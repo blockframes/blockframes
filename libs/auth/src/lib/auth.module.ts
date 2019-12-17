@@ -31,6 +31,7 @@ import { EmailVerificationComponent } from './pages/email-verification/email-ver
 import { PasswordResetComponent } from './pages/password-reset/password-reset.component';
 import { TermsConditionsModule } from './components/terms-conditions/terms-conditions.module';
 import { AcceptConditionsModule } from './components/accept-conditions/accept-conditions.module';
+import { AssetsThemeModule } from '@blockframes/ui';
 
 export const AuthRoutes: Routes = [
   { path: '', redirectTo: 'welcome', pathMatch: 'full' },
@@ -51,6 +52,7 @@ export const AuthRoutes: Routes = [
     TermsConditionsModule,
     AcceptConditionsModule,
     UiFormModule,
+    AssetsThemeModule,
 
     // Material
     MatFormFieldModule,

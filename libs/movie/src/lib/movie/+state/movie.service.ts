@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestoreCollection } from '@angular/fire/firestore/collection/collection';
 import { AngularFirestoreDocument } from '@angular/fire/firestore/document/document';
-import { Organization, OrganizationQuery, OrganizationService } from '@blockframes/organization';
+import { OrganizationQuery, OrganizationService, PermissionsService, createDocPermissions } from '@blockframes/organization';
 import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
 import { firestore } from 'firebase';
 import objectHash from 'object-hash';
@@ -28,6 +28,7 @@ export class MovieService extends CollectionService<MovieState> {
   constructor(
     private organizationQuery: OrganizationQuery,
     private organizationService: OrganizationService,
+    private permissionsService: PermissionsService,
     store: MovieStore
   ) {
     super(store);
@@ -60,9 +61,13 @@ export class MovieService extends CollectionService<MovieState> {
 
   /** Hook that triggers when a movie is added to the database. */
   async onCreate(movie: Movie, write: WriteOptions) {
+    // Push the movie id into organization.movieIds.
     const organizationId = this.organizationQuery.getActiveId();
-    const organization = await this.organizationService.getValue(organizationId);
-    return this.db.doc<Organization>(`orgs/${organizationId}`).update({ movieIds: [...organization.movieIds, movie.id] })
+    const organization = await this.organizationService.getValue(this.organizationQuery.getActiveId());
+    this.organizationService.update({...organization, movieIds: [...organization.movieIds, movie.id]})
+
+    // Create organization related permissions for this document.
+    return this.permissionsService.createDocPermissions(movie.id, organizationId);
   }
 
   public updateById(id: string, movie: any): Promise<void> {

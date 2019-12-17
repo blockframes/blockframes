@@ -7,22 +7,22 @@ export interface PermissionsDocument {
   canRead: string[];
   canUpdate: string[];
   canDelete: string[];
-  userAppPermissions?: AppPermissions[];
-  userDocPermissions?: UserDocPermissions[];
-  organizationDocPermissions?: OrganizationDocPermissions[];
 }
 
+/** Mapping of all users with their role in the organization. */
 export interface Roles {
   [memberId: string]: UserRole;
 }
 
+/** Roles a user can have in an organization. */
 export const enum UserRole {
   superAdmin = 'superAdmin',
   admin = 'admin',
   member = 'member'
 }
 
-export interface AppPermissions {
+/** Permissions related to a specific application. */
+export interface AppPermissionsDocument {
   name: App;
   admins: string[];
   canCreate: string[];
@@ -31,7 +31,8 @@ export interface AppPermissions {
   canDelete: string[];
 }
 
-export interface UserDocPermissions {
+/** Permissions related to a specific user on a document. */
+export interface UserPermissionsDocument {
   id: string;
   admins: string[];
   canCreate: string[];
@@ -40,7 +41,8 @@ export interface UserDocPermissions {
   canDelete: string[];
 }
 
-export interface OrganizationDocPermissions {
+/** Permissions related to an organization on a document. */
+export interface DocPermissionsDocument {
   id: string;
   ownerId: string;
   isAdmin: boolean;
@@ -50,7 +52,8 @@ export interface OrganizationDocPermissions {
   canDelete: boolean;
 }
 
-export function createOrgPermissions(params: Partial<PermissionsDocument>): PermissionsDocument {
+/** Factory function to create organization related permissions. */
+export function createPermissions(params: Partial<PermissionsDocument>): PermissionsDocument {
   return {
     id: params.id || '',
     roles : params.roles || {},
@@ -62,7 +65,8 @@ export function createOrgPermissions(params: Partial<PermissionsDocument>): Perm
   };
 }
 
-export function createAppPermissions(app: App): AppPermissions {
+/** Factory function to create application related permissions. */
+export function createAppPermissions(app: App): AppPermissionsDocument {
   return {
     name: app,
     admins: [],
@@ -73,7 +77,8 @@ export function createAppPermissions(app: App): AppPermissions {
   };
 }
 
-export function createUserDocPermissions(params: Partial<UserDocPermissions>): UserDocPermissions {
+/** Factory function to create user permissions on a document. */
+export function createUserPermissions(params: Partial<UserPermissionsDocument>): UserPermissionsDocument {
   return {
     id: params.id || '',
     admins: [],
@@ -85,8 +90,8 @@ export function createUserDocPermissions(params: Partial<UserDocPermissions>): U
   };
 }
 
-
-export function createOrganizationDocPermissions(params: Partial<OrganizationDocPermissions>): OrganizationDocPermissions {
+/** Factory function to create organization permissions on a document. */
+export function createDocPermissions(params: Partial<DocPermissionsDocument> = {}): DocPermissionsDocument {
   return {
     id: params.id || '',
     ownerId: params.ownerId || '',

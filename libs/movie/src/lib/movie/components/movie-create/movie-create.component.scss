@@ -1,3 +1,7 @@
 section {
-    min-height: calc(100vh - (var(--toolbarHeight) * 2) - 30px); // TODO #1212
+  min-height: calc(100vh - (var(--toolbarHeight) * 2) - 30px); // TODO #1212
+}
+
+img {
+  max-height: 500px;
 }

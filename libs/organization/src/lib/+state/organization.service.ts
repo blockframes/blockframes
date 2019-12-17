@@ -12,7 +12,7 @@ import { OrganizationQuery } from './organization.query';
 import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { APPS_DETAILS, App } from '@blockframes/utils';
-import { createOrgPermissions, UserRole, createAppPermissions } from '../permissions/+state/permissions.firestore';
+import { createPermissions, UserRole, createAppPermissions } from '../permissions/+state/permissions.model';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'orgs'})
@@ -69,7 +69,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   async onCreate(org: Organization, { write }: WriteOptions) {
     const user = this.authQuery.user;
     const orgId: string = org.id;
-    const permissions = createOrgPermissions({
+    const permissions = createPermissions({
       id: orgId,
       roles: { [user.uid]: UserRole.superAdmin }
     });

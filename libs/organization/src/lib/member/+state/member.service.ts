@@ -18,7 +18,7 @@ export class MemberService extends CollectionService<MemberState> {
 
   public syncOrgMembers() {
     return this.userIds$.pipe(
-      switchMap(orgIds => this.syncManyDocs(orgIds))
+      switchMap(userIds => this.syncManyDocs(userIds))
     );
   }
 }
