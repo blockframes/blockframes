@@ -38,3 +38,12 @@
   @include sat-datepicker-theme($bf-dark-theme);
   @include bf-material-theme($bf-dark-theme);
 }
+
+
+#dashboard-navbar {
+  background-color: mat-color($bf-dark-background, app-bar);
+  // background-color: map-get($map: , $key: );
+  .mat-toolbar {
+    background-color: mat-color($bf-dark-background, app-bar);
+  }
+}

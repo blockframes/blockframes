@@ -8,23 +8,25 @@ import { LayoutComponent } from './layout/layout.component';
 const routes: Routes = [
   {
     path: '',
-    component: LayoutComponent
-  },
-  {
-    path: 'about',
-    loadChildren: () => import('./pages/about-page/about.module').then(m => m.AboutModule)
-  },
-  {
-    path: 'who-are-we',
-    loadChildren: () => import('./pages/team-page/team.module').then(m => m.TeamModule)
-  },
-  {
-    path: 'contact',
-    loadChildren: () => import('./pages/contact-page/contact.module').then(m => m.ContactModule)
-  },
-  {
-    path: 'terms',
-    loadChildren: () => import('./pages/privacy-page/privacy.module').then(m => m.PrivacyModule)
+    component: LayoutComponent,
+    children: [
+      {
+        path: 'about',
+        loadChildren: () => import('./pages/about-page/about.module').then(m => m.AboutModule)
+      },
+      {
+        path: 'who-are-we',
+        loadChildren: () => import('./pages/team-page/team.module').then(m => m.TeamModule)
+      },
+      {
+        path: 'contact',
+        loadChildren: () => import('./pages/contact-page/contact.module').then(m => m.ContactModule)
+      },
+      {
+        path: 'terms',
+        loadChildren: () => import('./pages/privacy-page/privacy.module').then(m => m.PrivacyModule)
+      }
+    ]
   },
   // {
   //   path: 'no-movies',

@@ -1,31 +1,35 @@
 mat-sidenav-container {
   height: 100%;
-  mat-sidenav {
+  #dashboard-navbar {
     width: 300px;
+    border: none;
 
     .mat-toolbar {
-      border-bottom: none;
+      border: none;
     }
 
-    .mat-drawer {
-      background-color: #0d0f1f;
-      .mat-drawer-side {
-        border-bottom: none;
-      }
+    .mat-divider {
+      border-top-color: var(--lightGrey);
     }
   }
 }
 
-// .mat-sidenav-container.mat-sidenav.mat-drawer {
-//   background-color: #0d0f1f;
-// }
+mat-sidenav-content {
+  #catalog-toolbar {
+    border: none;
+  }
+}
 
-// .mat-sidenav-container.mat-sidenav.mat-drawer.mat-drawer-side {
-//   border-right: none;
-// }
+.app-icon,
+.app-icon-button {
+  width: 157px;
+}
 
 mat-form-field {
   width: 100%;
+  input span.mat-form-field-label-wrapper{
+    color: red;
+  }
 }
 
 mat-form-field.mat-form-field {
@@ -35,13 +39,7 @@ mat-form-field.mat-form-field {
 mat-form-field input {
   font-size: 15px;
 }
-.app-icon,
-.app-icon-button {
-  // border-radius: 0;
-  width: 157px;
-  // height: 24px;
-  // margin: 19px;
-}
+
 
 .example-fill-remaining-space {
   /* This fills the remaining space, by using flexbox.
@@ -73,13 +71,11 @@ mat-form-field input {
 }
 
 .more-icon {
-  margin: 0 20px 0 20px;
+  margin-right: 20px;
 }
 
 .custom-badge {
-
   .mat-badge-content {
-
     width: fit-content;
     text-align: center;
     border-radius: 7px;

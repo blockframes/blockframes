@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, ViewEncapsulation } from '@angular/core';
 
 @Component({
   selector: 'catalog-layout',

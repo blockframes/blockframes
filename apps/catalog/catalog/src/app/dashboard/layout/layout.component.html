@@ -1,13 +1,13 @@
 <mat-sidenav-container>
-  <mat-sidenav mode="side" opened>
+  <mat-sidenav id="dashboard-navbar" mode="side" opened>
     <mat-toolbar>
       <ng-container app-icon>
-        <button test-id="home" mat-icon-button class="app-icon-button" routerLink="/layout">
+        <button test-id="home" mat-icon-button class="app-icon-button" routerLink="/dashboard">
           <mat-icon svgIcon="LogoAC" class="app-icon"></mat-icon>
         </button>
       </ng-container>
     </mat-toolbar>
-    <!-- TODO: update icons & connect with pages -->
+    <!-- TODO: update icons, connect with pages, get number for mat-chips -->
     <mat-nav-list>
       <a mat-list-item>
         <mat-icon matListIcon>add</mat-icon>
@@ -42,11 +42,11 @@
     </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
-    <mat-toolbar fxLayout="row">
+    <mat-toolbar id="catalog-toolbar" fxLayout="row">
       <!-- Search Bar -->
       <form fxFlex="60" fxLayoutAlign=" end">
         <mat-form-field no-underline floatLabel="never">
-          <input matInput
+          <input matInput id="test"
           placeholder="Search for clients, negotiations, titles instead of listings..."
           [widgetTarget]="search" />
           <mat-icon matPrefix>search</mat-icon>
@@ -55,7 +55,6 @@
           <overlay-search-widget></overlay-search-widget>
         </overlay-widget>
       </form>
-        <!-- This fills the remaining space of the current row -->
       <span class="example-fill-remaining-space"></span>
       <div fxLayout="row" fxLayoutAlign="start center">
         <!-- Notification -->
@@ -66,13 +65,8 @@
           <overlay-notification-widget></overlay-notification-widget>
         </overlay-widget>
         <!-- User Info -->
+        <!-- TODO: connect with account -->
         <div fxLayout="row" fxLayoutAlign="start center">
-          <div fxLayout="column" class="user-name">
-            <!-- TODO: apply global typography -->
-            <div>Name</div>
-            <div>role</div>
-          </div>
-          <!-- TODO: connect with account -->
         <img class="avatar" src="https://material.angular.io/assets/img/examples/shiba1.jpg" />
         <a mat-icon-button class="more-icon">
           <mat-icon>more_vert</mat-icon>
@@ -81,7 +75,7 @@
       </div>
     </mat-toolbar>
     <main>
-      <!-- <router-outlet></router-outlet> -->
+      <router-outlet></router-outlet>
     </main>
   </mat-sidenav-content>
 </mat-sidenav-container>
