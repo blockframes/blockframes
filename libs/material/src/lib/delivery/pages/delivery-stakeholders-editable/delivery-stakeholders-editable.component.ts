@@ -3,7 +3,7 @@ import { Delivery, DeliveryQuery } from '../../+state';
 import { StakeholderService } from '../../stakeholder/+state/stakeholder.service';
 import { Observable } from 'rxjs';
 import { OrganizationAlgoliaResult } from '@blockframes/utils';
-import { createStakeholder } from '../../stakeholder/+state/stakeholder.firestore';
+import { createDeliveryStakeholder } from '../../stakeholder/+state/stakeholder.firestore';
 
 @Component({
   selector: 'delivery-stakeholders-editable',
@@ -31,6 +31,6 @@ export class DeliveryStakeholdersEditableComponent implements OnInit {
 
   public addStakeholder({ objectID }: OrganizationAlgoliaResult) {
     // TODO: handle promises correctly (update loading status, send back error report, etc). => ISSUE#612
-    this.stakeholderService.add(createStakeholder({id: objectID}));
+    this.stakeholderService.add(createDeliveryStakeholder({orgId: objectID}));
   }
 }

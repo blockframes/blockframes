@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { SpectatorService, createServiceFactory } from '@ngneat/spectator/jest';
 
 @Injectable()
-class BasketService {
+class CartService {
   constructor(private store: MovieStore) {}
   createFireStoreId(): boolean {
     return true;
@@ -13,10 +13,10 @@ class BasketService {
   }
 }
 
-describe('BasketService', () => {
+describe('CartService', () => {
   let spectator: SpectatorService<any>;
   const createService = createServiceFactory({
-    service: BasketService,
+    service: CartService,
     mocks: [MovieStore]
   });
 

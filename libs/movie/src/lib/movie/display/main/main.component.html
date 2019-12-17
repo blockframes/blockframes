@@ -81,7 +81,7 @@
       <mat-card-title>Production Companies</mat-card-title>
       <mat-card-subtitle>
         <span *ngFor="let item of data.productionCompanies; let isLast=last">
-          {{ item.firstName }} {{ isLast? '':',' }}
+          {{ item.displayName }} {{ isLast? '':',' }}
         </span>
       </mat-card-subtitle>
     </ng-container>

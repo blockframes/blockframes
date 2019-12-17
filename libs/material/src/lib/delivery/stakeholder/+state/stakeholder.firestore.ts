@@ -1,16 +1,16 @@
+import { StakeholderRaw } from "@blockframes/utils/common-interfaces/identity";
+
 /** Stakeholder model as it appears in Firestore. */
-export interface StakeholderDocument {
-  id: string;
-  role: string
+export interface StakeholderDocument extends StakeholderRaw {
+  orgId: string;
   isAccepted: boolean;
   processedId?: string;
 }
 
 /** A factory function that create a stakeholder. */
-export function createStakeholder(params: Partial<StakeholderDocument> = {}): StakeholderDocument {
+export function createDeliveryStakeholder(params: Partial<StakeholderDocument> = {}): StakeholderDocument {
   return {
-    id: '',
-    role: '',
+    orgId: '',
     isAccepted: false,
     ...params,
   }

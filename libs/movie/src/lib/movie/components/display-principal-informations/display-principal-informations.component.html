@@ -33,7 +33,7 @@
       <li fxLayout="row wrap" fxLayout.lt-sm="column" *ngIf="salesCast.credits.length > 0">
         <span><b>Principal Cast</b></span>
         <span *ngFor="let cast of salesCast.credits; let i = index; let isLast = last">
-          <ng-container *ngIf="cast.creditRole === 'actor' && i <= 1; else end">
+          <ng-container *ngIf="cast.role === 'actor' && i <= 1; else end">
             {{ cast.lastName }} {{ cast.firstName }} {{ isLast ? '' : ', '}}
           </ng-container>
           <ng-template #end>...</ng-template>

@@ -109,7 +109,7 @@ async function notifyOnNewSignee(
     throw new Error("This stakeholder doesn't exist !");
   }
 
-  const newStakeholderOrg = await getDocument<OrganizationDocument>(`orgs/${newStakeholder!.id}`);
+  const newStakeholderOrg = await getDocument<OrganizationDocument>(`orgs/${newStakeholder!.orgId}`);
 
   if (!newStakeholderOrg) {
     throw new Error("This organization doesn't exist !");

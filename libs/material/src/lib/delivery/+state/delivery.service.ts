@@ -37,7 +37,7 @@ const deliveriesListQuery = (movieId: string): Query<DeliveryWithTimestamps[]> =
   stakeholders: delivery => ({
     path: `deliveries/${delivery.id}/stakeholders`,
     organization: stakeholder => ({
-      path: `orgs/${stakeholder.id}`
+      path: `orgs/${stakeholder.orgId}`
     })
   })
 })
@@ -47,7 +47,7 @@ export const deliveryQuery = (deliveryId: string): Query<DeliveryWithTimestamps>
   stakeholders: delivery => ({
     path: `deliveries/${delivery.id}/stakeholders`,
     organization: stakeholder => ({
-      path: `orgs/${stakeholder.id}`
+      path: `orgs/${stakeholder.orgId}`
     })
   })
 });
@@ -303,11 +303,11 @@ export class DeliveryService extends CollectionService<DeliveryState> {
     const { id, validated, stakeholders } = delivery;
 
     const stakeholderSignee = stakeholders.find(
-      ({ id: stakeholderId }) => organizationId === stakeholderId
+      ({ orgId: stakeholderId }) => organizationId === stakeholderId
     );
 
-    if (!validated.includes(stakeholderSignee.id)) {
-      const updatedValidated = [...validated, stakeholderSignee.id];
+    if (!validated.includes(stakeholderSignee.orgId)) {
+      const updatedValidated = [...validated, stakeholderSignee.orgId];
       return this.update(id, { validated: updatedValidated });
     }
   }

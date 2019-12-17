@@ -12,9 +12,9 @@
         <input matInput formControlName="lastName" placeholder="Last Name">
       </mat-form-field>
       <mat-form-field appearance="outline" class="small-margin">
-        <mat-select formControlName="creditRole" placeholder="Position">
-          <mat-option *ngFor="let creditRole of staticModels.CREDIT_ROLES" [value]="creditRole.slug">
-            {{ creditRole.label }}
+        <mat-select formControlName="role" placeholder="Position">
+          <mat-option *ngFor="let role of staticModels.CREDIT_ROLES" [value]="role.slug">
+            {{ role.label }}
           </mat-option>
         </mat-select>
       </mat-form-field>

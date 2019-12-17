@@ -38,7 +38,7 @@ async function stakeholdersCollectionEvent(
   // TODO(issue#686): extract semi-generic part, too many if then else, won't work with more types.
   const delivery = await getDocument<DeliveryDocument>(`deliveries/${context.params.deliveryID}`);
   const movie = await getDocument<MovieDocument>(`movies/${delivery.movieId}`)
-  const organization = await getDocument<PublicOrganization>(`orgs/${newStakeholder.id}`);
+  const organization = await getDocument<PublicOrganization>(`orgs/${newStakeholder.orgId}`);
 
   if (!!delivery.id && !!newStakeholder && !!organization) {
     const documentSnapshot = await db.doc(`deliveries/${delivery.id}`).get();
@@ -50,7 +50,7 @@ async function stakeholdersCollectionEvent(
 
     try {
       await db
-        .doc(`deliveries/${delivery.id}/stakeholders/${newStakeholder.id}`)
+        .doc(`deliveries/${delivery.id}/stakeholders/${newStakeholder.orgId}`)
         .update({ processedId: context.eventId });
       const organizationsOfDocument = await getOrganizationsOfDocument(delivery.id, 'deliveries');
 
@@ -71,7 +71,7 @@ async function stakeholdersCollectionEvent(
       return Promise.all([triggerNotifications(notifications)]);
     } catch (e) {
       await db
-        .doc(`deliveries/${delivery.id}/stakeholders/${newStakeholder.id}`)
+        .doc(`deliveries/${delivery.id}/stakeholders/${newStakeholder.orgId}`)
         .update({ processedId: null });
       throw e;
     }

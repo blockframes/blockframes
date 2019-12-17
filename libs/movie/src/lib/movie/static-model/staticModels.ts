@@ -15,6 +15,7 @@ interface Model {
   CERTIFICATIONS: readonly SlugAndLabel[];
   TERRITORIES: readonly SlugAndLabel[];
   MEDIAS: readonly SlugAndLabel[];
+  LEGAL_ROLES: readonly SlugAndLabel[];
 }
 
 export type Scope = keyof Model;
@@ -163,7 +164,7 @@ const models: Model = {
       'label': 'Completed'
     }
   ] as const,
-  'LANGUAGES': [
+  'LANGUAGES': [ // @TODO (#1388) transform to RFC-5646
     { 'slug': 'albanian', 'label': 'Albanian' },
     { 'slug': 'arabic', 'label': 'Arabic' },
     { 'slug': 'armenian', 'label': 'Armenian' },
@@ -363,7 +364,7 @@ const models: Model = {
       'label': 'EOF'
     }
   ] as const,
-  'TERRITORIES': [
+  'TERRITORIES': [ // @TODO (#1388) transform to ISO-3166
     { 'slug': 'world', 'label': 'World' },
     { 'slug': 'afghanistan', 'label': 'Afghanistan' },
     { 'slug': 'albania', 'label': 'Albania' },
@@ -647,6 +648,19 @@ const models: Model = {
     { 'slug': 'book-adaptation', 'label': 'Book Adaptation' },
     { 'slug': 'music-publishing', 'label': 'Music Publishing' },
     { 'slug': 'merchandising', 'label': 'Merchandising' },
+  ] as const,
+  'LEGAL_ROLES': [
+    { 'slug': 'service-provider', 'label': 'Service provider' },
+    { 'slug': 'licensor', 'label': 'Licensor' },
+    { 'slug': 'licensee', 'label': 'Licensee' },
+    { 'slug': 'seller', 'label': 'Seller' },
+    { 'slug': 'lender', 'label': 'Lender' },
+    { 'slug': 'signatory', 'label': 'Signatory' },
+    { 'slug': 'promisor', 'label': 'Promisor' },
+    { 'slug': 'promisee', 'label': 'Promisee' },
+    { 'slug': 'beneficiary', 'label': 'Beneficiary' },
+    { 'slug': 'third-party', 'label': 'Third party' },
+    { 'slug': 'purchaser', 'label': 'Purchaser' },
   ] as const,
 };
 

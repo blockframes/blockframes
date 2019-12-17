@@ -1,9 +1,41 @@
-import { MovieStatusSlug, PromotionalElementTypesSlug, ResourceRatioSlug, ResourceSizesSlug } from "@blockframes/movie/movie/static-model";
-import { DateRangeRaw } from "@blockframes/utils/date-range";
+import { MovieStatusSlug, PromotionalElementTypesSlug, ResourceRatioSlug, ResourceSizesSlug, TerritoriesSlug, LanguagesSlug, MediasSlug } from "@blockframes/movie/movie/static-model";
+import { DateRangeRaw } from "@blockframes/utils/common-interfaces/date-range";
+import { Person, Credit, SalesAgent, Company, Licensee, Licensor } from "@blockframes/utils/common-interfaces/identity";
 import { firestore } from "firebase/app";
 import { ImgRef } from "@blockframes/utils/image-uploader";
+import { Price, Fee } from "@blockframes/utils/common-interfaces/price";
+import { TermsRaw } from "@blockframes/utils/common-interfaces/terms";
 
 type Timestamp = firestore.Timestamp;
+
+export const enum LicenseStatus {
+  unknown = 'unknown',
+  undernegotiation = 'under negotiation',
+  waitingsignature = 'waiting for signature',
+  waitingpaiment = 'waiting for paiment',
+  paid = 'paid',
+}
+
+export const enum WorkType {
+  movie = 'Movie',
+  short = 'Short',
+  serie = 'Serie',
+  season = 'Season',
+  volume = 'Volume',
+  episode = 'Episode',
+  collection = 'Collection',
+}
+
+export const enum FormatProfile {
+  unknown = 'unknown',
+  HD = 'HD',
+  SD = 'SD',
+  UHD = 'UHD',
+  _3D = '3D',
+  _3DSD = '3DSD',
+  _3DHD = '3DHD',
+  _3UHD = '3DUHD'
+}
 
 export interface MovieVersionInfo {
   dubbings: string[],
@@ -14,7 +46,7 @@ interface MovieSalesAgentDealRaw<D> {
   rights: DateRangeRaw<D>;
   territories: string[],
   medias: string[],
-  salesAgent?: Person,
+  salesAgent?: SalesAgent,
   reservedTerritories?: string[],
 }
 
@@ -51,23 +83,13 @@ export interface Title {
   international?: string;
 }
 
-export interface Person {
-  firstName: string, // @todo #1052 replace with displayName
-  lastName?: string, // @todo #1052 replace with displayName
-  creditRole?: string, // @todo #1052 rename to role
-  displayName?: string, // @todo #1052 "?" is temporary
-  showName?: boolean, // @todo #1052 merge credit & stakeholder interface ? or implements?
-  orgId?: string, // @todo #1052 merge credit & stakeholder interface ? or implements?
-  logo?: ImgRef,
-}
-
 export interface MovieStory {
   synopsis: string,
   logline: string,
 }
 
 export interface MovieSalesCast {
-  credits: Person[],
+  credits: Credit[],
 }
 
 export interface MovieFestivalPrizes {
@@ -80,20 +102,59 @@ export interface MovieBudget {
   detailledBudget?: any // WIP #1052
 }
 
+export const enum MovieLanguageTypes {
+  original = 'original',
+  dubbed = 'dubbed',
+  subtitle = 'subtitle',
+}
+
+export interface MovieLanguageSpecification {
+  original: boolean;
+  dubbed: boolean;
+  subtitle: boolean;
+}
+
+export type MovieLanguageSpecificationContainer = Record<LanguagesSlug, MovieLanguageSpecification>;
+
+export interface HoldbackRaw<D> {
+  terms: TermsRaw<D>,
+  media: MediasSlug,
+}
+
+export interface HoldbackWithDates extends HoldbackRaw<Date> {
+}
+
 // Distribution deal raw interface, formerly called MovieSaleRaw
-interface DistributionDealRaw<D> {  
-  operatorName: string;
-  showOperatorName: boolean; //@todo #581 Promotional Distribution Deal
-  rights: DateRangeRaw<D>;
-  territories: string[];
-  medias: string[];
-  dubbings: string[];
-  subtitles: string[];
+interface DistributionDealRaw<D> {
+  id: string,
+  publicId?: string,
+  licensor: Licensor,
+  licensee: Licensee,
+  licenseType: MediasSlug[];
+  terms: TermsRaw<D>;
+  territory: TerritoriesSlug[];
+  territoryExcluded : TerritoriesSlug[];
+  assetLanguage: { [language in LanguagesSlug]: MovieLanguageSpecification };
+  workType: WorkType;
   exclusive: boolean;
-  price: number;
+  price: Price;
+  titleInternalAlias: string;
+  formatProfile: FormatProfile;
+  download: boolean;
+  contractId?: string;
+  licenseStatus: LicenseStatus;
+  reportingId?: string;
+  deliveryIds?: string;
+  multidiffusion?: number;
+  holdbacks?:  HoldbackRaw<D>[];
+  catchUp?: TermsRaw<D>;
+  fees: Fee[];
 }
 
 export interface DistributionDealDocumentWithDates extends DistributionDealRaw<Date> {
+}
+
+export interface DistributionDealDocument extends DistributionDealRaw<Timestamp> {
 }
 
 export interface MovieMain {
@@ -107,7 +168,7 @@ export interface MovieMain {
   originCountries?: string[],
   languages?: string[],
   status?: MovieStatusSlug,
-  productionCompanies?: Person[],
+  productionCompanies?: Company[],
   length?: number,
   shortSynopsis?: string,
 }

@@ -7,7 +7,7 @@ function createPromotionalElementControl(promotionalElement?: Partial<Promotiona
   const { label, media } = createPromotionalElement(promotionalElement);
   return {
     label: new FormControl(label),
-    media: new FormControl(media, urlValidators),
+    media: new FormControl(media.url, urlValidators),
   }
 }
 

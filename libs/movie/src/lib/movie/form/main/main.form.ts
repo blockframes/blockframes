@@ -1,13 +1,14 @@
 import { FormEntity, FormList, yearValidators } from '@blockframes/utils';
-import { MovieMain, Credit, createMovieMain, createCredit, Movie, createTitle } from '../../+state';
+import { MovieMain, Credit, createMovieMain, Movie, createTitle } from '../../+state';
 import { Validators, FormControl } from '@angular/forms';
+import { createCredit, createCompany } from '@blockframes/utils/common-interfaces/identity';
 
 function createCreditFormControl(credit?: Partial<Credit>) {
-  const { firstName, lastName, creditRole } = createCredit(credit);
+  const { firstName, lastName, role } = createCredit(credit);
   return {
     firstName: new FormControl(firstName),
     lastName: new FormControl(lastName),
-    creditRole: new FormControl(creditRole),
+    role: new FormControl(role),
   }
 }
 
@@ -42,9 +43,9 @@ export class ProductionCompagnyForm extends FormEntity<ProductionCompagnyControl
 }
 
 function createProductionCompagnyControl(compagny?: Partial<Credit>) {
-  const { firstName } = createCredit(compagny);
+  const { displayName } = createCompany(compagny);
   return {
-    firstName: new FormControl(firstName),
+    displayName: new FormControl(displayName),
   }
 }
 

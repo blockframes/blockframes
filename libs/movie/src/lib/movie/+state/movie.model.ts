@@ -11,12 +11,22 @@ import {
   MovieSalesInfoDocumentWithDates,
   MovieStory,
   MovieVersionInfo,
-  Person,
   Prize,
   PromotionalElement,
-  Title
+  Title,
+  LicenseStatus,
+  HoldbackWithDates,
+  WorkType,
+  FormatProfile,
+  MovieLanguageSpecification,
+  MovieLanguageTypes,
+  MovieLanguageSpecificationContainer
 } from './movie.firestore';
 import { createImgRef } from '@blockframes/utils/image-uploader';
+import { createStakeholder, Credit, SalesAgent, Licensee, Licensor } from '@blockframes/utils/common-interfaces/identity';
+import { createPrice } from '@blockframes/utils/common-interfaces/price';
+import { createTerms } from '@blockframes/utils/common-interfaces/terms';
+import { LanguagesSlug } from '../static-model';
 
 export type PromotionalElement = PromotionalElement;
 
@@ -36,9 +46,13 @@ export type MovieVersionInfo = MovieVersionInfo;
 
 export type Prize = Prize;
 
-export type Credit = Person;
+export type Credit = Credit;
 
-export type SalesAgent = Person;
+export type SalesAgent = SalesAgent;
+
+export type Licensee = Licensee;
+
+export type Licensor = Licensor;
 
 export type DistributionDeal = DistributionDealDocumentWithDates;
 
@@ -47,6 +61,8 @@ export type MovieSalesInfo = MovieSalesInfoDocumentWithDates;
 export type MovieSalesAgentDeal = MovieSalesAgentDealDocumentWithDates;
 
 export type Movie = MovieDocumentWithDates;
+
+export type Holdback = HoldbackWithDates;
 
 /** A factory function that creates Movie */
 export function createMovie(params: Partial<Movie> = {}): Movie {
@@ -85,6 +101,8 @@ export function createMovieMain(params: Partial<MovieMain> = {}): MovieMain {
   };
 }
 
+// @TODO #1052 remove this section .
+// merge movie.promotionalElements.promotionalElements and movie.promotionalElements.images  into `movie.promotionalElements`
 export function createMoviePromotionalElements(
   params: Partial<MoviePromotionalElements> = {}
 ): MoviePromotionalElements {
@@ -110,9 +128,9 @@ export function createPromotionalElement(
 ): PromotionalElement {
   return {
     label: '',
-    media: createImgRef(promotionalElement.media),
     type: 'other',
-    ...promotionalElement
+    ...promotionalElement,
+    media: createImgRef(promotionalElement.media),
   };
 }
 
@@ -202,29 +220,24 @@ export function createMovieSalesAgentDeal(
 
 export function createDistributionDeal(params: Partial<DistributionDeal> = {}): DistributionDeal {
   return {
-    operatorName: '',
-    showOperatorName: false,
-    rights: {
-      from: null,
-      to: null
-    },
-    territories: [],
-    medias: [],
-    dubbings: [],
-    subtitles: [],
+    id: '',
+    licenseStatus: LicenseStatus.unknown,
+    licenseType: [],
+    terms: createTerms(params.terms),
+    territory: [],
+    territoryExcluded: [],
+    assetLanguage: {},
+    workType: WorkType.movie,
     exclusive: false,
-    price: 0,
-    ...params
-  };
-}
-
-export function createCredit(params: Partial<Credit> = {}): Credit {
-  return {
-    firstName: '',
-    lastName: '',
-    creditRole: '',
-    logo: createImgRef(),
-    ...params
+    price: createPrice(params.price),
+    titleInternalAlias: '',
+    formatProfile: FormatProfile.unknown,
+    download: false,
+    holdbacks: [],
+    fees: [],
+    ...params,
+    licensee: createStakeholder(params.licensee),
+    licensor: createStakeholder(params.licensor),
   };
 }
 
@@ -233,4 +246,30 @@ export function createMovieBudget(params: Partial<MovieBudget> = {}): MovieBudge
     totalBudget: '',
     ...params
   };
+}
+
+export function createHoldback(params: Partial<Holdback> = {}): Holdback {
+  return {
+    terms: createTerms(params.terms),
+    media: '',
+    ...params
+  };
+}
+
+export function createMovieLanguageSpecification(params: Partial<MovieLanguageSpecification> = {}): MovieLanguageSpecification {
+  return {
+    original: false,
+    dubbed: false,
+    subtitle: false,
+    ...params
+  };
+}
+
+export function populateMovieLanguageSpecification(spec: MovieLanguageSpecificationContainer, slug: LanguagesSlug, type: MovieLanguageTypes, value: boolean = true) {
+  if (!spec[slug]) {
+    spec[slug] = createMovieLanguageSpecification();
+  }
+
+  spec[slug][type] = value;
+  return spec;
 }

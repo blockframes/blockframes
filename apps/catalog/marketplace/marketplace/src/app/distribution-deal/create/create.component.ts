@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { Router } from '@angular/router';
-import { Movie, MovieQuery, MovieService } from '@blockframes/movie/movie/+state';
+import { Movie, MovieQuery, MovieService, createDistributionDeal } from '@blockframes/movie/movie/+state';
 import {
   MEDIAS_SLUG,
   MediasSlug,
@@ -22,7 +22,7 @@ import {
   LANGUAGES_SLUG,
   LanguagesLabel
 } from '@blockframes/movie/movie/static-model/types';
-import { DateRange } from '@blockframes/utils/date-range';
+import { DateRange } from '@blockframes/utils/common-interfaces/date-range';
 import { ControlErrorStateMatcher, languageValidator } from '@blockframes/utils';
 import {
   getDistributionDealsInDateRange,
@@ -30,8 +30,11 @@ import {
   salesAgentHasDateRange,
   getDistributionDealsWithMediasTerritoriesAndLanguagesInCommon
 } from './availabilities.util';
-import { DistributionRightForm } from './create.form';
+import { DistributionDealForm } from './create.form';
 import { getCodeIfExists } from '@blockframes/movie/movie/static-model/staticModels';
+import { CartService } from '../+state';
+import { MatSnackBar } from '@angular/material';
+import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 
 enum ResearchSteps {
   START = 'Start',
@@ -40,13 +43,12 @@ enum ResearchSteps {
 }
 
 @Component({
-  selector: 'distribution-right-create',
+  selector: 'distribution-deal-create',
   templateUrl: './create.component.html',
   styleUrls: ['./create.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DistributionRightCreateComponent implements OnInit, OnDestroy {
-  @HostBinding('attr.page-id') pageId = 'distribution-right';
+export class DistributionDealCreateComponent implements OnInit, OnDestroy {
 
   // Enum for tracking the current research state
   public steps = ResearchSteps;
@@ -56,7 +58,7 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
   private researchSubscription: Subscription;
 
   // Form for holding users distribution rights choice
-  public form = new DistributionRightForm();
+  public form = new DistributionDealForm();
 
   // Movie for information to display
   public movie$: Observable<Movie>;
@@ -100,7 +102,10 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
   constructor(
     private query: MovieQuery,
     private router: Router,
+    private organizationQuery: OrganizationQuery,
     private movieService: MovieService,
+    private cartService: CartService,
+    private snackBar: MatSnackBar
   ) { }
 
   ngOnInit() {
@@ -174,7 +179,14 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
     this.form.removeLanguage(language);
   }
 
-  public addDistributionRight() {
+  public async addDistributionDeal() {
+    const distributionDeal = createDistributionDeal(); // @todo #1388 populate with form values
+    distributionDeal.licensee.orgId = this.organizationQuery.getActiveId();
+
+    const dealId = await this.movieService.addDistributionDeal(this.movie.id, distributionDeal);
+
+    this.cartService.addDealToCart(dealId, 'default');
+    this.snackBar.open(`Distribution deal saved. Redirecting ...`, 'close', { duration: 2000 });
     this.router.navigateByUrl(`layout/o/catalog/selection/overview`);
   }
 
@@ -257,6 +269,7 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
           if (dealsInDateRange.length === 0) {
             // We have no intersection with other deals, so we are OK !
             console.log('YOU CAN BUY YOUR DIST RIGHT, NO INTERSECTION FOUND');
+            this.step = this.steps.POSSIBLE;
             return true; // End of process
           }
 
@@ -288,12 +301,14 @@ export class DistributionRightCreateComponent implements OnInit, OnDestroy {
                 return false; // End of process
               } else {
                 console.log('YOU CAN BUY YOUR DIST RIGHT, since you do not require exclusivity');
+                this.step = this.steps.POSSIBLE;
                 return true; // End of process
               }
             }
           } else {
             // There is no deals with territories AND medias in common, we are OK.
             console.log('YOU CAN BUY YOUR DIST RIGHT, NO MEDIAS, TERRITORIES AND LANGUAGES OVERLAPPINGS FOUND');
+            this.step = this.steps.POSSIBLE;
             return true; // End of process
           }
 

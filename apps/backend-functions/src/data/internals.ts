@@ -38,7 +38,7 @@ export async function getOrganizationsOfDocument(
   const stakeholders = await getCollection<StakeholderDocument>(
     `${collection}/${documentId}/stakeholders`
   );
-  const promises = stakeholders.map(({ id }) => getDocument<OrganizationDocument>(`orgs/${id}`));
+  const promises = stakeholders.map(({ orgId }) => getDocument<OrganizationDocument>(`orgs/${orgId}`));
   return Promise.all(promises);
 }
 

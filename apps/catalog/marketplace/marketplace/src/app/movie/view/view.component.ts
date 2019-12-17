@@ -1,5 +1,5 @@
 import { map } from 'rxjs/operators';
-import { BasketService } from './../../distribution-right/+state/basket.service';
+import { CartService } from './../../distribution-deal/+state/cart.service';
 import { Movie, PromotionalElement } from '@blockframes/movie';
 import { Component, OnInit, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -22,7 +22,7 @@ export class MarketplaceMovieViewComponent implements OnInit {
 
   constructor(
     private movieQuery: MovieQuery,
-    private basketService: BasketService,
+    private cartService: CartService,
     private orgQuery: OrganizationQuery,
     private snackbar: MatSnackBar
   ) {}
@@ -45,13 +45,13 @@ export class MarketplaceMovieViewComponent implements OnInit {
 
   public addToWishlist() {
     const title = this.movieQuery.getActive().main.title.international
-    this.basketService.updateWishlist(this.movieQuery.getActive());
+    this.cartService.updateWishlist(this.movieQuery.getActive());
     this.snackbar.open(`${title} has been added to your selection.`, 'close', { duration: 2000 });
   }
 
   public removeFromWishlist() {
     const title = this.movieQuery.getActive().main.title.international
-    this.basketService.updateWishlist(this.movieQuery.getActive());
+    this.cartService.updateWishlist(this.movieQuery.getActive());
     this.snackbar.open(`${title} has been removed from your selection.`, 'close', { duration: 2000 });
   }
 

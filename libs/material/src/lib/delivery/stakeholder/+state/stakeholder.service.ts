@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { OrganizationService } from '@blockframes/organization';
 import { InvitationService } from '@blockframes/notification';
 import { AuthQuery } from '@blockframes/auth';
-import { StakeholderDocument, createStakeholder } from './stakeholder.firestore';
+import { StakeholderDocument, createDeliveryStakeholder } from './stakeholder.firestore';
 import { CollectionService, CollectionConfig } from 'akita-ng-fire';
 import { StakeholderStore, StakeholderState } from './stakeholder.store';
 import { DeliveryQuery } from '../../+state/delivery.query';
@@ -32,9 +32,9 @@ export class StakeholderService extends CollectionService<StakeholderState> {
     tx?: firebase.firestore.Transaction
   ): Promise<string> {
     const organization = await this.organizationService.getValue(organizationId);
-    const stakeholder = createStakeholder({ id: organization.id, isAccepted });
+    const stakeholder = createDeliveryStakeholder({ orgId: organization.id, isAccepted });
     const stakeholderDoc = this.db.doc<StakeholderDocument>(
-      `deliveries/${docId}/stakeholders/${stakeholder.id}`
+      `deliveries/${docId}/stakeholders/${stakeholder.orgId}`
     );
 
     !!tx ? tx.set(stakeholderDoc.ref, stakeholder) : this.add(stakeholder);
@@ -43,7 +43,7 @@ export class StakeholderService extends CollectionService<StakeholderState> {
       this.invitationService.sendDocumentInvitationToOrg(organization, docId);
     }
 
-    return stakeholder.id;
+    return stakeholder.orgId;
   }
 
 }

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { EntityState, EntityStore, StoreConfig, MultiActiveState } from '@datorama/akita';
-import { Stakeholder } from './stakeholder.model';
+import { StakeholderDocument } from './stakeholder.firestore';
 
-export interface StakeholderState extends EntityState<Stakeholder>, MultiActiveState {}
+export interface StakeholderState extends EntityState<StakeholderDocument>, MultiActiveState {}
 
 const initialState = {
   active: []
@@ -10,7 +10,7 @@ const initialState = {
 
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'stakeholder' })
-export class StakeholderStore extends EntityStore<StakeholderState, Stakeholder> {
+export class StakeholderStore extends EntityStore<StakeholderState, StakeholderDocument> {
 
   constructor() {
     super(initialState);
