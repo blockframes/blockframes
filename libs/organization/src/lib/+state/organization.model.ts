@@ -3,8 +3,8 @@ import { AppDetails } from '@blockframes/utils';
 import {
   OrganizationDocumentWithDates,
   WishlistDocumentWithDates,
-  OrganizationDocument,
   WishlistDocument,
+  OrganizationDocument,
   createOrganizationRaw
 } from './organization.firestore';
 import { Movie } from '@blockframes/movie';
@@ -30,11 +30,9 @@ export interface AppDetailsWithStatus extends AppDetails {
   status: AppStatus;
 }
 
-export interface OrganizationWithTimestamps extends OrganizationDocument {
-}
+export type OrganizationWithTimestamps = OrganizationDocument;
 
-export interface Organization extends OrganizationDocumentWithDates {
-}
+export type Organization = OrganizationDocumentWithDates;
 
 export interface Wishlist extends WishlistDocumentWithDates {
   movies?: Movie[];
