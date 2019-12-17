@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
 import { LayoutComponent } from './layout.component';
 import { CommonModule } from '@angular/common';
-import { WidgetModule } from '@blockframes/ui/widget/widget.module';
+import { OverlayWidgetModule } from '@blockframes/ui/overlay-widget/overlay-widget.module.ts';
 import { FlexLayoutModule } from '@angular/flex-layout';
-
+import { NotificationWidgetModule } from '@blockframes/ui/overlay-widget/notification-widget/nofitication-widget.module';
+import { SearchWidgetModule } from '@blockframes/ui/overlay-widget/search-widget/search-widget.module';
 // Material
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
@@ -32,8 +33,10 @@ const material = [
 @NgModule({
   declarations: [LayoutComponent],
   imports: [CommonModule,
-    WidgetModule,
+    OverlayWidgetModule,
     FlexLayoutModule,
+    NotificationWidgetModule,
+    SearchWidgetModule,
   ...material
   ],
   exports: [LayoutComponent]

@@ -11,7 +11,7 @@ const fade = trigger('fade', [
 ]);
 
 @Component({
-  selector: 'bf-widget',
+  selector: 'overlay-widget',
   template: `
   <ng-template #ref>
     <div tabindex="-1" role="menu" @fade class="bf-widget">
@@ -21,6 +21,6 @@ const fade = trigger('fade', [
 `,
 animations: [fade]
 })
-export class WidgetComponent {
+export class OverlayWidgetComponent {
   @ViewChild('ref', { static: false }) public ref: TemplateRef<any>;
 }
