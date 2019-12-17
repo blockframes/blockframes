@@ -110,19 +110,21 @@ export function getDistributionDealsWithMediasTerritoriesAndLanguagesInCommon(
   const dealsWithMediasTerritoriesAndLanguagesInCommon: DistributionDeal[] = [];
   for (const deal of deals) {
     let mediasInCommon = false;
-    for (const media of formMedias) {
+    mediaLoop : for (const media of formMedias) {
       for (const licenseType of deal.licenseType) {
         if (licenseType === media) {
           mediasInCommon = true;
+          break mediaLoop;
         }
       }
     }
 
     let territoriesInCommon = false;
-    for (const territory of formTerritories) {
+    territoryLoop : for (const territory of formTerritories) {
       for (const saleTerritory of deal.territory) {
         if (saleTerritory === territory) {
           territoriesInCommon = true;
+          break territoryLoop;
         }
       }
     }
@@ -134,6 +136,7 @@ export function getDistributionDealsWithMediasTerritoriesAndLanguagesInCommon(
     for (const language of languagesName) {
       if (deal.assetLanguage[language] && deal.assetLanguage[language].dubbed) {
         dubbingInCommon = true;
+        break;
       }
     }
 
@@ -141,6 +144,7 @@ export function getDistributionDealsWithMediasTerritoriesAndLanguagesInCommon(
     for (const language of languagesName) {
       if (deal.assetLanguage[language] && deal.assetLanguage[language].subtitle) {
         subtitlesInCommon = true;
+        break;
       }
     }
 

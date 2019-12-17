@@ -123,6 +123,8 @@ export interface MovieLanguageSpecification {
   subtitle: boolean;
 }
 
+export type MovieLanguageSpecificationContainer = Record<LanguagesSlug, MovieLanguageSpecification>;
+
 export interface HoldbackRaw<D> {
   terms: TermsRaw<D>,
   media: MediasSlug,
@@ -138,7 +140,7 @@ interface DistributionDealRaw<D> {
   licenseType: MediasSlug[];
   terms: TermsRaw<D>;
   territory: TerritoriesSlug[];
-  territoryExcluded : TerritoriesSlug[];
+  territoryExcluded: TerritoriesSlug[];
   assetLanguage: { [language in LanguagesSlug]: MovieLanguageSpecification };
   exclusive: boolean;
   titleInternalAlias: string;
@@ -149,7 +151,7 @@ interface DistributionDealRaw<D> {
   reportingId?: string;
   deliveryIds?: string;
   multidiffusion?: number;
-  holdbacks?:  HoldbackRaw<D>[];
+  holdbacks?: HoldbackRaw<D>[];
   catchUp?: TermsRaw<D>;
 }
 

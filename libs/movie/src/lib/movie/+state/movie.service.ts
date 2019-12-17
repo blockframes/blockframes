@@ -103,6 +103,7 @@ export class MovieService extends CollectionService<MovieState> {
   public async addDistributionDeal(movieId: string, distributionDeal: DistributionDeal, contract: Contract): Promise<string> {
     // Create an id from DistributionDeal content.
     // A same DistributionDeal document will always have the same hash to prevent multiple insertion of same deal
+    // @TODO #1389 Use native akita-ng-fire functions : https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
     const dealId = objectHash(distributionDeal);
     distributionDeal.id = dealId;
 

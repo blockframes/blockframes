@@ -21,7 +21,8 @@ import {
   MovieLanguageSpecification,
   MovieLanguageTypes,
   StoreConfig,
-  StoreType
+  StoreType,
+  MovieLanguageSpecificationContainer
 } from './movie.firestore';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 import { Credit, SalesAgent, Licensee, Licensor } from '@blockframes/utils/common-interfaces/identity';
@@ -225,7 +226,7 @@ export function createDistributionDeal(params: Partial<DistributionDeal> = {}): 
     id: '',
     licenseStatus: LicenseStatus.unknown,
     licenseType: [],
-    terms: createTerms(),
+    terms: createTerms(params.terms),
     territory: [],
     territoryExcluded: [],
     assetLanguage: {},
@@ -234,6 +235,7 @@ export function createDistributionDeal(params: Partial<DistributionDeal> = {}): 
     formatProfile: FormatProfile.unknown,
     download: false,
     holdbacks: [],
+    catchUp: createTerms(params.catchUp),
     ...params
   };
 }
@@ -247,7 +249,7 @@ export function createMovieBudget(params: Partial<MovieBudget> = {}): MovieBudge
 
 export function createHoldback(params: Partial<Holdback> = {}): Holdback {
   return {
-    terms: createTerms(),
+    terms: createTerms(params.terms),
     media: '',
     ...params
   };
@@ -262,7 +264,7 @@ export function createMovieLanguageSpecification(params: Partial<MovieLanguageSp
   };
 }
 
-export function populateMovieLanguageSpecification(spec: { [language in LanguagesSlug]: MovieLanguageSpecification }, slug: LanguagesSlug, type: MovieLanguageTypes, value: boolean = true) {
+export function populateMovieLanguageSpecification(spec: MovieLanguageSpecificationContainer, slug: LanguagesSlug, type: MovieLanguageTypes, value: boolean = true) {
   if (!spec[slug]) {
     spec[slug] = createMovieLanguageSpecification();
   }

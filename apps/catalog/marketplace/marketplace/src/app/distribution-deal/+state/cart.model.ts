@@ -46,7 +46,7 @@ export function createCart(cart: Partial<CatalogCart> = {}): CatalogCart {
 
 export function createContract(params: Partial<Contract> = {}): Contract {
   return {
-    id: params.id,
+    id: params.id ? params.id : '',
     parties: [],
     titles: {},
     ...params,

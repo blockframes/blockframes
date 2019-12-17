@@ -1,5 +1,6 @@
 
 import { firestore } from "firebase/app";
+import { CatalogCart } from "@blockframes/marketplace/app/distribution-deal/+state/cart.model";
 
 type Timestamp = firestore.Timestamp;
 
@@ -20,6 +21,7 @@ interface OrganizationRaw<D> {
   fiscalNumber: string;
   activity: string;
   wishlist: WishlistRaw<D>[];
+  cart: CatalogCart[];
   isBlockchainEnabled: boolean;
 }
 
@@ -104,6 +106,7 @@ export function createOrganizationRaw(
     updated: new Date(),
     logo: PLACEHOLDER_LOGO,
     wishlist: [],
+    cart: [],
     isBlockchainEnabled: false,
     ...params
   };
