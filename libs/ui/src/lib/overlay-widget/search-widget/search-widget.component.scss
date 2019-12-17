@@ -1,3 +1,18 @@
-.bottom-button {
-  width: 100%;
+mat-card {
+  max-height: 50vh;
+  display: flex;
+  flex-direction: column;
+  mat-card-header {
+    display: flex;
+    flex-shrink: 0;
+  }
+  mat-card-content {
+    flex-grow: 1;
+    overflow-y: auto;
+  }
+  mat-card-footer {
+    .bottom-button {
+      width: 100%;
+    }
+  }
 }
