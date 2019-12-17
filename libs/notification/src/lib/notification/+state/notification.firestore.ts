@@ -17,7 +17,9 @@ export const enum NotificationType {
   organizationAccepted = 'organizationAccepted',
   movieTitleUpdated = 'movieTitleUpdated',
   movieTitleCreated = 'movieTitleCreated',
-  movieDeleted = 'movieDeleted'
+  movieDeleted = 'movieDeleted',
+  invitationFromUserToJoinOrgDecline = 'invitationFromUserToJoinOrgDecline',
+  invitationFromOrganizationToUserDecline = 'invitationFromOrganizationToUserDecline'
 }
 
 /** Minimum required informations to create a Notification. */
