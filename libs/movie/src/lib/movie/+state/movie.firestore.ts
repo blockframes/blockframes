@@ -41,6 +41,11 @@ export const enum FormatProfile {
   _3UHD = '3DUHD'
 }
 
+export const enum Freshness {
+  lineup = 'Line-Up',
+  catalog = 'Catalog'
+}
+
 export interface MovieVersionInfo {
   dubbings: string[],
   subtitles: string[],
@@ -161,11 +166,18 @@ export interface DistributionDealDocumentWithDates extends DistributionDealRaw<D
 export interface DistributionDealDocument extends DistributionDealRaw<Timestamp> {
 }
 
+export interface MovieOfficialIds {
+  isan: string;
+  eidr: string;
+}
+
 export interface MovieMain {
   internalRef?: string,
   isan?: string,
   title: Title,
   directors?: Person[],
+  freshness: Freshness,
+  officialIds: MovieOfficialIds,
   poster?: ImgRef,
   productionYear?: number,
   genres?: string[],

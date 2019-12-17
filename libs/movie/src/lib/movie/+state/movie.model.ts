@@ -22,7 +22,9 @@ import {
   MovieLanguageTypes,
   StoreConfig,
   StoreType,
-  MovieLanguageSpecificationContainer
+  MovieLanguageSpecificationContainer,
+  Freshness,
+  MovieOfficialIds
 } from './movie.firestore';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 import { Credit, SalesAgent, Licensee, Licensor } from '@blockframes/utils/common-interfaces/identity';
@@ -95,12 +97,15 @@ export function createMovieMain(params: Partial<MovieMain> = {}): MovieMain {
     directors: [],
     genres: [],
     workType: WorkType.movie,
-    storeConfig: createStoreConfig(params.storeConfig),
+    
     languages: [],
     productionCompanies: [],
     originCountries: [],
     status: '',
-    ...params
+    ...params,
+    storeConfig: createStoreConfig(params.storeConfig),
+    freshness: params.freshness ? params.freshness : Freshness.lineup,
+    officialIds: createOfficialIds(params.officialIds)
   };
 }
 
@@ -277,6 +282,14 @@ export function createStoreConfig(params: Partial<StoreConfig> = {}): StoreConfi
   return {
     display: true,
     storeType: StoreType.movie,
+    ...params
+  };
+}
+
+export function createOfficialIds(params: Partial<MovieOfficialIds> = {}): MovieOfficialIds {
+  return {
+    eidr:'',
+    isan:'',
     ...params
   };
 }
