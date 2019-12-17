@@ -1,17 +1,17 @@
 import { Directive, Input, HostListener, ViewContainerRef, ElementRef, OnDestroy } from '@angular/core';
 import { Overlay, OverlayRef } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
-import { WidgetComponent } from './widget.component';
+import { OverlayWidgetComponent } from './overlay-widget.component';
 
 @Directive({
   selector: "[widgetTarget]"
 })
 
-export class WidgetDirective implements OnDestroy{
+export class OverlayWidgetDirective implements OnDestroy{
   private overlayRef: OverlayRef;
   private widget: TemplatePortal;
 
-  @Input() widgetTarget: WidgetComponent;
+  @Input() widgetTarget: OverlayWidgetComponent;
   @HostListener('click')
     open() {
       if (!this.overlayRef) {

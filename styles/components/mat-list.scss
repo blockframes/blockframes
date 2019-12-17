@@ -15,11 +15,18 @@
     height: 72px;
   }
 
+  // Every nav-list in a sidenav won't get border
   .mat-sidenav .mat-nav-list {
     border: none;
   }
 
-  .bf-widget .mat-list.mat-list-base {
-    border: none;
+  // Every list in bf-widget won't get border
+  .bf-widget {
+    .mat-list.mat-list-base {
+      border: none;
+    }
+    .mat-nav-list {
+      border: none;
+    }
   }
 }

@@ -1,10 +1,28 @@
 mat-sidenav-container {
   height: 100%;
+  mat-sidenav {
+    width: 300px;
+
+    .mat-toolbar {
+      border-bottom: none;
+    }
+
+    .mat-drawer {
+      background-color: #0d0f1f;
+      .mat-drawer-side {
+        border-bottom: none;
+      }
+    }
+  }
 }
 
-mat-sidenav {
-  width: 300px;
-}
+// .mat-sidenav-container.mat-sidenav.mat-drawer {
+//   background-color: #0d0f1f;
+// }
+
+// .mat-sidenav-container.mat-sidenav.mat-drawer.mat-drawer-side {
+//   border-right: none;
+// }
 
 mat-form-field {
   width: 100%;
@@ -19,10 +37,10 @@ mat-form-field input {
 }
 .app-icon,
 .app-icon-button {
-  border-radius: 0;
+  // border-radius: 0;
   width: 157px;
-  height: 24px;
-  margin: 19px;
+  // height: 24px;
+  // margin: 19px;
 }
 
 .example-fill-remaining-space {
