@@ -196,10 +196,15 @@ interface MovieSalesInfoRaw<D> {
 export interface MovieSalesInfoDocumentWithDates extends MovieSalesInfoRaw<Date> {
 }
 
+interface DocumentMeta {
+  userId: string;
+}
+
 /** Generic interface of a Movie */
 interface MovieRaw<D> {
   // @todo #643 add new fields to Draw.io
   _type: 'movies';
+  _meta: DocumentMeta;
   processedId?: string;
   id: string;
 

@@ -2,6 +2,7 @@ import { PublicOrganization } from '@blockframes/organization/types';
 import { PublicMovie } from '@blockframes/movie/types';
 import * as admin from 'firebase-admin';
 import { App } from '@blockframes/utils/apps';
+import { PublicUser } from 'apps/backend-functions/src/data/types';
 
 /** Type of Notification depending of its origin. */
 export const enum NotificationType {
@@ -14,12 +15,15 @@ export const enum NotificationType {
   pathToDocument = 'pathToDocument',
   // Organization acceptation by Archipel Content
   organizationAccepted = 'organizationAccepted',
-  movieTitleUpdated = 'movieTitleUpdated'
+  movieTitleUpdated = 'movieTitleUpdated',
+  movieTitleCreated = 'movieTitleCreated',
+  movieDeleted = 'movieDeleted'
 }
 
 /** Minimum required informations to create a Notification. */
 export interface NotificationOptions {
   userId: string;
+  user?: Partial<PublicUser>;
   docId?: string;
   type: NotificationType;
   movie?: PublicMovie;

@@ -1,9 +1,70 @@
 import { functions, db } from './internals/firebase';
-import { MovieDocument, OrganizationDocument } from './data/types';
+import { MovieDocument, OrganizationDocument, PublicUser } from './data/types';
 import { createNotification, NotificationType } from '@blockframes/notification/types';
 import { App } from '@blockframes/utils/apps';
 import { triggerNotifications } from './notification';
 import { flatten, isEqual } from 'lodash';
+
+function notifUser(userId: string, notificationType :NotificationType, movie: MovieDocument, user: PublicUser) {
+  return createNotification({
+    userId,
+    user: { name: user.name, surname: user.surname },
+    type: notificationType,
+    app: App.blockframes,
+    movie: {
+      id: movie.id,
+      title: {
+        international: movie.main.title.international || '',
+        original: movie.main.title.original
+      }
+    }
+  });
+}
+
+async function createNotificationsForUsers(movie: MovieDocument, notificationType: NotificationType, user: PublicUser) {
+  const orgsSnapShot = await db
+  .collection(`orgs`)
+  .where('movieIds', 'array-contains', movie.id)
+  .get();
+
+  const orgs = orgsSnapShot.docs.map(org => org.data() as OrganizationDocument);
+
+  return flatten(orgs.map(org => org.userIds.map(userId => notifUser(userId, notificationType, movie, user))));
+}
+
+export async function onMovieCreate(
+  snap: FirebaseFirestore.DocumentSnapshot,
+  context: functions.EventContext
+) {
+  const movie = snap.data() as MovieDocument;
+  const movieId = context.params.movieId;
+
+  const userSnapshot = await db.doc(`users/${movie._meta!.userId}`).get();
+  const user = userSnapshot.data() as PublicUser;
+
+  if (!movie || !movieId) {
+    console.error('Invalid movie data:', movie);
+    throw new Error('movie update function got invalid movie data');
+  }
+
+  const notifications = await createNotificationsForUsers(movie, NotificationType.movieTitleCreated, user);
+
+  return triggerNotifications(notifications);
+}
+
+export async function onMovieDelete(
+  snap: FirebaseFirestore.DocumentSnapshot,
+  context: functions.EventContext
+) {
+  const movie = snap.data() as MovieDocument;
+
+  const userSnapshot = await db.doc(`users/${movie._meta!.userId}`).get();
+  const user = userSnapshot.data() as PublicUser;
+
+  const notifications = await createNotificationsForUsers(movie, NotificationType.movieDeleted, user);
+
+  return triggerNotifications(notifications);
+}
 
 export async function onMovieUpdate(
   change: functions.Change<FirebaseFirestore.DocumentSnapshot>,
@@ -12,31 +73,13 @@ export async function onMovieUpdate(
   const before = change.before.data() as MovieDocument;
   const after = change.after.data() as MovieDocument;
 
-  const hasTitleChanged = !isEqual(before.main.title, after.main.title);
+  const userSnapshot = await db.doc(`users/${after._meta!.userId}`).get();
+  const user = userSnapshot.data() as PublicUser;
+
+  const hasTitleChanged = !!before.main.title.international && !isEqual(before.main.title.international, after.main.title.international);
 
   if (hasTitleChanged) {
-    const orgsSnapShot = await db
-      .collection(`orgs`)
-      .where('movieIds', 'array-contains', after.id)
-      .get();
-
-    const orgs = orgsSnapShot.docs.map(org => org.data() as OrganizationDocument);
-
-    const notifUser = (userId: string) =>
-      createNotification({
-        userId,
-        type: NotificationType.movieTitleUpdated,
-        app: App.blockframes,
-        movie: {
-          id: before.id,
-          title: {
-            international: before.main.title.international,
-            original: before.main.title.original
-          }
-        }
-      });
-
-    const notifications = flatten(orgs.map(org => org.userIds.map(userId => notifUser(userId))));
+    const notifications = await createNotificationsForUsers(before, NotificationType.movieTitleUpdated, user);
 
     return triggerNotifications(notifications);
   }

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestoreCollection } from '@angular/fire/firestore/collection/collection';
 import { AngularFirestoreDocument } from '@angular/fire/firestore/document/document';
-import { OrganizationQuery, OrganizationService, PermissionsService, createDocPermissions } from '@blockframes/organization';
+import { OrganizationQuery, OrganizationService, PermissionsService } from '@blockframes/organization';
 import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
 import { firestore } from 'firebase';
 import objectHash from 'object-hash';
@@ -9,6 +9,8 @@ import { switchMap } from 'rxjs/operators';
 import { createMovie, Movie, DistributionDeal } from './movie.model';
 import { MovieState, MovieStore } from './movie.store';
 import { Contract, createContractTitleDetail } from '@blockframes/marketplace/app/distribution-deal/+state/cart.model';
+import { AuthQuery } from '@blockframes/auth';
+import { MovieQuery } from './movie.query';
 
 /**
  * @see #483
@@ -30,6 +32,8 @@ export class MovieService extends CollectionService<MovieState> {
     private organizationQuery: OrganizationQuery,
     private organizationService: OrganizationService,
     private permissionsService: PermissionsService,
+    private query: MovieQuery,
+    private authQuery: AuthQuery,
     store: MovieStore
   ) {
     super(store);
@@ -42,22 +46,34 @@ export class MovieService extends CollectionService<MovieState> {
     )
   }
 
+  public async removeMovie(movieId: string) {
+    // Update the userId of field _meta to know who is deleting the movie.
+    await this.update(movieId, { _meta: { userId: this.authQuery.userId }});
+    return this.remove(movieId);
+  }
+
   /** Add a partial or a full movie to the database. */
   public async addMovie(original: string, movie?: Movie): Promise<Movie> {
     const id = this.db.createId();
 
     if (!movie) {
       // create empty movie
-      movie = createMovie({ id, main: { title: { original } } });
+      movie = createMovie({ id, main: { title: { original } }, _meta: { userId: this.authQuery.userId } });
     } else {
       // we set an id for this new movie
-      movie = createMovie({ id, ...movie });
+      movie = createMovie({ ...movie, id, _meta: { userId: this.authQuery.userId } });
     }
 
     // Add movie document to the database
     await this.add(cleanModel(movie))
 
     return movie;
+  }
+
+  onUpdate(movie: Movie, { write }: WriteOptions) {
+    const movieId = this.query.getActiveId();
+    const movieRef = this.db.doc(`movies/${movieId}`).ref;
+    write.update(movieRef, { _meta: { userId: this.authQuery.userId } });
   }
 
   /** Hook that triggers when a movie is added to the database. */
