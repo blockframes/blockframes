@@ -66,6 +66,8 @@ export function createContractTitleDetail(params: Partial<ContractTitleDetail> =
 }
 
 /**
+ * Various validation steps for validating a contract
+ * Currently (dec 2019), only validate that there is licensee and a licensor
  * @param contract
  */
 export function validateContract(contract: Contract): boolean {
@@ -79,7 +81,7 @@ export function validateContract(contract: Contract): boolean {
   if (!licensees.length || !licensors.length) { return false; }
 
   for(const licensee of licensees) {
-    if(licensee.orgId === undefined) {
+    if(!licensee.orgId) {
       delete licensee.orgId
     }
     if(typeof licensee.showName !== 'boolean') {
@@ -88,7 +90,7 @@ export function validateContract(contract: Contract): boolean {
   }
 
   for(const licensor of licensors) {
-    if(licensor.orgId === undefined) {
+    if(!licensor.orgId) {
       delete licensor.orgId
     }
     if(typeof licensor.showName !== 'boolean') {

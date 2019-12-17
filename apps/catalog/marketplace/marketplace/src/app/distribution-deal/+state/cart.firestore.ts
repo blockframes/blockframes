@@ -24,7 +24,7 @@ interface ContractRaw<D> {
   status: ContractStatus,
   scope: TermsRaw<D>,
   signDate?: D,
-  titles: { [titleId: string]: ContractTitleDetail },
+  titles: Record<string, ContractTitleDetail>,
   price: Price;
   paymentSchedule?: string; // @todo #1397 change this when creating invoices
 }

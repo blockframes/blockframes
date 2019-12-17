@@ -30,10 +30,11 @@ export class CartService extends CollectionService<CartState> {
   //////////////////
 
   /**
-   * Adds a deal to cart identified by "name"
+   * Adds a deal to cart identified by "name" (default cart name is : "default")
    * @param dealId 
    * @param name 
    */
+  // @TODO #1389 Use native akita-ng-fire functions : https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
   public async addDealToCart(dealId: string, name: string): Promise<CatalogCart> {
     const cart = await this.getCart(name);
     cart.deals.push(dealId);
@@ -41,11 +42,12 @@ export class CartService extends CollectionService<CartState> {
   }
 
   /**
-   * 
+   * Change cart status to : "submitted".
    * @param amount 
    * @param currency
    * @param _name
    */
+  // @TODO #1389 Use native akita-ng-fire functions : https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
   public async submitCart(amount: number, currency: MovieCurrenciesSlug, _name?: string) {
     const name = _name ? _name : 'default';
     const cart = await this.getCart(name);
@@ -61,13 +63,18 @@ export class CartService extends CollectionService<CartState> {
    * Creates an empty cart
    * @param _name
    */
-  private async initCart(_name?: string): Promise<CatalogCart> {
-    const name = _name ? _name : 'default';
+  // @TODO #1389 Use native akita-ng-fire functions : https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
+  private async initCart(_name: string = 'default'): Promise<CatalogCart> {
     const cart: CatalogCart = createCart({ name });
     await this.db.doc<CatalogCart>(`orgs/${this.organizationQuery.getActiveId()}/cart/${name}`).set(cart);
     return cart;
   }
 
+  /**
+   * 
+   * @param cart 
+   */
+  // @TODO #1389 Remove this function if doesn't do anything more than native akita-ng-fire
   private async updateCart(cart: CatalogCart): Promise<CatalogCart> {
     await this.db
       .doc<CatalogCart>(`orgs/${this.organizationQuery.getActiveId()}/cart/${cart.name}`)
