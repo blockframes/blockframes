@@ -43,7 +43,11 @@ export class NotificationItemComponent {
       case NotificationType.movieTitleCreated:
         return `${this.notification.user.name} ${this.notification.user.surname} created ${this.notification.movie.title.international}.`;
       case NotificationType.movieDeleted:
-        return `${this.notification.user.name} ${this.notification.user.surname} deleted ${this.notification.movie.title.international}.`
+        return `${this.notification.user.name} ${this.notification.user.surname} deleted ${this.notification.movie.title.international}.`;
+      case NotificationType.invitationFromOrganizationToUserDecline:
+        return `${this.notification.user.name} ${this.notification.user.surname} has declined your invitation from your organization.`;
+      case NotificationType.invitationFromUserToJoinOrgDecline:
+        return `Your organization has refused the request from ${this.notification.user.name} ${this.notification.user.surname}.`;
     }
   }
 
