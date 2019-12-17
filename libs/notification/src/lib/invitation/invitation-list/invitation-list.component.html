@@ -1,16 +1,4 @@
-<section test-id="invitations">
-
-  <ng-container *ngFor="let invitation of (docInvitations$ | async)">
-    <invitation-item [invitation]="invitation"></invitation-item>
-    <mat-divider></mat-divider>
-  </ng-container>
-
-  <!-- Only SuperAdmins can get user requests invitations in notification-widget -->
-  <ng-container *ngIf="(isAdmin$ | async)">
-    <ng-container *ngFor="let invitation of (userInvitations$ | async)">
-      <invitation-item [invitation]="invitation"></invitation-item>
-      <mat-divider></mat-divider>
-    </ng-container>
-  </ng-container>
-
+<section test-id="invitations" *ngFor="let invitation of invitations$ | async">
+  <invitation-item [invitation]="invitation" [inWidget]="true"></invitation-item>
+  <mat-divider></mat-divider>
 </section>

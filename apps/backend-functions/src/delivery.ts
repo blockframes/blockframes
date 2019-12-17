@@ -1,5 +1,5 @@
 import { db, functions } from './internals/firebase';
-import { triggerNotifications, createNotification } from './notification';
+import { triggerNotifications } from './notification';
 import { getCollection, getCount, getDocument, getOrganizationsOfDocument } from './data/internals';
 import {
   MovieDocument,
@@ -10,7 +10,7 @@ import {
   StakeholderDocument
 } from './data/types';
 import { copyMaterialsToMovie } from './material';
-import { NotificationType } from '@blockframes/notification/types';
+import { createNotification, NotificationType } from '@blockframes/notification/types';
 import { App } from '@blockframes/utils/apps';
 
 export async function onDeliveryUpdate(

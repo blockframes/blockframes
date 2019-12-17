@@ -1,4 +1,4 @@
 <section testId="notifications" *ngFor="let notification of (notifications$ | async)">
-  <notification-item [notification]="notification"></notification-item>
+  <notification-item [notification]="notification" [inWidget]="true"></notification-item>
   <mat-divider></mat-divider>
 </section>

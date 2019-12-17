@@ -39,5 +39,15 @@ export interface NotificationOptions {
 export interface NotificationDocument extends NotificationOptions {
   id: string;
   isRead: boolean;
-  date: firestore.FieldValue;
+  date: firestore.Timestamp;
 };
+
+/** Createa a Notification with required and generic informations. */
+export function createNotification(notification: NotificationOptions): NotificationDocument {
+  return {
+    id: firestore().collection('notifications').doc().id,
+    isRead: false,
+    date: firestore.Timestamp.now(),
+    ...notification
+  };
+}

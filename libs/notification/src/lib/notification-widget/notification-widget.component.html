@@ -16,7 +16,7 @@
   </button>
 </section>
 <mat-menu #notifications="matMenu" xPosition="before" class="mat-elevation-z6">
-  <section class="notification-list" test-id="notification-list">
+  <section test-id="notification-list">
     <mat-list> <invitation-list></invitation-list> </mat-list>
     <mat-list> <notification-list></notification-list> </mat-list>
     <article *ngIf="(totalCount$ | async) == 0" class="container">

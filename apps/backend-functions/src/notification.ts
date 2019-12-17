@@ -1,15 +1,5 @@
-import { NotificationDocument, NotificationOptions } from './data/types';
-import { db, serverTimestamp } from './internals/firebase'
-
-/** Createa a Notification with required and generic informations. */
-export function createNotification(notification: NotificationOptions): NotificationDocument {
-  return {
-    id: db.collection('notifications').doc().id,
-    isRead: false,
-    date: serverTimestamp(),
-    ...notification
-  };
-}
+import { NotificationDocument } from './data/types';
+import { db } from './internals/firebase'
 
 /** Takes one or more notifications and add them on the notifications collection */
 export function triggerNotifications(notifications: NotificationDocument[]): Promise<any> {

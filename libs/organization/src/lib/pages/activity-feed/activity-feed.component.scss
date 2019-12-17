@@ -3,11 +3,7 @@ section {
   margin-right: 5%;
   height: 100%;
 
-  mat-card {
-    margin: 20px 0;
-
-    mat-card-subtitle {
-      margin: 10px 0;
-    }
+  invitation-item {
+    width: 100%;
   }
 }

@@ -14,3 +14,4 @@ export * from './lib/invitation/guard/no-organization-invitation.guard';
 export * from './lib/notification/notifications.guard';
 export * from './lib/notification/notification.module';
 export * from './lib/notification-widget/notification-widget.module';
+export * from './lib/notification/notification-item/notification-item.component';

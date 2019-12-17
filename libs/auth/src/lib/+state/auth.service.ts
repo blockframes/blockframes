@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-import { AuthStore, User, AuthState } from './auth.store';
+import { AuthStore, AuthState } from './auth.store';
 import { Router } from '@angular/router';
 import { AuthQuery } from './auth.query';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { FireAuthService, CollectionConfig } from 'akita-ng-fire';
+import { User } from './auth.firestore';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'users' })

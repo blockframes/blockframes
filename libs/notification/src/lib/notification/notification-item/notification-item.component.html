@@ -1,12 +1,9 @@
-<article *ngIf="notification" class="container" (click)="read()">
-  <span class="message" (click)="goToPath()">
-    {{ message }}
-  </span>
-  <article class="nav-anchor" *ngIf="notification.type === 'pathToDocument'">
-    <a test-id="navigate" mat-flat-button color="accent" (click)="goToPath()">Go to document</a>
-  </article>
-  <p>
-    Received {{ notification.date.toDate() | date: 'MMM dd yyyy' }} at
-    {{ notification.date.toDate() | date: 'hh:mm a' }}
-  </p>
-</article>
+<section fxLayout="column" fxLayoutAlign="space-between start">
+  <p>{{ message }}</p>
+  <ng-container *ngIf="inWidget; else inFeed">
+    <small>{{ notification.date.toDate() | date: 'medium' }}</small>
+  </ng-container>
+  <ng-template #inFeed>
+    <small>{{ notification.date.toDate() | date: 'shortTime' }}</small>
+  </ng-template>
+</section>
