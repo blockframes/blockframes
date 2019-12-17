@@ -39,7 +39,11 @@ export class NotificationItemComponent {
       case NotificationType.organizationAccepted:
         return 'Your organization has been accepted by Archipel Content !';
       case NotificationType.movieTitleUpdated:
-        return `The title of the film ${this.notification.movie.title.international} has been changed.`;
+        return `${this.notification.user.name} ${this.notification.user.surname} edited ${this.notification.movie.title.international}.`;
+      case NotificationType.movieTitleCreated:
+        return `${this.notification.user.name} ${this.notification.user.surname} created ${this.notification.movie.title.international}.`;
+      case NotificationType.movieDeleted:
+        return `${this.notification.user.name} ${this.notification.user.surname} deleted ${this.notification.movie.title.international}.`
     }
   }
 

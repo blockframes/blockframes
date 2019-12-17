@@ -35,7 +35,7 @@ export class DeliveryHomeComponent implements OnInit {
 
   public remove(movie: Movie) {
     try {
-      this.movieService.remove(movie.id);
+      this.movieService.removeMovie(movie.id);
       this.snackBar.open(`Movie "${movie.main.title.original}" has been deleted.`, 'close', {
         duration: 2000
       });
