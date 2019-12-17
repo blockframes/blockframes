@@ -151,7 +151,7 @@
       <div *ngSwitchCase="steps.POSSIBLE">
         <month-calendar [selectedRange]="choosenDateRange" [disabledDates]="occupiedDateRanges"
           (rangeSelected)="changeDateFocus($event)"></month-calendar>
-        <a test-id="add-distribution-button" mat-flat-button color="accent" (click)="addDistributionDeal()">Create distribution deal</a>
+        <button test-id="add-distribution-button" mat-flat-button color="accent" (click)="addDistributionDeal()">Create distribution deal</button>
       </div>
       <div *ngSwitchCase="steps.ERROR">
         Error

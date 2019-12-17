@@ -10,6 +10,13 @@ import { AngularFireFunctions } from '@angular/fire/functions';
 import { MovieCurrenciesSlug } from '@blockframes/movie/movie/static-model/types';
 import { MovieService } from '@blockframes/movie';
 
+const wishlistFactory = (movieId: string): Wishlist => {
+  return {
+    status: WishlistStatus.pending,
+    movieIds: [movieId]
+  };
+};
+
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'orgs/:orgId/carts' })
 export class CartService extends CollectionService<CartState> {
@@ -44,10 +51,9 @@ export class CartService extends CollectionService<CartState> {
    * 
    * @param amount 
    * @param currency
-   * @param _name
+   * @param name
    */
-  public async submitCart(amount: number, currency: MovieCurrenciesSlug, _name?: string) {
-    const name = _name ? _name : 'default';
+  public async submitCart(amount: number, currency: MovieCurrenciesSlug, name: string = 'default') {
     const cart = await this.getCart(name);
     const updatedCart: CatalogCart = {
       ...cart,
@@ -59,10 +65,9 @@ export class CartService extends CollectionService<CartState> {
 
   /**
    * Creates an empty cart
-   * @param _name
+   * @param name
    */
-  private async initCart(_name?: string): Promise<CatalogCart> {
-    const name = _name ? _name : 'default';
+  private async initCart(name: string = 'default'): Promise<CatalogCart> {
     const cart: CatalogCart = createCart({ name });
     await this.db.doc<CatalogCart>(`orgs/${this.organizationQuery.getActiveId()}/cart/${name}`).set(cart);
     return cart;
@@ -129,22 +134,19 @@ export class CartService extends CollectionService<CartState> {
 
   /**
    * 
-   * @param id 
+   * @param movieId 
    */
   // @TODO #1389 Use native akita-ng-fire functions : https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
-  public removeMovieFromWishlist(id: string): boolean | Error {
+  public async removeMovieFromWishlist(movieId: string): Promise<boolean | Error> {
+    const orgState = this.organizationQuery.getActive();
     try {
-      const wishlist = this.organizationQuery.getActive().wishlist.map(w => {
-        const wish = Object.assign({}, w);
-        if (wish.status === 'pending' && wish.movieIds.includes(id)) {
-          wish.movieIds = wish.movieIds.filter(movieId => movieId !== id);
+      const wishlist = orgState.wishlist.map(wish => {
+        if (wish.status === 'pending') {
+          wish.movieIds = wish.movieIds.includes(movieId) ? wish.movieIds.filter(id => id !== movieId) : wish.movieIds;
         }
         return wish;
       });
-      this.organizationService.update({
-        ...this.organizationQuery.getActive(),
-        wishlist: wishlist
-      });
+      await this.organizationService.update({ ...orgState, wishlist });
       return true;
     } catch (err) {
       return err;
@@ -160,18 +162,14 @@ export class CartService extends CollectionService<CartState> {
     const pendingWishlist = this.organizationQuery
       .getActive()
       .wishlist.filter(wishlist => wishlist.status === 'pending');
-    const wishlistFactory = (movieId: string): Wishlist => {
-      return {
-        status: WishlistStatus.pending,
-        movieIds: [movieId]
-      };
-    };
+
     if (!orgState.wishlist || orgState.wishlist.length <= 0) {
+      console.log({ wishlist: [wishlistFactory(movie.id)] });
       this.organizationService.update({ ...orgState, wishlist: [wishlistFactory(movie.id)] });
       // If the organization has sent wishlist but no pending
     } else if (pendingWishlist.length === 0) {
       this.organizationService.update({ ...orgState, wishlist: [...orgState.wishlist, wishlistFactory(movie.id)] });
-    } else if (pendingWishlist.length) {
+    } else {
       const wishlist = orgState.wishlist.map(w => {
         const wish = Object.assign({}, w);
         if (wish.status === 'pending') {
@@ -183,7 +181,7 @@ export class CartService extends CollectionService<CartState> {
         }
         return wish;
       });
-      this.organizationService.update({ ...orgState, wishlist: wishlist });
+      this.organizationService.update({ ...orgState, wishlist });
     }
   }
 }

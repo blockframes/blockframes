@@ -1,10 +1,22 @@
 export interface TermsRaw<D> {
-  start?: D | null;
-  startLag?: string; // @example: 3 months around start
-  end?: D | null;
-  endLag?: string; // @example: 3 months around end
-  floatingStart?: string; // @example: 7 months after theatrical release
-  floatingDuration?: string; // @example: 1 year after floatingStart event occured
+  start?: D ;
+  /**
+   * @example: 3 months around start
+   */
+  startLag?: string;
+  end?: D;
+  /**
+   * @example: 3 months around end
+   */
+  endLag?: string;
+  /**
+   * @example: 7 months after theatrical release
+   */
+  floatingStart?: string;
+  /**
+   * @example: 1 year after floatingStart event occured
+   */
+  floatingDuration?: string;
 }
 
 export interface Terms extends TermsRaw<Date> {

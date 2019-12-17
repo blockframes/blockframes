@@ -46,7 +46,7 @@ export class MarketplaceSelectionComponent implements OnInit {
     // @TODO to implement
   }
 
-  public async submitCart() {
-    return await this.cartService.submitCart(this.priceControl.value, this.selectedCurrency);
+  public submitCart() {
+    return this.cartService.submitCart(this.priceControl.value, this.selectedCurrency);
   }
 }

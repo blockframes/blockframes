@@ -114,6 +114,8 @@ export interface MovieLanguageSpecification {
   subtitle: boolean;
 }
 
+export type MovieLanguageSpecificationContainer = Record<LanguagesSlug, MovieLanguageSpecification>;
+
 export interface HoldbackRaw<D> {
   terms: TermsRaw<D>,
   media: MediasSlug,
