@@ -75,8 +75,8 @@ export function validateContract(contract: Contract): boolean {
   // First, contract must have at least a licensee and a licensor
 
   if (contract.parties.length < 2) { return false; }
-  const licensees = contract.parties.filter(p => p.role == getCodeIfExists('LEGAL_ROLES', 'licensee'))
-  const licensors = contract.parties.filter(p => p.role == getCodeIfExists('LEGAL_ROLES', 'licensor'))
+  const licensees = contract.parties.filter(p => p.role === getCodeIfExists('LEGAL_ROLES', 'licensee'))
+  const licensors = contract.parties.filter(p => p.role === getCodeIfExists('LEGAL_ROLES', 'licensor'))
 
   if (!licensees.length || !licensors.length) { return false; }
 
