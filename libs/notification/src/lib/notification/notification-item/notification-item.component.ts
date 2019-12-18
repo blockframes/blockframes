@@ -36,7 +36,7 @@ export class NotificationItemComponent {
         return `${this.movieName}'s delivery has been deleted.`;
       case NotificationType.pathToDocument:
         return `You accepted the invitation. Now you can work on the document.`;
-      case NotificationType.organizationAccepted:
+      case NotificationType.organizationAcceptedByArchipelContent:
         return 'Your organization has been accepted by Archipel Content !';
       case NotificationType.movieTitleUpdated:
         return `${this.notification.user.name} ${this.notification.user.surname} edited ${this.notification.movie.title.international}.`;

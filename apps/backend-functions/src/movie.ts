@@ -6,7 +6,7 @@ import { triggerNotifications } from './notification';
 import { flatten, isEqual } from 'lodash';
 
 /** Create a notification with user and movie. */
-function notifUser(userId: string, notificationType :NotificationType, movie: MovieDocument, user: PublicUser) {
+function notifUser(userId: string, notificationType: NotificationType, movie: MovieDocument, user: PublicUser) {
   return createNotification({
     userId,
     user: { name: user.name, surname: user.surname },
@@ -41,7 +41,7 @@ export async function onMovieCreate(
   const movie = snap.data() as MovieDocument;
   const movieId = context.params.movieId;
 
-  const userSnapshot = await db.doc(`users/${movie._meta!.userId}`).get();
+  const userSnapshot = await db.doc(`users/${movie._meta!.createdBy}`).get();
   const user = userSnapshot.data() as PublicUser;
 
   if (!movie || !movieId) {
@@ -60,7 +60,7 @@ export async function onMovieDelete(
 ) {
   const movie = snap.data() as MovieDocument;
 
-  const userSnapshot = await db.doc(`users/${movie._meta!.userId}`).get();
+  const userSnapshot = await db.doc(`users/${movie._meta!.deletedBy}`).get();
   const user = userSnapshot.data() as PublicUser;
 
   const notifications = await createNotificationsForUsers(movie, NotificationType.movieDeleted, user);
@@ -75,7 +75,7 @@ export async function onMovieUpdate(
   const before = change.before.data() as MovieDocument;
   const after = change.after.data() as MovieDocument;
 
-  const userSnapshot = await db.doc(`users/${after._meta!.userId}`).get();
+  const userSnapshot = await db.doc(`users/${after._meta!.updatedBy}`).get();
   const user = userSnapshot.data() as PublicUser;
 
   const hasTitleChanged = !!before.main.title.international && !isEqual(before.main.title.international, after.main.title.international);

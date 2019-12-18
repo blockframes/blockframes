@@ -32,8 +32,7 @@ export interface OrganizationDocumentWithDates extends OrganizationRaw<Date> {}
 /** Status of an Organization, set to pending by default when an Organization is created. */
 export const enum OrganizationStatus {
   pending = 'pending',
-  accepted = 'accepted',
-  refused = 'refused'
+  accepted = 'accepted'
 }
 
 export interface AddressSet {
