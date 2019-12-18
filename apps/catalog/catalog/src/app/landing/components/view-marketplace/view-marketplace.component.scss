@@ -12,9 +12,7 @@
 }
 
 @include mobile {
-  section {
-    video {
-      width: 100%;
-    }
+  section video {
+    width: 100%;
   }
 }

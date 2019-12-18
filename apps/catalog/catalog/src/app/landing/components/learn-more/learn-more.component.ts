@@ -1,7 +1,5 @@
-import { Component, Output, EventEmitter, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { Router, NavigationEnd } from '@angular/router';
-import { Subscription } from 'rxjs';
 import { RequestDemoRole } from '../../demo-request.model';
 
 @Component({
@@ -10,7 +8,7 @@ import { RequestDemoRole } from '../../demo-request.model';
   styleUrls: ['./learn-more.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CatalogLearnMoreComponent implements OnDestroy {
+export class CatalogLearnMoreComponent {
   @Output() sendRequest = new EventEmitter<FormGroup>();
 
   public form = new FormGroup({
@@ -27,24 +25,5 @@ export class CatalogLearnMoreComponent implements OnDestroy {
     RequestDemoRole.seller,
     RequestDemoRole.other
   ];
-  private subscription: Subscription;
 
-  constructor(router: Router) {
-    /** Enables the "jump to" behavior on this component. */
-    this.subscription = router.events.subscribe(s => {
-      if (s instanceof NavigationEnd) {
-        const tree = router.parseUrl(router.url);
-        if (tree.fragment) {
-          const element = document.querySelector('#' + tree.fragment);
-          if (element) {
-            element.scrollIntoView(true);
-          }
-        }
-      }
-    });
-  }
-
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
-  }
 }

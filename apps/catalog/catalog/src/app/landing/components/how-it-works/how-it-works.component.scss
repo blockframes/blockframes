@@ -2,6 +2,10 @@ section {
   margin-left: 20%;
   margin-right: 20%;
 
+  span b {
+    text-transform: uppercase;
+  }
+
   mat-card {
     width: 400px;
     margin: 15px 0;

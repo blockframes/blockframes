@@ -16,6 +16,8 @@ interface RouteOptions {
 
 function root(LayoutComponent, children: Routes, rootPath: string, appName: string) {
   return [
+    { path: 'welcome',
+    loadChildren: () => import('apps/catalog/catalog/src/app/landing/landing.module').then(m => m.LandingModule)},
     { path: '', redirectTo: rootPath, pathMatch: 'full' },
     {
       path: 'auth',
