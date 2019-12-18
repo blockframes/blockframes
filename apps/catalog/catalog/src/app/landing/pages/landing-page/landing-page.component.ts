@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, ViewChild, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { FormGroup } from '@angular/forms';
 import { MatSnackBar, MatSidenav } from '@angular/material';
@@ -12,7 +12,7 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./landing-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CatalogLandingPageComponent implements OnDestroy {
+export class CatalogLandingPageComponent implements OnDestroy, AfterViewInit {
   @ViewChild(MatSidenav, { static: false }) sidenav: MatSidenav;
   private subscription: Subscription;
 
@@ -28,9 +28,9 @@ export class CatalogLandingPageComponent implements OnDestroy {
   }
 
   /** Send a mail to the admin with user's informations. */
-  private async sendDemoRequest(informations: RequestDemoInformations) {
+  private async sendDemoRequest(information: RequestDemoInformations) {
     const f = this.functions.httpsCallable('sendDemoRequest');
-    return f(informations).toPromise();
+    return f(information).toPromise();
   }
 
   /** Triggers when a user click on the button from LearnMoreComponent.  */
@@ -40,9 +40,9 @@ export class CatalogLandingPageComponent implements OnDestroy {
       return;
     }
     try {
-      const informations: RequestDemoInformations = createDemoRequestInformations(form.value);
+      const information: RequestDemoInformations = createDemoRequestInformations(form.value);
 
-      this.sendDemoRequest(informations);
+      this.sendDemoRequest(information);
       this.snackBar.open('Your request has been sent !', 'close', { duration: 2000 });
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 5000 });
