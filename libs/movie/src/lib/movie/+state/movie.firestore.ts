@@ -23,6 +23,8 @@ export const enum WorkType {
   volume = 'Volume',
   episode = 'Episode',
   collection = 'Collection',
+  tv_film = 'TV Film',
+  flow = 'Flow'
 }
 
 export const enum StoreType {

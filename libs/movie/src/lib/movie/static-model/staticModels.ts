@@ -144,6 +144,10 @@ const models: Model = {
     {
       'slug': 'associate-producer',
       'label': 'Associate Producer'
+    },
+    {
+      'slug': 'score-composer',
+      'label': 'Score Composer'
     }
   ],
   'MOVIE_STATUS': [
@@ -362,6 +366,18 @@ const models: Model = {
     {
       'slug': 'eof',
       'label': 'EOF'
+    },
+    {
+      'slug': 'media',
+      'label': 'Media'
+    },
+    {
+      'slug': 'awarded-film',
+      'label': 'Awarded Film'
+    },
+    {
+      'slug': 'a-list-cast',
+      'label': 'A-list Cast'
     }
   ] as const,
   'TERRITORIES': [ // @TODO (#1388) transform to ISO-3166
