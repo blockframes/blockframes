@@ -96,13 +96,12 @@ export function createMovieMain(params: Partial<MovieMain> = {}): MovieMain {
     directors: [],
     genres: [],
     workType: WorkType.movie,
-    
+    storeConfig: createStoreConfig(params.storeConfig),
     languages: [],
     productionCompanies: [],
     originCountries: [],
     status: '',
     ...params,
-    storeConfig: createStoreConfig(params.storeConfig),
     officialIds: createOfficialIds(params.officialIds)
   };
 }
@@ -279,7 +278,7 @@ export function populateMovieLanguageSpecification(spec: MovieLanguageSpecificat
 export function createStoreConfig(params: Partial<StoreConfig> = {}): StoreConfig {
   return {
     display: true,
-    storeType: StoreType.catalog,
+    storeType: StoreType.movie,
     ...params
   };
 }

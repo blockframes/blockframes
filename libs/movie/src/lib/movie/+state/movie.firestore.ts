@@ -26,8 +26,8 @@ export const enum WorkType {
 }
 
 export const enum StoreType {
-  catalog = 'Catalog',
-  lineup = 'Line-up',
+  tv = 'TV',
+  movie = 'Movie',
 }
 
 export const enum FormatProfile {

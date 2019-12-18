@@ -9,7 +9,6 @@ import { switchMap } from 'rxjs/operators';
 import { createMovie, Movie, DistributionDeal } from './movie.model';
 import { MovieState, MovieStore } from './movie.store';
 import { Contract, createContractTitleDetail } from '@blockframes/marketplace/app/distribution-deal/+state/cart.model';
-import { createImgRef } from '@blockframes/utils';
 
 /**
  * @see #483

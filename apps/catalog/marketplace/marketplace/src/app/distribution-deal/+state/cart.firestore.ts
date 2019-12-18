@@ -11,7 +11,11 @@ export const enum ContractStatus {
 }
 
 export interface ContractTitleDetail {
-  titleId: string, // ie: movieId
+  /** 
+   * @dev titleId is replacing movieId 
+   * since we are going to handle series, movies etc..
+   */
+  titleId: string,
   price: Price,
   distributionDealIds: string[];
 }
@@ -29,9 +33,11 @@ interface ContractRaw<D> {
   paymentSchedule?: string; // @todo #1397 change this when creating invoices
 }
 
+/*
 export interface InvoiceRaw<D> {
-  // @todo #1397
+   @todo #1397
 }
+*/
 
 export interface ContractDocumentWithDates extends ContractRaw<Date> {
 }

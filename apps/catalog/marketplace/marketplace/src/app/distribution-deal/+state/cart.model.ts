@@ -18,7 +18,10 @@ export interface CatalogCart {
   price: Price;
 }
 
-export interface MovieData { // @TODO (#1388) check this object
+/**
+ * @TODO (#1388) should be removed to use something more like actual movie model 
+ */
+export interface MovieData {
   id: string;
   movieName: string;
   duration: DateRange;
@@ -75,13 +78,13 @@ export function validateContract(contract: Contract): boolean {
   // First, contract must have at least a licensee and a licensor
 
   if (contract.parties.length < 2) { return false; }
-  const licensees = contract.parties.filter(p => p.role == getCodeIfExists('LEGAL_ROLES', 'licensee'))
-  const licensors = contract.parties.filter(p => p.role == getCodeIfExists('LEGAL_ROLES', 'licensor'))
+  const licensees = contract.parties.filter(p => p.role === getCodeIfExists('LEGAL_ROLES', 'licensee'))
+  const licensors = contract.parties.filter(p => p.role === getCodeIfExists('LEGAL_ROLES', 'licensor'))
 
   if (!licensees.length || !licensors.length) { return false; }
 
   for(const licensee of licensees) {
-    if(!licensee.orgId) {
+    if(licensee.orgId === undefined) {
       delete licensee.orgId
     }
     if(typeof licensee.showName !== 'boolean') {
@@ -90,7 +93,7 @@ export function validateContract(contract: Contract): boolean {
   }
 
   for(const licensor of licensors) {
-    if(!licensor.orgId) {
+    if(licensor.orgId === undefined) {
       delete licensor.orgId
     }
     if(typeof licensor.showName !== 'boolean') {
