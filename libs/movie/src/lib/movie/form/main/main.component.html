@@ -128,13 +128,13 @@
       type="string"></textarea>
     <mat-hint align="end">{{ main.shortSynopsis.value?.length }} / 500</mat-hint>
   </mat-form-field>
-  <!-- LENGTH -->
-  <h3> Length </h3>
+  <!-- TOTAL RUN TIME -->
+  <h3> Total Run Time </h3>
   <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Length</mat-label>
-    <input matInput type="number" placeholder="Length" formControlName="length" />
-    <mat-error *ngIf="main.get('length').hasError('required')">
-      Length is <strong>required</strong>
+    <mat-label>Total Run Time</mat-label>
+    <input matInput type="number" placeholder="Total Run Time" formControlName="totalRunTime" />
+    <mat-error *ngIf="main.get('totalRunTime').hasError('required')">
+        Total Run Time is <strong>required</strong>
     </mat-error>
   </mat-form-field>
   <!-- PRODUCTION COMPANIES -->

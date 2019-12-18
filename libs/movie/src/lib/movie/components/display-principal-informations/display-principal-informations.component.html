@@ -21,9 +21,9 @@
         <span><b>Production Status</b></span>
         <span class="capitalized">{{ main.status }}</span>
       </li>
-      <li fxLayout="row" fxLayout.lt-sm="column" *ngIf="main.length">
+      <li fxLayout="row" fxLayout.lt-sm="column" *ngIf="main.totalRunTime">
         <span><b>Running Time</b></span>
-        <span>{{ main.length }} min</span>
+        <span>{{ main.totalRunTime }} min</span>
       </li>
     </ng-container>
   </ul>

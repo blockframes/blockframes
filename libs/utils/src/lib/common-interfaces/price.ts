@@ -5,6 +5,9 @@ export interface Price {
   amount: number;
   currency: MovieCurrenciesSlug;
   vat?: number; // percentage
+  fees?: Fee[];
+  commission?: number;
+  mg?: Price; // ie: minimun guaranteed
 }
 
 export interface Fee {

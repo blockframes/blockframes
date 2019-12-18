@@ -58,7 +58,7 @@ export class TableExtractedDealsComponent implements OnInit {
     const existingMovie = this.movieQuery.existingMovie(importState.movieInternalRef);
     const data = this.rows.data;
 
-    await this.movieService.addDistributionDeal(existingMovie.id, importState.distributionDeal);
+    await this.movieService.addDistributionDeal(existingMovie.id, importState.distributionDeal, importState.contract);
     importState.errors.push({
       type: 'error',
       field: 'distributionDeal',
@@ -92,7 +92,7 @@ export class TableExtractedDealsComponent implements OnInit {
             hint: 'Distribution deal already added'
           });
 
-          return promises.push(this.movieService.addDistributionDeal(movies[importState.movieInternalRef].id, importState.distributionDeal));
+          return promises.push(this.movieService.addDistributionDeal(movies[importState.movieInternalRef].id, importState.distributionDeal, importState.contract));
         });
       this.rows.data = data;
 

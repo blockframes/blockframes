@@ -1,9 +1,8 @@
 import { MovieStatusSlug, PromotionalElementTypesSlug, ResourceRatioSlug, ResourceSizesSlug, TerritoriesSlug, LanguagesSlug, MediasSlug } from "@blockframes/movie/movie/static-model";
 import { DateRangeRaw } from "@blockframes/utils/common-interfaces/date-range";
-import { Person, Credit, SalesAgent, Company, Licensee, Licensor } from "@blockframes/utils/common-interfaces/identity";
+import { Person, Credit, SalesAgent, Company } from "@blockframes/utils/common-interfaces/identity";
 import { firestore } from "firebase/app";
 import { ImgRef } from "@blockframes/utils/image-uploader";
-import { Price, Fee } from "@blockframes/utils/common-interfaces/price";
 import { TermsRaw } from "@blockframes/utils/common-interfaces/terms";
 
 type Timestamp = firestore.Timestamp;
@@ -26,6 +25,11 @@ export const enum WorkType {
   collection = 'Collection',
 }
 
+export const enum StoreType {
+  tv = 'TV',
+  movie = 'Movie',
+}
+
 export const enum FormatProfile {
   unknown = 'unknown',
   HD = 'HD',
@@ -40,6 +44,11 @@ export const enum FormatProfile {
 export interface MovieVersionInfo {
   dubbings: string[],
   subtitles: string[],
+}
+
+export interface StoreConfig {
+  display: boolean,
+  storeType: StoreType,
 }
 
 interface MovieSalesAgentDealRaw<D> {
@@ -128,16 +137,12 @@ export interface HoldbackWithDates extends HoldbackRaw<Date> {
 interface DistributionDealRaw<D> {
   id: string,
   publicId?: string,
-  licensor: Licensor,
-  licensee: Licensee,
   licenseType: MediasSlug[];
   terms: TermsRaw<D>;
   territory: TerritoriesSlug[];
-  territoryExcluded : TerritoriesSlug[];
+  territoryExcluded: TerritoriesSlug[];
   assetLanguage: { [language in LanguagesSlug]: MovieLanguageSpecification };
-  workType: WorkType;
   exclusive: boolean;
-  price: Price;
   titleInternalAlias: string;
   formatProfile: FormatProfile;
   download: boolean;
@@ -146,9 +151,8 @@ interface DistributionDealRaw<D> {
   reportingId?: string;
   deliveryIds?: string;
   multidiffusion?: number;
-  holdbacks?:  HoldbackRaw<D>[];
+  holdbacks?: HoldbackRaw<D>[];
   catchUp?: TermsRaw<D>;
-  fees: Fee[];
 }
 
 export interface DistributionDealDocumentWithDates extends DistributionDealRaw<Date> {
@@ -169,8 +173,10 @@ export interface MovieMain {
   languages?: string[],
   status?: MovieStatusSlug,
   productionCompanies?: Company[],
-  length?: number,
   shortSynopsis?: string,
+  workType?: WorkType;
+  storeConfig?: StoreConfig;
+  totalRunTime?: number;
 }
 
 interface MovieSalesInfoRaw<D> {

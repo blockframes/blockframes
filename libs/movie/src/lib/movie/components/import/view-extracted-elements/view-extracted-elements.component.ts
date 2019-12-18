@@ -28,7 +28,9 @@ import { getCodeIfExists } from '../../../static-model/staticModels';
 import { SSF } from 'xlsx';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { LicenseStatus, MovieLanguageTypes } from '@blockframes/movie/movie/+state/movie.firestore';
-import { createCredit } from '@blockframes/utils/common-interfaces/identity';
+import { createCredit, createParty } from '@blockframes/utils/common-interfaces/identity';
+import { createContract, validateContract, Contract } from '@blockframes/marketplace/app/distribution-deal/+state/cart.model';
+import { ContractStatus } from '@blockframes/marketplace/app/distribution-deal/+state/cart.firestore';
 
 export interface SpreadsheetImportError {
   field: string;
@@ -48,6 +50,7 @@ export interface DealsImportState {
   errors?: SpreadsheetImportError[];
   movieTitle: String;
   movieInternalRef?: string;
+  contract: Contract;
 }
 
 enum SpreadSheetMovie {
@@ -260,9 +263,9 @@ export class ViewExtractedElementsComponent {
           movie.main.title.international = spreadSheetRow[SpreadSheetMovie.internationalTitle];
         }
 
-        // LENGTH (Length)
+        // Total Run Time
         if (!isNaN(Number(spreadSheetRow[SpreadSheetMovie.length]))) {
-          movie.main.length = parseInt(spreadSheetRow[SpreadSheetMovie.length], 10);
+          movie.main.totalRunTime = parseInt(spreadSheetRow[SpreadSheetMovie.length], 10);
         }
 
         // PRODUCTION COMPANIES (Production Companie(s))
@@ -781,11 +784,11 @@ export class ViewExtractedElementsComponent {
       });
     }
 
-    if (!movie.main.length) {
+    if (!movie.main.totalRunTime) {
       errors.push({
         type: 'warning',
-        field: 'main.length',
-        name: "Length",
+        field: 'main.totalRunTime',
+        name: "Total Run Time",
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -1023,9 +1026,13 @@ export class ViewExtractedElementsComponent {
 
         const movie = this.movieQuery.existingMovie(spreadSheetRow[SpreadSheetDistributionDeal.internalRef]);
         const distributionDeal = createDistributionDeal();
+        // Create the contract that will handle the deal
+        const contract = createContract();
+        contract.status = ContractStatus.accepted;
 
         const importErrors = {
           distributionDeal,
+          contract,
           errors: [],
           movieInternalRef: spreadSheetRow[SpreadSheetDistributionDeal.internalRef],
           movieTitle: movie ? movie.main.title.original : undefined
@@ -1039,20 +1046,29 @@ export class ViewExtractedElementsComponent {
           /* LICENSOR */
 
           // @TODO #1388 Cascade8 will be the licensor for imported movies. Update this if needed
-          distributionDeal.licensor.orgId = this.organizationQuery.getActiveId();
-          distributionDeal.licensor.displayName = 'licensor example';
+          const licensor = createParty();
+          licensor.role = 'licensor';
+          licensor.orgId = this.organizationQuery.getActiveId();
+          licensor.displayName = 'licensor display name example';
+          licensor.showName = true;
+          contract.parties.push(licensor);
 
           /* LICENSEE */
 
+          const licensee = createParty();
+          licensee.role = 'licensee';
+          
           // DISPLAY NAME
           if (spreadSheetRow[SpreadSheetDistributionDeal.licenseeName]) {
-            distributionDeal.licensee.displayName = spreadSheetRow[SpreadSheetDistributionDeal.licenseeName];
+            licensee.displayName = spreadSheetRow[SpreadSheetDistributionDeal.licenseeName];
           }
 
           // SHOW NAME
           if (spreadSheetRow[SpreadSheetDistributionDeal.displayLicenseeName]) {
-            distributionDeal.licensee.showName = spreadSheetRow[SpreadSheetDistributionDeal.displayLicenseeName].toLowerCase() === 'yes' ? true : false;
+            licensee.showName = spreadSheetRow[SpreadSheetDistributionDeal.displayLicenseeName].toLowerCase() === 'yes' ? true : false;
           }
+
+          contract.parties.push(licensee);
 
           /* LICENSE STATUS */
           distributionDeal.licenseStatus = LicenseStatus.paid;
@@ -1164,7 +1180,7 @@ export class ViewExtractedElementsComponent {
 
           // PRICE
           if (!isNaN(Number(spreadSheetRow[SpreadSheetDistributionDeal.price]))) {
-            distributionDeal.price.amount = parseInt(spreadSheetRow[SpreadSheetDistributionDeal.price], 10);
+            contract.price.amount = parseInt(spreadSheetRow[SpreadSheetDistributionDeal.price], 10);
           }
 
           // Checks if sale already exists
@@ -1199,7 +1215,7 @@ export class ViewExtractedElementsComponent {
 
   private validateMovieSale(importErrors: DealsImportState): DealsImportState {
     const distributionDeal = importErrors.distributionDeal;
-
+    const contract = importErrors.contract;
     const errors = importErrors.errors;
 
     // No movie found
@@ -1211,27 +1227,17 @@ export class ViewExtractedElementsComponent {
     // REQUIRED FIELDS
     //////////////////
 
-    //  LICENSEE NAME
-    if (!distributionDeal.licensee.displayName) {
+    //  CONTRACT VALIDATION
+    if(!validateContract(contract)) {
       errors.push({
         type: 'error',
-        field: 'operatorName',
-        name: "Operator name",
+        field: 'contractId',
+        name: "Operator name | Do you want to show the operator name on a buyer research ? ",
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
       });
     }
 
-    //  LICENSEE SHOW NAME
-    if (typeof distributionDeal.licensee.showName !== 'boolean') {
-      errors.push({
-        type: 'error',
-        field: 'showOperatorName',
-        name: "Do you want to show the operator name on a buyer research ?",
-        reason: 'Required field is missing',
-        hint: 'Edit corresponding sheet field.'
-      });
-    }
 
     // BEGINNING OF RIGHTS
     if (!distributionDeal.terms.start) {
@@ -1303,8 +1309,8 @@ export class ViewExtractedElementsComponent {
     // OPTIONAL FIELDS
     //////////////////
 
-    // PRICE
-    if (!distributionDeal.price.amount) {
+    // CONTRACT PRICE VALIDATION
+    if (!contract.price.amount) {
       errors.push({
         type: 'warning',
         field: 'price',

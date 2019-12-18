@@ -32,9 +32,10 @@ import {
 } from './availabilities.util';
 import { DistributionDealForm } from './create.form';
 import { getCodeIfExists } from '@blockframes/movie/movie/static-model/staticModels';
-import { CartService } from '../+state';
+import { CartService, createContract, validateContract } from '../+state';
 import { MatSnackBar } from '@angular/material';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
+import { createParty } from '@blockframes/utils/common-interfaces/identity';
 
 enum ResearchSteps {
   START = 'Start',
@@ -179,15 +180,31 @@ export class DistributionDealCreateComponent implements OnInit, OnDestroy {
     this.form.removeLanguage(language);
   }
 
-  public async addDistributionDeal() {
+  public async addDistributionDeal(movie: Movie) {
     const distributionDeal = createDistributionDeal(); // @todo #1388 populate with form values
-    distributionDeal.licensee.orgId = this.organizationQuery.getActiveId();
+    // Create the contract that will handle the deal
+    const contract = createContract();
 
-    const dealId = await this.movieService.addDistributionDeal(this.movie.id, distributionDeal);
+    const licensee = createParty();
+    licensee.orgId = this.organizationQuery.getActiveId();
+    licensee.role = 'licensee';
+    contract.parties.push(licensee);
 
-    this.cartService.addDealToCart(dealId, 'default');
-    this.snackBar.open(`Distribution deal saved. Redirecting ...`, 'close', { duration: 2000 });
-    this.router.navigateByUrl(`layout/o/catalog/selection/overview`);
+    const licensor = createParty();
+    licensor.orgId = movie.salesAgentDeal.salesAgent.orgId;
+    licensor.displayName = movie.salesAgentDeal.salesAgent.displayName;
+    licensor.role = 'licensor';
+    contract.parties.push(licensor);
+
+    if(!validateContract(contract)) {
+      this.snackBar.open(`Error while creating contract..`, 'close', { duration: 2000 });
+    } else {
+      const dealId = await this.movieService.addDistributionDeal(this.movie.id, distributionDeal, contract);
+      await this.cartService.addDealToCart(dealId, 'default');
+      this.snackBar.open(`Distribution deal saved. Redirecting ...`, 'close', { duration: 2000 });
+      this.router.navigateByUrl(`layout/o/catalog/selection/overview`);
+    }
+
   }
 
   //////////////////////

@@ -20,11 +20,12 @@ import {
   FormatProfile,
   MovieLanguageSpecification,
   MovieLanguageTypes,
+  StoreConfig,
+  StoreType,
   MovieLanguageSpecificationContainer
 } from './movie.firestore';
 import { createImgRef } from '@blockframes/utils/image-uploader';
-import { createStakeholder, Credit, SalesAgent, Licensee, Licensor } from '@blockframes/utils/common-interfaces/identity';
-import { createPrice } from '@blockframes/utils/common-interfaces/price';
+import { Credit, SalesAgent, Licensee, Licensor } from '@blockframes/utils/common-interfaces/identity';
 import { createTerms } from '@blockframes/utils/common-interfaces/terms';
 import { LanguagesSlug } from '../static-model';
 
@@ -93,6 +94,8 @@ export function createMovieMain(params: Partial<MovieMain> = {}): MovieMain {
     },
     directors: [],
     genres: [],
+    workType: WorkType.movie,
+    storeConfig: createStoreConfig(params.storeConfig),
     languages: [],
     productionCompanies: [],
     originCountries: [],
@@ -227,17 +230,13 @@ export function createDistributionDeal(params: Partial<DistributionDeal> = {}): 
     territory: [],
     territoryExcluded: [],
     assetLanguage: {},
-    workType: WorkType.movie,
     exclusive: false,
-    price: createPrice(params.price),
     titleInternalAlias: '',
     formatProfile: FormatProfile.unknown,
     download: false,
     holdbacks: [],
-    fees: [],
-    ...params,
-    licensee: createStakeholder(params.licensee),
-    licensor: createStakeholder(params.licensor),
+    catchUp: createTerms(params.catchUp),
+    ...params
   };
 }
 
@@ -272,4 +271,12 @@ export function populateMovieLanguageSpecification(spec: MovieLanguageSpecificat
 
   spec[slug][type] = value;
   return spec;
+}
+
+export function createStoreConfig(params: Partial<StoreConfig> = {}): StoreConfig {
+  return {
+    display: true,
+    storeType: StoreType.movie,
+    ...params
+  };
 }

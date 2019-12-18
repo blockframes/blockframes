@@ -8,7 +8,7 @@ import { WishlistStatus } from '@blockframes/organization';
 import { AuthQuery } from '@blockframes/auth';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { MovieCurrenciesSlug } from '@blockframes/movie/movie/static-model/types';
-import { MovieService } from '@blockframes/movie';
+import { MovieService } from '@blockframes/movie/movie/+state/movie.service';
 
 const wishlistFactory = (movieId: string): Wishlist => {
   return {
@@ -37,10 +37,11 @@ export class CartService extends CollectionService<CartState> {
   //////////////////
 
   /**
-   * Adds a deal to cart identified by "name"
+   * Adds a deal to cart identified by "name" (default cart name is : "default")
    * @param dealId 
    * @param name 
    */
+  // @TODO #1389 Use native akita-ng-fire functions : https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
   public async addDealToCart(dealId: string, name: string): Promise<CatalogCart> {
     const cart = await this.getCart(name);
     cart.deals.push(dealId);
@@ -48,11 +49,12 @@ export class CartService extends CollectionService<CartState> {
   }
 
   /**
-   * 
+   * Change cart status to : "submitted".
    * @param amount 
    * @param currency
    * @param name
    */
+  // @TODO #1389 Use native akita-ng-fire functions : https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
   public async submitCart(amount: number, currency: MovieCurrenciesSlug, name: string = 'default') {
     const cart = await this.getCart(name);
     const updatedCart: CatalogCart = {
@@ -67,12 +69,18 @@ export class CartService extends CollectionService<CartState> {
    * Creates an empty cart
    * @param name
    */
+  // @TODO #1389 Use native akita-ng-fire functions : https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
   private async initCart(name: string = 'default'): Promise<CatalogCart> {
     const cart: CatalogCart = createCart({ name });
     await this.db.doc<CatalogCart>(`orgs/${this.organizationQuery.getActiveId()}/cart/${name}`).set(cart);
     return cart;
   }
 
+  /**
+   * 
+   * @param cart 
+   */
+  // @TODO #1389 Remove this function if doesn't do anything more than native akita-ng-fire
   private async updateCart(cart: CatalogCart): Promise<CatalogCart> {
     await this.db
       .doc<CatalogCart>(`orgs/${this.organizationQuery.getActiveId()}/cart/${cart.name}`)

@@ -12,8 +12,8 @@ export const baseMenu = [
     route: baseRoute,
     items: [
       {
-        name: 'movie list',
-        path: `${baseRoute}/home/list`
+        name: 'Catalog',
+        path: `${baseRoute}/catalog/home`
       }, // temp
       {
         name: 'Upload avails & films doc',

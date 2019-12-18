@@ -33,7 +33,7 @@ export class WishlistCurrentRepertoryComponent implements OnInit {
     'director',
     'productionStatus',
     'originCountry',
-    'length'
+    'totalRunTime'
   ];
   public dataSource: MatTableDataSource<Movie>;
 

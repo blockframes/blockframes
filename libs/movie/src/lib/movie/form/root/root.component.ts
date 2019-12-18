@@ -129,8 +129,8 @@ export class MovieFormRootComponent {
         });
         this.form.main.get('genres').setValue(genres);
 
-        // LENGTH
-        this.form.main.get('length').setValue(parseInt(movie.runtime.replace(' min', ''), 10));
+        // TOTAL RUN TIME
+        this.form.main.get('totalRunTime').setValue(parseInt(movie.runtime.replace(' min', ''), 10));
 
         // PEGI (Rating)
         this.form.get('salesInfo').get('pegi').setValue(movie.rated);
