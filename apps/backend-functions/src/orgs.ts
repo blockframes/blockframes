@@ -16,6 +16,44 @@ import { createNotification, NotificationType } from '@blockframes/notification/
 import { App } from '@blockframes/utils/apps';
 import { triggerNotifications } from './notification';
 
+function notifUser(userId: string, notificationType :NotificationType, org: OrganizationDocument, user: PublicUser) {
+  return createNotification({
+    userId,
+    type: notificationType,
+    user: {
+      name: user.name,
+      surname: user.surname
+    },
+    organization: {
+      id: org.id,
+      name: org.name
+    },
+    app: App.blockframes
+  });
+}
+
+/** Send notifications to all org's members when a member is added or removed. */
+async function sendInvitationToUsers(before: OrganizationDocument, after: OrganizationDocument) {
+  if (before.userIds.length < after.userIds.length) {
+    // Member added
+    const userAddedId = after.userIds.filter(userId => !before.userIds.includes(userId))[0];
+    const userSnapshot = await db.doc(`users/${userAddedId}`).get();
+    const userAdded = userSnapshot.data() as PublicUser;
+
+    const notifications = after.userIds.map(userId => notifUser(userId, NotificationType.memberAddedToOrg, after, userAdded));
+    return triggerNotifications(notifications);
+
+  } else if (before.userIds.length > after.userIds.length) {
+    // Member removed
+    const userAddedId = before.userIds.filter(userId => !after.userIds.includes(userId))[0];
+    const userSnapshot = await db.doc(`users/${userAddedId}`).get();
+    const userRemoved = userSnapshot.data() as PublicUser;
+
+    const notifications = after.userIds.map(userId => notifUser(userId, NotificationType.memberRemovedFromOrg, after, userRemoved));
+    return triggerNotifications(notifications);
+  }
+}
+
 export function onOrganizationCreate(
   snap: FirebaseFirestore.DocumentSnapshot,
   context: functions.EventContext
@@ -56,6 +94,9 @@ export async function onOrganizationUpdate(
   if (before.name !== after.name) {
     throw new Error('Organization name cannot be changed !'); // this will require to change the org ENS name, for now we throw to prevent silent bug
   }
+
+  // Send notifications when a member is added or removed
+  await sendInvitationToUsers(before, after);
 
   // Deploy org's smart-contract
   const becomeAccepted = before.status === OrganizationStatus.pending && after.status === OrganizationStatus.accepted;
