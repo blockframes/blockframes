@@ -117,10 +117,17 @@ async function onInvitationToOrgAccept({ user, organization }: InvitationFromOrg
 async function onInvitationToOrgDecline(invitation: InvitationFromOrganizationToUser) {
   const orgSnapshot = await db.doc(`orgs/${invitation.organization.id}`).get();
   const org = orgSnapshot.data() as OrganizationDocument;
+
   const userSnapshot = await db.doc(`users/${invitation.user.uid}`).get();
   const user = userSnapshot.data() as PublicUser;
 
-  const notifications = org.userIds.map(userId => createNotification({
+  const permissionSnapshot = await db.doc(`permissions/${invitation.organization.id}`).get();
+  const permission = permissionSnapshot.data()!;
+
+  const isAdmin = (userId: string) => (permission.roles[userId] === UserRole.admin) || (permission.roles[userId] === UserRole.superAdmin);
+  const adminIds = org.userIds.filter(isAdmin);
+
+  const notifications = adminIds.map(userId => createNotification({
     userId,
     user: {
       name: user.name,
@@ -311,7 +318,13 @@ async function onInvitationFromUserToJoinOrgDecline(invitation: InvitationFromUs
   const orgSnapshot = await db.doc(`orgs/${invitation.organization.id}`).get();
   const org = orgSnapshot.data() as OrganizationDocument;
 
-  const notifications = org.userIds.map(userId => createNotification({
+  const permissionSnapshot = await db.doc(`permissions/${invitation.organization.id}`).get();
+  const permission = permissionSnapshot.data()!;
+
+  const isAdmin = (userId: string) => (permission.roles[userId] === UserRole.admin) || (permission.roles[userId] === UserRole.superAdmin);
+  const adminIds = org.userIds.filter(isAdmin);
+
+  const notifications = adminIds.map(userId => createNotification({
     userId,
     user: {
       name: invitation.user.name,
