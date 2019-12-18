@@ -163,7 +163,7 @@ export function sendWishlist(userName: string, orgName: string, wishlist: string
   }
 }
 
-export function sendDemoRequestMail(informations: RequestDemoInformations) {
+export function sendDemoRequestMail(information: RequestDemoInformations) {
   return {
     to: adminEmail,
     subject: 'A demo has been requested',
@@ -171,11 +171,11 @@ export function sendDemoRequestMail(informations: RequestDemoInformations) {
 
     User informations
 
-    First name: ${informations.firstName}
-    Last name: ${informations.lastName}
-    Email: ${informations.email}
-    Phone number: ${informations.phoneNumber}
-    Company name: ${informations.companyName}
-    Role: ${informations.role}`
+    First name: ${information.firstName}
+    Last name: ${information.lastName}
+    Email: ${information.email}
+    Phone number: ${information.phoneNumber}
+    Company name: ${information.companyName}
+    Role: ${information.role}`
   }
 }
