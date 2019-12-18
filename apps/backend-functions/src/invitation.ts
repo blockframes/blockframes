@@ -113,7 +113,7 @@ async function onInvitationToOrgAccept({ user, organization }: InvitationFromOrg
   // TODO maybe send an email "you have accepted to join OrgNAme ! Congratz, you are now part of this org !"
   return mailOnInvitationAccept(user.uid, organization.id);
 }
-/** Send a notification to users of organizaiton to notify them that the user declined their invitation. */
+/** Send a notification to users of organization to notify them that the user declined their invitation. */
 async function onInvitationToOrgDecline(invitation: InvitationFromOrganizationToUser) {
   const orgSnapshot = await db.doc(`orgs/${invitation.organization.id}`).get();
   const org = orgSnapshot.data() as OrganizationDocument;
@@ -121,7 +121,7 @@ async function onInvitationToOrgDecline(invitation: InvitationFromOrganizationTo
   const user = userSnapshot.data() as PublicUser;
 
   const notifications = org.userIds.map(userId => createNotification({
-    userId: userId,
+    userId,
     user: {
       name: user.name,
       surname: user.surname
@@ -306,13 +306,13 @@ async function onInvitationFromUserToJoinOrgAccept({
   return mailOnInvitationAccept(user.uid, organization.id);
 }
 
-/** Send a notification to users of organizaiton to notify them that the request is declined. */
+/** Send a notification to users of organization to notify them that the request is declined. */
 async function onInvitationFromUserToJoinOrgDecline(invitation: InvitationFromUserToOrganization) {
   const orgSnapshot = await db.doc(`orgs/${invitation.organization.id}`).get();
   const org = orgSnapshot.data() as OrganizationDocument;
 
   const notifications = org.userIds.map(userId => createNotification({
-    userId: userId,
+    userId,
     user: {
       name: invitation.user.name,
       surname: invitation.user.surname
