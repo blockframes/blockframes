@@ -180,7 +180,7 @@ export class DistributionDealCreateComponent implements OnInit, OnDestroy {
     this.form.removeLanguage(language);
   }
 
-  public async addDistributionDeal(movie: Movie) {
+  public async addDistributionDeal() {
     const distributionDeal = createDistributionDeal(); // @todo #1388 populate with form values
     // Create the contract that will handle the deal
     const contract = createContract();
@@ -191,8 +191,8 @@ export class DistributionDealCreateComponent implements OnInit, OnDestroy {
     contract.parties.push(licensee);
 
     const licensor = createParty();
-    licensor.orgId = movie.salesAgentDeal.salesAgent.orgId;
-    licensor.displayName = movie.salesAgentDeal.salesAgent.displayName;
+    licensor.orgId = this.movie.salesAgentDeal.salesAgent.orgId;
+    licensor.displayName = this.movie.salesAgentDeal.salesAgent.displayName;
     licensor.role = 'licensor';
     contract.parties.push(licensor);
 
