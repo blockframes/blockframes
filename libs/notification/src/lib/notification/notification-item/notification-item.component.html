@@ -1,9 +1,19 @@
-<section fxLayout="column" fxLayoutAlign="space-between start">
-  <p>{{ message }}</p>
-  <ng-container *ngIf="inWidget; else inFeed">
-    <small>{{ notification.date.toDate() | date: 'medium' }}</small>
-  </ng-container>
-  <ng-template #inFeed>
-    <small>{{ notification.date.toDate() | date: 'shortTime' }}</small>
-  </ng-template>
+<section fxLayout="row" fxLayoutAlign="start start">
+  <article>
+    <ng-container *ngIf="information.imgRef; else defaultAvatar">
+      <avatar-list [refs]="[information.imgRef]"></avatar-list>
+    </ng-container>
+    <ng-template #defaultAvatar>
+      <img [asset]="information.defaultImg" />
+    </ng-template>
+  </article>
+  <article fxLayout="column" fxLayoutAlign="start start">
+    <p>{{ information.message }}</p>
+    <ng-container *ngIf="inWidget; else inFeed">
+      <small>{{ notification.date.toDate() | date: 'medium' }}</small>
+    </ng-container>
+    <ng-template #inFeed>
+      <small>{{ notification.date.toDate() | date: 'shortTime' }}</small>
+    </ng-template>
+  </article>
 </section>

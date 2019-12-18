@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { AvatarListModule } from '@blockframes/ui/avatar-list/avatar-list.module';
+import { AssetsThemeModule } from '@blockframes/ui';
 
 // Components
 import { InvitationListComponent } from './invitation-list/invitation-list.component';
@@ -24,6 +26,8 @@ import { MatListModule } from '@angular/material/list';
     CommonModule,
     RouterModule,
     FlexLayoutModule,
+    AvatarListModule,
+    AssetsThemeModule,
 
     // Material
     MatIconModule,

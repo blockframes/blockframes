@@ -4,12 +4,20 @@ import { NotificationService, Notification } from '../+state';
 import { NotificationType } from '../+state/notification.firestore';
 import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
 
+/** Specific interface to load informations depending of the notification type. */
+interface Information {
+  message: string;
+  imgRef: string;
+  defaultImg: string;q
+}
+
 @Component({
   selector: 'notification-item',
   templateUrl: './notification-item.component.html',
   styleUrls: ['./notification-item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
+
 export class NotificationItemComponent {
   @Input() notification: Notification;
   @Input() inWidget: boolean;

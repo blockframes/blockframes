@@ -276,6 +276,7 @@ export interface MovieDocumentWithDates extends MovieRaw<Date> {
 export interface PublicMovie {
   id: string;
   title: Title;
+  poster?: string;
 }
 
 export interface MovieStakeholders {
