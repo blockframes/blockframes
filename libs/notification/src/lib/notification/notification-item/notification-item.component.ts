@@ -48,6 +48,10 @@ export class NotificationItemComponent {
         return `${this.notification.user.name} ${this.notification.user.surname} has declined your invitation from your organization.`;
       case NotificationType.invitationFromUserToJoinOrgDecline:
         return `Your organization has refused the request from ${this.notification.user.name} ${this.notification.user.surname}.`;
+      case NotificationType.memberAddedToOrg:
+        return `${this.notification.user.name} ${this.notification.user.surname} has been added to ${this.notification.organization.name}.`;
+      case NotificationType.memberRemovedFromOrg:
+        return `${this.notification.user.name} ${this.notification.user.surname} has been removed from ${this.notification.organization.name}.`;
     }
   }
 
