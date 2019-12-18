@@ -11,7 +11,11 @@ export const enum ContractStatus {
 }
 
 export interface ContractTitleDetail {
-  titleId: string, // ie: movieId
+  /** 
+   * @dev titleId is replacing movieId 
+   * since we are going to handle series, movies etc..
+   */
+  titleId: string,
   price: Price,
   distributionDealIds: string[];
 }

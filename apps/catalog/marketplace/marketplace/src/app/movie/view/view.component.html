@@ -18,7 +18,7 @@
             <span *ngIf="movie.main.status || movie.main.totalRunTime"> | </span>
             <span *ngIf="movie.main.status">{{ movie.main.status | translateSlug: 'MOVIE_STATUS'}}</span>
             <span *ngIf="movie.main.totalRunTime && movie.main.status"> | </span>
-            <span *ngIf="movie.main.totalRunTime">{{ movie.main.totalRunTime }} min</span>
+            <span *ngIf="movie.main.totalRunTime as time">| {{ time }} min </span>
           </div>
         </div>
       </article>
