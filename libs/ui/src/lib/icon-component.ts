@@ -283,10 +283,9 @@ const ICONS_SVG = [
     name: 'heart_filled',
     url: 'assets/icons/heart_filled.svg'
   },
-  { name: 'star', url: 'assets/icons/star.svg' },
   {
-    name: 'LogoAC',
-    url: 'assets/logo/LogoAC.svg'
+    name: 'star',
+    url: 'assets/icons/star.svg'
   },
   {
     name: 'home_sidebar',

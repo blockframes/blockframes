@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { ReactiveFormsModule } from '@angular/forms';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Pages
 import { CatalogLandingPageComponent } from './pages/landing-page/landing-page.component';
@@ -13,7 +15,19 @@ import { CatalogHowItWorksComponent } from './components/how-it-works/how-it-wor
 import { CatalogViewMarketplaceComponent } from './components/view-marketplace/view-marketplace.component';
 import { CatalogLearnMoreComponent } from './components/learn-more/learn-more.component';
 import { CatalogLeftMenuComponent } from './components/left-menu/left-menu.component';
+import { CatalogFooterComponent } from './components/footer/footer.component';
 
+// Material
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatIconModule } from '@angular/material/icon';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatCardModule } from '@angular/material/card';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSelectModule } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [
@@ -24,8 +38,27 @@ import { CatalogLeftMenuComponent } from './components/left-menu/left-menu.compo
     CatalogViewMarketplaceComponent,
     CatalogHowItWorksComponent,
     CatalogLearnMoreComponent,
-    CatalogLeftMenuComponent
+    CatalogLeftMenuComponent,
+    CatalogFooterComponent
   ],
-  imports: [CommonModule, RouterModule.forChild([{ path: '', component: CatalogLandingPageComponent }])]
+  imports: [
+    CommonModule,
+    FlexLayoutModule,
+    ReactiveFormsModule,
+
+    // Material
+    MatSidenavModule,
+    MatIconModule,
+    MatToolbarModule,
+    MatCardModule,
+    MatTabsModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatInputModule,
+    MatDividerModule,
+    MatButtonModule,
+
+    RouterModule.forChild([{ path: '', component: CatalogLandingPageComponent }])
+  ]
 })
 export class LandingModule {}
