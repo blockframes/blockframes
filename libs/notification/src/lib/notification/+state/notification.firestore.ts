@@ -13,8 +13,7 @@ export const enum NotificationType {
   inviteOrganization = 'inviteOrganization',
   removeOrganization = 'removeOrganization',
   pathToDocument = 'pathToDocument',
-  // Organization acceptation by Archipel Content
-  organizationAccepted = 'organizationAccepted',
+  organizationAcceptedByArchipelContent = 'organizationAcceptedByArchipelContent',
   movieTitleUpdated = 'movieTitleUpdated',
   movieTitleCreated = 'movieTitleCreated',
   movieDeleted = 'movieDeleted',

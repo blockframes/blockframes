@@ -48,7 +48,8 @@ export class MovieService extends CollectionService<MovieState> {
 
   public async removeMovie(movieId: string) {
     // Update the userId of field _meta to know who is deleting the movie.
-    await this.update(movieId, { _meta: { userId: this.authQuery.userId }});
+    const meta = this.query.getActive()._meta;
+    await this.update(movieId, { _meta: { ...meta, deletedBy: this.authQuery.userId } });
     return this.remove(movieId);
   }
 
@@ -58,10 +59,10 @@ export class MovieService extends CollectionService<MovieState> {
 
     if (!movie) {
       // create empty movie
-      movie = createMovie({ id, main: { title: { original } }, _meta: { userId: this.authQuery.userId } });
+      movie = createMovie({ id, main: { title: { original } }, _meta: { createdBy: this.authQuery.userId } });
     } else {
       // we set an id for this new movie
-      movie = createMovie({ ...movie, id, _meta: { userId: this.authQuery.userId } });
+      movie = createMovie({ ...movie, id, _meta: { createdBy: this.authQuery.userId } });
     }
 
     // Add movie document to the database
@@ -73,7 +74,7 @@ export class MovieService extends CollectionService<MovieState> {
   onUpdate(movie: Movie, { write }: WriteOptions) {
     const movieId = this.query.getActiveId();
     const movieRef = this.db.doc(`movies/${movieId}`).ref;
-    write.update(movieRef, { _meta: { userId: this.authQuery.userId } });
+    write.update(movieRef, { _meta: { updatedBy: this.authQuery.userId } });
   }
 
   /** Hook that triggers when a movie is added to the database. */

@@ -8,7 +8,6 @@ import {
   createOrganizationRaw
 } from './organization.firestore';
 import { Movie } from '@blockframes/movie';
-import { CatalogCart } from '@blockframes/marketplace';
 
 export {
   OrganizationStatus,

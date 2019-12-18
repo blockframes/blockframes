@@ -1,3 +1,5 @@
+import { difference } from 'lodash';
+
 /**
  * Organization-related code,
  *
@@ -17,7 +19,7 @@ import { App } from '@blockframes/utils/apps';
 import { triggerNotifications } from './notification';
 
 /** Create a notification with user and org. */
-function notifUser(userId: string, notificationType :NotificationType, org: OrganizationDocument, user: PublicUser) {
+function notifUser(userId: string, notificationType: NotificationType, org: OrganizationDocument, user: PublicUser) {
   return createNotification({
     userId,
     type: notificationType,
@@ -34,10 +36,10 @@ function notifUser(userId: string, notificationType :NotificationType, org: Orga
 }
 
 /** Send notifications to all org's members when a member is added or removed. */
-async function sendNotificationToUsers(before: OrganizationDocument, after: OrganizationDocument) {
+async function sendNotificationToMembers(before: OrganizationDocument, after: OrganizationDocument) {
   // Member added
   if (before.userIds.length < after.userIds.length) {
-    const userAddedId = after.userIds.filter(userId => !before.userIds.includes(userId))[0];
+    const userAddedId = difference(after.userIds, before.userIds)[0];
     const userSnapshot = await db.doc(`users/${userAddedId}`).get();
     const userAdded = userSnapshot.data() as PublicUser;
 
@@ -46,7 +48,7 @@ async function sendNotificationToUsers(before: OrganizationDocument, after: Orga
 
   // Member removed
   } else if (before.userIds.length > after.userIds.length) {
-    const userAddedId = before.userIds.filter(userId => !after.userIds.includes(userId))[0];
+    const userAddedId = difference(before.userIds, after.userIds)[0];
     const userSnapshot = await db.doc(`users/${userAddedId}`).get();
     const userRemoved = userSnapshot.data() as PublicUser;
 
@@ -97,7 +99,7 @@ export async function onOrganizationUpdate(
   }
 
   // Send notifications when a member is added or removed
-  await sendNotificationToUsers(before, after);
+  await sendNotificationToMembers(before, after);
 
   // Deploy org's smart-contract
   const becomeAccepted = before.status === OrganizationStatus.pending && after.status === OrganizationStatus.accepted;
@@ -108,9 +110,11 @@ export async function onOrganizationUpdate(
   if (becomeAccepted) {
     // send email to let the org admin know that the org has been accepted
     await sendMailFromTemplate(organizationWasAccepted(admin.email, id, admin.name));
+
+    // Send a notification to the creator of the organization
     const notification = createNotification({
       userId: after.userIds[0],
-      type: NotificationType.organizationAccepted,
+      type: NotificationType.organizationAcceptedByArchipelContent,
       app: App.blockframes
     });
     await triggerNotifications([notification]);
