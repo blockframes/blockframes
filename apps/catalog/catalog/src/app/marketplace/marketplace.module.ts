@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 
-import { CatalogBasketGuard } from './guards/catalog-basket-list.guard';
+import { CatalogCartGuard } from './guards/catalog-cart-list.guard';
 import { MovieActiveGuard } from '@blockframes/movie';
 
 const routes: Routes = [
@@ -33,8 +33,8 @@ const routes: Routes = [
   },
   {
     path: 'wishlist',
-    canActivate: [CatalogBasketGuard],
-    canDeactivate: [CatalogBasketGuard],
+    canActivate: [CatalogCartGuard],
+    canDeactivate: [CatalogCartGuard],
     children: [
       {
         path: '',
@@ -60,9 +60,21 @@ const routes: Routes = [
       {
         path: 'create',
         loadChildren: () =>
-          import('./distribution-right/create/create.module').then(
-            m => m.DistributionRightCreateModule
+          import('./distribution-deal/create/create.module').then(
+            m => m.DistributionDealCreateModule
           )
+      }
+    ]
+  },
+  {
+    path: 'selection',
+    canActivate: [CatalogCartGuard],
+    canDeactivate: [CatalogCartGuard],
+    children: [
+      { path: '', redirectTo: 'overview', pathMatch: 'full' },
+      {
+        path: 'overview',
+        loadChildren: () => import('./movie/selection/selection.module').then(m => m.SelectionModule)
       }
     ]
   }
