@@ -1,6 +1,6 @@
-import { MovieLanguageSpecification } from './../../movie/search/search.form';
-import { DateRange } from '@blockframes/utils/date-range';
+import { DateRange } from '@blockframes/utils/common-interfaces/date-range';
 import { DistributionDeal, MovieSalesAgentDeal } from '@blockframes/movie/movie/+state';
+import { MovieLanguageSpecification } from '@blockframes/movie/movie/+state/movie.firestore';
 
 /**
  * These function should be used in connection. For instance, we look for movie distribution deals in
@@ -52,8 +52,8 @@ export function getDistributionDealsInDateRange(formDates: DateRange, distributi
   const intersectedDateRangeDeals: DistributionDeal[] = [];
 
   for (const deal of distributionDeals) {
-    const dealsFrom: Date = new Date(deal.rights.from);
-    const dealsTo: Date = new Date(deal.rights.to);
+    const dealsFrom: Date = new Date(deal.terms.start);
+    const dealsTo: Date = new Date(deal.terms.end);
     /**
      * If the form date 'from' is between a deal from and to, it means that there
      * are already deals made, but it is still possible to buy a distribution right
@@ -110,19 +110,21 @@ export function getDistributionDealsWithMediasTerritoriesAndLanguagesInCommon(
   const dealsWithMediasTerritoriesAndLanguagesInCommon: DistributionDeal[] = [];
   for (const deal of deals) {
     let mediasInCommon = false;
-    for (const media of formMedias) {
-      for (const saleMedia of deal.medias) {
-        if (saleMedia === media) {
+    mediaLoop : for (const media of formMedias) {
+      for (const licenseType of deal.licenseType) {
+        if (licenseType === media) {
           mediasInCommon = true;
+          break mediaLoop;
         }
       }
     }
 
     let territoriesInCommon = false;
-    for (const territory of formTerritories) {
-      for (const saleTerritory of deal.territories) {
+    territoryLoop : for (const territory of formTerritories) {
+      for (const saleTerritory of deal.territory) {
         if (saleTerritory === territory) {
           territoriesInCommon = true;
+          break territoryLoop;
         }
       }
     }
@@ -132,15 +134,17 @@ export function getDistributionDealsWithMediasTerritoriesAndLanguagesInCommon(
 
     let dubbingInCommon = false;
     for (const language of languagesName) {
-      if (deal.dubbings.includes(language)) {
+      if (deal.assetLanguage[language] && deal.assetLanguage[language].dubbed) {
         dubbingInCommon = true;
+        break;
       }
     }
 
     let subtitlesInCommon = false;
     for (const language of languagesName) {
-      if (deal.subtitles.includes(language)) {
+      if (deal.assetLanguage[language] && deal.assetLanguage[language].subtitle) {
         subtitlesInCommon = true;
+        break;
       }
     }
 

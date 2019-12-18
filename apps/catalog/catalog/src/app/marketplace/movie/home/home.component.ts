@@ -1,11 +1,11 @@
 import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ChangeDetectionStrategy, Component, HostBinding, OnInit, Inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding, OnInit } from '@angular/core';
 import { Movie, MovieQuery } from '@blockframes/movie/movie/+state';
-import { BasketService } from '../../distribution-right/+state/basket.service';
+import { CartService } from '../../distribution-deal/+state/cart.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ImgRef } from '@blockframes/utils/image-uploader';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
+import { CatalogCartQuery } from '../../distribution-deal/+state';
 
 interface CarouselSection {
   title: string;
@@ -26,9 +26,10 @@ export class MarketplaceHomeComponent implements OnInit {
 
   constructor(
     private movieQuery: MovieQuery,
-    private basketService: BasketService,
+    private cartService: CartService,
     private snackbar: MatSnackBar,
-    private analytics: FireAnalytics
+    private analytics: FireAnalytics,
+    private catalogCartQuery: CatalogCartQuery,
   ) {
   }
 
@@ -75,16 +76,13 @@ export class MarketplaceHomeComponent implements OnInit {
   }
 
   public toggle$(movieId: string) {
-    return this.basketService.isAddedToWishlist(movieId);
+    return this.catalogCartQuery.isAddedToWishlist(movieId);
   }
 
   public addToWishlist(movie: Movie, event: Event) {
     event.stopPropagation();
-    this.basketService.updateWishlist(movie);
-    this.snackbar.open(`${movie.main.title.international} has been added to your selection.`,
-      'close',
-      { duration: 2000 }
-    );
+    this.cartService.updateWishlist(movie);
+    this.snackbar.open(`${movie.main.title.international} has been added to your selection.`, 'close', { duration: 2000 });
     this.analytics.event('movie_to_wishlist', {
       movie_name: movie.main.title.original,
     });
@@ -92,12 +90,8 @@ export class MarketplaceHomeComponent implements OnInit {
 
   public removeFromWishlist(movie: Movie, event: Event) {
     event.stopPropagation();
-    this.basketService.updateWishlist(movie);
-    this.snackbar.open(
-      `${movie.main.title.international} has been removed from your selection.`,
-      'close',
-      { duration: 2000 }
-    );
+    this.cartService.updateWishlist(movie);
+    this.snackbar.open(`${movie.main.title.international} has been removed from your selection.`, 'close', { duration: 2000 });
     this.analytics.event('movie_removed_wishlist', {
       movie_name: movie.main.title.original,
     });

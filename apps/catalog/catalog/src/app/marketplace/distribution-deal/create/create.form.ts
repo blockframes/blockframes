@@ -1,27 +1,54 @@
-import { FormEntity } from '@blockframes/utils';
-import {
-  DistributionRight,
-  createDistributionRight,
-  createDistributionRightControls,
-  DistributionRightControls
-} from '../+state/basket.model';
-import { FormArray, FormGroup, FormControl } from '@angular/forms';
+import { FormEntity, numberRangeValidator, valueIsInModelValidator } from '@blockframes/utils';
+import { FormArray, FormGroup, FormControl, Validators } from '@angular/forms';
 import {
   TerritoriesSlug,
   TERRITORIES_SLUG,
   LanguagesSlug
 } from '@blockframes/movie/movie/static-model/types';
 import {
-  MovieLanguageSpecification,
   createMovieLanguage,
   createLanguageControl
 } from '../../movie/search/search.form';
-import { MovieMain } from '@blockframes/movie';
+import { MovieMain, DistributionDeal, createDistributionDeal } from '@blockframes/movie';
+import { MovieLanguageSpecification } from '@blockframes/movie/movie/+state/movie.firestore';
 
-export class DistributionRightForm extends FormEntity<DistributionRightControls> {
-  constructor(distributionRight: Partial<DistributionRight> = {}) {
-    const right = createDistributionRight(distributionRight);
-    const controls = createDistributionRightControls(right);
+function createDistributionDealControls(deal: Partial<DistributionDeal> = {}) {
+  // Create controls for the languages
+  const languageControl = Object.keys(deal.assetLanguage).reduce( // @TODO better to mutate it to avoid double loop
+    (acc, key) => ({
+      ...acc,
+      // Key is the name of the language, english, french etc.
+      [key]: createLanguageControl(deal.assetLanguage[key])
+    }),
+    {} // Initial value. No controls at the beginning
+  );
+  return {
+    medias: new FormArray(deal.licenseType.map(media => new FormControl(media)), [
+      Validators.required,
+      valueIsInModelValidator('MEDIAS')
+    ]),
+    languages: new FormGroup(languageControl, Validators.required),
+    duration: new FormGroup(
+      {
+        from: new FormControl(deal.terms.start, [Validators.required]),
+        to: new FormControl(deal.terms.end, [Validators.required])
+      },
+      [Validators.required, numberRangeValidator('from', 'to')]
+    ),
+    territories: new FormArray(deal.territory.map(territory => new FormControl(territory)), [
+      Validators.required,
+      valueIsInModelValidator('TERRITORIES')
+    ]),
+    exclusive: new FormControl(deal.exclusive)
+  };
+}
+
+export type DistributionDealControls = ReturnType<typeof createDistributionDealControls>;
+
+export class DistributionDealForm extends FormEntity<DistributionDealControls> {
+  constructor(distributionDeal: Partial<DistributionDeal> = {}) {
+    const deal = createDistributionDeal(distributionDeal);
+    const controls = createDistributionDealControls(deal);
     super(controls);
   }
 
