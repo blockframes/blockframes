@@ -16,6 +16,7 @@ import { createNotification, NotificationType } from '@blockframes/notification/
 import { App } from '@blockframes/utils/apps';
 import { triggerNotifications } from './notification';
 
+/** Create a notification with user and org. */
 function notifUser(userId: string, notificationType :NotificationType, org: OrganizationDocument, user: PublicUser) {
   return createNotification({
     userId,
@@ -33,9 +34,9 @@ function notifUser(userId: string, notificationType :NotificationType, org: Orga
 }
 
 /** Send notifications to all org's members when a member is added or removed. */
-async function sendInvitationToUsers(before: OrganizationDocument, after: OrganizationDocument) {
+async function sendNotificationToUsers(before: OrganizationDocument, after: OrganizationDocument) {
+  // Member added
   if (before.userIds.length < after.userIds.length) {
-    // Member added
     const userAddedId = after.userIds.filter(userId => !before.userIds.includes(userId))[0];
     const userSnapshot = await db.doc(`users/${userAddedId}`).get();
     const userAdded = userSnapshot.data() as PublicUser;
@@ -43,8 +44,8 @@ async function sendInvitationToUsers(before: OrganizationDocument, after: Organi
     const notifications = after.userIds.map(userId => notifUser(userId, NotificationType.memberAddedToOrg, after, userAdded));
     return triggerNotifications(notifications);
 
+  // Member removed
   } else if (before.userIds.length > after.userIds.length) {
-    // Member removed
     const userAddedId = before.userIds.filter(userId => !after.userIds.includes(userId))[0];
     const userSnapshot = await db.doc(`users/${userAddedId}`).get();
     const userRemoved = userSnapshot.data() as PublicUser;
@@ -96,7 +97,7 @@ export async function onOrganizationUpdate(
   }
 
   // Send notifications when a member is added or removed
-  await sendInvitationToUsers(before, after);
+  await sendNotificationToUsers(before, after);
 
   // Deploy org's smart-contract
   const becomeAccepted = before.status === OrganizationStatus.pending && after.status === OrganizationStatus.accepted;

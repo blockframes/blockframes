@@ -5,6 +5,7 @@ import { App } from '@blockframes/utils/apps';
 import { triggerNotifications } from './notification';
 import { flatten, isEqual } from 'lodash';
 
+/** Create a notification with user and movie. */
 function notifUser(userId: string, notificationType :NotificationType, movie: MovieDocument, user: PublicUser) {
   return createNotification({
     userId,
@@ -21,6 +22,7 @@ function notifUser(userId: string, notificationType :NotificationType, movie: Mo
   });
 }
 
+/** Create notifications for all org's members. */
 async function createNotificationsForUsers(movie: MovieDocument, notificationType: NotificationType, user: PublicUser) {
   const orgsSnapShot = await db
   .collection(`orgs`)
