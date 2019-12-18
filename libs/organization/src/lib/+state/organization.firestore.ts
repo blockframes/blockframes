@@ -99,7 +99,7 @@ export function createOrganizationRaw(
 ): OrganizationRaw<Timestamp | Date> {
   return {
     id: !!params.id ? params.id : '',
-    denomination: {full: '', publicName: ''},
+    denomination: createDenomination(),
     email: '',
     fiscalNumber: '',
     activity: '',

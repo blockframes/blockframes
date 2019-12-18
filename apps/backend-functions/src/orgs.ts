@@ -20,7 +20,7 @@ export function onOrganizationCreate(
   const org = snap.data();
   const orgID = context.params.orgID;
 
-  if (!org || !org.denomination.full) {
+  if (!org  || !org.denomination || !org.denomination.full) {
     console.error('Invalid org data:', org);
     throw new Error('organization update function got invalid org data');
   }
