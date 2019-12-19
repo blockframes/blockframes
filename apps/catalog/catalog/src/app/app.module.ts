@@ -5,9 +5,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { HttpClientModule } from '@angular/common/http';
 import { ServiceWorkerModule } from '@angular/service-worker';
-import { OverlayModule } from '@angular/cdk/overlay';
-import { OverlayWidgetDirective } from '@blockframes/ui/overlay-widget/overlay-widget.directive';
-import { OverlayWidgetModule } from '@blockframes/ui/overlay-widget/overlay-widget.module';
 
 // Akita
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
@@ -32,7 +29,6 @@ import { sentryDsn } from '@env';
 @NgModule({
   declarations: [AppComponent],
   imports: [
-    OverlayWidgetModule,
     // Angular
     BrowserModule,
     BrowserAnimationsModule,

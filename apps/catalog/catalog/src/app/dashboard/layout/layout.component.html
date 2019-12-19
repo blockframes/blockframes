@@ -1,10 +1,10 @@
 <mat-sidenav-container>
-  <mat-sidenav id="dashboard-navbar" mode="side" opened>
+  <mat-sidenav id="dashboard-navbar" mode="side" closed>
     <mat-toolbar>
       <ng-container app-icon>
-        <button test-id="home" mat-icon-button class="app-icon-button" routerLink="/dashboard">
+        <a test-id="home" mat-button class="app-icon-button" routerLink="/dashboard">
           <mat-icon svgIcon="LogoAC" class="app-icon"></mat-icon>
-        </button>
+        </a>
       </ng-container>
     </mat-toolbar>
     <!-- TODO: update icons, connect with pages, get number for mat-chips -->
@@ -44,38 +44,35 @@
   <mat-sidenav-content>
     <mat-toolbar id="catalog-toolbar" fxLayout="row">
       <!-- Search Bar -->
-      <form fxFlex="60" fxLayoutAlign=" end">
+      <form class="search-bar">
         <mat-form-field no-underline floatLabel="never">
-          <input matInput id="test"
+          <input matInput
           placeholder="Search for clients, negotiations, titles instead of listings..."
           [widgetTarget]="search" />
           <mat-icon matPrefix>search</mat-icon>
         </mat-form-field>
-        <overlay-widget #search>
-          <overlay-search-widget></overlay-search-widget>
-        </overlay-widget>
       </form>
-      <span class="example-fill-remaining-space"></span>
-      <div fxLayout="row" fxLayoutAlign="start center">
+      <section fxLayout="row" fxLayoutAlign="start center">
         <!-- Notification -->
-        <a mat-icon-button>
-          <mat-icon matListIcon [widgetTarget]="notification" matBadge="3" matBadgeSize="small" class="notification-icon">notification_important</mat-icon>
-        </a>
-        <overlay-widget #notification>
-          <overlay-notification-widget></overlay-notification-widget>
-        </overlay-widget>
+        <button mat-icon-button [widgetTarget]="notification">
+          <mat-icon matListIcon matBadge="3" matBadgeSize="small" class="notification-icon">notification_important</mat-icon>
+        </button>
+
         <!-- User Info -->
-        <!-- TODO: connect with account -->
-        <div fxLayout="row" fxLayoutAlign="start center">
-        <img class="avatar" src="https://material.angular.io/assets/img/examples/shiba1.jpg" />
-        <a mat-icon-button class="more-icon">
-          <mat-icon>more_vert</mat-icon>
-        </a>
-        </div>
-      </div>
+        <!-- <ng-container *ngIf="(user$ | async) as user">
+          <img [imgRef]="user.avatar" [placeholderUrl]="placeholderUrl" alt="Profile picture" />
+        </ng-container> -->
+      </section>
     </mat-toolbar>
     <main>
       <router-outlet></router-outlet>
     </main>
   </mat-sidenav-content>
 </mat-sidenav-container>
+
+<overlay-widget #search>
+  <overlay-search-widget></overlay-search-widget>
+</overlay-widget>
+<overlay-widget #notification>
+  <overlay-notification-widget></overlay-notification-widget>
+</overlay-widget>

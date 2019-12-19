@@ -1,11 +1,15 @@
 import { NgModule } from '@angular/core';
 import { LayoutComponent } from './layout.component';
 import { CommonModule } from '@angular/common';
-import { RouterModule, Routes } from '@angular/router';
-import { OverlayWidgetModule } from '@blockframes/ui/overlay-widget/overlay-widget.module.ts';
+import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
+
+// Widgets
+import { OverlayWidgetModule } from '@blockframes/ui/overlay-widget/overlay-widget.module.ts';
 import { NotificationWidgetModule } from '@blockframes/ui/overlay-widget/notification-widget/nofitication-widget.module';
 import { SearchWidgetModule } from '@blockframes/ui/overlay-widget/search-widget/search-widget.module';
+
 // Material
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
@@ -38,8 +42,9 @@ const material = [
     FlexLayoutModule,
     NotificationWidgetModule,
     SearchWidgetModule,
-  ...material,
-  RouterModule
+    RouterModule,
+    ImageReferenceModule,
+  ...material
   ],
   exports: [LayoutComponent]
 })

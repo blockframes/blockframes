@@ -7,10 +7,6 @@ mat-sidenav-container {
     .mat-toolbar {
       border: none;
     }
-
-    .mat-divider {
-      border-top-color: var(--lightGrey);
-    }
   }
 }
 
@@ -25,52 +21,18 @@ mat-sidenav-content {
   width: 157px;
 }
 
-mat-form-field {
-  width: 100%;
-  input span.mat-form-field-label-wrapper{
-    color: red;
-  }
-}
 
-mat-form-field.mat-form-field {
-  font-size: 10px;
-}
-
-mat-form-field input {
-  font-size: 15px;
-}
-
-
-.example-fill-remaining-space {
-  /* This fills the remaining space, by using flexbox.
-     Every toolbar row uses a flexbox row layout. */
-  flex: 1 1 auto;
-}
-
-.card-avatar {
-    background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
-    background-size: cover;
+.search-bar {
+  flex: 1;
+  margin: 0 15px 0 15px;
+  padding-top: 20px;
+   .mat-form-field{
+     width: 100%;
+   }
 }
 
 .avatar {
   border-radius: 50%;
   height: 50px;
   width: 50px;
-}
-
-.notification-icon {
-  margin-right: 20px;
-}
-
-.more-icon {
-  margin-right: 20px;
-}
-
-.custom-badge {
-  .mat-badge-content {
-    width: fit-content;
-    text-align: center;
-    border-radius: 7px;
-    left: 13px;
-  }
 }
