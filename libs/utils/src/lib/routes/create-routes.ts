@@ -16,6 +16,7 @@ interface RouteOptions {
 
 function root(LayoutComponent, children: Routes, rootPath: string, appName: string) {
   return [
+    { path: '', redirectTo: rootPath, pathMatch: 'full' },
     {
       path: 'auth',
       loadChildren: () => import('@blockframes/auth/auth.module').then(m => m.AuthModule)
