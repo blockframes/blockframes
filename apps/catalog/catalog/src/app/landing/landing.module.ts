@@ -28,6 +28,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -57,6 +58,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatInputModule,
     MatDividerModule,
     MatButtonModule,
+    MatSnackBarModule,
 
     RouterModule.forChild([{ path: '', component: CatalogLandingPageComponent }])
   ]
