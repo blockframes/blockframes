@@ -1,5 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, ViewEncapsulation } from '@angular/core';
-
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 @Component({
   selector: 'catalog-layout',
   templateUrl: './layout.component.html',
@@ -7,5 +6,6 @@ import { Component, ChangeDetectionStrategy, OnInit, ViewEncapsulation } from '@
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
-export class LayoutComponent {
+export class LayoutComponent{
+  opened: boolean;
 }

@@ -1,7 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-// import { MovieCreateComponent } from '@blockframes/movie/movie/components/movie-create/movie-create.component';
-// import { MovieCreateModule } from '@blockframes/movie/movie/components/movie-create/movie-create.module';
 import { LayoutModule } from './layout/layout.module';
 import { LayoutComponent } from './layout/layout.component';
 
@@ -28,23 +26,6 @@ const routes: Routes = [
       }
     ]
   },
-  // {
-  //   path: 'no-movies',
-  //   component: MovieCreateComponent
-  // },
-  // {
-  //   path: 'home',
-  //   loadChildren: () => import('@blockframes/movie').then(m => m.MovieModule)
-  // },
-  // {
-  //   path: 'import',
-  //   loadChildren: () => import('@blockframes/movie/import').then(m => m.ImportMovieModule)
-  // },
-  // {
-  //   path: 'catalog',
-  //   loadChildren: () =>
-  //     import('./pages/dashboard-home/dashboard-home.module').then(m => m.DashboardHomeModule)
-  // }
 ];
 
 @NgModule({

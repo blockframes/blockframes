@@ -11,44 +11,75 @@
     "esModuleInterop": true,
     "module": "esNext",
     "target": "es5",
-    "typeRoots": ["node_modules/@types"],
-    "lib": ["es2017", "dom"],
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "lib": [
+      "es2017",
+      "dom"
+    ],
     "baseUrl": ".",
     "paths": {
-      "@env": ["env/env.ts"],
-      "@blockframes/ip": ["libs/ip/src/index.ts"],
-      "@blockframes/auth": ["libs/auth/src/index.ts"],
-      "@blockframes/auth/*": ["libs/auth/src/lib/*"],
-
+      "@env": [
+        "env/env.ts"
+      ],
+      "@blockframes/ip": [
+        "libs/ip/src/index.ts"
+      ],
+      "@blockframes/auth": [
+        "libs/auth/src/index.ts"
+      ],
+      "@blockframes/auth/*": [
+        "libs/auth/src/lib/*"
+      ],
       // UI
-      "@blockframes/ui": ["libs/ui/src/index.ts"],
-      "@blockframes/ui/*": ["libs/ui/src/lib/*"],
-
+      "@blockframes/ui": [
+        "libs/ui/src/index.ts"
+      ],
+      "@blockframes/ui/*": [
+        "libs/ui/src/lib/*"
+      ],
       // UTILS
-      "@blockframes/utils": ["libs/utils/src/index.ts"],
-      "@blockframes/utils/*": ["libs/utils/src/lib/*"],
-      "@blockframes/utils/spreadsheet": ["libs/utils/src/lib/spreadsheet/index.ts"],
-
+      "@blockframes/utils": [
+        "libs/utils/src/index.ts"
+      ],
+      "@blockframes/utils/*": [
+        "libs/utils/src/lib/*"
+      ],
+      "@blockframes/utils/spreadsheet": [
+        "libs/utils/src/lib/spreadsheet/index.ts"
+      ],
       // MOVIE
-      "@blockframes/movie": ["libs/movie/src/index.ts"],
-      "@blockframes/movie/*": ["libs/movie/src/lib/*"],
+      "@blockframes/movie": [
+        "libs/movie/src/index.ts"
+      ],
+      "@blockframes/movie/*": [
+        "libs/movie/src/lib/*"
+      ],
       "@blockframes/movie/import": [
         "libs/movie/src/lib/movie/components/import/import-movie.module.ts"
       ],
-
       // ETHERS
-      "@blockframes/ethers": ["libs/ethers/src/index.ts"],
-      "@blockframes/ethers/*": ["libs/ethers/src/lib/*"],
-
+      "@blockframes/ethers": [
+        "libs/ethers/src/index.ts"
+      ],
+      "@blockframes/ethers/*": [
+        "libs/ethers/src/lib/*"
+      ],
       // ORGANIZATION
-      "@blockframes/organization": ["libs/organization/src/index.ts"],
-      "@blockframes/organization/*": ["libs/organization/src/lib/*"],
-
+      "@blockframes/organization": [
+        "libs/organization/src/index.ts"
+      ],
+      "@blockframes/organization/*": [
+        "libs/organization/src/lib/*"
+      ],
       // FIRESTORE DATA MODEL
       "@blockframes/organization/types": [
         "libs/organization/src/lib/+state/organization.firestore.ts"
       ],
-      "@blockframes/auth/types": ["libs/auth/src/lib/+state/auth.firestore.ts"],
+      "@blockframes/auth/types": [
+        "libs/auth/src/lib/+state/auth.firestore.ts"
+      ],
       "@blockframes/invitation/types": [
         "libs/notification/src/lib/invitation/+state/invitation.firestore.ts"
       ],
@@ -67,30 +98,60 @@
       "@blockframes/notification/types": [
         "libs/notification/src/lib/notification/+state/notification.firestore.ts"
       ],
-      "@blockframes/movie/types": ["libs/movie/src/lib/movie/+state/movie.firestore.ts"],
-      "@blockframes/permissions/types": ["libs/organization/src/lib/permissions/+state/permissions.firestore.ts"],
-
-      "@blockframes/account": ["libs/account/src/index.ts"],
-
+      "@blockframes/movie/types": [
+        "libs/movie/src/lib/movie/+state/movie.firestore.ts"
+      ],
+      "@blockframes/permissions/types": [
+        "libs/organization/src/lib/permissions/+state/permissions.firestore.ts"
+      ],
+      "@blockframes/account": [
+        "libs/account/src/index.ts"
+      ],
+      "@blockframes/account/*": [
+        "libs/account/src/lib/*"
+      ],
       // MATERIAL
-      "@blockframes/material": ["libs/material/src/index.ts"],
-
-      "@blockframes/template": ["libs/material/src/index.ts"],
-      "@blockframes/contracts/*": ["contracts/build/*"],
-      "@blockframes/notification": ["libs/notification/src/index.ts"],
-      "@blockframes/catalog": ["libs/catalog/src/index.ts"],
-      "@blockframes/marketplace": ["apps/catalog/marketplace/marketplace/src/index.ts"],
-      "@blockframes/marketplace/*": ["apps/catalog/marketplace/marketplace/src/*"],
-
+      "@blockframes/material": [
+        "libs/material/src/index.ts"
+      ],
+      "@blockframes/template": [
+        "libs/material/src/index.ts"
+      ],
+      "@blockframes/contracts/*": [
+        "contracts/build/*"
+      ],
+      "@blockframes/notification": [
+        "libs/notification/src/index.ts"
+      ],
+      "@blockframes/catalog": [
+        "libs/catalog/src/index.ts"
+      ],
+      "@blockframes/marketplace": [
+        "apps/catalog/marketplace/marketplace/src/index.ts"
+      ],
+      "@blockframes/marketplace/*": [
+        "apps/catalog/marketplace/marketplace/src/*"
+      ],
       // APPS
-      "@blockframes/apps/delivery": ["apps/delivery/delivery/src/app/delivery.module.ts"],
-      "@blockframes/apps/catalog/marketplace": ["apps/catalog/marketplace/marketplace/src/app/marketplace.module.ts"],
-      "@blockframes/apps/catalog/dashboard": ["apps/catalog/dashboard/dashboard/src/app/dashboard.module.ts"],
-      "@blockframes/apps/catalog/*": ["apps/catalog/catalog/src/*"],
+      "@blockframes/apps/delivery": [
+        "apps/delivery/delivery/src/app/delivery.module.ts"
+      ],
+      "@blockframes/apps/catalog/marketplace": [
+        "apps/catalog/marketplace/marketplace/src/app/marketplace.module.ts"
+      ],
+      "@blockframes/apps/catalog/dashboard": [
+        "apps/catalog/dashboard/dashboard/src/app/dashboard.module.ts"
+      ],
+      "@blockframes/apps/catalog/*": [
+        "apps/catalog/catalog/src/*"
+      ],
     }
   },
   "angularCompilerOptions": {
     "enableIvy": true
   },
-  "exclude": ["node_modules", "tmp"]
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
 }
