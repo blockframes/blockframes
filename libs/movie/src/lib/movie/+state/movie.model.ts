@@ -70,7 +70,6 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
   return {
     id: params.id,
     deliveryIds: [],
-    _meta: { createdBy: '' },
     _type: 'movies',
     main: createMovieMain(params.main),
     story: createMovieStory(params.story),

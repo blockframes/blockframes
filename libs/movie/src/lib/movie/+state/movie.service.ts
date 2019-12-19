@@ -11,6 +11,7 @@ import { MovieState, MovieStore } from './movie.store';
 import { Contract, createContractTitleDetail } from '@blockframes/marketplace/app/distribution-deal/+state/cart.model';
 import { AuthQuery } from '@blockframes/auth';
 import { MovieQuery } from './movie.query';
+import { AngularFireFunctions } from '@angular/fire/functions';
 
 /**
  * @see #483
@@ -34,6 +35,7 @@ export class MovieService extends CollectionService<MovieState> {
     private permissionsService: PermissionsService,
     private query: MovieQuery,
     private authQuery: AuthQuery,
+    private functions: AngularFireFunctions,
     store: MovieStore
   ) {
     super(store);
@@ -46,23 +48,23 @@ export class MovieService extends CollectionService<MovieState> {
     )
   }
 
-  public async removeMovie(movieId: string) {
-    // Update the userId of field _meta to know who is deleting the movie.
-    const meta = this.query.getActive()._meta;
-    await this.update(movieId, { _meta: { ...meta, deletedBy: this.authQuery.userId } });
-    return this.remove(movieId);
+  /** Call a backend function that remove the movie and send notifications to concerned users. */
+  public async remove(movieId: string) {
+    const callDeploy = this.functions.httpsCallable('removeMovie');
+    await callDeploy({ movieId }).toPromise();
   }
 
   /** Add a partial or a full movie to the database. */
   public async addMovie(original: string, movie?: Movie): Promise<Movie> {
     const id = this.db.createId();
+    const userId = this.authQuery.userId;
 
     if (!movie) {
       // create empty movie
-      movie = createMovie({ id, main: { title: { original } }, _meta: { createdBy: this.authQuery.userId } });
+      movie = createMovie({ id, main: { title: { original } }, _meta: { createdBy: userId } });
     } else {
       // we set an id for this new movie
-      movie = createMovie({ ...movie, id, _meta: { createdBy: this.authQuery.userId } });
+      movie = createMovie({ ...movie, id, _meta: { createdBy: userId } });
     }
 
     // Add movie document to the database
@@ -71,10 +73,10 @@ export class MovieService extends CollectionService<MovieState> {
     return movie;
   }
 
-  onUpdate(movie: Movie, { write }: WriteOptions) {
-    const movieId = this.query.getActiveId();
-    const movieRef = this.db.doc(`movies/${movieId}`).ref;
-    write.update(movieRef, { _meta: { updatedBy: this.authQuery.userId } });
+  onUpdate(form: Movie, { write }: WriteOptions) {
+    const movie = this.query.getActive();
+    const movieRef = this.db.doc(`movies/${movie.id}`).ref;
+    write.update(movieRef, { _meta: { ...movie._meta, updatedBy: this.authQuery.userId } });
   }
 
   /** Hook that triggers when a movie is added to the database. */
