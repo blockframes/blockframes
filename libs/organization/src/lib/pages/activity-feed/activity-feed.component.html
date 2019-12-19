@@ -1,66 +1,12 @@
-<section>
-  <h3>Activity feed</h3>
-  <mat-tab-group animationDuration="1000ms" selectedIndex="0">
-    <mat-tab [label]="['All (' + (notifications$ | async).length + ')']">
-      <mat-card>
-        <ng-container
-          [ngSwitch]="day.key"
-          *ngFor="let day of (notificationsByDate$ | async | keyvalue | reverse)">
-          <ng-container *ngSwitchCase="(today | date)">
-            <h4>Today</h4>
-            <notification-item
-              *ngFor="let notification of day.value"
-              [notification]="notification">
-            </notification-item>
-          </ng-container>
-          <ng-container *ngSwitchCase="(yesterday | date)">
-            <h4>Yesterday</h4>
-            <notification-item
-              *ngFor="let notification of day.value"
-              [notification]="notification">
-            </notification-item>
-          </ng-container>
-          <ng-container *ngSwitchDefault>
-            <h4>{{ day.key }}</h4>
-            <notification-item
-              *ngFor="let notification of day.value; let isLast = last"
-              [notification]="notification">
-            </notification-item>
-          </ng-container>
-        </ng-container>
-      </mat-card>
-    </mat-tab>
-    <mat-tab label="Titles"> </mat-tab>
-    <mat-tab *ngIf="app == 'catalog'" label="Deals"> </mat-tab>
-    <mat-tab [label]="app | titlecase"> </mat-tab>
-    <mat-tab [label]="[organizationName + ' (' + (invitations$ | async).length + ')']">
-      <mat-card>
-        <ng-container
-          [ngSwitch]="day.key"
-          *ngFor="let day of (invitationsByDate$ | async | keyvalue | reverse)">
-          <ng-container *ngSwitchCase="(today | date)">
-            <h4>Today</h4>
-            <invitation-item
-              *ngFor="let invitation of day.value"
-              [invitation]="invitation">
-            </invitation-item>
-          </ng-container>
-          <ng-container *ngSwitchCase="(yesterday | date)">
-            <h4>Yesterday</h4>
-            <invitation-item
-              *ngFor="let invitation of day.value"
-              [invitation]="invitation">
-            </invitation-item>
-          </ng-container>
-          <ng-container *ngSwitchDefault>
-            <h4>{{ day.key }}</h4>
-            <invitation-item
-              *ngFor="let invitation of day.value; let isLast = last"
-              [invitation]="invitation">
-            </invitation-item>
-          </ng-container>
-        </ng-container>
-      </mat-card>
-    </mat-tab>
-  </mat-tab-group>
-</section>
+<h3>Activity feed</h3>
+<mat-tab-group animationDuration="1000ms" selectedIndex="0">
+  <mat-tab [label]="notificationsLabel$ | async">
+    <notification-list></notification-list>
+  </mat-tab>
+  <mat-tab label="Titles"> </mat-tab>
+  <mat-tab *ngIf="app == 'catalog'" label="Deals"> </mat-tab>
+  <mat-tab [label]="app | titlecase"> </mat-tab>
+  <mat-tab [label]="invitationsLabel$ | async">
+    <invitation-list></invitation-list>
+  </mat-tab>
+</mat-tab-group>

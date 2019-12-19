@@ -14,9 +14,7 @@ import { NotificationWidgetComponent } from './notification-widget.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDividerModule } from '@angular/material/divider';
 import { MatBadgeModule } from '@angular/material/badge';
-import { MatListModule } from '@angular/material/list';
 
 @NgModule({
   declarations: [
@@ -34,9 +32,7 @@ import { MatListModule } from '@angular/material/list';
     MatIconModule,
     MatMenuModule,
     MatButtonModule,
-    MatDividerModule,
-    MatBadgeModule,
-    MatListModule
+    MatBadgeModule
   ],
   exports: [NotificationWidgetComponent]
 })

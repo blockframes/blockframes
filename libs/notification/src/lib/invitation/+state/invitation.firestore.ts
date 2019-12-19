@@ -1,6 +1,6 @@
 import { PublicOrganization } from "@blockframes/organization/types";
 import { firestore } from 'firebase/app';
-import { PublicUser } from "@blockframes/auth/+state/auth.store";
+import { PublicUser } from "@blockframes/auth/+state/auth.firestore";
 type Timestamp = firestore.Timestamp;
 
 /** Raw type for Invitation. */

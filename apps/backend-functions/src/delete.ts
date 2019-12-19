@@ -65,6 +65,7 @@ export async function deleteFirestoreDelivery(
   context: functions.EventContext
 ) {
   const delivery = snap.data();
+  console.log('salut')
 
   if (!delivery) {
     throw new Error(`This delivery doesn't exist !`);
@@ -72,13 +73,9 @@ export async function deleteFirestoreDelivery(
 
   // We store the organizations before the delivery is deleted
   const organizations = await getOrganizationsOfDocument(delivery.id, 'deliveries');
+  console.log('ORGANIZATIONS', organizations)
 
   const batch = db.batch();
-  const deliveryMaterials = await db.collection(`deliveries/${delivery.id}/materials`).get();
-  deliveryMaterials.forEach(doc => batch.delete(doc.ref));
-
-  const stakeholders = await db.collection(`deliveries/${delivery.id}/stakeholders`).get();
-  stakeholders.forEach(doc => batch.delete(doc.ref));
 
   const movieMaterials = await db.collection(`movies/${delivery.movieId}/materials`).get();
   movieMaterials.forEach(doc => {
@@ -102,20 +99,33 @@ export async function deleteFirestoreDelivery(
     });
   }
 
+  // Delete sub-collections
+  await removeAllSubcollections(snap, batch);
+  console.log(`removed sub colletions of ${delivery.id}`);
   await batch.commit();
 
+  console.log('NOTIFICATIONS PART')
   // When delivery is deleted, notifications are created for each organization of this delivery
   const notifications = organizations
     .filter(organization => !!organization && !!organization.userIds)
     .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
-    .map(userId =>
-      createNotification({
+    .map(userId =>{
+      console.log("USERID", userId)
+      console.log("NOTIFICTION", createNotification({
+        userId,
+        docId: delivery.id,
+        movie: { id: movie.id, title: movie.main.title },
+        app: App.mediaDelivering,
+        type: NotificationType.deleteDocument
+      }))
+      return createNotification({
         userId,
         docId: delivery.id,
         movie: { id: movie.id, title: movie.main.title },
         type: NotificationType.deleteDocument,
         app: App.mediaDelivering
       })
+    }
     );
 
   await triggerNotifications(notifications);

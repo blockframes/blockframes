@@ -2,10 +2,6 @@ import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/
 import { InvitationQuery, InvitationService, InvitationStore } from '../+state';
 import { Observable, Subscription } from 'rxjs';
 import { AuthQuery } from '@blockframes/auth';
-import { PermissionsQuery } from 'libs/organization/src/lib/permissions/+state/permissions.query';
-import { Order } from '@datorama/akita';
-import { switchMap } from 'rxjs/operators';
-import { InvitationType, Invitation } from '@blockframes/invitation/types';
 
 @Component({
   selector: 'invitation-list',
@@ -14,39 +10,30 @@ import { InvitationType, Invitation } from '@blockframes/invitation/types';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InvitationListComponent implements OnInit, OnDestroy {
-  public invitations$: Observable<Invitation[]>
+  public invitationsByDate$: Observable<{}>;
+
+  public today: Date = new Date();
+  public yesterday: Date = new Date();
+
   private sub: Subscription;
 
   constructor(
     private query: InvitationQuery,
     private store: InvitationStore,
     private service: InvitationService,
-    private permissionQuery: PermissionsQuery,
     private authQuery: AuthQuery
   ) {}
 
   ngOnInit() {
+    this.yesterday.setDate(this.today.getDate() - 1);
+
     const storeName = this.store.storeName;
     const queryFn = ref =>
       ref.where('organization.id', '==', this.authQuery.orgId).where('status', '==', 'pending');
-    if (!!this.authQuery.orgId) {
+    if (this.authQuery.orgId) {
       this.sub = this.service.syncCollection(queryFn, { storeName }).subscribe();
-      this.invitations$ = this.permissionQuery.isAdmin$.pipe(
-        switchMap(isAdmin => {
-          const filterBy = invitation =>
-            invitation.type === InvitationType.fromUserToOrganization ||
-            invitation.type === InvitationType.toWorkOnDocument;
-          if (isAdmin) {
-            return this.query.selectAll({
-              filterBy,
-              sortBy: 'date',
-              sortByOrder: Order.DESC
-            });
-          }
-        })
-      );
+      this.invitationsByDate$ = this.query.groupInvitationsByDate();
     }
-
   }
 
   ngOnDestroy() {

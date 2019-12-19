@@ -1,7 +1,6 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { NotificationQuery } from '../+state';
 import { Observable } from 'rxjs';
-import { Order } from '@datorama/akita';
-import { NotificationQuery, Notification } from '../+state';
 
 @Component({
   selector: 'notification-list',
@@ -10,14 +9,16 @@ import { NotificationQuery, Notification } from '../+state';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NotificationListComponent implements OnInit {
-  public notifications$: Observable<Notification[]>
+  public notificationsByDate$: Observable<{}>;
+
+  public today: Date = new Date();
+  public yesterday: Date = new Date();
 
   constructor(private query: NotificationQuery) {}
 
   ngOnInit() {
-    this.notifications$ = this.query.selectAll({
-      sortBy: 'date',
-      sortByOrder: Order.DESC
-    });
+    this.yesterday.setDate(this.today.getDate() - 1);
+
+    this.notificationsByDate$ = this.query.groupNotificationsByDate();
   }
 }

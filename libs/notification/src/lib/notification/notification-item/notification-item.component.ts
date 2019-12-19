@@ -20,7 +20,6 @@ interface Information {
 
 export class NotificationItemComponent {
   @Input() notification: Notification;
-  @Input() inWidget: boolean;
 
   constructor(private router: Router, private service: NotificationService, private movieQuery: MovieQuery) {}
 
@@ -36,22 +35,46 @@ export class NotificationItemComponent {
   public get informations(): {} {
     switch (this.notification.type) {
       case NotificationType.inviteOrganization:
-        return `${this.notification.organization.name} has been invited to work on ${this.movieTitleOriginal}'s delivery.`;
+        return {
+          message: `${this.notification.organization.name} has been invited to work on ${this.notification.movie.title.original}'s delivery.`,
+          imgRef: this.notification.movie.poster,
+          defaultImg: 'WelcomeDelivery_500.png'
+        };
       case NotificationType.removeOrganization:
-        return `${this.notification.organization.name} has been removed from ${this.movieTitleOriginal}'s delivery.`;
+        return  {
+          message: `${this.notification.organization.name} has been removed from ${this.notification.movie.title.original}'s delivery.`,
+          imgRef: this.notification.movie.poster,
+          defaultImg: 'WelcomeDelivery_500.png'
+        };
       case NotificationType.newSignature:
-        return `${this.notification.organization.name} has signed ${this.movieTitleOriginal}'s delivery.`;
+        return {
+          message: `${this.notification.organization.name} has signed ${this.notification.movie.title.original}'s delivery.`,
+          imgRef: this.notification.movie.poster,
+          defaultImg: 'WelcomeDelivery_500.png'
+        };
       case NotificationType.finalSignature:
-        return `Every stakeholders have signed ${this.movieTitleOriginal}'s delivery.`;
+        return {
+          message: `Every stakeholders have signed ${this.notification.movie.title.original}'s delivery.`,
+          imgRef: this.notification.movie.poster,
+          defaultImg: 'WelcomeDelivery_500.png'
+        };
       case NotificationType.createDocument:
-        return `A new delivery has been created for ${this.movieTitleOriginal}.`;
+        return {
+          message: `A new delivery has been created for ${this.notification.movie.title.original}.`,
+          imgRef: this.notification.movie.poster,
+          defaultImg: 'WelcomeDelivery_500.png'
+        };
       case NotificationType.deleteDocument:
-        return `${this.movieTitleOriginal}'s delivery has been deleted.`;
+        return {
+          message: `${this.notification.movie.title.original}'s delivery has been deleted.`,
+          imgRef: this.notification.movie.poster,
+          defaultImg: 'WelcomeDelivery_500.png'
+        };
       case NotificationType.pathToDocument:
         return {
           message: `You accepted the invitation. Now you can work on the document.`,
           imgRef: this.notification.movie.poster,
-          defaultImg: 'default-movie-poster.png'
+          defaultImg: 'WelcomeDelivery_500.png'
         };
       case NotificationType.organizationAcceptedByArchipelContent:
         return 'Your organization has been accepted by Archipel Content !';
