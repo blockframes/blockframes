@@ -4,6 +4,7 @@ import { InvitationStore, InvitationState } from './invitation.store';
 import { map } from 'rxjs/operators';
 import { formatDate } from '@blockframes/utils/helpers';
 import { Observable } from 'rxjs';
+import { InvitationType } from './invitation.firestore';
 
 @Injectable()
 export class InvitationQuery extends QueryEntity<InvitationState> {
@@ -13,7 +14,10 @@ export class InvitationQuery extends QueryEntity<InvitationState> {
 
   /** Group invitations by date in an object. */
   public groupInvitationsByDate(): Observable<{}> {
-    return this.selectAll().pipe(
+    const filterBy = invitation =>
+            invitation.type === InvitationType.fromUserToOrganization ||
+            invitation.type === InvitationType.toWorkOnDocument;
+    return this.selectAll({filterBy}).pipe(
       map(invits => {
         return invits.reduce((acc, invitation) => {
           // As Date cannot be used as an index type (key), we format the date into a string.

@@ -17,8 +17,8 @@
 </section>
 <mat-menu #notifications="matMenu" xPosition="before" class="mat-elevation-z6">
   <section test-id="notification-list">
-    <mat-list> <invitation-list></invitation-list> </mat-list>
-    <mat-list> <notification-list></notification-list> </mat-list>
+    <invitation-list></invitation-list>
+    <notification-list></notification-list>
     <article *ngIf="(totalCount$ | async) == 0" class="container">
       <span>You have not yet received any notifications</span>
     </article>

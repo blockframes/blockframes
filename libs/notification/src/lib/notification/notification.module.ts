@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { AvatarListModule } from '@blockframes/ui/avatar-list/avatar-list.module';
 import { AssetsThemeModule } from '@blockframes/ui';
+import { ReverseModule } from '@blockframes/utils/pipes/reverse.module';
 
 // Components
 import { NotificationListComponent } from './notification-list/notification-list.component';
@@ -16,6 +17,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatListModule } from '@angular/material/list';
+import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
   declarations: [
@@ -28,6 +30,7 @@ import { MatListModule } from '@angular/material/list';
     FlexLayoutModule,
     AvatarListModule,
     AssetsThemeModule,
+    ReverseModule,
 
     // Material
     MatIconModule,
@@ -35,7 +38,8 @@ import { MatListModule } from '@angular/material/list';
     MatButtonModule,
     MatDividerModule,
     MatBadgeModule,
-    MatListModule
+    MatListModule,
+    MatCardModule,
   ],
   exports: [NotificationListComponent, NotificationItemComponent]
 })

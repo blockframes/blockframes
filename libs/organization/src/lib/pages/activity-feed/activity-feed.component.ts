@@ -1,16 +1,16 @@
-import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 import {
   Notification,
   NotificationQuery,
   InvitationQuery,
-  InvitationStore,
-  InvitationService
+  InvitationStore
 } from '@blockframes/notification';
-import { AuthQuery } from '@blockframes/auth';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { Invitation } from '@blockframes/invitation/types';
+import { Invitation, InvitationStatus } from '@blockframes/invitation/types';
 import { OrganizationQuery } from '../../+state/organization.query';
+import { map } from 'rxjs/operators';
+import { Organization } from '@blockframes/organization/+state/organization.model';
 
 @Component({
   selector: 'notification-activity-feed',
@@ -19,48 +19,32 @@ import { OrganizationQuery } from '../../+state/organization.query';
   providers: [InvitationQuery, InvitationStore],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ActivityFeedComponent implements OnInit, OnDestroy {
-  public notificationsByDate$: Observable<{}>;
-  public invitationsByDate$: Observable<{}>;
-  public notifications$: Observable<Notification[]>;
-  public invitations$: Observable<Invitation[]>;
+export class ActivityFeedComponent implements OnInit {
+  public notificationsLabel$: Observable<string>;
+  public invitationsLabel$: Observable<string>;
 
-  public organizationName: string;
+  public organization: Organization;
   public app: string;
-  public today: Date = new Date();
-  public yesterday: Date = new Date();
-
-  private sub: Subscription;
 
   constructor(
     private notificationQuery: NotificationQuery,
     private invitationQuery: InvitationQuery,
-    private invitationStore: InvitationStore,
-    private invitationService: InvitationService,
     private organizationQuery: OrganizationQuery,
-    private authQuery: AuthQuery,
     private routerQuery: RouterQuery
   ) {}
 
   ngOnInit() {
-    // Set need variables.
-    this.yesterday.setDate(this.today.getDate() - 1);
-    this.organizationName = this.organizationQuery.getActive().name;
+    this.organization = this.organizationQuery.getActive();
     this.app = this.routerQuery.getValue().state.root.data.app;
-
-    // Create a specific invitation store for this component.
-    const storeName = this.invitationStore.storeName;
-    const queryFn = ref => ref.where('organization.id', '==', this.authQuery.orgId);
-    this.sub = this.invitationService.syncCollection(queryFn, { storeName }).subscribe();
-
-    // Populate observables.
-    this.notificationsByDate$ = this.notificationQuery.groupNotificationsByDate();
-    this.invitationsByDate$ = this.invitationQuery.groupInvitationsByDate()
-    this.invitations$ = this.invitationQuery.selectAll();
-    this.notifications$ = this.notificationQuery.selectAll();
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
+    this.invitationsLabel$ = this.invitationQuery
+      .selectCount(
+        invitation =>
+          invitation.status === InvitationStatus.pending &&
+          invitation.organization.id === this.organization.id
+      )
+      .pipe(map(lenght => `${this.organization.name} (${lenght})`));
+    this.notificationsLabel$ = this.notificationQuery
+      .selectCount()
+      .pipe(map(lenght => `All (${lenght})`));
   }
 }

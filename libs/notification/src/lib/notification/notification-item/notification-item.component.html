@@ -9,11 +9,6 @@
   </article>
   <article fxLayout="column" fxLayoutAlign="start start">
     <p>{{ information.message }}</p>
-    <ng-container *ngIf="inWidget; else inFeed">
-      <small>{{ notification.date.toDate() | date: 'medium' }}</small>
-    </ng-container>
-    <ng-template #inFeed>
-      <small>{{ notification.date.toDate() | date: 'shortTime' }}</small>
-    </ng-template>
+    <small>{{ notification.date.toDate() | date: 'shortTime' }}</small>
   </article>
 </section>

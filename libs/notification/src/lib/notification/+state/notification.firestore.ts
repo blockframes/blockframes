@@ -2,7 +2,7 @@ import { PublicOrganization } from '@blockframes/organization/types';
 import { PublicMovie } from '@blockframes/movie/types';
 import { firestore } from 'firebase/app';
 import { App } from '@blockframes/utils/apps';
-import { PublicUser } from '@blockframes/auth/+state/auth.store';
+import { PublicUser } from '@blockframes/auth/+state/auth.firestore';
 
 /** Type of Notification depending of its origin. */
 export const enum NotificationType {

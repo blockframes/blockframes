@@ -13,7 +13,6 @@ import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/imag
 import { OrganizationFormModule } from './components/organization-form/organization-form.module';
 import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
 import { AssetsThemeModule } from '@blockframes/ui';
-import { ReverseModule } from '@blockframes/utils/pipes/reverse.module';
 
 // Material
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -103,7 +102,6 @@ export const organizationRoutes: Routes = [
     AssetsThemeModule,
     NotificationModule,
     InvitationModule,
-    ReverseModule,
 
     // Material
     MatFormFieldModule,
