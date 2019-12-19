@@ -1,8 +1,8 @@
+import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { Organization } from '@blockframes/organization/+state/organization.model';
 import { CatalogCartQuery } from './cart.query';
 import { CartService } from 'apps/catalog/marketplace/marketplace/src/app/distribution-deal/+state/cart.service';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
-import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireFunctionsModule, AngularFireFunctions } from '@angular/fire/functions';
 import { AngularFireModule } from '@angular/fire';
@@ -76,7 +76,7 @@ const initTestApp = initializeTestApp({
 
 describe('CartService', () => {
   let spectator: SpectatorService<CartService>;
-  let serviceBasket: CartService;
+  let serviceCart: CartService;
 
   const createService = createServiceFactory({
     service: CartService,
@@ -85,10 +85,9 @@ describe('CartService', () => {
       AngularFireFunctionsModule,
       AngularFirestoreModule
     ],
-    mocks: [AngularFirestore],
+    mocks: [AngularFirestore, OrganizationService],
     providers: [
       CatalogCartQuery,
-      OrganizationService,
       AngularFireFunctions,
       AuthQuery,
       OrganizationQuery
@@ -97,7 +96,7 @@ describe('CartService', () => {
 
   beforeEach(() => {
     spectator = createService();
-    serviceBasket = spectator.get(CartService);
+    serviceCart = spectator.get(CartService);
   });
 
   afterEach(() => {
@@ -105,29 +104,29 @@ describe('CartService', () => {
   });
 
   it('should be created', () => {
-    expect(serviceBasket).toBeTruthy();
+    expect(serviceCart).toBeTruthy();
   });
 
-  it('should not call OrganizationService if no Organization ID is available', async () => {
+/*   it('should call OrganizationQuery when updateWishlist is called', () => {
     const getAcitveOrgSpy = jest
       .spyOn(spectator.get(OrganizationQuery), 'getActive')
       .mockReturnValue(mockOrg);
-    await serviceBasket.updateWishlist(mockMovie);
+    serviceCart.updateWishlist(mockMovie).catch(e => console.log(e));
     expect(getAcitveOrgSpy).toHaveBeenCalled();
   });
-
+ */
   it('should have only one function for one task', () => {
-    expect(serviceBasket.updateWishlist).toBeTruthy();
-    expect(serviceBasket.updateWishlistStatus).toBeTruthy();
-    expect(serviceBasket.updateWishlist).toBeTruthy();
-    expect(serviceBasket.removeMovieFromWishlist).toBeTruthy();
+    expect(serviceCart.updateWishlist).toBeTruthy();
+    expect(serviceCart.updateWishlistStatus).toBeTruthy();
+    expect(serviceCart.updateWishlist).toBeTruthy();
+    expect(serviceCart.removeMovieFromWishlist).toBeTruthy();
   });
 
   it('should remove a movie from the wishlist if the movie is present in the wishlist', () => {
     const orgQuerySpy = jest
       .spyOn(spectator.get(OrganizationQuery), 'getActive')
       .mockReturnValue(mockOrg);
-    const result = serviceBasket.removeMovieFromWishlist('test');
+    serviceCart.removeMovieFromWishlist('test');
     expect(orgQuerySpy).toHaveBeenCalled();
   });
 });
