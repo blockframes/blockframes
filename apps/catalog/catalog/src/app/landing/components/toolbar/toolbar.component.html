@@ -1,12 +1,12 @@
-<section>
-
-<mat-toolbar id="toolbar" class="mat-elevation-z2 transparent-toolbar" fxLayout="row" fxLayoutAlign="space-between center">
+<mat-toolbar [ngClass]="setBackground ? 'plain-toolbar' : 'transparent-toolbar'" (scroll)="scrollHandler()" fxLayout="row" fxLayoutAlign="space-between center">
   <!-- Burger menu -->
   <button fxHide.gt-xs mat-icon-button (click)="sidenav.toggle();">
     <mat-icon>menu</mat-icon>
   </button>
   <span fxHide.xs fxLayout="row" fxLayoutAlign="space-between center">
-    <img src="assets/logo/LogoAC.svg" class="app-icon" />
+    <a>
+      <img src="assets/logo/LogoAC.svg" class="app-icon" />
+    </a>
     <nav mat-tab-nav-bar mat-align-tabs="center" fxLayout="row" fxLayoutAlign="center center">
       <!-- ISSUE#1391 -->
       <a mat-tab-link routerLink=""><b>About us</b></a>
@@ -20,5 +20,3 @@
     <a mat-stroked-button routerLink="/auth/connexion" fragment="signup"><span><b>Sign up</b></span></a>
   </span>
 </mat-toolbar>
-
-</section>
