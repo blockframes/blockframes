@@ -36,7 +36,7 @@ function notifUser(userId: string, notificationType: NotificationType, org: Orga
 }
 
 /** Send notifications to all org's members when a member is added or removed. */
-async function sendNotificationToMembers(before: OrganizationDocument, after: OrganizationDocument) {
+async function notifyOnOrgMemberChanges(before: OrganizationDocument, after: OrganizationDocument) {
   // Member added
   if (before.userIds.length < after.userIds.length) {
     const userAddedId = difference(after.userIds, before.userIds)[0];
@@ -48,8 +48,8 @@ async function sendNotificationToMembers(before: OrganizationDocument, after: Or
 
   // Member removed
   } else if (before.userIds.length > after.userIds.length) {
-    const userAddedId = difference(before.userIds, after.userIds)[0];
-    const userSnapshot = await db.doc(`users/${userAddedId}`).get();
+    const userRemovedId = difference(before.userIds, after.userIds)[0];
+    const userSnapshot = await db.doc(`users/${userRemovedId}`).get();
     const userRemoved = userSnapshot.data() as PublicUser;
 
     const notifications = after.userIds.map(userId => notifUser(userId, NotificationType.memberRemovedFromOrg, after, userRemoved));
@@ -99,7 +99,7 @@ export async function onOrganizationUpdate(
   }
 
   // Send notifications when a member is added or removed
-  await sendNotificationToMembers(before, after);
+  await notifyOnOrgMemberChanges(before, after);
 
   // Deploy org's smart-contract
   const becomeAccepted = before.status === OrganizationStatus.pending && after.status === OrganizationStatus.accepted;
@@ -113,6 +113,7 @@ export async function onOrganizationUpdate(
 
     // Send a notification to the creator of the organization
     const notification = createNotification({
+      // At this moment, the organization was just created, so we are sure to have only one userId in the array
       userId: after.userIds[0],
       type: NotificationType.organizationAcceptedByArchipelContent,
       app: App.blockframes
