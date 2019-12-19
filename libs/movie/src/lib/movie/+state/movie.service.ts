@@ -49,9 +49,8 @@ export class MovieService extends CollectionService<MovieState> {
   /** Update deletedBy (_meta field of movie) with the current user and remove the movie. */
   public async remove(movieId: string) {
     const userId = this.authQuery.userId;
-    const meta = this.query.getEntity(movieId)._meta;
     // We need to update the _meta field before remove to get the userId in the backend function: onMovieDeleteEvent
-    await this.db.doc(`movies/${movieId}`).update({ _meta: { ...meta, deletedBy: userId } });
+    await this.db.doc(`movies/${movieId}`).update({ "_meta.deletedBy": userId } );
     return super.remove(movieId);
   }
 
@@ -77,7 +76,7 @@ export class MovieService extends CollectionService<MovieState> {
   onUpdate(form: Movie, { write }: WriteOptions) {
     const movie = this.query.getActive();
     const movieRef = this.db.doc(`movies/${movie.id}`).ref;
-    write.update(movieRef, { _meta: { ...movie._meta, updatedBy: this.authQuery.userId } });
+    write.update(movieRef, { "_meta.updatedBy": this.authQuery.userId });
   }
 
   /** Hook that triggers when a movie is added to the database. */
