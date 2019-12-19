@@ -65,13 +65,4 @@ export class InvitationService extends CollectionService<InvitationState> {
   public declineInvitation(invitation: Invitation) {
     return this.update({...invitation, status: InvitationStatus.declined});
   }
-
-  public invitationTimestampToDate(invitations: Observable<Invitation[]>) {
-    return invitations.pipe(
-      map(invits => invits.map(invitation => {
-        return {...invitation, date: invitation.date.toDate()}
-      }))
-    )
-  }
-
 }

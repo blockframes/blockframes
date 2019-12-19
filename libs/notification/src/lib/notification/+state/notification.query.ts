@@ -14,6 +14,7 @@ export class NotificationQuery extends QueryEntity<NotificationState, Notificati
     super(store);
   }
 
+  /** Group notifications by date in an object. */
   public groupNotificationsByDate(): Observable<{}> {
     return this.selectAll().pipe(
       map(notifications => {

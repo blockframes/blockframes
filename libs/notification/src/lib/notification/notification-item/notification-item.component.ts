@@ -48,7 +48,11 @@ export class NotificationItemComponent {
       case NotificationType.deleteDocument:
         return `${this.movieTitleOriginal}'s delivery has been deleted.`;
       case NotificationType.pathToDocument:
-        return `You accepted the invitation. Now you can work on the document.`;
+        return {
+          message: `You accepted the invitation. Now you can work on the document.`,
+          imgRef: this.notification.movie.poster,
+          defaultImg: 'default-movie-poster.png'
+        };
       case NotificationType.organizationAcceptedByArchipelContent:
         return 'Your organization has been accepted by Archipel Content !';
       case NotificationType.movieTitleUpdated:

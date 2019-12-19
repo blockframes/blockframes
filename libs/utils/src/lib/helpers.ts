@@ -1,3 +1,4 @@
+/** Format a date into a string to match angular "| date" in html. */
 export function formatDate(date: Date) {
   return (
     date.toLocaleString('default', { month: 'short' }) +

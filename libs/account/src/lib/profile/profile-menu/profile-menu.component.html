@@ -1,7 +1,14 @@
 <ng-container *ngIf="(user$ | async) as user">
-  <button mat-icon-button [matMenuTriggerFor]="menu" test-id="profile-avatar">
-    <img class="profile-picture-menu" [imgRef]="profile.avatar" [placeholderUrl]="placeholderUrl" alt="Profile picture" />
-  </button>
+  <ng-container *ngIf="profile.avatar; else placeholder">
+    <button mat-icon-button [matMenuTriggerFor]="menu" test-id="profile-avatar">
+      <img class="profile-picture-menu" [imgRef]="profile.avatar" alt="Profile picture" />
+    </button>
+  </ng-container>
+  <ng-template #placeholder>
+    <button mat-icon-button [matMenuTriggerFor]="menu" test-id="profile-avatar">
+      <img class="profile-picture-menu" asset="Avatar_40.png" />
+    </button>
+  </ng-template>
   <mat-menu #menu="matMenu" class="mat-elevation-z6 account-profile-menu">
     <mat-list>
       <ng-content select="[widgets]"></ng-content>
