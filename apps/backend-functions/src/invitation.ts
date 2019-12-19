@@ -17,6 +17,7 @@ import {
   createDocPermissions,
   createUserPermissions,
   NotificationType,
+  createNotification,
   UserRole,
   App,
   PublicUser
@@ -29,8 +30,6 @@ import {
   userRequestedToJoinYourOrg,
   userJoinOrgPendingRequest
 } from './assets/mail-templates';
-import { createNotification } from '@blockframes/notification/types';
-import { User } from '@blockframes/auth/+state/auth.firestore';
 
 /** Checks if an invitation just got accepted. */
 function wasAccepted(before: InvitationDocument, after: InvitationDocument) {
@@ -112,18 +111,6 @@ async function mailOnInvitationAccept(userId: string, organizationId: string) {
 async function onInvitationToOrgAccept({ user, organization }: InvitationFromOrganizationToUser) {
   // TODO(issue#739): When a user is added to an org, clear other invitations
   await addUserToOrg(user.uid, organization.id);
-  // Create a notification for the organization members.
-  const { userIds } = await getDocument<OrganizationDocument>(`orgs/${organization.id}`);
-  const { name, surname } = await getDocument<User>(`users/${user.uid}`);
-  const notifications = userIds.map(userId => {
-    return createNotification({
-      userId,
-      app: App.blockframes,
-      type: NotificationType.addOrgMember,
-      user: { ...user, name, surname }
-    });
-  })
-  await triggerNotifications(notifications)
   // TODO maybe send an email "you have accepted to join OrgNAme ! Congratz, you are now part of this org !"
   return mailOnInvitationAccept(user.uid, organization.id);
 }

@@ -6,12 +6,13 @@ import {
   SnapObject,
   MovieDocument,
   StakeholderDocument,
-  DeliveryDocument
+  DeliveryDocument,
+  NotificationType,
+  createNotification,
+  App,
+  PublicMovie,
+  PublicOrganization
 } from './data/types';
-import { PublicOrganization } from '@blockframes/organization/types';
-import { NotificationType, createNotification } from '@blockframes/notification/types';
-import { PublicMovie } from '@blockframes/movie/types';
-import { App } from '@blockframes/utils/apps';
 
 export async function onDeliveryStakeholderCreate(
   snap: FirebaseFirestore.DocumentSnapshot,

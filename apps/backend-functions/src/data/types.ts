@@ -2,11 +2,12 @@ import { PublicOrganization } from '@blockframes/organization/types';
 import { NotificationType } from '@blockframes/notification/types';
 import { PublicMovie } from '@blockframes/movie/types';
 
-export { MovieDocument } from '@blockframes/movie/types';
+export { MovieDocument, PublicMovie } from '@blockframes/movie/types';
 export {
   OrganizationDocument,
   OrganizationStatus,
-  createOrganizationDocument
+  createOrganizationDocument,
+  PublicOrganization
 } from '@blockframes/organization/types';
 export {
   InvitationDocument,
