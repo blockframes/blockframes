@@ -1,17 +1,5 @@
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, HostListener } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
-
-/** Transition from transparent to plain toolbar and vice versa. */
-window.addEventListener('scroll', function(e) {
-  const toolbar = document.getElementById('toolbar');
-  if (document.documentElement.scrollTop || document.body.scrollTop > window.innerHeight) {
-    toolbar.classList.add('plain-toolbar');
-    toolbar.classList.remove('transparent-toolbar');
-  } else {
-    toolbar.classList.add('transparent-toolbar');
-    toolbar.classList.remove('plain-toolbar');
-  }
-});
 
 @Component({
   selector: 'catalog-toolbar',
@@ -22,4 +10,11 @@ window.addEventListener('scroll', function(e) {
 export class CatalogToolbarComponent {
 
   @Input() sidenav: MatSidenav;
+  public setBackground = false;
+
+  /** Change the toolbar class when page is scrolled. */
+  @HostListener('window:scroll')
+    scrollHandler() {
+      this.setBackground = window.pageYOffset > 0;
+    }
 }
