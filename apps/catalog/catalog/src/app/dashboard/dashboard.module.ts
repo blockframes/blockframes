@@ -29,6 +29,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [LayoutModule, RouterModule.forChild(routes)]
+  imports: [LayoutModule, RouterModule.forChild(routes)],
+  declarations: []
 })
 export class DashboardModule {}

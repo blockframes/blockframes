@@ -7,8 +7,6 @@ import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/imag
 
 // Widgets
 import { OverlayWidgetModule } from '@blockframes/ui/overlay-widget/overlay-widget.module.ts';
-import { NotificationWidgetModule } from '@blockframes/ui/overlay-widget/notification-widget/nofitication-widget.module';
-import { SearchWidgetModule } from '@blockframes/ui/overlay-widget/search-widget/search-widget.module';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -40,8 +38,6 @@ const material = [
   imports: [CommonModule,
     OverlayWidgetModule,
     FlexLayoutModule,
-    NotificationWidgetModule,
-    SearchWidgetModule,
     RouterModule,
     ImageReferenceModule,
   ...material
