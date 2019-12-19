@@ -5,6 +5,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule, Routes } from '@angular/router';
 import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
 import { BackgroundAssetModule } from '@blockframes/ui/theme/background-asset.module';
+import { AssetsThemeModule } from '@blockframes/ui';
 
 // Angular Fire
 import { AngularFireAuthModule } from '@angular/fire/auth';

@@ -9,11 +9,12 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
+import { AssetsThemeModule } from '@blockframes/ui';
 
 const material = [MatMenuModule, MatDividerModule, MatIconModule, MatButtonModule, MatListModule];
 
 @NgModule({
-  imports: [CommonModule, ImageReferenceModule, ...material],
+  imports: [CommonModule, ImageReferenceModule, AssetsThemeModule, ...material],
   declarations: [ProfileMenuComponent],
   exports: [ProfileMenuComponent]
 })

@@ -3,7 +3,6 @@ import { QueryEntity } from '@datorama/akita';
 import { InvitationStore, InvitationState } from './invitation.store';
 import { map } from 'rxjs/operators';
 import { formatDate } from '@blockframes/utils/helpers';
-import { Invitation } from './invitation.firestore';
 import { Observable } from 'rxjs';
 
 @Injectable()
@@ -13,7 +12,7 @@ export class InvitationQuery extends QueryEntity<InvitationState> {
   }
 
   /** Group invitations by date in an object. */
-  public groupInvitationsByDate() {
+  public groupInvitationsByDate(): Observable<{}> {
     return this.selectAll().pipe(
       map(invits => {
         return invits.reduce((acc, invitation) => {
