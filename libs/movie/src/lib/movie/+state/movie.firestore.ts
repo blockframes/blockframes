@@ -199,6 +199,7 @@ export interface MovieSalesInfoDocumentWithDates extends MovieSalesInfoRaw<Date>
 interface DocumentMeta {
   createdBy: string;
   updatedBy?: string,
+  deletedBy?: string
 }
 
 /** Generic interface of a Movie */

@@ -33,7 +33,7 @@ import { logErrors } from './internals/sentry';
 import { onInvitationWrite } from './invitation';
 import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate } from './orgs';
 import { adminApp, onRequestAccessToAppWrite } from './admin';
-import { onMovieUpdate, onMovieCreate, removeMovieAndSendNotifications } from './movie';
+import { onMovieUpdate, onMovieCreate, onMovieDelete } from './movie';
 
 /** Trigger: when eth-events-server pushes contract events. */
 export const onIpHashEvent = functions.pubsub.topic('eth-events.ipHash').onPublish(onIpHash);
@@ -118,6 +118,10 @@ export const onInvitationUpdateEvent = onDocumentWrite(
   onInvitationWrite
 );
 
+//--------------------------------
+//       Movies Management        //
+//--------------------------------
+
 /**
  * Trigger: when a movie is created
  */
@@ -134,9 +138,13 @@ export const onMovieUpdateEvent = onDocumentUpdate(
   onMovieUpdate
 )
 
-/** Trigger: REST call to remove a movie and send notifications for all users of concerned organizations. */
-export const removeMovie = functions.https
-  .onCall(removeMovieAndSendNotifications);
+/**
+ * Trigger: when a movie is deleted
+ */
+export const onMovieDeleteEvent = onDocumentDelete(
+  'movies/{movieId}',
+  onMovieDelete
+)
 
 //--------------------------------
 //       Apps Management        //

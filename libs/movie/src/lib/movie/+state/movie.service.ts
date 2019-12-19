@@ -11,7 +11,6 @@ import { MovieState, MovieStore } from './movie.store';
 import { Contract, createContractTitleDetail } from '@blockframes/marketplace/app/distribution-deal/+state/cart.model';
 import { AuthQuery } from '@blockframes/auth';
 import { MovieQuery } from './movie.query';
-import { AngularFireFunctions } from '@angular/fire/functions';
 
 /**
  * @see #483
@@ -35,7 +34,6 @@ export class MovieService extends CollectionService<MovieState> {
     private permissionsService: PermissionsService,
     private query: MovieQuery,
     private authQuery: AuthQuery,
-    private functions: AngularFireFunctions,
     store: MovieStore
   ) {
     super(store);
@@ -48,10 +46,13 @@ export class MovieService extends CollectionService<MovieState> {
     )
   }
 
-  /** Call a backend function that remove the movie and send notifications to concerned users. */
+  /** Update deletedBy (_meta field of movie) with the current user and remove the movie. */
   public async remove(movieId: string) {
-    const callDeploy = this.functions.httpsCallable('removeMovie');
-    await callDeploy({ movieId }).toPromise();
+    const userId = this.authQuery.userId;
+    const meta = this.query.getEntity(movieId)._meta;
+    // We need to update the _meta field before remove to get the userId in the backend function: onMovieDeleteEvent
+    await this.db.doc(`movies/${movieId}`).update({ _meta: { ...meta, deletedBy: userId } });
+    return super.remove(movieId);
   }
 
   /** Add a partial or a full movie to the database. */

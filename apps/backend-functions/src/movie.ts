@@ -4,7 +4,6 @@ import { createNotification, NotificationType } from '@blockframes/notification/
 import { App } from '@blockframes/utils/apps';
 import { triggerNotifications } from './notification';
 import { flatten, isEqual } from 'lodash';
-import { CallableContext } from 'firebase-functions/lib/providers/https';
 
 /** Create a notification with user and movie. */
 function notifUser(userId: string, notificationType: NotificationType, movie: MovieDocument, user: PublicUser) {
@@ -56,25 +55,18 @@ export async function onMovieCreate(
 }
 
 /** Remove a movie and send notifications to all users of concerned organizations. */
-export const removeMovieAndSendNotifications = async (data: any, context: CallableContext) => {
-  const userId = context.auth!.uid;
-  const movieId = data.movieId;
+export async function onMovieDelete(
+  snap: FirebaseFirestore.DocumentSnapshot,
+  context: functions.EventContext
+) {
+  const movie = snap.data() as MovieDocument;
 
-  if (!userId || !movieId) {
-    throw new Error(`userId or movieId are undefined.`)
-  }
-
-  const userSnapshot = await db.doc(`users/${userId}`).get();
+  const userSnapshot = await db.doc(`users/${movie._meta!.deletedBy}`).get();
   const user = userSnapshot.data() as PublicUser;
-
-  const movieSnapshot = await db.doc(`movies/${movieId}`).get();
-  const movie = movieSnapshot.data() as MovieDocument;
 
   const notifications = await createNotificationsForUsers(movie, NotificationType.movieDeleted, user);
 
-  await triggerNotifications(notifications);
-
-  return db.doc(`movies/${movieId}`).delete();
+  return triggerNotifications(notifications);
 }
 
 export async function onMovieUpdate(
