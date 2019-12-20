@@ -12,16 +12,16 @@
     </mat-toolbar>
     <!-- TODO: update icons, connect with pages, get number for mat-chips -->
     <mat-nav-list>
-      <a mat-list-item>
+      <a mat-list-item routerLink="overview">
         <mat-icon matListIcon>add</mat-icon>
         <span matLine>Overview</span>
       </a>
       <mat-chip-list>
-        <a mat-list-item>
+        <a mat-list-item routerLink="titles">
           <mat-icon matListIcon>add</mat-icon>
           <span matLine>Titles</span>
         </a>
-        <a mat-list-item>
+        <a mat-list-item routerLink="deals">
           <mat-icon matListIcon>add</mat-icon>
           <span matLine>Deals</span>
         </a>
@@ -32,16 +32,18 @@
         <span matLine>Marketplace</span>
       </a>
       <mat-divider></mat-divider>
-      <a mat-list-item>
+      <a mat-list-item routerLink="faq">
         <mat-icon matListIcon>add</mat-icon>
         <span matLine>FAQ</span>
       </a>
-      <a mat-list-item>
+      <a mat-list-item routerLink="contact">
         <mat-icon matListIcon>add</mat-icon>
         <span matLine>Contact</span>
       </a>
     </mat-nav-list>
-    <button>Help?</button>
+    <div class="help-button">
+      <button mat-flat-button>Help?</button>
+    </div>
   </mat-sidenav>
   <mat-sidenav-content>
     <mat-toolbar id="catalog-toolbar" fxLayout="row">
