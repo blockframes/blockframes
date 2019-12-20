@@ -18,7 +18,7 @@ const routes: Routes = [
         path: 'deals'
       },
       {
-        path: 'FAQ'
+        path: 'faq'
       },
       {
         path: 'about',

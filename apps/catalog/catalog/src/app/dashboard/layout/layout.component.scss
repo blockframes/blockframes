@@ -1,5 +1,6 @@
 mat-sidenav-container {
   height: 100%;
+  position: relative;
   #dashboard-navbar {
     width: 300px;
     border: none;
@@ -7,6 +8,12 @@ mat-sidenav-container {
     .mat-toolbar {
       border: none;
     }
+  }
+  .help-button {
+    // text-align: center;
+    position: absolute;
+    left: 120px;
+    bottom: 20px;
   }
 }
 
