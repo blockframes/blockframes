@@ -1,6 +1,14 @@
 import { Firestore } from '../admin';
 import { withoutUndefined } from './0001';
 
+interface Language {
+  [language: string]:
+    {
+      dubbed: boolean,
+    subtitle: boolean,
+    closedCaptioned: boolean
+  }
+}
 
 /**
  * Upgrade invitation collection
@@ -23,7 +31,7 @@ export async function upgradeInvitationCollection(db: Firestore) {
     return invitDocSnapshot.ref.set(newData);
   });
   await Promise.all(newInvitationDoc);
-  console.log('Upgrading invitation collection done');
+  console.log('Upgrading invitation collection done.');
 }
 
 /**
@@ -40,20 +48,22 @@ export async function upgradeOrganizationCollection(db: Firestore) {
 
     const newData = {
       ...organizationData,
+      allowLineUpCreation: false,
       denomination: {
         full: name,
         public: name
       },
-      movieIds: {
-        archipelContent: movieIds
-      }
+      isBlockchainEnabled: false,
+      // movieIds: {
+      //   archipelContent: movieIds
+      // }
     };
 
     return orgDocSnapshot.ref.set(newData);
   });
 
   await Promise.all(newOrgData);
-  console.log('Upgrading organization collection done');
+  console.log('Upgrading organization collection done.');
 }
 
 /**
@@ -64,10 +74,11 @@ export async function upgradeMovieCollection(db: Firestore) {
 
   const newMovieData = movies.docs.map(async (movieDocSnapshot: any): Promise<any> => {
     const movieData = movieDocSnapshot.data();
-    const {length} = movieData.main;
+    const {length, languages} = movieData.main;
     const {pegi} = movieData.salesInfo;
     const {rights} = movieData.salesAgentDeal;
     const {totalBudget} = movieData.budget;
+    const {dubbings, subtitles} = movieData.versionInfo;
 
     function convertStrToNumber(string) {
       const numberWithoutComma = string.replace(/,/g, '');
@@ -84,7 +95,26 @@ export async function upgradeMovieCollection(db: Firestore) {
     function termsDate(string) {
       const seconds = Date.parse(string);
       return new Date(seconds);
-    }
+    };
+
+    function subDubTitle(dubbingArray, subtitleArray) {
+      let languages : Language;
+      const subDub = dubbingArray.filter(e => subtitleArray.includes(e)); // tableau des langues dans sub et dub
+      const dubOnly = dubbingArray.filter(e => !subtitleArray.includes(e))
+      const subOnly = subtitleArray.filter(e => !dubbingArray.includes(e))
+
+      subOnly.forEach(key => {
+        languages = ({...languages, [key]:{dubbed: false, subtitle: true, closedCaptioned: false}})
+      })
+
+      dubOnly.forEach(key => {
+        languages = ({...languages, [key]:{dubbed: true, subtitle: false, closedCaptioned: false}})
+      })
+
+      subDub.forEach(key => {
+        languages = ({...languages, [key]:{dubbed: true, subtitle: true, closedCaptioned: false}})
+      })
+    };
 
     delete movieData.main.length;
     delete movieData.salesInfo.pegi;
@@ -92,9 +122,9 @@ export async function upgradeMovieCollection(db: Firestore) {
 
     const newData = {
       ...movieData,
-      applications: {
-        archipelContent: true
-      },
+      // applications: {
+      //   archipelContent: true
+      // },
       budget: {
         realBudget: {
           currency: findCurrency(totalBudget),
@@ -103,6 +133,7 @@ export async function upgradeMovieCollection(db: Firestore) {
       },
       main: withoutUndefined({
         ...movieData.main,
+        originalLanguages: languages,
         totalRunTime: length
       }),
       salesAgentDeal: {
@@ -117,14 +148,15 @@ export async function upgradeMovieCollection(db: Firestore) {
         rating: {
           value: pegi
         },
-      })
+      }),
+      versionInfo: subDubTitle(dubbings, subtitles)
     };
 
     return movieDocSnapshot.ref.set(newData);
   });
 
   await Promise.all(newMovieData);
-  console.log('Upgrading movie collection done');
+  console.log('Upgrading movie collection done.');
 }
 
 export async function upgrade(db: Firestore) {
