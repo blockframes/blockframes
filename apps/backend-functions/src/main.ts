@@ -177,33 +177,6 @@ export const onOrganizationDeleteEvent = onDocumentDelete(
 );
 
 //--------------------------------
-//        Movies Management     //
-//--------------------------------
-
-/**
- * Trigger: when a movie is created
- */
-export const onMovieCreateEvent = onDocumentCreate(
-  'movies/{movieId}',
-  onMovieCreate
-);
-
-/**
- * Trigger: when a movie is deleted
- */
-export const onMovieDeleteEvent = onDocumentDelete(
-  'movies/{movieId}',
-  onMovieDelete
-)
-
-/**
- * Trigger: when a movie is updated
- */
-export const onMovieUpdateEvent = onDocumentUpdate(
-  'movies/{movieId}',
-  onMovieUpdate
-)
-//--------------------------------
 //        GENERATE PDF          //
 //--------------------------------
 
@@ -219,10 +192,10 @@ const RELAYER_CONFIG: RelayerConfig = {
   mnemonic
 };
 
-export const relayerDeploy = functions.runWith({timeoutSeconds: 540}).https
+export const relayerDeploy = functions.runWith({ timeoutSeconds: 540 }).https
   .onCall((data, context) => logErrors(relayerDeployLogic(data, RELAYER_CONFIG)));
 
-export const relayerRegister = functions.runWith({timeoutSeconds: 540}).https
+export const relayerRegister = functions.runWith({ timeoutSeconds: 540 }).https
   .onCall((data, context) => logErrors(relayerRegisterENSLogic(data, RELAYER_CONFIG)));
 
 export const relayerSend = functions.https
