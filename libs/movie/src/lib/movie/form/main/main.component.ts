@@ -20,6 +20,9 @@ export class MovieFormMainComponent implements OnInit {
   public genresFilterCtrl = new FormControl();
   public countries$: Observable<SlugAndLabel[]>;
   public languages$: Observable<SlugAndLabel[]>;
+  // @todo (#1463)
+  // public main = new MovieMainForm(this.query.getForm().main)
+  // no more control container
   public genres$: Observable<SlugAndLabel[]>;
 
   constructor(public controlContainer: ControlContainer) { }
