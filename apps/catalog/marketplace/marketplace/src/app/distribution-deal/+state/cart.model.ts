@@ -3,6 +3,8 @@ import { Price, createPrice } from '@blockframes/utils/common-interfaces/price';
 import { ContractDocumentWithDates, ContractStatus, ContractTitleDetail } from './cart.firestore';
 import { createTerms } from '@blockframes/utils/common-interfaces/terms';
 import { getCodeIfExists } from '@blockframes/movie/movie/static-model/staticModels';
+import { LegalRolesSlug } from '@blockframes/movie/movie/static-model/types';
+import { Party } from '@blockframes/utils/common-interfaces/identity';
 
 export const enum CartStatus {
   pending = 'pending',
@@ -83,26 +85,40 @@ export function validateContract(contract: Contract): boolean {
 
   if (!licensees.length || !licensors.length) { return false; }
 
-  for(const licensee of licensees) {
-    if(licensee.orgId === undefined) {
+  for (const licensee of licensees) {
+    if (licensee.orgId === undefined) {
       delete licensee.orgId
     }
-    if(typeof licensee.showName !== 'boolean') {
+    if (typeof licensee.showName !== 'boolean') {
       return false;
     }
   }
 
-  for(const licensor of licensors) {
-    if(licensor.orgId === undefined) {
+  for (const licensor of licensors) {
+    if (licensor.orgId === undefined) {
       delete licensor.orgId
     }
-    if(typeof licensor.showName !== 'boolean') {
+    if (typeof licensor.showName !== 'boolean') {
       return false;
     }
   }
 
   // Other contract validation steps goes here 
   // ...
-  
+
   return true;
+}
+
+/**
+ * 
+ * @param contract 
+ * @param legalRole 
+ */
+export function getContractParties(contract: Contract, legalRole: LegalRolesSlug): Party[] {
+  return contract.parties.filter(p => p.role === getCodeIfExists('LEGAL_ROLES', legalRole));
+}
+
+export function buildChainOfTitle() {
+  // ie:  calculate contract prices and fees for each parents
+  // @todo #1462 implement this
 }

@@ -29,7 +29,7 @@ import { SSF } from 'xlsx';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { LicenseStatus, MovieLanguageTypes } from '@blockframes/movie/movie/+state/movie.firestore';
 import { createCredit, createParty } from '@blockframes/utils/common-interfaces/identity';
-import { createContract, validateContract, Contract, createContractTitleDetail } from '@blockframes/marketplace/app/distribution-deal/+state/cart.model';
+import { createContract, validateContract, Contract, createContractTitleDetail, getContractParties } from '@blockframes/marketplace/app/distribution-deal/+state/cart.model';
 import { ContractStatus, ContractTitleDetail } from '@blockframes/marketplace/app/distribution-deal/+state/cart.firestore';
 import { createFee } from '@blockframes/utils/common-interfaces/price';
 
@@ -51,6 +51,7 @@ export interface DealsImportState {
   errors?: SpreadsheetImportError[];
   movieTitle: String;
   movieInternalRef?: string;
+  movieId: string;
   contract: Contract;
 }
 
@@ -107,17 +108,22 @@ enum SpreadSheetMovie {
 
 enum SpreadSheetDistributionDeal {
   internalRef,
+  distributionDealId,
   internationalTitle, // unused
-  licenseeName, // old operatorName 
+  licensorName, // @todo #1462 should be unused since we can already retreive this from contract
+  licenseeName, // old operatorName @todo #1462 should be unused since we can already retreive this from contract
   displayLicenseeName, // old showOperatorName
   rightsStart,
   rightsEnd,
   territories,
+  territoriesExcluded, // @todo #1462
   licenseType, // old medias
   dubbings,
   subtitles,
+  captions, // @todo #1462
   exclusive,
-  price
+  priceAmount,
+  priceCurrency,
 }
 
 enum SpreadSheetContract {
@@ -1053,16 +1059,27 @@ export class ViewExtractedElementsComponent {
 
         const movie = this.movieQuery.existingMovie(spreadSheetRow[SpreadSheetDistributionDeal.internalRef]);
         const distributionDeal = createDistributionDeal();
-        // Create the contract that will handle the deal
-        const contract = createContract();
-        contract.status = ContractStatus.accepted;
+
+        /////////////////
+        // CONTRACT STUFF
+        /////////////////
+
+        // @todo #1462 handle if movie is missing
+        // Retreive the contract that will handle the deal
+        if (spreadSheetRow[SpreadSheetDistributionDeal.distributionDealId]) {
+          distributionDeal.id = spreadSheetRow[SpreadSheetDistributionDeal.distributionDealId];
+        }
+
+        // @todo #1462 handle if contract is missing
+        const contract = await this.movieService.getContractFromDeal(movie.id, distributionDeal.id);
 
         const importErrors = {
           distributionDeal,
           contract,
           errors: [],
           movieInternalRef: spreadSheetRow[SpreadSheetDistributionDeal.internalRef],
-          movieTitle: movie ? movie.main.title.original : undefined
+          movieTitle: movie ? movie.main.title.original : undefined,
+          movieId: movie ? movie.id : undefined
         } as DealsImportState;
 
         if (movie) {
@@ -1072,33 +1089,26 @@ export class ViewExtractedElementsComponent {
 
           /* LICENSOR */
 
-          // @TODO #1388 Cascade8 will be the licensor for imported movies. Update this if needed
-          const licensor = createParty();
-          licensor.role = 'licensor';
-          licensor.orgId = this.organizationQuery.getActiveId();
-          licensor.displayName = 'licensor display name example';
-          licensor.showName = true;
-          contract.parties.push(licensor);
+          // Nothing to do. Should be the same infos already filled in previously imported contract sheet
 
           /* LICENSEE */
 
-          const licensee = createParty();
-          licensee.role = 'licensee';
+          // Retreive the licensee inside the contract to update his infos
 
-          // DISPLAY NAME
-          if (spreadSheetRow[SpreadSheetDistributionDeal.licenseeName]) {
-            licensee.displayName = spreadSheetRow[SpreadSheetDistributionDeal.licenseeName];
-          }
+          // @todo #1462 can have multiple licensors? => YES UPDATE
+          // @todo #1462 handle if there is no licensee
+          const licensee = getContractParties(contract, 'licensee').shift();
 
           // SHOW NAME
           if (spreadSheetRow[SpreadSheetDistributionDeal.displayLicenseeName]) {
             licensee.showName = spreadSheetRow[SpreadSheetDistributionDeal.displayLicenseeName].toLowerCase() === 'yes' ? true : false;
           }
 
-          contract.parties.push(licensee);
+          // @todo #1462 need to update licensee inside contract object ?
+          // contract.parties.push(licensee);
 
           /* LICENSE STATUS */
-          distributionDeal.licenseStatus = LicenseStatus.paid;
+          distributionDeal.licenseStatus = LicenseStatus.paid; // @todo #1462 ok with that?
 
           /////////////////
           // TERMS STUFF
@@ -1206,8 +1216,16 @@ export class ViewExtractedElementsComponent {
           }
 
           // PRICE
-          if (!isNaN(Number(spreadSheetRow[SpreadSheetDistributionDeal.price]))) {
-            contract.price.amount = parseInt(spreadSheetRow[SpreadSheetDistributionDeal.price], 10);
+          if (!isNaN(Number(spreadSheetRow[SpreadSheetDistributionDeal.priceAmount]))) {
+            // @todo #1462 this should be distributionDeal price. But we don't have such model to store it
+            // until we have a way to store it, we increment global price for this title.
+            contract.titles[movie.id].price.amount += parseInt(spreadSheetRow[SpreadSheetDistributionDeal.priceAmount], 10);
+          }
+
+          if (spreadSheetRow[SpreadSheetDistributionDeal.priceCurrency]) {
+            // @todo #1462 this should be distributionDeal price. But we don't have such model to store it
+            // @todo #1462 test if priceCurrency is in staticModels
+            contract.titles[movie.id].price.currency = spreadSheetRow[SpreadSheetDistributionDeal.priceCurrency];
           }
 
           // Checks if sale already exists
@@ -1235,6 +1253,7 @@ export class ViewExtractedElementsComponent {
         this.deals.data.push(saleWithErrors);
         this.deals.data = [... this.deals.data];
 
+        this.cdRef.detectChanges();
       }
 
     });
@@ -1332,12 +1351,14 @@ export class ViewExtractedElementsComponent {
       });
     }
 
+    // @todo #1462 new verifications to make ?
+
     //////////////////
     // OPTIONAL FIELDS
     //////////////////
 
-    // CONTRACT PRICE VALIDATION
-    if (!contract.price.amount) {
+    // TITLE PRICE VALIDATION
+    if (!contract.titles[importErrors.movieId].price.amount) {
       errors.push({
         type: 'warning',
         field: 'price',
@@ -1360,12 +1381,12 @@ export class ViewExtractedElementsComponent {
       let contract = createContract();
       if (spreadSheetRow[SpreadSheetContract.contractId]) {
         const existingContract = await this.movieService.getContract(spreadSheetRow[SpreadSheetContract.contractId]);
-        if(!!existingContract) {
+        if (!!existingContract) {
           contract = existingContract;
         }
       }
-      
-      
+
+
       contract.parentContractIds = [];
       contract.childContractIds = [];
 
@@ -1375,10 +1396,10 @@ export class ViewExtractedElementsComponent {
           errors: [],
         } as ContractsImportState;
 
-        if (spreadSheetRow[SpreadSheetContract.licensor]) {
+        if (spreadSheetRow[SpreadSheetContract.licensor]) {  // @todo #1462 can have multiple licensors? => YES UPDATE
           const licensor = createParty();
           // @todo #1462 try to match with an existing org
-          ///licensor.orgId = 
+          // licensor.orgId = 
           licensor.displayName = spreadSheetRow[SpreadSheetContract.licensor];
           licensor.role = 'licensor';
           contract.parties.push(licensor);
@@ -1387,7 +1408,8 @@ export class ViewExtractedElementsComponent {
         if (spreadSheetRow[SpreadSheetContract.licensee]) {
           // @todo #1462 try to match with an existing org
           const licensee = createParty();
-          //licensee.orgId =
+          // licensee.orgId =
+          licensee.displayName = spreadSheetRow[SpreadSheetContract.licensee];
           licensee.role = 'licensee';
           contract.parties.push(licensee);
         }
@@ -1413,7 +1435,7 @@ export class ViewExtractedElementsComponent {
         let titleIndex = 0;
         while (spreadSheetRow[SpreadSheetContract.titleStuffIndexStart + titleIndex]) {
           const currentIndex = SpreadSheetContract.titleStuffIndexStart + titleIndex;
-          titleIndex += titlesFieldsCount; 
+          titleIndex += titlesFieldsCount;
           const titleDetails = this.processTitleDetails(spreadSheetRow, currentIndex);
           contract.titles[titleDetails.titleId] = titleDetails;
         }
@@ -1481,7 +1503,7 @@ export class ViewExtractedElementsComponent {
     return importErrors;
   }
 
-  private processTitleDetails(spreadSheetRow: any[], currentIndex: number) : ContractTitleDetail {
+  private processTitleDetails(spreadSheetRow: any[], currentIndex: number): ContractTitleDetail {
     const titleDetails = createContractTitleDetail();
     titleDetails.price.fees = [];
 
@@ -1512,7 +1534,7 @@ export class ViewExtractedElementsComponent {
 
     if (spreadSheetRow[SpreadSheetContractTitle.feeCurrency + currentIndex]) {
       // @todo #1462 ask @Jackseed to update currency value in excel to match our local values
-      if(spreadSheetRow[SpreadSheetContractTitle.feeCurrency + currentIndex].toLowerCase() === 'eur') {
+      if (spreadSheetRow[SpreadSheetContractTitle.feeCurrency + currentIndex].toLowerCase() === 'eur') {
         fee.price.currency = 'euro';
       }
     }

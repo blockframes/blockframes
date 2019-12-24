@@ -69,6 +69,7 @@ export class TableExtractedContractsComponent implements OnInit {
   
   async updateContract(importState: ContractsImportState): Promise<boolean> {
     // @todo #1462 implement this
+    // don't forget to clean inside arrays to prevent duplicate parties
     return this.createContract(importState);
   }
   

@@ -133,24 +133,35 @@ export class MovieService extends CollectionService<MovieState> {
     // Create an id from DistributionDeal content.
     // A same DistributionDeal document will always have the same hash to prevent multiple insertion of same deal
     // @TODO #1389 Use native akita-ng-fire functions : https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
-    const dealId = objectHash(distributionDeal);
-    distributionDeal.id = dealId;
+    if (!distributionDeal.id) {
+      distributionDeal.id = objectHash(distributionDeal);
+    }
 
-    // Populate distribution deal contract
-    contract.titles[movieId] = createContractTitleDetail();
-    contract.titles[movieId].titleId = movieId;
-    contract.titles[movieId].distributionDealIds.push(dealId);
-    // @todo #1397 change this price calculus
-    contract.titles[movieId].price = contract.price;
+    // If a contract does not have an id, we update contract and link it to this distrubution deal
+    // If there already a contract id, this means it have been created before
+    if (!contract.id) {
+      // Populate distribution deal contract
+      contract.titles[movieId] = createContractTitleDetail();
+      contract.titles[movieId].titleId = movieId;
+      contract.titles[movieId].distributionDealIds.push(distributionDeal.id);
+      // @todo #1397 change this price calculus
+      contract.titles[movieId].price = contract.price;
 
-    const contractId = await this.addContract(contract);
+      const contractId = await this.addContract(contract);
 
-    // Link distributiondeal with contract
-    distributionDeal.contractId = contractId;
+      // Link distributiondeal with contract
+      distributionDeal.contractId = contractId;
+    } else {
+      // Link distributiondeal with contract
+      distributionDeal.contractId = contract.id;
+      // Contract may have been updated along with the distribution deal, we update it
+      await this.db.collection('contracts').doc(contract.id).set(contract);
+    }
+
 
     // @TODO #1389 Use native akita-ng-fire functions : https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
-    await this.distributionDealsCollection(movieId).doc(dealId).set(distributionDeal);
-    return dealId;
+    await this.distributionDealsCollection(movieId).doc(distributionDeal.id).set(distributionDeal);
+    return distributionDeal.id;
   }
 
   /**
@@ -159,7 +170,7 @@ export class MovieService extends CollectionService<MovieState> {
    * @param distributionDeal
    */
   public async existingDistributionDeal(movieId: string, distributionDeal: DistributionDeal): Promise<DistributionDeal> {
-    const dealId = objectHash(distributionDeal);
+    const dealId = distributionDeal.id ? distributionDeal.id : objectHash(distributionDeal);
     const distributionDealSnapshot = await this.distributionDealsCollection(movieId).doc(dealId).get().toPromise();
     return distributionDealSnapshot.exists ? distributionDealSnapshot.data() as DistributionDeal : undefined;
   }
@@ -209,6 +220,22 @@ export class MovieService extends CollectionService<MovieState> {
     const snapshot = await this.db.collection('contracts').doc(contractId).get().toPromise();
     const doc = snapshot.data();
     return !!doc ? this.formatContract(doc) : undefined;
+  }
+
+  /**
+   * 
+   * @param movieId 
+   * @param distributionDealId 
+   */
+  public async getContractFromDeal(movieId: string, distributionDealId: string): Promise<Contract> {
+    const contractSnapShot = await this.db
+      .collection(
+        `contracts`,
+        ref => ref.where(`titles.${movieId}.distributionDealIds`, 'array-contains', distributionDealId)
+      )
+      .get().toPromise();
+
+    return contractSnapShot.docs.length ? this.formatContract(contractSnapShot.docs[0].data()) : undefined;
   }
 
   /**
