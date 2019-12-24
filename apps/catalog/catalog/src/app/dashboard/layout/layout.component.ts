@@ -11,9 +11,7 @@ import { CONTEXT_MENU } from '@blockframes/utils/routes/context-menu/app/catalog
 
 export class LayoutComponent implements OnInit {
 
-  constructor(
-    private contextMenuService: ContextMenuService,
-  ) {}
+  constructor(private contextMenuService: ContextMenuService) {}
 
   ngOnInit() {
     this.contextMenuService.setMenu(CONTEXT_MENU);
