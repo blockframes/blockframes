@@ -5,9 +5,10 @@ import { Price } from "@blockframes/utils/common-interfaces/price";
 
 type Timestamp = firestore.Timestamp;
 
-export const enum ContractStatus {
+export enum ContractStatus {
   submitted = 'submitted',
   accepted = 'accepted',
+  paid = 'paid',
 }
 
 export interface ContractTitleDetail {

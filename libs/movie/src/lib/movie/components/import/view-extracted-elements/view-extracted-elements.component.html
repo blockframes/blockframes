@@ -11,4 +11,8 @@
     <h3>Distribution deals</h3>
     <movie-table-extracted-deals [rows]="deals"></movie-table-extracted-deals>
   </ng-container>
+  <ng-container *ngIf="contracts.data.length">
+    <h3>Contracts</h3>
+    <movie-table-extracted-contracts [rows]="contracts"></movie-table-extracted-contracts>
+  </ng-container>
 </section>

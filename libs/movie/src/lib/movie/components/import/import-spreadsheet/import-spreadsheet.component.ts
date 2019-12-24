@@ -34,6 +34,8 @@ export class ImportSpreadsheetComponent {
     let sheetRange;
     if (this.fileType.value === 'movies') {
       sheetRange = 'A10:AQ100';
+    } else if (this.fileType.value === 'contracts') {
+      sheetRange = 'A1:AD100';
     } else {
       sheetRange = 'A10:AD100';
     }

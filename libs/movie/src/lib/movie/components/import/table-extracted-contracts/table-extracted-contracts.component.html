@@ -1,0 +1,74 @@
+<p>Found <strong>{{ rows.data.length }}</strong> row(s).</p>
+
+<p>For selection ({{this.selection.selected.length}} items selected) :
+  <button mat-flat-button color="primary" [disabled]="this.selection.selected.length === 0"
+    (click)="createSelectedDeals()">
+    <span>Add</span>
+    <mat-icon>create</mat-icon>
+  </button>
+</p>
+
+<mat-form-field appearance="outline">
+  <mat-label>Filter</mat-label>
+  <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+</mat-form-field>
+
+<table mat-table [dataSource]="rows" matSort class="extracted-movie-list">
+
+  <!-- Checkbox Column -->
+  <ng-container matColumnDef="select">
+    <th mat-header-cell *matHeaderCellDef>
+      <mat-checkbox (change)="$event ? masterToggle() : null" [checked]="selection.hasValue() && isAllSelected()"
+        [indeterminate]="selection.hasValue() && !isAllSelected()" [aria-label]="checkboxLabel()">
+      </mat-checkbox>
+    </th>
+    <td mat-cell *matCellDef="let row">
+      <mat-checkbox (click)="$event.stopPropagation()" (change)="$event ? selection.toggle(row) : null"
+        [checked]="selection.isSelected(row)" [aria-label]="checkboxLabel(row)">
+      </mat-checkbox>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="id">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> # </th>
+    <td mat-cell *matCellDef="let element; let i = index"> {{ i + 1 }} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="contract.id">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Contract Id </th>
+    <td mat-cell *matCellDef="let element"> {{ element.contract.id ? element.contract.id : '--'  }} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="errors">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Errors </th>
+    <td mat-cell *matCellDef="let element" [style.color]="errorCount(element) ? 'red': 'green'"
+      [style.font-weight]="errorCount(element) ? 'bold': 'normal'">
+      <button mat-flat-button color="warn" [disabled]="errorCount(element) === 0"
+        (click)="displayErrors(element)">{{ errorCount(element) }}</button>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="warnings">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Warnings </th>
+    <td mat-cell *matCellDef="let element" [style.color]="errorCount(element, 'warning') ? 'orange': 'green'"
+      [style.font-weight]="errorCount(element, 'warning') ? 'bold': 'normal'">
+      <button mat-flat-button color="accent" [disabled]="errorCount(element, 'warning') === 0"
+        (click)="displayErrors(element)">{{ errorCount(element, 'warning') }}</button>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef> Actions </th>
+    <td mat-cell *matCellDef="let element; let i = index">
+      <button mat-flat-button color="primary" [disabled]="errorCount(element) > 0" (click)="createDeal(element)">Add
+        <mat-icon>create</mat-icon>
+      </button>
+    </td>
+  </ng-container>
+
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+</table>
+
+<mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
