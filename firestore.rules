@@ -51,7 +51,7 @@ service cloud.firestore {
       allow delete: if isSuperAdmin(userId(), orgId);
       allow read: if isSignedIn();
 
-      match /baskets/{basketId} {
+      match /carts/{basketId} {
       	allow read: if isOrgMember(userId(), orgId);
         allow create: if isOrgMember(userId(), orgId);
         allow update: if isOrgMember(userId(), orgId)

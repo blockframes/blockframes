@@ -72,7 +72,7 @@ export class CartService extends CollectionService<CartState> {
   // @TODO #1389 Use native akita-ng-fire functions : https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
   private async initCart(name: string = 'default'): Promise<CatalogCart> {
     const cart: CatalogCart = createCart({ name });
-    await this.db.doc<CatalogCart>(`orgs/${this.organizationQuery.getActiveId()}/cart/${name}`).set(cart);
+    await this.db.doc<CatalogCart>(`orgs/${this.organizationQuery.getActiveId()}/carts/${name}`).set(cart);
     return cart;
   }
 
@@ -83,7 +83,7 @@ export class CartService extends CollectionService<CartState> {
   // @TODO #1389 Remove this function if doesn't do anything more than native akita-ng-fire
   private async updateCart(cart: CatalogCart): Promise<CatalogCart> {
     await this.db
-      .doc<CatalogCart>(`orgs/${this.organizationQuery.getActiveId()}/cart/${cart.name}`)
+      .doc<CatalogCart>(`orgs/${this.organizationQuery.getActiveId()}/carts/${cart.name}`)
       .update(cart);
     return cart;
   }
@@ -104,8 +104,8 @@ export class CartService extends CollectionService<CartState> {
    * @param name 
    */
   // @TODO #1389 Use native akita-ng-fire functions : https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
-  public async getCart(name: string): Promise<CatalogCart> {
-    const snap = await this.db.doc<CatalogCart>(`orgs/${this.organizationQuery.getActiveId()}/cart/${name}`).ref.get();
+  public async getCart(name: string = 'default'): Promise<CatalogCart> {
+    const snap = await this.db.doc<CatalogCart>(`orgs/${this.organizationQuery.getActiveId()}/carts/${name}`).ref.get();
     const cart = snap.data() as CatalogCart;
     if (cart === undefined) {
       return this.initCart(name);
