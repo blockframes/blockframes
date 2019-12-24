@@ -16,6 +16,7 @@ import {
   MovieDocument,
   createDocPermissions,
   createUserPermissions,
+  PublicUser,
 } from './data/types';
 import { triggerNotifications } from './notification';
 import { sendMailFromTemplate } from './internals/email';
@@ -27,10 +28,16 @@ import {
 } from './assets/mail-templates';
 import { createNotification, NotificationType } from '@blockframes/notification/types';
 import { UserRole } from '@blockframes/permissions/types';
+import { App } from '@blockframes/utils/apps';
 
 /** Checks if an invitation just got accepted. */
 function wasAccepted(before: InvitationDocument, after: InvitationDocument) {
   return before.status === InvitationStatus.pending && after.status === InvitationStatus.accepted;
+}
+
+/** Checks if an invitation just got declined. */
+function wasDeclined(before: InvitationDocument, after: InvitationDocument) {
+  return before.status === InvitationStatus.pending && after.status === InvitationStatus.declined;
 }
 
 /** Checks if an invitation just got created. */
@@ -105,6 +112,29 @@ async function onInvitationToOrgAccept({ user, organization }: InvitationFromOrg
   await addUserToOrg(user.uid, organization.id);
   // TODO maybe send an email "you have accepted to join OrgNAme ! Congratz, you are now part of this org !"
   return mailOnInvitationAccept(user.uid, organization.id);
+}
+
+/** Send a notification to admins of organization to notify them that the user declined their invitation. */
+async function onInvitationToOrgDecline(invitation: InvitationFromOrganizationToUser) {
+  const orgSnapshot = await db.doc(`orgs/${invitation.organization.id}`).get();
+  const org = orgSnapshot.data() as OrganizationDocument;
+
+  const userSnapshot = await db.doc(`users/${invitation.user.uid}`).get();
+  const user = userSnapshot.data() as PublicUser;
+
+  const adminIds = await getAdminIds(org.id);
+
+  const notifications = adminIds.map(userId => createNotification({
+    userId,
+    user: {
+      name: user.name,
+      surname: user.surname
+    },
+    app: App.blockframes,
+    type: NotificationType.invitationFromOrganizationToUserDecline
+  }));
+
+  return triggerNotifications(notifications);
 }
 
 /** Sends an email when an organization invites a user to join. */
@@ -203,7 +233,8 @@ async function onDocumentInvitationAccept(invitation: InvitationToWorkOnDocument
             userId,
             docId,
             movie: { id: movie.id, title: movie.main.title },
-            type: NotificationType.pathToDocument
+            type: NotificationType.pathToDocument,
+            app: App.mediaDelivering
           });
         })
       )
@@ -224,6 +255,8 @@ async function onInvitationToOrgUpdate(
     return onInvitationToOrgCreate(invitation);
   } else if (wasAccepted(before!, after)) {
     return onInvitationToOrgAccept(invitation);
+  } else if (wasDeclined(before!, after)) {
+    return onInvitationToOrgDecline(invitation)
   }
   return;
 }
@@ -277,6 +310,25 @@ async function onInvitationFromUserToJoinOrgAccept({
   return mailOnInvitationAccept(user.uid, organization.id);
 }
 
+/** Send a notification to admins of organization to notify them that the request is declined. */
+async function onInvitationFromUserToJoinOrgDecline(invitation: InvitationFromUserToOrganization) {
+  const orgSnapshot = await db.doc(`orgs/${invitation.organization.id}`).get();
+  const org = orgSnapshot.data() as OrganizationDocument;
+  const adminIds = await getAdminIds(org.id);
+
+  const notifications = adminIds.map(userId => createNotification({
+    userId,
+    user: {
+      name: invitation.user.name,
+      surname: invitation.user.surname
+    },
+    app: App.blockframes,
+    type: NotificationType.invitationFromUserToJoinOrgDecline
+  }));
+
+  return triggerNotifications(notifications);
+}
+
 /**
  * Dispatch the invitation update call depending on whether the invitation
  * was 'created' or 'accepted'.
@@ -290,6 +342,8 @@ async function onInvitationFromUserToJoinOrgUpdate(
     return onInvitationFromUserToJoinOrgCreate(invitation);
   } else if (wasAccepted(before!, after)) {
     return onInvitationFromUserToJoinOrgAccept(invitation);
+  } else if (wasDeclined(before!, after)) {
+    return onInvitationFromUserToJoinOrgDecline(invitation);
   }
   return;
 }

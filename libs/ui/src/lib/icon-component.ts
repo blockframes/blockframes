@@ -283,10 +283,9 @@ const ICONS_SVG = [
     name: 'heart_filled',
     url: 'assets/icons/heart_filled.svg'
   },
-  { name: 'star', url: 'assets/icons/star.svg' },
   {
-    name: 'LogoAC',
-    url: 'assets/logo/LogoAC.svg'
+    name: 'star',
+    url: 'assets/icons/star.svg'
   },
   {
     name: 'home_sidebar',
@@ -295,6 +294,18 @@ const ICONS_SVG = [
   {
     name: 'search_sidebar',
     url: 'assets/icons/search-sidebar.svg'
+  },{
+    name: 'facebook',
+    url: 'assets/icons/facebook.svg'
+  },{
+    name: 'twitter',
+    url: 'assets/icons/twitter.svg'
+  },{
+    name: 'linkedin',
+    url: 'assets/icons/linkedin.svg'
+  },{
+    name: 'instagram',
+    url: 'assets/icons/instagram.svg'
   }
 ];
 

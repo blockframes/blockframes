@@ -1,0 +1,22 @@
+.transparent-toolbar {
+  background-color: transparent;
+  transition-duration: 0;
+}
+
+.plain-toolbar {
+  transition-duration: 1000ms;
+}
+
+.app-icon {
+  width: 100px;
+  height: 36px;
+}
+
+nav {
+  height: 64px;
+  margin-left: 50px;
+
+  a {
+    opacity: 1;
+  }
+}

@@ -1,0 +1,13 @@
+<article
+  *ngFor="let feature of keyFeatures; let i = index; let even = even"
+  [fxLayout]="even ? 'row-reverse' : 'row'"
+  fxLayoutAlign="space-between start"
+  fxLayout.lt-md="column"
+  fxLayoutAlign.lt-md="start center">
+  <div>
+    <span><b>KEY FEATURE #{{ i + 1 }}</b></span>
+    <h3>{{ feature.title }}</h3>
+    <p>{{ feature.description }}</p>
+  </div>
+  <img [src]="feature.imgPath" alt="Feature Image">
+</article>

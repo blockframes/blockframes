@@ -2,8 +2,9 @@ import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 import { generate as passwordGenerator } from 'generate-password';
 import { auth, db } from './internals/firebase';
-import { userInvite, userVerifyEmail, welcomeMessage, userResetPassword, sendWishlist, sendWishlistPending } from './assets/mail-templates';
+import { userInvite, userVerifyEmail, welcomeMessage, userResetPassword, sendWishlist, sendWishlistPending, sendDemoRequestMail } from './assets/mail-templates';
 import { sendMailFromTemplate, sendMail } from './internals/email';
+import { RequestDemoInformations } from './data/types';
 
 type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
@@ -169,3 +170,13 @@ export const getOrCreateUserByMail = async (
     return { uid: user.uid, email };
   }
 };
+
+export const sendDemoRequest = async (
+  data: RequestDemoInformations,
+  context: CallableContext
+): Promise<RequestDemoInformations> => {
+
+  await sendMail(sendDemoRequestMail(data))
+
+  return data;
+}

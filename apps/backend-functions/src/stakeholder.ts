@@ -5,6 +5,7 @@ import { OrganizationDocument, SnapObject, MovieDocument, StakeholderDocument, D
 import { PublicOrganization } from '@blockframes/organization/types';
 import { createNotification, NotificationType } from '@blockframes/notification/types';
 import { PublicMovie } from '@blockframes/movie/types';
+import { App } from '@blockframes/utils/apps';
 
 export async function onDeliveryStakeholderCreate(
   snap: FirebaseFirestore.DocumentSnapshot,
@@ -104,7 +105,8 @@ function createNotifications(
         organization: snapObject.organization,
         movie: snapObject.movie,
         type: snapObject.type,
-        docId: snapObject.docId
+        docId: snapObject.docId,
+        app: App.mediaDelivering
       });
     });
 }
