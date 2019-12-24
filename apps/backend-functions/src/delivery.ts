@@ -11,6 +11,7 @@ import {
 } from './data/types';
 import { copyMaterialsToMovie } from './material';
 import { createNotification, NotificationType } from '@blockframes/notification/types';
+import { App } from '@blockframes/utils/apps';
 
 export async function onDeliveryUpdate(
   change: functions.Change<FirebaseFirestore.DocumentSnapshot>,
@@ -141,7 +142,8 @@ function createSignatureNotifications(
         organization: snapObject.organization,
         type: snapObject.type,
         docId: snapObject.docId,
-        movie: snapObject.movie
+        movie: snapObject.movie,
+        app: App.mediaDelivering
       });
     });
 }

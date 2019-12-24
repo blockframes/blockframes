@@ -1,0 +1,16 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #sidenav mode="over">
+    <catalog-left-menu [sidenav]="sidenav"> </catalog-left-menu>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <catalog-toolbar [sidenav]="sidenav"></catalog-toolbar>
+    <main>
+      <catalog-header></catalog-header>
+      <catalog-key-features></catalog-key-features>
+      <catalog-how-it-works></catalog-how-it-works>
+      <catalog-view-marketplace></catalog-view-marketplace>
+      <catalog-learn-more id="demo" (sendRequest)="sendRequest($event)"></catalog-learn-more>
+      <catalog-footer></catalog-footer>
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

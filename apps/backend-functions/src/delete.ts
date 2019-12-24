@@ -4,6 +4,7 @@ import { isTheSame, removeAllSubcollections } from './utils';
 import { getCollection, getDocument, getOrganizationsOfDocument } from './data/internals';
 import { MovieDocument, OrganizationDocument, DeliveryDocument, MaterialDocument } from './data/types';
 import { createNotification, NotificationType } from '@blockframes/notification/types';
+import { App } from '@blockframes/utils/apps';
 
 export async function deleteFirestoreMovie(
   snap: FirebaseFirestore.DocumentSnapshot,
@@ -103,7 +104,8 @@ export async function deleteFirestoreDelivery(
         userId,
         docId: delivery.id,
         movie: { id: movie.id, title: movie.main.title },
-        type: NotificationType.deleteDocument
+        type: NotificationType.deleteDocument,
+        app: App.mediaDelivering
       })
     );
 
