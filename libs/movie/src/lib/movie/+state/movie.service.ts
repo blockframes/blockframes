@@ -11,6 +11,7 @@ import { MovieState, MovieStore } from './movie.store';
 import { Contract, createContractTitleDetail } from '@blockframes/marketplace/app/distribution-deal/+state/cart.model';
 import { AuthQuery } from '@blockframes/auth';
 import { MovieQuery } from './movie.query';
+import { createImgRef } from '@blockframes/utils/image-uploader';
 
 /**
  * @see #483
