@@ -33,6 +33,7 @@ import { logErrors } from './internals/sentry';
 import { onInvitationWrite } from './invitation';
 import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate } from './orgs';
 import { adminApp, onRequestAccessToAppWrite } from './admin';
+import { onMovieUpdate, onMovieCreate, onMovieDelete } from './movie';
 
 /** Trigger: when eth-events-server pushes contract events. */
 export const onIpHashEvent = functions.pubsub.topic('eth-events.ipHash').onPublish(onIpHash);
@@ -80,6 +81,9 @@ export const findOrgByName = functions.https
 /** Trigger: REST call to get or create a user. */
 export const getOrCreateUserByMail = functions.https.onCall(logErrors(users.getOrCreateUserByMail));
 
+/** Trigger: REST call to send a mail to an admin for demo request. */
+export const sendDemoRequest = functions.https.onCall(logErrors(users.sendDemoRequest));
+
 /**
  * Trigger: REST call to the /admin app
  *
@@ -113,6 +117,34 @@ export const onInvitationUpdateEvent = onDocumentWrite(
   'invitations/{invitationID}',
   onInvitationWrite
 );
+
+//--------------------------------
+//       Movies Management        //
+//--------------------------------
+
+/**
+ * Trigger: when a movie is created
+ */
+export const onMovieCreateEvent = onDocumentCreate(
+  'movies/{movieId}',
+  onMovieCreate
+);
+
+/**
+ * Trigger: when a movie is updated
+ */
+export const onMovieUpdateEvent = onDocumentUpdate(
+  'movies/{movieId}',
+  onMovieUpdate
+)
+
+/**
+ * Trigger: when a movie is deleted
+ */
+export const onMovieDeleteEvent = onDocumentDelete(
+  'movies/{movieId}',
+  onMovieDelete
+)
 
 //--------------------------------
 //       Apps Management        //

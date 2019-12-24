@@ -4,7 +4,7 @@
 import { adminEmail, appUrl } from '../environments/environment';
 import { EmailRequest, EmailTemplateRequest } from '../internals/email';
 import { templateIds } from '@env';
-import { RequestToJoinOrganization } from '../data/types';
+import { RequestToJoinOrganization, RequestDemoInformations } from '../data/types';
 
 const ORG_HOME = '/layout/o/organization/';
 const USER_ORG_INVITATION = '/layout/organization/home';
@@ -160,5 +160,22 @@ export function sendWishlist(userName: string, orgName: string, wishlist: string
     to: adminEmail,
     subject: 'A wishlist has been sent',
     text: wishlistSent(userName, orgName, wishlist)
+  }
+}
+
+export function sendDemoRequestMail(information: RequestDemoInformations) {
+  return {
+    to: adminEmail,
+    subject: 'A demo has been requested',
+    text: `A user wants to schedule a demo of Archipel Content.
+
+    User informations
+
+    First name: ${information.firstName}
+    Last name: ${information.lastName}
+    Email: ${information.email}
+    Phone number: ${information.phoneNumber}
+    Company name: ${information.companyName}
+    Role: ${information.role}`
   }
 }

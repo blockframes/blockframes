@@ -1,3 +1,5 @@
+import { difference } from 'lodash';
+
 /**
  * Organization-related code,
  *
@@ -12,6 +14,48 @@ import { RelayerConfig, relayerDeployOrganizationLogic, relayerRegisterENSLogic,
 import { mnemonic, relayer } from './environments/environment';
 import { emailToEnsDomain, precomputeAddress as precomputeEthAddress, getProvider } from '@blockframes/ethers/helpers';
 import { PublicUser } from '@blockframes/auth/types';
+import { createNotification, NotificationType } from '@blockframes/notification/types';
+import { App } from '@blockframes/utils/apps';
+import { triggerNotifications } from './notification';
+
+/** Create a notification with user and org. */
+function notifUser(userId: string, notificationType: NotificationType, org: OrganizationDocument, user: PublicUser) {
+  return createNotification({
+    userId,
+    type: notificationType,
+    user: {
+      name: user.name,
+      surname: user.surname
+    },
+    organization: {
+      id: org.id,
+      name: org.name
+    },
+    app: App.blockframes
+  });
+}
+
+/** Send notifications to all org's members when a member is added or removed. */
+async function notifyOnOrgMemberChanges(before: OrganizationDocument, after: OrganizationDocument) {
+  // Member added
+  if (before.userIds.length < after.userIds.length) {
+    const userAddedId = difference(after.userIds, before.userIds)[0];
+    const userSnapshot = await db.doc(`users/${userAddedId}`).get();
+    const userAdded = userSnapshot.data() as PublicUser;
+
+    const notifications = after.userIds.map(userId => notifUser(userId, NotificationType.memberAddedToOrg, after, userAdded));
+    return triggerNotifications(notifications);
+
+  // Member removed
+  } else if (before.userIds.length > after.userIds.length) {
+    const userRemovedId = difference(before.userIds, after.userIds)[0];
+    const userSnapshot = await db.doc(`users/${userRemovedId}`).get();
+    const userRemoved = userSnapshot.data() as PublicUser;
+
+    const notifications = after.userIds.map(userId => notifUser(userId, NotificationType.memberRemovedFromOrg, after, userRemoved));
+    return triggerNotifications(notifications);
+  }
+}
 
 export function onOrganizationCreate(
   snap: FirebaseFirestore.DocumentSnapshot,
@@ -54,6 +98,9 @@ export async function onOrganizationUpdate(
     throw new Error('Organization name cannot be changed !'); // this will require to change the org ENS name, for now we throw to prevent silent bug
   }
 
+  // Send notifications when a member is added or removed
+  await notifyOnOrgMemberChanges(before, after);
+
   // Deploy org's smart-contract
   const becomeAccepted = before.status === OrganizationStatus.pending && after.status === OrganizationStatus.accepted;
   const blockchainBecomeEnabled = before.isBlockchainEnabled === false && after.isBlockchainEnabled === true;
@@ -63,6 +110,15 @@ export async function onOrganizationUpdate(
   if (becomeAccepted) {
     // send email to let the org admin know that the org has been accepted
     await sendMailFromTemplate(organizationWasAccepted(admin.email, id, admin.name));
+
+    // Send a notification to the creator of the organization
+    const notification = createNotification({
+      // At this moment, the organization was just created, so we are sure to have only one userId in the array
+      userId: after.userIds[0],
+      type: NotificationType.organizationAcceptedByArchipelContent,
+      app: App.blockframes
+    });
+    await triggerNotifications([notification]);
   }
 
   if (blockchainBecomeEnabled) {
