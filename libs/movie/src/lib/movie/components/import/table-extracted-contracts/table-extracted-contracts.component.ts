@@ -22,6 +22,7 @@ const hasImportErrors = (importState: ContractsImportState, type: string = 'erro
 export class TableExtractedContractsComponent implements OnInit {
 
   @Input() rows: MatTableDataSource<ContractsImportState>;
+  @Input() mode: string;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
@@ -50,54 +51,54 @@ export class TableExtractedContractsComponent implements OnInit {
     this.rows.sort = this.sort;
   }
 
-  async createDeal(importState: ContractsImportState): Promise<boolean> {
-    /*const existingMovie = this.movieQuery.existingMovie(importState.movieInternalRef);
-    const data = this.rows.data;
+  async createContract(importState: ContractsImportState): Promise<boolean> {
 
-    await this.movieService.addDistributionDeal(existingMovie.id, importState.distributionDeal, importState.contract);
+    const contractId = await this.movieService.addContract(importState.contract);
     importState.errors.push({
       type: 'error',
-      field: 'distributionDeal',
-      name: 'Distribution deal',
-      reason: 'Distribution deal already added',
-      hint: 'Distribution deal already added'
+      field: 'contract',
+      name: 'Contract',
+      reason: 'Contract already added',
+      hint: 'Contract already added'
     });
-    this.rows.data = data;
-    this.snackBar.open('Distribution deal added!', 'close', { duration: 3000 });*/
+
+    this.snackBar.open(`Contract ${contractId} added!`, 'close', { duration: 3000 });
+
     return true;
   }
+  
+  async updateContract(importState: ContractsImportState): Promise<boolean> {
+    // @todo #1462 implement this
+    return this.createContract(importState);
+  }
+  
 
-  async createSelectedDeals(): Promise<boolean> {
+  async createSelectedContracts(): Promise<boolean> {
     try {
       const data = this.rows.data;
-      //const movies = {};
       const promises = [];
-      /*this.selection.selected
+      this.selection.selected
         .filter(importState => !hasImportErrors(importState))
         .map(importState => {
 
-          if (!movies[importState.movieInternalRef]) {
-            const existingMovie = this.movieQuery.existingMovie(importState.movieInternalRef);
-            movies[importState.movieInternalRef] = createMovie(cleanModel(existingMovie));
-          }
           importState.errors.push({
             type: 'error',
-            field: 'distributionDeal',
-            name: 'Distribution deal',
-            reason: 'Distribution deal already added',
-            hint: 'Distribution deal already added'
+            field: 'contract',
+            name: 'Contract',
+            reason: 'Contract already added',
+            hint: 'Contract already added'
           });
 
-          return promises.push(this.movieService.addDistributionDeal(movies[importState.movieInternalRef].id, importState.distributionDeal, importState.contract));
+          return promises.push(this.movieService.addContract(importState.contract));
         });
-      */
+      
       this.rows.data = data;
 
       await Promise.all(promises);
       this.snackBar.open(`${promises.length} contracts imported!`, 'close', { duration: 3000 });
       return true;
     } catch (err) {
-      this.snackBar.open(`Could not import contracts deals`, 'close', { duration: 3000 });
+      this.snackBar.open(`Could not import contracts`, 'close', { duration: 3000 });
     }
   }
 

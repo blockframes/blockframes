@@ -51,7 +51,7 @@ export class MovieService extends CollectionService<MovieState> {
   public async remove(movieId: string) {
     const userId = this.authQuery.userId;
     // We need to update the _meta field before remove to get the userId in the backend function: onMovieDeleteEvent
-    await this.db.doc(`movies/${movieId}`).update({ "_meta.deletedBy": userId } );
+    await this.db.doc(`movies/${movieId}`).update({ "_meta.deletedBy": userId });
     return super.remove(movieId);
   }
 
@@ -199,5 +199,31 @@ export class MovieService extends CollectionService<MovieState> {
 
     await this.db.collection('contracts').doc(contract.id).set(contract);
     return contract.id;
+  }
+
+  /**
+   * 
+   * @param contractId 
+   */
+  public async getContract(contractId: string): Promise<Contract> {
+    const snapshot = await this.db.collection('contracts').doc(contractId).get().toPromise();
+    const doc = snapshot.data();
+    return !!doc ? this.formatContract(doc) : undefined;
+  }
+
+  /**
+   * 
+   * @param contract 
+   */
+  private formatContract(contract: any): Contract {
+    // Dates from firebase are Timestamps, we convert it to Dates.
+    if (contract.scope && contract.scope.start instanceof firestore.Timestamp) {
+      contract.scope.start = contract.scope.start.toDate();
+    }
+
+    if (contract.scope.end instanceof firestore.Timestamp) {
+      contract.scope.end = contract.scope.end.toDate();
+    }
+    return contract as Contract;
   }
 }
