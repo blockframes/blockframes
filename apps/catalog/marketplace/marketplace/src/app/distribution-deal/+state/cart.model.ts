@@ -70,7 +70,7 @@ export function createContractTitleDetail(params: Partial<ContractTitleDetail> =
 
 /**
  * Various validation steps for validating a contract
- * Currently (dec 2019), only validate that there is licensee and a licensor
+ * Currently (dec 2019), only validate that there is a licensee and a licensor
  * @param contract
  */
 export function validateContract(contract: Contract): boolean {

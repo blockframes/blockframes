@@ -11,6 +11,9 @@
       <button mat-button color="primary" (click)="downloadTemplate('deals')">
         Download our excel deals template
       </button>
+      <button mat-button color="primary" (click)="downloadTemplate('contracts')">
+        Download our excel contracts template
+      </button>
     </div>
   </section>
 
@@ -20,6 +23,7 @@
       <mat-select [formControl]="fileType">
         <mat-option value="movies">Movies</mat-option>
         <mat-option value="deals">Deals</mat-option>
+        <mat-option value="contracts">Contracts</mat-option>
       </mat-select>
     </mat-form-field>
   </section>

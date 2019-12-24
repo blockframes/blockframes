@@ -29,8 +29,9 @@ import { SSF } from 'xlsx';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { LicenseStatus, MovieLanguageTypes } from '@blockframes/movie/movie/+state/movie.firestore';
 import { createCredit, createParty } from '@blockframes/utils/common-interfaces/identity';
-import { createContract, validateContract, Contract } from '@blockframes/marketplace/app/distribution-deal/+state/cart.model';
-import { ContractStatus } from '@blockframes/marketplace/app/distribution-deal/+state/cart.firestore';
+import { createContract, validateContract, Contract, createContractTitleDetail } from '@blockframes/marketplace/app/distribution-deal/+state/cart.model';
+import { ContractStatus, ContractTitleDetail } from '@blockframes/marketplace/app/distribution-deal/+state/cart.firestore';
+import { createFee } from '@blockframes/utils/common-interfaces/price';
 
 export interface SpreadsheetImportError {
   field: string;
@@ -50,6 +51,11 @@ export interface DealsImportState {
   errors?: SpreadsheetImportError[];
   movieTitle: String;
   movieInternalRef?: string;
+  contract: Contract;
+}
+
+export interface ContractsImportState {
+  errors?: SpreadsheetImportError[];
   contract: Contract;
 }
 
@@ -114,6 +120,25 @@ enum SpreadSheetDistributionDeal {
   price
 }
 
+enum SpreadSheetContract {
+  licensor,
+  licensee,
+  contractId,
+  parentContractIds,
+  childContractIds,
+  status,
+  titleStuffIndexStart,
+}
+
+enum SpreadSheetContractTitle {
+  titleId, // ie: movieId
+  licensedRightIds, // ie: distributionDealIds @see #1388
+  commission,
+  feeLabel,
+  feeValue,
+  feeCurrency,
+}
+
 @Component({
   selector: 'movie-view-extracted-elements',
   templateUrl: './view-extracted-elements.component.html',
@@ -125,6 +150,7 @@ export class ViewExtractedElementsComponent {
   public moviesToCreate = new MatTableDataSource<MovieImportState>();
   public moviesToUpdate = new MatTableDataSource<MovieImportState>();
   public deals = new MatTableDataSource<DealsImportState>();
+  public contracts = new MatTableDataSource<ContractsImportState>();
   private separator = ';';
 
   constructor(
@@ -1057,7 +1083,7 @@ export class ViewExtractedElementsComponent {
 
           const licensee = createParty();
           licensee.role = 'licensee';
-          
+
           // DISPLAY NAME
           if (spreadSheetRow[SpreadSheetDistributionDeal.licenseeName]) {
             licensee.displayName = spreadSheetRow[SpreadSheetDistributionDeal.licenseeName];
@@ -1228,7 +1254,7 @@ export class ViewExtractedElementsComponent {
     //////////////////
 
     //  CONTRACT VALIDATION
-    if(!validateContract(contract)) {
+    if (!validateContract(contract)) {
       errors.push({
         type: 'error',
         field: 'contractId',
@@ -1322,6 +1348,169 @@ export class ViewExtractedElementsComponent {
 
     return importErrors;
   }
+
+  public formatContracts(sheetTab: SheetTab) {
+    this.clearDataSources();
+    sheetTab.rows.forEach(async spreadSheetRow => {
+      // Create the contract 
+      // @todo #1462 try to fetch it to see if it already exists
+      const contract = createContract();
+      contract.parentContractIds = [];
+      contract.childContractIds = [];
+
+      if (spreadSheetRow[SpreadSheetContract.contractId]) {
+        contract.id = spreadSheetRow[SpreadSheetContract.contractId];
+      
+
+        const importErrors = {
+          contract,
+          errors: [],
+        } as ContractsImportState;
+
+        if (spreadSheetRow[SpreadSheetContract.licensor]) {
+          const licensor = createParty();
+          // @todo #1462 try to match with an existing org
+          ///licensor.orgId = 
+          licensor.displayName = spreadSheetRow[SpreadSheetContract.licensor];
+          licensor.role = 'licensor';
+          contract.parties.push(licensor);
+        }
+
+        if (spreadSheetRow[SpreadSheetContract.licensee]) {
+          // @todo #1462 try to match with an existing org
+          const licensee = createParty();
+          //licensee.orgId =
+          licensee.role = 'licensee';
+          contract.parties.push(licensee);
+        }
+
+        if (spreadSheetRow[SpreadSheetContract.parentContractIds]) {
+          spreadSheetRow[SpreadSheetContract.parentContractIds].split(this.separator).forEach((c: string) => {
+            contract.parentContractIds.push(c.trim());
+          });
+        }
+
+        if (spreadSheetRow[SpreadSheetContract.childContractIds]) {
+          spreadSheetRow[SpreadSheetContract.childContractIds].split(this.separator).forEach((c: string) => {
+            contract.childContractIds.push(c.trim());
+          });
+        }
+
+        if (spreadSheetRow[SpreadSheetContract.status]) {
+          if (spreadSheetRow[SpreadSheetContract.status] in ContractStatus) {
+            contract.status = spreadSheetRow[SpreadSheetContract.status];
+          }
+        }
+
+        let titleIndex = 0;
+        while (spreadSheetRow[SpreadSheetContract.titleStuffIndexStart + titleIndex]) {
+          const currentIndex = SpreadSheetContract.titleStuffIndexStart + titleIndex;
+          titleIndex += Object.keys(SpreadSheetContractTitle).length;
+          const titleDetails = this.processTitleDetails(spreadSheetRow, currentIndex);
+          contract.titles[titleDetails.titleId] = titleDetails;
+        }
+
+
+        ///////////////
+        // VALIDATION
+        ///////////////
+
+  
+        const contractWithErrors = this.validateMovieContract(importErrors);
+        /*
+        @todo #1462 check if it is already existing
+        if (contractWithErrors.contract.id) {
+          this.contractsToUpdate.data.push(movieWithErrors);
+          this.contractsToUpdate.data = [... this.contractsToUpdate.data];
+        } else {*/
+          this.contracts.data.push(contractWithErrors);
+          this.contracts.data = [... this.contracts.data];
+        //}
+
+        this.cdRef.detectChanges();
+      }
+    });
+
+
+  }
+
+  private validateMovieContract(importErrors: ContractsImportState): ContractsImportState {
+
+    const contract = importErrors.contract;
+    const errors = importErrors.errors;
+
+
+    //////////////////
+    // REQUIRED FIELDS
+    //////////////////
+
+    //  CONTRACT VALIDATION
+    if (!validateContract(contract)) {
+      errors.push({
+        type: 'error',
+        field: 'contractId',
+        name: "TODO #1462",
+        reason: 'Required field is missing',
+        hint: 'Edit corresponding sheet field.'
+      });
+    }
+
+
+    //////////////////
+    // OPTIONAL FIELDS
+    //////////////////
+
+    // CONTRACT PRICE VALIDATION
+    /*if (!contract.price.amount) {
+      errors.push({
+        type: 'warning',
+        field: 'price',
+        name: "Distribution deal price",
+        reason: 'Optional field is missing',
+        hint: 'Edit corresponding sheet field.'
+      });
+    }*/
+
+    return importErrors;
+  }
+
+  private processTitleDetails(spreadSheetRow: any[], currentIndex: number) : ContractTitleDetail {
+    const titleDetails = createContractTitleDetail();
+    if (spreadSheetRow[SpreadSheetContractTitle.titleId + currentIndex]) {
+      // @todo #1462 try to match with an existing title
+      titleDetails.titleId = spreadSheetRow[SpreadSheetContractTitle.titleId + currentIndex];
+    }
+
+    if (spreadSheetRow[SpreadSheetContractTitle.licensedRightIds + currentIndex]) {
+      // @todo #1462 try to match with an existing distribution deal / licensedRight
+      titleDetails.distributionDealIds = spreadSheetRow[SpreadSheetContractTitle.licensedRightIds + currentIndex]
+        .split(this.separator)
+        .map(c => c.trim());
+    }
+
+    if (spreadSheetRow[SpreadSheetContractTitle.commission + currentIndex]) {
+      titleDetails.price.commission = spreadSheetRow[SpreadSheetContractTitle.commission + currentIndex]
+    }
+
+    const fee = createFee();
+    if (spreadSheetRow[SpreadSheetContractTitle.feeLabel + currentIndex]) {
+      fee.label = spreadSheetRow[SpreadSheetContractTitle.feeLabel + currentIndex];
+    }
+
+    if (spreadSheetRow[SpreadSheetContractTitle.feeValue + currentIndex]) {
+      fee.price.amount = spreadSheetRow[SpreadSheetContractTitle.feeValue + currentIndex];
+    }
+
+    if (spreadSheetRow[SpreadSheetContractTitle.feeCurrency + currentIndex]) {
+      // @todo #1462 ask @Jackseed to update currency value in excel to match our local values
+      if(spreadSheetRow[SpreadSheetContractTitle.feeCurrency + currentIndex].toLowerCase() === 'eur') {
+        fee.price.currency = 'euro';
+      }
+    }
+
+    return titleDetails;
+  }
+
 
   private clearDataSources() {
     this.moviesToCreate.data = [];
