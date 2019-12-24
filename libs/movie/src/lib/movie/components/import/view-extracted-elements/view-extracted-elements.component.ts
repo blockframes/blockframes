@@ -150,7 +150,8 @@ export class ViewExtractedElementsComponent {
   public moviesToCreate = new MatTableDataSource<MovieImportState>();
   public moviesToUpdate = new MatTableDataSource<MovieImportState>();
   public deals = new MatTableDataSource<DealsImportState>();
-  public contracts = new MatTableDataSource<ContractsImportState>();
+  public contractsToUpdate = new MatTableDataSource<ContractsImportState>();
+  public contractsToCreate = new MatTableDataSource<ContractsImportState>();
   private separator = ';';
 
   constructor(
@@ -1351,17 +1352,24 @@ export class ViewExtractedElementsComponent {
 
   public formatContracts(sheetTab: SheetTab) {
     this.clearDataSources();
+
+    const titlesFieldsCount = Object.keys(SpreadSheetContractTitle).length / 2; // To get enum length
+
     sheetTab.rows.forEach(async spreadSheetRow => {
-      // Create the contract 
-      // @todo #1462 try to fetch it to see if it already exists
-      const contract = createContract();
+      // Create/retreive the contract 
+      let contract = createContract();
+      if (spreadSheetRow[SpreadSheetContract.contractId]) {
+        const existingContract = await this.movieService.getContract(spreadSheetRow[SpreadSheetContract.contractId]);
+        if(!!existingContract) {
+          contract = existingContract;
+        }
+      }
+      
+      
       contract.parentContractIds = [];
       contract.childContractIds = [];
 
       if (spreadSheetRow[SpreadSheetContract.contractId]) {
-        contract.id = spreadSheetRow[SpreadSheetContract.contractId];
-      
-
         const importErrors = {
           contract,
           errors: [],
@@ -1405,7 +1413,7 @@ export class ViewExtractedElementsComponent {
         let titleIndex = 0;
         while (spreadSheetRow[SpreadSheetContract.titleStuffIndexStart + titleIndex]) {
           const currentIndex = SpreadSheetContract.titleStuffIndexStart + titleIndex;
-          titleIndex += Object.keys(SpreadSheetContractTitle).length;
+          titleIndex += titlesFieldsCount; 
           const titleDetails = this.processTitleDetails(spreadSheetRow, currentIndex);
           contract.titles[titleDetails.titleId] = titleDetails;
         }
@@ -1415,17 +1423,16 @@ export class ViewExtractedElementsComponent {
         // VALIDATION
         ///////////////
 
-  
         const contractWithErrors = this.validateMovieContract(importErrors);
-        /*
-        @todo #1462 check if it is already existing
+
         if (contractWithErrors.contract.id) {
-          this.contractsToUpdate.data.push(movieWithErrors);
+          this.contractsToUpdate.data.push(contractWithErrors);
           this.contractsToUpdate.data = [... this.contractsToUpdate.data];
-        } else {*/
-          this.contracts.data.push(contractWithErrors);
-          this.contracts.data = [... this.contracts.data];
-        //}
+        } else {
+          contract.id = spreadSheetRow[SpreadSheetContract.contractId];
+          this.contractsToCreate.data.push(contractWithErrors);
+          this.contractsToCreate.data = [... this.contractsToCreate.data];
+        }
 
         this.cdRef.detectChanges();
       }
@@ -1476,6 +1483,8 @@ export class ViewExtractedElementsComponent {
 
   private processTitleDetails(spreadSheetRow: any[], currentIndex: number) : ContractTitleDetail {
     const titleDetails = createContractTitleDetail();
+    titleDetails.price.fees = [];
+
     if (spreadSheetRow[SpreadSheetContractTitle.titleId + currentIndex]) {
       // @todo #1462 try to match with an existing title
       titleDetails.titleId = spreadSheetRow[SpreadSheetContractTitle.titleId + currentIndex];
@@ -1507,6 +1516,8 @@ export class ViewExtractedElementsComponent {
         fee.price.currency = 'euro';
       }
     }
+
+    titleDetails.price.fees.push(fee);
 
     return titleDetails;
   }

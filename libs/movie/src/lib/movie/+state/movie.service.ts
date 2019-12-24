@@ -50,7 +50,7 @@ export class MovieService extends CollectionService<MovieState> {
   public async remove(movieId: string) {
     const userId = this.authQuery.userId;
     // We need to update the _meta field before remove to get the userId in the backend function: onMovieDeleteEvent
-    await this.db.doc(`movies/${movieId}`).update({ "_meta.deletedBy": userId } );
+    await this.db.doc(`movies/${movieId}`).update({ "_meta.deletedBy": userId });
     return super.remove(movieId);
   }
 
@@ -84,7 +84,7 @@ export class MovieService extends CollectionService<MovieState> {
     // Push the movie id into organization.movieIds.
     const organizationId = this.organizationQuery.getActiveId();
     const organization = await this.organizationService.getValue(this.organizationQuery.getActiveId());
-    this.organizationService.update({...organization, movieIds: [...organization.movieIds, movie.id]})
+    this.organizationService.update({ ...organization, movieIds: [...organization.movieIds, movie.id] })
 
     // Create organization related permissions for this document.
     return this.permissionsService.createDocPermissions(movie.id, organizationId);
@@ -162,7 +162,7 @@ export class MovieService extends CollectionService<MovieState> {
     return deals.docs.map(doc => this.formatDistributionDeal(doc.data()));
   }
 
-  public formatDistributionDeal(deal: any) : DistributionDeal{
+  public formatDistributionDeal(deal: any): DistributionDeal {
     // Dates from firebase are Timestamps, we convert it to Dates.
     if (deal.terms.start instanceof firestore.Timestamp) {
       deal.terms.start = deal.terms.start.toDate();
@@ -183,11 +183,37 @@ export class MovieService extends CollectionService<MovieState> {
    * @param contract
    */
   public async addContract(contract: Contract): Promise<string> {
-    if(!contract.id) {
-      contract.id  = this.db.createId();
+    if (!contract.id) {
+      contract.id = this.db.createId();
     }
 
     await this.db.collection('contracts').doc(contract.id).set(contract);
     return contract.id;
+  }
+
+  /**
+   * 
+   * @param contractId 
+   */
+  public async getContract(contractId: string): Promise<Contract> {
+    const snapshot = await this.db.collection('contracts').doc(contractId).get().toPromise();
+    const doc = snapshot.data();
+    return !!doc ? this.formatContract(doc) : undefined;
+  }
+
+  /**
+   * 
+   * @param contract 
+   */
+  private formatContract(contract: any): Contract {
+    // Dates from firebase are Timestamps, we convert it to Dates.
+    if (contract.scope && contract.scope.start instanceof firestore.Timestamp) {
+      contract.scope.start = contract.scope.start.toDate();
+    }
+
+    if (contract.scope.end instanceof firestore.Timestamp) {
+      contract.scope.end = contract.scope.end.toDate();
+    }
+    return contract as Contract;
   }
 }
