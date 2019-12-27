@@ -56,7 +56,7 @@ jobs:
             - ~/.cache/Cypress
           key: dependencies-{{ .Environment.CACHE_VERSION }}-{{ checksum "package.json" }}
       - run: cp env/env.ci.ts env/env.ts # required for the typechecking & file rewrite to work
-      - run: npm run build:all
+      - run: npm run affected:build
       - persist_to_workspace:
           root: ~/repo
           paths:
@@ -93,7 +93,7 @@ jobs:
       - attach_workspace:
           at: ~/build
       - run: cp -R ~/build/* ./
-      - run: npm run lint
+      - run: npm run affected:lint
   test:
     executor: blockframes-ci
     environment:
@@ -105,7 +105,7 @@ jobs:
           at: ~/build
       - run: cp -R ~/build/* ./
       - run: echo "${FIREBASE_SERVICE_ACCOUNT}" > creds.json
-      - run: npm run test
+      - run: npm run affected:test
   test-e2e:
     executor: blockframes-ci
     environment:
