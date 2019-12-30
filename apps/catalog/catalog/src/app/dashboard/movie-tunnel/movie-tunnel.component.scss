@@ -1,0 +1,25 @@
+.app-icon-link {
+  width: 100px;
+  height: 35px;
+  margin-left: 50px;
+}
+
+mat-sidenav-container {
+  height: 500px;
+}
+mat-sidenav {
+  width: 300px;
+  article {
+    padding: 20px;
+    mat-icon {
+      margin-right: 10px;
+    }
+  }
+  .mat-accordion .mat-expansion-panel {
+    border: none;
+  }
+  .expansion-margin {
+    margin-left: 30px;
+  }
+}
+

@@ -116,6 +116,10 @@ const ICONS_SVG = [
     url: 'assets/logo/logoBFlight.svg'
   },
   {
+    name: 'logoAC',
+    url: 'assets/logo/LogoAC.svg'
+  },
+  {
     name: 'media_delivering',
     url: 'assets/apps/media_delivering.svg'
   },
