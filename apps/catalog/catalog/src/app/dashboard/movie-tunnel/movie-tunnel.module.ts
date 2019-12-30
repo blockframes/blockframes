@@ -2,7 +2,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { Routes } from '@angular/router';
 
 // Component
 import { MovieTunnelComponent } from './movie-tunnel.component';
