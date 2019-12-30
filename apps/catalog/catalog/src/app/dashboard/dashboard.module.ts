@@ -35,6 +35,10 @@ const routes: Routes = [
       {
         path: 'terms',
         loadChildren: () => import('./pages/privacy-page/privacy.module').then(m => m.PrivacyModule)
+      },
+      {
+        path: 'movie-tunnel',
+        loadChildren: () => import('./movie-tunnel/movie-tunnel.module').then(m => m.MovieTunnelModule)
       }
     ]
   },

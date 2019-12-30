@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
+import { MovieTunnelService } from '../movie-tunnel/movie-tunnel.service';
 @Component({
   selector: 'catalog-layout',
   templateUrl: './layout.component.html',
@@ -17,5 +18,9 @@ export class LayoutComponent{
     shareReplay()
   );
 
-  constructor(private breakpointObserver: BreakpointObserver) {}
+  constructor(private breakpointObserver: BreakpointObserver, private service: MovieTunnelService) {}
+
+  startTunnel(){
+    this.service.openTunnel();
+  }
 }

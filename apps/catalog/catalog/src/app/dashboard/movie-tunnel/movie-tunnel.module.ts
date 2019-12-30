@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 
 // Component
 import { MovieTunnelComponent } from './movie-tunnel.component';
+import { MovieTunnelRoutingModule } from './movie-tunnel-routing.module';
 
 
 @NgModule({
@@ -12,6 +13,7 @@ import { MovieTunnelComponent } from './movie-tunnel.component';
   imports: [
     CommonModule,
     HttpClientModule,
+    MovieTunnelRoutingModule
   ]
 })
 export class MovieTunnelModule {}
