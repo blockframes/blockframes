@@ -4,11 +4,9 @@
     [mode]="(isHandset$ | async) ? 'over' : 'side'"
     [opened]="(isHandset$ | async) === false">
     <mat-toolbar>
-      <ng-container app-icon>
-        <a test-id="home" mat-button class="app-icon-button" routerLink="/dashboard">
-          <mat-icon svgIcon="LogoAC" class="app-icon"></mat-icon>
-        </a>
-      </ng-container>
+      <a mat-icon-button class="logo" routerLink="/dashboard">
+        <img src="assets/logo/LogoAC.svg"/>
+      </a>
     </mat-toolbar>
     <!-- TODO#1444: update icons -->
     <mat-nav-list>
@@ -41,10 +39,6 @@
         <span matLine>Contact</span>
       </a>
     </mat-nav-list>
-    <div class="help-button">
-        <!-- TODO#1444: update icons -->
-      <button mat-flat-button>Help?</button>
-    </div>
   </mat-sidenav>
   <mat-sidenav-content>
     <mat-toolbar id="catalog-toolbar" fxLayout="row">

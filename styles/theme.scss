@@ -14,6 +14,7 @@
 @import './components/mat-form';
 @import './components/mat-chips';
 @import 'footer';
+@import './components/bf-widget.scss';
 
 @mixin bf-material-theme($theme) {
   @include mat-bf-button-theme($theme);
@@ -25,6 +26,7 @@
   @include mat-bf-table-theme($theme);
   @include mat-bf-toolbar-theme($theme);
   @include bf-footer-theme($theme);
+  @include bf-widget-theme($theme);
 }
 
 .light-theme {

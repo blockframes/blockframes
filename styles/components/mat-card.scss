@@ -7,9 +7,4 @@
     background-color: mat-color($background, card);
     border: 1px solid mat-color($foreground, divider);
   }
-
-  .bf-widget .mat-card .mat-card-footer {
-    background-color: mat-color($background, hover);
-    border-radius: none;
-  }
 }

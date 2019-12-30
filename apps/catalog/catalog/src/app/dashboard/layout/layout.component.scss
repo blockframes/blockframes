@@ -1,18 +1,11 @@
 mat-sidenav-container {
   height: 100%;
-  position: relative;
   #dashboard-navbar {
     width: 300px;
     border: none;
-
     .mat-toolbar {
       border: none;
     }
-  }
-  .help-button {
-    position: absolute;
-    left: 120px;
-    bottom: 20px;
   }
 }
 
@@ -22,9 +15,8 @@ mat-sidenav-content {
   }
 }
 
-.app-icon,
-.app-icon-button {
-  width: 157px;
+.logo {
+  height: 80%;
 }
 
 

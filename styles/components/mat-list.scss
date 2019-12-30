@@ -19,14 +19,4 @@
   .mat-sidenav .mat-nav-list, .mat-list-base {
     border: none;
   }
-
-  // Every list in bf-widget won't get border
-  .bf-widget {
-    .mat-list.mat-list-base {
-      border: none;
-    }
-    .mat-nav-list {
-      border: none;
-    }
-  }
 }
