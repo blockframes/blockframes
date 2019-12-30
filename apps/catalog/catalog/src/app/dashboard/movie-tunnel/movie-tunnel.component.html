@@ -9,65 +9,72 @@
 
   <mat-sidenav-container>
     <mat-sidenav opened="true" position="start" mode="side">
-      <mat-accordion>
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <article fxLayout="row" fxLayoutAlign="start center">
-              <mat-icon>home</mat-icon>
-              <mat-panel-title>Title Information</mat-panel-title>
+      <section fxLayout="column" fxLayoutAlign="space-between center">
+        <mat-accordion>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <article fxLayout="row" fxLayoutAlign="start center">
+                <mat-icon>home</mat-icon>
+                <mat-panel-title>Title Information</mat-panel-title>
+              </article>
+            </mat-expansion-panel-header>
+            <article fxLayout="column" class="expansion-margin">
+              <a routerLink="">Main information</a>
+              <a routerLink="">Synopsis</a>
+              <a routerLink="">Credits</a>
+              <a routerLink="">Budget, quota, critics</a>
+              <a routerLink="">Technical Information</a>
+              <a routerLink="">Keywords</a>
             </article>
-          </mat-expansion-panel-header>
-          <article fxLayout="column" class="expansion-margin">
-            <a>Main information</a>
-            <a>Synopsis</a>
-            <a>Credits</a>
-            <a>Budget, quota, critics</a>
-            <a>Technical Information</a>
-            <a>Keywords</a>
-          </article>
-        </mat-expansion-panel>
+          </mat-expansion-panel>
 
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <article fxLayout="row" fxLayoutAlign="start center">
-              <mat-icon>home</mat-icon>
-              <mat-panel-title>Licensed Rights</mat-panel-title>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <article fxLayout="row" fxLayoutAlign="start center">
+                <mat-icon>home</mat-icon>
+                <mat-panel-title>Licensed Rights</mat-panel-title>
+              </article>
+            </mat-expansion-panel-header>
+            <article fxLayout="column" class="expansion-margin">
+              <a routerLink="">Marketplace Rights</a>
+              <a routerLink="">Previously Deals</a>
             </article>
-          </mat-expansion-panel-header>
-          <article fxLayout="column" class="expansion-margin">
-            <a>Marketplace Rights</a>
-            <a>Previously Deals</a>
-          </article>
-        </mat-expansion-panel>
+          </mat-expansion-panel>
 
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <article fxLayout="row" fxLayoutAlign="start center">
-              <mat-icon>home</mat-icon>
-              <mat-panel-title>Uploaded Media</mat-panel-title>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <article fxLayout="row" fxLayoutAlign="start center">
+                <mat-icon>home</mat-icon>
+                <mat-panel-title>Uploaded Media</mat-panel-title>
+              </article>
+            </mat-expansion-panel-header>
+            <article fxLayout="column" class="expansion-margin">
+              <a routerLink="">Images</a>
+              <a routerLink="">Files & links</a>
             </article>
-          </mat-expansion-panel-header>
-          <article fxLayout="column" class="expansion-margin">
-            <a>Images</a>
-            <a>Files & links</a>
-          </article>
-        </mat-expansion-panel>
+          </mat-expansion-panel>
 
-        <mat-expansion-panel>
-          <mat-expansion-panel-header>
-            <article fxLayout="row" fxLayoutAlign="start center">
-              <mat-icon>home</mat-icon>
-              <mat-panel-title>Legal Information</mat-panel-title>
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <article fxLayout="row" fxLayoutAlign="start center">
+                <mat-icon>home</mat-icon>
+                <mat-panel-title>Legal Information</mat-panel-title>
+              </article>
+            </mat-expansion-panel-header>
+            <article fxLayout="column" class="expansion-margin">
+              <a routerLink="">Chain of Titles</a>
+              <a routerLink="">Marketplace Eval.</a>
             </article>
-          </mat-expansion-panel-header>
-          <article fxLayout="column" class="expansion-margin">
-            <a>Chain of Titles</a>
-            <a>Marketplace Eval.</a>
-          </article>
-        </mat-expansion-panel>
-      </mat-accordion>
+          </mat-expansion-panel>
+        </mat-accordion>
 
+        <article class="spinner-section">
+          <mat-spinner mode="determinate" value="55"></mat-spinner>
+          <span>Your progress</span>
+        </article>
+      </section>
     </mat-sidenav>
+
     <mat-sidenav-content>
       <ng-content select="[sidenavContent]"></ng-content>
     </mat-sidenav-content>
