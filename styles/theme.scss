@@ -31,6 +31,12 @@
   @include angular-material-theme($bf-light-theme);
   @include sat-datepicker-theme($bf-light-theme);
   @include bf-material-theme($bf-light-theme);
+  // every components inside of dashboard-navbar should be always in the dark theme
+  #dashboard-navbar {
+    background-color: mat-color($bf-dark-background, app-bar);
+    @include angular-material-theme($bf-dark-theme);
+    @include bf-material-theme($bf-dark-theme);
+  }
 }
 
 .dark-theme {
@@ -39,9 +45,3 @@
   @include bf-material-theme($bf-dark-theme);
 }
 
-#dashboard-navbar {
-  background-color: mat-color($bf-dark-background, app-bar);
-  .mat-toolbar {
-    background-color: mat-color($bf-dark-background, app-bar);
-  }
-}
