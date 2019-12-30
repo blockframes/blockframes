@@ -1,0 +1,75 @@
+<section>
+  <mat-toolbar>
+    <article>
+      <a mat-icon-button >
+        <mat-icon class="app-icon-link" svgIcon="logoAC"></mat-icon>
+      </a>
+    </article>
+  </mat-toolbar>
+
+  <mat-sidenav-container>
+    <mat-sidenav opened="true" position="start" mode="side">
+      <mat-accordion>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <article fxLayout="row" fxLayoutAlign="start center">
+              <mat-icon>home</mat-icon>
+              <mat-panel-title>Title Information</mat-panel-title>
+            </article>
+          </mat-expansion-panel-header>
+          <article fxLayout="column" class="expansion-margin">
+            <a>Main information</a>
+            <a>Synopsis</a>
+            <a>Credits</a>
+            <a>Budget, quota, critics</a>
+            <a>Technical Information</a>
+            <a>Keywords</a>
+          </article>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <article fxLayout="row" fxLayoutAlign="start center">
+              <mat-icon>home</mat-icon>
+              <mat-panel-title>Licensed Rights</mat-panel-title>
+            </article>
+          </mat-expansion-panel-header>
+          <article fxLayout="column" class="expansion-margin">
+            <a>Marketplace Rights</a>
+            <a>Previously Deals</a>
+          </article>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <article fxLayout="row" fxLayoutAlign="start center">
+              <mat-icon>home</mat-icon>
+              <mat-panel-title>Uploaded Media</mat-panel-title>
+            </article>
+          </mat-expansion-panel-header>
+          <article fxLayout="column" class="expansion-margin">
+            <a>Images</a>
+            <a>Files & links</a>
+          </article>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <article fxLayout="row" fxLayoutAlign="start center">
+              <mat-icon>home</mat-icon>
+              <mat-panel-title>Legal Information</mat-panel-title>
+            </article>
+          </mat-expansion-panel-header>
+          <article fxLayout="column" class="expansion-margin">
+            <a>Chain of Titles</a>
+            <a>Marketplace Eval.</a>
+          </article>
+        </mat-expansion-panel>
+      </mat-accordion>
+
+    </mat-sidenav>
+    <mat-sidenav-content>
+      <ng-content select="[sidenavContent]"></ng-content>
+    </mat-sidenav-content>
+  </mat-sidenav-container>
+</section>
