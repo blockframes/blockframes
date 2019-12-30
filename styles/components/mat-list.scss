@@ -16,12 +16,8 @@
   }
 
   // Every nav-list in a sidenav won't get border
-  .mat-sidenav .mat-nav-list {
+  .mat-sidenav .mat-nav-list, .mat-list-base {
     border: none;
-    background-color: transparent;
-    .mat-list-item {
-      color: white;
-    }
   }
 
   // Every list in bf-widget won't get border
