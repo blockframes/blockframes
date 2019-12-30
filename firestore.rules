@@ -51,7 +51,7 @@ service cloud.firestore {
       allow delete: if isSuperAdmin(userId(), orgId);
       allow read: if isSignedIn();
 
-      match /carts/{basketId} {
+      match /baskets/{basketId} {
       	allow read: if isOrgMember(userId(), orgId);
         allow create: if isOrgMember(userId(), orgId);
         allow update: if isOrgMember(userId(), orgId)
@@ -101,11 +101,28 @@ service cloud.firestore {
       }
     }
 
-    /// DISTRIBUTION DEALS RULES ///
+    /// DELIVERIES RULES ///
 
-    match /{path=**}/distributiondeals/{dealId} {
-    	allow write: if true; // @TODO #1388 Only if licenseStatus === 'unknown'
-      allow read: if true; // @TODO #1388 Only if licensee.orgId == currentUser.orgId || if licensor.orgId == currentUser.orgId
+    match /deliveries/{deliveryId} {
+      allow read: if userHasValidOrg()
+				&& documentPermissionsExist(userOrgId(), existingData().movieId);
+      allow create: if userHasValidOrg()
+      	&& documentIdChecked(deliveryId, 'deliveries')
+        && documentPermissionsExist(userOrgId(), existingData().movieId);
+      allow update: if orgCan('update', userOrgId(), deliveryId)
+      	&& documentIdChecked(deliveryId, 'deliveries')
+        && incomingData().id == existingData().id;
+      allow delete: if orgCan('delete', userOrgId(), deliveryId);
+
+      match /{documents=**} {
+      	allow read: if orgCan('read', userOrgId(), deliveryId);
+      	allow create: if userHasValidOrg()
+      		&& documentIdChecked(deliveryId, 'deliveries');
+      	allow update: if orgCan('update', userOrgId(), deliveryId)
+      		&& documentIdChecked(deliveryId, 'deliveries')
+        	&& incomingData().id == existingData().id;
+      	allow delete: if orgCan('delete', userOrgId(), deliveryId);
+      }
     }
 
     /// FUNCTIONS ///
@@ -168,11 +185,15 @@ service cloud.firestore {
     	return get(/databases/$(database)/documents/permissions/$(orgId)).data;
     }
 
+    function documentPermissionsExist(orgId, docId) {
+    	return exists(/databases/$(database)/documents/permissions/$(orgId)/documentPermissions/$(docId));
+    }
+
 		// Parameter "action" can either be "canCreate", "canRead", "canUpdate" or "canDelete"
     function orgCan(action, orgId, docId) {
-      return (getOrgDocumentPermissions(orgId, docId).owner == orgId)
-        || (getOrgDocumentPermissions(orgId, docId).admin == true)
-        || (getOrgDocumentPermissions(orgId, docId)[action] == true);
+      return (getDocumentPermissions(orgId, docId).ownerId == orgId)
+        || (getDocumentPermissions(orgId, docId).admin == true)
+        || (getDocumentPermissions(orgId, docId)[action] == true);
     }
   }
 }
