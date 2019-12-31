@@ -3,7 +3,6 @@ import { Delivery, DeliveryQuery, DeliveryService } from '../../+state';
 import { StakeholderService } from '../../stakeholder/+state/stakeholder.service';
 import { Observable } from 'rxjs';
 import { OrganizationAlgoliaResult } from '@blockframes/utils';
-import { createDeliveryStakeholder } from '../../stakeholder/+state/stakeholder.firestore';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Stakeholder } from '../../stakeholder/+state/stakeholder.model';
 
@@ -45,9 +44,10 @@ export class DeliveryStakeholdersEditableComponent implements OnInit {
   public addStakeholder({ objectID }: OrganizationAlgoliaResult) {
     // TODO: handle promises correctly (update loading status, send back error report, etc). => ISSUE#612
     try {
-      this.stakeholderService.add(createDeliveryStakeholder({ orgId: objectID }));
-      this.deliveryService.update({
-        stakeholderIds: [...this.query.getActive().stakeholderIds, objectID]
+      const delivery = this.query.getActive();
+      this.stakeholderService.addStakeholder(delivery.id, objectID);
+      this.deliveryService.update(delivery.id, {
+        stakeholderIds: [...delivery.stakeholderIds, objectID]
       });
       this.snackBar.open(`You invited a new organization to work on the delivery`, 'close', {
         duration: 2000

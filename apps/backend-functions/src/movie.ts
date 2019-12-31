@@ -4,7 +4,7 @@ import { createNotification, NotificationType } from '@blockframes/notification/
 import { App } from '@blockframes/utils/apps';
 import { triggerNotifications } from './notification';
 import { flatten, isEqual } from 'lodash';
-import { getDocument } from './data/internals';
+import { getDocument, getOrganizationsOfDocument } from './data/internals';
 import { removeAllSubcollections } from './utils';
 
 /** Create a notification with user and movie. */
@@ -26,12 +26,10 @@ function notifUser(userId: string, notificationType: NotificationType, movie: Mo
 
 /** Create notifications for all org's members. */
 async function createNotificationsForUsers(movie: MovieDocument, notificationType: NotificationType, user: PublicUser) {
-  const orgsSnapShot = await db
-  .collection(`orgs`)
-  .where('movieIds', 'array-contains', movie.id)
-  .get();
 
-  const orgs = orgsSnapShot.docs.map(org => org.data() as OrganizationDocument);
+  const orgs = await getOrganizationsOfDocument(movie.id, 'movies')
+  console.log('user ', user)
+  console.log('organizations from notifications', orgs)
 
   return flatten(orgs.map(org => org.userIds.map(userId => notifUser(userId, notificationType, movie, user))));
 }
@@ -43,6 +41,7 @@ export async function onMovieCreate(
 ) {
   const movie = snap.data() as MovieDocument;
 
+  console.log('movie', movie)
   // Get the user document, and then his organization.
   const user = await getDocument<PublicUser>(`users/${movie._meta!.createdBy}`);
   const organization = await getDocument<OrganizationDocument>(`orgs/${user.orgId}`)
@@ -53,7 +52,7 @@ export async function onMovieCreate(
   }
 
   // Create permissions and notifications documents.
-  const documentPermissions = createDocPermissions({id: movieId, ownerId: organization.id});
+  const documentPermissions = createDocPermissions({id: movie.id, ownerId: organization.id});
   const notifications = await createNotificationsForUsers(movie, NotificationType.movieTitleCreated, user);
 
   // Getting snapshots of documents for the transaction.
@@ -67,7 +66,7 @@ export async function onMovieCreate(
       // Add document permissions for this movie in the database.
       tx.set(documentPermissionSnap.ref, documentPermissions),
       // Update the organization's movieIds with the new movie id.
-      tx.update(organizationSnap.ref, { movieIds: [...organization.movieIds, movieId] }),
+      tx.update(organizationSnap.ref, { movieIds: [...organization.movieIds, movie.id] }),
       // Send notifications about this new movie to each organization member.
       triggerNotifications(notifications)
     ]);

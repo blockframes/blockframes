@@ -22,7 +22,6 @@ import { DeliveryMaterialService } from '../../material/+state/delivery-material
 import { TemplateMaterialService } from '../../material/+state/template-material.service';
 import { TemplateQuery } from '../../template/+state/template.query';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
-import { createDeliveryStakeholder } from '../stakeholder/+state/stakeholder.firestore';
 
 interface AddDeliveryOptions {
   templateId?: string;
@@ -69,7 +68,7 @@ export class DeliveryService extends CollectionService<DeliveryState> {
     private deliveryMaterialService: DeliveryMaterialService,
     private templateMaterialService: TemplateMaterialService,
     private permissionsService: PermissionsService,
-    private stakeholderService: StakeholderService,
+    private shService: StakeholderService,
     private walletService: WalletService,
     private movieMaterialService: MovieMaterialService,
     private authQuery: AuthQuery
@@ -136,7 +135,8 @@ export class DeliveryService extends CollectionService<DeliveryState> {
       movieId,
       validated: [],
       mustChargeMaterials: opts.mustChargeMaterials,
-      mustBeSigned: opts.mustBeSigned
+      mustBeSigned: opts.mustBeSigned,
+      stakeholderIds: [organization.id]
     });
 
     await this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
@@ -160,7 +160,7 @@ export class DeliveryService extends CollectionService<DeliveryState> {
       }
 
       // Create the stakeholder in the sub-collection
-      await this.stakeholderService.add(createDeliveryStakeholder({ orgId: organization.id }));
+      await this.shService.addStakeholder(delivery.id, organization.id, true, tx);
 
       // Update the movie deliveryIds
       const nextDeliveryIds = [...deliveryIds, delivery.id];
@@ -205,7 +205,7 @@ export class DeliveryService extends CollectionService<DeliveryState> {
       }
 
       // Create the stakeholder in the sub-collection
-      await this.stakeholderService.add(createDeliveryStakeholder({ orgId: organization.id }));
+      await this.shService.addStakeholder(delivery.id, organization.id, true, tx);
 
       // Update the movie deliveryIds
       const nextDeliveryIds = [...deliveryIds, delivery.id];
