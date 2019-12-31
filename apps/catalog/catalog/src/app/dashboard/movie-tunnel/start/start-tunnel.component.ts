@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
-  selector: 'start-tunnel',
+  selector: 'catalog-start-tunnel',
   templateUrl: './start-tunnel.component.html',
   styleUrls: ['./start-tunnel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
