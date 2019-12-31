@@ -17,7 +17,6 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { MatGridListModule } from '@angular/material/grid-list';
 @NgModule({
   declarations: [MovieTunnelComponent, StartTunnelComponent],
   imports: [
@@ -32,7 +31,6 @@ import { MatGridListModule } from '@angular/material/grid-list';
     MatProgressSpinnerModule,
     MatButtonModule,
     MatCardModule,
-    MatGridListModule
   ],
   exports: [MovieTunnelComponent]
 })
