@@ -1,162 +1,273 @@
 <form page-id="movie-form-main" [formGroup]="main">
-  <!-- INTERNAL REF -->
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Internal ref</mat-label>
-    <input matInput type="text" placeholder="Internal ref" formControlName="internalRef" required />
-    <mat-error *ngIf="main.get('internalRef').hasError('required')">
-      Internal ref is <strong>required</strong>
-    </mat-error>
-  </mat-form-field>
-  <!-- ISAN NUMBER -->
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>ISAN Number</mat-label>
-    <input matInput type="text" placeholder="ISAN number (ISAN 0000-0001-8947-0000-8-0000-0000-D)"
-      formControlName="isan" required />
-    <mat-error *ngIf="main.get('isan').hasError('required')">
-      ISAN number is <strong>required</strong>
-    </mat-error>
-  </mat-form-field>
-  <!-- @todo #643 Use articles and sections.-->
-  <div formGroupName="title">
-    <!-- TITLES -->
-    <h3> Titles </h3>
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Original title</mat-label>
-      <input test-id="movie-add" matInput type="text" placeholder="Original title" formControlName="original" required />
-      <mat-error *ngIf="main.title.get('original').hasError('required')">
-        Original title is <strong>required</strong>
-      </mat-error>
-    </mat-form-field>
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>International title</mat-label>
-      <input matInput type="text" placeholder="International title" formControlName="international" required />
-      <mat-error *ngIf="main.title.get('international').hasError('required')">
-        International title is <strong>required</strong>
-      </mat-error>
-    </mat-form-field>
-  </div>
-  <!-- DIRECTORS -->
-  <h3> Directed By </h3>
-  <div formArrayName="directors" *ngFor="let director of main.directors.controls; let i = index">
-    <div [formGroupName]="i" class="full-width">
-      <mat-form-field appearance="outline" class="small-margin">
-        <mat-label>Firstname</mat-label>
-        <input matInput formControlName="firstName" placeholder="First Name">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Content Type</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <article fxLayout="column">
+
+        <!-- CONTENT TYPE -->
+        <mat-form-field appearance="outline">
+          <mat-label>Content Type</mat-label>
+          <mat-select formControlName="workType">
+            <mat-option *ngFor="let contentType of contentTypes" [value]="contentType">
+              {{contentType}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- FRESHNESS -->
+        <mat-form-field appearance="outline">
+          <mat-label>Freshness</mat-label>
+          <mat-select formControlName="workType">
+            <mat-option *ngFor="let freshness of freshnesses" [value]="freshness">
+              {{freshness}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- PRODUCTION STATUS -->
+        <mat-form-field appearance="outline">
+          <mat-label>Production Status</mat-label>
+          <mat-select formControlName="status" required>
+            <mat-option *ngFor="let status of staticModels.MOVIE_STATUS" [value]="status.slug">
+              {{ status.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- TITLES -->
+        <article formGroupName="title" fxLayout="column">
+          <mat-form-field appearance="outline">
+            <mat-label>International title</mat-label>
+            <input matInput type="text" placeholder="International title" formControlName="international" required />
+            <mat-error *ngIf="main.title.get('international').hasError('required')">
+              International title is <b>required</b>
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Reference</mat-label>
+            <input matInput type="text" placeholder="Reference" formControlName="reference" />
+            <mat-hint>This reference is for you only</mat-hint>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline">
+            <mat-label>Original title</mat-label>
+            <input test-id="movie-add" matInput type="text" placeholder="Original title" formControlName="original" required />
+            <mat-error *ngIf="main.title.get('original').hasError('required')">
+              Original title is <b>required</b>
+            </mat-error>
+          </mat-form-field>
+        </article>
+
+      </article>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Director(s)</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <!-- DIRECTORS -->
+      <article formGroupName="director" fxLayout="column">
+        <mat-form-field appearance="outline">
+          <mat-label>Drector's Firstname</mat-label>
+          <input matInput formControlName="firstname" placeholder="ex. Woody">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Director's Lastname</mat-label>
+          <input matInput formControlName="lastname" placeholder="ex. Allen">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Director's Filmography</mat-label>
+          <textarea matInput formControlName="filmography" placeholder="Director's Filmography"></textarea>
+          <mat-hint>Selective filmography to present the director</mat-hint>
+        </mat-form-field>
+      </article>
+
+      <article fxLayout="column" fxLayoutAlign="center center">
+        <button mat-mini-fab color="primary" (click)="main.addDirector()">
+          <mat-icon>add</mat-icon>
+        </button>
+        <p>Add an other director</p>
+      </article>
+    </mat-card-content>
+  </mat-card>
+
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Country(ies) of Origin</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <article fxLayout="column">
+        <!-- COUNTRIES OF ORIGIN -->
+        <mat-form-field appearance="outline">
+          <input matInput formControlName="originCountries" placeholder="Country of Origin" [matAutocomplete]="originCountries" required>
+
+          <mat-autocomplete #originCountries="matAutocomplete">
+            <mat-option *ngFor="let country of countries$ | async" [value]="country.slug">
+              {{ country.label }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+
+        <!-- DISTRIBUTOR OF COUNTRY OF ORIGIN -->
+        <mat-form-field appearance="outline">
+          <mat-label>Domestic Distributor</mat-label>
+          <input matInput formControlName="originDistributor" placeholder="Domestic Distributor">
+        </mat-form-field>
+      </article>
+
+      <article fxLayout="column" fxLayoutAlign="center center">
+        <button mat-mini-fab color="primary" (click)="main.addDirector()">
+          <mat-icon>add</mat-icon>
+        </button>
+        <span>Add an other country</span>
+      </article>
+
+      <mat-divider inset="true"></mat-divider>
+
+      <article fxLayout="column">
+        <!-- ORIGINAL LANGUAGES -->
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Original Language</mat-label>
+          <mat-select formControlName="languages" placeholder="Film Languages" multiple required>
+            <mat-option>
+              <ngx-mat-select-search [formControl]="languagesFilterCtrl" [placeholderLabel]="'Choose a language'"
+                [noEntriesFoundLabel]="'No matching language found'"></ngx-mat-select-search>
+            </mat-option>
+            <mat-option *ngFor="let language of languages$ | async" [value]="language.slug">
+              {{ language.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </article>
+    </mat-card-content>
+  </mat-card>
+</form>
+
+<form [formGroup]="salesInfo">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Theatrical Release</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <article fxLayout="row" fxLayoutAlign="space-between center">
+        <p>Theatrical Release</p>
+        <mat-slide-toggle color="primary"></mat-slide-toggle>
+      </article>
+
+      <!-- THEATRICAL RELEASE -->
+      <mat-form-field appearance="outline">
+        <mat-label>Release Date in Country of Origin</mat-label>
+        <input matInput [matDatepicker]="originReleaseDate" placeholder="MM/DD/YYYY">
+        <mat-datepicker-toggle matSuffix [for]="originReleaseDate"></mat-datepicker-toggle>
+        <mat-datepicker #originReleaseDate></mat-datepicker>
       </mat-form-field>
-      <mat-form-field appearance="outline" class="small-margin">
-        <mat-label>Lastname</mat-label>
-        <input matInput formControlName="lastName" placeholder="Last Name">
-      </mat-form-field>
-      <button mat-icon-button color="primary" (click)="main.addDirector()">
-        <mat-icon>add_circle</mat-icon>
-      </button>
-      <button mat-icon-button color="primary" (click)="main.removeDirector(i)">
-        <mat-icon>delete_circle</mat-icon>
-      </button>
-    </div>
-  </div>
-  <ng-container *ngIf="main.directors.controls.length === 0">
-    <button mat-icon-button color="primary" (click)="main.addDirector()">
-      <mat-icon>add_circle</mat-icon>
-    </button>
-  </ng-container>
-  <!-- POSTER -->
-  <h3> Poster </h3>
-  <drop-cropper [ratio]="2/3" storagePath="poster" formControlName="poster"></drop-cropper>
-  <!-- PRODUCTION -->
-  <h3> Production </h3>
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Production year</mat-label>
-    <input matInput type="number" placeholder="Production year" formControlName="productionYear" />
-    <mat-error *ngIf="main.get('productionYear').hasError('pattern')">
-      Invalid year.
-    </mat-error>
-  </mat-form-field>
-  <!-- GENRES -->
-  <h3> Genres </h3>
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-select formControlName="genres" placeholder="Genres" multiple>
-      <mat-option>
-        <ngx-mat-select-search [formControl]="genresFilterCtrl" [placeholderLabel]="'Search...'"
-          [noEntriesFoundLabel]="'no matching genre found'"></ngx-mat-select-search>
-      </mat-option>
-      <mat-option *ngFor="let genre of genres$ | async" [value]="genre.slug">
-        {{ genre.label }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-  <!-- ORIGIN COUNTRIES -->
-  <h3> Origin Countries </h3>
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-select formControlName="originCountries" placeholder="Origin Countries" multiple>
-      <mat-option>
-        <ngx-mat-select-search [formControl]="countriesFilterCtrl" [placeholderLabel]="'Search...'"
-          [noEntriesFoundLabel]="'no matching country found'"></ngx-mat-select-search>
-      </mat-option>
-      <mat-option *ngFor="let country of countries$ | async" [value]="country.slug">
-        {{ country.label }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-  <!-- LANGUAGES -->
-  <h3> Languages </h3>
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-select formControlName="originalLanguages" placeholder="Film Languages" multiple>
-      <mat-option>
-        <ngx-mat-select-search [formControl]="languagesFilterCtrl" [placeholderLabel]="'Search...'"
-          [noEntriesFoundLabel]="'no matching language found'"></ngx-mat-select-search>
-      </mat-option>
-      <mat-option *ngFor="let language of languages$ | async" [value]="language.slug">
-        {{ language.label }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-  <!-- STATUS -->
-  <h3> Status </h3>
-  <mat-form-field appearance="outline">
-    <mat-select formControlName="status" placeholder="Status">
-      <mat-option *ngFor="let status of staticModels.MOVIE_STATUS" [value]="status.slug">
-        {{ status.label }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-  <!-- SHORT SYNOPSIS -->
-  <h3> Short synopsis </h3>
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Synopsis</mat-label>
-    <textarea matInput #synopsis formControlName="shortSynopsis" maxlength="500" placeholder="Short synopsis"
-      type="string"></textarea>
-    <mat-hint align="end">{{ main.shortSynopsis.value?.length }} / 500</mat-hint>
-  </mat-form-field>
-  <!-- TOTAL RUN TIME -->
-  <h3> Total Run Time </h3>
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Total Run Time</mat-label>
-    <input matInput type="number" placeholder="Total Run Time" formControlName="totalRunTime" />
-    <mat-error *ngIf="main.get('totalRunTime').hasError('required')">
-        Total Run Time is <strong>required</strong>
-    </mat-error>
-  </mat-form-field>
-  <!-- PRODUCTION COMPANIES -->
-  <h3> Production companies </h3>
-  <div formArrayName="stakeholders"
-    *ngFor="let stakeholder of main.stakeholders.controls; let i = index">
-    <div [formGroupName]="i" class="full-width">
-      <mat-form-field appearance="outline" class="small-margin">
-        <mat-label>Stakeholder</mat-label>
-        <input matInput formControlName="displayName" placeholder="Company name">
-      </mat-form-field>
-      <button mat-icon-button color="primary" (click)="main.addStakeholder()">
-        <mat-icon>add_circle</mat-icon>
-      </button>
-      <button mat-icon-button color="primary" (click)="main.removeStakeholder(i)">
-        <mat-icon>delete_circle</mat-icon>
-      </button>
-    </div>
-  </div>
-  <ng-container *ngIf="main.stakeholders.controls.length === 0">
-    <button mat-icon-button color="primary" (click)="main.addStakeholder()">
-      <mat-icon>add_circle</mat-icon>
-    </button>
-  </ng-container>
+    </mat-card-content>
+  </mat-card>
+</form>
+
+<form [formGroup]="main">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Genre</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <article fxLayout="column">
+        <!-- GENRES -->
+        <mat-form-field appearance="outline">
+          <mat-select formControlName="genres" placeholder="Genres" multiple required>
+            <mat-option>
+              <ngx-mat-select-search [formControl]="genresFilterCtrl" [placeholderLabel]="'Genre'"
+                [noEntriesFoundLabel]="'No matching genre found'"></ngx-mat-select-search>
+            </mat-option>
+            <mat-option *ngFor="let genre of genres$ | async" [value]="genre.slug">
+              {{ genre.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <!-- IF OTHER SPECIFY -->
+        <mat-form-field appearance="outline">
+          <mat-label>Specify</mat-label>
+          <input matInput formControlName="specify" placeholder="Specify">
+        </mat-form-field>
+      </article>
+
+      <article fxLayout="column" fxLayoutAlign="center center">
+        <button mat-mini-fab color="primary" (click)="main.addDirector()">
+          <mat-icon>add</mat-icon>
+        </button>
+        <span>Add an other genre</span>
+      </article>
+
+      <mat-divider inset="true"></mat-divider>
+
+      <article fxLayout="column">
+        <!-- TOTAL RUNTIME -->
+        <mat-form-field appearance="outline">
+          <mat-label>Running Time</mat-label>
+          <input matInput formControlName="totalRunTime" placeholder="Running Time" required>
+          <mat-hint>In minutes</mat-hint>
+        </mat-form-field>
+
+        <!-- PRINCIPAL CAST -->
+        <mat-form-field appearance="outline">
+          <mat-label>Principal Cast Member(s)</mat-label>
+          <input matInput formControlName="castMember" placeholder="Principal Cast Member">
+        </mat-form-field>
+      </article>
+    </mat-card-content>
+  </mat-card>
+</form>
+
+<form [formGroup]="festivalPrizes">
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Festivals</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <article fxLayout="column">
+        <!-- FESTIVAL NAME -->
+        <mat-form-field appearance="outline">
+          <mat-label>Festival Cannes</mat-label>
+          <input matInput formNameControl="name" placeholder="Festival Name">
+        </mat-form-field>
+
+        <!-- AWARD OR SELECTION -->
+        <mat-form-field appearance="outline">
+          <mat-label>Award or Selection</mat-label>
+          <input matInput formNameControl="award" placeholder="Festival Award or Selection">
+        </mat-form-field>
+
+        <!-- FESTIVAL YEAR -->
+        <mat-form-field appearance="outline">
+          <mat-label>Year</mat-label>
+          <input matInput formNameControl="year" placeholder="Year">
+        </mat-form-field>
+
+        <!-- PREMIERE -->
+        <mat-form-field appearance="outline">
+          <mat-label>Premiere</mat-label>
+          <mat-select formNameControl="premiere" placeholder="Premiere">
+            <mat-option>World</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </article>
+
+      <mat-divider inset="true"></mat-divider>
+
+      <article fxLayout="column" fxLayoutAlign="center center">
+        <button mat-mini-fab color="primary" (click)="main.addDirector()">
+          <mat-icon>add</mat-icon>
+        </button>
+        <span>Add an other festival</span>
+      </article>
+    </mat-card-content>
+  </mat-card>
 </form>
