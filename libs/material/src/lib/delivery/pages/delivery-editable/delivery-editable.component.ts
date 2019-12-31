@@ -198,9 +198,13 @@ export class DeliveryEditableComponent implements OnInit {
   }
 
   private async deleteDelivery() {
-    await this.service.deleteDelivery();
-    this.router.navigate([`../../list`], { relativeTo: this.route });
-    this.snackBar.open('Delivery deleted', 'close', { duration: 2000 });
+    try {
+      await this.service.deleteDelivery();
+      this.router.navigate([`../../list`], { relativeTo: this.route });
+      this.snackBar.open('Delivery deleted', 'close', { duration: 2000 });
+    } catch (error) {
+      this.snackBar.open(error.message, 'close', { duration: 2000 });
+    }
   }
 
   public openUnsealDelivery() {
