@@ -141,7 +141,8 @@ export class DeliveryService extends CollectionService<DeliveryState> {
       const deliveryIds = movieSnap.data().deliveryIds || [];
 
       // Create document and permissions
-      await this.permissionsService.createDocAndPermissions(delivery, organization, tx);
+      this.add(delivery);
+      await this.permissionsService.createDocumentPermissions(delivery, organization, tx);
 
       // If there is a templateId, and mustBeSigned is true, copy template materials to the delivery
       if (!!opts.templateId && delivery.mustBeSigned) {
@@ -186,7 +187,8 @@ export class DeliveryService extends CollectionService<DeliveryState> {
       const deliveryIds = movieSnap.data().deliveryIds || [];
 
       // Create document and permissions
-      await this.permissionsService.createDocAndPermissions(delivery, organization, tx);
+      this.add(delivery);
+      await this.permissionsService.createDocumentPermissions(delivery, organization, tx);
 
       // If mustBeSigned is true, copy materials to the delivery
       if (delivery.mustBeSigned) {
