@@ -21,6 +21,8 @@ import { MovieMaterialService } from '../../material/+state/movie-material.servi
 import { DeliveryMaterialService } from '../../material/+state/delivery-material.service';
 import { TemplateMaterialService } from '../../material/+state/template-material.service';
 import { TemplateQuery } from '../../template/+state/template.query';
+import { AuthQuery } from '@blockframes/auth/+state/auth.query';
+import { createDeliveryStakeholder } from '../stakeholder/+state/stakeholder.firestore';
 
 interface AddDeliveryOptions {
   templateId?: string;
@@ -31,9 +33,9 @@ interface AddDeliveryOptions {
 
 // TODO: add a stakeholderIds in delivery so we can filter them here. => ISSUE#639
 // e. g. queryFn: ref => ref.where('stakeholderIds', 'array-contains', userOrgId)
-const deliveriesListQuery = (movieId: string): Query<DeliveryWithTimestamps[]> =>  ({
+const deliveriesListQuery = (movieId: string, orgId: string): Query<DeliveryWithTimestamps[]> =>  ({
   path: 'deliveries',
-  queryFn: ref => ref.where('movieId', '==', movieId),
+  queryFn: ref => ref.where('movieId', '==', movieId).where('stakeholderIds', 'array-contains', orgId),
   stakeholders: delivery => ({
     path: `deliveries/${delivery.id}/stakeholders`,
     organization: stakeholder => ({
@@ -67,9 +69,10 @@ export class DeliveryService extends CollectionService<DeliveryState> {
     private deliveryMaterialService: DeliveryMaterialService,
     private templateMaterialService: TemplateMaterialService,
     private permissionsService: PermissionsService,
-    private shService: StakeholderService,
+    private stakeholderService: StakeholderService,
     private walletService: WalletService,
-    private movieMaterialService: MovieMaterialService
+    private movieMaterialService: MovieMaterialService,
+    private authQuery: AuthQuery
   ) {
     super(store);
   }
@@ -79,7 +82,7 @@ export class DeliveryService extends CollectionService<DeliveryState> {
     return this.movieQuery.selectActiveId().pipe(
       // Reset the store everytime the movieId changes
       tap(_ => this.store.reset()),
-      switchMap(movieId => awaitSyncQuery.call(this, deliveriesListQuery(movieId)))
+      switchMap(movieId => awaitSyncQuery.call(this, deliveriesListQuery(movieId, this.authQuery.orgId)))
     );
   }
 
@@ -157,7 +160,7 @@ export class DeliveryService extends CollectionService<DeliveryState> {
       }
 
       // Create the stakeholder in the sub-collection
-      await this.shService.addStakeholder(delivery.id, organization.id, true, tx);
+      await this.stakeholderService.add(createDeliveryStakeholder({ orgId: organization.id }));
 
       // Update the movie deliveryIds
       const nextDeliveryIds = [...deliveryIds, delivery.id];
@@ -179,7 +182,8 @@ export class DeliveryService extends CollectionService<DeliveryState> {
       movieId,
       validated: [],
       mustChargeMaterials: opts.mustChargeMaterials,
-      mustBeSigned: opts.mustBeSigned
+      mustBeSigned: opts.mustBeSigned,
+      stakeholderIds: [organization.id]
     });
 
     await this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
@@ -201,7 +205,7 @@ export class DeliveryService extends CollectionService<DeliveryState> {
       }
 
       // Create the stakeholder in the sub-collection
-      await this.shService.addStakeholder(delivery.id, organization.id, true, tx);
+      await this.stakeholderService.add(createDeliveryStakeholder({ orgId: organization.id }));
 
       // Update the movie deliveryIds
       const nextDeliveryIds = [...deliveryIds, delivery.id];
