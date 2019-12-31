@@ -77,19 +77,6 @@ export function createAppPermissions(app: App): AppPermissionsDocument {
   };
 }
 
-/** Factory function to create user permissions on a document. */
-export function createUserPermissions(params: Partial<UserPermissionsDocument>): UserPermissionsDocument {
-  return {
-    id: params.id || '',
-    admins: [],
-    canCreate: [],
-    canRead: [],
-    canUpdate: [],
-    canDelete: [],
-    ...params
-  };
-}
-
 /** Factory function to create organization permissions on a document. */
 export function createDocPermissions(params: Partial<DocPermissionsDocument> = {}): DocPermissionsDocument {
   return {

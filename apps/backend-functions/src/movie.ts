@@ -5,6 +5,7 @@ import { App } from '@blockframes/utils/apps';
 import { triggerNotifications } from './notification';
 import { flatten, isEqual } from 'lodash';
 import { getDocument } from './data/internals';
+import { removeAllSubcollections } from './utils';
 
 /** Create a notification with user and movie. */
 function notifUser(userId: string, notificationType: NotificationType, movie: MovieDocument, user: PublicUser) {
