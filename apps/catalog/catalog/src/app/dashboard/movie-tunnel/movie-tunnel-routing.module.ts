@@ -1,7 +1,6 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 import { MovieTunnelComponent } from "./movie-tunnel.component";
-import { StartTunnelComponent } from "./start/start-tunnel.component";
 
 const tunnelRoutes: Routes = [
   {
@@ -9,8 +8,8 @@ const tunnelRoutes: Routes = [
     component: MovieTunnelComponent,
     children: [
       {
-        path: 'start',
-        component: StartTunnelComponent
+        path: '',
+        loadChildren: () => import('./start/start-tunnel.module').then(m => m.StartTunnelModule)
       }
     ]
   }
@@ -20,8 +19,6 @@ const tunnelRoutes: Routes = [
   imports: [
     RouterModule.forChild(tunnelRoutes)
   ],
-  exports: [
-    RouterModule
-  ]
+  exports: [RouterModule]
 })
 export class MovieTunnelRoutingModule { }
