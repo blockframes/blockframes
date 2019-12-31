@@ -20,21 +20,17 @@ export class PermissionsService extends CollectionService<PermissionsState> {
   // DOC TRANSACTIONS //
   //////////////////////
 
-  /** Create a transaction for the document and add document permissions (organization document permissions and shared document permissions) at the same time */
-  public async createDocAndPermissions<T>(
+  /** Create permissions for a document */
+  public async createDocumentPermissions(
     document: BFDoc,
     organization: Organization,
     tx: firebase.firestore.Transaction
   ) {
 
     const documentPermissions = createDocPermissions({id: document.id, ownerId: organization.id});
-    const documentPermissionsRef = this.db.doc<T>(`permissions/${organization.id}/documentPermissions/${document.id}`).ref;
-    const documentRef = this.db.doc<T>(`${document._type}/${document.id}`).ref;
+    const documentPermissionsRef = this.db.doc(`permissions/${organization.id}/documentPermissions/${document.id}`).ref;
 
-    return Promise.all([
-      tx.set(documentPermissionsRef, documentPermissions),
-      tx.set(documentRef, document)
-    ]);
+    return tx.set(documentPermissionsRef, documentPermissions)
   }
 
   /** Update roles of members of the organization */
