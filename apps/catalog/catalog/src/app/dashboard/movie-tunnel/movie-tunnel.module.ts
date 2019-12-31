@@ -6,7 +6,6 @@ import { RouterModule } from '@angular/router';
 
 // Component
 import { MovieTunnelComponent } from './movie-tunnel.component';
-import { StartTunnelComponent } from './start/start-tunnel.component';
 import { MovieTunnelRoutingModule } from './movie-tunnel-routing.module';
 
 // Materials
@@ -18,7 +17,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 @NgModule({
-  declarations: [MovieTunnelComponent, StartTunnelComponent],
+  declarations: [MovieTunnelComponent],
   imports: [
     CommonModule,
     MovieTunnelRoutingModule,
