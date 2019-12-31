@@ -3,7 +3,7 @@ import { BFDoc } from '@blockframes/utils';
 import { PermissionsQuery } from './permissions.query';
 import { Organization } from '../../+state';
 import { OrganizationMember } from '../../member/+state/member.model';
-import { createDocPermissions, createUserPermissions, UserRole, DocPermissionsDocument } from './permissions.firestore';
+import { createDocPermissions, UserRole, DocPermissionsDocument } from './permissions.firestore';
 import { PermissionsState, PermissionsStore } from './permissions.store';
 import { CollectionService, CollectionConfig } from 'akita-ng-fire';
 
@@ -28,13 +28,9 @@ export class PermissionsService extends CollectionService<PermissionsState> {
   ) {
     const promises = [];
     const orgDocPermissions = createDocPermissions({id: document.id, ownerId: organization.id});
-    const userDocPermissions = createUserPermissions({id : document.id});
 
     const orgDocPermissionsRef = this.db.doc<T>(`permissions/${organization.id}/orgDocsPermissions/${document.id}`).ref;
     promises.push(tx.set(orgDocPermissionsRef, orgDocPermissions));
-
-    const userDocPermissionsRef = this.db.doc<T>(`permissions/${organization.id}/userDocsPermissions/${document.id}`).ref;
-    promises.push(tx.set(userDocPermissionsRef, userDocPermissions));
 
     const documentRef = this.db.doc<T>(`${document._type}/${document.id}`).ref;
     promises.push(tx.set(documentRef, document));

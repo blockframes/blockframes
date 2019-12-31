@@ -32,7 +32,6 @@ export {
   DocPermissionsDocument,
   createAppPermissions,
   createDocPermissions,
-  createUserPermissions,
   UserRole
 } from '@blockframes/permissions/types';
 export { PublicUser } from '@blockframes/auth/types';

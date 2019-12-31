@@ -15,7 +15,6 @@ import {
   OrganizationDocument,
   MovieDocument,
   createDocPermissions,
-  createUserPermissions,
   PublicUser,
 } from './data/types';
 import { triggerNotifications } from './notification';
@@ -166,30 +165,24 @@ async function onDocumentInvitationAccept(invitation: InvitationToWorkOnDocument
   const movie = await getDocument<MovieDocument>(`movies/${delivery.movieId}`);
 
   const [
-    organizationDocPermissionsSnap,
-    userDocPermissionsSnap,
+    documentPermissionsSnap,
     stakeholderSnap,
     organizationSnap,
-    organizationMoviePermissionsSnap,
-    userMoviePermissionsSnap,
+    moviePermissionsSnap,
     organization
   ] = await Promise.all([
     db.doc(`permissions/${stakeholderId}/orgDocsPermissions/${docId}`).get(),
-    db.doc(`permissions/${stakeholderId}/userDocsPermissions/${docId}`).get(),
     db.doc(`deliveries/${docId}/stakeholders/${stakeholderId}`).get(),
     db.doc(`orgs/${stakeholderId}`).get(),
     db.doc(`permissions/${stakeholderId}/orgDocsPermissions/${delivery.movieId}`).get(),
-    db.doc(`permissions/${stakeholderId}/userDocsPermissions/${delivery.movieId}`).get(),
     getDocument<OrganizationDocument>(`orgs/${stakeholderId}`)
   ]);
 
-  const orgDocPermissions = createDocPermissions({
+  const documentPermissions = createDocPermissions({
     id: docId,
-    canUpdate: true
+    canDelete: false
   });
-  const userDocPermissions = createUserPermissions({ id: docId });
-  const orgMoviePermissions = createDocPermissions({ id: delivery.movieId });
-  const userMoviePermissions = createUserPermissions({ id: delivery.movieId });
+  const moviePermissions = createDocPermissions({ id: delivery.movieId });
 
   return db.runTransaction(tx => {
     const promises = [];
@@ -207,10 +200,7 @@ async function onDocumentInvitationAccept(invitation: InvitationToWorkOnDocument
 
     return Promise.all([
       // Initialize organization permissions on a document owned by another organization
-      tx.set(organizationDocPermissionsSnap.ref, orgDocPermissions),
-
-      // Then Initialize user permissions document
-      tx.set(userDocPermissionsSnap.ref, userDocPermissions),
+      tx.set(documentPermissionsSnap.ref, documentPermissions),
 
       // Make the new stakeholder active on the delivery by switch isAccepted property from false to true
       tx.update(stakeholderSnap.ref, { isAccepted: true }),
@@ -221,8 +211,7 @@ async function onDocumentInvitationAccept(invitation: InvitationToWorkOnDocument
       }),
 
       // Finally, also initialize reading rights on the movie for the invited organization
-      tx.set(organizationMoviePermissionsSnap.ref, orgMoviePermissions),
-      tx.set(userMoviePermissionsSnap.ref, userMoviePermissions),
+      tx.set(moviePermissionsSnap.ref, moviePermissions),
 
       ...promises,
 

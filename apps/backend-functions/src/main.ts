@@ -13,7 +13,6 @@ import { mnemonic, relayer } from './environments/environment';
 import {
   deleteFirestoreDelivery,
   deleteFirestoreMaterial,
-  deleteFirestoreMovie,
   deleteFirestoreTemplate
 } from './delete';
 import {
@@ -141,7 +140,7 @@ export const onMovieUpdateEvent = onDocumentUpdate(
  */
 export const onMovieDeleteEvent = onDocumentDelete(
   'movies/{movieId}',
-  onMovieDelete
+  logErrors(onMovieDelete)
 )
 
 //--------------------------------
@@ -204,8 +203,6 @@ export const relayerSend = functions.https
 //--------------------------------
 //   PROPER FIRESTORE DELETION  //
 //--------------------------------
-
-export const deleteMovie = onDocumentDelete('movies/{movieId}', logErrors(deleteFirestoreMovie));
 
 export const deleteDelivery = onDocumentDelete('deliveries/{deliveryId}', logErrors(deleteFirestoreDelivery));
 

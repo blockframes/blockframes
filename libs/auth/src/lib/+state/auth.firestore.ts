@@ -5,4 +5,5 @@ export interface PublicUser {
   avatar?: string;
   name?: string;
   surname?: string;
+  orgId?: string;
 }
