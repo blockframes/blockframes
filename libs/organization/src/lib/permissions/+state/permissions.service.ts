@@ -26,28 +26,15 @@ export class PermissionsService extends CollectionService<PermissionsState> {
     organization: Organization,
     tx: firebase.firestore.Transaction
   ) {
-    const promises = [];
-    const orgDocPermissions = createDocPermissions({id: document.id, ownerId: organization.id});
 
-    const orgDocPermissionsRef = this.db.doc<T>(`permissions/${organization.id}/orgDocsPermissions/${document.id}`).ref;
-    promises.push(tx.set(orgDocPermissionsRef, orgDocPermissions));
-
+    const documentPermissions = createDocPermissions({id: document.id, ownerId: organization.id});
+    const documentPermissionsRef = this.db.doc<T>(`permissions/${organization.id}/documentPermissions/${document.id}`).ref;
     const documentRef = this.db.doc<T>(`${document._type}/${document.id}`).ref;
-    promises.push(tx.set(documentRef, document));
 
-    return Promise.all(promises);
-  }
-
-  /**
-   * Create a generic DocPermisionsDocument and add it to the database.
-   * @param documentId id from the document is the same as its permissions counterpart.
-   * @param organizationId id from the organization who created the document.
-   */
-  public createDocPermissions(documentId: string, organizationId: string) {
-    const docPermissions = createDocPermissions({id: documentId, ownerId: organizationId});
-    this.db
-      .doc<DocPermissionsDocument>(`permissions/${organizationId}/documentPermissions/${documentId}`)
-      .set(docPermissions);
+    return Promise.all([
+      tx.set(documentPermissionsRef, documentPermissions),
+      tx.set(documentRef, document)
+    ]);
   }
 
   /** Update roles of members of the organization */
