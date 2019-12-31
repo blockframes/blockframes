@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'start-tunnel',
@@ -7,8 +7,7 @@ import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
-export class StartTunnelComponent implements OnInit {
-  breakpoint;
+export class StartTunnelComponent{
   public cardContents = [
     {
       title: 'Title Information',
@@ -27,14 +26,4 @@ export class StartTunnelComponent implements OnInit {
       description: 'Your title will be published on the platform only once you have signed a contract with us.'
     },
   ]
-
-  constructor() {}
-
-  ngOnInit() {
-    this.breakpoint = (window.innerWidth <= 760) ? 1 : 2;
-}
-
-  onResize(event) {
-  this.breakpoint = (event.target.innerWidth <= 760) ? 1 : 2;
-  }
 }
