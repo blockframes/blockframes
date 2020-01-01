@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule } from '@angular/router';
 import { StartTunnelComponent } from './start-tunnel.component';
+import { TunnelPageModule } from '@blockframes/ui/tunnel/page/tunnel-page.module';
 // Materials
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -12,11 +13,10 @@ import { MatButtonModule } from '@angular/material/button';
   imports: [
     CommonModule,
     FlexLayoutModule,
-    RouterModule,
+    TunnelPageModule,
     MatCardModule,
     MatButtonModule,
     RouterModule.forChild([{ path: '', component: StartTunnelComponent }])
   ],
-  exports: [StartTunnelComponent]
 })
 export class StartTunnelModule {}
