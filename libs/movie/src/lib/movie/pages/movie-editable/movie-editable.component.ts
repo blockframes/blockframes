@@ -24,7 +24,7 @@ export class MovieEditableComponent implements OnInit {
     // TODO: issue#1084, use PersistNgFormPlugin of Akita to save changes of form in the state
     const movie = this.query.getActive();
     this.form = new MovieForm();
-    this.form.setValue(movie);
+    this.form.patchValue(movie);
     this.form$ = this.form.valueChanges.pipe(startWith(movie));
   }
 
