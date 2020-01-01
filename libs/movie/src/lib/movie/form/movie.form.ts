@@ -28,7 +28,7 @@ function createMovieControls(movie: Partial<Movie>) {
   }
 }
 
-type MovieControl = ReturnType<typeof createMovieControls>
+type MovieControl = ReturnType<typeof createMovieControls>;
 
 @Injectable({ providedIn: 'root' })
 export class MovieForm extends FormEntity<MovieControl> {

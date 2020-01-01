@@ -1,23 +1,20 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ControlContainer } from '@angular/forms';
-import { MoviePromotionalDescriptionForm } from './synopsis-keyassets.form';
-import { ENTER, COMMA } from '@angular/cdk/keycodes';
-
+import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
 @Component({
-  selector: '[formGroup] movie-form-promotional-description, [formGroupName] movie-form-promotional-description',
+  selector: 'movie-synopsis-keyassets',
   templateUrl: './synopsis-keyassets.component.html',
   styleUrls: ['./synopsis-keyassets.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieFormSynopsisKeyAssetsComponent {
 
-  public readonly separatorKeysCodes: number[] = [ENTER, COMMA];
+  constructor(private movieForm: MovieForm) {}
 
-  constructor(public controlContainer: ControlContainer) { }
-
-  get promotionalDescription() : MoviePromotionalDescriptionForm {
-    return this.controlContainer.control as MoviePromotionalDescriptionForm;
+  get synopsis() {
+    return this.movieForm.get('story').get('synopsis');
   }
 
-
+  get keyAssets() {
+    return this.movieForm.get('promotionalDescription').get('keyAssets');
+  }
 }

@@ -10,6 +10,10 @@ const tunnelRoutes: Routes = [
       {
         path: '',
         loadChildren: () => import('./start/start-tunnel.module').then(m => m.StartTunnelModule)
+      },
+      {
+        path: 'synopsis-keyassets',
+        loadChildren: () => import('@blockframes/movie/movie/form/synopsis-keyassets/synopsis-keyassets.module').then(m => m.MovieFormSynopsisKeyAssetsModule)
       }
     ]
   }
