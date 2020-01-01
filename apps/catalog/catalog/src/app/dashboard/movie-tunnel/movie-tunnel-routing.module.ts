@@ -1,11 +1,13 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
 import { MovieTunnelComponent } from "./movie-tunnel.component";
-
+import { MovieTunnelGuard } from './movie-tunnel.guard';
 const tunnelRoutes: Routes = [
   {
     path: '',
     component: MovieTunnelComponent,
+    canActivate: [MovieTunnelGuard],
+    canDeactivate: [MovieTunnelGuard],
     children: [
       {
         path: '',

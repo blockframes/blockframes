@@ -11,16 +11,26 @@
         <mat-card-title>Storyline</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <textarea matInput maxlength="500" type="string"></textarea>
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Storyline</mat-label>
+            <textarea matInput [formControl]="synopsis" maxlength="500" type="string"
+            placeholder="storyline"></textarea>
+            <mat-hint align="end">{{ synopsis.value?.length }} / 500</mat-hint>
+          </mat-form-field>
       </mat-card-content>
     </mat-card>
     <!-- KEY ASSETS -->
+    <!-- TODO#1478 Sync Data and UI -->
     <mat-card>
       <mat-card-header>
         <mat-card-title>Key Assets</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <textarea matInput maxlength="500" type="string"></textarea>
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Key Assets</mat-label>
+          <textarea matInput type="string"
+          placeholder="ex. interesting facts such as the film track, or other trivia"></textarea>
+        </mat-form-field>
       </mat-card-content>
     </mat-card>
   </section>
