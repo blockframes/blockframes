@@ -8,13 +8,13 @@ import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
 })
 export class MovieFormSynopsisKeyAssetsComponent {
 
-  constructor(private movieForm: MovieForm) {}
+  constructor() {}
 
-  get synopsis() {
-    return this.movieForm.get('story').get('synopsis');
-  }
+  // get synopsis() {
+  //   return this.movieForm.get('story').get('synopsis');
+  // }
 
-  get keyAssets() {
-    return this.movieForm.get('promotionalDescription').get('keyAssets');
-  }
+  // get keyAssets() {
+  //   return this.movieForm.get('promotionalDescription').get('keyAssets');
+  // }
 }
