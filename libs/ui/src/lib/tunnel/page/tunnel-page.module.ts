@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { RouterModule } from '@angular/router';
 import { TunnelPageComponent } from './tunnel-page.component';
 
 @NgModule({
@@ -9,8 +8,6 @@ import { TunnelPageComponent } from './tunnel-page.component';
   imports: [
     CommonModule,
     FlexLayoutModule,
-    RouterModule,
-    RouterModule.forChild([{ path: '', component: TunnelPageComponent }])
   ],
   exports: [TunnelPageComponent]
 })
