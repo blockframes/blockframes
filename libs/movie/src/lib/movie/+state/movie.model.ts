@@ -1,21 +1,21 @@
 import {
   MovieBudget,
-  MovieDocumentWithDates,
+  MovieDocumentWithDates as Movie,
   MovieFestivalPrizes,
   MovieMain,
   MoviePromotionalDescription,
   MoviePromotionalElements,
-  DistributionDealDocumentWithDates,
-  MovieSalesAgentDealDocumentWithDates,
+  DistributionDealDocumentWithDates as DistributionDeal,
+  MovieSalesAgentDealDocumentWithDates as MovieSalesAgentDeal,
   MovieSalesCast,
-  MovieSalesInfoDocumentWithDates,
+  MovieSalesInfoDocumentWithDates as MovieSalesInfo,
   MovieStory,
   MovieVersionInfo,
   Prize,
   PromotionalElement,
   Title,
   LicenseStatus,
-  HoldbackWithDates,
+  HoldbackWithDates as Holdback,
   WorkType,
   FormatProfile,
   MovieLanguageSpecification,
@@ -26,45 +26,32 @@ import {
   MovieOfficialIds
 } from './movie.firestore';
 import { createImgRef } from '@blockframes/utils/image-uploader';
-import { Credit, SalesAgent, Licensee, Licensor } from '@blockframes/utils/common-interfaces/identity';
 import { createTerms } from '@blockframes/utils/common-interfaces/terms';
 import { LanguagesSlug } from '../static-model';
 
-export type PromotionalElement = PromotionalElement;
-
-export type MovieFestivalPrizes = MovieFestivalPrizes;
-
-export type MovieMain = MovieMain;
-
-export type MoviePromotionalDescription = MoviePromotionalDescription;
-
-export type MoviePromotionalElements = MoviePromotionalElements;
-
-export type MovieSalesCast = MovieSalesCast;
-
-export type MovieStory = MovieStory;
-
-export type MovieVersionInfo = MovieVersionInfo;
-
-export type Prize = Prize;
-
-export type Credit = Credit;
-
-export type SalesAgent = SalesAgent;
-
-export type Licensee = Licensee;
-
-export type Licensor = Licensor;
-
-export type DistributionDeal = DistributionDealDocumentWithDates;
-
-export type MovieSalesInfo = MovieSalesInfoDocumentWithDates;
-
-export type MovieSalesAgentDeal = MovieSalesAgentDealDocumentWithDates;
-
-export type Movie = MovieDocumentWithDates;
-
-export type Holdback = HoldbackWithDates;
+// Export for other files
+export {
+  Credit,
+  SalesAgent,
+  Licensee,
+  Licensor
+} from '@blockframes/utils/common-interfaces/identity';
+export {
+  PromotionalElement,
+  MovieFestivalPrizes,
+  MovieMain,
+  MoviePromotionalDescription,
+  MoviePromotionalElements,
+  MovieSalesCast,
+  MovieStory,
+  MovieVersionInfo,
+  Prize,
+  DistributionDealDocumentWithDates as DistributionDeal,
+  MovieSalesInfoDocumentWithDates as MovieSalesInfo,
+  MovieSalesAgentDealDocumentWithDates as MovieSalesAgentDeal,
+  MovieDocumentWithDates as Movie,
+  HoldbackWithDates as Holdback
+} from './movie.firestore';
 
 /** A factory function that creates Movie */
 export function createMovie(params: Partial<Movie> = {}): Movie {
@@ -135,7 +122,7 @@ export function createPromotionalElement(
     label: '',
     type: 'other',
     ...promotionalElement,
-    media: createImgRef(promotionalElement.media),
+    media: createImgRef(promotionalElement.media)
   };
 }
 
@@ -257,7 +244,9 @@ export function createHoldback(params: Partial<Holdback> = {}): Holdback {
   };
 }
 
-export function createMovieLanguageSpecification(params: Partial<MovieLanguageSpecification> = {}): MovieLanguageSpecification {
+export function createMovieLanguageSpecification(
+  params: Partial<MovieLanguageSpecification> = {}
+): MovieLanguageSpecification {
   return {
     original: false,
     dubbed: false,
@@ -266,7 +255,12 @@ export function createMovieLanguageSpecification(params: Partial<MovieLanguageSp
   };
 }
 
-export function populateMovieLanguageSpecification(spec: MovieLanguageSpecificationContainer, slug: LanguagesSlug, type: MovieLanguageTypes, value: boolean = true) {
+export function populateMovieLanguageSpecification(
+  spec: MovieLanguageSpecificationContainer,
+  slug: LanguagesSlug,
+  type: MovieLanguageTypes,
+  value: boolean = true
+) {
   if (!spec[slug]) {
     spec[slug] = createMovieLanguageSpecification();
   }
@@ -285,8 +279,8 @@ export function createStoreConfig(params: Partial<StoreConfig> = {}): StoreConfi
 
 export function createOfficialIds(params: Partial<MovieOfficialIds> = {}): MovieOfficialIds {
   return {
-    eidr:'',
-    isan:'',
+    eidr: '',
+    isan: '',
     ...params
   };
 }
