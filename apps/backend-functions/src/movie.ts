@@ -1,9 +1,10 @@
 import { functions, db } from './internals/firebase';
-import { MovieDocument, OrganizationDocument, PublicUser } from './data/types';
+import { MovieDocument, OrganizationDocument, PublicUser, createDocPermissions } from './data/types';
 import { createNotification, NotificationType } from '@blockframes/notification/types';
 import { App } from '@blockframes/utils/apps';
 import { triggerNotifications } from './notification';
 import { flatten, isEqual } from 'lodash';
+import { getDocument } from './data/internals';
 
 /** Create a notification with user and movie. */
 function notifUser(userId: string, notificationType: NotificationType, movie: MovieDocument, user: PublicUser) {
@@ -49,9 +50,27 @@ export async function onMovieCreate(
     throw new Error('movie update function got invalid movie data');
   }
 
-  const notifications = await createNotificationsForUsers(movie, NotificationType.movieTitleCreated, user);
+  try {
+    const { orgId } = await getDocument(`users/${user.uid}`);
+    const organization = await getDocument<OrganizationDocument>(`orgs/${orgId}`);
+    const permissions = createDocPermissions({id: movie.id, ownerId: orgId});
+    const notifications = await createNotificationsForUsers(movie, NotificationType.movieTitleCreated, user);
 
-  return triggerNotifications(notifications);
+    return Promise.all([
+      // Update or create the processedId to avoid multiple executions of the function.
+      db.doc(`movies/${movie.id}`).update({ processedId: context.eventId }),
+      // Push new movie id into organization's movieIds array.
+      db.doc(`orgs/${orgId}`).update({ movieIds: [...organization.movieIds, movieId]}),
+      // Create permissions document for this new movie.
+      db.doc(`permissions/${orgId}/documentPermissions/${permissions.id}`).set(permissions),
+      // Trigger the notifications for the organization users.
+      triggerNotifications(notifications)
+    ]);
+  } catch (error) {
+    await db
+      .doc(`movies/${movie.id}`).update({ processedId: null });
+    throw error;
+  }
 }
 
 /** Remove a movie and send notifications to all users of concerned organizations. */
