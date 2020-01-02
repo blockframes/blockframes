@@ -1,7 +1,7 @@
 import { MovieBudget, createMovieBudget } from '../../+state/movie.model'
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
-import { validRange } from '@blockframes/utils/form/validators/validators'
-import { FormControl, FormGroup } from '@angular/forms';
+import { NumberRangeForm } from '@blockframes/utils/form/forms/range.form';
+import { FormControl } from '@angular/forms';
 
 function createBudgetFormControl(entity?: Partial<MovieBudget>) {
   const { totalBudget, budgetCurrency, detailledBudget, range } = createMovieBudget(entity);
@@ -9,10 +9,7 @@ function createBudgetFormControl(entity?: Partial<MovieBudget>) {
     totalBudget: new FormControl(totalBudget),
     budgetCurrency: new FormControl(budgetCurrency),
     detailledBudget: new FormControl(detailledBudget),
-    range: new FormGroup({
-      from: new FormControl(range.from),
-      to: new FormControl(range.to),
-    }, [validRange])
+    range: new NumberRangeForm(range)
   }
 }
 

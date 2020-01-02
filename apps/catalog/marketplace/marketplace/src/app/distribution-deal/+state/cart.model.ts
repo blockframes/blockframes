@@ -1,4 +1,4 @@
-import { DateRange } from '@blockframes/utils/common-interfaces/date-range';
+import { DateRange } from '@blockframes/utils/common-interfaces/range';
 import { Price, createPrice } from '@blockframes/utils/common-interfaces/price';
 import { ContractDocumentWithDates, ContractStatus, ContractTitleDetail } from './cart.firestore';
 import { createTerms } from '@blockframes/utils/common-interfaces/terms';

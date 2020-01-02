@@ -23,10 +23,12 @@ import {
   StoreConfig,
   StoreType,
   MovieLanguageSpecificationContainer,
-  MovieOfficialIds
+  MovieOfficialIds,
+  MovieBudgetRange
 } from './movie.firestore';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 import { createTerms } from '@blockframes/utils/common-interfaces/terms';
+import { createRange } from '@blockframes/utils/common-interfaces/range';
 import { LanguagesSlug } from '../static-model';
 
 // Export for other files
@@ -38,6 +40,7 @@ export {
 } from '@blockframes/utils/common-interfaces/identity';
 export {
   PromotionalElement,
+  MovieBudget,
   MovieFestivalPrizes,
   MovieMain,
   MoviePromotionalDescription,
@@ -232,7 +235,8 @@ export function createDistributionDeal(params: Partial<DistributionDeal> = {}): 
 export function createMovieBudget(params: Partial<MovieBudget> = {}): MovieBudget {
   return {
     totalBudget: '',
-    ...params
+    ...params,
+    range: createRange<number>(params.range)
   };
 }
 
