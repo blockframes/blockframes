@@ -8,7 +8,9 @@
       </mat-card-header>
       <!-- keyword component -->
       <mat-card-content>
-        <movie-form-keywords [formArray]="keywords"></movie-form-keywords>
+        <form [formGroup]="promotionalDescription">
+          <movie-form-keywords formArrayName="keywords"></movie-form-keywords>
+        </form>
       </mat-card-content>
     </mat-card>
   </section>

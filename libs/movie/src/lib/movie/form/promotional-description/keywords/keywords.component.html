@@ -1,5 +1,7 @@
-<form [formArray]="keywords" fxLayout="row">
-  <mat-form-field>
-    <input matInput [formControlName]="0"/>
-  </mat-form-field>
-</form>
+<mat-form-field>
+  <input matInput [formControl]="keyword" />
+</mat-form-field>
+<button (click)="add()">Add</button>
+<div>
+  <span *ngFor="let v of values$ | async">{{ v }}, </span>
+</div>
