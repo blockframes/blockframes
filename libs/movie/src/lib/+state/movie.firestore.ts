@@ -1,5 +1,5 @@
 import { MovieStatusSlug, PromotionalElementTypesSlug, ResourceRatioSlug, ResourceSizesSlug, TerritoriesSlug, LanguagesSlug, MediasSlug } from "@blockframes/movie/movie/static-model";
-import { DateRangeRaw } from "@blockframes/utils/common-interfaces/range";
+import { RawRange } from "@blockframes/utils/common-interfaces/range";
 import { Person, Credit, SalesAgent, Company } from "@blockframes/utils/common-interfaces/identity";
 import { firestore } from "firebase/app";
 import { ImgRef } from "@blockframes/utils/image-uploader";
@@ -54,7 +54,7 @@ export interface StoreConfig {
 }
 
 interface MovieSalesAgentDealRaw<D> {
-  rights: DateRangeRaw<D>;
+  rights: RawRange<D>;
   territories: string[],
   medias: string[],
   salesAgent?: SalesAgent,
