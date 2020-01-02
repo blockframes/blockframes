@@ -11,7 +11,7 @@ export class TunnelKeywordsComponent {
 
   constructor(private form: MovieForm) { }
 
-  get keywords() {
-    return this.form.get('promotionalDescription').get('keywords');
+  get promotionalDescription() {
+    return this.form.get('promotionalDescription');
   }
 }
