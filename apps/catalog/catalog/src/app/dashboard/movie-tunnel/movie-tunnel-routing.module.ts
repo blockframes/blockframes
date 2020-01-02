@@ -7,6 +7,7 @@ const tunnelRoutes: Routes = [
     path: '',
     component: MovieTunnelComponent,
     children: [
+      // Page 1
       {
         path: '',
         loadChildren: () => import('./start/start-tunnel.module').then(m => m.StartTunnelModule)
@@ -19,6 +20,11 @@ const tunnelRoutes: Routes = [
         path: 'keywords',
         loadChildren: () => import('./keywords/keywords.module').then(m => m.TunnelKeywordsModule)
       },
+      // Page 5
+      {
+        path: 'budget',
+        loadChildren: () => import('./budget/budget.module').then(m => m.BudgetModule)
+      }
     ]
   }
 ];
