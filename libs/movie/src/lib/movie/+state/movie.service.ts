@@ -77,17 +77,6 @@ export class MovieService extends CollectionService<MovieState> {
     write.update(movieRef, { "_meta.updatedBy": this.authQuery.userId });
   }
 
-  /** Hook that triggers when a movie is added to the database. */
-  async onCreate(movie: Movie, write: WriteOptions) {
-    // Push the movie id into organization.movieIds.
-    const organizationId = this.organizationQuery.getActiveId();
-    const organization = await this.organizationService.getValue(this.organizationQuery.getActiveId());
-    this.organizationService.update({ ...organization, movieIds: [...organization.movieIds, movie.id] })
-
-    // Create organization related permissions for this document.
-    return this.permissionsService.createDocPermissions(movie.id, organizationId);
-  }
-
   public updateById(id: string, movie: any): Promise<void> {
     // we don't want to keep orgId in our Movie object
     if (movie.organization) delete movie.organization;
