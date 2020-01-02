@@ -10,7 +10,6 @@ import { createMovie, Movie, DistributionDeal } from './movie.model';
 import { MovieState, MovieStore } from './movie.store';
 import { Contract, createContractTitleDetail } from '@blockframes/marketplace/app/distribution-deal/+state/cart.model';
 import { AuthQuery } from '@blockframes/auth';
-import { MovieQuery } from './movie.query';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 
 /**
@@ -33,7 +32,6 @@ export class MovieService extends CollectionService<MovieState> {
     private organizationQuery: OrganizationQuery,
     private organizationService: OrganizationService,
     private permissionsService: PermissionsService,
-    private query: MovieQuery,
     private authQuery: AuthQuery,
     store: MovieStore
   ) {
@@ -74,8 +72,7 @@ export class MovieService extends CollectionService<MovieState> {
     return movie;
   }
 
-  onUpdate(form: Movie, { write }: WriteOptions) {
-    const movie = this.query.getActive();
+  onUpdate(movie: Movie, { write }: WriteOptions) {
     const movieRef = this.db.doc(`movies/${movie.id}`).ref;
     write.update(movieRef, { "_meta.updatedBy": this.authQuery.userId });
   }
