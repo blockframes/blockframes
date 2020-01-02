@@ -10,6 +10,7 @@ import { MovieSalesInfoForm } from './sales-info/sales-info.form';
 import { MovieVersionInfoForm } from './version-info/version-info.form';
 import { MovieFestivalPrizesForm } from './festival-prizes/festival-prizes.form';
 import { MovieSalesAgentDealForm } from './sales-agent-deal/sales-agent-deal.form';
+import { MovieBudgetForm } from './budget/budget.form';
 import { Injectable } from '@angular/core';
 
 
@@ -25,6 +26,7 @@ function createMovieControls(movie: Partial<Movie>) {
     versionInfo: new MovieVersionInfoForm(entity.versionInfo),
     festivalPrizes: new MovieFestivalPrizesForm(entity.festivalPrizes),
     salesAgentDeal: new MovieSalesAgentDealForm(entity.salesAgentDeal),
+    budget: new MovieBudgetForm(entity.budget)
   }
 }
 
