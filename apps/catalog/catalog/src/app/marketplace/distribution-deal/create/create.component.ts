@@ -21,8 +21,8 @@ import {
   LanguagesSlug,
   LANGUAGES_SLUG,
   LanguagesLabel
-} from '@blockframes/movie/static-model/types';
-import { DateRange } from '@blockframes/utils/common-interfaces/date-range';
+} from '@blockframes/movie/movie/static-model/types';
+import { DateRange } from '@blockframes/utils/common-interfaces/range';
 import { ControlErrorStateMatcher, languageValidator } from '@blockframes/utils';
 import {
   getDistributionDealsInDateRange,

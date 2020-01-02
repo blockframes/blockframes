@@ -1,5 +1,5 @@
 import { Component, OnInit, Output, EventEmitter, ChangeDetectionStrategy, Input} from '@angular/core';
-import { DateRange, isBetween } from '@blockframes/utils/common-interfaces/date-range';
+import { DateRange, isBetween } from '@blockframes/utils/common-interfaces/range';
 
 interface Tile {
   cols: number;
