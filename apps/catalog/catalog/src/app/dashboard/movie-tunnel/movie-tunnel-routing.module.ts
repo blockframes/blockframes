@@ -10,7 +10,15 @@ const tunnelRoutes: Routes = [
       {
         path: '',
         loadChildren: () => import('./start/start-tunnel.module').then(m => m.StartTunnelModule)
-      }
+      },
+      {
+        path: 'synopsis',
+        loadChildren: () => import('./synopsis/synopsis.module').then(m => m.TunnelSynopsisModule)
+      },
+      {
+        path: 'keywords',
+        loadChildren: () => import('./keywords/keywords.module').then(m => m.TunnelKeywordsModule)
+      },
     ]
   }
 ];

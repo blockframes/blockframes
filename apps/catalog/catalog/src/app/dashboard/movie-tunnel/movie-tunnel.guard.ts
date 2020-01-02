@@ -14,7 +14,7 @@ export class MovieTunnelGuard implements CanActivate, CanDeactivate<MovieTunnelC
 
   // Fill the form with the current content of the movie
   canActivate({ params }: ActivatedRouteSnapshot) {
-    const movie = params.movieId ? this.query.getEntity(params.movieId) : {};
+    const movie = params.movieId === 'create' ? {} : this.query.getEntity(params.movieId);
     if (!movie) {
       return this.router.parseUrl('dashboard');
     }
