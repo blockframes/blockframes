@@ -1,5 +1,18 @@
-tunnel-page!
-<ng-content select="[title]"></ng-content>
-<ng-content select="[subtitle]"></ng-content>
-<ng-content select="[tunnel-form]"></ng-content>
-<ng-content select="h1"></ng-content>
+<main fxLayout="row" fxLayout.lt-sm="column" fxLayoutAlign="space-between start">
+  <section fxFlex.gt-sm="45">
+    <div class="title-box">
+      <ng-content select="[title]"></ng-content>
+      <ng-content select="[subtitle]"></ng-content>
+      <a href="#" routerLink="#"><p>Skip and do later ></p></a>
+      <div class="button-box">
+        <a mat-stroked-button color="accent" routerLink="#">
+          <mat-icon>arrow_back</mat-icon><span>Back</span>
+        </a>
+        <a mat-flat-button color="accent" routerLink="#">
+          <span>Next</span><mat-icon>arrow_forward</mat-icon>
+        </a>
+      </div>
+    </div>
+  </section>
+    <ng-content select="[tunnel-form]"></ng-content>
+</main>
