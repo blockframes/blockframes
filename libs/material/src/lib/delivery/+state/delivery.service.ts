@@ -1,15 +1,23 @@
 import { Injectable } from '@angular/core';
 import { DeliveryQuery } from './delivery.query';
 import { Material } from '../../material/+state/material.model';
-import { createDelivery, Delivery, DeliveryWithTimestamps, deliveryStatuses } from './delivery.model';
 import {
-  Movie,
-  MovieQuery
-} from '@blockframes/movie';
-import { OrganizationQuery, PermissionsService} from '@blockframes/organization';
+  createDelivery,
+  Delivery,
+  DeliveryWithTimestamps,
+  deliveryStatuses
+} from './delivery.model';
+import { Movie, MovieQuery } from '@blockframes/movie';
+import { OrganizationQuery, PermissionsService } from '@blockframes/organization';
 import { BFDoc } from '@blockframes/utils';
 import { MaterialQuery, createMaterial, isTheSame } from '../../material/+state';
-import { DeliveryOption, DeliveryWizard, DeliveryWizardKind, DeliveryState, DeliveryStore } from './delivery.store';
+import {
+  DeliveryOption,
+  DeliveryWizard,
+  DeliveryWizardKind,
+  DeliveryState,
+  DeliveryStore
+} from './delivery.store';
 import { AngularFirestoreDocument } from '@angular/fire/firestore';
 import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
 import { CreateTx } from '@blockframes/ethers';
@@ -32,7 +40,7 @@ interface AddDeliveryOptions {
 
 // TODO: add a stakeholderIds in delivery so we can filter them here. => ISSUE#639
 // e. g. queryFn: ref => ref.where('stakeholderIds', 'array-contains', userOrgId)
-const deliveriesListQuery = (movieId: string, orgId: string): Query<DeliveryWithTimestamps[]> =>  ({
+const deliveriesListQuery = (movieId: string, orgId: string): Query<DeliveryWithTimestamps[]> => ({
   path: 'deliveries',
   queryFn: ref => ref.where('movieId', '==', movieId).where('stakeholderIds', 'array-contains', orgId),
   stakeholders: delivery => ({
@@ -41,7 +49,7 @@ const deliveriesListQuery = (movieId: string, orgId: string): Query<DeliveryWith
       path: `orgs/${stakeholder.orgId}`
     })
   })
-})
+});
 
 export const deliveryQuery = (deliveryId: string): Query<DeliveryWithTimestamps> => ({
   path: `deliveries/${deliveryId}`,
@@ -101,7 +109,9 @@ export class DeliveryService extends CollectionService<DeliveryState> {
   }
 
   private materialDeliveryDoc(deliveryId: string, materialId: string): AngularFirestoreDocument {
-    return this.deliveryDoc(deliveryId).collection('materials').doc(materialId);
+    return this.deliveryDoc(deliveryId)
+      .collection('materials')
+      .doc(materialId);
   }
 
   private deliveryDoc(deliveryId: string): AngularFirestoreDocument<DeliveryWithTimestamps> {
@@ -245,7 +255,9 @@ export class DeliveryService extends CollectionService<DeliveryState> {
     const { mustBeSigned, id } = this.query.getActive();
 
     // Add an id for new steps
-    const stepsWithId = delivery.steps.map(step => (step.id ? step : { ...step, id: this.db.createId() }));
+    const stepsWithId = delivery.steps.map(step =>
+      step.id ? step : { ...step, id: this.db.createId() }
+    );
 
     // Find steps that need to be removed
     const deletedSteps = oldSteps.filter(
@@ -253,34 +265,39 @@ export class DeliveryService extends CollectionService<DeliveryState> {
     );
 
     return this.db.firestore.runTransaction(async tx => {
-    // We set the concerned materials stepId to an empty string
+      // We set the concerned materials stepId to an empty string
       deletedSteps.forEach(step => {
-        const materials = this.materialQuery.getAll().filter(material => material.stepId === step.id);
+        const materials = this.materialQuery
+          .getAll()
+          .filter(material => material.stepId === step.id);
         // If the delivery is mustBeSigned, we update stepId of materials in the sub-collection of delivery
         if (mustBeSigned) {
           this.deliveryMaterialService.removeStepIdDeliveryMaterials(materials, tx);
-        // Else, we update stepId of materials in the sub-collection of movie
+          // Else, we update stepId of materials in the sub-collection of movie
         } else {
           const materialsWithoutStep = materials.map(material => ({ ...material, stepId: '' }));
           this.movieMaterialService.update(materialsWithoutStep, { write: tx });
         }
-      })
+      });
 
-      return this.update(id, {
-        // Update minimum guaranteed informations of delivery
-        mgAmount: delivery.mgAmount,
-        mgCurrency: delivery.mgCurrency,
-        mgDeadlines: delivery.mgDeadlines,
+      return this.update(
+        id,
+        {
+          // Update minimum guaranteed informations of delivery
+          mgAmount: delivery.mgAmount,
+          mgCurrency: delivery.mgCurrency,
+          mgDeadlines: delivery.mgDeadlines,
 
-        // Update dates of delivery
-        dueDate: delivery.dueDate,
-        acceptationPeriod: delivery.acceptationPeriod,
-        reWorkingPeriod: delivery.reWorkingPeriod,
+          // Update dates of delivery
+          dueDate: delivery.dueDate,
+          acceptationPeriod: delivery.acceptationPeriod,
+          reWorkingPeriod: delivery.reWorkingPeriod,
 
-        // Update steps of delivery
-        steps: stepsWithId
-      },
-      { write: tx });
+          // Update steps of delivery
+          steps: stepsWithId
+        },
+        { write: tx }
+      );
     });
   }
 
@@ -319,7 +336,12 @@ export class DeliveryService extends CollectionService<DeliveryState> {
   }
 
   /** Sign the delivery and save this action into active organization logs */
-  public setSignDeliveryTx(orgEthAddress: string, deliveryId: string, deliveryHash: string, movieId: string) {
+  public setSignDeliveryTx(
+    orgEthAddress: string,
+    deliveryId: string,
+    deliveryHash: string,
+    movieId: string
+  ) {
     const name = `Delivery #${deliveryId}`; // TODO better delivery name (see with @ioaNikas)
     const callback = async () => {
       await Promise.all([
@@ -334,8 +356,8 @@ export class DeliveryService extends CollectionService<DeliveryState> {
       confirmation: `You are about to sign the delivery ${name}`,
       success: `The delivery has been successfully signed !`,
       redirectName: 'Back to Delivery',
-      redirectRoute: `/layout/o/delivery/${movieId}/${deliveryId}/informations`,
-    }
+      redirectRoute: `/layout/o/delivery/${movieId}/${deliveryId}/informations`
+    };
     this.walletService.setTx(CreateTx.approveDelivery(orgEthAddress, deliveryHash, callback));
     this.walletService.setTxFeedback(feedback);
   }
@@ -389,8 +411,12 @@ export class DeliveryService extends CollectionService<DeliveryState> {
     const movieMaterials = await this.movieMaterialService.getValue();
 
     materials.forEach(material => {
-      const sameValuesMaterial = movieMaterials.find(movieMaterial => isTheSame(movieMaterial, material));
-      const isNewMaterial = !movieMaterials.find(movieMaterial => movieMaterial.id === material.id) && !sameValuesMaterial;
+      const sameValuesMaterial = movieMaterials.find(movieMaterial =>
+        isTheSame(movieMaterial, material)
+      );
+      const isNewMaterial =
+        !movieMaterials.find(movieMaterial => movieMaterial.id === material.id) &&
+        !sameValuesMaterial;
 
       // We check if material is brand new. If so, we just add it to database and return.
       if (isNewMaterial) {
@@ -407,7 +433,7 @@ export class DeliveryService extends CollectionService<DeliveryState> {
       // If values are not the same, this material is considered as new and we have to create
       // and set a new material (with new Id).
       if (!sameValuesMaterial) {
-        const newMaterial = createMaterial({...material, id: this.db.createId()});
+        const newMaterial = createMaterial({ ...material, id: this.db.createId() });
         this.movieMaterialService.setNewMaterial(newMaterial, delivery, tx);
       }
     });

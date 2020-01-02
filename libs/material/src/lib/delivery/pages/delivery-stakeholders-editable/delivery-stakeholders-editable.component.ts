@@ -46,9 +46,6 @@ export class DeliveryStakeholdersEditableComponent implements OnInit {
     try {
       const delivery = this.query.getActive();
       this.stakeholderService.addStakeholder(delivery.id, objectID);
-      this.deliveryService.update(delivery.id, {
-        stakeholderIds: [...delivery.stakeholderIds, objectID]
-      });
       this.snackBar.open(`You invited a new organization to work on the delivery`, 'close', {
         duration: 2000
       });
