@@ -272,7 +272,7 @@ export function populateMovieLanguageSpecification(
 export function createStoreConfig(params: Partial<StoreConfig> = {}): StoreConfig {
   return {
     display: true,
-    storeType: StoreType.movie,
+    storeType: StoreType.line_up,
     ...params
   };
 }
