@@ -33,8 +33,6 @@ const routes: Routes = [
   },
   {
     path: 'wishlist',
-    canActivate: [CatalogCartGuard],
-    canDeactivate: [CatalogCartGuard],
     children: [
       {
         path: '',
