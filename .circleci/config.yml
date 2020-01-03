@@ -13,10 +13,10 @@ version: 2.1
 references:
   restore_repo: &restore_repo
     restore_cache:
-        keys:
-          - dependencies-{{ .Environment.CACHE_VERSION }}-{{ checksum "package.json" }}
-          # fallback to using the latest cache if no exact match is found
-          - dependencies-{{ .Environment.CACHE_VERSION }}
+      keys:
+        - dependencies-{{ .Environment.CACHE_VERSION }}-{{ checksum "package.json" }}
+        # fallback to using the latest cache if no exact match is found
+        - dependencies-{{ .Environment.CACHE_VERSION }}
   production_only: &production_only
     filters:
       branches:
@@ -125,7 +125,7 @@ jobs:
     executor: blockframes-ci
     environment:
       - GOOGLE_APPLICATION_CREDENTIALS: creds.json
-      - NODE_OPTIONS: "--max_old_space_size=4096"
+      - NODE_OPTIONS: '--max_old_space_size=4096'
     steps:
       - checkout
       - attach_workspace:
@@ -136,7 +136,7 @@ jobs:
   test-e2e:
     executor: blockframes-ci
     environment:
-      - ENV: "ci"
+      - ENV: 'ci'
       - GOOGLE_APPLICATION_CREDENTIALS: creds.json
     steps:
       - checkout
@@ -147,7 +147,7 @@ jobs:
       - run: echo "${FIREBASE_CI_SERVICE_ACCOUNT}" > creds.json
       - run: mkdir -p ~/.cache/ && cp -R ~/build/Cypress ~/.cache
       - slack/notify:
-          message: "🚲 Deploying & testing e2e (https://blockframes-ci.web.app/)"
+          message: '🚲 Deploying & testing e2e (https://blockframes-ci.web.app/)'
       - run: |
           npm install --save-dev firebase-tools &&
           npx firebase use ci &&
@@ -184,7 +184,7 @@ jobs:
   deploy-to-prod:
     executor: blockframes-ci
     environment:
-      - ENV: "production"
+      - ENV: 'production'
     steps:
       - checkout
       - restore_cache:
@@ -197,7 +197,7 @@ jobs:
       - run: cp env/env.prod.ts env/env.ts # required for the typechecking & file rewrite to work
       - run: npm run build:all
       - slack/notify:
-          message: "🚚 Deploying to production..."
+          message: '🚚 Deploying to production...'
       - do-exclusively/do-exclusively:
           # Note: right now do-exclusively excludes cross-jobs (e2e & prod).
           token: $CIRCLE_TOKEN
@@ -210,8 +210,8 @@ jobs:
   deploy-to-staging:
     executor: blockframes-ci
     environment:
-      - ENV: "staging"
-      - NODE_OPTIONS: "--max_old_space_size=4096"
+      - ENV: 'staging'
+      - NODE_OPTIONS: '--max_old_space_size=4096'
     steps:
       - checkout
       - restore_cache:
@@ -224,7 +224,7 @@ jobs:
       - run: cp env/env.staging.ts env/env.ts # required for the typechecking & file rewrite to work
       - run: npm run build:all
       - slack/notify:
-          message: "🛵 Deploying to staging.. (https://staging.blockframes.io/)"
+          message: '🛵 Deploying to staging.. (https://staging.blockframes.io/)'
       - do-exclusively/do-exclusively:
           # Note: right now do-exclusively excludes cross-jobs (e2e & prod).
           token: $CIRCLE_TOKEN
