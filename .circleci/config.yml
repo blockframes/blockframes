@@ -85,11 +85,19 @@ jobs:
       - NODE_OPTIONS: '--max_old_space_size=4096'
     steps:
       - build_affected_app:
-          app: 'main'
+          app: 'catalog-marketplace'
+      - build_affected_app:
+          app: 'catalog-dashboard'
+      - build_affected_app:
+          app: 'backend-functions'
+      - build_affected_app:
+          app: 'backend-ops'
       - build_affected_app:
           app: 'delivery'
       - build_affected_app:
-          app: 'functions'
+          app: 'main'
+      - build_affected_app:
+          app: 'movie-financing'
   build:
     parameters:
       app:
@@ -243,6 +251,7 @@ workflows:
   build-test-deploy:
     jobs:
       - experiment
+      - build
       # - build:
       #     app: main
       #     name: build-main
