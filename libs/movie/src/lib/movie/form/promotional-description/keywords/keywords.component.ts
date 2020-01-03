@@ -25,22 +25,14 @@ export class KeywordsComponent implements OnInit {
     return this.controlContainer.control as FormArray
   }
 
-  public addChip(event: MatChipInputEvent): void {
-    const input = event.input;
-    const value = event.value;
+  public add(event: MatChipInputEvent): void {
+    const { value = '' } = event;
 
-    // Add keyword
-    if ((value || '').trim()) {
-      this.keywords.push(new FormControl(value.trim()));
-    }
-
-    // Reset the input value
-    if (input) {
-      input.value = '';
-    }
+    this.keywords.push(new FormControl(value))
+    this.keyword.reset();
   }
 
-  public removeKeyword(i: number): void {
+  public remove(i: number): void {
     this.keywords.removeAt(i);
   }
 }
