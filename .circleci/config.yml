@@ -66,7 +66,7 @@ commands:
       - checkout_project
       - run: |
           npx nx affected:apps > ./affected;
-          if [ grep --quiet << parameters.app >> ./affected ]; then
+          if grep --quiet << parameters.app >> ./affected; then
             npm run build:<< parameters.app >>
           fi
 orbs:
@@ -104,7 +104,7 @@ jobs:
       - run: npx nx affected:apps
       - build_app:
           app: 'all'
-  bundlesize:
+  bundle_size_checks:
     executor: blockframes-ci
     steps:
       - checkout
@@ -112,17 +112,12 @@ jobs:
           at: ~/build
       - run: cp -R ~/build/* ./
       - run: npm run bundlesize
-  zapier:
-    executor: blockframes-ci
-    steps:
-      - checkout
-      - attach_workspace:
-          at: ~/build
-      - run: cp -R ~/build/* ./
       - run:
           name: Post sizes of apps to zapier
           command: |
-            curl -X POST "${ZAPPIER_WEBHOOK}" --header "Build-number:${CIRCLE_BUILD_NUM}" --header "Branch:${CIRCLE_BRANCH}" --header  "Date:`date "+%D"`" --header  Main-size:`cat ./dist/apps/main**.js | wc -c` --header  Delivery-size:`cat ./dist/apps/delivery/main**.js | wc -c` --header  Marketplace-size:`cat ./dist/apps/catalog-marketplace/main**.js | wc -c` --header  Dashboard-size:`cat ./dist/apps/catalog-dashboard/main**.js | wc -c` --header  Movie-financing-size:`cat ./dist/apps/movie-financing/main**.js | wc -c` --header  Functions-size:`cat ./dist/apps/backend-functions/main**.js | wc -c`
+            if [ "${CIRCLE_BRANCH}" = "production" || "${CIRCLE_BRANCH}" = "master" ]; then
+              curl -X POST "${ZAPPIER_WEBHOOK}" --header "Build-number:${CIRCLE_BUILD_NUM}" --header "Branch:${CIRCLE_BRANCH}" --header  "Date:`date "+%D"`" --header  Main-size:`cat ./dist/apps/main**.js | wc -c` --header  Delivery-size:`cat ./dist/apps/delivery/main**.js | wc -c` --header  Marketplace-size:`cat ./dist/apps/catalog-marketplace/main**.js | wc -c` --header  Dashboard-size:`cat ./dist/apps/catalog-dashboard/main**.js | wc -c` --header  Movie-financing-size:`cat ./dist/apps/movie-financing/main**.js | wc -c` --header  Functions-size:`cat ./dist/apps/backend-functions/main**.js | wc -c`
+            fi
   lint:
     executor: blockframes-ci
     steps:
@@ -266,15 +261,7 @@ workflows:
       # - build:
       #     app: functions
       #     name: build-functions
-      # - bundlesize:
-      #     requires:
-      #       - build
-      # - zapier:
-      #     filters:
-      #       branches:
-      #         only:
-      #           - master
-      #           - production
+      # - bundle_size_checks:
       #     requires:
       #       - build
       # - lint:
