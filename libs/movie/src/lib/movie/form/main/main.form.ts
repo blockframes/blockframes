@@ -27,10 +27,11 @@ export class DirectorForm extends FormEntity<DirectorFormControl> {
 }
 
 function createDirectorFormControl(director?: Partial<Credit>) {
-  const { firstName, lastName } = createCredit(director);
+  const { firstName, lastName, shortBiography } = createCredit(director);
   return {
     firstName: new FormControl(firstName),
     lastName: new FormControl(lastName),
+    shortBiography: new FormControl(shortBiography),
   }
 }
 
@@ -77,14 +78,15 @@ function createMovieMainControls(main : Partial<MovieMain> = {}) {
     directors: FormList.factory(entity.directors, el => new DirectorForm(el)),
     poster: new FormControl(entity.poster),
     productionYear: new FormControl(entity.productionYear, yearValidators),
-    genres: new FormControl(entity.genres),
-    originCountries: new FormControl(entity.originCountries),
+    genres: FormList.factory(entity.genres, el => new FormControl(el)),
+    originCountries: FormList.factory(entity.originCountries, el => new FormControl(el)),
     originalLanguages: new FormControl(entity.originalLanguages),
     status: new FormControl(entity.status , [Validators.required]),
     totalRunTime: new FormControl(entity.totalRunTime),
     shortSynopsis: new FormControl(entity.shortSynopsis, [Validators.maxLength(500)] ),
     stakeholders: FormList.factory(entity.stakeholders, el => new StakeholdersForm(el)),
     customGenres: new FormControl(entity.customGenres),
+    workType: new FormControl(entity.workType),
   }
 }
 
@@ -111,6 +113,14 @@ export class MovieMainForm extends FormEntity<MovieMainControl>{
     return this.get('shortSynopsis');
   }
 
+  get originCountries() {
+    return this.get('originCountries');
+  }
+
+  get genres() {
+    return this.get('genres');
+  }
+
   public addDirector(credit?: Partial<Credit>): void {
     const entity = createCredit(credit);
     const creditControl = new DirectorForm(entity);
@@ -121,9 +131,17 @@ export class MovieMainForm extends FormEntity<MovieMainControl>{
     this.directors.removeAt(i);
   }
 
-  public addStakeholder(): void {
-    const credit = new StakeholdersForm();
-    this.stakeholders.push(credit);
+  public addOriginCountry(country: string): void {
+    this.originCountries.push(country);
+  }
+
+  public addGenres(genre: string): void {
+    this.genres.push(genre);
+  }
+
+  public addProductionCompany(): void {
+    const credit = new ProductionCompagnyForm();
+    this.productionCompanies.push(credit);
   }
 
   public removeStakeholder(i: number): void {
