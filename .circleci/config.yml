@@ -34,10 +34,10 @@ references:
           - ci
 commands:
   checkout_project:
-    description: "Checkout the project with caching"
+    description: 'Checkout the project with caching'
     steps:
       - checkout
-      - *restore_repo
+      # - *restore_repo
       - run: rm -rf node_modules/ganache-core/node_modules/web3-providers-ws/node_modules/websocket/.git
       - run: npm install
       - save_cache:
@@ -45,6 +45,16 @@ commands:
             - node_modules
           key: dependencies-{{ .Environment.CACHE_VERSION }}-{{ checksum "package.json" }}
       - run: cp env/env.ci.ts env/env.ts # required for the typechecking & file rewrite to work
+      - run:
+          name: 'Verify that this PR is not introducing weird package.json changes'
+          command: |
+            if git status | grep --quiet package.json; then
+              echo "package.json changed after npm install, please verify your PR";
+              git diff package.json
+              exit 1;
+            else
+              exit 0
+            fi
   build_app:
     description: "build an application"
     parameters:
@@ -82,6 +92,7 @@ jobs:
       - ENV: 'ci'
       - NODE_OPTIONS: '--max_old_space_size=4096'
     steps:
+      - checkout_project
       - run: npm run affected:build
       - run: npm run affected:lint
       - run: npm run affected:test
