@@ -28,8 +28,8 @@ export const enum WorkType {
 }
 
 export const enum StoreType {
-  tv = 'TV',
-  movie = 'Movie',
+  catalog = 'Catalog',
+  line_up = 'Line-Up',
 }
 
 export const enum FormatProfile {
