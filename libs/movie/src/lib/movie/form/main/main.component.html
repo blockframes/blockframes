@@ -10,9 +10,15 @@
         <mat-form-field appearance="outline">
           <mat-label>Content Type</mat-label>
           <mat-select formControlName="workType">
-            <mat-option *ngFor="let contentType of contentTypes" [value]="contentType">
-              {{contentType}}
-            </mat-option>
+            <mat-option value="movie">Movie</mat-option>
+            <mat-option value="short">Short</mat-option>
+            <mat-option value="serie">Serie</mat-option>
+            <mat-option value="season">Season</mat-option>
+            <mat-option value="volume">Volume</mat-option>
+            <mat-option value="episode">Episode</mat-option>
+            <mat-option value="collection">Collection</mat-option>
+            <mat-option value="tv_film">TV Film</mat-option>
+            <mat-option value="flow">Flow</mat-option>
           </mat-select>
         </mat-form-field>
 
@@ -20,9 +26,8 @@
         <mat-form-field appearance="outline">
           <mat-label>Freshness</mat-label>
           <mat-select formControlName="workType">
-            <mat-option *ngFor="let freshness of freshnesses" [value]="freshness">
-              {{freshness}}
-            </mat-option>
+            <mat-option value="catalog">Catalog</mat-option>
+            <mat-option value="line_up">Line-Up</mat-option>
           </mat-select>
         </mat-form-field>
 
@@ -47,17 +52,19 @@
           </mat-form-field>
 
           <mat-form-field appearance="outline">
-            <mat-label>Reference</mat-label>
-            <input matInput type="text" placeholder="Reference" formControlName="reference" />
-            <mat-hint>This reference is for you only</mat-hint>
-          </mat-form-field>
-
-          <mat-form-field appearance="outline">
             <mat-label>Original title</mat-label>
             <input test-id="movie-add" matInput type="text" placeholder="Original title" formControlName="original" required />
             <mat-error *ngIf="main.title.get('original').hasError('required')">
               Original title is <b>required</b>
             </mat-error>
+          </mat-form-field>
+        </article>
+
+        <article fxLayout="column">
+          <mat-form-field appearance="outline">
+            <mat-label>Reference</mat-label>
+            <input matInput type="text" placeholder="Reference" formControlName="internalRef" />
+            <mat-hint>This reference is for you only</mat-hint>
           </mat-form-field>
         </article>
 
@@ -71,30 +78,32 @@
     </mat-card-header>
     <mat-card-content>
       <!-- DIRECTORS -->
-      <article formGroupName="director" fxLayout="column">
-        <mat-form-field appearance="outline">
-          <mat-label>Drector's Firstname</mat-label>
-          <input matInput formControlName="firstname" placeholder="ex. Woody">
-        </mat-form-field>
+      <article formArrayName="directors" *ngFor="let director of main.get['directors']; let i = index;">
+        <div [formGroupName]="i" fxLayout="column">
+          <mat-form-field appearance="outline">
+            <mat-label>Director's Firstname</mat-label>
+            <input matInput formControlName="firstName" placeholder="ex. Woody">
+          </mat-form-field>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Director's Lastname</mat-label>
-          <input matInput formControlName="lastname" placeholder="ex. Allen">
-        </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Director's Lastname</mat-label>
+            <input matInput formControlName="lastName" placeholder="ex. Allen">
+          </mat-form-field>
 
-        <mat-form-field appearance="outline">
-          <mat-label>Director's Filmography</mat-label>
-          <textarea matInput formControlName="filmography" placeholder="Director's Filmography"></textarea>
-          <mat-hint>Selective filmography to present the director</mat-hint>
-        </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Director's Filmography</mat-label>
+            <textarea matInput formControlName="shortBiography" placeholder="Director's Filmography"></textarea>
+            <mat-hint>Selective filmography to present the director</mat-hint>
+          </mat-form-field>
+        </div>
       </article>
 
-      <article fxLayout="column" fxLayoutAlign="center center">
+      <!-- <article fxLayout="column" fxLayoutAlign="center center">
         <button mat-mini-fab color="primary" (click)="main.addDirector()">
           <mat-icon>add</mat-icon>
         </button>
         <p>Add an other director</p>
-      </article>
+      </article> -->
     </mat-card-content>
   </mat-card>
 
@@ -103,10 +112,12 @@
       <mat-card-title>Country(ies) of Origin</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <article fxLayout="column">
+      <article formArrayName="originCountries" *ngFor="let country of main.controls['originCountries'].value; let i = index" fxLayout="column">
+
         <!-- COUNTRIES OF ORIGIN -->
         <mat-form-field appearance="outline">
-          <input matInput formControlName="originCountries" placeholder="Country of Origin" [matAutocomplete]="originCountries" required>
+          <mat-label>Country of Origin</mat-label>
+          <input matInput [formControlName]="i" placeholder="Country of Origin" [matAutocomplete]="originCountries" required>
 
           <mat-autocomplete #originCountries="matAutocomplete">
             <mat-option *ngFor="let country of countries$ | async" [value]="country.slug">
@@ -116,10 +127,11 @@
         </mat-form-field>
 
         <!-- DISTRIBUTOR OF COUNTRY OF ORIGIN -->
-        <mat-form-field appearance="outline">
+        <!-- TODO #1478 Data model/UI : Distributor of country of origin doesn't exist yet-->
+        <!-- <mat-form-field appearance="outline">
           <mat-label>Domestic Distributor</mat-label>
           <input matInput formControlName="originDistributor" placeholder="Domestic Distributor">
-        </mat-form-field>
+        </mat-form-field> -->
       </article>
 
       <article fxLayout="column" fxLayoutAlign="center center">
@@ -133,7 +145,8 @@
 
       <article fxLayout="column">
         <!-- ORIGINAL LANGUAGES -->
-        <mat-form-field appearance="outline" class="full-width">
+
+        <mat-form-field appearance="outline">
           <mat-label>Original Language</mat-label>
           <mat-select formControlName="languages" placeholder="Film Languages" multiple required>
             <mat-option>
@@ -150,7 +163,7 @@
   </mat-card>
 </form>
 
-<form [formGroup]="salesInfo">
+<!-- <form [formGroup]="salesInfo">
   <mat-card>
     <mat-card-header>
       <mat-card-title>Theatrical Release</mat-card-title>
@@ -161,16 +174,18 @@
         <mat-slide-toggle color="primary"></mat-slide-toggle>
       </article>
 
-      <!-- THEATRICAL RELEASE -->
-      <mat-form-field appearance="outline">
-        <mat-label>Release Date in Country of Origin</mat-label>
-        <input matInput [matDatepicker]="originReleaseDate" placeholder="MM/DD/YYYY">
-        <mat-datepicker-toggle matSuffix [for]="originReleaseDate"></mat-datepicker-toggle>
-        <mat-datepicker #originReleaseDate></mat-datepicker>
-      </mat-form-field>
+      <article fxLayout="column"> -->
+        <!-- THEATRICAL RELEASE -->
+        <!-- <mat-form-field appearance="outline">
+          <mat-label>Release Date in Country of Origin</mat-label>
+          <input matInput [matDatepicker]="originReleaseDate" placeholder="MM/DD/YYYY">
+          <mat-datepicker-toggle matSuffix [for]="originReleaseDate"></mat-datepicker-toggle>
+          <mat-datepicker #originReleaseDate></mat-datepicker>
+        </mat-form-field>
+      </article>
     </mat-card-content>
   </mat-card>
-</form>
+</form> -->
 
 <form [formGroup]="main">
   <mat-card>
@@ -195,12 +210,12 @@
         <!-- IF OTHER SPECIFY -->
         <mat-form-field appearance="outline">
           <mat-label>Specify</mat-label>
-          <input matInput formControlName="specify" placeholder="Specify">
+          <input matInput formControlName="genres" placeholder="Specify">
         </mat-form-field>
       </article>
 
       <article fxLayout="column" fxLayoutAlign="center center">
-        <button mat-mini-fab color="primary" (click)="main.addDirector()">
+        <button mat-mini-fab color="primary" (click)="main.addGenres()">
           <mat-icon>add</mat-icon>
         </button>
         <span>Add an other genre</span>
@@ -217,41 +232,41 @@
         </mat-form-field>
 
         <!-- PRINCIPAL CAST -->
-        <mat-form-field appearance="outline">
+        <!-- <mat-form-field appearance="outline">
           <mat-label>Principal Cast Member(s)</mat-label>
           <input matInput formControlName="castMember" placeholder="Principal Cast Member">
-        </mat-form-field>
+        </mat-form-field> -->
       </article>
     </mat-card-content>
   </mat-card>
 </form>
 
-<form [formGroup]="festivalPrizes">
+<!-- <form [formGroup]="festivalPrizes">
   <mat-card>
     <mat-card-header>
       <mat-card-title>Festivals</mat-card-title>
     </mat-card-header>
     <mat-card-content>
       <article fxLayout="column">
-        <!-- FESTIVAL NAME -->
+        FESTIVAL NAME
         <mat-form-field appearance="outline">
-          <mat-label>Festival Cannes</mat-label>
+          <mat-label>Festival Name</mat-label>
           <input matInput formNameControl="name" placeholder="Festival Name">
         </mat-form-field>
 
-        <!-- AWARD OR SELECTION -->
+        AWARD OR SELECTION
         <mat-form-field appearance="outline">
           <mat-label>Award or Selection</mat-label>
           <input matInput formNameControl="award" placeholder="Festival Award or Selection">
         </mat-form-field>
 
-        <!-- FESTIVAL YEAR -->
+        FESTIVAL YEAR
         <mat-form-field appearance="outline">
           <mat-label>Year</mat-label>
           <input matInput formNameControl="year" placeholder="Year">
         </mat-form-field>
 
-        <!-- PREMIERE -->
+        PREMIERE
         <mat-form-field appearance="outline">
           <mat-label>Premiere</mat-label>
           <mat-select formNameControl="premiere" placeholder="Premiere">
@@ -270,4 +285,4 @@
       </article>
     </mat-card-content>
   </mat-card>
-</form>
+</form> -->
