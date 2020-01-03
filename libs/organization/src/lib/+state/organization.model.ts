@@ -41,11 +41,6 @@ export interface OrganizationForm {
   name: string;
 }
 
-export interface PublicOrganization {
-  id: string;
-  name: string;
-}
-
 /** A factory function that creates an Organization. */
 export function createOrganization(
   params: Partial<Organization> = {}
