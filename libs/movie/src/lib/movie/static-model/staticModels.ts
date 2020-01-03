@@ -16,6 +16,8 @@ interface Model {
   TERRITORIES: readonly SlugAndLabel[];
   MEDIAS: readonly SlugAndLabel[];
   LEGAL_ROLES: readonly SlugAndLabel[];
+  BUDGET_RANGE: readonly SlugAndLabel[];
+  MOVIE_FORMAT: readonly SlugAndLabel[];
 }
 
 export type Scope = keyof Model;
@@ -148,7 +150,59 @@ const models: Model = {
     {
       'slug': 'score-composer',
       'label': 'Score Composer'
-    }
+    },
+    {
+      'slug': 'dialogue-writer',
+      'label': 'Dialogue Writer'
+    },
+    {
+      'slug': 'director-of-photography',
+      'label': 'Director of Photography'
+    },
+    {
+      'slug': 'editor',
+      'label': 'Editor'
+    },
+    {
+      'slug': 'casting-director',
+      'label': 'Casting Director'
+    },
+    {
+      'slug': 'artistic-director',
+      'label': 'Artistic Director'
+    },
+    {
+      'slug': 'production-manager',
+      'label': 'Production Manager'
+    },
+    {
+      'slug': 'costume-designer',
+      'label': 'Costume Designer'
+    },
+    {
+      'slug': 'make-up-artist',
+      'label': 'Make-Up Artist'
+    },
+    {
+      'slug': 'production-designer',
+      'label': 'Production Designer'
+    },
+    {
+      'slug': 'first-assistant-director',
+      'label': '1st Assistant Director'
+    },
+    {
+      'slug': 'second-assistant-director',
+      'label': '2nd Assistant Director'
+    },
+    {
+      'slug': 'post-production-director',
+      'label': 'Post-Production Director'
+    },
+    {
+      'slug': 'original-author',
+      'label': 'Original Author'
+    },
   ],
   'MOVIE_STATUS': [
     {
@@ -677,6 +731,25 @@ const models: Model = {
     { 'slug': 'beneficiary', 'label': 'Beneficiary' },
     { 'slug': 'third-party', 'label': 'Third party' },
     { 'slug': 'purchaser', 'label': 'Purchaser' },
+  ] as const,
+  'BUDGET_RANGE': [
+    { 'slug': 'less-than-one', 'label': '$ Less than 1 million' },
+    { 'slug': 'one-to-five', 'label': '$ 1 - 5 millions' },
+    { 'slug': 'five-to-ten', 'label': '$ 5 - 10 millions' },
+    { 'slug': 'ten-to-fifty', 'label': '$ 10 - 50 millions' },
+    { 'slug': 'fifty-to-one-hundred', 'label': '$ 50 - 100 millions' },
+    { 'slug': 'one-hundred-to-three-hundred', 'label': '$ 100 - 300 millions' },
+    { 'slug': 'more-than-three-hundred', 'label': '$ More than 300 millions' },
+  ] as const,
+  'MOVIE_FORMAT': [
+    { 'slug': '1_33', 'label': '1.33' },
+    { 'slug': '1_37', 'label': '1.37' },
+    { 'slug': '1_66', 'label': '1.66' },
+    { 'slug': '1_77', 'label': '1.77' },
+    { 'slug': '1_85', 'label': '1.85' },
+    { 'slug': 'scope', 'label': 'SCOPE' },
+    { 'slug': '4/3', 'label': '4/3' },
+    { 'slug': '16/9', 'label': '16/9' },
   ] as const,
 };
 
