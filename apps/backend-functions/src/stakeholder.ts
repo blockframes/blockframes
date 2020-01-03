@@ -74,10 +74,12 @@ async function stakeholdersCollectionEvent(
       };
 
       // Remove stakeholder id reference from delivery's stakeholderIds array.
+      // Remove documentPermissions for this delivery.
       if (NotificationType.removeOrganization) {
-        db.doc(`deliveries/${delivery.id}`).update({
+        await db.doc(`deliveries/${delivery.id}`).update({
           stakeholderIds: delivery.stakeholderIds.filter((id: string) => id !== newStakeholder.orgId)
         });
+        await db.doc(`permissions/${newStakeholder.orgId}/documentPermissions/${delivery.id}`).delete();
       }
 
       const notifications = createNotifications(organizationsOfDocument, snapObject);

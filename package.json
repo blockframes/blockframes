@@ -170,13 +170,12 @@
     "pdfkit": "^0.10.0",
     "prettier": "1.18.2",
     "pwmetrics": "^4.2.2",
-    "ts-jest": "24.0.0",
+    "ts-jest": "^24.0.0",
     "ts-node": "~8.4.1",
     "tsickle": "0.37.0",
     "tslib": "^1.9.0",
     "tslint": "~5.20.0",
-    "typescript": "^3.4.5",
-    "webpack-bundle-analyzer": "^3.4.1"
+    "typescript": "^3.4.5"
   },
   "pwmetrics": {
     "url": "http://localhost:4200/"

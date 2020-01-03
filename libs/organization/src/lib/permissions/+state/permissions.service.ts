@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
-import { BFDoc } from '@blockframes/utils';
 import { PermissionsQuery } from './permissions.query';
-import { Organization } from '../../+state';
 import { OrganizationMember } from '../../member/+state/member.model';
-import { createDocPermissions, UserRole, DocPermissionsDocument } from './permissions.firestore';
+import { UserRole } from './permissions.firestore';
 import { PermissionsState, PermissionsStore } from './permissions.store';
 import { CollectionService, CollectionConfig } from 'akita-ng-fire';
 
@@ -14,23 +12,6 @@ import { CollectionService, CollectionConfig } from 'akita-ng-fire';
 export class PermissionsService extends CollectionService<PermissionsState> {
   constructor(private query: PermissionsQuery, store: PermissionsStore) {
     super(store)
-  }
-
-  //////////////////////
-  // DOC TRANSACTIONS //
-  //////////////////////
-
-  /** Create permissions for a document */
-  public async createDocumentPermissions(
-    document: BFDoc,
-    organization: Organization,
-    tx: firebase.firestore.Transaction
-  ) {
-
-    const documentPermissions = createDocPermissions({id: document.id, ownerId: organization.id});
-    const documentPermissionsRef = this.db.doc(`permissions/${organization.id}/documentPermissions/${document.id}`).ref;
-
-    return tx.set(documentPermissionsRef, documentPermissions)
   }
 
   /** Update roles of members of the organization */

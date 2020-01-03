@@ -8,7 +8,7 @@ import {
   deliveryStatuses
 } from './delivery.model';
 import { Movie, MovieQuery } from '@blockframes/movie';
-import { OrganizationQuery, PermissionsService } from '@blockframes/organization';
+import { OrganizationQuery } from '@blockframes/organization';
 import { BFDoc } from '@blockframes/utils';
 import { MaterialQuery, createMaterial, isTheSame } from '../../material/+state';
 import {
@@ -75,7 +75,6 @@ export class DeliveryService extends CollectionService<DeliveryState> {
     private organizationQuery: OrganizationQuery,
     private deliveryMaterialService: DeliveryMaterialService,
     private templateMaterialService: TemplateMaterialService,
-    private permissionsService: PermissionsService,
     private shService: StakeholderService,
     private walletService: WalletService,
     private movieMaterialService: MovieMaterialService,
@@ -109,9 +108,7 @@ export class DeliveryService extends CollectionService<DeliveryState> {
   }
 
   private materialDeliveryDoc(deliveryId: string, materialId: string): AngularFirestoreDocument {
-    return this.deliveryDoc(deliveryId)
-      .collection('materials')
-      .doc(materialId);
+    return this.deliveryDoc(deliveryId).collection('materials').doc(materialId);
   }
 
   private deliveryDoc(deliveryId: string): AngularFirestoreDocument<DeliveryWithTimestamps> {
@@ -155,7 +152,6 @@ export class DeliveryService extends CollectionService<DeliveryState> {
 
       // Create document and permissions
       this.add(delivery);
-      await this.permissionsService.createDocumentPermissions(delivery, organization, tx);
 
       // If there is a templateId, and mustBeSigned is true, copy template materials to the delivery
       if (!!opts.templateId && delivery.mustBeSigned) {
@@ -202,7 +198,6 @@ export class DeliveryService extends CollectionService<DeliveryState> {
 
       // Create document and permissions
       this.add(delivery);
-      await this.permissionsService.createDocumentPermissions(delivery, organization, tx);
 
       // If mustBeSigned is true, copy materials to the delivery
       if (delivery.mustBeSigned) {
@@ -255,9 +250,7 @@ export class DeliveryService extends CollectionService<DeliveryState> {
     const { mustBeSigned, id } = this.query.getActive();
 
     // Add an id for new steps
-    const stepsWithId = delivery.steps.map(step =>
-      step.id ? step : { ...step, id: this.db.createId() }
-    );
+    const stepsWithId = delivery.steps.map(step => step.id ? step : { ...step, id: this.db.createId() });
 
     // Find steps that need to be removed
     const deletedSteps = oldSteps.filter(
@@ -273,7 +266,7 @@ export class DeliveryService extends CollectionService<DeliveryState> {
         // If the delivery is mustBeSigned, we update stepId of materials in the sub-collection of delivery
         if (mustBeSigned) {
           this.deliveryMaterialService.removeStepIdDeliveryMaterials(materials, tx);
-          // Else, we update stepId of materials in the sub-collection of movie
+        // Else, we update stepId of materials in the sub-collection of movie
         } else {
           const materialsWithoutStep = materials.map(material => ({ ...material, stepId: '' }));
           this.movieMaterialService.update(materialsWithoutStep, { write: tx });
@@ -336,12 +329,7 @@ export class DeliveryService extends CollectionService<DeliveryState> {
   }
 
   /** Sign the delivery and save this action into active organization logs */
-  public setSignDeliveryTx(
-    orgEthAddress: string,
-    deliveryId: string,
-    deliveryHash: string,
-    movieId: string
-  ) {
+  public setSignDeliveryTx(orgEthAddress: string, deliveryId: string, deliveryHash: string, movieId: string) {
     const name = `Delivery #${deliveryId}`; // TODO better delivery name (see with @ioaNikas)
     const callback = async () => {
       await Promise.all([
@@ -411,12 +399,8 @@ export class DeliveryService extends CollectionService<DeliveryState> {
     const movieMaterials = await this.movieMaterialService.getValue();
 
     materials.forEach(material => {
-      const sameValuesMaterial = movieMaterials.find(movieMaterial =>
-        isTheSame(movieMaterial, material)
-      );
-      const isNewMaterial =
-        !movieMaterials.find(movieMaterial => movieMaterial.id === material.id) &&
-        !sameValuesMaterial;
+      const sameValuesMaterial = movieMaterials.find(movieMaterial => isTheSame(movieMaterial, material));
+      const isNewMaterial = !movieMaterials.find(movieMaterial => movieMaterial.id === material.id) && !sameValuesMaterial;
 
       // We check if material is brand new. If so, we just add it to database and return.
       if (isNewMaterial) {

@@ -1,7 +1,7 @@
 // import * as gcs from '@google-cloud/storage';
 import { hashToFirestore } from './generateHash';
 import { onIpHash } from './ipHash';
-import { onDeliveryUpdate } from './delivery';
+import { onDeliveryUpdate, onDeliveryCreate } from './delivery';
 import { functions } from './internals/firebase';
 import {
   RelayerConfig,
@@ -93,6 +93,10 @@ export const sendDemoRequest = functions.https.onCall(logErrors(users.sendDemoRe
  */
 export const admin = functions.https
   .onRequest(adminApp);
+
+
+/** Trigger: when a delivery is added to the database. */
+export const onDeliveryCreateEvent = onDocumentCreate('deliveries/{deliveryID}', onDeliveryCreate);
 
 /** Trigger: when signature (`orgId`) is added to or removed from `validated[]`. */
 export const onDeliveryUpdateEvent = onDocumentUpdate('deliveries/{deliveryID}', onDeliveryUpdate);

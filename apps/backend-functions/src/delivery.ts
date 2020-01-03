@@ -7,11 +7,35 @@ import {
   SnapObject,
   DeliveryDocument,
   MaterialDocument,
-  StakeholderDocument
+  StakeholderDocument,
+  createDocPermissions
 } from './data/types';
 import { copyMaterialsToMovie } from './material';
 import { createNotification, NotificationType } from '@blockframes/notification/types';
 import { App } from '@blockframes/utils/apps';
+
+export async function onDeliveryCreate(
+  snap: FirebaseFirestore.DocumentSnapshot,
+  context: functions.EventContext
+) {
+  const delivery = snap.data() as DeliveryDocument;
+
+  if (!delivery) {
+    throw new Error('No data found')
+  }
+
+  try {
+    // Create permissions for this delivery
+    const organizationId = delivery.stakeholderIds[0];
+    const documentPermissions = createDocPermissions({
+      id: delivery.id,
+      ownerId: organizationId
+    })
+    return db.doc(`permissions/${organizationId}/documentPermissions/${delivery.id}`).set(documentPermissions);
+  } catch (error) {
+    throw error;
+  }
+}
 
 export async function onDeliveryUpdate(
   change: functions.Change<FirebaseFirestore.DocumentSnapshot>,

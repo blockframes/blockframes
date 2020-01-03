@@ -13,7 +13,8 @@ export {
   OrganizationStatus,
   WishlistStatus,
   OrganizationDocument,
-  createOrganizationDocument
+  createOrganizationDocument,
+  PLACEHOLDER_LOGO
 } from './organization.firestore';
 
 export const enum AppStatus {
@@ -21,8 +22,6 @@ export const enum AppStatus {
   requested = 'requested',
   accepted = 'accepted'
 }
-
-export const PLACEHOLDER_LOGO = '/assets/logo/organisation_avatar_250.svg';
 
 /** An application details with the organization authorizations */
 export interface AppDetailsWithStatus extends AppDetails {
