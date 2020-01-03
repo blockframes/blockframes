@@ -1,7 +1,19 @@
-<mat-form-field>
-  <input matInput [formControl]="keyword" />
+<mat-form-field appearance="outline">
+  <mat-label>Keywords</mat-label>
+  <mat-chip-list #chipList>
+    <mat-chip
+    *ngFor="let value of values$ | async; let i = index"
+    [removable]="true"
+    (removed)="removeKeyword(i)">
+        {{ value }}
+        <mat-icon matChipRemove>cancel</mat-icon>
+    </mat-chip>
+  </mat-chip-list>
+  <input matInput
+  [formControl]="keyword"
+  [matChipInputFor]="chipList"
+  [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+  (matChipInputTokenEnd)="addChip($event)"
+  />
+  <mat-hint>Separate keywords with commas</mat-hint>
 </mat-form-field>
-<button (click)="add()">Add</button>
-<div>
-  <span *ngFor="let v of values$ | async">{{ v }}, </span>
-</div>
