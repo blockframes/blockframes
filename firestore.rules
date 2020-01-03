@@ -34,7 +34,8 @@ service cloud.firestore {
     	allow read: if userId() == existingData().user.uid
       	|| userOrgId() == existingData().organization.id;
     	allow update, create: if userId() == incomingData().user.uid
-      	|| userOrgId() == incomingData().organization.id;
+      	|| userOrgId() == incomingData().organization.id
+        || isOwner(userOrgId(), incomingData().docId) ;
       allow delete: if isOrgAdmin(userId(), orgId) || userId() == existingData().user.uid;
     }
 
@@ -51,12 +52,8 @@ service cloud.firestore {
       allow delete: if isSuperAdmin(userId(), orgId);
       allow read: if isSignedIn();
 
-      match /baskets/{basketId} {
-      	allow read: if isOrgMember(userId(), orgId);
-        allow create: if isOrgMember(userId(), orgId);
-        allow update: if isOrgMember(userId(), orgId)
-        	&& incomingData().id == existingData().id;
-        allow delete: if isOrgAdmin(userId(), orgId);
+      match /{documents=**} {
+        allow read, write;
       }
     }
 
@@ -73,7 +70,7 @@ service cloud.firestore {
         && incomingData().id == existingData().id;
 
       match /{documents=**} {
-      	allow read, write;
+        allow read, write;
       }
     }
 
@@ -90,38 +87,25 @@ service cloud.firestore {
       allow delete: if getDocumentPermissions(userOrgId(), movieId).ownerId == userOrgId()
       	&& isSuperAdmin(userId(), userOrgId());
 
-      match /{documents=**} {
-      	allow read: if userHasValidOrg();
-      	allow create: if userHasValidOrg();
-      	allow update: if getDocumentPermissions(userOrgId(), movieId).ownerId == userOrgId()
-      		&& isOrgAdmin(userId(), userOrgId())
-          && incomingData().id == existingData().id;
-      	allow delete: if getDocumentPermissions(userOrgId(), movieId).ownerId == userOrgId()
-      		&& isSuperAdmin(userId(), userOrgId());
-      }
+        match /{documents=**} {
+        	allow read, write;
+        }
     }
 
     /// DELIVERIES RULES ///
 
     match /deliveries/{deliveryId} {
-      allow read: if userHasValidOrg()
-				&& documentPermissionsExist(userOrgId(), existingData().movieId);
+    	allow read: if isStakeholder(userOrgId());
       allow create: if userHasValidOrg()
       	&& documentIdChecked(deliveryId, 'deliveries')
         && documentPermissionsExist(userOrgId(), existingData().movieId);
-      allow update: if orgCan('update', userOrgId(), deliveryId)
+      allow update: if orgCan('canUpdate', userOrgId())
       	&& documentIdChecked(deliveryId, 'deliveries')
         && incomingData().id == existingData().id;
-      allow delete: if orgCan('delete', userOrgId(), deliveryId);
+      allow delete: if orgCan('canDelete', userOrgId());
 
       match /{documents=**} {
-      	allow read: if orgCan('read', userOrgId(), deliveryId);
-      	allow create: if userHasValidOrg()
-      		&& documentIdChecked(deliveryId, 'deliveries');
-      	allow update: if orgCan('update', userOrgId(), deliveryId)
-      		&& documentIdChecked(deliveryId, 'deliveries')
-        	&& incomingData().id == existingData().id;
-      	allow delete: if orgCan('delete', userOrgId(), deliveryId);
+        allow read, write;
       }
     }
 
@@ -175,6 +159,14 @@ service cloud.firestore {
     function isOrgMember(userId, orgId) {
     	return (getOrgPermissions(orgId).roles[userId] == "member")
       	|| isOrgAdmin(userId, orgId);
+    }
+
+    function isOwner(orgId, docId) {
+    	return getDocumentPermissions(orgId, docId).ownerId == orgId;
+    }
+
+    function isStakeholder(orgId) {
+    	return orgId in resource.data.stakeholderIds;
     }
 
     function getDocumentPermissions(orgId, docId) {
