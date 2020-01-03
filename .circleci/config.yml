@@ -85,6 +85,13 @@ jobs:
       - run: npm run affected:build
       - run: npm run affected:lint
       - run: npm run affected:test
+      - run: npm run bundlesize
+      - run:
+          name: Post sizes of apps to zapier
+          command: |
+            if [ "${CIRCLE_BRANCH}" = "production" || "${CIRCLE_BRANCH}" = "master" ]; then
+              curl -X POST "${ZAPPIER_WEBHOOK}" --header "Build-number:${CIRCLE_BUILD_NUM}" --header "Branch:${CIRCLE_BRANCH}" --header  "Date:`date "+%D"`" --header  Main-size:`cat ./dist/apps/main**.js | wc -c` --header  Delivery-size:`cat ./dist/apps/delivery/main**.js | wc -c` --header  Marketplace-size:`cat ./dist/apps/catalog-marketplace/main**.js | wc -c` --header  Dashboard-size:`cat ./dist/apps/catalog-dashboard/main**.js | wc -c` --header  Movie-financing-size:`cat ./dist/apps/movie-financing/main**.js | wc -c` --header  Functions-size:`cat ./dist/apps/backend-functions/main**.js | wc -c`
+            fi
   build:
     parameters:
       app:
