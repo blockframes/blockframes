@@ -82,20 +82,9 @@ jobs:
       - ENV: 'ci'
       - NODE_OPTIONS: '--max_old_space_size=4096'
     steps:
-      - build_affected_app:
-          app: 'catalog-marketplace'
-      - build_affected_app:
-          app: 'catalog-dashboard'
-      - build_affected_app:
-          app: 'backend-functions'
-      - build_affected_app:
-          app: 'backend-ops'
-      - build_affected_app:
-          app: 'delivery'
-      - build_affected_app:
-          app: 'main'
-      - build_affected_app:
-          app: 'movie-financing'
+      - run: npm run affected:build
+      - run: npm run affected:lint
+      - run: npm run affected:test
   build:
     parameters:
       app:
