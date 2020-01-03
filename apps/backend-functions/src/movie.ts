@@ -4,7 +4,7 @@ import { createNotification, NotificationType } from '@blockframes/notification/
 import { App } from '@blockframes/utils/apps';
 import { triggerNotifications } from './notification';
 import { flatten, isEqual } from 'lodash';
-import { getDocument, getOrganizationsOfDocument } from './data/internals';
+import { getDocument } from './data/internals';
 import { removeAllSubcollections } from './utils';
 
 /** Create a notification with user and movie. */
@@ -26,10 +26,12 @@ function notifUser(userId: string, notificationType: NotificationType, movie: Mo
 
 /** Create notifications for all org's members. */
 async function createNotificationsForUsers(movie: MovieDocument, notificationType: NotificationType, user: PublicUser) {
+  const orgsSnapShot = await db
+    .collection(`orgs`)
+    .where('movieIds', 'array-contains', movie.id)
+    .get();
 
-  const orgs = await getOrganizationsOfDocument(movie.id, 'movies')
-  console.log('user ', user)
-  console.log('organizations from notifications', orgs)
+  const orgs = orgsSnapShot.docs.map(org => org.data() as OrganizationDocument);
 
   return flatten(orgs.map(org => org.userIds.map(userId => notifUser(userId, notificationType, movie, user))));
 }
@@ -41,7 +43,6 @@ export async function onMovieCreate(
 ) {
   const movie = snap.data() as MovieDocument;
 
-  console.log('movie', movie)
   // Get the user document, and then his organization.
   const user = await getDocument<PublicUser>(`users/${movie._meta!.createdBy}`);
   const organization = await getDocument<OrganizationDocument>(`orgs/${user.orgId}`)
