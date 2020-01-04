@@ -1,6 +1,8 @@
 <mat-form-field appearance="outline">
   <mat-label>Key Assets</mat-label>
   <!-- TODO#1478 Sync Data and UI  -->
-  <input matInput
-  placeholder="ex. interesting facts such as the film track, or other trivia"/>
+  <textarea matInput maxlength="500" cdkTextareaAutosize type="string"
+  placeholder="ex. interesting facts such as the film track, or other trivia">
+  </textarea>
+  <!-- <mat-hint align="end">{{ keyAssets.value?.length }} / 500</mat-hint> -->
 </mat-form-field>
