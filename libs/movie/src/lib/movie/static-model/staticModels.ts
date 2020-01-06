@@ -16,7 +16,6 @@ interface Model {
   TERRITORIES: readonly SlugAndLabel[];
   MEDIAS: readonly SlugAndLabel[];
   LEGAL_ROLES: readonly SlugAndLabel[];
-  BUDGET_RANGE: readonly SlugAndLabel[];
   MOVIE_FORMAT: readonly SlugAndLabel[];
 }
 
@@ -731,15 +730,6 @@ const models: Model = {
     { 'slug': 'beneficiary', 'label': 'Beneficiary' },
     { 'slug': 'third-party', 'label': 'Third party' },
     { 'slug': 'purchaser', 'label': 'Purchaser' },
-  ] as const,
-  'BUDGET_RANGE': [
-    { 'slug': 'less-than-one', 'label': '$ Less than 1 million' },
-    { 'slug': 'one-to-five', 'label': '$ 1 - 5 millions' },
-    { 'slug': 'five-to-ten', 'label': '$ 5 - 10 millions' },
-    { 'slug': 'ten-to-fifty', 'label': '$ 10 - 50 millions' },
-    { 'slug': 'fifty-to-one-hundred', 'label': '$ 50 - 100 millions' },
-    { 'slug': 'one-hundred-to-three-hundred', 'label': '$ 100 - 300 millions' },
-    { 'slug': 'more-than-three-hundred', 'label': '$ More than 300 millions' },
   ] as const,
   'MOVIE_FORMAT': [
     { 'slug': '1_33', 'label': '1.33' },
