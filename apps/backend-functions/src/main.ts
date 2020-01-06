@@ -1,7 +1,7 @@
 // import * as gcs from '@google-cloud/storage';
 import { hashToFirestore } from './generateHash';
 import { onIpHash } from './ipHash';
-import { onDeliveryUpdate, onDeliveryCreate } from './delivery';
+import { onDeliveryUpdate } from './delivery';
 import { functions } from './internals/firebase';
 import {
   RelayerConfig,
@@ -91,12 +91,7 @@ export const sendDemoRequest = functions.https.onCall(logErrors(users.sendDemoRe
  *    Organization cannot access applications until they requested it and
  *    a cascade8 administrator accept their request.
  */
-export const admin = functions.https
-  .onRequest(adminApp);
-
-
-/** Trigger: when a delivery is added to the database. */
-export const onDeliveryCreateEvent = onDocumentCreate('deliveries/{deliveryID}', onDeliveryCreate);
+export const admin = functions.https.onRequest(adminApp);
 
 /** Trigger: when signature (`orgId`) is added to or removed from `validated[]`. */
 export const onDeliveryUpdateEvent = onDocumentUpdate('deliveries/{deliveryID}', onDeliveryUpdate);

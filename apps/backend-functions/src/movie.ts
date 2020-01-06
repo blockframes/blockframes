@@ -1,5 +1,5 @@
 import { functions, db } from './internals/firebase';
-import { MovieDocument, OrganizationDocument, PublicUser, createDocPermissions } from './data/types';
+import { MovieDocument, OrganizationDocument, PublicUser } from './data/types';
 import { createNotification, NotificationType } from '@blockframes/notification/types';
 import { App } from '@blockframes/utils/apps';
 import { triggerNotifications } from './notification';
@@ -52,20 +52,14 @@ export async function onMovieCreate(
     throw new Error('movie update function got invalid movie data');
   }
 
-  // Create permissions and notifications documents.
-  const documentPermissions = createDocPermissions({id: movie.id, ownerId: organization.id});
-  const notifications = await createNotificationsForUsers(movie, NotificationType.movieTitleCreated, user);
-
-  // Getting snapshots of documents for the transaction.
-  const [documentPermissionSnap, organizationSnap] = await Promise.all([
-    db.doc(`permissions/${organization.id}/documentPermissions/${documentPermissions.id}`).get(),
+  // Create notifications and getting organization snapshot.
+  const [notifications, organizationSnap] = await Promise.all([
+    createNotificationsForUsers(movie, NotificationType.movieTitleCreated, user),
     db.doc(`orgs/${organization.id}`).get()
   ]);
 
   return db.runTransaction(tx => {
     return Promise.all([
-      // Add document permissions for this movie in the database.
-      tx.set(documentPermissionSnap.ref, documentPermissions),
       // Update the organization's movieIds with the new movie id.
       tx.update(organizationSnap.ref, { movieIds: [...organization.movieIds, movie.id] }),
       // Send notifications about this new movie to each organization member.

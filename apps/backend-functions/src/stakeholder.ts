@@ -75,7 +75,7 @@ async function stakeholdersCollectionEvent(
 
       // Remove stakeholder id reference from delivery's stakeholderIds array.
       // Remove documentPermissions for this delivery.
-      if (NotificationType.removeOrganization) {
+      if (type === NotificationType.removeOrganization) {
         await db.doc(`deliveries/${delivery.id}`).update({
           stakeholderIds: delivery.stakeholderIds.filter((id: string) => id !== newStakeholder.orgId)
         });
