@@ -162,3 +162,20 @@ $bf-light-theme: (
   foreground: $bf-light-foreground,
   background: $bf-light-background,
 );
+
+//////////
+// FONT //
+//////////
+$bf-light-font: (
+  display-4: #838993,
+  display-3: #071326,
+  display-2: #2a3545,
+  display-1: #838993,
+  h1: #2a3545,
+  h2: #071326,
+  h3: #2a3545,
+  h4: #838993,
+  mat-body-1: #5e6672,
+  mat-body-2: #2a3545,
+  mat-caption: #838993
+);

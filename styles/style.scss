@@ -19,7 +19,7 @@
 @import './components/bf-widget';
 
 // Typography
-@import './components/h.scss';
+@import './components/bf-font-color.scss';
 
 * {
   box-sizing: border-box;
@@ -45,7 +45,7 @@ span {
 
 .banner {
   border-top: 1px solid mat-color($mat-dark-bf-blue, 200);
-  border-bottom: 1px solid mat-color($mat-dark-bf-blue, 200);;
+  border-bottom: 1px solid mat-color($mat-dark-bf-blue, 200);
   box-shadow: 0 0 4px 4px mat-color($mat-dark-bf-blue, 200, 0.5);
 }
 
@@ -81,4 +81,3 @@ main {
 .black-bg-opacity-30 {
   background-color: rgba(#000000, 0.3);
 }
-

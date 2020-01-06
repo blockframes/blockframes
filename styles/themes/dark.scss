@@ -149,3 +149,20 @@ $bf-dark-theme: (
   foreground: $bf-dark-foreground,
   background: $bf-dark-background
 );
+
+//////////
+// FONT //
+//////////
+$bf-dark-font: (
+  display-4: #444960,
+  display-3: #d0d9ff,
+  display-2: #b1b8db,
+  display-1: #444960,
+  h1: #b1b8db,
+  h2: #d0d9ff,
+  h3: #b1b8db,
+  h4: #444960,
+  mat-body-1: #878EAC,
+  mat-body-2: #b1b8db,
+  mat-caption: #444960
+);
