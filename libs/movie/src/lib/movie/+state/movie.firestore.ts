@@ -7,14 +7,6 @@ import { TermsRaw } from "@blockframes/utils/common-interfaces/terms";
 
 type Timestamp = firestore.Timestamp;
 
-export const enum LicenseStatus {
-  unknown = 'unknown',
-  undernegotiation = 'under negotiation',
-  waitingsignature = 'waiting for signature',
-  waitingpaiment = 'waiting for paiment',
-  paid = 'paid',
-}
-
 export const enum WorkType {
   movie = 'Movie',
   short = 'Short',
@@ -151,7 +143,6 @@ interface DistributionDealRaw<D> {
   formatProfile: FormatProfile;
   download: boolean;
   contractId?: string;
-  licenseStatus: LicenseStatus;
   reportingId?: string;
   deliveryIds?: string;
   multidiffusion?: number;

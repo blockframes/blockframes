@@ -5,10 +5,16 @@ import { Price } from "@blockframes/utils/common-interfaces/price";
 
 type Timestamp = firestore.Timestamp;
 
-export enum ContractStatus {
+export enum ContractStatus { 
   submitted = 'submitted',
   accepted = 'accepted',
   paid = 'paid',
+  unknown = 'unknown',
+  undernegotiation = 'under negotiation',
+  waitingsignature = 'waiting for signature',
+  waitingpaiment = 'waiting for paiment',
+  rejected = 'rejected',
+  aborted = 'abordted',
 }
 
 export interface ContractTitleDetail {
@@ -28,7 +34,7 @@ interface ContractRaw<D> {
   parties: Party[],
   status: ContractStatus,
   scope: TermsRaw<D>,
-  signDate?: D,
+  creationDate?: D,
   titles: Record<string, ContractTitleDetail>,
   price: Price;
   paymentSchedule?: string; // @todo #1397 change this when creating invoices

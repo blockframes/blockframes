@@ -27,7 +27,7 @@ import { SSF$Date } from 'ssf/types';
 import { getCodeIfExists } from '../../../static-model/staticModels';
 import { SSF } from 'xlsx';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
-import { LicenseStatus, MovieLanguageTypes } from '@blockframes/movie/movie/+state/movie.firestore';
+import { MovieLanguageTypes } from '@blockframes/movie/movie/+state/movie.firestore';
 import { createCredit, createParty } from '@blockframes/utils/common-interfaces/identity';
 import { createContract, validateContract, Contract, createContractTitleDetail, getContractParties } from '@blockframes/marketplace/app/distribution-deal/+state/cart.model';
 import { ContractStatus, ContractTitleDetail } from '@blockframes/marketplace/app/distribution-deal/+state/cart.firestore';
@@ -127,7 +127,7 @@ enum SpreadSheetDistributionDeal {
 }
 
 enum SpreadSheetContract {
-  licensor,
+  licensors,
   licensee,
   contractId,
   parentContractIds,
@@ -1094,21 +1094,15 @@ export class ViewExtractedElementsComponent {
           /* LICENSEE */
 
           // Retreive the licensee inside the contract to update his infos
-
-          // @todo #1462 can have multiple licensors? => YES UPDATE
-          // @todo #1462 handle if there is no licensee
           const licensee = getContractParties(contract, 'licensee').shift();
+          if(licensee === undefined){
+            throw new Error(`No licensee found in contract ${contract.id}.`);
+          }
 
           // SHOW NAME
           if (spreadSheetRow[SpreadSheetDistributionDeal.displayLicenseeName]) {
             licensee.showName = spreadSheetRow[SpreadSheetDistributionDeal.displayLicenseeName].toLowerCase() === 'yes' ? true : false;
           }
-
-          // @todo #1462 need to update licensee inside contract object ?
-          // contract.parties.push(licensee);
-
-          /* LICENSE STATUS */
-          distributionDeal.licenseStatus = LicenseStatus.paid; // @todo #1462 ok with that?
 
           /////////////////
           // TERMS STUFF
@@ -1396,13 +1390,15 @@ export class ViewExtractedElementsComponent {
           errors: [],
         } as ContractsImportState;
 
-        if (spreadSheetRow[SpreadSheetContract.licensor]) {  // @todo #1462 can have multiple licensors? => YES UPDATE
-          const licensor = createParty();
-          // @todo #1462 try to match with an existing org
-          // licensor.orgId = 
-          licensor.displayName = spreadSheetRow[SpreadSheetContract.licensor];
-          licensor.role = 'licensor';
-          contract.parties.push(licensor);
+        if (spreadSheetRow[SpreadSheetContract.licensors]) {
+          spreadSheetRow[SpreadSheetContract.licensors].split(this.separator).forEach((licensorName: string) => {
+            const licensor = createParty();
+            // @todo #1462 try to match with an existing org
+            // licensor.orgId = 
+            licensor.displayName = licensorName.trim();
+            licensor.role = 'licensor';
+            contract.parties.push(licensor);
+          });
         }
 
         if (spreadSheetRow[SpreadSheetContract.licensee]) {

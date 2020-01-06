@@ -14,7 +14,6 @@ import {
   Prize,
   PromotionalElement,
   Title,
-  LicenseStatus,
   HoldbackWithDates as Holdback,
   WorkType,
   FormatProfile,
@@ -213,7 +212,6 @@ export function createMovieSalesAgentDeal(
 export function createDistributionDeal(params: Partial<DistributionDeal> = {}): DistributionDeal {
   return {
     id: '',
-    licenseStatus: LicenseStatus.unknown,
     licenseType: [],
     terms: createTerms(params.terms),
     territory: [],
