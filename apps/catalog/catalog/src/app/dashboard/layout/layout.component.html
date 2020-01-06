@@ -1,42 +1,71 @@
-<mat-sidenav-container class="sidenav-container">
-  <mat-sidenav #leftSidenav mode="over">
-    <toolbar-left-menu [sidenav]="leftSidenav"></toolbar-left-menu>
+<mat-sidenav-container>
+  <mat-sidenav #drawer id="dashboard-navbar"
+    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'"
+    [opened]="(isHandset$ | async) === false">
+    <mat-toolbar>
+      <a mat-icon-button class="logo" routerLink="/dashboard">
+        <img src="assets/logo/LogoAC.svg"/>
+      </a>
+    </mat-toolbar>
+    <!-- TODO#1444: update icons -->
+    <mat-nav-list>
+      <a mat-list-item routerLink="overview">
+        <mat-icon matListIcon>add</mat-icon>
+        <span matLine>Overview</span>
+      </a>
+      <mat-chip-list>
+        <a mat-list-item routerLink="titles">
+          <mat-icon matListIcon>add</mat-icon>
+          <span matLine>Titles</span>
+        </a>
+        <a mat-list-item routerLink="deals">
+          <mat-icon matListIcon>add</mat-icon>
+          <span matLine>Deals</span>
+        </a>
+      </mat-chip-list>
+      <mat-divider></mat-divider>
+      <a mat-list-item>
+        <mat-icon matListIcon>add</mat-icon>
+        <span matLine>Marketplace</span>
+      </a>
+      <mat-divider></mat-divider>
+      <a mat-list-item routerLink="faq">
+        <mat-icon matListIcon>add</mat-icon>
+        <span matLine>FAQ</span>
+      </a>
+      <a mat-list-item routerLink="contact">
+        <mat-icon matListIcon>add</mat-icon>
+        <span matLine>Contact</span>
+      </a>
+    </mat-nav-list>
   </mat-sidenav>
   <mat-sidenav-content>
-    <toolbar-header id="navbar" [sidenav]="leftSidenav">
-      <ng-container app-icon>
-        <button test-id="home" mat-icon-button class="app-icon-button" routerLink="/layout">
-          <mat-icon svgIcon="logoBFlight" class="app-icon"></mat-icon>
+    <mat-toolbar id="catalog-toolbar" fxLayout="row">
+      <button
+        mat-icon-button
+        (click)="drawer.toggle()"
+        *ngIf="isHandset$ | async">
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+      <!-- Search Bar -->
+      <form class="search-bar">
+        <mat-form-field floatLabel="never">
+          <input matInput
+          placeholder="Search for clients, negotiations, titles instead of listings..." />
+          <mat-icon matPrefix>search</mat-icon>
+        </mat-form-field>
+      </form>
+      <section fxLayout="row" fxLayoutAlign="start center">
+        <!-- Notification -->
+        <button mat-icon-button>
+          <mat-icon matListIcon matBadge="3" matBadgeSize="small" class="notification-icon">notification_important</mat-icon>
         </button>
-      </ng-container>
-
-      <ng-container notifications>
-        <notification-widget></notification-widget>
-      </ng-container>
-
-      <ng-container profile-menu>
-        <account-profile-menu>
-          <ng-container widgets>
-            <account-profile-widget></account-profile-widget>
-            <mat-divider></mat-divider>
-            <wallet-widget></wallet-widget>
-            <mat-divider></mat-divider>
-            <organization-widget></organization-widget>
-            <mat-divider></mat-divider>
-            <theme-widget></theme-widget>
-          </ng-container>
-        </account-profile-menu>
-      </ng-container>
-
-    </toolbar-header>
+        <!-- User Info -->
+      </section>
+    </mat-toolbar>
     <main>
       <router-outlet></router-outlet>
-      <footer page-id="footer" fxLayout="row" fxLayoutAlign="center center">
-        <a routerLink="/layout/o/catalog-dashboard/terms">Terms and Conditions</a>
-        <a routerLink="/layout/o/catalog-dashboard/about">About</a>
-        <a routerLink="/layout/o/catalog-dashboard/who-are-we">Who are we?</a>
-        <a routerLink="/layout/o/catalog-dashboard/contact">Contact</a>
-      </footer>
     </main>
   </mat-sidenav-content>
 </mat-sidenav-container>

@@ -5,10 +5,11 @@ import { Router } from '@angular/router';
   selector: 'catalog-completion-item',
   template: `
     <main fxLayout="row" fxLayoutAlign="center center">
+      <!-- TODO #1387 -->
       <feedback-message
         [title]="header"
         [subTitle]="subTitle"
-        imageUrl="/assets/images/Dark_Fine_380.png"
+        imageUrl="Fine_380.png"
         (redirectUser)="navigate()"
       >
       </feedback-message>

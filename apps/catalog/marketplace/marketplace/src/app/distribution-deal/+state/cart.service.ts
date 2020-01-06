@@ -38,8 +38,8 @@ export class CartService extends CollectionService<CartState> {
 
   /**
    * Adds a deal to cart identified by "name" (default cart name is : "default")
-   * @param dealId 
-   * @param name 
+   * @param dealId
+   * @param name
    */
   // @TODO #1389 Use native akita-ng-fire functions : https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
   public async addDealToCart(dealId: string, name: string): Promise<CatalogCart> {
@@ -50,7 +50,7 @@ export class CartService extends CollectionService<CartState> {
 
   /**
    * Change cart status to : "submitted".
-   * @param amount 
+   * @param amount
    * @param currency
    * @param name
    */
@@ -72,18 +72,18 @@ export class CartService extends CollectionService<CartState> {
   // @TODO #1389 Use native akita-ng-fire functions : https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
   private async initCart(name: string = 'default'): Promise<CatalogCart> {
     const cart: CatalogCart = createCart({ name });
-    await this.db.doc<CatalogCart>(`orgs/${this.organizationQuery.getActiveId()}/cart/${name}`).set(cart);
+    await this.db.doc<CatalogCart>(`orgs/${this.organizationQuery.getActiveId()}/carts/${name}`).set(cart);
     return cart;
   }
 
   /**
-   * 
-   * @param cart 
+   *
+   * @param cart
    */
   // @TODO #1389 Remove this function if doesn't do anything more than native akita-ng-fire
   private async updateCart(cart: CatalogCart): Promise<CatalogCart> {
     await this.db
-      .doc<CatalogCart>(`orgs/${this.organizationQuery.getActiveId()}/cart/${cart.name}`)
+      .doc<CatalogCart>(`orgs/${this.organizationQuery.getActiveId()}/carts/${cart.name}`)
       .update(cart);
     return cart;
   }
@@ -101,11 +101,11 @@ export class CartService extends CollectionService<CartState> {
 
   /**
    * Returns cart for given name if exists or create new one
-   * @param name 
+   * @param name
    */
   // @TODO #1389 Use native akita-ng-fire functions : https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
-  public async getCart(name: string): Promise<CatalogCart> {
-    const snap = await this.db.doc<CatalogCart>(`orgs/${this.organizationQuery.getActiveId()}/cart/${name}`).ref.get();
+  public async getCart(name: string = 'default'): Promise<CatalogCart> {
+    const snap = await this.db.doc<CatalogCart>(`orgs/${this.organizationQuery.getActiveId()}/carts/${name}`).ref.get();
     const cart = snap.data() as CatalogCart;
     if (cart === undefined) {
       return this.initCart(name);
@@ -120,7 +120,7 @@ export class CartService extends CollectionService<CartState> {
 
   /**
    * Update the status of the wishlist to 'sent' and create new date at this moment.
-   * @param movies 
+   * @param movies
    */
   // @TODO #1389 Use native akita-ng-fire functions : https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
   public async updateWishlistStatus(movies: Movie[]) {
@@ -141,8 +141,8 @@ export class CartService extends CollectionService<CartState> {
   }
 
   /**
-   * 
-   * @param movieId 
+   *
+   * @param movieId
    */
   // @TODO #1389 Use native akita-ng-fire functions : https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
   public async removeMovieFromWishlist(movieId: string): Promise<boolean | Error> {
@@ -150,9 +150,11 @@ export class CartService extends CollectionService<CartState> {
     try {
       const wishlist = orgState.wishlist.map(wish => {
         if (wish.status === 'pending') {
-          wish.movieIds = wish.movieIds.includes(movieId) ? wish.movieIds.filter(id => id !== movieId) : wish.movieIds;
+          const movieIds = wish.movieIds.includes(movieId) ? wish.movieIds.filter(id => id !== movieId) : wish.movieIds;
+          return { ...wish, movieIds };
+        } else {
+          return wish;
         }
-        return wish;
       });
       await this.organizationService.update({ ...orgState, wishlist });
       return true;
@@ -162,8 +164,8 @@ export class CartService extends CollectionService<CartState> {
   }
 
   /**
-   * 
-   * @param movie 
+   *
+   * @param movie
    */
   public async updateWishlist(movie: Movie) {
     const orgState = this.organizationQuery.getActive();

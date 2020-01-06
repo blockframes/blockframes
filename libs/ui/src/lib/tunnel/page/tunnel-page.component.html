@@ -1,0 +1,19 @@
+<section fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="space-between start">
+  <article fxFlex.gt-sm="45">
+    <ng-content select="[title]"></ng-content>
+    <ng-content select="[subtitle]"></ng-content>
+    <a routerLink="#">Skip and do later ></a>
+    <ng-content select="[description]"></ng-content>
+    <div class="button-box">
+      <a mat-stroked-button color="accent" routerLink="#">
+        <mat-icon>arrow_back</mat-icon><span>Back</span>
+      </a>
+      <a mat-flat-button color="accent" routerLink="#">
+        <span>Next</span><mat-icon>arrow_forward</mat-icon>
+      </a>
+    </div>
+  </article>
+  <article fxFlex.gt-sm="45">
+    <ng-content select="[tunnel-form]"></ng-content>
+  </article>
+</section>

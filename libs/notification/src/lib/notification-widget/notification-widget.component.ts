@@ -8,7 +8,7 @@ import { PermissionsQuery } from 'libs/organization/src/lib/permissions/+state/p
 import { Invitation, InvitationStatus, InvitationType } from '@blockframes/invitation/types';
 
 @Component({
-  selector: 'notification-widget',
+  selector: 'overlay-notification-widget',
   templateUrl: './notification-widget.component.html',
   styleUrls: ['./notification-widget.component.scss'],
   providers: [InvitationQuery, InvitationStore],

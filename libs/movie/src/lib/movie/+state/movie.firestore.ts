@@ -81,7 +81,9 @@ export interface PromotionalElement {
   type: PromotionalElementTypesSlug,
   size?: ResourceSizesSlug,
   ratio?: ResourceRatioSlug,
-  media: ImgRef
+  media: ImgRef,
+  language?: LanguagesSlug,
+  country?: TerritoriesSlug,
 }
 
 export interface MoviePromotionalElements {
@@ -163,11 +165,20 @@ export interface DistributionDealDocumentWithDates extends DistributionDealRaw<D
 export interface DistributionDealDocument extends DistributionDealRaw<Timestamp> {
 }
 
+export interface MovieOfficialIds {
+  isan: string;
+  eidr: string;
+  imdb?: string;
+  custom?: string;
+  internal?: string;
+}
+
 export interface MovieMain {
   internalRef?: string,
   isan?: string,
   title: Title,
   directors?: Person[],
+  officialIds?: MovieOfficialIds,
   poster?: ImgRef,
   productionYear?: number,
   genres?: string[],

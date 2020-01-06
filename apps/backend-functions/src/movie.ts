@@ -1,9 +1,10 @@
 import { functions, db } from './internals/firebase';
-import { MovieDocument, OrganizationDocument, PublicUser } from './data/types';
+import { MovieDocument, OrganizationDocument, PublicUser, createDocPermissions } from './data/types';
 import { createNotification, NotificationType } from '@blockframes/notification/types';
 import { App } from '@blockframes/utils/apps';
 import { triggerNotifications } from './notification';
 import { flatten, isEqual } from 'lodash';
+import { getDocument } from './data/internals';
 
 /** Create a notification with user and movie. */
 function notifUser(userId: string, notificationType: NotificationType, movie: MovieDocument, user: PublicUser) {
@@ -39,19 +40,38 @@ export async function onMovieCreate(
   context: functions.EventContext
 ) {
   const movie = snap.data() as MovieDocument;
-  const movieId = context.params.movieId;
 
   const userSnapshot = await db.doc(`users/${movie._meta!.createdBy}`).get();
   const user = userSnapshot.data() as PublicUser;
 
-  if (!movie || !movieId) {
+  if (!movie) {
     console.error('Invalid movie data:', movie);
     throw new Error('movie update function got invalid movie data');
   }
 
-  const notifications = await createNotificationsForUsers(movie, NotificationType.movieTitleCreated, user);
+  try {
+    const { orgId } = await getDocument(`users/${user.uid}`);
+    const [organization, permissions, notifications ] = await Promise.all([
+      getDocument<OrganizationDocument>(`orgs/${orgId}`),
+      createDocPermissions({id: movie.id, ownerId: orgId}),
+      createNotificationsForUsers(movie, NotificationType.movieTitleCreated, user)
+    ]);
 
-  return triggerNotifications(notifications);
+    return Promise.all([
+      // Update or create the processedId to avoid multiple executions of the function.
+      db.doc(`movies/${movie.id}`).update({ processedId: context.eventId }),
+      // Push new movie id into organization's movieIds array.
+      db.doc(`orgs/${orgId}`).update({ movieIds: [...organization.movieIds, movie.id] }),
+      // Create permissions document for this new movie.
+      db.doc(`permissions/${orgId}/documentPermissions/${permissions.id}`).set(permissions),
+      // Trigger the notifications for the organization users.
+      triggerNotifications(notifications)
+    ]);
+  } catch (error) {
+    await db
+      .doc(`movies/${movie.id}`).update({ processedId: null });
+    throw error;
+  }
 }
 
 /** Remove a movie and send notifications to all users of concerned organizations. */

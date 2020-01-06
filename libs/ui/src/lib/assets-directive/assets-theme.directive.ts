@@ -1,11 +1,11 @@
-import { Directive, Input, HostBinding, ChangeDetectorRef } from '@angular/core';
+import { Directive, Input, HostBinding, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 import { Subscription, BehaviorSubject, combineLatest } from 'rxjs';
 import { ThemeService } from '../theme';
 
 @Directive({
   selector: 'img[asset]'
 })
-export class AssetDirective {
+export class AssetDirective implements OnInit, OnDestroy{
   private sub: Subscription;
   // Create a local variable to subscribe to
   private asset$ = new BehaviorSubject('');

@@ -5,7 +5,7 @@ import { AFM_DISABLE } from '@env';
 import { Observable, Subscription } from 'rxjs';
 import { Wishlist, WishlistStatus } from '@blockframes/organization';
 import { map } from 'rxjs/operators';
-import { BasketQuery } from '../distribution-right/+state/basket.query';
+import { CatalogCartQuery } from '../distribution-deal/+state/cart.query';
 import { AuthService } from '@blockframes/auth';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { MatSidenav } from '@angular/material';
@@ -22,16 +22,16 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   public currentWishlist$: Observable<Wishlist>;
   public subscription: Subscription;
 
-  @ViewChild(MatSidenav, {static: false}) sidenav: MatSidenav;
+  @ViewChild(MatSidenav, { static: false }) sidenav: MatSidenav;
 
   constructor(
     private routerQuery: RouterQuery,
     private contextMenuService: ContextMenuService,
-    private basketQuery: BasketQuery,
+    private catalogCartQuery: CatalogCartQuery,
     private service: AuthService
-    ) {
-      this.AFM_DISABLE = AFM_DISABLE;
-    }
+  ) {
+    this.AFM_DISABLE = AFM_DISABLE;
+  }
 
   ngOnInit() {
     this.contextMenuService.setMenu(CONTEXT_MENU);
@@ -42,10 +42,10 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
       this.contextMenuService.setMenu(CONTEXT_MENU);
     }
 
-    this.currentWishlist$ = this.basketQuery.wishlistWithMovies$.pipe(
+    this.currentWishlist$ = this.catalogCartQuery.wishlistWithMovies$.pipe(
       map(wishlists => wishlists.find(wishlist => wishlist.status === WishlistStatus.pending))
-      );
-    }
+    );
+  }
 
   ngAfterViewInit() {
     this.subscription = this.routerQuery.select('navigationId').subscribe(() => this.sidenav.close());

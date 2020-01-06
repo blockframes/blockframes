@@ -1,0 +1,88 @@
+<mat-toolbar>
+  <article fxLayout="row" fxLayoutAlign="space-between center">
+    <a mat-icon-button >
+      <img class="app-icon-link" src="assets/logo/LogoAC.svg" alt="logo Archipel Content">
+    </a>
+    <button mat-flat-button>
+      <mat-icon>save</mat-icon>
+      Save
+    </button>
+  </article>
+</mat-toolbar>
+
+<mat-sidenav-container>
+  <mat-sidenav opened="true" position="start" mode="side">
+    <section fxLayout="column" fxLayoutAlign="space-between center">
+      <mat-accordion>
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <article fxLayout="row" fxLayoutAlign="start center">
+              <mat-icon>home</mat-icon>
+              <mat-panel-title>Title Information</mat-panel-title>
+            </article>
+          </mat-expansion-panel-header>
+          <article fxLayout="column" class="expansion-margin">
+            <a routerLink="">Main information</a>
+            <a routerLink="synopsis">Synopsis</a>
+            <a routerLink="">Credits</a>
+            <a routerLink="">Budget, quota, critics</a>
+            <a routerLink="">Technical Information</a>
+            <a routerLink="keywords">Keywords</a>
+          </article>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <article fxLayout="row" fxLayoutAlign="start center">
+              <mat-icon>home</mat-icon>
+              <mat-panel-title>Licensed Rights</mat-panel-title>
+            </article>
+          </mat-expansion-panel-header>
+          <article fxLayout="column" class="expansion-margin">
+            <a routerLink="">Marketplace Rights</a>
+            <a routerLink="">Previously Deals</a>
+          </article>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <article fxLayout="row" fxLayoutAlign="start center">
+              <mat-icon>home</mat-icon>
+              <mat-panel-title>Uploaded Media</mat-panel-title>
+            </article>
+          </mat-expansion-panel-header>
+          <article fxLayout="column" class="expansion-margin">
+            <a routerLink="">Images</a>
+            <a routerLink="">Files & links</a>
+          </article>
+        </mat-expansion-panel>
+
+        <mat-expansion-panel>
+          <mat-expansion-panel-header>
+            <article fxLayout="row" fxLayoutAlign="start center">
+              <mat-icon>home</mat-icon>
+              <mat-panel-title>Legal Information</mat-panel-title>
+            </article>
+          </mat-expansion-panel-header>
+          <article fxLayout="column" class="expansion-margin">
+            <a routerLink="">Chain of Titles</a>
+            <a routerLink="">Marketplace Eval.</a>
+          </article>
+        </mat-expansion-panel>
+      </mat-accordion>
+
+      <article class="spinner-section">
+        <mat-spinner mode="determinate" value="55"></mat-spinner>
+        <span>Your progress</span>
+      </article>
+    </section>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <router-outlet></router-outlet>
+    <article fxLayout="row" fxLayoutAlign="end center">
+      <button mat-flat-button>Previous</button>
+      <button mat-flat-button>Next</button>
+    </article>
+  </mat-sidenav-content>
+</mat-sidenav-container>

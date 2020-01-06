@@ -1,30 +1,36 @@
-.app-icon,
-.app-icon-button {
-  border-radius: 0;
-  width: 157px;
-}
-
-button {
-  margin-top: 5px;
-  margin-right: 10px;
-  margin-bottom: 10px;
-}
-
-main {
-  height: 100%;
-  padding-top: var(--toolbarHeight);
-}
-
-account-profile-menu {
-  margin-left: 20px;
-}
-
-mat-sidenav {
-  position: fixed;
-  width: 360px;
-  border-radius: 0 5px 5px 0;
-}
-
 mat-sidenav-container {
   height: 100%;
+  #dashboard-navbar {
+    width: 300px;
+    border: none;
+    .mat-toolbar {
+      border: none;
+    }
+  }
+}
+
+mat-sidenav-content {
+  #catalog-toolbar {
+    border: none;
+  }
+}
+
+.logo {
+  height: 80%;
+}
+
+
+.search-bar {
+  flex: 1;
+  margin: 0 15px 0 15px;
+  padding-top: 20px;
+   .mat-form-field{
+     width: 100%;
+   }
+}
+
+.avatar {
+  border-radius: 50%;
+  height: 50px;
+  width: 50px;
 }

@@ -1,0 +1,23 @@
+<main fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center center" fxLayoutGap="30px">
+  <section fxFlex.gt-sm="45">
+    <h1>Add a Title and Licensed Rights</h1>
+    <h2>The 4-step process of adding a listing and distribution rights will take about a half-hour to complete. </h2>
+    <p>You can fill it out in one go or over time. You may navigate between steps, but all sections must be completed before submitting to Archipel Content for validation. </p>
+    <a mat-flat-button color="accent" routerLink="#">
+      <span>Begin</span>
+    </a>
+  </section>
+  <section fxFlex.gt-sm="45" fxLayout="row wrap" fxLayoutAlign="flex-start" fxLayoutAlign.lt-sm="center">
+    <ng-container *ngFor="let content of cardContents">
+      <mat-card>
+        <article fxLayout="column" fxLayoutAlign="space-between center">
+          <img class="card-image" src="http://via.placeholder.com/100x100" alt="Placeholder image">
+          <div>
+            <span><b>{{ content.title }}</b></span>
+            <p class="mat-caption">{{ content.description }}</p>
+          </div>
+        </article>
+      </mat-card>
+    </ng-container>
+  </section>
+</main>
