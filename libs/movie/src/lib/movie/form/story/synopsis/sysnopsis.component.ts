@@ -3,7 +3,7 @@ import { ControlContainer, FormControl } from '@angular/forms';
 
 
 @Component({
-  selector: '[formControl] movie-form-synopsis, [formControlName] movie-form-synopsis, movie-form-synopsis',
+  selector: '[formGroup] movie-form-synopsis, [formGroupName] movie-form-synopsis',
   templateUrl: './synopsis.component.html',
   styleUrls: ['./synopsis.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
