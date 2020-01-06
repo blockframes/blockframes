@@ -10,6 +10,7 @@ import { MovieSalesInfoForm } from './sales-info/sales-info.form';
 import { MovieVersionInfoForm } from './version-info/version-info.form';
 import { MovieFestivalPrizesForm } from './festival-prizes/festival-prizes.form';
 import { MovieSalesAgentDealForm } from './sales-agent-deal/sales-agent-deal.form';
+import { Injectable } from '@angular/core';
 
 
 function createMovieControls(movie: Partial<Movie>) {
@@ -29,11 +30,10 @@ function createMovieControls(movie: Partial<Movie>) {
 
 type MovieControl = ReturnType<typeof createMovieControls>
 
+@Injectable({ providedIn: 'root' })
 export class MovieForm extends FormEntity<MovieControl> {
-  protected builder : FormBuilder;
-  constructor(movie: Movie) {
-    super(createMovieControls(movie));
-    this.builder = new FormBuilder();
+  constructor() {
+    super(createMovieControls({}));
   }
 
   reset(value?: EntityControl<Movie>, options?: {

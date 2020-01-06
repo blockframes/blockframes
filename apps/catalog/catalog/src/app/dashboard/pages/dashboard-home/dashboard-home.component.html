@@ -1,8 +1,53 @@
 <section test-id="content" page-id="catalog-homepage">
-    <article fxLayout="column" fxLayoutAlign="center center">
-        <h1 class="mat-display-3">Welcome to Bigger Boat - Dashboard</h1>
-        <p class="mat-body-1">
-            A consolidation of film libraries to create new opportunities through secure transactions.</p>
-        <button mat-button color="accent" test-id="import" [routerLink]="['/layout/o/home/import']">Upload avails & films doc</button>
-    </article>
+  <article fxLayout="column" fxLayoutAlign="center center">
+    <h1 class="mat-display-3">Welcome to Catalog - Dashboard</h1>
+    <p class="mat-body-1"> A consolidation of film libraries to create new opportunities through secure transactions.</p>
+    <button mat-button color="accent" test-id="import" [routerLink]="['/layout/o/catalog-dashboard/import']">Upload avails & films doc</button>
+    <ng-container *ngIf="movies$ | async as movies">
+      <ng-container *ngIf="movies.length; else noMovies">
+        <article fxLayout="column">
+
+          <ng-container *ngIf="loading$ | async; else loaded"> Loading </ng-container>
+
+          <ng-template #loaded>
+            <article fxLayout="row wrap" fxLayoutGap="30px" fxLayout.lt-md="column">
+              <!-- Movie Cards -->
+              <movie-card *ngFor="let movie of movies" [movie]="movie" [link]="['/layout/o/catalog-dashboard/catalog', movie.id]">
+                <ng-container movieCardAction>
+                  <div fxLayout="row" fxLayoutAlign="end end">
+                    <button mat-icon-button [matMenuTriggerFor]="menu">
+                      <mat-icon color="primary">more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu" xPosition="before">
+                      <button mat-menu-item [matMenuTriggerFor]="subMenu">
+                        <mat-icon color="primary">control_camera</mat-icon>
+                        <span>Open in...</span>
+                      </button>
+                      <a mat-menu-item [routerLink]="['/layout/o/catalog-dashboard/catalog', movie.id, 'edit']">
+                        <mat-icon color="primary">edit</mat-icon>
+                        <span>Edit</span>
+                      </a>
+                      <button mat-menu-item (click)="remove(movie)">
+                        <mat-icon color="primary">delete_outline</mat-icon>
+                        <span>Delete</span>
+                      </button>
+                    </mat-menu>
+                    <mat-menu #subMenu="matMenu">
+                      <a mat-menu-item [routerLink]="[movie.id]">Explorer</a>
+                    </mat-menu>
+                  </div>
+                </ng-container>
+              </movie-card>
+            </article>
+          </ng-template>
+        </article>
+      </ng-container>
+
+      <!-- Component to display if there is no movie -->
+      <ng-template #noMovies>
+        <movie-create (addMovie)="addNewMovie()"></movie-create>
+      </ng-template>
+    </ng-container>
+
+  </article>
 </section>

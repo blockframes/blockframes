@@ -1,7 +1,8 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { ContextMenuService } from '@blockframes/ui';
-import { CONTEXT_MENU } from '@blockframes/utils/routes/context-menu/app/catalog-dashboard';
-
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
+import { Observable } from 'rxjs';
+import { map, shareReplay } from 'rxjs/operators';
+import { MovieTunnelService } from '../movie-tunnel/movie-tunnel.service';
 @Component({
   selector: 'catalog-layout',
   templateUrl: './layout.component.html',
@@ -9,11 +10,17 @@ import { CONTEXT_MENU } from '@blockframes/utils/routes/context-menu/app/catalog
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
-export class LayoutComponent implements OnInit {
+export class LayoutComponent{
 
-  constructor(private contextMenuService: ContextMenuService) {}
+  isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
+  .pipe(
+    map(result => result.matches),
+    shareReplay()
+  );
 
-  ngOnInit() {
-    this.contextMenuService.setMenu(CONTEXT_MENU);
+  constructor(private breakpointObserver: BreakpointObserver, private service: MovieTunnelService) {}
+
+  startTunnel(){
+    this.service.openTunnel();
   }
 }

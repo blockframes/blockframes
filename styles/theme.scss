@@ -14,6 +14,8 @@
 @import './components/mat-form';
 @import './components/mat-chips';
 @import 'footer';
+@import './components/bf-widget.scss';
+@import './components/mat-sidenav.scss';
 
 @mixin bf-material-theme($theme) {
   @include mat-bf-button-theme($theme);
@@ -25,12 +27,20 @@
   @include mat-bf-table-theme($theme);
   @include mat-bf-toolbar-theme($theme);
   @include bf-footer-theme($theme);
+  @include bf-widget-theme($theme);
+  @include mat-bf-sidenav-theme($theme);
 }
 
 .light-theme {
   @include angular-material-theme($bf-light-theme);
   @include sat-datepicker-theme($bf-light-theme);
   @include bf-material-theme($bf-light-theme);
+  // every components inside of dashboard-navbar should be always in the dark theme
+  #dashboard-navbar {
+    background-color: mat-color($bf-dark-background, app-bar);
+    @include angular-material-theme($bf-dark-theme);
+    @include bf-material-theme($bf-dark-theme);
+  }
 }
 
 .dark-theme {
@@ -38,3 +48,4 @@
   @include sat-datepicker-theme($bf-dark-theme);
   @include bf-material-theme($bf-dark-theme);
 }
+

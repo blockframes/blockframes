@@ -1,0 +1,9 @@
+@mixin bf-widget-theme($theme) {
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+
+  .bf-widget .mat-card .mat-card-footer {
+    background-color: mat-color($background, hover);
+    border-radius: none;
+  }
+}

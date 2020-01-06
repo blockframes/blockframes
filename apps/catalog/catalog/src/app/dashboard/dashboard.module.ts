@@ -1,50 +1,54 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
-import { MovieCreateComponent } from '@blockframes/movie/movie/components/movie-create/movie-create.component';
+import { LayoutModule } from './layout/layout.module';
+import { LayoutComponent } from './layout/layout.component';
+import { MovieCollectionGuard } from '@blockframes/movie';
 
 const routes: Routes = [
   {
     path: '',
-    redirectTo: 'home',
-    pathMatch: 'full'
+    component: LayoutComponent,
+    canActivate: [MovieCollectionGuard],    // todo(#1476) move to a more precise place (overview or/and deals maybe)
+    canDeactivate: [MovieCollectionGuard],  // todo(#1476) move to a more precise place (overview or/and deals maybe)
+    children: [
+      {
+        path: 'overview'
+      },
+      {
+        path: 'titles'
+      },
+      {
+        path: 'deals'
+      },
+      {
+        path: 'faq'
+      },
+      {
+        path: 'about',
+        loadChildren: () => import('./pages/about-page/about.module').then(m => m.AboutModule)
+      },
+      {
+        path: 'who-are-we',
+        loadChildren: () => import('./pages/team-page/team.module').then(m => m.TeamModule)
+      },
+      {
+        path: 'contact',
+        loadChildren: () => import('./pages/contact-page/contact.module').then(m => m.ContactModule)
+      },
+      {
+        path: 'terms',
+        loadChildren: () => import('./pages/privacy-page/privacy.module').then(m => m.PrivacyModule)
+      },
+    ]
   },
   {
-    path: 'about',
-    loadChildren: () => import('./pages/about-page/about.module').then(m => m.AboutModule)
-  },
-  {
-    path: 'who-are-we',
-    loadChildren: () => import('./pages/team-page/team.module').then(m => m.TeamModule)
-  },
-  {
-    path: 'contact',
-    loadChildren: () => import('./pages/contact-page/contact.module').then(m => m.ContactModule)
-  },
-  {
-    path: 'terms',
-    loadChildren: () => import('./pages/privacy-page/privacy.module').then(m => m.PrivacyModule)
-  },
-  {
-    path: 'no-movies',
-    component: MovieCreateComponent
-  },
-  {
-    path: 'home',
-    loadChildren: () => import('@blockframes/movie').then(m => m.MovieModule)
-  },
-  {
-    path: 'import',
-    loadChildren: () => import('@blockframes/movie/import').then(m => m.ImportMovieModule)
-  },
-  {
-    path: 'catalog',
-    loadChildren: () =>
-      import('./pages/dashboard-home/dashboard-home.module').then(m => m.DashboardHomeModule)
+    path: 'movie-tunnel/:movieId',
+    loadChildren: () => import('./movie-tunnel/movie-tunnel.module').then(m => m.MovieTunnelModule)
   }
 ];
 
 @NgModule({
-  imports: [CommonModule, RouterModule.forChild(routes)]
+  imports: [LayoutModule, RouterModule.forChild(routes)],
+  declarations: []
 })
 export class DashboardModule {}
