@@ -1,93 +1,48 @@
-.light-theme {
-  .mat-display-4 {
-    color: mat-color($bf-light-font, display-4);
-  }
-  .mat-display-3 {
-    color: mat-color($bf-light-font, display-3);
-  }
-  .mat-display-2 {
-    color: mat-color($bf-light-font, display-2);
-  }
-  .mat-display-1 {
-    color: mat-color($bf-light-font, display-1);
-  }
-  h1,
-  .mat-h1,
-  .mat-headline {
-    color: mat-color($bf-light-font, h1);
-  }
-  h2,
-  .mat-h2,
-  .mat-title {
-    color: mat-color($bf-light-font, h2);
-  }
-  h3,
-  .mat-h3,
-  .mat-subheading-1 {
-    color: mat-color($bf-light-font, h3);
-  }
-  h4,
-  .mat-h4,
-  .mat-subhheading-2 {
-    color: mat-color($bf-light-font, h4);
-  }
-  .mat-body-1,
-  .mat-body {
-    color: mat-color($bf-light-font, mat-body-1);
-  }
-  .mat-body-2,
-  .mat-body-strong {
-    color: mat-color($bf-light-font, mat-body-2);
-  }
-  .mat-caption,
-  .mat-small {
-    color: mat-color($bf-light-font, mat-caption);
-  }
-}
+@mixin bf-color-font($theme) {
+  $color-font: map-get($theme, font);
 
-.dark-theme {
   .mat-display-4 {
-    color: mat-color($bf-dark-font, display-4);
+    color: mat-color($color-font, display-4);
   }
   .mat-display-3 {
-    color: mat-color($bf-dark-font, display-3);
+    color: mat-color($color-font, display-3);
   }
   .mat-display-2 {
-    color: mat-color($bf-dark-font, display-2);
+    color: mat-color($color-font, display-2);
   }
   .mat-display-1 {
-    color: mat-color($bf-dark-font, display-1);
+    color: mat-color($color-font, display-1);
   }
   h1,
   .mat-h1,
   .mat-headline {
-    color: mat-color($bf-dark-font, h1);
+    color: mat-color($color-font, h1);
   }
   h2,
   .mat-h2,
   .mat-title {
-    color: mat-color($bf-dark-font, h2);
+    color: mat-color($color-font, h2);
   }
   h3,
   .mat-h3,
   .mat-subheading-1 {
-    color: mat-color($bf-dark-font, h3);
+    color: mat-color($color-font, h3);
   }
   h4,
   .mat-h4,
   .mat-subhheading-2 {
-    color: mat-color($bf-dark-font, h4);
+    color: mat-color($color-font, h4);
   }
   .mat-body-1,
   .mat-body {
-    color: mat-color($bf-dark-font, mat-body-1);
+    color: mat-color($color-font, mat-body-1);
   }
   .mat-body-2,
   .mat-body-strong {
-    color: mat-color($bf-dark-font, mat-body-2);
+    color: mat-color($color-font, mat-body-2);
   }
   .mat-caption,
   .mat-small {
-    color: mat-color($bf-dark-font, mat-caption);
+    color: mat-color($color-font, mat-caption);
   }
 }

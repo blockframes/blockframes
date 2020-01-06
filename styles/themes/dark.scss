@@ -132,24 +132,6 @@ $bf-dark-foreground: (
   dark-text:    #80818a,
 );
 
-///////////
-// THEME //
-///////////
-
-$bf-dark-primary: mat-palette($mat-dark-bf-blue, 200, 50, 500);
-$bf-dark-accent: mat-palette($mat-dark-bf-orange, 400, 50, 700);
-$bf-dark-warn: mat-palette($mat-dark-bf-red, 500);
-
-$bf-dark-theme: (
-  // Standard
-  primary: $bf-dark-primary,
-  accent: $bf-dark-accent,
-  warn: $bf-dark-warn,
-  is-dark: true,
-  foreground: $bf-dark-foreground,
-  background: $bf-dark-background
-);
-
 //////////
 // FONT //
 //////////
@@ -165,4 +147,24 @@ $bf-dark-font: (
   mat-body-1: #878EAC,
   mat-body-2: #b1b8db,
   mat-caption: #444960
+);
+
+
+///////////
+// THEME //
+///////////
+
+$bf-dark-primary: mat-palette($mat-dark-bf-blue, 200, 50, 500);
+$bf-dark-accent: mat-palette($mat-dark-bf-orange, 400, 50, 700);
+$bf-dark-warn: mat-palette($mat-dark-bf-red, 500);
+
+$bf-dark-theme: (
+  // Standard
+  primary: $bf-dark-primary,
+  accent: $bf-dark-accent,
+  warn: $bf-dark-warn,
+  is-dark: true,
+  foreground: $bf-dark-foreground,
+  background: $bf-dark-background,
+  font: $bf-dark-font
 );
