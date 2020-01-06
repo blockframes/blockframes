@@ -98,6 +98,18 @@ export class MovieService extends CollectionService<MovieState> {
     return this.db.doc(`movies/${movieId}`);
   }
 
+  /**
+   * Fetch a movie from its internal reference (example : AAA1)
+   * @param internalRef
+   */
+  public async getFromInternalRef(internalRef: string): Promise<Movie> {
+    const movieSnapShot = await this.db
+      .collection('movies', ref => ref.where('main.internalRef', '==', internalRef))
+      .get().toPromise();
+
+    return movieSnapShot.docs.length ? createMovie(movieSnapShot.docs[0].data()) : undefined;
+  }
+
   /////////////////////////////
   // CRUD DISTRIBUTION DEALS //
   /////////////////////////////

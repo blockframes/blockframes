@@ -137,7 +137,7 @@ enum SpreadSheetContract {
 }
 
 enum SpreadSheetContractTitle {
-  titleId, // ie: movieId
+  titleCode, // ie: filmCode
   licensedRightIds, // ie: distributionDealIds @see #1388
   commission,
   feeLabel,
@@ -1436,7 +1436,7 @@ export class ViewExtractedElementsComponent {
         while (spreadSheetRow[SpreadSheetContract.titleStuffIndexStart + titleIndex]) {
           const currentIndex = SpreadSheetContract.titleStuffIndexStart + titleIndex;
           titleIndex += titlesFieldsCount;
-          const titleDetails = this.processTitleDetails(spreadSheetRow, currentIndex);
+          const titleDetails = await this.processTitleDetails(spreadSheetRow, currentIndex);
           contract.titles[titleDetails.titleId] = titleDetails;
         }
 
@@ -1459,7 +1459,6 @@ export class ViewExtractedElementsComponent {
         this.cdRef.detectChanges();
       }
     });
-
 
   }
 
@@ -1503,13 +1502,16 @@ export class ViewExtractedElementsComponent {
     return importErrors;
   }
 
-  private processTitleDetails(spreadSheetRow: any[], currentIndex: number): ContractTitleDetail {
+  private async processTitleDetails(spreadSheetRow: any[], currentIndex: number): Promise<ContractTitleDetail> {
     const titleDetails = createContractTitleDetail();
     titleDetails.price.fees = [];
 
-    if (spreadSheetRow[SpreadSheetContractTitle.titleId + currentIndex]) {
-      // @todo #1462 try to match with an existing title
-      titleDetails.titleId = spreadSheetRow[SpreadSheetContractTitle.titleId + currentIndex];
+    if (spreadSheetRow[SpreadSheetContractTitle.titleCode + currentIndex]) {
+      const title = await this.movieService.getFromInternalRef(spreadSheetRow[SpreadSheetContractTitle.titleCode + currentIndex]);
+      if(title === undefined){
+        throw new Error(`Movie ${spreadSheetRow[SpreadSheetContractTitle.titleCode + currentIndex]} is missing id database.`);
+      }
+      titleDetails.titleId = title.id;
     }
 
     if (spreadSheetRow[SpreadSheetContractTitle.licensedRightIds + currentIndex]) {
