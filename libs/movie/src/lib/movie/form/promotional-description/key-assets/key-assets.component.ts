@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ControlContainer } from '@angular/forms';
 
 @Component({
-  selector: '[formControl] movie-form-key-assets, [formControlName] movie-form-key-assets, movie-form-key-assets',
+  selector: '[formGroup] movie-form-key-assets, [formGroupName] movie-form-key-assets, movie-form-key-assets',
   templateUrl: './key-assets.component.html',
   styleUrls: ['./key-assets.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
