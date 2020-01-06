@@ -40,27 +40,28 @@ export async function onMovieCreate(
   context: functions.EventContext
 ) {
   const movie = snap.data() as MovieDocument;
-  const movieId = context.params.movieId;
 
   const userSnapshot = await db.doc(`users/${movie._meta!.createdBy}`).get();
   const user = userSnapshot.data() as PublicUser;
 
-  if (!movie || !movieId) {
+  if (!movie) {
     console.error('Invalid movie data:', movie);
     throw new Error('movie update function got invalid movie data');
   }
 
   try {
     const { orgId } = await getDocument(`users/${user.uid}`);
-    const organization = await getDocument<OrganizationDocument>(`orgs/${orgId}`);
-    const permissions = createDocPermissions({id: movie.id, ownerId: orgId});
-    const notifications = await createNotificationsForUsers(movie, NotificationType.movieTitleCreated, user);
+    const [organization, permissions, notifications ] = await Promise.all([
+      getDocument<OrganizationDocument>(`orgs/${orgId}`),
+      createDocPermissions({id: movie.id, ownerId: orgId}),
+      createNotificationsForUsers(movie, NotificationType.movieTitleCreated, user)
+    ]);
 
     return Promise.all([
       // Update or create the processedId to avoid multiple executions of the function.
       db.doc(`movies/${movie.id}`).update({ processedId: context.eventId }),
       // Push new movie id into organization's movieIds array.
-      db.doc(`orgs/${orgId}`).update({ movieIds: [...organization.movieIds, movieId]}),
+      db.doc(`orgs/${orgId}`).update({ movieIds: [...organization.movieIds, movie.id] }),
       // Create permissions document for this new movie.
       db.doc(`permissions/${orgId}/documentPermissions/${permissions.id}`).set(permissions),
       // Trigger the notifications for the organization users.
