@@ -146,6 +146,10 @@ jobs:
           command: npm run e2e:catalog-dashboard
           when: always
       - run:
+          name: catalog e2e tests
+          command: npm run e2e:catalog
+          when: always
+      - run:
           name: movie-financing e2e tests
           command: npm run e2e:movie-financing
           when: always
