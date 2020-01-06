@@ -8,7 +8,7 @@ import {
   deliveryStatuses
 } from './delivery.model';
 import { Movie, MovieQuery } from '@blockframes/movie';
-import { OrganizationQuery } from '@blockframes/organization';
+import { OrganizationQuery, createDocPermissions } from '@blockframes/organization';
 import { BFDoc } from '@blockframes/utils';
 import { MaterialQuery, createMaterial, isTheSame } from '../../material/+state';
 import {
@@ -23,8 +23,8 @@ import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
 import { CreateTx } from '@blockframes/ethers';
 import { TxFeedback } from '@blockframes/ethers/types';
 import { StakeholderService } from '../stakeholder/+state/stakeholder.service';
-import { CollectionService, CollectionConfig, Query, awaitSyncQuery } from 'akita-ng-fire';
-import { tap, switchMap } from 'rxjs/operators';
+import { CollectionService, CollectionConfig, Query, awaitSyncQuery, WriteOptions } from 'akita-ng-fire';
+import { tap, switchMap, filter } from 'rxjs/operators';
 import { MovieMaterialService } from '../../material/+state/movie-material.service';
 import { DeliveryMaterialService } from '../../material/+state/delivery-material.service';
 import { TemplateMaterialService } from '../../material/+state/template-material.service';
@@ -174,6 +174,14 @@ export class DeliveryService extends CollectionService<DeliveryState> {
     });
 
     return id;
+  }
+
+  onCreate(delivery: Delivery, { write }: WriteOptions) {
+    // When a movie is created, we also create a permissions document for it.
+    const organizationId = this.organizationQuery.getActiveId();
+    const documentPermissions = createDocPermissions({ id: delivery.id, ownerId: organizationId });
+    const documentPermissionsRef = this.db.doc(`permissions/${organizationId}/documentPermissions/${documentPermissions.id}`).ref;
+    write.set(documentPermissionsRef, documentPermissions);
   }
 
   /** Add a new delivery by copying the movie's materials */
