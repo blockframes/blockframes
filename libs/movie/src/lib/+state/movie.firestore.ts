@@ -3,17 +3,8 @@ import { RawRange, NumberRange } from "@blockframes/utils/common-interfaces/rang
 import { Person, Credit, SalesAgent, Company } from "@blockframes/utils/common-interfaces/identity";
 import { firestore } from "firebase/app";
 import { ImgRef } from "@blockframes/utils/image-uploader";
-import { TermsRaw } from "@blockframes/utils/common-interfaces/terms";
 
 type Timestamp = firestore.Timestamp;
-
-export const enum LicenseStatus {
-  unknown = 'unknown',
-  undernegotiation = 'under negotiation',
-  waitingsignature = 'waiting for signature',
-  waitingpaiment = 'waiting for paiment',
-  paid = 'paid',
-}
 
 export const enum WorkType {
   movie = 'Movie',
@@ -30,17 +21,6 @@ export const enum WorkType {
 export const enum StoreType {
   catalog = 'Catalog',
   line_up = 'Line-Up',
-}
-
-export const enum FormatProfile {
-  unknown = 'unknown',
-  HD = 'HD',
-  SD = 'SD',
-  UHD = 'UHD',
-  _3D = '3D',
-  _3DSD = '3DSD',
-  _3DHD = '3DHD',
-  _3UHD = '3DUHD'
 }
 
 export interface MovieVersionInfo {
@@ -130,42 +110,6 @@ export interface MovieLanguageSpecification {
 }
 
 export type MovieLanguageSpecificationContainer = Record<LanguagesSlug, MovieLanguageSpecification>;
-
-export interface HoldbackRaw<D> {
-  terms: TermsRaw<D>,
-  media: MediasSlug,
-}
-
-export interface HoldbackWithDates extends HoldbackRaw<Date> {
-}
-
-// Distribution deal raw interface, formerly called MovieSaleRaw
-interface DistributionDealRaw<D> {
-  id: string,
-  publicId?: string,
-  licenseType: MediasSlug[];
-  terms: TermsRaw<D>;
-  territory: TerritoriesSlug[];
-  territoryExcluded: TerritoriesSlug[];
-  assetLanguage: { [language in LanguagesSlug]: MovieLanguageSpecification };
-  exclusive: boolean;
-  titleInternalAlias: string;
-  formatProfile: FormatProfile;
-  download: boolean;
-  contractId?: string;
-  licenseStatus: LicenseStatus;
-  reportingId?: string;
-  deliveryIds?: string;
-  multidiffusion?: number;
-  holdbacks?: HoldbackRaw<D>[];
-  catchUp?: TermsRaw<D>;
-}
-
-export interface DistributionDealDocumentWithDates extends DistributionDealRaw<Date> {
-}
-
-export interface DistributionDealDocument extends DistributionDealRaw<Timestamp> {
-}
 
 export interface MovieOfficialIds {
   isan: string;

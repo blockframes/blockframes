@@ -10,6 +10,7 @@ export * from './lib/guards/movie-organization-list.guard';
 export * from './lib/guards/movie-collection.guard';
 // Movie Modules
 export * from './lib/movie.module';
+export * from './lib/distribution-deals/selection-table/form-selection.module';
 // Movie Components
 export { MovieViewComponent } from './lib/pages/movie-view/movie-view.component';
 export { MovieEditableComponent } from './lib/pages/movie-editable/movie-editable.component';

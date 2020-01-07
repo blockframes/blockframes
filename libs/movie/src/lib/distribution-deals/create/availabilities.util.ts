@@ -1,6 +1,7 @@
-import { DateRange } from '@blockframes/utils/common-interfaces/range';
-import { DistributionDeal, MovieSalesAgentDeal } from '@blockframes/movie/+state';
+import { DateRange } from '@blockframes/utils/common-interfaces/date-range';
+import { MovieSalesAgentDeal } from '@blockframes/movie/+state';
 import { MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
+import { DistributionDeal } from '../+state/distribution-deal.model';
 
 /**
  * These function should be used in connection. For instance, we look for movie distribution deals in
