@@ -1,15 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input  } from '@angular/core';
+import { FormControl } from '@angular/forms';
 
 @Component({
-  selector: 'movie-form-production-year',
+  selector: '[form] movie-form-production-year',
   templateUrl: './production-year.component.html',
-  styleUrls: ['./production-year.component.scss']
+  styleUrls: ['./production-year.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ProductionYearComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit() {
-  }
-
+export class ProductionYearComponent {
+  @Input() form: FormControl;
 }
