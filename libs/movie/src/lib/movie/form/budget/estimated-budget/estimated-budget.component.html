@@ -1,0 +1,11 @@
+<form [formGroup]="form" >
+  <mat-form-field appearance="outline">
+    <mat-label>Budget Range</mat-label>
+    <span matPrefix>$&nbsp;</span>
+    <mat-select>
+      <mat-option *ngFor="let budget of budgetList" [value]="budget">
+        {{ budget.from }} - {{ budget.to }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</form>
