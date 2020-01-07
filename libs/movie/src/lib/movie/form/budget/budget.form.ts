@@ -9,7 +9,7 @@ function createBudgetFormControl(entity?: Partial<MovieBudget>) {
     totalBudget: new FormControl(totalBudget),
     budgetCurrency: new FormControl(budgetCurrency),
     detailledBudget: new FormControl(detailledBudget),
-    range: new NumberRangeForm(estimatedBudget)
+    estimatedBudget: new NumberRangeForm(estimatedBudget)
   }
 }
 
