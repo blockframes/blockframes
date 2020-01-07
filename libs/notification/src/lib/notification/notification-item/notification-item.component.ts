@@ -8,7 +8,7 @@ import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
 interface Information {
   message: string;
   imgRef: string;
-  defaultImg: string;q
+  defaultImg?: string;
 }
 
 @Component({
@@ -32,7 +32,7 @@ export class NotificationItemComponent {
   }
 
   /** Creates a message based on the notification.type. */
-  public get informations(): {} {
+  public get information(): Information {
     switch (this.notification.type) {
       case NotificationType.inviteOrganization:
         return {
@@ -72,26 +72,57 @@ export class NotificationItemComponent {
         };
       case NotificationType.pathToDocument:
         return {
-          message: `You accepted the invitation. Now you can work on the document.`,
+          message: 'You accepted the invitation. Now you can work on the document.',
           imgRef: this.notification.movie.poster,
           defaultImg: 'WelcomeDelivery_500.png'
         };
       case NotificationType.organizationAcceptedByArchipelContent:
-        return 'Your organization has been accepted by Archipel Content !';
+        return {
+          message: 'Your organization has been accepted by Archipel Content !',
+          imgRef: 'WelcomeArchipelContent_500.png'
+        };
       case NotificationType.movieTitleUpdated:
-        return `${this.notification.user.name} ${this.notification.user.surname} edited ${this.movieTitleInternational}.`;
+        return {
+          message: `${this.notification.user.name} ${this.notification.user.surname} edited ${this.movieTitleInternational}.`,
+          imgRef: this.notification.movie.poster,
+          defaultImg: 'WelcomeDelivery_500.png'
+        };
       case NotificationType.movieTitleCreated:
-        return `${this.notification.user.name} ${this.notification.user.surname} created ${this.movieTitleInternational}.`;
+        return {
+          message: `${this.notification.user.name} ${this.notification.user.surname} created ${this.movieTitleInternational}.`,
+          imgRef: this.notification.movie.poster,
+          defaultImg: 'WelcomeDelivery_500.png'
+        };
       case NotificationType.movieDeleted:
-        return `${this.notification.user.name} ${this.notification.user.surname} deleted ${this.movieTitleInternational}.`;
+        return {
+          message: `${this.notification.user.name} ${this.notification.user.surname} deleted ${this.movieTitleInternational}.`,
+          imgRef: this.notification.movie.poster,
+          defaultImg: 'WelcomeDelivery_500.png'
+        };
       case NotificationType.invitationFromOrganizationToUserDecline:
-        return `${this.notification.user.name} ${this.notification.user.surname} has declined your organization's invitation.`;
+        return {
+          message: `${this.notification.user.name} ${this.notification.user.surname} has declined your organization's invitation.`,
+          imgRef: this.notification.user.avatar,
+          defaultImg: 'Avatar_40.png'
+        };
       case NotificationType.invitationFromUserToJoinOrgDecline:
-        return `Your organization has refused the request from ${this.notification.user.name} ${this.notification.user.surname}.`;
+        return {
+          message: `Your organization has refused the request from ${this.notification.user.name} ${this.notification.user.surname}.`,
+          imgRef: this.notification.user.avatar,
+          defaultImg: 'Avatar_40.png'
+        };
       case NotificationType.memberAddedToOrg:
-        return `${this.notification.user.name} ${this.notification.user.surname} has been added to ${this.notification.organization.name}.`;
+        return {
+          message: `${this.notification.user.name} ${this.notification.user.surname} has been added to ${this.notification.organization.name}.`,
+          imgRef: this.notification.user.avatar,
+          defaultImg: 'Avatar_40.png'
+        };
       case NotificationType.memberRemovedFromOrg:
-        return `${this.notification.user.name} ${this.notification.user.surname} has been removed from ${this.notification.organization.name}.`;
+        return {
+          message: `${this.notification.user.name} ${this.notification.user.surname} has been removed from ${this.notification.organization.name}.`,
+          imgRef: this.notification.user.avatar,
+          defaultImg: 'Avatar_40.png'
+        };
     }
   }
 
