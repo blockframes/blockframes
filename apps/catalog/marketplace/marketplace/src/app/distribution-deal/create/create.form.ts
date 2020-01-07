@@ -4,13 +4,13 @@ import {
   TerritoriesSlug,
   TERRITORIES_SLUG,
   LanguagesSlug
-} from '@blockframes/movie/movie/static-model/types';
+} from '@blockframes/movie/static-model/types';
 import {
   createMovieLanguage,
   createLanguageControl
 } from '../../movie/search/search.form';
 import { MovieMain, DistributionDeal, createDistributionDeal } from '@blockframes/movie';
-import { MovieLanguageSpecification } from '@blockframes/movie/movie/+state/movie.firestore';
+import { MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
 
 function createDistributionDealControls(deal: Partial<DistributionDeal> = {}) {
   // Create controls for the languages

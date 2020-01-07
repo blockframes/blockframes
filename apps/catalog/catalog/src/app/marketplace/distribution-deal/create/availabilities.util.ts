@@ -1,6 +1,6 @@
 import { DateRange } from '@blockframes/utils/common-interfaces/date-range';
-import { DistributionDeal, MovieSalesAgentDeal } from '@blockframes/movie/movie/+state';
-import { MovieLanguageSpecification } from '@blockframes/movie/movie/+state/movie.firestore';
+import { DistributionDeal, MovieSalesAgentDeal } from '@blockframes/movie/+state';
+import { MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
 
 /**
  * These function should be used in connection. For instance, we look for movie distribution deals in
@@ -10,8 +10,8 @@ import { MovieLanguageSpecification } from '@blockframes/movie/movie/+state/movi
  * Because of that flow, all properties which can be specified by the customer are mandatory.
  * That is why we need to implement a good error handeling and show results and solution
  * in the UI.
- * 
- * @dev workflow is described here : https://www.notion.so/cascade8/Avails-Search-ad38ce0bca424b6fa3036b0ab36164a0## 
+ *
+ * @dev workflow is described here : https://www.notion.so/cascade8/Avails-Search-ad38ce0bca424b6fa3036b0ab36164a0##
  */
 
 /**

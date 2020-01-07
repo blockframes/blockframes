@@ -1,5 +1,5 @@
-import { MovieCurrenciesSlug } from "@blockframes/movie/movie/static-model/types";
-import { getCodeIfExists } from "@blockframes/movie/movie/static-model/staticModels";
+import { MovieCurrenciesSlug } from "@blockframes/movie/static-model/types";
+import { getCodeIfExists } from "@blockframes/movie/static-model/staticModels";
 
 export interface Price {
   amount: number;
@@ -22,7 +22,7 @@ export function createPrice(price: Partial<Price> = {}): Price {
   const defaultCurrency = getCodeIfExists('MOVIE_CURRENCIES','euro');
   return {
     amount: 0,
-    currency: defaultCurrency ? defaultCurrency : '', 
+    currency: defaultCurrency ? defaultCurrency : '',
     ...price
   }
 }

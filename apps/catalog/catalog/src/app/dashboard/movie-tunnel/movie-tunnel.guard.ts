@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CanDeactivate, CanActivate, Router, ActivatedRouteSnapshot } from '@angular/router';
-import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
+import { MovieForm } from '@blockframes/movie/form/movie.form';
 import { MovieQuery } from '@blockframes/movie';
 import { MovieTunnelComponent } from './movie-tunnel.component';
 

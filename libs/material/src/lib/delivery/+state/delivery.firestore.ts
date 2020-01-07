@@ -1,4 +1,4 @@
-import { default as staticModels } from '@blockframes/movie/movie/static-model/staticModels';
+import { default as staticModels } from '@blockframes/movie/static-model/staticModels';
 import { firestore } from 'firebase';
 
 export type Timestamp = firestore.Timestamp;

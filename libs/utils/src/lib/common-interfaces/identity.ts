@@ -1,5 +1,5 @@
 import { ImgRef, createImgRef } from "../image-uploader";
-import { StakeholderRolesSlug, CreditRolesSlug, LegalRolesSlug } from "@blockframes/movie/movie/static-model/types";
+import { StakeholderRolesSlug, CreditRolesSlug, LegalRolesSlug } from "@blockframes/movie/static-model/types";
 
 
 //////////////////////////
@@ -21,7 +21,7 @@ interface IdentityRaw {
 
   /**
    * @see extending interface for enums
-   * can be used for various usages: credit role, stakeholder role (for contracts) 
+   * can be used for various usages: credit role, stakeholder role (for contracts)
    */
   role?: string,
 }
@@ -58,7 +58,7 @@ export interface Party extends StakeholderRaw {
   role: LegalRolesSlug, // overrided role scope from Person interface
 }
 
-// This is just for more readable code : 
+// This is just for more readable code :
 
 export type SalesAgent = Person;
 

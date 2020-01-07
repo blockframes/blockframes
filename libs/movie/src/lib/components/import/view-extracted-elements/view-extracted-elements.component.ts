@@ -27,7 +27,7 @@ import { SSF$Date } from 'ssf/types';
 import { getCodeIfExists } from '../../../static-model/staticModels';
 import { SSF } from 'xlsx';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
-import { LicenseStatus, MovieLanguageTypes } from '@blockframes/movie/movie/+state/movie.firestore';
+import { LicenseStatus, MovieLanguageTypes } from '@blockframes/movie/+state/movie.firestore';
 import { createCredit, createParty } from '@blockframes/utils/common-interfaces/identity';
 import { createContract, validateContract, Contract } from '@blockframes/marketplace/app/distribution-deal/+state/cart.model';
 import { ContractStatus } from '@blockframes/marketplace/app/distribution-deal/+state/cart.firestore';
@@ -102,7 +102,7 @@ enum SpreadSheetMovie {
 enum SpreadSheetDistributionDeal {
   internalRef,
   internationalTitle, // unused
-  licenseeName, // old operatorName 
+  licenseeName, // old operatorName
   displayLicenseeName, // old showOperatorName
   rightsStart,
   rightsEnd,
@@ -1057,7 +1057,7 @@ export class ViewExtractedElementsComponent {
 
           const licensee = createParty();
           licensee.role = 'licensee';
-          
+
           // DISPLAY NAME
           if (spreadSheetRow[SpreadSheetDistributionDeal.licenseeName]) {
             licensee.displayName = spreadSheetRow[SpreadSheetDistributionDeal.licenseeName];

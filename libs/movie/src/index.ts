@@ -1,20 +1,20 @@
 // Movie exports
 // Movie State
-export * from './lib/movie/+state/movie.model';
-export * from './lib/movie/+state/movie.query';
-export * from './lib/movie/+state/movie.service';
-export * from './lib/movie/+state/movie.store';
+export * from './lib/+state/movie.model';
+export * from './lib/+state/movie.query';
+export * from './lib/+state/movie.service';
+export * from './lib/+state/movie.store';
 // Movie Guards
-export * from './lib/movie/guards/movie-active.guard';
-export * from './lib/movie/guards/movie-organization-list.guard';
-export * from './lib/movie/guards/movie-collection.guard';
+export * from './lib/guards/movie-active.guard';
+export * from './lib/guards/movie-organization-list.guard';
+export * from './lib/guards/movie-collection.guard';
 // Movie Modules
-export * from './lib/movie/movie.module';
+export * from './lib/movie.module';
 // Movie Components
-export { MovieViewComponent } from './lib/movie/pages/movie-view/movie-view.component';
-export { MovieEditableComponent } from './lib/movie/pages/movie-editable/movie-editable.component';
-export { MovieCreateModule } from './lib/movie/components/movie-create/movie-create.module';
-export * from './lib/movie/static-model';
+export { MovieViewComponent } from './lib/pages/movie-view/movie-view.component';
+export { MovieEditableComponent } from './lib/pages/movie-editable/movie-editable.component';
+export { MovieCreateModule } from './lib/components/movie-create/movie-create.module';
+export * from './lib/static-model';
 
 // Movie Component Module
-export * from './lib/movie/components/movie-picker/movie-picker.module';
+export * from './lib/components/movie-picker/movie-picker.module';

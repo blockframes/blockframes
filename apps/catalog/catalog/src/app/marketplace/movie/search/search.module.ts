@@ -1,6 +1,6 @@
 // Components
 import { MovieCardModule } from "@blockframes/ui/movie-card/movie-card.module";
-import { MovieDisplayListModule } from '@blockframes/movie/movie/components/display-list/display-list.module';
+import { MovieDisplayListModule } from '@blockframes/movie/components/display-list/display-list.module';
 import { TranslateSlugModule } from "@blockframes/utils/pipes/translate-slug.module";
 
 // Pages

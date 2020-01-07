@@ -1,4 +1,4 @@
-import { Movie, DistributionDeal } from '@blockframes/movie/movie/+state/movie.model';
+import { Movie, DistributionDeal } from '@blockframes/movie/+state/movie.model';
 import { Injectable } from '@angular/core';
 import { CatalogCart, createCart, CartStatus } from './cart.model';
 import { OrganizationQuery, OrganizationService, Wishlist } from '@blockframes/organization';
@@ -7,8 +7,8 @@ import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { WishlistStatus } from '@blockframes/organization';
 import { AuthQuery } from '@blockframes/auth';
 import { AngularFireFunctions } from '@angular/fire/functions';
-import { MovieCurrenciesSlug } from '@blockframes/movie/movie/static-model/types';
-import { MovieService } from '@blockframes/movie/movie/+state/movie.service';
+import { MovieCurrenciesSlug } from '@blockframes/movie/static-model/types';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 
 const wishlistFactory = (movieId: string): Wishlist => {
   return {

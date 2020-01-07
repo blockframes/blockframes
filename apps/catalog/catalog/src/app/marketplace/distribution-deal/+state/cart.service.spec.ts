@@ -1,4 +1,4 @@
-import { MovieStore } from '@blockframes/movie/movie/+state';
+import { MovieStore } from '@blockframes/movie/+state';
 import { Injectable } from '@angular/core';
 import { SpectatorService, createServiceFactory } from '@ngneat/spectator/jest';
 

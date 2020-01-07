@@ -1,7 +1,7 @@
 import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ChangeDetectionStrategy, Component, HostBinding, OnInit } from '@angular/core';
-import { Movie, MovieQuery } from '@blockframes/movie/movie/+state';
+import { Movie, MovieQuery } from '@blockframes/movie/+state';
 import { CartService } from '../../distribution-deal/+state/cart.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
