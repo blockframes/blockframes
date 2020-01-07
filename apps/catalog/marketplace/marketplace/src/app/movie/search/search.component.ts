@@ -17,7 +17,7 @@ import {
 } from '@angular/core';
 import { BreakpointObserver } from '@angular/cdk/layout';
 // Blockframes
-import { Movie, MovieService } from '@blockframes/movie/+state';
+import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import {
@@ -55,8 +55,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Index } from 'algoliasearch';
 import flatten from 'lodash/flatten';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { CatalogCartQuery } from '../../distribution-deal/+state';
+import { CatalogCartQuery } from '../../distribution-deal/+state/cart.query';
 import { MovieDocumentWithDates } from '@blockframes/movie/+state/movie.firestore';
+import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state/distribution-deal.service';
 
 @Component({
   selector: 'catalog-movie-search',
@@ -156,7 +157,7 @@ export class MarketplaceSearchComponent implements OnInit {
   constructor(
     private router: Router,
     private routerQuery: RouterQuery,
-    private movieService: MovieService,
+    private distributionDealService: DistributionDealService,
     private cartService: CartService,
     private catalogCartQuery: CatalogCartQuery,
     private snackbar: MatSnackBar,
@@ -211,7 +212,7 @@ export class MarketplaceSearchComponent implements OnInit {
         if (AFM_DISABLE) {
           //TODO #1146
           return movies.filter(async movie => {
-            const deals = await this.movieService.getDistributionDeals(movie.id);
+            const deals = await this.distributionDealService.getDistributionDeals(movie.id);
             return filterMovie(movie, filterOptions, deals);
           });
         } else {

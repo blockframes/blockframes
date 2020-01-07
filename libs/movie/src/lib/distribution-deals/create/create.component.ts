@@ -36,6 +36,8 @@ import { OrganizationQuery } from '@blockframes/organization/+state/organization
 import { createParty } from '@blockframes/utils/common-interfaces/identity';
 import { createDistributionDeal } from '../+state/distribution-deal.model';
 import { DistributionDealService } from '../+state';
+import { createContract, validateContract } from '@blockframes/contract/+state/contract.model';
+import { CartService } from '@blockframes/marketplace/app/distribution-deal/+state/cart.service';
 
 enum ResearchSteps {
   START = 'Start',

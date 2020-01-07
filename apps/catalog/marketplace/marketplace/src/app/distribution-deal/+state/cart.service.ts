@@ -8,7 +8,6 @@ import { WishlistStatus } from '@blockframes/organization';
 import { AuthQuery } from '@blockframes/auth';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { MovieCurrenciesSlug } from '@blockframes/movie/static-model/types';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
 
 const wishlistFactory = (movieId: string): Wishlist => {
   return {
@@ -26,8 +25,7 @@ export class CartService extends CollectionService<CartState> {
     private organizationService: OrganizationService,
     private authQuery: AuthQuery,
     private functions: AngularFireFunctions,
-    protected store: CartStore,
-    private movieService: MovieService,
+    protected store: CartStore
   ) {
     super(store);
   }

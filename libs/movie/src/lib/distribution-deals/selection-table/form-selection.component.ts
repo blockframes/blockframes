@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { SelectionModel } from '@angular/cdk/collections';
-import { DateRange } from '@blockframes/utils/common-interfaces/date-range';
+import { DateRange } from '@blockframes/utils/common-interfaces/range';
 
 /**
  * @TODO (#1388) should be removed to use something more like actual movie model

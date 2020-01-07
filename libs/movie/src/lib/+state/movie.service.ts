@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestoreDocument } from '@angular/fire/firestore/document/document';
-import { OrganizationQuery, OrganizationService, PermissionsService } from '@blockframes/organization';
+import { OrganizationQuery } from '@blockframes/organization';
 import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
 import { switchMap } from 'rxjs/operators';
 import { createMovie, Movie } from './movie.model';
 import { MovieState, MovieStore } from './movie.store';
-import { Contract } from '@blockframes/marketplace/app/distribution-deal/+state/cart.model';
 import { AuthQuery } from '@blockframes/auth';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 
@@ -87,21 +85,5 @@ export class MovieService extends CollectionService<MovieState> {
     }
 
     return this.update(id, cleanModel(movie));
-  }
-
-  //////////////////
-  /// CONTRACT STUFF
-  //////////////////
-  // TODO: move this into specific contract lib => ISSUE#1440
-  /**
-   * @param contract
-   */
-  public async addContract(contract: Contract): Promise<string> {
-    if (!contract.id) {
-      contract.id = this.db.createId();
-    }
-
-    await this.db.collection('contracts').doc(contract.id).set(contract);
-    return contract.id;
   }
 }

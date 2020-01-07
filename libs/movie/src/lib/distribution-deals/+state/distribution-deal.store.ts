@@ -4,16 +4,12 @@ import { DistributionDeal } from './distribution-deal.model';
 
 export interface DistributionDealState extends EntityState<DistributionDeal>, ActiveState<string> {}
 
-const initialState = {
-  active: null
-};
-
 @Injectable({
   providedIn: 'root'
 })
-@StoreConfig({ name: 'distrbution-deals' })
+@StoreConfig({ name: 'distribution-deals' })
 export class DistributionDealStore extends EntityStore<DistributionDealState, DistributionDeal> {
   constructor() {
-    super(initialState);
+    super();
   }
 }
