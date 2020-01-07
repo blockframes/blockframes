@@ -23,13 +23,15 @@
         </mat-form-field>
 
         <!-- FRESHNESS -->
-        <mat-form-field appearance="outline">
-          <mat-label>Freshness</mat-label>
-          <mat-select formControlName="workType">
-            <mat-option value="catalog">Catalog</mat-option>
-            <mat-option value="line_up">Line-Up</mat-option>
-          </mat-select>
-        </mat-form-field>
+        <div formGroupName="storeConfig" fxLayout="column">
+          <mat-form-field appearance="outline">
+            <mat-label>Freshness</mat-label>
+            <mat-select formControlName="storeType">
+              <mat-option value="catalog">Catalog</mat-option>
+              <mat-option value="line_up">Line-Up</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
 
         <!-- PRODUCTION STATUS -->
         <mat-form-field appearance="outline">
@@ -78,16 +80,16 @@
     </mat-card-header>
     <mat-card-content>
       <!-- DIRECTORS -->
-      <article formArrayName="directors" *ngFor="let director of main.get['directors']; let i = index;">
+      <article formArrayName="directors" *ngFor="let director of main.directors.controls; let i = index;">
         <div [formGroupName]="i" fxLayout="column">
           <mat-form-field appearance="outline">
             <mat-label>Director's Firstname</mat-label>
-            <input matInput formControlName="firstName" placeholder="ex. Woody">
+            <input matInput formControlName="firstName" placeholder="ex. Woody" required>
           </mat-form-field>
 
           <mat-form-field appearance="outline">
             <mat-label>Director's Lastname</mat-label>
-            <input matInput formControlName="lastName" placeholder="ex. Allen">
+            <input matInput formControlName="lastName" placeholder="ex. Allen" required>
           </mat-form-field>
 
           <mat-form-field appearance="outline">
@@ -96,14 +98,17 @@
             <mat-hint>Selective filmography to present the director</mat-hint>
           </mat-form-field>
         </div>
+
+        <mat-divider inset="true"></mat-divider>
+
       </article>
 
-      <!-- <article fxLayout="column" fxLayoutAlign="center center">
+      <article fxLayout="column" fxLayoutAlign="center center">
         <button mat-mini-fab color="primary" (click)="main.addDirector()">
           <mat-icon>add</mat-icon>
         </button>
         <p>Add an other director</p>
-      </article> -->
+      </article>
     </mat-card-content>
   </mat-card>
 
@@ -112,7 +117,7 @@
       <mat-card-title>Country(ies) of Origin</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <article formArrayName="originCountries" *ngFor="let country of main.controls['originCountries'].value; let i = index" fxLayout="column">
+      <article formArrayName="originCountries" *ngFor="let country of main.originCountries.controls; let i = index" fxLayout="column">
 
         <!-- COUNTRIES OF ORIGIN -->
         <mat-form-field appearance="outline">
@@ -135,7 +140,7 @@
       </article>
 
       <article fxLayout="column" fxLayoutAlign="center center">
-        <button mat-mini-fab color="primary" (click)="main.addDirector()">
+        <button mat-mini-fab color="primary" (click)="main.addOriginCountry()">
           <mat-icon>add</mat-icon>
         </button>
         <span>Add an other country</span>
@@ -145,7 +150,6 @@
 
       <article fxLayout="column">
         <!-- ORIGINAL LANGUAGES -->
-
         <mat-form-field appearance="outline">
           <mat-label>Original Language</mat-label>
           <mat-select formControlName="languages" placeholder="Film Languages" multiple required>
@@ -161,33 +165,7 @@
       </article>
     </mat-card-content>
   </mat-card>
-</form>
 
-<!-- <form [formGroup]="salesInfo">
-  <mat-card>
-    <mat-card-header>
-      <mat-card-title>Theatrical Release</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <article fxLayout="row" fxLayoutAlign="space-between center">
-        <p>Theatrical Release</p>
-        <mat-slide-toggle color="primary"></mat-slide-toggle>
-      </article>
-
-      <article fxLayout="column"> -->
-        <!-- THEATRICAL RELEASE -->
-        <!-- <mat-form-field appearance="outline">
-          <mat-label>Release Date in Country of Origin</mat-label>
-          <input matInput [matDatepicker]="originReleaseDate" placeholder="MM/DD/YYYY">
-          <mat-datepicker-toggle matSuffix [for]="originReleaseDate"></mat-datepicker-toggle>
-          <mat-datepicker #originReleaseDate></mat-datepicker>
-        </mat-form-field>
-      </article>
-    </mat-card-content>
-  </mat-card>
-</form> -->
-
-<form [formGroup]="main">
   <mat-card>
     <mat-card-header>
       <mat-card-title>Genre</mat-card-title>
@@ -208,18 +186,19 @@
         </mat-form-field>
 
         <!-- IF OTHER SPECIFY -->
-        <mat-form-field appearance="outline">
+        <!-- TODO #1478 Data model/UI : Specify genre must be in a specific new array -->
+        <!-- <mat-form-field appearance="outline">
           <mat-label>Specify</mat-label>
           <input matInput formControlName="genres" placeholder="Specify">
-        </mat-form-field>
+        </mat-form-field> -->
       </article>
 
-      <article fxLayout="column" fxLayoutAlign="center center">
+      <!-- <article fxLayout="column" fxLayoutAlign="center center">
         <button mat-mini-fab color="primary" (click)="main.addGenres()">
           <mat-icon>add</mat-icon>
         </button>
         <span>Add an other genre</span>
-      </article>
+      </article> -->
 
       <mat-divider inset="true"></mat-divider>
 
@@ -234,55 +213,9 @@
         <!-- PRINCIPAL CAST -->
         <!-- <mat-form-field appearance="outline">
           <mat-label>Principal Cast Member(s)</mat-label>
-          <input matInput formControlName="castMember" placeholder="Principal Cast Member">
+          <input matInput formControlName="castMember" placeholder="Principal Cast Member" required>
         </mat-form-field> -->
       </article>
     </mat-card-content>
   </mat-card>
 </form>
-
-<!-- <form [formGroup]="festivalPrizes">
-  <mat-card>
-    <mat-card-header>
-      <mat-card-title>Festivals</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <article fxLayout="column">
-        FESTIVAL NAME
-        <mat-form-field appearance="outline">
-          <mat-label>Festival Name</mat-label>
-          <input matInput formNameControl="name" placeholder="Festival Name">
-        </mat-form-field>
-
-        AWARD OR SELECTION
-        <mat-form-field appearance="outline">
-          <mat-label>Award or Selection</mat-label>
-          <input matInput formNameControl="award" placeholder="Festival Award or Selection">
-        </mat-form-field>
-
-        FESTIVAL YEAR
-        <mat-form-field appearance="outline">
-          <mat-label>Year</mat-label>
-          <input matInput formNameControl="year" placeholder="Year">
-        </mat-form-field>
-
-        PREMIERE
-        <mat-form-field appearance="outline">
-          <mat-label>Premiere</mat-label>
-          <mat-select formNameControl="premiere" placeholder="Premiere">
-            <mat-option>World</mat-option>
-          </mat-select>
-        </mat-form-field>
-      </article>
-
-      <mat-divider inset="true"></mat-divider>
-
-      <article fxLayout="column" fxLayoutAlign="center center">
-        <button mat-mini-fab color="primary" (click)="main.addDirector()">
-          <mat-icon>add</mat-icon>
-        </button>
-        <span>Add an other festival</span>
-      </article>
-    </mat-card-content>
-  </mat-card>
-</form> -->

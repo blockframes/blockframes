@@ -12,6 +12,11 @@ const tunnelRoutes: Routes = [
         path: '',
         loadChildren: () => import('./start/start-tunnel.module').then(m => m.StartTunnelModule)
       },
+      // Page 2
+      {
+        path: 'main',
+        loadChildren: () => import('./main/main.module').then(m => m.MainTunnelModule)
+      },
       {
         path: 'synopsis',
         loadChildren: () => import('./synopsis/synopsis.module').then(m => m.TunnelSynopsisModule)

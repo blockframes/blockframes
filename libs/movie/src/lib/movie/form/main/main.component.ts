@@ -34,7 +34,7 @@ export class MovieFormMainComponent implements OnInit {
 
   /* Selects with search bar */
   private selectSearchSubScriptions() : void {
-    // this.countries$ = this.filterSelectSearch(this.main.controls['originCountries'], this.staticModels['TERRITORIES']);
+    this.countries$ = this.filterSelectSearch(this.countriesFilterCtrl, this.staticModels['TERRITORIES']);
     this.languages$ = this.filterSelectSearch(this.languagesFilterCtrl, this.staticModels['LANGUAGES']);
     this.genres$ = this.filterSelectSearch(this.genresFilterCtrl, this.staticModels['GENRES']);
   }
