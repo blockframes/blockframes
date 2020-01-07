@@ -86,7 +86,7 @@ service cloud.firestore {
       allow read: if userHasValidOrg();
       allow create: if userHasValidOrg()
       	&& documentIdChecked(movieId, 'movies')
-        && orgCan('canCreate', userOrgId(), movieId);
+        && canCreateNewPermissions(userOrgId(), movieId);
       allow update: if isOrgAdmin(userId(), userOrgId())
         && documentIdChecked(movieId, 'movies')
         && incomingData().id == existingData().id
@@ -111,7 +111,7 @@ service cloud.firestore {
     	allow read: if isStakeholder(userOrgId());
       allow create: if userHasValidOrg()
       	&& documentIdChecked(deliveryId, 'deliveries')
-        && orgCan('canCreate', userOrgId(), deliveryId);
+        && canCreateNewPermissions(userOrgId(), deliveryId);
       allow update: if orgCan('canUpdate', userOrgId(), deliveryId);
       allow delete: if orgCan('canDelete', userOrgId(), deliveryId);
 
@@ -198,7 +198,11 @@ service cloud.firestore {
     }
 
     function getDocumentPermissions(orgId, docId) {
-    	return getAfter(/databases/$(database)/documents/permissions/$(orgId)/documentPermissions/$(docId)).data;
+    	return get(/databases/$(database)/documents/permissions/$(orgId)/documentPermissions/$(docId)).data;
+    }
+
+    function canCreateNewPermissions(orgId, docId) {
+    	return getAfter(/databases/$(database)/documents/permissions/$(orgId)/documentPermissions/$(docId)).data.canCreate == true;
     }
 
     function getOrgPermissions(orgId) {
