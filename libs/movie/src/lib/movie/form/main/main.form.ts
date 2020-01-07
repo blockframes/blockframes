@@ -1,7 +1,13 @@
 import { FormEntity, FormList, yearValidators } from '@blockframes/utils';
 import { MovieMain, Credit, createMovieMain, Movie, createTitle } from '../../+state';
 import { Validators, FormControl } from '@angular/forms';
+<<<<<<< HEAD
 import { createCredit, Stakeholder, createStakeholder } from '@blockframes/utils/common-interfaces/identity';
+=======
+import { createCredit, createCompany } from '@blockframes/utils/common-interfaces/identity';
+import { StoreConfig } from '../../+state/movie.firestore';
+import { createStoreConfig } from '../../+state/movie.model';
+>>>>>>> create different component for main form
 
 function createCreditFormControl(credit?: Partial<Credit>) {
   const { firstName, lastName, role } = createCredit(credit);
@@ -17,6 +23,22 @@ export type CreditFormControl = ReturnType<typeof createCreditFormControl>;
 export class MovieCreditForm extends FormEntity<CreditFormControl> {
   constructor(credit?: Credit) {
     super(createCreditFormControl(credit));
+  }
+}
+
+function createStoreConfigControl(storeConfig?: Partial<StoreConfig>) {
+  const { display, storeType } = createStoreConfig(storeConfig);
+  return {
+    display: new FormControl(display),
+    storeType: new FormControl(storeType),
+  };
+}
+
+export type StoreConfigControl = ReturnType<typeof createStoreConfigControl>;
+
+export class StoreConfigForm extends FormEntity<StoreConfigControl> {
+  constructor(storeConfig?: StoreConfig) {
+    super(createStoreConfigControl(storeConfig));
   }
 }
 
@@ -78,7 +100,7 @@ function createMovieMainControls(main : Partial<MovieMain> = {}) {
     directors: FormList.factory(entity.directors, el => new DirectorForm(el)),
     poster: new FormControl(entity.poster),
     productionYear: new FormControl(entity.productionYear, yearValidators),
-    genres: FormList.factory(entity.genres, el => new FormControl(el)),
+    genres: new FormControl(entity.genres),
     originCountries: FormList.factory(entity.originCountries, el => new FormControl(el)),
     originalLanguages: new FormControl(entity.originalLanguages),
     status: new FormControl(entity.status , [Validators.required]),
@@ -87,6 +109,14 @@ function createMovieMainControls(main : Partial<MovieMain> = {}) {
     stakeholders: FormList.factory(entity.stakeholders, el => new StakeholdersForm(el)),
     customGenres: new FormControl(entity.customGenres),
     workType: new FormControl(entity.workType),
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> WIP movie main form
+=======
+    storeConfig: new StoreConfigForm(entity.storeConfig)
+>>>>>>> create different component for main form
+>>>>>>> create different component for main form
   }
 }
 
@@ -131,13 +161,15 @@ export class MovieMainForm extends FormEntity<MovieMainControl>{
     this.directors.removeAt(i);
   }
 
-  public addOriginCountry(country: string): void {
-    this.originCountries.push(country);
+  public addOriginCountry(country?: string): void {
+    const originCountryControl = new FormControl(country);
+    this.originCountries.push(originCountryControl);
   }
 
-  public addGenres(genre: string): void {
-    this.genres.push(genre);
-  }
+  // public addGenres(genre?: string): void {
+  //   const genreCtrl = new FormControl(genre);
+  //   this.genres.push(genreCtrl);
+  // }
 
   public addProductionCompany(): void {
     const credit = new ProductionCompagnyForm();

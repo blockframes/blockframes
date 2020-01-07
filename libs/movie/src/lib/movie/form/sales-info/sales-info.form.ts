@@ -50,6 +50,7 @@ function createMovieSalesInfoControls(salesInfo: Partial<MovieSalesInfo> = {}){
     format: new FormControl(entity.format),
     formatQuality: new FormControl(entity.formatQuality),
     soundFormat: new FormControl(entity.soundFormat)
+    theatricalRelease: new FormControl(entity.theatricalRelease),
   }
 }
 
