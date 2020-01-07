@@ -11,7 +11,21 @@ import {
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { SelectionModel } from '@angular/cdk/collections';
-import { MovieData } from '../+state';
+import { DateRange } from '@blockframes/utils/common-interfaces/date-range';
+
+/**
+ * @TODO (#1388) should be removed to use something more like actual movie model
+ */
+export interface MovieData {
+  id: string;
+  movieName: string;
+  duration: DateRange;
+  territory: string;
+  rights: string;
+  languages: string;
+  dubbed: string;
+  subtitle: string;
+}
 
 @Component({
   selector: 'catalog-form-selection',

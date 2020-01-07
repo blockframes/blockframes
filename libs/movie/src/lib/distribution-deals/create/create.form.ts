@@ -5,12 +5,35 @@ import {
   TERRITORIES_SLUG,
   LanguagesSlug
 } from '@blockframes/movie/static-model/types';
-import {
-  createMovieLanguage,
-  createLanguageControl
-} from '../../movie/search/search.form';
-import { MovieMain, DistributionDeal, createDistributionDeal } from '@blockframes/movie';
+import { MovieMain } from '@blockframes/movie';
 import { MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
+import { DistributionDeal, createDistributionDeal } from '../+state/distribution-deal.model';
+
+/* ------------- */
+/* CREATE OBJECT */
+/* ------------- */
+
+export function createMovieLanguage(
+  movieLanguage: Partial<MovieLanguageSpecification> = {}
+): MovieLanguageSpecification {
+  return {
+    original: false,
+    dubbed: false,
+    subtitle: false,
+    ...movieLanguage
+  } as MovieLanguageSpecification;
+}
+
+export function createLanguageControl(
+  language: MovieLanguageSpecification,
+  disableDubbed?: boolean
+) {
+  return new FormGroup({
+    original: new FormControl(language.original),
+    dubbed: new FormControl({ value: language.dubbed, disabled: disableDubbed }),
+    subtitle: new FormControl(language.subtitle)
+  });
+}
 
 function createDistributionDealControls(deal: Partial<DistributionDeal> = {}) {
   // Create controls for the languages

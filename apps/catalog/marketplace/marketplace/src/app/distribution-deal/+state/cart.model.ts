@@ -1,4 +1,3 @@
-import { DateRange } from '@blockframes/utils/common-interfaces/range';
 import { Price, createPrice } from '@blockframes/utils/common-interfaces/price';
 import { ContractDocumentWithDates, ContractStatus, ContractTitleDetail } from './cart.firestore';
 import { createTerms } from '@blockframes/utils/common-interfaces/terms';
@@ -16,20 +15,6 @@ export interface CatalogCart {
   status: CartStatus;
   deals: string[];
   price: Price;
-}
-
-/**
- * @TODO (#1388) should be removed to use something more like actual movie model
- */
-export interface MovieData {
-  id: string;
-  movieName: string;
-  duration: DateRange;
-  territory: string;
-  rights: string;
-  languages: string;
-  dubbed: string;
-  subtitle: string;
 }
 
 export type Contract = ContractDocumentWithDates;

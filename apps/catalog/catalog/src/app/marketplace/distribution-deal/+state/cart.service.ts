@@ -1,4 +1,4 @@
-import { Movie, DistributionDeal } from '@blockframes/movie/+state/movie.model';
+import { Movie } from '@blockframes/movie/+state/movie.model';
 import { Injectable } from '@angular/core';
 import { CatalogCart, createCart, CartStatus } from './cart.model';
 import { OrganizationQuery, OrganizationService, Wishlist } from '@blockframes/organization';
@@ -8,7 +8,8 @@ import { WishlistStatus } from '@blockframes/organization';
 import { AuthQuery } from '@blockframes/auth';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { MovieCurrenciesSlug } from '@blockframes/movie/static-model/types';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
+import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state/distribution-deal.service';
 
 const wishlistFactory = (movieId: string): Wishlist => {
   return {
@@ -26,8 +27,8 @@ export class CartService extends CollectionService<CartState> {
     private organizationService: OrganizationService,
     private authQuery: AuthQuery,
     private functions: AngularFireFunctions,
+    private distributionDealService: DistributionDealService,
     protected store: CartStore,
-    private movieService: MovieService,
   ) {
     super(store);
   }
@@ -96,7 +97,7 @@ export class CartService extends CollectionService<CartState> {
   public async getMyDeals(type: string = 'licensor'): Promise<DistributionDeal[]> {
     const query = this.db.collectionGroup('distributiondeals', ref => ref.where(`${type}.orgId`, '==', this.organizationQuery.getActiveId()))
     const myDeals = await query.get().toPromise();
-    return myDeals.docs.map(doc => this.movieService.formatDistributionDeal(doc.data()));
+    return myDeals.docs.map(doc => this.distributionDealService.formatDistributionDeal(doc.data()));
   }
 
   /**

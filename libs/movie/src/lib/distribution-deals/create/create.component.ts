@@ -5,14 +5,13 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  HostBinding,
   OnDestroy,
   OnInit,
   ViewChild
 } from '@angular/core';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { Router } from '@angular/router';
-import { Movie, MovieQuery, MovieService, createDistributionDeal } from '@blockframes/movie/+state';
+import { Movie, MovieQuery } from '@blockframes/movie/+state';
 import {
   MEDIAS_SLUG,
   MediasSlug,
@@ -32,10 +31,11 @@ import {
 } from './availabilities.util';
 import { DistributionDealForm } from './create.form';
 import { getCodeIfExists } from '@blockframes/movie/static-model/staticModels';
-import { CartService, createContract, validateContract } from '../+state';
 import { MatSnackBar } from '@angular/material';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { createParty } from '@blockframes/utils/common-interfaces/identity';
+import { createDistributionDeal } from '../+state/distribution-deal.model';
+import { DistributionDealService } from '../+state';
 
 enum ResearchSteps {
   START = 'Start',
@@ -104,7 +104,7 @@ export class DistributionDealCreateComponent implements OnInit, OnDestroy {
     private query: MovieQuery,
     private router: Router,
     private organizationQuery: OrganizationQuery,
-    private movieService: MovieService,
+    private distributionDealService: DistributionDealService,
     private cartService: CartService,
     private snackBar: MatSnackBar
   ) { }
@@ -199,7 +199,7 @@ export class DistributionDealCreateComponent implements OnInit, OnDestroy {
     if(!validateContract(contract)) {
       this.snackBar.open(`Error while creating contract..`, 'close', { duration: 2000 });
     } else {
-      const dealId = await this.movieService.addDistributionDeal(this.movie.id, distributionDeal, contract);
+      const dealId = await this.distributionDealService.addDistributionDeal(this.movie.id, distributionDeal, contract);
       await this.cartService.addDealToCart(dealId, 'default');
       this.snackBar.open(`Distribution deal saved. Redirecting ...`, 'close', { duration: 2000 });
       this.router.navigateByUrl(`layout/o/catalog/selection/overview`);
@@ -281,7 +281,7 @@ export class DistributionDealCreateComponent implements OnInit, OnDestroy {
           ///////////////
 
           // Do we have others distribution deals overrlapping current daterange ?
-          const deals = await this.movieService.getDistributionDeals(this.movie.id);
+          const deals = await this.distributionDealService.getDistributionDeals(this.movie.id);
           const dealsInDateRange = getDistributionDealsInDateRange(value.duration, deals);
           if (dealsInDateRange.length === 0) {
             // We have no intersection with other deals, so we are OK !
