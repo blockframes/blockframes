@@ -114,7 +114,7 @@ export interface MovieBudget {
   totalBudget: string, // WIP #1052 use Price Interface?
   budgetCurrency?: string, // WIP #1052
   detailledBudget?: any // WIP #1052
-  estimatedBudget: NumberRange
+  estimatedBudget?: NumberRange
 }
 
 export const enum MovieLanguageTypes {
