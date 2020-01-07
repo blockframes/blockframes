@@ -11,14 +11,50 @@ const routes: Routes = [
     canActivate: [MovieCollectionGuard],    // todo(#1476) move to a more precise place (overview or/and deals maybe)
     canDeactivate: [MovieCollectionGuard],  // todo(#1476) move to a more precise place (overview or/and deals maybe)
     children: [
+      // Home (dashboard if film, welcome if not)
       {
-        path: 'overview'
+        path: 'home'
       },
+      // List of notifications (Activity feed)
       {
-        path: 'titles'
+        path: 'activity'
       },
+      // Import bulk of movies
       {
-        path: 'deals'
+        path: 'import'
+      },
+      // Result of a search on the main searchbar
+      {
+        path: 'search-result'
+      },
+      // List of titles
+      {
+        path: 'titles',
+        children: [{
+          // List of titles
+          path: 'list'
+        }, {
+          // One movie
+          path: ':movieId',
+          children: [{
+            path: 'sales'
+          }, {
+            path: 'details'
+          }, {
+            path: 'avails'
+          }]
+        }]
+      },
+      // List of titles
+      {
+        path: 'deals',
+        children: [{
+          // List of deals
+          path: 'list'
+        }, {
+          // One deal: different state of a deal (offer, counter-offer, payment)
+          path: ':dealId',
+        }]
       },
       {
         path: 'faq'
