@@ -1390,6 +1390,7 @@ export class ViewExtractedElementsComponent {
           errors: [],
         } as ContractsImportState;
 
+        // @todo #1462 si le contract existe déja, on ne maj pas les parties
         if (spreadSheetRow[SpreadSheetContract.licensors]) {
           spreadSheetRow[SpreadSheetContract.licensors].split(this.separator).forEach((licensorName: string) => {
             const licensor = createContractPartyDetail();

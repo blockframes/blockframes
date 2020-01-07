@@ -30,6 +30,7 @@ export class TableExtractedDealsComponent implements OnInit {
     'id',
     'select',
     'movieInternalRef',
+    'distributionDeal.id',
     'movieTitle',
     'distributionDeal.terms.start',
     'distributionDeal.terms.end',

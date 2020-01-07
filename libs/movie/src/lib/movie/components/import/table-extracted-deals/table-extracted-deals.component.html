@@ -44,6 +44,11 @@
     <td mat-cell *matCellDef="let element"> {{ element.movieInternalRef || '--' }} </td>
   </ng-container>
 
+  <ng-container matColumnDef="distributionDeal.id">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Deal Id </th>
+    <td mat-cell *matCellDef="let element"> {{ element.distributionDeal.id || '--' }} </td>
+  </ng-container>
+
   <ng-container matColumnDef="distributionDeal.terms.start">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Start </th>
     <td mat-cell *matCellDef="let element"> {{ element.distributionDeal.terms.start | date:'shortDate'}} </td>
