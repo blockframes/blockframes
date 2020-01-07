@@ -6,7 +6,7 @@ import { AngularFirestoreModule, AngularFirestore } from "@angular/fire/firestor
 import { DeliveryService } from "./delivery.service";
 import { DeliveryStore } from "./delivery.store";
 import { DeliveryQuery } from "./delivery.query";
-import { MovieQuery } from "@blockframes/movie/movie/+state/movie.query";
+import { MovieQuery } from "@blockframes/movie/+state/movie.query";
 import { TemplateQuery } from "../../template/+state/template.query";
 import { MaterialQuery } from "../../material/+state/material.query";
 import { OrganizationQuery } from "@blockframes/organization/+state/organization.query";

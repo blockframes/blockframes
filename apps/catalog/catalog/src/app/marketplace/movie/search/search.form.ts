@@ -17,12 +17,12 @@ import {
   MovieStatusLabel,
   MovieStatusSlug,
   MOVIE_STATUS_SLUG
-} from '@blockframes/movie/movie/static-model/types';
+} from '@blockframes/movie/static-model/types';
 import { Validators, FormArray } from '@angular/forms';
 import { FormGroup, FormControl } from '@angular/forms';
 import { FormEntity, yearValidators, numberRangeValidator } from '@blockframes/utils';
-import { getLabelByCode } from '@blockframes/movie/movie/static-model/staticModels';
-import { MovieLanguageSpecification } from '@blockframes/movie/movie/+state/movie.firestore';
+import { getLabelByCode } from '@blockframes/movie/static-model/staticModels';
+import { MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
 
 /////////////////////////
 // CatalogGenresFilter //

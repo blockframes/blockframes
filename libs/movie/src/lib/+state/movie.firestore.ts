@@ -1,4 +1,4 @@
-import { MovieStatusSlug, PromotionalElementTypesSlug, ResourceRatioSlug, ResourceSizesSlug, TerritoriesSlug, LanguagesSlug, MediasSlug } from "@blockframes/movie/movie/static-model";
+import { MovieStatusSlug, PromotionalElementTypesSlug, ResourceRatioSlug, ResourceSizesSlug, TerritoriesSlug, LanguagesSlug, MediasSlug } from "@blockframes/movie/static-model";
 import { DateRangeRaw } from "@blockframes/utils/common-interfaces/date-range";
 import { Person, Credit, SalesAgent, Company } from "@blockframes/utils/common-interfaces/identity";
 import { firestore } from "firebase/app";

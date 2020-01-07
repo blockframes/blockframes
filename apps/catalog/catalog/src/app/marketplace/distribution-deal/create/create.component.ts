@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { Router } from '@angular/router';
-import { Movie, MovieQuery, MovieService, createDistributionDeal } from '@blockframes/movie/movie/+state';
+import { Movie, MovieQuery, MovieService, createDistributionDeal } from '@blockframes/movie/+state';
 import {
   MEDIAS_SLUG,
   MediasSlug,
@@ -21,7 +21,7 @@ import {
   LanguagesSlug,
   LANGUAGES_SLUG,
   LanguagesLabel
-} from '@blockframes/movie/movie/static-model/types';
+} from '@blockframes/movie/static-model/types';
 import { DateRange } from '@blockframes/utils/common-interfaces/date-range';
 import { ControlErrorStateMatcher, languageValidator } from '@blockframes/utils';
 import {
@@ -31,7 +31,7 @@ import {
   getDistributionDealsWithMediasTerritoriesAndLanguagesInCommon
 } from './availabilities.util';
 import { DistributionDealForm } from './create.form';
-import { getCodeIfExists } from '@blockframes/movie/movie/static-model/staticModels';
+import { getCodeIfExists } from '@blockframes/movie/static-model/staticModels';
 import { CartService, createContract, validateContract } from '../+state';
 import { MatSnackBar } from '@angular/material';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';

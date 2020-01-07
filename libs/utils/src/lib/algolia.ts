@@ -1,4 +1,4 @@
-import { Movie } from '@blockframes/movie/movie/+state';
+import { Movie } from '@blockframes/movie/+state';
 import { algolia } from '@env';
 import algoliasearch from 'algoliasearch/lite';
 import { Index } from 'algoliasearch';

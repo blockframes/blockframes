@@ -6,7 +6,7 @@ import { Component, OnInit } from '@angular/core';
 import {
   MOVIE_CURRENCIES_SLUG,
   MovieCurrenciesSlug
-} from '@blockframes/movie/movie/static-model/types';
+} from '@blockframes/movie/static-model/types';
 import { FormControl } from '@angular/forms';
 import { CartService } from '../../distribution-deal/+state/cart.service';
 

@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { getLabelByCode, Scope } from '@blockframes/movie/movie/static-model/staticModels';
+import { getLabelByCode, Scope } from '@blockframes/movie/static-model/staticModels';
 
 @Pipe({
   name: 'translateSlug'
