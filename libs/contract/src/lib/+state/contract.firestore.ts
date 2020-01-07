@@ -11,8 +11,8 @@ export const enum ContractStatus {
 }
 
 export interface ContractTitleDetail {
-  /** 
-   * @dev titleId is replacing movieId 
+  /**
+   * @dev titleId is replacing movieId
    * since we are going to handle series, movies etc..
    */
   titleId: string,

@@ -3,7 +3,6 @@ import { MatTableDataSource } from '@angular/material';
 import {
   Movie,
   MovieQuery,
-  DistributionDeal,
   createMovieMain,
   createMoviePromotionalDescription,
   createMovieSalesCast,
@@ -12,8 +11,6 @@ import {
   createMovieFestivalPrizes,
   createMovieSalesAgentDeal,
   cleanModel,
-  createDistributionDeal,
-  MovieService,
   createPromotionalElement,
   createMovieBudget,
   createMoviePromotionalElements,
@@ -27,10 +24,13 @@ import { SSF$Date } from 'ssf/types';
 import { getCodeIfExists } from '../../../static-model/staticModels';
 import { SSF } from 'xlsx';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
-import { LicenseStatus, MovieLanguageTypes } from '@blockframes/movie/+state/movie.firestore';
+import { MovieLanguageTypes } from '@blockframes/movie/+state/movie.firestore';
 import { createCredit, createParty } from '@blockframes/utils/common-interfaces/identity';
-import { createContract, validateContract, Contract } from '@blockframes/marketplace/app/distribution-deal/+state/cart.model';
-import { ContractStatus } from '@blockframes/marketplace/app/distribution-deal/+state/cart.firestore';
+import { DistributionDeal, createDistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
+import { Contract, createContract, validateContract } from '@blockframes/contract/+state/contract.model';
+import { ContractStatus } from '@blockframes/contract/+state/contract.firestore';
+import { LicenseStatus } from '@blockframes/movie/distribution-deals/+state/distribution-deal.firestore';
+import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state/distribution-deal.service';
 
 export interface SpreadsheetImportError {
   field: string;
@@ -129,7 +129,7 @@ export class ViewExtractedElementsComponent {
 
   constructor(
     private movieQuery: MovieQuery,
-    private movieService: MovieService,
+    private distributionDealService: DistributionDealService,
     private organizationQuery: OrganizationQuery,
     private imageUploader: ImageUploader,
     private cdRef: ChangeDetectorRef,
@@ -1184,7 +1184,7 @@ export class ViewExtractedElementsComponent {
           }
 
           // Checks if sale already exists
-          if (await this.movieService.existingDistributionDeal(movie.id, distributionDeal)) {
+          if (await this.distributionDealService.existingDistributionDeal(movie.id, distributionDeal)) {
             importErrors.errors.push({
               type: 'error',
               field: 'distributionDeal',

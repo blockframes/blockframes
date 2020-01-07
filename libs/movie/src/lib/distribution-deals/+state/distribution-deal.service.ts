@@ -2,9 +2,11 @@ import { Injectable } from '@angular/core';
 import { DistributionDealState, DistributionDealStore } from './distribution-deal.store';
 import { MovieQuery } from '../../+state/movie.query';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
+import { ContractService } from '@blockframes/contract/+state/contract.service';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { AngularFirestoreCollection } from '@angular/fire/firestore';
 import { DistributionDeal } from './distribution-deal.model';
+import { createContractTitleDetail } from '@blockframes/contract/+state/contract.model';
 import objectHash from 'object-hash';
 import { firestore } from 'firebase';
 
@@ -17,6 +19,7 @@ export class DistributionDealService extends CollectionService<DistributionDealS
   constructor(
     private movieQuery: MovieQuery,
     private organizationQuery: OrganizationQuery,
+    private contractService: ContractService,
     store: DistributionDealStore
     )
   {
@@ -54,7 +57,7 @@ export class DistributionDealService extends CollectionService<DistributionDealS
     // @todo #1397 change this price calculus
     contract.titles[movieId].price = contract.price;
 
-    const contractId = await this.addContract(contract);
+    const contractId = await this.contractService.addContract(contract);
 
     // Link distributiondeal with contract
     distributionDeal.contractId = contractId;
