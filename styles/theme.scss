@@ -18,7 +18,6 @@
 @import './components/mat-sidenav.scss';
 @import './components/bf-font-color.scss';
 
-@include angular-material-typography($bf-typography);
 @include mat-core($bf-typography);
 
 @mixin bf-material-theme($theme) {

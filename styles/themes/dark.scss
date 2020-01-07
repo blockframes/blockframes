@@ -166,5 +166,6 @@ $bf-dark-theme: (
   is-dark: true,
   foreground: $bf-dark-foreground,
   background: $bf-dark-background,
+  // font key is not standard angular theme, we've created font palette for each typography config except button & input
   font: $bf-dark-font
 );
