@@ -2,19 +2,32 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 const routes: Routes = [
-  { path: '', redirectTo: 'home', pathMatch: 'full' },
   {
-    path: 'home',
+    path: '',
     loadChildren: () => import('./landing/landing.module').then(m => m.LandingModule)
   },
   {
-    path: 'marketplace',
-    loadChildren: () => import('./marketplace/marketplace.module').then(m => m.MarketplaceModule)
+    path: 'auth',
+    loadChildren: () => import('@blockframes/auth').then(m => m.AuthModule)
   },
   {
-    path: 'dashboard',
-    loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule)
-  }
+    path: 'c',
+    children: [{
+      path: 'organization',
+      loadChildren: () => import('@blockframes/organization').then(m => m.NoOrganizationModule)
+    }, {
+      path: 'o',
+      children: [{
+        path: 'marketplace',
+        loadChildren: () => import('./marketplace/marketplace.module').then(m => m.MarketplaceModule)
+      },
+      {
+        path: 'dashboard',
+        loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule)
+      }]
+    }]
+  },
+
 ];
 
 @NgModule({
