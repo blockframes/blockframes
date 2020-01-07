@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { NumberRange } from '@blockframes/utils/common-interfaces';
 
 @Component({
@@ -10,7 +10,7 @@ import { NumberRange } from '@blockframes/utils/common-interfaces';
 })
 export class EstimatedBudgetComponent {
 
-  @Input() form: FormGroup;
+  @Input() form: FormControl;
 
   budgetList: NumberRange[] = [
     { from: 100000, to: 200000 },

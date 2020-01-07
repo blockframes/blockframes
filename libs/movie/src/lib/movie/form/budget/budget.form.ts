@@ -9,7 +9,8 @@ function createBudgetFormControl(entity?: Partial<MovieBudget>) {
     totalBudget: new FormControl(totalBudget),
     budgetCurrency: new FormControl(budgetCurrency),
     detailledBudget: new FormControl(detailledBudget),
-    estimatedBudget: new NumberRangeForm(estimatedBudget)
+    // We use FormControl because objet { from, to } is one value (cannot update separately)
+    estimatedBudget: new FormControl(estimatedBudget)
   }
 }
 
