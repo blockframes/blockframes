@@ -10,6 +10,10 @@ export class CreditsComponent implements OnInit {
 
   constructor(private form: MovieForm) { }
 
+  get productionYear() {
+    return this.form.get('main').get('productionYear');
+  }
+
   ngOnInit() {
   }
 
