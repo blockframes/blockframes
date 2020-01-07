@@ -55,8 +55,6 @@ export const generateHash = functions.storage
  * We create a corresponding document in `users/userID`.
  */
 export const onUserCreate = functions.auth
-  .user()
-  .onCreate(logErrors(users.onUserCreate));
 
 /** Trigger: REST call to find a list of users by email. */
 export const findUserByMail = functions.https
@@ -178,7 +176,6 @@ export const onOrganizationDeleteEvent = onDocumentDelete(
   onOrganizationDelete
 );
 
-
 //--------------------------------
 //        GENERATE PDF          //
 //--------------------------------
@@ -195,10 +192,10 @@ const RELAYER_CONFIG: RelayerConfig = {
   mnemonic
 };
 
-export const relayerDeploy = functions.runWith({timeoutSeconds: 540}).https
+export const relayerDeploy = functions.runWith({ timeoutSeconds: 540 }).https
   .onCall((data, context) => logErrors(relayerDeployLogic(data, RELAYER_CONFIG)));
 
-export const relayerRegister = functions.runWith({timeoutSeconds: 540}).https
+export const relayerRegister = functions.runWith({ timeoutSeconds: 540 }).https
   .onCall((data, context) => logErrors(relayerRegisterENSLogic(data, RELAYER_CONFIG)));
 
 export const relayerSend = functions.https

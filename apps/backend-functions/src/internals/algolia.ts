@@ -58,3 +58,12 @@ export function storeSearchableMovie(
     movie: pick(movie, ALGOLIA_FIELDS)
   });
 }
+
+export function deleteSearchableMovie(movieId: string): Promise<any> {
+  if (!algolia.adminKey) {
+    console.warn('No algolia id set, assuming dev config: skipping');
+    return Promise.resolve(true);
+  }
+
+  return indexMoviesBuilder().deleteObject(movieId);
+}
