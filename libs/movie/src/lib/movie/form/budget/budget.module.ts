@@ -5,22 +5,24 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Components
 import { BoxOfficeComponent } from './box-office/box-office.component';
-import { RangeComponent } from './range/range.component';
+import { EstimatedBudgetComponent } from './estimated-budget/estimated-budget.component';
 
 // Material
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 
 
 @NgModule({
-  declarations: [RangeComponent, BoxOfficeComponent],
+  declarations: [EstimatedBudgetComponent, BoxOfficeComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
     FlexLayoutModule,
     MatFormFieldModule,
     MatInputModule,
+    MatSelectModule,
   ],
-  exports: [RangeComponent, BoxOfficeComponent]
+  exports: [EstimatedBudgetComponent, BoxOfficeComponent]
 })
 export class MovieFormBudgetModule { }

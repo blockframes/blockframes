@@ -1,5 +1,5 @@
 import { MovieStatusSlug, PromotionalElementTypesSlug, ResourceRatioSlug, ResourceSizesSlug, TerritoriesSlug, LanguagesSlug, MediasSlug } from "@blockframes/movie/movie/static-model";
-import { RawRange } from "@blockframes/utils/common-interfaces/range";
+import { RawRange, NumberRange } from "@blockframes/utils/common-interfaces/range";
 import { Person, Credit, SalesAgent, Company } from "@blockframes/utils/common-interfaces/identity";
 import { firestore } from "firebase/app";
 import { ImgRef } from "@blockframes/utils/image-uploader";
@@ -109,16 +109,12 @@ export interface MovieFestivalPrizes {
   prizes: Prize[]
 }
 
-export interface MovieBudgetRange {
-  from: number;
-  to: number;
-}
 
 export interface MovieBudget {
   totalBudget: string, // WIP #1052 use Price Interface?
   budgetCurrency?: string, // WIP #1052
   detailledBudget?: any // WIP #1052
-  range: MovieBudgetRange // WIP #1053
+  estimatedBudget: NumberRange
 }
 
 export const enum MovieLanguageTypes {

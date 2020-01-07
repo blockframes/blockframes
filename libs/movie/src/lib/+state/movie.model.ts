@@ -24,7 +24,6 @@ import {
   StoreType,
   MovieLanguageSpecificationContainer,
   MovieOfficialIds,
-  MovieBudgetRange
 } from './movie.firestore';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 import { createTerms } from '@blockframes/utils/common-interfaces/terms';
@@ -236,7 +235,7 @@ export function createMovieBudget(params: Partial<MovieBudget> = {}): MovieBudge
   return {
     totalBudget: '',
     ...params,
-    range: createRange<number>(params.range)
+    estimatedBudget: createRange<number>(params.estimatedBudget)
   };
 }
 

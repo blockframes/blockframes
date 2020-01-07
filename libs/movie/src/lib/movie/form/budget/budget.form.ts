@@ -4,12 +4,12 @@ import { NumberRangeForm } from '@blockframes/utils/form/forms/range.form';
 import { FormControl } from '@angular/forms';
 
 function createBudgetFormControl(entity?: Partial<MovieBudget>) {
-  const { totalBudget, budgetCurrency, detailledBudget, range } = createMovieBudget(entity);
+  const { totalBudget, budgetCurrency, detailledBudget, estimatedBudget } = createMovieBudget(entity);
   return {
     totalBudget: new FormControl(totalBudget),
     budgetCurrency: new FormControl(budgetCurrency),
     detailledBudget: new FormControl(detailledBudget),
-    range: new NumberRangeForm(range)
+    range: new NumberRangeForm(estimatedBudget)
   }
 }
 
