@@ -30,6 +30,21 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
+const routes = [{
+  path: '',
+  component: CatalogLandingPageComponent,
+  children: [{
+    path: '',
+    // loadChildren: () => import('./home/home.module').then(m => m.HomeModule)
+  }, {
+    path: 'about',
+    // loadChildren: () => import()
+  }, {
+    path: 'faq',
+    // loadChildren: () => import()
+  }]
+}]
+
 @NgModule({
   declarations: [
     CatalogLandingPageComponent,
