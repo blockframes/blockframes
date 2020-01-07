@@ -5,7 +5,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  HostBinding,
   OnDestroy,
   OnInit,
   ViewChild
@@ -35,7 +34,7 @@ import { getCodeIfExists } from '@blockframes/movie/movie/static-model/staticMod
 import { CartService, createContract, validateContract } from '../+state';
 import { MatSnackBar } from '@angular/material';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
-import { createParty } from '@blockframes/utils/common-interfaces/identity';
+import { createContractPartyDetail, createContractWithVersion } from '@blockframes/marketplace/app/distribution-deal/+state/cart.model';
 
 enum ResearchSteps {
   START = 'Start',
@@ -183,20 +182,20 @@ export class DistributionDealCreateComponent implements OnInit, OnDestroy {
   public async addDistributionDeal() {
     const distributionDeal = createDistributionDeal(); // @todo #1388 populate with form values
     // Create the contract that will handle the deal
-    const contract = createContract();
+    const contract = createContractWithVersion();
 
-    const licensee = createParty();
-    licensee.orgId = this.organizationQuery.getActiveId();
-    licensee.role = 'licensee';
-    contract.parties.push(licensee);
+    const licensee = createContractPartyDetail();
+    licensee.party.orgId = this.organizationQuery.getActiveId();
+    licensee.party.role = 'licensee';
+    contract.doc.parties.push(licensee);
 
-    const licensor = createParty();
-    licensor.orgId = this.movie.salesAgentDeal.salesAgent.orgId;
-    licensor.displayName = this.movie.salesAgentDeal.salesAgent.displayName;
-    licensor.role = 'licensor';
-    contract.parties.push(licensor);
+    const licensor = createContractPartyDetail();
+    licensor.party.orgId = this.movie.salesAgentDeal.salesAgent.orgId;
+    licensor.party.displayName = this.movie.salesAgentDeal.salesAgent.displayName;
+    licensor.party.role = 'licensor';
+    contract.doc.parties.push(licensor);
 
-    if(!validateContract(contract)) {
+    if(!validateContract(contract.doc)) {
       this.snackBar.open(`Error while creating contract..`, 'close', { duration: 2000 });
     } else {
       const dealId = await this.movieService.addDistributionDeal(this.movie.id, distributionDeal, contract);

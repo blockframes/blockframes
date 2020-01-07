@@ -4,7 +4,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Component, Input, ViewChild, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { MovieService, MovieQuery, cleanModel, createMovie } from '../../../+state';
+import { MovieService } from '../../../+state';
 import { SelectionModel } from '@angular/cdk/collections';
 import { SpreadsheetImportError, ContractsImportState } from '../view-extracted-elements/view-extracted-elements.component';
 import { ViewImportErrorsComponent } from '../view-import-errors/view-import-errors.component';
@@ -30,7 +30,12 @@ export class TableExtractedContractsComponent implements OnInit {
   public displayedColumns: string[] = [
     'id',
     'select',
-    'contract.id',
+    'contract.doc.id',
+    'contract.last.status',
+    'contract.last.id',
+    'contract.doc.parentContractIds',
+    'contract.doc.childContractIds',
+    'contract.doc.parties',
     'errors',
     'warnings',
     'actions',
@@ -40,7 +45,6 @@ export class TableExtractedContractsComponent implements OnInit {
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
     private movieService: MovieService,
-    private movieQuery: MovieQuery,
   ) { }
 
   ngOnInit() {
@@ -53,7 +57,7 @@ export class TableExtractedContractsComponent implements OnInit {
 
   async createContract(importState: ContractsImportState): Promise<boolean> {
 
-    const contractId = await this.movieService.addContract(importState.contract);
+    const contractId = await this.movieService.addContractAndVersion(importState.contract.doc, importState.contract.last);
     importState.errors.push({
       type: 'error',
       field: 'contract',
@@ -66,13 +70,12 @@ export class TableExtractedContractsComponent implements OnInit {
 
     return true;
   }
-  
+
   async updateContract(importState: ContractsImportState): Promise<boolean> {
     // @todo #1462 implement this
     // don't forget to clean inside arrays to prevent duplicate parties
     return this.createContract(importState);
   }
-  
 
   async createSelectedContracts(): Promise<boolean> {
     try {
@@ -90,9 +93,9 @@ export class TableExtractedContractsComponent implements OnInit {
             hint: 'Contract already added'
           });
 
-          return promises.push(this.movieService.addContract(importState.contract));
+          return promises.push(this.movieService.addContractAndVersion(importState.contract.doc, importState.contract.last));
         });
-      
+
       this.rows.data = data;
 
       await Promise.all(promises);
@@ -105,6 +108,10 @@ export class TableExtractedContractsComponent implements OnInit {
 
   errorCount(data: ContractsImportState, type: string = 'error') {
     return data.errors.filter((error: SpreadsheetImportError) => error.type === type).length;
+  }
+
+  parseInt(str: string): number {
+    return parseInt(str, 10);
   }
 
   ///////////////////
@@ -171,7 +178,7 @@ export class TableExtractedContractsComponent implements OnInit {
    * Even for nested objects.
    */
   filterPredicate(data: ContractsImportState, filter) {
-    const dataStr = data.contract.id; // @todo #1462
+    const dataStr = data.contract.doc.id + data.contract.last.id + data.contract.last.creationDate + data.contract.last.price.amount;
     return dataStr.toLowerCase().indexOf(filter) !== -1;
   }
 

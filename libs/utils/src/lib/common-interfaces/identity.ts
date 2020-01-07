@@ -15,7 +15,7 @@ import { StakeholderRolesSlug, CreditRolesSlug, LegalRolesSlug } from "@blockfra
 interface IdentityRaw {
   orgId?: string,
 
-  displayName?: string, // @todo #1052 interogation mark will be removed when not using firstName & lastName anymore
+  displayName?: string, // @todo #1052 for persons, use firstname lastname, display name otherwise
 
   showName?: boolean,
 

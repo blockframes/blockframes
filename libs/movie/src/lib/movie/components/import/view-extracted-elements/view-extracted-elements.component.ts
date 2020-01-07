@@ -28,10 +28,11 @@ import { getCodeIfExists } from '../../../static-model/staticModels';
 import { SSF } from 'xlsx';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { MovieLanguageTypes } from '@blockframes/movie/movie/+state/movie.firestore';
-import { createCredit, createParty } from '@blockframes/utils/common-interfaces/identity';
-import { createContract, validateContract, Contract, createContractTitleDetail, getContractParties } from '@blockframes/marketplace/app/distribution-deal/+state/cart.model';
+import { createCredit } from '@blockframes/utils/common-interfaces/identity';
+import { validateContract, createContractTitleDetail, getContractParties, createContractPartyDetail } from '@blockframes/marketplace/app/distribution-deal/+state/cart.model';
 import { ContractStatus, ContractTitleDetail } from '@blockframes/marketplace/app/distribution-deal/+state/cart.firestore';
 import { createFee } from '@blockframes/utils/common-interfaces/price';
+import { ContractWithLastVersion, createContractWithVersion } from '@blockframes/marketplace';
 
 export interface SpreadsheetImportError {
   field: string;
@@ -52,12 +53,12 @@ export interface DealsImportState {
   movieTitle: String;
   movieInternalRef?: string;
   movieId: string;
-  contract: Contract;
+  contract: ContractWithLastVersion;
 }
 
 export interface ContractsImportState {
   errors?: SpreadsheetImportError[];
-  contract: Contract;
+  contract: ContractWithLastVersion;
 }
 
 enum SpreadSheetMovie {
@@ -1071,7 +1072,7 @@ export class ViewExtractedElementsComponent {
         }
 
         // @todo #1462 handle if contract is missing
-        const contract = await this.movieService.getContractFromDeal(movie.id, distributionDeal.id);
+        const contract = await this.movieService.getContractWithLastVersionFromDeal(movie.id, distributionDeal.id);
 
         const importErrors = {
           distributionDeal,
@@ -1094,14 +1095,14 @@ export class ViewExtractedElementsComponent {
           /* LICENSEE */
 
           // Retreive the licensee inside the contract to update his infos
-          const licensee = getContractParties(contract, 'licensee').shift();
+          const licensee = getContractParties(contract.doc, 'licensee').shift();
           if(licensee === undefined){
-            throw new Error(`No licensee found in contract ${contract.id}.`);
+            throw new Error(`No licensee found in contract ${contract.doc.id}.`);
           }
 
           // SHOW NAME
           if (spreadSheetRow[SpreadSheetDistributionDeal.displayLicenseeName]) {
-            licensee.showName = spreadSheetRow[SpreadSheetDistributionDeal.displayLicenseeName].toLowerCase() === 'yes' ? true : false;
+            licensee.party.showName = spreadSheetRow[SpreadSheetDistributionDeal.displayLicenseeName].toLowerCase() === 'yes' ? true : false;
           }
 
           /////////////////
@@ -1213,13 +1214,13 @@ export class ViewExtractedElementsComponent {
           if (!isNaN(Number(spreadSheetRow[SpreadSheetDistributionDeal.priceAmount]))) {
             // @todo #1462 this should be distributionDeal price. But we don't have such model to store it
             // until we have a way to store it, we increment global price for this title.
-            contract.titles[movie.id].price.amount += parseInt(spreadSheetRow[SpreadSheetDistributionDeal.priceAmount], 10);
+            contract.last.titles[movie.id].price.amount += parseInt(spreadSheetRow[SpreadSheetDistributionDeal.priceAmount], 10);
           }
 
           if (spreadSheetRow[SpreadSheetDistributionDeal.priceCurrency]) {
             // @todo #1462 this should be distributionDeal price. But we don't have such model to store it
             // @todo #1462 test if priceCurrency is in staticModels
-            contract.titles[movie.id].price.currency = spreadSheetRow[SpreadSheetDistributionDeal.priceCurrency];
+            contract.last.titles[movie.id].price.currency = spreadSheetRow[SpreadSheetDistributionDeal.priceCurrency];
           }
 
           // Checks if sale already exists
@@ -1268,7 +1269,7 @@ export class ViewExtractedElementsComponent {
     //////////////////
 
     //  CONTRACT VALIDATION
-    if (!validateContract(contract)) {
+    if (!validateContract(contract.doc)) {
       errors.push({
         type: 'error',
         field: 'contractId',
@@ -1352,7 +1353,7 @@ export class ViewExtractedElementsComponent {
     //////////////////
 
     // TITLE PRICE VALIDATION
-    if (!contract.titles[importErrors.movieId].price.amount) {
+    if (!contract.last.titles[importErrors.movieId].price.amount) {
       errors.push({
         type: 'warning',
         field: 'price',
@@ -1372,17 +1373,16 @@ export class ViewExtractedElementsComponent {
 
     sheetTab.rows.forEach(async spreadSheetRow => {
       // Create/retreive the contract 
-      let contract = createContract();
+      let contract = createContractWithVersion();
       if (spreadSheetRow[SpreadSheetContract.contractId]) {
-        const existingContract = await this.movieService.getContract(spreadSheetRow[SpreadSheetContract.contractId]);
+        const existingContract = await this.movieService.getContractWithLastVersion(spreadSheetRow[SpreadSheetContract.contractId]);
         if (!!existingContract) {
           contract = existingContract;
         }
       }
 
-
-      contract.parentContractIds = [];
-      contract.childContractIds = [];
+      contract.doc.parentContractIds = [];
+      contract.doc.childContractIds = [];
 
       if (spreadSheetRow[SpreadSheetContract.contractId]) {
         const importErrors = {
@@ -1392,39 +1392,39 @@ export class ViewExtractedElementsComponent {
 
         if (spreadSheetRow[SpreadSheetContract.licensors]) {
           spreadSheetRow[SpreadSheetContract.licensors].split(this.separator).forEach((licensorName: string) => {
-            const licensor = createParty();
+            const licensor = createContractPartyDetail();
             // @todo #1462 try to match with an existing org
             // licensor.orgId = 
-            licensor.displayName = licensorName.trim();
-            licensor.role = 'licensor';
-            contract.parties.push(licensor);
+            licensor.party.displayName = licensorName.trim();
+            licensor.party.role = 'licensor';
+            contract.doc.parties.push(licensor);
           });
         }
 
         if (spreadSheetRow[SpreadSheetContract.licensee]) {
           // @todo #1462 try to match with an existing org
-          const licensee = createParty();
+          const licensee = createContractPartyDetail();
           // licensee.orgId =
-          licensee.displayName = spreadSheetRow[SpreadSheetContract.licensee];
-          licensee.role = 'licensee';
-          contract.parties.push(licensee);
+          licensee.party.displayName = spreadSheetRow[SpreadSheetContract.licensee];
+          licensee.party.role = 'licensee';
+          contract.doc.parties.push(licensee);
         }
 
         if (spreadSheetRow[SpreadSheetContract.parentContractIds]) {
           spreadSheetRow[SpreadSheetContract.parentContractIds].split(this.separator).forEach((c: string) => {
-            contract.parentContractIds.push(c.trim());
+            contract.doc.parentContractIds.push(c.trim());
           });
         }
 
         if (spreadSheetRow[SpreadSheetContract.childContractIds]) {
           spreadSheetRow[SpreadSheetContract.childContractIds].split(this.separator).forEach((c: string) => {
-            contract.childContractIds.push(c.trim());
+            contract.doc.childContractIds.push(c.trim());
           });
         }
 
         if (spreadSheetRow[SpreadSheetContract.status]) {
           if (spreadSheetRow[SpreadSheetContract.status] in ContractStatus) {
-            contract.status = spreadSheetRow[SpreadSheetContract.status];
+            contract.last.status = spreadSheetRow[SpreadSheetContract.status];
           }
         }
 
@@ -1433,7 +1433,9 @@ export class ViewExtractedElementsComponent {
           const currentIndex = SpreadSheetContract.titleStuffIndexStart + titleIndex;
           titleIndex += titlesFieldsCount;
           const titleDetails = await this.processTitleDetails(spreadSheetRow, currentIndex);
-          contract.titles[titleDetails.titleId] = titleDetails;
+          contract.last.titles[titleDetails.titleId] = titleDetails;
+          // @todo #1462 push que si pas déja dedans ?
+          contract.doc.titleIds.push(titleDetails.titleId);
         }
 
 
@@ -1443,11 +1445,11 @@ export class ViewExtractedElementsComponent {
 
         const contractWithErrors = this.validateMovieContract(importErrors);
 
-        if (contractWithErrors.contract.id) {
+        if (contractWithErrors.contract.doc.id) {
           this.contractsToUpdate.data.push(contractWithErrors);
           this.contractsToUpdate.data = [... this.contractsToUpdate.data];
         } else {
-          contract.id = spreadSheetRow[SpreadSheetContract.contractId];
+          contract.doc.id = spreadSheetRow[SpreadSheetContract.contractId];
           this.contractsToCreate.data.push(contractWithErrors);
           this.contractsToCreate.data = [... this.contractsToCreate.data];
         }
@@ -1469,7 +1471,7 @@ export class ViewExtractedElementsComponent {
     //////////////////
 
     //  CONTRACT VALIDATION
-    if (!validateContract(contract)) {
+    if (!validateContract(contract.doc)) {
       errors.push({
         type: 'error',
         field: 'contractId',

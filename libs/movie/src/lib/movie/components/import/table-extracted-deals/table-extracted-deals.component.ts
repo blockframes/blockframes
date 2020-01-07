@@ -100,6 +100,7 @@ export class TableExtractedDealsComponent implements OnInit {
       this.snackBar.open(`${promises.length} distribution deals inserted!`, 'close', { duration: 3000 });
       return true;
     } catch (err) {
+      console.log(err);
       this.snackBar.open(`Could not insert distribution deals`, 'close', { duration: 3000 });
     }
   }

@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestoreCollection } from '@angular/fire/firestore/collection/collection';
 import { AngularFirestoreDocument } from '@angular/fire/firestore/document/document';
-import { OrganizationQuery, OrganizationService, PermissionsService } from '@blockframes/organization';
+import { OrganizationQuery } from '@blockframes/organization';
 import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
 import { firestore } from 'firebase';
 import objectHash from 'object-hash';
 import { switchMap } from 'rxjs/operators';
 import { createMovie, Movie, DistributionDeal } from './movie.model';
 import { MovieState, MovieStore } from './movie.store';
-import { Contract, createContractTitleDetail } from '@blockframes/marketplace/app/distribution-deal/+state/cart.model';
+import { Contract, createContractTitleDetail, ContractVersion, createContractWithVersion, ContractWithLastVersion } from '@blockframes/marketplace/app/distribution-deal/+state/cart.model';
 import { AuthQuery } from '@blockframes/auth';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 
@@ -30,8 +30,6 @@ export function cleanModel<T>(data: T): T {
 export class MovieService extends CollectionService<MovieState> {
   constructor(
     private organizationQuery: OrganizationQuery,
-    private organizationService: OrganizationService,
-    private permissionsService: PermissionsService,
     private authQuery: AuthQuery,
     store: MovieStore
   ) {
@@ -127,7 +125,7 @@ export class MovieService extends CollectionService<MovieState> {
    * @param movieId
    * @param distributionDeal
    */
-  public async addDistributionDeal(movieId: string, distributionDeal: DistributionDeal, contract: any): Promise<string> { // @TODO (#1440) replace contract: any with contract: Contract
+  public async addDistributionDeal(movieId: string, distributionDeal: DistributionDeal, contract: ContractWithLastVersion): Promise<string> { // @TODO (#1440) replace contract: any with contract: Contract
     // Create an id from DistributionDeal content.
     // A same DistributionDeal document will always have the same hash to prevent multiple insertion of same deal
     // @TODO #1389 Use native akita-ng-fire functions : https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
@@ -136,24 +134,26 @@ export class MovieService extends CollectionService<MovieState> {
     }
 
     // If a contract does not have an id, we update contract and link it to this distrubution deal
-    // If there already a contract id, this means it have been created before
-    if (!contract.id) {
+    // If there is already a contract id, this means it have been created before
+    if (!contract.doc.id) {
       // Populate distribution deal contract
-      contract.titles[movieId] = createContractTitleDetail();
-      contract.titles[movieId].titleId = movieId;
-      contract.titles[movieId].distributionDealIds.push(distributionDeal.id);
+      contract.last.titles[movieId] = createContractTitleDetail();
+      contract.last.titles[movieId].titleId = movieId;
+      contract.last.titles[movieId].distributionDealIds.push(distributionDeal.id);
+      contract.doc.titleIds.push(distributionDeal.id);
+
       // @todo #1397 change this price calculus
-      contract.titles[movieId].price = contract.price;
+      contract.last.titles[movieId].price = contract.last.price;
 
-      const contractId = await this.addContract(contract);
-
+      const contractId = await this.addContractAndVersion(contract.doc, contract.last);
+      
       // Link distributiondeal with contract
       distributionDeal.contractId = contractId;
     } else {
       // Link distributiondeal with contract
-      distributionDeal.contractId = contract.id;
+      distributionDeal.contractId = contract.doc.id;
       // Contract may have been updated along with the distribution deal, we update it
-      await this.db.collection('contracts').doc(contract.id).set(contract);
+      await this.db.collection('contracts').doc(contract.doc.id).set(contract);
     }
 
 
@@ -213,11 +213,69 @@ export class MovieService extends CollectionService<MovieState> {
   /**
    * 
    * @param contractId 
+   * @param contractVersion 
+   */
+  public async addContractVersion(contractId: string, contractVersion: ContractVersion): Promise<string> {
+    const snapshot = await this.db.collection('contracts').doc(contractId).collection('versions').get().toPromise();
+    contractVersion.id = (snapshot.size + 1).toString();
+
+    await this.db.collection('contracts').doc(contractId).collection('versions').doc(contractVersion.id).set(contractVersion);
+    return contractVersion.id;
+  }
+
+  /**
+   * 
+   * @param contract 
+   * @param version 
+   */
+  public async addContractAndVersion(contract: Contract, version: ContractVersion): Promise<string> {
+    const contractId = await this.addContract(contract);
+    const versionId = await this.addContractVersion(contractId, version);
+    return versionId;
+  }
+
+  /**
+   * 
+   * @param contractId 
    */
   public async getContract(contractId: string): Promise<Contract> {
     const snapshot = await this.db.collection('contracts').doc(contractId).get().toPromise();
     const doc = snapshot.data();
-    return !!doc ? this.formatContract(doc) : undefined;
+    return !!doc ? doc as Contract : undefined;
+  }
+
+  /**
+   * Returns last contract version associated with contractId
+   * @param contractId 
+   */
+  public async getLastVersionContract(contractId: string): Promise<ContractVersion> {
+    const snapshot = await this.db.collection('contracts')
+      .doc(contractId)
+      .collection('versions').ref
+      .orderBy('creationDate', 'desc')
+      .limit(1)
+      .get()
+
+    if (snapshot.size) {
+      return snapshot.docs[0].data() as ContractVersion;
+    } else {
+      throw new Error(`Every contract should have at least one version. None found for ${contractId}`);
+    }
+  }
+
+  /**
+   * @dev Fetch contract and last version
+   */
+  public async getContractWithLastVersion(contractId: string): Promise<ContractWithLastVersion> {
+    try {
+      const contractWithVersion = createContractWithVersion();
+      contractWithVersion.doc = await this.getContract(contractId);
+      contractWithVersion.last = await this.getLastVersionContract(contractId);
+  
+      return contractWithVersion;
+    } catch (error) {
+      console.log(`Contract ${contractId} not found`);
+    }
   }
 
   /**
@@ -225,30 +283,45 @@ export class MovieService extends CollectionService<MovieState> {
    * @param movieId 
    * @param distributionDealId 
    */
-  public async getContractFromDeal(movieId: string, distributionDealId: string): Promise<Contract> {
+  public async getContractWithLastVersionFromDeal(movieId: string, distributionDealId: string): Promise<ContractWithLastVersion> {
     const contractSnapShot = await this.db
-      .collection(
-        `contracts`,
-        ref => ref.where(`titles.${movieId}.distributionDealIds`, 'array-contains', distributionDealId)
-      )
+      .collection('contracts', ref => ref.where('titleIds', 'array-contains', movieId))
       .get().toPromise();
 
-    return contractSnapShot.docs.length ? this.formatContract(contractSnapShot.docs[0].data()) : undefined;
+    if (contractSnapShot.docs.length) {
+      const contractWithVersion = createContractWithVersion();
+      for(const contract of contractSnapShot.docs) {
+        const versionSnapshot = await this.db
+          .collection('contracts')
+          .doc(contract.id)
+          .collection('versions', ref => ref.where(`titles.${movieId}.distributionDealIds`, 'array-contains', distributionDealId))
+          .ref.orderBy('creationDate', 'desc')
+          .limit(1)
+          .get();
+
+        if (versionSnapshot.docs.length) {
+          contractWithVersion.doc = contract.data() as Contract;
+          contractWithVersion.last = this.formatContract(versionSnapshot.docs[0].data());
+          return contractWithVersion;
+        }
+      }
+      
+    }
   }
 
   /**
    * 
-   * @param contract 
+   * @param contractVersion 
    */
-  private formatContract(contract: any): Contract {
+  private formatContract(contractVersion: any): ContractVersion {
     // Dates from firebase are Timestamps, we convert it to Dates.
-    if (contract.scope && contract.scope.start instanceof firestore.Timestamp) {
-      contract.scope.start = contract.scope.start.toDate();
+    if (contractVersion.scope && contractVersion.scope.start instanceof firestore.Timestamp) {
+      contractVersion.scope.start = contractVersion.scope.start.toDate();
     }
 
-    if (contract.scope.end instanceof firestore.Timestamp) {
-      contract.scope.end = contract.scope.end.toDate();
+    if (contractVersion.scope.end instanceof firestore.Timestamp) {
+      contractVersion.scope.end = contractVersion.scope.end.toDate();
     }
-    return contract as Contract;
+    return contractVersion as ContractVersion;
   }
 }

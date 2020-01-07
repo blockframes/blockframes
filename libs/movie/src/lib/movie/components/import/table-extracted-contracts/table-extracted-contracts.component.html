@@ -45,9 +45,59 @@
     <td mat-cell *matCellDef="let element; let i = index"> {{ i + 1 }} </td>
   </ng-container>
 
-  <ng-container matColumnDef="contract.id">
+  <ng-container matColumnDef="contract.doc.id">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Contract Id </th>
-    <td mat-cell *matCellDef="let element"> {{ element.contract.id ? element.contract.id : '--'  }} </td>
+    <td mat-cell *matCellDef="let element"> {{ element.contract.doc.id ? element.contract.doc.id : '--'  }} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="contract.doc.parentContractIds">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Parent Ids </th>
+    <td mat-cell *matCellDef="let element"> 
+      <ul *ngIf="element.contract.doc.parentContractIds.length else noParents">
+        <li *ngFor="let parentId of element.contract.doc.parentContractIds">{{ parentId }}</li>
+      </ul>
+      <ng-template #noParents>
+        --
+      </ng-template>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="contract.doc.childContractIds">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Child Ids </th>
+    <td mat-cell *matCellDef="let element"> 
+      <ul *ngIf="element.contract.doc.childContractIds.length else noChilds">
+        <li *ngFor="let childId of element.contract.doc.childContractIds">{{ childId }}</li>
+      </ul>
+      <ng-template #noChilds>
+        --
+      </ng-template>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="contract.doc.parties">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Parties </th>
+    <td mat-cell *matCellDef="let element"> 
+      <ul *ngIf="element.contract.doc.parties else noparties">
+        <li *ngFor="let partyDetails of element.contract.doc.parties">{{ partyDetails.party.displayName }} ( {{ partyDetails.party.role }} )</li>
+      </ul>
+      <ng-template #noparties>
+        --
+      </ng-template>
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="contract.last.status">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+    <td mat-cell *matCellDef="let element"> 
+      {{ element.contract.last.status }}
+    </td>
+  </ng-container>
+
+  <ng-container matColumnDef="contract.last.id">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Version </th>
+    <td mat-cell *matCellDef="let element"> 
+      v-{{ element.contract.last.id }}
+    </td>
   </ng-container>
 
   <ng-container matColumnDef="errors">
@@ -73,7 +123,7 @@
     <td mat-cell *matCellDef="let element">
       <ng-container *ngIf="mode === 'update' else create">
         <button mat-flat-button color="accent" [disabled]="errorCount(element) > 0"
-          (click)="updateContract(element)">Update<mat-icon>update</mat-icon></button>
+        (click)="updateContract(element)">Update to v-{{ parseInt(element.contract.last.id) +1 }}<mat-icon>update</mat-icon></button>
       </ng-container>
       <ng-template #create>
         <button mat-flat-button color="primary" [disabled]="errorCount(element) > 0"
