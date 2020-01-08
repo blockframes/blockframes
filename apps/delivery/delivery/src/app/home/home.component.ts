@@ -39,6 +39,7 @@ export class DeliveryHomeComponent implements OnInit {
       this.snackBar.open(`Movie "${movie.main.title.original}" has been deleted.`, 'close', {
         duration: 2000
       });
+    // TODO: Handle errors from firestore security rules => ISSUE#1495
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });
     }

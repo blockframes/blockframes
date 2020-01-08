@@ -16,7 +16,6 @@ import { getProvider, orgNameToEnsDomain } from '@blockframes/ethers/helpers';
 
 // TODO issue#1146
 import { AFM_DISABLE } from '@env';
-import { FireQuery } from '@blockframes/utils/firequery/firequery';
 import { OrganizationService } from '@blockframes/organization';
 
 export const urlValidators = [Validators.pattern('^(http|https)://[^ "]+$')];

@@ -4,7 +4,6 @@ import { map } from 'rxjs/operators';
 import { MovieQuery } from '@blockframes/movie';
 import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
 
-
 @Injectable({ providedIn: 'root' })
 @CollectionGuardConfig({ awaitSync: true })
 export class DeliveryListGuard extends CollectionGuard<DeliveryState> {

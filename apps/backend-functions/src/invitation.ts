@@ -15,8 +15,7 @@ import {
   OrganizationDocument,
   MovieDocument,
   createDocPermissions,
-  createUserPermissions,
-  PublicUser,
+  PublicUser
 } from './data/types';
 import { triggerNotifications } from './notification';
 import { sendMailFromTemplate } from './internals/email';
@@ -124,15 +123,17 @@ async function onInvitationToOrgDecline(invitation: InvitationFromOrganizationTo
 
   const adminIds = await getAdminIds(org.id);
 
-  const notifications = adminIds.map(userId => createNotification({
-    userId,
-    user: {
-      name: user.name,
-      surname: user.surname
-    },
-    app: App.blockframes,
-    type: NotificationType.invitationFromOrganizationToUserDecline
-  }));
+  const notifications = adminIds.map(userId =>
+    createNotification({
+      userId,
+      user: {
+        name: user.name,
+        surname: user.surname
+      },
+      app: App.blockframes,
+      type: NotificationType.invitationFromOrganizationToUserDecline
+    })
+  );
 
   return triggerNotifications(notifications);
 }
@@ -166,30 +167,32 @@ async function onDocumentInvitationAccept(invitation: InvitationToWorkOnDocument
   const movie = await getDocument<MovieDocument>(`movies/${delivery.movieId}`);
 
   const [
-    organizationDocPermissionsSnap,
-    userDocPermissionsSnap,
+    deliverySnap,
+    documentPermissionsSnap,
     stakeholderSnap,
     organizationSnap,
-    organizationMoviePermissionsSnap,
-    userMoviePermissionsSnap,
+    moviePermissionsSnap,
     organization
   ] = await Promise.all([
-    db.doc(`permissions/${stakeholderId}/orgDocsPermissions/${docId}`).get(),
-    db.doc(`permissions/${stakeholderId}/userDocsPermissions/${docId}`).get(),
+    db.doc(`deliveries/${docId}`).get(),
+    db.doc(`permissions/${stakeholderId}/documentPermissions/${docId}`).get(),
     db.doc(`deliveries/${docId}/stakeholders/${stakeholderId}`).get(),
     db.doc(`orgs/${stakeholderId}`).get(),
-    db.doc(`permissions/${stakeholderId}/orgDocsPermissions/${delivery.movieId}`).get(),
-    db.doc(`permissions/${stakeholderId}/userDocsPermissions/${delivery.movieId}`).get(),
+    db.doc(`permissions/${stakeholderId}/documentPermissions/${delivery.movieId}`).get(),
     getDocument<OrganizationDocument>(`orgs/${stakeholderId}`)
   ]);
 
-  const orgDocPermissions = createDocPermissions({
+  const documentPermissions = createDocPermissions({
     id: docId,
-    canUpdate: true
+    canDelete: false,
+    isAdmin: false
   });
-  const userDocPermissions = createUserPermissions({ id: docId });
-  const orgMoviePermissions = createDocPermissions({ id: delivery.movieId });
-  const userMoviePermissions = createUserPermissions({ id: delivery.movieId });
+  const moviePermissions = createDocPermissions({
+    id: delivery.movieId,
+    canDelete: false,
+    canUpdate: false,
+    isAdmin: false
+  });
 
   return db.runTransaction(tx => {
     const promises = [];
@@ -206,27 +209,28 @@ async function onDocumentInvitationAccept(invitation: InvitationToWorkOnDocument
     }
 
     return Promise.all([
-      // Initialize organization permissions on a document owned by another organization
-      tx.set(organizationDocPermissionsSnap.ref, orgDocPermissions),
+      // Initialize organization permissions on a document owned by another organization.
+      tx.set(documentPermissionsSnap.ref, documentPermissions),
 
-      // Then Initialize user permissions document
-      tx.set(userDocPermissionsSnap.ref, userDocPermissions),
-
-      // Make the new stakeholder active on the delivery by switch isAccepted property from false to true
+      // Make the new stakeholder active on the delivery by switch isAccepted property from false to true.
       tx.update(stakeholderSnap.ref, { isAccepted: true }),
 
-      // Push the delivery's movie into stakeholder Organization's movieIds so users have access to the new doc
+      // Push the delivery's movie into stakeholder Organization's movieIds so users have access to the new doc.
       tx.update(organizationSnap.ref, {
         movieIds: [...organization.movieIds, delivery.movieId]
       }),
 
-      // Finally, also initialize reading rights on the movie for the invited organization
-      tx.set(organizationMoviePermissionsSnap.ref, orgMoviePermissions),
-      tx.set(userMoviePermissionsSnap.ref, userMoviePermissions),
+      // Push the stakeholder's id into delivery stakeholdersIds array.
+      tx.update(deliverySnap.ref, {
+        stakeholderIds: [...delivery.stakeholderIds, stakeholderId]
+      }),
+
+      // Finally, also initialize reading rights on the movie for the invited organization.
+      tx.set(moviePermissionsSnap.ref, moviePermissions),
 
       ...promises,
 
-      // Now that permissions are in the database, notify organization users with direct link to the document
+      // Now that permissions are in the database, notify organization users with direct link to the document.
       triggerNotifications(
         organization.userIds.map(userId => {
           return createNotification({
@@ -256,7 +260,7 @@ async function onInvitationToOrgUpdate(
   } else if (wasAccepted(before!, after)) {
     return onInvitationToOrgAccept(invitation);
   } else if (wasDeclined(before!, after)) {
-    return onInvitationToOrgDecline(invitation)
+    return onInvitationToOrgDecline(invitation);
   }
   return;
 }
@@ -316,15 +320,17 @@ async function onInvitationFromUserToJoinOrgDecline(invitation: InvitationFromUs
   const org = orgSnapshot.data() as OrganizationDocument;
   const adminIds = await getAdminIds(org.id);
 
-  const notifications = adminIds.map(userId => createNotification({
-    userId,
-    user: {
-      name: invitation.user.name,
-      surname: invitation.user.surname
-    },
-    app: App.blockframes,
-    type: NotificationType.invitationFromUserToJoinOrgDecline
-  }));
+  const notifications = adminIds.map(userId =>
+    createNotification({
+      userId,
+      user: {
+        name: invitation.user.name,
+        surname: invitation.user.surname
+      },
+      app: App.blockframes,
+      type: NotificationType.invitationFromUserToJoinOrgDecline
+    })
+  );
 
   return triggerNotifications(notifications);
 }

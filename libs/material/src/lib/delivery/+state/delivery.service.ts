@@ -1,26 +1,35 @@
 import { Injectable } from '@angular/core';
 import { DeliveryQuery } from './delivery.query';
 import { Material } from '../../material/+state/material.model';
-import { createDelivery, Delivery, DeliveryWithTimestamps, deliveryStatuses } from './delivery.model';
 import {
-  Movie,
-  MovieQuery
-} from '@blockframes/movie';
-import { OrganizationQuery, PermissionsService} from '@blockframes/organization';
+  createDelivery,
+  Delivery,
+  DeliveryWithTimestamps,
+  deliveryStatuses
+} from './delivery.model';
+import { Movie, MovieQuery } from '@blockframes/movie';
+import { OrganizationQuery, createDocPermissions } from '@blockframes/organization';
 import { BFDoc } from '@blockframes/utils';
 import { MaterialQuery, createMaterial, isTheSame } from '../../material/+state';
-import { DeliveryOption, DeliveryWizard, DeliveryWizardKind, DeliveryState, DeliveryStore } from './delivery.store';
+import {
+  DeliveryOption,
+  DeliveryWizard,
+  DeliveryWizardKind,
+  DeliveryState,
+  DeliveryStore
+} from './delivery.store';
 import { AngularFirestoreDocument } from '@angular/fire/firestore';
 import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
 import { CreateTx } from '@blockframes/ethers';
 import { TxFeedback } from '@blockframes/ethers/types';
 import { StakeholderService } from '../stakeholder/+state/stakeholder.service';
-import { CollectionService, CollectionConfig, Query, awaitSyncQuery } from 'akita-ng-fire';
-import { tap, switchMap } from 'rxjs/operators';
+import { CollectionService, CollectionConfig, Query, awaitSyncQuery, WriteOptions } from 'akita-ng-fire';
+import { tap, switchMap, filter } from 'rxjs/operators';
 import { MovieMaterialService } from '../../material/+state/movie-material.service';
 import { DeliveryMaterialService } from '../../material/+state/delivery-material.service';
 import { TemplateMaterialService } from '../../material/+state/template-material.service';
 import { TemplateQuery } from '../../template/+state/template.query';
+import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 
 interface AddDeliveryOptions {
   templateId?: string;
@@ -31,16 +40,16 @@ interface AddDeliveryOptions {
 
 // TODO: add a stakeholderIds in delivery so we can filter them here. => ISSUE#639
 // e. g. queryFn: ref => ref.where('stakeholderIds', 'array-contains', userOrgId)
-const deliveriesListQuery = (movieId: string): Query<DeliveryWithTimestamps[]> =>  ({
+const deliveriesListQuery = (movieId: string, orgId: string): Query<DeliveryWithTimestamps[]> => ({
   path: 'deliveries',
-  queryFn: ref => ref.where('movieId', '==', movieId),
+  queryFn: ref => ref.where('movieId', '==', movieId).where('stakeholderIds', 'array-contains', orgId),
   stakeholders: delivery => ({
     path: `deliveries/${delivery.id}/stakeholders`,
     organization: stakeholder => ({
       path: `orgs/${stakeholder.orgId}`
     })
   })
-})
+});
 
 export const deliveryQuery = (deliveryId: string): Query<DeliveryWithTimestamps> => ({
   path: `deliveries/${deliveryId}`,
@@ -66,10 +75,10 @@ export class DeliveryService extends CollectionService<DeliveryState> {
     private organizationQuery: OrganizationQuery,
     private deliveryMaterialService: DeliveryMaterialService,
     private templateMaterialService: TemplateMaterialService,
-    private permissionsService: PermissionsService,
     private shService: StakeholderService,
     private walletService: WalletService,
-    private movieMaterialService: MovieMaterialService
+    private movieMaterialService: MovieMaterialService,
+    private authQuery: AuthQuery
   ) {
     super(store);
   }
@@ -79,7 +88,7 @@ export class DeliveryService extends CollectionService<DeliveryState> {
     return this.movieQuery.selectActiveId().pipe(
       // Reset the store everytime the movieId changes
       tap(_ => this.store.reset()),
-      switchMap(movieId => awaitSyncQuery.call(this, deliveriesListQuery(movieId)))
+      switchMap(movieId => awaitSyncQuery.call(this, deliveriesListQuery(movieId, this.authQuery.orgId)))
     );
   }
 
@@ -133,7 +142,8 @@ export class DeliveryService extends CollectionService<DeliveryState> {
       movieId,
       validated: [],
       mustChargeMaterials: opts.mustChargeMaterials,
-      mustBeSigned: opts.mustBeSigned
+      mustBeSigned: opts.mustBeSigned,
+      stakeholderIds: [organization.id]
     });
 
     await this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
@@ -141,7 +151,7 @@ export class DeliveryService extends CollectionService<DeliveryState> {
       const deliveryIds = movieSnap.data().deliveryIds || [];
 
       // Create document and permissions
-      await this.permissionsService.createDocAndPermissions(delivery, organization, tx);
+      this.add(delivery);
 
       // If there is a templateId, and mustBeSigned is true, copy template materials to the delivery
       if (!!opts.templateId && delivery.mustBeSigned) {
@@ -166,6 +176,14 @@ export class DeliveryService extends CollectionService<DeliveryState> {
     return id;
   }
 
+  onCreate(delivery: Delivery, { write }: WriteOptions) {
+    // When a movie is created, we also create a permissions document for it.
+    const organizationId = this.organizationQuery.getActiveId();
+    const documentPermissions = createDocPermissions({ id: delivery.id, ownerId: organizationId });
+    const documentPermissionsRef = this.db.doc(`permissions/${organizationId}/documentPermissions/${documentPermissions.id}`).ref;
+    write.set(documentPermissionsRef, documentPermissions);
+  }
+
   /** Add a new delivery by copying the movie's materials */
   public async addDeliveryWithMovieMaterials(opts?: AddDeliveryOptions) {
     const id = this.db.createId();
@@ -178,7 +196,8 @@ export class DeliveryService extends CollectionService<DeliveryState> {
       movieId,
       validated: [],
       mustChargeMaterials: opts.mustChargeMaterials,
-      mustBeSigned: opts.mustBeSigned
+      mustBeSigned: opts.mustBeSigned,
+      stakeholderIds: [organization.id]
     });
 
     await this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
@@ -186,7 +205,7 @@ export class DeliveryService extends CollectionService<DeliveryState> {
       const deliveryIds = movieSnap.data().deliveryIds || [];
 
       // Create document and permissions
-      await this.permissionsService.createDocAndPermissions(delivery, organization, tx);
+      this.add(delivery);
 
       // If mustBeSigned is true, copy materials to the delivery
       if (delivery.mustBeSigned) {
@@ -239,7 +258,7 @@ export class DeliveryService extends CollectionService<DeliveryState> {
     const { mustBeSigned, id } = this.query.getActive();
 
     // Add an id for new steps
-    const stepsWithId = delivery.steps.map(step => (step.id ? step : { ...step, id: this.db.createId() }));
+    const stepsWithId = delivery.steps.map(step => step.id ? step : { ...step, id: this.db.createId() });
 
     // Find steps that need to be removed
     const deletedSteps = oldSteps.filter(
@@ -247,9 +266,11 @@ export class DeliveryService extends CollectionService<DeliveryState> {
     );
 
     return this.db.firestore.runTransaction(async tx => {
-    // We set the concerned materials stepId to an empty string
+      // We set the concerned materials stepId to an empty string
       deletedSteps.forEach(step => {
-        const materials = this.materialQuery.getAll().filter(material => material.stepId === step.id);
+        const materials = this.materialQuery
+          .getAll()
+          .filter(material => material.stepId === step.id);
         // If the delivery is mustBeSigned, we update stepId of materials in the sub-collection of delivery
         if (mustBeSigned) {
           this.deliveryMaterialService.removeStepIdDeliveryMaterials(materials, tx);
@@ -258,23 +279,26 @@ export class DeliveryService extends CollectionService<DeliveryState> {
           const materialsWithoutStep = materials.map(material => ({ ...material, stepId: '' }));
           this.movieMaterialService.update(materialsWithoutStep, { write: tx });
         }
-      })
+      });
 
-      return this.update(id, {
-        // Update minimum guaranteed informations of delivery
-        mgAmount: delivery.mgAmount,
-        mgCurrency: delivery.mgCurrency,
-        mgDeadlines: delivery.mgDeadlines,
+      return this.update(
+        id,
+        {
+          // Update minimum guaranteed informations of delivery
+          mgAmount: delivery.mgAmount,
+          mgCurrency: delivery.mgCurrency,
+          mgDeadlines: delivery.mgDeadlines,
 
-        // Update dates of delivery
-        dueDate: delivery.dueDate,
-        acceptationPeriod: delivery.acceptationPeriod,
-        reWorkingPeriod: delivery.reWorkingPeriod,
+          // Update dates of delivery
+          dueDate: delivery.dueDate,
+          acceptationPeriod: delivery.acceptationPeriod,
+          reWorkingPeriod: delivery.reWorkingPeriod,
 
-        // Update steps of delivery
-        steps: stepsWithId
-      },
-      { write: tx });
+          // Update steps of delivery
+          steps: stepsWithId
+        },
+        { write: tx }
+      );
     });
   }
 
@@ -328,8 +352,8 @@ export class DeliveryService extends CollectionService<DeliveryState> {
       confirmation: `You are about to sign the delivery ${name}`,
       success: `The delivery has been successfully signed !`,
       redirectName: 'Back to Delivery',
-      redirectRoute: `/layout/o/delivery/${movieId}/${deliveryId}/informations`,
-    }
+      redirectRoute: `/layout/o/delivery/${movieId}/${deliveryId}/informations`
+    };
     this.walletService.setTx(CreateTx.approveDelivery(orgEthAddress, deliveryHash, callback));
     this.walletService.setTxFeedback(feedback);
   }
@@ -401,7 +425,7 @@ export class DeliveryService extends CollectionService<DeliveryState> {
       // If values are not the same, this material is considered as new and we have to create
       // and set a new material (with new Id).
       if (!sameValuesMaterial) {
-        const newMaterial = createMaterial({...material, id: this.db.createId()});
+        const newMaterial = createMaterial({ ...material, id: this.db.createId() });
         this.movieMaterialService.setNewMaterial(newMaterial, delivery, tx);
       }
     });

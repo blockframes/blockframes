@@ -2,6 +2,10 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
+    ///////////////////
+    /// COLLECTIONS ///
+    ///////////////////
+
     // Note: Add a verification of each document ID => {id: ID_SHOULD_BE_EQUAL_TO_PATH}
     // Add schemas validators for document update/create => ISSUE#650
 
@@ -34,7 +38,9 @@ service cloud.firestore {
     	allow read: if userId() == existingData().user.uid
       	|| userOrgId() == existingData().organization.id;
     	allow update, create: if userId() == incomingData().user.uid
-      	|| userOrgId() == incomingData().organization.id;
+      	|| userOrgId() == incomingData().organization.id
+        || isOwner(userOrgId(), incomingData().docId)
+        || orgCan('isAdmin', userOrgId(), incomingData().docId);
       allow delete: if isOrgAdmin(userId(), orgId) || userId() == existingData().user.uid;
     }
 
@@ -51,12 +57,8 @@ service cloud.firestore {
       allow delete: if isSuperAdmin(userId(), orgId);
       allow read: if isSignedIn();
 
-      match /carts/{basketId} {
-      	allow read: if isOrgMember(userId(), orgId);
-        allow create: if isOrgMember(userId(), orgId);
-        allow update: if isOrgMember(userId(), orgId)
-        	&& incomingData().id == existingData().id;
-        allow delete: if isOrgAdmin(userId(), orgId);
+      match /{documents=**} {
+        allow read, write;
       }
     }
 
@@ -73,31 +75,60 @@ service cloud.firestore {
         && incomingData().id == existingData().id;
 
       match /{documents=**} {
-      	allow read, write;
+        allow read, write;
       }
     }
 
     /// MOVIES RULES ///
 
     match /movies/{movieId} {
+    	// We allow all movie read as Archipel Content is a catalog of public movies.
       allow read: if userHasValidOrg();
       allow create: if userHasValidOrg()
-      	&& documentIdChecked(movieId, 'movies');
-      allow update: if getDocumentPermissions(userOrgId(), movieId).ownerId == userOrgId()
-      	&& isOrgAdmin(userId(), userOrgId())
+      	&& documentIdChecked(movieId, 'movies')
+        && canCreateNewPermissions(userOrgId(), movieId);
+      allow update: if isOrgAdmin(userId(), userOrgId())
         && documentIdChecked(movieId, 'movies')
-        && incomingData().id == existingData().id;
-      allow delete: if getDocumentPermissions(userOrgId(), movieId).ownerId == userOrgId()
-      	&& isSuperAdmin(userId(), userOrgId());
+        && incomingData().id == existingData().id
+        && orgCan('canUpdate', userOrgId(), movieId);
+      allow delete: if orgCan('canDelete', userOrgId(), movieId)
+      	&& isOrgAdmin(userId(), userOrgId());
 
-      match /{documents=**} {
-      	allow read: if userHasValidOrg();
-      	allow create: if userHasValidOrg();
-      	allow update: if getDocumentPermissions(userOrgId(), movieId).ownerId == userOrgId()
-      		&& isOrgAdmin(userId(), userOrgId())
-          && incomingData().id == existingData().id;
-      	allow delete: if getDocumentPermissions(userOrgId(), movieId).ownerId == userOrgId()
-      		&& isSuperAdmin(userId(), userOrgId());
+        match /materials/{materialId} {
+          allow read: if userHasValidOrg();
+          allow create: if userHasValidOrg()
+            && documentIdChecked(movieId, 'movies');
+          allow update: if userHasValidOrg()
+          	&& documentIdChecked(movieId, 'movies')
+            && incomingData().id == existingData().id;
+          allow delete: if userHasValidOrg();
+        }
+    }
+
+    /// DELIVERIES RULES ///
+
+    match /deliveries/{deliveryId} {
+    	allow read: if isStakeholder(userOrgId());
+      allow create: if userHasValidOrg()
+      	&& documentIdChecked(deliveryId, 'deliveries')
+        && canCreateNewPermissions(userOrgId(), deliveryId);
+      allow update: if orgCan('canUpdate', userOrgId(), deliveryId);
+      allow delete: if orgCan('canDelete', userOrgId(), deliveryId);
+
+      match /materials/{materialId} {
+        allow read: if userHasValidOrg();
+      	allow create: if userHasValidOrg()
+      		&& documentIdChecked(deliveryId, 'deliveries')
+        	&& orgCan('canCreate', userOrgId(), deliveryId);
+      	allow update: if orgCan('canUpdate', userOrgId(), deliveryId)
+        	&& incomingData().id == existingData().id;
+        allow delete: if orgCan('canUpdate', userOrgId(), deliveryId);
+      }
+
+      match /stakeholders/{stakeholderId} {
+        allow read: if userHasValidOrg();
+        allow write: if orgCan('isAdmin', userOrgId(), deliveryId)
+        	|| isOwner(userOrgId(), deliveryId);
       }
     }
 
@@ -108,12 +139,16 @@ service cloud.firestore {
       allow read: if true; // @TODO #1388 Only if licensee.orgId == currentUser.orgId || if licensor.orgId == currentUser.orgId
     }
 
+    /////////////////
     /// FUNCTIONS ///
+    /////////////////
 
+    // Check the requested data.
     function existingData() {
       return resource.data;
     }
 
+    // Check the data after being updated.
     function incomingData() {
       return request.resource.data;
     }
@@ -152,27 +187,44 @@ service cloud.firestore {
     function isOrgAdmin(userId, orgId) {
     	// /!\ Carefull, parentheses needed for operator precedence to work
     	return (getOrgPermissions(orgId).roles[userId] == "admin")
-        || isSuperAdmin(userId, orgId);
+        || (isSuperAdmin(userId, orgId));
     }
 
     function isOrgMember(userId, orgId) {
     	return (getOrgPermissions(orgId).roles[userId] == "member")
-      	|| isOrgAdmin(userId, orgId);
+      	|| (isOrgAdmin(userId, orgId));
+    }
+
+    function isOwner(orgId, docId) {
+    	return getDocumentPermissions(orgId, docId).ownerId == orgId;
+    }
+
+    // Check is the organization is stakeholder on a delivery.
+    function isStakeholder(orgId) {
+    	return orgId in resource.data.stakeholderIds;
     }
 
     function getDocumentPermissions(orgId, docId) {
     	return get(/databases/$(database)/documents/permissions/$(orgId)/documentPermissions/$(docId)).data;
     }
 
+    function canCreateNewPermissions(orgId, docId) {
+    	return getAfter(/databases/$(database)/documents/permissions/$(orgId)/documentPermissions/$(docId)).data.canCreate == true;
+    }
+
     function getOrgPermissions(orgId) {
     	return get(/databases/$(database)/documents/permissions/$(orgId)).data;
     }
 
+    function documentPermissionsExist(orgId, docId) {
+    	return exists(/databases/$(database)/documents/permissions/$(orgId)/documentPermissions/$(docId));
+    }
+
 		// Parameter "action" can either be "canCreate", "canRead", "canUpdate" or "canDelete"
     function orgCan(action, orgId, docId) {
-      return (getOrgDocumentPermissions(orgId, docId).owner == orgId)
-        || (getOrgDocumentPermissions(orgId, docId).admin == true)
-        || (getOrgDocumentPermissions(orgId, docId)[action] == true);
+      return (getDocumentPermissions(orgId, docId).ownerId == orgId)
+        || (getDocumentPermissions(orgId, docId).admin == true)
+        || (getDocumentPermissions(orgId, docId)[action] == true);
     }
   }
 }

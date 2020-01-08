@@ -17,7 +17,7 @@
     <ng-container matColumnDef="action">
       <th mat-header-cell *matHeaderCellDef></th>
       <td [class.disabled]="!stakeholder.isAccepted" mat-cell *matCellDef="let stakeholder">
-        <button mat-icon-button (click)="removed.emit(stakeholder.id)">
+        <button mat-icon-button (click)="removed.emit(stakeholder)">
           <mat-icon svgIcon="trash"></mat-icon>
         </button>
       </td>

@@ -9,7 +9,7 @@ import { DeliveryService } from '../../+state/delivery.service';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MovieQuery, Movie } from '@blockframes/movie';
 import { ConfirmComponent } from '@blockframes/ui';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { map, switchMap, tap, filter } from 'rxjs/operators';
 import { MaterialForm, MaterialControl } from '../../forms/material.form';
 import { applyTransaction } from '@datorama/akita';
 import { id as keccak256 } from '@ethersproject/hash';
@@ -58,6 +58,7 @@ export class DeliveryEditableComponent implements OnInit {
       this.query.selectActive(),
       this.materialQuery.selectAll()
     ]).pipe(
+      filter(([delivery, materials]) => !!delivery),
       tap(([delivery, materials]) => {
         this.form.upsertValue(materials);
         // Disable or enable form depending on delivery isSigned property
@@ -197,9 +198,13 @@ export class DeliveryEditableComponent implements OnInit {
   }
 
   private async deleteDelivery() {
-    await this.service.deleteDelivery();
-    this.router.navigate([`../../list`], { relativeTo: this.route });
-    this.snackBar.open('Delivery deleted', 'close', { duration: 2000 });
+    try {
+      await this.service.deleteDelivery();
+      this.router.navigate([`../../list`], { relativeTo: this.route });
+      this.snackBar.open('Delivery deleted', 'close', { duration: 2000 });
+    } catch (error) {
+      this.snackBar.open(error.message, 'close', { duration: 2000 });
+    }
   }
 
   public openUnsealDelivery() {

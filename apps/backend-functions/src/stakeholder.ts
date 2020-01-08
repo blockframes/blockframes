@@ -1,7 +1,13 @@
 import { db, functions } from './internals/firebase';
 import { triggerNotifications } from './notification';
 import { getDocument, getOrganizationsOfDocument } from './data/internals';
-import { OrganizationDocument, SnapObject, MovieDocument, StakeholderDocument, DeliveryDocument } from './data/types';
+import {
+  OrganizationDocument,
+  SnapObject,
+  MovieDocument,
+  StakeholderDocument,
+  DeliveryDocument
+} from './data/types';
 import { PublicOrganization } from '@blockframes/organization/types';
 import { createNotification, NotificationType } from '@blockframes/notification/types';
 import { PublicMovie } from '@blockframes/movie/types';
@@ -38,7 +44,7 @@ async function stakeholdersCollectionEvent(
 
   // TODO(issue#686): extract semi-generic part, too many if then else, won't work with more types.
   const delivery = await getDocument<DeliveryDocument>(`deliveries/${context.params.deliveryID}`);
-  const movie = await getDocument<MovieDocument>(`movies/${delivery.movieId}`)
+  const movie = await getDocument<MovieDocument>(`movies/${delivery.movieId}`);
   const organization = await getDocument<PublicOrganization>(`orgs/${newStakeholder.orgId}`);
 
   if (!!delivery.id && !!newStakeholder && !!organization) {
@@ -61,11 +67,20 @@ async function stakeholdersCollectionEvent(
           : NotificationType.removeOrganization;
 
       const snapObject: SnapObject = {
-        organization: {id: organization.id, name: organization.name} as PublicOrganization,
-        movie: {id: movie.id, title: movie.main.title} as PublicMovie,
+        organization: { id: organization.id, name: organization.name } as PublicOrganization,
+        movie: { id: movie.id, title: movie.main.title } as PublicMovie,
         docId: delivery.id,
         type
       };
+
+      // Remove stakeholder id reference from delivery's stakeholderIds array.
+      // Remove documentPermissions for this delivery.
+      if (type === NotificationType.removeOrganization) {
+        await db.doc(`deliveries/${delivery.id}`).update({
+          stakeholderIds: delivery.stakeholderIds.filter((id: string) => id !== newStakeholder.orgId)
+        });
+        await db.doc(`permissions/${newStakeholder.orgId}/documentPermissions/${delivery.id}`).delete();
+      }
 
       const notifications = createNotifications(organizationsOfDocument, snapObject);
 

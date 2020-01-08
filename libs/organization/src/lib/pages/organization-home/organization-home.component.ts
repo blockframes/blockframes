@@ -8,18 +8,18 @@ import {
 import { map } from 'rxjs/operators';
 import { Observable, Subscription } from 'rxjs';
 import { AuthQuery, User } from '@blockframes/auth';
-import { InvitationType, Invitation } from '@blockframes/invitation/types';
+import { InvitationType, Invitation, InvitationFromUserToOrganization, InvitationFromOrganizationToUser } from '@blockframes/invitation/types';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material';
 
-const invitationActionFromUserToOrganization = (invitation: Invitation) => ({
+const invitationActionFromUserToOrganization = (invitation: InvitationFromUserToOrganization) => ({
   matIcon: 'alternate_email',
   title: `Pending request to ${invitation.organization.name}`,
   routerLink: './',
   description: ''
 });
 
-const invitationActionFromOrgToUser = (invitation: Invitation, action: () => void) => ({
+const invitationActionFromOrgToUser = (invitation: InvitationFromOrganizationToUser, action: () => void) => ({
   matIcon: 'alternate_email',
   title: `Join ${invitation.organization.name}`,
   action,
@@ -78,11 +78,11 @@ export class OrganizationHomeComponent implements OnInit, OnDestroy {
           switch (invitation.type) {
             case InvitationType.fromUserToOrganization:
               return {
-                ...invitationActionFromUserToOrganization(invitation),
+                ...invitationActionFromUserToOrganization(invitation as InvitationFromUserToOrganization),
                 button: { matIcon: 'delete_outline', action: () => this.cancelInvitation(invitation) }
               };
             case InvitationType.fromOrganizationToUser:
-              return invitationActionFromOrgToUser(invitation, () => {
+              return invitationActionFromOrgToUser(invitation as InvitationFromOrganizationToUser, () => {
                 this.acceptInvitation(invitation);
                 this.router.navigateByUrl('/layout/organization/loading');
               });

@@ -48,6 +48,7 @@ interface DeliveryRaw<D> {
   mgCurrentDeadline?: number;
   isSigned?: boolean;
   processedId?: string;
+  stakeholderIds: string[];
 }
 
 /** Document model of a delivery */

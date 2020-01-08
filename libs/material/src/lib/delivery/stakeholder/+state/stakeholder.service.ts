@@ -37,7 +37,9 @@ export class StakeholderService extends CollectionService<StakeholderState> {
       `deliveries/${docId}/stakeholders/${stakeholder.orgId}`
     );
 
-    !!tx ? tx.set(stakeholderDoc.ref, stakeholder) : this.add(stakeholder);
+    !!tx
+      ? tx.set(stakeholderDoc.ref, stakeholder)
+      : this.db.doc(`deliveries/${docId}/stakeholders/${stakeholder.orgId}`).set(stakeholder);
 
     if (organization.id !== this.authQuery.orgId) {
       this.invitationService.sendDocumentInvitationToOrg(organization, docId);

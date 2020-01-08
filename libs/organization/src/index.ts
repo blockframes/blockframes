@@ -13,6 +13,7 @@ export * from './lib/+state/organization.model';
 export * from './lib/+state/organization.query';
 export * from './lib/+state/organization.service';
 export * from './lib/+state/organization.store';
+export * from './lib/+state/organization.firestore';
 
 // Permission Guard
 export * from './lib/permissions/guard/permissions.guard';

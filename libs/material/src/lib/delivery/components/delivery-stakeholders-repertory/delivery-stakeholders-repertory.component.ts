@@ -10,7 +10,7 @@ import { Stakeholder } from '../../stakeholder/+state/stakeholder.model';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DeliveryStakeholdersRepertoryComponent {
-  @Output() removed = new EventEmitter<string>();
+  @Output() removed = new EventEmitter<Stakeholder>();
   @Output() added = new EventEmitter<OrganizationAlgoliaResult>();
 
   @Input() set stakeholders(stakeholders: Stakeholder[]) {

@@ -13,7 +13,6 @@ import { mnemonic, relayer } from './environments/environment';
 import {
   deleteFirestoreDelivery,
   deleteFirestoreMaterial,
-  deleteFirestoreMovie,
   deleteFirestoreTemplate
 } from './delete';
 import {
@@ -92,8 +91,7 @@ export const sendDemoRequest = functions.https.onCall(logErrors(users.sendDemoRe
  *    Organization cannot access applications until they requested it and
  *    a cascade8 administrator accept their request.
  */
-export const admin = functions.https
-  .onRequest(adminApp);
+export const admin = functions.https.onRequest(adminApp);
 
 /** Trigger: when signature (`orgId`) is added to or removed from `validated[]`. */
 export const onDeliveryUpdateEvent = onDocumentUpdate('deliveries/{deliveryID}', onDeliveryUpdate);
@@ -141,7 +139,7 @@ export const onMovieUpdateEvent = onDocumentUpdate(
  */
 export const onMovieDeleteEvent = onDocumentDelete(
   'movies/{movieId}',
-  onMovieDelete
+  logErrors(onMovieDelete)
 )
 
 //--------------------------------
@@ -204,8 +202,6 @@ export const relayerSend = functions.https
 //--------------------------------
 //   PROPER FIRESTORE DELETION  //
 //--------------------------------
-
-export const deleteMovie = onDocumentDelete('movies/{movieId}', logErrors(deleteFirestoreMovie));
 
 export const deleteDelivery = onDocumentDelete('deliveries/{deliveryId}', logErrors(deleteFirestoreDelivery));
 

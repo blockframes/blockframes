@@ -5,7 +5,6 @@ import { OrganizationForm } from '../../forms/organization.form';
 import { Observable } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { startWith, tap } from 'rxjs/operators';
-import { FireQuery } from '@blockframes/utils';
 
 @Component({
   selector: 'organization-editable',

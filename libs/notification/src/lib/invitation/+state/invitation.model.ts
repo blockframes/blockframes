@@ -1,7 +1,7 @@
 import { firestore } from 'firebase/app';
-import { PublicOrganization } from '@blockframes/organization';
 import { InvitationType, InvitationStatus, InvitationFromUserToOrganization, InvitationFromOrganizationToUser, InvitationToWorkOnDocument } from './invitation.firestore';
 import { PublicUser } from '@blockframes/auth/types';
+import { PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
 
 export { InvitationStatus } from './invitation.firestore';
 
