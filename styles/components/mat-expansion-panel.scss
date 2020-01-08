@@ -14,7 +14,7 @@
 }
 
 @mixin bf-expansion-panel-typography($config) {
-  .mat-expansion-panel-header {
+  .mat-expansion-panel-header-title {
     font: {
       size: mat-font-size($config, body-2);
       weight: mat-font-weight($config, button);
