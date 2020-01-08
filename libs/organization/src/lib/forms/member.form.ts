@@ -2,7 +2,7 @@ import { FormList } from "@blockframes/utils";
 import { FormGroup, FormControl } from "@angular/forms";
 import { OrganizationMember } from "../member/+state/member.model";
 
-function createMemberFormGroup(member: OrganizationMember) {
+function createMemberFormGroup(member: Partial<OrganizationMember> = {}) {
   return new FormGroup({
     uid: new FormControl(member.uid),
     name: new FormControl(member.name),

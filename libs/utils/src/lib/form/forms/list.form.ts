@@ -38,7 +38,7 @@ export class FormList<T, Control extends AbstractControl = any> extends FormArra
     if (createControl) {
       form['createControl'] = createControl.bind(form);
     }
-    if (!value.length) {
+    if (!value || !value.length) {
       const control = createControl ? createControl() : new FormControl();
       form.push(control);
     } else {
