@@ -1,5 +1,5 @@
 import { staticModels } from '@blockframes/movie';
-import { DeliveryStatus, MGDeadlineRaw, DeliveryDocument, DeliveryDocumentWithDates, StepDocumentWithDate, Timestamp } from './delivery.firestore';
+import { DeliveryStatus, MGDeadlineRaw, DeliveryDocument, DeliveryDocumentWithDates, StepDocumentWithDate } from './delivery.firestore';
 import { Stakeholder } from '../stakeholder/+state/stakeholder.model';
 
 export { DeliveryStatus, CurrencyCode } from './delivery.firestore';

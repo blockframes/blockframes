@@ -1,6 +1,6 @@
 import { createTerms } from "@blockframes/utils/common-interfaces/terms";
 import { createPrice } from "@blockframes/utils/common-interfaces/price";
-import { getCodeIfExists } from "@blockframes/movie/static-model/staticModels";
+import { getCodeIfExists } from "@blockframes/movie/movie/static-model/staticModels";
 import { ContractDocumentWithDates, ContractStatus, ContractTitleDetail } from "./contract.firestore";
 
 export type Contract = ContractDocumentWithDates;

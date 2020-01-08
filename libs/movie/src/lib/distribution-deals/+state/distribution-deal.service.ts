@@ -10,10 +10,7 @@ import { createContractTitleDetail } from '@blockframes/contract/+state/contract
 import objectHash from 'object-hash';
 import { firestore } from 'firebase';
 
-
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies/:movieId/distributionDeals' })
 export class DistributionDealService extends CollectionService<DistributionDealState> {
   constructor(
@@ -34,7 +31,7 @@ export class DistributionDealService extends CollectionService<DistributionDealS
    *
    * @param movieId
    */
-  private distributionDealsCollection(movieId: string): AngularFirestoreCollection<DistributionDeal> {
+  private getCollection(movieId: string): AngularFirestoreCollection<DistributionDeal> {
     return this.db.doc(movieId).collection('distributiondeals');
   }
 
@@ -57,13 +54,13 @@ export class DistributionDealService extends CollectionService<DistributionDealS
     // @todo #1397 change this price calculus
     contract.titles[movieId].price = contract.price;
 
-    const contractId = await this.contractService.addContract(contract);
+    const contractId = await this.contractService.add(contract) as string;
 
     // Link distributiondeal with contract
     distributionDeal.contractId = contractId;
 
     // @TODO #1389 Use native akita-ng-fire functions : https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
-    await this.distributionDealsCollection(movieId).doc(dealId).set(distributionDeal);
+    await this.getCollection(movieId).doc(dealId).set(distributionDeal);
     return dealId;
   }
 
@@ -74,7 +71,7 @@ export class DistributionDealService extends CollectionService<DistributionDealS
    */
   public async existingDistributionDeal(movieId: string, distributionDeal: DistributionDeal): Promise<DistributionDeal> {
     const dealId = objectHash(distributionDeal);
-    const distributionDealSnapshot = await this.distributionDealsCollection(movieId).doc(dealId).get().toPromise();
+    const distributionDealSnapshot = await this.getCollection(movieId).doc(dealId).get().toPromise();
     return distributionDealSnapshot.exists ? distributionDealSnapshot.data() as DistributionDeal : undefined;
   }
 
@@ -82,7 +79,7 @@ export class DistributionDealService extends CollectionService<DistributionDealS
    * @param movieId
    */
   public async getDistributionDeals(movieId: string): Promise<DistributionDeal[]> {
-    const deals = await this.distributionDealsCollection(movieId).get().toPromise();
+    const deals = await this.getCollection(movieId).get().toPromise();
     return deals.docs.map(doc => this.formatDistributionDeal(doc.data()));
   }
 

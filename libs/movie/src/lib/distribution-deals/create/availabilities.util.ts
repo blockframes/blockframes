@@ -1,5 +1,5 @@
-import { MovieSalesAgentDeal } from '@blockframes/movie/+state';
-import { MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
+import { MovieSalesAgentDeal } from '../../movie/+state/movie.model';
+import { MovieLanguageSpecification } from '../../movie/+state/movie.firestore';
 import { DistributionDeal } from '../+state/distribution-deal.model';
 import { DateRange } from '@blockframes/utils/common-interfaces/range';
 

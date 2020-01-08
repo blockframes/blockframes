@@ -8,6 +8,7 @@ export interface StakeholderState extends EntityState<StakeholderDocument>, Mult
 @StoreConfig({ name: 'stakeholder' })
 export class StakeholderStore extends EntityStore<StakeholderState, StakeholderDocument> {
 
+  constructor() {
+    super()
+  }
 }
-
-

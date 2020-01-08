@@ -59,7 +59,7 @@
       "@blockframes/movie": [
         "libs/movie/src/index.ts"
       ],
-      "@blockframes/movie/*": [
+      "@blockframes/movie/movie*": [
         "libs/movie/src/lib/movie/*"
       ],
       "@blockframes/movie/import": [
@@ -68,7 +68,7 @@
       "@blockframes/movie/types": [
         "libs/movie/src/lib/movie/+state/movie.firestore.ts"
       ],
-      "@blockframes/movie/deals/*": [
+      "@blockframes/movie/distribution-deals/*": [
         "libs/movie/src/lib/distribution-deals/*"
       ],
 

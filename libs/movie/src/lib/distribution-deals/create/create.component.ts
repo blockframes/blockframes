@@ -11,7 +11,7 @@ import {
 } from '@angular/core';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { Router } from '@angular/router';
-import { Movie, MovieQuery } from '@blockframes/movie/+state';
+import { Movie, MovieQuery } from '../../movie/+state';
 import {
   MEDIAS_SLUG,
   MediasSlug,
@@ -19,8 +19,8 @@ import {
   TerritoriesSlug,
   LanguagesSlug,
   LANGUAGES_SLUG,
-  LanguagesLabel
-} from '@blockframes/movie/static-model/types';
+  LanguagesLabel,
+} from '../../movie/static-model/types';
 import { DateRange } from '@blockframes/utils/common-interfaces/range';
 import { ControlErrorStateMatcher, languageValidator } from '@blockframes/utils';
 import {
@@ -30,7 +30,7 @@ import {
   getDistributionDealsWithMediasTerritoriesAndLanguagesInCommon
 } from './availabilities.util';
 import { DistributionDealForm } from './create.form';
-import { getCodeIfExists } from '@blockframes/movie/static-model/staticModels';
+import { getCodeIfExists } from '../../movie/static-model/staticModels';
 import { MatSnackBar } from '@angular/material';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { createParty } from '@blockframes/utils/common-interfaces/identity';

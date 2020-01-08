@@ -1,4 +1,4 @@
-import { Movie } from '@blockframes/movie/+state';
+import { Movie } from '@blockframes/movie/movie/+state';
 
 export function sortMovieBy(a: Movie, b: Movie, sortIdentifier: string) {
   switch (sortIdentifier) {
