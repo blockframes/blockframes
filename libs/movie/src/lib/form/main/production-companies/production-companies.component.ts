@@ -1,5 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import { FormArray, FormControl } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { ProductionCompagnyForm } from '../main.form';
 import { FormList } from '@blockframes/utils/form/forms/list.form';
 import { Company } from "@blockframes/utils/common-interfaces/identity";
@@ -11,12 +11,16 @@ import { Company } from "@blockframes/utils/common-interfaces/identity";
 })
 export class ProductionCompaniesComponent {
   @Input() form: FormList<Company>;
+  addForm = new FormControl();
 
   public add(): void {
-    this.form.push(new ProductionCompagnyForm())
+    const displayName = this.addForm.value;
+    this.form.push(new ProductionCompagnyForm({ displayName }));
+    this.addForm.reset();
   }
 
   public remove(i: number): void {
     this.form.removeAt(i);
+    console.log(this.form)
   }
 }
