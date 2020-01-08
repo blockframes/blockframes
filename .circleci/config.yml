@@ -220,7 +220,16 @@ workflows:
   version: 2.1
   build-and-test:
     jobs:
-      - build-and-test-prs
+      # build only the PR
+      - build-and-test-prs:
+          filters:
+            branches:
+              ignore:
+                - ci
+                - master
+                - production
+                - staging
+      # build EVERYTHING and trigger the rest of the deploy
       - build-and-test-all:
           filters:
             branches:
