@@ -1,7 +1,7 @@
-import { MatOptionModule } from '@angular/material/core';
 import { MovieFormVersionInfoComponent } from './version-info.component';
 
 // Angular
+import { MatOptionModule } from '@angular/material/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';

@@ -4,13 +4,13 @@ import { Component } from '@angular/core';
 import models from '../../../static-model/staticModels'
 
 @Component({
-    selector: '[formSalesInfo] movie-form-format',
+    selector: '[form] movie-form-format',
     templateUrl: './format.component.html',
     styleUrls: ['./format.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieFormFormatComponent {
-    @Input() formSalesInfo: MovieSalesInfoForm;
+    @Input() form: MovieSalesInfoForm;
 
     public staticFormats = models.MOVIE_FORMAT;
 

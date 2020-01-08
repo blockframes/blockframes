@@ -8,7 +8,7 @@ import { Component, ChangeDetectionStrategy, OnInit, Input } from '@angular/core
 import { default as staticModels } from '../../static-model/staticModels';
 
 @Component({
-  selector: 'movie-form-version-info',
+  selector: '[form] movie-form-version-info',
   templateUrl: './version-info.component.html',
   styleUrls: ['./version-info.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

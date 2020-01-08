@@ -1,4 +1,4 @@
-import { MovieForm } from '@blockframes/movie/form/movie.form';
+import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
@@ -12,10 +12,6 @@ export class TunnelTechnicalInfoComponent {
 
     get movieSalesInfo() {
         return this.movieForm.get('salesInfo');
-    }
-
-    get movieMain() {
-        return this.movieForm.get('main');
     }
 
     get movieVersionInfo() {

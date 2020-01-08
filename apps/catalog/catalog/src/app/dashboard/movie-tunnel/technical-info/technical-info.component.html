@@ -7,15 +7,16 @@
           <mat-card-title>Format</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-            <movie-form-format [formSalesInfo]="movieSalesInfo"></movie-form-format>
+            <movie-form-format [form]="movieSalesInfo"></movie-form-format>
         </mat-card-content>
       </mat-card>
       <mat-card>
         <mat-card-header>
+          <!-- TOD(MF) ADD DYNAMIC VERSION WORD PLURAL HERE -->
           <mat-card-title>Version available</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-            <movie-form-version-info [formMain]="movieMain" [formVersionInfo]="movieVersionInfo"></movie-form-version-info>
+            <movie-form-version-info [form]="movieVersionInfo"></movie-form-version-info>
         </mat-card-content>
       </mat-card>
     </section>
