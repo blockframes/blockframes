@@ -29,6 +29,9 @@ function createMovieSalesInfoControls(salesInfo: Partial<MovieSalesInfo> = {}){
     internationalPremiere: new InternationalPremiereForm(entity.internationalPremiere),
     originCountryReleaseDate: new FormControl(entity.originCountryReleaseDate),
     broadcasterCoproducers: FormList.factory(entity.broadcasterCoproducers),
+    format: new FormControl(entity.format),
+    formatQuality: new FormControl(entity.formatQuality),
+    soundFormat: new FormControl(entity.soundFormat)
   }
 }
 
