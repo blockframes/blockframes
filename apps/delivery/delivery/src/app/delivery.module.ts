@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { MovieOrganizationListGuard } from '@blockframes/movie/guards/movie-organization-list.guard';
+import { MovieOrganizationListGuard } from '@blockframes/movie/movie/guards/movie-organization-list.guard';
 
 export const routes: Routes = [
   {

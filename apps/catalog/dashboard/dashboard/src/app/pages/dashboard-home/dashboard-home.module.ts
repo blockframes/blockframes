@@ -18,10 +18,10 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { CatalogDashboardHomeComponent } from './dashboard-home.component';
 
 // Modules
-import { MovieCreateModule } from '@blockframes/movie/components/movie-create/movie-create.module';
+import { MovieCreateModule } from '@blockframes/movie/movie/components/movie-create/movie-create.module';
 import { MovieCardModule } from '@blockframes/ui/movie-card/movie-card.module';
-import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
-import { MovieOrganizationListGuard } from '@blockframes/movie/guards/movie-organization-list.guard';
+import { MovieActiveGuard } from '@blockframes/movie/movie/guards/movie-active.guard';
+import { MovieOrganizationListGuard } from '@blockframes/movie/movie/guards/movie-organization-list.guard';
 
 
 

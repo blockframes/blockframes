@@ -7,7 +7,7 @@ import { AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestor
 import { AngularFireFunctionsModule, AngularFireFunctions } from '@angular/fire/functions';
 import { AngularFireModule } from '@angular/fire';
 import { createServiceFactory, SpectatorService } from '@ngneat/spectator/jest';
-import { Movie } from '@blockframes/movie/+state/movie.model';
+import { Movie } from '@blockframes/movie/movie/+state/movie.model';
 import { OrganizationQuery, WishlistStatus } from '@blockframes/organization';
 import { initializeTestApp } from '@firebase/testing';
 

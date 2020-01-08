@@ -1,5 +1,5 @@
-import { MovieCurrenciesSlug } from "@blockframes/movie/static-model/types";
-import { getCodeIfExists } from "@blockframes/movie/static-model/staticModels";
+import { MovieCurrenciesSlug } from "@blockframes/movie/movie/static-model/types";
+import { getCodeIfExists } from "@blockframes/movie/movie/static-model/staticModels";
 
 export interface Price {
   amount: number;

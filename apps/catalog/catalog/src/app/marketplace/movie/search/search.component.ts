@@ -17,8 +17,8 @@ import {
 } from '@angular/core';
 import { BreakpointObserver } from '@angular/cdk/layout';
 // Blockframes
-import { Movie } from '@blockframes/movie/+state/movie.model';
-import { MovieQuery } from '@blockframes/movie/+state/movie.query';
+import { Movie } from '@blockframes/movie/movie/+state/movie.model';
+import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import {
   GenresLabel,
@@ -37,8 +37,8 @@ import {
   TerritoriesSlug,
   MovieStatusLabel,
   MOVIE_STATUS_LABEL
-} from '@blockframes/movie/static-model/types';
-import { getCodeIfExists } from '@blockframes/movie/static-model/staticModels';
+} from '@blockframes/movie/movie/static-model/types';
+import { getCodeIfExists } from '@blockframes/movie/movie/static-model/staticModels';
 import { languageValidator } from '@blockframes/utils/form/validators/validators';
 import { ControlErrorStateMatcher } from '@blockframes/utils/form/validators/validators';
 import { MovieAlgoliaResult } from '@blockframes/utils/algolia';
@@ -56,8 +56,8 @@ import { Index } from 'algoliasearch';
 import flatten from 'lodash/flatten';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { CatalogCartQuery } from '../../distribution-deal/+state';
-import { MovieDocumentWithDates } from '@blockframes/movie/+state/movie.firestore';
-import { DistributionDealService } from '@blockframes/movie/deals/+state/distribution-deal.service';
+import { MovieDocumentWithDates } from '@blockframes/movie/movie/+state/movie.firestore';
+import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state/distribution-deal.service';
 
 @Component({
   selector: 'catalog-movie-search',

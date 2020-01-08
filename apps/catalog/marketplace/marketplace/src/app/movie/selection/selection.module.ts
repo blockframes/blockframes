@@ -14,7 +14,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 
 // Custom modules
-import { CatalogFormSelectionModule } from '@blockframes/movie/deals/selection-table/form-selection.module';
+import { CatalogFormSelectionModule } from '@blockframes/movie/distribution-deals/selection-table/form-selection.module';
 
 @NgModule({
   declarations: [MarketplaceSelectionComponent],

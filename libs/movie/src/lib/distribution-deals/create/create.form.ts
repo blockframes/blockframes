@@ -4,9 +4,9 @@ import {
   TerritoriesSlug,
   TERRITORIES_SLUG,
   LanguagesSlug
-} from '@blockframes/movie/static-model/types';
-import { MovieMain } from '@blockframes/movie';
-import { MovieLanguageSpecification } from '@blockframes/movie/+state/movie.firestore';
+} from '../../movie/static-model/types';
+import { MovieMain } from '../../movie/+state/movie.model';
+import { MovieLanguageSpecification } from '../../movie/+state/movie.firestore';
 import { DistributionDeal, createDistributionDeal } from '../+state/distribution-deal.model';
 
 /* ------------- */
@@ -28,11 +28,11 @@ export function createLanguageControl(
   language: MovieLanguageSpecification,
   disableDubbed?: boolean
 ) {
-  return new FormGroup({
+  return {
     original: new FormControl(language.original),
     dubbed: new FormControl({ value: language.dubbed, disabled: disableDubbed }),
     subtitle: new FormControl(language.subtitle)
-  });
+  };
 }
 
 function createDistributionDealControls(deal: Partial<DistributionDeal> = {}) {
@@ -129,12 +129,12 @@ export class DistributionDealForm extends FormEntity<DistributionDealControls> {
       value.original = true;
       (<FormGroup>this.languages).addControl(
         language,
-        createLanguageControl(createMovieLanguage(value), true)
+        new FormGroup(createLanguageControl(createMovieLanguage(value), true))
       );
     }
     (<FormGroup>this.languages).addControl(
       language,
-      createLanguageControl(createMovieLanguage(value))
+      new FormGroup(createLanguageControl(createMovieLanguage(value)))
     );
   }
 

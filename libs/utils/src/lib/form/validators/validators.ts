@@ -9,9 +9,9 @@ import {
   AsyncValidatorFn
 } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { LANGUAGES_SLUG } from '@blockframes/movie/static-model/types';
+import { LANGUAGES_SLUG } from '@blockframes/movie/movie/static-model/types';
 import { network, baseEnsDomain } from '@env';
-import { getLabelByCode, Scope } from '@blockframes/movie/static-model/staticModels';
+import { getLabelByCode, Scope } from '@blockframes/movie/movie/static-model/staticModels';
 import { getProvider, orgNameToEnsDomain } from '@blockframes/ethers/helpers';
 
 // TODO issue#1146
