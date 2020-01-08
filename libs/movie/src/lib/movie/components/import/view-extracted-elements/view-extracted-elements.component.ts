@@ -113,7 +113,7 @@ enum SpreadSheetDistributionDeal {
   internationalTitle, // unused
   licensorName, // unused
   licenseeName, // unused
-  displayLicenseeName, 
+  displayLicenseeName,
   rightsStart,
   rightsEnd,
   territories,
@@ -1084,6 +1084,7 @@ export class ViewExtractedElementsComponent {
           }
 
           contract = await this.movieService.getContractWithLastVersionFromDeal(movie.id, distributionDeal.id);
+          importErrors.contract = contract;
 
           /////////////////
           // LICENSE STUFF
@@ -1097,7 +1098,7 @@ export class ViewExtractedElementsComponent {
 
           // Retreive the licensee inside the contract to update his infos
           const licensee = getContractParties(contract.doc, 'licensee').shift();
-          if(licensee === undefined){
+          if (licensee === undefined) {
             throw new Error(`No licensee found in contract ${contract.doc.id}.`);
           }
 
@@ -1277,7 +1278,7 @@ export class ViewExtractedElementsComponent {
             type: 'error',
             field: 'internalRef',
             name: "Movie",
-            reason: 'Movie not found',
+            reason: `Movie ${spreadSheetRow[SpreadSheetDistributionDeal.internalRef]} not found`,
             hint: 'Try importing it first or check if data is correct.'
           });
         }
@@ -1400,15 +1401,17 @@ export class ViewExtractedElementsComponent {
     //////////////////
 
     // TITLE PRICE VALIDATION
-    if (!contract.last.titles[importErrors.movieId].price.amount) {
-      errors.push({
-        type: 'warning',
-        field: 'price',
-        name: "Distribution deal price",
-        reason: 'Optional field is missing',
-        hint: 'Edit corresponding sheet field.'
-      });
-    }
+    Object.keys(contract.last.titles).forEach(titleId => {
+      if (!contract.last.titles[titleId].price.amount) {
+        errors.push({
+          type: 'warning',
+          field: 'price',
+          name: "Distribution deal price",
+          reason: `Optional field is missing for ${titleId}`,
+          hint: 'Edit corresponding sheet field.'
+        });
+      }
+    })
 
     return importErrors;
   }
@@ -1439,7 +1442,7 @@ export class ViewExtractedElementsComponent {
           errors: [],
         } as ContractsImportState;
 
-        if(newContract) {
+        if (newContract) {
           /**
            * @dev We process this data only if this is for a new contract
            * Changing parties or titles for a same contract is forbidden
@@ -1561,7 +1564,7 @@ export class ViewExtractedElementsComponent {
 
     if (spreadSheetRow[SpreadSheetContractTitle.titleCode + currentIndex]) {
       const title = await this.movieService.getFromInternalRef(spreadSheetRow[SpreadSheetContractTitle.titleCode + currentIndex]);
-      if(title === undefined){
+      if (title === undefined) {
         throw new Error(`Movie ${spreadSheetRow[SpreadSheetContractTitle.titleCode + currentIndex]} is missing id database.`);
       }
       titleDetails.titleId = title.id;
