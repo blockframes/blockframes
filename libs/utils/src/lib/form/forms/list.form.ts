@@ -7,19 +7,19 @@ import { createControlForm } from './create-control';
 type GetValue<T> = T extends FormEntity<infer J> ? J : T;
 
 /** Check form content has a value given by the user */
-function hasValue(v: any): boolean {
-  if (Array.isArray(v)) {
-    return v.some(i => hasValue(i));
+function hasValue(value: any): boolean {
+  if (Array.isArray(value)) {
+    return value.some(item => hasValue(item));
   }
-  if (v === null) {
+  if (value === null) {
     return false;
   }
-  if (typeof v === 'object') {
-    return Object.keys(v).some(k => hasValue(v[k]));
-  } else if (typeof v === 'number') {
+  if (typeof value === 'object') {
+    return Object.keys(value).some(key => hasValue(value[key]));
+  } else if (typeof value === 'number') {
     return true;
   } else {
-    return !!v
+    return !!value
   }
 }
 
