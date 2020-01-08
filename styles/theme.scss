@@ -35,9 +35,15 @@
   @include bf-color-font($theme);
 }
 
+@mixin bf-material-typography($typography) {
+  @include bf-expansion-panel-typography($typography);
+  @include bf-list-typography($typography);
+}
+
 .light-theme {
   @include angular-material-theme($bf-light-theme);
   @include sat-datepicker-theme($bf-light-theme);
+  @include bf-material-typography($bf-typography);
   @include bf-material-theme($bf-light-theme);
   // every components inside of dashboard-navbar should be always in the dark theme
   #dashboard-navbar {
@@ -51,4 +57,5 @@
   @include angular-material-theme($bf-dark-theme);
   @include sat-datepicker-theme($bf-dark-theme);
   @include bf-material-theme($bf-dark-theme);
+  @include bf-material-typography($bf-typography);
 }
