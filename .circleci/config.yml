@@ -150,7 +150,7 @@ jobs:
           npx ng build backend-ops --configuration=$ENV
       - run:
           name: prepare the ci for testing
-          command: node dist/apps/backend-ops/main.js prepareForTesting
+          command: npm run build:backend-ops && node dist/apps/backend-ops/main.js prepareForTesting
           when: always
       - run:
           name: main e2e tests
