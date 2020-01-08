@@ -98,6 +98,7 @@ jobs:
           name: build affected apps
           command: |
             AFFECTED=`npx nx affected:apps --plain --base=origin/master`;
+            echo "Building: ${AFFECTED}"
             for app in ${AFFECTED}; do
               echo "building ${app}";
               npm run build:${app};
