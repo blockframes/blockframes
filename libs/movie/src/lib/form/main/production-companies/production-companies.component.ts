@@ -1,18 +1,19 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { FormArray, FormControl } from '@angular/forms';
-
+import { ProductionCompagnyForm } from '../main.form';
+import { FormList } from '@blockframes/utils/form/forms/list.form';
+import { Company } from "@blockframes/utils/common-interfaces/identity";
 @Component({
   selector: '[form] movie-form-production-companies',
   templateUrl: './production-companies.component.html',
-  styleUrls: ['./production-companies.component.scss']
+  styleUrls: ['./production-companies.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductionCompaniesComponent {
-  @Input() form: FormArray;
+  @Input() form: FormList<Company>;
 
-  public add(event): void {
-    const { value = '' } = event;
-    this.form.push(new FormControl(value))
-    console.log(this.form);
+  public add(): void {
+    this.form.push(new ProductionCompagnyForm())
   }
 
   public remove(i: number): void {

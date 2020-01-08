@@ -8,6 +8,7 @@ import { ProductionCompaniesComponent } from './production-companies.component';
 // Material
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field'
 
 @NgModule({
@@ -18,6 +19,7 @@ import { MatFormFieldModule } from '@angular/material/form-field'
     FlexLayoutModule,
     MatInputModule,
     MatFormFieldModule,
+    MatButtonModule,
     MatIconModule
   ],
   exports: [ProductionCompaniesComponent]
