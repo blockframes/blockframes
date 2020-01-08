@@ -8,8 +8,8 @@ import { WishlistStatus } from '@blockframes/organization';
 import { AuthQuery } from '@blockframes/auth';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { MovieCurrenciesSlug } from '@blockframes/movie/static-model/types';
-import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
-import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state/distribution-deal.service';
+import { DistributionDeal } from '@blockframes/movie/deals/+state/distribution-deal.model';
+import { DistributionDealService } from '@blockframes/movie/deals/+state/distribution-deal.service';
 
 const wishlistFactory = (movieId: string): Wishlist => {
   return {

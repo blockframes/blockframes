@@ -57,7 +57,7 @@ import flatten from 'lodash/flatten';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { CatalogCartQuery } from '../../distribution-deal/+state/cart.query';
 import { MovieDocumentWithDates } from '@blockframes/movie/+state/movie.firestore';
-import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state/distribution-deal.service';
+import { DistributionDealService } from '@blockframes/movie/deals/+state/distribution-deal.service';
 
 @Component({
   selector: 'catalog-movie-search',

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { DistributionDealState, DistributionDealStore } from './distribution-deal.store';
-import { MovieQuery } from '../../+state/movie.query';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { ContractService } from '@blockframes/contract/+state/contract.service';
+import { MovieQuery } from '../../movie/+state/movie.query';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { AngularFirestoreCollection } from '@angular/fire/firestore';
 import { DistributionDeal } from './distribution-deal.model';

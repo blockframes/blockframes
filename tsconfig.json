@@ -60,13 +60,16 @@
         "libs/movie/src/index.ts"
       ],
       "@blockframes/movie/*": [
-        "libs/movie/src/lib/*"
+        "libs/movie/src/lib/movie/*"
       ],
       "@blockframes/movie/import": [
-        "libs/movie/src/lib/components/import/import-movie.module.ts"
+        "libs/movie/src/lib/movie/components/import/import-movie.module.ts"
       ],
       "@blockframes/movie/types": [
-        "libs/movie/src/lib/+state/movie.firestore.ts"
+        "libs/movie/src/lib/movie/+state/movie.firestore.ts"
+      ],
+      "@blockframes/movie/deals/*": [
+        "libs/movie/src/lib/distribution-deals/*"
       ],
 
       // ETHERS
