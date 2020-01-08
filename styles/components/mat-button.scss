@@ -1,19 +1,49 @@
-// Design for the stroke button is different in light theme
-.light-theme {
-  .mat-stroked-button {
-    border-radius: 50px;
-    box-shadow: none;
-    border: none;
-    background-color: mat-color($mat-light-bf-blue, 50);
-    }
-}
-
 @mixin mat-bf-button-theme($theme) {
+  $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
 
   .mat-stroked-button {
+    height: 52px;
+    border-radius: 26px;
+    &.mat-primary {
+      border-color: mat-color($primary);
+    }
     &.mat-accent {
       border-color: mat-color($accent);
     }
+    &.mat-warn {
+      border-color: mat-color($warn);
+    }
+  }
+
+  .mat-flat-button {
+    height: 52px;
+    border-radius: 26px;
+    &.mat-primary {
+      background-color: mat-color($primary);
+    }
+    &.mat-accent {
+      background-color: mat-color($accent);
+    }
+    &.mat-warn {
+      background-color: mat-color($warn);
+    }
+  }
+
+  .mat-fab, .mat-mini-fab {
+    &.mat-primary {
+      background-color: mat-color($primary);
+    }
+    &.mat-accent {
+      background-color: mat-color($accent);
+    }
+    &.mat-warn {
+      background-color: mat-color($warn);
+    }
+  }
+
+  a.primary-link {
+    color: mat-color($primary);
   }
 }
