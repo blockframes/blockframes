@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, Host } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { MovieForm } from '@blockframes/movie/form/movie.form';
-import { MovieService } from '@blockframes/movie/+state';
+import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
+import { MovieService } from '@blockframes/movie/movie/+state';
 import { Subscription } from 'rxjs';
 
 @Component({

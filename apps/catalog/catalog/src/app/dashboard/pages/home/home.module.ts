@@ -19,7 +19,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { HomeComponent } from './home.component';
 
 // Modules
-import { MovieCreateModule } from '@blockframes/movie/components/movie-create/movie-create.module';
+import { MovieCreateModule } from '@blockframes/movie/movie/components/movie-create/movie-create.module';
 import { MovieCardModule } from '@blockframes/ui/movie-card/movie-card.module';
 
 

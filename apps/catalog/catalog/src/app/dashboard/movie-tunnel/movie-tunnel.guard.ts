@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CanDeactivate } from '@angular/router';
-import { MovieForm } from '@blockframes/movie/form/movie.form';
+import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
 import { MovieTunnelComponent } from './movie-tunnel.component';
 
 @Injectable({ providedIn: 'root' })

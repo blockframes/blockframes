@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { MovieForm } from '@blockframes/movie/form/movie.form';
+import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
 
 @Component({
   selector: 'catalog-tunnel-keywords',

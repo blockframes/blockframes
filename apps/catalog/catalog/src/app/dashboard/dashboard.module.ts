@@ -2,14 +2,11 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LayoutModule } from './layout/layout.module';
 import { LayoutComponent } from './layout/layout.component';
-import { MovieCollectionGuard } from '@blockframes/movie';
 
 const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
-    canActivate: [MovieCollectionGuard],    // todo(#1476) move to a more precise place (overview or/and deals maybe)
-    canDeactivate: [MovieCollectionGuard],  // todo(#1476) move to a more precise place (overview or/and deals maybe)
     children: [
       {
         path: '',   // Home (dashboard if film, welcome if not)
@@ -21,7 +18,7 @@ const routes: Routes = [
       },
       {
         path: 'import', // Import bulk of movies
-        loadChildren: () => import('@blockframes/movie/components/import/import-movie.module')
+        loadChildren: () => import('@blockframes/movie/movie/components/import/import-movie.module')
           .then(m => m.ImportMovieModule)
       },
       {
