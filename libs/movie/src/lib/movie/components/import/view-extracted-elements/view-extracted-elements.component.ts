@@ -26,11 +26,11 @@ import { SSF } from 'xlsx';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { MovieLanguageTypes } from '@blockframes/movie/+state/movie.firestore';
 import { createCredit, createParty } from '@blockframes/utils/common-interfaces/identity';
-import { DistributionDeal, createDistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
+import { DistributionDeal, createDistributionDeal } from '@blockframes/movie/deals/+state/distribution-deal.model';
 import { Contract, createContract, validateContract } from '@blockframes/contract/+state/contract.model';
 import { ContractStatus } from '@blockframes/contract/+state/contract.firestore';
-import { LicenseStatus } from '@blockframes/movie/distribution-deals/+state/distribution-deal.firestore';
-import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state/distribution-deal.service';
+import { LicenseStatus } from '@blockframes/movie/deals/+state/distribution-deal.firestore';
+import { DistributionDealService } from '@blockframes/movie/deals/+state/distribution-deal.service';
 
 export interface SpreadsheetImportError {
   field: string;
