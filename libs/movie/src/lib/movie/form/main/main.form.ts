@@ -87,7 +87,7 @@ function createMovieMainControls(main : Partial<MovieMain> = {}) {
   }
 }
 
-type MovieMainControl = ReturnType<typeof createMovieMainControls>
+export type MovieMainControl = ReturnType<typeof createMovieMainControls>
 
 export class MovieMainForm extends FormEntity<MovieMainControl>{
   constructor(main: MovieMain) {
