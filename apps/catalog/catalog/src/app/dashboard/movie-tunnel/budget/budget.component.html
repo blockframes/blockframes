@@ -1,0 +1,25 @@
+<tunnel-page>
+  <h4 title>TITLE INFORMATION</h4>
+  <h1 subtitle>Budget, Quotas, Critics</h1>
+  <section tunnel-form>
+    <!-- Estimated Budget -->
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Budget Range</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <movie-form-estimated-budget [form]="estimatedBudget"></movie-form-estimated-budget>
+      </mat-card-content>
+    </mat-card>
+    <!-- Certifications -->
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Quotas</mat-card-title>
+        <mat-card-subtitle>Select all that apply</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <movie-form-certifications [form]="certifications"></movie-form-certifications>
+      </mat-card-content>
+    </mat-card>
+  </section>
+</tunnel-page>

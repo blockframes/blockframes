@@ -5,7 +5,6 @@ import {
   MovieMain,
   MoviePromotionalDescription,
   MoviePromotionalElements,
-  DistributionDealDocumentWithDates as DistributionDeal,
   MovieSalesAgentDealDocumentWithDates as MovieSalesAgentDeal,
   MovieSalesCast,
   MovieSalesInfoDocumentWithDates as MovieSalesInfo,
@@ -14,19 +13,17 @@ import {
   Prize,
   PromotionalElement,
   Title,
-  HoldbackWithDates as Holdback,
   WorkType,
-  FormatProfile,
   MovieLanguageSpecification,
   MovieLanguageTypes,
   StoreConfig,
   StoreType,
   MovieLanguageSpecificationContainer,
-  MovieOfficialIds
+  MovieOfficialIds,
 } from './movie.firestore';
 import { createImgRef } from '@blockframes/utils/image-uploader';
-import { createTerms } from '@blockframes/utils/common-interfaces/terms';
 import { LanguagesSlug } from '../static-model';
+import { createRange } from '@blockframes/utils/common-interfaces/range';
 
 // Export for other files
 export {
@@ -37,6 +34,7 @@ export {
 } from '@blockframes/utils/common-interfaces/identity';
 export {
   PromotionalElement,
+  MovieBudget,
   MovieFestivalPrizes,
   MovieMain,
   MoviePromotionalDescription,
@@ -45,11 +43,9 @@ export {
   MovieStory,
   MovieVersionInfo,
   Prize,
-  DistributionDealDocumentWithDates as DistributionDeal,
   MovieSalesInfoDocumentWithDates as MovieSalesInfo,
   MovieSalesAgentDealDocumentWithDates as MovieSalesAgentDeal,
-  MovieDocumentWithDates as Movie,
-  HoldbackWithDates as Holdback
+  MovieDocumentWithDates as Movie
 } from './movie.firestore';
 
 /** A factory function that creates Movie */
@@ -209,36 +205,11 @@ export function createMovieSalesAgentDeal(
   };
 }
 
-export function createDistributionDeal(params: Partial<DistributionDeal> = {}): DistributionDeal {
-  return {
-    id: '',
-    licenseType: [],
-    terms: createTerms(params.terms),
-    territory: [],
-    territoryExcluded: [],
-    assetLanguage: {},
-    exclusive: false,
-    titleInternalAlias: '',
-    formatProfile: FormatProfile.unknown,
-    download: false,
-    holdbacks: [],
-    catchUp: createTerms(params.catchUp),
-    ...params
-  };
-}
-
 export function createMovieBudget(params: Partial<MovieBudget> = {}): MovieBudget {
   return {
     totalBudget: '',
-    ...params
-  };
-}
-
-export function createHoldback(params: Partial<Holdback> = {}): Holdback {
-  return {
-    terms: createTerms(params.terms),
-    media: '',
-    ...params
+    ...params,
+    estimatedBudget: createRange<number>(params.estimatedBudget)
   };
 }
 
@@ -271,7 +242,7 @@ export function populateMovieLanguageSpecification(
 export function createStoreConfig(params: Partial<StoreConfig> = {}): StoreConfig {
   return {
     display: true,
-    storeType: StoreType.movie,
+    storeType: StoreType.line_up,
     ...params
   };
 }
@@ -282,4 +253,15 @@ export function createOfficialIds(params: Partial<MovieOfficialIds> = {}): Movie
     isan: '',
     ...params
   };
+}
+
+export function createMovieLanguage(
+  movieLanguage: Partial<MovieLanguageSpecification> = {}
+): MovieLanguageSpecification {
+  return {
+    original: false,
+    dubbed: false,
+    subtitle: false,
+    ...movieLanguage
+  } as MovieLanguageSpecification;
 }

@@ -4,10 +4,11 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Component, Input, ViewChild, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { MovieService, MovieQuery, cleanModel, createMovie } from '../../../+state';
+import { MovieQuery, cleanModel, createMovie } from '../../../+state';
 import { SelectionModel } from '@angular/cdk/collections';
 import { SpreadsheetImportError, DealsImportState } from '../view-extracted-elements/view-extracted-elements.component';
 import { ViewImportErrorsComponent } from '../view-import-errors/view-import-errors.component';
+import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state/distribution-deal.service';
 
 const hasImportErrors = (importState: DealsImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -43,7 +44,7 @@ export class TableExtractedDealsComponent implements OnInit {
   constructor(
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
-    private movieService: MovieService,
+    private distributionDealService: DistributionDealService,
     private movieQuery: MovieQuery,
   ) { }
 
@@ -59,7 +60,7 @@ export class TableExtractedDealsComponent implements OnInit {
     const existingMovie = this.movieQuery.existingMovie(importState.movieInternalRef);
     const data = this.rows.data;
 
-    await this.movieService.addDistributionDeal(existingMovie.id, importState.distributionDeal, importState.contract);
+    await this.distributionDealService.addDistributionDeal(existingMovie.id, importState.distributionDeal, importState.contract);
     importState.errors.push({
       type: 'error',
       field: 'distributionDeal',
@@ -93,7 +94,7 @@ export class TableExtractedDealsComponent implements OnInit {
             hint: 'Distribution deal already added'
           });
 
-          return promises.push(this.movieService.addDistributionDeal(movies[importState.movieInternalRef].id, importState.distributionDeal, importState.contract));
+          return promises.push(this.distributionDealService.addDistributionDeal(movies[importState.movieInternalRef].id, importState.distributionDeal, importState.contract));
         });
       this.rows.data = data;
 

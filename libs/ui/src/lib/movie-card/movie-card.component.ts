@@ -1,5 +1,5 @@
-import { Movie } from 'libs/movie/src/lib/movie/+state/movie.model';
 import { Component, ChangeDetectionStrategy, Input, HostBinding } from '@angular/core';
+import { Movie } from '@blockframes/movie/movie/+state/movie.model';
 
 @Component({
   selector: '[movie] movie-card',

@@ -58,7 +58,7 @@ const routes: Routes = [
       {
         path: 'create',
         loadChildren: () =>
-          import('./distribution-deal/create/create.module').then(
+          import('@blockframes/movie/distribution-deals/create/create.module').then(
             m => m.DistributionDealCreateModule
           )
       }

@@ -1,4 +1,4 @@
-import { Movie, DistributionDeal } from '@blockframes/movie/movie/+state/movie.model';
+import { Movie } from '@blockframes/movie/movie/+state/movie.model';
 import { Injectable } from '@angular/core';
 import { CatalogCart, createCart, CartStatus } from './cart.model';
 import { OrganizationQuery, OrganizationService, Wishlist } from '@blockframes/organization';
@@ -8,7 +8,6 @@ import { WishlistStatus } from '@blockframes/organization';
 import { AuthQuery } from '@blockframes/auth';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { MovieCurrenciesSlug } from '@blockframes/movie/movie/static-model/types';
-import { MovieService } from '@blockframes/movie/movie/+state/movie.service';
 
 const wishlistFactory = (movieId: string): Wishlist => {
   return {
@@ -26,8 +25,7 @@ export class CartService extends CollectionService<CartState> {
     private organizationService: OrganizationService,
     private authQuery: AuthQuery,
     private functions: AngularFireFunctions,
-    protected store: CartStore,
-    private movieService: MovieService,
+    protected store: CartStore
   ) {
     super(store);
   }
@@ -86,17 +84,6 @@ export class CartService extends CollectionService<CartState> {
       .doc<CatalogCart>(`orgs/${this.organizationQuery.getActiveId()}/carts/${cart.name}`)
       .update(cart);
     return cart;
-  }
-
-  /**
-   * Performs a collection group query accross movies to retreive sales
-   * @param type  licensee | licensor
-   */
-  // @TODO #1389 Use native akita-ng-fire functions : https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
-  public async getMyDeals(type: string = 'licensor'): Promise<DistributionDeal[]> {
-    const query = this.db.collectionGroup('distributiondeals', ref => ref.where(`${type}.orgId`, '==', this.organizationQuery.getActiveId()))
-    const myDeals = await query.get().toPromise();
-    return myDeals.docs.map(doc => this.movieService.formatDistributionDeal(doc.data()));
   }
 
   /**

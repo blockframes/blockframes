@@ -3,7 +3,6 @@ import { MatTableDataSource } from '@angular/material';
 import {
   Movie,
   MovieQuery,
-  DistributionDeal,
   createMovieMain,
   createMoviePromotionalDescription,
   createMovieSalesCast,
@@ -12,13 +11,12 @@ import {
   createMovieFestivalPrizes,
   createMovieSalesAgentDeal,
   cleanModel,
-  createDistributionDeal,
-  MovieService,
   createPromotionalElement,
   createMovieBudget,
   createMoviePromotionalElements,
   createPrize,
-  populateMovieLanguageSpecification
+  populateMovieLanguageSpecification,
+  MovieService
 } from '../../../+state';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { formatCredits } from '@blockframes/utils/spreadsheet/format';
@@ -26,13 +24,14 @@ import { ImageUploader } from '@blockframes/utils';
 import { SSF$Date } from 'ssf/types';
 import { getCodeIfExists } from '../../../static-model/staticModels';
 import { SSF } from 'xlsx';
-import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { MovieLanguageTypes } from '@blockframes/movie/movie/+state/movie.firestore';
 import { createCredit } from '@blockframes/utils/common-interfaces/identity';
-import { validateContract, createContractTitleDetail, getContractParties, createContractPartyDetail } from '@blockframes/marketplace/app/distribution-deal/+state/cart.model';
-import { ContractStatus, ContractTitleDetail } from '@blockframes/marketplace/app/distribution-deal/+state/cart.firestore';
+import { DistributionDeal, createDistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
+import { validateContract, ContractWithLastVersion, getContractParties, createContractWithVersion, createContractPartyDetail, createContractTitleDetail } from '@blockframes/contract/+state/contract.model';
+import { ContractStatus, ContractTitleDetail } from '@blockframes/contract/+state/contract.firestore';
+import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state/distribution-deal.service';
 import { createFee } from '@blockframes/utils/common-interfaces/price';
-import { ContractWithLastVersion, createContractWithVersion } from '@blockframes/marketplace';
+import { ContractService } from '@blockframes/contract/+state/contract.service';
 
 export interface SpreadsheetImportError {
   field: string;
@@ -164,7 +163,8 @@ export class ViewExtractedElementsComponent {
   constructor(
     private movieQuery: MovieQuery,
     private movieService: MovieService,
-    private organizationQuery: OrganizationQuery,
+    private distributionDealService: DistributionDealService,
+    private contractService: ContractService,
     private imageUploader: ImageUploader,
     private cdRef: ChangeDetectorRef,
   ) { }
@@ -1083,7 +1083,7 @@ export class ViewExtractedElementsComponent {
             distributionDeal.id = spreadSheetRow[SpreadSheetDistributionDeal.distributionDealId];
           }
 
-          contract = await this.movieService.getContractWithLastVersionFromDeal(movie.id, distributionDeal.id);
+          contract = await this.contractService.getContractWithLastVersionFromDeal(movie.id, distributionDeal.id);
           importErrors.contract = contract;
 
           /////////////////
@@ -1263,7 +1263,7 @@ export class ViewExtractedElementsComponent {
           }
 
           // Checks if sale already exists
-          if (await this.movieService.existingDistributionDeal(movie.id, distributionDeal)) {
+          if (await this.distributionDealService.existingDistributionDeal(movie.id, distributionDeal)) {
             importErrors.errors.push({
               type: 'error',
               field: 'distributionDeal',
@@ -1426,7 +1426,7 @@ export class ViewExtractedElementsComponent {
       let contract = createContractWithVersion();
       let newContract = true;
       if (spreadSheetRow[SpreadSheetContract.contractId]) {
-        const existingContract = await this.movieService.getContractWithLastVersion(spreadSheetRow[SpreadSheetContract.contractId]);
+        const existingContract = await this.contractService.getContractWithLastVersion(spreadSheetRow[SpreadSheetContract.contractId]);
         if (!!existingContract) {
           contract = existingContract;
           newContract = false;

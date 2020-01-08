@@ -2,23 +2,49 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LayoutModule } from './layout/layout.module';
 import { LayoutComponent } from './layout/layout.component';
-import { MovieCollectionGuard } from '@blockframes/movie';
 
 const routes: Routes = [
   {
     path: '',
     component: LayoutComponent,
-    canActivate: [MovieCollectionGuard],    // todo(#1476) move to a more precise place (overview or/and deals maybe)
-    canDeactivate: [MovieCollectionGuard],  // todo(#1476) move to a more precise place (overview or/and deals maybe)
     children: [
       {
-        path: 'overview'
+        path: '',   // Home (dashboard if film, welcome if not)
+        loadChildren: () => import('./pages/home/home.module').then(m => m.HomeModule)
       },
       {
-        path: 'titles'
+        // TODO(#1522)
+        path: 'activity',   // List of notifications
+        // loadChildren: () => import('@blockframes/notifications/pages/list/list.module').then(m => m.NotificationsListModule)
       },
       {
-        path: 'deals'
+        path: 'import', // Import bulk of movies
+        loadChildren: () => import('@blockframes/movie/movie/components/import/import-movie.module')
+          .then(m => m.ImportMovieModule)
+      },
+      {
+        path: 'search',  // Result of a search on the main searchbar
+        loadChildren: () => import('./pages/search/search.module').then(m => m.SearchModule)
+      },
+      {
+        path: 'titles',
+        children: [{
+          path: '',
+          loadChildren: () => import('./title/list/list.module').then(m => m.TitleListModule)
+        }, {
+          path: ':movieId',
+          loadChildren: () => import('./title/view/view.module').then(m => m.TitleViewModule)
+        }]
+      },
+      {
+        path: 'deals',
+        children: [{
+          path: '',
+          loadChildren: () => import('./deal/list/list.module').then(m => m.DealListModule)
+        }, {
+          path: ':dealId', // One deal: different state of a deal (offer, counter-offer, payment),
+          loadChildren: () => import('./deal/view/view.module').then(m => m.DealViewModule)
+        }]
       },
       {
         path: 'faq'

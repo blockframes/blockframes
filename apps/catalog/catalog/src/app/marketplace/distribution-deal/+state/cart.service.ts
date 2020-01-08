@@ -1,4 +1,4 @@
-import { Movie, DistributionDeal } from '@blockframes/movie/movie/+state/movie.model';
+import { Movie } from '@blockframes/movie/movie/+state/movie.model';
 import { Injectable } from '@angular/core';
 import { CatalogCart, createCart, CartStatus } from './cart.model';
 import { OrganizationQuery, OrganizationService, Wishlist } from '@blockframes/organization';
@@ -8,7 +8,8 @@ import { WishlistStatus } from '@blockframes/organization';
 import { AuthQuery } from '@blockframes/auth';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { MovieCurrenciesSlug } from '@blockframes/movie/movie/static-model/types';
-import { MovieService } from '@blockframes/movie/movie/+state/movie.service';
+import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
+import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state/distribution-deal.service';
 
 const wishlistFactory = (movieId: string): Wishlist => {
   return {
@@ -26,8 +27,8 @@ export class CartService extends CollectionService<CartState> {
     private organizationService: OrganizationService,
     private authQuery: AuthQuery,
     private functions: AngularFireFunctions,
+    private distributionDealService: DistributionDealService,
     protected store: CartStore,
-    private movieService: MovieService,
   ) {
     super(store);
   }
@@ -38,8 +39,8 @@ export class CartService extends CollectionService<CartState> {
 
   /**
    * Adds a deal to cart identified by "name" (default cart name is : "default")
-   * @param dealId 
-   * @param name 
+   * @param dealId
+   * @param name
    */
   // @TODO #1389 Use native akita-ng-fire functions : https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
   public async addDealToCart(dealId: string, name: string): Promise<CatalogCart> {
@@ -50,7 +51,7 @@ export class CartService extends CollectionService<CartState> {
 
   /**
    * Change cart status to : "submitted".
-   * @param amount 
+   * @param amount
    * @param currency
    * @param name
    */
@@ -77,8 +78,8 @@ export class CartService extends CollectionService<CartState> {
   }
 
   /**
-   * 
-   * @param cart 
+   *
+   * @param cart
    */
   // @TODO #1389 Remove this function if doesn't do anything more than native akita-ng-fire
   private async updateCart(cart: CatalogCart): Promise<CatalogCart> {
@@ -96,12 +97,12 @@ export class CartService extends CollectionService<CartState> {
   public async getMyDeals(type: string = 'licensor'): Promise<DistributionDeal[]> {
     const query = this.db.collectionGroup('distributiondeals', ref => ref.where(`${type}.orgId`, '==', this.organizationQuery.getActiveId()))
     const myDeals = await query.get().toPromise();
-    return myDeals.docs.map(doc => this.movieService.formatDistributionDeal(doc.data()));
+    return myDeals.docs.map(doc => this.distributionDealService.formatDistributionDeal(doc.data()));
   }
 
   /**
    * Returns cart for given name if exists or create new one
-   * @param name 
+   * @param name
    */
   // @TODO #1389 Use native akita-ng-fire functions : https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
   public async getCart(name: string): Promise<CatalogCart> {
@@ -120,7 +121,7 @@ export class CartService extends CollectionService<CartState> {
 
   /**
    * Update the status of the wishlist to 'sent' and create new date at this moment.
-   * @param movies 
+   * @param movies
    */
   // @TODO #1389 Use native akita-ng-fire functions : https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
   public async updateWishlistStatus(movies: Movie[]) {
@@ -141,8 +142,8 @@ export class CartService extends CollectionService<CartState> {
   }
 
   /**
-   * 
-   * @param movieId 
+   *
+   * @param movieId
    */
   // @TODO #1389 Use native akita-ng-fire functions : https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
   public async removeMovieFromWishlist(movieId: string): Promise<boolean | Error> {
@@ -162,8 +163,8 @@ export class CartService extends CollectionService<CartState> {
   }
 
   /**
-   * 
-   * @param movie 
+   *
+   * @param movie
    */
   public async updateWishlist(movie: Movie) {
     const orgState = this.organizationQuery.getActive();

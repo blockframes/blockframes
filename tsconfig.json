@@ -26,11 +26,15 @@
       "@blockframes/ip": [
         "libs/ip/src/index.ts"
       ],
+      // AUTH
       "@blockframes/auth": [
         "libs/auth/src/index.ts"
       ],
       "@blockframes/auth/*": [
         "libs/auth/src/lib/*"
+      ],
+      "@blockframes/auth/types": [
+        "libs/auth/src/lib/+state/auth.firestore.ts"
       ],
       // UI
       "@blockframes/ui": [
@@ -39,6 +43,7 @@
       "@blockframes/ui/*": [
         "libs/ui/src/lib/*"
       ],
+
       // UTILS
       "@blockframes/utils": [
         "libs/utils/src/index.ts"
@@ -49,16 +54,24 @@
       "@blockframes/utils/spreadsheet": [
         "libs/utils/src/lib/spreadsheet/index.ts"
       ],
+
       // MOVIE
       "@blockframes/movie": [
         "libs/movie/src/index.ts"
       ],
-      "@blockframes/movie/*": [
-        "libs/movie/src/lib/*"
+      "@blockframes/movie/movie*": [
+        "libs/movie/src/lib/movie/*"
       ],
       "@blockframes/movie/import": [
         "libs/movie/src/lib/movie/components/import/import-movie.module.ts"
       ],
+      "@blockframes/movie/types": [
+        "libs/movie/src/lib/movie/+state/movie.firestore.ts"
+      ],
+      "@blockframes/movie/distribution-deals/*": [
+        "libs/movie/src/lib/distribution-deals/*"
+      ],
+
       // ETHERS
       "@blockframes/ethers": [
         "libs/ethers/src/index.ts"
@@ -66,6 +79,7 @@
       "@blockframes/ethers/*": [
         "libs/ethers/src/lib/*"
       ],
+
       // ORGANIZATION
       "@blockframes/organization": [
         "libs/organization/src/index.ts"
@@ -73,16 +87,25 @@
       "@blockframes/organization/*": [
         "libs/organization/src/lib/*"
       ],
-      // FIRESTORE DATA MODEL
       "@blockframes/organization/types": [
         "libs/organization/src/lib/+state/organization.firestore.ts"
       ],
-      "@blockframes/auth/types": [
-        "libs/auth/src/lib/+state/auth.firestore.ts"
+      "@blockframes/permissions/types": [
+        "libs/organization/src/lib/permissions/+state/permissions.firestore.ts"
       ],
+
+      // NOTIFICATIONS/INVITATIONS
       "@blockframes/invitation/types": [
         "libs/notification/src/lib/invitation/+state/invitation.firestore.ts"
       ],
+      "@blockframes/notification/types": [
+        "libs/notification/src/lib/notification/+state/notification.firestore.ts"
+      ],
+      "@blockframes/notification": [
+        "libs/notification/src/index.ts"
+      ],
+
+      // DELIVERY/MATERIAL/TEMPLATES
       "@blockframes/material/material/types": [
         "libs/material/src/lib/material/+state/material.firestore.ts"
       ],
@@ -95,44 +118,45 @@
       "@blockframes/material/delivery/stakeholder/types": [
         "libs/material/src/lib/delivery/stakeholder/+state/stakeholder.firestore.ts"
       ],
-      "@blockframes/notification/types": [
-        "libs/notification/src/lib/notification/+state/notification.firestore.ts"
-      ],
-      "@blockframes/movie/types": [
-        "libs/movie/src/lib/movie/+state/movie.firestore.ts"
-      ],
-      "@blockframes/permissions/types": [
-        "libs/organization/src/lib/permissions/+state/permissions.firestore.ts"
-      ],
+
+      // PROFILE/ACCOUNT
       "@blockframes/account": [
         "libs/account/src/index.ts"
       ],
       "@blockframes/account/*": [
         "libs/account/src/lib/*"
       ],
-      // MATERIAL
       "@blockframes/material": [
         "libs/material/src/index.ts"
       ],
       "@blockframes/template": [
         "libs/material/src/index.ts"
       ],
-      "@blockframes/contracts/*": [
-        "contracts/build/*"
-      ],
-      "@blockframes/notification": [
-        "libs/notification/src/index.ts"
-      ],
+
+      // CATALOG
       "@blockframes/catalog": [
         "libs/catalog/src/index.ts"
       ],
+
+      // CONTRACT
+      "@blockframes/contract": [
+        "libs/contract/src/index.ts"
+      ],
+      "@blockframes/contract/*": [
+        "libs/contract/src/lib/*"
+      ],
+
+      "@blockframes/contracts/*": [
+        "contracts/build/*"
+      ],
+
+      // APPS
       "@blockframes/marketplace": [
         "apps/catalog/marketplace/marketplace/src/index.ts"
       ],
       "@blockframes/marketplace/*": [
         "apps/catalog/marketplace/marketplace/src/*"
       ],
-      // APPS
       "@blockframes/apps/delivery": [
         "apps/delivery/delivery/src/app/delivery.module.ts"
       ],
@@ -144,7 +168,7 @@
       ],
       "@blockframes/apps/catalog/*": [
         "apps/catalog/catalog/src/*"
-      ],
+      ]
     }
   },
   "angularCompilerOptions": {

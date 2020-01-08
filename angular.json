@@ -1597,6 +1597,42 @@
         }
       }
     },
+    "contract": {
+      "projectType": "library",
+      "root": "libs/contract",
+      "sourceRoot": "libs/contract/src",
+      "prefix": "contract",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "libs/contract/tsconfig.lib.json",
+            "project": "libs/contract/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/contract/jest.config.js",
+            "tsConfig": "libs/contract/tsconfig.spec.json",
+            "setupFile": "libs/contract/src/test-setup.ts"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/contract/tsconfig.lib.json",
+              "libs/contract/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/contract/**"
+            ]
+          }
+        }
+      }
+    },
     "catalog": {
       "projectType": "application",
       "schematics": {

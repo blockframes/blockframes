@@ -120,6 +120,17 @@ export function numberRangeValidator(from: string, to: string): ValidatorFn {
 }
 
 /**
+ * @description Check in a number-range that from is below to, and to is above from
+ */
+export function validRange(): ValidatorFn {
+  return (parent: FormGroup): ValidationErrors => {
+    return (parent.value.from > parent.value.to)
+      ? { invalidOrder: true }
+      : null;
+  }
+}
+
+/**
  * @description This validator checks if the value in the form group
  * or form array is in the static model and then valid
  * @param scope defines where to look. For instance 'TERRITORIES'

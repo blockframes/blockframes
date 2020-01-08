@@ -7,6 +7,8 @@ function createMoviePromotionalDescriptionControls(promotionalDescription?: Part
   const entity = createMoviePromotionalDescription(promotionalDescription);
   return {
     keywords: FormList.factory(entity.keywords),
+    // TODO#1478 Sync Data and UI
+    // keyAssets: new FormControl(entity.keyAssets, [validators.maxLenth(750)])
     keyAssets: FormList.factory(entity.keyAssets),
   }
 }
