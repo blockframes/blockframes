@@ -23,6 +23,7 @@ export interface InvitationToWorkOnDocument extends Invitation {
   type: InvitationType.toWorkOnDocument;
   docId: string;
   organization: PublicOrganization;
+  user?: PublicUser;
 }
 
 /**  Specific Invitation send by an Organization to a User to join it. */

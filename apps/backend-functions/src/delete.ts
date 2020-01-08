@@ -1,6 +1,6 @@
 import { db, functions } from './internals/firebase';
 import { triggerNotifications } from './notification';
-import { isTheSame } from './utils';
+import { isTheSame, removeAllSubcollections } from './utils';
 import { getCollection, getDocument, getOrganizationsOfDocument } from './data/internals';
 import {
   MovieDocument,
@@ -65,7 +65,6 @@ export async function deleteFirestoreDelivery(
   context: functions.EventContext
 ) {
   const delivery = snap.data();
-  console.log('salut')
 
   if (!delivery) {
     throw new Error(`This delivery doesn't exist !`);
@@ -73,7 +72,6 @@ export async function deleteFirestoreDelivery(
 
   // We store the organizations before the delivery is deleted
   const organizations = await getOrganizationsOfDocument(delivery.id, 'deliveries');
-  console.log('ORGANIZATIONS', organizations)
 
   const batch = db.batch();
 
@@ -83,9 +81,7 @@ export async function deleteFirestoreDelivery(
       if (doc.data().deliveryIds.length === 1) {
         batch.delete(doc.ref);
       } else {
-        batch.update(doc.ref, {
-          deliveryIds: doc.data().deliveryIds.filter((id: string) => id !== delivery.id)
-        });
+        batch.update(doc.ref, { deliveryIds: doc.data().deliveryIds.filter((id: string) => id !== delivery.id) });
       }
     }
   });
@@ -94,30 +90,18 @@ export async function deleteFirestoreDelivery(
   const movie = await getDocument<MovieDocument>(`movies/${delivery.movieId}`);
 
   if (!!movieDoc) {
-    batch.update(movieDoc.ref, {
-      deliveryIds: movie.deliveryIds.filter((id: string) => id !== delivery.id)
-    });
+    batch.update(movieDoc.ref, { deliveryIds: movie.deliveryIds.filter((id: string) => id !== delivery.id) });
   }
 
   // Delete sub-collections
   await removeAllSubcollections(snap, batch);
-  console.log(`removed sub colletions of ${delivery.id}`);
   await batch.commit();
 
-  console.log('NOTIFICATIONS PART')
   // When delivery is deleted, notifications are created for each organization of this delivery
   const notifications = organizations
     .filter(organization => !!organization && !!organization.userIds)
     .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
     .map(userId =>{
-      console.log("USERID", userId)
-      console.log("NOTIFICTION", createNotification({
-        userId,
-        docId: delivery.id,
-        movie: { id: movie.id, title: movie.main.title },
-        app: App.mediaDelivering,
-        type: NotificationType.deleteDocument
-      }))
       return createNotification({
         userId,
         docId: delivery.id,
@@ -170,15 +154,11 @@ export async function deleteFirestoreMaterial(
     throw new Error(`This delivery doesn't exist !`);
   }
 
-  const movieMaterials = await getCollection<MaterialDocument>(
-    `movies/${delivery.movieId}/materials`
-  );
+  const movieMaterials = await getCollection<MaterialDocument>(`movies/${delivery.movieId}/materials`);
 
   // As material and movieMaterial don't share the same document ID, we have to look at
   // some property values to find the matching one.
-  const movieMaterial = movieMaterials.find(movieMat =>
-    isTheSame(movieMat, material as MaterialDocument)
-  );
+  const movieMaterial = movieMaterials.find(movieMat => isTheSame(movieMat, material as MaterialDocument));
 
   if (!movieMaterial) {
     throw new Error(`This material doesn't exist on this movie`);

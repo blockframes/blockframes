@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { InvitationService } from '../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { InvitationDocument, InvitationType, Invitation, InvitationStatus } from '@blockframes/invitation/types';
+import { InvitationDocument, InvitationType, InvitationStatus } from '../+state/invitation.firestore';
 
 @Component({
   selector: 'invitation-item',

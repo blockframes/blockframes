@@ -1,16 +1,14 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
 import {
-  Notification,
   NotificationQuery,
   InvitationQuery,
   InvitationStore
 } from '@blockframes/notification';
+import { Organization } from '@blockframes/organization/+state/organization.model'
+import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { Invitation, InvitationStatus } from '@blockframes/invitation/types';
-import { OrganizationQuery } from '../../+state/organization.query';
-import { map } from 'rxjs/operators';
-import { Organization } from '@blockframes/organization/+state/organization.model';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';;
 
 @Component({
   selector: 'notification-activity-feed',
@@ -28,7 +26,6 @@ export class ActivityFeedComponent implements OnInit {
 
   constructor(
     private notificationQuery: NotificationQuery,
-    private invitationQuery: InvitationQuery,
     private organizationQuery: OrganizationQuery,
     private routerQuery: RouterQuery
   ) {}
@@ -36,13 +33,6 @@ export class ActivityFeedComponent implements OnInit {
   ngOnInit() {
     this.organization = this.organizationQuery.getActive();
     this.app = this.routerQuery.getValue().state.root.data.app;
-    this.invitationsLabel$ = this.invitationQuery
-      .selectCount(
-        invitation =>
-          invitation.status === InvitationStatus.pending &&
-          invitation.organization.id === this.organization.id
-      )
-      .pipe(map(lenght => `${this.organization.name} (${lenght})`));
     this.notificationsLabel$ = this.notificationQuery
       .selectCount()
       .pipe(map(lenght => `All (${lenght})`));

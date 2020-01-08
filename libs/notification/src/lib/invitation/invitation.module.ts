@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { AvatarListModule } from '@blockframes/ui/avatar-list/avatar-list.module';
-import { AssetsThemeModule } from '@blockframes/ui';
 import { ReverseModule } from '@blockframes/utils/pipes/reverse.module';
 
 // Components
@@ -29,7 +28,6 @@ import { MatCardModule } from '@angular/material/card';
     RouterModule,
     FlexLayoutModule,
     AvatarListModule,
-    AssetsThemeModule,
     ReverseModule,
 
     // Material

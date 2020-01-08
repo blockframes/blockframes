@@ -6,7 +6,5 @@
   <mat-tab label="Titles"> </mat-tab>
   <mat-tab *ngIf="app == 'catalog'" label="Deals"> </mat-tab>
   <mat-tab [label]="app | titlecase"> </mat-tab>
-  <mat-tab [label]="invitationsLabel$ | async">
-    <invitation-list></invitation-list>
-  </mat-tab>
+  <mat-tab [label]="organization.name"> </mat-tab>
 </mat-tab-group>

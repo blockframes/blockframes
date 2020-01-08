@@ -120,7 +120,6 @@ function createNotifications(
         userId,
         organization: snapObject.organization,
         movie: snapObject.movie,
-        app: App.mediaDelivering,
         type: snapObject.type,
         docId: snapObject.docId,
         app: App.mediaDelivering

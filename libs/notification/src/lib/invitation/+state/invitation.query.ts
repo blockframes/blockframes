@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { QueryEntity } from '@datorama/akita';
 import { InvitationStore, InvitationState } from './invitation.store';
-import { map } from 'rxjs/operators';
-import { formatDate } from '@blockframes/utils/helpers';
-import { Observable } from 'rxjs';
 import { InvitationType } from './invitation.firestore';
+import { formatDate } from '@blockframes/utils/helpers';
+import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class InvitationQuery extends QueryEntity<InvitationState> {

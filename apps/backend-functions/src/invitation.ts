@@ -15,7 +15,6 @@ import {
   OrganizationDocument,
   MovieDocument,
   createDocPermissions,
-  createUserPermissions,
   NotificationType,
   createNotification,
   UserRole,
@@ -238,9 +237,9 @@ async function onDocumentInvitationAccept(invitation: InvitationToWorkOnDocument
           return createNotification({
             userId,
             docId,
-            app: App.mediaDelivering,
             movie: { id: movie.id, title: movie.main.title },
-            type: NotificationType.pathToDocument
+            type: NotificationType.pathToDocument,
+            app: App.mediaDelivering
           });
         })
       )
