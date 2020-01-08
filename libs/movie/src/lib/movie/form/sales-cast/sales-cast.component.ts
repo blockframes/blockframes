@@ -4,7 +4,7 @@ import { default as staticModels } from '../../static-model/staticModels';
 import { MovieSalesCastForm } from './sales-cast.form';
 
 @Component({
-  selector: '[formGroup] movie-form-sales-cast, [formGroupName] movie-form-sales-cast',
+  selector: '[formGroup] movie-form-sales-cast, [formGroupName] movie-form-sales-cast, [form] movie-form-sales-cast',
   templateUrl: './sales-cast.component.html',
   styleUrls: ['./sales-cast.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

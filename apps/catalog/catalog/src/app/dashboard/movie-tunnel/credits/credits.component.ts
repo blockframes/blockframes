@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ViewEncapsulation } from '@angular/core';
 import { MovieForm } from '@blockframes/movie/form/movie.form';
 
 @Component({
   selector: 'catalog-movie-tunnel-credits',
   templateUrl: './credits.component.html',
-  styleUrls: ['./credits.component.scss']
+  styleUrls: ['./credits.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CreditsComponent implements OnInit {
 
@@ -16,6 +17,10 @@ export class CreditsComponent implements OnInit {
 
   get productionCompanies() {
     return this.form.get('main').get('productionCompanies');
+  }
+
+  get salesCast() {
+    return this.form.get('salesCast');
   }
 
   ngOnInit() {
