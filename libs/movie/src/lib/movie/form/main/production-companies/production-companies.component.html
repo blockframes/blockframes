@@ -1,0 +1,25 @@
+<div fxLayout="row" fxLayoutAlign="space-between center">
+  <mat-form-field appearance="outline">
+    <mat-label>Production company</mat-label>
+    <input matInput [formControl]="addForm" />
+  </mat-form-field>
+  <button mat-icon-button color="primary" (click)="add()">
+    <mat-icon>add_circle</mat-icon>
+  </button>
+</div>
+<mat-list>
+  <mat-list-item fxLayout="row" fxLayoutAlign="space-between center" *ngFor="let control of form.controls; let i = index">
+    <!-- <mat-form-field  disalbed> -->
+      <!-- <input matInput [formControl]="control.get('displayName')" required /> -->
+    <!-- </mat-form-field> -->
+    <span matLine >{{ control.get('displayName').value }} </span>
+    <button mat-icon-button color="primary" (click)="edit(i)">
+      <mat-icon>edit</mat-icon>
+    </button>
+    <button mat-icon-button color="primary" (click)="remove(i)">
+      <mat-icon>delete_circle</mat-icon>
+    </button>
+    <div fxLayout="row" fxLayoutAlign="start center">
+    </div>
+  </mat-list-item>
+</mat-list>
