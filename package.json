@@ -13,6 +13,7 @@
     "build:main": "npx ng build main --base-href / --configuration=\"${ENV:-dev}\"",
     "build:delivery": "npx ng build delivery --base-href /delivery/ --configuration=\"${ENV:-dev}\"",
     "build:movie-financing": "npx ng build movie-financing --base-href /movie-financing/ --configuration=\"${ENV:-dev}\"",
+    "build:catalog": "npx ng build catalog --base-href /catalog/ --configuration=\"${ENV:-dev}\"",
     "build:catalog-marketplace": "npx ng build catalog-marketplace --base-href /catalog-marketplace/ --configuration=\"${ENV:-dev}\"",
     "build:catalog-dashboard": "npx ng build catalog-dashboard --base-href /catalog-dashboard/ --configuration=\"${ENV:-dev}\"",
     "build:backend-functions": "npx ng build backend-functions --configuration=\"${ENV:-dev}\"",
