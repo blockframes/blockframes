@@ -143,6 +143,9 @@ export function createMovieSalesInfo(params: Partial<MovieSalesInfo> = {}): Movi
     pegi: '',
     originCountryReleaseDate: null,
     theatricalRelease: false,
+    format: '',
+    formatQuality: '',
+    soundFormat: '',
     ...params
   };
 }

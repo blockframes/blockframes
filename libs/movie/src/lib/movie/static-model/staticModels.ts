@@ -17,6 +17,8 @@ interface Model {
   MEDIAS: readonly SlugAndLabel[];
   LEGAL_ROLES: readonly SlugAndLabel[];
   MOVIE_FORMAT: readonly SlugAndLabel[];
+  MOVIE_FORMAT_QUALITY: readonly SlugAndLabel[],
+  SOUND_FORMATS: readonly SlugAndLabel[]
 }
 
 export type Scope = keyof Model;
@@ -57,17 +59,17 @@ const models: Model = {
     { 'slug': 'teaser', 'label': 'Teaser' },
   ] as const,
   'RESOURCE_SIZES': [
-    { 'slug': 'medium', 'label': 'Medium'},
-    { 'slug': 'small', 'label': 'Small'},
-    { 'slug': 'large', 'label': 'Large'},
-    { 'slug': 'thumbnail', 'label': 'Thumbnail'},
+    { 'slug': 'medium', 'label': 'Medium' },
+    { 'slug': 'small', 'label': 'Small' },
+    { 'slug': 'large', 'label': 'Large' },
+    { 'slug': 'thumbnail', 'label': 'Thumbnail' },
   ] as const,
   'RESOURCE_RATIOS': [
-    { 'slug': '16/9', 'label': '16:9'},
-    { 'slug': '4/3', 'label': '4:3'},
-    { 'slug': 'round', 'label': 'Round'},
-    { 'slug': 'square', 'label': 'Square'},
-    { 'slug': 'rectangle', 'label': 'Rectangle'},
+    { 'slug': '16/9', 'label': '16:9' },
+    { 'slug': '4/3', 'label': '4:3' },
+    { 'slug': 'round', 'label': 'Round' },
+    { 'slug': 'square', 'label': 'Square' },
+    { 'slug': 'rectangle', 'label': 'Rectangle' },
   ] as const,
   'STAKEHOLDER_ROLES': [
     {
@@ -741,6 +743,21 @@ const models: Model = {
     { 'slug': '4/3', 'label': '4/3' },
     { 'slug': '16/9', 'label': '16/9' },
   ] as const,
+  'MOVIE_FORMAT_QUALITY': [
+    { 'slug': 'sd', 'label': 'SD' },
+    { 'slug': 'hd', 'label': 'HD' },
+    { 'slug': '2k', 'label': '2K' },
+    { 'slug': '4k', 'label': '4K' },
+  ] as const,
+  'SOUND_FORMATS': [
+    { 'slug': 'mono', 'label': 'Mono' },
+    { 'slug': 'stereo', 'label': 'Stereo' },
+    { 'slug': 'dolby-sr', 'label': 'Dolby SR' },
+    { 'slug': 'dts', 'label': 'DTS' },
+    { 'slug': 'dolby-5.1', 'label': 'Dolby 5.1' },
+    { 'slug': 'dolby-7.1', 'label': 'Dolby 7.1' },
+    { 'slug': 'thx', 'label': 'THX' },
+  ]
 };
 
 /**

@@ -24,6 +24,11 @@ const tunnelRoutes: Routes = [
       {
         path: 'budget',
         loadChildren: () => import('./budget/budget.module').then(m => m.BudgetModule)
+      },
+      // Page 6
+      {
+        path: 'technical-info',
+        loadChildren: () => import('./technical-info/technical-info.module').then(m => m.TunnelTechnicalInfoModule)
       }
     ]
   }
