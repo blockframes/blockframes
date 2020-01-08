@@ -2,6 +2,8 @@ section {
   margin: 30px;
   a.mat-button {
     text-decoration: underline;
+  mat-card {
+    margin-bottom: 20px;
   }
 }
 
@@ -13,4 +15,9 @@ section {
       margin: 10px;
     }
   }
+}
+
+mat-form-field {
+  width: 100%;
+  margin-top: 10px;
 }
