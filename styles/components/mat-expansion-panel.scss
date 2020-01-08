@@ -12,3 +12,16 @@
     }
   }
 }
+
+@mixin bf-expansion-panel-typography($config) {
+  .mat-expansion-panel-header {
+    font: {
+      size: mat-font-size($config, body-2);
+      weight: mat-font-weight($config, button);
+    }
+  }
+
+  .mat-expansion-panel-content {
+    @include mat-typography-level-to-styles($config, body-2);
+  }
+}
