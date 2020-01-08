@@ -72,8 +72,6 @@ export class TableExtractedContractsComponent implements OnInit {
   }
 
   async updateContract(importState: ContractsImportState): Promise<boolean> {
-    // @todo #1462 implement this
-    // don't forget to clean inside arrays to prevent duplicate parties
     return this.createContract(importState);
   }
 
@@ -119,7 +117,7 @@ export class TableExtractedContractsComponent implements OnInit {
   ///////////////////
 
   displayErrors(importState: ContractsImportState) {
-    const data = { title: '-- @todo #1462', errors: importState.errors };
+    const data = { title: `Contract id ${importState.contract.doc.id} v-${importState.contract.last.id}`, errors: importState.errors };
     this.dialog.open(ViewImportErrorsComponent, { data, width: '50%' });
   }
 

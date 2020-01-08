@@ -141,7 +141,9 @@ export class MovieService extends CollectionService<MovieState> {
       contract.last.titles[movieId] = createContractTitleDetail();
       contract.last.titles[movieId].titleId = movieId;
       contract.last.titles[movieId].distributionDealIds.push(distributionDeal.id);
-      contract.doc.titleIds.push(distributionDeal.id);
+      if (contract.doc.titleIds.indexOf(movieId) === -1) {
+        contract.doc.titleIds.push(movieId);
+      }
 
       // @todo #1397 change this price calculus
       contract.last.titles[movieId].price = contract.last.price;
@@ -225,7 +227,7 @@ export class MovieService extends CollectionService<MovieState> {
   }
 
   /**
-   * 
+   * Add/update a contract & create a new contract version
    * @param contract 
    * @param version 
    */
@@ -242,7 +244,7 @@ export class MovieService extends CollectionService<MovieState> {
   public async getContract(contractId: string): Promise<Contract> {
     const snapshot = await this.db.collection('contracts').doc(contractId).get().toPromise();
     const doc = snapshot.data();
-    return !!doc ? doc as Contract : undefined;
+    return !!doc ? this.formatContract(doc) : undefined;
   }
 
   /**
@@ -258,7 +260,6 @@ export class MovieService extends CollectionService<MovieState> {
    * @param contractId 
    */
   private contractDoc(contractId: string): AngularFirestoreDocument<Contract> {
-    // @todo #1462 cast timestamps to dates
     return this.db.doc(`contracts/${contractId}`);
   }
 
@@ -273,7 +274,7 @@ export class MovieService extends CollectionService<MovieState> {
       .get()
 
     if (snapshot.size) {
-      return snapshot.docs[0].data() as ContractVersion;
+      return this.formatContractVersion(snapshot.docs[0].data());
     } else {
       throw new Error(`Every contract should have at least one version. None found for ${contractId}`);
     }
@@ -313,10 +314,10 @@ export class MovieService extends CollectionService<MovieState> {
           .get();
 
         if (versionSnapshot.size) {
-          const docs = versionSnapshot.docs.map( d => d.data());
+          const docs = versionSnapshot.docs.map(d => d.data());
           const sortedDocs = orderBy(docs, 'id', 'desc');
-          contractWithVersion.doc = contract.data() as Contract;
-          contractWithVersion.last = this.formatContract(sortedDocs[0]);
+          contractWithVersion.doc = this.formatContract(contract.data());
+          contractWithVersion.last = this.formatContractVersion(sortedDocs[0]);
           return contractWithVersion;
         }
       }
@@ -328,7 +329,7 @@ export class MovieService extends CollectionService<MovieState> {
    * 
    * @param contractVersion 
    */
-  private formatContract(contractVersion: any): ContractVersion {
+  private formatContractVersion(contractVersion: any): ContractVersion {
     // Dates from firebase are Timestamps, we convert it to Dates.
     if (contractVersion.scope && contractVersion.scope.start instanceof firestore.Timestamp) {
       contractVersion.scope.start = contractVersion.scope.start.toDate();
@@ -338,5 +339,13 @@ export class MovieService extends CollectionService<MovieState> {
       contractVersion.scope.end = contractVersion.scope.end.toDate();
     }
     return contractVersion as ContractVersion;
+  }
+
+  /**
+   * 
+   * @param contract 
+   */
+  private formatContract(contract: any): Contract {
+    return contract;
   }
 }

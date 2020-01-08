@@ -111,17 +111,17 @@ enum SpreadSheetDistributionDeal {
   internalRef,
   distributionDealId,
   internationalTitle, // unused
-  licensorName, // @todo #1462 should be unused since we can already retreive this from contract
-  licenseeName, // old operatorName @todo #1462 should be unused since we can already retreive this from contract
-  displayLicenseeName, // old showOperatorName
+  licensorName, // unused
+  licenseeName, // unused
+  displayLicenseeName, 
   rightsStart,
   rightsEnd,
   territories,
-  territoriesExcluded, // @todo #1462
-  licenseType, // old medias
+  territoriesExcluded,
+  licenseType,
   dubbings,
   subtitles,
-  captions, // @todo #1462
+  captions,
   exclusive,
   priceAmount,
   priceCurrency,
@@ -1061,18 +1061,7 @@ export class ViewExtractedElementsComponent {
         const movie = this.movieQuery.existingMovie(spreadSheetRow[SpreadSheetDistributionDeal.internalRef]);
         const distributionDeal = createDistributionDeal();
 
-        /////////////////
-        // CONTRACT STUFF
-        /////////////////
-
-        // @todo #1462 handle if movie is missing
-        // Retreive the contract that will handle the deal
-        if (spreadSheetRow[SpreadSheetDistributionDeal.distributionDealId]) {
-          distributionDeal.id = spreadSheetRow[SpreadSheetDistributionDeal.distributionDealId];
-        }
-
-        // @todo #1462 handle if contract is missing
-        const contract = await this.movieService.getContractWithLastVersionFromDeal(movie.id, distributionDeal.id);
+        let contract = createContractWithVersion();
 
         const importErrors = {
           distributionDeal,
@@ -1084,6 +1073,18 @@ export class ViewExtractedElementsComponent {
         } as DealsImportState;
 
         if (movie) {
+
+          /////////////////
+          // CONTRACT STUFF
+          /////////////////
+
+          // Retreive the contract that will handle the deal
+          if (spreadSheetRow[SpreadSheetDistributionDeal.distributionDealId]) {
+            distributionDeal.id = spreadSheetRow[SpreadSheetDistributionDeal.distributionDealId];
+          }
+
+          contract = await this.movieService.getContractWithLastVersionFromDeal(movie.id, distributionDeal.id);
+
           /////////////////
           // LICENSE STUFF
           /////////////////
@@ -1133,6 +1134,25 @@ export class ViewExtractedElementsComponent {
                   type: 'error',
                   field: 'territories',
                   name: "Territories sold",
+                  reason: `${c} not found in territories list`,
+                  hint: 'Edit corresponding sheet field.'
+                });
+              }
+            });
+          }
+
+          // TERRITORIES EXCLUDED
+          if (spreadSheetRow[SpreadSheetDistributionDeal.territoriesExcluded]) {
+            distributionDeal.territoryExcluded = [];
+            spreadSheetRow[SpreadSheetDistributionDeal.territoriesExcluded].split(this.separator).forEach((c: string) => {
+              const territory = getCodeIfExists('TERRITORIES', c);
+              if (territory) {
+                distributionDeal.territoryExcluded.push(territory);
+              } else {
+                importErrors.errors.push({
+                  type: 'error',
+                  field: 'territories excluded',
+                  name: "Territories excluded",
                   reason: `${c} not found in territories list`,
                   hint: 'Edit corresponding sheet field.'
                 });
@@ -1202,7 +1222,28 @@ export class ViewExtractedElementsComponent {
                 });
               }
             });
+          }
 
+          // CAPTIONS (Available subtitle(s))
+          if (spreadSheetRow[SpreadSheetDistributionDeal.captions]) {
+            spreadSheetRow[SpreadSheetDistributionDeal.captions].split(this.separator).forEach((g: string) => {
+              const caption = getCodeIfExists('LANGUAGES', g);
+              if (!!caption) {
+                distributionDeal.assetLanguage = populateMovieLanguageSpecification(
+                  distributionDeal.assetLanguage,
+                  caption,
+                  MovieLanguageTypes.caption
+                );
+              } else {
+                importErrors.errors.push({
+                  type: 'error',
+                  field: 'caption',
+                  name: "Authorized caption(s)",
+                  reason: `${g} not found in languages list`,
+                  hint: 'Edit corresponding sheet field.'
+                });
+              }
+            });
           }
 
           // EXCLUSIVE DEAL
@@ -1212,14 +1253,11 @@ export class ViewExtractedElementsComponent {
 
           // PRICE
           if (!isNaN(Number(spreadSheetRow[SpreadSheetDistributionDeal.priceAmount]))) {
-            // @todo #1462 this should be distributionDeal price. But we don't have such model to store it
-            // until we have a way to store it, we increment global price for this title.
+            // We increment global price for this title with the current deal price.
             contract.last.titles[movie.id].price.amount += parseInt(spreadSheetRow[SpreadSheetDistributionDeal.priceAmount], 10);
           }
 
           if (spreadSheetRow[SpreadSheetDistributionDeal.priceCurrency]) {
-            // @todo #1462 this should be distributionDeal price. But we don't have such model to store it
-            // @todo #1462 test if priceCurrency is in staticModels
             contract.last.titles[movie.id].price.currency = spreadSheetRow[SpreadSheetDistributionDeal.priceCurrency];
           }
 
@@ -1273,8 +1311,8 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'error',
         field: 'contractId',
-        name: "Operator name | Do you want to show the operator name on a buyer research ? ",
-        reason: 'Required field is missing',
+        name: "Contract ",
+        reason: 'Related contract not found',
         hint: 'Edit corresponding sheet field.'
       });
     }
@@ -1313,6 +1351,17 @@ export class ViewExtractedElementsComponent {
       });
     }
 
+    // TERRITORIES EXCLUDED
+    if (!distributionDeal.territoryExcluded) {
+      errors.push({
+        type: 'warning',
+        field: 'territoryExcluded',
+        name: "Territories excluded",
+        reason: 'Optionnal field is missing',
+        hint: 'Edit corresponding sheet field.'
+      });
+    }
+
     // LICENSE TYPE
     if (!distributionDeal.licenseType) {
       errors.push({
@@ -1346,8 +1395,6 @@ export class ViewExtractedElementsComponent {
       });
     }
 
-    // @todo #1462 new verifications to make ?
-
     //////////////////
     // OPTIONAL FIELDS
     //////////////////
@@ -1374,10 +1421,12 @@ export class ViewExtractedElementsComponent {
     sheetTab.rows.forEach(async spreadSheetRow => {
       // Create/retreive the contract 
       let contract = createContractWithVersion();
+      let newContract = true;
       if (spreadSheetRow[SpreadSheetContract.contractId]) {
         const existingContract = await this.movieService.getContractWithLastVersion(spreadSheetRow[SpreadSheetContract.contractId]);
         if (!!existingContract) {
           contract = existingContract;
+          newContract = false;
         }
       }
 
@@ -1390,37 +1439,41 @@ export class ViewExtractedElementsComponent {
           errors: [],
         } as ContractsImportState;
 
-        // @todo #1462 si le contract existe déja, on ne maj pas les parties
-        if (spreadSheetRow[SpreadSheetContract.licensors]) {
-          spreadSheetRow[SpreadSheetContract.licensors].split(this.separator).forEach((licensorName: string) => {
-            const licensor = createContractPartyDetail();
-            // @todo #1462 try to match with an existing org
-            // licensor.orgId = 
-            licensor.party.displayName = licensorName.trim();
-            licensor.party.role = 'licensor';
-            contract.doc.parties.push(licensor);
-          });
-        }
+        if(newContract) {
+          /**
+           * @dev We process this data only if this is for a new contract
+           * Changing parties or titles for a same contract is forbidden
+           * Only change into distribution deals is allowed and will lead to a new contractVersion
+          */
+          if (spreadSheetRow[SpreadSheetContract.licensors]) {
+            spreadSheetRow[SpreadSheetContract.licensors].split(this.separator).forEach((licensorName: string) => {
+              const licensor = createContractPartyDetail();
+              // licensor.orgId @TODO (#1397) try to match with an existing org
+              licensor.party.displayName = licensorName.trim();
+              licensor.party.role = 'licensor';
+              contract.doc.parties.push(licensor);
+            });
+          }
 
-        if (spreadSheetRow[SpreadSheetContract.licensee]) {
-          // @todo #1462 try to match with an existing org
-          const licensee = createContractPartyDetail();
-          // licensee.orgId =
-          licensee.party.displayName = spreadSheetRow[SpreadSheetContract.licensee];
-          licensee.party.role = 'licensee';
-          contract.doc.parties.push(licensee);
-        }
+          if (spreadSheetRow[SpreadSheetContract.licensee]) {
+            const licensee = createContractPartyDetail();
+            // licensee.orgId @TODO (#1397) try to match with an existing org
+            licensee.party.displayName = spreadSheetRow[SpreadSheetContract.licensee];
+            licensee.party.role = 'licensee';
+            contract.doc.parties.push(licensee);
+          }
 
-        if (spreadSheetRow[SpreadSheetContract.parentContractIds]) {
-          spreadSheetRow[SpreadSheetContract.parentContractIds].split(this.separator).forEach((c: string) => {
-            contract.doc.parentContractIds.push(c.trim());
-          });
-        }
+          if (spreadSheetRow[SpreadSheetContract.parentContractIds]) {
+            spreadSheetRow[SpreadSheetContract.parentContractIds].split(this.separator).forEach((c: string) => {
+              contract.doc.parentContractIds.push(c.trim());
+            });
+          }
 
-        if (spreadSheetRow[SpreadSheetContract.childContractIds]) {
-          spreadSheetRow[SpreadSheetContract.childContractIds].split(this.separator).forEach((c: string) => {
-            contract.doc.childContractIds.push(c.trim());
-          });
+          if (spreadSheetRow[SpreadSheetContract.childContractIds]) {
+            spreadSheetRow[SpreadSheetContract.childContractIds].split(this.separator).forEach((c: string) => {
+              contract.doc.childContractIds.push(c.trim());
+            });
+          }
         }
 
         if (spreadSheetRow[SpreadSheetContract.status]) {
@@ -1435,8 +1488,9 @@ export class ViewExtractedElementsComponent {
           titleIndex += titlesFieldsCount;
           const titleDetails = await this.processTitleDetails(spreadSheetRow, currentIndex);
           contract.last.titles[titleDetails.titleId] = titleDetails;
-          // @todo #1462 push que si pas déja dedans ?
-          contract.doc.titleIds.push(titleDetails.titleId);
+          if (contract.doc.titleIds.indexOf(titleDetails.titleId) === -1) {
+            contract.doc.titleIds.push(titleDetails.titleId);
+          }
         }
 
 
@@ -1476,8 +1530,8 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'error',
         field: 'contractId',
-        name: "TODO #1462",
-        reason: 'Required field is missing',
+        name: "Contract",
+        reason: 'Contract is not valid',
         hint: 'Edit corresponding sheet field.'
       });
     }
@@ -1514,7 +1568,6 @@ export class ViewExtractedElementsComponent {
     }
 
     if (spreadSheetRow[SpreadSheetContractTitle.licensedRightIds + currentIndex]) {
-      // @todo #1462 try to match with an existing distribution deal / licensedRight
       titleDetails.distributionDealIds = spreadSheetRow[SpreadSheetContractTitle.licensedRightIds + currentIndex]
         .split(this.separator)
         .map(c => c.trim());
@@ -1534,7 +1587,6 @@ export class ViewExtractedElementsComponent {
     }
 
     if (spreadSheetRow[SpreadSheetContractTitle.feeCurrency + currentIndex]) {
-      // @todo #1462 ask @Jackseed to update currency value in excel to match our local values
       if (spreadSheetRow[SpreadSheetContractTitle.feeCurrency + currentIndex].toLowerCase() === 'eur') {
         fee.price.currency = 'euro';
       }

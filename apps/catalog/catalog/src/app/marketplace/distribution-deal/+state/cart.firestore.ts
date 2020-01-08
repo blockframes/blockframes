@@ -37,7 +37,7 @@ interface ContractPartyDetailRaw<D> {
    * @dev Use this to set which role this party will have for child contracts
    * For example, the licensor for a movie can have to approve sub-sells of the license for this movie.
    */
-  childRole?: LegalRolesSlug, // @todo #1462 maj other file & draw.io
+  childRole?: LegalRolesSlug,
 }
 
 /**

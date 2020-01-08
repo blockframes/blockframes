@@ -249,6 +249,7 @@ export function createMovieLanguageSpecification(
     original: false,
     dubbed: false,
     subtitle: false,
+    caption: false,
     ...params
   };
 }

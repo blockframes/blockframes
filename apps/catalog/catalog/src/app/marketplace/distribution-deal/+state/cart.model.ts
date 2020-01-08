@@ -157,5 +157,5 @@ export function getContractParties(contract: Contract, legalRole: LegalRolesSlug
 
 export function buildChainOfTitle() {
   // ie:  calculate contract prices and fees for each parents
-  // @todo #1462 implement this
+  // @todo #1397 implement this
 }
