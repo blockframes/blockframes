@@ -12,8 +12,4 @@ import { TitleSalesComponent } from './sales.component';
     RouterModule.forChild([{ path: '', component: TitleSalesComponent }])
   ]
 })
-export class TitleSalesModule {
-  constructor() {
-    console.log('CREATED')
-  }
-}
+export class TitleSalesModule {}
