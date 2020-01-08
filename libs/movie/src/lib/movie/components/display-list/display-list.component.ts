@@ -3,9 +3,9 @@ import { ChangeDetectionStrategy } from '@angular/core';
 import { Movie } from './../../+state/movie.model';
 import { Component, Input } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { CartService } from 'apps/catalog/marketplace/marketplace/src/app/distribution-deal/+state/cart.service';
+import { CartService } from '@blockframes/organization/cart/+state/cart.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { CatalogCartQuery } from '@blockframes/marketplace';
+import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
 
 @Component({
   selector: '[movies] movie-display-list',
