@@ -15,7 +15,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Pages
-import { CatalogDashboardHomeComponent } from './dashboard-home.component';
+import { HomeComponent } from './home.component';
 
 // Modules
 import { MovieCreateModule } from '@blockframes/movie/components/movie-create/movie-create.module';
@@ -26,7 +26,7 @@ import { MovieOrganizationListGuard } from '@blockframes/movie/guards/movie-orga
 
 
 @NgModule({
-  declarations: [CatalogDashboardHomeComponent],
+  declarations: [HomeComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
@@ -44,7 +44,7 @@ import { MovieOrganizationListGuard } from '@blockframes/movie/guards/movie-orga
         path: 'home',
         canActivate: [MovieOrganizationListGuard],
         canDeactivate: [MovieOrganizationListGuard],
-        component: CatalogDashboardHomeComponent
+        component: HomeComponent
       },
       {
         path: ':movieId',
@@ -55,4 +55,4 @@ import { MovieOrganizationListGuard } from '@blockframes/movie/guards/movie-orga
     ])
   ]
 })
-export class DashboardHomeModule {}
+export class HomeModule { }

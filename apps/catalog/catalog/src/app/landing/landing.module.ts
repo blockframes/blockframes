@@ -43,7 +43,7 @@ const routes = [{
     path: 'faq',
     // loadChildren: () => import()
   }]
-}]
+}];
 
 @NgModule({
   declarations: [
