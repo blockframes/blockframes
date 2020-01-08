@@ -1,15 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { FormArray, FormControl } from '@angular/forms';
 
 @Component({
-  selector: 'movie-form-production-companies',
+  selector: '[form] movie-form-production-companies',
   templateUrl: './production-companies.component.html',
   styleUrls: ['./production-companies.component.scss']
 })
-export class ProductionCompaniesComponent implements OnInit {
+export class ProductionCompaniesComponent {
+  @Input() form: FormArray;
 
-  constructor() { }
-
-  ngOnInit() {
+  public add(event): void {
+    const { value = '' } = event;
+    this.form.push(new FormControl(value))
+    console.log(this.form);
   }
 
+  public remove(i: number): void {
+    this.form.removeAt(i);
+  }
 }

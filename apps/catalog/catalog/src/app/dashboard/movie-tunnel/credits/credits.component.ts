@@ -14,6 +14,10 @@ export class CreditsComponent implements OnInit {
     return this.form.get('main').get('productionYear');
   }
 
+  get productionCompanies() {
+    return this.form.get('main').get('productionCompanies');
+  }
+
   ngOnInit() {
   }
 
