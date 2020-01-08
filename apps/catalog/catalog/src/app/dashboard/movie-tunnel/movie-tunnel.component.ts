@@ -29,7 +29,7 @@ export class MovieTunnelComponent {
       this.form.patchValue(movie)
     })
   }
-  
+
   ngOnDestroy() {
     this.sub.unsubscribe();
   }

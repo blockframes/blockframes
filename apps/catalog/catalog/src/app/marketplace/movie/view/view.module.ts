@@ -31,6 +31,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material';
 import { MatButtonModule } from '@angular/material/button';
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
+import { ActiveMovieDistributionDealsGuard } from '@blockframes/movie/distribution-deals/guards/active-movie-distribution-deals.guard';
 
 @NgModule({
   declarations: [MarketplaceMovieViewComponent],
@@ -59,7 +60,7 @@ import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.mod
     MatProgressSpinnerModule,
     MatButtonModule,
     MatIconModule,
-    RouterModule.forChild([{ path: '', component: MarketplaceMovieViewComponent }])
+    RouterModule.forChild([{ path: '', component: MarketplaceMovieViewComponent, canActivate: [ActiveMovieDistributionDealsGuard] }])
   ]
 })
 export class MovieViewModule {}

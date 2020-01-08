@@ -5,7 +5,7 @@ import { AFM_DISABLE } from '@env';
 import { Observable, Subscription } from 'rxjs';
 import { Wishlist, WishlistStatus } from '@blockframes/organization';
 import { map } from 'rxjs/operators';
-import { CatalogCartQuery } from '../distribution-deal/+state/cart.query';
+import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
 import { AuthService } from '@blockframes/auth';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { MatSidenav } from '@angular/material';

@@ -8,7 +8,7 @@ import {
   MovieCurrenciesSlug
 } from '@blockframes/movie/movie/static-model/types';
 import { FormControl } from '@angular/forms';
-import { CartService } from '../../distribution-deal/+state/cart.service';
+import { CartService } from '@blockframes/organization/cart/+state/cart.service';
 
 @Component({
   selector: 'catalog-selection',

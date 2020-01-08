@@ -50,12 +50,12 @@ import { startWith, map, debounceTime, switchMap, tap, distinctUntilChanged } fr
 import { CatalogSearchForm } from './search.form';
 import { filterMovie } from './filter.util';
 import { AFM_DISABLE } from '@env';
-import { CartService } from '../../distribution-deal/+state/cart.service';
+import { CartService } from '@blockframes/organization/cart/+state/cart.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Index } from 'algoliasearch';
 import flatten from 'lodash/flatten';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { CatalogCartQuery } from '../../distribution-deal/+state';
+import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
 import { MovieDocumentWithDates } from '@blockframes/movie/movie/+state/movie.firestore';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state/distribution-deal.service';
 

@@ -19,3 +19,7 @@ export * from './lib/movie/static-model';
 
 // Movie Component Module
 export * from './lib/movie/components/movie-picker/movie-picker.module';
+
+
+// Distribution Deals guards
+export * from './lib/distribution-deals/guards/active-movie-distribution-deals.guard';

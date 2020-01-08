@@ -1,9 +1,7 @@
-
-import { firestore } from "firebase/app";
-import { CatalogCart } from "@blockframes/marketplace/app/distribution-deal/+state/cart.model";
+import { firestore } from 'firebase/app';
+import { CatalogCart } from '@blockframes/organization/cart/+state/cart.model';
 
 type Timestamp = firestore.Timestamp;
-
 
 /** Document model of an Organization */
 interface OrganizationRaw<D> {
@@ -36,30 +34,30 @@ export const enum OrganizationStatus {
 }
 
 export interface AddressSet {
-  main: Location,
-  billing?: Location,
-  office?: Location,
+  main: Location;
+  billing?: Location;
+  office?: Location;
   // Other can be added here
 }
 
 export interface Location {
-  street: string,
-  zipCode: string,
-  city: string,
-  country: string,
-  region?: string,
-  phoneNumber: string,
+  street: string;
+  zipCode: string;
+  city: string;
+  country: string;
+  region?: string;
+  phoneNumber: string;
 }
 
 export interface WishlistRaw<D> {
-  status: WishlistStatus,
-  movieIds: string[],
-  sent?: D,
-  name?: string,
+  status: WishlistStatus;
+  movieIds: string[];
+  sent?: D;
+  name?: string;
 }
-export interface WishlistDocument extends WishlistRaw<Timestamp> { }
+export interface WishlistDocument extends WishlistRaw<Timestamp> {}
 
-export interface WishlistDocumentWithDates extends WishlistRaw<Date> { }
+export interface WishlistDocumentWithDates extends WishlistRaw<Date> {}
 
 export const enum WishlistStatus {
   pending = 'pending',
@@ -84,7 +82,7 @@ export function createOrganizationDocument(
     ...org,
     created: firestore.Timestamp.now(),
     updated: firestore.Timestamp.now()
-  } as OrganizationDocument
+  } as OrganizationDocument;
 }
 
 /** A factory function that creates an OrganizationDocument. */
