@@ -1,9 +1,11 @@
-<mat-slide-toggle>Original language</mat-slide-toggle>
 <form [formGroup]="form" fxLayout="column" fxLayoutAlign="center start">
-  <!-- PROBLEME IS HERE -->
+  <div fxLayout="row" fxLayoutAlign="space-between center" class="original-language-btn">
+    <span class="mat-body">Original language</span>
+    <mat-slide-toggle></mat-slide-toggle>
+  </div>
   <mat-form-field appearance="outline">
     <mat-label>Language</mat-label>
-    <mat-select formControlName="languages">
+    <mat-select >
       <mat-option>
         <ngx-mat-select-search [formControl]="languagesFilterCtrl" placeholderLabel="Search..."
           noEntriesFoundLabel="no matching languages found"></ngx-mat-select-search>
@@ -20,42 +22,4 @@
     <mat-button-toggle value="subtitled">Subtitled</mat-button-toggle>
     <mat-button-toggle value="closed-captioned">Closed-captioned</mat-button-toggle>
   </mat-button-toggle-group>
-<!--   <mat-button-toggle-group #group="matButtonToggleGroup">
-    <mat-button-toggle value="dubbed">
-     Dubbed
-    </mat-button-toggle>
-    <mat-button-toggle value="subtitled">
-      Subtitled
-     </mat-button-toggle>
-       <mat-button-toggle value="closed-captioned">
-     Closed-captioned
-    </mat-button-toggle>
-  </mat-button-toggle-group> -->
 </form>
-  <!-- DUBBINGS -->
-<!--   <h3> Dubbings </h3>
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-select formControlName="dubbings" placeholder="Available dubbing(s)" multiple>
-      <mat-option>
-        <ngx-mat-select-search [formControl]="languagesFilterCtrl" [placeholderLabel]="'Search...'"
-          [noEntriesFoundLabel]="'no matching language found'"></ngx-mat-select-search>
-      </mat-option>
-      <mat-option *ngFor="let language of languages$ | async" [value]="language.slug">
-        {{ language.label }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field> -->
-  <!-- SUBTITLES -->
-<!--   <h3> Subtitles </h3>
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-select formControlName="subtitles" placeholder="Available subtitle(s)" multiple>
-      <mat-option>
-        <ngx-mat-select-search [formControl]="languagesFilterCtrl" [placeholderLabel]="'Search...'"
-          [noEntriesFoundLabel]="'no matching language found'"></ngx-mat-select-search>
-      </mat-option>
-      <mat-option *ngFor="let language of languages$ | async" [value]="language.slug">
-        {{ language.label }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
- -->

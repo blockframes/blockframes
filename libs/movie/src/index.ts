@@ -19,8 +19,8 @@ export * from './lib/movie/static-model';
 
 // Movie Component Module
 export * from './lib/movie/components/movie-picker/movie-picker.module';
-export * from './lib/components/movie-picker/movie-picker.module';
+export * from './lib/movie/components/movie-picker/movie-picker.module';
 
 // Movie Form Moudles
-export * from './lib/form/sales-info/format/format.module';
-export * from './lib/form/version-info/version-info.module';
+export * from './lib/movie/form/sales-info/format/format.module';
+export * from './lib/movie/form/version-info/version-info.module';
