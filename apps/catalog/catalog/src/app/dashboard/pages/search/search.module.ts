@@ -1,15 +1,15 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ViewComponent } from './view.component';
+import { SearchComponent } from './search.component';
 import { RouterModule } from '@angular/router';
 
 
 
 @NgModule({
-  declarations: [ViewComponent],
+  declarations: [SearchComponent],
   imports: [
     CommonModule,
-    RouterModule.forChild([{ path: '', component: ViewComponent }])
+    RouterModule.forChild([{ path: '', component: SearchComponent }])
   ]
 })
-export class DealViewModule { }
+export class SearchModule { }
