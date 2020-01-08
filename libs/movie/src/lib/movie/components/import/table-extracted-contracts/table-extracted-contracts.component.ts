@@ -4,10 +4,10 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Component, Input, ViewChild, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { MovieService } from '../../../+state';
 import { SelectionModel } from '@angular/cdk/collections';
 import { SpreadsheetImportError, ContractsImportState } from '../view-extracted-elements/view-extracted-elements.component';
 import { ViewImportErrorsComponent } from '../view-import-errors/view-import-errors.component';
+import { ContractService } from '@blockframes/contract/+state/contract.service';
 
 const hasImportErrors = (importState: ContractsImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -44,7 +44,7 @@ export class TableExtractedContractsComponent implements OnInit {
   constructor(
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
-    private movieService: MovieService,
+    private contractService: ContractService,
   ) { }
 
   ngOnInit() {
@@ -57,7 +57,7 @@ export class TableExtractedContractsComponent implements OnInit {
 
   async createContract(importState: ContractsImportState): Promise<boolean> {
 
-    const contractId = await this.movieService.addContractAndVersion(importState.contract.doc, importState.contract.last);
+    const contractId = await this.contractService.addContractAndVersion(importState.contract.doc, importState.contract.last);
     importState.errors.push({
       type: 'error',
       field: 'contract',
@@ -91,7 +91,7 @@ export class TableExtractedContractsComponent implements OnInit {
             hint: 'Contract already added'
           });
 
-          return promises.push(this.movieService.addContractAndVersion(importState.contract.doc, importState.contract.last));
+          return promises.push(this.contractService.addContractAndVersion(importState.contract.doc, importState.contract.last));
         });
 
       this.rows.data = data;
