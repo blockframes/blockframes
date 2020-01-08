@@ -37,7 +37,7 @@ const routes: Routes = [
           // One movie
           path: ':movieId',
           children: [{
-            path: 'sales'
+            path: 'sales' 
           }, {
             path: 'details'
           }, {

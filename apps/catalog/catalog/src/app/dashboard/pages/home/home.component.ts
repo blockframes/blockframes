@@ -1,20 +1,19 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { Observable } from 'rxjs/internal/Observable';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { MatDialog } from '@angular/material/dialog';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { MovieTitleFormComponent } from '@blockframes/movie/components/movie-title-form/movie-title-form.component';
+import { Observable } from 'rxjs';
 
 @Component({
-  selector: 'catalog-dashboard-home',
-  templateUrl: './dashboard-home.component.html',
-  styleUrls: ['./dashboard-home.component.scss'],
+  selector: 'catalog-home',
+  templateUrl: './home.component.html',
+  styleUrls: ['./home.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CatalogDashboardHomeComponent implements OnInit {
-
+export class HomeComponent implements OnInit {
   public movies$: Observable<Movie[]>;
   public loading$: Observable<boolean>;
 
@@ -44,4 +43,5 @@ export class CatalogDashboardHomeComponent implements OnInit {
       this.snackBar.open(error.message, 'close', { duration: 2000 });
     }
   }
+
 }
