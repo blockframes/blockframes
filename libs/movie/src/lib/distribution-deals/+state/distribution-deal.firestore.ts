@@ -24,10 +24,17 @@ export const enum FormatProfile {
   _3UHD = '3DUHD'
 }
 
+export interface HoldbackRaw<D> {
+  terms: TermsRaw<D>;
+  media: MediasSlug;
+}
+
+export interface HoldbackWithDates extends HoldbackRaw<Date> {}
+
 // Distribution deal raw interface, formerly called MovieSaleRaw
 interface DistributionDealRaw<D> {
-  id: string;
-  publicId?: string;
+  id: string,
+  publicId?: string,
   licenseType: MediasSlug[];
   terms: TermsRaw<D>;
   territory: TerritoriesSlug[];
@@ -38,7 +45,6 @@ interface DistributionDealRaw<D> {
   formatProfile: FormatProfile;
   download: boolean;
   contractId?: string;
-  licenseStatus: LicenseStatus;
   reportingId?: string;
   deliveryIds?: string;
   multidiffusion?: number;
@@ -50,9 +56,3 @@ export interface DistributionDealDocumentWithDates extends DistributionDealRaw<D
 
 export interface DistributionDealDocument extends DistributionDealRaw<Timestamp> {}
 
-export interface HoldbackRaw<D> {
-  terms: TermsRaw<D>;
-  media: MediasSlug;
-}
-
-export interface HoldbackWithDates extends HoldbackRaw<Date> {}

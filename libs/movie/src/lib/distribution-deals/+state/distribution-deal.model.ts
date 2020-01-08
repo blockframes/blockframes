@@ -1,7 +1,6 @@
 import {
   DistributionDealDocumentWithDates as DistributionDeal,
   HoldbackWithDates as Holdback,
-  LicenseStatus,
   FormatProfile
 } from './distribution-deal.firestore';
 import { createTerms } from '@blockframes/utils/common-interfaces/terms';
@@ -11,7 +10,6 @@ export { DistributionDealDocumentWithDates as DistributionDeal } from './distrib
 export function createDistributionDeal(params: Partial<DistributionDeal> = {}): DistributionDeal {
   return {
     id: '',
-    licenseStatus: LicenseStatus.unknown,
     licenseType: [],
     terms: createTerms(params.terms),
     territory: [],

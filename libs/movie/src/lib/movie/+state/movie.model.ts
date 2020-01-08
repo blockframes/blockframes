@@ -254,14 +254,3 @@ export function createOfficialIds(params: Partial<MovieOfficialIds> = {}): Movie
     ...params
   };
 }
-
-export function createMovieLanguage(
-  movieLanguage: Partial<MovieLanguageSpecification> = {}
-): MovieLanguageSpecification {
-  return {
-    original: false,
-    dubbed: false,
-    subtitle: false,
-    ...movieLanguage
-  } as MovieLanguageSpecification;
-}

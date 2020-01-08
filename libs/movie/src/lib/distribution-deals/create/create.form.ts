@@ -5,24 +5,13 @@ import {
   TERRITORIES_SLUG,
   LanguagesSlug
 } from '../../movie/static-model/types';
-import { MovieMain } from '../../movie/+state/movie.model';
+import { MovieMain, createMovieLanguageSpecification } from '../../movie/+state/movie.model';
 import { MovieLanguageSpecification } from '../../movie/+state/movie.firestore';
 import { DistributionDeal, createDistributionDeal } from '../+state/distribution-deal.model';
 
 /* ------------- */
 /* CREATE OBJECT */
 /* ------------- */
-
-export function createMovieLanguage(
-  movieLanguage: Partial<MovieLanguageSpecification> = {}
-): MovieLanguageSpecification {
-  return {
-    original: false,
-    dubbed: false,
-    subtitle: false,
-    ...movieLanguage
-  } as MovieLanguageSpecification;
-}
 
 export function createLanguageControl(
   language: MovieLanguageSpecification,
@@ -129,12 +118,12 @@ export class DistributionDealForm extends FormEntity<DistributionDealControls> {
       value.original = true;
       (<FormGroup>this.languages).addControl(
         language,
-        new FormGroup(createLanguageControl(createMovieLanguage(value), true))
+        new FormGroup(createLanguageControl(createMovieLanguageSpecification(value), true))
       );
     }
     (<FormGroup>this.languages).addControl(
       language,
-      new FormGroup(createLanguageControl(createMovieLanguage(value)))
+      new FormGroup(createLanguageControl(createMovieLanguageSpecification(value)))
     );
   }
 
