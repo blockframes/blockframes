@@ -11,49 +11,41 @@ const routes: Routes = [
     canActivate: [MovieCollectionGuard],    // todo(#1476) move to a more precise place (overview or/and deals maybe)
     canDeactivate: [MovieCollectionGuard],  // todo(#1476) move to a more precise place (overview or/and deals maybe)
     children: [
-      // Home (dashboard if film, welcome if not)
       {
-        path: 'home'
+        path: '',   // Home (dashboard if film, welcome if not)
+        loadChildren: () => import('./pages/home/home.module').then(m => m.HomeModule)
       },
-      // List of notifications (Activity feed)
       {
-        path: 'activity'
+        path: 'activity',   // List of notifications
+        // loadChildren: () => import('@blockframes/notifications/pages/list/list.module').then(m => m.NotificationsListModule)
       },
-      // Import bulk of movies
       {
-        path: 'import'
+        path: 'import', // Import bulk of movies
+        loadChildren: () => import('@blockframes/movie/components/import/import-movie.module')
+          .then(m => m.ImportMovieModule)
       },
-      // Result of a search on the main searchbar
       {
-        path: 'search-result'
+        path: 'search',  // Result of a search on the main searchbar
+        loadChildren: () => import('./pages/search/search.module').then(m => m.SearchModule)
       },
-      // List of titles
       {
         path: 'titles',
         children: [{
-          // List of titles
-          path: 'list'
+          path: '',
+          loadChildren: () => import('./title/list/list.module').then(m => m.TitleListModule)
         }, {
-          // One movie
           path: ':movieId',
-          children: [{
-            path: 'sales' 
-          }, {
-            path: 'details'
-          }, {
-            path: 'avails'
-          }]
+          loadChildren: () => import('./title/view/view.module').then(m => m.TitleViewModule)
         }]
       },
-      // List of titles
       {
         path: 'deals',
         children: [{
-          // List of deals
-          path: 'list'
+          path: '',
+          loadChildren: () => import('./deal/list/list.module').then(m => m.DealListModule)
         }, {
-          // One deal: different state of a deal (offer, counter-offer, payment)
-          path: ':dealId',
+          path: ':dealId', // One deal: different state of a deal (offer, counter-offer, payment),
+          loadChildren: () => import('./deal/view/view.module').then(m => m.DealViewModule)
         }]
       },
       {
