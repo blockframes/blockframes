@@ -1,13 +1,31 @@
 import { AbstractControl } from '@angular/forms';
-import { FormArray } from '@angular/forms';
+import { FormArray, FormControl } from '@angular/forms';
 import { FormEntity } from './entity.form';
 import { Validator, AsyncValidator } from './types';
 import { createControlForm } from './create-control';
 
 type GetValue<T> = T extends FormEntity<infer J> ? J : T;
 
+/** Check form content has a value given by the user */
+function hasValue(v: any): boolean {
+  if (Array.isArray(v)) {
+    return v.some(i => hasValue(i));
+  }
+  if (v === null) {
+    return false;
+  }
+  if (typeof v === 'object') {
+    return Object.keys(v).some(k => hasValue(v[k]));
+  } else if (typeof v === 'number') {
+    return true;
+  } else {
+    return !!v
+  }
+}
+
 /** A list of FormField */
 export class FormList<T, Control extends AbstractControl = any> extends FormArray {
+  private _value: T[];
   createControl: (value: T) => Control = createControlForm;
   controls: Control[];
 
@@ -15,13 +33,27 @@ export class FormList<T, Control extends AbstractControl = any> extends FormArra
     super(controls, validators, asyncValidators);
   }
 
-  static factory<T, Control>(value: T[], createControl?: (value: T) => Control, validators?: Validator) {
+  static factory<T, Control>(value: T[], createControl?: (value?: T) => Control, validators?: Validator) {
     const form = new FormList<T>([], validators);
     if (createControl) {
       form['createControl'] = createControl.bind(form);
     }
-    form.patchValue(value);
+    if (!value.length) {
+      const control = createControl ? createControl() : new FormControl();
+      form.push(control);
+    } else {
+      form.patchValue(value);
+    }
     return form;
+  }
+
+  /** Get value of item that has value */
+  get value() {
+    return this._value.filter((value: T) => hasValue(value));
+  }
+
+  set value(v: T[]) {
+    this._value = v;
   }
 
   at(index: number): Control {
