@@ -1,9 +1,16 @@
-<mat-form-field appearance="outline">
-  <mat-label>Production company*</mat-label>
-  <input matInput [formControl]="form" />
-</mat-form-field>
-<ng-container *ngIf="form.value.length == 0">
-  <button mat-icon-button color="primary" (click)="add($event)">
-    <mat-icon>add_circle</mat-icon>
-  </button>
-</ng-container>
+<div fxLayout="column" fxLayoutAlign="space-around">
+  <div *ngFor="let control of form.controls">    
+    <mat-form-field appearance="outline">
+      <mat-label>Production company</mat-label>
+      <input matInput [formControl]="control.get('displayName')" required/>
+    </mat-form-field>
+    <button mat-icon-button color="primary" (click)="remove(i)">
+      <mat-icon>delete_circle</mat-icon>
+    </button>
+  </div>
+  <div>
+    <button mat-icon-button color="primary" (click)="add()">
+      <mat-icon>add_circle</mat-icon>
+    </button>
+  </div>
+</div>
