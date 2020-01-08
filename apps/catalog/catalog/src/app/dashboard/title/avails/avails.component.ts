@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'catalog-avails',
+  selector: 'catalog-title-avails',
   templateUrl: './avails.component.html',
   styleUrls: ['./avails.component.scss']
 })
-export class AvailsComponent implements OnInit {
+export class TitleAvailsComponent implements OnInit {
 
   constructor() { }
 

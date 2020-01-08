@@ -1,15 +1,15 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AvailsComponent } from './avails.component';
 import { RouterModule } from '@angular/router';
 
+import { TitleAvailsComponent } from './avails.component';
 
 
 @NgModule({
-  declarations: [AvailsComponent],
+  declarations: [TitleAvailsComponent],
   imports: [
     CommonModule,
-    RouterModule.forChild([{ path: '', component: AvailsComponent }])
+    RouterModule.forChild([{ path: '', component: TitleAvailsComponent }])
   ]
 })
-export class AvailsModule { }
+export class TitleAvailsModule { }

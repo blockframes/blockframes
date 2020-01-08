@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'catalog-view',
+  selector: 'catalog-deal-view',
   templateUrl: './view.component.html',
   styleUrls: ['./view.component.scss']
 })
-export class ViewComponent implements OnInit {
+export class DealViewComponent implements OnInit {
 
   constructor() { }
 

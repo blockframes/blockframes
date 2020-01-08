@@ -1,29 +1,35 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ViewComponent } from './view.component';
 import { RouterModule } from '@angular/router';
+
+import { TitleViewComponent } from './view.component';
 
 const routes = [{
   path: '',
-  component: ViewComponent,
+  component: TitleViewComponent,
   children: [
     {
+      path: '',
+      redirectTo: 'sales',
+      pathMatch: 'full'
+    },
+    {
       path: 'sales',
-      loadChlidren: () => import('../sales/sales.module').then(m => m.SalesModule)
+      loadChildren: () => import('../sales/sales.module').then(m => m.TitleSalesModule)
     },
     {
       path: 'details',
-      loadChlidren: () => import('../details/details.module').then(m => m.DetailsModule)
+      loadChildren: () => import('../details/details.module').then(m => m.TitleDetailsModule)
     },
     {
       path: 'avails',
-      loadChlidren: () => import('../avails/avails.module').then(m => m.AvailsModule)
+      loadChildren: () => import('../avails/avails.module').then(m => m.TitleAvailsModule)
     }
   ]
 }];
 
 @NgModule({
-  declarations: [ViewComponent],
+  declarations: [TitleViewComponent],
   imports: [
     CommonModule,
     RouterModule.forChild(routes)
