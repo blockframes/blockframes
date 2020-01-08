@@ -13,6 +13,7 @@ const routes: Routes = [
         loadChildren: () => import('./pages/home/home.module').then(m => m.HomeModule)
       },
       {
+        // TODO(#1522)
         path: 'activity',   // List of notifications
         // loadChildren: () => import('@blockframes/notifications/pages/list/list.module').then(m => m.NotificationsListModule)
       },
