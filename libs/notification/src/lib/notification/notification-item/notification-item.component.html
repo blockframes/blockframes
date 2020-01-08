@@ -11,4 +11,7 @@
     <p>{{ information.message }}</p>
     <small>{{ notification.date.toDate() | date: 'shortTime' }}</small>
   </article>
+  <article *ngIf="notification.type == 'pathToDocument'">
+    <a mat-flat-button (click)="goToPath()">Go to document</a>
+  </article>
 </section>

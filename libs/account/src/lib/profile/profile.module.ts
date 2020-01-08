@@ -19,7 +19,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ProfileDisplayComponent } from './components/profile-display/profile-display.component';
 import { ProfileFormComponent } from './components/profile-form/profile-form.component';
 import { ProfileEditableComponent } from './pages/profile-editable/profile-editable.component';
-import { EditableSidenavModule, UiFormModule, UploadModule, AssetsThemeModule } from '@blockframes/ui';
+import { EditableSidenavModule, UiFormModule, UploadModule } from '@blockframes/ui';
 import { PasswordFormComponent } from './components/password-form/password-form.component';
 
 export const profileRoutes: Routes = [
@@ -34,7 +34,6 @@ export const profileRoutes: Routes = [
     FlexLayoutModule,
     CropperModule,
     ImageReferenceModule,
-    AssetsThemeModule,
     MatListModule,
     MatCardModule,
     MatButtonModule,

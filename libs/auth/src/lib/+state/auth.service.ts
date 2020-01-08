@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AuthStore, AuthState, User } from './auth.store';
+import { AuthStore, User, AuthState } from './auth.store';
 import { Router } from '@angular/router';
 import { AuthQuery } from './auth.query';
 import { AngularFireFunctions } from '@angular/fire/functions';

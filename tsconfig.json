@@ -116,6 +116,9 @@
       "@blockframes/notification": [
         "libs/notification/src/index.ts"
       ],
+      "@blockframes/notification/*": [
+        "libs/notification/src/lib/*"
+      ],
 
       // DELIVERY/MATERIAL/TEMPLATES
       "@blockframes/material/material/types": [

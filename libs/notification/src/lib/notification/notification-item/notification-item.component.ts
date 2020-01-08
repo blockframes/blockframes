@@ -3,11 +3,12 @@ import { Router } from '@angular/router';
 import { NotificationService, Notification } from '../+state';
 import { NotificationType } from '../+state/notification.firestore';
 import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
+import { ImgRef } from '@blockframes/utils/image-uploader';
 
 /** Specific interface to load informations depending of the notification type. */
 interface Information {
   message: string;
-  imgRef: string;
+  imgRef?: ImgRef;
   defaultImg?: string;
 }
 
@@ -37,66 +38,66 @@ export class NotificationItemComponent {
       case NotificationType.inviteOrganization:
         return {
           message: `${this.notification.organization.name} has been invited to work on ${this.notification.movie.title.original}'s delivery.`,
-          imgRef: this.notification.movie.poster,
+          imgRef: this.getPoster(this.notification.movie.id),
           defaultImg: 'WelcomeDelivery_500.png'
         };
       case NotificationType.removeOrganization:
         return  {
           message: `${this.notification.organization.name} has been removed from ${this.notification.movie.title.original}'s delivery.`,
-          imgRef: this.notification.movie.poster,
+          imgRef: this.getPoster(this.notification.movie.id),
           defaultImg: 'WelcomeDelivery_500.png'
         };
       case NotificationType.newSignature:
         return {
           message: `${this.notification.organization.name} has signed ${this.notification.movie.title.original}'s delivery.`,
-          imgRef: this.notification.movie.poster,
+          imgRef: this.getPoster(this.notification.movie.id),
           defaultImg: 'WelcomeDelivery_500.png'
         };
       case NotificationType.finalSignature:
         return {
           message: `Every stakeholders have signed ${this.notification.movie.title.original}'s delivery.`,
-          imgRef: this.notification.movie.poster,
+          imgRef: this.getPoster(this.notification.movie.id),
           defaultImg: 'WelcomeDelivery_500.png'
         };
       case NotificationType.createDocument:
         return {
           message: `A new delivery has been created for ${this.notification.movie.title.original}.`,
-          imgRef: this.notification.movie.poster,
+          imgRef: this.getPoster(this.notification.movie.id),
           defaultImg: 'WelcomeDelivery_500.png'
         };
       case NotificationType.deleteDocument:
         return {
           message: `${this.notification.movie.title.original}'s delivery has been deleted.`,
-          imgRef: this.notification.movie.poster,
+          imgRef: this.getPoster(this.notification.movie.id),
           defaultImg: 'WelcomeDelivery_500.png'
         };
       case NotificationType.pathToDocument:
         return {
           message: 'You accepted the invitation. Now you can work on the document.',
-          imgRef: this.notification.movie.poster,
+          imgRef: this.getPoster(this.notification.movie.id),
           defaultImg: 'WelcomeDelivery_500.png'
         };
       case NotificationType.organizationAcceptedByArchipelContent:
         return {
           message: 'Your organization has been accepted by Archipel Content !',
-          imgRef: 'WelcomeArchipelContent_500.png'
+          defaultImg: 'WelcomeArchipelContent_500.png'
         };
       case NotificationType.movieTitleUpdated:
         return {
           message: `${this.notification.user.name} ${this.notification.user.surname} edited ${this.movieTitleInternational}.`,
-          imgRef: this.notification.movie.poster,
+          imgRef: this.getPoster(this.notification.movie.id),
           defaultImg: 'WelcomeDelivery_500.png'
         };
       case NotificationType.movieTitleCreated:
         return {
           message: `${this.notification.user.name} ${this.notification.user.surname} created ${this.movieTitleInternational}.`,
-          imgRef: this.notification.movie.poster,
+          imgRef: this.getPoster(this.notification.movie.id),
           defaultImg: 'WelcomeDelivery_500.png'
         };
       case NotificationType.movieDeleted:
         return {
           message: `${this.notification.user.name} ${this.notification.user.surname} deleted ${this.movieTitleInternational}.`,
-          imgRef: this.notification.movie.poster,
+          imgRef: this.getPoster(this.notification.movie.id),
           defaultImg: 'WelcomeDelivery_500.png'
         };
       case NotificationType.invitationFromOrganizationToUserDecline:
@@ -126,7 +127,7 @@ export class NotificationItemComponent {
     }
   }
 
-  public getPoster(id: string) {
+  public getPoster(id: string): ImgRef {
     const movie = this.movieQuery.getEntity(id)
     return movie.main.poster
   }
@@ -142,13 +143,5 @@ export class NotificationItemComponent {
     } catch (error) {
       throw new Error(error.message);
     }
-  }
-
-  public read() {
-    this.service.readNotification(this.notification);
-  }
-
-  public getDate() {
-    return this.notification.date.toDate();
   }
 }
