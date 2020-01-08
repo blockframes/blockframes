@@ -8,7 +8,14 @@
          <mat-card-title>Production information</mat-card-title>
        </mat-card-header>
        <mat-card-content>
+         <!-- production year from main-->
          <movie-form-production-year [form]="productionYear"></movie-form-production-year>
+         <mat-divider></mat-divider>
+         <!-- mutiple production company from main -->
+         <movie-form-production-companies [form]="productionCompanies"></movie-form-production-companies>
+         <mat-divider></mat-divider>
+         <!-- producer from main -->
+         <!-- multiple co production company from main -->
        </mat-card-content>
      </mat-card>
      <!-- Writer -->

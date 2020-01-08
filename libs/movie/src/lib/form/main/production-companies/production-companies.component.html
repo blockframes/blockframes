@@ -1,0 +1,9 @@
+<mat-form-field appearance="outline">
+  <mat-label>Production company*</mat-label>
+  <input matInput [formControl]="form" />
+</mat-form-field>
+<ng-container *ngIf="form.value.length == 0">
+  <button mat-icon-button color="primary" (click)="add($event)">
+    <mat-icon>add_circle</mat-icon>
+  </button>
+</ng-container>
