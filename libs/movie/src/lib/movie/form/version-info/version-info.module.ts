@@ -11,6 +11,8 @@ import { NgModule } from '@angular/core';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 // Materials
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatSelectModule } from '@angular/material/select';
@@ -31,6 +33,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
         MatFormFieldModule,
         MatSelectModule,
         MatOptionModule,
+        MatButtonModule,
+        MatIconModule,
         MatButtonToggleModule,
         MatSlideToggleModule
     ],

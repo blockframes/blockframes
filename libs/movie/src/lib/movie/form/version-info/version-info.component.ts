@@ -3,7 +3,6 @@ import { Observable } from 'rxjs';
 import { SlugAndLabel } from './../../static-model/staticModels';
 import { FormControl } from '@angular/forms';
 import { MovieVersionInfoForm } from './version-info.form';
-import { MovieMainForm } from './../main/main.form';
 import { Component, ChangeDetectionStrategy, OnInit, Input } from '@angular/core';
 import { default as staticModels } from '../../static-model/staticModels';
 
@@ -15,7 +14,7 @@ import { default as staticModels } from '../../static-model/staticModels';
 })
 export class MovieFormVersionInfoComponent implements OnInit {
 
-  @Input() form: MovieVersionInfoForm
+  @Input() form: MovieVersionInfoForm;
 
   public staticModels: any;
 
