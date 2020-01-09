@@ -8,7 +8,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { FeedbackMessageModule, ActionsListModule } from '@blockframes/ui';
 import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
 import { OrganizationFormModule } from './components/organization-form/organization-form.module';
-import { AssetsThemeModule } from '@blockframes/ui';
+import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
 
 // Material
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -72,7 +72,7 @@ export const noOrganizationRoutes: Routes = [
     FlexLayoutModule,
     CropperModule,
     OrganizationFormModule,
-    AssetsThemeModule,
+    ImgAssetModule,
 
     // Material
     MatFormFieldModule,
