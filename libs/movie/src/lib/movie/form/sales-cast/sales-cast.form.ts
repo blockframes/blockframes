@@ -24,7 +24,7 @@ function createCreditControls(credit?: Partial<Credit>) {
 
 type CreditControl = ReturnType<typeof createCreditControls>;
 
-class CreditForm extends FormEntity<CreditControl>{
+export class CreditForm extends FormEntity<CreditControl>{
   constructor(credit?: Credit) {
     super(createCreditControls(credit));
   }
