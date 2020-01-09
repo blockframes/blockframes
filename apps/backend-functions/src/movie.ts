@@ -43,24 +43,19 @@ export async function onMovieCreate(
 ) {
   const movie = snap.data() as MovieDocument;
 
-  // Get the user document.
-  const user = await getDocument<PublicUser>(`users/${movie._meta!.createdBy}`);
-
   if (!movie) {
     console.error('Invalid movie data:', movie);
     throw new Error('movie update function got invalid movie data');
   }
 
-  // Create notifications and getting organization snapshot.
-  const [notifications, organizationSnap] = await Promise.all([
-    createNotificationsForUsers(movie, NotificationType.movieTitleCreated, user),
-    db.doc(`orgs/${user.orgId}`).get()
-  ]);
+  // Get the user document and create notifications.
+  const user = await getDocument<PublicUser>(`users/${movie._meta!.createdBy}`);
+  const notifications = await createNotificationsForUsers(movie, NotificationType.movieTitleCreated, user);
 
   return db.runTransaction(async tx => {
     // Get the organization document in the transaction for maximum freshness.
-    const organizationDoc = await tx.get(organizationSnap.ref);
-    const organization = organizationDoc.data() as OrganizationDocument
+    const organizationSnap = await tx.get(db.doc(`orgs/${user.orgId}`));
+    const organization = organizationSnap.data() as OrganizationDocument
 
     return Promise.all([
       // Update the organization's movieIds with the new movie id.
