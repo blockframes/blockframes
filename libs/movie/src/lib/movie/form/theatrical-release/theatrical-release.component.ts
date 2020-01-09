@@ -1,20 +1,21 @@
-import { Component, OnInit } from '@angular/core';
-import { MovieForm } from '@blockframes/movie/form/movie.form';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ControlContainer, FormControl } from '@angular/forms';
 
 @Component({
   selector: '[formGroup] movie-theatrical-release, [formGroupName] movie-theatrical-release',
   templateUrl: './theatrical-release.component.html',
-  styleUrls: ['./theatrical-release.component.scss']
+  styleUrls: ['./theatrical-release.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TheatricalReleaseComponent implements OnInit {
+export class TheatricalReleaseComponent {
 
-  constructor(private form: MovieForm) { }
+  constructor(private controlContainer: ControlContainer) { }
 
-  get salesInfo() {
-    return this.form.get('salesInfo');
+  get theatricalRelease() : FormControl {
+    return this.controlContainer.control as FormControl
   }
 
-  ngOnInit() {
+  get originCountryReleaseDate() : FormControl {
+    return this.controlContainer.control as FormControl
   }
-
 }
