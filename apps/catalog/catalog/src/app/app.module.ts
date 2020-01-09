@@ -44,9 +44,6 @@ import { intercomId } from '@env';
 // Analytics
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 
-// Material
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -83,9 +80,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
       accurateTrackBounce: true,
       webvisor: true
     }),
-
-    // Material
-    MatSnackBarModule
   ],
   providers: [],
   bootstrap: [AppComponent]
