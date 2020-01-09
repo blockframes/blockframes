@@ -32,7 +32,7 @@ export class WalletViewComponent implements OnInit {
   async deleteKey(key: Key) {
     if (key.isLinked || key.isMainKey) {
       await this.service.setDeleteKeyTx(this.query.getValue().address, key);
-      this.router.navigateByUrl('/layout/o/account/wallet/send');
+      this.router.navigateByUrl('/c/o/account/wallet/send');
     } else {
       this.keyService.deleteKey(key);
     }
@@ -41,7 +41,7 @@ export class WalletViewComponent implements OnInit {
   async linkKey(key: Key) {
     if (!key.isMainKey && !key.isLinked) {
       await this.service.setLinkKeyTx(this.query.getValue().address, key);
-      this.router.navigateByUrl('/layout/o/account/wallet/send');
+      this.router.navigateByUrl('/c/o/account/wallet/send');
     } else {
       console.warn('This key is already linked !'); // TODO BETTER ERROR HANDLING : issue 671
     }

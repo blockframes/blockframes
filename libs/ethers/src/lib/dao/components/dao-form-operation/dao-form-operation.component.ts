@@ -54,11 +54,11 @@ export class DaoFormOperationComponent {
       confirmation: `You are about to blacklist ${removedMember.name} for ${operationName}`,
       success: `${removedMember.name} has been successfully blacklisted !`,
       redirectName: 'Back to Administration',
-      redirectRoute: `/layout/o/organization/`,
+      redirectRoute: `/c/o/organization/`,
     }
     this.walletService.setTx(tx);
     this.walletService.setTxFeedback(feedback);
-    this.router.navigateByUrl('/layout/o/account/wallet/send');
+    this.router.navigateByUrl('/c/o/account/wallet/send');
   }
 
   public async addMember() {
@@ -76,11 +76,11 @@ export class DaoFormOperationComponent {
       confirmation: `You are about to whitelist ${addedMember.name} for ${operationName}`,
       success: `${addedMember.name} has been successfully whitelisted !`,
       redirectName: 'Back to Administration',
-      redirectRoute: `/layout/o/organization`,
+      redirectRoute: `/c/o/organization`,
     }
     this.walletService.setTx(tx);
     this.walletService.setTxFeedback(feedback);
-    this.router.navigateByUrl('/layout/o/account/wallet/send');
+    this.router.navigateByUrl('/c/o/account/wallet/send');
   }
 
   public async updateQuorum() {
@@ -93,10 +93,10 @@ export class DaoFormOperationComponent {
       confirmation: `You are about to set the quorum for ${operationName} to ${newQuorum}`,
       success: 'The quorum has been successfully updated !',
       redirectName: 'Back to Administration',
-      redirectRoute: `/layout/o/organization`,
+      redirectRoute: `/c/o/organization`,
     }
     this.walletService.setTx(tx);
     this.walletService.setTxFeedback(feedback);
-    this.router.navigateByUrl('/layout/o/account/wallet/send');
+    this.router.navigateByUrl('/c/o/account/wallet/send');
   }
 }

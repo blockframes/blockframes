@@ -16,11 +16,19 @@ const routes: Routes = [
     canActivate: [AuthGuard],
     canDeactivate: [AuthGuard],
     children: [{
+      path: '',
+      redirectTo: 'o',
+      pathMatch: 'full'
+    }, {
       path: 'organization',
       loadChildren: () => import('@blockframes/organization').then(m => m.NoOrganizationModule)
     }, {
       path: 'o',
       children: [{
+        path: '',
+        redirectTo: 'marketplace',
+        pathMatch: 'full'
+      }, {
         path: 'marketplace',
         loadChildren: () => import('./marketplace/marketplace.module').then(m => m.MarketplaceModule)
       },

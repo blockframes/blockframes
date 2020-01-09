@@ -9,7 +9,7 @@ const baseRoute = `${appsRoute}/${App.mediaDelivering}`;
 
 export const baseMenu = [
   {
-    route: '/layout/welcome',
+    route: '/c/welcome',
     items: []
   },
   {

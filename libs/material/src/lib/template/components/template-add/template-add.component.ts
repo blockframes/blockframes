@@ -22,7 +22,7 @@ export class TemplateAddComponent {
     const template = this.service.createTemplate(templateName);
     this.close();
     // TODO: issue#1332, relative path doesn't work.
-    this.router.navigate([`layout/o/delivery/templates/${template.id}`]);
+    this.router.navigate([`c/o/delivery/templates/${template.id}`]);
   }
 
   public close(): void {

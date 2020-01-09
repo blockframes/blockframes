@@ -62,7 +62,7 @@ export class DaoSignerFormComponent {
         confirmation: `You are about to whitelist ${memberName} for ${operationName}`,
         success: `${memberName} has been successfully whitelisted !`,
         redirectName: 'Back to Administration',
-        redirectRoute: `/layout/o/organization/`,
+        redirectRoute: `/c/o/organization/`,
       }
     } else {
       tx = CreateTx.removeMember(orgEthAddress, id, memberEthAddress);
@@ -70,12 +70,12 @@ export class DaoSignerFormComponent {
         confirmation: `You are about to blacklist ${memberName} for ${operationName}`,
         success: `${memberName} has been successfully blacklisted !`,
         redirectName: 'Back to Administration',
-        redirectRoute: `/layout/o/organization/`,
+        redirectRoute: `/c/o/organization/`,
       }
     }
 
     this.walletService.setTx(tx);
     this.walletService.setTxFeedback(feedback);
-    this.router.navigateByUrl('/layout/o/account/wallet/send');
+    this.router.navigateByUrl('/c/o/account/wallet/send');
   }
 }
