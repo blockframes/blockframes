@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from '@blockframes/auth';
 
 const routes: Routes = [
   {
@@ -12,6 +13,8 @@ const routes: Routes = [
   },
   {
     path: 'c',
+    canActivate: [AuthGuard],
+    canDeactivate: [AuthGuard],
     children: [{
       path: 'organization',
       loadChildren: () => import('@blockframes/organization').then(m => m.NoOrganizationModule)
