@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
 
 @Component({
@@ -7,7 +7,7 @@ import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
   styleUrls: ['./credits.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class CreditsComponent implements OnInit {
+export class CreditsComponent {
 
   constructor(private form: MovieForm) { }
 
@@ -19,16 +19,8 @@ export class CreditsComponent implements OnInit {
     return this.form.get('main').get('productionCompanies');
   }
 
-  get salesCast() {
-    return this.form.get('salesCast');
-  }
-
   get credits() {
-    return this.salesCast.get('credits');
-  }
-
-
-  ngOnInit() {
+    return this.form.get('salesCast').get('credits');
   }
 
 }

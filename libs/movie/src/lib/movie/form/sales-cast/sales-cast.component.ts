@@ -4,7 +4,7 @@ import { default as staticModels } from '../../static-model/staticModels';
 import { CreditForm } from './sales-cast.form';
 
 @Component({
-  selector: '[form] movie-form-sales-cast, movie-form-sales-cast',
+  selector: '[form] movie-form-sales-cast',
   templateUrl: './sales-cast.component.html',
   styleUrls: ['./sales-cast.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -17,6 +17,10 @@ export class MovieFormSalesCastComponent {
 
   add() {
     this.form.push(new CreditForm())
+  }
+
+  public remove(i: number): void {
+    this.form.removeAt(i);
   }
 
 }

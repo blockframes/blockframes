@@ -11,24 +11,9 @@ import { Company } from "@blockframes/utils/common-interfaces/identity";
 })
 export class ProductionCompaniesComponent {
   @Input() form: FormList<Company>;
-  addForm = new FormControl();
-  isEditing : number;
 
   public add(): void {
-    const displayName = this.addForm.value;
-    if (typeof this.isEditing === 'number') {
-      this.form.at(this.isEditing).patchValue( {displayName});
-      delete this.isEditing;
-    } else {
-      this.form.push(new ProductionCompagnyForm({ displayName }));
-    }
-    this.addForm.reset();
-  }
-
-  public edit(i: number): void {
-    const value = this.form.at(i).get('displayName').value;
-    this.addForm.patchValue(value);
-    this.isEditing = i;
+    this.form.push(new ProductionCompagnyForm());
   }
 
   public remove(i: number): void {
