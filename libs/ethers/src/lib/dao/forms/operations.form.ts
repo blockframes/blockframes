@@ -14,7 +14,7 @@ function createOperationControl(operation: Partial<DaoOperation> = {}) {
 export type OperationControl = ReturnType<typeof createOperationControl>;
 
 export function createOperationFormList() {
-  return FormList.factory([], (operation: DaoOperation) => {
+  return FormList.factory([], (operation?: DaoOperation) => {
     const control = createOperationControl(operation);
     return new FormEntity<OperationControl>(control);
   });

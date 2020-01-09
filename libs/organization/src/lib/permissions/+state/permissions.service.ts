@@ -15,7 +15,7 @@ export class PermissionsService extends CollectionService<PermissionsState> {
   }
 
   /** Update roles of members of the organization */
-  public async updateMembersRole(organizationMembers: OrganizationMember[]) {
+  public async updateMembersRole(organizationMembers: Partial<OrganizationMember>[]) {
     const orgId = this.query.getActiveId();
     const permissions = await this.getValue(orgId);
 
