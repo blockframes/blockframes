@@ -12,6 +12,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @NgModule({
   declarations: [TheatricalReleaseComponent],
@@ -25,6 +26,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
     MatCardModule,
     MatSlideToggleModule,
     MatDatepickerModule,
+    MatNativeDateModule,
   ],
   exports: [TheatricalReleaseComponent]
 })

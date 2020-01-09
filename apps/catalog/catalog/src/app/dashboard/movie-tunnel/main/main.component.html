@@ -1,3 +1,17 @@
-<form [formGroup]="salesInfo">
-  <movie-theatrical-release [formGroupName]="salesInfo"></movie-theatrical-release>
-</form>
+<tunnel-page>
+  <h4 title>TITLE INFORMATION</h4>
+  <h1 subtitle>Main Information</h1>
+  <section tunnel-form>
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Theatrical Release</mat-card-title>
+      </mat-card-header>
+      <!-- keyword component -->
+      <mat-card-content>
+        <form [formGroup]="salesInfo">
+          <movie-theatrical-release [formGroup]="theatricalData"></movie-theatrical-release>
+        </form>
+      </mat-card-content>
+    </mat-card>
+  </section>
+</tunnel-page>
