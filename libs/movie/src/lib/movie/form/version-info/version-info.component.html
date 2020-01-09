@@ -1,5 +1,5 @@
 <form [formGroup]="form" fxLayout="column" fxLayoutAlign="center start">
-  <div fxLayout="row" fxLayoutAlign="space-between center" class="original-language-btn">
+  <div fxLayout="row" fxLayoutAlign="space-between center" class="original-language">
     <span class="mat-body">Original language</span>
     <mat-slide-toggle></mat-slide-toggle>
   </div>
@@ -22,4 +22,5 @@
     <mat-button-toggle value="subtitled">Subtitled</mat-button-toggle>
     <mat-button-toggle value="closed-captioned">Closed-captioned</mat-button-toggle>
   </mat-button-toggle-group>
+  <button mat-fab color="primary"><mat-icon>add</mat-icon></button>
 </form>
