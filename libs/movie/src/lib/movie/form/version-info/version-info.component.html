@@ -5,20 +5,23 @@
   </div>
   <mat-form-field appearance="outline">
     <mat-label>Language</mat-label>
-    <mat-select >
+    <mat-select>
       <mat-option>
-        <ngx-mat-select-search [formControl]="languagesFilterCtrl" placeholderLabel="Search..."
-          noEntriesFoundLabel="no matching languages found"></ngx-mat-select-search>
+        <ngx-mat-select-search
+          [formControl]="languagesFilterCtrl"
+          placeholderLabel="Search..."
+          noEntriesFoundLabel="no matching languages found"
+        ></ngx-mat-select-search>
       </mat-option>
       <mat-option *ngFor="let language of languages$ | async" [value]="language.slug">
         {{ language.label }}
-      </mat-option> 
+      </mat-option>
     </mat-select>
   </mat-form-field>
-  
+
   <!-- Specify the version -->
-  <div class="mat-body-2">Version</div>
-  <div class="caption"> Select all that apply</div>
+  <span class="mat-body-2">Version</span>
+  <span class="caption"> Select all that apply</span>
   <mat-button-toggle-group name="language" aria-label="Language" multiple color="primary">
     <mat-button-toggle value="dubbed">Dubbed</mat-button-toggle>
     <mat-button-toggle value="subtitled">Subtitled</mat-button-toggle>
@@ -27,7 +30,9 @@
 
   <!-- Add new language-->
   <div fxLayout="column" fxLayoutAlign="center center" class="full-width add-btn">
-  <button mat-fab color="primary" (click)="addLanguageVersion"><mat-icon>add</mat-icon></button>
-  <span class="caption">Add an other Language</span>
+    <button mat-fab color="primary" (click)="(addLanguageVersion)">
+      <mat-icon>add</mat-icon>
+    </button>
+    <span class="caption">Add an other Language</span>
   </div>
 </form>
