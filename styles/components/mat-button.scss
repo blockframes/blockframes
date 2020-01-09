@@ -20,27 +20,6 @@
   .mat-flat-button {
     height: 52px;
     border-radius: 26px;
-    &.mat-primary {
-      background-color: mat-color($primary);
-    }
-    &.mat-accent {
-      background-color: mat-color($accent);
-    }
-    &.mat-warn {
-      background-color: mat-color($warn);
-    }
-  }
-
-  .mat-fab, .mat-mini-fab {
-    &.mat-primary {
-      background-color: mat-color($primary);
-    }
-    &.mat-accent {
-      background-color: mat-color($accent);
-    }
-    &.mat-warn {
-      background-color: mat-color($warn);
-    }
   }
 
   a.primary-link {
