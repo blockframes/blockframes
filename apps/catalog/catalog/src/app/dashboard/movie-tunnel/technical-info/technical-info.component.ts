@@ -8,13 +8,13 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TunnelTechnicalInfoComponent {
-    constructor(public movieForm: MovieForm) { }
+    constructor(public form: MovieForm) { }
 
     get movieSalesInfo() {
-        return this.movieForm.get('salesInfo');
+        return this.form.get('salesInfo');
     }
 
     get movieVersionInfo() {
-        return this.movieForm.get('versionInfo');
+        return this.form.get('versionInfo');
     }
 }

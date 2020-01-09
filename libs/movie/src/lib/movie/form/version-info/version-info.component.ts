@@ -30,7 +30,7 @@ export class MovieFormVersionInfoComponent implements OnInit {
       map(name => this.staticModels.filter(item => item.label.toLowerCase().indexOf(name.toLowerCase()) > -1))
     );
   }
-
+  // TODO issue#1411
   get addLanguageVersion() {
     return null;
   }
