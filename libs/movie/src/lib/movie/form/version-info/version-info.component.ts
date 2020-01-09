@@ -31,5 +31,8 @@ export class MovieFormVersionInfoComponent implements OnInit {
     );
   }
 
+  get addLanguageVersion() {
+    return null;
+  }
 
 }

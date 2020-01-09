@@ -1,5 +1,5 @@
 <form [formGroup]="form" fxLayout="column" fxLayoutAlign="center start">
-  <div fxLayout="row" fxLayoutAlign="space-between center" class="original-language">
+  <div fxLayout="row" fxLayoutAlign="space-between center" class="full-width">
     <span class="mat-body">Original language</span>
     <mat-slide-toggle></mat-slide-toggle>
   </div>
@@ -15,12 +15,19 @@
       </mat-option> 
     </mat-select>
   </mat-form-field>
+  
+  <!-- Specify the version -->
   <div class="mat-body-2">Version</div>
   <div class="caption"> Select all that apply</div>
-  <mat-button-toggle-group name="language" aria-label="Language">
+  <mat-button-toggle-group name="language" aria-label="Language" multiple color="primary">
     <mat-button-toggle value="dubbed">Dubbed</mat-button-toggle>
     <mat-button-toggle value="subtitled">Subtitled</mat-button-toggle>
     <mat-button-toggle value="closed-captioned">Closed-captioned</mat-button-toggle>
   </mat-button-toggle-group>
-  <button mat-fab color="primary"><mat-icon>add</mat-icon></button>
+
+  <!-- Add new language-->
+  <div fxLayout="column" fxLayoutAlign="center center" class="full-width add-btn">
+  <button mat-fab color="primary" (click)="addLanguageVersion"><mat-icon>add</mat-icon></button>
+  <span class="caption">Add an other Language</span>
+  </div>
 </form>
