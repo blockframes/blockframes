@@ -1,7 +1,7 @@
 <mat-toolbar fxLayout="row" fxLayoutAlign="space-between center">
   <article>
     <!-- TODO need to do a counter for step-->
-    <span>Step 1/6</span>
+    <span class="mat-body-2"><b>Step 1/6</b></span>
   </article>
 
   <article>
@@ -28,12 +28,12 @@
             </article>
           </mat-expansion-panel-header>
           <mat-nav-list>
-            <a mat-list-item routerLink="main">Main information</a>
-            <a mat-list-item routerLink="synopsis">Synopsis</a>
-            <a mat-list-item routerLink="">Credits</a>
-            <a mat-list-item routerLink="">Budg., quota, critics</a>
-            <a mat-list-item routerLink="">Technical info.</a>
-            <a mat-list-item routerLink="keywords">Keywords</a>
+            <a mat-list-item routerLink="main" routerLinkActive="active-link">Main information</a>
+            <a mat-list-item routerLink="synopsis" routerLinkActive="active-link">Synopsis</a>
+            <a mat-list-item routerLink="credits" routerLinkActive="active-link">Credits</a>
+            <a mat-list-item routerLink="budget" routerLinkActive="active-link">Budg., quota, critics</a>
+            <a mat-list-item routerLink="technical-info" routerLinkActive="active-link">Technical info.</a>
+            <a mat-list-item routerLink="keywords" routerLinkActive="active-link">Keywords</a>
           </mat-nav-list>
         </mat-expansion-panel>
 
@@ -45,8 +45,8 @@
             </article>
           </mat-expansion-panel-header>
           <mat-nav-list>
-            <a mat-list-item routerLink="">Marketplace Rights</a>
-            <a mat-list-item routerLink="">Previously Deals</a>
+            <a mat-list-item routerLink="" routerLinkActive="active-link">Marketplace Rights</a>
+            <a mat-list-item routerLink="" routerLinkActive="active-link">Previously Deals</a>
           </mat-nav-list>
         </mat-expansion-panel>
 
@@ -58,8 +58,8 @@
             </article>
           </mat-expansion-panel-header>
           <mat-nav-list>
-            <a mat-list-item routerLink="">Images</a>
-            <a mat-list-item routerLink="">Files & links</a>
+            <a mat-list-item routerLink="" routerLinkActive="active-link">Images</a>
+            <a mat-list-item routerLink="" routerLinkActive="active-link">Files & links</a>
           </mat-nav-list>
         </mat-expansion-panel>
 
@@ -71,8 +71,8 @@
             </article>
           </mat-expansion-panel-header>
           <mat-nav-list>
-            <a mat-list-item routerLink="">Chain of Titles</a>
-            <a mat-list-item routerLink="">Marketplace Eval.</a>
+            <a mat-list-item routerLink="" routerLinkActive="active-link">Chain of Titles</a>
+            <a mat-list-item routerLink="" routerLinkActive="active-link">Marketplace Eval.</a>
           </mat-nav-list>
         </mat-expansion-panel>
       </mat-accordion>

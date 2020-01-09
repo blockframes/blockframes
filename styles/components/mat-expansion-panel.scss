@@ -4,7 +4,12 @@
   .mat-expansion-panel {
     @include _mat-theme-overridable-elevation(0, $theme);
   }
-
+  .expansion-panel-body {
+    padding: 0;
+  }
+  .mat-expansion-panel-spacing {
+    margin: 0;
+  }
   .mat-accordion .mat-expansion-panel {
     border-bottom: solid 1px mat-color($foreground, divider);
     &:last-of-type {
