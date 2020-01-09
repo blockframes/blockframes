@@ -1,26 +1,39 @@
 <tunnel-page>
-    <h4 title>TITLE INFORMATION</h4>
-    <h1 subtitle>Credits</h1>
-    <section tunnel-form>
-     <!-- Production information -->
-     <mat-card>
-       <mat-card-header>
-         <mat-card-title>Production information</mat-card-title>
-       </mat-card-header>
-       <mat-card-content>
-         <movie-form-production-year [form]="productionYear"></movie-form-production-year>
-         <mat-divider></mat-divider>
-         <movie-form-production-companies [form]="productionCompanies"></movie-form-production-companies>
-         <mat-divider></mat-divider>
-         <!-- producer from main -->
-         <!-- <movie-form-sales-cast [form]="salesCast"></movie-form-sales-cast> -->
-         <!-- TODO#1478 co-production company -->
-       </mat-card-content>
-     </mat-card>
-     <!-- Writer -->
-     <mat-card>
-       aaaaaaa
-     </mat-card>
-     <!-- More information -->
-    </section>
-  </tunnel-page>
+  <h4 title>TITLE INFORMATION</h4>
+  <h1 subtitle>Credits</h1>
+  <section tunnel-form>
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title><h3>Production information</h3></mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>production-year</p>
+        <movie-form-production-year [form]="productionYear"></movie-form-production-year>
+        <mat-divider></mat-divider>
+        <p>production-companies / co-production-companies</p>
+        <movie-form-production-companies [form]="productionCompanies"></movie-form-production-companies>
+        <!-- TODO#1478 co-production company -->
+        <mat-divider></mat-divider>
+        <p>producer</p>
+        <movie-form-sales-cast role="executive producer"></movie-form-sales-cast>
+      </mat-card-content>
+    </mat-card>
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title><h3>Writer(s)</h3></mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <movie-form-sales-cast role="writer"></movie-form-sales-cast>
+        <movie-form-sales-cast role="score composer"></movie-form-sales-cast>
+      </mat-card-content>
+    </mat-card>
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title><h3>More information</h3></mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <movie-form-sales-cast></movie-form-sales-cast>
+      </mat-card-content>
+    </mat-card>
+  </section>
+</tunnel-page>
