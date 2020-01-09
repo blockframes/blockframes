@@ -4,6 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule, Routes } from '@angular/router';
 import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
+import { BackgroundAssetModule } from '@blockframes/ui/theme/background-asset.module';
 
 // Angular Fire
 import { AngularFireAuthModule } from '@angular/fire/auth';
@@ -32,7 +33,7 @@ import { EmailVerificationComponent } from './pages/email-verification/email-ver
 import { PasswordResetComponent } from './pages/password-reset/password-reset.component';
 import { TermsConditionsModule } from './components/terms-conditions/terms-conditions.module';
 import { AcceptConditionsModule } from './components/accept-conditions/accept-conditions.module';
-import { AssetsThemeModule } from '@blockframes/ui';
+import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
 
 export const AuthRoutes: Routes = [
   { path: '', redirectTo: 'welcome', pathMatch: 'full' },
@@ -53,7 +54,8 @@ export const AuthRoutes: Routes = [
     TermsConditionsModule,
     AcceptConditionsModule,
     UiFormModule,
-    AssetsThemeModule,
+    ImgAssetModule,
+    BackgroundAssetModule,
 
     // Material
     MatSnackBarModule,

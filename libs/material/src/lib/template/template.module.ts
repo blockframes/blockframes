@@ -9,7 +9,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { EditableModule, EditableSidenavModule } from '@blockframes/ui';
 import { ConfirmModule } from '@blockframes/ui';
 import { MaterialModule } from '../material/material.module';
-import { AssetsThemeModule } from '@blockframes/ui';
+import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
 
 // Components
 import { TemplateAddComponent } from './components/template-add/template-add.component';
@@ -106,7 +106,7 @@ const routes: Routes = [
     MatSelectModule,
     MatSortModule,
     RouterModule.forChild(routes),
-    AssetsThemeModule
+    ImgAssetModule
   ],
   entryComponents: [TemplateAddComponent]
 })

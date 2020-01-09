@@ -11,7 +11,7 @@ import { UploadModule, UiFormModule } from '@blockframes/ui';
 import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { OrganizationFormModule } from './components/organization-form/organization-form.module';
-import { AssetsThemeModule } from '@blockframes/ui';
+import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
 
 // Material
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -92,7 +92,7 @@ export const organizationRoutes: Routes = [
     CropperModule,
     ImageReferenceModule,
     OrganizationFormModule,
-    AssetsThemeModule,
+    ImgAssetModule,
 
     // Material
     MatFormFieldModule,
