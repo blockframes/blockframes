@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, ViewEncapsulation } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
 
 @Component({
@@ -22,6 +22,11 @@ export class CreditsComponent implements OnInit {
   get salesCast() {
     return this.form.get('salesCast');
   }
+
+  get credits() {
+    return this.salesCast.get('credits');
+  }
+
 
   ngOnInit() {
   }
