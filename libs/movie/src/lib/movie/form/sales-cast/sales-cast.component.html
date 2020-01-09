@@ -8,10 +8,13 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
+  <button mat-icon-button color="primary" (click)="remove(i)">
+    <mat-icon>delete_circle</mat-icon>
+  </button>
 </ng-container>
 <div fxLayout="column" fxLayoutAlign="center center">
   <button mat-icon-button color="primary" (click)="add()">
     <mat-icon>add_circle</mat-icon>
   </button>
-  <p class="mat-caption">Add another Crew Member</p>
+  <caption class="mat-caption">Add another Crew Member</caption>
 </div>
