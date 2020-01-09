@@ -1,50 +1,17 @@
-<div fxLayout="row" fxLayoutAlign="space-between center">
-  <mat-form-field appearance="outline">
-    <mat-label>Production company</mat-label>
-    <input matInput [formControl]="addForm" />
-  </mat-form-field>
-  <button mat-icon-button color="primary" (click)="add()">
-    <mat-icon>add_circle</mat-icon>
-  </button>
-</div>
 <ng-container *ngFor="let control of form.controls; let i = index">
-  <mat-form-field>
-    <mat-label>Production company</mat-label>
-    <input matInput [formControl]="control.get('displayName')" />
-  </mat-form-field>
-  <button mat-icon-button color="primary" (click)="remove(i)">
-    <mat-icon>delete_circle</mat-icon>
-  </button>
   <div fxLayout="row" fxLayoutAlign="start center">
-  </div>
-</ng-container>
-<!-- <mat-list>
-  <mat-list-item *ngFor="let control of form.controls; let i = index">
-    <span matLine >{{ control.get('displayName').value }} </span>
-    <button mat-icon-button color="primary" (click)="edit(i)">
-      <mat-icon>edit</mat-icon>
-    </button>
+    <mat-form-field appearance="outline">
+      <mat-label>Production company</mat-label>
+      <input matInput [formControl]="control.get('displayName')" required />
+    </mat-form-field>
     <button mat-icon-button color="primary" (click)="remove(i)">
       <mat-icon>delete_circle</mat-icon>
     </button>
-    <div fxLayout="row" fxLayoutAlign="start center">
-    </div>
-  </mat-list-item>
-</mat-list> -->
-
-<!-- <div fxLayout="row">
+  </div>
+</ng-container>
+<div fxLayout="column" fxLayoutAlign="center center">
   <button mat-icon-button color="primary" (click)="add()">
     <mat-icon>add_circle</mat-icon>
   </button>
+  <p class="mat-caption">Add an other Production Company</p>
 </div>
-<ng-container *ngFor="let control of form.controls; let i = index">
-  <mat-form-field appearance="outline">
-    <mat-label>Production company</mat-label>
-    <input matInput [formControl]="control.get('displayName')" />
-  </mat-form-field>
-  <button mat-icon-button color="primary" (click)="remove(i)">
-    <mat-icon>delete_circle</mat-icon>
-  </button>
-  <div fxLayout="row" fxLayoutAlign="start center">
-  </div>
-</ng-container> -->
