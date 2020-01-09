@@ -1,71 +1,17 @@
-<!-- <form [formGroup]="salesCast">
-  <h3> Credits </h3>
-  <div formArrayName="credits" *ngFor="let credit of salesCast.credits.controls; let i = index">
-    <div [formGroupName]="i" class="full-width">
-      <mat-form-field appearance="outline" class="small-margin">
-        <mat-label>Firstname</mat-label>
-        <input matInput formControlName="firstName" placeholder="First Name">
-      </mat-form-field>
-      <mat-form-field appearance="outline" class="small-margin">
-        <mat-label>Lastname</mat-label>
-        <input matInput formControlName="lastName" placeholder="Last Name">
-      </mat-form-field>
-      <mat-form-field appearance="outline" class="small-margin">
-        <mat-select formControlName="role" placeholder="Position">
-          <mat-option *ngFor="let role of staticModels.CREDIT_ROLES" [value]="role.slug">
-            {{ role.label }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      <button mat-icon-button color="primary" (click)="salesCast.addCredit()">
-        <mat-icon>add_circle</mat-icon>
-      </button>
-      <button mat-icon-button color="primary" (click)="salesCast.removeCredit(i)">
-        <mat-icon>delete_circle</mat-icon>
-      </button>
-    </div>
-  </div>
-  <ng-container *ngIf="salesCast.credits.controls.length == 0">
-    <button mat-icon-button color="primary" (click)="salesCast.addCredit()">
-      <mat-icon>add_circle</mat-icon>
-    </button>
-  </ng-container>
-</form> -->
-
-<ng-container *ngIf="role">
+<ng-container *ngFor="let control of form.controls; let i = index">
+  <form-display-name [form]="control"></form-display-name>
   <mat-form-field appearance="outline">
-    <mat-label>{{ role }}</mat-label>
-    <input matInput 
-    [formControl]="name"
-     placeholder="First / last name separated by commas" required/>
+    <mat-label>Role</mat-label>
+    <mat-select [formControl]="control.get('role')">
+      <mat-option *ngFor="let role of roles" [value]="role.slug">
+        {{ role.label }}
+      </mat-option>
+    </mat-select>
   </mat-form-field>
-  <button (click)="update(name.value)">update</button>
 </ng-container>
-
-
-<ng-container *ngIf="!role">
-  <!-- <ng-container *ngFor="let control of form.controls; let i = index">
-    <div fxLayout="row" fxLayoutAlign="start center">
-      <mat-form-field appearance="outline">
-        <mat-label>Name of crew member</mat-label>
-        <input matInput [formControl]="control.get('displayName')" required />
-      </mat-form-field>
-      <mat-form-field appearance="outline" class="small-margin">
-        <mat-select formControlName="role" placeholder="Position">
-          <mat-option *ngFor="let role of staticModels.CREDIT_ROLES" [value]="role.slug">
-            {{ role.label }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      <button mat-icon-button color="primary">
-        <mat-icon>delete_circle</mat-icon>
-      </button>
-    </div>
-  </ng-container> -->
-  <div fxLayout="column" fxLayoutAlign="center center">
-    <button mat-icon-button color="primary">
-      <mat-icon>add_circle</mat-icon>
-    </button>
-    <p class="mat-caption">Add an other Crew Member</p>
-  </div>
-</ng-container>
+<div fxLayout="column" fxLayoutAlign="center center">
+  <button mat-icon-button color="primary" (click)="add()">
+    <mat-icon>add_circle</mat-icon>
+  </button>
+  <p class="mat-caption">Add another Crew Member</p>
+</div>
