@@ -21,7 +21,7 @@
   }
 
   // Use to let active link in color in mat-nav-list, used with routerLinkActive
-  .mat-nav-list a.active-link {
+  .mat-nav-list a.active {
     color: mat-color($primary, 500);
     &:focus {
       background: transparent;
