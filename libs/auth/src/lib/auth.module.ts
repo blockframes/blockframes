@@ -10,6 +10,7 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFirePerformanceModule } from '@angular/fire/performance';
 
 // Material
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
@@ -55,6 +56,7 @@ export const AuthRoutes: Routes = [
     AssetsThemeModule,
 
     // Material
+    MatSnackBarModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
