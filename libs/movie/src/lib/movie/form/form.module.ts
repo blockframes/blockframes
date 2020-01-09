@@ -65,7 +65,6 @@ import { MovieFormSalesAgentDealComponent } from './sales-agent-deal/sales-agent
     MovieFormPromotionalDescriptionComponent,
     MovieFormStoryComponent,
     MovieFormSalesCastComponent,
-    // MovieFormVersionInfoComponent,
     MovieFormFestivalPrizesComponent,
     MovieFormSalesAgentDealComponent,
   ],
