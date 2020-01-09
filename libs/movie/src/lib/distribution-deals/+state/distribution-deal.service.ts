@@ -11,7 +11,7 @@ import objectHash from 'object-hash';
 import { firestore } from 'firebase';
 
 @Injectable({ providedIn: 'root' })
-@CollectionConfig({ path: 'movies/:movieId/distributionDeals' })
+@CollectionConfig({ path: 'movies/:movieId/distributiondeals' })
 export class DistributionDealService extends CollectionService<DistributionDealState> {
   constructor(
     private movieQuery: MovieQuery,
@@ -24,7 +24,7 @@ export class DistributionDealService extends CollectionService<DistributionDealS
   }
 
   get path() {
-    return `movies/${this.movieQuery.getActiveId()}/distributionDeals`;
+    return `movies/${this.movieQuery.getActiveId()}/distributiondeals`;
   }
 
   /**

@@ -38,8 +38,6 @@ interface AddDeliveryOptions {
   mustBeSigned?: boolean;
 }
 
-// TODO: add a stakeholderIds in delivery so we can filter them here. => ISSUE#639
-// e. g. queryFn: ref => ref.where('stakeholderIds', 'array-contains', userOrgId)
 const deliveriesListQuery = (movieId: string, orgId: string): Query<DeliveryWithTimestamps[]> => ({
   path: 'deliveries',
   queryFn: ref => ref.where('movieId', '==', movieId).where('stakeholderIds', 'array-contains', orgId),
