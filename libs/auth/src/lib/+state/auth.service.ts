@@ -72,7 +72,7 @@ export class AuthService extends FireAuthService<AuthState> {
 
   /** Redirect the user after he is signin. */
   onSignin() {
-    return this.router.navigate(['layout']);
+    return this.router.navigate(['c']);
   }
 
   //////////

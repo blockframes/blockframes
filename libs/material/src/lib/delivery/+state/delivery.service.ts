@@ -350,7 +350,7 @@ export class DeliveryService extends CollectionService<DeliveryState> {
       confirmation: `You are about to sign the delivery ${name}`,
       success: `The delivery has been successfully signed !`,
       redirectName: 'Back to Delivery',
-      redirectRoute: `/layout/o/delivery/${movieId}/${deliveryId}/informations`
+      redirectRoute: `/c/o/delivery/${movieId}/${deliveryId}/informations`
     };
     this.walletService.setTx(CreateTx.approveDelivery(orgEthAddress, deliveryHash, callback));
     this.walletService.setTxFeedback(feedback);

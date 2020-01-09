@@ -9,7 +9,7 @@ import { Wallet } from '../../types';
 @Injectable({ providedIn: 'root' })
 export class WalletActiveGuard implements CanActivate, CanDeactivate<Wallet> {
 
-  urlFallback = 'layout/o/account';
+  urlFallback = 'c/o/account';
   subscription: Subscription;
 
   constructor(

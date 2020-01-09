@@ -27,16 +27,16 @@ export class OrganizationGuard extends CollectionGuard<OrganizationState> {
     return this.authQuery.user$.pipe(
       switchMap(user => {
         if (!user.orgId) {
-          return of('/layout/organization');
+          return of('/c/organization');
         } else {
           return this.service.syncActive({ id: user.orgId }).pipe(
             map(_ => this.query.getActive()),
             map(org => {
               if (!org) {
-                return 'layout/organization';
+                return 'c/organization';
               }
               if (org.status === OrganizationStatus.pending) {
-                return 'layout/organization/congratulations';
+                return 'c/organization/congratulations';
               }
             })
           );

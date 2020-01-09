@@ -8,7 +8,7 @@ import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
 @CollectionGuardConfig({ awaitSync: true })
 export class DeliveryListGuard extends CollectionGuard<DeliveryState> {
   public get urlFallback() {
-    return `/layout/o/delivery/movie/add/${this.movieQuery.getActiveId()}/2-choose-starter`;
+    return `/c/o/delivery/movie/add/${this.movieQuery.getActiveId()}/2-choose-starter`;
   }
 
   constructor(

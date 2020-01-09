@@ -84,7 +84,7 @@ export class OrganizationHomeComponent implements OnInit, OnDestroy {
             case InvitationType.fromOrganizationToUser:
               return invitationActionFromOrgToUser(invitation as InvitationFromOrganizationToUser, () => {
                 this.acceptInvitation(invitation);
-                this.router.navigateByUrl('/layout/organization/loading');
+                this.router.navigateByUrl('/c/organization/loading');
               });
           }
         });

@@ -6,7 +6,7 @@ export default class OrganizationHomePage {
 
   public assertMoveToOrgHomepage() {
     cy.location().should((loc) => {
-      expect(loc.pathname).to.eq('/layout/organization/home')
+      expect(loc.pathname).to.eq('/c/organization/home')
     })
   }
 }

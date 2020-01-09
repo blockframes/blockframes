@@ -17,7 +17,7 @@
 
 <!-- List of IPs -->
 <mat-nav-list>
-  <mat-list-item [routerLink]="['/layout', 'ip', ip.id]" *ngFor="let ip of (ipList$ | async); let i = index">
+  <mat-list-item [routerLink]="['/c', 'ip', ip.id]" *ngFor="let ip of (ipList$ | async); let i = index">
     <mat-checkbox [checked]="selected.includes(ip.id)" (change)="toggleOne($event, ip.id)" (click)="$event.stopPropagation()"></mat-checkbox>
     <p>{{ ip.title }}</p>
   </mat-list-item>
@@ -25,7 +25,7 @@
 
 <!-- Current IP form -->
 <mat-nav-list>
-  <mat-list-item [routerLink]="['/layout', 'ip', ip.id, 'edit']" *ngIf="(ipForm$ | async) as ip">
+  <mat-list-item [routerLink]="['/c', 'ip', ip.id, 'edit']" *ngIf="(ipForm$ | async) as ip">
     <mat-icon mat-list-icon>create</mat-icon>
     <p>{{ ip.title }}</p>
   </mat-list-item>

@@ -18,6 +18,6 @@ export class ActiveDaoGuard {
     if (isBlockchainEnabled) {
       return true;
     }
-    return this.router.parseUrl(`/layout/o/organization/${id}/activate`);
+    return this.router.parseUrl(`/c/o/organization/${id}/activate`);
   }
 }

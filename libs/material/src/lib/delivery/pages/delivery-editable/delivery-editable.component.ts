@@ -237,7 +237,7 @@ export class DeliveryEditableComponent implements OnInit {
     const movieId = this.movieQuery.getValue().active;
 
     this.service.setSignDeliveryTx(orgEthAddress, delivery.id, deliveryHash, movieId);
-    this.router.navigateByUrl('/layout/o/account/wallet/send');
+    this.router.navigateByUrl('/c/o/account/wallet/send');
   }
 
   public disableDelivery() {

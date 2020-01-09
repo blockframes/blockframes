@@ -21,7 +21,7 @@ export class IpGuard implements CanActivate {
       this.store.setActive(ip.id);
       return true;
     } else {
-      const fallbackUrl = route.data.fallback !== '' &&  route.data.fallback !== undefined ? route.data.fallback : '/layout/home';
+      const fallbackUrl = route.data.fallback !== '' &&  route.data.fallback !== undefined ? route.data.fallback : '/c/home';
       return this.router.parseUrl(fallbackUrl);
     }
   }
