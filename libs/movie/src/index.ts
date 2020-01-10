@@ -8,6 +8,7 @@ export * from './lib/movie/+state/movie.store';
 export * from './lib/movie/guards/movie-active.guard';
 export * from './lib/movie/guards/movie-organization-list.guard';
 export * from './lib/movie/guards/movie-collection.guard';
+export * from './lib/movie/guards/movie-contract.guard';
 // Movie Modules
 export * from './lib/movie/movie.module';
 export * from './lib/distribution-deals/selection-table/form-selection.module';

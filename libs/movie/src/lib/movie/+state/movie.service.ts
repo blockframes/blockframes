@@ -6,6 +6,7 @@ import { createMovie, Movie } from './movie.model';
 import { MovieState, MovieStore } from './movie.store';
 import { AuthQuery } from '@blockframes/auth';
 import { createImgRef } from '@blockframes/utils/image-uploader';
+import { ContractQuery } from '@blockframes/contract/+state/contract.query';
 
 /**
  * @see #483
@@ -25,6 +26,7 @@ export function cleanModel<T>(data: T): T {
 export class MovieService extends CollectionService<MovieState> {
   constructor(
     private organizationQuery: OrganizationQuery,
+    private contractQuery: ContractQuery,
     private authQuery: AuthQuery,
     store: MovieStore
   ) {
@@ -35,7 +37,14 @@ export class MovieService extends CollectionService<MovieState> {
   public syncOrgMovies() {
     return this.organizationQuery.selectActive().pipe(
       switchMap(org => this.syncManyDocs(org.movieIds))
-    )
+    );
+  }
+
+  /** Gets every movies Id from contract and sync them. */
+  public syncContractMovies() {
+    return this.contractQuery.selectActive().pipe(
+      switchMap(contract => this.syncManyDocs(contract.titleIds))
+    );
   }
 
   /** Update deletedBy (_meta field of movie) with the current user and remove the movie. */
