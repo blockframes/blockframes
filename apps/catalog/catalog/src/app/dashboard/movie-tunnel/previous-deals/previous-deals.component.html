@@ -7,7 +7,10 @@
           <mat-card-title>Deal</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <distribution-form-exclusivity [form]="distributionDeal"></distribution-form-exclusivity>
+          <div fxLayout="row" fxLayoutAlign="space-between start">
+            <span class="mat-body">Exclusivity</span>
+            <mat-slide-toggle (change)="updateForm($event)"></mat-slide-toggle>
+          </div>          
           <contract-form-display-name [form]="contract"></contract-form-display-name>
         </mat-card-content>
       </mat-card>

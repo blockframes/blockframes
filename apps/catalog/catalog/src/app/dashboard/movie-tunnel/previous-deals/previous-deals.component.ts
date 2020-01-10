@@ -1,6 +1,8 @@
+import { tap } from 'rxjs/operators';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ContractForm } from '@blockframes/contract/forms/contract.form';
 import { DistributionDealForm } from '@blockframes/movie/distribution-deals/form/distribution-deal.form';
+import { MatSlideToggleChange } from '@angular/material';
 
 @Component({
   selector: 'catalog-tunnel-previous-deals',
@@ -18,5 +20,9 @@ export class TunnelPreviousDealsComponent {
 
   get distributionDeal() {
     return this.formDistributionDeal.get('exclusive');
+  }
+
+  public updateForm(value: MatSlideToggleChange) {
+    this.formDistributionDeal.get('exclusive').setValue(value.checked);
   }
 }
