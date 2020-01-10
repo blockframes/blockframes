@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, Host } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
 import { MovieService } from '@blockframes/movie/movie/+state';
-import { Subscription } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 
@@ -22,6 +22,7 @@ export class MovieTunnelComponent {
     ['images', 'files&links'],
     ['chain', 'evaluation']
   ];
+  public pageData$: Observable<PageData>;
 
   constructor(
     @Host() private form: MovieForm,
@@ -37,20 +38,29 @@ export class MovieTunnelComponent {
         : {};                                   // Create movie
       this.form.patchValue(movie)
     });
+    this.pageUrl();
   }
 
   ngOnDestroy() {
     this.sub.unsubscribe();
   }
 
-  get pageUrl() {
-    return this.routerQuery.getValue().state.url.split('/').pop();
+  pageUrl() {
+    this.pageData$ = this.routerQuery.select('state').pipe(
+      map( state => getPageData(state.url, this.pages))
+    );
   }
+}
 
-  get pageData() {
-    const panel = this.pages.find(page => page.includes(this.pageUrl));
-    const index = panel.indexOf(this.pageUrl) + 1;
-    const arrayLength = panel.length;
-    return { index: index, length: arrayLength};
-  }
+function getPageData(url: string, pages: string[][]) {
+  const pageUrl = url.split('/').pop();
+  const panel = pages.find(page => page.includes(pageUrl));
+  const index = panel.indexOf(pageUrl) + 1;
+  const arrayLength = panel.length;
+  return { index: index, length: arrayLength};
+}
+
+interface PageData {
+  index: number;
+  length: number;
 }
