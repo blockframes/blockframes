@@ -85,7 +85,7 @@ export default class LoginViewPage {
   }
 
   public clickTermsAndCondition() {
-    cy.get('[page-id=accept-condition] [test-id="checkbox"]').click();
+    cy.get('[page-id=accept-condition] [test-id="checkbox"] input').check({ force: true });
   }
 
   public clickSignupToOrgHome() {
