@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import { TitlesListPage, StartTunnelPage } from '../../support/pages/dashboard';
+import { TitlesListPage, StartTunnelPage, TunnelMainPage } from '../../support/pages/dashboard';
 import { HomePage } from '../../support/pages/marketplace';
 import { User } from '../../support/utils/type';
 import { USERS } from '../../support/utils/users';
@@ -28,10 +28,8 @@ describe('User can navigate to the movie tunnel page 1 and 2', () => {
     const p3: HomePage = p2.clickSignIn();
 
     // Navigate to movie-tunnel-1
-    cy.visit('c/o/dashboard/titles');
-    const p4 = new TitlesListPage();
+    const p4: TitlesListPage = TitlesListPage.navigateToPage();
     const p5: StartTunnelPage = p4.clickAdd();
-    // issue#1407: Will create the movie tunnel page 2
-    p5.clickBegin();
+    const p6: TunnelMainPage = p5.clickBegin();
   });
 });
