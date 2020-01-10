@@ -47,6 +47,11 @@ const tunnelRoutes: Routes = [
         loadChildren: () =>
           import('./previous-deals/previous-deals.module').then(m => m.TunnelPreviousDealsModule)
       },
+      // Page 10
+      {
+        path: 'media-image',
+        loadChildren: () => import('./media-image/media-image.module').then(m => m.MediaImageModule)
+      },
       // Last page
       {
         path: 'end',

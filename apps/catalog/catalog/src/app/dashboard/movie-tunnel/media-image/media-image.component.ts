@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'catalog-media-image',
+  selector: 'catalog-tunnel-media-image',
   templateUrl: './media-image.component.html',
   styleUrls: ['./media-image.component.scss']
 })
