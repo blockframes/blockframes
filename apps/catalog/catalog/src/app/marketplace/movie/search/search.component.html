@@ -337,7 +337,7 @@
     <div fxLayout="row wrap" fxLayoutGap="30px" *ngIf="(movieSearchResults$ | async) as movies" fxLayout.lt-md="column"
       fxLayoutAlign.lt-md="center center">
       <ng-container *ngFor="let movie of movies">
-        <movie-card [movie]="movie" [link]="['/c/o/catalog',  movie.id]" *ngIf="!listView">
+        <movie-card [movie]="movie" [link]="['/c/o/marketplace',  movie.id]" *ngIf="!listView">
           <ng-container movieInformation>
             <mat-card-subtitle>
               <span *ngFor="let director of movie.main.directors; let isLast=last">{{ director.firstName }}

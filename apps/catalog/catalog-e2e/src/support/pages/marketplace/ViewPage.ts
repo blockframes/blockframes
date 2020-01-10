@@ -15,6 +15,7 @@ export default class ViewPage extends NavbarPage {
 
   public clickWishListButton() {
     cy.get('.heart-button').click();
+    cy.wait(500);
   }
 }
 
