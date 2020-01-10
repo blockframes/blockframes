@@ -38,7 +38,7 @@ const tunnelRoutes: Routes = [
       // Last page
       {
         path: 'end',
-        loadChildren: () => import('./end/end-tunnel.module').then(m => m.EndTunnelModule)
+        loadChildren: () => import('./end/end.module').then(m => m.EndTunnelModule)
       },
     ]
   }
