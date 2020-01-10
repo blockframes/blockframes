@@ -1,8 +1,6 @@
 <mat-toolbar fxLayout="row" fxLayoutAlign="space-between center">
-  <article *ngIf="(pageData$ | async) as pageData">
-    <span class="mat-body-2">
-      <b>Step {{ pageData.index }}/{{ pageData.length }}</b>
-    </span>
+  <article *ngIf="(pageData$ | async) as pageData" class="mat-body-2">
+    <b>Step {{ pageData.index }}/{{ pageData.length }}</b>
   </article>
 
   <article fxLayoutGap="24px">
