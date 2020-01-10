@@ -8,6 +8,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { SpreadsheetImportError, ContractsImportState } from '../view-extracted-elements/view-extracted-elements.component';
 import { ViewImportErrorsComponent } from '../view-import-errors/view-import-errors.component';
 import { ContractService } from '@blockframes/contract/+state/contract.service';
+import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 
 const hasImportErrors = (importState: ContractsImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -45,6 +46,7 @@ export class TableExtractedContractsComponent implements OnInit {
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
     private contractService: ContractService,
+    private organizationQuery: OrganizationQuery,
   ) { }
 
   ngOnInit() {
@@ -56,7 +58,7 @@ export class TableExtractedContractsComponent implements OnInit {
   }
 
   async createContract(importState: ContractsImportState): Promise<boolean> {
-
+    importState.contract.doc.partyIds.push(this.organizationQuery.getActive().id)
     const contractId = await this.contractService.addContractAndVersion(importState.contract.doc, importState.contract.last);
     importState.errors.push({
       type: 'error',
@@ -138,7 +140,7 @@ export class TableExtractedContractsComponent implements OnInit {
    * Selects all rows if they are not all selected; otherwise clear selection.
    */
   masterToggle() {
-    this.isAllSelected() 
+    this.isAllSelected()
       ? this.selection.clear()
       : this.rows.data.forEach(row => this.selection.select(row));
   }
