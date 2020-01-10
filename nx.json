@@ -62,18 +62,6 @@
     "backend-ops": {
       "tags": []
     },
-    "catalog-dashboard-e2e": {
-      "tags": []
-    },
-    "catalog-dashboard": {
-      "tags": []
-    },
-    "catalog-marketplace-e2e": {
-      "tags": []
-    },
-    "catalog-marketplace": {
-      "tags": []
-    },
     "catalog-lib": {
       "tags": ["catalog"]
     },
