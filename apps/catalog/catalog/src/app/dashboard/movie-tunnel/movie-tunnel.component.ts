@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Host } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Host, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
 import { MovieService } from '@blockframes/movie/movie/+state';
@@ -36,7 +36,7 @@ const pages = [
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
-export class MovieTunnelComponent {
+export class MovieTunnelComponent implements OnInit, OnDestroy {
   private sub: Subscription;
   public pageData$ = this.routerQuery.select('state').pipe(
     map( ({url}) => getPageData(url, pages))
