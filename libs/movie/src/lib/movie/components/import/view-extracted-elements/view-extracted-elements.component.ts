@@ -1308,7 +1308,7 @@ export class ViewExtractedElementsComponent {
     //////////////////
 
     //  CONTRACT VALIDATION
-    if (!validateContract(contract.doc)) {
+    if(!this.contractService.validateContract(contract)) {
       errors.push({
         type: 'error',
         field: 'contractId',
@@ -1422,7 +1422,7 @@ export class ViewExtractedElementsComponent {
     const titlesFieldsCount = Object.keys(SpreadSheetContractTitle).length / 2; // To get enum length
 
     sheetTab.rows.forEach(async spreadSheetRow => {
-      // Create/retreive the contract 
+      // Create/retreive the contract
       let contract = initContractWithVersion();
       let newContract = true;
       if (spreadSheetRow[SpreadSheetContract.contractId]) {
