@@ -5,7 +5,7 @@
   <mat-sidenav-content>
     <toolbar-header id="navbar" [sidenav]="leftSidenav">
       <ng-container app-icon>
-        <button test-id="home" mat-icon-button class="app-icon-button" routerLink="/layout">
+        <button test-id="home" mat-icon-button class="app-icon-button" routerLink="/c">
           <mat-icon svgIcon="logoBFlight" class="app-icon"></mat-icon>
         </button>
       </ng-container>
@@ -15,7 +15,7 @@
       </ng-container>
 
       <ng-container notifications>
-        <notification-widget></notification-widget>
+        <overlay-notification-widget></overlay-notification-widget>
       </ng-container>
 
       <ng-container profile-menu>

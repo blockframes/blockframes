@@ -2,14 +2,16 @@
   <article fxFlex.gt-sm="45">
     <ng-content select="[title]"></ng-content>
     <ng-content select="[subtitle]"></ng-content>
-    <a routerLink="#">Skip and do later ></a>
+    <a mat-button color="primary" routerLink="#" class="mat-body-2">Skip and do later ></a>
     <ng-content select="[description]"></ng-content>
-    <div class="button-box">
-      <a mat-stroked-button color="accent" routerLink="#">
-        <mat-icon>arrow_back</mat-icon><span>Back</span>
+    <div class="button-box" fxLayout="row" fxLayoutGap="24px">
+      <a mat-stroked-button color="accent" routerLink="#" fxLayoutAlign="center center">
+        <mat-icon>arrow_back</mat-icon>
+        <span>Back</span>
       </a>
-      <a mat-flat-button color="accent" routerLink="#">
-        <span>Next</span><mat-icon>arrow_forward</mat-icon>
+      <a mat-flat-button color="accent" routerLink="#" fxLayoutAlign="center center">
+        <span>Next</span>
+        <mat-icon>arrow_forward</mat-icon>
       </a>
     </div>
   </article>

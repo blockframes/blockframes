@@ -17,7 +17,7 @@
       <ng-template #loaded>
         <article fxLayout="row wrap" fxLayoutGap="30px" fxLayout.lt-md="column">
           <!-- Movie Cards -->
-          <movie-card *ngFor="let movie of movies" [movie]="movie" [link]="['/layout/o/delivery/movie', movie.id]">
+          <movie-card *ngFor="let movie of movies" [movie]="movie" [link]="['/c/o/delivery/movie', movie.id]">
             <ng-container movieCardAction>
               <div fxLayout="row" fxLayoutAlign="end end">
                 <button mat-icon-button [matMenuTriggerFor]="menu">

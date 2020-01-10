@@ -22,7 +22,7 @@ function root(LayoutComponent, children: Routes, rootPath: string, appName: stri
       loadChildren: () => import('@blockframes/auth/auth.module').then(m => m.AuthModule)
     },
     {
-      path: 'layout',
+      path: 'c',
       component: LayoutComponent,
       canActivate: [AuthGuard],
       canDeactivate: [AuthGuard],
@@ -59,7 +59,7 @@ function root(LayoutComponent, children: Routes, rootPath: string, appName: stri
 
 
 
-export function createRoutes({ layout, appsRoutes, appName, rootPath = 'layout' }: RouteOptions) {
+export function createRoutes({ layout, appsRoutes, appName, rootPath = 'c' }: RouteOptions) {
   const children = [
     ...appsRoutes,
     {
@@ -75,4 +75,4 @@ export function createRoutes({ layout, appsRoutes, appName, rootPath = 'layout' 
 }
 
 
-export const appsRoute = '/layout/o';
+export const appsRoute = '/c/o';

@@ -5,7 +5,7 @@ import { ctxMenu } from '../helpers';
 // common
 import * as common from '../common/common';
 
-export const baseRoute = `${appsRoute}/${App.biggerBoat}`;
+export const baseRoute = `${appsRoute}/${App.catalogMarketplace}`;
 
 export const baseMenu = [
   {
@@ -64,19 +64,19 @@ export const baseMenu = [
     ]
   },
   {
-    route: '/layout/organization/home',
+    route: '/c/organization/home',
     items: []
   },
   {
-    route: '/layout/organization/create',
+    route: '/c/organization/create',
     items: []
   },
   {
-    route: '/layout/organization/find',
+    route: '/c/organization/find',
     items: []
   },
   {
-    route: '/layout/organization/congratulations',
+    route: '/c/organization/congratulations',
     items: []
   }
 ];
@@ -103,19 +103,19 @@ export const baseMenuAfm = [ // TODO #1146
     ]
   },
   {
-    route: '/layout/organization/home',
+    route: '/c/organization/home',
     items: []
   },
   {
-    route: '/layout/organization/create',
+    route: '/c/organization/create',
     items: []
   },
   {
-    route: '/layout/organization/find',
+    route: '/c/organization/find',
     items: []
   },
   {
-    route: '/layout/organization/congratulations',
+    route: '/c/organization/congratulations',
     items: []
   }
 ];

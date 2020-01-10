@@ -6,7 +6,7 @@ import { Wallet } from '../../types';
 @Injectable({ providedIn: 'root' })
 export class WalletTxGuard implements CanActivate, CanDeactivate<Wallet> {
 
-  urlFallback = 'layout/o/account/wallet';
+  urlFallback = 'c/o/account/wallet';
 
   constructor(
     private query: WalletQuery,

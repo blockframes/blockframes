@@ -63,8 +63,8 @@ export class NotificationItemComponent {
     try {
       const path =
         this.notification.type === NotificationType.pathToDocument
-          ? `layout/o/delivery/${this.notification.movie.id}/${this.notification.docId}/list`
-          : `layout/o/delivery/${this.notification.movie.id}/${this.notification.docId}/stakeholders`;
+          ? `c/o/delivery/${this.notification.movie.id}/${this.notification.docId}/list`
+          : `c/o/delivery/${this.notification.movie.id}/${this.notification.docId}/stakeholders`;
       this.router.navigateByUrl(path);
       this.service.readNotification(this.notification);
     } catch (error) {

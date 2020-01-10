@@ -3,6 +3,7 @@
 }
 
 @mixin mat-bf-list-theme($theme) {
+  $primary: map-get($theme, primary);
   $background: map-get($theme, background);
   $foreground: map-get($theme , foreground);
 
@@ -15,8 +16,35 @@
     height: 72px;
   }
 
+  .mat-list-base .mat-list-item .mat-list-item-content {
+    padding: 0 0 0 20px;
+  }
+
+  // Use to let active link in color in mat-nav-list, used with routerLinkActive
+  .mat-nav-list a.active {
+    color: mat-color($primary, 500);
+    &:focus {
+      background: transparent;
+    }
+  }
+
   // Every nav-list in a sidenav won't get border
   .mat-sidenav .mat-nav-list, .mat-list-base {
     border: none;
+  }
+}
+
+@mixin bf-list-typography($config) {
+  $font-family: mat-font-family($config);
+
+  // Default list
+  .mat-list-base {
+    .mat-list-item {
+      font-size: mat-font-size($config, body-2);
+    }
+
+    .mat-list-option {
+      font-size: mat-font-size($config, body-2);
+    }
   }
 }

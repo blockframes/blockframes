@@ -161,12 +161,8 @@ jobs:
           command: npm run e2e:delivery
           when: always
       - run:
-          name: catalog-marketplace e2e tests
-          command: npm run e2e:catalog-marketplace
-          when: always
-      - run:
-          name: catalog-dashboard e2e tests
-          command: npm run e2e:catalog-dashboard
+          name: catalog e2e tests
+          command: npm run e2e:catalog
           when: always
       - run:
           name: movie-financing e2e tests

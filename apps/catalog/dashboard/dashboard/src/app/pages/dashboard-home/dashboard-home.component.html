@@ -2,7 +2,7 @@
   <article fxLayout="column" fxLayoutAlign="center center">
     <h1 class="mat-display-3">Welcome to Catalog - Dashboard</h1>
     <p class="mat-body-1"> A consolidation of film libraries to create new opportunities through secure transactions.</p>
-    <button mat-button color="accent" test-id="import" [routerLink]="['/layout/o/catalog-dashboard/import']">Upload avails & films doc</button>
+    <button mat-button color="accent" test-id="import" [routerLink]="['/c/o/catalog-dashboard/import']">Upload avails & films doc</button>
     <ng-container *ngIf="movies$ | async as movies">
       <ng-container *ngIf="movies.length; else noMovies">
         <article fxLayout="column">
@@ -12,7 +12,7 @@
           <ng-template #loaded>
             <article fxLayout="row wrap" fxLayoutGap="30px" fxLayout.lt-md="column">
               <!-- Movie Cards -->
-              <movie-card *ngFor="let movie of movies" [movie]="movie" [link]="['/layout/o/catalog-dashboard/catalog', movie.id]">
+              <movie-card *ngFor="let movie of movies" [movie]="movie" [link]="['/c/o/catalog-dashboard/catalog', movie.id]">
                 <ng-container movieCardAction>
                   <div fxLayout="row" fxLayoutAlign="end end">
                     <button mat-icon-button [matMenuTriggerFor]="menu">
@@ -23,7 +23,7 @@
                         <mat-icon color="primary">control_camera</mat-icon>
                         <span>Open in...</span>
                       </button>
-                      <a mat-menu-item [routerLink]="['/layout/o/catalog-dashboard/catalog', movie.id, 'edit']">
+                      <a mat-menu-item [routerLink]="['/c/o/catalog-dashboard/catalog', movie.id, 'edit']">
                         <mat-icon color="primary">edit</mat-icon>
                         <span>Edit</span>
                       </a>

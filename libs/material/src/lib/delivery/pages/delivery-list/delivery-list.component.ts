@@ -43,6 +43,6 @@ export class DeliveryListComponent implements OnInit {
     // this.router.navigate(['../2-choose-starter'], { relativeTo: this.route });
 
     // Temporary route
-    this.router.navigate([`/layout/o/delivery/movie/add/1-find-movie`]);
+    this.router.navigate([`/c/o/delivery/movie/add/1-find-movie`]);
   }
 }

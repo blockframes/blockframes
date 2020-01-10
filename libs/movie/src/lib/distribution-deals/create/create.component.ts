@@ -203,7 +203,7 @@ export class DistributionDealCreateComponent implements OnInit, OnDestroy {
       const dealId = await this.distributionDealService.addDistributionDeal(this.movie.id, distributionDeal, contract);
       await this.cartService.addDealToCart(dealId, 'default');
       this.snackBar.open(`Distribution deal saved. Redirecting ...`, 'close', { duration: 2000 });
-      this.router.navigateByUrl(`layout/o/catalog/selection/overview`);
+      this.router.navigateByUrl(`c/o/catalog/selection/overview`);
     }
 
   }

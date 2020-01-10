@@ -73,11 +73,11 @@ export class MemberFormRoleComponent {
       confirmation: `You are about to destroy ${this.name}'s Wallet.`,
       success: `${this.name}'s Wallet has been successfully destroyed!`,
       redirectName: 'Back to Members',
-      redirectRoute: `/layout/o/organization/${orgId}/members`
+      redirectRoute: `/c/o/organization/${orgId}/members`
     };
 
     this.walletService.setTx(tx);
     this.walletService.setTxFeedback(feedback);
-    this.router.navigateByUrl('/layout/o/account/wallet/send');
+    this.router.navigateByUrl('/c/o/account/wallet/send');
   }
 }
