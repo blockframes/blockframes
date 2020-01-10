@@ -77,6 +77,10 @@ const models: Model = {
       'label': 'Executive Producer'
     },
     {
+      'slug': 'co-producer',
+      'label': 'Co-Producer'
+    },
+    {
       'slug': 'line-producer',
       'label': 'Line Producer'
     },

@@ -223,6 +223,7 @@ export function createMovieLanguageSpecification(
     original: false,
     dubbed: false,
     subtitle: false,
+    caption: false,
     ...params
   };
 }
@@ -255,15 +256,4 @@ export function createOfficialIds(params: Partial<MovieOfficialIds> = {}): Movie
     isan: '',
     ...params
   };
-}
-
-export function createMovieLanguage(
-  movieLanguage: Partial<MovieLanguageSpecification> = {}
-): MovieLanguageSpecification {
-  return {
-    original: false,
-    dubbed: false,
-    subtitle: false,
-    ...movieLanguage
-  } as MovieLanguageSpecification;
 }

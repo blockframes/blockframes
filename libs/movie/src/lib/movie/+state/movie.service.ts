@@ -42,7 +42,7 @@ export class MovieService extends CollectionService<MovieState> {
   public async remove(movieId: string) {
     const userId = this.authQuery.userId;
     // We need to update the _meta field before remove to get the userId in the backend function: onMovieDeleteEvent
-    await this.db.doc(`movies/${movieId}`).update({ "_meta.deletedBy": userId } );
+    await this.db.doc(`movies/${movieId}`).update({ "_meta.deletedBy": userId });
     return super.remove(movieId);
   }
 
@@ -85,5 +85,18 @@ export class MovieService extends CollectionService<MovieState> {
     }
 
     return this.update(id, cleanModel(movie));
+  }
+
+  /**
+   * Fetch a movie from its internal reference (example : AAA1)
+   * @param internalRef
+   */
+  // @TODO #1389 Use native akita-ng-fire functions
+  public async getFromInternalRef(internalRef: string): Promise<Movie> {
+    const movieSnapShot = await this.db
+      .collection('movies', ref => ref.where('main.internalRef', '==', internalRef))
+      .get().toPromise();
+
+    return movieSnapShot.docs.length ? createMovie(movieSnapShot.docs[0].data()) : undefined;
   }
 }

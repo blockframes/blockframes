@@ -4,38 +4,38 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Component, Input, ViewChild, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { MovieQuery, cleanModel, createMovie } from '../../../+state';
 import { SelectionModel } from '@angular/cdk/collections';
-import { SpreadsheetImportError, DealsImportState } from '../view-extracted-elements/view-extracted-elements.component';
+import { SpreadsheetImportError, ContractsImportState } from '../view-extracted-elements/view-extracted-elements.component';
 import { ViewImportErrorsComponent } from '../view-import-errors/view-import-errors.component';
-import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state/distribution-deal.service';
+import { ContractService } from '@blockframes/contract/+state/contract.service';
 
-const hasImportErrors = (importState: DealsImportState, type: string = 'error'): boolean => {
+const hasImportErrors = (importState: ContractsImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
 };
 
 @Component({
-  selector: 'movie-table-extracted-deals',
-  templateUrl: './table-extracted-deals.component.html',
-  styleUrls: ['./table-extracted-deals.component.scss'],
+  selector: 'movie-table-extracted-contracts',
+  templateUrl: './table-extracted-contracts.component.html',
+  styleUrls: ['./table-extracted-contracts.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TableExtractedDealsComponent implements OnInit {
+export class TableExtractedContractsComponent implements OnInit {
 
-  @Input() rows: MatTableDataSource<DealsImportState>;
+  @Input() rows: MatTableDataSource<ContractsImportState>;
+  @Input() mode: string;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
-  public selection = new SelectionModel<DealsImportState>(true, []);
+  public selection = new SelectionModel<ContractsImportState>(true, []);
   public displayedColumns: string[] = [
     'id',
     'select',
-    'movieInternalRef',
-    'distributionDeal.id',
-    'movieTitle',
-    'distributionDeal.terms.start',
-    'distributionDeal.terms.end',
-    'distributionDeal.exclusive',
+    'contract.doc.id',
+    'contract.last.status',
+    'contract.last.id',
+    'contract.doc.parentContractIds',
+    'contract.doc.childContractIds',
+    'contract.doc.parties',
     'errors',
     'warnings',
     'actions',
@@ -44,8 +44,7 @@ export class TableExtractedDealsComponent implements OnInit {
   constructor(
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
-    private distributionDealService: DistributionDealService,
-    private movieQuery: MovieQuery,
+    private contractService: ContractService,
   ) { }
 
   ngOnInit() {
@@ -56,67 +55,69 @@ export class TableExtractedDealsComponent implements OnInit {
     this.rows.sort = this.sort;
   }
 
-  async createDeal(importState: DealsImportState): Promise<boolean> {
-    const existingMovie = this.movieQuery.existingMovie(importState.movieInternalRef);
-    const data = this.rows.data;
+  async createContract(importState: ContractsImportState): Promise<boolean> {
 
-    await this.distributionDealService.addDistributionDeal(existingMovie.id, importState.distributionDeal, importState.contract);
+    const contractId = await this.contractService.addContractAndVersion(importState.contract.doc, importState.contract.last);
     importState.errors.push({
       type: 'error',
-      field: 'distributionDeal',
-      name: 'Distribution deal',
-      reason: 'Distribution deal already added',
-      hint: 'Distribution deal already added'
+      field: 'contract',
+      name: 'Contract',
+      reason: 'Contract already added',
+      hint: 'Contract already added'
     });
-    this.rows.data = data;
-    this.snackBar.open('Distribution deal added!', 'close', { duration: 3000 });
+
+    this.snackBar.open(`Contract ${contractId} added!`, 'close', { duration: 3000 });
+
     return true;
   }
 
-  async createSelectedDeals(): Promise<boolean> {
+  async updateContract(importState: ContractsImportState): Promise<boolean> {
+    return this.createContract(importState);
+  }
+
+  async createSelectedContracts(): Promise<boolean> {
     try {
       const data = this.rows.data;
-      const movies = {};
       const promises = [];
       this.selection.selected
         .filter(importState => !hasImportErrors(importState))
         .map(importState => {
 
-          if (!movies[importState.movieInternalRef]) {
-            const existingMovie = this.movieQuery.existingMovie(importState.movieInternalRef);
-            movies[importState.movieInternalRef] = createMovie(cleanModel(existingMovie));
-          }
           importState.errors.push({
             type: 'error',
-            field: 'distributionDeal',
-            name: 'Distribution deal',
-            reason: 'Distribution deal already added',
-            hint: 'Distribution deal already added'
+            field: 'contract',
+            name: 'Contract',
+            reason: 'Contract already added',
+            hint: 'Contract already added'
           });
 
-          return promises.push(this.distributionDealService.addDistributionDeal(movies[importState.movieInternalRef].id, importState.distributionDeal, importState.contract));
+          return promises.push(this.contractService.addContractAndVersion(importState.contract.doc, importState.contract.last));
         });
+
       this.rows.data = data;
 
-      await Promise.all(promises); // @TODO #1389
-      this.snackBar.open(`${promises.length} distribution deals inserted!`, 'close', { duration: 3000 });
+      await Promise.all(promises);
+      this.snackBar.open(`${promises.length} contracts imported!`, 'close', { duration: 3000 });
       return true;
     } catch (err) {
-      console.log(err);
-      this.snackBar.open(`Could not insert distribution deals`, 'close', { duration: 3000 });
+      this.snackBar.open(`Could not import contracts`, 'close', { duration: 3000 });
     }
   }
 
-  errorCount(data: DealsImportState, type: string = 'error') {
+  errorCount(data: ContractsImportState, type: string = 'error') {
     return data.errors.filter((error: SpreadsheetImportError) => error.type === type).length;
+  }
+
+  parseInt(str: string): number {
+    return parseInt(str, 10);
   }
 
   ///////////////////
   // POPINS
   ///////////////////
 
-  displayErrors(importState: DealsImportState) {
-    const data = { title: importState.movieTitle ? importState.movieTitle : '--', errors: importState.errors };
+  displayErrors(importState: ContractsImportState) {
+    const data = { title: `Contract id ${importState.contract.doc.id} v-${importState.contract.last.id}`, errors: importState.errors };
     this.dialog.open(ViewImportErrorsComponent, { data, width: '50%' });
   }
 
@@ -145,7 +146,7 @@ export class TableExtractedDealsComponent implements OnInit {
   /**
    * The label for the checkbox on the passed row
    */
-  checkboxLabel(row?: DealsImportState): string {
+  checkboxLabel(row?: ContractsImportState): string {
     if (!row) {
       return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
     }
@@ -174,8 +175,8 @@ export class TableExtractedDealsComponent implements OnInit {
    * Specify the fields in which filter is possible.
    * Even for nested objects.
    */
-  filterPredicate(data: DealsImportState, filter) {
-    const dataStr = data.movieInternalRef + data.movieTitle + data.distributionDeal.terms.start + data.distributionDeal.terms.end;
+  filterPredicate(data: ContractsImportState, filter) {
+    const dataStr = data.contract.doc.id + data.contract.last.id + data.contract.last.creationDate + data.contract.last.price.amount;
     return dataStr.toLowerCase().indexOf(filter) !== -1;
   }
 

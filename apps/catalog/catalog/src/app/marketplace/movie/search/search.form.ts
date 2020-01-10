@@ -23,6 +23,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { FormEntity, yearValidators, numberRangeValidator } from '@blockframes/utils';
 import { getLabelByCode } from '@blockframes/movie/movie/static-model/staticModels';
 import { MovieLanguageSpecification } from '@blockframes/movie/movie/+state/movie.firestore';
+import { createMovieLanguageSpecification } from '@blockframes/movie/movie+state/movie.model';
 
 /////////////////////////
 // CatalogGenresFilter //
@@ -53,17 +54,6 @@ export interface CatalogSearch {
 /* ------------- */
 /* CREATE OBJECT */
 /* ------------- */
-
-export function createMovieLanguage(
-  movieLanguage: Partial<MovieLanguageSpecification> = {}
-): MovieLanguageSpecification {
-  return {
-    original: false,
-    dubbed: false,
-    subtitle: false,
-    ...movieLanguage
-  } as MovieLanguageSpecification;
-}
 
 function createCatalogSearch(search: Partial<CatalogSearch>): CatalogSearch {
   return {
@@ -157,7 +147,7 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
   }
 
   addLanguage(language: LanguagesSlug, value: Partial<MovieLanguageSpecification> = {}) {
-    const movieLanguage = createMovieLanguage(value);
+    const movieLanguage = createMovieLanguageSpecification(value);
     this.get('languages').addControl(language, createLanguageControl(movieLanguage));
   }
 

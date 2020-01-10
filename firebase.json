@@ -37,7 +37,7 @@
     "predeploy": [
       "cp ./package.json dist/apps/backend-functions/package.json",
       "npm run lint backend-functions",
-      "npm run build:functions",
+      "npm run build:backend-functions",
       "./ops/deploy_secrets.sh"
     ],
     "source": "dist/apps/backend-functions/"

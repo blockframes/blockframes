@@ -101,12 +101,14 @@ export const enum MovieLanguageTypes {
   original = 'original',
   dubbed = 'dubbed',
   subtitle = 'subtitle',
+  caption = 'caption',
 }
 
 export interface MovieLanguageSpecification {
   original: boolean;
   dubbed: boolean;
   subtitle: boolean;
+  caption: boolean;
 }
 
 export type MovieLanguageSpecificationContainer = Record<LanguagesSlug, MovieLanguageSpecification>;
