@@ -1,18 +1,35 @@
 import { Injectable } from '@angular/core';
 import { ContractStore, ContractState } from './contract.store';
 import { getCodeIfExists } from '@blockframes/movie/moviestatic-model/staticModels';
-import { CollectionConfig, CollectionService } from 'akita-ng-fire';
-import { Contract, ContractVersion, ContractWithLastVersion, initContractWithVersion } from './contract.model';
+import { CollectionConfig, CollectionService, awaitSyncQuery, Query } from 'akita-ng-fire';
+import { Contract, ContractVersion, ContractWithLastVersion, initContractWithVersion, ContractPartyDetail } from './contract.model';
 import { AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
 import orderBy from 'lodash/orderBy';
 import { firestore } from 'firebase/app';
+import { LegalRolesSlug } from '@blockframes/movie/moviestatic-model/types';
+import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
+import { tap, switchMap } from 'rxjs/operators';
+
+const contractsListQuery = (orgId: string): Query<Contract[]> => ({
+  path: 'contracts',
+  queryFn: ref => ref.where('partyIds', 'array-contains', orgId)
+});
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'contracts' })
 export class ContractService extends CollectionService<ContractState> {
 
-  constructor(store: ContractStore) {
+  constructor(private organizationQuery: OrganizationQuery, store: ContractStore) {
     super(store);
+  }
+
+  /** Sync the store with every contracts of the active organization. */
+  public syncOrganizationContracts() {
+    return this.organizationQuery.selectActiveId().pipe(
+      // Reset the store everytime the movieId changes
+      tap(_ => this.store.reset()),
+      switchMap(orgId => awaitSyncQuery.call(this, contractsListQuery(orgId)))
+    );
   }
 
   /**
@@ -174,7 +191,7 @@ export class ContractService extends CollectionService<ContractState> {
 
   /**
    * Various validation steps for validating a contract
-   * Currently (dec 2019), only validate that there is licensee and a licensor
+   * Currently (dec 2019), only validate that there is a licensee and a licensor
    * @param contract
    */
   public validateContract(contract: Contract): boolean {
@@ -184,28 +201,27 @@ export class ContractService extends CollectionService<ContractState> {
     if (contract.parties.length < 2) {
       return false;
     }
-
-    const licensees = contract.parties.filter(p => p.role === getCodeIfExists('LEGAL_ROLES', 'licensee'))
-    const licensors = contract.parties.filter(p => p.role === getCodeIfExists('LEGAL_ROLES', 'licensor'))
+    const licensees = contract.parties.filter(p => p.party.role === getCodeIfExists('LEGAL_ROLES', 'licensee'))
+    const licensors = contract.parties.filter(p => p.party.role === getCodeIfExists('LEGAL_ROLES', 'licensor'))
 
     if (!licensees.length || !licensors.length) {
       return false;
     }
 
-    for(const licensee of licensees) {
-      if(licensee.orgId === undefined) {
-        delete licensee.orgId
+    for (const licensee of licensees) {
+      if (licensee.party.orgId === undefined) {
+        delete licensee.party.orgId
       }
-      if(typeof licensee.showName !== 'boolean') {
+      if (typeof licensee.party.showName !== 'boolean') {
         return false;
       }
     }
 
-    for(const licensor of licensors) {
-      if(licensor.orgId === undefined) {
-        delete licensor.orgId
+    for (const licensor of licensors) {
+      if (licensor.party.orgId === undefined) {
+        delete licensor.party.orgId
       }
-      if(typeof licensor.showName !== 'boolean') {
+      if (typeof licensor.party.showName !== 'boolean') {
         return false;
       }
     }
@@ -214,5 +230,14 @@ export class ContractService extends CollectionService<ContractState> {
     // ...
 
     return true;
+  }
+
+/**
+ * Fetch parties related to a contract given a specific legal role
+ * @param contract
+ * @param legalRole
+ */
+  public getContractParties(contract: Contract, legalRole: LegalRolesSlug): ContractPartyDetail[] {
+    return contract.parties.filter(p => p.party.role === getCodeIfExists('LEGAL_ROLES', legalRole));
   }
 }

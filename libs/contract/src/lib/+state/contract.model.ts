@@ -1,9 +1,14 @@
-import { createTerms } from "@blockframes/utils/common-interfaces/terms";
-import { createPrice } from "@blockframes/utils/common-interfaces/price";
-import { getCodeIfExists } from "@blockframes/movie/movie/static-model/staticModels";
-import { ContractDocumentWithDates, ContractStatus, ContractTitleDetail, ContractVersionDocumentWithDates, ContractPartyDetailDocumentWithDates, ContractPartyDetailDocumentWithDatesDocument } from "./contract.firestore";
-import { createParty } from "@blockframes/utils/common-interfaces/identity";
-import { LegalRolesSlug } from "@blockframes/movie/moviestatic-model/types";
+import { createTerms } from '@blockframes/utils/common-interfaces/terms';
+import { createPrice } from '@blockframes/utils/common-interfaces/price';
+import {
+  ContractDocumentWithDates,
+  ContractStatus,
+  ContractTitleDetail,
+  ContractVersionDocumentWithDates,
+  ContractPartyDetailDocumentWithDates,
+  ContractPartyDetailDocumentWithDatesDocument
+} from './contract.firestore';
+import { createParty } from '@blockframes/utils/common-interfaces/identity';
 
 export type Contract = ContractDocumentWithDates;
 
@@ -18,8 +23,8 @@ export type ContractPartyDetailDocument = ContractPartyDetailDocumentWithDatesDo
  * used only in front
  */
 export interface ContractWithLastVersion {
-  doc: Contract,
-  last: ContractVersion,
+  doc: Contract;
+  last: ContractVersion;
 }
 
 export function createContract(params: Partial<Contract> = {}): Contract {
@@ -27,7 +32,8 @@ export function createContract(params: Partial<Contract> = {}): Contract {
     id: params.id ? params.id : '',
     parties: [],
     titleIds: [],
-    ...params,
+    partyIds: [],
+    ...params
   };
 }
 
@@ -39,7 +45,7 @@ export function createContractVersion(params: Partial<ContractVersion> = {}): Co
     ...params,
     status: ContractStatus.submitted,
     scope: createTerms(params.scope),
-    price: createPrice(params.price),
+    price: createPrice(params.price)
   };
 }
 
@@ -48,7 +54,7 @@ export function createContractTitleDetail(params: Partial<ContractTitleDetail> =
     titleId: '',
     distributionDealIds: [],
     ...params,
-    price: createPrice(params.price),
+    price: createPrice(params.price)
   };
 }
 
@@ -56,24 +62,15 @@ export function createContractPartyDetail(params: Partial<ContractPartyDetail> =
   return {
     status: ContractStatus.unknown,
     ...params,
-    party: createParty(params.party),
+    party: createParty(params.party)
   };
 }
 
 export function initContractWithVersion(): ContractWithLastVersion {
   return {
     doc: createContract(),
-    last: createContractVersion(),
-  }
-}
-
-/**
- * Fetch parties related to a contract given a specific legal role
- * @param contract
- * @param legalRole
- */
-export function getContractParties(contract: Contract, legalRole: LegalRolesSlug): ContractPartyDetail[] {
-  return contract.parties.filter(p => p.party.role === getCodeIfExists('LEGAL_ROLES', legalRole));
+    last: createContractVersion()
+  };
 }
 
 export function buildChainOfTitle() {

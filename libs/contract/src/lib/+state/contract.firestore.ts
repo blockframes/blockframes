@@ -6,7 +6,7 @@ import { LegalRolesSlug } from "@blockframes/movie/movie/static-model/types";
 
 type Timestamp = firestore.Timestamp;
 
-export enum ContractStatus { 
+export enum ContractStatus {
   submitted = 'submitted',
   accepted = 'accepted',
   paid = 'paid',
@@ -60,6 +60,7 @@ interface ContractRaw<D> {
   childContractIds?: string[],
   parties: ContractPartyDetailRaw<D>[],
   titleIds: string[],
+  partyIds: string[]
 }
 
 /*

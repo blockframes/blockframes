@@ -5,7 +5,7 @@ import { EntityState, ActiveState, EntityStore, StoreConfig } from '@datorama/ak
 export interface ContractState extends EntityState<Contract, string>, ActiveState<string> {}
 
 @Injectable({ providedIn: 'root' })
-@StoreConfig({ name: 'contract' })
+@StoreConfig({ name: 'contracts' })
 export class ContractStore extends EntityStore<ContractState> {
 
   constructor() {
