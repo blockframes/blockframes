@@ -6,7 +6,7 @@ import { Observable, BehaviorSubject, of, combineLatest } from 'rxjs';
 import { zoom, zoomDelay, check, finalZoom } from '@blockframes/utils/animations/cropper-animations';
 import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/storage';
 /*import { HttpClient } from '@angular/common/http';*/
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormGroup, FormControl } from '@angular/forms';
 import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
 import { ImgRef } from '@blockframes/utils/image-uploader';
 
@@ -79,7 +79,7 @@ export class CropperComponent implements ControlValueAccessor {
   /** Disable fileuploader & delete buttons in 'show' step */
   @Input() useFileuploader?= true;
   @Input() useDelete?= true;
-
+  @Input() form?: FormControl;
   uploaded: (ref: ImgRef) => void;
   deleted: () => void;
 

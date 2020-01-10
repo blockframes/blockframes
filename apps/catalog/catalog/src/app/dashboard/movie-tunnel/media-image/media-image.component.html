@@ -1,6 +1,7 @@
 <tunnel-page>
   <h4 title>Uploaded Media</h4>
   <h1 subtitle>Images</h1>
+  <p description class="mat-body-1">Upload your images in .jpeg or .png formats, they will be used for promotional purposes. When you upload an image, we will help you to match the size required.</p>
   <section tunnel-form>
     <mat-card>
       <mat-card-header>
@@ -16,7 +17,12 @@
         <mat-card-title>Movie poster image</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <drop-cropper></drop-cropper>
+        <drop-cropper 
+        storagePath="poster" 
+        [ratio]="1" 
+        [form]="poster"
+        ></drop-cropper>
+        <!-- {{ poster.value | async }} -->
       </mat-card-content>
     </mat-card>
     <mat-card>
