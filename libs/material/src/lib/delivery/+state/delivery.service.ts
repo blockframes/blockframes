@@ -30,6 +30,7 @@ import { DeliveryMaterialService } from '../../material/+state/delivery-material
 import { TemplateMaterialService } from '../../material/+state/template-material.service';
 import { TemplateQuery } from '../../template/+state/template.query';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
+import { firestore } from 'firebase';
 
 interface AddDeliveryOptions {
   templateId?: string;
@@ -179,7 +180,7 @@ export class DeliveryService extends CollectionService<DeliveryState> {
     const organizationId = this.organizationQuery.getActiveId();
     const documentPermissions = createDocPermissions({ id: delivery.id, ownerId: organizationId });
     const documentPermissionsRef = this.db.doc(`permissions/${organizationId}/documentPermissions/${documentPermissions.id}`).ref;
-    write.set(documentPermissionsRef, documentPermissions);
+    (write as firestore.WriteBatch).set(documentPermissionsRef, documentPermissions);
   }
 
   /** Add a new delivery by copying the movie's materials */

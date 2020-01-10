@@ -166,7 +166,7 @@ export class ViewExtractedElementsComponent {
     private distributionDealService: DistributionDealService,
     private contractService: ContractService,
     private imageUploader: ImageUploader,
-    private cdRef: ChangeDetectorRef,
+    private cdRef: ChangeDetectorRef
   ) { }
 
   public formatMovies(sheetTab: SheetTab) {

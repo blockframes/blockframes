@@ -188,7 +188,6 @@ export class ContractService extends CollectionService<ContractState> {
     return contract;
   }
 
-
   /**
    * Various validation steps for validating a contract
    * Currently (dec 2019), only validate that there is a licensee and a licensor
@@ -201,22 +200,27 @@ export class ContractService extends CollectionService<ContractState> {
     if (contract.parties.length < 2) {
       return false;
     }
-    const licensees = contract.parties.filter(p => p.party.role === getCodeIfExists('LEGAL_ROLES', 'licensee'))
-    const licensors = contract.parties.filter(p => p.party.role === getCodeIfExists('LEGAL_ROLES', 'licensor'))
+    const licensees = this.getContractParties(contract, 'licensee');
+    const licensors = this.getContractParties(contract, 'licensor');
 
     if (!licensees.length || !licensors.length) {
       return false;
     }
 
+    // Checking both licensee and licensor to clean the json and tell if contract is valid.
     for (const licensee of licensees) {
+      // Clean the json before sending it to firebase .
+      // If orgId is undefined, delete it (firebase doesn't accept undefined values).
       if (licensee.party.orgId === undefined) {
         delete licensee.party.orgId
       }
+      // Check if showName is a boolean. If not, the contract is invalid and function return false.
       if (typeof licensee.party.showName !== 'boolean') {
         return false;
       }
     }
 
+    // Same for the licensor
     for (const licensor of licensors) {
       if (licensor.party.orgId === undefined) {
         delete licensor.party.orgId
@@ -227,7 +231,7 @@ export class ContractService extends CollectionService<ContractState> {
     }
 
     // Other contract validation steps goes here
-    // ...
+    // TODO: Add more validations steps to the validateContract function => ISSUE#1542
 
     return true;
   }

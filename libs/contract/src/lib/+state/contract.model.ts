@@ -9,11 +9,8 @@ import {
   ContractPartyDetailDocumentWithDatesDocument
 } from './contract.firestore';
 import { createParty } from '@blockframes/utils/common-interfaces/identity';
-import { Movie } from '@blockframes/movie/movie+state/movie.model';
 
-export interface Contract extends ContractDocumentWithDates {
-  movies?: Movie[];
-};
+export type Contract = ContractDocumentWithDates;
 
 export type ContractVersion = ContractVersionDocumentWithDates;
 

@@ -16,4 +16,4 @@ import { MatButtonModule } from '@angular/material';
     RouterModule.forChild([{ path: '', component: TitleListComponent }])
   ]
 })
-export class TitleListModule {}
+export class TitleListModule { }
