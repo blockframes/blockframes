@@ -199,7 +199,7 @@ export class DistributionDealCreateComponent implements OnInit, OnDestroy {
     licensor.party.role = 'licensor';
     contract.doc.parties.push(licensor);
 
-    if(!this.contractService.validateContract(contract)) {
+    if(!this.contractService.validateContract(contract.doc)) {
       this.snackBar.open(`Error while creating contract..`, 'close', { duration: 2000 });
     } else {
       const dealId = await this.distributionDealService.addDistributionDeal(this.movie.id, distributionDeal, contract);
