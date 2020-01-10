@@ -5,8 +5,8 @@ import { RouterModule } from '@angular/router';
 
 import { TunnelPageModule } from '@blockframes/ui/tunnel/page/tunnel-page.module';
 import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
+import { PromotionalElementsImagesModule } from '@blockframes/movie/movie/form/promotional-elements/promotional-elements-images/promotional-elements-images.module.ts';
 import { MediaImageComponent } from './media-image.component';
-
 // Material
 import { MatCardModule } from '@angular/material/card';
 
@@ -17,6 +17,7 @@ import { MatCardModule } from '@angular/material/card';
     ReactiveFormsModule,
     TunnelPageModule,
     CropperModule,
+    PromotionalElementsImagesModule,
     // Material
     MatCardModule,
     // Route
