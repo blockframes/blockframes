@@ -9,7 +9,10 @@
         <mat-card-subtitle>The banner image will be used at the top of the film page in the marketplace</mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
-        <drop-cropper></drop-cropper>
+        <drop-cropper>
+          <h3 type>Banner image*</h3>
+          <p dimensions class="mat-body-2">Dimensions : 3200 x 410 px</p>
+        </drop-cropper>
       </mat-card-content>
     </mat-card>
     <mat-card>
@@ -21,8 +24,10 @@
         storagePath="poster" 
         [ratio]="1" 
         [form]="poster"
-        ></drop-cropper>
-        <!-- {{ poster.value | async }} -->
+        >
+        <h3 type>Movie poster image*</h3>
+        <p dimensions class="mat-body-2">Dimensions : 300 x 700 px</p>
+      </drop-cropper>
       </mat-card-content>
     </mat-card>
     <mat-card>
@@ -30,7 +35,10 @@
         <mat-card-title>Still photos</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <drop-cropper></drop-cropper>
+        <drop-cropper>
+          <h3 type>Still photos</h3>
+          <p dimensions class="mat-body-2">Dimensions : 700 x 500 px</p>  
+        </drop-cropper>
       </mat-card-content>
     </mat-card>
   </section>
