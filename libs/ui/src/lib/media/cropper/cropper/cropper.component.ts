@@ -74,7 +74,7 @@ export class CropperComponent implements ControlValueAccessor {
     this.parentWidth = el.clientWidth;
     this._renderer.setStyle(el, "height", `calc(40px+${this.parentWidth}px/${ratio})`)
   }
-
+  @Input() setWidth?: number;
   @Input() storagePath: string;
   /** Disable fileuploader & delete buttons in 'show' step */
   @Input() useFileuploader?= true;
