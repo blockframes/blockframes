@@ -9,8 +9,11 @@
     <mat-list-item *ngIf="data.europeanQualification">
       <strong>Eureopean Qualification :</strong> {{data.europeanQualification}}
     </mat-list-item>
-    <mat-list-item *ngIf="data.pegi">
-      <strong>Rating (PEGI) :</strong> {{data.pegi}}
+    <mat-list-item *ngIf="data.rating">
+      <strong>Rating :</strong> 
+      <ul>
+        <li *ngFor="let rating of data.rating">{{ rating.system }} {{ getLabelByCode('TERRITORIES', rating.country) }} : {{ rating.value }} ({{ rating.reason }})</li>
+      </ul>
     </mat-list-item>
     <mat-list-item *ngIf="data.certifications.length">
       <strong>Certifications :</strong>
@@ -24,7 +27,7 @@
       <strong>International Premiere :</strong> {{data.internationalPremiere.name}} ({{data.internationalPremiere.year}})
     </mat-list-item>
     <mat-list-item *ngIf="data.originCountryReleaseDate">
-      <strong>Release date in Origin Country :</strong> {{data.originCountryReleaseDate | date: 'dd MMM yyyy' }}
+      <strong>Release date in Origin Country :</strong> {{data.originCountryReleaseDate | date: 'dd MMM yyyy' }} <!-- @todo #1508-->
     </mat-list-item>
     <mat-list-item *ngIf="data.broadcasterCoproducers.length">
       <strong>TV / Platform coproducer(s) :</strong>

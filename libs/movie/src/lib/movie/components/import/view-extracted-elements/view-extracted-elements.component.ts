@@ -16,13 +16,15 @@ import {
   createMoviePromotionalElements,
   createPrize,
   populateMovieLanguageSpecification,
-  MovieService
+  MovieService,
+  createMovieRating,
+  createMovieOriginalRelease
 } from '../../../+state';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { formatCredits } from '@blockframes/utils/spreadsheet/format';
 import { ImageUploader } from '@blockframes/utils';
 import { SSF$Date } from 'ssf/types';
-import { getCodeIfExists } from '../../../static-model/staticModels';
+import { getCodeIfExists, getLabelByCode } from '../../../static-model/staticModels';
 import { SSF } from 'xlsx';
 import { MovieLanguageTypes } from '@blockframes/movie/movie/+state/movie.firestore';
 import { createCredit } from '@blockframes/utils/common-interfaces/identity';
@@ -361,7 +363,7 @@ export class ViewExtractedElementsComponent {
 
         // PEGI (Rating)
         if (spreadSheetRow[SpreadSheetMovie.rating]) {
-          movie.salesInfo.pegi = spreadSheetRow[SpreadSheetMovie.rating];
+          movie.salesInfo.rating.push(createMovieRating({value: spreadSheetRow[SpreadSheetMovie.rating]}));
         }
 
         // CERTIFICATIONS (Certifications)
@@ -405,8 +407,16 @@ export class ViewExtractedElementsComponent {
 
         // ORIGIN COUNTRY RELEASE DATE (Release date in Origin Country)
         if (spreadSheetRow[SpreadSheetMovie.originCountryReleaseDate]) {
-          const originCountryReleaseDate: SSF$Date = SSF.parse_date_code(spreadSheetRow[SpreadSheetMovie.originCountryReleaseDate]);
-          movie.salesInfo.originCountryReleaseDate = new Date(`${originCountryReleaseDate.y}-${originCountryReleaseDate.m}-${originCountryReleaseDate.d}`);
+          let date = spreadSheetRow[SpreadSheetMovie.originCountryReleaseDate];
+
+          if(SSF.is_date(spreadSheetRow[SpreadSheetMovie.originCountryReleaseDate])) {
+            const originCountryReleaseDate: SSF$Date = SSF.parse_date_code(spreadSheetRow[SpreadSheetMovie.originCountryReleaseDate]);
+            date = new Date(`${originCountryReleaseDate.y}-${originCountryReleaseDate.m}-${originCountryReleaseDate.d}`);
+          }
+
+          movie.main.originCountries.forEach( c => {
+            movie.salesInfo.originalRelease.push(createMovieOriginalRelease({date}));
+          });
         }
 
         // GENRES (Genres)
@@ -627,7 +637,11 @@ export class ViewExtractedElementsComponent {
 
         // THEATRICAL RELEASE
         if (spreadSheetRow[SpreadSheetMovie.theatricalRelease]) {
-          movie.salesInfo.theatricalRelease = spreadSheetRow[SpreadSheetMovie.theatricalRelease].toLowerCase() === 'yes' ? true : false;
+          if(spreadSheetRow[SpreadSheetMovie.theatricalRelease].toLowerCase() === 'yes') {
+            movie.salesInfo.originalRelease.forEach(r => {
+              r.media = getLabelByCode('MEDIAS', 'theatrical');
+            })
+          }
         }
 
         // IMAGE BANNIERE LINK
@@ -888,10 +902,10 @@ export class ViewExtractedElementsComponent {
       });
     }
 
-    if (!movie.salesInfo.pegi) {
+    if (movie.salesInfo.rating.length === 0) {
       errors.push({
         type: 'warning',
-        field: 'salesInfo.pegi',
+        field: 'salesInfo.rating',
         name: 'Rating',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
@@ -924,16 +938,6 @@ export class ViewExtractedElementsComponent {
         field: 'salesInfo.internationalPremiere',
         name: "International Premiere",
         reason: 'Optional field is missing or could not be parsed',
-        hint: 'Edit corresponding sheet field.'
-      });
-    }
-
-    if (!movie.salesInfo.originCountryReleaseDate) {
-      errors.push({
-        type: 'warning',
-        field: 'salesInfo.originCountryReleaseDate',
-        name: 'Release date in Origin Country',
-        reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
     }
@@ -1013,16 +1017,6 @@ export class ViewExtractedElementsComponent {
         type: 'warning',
         field: 'budget.totalBudget',
         name: 'Budget',
-        reason: 'Optional field is missing',
-        hint: 'Edit corresponding sheet field.'
-      });
-    }
-
-    if (movie.salesInfo.theatricalRelease === undefined) {
-      errors.push({
-        type: 'warning',
-        field: 'salesInfo.theatricalRelease',
-        name: 'Theatrical release',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });

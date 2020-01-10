@@ -1,5 +1,6 @@
 import { AFM_DISABLE } from '@env';
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { getLabelByCode } from '../../static-model/staticModels';
 
 @Component({
   selector: 'movie-display-film-details',
@@ -8,6 +9,7 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieDisplayFilmDetailsComponent {
+  public getLabelByCode = getLabelByCode;
   @Input() main;
   @Input() salesInfo;
   @Input() color;

@@ -1,6 +1,7 @@
-import { MovieSalesInfo, createMovieSalesInfo, createPrize } from '../../+state';
+import { MovieSalesInfo, createMovieSalesInfo, createPrize, createMovieRating } from '../../+state';
 import { FormEntity, FormList } from '@blockframes/utils';
 import { FormControl } from '@angular/forms';
+import { MovieRating } from '@blockframes/movie/movie+state/movie.firestore';
 
 function createInternationalPremiereControl(entity?: Partial<MovieSalesInfo['internationalPremiere']>) {;
   const { name, year } = createPrize(entity)
@@ -18,16 +19,33 @@ class InternationalPremiereForm extends FormEntity<InternationalPremiereControl>
   }
 }
 
+function createRatingFormControl(entity?: Partial<MovieRating>) {
+  const { country, reason, system, value } = createMovieRating(entity);
+  return { 
+    country: new FormControl(country),
+    reason: new FormControl(reason),
+    system: new FormControl(system),
+    value: new FormControl(value),
+  }
+}
+
+type RatingFormControl = ReturnType<typeof createRatingFormControl>;
+
+export class MovieRatingForm extends FormEntity<RatingFormControl> {
+  constructor(rating?: MovieRating) {
+    super(createRatingFormControl(rating));
+  }
+}
+
 function createMovieSalesInfoControls(salesInfo: Partial<MovieSalesInfo> = {}){
   const entity = createMovieSalesInfo(salesInfo);
   return {
     scoring: new FormControl(entity.scoring),
     color: new FormControl(entity.color),
     europeanQualification: new FormControl(entity.europeanQualification),
-    pegi: new FormControl(entity.pegi),
+    rating: FormList.factory(entity.rating, el => new MovieRatingForm(el)),
     certifications: new FormControl(entity.certifications),
     internationalPremiere: new InternationalPremiereForm(entity.internationalPremiere),
-    originCountryReleaseDate: new FormControl(entity.originCountryReleaseDate),
     broadcasterCoproducers: FormList.factory(entity.broadcasterCoproducers),
     format: new FormControl(entity.format),
     formatQuality: new FormControl(entity.formatQuality),
@@ -52,6 +70,23 @@ export class MovieSalesInfoForm extends FormEntity<MovieSalesInfoControl>{
 
   public removeBroadcasterCoproducers(i: number): void {
    this.broadcasterCoproducers.removeAt(i);
+  }
+
+  get rating() {
+    return this.get('rating');
+  }
+
+  public getRating(i: number) {
+    return this.rating.controls[i];
+  }
+
+  public addRating(): void {
+    const rating = new MovieRatingForm();
+    this.rating.push(rating);
+  }
+
+  public removeRating(i: number): void {
+    this.rating.removeAt(i);
   }
 
 }

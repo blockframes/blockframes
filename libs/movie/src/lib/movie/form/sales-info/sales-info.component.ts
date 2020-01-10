@@ -16,13 +16,19 @@ export class MovieFormSalesInfoComponent implements OnInit {
   public staticModels: any;
   public europeanQualification: false;
 
+  public countriesFilterCtrl = new FormControl();
+  public ratingSystemFilterCtrl = new FormControl();
   public certificationsFilterCtrl = new FormControl();
+  public countries$: Observable<SlugAndLabel[]>;
+  public ratingSystems$: Observable<SlugAndLabel[]>;
   public certifications$: Observable<SlugAndLabel[]>;
 
   constructor(public controlContainer: ControlContainer) { }
 
   ngOnInit() {
     this.staticModels = staticModels;
+    this.countries$ = this.filterSelectSearch(this.countriesFilterCtrl, this.staticModels['TERRITORIES']);
+    this.ratingSystems$ = this.filterSelectSearch(this.ratingSystemFilterCtrl, this.staticModels['RATING']);
     // Init search bar
     this.certifications$ = this.certificationsFilterCtrl.valueChanges.pipe(
       startWith(''),
@@ -36,4 +42,17 @@ export class MovieFormSalesInfoComponent implements OnInit {
     return this.controlContainer.control as MovieSalesInfoForm;
   }
 
+  public getRatingSystem(i) {
+    const control = this.salesInfo.getRating(i);
+    return control.get('system').value ? control.get('system').value : 'unnamed system';
+  }
+
+  private filterSelectSearch(control: FormControl, model: SlugAndLabel[]) {
+    return control.valueChanges.pipe(
+      startWith(''),
+      debounceTime(200),
+      distinctUntilChanged(),
+      map(name => model.filter(item => item.label.toLowerCase().indexOf(name.toLowerCase()) > -1))
+    );
+  }
 }
