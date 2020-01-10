@@ -5,6 +5,9 @@
 }
 .mat-stroked-button {
   min-width: 130px;
+  mat-icon {
+    margin-right: 8px;
+  }
 }
 mat-sidenav-container {
   flex: 1;

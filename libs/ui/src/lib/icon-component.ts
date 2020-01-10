@@ -28,10 +28,6 @@ const ICONS_SVG = [
     url: 'assets/icons/refuseMember.svg'
   },
   {
-    name: 'cross',
-    url: 'assets/icons/cross.svg'
-  },
-  {
     name: 'save',
     url: 'assets/icons/save.svg'
   },
@@ -272,10 +268,6 @@ const ICONS_SVG = [
     url: 'assets/icons/building.svg'
   },
   {
-    name: 'wallet',
-    url: 'assets/icons/wallet.svg'
-  },
-  {
     name: 'heart',
     url: 'assets/icons/heart.svg'
   },
@@ -306,7 +298,63 @@ const ICONS_SVG = [
   },{
     name: 'instagram',
     url: 'assets/icons/instagram.svg'
-  }
+  },
+  //! From here, it's only the new icons from Mathilde
+  // please organise icon by alphabetical order
+  ////////////////
+  // LIGHT ICON //
+  ////////////////
+  {
+    name: 'certificate',
+    url: 'assets/icons/light/Certificate.svg'
+  },
+  {
+    name: 'cross',
+    url: 'assets/icons/light/Cross.svg'
+  },
+  {
+    name: 'document',
+    url: 'assets/icons/light/Document.svg'
+  },
+  {
+    name: 'floppy',
+    url: 'assets/icons/light/Floppy.svg'
+  },
+  {
+    name: 'import',
+    url: 'assets/icons/light/Import.svg'
+  },
+  {
+    name: 'mapMarker',
+    url: 'assets/icons/light/MapMarker.svg'
+  },
+  ////////////////
+  // DARK ICON //
+  ////////////////
+  {
+    name: 'dashboard',
+    url: 'assets/icons/dark/Dashboard.svg'
+  },
+  {
+    name: 'info',
+    url: 'assets/icons/dark/Info.svg'
+  },
+  {
+    name: 'mail',
+    url: 'assets/icons/dark/Mail.svg'
+  },
+  {
+    name: 'shoppingCart',
+    url: 'assets/icons/dark/ShoppingCart.svg'
+  },
+  {
+    name: 'videoLibrary',
+    url: 'assets/icons/dark/VideoLibrary.svg'
+  },
+  {
+    name: 'wallet',
+    url: 'assets/icons/dark/Wallet.svg'
+  },
 ];
 
 /**

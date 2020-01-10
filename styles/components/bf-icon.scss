@@ -1,0 +1,11 @@
+@mixin bf-icon-theme($theme) {
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+
+  .primary-icon {
+    path {
+      fill: mat-color($primary, 500);
+    }
+  }
+}
