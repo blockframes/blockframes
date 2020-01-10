@@ -4,7 +4,7 @@ import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { Contract, ContractVersion, ContractWithLastVersion, createContractWithVersion } from './contract.model';
 import { AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
 import orderBy from 'lodash/orderBy';
-import { firestore } from 'firebase';
+import { firestore } from 'firebase/app';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'contracts' })
@@ -16,7 +16,8 @@ export class ContractService extends CollectionService<ContractState> {
 
   /**
    * @param contract
-   */
+   */ 
+  // @TODO #1389 Use native akita-ng-fire functions
   public async addContract(contract: Contract): Promise<string> {
     if (!contract.id) {
       contract.id = this.db.createId();
@@ -31,6 +32,7 @@ export class ContractService extends CollectionService<ContractState> {
    * @param contractId 
    * @param contractVersion 
    */
+  // @TODO #1389 Use native akita-ng-fire functions
   public async addContractVersion(contractId: string, contractVersion: ContractVersion): Promise<string> {
     const snapshot = await this.contractsVersionCollection(contractId).get().toPromise();
     contractVersion.id = (snapshot.size + 1).toString();
@@ -44,6 +46,7 @@ export class ContractService extends CollectionService<ContractState> {
    * @param contract 
    * @param version 
    */
+  // @TODO #1389 Use native akita-ng-fire functions
   public async addContractAndVersion(contract: Contract, version: ContractVersion): Promise<string> {
     const contractId = await this.addContract(contract);
     await this.addContractVersion(contractId, version);
@@ -54,6 +57,7 @@ export class ContractService extends CollectionService<ContractState> {
    * 
    * @param contractId 
    */
+  // @TODO #1389 Use native akita-ng-fire functions
   public async getContract(contractId: string): Promise<Contract> {
     const snapshot = await this.db.collection('contracts').doc(contractId).get().toPromise();
     const doc = snapshot.data();
@@ -64,6 +68,7 @@ export class ContractService extends CollectionService<ContractState> {
    *
    * @param contractId
    */
+  // @TODO #1389 Use native akita-ng-fire functions
   public contractsVersionCollection(contractId: string): AngularFirestoreCollection<ContractVersion> {
     return this.contractDoc(contractId).collection('versions');
   }
@@ -80,6 +85,7 @@ export class ContractService extends CollectionService<ContractState> {
    * Returns last contract version associated with contractId
    * @param contractId 
    */
+  // @TODO #1389 Use native akita-ng-fire functions
   public async getLastVersionContract(contractId: string): Promise<ContractVersion> {
     const snapshot = await this.contractsVersionCollection(contractId).ref
       .orderBy('creationDate', 'desc')
@@ -96,6 +102,7 @@ export class ContractService extends CollectionService<ContractState> {
   /**
    * @dev Fetch contract and last version
    */
+  // @TODO #1389 Use native akita-ng-fire functions
   public async getContractWithLastVersion(contractId: string): Promise<ContractWithLastVersion> {
     try {
       const contractWithVersion = createContractWithVersion();
@@ -113,6 +120,7 @@ export class ContractService extends CollectionService<ContractState> {
    * @param movieId 
    * @param distributionDealId 
    */
+  // @TODO #1389 Use native akita-ng-fire functions
   public async getContractWithLastVersionFromDeal(movieId: string, distributionDealId: string): Promise<ContractWithLastVersion> {
     const contractSnapShot = await this.db
       .collection('contracts', ref => ref.where('titleIds', 'array-contains', movieId))

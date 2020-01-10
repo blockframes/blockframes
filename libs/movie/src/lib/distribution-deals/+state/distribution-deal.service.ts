@@ -64,7 +64,7 @@ export class DistributionDealService extends CollectionService<DistributionDealS
       contract.last.titles[movieId] = createContractTitleDetail();
       contract.last.titles[movieId].titleId = movieId;
       contract.last.titles[movieId].distributionDealIds.push(distributionDeal.id);
-      if (contract.doc.titleIds.indexOf(movieId) === -1) {
+      if (!contract.doc.titleIds.includes(movieId)) {
         contract.doc.titleIds.push(movieId);
       }
 

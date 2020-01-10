@@ -1,7 +1,7 @@
 import { createTerms } from "@blockframes/utils/common-interfaces/terms";
 import { createPrice } from "@blockframes/utils/common-interfaces/price";
 import { getCodeIfExists } from "@blockframes/movie/movie/static-model/staticModels";
-import { ContractDocumentWithDates, ContractStatus, ContractTitleDetail, ContractVersionDocumentWithDates, ContractPartyDetailDocumentWithDates } from "./contract.firestore";
+import { ContractDocumentWithDates, ContractStatus, ContractTitleDetail, ContractVersionDocumentWithDates, ContractPartyDetailDocumentWithDates, ContractPartyDetailDocumentWithDatesDocument } from "./contract.firestore";
 import { createParty } from "@blockframes/utils/common-interfaces/identity";
 import { LegalRolesSlug } from "@blockframes/movie/moviestatic-model/types";
 
@@ -10,6 +10,8 @@ export type Contract = ContractDocumentWithDates;
 export type ContractVersion = ContractVersionDocumentWithDates;
 
 export type ContractPartyDetail = ContractPartyDetailDocumentWithDates;
+
+export type ContractPartyDetailDocument = ContractPartyDetailDocumentWithDatesDocument;
 
 /**
  * @dev this should not be saved to firestore,
@@ -52,9 +54,9 @@ export function createContractTitleDetail(params: Partial<ContractTitleDetail> =
 
 export function createContractPartyDetail(params: Partial<ContractPartyDetail> = {}): ContractPartyDetail {
   return {
-    party: createParty(params.party),
     status: ContractStatus.unknown,
     ...params,
+    party: createParty(params.party),
   };
 }
 
@@ -105,7 +107,7 @@ export function validateContract(contract: Contract): boolean {
 }
 
 /**
- * 
+ * Fetch parties related to a contract given a specific legal role
  * @param contract 
  * @param legalRole 
  */
