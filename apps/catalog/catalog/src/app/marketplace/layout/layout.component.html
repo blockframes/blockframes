@@ -21,13 +21,13 @@
 
       <ng-container wishlist>
         <a *ngIf="(currentWishlist$ | async) as wishlist else emptywishlist" mat-icon-button
-          routerLink="/c/o/catalog/wishlist/view" test-id="heartIcon">
+          routerLink="/c/o/marketplace/wishlist/view" test-id="heartIcon">
           <mat-icon [matBadge]="wishlist.movieIds.length" matBadgeColor="accent" matBadgeSize="small" svgIcon="heart">
           </mat-icon>
         </a>
       </ng-container>
       <ng-template #emptywishlist>
-        <a mat-icon-button routerLink="/c/o/catalog/wishlist/view" test-id="heartIcon">
+        <a mat-icon-button routerLink="/c/o/marketplace/wishlist/view" test-id="heartIcon">
           <mat-icon matBadge="0" matBadgeColor="accent" matBadgeSize="small" svgIcon="heart">
           </mat-icon>
         </a>

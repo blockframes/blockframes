@@ -1,6 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { AuthGuard } from '@blockframes/auth';
+import { OrganizationGuard, PermissionsGuard } from '@blockframes/organization';
+import { MovieCollectionGuard } from '@blockframes/movie/movieguards/movie-collection.guard';
 
 const routes: Routes = [
   {
@@ -19,17 +21,24 @@ const routes: Routes = [
       path: '',
       redirectTo: 'o',
       pathMatch: 'full'
-    }, {
+    },
+    {
       path: 'organization',
       loadChildren: () => import('@blockframes/organization').then(m => m.NoOrganizationModule)
-    }, {
+    },
+    {
       path: 'o',
+      canActivate: [OrganizationGuard, PermissionsGuard],
+      canDeactivate: [OrganizationGuard, PermissionsGuard],
       children: [{
         path: '',
         redirectTo: 'marketplace',
         pathMatch: 'full'
-      }, {
+      },
+      {
         path: 'marketplace',
+        canActivate: [MovieCollectionGuard],
+        canDeactivate: [MovieCollectionGuard],
         loadChildren: () => import('./marketplace/marketplace.module').then(m => m.MarketplaceModule)
       },
       {

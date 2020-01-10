@@ -5,7 +5,7 @@ import { ctxMenu } from '../helpers';
 // common
 import * as common from '../common/common';
 
-export const baseRoute = `${appsRoute}/${App.biggerBoat}`;
+export const baseRoute = `${appsRoute}/${App.catalogMarketplace}`;
 
 export const baseMenu = [
   {
