@@ -17,6 +17,7 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 export class MovieTunnelComponent {
   private sub: Subscription;
   // This table has to be synced with the routes, it allows the steps to be updated depending of the routes
+  // See movie-tunnel-routing.module.ts to synchronize the table
   public pages = [
     ['main', 'synopsis', 'credits', 'budget', 'technical-info', 'keywords'],
     ['rights', 'deals'],
