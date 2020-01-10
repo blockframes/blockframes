@@ -4,11 +4,15 @@ import { RouterModule } from '@angular/router';
 
 import { TitleListComponent } from './list.component';
 
+// Material
+import { MatButtonModule } from '@angular/material';
+
 
 @NgModule({
   declarations: [TitleListComponent],
   imports: [
     CommonModule,
+    MatButtonModule,
     RouterModule.forChild([{ path: '', component: TitleListComponent }])
   ]
 })

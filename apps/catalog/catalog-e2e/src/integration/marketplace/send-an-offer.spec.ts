@@ -1,9 +1,10 @@
 /// <reference types="cypress" />
 
-import { LoginViewPage, WelcomeViewPage, HomePage, WishlistPage } from "../../support/pages/marketplace";
+import { HomePage, WishlistPage } from "../../support/pages/marketplace";
 import { User } from "../../support/utils/type";
 import { USERS } from "../../support/utils/users";
 import { MOVIENAMELIST } from "../../support/utils/movies";
+import { WelcomeViewPage, LoginViewPage } from "../../support/pages/auth";
 
 // Select user: cytest@blockframes.com
 const LOGIN_CREDENTIALS: Partial<User> = USERS[0];

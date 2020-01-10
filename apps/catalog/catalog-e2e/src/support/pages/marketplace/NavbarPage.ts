@@ -1,4 +1,5 @@
-import { WishlistPage, SearchPage, LoginViewPage, HomePage } from "./index";
+import { WishlistPage, SearchPage, HomePage } from "./index";
+import { LoginViewPage } from "../auth";
 
 export default abstract class NavbarPage {
   constructor() {
