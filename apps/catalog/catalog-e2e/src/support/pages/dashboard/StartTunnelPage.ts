@@ -1,3 +1,5 @@
+import TunnelMainPage from "./TunnelMainPage";
+
 export default class StartTunnelPage {
   constructor() {
     cy.get('catalog-start-tunnel', { timeout: 5000 });
@@ -5,6 +7,6 @@ export default class StartTunnelPage {
 
   clickBegin() {
     cy.get('catalog-start-tunnel [test-id=begin]').click();
-    // issue#1407: Will return the movie tunnel page 2
+    return new TunnelMainPage();
   }
 }
