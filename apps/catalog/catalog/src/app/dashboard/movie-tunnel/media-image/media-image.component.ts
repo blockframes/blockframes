@@ -9,7 +9,7 @@ export class MediaImageComponent {
   
   constructor(private form: MovieForm) { }
 
-  get type() {
+  get promotionalElements() {
     return this.form.get('promotionalElements')
   }
 
@@ -19,11 +19,5 @@ export class MediaImageComponent {
 
   get poster() {
     return this.form.get('main').get('poster');
-  }
-
-  click(e) {
-    console.log(e)
-  }
-
-  
+  }  
 }
