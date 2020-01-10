@@ -27,7 +27,7 @@ import { SSF } from 'xlsx';
 import { MovieLanguageTypes } from '@blockframes/movie/movie/+state/movie.firestore';
 import { createCredit } from '@blockframes/utils/common-interfaces/identity';
 import { DistributionDeal, createDistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
-import { validateContract, ContractWithLastVersion, getContractParties, createContractWithVersion, createContractPartyDetail, createContractTitleDetail } from '@blockframes/contract/+state/contract.model';
+import { validateContract, ContractWithLastVersion, getContractParties, initContractWithVersion, createContractPartyDetail, createContractTitleDetail } from '@blockframes/contract/+state/contract.model';
 import { ContractStatus, ContractTitleDetail } from '@blockframes/contract/+state/contract.firestore';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state/distribution-deal.service';
 import { createFee } from '@blockframes/utils/common-interfaces/price';
@@ -1061,7 +1061,7 @@ export class ViewExtractedElementsComponent {
         const movie = this.movieQuery.existingMovie(spreadSheetRow[SpreadSheetDistributionDeal.internalRef]);
         const distributionDeal = createDistributionDeal();
 
-        let contract = createContractWithVersion();
+        let contract = initContractWithVersion();
 
         const importErrors = {
           distributionDeal,
@@ -1423,7 +1423,7 @@ export class ViewExtractedElementsComponent {
 
     sheetTab.rows.forEach(async spreadSheetRow => {
       // Create/retreive the contract 
-      let contract = createContractWithVersion();
+      let contract = initContractWithVersion();
       let newContract = true;
       if (spreadSheetRow[SpreadSheetContract.contractId]) {
         const existingContract = await this.contractService.getContractWithLastVersion(spreadSheetRow[SpreadSheetContract.contractId]);

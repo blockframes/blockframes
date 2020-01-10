@@ -60,7 +60,7 @@ export function createContractPartyDetail(params: Partial<ContractPartyDetail> =
   };
 }
 
-export function createContractWithVersion(): ContractWithLastVersion {
+export function initContractWithVersion(): ContractWithLastVersion {
   return {
     doc: createContract(),
     last: createContractVersion(),

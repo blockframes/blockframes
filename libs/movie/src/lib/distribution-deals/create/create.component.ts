@@ -35,7 +35,7 @@ import { MatSnackBar } from '@angular/material';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { createDistributionDeal } from '../+state/distribution-deal.model';
 import { DistributionDealService } from '../+state';
-import { validateContract, createContractPartyDetail, createContractWithVersion } from '@blockframes/contract/+state/contract.model';
+import { validateContract, createContractPartyDetail, initContractWithVersion } from '@blockframes/contract/+state/contract.model';
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
 
 enum ResearchSteps {
@@ -184,7 +184,7 @@ export class DistributionDealCreateComponent implements OnInit, OnDestroy {
   public async addDistributionDeal() {
     const distributionDeal = createDistributionDeal(); // @todo #1388 populate with form values
     // Create the contract that will handle the deal
-    const contract = createContractWithVersion();
+    const contract = initContractWithVersion();
 
     const licensee = createContractPartyDetail();
     licensee.party.orgId = this.organizationQuery.getActiveId();
