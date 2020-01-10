@@ -1,7 +1,9 @@
 <mat-toolbar fxLayout="row" fxLayoutAlign="space-between center">
   <article>
     <!-- TODO need to do a counter for step-->
-    <span class="mat-body-2"><b>Step 1/6</b></span>
+    <span class="mat-body-2">
+      <b>Step {{ pageData.index }}/{{ pageData.length }}</b>
+    </span>
   </article>
 
   <article fxLayoutGap="24px">
