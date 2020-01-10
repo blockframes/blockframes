@@ -34,7 +34,12 @@ const tunnelRoutes: Routes = [
       {
         path: 'technical-info',
         loadChildren: () => import('./technical-info/technical-info.module').then(m => m.TunnelTechnicalInfoModule)
-      }
+      },
+      // Last page
+      {
+        path: 'end',
+        loadChildren: () => import('./end/end-tunnel.module').then(m => m.EndTunnelModule)
+      },
     ]
   }
 ];
