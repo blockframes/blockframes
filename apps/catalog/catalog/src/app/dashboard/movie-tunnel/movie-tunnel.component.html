@@ -1,4 +1,4 @@
-<mat-toolbar fxLayout="row" fxLayoutAlign="space-between center">
+<mat-toolbar fxLayout="row" [fxLayoutAlign]="(pageData$ | async) ? 'space-between center' : 'end center'">
   <article *ngIf="(pageData$ | async) as pageData" class="mat-body-2">
     <b>Step {{ pageData.index }}/{{ pageData.length }}</b>
   </article>
