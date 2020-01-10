@@ -20,6 +20,11 @@ const tunnelRoutes: Routes = [
         path: 'keywords',
         loadChildren: () => import('./keywords/keywords.module').then(m => m.TunnelKeywordsModule)
       },
+      // Page 4
+      {
+        path: 'credits',
+        loadChildren: () => import('./credits/credits.module').then(m => m.CreditsModule)
+      },
       // Page 5
       {
         path: 'budget',
