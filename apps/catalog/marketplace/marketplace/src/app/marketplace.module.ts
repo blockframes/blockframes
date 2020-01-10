@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 
-import { CatalogCartGuard } from './guards/catalog-cart-list.guard';
+import { CatalogCartGuard } from '@blockframes/organization/cart/guards/catalog-cart-list.guard';
 import { MovieActiveGuard } from '@blockframes/movie';
 
 const routes: Routes = [

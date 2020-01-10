@@ -1,5 +1,5 @@
 import { map } from 'rxjs/operators';
-import { CartService } from './../../distribution-deal/+state/cart.service';
+import { CartService } from '@blockframes/organization/cart/+state/cart.service';
 import { Movie, PromotionalElement } from '@blockframes/movie';
 import { Component, OnInit, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { Observable } from 'rxjs';

@@ -2,10 +2,10 @@ import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ChangeDetectionStrategy, Component, HostBinding, OnInit } from '@angular/core';
 import { Movie, MovieQuery } from '@blockframes/movie/movie/+state';
-import { CartService } from '../../distribution-deal/+state/cart.service';
+import { CartService } from '@blockframes/organization/cart/+state/cart.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
-import { CatalogCartQuery } from '../../distribution-deal/+state';
+import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
 
 interface CarouselSection {
   title: string;

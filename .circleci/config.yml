@@ -10,21 +10,49 @@
 #     /!\ secret value.
 #
 version: 2.1
-production_only: &production_only
-  filters:
-    branches:
-      only:
-        - production
-staging_only: &staging_only
-  filters:
-    branches:
-      only:
-        - staging
-ci_only: &ci_only
-  filters:
-    branches:
-      only:
-        - ci
+references:
+  production_only: &production_only
+    filters:
+      branches:
+        only:
+          - production
+  staging_only: &staging_only
+    filters:
+      branches:
+        only:
+          - staging
+  ci_only: &ci_only
+    filters:
+      branches:
+        only:
+          - ci
+commands:
+  checkout_project:
+    description: 'Checkout the project with caching'
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - dependencies-{{ .Environment.CACHE_VERSION }}-{{ checksum "package.json" }}
+            # fallback to using the latest cache if no exact match is found
+            - dependencies-{{ .Environment.CACHE_VERSION }}
+      - run: rm -rf node_modules/ganache-core/node_modules/web3-providers-ws/node_modules/websocket/.git
+      - run: npm install
+      - save_cache:
+          paths:
+            - node_modules
+          key: dependencies-{{ .Environment.CACHE_VERSION }}-{{ checksum "package.json" }}
+      - run: cp env/env.ci.ts env/env.ts # required for the typechecking & file rewrite to work
+      - run:
+          name: 'Verify that this PR is not introducing weird package.json changes'
+          command: |
+            if git status | grep --quiet package.json; then
+              echo "package.json changed after npm install, please verify your PR";
+              git diff package.json
+              exit 1;
+            else
+              exit 0
+            fi
 orbs:
   do-exclusively: miyajan/do-exclusively@0.1.0
   slack: circleci/slack@3.4.0
@@ -34,92 +62,87 @@ executors:
       - image: blockframes/ci:latest
     working_directory: ~/repo
 jobs:
-  build:
+  build-and-test-all:
     executor: blockframes-ci
     environment:
-      - ENV: "ci"
-      - NODE_OPTIONS: "--max_old_space_size=4096"
+      - ENV: ci
+      - NODE_OPTIONS: '--max_old_space_size=4096'
+      - GOOGLE_APPLICATION_CREDENTIALS: creds.json
     steps:
-      - checkout
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-            - dependencies-{{ .Environment.CACHE_VERSION }}-{{ checksum "package.json" }}
-            # fallback to using the latest cache if no exact match is found
-            - dependencies-{{ .Environment.CACHE_VERSION }}
-      - run: rm -rf node_modules/ganache-core/node_modules/web3-providers-ws/node_modules/websocket/.git
-      - run: npm install
-      - run: ./node_modules/.bin/cypress install
-      - save_cache:
-          paths:
-            - node_modules
-            - ~/.cache/Cypress
-          key: dependencies-{{ .Environment.CACHE_VERSION }}-{{ checksum "package.json" }}
-      - run: cp env/env.ci.ts env/env.ts # required for the typechecking & file rewrite to work
+      - checkout_project
+      - run: echo "${FIREBASE_CI_SERVICE_ACCOUNT}" > creds.json
       - run: npm run build:all
-      - persist_to_workspace:
-          root: ~/repo
-          paths:
-            - node_modules/
-            - dist/
-            - env/
-      - persist_to_workspace:
-          root: ~/.cache
-          paths:
-            - Cypress
-  bundlesize:
-    executor: blockframes-ci
-    steps:
-      - checkout
-      - attach_workspace:
-          at: ~/build
-      - run: cp -R ~/build/* ./
-      - run: npm run bundlesize
-  zapier:
-    executor: blockframes-ci
-    steps:
-      - checkout
-      - attach_workspace:
-          at: ~/build
-      - run: cp -R ~/build/* ./
+      - run: npm run test
+      - run: npm run lint
+      - run:
+          name: Check size of apps being build
+          command: npm run bundlesize
       - run:
           name: Post sizes of apps to zapier
           command: |
-            curl -X POST "${ZAPPIER_WEBHOOK}" --header "Build-number:${CIRCLE_BUILD_NUM}" --header "Branch:${CIRCLE_BRANCH}" --header  "Date:`date "+%D"`" --header  Main-size:`cat ./dist/apps/main**.js | wc -c` --header  Delivery-size:`cat ./dist/apps/delivery/main**.js | wc -c` --header  Marketplace-size:`cat ./dist/apps/catalog-marketplace/main**.js | wc -c` --header  Dashboard-size:`cat ./dist/apps/catalog-dashboard/main**.js | wc -c` --header  Movie-financing-size:`cat ./dist/apps/movie-financing/main**.js | wc -c` --header  Functions-size:`cat ./dist/apps/backend-functions/main**.js | wc -c`
-  lint:
-    executor: blockframes-ci
-    steps:
-      - checkout
-      - attach_workspace:
-          at: ~/build
-      - run: cp -R ~/build/* ./
-      - run: npm run lint
-  test:
+            if [ "${CIRCLE_BRANCH}" = "production" ] || [ "${CIRCLE_BRANCH}" = "master" ]; then
+              curl -X POST "${ZAPPIER_WEBHOOK}" --header "Build-number:${CIRCLE_BUILD_NUM}" --header "Branch:${CIRCLE_BRANCH}" --header  "Date:`date "+%D"`" --header  Main-size:`cat ./dist/apps/main**.js | wc -c` --header  Delivery-size:`cat ./dist/apps/delivery/main**.js | wc -c` --header  Marketplace-size:`cat ./dist/apps/catalog-marketplace/main**.js | wc -c` --header  Dashboard-size:`cat ./dist/apps/catalog-dashboard/main**.js | wc -c` --header  Movie-financing-size:`cat ./dist/apps/movie-financing/main**.js | wc -c` --header  Functions-size:`cat ./dist/apps/backend-functions/main**.js | wc -c`;
+            fi
+  build-and-test-prs:
     executor: blockframes-ci
     environment:
+      - ENV: ci
+      - NODE_OPTIONS: '--max_old_space_size=4096'
       - GOOGLE_APPLICATION_CREDENTIALS: creds.json
-      - NODE_OPTIONS: "--max_old_space_size=4096"
     steps:
-      - checkout
-      - attach_workspace:
-          at: ~/build
-      - run: cp -R ~/build/* ./
-      - run: echo "${FIREBASE_SERVICE_ACCOUNT}" > creds.json
+      - checkout_project
+      - run: echo "${FIREBASE_CI_SERVICE_ACCOUNT}" > creds.json
+      - run:
+          # npm run affected:build tries to build the libs which are broken,
+          # the following command only build affected apps.
+          name: build affected apps
+          command: |
+            AFFECTED=`npx nx affected:apps --plain --base=origin/master`;
+            echo "Building: ${AFFECTED}"
+            for app in ${AFFECTED}; do
+              echo "building ${app}";
+              npm run build:${app};
+            done;
+      - run: npm run affected:lint --base=origin/master
       - run: npm run test
+      - run:
+          name: Check size of apps being build
+          command: |
+            # Generate default json for bundlesize
+            # This is a quick hack to get bundlesize AND affected build working.
+            # Maintain this script to keep checking new apps.
+            mkdir -p dist/apps/delivery \
+                     dist/apps/catalog-marketplace \
+                     dist/apps/catalog-dashboard \
+                     dist/apps/backend-functions \
+                     dist/apps/movie-financing
+            touch ./dist/apps/main.dummy.js \
+                  ./dist/apps/delivery/main.dummy.js \
+                  ./dist/apps/catalog-marketplace/main.dummy.js \
+                  ./dist/apps/catalog-dashboard/main.dummy.js \
+                  ./dist/apps/backend-functions/main.dummy.js \
+                  ./dist/apps/movie-financing/main.dummy.js \
+            npm run bundlesize
+      - run:
+          name: Post sizes of apps to zapier
+          command: |
+            if [ "${CIRCLE_BRANCH}" = "production" ] || [ "${CIRCLE_BRANCH}" = "master" ]; then
+              npm run build:all;
+              curl -X POST "${ZAPPIER_WEBHOOK}" --header "Build-number:${CIRCLE_BUILD_NUM}" --header "Branch:${CIRCLE_BRANCH}" --header  "Date:`date "+%D"`" --header  Main-size:`cat ./dist/apps/main**.js | wc -c` --header  Delivery-size:`cat ./dist/apps/delivery/main**.js | wc -c` --header  Marketplace-size:`cat ./dist/apps/catalog-marketplace/main**.js | wc -c` --header  Dashboard-size:`cat ./dist/apps/catalog-dashboard/main**.js | wc -c` --header  Movie-financing-size:`cat ./dist/apps/movie-financing/main**.js | wc -c` --header  Functions-size:`cat ./dist/apps/backend-functions/main**.js | wc -c`;
+            fi
   test-e2e:
     executor: blockframes-ci
     environment:
-      - ENV: "ci"
+      - ENV: ci
+      - NODE_OPTIONS: '--max_old_space_size=4096'
       - GOOGLE_APPLICATION_CREDENTIALS: creds.json
     steps:
-      - checkout
-      - attach_workspace:
-          at: ~/build
-      - run: cp -R ~/build/* ./
+      - checkout_project
       - run: echo "${FIREBASE_CI_SERVICE_ACCOUNT}" > creds.json
-      - run: mkdir -p ~/.cache/ && cp -R ~/build/Cypress ~/.cache
+      - run: npx cypress install
+      - run: npm run build:all
       - slack/notify:
-          message: "🚲 Deploying & testing e2e (https://blockframes-ci.web.app/)"
+          message: '🚲 Deploying & testing e2e (https://blockframes-ci.web.app/)'
       - run: |
           npm install --save-dev firebase-tools &&
           npx firebase use ci &&
@@ -127,7 +150,7 @@ jobs:
           npx ng build backend-ops --configuration=$ENV
       - run:
           name: prepare the ci for testing
-          command: node dist/apps/backend-ops/main.js prepareForTesting
+          command: npm run build:backend-ops && node dist/apps/backend-ops/main.js prepareForTesting
           when: always
       - run:
           name: main e2e tests
@@ -156,22 +179,17 @@ jobs:
   deploy-to-prod:
     executor: blockframes-ci
     environment:
-      - ENV: "production"
+      - ENV: production
+      - NODE_OPTIONS: '--max_old_space_size=4096'
     steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - dependencies-{{ .Environment.CACHE_VERSION }}-{{ checksum "package.json" }}
-            # fallback to using the latest cache if no exact match is found
-            - dependencies-{{ .Environment.CACHE_VERSION }}
-      - run: rm -rf node_modules/ganache-core/node_modules/web3-providers-ws/node_modules/websocket/.git
-      - run: npm install
+      - run: echo "${FIREBASE_CI_SERVICE_ACCOUNT}" > creds.json
+      - checkout_project
       - run: cp env/env.prod.ts env/env.ts # required for the typechecking & file rewrite to work
       - run: npm run build:all
       - slack/notify:
-          message: "🚚 Deploying to production..."
+          message: '🚚 Deploying to production...'
       - do-exclusively/do-exclusively:
-          # Note: right now do-exclusively excludes cross-jobs (e2e & prod).
+          # Note: right now do-exclusively excludes cross-jobs (staging & prod).
           token: $CIRCLE_TOKEN
           command: |
             npm install --save-dev firebase-tools &&
@@ -182,23 +200,16 @@ jobs:
   deploy-to-staging:
     executor: blockframes-ci
     environment:
-      - ENV: "staging"
-      - NODE_OPTIONS: "--max_old_space_size=4096"
+      - ENV: staging
+      - NODE_OPTIONS: '--max_old_space_size=4096'
     steps:
-      - checkout
-      - restore_cache:
-          keys:
-            - dependencies-{{ .Environment.CACHE_VERSION }}-{{ checksum "package.json" }}
-            # fallback to using the latest cache if no exact match is found
-            - dependencies-{{ .Environment.CACHE_VERSION }}
-      - run: rm -rf node_modules/ganache-core/node_modules/web3-providers-ws/node_modules/websocket/.git
-      - run: npm install
+      - checkout_project
       - run: cp env/env.staging.ts env/env.ts # required for the typechecking & file rewrite to work
       - run: npm run build:all
       - slack/notify:
-          message: "🛵 Deploying to staging.. (https://staging.blockframes.io/)"
+          message: '🛵 Deploying to staging.. (https://staging.blockframes.io/)'
       - do-exclusively/do-exclusively:
-          # Note: right now do-exclusively excludes cross-jobs (e2e & prod).
+          # Note: right now do-exclusively excludes cross-jobs (staging & prod).
           token: $CIRCLE_TOKEN
           command: |
             npm install --save-dev firebase-tools &&
@@ -208,34 +219,38 @@ jobs:
       - slack/status
 workflows:
   version: 2.1
-  build-test-deploy:
+  build-and-test:
     jobs:
-      - build
-      - bundlesize:
-          requires:
-            - build
-      - zapier:
+      # build only the PR
+      - build-and-test-prs:
+          filters:
+            branches:
+              ignore:
+                - ci
+                - master
+                - production
+                - staging
+      # build EVERYTHING and trigger the rest of the deploy
+      - build-and-test-all:
           filters:
             branches:
               only:
+                - ci
                 - master
                 - production
-          requires:
-            - build
-      - lint:
-          requires:
-            - build
-      - test:
-          requires:
-            - build
+                - staging
       - test-e2e:
           <<: *ci_only
           requires:
-            - build
+            - build-and-test-all
       - deploy-to-prod:
           <<: *production_only
+          requires:
+            - build-and-test-all
       - deploy-to-staging:
           <<: *staging_only
+          requires:
+            - build-and-test-all
   nightly-e2e:
     triggers:
       - schedule:
@@ -245,7 +260,7 @@ workflows:
               only:
                 - master
     jobs:
-      - build
+      - build-and-test-all
       - test-e2e:
           requires:
-            - build
+            - build-and-test-all

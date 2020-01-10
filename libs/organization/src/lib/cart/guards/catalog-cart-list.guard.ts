@@ -1,7 +1,7 @@
-import { CartState } from '../distribution-deal/+state/cart.store';
+import { CartState } from '../+state/cart.store';
+import { CartService } from '../+state/cart.service';
 import { Injectable } from '@angular/core';
 import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
-import { CartService } from '../distribution-deal/+state/cart.service';
 import { OrganizationQuery } from '@blockframes/organization';
 import { switchMap } from 'rxjs/internal/operators/switchMap';
 

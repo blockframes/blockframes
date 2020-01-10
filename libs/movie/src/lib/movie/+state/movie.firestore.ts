@@ -150,6 +150,9 @@ interface MovieSalesInfoRaw<D> {
   originCountryReleaseDate: D,
   broadcasterCoproducers: string[],
   theatricalRelease: boolean,
+  format: string,
+  formatQuality: string,
+  soundFormat: string
 }
 
 export interface MovieSalesInfoDocumentWithDates extends MovieSalesInfoRaw<Date> {

@@ -1,10 +1,9 @@
-import { Component, ChangeDetectionStrategy, ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewChild, AfterViewInit } from '@angular/core';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { FormGroup } from '@angular/forms';
 import { MatSnackBar, MatSidenav } from '@angular/material';
 import { RequestDemoInformations, createDemoRequestInformations } from '../../demo-request.model';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'catalog-landing-page',
@@ -12,9 +11,8 @@ import { Subscription } from 'rxjs';
   styleUrls: ['./landing-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CatalogLandingPageComponent implements OnDestroy, AfterViewInit {
+export class CatalogLandingPageComponent implements AfterViewInit {
   @ViewChild(MatSidenav, { static: false }) sidenav: MatSidenav;
-  private subscription: Subscription;
 
   constructor(
     private snackBar: MatSnackBar,
@@ -47,9 +45,5 @@ export class CatalogLandingPageComponent implements OnDestroy, AfterViewInit {
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 5000 });
     }
-  }
-
-  ngOnDestroy() {
-    this.subscription.unsubscribe();
   }
 }

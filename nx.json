@@ -20,6 +20,9 @@
     "utils": {
       "tags": ["utils", "shared"]
     },
+    "contract": {
+      "tags": []
+    },
     "ethers": {
       "tags": ["ethereum", "smart-contract"]
     },

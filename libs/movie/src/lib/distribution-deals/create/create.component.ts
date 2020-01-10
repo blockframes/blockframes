@@ -33,11 +33,10 @@ import { DistributionDealForm } from './create.form';
 import { getCodeIfExists } from '../../movie/static-model/staticModels';
 import { MatSnackBar } from '@angular/material';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
-import { createParty } from '@blockframes/utils/common-interfaces/identity';
 import { createDistributionDeal } from '../+state/distribution-deal.model';
 import { DistributionDealService } from '../+state';
-import { createContract, validateContract, createContractPartyDetail, createContractWithVersion } from '@blockframes/contract/+state/contract.model';
-import { CartService } from '@blockframes/marketplace/app/distribution-deal/+state/cart.service';
+import { validateContract, createContractPartyDetail, createContractWithVersion } from '@blockframes/contract/+state/contract.model';
+import { CartService } from '@blockframes/organization/cart/+state/cart.service';
 
 enum ResearchSteps {
   START = 'Start',

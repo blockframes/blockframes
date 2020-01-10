@@ -137,11 +137,9 @@ export class CartService extends CollectionService<CartState> {
     try {
       const wishlist = orgState.wishlist.map(wish => {
         if (wish.status === 'pending') {
-          const movieIds = wish.movieIds.includes(movieId) ? wish.movieIds.filter(id => id !== movieId) : wish.movieIds;
-          return { ...wish, movieIds };
-        } else {
-          return wish;
+          wish.movieIds = wish.movieIds.filter(id => id !== movieId)
         }
+        return wish;
       });
       await this.organizationService.update({ ...orgState, wishlist });
       return true;

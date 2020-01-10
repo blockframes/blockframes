@@ -79,7 +79,7 @@ import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
       trackLinks: true,
       accurateTrackBounce: true,
       webvisor: true
-    })
+    }),
   ],
   providers: [],
   bootstrap: [AppComponent]
