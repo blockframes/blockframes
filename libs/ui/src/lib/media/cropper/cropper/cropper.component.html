@@ -13,7 +13,7 @@
       [imageFile]="file"
       [aspectRatio]="cropRatio"
       [containWithinAspectRatio]="true"
-      [resizeToWidth]="parentWidth"
+      [resizeToWidth]="setWidth? setWidth : parentWidth"
       (imageCropped)="imageCropped($event)"
     ></image-cropper>
     <div class="buttons" fxLayout="row" fxLayoutAlign="space-evenly center">
