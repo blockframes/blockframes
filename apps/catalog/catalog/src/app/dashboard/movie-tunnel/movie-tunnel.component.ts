@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Host } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Host, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
 import { MovieService } from '@blockframes/movie/movie/+state';
@@ -12,7 +12,7 @@ import { Subscription } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
-export class MovieTunnelComponent {
+export class MovieTunnelComponent implements OnInit, OnDestroy {
   private sub: Subscription;
 
   constructor(
