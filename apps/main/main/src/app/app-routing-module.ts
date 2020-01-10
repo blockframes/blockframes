@@ -27,18 +27,6 @@ const routes = createRoutes({
       data: { app: App.mediaDelivering },
       loadChildren: () => import('@blockframes/apps/delivery').then(m => m.DeliveryAppModule)
     },
-    {
-      path: App.biggerBoat,
-      data: { app: App.biggerBoat },
-      loadChildren: () =>
-        import('@blockframes/apps/catalog/marketplace').then(m => m.CatalogMarketplaceAppModule)
-    },
-    {
-      path: App.catalogDashboard,
-      data: { app: App.catalogDashboard },
-      loadChildren: () =>
-        import('@blockframes/apps/catalog/dashboard').then(m => m.CatalogDashboardAppModule)
-    }
   ]
 });
 
