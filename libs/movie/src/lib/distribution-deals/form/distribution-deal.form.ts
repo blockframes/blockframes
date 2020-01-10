@@ -8,6 +8,8 @@ function createDistributionDealControls(deal: Partial<DistributionDeal>) {
     const entity = createDistributionDeal(deal)
     return {
         exclusive: new FormControl(entity.exclusive),
+        territory: new FormControl(entity.territory),
+        territoryExcluded: new FormControl(entity.territoryExcluded)
     }
 }
 

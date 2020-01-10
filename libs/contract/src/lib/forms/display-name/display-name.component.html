@@ -1,6 +1,6 @@
 <form *ngFor="let control of form.controls" [formGroup]="control">
     <mat-form-field appearance="outline">
         <mat-label>Buyer name</mat-label>
-        <input matInput type="text" formControlName="displayName" autocomplete="off">
+        <input matInput type="text" [formControl]="displayNameControl(control)" autocomplete="off">
     </mat-form-field>
 </form>

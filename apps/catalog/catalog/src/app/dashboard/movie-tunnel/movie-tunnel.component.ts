@@ -1,4 +1,6 @@
 import { Component, ChangeDetectionStrategy, Host, OnInit, OnDestroy } from '@angular/core';
+import { DistributionDealForm } from '@blockframes/movie/distribution-deals/form/distribution-deal.form';
+import { ContractForm } from '@blockframes/contract/forms/contract.form';
 import { ActivatedRoute } from '@angular/router';
 import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
 import { MovieService } from '@blockframes/movie/movie/+state';
@@ -32,7 +34,7 @@ const pages = [
   selector: 'catalog-layout',
   templateUrl: './movie-tunnel.component.html',
   styleUrls: ['./movie-tunnel.component.scss'],
-  providers: [MovieForm],
+  providers: [MovieForm, ContractForm, DistributionDealForm],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 

@@ -1,11 +1,10 @@
 import { FormEntity } from '@blockframes/utils';
 import { FormControl } from '@angular/forms';
-import { Party, createParty } from '@blockframes/utils/common-interfaces/identity';
+import { Party } from '@blockframes/utils/common-interfaces/identity';
 
-function createPartyControl(party: Partial<Party>) {
-    const entity = createParty(party);
+function createPartyControl(party: Partial<Party> = {}) {
     return {
-        displayName: new FormControl(entity.displayName)
+        displayName: new FormControl(party.displayName)
     }
 }
 
