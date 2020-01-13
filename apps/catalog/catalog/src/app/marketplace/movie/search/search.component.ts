@@ -534,7 +534,8 @@ export class MarketplaceSearchComponent implements OnInit {
       { duration: 2000 }
     );
     this.analytics.event('added_to_wishlist', {
-      movie: movie.main.title.original
+      movieId: movie.id,
+      movieTitle: movie.main.title.original
     });
   }
 
@@ -546,7 +547,8 @@ export class MarketplaceSearchComponent implements OnInit {
       { duration: 2000 }
     );
     this.analytics.event('removed_from_wishlist', {
-      movie: movie.main.title.original
+      movieId: movie.id,
+      movieTitle: movie.main.title.original
     });
   }
 

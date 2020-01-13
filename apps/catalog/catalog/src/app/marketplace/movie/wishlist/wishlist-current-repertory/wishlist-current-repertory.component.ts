@@ -69,8 +69,9 @@ export class WishlistCurrentRepertoryComponent implements OnInit {
       'close',
       { duration: 2000 }
     );
-    this.analytics.event('remove_movie_wishlist', {
-      movie: movie.main.title.original
+    this.analytics.event('removed_from_wishlist', {
+      movieId: movie.id,
+      movieTitle: movie.main.title.original
     });
   }
 }

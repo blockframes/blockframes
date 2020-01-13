@@ -47,7 +47,7 @@
         </ng-container>
         <!-- Promotional elements -->
         <ng-container *ngIf="movie.promotionalElements.promotionalElements.length">
-          <catalog-promotional-elements [promotionalElements]="movie.promotionalElements.promotionalElements">
+          <catalog-promotional-elements (promoReelOpened)="sendPromoReelAnalytic()" [promotionalElements]="movie.promotionalElements.promotionalElements">
           </catalog-promotional-elements>
         </ng-container>
         <!-- Reserved territories -->

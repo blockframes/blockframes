@@ -1,5 +1,5 @@
 import { PromotionalElement } from '@blockframes/movie/types';
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'catalog-promotional-elements',
@@ -7,6 +7,7 @@ import { Component, Input } from '@angular/core';
   styleUrls: ['./promotional-elements.component.scss']
 })
 export class CatalogPromotionalElementsComponent {
+  @Output() promoReelOpened = new EventEmitter();
   public elements: PromotionalElement[];
 
   @Input()

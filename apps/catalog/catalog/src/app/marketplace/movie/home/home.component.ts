@@ -83,8 +83,9 @@ export class MarketplaceHomeComponent implements OnInit {
     event.stopPropagation();
     this.cartService.updateWishlist(movie);
     this.snackbar.open(`${movie.main.title.international} has been added to your selection.`, 'close', { duration: 2000 });
-    this.analytics.event('movie_to_wishlist', {
-      movie_name: movie.main.title.original,
+    this.analytics.event('added_to_wishlist', {
+      movieId: movie.id,
+      movieTitle: movie.main.title.original,
     });
   }
 
@@ -92,8 +93,9 @@ export class MarketplaceHomeComponent implements OnInit {
     event.stopPropagation();
     this.cartService.updateWishlist(movie);
     this.snackbar.open(`${movie.main.title.international} has been removed from your selection.`, 'close', { duration: 2000 });
-    this.analytics.event('movie_removed_wishlist', {
-      movie_name: movie.main.title.original,
+    this.analytics.event('removed_from_wishlist', {
+      movieId: movie.id,
+      movieTitle: movie.main.title.original,
     });
   }
 
