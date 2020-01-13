@@ -194,14 +194,14 @@ adminApp.get(`${ADMIN_DATA_PATH}/quorum/create/:movieId`, async (req: express.Re
   const movieRef = db.collection('movies').doc(movieId);
   const movie = await movieRef.get();
 
-  if(!movie.exists) {
+  if (!movie.exists) {
     return res.send(`Error : movie Id ${movieId} not found in the database!`);
   }
 
   const movieData = movie.data();
 
   // if the movie has already an initialized smart-contract associated no need to go further
-  if(!!movieData!.quorumSmartContractAddress && !!movieData!.quorumSmartContractInitialized) {
+  if (!!movieData!.quorumSmartContractAddress && !!movieData!.quorumSmartContractInitialized) {
     return res.send(`Error : movie Id ${movieId} has already an initialized smart-contract (${movieData!.quorumSmartContractAddress})!`);
   }
 
@@ -222,7 +222,7 @@ adminApp.post(`${ADMIN_DATA_PATH}/quorum/create/:movieId`, async (req: express.R
   const movieRef = db.collection('movies').doc(movieId);
   const movie = await movieRef.get();
 
-  if(!movie.exists) {
+  if (!movie.exists) {
     return res.send(`Error : movie Id ${movieId} not found in the database!`);
   }
 
