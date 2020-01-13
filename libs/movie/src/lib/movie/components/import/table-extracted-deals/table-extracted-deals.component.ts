@@ -4,11 +4,12 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Component, Input, ViewChild, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { MovieQuery, cleanModel, createMovie } from '../../../+state';
+import { MovieQuery, createMovie } from '../../../+state';
 import { SelectionModel } from '@angular/cdk/collections';
 import { SpreadsheetImportError, DealsImportState } from '../view-extracted-elements/view-extracted-elements.component';
 import { ViewImportErrorsComponent } from '../view-import-errors/view-import-errors.component';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state/distribution-deal.service';
+import { cleanModel } from '@blockframes/utils/helpers';
 
 const hasImportErrors = (importState: DealsImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -137,7 +138,7 @@ export class TableExtractedDealsComponent implements OnInit {
    * Selects all rows if they are not all selected; otherwise clear selection.
    */
   masterToggle() {
-    this.isAllSelected() 
+    this.isAllSelected()
       ? this.selection.clear()
       : this.rows.data.forEach(row => this.selection.select(row));
   }
