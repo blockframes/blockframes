@@ -2,10 +2,33 @@
   $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);
   $warn: map-get($theme, warn);
+  $background: map-get($theme, background);
 
-  .primary-icon {
-    path {
-      fill: mat-color($primary, 500);
+  mat-icon {
+    &[bf-color="primary"] {
+      g {
+        fill: mat-color($primary, 500);
+      }
+    }
+    &[bf-color="accent"] {
+      g {
+        fill: mat-color($accent, 500);
+      }
+    }
+    &[bf-color="warn"] {
+      g {
+        fill: mat-color($warn, 500);
+      }
+    }
+    &[bf-color="beware"] {
+      g {
+        fill: mat-color($background, beware);
+      }
+    }
+    &[bf-color="disabled"] {
+      g {
+        fill: mat-color($background, disabled-button);
+      }
     }
   }
 }

@@ -1,4 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+  <title id="documentTitle">Document</title>
+  <desc id="documentDesc">An icon of a document</desc>
   <g fill="#606F87" fill-rule="evenodd" transform="translate(4 2)">
     <polygon points="2 2 9 2 9 7 14 7 14 18 2 18" opacity=".3"/>
     <path d="M2,0 C0.8954305,0 0,0.8954305 0,2 L0,18 C0,19.1045695 0.8954305,20 2,20 L14,20 C15.1045695,20 16,19.1045695 16,18 L16,6 L10,0 L2,0 L2,0 Z M2,2 L9,2 L9,7 L14,7 L14,18 L2,18 L2,2 L2,2 Z M4,10 L4,12 L12,12 L12,10 L4,10 L4,10 Z M4,14 L4,16 L9,16 L9,14 L4,14 Z"/>
