@@ -1,4 +1,6 @@
-import { FormControl } from '@angular/forms';
+import { getLabelByCode } from '@blockframes/movie/movie/static-model/staticModels';
+import { TerritoriesSlug, TERRITORIES_SLUG } from '@blockframes/movie/movie/static-model';
+import { FormControl, FormArray } from '@angular/forms';
 import { createDistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { Injectable } from '@angular/core';
@@ -8,8 +10,8 @@ function createDistributionDealControls(deal: Partial<DistributionDeal>) {
   const entity = createDistributionDeal(deal);
   return {
     exclusive: new FormControl(entity.exclusive),
-    territory: new FormControl(entity.territory),
-    territoryExcluded: new FormControl(entity.territoryExcluded)
+    territory: new FormArray(entity.territory.map(territory => new FormControl(territory))),
+    territoryExcluded: new FormArray(entity.territoryExcluded.map(territory => new FormControl(territory))),
   };
 }
 
@@ -21,9 +23,41 @@ export class DistributionDealForm extends FormEntity<DistributionDealControls> {
     super(createDistributionDealControls({}));
   }
 
-  addTerritory(territory: string) {
-    const state = this.get('territory').value;
-    this.get('territory').setValue([...state, territory]);
-    console.log(this.get('territory').value)
+  addIncludedTerritory(territory: TerritoriesSlug) {
+    // Check it's part of the list available
+    if (!TERRITORIES_SLUG.includes(territory)) {
+      throw new Error(
+        `Territory ${getLabelByCode('TERRITORIES', territory)} is not part of the list`
+      );
+    }
+    // Check it's not already in the form control
+    const territoriesValue = this.get('territory').value;
+    if (!territoriesValue.includes(territory)) {
+      this.get('territory').push(new FormControl(territory));
+    }
+    // Else do nothing as it's already in the list
+  }
+
+  addExcludedTerritory(territory: TerritoriesSlug) {
+    // Check it's part of the list available
+    if (!TERRITORIES_SLUG.includes(territory)) {
+      throw new Error(
+        `Territory ${getLabelByCode('TERRITORIES', territory)} is not part of the list`
+      );
+    }
+    // Check it's not already in the form control
+    const territoriesValue = this.get('territoryExcluded').value;
+    if (!territoriesValue.includes(territory)) {
+      this.get('territoryExcluded').push(new FormControl(territory));
+    }
+    // Else do nothing as it's already in the list
+  }
+
+  removeIncludedTerritory(index: number) {
+    this.get('territory').removeAt(index);
+  }
+
+  removeExcludedTerritory(index: number) {
+    this.get('territoryExcluded').removeAt(index);
   }
 }

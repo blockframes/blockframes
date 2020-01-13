@@ -9,7 +9,7 @@ import {
   AsyncValidatorFn
 } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { LANGUAGES_SLUG } from '@blockframes/movie/movie/static-model/types';
+import { LANGUAGES_SLUG, TERRITORIES_SLUG } from '@blockframes/movie/movie/static-model/types';
 import { network, baseEnsDomain } from '@env';
 import { getLabelByCode, Scope } from '@blockframes/movie/movie/static-model/staticModels';
 import { getProvider, orgNameToEnsDomain } from '@blockframes/ethers/helpers';
@@ -84,7 +84,7 @@ export function UniqueOrgName(service: OrganizationService): AsyncValidatorFn {
     uniqueOnFirestore = await service.orgNameExist(control.value).then(exist => !exist);
 
     return uniqueOnEthereum && uniqueOnFirestore ? null : { notUnique: true };
-  }
+  };
 }
 
 /**
@@ -123,10 +123,8 @@ export function numberRangeValidator(from: string, to: string): ValidatorFn {
  */
 export function validRange(): ValidatorFn {
   return (parent: FormGroup): ValidationErrors => {
-    return (parent.value.from > parent.value.to)
-      ? { invalidOrder: true }
-      : null;
-  }
+    return parent.value.from > parent.value.to ? { invalidOrder: true } : null;
+  };
 }
 
 /**
@@ -151,5 +149,18 @@ export function valueIsInModelValidator(scope: Scope): ValidatorFn {
 export class ControlErrorStateMatcher implements ErrorStateMatcher {
   isErrorState(control: FormControl | null): boolean {
     return !!(control && control.invalid && control.touched);
+  }
+}
+
+/**
+ * Checks if the territory exists
+ */
+export function territoryValidator(control: AbstractControl): { [key: string]: boolean } | null {
+  if (!!control.value) {
+    return !TERRITORIES_SLUG.includes(control.value.trim().toLowerCase())
+      ? { territoryNotSupported: true }
+      : null;
+  } else {
+    return null;
   }
 }

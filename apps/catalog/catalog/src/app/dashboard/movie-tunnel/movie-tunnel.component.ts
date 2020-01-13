@@ -24,7 +24,7 @@ interface PageData {
 // This table has to be synced with the routes, it allows the steps to be updated depending of the routes
 // See movie-tunnel-routing.module.ts to synchronize the table
 const pages = [
-  ['main', 'synopsis', 'credits', 'budget', 'technical-info', 'keywords'],
+  ['main', 'synopsis', 'credits', 'budget', 'technical-info', 'keywords', 'previous-deals'],
   ['rights', 'deals'],
   ['images', 'files&links'],
   ['chain', 'evaluation']
