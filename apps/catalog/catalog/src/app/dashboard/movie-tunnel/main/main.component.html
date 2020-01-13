@@ -4,13 +4,21 @@
   <section tunnel-form>
     <mat-card>
       <mat-card-header>
+        <mat-card-title>Content Type</mat-card-title>
+      </mat-card-header>
+      <!-- Content type component -->
+      <mat-card-content>
+        <!-- <movie-content-type [formGroup]="main"></movie-content-type> -->
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+      <mat-card-header>
         <mat-card-title>Theatrical Release</mat-card-title>
       </mat-card-header>
-      <!-- keyword component -->
+      <!-- Theatrical release component -->
       <mat-card-content>
-        <form [formGroup]="salesInfo">
-          <movie-theatrical-release [formGroup]="theatricalData"></movie-theatrical-release>
-        </form>
+        <movie-theatrical-release [form]="salesInfo"></movie-theatrical-release>
       </mat-card-content>
     </mat-card>
   </section>
