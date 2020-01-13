@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'catalog-reserved-territories',
@@ -11,7 +11,8 @@ import { Component, Input } from '@angular/core';
   `,
   styles: [`.text {
     margin: 2px
-  }`]
+  }`],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CatalogReservedTerritoriesComponent {
   @Input() reservedTerritories: string[];
