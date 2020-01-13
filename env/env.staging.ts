@@ -93,3 +93,25 @@ export const yandexId = 0;
 // Intercom
 // ========
 export const intercomId = 'srwfltp4';
+
+// Quorum
+// ========
+export const quorum = {
+  privateForList: [
+    'PJg4NoFMk73mGCbkJ7/griaiKfkbS+edhfjO5PzztQs=',
+    'fnF4IPKvDcmM9bgmEKHoYjNyXG6cXqJjv806RK1F5y8=',
+    'Tj879+7P6IgX2UJTOLtWx5IjrPlABb7HO//kNNbnt28='
+  ],
+  archipelNode: {
+    url: 'https://e0rf4hbql8-e0cy67u40h-rpc.de0-aws.kaleido.io',
+    user: 'e0xwcvgknw',
+  },
+  pulsarlNode: {
+    url: 'https://e0rf4hbql8-e0zhtusyfh-rpc.de0-aws.kaleido.io',
+    user: 'e0xwcvgknw',
+  },
+  bankNode: {
+    url: 'https://e0rf4hbql8-e0jbt507aa-rpc.de0-aws.kaleido.io',
+    user: 'e0xwcvgknw',
+  },
+}

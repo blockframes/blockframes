@@ -4,6 +4,9 @@ export * from './lib/types';
 export * from './lib/helpers';
 export * from './lib/create-tx';
 
+// Quorum
+export * from './lib/quorum/quorum';
+
 // Wallet
 export * from './lib/wallet/wallet.module';
 
