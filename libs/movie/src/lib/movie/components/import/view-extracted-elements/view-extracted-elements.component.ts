@@ -1293,7 +1293,7 @@ export class ViewExtractedElementsComponent {
     //////////////////
 
     //  CONTRACT VALIDATION
-    if (!this.contractService.validateContract(contract.doc)) {
+    if (!this.contractService.isContractValid(contract.doc)) {
       errors.push({
         type: 'error',
         field: 'contractId',
@@ -1514,7 +1514,7 @@ export class ViewExtractedElementsComponent {
     //////////////////
 
     //  CONTRACT VALIDATION
-    if (!this.contractService.validateContract(contract.doc)) {
+    if (!this.contractService.isContractValid(contract.doc)) {
       errors.push({
         type: 'error',
         field: 'contractId',

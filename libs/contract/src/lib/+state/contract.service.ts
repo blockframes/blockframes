@@ -9,6 +9,7 @@ import { tap, switchMap } from 'rxjs/operators';
 import { ContractVersionService } from '../version/+state/contract-version.service';
 import { initContractWithVersion, ContractWithLastVersion } from '../version/+state/contract-version.model';
 import { LegalRolesSlug } from '@blockframes/movie/moviestatic-model/types';
+import { cleanModel } from '@blockframes/utils';
 
 const contractsListQuery = (orgId: string): Query<Contract[]> => ({
   path: 'contracts',
@@ -84,7 +85,7 @@ export class ContractService extends CollectionService<ContractState> {
    * Currently (dec 2019), only validate that there is a licensee and a licensor
    * @param contract
    */
-  public validateContract(contract: Contract): boolean {
+  public isContractValid(contract: Contract): boolean {
 
     // First, contract must have at least a licensee and a licensor
 
@@ -100,25 +101,27 @@ export class ContractService extends CollectionService<ContractState> {
     }
 
     for (const licensee of licensees) {
-      if (licensee.party.orgId === undefined) {
-        delete licensee.party.orgId
-      }
+      // Cleaning model to remove undefined properties.
+      cleanModel(licensee);
+
+      // If showName is not set, the contract is invalid, function returns false.
       if (typeof licensee.party.showName !== 'boolean') {
         return false;
       }
     }
 
     for (const licensor of licensors) {
-      if (licensor.party.orgId === undefined) {
-        delete licensor.party.orgId
-      }
+      // Cleaning model to remove undefined properties.
+      cleanModel(licensor);
+
+      // If showName is not set, the contract is invalid, function returns false.
       if (typeof licensor.party.showName !== 'boolean') {
         return false;
       }
     }
 
     // Other contract validation steps goes here
-    // TODO: Add more validations steps to the validateContract function => ISSUE#1542
+    // TODO: Add more validations steps to the isContractValid function => ISSUE#1542
 
     return true;
   }
