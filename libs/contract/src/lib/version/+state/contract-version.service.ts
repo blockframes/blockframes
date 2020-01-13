@@ -3,23 +3,14 @@ import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import orderBy from 'lodash/orderBy';
 import { firestore } from 'firebase/app';
 import { ContractVersionState, ContractVersionStore } from './contract-version.store';
-import {
-  ContractVersion,
-  initContractWithVersion,
-  ContractWithLastVersion
-} from './contract-version.model';
+import { ContractVersion } from './contract-version.model';
 import { ContractQuery } from '../../+state/contract.query';
 import { Contract } from '../../+state/contract.model';
-import { ContractService } from '../../+state/contract.service';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'contracts/:contractId/versions' })
 export class ContractVersionService extends CollectionService<ContractVersionState> {
-  constructor(
-    private contractQuery: ContractQuery,
-    private contractService: ContractService,
-    store: ContractVersionStore
-  ) {
+  constructor(private contractQuery: ContractQuery, store: ContractVersionStore) {
     super(store);
   }
 
@@ -45,7 +36,10 @@ export class ContractVersionService extends CollectionService<ContractVersionSta
    * @param contract
    * @param version
    */
-  public async addContractAndVersion(contract: Contract, version: ContractVersion): Promise<string> {
+  public async addContractAndVersion(
+    contract: Contract,
+    version: ContractVersion
+  ): Promise<string> {
     const contractId = (await this.add(contract)) as string;
     await this.addContractVersion(version);
     return contractId;
@@ -65,21 +59,6 @@ export class ContractVersionService extends CollectionService<ContractVersionSta
       throw new Error(
         `Every contract should have at least one version. None found for ${contractId}`
       );
-    }
-  }
-
-  /**
-   * @dev Fetch contract and last version
-   */
-  public async getContractWithLastVersion(contractId: string): Promise<ContractWithLastVersion> {
-    try {
-      const contractWithVersion = initContractWithVersion();
-      contractWithVersion.doc = await this.contractService.getContract(contractId);
-      contractWithVersion.last = await this.getLastVersionContract(contractId);
-
-      return contractWithVersion;
-    } catch (error) {
-      console.log(`Contract ${contractId} not found`);
     }
   }
 

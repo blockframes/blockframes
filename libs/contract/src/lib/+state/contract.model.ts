@@ -47,18 +47,6 @@ export function createContractPartyDetail(
   };
 }
 
-/**
- * Fetch parties related to a contract given a specific legal role
- * @param contract
- * @param legalRole
- */
-export function getContractParties(
-  contract: Contract,
-  legalRole: LegalRolesSlug
-): ContractPartyDetail[] {
-  return contract.parties.filter(p => p.party.role === getCodeIfExists('LEGAL_ROLES', legalRole));
-}
-
 export function buildChainOfTitle() {
   // ie:  calculate contract prices and fees for each parents
   // @todo #1397 implement this
