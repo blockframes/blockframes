@@ -19,9 +19,11 @@ export class MovieFormSalesInfoComponent implements OnInit {
   public countriesFilterCtrl = new FormControl();
   public ratingSystemFilterCtrl = new FormControl();
   public certificationsFilterCtrl = new FormControl();
+  public mediasFilterCtrl = new FormControl();
   public countries$: Observable<SlugAndLabel[]>;
   public ratingSystems$: Observable<SlugAndLabel[]>;
   public certifications$: Observable<SlugAndLabel[]>;
+  public medias$: Observable<SlugAndLabel[]>;
 
   constructor(public controlContainer: ControlContainer) { }
 
@@ -29,6 +31,8 @@ export class MovieFormSalesInfoComponent implements OnInit {
     this.staticModels = staticModels;
     this.countries$ = this.filterSelectSearch(this.countriesFilterCtrl, this.staticModels['TERRITORIES']);
     this.ratingSystems$ = this.filterSelectSearch(this.ratingSystemFilterCtrl, this.staticModels['RATING']);
+    this.medias$ = this.filterSelectSearch(this.mediasFilterCtrl, this.staticModels['MEDIAS']);
+
     // Init search bar
     this.certifications$ = this.certificationsFilterCtrl.valueChanges.pipe(
       startWith(''),
@@ -45,6 +49,11 @@ export class MovieFormSalesInfoComponent implements OnInit {
   public getRatingSystem(i) {
     const control = this.salesInfo.getRating(i);
     return control.get('system').value ? control.get('system').value : 'unnamed system';
+  }
+
+  public getOriginalRelease(i) {
+    const control = this.salesInfo.getOriginalRelease(i);
+    return control.get('country').value ? control.get('country').value : 'unnamed release';
   }
 
   private filterSelectSearch(control: FormControl, model: SlugAndLabel[]) {

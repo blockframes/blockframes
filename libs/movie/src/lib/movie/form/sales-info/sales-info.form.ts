@@ -1,7 +1,7 @@
-import { MovieSalesInfo, createMovieSalesInfo, createPrize, createMovieRating } from '../../+state';
+import { MovieSalesInfo, createMovieSalesInfo, createPrize, createMovieRating, createMovieOriginalRelease } from '../../+state';
 import { FormEntity, FormList } from '@blockframes/utils';
 import { FormControl } from '@angular/forms';
-import { MovieRating } from '@blockframes/movie/movie+state/movie.firestore';
+import { MovieRating, MovieOriginalRelease } from '@blockframes/movie/movie+state/movie.firestore';
 
 function createInternationalPremiereControl(entity?: Partial<MovieSalesInfo['internationalPremiere']>) {;
   const { name, year } = createPrize(entity)
@@ -37,6 +37,23 @@ export class MovieRatingForm extends FormEntity<RatingFormControl> {
   }
 }
 
+function createOriginalReleaseFormControl(entity?: Partial<MovieOriginalRelease>) {
+  const { country, date, media } = createMovieOriginalRelease(entity);
+  return { 
+    country: new FormControl(country),
+    date: new FormControl(date),
+    media: new FormControl(media),
+  }
+}
+
+type OriginalReleaseFormControl = ReturnType<typeof createOriginalReleaseFormControl>;
+
+export class OriginalReleaseForm extends FormEntity<OriginalReleaseFormControl> {
+  constructor(originalRelease?: MovieOriginalRelease) {
+    super(createOriginalReleaseFormControl(originalRelease));
+  }
+}
+
 function createMovieSalesInfoControls(salesInfo: Partial<MovieSalesInfo> = {}){
   const entity = createMovieSalesInfo(salesInfo);
   return {
@@ -46,6 +63,7 @@ function createMovieSalesInfoControls(salesInfo: Partial<MovieSalesInfo> = {}){
     rating: FormList.factory(entity.rating, el => new MovieRatingForm(el)),
     certifications: new FormControl(entity.certifications),
     internationalPremiere: new InternationalPremiereForm(entity.internationalPremiere),
+    originalRelease: FormList.factory(entity.originalRelease, el => new OriginalReleaseForm(el)),
     broadcasterCoproducers: FormList.factory(entity.broadcasterCoproducers),
     format: new FormControl(entity.format),
     formatQuality: new FormControl(entity.formatQuality),
@@ -76,6 +94,10 @@ export class MovieSalesInfoForm extends FormEntity<MovieSalesInfoControl>{
     return this.get('rating');
   }
 
+  get orignialRelease() {
+    return this.get('originalRelease');
+  }
+
   public getRating(i: number) {
     return this.rating.controls[i];
   }
@@ -87,6 +109,19 @@ export class MovieSalesInfoForm extends FormEntity<MovieSalesInfoControl>{
 
   public removeRating(i: number): void {
     this.rating.removeAt(i);
+  }
+
+  public getOriginalRelease(i: number) {
+    return this.orignialRelease.controls[i];
+  }
+
+  public addOriginalRelease(): void {
+    const orignialRelease = new OriginalReleaseForm();
+    this.orignialRelease.push(orignialRelease);
+  }
+
+  public removeOriginalRelease(i: number): void {
+    this.orignialRelease.removeAt(i);
   }
 
 }

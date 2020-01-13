@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation, Input } from '@angular/core';
-import { MovieQuery, MovieService, createMovieRating } from '../../+state';
+import { MovieQuery, MovieService, createMovieRating, createMovieOriginalRelease } from '../../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieForm } from './../movie.form';
 import { MatDialog } from '@angular/material';
@@ -106,9 +106,6 @@ export class MovieFormRootComponent {
         });
         this.form.main.get('languages').setValue(languages);
 
-        // ORIGIN COUNTRY RELEASE DATE (Release date in Origin Country)
-        this.form.get('salesInfo').get('originCountryReleaseDate').setValue(movie.released); // @todo #1508 
-
         // ORIGIN COUNTRY
         const countries = [];
         movie.country.split(',').forEach((c: string) => {
@@ -118,6 +115,14 @@ export class MovieFormRootComponent {
           if (country) { countries.push(country) }
           this.form.main.get('originCountries').setValue(countries);
         });
+
+        // ORIGINAL RELEASE 
+        // We put the same date for various origin countries
+        const releases = [];
+        countries.forEach(country => {
+          releases.push(createMovieOriginalRelease({country, date: movie.released}));
+        });
+        this.form.get('salesInfo').get('originalRelease').setValue(releases);
 
         // GENRES
         const genres = [];

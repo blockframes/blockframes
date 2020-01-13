@@ -414,9 +414,11 @@ export class ViewExtractedElementsComponent {
             date = new Date(`${originCountryReleaseDate.y}-${originCountryReleaseDate.m}-${originCountryReleaseDate.d}`);
           }
 
-          movie.main.originCountries.forEach( c => {
-            movie.salesInfo.originalRelease.push(createMovieOriginalRelease({date}));
+          movie.main.originCountries.forEach( country => {
+            movie.salesInfo.originalRelease.push(createMovieOriginalRelease({date, country}));
           });
+
+          // @todo #1508 excel should be updated to match model (country + media of originCountryRelease date)
         }
 
         // GENRES (Genres)

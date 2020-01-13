@@ -134,7 +134,6 @@ export function createMovieOriginalRelease(params: Partial<MovieOriginalRelease>
   return {
     date: null,
     country: '',
-    media: '',
     ...params
   };
 }
@@ -166,6 +165,8 @@ export function createMovieSalesInfo(params: Partial<MovieSalesInfo> = {}): Movi
     format: '',
     formatQuality: '',
     soundFormat: '',
+    physicalHVRelease: null,
+    releaseYear: null,
     ...params
   };
 }
