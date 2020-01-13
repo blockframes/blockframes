@@ -76,14 +76,16 @@ export class DistributionDealTerritoryComponent implements OnInit {
     );
   }
   // TOD (MF) check if territory is already inside
+  // and update the form control
   public includedAdd(event: MatChipInputEvent) {
     if (!this.includedAuto.isOpen) {
       const input = event.input;
       const value = event.value;
 
       // Add the territory
-      if ((value || '').trim()) {
+      if ((value || '').trim() && !this.includedTerritories.includes(value.trim())) {
         this.includedTerritories.push(value.trim());
+        this.form.addTerritory(value.trim());
       }
 
       // Reset the input value
@@ -101,7 +103,7 @@ export class DistributionDealTerritoryComponent implements OnInit {
       const value = event.value;
 
       // Add the territory
-      if ((value || '').trim()) {
+      if ((value || '').trim() && this.excludedTerritories.includes(value)) {
         this.excludedTerritories.push(value.trim());
       }
 
@@ -131,6 +133,7 @@ export class DistributionDealTerritoryComponent implements OnInit {
   }
 
   public includedSelected(event: MatAutocompleteSelectedEvent) {
+    console.log(this.includedTerritories.includes(event.option.viewValue.trim()))
     this.includedTerritories.push(event.option.viewValue);
     this.includedTerritoryInput.nativeElement.value = '';
     this.includedControl.setValue(null);
