@@ -8,11 +8,11 @@ import { namehash } from '@ethersproject/hash';
 import { keccak256 } from '@ethersproject/keccak256';
 import { toUtf8Bytes } from '@ethersproject/strings';
 import { getAddress } from '@ethersproject/address';
-import { abi as CREATE2_FACTORY_ABI } from '@blockframes/contracts/Factory2.json';
-import { bytecode as ERC1077_BYTECODE, abi as ERC1077_ABI } from '@blockframes/contracts/ERC1077.json';
-import { abi as ENS_REGISTRY_ABI } from '@blockframes/contracts/ENSRegistry.json';
-import { abi as ENS_RESOLVER_ABI } from '@blockframes/contracts/PublicResolver.json';
-import {abi as ORG_CONTRACT_ABI, bytecode as ORG_CONTRACT_BYTECODE } from '@blockframes/contracts/Organization.json';
+import { abi as CREATE2_FACTORY_ABI } from '@blockframes/smart-contracts/Factory2.json';
+import { bytecode as ERC1077_BYTECODE, abi as ERC1077_ABI } from '@blockframes/smart-contracts/ERC1077.json';
+import { abi as ENS_REGISTRY_ABI } from '@blockframes/smart-contracts/ENSRegistry.json';
+import { abi as ENS_RESOLVER_ABI } from '@blockframes/smart-contracts/PublicResolver.json';
+import {abi as ORG_CONTRACT_ABI, bytecode as ORG_CONTRACT_BYTECODE } from '@blockframes/smart-contracts/Organization.json';
 
 type TxResponse = TransactionResponse;
 type TxReceipt = TransactionReceipt;
