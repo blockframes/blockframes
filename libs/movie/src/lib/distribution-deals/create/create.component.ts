@@ -285,7 +285,7 @@ export class DistributionDealCreateComponent implements OnInit, OnDestroy {
           ///////////////
 
           // Do we have others distribution deals overrlapping current daterange ?
-          const deals = await this.distributionDealService.getDistributionDeals(this.movie.id);
+          const deals = await this.distributionDealService.getValue();
           const dealsInDateRange = getDistributionDealsInDateRange(value.duration, deals);
           if (dealsInDateRange.length === 0) {
             // We have no intersection with other deals, so we are OK !
