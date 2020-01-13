@@ -122,6 +122,8 @@ $bf-light-background: (
   unselected-chip: map_get($mat-grey, 200),
   disabled-list-option: #EAEFF4,
   tooltip: rgba(mat-color($mat-grey, 700), 0.9),
+  // TODO remove this custom variable when last palette will be imported
+  beware: #F6A92C,
 );
 
 ////////////////

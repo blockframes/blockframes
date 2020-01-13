@@ -17,6 +17,7 @@
 @import './components/bf-widget.scss';
 @import './components/mat-sidenav.scss';
 @import './components/bf-font-color.scss';
+@import './components/bf-icon.scss';
 
 @include mat-core($bf-typography);
 
@@ -33,6 +34,7 @@
   @include bf-widget-theme($theme);
   @include mat-bf-sidenav-theme($theme);
   @include bf-color-font($theme);
+  @include bf-icon-theme($theme);
 }
 
 @mixin bf-material-typography($typography) {
