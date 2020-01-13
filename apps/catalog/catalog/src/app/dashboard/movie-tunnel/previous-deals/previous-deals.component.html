@@ -2,9 +2,11 @@
     <h4 title>LICENSED RIGHTS</h4>
     <h1 subtitle>Previous deals</h1>
     <section tunnel-form>
+                <!-- TODO(MF) render the number of deals -->
+      <h2>Deal #1</h2>
       <mat-card>
         <mat-card-header>
-          <mat-card-title>Deal</mat-card-title>
+          <mat-card-title></mat-card-title>
         </mat-card-header>
         <mat-card-content>
           <div fxLayout="row" fxLayoutAlign="space-between start">
@@ -14,6 +16,13 @@
           <contract-form-display-name [form]="contract"></contract-form-display-name>
         </mat-card-content>
       </mat-card>
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Territories</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <distribution-form-territory [form]="distributionDeal"></distribution-form-territory>
+        </mat-card-content>
+      </mat-card>
     </section>
   </tunnel-page>
-  

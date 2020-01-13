@@ -27,3 +27,6 @@ export * from './lib/movie/form/version-info/version-info.module';
 
 // Distribution Deal Forms
 export * from './lib/distribution-deals/form/distribution-deal.form';
+
+// Distribution form modules
+export * from './lib/distribution-deals/form/territory/territory.module';
