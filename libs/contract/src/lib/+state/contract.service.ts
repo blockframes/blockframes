@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 import { ContractStore, ContractState } from './contract.store';
 import { getCodeIfExists } from '@blockframes/movie/moviestatic-model/staticModels';
 import { CollectionConfig, CollectionService, awaitSyncQuery, Query } from 'akita-ng-fire';
-import { Contract, ContractVersion, ContractWithLastVersion, initContractWithVersion, ContractPartyDetail } from './contract.model';
-import { AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
+import { Contract, ContractPartyDetail } from './contract.model';
 import orderBy from 'lodash/orderBy';
-import { firestore } from 'firebase/app';
-import { LegalRolesSlug } from '@blockframes/movie/moviestatic-model/types';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { tap, switchMap } from 'rxjs/operators';
+import { ContractVersionService } from '../version/+state/contract-version.service';
+import { initContractWithVersion, ContractWithLastVersion } from '../version/+state/contract-version.model';
+import { LegalRolesSlug } from '@blockframes/movie/moviestatic-model/types';
 
 const contractsListQuery = (orgId: string): Query<Contract[]> => ({
   path: 'contracts',
@@ -19,7 +19,7 @@ const contractsListQuery = (orgId: string): Query<Contract[]> => ({
 @CollectionConfig({ path: 'contracts' })
 export class ContractService extends CollectionService<ContractState> {
 
-  constructor(private organizationQuery: OrganizationQuery, store: ContractStore) {
+  constructor(private organizationQuery: OrganizationQuery, private contractVersionService: ContractVersionService, store: ContractStore) {
     super(store);
   }
 
@@ -33,24 +33,12 @@ export class ContractService extends CollectionService<ContractState> {
   }
 
   /**
-   *
-   * @param contractId
-   */
-  // @TODO #1389 Use native akita-ng-fire functions
-  public async getContract(contractId: string): Promise<Contract> {
-    const snapshot = await this.db.collection('contracts').doc(contractId).get().toPromise();
-    const doc = snapshot.data();
-    return !!doc ? this.formatContract(doc) : undefined;
-  }
-
-  /**
    * @dev Fetch contract and last version
    */
-  // @TODO #1389 Use native akita-ng-fire functions
   public async getContractWithLastVersion(contractId: string): Promise<ContractWithLastVersion> {
     try {
       const contractWithVersion = initContractWithVersion();
-      contractWithVersion.doc = await this.getContract(contractId);
+      contractWithVersion.doc = this.formatContract(await this.getValue(contractId));
       contractWithVersion.last = await this.contractVersionService.getLastVersionContract(contractId);
 
       return contractWithVersion;
@@ -92,41 +80,50 @@ export class ContractService extends CollectionService<ContractState> {
   }
 
   /**
- * Various validation steps for validating a contract
- * Currently (dec 2019), only validate that there is a licensee and a licensor
- * @param contract
- */
- public validateContract(contract: Contract): boolean {
+   * Various validation steps for validating a contract
+   * Currently (dec 2019), only validate that there is a licensee and a licensor
+   * @param contract
+   */
+  public validateContract(contract: Contract): boolean {
 
-  // First, contract must have at least a licensee and a licensor
+    // First, contract must have at least a licensee and a licensor
 
-  if (contract.parties.length < 2) { return false; }
-  const licensees = contract.parties.filter(p => p.party.role === getCodeIfExists('LEGAL_ROLES', 'licensee'))
-  const licensors = contract.parties.filter(p => p.party.role === getCodeIfExists('LEGAL_ROLES', 'licensor'))
+    if (contract.parties.length < 2) { return false; }
+    const licensees = this.getContractParties(contract, 'licensee');
+    const licensors = this.getContractParties(contract, 'licensor');
 
-  if (!licensees.length || !licensors.length) { return false; }
+    if (!licensees.length || !licensors.length) { return false; }
 
-  for (const licensee of licensees) {
-    if (licensee.party.orgId === undefined) {
-      delete licensee.party.orgId
+    for (const licensee of licensees) {
+      if (licensee.party.orgId === undefined) {
+        delete licensee.party.orgId
+      }
+      if (typeof licensee.party.showName !== 'boolean') {
+        return false;
+      }
     }
-    if (typeof licensee.party.showName !== 'boolean') {
-      return false;
+
+    for (const licensor of licensors) {
+      if (licensor.party.orgId === undefined) {
+        delete licensor.party.orgId
+      }
+      if (typeof licensor.party.showName !== 'boolean') {
+        return false;
+      }
     }
+
+    // Other contract validation steps goes here
+    // TODO: Add more validations step to the validateContract function => ISSUE#1542
+
+    return true;
   }
 
-  for (const licensor of licensors) {
-    if (licensor.party.orgId === undefined) {
-      delete licensor.party.orgId
-    }
-    if (typeof licensor.party.showName !== 'boolean') {
-      return false;
-    }
+  /**
+   * Fetch parties related to a contract given a specific legal role
+   * @param contract
+   * @param legalRole
+   */
+  public getContractParties(contract: Contract, legalRole: LegalRolesSlug): ContractPartyDetail[] {
+    return contract.parties.filter(p => p.party.role === getCodeIfExists('LEGAL_ROLES', legalRole));
   }
-
-  // Other contract validation steps goes here
-  // ...
-
-  return true;
-}
 }
