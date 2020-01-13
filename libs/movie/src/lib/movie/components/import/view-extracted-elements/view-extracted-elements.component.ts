@@ -1249,7 +1249,7 @@ export class ViewExtractedElementsComponent {
           }
 
           // Checks if sale already exists
-          if (await this.distributionDealService.existingDistributionDeal(movie.id, distributionDeal)) {
+          if (await this.distributionDealService.getValue(distributionDeal.id)) {
             importErrors.errors.push({
               type: 'error',
               field: 'distributionDeal',

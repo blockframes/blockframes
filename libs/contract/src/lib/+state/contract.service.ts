@@ -53,7 +53,7 @@ export class ContractService extends CollectionService<ContractState> {
    * @param distributionDealId
    */
   public async getContractWithLastVersionFromDeal(movieId: string, distributionDealId: string): Promise<ContractWithLastVersion> {
-    const contracts = await this.getValue(ref => ref.where('titleIds', 'array-contains', movieId))
+    const contracts = await this.getValue(ref => ref.where('titleIds', 'array-contains', movieId));
 
     if (contracts.length) {
       const contractWithVersion = initContractWithVersion();
@@ -88,11 +88,16 @@ export class ContractService extends CollectionService<ContractState> {
 
     // First, contract must have at least a licensee and a licensor
 
-    if (contract.parties.length < 2) { return false; }
+    if (contract.parties.length < 2) {
+      return false;
+    }
+
     const licensees = this.getContractParties(contract, 'licensee');
     const licensors = this.getContractParties(contract, 'licensor');
 
-    if (!licensees.length || !licensors.length) { return false; }
+    if (!licensees.length || !licensors.length) {
+      return false;
+    }
 
     for (const licensee of licensees) {
       if (licensee.party.orgId === undefined) {
@@ -113,7 +118,7 @@ export class ContractService extends CollectionService<ContractState> {
     }
 
     // Other contract validation steps goes here
-    // TODO: Add more validations step to the validateContract function => ISSUE#1542
+    // TODO: Add more validations steps to the validateContract function => ISSUE#1542
 
     return true;
   }

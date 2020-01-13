@@ -1,5 +1,4 @@
 import { createPrice } from '@blockframes/utils/common-interfaces/price';
-import { getCodeIfExists } from '@blockframes/movie/movie/static-model/staticModels';
 import {
   ContractDocumentWithDates,
   ContractStatus,
@@ -8,8 +7,6 @@ import {
   ContractPartyDetailDocumentWithDatesDocument
 } from './contract.firestore';
 import { createParty } from '@blockframes/utils/common-interfaces/identity';
-import { LegalRolesSlug } from '@blockframes/movie/moviestatic-model/types';
-
 export type Contract = ContractDocumentWithDates;
 
 export type ContractPartyDetail = ContractPartyDetailDocumentWithDates;
@@ -26,9 +23,7 @@ export function createContract(params: Partial<Contract> = {}): Contract {
   };
 }
 
-export function createContractTitleDetail(
-  params: Partial<ContractTitleDetail> = {}
-): ContractTitleDetail {
+export function createContractTitleDetail(params: Partial<ContractTitleDetail> = {}): ContractTitleDetail {
   return {
     titleId: '',
     distributionDealIds: [],
@@ -37,9 +32,7 @@ export function createContractTitleDetail(
   };
 }
 
-export function createContractPartyDetail(
-  params: Partial<ContractPartyDetail> = {}
-): ContractPartyDetail {
+export function createContractPartyDetail(params: Partial<ContractPartyDetail> = {}): ContractPartyDetail {
   return {
     status: ContractStatus.unknown,
     ...params,
