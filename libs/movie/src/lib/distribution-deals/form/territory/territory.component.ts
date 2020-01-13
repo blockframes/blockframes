@@ -7,7 +7,7 @@ import { startWith, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
 // Angular
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { ENTER } from '@angular/cdk/keycodes';
 import { FormControl } from '@angular/forms';
 import {
   Component,
@@ -21,6 +21,7 @@ import {
 // Others
 import { SlugAndLabel, default as staticModels } from './../../../movie/static-model/staticModels';
 import { DistributionDealForm } from '../distribution-deal.form';
+import { territoryValidator } from '@blockframes/utils/form/validators/validators';
 
 @Component({
   selector: '[form] distribution-form-territory',
@@ -37,12 +38,12 @@ export class DistributionDealTerritoryComponent implements OnInit {
 
   public staticTerritories = staticModels['TERRITORIES'];
 
-  public includedControl: FormControl = new FormControl('');
+  public includedControl: FormControl = new FormControl('', territoryValidator);
 
-  public excludedControl: FormControl = new FormControl('');
+  public excludedControl: FormControl = new FormControl('', territoryValidator);
 
   // Lets the user use the command to add more territories
-  public separatorKeysCodes: number[] = [ENTER, COMMA];
+  public separatorKeysCodes: number[] = [ENTER];
 
   public filteredIncludedTerritories$: Observable<string[] | SlugAndLabel[]>;
 
@@ -74,18 +75,20 @@ export class DistributionDealTerritoryComponent implements OnInit {
         territory ? this.territoryFilter(territory) : this.staticTerritories.slice()
       )
     );
+    this.filteredIncludedTerritories$.subscribe(console.log)
   }
-  // TOD (MF) check if territory is already inside
-  // and update the form control
+
   public includedAdd(event: MatChipInputEvent) {
     if (!this.includedAuto.isOpen) {
       const input = event.input;
-      const value = event.value;
+      const value = event.value.trim();
 
       // Add the territory
-      if ((value || '').trim() && !this.includedTerritories.includes(value.trim())) {
-        this.includedTerritories.push(value.trim());
-        this.form.addTerritory(value.trim());
+      if ((value || '') && !this.includedTerritories.includes(value)) {
+        this.includedTerritories.push(value);
+        this.form.addIncludedTerritory(value);
+      } else {
+        this.includedControl.setErrors({territoryValidator: true});
       }
 
       // Reset the input value
@@ -100,11 +103,14 @@ export class DistributionDealTerritoryComponent implements OnInit {
   public excludedAdd(event: MatChipInputEvent) {
     if (!this.excludedAuto.isOpen) {
       const input = event.input;
-      const value = event.value;
+      const value = event.value.trim();
 
       // Add the territory
-      if ((value || '').trim() && this.excludedTerritories.includes(value)) {
-        this.excludedTerritories.push(value.trim());
+      if ((value || '') && !this.excludedTerritories.includes(value)) {
+        this.excludedTerritories.push(value);
+        this.form.addExcludedTerritory(value);
+      } else {
+        this.excludedControl.setErrors({territoryValidator: true});
       }
 
       // Reset the input value
@@ -116,37 +122,41 @@ export class DistributionDealTerritoryComponent implements OnInit {
     }
   }
 
-  public removeIncluded(fruit: string) {
-    const index = this.includedTerritories.indexOf(fruit);
+  public removeIncluded(territory: string) {
+    const index = this.includedTerritories.indexOf(territory);
 
     if (index >= 0) {
       this.includedTerritories.splice(index, 1);
+      this.form.removeIncludedTerritory(index);
     }
   }
 
-  public removeExcluded(fruit: string) {
-    const index = this.excludedTerritories.indexOf(fruit);
+  public removeExcluded(territory: string) {
+    const index = this.excludedTerritories.indexOf(territory);
 
     if (index >= 0) {
       this.excludedTerritories.splice(index, 1);
+      this.form.removeExcludedTerritory(index);
     }
   }
 
   public includedSelected(event: MatAutocompleteSelectedEvent) {
-    console.log(this.includedTerritories.includes(event.option.viewValue.trim()))
+    this.form.addIncludedTerritory(event.option.value);
     this.includedTerritories.push(event.option.viewValue);
     this.includedTerritoryInput.nativeElement.value = '';
-    this.includedControl.setValue(null);
+    this.includedControl.reset();
   }
 
   public excludedSelected(event: MatAutocompleteSelectedEvent) {
+    console.log(event.option.viewValue)
+    this.form.addExcludedTerritory(event.option.value);
     this.excludedTerritories.push(event.option.viewValue);
     this.excludedTerritoryInput.nativeElement.value = '';
-    this.excludedControl.setValue(null);
+    this.excludedControl.reset();
   }
 
   private territoryFilter(value: string): SlugAndLabel[] {
     const filterValue = value.toLowerCase();
-    return this.staticTerritories.filter(territory => territory.slug.includes(filterValue));
+    return this.staticTerritories.filter(territory => territory.slug.trim().includes(filterValue));
   }
 }

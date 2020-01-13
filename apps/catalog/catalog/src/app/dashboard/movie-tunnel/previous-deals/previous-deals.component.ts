@@ -1,4 +1,3 @@
-import { tap } from 'rxjs/operators';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ContractForm } from '@blockframes/contract/forms/contract.form';
 import { DistributionDealForm } from '@blockframes/movie/distribution-deals/form/distribution-deal.form';
@@ -19,7 +18,7 @@ export class TunnelPreviousDealsComponent {
   }
 
   get distributionDeal() {
-    return this.formDistributionDeal.get('exclusive');
+    return this.formDistributionDeal;
   }
 
   public updateForm(value: MatSlideToggleChange) {
