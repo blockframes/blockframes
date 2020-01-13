@@ -1,15 +1,17 @@
 import { Injectable } from '@angular/core';
+import objectHash from 'object-hash';
+import { firestore } from 'firebase';
+import { CollectionConfig, CollectionService } from 'akita-ng-fire';
+import { AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { DistributionDealState, DistributionDealStore } from './distribution-deal.store';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { ContractService } from '@blockframes/contract/+state/contract.service';
 import { MovieQuery } from '../../movie/+state/movie.query';
-import { CollectionConfig, CollectionService } from 'akita-ng-fire';
-import { AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { DistributionDeal } from './distribution-deal.model';
-import { createContractTitleDetail, ContractWithLastVersion } from '@blockframes/contract/+state/contract.model';
-import objectHash from 'object-hash';
-import { firestore } from 'firebase';
+import { createContractTitleDetail } from '@blockframes/contract/+state/contract.model';
 import { Movie } from '@blockframes/movie/movie+state/movie.model';
+import { ContractVersionService } from '@blockframes/contract/version/+state/contract-version.service';
+import { ContractWithLastVersion } from '@blockframes/contract/version/+state/contract-version.model';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies/:movieId/distributiondeals' })
@@ -17,7 +19,7 @@ export class DistributionDealService extends CollectionService<DistributionDealS
   constructor(
     private movieQuery: MovieQuery,
     private organizationQuery: OrganizationQuery,
-    private contractService: ContractService,
+    private contractVersionService: ContractVersionService,
     store: DistributionDealStore
     )
   {
@@ -37,8 +39,8 @@ export class DistributionDealService extends CollectionService<DistributionDealS
   }
 
   /**
-   * 
-   * @param movieId 
+   *
+   * @param movieId
    */
   private movieDoc(movieId: string): AngularFirestoreDocument<Movie> {
     return this.db.doc(`movies/${movieId}`);
@@ -71,7 +73,7 @@ export class DistributionDealService extends CollectionService<DistributionDealS
       // @todo #1397 change this price calculus
       contract.last.titles[movieId].price = contract.last.price;
 
-      const contractId = await this.contractService.addContractAndVersion(contract.doc, contract.last);
+      const contractId = await this.contractVersionService.addContractAndVersion(contract.doc, contract.last);
 
       // Link distributiondeal with contract
       distributionDeal.contractId = contractId;
@@ -80,7 +82,7 @@ export class DistributionDealService extends CollectionService<DistributionDealS
       distributionDeal.contractId = contract.doc.id;
       // Contract may have been updated along with the distribution deal, we update it
       await this.db.collection('contracts').doc(contract.doc.id).set(contract.doc);
-      await this.contractService.contractsVersionCollection(contract.doc.id).doc(contract.last.id).set(contract.last);
+      await this.contractVersionService.add(contract.last);
     }
 
     // @TODO #1389 Use native akita-ng-fire functions : https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
