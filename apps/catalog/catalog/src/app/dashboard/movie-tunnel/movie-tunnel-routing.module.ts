@@ -40,6 +40,11 @@ const tunnelRoutes: Routes = [
         path: 'end',
         loadChildren: () => import('./end/end.module').then(m => m.EndTunnelModule)
       },
+      // Page 12.2
+      {
+        path: 'evaluation',
+        loadChildren: () => import('./evaluation/evaluation.module').then(m => m.EvaluationModule)
+      }
     ]
   }
 ];

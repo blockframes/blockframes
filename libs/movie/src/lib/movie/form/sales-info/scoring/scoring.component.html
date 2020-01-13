@@ -1,0 +1,10 @@
+<form [formGroup]="form" fxLayout="column" fxLayoutAlign="center start">
+  <mat-form-field appearance="outline">
+      <mat-label>Evaluation note</mat-label>
+      <mat-select formControlName="scoring">
+          <mat-option *ngFor="let scoring of staticScoring" [value]="scoring.slug">
+              {{ scoring.label }}
+          </mat-option>
+      </mat-select>
+  </mat-form-field>
+</form>
