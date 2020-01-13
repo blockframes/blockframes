@@ -19,7 +19,7 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 // Blockframes
 import { Movie } from '@blockframes/movie/movie/+state/movie.model';
 import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
-import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
+import { FireAnalytics, AnalyticsEvents } from '@blockframes/utils/analytics/app-analytics';
 import {
   GenresLabel,
   GENRES_LABEL,
@@ -391,7 +391,7 @@ export class MarketplaceSearchComponent implements OnInit {
     const languageSlug: LanguagesSlug = getCodeIfExists('LANGUAGES', language);
     if (LANGUAGES_LABEL.includes(language)) {
       this.filterForm.addLanguage(languageSlug);
-      this.analytics.event('added_language', { language });
+      this.analytics.event(AnalyticsEvents.addedLanguage, { language });
     } else {
       throw new Error('Something went wrong. Please choose a language from the drop down menu.');
     }
@@ -404,7 +404,7 @@ export class MarketplaceSearchComponent implements OnInit {
      */
     const languageSlug: LanguagesSlug = getCodeIfExists('LANGUAGES', language);
     this.filterForm.removeLanguage(languageSlug);
-    this.analytics.event('removed_language', { language });
+    this.analytics.event(AnalyticsEvents.removedLanguage, { language });
   }
 
   public hasStatus(status: MovieStatusLabel) {
@@ -418,10 +418,10 @@ export class MarketplaceSearchComponent implements OnInit {
       !this.filterForm.get('status').value.includes(productionStatusSlug)
     ) {
       this.filterForm.addStatus(productionStatusSlug);
-      this.analytics.event('added_movie_status', { status });
+      this.analytics.event(AnalyticsEvents.addedMovieStatus, { status });
     } else {
       this.filterForm.removeStatus(productionStatusSlug);
-      this.analytics.event('removed_movie_status', { status });
+      this.analytics.event(AnalyticsEvents.removedMovieStatus, { status });
     }
   }
 
@@ -486,7 +486,7 @@ export class MarketplaceSearchComponent implements OnInit {
     this.filterForm.addGenre(genreSlug);
     this.genreControl.setValue('');
     this.genreInput.nativeElement.value = '';
-    this.analytics.event('added_genre', { genre });
+    this.analytics.event(AnalyticsEvents.addedGenre, { genre });
   }
 
   public removeGenre(genre: string) {
@@ -495,7 +495,7 @@ export class MarketplaceSearchComponent implements OnInit {
       this.selectedGenres.splice(index, 1);
       const genreSlug: GenresSlug = getCodeIfExists('GENRES', genre);
       this.filterForm.removeGenre(genreSlug);
-      this.analytics.event('removed_genre', { genre });
+      this.analytics.event(AnalyticsEvents.removedGenre, { genre });
     }
   }
 
@@ -509,7 +509,7 @@ export class MarketplaceSearchComponent implements OnInit {
     this.filterForm.addSalesAgent(salesAgent);
     this.salesAgentControl.setValue('');
     this.salesAgentInput.nativeElement.value = '';
-    this.analytics.event('removed_sales_agent', { salesAgent });
+    this.analytics.event(AnalyticsEvents.addedSalesAgent, { salesAgent });
   }
 
   public removeSalesAgent(salesAgent: string) {
@@ -518,7 +518,7 @@ export class MarketplaceSearchComponent implements OnInit {
     if (index >= 0) {
       this.selectedSalesAgents.splice(index, 1);
       this.filterForm.removeSalesAgent(salesAgent);
-      this.analytics.event('removed_sales_agent', { salesAgent });
+      this.analytics.event(AnalyticsEvents.removedSalesAgent, { salesAgent });
     }
   }
 
@@ -533,8 +533,9 @@ export class MarketplaceSearchComponent implements OnInit {
       'close',
       { duration: 2000 }
     );
-    this.analytics.event('added_to_wishlist', {
-      movie: movie.main.title.original
+    this.analytics.event(AnalyticsEvents.addedToWishlist, {
+      movieId: movie.id,
+      movieTitle: movie.main.title.original
     });
   }
 
@@ -545,8 +546,9 @@ export class MarketplaceSearchComponent implements OnInit {
       'close',
       { duration: 2000 }
     );
-    this.analytics.event('removed_from_wishlist', {
-      movie: movie.main.title.original
+    this.analytics.event(AnalyticsEvents.removedFromWishlist, {
+      movieId: movie.id,
+      movieTitle: movie.main.title.original
     });
   }
 
@@ -557,7 +559,7 @@ export class MarketplaceSearchComponent implements OnInit {
   public selectSearchType(type: string) {
     if (this.searchbarForm.value !== type) {
       this.searchbarTypeForm.setValue(type);
-      this.analytics.event('searchbar_search_type', { type });
+      this.analytics.event(AnalyticsEvents.searchbarSearchType, { type });
     } else {
       this.searchbarTypeForm.setValue('');
     }

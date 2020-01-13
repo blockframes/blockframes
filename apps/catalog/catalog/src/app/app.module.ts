@@ -42,7 +42,7 @@ import { IntercomAppModule } from '@blockframes/utils/intercom.module';
 import { intercomId } from '@env';
 
 // Analytics
-import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
+import { FireAnalytics, AnalyticsEvents } from '@blockframes/utils/analytics/app-analytics';
 
 @NgModule({
   declarations: [AppComponent],
@@ -91,12 +91,12 @@ export class AppModule {
     const navEnds = this.router.events.pipe(filter(event => event instanceof NavigationEnd));
     this.subscription = navEnds.subscribe((event: NavigationEnd) => {
       try {
-        this.analytics.event('page_view', {
+        this.analytics.event(AnalyticsEvents.pageView, {
           page_location: 'marketplace',
           page_path: event.urlAfterRedirects
         });
       } catch {
-        this.analytics.event('page_view', {
+        this.analytics.event(AnalyticsEvents.pageView, {
           page_location: 'marketplace',
           page_path: event.urlAfterRedirects
         });

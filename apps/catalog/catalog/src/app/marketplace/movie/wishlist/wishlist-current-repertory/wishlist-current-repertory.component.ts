@@ -1,4 +1,4 @@
-import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
+import { FireAnalytics, AnalyticsEvents } from '@blockframes/utils/analytics/app-analytics';
 import { MatTableDataSource, MatSnackBar } from '@angular/material';
 import {
   Component,
@@ -69,7 +69,7 @@ export class WishlistCurrentRepertoryComponent implements OnInit {
       'close',
       { duration: 2000 }
     );
-    this.analytics.event('removed_from_wishlist', {
+    this.analytics.event(AnalyticsEvents.removedFromWishlist, {
       movieId: movie.id,
       movieTitle: movie.main.title.original
     });
