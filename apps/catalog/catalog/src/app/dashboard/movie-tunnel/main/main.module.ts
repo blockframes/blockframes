@@ -4,16 +4,22 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
 import { TunnelMainComponent } from './main.component';
-import { MovieFormReleaseModule } from '@blockframes/movie/movie/form/theatrical-release/theatrical-release.module';
 import { TunnelPageModule } from '@blockframes/ui/tunnel/page/tunnel-page.module';
+
+// Materials
 import { MatCardModule } from '@angular/material/card';
+
+// Form modules
+import { MovieFormTheatricalReleaseModule } from '@blockframes/movie/movie/form/sales-info/theatrical-release/theatrical-release.module';
+import { MovieFormContentTypeModule } from '@blockframes/movie/movie/form/main/content-type/content-type.module';
 
 @NgModule({
   declarations: [TunnelMainComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    MovieFormReleaseModule,
+    MovieFormTheatricalReleaseModule,
+    MovieFormContentTypeModule,
     TunnelPageModule,
     MatCardModule,
     RouterModule.forChild([{ path: '', component: TunnelMainComponent }])

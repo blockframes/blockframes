@@ -30,4 +30,4 @@ import { MatNativeDateModule } from '@angular/material/core';
   ],
   exports: [TheatricalReleaseComponent]
 })
-export class MovieFormReleaseModule { }
+export class MovieFormTheatricalReleaseModule { }
