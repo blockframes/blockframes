@@ -5,7 +5,7 @@ import { ContractVersionState } from "../+state/contract-version.store";
 
 @Injectable({ providedIn: 'root' })
 @CollectionGuardConfig({ awaitSync: true })
-export class ContractActiveVersionsGuard extends CollectionGuard<ContractVersionState> {
+export class ActiveContractVersionsGuard extends CollectionGuard<ContractVersionState> {
 
   constructor(service: ContractVersionService) {
     super(service);

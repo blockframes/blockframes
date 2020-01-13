@@ -93,4 +93,13 @@ export class DistributionDealService extends CollectionService<DistributionDealS
     );
     return myDeals.map(deal => this.formatDistributionDeal(deal));
   }
+
+  /**
+   * Get distributionDeals from a specific movie.
+   * @param movieId
+   */
+  public async getDistributionDeals(movieId?: string) {
+    const distributionDealsSnap = await this.db.collection(`movies/${movieId}/distributiondeals`).get().toPromise();
+    return distributionDealsSnap.docs.map(deal => deal.data() as DistributionDeal);
+  }
 }
