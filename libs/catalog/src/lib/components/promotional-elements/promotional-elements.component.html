@@ -1,5 +1,5 @@
 <article *ngFor="let info of elements" class="link" fxLayout="column" fxLayoutAlign="start start">
-    <a *ngIf="info.type === 'reel'" mat-stroked-button color="accent" [href]="info.media.url" target="_blank">
+    <a *ngIf="info.type === 'reel'" (click)="promoReelOpened.emit()" mat-stroked-button color="accent" [href]="info.media.url" target="_blank">
       <mat-icon>play_arrow</mat-icon>
       <b>Watch promo reel</b>
     </a>
