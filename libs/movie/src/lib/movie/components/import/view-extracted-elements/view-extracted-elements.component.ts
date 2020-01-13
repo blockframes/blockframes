@@ -10,7 +10,6 @@ import {
   createMovieVersionInfo,
   createMovieFestivalPrizes,
   createMovieSalesAgentDeal,
-  cleanModel,
   createPromotionalElement,
   createMovieBudget,
   createMoviePromotionalElements,
@@ -22,7 +21,7 @@ import {
 } from '../../../+state';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { formatCredits } from '@blockframes/utils/spreadsheet/format';
-import { ImageUploader } from '@blockframes/utils';
+import { ImageUploader, cleanModel } from '@blockframes/utils';
 import { SSF$Date } from 'ssf/types';
 import { getCodeIfExists } from '../../../static-model/staticModels';
 import { SSF } from 'xlsx';
@@ -1585,7 +1584,6 @@ export class ViewExtractedElementsComponent {
 
     return titleDetails;
   }
-
 
   private clearDataSources() {
     this.moviesToCreate.data = [];
