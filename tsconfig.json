@@ -83,6 +83,14 @@
         "libs/ethers/src/lib/*"
       ],
 
+      // SMART-CONTRACT
+      "@blockframes/smart-contracts/*": [
+        "smart-contracts/build/*"
+      ],
+      "@blockframes/smart-contracts/quorum/*": [
+        "smart-contracts/quorum/*"
+      ],
+
       // ORGANIZATION
       "@blockframes/organization": [
         "libs/organization/src/index.ts"
@@ -147,10 +155,6 @@
       ],
       "@blockframes/contract/*": [
         "libs/contract/src/lib/*"
-      ],
-
-      "@blockframes/contracts/*": [
-        "contracts/build/*"
       ],
 
       // APPS
