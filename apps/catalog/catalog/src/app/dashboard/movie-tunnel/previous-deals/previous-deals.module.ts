@@ -8,12 +8,13 @@ import { NgModule } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 import { MatSlideToggleModule } from '@angular/material';
 
-// Tunnel 
+// Tunnel
 import { TunnelPageModule } from '@blockframes/ui/tunnel/page/tunnel-page.module';
 import { TunnelPreviousDealsComponent } from './previous-deals.component';
 
 // Component Modules
 import { ContractFormDisplayNameModule } from '@blockframes/contract/forms/display-name/display-name.module';
+import { DistributionDealTerritoryModule } from '@blockframes/movie/distribution-deals/form/territory/territory.module';
 
 @NgModule({
   declarations: [TunnelPreviousDealsComponent],
@@ -24,6 +25,7 @@ import { ContractFormDisplayNameModule } from '@blockframes/contract/forms/displ
 
     // Component Modules
     ContractFormDisplayNameModule,
+    DistributionDealTerritoryModule,
 
     RouterModule.forChild([{ path: '', component: TunnelPreviousDealsComponent }]),
 
