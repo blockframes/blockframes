@@ -1,14 +1,14 @@
 import { FormEntity, FormList, yearValidators } from '@blockframes/utils';
 import { MovieMain, Credit, createMovieMain, Movie, createTitle } from '../../+state';
 import { Validators, FormControl } from '@angular/forms';
-<<<<<<< HEAD
-import { createCredit, Stakeholder, createStakeholder } from '@blockframes/utils/common-interfaces/identity';
-=======
 import { createCredit, createCompany } from '@blockframes/utils/common-interfaces/identity';
 import { StoreConfig } from '../../+state/movie.firestore';
 import { createStoreConfig } from '../../+state/movie.model';
->>>>>>> create different component for main form
 
+
+//////////////
+// Credit form
+//////////////
 function createCreditFormControl(credit?: Partial<Credit>) {
   const { firstName, lastName, role } = createCredit(credit);
   return {
@@ -26,6 +26,9 @@ export class MovieCreditForm extends FormEntity<CreditFormControl> {
   }
 }
 
+/////////////////////
+/// Store config form
+/////////////////////
 function createStoreConfigControl(storeConfig?: Partial<StoreConfig>) {
   const { display, storeType } = createStoreConfig(storeConfig);
   return {
@@ -42,12 +45,28 @@ export class StoreConfigForm extends FormEntity<StoreConfigControl> {
   }
 }
 
-export class DirectorForm extends FormEntity<DirectorFormControl> {
-  constructor(director?: Partial<Credit>) {
-    super(createDirectorFormControl(director))
+/////////////
+// Title form
+/////////////
+function createTitleFormControl(title?: Partial<Movie['main']['title']>) {
+  const { original, international } = createTitle(title);
+  return {
+    original: new FormControl(original),
+    international: new FormControl(international),
   }
 }
 
+type TitleFormControl = ReturnType<typeof createTitleFormControl>;
+
+export class TitleForm extends FormEntity<TitleFormControl> {
+  constructor(title?: Movie['main']['title']) {
+    super(createTitleFormControl(title));
+  }
+}
+
+////////////////
+// Director form
+////////////////
 function createDirectorFormControl(director?: Partial<Credit>) {
   const { firstName, lastName, shortBiography } = createCredit(director);
   return {
@@ -74,23 +93,15 @@ function createStakeholdersControl(stakeholder?: Partial<Stakeholder>) {
 
 type StakeholdersControl = ReturnType<typeof createStakeholdersControl>;
 
-
-export class TitleForm extends FormEntity<TitleFormControl> {
-  constructor(title?: Movie['main']['title']) {
-    super(createTitleFormControl(title));
+export class ProductionCompagnyForm extends FormEntity<ProductionCompagnyControl> {
+  constructor(compagny?: Partial<Credit>) {
+    super(createProductionCompagnyControl(compagny))
   }
 }
 
-function createTitleFormControl(title?: Partial<Movie['main']['title']>) {
-  const { original, international } = createTitle(title);
-  return {
-    original: new FormControl(original),
-    international: new FormControl(international),
-  }
-}
-
-type TitleFormControl = ReturnType<typeof createTitleFormControl>;
-
+///////////////
+// Create movie
+///////////////
 function createMovieMainControls(main : Partial<MovieMain> = {}) {
   const entity = createMovieMain(main);
   return {
@@ -109,14 +120,7 @@ function createMovieMainControls(main : Partial<MovieMain> = {}) {
     stakeholders: FormList.factory(entity.stakeholders, el => new StakeholdersForm(el)),
     customGenres: new FormControl(entity.customGenres),
     workType: new FormControl(entity.workType),
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
->>>>>>> WIP movie main form
-=======
     storeConfig: new StoreConfigForm(entity.storeConfig)
->>>>>>> create different component for main form
->>>>>>> create different component for main form
   }
 }
 

@@ -49,7 +49,7 @@ function createMovieSalesInfoControls(salesInfo: Partial<MovieSalesInfo> = {}){
     broadcasterCoproducers: FormList.factory(entity.broadcasterCoproducers),
     format: new FormControl(entity.format),
     formatQuality: new FormControl(entity.formatQuality),
-    soundFormat: new FormControl(entity.soundFormat)
+    soundFormat: new FormControl(entity.soundFormat),
     theatricalRelease: new FormControl(entity.theatricalRelease),
   }
 }
