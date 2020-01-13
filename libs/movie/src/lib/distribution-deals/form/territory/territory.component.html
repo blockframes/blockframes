@@ -25,6 +25,7 @@
         </mat-option>
       </mat-autocomplete>
       <mat-error *ngIf="includedControl.hasError('territoryValidator')">This is not a valid territory</mat-error>
+      <mat-error *ngIf="includedControl.hasError('territoryAlreadyExists')">This territory has already been added</mat-error>
   </mat-form-field>
   <span class="caption">Add as many as apply</span>
   <mat-form-field>
@@ -52,5 +53,6 @@
         </mat-option>
       </mat-autocomplete>
       <mat-error *ngIf="excludedControl.hasError('territoryValidator')">This is not a valid territory</mat-error>
+      <mat-error *ngIf="excludedControl.hasError('territoryAlreadyExists')">This territory has already been added</mat-error>
   </mat-form-field>
 </form>
