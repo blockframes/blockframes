@@ -8,7 +8,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { FeedbackMessageModule, ActionsListModule } from '@blockframes/ui';
 import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
 import { OrganizationFormModule } from './components/organization-form/organization-form.module';
-import { AssetsThemeModule } from '@blockframes/ui';
+import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
 
 // Material
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -22,6 +22,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 // Components
 import { OrganizationHomeComponent } from './pages/organization-home/organization-home.component';
@@ -72,7 +73,7 @@ export const noOrganizationRoutes: Routes = [
     FlexLayoutModule,
     CropperModule,
     OrganizationFormModule,
-    AssetsThemeModule,
+    ImgAssetModule,
 
     // Material
     MatFormFieldModule,
@@ -86,6 +87,7 @@ export const noOrganizationRoutes: Routes = [
     MatAutocompleteModule,
     MatProgressSpinnerModule,
     MatProgressBarModule,
+    MatSnackBarModule,
 
     // UI
     ActionsListModule,

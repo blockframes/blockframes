@@ -61,6 +61,6 @@ export class InvitationListComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe(); // TODO: Leads to an error and an empty page when no invitations on /layout/organization/home => ISSUE#1337
+    this.sub.unsubscribe(); // TODO: Leads to an error and an empty page when no invitations on /c/organization/home => ISSUE#1337
   }
 }

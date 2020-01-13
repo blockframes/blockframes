@@ -6,6 +6,7 @@ export const enum App {
   mediaFinanciers = 'movie-financing',
   storiesAndMore = 'stories-and-more',
   biggerBoat = 'catalog',
+  catalogMarketplace = 'marketplace',
   catalogDashboard = 'catalog-dashboard',
   blockframes = 'blockframes'
 }

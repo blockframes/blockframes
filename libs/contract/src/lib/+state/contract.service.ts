@@ -1,22 +1,40 @@
 import { Injectable } from '@angular/core';
 import { ContractStore, ContractState } from './contract.store';
-import { CollectionConfig, CollectionService } from 'akita-ng-fire';
-import { Contract, ContractVersion, ContractWithLastVersion, initContractWithVersion } from './contract.model';
+import { getCodeIfExists } from '@blockframes/movie/moviestatic-model/staticModels';
+import { CollectionConfig, CollectionService, awaitSyncQuery, Query } from 'akita-ng-fire';
+import { Contract, ContractVersion, ContractWithLastVersion, initContractWithVersion, ContractPartyDetail } from './contract.model';
 import { AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
 import orderBy from 'lodash/orderBy';
 import { firestore } from 'firebase/app';
+import { LegalRolesSlug } from '@blockframes/movie/moviestatic-model/types';
+import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
+import { tap, switchMap } from 'rxjs/operators';
+
+const contractsListQuery = (orgId: string): Query<Contract[]> => ({
+  path: 'contracts',
+  queryFn: ref => ref.where('partyIds', 'array-contains', orgId)
+});
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'contracts' })
 export class ContractService extends CollectionService<ContractState> {
 
-  constructor(store: ContractStore) {
+  constructor(private organizationQuery: OrganizationQuery, store: ContractStore) {
     super(store);
+  }
+
+  /** Sync the store with every contracts of the active organization. */
+  public syncOrganizationContracts() {
+    return this.organizationQuery.selectActiveId().pipe(
+      // Reset the store everytime the movieId changes
+      tap(_ => this.store.reset()),
+      switchMap(orgId => awaitSyncQuery.call(this, contractsListQuery(orgId)))
+    );
   }
 
   /**
    * @param contract
-   */ 
+   */
   // @TODO #1389 Use native akita-ng-fire functions
   public async addContract(contract: Contract): Promise<string> {
     if (!contract.id) {
@@ -28,9 +46,9 @@ export class ContractService extends CollectionService<ContractState> {
   }
 
   /**
-   * 
-   * @param contractId 
-   * @param contractVersion 
+   *
+   * @param contractId
+   * @param contractVersion
    */
   // @TODO #1389 Use native akita-ng-fire functions
   public async addContractVersion(contractId: string, contractVersion: ContractVersion): Promise<string> {
@@ -43,8 +61,8 @@ export class ContractService extends CollectionService<ContractState> {
 
   /**
    * Add/update a contract & create a new contract version
-   * @param contract 
-   * @param version 
+   * @param contract
+   * @param version
    */
   // @TODO #1389 Use native akita-ng-fire functions
   public async addContractAndVersion(contract: Contract, version: ContractVersion): Promise<string> {
@@ -54,8 +72,8 @@ export class ContractService extends CollectionService<ContractState> {
   }
 
   /**
-   * 
-   * @param contractId 
+   *
+   * @param contractId
    */
   // @TODO #1389 Use native akita-ng-fire functions
   public async getContract(contractId: string): Promise<Contract> {
@@ -74,8 +92,8 @@ export class ContractService extends CollectionService<ContractState> {
   }
 
   /**
-   * 
-   * @param contractId 
+   *
+   * @param contractId
    */
   private contractDoc(contractId: string): AngularFirestoreDocument<Contract> {
     return this.db.doc(`contracts/${contractId}`);
@@ -83,7 +101,7 @@ export class ContractService extends CollectionService<ContractState> {
 
   /**
    * Returns last contract version associated with contractId
-   * @param contractId 
+   * @param contractId
    */
   // @TODO #1389 Use native akita-ng-fire functions
   public async getLastVersionContract(contractId: string): Promise<ContractVersion> {
@@ -116,9 +134,9 @@ export class ContractService extends CollectionService<ContractState> {
   }
 
   /**
-   * 
-   * @param movieId 
-   * @param distributionDealId 
+   *
+   * @param movieId
+   * @param distributionDealId
    */
   // @TODO #1389 Use native akita-ng-fire functions
   public async getContractWithLastVersionFromDeal(movieId: string, distributionDealId: string): Promise<ContractWithLastVersion> {
@@ -147,8 +165,8 @@ export class ContractService extends CollectionService<ContractState> {
   }
 
   /**
-   * 
-   * @param contractVersion 
+   *
+   * @param contractVersion
    */
   private formatContractVersion(contractVersion: any): ContractVersion {
     // Dates from firebase are Timestamps, we convert it to Dates.
@@ -163,10 +181,67 @@ export class ContractService extends CollectionService<ContractState> {
   }
 
   /**
-   * 
-   * @param contract 
+   *
+   * @param contract
    */
   private formatContract(contract: any): Contract {
     return contract;
+  }
+
+  /**
+   * Various validation steps for validating a contract
+   * Currently (dec 2019), only validate that there is a licensee and a licensor
+   * @param contract
+   */
+  public validateContract(contract: Contract): boolean {
+
+    // First, contract must have at least a licensee and a licensor
+
+    if (contract.parties.length < 2) {
+      return false;
+    }
+    const licensees = this.getContractParties(contract, 'licensee');
+    const licensors = this.getContractParties(contract, 'licensor');
+
+    if (!licensees.length || !licensors.length) {
+      return false;
+    }
+
+    // Checking both licensee and licensor to clean the json and tell if contract is valid.
+    for (const licensee of licensees) {
+      // Clean the json before sending it to firebase .
+      // If orgId is undefined, delete it (firebase doesn't accept undefined values).
+      if (licensee.party.orgId === undefined) {
+        delete licensee.party.orgId
+      }
+      // Check if showName is a boolean. If not, the contract is invalid and function return false.
+      if (typeof licensee.party.showName !== 'boolean') {
+        return false;
+      }
+    }
+
+    // Same for the licensor
+    for (const licensor of licensors) {
+      if (licensor.party.orgId === undefined) {
+        delete licensor.party.orgId
+      }
+      if (typeof licensor.party.showName !== 'boolean') {
+        return false;
+      }
+    }
+
+    // Other contract validation steps goes here
+    // TODO: Add more validations steps to the validateContract function => ISSUE#1542
+
+    return true;
+  }
+
+/**
+ * Fetch parties related to a contract given a specific legal role
+ * @param contract
+ * @param legalRole
+ */
+  public getContractParties(contract: Contract, legalRole: LegalRolesSlug): ContractPartyDetail[] {
+    return contract.parties.filter(p => p.party.role === getCodeIfExists('LEGAL_ROLES', legalRole));
   }
 }

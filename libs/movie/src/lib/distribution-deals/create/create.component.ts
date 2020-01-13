@@ -35,8 +35,9 @@ import { MatSnackBar } from '@angular/material';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { createDistributionDeal } from '../+state/distribution-deal.model';
 import { DistributionDealService } from '../+state';
-import { validateContract, createContractPartyDetail, initContractWithVersion } from '@blockframes/contract/+state/contract.model';
+import { createContractPartyDetail, initContractWithVersion } from '@blockframes/contract/+state/contract.model';
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
+import { ContractService } from '@blockframes/contract/+state/contract.service';
 
 enum ResearchSteps {
   START = 'Start',
@@ -106,6 +107,7 @@ export class DistributionDealCreateComponent implements OnInit, OnDestroy {
     private router: Router,
     private organizationQuery: OrganizationQuery,
     private distributionDealService: DistributionDealService,
+    private contractService: ContractService,
     private cartService: CartService,
     private snackBar: MatSnackBar
   ) { }
@@ -197,13 +199,13 @@ export class DistributionDealCreateComponent implements OnInit, OnDestroy {
     licensor.party.role = 'licensor';
     contract.doc.parties.push(licensor);
 
-    if(!validateContract(contract.doc)) {
+    if(!this.contractService.validateContract(contract.doc)) {
       this.snackBar.open(`Error while creating contract..`, 'close', { duration: 2000 });
     } else {
       const dealId = await this.distributionDealService.addDistributionDeal(this.movie.id, distributionDeal, contract);
       await this.cartService.addDealToCart(dealId, 'default');
       this.snackBar.open(`Distribution deal saved. Redirecting ...`, 'close', { duration: 2000 });
-      this.router.navigateByUrl(`layout/o/catalog/selection/overview`);
+      this.router.navigateByUrl(`c/o/catalog/selection/overview`);
     }
 
   }

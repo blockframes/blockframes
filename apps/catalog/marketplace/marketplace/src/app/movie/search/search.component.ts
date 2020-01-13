@@ -264,7 +264,7 @@ export class MarketplaceSearchComponent implements OnInit {
   }
 
   public goToMovieDetails(id: string) {
-    this.router.navigateByUrl(`layout/o/catalog/${id}`);
+    this.router.navigateByUrl(`c/o/catalog/${id}`);
   }
 
   public get getCurrentYear(): number {

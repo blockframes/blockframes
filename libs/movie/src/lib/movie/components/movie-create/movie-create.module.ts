@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { AssetsThemeModule } from '@blockframes/ui';
+import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
 
 // Component
 import { MovieCreateComponent } from './movie-create.component';
@@ -15,7 +15,7 @@ import { MatButtonModule } from '@angular/material/button';
     CommonModule,
     RouterModule,
     FlexLayoutModule,
-    AssetsThemeModule,
+    ImgAssetModule,
 
     //Material
     MatButtonModule

@@ -1,11 +1,19 @@
 section {
   margin: 30px;
+  a.mat-button {
+    text-decoration: underline;
+  }
+  mat-card {
+    margin-bottom: 20px;
+  }
 }
 
 .button-box {
   margin-top: 50px;
   a {
-    margin-right: 20px;
-    margin-bottom: 30px;
+    min-width: 130px;
+    span {
+      margin: 10px;
+    }
   }
 }

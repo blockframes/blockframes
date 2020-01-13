@@ -13,6 +13,7 @@ import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { APPS_DETAILS, App } from '@blockframes/utils';
 import { createPermissions, UserRole, createAppPermissions } from '../permissions/+state/permissions.model';
+import { firestore } from 'firebase/app';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'orgs'})
@@ -78,12 +79,12 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     const apps: App[] = [App.mediaDelivering, App.mediaFinanciers, App.storiesAndMore];
 
     // Set the new organization in permissions collection.
-    write.set(permissionsDoc.ref, permissions);
+    (write as firestore.WriteBatch).set(permissionsDoc.ref, permissions);
     // Initialize apps permissions documents in permissions apps sub-collection.
     apps.map(app => {
       const newApp = this.db.doc(`permissions/${orgId}/userAppsPermissions/${app}`);
       const appPermissions = createAppPermissions(app);
-      return write.set(newApp.ref, appPermissions);
+      return (write as firestore.WriteBatch).set(newApp.ref, appPermissions);
     })
 
     // Update user with orgId.

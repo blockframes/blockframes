@@ -29,7 +29,7 @@ import { SSF } from 'xlsx';
 import { MovieLanguageTypes } from '@blockframes/movie/movie/+state/movie.firestore';
 import { createCredit } from '@blockframes/utils/common-interfaces/identity';
 import { DistributionDeal, createDistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
-import { validateContract, ContractWithLastVersion, getContractParties, initContractWithVersion, createContractPartyDetail, createContractTitleDetail } from '@blockframes/contract/+state/contract.model';
+import { ContractWithLastVersion, initContractWithVersion, createContractPartyDetail, createContractTitleDetail } from '@blockframes/contract/+state/contract.model';
 import { ContractStatus, ContractTitleDetail } from '@blockframes/contract/+state/contract.firestore';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state/distribution-deal.service';
 import { createFee } from '@blockframes/utils/common-interfaces/price';
@@ -168,7 +168,7 @@ export class ViewExtractedElementsComponent {
     private distributionDealService: DistributionDealService,
     private contractService: ContractService,
     private imageUploader: ImageUploader,
-    private cdRef: ChangeDetectorRef,
+    private cdRef: ChangeDetectorRef
   ) { }
 
   public formatMovies(sheetTab: SheetTab) {
@@ -1091,7 +1091,7 @@ export class ViewExtractedElementsComponent {
           /* LICENSEE */
 
           // Retreive the licensee inside the contract to update his infos
-          const licensee = getContractParties(contract.doc, 'licensee').shift();
+          const licensee = this.contractService.getContractParties(contract.doc, 'licensee').shift();
           if (licensee === undefined) {
             throw new Error(`No licensee found in contract ${contract.doc.id}.`);
           }
@@ -1302,7 +1302,7 @@ export class ViewExtractedElementsComponent {
     //////////////////
 
     //  CONTRACT VALIDATION
-    if (!validateContract(contract.doc)) {
+    if(!this.contractService.validateContract(contract.doc)) {
       errors.push({
         type: 'error',
         field: 'contractId',
@@ -1416,7 +1416,7 @@ export class ViewExtractedElementsComponent {
     const titlesFieldsCount = Object.keys(SpreadSheetContractTitle).length / 2; // To get enum length
 
     sheetTab.rows.forEach(async spreadSheetRow => {
-      // Create/retreive the contract 
+      // Create/retreive the contract
       let contract = initContractWithVersion();
       let newContract = true;
       if (spreadSheetRow[SpreadSheetContract.contractId]) {
@@ -1523,7 +1523,7 @@ export class ViewExtractedElementsComponent {
     //////////////////
 
     //  CONTRACT VALIDATION
-    if (!validateContract(contract.doc)) {
+    if (!this.contractService.validateContract(contract.doc)) {
       errors.push({
         type: 'error',
         field: 'contractId',

@@ -1,13 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AssetDirective } from './assets-theme.directive';
+import { AssetDirective } from './img-asset.directive';
 
 
 @NgModule({
   declarations: [AssetDirective],
-  imports: [
-    CommonModule
-  ],
+  imports: [CommonModule],
   exports: [AssetDirective]
 })
-export class AssetsThemeModule {}
+export class ImgAssetModule {}

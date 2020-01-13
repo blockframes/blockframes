@@ -15,6 +15,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
+import { MatListModule } from '@angular/material/list';
 
 @NgModule({
   declarations: [MovieTunnelComponent],
@@ -29,6 +30,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatExpansionModule,
     MatProgressSpinnerModule,
     MatButtonModule,
+    MatListModule,
   ],
   exports: [MovieTunnelComponent]
 })

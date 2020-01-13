@@ -1,34 +1,20 @@
-<form [formGroup]="salesCast">
-  <!-- CREDITS -->
-  <h3> Credits </h3>
-  <div formArrayName="credits" *ngFor="let credit of salesCast.credits.controls; let i = index">
-    <div [formGroupName]="i" class="full-width">
-      <mat-form-field appearance="outline" class="small-margin">
-        <mat-label>Firstname</mat-label>
-        <input matInput formControlName="firstName" placeholder="First Name">
-      </mat-form-field>
-      <mat-form-field appearance="outline" class="small-margin">
-        <mat-label>Lastname</mat-label>
-        <input matInput formControlName="lastName" placeholder="Last Name">
-      </mat-form-field>
-      <mat-form-field appearance="outline" class="small-margin">
-        <mat-select formControlName="role" placeholder="Position">
-          <mat-option *ngFor="let role of staticModels.CREDIT_ROLES" [value]="role.slug">
-            {{ role.label }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      <button mat-icon-button color="primary" (click)="salesCast.addCredit()">
-        <mat-icon>add_circle</mat-icon>
-      </button>
-      <button mat-icon-button color="primary" (click)="salesCast.removeCredit(i)">
-        <mat-icon>delete_circle</mat-icon>
-      </button>
-    </div>
-  </div>
-  <ng-container *ngIf="salesCast.credits.controls.length == 0">
-    <button mat-icon-button color="primary" (click)="salesCast.addCredit()">
-      <mat-icon>add_circle</mat-icon>
-    </button>
-  </ng-container>
-</form>
+<ng-container *ngFor="let control of form.controls; let i = index">
+  <form-display-name [form]="control"></form-display-name>
+  <mat-form-field appearance="outline">
+    <mat-label>Role</mat-label>
+    <mat-select [formControl]="control.get('role')">
+      <mat-option *ngFor="let role of roles" [value]="role.slug">
+        {{ role.label }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <button mat-icon-button color="primary" (click)="remove(i)">
+    <mat-icon>delete_circle</mat-icon>
+  </button>
+</ng-container>
+<div fxLayout="column" fxLayoutAlign="center center">
+  <button mat-icon-button color="primary" (click)="add()">
+    <mat-icon>add_circle</mat-icon>
+  </button>
+  <caption class="mat-caption">Add another Crew Member</caption>
+</div>

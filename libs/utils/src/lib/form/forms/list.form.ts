@@ -33,7 +33,7 @@ export class FormList<T, Control extends AbstractControl = any> extends FormArra
     super(controls, validators, asyncValidators);
   }
 
-  static factory<T, Control>(value: T[], createControl?: (value?: T) => Control, validators?: Validator) {
+  static factory<T, Control extends AbstractControl = any>(value: T[], createControl?: (value?: T) => Control, validators?: Validator): FormList<T, Control> {
     const form = new FormList<T>([], validators);
     if (createControl) {
       form['createControl'] = createControl.bind(form);

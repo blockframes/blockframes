@@ -22,13 +22,13 @@ export class PermissionsGuard extends CollectionGuard<PermissionsState> {
     return this.authQuery.user$.pipe(
       switchMap(user => {
         if (!user.orgId) {
-          return of('layout/organization');
+          return of('c/organization');
         } else {
           return this.service.syncActive({ id: user.orgId }).pipe(
             map(_ => this.query.getActive()),
             map(permissions => {
               if (!permissions) {
-                return 'layout/organization';
+                return 'c/organization';
               }
             })
           );

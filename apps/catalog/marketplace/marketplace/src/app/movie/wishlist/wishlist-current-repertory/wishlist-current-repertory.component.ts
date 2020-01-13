@@ -58,7 +58,7 @@ export class WishlistCurrentRepertoryComponent implements OnInit {
 
   // TODO: issue#1203 use a relative path
   public async redirectToMovie(movieId: string) {
-    this.router.navigate([`layout/o/catalog/${movieId}/view`]);
+    this.router.navigate([`c/o/catalog/${movieId}/view`]);
   }
 
   public remove(movie: Movie, event: Event) {

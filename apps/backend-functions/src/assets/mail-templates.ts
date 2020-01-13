@@ -6,8 +6,8 @@ import { EmailRequest, EmailTemplateRequest } from '../internals/email';
 import { templateIds } from '@env';
 import { RequestToJoinOrganization, RequestDemoInformations } from '../data/types';
 
-const ORG_HOME = '/layout/o/organization/';
-const USER_ORG_INVITATION = '/layout/organization/home';
+const ORG_HOME = '/c/o/organization/';
+const USER_ORG_INVITATION = '/c/organization/home';
 export const ADMIN_ACCEPT_ORG_PATH = '/admin/acceptOrganization';
 export const ADMIN_ACCESS_TO_APP_PATH = '/admin/allowAccessToApp';
 export const ADMIN_DATA_PATH = '/admin/data'; // backup / restore

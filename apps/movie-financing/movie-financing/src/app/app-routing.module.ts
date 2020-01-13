@@ -22,7 +22,7 @@ export const routes: Routes = [
     loadChildren: '@blockframes/auth#AuthModule'
   },
   {
-    path: 'layout',
+    path: 'c',
     component: LayoutComponent,
     canActivate: [AuthGuard],
     children: [

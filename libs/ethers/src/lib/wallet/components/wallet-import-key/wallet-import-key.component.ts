@@ -55,9 +55,9 @@ export class WalletImportKeyComponent implements OnInit {
 
   handleRedirection() {
     if (!!this.walletQuery.getValue().tx) {
-      this.router.navigateByUrl('/layout/o/account/wallet/send');
+      this.router.navigateByUrl('/c/o/account/wallet/send');
     } else {
-      this.router.navigateByUrl('/layout/o/account/wallet');
+      this.router.navigateByUrl('/c/o/account/wallet');
     }
   }
 }

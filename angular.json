@@ -1673,6 +1673,7 @@
             "scripts": []
           },
           "configurations": {
+            "dev": {},
             "production": {
               "fileReplacements": [
                 {
@@ -1818,11 +1819,15 @@
           "options": {
             "cypressConfig": "apps/catalog/catalog-e2e/cypress.json",
             "tsConfig": "apps/catalog/catalog-e2e/tsconfig.e2e.json",
-            "devServerTarget": "catalog:serve"
+            "baseUrl": "http://localhost:4200"
           },
           "configurations": {
+            "dev": {},
             "production": {
               "devServerTarget": "catalog:serve:production"
+            },
+            "ci": {
+              "devServerTarget": "catalog:serve"
             }
           }
         },

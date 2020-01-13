@@ -134,7 +134,7 @@ export class WalletService {
       confirmation: 'You are about to delete a key from your smart-wallet',
       success: 'Your key has been successfully deleted !',
       redirectName: 'Back to Wallet',
-      redirectRoute: '/layout/o/account/wallet',
+      redirectRoute: '/c/o/account/wallet',
     }
     this.setTx(tx);
     this.setTxFeedback(feedback);
@@ -146,7 +146,7 @@ export class WalletService {
       confirmation: 'You are about add a new key to your smart-wallet',
       success: 'Your key has been successfully added !',
       redirectName: 'Back to Wallet',
-      redirectRoute: '/layout/o/account/wallet',
+      redirectRoute: '/c/o/account/wallet',
     }
     this.setTx(tx);
     this.setTxFeedback(feedback);

@@ -49,7 +49,7 @@ export class LoginViewComponent {
     try {
       const { email, password, name, surname } = signupForm.value;
       await this.service.signup(email, password, { ctx: { name, surname } });
-      this.router.navigate(['layout']);
+      this.router.navigate(['c']);
     } catch (err) {
       console.error(err); // let the devs see what happened
       this.snackBar.open(err.message, 'close', { duration: this.snackbarDuration });
