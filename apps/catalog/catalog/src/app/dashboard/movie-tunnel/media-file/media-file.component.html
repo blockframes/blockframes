@@ -1,14 +1,34 @@
 <tunnel-page>
-  <h4 title>TITLE INFORMATION</h4>
-  <h1 subtitle>Marketplace Evaluation</h1>
+  <h4 title>UPLOADED MEDIA</h4>
+  <h1 subtitle>Files & links</h1>
   <section tunnel-form>
-    <!-- Estimated Budget -->
+    <!-- Presentation deck -->
     <mat-card>
       <mat-card-header>
-        <mat-card-title>Evaluation for Archipel Content</mat-card-title>
+        <mat-card-title>Presentation deck</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        file uploader
+        <file-upload></file-upload>
+      </mat-card-content>
+    </mat-card>
+    <!-- Scenario -->
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Scenario</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <file-upload></file-upload>
+      </mat-card-content>
+    </mat-card>
+    <!-- File Links -->
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>File Links</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <movie-form-promo-reel-link></movie-form-promo-reel-link>
+        <mat-divider [inset]="true"></mat-divider>
+        <movie-form-promotional-links></movie-form-promotional-links>
       </mat-card-content>
     </mat-card>
   </section>
