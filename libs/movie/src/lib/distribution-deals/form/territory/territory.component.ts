@@ -80,7 +80,23 @@ export class DistributionDealTerritoryComponent implements OnInit {
       )
     );
   }
-  // TODO(MF) Mat error doenst show up, why????
+
+  private hasTerritory(value: string, type: string): boolean {
+    if (type === 'included') {
+      this.includedTerritories.includes(value);
+    } else if (type === 'excluded') {
+      return this.excludedTerritories.includes(value);
+    }
+  }
+
+  private noDuplicate(value: string, type: string): boolean {
+    if (type === 'included') {
+      return this.excludedTerritories.includes(getCodeIfExists('TERRITORIES', value));
+    } else if (type === 'excluded') {
+      return this.includedTerritories.includes(getCodeIfExists('TERRITORIES', value));
+    }
+  }
+
   public includedAdd(event: MatChipInputEvent) {
     if (!this.includedAuto.isOpen) {
       const input = event.input;
@@ -89,12 +105,12 @@ export class DistributionDealTerritoryComponent implements OnInit {
       // Add the territory
       if (
         (value || '') &&
-        !this.includedTerritories.includes(value) &&
+        !this.hasTerritory(value, 'included') &&
         TERRITORIES_SLUG.includes(value) &&
-        !this.excludedTerritories.includes(getCodeIfExists('TERRITORIES', value))
+        !this.noDuplicate(value, 'included')
       ) {
         this.includedTerritories.push(value);
-        this.form.addIncludedTerritory(value);
+        this.form.addTerritory(value, 'included');
       }
 
       // Reset the input value
@@ -114,12 +130,12 @@ export class DistributionDealTerritoryComponent implements OnInit {
       // Add the territory
       if (
         (value || '') &&
-        !this.excludedTerritories.includes(value) &&
+        !this.hasTerritory(value, 'excluded') &&
         TERRITORIES_SLUG.includes(value) &&
-        !this.includedTerritories.includes(getCodeIfExists('TERRITORIES', value))
+        !this.noDuplicate(value, 'excluded')
       ) {
         this.excludedTerritories.push(value);
-        this.form.addExcludedTerritory(value);
+        this.form.addTerritory(value, 'excluded');
       }
 
       // Reset the input value
@@ -155,7 +171,7 @@ export class DistributionDealTerritoryComponent implements OnInit {
       TERRITORIES_SLUG.includes(event.option.value) &&
       !this.excludedTerritories.includes(event.option.viewValue)
     ) {
-      this.form.addIncludedTerritory(event.option.value);
+      this.form.addTerritory(event.option.value, 'included');
       this.includedTerritories.push(event.option.viewValue);
     }
     this.includedTerritoryInput.nativeElement.value = '';
@@ -168,7 +184,7 @@ export class DistributionDealTerritoryComponent implements OnInit {
       TERRITORIES_SLUG.includes(event.option.value) &&
       !this.includedTerritories.includes(event.option.viewValue)
     ) {
-      this.form.addExcludedTerritory(event.option.value);
+      this.form.addTerritory(event.option.value, 'excluded');
       this.excludedTerritories.push(event.option.viewValue);
     }
     this.excludedTerritoryInput.nativeElement.value = '';

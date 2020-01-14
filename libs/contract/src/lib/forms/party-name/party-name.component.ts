@@ -1,14 +1,14 @@
-import { ContractPartyForm } from './display-name.form';
+import { ContractPartyForm } from './party-name.form';
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { PartyDetailsForm } from '../contract.form'
 
 @Component({
-    selector: '[form] contract-form-display-name',
-    templateUrl: './display-name.component.html',
-    styleUrls: ['./display-name.component.scss'],
+    selector: '[form] contract-form-party-name',
+    templateUrl: './party-name.component.html',
+    styleUrls: ['./party-name.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ContractFormDisplayNameComponent { 
+export class ContractFormPartyNameComponent { 
     @Input() form: ContractPartyForm;
 
     public displayNameControl(control: PartyDetailsForm) {

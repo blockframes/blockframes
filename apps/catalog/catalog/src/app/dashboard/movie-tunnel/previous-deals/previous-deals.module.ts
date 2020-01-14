@@ -1,4 +1,5 @@
 // Angular
+import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { CommonModule } from '@angular/common';
@@ -13,7 +14,7 @@ import { TunnelPageModule } from '@blockframes/ui/tunnel/page/tunnel-page.module
 import { TunnelPreviousDealsComponent } from './previous-deals.component';
 
 // Component Modules
-import { ContractFormDisplayNameModule } from '@blockframes/contract/forms/display-name/display-name.module';
+import { ContractFormPartyNameModule } from '@blockframes/contract/forms/party-name/party-name.module';
 import { DistributionDealTerritoryModule } from '@blockframes/movie/distribution-deals/form/territory/territory.module';
 
 @NgModule({
@@ -22,9 +23,10 @@ import { DistributionDealTerritoryModule } from '@blockframes/movie/distribution
     CommonModule,
     FlexLayoutModule,
     TunnelPageModule,
+    ReactiveFormsModule,
 
     // Component Modules
-    ContractFormDisplayNameModule,
+    ContractFormPartyNameModule,
     DistributionDealTerritoryModule,
 
     RouterModule.forChild([{ path: '', component: TunnelPreviousDealsComponent }]),
