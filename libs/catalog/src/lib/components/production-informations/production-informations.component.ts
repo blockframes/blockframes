@@ -9,6 +9,6 @@ import { ImgRef } from '@blockframes/utils';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CatalogProductionInformationsComponent {
-  @Input() productionCompanies: Company[];
+  @Input() stakeholders: Company[];
   @Input() salesAgentDealAvatar: ImgRef;
 }
