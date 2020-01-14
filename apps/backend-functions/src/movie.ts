@@ -6,6 +6,7 @@ import { triggerNotifications } from './notification';
 import { flatten, isEqual } from 'lodash';
 import { getDocument } from './data/internals';
 import { removeAllSubcollections } from './utils';
+import { storeSearchableMovie, deleteSearchableMovie } from './internals/algolia';
 
 /** Create a notification with user and movie. */
 function notifUser(userId: string, notificationType: NotificationType, movie: MovieDocument, user: PublicUser) {
@@ -53,6 +54,10 @@ export async function onMovieCreate(
   const notifications = await createNotificationsForUsers(movie, NotificationType.movieTitleCreated, user);
 
   return db.runTransaction(async tx => {
+
+    // Update algolia's index
+    await storeSearchableMovie(movie);
+
     // Get the organization document in the transaction for maximum freshness.
     const organizationSnap = await tx.get(db.doc(`orgs/${user.orgId}`));
     const organization = organizationSnap.data() as OrganizationDocument
@@ -112,6 +117,10 @@ export async function onMovieDelete(
 
   // Delete sub-collections
   await removeAllSubcollections(snap, batch);
+
+  // Update algolia's index
+  await  deleteSearchableMovie(context.params.movieId);
+
   console.log(`removed sub colletions of ${movie.id}`);
   await batch.commit();
 
@@ -135,4 +144,6 @@ export async function onMovieUpdate(
 
     return triggerNotifications(notifications);
   }
+
+  return storeSearchableMovie(after);
 }
