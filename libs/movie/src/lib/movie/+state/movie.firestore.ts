@@ -23,6 +23,14 @@ export const enum StoreType {
   line_up = 'Line-Up',
 }
 
+export enum PremiereType {
+  'internationnal' = 'International',
+  'world' = 'World',
+  'market' = 'Market',
+  'local' = 'Local',
+}
+
+
 export interface MovieVersionInfo {
   dubbings: string[],
   subtitles: string[],
@@ -54,6 +62,7 @@ export interface Prize {
   year: number,
   prize?: string,
   logo?: ImgRef,
+  premiere?: PremiereType,
 }
 
 export interface PromotionalElement {
@@ -146,7 +155,6 @@ interface MovieSalesInfoRaw<D> {
   europeanQualification: boolean,
   pegi: string,
   certifications: string[],
-  internationalPremiere: Prize,
   originCountryReleaseDate: D,
   broadcasterCoproducers: string[],
   theatricalRelease: boolean,

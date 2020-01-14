@@ -130,11 +130,6 @@ export function createMovieSalesCast(params: Partial<MovieSalesCast> = {}): Movi
 
 export function createMovieSalesInfo(params: Partial<MovieSalesInfo> = {}): MovieSalesInfo {
   return {
-    internationalPremiere: {
-      name: '',
-      year: 0,
-      prize: ''
-    },
     certifications: [],
     broadcasterCoproducers: [],
     scoring: '',

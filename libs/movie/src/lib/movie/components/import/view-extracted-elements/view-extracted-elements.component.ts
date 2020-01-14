@@ -24,7 +24,7 @@ import { ImageUploader } from '@blockframes/utils';
 import { SSF$Date } from 'ssf/types';
 import { getCodeIfExists } from '../../../static-model/staticModels';
 import { SSF } from 'xlsx';
-import { MovieLanguageTypes } from '@blockframes/movie/movie/+state/movie.firestore';
+import { MovieLanguageTypes, PremiereType } from '@blockframes/movie/movie/+state/movie.firestore';
 import { createCredit } from '@blockframes/utils/common-interfaces/identity';
 import { DistributionDeal, createDistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
 import { ContractWithLastVersion, initContractWithVersion, createContractPartyDetail, createContractTitleDetail } from '@blockframes/contract/+state/contract.model';
@@ -398,8 +398,14 @@ export class ViewExtractedElementsComponent {
         // INTERNATIONAL PREMIERE (International Premiere )
         if (spreadSheetRow[SpreadSheetMovie.internationalPremiere]) {
           if (spreadSheetRow[SpreadSheetMovie.internationalPremiere].split(this.separator).length === 2 && !isNaN(Number(spreadSheetRow[SpreadSheetMovie.internationalPremiere].split(',')[1]))) {
-            movie.salesInfo.internationalPremiere.name = spreadSheetRow[SpreadSheetMovie.internationalPremiere].split(',')[0];
-            movie.salesInfo.internationalPremiere.year = Number(spreadSheetRow[SpreadSheetMovie.internationalPremiere].split(',')[1]);
+
+            const prize = createPrize();
+
+            prize.name = spreadSheetRow[SpreadSheetMovie.internationalPremiere].split(',')[0];
+            prize.year = Number(spreadSheetRow[SpreadSheetMovie.internationalPremiere].split(',')[1]);
+            prize.premiere = PremiereType.internationnal;
+
+            movie.festivalPrizes.prizes.push(prize);
           }
         }
 
@@ -914,16 +920,6 @@ export class ViewExtractedElementsComponent {
         field: 'main.shortSynopsis',
         name: "Synopsis",
         reason: 'Optional field is missing',
-        hint: 'Edit corresponding sheet field.'
-      });
-    }
-
-    if (!movie.salesInfo.internationalPremiere) {
-      errors.push({
-        type: 'warning',
-        field: 'salesInfo.internationalPremiere',
-        name: "International Premiere",
-        reason: 'Optional field is missing or could not be parsed',
         hint: 'Edit corresponding sheet field.'
       });
     }

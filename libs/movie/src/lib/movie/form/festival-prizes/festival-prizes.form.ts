@@ -3,12 +3,13 @@ import { FormEntity, FormList } from '@blockframes/utils';
 import { FormControl } from '@angular/forms';
 
 function createPrizeFormControl(entity?: Partial<Prize>) {
-  const { name, year, prize, logo } = createPrize(entity);
+  const { name, year, prize, logo, premiere } = createPrize(entity);
   return {
     name: new FormControl(name),
     year: new FormControl(year),
     prize: new FormControl(prize),
     logo: new FormControl(logo),
+    premiere: new FormControl(premiere),
   }
 }
 

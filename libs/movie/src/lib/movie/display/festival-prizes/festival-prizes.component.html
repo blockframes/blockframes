@@ -8,6 +8,7 @@
           <td class="movie-credit-table-role">{{ item.prize }}</td>
           <td>{{ item.name }} ({{ item.year }})</td>
           <td *ngIf="item.logo"><img [imgRef]="item.logo"></td>
+          <td *ngIf="item.premiere">Premiere: {{ item.premiere }}</td>
         </tr>
       </table>
     </mat-card-subtitle>

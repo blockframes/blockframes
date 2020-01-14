@@ -20,9 +20,6 @@
         </li>
       </ul>
     </mat-list-item>
-    <mat-list-item *ngIf="data.internationalPremiere.name">
-      <strong>International Premiere :</strong> {{data.internationalPremiere.name}} ({{data.internationalPremiere.year}})
-    </mat-list-item>
     <mat-list-item *ngIf="data.originCountryReleaseDate">
       <strong>Release date in Origin Country :</strong> {{data.originCountryReleaseDate | date: 'dd MMM yyyy' }}
     </mat-list-item>
