@@ -57,6 +57,7 @@ const models: Model = {
     { 'slug': 'banner', 'label': 'Banner' },
     { 'slug': 'screener', 'label': 'Screener' },
     { 'slug': 'teaser', 'label': 'Teaser' },
+    { 'slug': 'still_photo', 'label': 'Stills' },
   ] as const,
   'RESOURCE_SIZES': [
     { 'slug': 'medium', 'label': 'Medium' },
