@@ -33,7 +33,7 @@ import { onInvitationWrite } from './invitation';
 import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate } from './orgs';
 import { adminApp, onRequestAccessToAppWrite } from './admin';
 import { onMovieUpdate, onMovieCreate, onMovieDelete } from './movie';
-import { bigQuery } from './bigQuery';
+import * as bigQuery from './bigQuery';
 
 /** Trigger: when eth-events-server pushes contract events. */
 export const onIpHashEvent = functions.pubsub.topic('eth-events.ipHash').onPublish(onIpHash);
@@ -82,8 +82,8 @@ export const getOrCreateUserByMail = functions.https.onCall(logErrors(users.getO
 /** Trigger: REST call to send a mail to an admin for demo request. */
 export const sendDemoRequest = functions.https.onCall(logErrors(users.sendDemoRequest));
 
-/** Trigger: REST call to query bigQuery. */
-export const requestBigQuery = functions.https.onCall(logErrors(bigQuery.request));
+/** Trigger: REST call bigQuery with a movieId to get its analytics. */
+export const getMovieAnalytics = functions.https.onCall(logErrors(bigQuery.requestMovieAnalytics));
 
 /**
  * Trigger: REST call to the /admin app

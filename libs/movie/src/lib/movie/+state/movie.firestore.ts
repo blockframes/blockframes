@@ -51,6 +51,26 @@ export enum UnitBox {
   entrances = '#Entrances',
 }
 
+export interface MovieAnalytics {
+  addedToWishlist: {
+    hits: number,
+    movieId: string,
+  },
+  movieViews: {
+    hits: number,
+    page_path: string
+  },
+  promoReelOpened: {
+    hits: number,
+    movieId: string,
+  }
+}
+
+export interface MovieVersionInfo {
+  dubbings: string[],
+  subtitles: string[],
+}
+
 export interface StoreConfig {
   display: boolean,
   storeType: StoreType,
