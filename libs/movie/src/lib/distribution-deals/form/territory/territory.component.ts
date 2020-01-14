@@ -20,7 +20,6 @@ import {
 
 // Others
 import { DistributionDealForm } from '../distribution-deal.form';
-import { territoryValidator } from '@blockframes/utils/form/validators/validators';
 import {
   getCodeIfExists,
   default as staticModels,
@@ -43,9 +42,9 @@ export class DistributionDealTerritoryComponent implements OnInit {
 
   public staticTerritories = staticModels['TERRITORIES'];
 
-  public includedControl: FormControl = new FormControl('', territoryValidator);
+  public includedControl: FormControl = new FormControl('');
 
-  public excludedControl: FormControl = new FormControl('', territoryValidator);
+  public excludedControl: FormControl = new FormControl('');
 
   // Lets the user use the command to add more territories
   public separatorKeysCodes: number[] = [ENTER];
@@ -81,7 +80,7 @@ export class DistributionDealTerritoryComponent implements OnInit {
       )
     );
   }
-// TODO(MF) Mat error doenst show up, why????
+  // TODO(MF) Mat error doenst show up, why????
   public includedAdd(event: MatChipInputEvent) {
     if (!this.includedAuto.isOpen) {
       const input = event.input;
@@ -91,16 +90,11 @@ export class DistributionDealTerritoryComponent implements OnInit {
       if (
         (value || '') &&
         !this.includedTerritories.includes(value) &&
-        TERRITORIES_SLUG.includes(value)
+        TERRITORIES_SLUG.includes(value) &&
+        !this.excludedTerritories.includes(getCodeIfExists('TERRITORIES', value))
       ) {
-        if (!this.excludedTerritories.includes(getCodeIfExists('TERRITORIES', value))) {
-          this.includedTerritories.push(value);
-          this.form.addIncludedTerritory(value);
-        } else {
-          this.includedControl.setErrors({ territoryAlreadyExists: true });
-        }
-      } else {
-        this.includedControl.setErrors({ territoryValidator: true });
+        this.includedTerritories.push(value);
+        this.form.addIncludedTerritory(value);
       }
 
       // Reset the input value
@@ -121,16 +115,11 @@ export class DistributionDealTerritoryComponent implements OnInit {
       if (
         (value || '') &&
         !this.excludedTerritories.includes(value) &&
-        TERRITORIES_SLUG.includes(value)
+        TERRITORIES_SLUG.includes(value) &&
+        !this.includedTerritories.includes(getCodeIfExists('TERRITORIES', value))
       ) {
-        if (!this.includedTerritories.includes(getCodeIfExists('TERRITORIES', value))) {
-          this.excludedTerritories.push(value);
-          this.form.addExcludedTerritory(value);
-        } else {
-          this.excludedControl.setErrors({ territoryAlreadyExists: true });
-        }
-      } else {
-        this.excludedControl.setErrors({ territoryValidator: true });
+        this.excludedTerritories.push(value);
+        this.form.addExcludedTerritory(value);
       }
 
       // Reset the input value
@@ -163,16 +152,11 @@ export class DistributionDealTerritoryComponent implements OnInit {
   public includedSelected(event: MatAutocompleteSelectedEvent) {
     if (
       !this.includedTerritories.includes(event.option.viewValue) &&
-      TERRITORIES_SLUG.includes(event.option.value)
+      TERRITORIES_SLUG.includes(event.option.value) &&
+      !this.excludedTerritories.includes(event.option.viewValue)
     ) {
-      if (!this.excludedTerritories.includes(event.option.viewValue)) {
-        this.form.addIncludedTerritory(event.option.value);
-        this.includedTerritories.push(event.option.viewValue);
-      } else {
-        this.includedControl.setErrors({ territoryAlreadyExists: true });
-      }
-    } else {
-      this.includedControl.setErrors({ territoryValidator: true });
+      this.form.addIncludedTerritory(event.option.value);
+      this.includedTerritories.push(event.option.viewValue);
     }
     this.includedTerritoryInput.nativeElement.value = '';
     this.includedControl.reset();
@@ -181,16 +165,11 @@ export class DistributionDealTerritoryComponent implements OnInit {
   public excludedSelected(event: MatAutocompleteSelectedEvent) {
     if (
       !this.excludedTerritories.includes(event.option.viewValue) &&
-      TERRITORIES_SLUG.includes(event.option.value)
+      TERRITORIES_SLUG.includes(event.option.value) &&
+      !this.includedTerritories.includes(event.option.viewValue)
     ) {
-      if (!this.includedTerritories.includes(event.option.viewValue)) {
-        this.form.addExcludedTerritory(event.option.value);
-        this.excludedTerritories.push(event.option.viewValue);
-      } else {
-        this.excludedControl.setErrors({ territoryAlreadyExists: true });
-      }
-    } else {
-      this.excludedControl.setErrors({ territoryValidator: true });
+      this.form.addExcludedTerritory(event.option.value);
+      this.excludedTerritories.push(event.option.viewValue);
     }
     this.excludedTerritoryInput.nativeElement.value = '';
     this.excludedControl.reset();
