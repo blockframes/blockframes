@@ -1,5 +1,5 @@
 <ng-container *ngFor="let control of controls">
-  <drop-cropper [formControl]="control">
+  <drop-cropper [formControl]="control" *ngIf="control.length > 0">
     <h3 type>Banner image*</h3>
     <p dimensions class="mat-body-2">Dimensions : 3200 x 410 px</p>
   </drop-cropper>
