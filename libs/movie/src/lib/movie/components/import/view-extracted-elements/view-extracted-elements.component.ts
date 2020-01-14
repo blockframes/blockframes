@@ -447,10 +447,7 @@ export class ViewExtractedElementsComponent {
 
         // KEY ASSETS (Key Assets)
         if (spreadSheetRow[SpreadSheetMovie.keyAssets]) {
-          movie.promotionalDescription.keyAssets = [];
-          spreadSheetRow[SpreadSheetMovie.keyAssets].split(this.separator).forEach((k: string) => {
-            movie.promotionalDescription.keyAssets.push(k);
-          });
+          movie.promotionalDescription.keyAssets = spreadSheetRow[SpreadSheetMovie.keyAssets];
         }
 
         // KEYWORDS

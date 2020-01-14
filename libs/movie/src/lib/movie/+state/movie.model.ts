@@ -106,7 +106,7 @@ export function createMoviePromotionalDescription(
   params: Partial<MoviePromotionalDescription> = {}
 ): MoviePromotionalDescription {
   return {
-    keyAssets: [],
+    keyAssets: '',
     keywords: [],
     ...params
   };
