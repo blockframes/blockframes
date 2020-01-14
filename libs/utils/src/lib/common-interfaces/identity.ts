@@ -100,12 +100,3 @@ export function createCredit(params: Partial<Credit> = {}): Credit {
     ...params
   };
 }
-
-export function createCompany(params: Partial<Company> = {}): Company {
-  return {
-    displayName: '',
-    role: '',
-    logo: createImgRef(),
-    ...params
-  };
-}

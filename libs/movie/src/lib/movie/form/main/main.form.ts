@@ -1,7 +1,7 @@
 import { FormEntity, FormList, yearValidators } from '@blockframes/utils';
 import { MovieMain, Credit, createMovieMain, Movie, createTitle } from '../../+state';
 import { Validators, FormControl } from '@angular/forms';
-import { createCredit, createCompany, Stakeholder } from '@blockframes/utils/common-interfaces/identity';
+import { createCredit, Stakeholder, createStakeholder } from '@blockframes/utils/common-interfaces/identity';
 
 function createCreditFormControl(credit?: Partial<Credit>) {
   const { firstName, lastName, role } = createCredit(credit);
@@ -43,7 +43,7 @@ export class StakeholdersForm extends FormEntity<StakeholdersControl> {
 }
 
 function createStakeholdersControl(stakeholder?: Partial<Stakeholder>) {
-  const { displayName } = createCompany(stakeholder);
+  const { displayName } = createStakeholder(stakeholder);
   return {
     displayName: new FormControl(displayName),
   }
