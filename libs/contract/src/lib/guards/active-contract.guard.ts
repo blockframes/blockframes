@@ -17,6 +17,6 @@ export class ActiveContractGuard extends CollectionGuard<ContractState> {
    * Use it on a route with :contractId in it.
    */
   sync(next: ActivatedRouteSnapshot) {
-    return this.service.syncActive({ id: next.params.contractId });
+    return this.service.syncActive({ id: 'AznavourDeepHousePulsarMandateArchipel' });
   }
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { OrganizationQuery } from '@blockframes/organization';
-import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
-import { switchMap } from 'rxjs/operators';
+import { CollectionConfig, CollectionService, WriteOptions, awaitSyncQuery } from 'akita-ng-fire';
+import { switchMap, tap } from 'rxjs/operators';
 import { createMovie, Movie } from './movie.model';
 import { MovieState, MovieStore } from './movie.store';
 import { AuthQuery } from '@blockframes/auth';
@@ -24,15 +24,21 @@ export class MovieService extends CollectionService<MovieState> {
 
   /** Gets every movieIds of the user active organization and sync them. */
   public syncOrgMovies() {
-    return this.organizationQuery.selectActive().pipe(
-      switchMap(org => this.syncManyDocs(org.movieIds))
-    );
+    return this.organizationQuery
+      .selectActive()
+      .pipe(switchMap(org => this.syncManyDocs(org.movieIds)));
   }
 
-  /** Gets every movies Id from contract and sync them. */
+  /** Gets every movies Id from contract and sync them if they belong to active. */
   public syncContractMovies() {
     return this.contractQuery.selectActive().pipe(
-      switchMap(contract => this.syncManyDocs(contract.titleIds))
+      switchMap(contract => {
+        const movieIds = Object.keys(contract.last.titles);
+        const filteredMovieIds = movieIds.filter(movieId =>
+          this.organizationQuery.getActive().movieIds.includes(movieId)
+        );
+        return this.syncManyDocs(filteredMovieIds);
+      })
     );
   }
 
@@ -40,7 +46,7 @@ export class MovieService extends CollectionService<MovieState> {
   public async remove(movieId: string) {
     const userId = this.authQuery.userId;
     // We need to update the _meta field before remove to get the userId in the backend function: onMovieDeleteEvent
-    await this.db.doc(`movies/${movieId}`).update({ "_meta.deletedBy": userId });
+    await this.db.doc(`movies/${movieId}`).update({ '_meta.deletedBy': userId });
     return super.remove(movieId);
   }
 
@@ -58,14 +64,14 @@ export class MovieService extends CollectionService<MovieState> {
     }
 
     // Add movie document to the database
-    await this.add(cleanModel(movie))
+    await this.add(cleanModel(movie));
 
     return movie;
   }
 
   onUpdate(movie: Movie, { write }: WriteOptions) {
     const movieRef = this.db.doc(`movies/${movie.id}`).ref;
-    write.update(movieRef, { "_meta.updatedBy": this.authQuery.userId });
+    write.update(movieRef, { '_meta.updatedBy': this.authQuery.userId });
   }
 
   public updateById(id: string, movie: any): Promise<void> {
@@ -93,7 +99,8 @@ export class MovieService extends CollectionService<MovieState> {
   public async getFromInternalRef(internalRef: string): Promise<Movie> {
     const movieSnapShot = await this.db
       .collection('movies', ref => ref.where('main.internalRef', '==', internalRef))
-      .get().toPromise();
+      .get()
+      .toPromise();
 
     return movieSnapShot.docs.length ? createMovie(movieSnapShot.docs[0].data()) : undefined;
   }
