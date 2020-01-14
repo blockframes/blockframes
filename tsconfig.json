@@ -161,8 +161,8 @@
       ],
 
       // APPS
-      "@blockframes/apps/delivery": [
-        "apps/delivery/delivery/src/app/delivery.module.ts"
+      "@blockframes/apps/delivery/*": [
+        "apps/delivery/delivery/src/app/*"
       ],
       "@blockframes/apps/catalog/marketplace/*": [
         "apps/catalog/src/app/marketplace/*"
