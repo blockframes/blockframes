@@ -1,4 +1,4 @@
-import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
+import { FireAnalytics, AnalyticsEvents } from '@blockframes/utils/analytics/app-analytics';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -40,7 +40,7 @@ export class WishlistViewComponent implements OnInit {
     try {
       this.cartService.updateWishlistStatus(movies);
       this.snackBar.open('Your current wishlist has been sent.', 'close', { duration: 2000 });
-      this.analytics.event('wishlist_send', {
+      this.analytics.event(AnalyticsEvents.wishlistSend, {
         wishlist: movies
       });
     } catch (err) {

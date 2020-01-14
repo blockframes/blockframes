@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, Component, HostBinding, OnInit } from '@angula
 import { Movie, MovieQuery } from '@blockframes/movie/movie/+state';
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
+import { FireAnalytics, AnalyticsEvents } from '@blockframes/utils/analytics/app-analytics';
 import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
 
 interface CarouselSection {
@@ -83,8 +83,9 @@ export class MarketplaceHomeComponent implements OnInit {
     event.stopPropagation();
     this.cartService.updateWishlist(movie);
     this.snackbar.open(`${movie.main.title.international} has been added to your selection.`, 'close', { duration: 2000 });
-    this.analytics.event('movie_to_wishlist', {
-      movie_name: movie.main.title.original,
+    this.analytics.event(AnalyticsEvents.addedToWishlist, {
+      movieId: movie.id,
+      movieTitle: movie.main.title.original,
     });
   }
 
@@ -92,8 +93,9 @@ export class MarketplaceHomeComponent implements OnInit {
     event.stopPropagation();
     this.cartService.updateWishlist(movie);
     this.snackbar.open(`${movie.main.title.international} has been removed from your selection.`, 'close', { duration: 2000 });
-    this.analytics.event('movie_removed_wishlist', {
-      movie_name: movie.main.title.original,
+    this.analytics.event(AnalyticsEvents.removedFromWishlist, {
+      movieId: movie.id,
+      movieTitle: movie.main.title.original,
     });
   }
 

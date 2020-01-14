@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { MovieQuery } from '@blockframes/movie';
 import { OrganizationQuery } from '@blockframes/organization';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { FireAnalytics, AnalyticsEvents } from '@blockframes/utils/analytics/app-analytics';
 
 @Component({
   selector: 'catalog-movie-view',
@@ -24,7 +25,8 @@ export class MarketplaceMovieViewComponent implements OnInit {
     private movieQuery: MovieQuery,
     private cartService: CartService,
     private orgQuery: OrganizationQuery,
-    private snackbar: MatSnackBar
+    private snackbar: MatSnackBar,
+    private analytics: FireAnalytics
   ) {}
 
   ngOnInit() {
@@ -43,15 +45,33 @@ export class MarketplaceMovieViewComponent implements OnInit {
     this.movie$ = this.movieQuery.selectActive();
   }
 
+  public sendPromoReelAnalytic() {
+    const movie = this.movieQuery.getActive();
+    this.analytics.event(AnalyticsEvents.promoReelOpened, {
+      movieId: movie.id,
+      movie: movie.main.title.original
+    });
+  }
+
   public addToWishlist() {
-    const title = this.movieQuery.getActive().main.title.international
-    this.cartService.updateWishlist(this.movieQuery.getActive());
+    const movie = this.movieQuery.getActive();
+    const title = movie.main.title.international;
+    this.cartService.updateWishlist(movie);
+    this.analytics.event(AnalyticsEvents.addedToWishlist, {
+      movieId: movie.id,
+      movieTitle: movie.main.title.original
+    });
     this.snackbar.open(`${title} has been added to your selection.`, 'close', { duration: 2000 });
   }
 
   public removeFromWishlist() {
-    const title = this.movieQuery.getActive().main.title.international
-    this.cartService.updateWishlist(this.movieQuery.getActive());
+    const movie = this.movieQuery.getActive();
+    const title = movie.main.title.international;
+    this.cartService.updateWishlist(movie);
+    this.analytics.event(AnalyticsEvents.removedFromWishlist, {
+      movieId: movie.id,
+      movieTitle: movie.main.title.original
+    });
     this.snackbar.open(`${title} has been removed from your selection.`, 'close', { duration: 2000 });
   }
 
