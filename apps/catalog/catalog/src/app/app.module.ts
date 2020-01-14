@@ -8,7 +8,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { HttpClientModule } from '@angular/common/http';
 import { ServiceWorkerModule } from '@angular/service-worker';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router, NavigationEnd, RouterModule } from '@angular/router';
 
 // Libraries
 import { AngularFireAnalyticsModule } from '@blockframes/utils/analytics/analytics.module';
@@ -19,7 +19,6 @@ import { environment } from '../environments/environment';
 
 // Components
 import { AppComponent } from './app.component';
-import { AppRoutingModule } from './app-routing.module';
 
 // Angular Fire
 import { AngularFireModule } from '@angular/fire';
@@ -50,7 +49,6 @@ import { FireAnalytics, AnalyticsEvents } from '@blockframes/utils/analytics/app
     // Angular
     BrowserModule,
     BrowserAnimationsModule,
-    AppRoutingModule,
     FlexLayoutModule,
     HttpClientModule,
     ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
@@ -80,6 +78,17 @@ import { FireAnalytics, AnalyticsEvents } from '@blockframes/utils/analytics/app
       accurateTrackBounce: true,
       webvisor: true
     }),
+
+    // Router
+    RouterModule.forRoot([{
+      path: '',
+      loadChildren: () => import('./catalog.module').then(m => m.CatalogModule)
+    }], {
+      initialNavigation: 'enabled',
+      anchorScrolling: 'enabled',
+      onSameUrlNavigation: 'reload',
+      paramsInheritanceStrategy: 'always'
+    })
   ],
   providers: [],
   bootstrap: [AppComponent]
@@ -104,4 +113,3 @@ export class AppModule {
     });
   }
 }
-
