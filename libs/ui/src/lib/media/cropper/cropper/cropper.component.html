@@ -46,7 +46,7 @@
         <img class="croppedImage" [src]="url" />
       </div>
       <div class="buttons" fxLayout="row" fxLayoutAlign="space-evenly center">
-        <ng-container *ngIf="useChangePic">
+        <ng-container *ngIf="useFileuploader">
           <input #fileUploader multiple hidden type="file" (change)="filesSelected($event.target.files)" />
           <mat-icon (click)="fileUploader.click()" mat-button fontSet="material-icons-outlined" color="primary" matTooltip="select new picture">photo_size_select_actual</mat-icon>
         </ng-container>

@@ -1,7 +1,7 @@
-import { Component, Input, forwardRef, Renderer2, ElementRef } from '@angular/core';
+import { Component, Input, Output, forwardRef, Renderer2, ElementRef, EventEmitter } from '@angular/core';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
 import { DropZoneDirective } from '../drop-zone.directive'
-import { finalize, catchError } from 'rxjs/operators';
+import { finalize, catchError, distinctUntilChanged } from 'rxjs/operators';
 import { Observable, BehaviorSubject, of, combineLatest } from 'rxjs';
 import { zoom, zoomDelay, check, finalZoom } from '@blockframes/utils/animations/cropper-animations';
 import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/storage';
@@ -79,6 +79,8 @@ export class CropperComponent implements ControlValueAccessor {
   /** Disable fileuploader & delete buttons in 'show' step */
   @Input() useFileuploader?= true;
   @Input() useDelete?= true;
+  @Output() onUploaded = new EventEmitter();
+  @Output() onDeleted = new EventEmitter();
   uploaded: (ref: ImgRef) => void;
   deleted: () => void;
 
@@ -109,8 +111,16 @@ export class CropperComponent implements ControlValueAccessor {
 
   // update the parent form field when there is change in the component (component -> parent)
   registerOnChange(fn: any): void {
-    this.uploaded = (ref: ImgRef) => fn(ref);
-    this.deleted = () => fn({ url: '', ref: '', originalRef: '' });
+    console.log('registerOnChange')
+    this.uploaded = (ref: ImgRef) => {
+      fn(ref);
+      this.onUploaded.emit(ref);
+    };
+
+    this.deleted = () => {
+      fn({ url: '', ref: '', originalRef: '' });
+      this.onDeleted.emit()
+    }
   }
 
   registerOnTouched(fn: any): void {
@@ -159,7 +169,8 @@ export class CropperComponent implements ControlValueAccessor {
   goToShow() {
     this.url$ = this.ref.getDownloadURL();
     // Observable completed once both requests are completed
-    combineLatest([this.url$, this.ref.getMetadata()]).subscribe(([url, meta]) => {
+    combineLatest([this.url$, this.ref.getMetadata()])
+    .subscribe(([url, meta]) => {
       this.uploaded({
         url,
         ref: meta.fullPath,
