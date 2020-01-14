@@ -15,8 +15,8 @@ export class CreditsComponent {
     return this.form.get('main').get('productionYear');
   }
 
-  get productionCompanies() {
-    return this.form.get('main').get('productionCompanies');
+  get stakeholders() {
+    return this.form.get('main').get('stakeholders');
   }
 
   get credits() {

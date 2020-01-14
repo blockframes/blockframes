@@ -59,10 +59,10 @@
         <!-- Production information -->
         <catalog-production-informations *ngIf="
           movie.main &&
-          movie.main.productionCompanies &&
+          movie.main.stakeholders &&
           movie.salesAgentDeal &&
           movie.salesAgentDeal.salesAgent"
-          [productionCompanies]="movie.main.productionCompanies"
+          [productionCompanies]="movie.main.stakeholders"
           [salesAgentDealAvatar]="movie.salesAgentDeal.salesAgent.avatar">
         </catalog-production-informations>
         <!-- Key Assets -->
@@ -88,7 +88,7 @@
           [synopsis]="movie.main.shortSynopsis"
           [keywords]="movie.promotionalDescription.keywords"
           [releaseDate]="movie.AFMOriginCountryReleaseDate"
-          [productionCompanies]="movie.main.productionCompanies"
+          [productionCompanies]="movie.main.stakeholders"
           [salesAgent]="movie.salesAgentDeal.salesAgent">
         </movie-display-film-info-card>
         <!-- Promotional elements -->

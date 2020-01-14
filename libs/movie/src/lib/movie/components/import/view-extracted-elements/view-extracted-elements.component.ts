@@ -306,9 +306,9 @@ export class ViewExtractedElementsComponent {
 
         // PRODUCTION COMPANIES (Production Companie(s))
         if (spreadSheetRow[SpreadSheetMovie.productionCompanies]) {
-          movie.main.productionCompanies = [];
+          movie.main.stakeholders = [];
           spreadSheetRow[SpreadSheetMovie.productionCompanies].split(this.separator).forEach((p: string) => {
-            movie.main.productionCompanies.push({ displayName: p });
+            movie.main.stakeholders.push({ displayName: p });
           });
         }
 
@@ -843,10 +843,10 @@ export class ViewExtractedElementsComponent {
       });
     }
 
-    if (movie.main.productionCompanies.length === 0) {
+    if (movie.main.stakeholders.length === 0) {
       errors.push({
         type: 'warning',
-        field: 'main.productionCompanies',
+        field: 'main.stakeholders',
         name: "Production Companie(s)",
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'

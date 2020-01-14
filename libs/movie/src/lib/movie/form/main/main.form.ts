@@ -36,20 +36,20 @@ function createDirectorFormControl(director?: Partial<Credit>) {
 
 type DirectorFormControl = ReturnType<typeof createDirectorFormControl>;
 
-export class ProductionCompagnyForm extends FormEntity<ProductionCompagnyControl> {
+export class StakeholdersForm extends FormEntity<StakeholdersControl> {
   constructor(compagny?: Partial<Credit>) {
-    super(createProductionCompagnyControl(compagny))
+    super(createStakeholdersControl(compagny))
   }
 }
 
-function createProductionCompagnyControl(compagny?: Partial<Credit>) {
+function createStakeholdersControl(compagny?: Partial<Credit>) {
   const { displayName } = createCompany(compagny);
   return {
     displayName: new FormControl(displayName),
   }
 }
 
-type ProductionCompagnyControl = ReturnType<typeof createProductionCompagnyControl>;
+type StakeholdersControl = ReturnType<typeof createStakeholdersControl>;
 
 
 export class TitleForm extends FormEntity<TitleFormControl> {
@@ -83,7 +83,7 @@ function createMovieMainControls(main : Partial<MovieMain> = {}) {
     status: new FormControl(entity.status , [Validators.required]),
     totalRunTime: new FormControl(entity.totalRunTime),
     shortSynopsis: new FormControl(entity.shortSynopsis, [Validators.maxLength(500)] ),
-    productionCompanies: FormList.factory(entity.productionCompanies, el => new ProductionCompagnyForm(el)),
+    stakeholders: FormList.factory(entity.stakeholders, el => new StakeholdersForm(el)),
   }
 }
 
@@ -102,8 +102,8 @@ export class MovieMainForm extends FormEntity<MovieMainControl>{
     return this.get('directors');
   }
 
-  get productionCompanies() {
-    return this.get('productionCompanies');
+  get stakeholders() {
+    return this.get('stakeholders');
   }
 
   get shortSynopsis() {
@@ -121,11 +121,11 @@ export class MovieMainForm extends FormEntity<MovieMainControl>{
   }
 
   public addProductionCompany(): void {
-    const credit = new ProductionCompagnyForm();
-    this.productionCompanies.push(credit);
+    const credit = new StakeholdersForm();
+    this.stakeholders.push(credit);
   }
 
   public removeProductionCompany(i: number): void {
-    this.productionCompanies.removeAt(i);
+    this.stakeholders.removeAt(i);
   }
 }

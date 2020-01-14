@@ -84,7 +84,7 @@ export function createMovieMain(params: Partial<MovieMain> = {}): MovieMain {
     workType: WorkType.movie,
     storeConfig: createStoreConfig(params.storeConfig),
     languages: [],
-    productionCompanies: [],
+    stakeholders: [],
     originCountries: [],
     status: '',
     ...params,
