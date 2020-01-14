@@ -1,4 +1,4 @@
-import { ContractWithLastVersion, createContractVersion } from './../version/+state/contract-version.model';
+import { createTerms } from '@blockframes/utils/common-interfaces/terms';
 import { getCodeIfExists } from '@blockframes/movie/movie/static-model/staticModels';
 import { LegalRolesSlug } from '@blockframes/movie/movie/static-model/types';
 import { createPrice } from '@blockframes/utils/common-interfaces/price';
@@ -7,15 +7,26 @@ import {
   ContractStatus,
   ContractTitleDetail,
   ContractPartyDetailDocumentWithDates,
-  ContractPartyDetailDocumentWithDatesDocument
+  ContractPartyDetailDocumentWithDatesDocument,
+  ContractVersionDocumentWithDates
 } from './contract.firestore';
 import { createParty } from '@blockframes/utils/common-interfaces/identity';
 export type Contract = ContractDocumentWithDates;
+
+export type ContractVersion = ContractVersionDocumentWithDates;
 
 export type ContractPartyDetail = ContractPartyDetailDocumentWithDates;
 
 export type ContractPartyDetailDocument = ContractPartyDetailDocumentWithDatesDocument;
 
+/**
+ * @dev this should not be saved to firestore,
+ * used only in front
+ */
+export interface ContractWithLastVersion {
+  doc: Contract;
+  last: ContractVersion;
+}
 export function createContract(params: Partial<Contract> = {}): Contract {
   return {
     id: params.id ? params.id : '',
@@ -26,7 +37,21 @@ export function createContract(params: Partial<Contract> = {}): Contract {
   };
 }
 
-export function createContractTitleDetail(params: Partial<ContractTitleDetail> = {}): ContractTitleDetail {
+export function createContractVersion(params: Partial<ContractVersion> = {}): ContractVersion {
+  return {
+    id: params.id ? params.id : '1',
+    titles: {},
+    creationDate: new Date(),
+    ...params,
+    status: ContractStatus.submitted,
+    scope: createTerms(params.scope),
+    price: createPrice(params.price)
+  };
+}
+
+export function createContractTitleDetail(
+  params: Partial<ContractTitleDetail> = {}
+): ContractTitleDetail {
   return {
     titleId: '',
     distributionDealIds: [],
