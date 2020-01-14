@@ -1,4 +1,4 @@
-<ng-container *ngFor="let control of controls">
+<!-- <ng-container *ngFor="let control of controls">
   <ng-container *ngIf="displayCropper">
     <drop-cropper [formControl]="control.get('media')">
       <h3 type>Banner image*</h3>
@@ -8,4 +8,12 @@
   <ng-container *ngIf="!displayCropper">
     <img [imgRef]="control.media" />
   </ng-container>
-</ng-container>
+</ng-container> -->
+<form [formGroup]="localForm">
+  <drop-cropper 
+  [storagePath]="type" 
+  [ratio]="1" 
+  [setWidth]="300"
+  formControlName="media"
+  (onUploaded)="add($event)"></drop-cropper>
+</form>
