@@ -10,8 +10,10 @@ import { MatSlideToggleChange } from '@angular/material';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TunnelPreviousDealsComponent {
-  
-  constructor(private formContract: ContractForm, private formDistributionDeal: DistributionDealForm) {}
+  constructor(
+    private formContract: ContractForm,
+    private formDistributionDeal: DistributionDealForm
+  ) {}
 
   get contract() {
     return this.formContract.get('parties');
@@ -21,7 +23,7 @@ export class TunnelPreviousDealsComponent {
     return this.formDistributionDeal;
   }
 
-  public updateForm(value: MatSlideToggleChange) {
-    this.formDistributionDeal.get('exclusive').setValue(value.checked);
+  get distributionDealExclusiveControl() {
+    return this.formDistributionDeal.get('exclusive');
   }
 }
