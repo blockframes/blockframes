@@ -399,13 +399,14 @@ export class ViewExtractedElementsComponent {
         }
 
         // INTERNATIONAL PREMIERE (International Premiere )
-        if (spreadSheetRow[SpreadSheetMovie.internationalPremiere]) {
-          if (spreadSheetRow[SpreadSheetMovie.internationalPremiere].split(this.separator).length === 2 && !isNaN(Number(spreadSheetRow[SpreadSheetMovie.internationalPremiere].split(',')[1]))) {
-
+        const spreadSheetPremiere = spreadSheetRow[SpreadSheetMovie.internationalPremiere];
+        if (spreadSheetPremiere) {
+          const isPremiereYearNumber = !isNaN(Number(spreadSheetPremiere.split(',')[1]));
+          if (spreadSheetPremiere.split(this.separator).length === 2 && isPremiereYearNumber) {
             const prize = createPrize();
 
-            prize.name = spreadSheetRow[SpreadSheetMovie.internationalPremiere].split(',')[0];
-            prize.year = Number(spreadSheetRow[SpreadSheetMovie.internationalPremiere].split(',')[1]);
+            prize.name = spreadSheetPremiere.split(',')[0];
+            prize.year = Number(spreadSheetPremiere.split(',')[1]);
             prize.premiere = PremiereType.internationnal;
 
             movie.festivalPrizes.prizes.push(prize);
