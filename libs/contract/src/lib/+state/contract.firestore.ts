@@ -18,6 +18,11 @@ export enum ContractStatus {
   aborted = 'abordted',
 }
 
+/** An interface for a single document to display versions subcollection count. */
+export interface VersionMeta {
+  count: number;
+}
+
 export interface ContractTitleDetail {
   /**
    * @dev titleId is replacing movieId

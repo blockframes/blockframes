@@ -33,6 +33,7 @@ import { onInvitationWrite } from './invitation';
 import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate } from './orgs';
 import { adminApp, onRequestAccessToAppWrite } from './admin';
 import { onMovieUpdate, onMovieCreate, onMovieDelete } from './movie';
+import { onContractVersionCreate, onContractVersionDelete } from './contract';
 
 /** Trigger: when eth-events-server pushes contract events. */
 export const onIpHashEvent = functions.pubsub.topic('eth-events.ipHash').onPublish(onIpHash);
@@ -113,6 +114,18 @@ export const onInvitationUpdateEvent = onDocumentWrite(
   'invitations/{invitationID}',
   onInvitationWrite
 );
+
+/** Trigger: when an new version of a contract is added. */
+export const onContractVersionCreateEvent = onDocumentCreate(
+  'contracts/{contractID}/versions/{versionID}',
+  onContractVersionCreate
+)
+
+/** Trigger: when a version of a contract is removed. */
+export const onContractVersionDeleteEvent = onDocumentDelete(
+  'contracts/{contractID}/versions/{versionID}',
+  onContractVersionDelete
+)
 
 //--------------------------------
 //       Movies Management        //
