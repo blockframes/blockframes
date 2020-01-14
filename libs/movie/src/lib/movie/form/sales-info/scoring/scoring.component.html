@@ -1,0 +1,8 @@
+<mat-form-field appearance="outline">
+    <mat-label>Evaluation note</mat-label>
+    <mat-select [formControl]="form">
+        <mat-option *ngFor="let scoring of staticScoring" [value]="scoring.slug">
+            {{ scoring.label }}
+        </mat-option>
+    </mat-select>
+</mat-form-field>
