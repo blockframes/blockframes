@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { HttpClientModule } from '@angular/common/http';
+import { RouterModule } from '@angular/router';
 
 // Akita
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
@@ -11,7 +12,6 @@ import { environment } from '../environments/environment';
 
 // Components
 import { AppComponent } from './app.component';
-import { AppRoutingModule } from './app-routing-module';
 import { LayoutComponent } from './layout/layout.component';
 
 // Angular Fire
@@ -63,7 +63,6 @@ import { sentryDsn } from '@env';
     // Angular
     BrowserModule,
     BrowserAnimationsModule,
-    AppRoutingModule,
     FlexLayoutModule,
     HttpClientModule,
 
@@ -111,6 +110,17 @@ import { sentryDsn } from '@env';
 
     // Akita
     AkitaNgRouterStoreModule.forRoot(),
+
+    // Router
+    RouterModule.forRoot([{
+      path: '',
+      loadChildren: () => import('./delivery.module').then(m => m.DeliveryModule)
+    }], {
+      initialNavigation: 'enabled',
+      anchorScrolling: 'enabled',
+      onSameUrlNavigation: 'reload',
+      paramsInheritanceStrategy: 'always'
+    })
   ],
   providers: [],
   bootstrap: [AppComponent]

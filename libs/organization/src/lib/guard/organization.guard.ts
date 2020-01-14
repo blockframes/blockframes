@@ -33,10 +33,10 @@ export class OrganizationGuard extends CollectionGuard<OrganizationState> {
             map(_ => this.query.getActive()),
             map(org => {
               if (!org) {
-                return 'c/organization';
+                return '/c/organization';
               }
               if (org.status === OrganizationStatus.pending) {
-                return 'c/organization/congratulations';
+                return '/c/organization/congratulations';
               }
             })
           );

@@ -6,8 +6,6 @@ import { LayoutComponent } from './layout/layout.component';
 import { AppGridComponent } from './app-grid/app-grid.component';
 // Routes utils
 import { App } from '@blockframes/utils';
-import { createRoutes } from '@blockframes/utils/routes';
-
 
 const routes = [{
   path: '',
@@ -19,7 +17,7 @@ const routes = [{
 {
   path: App.mediaDelivering,
   data: { app: App.mediaDelivering },
-  loadChildren: () => import('@blockframes/apps/delivery').then(m => m.DeliveryAppModule)
+  loadChildren: () => import('@blockframes/apps/delivery/delivery.module').then(m => m.DeliveryModule)
 }]
 
 @NgModule({
