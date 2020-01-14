@@ -12,7 +12,7 @@ export interface QuorumNodeCredentials {
   user: string;
 }
 
-function instantiateQuorumProvider(credential: QuorumNodeCredentials, password: string) {
+function quorumProvider(credential: QuorumNodeCredentials, password: string) {
   return new JsonRpcProvider({
     url: credential.url,
     user: credential.user,
@@ -25,6 +25,7 @@ function getFunctionId(functionSignature: string) {
   return keccak256(functionSignature).substr(0, 10);
 }
 
+// TODO ISSUE#1560 MAKE CODE MORE GENERIC
 /**
 * Function called by an Archipel-Content admin (via a page in the admin UI).
 * This function will connect to Archipel-Content's quorum node and then deploy a new movie smart-contract
@@ -34,7 +35,7 @@ export async function deployMovieContract(
     password: string,
   ) {
 
-    const provider = instantiateQuorumProvider(quorum.archipelNode, password);
+    const provider = quorumProvider(quorum.archipelNode, password);
 
     const movieContractFactory = new ContractFactory(abi, bytecode, provider.getSigner());
     const deployBytecode = movieContractFactory.getDeployTransaction(quorum.pulsarlNode.ethAddress).data; // ! maybe the owner should not be hardcoded, for Berlin poc it should be fine though
@@ -54,6 +55,7 @@ export async function deployMovieContract(
     return txReceipt;
   }
 
+  // TODO ISSUE#1560 MAKE CODE MORE GENERIC
   /**
   * Function called by an Archipel-Content admin (via a page in the admin UI).
   * This function will connect to Archipel-Content's quorum node and then set a movie's initial share.
@@ -72,7 +74,7 @@ export async function deployMovieContract(
       throw new Error(`'initialRepartition' must be a valid percentage (0-100) but ${initialRepartition} was given!`);
     }
 
-    const provider = instantiateQuorumProvider(quorum.archipelNode, password);
+    const provider = quorumProvider(quorum.archipelNode, password);
 
     const abiCoder = new AbiCoder();
     const functionId = getFunctionId('addDeal(address,address,uint256,uint256)');
@@ -85,12 +87,11 @@ export async function deployMovieContract(
         0, // parent share id : 0 for the initial share (see movie2.sol implementation for more details)
       ]
     ).substr(2); // remove leading '0x'
-    const data = `${functionId}${functionParams}`;
     const tx = {
       from: quorum.archipelNode.ethAddress,
       to: contractAddress,
       gas: '0x2fefd800', // setting 'gas' to 'BLOCK_GAS_LIMIT'
-      data,
+      data: `${functionId}${functionParams}`,
       privateFor: [quorum.pulsarlNode.privateFor], // this transaction is private between us and pulsar
     }
     const txHash = await provider.send('eth_sendTransaction', [tx]);

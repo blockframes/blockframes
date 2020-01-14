@@ -103,6 +103,9 @@ contract Movie2 {
         shares[newShareIdB] = Share(participantB, finalSharePercentageB, parentShareId, true);
     }
 
+    // Bank informing that a payement has been received
+    // For the moment the function only store the payement and
+    // iterate over shares to emit an event for each of them
     function pay(string memory buyer, uint256 price) public {
         payments[paymentCount] = Payment(buyer, price, now);
         paymentCount++;
