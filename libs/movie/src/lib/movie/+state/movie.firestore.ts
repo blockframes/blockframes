@@ -27,7 +27,7 @@ export enum PremiereType {
   'internationnal' = 'International',
   'world' = 'World',
   'market' = 'Market',
-  'local' = 'Local',
+  'national' = 'National',
 }
 
 
