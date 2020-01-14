@@ -35,8 +35,8 @@ export {
   UserRole
 } from '@blockframes/permissions/types';
 export { PublicUser } from '@blockframes/auth/types';
-
-export { RequestDemoInformations } from '@blockframes/catalog';
+export { RequestDemoInformations } from '@blockframes/catalog/demo-request.model';
+export { ContractVersionDocument, VersionMeta } from '@blockframes/contract/+state/contract.firestore';
 
 /**
  * Types used by the firebase backend.
