@@ -51,7 +51,7 @@ export interface MovieSalesAgentDealDocumentWithDates extends MovieSalesAgentDea
 }
 
 export interface MoviePromotionalDescription {
-  keyAssets: string[],
+  keyAssets: string,
   keywords: string[],
 }
 
