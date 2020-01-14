@@ -79,18 +79,6 @@
       </mat-option>
     </mat-select>
   </mat-form-field>
-  <div formGroupName="internationalPremiere">
-    <!-- INTERNATIONAL PREMIERE -->
-    <h3> International Premiere</h3>
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Festival name</mat-label>
-      <input matInput type="text" placeholder="Festival name" formControlName="name" />
-    </mat-form-field>
-    <mat-form-field appearance="outline" class="full-width">
-      <mat-label>Year</mat-label>
-      <input matInput type="number" placeholder="Year" formControlName="year" />
-    </mat-form-field>
-  </div>
   <!-- ORIGINAL RELEASE -->
   <h3> Original Release(s) </h3>
   <div formArrayName="originalRelease" *ngFor="let release of salesInfo.originalRelease.controls; let i = index">

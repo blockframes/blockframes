@@ -38,6 +38,13 @@ export const enum StoreType {
   line_up = 'Line-Up',
 }
 
+export enum PremiereType {
+  'internationnal' = 'International',
+  'world' = 'World',
+  'market' = 'Market',
+  'national' = 'National',
+}
+
 export const enum UnitBox {
   boxoffice_dollar = 'Box office in $',
   boxoffice_euro = 'Box office in €',
@@ -75,6 +82,7 @@ export interface Prize {
   year: number,
   prize?: string,
   logo?: ImgRef,
+  premiere?: PremiereType,
 }
 
 export interface PromotionalElement {
@@ -187,7 +195,6 @@ interface MovieSalesInfoRaw<D> {
   europeanQualification: boolean,
   format?: FormatSlug,
   formatQuality?: FormatQualitySlug,
-  internationalPremiere: Prize,
   originalRelease: MovieOriginalReleaseRaw<D>[],
   physicalHVRelease: D,
   rating: MovieRating[],

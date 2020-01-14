@@ -16,6 +16,14 @@
         <mat-label>Prize</mat-label>
         <input matInput formControlName="prize" placeholder="Prize">
       </mat-form-field>
+      <mat-form-field appearance="outline" class="small-margin">
+        <mat-label>Premiere</mat-label>
+        <mat-select formControlName="premiere" placeholder="Premiere">
+          <mat-option *ngFor="let type of premiereTypes" [value]="type">
+            {{ PremiereType[type] }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
       <div class="movie-poster-thumbnail">
         <h4> Festival Logo </h4>
         <!-- TODO:#1292 cropper size -->

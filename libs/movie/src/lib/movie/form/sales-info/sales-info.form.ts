@@ -1,23 +1,7 @@
-import { MovieSalesInfo, createMovieSalesInfo, createPrize, createMovieRating, createMovieOriginalRelease } from '../../+state';
+import { MovieSalesInfo, createMovieSalesInfo, createMovieRating, createMovieOriginalRelease } from '../../+state';
 import { FormEntity, FormList } from '@blockframes/utils';
 import { FormControl } from '@angular/forms';
 import { MovieRating, MovieOriginalRelease } from '@blockframes/movie/movie+state/movie.firestore';
-
-function createInternationalPremiereControl(entity?: Partial<MovieSalesInfo['internationalPremiere']>) {;
-  const { name, year } = createPrize(entity)
-  return {
-    name: new FormControl(name),
-    year: new FormControl(year)
-  }
-}
-
-type InternationalPremiereControl = ReturnType<typeof createInternationalPremiereControl>;
-
-class InternationalPremiereForm extends FormEntity<InternationalPremiereControl> {
-  constructor(entity?: Partial<MovieSalesInfo['internationalPremiere']>) {
-    super(createInternationalPremiereControl(entity));
-  }
-}
 
 function createRatingFormControl(entity?: Partial<MovieRating>) {
   const { country, reason, system, value } = createMovieRating(entity);
@@ -62,7 +46,6 @@ function createMovieSalesInfoControls(salesInfo: Partial<MovieSalesInfo> = {}){
     europeanQualification: new FormControl(entity.europeanQualification),
     rating: FormList.factory(entity.rating, el => new MovieRatingForm(el)),
     certifications: new FormControl(entity.certifications),
-    internationalPremiere: new InternationalPremiereForm(entity.internationalPremiere),
     originalRelease: FormList.factory(entity.originalRelease, el => new OriginalReleaseForm(el)),
     broadcasterCoproducers: FormList.factory(entity.broadcasterCoproducers),
     format: new FormControl(entity.format),

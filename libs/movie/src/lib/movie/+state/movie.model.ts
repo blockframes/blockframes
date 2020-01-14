@@ -152,11 +152,6 @@ export function createMovieRating(params: Partial<MovieRating> = {}): MovieRatin
 
 export function createMovieSalesInfo(params: Partial<MovieSalesInfo> = {}): MovieSalesInfo {
   return {
-    internationalPremiere: { 
-      name: '',
-      year: 0,
-      prize: ''
-    },
     certifications: [],
     broadcasterCoproducers: [],
     scoring: '',

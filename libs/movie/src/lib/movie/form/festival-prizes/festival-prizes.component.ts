@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ControlContainer } from '@angular/forms';
 import { MovieFestivalPrizesForm } from './festival-prizes.form';
+import { PremiereType } from '@blockframes/movie/movie+state/movie.firestore';
 
 
 @Component({
@@ -15,6 +16,10 @@ export class MovieFormFestivalPrizesComponent {
 
   get festivalprizes() : MovieFestivalPrizesForm {
     return this.controlContainer.control as MovieFestivalPrizesForm;
+  }
+
+  get premiereTypes() {
+    return Object.keys(PremiereType);
   }
 
   public getPrizeName(i) {
