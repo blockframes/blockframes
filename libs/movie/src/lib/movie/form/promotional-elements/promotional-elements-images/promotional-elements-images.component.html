@@ -1,14 +1,3 @@
-<!-- <ng-container *ngFor="let control of controls">
-  <ng-container *ngIf="displayCropper">
-    <drop-cropper [formControl]="control.get('media')">
-      <h3 type>Banner image*</h3>
-      <p dimensions class="mat-body-2">Dimensions : 3200 x 410 px</p>
-    </drop-cropper>
-  </ng-container>
-  <ng-container *ngIf="!displayCropper">
-    <img [imgRef]="control.media" />
-  </ng-container>
-</ng-container> -->
 <form [formGroup]="localForm">
   <drop-cropper 
   [storagePath]="type" 
