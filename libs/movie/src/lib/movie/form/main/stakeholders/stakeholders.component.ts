@@ -1,15 +1,15 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { StakeholdersForm } from '../main.form';
 import { FormList } from '@blockframes/utils/form/forms/list.form';
-import { Company } from "@blockframes/utils/common-interfaces/identity";
+import { Stakeholder } from "@blockframes/utils/common-interfaces/identity";
 @Component({
-  selector: '[form] movie-form-production-companies',
-  templateUrl: './production-companies.component.html',
-  styleUrls: ['./production-companies.component.scss'],
+  selector: '[form] movie-form-stakeholders',
+  templateUrl: './stakeholders.component.html',
+  styleUrls: ['./stakeholders.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProductionCompaniesComponent {
-  @Input() form: FormList<Company>;
+export class StakeholdersComponent {
+  @Input() form: FormList<Stakeholder>;
 
   public add(): void {
     this.form.push(new StakeholdersForm());
