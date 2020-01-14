@@ -161,23 +161,17 @@
       ],
 
       // APPS
-      "@blockframes/marketplace": [
-        "apps/catalog/marketplace/marketplace/src/index.ts"
-      ],
-      "@blockframes/marketplace/*": [
-        "apps/catalog/marketplace/marketplace/src/*"
-      ],
       "@blockframes/apps/delivery": [
         "apps/delivery/delivery/src/app/delivery.module.ts"
       ],
-      "@blockframes/apps/catalog/marketplace": [
-        "apps/catalog/marketplace/marketplace/src/app/marketplace.module.ts"
+      "@blockframes/apps/catalog/marketplace/*": [
+        "apps/catalog/src/app/marketplace/*"
       ],
-      "@blockframes/apps/catalog/dashboard": [
-        "apps/catalog/dashboard/dashboard/src/app/dashboard.module.ts"
+      "@blockframes/apps/catalog/dashboard/*": [
+        "apps/catalog/src/app/dashboard/*"
       ],
       "@blockframes/apps/catalog/*": [
-        "apps/catalog/catalog/src/*"
+        "apps/catalog/catalog/src/app/*"
       ]
     }
   },

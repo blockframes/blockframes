@@ -6,11 +6,18 @@ import { createRoutes } from '@blockframes/utils/routes';
 import { App } from '@blockframes/utils/apps';
 
 /** Scaffold a dashboard like application routing for this application */
-const routes = createRoutes({
+const routes = [
+  {
+    path: '',
+    redirectTo: 'c',
+    pathMatch: 'full',
+  },
+  ...createRoutes({
   appName: App.mediaDelivering,
-  layout: LayoutComponent,
-  appsRoutes: [
-    {
+  appsRoutes: [{
+    path: '',
+    component: LayoutComponent,
+    children: [{
       path: '',
       redirectTo: App.mediaDelivering,
       pathMatch: 'full'
@@ -18,9 +25,10 @@ const routes = createRoutes({
     {
       path: App.mediaDelivering,
       loadChildren: () => import('./delivery.module').then(m => m.DeliveryAppModule)
-    }
-  ]
-});
+    }]
+  }]
+})
+];
 
 @NgModule({
   imports: [
