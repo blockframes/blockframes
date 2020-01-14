@@ -23,6 +23,12 @@ export const enum StoreType {
   line_up = 'Line-Up',
 }
 
+export const enum UnitBox {
+  boxoffice_dollar = 'Box office in $',
+  boxoffice_euro = 'Box office in €',
+  entrances = '#Entrances',
+}
+
 export interface MovieVersionInfo {
   dubbings: string[],
   subtitles: string[],
@@ -89,12 +95,18 @@ export interface MovieFestivalPrizes {
   prizes: Prize[]
 }
 
+export interface BoxOffice {
+  unit: UnitBox,
+  value: number,
+  territory: TerritoriesSlug,
+}
 
 export interface MovieBudget {
   totalBudget: string, // WIP #1052 use Price Interface?
   budgetCurrency?: string, // WIP #1052
-  detailledBudget?: any // WIP #1052
-  estimatedBudget?: NumberRange
+  detailledBudget?: any, // WIP #1052
+  estimatedBudget?: NumberRange,
+  boxOffice?: BoxOffice,
 }
 
 export const enum MovieLanguageTypes {
