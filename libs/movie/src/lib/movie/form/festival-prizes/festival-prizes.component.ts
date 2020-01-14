@@ -18,6 +18,10 @@ export class MovieFormFestivalPrizesComponent {
     return this.controlContainer.control as MovieFestivalPrizesForm;
   }
 
+  get premiereTypes() {
+    return Object.keys(PremiereType);
+  }
+
   public getPrizeName(i) {
     const control = this.festivalprizes.getPrize(i);
     return control.get('name').value ? control.get('name').value : 'unnamed festival';
@@ -26,9 +30,5 @@ export class MovieFormFestivalPrizesComponent {
   public getPrizeLogo(i) {
     const control = this.festivalprizes.getPrize(i);
     return control.get('logo').value;
-  }
-
-  public premiereTypes() {
-    return Object.keys(PremiereType);
   }
 }
