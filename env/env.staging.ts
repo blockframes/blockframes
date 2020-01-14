@@ -97,21 +97,22 @@ export const intercomId = 'srwfltp4';
 // Quorum
 // ========
 export const quorum = {
-  privateForList: [
-    'PJg4NoFMk73mGCbkJ7/griaiKfkbS+edhfjO5PzztQs=',
-    'fnF4IPKvDcmM9bgmEKHoYjNyXG6cXqJjv806RK1F5y8=',
-    'Tj879+7P6IgX2UJTOLtWx5IjrPlABb7HO//kNNbnt28='
-  ],
   archipelNode: {
     url: 'https://e0rf4hbql8-e0cy67u40h-rpc.de0-aws.kaleido.io',
     user: 'e0xwcvgknw',
+    privateFor: 'PJg4NoFMk73mGCbkJ7/griaiKfkbS+edhfjO5PzztQs=',
+    ethAddress: '0x7E5D163D7390A6068d44C8e2F3c2861B5133daa4',
   },
   pulsarlNode: {
     url: 'https://e0rf4hbql8-e0zhtusyfh-rpc.de0-aws.kaleido.io',
     user: 'e0xwcvgknw',
+    privateFor: 'fnF4IPKvDcmM9bgmEKHoYjNyXG6cXqJjv806RK1F5y8=',
+    ethAddress: '0x43c92D51ba8c0B83062F8116B036D6616ebe4746',
   },
   bankNode: {
     url: 'https://e0rf4hbql8-e0jbt507aa-rpc.de0-aws.kaleido.io',
     user: 'e0xwcvgknw',
+    privateFor: 'Tj879+7P6IgX2UJTOLtWx5IjrPlABb7HO//kNNbnt28=',
+    ethAddress: '0xe795245444d459CD0d8e12A26232646B5521e72F',
   },
 }
