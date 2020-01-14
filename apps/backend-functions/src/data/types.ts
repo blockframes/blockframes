@@ -37,6 +37,7 @@ export {
 export { PublicUser } from '@blockframes/auth/types';
 export { RequestDemoInformations } from '@blockframes/catalog/demo-request.model';
 export { MovieAnalytics } from "@blockframes/movie/movie+state/movie.firestore";
+export { EventAnalytics } from "@blockframes/movie/movie+state/movie.firestore";
 
 /**
  * Types used by the firebase backend.
