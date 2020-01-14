@@ -151,16 +151,3 @@ export class ControlErrorStateMatcher implements ErrorStateMatcher {
     return !!(control && control.invalid && control.touched);
   }
 }
-
-/**
- * Checks if the territory exists
- */
-export function territoryValidator(control: AbstractControl): { [key: string]: boolean } | null {
-  if (!!control.value) {
-    return !TERRITORIES_SLUG.includes(control.value.trim().toLowerCase())
-      ? { territoryNotSupported: true }
-      : null;
-  } else {
-    return null;
-  }
-}
