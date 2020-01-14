@@ -77,10 +77,10 @@
       </mat-card-subtitle>
     </ng-container>
 
-    <ng-container *ngIf="data.productionCompanies.length">
+    <ng-container *ngIf="data.stakeholders.length">
       <mat-card-title>Production Companies</mat-card-title>
       <mat-card-subtitle>
-        <span *ngFor="let item of data.productionCompanies; let isLast=last">
+        <span *ngFor="let item of data.stakeholders; let isLast=last">
           {{ item.displayName }} {{ isLast? '':',' }}
         </span>
       </mat-card-subtitle>

@@ -139,8 +139,8 @@
   </mat-form-field>
   <!-- PRODUCTION COMPANIES -->
   <h3> Production companies </h3>
-  <div formArrayName="productionCompanies"
-    *ngFor="let productionCompany of main.productionCompanies.controls; let i = index">
+  <div formArrayName="stakeholders"
+    *ngFor="let productionCompany of main.stakeholders.controls; let i = index">
     <div [formGroupName]="i" class="full-width">
       <mat-form-field appearance="outline" class="small-margin">
         <mat-label>Company name</mat-label>
@@ -154,7 +154,7 @@
       </button>
     </div>
   </div>
-  <ng-container *ngIf="main.productionCompanies.controls.length === 0">
+  <ng-container *ngIf="main.stakeholders.controls.length === 0">
     <button mat-icon-button color="primary" (click)="main.addProductionCompany()">
       <mat-icon>add_circle</mat-icon>
     </button>

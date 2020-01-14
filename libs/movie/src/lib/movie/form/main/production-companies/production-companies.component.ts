@@ -1,5 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import { ProductionCompagnyForm } from '../main.form';
+import { StakeholdersForm } from '../main.form';
 import { FormList } from '@blockframes/utils/form/forms/list.form';
 import { Company } from "@blockframes/utils/common-interfaces/identity";
 @Component({
@@ -12,7 +12,7 @@ export class ProductionCompaniesComponent {
   @Input() form: FormList<Company>;
 
   public add(): void {
-    this.form.push(new ProductionCompagnyForm());
+    this.form.push(new StakeholdersForm());
   }
 
   public remove(i: number): void {

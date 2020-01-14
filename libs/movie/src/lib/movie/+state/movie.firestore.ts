@@ -181,7 +181,7 @@ export interface MovieMain {
   originCountries?: TerritoriesSlug[],
   languages?: string[],
   status?: MovieStatusSlug,
-  productionCompanies?: Company[],
+  stakeholders?: Company[],
   shortSynopsis?: string,
   workType?: WorkType;
   storeConfig?: StoreConfig;
