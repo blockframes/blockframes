@@ -4,7 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Components
-import { ProductionCompaniesComponent } from './production-companies.component';
+import { StakeholdersComponent } from './stakeholders.component';
 // Material
 import { MatListModule } from '@angular/material/list';
 import { MatInputModule } from '@angular/material/input';
@@ -13,7 +13,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field'
 
 @NgModule({
-  declarations: [ProductionCompaniesComponent],
+  declarations: [StakeholdersComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -24,6 +24,6 @@ import { MatFormFieldModule } from '@angular/material/form-field'
     MatButtonModule,
     MatIconModule
   ],
-  exports: [ProductionCompaniesComponent]
+  exports: [StakeholdersComponent]
 })
-export class MovieFormProductionCompaniesModule { }
+export class MovieFormStakeholdersModule { }

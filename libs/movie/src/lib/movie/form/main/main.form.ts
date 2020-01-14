@@ -1,7 +1,7 @@
 import { FormEntity, FormList, yearValidators } from '@blockframes/utils';
 import { MovieMain, Credit, createMovieMain, Movie, createTitle } from '../../+state';
 import { Validators, FormControl } from '@angular/forms';
-import { createCredit, createCompany } from '@blockframes/utils/common-interfaces/identity';
+import { createCredit, createCompany, Stakeholder } from '@blockframes/utils/common-interfaces/identity';
 
 function createCreditFormControl(credit?: Partial<Credit>) {
   const { firstName, lastName, role } = createCredit(credit);
@@ -37,13 +37,13 @@ function createDirectorFormControl(director?: Partial<Credit>) {
 type DirectorFormControl = ReturnType<typeof createDirectorFormControl>;
 
 export class StakeholdersForm extends FormEntity<StakeholdersControl> {
-  constructor(compagny?: Partial<Credit>) {
-    super(createStakeholdersControl(compagny))
+  constructor(stakeholder?: Partial<Stakeholder>) {
+    super(createStakeholdersControl(stakeholder))
   }
 }
 
-function createStakeholdersControl(compagny?: Partial<Credit>) {
-  const { displayName } = createCompany(compagny);
+function createStakeholdersControl(stakeholder?: Partial<Stakeholder>) {
+  const { displayName } = createCompany(stakeholder);
   return {
     displayName: new FormControl(displayName),
   }
@@ -120,12 +120,12 @@ export class MovieMainForm extends FormEntity<MovieMainControl>{
     this.directors.removeAt(i);
   }
 
-  public addProductionCompany(): void {
+  public addStakeholder(): void {
     const credit = new StakeholdersForm();
     this.stakeholders.push(credit);
   }
 
-  public removeProductionCompany(i: number): void {
+  public removeStakeholder(i: number): void {
     this.stakeholders.removeAt(i);
   }
 }

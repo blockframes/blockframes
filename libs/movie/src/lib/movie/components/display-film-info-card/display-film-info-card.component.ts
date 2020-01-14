@@ -22,7 +22,7 @@ export class MovieDisplayFilmInfoCardComponent {
   @Input() synopsis;
   @Input() keywords;
   @Input() releaseDate;
-  @Input() productionCompanies: Company[];
+  @Input() stakeholders: Company[];
   @Input() salesAgent;
 
   public hasTheatricalRelease (originalReleases: MovieOriginalRelease[]) {
