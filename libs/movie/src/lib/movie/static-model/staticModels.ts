@@ -140,16 +140,16 @@ const models: Model = {
     {
       'slug': 'actor',
       'label': 'Actor'
-    }, // @todo 1508 useless ?
+    },
     {
       'slug': 'exectuive-producer',
       'label': 'Executive Producer'
     },
-    {// @todo 1508 useless ?
+    {
       'slug': 'line-producer',
       'label': 'Line Producer'
     },
-    {// @todo 1508 useless ?
+    {
       'slug': 'associate-producer',
       'label': 'Associate Producer'
     },
