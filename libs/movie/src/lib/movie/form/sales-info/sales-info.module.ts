@@ -8,7 +8,7 @@ import { MovieFormSalesInfoComponent } from './sales-info.component';
 
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatSelectModule, MatOptionModule, MatButtonModule, MatIconModule } from '@angular/material';
-import { NgxMatSelectSearchModule } from 'ngx-mat-select-search/ngx-mat-select-search.module';
+import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 @NgModule({
   declarations: [
