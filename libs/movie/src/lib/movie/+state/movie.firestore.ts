@@ -150,12 +150,19 @@ interface MovieSalesInfoRaw<D> {
   originCountryReleaseDate: D,
   broadcasterCoproducers: string[],
   theatricalRelease: boolean,
-  format: FormatSlug,
-  formatQuality: FormatQualitySlug,
-  soundFormat: SoundFormatSlug
+  format?: FormatSlug,
+  formatQuality?: FormatQualitySlug,
+  soundFormat?: SoundFormatSlug
 }
 
 export interface MovieSalesInfoDocumentWithDates extends MovieSalesInfoRaw<Date> {
+}
+
+export interface MovieReview {
+  criticName?: string,
+  journalName?: string,
+  criticQuote?: string,
+  revueLink?: string,
 }
 
 interface DocumentMeta {
@@ -195,6 +202,7 @@ interface MovieRaw<D> {
   festivalPrizes: MovieFestivalPrizes;
   salesAgentDeal: MovieSalesAgentDealRaw<D>;
   budget: MovieBudget;
+  movieReview: MovieReview;
 }
 
 /** Document model of a Movie */
