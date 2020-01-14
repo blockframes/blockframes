@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
 
 @Component({
   selector: 'catalog-movie-tunnel-evaluation',
   templateUrl: './evaluation.component.html',
-  styleUrls: ['./evaluation.component.scss']
+  styleUrls: ['./evaluation.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EvaluationComponent {
 
