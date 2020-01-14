@@ -83,6 +83,7 @@
     "@ethersproject/strings": "^5.0.0-beta.131",
     "@ethersproject/wallet": "^5.0.0-beta.131",
     "@fullpage/angular-fullpage": "0.0.14",
+    "@google-cloud/bigquery": "^4.6.1",
     "@google-cloud/pubsub": "^1.1.2",
     "@google-cloud/storage": "^3.5.0",
     "@kolkov/ngx-metrika": "^0.5.2",
