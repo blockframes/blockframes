@@ -60,7 +60,7 @@ export class TableExtractedContractsComponent implements OnInit {
   async createContract(importState: ContractsImportState): Promise<boolean> {
 
     importState.contract.doc.partyIds.push(this.organizationQuery.getActive().id)
-    const contractId = await this.contractVersionService.addContractAndVersion(importState.contract.doc, importState.contract.last);
+    const contractId = await this.contractVersionService.addContractAndVersion(importState.contract);
     importState.errors.push({
       type: 'error',
       field: 'contract',
@@ -94,7 +94,7 @@ export class TableExtractedContractsComponent implements OnInit {
             hint: 'Contract already added'
           });
 
-          return promises.push(this.contractVersionService.addContractAndVersion(importState.contract.doc, importState.contract.last));
+          return promises.push(this.contractVersionService.addContractAndVersion(importState.contract));
         });
 
       this.rows.data = data;

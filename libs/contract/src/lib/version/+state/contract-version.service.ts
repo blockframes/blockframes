@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
-import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
-import orderBy from 'lodash/orderBy';
+import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { firestore } from 'firebase/app';
 import { ContractVersionState, ContractVersionStore } from './contract-version.store';
-import { ContractVersion } from './contract-version.model';
+import { ContractVersion, ContractWithLastVersion } from './contract-version.model';
 import { ContractQuery } from '../../+state/contract.query';
-import { Contract } from '../../+state/contract.model';
 import { VersionMeta } from '@blockframes/contract/+state/contract.firestore';
 
 @Injectable({ providedIn: 'root' })
@@ -26,7 +24,7 @@ export class ContractVersionService extends CollectionService<ContractVersionSta
    */
   public addContractVersion(contractVersion: ContractVersion): string {
     this.db.firestore.runTransaction(async tx =>  {
-      // Get the _meta document from versions collection.
+      // Get the _meta document from versions subcollection.
       const _metaSnap = await tx.get(this.db.doc(`contracts/${this.contractQuery.getActiveId()}/versions/_meta`).ref);
       const _meta = _metaSnap.data() as VersionMeta;
 
@@ -41,7 +39,7 @@ export class ContractVersionService extends CollectionService<ContractVersionSta
 
   onDelete() {
     this.db.firestore.runTransaction(async tx =>  {
-      // Get the _meta document from versions collection.
+      // Get the _meta document from versions subcollection.
       const _metaSnap = await tx.get(this.db.doc(`contracts/${this.contractQuery.getActiveId()}/versions/_meta`).ref);
       const _meta = _metaSnap.data() as VersionMeta;
 
@@ -58,11 +56,10 @@ export class ContractVersionService extends CollectionService<ContractVersionSta
    * @param version
    */
   public async addContractAndVersion(
-    contract: Contract,
-    version: ContractVersion
+    contract: ContractWithLastVersion
   ): Promise<string> {
-    const contractId = (await this.add(contract)) as string;
-    await this.addContractVersion(version);
+    const contractId = (await this.add(contract.doc)) as string;
+    await this.addContractVersion(contract.last);
     return contractId;
   }
 
@@ -71,15 +68,14 @@ export class ContractVersionService extends CollectionService<ContractVersionSta
    * @param contractId
    */
   public async getLastVersionContract(contractId: string): Promise<ContractVersion> {
-    const contractVersions = await this.getValue();
+    try {
+      const _metaSnap = await this.db.doc(`contracts/${contractId}/versions/_meta`).get().toPromise();
+      const { count } = _metaSnap.data() as VersionMeta;
+      const lastVersion = this.getValue(count.toString());
 
-    if (contractVersions.length) {
-      const sortedContractVersions = orderBy(contractVersions, 'creationDate', 'desc');
-      return sortedContractVersions[0];
-    } else {
-      throw new Error(
-        `Every contract should have at least one version. None found for ${contractId}`
-      );
+      return lastVersion;
+    } catch (error) {
+      throw new Error(error);
     }
   }
 
