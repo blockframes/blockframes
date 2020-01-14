@@ -18,7 +18,7 @@ import { DaoStore } from './dao.store';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { MemberQuery } from '@blockframes/organization/member/+state/member.query';
 import { DeploySteps, DaoOperation, DaoAction } from './dao.model';
-import { abi as ORGANIZATION_ABI } from '@blockframes/contracts/Organization.json';
+import { abi as ORGANIZATION_ABI } from '@blockframes/smart-contracts/Organization.json';
 import { OrganizationMember } from '@blockframes/organization/member/+state/member.model';
 import { PermissionsQuery } from '@blockframes/organization/permissions/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';

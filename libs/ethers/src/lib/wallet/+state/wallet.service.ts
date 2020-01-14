@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { network, factoryContract, baseEnsDomain } from '@env';
-import { abi as ERC1077_ABI } from '@blockframes/contracts/ERC1077.json';
+import { abi as ERC1077_ABI } from '@blockframes/smart-contracts/ERC1077.json';
 import { WalletStore } from './wallet.store';
 import { KeyManagerService, KeyManagerQuery } from '../../key-manager/+state';
 import { Relayer } from '../../relayer/relayer';

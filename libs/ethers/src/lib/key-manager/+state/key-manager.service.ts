@@ -5,7 +5,7 @@ import { Wallet as EthersWallet } from '@ethersproject/wallet';
 
 import { KeyManagerQuery } from './key-manager.query';
 import { network } from '@env';
-import { abi as ERC1077_ABI } from '@blockframes/contracts/ERC1077.json';
+import { abi as ERC1077_ABI } from '@blockframes/smart-contracts/ERC1077.json';
 import { SigningKey } from '@ethersproject/signing-key';
 import { mnemonicToEntropy, entropyToMnemonic } from '@ethersproject/hdnode';
 import { Key } from '../../types';

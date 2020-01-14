@@ -5,7 +5,7 @@ import { Filter } from '@ethersproject/abstract-provider'
 import { Provider, InfuraProvider } from '@ethersproject/providers'
 
 import { toUtf8Bytes } from '@ethersproject/strings'
-import { bytecode as ERC1077_BYTECODE } from '@blockframes/contracts/ERC1077.json';
+import { bytecode as ERC1077_BYTECODE } from '@blockframes/smart-contracts/ERC1077.json';
 
 /** instantiate a Fallback provider from the wanted network */
 export function getProvider(network: string) {
