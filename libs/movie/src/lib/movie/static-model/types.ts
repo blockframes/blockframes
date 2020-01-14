@@ -102,7 +102,6 @@ export const RESOURCE_RATIOS_SLUG = models['RESOURCE_RATIOS'].map(key => key.slu
 export type ResourceRatioLabel = typeof RESOURCE_RATIOS_LABEL[number];
 export type ResourceRatioSlug = typeof RESOURCE_RATIOS_SLUG[number];
 
-
 export const LEGAL_ROLES_LABEL = models['LEGAL_ROLES'].map(key => key.label);
 export const LEGAL_ROLES_SLUG = models['LEGAL_ROLES'].map(key => key.slug);
 
@@ -112,17 +111,17 @@ export type LegalRolesSlug = typeof LEGAL_ROLES_SLUG[number];
 export const MOVIE_FORMAT_LABEL = models['MOVIE_FORMAT'].map(key => key.label);
 export const MOVIE_FORMAT_SLUG = models['MOVIE_FORMAT'].map(key => key.slug);
 
-export type FormatLabel = typeof LEGAL_ROLES_LABEL[number];
-export type FormatSlug = typeof LEGAL_ROLES_SLUG[number];
+export type FormatLabel = typeof MOVIE_FORMAT_LABEL[number];
+export type FormatSlug = typeof MOVIE_FORMAT_SLUG[number];
 
 export const MOVIE_FORMAT_QUALITY_LABEL = models['MOVIE_FORMAT_QUALITY'].map(key => key.label);
 export const MOVIE_FORMAT_QUALITY_SLUG = models['MOVIE_FORMAT_QUALITY'].map(key => key.slug);
 
-export type FormatQualityLabel = typeof LEGAL_ROLES_LABEL[number];
-export type FormatQualitySlug = typeof LEGAL_ROLES_SLUG[number];
+export type FormatQualityLabel = typeof MOVIE_FORMAT_QUALITY_LABEL[number];
+export type FormatQualitySlug = typeof MOVIE_FORMAT_QUALITY_SLUG[number];
 
 export const SOUND_FORMAT_LABEL = models['SOUND_FORMAT'].map(key => key.label);
 export const SOUND_FORMAT_SLUG = models['SOUND_FORMAT'].map(key => key.slug);
 
-export type SoundFormatLabel = typeof LEGAL_ROLES_LABEL[number];
-export type SoundFormatSlug = typeof LEGAL_ROLES_SLUG[number];
+export type SoundFormatLabel = typeof SOUND_FORMAT_LABEL[number];
+export type SoundFormatSlug = typeof SOUND_FORMAT_SLUG[number];
