@@ -24,7 +24,7 @@ import { CreateTx } from '@blockframes/ethers';
 import { TxFeedback } from '@blockframes/ethers/types';
 import { StakeholderService } from '../stakeholder/+state/stakeholder.service';
 import { CollectionService, CollectionConfig, Query, awaitSyncQuery, WriteOptions } from 'akita-ng-fire';
-import { tap, switchMap, filter } from 'rxjs/operators';
+import { tap, switchMap } from 'rxjs/operators';
 import { MovieMaterialService } from '../../material/+state/movie-material.service';
 import { DeliveryMaterialService } from '../../material/+state/delivery-material.service';
 import { TemplateMaterialService } from '../../material/+state/template-material.service';

@@ -11,10 +11,19 @@ import { initContractWithVersion, ContractWithLastVersion } from '../version/+st
 import { LegalRolesSlug } from '@blockframes/movie/moviestatic-model/types';
 import { cleanModel } from '@blockframes/utils';
 
+/** Get all the contracts where user organization is party. */
 const contractsListQuery = (orgId: string): Query<Contract[]> => ({
   path: 'contracts',
   queryFn: ref => ref.where('partyIds', 'array-contains', orgId)
 });
+
+/** Get the active contract and put his lastVersion in it. */
+const contractQuery = (contractId: string): Query<Contract> => ({
+  path: `contracts/${contractId}`,
+  lastVersion: (contract: Contract) => ({
+    path: `contracts/${contractId}/versions/${contract.lastVersionId}`
+  })
+})
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'contracts' })
@@ -31,6 +40,21 @@ export class ContractService extends CollectionService<ContractState> {
       tap(_ => this.store.reset()),
       switchMap(orgId => awaitSyncQuery.call(this, contractsListQuery(orgId)))
     );
+  }
+
+  /** Sync the store with the given contract. */
+  public syncContractQuery(contractId: string) {
+    // Reset the store everytime the contractId changes
+    this.store.reset();
+    return awaitSyncQuery.call(this, contractQuery(contractId));
+  }
+
+  /**
+   * This convert the contract into a ContractDocumentWithDates
+   * to clean the unused properties in the database.
+  */
+  formatToFirestore(contract: Contract): ContractDocumentWithDates {
+    return convertToContractDocument(contract);
   }
 
   /**
@@ -162,5 +186,10 @@ export class ContractService extends CollectionService<ContractState> {
    */
   public getContractParties(contract: Contract, legalRole: LegalRolesSlug): ContractPartyDetail[] {
     return contract.parties.filter(p => p.party.role === getCodeIfExists('LEGAL_ROLES', legalRole));
+  }
+
+  /** Check if the organization is party of the contract. */
+  public isPartyOfContract(organizationId: string, contract: Contract) {
+    return contract.parties.some(partyDetails => partyDetails.party.orgId === organizationId)
   }
 }
