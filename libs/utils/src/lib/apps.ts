@@ -6,8 +6,6 @@ export const enum App {
   mediaFinanciers = 'movie-financing',
   storiesAndMore = 'stories-and-more',
   biggerBoat = 'catalog',
-  catalogMarketplace = 'marketplace',
-  catalogDashboard = 'catalog-dashboard',
   blockframes = 'blockframes'
 }
 
@@ -38,15 +36,9 @@ export const APPS_DETAILS: AppDetails[] = [
     id: App.mediaDelivering
   },
   {
-    name: 'Bigger Boat - Marketplace',
+    name: 'Archipel Content',
     logo: '/assets/logo/biggerBoatMarketplaceLogo.png',
-    href: 'catalog-marketplace',
+    href: 'catalog',
     id: App.biggerBoat
-  },
-  {
-    name: 'Bigger Boat - Dashboard',
-    logo: '/assets/logo/biggerBoatDashboard.png',
-    href: 'catalog-dashboard',
-    id: App.catalogDashboard
   }
 ];

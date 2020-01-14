@@ -19,7 +19,7 @@ interface Model {
   LEGAL_ROLES: readonly SlugAndLabel[];
   MOVIE_FORMAT: readonly SlugAndLabel[];
   MOVIE_FORMAT_QUALITY: readonly SlugAndLabel[],
-  SOUND_FORMATS: readonly SlugAndLabel[]
+  SOUND_FORMAT: readonly SlugAndLabel[]
 }
 
 export type Scope = keyof Model;
@@ -58,6 +58,7 @@ const models: Model = {
     { 'slug': 'banner', 'label': 'Banner' },
     { 'slug': 'screener', 'label': 'Screener' },
     { 'slug': 'teaser', 'label': 'Teaser' },
+    { 'slug': 'still_photo', 'label': 'Stills' },
   ] as const,
   'RESOURCE_SIZES': [
     { 'slug': 'medium', 'label': 'Medium' },
@@ -768,7 +769,7 @@ const models: Model = {
     { 'slug': '2k', 'label': '2K' },
     { 'slug': '4k', 'label': '4K' },
   ] as const,
-  'SOUND_FORMATS': [
+  'SOUND_FORMAT': [
     { 'slug': 'mono', 'label': 'Mono' },
     { 'slug': 'stereo', 'label': 'Stereo' },
     { 'slug': 'dolby-sr', 'label': 'Dolby SR' },

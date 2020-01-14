@@ -5,6 +5,7 @@ import {
   MovieMain,
   MoviePromotionalDescription,
   MoviePromotionalElements,
+  MovieReview,
   MovieSalesAgentDealDocumentWithDates as MovieSalesAgentDeal,
   MovieSalesCast,
   MovieSalesInfoDocumentWithDates as MovieSalesInfo,
@@ -66,6 +67,7 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     festivalPrizes: createMovieFestivalPrizes(params.festivalPrizes),
     salesAgentDeal: createMovieSalesAgentDeal(params.salesAgentDeal),
     budget: createMovieBudget(params.budget),
+    movieReview: createMovieReview(params.movieReview),
     ...params
   };
 }
@@ -106,7 +108,7 @@ export function createMoviePromotionalDescription(
   params: Partial<MoviePromotionalDescription> = {}
 ): MoviePromotionalDescription {
   return {
-    keyAssets: [],
+    keyAssets: '',
     keywords: [],
     ...params
   };
@@ -234,6 +236,12 @@ export function createMovieBudget(params: Partial<MovieBudget> = {}): MovieBudge
     totalBudget: '',
     ...params,
     estimatedBudget: createRange<number>(params.estimatedBudget)
+  };
+}
+
+export function createMovieReview(params: Partial<MovieReview> = {}): MovieReview {
+  return {
+    ...params,
   };
 }
 

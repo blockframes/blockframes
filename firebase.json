@@ -16,12 +16,8 @@
         "destination": "/delivery/index.html"
       },
       {
-        "source": "/catalog-marketplace{,/**}",
-        "destination": "/catalog-marketplace/index.html"
-      },
-      {
-        "source": "/catalog-dashboard{,/**}",
-        "destination": "/catalog-dashboard/index.html"
+        "source": "/catalog{,/**}",
+        "destination": "/catalog/index.html"
       },
       {
         "source": "/movie-financing{,/**}",

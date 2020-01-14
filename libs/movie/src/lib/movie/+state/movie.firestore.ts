@@ -1,4 +1,19 @@
-import { MovieStatusSlug, PromotionalElementTypesSlug, ResourceRatioSlug, ResourceSizesSlug, TerritoriesSlug, LanguagesSlug, MediasSlug, ScoringSlug, CertificationsSlug, ColorsSlug, RatingSlug } from "@blockframes/movie/movie/static-model";
+import { 
+  MovieStatusSlug,
+  PromotionalElementTypesSlug,
+  ResourceRatioSlug,
+  ResourceSizesSlug,
+  TerritoriesSlug,
+  LanguagesSlug,
+  MediasSlug,
+  ScoringSlug,
+  CertificationsSlug,
+  ColorsSlug, 
+  RatingSlug, 
+  SoundFormatSlug, 
+  FormatQualitySlug, 
+  FormatSlug 
+} from "@blockframes/movie/movie/static-model";
 import { RawRange, NumberRange } from "@blockframes/utils/common-interfaces/range";
 import { Person, Credit, SalesAgent, Company } from "@blockframes/utils/common-interfaces/identity";
 import { firestore } from "firebase/app";
@@ -23,6 +38,12 @@ export const enum StoreType {
   line_up = 'Line-Up',
 }
 
+export const enum UnitBox {
+  boxoffice_dollar = 'Box office in $',
+  boxoffice_euro = 'Box office in €',
+  entrances = '#Entrances',
+}
+
 export interface MovieVersionInfo {
   dubbings: string[],
   subtitles: string[],
@@ -45,7 +66,7 @@ export interface MovieSalesAgentDealDocumentWithDates extends MovieSalesAgentDea
 }
 
 export interface MoviePromotionalDescription {
-  keyAssets: string[],
+  keyAssets: string,
   keywords: string[],
 }
 
@@ -89,12 +110,18 @@ export interface MovieFestivalPrizes {
   prizes: Prize[]
 }
 
+export interface BoxOffice {
+  unit: UnitBox,
+  value: number,
+  territory: TerritoriesSlug,
+}
 
 export interface MovieBudget {
   totalBudget: string, // WIP #1052 use Price Interface?
   budgetCurrency?: string, // WIP #1052
-  detailledBudget?: any // WIP #1052
-  estimatedBudget?: NumberRange
+  detailledBudget?: any, // WIP #1052
+  estimatedBudget?: NumberRange,
+  boxOffice?: BoxOffice,
 }
 
 export const enum MovieLanguageTypes {
@@ -158,21 +185,28 @@ interface MovieSalesInfoRaw<D> {
   certifications: CertificationsSlug[],
   color: ColorsSlug,
   europeanQualification: boolean,
-  format: string,
-  formatQuality: string,
+  format?: FormatSlug,
+  formatQuality?: FormatQualitySlug,
   internationalPremiere: Prize,
   originalRelease: MovieOriginalReleaseRaw<D>[],
   physicalHVRelease: D,
   rating: MovieRating[],
   releaseYear: number,
   scoring: ScoringSlug, 
-  soundFormat: string
+  soundFormat?: SoundFormatSlug,
 }
 
 export interface MovieSalesInfoDocumentWithDates extends MovieSalesInfoRaw<Date> {
 }
 
 export interface MovieOriginalRelease extends MovieOriginalReleaseRaw<Date> {
+}
+
+export interface MovieReview {
+  criticName?: string,
+  journalName?: string,
+  criticQuote?: string,
+  revueLink?: string,
 }
 
 interface DocumentMeta {
@@ -212,6 +246,7 @@ interface MovieRaw<D> {
   festivalPrizes: MovieFestivalPrizes;
   salesAgentDeal: MovieSalesAgentDealRaw<D>;
   budget: MovieBudget;
+  movieReview: MovieReview;
 }
 
 /** Document model of a Movie */
