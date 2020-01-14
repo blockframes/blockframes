@@ -8,7 +8,7 @@ import { ContractState } from "../+state/contract.store";
 @CollectionGuardConfig({ awaitSync: true })
 export class ActiveContractGuard extends CollectionGuard<ContractState> {
 
-  constructor(service: ContractService) {
+  constructor(protected service: ContractService) {
     super(service);
   }
 
@@ -17,6 +17,6 @@ export class ActiveContractGuard extends CollectionGuard<ContractState> {
    * Use it on a route with :contractId in it.
    */
   sync(next: ActivatedRouteSnapshot) {
-    return this.service.syncActive({ id: 'AznavourDeepHousePulsarMandateArchipel' });
+    return this.service.syncContractQuery(next.params.contractId);
   }
 }

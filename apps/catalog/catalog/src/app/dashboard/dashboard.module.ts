@@ -2,8 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LayoutModule } from './layout/layout.module';
 import { LayoutComponent } from './layout/layout.component';
-import { ActiveContractGuard } from '@blockframes/contract/guards/active-contract.guard';
-import { MovieContractGuard } from '@blockframes/movie';
 
 const routes: Routes = [
   {
@@ -30,13 +28,11 @@ const routes: Routes = [
       },
       {
         path: 'titles',
-        canActivate: [ActiveContractGuard],
         children: [{
           path: '',
           loadChildren: () => import('./title/list/list.module').then(m => m.TitleListModule)
         }, {
-          path: 'view',
-          canActivate: [MovieContractGuard],
+          path: ':movieId',
           loadChildren: () => import('./title/view/view.module').then(m => m.TitleViewModule)
         }]
       },

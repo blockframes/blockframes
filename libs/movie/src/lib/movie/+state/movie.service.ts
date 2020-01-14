@@ -1,13 +1,41 @@
 import { Injectable } from '@angular/core';
-import { OrganizationQuery } from '@blockframes/organization';
-import { CollectionConfig, CollectionService, WriteOptions, awaitSyncQuery } from 'akita-ng-fire';
+import { OrganizationQuery, Organization } from '@blockframes/organization';
+import {
+  CollectionConfig,
+  CollectionService,
+  WriteOptions,
+  awaitSyncQuery,
+  Query
+} from 'akita-ng-fire';
 import { switchMap, tap } from 'rxjs/operators';
 import { createMovie, Movie } from './movie.model';
 import { MovieState, MovieStore } from './movie.store';
 import { AuthQuery } from '@blockframes/auth';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 import { ContractQuery } from '@blockframes/contract/+state/contract.query';
-import { cleanModel } from '@blockframes/utils/helpers';
+import { Contract } from '@blockframes/contract/+state/contract.model';
+
+/**
+ * @see #483
+ * This method is used before pushing data on db
+ * to prevent "Unsupported field value: undefined" errors.
+ * Doing JSON.parse(JSON.stringify(data)) clones object and
+ * removes undefined fields and empty arrays.
+ * This methods also removes readonly settings on objects coming from Akita
+ */
+export function cleanModel<T>(data: T): T {
+  return JSON.parse(JSON.stringify(data));
+}
+
+/** Query movies from the contract with distributions deals from the last version. */
+const movieListContractQuery = (contract: Contract, movieIds: string[]): Query<Movie[]> => ({
+  path: 'movies',
+  queryFn: ref => ref.where('id', 'in', movieIds),
+  distributionDeals: (movie: Movie) => ({
+    path: `movies/${movie.id}/distributiondeals`,
+    queryFn: ref => ref.where('id', 'in', contract.lastVersion.titles[movie.id].distributionDealIds)
+  })
+});
 
 // TODO#944 - refactor CRUD operations
 @Injectable({ providedIn: 'root' })
@@ -32,13 +60,16 @@ export class MovieService extends CollectionService<MovieState> {
   /** Gets every movies Id from contract and sync them if they belong to active. */
   public syncContractMovies() {
     return this.contractQuery.selectActive().pipe(
+      // Reset the store everytime the movieId changes.
+      tap(_ => this.store.reset()),
       switchMap(contract => {
-        const movieIds = Object.keys(contract.last.titles);
-        const filteredMovieIds = movieIds.filter(movieId =>
-          this.organizationQuery.getActive().movieIds.includes(movieId)
-        );
-        return this.syncManyDocs(filteredMovieIds);
-      })
+        // Filter movieIds before the query to relieve it.
+        const organizationMovieIds = this.organizationQuery.getActive().movieIds;
+        const movieIds = contract.titleIds.filter(titleId => organizationMovieIds.includes(titleId));
+
+        return awaitSyncQuery.call(this, movieListContractQuery(contract, movieIds))
+      }
+      )
     );
   }
 
