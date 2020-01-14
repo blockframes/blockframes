@@ -5,6 +5,7 @@ import {
   MovieMain,
   MoviePromotionalDescription,
   MoviePromotionalElements,
+  MovieReview,
   MovieSalesAgentDealDocumentWithDates as MovieSalesAgentDeal,
   MovieSalesCast,
   MovieSalesInfoDocumentWithDates as MovieSalesInfo,
@@ -64,6 +65,7 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     festivalPrizes: createMovieFestivalPrizes(params.festivalPrizes),
     salesAgentDeal: createMovieSalesAgentDeal(params.salesAgentDeal),
     budget: createMovieBudget(params.budget),
+    movieReview: createMovieReview(params.movieReview),
     ...params
   };
 }
@@ -143,9 +145,6 @@ export function createMovieSalesInfo(params: Partial<MovieSalesInfo> = {}): Movi
     pegi: '',
     originCountryReleaseDate: null,
     theatricalRelease: false,
-    format: '',
-    formatQuality: '',
-    soundFormat: '',
     ...params
   };
 }
@@ -213,6 +212,16 @@ export function createMovieBudget(params: Partial<MovieBudget> = {}): MovieBudge
     totalBudget: '',
     ...params,
     estimatedBudget: createRange<number>(params.estimatedBudget)
+  };
+}
+
+export function createMovieReview(params: Partial<MovieReview> = {}): MovieReview {
+  return {
+    criticName: '',
+    journalName: '',
+    criticQuote: '',
+    revueLink: '',
+    ...params,
   };
 }
 
