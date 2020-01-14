@@ -39,7 +39,8 @@ export class ContractService extends CollectionService<ContractState> {
   public async getContractWithLastVersion(contractId: string): Promise<ContractWithLastVersion> {
     try {
       const contractWithVersion = initContractWithVersion();
-      contractWithVersion.doc = this.formatContract(await this.getValue(contractId));
+      const contract = await this.getValue(contractId)
+      contractWithVersion.doc = this.formatContract(contract);
       contractWithVersion.last = await this.contractVersionService.getLastVersionContract(contractId);
 
       return contractWithVersion;
@@ -100,9 +101,9 @@ export class ContractService extends CollectionService<ContractState> {
       return false;
     }
 
-    for (const licensee of licensees) {
+    for (let licensee of licensees) {
       // Cleaning model to remove undefined properties.
-      cleanModel(licensee);
+      licensee = cleanModel(licensee);
 
       // If showName is not set, the contract is invalid, function returns false.
       if (typeof licensee.party.showName !== 'boolean') {
@@ -110,9 +111,9 @@ export class ContractService extends CollectionService<ContractState> {
       }
     }
 
-    for (const licensor of licensors) {
+    for (let licensor of licensors) {
       // Cleaning model to remove undefined properties.
-      cleanModel(licensor);
+      licensor = cleanModel(licensor);
 
       // If showName is not set, the contract is invalid, function returns false.
       if (typeof licensor.party.showName !== 'boolean') {

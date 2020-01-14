@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
-import { CollectionConfig, CollectionService } from 'akita-ng-fire';
+import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
 import orderBy from 'lodash/orderBy';
 import { firestore } from 'firebase/app';
 import { ContractVersionState, ContractVersionStore } from './contract-version.store';
 import { ContractVersion } from './contract-version.model';
 import { ContractQuery } from '../../+state/contract.query';
 import { Contract } from '../../+state/contract.model';
+import { VersionMeta } from '@blockframes/contract/+state/contract.firestore';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'contracts/:contractId/versions' })
@@ -23,12 +24,32 @@ export class ContractVersionService extends CollectionService<ContractVersionSta
    * @param contractId
    * @param contractVersion
    */
-  public async addContractVersion(contractVersion: ContractVersion): Promise<string> {
-    const contractVersions = await this.getValue();
-    contractVersion.id = (contractVersions.length + 1).toString();
+  public addContractVersion(contractVersion: ContractVersion): string {
+    this.db.firestore.runTransaction(async tx =>  {
+      // Get the _meta document from versions collection.
+      const _metaSnap = await tx.get(this.db.doc(`contracts/${this.contractQuery.getActiveId()}/versions/_meta`).ref);
+      const _meta = _metaSnap.data() as VersionMeta;
 
-    await this.add(contractVersion);
+      // Increment count and then assign it to contractVersion id.
+      contractVersion.id = (++_meta.count).toString();
+
+      // Add the version and update _meta.
+      this.add(contractVersion, { write: tx.update(_metaSnap.ref, _meta)})
+    })
     return contractVersion.id;
+  }
+
+  onDelete() {
+    this.db.firestore.runTransaction(async tx =>  {
+      // Get the _meta document from versions collection.
+      const _metaSnap = await tx.get(this.db.doc(`contracts/${this.contractQuery.getActiveId()}/versions/_meta`).ref);
+      const _meta = _metaSnap.data() as VersionMeta;
+
+      // Decrement count
+      --_meta.count;
+
+      tx.update(_metaSnap.ref, _meta);
+    })
   }
 
   /**
