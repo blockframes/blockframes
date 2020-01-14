@@ -16,7 +16,9 @@ import {
   createMoviePromotionalElements,
   createPrize,
   populateMovieLanguageSpecification,
-  MovieService
+  MovieService,
+  createMovieRating,
+  createMovieOriginalRelease
 } from '../../../+state';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { formatCredits } from '@blockframes/utils/spreadsheet/format';
@@ -361,7 +363,8 @@ export class ViewExtractedElementsComponent {
 
         // PEGI (Rating)
         if (spreadSheetRow[SpreadSheetMovie.rating]) {
-          movie.salesInfo.pegi = spreadSheetRow[SpreadSheetMovie.rating];
+          const movieRating = createMovieRating({ value: spreadSheetRow[SpreadSheetMovie.rating] });
+          movie.salesInfo.rating.push(movieRating);
         }
 
         // CERTIFICATIONS (Certifications)
@@ -405,8 +408,12 @@ export class ViewExtractedElementsComponent {
 
         // ORIGIN COUNTRY RELEASE DATE (Release date in Origin Country)
         if (spreadSheetRow[SpreadSheetMovie.originCountryReleaseDate]) {
-          const originCountryReleaseDate: SSF$Date = SSF.parse_date_code(spreadSheetRow[SpreadSheetMovie.originCountryReleaseDate]);
-          movie.salesInfo.originCountryReleaseDate = new Date(`${originCountryReleaseDate.y}-${originCountryReleaseDate.m}-${originCountryReleaseDate.d}`);
+          const date = spreadSheetRow[SpreadSheetMovie.originCountryReleaseDate];
+
+          movie.salesInfo.originalRelease = [
+            ...movie.salesInfo.originalRelease,
+            ...movie.main.originCountries.map(country => (createMovieOriginalRelease({ date, country })))
+          ]
         }
 
         // GENRES (Genres)
@@ -624,7 +631,11 @@ export class ViewExtractedElementsComponent {
 
         // THEATRICAL RELEASE
         if (spreadSheetRow[SpreadSheetMovie.theatricalRelease]) {
-          movie.salesInfo.theatricalRelease = spreadSheetRow[SpreadSheetMovie.theatricalRelease].toLowerCase() === 'yes' ? true : false;
+          if (spreadSheetRow[SpreadSheetMovie.theatricalRelease].toLowerCase() === 'yes') {
+            movie.salesInfo.originalRelease.forEach(r => {
+              r.media = getCodeIfExists('MEDIAS', 'theatrical');
+            })
+          }
         }
 
         // IMAGE BANNIERE LINK
@@ -885,10 +896,10 @@ export class ViewExtractedElementsComponent {
       });
     }
 
-    if (!movie.salesInfo.pegi) {
+    if (movie.salesInfo.rating.length === 0) {
       errors.push({
         type: 'warning',
-        field: 'salesInfo.pegi',
+        field: 'salesInfo.rating',
         name: 'Rating',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
@@ -921,16 +932,6 @@ export class ViewExtractedElementsComponent {
         field: 'salesInfo.internationalPremiere',
         name: "International Premiere",
         reason: 'Optional field is missing or could not be parsed',
-        hint: 'Edit corresponding sheet field.'
-      });
-    }
-
-    if (!movie.salesInfo.originCountryReleaseDate) {
-      errors.push({
-        type: 'warning',
-        field: 'salesInfo.originCountryReleaseDate',
-        name: 'Release date in Origin Country',
-        reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
     }
@@ -1010,16 +1011,6 @@ export class ViewExtractedElementsComponent {
         type: 'warning',
         field: 'budget.totalBudget',
         name: 'Budget',
-        reason: 'Optional field is missing',
-        hint: 'Edit corresponding sheet field.'
-      });
-    }
-
-    if (movie.salesInfo.theatricalRelease === undefined) {
-      errors.push({
-        type: 'warning',
-        field: 'salesInfo.theatricalRelease',
-        name: 'Theatrical release',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -1305,7 +1296,7 @@ export class ViewExtractedElementsComponent {
     //////////////////
 
     //  CONTRACT VALIDATION
-    if(!this.contractService.validateContract(contract.doc)) {
+    if (!this.contractService.validateContract(contract.doc)) {
       errors.push({
         type: 'error',
         field: 'contractId',

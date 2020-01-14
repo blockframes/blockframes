@@ -1,5 +1,7 @@
 import { Component, ChangeDetectionStrategy, Input } from "@angular/core";
 import { Company } from "@blockframes/utils/common-interfaces/identity";
+import { getCodeIfExists } from "@blockframes/movie/moviestatic-model/staticModels";
+import { MovieOriginalRelease } from "@blockframes/movie/movie+state/movie.firestore";
 
 @Component({
   selector: 'movie-display-film-info-card',
@@ -22,4 +24,8 @@ export class MovieDisplayFilmInfoCardComponent {
   @Input() releaseDate;
   @Input() productionCompanies: Company[];
   @Input() salesAgent;
+
+  public hasTheatricalRelease (originalReleases: MovieOriginalRelease[]) {
+    return originalReleases.some(r => r.media === getCodeIfExists('MEDIAS', 'theatrical'))
+  }
 }

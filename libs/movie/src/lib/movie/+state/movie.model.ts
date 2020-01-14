@@ -21,6 +21,8 @@ import {
   StoreType,
   MovieLanguageSpecificationContainer,
   MovieOfficialIds,
+  MovieOriginalRelease,
+  MovieRating,
 } from './movie.firestore';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 import { LanguagesSlug } from '../static-model';
@@ -130,9 +132,27 @@ export function createMovieSalesCast(params: Partial<MovieSalesCast> = {}): Movi
   };
 }
 
+export function createMovieOriginalRelease(params: Partial<MovieOriginalRelease> = {}): MovieOriginalRelease {
+  return {
+    date: null,
+    country: '',
+    ...params
+  };
+}
+
+export function createMovieRating(params: Partial<MovieRating> = {}): MovieRating {
+  return {
+    country: '',
+    reason: '',
+    system: '',
+    value: '',
+    ...params
+  };
+}
+
 export function createMovieSalesInfo(params: Partial<MovieSalesInfo> = {}): MovieSalesInfo {
   return {
-    internationalPremiere: {
+    internationalPremiere: { 
       name: '',
       year: 0,
       prize: ''
@@ -142,9 +162,13 @@ export function createMovieSalesInfo(params: Partial<MovieSalesInfo> = {}): Movi
     scoring: '',
     color: '',
     europeanQualification: false,
-    pegi: '',
-    originCountryReleaseDate: null,
-    theatricalRelease: false,
+    rating: [],
+    originalRelease: [],
+    format: '',
+    formatQuality: '',
+    soundFormat: '',
+    physicalHVRelease: null,
+    releaseYear: null,
     ...params
   };
 }
@@ -261,4 +285,15 @@ export function createOfficialIds(params: Partial<MovieOfficialIds> = {}): Movie
     isan: '',
     ...params
   };
+}
+
+export function createMovieLanguage(
+  movieLanguage: Partial<MovieLanguageSpecification> = {}
+): MovieLanguageSpecification {
+  return {
+    original: false,
+    dubbed: false,
+    subtitle: false,
+    ...movieLanguage
+  } as MovieLanguageSpecification;
 }

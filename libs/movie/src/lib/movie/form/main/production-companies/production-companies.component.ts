@@ -1,5 +1,4 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import { FormControl } from '@angular/forms';
 import { ProductionCompagnyForm } from '../main.form';
 import { FormList } from '@blockframes/utils/form/forms/list.form';
 import { Company } from "@blockframes/utils/common-interfaces/identity";

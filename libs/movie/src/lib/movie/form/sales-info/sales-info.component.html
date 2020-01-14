@@ -20,15 +20,52 @@
   <!-- EUROPEAN QUALIFICATION -->
   <h3> European Qualification </h3>
   <mat-checkbox formControlName="europeanQualification">European Qualification</mat-checkbox>
-  <!-- RATING (PEGI) -->
-  <h3> Rating (PEGI) </h3>
-  <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Rating (PEGI)</mat-label>
-    <input matInput type="text" placeholder="Rating (PEGI)" formControlName="pegi" />
-    <mat-error *ngIf="salesInfo.get('pegi').hasError('required')">
-      Rating is <strong>required</strong>
-    </mat-error>
-  </mat-form-field>
+  <!-- RATING -->
+  <h3> Rating </h3>
+  <div formArrayName="rating" *ngFor="let rating of salesInfo.rating.controls; let i = index">
+    <div [formGroupName]="i" class="full-width">
+      <h4>{{ getRatingSystem(i) }}</h4>
+      <mat-form-field appearance="outline" class="small-margin">
+        <mat-select formControlName="country" placeholder="Country">
+          <mat-option>
+            <ngx-mat-select-search [formControl]="countriesFilterCtrl" [placeholderLabel]="'Search...'"
+              [noEntriesFoundLabel]="'no matching country found'"></ngx-mat-select-search>
+          </mat-option>
+          <mat-option *ngFor="let country of countries$ | async" [value]="country.slug">
+            {{ country.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="small-margin">
+        <mat-select formControlName="system" placeholder="System">
+          <mat-option>
+            <ngx-mat-select-search [formControl]="ratingSystemFilterCtrl" [placeholderLabel]="'Search...'"
+              [noEntriesFoundLabel]="'no matching system found'"></ngx-mat-select-search>
+          </mat-option>
+          <mat-option *ngFor="let system of ratingSystems$ | async" [value]="system.slug">
+            {{ system.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="small-margin">
+        <mat-label>Reason</mat-label>
+        <input matInput formControlName="reason" placeholder="Rating reason">
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="small-margin">
+        <mat-label>Value</mat-label>
+        <input matInput formControlName="value" placeholder="Value">
+      </mat-form-field>
+      <button mat-icon-button color="primary" (click)="salesInfo.addRating()">
+        <mat-icon>add_circle</mat-icon>
+      </button>
+      <button mat-icon-button color="primary" (click)="salesInfo.removeRating(i)">
+        <mat-icon>delete_circle</mat-icon>
+      </button>
+    </div>
+  </div>
+  <button mat-icon-button color="primary" (click)="salesInfo.addRating()">
+    <mat-icon>add_circle</mat-icon>
+  </button>
   <!-- CERTIFICATIONS -->
   <h3> Certifications </h3>
   <mat-form-field appearance="outline" class="full-width">
@@ -54,13 +91,48 @@
       <input matInput type="number" placeholder="Year" formControlName="year" />
     </mat-form-field>
   </div>
-  <!-- ORIGIN COUNTRY RELEASE DATE -->
-  <h3> Release date in Origin Country</h3>
-  <mat-form-field appearance="outline">
-    <input matInput formControlName="originCountryReleaseDate" [matDatepicker]="picker" placeholder="Choose a date">
-    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker #picker></mat-datepicker>
-  </mat-form-field>
+  <!-- ORIGINAL RELEASE -->
+  <h3> Original Release(s) </h3>
+  <div formArrayName="originalRelease" *ngFor="let release of salesInfo.originalRelease.controls; let i = index">
+    <div [formGroupName]="i" class="full-width">
+      <h4>{{ getOriginalRelease(i) }}</h4>  
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-label>Date</mat-label>
+        <input matInput placeholder="Choose release date" formControlName="date" />
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="small-margin">
+        <mat-select formControlName="country" placeholder="Country">
+          <mat-option>
+            <ngx-mat-select-search [formControl]="countriesFilterCtrl" [placeholderLabel]="'Search...'"
+              [noEntriesFoundLabel]="'no matching country found'"></ngx-mat-select-search>
+          </mat-option>
+          <mat-option *ngFor="let country of countries$ | async" [value]="country.slug">
+            {{ country.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline" class="full-width">
+        <mat-select formControlName="media" placeholder="Media">
+          <mat-option>
+            <ngx-mat-select-search [formControl]="mediasFilterCtrl" [placeholderLabel]="'Search...'"
+              [noEntriesFoundLabel]="'no matching media found'"></ngx-mat-select-search>
+          </mat-option>
+          <mat-option *ngFor="let media of medias$ | async" [value]="media.slug">
+            {{ media.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button mat-icon-button color="primary" (click)="salesInfo.addOriginalRelease()">
+        <mat-icon>add_circle</mat-icon>
+      </button>
+      <button mat-icon-button color="primary" (click)="salesInfo.removeOriginalRelease(i)">
+        <mat-icon>delete_circle</mat-icon>
+      </button>
+    </div>
+  </div>
+  <button mat-icon-button color="primary" (click)="salesInfo.addOriginalRelease()">
+    <mat-icon>add_circle</mat-icon>
+  </button>
   <!-- Broadcaster coproducers -->
   <h3> TV / Platform coproducer(s), if any </h3>
   <div formArrayName="broadcasterCoproducers" *ngFor="let broadcasterCoproducer of salesInfo.broadcasterCoproducers.controls; let i = index">

@@ -60,6 +60,12 @@ export const SCORING_SLUG = models['SCORING'].map(key => key.slug);
 export type ScoringLabel = typeof SCORING_LABEL[number];
 export type ScoringSlug = typeof SCORING_SLUG[number];
 
+export const RATING_LABEL = models['RATING'].map(key => key.label);
+export const RATING_SLUG = models['RATING'].map(key => key.slug);
+
+export type RatingLabel = typeof RATING_LABEL[number];
+export type RatingSlug = typeof RATING_SLUG[number];
+
 export const COLORS_LABEL = models['COLORS'].map(key => key.label);
 export const COLORS_SLUG = models['COLORS'].map(key => key.slug);
 
