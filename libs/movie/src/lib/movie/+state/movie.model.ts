@@ -217,10 +217,6 @@ export function createMovieBudget(params: Partial<MovieBudget> = {}): MovieBudge
 
 export function createMovieReview(params: Partial<MovieReview> = {}): MovieReview {
   return {
-    criticName: '',
-    journalName: '',
-    criticQuote: '',
-    revueLink: '',
     ...params,
   };
 }
