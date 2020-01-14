@@ -1,6 +1,7 @@
 import { AFM_DISABLE } from '@env';
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { getLabelByCode } from '../../static-model/staticModels';
+import { getLabelByCode, getCodeIfExists } from '../../static-model/staticModels';
+import { MovieOriginalRelease } from '@blockframes/movie/movie+state/movie.firestore';
 
 @Component({
   selector: 'movie-display-film-details',
@@ -17,4 +18,14 @@ export class MovieDisplayFilmDetailsComponent {
   @Input() movieSalesInfo;
   // TODO issue#1146
   public AFM_DISABLE = AFM_DISABLE;
+
+  public getTheatricalRelease (originalReleases: MovieOriginalRelease[]) {
+    originalReleases.forEach( r => {
+      if(r.media === getCodeIfExists('MEDIAS', 'theatrical')) {
+        return true;
+      }
+    });
+
+    return false;
+  }
 }

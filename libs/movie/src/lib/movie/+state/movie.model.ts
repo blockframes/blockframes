@@ -148,7 +148,7 @@ export function createMovieRating(params: Partial<MovieRating> = {}): MovieRatin
   };
 }
 
-export function createMovieSalesInfo(params: Partial<MovieSalesInfo> = {}): MovieSalesInfo { //  @tddo #1508 
+export function createMovieSalesInfo(params: Partial<MovieSalesInfo> = {}): MovieSalesInfo {
   return {
     internationalPremiere: { 
       name: '',

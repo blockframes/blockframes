@@ -54,7 +54,7 @@
     <span class="bf-dark-text">Budget</span>
     <span>{{budget.totalBudget}}</span>
   </li>
-  <ng-container *ngIf="salesInfo.theatricalRelease; else noRelease"> <!-- @todo #1508-->
+  <ng-container *ngIf="getTheatricalRelease(data.originalRelease); else noRelease"> 
     <li fxLayout="row" fxLayout.lt-sm="column">
       <span class="bf-dark-text">Theatrical Release</span>
       <span>Yes</span>

@@ -157,16 +157,16 @@ interface MovieSalesInfoRaw<D> {
   broadcasterCoproducers: string[],
   certifications: CertificationsSlug[],
   color: ColorsSlug,
-  europeanQualification: boolean, //  @todo #1508 move to certifications
-  format: string, //  @tddo #1508 interface ?
-  formatQuality: string,// @tddo #1508 interface
+  europeanQualification: boolean,
+  format: string,
+  formatQuality: string,
   internationalPremiere: Prize,
   originalRelease: MovieOriginalReleaseRaw<D>[],
   physicalHVRelease: D,
   rating: MovieRating[],
   releaseYear: number,
   scoring: ScoringSlug, 
-  soundFormat: string // @tddo #1508 interface
+  soundFormat: string
 }
 
 export interface MovieSalesInfoDocumentWithDates extends MovieSalesInfoRaw<Date> {

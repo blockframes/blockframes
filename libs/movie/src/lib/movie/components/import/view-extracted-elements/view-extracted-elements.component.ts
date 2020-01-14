@@ -24,7 +24,7 @@ import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { formatCredits } from '@blockframes/utils/spreadsheet/format';
 import { ImageUploader } from '@blockframes/utils';
 import { SSF$Date } from 'ssf/types';
-import { getCodeIfExists, getLabelByCode } from '../../../static-model/staticModels';
+import { getCodeIfExists } from '../../../static-model/staticModels';
 import { SSF } from 'xlsx';
 import { MovieLanguageTypes } from '@blockframes/movie/movie/+state/movie.firestore';
 import { createCredit } from '@blockframes/utils/common-interfaces/identity';
@@ -408,17 +408,9 @@ export class ViewExtractedElementsComponent {
         // ORIGIN COUNTRY RELEASE DATE (Release date in Origin Country)
         if (spreadSheetRow[SpreadSheetMovie.originCountryReleaseDate]) {
           let date = spreadSheetRow[SpreadSheetMovie.originCountryReleaseDate];
-
-          if(SSF.is_date(spreadSheetRow[SpreadSheetMovie.originCountryReleaseDate])) {
-            const originCountryReleaseDate: SSF$Date = SSF.parse_date_code(spreadSheetRow[SpreadSheetMovie.originCountryReleaseDate]);
-            date = new Date(`${originCountryReleaseDate.y}-${originCountryReleaseDate.m}-${originCountryReleaseDate.d}`);
-          }
-
           movie.main.originCountries.forEach( country => {
             movie.salesInfo.originalRelease.push(createMovieOriginalRelease({date, country}));
           });
-
-          // @todo #1508 excel should be updated to match model (country + media of originCountryRelease date)
         }
 
         // GENRES (Genres)
@@ -641,7 +633,7 @@ export class ViewExtractedElementsComponent {
         if (spreadSheetRow[SpreadSheetMovie.theatricalRelease]) {
           if(spreadSheetRow[SpreadSheetMovie.theatricalRelease].toLowerCase() === 'yes') {
             movie.salesInfo.originalRelease.forEach(r => {
-              r.media = getLabelByCode('MEDIAS', 'theatrical');
+              r.media = getCodeIfExists('MEDIAS', 'theatrical');
             })
           }
         }

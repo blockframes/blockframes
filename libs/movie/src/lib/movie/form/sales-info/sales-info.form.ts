@@ -94,7 +94,7 @@ export class MovieSalesInfoForm extends FormEntity<MovieSalesInfoControl>{
     return this.get('rating');
   }
 
-  get orignialRelease() {
+  get originalRelease() {
     return this.get('originalRelease');
   }
 
@@ -112,16 +112,16 @@ export class MovieSalesInfoForm extends FormEntity<MovieSalesInfoControl>{
   }
 
   public getOriginalRelease(i: number) {
-    return this.orignialRelease.controls[i];
+    return this.originalRelease.controls[i];
   }
 
   public addOriginalRelease(): void {
     const orignialRelease = new OriginalReleaseForm();
-    this.orignialRelease.push(orignialRelease);
+    this.originalRelease.push(orignialRelease);
   }
 
   public removeOriginalRelease(i: number): void {
-    this.orignialRelease.removeAt(i);
+    this.originalRelease.removeAt(i);
   }
 
 }

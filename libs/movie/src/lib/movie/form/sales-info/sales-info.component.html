@@ -22,13 +22,9 @@
   <mat-checkbox formControlName="europeanQualification">European Qualification</mat-checkbox>
   <!-- RATING -->
   <h3> Rating </h3>
-  <div formArrayName="ratings" *ngFor="let rating of salesInfo.rating.controls; let i = index">
+  <div formArrayName="rating" *ngFor="let rating of salesInfo.rating.controls; let i = index">
     <div [formGroupName]="i" class="full-width">
-      <h4>{{ getRatingSystem(i) }}</h4>  
-      <mat-form-field appearance="outline" class="small-margin">
-        <mat-label>Name</mat-label>
-        <input matInput formControlName="name" placeholder="Festival name">
-      </mat-form-field>
+      <h4>{{ getRatingSystem(i) }}</h4>
       <mat-form-field appearance="outline" class="small-margin">
         <mat-select formControlName="country" placeholder="Country">
           <mat-option>
@@ -67,6 +63,9 @@
       </button>
     </div>
   </div>
+  <button mat-icon-button color="primary" (click)="salesInfo.addRating()">
+    <mat-icon>add_circle</mat-icon>
+  </button>
   <!-- CERTIFICATIONS -->
   <h3> Certifications </h3>
   <mat-form-field appearance="outline" class="full-width">
@@ -92,13 +91,6 @@
       <input matInput type="number" placeholder="Year" formControlName="year" />
     </mat-form-field>
   </div>
-  
-  <h3> Release date in Origin Country</h3>
-  <mat-form-field appearance="outline">
-    <input matInput formControlName="originCountryReleaseDate" [matDatepicker]="picker" placeholder="Choose a date"> <!-- @todo #1508-->
-    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-    <mat-datepicker #picker></mat-datepicker>
-  </mat-form-field>
   <!-- ORIGINAL RELEASE -->
   <h3> Original Release(s) </h3>
   <div formArrayName="originalRelease" *ngFor="let release of salesInfo.originalRelease.controls; let i = index">
@@ -106,9 +98,7 @@
       <h4>{{ getOriginalRelease(i) }}</h4>  
       <mat-form-field appearance="outline" class="full-width">
         <mat-label>Date</mat-label>
-        <input matInput [matDatepicker]="picker1" placeholder="Choose release date" formControlName="date" />
-        <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
-        <mat-datepicker #picker1></mat-datepicker>
+        <input matInput placeholder="Choose release date" formControlName="date" />
       </mat-form-field>
       <mat-form-field appearance="outline" class="small-margin">
         <mat-select formControlName="country" placeholder="Country">
@@ -122,7 +112,7 @@
         </mat-select>
       </mat-form-field>
       <mat-form-field appearance="outline" class="full-width">
-        <mat-select formControlName="medias" placeholder="Medias" multiple>
+        <mat-select formControlName="media" placeholder="Media">
           <mat-option>
             <ngx-mat-select-search [formControl]="mediasFilterCtrl" [placeholderLabel]="'Search...'"
               [noEntriesFoundLabel]="'no matching media found'"></ngx-mat-select-search>
@@ -140,6 +130,9 @@
       </button>
     </div>
   </div>
+  <button mat-icon-button color="primary" (click)="salesInfo.addOriginalRelease()">
+    <mat-icon>add_circle</mat-icon>
+  </button>
   <!-- Broadcaster coproducers -->
   <h3> TV / Platform coproducer(s), if any </h3>
   <div formArrayName="broadcasterCoproducers" *ngFor="let broadcasterCoproducer of salesInfo.broadcasterCoproducers.controls; let i = index">

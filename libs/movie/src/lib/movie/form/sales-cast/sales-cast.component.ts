@@ -1,26 +1,26 @@
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { FormArray } from '@angular/forms';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ControlContainer } from '@angular/forms';
 import { default as staticModels } from '../../static-model/staticModels';
-import { CreditForm } from './sales-cast.form';
+import { MovieSalesCastForm } from './sales-cast.form';
 
 @Component({
-  selector: '[form] movie-form-sales-cast',
+  selector: '[formGroup] movie-form-sales-cast, [formGroupName] movie-form-sales-cast',
   templateUrl: './sales-cast.component.html',
   styleUrls: ['./sales-cast.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
+export class MovieFormSalesCastComponent implements OnInit {
+  
+  public staticModels: any;
 
+  constructor(public controlContainer: ControlContainer) { }
 
-export class MovieFormSalesCastComponent {
-  @Input() form: FormArray;
-  roles = staticModels.CREDIT_ROLES;
-
-  add() {
-    this.form.push(new CreditForm())
+  ngOnInit() {
+    this.staticModels = staticModels;
   }
 
-  public remove(i: number): void {
-    this.form.removeAt(i);
+  get salesCast() : MovieSalesCastForm {
+    return this.controlContainer.control as MovieSalesCastForm;
   }
 
 }
