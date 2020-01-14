@@ -1,4 +1,4 @@
-import { MovieStatusSlug, PromotionalElementTypesSlug, ResourceRatioSlug, ResourceSizesSlug, TerritoriesSlug, LanguagesSlug, MediasSlug, ScoringSlug, CertificationsSlug, ColorsSlug } from "@blockframes/movie/movie/static-model";
+import { MovieStatusSlug, PromotionalElementTypesSlug, ResourceRatioSlug, ResourceSizesSlug, TerritoriesSlug, LanguagesSlug, MediasSlug, ScoringSlug, CertificationsSlug, ColorsSlug, RatingSlug } from "@blockframes/movie/movie/static-model";
 import { RawRange, NumberRange } from "@blockframes/utils/common-interfaces/range";
 import { Person, Credit, SalesAgent, Company } from "@blockframes/utils/common-interfaces/identity";
 import { firestore } from "firebase/app";
@@ -120,7 +120,7 @@ export interface MovieOriginalReleaseRaw<D> {
 export interface MovieRating {
   country: TerritoriesSlug;
   reason: string,
-  system: string,
+  system: RatingSlug,
   value: string,
 }
 

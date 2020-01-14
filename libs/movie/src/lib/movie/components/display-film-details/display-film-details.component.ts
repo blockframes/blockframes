@@ -19,13 +19,7 @@ export class MovieDisplayFilmDetailsComponent {
   // TODO issue#1146
   public AFM_DISABLE = AFM_DISABLE;
 
-  public getTheatricalRelease (originalReleases: MovieOriginalRelease[]) {
-    originalReleases.forEach( r => {
-      if(r.media === getCodeIfExists('MEDIAS', 'theatrical')) {
-        return true;
-      }
-    });
-
-    return false;
+  public hasTheatricalRelease (originalReleases: MovieOriginalRelease[]) {
+    return originalReleases.some(r => r.media === getCodeIfExists('MEDIAS', 'theatrical'))
   }
 }

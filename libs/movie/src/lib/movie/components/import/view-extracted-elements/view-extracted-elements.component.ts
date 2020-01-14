@@ -363,7 +363,8 @@ export class ViewExtractedElementsComponent {
 
         // PEGI (Rating)
         if (spreadSheetRow[SpreadSheetMovie.rating]) {
-          movie.salesInfo.rating.push(createMovieRating({value: spreadSheetRow[SpreadSheetMovie.rating]}));
+          const movieRating = createMovieRating({ value: spreadSheetRow[SpreadSheetMovie.rating] });
+          movie.salesInfo.rating.push(movieRating);
         }
 
         // CERTIFICATIONS (Certifications)
@@ -407,10 +408,12 @@ export class ViewExtractedElementsComponent {
 
         // ORIGIN COUNTRY RELEASE DATE (Release date in Origin Country)
         if (spreadSheetRow[SpreadSheetMovie.originCountryReleaseDate]) {
-          let date = spreadSheetRow[SpreadSheetMovie.originCountryReleaseDate];
-          movie.main.originCountries.forEach( country => {
-            movie.salesInfo.originalRelease.push(createMovieOriginalRelease({date, country}));
-          });
+          const date = spreadSheetRow[SpreadSheetMovie.originCountryReleaseDate];
+
+          movie.salesInfo.originalRelease = [
+            ...movie.salesInfo.originalRelease,
+            ...movie.main.originCountries.map(country => (createMovieOriginalRelease({ date, country })))
+          ]
         }
 
         // GENRES (Genres)
@@ -631,7 +634,7 @@ export class ViewExtractedElementsComponent {
 
         // THEATRICAL RELEASE
         if (spreadSheetRow[SpreadSheetMovie.theatricalRelease]) {
-          if(spreadSheetRow[SpreadSheetMovie.theatricalRelease].toLowerCase() === 'yes') {
+          if (spreadSheetRow[SpreadSheetMovie.theatricalRelease].toLowerCase() === 'yes') {
             movie.salesInfo.originalRelease.forEach(r => {
               r.media = getCodeIfExists('MEDIAS', 'theatrical');
             })
@@ -1296,7 +1299,7 @@ export class ViewExtractedElementsComponent {
     //////////////////
 
     //  CONTRACT VALIDATION
-    if(!this.contractService.validateContract(contract.doc)) {
+    if (!this.contractService.validateContract(contract.doc)) {
       errors.push({
         type: 'error',
         field: 'contractId',

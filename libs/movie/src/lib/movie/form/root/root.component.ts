@@ -118,10 +118,7 @@ export class MovieFormRootComponent {
 
         // ORIGINAL RELEASE 
         // We put the same date for various origin countries
-        const releases = [];
-        countries.forEach(country => {
-          releases.push(createMovieOriginalRelease({country, date: movie.released}));
-        });
+        const releases = countries.map(country => createMovieOriginalRelease({country, date: movie.released}));
         this.form.get('salesInfo').get('originalRelease').setValue(releases);
 
         // GENRES

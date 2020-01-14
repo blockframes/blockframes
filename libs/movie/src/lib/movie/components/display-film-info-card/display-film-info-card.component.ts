@@ -25,13 +25,7 @@ export class MovieDisplayFilmInfoCardComponent {
   @Input() productionCompanies: Company[];
   @Input() salesAgent;
 
-  public getTheatricalRelease (originalReleases: MovieOriginalRelease[]) {
-    originalReleases.forEach( r => {
-      if(r.media === getCodeIfExists('MEDIAS', 'theatrical')) {
-        return true;
-      }
-    });
-
-    return false;
+  public hasTheatricalRelease (originalReleases: MovieOriginalRelease[]) {
+    return originalReleases.some(r => r.media === getCodeIfExists('MEDIAS', 'theatrical'))
   }
 }
