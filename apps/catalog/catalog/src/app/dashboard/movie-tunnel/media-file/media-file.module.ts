@@ -3,9 +3,14 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { TunnelPageModule } from '@blockframes/ui/tunnel/page/tunnel-page.module';
+import { PromotionalElementsModule } from '@blockframes/movie/movie/form/promotional-elements/promotional-elements.module';
+import { UploadModule } from '@blockframes/ui/upload/upload.module';
 import { MediaFileComponent } from './media-file.component';
 // Material
 import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDividerModule } from '@angular/material/divider';
 
 
 @NgModule({
@@ -14,8 +19,13 @@ import { MatCardModule } from '@angular/material/card';
     CommonModule,
     ReactiveFormsModule,
     TunnelPageModule,
+    PromotionalElementsModule,
+    UploadModule,
     // Material
     MatCardModule,
+    MatIconModule,
+    MatButtonModule,
+    MatDividerModule,
     RouterModule.forChild([{ path: '', component: MediaFileComponent }])
   ],
   exports: [MediaFileComponent]

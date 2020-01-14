@@ -32,6 +32,7 @@ import { MovieFormStoryComponent } from './story/story.component';
 import { MovieFormRootComponent } from './root/root.component';
 import { MovieFormSalesAgentDealComponent } from './sales-agent-deal/sales-agent-deal.component';
 import { MovieFormSalesInfoComponent } from './sales-info/sales-info.component';
+import { PromotionalLinksComponent } from './promotional-elements/promotional-links/promotional-links.component';
 
 // Forms Modules
 import { MovieFormFestivalPrizesModule } from './festival-prizes/festival-prizes.module';
@@ -83,6 +84,7 @@ import { MovieFormVersionInfoModule } from './version-info/version-info.module';
     MovieFormStoryComponent,
     MovieFormSalesInfoComponent,
     MovieFormSalesAgentDealComponent,
+    PromotionalLinksComponent,
   ],
   exports: [
     MovieFormRootComponent
