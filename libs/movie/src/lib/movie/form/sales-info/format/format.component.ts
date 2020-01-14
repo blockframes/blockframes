@@ -16,7 +16,7 @@ export class MovieFormFormatComponent {
 
     public staticFormatsQuality = models.MOVIE_FORMAT_QUALITY;
 
-    public staticSoundFormats = models.SOUND_FORMATS;
+    public staticSoundFormats = models.SOUND_FORMAT;
 
     public staticColor = models.COLORS;
 }
