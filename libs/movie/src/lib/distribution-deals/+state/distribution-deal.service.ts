@@ -54,10 +54,7 @@ export class DistributionDealService extends CollectionService<DistributionDealS
       // @todo #1397 change this price calculus
       contract.last.titles[movieId].price = contract.last.price;
 
-      const contractId = await this.contractVersionService.addContractAndVersion(
-        contract.doc,
-        contract.last
-      );
+      const contractId = await this.contractVersionService.addContractAndVersion(contract)
 
       // Link distributiondeal with contract
       distributionDeal.contractId = contractId;

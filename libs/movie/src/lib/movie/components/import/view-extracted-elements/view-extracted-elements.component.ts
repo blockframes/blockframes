@@ -1248,7 +1248,8 @@ export class ViewExtractedElementsComponent {
           }
 
           // Checks if sale already exists
-          if (await this.distributionDealService.getValue(distributionDeal.id)) {
+          const existingDeal = await this.distributionDealService.getValue(distributionDeal.id)
+          if (existingDeal) {
             importErrors.errors.push({
               type: 'error',
               field: 'distributionDeal',
