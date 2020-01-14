@@ -11,6 +11,7 @@ interface Model {
   MOVIE_CURRENCIES: readonly CurrencyWithLabel[];
   SELECTION_CATEGORIES: readonly SlugAndLabel[];
   SCORING: readonly SlugAndLabel[];
+  RATING: readonly SlugAndLabel[];
   COLORS: readonly SlugAndLabel[];
   CERTIFICATIONS: readonly SlugAndLabel[];
   TERRITORIES: readonly SlugAndLabel[];
@@ -406,6 +407,20 @@ const models: Model = {
     {
       'slug': 'd',
       'label': 'D'
+    },
+  ] as const,
+  'RATING': [
+    {
+      'slug': 'pegi',
+      'label': 'PEGI'
+    },
+    {
+      'slug': 'csa',
+      'label': 'CSA'
+    },
+    {
+      'slug': 'cnc',
+      'label': 'CNC'
     },
   ] as const,
   'COLORS': [

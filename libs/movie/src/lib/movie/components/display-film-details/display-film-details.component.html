@@ -8,10 +8,12 @@
         <span>{{ main.isan }}</span>
       </li>
     </ng-container><!-- TODO issue#1146 -->
-    <ng-container *ngIf="salesInfo.pegi && !AFM_DISABLE">
+    <ng-container *ngIf="salesInfo.rating && !AFM_DISABLE">
       <li fxLayout="row" fxLayout.lt-sm="column">
         <span><b>Rating</b></span>
-        <span>{{ salesInfo.pegi }}</span>
+        <ul>
+          <li *ngFor="let rating of salesInfo.rating">{{ rating.system }} {{ getLabelByCode('TERRITORIES', rating.country) }} : {{ rating.value }} ({{ rating.reason }})</li>
+        </ul>
       </li>
     </ng-container>
     <ng-container *ngIf="main">
@@ -29,7 +31,7 @@
         <span>{{ color | titlecase }}</span>
       </li>
     </ng-container>
-    <ng-container *ngIf="movieSalesInfo.theatricalRelease; else noRelease">
+    <ng-container *ngIf="hasTheatricalRelease(salesInfo.originalRelease); else noRelease"> 
       <li fxLayout="row" fxLayout.lt-sm="column">
         <span><b>Theatrical Release</b></span>
         <span>Yes</span>
@@ -41,11 +43,11 @@
         <span>No</span>
       </li>
     </ng-template>
-    <ng-container *ngIf="salesInfo.originCountryReleaseDate">
-      <li fxLayout="row" fxLayout.lt-sm="column">
-        <span><b>Release date in Origin Country</b></span>
-        <span>{{ salesInfo.originCountryReleaseDate | date:'LLLL, dd yyyy' }}</span>
-      </li>
-    </ng-container>
   </ul>
+  <ng-container *ngIf="salesInfo.originalRelease">
+    <span><b>Release dates in Origin Countries</b></span>
+    <ul>
+      <li *ngFor="let release of salesInfo.originalRelease">{{ getLabelByCode('TERRITORIES', release.country) }} : {{ release.date }} ({{ getLabelByCode('MEDIAS', release.media) }})</li>
+    </ul>
+  </ng-container>
 </article>

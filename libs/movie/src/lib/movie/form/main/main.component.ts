@@ -1,9 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, ControlContainer } from '@angular/forms';
 import { default as staticModels, SlugAndLabel } from '../../static-model/staticModels';
 import { Observable } from 'rxjs';
 import { startWith, debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
-import { MovieForm } from '../movie.form';
+import { MovieMainForm } from './main.form';
 
 @Component({
   selector: '[formGroup] movie-form-main, [formGroupName] movie-form-main',
@@ -21,15 +21,15 @@ export class MovieFormMainComponent implements OnInit {
   public languages$: Observable<SlugAndLabel[]>;
   public genres$: Observable<SlugAndLabel[]>;
 
-  constructor(private form: MovieForm) { }
+  constructor(public controlContainer: ControlContainer) { }
 
   ngOnInit() {
     this.staticModels = staticModels;
     this.selectSearchSubScriptions();
   }
 
-  get main() {
-    return this.form.get('main');
+  get main() : MovieMainForm {
+    return this.controlContainer.control as MovieMainForm;
   }
 
   /* Selects with search bar */

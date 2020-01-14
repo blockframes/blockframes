@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation, Input } from '@angular/core';
-import { MovieQuery, MovieService } from '../../+state';
+import { MovieQuery, MovieService, createMovieRating, createMovieOriginalRelease } from '../../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieForm } from './../movie.form';
 import { MatDialog } from '@angular/material';
@@ -106,9 +106,6 @@ export class MovieFormRootComponent {
         });
         this.form.main.get('languages').setValue(languages);
 
-        // ORIGIN COUNTRY RELEASE DATE (Release date in Origin Country)
-        this.form.get('salesInfo').get('originCountryReleaseDate').setValue(movie.released);
-
         // ORIGIN COUNTRY
         const countries = [];
         movie.country.split(',').forEach((c: string) => {
@@ -118,6 +115,11 @@ export class MovieFormRootComponent {
           if (country) { countries.push(country) }
           this.form.main.get('originCountries').setValue(countries);
         });
+
+        // ORIGINAL RELEASE 
+        // We put the same date for various origin countries
+        const releases = countries.map(country => createMovieOriginalRelease({country, date: movie.released}));
+        this.form.get('salesInfo').get('originalRelease').setValue(releases);
 
         // GENRES
         const genres = [];
@@ -133,7 +135,7 @@ export class MovieFormRootComponent {
         this.form.main.get('totalRunTime').setValue(parseInt(movie.runtime.replace(' min', ''), 10));
 
         // PEGI (Rating)
-        this.form.get('salesInfo').get('pegi').setValue(movie.rated);
+        this.form.get('salesInfo').get('rating').setValue([createMovieRating({value: movie.rated})]);
 
         // STATUS
         this.form.main.get('status').setValue('finished');

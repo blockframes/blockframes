@@ -1,4 +1,19 @@
-import { MovieStatusSlug, PromotionalElementTypesSlug, ResourceRatioSlug, ResourceSizesSlug, TerritoriesSlug, LanguagesSlug, FormatSlug, FormatQualitySlug, SoundFormatSlug } from "@blockframes/movie/movie/static-model";
+import { 
+  MovieStatusSlug,
+  PromotionalElementTypesSlug,
+  ResourceRatioSlug,
+  ResourceSizesSlug,
+  TerritoriesSlug,
+  LanguagesSlug,
+  MediasSlug,
+  ScoringSlug,
+  CertificationsSlug,
+  ColorsSlug, 
+  RatingSlug, 
+  SoundFormatSlug, 
+  FormatQualitySlug, 
+  FormatSlug 
+} from "@blockframes/movie/movie/static-model";
 import { RawRange, NumberRange } from "@blockframes/utils/common-interfaces/range";
 import { Person, Credit, SalesAgent, Company } from "@blockframes/utils/common-interfaces/identity";
 import { firestore } from "firebase/app";
@@ -49,7 +64,7 @@ export interface StoreConfig {
 interface MovieSalesAgentDealRaw<D> {
   rights: RawRange<D>;
   territories: string[],
-  medias: string[],
+  medias: MediasSlug[],
   salesAgent?: SalesAgent,
   reservedTerritories?: string[],
 }
@@ -131,6 +146,19 @@ export interface MovieLanguageSpecification {
   caption: boolean;
 }
 
+export interface MovieOriginalReleaseRaw<D> {
+  date: D | string;
+  country: TerritoriesSlug;
+  media?: MediasSlug
+}
+
+export interface MovieRating {
+  country: TerritoriesSlug;
+  reason: string,
+  system: RatingSlug,
+  value: string,
+}
+
 export type MovieLanguageSpecificationContainer = Record<LanguagesSlug, MovieLanguageSpecification>;
 
 export interface MovieOfficialIds {
@@ -150,7 +178,7 @@ export interface MovieMain {
   poster?: ImgRef,
   productionYear?: number,
   genres?: string[],
-  originCountries?: string[],
+  originCountries?: TerritoriesSlug[],
   languages?: string[],
   status?: MovieStatusSlug,
   productionCompanies?: Company[],
@@ -161,20 +189,24 @@ export interface MovieMain {
 }
 
 interface MovieSalesInfoRaw<D> {
-  scoring: string,
-  color: string,
-  europeanQualification: boolean,
-  pegi: string,
-  certifications: string[],
-  originCountryReleaseDate: D,
   broadcasterCoproducers: string[],
-  theatricalRelease: boolean,
+  certifications: CertificationsSlug[],
+  color: ColorsSlug,
+  europeanQualification: boolean,
   format?: FormatSlug,
   formatQuality?: FormatQualitySlug,
-  soundFormat?: SoundFormatSlug
+  originalRelease: MovieOriginalReleaseRaw<D>[],
+  physicalHVRelease: D,
+  rating: MovieRating[],
+  releaseYear: number,
+  scoring: ScoringSlug, 
+  soundFormat?: SoundFormatSlug,
 }
 
 export interface MovieSalesInfoDocumentWithDates extends MovieSalesInfoRaw<Date> {
+}
+
+export interface MovieOriginalRelease extends MovieOriginalReleaseRaw<Date> {
 }
 
 export interface MovieReview {
