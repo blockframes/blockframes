@@ -2,7 +2,7 @@ import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core
 import { MovieMainControl } from '../main.form';
 import { default as staticModel } from '../../../static-model/staticModels';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { startWith, map, switchMap, tap } from 'rxjs/operators';
+import { startWith, map, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: '[form] movie-form-languages',

@@ -35,16 +35,17 @@
         <movie-form-languages [form]="main.get('languages')"></movie-form-languages>
       </mat-card-content>
     </mat-card>
-
-    <!-- Theatrical release component
+  
+    <!-- General Information -->
     <mat-card>
       <mat-card-header>
-        <mat-card-title>Theatrical Release</mat-card-title>
+        <mat-card-title>General Information</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <movie-theatrical-release [form]="salesInfo"></movie-theatrical-release>
+        <movie-form-genre [form]="main"></movie-form-genre>
       </mat-card-content>
-    </mat-card> -->
+    </mat-card>
+
 
   </section>
 </tunnel-page>
