@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { ContractVersionState, ContractVersionStore } from './contract-version.store';
-import { ContractVersion, ContractWithLastVersion } from './contract-version.model';
+import { ContractVersion, ContractWithLastVersion, VersionMeta } from './contract-version.model';
 import { ContractQuery } from '../../+state/contract.query';
-import { VersionMeta } from '@blockframes/contract/+state/contract.firestore';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'contracts/:contractId/versions' })
@@ -58,7 +57,7 @@ export class ContractVersionService extends CollectionService<ContractVersionSta
     contract: ContractWithLastVersion
   ): Promise<string> {
     const contractId = (await this.add(contract.doc)) as string;
-    await this.addContractVersion(contract.last);
+    this.addContractVersion(contract.last);
     return contractId;
   }
 
