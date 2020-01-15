@@ -17,7 +17,7 @@ export class GenreComponent {
     return this.form.get('genres');
   }
 
-  // get customGenreForm() {
-  //   return this.form.get('customGenres');
-  // }
+  get customGenreForm() {
+    return this.form.get('customGenres');
+  }
 }

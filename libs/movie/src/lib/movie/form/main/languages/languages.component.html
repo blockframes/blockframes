@@ -3,6 +3,9 @@
     <mat-form-field appearance="outline">
       <mat-label>Original Language</mat-label>
       <input (focus)="focus(i)" type="text" matInput [formControl]="control" [matAutocomplete]="auto" name="languages" required>
+      <mat-error *ngIf="control.hasError('invalidValue')">
+        Please select one of the language suggested.
+      </mat-error>
     </mat-form-field>
 
     <!-- Add / Delete -->
