@@ -21,7 +21,7 @@ function createCreditFormControl(credit?: Partial<Credit>) {
 export type CreditFormControl = ReturnType<typeof createCreditFormControl>;
 
 export class MovieCreditForm extends FormEntity<CreditFormControl> {
-  constructor(credit?: Partial<Credit>) {
+  constructor(credit?: Credit) {
     super(createCreditFormControl(credit));
   }
 }
@@ -78,20 +78,23 @@ function createDirectorFormControl(director?: Partial<Credit>) {
 
 type DirectorFormControl = ReturnType<typeof createDirectorFormControl>;
 
-export class StakeholdersForm extends FormEntity<StakeholdersControl> {
-  constructor(stakeholder?: Partial<Stakeholder>) {
-    super(createStakeholdersControl(stakeholder))
+export class DirectorForm extends FormEntity<DirectorFormControl> {
+  constructor(director?: Partial<Credit>) {
+    super(createDirectorFormControl(director))
   }
 }
 
-function createStakeholdersControl(stakeholder?: Partial<Stakeholder>) {
-  const { displayName } = createStakeholder(stakeholder);
+//////////////////////////
+// Production company form
+//////////////////////////
+function createProductionCompagnyControl(compagny?: Partial<Credit>) {
+  const { displayName } = createCompany(compagny);
   return {
     displayName: new FormControl(displayName),
   }
 }
 
-type StakeholdersControl = ReturnType<typeof createStakeholdersControl>;
+type ProductionCompagnyControl = ReturnType<typeof createProductionCompagnyControl>;
 
 export class ProductionCompagnyForm extends FormEntity<ProductionCompagnyControl> {
   constructor(compagny?: Partial<Credit>) {
@@ -111,7 +114,7 @@ function createMovieMainControls(main : Partial<MovieMain> = {}) {
     directors: FormList.factory(entity.directors, el => new DirectorForm(el)),
     poster: new FormControl(entity.poster),
     productionYear: new FormControl(entity.productionYear, yearValidators),
-    genres: FormList.factory(entity.genres),
+    genres: new FormControl(entity.genres),
     originCountries: FormList.factory(entity.originCountries, el => new FormControl(el)),
     originalLanguages: new FormControl(entity.originalLanguages),
     status: new FormControl(entity.status , [Validators.required]),
@@ -139,8 +142,8 @@ export class MovieMainForm extends FormEntity<MovieMainControl>{
     return this.get('directors');
   }
 
-  get stakeholders() {
-    return this.get('stakeholders');
+  get productionCompanies() {
+    return this.get('productionCompanies');
   }
 
   get shortSynopsis() {
@@ -180,7 +183,7 @@ export class MovieMainForm extends FormEntity<MovieMainControl>{
     this.productionCompanies.push(credit);
   }
 
-  public removeStakeholder(i: number): void {
-    this.stakeholders.removeAt(i);
+  public removeProductionCompany(i: number): void {
+    this.productionCompanies.removeAt(i);
   }
 }
