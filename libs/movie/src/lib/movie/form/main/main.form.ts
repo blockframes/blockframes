@@ -2,6 +2,7 @@ import { FormEntity, FormList, yearValidators } from '@blockframes/utils';
 import { MovieMain, Credit, createMovieMain, Movie, createTitle } from '../../+state';
 import { Validators, FormControl } from '@angular/forms';
 import { createCredit, Stakeholder, createStakeholder } from '@blockframes/utils/common-interfaces/identity';
+import { valueIsInModelValidator } from '@blockframes/utils/form/validators/validators';
 
 function createCreditFormControl(credit?: Partial<Credit>) {
   const { firstName, lastName, role } = createCredit(credit);
@@ -84,9 +85,9 @@ function createMovieMainControls(main : Partial<MovieMain> = {}) {
     totalRunTime: new FormControl(entity.totalRunTime),
     shortSynopsis: new FormControl(entity.shortSynopsis, [Validators.maxLength(500)] ),
     stakeholders: FormList.factory(entity.stakeholders, el => new StakeholdersForm(el)),
-    customGenres: new FormControl(entity.customGenres),
     workType: new FormControl(entity.workType),
-    storeConfig: new StoreConfigForm(entity.storeConfig)
+    storeConfig: new StoreConfigForm(entity.storeConfig),
+    customGenres: FormList.factory(entity.customGenres),
   }
 }
 

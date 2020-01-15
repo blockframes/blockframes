@@ -1,6 +1,9 @@
 <mat-form-field appearance="outline">
   <mat-label>Country of Origin</mat-label>
   <input type="text" matInput [formControl]="form" [matAutocomplete]="auto" name="originCountry" required>
+  <mat-error *ngIf="form.hasError('invalidValue')">
+    Please select one of the country suggested.
+  </mat-error>
 </mat-form-field>
 
 <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
