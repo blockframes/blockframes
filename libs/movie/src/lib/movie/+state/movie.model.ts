@@ -83,7 +83,7 @@ export function createMovieMain(params: Partial<MovieMain> = {}): MovieMain {
     genres: [],
     workType: WorkType.movie,
     storeConfig: createStoreConfig(params.storeConfig),
-    languages: [],
+    originalLanguages: [],
     stakeholders: [],
     originCountries: [],
     status: '',

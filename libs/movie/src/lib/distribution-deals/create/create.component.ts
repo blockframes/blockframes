@@ -199,6 +199,8 @@ export class DistributionDealCreateComponent implements OnInit, OnDestroy {
     licensor.party.role = 'licensor';
     contract.doc.parties.push(licensor);
 
+    // @todo #1478 here subcontract
+
     if(!this.contractService.validateContract(contract.doc)) {
       this.snackBar.open(`Error while creating contract..`, 'close', { duration: 2000 });
     } else {

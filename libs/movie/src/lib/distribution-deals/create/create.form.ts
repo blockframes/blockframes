@@ -114,7 +114,7 @@ export class DistributionDealForm extends FormEntity<DistributionDealControls> {
     movie: MovieMain,
     value: Partial<MovieLanguageSpecification> = {}
   ) {
-    if (movie.languages.includes(language)) {
+    if (movie.originalLanguages.includes(language)) {
       value.original = true;
       (<FormGroup>this.languages).addControl(
         language,

@@ -474,15 +474,15 @@ export class ViewExtractedElementsComponent {
 
         // LANGUAGES (Original Language(s))
         if (spreadSheetRow[SpreadSheetMovie.languages]) {
-          movie.main.languages = [];
+          movie.main.originalLanguages = [];
           spreadSheetRow[SpreadSheetMovie.languages].split(this.separator).forEach((g: string) => {
             const language = getCodeIfExists('LANGUAGES', g);
             if (language) {
-              movie.main.languages.push(language);
+              movie.main.originalLanguages.push(language);
             } else {
               importErrors.errors.push({
                 type: 'warning',
-                field: 'main.languages',
+                field: 'main.originalLanguages',
                 name: "Languages",
                 reason: `${g} not found in languages list`,
                 hint: 'Edit corresponding sheet field.'
@@ -973,10 +973,10 @@ export class ViewExtractedElementsComponent {
       });
     }
 
-    if (movie.main.languages.length === 0) {
+    if (movie.main.originalLanguages.length === 0) {
       errors.push({
         type: 'warning',
-        field: 'main.languages',
+        field: 'main.originalLanguages',
         name: "Languages",
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
@@ -1451,6 +1451,7 @@ export class ViewExtractedElementsComponent {
             contract.doc.parties.push(licensee);
           }
 
+          // @todo #1478 here subcontract
           if (spreadSheetRow[SpreadSheetContract.parentContractIds]) {
             spreadSheetRow[SpreadSheetContract.parentContractIds].split(this.separator).forEach((c: string) => {
               contract.doc.parentContractIds.push(c.trim());

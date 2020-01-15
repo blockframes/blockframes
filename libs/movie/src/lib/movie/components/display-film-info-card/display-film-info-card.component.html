@@ -32,9 +32,9 @@
     <span class="bf-dark-text">Release Date on Country of Origin</span>
     <span>{{ releaseDate }}</span>
   </li>
-  <li fxLayout="row wrap" fxLayout.lt-sm="column" *ngIf="main.languages">
-    <span class="bf-dark-text">{{main.languages.length <= 1 ? 'Original Language': 'Original Languages'}}</span>
-    <span *ngFor="let languages of main.languages; let isLast=last">
+  <li fxLayout="row wrap" fxLayout.lt-sm="column" *ngIf="main.originalLanguages">
+    <span class="bf-dark-text">{{main.originalLanguages.length <= 1 ? 'Original Language': 'Original Languages'}}</span>
+    <span *ngFor="let languages of main.originalLanguages; let isLast=last">
       {{ languages | translateSlug: 'LANGUAGES' }}{{isLast ? '' : ', '}}
     </span>
   </li>
@@ -45,7 +45,7 @@
     </span>
   </li>
   <li fxLayout="row wrap" *ngIf="versionInfo.dubbings.length">
-    <span class="bf-dark-text">Available {{main.languages.length <= 1 ? 'Dubbing': 'Dubbings'}}</span>
+    <span class="bf-dark-text">Available {{main.originalLanguages.length <= 1 ? 'Dubbing': 'Dubbings'}}</span>
     <span *ngFor="let dubbing of versionInfo.dubbings; let isLast=last">
       {{ dubbing | translateSlug: 'LANGUAGES'}}{{isLast ? '' : ', '}}
     </span>
