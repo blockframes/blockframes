@@ -96,6 +96,12 @@ export const PROMOTIONAL_ELEMENT_TYPES_SLUG = models['PROMOTIONAL_ELEMENT_TYPES'
 export type PromotionalElementTypesLabel = typeof PROMOTIONAL_ELEMENT_TYPES_LABEL[number];
 export type PromotionalElementTypesSlug = typeof PROMOTIONAL_ELEMENT_TYPES_SLUG[number];
 
+export const LEGAL_DOCUMENT_TYPES_LABEL = models['LEGAL_DOCUMENT_TYPES'].map(key => key.label);
+export const LEGAL_DOCUMENT_TYPES_SLUG = models['LEGAL_DOCUMENT_TYPES'].map(key => key.slug);
+
+export type LegalDocumentTypesLabel = typeof LEGAL_DOCUMENT_TYPES_LABEL[number];
+export type LegalDocumentTypesSlug = typeof LEGAL_DOCUMENT_TYPES_SLUG[number];
+
 export const RESOURCE_SIZES_LABEL = models['RESOURCE_SIZES'].map(key => key.label);
 export const RESOURCE_SIZES_SLUG = models['RESOURCE_SIZES'].map(key => key.slug);
 

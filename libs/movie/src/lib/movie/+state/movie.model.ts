@@ -97,8 +97,6 @@ export function createMovieMain(params: Partial<MovieMain> = {}): MovieMain {
   };
 }
 
-// @TODO #1052 remove this section .
-// merge movie.promotionalElements.promotionalElements and movie.promotionalElements.images  into `movie.promotionalElements`
 export function createMoviePromotionalElements(
   params: Partial<MoviePromotionalElements> = {}
 ): MoviePromotionalElements {
