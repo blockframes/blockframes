@@ -1,1 +1,28 @@
-<p>languages works!</p>
+<ng-container *ngFor="let control of form.controls; let i = index; let last = last">
+  <article fxLayout="row">
+    <mat-form-field appearance="outline">
+      <mat-label>Original Language</mat-label>
+      <input (focus)="focus(i)" type="text" matInput [formControl]="control" [matAutocomplete]="auto" name="languages" required>
+    </mat-form-field>
+
+    <!-- Add / Delete -->
+    <div *ngIf="!last" fxLayout="row" fxLayoutAlign="start center">
+      <button mat-mini-fab color="warn" (click)="form.removeAt(i)" aria-label="Remove a director form">
+        <mat-icon>delete</mat-icon>
+      </button>
+      <span class="mat-caption">Delete additional director</span>
+    </div>
+    <div *ngIf="last" fxLayout="column" fxLayoutAlign="start center">
+      <button mat-mini-fab color="primary" (click)="form.add()" aria-label="Remove a director form">
+        <mat-icon>add</mat-icon>
+      </button>
+      <span class="mat-caption">Add another director</span>
+    </div>
+  </article>
+</ng-container>
+
+<mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+  <mat-option *ngFor="let language of filteredLanguages$ | async" [value]="language.slug">
+    {{ language.label }}
+  </mat-option>
+</mat-autocomplete>
