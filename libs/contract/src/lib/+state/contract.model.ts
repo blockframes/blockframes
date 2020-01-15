@@ -65,8 +65,8 @@ export function createContractPartyDetail(
 ): ContractPartyDetail {
   return {
     status: ContractStatus.unknown,
-    party: createParty(params.party),
     ...params,
+    party: createParty(params.party),
   };
 }
 

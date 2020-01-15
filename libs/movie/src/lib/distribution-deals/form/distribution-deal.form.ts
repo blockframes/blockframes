@@ -11,10 +11,8 @@ function createDistributionDealControls(deal: Partial<DistributionDeal>) {
   const entity = createDistributionDeal(deal);
   return {
     exclusive: new FormControl(entity.exclusive),
-    territory: new FormList(entity.territory.map(territory => new FormControl(territory))),
-    territoryExcluded: new FormList(
-      entity.territoryExcluded.map(territory => new FormControl(territory))
-    )
+    territory: FormList.factory(entity.territory),
+    territoryExcluded: FormList.factory(entity.territoryExcluded)
   };
 }
 
@@ -26,35 +24,18 @@ export class DistributionDealForm extends FormEntity<DistributionDealControls> {
     super(createDistributionDealControls({}));
   }
 
-  addTerritory(territory: TerritoriesSlug, type: string) {
-    // Check it's part of the list available
+  addTerritory(territory: TerritoriesSlug, type: 'territory' | 'territoryExcluded') {
     if (!TERRITORIES_SLUG.includes(territory)) {
       throw new Error(
         `Territory ${getLabelByCode('TERRITORIES', territory)} is not part of the list`
       );
     }
-
-    if (type === 'included') {
-      // Check it's not already in the form control
-      const territoriesValue = this.get('territory').value;
-      if (!territoriesValue.includes(territory)) {
-        this.get('territory').push(new FormControl(territory));
-      }
-    } else if (type === 'excluded') {
-      // Check it's not already in the form control
-      const territoriesValue = this.get('territoryExcluded').value;
-      if (!territoriesValue.includes(territory)) {
-        this.get('territoryExcluded').push(new FormControl(territory));
-      }
-      // Else do nothing as it's already in the list
+    const territories = this.get(type).value;
+    if (!territories.includes(territory)) {
+      this.get(type).push(new FormControl(territory));
     }
   }
-
-  removeIncludedTerritory(index: number) {
-    this.get('territory').removeAt(index);
-  }
-
-  removeExcludedTerritory(index: number) {
-    this.get('territoryExcluded').removeAt(index);
+  removeTerritory(index: number, type: 'territory' | 'territoryExcluded') {
+    this.get(type).removeAt(index);
   }
 }
