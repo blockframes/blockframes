@@ -1269,7 +1269,7 @@ export class ViewExtractedElementsComponent {
           });
         }
 
-        const saleWithErrors = this.validateMovieSale(importErrors);
+        const saleWithErrors = await this.validateMovieSale(importErrors);
         this.deals.data.push(saleWithErrors);
         this.deals.data = [... this.deals.data];
 
@@ -1279,7 +1279,7 @@ export class ViewExtractedElementsComponent {
     });
   }
 
-  private validateMovieSale(importErrors: DealsImportState): DealsImportState {
+  private async validateMovieSale(importErrors: DealsImportState): Promise<DealsImportState> {
     const distributionDeal = importErrors.distributionDeal;
     const contract = importErrors.contract;
     const errors = importErrors.errors;
@@ -1294,7 +1294,8 @@ export class ViewExtractedElementsComponent {
     //////////////////
 
     //  CONTRACT VALIDATION
-    if (!this.contractService.isContractValid(contract.doc)) {
+    const isContractValid = await this.contractService.isContractValid(contract.doc);
+    if (!isContractValid) {
       errors.push({
         type: 'error',
         field: 'contractId',
@@ -1452,7 +1453,6 @@ export class ViewExtractedElementsComponent {
             contract.doc.parties.push(licensee);
           }
 
-          // @todo #1478 here subcontract
           if (spreadSheetRow[SpreadSheetContract.parentContractIds]) {
             spreadSheetRow[SpreadSheetContract.parentContractIds].split(this.separator).forEach((c: string) => {
               contract.doc.parentContractIds.push(c.trim());
@@ -1488,7 +1488,7 @@ export class ViewExtractedElementsComponent {
         // VALIDATION
         ///////////////
 
-        const contractWithErrors = this.validateMovieContract(importErrors);
+        const contractWithErrors = await this.validateMovieContract(importErrors);
 
         if (contractWithErrors.contract.doc.id) {
           this.contractsToUpdate.data.push(contractWithErrors);
@@ -1505,7 +1505,7 @@ export class ViewExtractedElementsComponent {
 
   }
 
-  private validateMovieContract(importErrors: ContractsImportState): ContractsImportState {
+  private async validateMovieContract(importErrors: ContractsImportState): Promise<ContractsImportState> {
 
     const contract = importErrors.contract;
     const errors = importErrors.errors;
@@ -1516,7 +1516,8 @@ export class ViewExtractedElementsComponent {
     //////////////////
 
     //  CONTRACT VALIDATION
-    if (!this.contractService.isContractValid(contract.doc)) {
+    const isContractValid = await this.contractService.isContractValid(contract.doc);
+    if (!isContractValid) {
       errors.push({
         type: 'error',
         field: 'contractId',
