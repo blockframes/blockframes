@@ -86,9 +86,22 @@ export interface Prize {
   premiere?: PremiereType,
 }
 
+export interface LegalDocuments {
+  chain_of_titles: LegalDocument[],
+  invoices: LegalDocument[],
+  bill : LegalDocument
+}
+
+export interface LegalDocument {
+  label: string,
+  media: ImgRef,
+  language?: LanguagesSlug,
+  country?: TerritoriesSlug,
+}
+
+
 export interface PromotionalElement {
   label: string,
-  type: PromotionalElementTypesSlug,
   size?: ResourceSizesSlug,
   ratio?: ResourceRatioSlug,
   media: ImgRef,
@@ -97,8 +110,17 @@ export interface PromotionalElement {
 }
 
 export interface MoviePromotionalElements {
-  images: ImgRef[], // @todo #1052 merge into promotional elements
   promotionalElements: PromotionalElement[],
+  trailer: PromotionalElement[],
+  banner: PromotionalElement,
+  poster: PromotionalElement[],
+  still_photo: PromotionalElement[],
+  presentation_deck: PromotionalElement,
+  scenario: PromotionalElement,
+  promo_reel_link: PromotionalElement,
+  screener_link: PromotionalElement,
+  trailer_link: PromotionalElement,
+  teaser_link: PromotionalElement,
 }
 
 export interface Title {

@@ -1,6 +1,7 @@
 interface Model {
   GENRES: readonly SlugAndLabel[];
   PROMOTIONAL_ELEMENT_TYPES: readonly SlugAndLabel[];
+  LEGAL_DOCUMENT_TYPES: readonly SlugAndLabel[];
   RESOURCE_SIZES: readonly SlugAndLabel[];
   RESOURCE_RATIOS: readonly SlugAndLabel[];
   STAKEHOLDER_ROLES: readonly SlugAndLabel[];
@@ -53,13 +54,20 @@ const models: Model = {
   'PROMOTIONAL_ELEMENT_TYPES': [
     { 'slug': 'trailer', 'label': 'Trailer' },
     { 'slug': 'poster', 'label': 'Poster' },
-    { 'slug': 'reel', 'label': 'Reel' },
-    { 'slug': 'scenario', 'label': 'Scenario' },
-    { 'slug': 'other', 'label': 'Other' },
     { 'slug': 'banner', 'label': 'Banner' },
-    { 'slug': 'screener', 'label': 'Screener' },
-    { 'slug': 'teaser', 'label': 'Teaser' },
     { 'slug': 'still_photo', 'label': 'Stills' },
+    { 'slug': 'presentation_deck', 'label': 'Presentation Deck' },
+    { 'slug': 'scenario', 'label': 'Scenario' },
+    { 'slug': 'promo_reel_link', 'label': 'Promo Reel Link' },
+    { 'slug': 'screener_link', 'label': 'Screener Link' },
+    { 'slug': 'trailer_link', 'label': 'Trailer Link' },
+    { 'slug': 'teaser_link', 'label': 'Teaser Link' },
+    { 'slug': 'other', 'label': 'Other' },
+  ] as const,
+  'LEGAL_DOCUMENT_TYPES': [
+    { 'slug': 'chain_of_titles', 'label': 'Chain Of Titles' },
+    { 'slug': 'invoices', 'label': 'Invoices' },
+    { 'slug': 'bill', 'label': 'Bill' },
   ] as const,
   'RESOURCE_SIZES': [
     { 'slug': 'medium', 'label': 'Medium' },

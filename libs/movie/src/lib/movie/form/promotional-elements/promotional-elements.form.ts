@@ -4,10 +4,9 @@ import { FormControl } from '@angular/forms';
 
 
 function createPromotionalElementControl(promotionalElement?: Partial<PromotionalElement>) {
-  const { label, type, size, ratio, media, language, country } = createPromotionalElement(promotionalElement);
+  const { label, size, ratio, media, language, country } = createPromotionalElement(promotionalElement);
   return {
     label: new FormControl(label),
-    type: new FormControl(type),
     size: new FormControl(size),
     ratio: new FormControl(ratio),
     media: new FormControl(media.url, urlValidators),
@@ -27,8 +26,17 @@ export class MoviePromotionalElementForm extends FormEntity<PromotionalElementCo
 function createMoviePromotionalElementsControls(promotionalElements?: Partial<MoviePromotionalElements>) {
   const entity = createMoviePromotionalElements(promotionalElements);
   return {
-    images: FormList.factory(entity.images),
     promotionalElements: FormList.factory(entity.promotionalElements, el => new MoviePromotionalElementForm(el)),
+    trailer: FormList.factory(entity.trailer),
+    banner: new MoviePromotionalElementForm() ,
+    poster: FormList.factory(entity.poster),
+    still_photo: FormList.factory(entity.still_photo),
+    presentation_deck: new MoviePromotionalElementForm() ,
+    scenario: new MoviePromotionalElementForm() ,
+    promo_reel_link: new MoviePromotionalElementForm() ,
+    screener_link: new MoviePromotionalElementForm() ,
+    trailer_link: new MoviePromotionalElementForm() ,
+    teaser_link: new MoviePromotionalElementForm() ,
   }
 }
 
@@ -39,20 +47,8 @@ export class MoviePromotionalElementsForm extends FormEntity<MoviePromotionalEle
     super(createMoviePromotionalElementsControls(promotionalElements));
   }
 
-  get images() {
-    return this.get('images');
-  }
-
   get promotionalElements() {
     return this.get('promotionalElements');
-  }
-
-  public setImage(image: string, index: number): void {
-    this.images.controls[index].setValue(image);
-  }
-
-  public addImage(): void {
-    this.images.push(new FormControl());
   }
 
   public addPromotionalElement(): void {
@@ -62,10 +58,6 @@ export class MoviePromotionalElementsForm extends FormEntity<MoviePromotionalEle
 
   public removePromotionalElement(i: number): void {
     this.promotionalElements.removeAt(i);
-  }
-
-  public removeImage(i: number): void {
-    this.images.removeAt(i);
   }
 
 }
