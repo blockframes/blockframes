@@ -1,0 +1,16 @@
+<ng-container *ngFor="let country of originCountries.controls; let i = index; let last = last">
+  <!-- Country of origin -->
+  <mat-form-field>
+    <mat-label>Country of Origin</mat-label>
+    <input matInput [formControl]="country" name="originCountry"/>
+  </mat-form-field>
+
+  <form [formGroup]="originalRelease.get(i)">
+    <mat-form-field appearance="outline">
+      <mat-label>Release Date in Country of Origin</mat-label>
+      <input matInput formControlName="originCountryReleaseDate" [matDatepicker]="originReleaseDate" placeholder="MM/DD/YYYY">
+      <mat-datepicker-toggle matSuffix [for]="originReleaseDate"></mat-datepicker-toggle>
+      <mat-datepicker #originReleaseDate></mat-datepicker>
+    </mat-form-field>
+  </form>
+</ng-container>
