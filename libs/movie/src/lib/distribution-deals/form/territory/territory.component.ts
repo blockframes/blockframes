@@ -62,6 +62,10 @@ export class DistributionDealTerritoryComponent {
 
   @ViewChild('excludedAuto', { static: false }) excludedAuto: MatAutocomplete;
 
+  /**
+   * @description returns depending on the input possible territories
+   * @param type either territory or territoryExcluded depinding on what array we want to operate
+   */
   public select(type: TerritoryType): Observable<string[] | SlugAndLabel[]> {
     return this.controls[type].valueChanges.pipe(
       startWith(this.controls[type].value),
@@ -169,9 +173,12 @@ export class DistributionDealTerritoryComponent {
       this.value[type].push(event.option.viewValue);
       this.controls[type].reset();
       if (this.isTerritoryType(type) === 'territory') {
+        console.log(type)
         this.includedTerritoryInput.nativeElement.value = '';
+      } else {
+        console.log(type)
+        this.excludedTerritoryInput.nativeElement.value = '';
       }
-      this.excludedTerritoryInput.nativeElement.value = '';
     }
   }
 }
