@@ -1,5 +1,5 @@
 import { ImgRef, createImgRef } from "../image-uploader";
-import { StakeholderRolesSlug, CreditRolesSlug, LegalRolesSlug } from "@blockframes/movie/movie/static-model/types";
+import { StakeholderRolesSlug, CreditRolesSlug, LegalRolesSlug, TerritoriesSlug } from "@blockframes/movie/movie/static-model/types";
 
 
 //////////////////////////
@@ -41,6 +41,7 @@ export type StakeholderRaw = IdentityRaw;
 export interface Stakeholder extends StakeholderRaw {
   role?: StakeholderRolesSlug, // overrided role scope from Person interface
   logo?: ImgRef;
+  countries?: TerritoriesSlug[],
 }
 
 /**
