@@ -35,8 +35,9 @@ import { MatSnackBar } from '@angular/material';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { createDistributionDeal } from '../+state/distribution-deal.model';
 import { DistributionDealService } from '../+state';
-import { createContractPartyDetail, initContractWithVersion } from '@blockframes/contract/+state/contract.model';
+import { createContractPartyDetail } from '@blockframes/contract/+state/contract.model';
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
+import { initContractWithVersion } from '@blockframes/contract/version/+state/contract-version.model';
 import { ContractService } from '@blockframes/contract/+state/contract.service';
 
 enum ResearchSteps {
@@ -201,7 +202,9 @@ export class DistributionDealCreateComponent implements OnInit, OnDestroy {
 
     // @todo #1478 here subcontract
 
-    if(!this.contractService.validateContract(contract.doc)) {
+    const isValid = this.contractService.isContractValid(contract.doc)
+
+    if (!isValid) {
       this.snackBar.open(`Error while creating contract..`, 'close', { duration: 2000 });
     } else {
       const dealId = await this.distributionDealService.addDistributionDeal(this.movie.id, distributionDeal, contract);
@@ -286,7 +289,7 @@ export class DistributionDealCreateComponent implements OnInit, OnDestroy {
           ///////////////
 
           // Do we have others distribution deals overrlapping current daterange ?
-          const deals = await this.distributionDealService.getDistributionDeals(this.movie.id);
+          const deals = await this.distributionDealService.getValue();
           const dealsInDateRange = getDistributionDealsInDateRange(value.duration, deals);
           if (dealsInDateRange.length === 0) {
             // We have no intersection with other deals, so we are OK !

@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
-import { DistributionDealState, DistributionDealStore } from './distribution-deal.store';
-import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
-import { ContractService } from '@blockframes/contract/+state/contract.service';
-import { MovieQuery } from '../../movie/+state/movie.query';
-import { CollectionConfig, CollectionService } from 'akita-ng-fire';
-import { AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
-import { DistributionDeal } from './distribution-deal.model';
-import { createContractTitleDetail, ContractWithLastVersion } from '@blockframes/contract/+state/contract.model';
 import objectHash from 'object-hash';
 import { firestore } from 'firebase';
-import { Movie } from '@blockframes/movie/movie+state/movie.model';
+import { CollectionConfig, CollectionService } from 'akita-ng-fire';
+import { DistributionDealState, DistributionDealStore } from './distribution-deal.store';
+import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
+import { MovieQuery } from '../../movie/+state/movie.query';
+import { DistributionDeal } from './distribution-deal.model';
+import { createContractTitleDetail } from '@blockframes/contract/+state/contract.model';
+import { ContractVersionService } from '@blockframes/contract/version/+state/contract-version.service';
+import { ContractWithLastVersion } from '@blockframes/contract/version/+state/contract-version.model';
+import { ContractService } from '@blockframes/contract/+state/contract.service';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies/:movieId/distributiondeals' })
@@ -18,9 +18,9 @@ export class DistributionDealService extends CollectionService<DistributionDealS
     private movieQuery: MovieQuery,
     private organizationQuery: OrganizationQuery,
     private contractService: ContractService,
+    private contractVersionService: ContractVersionService,
     store: DistributionDealStore
-    )
-  {
+  ) {
     super(store);
   }
 
@@ -31,28 +31,11 @@ export class DistributionDealService extends CollectionService<DistributionDealS
   /**
    *
    * @param movieId
-   */
-  private getCollection(movieId: string): AngularFirestoreCollection<DistributionDeal> {
-    return this.movieDoc(movieId).collection('distributiondeals');
-  }
-
-  /**
-   * 
-   * @param movieId 
-   */
-  private movieDoc(movieId: string): AngularFirestoreDocument<Movie> {
-    return this.db.doc(`movies/${movieId}`);
-  }
-
-  /**
-   *
-   * @param movieId
    * @param distributionDeal
    */
-  public async addDistributionDeal(movieId: string, distributionDeal: DistributionDeal, contract: ContractWithLastVersion): Promise<string> { // @TODO (#1440) replace contract: any with contract: Contract
+  public async addDistributionDeal(movieId: string, distributionDeal: DistributionDeal, contract: ContractWithLastVersion) {
     // Create an id from DistributionDeal content.
     // A same DistributionDeal document will always have the same hash to prevent multiple insertion of same deal
-    // @TODO #1389 Use native akita-ng-fire functions : https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
     if (!distributionDeal.id) {
       distributionDeal.id = objectHash(distributionDeal);
     }
@@ -71,7 +54,7 @@ export class DistributionDealService extends CollectionService<DistributionDealS
       // @todo #1397 change this price calculus
       contract.last.titles[movieId].price = contract.last.price;
 
-      const contractId = await this.contractService.addContractAndVersion(contract.doc, contract.last);
+      const contractId = await this.contractVersionService.addContractAndVersion(contract)
 
       // Link distributiondeal with contract
       distributionDeal.contractId = contractId;
@@ -79,32 +62,10 @@ export class DistributionDealService extends CollectionService<DistributionDealS
       // Link distributiondeal with contract
       distributionDeal.contractId = contract.doc.id;
       // Contract may have been updated along with the distribution deal, we update it
-      await this.db.collection('contracts').doc(contract.doc.id).set(contract.doc);
-      await this.contractService.contractsVersionCollection(contract.doc.id).doc(contract.last.id).set(contract.last);
+      await this.contractService.add(contract.doc);
+      await this.contractVersionService.add(contract.last);
+      return distributionDeal.id ;
     }
-
-    // @TODO #1389 Use native akita-ng-fire functions : https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
-    await this.getCollection(movieId).doc(distributionDeal.id).set(distributionDeal);
-    return distributionDeal.id;
-  }
-
-  /**
-   * Checks if a distribution deal is already existing for a given movie and returns it.
-   * @param movieId
-   * @param distributionDeal
-   */
-  public async existingDistributionDeal(movieId: string, distributionDeal: DistributionDeal): Promise<DistributionDeal> {
-    const dealId = distributionDeal.id ? distributionDeal.id : objectHash(distributionDeal);
-    const distributionDealSnapshot = await this.getCollection(movieId).doc(dealId).get().toPromise();
-    return distributionDealSnapshot.exists ? distributionDealSnapshot.data() as DistributionDeal : undefined;
-  }
-
-  /**
-   * @param movieId
-   */
-  public async getDistributionDeals(movieId: string): Promise<DistributionDeal[]> {
-    const deals = await this.getCollection(movieId).get().toPromise();
-    return deals.docs.map(doc => this.formatDistributionDeal(doc.data()));
   }
 
   public formatDistributionDeal(deal: any): DistributionDeal {
@@ -119,16 +80,23 @@ export class DistributionDealService extends CollectionService<DistributionDealS
     return deal as DistributionDeal;
   }
 
-
   /**
    * Performs a collection group query accross movies to retreive sales
    * @param type  licensee | licensor
    */
-  // @TODO #1389 Use native akita-ng-fire functions : https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
   public async getMyDeals(type: string = 'licensor'): Promise<DistributionDeal[]> {
-    const query = this.db.collectionGroup('distributiondeals', ref => ref.where(`${type}.orgId`, '==', this.organizationQuery.getActiveId()))
-    const myDeals = await query.get().toPromise();
-    return myDeals.docs.map(doc => this.formatDistributionDeal(doc.data()));
+    const myDeals = await this.getValue(ref =>
+      ref.where(`${type}.orgId`, '==', this.organizationQuery.getActiveId())
+    );
+    return myDeals.map(deal => this.formatDistributionDeal(deal));
   }
 
+  /**
+   * Get distributionDeals from a specific movie.
+   * @param movieId
+   */
+  public async getDistributionDeals(movieId: string) {
+    const distributionDealsSnap = await this.db.collection(`movies/${movieId}/distributiondeals`).get().toPromise();
+    return distributionDealsSnap.docs.map(deal => deal.data() as DistributionDeal);
+  }
 }

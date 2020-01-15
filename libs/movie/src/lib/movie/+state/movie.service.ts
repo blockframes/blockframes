@@ -7,18 +7,7 @@ import { MovieState, MovieStore } from './movie.store';
 import { AuthQuery } from '@blockframes/auth';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 import { ContractQuery } from '@blockframes/contract/+state/contract.query';
-
-/**
- * @see #483
- * This method is used before pushing data on db
- * to prevent "Unsupported field value: undefined" errors.
- * Doing JSON.parse(JSON.stringify(data)) clones object and
- * removes undefined fields and empty arrays.
- * This methods also removes readonly settings on objects coming from Akita
- */
-export function cleanModel<T>(data: T): T {
-  return JSON.parse(JSON.stringify(data));
-}
+import { cleanModel } from '@blockframes/utils/helpers';
 
 // TODO#944 - refactor CRUD operations
 @Injectable({ providedIn: 'root' })
