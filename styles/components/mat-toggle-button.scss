@@ -1,0 +1,29 @@
+@mixin mat-bf-button-toggle-theme($theme) {
+  $primary: map-get($theme, primary);
+  $foreground: map-get($theme, foreground);
+  $background: map-get($theme, background);
+
+  .mat-button-toggle {
+    color: mat-color($primary, 500);
+  }
+
+  .mat-button-toggle-checked {
+    &.mat-button-toggle-appearance-standard {
+      color: mat-color($background, card);
+    }
+  }
+
+  .mat-button-toggle-group-appearance-standard .mat-button-toggle + .mat-button-toggle {
+    border-left: solid 1px mat-color($primary, 500);
+  }
+
+  [dir='rtl'] .mat-button-toggle-group-appearance-standard .mat-button-toggle + .mat-button-toggle {
+    border-left: none;
+    border-right: solid 1px mat-color($primary, 500);
+  }
+
+  .mat-button-toggle-standalone.mat-button-toggle-appearance-standard,
+  .mat-button-toggle-group-appearance-standard {
+    border: solid 1px mat-color($primary, 500);
+  }
+}
