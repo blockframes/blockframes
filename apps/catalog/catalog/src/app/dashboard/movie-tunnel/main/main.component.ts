@@ -8,7 +8,7 @@ import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
 })
 export class TunnelMainComponent implements OnInit {
 
-  constructor(public form: MovieForm) { }
+  constructor(private form: MovieForm) { }
 
   get main() {
     return this.form.get('main');

@@ -28,9 +28,11 @@
         <mat-card-title>Country(ies) of Origin</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <movie-form-original-releases [movieForm]="form"></movie-form-original-releases>
+        <movie-form-original-releases
+          [releasesForm]="salesInfo.get('originalRelease')"
+          [countriesForm]="main.get('originCountries')"></movie-form-original-releases>
         <mat-divider></mat-divider>
-        <movie-form-languages [form]="main"></movie-form-languages>
+        <movie-form-languages [form]="main.get('languages')"></movie-form-languages>
       </mat-card-content>
     </mat-card>
 

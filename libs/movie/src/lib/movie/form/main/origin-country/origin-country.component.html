@@ -3,7 +3,7 @@
   <input type="text" matInput [formControl]="form" [matAutocomplete]="auto" name="originCountry" required>
 </mat-form-field>
 
-<mat-autocomplete #auto="matAutocomplete">
+<mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
   <mat-option *ngFor="let country of filteredCountries$ | async" [value]="country.slug">
     {{ country.label }}
   </mat-option>
