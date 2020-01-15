@@ -87,8 +87,9 @@ export function createMovieMain(params: Partial<MovieMain> = {}): MovieMain {
     stakeholders: [],
     originCountries: [],
     status: '',
+    customGenres: [],
     ...params,
-    officialIds: createOfficialIds(params.officialIds)
+    officialIds: createOfficialIds(params.officialIds),
   };
 }
 

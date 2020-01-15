@@ -1,4 +1,4 @@
-import { 
+import {
   MovieStatusSlug,
   PromotionalElementTypesSlug,
   ResourceRatioSlug,
@@ -8,11 +8,11 @@ import {
   MediasSlug,
   ScoringSlug,
   CertificationsSlug,
-  ColorsSlug, 
-  RatingSlug, 
-  SoundFormatSlug, 
-  FormatQualitySlug, 
-  FormatSlug 
+  ColorsSlug,
+  RatingSlug,
+  SoundFormatSlug,
+  FormatQualitySlug,
+  FormatSlug
 } from "@blockframes/movie/movie/static-model";
 import { RawRange, NumberRange } from "@blockframes/utils/common-interfaces/range";
 import { Person, Credit, SalesAgent, Company } from "@blockframes/utils/common-interfaces/identity";
@@ -178,6 +178,7 @@ export interface MovieMain {
   poster?: ImgRef,
   productionYear?: number,
   genres?: string[],
+  customGenres?: string[],
   originCountries?: TerritoriesSlug[],
   languages?: string[],
   status?: MovieStatusSlug,
@@ -199,7 +200,7 @@ interface MovieSalesInfoRaw<D> {
   physicalHVRelease: D,
   rating: MovieRating[],
   releaseYear: number,
-  scoring: ScoringSlug, 
+  scoring: ScoringSlug,
   soundFormat?: SoundFormatSlug,
 }
 

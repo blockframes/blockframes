@@ -84,6 +84,7 @@ function createMovieMainControls(main : Partial<MovieMain> = {}) {
     totalRunTime: new FormControl(entity.totalRunTime),
     shortSynopsis: new FormControl(entity.shortSynopsis, [Validators.maxLength(500)] ),
     stakeholders: FormList.factory(entity.stakeholders, el => new StakeholdersForm(el)),
+    customGenres: new FormControl(entity.customGenres),
   }
 }
 
