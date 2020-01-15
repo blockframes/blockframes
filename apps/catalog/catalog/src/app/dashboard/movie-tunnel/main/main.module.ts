@@ -11,7 +11,6 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 
 // Form modules
-import { MovieFormTheatricalReleaseModule } from '@blockframes/movie/movie/form/sales-info/theatrical-release/theatrical-release.module';
 import { MovieFormContentTypeModule } from '@blockframes/movie/movie/form/main/content-type/content-type.module';
 import { MovieFormDirectorsModule } from '@blockframes/movie/movie/form/main/directors/directors.module';
 import { MovieFormLanguagesModule } from '@blockframes/movie/movie/form/main/languages/languages.module';
@@ -22,7 +21,6 @@ import { MovieFormOriginalReleasesModule } from '@blockframes/movie/movie/form/s
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    MovieFormTheatricalReleaseModule,
     MovieFormContentTypeModule,
     MovieFormDirectorsModule,
     MovieFormLanguagesModule,
