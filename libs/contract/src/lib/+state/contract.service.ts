@@ -38,10 +38,14 @@ export class ContractService extends CollectionService<ContractState> {
    */
   public async getContractWithLastVersion(contractId: string): Promise<ContractWithLastVersion> {
     try {
-      const contractWithVersion = initContractWithVersion();
-      const contract = await this.getValue(contractId)
+
+      const [contractWithVersion, contract] = await Promise.all([
+        initContractWithVersion(),
+        this.getValue(contractId)
+      ])
+
       contractWithVersion.doc = this.formatContract(contract);
-      contractWithVersion.last = await this.contractVersionService.getLastVersionContract(contractId);
+      contractWithVersion.last = await this.contractVersionService.getLastVersionContract();
 
       return contractWithVersion;
     } catch (error) {
@@ -59,6 +63,7 @@ export class ContractService extends CollectionService<ContractState> {
 
     if (contracts.length) {
       const contractWithVersion = initContractWithVersion();
+
       for (const contract of contracts) {
         const contractVersions = await this.contractVersionService.getValue(ref =>
           ref.where(`titles.${movieId}.distributionDealIds`, 'array-contains', distributionDealId)
@@ -66,7 +71,7 @@ export class ContractService extends CollectionService<ContractState> {
         if (contractVersions.length) {
           const sortedContractVersions = orderBy(contractVersions, 'id', 'desc');
           contractWithVersion.doc = this.formatContract(contract);
-          contractWithVersion.last = this.contractVersionService.formatContractVersion(sortedContractVersions[0]);
+          contractWithVersion.last = sortedContractVersions[0];
           return contractWithVersion;
         }
       }

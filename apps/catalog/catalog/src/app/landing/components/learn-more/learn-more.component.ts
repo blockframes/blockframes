@@ -1,6 +1,6 @@
 import { Component, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
-import { RequestDemoRole } from '../../demo-request.model';
+import { RequestDemoRole } from '@blockframes/catalog/demo-request.model';
 
 @Component({
   selector: 'catalog-learn-more',

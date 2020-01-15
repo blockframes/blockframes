@@ -2,8 +2,8 @@ import { Component, ChangeDetectionStrategy, ViewChild, AfterViewInit } from '@a
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { FormGroup } from '@angular/forms';
 import { MatSnackBar, MatSidenav } from '@angular/material';
-import { RequestDemoInformations, createDemoRequestInformations } from '../../demo-request.model';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { RequestDemoInformations, createDemoRequestInformations } from '@blockframes/catalog/demo-request.model';
 
 @Component({
   selector: 'catalog-landing-page',
