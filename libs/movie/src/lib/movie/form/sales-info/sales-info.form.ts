@@ -54,7 +54,7 @@ function createMovieSalesInfoControls(salesInfo: Partial<MovieSalesInfo> = {}){
   }
 }
 
-type MovieSalesInfoControl = ReturnType<typeof createMovieSalesInfoControls>
+export type MovieSalesInfoControl = ReturnType<typeof createMovieSalesInfoControls>
 
 export class MovieSalesInfoForm extends FormEntity<MovieSalesInfoControl>{
   constructor(SalesInfo?: Partial<MovieSalesInfo>) {

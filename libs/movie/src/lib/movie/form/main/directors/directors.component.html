@@ -7,7 +7,8 @@
     <textarea matInput [formControl]="control.get('shortBiography')"></textarea>
     <mat-hint>Selective Filmography to present the director.</mat-hint>
   </mat-form-field>
-  <!-- Display only for the first -->
+
+  <!-- Add / Delete -->
   <div *ngIf="!last" fxLayout="column" fxLayoutAlign="center center">
     <button mat-mini-fab color="warn" (click)="form.removeAt(i)" aria-label="Remove a director form">
       <mat-icon>delete</mat-icon>

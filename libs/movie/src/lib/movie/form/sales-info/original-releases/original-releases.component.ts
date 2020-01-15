@@ -3,6 +3,8 @@ import { OriginalReleaseForm } from '../sales-info.form';
 import { MovieForm } from '../../movie.form';
 import { startWith } from 'rxjs/operators';
 import { default as staticModel } from '../../../static-model/staticModels';
+import { MovieMainControl } from '../../main/main.form';
+import { MovieSalesInfoControl } from '../sales-info.form'
 
 @Component({
   selector: 'movie-form-original-releases',
@@ -12,17 +14,18 @@ import { default as staticModel } from '../../../static-model/staticModels';
 })
 export class OriginalReleaseComponent implements OnInit {
 
-  @Input() movieForm: MovieForm;
+  @Input() releasesForm: MovieSalesInfoControl['originalRelease'];
+  @Input() countriesForm: MovieMainControl['originCountries'];
   media = staticModel.MEDIAS;
 
   constructor() { }
 
   get originalRelease() {
-    return this.movieForm.get('salesInfo').get('originalRelease');
+    return this.releasesForm;
   }
 
   get originCountries() {
-    return this.movieForm.get('main').get('originCountries');
+    return this.countriesForm;
   }
 
   ngOnInit() {

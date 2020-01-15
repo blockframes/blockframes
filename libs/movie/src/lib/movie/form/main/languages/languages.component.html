@@ -7,16 +7,16 @@
 
     <!-- Add / Delete -->
     <div *ngIf="!last" fxLayout="row" fxLayoutAlign="start center">
-      <button mat-mini-fab color="warn" (click)="form.removeAt(i)" aria-label="Remove a director form">
+      <button mat-mini-fab color="warn" (click)="form.removeAt(i)" aria-label="Remove a language form">
         <mat-icon>delete</mat-icon>
       </button>
-      <span class="mat-caption">Delete additional director</span>
+      <span class="mat-caption">Delete additional language</span>
     </div>
     <div *ngIf="last" fxLayout="column" fxLayoutAlign="start center">
-      <button mat-mini-fab color="primary" (click)="form.add()" aria-label="Remove a director form">
+      <button mat-mini-fab color="primary" (click)="form.add()" aria-label="Remove a language form">
         <mat-icon>add</mat-icon>
       </button>
-      <span class="mat-caption">Add another director</span>
+      <span class="mat-caption">Add another language</span>
     </div>
   </article>
 </ng-container>

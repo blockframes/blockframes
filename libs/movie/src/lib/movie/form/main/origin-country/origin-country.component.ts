@@ -20,9 +20,15 @@ export class OriginCountryComponent implements OnInit {
     this.filteredCountries$ = this.form.valueChanges
       .pipe(
         startWith(''),
-        map(value => typeof value === 'string' ? value : value.name),
         map(country => country ? this._filter(country) : this.countries.slice())
       );
+  }
+
+  // @dev displayFn "this" is the MatAutocomplete, not the component
+  displayFn(key: string) {
+    if (key) {
+      return staticModel.TERRITORIES.find(({ slug }) => slug === key).label;
+    }
   }
 
   private _filter(country: string) {
