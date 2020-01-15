@@ -173,10 +173,8 @@ export class DistributionDealTerritoryComponent {
       this.value[type].push(event.option.viewValue);
       this.controls[type].reset();
       if (this.isTerritoryType(type) === 'territory') {
-        console.log(type)
         this.includedTerritoryInput.nativeElement.value = '';
       } else {
-        console.log(type)
         this.excludedTerritoryInput.nativeElement.value = '';
       }
     }
