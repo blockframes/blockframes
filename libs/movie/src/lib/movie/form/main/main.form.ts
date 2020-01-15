@@ -1,14 +1,8 @@
 import { FormEntity, FormList, yearValidators } from '@blockframes/utils';
 import { MovieMain, Credit, createMovieMain, Movie, createTitle } from '../../+state';
 import { Validators, FormControl } from '@angular/forms';
-import { createCredit, createCompany } from '@blockframes/utils/common-interfaces/identity';
-import { StoreConfig } from '../../+state/movie.firestore';
-import { createStoreConfig } from '../../+state/movie.model';
+import { createCredit, Stakeholder, createStakeholder } from '@blockframes/utils/common-interfaces/identity';
 
-
-//////////////
-// Credit form
-//////////////
 function createCreditFormControl(credit?: Partial<Credit>) {
   const { firstName, lastName, role } = createCredit(credit);
   return {
@@ -26,28 +20,44 @@ export class MovieCreditForm extends FormEntity<CreditFormControl> {
   }
 }
 
-/////////////////////
-/// Store config form
-/////////////////////
-function createStoreConfigControl(storeConfig?: Partial<StoreConfig>) {
-  const { display, storeType } = createStoreConfig(storeConfig);
-  return {
-    display: new FormControl(display),
-    storeType: new FormControl(storeType),
-  };
-}
-
-export type StoreConfigControl = ReturnType<typeof createStoreConfigControl>;
-
-export class StoreConfigForm extends FormEntity<StoreConfigControl> {
-  constructor(storeConfig?: StoreConfig) {
-    super(createStoreConfigControl(storeConfig));
+export class DirectorForm extends FormEntity<DirectorFormControl> {
+  constructor(director?: Partial<Credit>) {
+    super(createDirectorFormControl(director))
   }
 }
 
-/////////////
-// Title form
-/////////////
+function createDirectorFormControl(director?: Partial<Credit>) {
+  const { firstName, lastName } = createCredit(director);
+  return {
+    firstName: new FormControl(firstName),
+    lastName: new FormControl(lastName),
+  }
+}
+
+type DirectorFormControl = ReturnType<typeof createDirectorFormControl>;
+
+export class StakeholdersForm extends FormEntity<StakeholdersControl> {
+  constructor(stakeholder?: Partial<Stakeholder>) {
+    super(createStakeholdersControl(stakeholder))
+  }
+}
+
+function createStakeholdersControl(stakeholder?: Partial<Stakeholder>) {
+  const { displayName } = createStakeholder(stakeholder);
+  return {
+    displayName: new FormControl(displayName),
+  }
+}
+
+type StakeholdersControl = ReturnType<typeof createStakeholdersControl>;
+
+
+export class TitleForm extends FormEntity<TitleFormControl> {
+  constructor(title?: Movie['main']['title']) {
+    super(createTitleFormControl(title));
+  }
+}
+
 function createTitleFormControl(title?: Partial<Movie['main']['title']>) {
   const { original, international } = createTitle(title);
   return {
@@ -58,53 +68,6 @@ function createTitleFormControl(title?: Partial<Movie['main']['title']>) {
 
 type TitleFormControl = ReturnType<typeof createTitleFormControl>;
 
-export class TitleForm extends FormEntity<TitleFormControl> {
-  constructor(title?: Movie['main']['title']) {
-    super(createTitleFormControl(title));
-  }
-}
-
-////////////////
-// Director form
-////////////////
-function createDirectorFormControl(director?: Partial<Credit>) {
-  const { firstName, lastName, shortBiography } = createCredit(director);
-  return {
-    firstName: new FormControl(firstName),
-    lastName: new FormControl(lastName),
-    shortBiography: new FormControl(shortBiography),
-  }
-}
-
-type DirectorFormControl = ReturnType<typeof createDirectorFormControl>;
-
-export class DirectorForm extends FormEntity<DirectorFormControl> {
-  constructor(director?: Partial<Credit>) {
-    super(createDirectorFormControl(director))
-  }
-}
-
-//////////////////////////
-// Production company form
-//////////////////////////
-function createProductionCompagnyControl(compagny?: Partial<Credit>) {
-  const { displayName } = createCompany(compagny);
-  return {
-    displayName: new FormControl(displayName),
-  }
-}
-
-type ProductionCompagnyControl = ReturnType<typeof createProductionCompagnyControl>;
-
-export class ProductionCompagnyForm extends FormEntity<ProductionCompagnyControl> {
-  constructor(compagny?: Partial<Credit>) {
-    super(createProductionCompagnyControl(compagny))
-  }
-}
-
-///////////////
-// Create movie
-///////////////
 function createMovieMainControls(main : Partial<MovieMain> = {}) {
   const entity = createMovieMain(main);
   return {
@@ -142,20 +105,12 @@ export class MovieMainForm extends FormEntity<MovieMainControl>{
     return this.get('directors');
   }
 
-  get productionCompanies() {
-    return this.get('productionCompanies');
+  get stakeholders() {
+    return this.get('stakeholders');
   }
 
   get shortSynopsis() {
     return this.get('shortSynopsis');
-  }
-
-  get originCountries() {
-    return this.get('originCountries');
-  }
-
-  get genres() {
-    return this.get('genres');
   }
 
   public addDirector(credit?: Partial<Credit>): void {
@@ -168,22 +123,12 @@ export class MovieMainForm extends FormEntity<MovieMainControl>{
     this.directors.removeAt(i);
   }
 
-  public addOriginCountry(country?: string): void {
-    const originCountryControl = new FormControl(country);
-    this.originCountries.push(originCountryControl);
+  public addStakeholder(): void {
+    const credit = new StakeholdersForm();
+    this.stakeholders.push(credit);
   }
 
-  // public addGenres(genre?: string): void {
-  //   const genreCtrl = new FormControl(genre);
-  //   this.genres.push(genreCtrl);
-  // }
-
-  public addProductionCompany(): void {
-    const credit = new ProductionCompagnyForm();
-    this.productionCompanies.push(credit);
-  }
-
-  public removeProductionCompany(i: number): void {
-    this.productionCompanies.removeAt(i);
+  public removeStakeholder(i: number): void {
+    this.stakeholders.removeAt(i);
   }
 }
