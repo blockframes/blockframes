@@ -94,8 +94,4 @@ export class MarketplaceMovieViewComponent implements OnInit {
     return color === 'c' ? 'Color' : 'Black & white';
   }
 
-  get europeanQualification() {
-    const europeanQualification = this.movieQuery.getActive().salesInfo.europeanQualification;
-    return europeanQualification ? 'Yes' : 'No';
-  }
 }

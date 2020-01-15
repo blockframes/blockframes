@@ -56,7 +56,7 @@
       <span><b>Budget</b></span>
       <span>{{budget.totalBudget}}</span>
     </li>
-    <li fxLayout="row" fxLayout.lt-sm="column" *ngIf="salesInfo.europeanQualification">
+    <li fxLayout="row" fxLayout.lt-sm="column" *ngIf="hasEuropeanQualification()">
       <span><b>Quotas</b></span>
       <span>European Qualification</span>
     </li>

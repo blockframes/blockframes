@@ -14,7 +14,6 @@ import { Observable } from 'rxjs/internal/Observable';
 export class MovieFormSalesInfoComponent implements OnInit {
 
   public staticModels: any;
-  public europeanQualification: false;
 
   public countriesFilterCtrl = new FormControl();
   public ratingSystemFilterCtrl = new FormControl();

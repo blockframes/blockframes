@@ -31,7 +31,7 @@
         <span>{{ color | titlecase }}</span>
       </li>
     </ng-container>
-    <ng-container *ngIf="hasTheatricalRelease(salesInfo.originalRelease); else noRelease"> 
+    <ng-container *ngIf="hasTheatricalRelease(); else noRelease"> 
       <li fxLayout="row" fxLayout.lt-sm="column">
         <span><b>Theatrical Release</b></span>
         <span>Yes</span>

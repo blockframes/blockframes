@@ -54,7 +54,7 @@
     <span class="bf-dark-text">Budget</span>
     <span>{{budget.totalBudget}}</span>
   </li>
-  <ng-container *ngIf="hasTheatricalRelease(salesInfo.originalRelease); else noRelease"> 
+  <ng-container *ngIf="hasTheatricalRelease(); else noRelease"> 
     <li fxLayout="row" fxLayout.lt-sm="column">
       <span class="bf-dark-text">Theatrical Release</span>
       <span>Yes</span>
@@ -66,8 +66,8 @@
       <span>No</span>
     </li>
   </ng-template>
-  <li fxLayout="row" fxLayout.lt-sm="column" *ngIf="salesInfo.europeanQualification">
-    <span class="bf-dark-text">{{salesInfo.europeanQualification.length <= 1 ? 'Quota': 'Quotas'}}</span>
+  <li fxLayout="row" fxLayout.lt-sm="column" *ngIf="hasEuropeanQualification()">
+    <span class="bf-dark-text">Quota</span>
     <span>European Qualification</span>
   </li>
   <li fxLayout="row" fxLayout.lt-sm="column" *ngIf="color">

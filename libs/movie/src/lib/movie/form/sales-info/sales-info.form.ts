@@ -43,7 +43,6 @@ function createMovieSalesInfoControls(salesInfo: Partial<MovieSalesInfo> = {}){
   return {
     scoring: new FormControl(entity.scoring),
     color: new FormControl(entity.color),
-    europeanQualification: new FormControl(entity.europeanQualification),
     rating: FormList.factory(entity.rating, el => new MovieRatingForm(el)),
     certifications: new FormControl(entity.certifications),
     originalRelease: FormList.factory(entity.originalRelease, el => new OriginalReleaseForm(el)),

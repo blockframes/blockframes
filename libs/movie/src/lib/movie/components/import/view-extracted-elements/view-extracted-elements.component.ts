@@ -357,8 +357,12 @@ export class ViewExtractedElementsComponent {
         }
 
         // CERTIFICATIONS (European Qualification)
-        if (spreadSheetRow[SpreadSheetMovie.europeanQualification]) {
-          movie.salesInfo.europeanQualification = spreadSheetRow[SpreadSheetMovie.europeanQualification].toLowerCase() === 'yes' ? true : false;
+        if (spreadSheetRow[SpreadSheetMovie.europeanQualification] &&
+          spreadSheetRow[SpreadSheetMovie.europeanQualification].toLowerCase() === 'yes') {
+          const certification = getCodeIfExists('CERTIFICATIONS', 'europeanQualification');
+          if (certification) {
+            movie.salesInfo.certifications.push(certification);
+          }
         }
 
         // PEGI (Rating)
@@ -888,16 +892,6 @@ export class ViewExtractedElementsComponent {
         type: 'warning',
         field: 'salesInfo.certifications',
         name: "Certifications",
-        reason: 'Optional field is missing',
-        hint: 'Edit corresponding sheet field.'
-      });
-    }
-
-    if (movie.salesInfo.europeanQualification === undefined) {
-      errors.push({
-        type: 'warning',
-        field: 'salesInfo.europeanQualification',
-        name: 'European Qualification',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
