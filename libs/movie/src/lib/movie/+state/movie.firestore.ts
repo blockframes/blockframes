@@ -110,7 +110,6 @@ export interface PromotionalElement {
 }
 
 export interface MoviePromotionalElements {
-  promotionalElements: PromotionalElement[],
   trailer: PromotionalElement[],
   banner: PromotionalElement,
   poster: PromotionalElement[],

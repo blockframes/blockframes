@@ -2,7 +2,6 @@ import { MoviePromotionalElements, PromotionalElement, createMoviePromotionalEle
 import { FormEntity, FormList, urlValidators } from '@blockframes/utils';
 import { FormControl } from '@angular/forms';
 
-
 function createPromotionalElementControl(promotionalElement?: Partial<PromotionalElement>) {
   const { label, size, ratio, media, language, country } = createPromotionalElement(promotionalElement);
   return {
@@ -26,7 +25,6 @@ export class MoviePromotionalElementForm extends FormEntity<PromotionalElementCo
 function createMoviePromotionalElementsControls(promotionalElements?: Partial<MoviePromotionalElements>) {
   const entity = createMoviePromotionalElements(promotionalElements);
   return {
-    promotionalElements: FormList.factory(entity.promotionalElements, el => new MoviePromotionalElementForm(el)),
     trailer: FormList.factory(entity.trailer),
     banner: new MoviePromotionalElementForm() ,
     poster: FormList.factory(entity.poster),
@@ -45,19 +43,6 @@ type MoviePromotionalElementsControl = ReturnType<typeof createMoviePromotionalE
 export class MoviePromotionalElementsForm extends FormEntity<MoviePromotionalElementsControl>{
   constructor(promotionalElements?: MoviePromotionalElements) {
     super(createMoviePromotionalElementsControls(promotionalElements));
-  }
-
-  get promotionalElements() {
-    return this.get('promotionalElements');
-  }
-
-  public addPromotionalElement(): void {
-    const promotionalElement = new MoviePromotionalElementForm();
-    this.promotionalElements.push(promotionalElement);
-  }
-
-  public removePromotionalElement(i: number): void {
-    this.promotionalElements.removeAt(i);
   }
 
 }

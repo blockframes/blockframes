@@ -103,7 +103,6 @@ export function createMoviePromotionalElements(
   params: Partial<MoviePromotionalElements> = {}
 ): MoviePromotionalElements {
   return {
-    promotionalElements: [],
     trailer: [],
     banner: createPromotionalElement(params.banner),
     poster: [],
@@ -114,7 +113,6 @@ export function createMoviePromotionalElements(
     screener_link: createPromotionalElement(params.screener_link),
     trailer_link: createPromotionalElement(params.trailer_link),
     teaser_link: createPromotionalElement(params.teaser_link),
-    ...params
   };
 }
 
