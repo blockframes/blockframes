@@ -23,6 +23,8 @@ import {
   MovieOriginalRelease,
   MovieRating,
   MovieDocumentWithDates
+  BoxOffice,
+  UnitBox,
 } from './movie.firestore';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 import { LanguagesSlug } from '../static-model';
@@ -236,11 +238,21 @@ export function createMovieSalesAgentDeal(
   };
 }
 
+export function createBoxOffice(params: Partial<BoxOffice> = {}): BoxOffice {
+  return {
+      unit: UnitBox.boxoffice_dollar,
+      value: 0,
+      territory: '',
+      ...params,
+  }
+}
+
 export function createMovieBudget(params: Partial<MovieBudget> = {}): MovieBudget {
   return {
     totalBudget: '',
+    boxOffice: createBoxOffice(params.boxOffice),
     ...params,
-    estimatedBudget: createRange<number>(params.estimatedBudget)
+    estimatedBudget: createRange<number>(params.estimatedBudget),
   };
 }
 

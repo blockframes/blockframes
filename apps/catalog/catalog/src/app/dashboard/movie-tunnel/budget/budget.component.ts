@@ -18,6 +18,10 @@ export class BudgetComponent implements OnInit {
     return this.form.get('salesInfo').get('certifications');
   }
 
+  get boxOffice() {
+    return this.form.get('budget').get('boxOffice');
+  }
+
   ngOnInit() {
   }
 

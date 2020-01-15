@@ -1,1 +1,42 @@
-<p>box-office works!</p>
+<form [formGroup]="form">
+  <span>World-wide</span>
+  <article fxLayout="row" fxLayoutGap="24px">
+    <mat-form-field appearance="outline">
+      <mat-label>Metrics</mat-label>
+      <mat-select formGroupName="unit">
+        <mat-option>
+          blabla
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Earnings</mat-label>
+      <input matInput type="number" formGroupName="value">
+    </mat-form-field>
+  </article>
+
+  <mat-divider [inset]="true"></mat-divider>
+
+  <span>National</span>
+  <article fxLayout="row" fxLayoutGap="24px">
+    <mat-form-field appearance="outline">
+      <mat-label>Country</mat-label>
+      <input matInput type="text" formGroupName="territory">
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Metrics</mat-label>
+      <mat-select formGroupName="unit">
+        <mat-option>
+          blabla
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline">
+      <mat-label>Number of tickets sold</mat-label>
+      <input matInput type="number" formGroupName="value">
+    </mat-form-field>
+  </article>
+</form>
