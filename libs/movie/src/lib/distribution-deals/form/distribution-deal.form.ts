@@ -6,6 +6,7 @@ import { createDistributionDeal } from '@blockframes/movie/distribution-deals/+s
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { Injectable } from '@angular/core';
 import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
+import { TerritoryType } from './territory/territory.component';
 
 function createDistributionDealControls(deal: Partial<DistributionDeal>) {
   const entity = createDistributionDeal(deal);
@@ -24,7 +25,7 @@ export class DistributionDealForm extends FormEntity<DistributionDealControls> {
     super(createDistributionDealControls({}));
   }
 
-  addTerritory(territory: TerritoriesSlug, type: 'territory' | 'territoryExcluded') {
+  addTerritory(territory: TerritoriesSlug, type: TerritoryType) {
     if (!TERRITORIES_SLUG.includes(territory)) {
       throw new Error(
         `Territory ${getLabelByCode('TERRITORIES', territory)} is not part of the list`
@@ -35,7 +36,7 @@ export class DistributionDealForm extends FormEntity<DistributionDealControls> {
       this.get(type).push(new FormControl(territory));
     }
   }
-  removeTerritory(index: number, type: 'territory' | 'territoryExcluded') {
+  removeTerritory(index: number, type: TerritoryType) {
     this.get(type).removeAt(index);
   }
 }
