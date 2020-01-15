@@ -7,7 +7,7 @@ import { MovieImdbSearchComponent } from '../../components/movie-imdb-search/mov
 import { SearchRequest, ImdbMovie, FormEntity, ImageUploader } from '@blockframes/utils';
 import { formatCredit, formatCredits } from '@blockframes/utils/spreadsheet/format';
 import { FormControl } from '@angular/forms';
-import { getCodeIfExists } from '../../static-model/staticModels';
+import { getCodeIfExists, ExtractCode } from '../../static-model/staticModels';
 import { CreditFormControl } from '../main/main.form';
 import { Router } from '@angular/router';
 
@@ -102,7 +102,7 @@ export class MovieFormRootComponent {
         // LANGUAGES
         const languages = [];
         movie.languages.split(',').forEach((g: string) => {
-          const language = getCodeIfExists('LANGUAGES', g.trim());
+          const language = getCodeIfExists('LANGUAGES', g.trim() as ExtractCode<'LANGUAGES'>);
           if (language) { languages.push(language) }
         });
         this.form.main.get('originalLanguages').setValue(languages);
@@ -112,7 +112,7 @@ export class MovieFormRootComponent {
         movie.country.split(',').forEach((c: string) => {
           c = c.trim();
           if (c === 'USA') { c = 'United States' };
-          const country = getCodeIfExists('TERRITORIES', c);
+          const country = getCodeIfExists('TERRITORIES', c as ExtractCode<'TERRITORIES'>);
           if (country) { countries.push(country) }
           this.form.main.get('originCountries').setValue(countries);
         });
@@ -127,7 +127,7 @@ export class MovieFormRootComponent {
         movie.genres.split(',').forEach((g: string) => {
           g = g.trim();
           if (g === 'Sci-Fi') { g = 'Science Fiction' };
-          const genre = getCodeIfExists('GENRES', g);
+          const genre = getCodeIfExists('GENRES', g as ExtractCode<'GENRES'>);
           if (genre) { genres.push(genre) }
         });
         this.form.main.get('genres').setValue(genres);

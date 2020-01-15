@@ -30,7 +30,7 @@ import {
   getDistributionDealsWithMediasTerritoriesAndLanguagesInCommon
 } from './availabilities.util';
 import { DistributionDealForm } from './create.form';
-import { getCodeIfExists } from '../../movie/static-model/staticModels';
+import { getCodeIfExists, ExtractCode } from '../../movie/static-model/staticModels';
 import { MatSnackBar } from '@angular/material';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { createDistributionDeal } from '../+state/distribution-deal.model';
@@ -159,7 +159,7 @@ export class DistributionDealCreateComponent implements OnInit, OnDestroy {
   }
 
   public selectedTerritory(territory: MatAutocompleteSelectedEvent) {
-    this.form.addTerritory(getCodeIfExists('TERRITORIES', territory.option.viewValue));
+    this.form.addTerritory(getCodeIfExists('TERRITORIES', territory.option.viewValue as ExtractCode<'TERRITORIES'>));
     this.territoryInput.nativeElement.value = '';
   }
 
