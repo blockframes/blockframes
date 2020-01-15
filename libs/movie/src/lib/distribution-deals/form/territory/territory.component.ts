@@ -70,44 +70,64 @@ export class DistributionDealTerritoryComponent {
       })
     );
   }
-
+  /**
+   * @description returns a filtered array of all possible territories depending on the value param
+   * @param value string of what the users typed in
+   */
   private territoryFilter(value: string): SlugAndLabel[] {
     const filterValue = value.toLowerCase();
     return this.staticTerritories.filter(territory => territory.slug.trim().includes(filterValue));
   }
 
-  private isValidTerritoryAndNoDuplicate(type: TerritoryType, territory: string): boolean {
+  /**
+   * @description resusable function that checks if a territory has already been aded
+   * to the other input field
+   * @param type either territory or territoryExcluded depinding on what array we want to operate
+   * @param territory the string of what the user would like to add
+   */
+  private isInThisOther(type: TerritoryType, territory: string) {
+    return type === 'territory'
+      ? this.value['territoryExcluded'].includes(territory)
+      : this.value['territory'].includes(territory);
+  }
+
+  /**
+   * @description checks what type has been inputted
+   * @param type is one of the possible TerritoryType
+   */
+  private isTerritoryType(type: TerritoryType): string | boolean {
     if (type === 'territory') {
-      return (
-        !this.value[type].includes(territory) &&
-        TERRITORIES_SLUG.includes(getCodeIfExists('TERRITORIES', territory)) &&
-        !this.value['territoryExcluded'].includes(territory)
-      );
+      return type;
+    } else if (type === 'territoryExcluded') {
+      return type;
     }
+    return false;
+  }
+
+  /**
+   * @description resusable function that checks if the territory param has already been added
+   * and if the territory is a valid one
+   * @param type either territory or territoryExcluded depinding on what array we want to operate
+   * @param territory the string of what the user would like to add
+   */
+  private isValidTerritoryAndNoDuplicate(type: TerritoryType, territory: string): boolean {
     return (
       !this.value[type].includes(territory) &&
       TERRITORIES_SLUG.includes(getCodeIfExists('TERRITORIES', territory)) &&
-      !this.value['territory'].includes(territory)
+      !this.isInThisOther(type, territory)
     );
   }
 
+  /**
+   * @description adds a territory when the user typed in territory, also resets the input field
+   * @param event the event that was emitted by the chip input
+   * @param type either territory or territoryExcluded depinding on what array we want to operate
+   */
   public addTerritory(event: MatChipInputEvent, type: TerritoryType) {
-    if (type === 'territory' && !this.includedAuto.isOpen) {
-      const input = event.input;
-      const value = event.value.trim();
-
-      // Add the territory
-      if ((value || '') && this.isValidTerritoryAndNoDuplicate(type, value)) {
-        this.value[type].push(value);
-        this.form.addTerritory(value, type);
-      }
-
-      // Reset the input value
-      if (input) {
-        input.value = '';
-      }
-      this.controls[type].reset();
-    } else if (type === 'territoryExcluded' && !this.excludedAuto.isOpen) {
+    if (!this.isTerritoryType(type)) {
+      throw new Error(`Not supported type: ${type} `);
+    }
+    if (!this.includedAuto.isOpen) {
       const input = event.input;
       const value = event.value.trim();
 
@@ -125,6 +145,11 @@ export class DistributionDealTerritoryComponent {
     }
   }
 
+  /**
+   * @description removes a territory from the input and form
+   * @param territory territory to be removed
+   * @param type either territory or territoryExcluded depinding on what array we want to operate
+   */
   public removeTerritory(territory: string, type: TerritoryType) {
     const index = this.value[type].indexOf(territory);
     if (index >= 0) {
@@ -133,17 +158,20 @@ export class DistributionDealTerritoryComponent {
     }
   }
 
+  /**
+   * @description adds a territory when the user clicks on an option provided by the autocompletion
+   * @param event event that got emiited by the autocompletion
+   * @param type either territory or territoryExcluded depinding on what array we want to operate
+   */
   public selectedTerritory(event: MatAutocompleteSelectedEvent, type: TerritoryType) {
     if (this.isValidTerritoryAndNoDuplicate(type, event.option.viewValue)) {
       this.form.addTerritory(event.option.value, type);
       this.value[type].push(event.option.viewValue);
-      this.includedTerritoryInput.nativeElement.value = '';
       this.controls[type].reset();
-    } else if (this.isValidTerritoryAndNoDuplicate(type, event.option.viewValue)) {
-      this.form.addTerritory(event.option.value, type);
-      this.value[type].push(event.option.viewValue);
+      if (this.isTerritoryType(type) === 'territory') {
+        this.includedTerritoryInput.nativeElement.value = '';
+      }
       this.excludedTerritoryInput.nativeElement.value = '';
-      this.controls[type].reset();
     }
   }
 }
