@@ -23,9 +23,9 @@ interface Model {
   SOUND_FORMAT: readonly SlugAndLabel[]
 }
 
-export type Scope = keyof Model;
+export type Scope = keyof typeof models;
 
-const models: Model = {
+const models = {
   'GENRES': [
     { 'slug': 'comedy', 'label': 'Comedy' },
     { 'slug': 'drama', 'label': 'Drama' },
@@ -807,10 +807,10 @@ const models: Model = {
  * @param str
  */
 export const getCodeIfExists = (scope: Scope, str: string) => {
-  let item = models[scope].find(i => i.slug.trim().toLowerCase() === str.trim().toLowerCase());
+  let item = (models[scope] as any[]).find(i => i.slug.trim().toLowerCase() === str.trim().toLowerCase());
   if (item) { return item.slug }
 
-  item = models[scope].find(i => i.label.trim().toLowerCase() === str.trim().toLowerCase());
+  item = (models[scope] as any[]).find(i => i.label.trim().toLowerCase() === str.trim().toLowerCase());
   if (item) { return item.slug }
 
   return null;
@@ -823,7 +823,7 @@ export const getCodeIfExists = (scope: Scope, str: string) => {
  * @param slug
  */
 export const getLabelByCode = (scope: Scope, slug: string) => {
-  const item = models[scope].find(i => i.slug === slug);
+  const item = (models[scope] as any[]).find(i => i.slug === slug);
   return item ? item.label : '';
 };
 
