@@ -18,6 +18,7 @@
 @import './components/mat-sidenav.scss';
 @import './components/bf-font-color.scss';
 @import './components/bf-icon.scss';
+@import './components/mat-toggle-button.scss';
 
 @include mat-core($bf-typography);
 
@@ -30,9 +31,10 @@
   @include mat-bf-list-theme($theme);
   @include mat-bf-table-theme($theme);
   @include mat-bf-toolbar-theme($theme);
+  @include mat-bf-button-toggle-theme($theme);
+  @include mat-bf-sidenav-theme($theme);
   @include bf-footer-theme($theme);
   @include bf-widget-theme($theme);
-  @include mat-bf-sidenav-theme($theme);
   @include bf-color-font($theme);
   @include bf-icon-theme($theme);
 }
