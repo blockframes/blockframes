@@ -1,7 +1,7 @@
 import { MoviePromotionalElements, PromotionalElement, createMoviePromotionalElements, createPromotionalElement } from '../../+state';
 import { FormEntity, FormList, urlValidators } from '@blockframes/utils';
 import { FormControl } from '@angular/forms';
-import { PROMOTIONAL_ELEMENT_TYPES  } from '@blockframes/movie/movie/static-model/staticModels';
+import { PromotionalElementTypesSlug } from '@blockframes/movie/movie/static-model/types';
 
 function createPromotionalElementControl(promotionalElement?: Partial<PromotionalElement>) {
   const { label, size, ratio, media, language, country } = createPromotionalElement(promotionalElement);
@@ -27,15 +27,15 @@ function createMoviePromotionalElementsControls(promotionalElements?: Partial<Mo
   const entity = createMoviePromotionalElements(promotionalElements);
   return {
     trailer: FormList.factory(entity.trailer),
-    banner: new MoviePromotionalElementForm() ,
+    banner: new MoviePromotionalElementForm(),
     poster: FormList.factory(entity.poster),
     still_photo: FormList.factory(entity.still_photo),
-    presentation_deck: new MoviePromotionalElementForm() ,
-    scenario: new MoviePromotionalElementForm() ,
-    promo_reel_link: new MoviePromotionalElementForm() ,
-    screener_link: new MoviePromotionalElementForm() ,
-    trailer_link: new MoviePromotionalElementForm() ,
-    teaser_link: new MoviePromotionalElementForm() ,
+    presentation_deck: new MoviePromotionalElementForm(),
+    scenario: new MoviePromotionalElementForm(),
+    promo_reel_link: new MoviePromotionalElementForm(),
+    screener_link: new MoviePromotionalElementForm(),
+    trailer_link: new MoviePromotionalElementForm(),
+    teaser_link: new MoviePromotionalElementForm(),
   }
 }
 
@@ -46,13 +46,13 @@ export class MoviePromotionalElementsForm extends FormEntity<MoviePromotionalEle
     super(createMoviePromotionalElementsControls(promotionalElements));
   }
 
-  public addPromotionalElement(type: PROMOTIONAL_ELEMENT_TYPES): void {	
+  public addPromotionalElement(type: PromotionalElementTypesSlug): void {	
     const promotionalElement = new MoviePromotionalElementForm();	
-    this.get(type).push(promotionalElement);	
+    this.get(type as any).push(promotionalElement);	
   }	
 
-  public removePromotionalElement(type: PROMOTIONAL_ELEMENT_TYPES, i: number): void {	
-    this.get(type).removeAt(i);	
+  public removePromotionalElement(type: PromotionalElementTypesSlug, i: number): void {	
+    this.get(type as any).removeAt(i);	
   }	
 
 }
