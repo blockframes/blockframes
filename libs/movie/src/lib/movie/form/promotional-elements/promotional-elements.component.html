@@ -1,22 +1,8 @@
 <form [formGroup]="promotionalElements">
-  <!-- IMAGES -->
-  <h3> Images </h3>
-  <div formArrayName="images" *ngFor="let image of promotionalElements.images.controls; let i = index">
-    <!-- TODO:#1292 cropper size -->
-    <drop-cropper [ratio]="4/3" storagePath="promotionalElements" [formControlName]="i" [useFileuploader]="false" [useDelete]="false"></drop-cropper>
-    <button mat-flat-button color="warn" (click)="promotionalElements.removeImage(i)">
-        <mat-icon>delete_circle</mat-icon> Remove
-      </button>
-  </div>
-  <ng-container *ngIf="promotionalElements.images.controls.length < 6">
-    <button mat-icon-button color="primary" (click)="promotionalElements.addImage()">
-      <mat-icon>add_circle</mat-icon>
-    </button>
-  </ng-container>
   <!-- OTHER PROMOTIONAL ELEMENTS -->
   <h3> Other Promotional Elements </h3>
   <div formArrayName="promotionalElements">
-    <ng-container *ngFor="let element of promotionalElements.promotionalElements.controls; let i = index">
+    <ng-container *ngFor="let element of promotionalElements.controls; let i = index">
       <div [formGroupName]="i" class="full-width">
         <mat-form-field appearance="outline" class="small-width">
           <mat-label>Label</mat-label>
@@ -76,9 +62,4 @@
       </div>
     </ng-container>
   </div>
-  <ng-container *ngIf="promotionalElements.promotionalElements.controls.length == 0">
-    <button mat-icon-button color="primary" (click)="promotionalElements.addPromotionalElement()">
-      <mat-icon>add_circle</mat-icon>
-    </button>
-  </ng-container>
 </form>
