@@ -1,23 +1,23 @@
-<ng-container *ngFor="let control of form.controls; let i = index; let last = last">
+<article *ngFor="let control of form.controls; let i = index; let last = last">
   <!-- Display Name -->
   <form-display-name [form]="control"></form-display-name>
   <!--  Shot Biography -->
-  <mat-form-field>
+  <mat-form-field appearance="outline">
     <mat-label>Director Filmography</mat-label>
     <textarea matInput [formControl]="control.get('shortBiography')"></textarea>
     <mat-hint>Selective Filmography to present the director.</mat-hint>
   </mat-form-field>
   <!-- Display only for the first -->
-  <div *ngIf="i">
-    <button mat-mini-fab color="warn" (click)="remove(i)" aria-label="Remove a director form">
+  <div *ngIf="!last" fxLayout="column" fxLayoutAlign="center center">
+    <button mat-mini-fab color="warn" (click)="form.removeAt(i)" aria-label="Remove a director form">
       <mat-icon>delete</mat-icon>
     </button>
     <span class="mat-caption">Delete additional director</span>
   </div>
-  <div *ngIf="last">
-    <button mat-mini-fab color="primary" (click)="remove(i)" aria-label="Remove a director form">
+  <div *ngIf="last" fxLayout="column" fxLayoutAlign="center center">
+    <button mat-mini-fab color="primary" (click)="form.add()" aria-label="Remove a director form">
       <mat-icon>add</mat-icon>
     </button>
     <span class="mat-caption">Add another director</span>
   </div>
-</ng-container>
+</article>

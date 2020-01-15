@@ -10,14 +10,4 @@ import { MovieMainControl } from '../main.form';
 export class DirectorsComponent {
 
   @Input() form: MovieMainControl['directors'];
-
-  constructor() { }
-
-  add() {
-    this.form.add();
-  }
-
-  remove(i: number) {
-    this.form.removeAt(i);
-  }
 }

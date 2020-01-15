@@ -91,7 +91,7 @@ export class FormList<T, Control extends AbstractControl = any> extends FormArra
   }
 
   patchValue(
-    value: T[],
+    value: Partial<T>[],
     options: {
       onlySelf?: boolean;
       emitEvent?: boolean;
