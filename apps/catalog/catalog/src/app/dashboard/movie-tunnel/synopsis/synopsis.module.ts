@@ -7,10 +7,10 @@ import { MovieFormStoryModule } from '@blockframes/movie/movie/form/story/story.
 import { ReactiveFormsModule } from '@angular/forms';
 
 // Material
-import { MatCardModule } from '@angular/material/card';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 const material = [
-  MatCardModule
+  MatExpansionModule
 ]
 @NgModule({
   declarations: [TunnelSynopsisComponent],

@@ -2,22 +2,20 @@
   <h4 title>TITLE INFORMATION</h4>
   <h1 subtitle>Credits</h1>
   <section tunnel-form>
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title>Production information</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
+    <mat-accordion multi>
+      <mat-expansion-panel expanded>
+        <mat-expansion-panel-header>
+          <mat-panel-title>Production information</mat-panel-title>
+        </mat-expansion-panel-header>
         <movie-form-production-year [form]="productionYear"></movie-form-production-year>
         <movie-form-stakeholders [form]="stakeholders"></movie-form-stakeholders>
-      </mat-card-content>
-    </mat-card>
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title><h3>More information</h3></mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
+      </mat-expansion-panel>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title>More information</mat-panel-title>
+        </mat-expansion-panel-header>
         <movie-form-sales-cast [form]="credits"></movie-form-sales-cast>
-      </mat-card-content>
-    </mat-card>
+      </mat-expansion-panel>
+    </mat-accordion>
   </section>
 </tunnel-page>

@@ -10,7 +10,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 // Materials
-import { MatCardModule } from '@angular/material/card';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
   declarations: [TunnelTechnicalInfoComponent],
@@ -22,7 +22,7 @@ import { MatCardModule } from '@angular/material/card';
     MovieFormVersionInfoModule,
 
     // Material
-    MatCardModule,
+    MatExpansionModule,
 
     // Route
     RouterModule.forChild([{ path: '', component: TunnelTechnicalInfoComponent }]),

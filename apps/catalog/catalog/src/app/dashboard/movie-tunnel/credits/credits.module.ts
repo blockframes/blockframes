@@ -8,9 +8,9 @@ import { CreditsComponent } from './credits.component';
 import { MovieFormProductionYearModule } from '@blockframes/movie/movie/form/main/production-year/production-year.module';
 import { MovieFormStakeholdersModule } from '@blockframes/movie/movie/form/main/stakeholders/stakeholders.module';
 import { MovieFormSalesCastModule } from '@blockframes/movie/movie/form/sales-cast/sales-cast.module';
+
 // Material
-import { MatCardModule } from '@angular/material/card';
-import { MatDividerModule } from '@angular/material/divider';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
     declarations: [CreditsComponent],
@@ -23,8 +23,7 @@ import { MatDividerModule } from '@angular/material/divider';
       MovieFormStakeholdersModule,
       MovieFormSalesCastModule,
       // Material
-      MatCardModule,
-      MatDividerModule,
+      MatExpansionModule,
       // Route
       RouterModule.forChild([{ path: '', component: CreditsComponent }])
     ]

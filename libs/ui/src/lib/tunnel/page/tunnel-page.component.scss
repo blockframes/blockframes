@@ -1,7 +1,7 @@
 section {
   margin: 30px;
   a.mat-button {
-    text-decoration: underline;
+    text-decoration: none;
   }
   mat-card {
     margin-bottom: 20px;
@@ -16,4 +16,8 @@ section {
       margin: 10px;
     }
   }
+}
+
+.full-width {
+  width: 100%;
 }

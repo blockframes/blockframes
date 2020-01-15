@@ -2,14 +2,14 @@
   <h4 title>TITLE INFORMATION</h4>
   <h1 subtitle>Marketplace Evaluation</h1>
   <section tunnel-form>
-    <!-- Scoring -->
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title>Evaluation for Archipel Content</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
+    <mat-accordion multi>
+      <mat-expansion-panel expanded>
+        <mat-expansion-panel-header>
+          <mat-panel-title>Evaluation for Archipel </mat-panel-title>
+        </mat-expansion-panel-header>
+        <!-- Scoring -->
         <movie-form-scoring [form]="salesInfo.get('scoring')"></movie-form-scoring>
-      </mat-card-content>
-    </mat-card>
+      </mat-expansion-panel>
+    </mat-accordion>
   </section>
 </tunnel-page>
