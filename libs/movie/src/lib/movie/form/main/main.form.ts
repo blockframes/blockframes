@@ -111,7 +111,7 @@ function createMovieMainControls(main : Partial<MovieMain> = {}) {
     directors: FormList.factory(entity.directors, el => new DirectorForm(el)),
     poster: new FormControl(entity.poster),
     productionYear: new FormControl(entity.productionYear, yearValidators),
-    genres: new FormControl(entity.genres),
+    genres: FormList.factory(entity.genres),
     originCountries: FormList.factory(entity.originCountries, el => new FormControl(el)),
     originalLanguages: new FormControl(entity.originalLanguages),
     status: new FormControl(entity.status , [Validators.required]),

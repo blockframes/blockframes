@@ -14,6 +14,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MovieFormContentTypeModule } from '@blockframes/movie/movie/form/main/content-type/content-type.module';
 import { MovieFormDirectorsModule } from '@blockframes/movie/movie/form/main/directors/directors.module';
 import { MovieFormLanguagesModule } from '@blockframes/movie/movie/form/main/languages/languages.module';
+import { MovieFormGenresModule } from '@blockframes/movie/movie/form/main/genres/genres.module';
 import { MovieFormOriginalReleasesModule } from '@blockframes/movie/movie/form/sales-info/original-releases/original-releases.module';
 
 @NgModule({
@@ -24,6 +25,7 @@ import { MovieFormOriginalReleasesModule } from '@blockframes/movie/movie/form/s
     MovieFormContentTypeModule,
     MovieFormDirectorsModule,
     MovieFormLanguagesModule,
+    MovieFormGenresModule,
     MovieFormOriginalReleasesModule,
     TunnelPageModule,
     // Material

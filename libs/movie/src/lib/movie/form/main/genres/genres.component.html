@@ -1,0 +1,32 @@
+  <ng-container *ngFor="let control of genresForm.controls; let i = index; let last = last">
+    <article fxLayout="row" fxLayoutAlign="start center">
+      <!--  Genre -->
+      <mat-form-field appearance="outline">
+        <mat-label>Original Genre</mat-label>
+        <mat-select [formControl]="control">
+          <mat-option [value]="genre.slug" *ngFor="let genre of genres">
+            {{ genre.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      
+      <!--  Genre -->
+      <mat-form-field *ngIf="control.value === 'other'" appearance="outline">
+        <mat-label>Please Specify</mat-label>
+        <input type="text" />
+      </mat-form-field>
+    </article>
+    <!-- Add / Delete -->
+    <div *ngIf="!last" fxLayout="column" fxLayoutAlign="center center">
+      <button mat-mini-fab color="warn" (click)="genresForm.removeAt(i)" aria-label="Remove a director form">
+        <mat-icon>delete</mat-icon>
+      </button>
+      <span class="mat-caption">Delete additional director</span>
+    </div>
+    <div *ngIf="last" fxLayout="column" fxLayoutAlign="center center">
+      <button mat-mini-fab color="primary" (click)="genresForm.add()" aria-label="Remove a director form">
+        <mat-icon>add</mat-icon>
+      </button>
+      <span class="mat-caption">Add another director</span>
+    </div>
+  </ng-container>
