@@ -41,18 +41,25 @@ function createMoviePromotionalElementsControls(promotionalElements?: Partial<Mo
 
 type MoviePromotionalElementsControl = ReturnType<typeof createMoviePromotionalElementsControls>
 
+type MoviePromotionalElementsListKey = ExtractFormListKeys<MoviePromotionalElementsControl>
+
+// Extract the keys that return a FormList
+type ExtractFormListKeys<C> = {
+  [K in keyof C]: C[K] extends FormList<infer I> ? K : never
+}[keyof C]
+
 export class MoviePromotionalElementsForm extends FormEntity<MoviePromotionalElementsControl>{
   constructor(promotionalElements?: MoviePromotionalElements) {
     super(createMoviePromotionalElementsControls(promotionalElements));
   }
 
-  public addPromotionalElement(type: PromotionalElementTypesSlug): void {	
+  public addPromotionalElement(type: MoviePromotionalElementsListKey): void {	
     const promotionalElement = new MoviePromotionalElementForm();	
-    this.get(type as any).push(promotionalElement);	
+    this.get(type).push(promotionalElement);	
   }	
 
-  public removePromotionalElement(type: PromotionalElementTypesSlug, i: number): void {	
-    this.get(type as any).removeAt(i);	
+  public removePromotionalElement(type: MoviePromotionalElementsListKey, i: number): void {	
+    this.get(type).removeAt(i);	
   }	
 
 }
