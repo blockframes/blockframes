@@ -16,7 +16,7 @@ function createPrizeFormControl(entity?: Partial<Prize>) {
 type PrizeFormControl = ReturnType<typeof createPrizeFormControl>;
 
 export class MoviePrizeForm extends FormEntity<PrizeFormControl> {
-  constructor(prize?: Prize) {
+  constructor(prize?: Partial<Prize>) {
     super(createPrizeFormControl(prize));
   }
 }

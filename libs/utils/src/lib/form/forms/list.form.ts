@@ -26,14 +26,14 @@ function hasValue(value: any): boolean {
 /** A list of FormField */
 export class FormList<T, Control extends AbstractControl = any> extends FormArray {
   private _value: T[];
-  createControl: (value: T) => Control = createControlForm;
+  createControl: (value: Partial<T>) => Control = createControlForm;
   controls: Control[];
 
   constructor(controls: Control[], validators?: Validator, asyncValidators?: AsyncValidator) {
     super(controls, validators, asyncValidators);
   }
 
-  static factory<T, Control extends AbstractControl = any>(value: T[], createControl?: (value?: T) => Control, validators?: Validator): FormList<T, Control> {
+  static factory<T, Control extends AbstractControl = any>(value: T[], createControl?: (value?: Partial<T>) => Control, validators?: Validator): FormList<T, Control> {
     const form = new FormList<T>([], validators);
     if (createControl) {
       form['createControl'] = createControl.bind(form);
@@ -70,6 +70,14 @@ export class FormList<T, Control extends AbstractControl = any> extends FormArra
 
   setControl(index: number, control: Control) {
     super.setControl(index, control);
+  }
+
+  /**
+   * Custom method to add a Control using the createControl method
+   */
+  add(value?: Partial<T>) {
+    const control = this.createControl(value);
+    this.push(control);
   }
 
   setValue(

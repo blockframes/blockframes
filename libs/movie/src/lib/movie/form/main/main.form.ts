@@ -21,7 +21,7 @@ function createCreditFormControl(credit?: Partial<Credit>) {
 export type CreditFormControl = ReturnType<typeof createCreditFormControl>;
 
 export class MovieCreditForm extends FormEntity<CreditFormControl> {
-  constructor(credit?: Credit) {
+  constructor(credit?: Partial<Credit>) {
     super(createCreditFormControl(credit));
   }
 }

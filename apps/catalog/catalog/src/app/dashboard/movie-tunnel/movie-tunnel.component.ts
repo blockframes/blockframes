@@ -8,17 +8,21 @@ import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 
-function getPageData(url: string, array: string[][]) {
-  const pageUrl = url.split('/').pop();
-  const panel = array.find(page => page.includes(pageUrl));
-  const index = panel.indexOf(pageUrl) + 1;
-  const arrayLength = panel.length;
-  return { index: index, length: arrayLength};
-}
-
 interface PageData {
   index: number;
   length: number;
+}
+
+function getPageData(url: string, array: string[][]): PageData {
+  const pageUrl = url.split('/').pop();
+  const panel = array.find(page => page.includes(pageUrl));
+  if (panel) {
+    const index = panel.indexOf(pageUrl) + 1;
+    const arrayLength = panel.length;
+    return { index: index, length: arrayLength};
+  } else {
+    return { index: 0, length: 0 }
+  }
 }
 
 // This table has to be synced with the routes, it allows the steps to be updated depending of the routes
