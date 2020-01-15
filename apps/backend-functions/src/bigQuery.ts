@@ -1,6 +1,6 @@
 import { CallableContext } from "firebase-functions/lib/providers/https";
 import { BigQuery } from '@google-cloud/bigquery';
-import { PublicUser, OrganizationDocument, MovieAnalytics, EventAnalytics } from "./data/types";
+import { PublicUser, OrganizationDocument, MovieAnalytics, EventAnalytics, CallMovieAnalytics } from "./data/types";
 import { getDocument } from "./data/internals";
 
 function queryAddedToWishlist(movieId: string, from: number, to: number) {
@@ -68,19 +68,19 @@ async function executeQuery(query: any) {
 }
 
 function calculatePercentage(current: number, past: number) {
-  return (current / past - 1) * 100;
+  return past ? (current / past - 1) * 100 : 0;
 }
 
 function calculateIncrease(current: EventAnalytics, past: EventAnalytics) {
-  return past ? calculatePercentage(current.hits, past.hits) : null;
+  return past ? calculatePercentage(current.hits, past.hits) : 0;
 }
 
 /** Call bigQuery with a movieId to get its analytics. */
 export const requestMovieAnalytics = async (
-  data: any,
+  data: CallMovieAnalytics,
   context: CallableContext
 ): Promise<MovieAnalytics> => {
-  const { movieId } = data;
+  const { movieId, currentPeriod, pastPeriod } = data;
   const uid = context.auth!.uid;
   const user = await getDocument<PublicUser>(`users/${uid}`);
   const org = await getDocument<OrganizationDocument>(`orgs/${user.orgId}`);
@@ -89,12 +89,12 @@ export const requestMovieAnalytics = async (
   if (org.movieIds.includes(movieId)) {
     // Request bigQuery
     const promises = [
-      executeQuery(queryAddedToWishlist(movieId, 29, 1)),
-      executeQuery(queryAddedToWishlist(movieId, 59, 30)),
-      executeQuery(queryPromoReelOpened(movieId, 29, 1)),
-      executeQuery(queryPromoReelOpened(movieId, 59, 30)),
-      executeQuery(queryMovieViews(movieId, 29, 1)),
-      executeQuery(queryMovieViews(movieId, 59, 30))
+      executeQuery(queryAddedToWishlist(movieId, currentPeriod.from, currentPeriod.to)),
+      executeQuery(queryAddedToWishlist(movieId, pastPeriod.from, pastPeriod.to)),
+      executeQuery(queryPromoReelOpened(movieId, currentPeriod.from, currentPeriod.to)),
+      executeQuery(queryPromoReelOpened(movieId, pastPeriod.from, pastPeriod.to)),
+      executeQuery(queryMovieViews(movieId, currentPeriod.from, currentPeriod.to)),
+      executeQuery(queryMovieViews(movieId, pastPeriod.from, pastPeriod.to))
     ];
     const results = await Promise.all(promises);
     if (results !== undefined && results.length >= 0){

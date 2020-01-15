@@ -64,6 +64,18 @@ export interface MovieAnalytics {
   promoReelOpened: EventAnalytics
 }
 
+export interface CallMovieAnalytics {
+  movieId: string,
+  currentPeriod: {
+    from: number,
+    to: number
+  },
+  pastPeriod: {
+    from: number,
+    to: number
+  }
+}
+
 export interface MovieVersionInfo {
   dubbings: string[],
   subtitles: string[],
