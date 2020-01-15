@@ -4,8 +4,8 @@
     <mat-form-field appearance="outline">
       <mat-label>Metrics</mat-label>
       <mat-select formGroupName="unit">
-        <mat-option>
-          blabla
+        <mat-option *ngFor="let unit of unitBoxList" [value]="unit">
+          {{ unitBox[unit] }}
         </mat-option>
       </mat-select>
     </mat-form-field>
@@ -18,25 +18,29 @@
 
   <mat-divider [inset]="true"></mat-divider>
 
-  <span>National</span>
-  <article fxLayout="row" fxLayoutGap="24px">
-    <mat-form-field appearance="outline">
-      <mat-label>Country</mat-label>
-      <input matInput type="text" formGroupName="territory">
-    </mat-form-field>
+  <!-- <div formArrayName="boxOffice" *ngFor="let boxOffice of boxOffice.controls; let i = index">
+    <div [formGroup]="i" class="full-width">
+      <span>National</span>
+      <article fxLayout="row" fxLayoutGap="24px">
+        <mat-form-field appearance="outline">
+          <mat-label>Country</mat-label>
+          <input matInput type="text" formControl="territory">
+        </mat-form-field>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Metrics</mat-label>
-      <mat-select formGroupName="unit">
-        <mat-option>
-          blabla
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Metrics</mat-label>
+          <mat-select formControl="unit">
+            <mat-option>
+              blabla
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
 
-    <mat-form-field appearance="outline">
-      <mat-label>Number of tickets sold</mat-label>
-      <input matInput type="number" formGroupName="value">
-    </mat-form-field>
-  </article>
+        <mat-form-field appearance="outline">
+          <mat-label>Number of tickets sold</mat-label>
+          <input matInput type="number" formControl="value">
+        </mat-form-field>
+      </article>
+    </div>
+  </div> -->
 </form>

@@ -45,7 +45,7 @@ export enum PremiereType {
   'national' = 'National',
 }
 
-export const enum UnitBox {
+export enum UnitBox {
   boxoffice_dollar = 'Box office in $',
   boxoffice_euro = 'Box office in €',
   entrances = '#Entrances',
