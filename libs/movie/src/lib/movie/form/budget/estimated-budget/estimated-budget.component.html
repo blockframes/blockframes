@@ -3,7 +3,7 @@
   <span matPrefix>$&nbsp;</span>
   <mat-select test-id="budget-range" [formControl]="form" >
     <mat-option *ngFor="let budget of budgetList" [value]="budget">
-      {{ budget.from }} - {{ budget.to }}
+      {{ budget.label }}
     </mat-option>
   </mat-select>
 </mat-form-field>
