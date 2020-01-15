@@ -1,5 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { MovieBudgetForm } from '../budget.form';
+import { UnitBox } from '@blockframes/movie/movie+state/movie.firestore';
 
 @Component({
   selector: '[form] movie-form-box-office, [formGroup] movie-form-box-office',
@@ -8,6 +9,7 @@ import { MovieBudgetForm } from '../budget.form';
 })
 export class BoxOfficeComponent implements OnInit {
   @Input() form: MovieBudgetForm;
+  private unitBox = UnitBox;
 
   constructor() { }
 
@@ -15,4 +17,7 @@ export class BoxOfficeComponent implements OnInit {
     console.log(this.form.value);
   }
 
+  get unitBoxList() {
+    return Object.keys(this.unitBox);
+  }
 }
