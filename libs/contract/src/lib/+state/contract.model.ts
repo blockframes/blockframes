@@ -79,9 +79,9 @@ export function initContractWithVersion(): ContractWithLastVersion {
 
 export function createPartyDetails(params: Partial<ContractPartyDetail>) {
   return {
-    party: createParty(params.party),
     status: '',
-    ...params
+    ...params,
+    party: createParty(params.party),
   };
 }
 
