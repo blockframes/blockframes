@@ -1,7 +1,6 @@
 import {
   DistributionDealDocumentWithDates as DistributionDeal,
   HoldbackWithDates as Holdback,
-  FormatProfile
 } from './distribution-deal.firestore';
 import { createTerms } from '@blockframes/utils/common-interfaces/terms';
 
@@ -17,7 +16,6 @@ export function createDistributionDeal(params: Partial<DistributionDeal> = {}): 
     assetLanguage: {},
     exclusive: false,
     titleInternalAlias: '',
-    formatProfile: FormatProfile.unknown,
     download: false,
     holdbacks: [],
     catchUp: createTerms(params.catchUp),
