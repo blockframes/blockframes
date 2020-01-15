@@ -170,7 +170,6 @@ export interface MovieOfficialIds {
 }
 
 export interface MovieMain {
-  customGenres?: string[],
   internalRef?: string,
   isan?: string,
   title: Title,
@@ -179,6 +178,7 @@ export interface MovieMain {
   poster?: ImgRef,
   productionYear?: number,
   genres?: string[],
+  customGenres?: string[],
   originCountries?: TerritoriesSlug[],
   languages?: string[],
   status?: MovieStatusSlug,
