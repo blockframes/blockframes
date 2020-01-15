@@ -7,7 +7,7 @@ import { Component, Input, ViewChild, OnInit, ChangeDetectionStrategy } from '@a
 import { SelectionModel } from '@angular/cdk/collections';
 import { SpreadsheetImportError, ContractsImportState } from '../view-extracted-elements/view-extracted-elements.component';
 import { ViewImportErrorsComponent } from '../view-import-errors/view-import-errors.component';
-import { ContractService } from '@blockframes/contract/+state/contract.service';
+import { ContractVersionService } from '@blockframes/contract/version/+state/contract-version.service';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 
 const hasImportErrors = (importState: ContractsImportState, type: string = 'error'): boolean => {
@@ -45,8 +45,8 @@ export class TableExtractedContractsComponent implements OnInit {
   constructor(
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
-    private contractService: ContractService,
     private organizationQuery: OrganizationQuery,
+    private contractVersionService: ContractVersionService
   ) { }
 
   ngOnInit() {
@@ -58,8 +58,9 @@ export class TableExtractedContractsComponent implements OnInit {
   }
 
   async createContract(importState: ContractsImportState): Promise<boolean> {
+
     importState.contract.doc.partyIds.push(this.organizationQuery.getActive().id)
-    const contractId = await this.contractService.addContractAndVersion(importState.contract.doc, importState.contract.last);
+    const contractId = await this.contractVersionService.addContractAndVersion(importState.contract);
     importState.errors.push({
       type: 'error',
       field: 'contract',
@@ -93,7 +94,7 @@ export class TableExtractedContractsComponent implements OnInit {
             hint: 'Contract already added'
           });
 
-          return promises.push(this.contractService.addContractAndVersion(importState.contract.doc, importState.contract.last));
+          return promises.push(this.contractVersionService.addContractAndVersion(importState.contract));
         });
 
       this.rows.data = data;

@@ -10,7 +10,6 @@ import {
   createMovieVersionInfo,
   createMovieFestivalPrizes,
   createMovieSalesAgentDeal,
-  cleanModel,
   createPromotionalElement,
   createMovieBudget,
   createMoviePromotionalElements,
@@ -22,18 +21,19 @@ import {
 } from '../../../+state';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { formatCredits } from '@blockframes/utils/spreadsheet/format';
-import { ImageUploader } from '@blockframes/utils';
+import { ImageUploader, cleanModel } from '@blockframes/utils';
 import { SSF$Date } from 'ssf/types';
 import { getCodeIfExists } from '../../../static-model/staticModels';
 import { SSF } from 'xlsx';
 import { MovieLanguageTypes, PremiereType } from '@blockframes/movie/movie/+state/movie.firestore';
 import { createCredit } from '@blockframes/utils/common-interfaces/identity';
 import { DistributionDeal, createDistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
-import { ContractWithLastVersion, initContractWithVersion, createContractPartyDetail, createContractTitleDetail } from '@blockframes/contract/+state/contract.model';
+import { createContractPartyDetail, createContractTitleDetail } from '@blockframes/contract/+state/contract.model';
 import { ContractStatus, ContractTitleDetail } from '@blockframes/contract/+state/contract.firestore';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state/distribution-deal.service';
 import { createFee } from '@blockframes/utils/common-interfaces/price';
 import { ContractService } from '@blockframes/contract/+state/contract.service';
+import { ContractWithLastVersion, initContractWithVersion } from '@blockframes/contract/version/+state/contract-version.model';
 
 export interface SpreadsheetImportError {
   field: string;
@@ -1242,7 +1242,8 @@ export class ViewExtractedElementsComponent {
           }
 
           // Checks if sale already exists
-          if (await this.distributionDealService.existingDistributionDeal(movie.id, distributionDeal)) {
+          const existingDeal = await this.distributionDealService.getValue(distributionDeal.id)
+          if (existingDeal) {
             importErrors.errors.push({
               type: 'error',
               field: 'distributionDeal',
@@ -1287,7 +1288,7 @@ export class ViewExtractedElementsComponent {
     //////////////////
 
     //  CONTRACT VALIDATION
-    if (!this.contractService.validateContract(contract.doc)) {
+    if (!this.contractService.isContractValid(contract.doc)) {
       errors.push({
         type: 'error',
         field: 'contractId',
@@ -1508,7 +1509,7 @@ export class ViewExtractedElementsComponent {
     //////////////////
 
     //  CONTRACT VALIDATION
-    if (!this.contractService.validateContract(contract.doc)) {
+    if (!this.contractService.isContractValid(contract.doc)) {
       errors.push({
         type: 'error',
         field: 'contractId',
@@ -1578,7 +1579,6 @@ export class ViewExtractedElementsComponent {
 
     return titleDetails;
   }
-
 
   private clearDataSources() {
     this.moviesToCreate.data = [];
