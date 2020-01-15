@@ -36,6 +36,8 @@ describe('User can navigate to the movie tunnel page 7, complete the field, and 
       p4.fillComma();
       p4.assertMatChipExists(KEYWORD);
     });
+
+    // Go to movie-tunnel-8
     const p5: TunnelDistributionRightPage = p4.clickNext();
   });
 });
