@@ -773,6 +773,11 @@ const models: Model = {
     { 'slug': 'hd', 'label': 'HD' },
     { 'slug': '2k', 'label': '2K' },
     { 'slug': '4k', 'label': '4K' },
+    { 'slug': 'UHD', 'label': 'UHD' },
+    { 'slug': '3D', 'label': '3D' },
+    { 'slug': '3DSD', 'label': '3DSD' },
+    { 'slug': '3DHD', 'label': '3DHD' },
+    { 'slug': '3DUHD', 'label': '3DUHD' },
   ] as const,
   'SOUND_FORMAT': [
     { 'slug': 'mono', 'label': 'Mono' },

@@ -13,17 +13,6 @@ export const enum LicenseStatus {
   paid = 'paid'
 }
 
-export const enum FormatProfile {
-  unknown = 'unknown',
-  HD = 'HD',
-  SD = 'SD',
-  UHD = 'UHD',
-  _3D = '3D',
-  _3DSD = '3DSD',
-  _3DHD = '3DHD',
-  _3UHD = '3DUHD'
-}
-
 export interface HoldbackRaw<D> {
   terms: TermsRaw<D>;
   media: MediasSlug;
@@ -42,12 +31,11 @@ interface DistributionDealRaw<D> {
   assetLanguage: { [language in LanguagesSlug]: MovieLanguageSpecification };
   exclusive: boolean;
   titleInternalAlias: string;
-  formatProfile: FormatProfile;
   download: boolean;
   contractId?: string;
   reportingId?: string;
   deliveryIds?: string;
-  multidiffusion?: number;
+  multidiffusion?: TermsRaw<D>[];
   holdbacks?: HoldbackRaw<D>[];
   catchUp?: TermsRaw<D>;
 }
