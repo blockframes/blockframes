@@ -103,8 +103,17 @@ export function createMoviePromotionalElements(
   params: Partial<MoviePromotionalElements> = {}
 ): MoviePromotionalElements {
   return {
-    images: [],
     promotionalElements: [],
+    trailer: [],
+    banner: createPromotionalElement(params.banner),
+    poster: [],
+    still_photo: [],
+    presentation_deck: createPromotionalElement(params.presentation_deck),
+    scenario: createPromotionalElement(params.scenario),
+    promo_reel_link: createPromotionalElement(params.promo_reel_link),
+    screener_link: createPromotionalElement(params.screener_link),
+    trailer_link: createPromotionalElement(params.trailer_link),
+    teaser_link: createPromotionalElement(params.teaser_link),
     ...params
   };
 }
@@ -124,7 +133,6 @@ export function createPromotionalElement(
 ): PromotionalElement {
   return {
     label: '',
-    type: 'other',
     ...promotionalElement,
     media: createImgRef(promotionalElement.media)
   };
