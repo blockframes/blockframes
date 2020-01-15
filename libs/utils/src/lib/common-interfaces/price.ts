@@ -22,7 +22,7 @@ export function createPrice(price: Partial<Price> = {}): Price {
   const defaultCurrency = getCodeIfExists('MOVIE_CURRENCIES','euro' as ExtractCode<'MOVIE_CURRENCIES'>);
   return {
     amount: 0,
-    currency: defaultCurrency ? defaultCurrency : null,
+    currency: defaultCurrency ? defaultCurrency : null!,
     ...price
   }
 }

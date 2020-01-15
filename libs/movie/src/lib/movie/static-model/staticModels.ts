@@ -1,27 +1,27 @@
-interface Model {
-  GENRES: readonly SlugAndLabel[];
-  PROMOTIONAL_ELEMENT_TYPES: readonly SlugAndLabel[];
-  LEGAL_DOCUMENT_TYPES: readonly SlugAndLabel[];
-  RESOURCE_SIZES: readonly SlugAndLabel[];
-  RESOURCE_RATIOS: readonly SlugAndLabel[];
-  STAKEHOLDER_ROLES: readonly SlugAndLabel[];
-  STAKEHOLDER_DELIVERY_AUTHORIZATIONS: readonly SlugAndLabel[];
-  CREDIT_ROLES: readonly SlugAndLabel[];
-  MOVIE_STATUS: readonly SlugAndLabel[];
-  LANGUAGES: readonly SlugAndLabel[];
-  MOVIE_CURRENCIES: readonly CurrencyWithLabel[];
-  SELECTION_CATEGORIES: readonly SlugAndLabel[];
-  SCORING: readonly SlugAndLabel[];
-  RATING: readonly SlugAndLabel[];
-  COLORS: readonly SlugAndLabel[];
-  CERTIFICATIONS: readonly SlugAndLabel[];
-  TERRITORIES: readonly SlugAndLabel[];
-  MEDIAS: readonly SlugAndLabel[];
-  LEGAL_ROLES: readonly SlugAndLabel[];
-  MOVIE_FORMAT: readonly SlugAndLabel[];
-  MOVIE_FORMAT_QUALITY: readonly SlugAndLabel[],
-  SOUND_FORMAT: readonly SlugAndLabel[]
-}
+// interface Model {
+//   GENRES: readonly SlugAndLabel[];
+//   PROMOTIONAL_ELEMENT_TYPES: readonly SlugAndLabel[];
+//   LEGAL_DOCUMENT_TYPES: readonly SlugAndLabel[];
+//   RESOURCE_SIZES: readonly SlugAndLabel[];
+//   RESOURCE_RATIOS: readonly SlugAndLabel[];
+//   STAKEHOLDER_ROLES: readonly SlugAndLabel[];
+//   STAKEHOLDER_DELIVERY_AUTHORIZATIONS: readonly SlugAndLabel[];
+//   CREDIT_ROLES: readonly SlugAndLabel[];
+//   MOVIE_STATUS: readonly SlugAndLabel[];
+//   LANGUAGES: readonly SlugAndLabel[];
+//   MOVIE_CURRENCIES: readonly CurrencyWithLabel[];
+//   SELECTION_CATEGORIES: readonly SlugAndLabel[];
+//   SCORING: readonly SlugAndLabel[];
+//   RATING: readonly SlugAndLabel[];
+//   COLORS: readonly SlugAndLabel[];
+//   CERTIFICATIONS: readonly SlugAndLabel[];
+//   TERRITORIES: readonly SlugAndLabel[];
+//   MEDIAS: readonly SlugAndLabel[];
+//   LEGAL_ROLES: readonly SlugAndLabel[];
+//   MOVIE_FORMAT: readonly SlugAndLabel[];
+//   MOVIE_FORMAT_QUALITY: readonly SlugAndLabel[],
+//   SOUND_FORMAT: readonly SlugAndLabel[]
+// }
 
 export type Scope = keyof typeof models;
 
@@ -820,7 +820,7 @@ export const getCodeIfExists = <S extends Scope, code extends ExtractCode<S>>(
   item = (models[scope] as any[]).find(i => i.label.trim().toLowerCase() === str.trim().toLowerCase());
   if (item) { return item.slug }
 
-  return null;
+  return item;
 };
 
 // export const getCodeIfExists = (scope: Scope, str: string) => {
