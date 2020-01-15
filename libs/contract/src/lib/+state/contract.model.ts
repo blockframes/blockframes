@@ -9,8 +9,11 @@ import {
   ContractPartyDetailDocumentWithDates,
   ContractPartyDetailDocumentWithDatesDocument
 } from './contract.firestore';
+import { LegalDocument } from '@blockframes/movie/movie/+state/movie.firestore';
 import { createParty } from '@blockframes/utils/common-interfaces/identity';
 import { ContractVersion } from '../version/+state/contract-version.model';
+import { createImgRef } from '@blockframes/utils/image-uploader';
+
 
 export interface Contract extends ContractDocumentWithDates {
   lastVersion?: ContractVersion;
@@ -157,4 +160,21 @@ export function convertToContractDocument(params: Partial<Contract> = {}): Contr
     titleIds: params.titleIds || [],
     partyIds: params.partyIds ||[]
   };
+}
+
+export function createLegalDocuments() {
+  return {
+    chain_of_titles: [],
+    invoices: [],
+    bill : null
+  }
+}
+
+export function createLegalDocument(
+  legalDocument: Partial<LegalDocument> = {}
+): LegalDocument {
+  return { 
+    label: '',
+    media: createImgRef(legalDocument.media),
+  }
 }

@@ -62,7 +62,6 @@ const models = {
     { 'slug': 'screener_link', 'label': 'Screener Link' },
     { 'slug': 'trailer_link', 'label': 'Trailer Link' },
     { 'slug': 'teaser_link', 'label': 'Teaser Link' },
-    { 'slug': 'other', 'label': 'Other' },
   ] as const,
   'LEGAL_DOCUMENT_TYPES': [
     { 'slug': 'chain_of_titles', 'label': 'Chain Of Titles' },
