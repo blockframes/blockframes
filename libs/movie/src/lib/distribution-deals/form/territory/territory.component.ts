@@ -20,7 +20,7 @@ import {
 } from '@blockframes/movie/movie/static-model/staticModels';
 import { TERRITORIES_SLUG } from '@blockframes/movie/movie/static-model/types';
 
-type TerritoryType = 'territory' | 'territoryExcluded';
+export type TerritoryType = 'territory' | 'territoryExcluded';
 
 @Component({
   selector: '[form] distribution-form-territory',
