@@ -2,6 +2,7 @@ import { CatalogSearch } from './search.form';
 import { Movie } from '@blockframes/movie/movie/+state/movie.model';
 import { AFM_DISABLE } from '@env';
 import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
+import { ExtractCode, ExtractSlug } from '@blockframes/movie/moviestatic-model/staticModels';
 
 function productionYearBetween(movie: Movie, range: { from: number; to: number }): boolean {
   if (!range || !(range.from && range.to)) {
@@ -124,7 +125,7 @@ function media(movie: Movie, movieMediaType: string): boolean {
   if (!movieMediaType) {
     return true;
   }
-  return movie.salesAgentDeal.medias.includes(movieMediaType.toLowerCase());
+  return movie.salesAgentDeal.medias.includes(movieMediaType.toLowerCase() as any);
 }
 
 // TODO #1306 - remove when algolia is ready

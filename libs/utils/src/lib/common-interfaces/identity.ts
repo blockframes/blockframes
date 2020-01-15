@@ -32,7 +32,7 @@ interface IdentityRaw {
  * Use a more representative interface entity (like Credit, SalesAgent) instead of this one if possible
  */
 export interface Person extends IdentityRaw {
-  firstName: string,
+  firstName?: string,
   lastName?: string,
   avatar?: ImgRef,
 }
@@ -86,8 +86,8 @@ export function createStakeholder(params: Partial<Stakeholder> = {}): Stakeholde
 
 export function createParty(params: Partial<Party> = {}): Party {
   return {
-    ...createStakeholder(params),
-    role: '',
+    orgId: '',
+    role: null,
     showName: false,
     ...params,
   }

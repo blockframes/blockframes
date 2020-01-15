@@ -56,15 +56,15 @@ const models = {
     { 'slug': 'poster', 'label': 'Poster' },
     { 'slug': 'banner', 'label': 'Banner' },
     { 'slug': 'still_photo', 'label': 'Stills' },
-    { 'slug': 'presentation_deck', 'label': 'Presentation Deck' },
+    { 'slug': 'presentation_deck', 'label': 'Presentation deck' },
     { 'slug': 'scenario', 'label': 'Scenario' },
-    { 'slug': 'promo_reel_link', 'label': 'Promo Reel Link' },
-    { 'slug': 'screener_link', 'label': 'Screener Link' },
-    { 'slug': 'trailer_link', 'label': 'Trailer Link' },
-    { 'slug': 'teaser_link', 'label': 'Teaser Link' },
+    { 'slug': 'promo_reel_link', 'label': 'Promo reel link' },
+    { 'slug': 'screener_link', 'label': 'Screener link' },
+    { 'slug': 'trailer_link', 'label': 'Trailer link' },
+    { 'slug': 'teaser_link', 'label': 'Teaser link' },
   ] as const,
   'LEGAL_DOCUMENT_TYPES': [
-    { 'slug': 'chain_of_titles', 'label': 'Chain Of Titles' },
+    { 'slug': 'chain_of_titles', 'label': 'Chain of titles' },
     { 'slug': 'invoices', 'label': 'Invoices' },
     { 'slug': 'bill', 'label': 'Bill' },
   ] as const,
@@ -803,9 +803,17 @@ const models = {
  * Checks if given code (or slug) exists in above static models
  * @dev If it exists, return code else false
  * @param scope
- * @param str
+ * @param str Either label or slug from scope
  */
-export const getCodeIfExists = (scope: Scope, str: string) => {
+
+export type ExtractSlug<S extends Scope> = typeof models[S][number]['slug']
+export type ExtractLabel<S extends Scope> = typeof models[S][number]['label']
+export type ExtractCode<S extends Scope> = ExtractSlug<S> | ExtractLabel<S>
+export type GetCodeOrNull<S extends Scope, Code> = Code extends ExtractCode<S> ? ExtractSlug<S> : null;
+export const getCodeIfExists = <S extends Scope, code extends ExtractCode<S>>(
+  scope: S,
+  str: code
+): GetCodeOrNull<S, code> => {
   let item = (models[scope] as any[]).find(i => i.slug.trim().toLowerCase() === str.trim().toLowerCase());
   if (item) { return item.slug }
 
@@ -814,6 +822,16 @@ export const getCodeIfExists = (scope: Scope, str: string) => {
 
   return null;
 };
+
+// export const getCodeIfExists = (scope: Scope, str: string) => {
+//   let item = (models[scope] as any[]).find(i => i.slug.trim().toLowerCase() === str.trim().toLowerCase());
+//   if (item) { return item.slug }
+
+//   item = (models[scope] as any[]).find(i => i.label.trim().toLowerCase() === str.trim().toLowerCase());
+//   if (item) { return item.slug }
+
+//   return null;
+// };
 
 /**
  * Returns the label corresponding to a slug (ie:code).

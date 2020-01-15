@@ -1,4 +1,4 @@
-import { PromotionalElement } from '@blockframes/movie/types';
+import { PromotionalElement, MoviePromotionalElements } from '@blockframes/movie/types';
 import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
@@ -12,10 +12,14 @@ export class CatalogPromotionalElementsComponent {
   public elements: PromotionalElement[];
 
   @Input()
-  set promotionalElements(promotionalElements: PromotionalElement[]) {
+  set promotionalElements(promotionalElements: MoviePromotionalElements) {
     this.elements = [
-      ...promotionalElements.filter(el => el.type === 'reel' || el.type === 'scenario'),
-      ...promotionalElements.filter(el => el.type === 'screener' || el.type === 'trailer' || el.type === 'teaser')
+      promotionalElements.promo_reel_link,
+      promotionalElements.scenario,
+      promotionalElements.screener_link,
+      ...promotionalElements.trailer,
+      promotionalElements.trailer_link,
+      promotionalElements.teaser_link
     ]
   }
 }

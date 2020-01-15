@@ -1,6 +1,6 @@
 import { map } from 'rxjs/operators';
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
-import { Movie, PromotionalElement } from '@blockframes/movie';
+import { Movie, PromotionalElement, MoviePromotionalElements } from '@blockframes/movie';
 import { Component, OnInit, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MovieQuery } from '@blockframes/movie';
@@ -75,8 +75,8 @@ export class MarketplaceMovieViewComponent implements OnInit {
     this.snackbar.open(`${title} has been removed from your selection.`, 'close', { duration: 2000 });
   }
 
-  public getBackgroundImage(promotionalElements: PromotionalElement[]) {
-    const element = promotionalElements.find(promo => promo.type === 'pageBanner');
+  public getBackgroundImage(promotionalElements: MoviePromotionalElements) {
+    const element = promotionalElements.banner;
     /** TODO(issue#1309) create image directive for background image*/
     return element
     ? `url(${element.media.url})`

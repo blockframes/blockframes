@@ -26,7 +26,7 @@ export function createDistributionDeal(params: Partial<DistributionDeal> = {}): 
 export function createHoldback(params: Partial<Holdback> = {}): Holdback {
   return {
     terms: createTerms(params.terms),
-    media: '',
+    media: null,
     ...params
   };
 }
