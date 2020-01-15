@@ -19,7 +19,7 @@ export enum ContractStatus {
 }
 
 /** An interface for a single document to display versions subcollection count. */
-export interface VersionMeta {
+export interface VersionMeta extends ContractVersionDocumentWithDates{
   count: number;
 }
 
