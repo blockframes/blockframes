@@ -90,7 +90,7 @@ export function createMovieMain(params: Partial<MovieMain> = {}): MovieMain {
     originalLanguages: [],
     stakeholders: [],
     originCountries: [],
-    status: '',
+    status: null,
     customGenres: [],
     ...params,
     officialIds: createOfficialIds(params.officialIds),
@@ -146,16 +146,16 @@ export function createMovieSalesCast(params: Partial<MovieSalesCast> = {}): Movi
 export function createMovieOriginalRelease(params: Partial<MovieOriginalRelease> = {}): MovieOriginalRelease {
   return {
     date: null,
-    country: '',
+    country: null,
     ...params
   };
 }
 
 export function createMovieRating(params: Partial<MovieRating> = {}): MovieRating {
   return {
-    country: '',
+    country: null,
     reason: '',
-    system: '',
+    system: null,
     value: '',
     ...params
   };
@@ -165,12 +165,12 @@ export function createMovieSalesInfo(params: Partial<MovieSalesInfo> = {}): Movi
   return {
     certifications: [],
     broadcasterCoproducers: [],
-    scoring: '',
-    color: '',
+    scoring: null,
+    color: null,
     rating: [],
     originalRelease: [],
-    format: '',
-    formatQuality: '',
+    format: null,
+    formatQuality: null,
     soundFormat: '',
     physicalHVRelease: null,
     releaseYear: null,
