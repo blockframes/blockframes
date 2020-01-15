@@ -2,16 +2,16 @@
   <h4 title>TITLE INFORMATION</h4>
   <h1 subtitle>Keywords</h1>
   <section tunnel-form>
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title>Keywords</mat-card-title>
-      </mat-card-header>
-      <!-- keyword component -->
-      <mat-card-content>
+    <mat-accordion multi>
+      <mat-expansion-panel expanded>
+        <mat-expansion-panel-header>
+          <mat-panel-title>Keywords</mat-panel-title>
+        </mat-expansion-panel-header>
+              <!-- keyword component -->
         <form [formGroup]="promotionalDescription">
           <movie-form-keywords formArrayName="keywords"></movie-form-keywords>
         </form>
-      </mat-card-content>
-    </mat-card>
+      </mat-expansion-panel>
+    </mat-accordion>
   </section>
 </tunnel-page>
