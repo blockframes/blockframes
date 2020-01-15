@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ContractStore, ContractState } from './contract.store';
 import { getCodeIfExists } from '@blockframes/movie/moviestatic-model/staticModels';
 import { CollectionConfig, CollectionService, awaitSyncQuery, Query } from 'akita-ng-fire';
-import { Contract, ContractPartyDetail, createContractPartyDetail } from './contract.model';
+import { Contract, ContractPartyDetail, convertToContractDocument, createContractPartyDetail } from './contract.model';
 import orderBy from 'lodash/orderBy';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { tap, switchMap } from 'rxjs/operators';
@@ -10,6 +10,7 @@ import { ContractVersionService } from '../version/+state/contract-version.servi
 import { initContractWithVersion, ContractWithLastVersion } from '../version/+state/contract-version.model';
 import { LegalRolesSlug } from '@blockframes/movie/moviestatic-model/types';
 import { cleanModel } from '@blockframes/utils';
+import { ContractDocumentWithDates } from './contract.firestore';
 
 /** Get all the contracts where user organization is party. */
 const contractsListQuery = (orgId: string): Query<Contract[]> => ({
@@ -18,10 +19,10 @@ const contractsListQuery = (orgId: string): Query<Contract[]> => ({
 });
 
 /** Get the active contract and put his lastVersion in it. */
-const contractQuery = (contractId: string): Query<Contract> => ({
+const contractQuery = (contractId: string, lastVersionId: string): Query<Contract> => ({
   path: `contracts/${contractId}`,
   lastVersion: (contract: Contract) => ({
-    path: `contracts/${contractId}/versions/${contract.lastVersionId}`
+    path: `contracts/${contract.id}/versions/${lastVersionId}`
   })
 })
 
@@ -36,22 +37,28 @@ export class ContractService extends CollectionService<ContractState> {
   /** Sync the store with every contracts of the active organization. */
   public syncOrganizationContracts() {
     return this.organizationQuery.selectActiveId().pipe(
-      // Reset the store everytime the movieId changes
+      // Reset the store everytime the movieId changes.
       tap(_ => this.store.reset()),
       switchMap(orgId => awaitSyncQuery.call(this, contractsListQuery(orgId)))
     );
   }
 
-  /** Sync the store with the given contract. */
-  public syncContractQuery(contractId: string) {
-    // Reset the store everytime the contractId changes
+  /**
+   * Sync the store with the given contract.
+   * Create a specific query of contract with a new field (lastVersion)
+   * and set the new entity as active on the contracts store.
+   */
+  public async syncContractQuery(contractId: string) {
+    // Get the last version id.
+    const lastVersion = await this.contractVersionService.getLastVersionContract();
+    // Reset the store to clean the active contract.
     this.store.reset();
-    return awaitSyncQuery.call(this, contractQuery(contractId));
+    return awaitSyncQuery.call(this, contractQuery(contractId, lastVersion.id));
   }
 
   /**
-   * This convert the contract into a ContractDocumentWithDates
-   * to clean the unused properties in the database.
+   * This convert the Contract into a ContractDocumentWithDates
+   * to clean the unused properties in the database (lastVersion).
   */
   formatToFirestore(contract: Contract): ContractDocumentWithDates {
     return convertToContractDocument(contract);
@@ -113,7 +120,7 @@ export class ContractService extends CollectionService<ContractState> {
   /**
    * Various validation steps for validating a contract
    * Currently (dec 2019), only validate that there is a licensee and a licensor
-   * 
+   *
    * This function validate and append data to contracts by looking on its parents contracts
    * @param contract
    */
@@ -188,8 +195,12 @@ export class ContractService extends CollectionService<ContractState> {
     return contract.parties.filter(p => p.party.role === getCodeIfExists('LEGAL_ROLES', legalRole));
   }
 
-  /** Check if the organization is party of the contract. */
-  public isPartyOfContract(organizationId: string, contract: Contract) {
+  /**
+   * Takes an organization id and a contract to check
+   * if the organization is party of this contract.
+   * Returns true if so.
+   */
+  public isPartyOfContract(organizationId: string, contract: Contract): boolean {
     return contract.parties.some(partyDetails => partyDetails.party.orgId === organizationId)
   }
 }

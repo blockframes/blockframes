@@ -7,22 +7,14 @@ import {
   ContractStatus,
   ContractTitleDetail,
   ContractPartyDetailDocumentWithDates,
-  ContractPartyDetailDocumentWithDatesDocument,
-  ContractVersionDocumentWithDates,
-  ContractDocument
+  ContractPartyDetailDocumentWithDatesDocument
 } from './contract.firestore';
 import { createParty } from '@blockframes/utils/common-interfaces/identity';
-import { Movie } from '@blockframes/movie/movie+state/movie.model';
+import { ContractVersion } from '../version/+state/contract-version.model';
 
 export interface Contract extends ContractDocumentWithDates {
   lastVersion?: ContractVersion;
 };
-
-export interface ContractVersion extends ContractVersionDocumentWithDates {
-  movies?: Movie[];
-}
-
-export type ContractVersion = ContractVersionDocumentWithDates;
 
 export type ContractPartyDetail = ContractPartyDetailDocumentWithDates;
 
@@ -42,7 +34,6 @@ export function createContract(params: Partial<Contract> = {}): Contract {
     parties: [],
     titleIds: [],
     partyIds: [],
-    lastVersionId: '',
     ...params
   };
 }

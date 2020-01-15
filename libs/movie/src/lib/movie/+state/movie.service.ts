@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { OrganizationQuery, Organization } from '@blockframes/organization';
+import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import {
   CollectionConfig,
   CollectionService,
@@ -14,18 +14,7 @@ import { AuthQuery } from '@blockframes/auth';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 import { ContractQuery } from '@blockframes/contract/+state/contract.query';
 import { Contract } from '@blockframes/contract/+state/contract.model';
-
-/**
- * @see #483
- * This method is used before pushing data on db
- * to prevent "Unsupported field value: undefined" errors.
- * Doing JSON.parse(JSON.stringify(data)) clones object and
- * removes undefined fields and empty arrays.
- * This methods also removes readonly settings on objects coming from Akita
- */
-export function cleanModel<T>(data: T): T {
-  return JSON.parse(JSON.stringify(data));
-}
+import { cleanModel } from '@blockframes/utils/helpers';
 
 /** Query movies from the contract with distributions deals from the last version. */
 const movieListContractQuery = (contract: Contract, movieIds: string[]): Query<Movie[]> => ({
@@ -52,12 +41,12 @@ export class MovieService extends CollectionService<MovieState> {
 
   /** Gets every movieIds of the user active organization and sync them. */
   public syncOrgMovies() {
-    return this.organizationQuery
-      .selectActive()
-      .pipe(switchMap(org => this.syncManyDocs(org.movieIds)));
+    return this.organizationQuery.selectActive().pipe(
+      switchMap(org => this.syncManyDocs(org.movieIds))
+    );
   }
 
-  /** Gets every movies Id from contract and sync them if they belong to active. */
+  /** Gets every movies Id from contract and sync them if they belong to active organization. */
   public syncContractMovies() {
     return this.contractQuery.selectActive().pipe(
       // Reset the store everytime the movieId changes.
@@ -130,8 +119,7 @@ export class MovieService extends CollectionService<MovieState> {
   public async getFromInternalRef(internalRef: string): Promise<Movie> {
     const movieSnapShot = await this.db
       .collection('movies', ref => ref.where('main.internalRef', '==', internalRef))
-      .get()
-      .toPromise();
+      .get().toPromise();
 
     return movieSnapShot.docs.length ? createMovie(movieSnapShot.docs[0].data()) : undefined;
   }

@@ -61,8 +61,7 @@ interface ContractRaw<D> {
   childContractIds?: string[],
   parties: ContractPartyDetailRaw<D>[],
   titleIds: string[],
-  partyIds: string[],
-  lastVersionId: string
+  partyIds: string[]
 }
 
 /*
