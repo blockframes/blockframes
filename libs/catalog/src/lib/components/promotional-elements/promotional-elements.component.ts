@@ -11,15 +11,5 @@ export class CatalogPromotionalElementsComponent {
   @Output() promoReelOpened = new EventEmitter();
   public elements: PromotionalElement[];
 
-  @Input()
-  set promotionalElements(promotionalElements: MoviePromotionalElements) {
-    this.elements = [
-      promotionalElements.promo_reel_link,
-      promotionalElements.scenario,
-      promotionalElements.screener_link,
-      ...promotionalElements.trailer,
-      promotionalElements.trailer_link,
-      promotionalElements.teaser_link
-    ]
-  }
+  @Input() promotionalElements: MoviePromotionalElements
 }

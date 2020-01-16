@@ -85,20 +85,6 @@ export interface Prize {
   premiere?: PremiereType,
 }
 
-export interface LegalDocuments {
-  chain_of_titles: LegalDocument[],
-  invoices: LegalDocument[],
-  bill : LegalDocument
-}
-
-export interface LegalDocument {
-  label: string,
-  media: ImgRef,
-  language?: LanguagesSlug,
-  country?: TerritoriesSlug,
-}
-
-
 export interface PromotionalElement {
   label: string,
   size?: ResourceSizesSlug,
