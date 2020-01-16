@@ -130,16 +130,19 @@ export class ContractService extends CollectionService<ContractState> {
 
 
     /**
-     * @dev If any parent contracts of this current contract have parties with childRole defined,
+     * @dev If any parent contracts of this current contract have parties with childRoles defined,
      * We take thoses parties of the parent contracts to put them as regular parties of the current contract.
      */
     const promises = contract.parentContractIds.map(id => this.getValue(id));
     const parentContracts = await Promise.all(promises);
-    parentContracts.forEach(c => {
-      const partiesHavingRoleForChilds = c.parties.filter(p => p.childRole && p.childRole.length);
-      partiesHavingRoleForChilds.forEach(p => {
-        const partyToAddOnCurrentContract = createContractPartyDetail({ party: p.party });
-        contract.parties.push(partyToAddOnCurrentContract);
+    parentContracts.forEach( parentContract => {
+      const partiesHavingRoleForChilds = parentContract.parties.filter(p => p.childRoles && p.childRoles.length);
+      partiesHavingRoleForChilds.forEach(parentPartyDetails => {
+        parentPartyDetails.childRoles.forEach( childRole => {
+          const partyDetails = createContractPartyDetail({ party: parentPartyDetails.party });
+          partyDetails.party.role = childRole;
+          contract.parties.push(partyDetails);
+        });
       });
     });
 

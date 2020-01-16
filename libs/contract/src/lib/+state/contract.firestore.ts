@@ -33,12 +33,12 @@ interface ContractPartyDetailRaw<D> {
   signDate?: D,
   status: ContractStatus,
   /**
-   * Legal role of this party for child contracts.
-   * @dev Use this to set which role this party will have for child contracts
+   * Legal role(s) of this party for child contracts.
+   * @dev Use this to set which role(s) this party will have for child contracts
    * For example, the licensor for a movie can have to approve sub-sells of the license for this movie.
    * A more explicit naming would have been: rolesForChildContracts
    */
-  childRole?: LegalRolesSlug,
+  childRoles?: LegalRolesSlug[],
 }
 
 /**
