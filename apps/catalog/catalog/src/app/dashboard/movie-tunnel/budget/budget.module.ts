@@ -10,7 +10,7 @@ import { BudgetComponent } from './budget.component';
 
 
 // Material
-import { MatExpansionModule } from '@angular/material/expansion';
+import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
   declarations: [BudgetComponent],
@@ -21,7 +21,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MovieFormBudgetModule,
     MovieFormSalesInfoModule,
     // Material
-    MatExpansionModule,
+    MatCardModule,
     // Route
     RouterModule.forChild([{ path: '', component: BudgetComponent }])
   ]
