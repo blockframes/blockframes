@@ -1,8 +1,10 @@
 import { FormEntity, FormList, yearValidators } from '@blockframes/utils';
-import { MovieMain, Credit, createMovieMain, Movie, createTitle } from '../../+state';
+import { MovieMain, Credit, createMovieMain, Movie, createTitle, createStoreConfig } from '../../+state';
 import { Validators, FormControl } from '@angular/forms';
 import { createCredit, Stakeholder, createStakeholder } from '@blockframes/utils/common-interfaces/identity';
 import { isSlugValidator } from '@blockframes/utils/form/validators/validators';
+
+// CREDIT
 
 function createCreditFormControl(credit?: Partial<Credit>) {
   const { firstName, lastName, role } = createCredit(credit);
@@ -21,6 +23,8 @@ export class MovieCreditForm extends FormEntity<CreditFormControl> {
   }
 }
 
+// DIRECTOR
+
 export class DirectorForm extends FormEntity<DirectorFormControl> {
   constructor(director?: Partial<Credit>) {
     super(createDirectorFormControl(director))
@@ -37,6 +41,8 @@ function createDirectorFormControl(director?: Partial<Credit>) {
 
 type DirectorFormControl = ReturnType<typeof createDirectorFormControl>;
 
+// STAKEHOLDERS
+
 export class StakeholdersForm extends FormEntity<StakeholdersControl> {
   constructor(stakeholder?: Partial<Stakeholder>) {
     super(createStakeholdersControl(stakeholder))
@@ -52,6 +58,7 @@ function createStakeholdersControl(stakeholder?: Partial<Stakeholder>) {
 
 type StakeholdersControl = ReturnType<typeof createStakeholdersControl>;
 
+// TITLE
 
 export class TitleForm extends FormEntity<TitleFormControl> {
   constructor(title?: Movie['main']['title']) {
@@ -68,6 +75,24 @@ function createTitleFormControl(title?: Partial<Movie['main']['title']>) {
 }
 
 type TitleFormControl = ReturnType<typeof createTitleFormControl>;
+
+// STORE CONFIG
+
+export class StoreConfigForm extends FormEntity<TitleFormControl> {
+  constructor(storeConfig?: Partial<Movie['main']['storeConfig']>) {
+    super(createStoreConfigFormControl(storeConfig));
+  }
+}
+
+function createStoreConfigFormControl(storeConfig?: Partial<Movie['main']['storeConfig']>) {
+  const { display, storeType } = createStoreConfig(storeConfig);
+  return {
+    display: new FormControl(display),
+    storeType: new FormControl(storeType),
+  }
+}
+
+type StoreConfigControl = ReturnType<typeof createStoreConfigFormControl>;
 
 function createMovieMainControls(main : Partial<MovieMain> = {}) {
   const entity = createMovieMain(main);
@@ -88,7 +113,8 @@ function createMovieMainControls(main : Partial<MovieMain> = {}) {
     workType: new FormControl(entity.workType),
     storeConfig: new StoreConfigForm(entity.storeConfig),
     customGenres: FormList.factory(entity.customGenres),
-    workType: new FormControl(entity.workType)
+    workType: new FormControl(entity.workType),
+    storeConfig: new StoreConfigForm(entity.storeConfig)
   }
 }
 
