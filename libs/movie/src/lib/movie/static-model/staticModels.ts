@@ -798,15 +798,6 @@ export const getCodeIfExists = <S extends Scope, code extends ExtractCode<S>>(
   return null as any;
 };
 
-// export const getCodeIfExists = (scope: Scope, str: string) => {
-//   let item = (models[scope] as any[]).find(i => i.slug.trim().toLowerCase() === str.trim().toLowerCase());
-//   if (item) { return item.slug }
-
-//   item = (models[scope] as any[]).find(i => i.label.trim().toLowerCase() === str.trim().toLowerCase());
-//   if (item) { return item.slug }
-
-//   return null;
-// };
 
 /**
  * Returns the label corresponding to a slug (ie:code).

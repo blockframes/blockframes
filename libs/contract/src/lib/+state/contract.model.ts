@@ -1,5 +1,5 @@
 import { createTerms } from '@blockframes/utils/common-interfaces/terms';
-import { getCodeIfExists } from '@blockframes/movie/movie/static-model/staticModels';
+import { getCodeIfExists, ExtractCode } from '@blockframes/movie/movie/static-model/staticModels';
 import { LegalRolesSlug } from '@blockframes/movie/movie/static-model/types';
 import { createPrice } from '@blockframes/utils/common-interfaces/price';
 import {
@@ -144,7 +144,7 @@ export function getContractParties(
   contract: Contract,
   legalRole: LegalRolesSlug
 ): ContractPartyDetail[] {
-  return contract.parties.filter(p => p.party.role === getCodeIfExists('LEGAL_ROLES', legalRole));
+  return contract.parties.filter(p => p.party.role === getCodeIfExists('LEGAL_ROLES', legalRole as ExtractCode<'LEGAL_ROLES'>));
 }
 
 export function buildChainOfTitle() {

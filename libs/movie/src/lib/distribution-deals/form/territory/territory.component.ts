@@ -16,7 +16,9 @@ import { DistributionDealForm } from '../distribution-deal.form';
 import {
   getCodeIfExists,
   default as staticModels,
-  SlugAndLabel
+  SlugAndLabel,
+  ExtractCode,
+  ExtractSlug,
 } from '@blockframes/movie/movie/static-model/staticModels';
 import { TERRITORIES_SLUG } from '@blockframes/movie/movie/static-model/types';
 
@@ -117,7 +119,7 @@ export class DistributionDealTerritoryComponent {
   private isValidTerritoryAndNoDuplicate(type: TerritoryType, territory: string): boolean {
     return (
       !this.value[type].includes(territory) &&
-      TERRITORIES_SLUG.includes(getCodeIfExists('TERRITORIES', territory)) &&
+      TERRITORIES_SLUG.includes(getCodeIfExists('TERRITORIES', territory as ExtractCode<'TERRITORIES'>)) &&
       !this.isInThisOther(type, territory)
     );
   }
@@ -138,7 +140,7 @@ export class DistributionDealTerritoryComponent {
       // Add the territory
       if ((value || '') && this.isValidTerritoryAndNoDuplicate(type, value)) {
         this.value[type].push(value);
-        this.form.addTerritory(value, type);
+        this.form.addTerritory(value as ExtractSlug<'TERRITORIES'>, type);
       }
 
       // Reset the input value
