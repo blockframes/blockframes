@@ -23,7 +23,7 @@ import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { formatCredits } from '@blockframes/utils/spreadsheet/format';
 import { ImageUploader, cleanModel } from '@blockframes/utils';
 import { SSF$Date } from 'ssf/types';
-import { getCodeIfExists } from '../../../static-model/staticModels';
+import { getCodeIfExists, ExtractCode } from '../../../static-model/staticModels';
 import { SSF } from 'xlsx';
 import { MovieLanguageTypes, PremiereType } from '@blockframes/movie/movie/+state/movie.firestore';
 import { createCredit, createStakeholder } from '@blockframes/utils/common-interfaces/identity';
@@ -240,7 +240,7 @@ export class ViewExtractedElementsComponent {
         // @todo #643 for territories: handle "World excl. USA, Japan, France, Germany and Belgium"
         if (spreadSheetRow[SpreadSheetMovie.territories]) {
           movie.salesAgentDeal.territories = [];
-          spreadSheetRow[SpreadSheetMovie.territories].split(this.separator).forEach((c: string) => {
+          spreadSheetRow[SpreadSheetMovie.territories].split(this.separator).forEach((c: ExtractCode<'TERRITORIES'>) => {
             const territory = getCodeIfExists('TERRITORIES', c);
             if (territory) {
               movie.salesAgentDeal.territories.push(territory);
@@ -259,7 +259,7 @@ export class ViewExtractedElementsComponent {
         // MEDIAS (Mandate Medias)
         if (spreadSheetRow[SpreadSheetMovie.medias]) {
           movie.salesAgentDeal.medias = [];
-          spreadSheetRow[SpreadSheetMovie.medias].split(';').forEach((c: string) => {
+          spreadSheetRow[SpreadSheetMovie.medias].split(';').forEach((c: ExtractCode<'MEDIAS'>) => {
             const media = getCodeIfExists('MEDIAS', c);
             if (media) {
               movie.salesAgentDeal.medias.push(media);
@@ -298,7 +298,7 @@ export class ViewExtractedElementsComponent {
         }
 
         // Total Run Time
-        if(spreadSheetRow[SpreadSheetMovie.length]) {
+        if (spreadSheetRow[SpreadSheetMovie.length]) {
           if (!isNaN(Number(spreadSheetRow[SpreadSheetMovie.length]))) {
             movie.main.totalRunTime = parseInt(spreadSheetRow[SpreadSheetMovie.length], 10);
           } else {
@@ -312,7 +312,7 @@ export class ViewExtractedElementsComponent {
           spreadSheetRow[SpreadSheetMovie.stakeholdersWithRole].split(this.separator).forEach((p: string) => {
             const stakeHolderParts = p.split(',');
             const stakeHolder = createStakeholder({ displayName: stakeHolderParts[0] });
-            const role = getCodeIfExists('STAKEHOLDER_ROLES', stakeHolderParts[1] ? stakeHolderParts[1] : '');
+            const role = getCodeIfExists('STAKEHOLDER_ROLES', stakeHolderParts[1] as ExtractCode<'STAKEHOLDER_ROLES'>);
             if (role) {
               stakeHolder.role = role;
             }
@@ -341,7 +341,7 @@ export class ViewExtractedElementsComponent {
         // ORIGIN COUNTRIES (Countries of Origin)
         if (spreadSheetRow[SpreadSheetMovie.originCountries]) {
           movie.main.originCountries = [];
-          spreadSheetRow[SpreadSheetMovie.originCountries].split(this.separator).forEach((c: string) => {
+          spreadSheetRow[SpreadSheetMovie.originCountries].split(this.separator).forEach((c: ExtractCode<'TERRITORIES'>) => {
             const country = getCodeIfExists('TERRITORIES', c);
             if (country) {
               movie.main.originCountries.push(country);
@@ -371,10 +371,10 @@ export class ViewExtractedElementsComponent {
         if (spreadSheetRow[SpreadSheetMovie.rating]) {
           spreadSheetRow[SpreadSheetMovie.rating].split(this.separator).forEach((r: string) => {
             const ratingParts = r.split(',');
-            const country = getCodeIfExists('TERRITORIES', ratingParts[0]);
+            const country = getCodeIfExists('TERRITORIES', ratingParts[0] as ExtractCode<'TERRITORIES'>);
             const movieRating = createMovieRating({ value: ratingParts[1] });
             // @todo #1562 missing system & reason (optionnal)
-            if(country) {
+            if (country) {
               movieRating.country = country;
             }
 
@@ -384,7 +384,7 @@ export class ViewExtractedElementsComponent {
 
         // CERTIFICATIONS (Certifications)
         if (spreadSheetRow[SpreadSheetMovie.certifications]) {
-          spreadSheetRow[SpreadSheetMovie.certifications].split(this.separator).forEach((c: string) => {
+          spreadSheetRow[SpreadSheetMovie.certifications].split(this.separator).forEach((c: ExtractCode<'CERTIFICATIONS'>) => {
             const certification = getCodeIfExists('CERTIFICATIONS', c);
             if (certification) {
               movie.salesInfo.certifications.push(certification);
@@ -415,15 +415,15 @@ export class ViewExtractedElementsComponent {
         // ORIGIN COUNTRY RELEASE DATE (Release date in Origin Country)
         if (spreadSheetRow[SpreadSheetMovie.originCountryReleaseDate]) {
 
-          spreadSheetRow[SpreadSheetMovie.originCountryReleaseDate].split(this.separator).forEach((o: string) => {
+          spreadSheetRow[SpreadSheetMovie.originCountryReleaseDate].split(this.separator).forEach((o: ExtractCode<'TERRITORIES'>) => {
             const originalReleaseParts = o.split(',');
             const originalRelease = createMovieOriginalRelease({ date: originalReleaseParts[2] });
-            const country = getCodeIfExists('TERRITORIES', originalReleaseParts[0] ? originalReleaseParts[0] : '');
+            const country = getCodeIfExists('TERRITORIES', originalReleaseParts[0] as ExtractCode<'TERRITORIES'>);
             if (country) {
               originalRelease.country = country;
             }
 
-            const media = getCodeIfExists('MEDIAS', originalReleaseParts[1] ? originalReleaseParts[1] : '');
+            const media = getCodeIfExists('MEDIAS', originalReleaseParts[1] as ExtractCode<'MEDIAS'>);
             if (media) {
               originalRelease.media = media;
             }
@@ -436,7 +436,7 @@ export class ViewExtractedElementsComponent {
         // GENRES (Genres)
         if (spreadSheetRow[SpreadSheetMovie.genres]) {
           movie.main.genres = [];
-          spreadSheetRow[SpreadSheetMovie.genres].split(this.separator).forEach((g: string) => {
+          spreadSheetRow[SpreadSheetMovie.genres].split(this.separator).forEach((g: ExtractCode<'GENRES'>) => {
             const genre = getCodeIfExists('GENRES', g);
             if (genre) {
               movie.main.genres.push(genre);
@@ -471,7 +471,7 @@ export class ViewExtractedElementsComponent {
                     prize.premiere = PremiereType[prizeParts[3].trim().toLowerCase()];
                     break;
                 }
-                
+
               }
               if (prizeParts.length >= 5) {
                 prize.logo = await this.imageUploader.upload(prizeParts[4].trim());
@@ -497,7 +497,7 @@ export class ViewExtractedElementsComponent {
         // LANGUAGES (Original Language(s))
         if (spreadSheetRow[SpreadSheetMovie.languages]) {
           movie.main.originalLanguages = []; // @todo #1562 add to movie.versionInfo & check #1589
-          spreadSheetRow[SpreadSheetMovie.languages].split(this.separator).forEach((g: string) => {
+          spreadSheetRow[SpreadSheetMovie.languages].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
             const language = getCodeIfExists('LANGUAGES', g);
             if (language) {
               movie.main.originalLanguages.push(language);
@@ -517,7 +517,7 @@ export class ViewExtractedElementsComponent {
         // @todo #1562 Wait for  #1411
         if (spreadSheetRow[SpreadSheetMovie.dubbings]) {
           movie.versionInfo.dubbings = [];
-          spreadSheetRow[SpreadSheetMovie.dubbings].split(this.separator).forEach((g: string) => {
+          spreadSheetRow[SpreadSheetMovie.dubbings].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
             const dubbing = getCodeIfExists('LANGUAGES', g);
             if (dubbing) {
               movie.versionInfo.dubbings.push(dubbing);
@@ -537,7 +537,7 @@ export class ViewExtractedElementsComponent {
         // @todo #1562 Wait for  #1411
         if (spreadSheetRow[SpreadSheetMovie.subtitles]) {
           movie.versionInfo.subtitles = [];
-          spreadSheetRow[SpreadSheetMovie.subtitles].split(this.separator).forEach((g: string) => {
+          spreadSheetRow[SpreadSheetMovie.subtitles].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
             const subtitle = getCodeIfExists('LANGUAGES', g);
             if (subtitle) {
               movie.versionInfo.subtitles.push(subtitle);
@@ -556,7 +556,7 @@ export class ViewExtractedElementsComponent {
         // Captions (Avalaible closed-captioned)
         if (spreadSheetRow[SpreadSheetMovie.captions]) {
           //movie.versionInfo.captions = [];
-          spreadSheetRow[SpreadSheetMovie.captions].split(this.separator).forEach((g: string) => {
+          spreadSheetRow[SpreadSheetMovie.captions].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
             const caption = getCodeIfExists('LANGUAGES', g);
             if (caption) {
               // @todo #1562 Wait for  #1411
@@ -577,10 +577,8 @@ export class ViewExtractedElementsComponent {
           const promotionalElement = createPromotionalElement({
             label: 'Screener link',
             media: spreadSheetRow[SpreadSheetMovie.screenerLink],
-            type: 'screener'
           });
-
-          movie.promotionalElements.promotionalElements.push(promotionalElement);
+          movie.promotionalElements.screener_link = promotionalElement;
         } else {
           importErrors.errors.push({
             type: 'warning',
@@ -596,10 +594,9 @@ export class ViewExtractedElementsComponent {
           const promotionalElement = createPromotionalElement({
             label: 'Promo reel link',
             media: spreadSheetRow[SpreadSheetMovie.promoReelLink],
-            type: 'reel'
           });
 
-          movie.promotionalElements.promotionalElements.push(promotionalElement);
+          movie.promotionalElements.promo_reel_link = promotionalElement;
         } else {
           importErrors.errors.push({
             type: 'warning',
@@ -615,10 +612,9 @@ export class ViewExtractedElementsComponent {
           const promotionalElement = createPromotionalElement({
             label: 'Trailer link',
             media: spreadSheetRow[SpreadSheetMovie.trailerLink],
-            type: 'trailer'
           });
 
-          movie.promotionalElements.promotionalElements.push(promotionalElement);
+          movie.promotionalElements.trailer_link = promotionalElement;
         } else {
           importErrors.errors.push({
             type: 'warning',
@@ -634,10 +630,9 @@ export class ViewExtractedElementsComponent {
           const promotionalElement = createPromotionalElement({
             label: 'Pitch teaser link',
             media: spreadSheetRow[SpreadSheetMovie.pitchTeaserLink],
-            type: 'teaser'
           });
 
-          movie.promotionalElements.promotionalElements.push(promotionalElement);
+          movie.promotionalElements.teaser_link = promotionalElement;
         } else {
           importErrors.errors.push({
             type: 'warning',
@@ -653,10 +648,9 @@ export class ViewExtractedElementsComponent {
           const promotionalElement = createPromotionalElement({
             label: 'Scenario link',
             media: spreadSheetRow[SpreadSheetMovie.scenarioLink],
-            type: 'scenario'
           });
 
-          movie.promotionalElements.promotionalElements.push(promotionalElement);
+          movie.promotionalElements.scenario = promotionalElement;
         } else {
           importErrors.errors.push({
             type: 'warning',
@@ -668,9 +662,9 @@ export class ViewExtractedElementsComponent {
         }
 
         // PRODUCTION STATUS
-        if (spreadSheetRow[SpreadSheetMovie.productionStatus]) { 
+        if (spreadSheetRow[SpreadSheetMovie.productionStatus]) {
           const movieStatus = getCodeIfExists('MOVIE_STATUS', spreadSheetRow[SpreadSheetMovie.productionStatus]);
-          if(movieStatus){
+          if (movieStatus) {
             movie.main.status = movieStatus;
           } else {
             importErrors.errors.push({
@@ -691,7 +685,7 @@ export class ViewExtractedElementsComponent {
             hint: 'Edit corresponding sheet field.'
           });
         }
-        
+
         // BUDGET
         if (spreadSheetRow[SpreadSheetMovie.budget]) {
           movie.budget.totalBudget = spreadSheetRow[SpreadSheetMovie.budget];
@@ -700,18 +694,17 @@ export class ViewExtractedElementsComponent {
         // IMAGE BANNIERE LINK
         if (spreadSheetRow[SpreadSheetMovie.bannerLink]) {
           const promotionalElement = createPromotionalElement({
-            label: 'Banner link',
+            label: 'Banner',
             media: await this.imageUploader.upload(spreadSheetRow[SpreadSheetMovie.bannerLink]),
-            type: 'banner',
             ratio: 'rectangle'
           });
 
-          movie.promotionalElements.promotionalElements.push(promotionalElement);
+          movie.promotionalElements.banner = promotionalElement;
         } else {
           importErrors.errors.push({
             type: 'warning',
             field: 'promotionalElements',
-            name: 'Banner link',
+            name: 'Banner',
             reason: 'Optional field is missing',
             hint: 'Edit corresponding sheet field.'
           });
@@ -1155,7 +1148,7 @@ export class ViewExtractedElementsComponent {
           // TERRITORIES (Mandate Territories)
           if (spreadSheetRow[SpreadSheetDistributionDeal.territories]) {
             distributionDeal.territory = [];
-            spreadSheetRow[SpreadSheetDistributionDeal.territories].split(this.separator).forEach((c: string) => {
+            spreadSheetRow[SpreadSheetDistributionDeal.territories].split(this.separator).forEach((c: ExtractCode<'TERRITORIES'>) => {
               const territory = getCodeIfExists('TERRITORIES', c);
               if (territory) {
                 distributionDeal.territory.push(territory);
@@ -1174,7 +1167,7 @@ export class ViewExtractedElementsComponent {
           // TERRITORIES EXCLUDED
           if (spreadSheetRow[SpreadSheetDistributionDeal.territoriesExcluded]) {
             distributionDeal.territoryExcluded = [];
-            spreadSheetRow[SpreadSheetDistributionDeal.territoriesExcluded].split(this.separator).forEach((c: string) => {
+            spreadSheetRow[SpreadSheetDistributionDeal.territoriesExcluded].split(this.separator).forEach((c: ExtractCode<'TERRITORIES'>) => {
               const territory = getCodeIfExists('TERRITORIES', c);
               if (territory) {
                 distributionDeal.territoryExcluded.push(territory);
@@ -1193,7 +1186,7 @@ export class ViewExtractedElementsComponent {
           // MEDIAS (Mandate Medias)
           if (spreadSheetRow[SpreadSheetDistributionDeal.licenseType]) {
             distributionDeal.licenseType = [];
-            spreadSheetRow[SpreadSheetDistributionDeal.licenseType].split(this.separator).forEach((c: string) => {
+            spreadSheetRow[SpreadSheetDistributionDeal.licenseType].split(this.separator).forEach((c: ExtractCode<'MEDIAS'>) => {
               const media = getCodeIfExists('MEDIAS', c);
               if (media) {
                 distributionDeal.licenseType.push(media);
@@ -1211,7 +1204,7 @@ export class ViewExtractedElementsComponent {
 
           // DUBS (Authorized language(s))
           if (spreadSheetRow[SpreadSheetDistributionDeal.dubbings]) {
-            spreadSheetRow[SpreadSheetDistributionDeal.dubbings].split(this.separator).forEach((g: string) => {
+            spreadSheetRow[SpreadSheetDistributionDeal.dubbings].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
               const dubbing = getCodeIfExists('LANGUAGES', g);
               if (dubbing) {
                 distributionDeal.assetLanguage = populateMovieLanguageSpecification(
@@ -1234,7 +1227,7 @@ export class ViewExtractedElementsComponent {
 
           // SUBTILES (Available subtitle(s))
           if (spreadSheetRow[SpreadSheetDistributionDeal.subtitles]) {
-            spreadSheetRow[SpreadSheetDistributionDeal.subtitles].split(this.separator).forEach((g: string) => {
+            spreadSheetRow[SpreadSheetDistributionDeal.subtitles].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
               const subtitle = getCodeIfExists('LANGUAGES', g);
               if (!!subtitle) {
                 distributionDeal.assetLanguage = populateMovieLanguageSpecification(
@@ -1256,7 +1249,7 @@ export class ViewExtractedElementsComponent {
 
           // CAPTIONS (Available subtitle(s))
           if (spreadSheetRow[SpreadSheetDistributionDeal.captions]) {
-            spreadSheetRow[SpreadSheetDistributionDeal.captions].split(this.separator).forEach((g: string) => {
+            spreadSheetRow[SpreadSheetDistributionDeal.captions].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
               const caption = getCodeIfExists('LANGUAGES', g);
               if (!!caption) {
                 distributionDeal.assetLanguage = populateMovieLanguageSpecification(

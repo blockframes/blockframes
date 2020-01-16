@@ -4,6 +4,8 @@ import { default as staticModel } from '../../../static-model/staticModels'
 import { startWith, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
+type TERRITORIES = typeof staticModel.TERRITORIES;
+
 @Component({
   selector: '[form] movie-form-origin-country',
   templateUrl: './origin-country.component.html',
@@ -14,13 +16,13 @@ export class OriginCountryComponent implements OnInit {
   @Input() form: FormControl;
   countries = staticModel.TERRITORIES;
 
-  filteredCountries$: Observable<typeof staticModel.TERRITORIES>;
+  filteredCountries$: Observable<TERRITORIES>;
 
   ngOnInit() {
     this.filteredCountries$ = this.form.valueChanges
       .pipe(
         startWith(''),
-        map(country => country ? this._filter(country) : this.countries.slice())
+        map(country => country ? this._filter(country) : this.countries)
       );
   }
 
@@ -31,8 +33,8 @@ export class OriginCountryComponent implements OnInit {
     }
   }
 
-  private _filter(country: string) {
+  private _filter(country: string): TERRITORIES {
     const filterValue = country.toLowerCase();
-    return this.countries.filter(({ label }) => label.toLowerCase().indexOf(filterValue) === 0)
+    return this.countries.filter(({ label }) => label.toLowerCase().indexOf(filterValue) === 0) as any
   }
 }

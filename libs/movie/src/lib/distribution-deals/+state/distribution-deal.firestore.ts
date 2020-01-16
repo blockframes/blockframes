@@ -28,7 +28,7 @@ interface DistributionDealRaw<D> {
   terms: TermsRaw<D>;
   territory: TerritoriesSlug[];
   territoryExcluded: TerritoriesSlug[];
-  assetLanguage: { [language in LanguagesSlug]: MovieLanguageSpecification };
+  assetLanguage: Partial<{ [language in LanguagesSlug]: MovieLanguageSpecification }>;
   exclusive: boolean;
   titleInternalAlias: string;
   download: boolean;

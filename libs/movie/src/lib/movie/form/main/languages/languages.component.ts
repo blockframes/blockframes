@@ -1,8 +1,10 @@
 import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { MovieMainControl } from '../main.form';
-import { default as staticModel } from '../../../static-model/staticModels';
+import { default as staticModel, ExtractLabel } from '../../../static-model/staticModels';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { startWith, map, switchMap } from 'rxjs/operators';
+
+type Language = typeof staticModel.LANGUAGES;
 
 @Component({
   selector: '[form] movie-form-languages',
@@ -16,13 +18,13 @@ export class LanguagesComponent implements OnInit {
   private focusIndex = new BehaviorSubject(0);
   languages = staticModel.LANGUAGES;
 
-  filteredLanguages$: Observable<typeof staticModel.TERRITORIES>;
+  filteredLanguages$: Observable<Language>;
 
   ngOnInit() {
     this.filteredLanguages$ = this.focusIndex.pipe(
       // Use startWith inside switchMap to reinitialize when new focus
       switchMap(i => this.form.at(i).valueChanges.pipe(startWith(''))),
-      map((language: string) => language ? this._filter(language) : this.languages.slice())
+      map((language: string) => language ? this._filter(language) : this.languages)
     );
   }
 
@@ -38,9 +40,9 @@ export class LanguagesComponent implements OnInit {
     }
   }
 
-  private _filter(language: string) {
+  private _filter(language: string): Language {
     const filterValue = language.toLowerCase();
-    return this.languages.filter(({ label }) => label.toLowerCase().indexOf(filterValue) === 0)
+    return this.languages.filter(({ label }) => label.toLowerCase().indexOf(filterValue) === 0) as any
   }
 
 }
