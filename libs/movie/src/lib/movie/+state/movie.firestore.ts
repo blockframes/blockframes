@@ -186,7 +186,7 @@ export interface MovieMain {
   shortSynopsis?: string,
   workType?: WorkType;
   storeConfig?: StoreConfig;
-  totalRunTime?: number;
+  totalRunTime?: number | string;
 }
 
 interface MovieSalesInfoRaw<D> {

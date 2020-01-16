@@ -26,7 +26,7 @@ import { SSF$Date } from 'ssf/types';
 import { getCodeIfExists } from '../../../static-model/staticModels';
 import { SSF } from 'xlsx';
 import { MovieLanguageTypes, PremiereType } from '@blockframes/movie/movie/+state/movie.firestore';
-import { createCredit } from '@blockframes/utils/common-interfaces/identity';
+import { createCredit, createStakeholder } from '@blockframes/utils/common-interfaces/identity';
 import { DistributionDeal, createDistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
 import { createContractPartyDetail, createContractTitleDetail } from '@blockframes/contract/+state/contract.model';
 import { ContractStatus, ContractTitleDetail } from '@blockframes/contract/+state/contract.firestore';
@@ -76,8 +76,7 @@ enum SpreadSheetMovie {
   isan,
   internationalTitle,
   length,
-  productionCompanies,
-  broadcasterCoproducers,
+  stakeholdersWithRole,
   color,
   originCountries,
   europeanQualification,
@@ -85,7 +84,6 @@ enum SpreadSheetMovie {
   certifications,
   cast,
   shortSynopsis,
-  internationalPremiere,
   originCountryReleaseDate,
   genres,
   festivalPrizes,
@@ -94,6 +92,7 @@ enum SpreadSheetMovie {
   languages,
   dubbings,
   subtitles,
+  captions,
   screenerLink,
   promoReelLink,
   trailerLink,
@@ -101,7 +100,6 @@ enum SpreadSheetMovie {
   scenarioLink,
   productionStatus,
   budget,
-  theatricalRelease,
   bannerLink,
   salesAgentName,
   salesAgentImage,
@@ -279,7 +277,7 @@ export class ViewExtractedElementsComponent {
 
         // DIRECTORS (Director(s))
         if (spreadSheetRow[SpreadSheetMovie.directors]) {
-          movie.main.directors = formatCredits(spreadSheetRow[SpreadSheetMovie.directors], this.separator);
+          movie.main.directors = formatCredits(spreadSheetRow[SpreadSheetMovie.directors], this.separator, ',');
         }
 
         // POSTER (Poster)
@@ -300,23 +298,26 @@ export class ViewExtractedElementsComponent {
         }
 
         // Total Run Time
-        if (!isNaN(Number(spreadSheetRow[SpreadSheetMovie.length]))) {
-          movie.main.totalRunTime = parseInt(spreadSheetRow[SpreadSheetMovie.length], 10);
+        if(spreadSheetRow[SpreadSheetMovie.length]) {
+          if (!isNaN(Number(spreadSheetRow[SpreadSheetMovie.length]))) {
+            movie.main.totalRunTime = parseInt(spreadSheetRow[SpreadSheetMovie.length], 10);
+          } else {
+            movie.main.totalRunTime = spreadSheetRow[SpreadSheetMovie.length]; // Exemple value: TBC
+          }
         }
 
         // PRODUCTION COMPANIES (Production Companie(s))
-        if (spreadSheetRow[SpreadSheetMovie.productionCompanies]) {
+        if (spreadSheetRow[SpreadSheetMovie.stakeholdersWithRole]) {
           movie.main.stakeholders = [];
-          spreadSheetRow[SpreadSheetMovie.productionCompanies].split(this.separator).forEach((p: string) => {
-            movie.main.stakeholders.push({ displayName: p });
-          });
-        }
+          spreadSheetRow[SpreadSheetMovie.stakeholdersWithRole].split(this.separator).forEach((p: string) => {
+            const stakeHolderParts = p.split(',');
+            const stakeHolder = createStakeholder({ displayName: stakeHolderParts[0] });
+            const role = getCodeIfExists('STAKEHOLDER_ROLES', stakeHolderParts[1] ? stakeHolderParts[1] : '');
+            if (role) {
+              stakeHolder.role = role;
+            }
 
-        // BROADCASTER COPRODUCERS (TV / Platform coproducer(s))
-        if (spreadSheetRow[SpreadSheetMovie.broadcasterCoproducers]) {
-          movie.salesInfo.broadcasterCoproducers = [];
-          spreadSheetRow[SpreadSheetMovie.broadcasterCoproducers].split(this.separator).forEach((p: string) => {
-            movie.salesInfo.broadcasterCoproducers.push(p);
+            movie.main.stakeholders.push(stakeHolder);
           });
         }
 
@@ -357,6 +358,7 @@ export class ViewExtractedElementsComponent {
         }
 
         // CERTIFICATIONS (European Qualification)
+        movie.salesInfo.certifications = [];
         if (spreadSheetRow[SpreadSheetMovie.europeanQualification] &&
           spreadSheetRow[SpreadSheetMovie.europeanQualification].toLowerCase() === 'yes') {
           const certification = getCodeIfExists('CERTIFICATIONS', 'europeanQualification');
@@ -367,13 +369,21 @@ export class ViewExtractedElementsComponent {
 
         // PEGI (Rating)
         if (spreadSheetRow[SpreadSheetMovie.rating]) {
-          const movieRating = createMovieRating({ value: spreadSheetRow[SpreadSheetMovie.rating] });
-          movie.salesInfo.rating.push(movieRating);
+          spreadSheetRow[SpreadSheetMovie.rating].split(this.separator).forEach((r: string) => {
+            const ratingParts = r.split(',');
+            const country = getCodeIfExists('TERRITORIES', ratingParts[0]);
+            const movieRating = createMovieRating({ value: ratingParts[1] });
+            // @todo #1562 missing system & reason (optionnal)
+            if(country) {
+              movieRating.country = country;
+            }
+
+            movie.salesInfo.rating.push(movieRating);
+          });
         }
 
         // CERTIFICATIONS (Certifications)
         if (spreadSheetRow[SpreadSheetMovie.certifications]) {
-          movie.salesInfo.certifications = [];
           spreadSheetRow[SpreadSheetMovie.certifications].split(this.separator).forEach((c: string) => {
             const certification = getCodeIfExists('CERTIFICATIONS', c);
             if (certification) {
@@ -402,29 +412,25 @@ export class ViewExtractedElementsComponent {
           movie.main.shortSynopsis = spreadSheetRow[SpreadSheetMovie.shortSynopsis];
         }
 
-        // INTERNATIONAL PREMIERE (International Premiere )
-        const spreadSheetPremiere = spreadSheetRow[SpreadSheetMovie.internationalPremiere];
-        if (spreadSheetPremiere) {
-          const isPremiereYearNumber = !isNaN(Number(spreadSheetPremiere.split(',')[1]));
-          if (spreadSheetPremiere.split(this.separator).length === 2 && isPremiereYearNumber) {
-            const prize = createPrize();
-
-            prize.name = spreadSheetPremiere.split(',')[0];
-            prize.year = Number(spreadSheetPremiere.split(',')[1]);
-            prize.premiere = PremiereType.internationnal;
-
-            movie.festivalPrizes.prizes.push(prize);
-          }
-        }
-
         // ORIGIN COUNTRY RELEASE DATE (Release date in Origin Country)
         if (spreadSheetRow[SpreadSheetMovie.originCountryReleaseDate]) {
-          const date = spreadSheetRow[SpreadSheetMovie.originCountryReleaseDate];
 
-          movie.salesInfo.originalRelease = [
-            ...movie.salesInfo.originalRelease,
-            ...movie.main.originCountries.map(country => (createMovieOriginalRelease({ date, country })))
-          ]
+          spreadSheetRow[SpreadSheetMovie.originCountryReleaseDate].split(this.separator).forEach((o: string) => {
+            const originalReleaseParts = o.split(',');
+            const originalRelease = createMovieOriginalRelease({ date: originalReleaseParts[2] });
+            const country = getCodeIfExists('TERRITORIES', originalReleaseParts[0] ? originalReleaseParts[0] : '');
+            if (country) {
+              originalRelease.country = country;
+            }
+
+            const media = getCodeIfExists('MEDIAS', originalReleaseParts[1] ? originalReleaseParts[1] : '');
+            if (media) {
+              originalRelease.media = media;
+            }
+
+
+            movie.salesInfo.originalRelease.push(originalRelease);
+          });
         }
 
         // GENRES (Genres)
@@ -450,13 +456,25 @@ export class ViewExtractedElementsComponent {
         if (spreadSheetRow[SpreadSheetMovie.festivalPrizes]) {
           movie.festivalPrizes.prizes = [];
           spreadSheetRow[SpreadSheetMovie.festivalPrizes].split(this.separator).forEach(async (p: string) => {
-            if (p.split(',').length >= 3) {
+            const prizeParts = p.split(',');
+            if (prizeParts.length >= 3) {
               const prize = createPrize();
-              prize.name = p.split(',')[0];
-              prize.year = parseInt(p.split(',')[1], 10);
-              prize.prize = p.split(',')[2];
-              if (p.split(',').length >= 4) {
-                prize.logo = await this.imageUploader.upload(p.split(',')[3].trim());
+              prize.name = prizeParts[0];
+              prize.year = parseInt(prizeParts[1], 10);
+              prize.prize = prizeParts[2];
+              if (prizeParts.length >= 4) {
+                switch (prizeParts[3].trim()) {
+                  case 'International Premiere':
+                    prize.premiere = PremiereType.internationnal;
+                    break;
+                  default:
+                    prize.premiere = PremiereType[prizeParts[3].trim().toLowerCase()];
+                    break;
+                }
+                
+              }
+              if (prizeParts.length >= 5) {
+                prize.logo = await this.imageUploader.upload(prizeParts[4].trim());
               }
               movie.festivalPrizes.prizes.push(prize);
             }
@@ -478,7 +496,7 @@ export class ViewExtractedElementsComponent {
 
         // LANGUAGES (Original Language(s))
         if (spreadSheetRow[SpreadSheetMovie.languages]) {
-          movie.main.originalLanguages = [];
+          movie.main.originalLanguages = []; // @todo #1562 add to movie.versionInfo & check #1589
           spreadSheetRow[SpreadSheetMovie.languages].split(this.separator).forEach((g: string) => {
             const language = getCodeIfExists('LANGUAGES', g);
             if (language) {
@@ -496,6 +514,7 @@ export class ViewExtractedElementsComponent {
         }
 
         // DUBS (Available dubbing(s))
+        // @todo #1562 Wait for  #1411
         if (spreadSheetRow[SpreadSheetMovie.dubbings]) {
           movie.versionInfo.dubbings = [];
           spreadSheetRow[SpreadSheetMovie.dubbings].split(this.separator).forEach((g: string) => {
@@ -515,12 +534,32 @@ export class ViewExtractedElementsComponent {
         }
 
         // SUBTILES (Available subtitle(s))
+        // @todo #1562 Wait for  #1411
         if (spreadSheetRow[SpreadSheetMovie.subtitles]) {
           movie.versionInfo.subtitles = [];
           spreadSheetRow[SpreadSheetMovie.subtitles].split(this.separator).forEach((g: string) => {
             const subtitle = getCodeIfExists('LANGUAGES', g);
             if (subtitle) {
               movie.versionInfo.subtitles.push(subtitle);
+            } else {
+              importErrors.errors.push({
+                type: 'warning',
+                field: 'versionInfo.subtitle',
+                name: "Subtitles",
+                reason: `${g} not found in languages list`,
+                hint: 'Edit corresponding sheet field.'
+              });
+            }
+          });
+        }
+
+        // Captions (Avalaible closed-captioned)
+        if (spreadSheetRow[SpreadSheetMovie.captions]) {
+          //movie.versionInfo.captions = [];
+          spreadSheetRow[SpreadSheetMovie.captions].split(this.separator).forEach((g: string) => {
+            const caption = getCodeIfExists('LANGUAGES', g);
+            if (caption) {
+              // @todo #1562 Wait for  #1411
             } else {
               importErrors.errors.push({
                 type: 'warning',
@@ -629,24 +668,33 @@ export class ViewExtractedElementsComponent {
         }
 
         // PRODUCTION STATUS
-        if (spreadSheetRow[SpreadSheetMovie.productionStatus]) {
-          movie.main.status = spreadSheetRow[SpreadSheetMovie.productionStatus];
+        if (spreadSheetRow[SpreadSheetMovie.productionStatus]) { 
+          const movieStatus = getCodeIfExists('MOVIE_STATUS', spreadSheetRow[SpreadSheetMovie.productionStatus]);
+          if(movieStatus){
+            movie.main.status = movieStatus;
+          } else {
+            importErrors.errors.push({
+              type: 'warning',
+              field: 'movie.main.status',
+              name: 'Production status',
+              reason: 'Production status could not be parsed',
+              hint: 'Edit corresponding sheet field.'
+            });
+          }
         } else {
-          movie.main.status = 'finished';
+          movie.main.status = getCodeIfExists('MOVIE_STATUS', 'finished');
+          importErrors.errors.push({
+            type: 'warning',
+            field: 'movie.main.status',
+            name: 'Production status',
+            reason: 'Production status not found, assumed "Completed"',
+            hint: 'Edit corresponding sheet field.'
+          });
         }
-
+        
         // BUDGET
         if (spreadSheetRow[SpreadSheetMovie.budget]) {
           movie.budget.totalBudget = spreadSheetRow[SpreadSheetMovie.budget];
-        }
-
-        // THEATRICAL RELEASE
-        if (spreadSheetRow[SpreadSheetMovie.theatricalRelease]) {
-          if (spreadSheetRow[SpreadSheetMovie.theatricalRelease].toLowerCase() === 'yes') {
-            movie.salesInfo.originalRelease.forEach(r => {
-              r.media = getCodeIfExists('MEDIAS', 'theatrical');
-            })
-          }
         }
 
         // IMAGE BANNIERE LINK
@@ -851,17 +899,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'warning',
         field: 'main.stakeholders',
-        name: "Production Companie(s)",
-        reason: 'Optional field is missing',
-        hint: 'Edit corresponding sheet field.'
-      });
-    }
-
-    if (movie.salesInfo.broadcasterCoproducers.length === 0) {
-      errors.push({
-        type: 'warning',
-        field: 'main.salesInfo.broadcasterCoproducers',
-        name: "TV / Platform coproducer(s)",
+        name: "Stakeholder(s)",
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -996,6 +1034,18 @@ export class ViewExtractedElementsComponent {
         hint: 'Edit corresponding sheet field.'
       });
     }
+
+    /*
+    @todo #1562
+    if (movie.versionInfo.captions.length === 0) {
+      errors.push({
+        type: 'warning',
+        field: 'versionInfo.captions',
+        name: "Captions",
+        reason: 'Optional field is missing',
+        hint: 'Edit corresponding sheet field.'
+      });
+    }*/
 
     if (movie.budget.totalBudget === undefined) {
       errors.push({
