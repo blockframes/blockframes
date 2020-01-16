@@ -1,48 +1,52 @@
 <!--  Genre -->
 <ng-container *ngFor="let control of genresForm.controls; let i = index; let last = last">
-  <mat-form-field appearance="outline">
-    <mat-label>Original Genre</mat-label>
-    <mat-select [formControl]="control">
-      <mat-option [value]="genre.slug" *ngFor="let genre of genres">
-        {{ genre.label }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
-  <!-- Add / Delete -->
-  <div *ngIf="!last" fxLayout="row" fxLayoutAlign="center center">
-    <button mat-mini-fab color="warn" (click)="genresForm.removeAt(i)" aria-label="Remove a director form">
-      <mat-icon>delete</mat-icon>
-    </button>
-    <span class="mat-caption">Delete additional genre</span>
-  </div>
-  <div *ngIf="last" fxLayout="row" fxLayoutAlign="center center">
-    <button mat-mini-fab color="primary" (click)="genresForm.add()" aria-label="Remove a director form">
-      <mat-icon>add</mat-icon>
-    </button>
-    <span class="mat-caption">Add another genre</span>
-  </div>
+  <article fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
+    <mat-form-field appearance="outline">
+      <mat-label>Original Genre</mat-label>
+      <mat-select [formControl]="control">
+        <mat-option [value]="genre.slug" *ngFor="let genre of genres">
+          {{ genre.label }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <!-- Add / Delete -->
+    <div class="action" *ngIf="!last" fxLayout="row" fxLayoutAlign="center center" fxLayoutAlign="24px">
+      <button mat-mini-fab color="warn" (click)="genresForm.removeAt(i)" aria-label="Remove a director form">
+        <mat-icon>delete</mat-icon>
+      </button>
+      <span class="mat-caption">Delete additional genre</span>
+    </div>
+    <div class="action" *ngIf="last" fxLayout="row" fxLayoutAlign="center center">
+      <button mat-mini-fab color="primary" (click)="genresForm.add()" aria-label="Remove a director form">
+        <mat-icon>add</mat-icon>
+      </button>
+      <span class="mat-caption">Add another genre</span>
+    </div>
+  </article>
 </ng-container>
 
 <!--  Custom Genre -->
 <ng-container *ngIf="hasOtherGenre$ | async">
   <p>Please specify the other genres</p>
   <ng-container *ngFor="let control of customGenreForm.controls; let i = index; let last = last">
-    <mat-form-field appearance="outline">
-      <mat-label>Other Genre</mat-label>
-      <input matInput [formControl]="control" type="text"/>
-    </mat-form-field>
-    <!-- Add / Delete -->
-    <div *ngIf="!last" fxLayout="row" fxLayoutAlign="center center">
-      <button mat-mini-fab color="warn" (click)="customGenreForm.removeAt(i)" aria-label="Remove a director form">
-        <mat-icon>delete</mat-icon>
-      </button>
-      <span class="mat-caption">Delete additional genre</span>
-    </div>
-    <div *ngIf="last" fxLayout="row" fxLayoutAlign="center center">
-      <button mat-mini-fab color="primary" (click)="customGenreForm.add()" aria-label="Remove a director form">
-        <mat-icon>add</mat-icon>
-      </button>
-      <span class="mat-caption">Add another genre</span>
-    </div>
+    <article fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
+      <mat-form-field appearance="outline">
+        <mat-label>Other Genre</mat-label>
+        <input matInput [formControl]="control" type="text" />
+      </mat-form-field>
+      <!-- Add / Delete -->
+      <div class="action" *ngIf="!last" fxLayout="row" fxLayoutAlign="center">
+        <button mat-mini-fab color="warn" (click)="customGenreForm.removeAt(i)" aria-label="Remove a director form">
+          <mat-icon>delete</mat-icon>
+        </button>
+        <span class="mat-caption">Delete additional genre</span>
+      </div>
+      <div class="action" *ngIf="last" fxLayout="row" fxLayoutAlign="center">
+        <button mat-mini-fab color="primary" (click)="customGenreForm.add()" aria-label="Remove a director form">
+          <mat-icon>add</mat-icon>
+        </button>
+        <span class="mat-caption">Add another genre</span>
+      </div>
+    </article>
   </ng-container>
 </ng-container>
