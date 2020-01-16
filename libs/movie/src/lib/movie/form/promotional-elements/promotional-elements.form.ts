@@ -26,16 +26,16 @@ export class MoviePromotionalElementForm extends FormEntity<PromotionalElementCo
 function createMoviePromotionalElementsControls(promotionalElements?: Partial<MoviePromotionalElements>) {
   const entity = createMoviePromotionalElements(promotionalElements);
   return {
-    trailer: FormList.factory(entity.trailer),
-    banner: new MoviePromotionalElementForm(),
-    poster: FormList.factory(entity.poster),
-    still_photo: FormList.factory(entity.still_photo),
-    presentation_deck: new MoviePromotionalElementForm(),
-    scenario: new MoviePromotionalElementForm(),
-    promo_reel_link: new MoviePromotionalElementForm(),
-    screener_link: new MoviePromotionalElementForm(),
-    trailer_link: new MoviePromotionalElementForm(),
-    teaser_link: new MoviePromotionalElementForm(),
+    trailer: FormList.factory(entity.trailer, el => new MoviePromotionalElementForm(el)),
+    banner: new MoviePromotionalElementForm(entity.banner),
+    poster: FormList.factory(entity.poster, el => new MoviePromotionalElementForm(el)),
+    still_photo: FormList.factory(entity.still_photo, el => new MoviePromotionalElementForm(el)),
+    presentation_deck: new MoviePromotionalElementForm(entity.presentation_deck),
+    scenario: new MoviePromotionalElementForm(entity.scenario),
+    promo_reel_link: new MoviePromotionalElementForm(entity.promo_reel_link),
+    screener_link: new MoviePromotionalElementForm(entity.screener_link),
+    trailer_link: new MoviePromotionalElementForm(entity.trailer_link),
+    teaser_link: new MoviePromotionalElementForm(entity.teaser_link),
   }
 }
 
