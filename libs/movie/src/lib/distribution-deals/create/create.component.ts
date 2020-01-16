@@ -336,8 +336,6 @@ export class DistributionDealCreateComponent implements OnInit, OnDestroy {
           }
 
           // @TODO#1022
-          // @see https://www.notion.so/cascade8/Workflows-843369bf4c7e43958d5cf27da57fb91d
-          // and wait new distributionDeal model especially for the languages part (#1052)
         })
       )
       .subscribe();
