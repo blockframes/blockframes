@@ -730,7 +730,7 @@ const models = {
   'LEGAL_ROLES': [
     { 'slug': 'service-provider', 'label': 'Service provider' },
     { 'slug': 'licensor', 'label': 'Licensor' },
-    { 'slug': 'sub-licensor', 'label': 'Sub Licensor'},
+    { 'slug': 'sub-licensor', 'label': 'Sub Licensor' },
     { 'slug': 'licensee', 'label': 'Licensee' },
     { 'slug': 'seller', 'label': 'Seller' },
     { 'slug': 'lender', 'label': 'Lender' },
@@ -833,4 +833,14 @@ export const enum App {
   main = 'main',
   delivery = 'delivery',
   catalog = 'catalog'
+}
+
+/**
+ * Check if data passed into array have at lease one item belonging to scope
+ * @param array 
+ * @param scope 
+ * @param key 
+ */
+export function hasSlug<S extends Scope, code extends ExtractSlug<S>>(array: string[], scope: Scope, key: code): boolean {
+  return array.includes(getCodeIfExists(scope, key));
 }
