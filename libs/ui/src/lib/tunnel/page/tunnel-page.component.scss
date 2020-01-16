@@ -3,6 +3,8 @@ section {
   a.mat-button {
     text-decoration: none;
   }
+  // We want the same margin on the mat cards through all of the tunnel pages
+  // https://angular.io/guide/component-styles#view-encapsulation
   mat-card {
     margin-bottom: 20px;
   }

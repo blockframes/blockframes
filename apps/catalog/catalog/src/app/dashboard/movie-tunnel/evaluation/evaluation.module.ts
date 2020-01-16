@@ -10,7 +10,7 @@ import { EvaluationComponent } from './evaluation.component';
 
 
 // Material
-import { MatExpansionModule } from '@angular/material/expansion';
+import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
   declarations: [EvaluationComponent],
@@ -21,7 +21,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MovieFormScoringModule,
     MovieFormSalesInfoModule,
     // Material
-    MatExpansionModule,
+    MatCardModule,
     // Route
     RouterModule.forChild([{ path: '', component: EvaluationComponent }])
   ]

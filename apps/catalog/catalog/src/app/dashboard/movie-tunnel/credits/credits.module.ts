@@ -10,7 +10,7 @@ import { MovieFormStakeholdersModule } from '@blockframes/movie/movie/form/main/
 import { MovieFormSalesCastModule } from '@blockframes/movie/movie/form/sales-cast/sales-cast.module';
 
 // Material
-import { MatExpansionModule } from '@angular/material/expansion';
+import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
     declarations: [CreditsComponent],
@@ -23,7 +23,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
       MovieFormStakeholdersModule,
       MovieFormSalesCastModule,
       // Material
-      MatExpansionModule,
+      MatCardModule,
       // Route
       RouterModule.forChild([{ path: '', component: CreditsComponent }])
     ]
