@@ -1,6 +1,5 @@
 import {
   MovieBudget,
-  MovieDocumentWithDates as Movie,
   MovieFestivalPrizes,
   MovieMain,
   MoviePromotionalDescription,
@@ -23,10 +22,12 @@ import {
   MovieOfficialIds,
   MovieOriginalRelease,
   MovieRating,
+  MovieDocumentWithDates
 } from './movie.firestore';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 import { LanguagesSlug } from '../static-model';
 import { createRange } from '@blockframes/utils/common-interfaces/range';
+import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
 
 // Export for other files
 export {
@@ -47,9 +48,12 @@ export {
   MovieVersionInfo,
   Prize,
   MovieSalesInfoDocumentWithDates as MovieSalesInfo,
-  MovieSalesAgentDealDocumentWithDates as MovieSalesAgentDeal,
-  MovieDocumentWithDates as Movie
+  MovieSalesAgentDealDocumentWithDates as MovieSalesAgentDeal
 } from './movie.firestore';
+
+export interface Movie extends MovieDocumentWithDates {
+  distributionDeals?: DistributionDeal[]
+}
 
 /** A factory function that creates Movie */
 export function createMovie(params: Partial<Movie> = {}): Movie {

@@ -29,7 +29,7 @@ export class ContractVersionService extends CollectionService<ContractVersionSta
   }
 
   /**
-   *
+   * Add a new version of the contract.
    * @param contractId
    * @param contractVersion
    */
@@ -62,12 +62,13 @@ export class ContractVersionService extends CollectionService<ContractVersionSta
   }
 
   /**
-   * Returns last contract version associated with contractId
-   * @param contractId
+   * Returns last contract version.
+   * @param contractId if not provided, get the last version of active contract.
    */
-  public async getLastVersionContract(): Promise<ContractVersion> {
-    const _meta = await this.getValue('_meta') as VersionMeta;
-    const lastVersion = this.getValue(_meta.count.toString());
+  public async getLastVersionContract(contractId?: string): Promise<ContractVersion> {
+    const subCollectionPath = contractId ? `contracts/${contractId}/versions/` : '';
+    const { count } = await this.getValue(subCollectionPath + '_meta') as VersionMeta
+    const lastVersion = this.getValue(subCollectionPath + count.toString());
 
     return lastVersion;
   }

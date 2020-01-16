@@ -7,13 +7,14 @@ import {
   ContractStatus,
   ContractTitleDetail,
   ContractPartyDetailDocumentWithDates,
-  ContractPartyDetailDocumentWithDatesDocument,
-  ContractVersionDocumentWithDates
+  ContractPartyDetailDocumentWithDatesDocument
 } from './contract.firestore';
 import { createParty } from '@blockframes/utils/common-interfaces/identity';
-export type Contract = ContractDocumentWithDates;
+import { ContractVersion } from '../version/+state/contract-version.model';
 
-export type ContractVersion = ContractVersionDocumentWithDates;
+export interface Contract extends ContractDocumentWithDates {
+  lastVersion?: ContractVersion;
+};
 
 export type ContractPartyDetail = ContractPartyDetailDocumentWithDates;
 
@@ -146,4 +147,14 @@ export function getContractParties(
 export function buildChainOfTitle() {
   // ie:  calculate contract prices and fees for each parents
   // @todo #1397 implement this
+}
+
+/** Function to convert a Contract into a ContractDocument. */
+export function convertToContractDocument(params: Partial<Contract> = {}): ContractDocumentWithDates {
+  return {
+    id: params.id,
+    parties: params.parties || [],
+    titleIds: params.titleIds || [],
+    partyIds: params.partyIds ||[]
+  };
 }
