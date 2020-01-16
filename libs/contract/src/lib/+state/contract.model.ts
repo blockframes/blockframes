@@ -9,7 +9,7 @@ import {
   ContractPartyDetailDocumentWithDates,
   ContractPartyDetailDocumentWithDatesDocument
 } from './contract.firestore';
-import { LegalDocument } from '@blockframes/movie/movie/+state/movie.firestore';
+import { LegalDocument } from '@blockframes/contract/+state/contract.firestore';
 import { createParty } from '@blockframes/utils/common-interfaces/identity';
 import { ContractVersion } from '../version/+state/contract-version.model';
 import { createImgRef } from '@blockframes/utils/image-uploader';
