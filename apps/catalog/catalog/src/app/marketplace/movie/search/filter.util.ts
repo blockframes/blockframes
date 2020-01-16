@@ -23,15 +23,15 @@ function hasLanguage(
   let original = true;
   let dubbed = true;
   let subtitle = true;
-  if (language.original) {
-    original = movie.main.originalLanguages.includes(language.name.toLowerCase() as any);
+/*   if (language.original) {
+    original = movie.main.languages.includes(language.name.toLowerCase());
   }
   if (language.dubbed) {
     dubbed = movie.versionInfo.dubbings.includes(language.name.toLowerCase());
   }
   if (language.subtitle) {
     subtitle = movie.versionInfo.subtitles.includes(language.name.toLowerCase());
-  }
+  } */
   return original && dubbed && subtitle;
 }
 

@@ -245,7 +245,7 @@ interface MovieRaw<D> {
   promotionalDescription: MoviePromotionalDescription;
   salesCast: MovieSalesCast;
   salesInfo: MovieSalesInfoRaw<D>;
-  versionInfo: MovieVersionInfo;
+  versionInfo: Partial<{ [language in LanguagesSlug]: MovieLanguageSpecification }>;
   festivalPrizes: MovieFestivalPrizes;
   salesAgentDeal: MovieSalesAgentDealRaw<D>;
   budget: MovieBudget;
