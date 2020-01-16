@@ -231,23 +231,10 @@ interface DocumentMeta {
 
 /** Generic interface of a Movie */
 interface MovieRaw<D> {
-  // @todo #643 add new fields to Draw.io
   _type: 'movies';
   _meta?: DocumentMeta;
   id: string;
-
-  // @todo #643 not main movie attributes WIP
   deliveryIds: string[];
-  ipId?: string;
-  directorNote?: string;
-  producerNote?: string;
-  goalBudget?: number; // @todo #1052 remove ?
-  movieCurrency?: string;
-  fundedBudget?: number;
-  breakeven?: number;
-  backendProfit?: number;
-  potentialRevenues?: number;
-  selectionCategories?: string;
 
   // Sections
   main: MovieMain;
