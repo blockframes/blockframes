@@ -1,0 +1,29 @@
+<tunnel-page>
+  <h4 title>LICENSED RIGHTS</h4>
+  <h1 subtitle>Previous deals</h1>
+  <section tunnel-form>
+    <!-- TODO(MF) render the number of deals -->
+    <h2>Deal #1</h2>
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title></mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div fxLayout="row" fxLayoutAlign="space-between start" class="full-width">
+          <span class="mat-body">Exclusivity</span>
+          <mat-slide-toggle [formControl]="distributionDealExclusiveControl"></mat-slide-toggle>
+        </div>          
+        <contract-form-party-name [form]="contract"></contract-form-party-name>
+      </mat-card-content>
+    </mat-card>
+    <h3 class="mat-body">Territories to this deal</h3>
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Territories</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <distribution-form-territory [form]="distributionDeal"></distribution-form-territory>
+      </mat-card-content>
+    </mat-card>
+  </section>
+</tunnel-page>

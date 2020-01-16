@@ -1,0 +1,54 @@
+<form [formGroup]="form">
+  <mat-form-field>
+    <mat-chip-list #includedChips aria-label="Included Territories">
+        <mat-chip
+          *ngFor="let includedTerritory of value.territory"
+          color="primary"
+          removable
+          (removed)="removeTerritory(includedTerritory, 'territory')">
+          {{includedTerritory}}
+          <mat-icon matChipRemove>cancel</mat-icon>
+        </mat-chip>
+        <input
+          placeholder="Territories"
+          #includedInput
+          [formControl]="controls.territory"
+          [matAutocomplete]="includedAuto"
+          [matChipInputFor]="includedChips"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+          matChipInputAddOnBlur
+          (matChipInputTokenEnd)="addTerritory($event, 'territory')">
+      </mat-chip-list>
+      <mat-autocomplete #includedAuto="matAutocomplete" (optionSelected)="selectedTerritory($event, 'territory')">
+        <mat-option *ngFor="let searchedTerritory of $.territory | async" [value]="searchedTerritory.slug">
+          {{searchedTerritory.label}}
+        </mat-option>
+      </mat-autocomplete>
+  </mat-form-field>
+  <span class="caption">Add as many as apply</span>
+  <mat-form-field>
+      <mat-chip-list #excludedChips aria-label="Excluded Territories">
+          <mat-chip *ngFor="let excludedTerritory of value.territoryExcluded"
+            color="primary"
+            removable
+            (removed)="removeTerritory(excludedTerritory, 'territoryExcluded')">
+            {{excludedTerritory}}
+            <mat-icon matChipRemove>cancel</mat-icon>
+          </mat-chip>
+          <input
+            placeholder="Excluding the following countries or territories"
+            #excludedInput
+            [formControl]="controls.territoryExcluded"
+            [matAutocomplete]="excludedAuto"
+            [matChipInputFor]="excludedChips"
+            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+            matChipInputAddOnBlur
+            (matChipInputTokenEnd)="addTerritory($event, 'territoryExcluded')">
+      </mat-chip-list>
+      <mat-autocomplete #excludedAuto="matAutocomplete" (optionSelected)="selectedTerritory($event, 'territoryExcluded')">
+        <mat-option *ngFor="let searchedTerritory of $.territoryExcluded | async" [value]="searchedTerritory.slug">
+          {{searchedTerritory.label}}
+        </mat-option>
+      </mat-autocomplete>
+  </mat-form-field>
+</form>

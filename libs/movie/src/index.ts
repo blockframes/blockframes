@@ -20,7 +20,6 @@ export * from './lib/movie/static-model';
 
 // Movie Component Module
 export * from './lib/movie/components/movie-picker/movie-picker.module';
-export * from './lib/movie/components/movie-picker/movie-picker.module';
 
 // Movie Form Moudles
 export * from './lib/movie/form/sales-info/format/format.module';

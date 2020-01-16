@@ -1,6 +1,6 @@
-import { NgModule } from "@angular/core";
-import { RouterModule, Routes } from "@angular/router";
-import { MovieTunnelComponent } from "./movie-tunnel.component";
+import { NgModule } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { MovieTunnelComponent } from './movie-tunnel.component';
 
 const tunnelRoutes: Routes = [
   {
@@ -33,7 +33,14 @@ const tunnelRoutes: Routes = [
       // Page 6
       {
         path: 'technical-info',
-        loadChildren: () => import('./technical-info/technical-info.module').then(m => m.TunnelTechnicalInfoModule)
+        loadChildren: () =>
+          import('./technical-info/technical-info.module').then(m => m.TunnelTechnicalInfoModule)
+      },
+      // Page 9
+      {
+        path: 'previous-deals',
+        loadChildren: () =>
+          import('./previous-deals/previous-deals.module').then(m => m.TunnelPreviousDealsModule)
       },
       // Last page
       {
@@ -44,15 +51,14 @@ const tunnelRoutes: Routes = [
       {
         path: 'evaluation',
         loadChildren: () => import('./evaluation/evaluation.module').then(m => m.EvaluationModule)
+
       }
     ]
   }
 ];
 
 @NgModule({
-  imports: [
-    RouterModule.forChild(tunnelRoutes)
-  ],
+  imports: [RouterModule.forChild(tunnelRoutes)],
   exports: [RouterModule]
 })
-export class MovieTunnelRoutingModule { }
+export class MovieTunnelRoutingModule {}
