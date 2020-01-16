@@ -2,7 +2,7 @@ import { FormEntity, FormList, yearValidators } from '@blockframes/utils';
 import { MovieMain, Credit, createMovieMain, Movie, createTitle } from '../../+state';
 import { Validators, FormControl } from '@angular/forms';
 import { createCredit, Stakeholder, createStakeholder } from '@blockframes/utils/common-interfaces/identity';
-import { valueIsInModelValidator } from '@blockframes/utils/form/validators/validators';
+import { isSlugValidator } from '@blockframes/utils/form/validators/validators';
 
 function createCreditFormControl(credit?: Partial<Credit>) {
   const { firstName, lastName, role } = createCredit(credit);
@@ -16,7 +16,7 @@ function createCreditFormControl(credit?: Partial<Credit>) {
 export type CreditFormControl = ReturnType<typeof createCreditFormControl>;
 
 export class MovieCreditForm extends FormEntity<CreditFormControl> {
-  constructor(credit?: Credit) {
+  constructor(credit?: Partial<Credit>) {
     super(createCreditFormControl(credit));
   }
 }
