@@ -31,7 +31,6 @@ import { MovieFormPromotionalDescriptionComponent } from './promotional-descript
 import { MovieFormSalesCastComponent } from './sales-cast/sales-cast.component';
 import { MovieFormStoryComponent } from './story/story.component';
 import { MovieFormRootComponent } from './root/root.component';
-// import { MovieFormVersionInfoComponent } from './version-info/version-info.component';
 import { MovieFormFestivalPrizesComponent } from './festival-prizes/festival-prizes.component';
 import { MovieFormSalesAgentDealComponent } from './sales-agent-deal/sales-agent-deal.component';
 import { MovieFormVersionInfoComponent } from './version-info/version-info.component';

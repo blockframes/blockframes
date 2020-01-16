@@ -32,10 +32,11 @@ export class DirectorForm extends FormEntity<DirectorFormControl> {
 }
 
 function createDirectorFormControl(director?: Partial<Credit>) {
-  const { firstName, lastName } = createCredit(director);
+  const { firstName, lastName, shortBiography } = createCredit(director);
   return {
     firstName: new FormControl(firstName),
     lastName: new FormControl(lastName),
+    shortBiography: new FormControl(shortBiography)
   }
 }
 
