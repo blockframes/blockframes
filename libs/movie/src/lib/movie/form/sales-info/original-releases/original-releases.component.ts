@@ -2,7 +2,7 @@ import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core
 import { OriginalReleaseForm } from '../sales-info.form';
 import { MovieForm } from '../../movie.form';
 import { startWith } from 'rxjs/operators';
-import { default as staticModel } from '../../../static-model/staticModels';
+import { default as staticModel, ExtractCode } from '../../../static-model/staticModels';
 import { MovieMainControl } from '../../main/main.form';
 import { MovieSalesInfoControl } from '../sales-info.form'
 
@@ -31,8 +31,8 @@ export class OriginalReleaseComponent implements OnInit {
   ngOnInit() {
     this.originCountries.valueChanges.pipe(
       startWith(this.originCountries.value),
-    ).subscribe((countries: string[]) => {
-      countries.forEach((country, i) => {
+    ).subscribe(countries => {
+      countries.forEach((country: any, i: number) => {
         const control = this.originalRelease.createControl({ country });
         this.originalRelease.setControl(i, control);
       });

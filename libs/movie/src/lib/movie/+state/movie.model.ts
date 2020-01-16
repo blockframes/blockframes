@@ -90,22 +90,27 @@ export function createMovieMain(params: Partial<MovieMain> = {}): MovieMain {
     originalLanguages: [],
     stakeholders: [],
     originCountries: [],
-    status: '',
+    status: null,
     customGenres: [],
     ...params,
     officialIds: createOfficialIds(params.officialIds),
   };
 }
 
-// @TODO #1052 remove this section .
-// merge movie.promotionalElements.promotionalElements and movie.promotionalElements.images  into `movie.promotionalElements`
 export function createMoviePromotionalElements(
   params: Partial<MoviePromotionalElements> = {}
 ): MoviePromotionalElements {
   return {
-    images: [],
-    promotionalElements: [],
-    ...params
+    trailer: [],
+    banner: createPromotionalElement(params.banner),
+    poster: [],
+    still_photo: [],
+    presentation_deck: createPromotionalElement(params.presentation_deck),
+    scenario: createPromotionalElement(params.scenario),
+    promo_reel_link: createPromotionalElement(params.promo_reel_link),
+    screener_link: createPromotionalElement(params.screener_link),
+    trailer_link: createPromotionalElement(params.trailer_link),
+    teaser_link: createPromotionalElement(params.teaser_link),
   };
 }
 
@@ -124,7 +129,6 @@ export function createPromotionalElement(
 ): PromotionalElement {
   return {
     label: '',
-    type: 'other',
     ...promotionalElement,
     media: createImgRef(promotionalElement.media)
   };
@@ -140,16 +144,16 @@ export function createMovieSalesCast(params: Partial<MovieSalesCast> = {}): Movi
 export function createMovieOriginalRelease(params: Partial<MovieOriginalRelease> = {}): MovieOriginalRelease {
   return {
     date: null,
-    country: '',
+    country: null,
     ...params
   };
 }
 
 export function createMovieRating(params: Partial<MovieRating> = {}): MovieRating {
   return {
-    country: '',
+    country: null,
     reason: '',
-    system: '',
+    system: null,
     value: '',
     ...params
   };
@@ -159,12 +163,12 @@ export function createMovieSalesInfo(params: Partial<MovieSalesInfo> = {}): Movi
   return {
     certifications: [],
     broadcasterCoproducers: [],
-    scoring: '',
-    color: '',
+    scoring: null,
+    color: null,
     rating: [],
     originalRelease: [],
-    format: '',
-    formatQuality: '',
+    format: null,
+    formatQuality: null,
     soundFormat: '',
     physicalHVRelease: null,
     releaseYear: null,
@@ -257,7 +261,7 @@ export function createMovieLanguageSpecification(
 }
 
 export function populateMovieLanguageSpecification(
-  spec: MovieLanguageSpecificationContainer,
+  spec: Partial<MovieLanguageSpecificationContainer>,
   slug: LanguagesSlug,
   type: MovieLanguageTypes,
   value: boolean = true

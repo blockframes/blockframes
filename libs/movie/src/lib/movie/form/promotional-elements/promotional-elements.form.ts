@@ -1,13 +1,12 @@
 import { MoviePromotionalElements, PromotionalElement, createMoviePromotionalElements, createPromotionalElement } from '../../+state';
 import { FormEntity, FormList, urlValidators } from '@blockframes/utils';
 import { FormControl } from '@angular/forms';
-
+import { PromotionalElementTypesSlug } from '@blockframes/movie/movie/static-model/types';
 
 function createPromotionalElementControl(promotionalElement?: Partial<PromotionalElement>) {
-  const { label, type, size, ratio, media, language, country } = createPromotionalElement(promotionalElement);
+  const { label, size, ratio, media, language, country } = createPromotionalElement(promotionalElement);
   return {
     label: new FormControl(label),
-    type: new FormControl(type),
     size: new FormControl(size),
     ratio: new FormControl(ratio),
     media: new FormControl(media.url, urlValidators),
@@ -27,45 +26,40 @@ export class MoviePromotionalElementForm extends FormEntity<PromotionalElementCo
 function createMoviePromotionalElementsControls(promotionalElements?: Partial<MoviePromotionalElements>) {
   const entity = createMoviePromotionalElements(promotionalElements);
   return {
-    images: FormList.factory(entity.images),
-    promotionalElements: FormList.factory(entity.promotionalElements, el => new MoviePromotionalElementForm(el)),
+    trailer: FormList.factory(entity.trailer),
+    banner: new MoviePromotionalElementForm(),
+    poster: FormList.factory(entity.poster),
+    still_photo: FormList.factory(entity.still_photo),
+    presentation_deck: new MoviePromotionalElementForm(),
+    scenario: new MoviePromotionalElementForm(),
+    promo_reel_link: new MoviePromotionalElementForm(),
+    screener_link: new MoviePromotionalElementForm(),
+    trailer_link: new MoviePromotionalElementForm(),
+    teaser_link: new MoviePromotionalElementForm(),
   }
 }
 
 type MoviePromotionalElementsControl = ReturnType<typeof createMoviePromotionalElementsControls>
+
+type MoviePromotionalElementsListKey = ExtractFormListKeys<MoviePromotionalElementsControl>
+
+// Extract the keys that return a FormList
+type ExtractFormListKeys<C> = {
+  [K in keyof C]: C[K] extends FormList<infer I> ? K : never
+}[keyof C]
 
 export class MoviePromotionalElementsForm extends FormEntity<MoviePromotionalElementsControl>{
   constructor(promotionalElements?: MoviePromotionalElements) {
     super(createMoviePromotionalElementsControls(promotionalElements));
   }
 
-  get images() {
-    return this.get('images');
-  }
+  public addPromotionalElement(type: MoviePromotionalElementsListKey): void {	
+    const promotionalElement = new MoviePromotionalElementForm();	
+    this.get(type).push(promotionalElement);	
+  }	
 
-  get promotionalElements() {
-    return this.get('promotionalElements');
-  }
-
-  public setImage(image: string, index: number): void {
-    this.images.controls[index].setValue(image);
-  }
-
-  public addImage(): void {
-    this.images.push(new FormControl());
-  }
-
-  public addPromotionalElement(): void {
-    const promotionalElement = new MoviePromotionalElementForm();
-    this.promotionalElements.push(promotionalElement);
-  }
-
-  public removePromotionalElement(i: number): void {
-    this.promotionalElements.removeAt(i);
-  }
-
-  public removeImage(i: number): void {
-    this.images.removeAt(i);
-  }
+  public removePromotionalElement(type: MoviePromotionalElementsListKey, i: number): void {	
+    this.get(type).removeAt(i);	
+  }	
 
 }

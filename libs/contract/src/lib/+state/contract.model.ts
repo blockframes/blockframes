@@ -1,5 +1,5 @@
 import { createTerms } from '@blockframes/utils/common-interfaces/terms';
-import { getCodeIfExists } from '@blockframes/movie/movie/static-model/staticModels';
+import { getCodeIfExists, ExtractCode } from '@blockframes/movie/movie/static-model/staticModels';
 import { LegalRolesSlug } from '@blockframes/movie/movie/static-model/types';
 import { createPrice } from '@blockframes/utils/common-interfaces/price';
 import {
@@ -9,8 +9,11 @@ import {
   ContractPartyDetailDocumentWithDates,
   ContractPartyDetailDocumentWithDatesDocument
 } from './contract.firestore';
+import { LegalDocument } from '@blockframes/contract/+state/contract.firestore';
 import { createParty } from '@blockframes/utils/common-interfaces/identity';
 import { ContractVersion } from '../version/+state/contract-version.model';
+import { createImgRef } from '@blockframes/utils/image-uploader';
+
 
 export interface Contract extends ContractDocumentWithDates {
   lastVersion?: ContractVersion;
@@ -141,7 +144,7 @@ export function getContractParties(
   contract: Contract,
   legalRole: LegalRolesSlug
 ): ContractPartyDetail[] {
-  return contract.parties.filter(p => p.party.role === getCodeIfExists('LEGAL_ROLES', legalRole));
+  return contract.parties.filter(p => p.party.role === getCodeIfExists('LEGAL_ROLES', legalRole as ExtractCode<'LEGAL_ROLES'>));
 }
 
 export function buildChainOfTitle() {
@@ -157,4 +160,21 @@ export function convertToContractDocument(params: Partial<Contract> = {}): Contr
     titleIds: params.titleIds || [],
     partyIds: params.partyIds ||[]
   };
+}
+
+export function createLegalDocuments() {
+  return {
+    chain_of_titles: [],
+    invoices: [],
+    bill : null
+  }
+}
+
+export function createLegalDocument(
+  legalDocument: Partial<LegalDocument> = {}
+): LegalDocument {
+  return { 
+    label: '',
+    media: createImgRef(legalDocument.media),
+  }
 }
