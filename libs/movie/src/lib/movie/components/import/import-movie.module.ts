@@ -45,7 +45,7 @@ const routes: Routes = [
   {
     path: '',
     component: ImportStepperComponent,
-    canActivate: [MovieOrganizationListGuard], // @todo #643 not working if user does not have at least one movie in his list
+    canActivate: [MovieOrganizationListGuard],
     canDeactivate: [MovieOrganizationListGuard],
   }
 ];

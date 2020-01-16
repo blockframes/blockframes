@@ -1,14 +1,6 @@
 <ng-container *ngIf="data">
   <span>internal ref: {{ data.internalRef }}</span>
   <span>ISAN number: {{ data.isan }}</span>
-  <!-- @todo #643
-  check css / HTML:
-  A card is not supposed to have several content and title, ...
-  Prefer regular section + material typography
-
-  Don't use mat-card-*** if you don't have the mat-card in the same HTML.
-  This shows that you should use section/article instead.
-  -->
   <mat-card-header class="movie-card-header">
     <mat-card-title class="movie-card-meta-title" *ngIf="data.title">
       {{ data.title.original }}

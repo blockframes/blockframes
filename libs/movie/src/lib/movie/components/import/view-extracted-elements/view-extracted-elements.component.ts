@@ -239,7 +239,6 @@ export class ViewExtractedElementsComponent {
         }
 
         // TERRITORIES (Mandate Territories)
-        // @todo #643 for territories: handle "World excl. USA, Japan, France, Germany and Belgium"
         if (spreadSheetRow[SpreadSheetMovie.territories]) {
           movie.salesAgentDeal.territories = [];
           spreadSheetRow[SpreadSheetMovie.territories].split(this.separator).forEach((c: string) => {

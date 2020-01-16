@@ -16,11 +16,9 @@ import { Router } from '@angular/router';
   templateUrl: './root.component.html',
   styleUrls: ['./root.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None, //@todo #643 do not use
+  encapsulation: ViewEncapsulation.None,
 })
 export class MovieFormRootComponent {
-  // @todo #643 => navigation arrows , not mat-tab
-  // @see https://projects.invisionapp.com/d/main#/console/17971669/374982976/preview
   @Input() public form: MovieForm;
 
   constructor(
