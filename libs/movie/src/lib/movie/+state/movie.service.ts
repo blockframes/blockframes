@@ -1,13 +1,30 @@
 import { Injectable } from '@angular/core';
-import { OrganizationQuery } from '@blockframes/organization';
-import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
-import { switchMap } from 'rxjs/operators';
+import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
+import {
+  CollectionConfig,
+  CollectionService,
+  WriteOptions,
+  awaitSyncQuery,
+  Query
+} from 'akita-ng-fire';
+import { switchMap, tap } from 'rxjs/operators';
 import { createMovie, Movie } from './movie.model';
 import { MovieState, MovieStore } from './movie.store';
 import { AuthQuery } from '@blockframes/auth';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 import { ContractQuery } from '@blockframes/contract/+state/contract.query';
+import { Contract } from '@blockframes/contract/+state/contract.model';
 import { cleanModel } from '@blockframes/utils/helpers';
+
+/** Query movies from the contract with distributions deals from the last version. */
+const movieListContractQuery = (contract: Contract, movieIds: string[]): Query<Movie[]> => ({
+  path: 'movies',
+  queryFn: ref => ref.where('id', 'in', movieIds),
+  distributionDeals: (movie: Movie) => ({
+    path: `movies/${movie.id}/distributiondeals`,
+    queryFn: ref => ref.where('id', 'in', contract.lastVersion.titles[movie.id].distributionDealIds)
+  })
+});
 
 // TODO#944 - refactor CRUD operations
 @Injectable({ providedIn: 'root' })
@@ -29,10 +46,19 @@ export class MovieService extends CollectionService<MovieState> {
     );
   }
 
-  /** Gets every movies Id from contract and sync them. */
+  /** Gets every movies Id from contract and sync them if they belong to active organization. */
   public syncContractMovies() {
     return this.contractQuery.selectActive().pipe(
-      switchMap(contract => this.syncManyDocs(contract.titleIds))
+      // Reset the store everytime the movieId changes.
+      tap(_ => this.store.reset()),
+      switchMap(contract => {
+        // Filter movieIds before the query to relieve it.
+        const organizationMovieIds = this.organizationQuery.getActive().movieIds;
+        const movieIds = contract.titleIds.filter(titleId => organizationMovieIds.includes(titleId));
+
+        return awaitSyncQuery.call(this, movieListContractQuery(contract, movieIds))
+      }
+      )
     );
   }
 
@@ -40,7 +66,7 @@ export class MovieService extends CollectionService<MovieState> {
   public async remove(movieId: string) {
     const userId = this.authQuery.userId;
     // We need to update the _meta field before remove to get the userId in the backend function: onMovieDeleteEvent
-    await this.db.doc(`movies/${movieId}`).update({ "_meta.deletedBy": userId });
+    await this.db.doc(`movies/${movieId}`).update({ '_meta.deletedBy': userId });
     return super.remove(movieId);
   }
 
@@ -58,14 +84,14 @@ export class MovieService extends CollectionService<MovieState> {
     }
 
     // Add movie document to the database
-    await this.add(cleanModel(movie))
+    await this.add(cleanModel(movie));
 
     return movie;
   }
 
   onUpdate(movie: Movie, { write }: WriteOptions) {
     const movieRef = this.db.doc(`movies/${movie.id}`).ref;
-    write.update(movieRef, { "_meta.updatedBy": this.authQuery.userId });
+    write.update(movieRef, { '_meta.updatedBy': this.authQuery.userId });
   }
 
   public updateById(id: string, movie: any): Promise<void> {

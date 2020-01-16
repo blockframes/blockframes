@@ -16,7 +16,7 @@ export interface ContractWithLastVersion {
 }
 
 /** An interface for a single document to display versions subcollection count. */
-export interface VersionMeta extends ContractVersionDocumentWithDates{
+export interface VersionMeta extends ContractVersion{
   count: number;
 }
 

@@ -1,5 +1,6 @@
 import { ImgRef, createImgRef } from "../image-uploader";
 import { StakeholderRolesSlug, CreditRolesSlug, LegalRolesSlug, TerritoriesSlug } from "@blockframes/movie/movie/static-model/types";
+import { Location } from "@blockframes/organization/+state/organization.firestore";
 
 
 //////////////////////////
@@ -57,6 +58,7 @@ export interface Credit extends Person {
  */
 export interface Party extends StakeholderRaw {
   role: LegalRolesSlug, // overrided role scope from Person interface
+  address?: Location
 }
 
 // This is just for more readable code :

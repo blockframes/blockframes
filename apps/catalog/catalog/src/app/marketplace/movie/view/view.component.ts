@@ -35,7 +35,7 @@ export class MarketplaceMovieViewComponent implements OnInit {
       map(org => {
         return org.wishlist
           .filter(({ status }) => status === 'pending')
-          .some(({ movieIds }) => movieIds.includes(this.movieQuery.getActive().id));
+          .some(({ movieIds }) => movieIds.includes(this.movieQuery.getActiveId()));
       })
     );
   }
