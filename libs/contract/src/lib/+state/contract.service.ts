@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ContractStore, ContractState } from './contract.store';
-import { getCodeIfExists } from '@blockframes/movie/moviestatic-model/staticModels';
+import { getCodeIfExists, ExtractCode } from '@blockframes/movie/moviestatic-model/staticModels';
 import { CollectionConfig, CollectionService, awaitSyncQuery, Query } from 'akita-ng-fire';
 import { Contract, ContractPartyDetail, convertToContractDocument, createContractPartyDetail } from './contract.model';
 import orderBy from 'lodash/orderBy';
@@ -192,7 +192,7 @@ export class ContractService extends CollectionService<ContractState> {
    * @param legalRole
    */
   public getContractParties(contract: Contract, legalRole: LegalRolesSlug): ContractPartyDetail[] {
-    return contract.parties.filter(p => p.party.role === getCodeIfExists('LEGAL_ROLES', legalRole));
+    return contract.parties.filter(p => p.party.role === getCodeIfExists('LEGAL_ROLES', legalRole as ExtractCode<'LEGAL_ROLES'>));
   }
 
   /**
