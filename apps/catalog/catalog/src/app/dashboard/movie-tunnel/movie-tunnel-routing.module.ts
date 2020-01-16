@@ -9,7 +9,7 @@ const tunnelRoutes: Routes = [
     children: [
       // Page 1
       {
-        path: '',
+        path: 'start',
         loadChildren: () => import('./start/start-tunnel.module').then(m => m.StartTunnelModule)
       },
       // Page 2

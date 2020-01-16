@@ -84,6 +84,19 @@
   </mat-sidenav>
 
   <mat-sidenav-content>
+    <div fxLayoutAlign="end start" fxLayout="row" *ngIf="(next$ | async) !== 'synopsis'">
+      <a mat-button color="primary" [routerLink]="next$ | async" class="mat-body-2">Skip and do later <mat-icon>arrow_forward</mat-icon></a>
+    </div>
     <router-outlet></router-outlet>
+    <div class="button-box" fxLayout="row" fxLayoutGap="24px" fxLayoutAlign="center start">
+      <a test-id="back" mat-stroked-button color="accent" [routerLink]="previous$ | async" fxLayoutAlign="center center" *ngIf="'synopsis' !== (next$ | async)">
+        <mat-icon>arrow_back</mat-icon>
+        <span>Back</span>
+      </a>
+      <a test-id="next" mat-flat-button color="accent" [routerLink]="next$ | async" fxLayoutAlign="center center">
+      <span>{{ (next$ | async) === 'synopsis' ? 'Begin': 'Next' }}</span>
+        <mat-icon *ngIf="(next$ | async) !== 'synopsis'">arrow_forward</mat-icon>
+      </a>
+    </div>
   </mat-sidenav-content>
 </mat-sidenav-container>
