@@ -193,7 +193,6 @@ interface MovieSalesInfoRaw<D> {
   broadcasterCoproducers: string[],
   certifications: CertificationsSlug[],
   color: ColorsSlug,
-  europeanQualification: boolean,
   format?: FormatSlug,
   formatQuality?: FormatQualitySlug,
   originalRelease: MovieOriginalReleaseRaw<D>[],

@@ -16,7 +16,6 @@ export class MovieDisplayFilmInfoCardComponent {
   @Input() budget;
   @Input() salesInfo;
   @Input() color;
-  @Input() europeanQualification;
   @Input() versionInfo;
   @Input() prizes;
   @Input() synopsis;
@@ -25,7 +24,11 @@ export class MovieDisplayFilmInfoCardComponent {
   @Input() stakeholders: Company[];
   @Input() salesAgent;
 
-  public hasTheatricalRelease (originalReleases: MovieOriginalRelease[]) {
-    return originalReleases.some(r => r.media === getCodeIfExists('MEDIAS', 'theatrical'))
+  public hasTheatricalRelease () {
+    return this.salesInfo.originalRelease.some(r => r.media === getCodeIfExists('MEDIAS', 'theatrical'))
+  }
+
+  public hasEuropeanQualification() {
+    return this.salesInfo.certifications.some(r => r === getCodeIfExists('CERTIFICATIONS', 'europeanQualification'))
   }
 }

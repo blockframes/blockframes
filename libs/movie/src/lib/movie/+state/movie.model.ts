@@ -157,7 +157,6 @@ export function createMovieSalesInfo(params: Partial<MovieSalesInfo> = {}): Movi
     broadcasterCoproducers: [],
     scoring: '',
     color: '',
-    europeanQualification: false,
     rating: [],
     originalRelease: [],
     format: '',

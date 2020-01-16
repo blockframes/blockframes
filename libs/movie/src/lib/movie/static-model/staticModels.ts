@@ -454,6 +454,10 @@ const models: Model = {
     {
       'slug': 'a-list-cast',
       'label': 'A-list Cast'
+    },
+    {
+      'slug': 'europeanQualification',
+      'label': 'European Qualification'
     }
   ] as const,
   'TERRITORIES': [ // @TODO (#1388) transform to ISO-3166
