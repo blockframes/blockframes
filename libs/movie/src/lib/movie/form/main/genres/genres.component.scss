@@ -1,3 +1,7 @@
-article {
-  margin-bottom: 20px;
+mat-form-field {
+  flex: 1;
+}
+
+.action {
+  margin-top: 20px; // Average value of the button to be in the center of mat-form-field
 }

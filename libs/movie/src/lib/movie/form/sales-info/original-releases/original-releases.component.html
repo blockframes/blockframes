@@ -2,7 +2,7 @@
   <movie-form-origin-country [form]="country"></movie-form-origin-country>
 
   <ng-container *ngIf="originalRelease.at(i) as releaseControl">
-    <form [formGroup]="releaseControl">
+    <form [formGroup]="releaseControl" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="24px">
       <mat-form-field appearance="outline">
         <mat-label>Media</mat-label>
         <mat-select formControlName="media">
@@ -20,16 +20,16 @@
     </form>
   </ng-container>
 
-  <div *ngIf="!last" fxLayout="column" fxLayoutAlign="center center">
+  <footer *ngIf="!last" fxLayout="column" fxLayoutAlign="center center">
     <button mat-mini-fab color="warn" (click)="remove(i)" aria-label="Remove a director form">
       <mat-icon>delete</mat-icon>
     </button>
     <span class="mat-caption">Delete country</span>
-  </div>
-  <div *ngIf="last" fxLayout="column" fxLayoutAlign="center center">
+  </footer>
+  <footer *ngIf="last" fxLayout="column" fxLayoutAlign="center center">
     <button mat-mini-fab color="primary" (click)="originCountries.add()" aria-label="Remove a director form">
       <mat-icon>add</mat-icon>
     </button>
     <span class="mat-caption">Add another country</span>
-  </div>
+  </footer>
 </article>
