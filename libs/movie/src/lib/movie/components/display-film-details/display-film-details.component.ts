@@ -1,6 +1,7 @@
 import { AFM_DISABLE } from '@env';
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { getLabelByCode, hasSlug } from '../../static-model/staticModels';
+import { MovieOriginalRelease } from '@blockframes/movie/movie+state/movie.firestore';
 
 @Component({
   selector: 'movie-display-film-details',
@@ -18,6 +19,6 @@ export class MovieDisplayFilmDetailsComponent {
   public AFM_DISABLE = AFM_DISABLE;
 
   public hasTheatricalRelease() {
-    return hasSlug(this.salesInfo.originalRelease, 'MEDIAS', 'theatrical');
+    return hasSlug(this.salesInfo.originalRelease.map(r => r.media), 'MEDIAS', 'theatrical');
   }
 }

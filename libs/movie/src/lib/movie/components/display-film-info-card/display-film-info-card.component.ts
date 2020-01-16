@@ -24,7 +24,7 @@ export class MovieDisplayFilmInfoCardComponent {
   @Input() salesAgent;
 
   public hasTheatricalRelease() {
-    return hasSlug(this.salesInfo.originalRelease, 'MEDIAS', 'theatrical');
+    return hasSlug(this.salesInfo.originalRelease.map(r => r.media), 'MEDIAS', 'theatrical');
   }
 
   public hasEuropeanQualification() {

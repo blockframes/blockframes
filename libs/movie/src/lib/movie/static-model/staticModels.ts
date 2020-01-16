@@ -836,7 +836,7 @@ export const enum App {
 }
 
 /**
- * Check if key is belonging to scope
+ * Check if data passed into array have at lease one item belonging to scope
  * @param array 
  * @param scope 
  * @param key 
