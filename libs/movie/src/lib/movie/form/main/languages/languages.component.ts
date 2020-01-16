@@ -12,7 +12,7 @@ import { startWith, map, switchMap } from 'rxjs/operators';
 })
 export class LanguagesComponent implements OnInit {
 
-  @Input() form: MovieMainControl['languages'];
+  @Input() form: MovieMainControl['originalLanguages'];
   private focusIndex = new BehaviorSubject(0);
   languages = staticModel.LANGUAGES;
 
