@@ -1,6 +1,8 @@
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core';
 import { MovieMainForm } from '../main.form';
 import { default as staticModel } from '../../../static-model/staticModels';
+import { startWith, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'movie-form-genre',
@@ -8,9 +10,10 @@ import { default as staticModel } from '../../../static-model/staticModels';
   styleUrls: ['./genres.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class GenreComponent {
+export class GenreComponent implements OnInit {
 
   @Input() form: MovieMainForm;
+  hasOtherGenre$: Observable<boolean>;
   genres = staticModel.GENRES;
 
   get genresForm() {
@@ -19,5 +22,12 @@ export class GenreComponent {
 
   get customGenreForm() {
     return this.form.get('customGenres');
+  }
+
+  ngOnInit() {
+    this.hasOtherGenre$ = this.genresForm.valueChanges.pipe(
+      startWith(this.genresForm.value),
+      map(genres => genres.includes('other'))
+    )
   }
 }
