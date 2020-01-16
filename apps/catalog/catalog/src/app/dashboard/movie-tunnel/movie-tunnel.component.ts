@@ -87,6 +87,11 @@ export class MovieTunnelComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * @description returns the next or previous page where the router should go to
+   * @param current current url
+   * @param arithmeticOperator plus or minus
+   */
   private getPage(current: string, arithmeticOperator: number): string {
     const flat: string[] = flatten(pages);
     const i: number = flat.indexOf(current) + arithmeticOperator;
