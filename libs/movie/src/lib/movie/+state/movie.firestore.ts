@@ -227,6 +227,7 @@ interface MovieRaw<D> {
   _type: 'movies';
   _meta?: DocumentMeta;
   id: string;
+  deliveryIds: [];
 
   // Sections
   main: MovieMain;
