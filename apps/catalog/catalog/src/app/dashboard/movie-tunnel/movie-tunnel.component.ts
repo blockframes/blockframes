@@ -29,9 +29,9 @@ function getPageData(url: string, array: string[][]): PageData {
   if (panel) {
     const index = panel.indexOf(pageUrl) + 1;
     const arrayLength = panel.length;
-    return { index: index, length: arrayLength};
+    return { index: index, length: arrayLength };
   } else {
-    return { index: 0, length: 0 }
+    return { index: 0, length: 0 };
   }
 }
 
@@ -49,7 +49,7 @@ const pages = [
   templateUrl: './movie-tunnel.component.html',
   styleUrls: ['./movie-tunnel.component.scss'],
   providers: [MovieForm, ContractForm, DistributionDealForm],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieTunnelComponent implements OnInit, OnDestroy {
   private sub: Subscription;
@@ -87,13 +87,18 @@ export class MovieTunnelComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * @description returns the next or previous page where the router should go to
+   * @param current current url
+   * @param arithmeticOperator plus or minus
+   */
   private getPage(current: string, arithmeticOperator: number): string {
     const flat: string[] = flatten(pages);
-    const i: number = +flat.indexOf(current);
-    if (i <= 0) {
-      return 'synopsis';
+    const i: number = flat.indexOf(current) + arithmeticOperator;
+    if (i < 0) {
+      return 'start';
     }
-    return flat[i + arithmeticOperator];
+    return flat[i];
   }
 
   ngOnDestroy() {
