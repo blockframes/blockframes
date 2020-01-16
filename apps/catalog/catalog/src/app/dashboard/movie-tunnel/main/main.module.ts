@@ -15,6 +15,7 @@ import { MovieFormContentTypeModule } from '@blockframes/movie/movie/form/main/c
 import { MovieFormDirectorsModule } from '@blockframes/movie/movie/form/main/directors/directors.module';
 import { MovieFormLanguagesModule } from '@blockframes/movie/movie/form/main/languages/languages.module';
 import { MovieFormGenresModule } from '@blockframes/movie/movie/form/main/genres/genres.module';
+import { MovieFormTotalRuntimeModule } from '@blockframes/movie/movie/form/main/total-runtime/total-runtime.module';
 import { MovieFormOriginalReleasesModule } from '@blockframes/movie/movie/form/sales-info/original-releases/original-releases.module';
 
 @NgModule({
@@ -26,6 +27,7 @@ import { MovieFormOriginalReleasesModule } from '@blockframes/movie/movie/form/s
     MovieFormDirectorsModule,
     MovieFormLanguagesModule,
     MovieFormGenresModule,
+    MovieFormTotalRuntimeModule,
     MovieFormOriginalReleasesModule,
     TunnelPageModule,
     // Material
