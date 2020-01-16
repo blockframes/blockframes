@@ -1,4 +1,4 @@
-import { prepareForTesting } from './firebaseSetup';
+import { prepareForTesting, upgrade } from './firebaseSetup';
 import { migrate } from './migrations';
 import { exitable, showHelp } from './tools';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs } from './algolia';
@@ -9,6 +9,8 @@ const [cmd, ...rest] = args;
 
 if (cmd === 'prepareForTesting') {
   exitable(prepareForTesting)();
+} else if (cmd === 'upgrade') {
+  exitable(upgrade)();
 } else if (cmd === 'migrate') {
   exitable(migrate)();
 } else if (cmd === 'syncUsers') {

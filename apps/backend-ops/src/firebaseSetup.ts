@@ -29,3 +29,17 @@ export async function prepareForTesting() {
 
   process.exit(0);
 }
+
+export async function upgrade() {
+  console.info('Preparing the database...');
+  await migrate(true);
+  console.info('database ready for deploy...');
+
+  console.info('Preparing Algolia...');
+  await upgradeAlgoliaOrgs();
+  await upgradeAlgoliaMovies();
+  console.info('Algolia ready for testing!');
+
+  process.exit(0);
+}
+
