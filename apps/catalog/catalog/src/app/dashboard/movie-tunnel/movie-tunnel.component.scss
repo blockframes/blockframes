@@ -34,3 +34,13 @@ mat-sidenav section {
     }
   }
 }
+
+.button-box {
+  margin: 50px 0px;
+  a {
+    min-width: 130px;
+    span {
+      margin: 10px;
+    }
+  }
+}
