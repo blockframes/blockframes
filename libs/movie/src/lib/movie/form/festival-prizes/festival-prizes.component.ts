@@ -4,7 +4,7 @@ import { PremiereType } from '@blockframes/movie/movie+state/movie.firestore';
 
 
 @Component({
-  selector: '[form] movie-form-festivalprizes',
+  selector: '[form] movie-form-festival-prizes',
   templateUrl: './festival-prizes.component.html',
   styleUrls: ['./festival-prizes.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

@@ -1,6 +1,6 @@
 <ng-container *ngFor="let control of prizes.controls; let i = index; let last = last">
   <article [formGroup]="control">
-    <div fxLayout="row" fxLayoutAlign="space-between center">
+    <div fxLayout="row" fxLayoutGap="24px">
       <!-- Name -->
       <mat-form-field appearance="outline">
         <mat-label>Name</mat-label>
@@ -27,7 +27,7 @@
       <span class="mat-caption">Selection all premiere that apply</span>
     </div>
     <!-- Remove -->
-    <footer  *ngIf="!last" fxLayout="column" fxLayoutAlign="center center">
+    <footer *ngIf="!last" fxLayout="column" fxLayoutAlign="center center">
       <button mat-mini-fab color="warn" (click)="prizes.removeAt(i)" aria-label="Remove a director form">
         <mat-icon>delete</mat-icon>
       </button>
