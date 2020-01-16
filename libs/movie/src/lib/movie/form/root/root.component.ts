@@ -32,7 +32,6 @@ export class MovieFormRootComponent {
 
   /* Saves the form */
   public submit() {
-    console.log(this.form);
     if (!this.form.valid) {
       this.snackBar.open('form invalid', 'close', { duration: 2000 });
       throw new Error('Invalid form');
