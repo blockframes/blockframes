@@ -10,7 +10,7 @@ import { ActivatedRoute } from '@angular/router';
 // Akita
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 
-// Blockframe
+// Blockframes
 import { MovieService } from '@blockframes/movie/movie/+state';
 import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
 
@@ -38,7 +38,7 @@ function getPageData(url: string, array: string[][]): PageData {
 // This table has to be synced with the routes, it allows the steps to be updated depending of the routes
 // See movie-tunnel-routing.module.ts to synchronize the table
 const pages = [
-  ['start', 'synopsis', 'credits', 'budget', 'technical-info', 'keywords'],
+  ['main', 'synopsis', 'credits', 'budget', 'technical-info', 'keywords'],
   ['rights', 'deals'],
   ['images', 'files&links'],
   ['chain', 'evaluation']
