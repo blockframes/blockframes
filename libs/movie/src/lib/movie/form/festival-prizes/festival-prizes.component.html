@@ -1,5 +1,4 @@
 <form [formGroup]="festivalprizes">
-<<<<<<< HEAD
   <!-- FESTIVAL PRIZES -->
   <h3> Festival Prizes </h3>
   <div formArrayName="prizes" *ngFor="let credit of festivalprizes.prizes.controls; let i = index">
@@ -29,55 +28,18 @@
         <h4> Festival Logo </h4>
         <!-- TODO:#1292 cropper size -->
         <drop-cropper [ratio]="1" storagePath="festivalPrizes" [useFileuploader]="false" [useDelete]="false" formControlName="logo"></drop-cropper>
-=======
-  <mat-card>
-    <mat-card-header>
-      <mat-card-title>Festivals</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <div formArrayName="prizes" *ngFor="let credit of festivalprizes.prizes.controls; let i = index">
-        <article [formGroupName]="i" fxLayout="column">
-          <!-- FESTIVAL NAME -->
-          <mat-form-field appearance="outline">
-            <mat-label>Festival Name</mat-label>
-            <input matInput formNameControl="name" placeholder="Festival Name">
-          </mat-form-field>
-
-          <!-- AWARD OR SELECTION -->
-          <mat-form-field appearance="outline">
-            <mat-label>Award or Selection</mat-label>
-            <input matInput formNameControl="prize" placeholder="Festival Award or Selection">
-          </mat-form-field>
-
-          <!-- FESTIVAL YEAR -->
-          <mat-form-field appearance="outline">
-            <mat-label>Year</mat-label>
-            <input matInput formNameControl="year" placeholder="Year">
-          </mat-form-field>
-
-          <!-- PREMIERE -->
-          <!-- <mat-form-field appearance="outline">
-            <mat-label>Premiere</mat-label>
-            <mat-select formNameControl="premiere" placeholder="Premiere">
-              <mat-option>World</mat-option>
-            </mat-select>
-          </mat-form-field> -->
-        </article>
-<<<<<<< HEAD
->>>>>>> Festival card rework OK
       </div>
-=======
->>>>>>> create different component for main form
-
-        <mat-divider inset="true"></mat-divider>
-
-      </div>
-      <article fxLayout="column" fxLayoutAlign="center center">
-        <button mat-mini-fab color="primary" (click)="festivalprizes.addPrize()">
-          <mat-icon>add</mat-icon>
-        </button>
-        <span>Add an other festival</span>
-      </article>
-    </mat-card-content>
-  </mat-card>
+      <button mat-icon-button color="primary" (click)="festivalprizes.addPrize()">
+        <mat-icon>add_circle</mat-icon>
+      </button>
+      <button mat-icon-button color="primary" (click)="festivalprizes.removePrize(i)">
+        <mat-icon>delete_circle</mat-icon>
+      </button>
+    </div>
+  </div>
+  <ng-container *ngIf="festivalprizes.prizes.controls.length == 0">
+    <button mat-icon-button color="primary" (click)="festivalprizes.addPrize()">
+      <mat-icon>add_circle</mat-icon>
+    </button>
+  </ng-container>
 </form>
