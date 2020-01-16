@@ -744,10 +744,12 @@ const models: Model = {
   'LEGAL_ROLES': [
     { 'slug': 'service-provider', 'label': 'Service provider' },
     { 'slug': 'licensor', 'label': 'Licensor' },
+    { 'slug': 'sub-licensor', 'label': 'Sub Licensor'},
     { 'slug': 'licensee', 'label': 'Licensee' },
     { 'slug': 'seller', 'label': 'Seller' },
     { 'slug': 'lender', 'label': 'Lender' },
     { 'slug': 'signatory', 'label': 'Signatory' },
+    { 'slug': 'observator', 'label': 'Observator' },
     { 'slug': 'promisor', 'label': 'Promisor' },
     { 'slug': 'promisee', 'label': 'Promisee' },
     { 'slug': 'beneficiary', 'label': 'Beneficiary' },

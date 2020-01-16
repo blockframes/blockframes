@@ -12,6 +12,8 @@ import { PremiereType } from '@blockframes/movie/movie+state/movie.firestore';
 })
 export class MovieFormFestivalPrizesComponent {
   
+  public premiereType = PremiereType;
+
   constructor(public controlContainer: ControlContainer) { }
 
   get festivalprizes() : MovieFestivalPrizesForm {

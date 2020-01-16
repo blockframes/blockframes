@@ -104,7 +104,7 @@ export class MovieFormRootComponent {
           const language = getCodeIfExists('LANGUAGES', g.trim());
           if (language) { languages.push(language) }
         });
-        this.form.main.get('languages').setValue(languages);
+        this.form.main.get('originalLanguages').setValue(languages);
 
         // ORIGIN COUNTRY
         const countries = [];

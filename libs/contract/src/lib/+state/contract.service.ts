@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ContractStore, ContractState } from './contract.store';
 import { getCodeIfExists } from '@blockframes/movie/moviestatic-model/staticModels';
 import { CollectionConfig, CollectionService, awaitSyncQuery, Query } from 'akita-ng-fire';
-import { Contract, ContractPartyDetail } from './contract.model';
+import { Contract, ContractPartyDetail, createContractPartyDetail } from './contract.model';
 import orderBy from 'lodash/orderBy';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { tap, switchMap } from 'rxjs/operators';
@@ -89,9 +89,11 @@ export class ContractService extends CollectionService<ContractState> {
   /**
    * Various validation steps for validating a contract
    * Currently (dec 2019), only validate that there is a licensee and a licensor
+   * 
+   * This function validate and append data to contracts by looking on its parents contracts
    * @param contract
    */
-  public isContractValid(contract: Contract): boolean {
+  public async isContractValid(contract: Contract): Promise<boolean> {
 
     // First, contract must have at least a licensee and a licensor
 
@@ -125,6 +127,27 @@ export class ContractService extends CollectionService<ContractState> {
         return false;
       }
     }
+
+
+    /**
+     * @dev If any parent contracts of this current contract have parties with childRoles defined,
+     * We take thoses parties of the parent contracts to put them as regular parties of the current contract.
+     */
+    const promises = contract.parentContractIds.map(id => this.getValue(id));
+    const parentContracts = await Promise.all(promises);
+    parentContracts.forEach(parentContract => {
+      const partiesHavingRoleForChilds = parentContract.parties.filter(p => p.childRoles && p.childRoles.length);
+      partiesHavingRoleForChilds.forEach(parentPartyDetails => {
+        parentPartyDetails.childRoles.forEach(childRole => {
+          const partyDetails = createContractPartyDetail({ party: parentPartyDetails.party });
+          partyDetails.party.role = childRole;
+          contract.parties.push(partyDetails);
+          if (partyDetails.party.orgId) {
+            contract.partyIds.push(partyDetails.party.orgId);
+          }
+        });
+      });
+    });
 
     // Other contract validation steps goes here
     // TODO: Add more validations steps to the isContractValid function => ISSUE#1542

@@ -180,7 +180,7 @@ export interface MovieMain {
   genres?: string[],
   customGenres?: string[],
   originCountries?: TerritoriesSlug[],
-  languages?: string[],
+  originalLanguages?: LanguagesSlug[],
   status?: MovieStatusSlug,
   stakeholders?: Company[],
   shortSynopsis?: string,

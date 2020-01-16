@@ -79,7 +79,7 @@ function createMovieMainControls(main : Partial<MovieMain> = {}) {
     productionYear: new FormControl(entity.productionYear, yearValidators),
     genres: new FormControl(entity.genres),
     originCountries: new FormControl(entity.originCountries),
-    languages: new FormControl(entity.languages),
+    originalLanguages: new FormControl(entity.originalLanguages),
     status: new FormControl(entity.status , [Validators.required]),
     totalRunTime: new FormControl(entity.totalRunTime),
     shortSynopsis: new FormControl(entity.shortSynopsis, [Validators.maxLength(500)] ),

@@ -47,10 +47,10 @@
         </span>
       </mat-card-subtitle>
     </ng-container>
-    <ng-container *ngIf="data.languages.length">
+    <ng-container *ngIf="data.originalLanguages.length">
       <mat-card-title>Languages</mat-card-title>
       <mat-card-subtitle>
-        <span *ngFor="let item of data.languages; let isLast=last">
+        <span *ngFor="let item of data.originalLanguages; let isLast=last">
           {{ getLabelByCode('LANGUAGES', item) }}{{ isLast?'':',' }}
         </span>
       </mat-card-subtitle>

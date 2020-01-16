@@ -474,15 +474,15 @@ export class ViewExtractedElementsComponent {
 
         // LANGUAGES (Original Language(s))
         if (spreadSheetRow[SpreadSheetMovie.languages]) {
-          movie.main.languages = [];
+          movie.main.originalLanguages = [];
           spreadSheetRow[SpreadSheetMovie.languages].split(this.separator).forEach((g: string) => {
             const language = getCodeIfExists('LANGUAGES', g);
             if (language) {
-              movie.main.languages.push(language);
+              movie.main.originalLanguages.push(language);
             } else {
               importErrors.errors.push({
                 type: 'warning',
-                field: 'main.languages',
+                field: 'main.originalLanguages',
                 name: "Languages",
                 reason: `${g} not found in languages list`,
                 hint: 'Edit corresponding sheet field.'
@@ -973,10 +973,10 @@ export class ViewExtractedElementsComponent {
       });
     }
 
-    if (movie.main.languages.length === 0) {
+    if (movie.main.originalLanguages.length === 0) {
       errors.push({
         type: 'warning',
-        field: 'main.languages',
+        field: 'main.originalLanguages',
         name: "Languages",
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
@@ -1269,7 +1269,7 @@ export class ViewExtractedElementsComponent {
           });
         }
 
-        const saleWithErrors = this.validateMovieSale(importErrors);
+        const saleWithErrors = await this.validateMovieSale(importErrors);
         this.deals.data.push(saleWithErrors);
         this.deals.data = [... this.deals.data];
 
@@ -1279,7 +1279,7 @@ export class ViewExtractedElementsComponent {
     });
   }
 
-  private validateMovieSale(importErrors: DealsImportState): DealsImportState {
+  private async validateMovieSale(importErrors: DealsImportState): Promise<DealsImportState> {
     const distributionDeal = importErrors.distributionDeal;
     const contract = importErrors.contract;
     const errors = importErrors.errors;
@@ -1294,7 +1294,8 @@ export class ViewExtractedElementsComponent {
     //////////////////
 
     //  CONTRACT VALIDATION
-    if (!this.contractService.isContractValid(contract.doc)) {
+    const isContractValid = await this.contractService.isContractValid(contract.doc);
+    if (!isContractValid) {
       errors.push({
         type: 'error',
         field: 'contractId',
@@ -1487,7 +1488,7 @@ export class ViewExtractedElementsComponent {
         // VALIDATION
         ///////////////
 
-        const contractWithErrors = this.validateMovieContract(importErrors);
+        const contractWithErrors = await this.validateMovieContract(importErrors);
 
         if (contractWithErrors.contract.doc.id) {
           this.contractsToUpdate.data.push(contractWithErrors);
@@ -1504,7 +1505,7 @@ export class ViewExtractedElementsComponent {
 
   }
 
-  private validateMovieContract(importErrors: ContractsImportState): ContractsImportState {
+  private async validateMovieContract(importErrors: ContractsImportState): Promise<ContractsImportState> {
 
     const contract = importErrors.contract;
     const errors = importErrors.errors;
@@ -1515,7 +1516,8 @@ export class ViewExtractedElementsComponent {
     //////////////////
 
     //  CONTRACT VALIDATION
-    if (!this.contractService.isContractValid(contract.doc)) {
+    const isContractValid = await this.contractService.isContractValid(contract.doc);
+    if (!isContractValid) {
       errors.push({
         type: 'error',
         field: 'contractId',

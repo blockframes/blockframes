@@ -19,7 +19,7 @@ export class MovieDisplayMainComponent {
   get shouldDisplayMainInformations()  {
     return this.data.genres.length > 0 ||
       this.data.originCountries ||
-      this.data.languages.length > 0 ||
+      this.data.originalLanguages.length > 0 ||
       this.data.stakeholders.length > 0 ||
       this.data.shortSynopsis ||
       this.data.totalRunTime ||
