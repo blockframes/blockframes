@@ -135,13 +135,16 @@ export class ContractService extends CollectionService<ContractState> {
      */
     const promises = contract.parentContractIds.map(id => this.getValue(id));
     const parentContracts = await Promise.all(promises);
-    parentContracts.forEach( parentContract => {
+    parentContracts.forEach(parentContract => {
       const partiesHavingRoleForChilds = parentContract.parties.filter(p => p.childRoles && p.childRoles.length);
       partiesHavingRoleForChilds.forEach(parentPartyDetails => {
-        parentPartyDetails.childRoles.forEach( childRole => {
+        parentPartyDetails.childRoles.forEach(childRole => {
           const partyDetails = createContractPartyDetail({ party: parentPartyDetails.party });
           partyDetails.party.role = childRole;
           contract.parties.push(partyDetails);
+          if (partyDetails.party.orgId) {
+            contract.partyIds.push(partyDetails.party.orgId);
+          }
         });
       });
     });
