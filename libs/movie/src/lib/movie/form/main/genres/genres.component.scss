@@ -5,3 +5,7 @@ mat-form-field {
 .action {
   margin-top: 20px; // Average value of the button to be in the center of mat-form-field
 }
+
+button[mat-mini-fab] {
+  margin: 0 5px;
+}
