@@ -1,6 +1,9 @@
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { FlexLayoutModule } from '@angular/flex-layout';
+
 // Material
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -12,6 +15,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCardModule } from '@angular/material/card';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 import { UploadModule, UiFormModule } from '@blockframes/ui';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
@@ -40,8 +45,10 @@ import { MovieFormSalesInfoComponent } from './sales-info/sales-info.component';
     FormsModule,
     ReactiveFormsModule,
     RouterModule,
+    FlexLayoutModule,
 
     // Material
+    MatAutocompleteModule,
     MatCardModule,
     MatIconModule,
     MatButtonModule,
@@ -54,6 +61,8 @@ import { MovieFormSalesInfoComponent } from './sales-info/sales-info.component';
     MatCheckboxModule,
     MatNativeDateModule,
     MatDatepickerModule,
+    MatDividerModule,
+    MatSlideToggleModule,
 
     // Librairies
     UiFormModule,

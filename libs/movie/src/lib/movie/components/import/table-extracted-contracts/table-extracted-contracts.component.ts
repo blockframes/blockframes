@@ -59,7 +59,7 @@ export class TableExtractedContractsComponent implements OnInit {
 
   async createContract(importState: ContractsImportState): Promise<boolean> {
 
-    importState.contract.doc.partyIds.push(this.organizationQuery.getActive().id)
+    importState.contract.doc.partyIds.push(this.organizationQuery.getActiveId())
     const contractId = await this.contractVersionService.addContractAndVersion(importState.contract);
     importState.errors.push({
       type: 'error',

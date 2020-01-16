@@ -11,7 +11,7 @@ import {
 import { ErrorStateMatcher } from '@angular/material/core';
 import { LANGUAGES_SLUG, TERRITORIES_SLUG } from '@blockframes/movie/movie/static-model/types';
 import { network, baseEnsDomain } from '@env';
-import { getLabelByCode, Scope } from '@blockframes/movie/movie/static-model/staticModels';
+import { getLabelByCode, isInSlug, Scope } from '@blockframes/movie/movie/static-model/staticModels';
 import { getProvider, orgNameToEnsDomain } from '@blockframes/ethers/helpers';
 
 // TODO issue#1146
@@ -143,6 +143,17 @@ export function valueIsInModelValidator(scope: Scope): ValidatorFn {
 }
 
 /**
+ * @description Check if value if a slug of the scope provided, inside the static model
+ * @param scope Scope inside the static model
+ */
+export function isSlugValidator(scope: Scope): ValidatorFn {
+  return (control: FormControl): ValidationErrors => {
+    return isInSlug(scope, control.value) ? null : { invalidValue: true }
+  };
+}
+
+
+/**
  * @description Error state matcher which is just like in the docs from angular material.
  * Basic usage for invalid, dirty and touched checks.
  */
@@ -151,3 +162,4 @@ export class ControlErrorStateMatcher implements ErrorStateMatcher {
     return !!(control && control.invalid && control.touched);
   }
 }
+

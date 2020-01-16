@@ -1,5 +1,5 @@
 import { EntityControl, FormEntity } from '@blockframes/utils';
-import { FormArray, FormBuilder } from '@angular/forms';
+import { FormArray } from '@angular/forms';
 import { MovieMainForm } from './main/main.form';
 import { MoviePromotionalElementsForm } from './promotional-elements/promotional-elements.form';
 import { MoviePromotionalDescriptionForm } from './promotional-description/promotional-description.form';

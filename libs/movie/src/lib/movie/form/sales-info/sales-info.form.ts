@@ -16,7 +16,7 @@ function createRatingFormControl(entity?: Partial<MovieRating>) {
 type RatingFormControl = ReturnType<typeof createRatingFormControl>;
 
 export class MovieRatingForm extends FormEntity<RatingFormControl> {
-  constructor(rating?: MovieRating) {
+  constructor(rating?: Partial<MovieRating>) {
     super(createRatingFormControl(rating));
   }
 }
@@ -33,7 +33,7 @@ function createOriginalReleaseFormControl(entity?: Partial<MovieOriginalRelease>
 type OriginalReleaseFormControl = ReturnType<typeof createOriginalReleaseFormControl>;
 
 export class OriginalReleaseForm extends FormEntity<OriginalReleaseFormControl> {
-  constructor(originalRelease?: MovieOriginalRelease) {
+  constructor(originalRelease?: Partial<MovieOriginalRelease>) {
     super(createOriginalReleaseFormControl(originalRelease));
   }
 }
@@ -49,14 +49,15 @@ function createMovieSalesInfoControls(salesInfo: Partial<MovieSalesInfo> = {}){
     broadcasterCoproducers: FormList.factory(entity.broadcasterCoproducers),
     format: new FormControl(entity.format),
     formatQuality: new FormControl(entity.formatQuality),
-    soundFormat: new FormControl(entity.soundFormat)
+    soundFormat: new FormControl(entity.soundFormat),
+    // theatricalRelease: new FormControl(entity.theatricalRelease),
   }
 }
 
-type MovieSalesInfoControl = ReturnType<typeof createMovieSalesInfoControls>
+export type MovieSalesInfoControl = ReturnType<typeof createMovieSalesInfoControls>
 
 export class MovieSalesInfoForm extends FormEntity<MovieSalesInfoControl>{
-  constructor(SalesInfo : MovieSalesInfo) {
+  constructor(SalesInfo?: Partial<MovieSalesInfo>) {
     super(createMovieSalesInfoControls(SalesInfo));
   }
 
