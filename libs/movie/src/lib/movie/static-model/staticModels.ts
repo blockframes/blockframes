@@ -819,7 +819,7 @@ export const getLabelByCode = (scope: Scope, slug: string) => {
   return item ? item.label : '';
 };
 
-
+/** Check if the key is a slug of a scope */
 export const isInSlug = (scope: Scope, key: string) => {
   return (models[scope] as any[]).map(({ slug }) => slug).includes(key);
 }
