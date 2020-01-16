@@ -1,6 +1,5 @@
 import {
   MovieStatusSlug,
-  PromotionalElementTypesSlug,
   ResourceRatioSlug,
   ResourceSizesSlug,
   TerritoriesSlug,
@@ -88,7 +87,6 @@ export interface Prize {
 
 export interface PromotionalElement {
   label: string,
-  type: PromotionalElementTypesSlug,
   size?: ResourceSizesSlug,
   ratio?: ResourceRatioSlug,
   media: ImgRef,
@@ -97,8 +95,16 @@ export interface PromotionalElement {
 }
 
 export interface MoviePromotionalElements {
-  images: ImgRef[], // @todo #1052 merge into promotional elements
-  promotionalElements: PromotionalElement[],
+  trailer: PromotionalElement[],
+  banner: PromotionalElement,
+  poster: PromotionalElement[],
+  still_photo: PromotionalElement[],
+  presentation_deck: PromotionalElement,
+  scenario: PromotionalElement,
+  promo_reel_link: PromotionalElement,
+  screener_link: PromotionalElement,
+  trailer_link: PromotionalElement,
+  teaser_link: PromotionalElement,
 }
 
 export interface Title {

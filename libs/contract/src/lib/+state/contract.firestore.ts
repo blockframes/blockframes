@@ -2,7 +2,12 @@ import { firestore } from "firebase/app";
 import { TermsRaw } from "@blockframes/utils/common-interfaces/terms";
 import { Party } from "@blockframes/utils/common-interfaces/identity";
 import { Price } from "@blockframes/utils/common-interfaces/price";
-import { LegalRolesSlug } from "@blockframes/movie/movie/static-model/types";
+import {
+  TerritoriesSlug,
+  LanguagesSlug,
+  LegalRolesSlug
+} from "@blockframes/movie/movie/static-model/types";
+import { ImgRef } from "@blockframes/utils/image-uploader";
 
 type Timestamp = firestore.Timestamp;
 
@@ -69,6 +74,19 @@ export interface InvoiceRaw<D> {
    @todo #1397
 }
 */
+
+export interface LegalDocuments {
+  chain_of_titles: LegalDocument[],
+  invoices: LegalDocument[],
+  bill : LegalDocument
+}
+
+export interface LegalDocument {
+  label: string,
+  media: ImgRef,
+  language?: LanguagesSlug,
+  country?: TerritoriesSlug,
+}
 
 export interface ContractDocumentWithDates extends ContractRaw<Date> {
 }

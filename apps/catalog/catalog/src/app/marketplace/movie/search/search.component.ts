@@ -36,9 +36,10 @@ import {
   MediasSlug,
   TerritoriesSlug,
   MovieStatusLabel,
-  MOVIE_STATUS_LABEL
+  MOVIE_STATUS_LABEL,
+  MovieStatusSlug
 } from '@blockframes/movie/movie/static-model/types';
-import { getCodeIfExists } from '@blockframes/movie/movie/static-model/staticModels';
+import { getCodeIfExists, ExtractCode } from '@blockframes/movie/movie/static-model/staticModels';
 import { languageValidator } from '@blockframes/utils/form/validators/validators';
 import { ControlErrorStateMatcher } from '@blockframes/utils/form/validators/validators';
 import { MovieAlgoliaResult } from '@blockframes/utils/algolia';
@@ -412,7 +413,7 @@ export class MarketplaceSearchComponent implements OnInit {
      * We want to exchange the label for the slug,
      * because for our backend we need to store the slug.
      */
-    const productionStatusSlug: GenresSlug = getCodeIfExists('MOVIE_STATUS', status);
+    const productionStatusSlug = getCodeIfExists('MOVIE_STATUS', status);
     if (
       this.movieProductionStatuses.includes(status) &&
       !this.filterForm.get('status').value.includes(productionStatusSlug)
@@ -466,7 +467,7 @@ export class MarketplaceSearchComponent implements OnInit {
      */
     const territorySlug: TerritoriesSlug = getCodeIfExists(
       'TERRITORIES',
-      territory.option.viewValue
+      territory.option.viewValue as ExtractCode<'TERRITORIES'>
     );
     this.filterForm.addTerritory(territorySlug);
     this.territoryInput.nativeElement.value = '';
@@ -489,7 +490,7 @@ export class MarketplaceSearchComponent implements OnInit {
     this.analytics.event(AnalyticsEvents.addedGenre, { genre });
   }
 
-  public removeGenre(genre: string) {
+  public removeGenre(genre: ExtractCode<'GENRES'>) {
     const index = this.selectedGenres.indexOf(genre);
     if (index >= 0) {
       this.selectedGenres.splice(index, 1);
