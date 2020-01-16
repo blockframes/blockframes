@@ -7,7 +7,6 @@ import {
   createMoviePromotionalDescription,
   createMovieSalesCast,
   createMovieSalesInfo,
-  createMovieVersionInfo,
   createMovieFestivalPrizes,
   createMovieSalesAgentDeal,
   createPromotionalElement,
@@ -189,7 +188,7 @@ export class ViewExtractedElementsComponent {
           promotionalElements: createMoviePromotionalElements(),
           salesCast: createMovieSalesCast(),
           salesInfo: createMovieSalesInfo(),
-          versionInfo: createMovieVersionInfo(),
+          versionInfo: {}, // TODO issue #1596
           festivalPrizes: createMovieFestivalPrizes(),
           salesAgentDeal: createMovieSalesAgentDeal(),
           budget: createMovieBudget(),
@@ -522,7 +521,7 @@ export class ViewExtractedElementsComponent {
 
         // DUBS (Available dubbing(s))
         // @todo #1562 Wait for  #1411
-        if (spreadSheetRow[SpreadSheetMovie.dubbings]) {
+/*         if (spreadSheetRow[SpreadSheetMovie.dubbings]) {
           movie.versionInfo.dubbings = [];
           spreadSheetRow[SpreadSheetMovie.dubbings].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
             const dubbing = getCodeIfExists('LANGUAGES', g);
@@ -538,11 +537,15 @@ export class ViewExtractedElementsComponent {
               });
             }
           });
-        }
+        } */
 
         // SUBTILES (Available subtitle(s))
+<<<<<<< HEAD
         // @todo #1562 Wait for  #1411
         if (spreadSheetRow[SpreadSheetMovie.subtitles]) {
+=======
+   /*      if (spreadSheetRow[SpreadSheetMovie.subtitles]) {
+>>>>>>> updated the apps to MovieLangSpec
           movie.versionInfo.subtitles = [];
           spreadSheetRow[SpreadSheetMovie.subtitles].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
             const subtitle = getCodeIfExists('LANGUAGES', g);
@@ -577,7 +580,7 @@ export class ViewExtractedElementsComponent {
               });
             }
           });
-        }
+        } */
 
         // SCREENER LINK
         if (spreadSheetRow[SpreadSheetMovie.screenerLink]) {
@@ -1015,7 +1018,7 @@ export class ViewExtractedElementsComponent {
       });
     }
 
-    if (movie.versionInfo.dubbings.length === 0) {
+/*     if (movie.versionInfo.dubbings.length === 0) {
       errors.push({
         type: 'warning',
         field: 'versionInfo.dubbings',
@@ -1023,9 +1026,9 @@ export class ViewExtractedElementsComponent {
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
-    }
+    } */
 
-    if (movie.versionInfo.subtitles.length === 0) {
+/*     if (movie.versionInfo.subtitles.length === 0) {
       errors.push({
         type: 'warning',
         field: 'versionInfo.subtitles',
@@ -1033,7 +1036,7 @@ export class ViewExtractedElementsComponent {
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
-    }
+    } */
 
     /*
     @todo #1562  Wait for  #1411
