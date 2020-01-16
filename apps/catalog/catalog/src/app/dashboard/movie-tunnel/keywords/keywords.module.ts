@@ -6,10 +6,10 @@ import { MovieFormPromotionalDescriptionModule } from '@blockframes/movie/movie/
 import { ReactiveFormsModule } from '@angular/forms';
 
 // Material
-import { MatExpansionModule } from '@angular/material/expansion';
+import { MatCardModule } from '@angular/material/card';
 
 const material = [
-  MatExpansionModule
+  MatCardModule
 ]
 @NgModule({
   declarations: [TunnelKeywordsComponent],
