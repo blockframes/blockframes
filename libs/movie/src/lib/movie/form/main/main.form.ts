@@ -88,6 +88,7 @@ function createMovieMainControls(main : Partial<MovieMain> = {}) {
     workType: new FormControl(entity.workType),
     storeConfig: new StoreConfigForm(entity.storeConfig),
     customGenres: FormList.factory(entity.customGenres),
+    workType: new FormControl(entity.workType)
   }
 }
 
