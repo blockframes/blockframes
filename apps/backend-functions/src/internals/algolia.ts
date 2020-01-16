@@ -45,7 +45,7 @@ export function storeSearchableMovie(
     'main.title.international',
     'main.title.original',
     'main.directors',
-    'main.language',
+    'main.originalLanguages',
     'main.status',
     'main.originCountries',
     'promotionalDescription.keywords',
