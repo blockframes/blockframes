@@ -1,0 +1,35 @@
+<article *ngFor="let country of originCountries.controls; let i = index; let last = last">
+  <movie-form-origin-country [form]="country"></movie-form-origin-country>
+
+  <ng-container *ngIf="originalRelease.at(i) as releaseControl">
+    <form [formGroup]="releaseControl">
+      <mat-form-field appearance="outline">
+        <mat-label>Media</mat-label>
+        <mat-select formControlName="media">
+          <mat-option *ngFor="let medium of media" [value]="medium.slug">
+            {{ medium.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Release Date</mat-label>
+        <input matInput formControlName="date" [matDatepicker]="releaseDate" placeholder="MM/DD/YYYY">
+        <mat-datepicker-toggle matSuffix [for]="releaseDate"></mat-datepicker-toggle>
+        <mat-datepicker #releaseDate></mat-datepicker>
+      </mat-form-field>
+    </form>
+  </ng-container>
+
+  <div *ngIf="!last" fxLayout="column" fxLayoutAlign="center center">
+    <button mat-mini-fab color="warn" (click)="remove(i)" aria-label="Remove a director form">
+      <mat-icon>delete</mat-icon>
+    </button>
+    <span class="mat-caption">Delete country</span>
+  </div>
+  <div *ngIf="last" fxLayout="column" fxLayoutAlign="center center">
+    <button mat-mini-fab color="primary" (click)="originCountries.add()" aria-label="Remove a director form">
+      <mat-icon>add</mat-icon>
+    </button>
+    <span class="mat-caption">Add another country</span>
+  </div>
+</article>

@@ -12,7 +12,8 @@ import {
   RatingSlug,
   SoundFormatSlug,
   FormatQualitySlug,
-  FormatSlug
+  FormatSlug,
+  GenresSlug
 } from "@blockframes/movie/movie/static-model";
 import { RawRange, NumberRange } from "@blockframes/utils/common-interfaces/range";
 import { Person, Credit, SalesAgent, Company } from "@blockframes/utils/common-interfaces/identity";
@@ -177,7 +178,7 @@ export interface MovieMain {
   officialIds?: MovieOfficialIds,
   poster?: ImgRef,
   productionYear?: number,
-  genres?: string[],
+  genres?: GenresSlug[],
   customGenres?: string[],
   originCountries?: TerritoriesSlug[],
   originalLanguages?: LanguagesSlug[],
