@@ -819,6 +819,11 @@ export const getLabelByCode = (scope: Scope, slug: string) => {
   return item ? item.label : '';
 };
 
+
+export const isInSlug = (scope: Scope, key: string) => {
+  return (models[scope] as any[]).map(({ slug }) => slug).includes(key);
+}
+
 export default models;
 
 export interface SlugAndLabel {
