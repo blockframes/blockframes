@@ -103,9 +103,9 @@ function createMovieMainControls(main : Partial<MovieMain> = {}) {
     directors: FormList.factory(entity.directors, el => new DirectorForm(el)),
     poster: new FormControl(entity.poster),
     productionYear: new FormControl(entity.productionYear, yearValidators),
-    genres: new FormControl(entity.genres),
-    originCountries: FormList.factory(entity.originCountries, el => new FormControl(el)),
-    originalLanguages: new FormControl(entity.originalLanguages),
+    genres: FormList.factory(entity.genres),
+    originCountries: FormList.factory(entity.originCountries, el => new FormControl(el, isSlugValidator('TERRITORIES'))),
+    originalLanguages: FormList.factory(entity.originalLanguages, el => new FormControl(el, isSlugValidator('LANGUAGES'))),
     status: new FormControl(entity.status , [Validators.required]),
     totalRunTime: new FormControl(entity.totalRunTime),
     shortSynopsis: new FormControl(entity.shortSynopsis, [Validators.maxLength(500)] ),
@@ -113,8 +113,6 @@ function createMovieMainControls(main : Partial<MovieMain> = {}) {
     workType: new FormControl(entity.workType),
     storeConfig: new StoreConfigForm(entity.storeConfig),
     customGenres: FormList.factory(entity.customGenres),
-    workType: new FormControl(entity.workType),
-    storeConfig: new StoreConfigForm(entity.storeConfig)
   }
 }
 
