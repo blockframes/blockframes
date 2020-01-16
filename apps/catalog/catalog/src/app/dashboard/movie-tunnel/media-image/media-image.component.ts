@@ -12,12 +12,17 @@ export class MediaImageComponent {
   get promotionalElements() {
     return this.form.get('promotionalElements')
   }
-
-  get images() {
-    return this.form.get('promotionalElements').get('images');
+  
+  get banner() {
+    return this.promotionalElements.get('banner');
   }
 
   get poster() {
-    return this.form.get('main').get('poster');
-  }  
+    return this.promotionalElements.get('poster');
+  }
+
+  get stillPhoto() {
+    return this.promotionalElements.get('still_photo');
+  }
+
 }
