@@ -197,8 +197,10 @@ jobs:
     environment:
       - ENV: staging
       - NODE_OPTIONS: '--max_old_space_size=4096'
+      - GOOGLE_APPLICATION_CREDENTIALS: creds.json
     steps:
       - checkout_project
+      - run: echo "${FIREBASE_STAGING_SERVICE_ACCOUNT}" > creds.json
       - run: cp env/env.staging.ts env/env.ts # required for the typechecking & file rewrite to work
       - run: npm run build:all
       - slack/notify:
