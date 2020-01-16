@@ -27,7 +27,6 @@
 <ng-container *ngIf="hasOtherGenre$ | async">
   <p>Please specify the other genres</p>
   <ng-container *ngFor="let control of customGenreForm.controls; let i = index; let last = last">
-    <!--  Genre -->
     <mat-form-field appearance="outline">
       <mat-label>Other Genre</mat-label>
       <input matInput [formControl]="control" type="text"/>
