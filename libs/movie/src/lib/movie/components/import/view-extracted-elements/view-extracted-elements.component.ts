@@ -539,8 +539,7 @@ export class ViewExtractedElementsComponent {
             label: 'Screener link',
             media: spreadSheetRow[SpreadSheetMovie.screenerLink],
           });
-
-          movie.promotionalElements.screener_link;
+          movie.promotionalElements.screener_link = promotionalElement;
         } else {
           importErrors.errors.push({
             type: 'warning',
@@ -558,7 +557,7 @@ export class ViewExtractedElementsComponent {
             media: spreadSheetRow[SpreadSheetMovie.promoReelLink],
           });
 
-          movie.promotionalElements.promo_reel_link;
+          movie.promotionalElements.promo_reel_link = promotionalElement;
         } else {
           importErrors.errors.push({
             type: 'warning',
@@ -576,7 +575,7 @@ export class ViewExtractedElementsComponent {
             media: spreadSheetRow[SpreadSheetMovie.trailerLink],
           });
 
-          movie.promotionalElements.trailer_link;
+          movie.promotionalElements.trailer_link = promotionalElement;
         } else {
           importErrors.errors.push({
             type: 'warning',
@@ -594,7 +593,7 @@ export class ViewExtractedElementsComponent {
             media: spreadSheetRow[SpreadSheetMovie.pitchTeaserLink],
           });
 
-          movie.promotionalElements.teaser_link;
+          movie.promotionalElements.teaser_link = promotionalElement;
         } else {
           importErrors.errors.push({
             type: 'warning',
@@ -612,7 +611,7 @@ export class ViewExtractedElementsComponent {
             media: spreadSheetRow[SpreadSheetMovie.scenarioLink],
           });
 
-          movie.promotionalElements.scenario;
+          movie.promotionalElements.scenario = promotionalElement;
         } else {
           importErrors.errors.push({
             type: 'warning',
@@ -652,7 +651,7 @@ export class ViewExtractedElementsComponent {
             ratio: 'rectangle'
           });
 
-          movie.promotionalElements.banner;
+          movie.promotionalElements.banner = promotionalElement;
         } else {
           importErrors.errors.push({
             type: 'warning',

@@ -1,6 +1,5 @@
 import {
   MovieStatusSlug,
-  PromotionalElementTypesSlug,
   ResourceRatioSlug,
   ResourceSizesSlug,
   TerritoriesSlug,
