@@ -31,7 +31,7 @@ import { MovieFormPromotionalDescriptionComponent } from './promotional-descript
 import { MovieFormSalesCastComponent } from './sales-cast/sales-cast.component';
 import { MovieFormStoryComponent } from './story/story.component';
 import { MovieFormRootComponent } from './root/root.component';
-import { MovieFormFestivalPrizesComponent } from './festival-prizes/festival-prizes.component';
+import { MovieFormFestivalPrizesModule } from './festival-prizes/festival-prizes.module';
 import { MovieFormSalesAgentDealComponent } from './sales-agent-deal/sales-agent-deal.component';
 import { MovieFormVersionInfoComponent } from './version-info/version-info.component';
 import { MovieFormSalesInfoComponent } from './sales-info/sales-info.component';
@@ -67,6 +67,9 @@ import { MovieFormSalesInfoComponent } from './sales-info/sales-info.component';
     UiFormModule,
     UploadModule,
     CropperModule,
+
+    // Forms
+    MovieFormFestivalPrizesModule
   ],
   declarations: [
     MovieFormRootComponent,
@@ -77,7 +80,6 @@ import { MovieFormSalesInfoComponent } from './sales-info/sales-info.component';
     MovieFormSalesCastComponent,
     MovieFormVersionInfoComponent,
     MovieFormSalesInfoComponent,
-    MovieFormFestivalPrizesComponent,
     MovieFormSalesAgentDealComponent,
   ],
   exports: [

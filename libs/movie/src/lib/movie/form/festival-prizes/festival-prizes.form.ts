@@ -28,7 +28,7 @@ function createMovieFestivalPrizesControls(festivalprizes?: Partial<MovieFestiva
   }
 }
 
-type MovieFestivalPrizesControl = ReturnType<typeof createMovieFestivalPrizesControls>
+export type MovieFestivalPrizesControl = ReturnType<typeof createMovieFestivalPrizesControls>
 
 export class MovieFestivalPrizesForm extends FormEntity<MovieFestivalPrizesControl>{
 

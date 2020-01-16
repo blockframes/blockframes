@@ -47,6 +47,16 @@
         <movie-form-total-runtime [form]="main.get('totalRunTime')"></movie-form-total-runtime>
       </mat-card-content>
     </mat-card>
+  
+    <!-- Festival -->
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Festivals</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <movie-form-festivalprizes [form]="form.get('festivalPrizes')"></movie-form-festivalprizes>
+      </mat-card-content>
+    </mat-card>
 
 
   </section>
