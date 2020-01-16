@@ -1,6 +1,6 @@
 import { AFM_DISABLE } from '@env';
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { getLabelByCode, getCodeIfExists } from '../../static-model/staticModels';
+import { getLabelByCode, hasSlug } from '../../static-model/staticModels';
 
 @Component({
   selector: 'movie-display-film-details',
@@ -17,7 +17,7 @@ export class MovieDisplayFilmDetailsComponent {
   // TODO issue#1146
   public AFM_DISABLE = AFM_DISABLE;
 
-  public hasTheatricalRelease () {
-    return this.salesInfo.originalRelease.some(r => r.media === getCodeIfExists('MEDIAS', 'theatrical'))
+  public hasTheatricalRelease() {
+    return hasSlug(this.salesInfo.originalRelease, 'MEDIAS', 'theatrical');
   }
 }
