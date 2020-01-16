@@ -1,16 +1,18 @@
 import { CallableContext } from "firebase-functions/lib/providers/https";
 import { BigQuery } from '@google-cloud/bigquery';
 import { PublicUser, OrganizationDocument, MovieAnalytics, EventAnalytics, CallMovieAnalytics } from "./data/types";
-import { getDocument } from "./data/internals";
+import { getDocument } from './data/internals';
+import { AnalyticsEvents } from '@blockframes/utils/analytics/app-analytics';
+import { bigQueryAnalyticsTable } from "./environments/environment";
 
 function queryAddedToWishlist(movieId: string, from: number, to: number) {
   return `
   SELECT params.value.string_value AS movieId, COUNT(*) AS hits
   FROM
-    \`blockframes-hugo.analytics_195044791.events_*\`,
+    \`${bigQueryAnalyticsTable}*\`,
     UNNEST(event_params) AS params
   WHERE
-    event_name = 'added_to_wishlist'
+    event_name = '${AnalyticsEvents.addedToWishlist}'
     AND _TABLE_SUFFIX BETWEEN FORMAT_DATE("%Y%m%d", DATE_SUB(CURRENT_DATE(), INTERVAL ${from} DAY)) AND FORMAT_DATE("%Y%m%d", DATE_SUB(CURRENT_DATE(), INTERVAL ${to} DAY))
     AND params.key = 'movieId'
     AND params.value.string_value = '${movieId}'
@@ -23,10 +25,10 @@ function queryPromoReelOpened(movieId: string, from: number, to: number) {
   return `
   SELECT params.value.string_value AS movieId, COUNT(*) AS hits
   FROM
-    \`blockframes-hugo.analytics_195044791.events_*\`,
+    \`${bigQueryAnalyticsTable}*\`,
     UNNEST(event_params) AS params
   WHERE
-    event_name = 'promo_reel_opened'
+    event_name = '${AnalyticsEvents.promoReelOpened}'
     AND _TABLE_SUFFIX BETWEEN FORMAT_DATE("%Y%m%d", DATE_SUB(CURRENT_DATE(), INTERVAL ${from} DAY)) AND FORMAT_DATE("%Y%m%d", DATE_SUB(CURRENT_DATE(), INTERVAL ${to} DAY))
     AND params.key = 'movieId'
     AND params.value.string_value = '${movieId}'
@@ -39,10 +41,10 @@ function queryMovieViews(movieId: string, from: number, to: number) {
   return `
   SELECT params.value.string_value AS page_path, COUNT(*) AS hits
   FROM
-    \`blockframes-hugo.analytics_195044791.events_*\`,
+    \`${bigQueryAnalyticsTable}*\`,
     UNNEST(event_params) AS params
   WHERE
-    event_name = 'page_view'
+    event_name = '${AnalyticsEvents.pageView}'
     AND _TABLE_SUFFIX BETWEEN FORMAT_DATE("%Y%m%d", DATE_SUB(CURRENT_DATE(), INTERVAL ${from} DAY)) AND FORMAT_DATE("%Y%m%d", DATE_SUB(CURRENT_DATE(), INTERVAL ${to} DAY))
     AND params.key = 'page_path'
     AND params.value.string_value = '/c/o/marketplace/${movieId}/view'
@@ -59,7 +61,7 @@ async function executeQuery(query: any) {
 
   const options = {
     query,
-    timeoutMs: 100000, // Time out after 100 seconds.
+    timeoutMs: 100000,
     useLegacySql: false,
   };
 

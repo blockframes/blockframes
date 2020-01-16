@@ -31,3 +31,6 @@ export const algolia = {
 
 export const adminEmail = mockConfigIfNeeded('admin', 'email');
 export const adminPassword = mockConfigIfNeeded('admin', 'password');
+
+// BigQuery
+export const bigQueryAnalyticsTable = 'blockframes-hugo.analytics_195044791.events_';
