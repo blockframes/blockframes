@@ -23,14 +23,4 @@ export class MovieFormFestivalPrizesComponent {
   get prizes() {
     return this.form.get('prizes');
   }
-
-  public getPrizeName(i: number) {
-    const control = this.form.getPrize(i);
-    return control.get('name').value ? control.get('name').value : 'unnamed festival';
-  }
-
-  public getPrizeLogo(i: number) {
-    const control = this.form.getPrize(i);
-    return control.get('logo').value;
-  }
 }

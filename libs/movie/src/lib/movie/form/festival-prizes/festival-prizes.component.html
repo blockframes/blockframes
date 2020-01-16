@@ -1,41 +1,44 @@
 <ng-container *ngFor="let control of prizes.controls; let i = index; let last = last">
-  <div [formGroup]="control">
-    <h4>{{ getPrizeName(i) }}</h4>
-    <!-- Name -->
-    <mat-form-field appearance="outline">
-      <mat-label>Name</mat-label>
-      <input matInput formControlName="name" placeholder="Festival name">
-    </mat-form-field>
-    <!-- Prize -->
-    <mat-form-field appearance="outline">
-      <mat-label>Award Selection</mat-label>
-      <input matInput formControlName="prize" placeholder="Prize">
-    </mat-form-field>
-    <!-- Year -->
-    <mat-form-field appearance="outline">
-      <mat-label>Year</mat-label>
-      <input matInput formControlName="year" placeholder="Festival year">
-    </mat-form-field>
+  <article [formGroup]="control">
+    <div fxLayout="row" fxLayoutAlign="space-between center">
+      <!-- Name -->
+      <mat-form-field appearance="outline">
+        <mat-label>Name</mat-label>
+        <input matInput formControlName="name" placeholder="Festival name">
+      </mat-form-field>
+      <!-- Prize -->
+      <mat-form-field appearance="outline">
+        <mat-label>Award Selection</mat-label>
+        <input matInput formControlName="prize" placeholder="Prize">
+      </mat-form-field>
+      <!-- Year -->
+      <mat-form-field appearance="outline">
+        <mat-label>Year</mat-label>
+        <input matInput formControlName="year" placeholder="Festival year">
+      </mat-form-field>
+    </div>
     <!-- Premiere -->
-    <mat-button-toggle-group   aria-label="Premiere">
-      <ng-container *ngFor="let type of premiereTypes">
-        <mat-button-toggle [value]="type">{{ premiereType[type] }}</mat-button-toggle>
-      </ng-container>
-    </mat-button-toggle-group>
-  
+    <div fxLayout="column" fxLayoutAlign="start start">
+      <mat-button-toggle-group multiple formControlName="premiere" aria-label="Premiere" name="premiere">
+        <ng-container *ngFor="let type of premiereTypes">
+          <mat-button-toggle [value]="type">{{ premiereType[type] }}</mat-button-toggle>
+        </ng-container>
+      </mat-button-toggle-group>
+      <span class="mat-caption">Selection all premiere that apply</span>
+    </div>
     <!-- Remove -->
-    <div *ngIf="!last" fxLayout="column" fxLayoutAlign="center cener">
+    <footer  *ngIf="!last" fxLayout="column" fxLayoutAlign="center center">
       <button mat-mini-fab color="warn" (click)="prizes.removeAt(i)" aria-label="Remove a director form">
         <mat-icon>delete</mat-icon>
       </button>
       <span class="mat-caption">Delete Festival</span>
-    </div>
+    </footer>
     <!-- Add-->
-    <div *ngIf="last" fxLayout="column" fxLayoutAlign="center cener">
+    <footer *ngIf="last" fxLayout="column" fxLayoutAlign="center center">
       <button mat-mini-fab color="primary" (click)="prizes.add()" aria-label="Remove a director form">
         <mat-icon>add</mat-icon>
       </button>
       <span class="mat-caption">Add another Festival</span>
-    </div>
-  </div>
+    </footer>
+  </article>
 </ng-container>
