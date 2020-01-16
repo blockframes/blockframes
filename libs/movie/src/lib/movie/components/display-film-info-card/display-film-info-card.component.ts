@@ -1,7 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input } from "@angular/core";
 import { Company } from "@blockframes/utils/common-interfaces/identity";
-import { getCodeIfExists } from "@blockframes/movie/moviestatic-model/staticModels";
-import { MovieOriginalRelease } from "@blockframes/movie/movie+state/movie.firestore";
+import { hasSlug } from "@blockframes/movie/moviestatic-model/staticModels";
 
 @Component({
   selector: 'movie-display-film-info-card',
@@ -24,11 +23,11 @@ export class MovieDisplayFilmInfoCardComponent {
   @Input() stakeholders: Company[];
   @Input() salesAgent;
 
-  public hasTheatricalRelease () {
-    return this.salesInfo.originalRelease.some(r => r.media === getCodeIfExists('MEDIAS', 'theatrical'))
+  public hasTheatricalRelease() {
+    return hasSlug(this.salesInfo.originalRelease.map(r => r.media), 'MEDIAS', 'theatrical');
   }
 
   public hasEuropeanQualification() {
-    return this.salesInfo.certifications.some(r => r === getCodeIfExists('CERTIFICATIONS', 'europeanQualification'))
+    return hasSlug(this.salesInfo.certifications, 'CERTIFICATIONS', 'europeanQualification');
   }
 }
