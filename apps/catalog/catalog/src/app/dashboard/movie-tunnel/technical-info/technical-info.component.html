@@ -1,24 +1,23 @@
 <tunnel-page>
-    <h4 title>TITLE INFORMATION</h4>
-    <h1 subtitle>Technical information</h1>
-    <section tunnel-form>
-      <mat-card>
-        <mat-card-header>
-          <mat-card-title>Format</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-            <movie-form-format [form]="movieSalesInfo"></movie-form-format>
-        </mat-card-content>
-      </mat-card>
-      <mat-card>
-        <mat-card-header>
-          <!-- TOD(MF) ADD DYNAMIC VERSION WORD PLURAL HERE -->
-          <mat-card-title>Version available</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-            <movie-form-version-info [form]="movieVersionInfo"></movie-form-version-info>
-        </mat-card-content>
-      </mat-card>
-    </section>
-  </tunnel-page>
-  
+  <h4 title>TITLE INFORMATION</h4>
+  <h1 subtitle>Technical information</h1>
+  <section tunnel-form>
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Format</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <movie-form-format [form]="movieSalesInfo"></movie-form-format>
+      </mat-card-content>
+    </mat-card>
+    <mat-card>
+      <mat-card-header>
+        <!-- TOD(MF) ADD DYNAMIC VERSION WORD PLURAL HERE -->
+        <mat-card-title>Version available</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <movie-form-version-info [form]="movieVersionInfo"></movie-form-version-info>
+      </mat-card-content>
+    </mat-card>
+  </section>
+</tunnel-page>
