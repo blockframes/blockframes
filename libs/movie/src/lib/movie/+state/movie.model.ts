@@ -22,7 +22,7 @@ import {
   MovieOfficialIds,
   MovieOriginalRelease,
   MovieRating,
-  MovieDocumentWithDates
+  MovieDocumentWithDates,
   BoxOffice,
   UnitBox,
 } from './movie.firestore';
@@ -242,7 +242,7 @@ export function createBoxOffice(params: Partial<BoxOffice> = {}): BoxOffice {
   return {
       unit: UnitBox.boxoffice_dollar,
       value: 0,
-      territory: '',
+      territory: null,
       ...params,
   }
 }
@@ -250,7 +250,7 @@ export function createBoxOffice(params: Partial<BoxOffice> = {}): BoxOffice {
 export function createMovieBudget(params: Partial<MovieBudget> = {}): MovieBudget {
   return {
     totalBudget: '',
-    boxOffice: createBoxOffice(params.boxOffice),
+    boxOffice: [],
     ...params,
     estimatedBudget: createRange<number>(params.estimatedBudget),
   };

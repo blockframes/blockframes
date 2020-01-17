@@ -1,46 +1,54 @@
-<form [formGroup]="form">
-  <span>World-wide</span>
-  <article fxLayout="row" fxLayoutGap="24px">
-    <mat-form-field appearance="outline">
-      <mat-label>Metrics</mat-label>
-      <mat-select formGroupName="unit">
-        <mat-option *ngFor="let unit of unitBoxList" [value]="unit">
-          {{ unitBox[unit] }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
-
-    <mat-form-field appearance="outline">
-      <mat-label>Earnings</mat-label>
-      <input matInput type="number" formGroupName="value">
-    </mat-form-field>
-  </article>
-
-  <mat-divider [inset]="true"></mat-divider>
-
-  <!-- <div formArrayName="boxOffice" *ngFor="let boxOffice of boxOffice.controls; let i = index">
-    <div [formGroup]="i" class="full-width">
-      <span>National</span>
+<ng-container *ngIf="units$ | async as units">
+  <ng-container *ngFor="let control of form.controls; let i = index; let last = last">
+    <form [formGroup]="control">
+      <span>World-wide</span>
       <article fxLayout="row" fxLayoutGap="24px">
-        <mat-form-field appearance="outline">
-          <mat-label>Country</mat-label>
-          <input matInput type="text" formControl="territory">
-        </mat-form-field>
+        <movie-form-origin-country [form]="control.get('territory')"></movie-form-origin-country>
 
         <mat-form-field appearance="outline">
           <mat-label>Metrics</mat-label>
-          <mat-select formControl="unit">
-            <mat-option>
-              blabla
+          <mat-select formGroupName="unit">
+            <mat-option *ngFor="let unit of unitBox | keyvalue" [value]="unit.key">
+              {{ unit.value }}
             </mat-option>
           </mat-select>
         </mat-form-field>
-
+    
         <mat-form-field appearance="outline">
-          <mat-label>Number of tickets sold</mat-label>
-          <input matInput type="number" formControl="value">
+          <mat-label>Earnings</mat-label>
+          <input matInput type="number" formGroupName="value">
+          <span *ngIf="units[i] === '$'" matPrefix>{{ units[i] }}</span>
+          <span *ngIf="units[i] !== '$'" matSuffix>{{ units[i] }}</span>
         </mat-form-field>
       </article>
-    </div>
-  </div> -->
-</form>
+    
+      <mat-divider [inset]="true"></mat-divider>
+    
+      <!-- <div formArrayName="boxOffice" *ngFor="let boxOffice of boxOffice.controls; let i = index">
+        <div [formGroup]="i" class="full-width">
+          <span>National</span>
+          <article fxLayout="row" fxLayoutGap="24px">
+            <mat-form-field appearance="outline">
+              <mat-label>Country</mat-label>
+              <input matInput type="text" formControl="territory">
+            </mat-form-field>
+    
+            <mat-form-field appearance="outline">
+              <mat-label>Metrics</mat-label>
+              <mat-select formControl="unit">
+                <mat-option>
+                  blabla
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+    
+            <mat-form-field appearance="outline">
+              <mat-label>Number of tickets sold</mat-label>
+              <input matInput type="number" formControl="value">
+            </mat-form-field>
+          </article>
+        </div>
+      </div> -->
+    </form>
+  </ng-container>
+</ng-container>
