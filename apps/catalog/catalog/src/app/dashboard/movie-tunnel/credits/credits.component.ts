@@ -19,8 +19,16 @@ export class CreditsComponent {
     return this.form.get('main').get('stakeholders');
   }
 
-  get credits() {
-    return this.form.get('salesCast').get('credits');
+  get producers() {
+    return this.form.get('salesCast').get('producers');
+  }
+
+  get crew() {
+    return this.form.get('salesCast').get('crew');
+  }
+
+  get cast() {
+    return this.form.get('salesCast').get('cast');
   }
 
 }
