@@ -136,7 +136,9 @@ export function createPromotionalElement(
 
 export function createMovieSalesCast(params: Partial<MovieSalesCast> = {}): MovieSalesCast {
   return {
-    credits: [],
+    producers: [],
+    cast: [],
+    crew: [],
     ...params
   };
 }

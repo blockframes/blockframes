@@ -13,7 +13,7 @@ import { CreditForm } from './sales-cast.form';
 
 export class MovieFormSalesCastComponent {
   @Input() form: FormArray;
-  roles = staticModels.CREDIT_ROLES;
+  roles = staticModels.CAST_ROLES;
 
   add() {
     this.form.push(new CreditForm())

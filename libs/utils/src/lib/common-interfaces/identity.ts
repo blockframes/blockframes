@@ -1,5 +1,5 @@
 import { ImgRef, createImgRef } from "../image-uploader";
-import { StakeholderRolesSlug, CreditRolesSlug, LegalRolesSlug, TerritoriesSlug } from "@blockframes/movie/movie/static-model/types";
+import { StakeholderRolesSlug, LegalRolesSlug, TerritoriesSlug, ProducerRolesSlug, CastRolesSlug, CrewRolesSlug } from "@blockframes/movie/movie/static-model/types";
 import { Location } from "@blockframes/organization/+state/organization.firestore";
 
 
@@ -49,8 +49,28 @@ export interface Stakeholder extends StakeholderRaw {
  * @dev interface to represent a movie credit
  */
 export interface Credit extends Person {
-  role: CreditRolesSlug, // overrided role scope from Person interface
   shortBiography?: string,
+};
+
+/**
+ * @dev interface to represent a producer credit
+ */
+export interface Producer extends Credit {
+  role: ProducerRolesSlug, // overrided role scope from Producer interface
+};
+
+/**
+ * @dev interface to represent a cast credit
+ */
+export interface Cast extends Credit {
+  role: CastRolesSlug, // overrided role scope from Cast interface
+};
+
+/**
+ * @dev interface to represent a crew credit
+ */
+export interface Crew extends Credit {
+  role: CrewRolesSlug, // overrided role scope from Crew interface
 };
 
 /**
@@ -102,4 +122,16 @@ export function createCredit(params: Partial<Credit> = {}): Credit {
     avatar: createImgRef(),
     ...params
   };
+}
+
+export function createProducer(params: Partial<Credit> = {}): Producer {
+  return createCredit(params) as Producer;
+}
+
+export function createCrew(params: Partial<Credit> = {}): Crew {
+  return createCredit(params) as Crew;
+}
+
+export function createCast(params: Partial<Credit> = {}): Cast {
+  return createCredit(params) as Cast;
 }
