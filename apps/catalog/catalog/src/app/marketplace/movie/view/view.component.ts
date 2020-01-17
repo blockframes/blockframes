@@ -6,7 +6,8 @@ import { Observable } from 'rxjs';
 import { MovieQuery } from '@blockframes/movie';
 import { OrganizationQuery } from '@blockframes/organization';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { FireAnalytics, AnalyticsEvents } from '@blockframes/utils/analytics/app-analytics';
+import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
+import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
 
 @Component({
   selector: 'catalog-movie-view',
