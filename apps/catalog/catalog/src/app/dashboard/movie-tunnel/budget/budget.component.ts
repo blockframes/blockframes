@@ -1,12 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
 
 @Component({
   selector: 'catalog-movie-tunnel-budget',
   templateUrl: './budget.component.html',
-  styleUrls: ['./budget.component.scss']
+  styleUrls: ['./budget.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BudgetComponent implements OnInit {
+export class BudgetComponent {
 
   constructor(private form: MovieForm) { }
 
@@ -22,7 +23,5 @@ export class BudgetComponent implements OnInit {
     return this.form.get('budget').get('boxOffice');
   }
 
-  ngOnInit() {
-  }
 
 }
