@@ -79,7 +79,7 @@ type TitleFormControl = ReturnType<typeof createTitleFormControl>;
 
 // STORE CONFIG
 
-export class StoreConfigForm extends FormEntity<TitleFormControl> {
+export class StoreConfigForm extends FormEntity<StoreConfigControl> {
   constructor(storeConfig?: Partial<Movie['main']['storeConfig']>) {
     super(createStoreConfigFormControl(storeConfig));
   }

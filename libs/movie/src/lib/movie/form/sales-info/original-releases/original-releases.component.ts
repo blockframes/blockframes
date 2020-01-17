@@ -34,7 +34,7 @@ export class OriginalReleaseComponent implements OnInit, OnDestroy {
     this.sub = this.originCountries.valueChanges.pipe(
       startWith(this.originCountries.value),
     ).subscribe(countries => {
-      countries.forEach((country: any, i: number) => {
+      countries.forEach((country, i: number) => {
         const control = this.originalRelease.createControl({ country });
         this.originalRelease.setControl(i, control);
       });
