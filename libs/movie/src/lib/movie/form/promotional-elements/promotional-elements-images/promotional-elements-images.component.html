@@ -1,8 +1,6 @@
-<form [formGroup]="localForm">
-  <drop-cropper 
+<drop-cropper 
   [storagePath]="type" 
-  [ratio]="1" 
-  [setWidth]="300"
-  formControlName="media"
-  (onUploaded)="add($event)"></drop-cropper>
-</form>
+  [ratio]="ratio" 
+  [setWidth]="width"
+  [formControl]="form">
+</drop-cropper>

@@ -5,6 +5,7 @@ import { PromotionalElementTypesSlug } from '@blockframes/movie/moviestatic-mode
 import { MoviePromotionalElementForm } from '../promotional-elements.form';
 import { FormArray, FormControl } from '@angular/forms';
 import { createImgRef, ImgRef } from '@blockframes/utils/image-uploader';
+import { MoviePromotionalElementsControl } from '../promotional-elements.form';
 @Component({
   selector: '[form] movie-promotional-elements-images',
   templateUrl: './promotional-elements-images.component.html',
@@ -12,13 +13,17 @@ import { createImgRef, ImgRef } from '@blockframes/utils/image-uploader';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PromotionalElementsImagesComponent {
-  @Input() form: FormList<PromotionalElement>
+  @Input() form: MoviePromotionalElementsControl['banner'];
+  // @Input() form = new MoviePromotionalElementForm();
   @Input() type: string;
-  localForm = new MoviePromotionalElementForm();
-  displayCropper: boolean;
+  @Input() ratio: string;
+  @Input() width: string;
 
-  add(media: ImgRef) {
-    const control = new MoviePromotionalElementForm({ label: '', type: this.type, media: media });
-    this.form.push(control);
-  }
+  // banner: MoviePromotionalElementsControl['banner'];
+  // poster: MoviePromotionalElementsControl['poster'];
+  // stillPhoto: MoviePromotionalElementsControl['still_photo'];
+
+  // get banner() {
+  //   return this.form.banner;
+  // }
 }
