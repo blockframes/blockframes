@@ -18,6 +18,7 @@ import { RawRange, NumberRange } from "@blockframes/utils/common-interfaces/rang
 import { Person, SalesAgent, Producer, Crew, Cast, Stakeholder } from "@blockframes/utils/common-interfaces/identity";
 import { firestore } from "firebase/app";
 import { ImgRef } from "@blockframes/utils/image-uploader";
+import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
 
 type Timestamp = firestore.Timestamp;
 
@@ -52,28 +53,15 @@ export enum UnitBox {
 }
 
 export interface EventAnalytics {
-  hits: number,
-  movieId?: string,
-  page_path?: string,
-  increase: number
+  event_date: number,
+  event_name: AnalyticsEvents,
+  hits: number
 }
 
 export interface MovieAnalytics {
-  addedToWishlist: EventAnalytics,
-  movieViews: EventAnalytics,
-  promoReelOpened: EventAnalytics
-}
-
-export interface CallMovieAnalytics {
-  movieId: string,
-  currentPeriod: {
-    from: number,
-    to: number
-  },
-  pastPeriod: {
-    from: number,
-    to: number
-  }
+  addedToWishlist: EventAnalytics[],
+  movieViews: EventAnalytics[],
+  promoReelOpened: EventAnalytics[]
 }
 
 export interface MovieVersionInfo {
