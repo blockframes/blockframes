@@ -11,8 +11,7 @@ import { WelcomeViewPage, LoginViewPage } from '../../support/pages/auth';
 // Select user: cytest@blockframes.com
 const LOGIN_CREDENTIALS: Partial<User> = USERS[0];
 
-const BUDGET_RANGE = '0 - 1000000';
-const QUOTAS = ['EOF', 'European'];
+const BUDGET_RANGE = 'Less than 1 millions';
 
 beforeEach(() => {
   cy.clearCookies();
@@ -34,10 +33,6 @@ describe('User can navigate to the movie tunnel page 5, complete the fields, and
     const p4: TunnelBudgetPage = TunnelBudgetPage.navigateToPage();
     p4.selectBudgetRange(BUDGET_RANGE);
     p4.assertBudgetRangeIsSelected(BUDGET_RANGE);
-    QUOTAS.forEach(QUOTA => {
-      p4.selectQuota(QUOTA);
-      p4.assertQuotaIsSelected(QUOTA);
-    });
 
     // GO to movie-tunnel-6
     const p5: TunnelVersionInfoPage = p4.clickNext();
