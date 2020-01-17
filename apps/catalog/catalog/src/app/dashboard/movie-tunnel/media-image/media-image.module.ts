@@ -9,6 +9,8 @@ import { PromotionalElementsImagesModule } from '@blockframes/movie/movie/form/p
 import { MediaImageComponent } from './media-image.component';
 // Material
 import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [MediaImageComponent],
@@ -20,6 +22,8 @@ import { MatCardModule } from '@angular/material/card';
     PromotionalElementsImagesModule,
     // Material
     MatCardModule,
+    MatIconModule,
+    MatButtonModule,
     // Route
     RouterModule.forChild([{ path: '', component: MediaImageComponent }])
   ]
