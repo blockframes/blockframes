@@ -1,10 +1,18 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { FormArray } from '@angular/forms';
+import { FormList } from '@blockframes/utils/form';
 import { default as staticModels } from '@blockframes/utils/static-model/staticModels';
-import { CreditForm } from './sales-cast.form';
+import { CreditForm, MovieSalesCastControl } from './sales-cast.form';
+
+function getRole(role: keyof MovieSalesCastControl) {
+  switch (role) {
+    case 'cast': return 'CAST_ROLES';
+    case 'crew': return 'CREW_ROLES';
+    case 'producers': return 'PRODUCER_ROLES';
+  }
+}
 
 @Component({
-  selector: '[form] movie-form-sales-cast',
+  selector: '[form][role] movie-form-sales-cast',
   templateUrl: './sales-cast.component.html',
   styleUrls: ['./sales-cast.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -12,8 +20,12 @@ import { CreditForm } from './sales-cast.form';
 
 
 export class MovieFormSalesCastComponent {
-  @Input() form: FormArray;
-  roles = staticModels.CAST_ROLES;
+  roles: { slug: string, label: string }[] = [];
+
+  @Input() form: FormList<CreditForm>;
+  @Input() set role(role: keyof MovieSalesCastControl) {
+    this.roles = staticModels[getRole(role)];
+  }
 
   add() {
     this.form.push(new CreditForm())

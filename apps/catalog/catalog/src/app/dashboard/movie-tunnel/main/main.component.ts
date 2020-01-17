@@ -19,6 +19,10 @@ export class TunnelMainComponent implements OnInit {
     return this.form.get('salesInfo');
   }
 
+  get salesCast() {
+    return this.form.get('salesCast');
+  }
+
   get festivalPrizes() {
     return this.form.get('festivalPrizes');
   }
