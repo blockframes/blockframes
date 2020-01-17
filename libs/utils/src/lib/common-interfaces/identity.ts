@@ -1,5 +1,5 @@
 import { ImgRef, createImgRef } from "../image-uploader";
-import { StakeholderRolesSlug, CreditRolesSlug, LegalRolesSlug, TerritoriesSlug } from "@blockframes/utils/static-model/types";
+import { StakeholderRolesSlug, CrewRolesSlug, ProducerRolesSlug, CastRolesSlug, LegalRolesSlug, TerritoriesSlug } from "@blockframes/utils/static-model/types";
 import { Location } from "@blockframes/organization/+state/organization.firestore";
 
 
