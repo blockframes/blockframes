@@ -15,7 +15,7 @@ function createPromotionalElementControl(promotionalElement?: Partial<Promotiona
   }
 }
 
-type PromotionalElementControl = ReturnType<typeof createPromotionalElementControl>;
+export type PromotionalElementControl = ReturnType<typeof createPromotionalElementControl>;
 
 export class MoviePromotionalElementForm extends FormEntity<PromotionalElementControl> {
   constructor(promotionalElement?: Partial<PromotionalElement>) {
@@ -39,7 +39,7 @@ function createMoviePromotionalElementsControls(promotionalElements?: Partial<Mo
   }
 }
 
-type MoviePromotionalElementsControl = ReturnType<typeof createMoviePromotionalElementsControls>
+export type MoviePromotionalElementsControl = ReturnType<typeof createMoviePromotionalElementsControls>
 
 type MoviePromotionalElementsListKey = ExtractFormListKeys<MoviePromotionalElementsControl>
 
