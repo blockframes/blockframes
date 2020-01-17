@@ -73,7 +73,7 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     festivalPrizes: createMovieFestivalPrizes(params.festivalPrizes),
     salesAgentDeal: createMovieSalesAgentDeal(params.salesAgentDeal),
     budget: createMovieBudget(params.budget),
-    movieReview: createMovieReview(params.movieReview),
+    movieReview: [],
     ...params
   };
 }
@@ -258,6 +258,10 @@ export function createMovieBudget(params: Partial<MovieBudget> = {}): MovieBudge
 
 export function createMovieReview(params: Partial<MovieReview> = {}): MovieReview {
   return {
+    criticName: '',
+    journalName: '',
+    criticQuote: '',
+    revueLink: '',
     ...params,
   };
 }
