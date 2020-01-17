@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { staticModels } from '@blockframes/utils/static-model';
 
 @Component({
   selector: '[form] movie-form-certifications',
@@ -9,4 +10,5 @@ import { FormControl } from '@angular/forms';
 })
 export class CertificationsComponent {
   @Input() form: FormControl;
+  certifications = staticModels.CERTIFICATIONS;
 }

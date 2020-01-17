@@ -4,13 +4,12 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
 import { TunnelPageModule } from '@blockframes/ui/tunnel/page/tunnel-page.module';
-import { MovieFormSalesInfoModule } from '@blockframes/movie/movie/form/sales-info/sales-info.module';
 import { BudgetComponent } from './budget.component';
 
 // Forms
 import { MovieFormEstimatedBudgetModule } from '@blockframes/movie/movie/form/budget/estimated-budget/estimated-budget.module';
 import { MovieFormBoxOfficeModule } from '@blockframes/movie/movie/form/budget/box-office/box-office.module';
-
+import { MovieFormCertificationsModule } from '@blockframes/movie/movie/form/sales-info/certifications/certifications.module';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -23,7 +22,7 @@ import { MatCardModule } from '@angular/material/card';
     TunnelPageModule,
     MovieFormEstimatedBudgetModule,
     MovieFormBoxOfficeModule,
-    MovieFormSalesInfoModule,
+    MovieFormCertificationsModule,
     // Material
     MatCardModule,
     // Route
