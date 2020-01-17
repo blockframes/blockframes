@@ -76,7 +76,6 @@ export class ContractService extends CollectionService<ContractState> {
    */
   public async getContractWithLastVersion(contractOrId: Contract | string): Promise<ContractWithLastVersion> {
     try {
-
       const contractWithVersion = initContractWithVersion()
       const contract = typeof contractOrId === 'string'
         ? await this.getValue(contractOrId)
@@ -87,7 +86,7 @@ export class ContractService extends CollectionService<ContractState> {
 
       return contractWithVersion;
     } catch (error) {
-      console.log(`Contract ${contractOrId} not found`);
+      console.error('Contract not found');
     }
   }
 
