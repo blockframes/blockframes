@@ -76,7 +76,7 @@ export class ContractVersionService extends CollectionService<ContractVersionSta
    * Returns the creation date of the contract.
    * @param contractId if not provided, get the last version of active contract.
    */
-  public async getContractCreationDate(contractId?: string): Promise<Date> {
+  public async getContractInitialCreationDate(contractId?: string): Promise<Date> {
     const documentPath = contractId ? `contracts/${contractId}/versions/` : '';
     const firstVersion = await this.getValue(documentPath + '1');
 
