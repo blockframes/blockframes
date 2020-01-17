@@ -11,24 +11,12 @@ export class CreditsComponent {
 
   constructor(private form: MovieForm) { }
 
-  get productionYear() {
-    return this.form.get('main').get('productionYear');
+  get main() {
+    return this.form.get('main');
   }
 
-  get stakeholders() {
-    return this.form.get('main').get('stakeholders');
-  }
-
-  get producers() {
-    return this.form.get('salesCast').get('producers');
-  }
-
-  get crew() {
-    return this.form.get('salesCast').get('crew');
-  }
-
-  get cast() {
-    return this.form.get('salesCast').get('cast');
+  get salesCast() {
+    return this.form.get('salesCast');
   }
 
 }

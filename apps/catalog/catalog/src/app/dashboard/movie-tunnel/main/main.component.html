@@ -45,6 +45,8 @@
         <movie-form-genre [form]="main"></movie-form-genre>
         <mat-divider></mat-divider>
         <movie-form-total-runtime [form]="main.get('totalRunTime')"></movie-form-total-runtime>
+        <h2>Principal Cast Members</h2>
+        <movie-form-sales-cast role="cast" [form]="salesCast.get('cast')"></movie-form-sales-cast>
       </mat-card-content>
     </mat-card>
   
