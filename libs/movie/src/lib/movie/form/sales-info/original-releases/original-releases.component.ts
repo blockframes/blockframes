@@ -35,8 +35,10 @@ export class OriginalReleaseComponent implements OnInit, OnDestroy {
       startWith(this.originCountries.value),
     ).subscribe(countries => {
       countries.forEach((country, i: number) => {
-        const control = this.originalRelease.createControl({ country });
-        this.originalRelease.setControl(i, control);
+        if (!this.originalRelease.at(i)) {
+          this.originalRelease.setControl(i, new OriginalReleaseForm())
+        }
+        this.originalRelease.at(i).patchValue({ country })
       });
     });
   }
@@ -45,7 +47,11 @@ export class OriginalReleaseComponent implements OnInit, OnDestroy {
     this.sub.unsubscribe();
   }
 
-  // Remove cannot be automated by valueChange or it would resul into bad UX (remove form when input is emptied)
+  add() {
+    this.originCountries.add();
+    this.originalRelease.add();
+  }
+
   remove(i: number) {
     this.originCountries.removeAt(i);
     this.originalRelease.removeAt(i);
