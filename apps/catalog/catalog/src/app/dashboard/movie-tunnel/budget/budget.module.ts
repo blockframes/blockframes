@@ -11,6 +11,7 @@ import { MovieFormEstimatedBudgetModule } from '@blockframes/movie/movie/form/bu
 import { MovieFormBoxOfficeModule } from '@blockframes/movie/movie/form/budget/box-office/box-office.module';
 import { MovieFormCertificationsModule } from '@blockframes/movie/movie/form/sales-info/certifications/certifications.module';
 import { MovieFormRatingsModule } from '@blockframes/movie/movie/form/sales-info/ratings/ratings.module';
+import { MovieFormReviewModule } from '@blockframes/movie/movie/form/review/review.module';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -25,6 +26,7 @@ import { MatCardModule } from '@angular/material/card';
     MovieFormBoxOfficeModule,
     MovieFormCertificationsModule,
     MovieFormRatingsModule,
+    MovieFormReviewModule,
     // Material
     MatCardModule,
     // Route

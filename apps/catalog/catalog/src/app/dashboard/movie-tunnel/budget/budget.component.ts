@@ -27,5 +27,7 @@ export class BudgetComponent {
     return this.form.get('budget').get('boxOffice');
   }
 
-
+  get review() {
+    return this.form.get('movieReview');
+  }
 }

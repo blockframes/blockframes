@@ -2,7 +2,7 @@
   <ng-container *ngFor="let control of form.controls; let i = index; let last = last">
       <span>World-wide</span>
       <article fxLayout="row" fxLayoutGap="24px">
-        <movie-form-origin-country [form]="control.get('territory')"></movie-form-origin-country>
+        <form-country [form]="control.get('territory')"></form-country>
 
         <mat-form-field appearance="outline">
           <mat-label>Metrics</mat-label>
