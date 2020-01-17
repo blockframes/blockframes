@@ -9,7 +9,7 @@ import { WelcomeViewPage, LoginViewPage } from '../../support/pages/auth';
 // TEST
 
 const PRODUCTION_YEAR = '2006';
-const COMPAGNIES = ['Realitism Films', 'Backup Media'];
+const STAKEHOLDERS = ['Realitism Films', 'Backup Media'];
 
 // Select user: cytest@blockframes.com
 const LOGIN_CREDENTIALS: Partial<User> = USERS[0];
@@ -34,12 +34,12 @@ describe('User can navigate to the movie tunnel page 5, complete the fields, and
     const p4: TunnelCreditsPage = TunnelCreditsPage.navigateToPage();
     p4.fillProductionYear(PRODUCTION_YEAR);
     p4.assertProductionYearExists(PRODUCTION_YEAR);
-    p4.fillFirstProductionCompagny(COMPAGNIES[0]);
-    p4.assertFirstProductionCompagnyExists(COMPAGNIES[0]);
-    p4.clickAddProductionCompagny();
-    p4.assertNumberOfCompagnyFields(COMPAGNIES.length);
-    p4.fillLastProductionCompagny(COMPAGNIES[1]);
-    p4.assertLastProductionCompagnyExists(COMPAGNIES[1]);
+    p4.fillFirstProductioncompany(STAKEHOLDERS[0]);
+    p4.assertFirstProductioncompanyExists(STAKEHOLDERS[0]);
+    p4.clickAddProductioncompany();
+    p4.assertNumberOfcompanyFields(STAKEHOLDERS.length);
+    p4.fillLastProductioncompany(STAKEHOLDERS[1]);
+    p4.assertLastProductioncompanyExists(STAKEHOLDERS[1]);
 
     // Go on movie-tunnel-5
     const p5: TunnelBudgetPage = p4.clickNext();
