@@ -15,7 +15,7 @@ import {
   GenresSlug
 } from "@blockframes/movie/movie/static-model";
 import { RawRange, NumberRange } from "@blockframes/utils/common-interfaces/range";
-import { Person, Credit, SalesAgent, Company } from "@blockframes/utils/common-interfaces/identity";
+import { Person, SalesAgent, Company, Producer, Crew, Cast } from "@blockframes/utils/common-interfaces/identity";
 import { firestore } from "firebase/app";
 import { ImgRef } from "@blockframes/utils/image-uploader";
 
@@ -118,7 +118,9 @@ export interface MovieStory {
 }
 
 export interface MovieSalesCast {
-  credits: Credit[],
+  producers: Producer[],
+  cast: Cast[],
+  crew: Crew[],
 }
 
 export interface MovieFestivalPrizes {

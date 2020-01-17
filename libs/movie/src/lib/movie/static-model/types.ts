@@ -22,11 +22,23 @@ export const STAKEHOLDER_DELIVERY_AUTHORIZATIONS_SLUG = models[
 export type StakeholderDeliveryAuthorizationsLabel = typeof STAKEHOLDER_DELIVERY_AUTHORIZATIONS_LABEL[number];
 export type StakeholderDeliveryAuthorizationsSlug = typeof STAKEHOLDER_DELIVERY_AUTHORIZATIONS_SLUG[number];
 
-export const CREDIT_ROLES_LABEL = models['CREDIT_ROLES'].map(key => key.label);
-export const CREDIT_ROLES_SLUG = models['CREDIT_ROLES'].map(key => key.slug);
+export const PRODUCER_ROLES_LABEL = models['PRODUCER_ROLES'].map(key => key.label);
+export const PRODUCER_ROLES_SLUG = models['PRODUCER_ROLES'].map(key => key.slug);
 
-export type CreditRolesLabel = typeof CREDIT_ROLES_LABEL[number];
-export type CreditRolesSlug = typeof CREDIT_ROLES_SLUG[number];
+export type ProducerRolesLabel = typeof PRODUCER_ROLES_LABEL[number];
+export type ProducerRolesSlug = typeof PRODUCER_ROLES_SLUG[number];
+
+export const CAST_ROLES_LABEL = models['CAST_ROLES'].map(key => key.label);
+export const CAST_ROLES_SLUG = models['CAST_ROLES'].map(key => key.slug);
+
+export type CastRolesLabel = typeof CAST_ROLES_LABEL[number];
+export type CastRolesSlug = typeof CAST_ROLES_SLUG[number];
+
+export const CREW_ROLES_LABEL = models['CREW_ROLES'].map(key => key.label);
+export const CREW_ROLES_SLUG = models['CREW_ROLES'].map(key => key.slug);
+
+export type CrewRolesLabel = typeof CREW_ROLES_LABEL[number];
+export type CrewRolesSlug = typeof CREW_ROLES_SLUG[number];
 
 export const MOVIE_STATUS_LABEL = models['MOVIE_STATUS'].map(key => key.label);
 export const MOVIE_STATUS_SLUG = models['MOVIE_STATUS'].map(key => key.slug);

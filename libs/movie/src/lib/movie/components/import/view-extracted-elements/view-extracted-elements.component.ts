@@ -392,7 +392,7 @@ export class ViewExtractedElementsComponent {
 
         // CREDITS (Principal Cast)
         if (spreadSheetRow[SpreadSheetMovie.cast]) {
-          movie.salesCast.credits = formatCredits(spreadSheetRow[SpreadSheetMovie.cast], this.separator)
+          movie.salesCast.cast = formatCredits(spreadSheetRow[SpreadSheetMovie.cast], this.separator)
             .map(credit => ({ ...credit, role: 'actor' }));
         }
 
@@ -899,10 +899,10 @@ export class ViewExtractedElementsComponent {
       });
     }
 
-    if (movie.salesCast.credits.length === 0) {
+    if (movie.salesCast.cast.length === 0) {
       errors.push({
         type: 'warning',
-        field: 'salesCast.credits',
+        field: 'salesCast.cast',
         name: "Principal Cast",
         reason: 'Optional fields are missing',
         hint: 'Edit corresponding sheets fields: directors, principal cast.'
