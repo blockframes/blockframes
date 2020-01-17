@@ -29,7 +29,7 @@ export default class TunnelBudgetPage {
   }
 
   public clickNext() {
-    cy.get('catalog-movie-tunnel-budget [test-id=next]').click();
+    cy.get('[test-id=next]').click();
     return new TunnelVersionInfoPage();
   }
 }
