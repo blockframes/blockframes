@@ -1,5 +1,5 @@
 <ng-container *ngFor="let control of form.controls; let i = index; let last = last">
-  <div fxLayout="row" fxLayoutAlign="start start">
+  <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
     <mat-form-field appearance="outline">
       <mat-label>Production company</mat-label>
       <input matInput [formControl]="control.get('displayName')" required />

@@ -1,5 +1,5 @@
 <ng-container *ngFor="let control of form.controls; let i = index; let last = last">
-  <article fxLayout="row" fxLayoutAlign="space-between center">
+  <article fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
     <mat-form-field appearance="outline">
       <mat-label>Original Language</mat-label>
       <input (focus)="focus(i)" type="text" matInput [formControl]="control" [matAutocomplete]="auto" name="languages" required>
@@ -9,18 +9,12 @@
     </mat-form-field>
 
     <!-- Add / Delete -->
-    <div *ngIf="!last" fxLayout="row" fxLayoutAlign="start center">
-      <button mat-mini-fab color="warn" (click)="form.removeAt(i)" aria-label="Remove a language form">
-        <mat-icon>delete</mat-icon>
-      </button>
-      <span class="mat-caption">Delete additional language</span>
-    </div>
-    <div *ngIf="last" fxLayout="row" fxLayoutAlign="start center">
-      <button mat-mini-fab color="primary" (click)="form.add()" aria-label="Remove a language form">
-        <mat-icon>add</mat-icon>
-      </button>
-      <span class="mat-caption">Add another language</span>
-    </div>
+    <button *ngIf="!last" mat-mini-fab color="warn" (click)="form.removeAt(i)" matTooltip="Remove a Language" aria-label="Remove a Language">
+      <mat-icon>delete</mat-icon>
+    </button>
+    <button *ngIf="last" mat-mini-fab color="primary" (click)="form.add()" matTooltip="Add a Language" aria-label="Add a Language">
+      <mat-icon>add</mat-icon>
+    </button>
   </article>
 </ng-container>
 
