@@ -11,7 +11,7 @@ function createMoviePromotionalDescriptionControls(promotionalDescription?: Part
   }
 }
 
-type MoviePromotionalDescriptionControl = ReturnType<typeof createMoviePromotionalDescriptionControls>
+export type MoviePromotionalDescriptionControl = ReturnType<typeof createMoviePromotionalDescriptionControls>
 
 export class MoviePromotionalDescriptionForm extends FormEntity<MoviePromotionalDescriptionControl>{
   constructor(promotionalDescription?: MoviePromotionalDescription) {
