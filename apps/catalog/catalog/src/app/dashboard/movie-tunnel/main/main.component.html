@@ -1,7 +1,7 @@
 <tunnel-page>
   <h4 title>TITLE INFORMATION</h4>
   <h1 subtitle>Main Information</h1>
-  <section tunnel-form>
+  <ng-container tunnel-form>
     <!-- Content type component -->
     <mat-card>
       <mat-card-header>
@@ -44,9 +44,20 @@
       <mat-card-content>
         <movie-form-genre [form]="main"></movie-form-genre>
         <mat-divider></mat-divider>
+        <movie-form-total-runtime [form]="main.get('totalRunTime')"></movie-form-total-runtime>
+      </mat-card-content>
+    </mat-card>
+  
+    <!-- Festival -->
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Festivals</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <movie-form-festival-prizes [form]="festivalPrizes"></movie-form-festival-prizes>
       </mat-card-content>
     </mat-card>
 
 
-  </section>
+  </ng-container>
 </tunnel-page>

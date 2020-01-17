@@ -1,18 +1,12 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ControlContainer, FormControl } from '@angular/forms';
-
-
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { MovieStoryControl } from '../story.form';
 @Component({
-  selector: '[formGroup] movie-form-synopsis, [formGroupName] movie-form-synopsis',
+  selector: '[form] movie-form-synopsis',
   templateUrl: './synopsis.component.html',
   styleUrls: ['./synopsis.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SynopsisComponent{
 
-  constructor(private controlContainer: ControlContainer) {}
-
-  get synopsis() : FormControl {
-    return this.controlContainer.control as FormControl
-  }
+  @Input() form: MovieStoryControl['synopsis'];
 }

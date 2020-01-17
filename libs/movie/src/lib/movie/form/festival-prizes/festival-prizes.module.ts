@@ -2,28 +2,27 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { LanguagesComponent } from './languages.component';
+import { MovieFormFestivalPrizesComponent } from './festival-prizes.component';
 
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 @NgModule({
-  declarations: [LanguagesComponent],
-  exports: [LanguagesComponent],
+  declarations: [MovieFormFestivalPrizesComponent],
+  exports: [MovieFormFestivalPrizesComponent],
   imports: [
     CommonModule,
-    FlexLayoutModule,
     ReactiveFormsModule,
+    FlexLayoutModule,
     // Material
     MatFormFieldModule,
     MatInputModule,
-    MatAutocompleteModule,
+    MatButtonToggleModule,
     MatButtonModule,
-    MatIconModule,
+    MatIconModule
   ]
 })
-export class MovieFormLanguagesModule { }
+export class MovieFormFestivalPrizesModule { }

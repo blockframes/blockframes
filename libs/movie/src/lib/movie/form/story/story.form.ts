@@ -10,7 +10,7 @@ function createMovieStoryControls(story?: Partial<MovieStory>) {
   }
 }
 
-type MovieStoryControl = ReturnType<typeof createMovieStoryControls>
+export type MovieStoryControl = ReturnType<typeof createMovieStoryControls>
 
 export class MovieStoryForm extends FormEntity<MovieStoryControl>{
 

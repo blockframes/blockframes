@@ -1,45 +1,44 @@
-<form [formGroup]="festivalprizes">
-  <!-- FESTIVAL PRIZES -->
-  <h3> Festival Prizes </h3>
-  <div formArrayName="prizes" *ngFor="let credit of festivalprizes.prizes.controls; let i = index">
-    <div [formGroupName]="i" class="full-width">
-      <h4>{{ getPrizeName(i) }}</h4>
-      <mat-form-field appearance="outline" class="small-margin">
+<ng-container *ngFor="let control of prizes.controls; let i = index; let last = last">
+  <article [formGroup]="control">
+    <div fxLayout="row" fxLayoutGap="24px">
+      <!-- Name -->
+      <mat-form-field appearance="outline">
         <mat-label>Name</mat-label>
         <input matInput formControlName="name" placeholder="Festival name">
       </mat-form-field>
-      <mat-form-field appearance="outline" class="small-margin">
+      <!-- Prize -->
+      <mat-form-field appearance="outline">
+        <mat-label>Award Selection</mat-label>
+        <input matInput formControlName="prize" placeholder="Prize">
+      </mat-form-field>
+      <!-- Year -->
+      <mat-form-field appearance="outline">
         <mat-label>Year</mat-label>
         <input matInput formControlName="year" placeholder="Festival year">
       </mat-form-field>
-      <mat-form-field appearance="outline" class="small-margin">
-        <mat-label>Prize</mat-label>
-        <input matInput formControlName="prize" placeholder="Prize">
-      </mat-form-field>
-      <mat-form-field appearance="outline" class="small-margin">
-        <mat-label>Premiere</mat-label>
-        <mat-select formControlName="premiere" placeholder="Premiere">
-          <mat-option *ngFor="let type of premiereTypes" [value]="type">
-            {{ premiereType[type] }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      <div class="movie-poster-thumbnail">
-        <h4> Festival Logo </h4>
-        <!-- TODO:#1292 cropper size -->
-        <drop-cropper [ratio]="1" storagePath="festivalPrizes" [useFileuploader]="false" [useDelete]="false" formControlName="logo"></drop-cropper>
-      </div>
-      <button mat-icon-button color="primary" (click)="festivalprizes.addPrize()">
-        <mat-icon>add_circle</mat-icon>
-      </button>
-      <button mat-icon-button color="primary" (click)="festivalprizes.removePrize(i)">
-        <mat-icon>delete_circle</mat-icon>
-      </button>
     </div>
-  </div>
-  <ng-container *ngIf="festivalprizes.prizes.controls.length == 0">
-    <button mat-icon-button color="primary" (click)="festivalprizes.addPrize()">
-      <mat-icon>add_circle</mat-icon>
-    </button>
-  </ng-container>
-</form>
+    <!-- Premiere -->
+    <div fxLayout="column" fxLayoutAlign="start start">
+      <mat-button-toggle-group multiple formControlName="premiere" aria-label="Premiere" name="premiere">
+        <ng-container *ngFor="let type of premiereTypes">
+          <mat-button-toggle [value]="type">{{ premiereType[type] }}</mat-button-toggle>
+        </ng-container>
+      </mat-button-toggle-group>
+      <span class="mat-caption">Selection all premiere that apply</span>
+    </div>
+    <!-- Remove -->
+    <footer *ngIf="!last" fxLayout="column" fxLayoutAlign="center center">
+      <button mat-mini-fab color="warn" (click)="prizes.removeAt(i)" aria-label="Remove a director form">
+        <mat-icon>delete</mat-icon>
+      </button>
+      <span class="mat-caption">Delete Festival</span>
+    </footer>
+    <!-- Add-->
+    <footer *ngIf="last" fxLayout="column" fxLayoutAlign="center center">
+      <button mat-mini-fab color="primary" (click)="prizes.add()" aria-label="Remove a director form">
+        <mat-icon>add</mat-icon>
+      </button>
+      <span class="mat-caption">Add another Festival</span>
+    </footer>
+  </article>
+</ng-container>

@@ -1,5 +1,5 @@
 <ng-container *ngFor="let control of form.controls; let i = index; let last = last">
-  <article fxLayout="row">
+  <article fxLayout="row" fxLayoutAlign="space-between center">
     <mat-form-field appearance="outline">
       <mat-label>Original Language</mat-label>
       <input (focus)="focus(i)" type="text" matInput [formControl]="control" [matAutocomplete]="auto" name="languages" required>
@@ -15,7 +15,7 @@
       </button>
       <span class="mat-caption">Delete additional language</span>
     </div>
-    <div *ngIf="last" fxLayout="column" fxLayoutAlign="start center">
+    <div *ngIf="last" fxLayout="row" fxLayoutAlign="start center">
       <button mat-mini-fab color="primary" (click)="form.add()" aria-label="Remove a language form">
         <mat-icon>add</mat-icon>
       </button>

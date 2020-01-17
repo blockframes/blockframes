@@ -1,10 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
 
 @Component({
   selector: 'catalog-movie-tunnel-main',
   templateUrl: './main.component.html',
-  styleUrls: ['./main.component.scss']
+  styleUrls: ['./main.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TunnelMainComponent implements OnInit {
 
@@ -16,6 +17,10 @@ export class TunnelMainComponent implements OnInit {
 
   get salesInfo() {
     return this.form.get('salesInfo');
+  }
+
+  get festivalPrizes() {
+    return this.form.get('festivalPrizes');
   }
 
   ngOnInit() {

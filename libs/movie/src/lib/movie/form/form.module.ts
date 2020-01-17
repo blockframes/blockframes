@@ -28,14 +28,15 @@ import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
 import { MovieFormMainComponent } from './main/main.component';
 import { MovieFormPromotionalElementsComponent } from './promotional-elements/promotional-elements.component';
 import { MovieFormPromotionalDescriptionComponent } from './promotional-description/promotional-description.component';
-import { MovieFormSalesCastComponent } from './sales-cast/sales-cast.component';
 import { MovieFormStoryComponent } from './story/story.component';
 import { MovieFormRootComponent } from './root/root.component';
-// import { MovieFormVersionInfoComponent } from './version-info/version-info.component';
-import { MovieFormFestivalPrizesComponent } from './festival-prizes/festival-prizes.component';
 import { MovieFormSalesAgentDealComponent } from './sales-agent-deal/sales-agent-deal.component';
-import { MovieFormVersionInfoComponent } from './version-info/version-info.component';
 import { MovieFormSalesInfoComponent } from './sales-info/sales-info.component';
+
+// Forms Modules
+import { MovieFormFestivalPrizesModule } from './festival-prizes/festival-prizes.module';
+import { MovieFormSalesCastModule } from './sales-cast/sales-cast.module';
+import { MovieFormVersionInfoModule } from './version-info/version-info.module';
 
 
 
@@ -68,6 +69,11 @@ import { MovieFormSalesInfoComponent } from './sales-info/sales-info.component';
     UiFormModule,
     UploadModule,
     CropperModule,
+
+    // Forms
+    MovieFormFestivalPrizesModule,
+    MovieFormSalesCastModule,
+    MovieFormVersionInfoModule,
   ],
   declarations: [
     MovieFormRootComponent,
@@ -75,10 +81,7 @@ import { MovieFormSalesInfoComponent } from './sales-info/sales-info.component';
     MovieFormPromotionalElementsComponent,
     MovieFormPromotionalDescriptionComponent,
     MovieFormStoryComponent,
-    MovieFormSalesCastComponent,
-    MovieFormVersionInfoComponent,
     MovieFormSalesInfoComponent,
-    MovieFormFestivalPrizesComponent,
     MovieFormSalesAgentDealComponent,
   ],
   exports: [

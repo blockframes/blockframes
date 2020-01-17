@@ -15,16 +15,16 @@
           <movie-form-story formGroupName="story"></movie-form-story>
         </mat-tab>
         <mat-tab label="Sales cast">
-          <movie-form-sales-cast formGroupName="salesCast"></movie-form-sales-cast>
+          <movie-form-sales-cast [form]="form.get('salesCast')"></movie-form-sales-cast>
         </mat-tab>
         <mat-tab label="Sales info">
           <movie-form-sales-info formGroupName="salesInfo"></movie-form-sales-info>
         </mat-tab>
         <mat-tab label="Version info">
-          <movie-form-version-info formGroupName="versionInfo"></movie-form-version-info>
+          <movie-form-version-info [form]="form.get('versionInfo')"></movie-form-version-info>
         </mat-tab>
         <mat-tab label="Festival Prizes">
-          <movie-form-festivalprizes formGroupName="festivalPrizes"></movie-form-festivalprizes>
+          <movie-form-festival-prizes [form]="form.get('festivalPrizes')"></movie-form-festival-prizes>
         </mat-tab>
         <mat-tab label="Sales Agent Deal">
           <movie-form-salesdeal formGroupName="salesAgentDeal"></movie-form-salesdeal>

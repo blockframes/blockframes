@@ -1,19 +1,12 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ControlContainer } from '@angular/forms';
-
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { MoviePromotionalDescriptionControl } from '../promotional-description.form';
 @Component({
-  //  TODO#1478 Sync Data and UI, remove movie-form-key-assets from selector
-  selector: '[formGroup] movie-form-key-assets, [formGroupName] movie-form-key-assets, movie-form-key-assets',
+  selector: '[form] movie-form-key-assets',
   templateUrl: './key-assets.component.html',
   styleUrls: ['./key-assets.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class KeyAssetsComponent {
 
-  constructor(private controlContainer: ControlContainer) { }
-
-  get keyAssets() {
-    return this.controlContainer.control
-  }
-
+  @Input() form: MoviePromotionalDescriptionControl['keyAssets'];
 }
