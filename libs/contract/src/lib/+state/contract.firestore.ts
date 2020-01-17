@@ -6,7 +6,7 @@ import {
   TerritoriesSlug,
   LanguagesSlug,
   LegalRolesSlug
-} from "@blockframes/movie/movie/static-model/types";
+} from "@blockframes/utils/static-model/types";
 import { ImgRef } from "@blockframes/utils/image-uploader";
 
 type Timestamp = firestore.Timestamp;

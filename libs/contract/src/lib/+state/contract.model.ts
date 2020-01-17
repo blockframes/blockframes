@@ -1,6 +1,6 @@
 import { createTerms } from '@blockframes/utils/common-interfaces/terms';
-import { getCodeIfExists, ExtractCode } from '@blockframes/movie/movie/static-model/staticModels';
-import { LegalRolesSlug } from '@blockframes/movie/movie/static-model/types';
+import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
+import { LegalRolesSlug } from '@blockframes/utils/static-model/types';
 import { createPrice } from '@blockframes/utils/common-interfaces/price';
 import {
   ContractDocumentWithDates,

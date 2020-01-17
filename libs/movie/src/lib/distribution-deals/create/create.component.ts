@@ -20,7 +20,7 @@ import {
   LanguagesSlug,
   LANGUAGES_SLUG,
   LanguagesLabel,
-} from '../../movie/static-model/types';
+} from '@blockframes/utils/static-model/types';
 import { DateRange } from '@blockframes/utils/common-interfaces/range';
 import { ControlErrorStateMatcher, languageValidator } from '@blockframes/utils';
 import {
@@ -30,7 +30,7 @@ import {
   getDistributionDealsWithMediasTerritoriesAndLanguagesInCommon
 } from './availabilities.util';
 import { DistributionDealForm } from './create.form';
-import { getCodeIfExists, ExtractCode } from '../../movie/static-model/staticModels';
+import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
 import { MatSnackBar } from '@angular/material';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { createDistributionDeal } from '../+state/distribution-deal.model';

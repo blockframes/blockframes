@@ -1,6 +1,6 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { MovieSalesInfo, createMovieSalesInfo } from '../../+state';
-import { getLabelByCode } from '../../static-model/staticModels';
+import { getLabelByCode } from '@blockframes/utils/static-model/staticModels';
 
 @Component({
   selector: '[info] movie-display-sales-info',

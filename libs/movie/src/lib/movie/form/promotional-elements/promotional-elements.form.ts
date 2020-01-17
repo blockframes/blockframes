@@ -1,7 +1,7 @@
 import { MoviePromotionalElements, PromotionalElement, createMoviePromotionalElements, createPromotionalElement } from '../../+state';
 import { FormEntity, FormList, urlValidators } from '@blockframes/utils';
 import { FormControl } from '@angular/forms';
-import { PromotionalElementTypesSlug } from '@blockframes/movie/movie/static-model/types';
+import { PromotionalElementTypesSlug } from '@blockframes/utils/static-model/types';
 
 function createPromotionalElementControl(promotionalElement?: Partial<PromotionalElement>) {
   const { label, size, ratio, media, language, country } = createPromotionalElement(promotionalElement);

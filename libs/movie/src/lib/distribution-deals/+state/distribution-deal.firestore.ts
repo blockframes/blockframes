@@ -1,4 +1,4 @@
-import { TerritoriesSlug, LanguagesSlug, MediasSlug } from '@blockframes/movie/movie/static-model';
+import { TerritoriesSlug, LanguagesSlug, MediasSlug } from '@blockframes/utils/static-model';
 import { MovieLanguageSpecification } from '@blockframes/movie/movie/+state/movie.firestore';
 import { TermsRaw } from '@blockframes/utils/common-interfaces/terms';
 import { firestore } from 'firebase';

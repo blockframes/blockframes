@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ControlContainer } from '@angular/forms';
 import { MoviePromotionalElementsForm } from './promotional-elements.form';
-import { default as staticModels } from '../../static-model/staticModels';
+import { default as staticModels } from '@blockframes/utils/static-model/staticModels';
 
 @Component({
   selector: '[formGroup] movie-form-promotional-elements, [formGroupName] movie-form-promotional-elements',

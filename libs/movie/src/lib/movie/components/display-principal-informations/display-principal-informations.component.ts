@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input } from "@angular/core";
-import { getCodeIfExists } from "@blockframes/movie/moviestatic-model/staticModels";
+import { getCodeIfExists } from "@blockframes/utils/static-model/staticModels";
 
 @Component({
   selector: 'movie-display-principal-informations',

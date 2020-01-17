@@ -23,7 +23,7 @@ import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { formatCredits } from '@blockframes/utils/spreadsheet/format';
 import { ImageUploader, cleanModel } from '@blockframes/utils';
 import { SSF$Date } from 'ssf/types';
-import { getCodeIfExists, ExtractCode } from '../../../static-model/staticModels';
+import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
 import { SSF } from 'xlsx';
 import { MovieLanguageTypes, PremiereType } from '@blockframes/movie/movie/+state/movie.firestore';
 import { createCredit } from '@blockframes/utils/common-interfaces/identity';

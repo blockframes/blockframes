@@ -1,7 +1,7 @@
 import { MovieSalesInfoForm } from './../sales-info.form';
 import { ChangeDetectionStrategy, Input } from '@angular/core';
 import { Component } from '@angular/core';
-import models from '../../../static-model/staticModels'
+import models from '@blockframes/utils/static-model/staticModels'
 
 @Component({
     selector: '[form] movie-form-format',

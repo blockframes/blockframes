@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input } from "@angular/core";
 import { Company } from "@blockframes/utils/common-interfaces/identity";
-import { hasSlug } from "@blockframes/movie/moviestatic-model/staticModels";
+import { hasSlug } from "@blockframes/utils/static-model/staticModels";
 
 @Component({
   selector: 'movie-display-film-info-card',

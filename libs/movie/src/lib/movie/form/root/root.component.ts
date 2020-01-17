@@ -7,7 +7,7 @@ import { MovieImdbSearchComponent } from '../../components/movie-imdb-search/mov
 import { SearchRequest, ImdbMovie, FormEntity, ImageUploader } from '@blockframes/utils';
 import { formatCredit, formatCredits } from '@blockframes/utils/spreadsheet/format';
 import { FormControl } from '@angular/forms';
-import { getCodeIfExists, ExtractCode } from '../../static-model/staticModels';
+import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
 import { CreditFormControl } from '../main/main.form';
 import { Router } from '@angular/router';
 

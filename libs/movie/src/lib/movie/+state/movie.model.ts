@@ -27,7 +27,7 @@ import {
   UnitBox,
 } from './movie.firestore';
 import { createImgRef } from '@blockframes/utils/image-uploader';
-import { LanguagesSlug } from '../static-model';
+import { LanguagesSlug } from '@blockframes/utils/static-model';
 import { createRange } from '@blockframes/utils/common-interfaces/range';
 import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
 
