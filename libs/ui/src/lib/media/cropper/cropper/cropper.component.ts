@@ -79,8 +79,6 @@ export class CropperComponent implements ControlValueAccessor {
   /** Disable fileuploader & delete buttons in 'show' step */
   @Input() useFileuploader?= true;
   @Input() useDelete?= true;
-  @Output() onUploaded = new EventEmitter();
-  @Output() onDeleted = new EventEmitter();
   uploaded: (ref: ImgRef) => void;
   deleted: () => void;
 

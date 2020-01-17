@@ -2,10 +2,6 @@
   <h4 title>Uploaded Media</h4>
   <h1 subtitle>Images</h1>
   <p description class="mat-body-1">Upload your images in .jpeg or .png formats, they will be used for promotional purposes. When you upload an image, we will help you to match the size required.</p>
-  <!-- <form [formGroup]="promotionalElements">
-    <drop-cropper [ratio]="1" storagePath="banner" formControlName="banner"></drop-cropper>
-  </form> -->
-  <drop-cropper></drop-cropper>
   <section tunnel-form>
     <!-- Banner -->
     <mat-card>
@@ -14,7 +10,7 @@
         <mat-card-subtitle>The banner image will be used at the top of the film page in the marketplace</mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
-        <!-- <movie-promotional-elements-images [form]="banner" type="banner" ratio="16/9" width="700"></movie-promotional-elements-images> -->
+        <movie-promotional-elements-images [form]="banner" type="banner" [ratio]="16/9"></movie-promotional-elements-images>
       </mat-card-content>
     </mat-card>
     <!-- Poster -->
@@ -23,31 +19,33 @@
         <mat-card-title>Movie poster image</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <movie-promotional-elements-images [form]="poster" type="poster" ratio="3/7" width="700"></movie-promotional-elements-images>
+        <ng-container *ngFor="let control of poster.controls">
+          <movie-promotional-elements-images [form]="control" type="poster" [ratio]="4 / 3"></movie-promotional-elements-images>
+        </ng-container>
       </mat-card-content>
     </mat-card>
     <!-- Still Photos -->
-    <!-- <article *ngFor="let control of form.controls; let i = index; let last = last"> -->
+    <article *ngFor="let control of stillPhoto.controls; let i = index; let last = last">
       <mat-card>
         <mat-card-header>
           <mat-card-title>Still photos</mat-card-title>
         </mat-card-header>
         <mat-card-content>
-          <!-- <movie-promotional-elements-images [form]="stillPhoto" type="stillPhoto" ratio="7/5" width="500"></movie-promotional-elements-images> -->
+          <movie-promotional-elements-images [form]="control" type="stillPhoto" [ratio]="3/7"></movie-promotional-elements-images>
         </mat-card-content>
       </mat-card>
 
       <!-- Add / Delete -->
-      <!-- <footer *ngIf="!last" fxLayout="column" fxLayoutAlign="center center">
-        <button mat-mini-fab color="warn" (click)="form.removeAt(i)" aria-label="Remove a director form">
+      <footer *ngIf="!last" fxLayout="column" fxLayoutAlign="center center">
+        <button mat-mini-fab color="warn" (click)="stillPhoto.removeAt(i)" aria-label="Remove a director form">
           <mat-icon>delete</mat-icon>
         </button>
       </footer>
       <footer *ngIf="last" fxLayout="column" fxLayoutAlign="center center">
-        <button mat-mini-fab color="primary" (click)="form.add()" aria-label="Remove a director form">
+        <button mat-mini-fab color="primary" (click)="stillPhoto.add()" aria-label="Remove a director form">
           <mat-icon>add</mat-icon>
         </button>
-      </footer> -->
-    <!-- </article> -->
+      </footer>
+    </article>
   </section>
 </tunnel-page>

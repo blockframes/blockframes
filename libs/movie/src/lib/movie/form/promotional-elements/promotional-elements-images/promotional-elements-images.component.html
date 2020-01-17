@@ -1,17 +1,5 @@
-<!-- <form [formGroup]="form">
-  <drop-cropper 
-    [storagePath]="type" 
-    [ratio]="ratio" 
-    [setWidth]="width"
-    formControlName="media"
-    (onUploaded)="add($event)">
-  </drop-cropper>
-</form> -->
-
-<ng-container *ngFor="let control of form.controls">
-  <drop-cropper 
-    [storagePath]="type" 
-    [ratio]="ratio" 
-    [setWidth]="width"
-    [formControl]="control.get('media')"></drop-cropper>
-</ng-container>
+<drop-cropper 
+  [storagePath]="type" 
+  [ratio]="ratio"
+  [formControl]="form.get('media')">
+</drop-cropper>
