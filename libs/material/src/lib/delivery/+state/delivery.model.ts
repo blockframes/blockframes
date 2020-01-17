@@ -1,4 +1,4 @@
-import { staticModels } from '@blockframes/movie';
+import { staticModels } from '@blockframes/utils/static-model';
 import { DeliveryStatus, MGDeadlineRaw, DeliveryDocument, DeliveryDocumentWithDates, StepDocumentWithDate } from './delivery.firestore';
 import { Stakeholder } from '../stakeholder/+state/stakeholder.model';
 
