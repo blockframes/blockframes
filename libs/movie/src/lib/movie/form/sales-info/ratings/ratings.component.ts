@@ -1,4 +1,6 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { MovieSalesInfoControl } from '../sales-info.form';
+import { staticModels } from '@blockframes/utils/static-model';
 
 @Component({
   selector: '[form] movie-form-ratings',
@@ -6,11 +8,9 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
   styleUrls: ['./ratings.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class RatingComponent implements OnInit {
+export class RatingComponent {
 
-  constructor() { }
-
-  ngOnInit() {
-  }
+  @Input() form: MovieSalesInfoControl['rating'];
+  ratings = staticModels.RATING;
 
 }

@@ -19,6 +19,10 @@ export class BudgetComponent {
     return this.form.get('salesInfo').get('certifications');
   }
 
+  get rating() {
+    return this.form.get('salesInfo').get('rating');
+  }
+
   get boxOffice() {
     return this.form.get('budget').get('boxOffice');
   }
