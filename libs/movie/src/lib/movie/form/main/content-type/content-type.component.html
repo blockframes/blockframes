@@ -1,32 +1,30 @@
-<form [formGroup]="form">
-  <article fxLayout="column">
-    <!-- CONTENT TYPE -->
+<form [formGroup]="form" fxLayout="column">
+  <!-- CONTENT TYPE -->
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Content Type</mat-label>
+    <mat-select formControlName="workType">
+      <mat-option value="movie">Movie</mat-option>
+      <mat-option value="short">Short</mat-option>
+      <mat-option value="serie">Serie</mat-option>
+      <mat-option value="season">Season</mat-option>
+      <mat-option value="volume">Volume</mat-option>
+      <mat-option value="episode">Episode</mat-option>
+      <mat-option value="collection">Collection</mat-option>
+      <mat-option value="tv_film">TV Film</mat-option>
+      <mat-option value="flow">Flow</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="24px">
+    <!-- FRESHNESS -->
     <mat-form-field appearance="outline">
-      <mat-label>Content Type</mat-label>
-      <mat-select formControlName="workType">
-        <mat-option value="movie">Movie</mat-option>
-        <mat-option value="short">Short</mat-option>
-        <mat-option value="serie">Serie</mat-option>
-        <mat-option value="season">Season</mat-option>
-        <mat-option value="volume">Volume</mat-option>
-        <mat-option value="episode">Episode</mat-option>
-        <mat-option value="collection">Collection</mat-option>
-        <mat-option value="tv_film">TV Film</mat-option>
-        <mat-option value="flow">Flow</mat-option>
+      <mat-label>Freshness</mat-label>
+      <mat-select [formControl]="storeType">
+        <mat-option value="catalog">Catalog</mat-option>
+        <mat-option value="line_up">Line-Up</mat-option>
       </mat-select>
     </mat-form-field>
-
-    <!-- FRESHNESS -->
-    <div formGroupName="storeConfig" fxLayout="column">
-      <mat-form-field appearance="outline">
-        <mat-label>Freshness</mat-label>
-        <mat-select formControlName="storeType">
-          <mat-option value="catalog">Catalog</mat-option>
-          <mat-option value="line_up">Line-Up</mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-
+    
     <!-- PRODUCTION STATUS -->
     <mat-form-field appearance="outline">
       <mat-label>Production Status</mat-label>
@@ -36,32 +34,30 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
+  </div>
 
+  <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="24px">
     <!-- TITLES -->
-    <article formGroupName="title" fxLayout="column">
-      <mat-form-field appearance="outline">
-        <mat-label>International title</mat-label>
-        <input matInput type="text" placeholder="International title" formControlName="international" required />
-        <mat-error *ngIf="title.get('international').hasError('required')">
-          International title is <b>required</b>
-        </mat-error>
-      </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>International title</mat-label>
+      <input matInput type="text" placeholder="International title" [formControl]="title.get('international')" required />
+      <mat-error *ngIf="title.get('international').hasError('required')">
+        International title is <b>required</b>
+      </mat-error>
+    </mat-form-field>
 
-      <mat-form-field appearance="outline">
-        <mat-label>Original title</mat-label>
-        <input test-id="movie-add" matInput type="text" placeholder="Original title" formControlName="original" required />
-        <mat-error *ngIf="title.get('original').hasError('required')">
-          Original title is <b>required</b>
-        </mat-error>
-      </mat-form-field>
-    </article>
+    <mat-form-field appearance="outline">
+      <mat-label>Original title</mat-label>
+      <input test-id="movie-add" matInput type="text" placeholder="Original title" [formControl]="title.get('original')" required />
+      <mat-error *ngIf="title.get('original').hasError('required')">
+        Original title is <b>required</b>
+      </mat-error>
+    </mat-form-field>
+  </div>
 
-    <article fxLayout="column">
-      <mat-form-field appearance="outline">
-        <mat-label>Reference</mat-label>
-        <input matInput type="text" placeholder="Reference" formControlName="internalRef" />
-        <mat-hint>This reference is for you only</mat-hint>
-      </mat-form-field>
-    </article>
-  </article>
+  <mat-form-field appearance="outline" class="last">
+    <mat-label>Reference</mat-label>
+    <input matInput type="text" placeholder="Reference" formControlName="internalRef" />
+    <mat-hint>This reference is for you only</mat-hint>
+  </mat-form-field>
 </form>
