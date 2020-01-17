@@ -213,7 +213,7 @@ export class MarketplaceSearchComponent implements OnInit {
         if (AFM_DISABLE) {
           //TODO #1146
           return movies.filter(async movie => {
-            const deals = await this.distributionDealService.getDistributionDeals(movie.id);
+            const deals = await this.distributionDealService.getMovieDistributionDeals(movie.id);
             return filterMovie(movie, filterOptions, deals);
           });
         } else {

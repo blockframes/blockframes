@@ -12,10 +12,14 @@ import { LegalRolesSlug } from '@blockframes/movie/moviestatic-model/types';
 import { cleanModel } from '@blockframes/utils';
 import { ContractDocumentWithDates } from './contract.firestore';
 
-/** Get all the contracts where user organization is party. */
+/**
+ * Get all the contracts where user organization is party.
+ * Also check that there is no childContractIds to never fetch
+ * contract between organization and Archipel Content.
+ */
 const contractsListQuery = (orgId: string): Query<Contract[]> => ({
   path: 'contracts',
-  queryFn: ref => ref.where('partyIds', 'array-contains', orgId)
+  queryFn: ref => ref.where('partyIds', 'array-contains', orgId).where('childContractIds', '==', [])
 });
 
 /** Get the active contract and put his lastVersion in it. */
@@ -65,22 +69,25 @@ export class ContractService extends CollectionService<ContractState> {
   }
 
   /**
-   * @dev Fetch contract and last version
+   * @dev Fetch contract and last version. Using contract from store as an argument
+   * is always better as it send less queries to the database
+   *
+   * @param contractOrId argument can be either an string or a Contract
    */
-  public async getContractWithLastVersion(contractId: string): Promise<ContractWithLastVersion> {
+  public async getContractWithLastVersion(contractOrId: Contract | string): Promise<ContractWithLastVersion> {
     try {
 
-      const [contractWithVersion, contract] = await Promise.all([
-        initContractWithVersion(),
-        this.getValue(contractId)
-      ])
+      const contractWithVersion = initContractWithVersion()
+      const contract = typeof contractOrId === 'string'
+        ? await this.getValue(contractOrId)
+        : contractOrId
 
       contractWithVersion.doc = this.formatContract(contract);
-      contractWithVersion.last = await this.contractVersionService.getLastVersionContract();
+      contractWithVersion.last = await this.contractVersionService.getLastVersionContract(contract.id);
 
       return contractWithVersion;
     } catch (error) {
-      console.log(`Contract ${contractId} not found`);
+      console.log(`Contract ${contractOrId} not found`);
     }
   }
 
