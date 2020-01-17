@@ -78,9 +78,3 @@ export function createOrganization(): Organization {
     }
   };
 }
-
-export interface Material {
-  title: string;
-  category: string;
-  description: string;
-}

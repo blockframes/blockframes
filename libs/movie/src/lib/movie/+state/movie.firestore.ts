@@ -63,10 +63,10 @@ export interface StoreConfig {
 
 interface MovieSalesAgentDealRaw<D> {
   rights: RawRange<D>;
-  territories: string[],
+  territories: TerritoriesSlug[],
   medias: MediasSlug[],
   salesAgent?: SalesAgent,
-  reservedTerritories?: string[],
+  reservedTerritories?: TerritoriesSlug[],
 }
 
 export interface MovieSalesAgentDealDocumentWithDates extends MovieSalesAgentDealRaw<Date> {

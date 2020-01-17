@@ -34,6 +34,7 @@ import { DistributionDealService } from '@blockframes/movie/distribution-deals/+
 import { createFee } from '@blockframes/utils/common-interfaces/price';
 import { ContractService } from '@blockframes/contract/+state/contract.service';
 import { ContractWithLastVersion, initContractWithVersion } from '@blockframes/contract/version/+state/contract-version.model';
+import { createPaymentSchedule } from '@blockframes/utils/common-interfaces/schedule';
 
 export interface SpreadsheetImportError {
   field: string;
@@ -129,10 +130,15 @@ enum SpreadSheetDistributionDeal {
 enum SpreadSheetContract {
   licensors,
   licensee,
+  childRoles,
   contractId,
   parentContractIds,
   childContractIds,
   status,
+  creationDate,
+  scopeStartDate,
+  scopeEndDate,
+  paymentSchedules,
   titleStuffIndexStart,
 }
 
@@ -159,6 +165,7 @@ export class ViewExtractedElementsComponent {
   public contractsToUpdate = new MatTableDataSource<ContractsImportState>();
   public contractsToCreate = new MatTableDataSource<ContractsImportState>();
   private separator = ';';
+  private subSeparator = ',';
 
   constructor(
     private movieQuery: MovieQuery,
@@ -216,7 +223,7 @@ export class ViewExtractedElementsComponent {
             importErrors.errors.push({
               type: 'error',
               field: 'salesInfo.scoring',
-              name: "Scoring",
+              name: 'Scoring',
               reason: `${spreadSheetRow[SpreadSheetMovie.scoring]} not found in scoring list`,
               hint: 'Edit corresponding sheet field.'
             });
@@ -247,7 +254,7 @@ export class ViewExtractedElementsComponent {
               importErrors.errors.push({
                 type: 'error',
                 field: 'salesAgentDeal.territories',
-                name: "Mandate Territories",
+                name: 'Mandate Territories',
                 reason: `${c} not found in territories list`,
                 hint: 'Edit corresponding sheet field.'
               });
@@ -266,7 +273,7 @@ export class ViewExtractedElementsComponent {
               importErrors.errors.push({
                 type: 'error',
                 field: 'salesAgentDeal.medias',
-                name: "Mandate Medias",
+                name: 'Mandate Medias',
                 reason: `${c} not found in medias list`,
                 hint: 'Edit corresponding sheet field.'
               });
@@ -276,7 +283,7 @@ export class ViewExtractedElementsComponent {
 
         // DIRECTORS (Director(s))
         if (spreadSheetRow[SpreadSheetMovie.directors]) {
-          movie.main.directors = formatCredits(spreadSheetRow[SpreadSheetMovie.directors], this.separator, ',');
+          movie.main.directors = formatCredits(spreadSheetRow[SpreadSheetMovie.directors], this.separator, this.subSeparator);
         }
 
         // POSTER (Poster)
@@ -309,7 +316,7 @@ export class ViewExtractedElementsComponent {
         if (spreadSheetRow[SpreadSheetMovie.stakeholdersWithRole]) {
           movie.main.stakeholders = [];
           spreadSheetRow[SpreadSheetMovie.stakeholdersWithRole].split(this.separator).forEach((p: string) => {
-            const stakeHolderParts = p.split(',');
+            const stakeHolderParts = p.split(this.subSeparator);
             const stakeHolder = createStakeholder({ displayName: stakeHolderParts[0] });
             const role = getCodeIfExists('STAKEHOLDER_ROLES', stakeHolderParts[1] as ExtractCode<'STAKEHOLDER_ROLES'>);
             if (role) {
@@ -329,7 +336,7 @@ export class ViewExtractedElementsComponent {
             importErrors.errors.push({
               type: 'warning',
               field: 'salesInfo.color',
-              name: "Color",
+              name: 'Color',
               reason: `${spreadSheetRow[SpreadSheetMovie.color]} not found in colors list`,
               hint: 'Edit corresponding sheet field.'
             });
@@ -348,7 +355,7 @@ export class ViewExtractedElementsComponent {
               importErrors.errors.push({
                 type: 'warning',
                 field: 'main.originCountries',
-                name: "Countries of origin",
+                name: 'Countries of origin',
                 reason: `${c} not found in territories list`,
                 hint: 'Edit corresponding sheet field.'
               });
@@ -369,7 +376,7 @@ export class ViewExtractedElementsComponent {
         // PEGI (Rating)
         if (spreadSheetRow[SpreadSheetMovie.rating]) {
           spreadSheetRow[SpreadSheetMovie.rating].split(this.separator).forEach((r: string) => {
-            const ratingParts = r.split(',');
+            const ratingParts = r.split(this.subSeparator);
             const country = getCodeIfExists('TERRITORIES', ratingParts[0] as ExtractCode<'TERRITORIES'>);
             const movieRating = createMovieRating({ value: ratingParts[1] });
             // @todo #1562 missing system & reason (optionnal)
@@ -391,7 +398,7 @@ export class ViewExtractedElementsComponent {
               importErrors.errors.push({
                 type: 'warning',
                 field: 'salesInfo.certifications',
-                name: "Certifications",
+                name: 'Certifications',
                 reason: `${c} not found in certifications list`,
                 hint: 'Edit corresponding sheet field.'
               });
@@ -415,7 +422,7 @@ export class ViewExtractedElementsComponent {
         if (spreadSheetRow[SpreadSheetMovie.originCountryReleaseDate]) {
 
           spreadSheetRow[SpreadSheetMovie.originCountryReleaseDate].split(this.separator).forEach((o: ExtractCode<'TERRITORIES'>) => {
-            const originalReleaseParts = o.split(',');
+            const originalReleaseParts = o.split(this.subSeparator);
             const originalRelease = createMovieOriginalRelease({ date: originalReleaseParts[2] });
             const country = getCodeIfExists('TERRITORIES', originalReleaseParts[0] as ExtractCode<'TERRITORIES'>);
             if (country) {
@@ -443,7 +450,7 @@ export class ViewExtractedElementsComponent {
               importErrors.errors.push({
                 type: 'warning',
                 field: 'main.genres',
-                name: "Genres",
+                name: 'Genres',
                 reason: `${g} not found in genres list`,
                 hint: 'Edit corresponding sheet field.'
               });
@@ -455,7 +462,7 @@ export class ViewExtractedElementsComponent {
         if (spreadSheetRow[SpreadSheetMovie.festivalPrizes]) {
           movie.festivalPrizes.prizes = [];
           spreadSheetRow[SpreadSheetMovie.festivalPrizes].split(this.separator).forEach(async (p: string) => {
-            const prizeParts = p.split(',');
+            const prizeParts = p.split(this.subSeparator);
             if (prizeParts.length >= 3) {
               const prize = createPrize();
               prize.name = prizeParts[0];
@@ -504,7 +511,7 @@ export class ViewExtractedElementsComponent {
               importErrors.errors.push({
                 type: 'warning',
                 field: 'main.originalLanguages',
-                name: "Languages",
+                name: 'Languages',
                 reason: `${g} not found in languages list`,
                 hint: 'Edit corresponding sheet field.'
               });
@@ -524,7 +531,7 @@ export class ViewExtractedElementsComponent {
               importErrors.errors.push({
                 type: 'warning',
                 field: 'versionInfo.dubbing',
-                name: "Dubbings",
+                name: 'Dubbings',
                 reason: `${g} not found in languages list`,
                 hint: 'Edit corresponding sheet field.'
               });
@@ -544,7 +551,7 @@ export class ViewExtractedElementsComponent {
               importErrors.errors.push({
                 type: 'warning',
                 field: 'versionInfo.subtitle',
-                name: "Subtitles",
+                name: 'Subtitles',
                 reason: `${g} not found in languages list`,
                 hint: 'Edit corresponding sheet field.'
               });
@@ -563,7 +570,7 @@ export class ViewExtractedElementsComponent {
               importErrors.errors.push({
                 type: 'warning',
                 field: 'versionInfo.subtitle',
-                name: "Subtitles",
+                name: 'Subtitles',
                 reason: `${g} not found in languages list`,
                 hint: 'Edit corresponding sheet field.'
               });
@@ -757,7 +764,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'error',
         field: 'main.internalRef',
-        name: "Film Code ",
+        name: 'Film Code ',
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -767,7 +774,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'error',
         field: 'main.title.original',
-        name: "Original title",
+        name: 'Original title',
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -777,7 +784,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'error',
         field: 'main.productionYear',
-        name: "Production Year",
+        name: 'Production Year',
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -787,7 +794,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'error',
         field: 'salesInfo.scoring',
-        name: "Scoring",
+        name: 'Scoring',
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -817,7 +824,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'error',
         field: 'salesAgentDeal.territories',
-        name: "Mandate Territories",
+        name: 'Mandate Territories',
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -827,7 +834,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'error',
         field: 'salesAgentDeal.medias',
-        name: "Mandate Medias",
+        name: 'Mandate Medias',
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -837,7 +844,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'error',
         field: 'main.directors',
-        name: "Directors",
+        name: 'Directors',
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -847,7 +854,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'error',
         field: 'main.poster',
-        name: "Poster",
+        name: 'Poster',
         reason: 'Required field is missing',
         hint: 'Add poster URL in corresponding column.'
       });
@@ -861,7 +868,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'warning',
         field: 'main.isan',
-        name: "ISAN number",
+        name: 'ISAN number',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -871,7 +878,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'warning',
         field: 'main.title.international',
-        name: "International title",
+        name: 'International title',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -881,7 +888,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'warning',
         field: 'main.totalRunTime',
-        name: "Total Run Time",
+        name: 'Total Run Time',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -891,7 +898,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'warning',
         field: 'main.stakeholders',
-        name: "Stakeholder(s)",
+        name: 'Stakeholder(s)',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -901,7 +908,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'warning',
         field: 'salesInfo.color',
-        name: "Color / Black & White ",
+        name: 'Color / Black & White ',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -911,7 +918,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'warning',
         field: 'main.originCountries',
-        name: "Countries of origin",
+        name: 'Countries of origin',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -921,7 +928,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'warning',
         field: 'salesInfo.certifications',
-        name: "Certifications",
+        name: 'Certifications',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -941,7 +948,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'warning',
         field: 'salesCast.credits',
-        name: "Principal Cast",
+        name: 'Principal Cast',
         reason: 'Optional fields are missing',
         hint: 'Edit corresponding sheets fields: directors, principal cast.'
       });
@@ -951,7 +958,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'warning',
         field: 'main.shortSynopsis',
-        name: "Synopsis",
+        name: 'Synopsis',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -961,7 +968,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'warning',
         field: 'main.genres',
-        name: "Genres",
+        name: 'Genres',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -971,7 +978,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'warning',
         field: 'festivalPrizes.prizes',
-        name: "Festival Prizes",
+        name: 'Festival Prizes',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -981,7 +988,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'warning',
         field: 'promotionalDescription.keyAssets',
-        name: "Key assets",
+        name: 'Key assets',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -991,7 +998,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'warning',
         field: 'promotionalDescription.keywords',
-        name: "Keywords",
+        name: 'Keywords',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -1001,7 +1008,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'warning',
         field: 'main.originalLanguages',
-        name: "Languages",
+        name: 'Languages',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -1011,7 +1018,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'warning',
         field: 'versionInfo.dubbings',
-        name: "Dubbings",
+        name: 'Dubbings',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -1021,7 +1028,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'warning',
         field: 'versionInfo.subtitles',
-        name: "Subtitles",
+        name: 'Subtitles',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -1033,7 +1040,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'warning',
         field: 'versionInfo.captions',
-        name: "Captions",
+        name: 'Captions',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -1155,7 +1162,7 @@ export class ViewExtractedElementsComponent {
                 importErrors.errors.push({
                   type: 'error',
                   field: 'territories',
-                  name: "Territories sold",
+                  name: 'Territories sold',
                   reason: `${c} not found in territories list`,
                   hint: 'Edit corresponding sheet field.'
                 });
@@ -1174,7 +1181,7 @@ export class ViewExtractedElementsComponent {
                 importErrors.errors.push({
                   type: 'error',
                   field: 'territories excluded',
-                  name: "Territories excluded",
+                  name: 'Territories excluded',
                   reason: `${c} not found in territories list`,
                   hint: 'Edit corresponding sheet field.'
                 });
@@ -1193,7 +1200,7 @@ export class ViewExtractedElementsComponent {
                 importErrors.errors.push({
                   type: 'error',
                   field: 'medias',
-                  name: "Media(s)",
+                  name: 'Media(s)',
                   reason: `${c} not found in medias list`,
                   hint: 'Edit corresponding sheet field.'
                 });
@@ -1215,7 +1222,7 @@ export class ViewExtractedElementsComponent {
                 importErrors.errors.push({
                   type: 'error',
                   field: 'dubbing',
-                  name: "Authorized language(s)",
+                  name: 'Authorized language(s)',
                   reason: `${g} not found in languages list`,
                   hint: 'Edit corresponding sheet field.'
                 });
@@ -1238,7 +1245,7 @@ export class ViewExtractedElementsComponent {
                 importErrors.errors.push({
                   type: 'error',
                   field: 'subtitle',
-                  name: "Authorized subtitle(s)",
+                  name: 'Authorized subtitle(s)',
                   reason: `${g} not found in languages list`,
                   hint: 'Edit corresponding sheet field.'
                 });
@@ -1260,7 +1267,7 @@ export class ViewExtractedElementsComponent {
                 importErrors.errors.push({
                   type: 'error',
                   field: 'caption',
-                  name: "Authorized caption(s)",
+                  name: 'Authorized caption(s)',
                   reason: `${g} not found in languages list`,
                   hint: 'Edit corresponding sheet field.'
                 });
@@ -1299,7 +1306,7 @@ export class ViewExtractedElementsComponent {
           importErrors.errors.push({
             type: 'error',
             field: 'internalRef',
-            name: "Movie",
+            name: 'Movie',
             reason: `Movie ${spreadSheetRow[SpreadSheetDistributionDeal.internalRef]} not found`,
             hint: 'Try importing it first or check if data is correct.'
           });
@@ -1335,7 +1342,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'error',
         field: 'contractId',
-        name: "Contract ",
+        name: 'Contract ',
         reason: 'Related contract not found',
         hint: 'Edit corresponding sheet field.'
       });
@@ -1369,7 +1376,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'error',
         field: 'territory',
-        name: "Territories sold",
+        name: 'Territories sold',
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -1380,7 +1387,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'warning',
         field: 'territoryExcluded',
-        name: "Territories excluded",
+        name: 'Territories excluded',
         reason: 'Optionnal field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -1391,7 +1398,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'error',
         field: 'medias',
-        name: "Media(s)",
+        name: 'Media(s)',
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -1402,7 +1409,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'error',
         field: 'dubbings',
-        name: "Authorized language(s)",
+        name: 'Authorized language(s)',
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -1413,7 +1420,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'error',
         field: 'exclusive',
-        name: "Exclusive deal",
+        name: 'Exclusive deal',
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -1429,7 +1436,7 @@ export class ViewExtractedElementsComponent {
         errors.push({
           type: 'warning',
           field: 'price',
-          name: "Distribution deal price",
+          name: 'Distribution deal price',
           reason: `Optional field is missing for ${titleId}`,
           hint: 'Edit corresponding sheet field.'
         });
@@ -1445,6 +1452,7 @@ export class ViewExtractedElementsComponent {
     const titlesFieldsCount = Object.keys(SpreadSheetContractTitle).length / 2; // To get enum length
 
     sheetTab.rows.forEach(async spreadSheetRow => {
+      // CONTRACT ID
       // Create/retreive the contract
       let contract = initContractWithVersion();
       let newContract = true;
@@ -1466,6 +1474,8 @@ export class ViewExtractedElementsComponent {
         } as ContractsImportState;
 
         if (newContract) {
+
+          // LICENSORS
           /**
            * @dev We process this data only if this is for a new contract
            * Changing parties or titles for a same contract is forbidden
@@ -1476,25 +1486,62 @@ export class ViewExtractedElementsComponent {
               const licensor = createContractPartyDetail();
               // licensor.orgId @TODO (#1397) try to match with an existing org
               licensor.party.displayName = licensorName.trim();
-              licensor.party.role = 'licensor';
+              licensor.party.role = getCodeIfExists('LEGAL_ROLES', 'licensor');
               contract.doc.parties.push(licensor);
             });
           }
 
+          // LICENSEE
           if (spreadSheetRow[SpreadSheetContract.licensee]) {
             const licensee = createContractPartyDetail();
             // licensee.orgId @TODO (#1397) try to match with an existing org
             licensee.party.displayName = spreadSheetRow[SpreadSheetContract.licensee];
-            licensee.party.role = 'licensee';
+            licensee.party.role = getCodeIfExists('LEGAL_ROLES', 'licensee');
             contract.doc.parties.push(licensee);
           }
 
+          // CHILD ROLES
+          if (spreadSheetRow[SpreadSheetContract.childRoles]) {
+            spreadSheetRow[SpreadSheetContract.childRoles].split(this.separator).forEach((r: string) => {
+              const childRoleParts = r.split(this.subSeparator);
+              const licensorName = childRoleParts.pop().trim();
+              const party = contract.doc.parties.find(p => p.party.displayName === licensorName && p.party.role == getCodeIfExists('LEGAL_ROLES', 'licensor'));
+              if (party) {
+                childRoleParts.forEach(r => {
+                  const role = getCodeIfExists('LEGAL_ROLES', r.trim() as ExtractCode<'LEGAL_ROLES'>);
+                  if (role) {
+                    // @todo #1562 check if pointer (ie not need to update remove and push whole party in  contract.doc.parties)
+                    party.childRoles.push(role);
+                  } else {
+                    importErrors.errors.push({
+                      type: 'error',
+                      field: 'contract.parties.childRoles',
+                      name: 'Child roles',
+                      reason: `Child role mismatch : ${r.trim()}`,
+                      hint: 'Edit corresponding sheet field.'
+                    });
+                  }
+                });
+              } else {
+                importErrors.errors.push({
+                  type: 'error',
+                  field: 'contract.parties.childRoles',
+                  name: 'Child roles',
+                  reason: `Licensor name mismatch : ${licensorName}`,
+                  hint: 'Edit corresponding sheet field.'
+                });
+              }
+            });
+          }
+
+          // PARENTS CONTRACTS
           if (spreadSheetRow[SpreadSheetContract.parentContractIds]) {
             spreadSheetRow[SpreadSheetContract.parentContractIds].split(this.separator).forEach((c: string) => {
               contract.doc.parentContractIds.push(c.trim());
             });
           }
 
+          // CHILDS CONTRACTS
           if (spreadSheetRow[SpreadSheetContract.childContractIds]) {
             spreadSheetRow[SpreadSheetContract.childContractIds].split(this.separator).forEach((c: string) => {
               contract.doc.childContractIds.push(c.trim());
@@ -1502,12 +1549,86 @@ export class ViewExtractedElementsComponent {
           }
         }
 
+        // CONTRACT STATUS
         if (spreadSheetRow[SpreadSheetContract.status]) {
           if (spreadSheetRow[SpreadSheetContract.status] in ContractStatus) {
             contract.last.status = spreadSheetRow[SpreadSheetContract.status];
           }
         }
 
+        // CONTRACT CREATION DATE
+        if (spreadSheetRow[SpreadSheetContract.creationDate]) {
+          const creationDate: SSF$Date = SSF.parse_date_code(spreadSheetRow[SpreadSheetContract.creationDate]);
+          contract.last.creationDate = new Date(`${creationDate.y}-${creationDate.m}-${creationDate.d}`);
+        } else {
+          importErrors.errors.push({
+            type: 'warning',
+            field: 'contract.last.creationDate',
+            name: 'Creation date',
+            reason: 'Contract creation date not found. Using current date',
+            hint: 'Edit corresponding sheet field.'
+          });
+        }
+
+        // SCOPE DATE START
+        if (spreadSheetRow[SpreadSheetContract.scopeStartDate]) {
+          const scopeStartDate: SSF$Date = SSF.parse_date_code(SpreadSheetContract.scopeStartDate);
+          contract.last.scope.start = new Date(`${scopeStartDate.y}-${scopeStartDate.m}-${scopeStartDate.d}`);
+        } else {
+          importErrors.errors.push({
+            type: 'warning',
+            field: 'contract.last.scope.start',
+            name: 'Scope Start date',
+            reason: 'Scope Start date not found',
+            hint: 'Edit corresponding sheet field.'
+          });
+        }
+
+        // SCOPE DATE END
+        if (spreadSheetRow[SpreadSheetContract.scopeEndDate]) {
+          const scopeEndDate: SSF$Date = SSF.parse_date_code(SpreadSheetContract.scopeEndDate);
+          contract.last.scope.end = new Date(`${scopeEndDate.y}-${scopeEndDate.m}-${scopeEndDate.d}`);
+        } else {
+          importErrors.errors.push({
+            type: 'warning',
+            field: 'contract.last.scope.end',
+            name: 'Scope End date',
+            reason: 'Scope End date not found',
+            hint: 'Edit corresponding sheet field.'
+          });
+        }
+
+        // PAYMENT SCHEDULES
+        if (spreadSheetRow[SpreadSheetContract.paymentSchedules]) {
+          spreadSheetRow[SpreadSheetContract.paymentSchedules].split(this.separator).forEach((r: string) => {
+            const scheduleParts = r.split(this.subSeparator);
+            if (scheduleParts.length === 3) {
+              const percentage = scheduleParts[1].indexOf('%') !== -1 ? 
+                parseInt(scheduleParts[1].trim().replace('%',''), 10) : 
+                parseInt(scheduleParts[1].trim(), 10);
+              const paymentSchedule = createPaymentSchedule({ label: scheduleParts[0].trim(), percentage, date: scheduleParts[2].trim() });
+              contract.last.paymentSchedule.push(paymentSchedule);
+            } else {
+              importErrors.errors.push({
+                type: 'error',
+                field: 'contract.last.paymentSchedule',
+                name: 'Payment Schedule',
+                reason: 'Error while parsing data',
+                hint: 'Edit corresponding sheet field.'
+              });
+            }
+          });
+        } else {
+          importErrors.errors.push({
+            type: 'warning',
+            field: 'contract.last.paymentSchedule',
+            name: 'Payment Schedule',
+            reason: 'Missing data',
+            hint: 'Edit corresponding sheet field.'
+          });
+        }
+
+        // TITLES STUFF
         let titleIndex = 0;
         while (spreadSheetRow[SpreadSheetContract.titleStuffIndexStart + titleIndex]) {
           const currentIndex = SpreadSheetContract.titleStuffIndexStart + titleIndex;
@@ -1557,7 +1678,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'error',
         field: 'contractId',
-        name: "Contract",
+        name: 'Contract',
         reason: 'Contract is not valid',
         hint: 'Edit corresponding sheet field.'
       });
@@ -1573,12 +1694,23 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'warning',
         field: 'price',
-        name: "Distribution deal price",
+        name: 'Distribution deal price',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
     }*/
 
+    // CONTRACT STATUS
+    if (!contract.last.status) {
+      errors.push({
+        type: 'warning',
+        field: 'contract.last.status',
+        name: 'Contract Status',
+        reason: 'Optional field is missing',
+        hint: 'Edit corresponding sheet field.'
+      });
+    }
+    
     return importErrors;
   }
 
