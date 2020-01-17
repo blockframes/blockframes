@@ -11,11 +11,11 @@ export class TunnelSynopsisComponent {
 
   constructor(private form:MovieForm) { }
 
-  get story() {
-    return this.form.get('story');
+  get synopsis() {
+    return this.form.get('story').get('synopsis');
   }
 
-  get promotionalDescription() {
-    return this.form.get('promotionalDescription');
+  get keyAssets() {
+    return this.form.get('promotionalDescription').get('keyAssets');
   }
 }

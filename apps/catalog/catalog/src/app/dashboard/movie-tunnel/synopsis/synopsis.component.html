@@ -8,9 +8,7 @@
       </mat-card-header>
       <!-- TODO##1416 stoyline component -->
       <mat-card-content>
-        <form [formGroup]="story">
-          <movie-form-synopsis formGroupName="synopsis"></movie-form-synopsis>
-        </form>
+        <movie-form-synopsis [form]="synopsis"></movie-form-synopsis>
       </mat-card-content>
     </mat-card>
     <mat-card>
@@ -19,9 +17,7 @@
       </mat-card-header>
       <!-- TODO#1478 Sync Data and UI  -->
       <mat-card-content>
-        <form [formGroup]="promotionalDescription">
-          <movie-form-key-assets></movie-form-key-assets>
-        </form>
+        <movie-form-key-assets [form]="keyAssets"></movie-form-key-assets>
       </mat-card-content>
     </mat-card>
   </section>
