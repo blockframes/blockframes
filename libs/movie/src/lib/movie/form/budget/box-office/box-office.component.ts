@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { BudgetFormControl } from '../budget.form';
 import { UnitBox } from '@blockframes/movie/movie+state/movie.firestore';
 import { startWith, map } from 'rxjs/operators';
@@ -17,7 +17,8 @@ type Unit = ReturnType<typeof toUnit>;
 @Component({
   selector: '[form] movie-form-box-office, [formGroup] movie-form-box-office',
   templateUrl: './box-office.component.html',
-  styleUrls: ['./box-office.component.scss']
+  styleUrls: ['./box-office.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BoxOfficeComponent implements OnInit {
   @Input() form: BudgetFormControl['boxOffice'];
