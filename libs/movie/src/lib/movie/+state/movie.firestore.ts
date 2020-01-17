@@ -13,9 +13,9 @@ import {
   FormatQualitySlug,
   FormatSlug,
   GenresSlug
-} from "@blockframes/movie/movie/static-model";
+} from "@blockframes/utils/static-model";
 import { RawRange, NumberRange } from "@blockframes/utils/common-interfaces/range";
-import { Person, Credit, SalesAgent, Company } from "@blockframes/utils/common-interfaces/identity";
+import { Person, SalesAgent, Company, Producer, Crew, Cast } from "@blockframes/utils/common-interfaces/identity";
 import { firestore } from "firebase/app";
 import { ImgRef } from "@blockframes/utils/image-uploader";
 
@@ -45,7 +45,7 @@ export enum PremiereType {
   'national' = 'National',
 }
 
-export const enum UnitBox {
+export enum UnitBox {
   boxoffice_dollar = 'Box office in $',
   boxoffice_euro = 'Box office in €',
   entrances = '#Entrances',
@@ -118,7 +118,9 @@ export interface MovieStory {
 }
 
 export interface MovieSalesCast {
-  credits: Credit[],
+  producers: Producer[],
+  cast: Cast[],
+  crew: Crew[],
 }
 
 export interface MovieFestivalPrizes {
@@ -136,7 +138,7 @@ export interface MovieBudget {
   budgetCurrency?: string, // WIP #1052
   detailledBudget?: any, // WIP #1052
   estimatedBudget?: NumberRange,
-  boxOffice?: BoxOffice,
+  boxOffice?: BoxOffice[],
 }
 
 export const enum MovieLanguageTypes {

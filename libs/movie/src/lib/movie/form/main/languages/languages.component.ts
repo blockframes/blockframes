@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { MovieMainControl } from '../main.form';
-import { default as staticModel, ExtractLabel } from '../../../static-model/staticModels';
+import { default as staticModel, ExtractLabel } from '@blockframes/utils/static-model/staticModels';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { startWith, map, switchMap } from 'rxjs/operators';
 

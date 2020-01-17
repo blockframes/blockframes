@@ -2,7 +2,7 @@
   "indexes": [],
   "fieldOverrides": [
     {
-      "collectionGroup": "distributiondeals",
+      "collectionGroup": "distributionDeals",
       "fieldPath": "licensor.orgId",
       "indexes": [
         {

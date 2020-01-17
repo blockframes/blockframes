@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl, ControlContainer } from '@angular/forms';
-import { default as staticModels, SlugAndLabel } from '../../static-model/staticModels';
+import { default as staticModels, SlugAndLabel } from '@blockframes/utils/static-model/staticModels';
 import { Observable } from 'rxjs';
 import { startWith, debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { MovieMainForm } from './main.form';

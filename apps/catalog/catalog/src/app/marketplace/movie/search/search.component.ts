@@ -38,8 +38,8 @@ import {
   MovieStatusLabel,
   MOVIE_STATUS_LABEL,
   MovieStatusSlug
-} from '@blockframes/movie/movie/static-model/types';
-import { getCodeIfExists, ExtractCode } from '@blockframes/movie/movie/static-model/staticModels';
+} from '@blockframes/utils/static-model/types';
+import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
 import { languageValidator } from '@blockframes/utils/form/validators/validators';
 import { ControlErrorStateMatcher } from '@blockframes/utils/form/validators/validators';
 import { MovieAlgoliaResult } from '@blockframes/utils/algolia';
@@ -213,7 +213,7 @@ export class MarketplaceSearchComponent implements OnInit {
         if (AFM_DISABLE) {
           //TODO #1146
           return movies.filter(async movie => {
-            const deals = await this.distributionDealService.getDistributionDeals(movie.id);
+            const deals = await this.distributionDealService.getMovieDistributionDeals(movie.id);
             return filterMovie(movie, filterOptions, deals);
           });
         } else {

@@ -7,7 +7,7 @@ import { MovieImdbSearchComponent } from '../../components/movie-imdb-search/mov
 import { SearchRequest, ImdbMovie, FormEntity, ImageUploader } from '@blockframes/utils';
 import { formatCredit, formatCredits } from '@blockframes/utils/spreadsheet/format';
 import { FormControl } from '@angular/forms';
-import { getCodeIfExists, ExtractCode } from '../../static-model/staticModels';
+import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
 import { CreditFormControl } from '../main/main.form';
 import { Router } from '@angular/router';
 
@@ -76,11 +76,12 @@ export class MovieFormRootComponent {
         this.form.main.addDirector(formatCredit(movie.director));
 
         // ACTORS
-        this.form.get('salesCast').credits.clear();
-        formatCredits(movie.actors).map(credit => this.form.get('salesCast').addCredit({ ...credit, role: 'actor' }));
+        this.form.get('salesCast').cast.clear();
+        formatCredits(movie.actors).map(credit => this.form.get('salesCast').addCredit({ ...credit, role: 'actor' }, 'cast'));
 
         // WRITERS
-        formatCredits(movie.writer).map(credit => this.form.get('salesCast').addCredit({ ...credit, role: 'writer' }));
+        this.form.get('salesCast').crew.clear();
+        formatCredits(movie.writer).map(credit => this.form.get('salesCast').addCredit({ ...credit, role: 'writer' }, 'crew'));
 
         // PRODUCTION COMPANY
         this.form.main.stakeholders.clear();

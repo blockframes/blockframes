@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import objectHash from 'object-hash';
 import { firestore } from 'firebase';
-import { CollectionConfig, CollectionService } from 'akita-ng-fire';
+import { CollectionService } from 'akita-ng-fire';
 import { DistributionDealState, DistributionDealStore } from './distribution-deal.store';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { MovieQuery } from '../../movie/+state/movie.query';
@@ -12,7 +12,6 @@ import { ContractWithLastVersion } from '@blockframes/contract/version/+state/co
 import { ContractService } from '@blockframes/contract/+state/contract.service';
 
 @Injectable({ providedIn: 'root' })
-@CollectionConfig({ path: 'movies/:movieId/distributiondeals' })
 export class DistributionDealService extends CollectionService<DistributionDealState> {
   constructor(
     private movieQuery: MovieQuery,
@@ -25,7 +24,7 @@ export class DistributionDealService extends CollectionService<DistributionDealS
   }
 
   get path() {
-    return `movies/${this.movieQuery.getActiveId()}/distributiondeals`;
+    return `movies/${this.movieQuery.getActiveId()}/distributionDeals`;
   }
 
   /**
@@ -65,7 +64,7 @@ export class DistributionDealService extends CollectionService<DistributionDealS
       // Contract may have been updated along with the distribution deal, we update it
       await this.contractService.add(contract.doc);
       await this.contractVersionService.add(contract.last);
-      return distributionDeal.id ;
+      return distributionDeal.id;
     }
   }
 
@@ -86,18 +85,48 @@ export class DistributionDealService extends CollectionService<DistributionDealS
    * @param type  licensee | licensor
    */
   public async getMyDeals(type: string = 'licensor'): Promise<DistributionDeal[]> {
-    const myDeals = await this.getValue(ref =>
-      ref.where(`${type}.orgId`, '==', this.organizationQuery.getActiveId())
-    );
-    return myDeals.map(deal => this.formatDistributionDeal(deal));
+    const myDealsSnap = await this.db
+      .collectionGroup('distributionDeals', ref => ref.where(`${type}.orgId`, '==', this.organizationQuery.getActiveId()))
+      .get()
+      .toPromise();
+    const myDeals = myDealsSnap.docs.map(deal => this.formatDistributionDeal(deal.data()));
+    return myDeals;
   }
 
   /**
    * Get distributionDeals from a specific movie.
    * @param movieId
    */
-  public async getDistributionDeals(movieId: string) {
-    const distributionDealsSnap = await this.db.collection(`movies/${movieId}/distributiondeals`).get().toPromise();
-    return distributionDealsSnap.docs.map(deal => deal.data() as DistributionDeal);
+  public async getMovieDistributionDeals(movieId: string): Promise<DistributionDeal[]> {
+    const distributionDealsSnap = await this.db
+      .collection(`movies/${movieId}/distributionDeals`)
+      .get()
+      .toPromise();
+    const distributionDeals = distributionDealsSnap.docs.map(deal => this.formatDistributionDeal(deal.data()));
+    return distributionDeals;
+  }
+
+  /**
+   * Get distributionDeals from a specific contract.
+   * @param contractId
+   */
+  public async getContractDistributionDeals(contractId: string): Promise<DistributionDeal[]> {
+    const distributionDealsSnap = await this.db
+      .collectionGroup('distributionDeals', ref => ref.where('contractId', '==', contractId))
+      .get()
+      .toPromise();
+    const distributionDeals = distributionDealsSnap.docs.map(deal => this.formatDistributionDeal(deal.data()));
+    return distributionDeals;
+  }
+
+  /**
+   * Get all the territories from a list of deals and
+   * return them into an array of string
+   * @param deals
+   */
+  public getDistributionDealsTerritories(deals: DistributionDeal[]): string[] {
+    const territories = deals.map(deal => deal.territory.map(territory => territory));
+    const flattenedTerritories = territories.reduce((acc, nestedArray) => acc.concat(nestedArray));
+    return flattenedTerritories;
   }
 }

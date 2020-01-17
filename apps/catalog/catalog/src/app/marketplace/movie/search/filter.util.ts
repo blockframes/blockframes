@@ -2,7 +2,7 @@ import { CatalogSearch } from './search.form';
 import { Movie } from '@blockframes/movie/movie/+state/movie.model';
 import { AFM_DISABLE } from '@env';
 import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
-import { ExtractCode, ExtractSlug } from '@blockframes/movie/moviestatic-model/staticModels';
+import { ExtractCode, ExtractSlug } from '@blockframes/utils/static-model/staticModels';
 
 function productionYearBetween(movie: Movie, range: { from: number; to: number }): boolean {
   if (!range || !(range.from && range.to)) {

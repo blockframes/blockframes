@@ -23,7 +23,7 @@ import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { formatCredits } from '@blockframes/utils/spreadsheet/format';
 import { ImageUploader, cleanModel } from '@blockframes/utils';
 import { SSF$Date } from 'ssf/types';
-import { getCodeIfExists, ExtractCode } from '../../../static-model/staticModels';
+import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
 import { SSF } from 'xlsx';
 import { MovieLanguageTypes, PremiereType } from '@blockframes/movie/movie/+state/movie.firestore';
 import { createCredit, createStakeholder } from '@blockframes/utils/common-interfaces/identity';
@@ -409,7 +409,7 @@ export class ViewExtractedElementsComponent {
 
         // CREDITS (Principal Cast)
         if (spreadSheetRow[SpreadSheetMovie.cast]) {
-          movie.salesCast.credits = formatCredits(spreadSheetRow[SpreadSheetMovie.cast], this.separator)
+          movie.salesCast.cast = formatCredits(spreadSheetRow[SpreadSheetMovie.cast], this.separator)
             .map(credit => ({ ...credit, role: 'actor' }));
         }
 
@@ -944,11 +944,11 @@ export class ViewExtractedElementsComponent {
       });
     }
 
-    if (movie.salesCast.credits.length === 0) {
+    if (movie.salesCast.cast.length === 0) {
       errors.push({
         type: 'warning',
-        field: 'salesCast.credits',
-        name: 'Principal Cast',
+        field: 'salesCast.cast',
+        name: "Principal Cast",
         reason: 'Optional fields are missing',
         hint: 'Edit corresponding sheets fields: directors, principal cast.'
       });

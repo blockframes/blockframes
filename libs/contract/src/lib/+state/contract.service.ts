@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { ContractStore, ContractState } from './contract.store';
-import { getCodeIfExists, ExtractCode } from '@blockframes/movie/moviestatic-model/staticModels';
 import { CollectionConfig, CollectionService, awaitSyncQuery, Query } from 'akita-ng-fire';
 import { Contract, ContractPartyDetail, convertToContractDocument, createContractPartyDetail } from './contract.model';
 import orderBy from 'lodash/orderBy';
@@ -8,14 +7,19 @@ import { OrganizationQuery } from '@blockframes/organization/+state/organization
 import { tap, switchMap } from 'rxjs/operators';
 import { ContractVersionService } from '../version/+state/contract-version.service';
 import { initContractWithVersion, ContractWithLastVersion } from '../version/+state/contract-version.model';
-import { LegalRolesSlug } from '@blockframes/movie/moviestatic-model/types';
+import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
+import { LegalRolesSlug } from '@blockframes/utils/static-model/types';
 import { cleanModel } from '@blockframes/utils';
 import { ContractDocumentWithDates } from './contract.firestore';
 
-/** Get all the contracts where user organization is party. */
+/**
+ * Get all the contracts where user organization is party.
+ * Also check that there is no childContractIds to never fetch
+ * contract between organization and Archipel Content.
+ */
 const contractsListQuery = (orgId: string): Query<Contract[]> => ({
   path: 'contracts',
-  queryFn: ref => ref.where('partyIds', 'array-contains', orgId)
+  queryFn: ref => ref.where('partyIds', 'array-contains', orgId).where('childContractIds', '==', [])
 });
 
 /** Get the active contract and put his lastVersion in it. */
@@ -67,25 +71,27 @@ export class ContractService extends CollectionService<ContractState> {
   }
 
   /**
-   * @dev Fetch contract and last version
+   * @dev Fetch contract and last version. Using contract from store as an argument
+   * is always better as it send less queries to the database
+   *
+   * @param contractOrId argument can be either an string or a Contract
    */
-  public async getContractWithLastVersion(contractId: string): Promise<ContractWithLastVersion> {
+  public async getContractWithLastVersion(contractOrId: Contract | string): Promise<ContractWithLastVersion> {
     try {
-
-      const [contractWithVersion, contract] = await Promise.all([
-        initContractWithVersion(),
-        this.getValue(contractId)
-      ])
+      const contractWithVersion = initContractWithVersion()
+      const contract = typeof contractOrId === 'string'
+        ? await this.getValue(contractOrId)
+        : contractOrId
 
       contractWithVersion.doc = this.formatContract(contract);
-      const lastVersion = await this.contractVersionService.getLastVersionContract(contractId);
+      const lastVersion = await this.contractVersionService.getLastVersionContract(contract.id);
       if (lastVersion) {
         contractWithVersion.last = lastVersion;
       }
 
       return contractWithVersion;
     } catch (error) {
-      console.log(`Contract ${contractId} not found`);
+      console.error(`Contract ${typeof contractOrId === 'string' ? contractOrId : contractOrId.id} not found`);
     }
   }
 

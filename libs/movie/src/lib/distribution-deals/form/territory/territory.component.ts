@@ -19,8 +19,8 @@ import {
   SlugAndLabel,
   ExtractCode,
   ExtractSlug,
-} from '@blockframes/movie/movie/static-model/staticModels';
-import { TERRITORIES_SLUG } from '@blockframes/movie/movie/static-model/types';
+} from '@blockframes/utils/static-model/staticModels';
+import { TERRITORIES_SLUG } from '@blockframes/utils/static-model/types';
 
 export type TerritoryType = 'territory' | 'territoryExcluded';
 

@@ -1,5 +1,3 @@
-export type Scope = keyof typeof models;
-
 const models = {
   'GENRES': [
     { 'slug': 'comedy', 'label': 'Comedy' },
@@ -112,19 +110,7 @@ const models = {
       'label': 'Can refuse materials'
     }
   ],
-  'CREDIT_ROLES': [
-    {
-      'slug': 'writer',
-      'label': 'Writer'
-    },
-    {
-      'slug': 'director',
-      'label': 'Director'
-    },
-    {
-      'slug': 'actor',
-      'label': 'Actor'
-    },
+  'PRODUCER_ROLES': [
     {
       'slug': 'exectuive-producer',
       'label': 'Executive Producer'
@@ -138,6 +124,25 @@ const models = {
       'label': 'Associate Producer'
     },
     {
+      'slug': 'production-manager',
+      'label': 'Production Manager'
+    },
+  ],
+  'CAST_ROLES': [
+    {
+      'slug': 'lead-role',
+      'label': 'Lead Role'
+    },
+    {
+      'slug': 'secondary-role',
+      'label': 'Secondary Role'
+    }
+  ],
+  'CREW_ROLES': [
+    {
+      'slug': 'writer',
+      'label': 'Writer'
+    }, {
       'slug': 'score-composer',
       'label': 'Score Composer'
     },
@@ -160,10 +165,6 @@ const models = {
     {
       'slug': 'artistic-director',
       'label': 'Artistic Director'
-    },
-    {
-      'slug': 'production-manager',
-      'label': 'Production Manager'
     },
     {
       'slug': 'costume-designer',
@@ -192,7 +193,7 @@ const models = {
     {
       'slug': 'original-author',
       'label': 'Original Author'
-    },
+    }
   ],
   'MOVIE_STATUS': [
     {
@@ -773,6 +774,9 @@ const models = {
     { 'slug': 'thx', 'label': 'THX' },
   ]
 };
+
+export type Scope = keyof typeof models;
+export type Model = typeof models;
 
 /**
  * Checks if given code (or slug) exists in above static models

@@ -1,6 +1,6 @@
 import { FormList } from '@blockframes/utils/form/forms/list.form';
-import { getLabelByCode } from '@blockframes/movie/movie/static-model/staticModels';
-import { TerritoriesSlug, TERRITORIES_SLUG } from '@blockframes/movie/movie/static-model';
+import { getLabelByCode } from '@blockframes/utils/static-model/staticModels';
+import { TerritoriesSlug, TERRITORIES_SLUG } from '@blockframes/utils/static-model';
 import { FormControl } from '@angular/forms';
 import { createDistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';

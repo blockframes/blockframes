@@ -22,10 +22,12 @@ import {
   MovieOfficialIds,
   MovieOriginalRelease,
   MovieRating,
-  MovieDocumentWithDates
+  MovieDocumentWithDates,
+  BoxOffice,
+  UnitBox,
 } from './movie.firestore';
 import { createImgRef } from '@blockframes/utils/image-uploader';
-import { LanguagesSlug } from '../static-model';
+import { LanguagesSlug } from '@blockframes/utils/static-model';
 import { createRange } from '@blockframes/utils/common-interfaces/range';
 import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
 
@@ -136,7 +138,9 @@ export function createPromotionalElement(
 
 export function createMovieSalesCast(params: Partial<MovieSalesCast> = {}): MovieSalesCast {
   return {
-    credits: [],
+    producers: [],
+    cast: [],
+    crew: [],
     ...params
   };
 }
@@ -234,11 +238,21 @@ export function createMovieSalesAgentDeal(
   };
 }
 
+export function createBoxOffice(params: Partial<BoxOffice> = {}): BoxOffice {
+  return {
+      unit: UnitBox.boxoffice_dollar,
+      value: 0,
+      territory: null,
+      ...params,
+  }
+}
+
 export function createMovieBudget(params: Partial<MovieBudget> = {}): MovieBudget {
   return {
     totalBudget: '',
+    boxOffice: [],
     ...params,
-    estimatedBudget: createRange<number>(params.estimatedBudget)
+    estimatedBudget: createRange<number>(params.estimatedBudget),
   };
 }
 

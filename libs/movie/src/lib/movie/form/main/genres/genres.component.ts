@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core';
 import { MovieMainForm } from '../main.form';
-import { default as staticModel } from '../../../static-model/staticModels';
+import { default as staticModel } from '@blockframes/utils/static-model/staticModels';
 import { startWith, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 

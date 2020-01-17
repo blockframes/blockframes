@@ -1,6 +1,7 @@
 export interface RawRange<D> {
   from: D | null;
   to: D | null;
+  label?: string;
 }
 
 /** Need it for calendar components */
@@ -16,6 +17,7 @@ export function createRange<D>(params: Partial<RawRange<D>> = {}): RawRange<D> {
   return {
     from: null,
     to: null,
+    label: '',
     ...params
   };
 }

@@ -4,7 +4,7 @@ import {
   TerritoriesSlug,
   TERRITORIES_SLUG,
   LanguagesSlug
-} from '../../movie/static-model/types';
+} from '@blockframes/utils/static-model/types';
 import { MovieMain, createMovieLanguageSpecification } from '../../movie/+state/movie.model';
 import { MovieLanguageSpecification } from '../../movie/+state/movie.firestore';
 import { DistributionDeal, createDistributionDeal } from '../+state/distribution-deal.model';

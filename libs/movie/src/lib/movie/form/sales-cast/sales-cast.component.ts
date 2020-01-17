@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { FormArray } from '@angular/forms';
-import { default as staticModels } from '../../static-model/staticModels';
+import { default as staticModels } from '@blockframes/utils/static-model/staticModels';
 import { CreditForm } from './sales-cast.form';
 
 @Component({
@@ -13,7 +13,7 @@ import { CreditForm } from './sales-cast.form';
 
 export class MovieFormSalesCastComponent {
   @Input() form: FormArray;
-  roles = staticModels.CREDIT_ROLES;
+  roles = staticModels.CAST_ROLES;
 
   add() {
     this.form.push(new CreditForm())

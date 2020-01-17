@@ -7,7 +7,7 @@ import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { WishlistStatus } from '@blockframes/organization';
 import { AuthQuery } from '@blockframes/auth';
 import { AngularFireFunctions } from '@angular/fire/functions';
-import { MovieCurrenciesSlug } from '@blockframes/movie/movie/static-model/types';
+import { MovieCurrenciesSlug } from '@blockframes/utils/static-model/types';
 
 const wishlistFactory = (movieId: string): Wishlist => {
   return {
