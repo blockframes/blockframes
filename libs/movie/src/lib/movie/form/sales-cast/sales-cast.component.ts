@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { FormArray } from '@angular/forms';
-import { default as staticModels } from '../../static-model/staticModels';
+import { default as staticModels } from '@blockframes/utils/static-model/staticModels';
 import { CreditForm } from './sales-cast.form';
 
 @Component({

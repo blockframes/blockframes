@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { ContractStore, ContractState } from './contract.store';
-import { getCodeIfExists, ExtractCode } from '@blockframes/movie/moviestatic-model/staticModels';
 import { CollectionConfig, CollectionService, awaitSyncQuery, Query } from 'akita-ng-fire';
 import { Contract, ContractPartyDetail, convertToContractDocument, createContractPartyDetail } from './contract.model';
 import orderBy from 'lodash/orderBy';
@@ -8,7 +7,8 @@ import { OrganizationQuery } from '@blockframes/organization/+state/organization
 import { tap, switchMap } from 'rxjs/operators';
 import { ContractVersionService } from '../version/+state/contract-version.service';
 import { initContractWithVersion, ContractWithLastVersion } from '../version/+state/contract-version.model';
-import { LegalRolesSlug } from '@blockframes/movie/moviestatic-model/types';
+import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
+import { LegalRolesSlug } from '@blockframes/utils/static-model/types';
 import { cleanModel } from '@blockframes/utils';
 import { ContractDocumentWithDates } from './contract.firestore';
 

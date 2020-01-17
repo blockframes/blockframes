@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { default as staticModel } from '../../../static-model/staticModels'
+import { default as staticModel } from '@blockframes/utils/static-model/staticModels'
 import { startWith, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 

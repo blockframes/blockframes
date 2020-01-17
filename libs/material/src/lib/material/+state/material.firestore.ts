@@ -1,4 +1,4 @@
-import { default as staticModels } from '@blockframes/movie/movie/static-model/staticModels';
+import { default as staticModels } from '@blockframes/utils/static-model/staticModels';
 
 type CurrencyCode = ((typeof staticModels)['MOVIE_CURRENCIES'])[number]['code'];
 

@@ -1,5 +1,3 @@
-export type Scope = keyof typeof models;
-
 const models = {
   'GENRES': [
     { 'slug': 'comedy', 'label': 'Comedy' },
@@ -776,6 +774,9 @@ const models = {
     { 'slug': 'thx', 'label': 'THX' },
   ]
 };
+
+export type Scope = keyof typeof models;
+export type Model = typeof models;
 
 /**
  * Checks if given code (or slug) exists in above static models

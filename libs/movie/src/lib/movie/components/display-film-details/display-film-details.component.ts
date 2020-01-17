@@ -1,6 +1,6 @@
 import { AFM_DISABLE } from '@env';
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { getLabelByCode, hasSlug } from '../../static-model/staticModels';
+import { getLabelByCode, hasSlug } from '@blockframes/utils/static-model/staticModels';
 import { MovieOriginalRelease } from '@blockframes/movie/movie+state/movie.firestore';
 
 @Component({

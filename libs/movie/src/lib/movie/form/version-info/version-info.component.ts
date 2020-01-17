@@ -1,10 +1,10 @@
 import { startWith, debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { SlugAndLabel } from './../../static-model/staticModels';
+import { SlugAndLabel } from '@blockframes/utils/static-model/staticModels';
 import { FormControl } from '@angular/forms';
 import { MovieVersionInfoForm } from './version-info.form';
 import { Component, ChangeDetectionStrategy, OnInit, Input } from '@angular/core';
-import { default as staticModels } from '../../static-model/staticModels';
+import { default as staticModels } from '@blockframes/utils/static-model/staticModels';
 
 @Component({
   selector: '[form] movie-form-version-info',

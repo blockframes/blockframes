@@ -16,7 +16,6 @@ export * from './lib/distribution-deals/selection-table/form-selection.module';
 export { MovieViewComponent } from './lib/movie/pages/movie-view/movie-view.component';
 export { MovieEditableComponent } from './lib/movie/pages/movie-editable/movie-editable.component';
 export { MovieCreateModule } from './lib/movie/components/movie-create/movie-create.module';
-export * from './lib/movie/static-model';
 
 // Movie Component Module
 export * from './lib/movie/components/movie-picker/movie-picker.module';

@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { MovieSalesInfoForm } from './../sales-info.form';
-import models from '../../../static-model/staticModels'
+import models from '@blockframes/utils/static-model/staticModels'
 
 @Component({
     selector: '[form] movie-form-scoring',

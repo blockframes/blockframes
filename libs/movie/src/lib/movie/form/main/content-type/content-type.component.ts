@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { default as staticModels } from '../../../static-model/staticModels';
+import { default as staticModels } from '@blockframes/utils/static-model/staticModels';
 import { MovieMainForm } from '../main.form';
 
 
