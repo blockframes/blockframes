@@ -6,9 +6,9 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 // Components
 import { StakeholdersComponent } from './stakeholders.component';
 // Material
-import { MatListModule } from '@angular/material/list';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field'
 
@@ -18,7 +18,8 @@ import { MatFormFieldModule } from '@angular/material/form-field'
     CommonModule,
     ReactiveFormsModule,
     FlexLayoutModule,
-    MatListModule,
+    // Material
+    MatTooltipModule,
     MatInputModule,
     MatFormFieldModule,
     MatButtonModule,

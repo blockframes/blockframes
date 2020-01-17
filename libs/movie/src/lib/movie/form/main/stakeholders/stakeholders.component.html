@@ -1,17 +1,15 @@
-<ng-container *ngFor="let control of form.controls; let i = index">
-  <div fxLayout="row" fxLayoutAlign="start center">
+<ng-container *ngFor="let control of form.controls; let i = index; let last = last">
+  <div fxLayout="row" fxLayoutAlign="start start">
     <mat-form-field appearance="outline">
       <mat-label>Production company</mat-label>
       <input matInput [formControl]="control.get('displayName')" required />
     </mat-form-field>
-    <button mat-icon-button color="primary" (click)="remove(i)">
-      <mat-icon>delete_circle</mat-icon>
+    <!-- Add / Delete -->
+    <button *ngIf="!last" mat-mini-fab color="warn" (click)="form.removeAt(i)" matTooltip="Remove a Production Company" aria-label="Remove a Production Company">
+      <mat-icon>delete</mat-icon>
+    </button>
+    <button *ngIf="last" mat-mini-fab color="primary" (click)="form.add()" matTooltip="Add a Production Company" aria-label="Add a Production Company">
+      <mat-icon>add</mat-icon>
     </button>
   </div>
 </ng-container>
-<div fxLayout="column" fxLayoutAlign="center center">
-  <button test-id="add" mat-icon-button color="primary" (click)="add()">
-    <mat-icon>add_circle</mat-icon>
-  </button>
-  <caption class="mat-caption">Add an other Production Company</caption>
-</div>
