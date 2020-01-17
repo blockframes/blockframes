@@ -11,7 +11,7 @@ import { WelcomeViewPage, LoginViewPage } from '../../support/pages/auth';
 // Select user: cytest@blockframes.com
 const LOGIN_CREDENTIALS: Partial<User> = USERS[0];
 
-const BUDGET_RANGE = 'Less than 1 millions';
+const BUDGET_RANGE = 'Less than 1 million';
 
 beforeEach(() => {
   cy.clearCookies();

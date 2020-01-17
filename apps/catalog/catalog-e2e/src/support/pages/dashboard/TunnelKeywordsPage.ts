@@ -23,7 +23,7 @@ export default class TunnelKeywordsPage {
   }
 
   public clickNext() {
-    cy.get('catalog-tunnel-keywords [test-id=next]').click();
+    cy.get('[test-id=next]').click();
     return new TunnelDistributionRightPage();
   }
 }

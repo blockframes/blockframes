@@ -13,7 +13,7 @@ export class EstimatedBudgetComponent {
   @Input() form: FormControl;
 
   budgetList: NumberRange[] = [
-    { from: 0, to: 1000000, label: 'Less than 1 millions' },
+    { from: 0, to: 1000000, label: 'Less than 1 million' },
     { from: 1000000, to: 5000000, label: '1 - 5 millions' },
     { from: 5000000, to: 10000000, label: '5 - 10 millions' },
     { from: 10000000, to: 50000000, label: '10 - 50 millions' },
