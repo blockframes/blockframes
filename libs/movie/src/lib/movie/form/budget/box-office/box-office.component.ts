@@ -1,6 +1,18 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { MovieBudgetForm } from '../budget.form';
+import { BudgetFormControl } from '../budget.form';
 import { UnitBox } from '@blockframes/movie/movie+state/movie.firestore';
+import { startWith, map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+
+function toUnit(unit: UnitBox) {
+  switch (unit) {
+    case UnitBox.boxoffice_dollar: return '$'
+    case UnitBox.boxoffice_euro: return '€'
+    case UnitBox.entrances: return 'entrances'
+  }
+}
+type Unit = ReturnType<typeof toUnit>;
+
 
 @Component({
   selector: '[form] movie-form-box-office, [formGroup] movie-form-box-office',
@@ -8,16 +20,17 @@ import { UnitBox } from '@blockframes/movie/movie+state/movie.firestore';
   styleUrls: ['./box-office.component.scss']
 })
 export class BoxOfficeComponent implements OnInit {
-  @Input() form: MovieBudgetForm;
-  private unitBox = UnitBox;
+  @Input() form: BudgetFormControl['boxOffice'];
+  unitBox = UnitBox;
+  units$: Observable<Unit[]>;
 
   constructor() { }
 
   ngOnInit() {
-    console.log(this.form.value);
+    this.units$ = this.form.valueChanges.pipe(
+      startWith(this.form.value),
+      map((boxOffices) => boxOffices.map(({ unit }) => toUnit(unit)))
+    );
   }
 
-  get unitBoxList() {
-    return Object.keys(this.unitBox);
-  }
 }

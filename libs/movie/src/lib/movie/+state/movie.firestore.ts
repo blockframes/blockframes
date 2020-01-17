@@ -138,7 +138,7 @@ export interface MovieBudget {
   budgetCurrency?: string, // WIP #1052
   detailledBudget?: any, // WIP #1052
   estimatedBudget?: NumberRange,
-  boxOffice?: BoxOffice,
+  boxOffice?: BoxOffice[],
 }
 
 export const enum MovieLanguageTypes {

@@ -107,7 +107,7 @@ export function createStakeholder(params: Partial<Stakeholder> = {}): Stakeholde
 export function createParty(params: Partial<Party> = {}): Party {
   return {
     orgId: '',
-    role: '',
+    role: null as any, // @todo(#1607) remove as any
     showName: false,
     ...params,
   }

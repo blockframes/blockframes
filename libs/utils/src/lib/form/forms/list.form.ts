@@ -3,6 +3,7 @@ import { FormArray, FormControl } from '@angular/forms';
 import { FormEntity } from './entity.form';
 import { Validator, AsyncValidator } from './types';
 import { createControlForm } from './create-control';
+import { Observable } from 'rxjs';
 
 type GetValue<T> = T extends FormEntity<infer J> ? J : T;
 
@@ -28,6 +29,7 @@ export class FormList<T, Control extends AbstractControl = any> extends FormArra
   private _value: T[];
   createControl: (value: Partial<T>) => Control = createControlForm;
   controls: Control[];
+  valueChanges: Observable<T[]>;
 
   constructor(controls: Control[], validators?: Validator, asyncValidators?: AsyncValidator) {
     super(controls, validators, asyncValidators);

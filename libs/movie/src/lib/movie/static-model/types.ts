@@ -130,7 +130,7 @@ export const LEGAL_ROLES_LABEL = models['LEGAL_ROLES'].map(key => key.label);
 export const LEGAL_ROLES_SLUG = models['LEGAL_ROLES'].map(key => key.slug);
 
 export type LegalRolesLabel = typeof LEGAL_ROLES_LABEL[number];
-export type LegalRolesSlug = typeof LEGAL_ROLES_SLUG[number] | '';
+export type LegalRolesSlug = typeof LEGAL_ROLES_SLUG[number];
 
 export const MOVIE_FORMAT_LABEL = models['MOVIE_FORMAT'].map(key => key.label);
 export const MOVIE_FORMAT_SLUG = models['MOVIE_FORMAT'].map(key => key.slug);
