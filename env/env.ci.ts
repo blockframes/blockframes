@@ -118,3 +118,8 @@ export const quorum = {
     ethAddress: '0xe795245444d459CD0d8e12A26232646B5521e72F',
   },
 }
+
+// BigQuery
+// ========
+// Change it after config BigQuery for blockframes-ci
+export const bigQueryAnalyticsTable = 'blockframes-hugo.analytics_195044791.events_';
