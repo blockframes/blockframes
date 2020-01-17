@@ -28,7 +28,7 @@ import { SSF } from 'xlsx';
 import { MovieLanguageTypes, PremiereType } from '@blockframes/movie/movie/+state/movie.firestore';
 import { createCredit, createStakeholder } from '@blockframes/utils/common-interfaces/identity';
 import { DistributionDeal, createDistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
-import { createContractPartyDetail, createContractTitleDetail } from '@blockframes/contract/+state/contract.model';
+import { createContractPartyDetail, createContractTitleDetail, Contract } from '@blockframes/contract/+state/contract.model';
 import { ContractStatus, ContractTitleDetail } from '@blockframes/contract/+state/contract.firestore';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state/distribution-deal.service';
 import { createFee } from '@blockframes/utils/common-interfaces/price';
@@ -1451,7 +1451,21 @@ export class ViewExtractedElementsComponent {
 
     const titlesFieldsCount = Object.keys(SpreadSheetContractTitle).length / 2; // To get enum length
 
-    sheetTab.rows.forEach(async spreadSheetRow => {
+    // For contract validation, we need to process contracts that have no parents first
+    const sheetTabRowsWithNoParents: any[] = [];
+    const sheetTabRowsWithParents: any[] = [];
+
+    sheetTab.rows.forEach(spreadSheetRow => {
+      if (!spreadSheetRow[SpreadSheetContract.parentContractIds]) {
+        sheetTabRowsWithNoParents.push(spreadSheetRow);
+      } else {
+        sheetTabRowsWithParents.push(spreadSheetRow)
+      }
+    });
+
+    const orderedSheetTabRows: any[] = sheetTabRowsWithNoParents.concat(sheetTabRowsWithParents);
+
+    orderedSheetTabRows.forEach(async spreadSheetRow => {
       // CONTRACT ID
       // Create/retreive the contract
       let contract = initContractWithVersion();
@@ -1488,6 +1502,9 @@ export class ViewExtractedElementsComponent {
               licensor.party.displayName = licensorName.trim();
               licensor.party.role = getCodeIfExists('LEGAL_ROLES', 'licensor');
               contract.doc.parties.push(licensor);
+              if (licensor.party.orgId) {
+                contract.doc.partyIds.push(licensor.party.orgId);
+              }
             });
           }
 
@@ -1498,19 +1515,21 @@ export class ViewExtractedElementsComponent {
             licensee.party.displayName = spreadSheetRow[SpreadSheetContract.licensee];
             licensee.party.role = getCodeIfExists('LEGAL_ROLES', 'licensee');
             contract.doc.parties.push(licensee);
+            if (licensee.party.orgId) {
+              contract.doc.partyIds.push(licensee.party.orgId);
+            }
           }
 
           // CHILD ROLES
           if (spreadSheetRow[SpreadSheetContract.childRoles]) {
             spreadSheetRow[SpreadSheetContract.childRoles].split(this.separator).forEach((r: string) => {
               const childRoleParts = r.split(this.subSeparator);
-              const licensorName = childRoleParts.pop().trim();
-              const party = contract.doc.parties.find(p => p.party.displayName === licensorName && p.party.role == getCodeIfExists('LEGAL_ROLES', 'licensor'));
+              const partyName = childRoleParts.shift().trim();
+              const party = contract.doc.parties.find(p => p.party.displayName === partyName && p.party.role == getCodeIfExists('LEGAL_ROLES', 'licensor'));
               if (party) {
                 childRoleParts.forEach(r => {
                   const role = getCodeIfExists('LEGAL_ROLES', r.trim() as ExtractCode<'LEGAL_ROLES'>);
                   if (role) {
-                    // @todo #1562 check if pointer (ie not need to update remove and push whole party in  contract.doc.parties)
                     party.childRoles.push(role);
                   } else {
                     importErrors.errors.push({
@@ -1527,7 +1546,7 @@ export class ViewExtractedElementsComponent {
                   type: 'error',
                   field: 'contract.parties.childRoles',
                   name: 'Child roles',
-                  reason: `Licensor name mismatch : ${licensorName}`,
+                  reason: `Licensor name mismatch : ${partyName}`,
                   hint: 'Edit corresponding sheet field.'
                 });
               }
@@ -1602,11 +1621,14 @@ export class ViewExtractedElementsComponent {
         if (spreadSheetRow[SpreadSheetContract.paymentSchedules]) {
           spreadSheetRow[SpreadSheetContract.paymentSchedules].split(this.separator).forEach((r: string) => {
             const scheduleParts = r.split(this.subSeparator);
-            if (scheduleParts.length === 3) {
-              const percentage = scheduleParts[1].indexOf('%') !== -1 ? 
-                parseInt(scheduleParts[1].trim().replace('%',''), 10) : 
+            if (scheduleParts.length >= 2) {
+              const percentage = scheduleParts[1].indexOf('%') !== -1 ?
+                parseInt(scheduleParts[1].trim().replace('%', ''), 10) :
                 parseInt(scheduleParts[1].trim(), 10);
-              const paymentSchedule = createPaymentSchedule({ label: scheduleParts[0].trim(), percentage, date: scheduleParts[2].trim() });
+              const paymentSchedule = createPaymentSchedule({ label: scheduleParts[0].trim(), percentage });
+              if (scheduleParts[2]) {
+                paymentSchedule.date = scheduleParts[2].trim();
+              }
               contract.last.paymentSchedule.push(paymentSchedule);
             } else {
               importErrors.errors.push({
@@ -1647,11 +1669,24 @@ export class ViewExtractedElementsComponent {
 
         const contractWithErrors = await this.validateMovieContract(importErrors);
 
+        // Since contracts are not saved to DB yet, we need to manually pass them to isContractValid function
+        const parentContracts: Contract[] = [];
+        const otherContractsUploaded: Contract[] = this.contractsToUpdate.data.map(importState => importState.contract.doc)
+          .concat(this.contractsToCreate.data.map(importState => importState.contract.doc));
+        contract.doc.parentContractIds.forEach(parentId => {
+          const parentContract = otherContractsUploaded.find(o => o.id === parentId);
+          if (parentContract) {
+            parentContracts.push(parentContract);
+          }
+        });
+
+        contractWithErrors.contract.doc = await this.contractService.populatePartiesWithParentRoles(contractWithErrors.contract.doc, parentContracts);
+
         if (contractWithErrors.contract.doc.id) {
           this.contractsToUpdate.data.push(contractWithErrors);
           this.contractsToUpdate.data = [... this.contractsToUpdate.data];
         } else {
-          contract.doc.id = spreadSheetRow[SpreadSheetContract.contractId];
+          contractWithErrors.contract.doc.id = spreadSheetRow[SpreadSheetContract.contractId];
           this.contractsToCreate.data.push(contractWithErrors);
           this.contractsToCreate.data = [... this.contractsToCreate.data];
         }
@@ -1666,7 +1701,6 @@ export class ViewExtractedElementsComponent {
 
     const contract = importErrors.contract;
     const errors = importErrors.errors;
-
 
     //////////////////
     // REQUIRED FIELDS
@@ -1710,7 +1744,7 @@ export class ViewExtractedElementsComponent {
         hint: 'Edit corresponding sheet field.'
       });
     }
-    
+
     return importErrors;
   }
 

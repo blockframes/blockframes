@@ -1,18 +1,19 @@
 import { Injectable } from '@angular/core';
-import { CollectionConfig, CollectionService } from 'akita-ng-fire';
+import { CollectionService } from 'akita-ng-fire';
 import { ContractVersionState, ContractVersionStore } from './contract-version.store';
-import { ContractVersion, ContractWithLastVersion, VersionMeta } from './contract-version.model';
+import { ContractVersion, ContractWithLastVersion, VersionMeta, createVersionMeta } from './contract-version.model';
 import { ContractQuery } from '../../+state/contract.query';
 
 @Injectable({ providedIn: 'root' })
-@CollectionConfig({ path: 'contracts/:contractId/versions' })
 export class ContractVersionService extends CollectionService<ContractVersionState> {
+  private contractId: string;
+
   constructor(private contractQuery: ContractQuery, store: ContractVersionStore) {
     super(store);
   }
 
   onDelete() {
-    this.db.firestore.runTransaction(async tx =>  {
+    this.db.firestore.runTransaction(async tx => {
       // Get the _meta document from versions subcollection.
       const _metaSnap = await tx.get(this.db.doc(`contracts/${this.contractQuery.getActiveId()}/versions/_meta`).ref);
       const _meta = _metaSnap.data() as VersionMeta;
@@ -25,40 +26,35 @@ export class ContractVersionService extends CollectionService<ContractVersionSta
   }
 
   get path() {
-    return `contracts/${this.contractQuery.getActiveId()}/versions`;
+    if (!this.contractId) {
+      this.contractId = this.contractQuery.getActiveId();
+    }
+    return `contracts/${this.contractId}/versions`;
   }
 
   /**
    * Add a new version of the contract.
    * @param contractId
-   * @param contractVersion
+   * @param contractWithLastVersion
    */
-  public addContractVersion(contractVersion: ContractVersion): string {
-    this.db.firestore.runTransaction(async tx =>  {
+  public addContractVersion(contractWithLastVersion: ContractWithLastVersion): string {
+    this.db.firestore.runTransaction(async tx => {
+      this.contractId = contractWithLastVersion.doc.id;
       // Get the _meta document from versions subcollection.
-      const _metaSnap = await tx.get(this.db.doc(`contracts/${this.contractQuery.getActiveId()}/versions/_meta`).ref);
-      const _meta = _metaSnap.data() as VersionMeta;
-
+      const _metaSnap = await tx.get(this.db.doc(`${this.path}/_meta`).ref);
+      let _meta = createVersionMeta(_metaSnap.data());
       // Increment count and then assign it to contractVersion id.
-      contractVersion.id = (++_meta.count).toString();
+      contractWithLastVersion.last.id = (++_meta.count).toString();
 
       // Add the version and update _meta.
-      this.add(contractVersion, { write: tx.update(_metaSnap.ref, _meta)})
-    })
-    return contractVersion.id;
-  }
+      if (_metaSnap.data() === undefined) {
+        await this.add(contractWithLastVersion.last, { write: tx.set(_metaSnap.ref, _meta) })
+      } else {
+        await this.add(contractWithLastVersion.last, { write: tx.update(_metaSnap.ref, _meta) });
+      }
 
-  /**
-   * Add/update a contract & create a new contract version
-   * @param contract
-   * @param version
-   */
-  public async addContractAndVersion(
-    contract: ContractWithLastVersion
-  ): Promise<string> {
-    const contractId = (await this.add(contract.doc)) as string;
-    this.addContractVersion(contract.last);
-    return contractId;
+    })
+    return contractWithLastVersion.last.id;
   }
 
   /**
@@ -66,10 +62,14 @@ export class ContractVersionService extends CollectionService<ContractVersionSta
    * @param contractId if not provided, get the last version of active contract.
    */
   public async getLastVersionContract(contractId?: string): Promise<ContractVersion> {
-    const subCollectionPath = contractId ? `contracts/${contractId}/versions/` : '';
-    const { count } = await this.getValue(subCollectionPath + '_meta') as VersionMeta
-    const lastVersion = this.getValue(subCollectionPath + count.toString());
 
-    return lastVersion;
+    if (contractId) {
+      this.contractId = contractId;
+    }
+    const { count } = await this.getValue('_meta') as VersionMeta;
+    if (!!count) {
+      const lastVersion = await this.getValue(count.toString());
+      return lastVersion;
+    }
   }
 }

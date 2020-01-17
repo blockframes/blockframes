@@ -53,7 +53,9 @@ export class ContractService extends CollectionService<ContractState> {
     const lastVersion = await this.contractVersionService.getLastVersionContract();
     // Reset the store to clean the active contract.
     this.store.reset();
-    return awaitSyncQuery.call(this, contractQuery(contractId, lastVersion.id));
+    if (lastVersion) {
+      return awaitSyncQuery.call(this, contractQuery(contractId, lastVersion.id));
+    }
   }
 
   /**
@@ -76,7 +78,10 @@ export class ContractService extends CollectionService<ContractState> {
       ])
 
       contractWithVersion.doc = this.formatContract(contract);
-      contractWithVersion.last = await this.contractVersionService.getLastVersionContract();
+      const lastVersion = await this.contractVersionService.getLastVersionContract(contractId);
+      if (lastVersion) {
+        contractWithVersion.last = lastVersion;
+      }
 
       return contractWithVersion;
     } catch (error) {
@@ -110,6 +115,19 @@ export class ContractService extends CollectionService<ContractState> {
   }
 
   /**
+   * Add/update a contract & create a new contract version
+   * @param contract
+   * @param version
+   */
+  public async addContractAndVersion(
+    contract: ContractWithLastVersion
+  ): Promise<string> {
+    await this.add(contract.doc);
+    await this.contractVersionService.addContractVersion(contract);
+    return contract.doc.id;
+  }
+
+  /**
    *
    * @param contract
    */
@@ -120,8 +138,6 @@ export class ContractService extends CollectionService<ContractState> {
   /**
    * Various validation steps for validating a contract
    * Currently (dec 2019), only validate that there is a licensee and a licensor
-   *
-   * This function validate and append data to contracts by looking on its parents contracts
    * @param contract
    */
   public async isContractValid(contract: Contract): Promise<boolean> {
@@ -159,31 +175,45 @@ export class ContractService extends CollectionService<ContractState> {
       }
     }
 
+    // Other contract validation steps goes here
+    // TODO: Add more validations steps to the isContractValid function => ISSUE#1542
+
+    return true;
+  }
+
+  /**
+   * This function appends data to contracts by looking on its parents contracts
+   * @param contract
+   * @param parentContracts 
+   */
+  public async populatePartiesWithParentRoles(contract: Contract, parentContracts?: Contract[]): Promise<Contract> {
 
     /**
      * @dev If any parent contracts of this current contract have parties with childRoles defined,
      * We take thoses parties of the parent contracts to put them as regular parties of the current contract.
      */
-    const promises = contract.parentContractIds.map(id => this.getValue(id));
-    const parentContracts = await Promise.all(promises);
+    if (parentContracts.length === 0) {
+      const promises = contract.parentContractIds.map(id => this.getValue(id));
+      parentContracts = await Promise.all(promises);
+    }
+
     parentContracts.forEach(parentContract => {
-      const partiesHavingRoleForChilds = parentContract.parties.filter(p => p.childRoles && p.childRoles.length);
-      partiesHavingRoleForChilds.forEach(parentPartyDetails => {
-        parentPartyDetails.childRoles.forEach(childRole => {
-          const partyDetails = createContractPartyDetail({ party: parentPartyDetails.party });
-          partyDetails.party.role = childRole;
-          contract.parties.push(partyDetails);
-          if (partyDetails.party.orgId) {
-            contract.partyIds.push(partyDetails.party.orgId);
-          }
+      if (parentContract) {
+        const partiesHavingRoleForChilds = parentContract.parties.filter(p => p.childRoles && p.childRoles.length);
+        partiesHavingRoleForChilds.forEach(parentPartyDetails => {
+          parentPartyDetails.childRoles.forEach(childRole => {
+            const partyDetails = createContractPartyDetail({ party: parentPartyDetails.party });
+            partyDetails.party.role = childRole;
+            contract.parties.push(partyDetails);
+            if (partyDetails.party.orgId) {
+              contract.partyIds.push(partyDetails.party.orgId);
+            }
+          });
         });
-      });
+      }
     });
 
-    // Other contract validation steps goes here
-    // TODO: Add more validations steps to the isContractValid function => ISSUE#1542
-
-    return true;
+    return contract;
   }
 
   /**

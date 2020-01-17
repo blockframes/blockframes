@@ -7,8 +7,8 @@ import { Component, Input, ViewChild, OnInit, ChangeDetectionStrategy } from '@a
 import { SelectionModel } from '@angular/cdk/collections';
 import { SpreadsheetImportError, ContractsImportState } from '../view-extracted-elements/view-extracted-elements.component';
 import { ViewImportErrorsComponent } from '../view-import-errors/view-import-errors.component';
-import { ContractVersionService } from '@blockframes/contract/version/+state/contract-version.service';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
+import { ContractService } from '@blockframes/contract/+state/contract.service';
 
 const hasImportErrors = (importState: ContractsImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -46,7 +46,7 @@ export class TableExtractedContractsComponent implements OnInit {
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
     private organizationQuery: OrganizationQuery,
-    private contractVersionService: ContractVersionService
+    private contractService: ContractService
   ) { }
 
   ngOnInit() {
@@ -58,9 +58,7 @@ export class TableExtractedContractsComponent implements OnInit {
   }
 
   async createContract(importState: ContractsImportState): Promise<boolean> {
-
-    importState.contract.doc.partyIds.push(this.organizationQuery.getActiveId())
-    const contractId = await this.contractVersionService.addContractAndVersion(importState.contract);
+    const contractId = await this.contractService.addContractAndVersion(importState.contract);
     importState.errors.push({
       type: 'error',
       field: 'contract',
@@ -94,7 +92,7 @@ export class TableExtractedContractsComponent implements OnInit {
             hint: 'Contract already added'
           });
 
-          return promises.push(this.contractVersionService.addContractAndVersion(importState.contract));
+          return promises.push(this.contractService.addContractAndVersion(importState.contract));
         });
 
       this.rows.data = data;

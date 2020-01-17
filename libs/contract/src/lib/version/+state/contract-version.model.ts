@@ -16,8 +16,14 @@ export interface ContractWithLastVersion {
 }
 
 /** An interface for a single document to display versions subcollection count. */
-export interface VersionMeta extends ContractVersion{
+export interface VersionMeta extends ContractVersion {
   count: number;
+}
+
+export function createVersionMeta(params: Partial<VersionMeta>): VersionMeta {
+  return {
+    count: params && params.count || 0,
+  } as VersionMeta;
 }
 
 export function createContractVersion(params: Partial<ContractVersion> = {}): ContractVersion {
@@ -25,6 +31,7 @@ export function createContractVersion(params: Partial<ContractVersion> = {}): Co
     id: params.id ? params.id : '1',
     titles: {},
     creationDate: new Date(),
+    paymentSchedule: [],
     ...params,
     status: ContractStatus.submitted,
     scope: createTerms(params.scope),

@@ -1,4 +1,3 @@
-import { createTerms } from '@blockframes/utils/common-interfaces/terms';
 import { getCodeIfExists, ExtractCode } from '@blockframes/movie/movie/static-model/staticModels';
 import { LegalRolesSlug } from '@blockframes/movie/movie/static-model/types';
 import { createPrice } from '@blockframes/utils/common-interfaces/price';
@@ -11,7 +10,7 @@ import {
 } from './contract.firestore';
 import { LegalDocument } from '@blockframes/contract/+state/contract.firestore';
 import { createParty } from '@blockframes/utils/common-interfaces/identity';
-import { ContractVersion } from '../version/+state/contract-version.model';
+import { ContractVersion, createContractVersion } from '../version/+state/contract-version.model';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 
 
@@ -41,17 +40,7 @@ export function createContract(params: Partial<Contract> = {}): Contract {
   };
 }
 
-export function createContractVersion(params: Partial<ContractVersion> = {}): ContractVersion {
-  return {
-    id: params.id ? params.id : '1',
-    titles: {},
-    creationDate: new Date(),
-    ...params,
-    status: ContractStatus.submitted,
-    scope: createTerms(params.scope),
-    price: createPrice(params.price)
-  };
-}
+
 
 export function createContractTitleDetail(
   params: Partial<ContractTitleDetail> = {}
@@ -69,6 +58,7 @@ export function createContractPartyDetail(
 ): ContractPartyDetail {
   return {
     status: ContractStatus.unknown,
+    childRoles: [],
     ...params,
     party: createParty(params.party),
   };

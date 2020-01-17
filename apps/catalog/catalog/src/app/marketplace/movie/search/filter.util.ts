@@ -119,7 +119,7 @@ function territories(movie: Movie, territory: string): boolean {
   if (!territory) {
     return true;
   }
-  return movie.salesAgentDeal.territories.includes(territory.toLowerCase());
+  return movie.salesAgentDeal.territories.includes(territory.toLowerCase() as ExtractSlug<'TERRITORIES'>);
 }
 function media(movie: Movie, movieMediaType: string): boolean {
   if (!movieMediaType) {
