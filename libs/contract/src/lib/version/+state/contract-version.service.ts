@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { CollectionConfig, CollectionService } from 'akita-ng-fire';
+import { CollectionService } from 'akita-ng-fire';
 import { ContractVersionState, ContractVersionStore } from './contract-version.store';
 import { ContractVersion, ContractWithLastVersion, VersionMeta } from './contract-version.model';
 import { ContractQuery } from '../../+state/contract.query';
 
 @Injectable({ providedIn: 'root' })
-@CollectionConfig({ path: 'contracts/:contractId/versions' })
 export class ContractVersionService extends CollectionService<ContractVersionState> {
   constructor(private contractQuery: ContractQuery, store: ContractVersionStore) {
     super(store);
@@ -71,5 +70,16 @@ export class ContractVersionService extends CollectionService<ContractVersionSta
     const lastVersion = this.getValue(subCollectionPath + count.toString());
 
     return lastVersion;
+  }
+
+  /**
+   * Returns the creation date of the contract.
+   * @param contractId if not provided, get the last version of active contract.
+   */
+  public async getContractInitialCreationDate(contractId?: string): Promise<Date> {
+    const documentPath = contractId ? `contracts/${contractId}/versions/` : '';
+    const firstVersion = await this.getValue(documentPath + '1');
+
+    return firstVersion.creationDate;
   }
 }
