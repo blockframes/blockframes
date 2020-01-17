@@ -1,5 +1,5 @@
 <mat-form-field appearance="outline">
   <mat-label>Storyline</mat-label>
   <textarea matInput [formControl]="form" maxlength="1000" cdkTextareaAutosize type="string"></textarea>
-  <mat-hint align="end">{{ form.value? form.value.length : 0}} / 1000</mat-hint>
+  <mat-hint align="end">{{ form.value.length }} / 1000</mat-hint>
 </mat-form-field>
