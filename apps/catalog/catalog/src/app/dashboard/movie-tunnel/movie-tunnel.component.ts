@@ -35,14 +35,63 @@ function getPageData(url: string, array: string[][]): PageData {
   }
 }
 
-// This table has to be synced with the routes, it allows the steps to be updated depending of the routes
-// See movie-tunnel-routing.module.ts to synchronize the table
-const pages = [
-  ['main', 'synopsis', 'credits', 'budget', 'technical-info', 'keywords'],
-  ['rights', 'deals'],
-  ['images', 'files&links'],
-  ['chain', 'evaluation']
-];
+const panels = [{
+  title: 'Title Information',
+  icon: 'document',
+  routes: [{
+    path: 'main',
+    label: 'Main Informations'
+  }, {
+    path: 'synopsis',
+    label: 'Synopsis'
+  }, {
+    path: 'credits',
+    label: 'Credits'
+  }, {
+    path: 'budget',
+    label: 'Budg., quota, critics',
+  }, {
+    path: 'technical-info',
+    label: 'Technical info.'
+  }, {
+    path: 'keywords',
+    label: 'Keywords'
+  }]
+}, {
+  title: 'Licensed Rights',
+  icon: 'mapMarker',
+  routes: [{
+    path: 'rights',
+    label: 'Marketplace Rights'
+  }, {
+    path: 'deals',
+    label: 'Previously Deals'
+  }]
+}, {
+  title: 'Uploaded Media',
+  icon: 'import',
+  routes: [{
+    path: 'images',
+    label: 'Images'
+  }, {
+    path: 'files&links',
+    label: 'Files & Links'
+  }]
+}, {
+  title: 'Legal Information',
+  icon: 'certificate',
+  routes: [{
+    path: 'chain',
+    label: 'Chain of Titles'
+  }, {
+    path: 'evaluation',
+    label: 'Marketplace Eval.'
+  }]
+}];
+
+const allRoutes = panels.map(({ routes }) => routes.map(r => r.path));
+const allPath = flatten(allRoutes);
+
 
 @Component({
   selector: 'catalog-layout',
@@ -53,9 +102,10 @@ const pages = [
 })
 export class MovieTunnelComponent implements OnInit, OnDestroy {
   private sub: Subscription;
+  public panels = panels;
   public pageData$ = this.routerQuery
     .select('state')
-    .pipe(map(({ url }) => getPageData(url, pages)));
+    .pipe(map(({ url }) => getPageData(url, allRoutes)));
 
   public next$: Observable<string> = this.routerQuery.select('state').pipe(
     map(state => {
@@ -72,6 +122,8 @@ export class MovieTunnelComponent implements OnInit, OnDestroy {
 
   constructor(
     @Host() private form: MovieForm,
+    @Host() private contractForm: ContractForm,
+    @Host() private dealForm: DistributionDealForm,
     private service: MovieService,
     private route: ActivatedRoute,
     private routerQuery: RouterQuery
@@ -86,6 +138,10 @@ export class MovieTunnelComponent implements OnInit, OnDestroy {
       this.form.patchValue(movie);
     });
   }
+  
+  ngOnDestroy() {
+    this.sub.unsubscribe();
+  }
 
   /**
    * @description returns the next or previous page where the router should go to
@@ -93,15 +149,21 @@ export class MovieTunnelComponent implements OnInit, OnDestroy {
    * @param arithmeticOperator plus or minus
    */
   private getPage(current: string, arithmeticOperator: number): string {
-    const flat: string[] = flatten(pages);
-    const i: number = flat.indexOf(current) + arithmeticOperator;
+    const i: number = allPath.indexOf(current) + arithmeticOperator;
     if (i < 0) {
       return 'start';
     }
-    return flat[i];
+    return allPath[i];
   }
 
-  ngOnDestroy() {
-    this.sub.unsubscribe();
+  // Should save movie, contract & deal
+  private save() {
+    // Movie
+    this.form.value.id 
+      ? this.service.update(this.form.value)
+      : this.service.add(this.form.value);
+    // Contract
+
+    // Deal
   }
 }
