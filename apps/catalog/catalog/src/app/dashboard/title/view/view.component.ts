@@ -6,7 +6,16 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./view.component.scss']
 })
 export class TitleViewComponent implements OnInit {
-
+  navLinks = [{
+    path: 'sales',
+    label: 'Sales'
+  }, {
+    path: 'details',
+    label: 'Film Details'
+  },{
+    path: 'avails',
+    label: 'Avails'
+  }];
   constructor() { }
 
   ngOnInit() {

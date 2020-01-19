@@ -4,6 +4,9 @@ import { RouterModule } from '@angular/router';
 
 import { TitleViewComponent } from './view.component';
 
+// Material
+import { MatTabsModule } from '@angular/material/tabs';
+
 const routes = [{
   path: '',
   component: TitleViewComponent,
@@ -32,6 +35,9 @@ const routes = [{
   declarations: [TitleViewComponent],
   imports: [
     CommonModule,
+    // Material
+    MatTabsModule,
+    // Routes
     RouterModule.forChild(routes)
   ]
 })
