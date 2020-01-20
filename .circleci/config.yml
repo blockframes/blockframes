@@ -61,6 +61,7 @@ executors:
     docker:
       - image: blockframes/ci:latest
     working_directory: ~/repo
+    resource_class: medium+
 jobs:
   build-and-test-all:
     executor: blockframes-ci
