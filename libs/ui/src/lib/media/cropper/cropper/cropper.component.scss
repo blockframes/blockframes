@@ -1,11 +1,20 @@
 section {
   width: 100%;
   text-align: center;
+  article {
+    width: 100%;
+    text-align: center;
+  }
 }
 
 .cropper,
 .show {
   height: 100%;
+}
+
+.croppedImage {
+  max-width: 500px;
+  max-height: 1000px;
 }
 
 .buttons {

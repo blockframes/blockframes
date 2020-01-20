@@ -6,7 +6,7 @@
     </button>
     <ng-content select="[type]"></ng-content>
     <ng-content select="[dimensions]"></ng-content>
-    <p class="mat-caption">Drag and drop a file here or <a mat-button color="primary" routerLink="#" (click)="fileUploader.click()">Browse</a></p>
+    <p class="mat-caption">Drag and drop a file here or <a color="primary" routerLink="#" (click)="fileUploader.click()">Browse</a></p>
   </article>
   <article class="cropper" *ngSwitchCase="'crop'" @zoomDelay>
     <image-cropper
