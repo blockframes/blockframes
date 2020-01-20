@@ -26,6 +26,7 @@ export const firebase = {
   projectId: 'blockframes',
   storageBucket: 'blockframes.appspot.com',
   messagingSenderId: '1080507348015',
+  appId: "1:1080507348015:web:1009793cb9e2b297",
   measurementId: "G-Q4BWTRSV6P"
 };
 
@@ -120,4 +121,4 @@ export const quorum = {
 
 // BigQuery
 // ========
-export const bigQueryAnalyticsTable = 'blockframes-prod.analytics_193045559.events_';
+export const bigQueryAnalyticsTable = 'blockframes.analytics_193045559.events_';
