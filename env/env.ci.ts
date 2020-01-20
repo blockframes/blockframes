@@ -121,5 +121,4 @@ export const quorum = {
 
 // BigQuery
 // ========
-// Change it after config BigQuery for blockframes-ci
-export const bigQueryAnalyticsTable = 'blockframes-hugo.analytics_195044791.events_';
+export const bigQueryAnalyticsTable = 'blockframes-ci.analytics_197180636.events_';

@@ -117,3 +117,7 @@ export const quorum = {
     ethAddress: '0xe795245444d459CD0d8e12A26232646B5521e72F',
   },
 }
+
+// BigQuery
+// ========
+export const bigQueryAnalyticsTable = 'blockframes-prod.analytics_193045559.events_';
