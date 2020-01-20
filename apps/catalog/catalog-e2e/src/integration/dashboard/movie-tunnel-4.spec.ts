@@ -36,10 +36,6 @@ describe('User can navigate to the movie tunnel page 5, complete the fields, and
     p4.assertProductionYearExists(PRODUCTION_YEAR);
     p4.fillFirstProductioncompany(STAKEHOLDERS[0]);
     p4.assertFirstProductioncompanyExists(STAKEHOLDERS[0]);
-    p4.clickAddProductioncompany();
-    p4.assertNumberOfcompanyFields(STAKEHOLDERS.length);
-    p4.fillLastProductioncompany(STAKEHOLDERS[1]);
-    p4.assertLastProductioncompanyExists(STAKEHOLDERS[1]);
 
     // Go on movie-tunnel-5
     const p5: TunnelBudgetPage = p4.clickNext();
