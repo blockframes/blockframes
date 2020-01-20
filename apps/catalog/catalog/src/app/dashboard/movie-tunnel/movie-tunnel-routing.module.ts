@@ -49,7 +49,7 @@ const tunnelRoutes: Routes = [
       },
       // Page 10
       {
-        path: 'media-image',
+        path: 'images',
         loadChildren: () => import('./media-image/media-image.module').then(m => m.MediaImageModule)
       },
       // Last page
