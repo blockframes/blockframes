@@ -22,9 +22,11 @@
 
 
 <overlay-widget #filterColumnWidget>
-  <mat-selection-list [formControl]="columnFilter">
-    <mat-list-option *ngFor="let column of columns | keyvalue" [value]="column.key">
-      {{ column.value }}
-    </mat-list-option>
-  </mat-selection-list>
+  <mat-card>
+    <mat-selection-list [formControl]="columnFilter">
+      <mat-list-option *ngFor="let column of columns | keyvalue" [value]="column.key">
+        {{ column.value }}
+      </mat-list-option>
+    </mat-selection-list>
+  </mat-card>
 </overlay-widget>
