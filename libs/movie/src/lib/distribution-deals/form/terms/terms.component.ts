@@ -4,6 +4,7 @@ import { FormControl } from '@angular/forms';
 import { Component, Input, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { DistributionDealTermsForm } from './terms.form';
 import { tap, startWith } from 'rxjs/operators';
+import { MatSlideToggleChange } from '@angular/material';
 
 @Component({
   selector: '[form] distribution-form-terms',
@@ -31,21 +32,34 @@ export class DistributionDealTermsComponent implements OnInit, OnDestroy {
     this.periodSub = this.periodCtrl.valueChanges
       .pipe(
         startWith(this.periodCtrl.value),
-        tap(value => this.toggleForm(['start', 'end'], value))
+        tap(value => {
+          value
+            ? (this.form.get('start').enable(), this.form.get('end').enable())
+            : (this.form.get('start').disable(), this.form.get('end').disable());
+        })
       )
       .subscribe();
     this.eventSub = this.eventCtrl.valueChanges
       .pipe(
         startWith(this.eventCtrl.value),
-        tap(value => this.toggleForm(['floatingDuration', 'floatingStart'], value))
+        tap(value => {
+          value
+            ? (this.form.get('floatingDuration').enable(), this.form.get('floatingStart').enable())
+            : (this.form.get('floatingDuration').disable(value),
+              this.form.get('floatingStart').disable(value));
+        })
       )
       .subscribe();
   }
 
-  private toggleForm(formNames: string[], value: boolean) {
-    for (const name of formNames) {
-      const form = this.form.get(name as 'start' | 'end' | 'floatingStart' | 'floatingDuration');
-      value ? form.enable() : form.disable();
+  public updateState(event: MatSlideToggleChange, type: 'event' | 'period'){
+    // We need a type here otherwise we get a recursion
+    if(type === 'period') {
+      this.periodCtrl.setValue(event.checked);
+      this.eventCtrl.setValue(!this.eventCtrl.value)
+    } else {
+      this.periodCtrl.setValue(!this.periodCtrl.value);
+      this.eventCtrl.setValue(event.checked)
     }
   }
 

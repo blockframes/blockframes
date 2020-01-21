@@ -41,6 +41,8 @@ export class MovieFormVersionInfoComponent implements OnInit, OnDestroy {
 
   private sub: Subscription;
 
+  private subVersion: Subscription;
+
   public staticLanguages = staticModels.LANGUAGES;
 
   // For autocompletion
@@ -68,8 +70,7 @@ export class MovieFormVersionInfoComponent implements OnInit, OnDestroy {
           }
         });
       });
-
-    this.versionInfoCtrl.valueChanges.subscribe(languages => {
+    this.subVersion = this.versionInfoCtrl.valueChanges.subscribe(languages => {
       const formState = Object.keys(this.form.value);
       const versionInfoState = this.versionInfoCtrl.value;
       languages.forEach(language => {
@@ -145,5 +146,6 @@ export class MovieFormVersionInfoComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.sub.unsubscribe();
+    this.subVersion.unsubscribe();
   }
 }

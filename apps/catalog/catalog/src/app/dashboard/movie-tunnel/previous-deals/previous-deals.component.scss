@@ -1,5 +1,6 @@
 ng-container,
-mat-accordion {
+mat-accordion,
+distribution-form-holdbacks {
   width: 100%;
 }
 
@@ -9,4 +10,8 @@ mat-expansion-panel {
 
 ontract-form-party-name {
   width: 50%;
+}
+
+button {
+  margin: 10px;
 }
