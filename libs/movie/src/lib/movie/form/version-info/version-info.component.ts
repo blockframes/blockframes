@@ -85,7 +85,6 @@ export class MovieFormVersionInfoComponent implements OnInit, OnDestroy {
         }
       });
     });
-
     this.languages$ = this.languageFilterCtrl.valueChanges.pipe(
       startWith(this.languageFilterCtrl.value),
       map(language => {
