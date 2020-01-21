@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { MatTableDataSource } from '@angular/material';
+import { MatTableDataSource, MatSnackBar } from '@angular/material';
 import {
   Movie,
   MovieQuery,
@@ -26,14 +26,14 @@ import { SSF$Date } from 'ssf/types';
 import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
 import { SSF } from 'xlsx';
 import { MovieLanguageTypes, PremiereType } from '@blockframes/movie/movie/+state/movie.firestore';
-import { createCredit } from '@blockframes/utils/common-interfaces/identity';
+import { createCredit, createStakeholder } from '@blockframes/utils/common-interfaces/identity';
 import { DistributionDeal, createDistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
-import { createContractPartyDetail, createContractTitleDetail } from '@blockframes/contract/+state/contract.model';
+import { createContractPartyDetail, createContractTitleDetail, Contract, initContractWithVersion, ContractWithLastVersion } from '@blockframes/contract/+state/contract.model';
 import { ContractStatus, ContractTitleDetail } from '@blockframes/contract/+state/contract.firestore';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state/distribution-deal.service';
 import { createFee } from '@blockframes/utils/common-interfaces/price';
 import { ContractService } from '@blockframes/contract/+state/contract.service';
-import { ContractWithLastVersion, initContractWithVersion } from '@blockframes/contract/version/+state/contract-version.model';
+import { createPaymentSchedule } from '@blockframes/utils/common-interfaces/schedule';
 
 export interface SpreadsheetImportError {
   field: string;
@@ -59,6 +59,7 @@ export interface DealsImportState {
 
 export interface ContractsImportState {
   errors?: SpreadsheetImportError[];
+  newContract: boolean;
   contract: ContractWithLastVersion;
 }
 
@@ -76,8 +77,7 @@ enum SpreadSheetMovie {
   isan,
   internationalTitle,
   length,
-  productionCompanies,
-  broadcasterCoproducers,
+  stakeholdersWithRole,
   color,
   originCountries,
   europeanQualification,
@@ -85,7 +85,6 @@ enum SpreadSheetMovie {
   certifications,
   cast,
   shortSynopsis,
-  internationalPremiere,
   originCountryReleaseDate,
   genres,
   festivalPrizes,
@@ -94,6 +93,7 @@ enum SpreadSheetMovie {
   languages,
   dubbings,
   subtitles,
+  captions,
   screenerLink,
   promoReelLink,
   trailerLink,
@@ -101,7 +101,6 @@ enum SpreadSheetMovie {
   scenarioLink,
   productionStatus,
   budget,
-  theatricalRelease,
   bannerLink,
   salesAgentName,
   salesAgentImage,
@@ -131,10 +130,15 @@ enum SpreadSheetDistributionDeal {
 enum SpreadSheetContract {
   licensors,
   licensee,
+  childRoles,
   contractId,
   parentContractIds,
   childContractIds,
   status,
+  creationDate,
+  scopeStartDate,
+  scopeEndDate,
+  paymentSchedules,
   titleStuffIndexStart,
 }
 
@@ -161,9 +165,11 @@ export class ViewExtractedElementsComponent {
   public contractsToUpdate = new MatTableDataSource<ContractsImportState>();
   public contractsToCreate = new MatTableDataSource<ContractsImportState>();
   private separator = ';';
+  private subSeparator = ',';
 
   constructor(
     private movieQuery: MovieQuery,
+    private snackBar: MatSnackBar,
     private movieService: MovieService,
     private distributionDealService: DistributionDealService,
     private contractService: ContractService,
@@ -218,7 +224,7 @@ export class ViewExtractedElementsComponent {
             importErrors.errors.push({
               type: 'error',
               field: 'salesInfo.scoring',
-              name: "Scoring",
+              name: 'Scoring',
               reason: `${spreadSheetRow[SpreadSheetMovie.scoring]} not found in scoring list`,
               hint: 'Edit corresponding sheet field.'
             });
@@ -249,7 +255,7 @@ export class ViewExtractedElementsComponent {
               importErrors.errors.push({
                 type: 'error',
                 field: 'salesAgentDeal.territories',
-                name: "Mandate Territories",
+                name: 'Mandate Territories',
                 reason: `${c} not found in territories list`,
                 hint: 'Edit corresponding sheet field.'
               });
@@ -268,7 +274,7 @@ export class ViewExtractedElementsComponent {
               importErrors.errors.push({
                 type: 'error',
                 field: 'salesAgentDeal.medias',
-                name: "Mandate Medias",
+                name: 'Mandate Medias',
                 reason: `${c} not found in medias list`,
                 hint: 'Edit corresponding sheet field.'
               });
@@ -278,7 +284,7 @@ export class ViewExtractedElementsComponent {
 
         // DIRECTORS (Director(s))
         if (spreadSheetRow[SpreadSheetMovie.directors]) {
-          movie.main.directors = formatCredits(spreadSheetRow[SpreadSheetMovie.directors], this.separator);
+          movie.main.directors = formatCredits(spreadSheetRow[SpreadSheetMovie.directors], this.separator, this.subSeparator);
         }
 
         // POSTER (Poster)
@@ -299,23 +305,26 @@ export class ViewExtractedElementsComponent {
         }
 
         // Total Run Time
-        if (!isNaN(Number(spreadSheetRow[SpreadSheetMovie.length]))) {
-          movie.main.totalRunTime = parseInt(spreadSheetRow[SpreadSheetMovie.length], 10);
+        if (spreadSheetRow[SpreadSheetMovie.length]) {
+          if (!isNaN(Number(spreadSheetRow[SpreadSheetMovie.length]))) {
+            movie.main.totalRunTime = parseInt(spreadSheetRow[SpreadSheetMovie.length], 10);
+          } else {
+            movie.main.totalRunTime = spreadSheetRow[SpreadSheetMovie.length]; // Exemple value: TBC
+          }
         }
 
         // PRODUCTION COMPANIES (Production Companie(s))
-        if (spreadSheetRow[SpreadSheetMovie.productionCompanies]) {
+        if (spreadSheetRow[SpreadSheetMovie.stakeholdersWithRole]) {
           movie.main.stakeholders = [];
-          spreadSheetRow[SpreadSheetMovie.productionCompanies].split(this.separator).forEach((p: string) => {
-            movie.main.stakeholders.push({ displayName: p });
-          });
-        }
+          spreadSheetRow[SpreadSheetMovie.stakeholdersWithRole].split(this.separator).forEach((p: string) => {
+            const stakeHolderParts = p.split(this.subSeparator);
+            const stakeHolder = createStakeholder({ displayName: stakeHolderParts[0] });
+            const role = getCodeIfExists('STAKEHOLDER_ROLES', stakeHolderParts[1] as ExtractCode<'STAKEHOLDER_ROLES'>);
+            if (role) {
+              stakeHolder.role = role;
+            }
 
-        // BROADCASTER COPRODUCERS (TV / Platform coproducer(s))
-        if (spreadSheetRow[SpreadSheetMovie.broadcasterCoproducers]) {
-          movie.salesInfo.broadcasterCoproducers = [];
-          spreadSheetRow[SpreadSheetMovie.broadcasterCoproducers].split(this.separator).forEach((p: string) => {
-            movie.salesInfo.broadcasterCoproducers.push(p);
+            movie.main.stakeholders.push(stakeHolder);
           });
         }
 
@@ -328,7 +337,7 @@ export class ViewExtractedElementsComponent {
             importErrors.errors.push({
               type: 'warning',
               field: 'salesInfo.color',
-              name: "Color",
+              name: 'Color',
               reason: `${spreadSheetRow[SpreadSheetMovie.color]} not found in colors list`,
               hint: 'Edit corresponding sheet field.'
             });
@@ -347,7 +356,7 @@ export class ViewExtractedElementsComponent {
               importErrors.errors.push({
                 type: 'warning',
                 field: 'main.originCountries',
-                name: "Countries of origin",
+                name: 'Countries of origin',
                 reason: `${c} not found in territories list`,
                 hint: 'Edit corresponding sheet field.'
               });
@@ -356,6 +365,7 @@ export class ViewExtractedElementsComponent {
         }
 
         // CERTIFICATIONS (European Qualification)
+        movie.salesInfo.certifications = [];
         if (spreadSheetRow[SpreadSheetMovie.europeanQualification] &&
           spreadSheetRow[SpreadSheetMovie.europeanQualification].toLowerCase() === 'yes') {
           const certification = getCodeIfExists('CERTIFICATIONS', 'europeanQualification');
@@ -366,13 +376,21 @@ export class ViewExtractedElementsComponent {
 
         // PEGI (Rating)
         if (spreadSheetRow[SpreadSheetMovie.rating]) {
-          const movieRating = createMovieRating({ value: spreadSheetRow[SpreadSheetMovie.rating] });
-          movie.salesInfo.rating.push(movieRating);
+          spreadSheetRow[SpreadSheetMovie.rating].split(this.separator).forEach((r: string) => {
+            const ratingParts = r.split(this.subSeparator);
+            const country = getCodeIfExists('TERRITORIES', ratingParts[0] as ExtractCode<'TERRITORIES'>);
+            const movieRating = createMovieRating({ value: ratingParts[1] });
+            // @todo #1562 missing system & reason (optionnal)
+            if (country) {
+              movieRating.country = country;
+            }
+
+            movie.salesInfo.rating.push(movieRating);
+          });
         }
 
         // CERTIFICATIONS (Certifications)
         if (spreadSheetRow[SpreadSheetMovie.certifications]) {
-          movie.salesInfo.certifications = [];
           spreadSheetRow[SpreadSheetMovie.certifications].split(this.separator).forEach((c: ExtractCode<'CERTIFICATIONS'>) => {
             const certification = getCodeIfExists('CERTIFICATIONS', c);
             if (certification) {
@@ -381,7 +399,7 @@ export class ViewExtractedElementsComponent {
               importErrors.errors.push({
                 type: 'warning',
                 field: 'salesInfo.certifications',
-                name: "Certifications",
+                name: 'Certifications',
                 reason: `${c} not found in certifications list`,
                 hint: 'Edit corresponding sheet field.'
               });
@@ -401,29 +419,25 @@ export class ViewExtractedElementsComponent {
           movie.main.shortSynopsis = spreadSheetRow[SpreadSheetMovie.shortSynopsis];
         }
 
-        // INTERNATIONAL PREMIERE (International Premiere )
-        const spreadSheetPremiere = spreadSheetRow[SpreadSheetMovie.internationalPremiere];
-        if (spreadSheetPremiere) {
-          const isPremiereYearNumber = !isNaN(Number(spreadSheetPremiere.split(',')[1]));
-          if (spreadSheetPremiere.split(this.separator).length === 2 && isPremiereYearNumber) {
-            const prize = createPrize();
-
-            prize.name = spreadSheetPremiere.split(',')[0];
-            prize.year = Number(spreadSheetPremiere.split(',')[1]);
-            prize.premiere = PremiereType.internationnal;
-
-            movie.festivalPrizes.prizes.push(prize);
-          }
-        }
-
         // ORIGIN COUNTRY RELEASE DATE (Release date in Origin Country)
         if (spreadSheetRow[SpreadSheetMovie.originCountryReleaseDate]) {
-          const date = spreadSheetRow[SpreadSheetMovie.originCountryReleaseDate];
 
-          movie.salesInfo.originalRelease = [
-            ...movie.salesInfo.originalRelease,
-            ...movie.main.originCountries.map(country => (createMovieOriginalRelease({ date, country })))
-          ]
+          spreadSheetRow[SpreadSheetMovie.originCountryReleaseDate].split(this.separator).forEach((o: ExtractCode<'TERRITORIES'>) => {
+            const originalReleaseParts = o.split(this.subSeparator);
+            const originalRelease = createMovieOriginalRelease({ date: originalReleaseParts[2] });
+            const country = getCodeIfExists('TERRITORIES', originalReleaseParts[0] as ExtractCode<'TERRITORIES'>);
+            if (country) {
+              originalRelease.country = country;
+            }
+
+            const media = getCodeIfExists('MEDIAS', originalReleaseParts[1] as ExtractCode<'MEDIAS'>);
+            if (media) {
+              originalRelease.media = media;
+            }
+
+
+            movie.salesInfo.originalRelease.push(originalRelease);
+          });
         }
 
         // GENRES (Genres)
@@ -437,7 +451,7 @@ export class ViewExtractedElementsComponent {
               importErrors.errors.push({
                 type: 'warning',
                 field: 'main.genres',
-                name: "Genres",
+                name: 'Genres',
                 reason: `${g} not found in genres list`,
                 hint: 'Edit corresponding sheet field.'
               });
@@ -449,13 +463,25 @@ export class ViewExtractedElementsComponent {
         if (spreadSheetRow[SpreadSheetMovie.festivalPrizes]) {
           movie.festivalPrizes.prizes = [];
           spreadSheetRow[SpreadSheetMovie.festivalPrizes].split(this.separator).forEach(async (p: string) => {
-            if (p.split(',').length >= 3) {
+            const prizeParts = p.split(this.subSeparator);
+            if (prizeParts.length >= 3) {
               const prize = createPrize();
-              prize.name = p.split(',')[0];
-              prize.year = parseInt(p.split(',')[1], 10);
-              prize.prize = p.split(',')[2];
-              if (p.split(',').length >= 4) {
-                prize.logo = await this.imageUploader.upload(p.split(',')[3].trim());
+              prize.name = prizeParts[0];
+              prize.year = parseInt(prizeParts[1], 10);
+              prize.prize = prizeParts[2];
+              if (prizeParts.length >= 4) {
+                switch (prizeParts[3].trim()) {
+                  case 'International Premiere':
+                    prize.premiere = PremiereType.internationnal;
+                    break;
+                  default:
+                    prize.premiere = PremiereType[prizeParts[3].trim().toLowerCase()];
+                    break;
+                }
+
+              }
+              if (prizeParts.length >= 5) {
+                prize.logo = await this.imageUploader.upload(prizeParts[4].trim());
               }
               movie.festivalPrizes.prizes.push(prize);
             }
@@ -477,7 +503,7 @@ export class ViewExtractedElementsComponent {
 
         // LANGUAGES (Original Language(s))
         if (spreadSheetRow[SpreadSheetMovie.languages]) {
-          movie.main.originalLanguages = [];
+          movie.main.originalLanguages = []; // @todo #1562 add to movie.versionInfo & check #1589
           spreadSheetRow[SpreadSheetMovie.languages].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
             const language = getCodeIfExists('LANGUAGES', g);
             if (language) {
@@ -486,7 +512,7 @@ export class ViewExtractedElementsComponent {
               importErrors.errors.push({
                 type: 'warning',
                 field: 'main.originalLanguages',
-                name: "Languages",
+                name: 'Languages',
                 reason: `${g} not found in languages list`,
                 hint: 'Edit corresponding sheet field.'
               });
@@ -495,6 +521,7 @@ export class ViewExtractedElementsComponent {
         }
 
         // DUBS (Available dubbing(s))
+        // @todo #1562 Wait for  #1411
         if (spreadSheetRow[SpreadSheetMovie.dubbings]) {
           movie.versionInfo.dubbings = [];
           spreadSheetRow[SpreadSheetMovie.dubbings].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
@@ -505,7 +532,7 @@ export class ViewExtractedElementsComponent {
               importErrors.errors.push({
                 type: 'warning',
                 field: 'versionInfo.dubbing',
-                name: "Dubbings",
+                name: 'Dubbings',
                 reason: `${g} not found in languages list`,
                 hint: 'Edit corresponding sheet field.'
               });
@@ -514,6 +541,7 @@ export class ViewExtractedElementsComponent {
         }
 
         // SUBTILES (Available subtitle(s))
+        // @todo #1562 Wait for  #1411
         if (spreadSheetRow[SpreadSheetMovie.subtitles]) {
           movie.versionInfo.subtitles = [];
           spreadSheetRow[SpreadSheetMovie.subtitles].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
@@ -524,7 +552,26 @@ export class ViewExtractedElementsComponent {
               importErrors.errors.push({
                 type: 'warning',
                 field: 'versionInfo.subtitle',
-                name: "Subtitles",
+                name: 'Subtitles',
+                reason: `${g} not found in languages list`,
+                hint: 'Edit corresponding sheet field.'
+              });
+            }
+          });
+        }
+
+        // Captions (Avalaible closed-captioned)
+        if (spreadSheetRow[SpreadSheetMovie.captions]) {
+          //movie.versionInfo.captions = [];
+          spreadSheetRow[SpreadSheetMovie.captions].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
+            const caption = getCodeIfExists('LANGUAGES', g);
+            if (caption) {
+              // @todo #1562 Wait for  #1411
+            } else {
+              importErrors.errors.push({
+                type: 'warning',
+                field: 'versionInfo.subtitle',
+                name: 'Subtitles',
                 reason: `${g} not found in languages list`,
                 hint: 'Edit corresponding sheet field.'
               });
@@ -623,23 +670,32 @@ export class ViewExtractedElementsComponent {
 
         // PRODUCTION STATUS
         if (spreadSheetRow[SpreadSheetMovie.productionStatus]) {
-          movie.main.status = spreadSheetRow[SpreadSheetMovie.productionStatus];
+          const movieStatus = getCodeIfExists('MOVIE_STATUS', spreadSheetRow[SpreadSheetMovie.productionStatus]);
+          if (movieStatus) {
+            movie.main.status = movieStatus;
+          } else {
+            importErrors.errors.push({
+              type: 'warning',
+              field: 'movie.main.status',
+              name: 'Production status',
+              reason: 'Production status could not be parsed',
+              hint: 'Edit corresponding sheet field.'
+            });
+          }
         } else {
-          movie.main.status = 'finished';
+          movie.main.status = getCodeIfExists('MOVIE_STATUS', 'finished');
+          importErrors.errors.push({
+            type: 'warning',
+            field: 'movie.main.status',
+            name: 'Production status',
+            reason: 'Production status not found, assumed "Completed"',
+            hint: 'Edit corresponding sheet field.'
+          });
         }
 
         // BUDGET
         if (spreadSheetRow[SpreadSheetMovie.budget]) {
           movie.budget.totalBudget = spreadSheetRow[SpreadSheetMovie.budget];
-        }
-
-        // THEATRICAL RELEASE
-        if (spreadSheetRow[SpreadSheetMovie.theatricalRelease]) {
-          if (spreadSheetRow[SpreadSheetMovie.theatricalRelease].toLowerCase() === 'yes') {
-            movie.salesInfo.originalRelease.forEach(r => {
-              r.media = getCodeIfExists('MEDIAS', 'theatrical');
-            })
-          }
         }
 
         // IMAGE BANNIERE LINK
@@ -709,7 +765,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'error',
         field: 'main.internalRef',
-        name: "Film Code ",
+        name: 'Film Code ',
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -719,7 +775,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'error',
         field: 'main.title.original',
-        name: "Original title",
+        name: 'Original title',
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -729,7 +785,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'error',
         field: 'main.productionYear',
-        name: "Production Year",
+        name: 'Production Year',
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -739,7 +795,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'error',
         field: 'salesInfo.scoring',
-        name: "Scoring",
+        name: 'Scoring',
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -769,7 +825,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'error',
         field: 'salesAgentDeal.territories',
-        name: "Mandate Territories",
+        name: 'Mandate Territories',
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -779,7 +835,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'error',
         field: 'salesAgentDeal.medias',
-        name: "Mandate Medias",
+        name: 'Mandate Medias',
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -789,7 +845,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'error',
         field: 'main.directors',
-        name: "Directors",
+        name: 'Directors',
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -799,7 +855,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'error',
         field: 'main.poster',
-        name: "Poster",
+        name: 'Poster',
         reason: 'Required field is missing',
         hint: 'Add poster URL in corresponding column.'
       });
@@ -813,7 +869,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'warning',
         field: 'main.isan',
-        name: "ISAN number",
+        name: 'ISAN number',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -823,7 +879,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'warning',
         field: 'main.title.international',
-        name: "International title",
+        name: 'International title',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -833,7 +889,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'warning',
         field: 'main.totalRunTime',
-        name: "Total Run Time",
+        name: 'Total Run Time',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -843,17 +899,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'warning',
         field: 'main.stakeholders',
-        name: "Production Companie(s)",
-        reason: 'Optional field is missing',
-        hint: 'Edit corresponding sheet field.'
-      });
-    }
-
-    if (movie.salesInfo.broadcasterCoproducers.length === 0) {
-      errors.push({
-        type: 'warning',
-        field: 'main.salesInfo.broadcasterCoproducers',
-        name: "TV / Platform coproducer(s)",
+        name: 'Stakeholder(s)',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -863,7 +909,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'warning',
         field: 'salesInfo.color',
-        name: "Color / Black & White ",
+        name: 'Color / Black & White ',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -873,7 +919,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'warning',
         field: 'main.originCountries',
-        name: "Countries of origin",
+        name: 'Countries of origin',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -883,7 +929,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'warning',
         field: 'salesInfo.certifications',
-        name: "Certifications",
+        name: 'Certifications',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -913,7 +959,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'warning',
         field: 'main.shortSynopsis',
-        name: "Synopsis",
+        name: 'Synopsis',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -923,7 +969,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'warning',
         field: 'main.genres',
-        name: "Genres",
+        name: 'Genres',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -933,7 +979,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'warning',
         field: 'festivalPrizes.prizes',
-        name: "Festival Prizes",
+        name: 'Festival Prizes',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -943,7 +989,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'warning',
         field: 'promotionalDescription.keyAssets',
-        name: "Key assets",
+        name: 'Key assets',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -953,7 +999,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'warning',
         field: 'promotionalDescription.keywords',
-        name: "Keywords",
+        name: 'Keywords',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -963,7 +1009,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'warning',
         field: 'main.originalLanguages',
-        name: "Languages",
+        name: 'Languages',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -973,7 +1019,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'warning',
         field: 'versionInfo.dubbings',
-        name: "Dubbings",
+        name: 'Dubbings',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -983,11 +1029,23 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'warning',
         field: 'versionInfo.subtitles',
-        name: "Subtitles",
+        name: 'Subtitles',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
     }
+
+    /*
+    @todo #1562  Wait for  #1411
+    if (movie.versionInfo.captions.length === 0) {
+      errors.push({
+        type: 'warning',
+        field: 'versionInfo.captions',
+        name: 'Captions',
+        reason: 'Optional field is missing',
+        hint: 'Edit corresponding sheet field.'
+      });
+    }*/
 
     if (movie.budget.totalBudget === undefined) {
       errors.push({
@@ -1105,7 +1163,7 @@ export class ViewExtractedElementsComponent {
                 importErrors.errors.push({
                   type: 'error',
                   field: 'territories',
-                  name: "Territories sold",
+                  name: 'Territories sold',
                   reason: `${c} not found in territories list`,
                   hint: 'Edit corresponding sheet field.'
                 });
@@ -1124,7 +1182,7 @@ export class ViewExtractedElementsComponent {
                 importErrors.errors.push({
                   type: 'error',
                   field: 'territories excluded',
-                  name: "Territories excluded",
+                  name: 'Territories excluded',
                   reason: `${c} not found in territories list`,
                   hint: 'Edit corresponding sheet field.'
                 });
@@ -1143,7 +1201,7 @@ export class ViewExtractedElementsComponent {
                 importErrors.errors.push({
                   type: 'error',
                   field: 'medias',
-                  name: "Media(s)",
+                  name: 'Media(s)',
                   reason: `${c} not found in medias list`,
                   hint: 'Edit corresponding sheet field.'
                 });
@@ -1165,7 +1223,7 @@ export class ViewExtractedElementsComponent {
                 importErrors.errors.push({
                   type: 'error',
                   field: 'dubbing',
-                  name: "Authorized language(s)",
+                  name: 'Authorized language(s)',
                   reason: `${g} not found in languages list`,
                   hint: 'Edit corresponding sheet field.'
                 });
@@ -1188,7 +1246,7 @@ export class ViewExtractedElementsComponent {
                 importErrors.errors.push({
                   type: 'error',
                   field: 'subtitle',
-                  name: "Authorized subtitle(s)",
+                  name: 'Authorized subtitle(s)',
                   reason: `${g} not found in languages list`,
                   hint: 'Edit corresponding sheet field.'
                 });
@@ -1210,7 +1268,7 @@ export class ViewExtractedElementsComponent {
                 importErrors.errors.push({
                   type: 'error',
                   field: 'caption',
-                  name: "Authorized caption(s)",
+                  name: 'Authorized caption(s)',
                   reason: `${g} not found in languages list`,
                   hint: 'Edit corresponding sheet field.'
                 });
@@ -1249,7 +1307,7 @@ export class ViewExtractedElementsComponent {
           importErrors.errors.push({
             type: 'error',
             field: 'internalRef',
-            name: "Movie",
+            name: 'Movie',
             reason: `Movie ${spreadSheetRow[SpreadSheetDistributionDeal.internalRef]} not found`,
             hint: 'Try importing it first or check if data is correct.'
           });
@@ -1285,7 +1343,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'error',
         field: 'contractId',
-        name: "Contract ",
+        name: 'Contract ',
         reason: 'Related contract not found',
         hint: 'Edit corresponding sheet field.'
       });
@@ -1319,7 +1377,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'error',
         field: 'territory',
-        name: "Territories sold",
+        name: 'Territories sold',
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -1330,7 +1388,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'warning',
         field: 'territoryExcluded',
-        name: "Territories excluded",
+        name: 'Territories excluded',
         reason: 'Optionnal field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -1341,7 +1399,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'error',
         field: 'medias',
-        name: "Media(s)",
+        name: 'Media(s)',
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -1352,7 +1410,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'error',
         field: 'dubbings',
-        name: "Authorized language(s)",
+        name: 'Authorized language(s)',
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -1363,7 +1421,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'error',
         field: 'exclusive',
-        name: "Exclusive deal",
+        name: 'Exclusive deal',
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -1379,7 +1437,7 @@ export class ViewExtractedElementsComponent {
         errors.push({
           type: 'warning',
           field: 'price',
-          name: "Distribution deal price",
+          name: 'Distribution deal price',
           reason: `Optional field is missing for ${titleId}`,
           hint: 'Edit corresponding sheet field.'
         });
@@ -1389,12 +1447,27 @@ export class ViewExtractedElementsComponent {
     return importErrors;
   }
 
-  public formatContracts(sheetTab: SheetTab) {
+  public async formatContracts(sheetTab: SheetTab) {
     this.clearDataSources();
 
     const titlesFieldsCount = Object.keys(SpreadSheetContractTitle).length / 2; // To get enum length
 
-    sheetTab.rows.forEach(async spreadSheetRow => {
+    // For contract validation, we need to process contracts that have no parents first
+    const sheetTabRowsWithNoParents: any[] = [];
+    const sheetTabRowsWithParents: any[] = [];
+
+    sheetTab.rows.forEach(spreadSheetRow => {
+      if (!spreadSheetRow[SpreadSheetContract.parentContractIds]) {
+        sheetTabRowsWithNoParents.push(spreadSheetRow);
+      } else {
+        sheetTabRowsWithParents.push(spreadSheetRow)
+      }
+    });
+
+    const orderedSheetTabRows: any[] = sheetTabRowsWithNoParents.concat(sheetTabRowsWithParents);
+    const matSnackbarRef = this.snackBar.open('Loading... Please wait', 'close');
+    for(const spreadSheetRow of orderedSheetTabRows) {
+      // CONTRACT ID
       // Create/retreive the contract
       let contract = initContractWithVersion();
       let newContract = true;
@@ -1412,10 +1485,13 @@ export class ViewExtractedElementsComponent {
       if (spreadSheetRow[SpreadSheetContract.contractId]) {
         const importErrors = {
           contract,
+          newContract: newContract,
           errors: [],
         } as ContractsImportState;
 
         if (newContract) {
+
+          // LICENSORS
           /**
            * @dev We process this data only if this is for a new contract
            * Changing parties or titles for a same contract is forbidden
@@ -1423,28 +1499,76 @@ export class ViewExtractedElementsComponent {
           */
           if (spreadSheetRow[SpreadSheetContract.licensors]) {
             spreadSheetRow[SpreadSheetContract.licensors].split(this.separator).forEach((licensorName: string) => {
+              const licensorParts = licensorName.split(this.subSeparator);
               const licensor = createContractPartyDetail();
-              // licensor.orgId @TODO (#1397) try to match with an existing org
-              licensor.party.displayName = licensorName.trim();
-              licensor.party.role = 'licensor';
+              licensor.party.displayName = licensorParts[0].trim();
+              if(licensorParts[1]) {
+                licensor.party.orgId = licensorParts[1].trim();
+              }
+              licensor.party.role = getCodeIfExists('LEGAL_ROLES', 'licensor');
               contract.doc.parties.push(licensor);
+              if (licensor.party.orgId) {
+                contract.doc.partyIds.push(licensor.party.orgId);
+              }
             });
           }
 
+          // LICENSEE
           if (spreadSheetRow[SpreadSheetContract.licensee]) {
+            const licenseeParts = spreadSheetRow[SpreadSheetContract.licensee].split(this.subSeparator);
             const licensee = createContractPartyDetail();
-            // licensee.orgId @TODO (#1397) try to match with an existing org
-            licensee.party.displayName = spreadSheetRow[SpreadSheetContract.licensee];
-            licensee.party.role = 'licensee';
+            licensee.party.displayName = licenseeParts[0].trim();
+            if(licenseeParts[1]) {
+              licensee.party.orgId = licenseeParts[1].trim();
+            }
+            licensee.party.role = getCodeIfExists('LEGAL_ROLES', 'licensee');
             contract.doc.parties.push(licensee);
+            if (licensee.party.orgId) {
+              contract.doc.partyIds.push(licensee.party.orgId);
+            }
           }
 
+          // CHILD ROLES
+          if (spreadSheetRow[SpreadSheetContract.childRoles]) {
+            spreadSheetRow[SpreadSheetContract.childRoles].split(this.separator).forEach((r: string) => {
+              const childRoleParts = r.split(this.subSeparator);
+              const partyName = childRoleParts.shift().trim();
+              const party = contract.doc.parties.find(p => p.party.displayName === partyName && p.party.role === getCodeIfExists('LEGAL_ROLES', 'licensor'));
+              if (party) {
+                childRoleParts.forEach(childRole => {
+                  const role = getCodeIfExists('LEGAL_ROLES', childRole.trim() as ExtractCode<'LEGAL_ROLES'>);
+                  if (role) {
+                    party.childRoles.push(role);
+                  } else {
+                    importErrors.errors.push({
+                      type: 'error',
+                      field: 'contract.parties.childRoles',
+                      name: 'Child roles',
+                      reason: `Child role mismatch : ${childRole.trim()}`,
+                      hint: 'Edit corresponding sheet field.'
+                    });
+                  }
+                });
+              } else {
+                importErrors.errors.push({
+                  type: 'error',
+                  field: 'contract.parties.childRoles',
+                  name: 'Child roles',
+                  reason: `Licensor name mismatch : ${partyName}`,
+                  hint: 'Edit corresponding sheet field.'
+                });
+              }
+            });
+          }
+
+          // PARENTS CONTRACTS
           if (spreadSheetRow[SpreadSheetContract.parentContractIds]) {
             spreadSheetRow[SpreadSheetContract.parentContractIds].split(this.separator).forEach((c: string) => {
               contract.doc.parentContractIds.push(c.trim());
             });
           }
 
+          // CHILDS CONTRACTS
           if (spreadSheetRow[SpreadSheetContract.childContractIds]) {
             spreadSheetRow[SpreadSheetContract.childContractIds].split(this.separator).forEach((c: string) => {
               contract.doc.childContractIds.push(c.trim());
@@ -1452,13 +1576,91 @@ export class ViewExtractedElementsComponent {
           }
         }
 
+        // CONTRACT STATUS
         if (spreadSheetRow[SpreadSheetContract.status]) {
           if (spreadSheetRow[SpreadSheetContract.status] in ContractStatus) {
             contract.last.status = spreadSheetRow[SpreadSheetContract.status];
           }
         }
 
+        // CONTRACT CREATION DATE
+        if (spreadSheetRow[SpreadSheetContract.creationDate]) {
+          const creationDate: SSF$Date = SSF.parse_date_code(spreadSheetRow[SpreadSheetContract.creationDate]);
+          contract.last.creationDate = new Date(`${creationDate.y}-${creationDate.m}-${creationDate.d}`);
+        } else {
+          importErrors.errors.push({
+            type: 'warning',
+            field: 'contract.last.creationDate',
+            name: 'Creation date',
+            reason: 'Contract creation date not found. Using current date',
+            hint: 'Edit corresponding sheet field.'
+          });
+        }
+
+        // SCOPE DATE START
+        if (spreadSheetRow[SpreadSheetContract.scopeStartDate]) {
+          const scopeStartDate: SSF$Date = SSF.parse_date_code(SpreadSheetContract.scopeStartDate);
+          contract.last.scope.start = new Date(`${scopeStartDate.y}-${scopeStartDate.m}-${scopeStartDate.d}`);
+        } else {
+          importErrors.errors.push({
+            type: 'warning',
+            field: 'contract.last.scope.start',
+            name: 'Scope Start date',
+            reason: 'Scope Start date not found',
+            hint: 'Edit corresponding sheet field.'
+          });
+        }
+
+        // SCOPE DATE END
+        if (spreadSheetRow[SpreadSheetContract.scopeEndDate]) {
+          const scopeEndDate: SSF$Date = SSF.parse_date_code(SpreadSheetContract.scopeEndDate);
+          contract.last.scope.end = new Date(`${scopeEndDate.y}-${scopeEndDate.m}-${scopeEndDate.d}`);
+        } else {
+          importErrors.errors.push({
+            type: 'warning',
+            field: 'contract.last.scope.end',
+            name: 'Scope End date',
+            reason: 'Scope End date not found',
+            hint: 'Edit corresponding sheet field.'
+          });
+        }
+
+        // PAYMENT SCHEDULES
+        if (spreadSheetRow[SpreadSheetContract.paymentSchedules]) {
+          spreadSheetRow[SpreadSheetContract.paymentSchedules].split(this.separator).forEach((r: string) => {
+            const scheduleParts = r.split(this.subSeparator);
+            if (scheduleParts.length >= 2) {
+              const percentage = scheduleParts[1].indexOf('%') !== -1 ?
+                parseInt(scheduleParts[1].trim().replace('%', ''), 10) :
+                parseInt(scheduleParts[1].trim(), 10);
+              const paymentSchedule = createPaymentSchedule({ label: scheduleParts[0].trim(), percentage });
+              if (scheduleParts[2]) {
+                paymentSchedule.date = scheduleParts[2].trim();
+              }
+              contract.last.paymentSchedule.push(paymentSchedule);
+            } else {
+              importErrors.errors.push({
+                type: 'error',
+                field: 'contract.last.paymentSchedule',
+                name: 'Payment Schedule',
+                reason: 'Error while parsing data',
+                hint: 'Edit corresponding sheet field.'
+              });
+            }
+          });
+        } else {
+          importErrors.errors.push({
+            type: 'warning',
+            field: 'contract.last.paymentSchedule',
+            name: 'Payment Schedule',
+            reason: 'Missing data',
+            hint: 'Edit corresponding sheet field.'
+          });
+        }
+
+        // TITLES STUFF
         let titleIndex = 0;
+        // @dev this while is why we need to do a for(const of ...) (pretty sure)
         while (spreadSheetRow[SpreadSheetContract.titleStuffIndexStart + titleIndex]) {
           const currentIndex = SpreadSheetContract.titleStuffIndexStart + titleIndex;
           titleIndex += titlesFieldsCount;
@@ -1476,26 +1678,38 @@ export class ViewExtractedElementsComponent {
 
         const contractWithErrors = await this.validateMovieContract(importErrors);
 
-        if (contractWithErrors.contract.doc.id) {
+        // Since contracts are not saved to DB yet, we need to manually pass them to isContractValid function
+        const parentContracts: Contract[] = [];
+        const otherContractsUploaded: Contract[] = this.contractsToUpdate.data.map(importState => importState.contract.doc)
+          .concat(this.contractsToCreate.data.map(importState => importState.contract.doc));
+        contract.doc.parentContractIds.forEach(parentId => {
+          const parentContract = otherContractsUploaded.find(o => o.id === parentId);
+          if (parentContract) {
+            parentContracts.push(parentContract);
+          }
+        });
+
+        contractWithErrors.contract.doc = await this.contractService.populatePartiesWithParentRoles(contractWithErrors.contract.doc, parentContracts);
+
+        if (!contractWithErrors.newContract) {
           this.contractsToUpdate.data.push(contractWithErrors);
           this.contractsToUpdate.data = [... this.contractsToUpdate.data];
         } else {
-          contract.doc.id = spreadSheetRow[SpreadSheetContract.contractId];
+          contractWithErrors.contract.doc.id = spreadSheetRow[SpreadSheetContract.contractId];
           this.contractsToCreate.data.push(contractWithErrors);
           this.contractsToCreate.data = [... this.contractsToCreate.data];
         }
 
         this.cdRef.detectChanges();
       }
-    });
-
+    };
+    matSnackbarRef.dismissWithAction(); // loading ended
   }
 
   private async validateMovieContract(importErrors: ContractsImportState): Promise<ContractsImportState> {
 
     const contract = importErrors.contract;
     const errors = importErrors.errors;
-
 
     //////////////////
     // REQUIRED FIELDS
@@ -1507,7 +1721,7 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'error',
         field: 'contractId',
-        name: "Contract",
+        name: 'Contract',
         reason: 'Contract is not valid',
         hint: 'Edit corresponding sheet field.'
       });
@@ -1523,11 +1737,22 @@ export class ViewExtractedElementsComponent {
       errors.push({
         type: 'warning',
         field: 'price',
-        name: "Distribution deal price",
+        name: 'Distribution deal price',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
     }*/
+
+    // CONTRACT STATUS
+    if (!contract.last.status) {
+      errors.push({
+        type: 'warning',
+        field: 'contract.last.status',
+        name: 'Contract Status',
+        reason: 'Optional field is missing',
+        hint: 'Edit corresponding sheet field.'
+      });
+    }
 
     return importErrors;
   }

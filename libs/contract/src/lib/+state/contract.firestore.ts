@@ -8,6 +8,7 @@ import {
   LegalRolesSlug
 } from "@blockframes/utils/static-model/types";
 import { ImgRef } from "@blockframes/utils/image-uploader";
+import { PaymentScheduleRaw } from "@blockframes/utils/common-interfaces/schedule";
 
 type Timestamp = firestore.Timestamp;
 
@@ -57,7 +58,7 @@ interface ContractVersionRaw<D> {
   creationDate?: D,
   titles: Record<string, ContractTitleDetail>,
   price: Price;
-  paymentSchedule?: string; // @todo #1397 change this when creating invoices
+  paymentSchedule?: PaymentScheduleRaw<D>[];
 }
 
 interface ContractRaw<D> {

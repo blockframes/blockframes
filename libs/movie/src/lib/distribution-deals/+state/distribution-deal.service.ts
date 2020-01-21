@@ -6,9 +6,8 @@ import { DistributionDealState, DistributionDealStore } from './distribution-dea
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { MovieQuery } from '../../movie/+state/movie.query';
 import { DistributionDeal } from './distribution-deal.model';
-import { createContractTitleDetail } from '@blockframes/contract/+state/contract.model';
+import { createContractTitleDetail, ContractWithLastVersion } from '@blockframes/contract/+state/contract.model';
 import { ContractVersionService } from '@blockframes/contract/version/+state/contract-version.service';
-import { ContractWithLastVersion } from '@blockframes/contract/version/+state/contract-version.model';
 import { ContractService } from '@blockframes/contract/+state/contract.service';
 
 @Injectable({ providedIn: 'root' })
@@ -42,6 +41,7 @@ export class DistributionDealService extends CollectionService<DistributionDealS
     // If a contract does not have an id, we update contract and link it to this distrubution deal
     // If there is already a contract id, this means it have been created before
     if (!contract.doc.id) {
+      contract.doc.id = this.db.createId();
       // Populate distribution deal contract
       contract.last.titles[movieId] = createContractTitleDetail();
       contract.last.titles[movieId].titleId = movieId;
@@ -53,7 +53,7 @@ export class DistributionDealService extends CollectionService<DistributionDealS
       // @todo #1397 change this price calculus
       contract.last.titles[movieId].price = contract.last.price;
 
-      const contractId = await this.contractVersionService.addContractAndVersion(contract);
+      const contractId = await this.contractService.addContractAndVersion(contract);
 
       // Link distributiondeal with contract
       distributionDeal.contractId = contractId;
@@ -65,6 +65,9 @@ export class DistributionDealService extends CollectionService<DistributionDealS
       await this.contractVersionService.add(contract.last);
       return distributionDeal.id;
     }
+
+
+    /// @todo #1562 add ditribution deal
   }
 
   public formatDistributionDeal(deal: any): DistributionDeal {

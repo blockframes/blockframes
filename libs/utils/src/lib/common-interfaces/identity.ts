@@ -16,7 +16,7 @@ import { Location } from "@blockframes/organization/+state/organization.firestor
 interface IdentityRaw {
   orgId?: string,
 
-  displayName?: string, // @todo #1052 for persons, use firstname lastname, display name otherwise
+  displayName?: string,
 
   showName?: boolean,
 
@@ -108,7 +108,7 @@ export function createStakeholder(params: Partial<Stakeholder> = {}): Stakeholde
 export function createParty(params: Partial<Party> = {}): Party {
   return {
     orgId: '',
-    role: null as any, // @todo(#1607) remove as any
+    role: 'undefined',
     showName: false,
     ...params,
   }

@@ -1,4 +1,3 @@
-import { createTerms } from '@blockframes/utils/common-interfaces/terms';
 import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
 import { LegalRolesSlug } from '@blockframes/utils/static-model/types';
 import { createPrice } from '@blockframes/utils/common-interfaces/price';
@@ -7,13 +6,24 @@ import {
   ContractStatus,
   ContractTitleDetail,
   ContractPartyDetailDocumentWithDates,
-  ContractPartyDetailDocumentWithDatesDocument
+  ContractPartyDetailDocumentWithDatesDocument,
+  ContractVersionDocumentWithDates
 } from './contract.firestore';
 import { LegalDocument, LegalDocuments } from '@blockframes/contract/+state/contract.firestore';
 import { createParty } from '@blockframes/utils/common-interfaces/identity';
-import { ContractVersion } from '../version/+state/contract-version.model';
 import { createImgRef } from '@blockframes/utils/image-uploader';
+import { createTerms } from '@blockframes/utils/common-interfaces/terms';
 
+export type ContractVersion = ContractVersionDocumentWithDates;
+
+/**
+ * @dev this should not be saved to firestore,
+ * used only in front
+ */
+export interface ContractWithLastVersion {
+  doc: Contract,
+  last: ContractVersion,
+}
 
 export interface Contract extends ContractDocumentWithDates {
   lastVersion?: ContractVersion;
@@ -46,10 +56,11 @@ export function createContractVersion(params: Partial<ContractVersion> = {}): Co
     id: params.id ? params.id : '1',
     titles: {},
     creationDate: new Date(),
+    paymentSchedule: [],
     ...params,
     status: ContractStatus.submitted,
     scope: createTerms(params.scope),
-    price: createPrice(params.price)
+    price: createPrice(params.price),
   };
 }
 
@@ -69,6 +80,7 @@ export function createContractPartyDetail(
 ): ContractPartyDetail {
   return {
     status: ContractStatus.unknown,
+    childRoles: [],
     ...params,
     party: createParty(params.party),
   };
@@ -158,7 +170,9 @@ export function convertToContractDocument(params: Partial<Contract> = {}): Contr
     id: params.id,
     parties: params.parties || [],
     titleIds: params.titleIds || [],
-    partyIds: params.partyIds ||[]
+    partyIds: params.partyIds ||[],
+    parentContractIds: params.parentContractIds || [],
+    childContractIds: params.childContractIds || [],
   };
 }
 

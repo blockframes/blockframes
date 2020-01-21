@@ -35,9 +35,8 @@ import { MatSnackBar } from '@angular/material';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { createDistributionDeal } from '../+state/distribution-deal.model';
 import { DistributionDealService } from '../+state';
-import { createContractPartyDetail } from '@blockframes/contract/+state/contract.model';
+import { createContractPartyDetail, initContractWithVersion } from '@blockframes/contract/+state/contract.model';
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
-import { initContractWithVersion } from '@blockframes/contract/version/+state/contract-version.model';
 import { ContractService } from '@blockframes/contract/+state/contract.service';
 
 enum ResearchSteps {
@@ -336,8 +335,6 @@ export class DistributionDealCreateComponent implements OnInit, OnDestroy {
           }
 
           // @TODO#1022
-          // @see https://www.notion.so/cascade8/Workflows-843369bf4c7e43958d5cf27da57fb91d
-          // and wait new distributionDeal model especially for the languages part (#1052)
         })
       )
       .subscribe();

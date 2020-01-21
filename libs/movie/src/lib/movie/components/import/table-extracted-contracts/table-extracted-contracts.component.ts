@@ -7,8 +7,7 @@ import { Component, Input, ViewChild, OnInit, ChangeDetectionStrategy } from '@a
 import { SelectionModel } from '@angular/cdk/collections';
 import { SpreadsheetImportError, ContractsImportState } from '../view-extracted-elements/view-extracted-elements.component';
 import { ViewImportErrorsComponent } from '../view-import-errors/view-import-errors.component';
-import { ContractVersionService } from '@blockframes/contract/version/+state/contract-version.service';
-import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
+import { ContractService } from '@blockframes/contract/+state/contract.service';
 
 const hasImportErrors = (importState: ContractsImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -26,6 +25,7 @@ export class TableExtractedContractsComponent implements OnInit {
   @Input() mode: string;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
+  public processedContracts = 0;
 
   public selection = new SelectionModel<ContractsImportState>(true, []);
   public displayedColumns: string[] = [
@@ -45,8 +45,7 @@ export class TableExtractedContractsComponent implements OnInit {
   constructor(
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
-    private organizationQuery: OrganizationQuery,
-    private contractVersionService: ContractVersionService
+    private contractService: ContractService
   ) { }
 
   ngOnInit() {
@@ -58,9 +57,56 @@ export class TableExtractedContractsComponent implements OnInit {
   }
 
   async createContract(importState: ContractsImportState): Promise<boolean> {
+    await this.addContract(importState);
+    this.snackBar.open('Contract added!', 'close', { duration: 3000 });
+    return true;
+  }
 
-    importState.contract.doc.partyIds.push(this.organizationQuery.getActiveId())
-    const contractId = await this.contractVersionService.addContractAndVersion(importState.contract);
+  async updateContract(importState: ContractsImportState): Promise<boolean> {
+    await this.addContract(importState);
+    this.snackBar.open('Contract updated!', 'close', { duration: 3000 });
+    return true;
+  }
+
+  async createSelectedContracts(): Promise<boolean> {
+    try {
+      const creations = this.selection.selected.filter(importState => importState.newContract && !hasImportErrors(importState));
+      for (const contract of creations) {
+        this.processedContracts++;
+        await this.addContract(contract);
+      }
+      this.snackBar.open(`${this.processedContracts} contracts created!`, 'close', { duration: 3000 });
+      this.processedContracts = 0;
+      return true;
+    } catch (err) {
+      this.snackBar.open(`Could not import all contracts (${this.processedContracts} / ${this.selection.selected})`, 'close', { duration: 3000 });
+      this.processedContracts = 0;
+    }
+  }
+
+  async updateSelectedContracts(): Promise<boolean> {
+    try {
+      const updates = this.selection.selected.filter(importState => !importState.newContract && !hasImportErrors(importState));
+      for (const contract of updates) {
+        this.processedContracts++;
+        await this.addContract(contract);
+      }
+      this.snackBar.open(`${this.processedContracts} contracts updated!`, 'close', { duration: 3000 });
+      this.processedContracts = 0;
+      return true;
+    } catch (err) {
+      this.snackBar.open(`Could not update all contracts (${this.processedContracts} / ${this.selection.selected})`, 'close', { duration: 3000 });
+      this.processedContracts = 0;
+    }
+  }
+
+  /**
+   * Adds a contract to database and prevents multi-insert by refreshing mat-table
+   * @param importState 
+   */
+  private async addContract(importState: ContractsImportState): Promise<boolean> {
+    const data = this.rows.data;
+    await this.contractService.addContractAndVersion(importState.contract)
     importState.errors.push({
       type: 'error',
       field: 'contract',
@@ -68,43 +114,8 @@ export class TableExtractedContractsComponent implements OnInit {
       reason: 'Contract already added',
       hint: 'Contract already added'
     });
-
-    this.snackBar.open(`Contract ${contractId} added!`, 'close', { duration: 3000 });
-
+    this.rows.data = data;
     return true;
-  }
-
-  async updateContract(importState: ContractsImportState): Promise<boolean> {
-    return this.createContract(importState);
-  }
-
-  async createSelectedContracts(): Promise<boolean> {
-    try {
-      const data = this.rows.data;
-      const promises = [];
-      this.selection.selected
-        .filter(importState => !hasImportErrors(importState))
-        .map(importState => {
-
-          importState.errors.push({
-            type: 'error',
-            field: 'contract',
-            name: 'Contract',
-            reason: 'Contract already added',
-            hint: 'Contract already added'
-          });
-
-          return promises.push(this.contractVersionService.addContractAndVersion(importState.contract));
-        });
-
-      this.rows.data = data;
-
-      await Promise.all(promises);
-      this.snackBar.open(`${promises.length} contracts imported!`, 'close', { duration: 3000 });
-      return true;
-    } catch (err) {
-      this.snackBar.open(`Could not import contracts`, 'close', { duration: 3000 });
-    }
   }
 
   errorCount(data: ContractsImportState, type: string = 'error') {

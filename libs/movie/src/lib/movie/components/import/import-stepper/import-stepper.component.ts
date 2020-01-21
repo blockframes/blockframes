@@ -14,7 +14,7 @@ export class ImportStepperComponent {
 
   constructor() {}
 
-  next(importEvent : SpreadsheetImportEvent) {
+  async next(importEvent : SpreadsheetImportEvent) {
     switch (importEvent.fileType) {
       case 'movies':
         this.viewExtractedElementsComponent.formatMovies(importEvent.sheet);
@@ -23,7 +23,7 @@ export class ImportStepperComponent {
         this.viewExtractedElementsComponent.formatDistributionDeals(importEvent.sheet);
         break;
       case 'contracts':
-        this.viewExtractedElementsComponent.formatContracts(importEvent.sheet);
+        await this.viewExtractedElementsComponent.formatContracts(importEvent.sheet);
         break;
         
       default:

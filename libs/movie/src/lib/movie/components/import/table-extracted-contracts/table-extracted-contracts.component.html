@@ -4,17 +4,33 @@
   <p>For selection ({{ selection.selected.length }} items selected) :
     <button mat-flat-button color="primary" [disabled]="!selection.selected.length"
       (click)="createSelectedContracts()">
-      <span>Create</span>
-      <mat-icon>create</mat-icon>
+      <ng-container *ngIf="processedContracts === 0 else createinprogress">
+        <span>Create</span>
+        <mat-icon>create</mat-icon>
+      </ng-container>
+      <ng-template #createinprogress>
+        <span>
+          Creating... {{ processedContracts }} / {{ selection.selected.length}}
+          <mat-spinner [diameter]="20" [strokeWidth]="2" class="upload-spinner"></mat-spinner>
+        </span>
+      </ng-template>
     </button>
   </p>
 </ng-container>
 <ng-template #update>
   <p>For selection ({{ selection.selected.length }} items selected) :
     <button mat-flat-button color="primary" [disabled]="!selection.selected.length"
-      (click)="createSelectedContracts()">
+      (click)="updateSelectedContracts()">
+      <ng-container *ngIf="processedContracts === 0 else updateinprogress">
         <span>Update</span>
         <mat-icon>edit</mat-icon>
+      </ng-container>
+      <ng-template #updateinprogress>
+        <span>
+          Updating... {{ processedContracts }} / {{ selection.selected.length}}
+          <mat-spinner [diameter]="20" [strokeWidth]="2" class="upload-spinner"></mat-spinner>
+        </span>
+      </ng-template>
     </button>
   </p>
 </ng-template>

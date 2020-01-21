@@ -729,6 +729,7 @@ const models = {
     { 'slug': 'merchandising', 'label': 'Merchandising' },
   ] as const,
   'LEGAL_ROLES': [
+    { 'slug': 'undefined', 'label': 'Undefined role' },
     { 'slug': 'service-provider', 'label': 'Service provider' },
     { 'slug': 'licensor', 'label': 'Licensor' },
     { 'slug': 'sub-licensor', 'label': 'Sub Licensor' },
