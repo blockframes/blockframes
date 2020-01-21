@@ -1,9 +1,15 @@
 mat-card-content {
+  width: 100%;
   text-align: center;
+  movie-promotional-elements-images {
+    width: 100%;
+  }
 }
 
-movie-promotional-elements-images {
-  max-width: 760px;
+.mat-body-2 {
+  display: flex;
+  justify-content: flex-start;
+  margin-left: 15px;
 }
 
 footer {
