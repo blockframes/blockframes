@@ -1,72 +1,101 @@
-<ng-container *ngIf="data">
-  <span>internal ref: {{ data.internalRef }}</span>
-  <span>ISAN number: {{ data.isan }}</span>
-  <mat-card-header class="movie-card-header">
-    <mat-card-title class="movie-card-meta-title" *ngIf="data.title">
-      {{ data.title.original }}
-    </mat-card-title>
-    <mat-card-title class="movie-card-production-year" *ngIf="data.productionYear">({{ data.productionYear }})
-    </mat-card-title>
-    <mat-card-subtitle class="movie-card-sub-title" *ngIf="data.title ">
-      {{ data.title.international }}
-    </mat-card-subtitle>
-  </mat-card-header>
-  <img mat-card-image class="movie-poster" *ngIf="data.poster" [imgRef]="data.poster" alt="movie poster" />
-  <mat-card-content *ngIf="data.directors.length" class="movie-card-section">
-    <mat-card-title>Directors</mat-card-title>
-    <mat-card-subtitle>
-      <span *ngFor="let item of data.directors; let isLast=last">
-        {{ item.firstName }} {{ item.lastName }}{{ isLast? '':',' }}
-      </span>
-    </mat-card-subtitle>
-  </mat-card-content>
-  <mat-card-content *ngIf="shouldDisplayMainInformations" class="movie-card-section">
-    <mat-divider></mat-divider>
-    <mat-card-title class="movie-card-meta-title">Main informations</mat-card-title>
-    <ng-container *ngIf="data.genres.length">
-      <mat-card-title>Genres</mat-card-title>
-      <mat-card-subtitle>
-        <span *ngFor="let item of data.genres; let isLast=last">
-          {{ getLabelByCode('GENRES', item) }}{{ isLast ?'':',' }}
-        </span>
-      </mat-card-subtitle>
-    </ng-container>
-    <ng-container *ngIf="data.originCountries.length">
-      <mat-card-title>Origin Countries</mat-card-title>
-      <mat-card-subtitle>
-        <span *ngFor="let item of data.originCountries; let isLast=last">
-          {{ getLabelByCode('TERRITORIES', item) }}{{ isLast?'':',' }}
-        </span>
-      </mat-card-subtitle>
-    </ng-container>
-    <ng-container *ngIf="data.originalLanguages.length">
-      <mat-card-title>Languages</mat-card-title>
-      <mat-card-subtitle>
-        <span *ngFor="let item of data.originalLanguages; let isLast=last">
-          {{ getLabelByCode('LANGUAGES', item) }}{{ isLast?'':',' }}
-        </span>
-      </mat-card-subtitle>
-    </ng-container>
-    <ng-container *ngIf="data.status">
-      <mat-card-title>Status</mat-card-title>
-      <mat-card-subtitle>
-        <span>
-          {{ getLabelByCode('MOVIE_STATUS', data.status) }}
-        </span>
-      </mat-card-subtitle>
-    </ng-container>
-    <ng-container *ngIf="data.shortSynopsis">
-      <mat-card-title>Short Synopsis</mat-card-title>
-      <mat-card-subtitle>
-        <p>{{ data.shortSynopsis }}</p>
-      </mat-card-subtitle>
+<h2>Title Information</h2>
+<mat-card>
+  <h3>Main Information</h3>
+
+  <mat-card-content>
+    <p>
+      <span class="mat-body-1 info-name">Content Type </span>
+      <span class="mat-body-1">{{ workType | missing }}</span>
+    </p>
+    <p>
+      <span class="mat-body-1 info-name">Freshness </span>
+      <span class="mat-body-1">{{ storeType | missing }}</span>
+    </p>
+    <p>
+      <span class="mat-body-1 info-name">Production Status Mandatory </span>
+      <span class="mat-body-1">{{ status | missing }}</span>
+    </p>
+    <p>
+      <span class="mat-body-1 info-name">Original Title </span>
+      <span class="mat-body-1">{{ original | missing }}</span>
+    </p>
+    <p>
+      <span class="mat-body-1 info-name">International Title </span>
+      <span class="mat-body-1">{{ international | missing }}</span>
+    </p>
+    <p>
+      <span class="mat-body-1 info-name">Reference # </span>
+      <span class="mat-body-1">{{ reference | missing }}</span>
+    </p>
+    <ng-container *ngFor="let director of main.directors.controls; let isLast=last">
+      <p>
+        <span class="mat-body-1 info-name">Director Names </span>
+        <span class="mat-body-1">{{ director.get('firstName') | missing }} {{ director.get('lastName') | missing }}</span>
+      </p>
+      <p>
+        <span class="mat-body-1 info-name">Director's Filmography </span>
+        <span class="mat-body-1">{{ director.get('shortBiography') | missing }}</span>
+      </p>
     </ng-container>
 
-    <ng-container *ngIf="data.totalRunTime">
-      <mat-card-title>Total Run Time</mat-card-title>
-      <mat-card-subtitle>
-        <p>{{ data.totalRunTime }} min</p>
-      </mat-card-subtitle>
+    <ng-container *ngFor="let country of main.originCountries.controls; let i=index">
+      <div class="country">
+        <p class="mat-body-2">Countries of Origin #{{ i + 1 }}</p>
+        <p><span class="mat-body-1 info-name">Country </span><span class="mat-body-1">{{ country | missing }}</span></p>
+        <p><span class="mat-body-1 info-name">Domestic Distributor </span><span class="mat-body-1"></span></p>
+        <p>
+          <span class="mat-body-1 info-name">Release Media </span>
+          <ng-container *ngFor="let release of salesInfo.originalRelease.controls">
+            <span *ngIf="release.get('country').value === country.value" class="mat-body-1">{{ release.get('media') | missing }}</span>
+          </ng-container>
+        </p>
+        <p>
+          <span class="mat-body-1 info-name">Release Date </span>
+          <ng-container *ngFor="let release of salesInfo.originalRelease.controls">
+            <span *ngIf="release.get('country').value === country.value" class="mat-body-1">{{ release.get('date') | missing }}</span>
+          </ng-container>
+        </p>
+      </div>
+    </ng-container>
+
+    <p>
+      <span class="mat-body-1 info-name">Original Languages </span>
+      <ng-container *ngFor="let language of main.originalLanguages.controls; let isLast=last">
+        <span class="mat-body-1">{{ language | missing }}{{isLast ? '' : ', '}}</span>
+      </ng-container>
+    </p>
+
+    <p>
+      <span class="mat-body-1 info-name">Genres </span>
+      <ng-container *ngFor="let genre of genres; let isLast=last">
+        <span class="mat-body-1">{{ genre | missing }}{{isLast ? '' : ', '}}</span>
+      </ng-container>
+    </p>
+
+    <p>
+      <span class="mat-body-1 info-name">Running Time </span>
+      <span class="mat-body-1">{{ totalRunTime | missing }}</span>
+    </p>
+
+    <p>
+      <span class="mat-body-1 info-name">Principal Cast </span>
+      <ng-container *ngFor="let cast of salesCast.cast.controls; let isLast=last">
+        <span *ngIf="cast.value === 'lead-role'" class="mat-body-1">{{ cast.get('firstName') | missing }} {{ cast.get('lastName') | missing }}{{isLast ? '' : ', '}}</span>
+      </ng-container>
+    </p>
+
+    <p>
+      <span class="mat-body-1 info-name">Secondary Roles </span>
+      <ng-container *ngFor="let cast of salesCast.cast.controls; let isLast=last">
+        <span *ngIf="cast.value === 'secondary-role'" class="mat-body-1">{{ cast.get('firstName') | missing }} {{ cast.get('lastName') | missing }}{{isLast ? '' : ', '}}</span>
+      </ng-container>
+    </p>
+
+    <ng-container *ngFor="let festivalPrize of festivalPrizes.prizes.controls">
+      <p>
+        <span class="mat-body-1 info-name">Festival </span>
+        <span class="mat-body-1">{{ festivalPrize.get('name') | missing }}, {{ festivalPrize.get('prize') | missing }}, {{ festivalPrize.get('year') | missing }}, {{ festivalPrize.get('premiere') | missing }}</span>
+      </p>
     </ng-container>
 
     <ng-container *ngIf="data.stakeholders.executiveProducer.length">
@@ -78,4 +107,4 @@
       </mat-card-subtitle>
     </ng-container>
   </mat-card-content>
-</ng-container>
+</mat-card>
