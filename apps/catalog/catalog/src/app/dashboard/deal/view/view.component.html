@@ -1,7 +1,69 @@
-<section *ngIf="(contract$ | async) as contract">
-  <article *ngIf="licensees[0].party as licensee">
-    <h2>{{ licensees[0].party.displayName }}</h2>
-    <span> {{ licensee.address.street}}, {{ licensee.address.city }}, {{ licensee.address.region}}</span>
-    <span> {{ licensee.address.zipCode}}, {{ licensee.address.country }}</span>
+<section *ngIf="contract$ | async as contract">
+  <!-- TITLE & PRICE -->
+  <article
+    *ngIf="licensees[0].party as licensee"
+    fxLayout="row"
+    fxLayoutAlign="space-between start">
+    <div>
+      <p>{{ lastVersion.status | uppercase }}</p>
+      <h1>{{ licensees[0].party.displayName }} - {{ (movies$ | async).length }} films</h1>
+      <span class="mat-body-1" *ngIf="licensee.address">
+        {{ licensee.address.street }}, {{ licensee.address.city }}, {{ licensee.address.region }}
+        {{ licensee.address.zipCode }}, {{ licensee.address.country }}
+      </span>
+    </div>
+    <div fxLayout="column" fxLayoutAlign="center end">
+      <span class="mat-caption"> {{ lastVersion.creationDate.toDate() | date: 'short' }} </span>
+      <h2>{{ totalPrice.amount | currency: totalPrice.currency }}</h2>
+    </div>
+  </article>
+
+  <!-- CONTRACT SUMMARY -->
+  <article fxLayout="row">
+    <mat-card>
+      <mat-card-title>
+        <h3>
+          {{ licensees[0].party.displayName }} has made an offer for
+          {{ contract.titleIds.length }} titles, {{ (movies$ | async).length }} of which are yours.
+        </h3>
+      </mat-card-title>
+      <mat-card-content>
+        <span *ngIf="subLicensors.length > 1" class="mat-body-1">
+          We are gathering approval from {{ subLicensors.length - 1 }} other sellers.
+        </span>
+        <span *ngIf="subLicensors.length > 1; else uniqueSubLicensor" class="mat-body-1">
+          Your share of the deal is <b>{{ totalPrice.amount | currency: totalPrice.currency }}</b>
+          for the {{ (movies$ | async).length }} films:
+        </span>
+        <ng-template #uniqueSubLicensor>
+          <span class="mat-body-1">
+            The offer is <b>{{ totalPrice.amount | currency: totalPrice.currency }}</b>
+            for the {{ (movies$ | async).length }} films:
+          </span>
+        </ng-template>
+        <ul *ngFor="let movie of (movies$ | async)">
+          <li><b>{{ movie.main.title.international }}</b></li>
+        </ul>
+      </mat-card-content>
+      <mat-card-actions *ngIf="isSignatory" fxLayout="row" fxLayoutAlign="space-between center">
+        <button mat-flat-button color="accent" (click)="openIntercom()">
+          <mat-icon svgIcon="comment"></mat-icon>
+          Connect with the Archipel Team
+        </button>
+        <div>
+          <button mat-flat-button color="primary" (click)="acceptOffer(contract)">
+            <mat-icon svgIcon="check"></mat-icon>
+            Accept
+          </button>
+          <button mat-flat-button color="warn" (click)="declineOffer(contract)">
+            <mat-icon svgIcon="refuse"></mat-icon>
+            Decline
+          </button>
+        </div>
+      </mat-card-actions>
+    </mat-card>
+    <mat-card>
+
+    </mat-card>
   </article>
 </section>

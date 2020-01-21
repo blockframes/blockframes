@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ContractStore, ContractState } from './contract.store';
 import { CollectionConfig, CollectionService, awaitSyncQuery, Query } from 'akita-ng-fire';
-import { Contract, ContractPartyDetail, convertToContractDocument, createContractPartyDetail, initContractWithVersion, ContractWithLastVersion } from './contract.model';
+import { Contract, ContractPartyDetail, convertToContractDocument, createContractPartyDetail, createPartyDetails } from './contract.model';
 import orderBy from 'lodash/orderBy';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { tap, switchMap } from 'rxjs/operators';
@@ -9,9 +9,9 @@ import { ContractVersionService } from '../../version/+state/contract-version.se
 import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
 import { LegalRolesSlug } from '@blockframes/utils/static-model/types';
 import { cleanModel } from '@blockframes/utils';
-import { ContractDocumentWithDates } from './contract.firestore';
 import { VersionMeta } from '@blockframes/contract/version/+state/contract-version.model';
 import { PermissionsService } from '@blockframes/organization';
+import { ContractDocumentWithDates, ContractStatus } from './contract.firestore';
 
 /**
  * Get all the contracts where user organization is party.
@@ -259,5 +259,45 @@ export class ContractService extends CollectionService<ContractState> {
    */
   public isPartyOfContract(organizationId: string, contract: Contract): boolean {
     return contract.parties.some(partyDetails => partyDetails.party.orgId === organizationId)
+  }
+
+  /**
+   * Takes an organization id and a contract to check
+   * if the organization is signatory on this contract.
+   * @param orgnizationId
+   * @param contract
+   */
+  public isContractSignatory(contract: Contract, orgnizationId: string): boolean {
+    return contract.parties.some(
+      partyDetails =>
+        partyDetails.party.orgId === orgnizationId && partyDetails.party.role === 'signatory'
+    );
+  }
+
+  public acceptOffer(contract: Contract, organizationId: string) {
+    const index = contract.parties.findIndex(
+      partyDetails =>
+        partyDetails.party.orgId === organizationId && partyDetails.party.role === 'signatory'
+    );
+    const updatedParty = createPartyDetails({
+        ...contract.parties[index],
+        signDate: new Date(),
+        status: ContractStatus.accepted
+    });
+    const updatedParties = [...contract.parties.slice(0, index), updatedParty, ...contract.parties.slice(index + 1)];
+    this.update({ ...contract, parties: updatedParties })
+  }
+
+  public declineOffer(contract: Contract, organizationId: string) {
+    const index = contract.parties.findIndex(
+      partyDetails =>
+        partyDetails.party.orgId === organizationId && partyDetails.party.role === 'signatory'
+    );
+    const updatedParty = createPartyDetails({
+        ...contract.parties[index],
+        status: ContractStatus.rejected
+    });
+    const updatedParties = [...contract.parties.slice(0, index), updatedParty, ...contract.parties.slice(index + 1)];
+    this.update({ ...contract, parties: updatedParties })
   }
 }
