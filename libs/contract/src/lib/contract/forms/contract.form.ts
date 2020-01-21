@@ -6,8 +6,8 @@ import { createContract, createPartyDetails } from '@blockframes/contract/contra
 import { Contract } from './../+state/contract.model';
 import { ContractPartyForm } from './party-name/party-name.form';
 import { ContractPartyDetail } from '../+state/contract.model';
-import { createLegalDocument, createLegalDocuments } from '@blockframes/contract/+state/contract.model';
-import { LegalDocument, LegalDocuments } from '@blockframes/contract/+state/contract.firestore';;
+import { createLegalDocument, createLegalDocuments } from '@blockframes/contract/contract/+state/contract.model';
+import { LegalDocument, LegalDocuments } from '@blockframes/contract/contract/+state/contract.firestore';;
 import { urlValidators } from '@blockframes/utils/form/validators';
 
 

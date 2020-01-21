@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ContractForm } from '@blockframes/contract/forms/contract.form';
+import { ContractForm } from '@blockframes/contract/contract/forms/contract.form';
 import { createImgRef } from "@blockframes/utils/image-uploader";
 
 @Component({
