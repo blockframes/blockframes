@@ -5,7 +5,7 @@ import { Contract, ContractPartyDetail, convertToContractDocument, createContrac
 import orderBy from 'lodash/orderBy';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { tap, switchMap } from 'rxjs/operators';
-import { ContractVersionService } from '../version/+state/contract-version.service';
+import { ContractVersionService } from '../../version/+state/contract-version.service';
 import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
 import { LegalRolesSlug } from '@blockframes/utils/static-model/types';
 import { cleanModel } from '@blockframes/utils';
@@ -52,7 +52,7 @@ export class ContractService extends CollectionService<ContractState> {
     // Reset the store to clean the active contract.
     this.store.reset();
     return awaitSyncQuery.call(this, contractQuery(contractId));
-    
+
   }
 
   /**
@@ -183,7 +183,7 @@ export class ContractService extends CollectionService<ContractState> {
   /**
    * This function appends data to contracts by looking on its parents contracts
    * @param contract
-   * @param parentContracts 
+   * @param parentContracts
    */
   public async populatePartiesWithParentRoles(contract: Contract, parentContracts?: Contract[]): Promise<Contract> {
 

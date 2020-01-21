@@ -1,7 +1,7 @@
-import { ContractVersion } from "../../+state/contract.model";
 import { firestore } from "firebase/app";
+import { ContractVersionDocumentWithDates } from "../../contract/+state/contract.firestore";
 
-
+export type ContractVersion = ContractVersionDocumentWithDates;
 
 /** An interface for a single document to display versions subcollection count. */
 export interface VersionMeta extends ContractVersion {
