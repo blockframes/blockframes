@@ -1,139 +1,78 @@
-<form [formGroup]="form" fxLayout="column" fxLayoutAlign="center start">
-  <span class="mat-body">Original Language(s)</span>
-  <div
-    *ngFor="let control of originalLanguages.controls; let i = index"
-    fxLayout="row"
-    fxLayoutAlign="center center"
-    fxLayoutGap="20px">
-    <ng-container *ngIf="control.value">
-      <div fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="20px">
-        <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="20px">
-          <mat-form-field appearance="outline">
-            <mat-label>Language</mat-label>
-            <mat-select [formControl]="control">
-              <mat-option [value]="language.slug" *ngFor="let language of staticLanguages">
-                {{ language.label }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
-          <div fxLayout="column">
-            <mat-button-toggle-group multiple>
-              <mat-button-toggle checked disabled value="original" color="primary">
-                Original
-              </mat-button-toggle>
-              <mat-button-toggle
-                value="dubbed"
-                color="primary"
-                (change)="updateVersionInfo($event, control.value)">
-                Dubbed
-              </mat-button-toggle>
-              <mat-button-toggle
-                value="subtitle"
-                color="primary"
-                (change)="updateVersionInfo($event, control.value)"
-                >Subtitled
-              </mat-button-toggle>
-              <mat-button-toggle
-                value="caption"
-                color="primary"
-                (change)="updateVersionInfo($event, control.value)"
-                >Closed-captioned
-              </mat-button-toggle>
-            </mat-button-toggle-group>
-            <span class="caption">Select all versions that apply</span>
-          </div>
-        </div>
-        <div fxLayout="column" fxLayoutAlign="start center">
-          <button mat-fab (click)="removeLanguageVersion('original', control.value, i)">
-            <mat-icon>delete</mat-icon>
-          </button>
-          <span class="caption">Delete Original Language</span>
+<span class="mat-body">Original Language(s)</span>
+<div *ngFor="let control of originalLanguages.controls; let i = index" fxLayout="row" fxLayoutAlign="center center"
+  fxLayoutGap="20px">
+  <ng-container *ngIf="control.value">
+    <div fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="20px">
+      <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
+        <span class="mat-body">{{ getCode(control.value) }}</span>
+        <div fxLayout="column">
+          <mat-button-toggle-group multiple>
+            <mat-button-toggle checked disabled value="original" color="primary">
+              Original
+            </mat-button-toggle>
+            <mat-button-toggle value="dubbed" color="primary" (change)="updateVersionInfo($event, control.value)">
+              Dubbed
+            </mat-button-toggle>
+            <mat-button-toggle value="subtitle" color="primary" (change)="updateVersionInfo($event, control.value)">
+              Subtitled
+            </mat-button-toggle>
+            <mat-button-toggle value="caption" color="primary" (change)="updateVersionInfo($event, control.value)">
+              Closed-captioned
+            </mat-button-toggle>
+          </mat-button-toggle-group>
+          <span class="caption">Select all versions that apply</span>
         </div>
       </div>
-    </ng-container>
+    </div>
+  </ng-container>
+</div>
+
+<!-- Additional Languages -->
+<span class="mat-body">Additional Languages</span>
+
+<ng-container *ngFor="let control of versionInfoCtrl.controls; let i = index">
+  <div fxLayout="column">
+    <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="20px">
+      <mat-form-field appearance="outline">
+        <mat-label>Language</mat-label>
+        <mat-select [formControl]="control">
+          <mat-option [value]="language.slug" *ngFor="let language of staticLanguages">
+            {{ language.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <div fxLayout="column">
+        <mat-button-toggle-group multiple>
+          <mat-button-toggle value="dubbed" color="primary" (change)="updateVersionInfo($event, control.value)">
+            Dubbed
+          </mat-button-toggle>
+          <mat-button-toggle value="subtitle" color="primary" (change)="updateVersionInfo($event, control.value)">
+            Subtitled
+          </mat-button-toggle>
+          <mat-button-toggle value="caption" color="primary" (change)="updateVersionInfo($event, control.value)">
+            Closed-captioned
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+        <span class="caption">Select all versions that apply</span>
+      </div>
+    </div>
+    <div fxLayout="column" fxLayoutAlign="start center">
+      <button mat-fab (click)="removeLanguageVersion(i, control.value)">
+        <mat-icon>delete</mat-icon>
+      </button>
+      <span class="caption">Delete Additional Language</span>
+    </div>
   </div>
-  <div>
-    <mat-form-field appearance="outline">
-      <mat-label>Languages</mat-label>
-      <input
-        matInput
-        [formControl]="controls.original"
-        [matAutocomplete]="originalAuto"
-        placeholder="Add new language"
-        #originalInput/>
-    </mat-form-field>
-    <mat-autocomplete #originalAuto (optionSelected)="addLanguageVersion($event, 'original')">
-      <mat-option *ngFor="let language of $.original | async" [value]="language.slug">
-        {{ language.label }}
-      </mat-option>
-    </mat-autocomplete>
-  </div>
+</ng-container>
 
-  <!-- Additional Languages -->
-  <span class="mat-body">Additional Languages</span>
-
-  <form [formGroupName]="language" *ngFor="let language of selectedLanguages$ | async">
-    <ng-container *ngFor="let control of controls.language.controls; let i = index">
-      <ng-container *ngIf="isNotOriginal(language)">
-        <div fxLayout="column">
-          <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="20px">
-            <mat-form-field appearance="outline">
-              <mat-label>Language</mat-label>
-              <mat-select [formControl]="control">
-                <mat-option [value]="language.slug" *ngFor="let language of staticLanguages">
-                  {{ language.label }}
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-            <div fxLayout="column">
-              <mat-button-toggle-group multiple>
-                <mat-button-toggle
-                  value="dubbed"
-                  color="primary"
-                  (change)="updateVersionInfo($event, language)">
-                  Dubbed
-                </mat-button-toggle>
-                <mat-button-toggle
-                  value="subtitle"
-                  color="primary"
-                  (change)="updateVersionInfo($event, language)">
-                  Subtitled
-                </mat-button-toggle>
-                <mat-button-toggle
-                  value="caption"
-                  color="primary"
-                  (change)="updateVersionInfo($event, language)">
-                  Closed-captioned
-                </mat-button-toggle>
-              </mat-button-toggle-group>
-              <span class="caption">Select all versions that apply</span>
-            </div>
-          </div>
-          <div fxLayout="column" fxLayoutAlign="start center">
-            <button mat-fab (click)="removeLanguageVersion('version', langauge, i)">
-              <mat-icon>delete</mat-icon>
-            </button>
-            <span class="caption">Delete Additional Language</span>
-          </div>
-        </div>
-      </ng-container>
-    </ng-container>
-  </form>
-
-  <mat-form-field appearance="outline">
-    <mat-label>
-      Language
-    </mat-label>
-    <input
-      matInput
-      [formControl]="controls.version"
-      [matAutocomplete]="versionAuto"
-      placeholder="Add new language"
-      #versionInput/>
-  </mat-form-field>
-  <mat-autocomplete #versionAuto (optionSelected)="addLanguageVersion($event, 'version')">
-    <mat-option *ngFor="let language of $.version | async" [value]="language.slug">
-      {{ language.label }}
-    </mat-option>
-  </mat-autocomplete>
-</form>
+<mat-form-field appearance="outline">
+  <mat-label>
+    Language
+  </mat-label>
+  <input matInput [formControl]="languageFilterCtrl" [matAutocomplete]="versionAuto" placeholder="Add new language" />
+</mat-form-field>
+<mat-autocomplete #versionAuto (optionSelected)="addLanguageVersion($event)">
+  <mat-option *ngFor="let language of languages$ | async" [value]="language.slug">
+    {{ language.label }}
+  </mat-option>
+</mat-autocomplete>
