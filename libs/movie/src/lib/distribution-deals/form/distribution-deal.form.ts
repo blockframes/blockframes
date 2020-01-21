@@ -13,7 +13,8 @@ function createDistributionDealControls(deal: Partial<DistributionDeal>) {
   return {
     exclusive: new FormControl(entity.exclusive),
     territory: FormList.factory(entity.territory),
-    territoryExcluded: FormList.factory(entity.territoryExcluded)
+    territoryExcluded: FormList.factory(entity.territoryExcluded),
+    
   };
 }
 

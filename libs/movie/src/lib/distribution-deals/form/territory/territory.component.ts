@@ -50,9 +50,6 @@ export class DistributionDealTerritoryComponent {
 
   public staticTerritories = staticModels['TERRITORIES'];
 
-  // Lets the user use the command to add more territories
-  public separatorKeysCodes: number[] = [ENTER];
-
   // For included territories
   @ViewChild(`includedInput`, { static: false })
   includedTerritoryInput: ElementRef<HTMLInputElement>;
@@ -131,7 +128,7 @@ export class DistributionDealTerritoryComponent {
    */
   public addTerritory(event: MatChipInputEvent, type: TerritoryType) {
     if (!this.isTerritoryType(type)) {
-      throw new Error(`Not supported type: ${type} `);
+      throw new Error(`Not supported type: ${type}`);
     }
     if (!this.includedAuto.isOpen) {
       const input = event.input;

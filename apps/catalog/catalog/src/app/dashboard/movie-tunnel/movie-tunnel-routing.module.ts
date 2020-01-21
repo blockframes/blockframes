@@ -44,7 +44,7 @@ const tunnelRoutes: Routes = [
       },
       // Page 9
       {
-        path: 'previous-deals',
+        path: 'deals',
         loadChildren: () =>
           import('./previous-deals/previous-deals.module').then(m => m.TunnelPreviousDealsModule)
       },

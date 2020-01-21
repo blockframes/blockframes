@@ -3,8 +3,11 @@ import { FormControl } from '@angular/forms';
 import { Party } from '@blockframes/utils/common-interfaces/identity';
 
 function createPartyControl(party: Partial<Party> = {}) {
+  console.log()
   return {
-    displayName: new FormControl(party.displayName)
+    displayName: new FormControl(party.displayName),
+    showName: new FormControl(party.showName || true),
+    role: new FormControl(party.role !== 'licensee'? 'licensor' : party.role),
   };
 }
 

@@ -1,29 +1,29 @@
 <tunnel-page>
   <h4 title>LICENSED RIGHTS</h4>
-  <h1 subtitle>Previous deals</h1>
-  <section tunnel-form>
-    <!-- TODO(MF) render the number of deals -->
+  <h1 subtitle>Ongoing Deals</h1>
+  <h6 description>Please add below all ongoing licensed rights you want to sell on Archipel Content marketplace when
+    they are free.</h6>
+  <section tunnel-form class="full-width">
+    <!-- TODO #1523 -->
     <h2>Deal #1</h2>
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title></mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <div fxLayout="row" fxLayoutAlign="space-between start" class="full-width">
-          <span class="mat-body">Exclusivity</span>
-          <mat-slide-toggle [formControl]="distributionDealExclusiveControl"></mat-slide-toggle>
-        </div>          
-        <contract-form-party-name [form]="contract"></contract-form-party-name>
-      </mat-card-content>
-    </mat-card>
-    <h3 class="mat-body">Territories to this deal</h3>
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title>Territories</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
+    <mat-accordion multi>
+      <mat-expansion-panel expanded>
+        <mat-expansion-panel-header>
+          <mat-panel-title>
+            <!-- TODO #1523 -->
+            # Deal
+          </mat-panel-title>
+        </mat-expansion-panel-header>
+        <h3>Deal</h3>
+        <div class="medium">
+          <contract-form-party-name [form]="contract"></contract-form-party-name>
+        </div>
+        <mat-divier class="full-width"></mat-divier>
+        <h3 class="mat-body">Territories to this deal</h3>
+
         <distribution-form-territory [form]="distributionDeal"></distribution-form-territory>
-      </mat-card-content>
-    </mat-card>
+
+      </mat-expansion-panel>
+    </mat-accordion>
   </section>
 </tunnel-page>
