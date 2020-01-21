@@ -1,0 +1,28 @@
+<section fxLayout="row" fxLayoutAlign="space-between stretch" fxLayoutGap="24px">
+  <!-- World Map -->
+  <mat-card class="map-card">
+    <mat-card-header></mat-card-header>
+    <mat-card-content>
+      <div #leaflet class="leaflet"></div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Details -->
+  <mat-card class="view-card" fxLayout="column">
+    <mat-card-header></mat-card-header>
+    <mat-card-content fxFlex>
+      <ng-container *ngIf="country; else noSelection">
+        <h3>{{ country.name }}</h3>
+      </ng-container>
+      <ng-template #noSelection>
+        <p>Please select a Country</p>
+      </ng-template>
+    </mat-card-content>
+    <mat-card-footer>
+      <a mat-button color="primary" [disabled]="!country">
+        <span>View Deal</span>
+        <mat-icon>arrow_forward</mat-icon>
+      </a>
+    </mat-card-footer>
+  </mat-card>
+</section>

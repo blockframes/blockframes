@@ -1,12 +1,12 @@
-import { Component, Input, forwardRef, Renderer2, ElementRef } from '@angular/core';
+import { Component, Input, Output, forwardRef, Renderer2, ElementRef, EventEmitter } from '@angular/core';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
 import { DropZoneDirective } from '../drop-zone.directive'
-import { finalize, catchError } from 'rxjs/operators';
+import { finalize, catchError, distinctUntilChanged } from 'rxjs/operators';
 import { Observable, BehaviorSubject, of, combineLatest } from 'rxjs';
 import { zoom, zoomDelay, check, finalZoom } from '@blockframes/utils/animations/cropper-animations';
 import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/storage';
 /*import { HttpClient } from '@angular/common/http';*/
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormGroup, FormControl } from '@angular/forms';
 import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
 import { ImgRef } from '@blockframes/utils/image-uploader';
 
@@ -74,12 +74,11 @@ export class CropperComponent implements ControlValueAccessor {
     this.parentWidth = el.clientWidth;
     this._renderer.setStyle(el, "height", `calc(40px+${this.parentWidth}px/${ratio})`)
   }
-
+  @Input() setWidth?: number;
   @Input() storagePath: string;
   /** Disable fileuploader & delete buttons in 'show' step */
   @Input() useFileuploader?= true;
   @Input() useDelete?= true;
-
   uploaded: (ref: ImgRef) => void;
   deleted: () => void;
 
@@ -160,7 +159,8 @@ export class CropperComponent implements ControlValueAccessor {
   goToShow() {
     this.url$ = this.ref.getDownloadURL();
     // Observable completed once both requests are completed
-    combineLatest([this.url$, this.ref.getMetadata()]).subscribe(([url, meta]) => {
+    combineLatest([this.url$, this.ref.getMetadata()])
+    .subscribe(([url, meta]) => {
       this.uploaded({
         url,
         ref: meta.fullPath,

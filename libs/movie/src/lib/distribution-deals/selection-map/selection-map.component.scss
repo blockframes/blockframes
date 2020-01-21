@@ -1,0 +1,21 @@
+section {
+  display: block;
+}
+
+
+.map-card {
+  flex: 1;
+
+  .leaflet {
+    height: 500px;
+    background-color: transparent;
+  }
+}
+
+.view-card {
+  width: 30%;
+
+  mat-card-footer button {
+    width: 100%;
+  }
+}

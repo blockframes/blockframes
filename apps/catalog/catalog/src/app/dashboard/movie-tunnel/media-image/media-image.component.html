@@ -1,0 +1,67 @@
+<tunnel-page>
+  <h4 title>Uploaded Media</h4>
+  <h1 subtitle>Images</h1>
+  <p description class="mat-body-1">Upload your images in .jpeg or .png formats, they will be used for promotional purposes. When you upload an image, we will help you to match the size required.</p>
+  <section tunnel-form>
+    <!-- TODO#1625 cropzone doesn't match with source image on large screen -->
+    <!-- Banner -->
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Banner Image</mat-card-title>
+        <mat-card-subtitle>The banner image will be used at the top of the film page in the marketplace</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <drop-cropper 
+          [storagePath]="banner" 
+          [ratio]="16/9"
+          [formControl]="banner.get('media')">
+      </drop-cropper>
+      </mat-card-content>
+    </mat-card>
+    <!-- Poster -->
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Movie poster image</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <ng-container *ngFor="let control of poster.controls">
+          <drop-cropper 
+            [storagePath]="poster" 
+            [ratio]="5/7"
+            [formControl]="control.get('media')">
+          </drop-cropper>
+        </ng-container>
+      </mat-card-content>
+    </mat-card>
+    <!-- Still Photos -->
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Still photos</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <ng-container *ngFor="let control of stillPhoto.controls; let i = index; let last = last">
+          <span class="mat-body-2">Still # {{i + 1}}</span>
+          <drop-cropper 
+            [storagePath]="stillPhoto" 
+            [ratio]="7/5"
+            [formControl]="control.get('media')">
+          </drop-cropper>
+          <!-- Add / Delete -->
+          <footer *ngIf="!last" fxLayout="column" fxLayoutAlign="center center">
+            <button mat-mini-fab color="warn" (click)="stillPhoto.removeAt(i)" aria-label="Remove a director form">
+              <mat-icon>delete</mat-icon>
+            </button>
+            <span>Delete Still</span>
+          </footer>
+          <footer *ngIf="last" fxLayout="column" fxLayoutAlign="center center">
+            <button mat-mini-fab color="primary" (click)="stillPhoto.add()" aria-label="Remove a director form">
+              <mat-icon>add</mat-icon>
+            </button>
+            <span>Add Still</span>
+          </footer>
+          <mat-divider [inset]="true"></mat-divider>
+        </ng-container>
+        </mat-card-content>
+      </mat-card>
+  </section>
+</tunnel-page>
