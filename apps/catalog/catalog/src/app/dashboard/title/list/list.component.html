@@ -1,2 +1,20 @@
-<p>list works!</p>
-<a routerLink="../../../../movie-tunnel/create" test-id="add-movie" color="accent" mat-flat-button>+ Add</a>
+<h1>My Titles</h1>
+
+<div fxLayout="row" fxLayoutAlign="end center">
+  <a  mat-flat-button color="primary" routerLink="../../../../movie-tunnel/create" test-id="add-movie">
+    <span>New Movie</span>
+    <mat-icon>add</mat-icon>
+  </a>
+</div>
+
+<header mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
+  <button mat-tab-link (click)="filter.setValue()" [active]="!(filter$ | async)">All</button>
+  <button mat-tab-link (click)="applyFilter('Catalog')" [active]="(filter$ | async) === 'Catalog'" >Catalog</button>
+  <button mat-tab-link (click)="applyFilter('Line-up')" [active]="(filter$ | async) === 'Line-up'" >Line-up</button>
+</header>
+
+<bf-table-filter
+  [source]="titles$ | async"
+  [columns]="columns"
+  [initialColumns]="initialColumns">
+</bf-table-filter>

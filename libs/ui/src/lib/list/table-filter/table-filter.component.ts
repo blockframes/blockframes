@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 
 @Component({
-  selector: 'blockframes-table-filter',
+  selector: 'bf-table-filter',
   templateUrl: './table-filter.component.html',
   styleUrls: ['./table-filter.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
