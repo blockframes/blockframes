@@ -46,6 +46,7 @@ export function createContract(params: Partial<Contract> = {}): Contract {
     parties: [],
     titleIds: [],
     partyIds: [],
+    documents: createLegalDocuments(params.documents),
     ...params
   };
 }
@@ -59,7 +60,7 @@ export function createContractVersion(params: Partial<ContractVersion> = {}): Co
     ...params,
     status: ContractStatus.submitted,
     scope: createTerms(params.scope),
-    price: createPrice(params.price),
+    price: createPrice(params.price)
   };
 }
 
@@ -172,6 +173,7 @@ export function convertToContractDocument(params: Partial<Contract> = {}): Contr
     partyIds: params.partyIds ||[],
     parentContractIds: params.parentContractIds || [],
     childContractIds: params.childContractIds || [],
+    documents: params.documents || null
   };
 }
 
@@ -179,9 +181,10 @@ export function createLegalDocuments(
   params: Partial<LegalDocuments> = {}
 ): LegalDocuments {
   return {
-    chain_of_titles: [],
+    chainOfTitles: [],
     invoices: [],
-    bill : null
+    bill : createLegalDocument(params.bill),
+    ...params
   }
 }
 
