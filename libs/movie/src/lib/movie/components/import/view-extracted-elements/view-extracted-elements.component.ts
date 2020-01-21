@@ -1349,7 +1349,7 @@ export class ViewExtractedElementsComponent {
             holdbacks.forEach(h => {
               const holdbackParts = h.split(this.subSeparator);
               const media = holdbackParts[0];
-              
+
               const holdBack = createHoldback();
               distributionDeal.holdbacks.push(holdBack)
             });
