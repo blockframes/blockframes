@@ -15,7 +15,6 @@ import { createImgRef } from '@blockframes/utils/image-uploader';
 import { ContractQuery } from '@blockframes/contract/+state/contract.query';
 import { Contract } from '@blockframes/contract/+state/contract.model';
 import { cleanModel } from '@blockframes/utils/helpers';
-import { Organization } from '@blockframes/organization/+state/organization.model';
 
 /** Query movies from the contract with distributions deals from the last version. */
 const movieListContractQuery = (contract: Contract, movieIds: string[]): Query<Movie[]> => ({

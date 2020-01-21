@@ -34,6 +34,14 @@ export class ContractVersionService extends CollectionService<ContractVersionSta
   }
 
   /**
+   * @dev when we are out the scope of a guard to set the contractId
+   * @param contractId 
+   */
+  public setContractId(contractId: string) {
+    this.contractId = contractId;
+  }
+
+  /**
    * Add a new version of the contract.
    * @param contractId
    * @param contractWithLastVersion
