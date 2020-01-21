@@ -12,8 +12,7 @@ import { createMovie, Movie, MovieAnalytics } from './movie.model';
 import { MovieState, MovieStore } from './movie.store';
 import { AuthQuery } from '@blockframes/auth';
 import { createImgRef } from '@blockframes/utils/image-uploader';
-import { ContractQuery } from '@blockframes/contract/contract/+state/contract.query';
-import { Contract } from '@blockframes/contract/contract/+state/contract.model';
+import { ContractQuery } from '@blockframes/contract/+state/contract.query';
 import { cleanModel } from '@blockframes/utils/helpers';
 import { firestore } from 'firebase/app';
 import { PermissionsService } from '@blockframes/organization/permissions/+state/permissions.service';
@@ -22,12 +21,12 @@ import { MovieQuery } from './movie.query';
 import { Observable } from 'rxjs';
 
 /** Query movies from the contract with distributions deals from the last version. */
-const movieListContractQuery = (contract: Contract, movieIds: string[]): Query<Movie[]> => ({
+const movieListContractQuery = (contractId: string, movieIds: string[]): Query<Movie[]> => ({
   path: 'movies',
   queryFn: ref => ref.where('id', 'in', movieIds),
   distributionDeals: (movie: Movie) => ({
     path: `movies/${movie.id}/distributionDeals`,
-    queryFn: ref => ref.where('contractId', '==', contract.id)
+    queryFn: ref => ref.where('contractId', '==', contractId)
   })
 });
 
@@ -64,7 +63,7 @@ export class MovieService extends CollectionService<MovieState> {
         const organizationMovieIds = this.organizationQuery.getActive().movieIds;
         const movieIds = contract.titleIds.filter(titleId => organizationMovieIds.includes(titleId));
 
-        return awaitSyncQuery.call(this, movieListContractQuery(contract, movieIds))
+        return awaitSyncQuery.call(this, movieListContractQuery(contract.id, movieIds))
       }
       )
     );

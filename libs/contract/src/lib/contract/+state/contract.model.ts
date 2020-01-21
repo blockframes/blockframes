@@ -93,9 +93,9 @@ export function initContractWithVersion(): ContractWithLastVersion {
   };
 }
 
-export function createPartyDetails(params: Partial<ContractPartyDetail>) {
+export function createPartyDetails(params: Partial<ContractPartyDetail>): ContractPartyDetail {
   return {
-    status: '',
+    status: params.status || ContractStatus.unknown,
     ...params,
     party: createParty(params.party),
   };
