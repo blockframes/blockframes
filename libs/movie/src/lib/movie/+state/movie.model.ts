@@ -46,7 +46,8 @@ export {
   MoviePromotionalElements,
   MovieSalesCast,
   MovieStory,
-  MovieVersionInfo,
+  // TODO #1562
+/*   MovieVersionInfo, */
   Prize,
   MovieSalesInfoDocumentWithDates as MovieSalesInfo,
   MovieSalesAgentDealDocumentWithDates as MovieSalesAgentDeal
@@ -68,7 +69,7 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     promotionalDescription: createMoviePromotionalDescription(params.promotionalDescription),
     salesCast: createMovieSalesCast(params.salesCast),
     salesInfo: createMovieSalesInfo(params.salesInfo),
-    versionInfo: {}, // TODO issue #1596
+    versionInfo: {languages:{}}, // TODO issue #1596
     festivalPrizes: createMovieFestivalPrizes(params.festivalPrizes),
     salesAgentDeal: createMovieSalesAgentDeal(params.salesAgentDeal),
     budget: createMovieBudget(params.budget),

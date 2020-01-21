@@ -22,6 +22,7 @@ import { staticModels, LanguagesSlug } from '@blockframes/utils/static-model';
 import { MovieLanguageSpecification } from '@blockframes/movie/movie/+state/movie.firestore';
 
 // Utils
+import { FormStaticValue } from '@blockframes/utils/form';
 import { FormList } from '@blockframes/utils/form/forms/list.form';
 import isEqual from 'lodash/isEqual';
 
@@ -36,7 +37,7 @@ import { MovieVersionInfoForm } from './version-info.form';
 })
 export class MovieFormVersionInfoComponent implements OnInit, OnDestroy {
   @Input() form: MovieVersionInfoForm;
-  @Input() originalLanguages: FormList<string, FormControl>;
+  @Input() originalLanguages: FormList<LanguagesSlug, FormStaticValue<'LANGUAGES'>>
 
   private sub: Subscription;
 
@@ -63,7 +64,7 @@ export class MovieFormVersionInfoComponent implements OnInit, OnDestroy {
       .subscribe(languages => {
         languages.forEach(language => {
           if (!this.form.get(language)) {
-            this.form.addLanguage(language as LanguagesSlug, { original: true });
+            this.form.addLanguage(language, { original: true });
           }
         });
       });
@@ -91,8 +92,6 @@ export class MovieFormVersionInfoComponent implements OnInit, OnDestroy {
         return language ? this.languageFilter(language) : this.staticLanguages.slice();
       })
     );
-
-    this.form.valueChanges.subscribe(console.log);
   }
 
   /**
@@ -130,9 +129,9 @@ export class MovieFormVersionInfoComponent implements OnInit, OnDestroy {
    * @param index optional parameter when we want to delete the language
    * also in the originalLanguages form
    */
-  public removeLanguageVersion(index: number, language: string) {
+  public removeLanguageVersion(index: number, language: LanguagesSlug) {
     this.versionInfoCtrl.removeAt(index);
-    this.form.removeLanguage(language as LanguagesSlug);
+    this.form.removeLanguage(language);
   }
 
   /**

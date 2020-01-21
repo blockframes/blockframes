@@ -1,31 +1,29 @@
 <span class="mat-body">Original Language(s)</span>
-<div *ngFor="let control of originalLanguages.controls; let i = index" fxLayout="row" fxLayoutAlign="center center"
-  fxLayoutGap="20px">
+<ng-container *ngFor="let control of originalLanguages.controls; let i = index" fxLayout="row"
+  fxLayoutAlign="center center" fxLayoutGap="20px">
   <ng-container *ngIf="control.value; else template">
-    <div fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="20px">
-      <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
-        <span class="mat-body">{{ getCode(control.value) }}</span>
-        <div fxLayout="column">
-          <mat-button-toggle-group multiple>
-            <mat-button-toggle checked disabled value="original" color="primary">
-              Original
-            </mat-button-toggle>
-            <mat-button-toggle value="dubbed" color="primary" (change)="updateVersionInfo($event, control.value)">
-              Dubbed
-            </mat-button-toggle>
-            <mat-button-toggle value="subtitle" color="primary" (change)="updateVersionInfo($event, control.value)">
-              Subtitled
-            </mat-button-toggle>
-            <mat-button-toggle value="caption" color="primary" (change)="updateVersionInfo($event, control.value)">
-              Closed-captioned
-            </mat-button-toggle>
-          </mat-button-toggle-group>
-          <span class="caption">Select all versions that apply</span>
-        </div>
+    <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
+      <span class="mat-body">{{ getCode(control.value) }}</span>
+      <div fxLayout="column">
+        <mat-button-toggle-group multiple>
+          <mat-button-toggle checked disabled value="original" color="primary">
+            Original
+          </mat-button-toggle>
+          <mat-button-toggle value="dubbed" color="primary" (change)="updateVersionInfo($event, control.value)">
+            Dubbed
+          </mat-button-toggle>
+          <mat-button-toggle value="subtitle" color="primary" (change)="updateVersionInfo($event, control.value)">
+            Subtitled
+          </mat-button-toggle>
+          <mat-button-toggle value="caption" color="primary" (change)="updateVersionInfo($event, control.value)">
+            Closed-captioned
+          </mat-button-toggle>
+        </mat-button-toggle-group>
+        <span class="caption">Select all versions that apply</span>
       </div>
     </div>
   </ng-container>
-</div>
+</ng-container>
 
 <!-- Additional Languages -->
 <span class="mat-body">Additional Languages</span>
