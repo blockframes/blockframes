@@ -168,12 +168,13 @@ export function buildChainOfTitle() {
 export function convertToContractDocument(params: Partial<Contract> = {}): ContractDocumentWithDates {
   return {
     id: params.id,
-    parties: params.parties || [],
-    titleIds: params.titleIds || [],
-    partyIds: params.partyIds ||[],
-    parentContractIds: params.parentContractIds || [],
-    childContractIds: params.childContractIds || [],
-    documents: params.documents || null
+    parties: [],
+    titleIds: [],
+    partyIds: [],
+    parentContractIds: [],
+    childContractIds: [],
+    documents: createLegalDocuments(params.documents),
+    ...params
   };
 }
 
