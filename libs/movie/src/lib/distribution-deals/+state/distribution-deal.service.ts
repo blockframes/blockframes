@@ -6,9 +6,8 @@ import { DistributionDealState, DistributionDealStore } from './distribution-dea
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { MovieQuery } from '../../movie/+state/movie.query';
 import { DistributionDeal } from './distribution-deal.model';
-import { createContractTitleDetail } from '@blockframes/contract/+state/contract.model';
+import { createContractTitleDetail, ContractWithLastVersion } from '@blockframes/contract/+state/contract.model';
 import { ContractVersionService } from '@blockframes/contract/version/+state/contract-version.service';
-import { ContractWithLastVersion } from '@blockframes/contract/version/+state/contract-version.model';
 import { ContractService } from '@blockframes/contract/+state/contract.service';
 
 @Injectable({ providedIn: 'root' })
@@ -66,6 +65,9 @@ export class DistributionDealService extends CollectionService<DistributionDealS
       await this.contractVersionService.add(contract.last);
       return distributionDeal.id;
     }
+
+
+    /// @todo #1562 add ditribution deal
   }
 
   public formatDistributionDeal(deal: any): DistributionDeal {

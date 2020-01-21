@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import { ContractStore, ContractState } from './contract.store';
 import { CollectionConfig, CollectionService, awaitSyncQuery, Query } from 'akita-ng-fire';
-import { Contract, ContractPartyDetail, convertToContractDocument, createContractPartyDetail } from './contract.model';
+import { Contract, ContractPartyDetail, convertToContractDocument, createContractPartyDetail, initContractWithVersion, ContractWithLastVersion } from './contract.model';
 import orderBy from 'lodash/orderBy';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { tap, switchMap } from 'rxjs/operators';
 import { ContractVersionService } from '../version/+state/contract-version.service';
-import { initContractWithVersion, ContractWithLastVersion } from '../version/+state/contract-version.model';
 import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
 import { LegalRolesSlug } from '@blockframes/utils/static-model/types';
 import { cleanModel } from '@blockframes/utils';
@@ -23,11 +22,8 @@ const contractsListQuery = (orgId: string): Query<Contract[]> => ({
 });
 
 /** Get the active contract and put his lastVersion in it. */
-const contractQuery = (contractId: string, lastVersionId: string): Query<Contract> => ({
-  path: `contracts/${contractId}`,
-  lastVersion: (contract: Contract) => ({
-    path: `contracts/${contract.id}/versions/${lastVersionId}`
-  })
+const contractQuery = (contractId: string): Query<Contract> => ({
+  path: `contracts/${contractId}`
 })
 
 @Injectable({ providedIn: 'root' })
@@ -52,14 +48,11 @@ export class ContractService extends CollectionService<ContractState> {
    * Create a specific query of contract with a new field (lastVersion)
    * and set the new entity as active on the contracts store.
    */
-  public async syncContractQuery(contractId: string) {
-    // Get the last version id.
-    const lastVersion = await this.contractVersionService.getLastVersionContract();
+  public syncContractQuery(contractId: string) {
     // Reset the store to clean the active contract.
     this.store.reset();
-    if (lastVersion) {
-      return awaitSyncQuery.call(this, contractQuery(contractId, lastVersion.id));
-    }
+    return awaitSyncQuery.call(this, contractQuery(contractId));
+    
   }
 
   /**
