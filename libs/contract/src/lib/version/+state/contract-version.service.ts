@@ -43,7 +43,7 @@ export class ContractVersionService extends CollectionService<ContractVersionSta
     await this.db.firestore.runTransaction(async tx => {
       // Get the _meta document from versions subcollection.
       const _metaSnap = await tx.get(this.db.doc(`${this.path}/_meta`).ref);
-      let _meta = createVersionMeta(_metaSnap.data());
+      const _meta = createVersionMeta(_metaSnap.data());
       // Increment count and then assign it to contractVersion id.
       contractWithLastVersion.last.id = (++_meta.count).toString();
       const versionRef = this.db.collection(`${this.path}`).doc(contractWithLastVersion.last.id).ref;

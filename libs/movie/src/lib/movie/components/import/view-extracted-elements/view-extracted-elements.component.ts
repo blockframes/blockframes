@@ -1533,10 +1533,10 @@ export class ViewExtractedElementsComponent {
             spreadSheetRow[SpreadSheetContract.childRoles].split(this.separator).forEach((r: string) => {
               const childRoleParts = r.split(this.subSeparator);
               const partyName = childRoleParts.shift().trim();
-              const party = contract.doc.parties.find(p => p.party.displayName === partyName && p.party.role == getCodeIfExists('LEGAL_ROLES', 'licensor'));
+              const party = contract.doc.parties.find(p => p.party.displayName === partyName && p.party.role === getCodeIfExists('LEGAL_ROLES', 'licensor'));
               if (party) {
-                childRoleParts.forEach(r => {
-                  const role = getCodeIfExists('LEGAL_ROLES', r.trim() as ExtractCode<'LEGAL_ROLES'>);
+                childRoleParts.forEach(childRole => {
+                  const role = getCodeIfExists('LEGAL_ROLES', childRole.trim() as ExtractCode<'LEGAL_ROLES'>);
                   if (role) {
                     party.childRoles.push(role);
                   } else {
@@ -1544,7 +1544,7 @@ export class ViewExtractedElementsComponent {
                       type: 'error',
                       field: 'contract.parties.childRoles',
                       name: 'Child roles',
-                      reason: `Child role mismatch : ${r.trim()}`,
+                      reason: `Child role mismatch : ${childRole.trim()}`,
                       hint: 'Edit corresponding sheet field.'
                     });
                   }
@@ -1703,7 +1703,7 @@ export class ViewExtractedElementsComponent {
         this.cdRef.detectChanges();
       }
     };
-    matSnackbarRef.closeWithAction(); // loading ended
+    matSnackbarRef.dismissWithAction(); // loading ended
   }
 
   private async validateMovieContract(importErrors: ContractsImportState): Promise<ContractsImportState> {
