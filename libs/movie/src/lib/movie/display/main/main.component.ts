@@ -20,7 +20,7 @@ export class MovieDisplayMainComponent {
     return this.data.genres.length > 0 ||
       this.data.originCountries ||
       this.data.originalLanguages.length > 0 ||
-      this.data.stakeholders.length > 0 ||
+      this.data.stakeholders.executiveProducer.length > 0 ||
       this.data.shortSynopsis ||
       this.data.totalRunTime ||
       this.data.status

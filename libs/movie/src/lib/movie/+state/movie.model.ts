@@ -24,6 +24,7 @@ import {
   MovieDocumentWithDates,
   BoxOffice,
   UnitBox,
+  MovieStakeholders,
 } from './movie.firestore';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 import { LanguagesSlug } from '@blockframes/utils/static-model';
@@ -31,12 +32,7 @@ import { createRange } from '@blockframes/utils/common-interfaces/range';
 import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
 
 // Export for other files
-export {
-  Credit,
-  SalesAgent,
-  Licensee,
-  Licensor
-} from '@blockframes/utils/common-interfaces/identity';
+export { Credit, SalesAgent } from '@blockframes/utils/common-interfaces/identity';
 export {
   PromotionalElement,
   MovieBudget,
@@ -47,6 +43,7 @@ export {
   MovieSalesCast,
   MovieStory,
   MovieVersionInfo,
+  MovieStakeholders,
   Prize,
   MovieSalesInfoDocumentWithDates as MovieSalesInfo,
   MovieSalesAgentDealDocumentWithDates as MovieSalesAgentDeal
@@ -87,14 +84,14 @@ export function createMovieMain(params: Partial<MovieMain> = {}): MovieMain {
     directors: [],
     genres: [],
     workType: WorkType.movie,
-    storeConfig: createStoreConfig(params.storeConfig),
     originalLanguages: [],
-    stakeholders: [],
     originCountries: [],
     status: null,
     customGenres: [],
     ...params,
-    officialIds: createOfficialIds(params.officialIds)
+    storeConfig: createStoreConfig(params.storeConfig),
+    stakeholders: createMovieStakeholders(params.stakeholders),
+    officialIds: createOfficialIds(params.officialIds),
   };
 }
 
@@ -299,4 +296,29 @@ export function createOfficialIds(params: Partial<MovieOfficialIds> = {}): Movie
     isan: '',
     ...params
   };
+}
+
+export function createMovieLanguage(
+  movieLanguage: Partial<MovieLanguageSpecification> = {}
+): MovieLanguageSpecification {
+  return {
+    original: false,
+    dubbed: false,
+    subtitle: false,
+    ...movieLanguage
+  } as MovieLanguageSpecification;
+}
+
+export function createMovieStakeholders(stakeholders: Partial<MovieStakeholders> = {}): MovieStakeholders {
+  return {
+    executiveProducer: [],
+    coProducer: [],
+    broadcasterCoproducer: [],
+    lineProducer: [],
+    distributor: [],
+    salesAgent: [],
+    laboratory: [],
+    financier: [],
+    ...stakeholders
+  }
 }
