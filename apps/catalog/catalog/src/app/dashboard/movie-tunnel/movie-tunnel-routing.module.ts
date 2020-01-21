@@ -52,6 +52,7 @@ const tunnelRoutes: Routes = [
         path: 'images',
         loadChildren: () => import('./media-image/media-image.module').then(m => m.MediaImageModule)
       // Page 11
+      },
       {
         path: 'files&links',
         loadChildren: () => import('./media-file/media-file.module').then(m => m.MediaFileModule)
