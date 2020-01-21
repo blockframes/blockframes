@@ -3,23 +3,33 @@
   <h1 subtitle>Files & links</h1>
   <section tunnel-form>
     <!-- Presentation deck -->
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title>Presentation deck</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <file-upload path="pdf" accept="['.pdf']" [types]="['application/pdf']" (uploaded)="importPDF($event)"></file-upload>
-      </mat-card-content>
-    </mat-card>
-    <!-- Scenario -->
-    <mat-card>
-      <mat-card-header>
-        <mat-card-title>Scenario</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <file-upload path="pdf" accept="['.pdf']" [types]="['application/pdf']" (uploaded)="importPDF($event)"></file-upload>
-      </mat-card-content>
-    </mat-card>
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Presentation deck</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <file-upload 
+          path="pdf" 
+          uploadOnFirestore="true" 
+          accept="['.pdf']" 
+          [types]="['application/pdf']" 
+          (storeUploaded)="importPDF($event, 'presentation_deck')"></file-upload>
+        </mat-card-content>
+      </mat-card>
+      <!-- Scenario -->
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Scenario</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <file-upload 
+          path="pdf" 
+          uploadOnFirestore="true" 
+          accept="['.pdf']" 
+          [types]="['application/pdf']" 
+          (storeUploaded)="importPDF($event, 'scenario')"></file-upload>
+        </mat-card-content>
+      </mat-card>
     <!-- File Links -->
     <mat-card>
       <mat-card-header>
