@@ -5,7 +5,6 @@ import { RouterModule } from '@angular/router';
 
 import { TunnelPageModule } from '@blockframes/ui/tunnel/page/tunnel-page.module';
 import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
-import { PromotionalElementsImagesModule } from '@blockframes/movie/movie/form/promotional-elements/promotional-elements-images/promotional-elements-images.module.ts';
 import { MediaImageComponent } from './media-image.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
@@ -13,6 +12,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   declarations: [MediaImageComponent],
@@ -22,11 +22,11 @@ import { MatButtonModule } from '@angular/material/button';
     TunnelPageModule,
     CropperModule,
     FlexLayoutModule,
-    PromotionalElementsImagesModule,
     // Material
     MatCardModule,
     MatIconModule,
     MatButtonModule,
+    MatDividerModule,
     // Route
     RouterModule.forChild([{ path: '', component: MediaImageComponent }])
   ]
