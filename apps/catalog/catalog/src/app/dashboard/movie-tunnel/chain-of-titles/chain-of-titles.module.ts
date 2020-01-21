@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 import { ChainOfTitlesComponent } from './chain-of-titles.component';
 import { TunnelPageModule } from '@blockframes/ui/tunnel/page/tunnel-page.module';
 import { UploadModule } from '@blockframes/ui/upload/upload.module';
+import { FlexLayoutModule } from '@angular/flex-layout';
 // Materials
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
@@ -18,6 +19,7 @@ import { MatDividerModule } from '@angular/material/divider';
     ReactiveFormsModule,
     TunnelPageModule,
     UploadModule,
+    FlexLayoutModule,
     // Materials
     MatCardModule,
     MatIconModule,

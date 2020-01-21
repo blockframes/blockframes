@@ -8,21 +8,29 @@
         <mat-card-title>Upload Documents</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <ng-container>
-          <file-upload></file-upload>
+        <ng-container *ngFor="let control of chainOfTitles.controls; let i = index; let last = last">
+          <file-upload 
+            path="pdf" 
+            uploadOnFirestore="true" 
+            accept="['.pdf']" 
+            [types]="['application/pdf']" 
+            (storeUploaded)="importPDF($event, i)">
+            <h3 type>Upload files</h3>
+            <p class="mat-caption" format>Accepted Formats: .pdf</p>
+        </file-upload>
           <!-- Add / Delete -->
-          <!-- <footer *ngIf="!last" fxLayout="column" fxLayoutAlign="center center">
-            <button mat-mini-fab color="warn" (click)="stillPhoto.removeAt(i)" aria-label="Remove a director form">
+          <footer *ngIf="!last" fxLayout="column" fxLayoutAlign="center center">
+            <button mat-mini-fab color="warn" (click)="chainOfTitles.removeAt(i)" aria-label="Remove a director form">
               <mat-icon>delete</mat-icon>
             </button>
             <span>Delete Still</span>
           </footer>
           <footer *ngIf="last" fxLayout="column" fxLayoutAlign="center center">
-            <button mat-mini-fab color="primary" (click)="stillPhoto.add()" aria-label="Remove a director form">
+            <button mat-mini-fab color="primary" (click)="chainOfTitles.add()" aria-label="Remove a director form">
               <mat-icon>add</mat-icon>
             </button>
             <span>Add Still</span>
-          </footer> -->
+          </footer>
           <mat-divider [inset]="true"></mat-divider>
         </ng-container>
       </mat-card-content>
