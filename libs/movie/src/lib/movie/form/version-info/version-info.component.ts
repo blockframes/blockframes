@@ -10,7 +10,6 @@ import {
   OnInit,
   Input,
   OnDestroy,
-  ViewChild
 } from '@angular/core';
 
 // Material
