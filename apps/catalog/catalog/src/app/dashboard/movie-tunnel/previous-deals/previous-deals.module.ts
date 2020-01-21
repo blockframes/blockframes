@@ -6,8 +6,9 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
 // Material
-import { MatCardModule } from '@angular/material/card';
+import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSlideToggleModule } from '@angular/material';
+import { MatDividerModule } from '@angular/material/divider';
 
 // Tunnel
 import { TunnelPageModule } from '@blockframes/ui/tunnel/page/tunnel-page.module';
@@ -32,7 +33,8 @@ import { DistributionDealTerritoryModule } from '@blockframes/movie/distribution
     RouterModule.forChild([{ path: '', component: TunnelPreviousDealsComponent }]),
 
     // Material
-    MatCardModule,
+    MatExpansionModule,
+    MatDividerModule,
     MatSlideToggleModule
   ]
 })

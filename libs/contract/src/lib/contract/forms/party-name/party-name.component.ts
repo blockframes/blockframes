@@ -14,4 +14,8 @@ export class ContractFormPartyNameComponent {
     public displayNameControl(control: PartyDetailsForm) {
         return control.get('party').get('displayName');
       }
+
+      public showName(control: PartyDetailsForm) {
+          return control.get('party').get('showName')
+      }
 }
