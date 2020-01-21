@@ -147,6 +147,26 @@ export class MovieMainForm extends FormEntity<MovieMainControl>{
     super(createMovieMainControls(main));
   }
 
+  public get genres() {
+    return this.get('genres');
+  }
+
+  public get customGenres() {
+    return this.get('customGenres');
+  }
+
+  get originCountries() {
+    return this.get('originCountries');
+  }
+
+  get originalLanguages() {
+    return this.get('originalLanguages');
+  }
+
+  get storeConfig() {
+    return this.get('storeConfig');
+  }
+
   get title() {
     return this.get('title');
   }
