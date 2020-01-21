@@ -4,7 +4,14 @@ import { startWith, map } from 'rxjs/operators';
 
 // Angular
 import { FormControl, FormArray } from '@angular/forms';
-import { Component, ChangeDetectionStrategy, OnInit, Input, OnDestroy } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  OnInit,
+  Input,
+  OnDestroy,
+  ViewChild
+} from '@angular/core';
 
 // Material
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
@@ -46,9 +53,10 @@ export class MovieFormVersionInfoComponent implements OnInit, OnDestroy {
   public languages$: Observable<SlugAndLabel[]>;
 
   // For tempalte
-  public getCode = (language) => {
-    return getLabelByCode('LANGUAGES', language)
-  }
+  public getCode = language => {
+    return getLabelByCode('LANGUAGES', language);
+  };
+
 
   ngOnInit() {
     this.sub = this.originalLanguages.valueChanges
@@ -84,6 +92,8 @@ export class MovieFormVersionInfoComponent implements OnInit, OnDestroy {
         return language ? this.languageFilter(language) : this.staticLanguages.slice();
       })
     );
+
+    this.form.valueChanges.subscribe(console.log);
   }
 
   /**
@@ -125,6 +135,16 @@ export class MovieFormVersionInfoComponent implements OnInit, OnDestroy {
     this.versionInfoCtrl.removeAt(index);
     this.form.removeLanguage(language as LanguagesSlug);
   }
+
+  /**
+   * @description when user changes languages we want to update the state of the toggle buttons
+   * @param language language for checking the value
+   * @param button which button should be checked
+   */
+  public isChecked(language: LanguagesSlug, button: string){
+    return this.form.get(language).value[button];
+  }
+
 
   ngOnDestroy() {
     this.sub.unsubscribe();

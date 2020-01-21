@@ -25,7 +25,6 @@
       </div>
     </div>
   </ng-container>
-  <ng-template #template><h4>No languages added in the Main Information section</h4></ng-template>
 </div>
 
 <!-- Additional Languages -->
@@ -43,14 +42,17 @@
         </mat-select>
       </mat-form-field>
       <div fxLayout="column">
-        <mat-button-toggle-group multiple>
-          <mat-button-toggle value="dubbed" color="primary" (change)="updateVersionInfo($event, control.value)">
+        <mat-button-toggle-group multiple #versionButtons>
+          <mat-button-toggle value="dubbed" color="primary" (change)="updateVersionInfo($event, control.value)"
+            [checked]="isChecked(control.value, 'dubbed')">
             Dubbed
           </mat-button-toggle>
-          <mat-button-toggle value="subtitle" color="primary" (change)="updateVersionInfo($event, control.value)">
+          <mat-button-toggle value="subtitle" color="primary" (change)="updateVersionInfo($event, control.value)"
+            [checked]="isChecked(control.value, 'subtitle')">
             Subtitled
           </mat-button-toggle>
-          <mat-button-toggle value="caption" color="primary" (change)="updateVersionInfo($event, control.value)">
+          <mat-button-toggle value="caption" color="primary" (change)="updateVersionInfo($event, control.value)"
+            [checked]="isChecked(control.value, 'caption')">
             Closed-captioned
           </mat-button-toggle>
         </mat-button-toggle-group>
