@@ -16,9 +16,11 @@
     height: 72px;
   }
 
-  .mat-list-base .mat-list-item .mat-list-item-content {
-    padding: 0 0 0 20px;
-  }
+  // Removed as it create weird behaviour with mat-selection-list (21/01/2020)
+  // If you need that somewhere please specify the type of list you want to apply this style on
+  // .mat-list-base .mat-list-item .mat-list-item-content {
+  //   padding: 0 0 0 20px;
+  // }
 
   // Use to let active link in color in mat-nav-list, used with routerLinkActive
   .mat-nav-list a.active {
