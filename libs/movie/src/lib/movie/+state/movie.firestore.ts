@@ -34,12 +34,12 @@ export const enum WorkType {
 }
 
 export const enum StoreType {
-  catalog = 'Catalog',
+  library = 'Library',
   line_up = 'Line-Up',
 }
 
 export enum PremiereType {
-  'internationnal' = 'International',
+  'international' = 'International',
   'world' = 'World',
   'market' = 'Market',
   'national' = 'National',

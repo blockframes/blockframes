@@ -27,13 +27,14 @@ import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/st
 import { SSF } from 'xlsx';
 import { MovieLanguageTypes, PremiereType } from '@blockframes/movie/movie/+state/movie.firestore';
 import { createCredit, createStakeholder } from '@blockframes/utils/common-interfaces/identity';
-import { DistributionDeal, createDistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
+import { DistributionDeal, createDistributionDeal, createHoldback } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
 import { createContractPartyDetail, createContractTitleDetail, Contract, initContractWithVersion, ContractWithLastVersion } from '@blockframes/contract/+state/contract.model';
 import { ContractStatus, ContractTitleDetail } from '@blockframes/contract/+state/contract.firestore';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state/distribution-deal.service';
 import { createFee } from '@blockframes/utils/common-interfaces/price';
 import { ContractService } from '@blockframes/contract/+state/contract.service';
 import { createPaymentSchedule } from '@blockframes/utils/common-interfaces/schedule';
+import { createTerms } from '@blockframes/utils/common-interfaces';
 
 export interface SpreadsheetImportError {
   field: string;
@@ -125,6 +126,10 @@ enum SpreadSheetDistributionDeal {
   exclusive,
   priceAmount,
   priceCurrency,
+  catchUpStartDate,
+  catchUpEndDate,
+  multidiffusion,
+  holdbacks
 }
 
 enum SpreadSheetContract {
@@ -472,7 +477,7 @@ export class ViewExtractedElementsComponent {
               if (prizeParts.length >= 4) {
                 switch (prizeParts[3].trim()) {
                   case 'International Premiere':
-                    prize.premiere = PremiereType.internationnal;
+                    prize.premiere = PremiereType.international;
                     break;
                   default:
                     prize.premiere = PremiereType[prizeParts[3].trim().toLowerCase()];
@@ -1287,8 +1292,67 @@ export class ViewExtractedElementsComponent {
             contract.last.titles[movie.id].price.amount += parseInt(spreadSheetRow[SpreadSheetDistributionDeal.priceAmount], 10);
           }
 
+          // CURRENCY
           if (spreadSheetRow[SpreadSheetDistributionDeal.priceCurrency]) {
             contract.last.titles[movie.id].price.currency = spreadSheetRow[SpreadSheetDistributionDeal.priceCurrency];
+          }
+
+          // CATCH UP 
+          if (spreadSheetRow[SpreadSheetDistributionDeal.catchUpStartDate] || spreadSheetRow[SpreadSheetDistributionDeal.catchUpEndDate]) {
+            distributionDeal.catchUp = createTerms();
+
+            // CATCH UP START
+            if (spreadSheetRow[SpreadSheetDistributionDeal.catchUpStartDate]) {
+              try {
+                const catchUpStartDate: SSF$Date = SSF.parse_date_code(spreadSheetRow[SpreadSheetDistributionDeal.catchUpStartDate]);
+                distributionDeal.catchUp.start = new Date(`${catchUpStartDate.y}-${catchUpStartDate.m}-${catchUpStartDate.d}`);
+              } catch (error) {
+                distributionDeal.catchUp.startLag = spreadSheetRow[SpreadSheetDistributionDeal.catchUpStartDate];
+              }
+            }
+
+            // CATCH UP END
+            if (spreadSheetRow[SpreadSheetDistributionDeal.catchUpEndDate]) {
+              try {
+                const catchUpEndDate: SSF$Date = SSF.parse_date_code(spreadSheetRow[SpreadSheetDistributionDeal.catchUpEndDate]);
+                distributionDeal.catchUp.end = new Date(`${catchUpEndDate.y}-${catchUpEndDate.m}-${catchUpEndDate.d}`);
+              } catch (error) {
+                distributionDeal.catchUp.endLag = spreadSheetRow[SpreadSheetDistributionDeal.catchUpEndDate];
+              }
+            }
+          }
+
+          // MULTIDIFFUSION
+          if (spreadSheetRow[SpreadSheetDistributionDeal.multidiffusion]) {
+            const multiDiffDates = spreadSheetRow[SpreadSheetDistributionDeal.multidiffusion].split(this.separator)
+            multiDiffDates.forEach(date => {
+              const diffusionDate: SSF$Date = SSF.parse_date_code(date);
+              const diffusion = createTerms();
+              diffusion.start = new Date(`${diffusionDate.y}-${diffusionDate.m}-${diffusionDate.d}`);
+            });
+          }
+
+          // MULTIDIFFUSION
+          if (spreadSheetRow[SpreadSheetDistributionDeal.multidiffusion]) {
+            const multiDiffDates = spreadSheetRow[SpreadSheetDistributionDeal.multidiffusion].split(this.separator)
+            multiDiffDates.forEach(date => {
+              const diffusionDate: SSF$Date = SSF.parse_date_code(date);
+              const diffusion = createTerms();
+              diffusion.start = new Date(`${diffusionDate.y}-${diffusionDate.m}-${diffusionDate.d}`);
+              distributionDeal.multidiffusion.push(diffusion);
+            });
+          }
+
+          // HOLDBACKS
+          if (spreadSheetRow[SpreadSheetDistributionDeal.holdbacks]) {
+            const holdbacks = spreadSheetRow[SpreadSheetDistributionDeal.holdbacks].split(this.separator)
+            holdbacks.forEach(h => {
+              const holdbackParts = h.split(this.subSeparator);
+              const media = holdbackParts[0];
+              
+              const holdBack = createHoldback();
+              distributionDeal.holdbacks.push(holdBack)
+            });
           }
 
           // Checks if sale already exists
@@ -1466,7 +1530,7 @@ export class ViewExtractedElementsComponent {
 
     const orderedSheetTabRows: any[] = sheetTabRowsWithNoParents.concat(sheetTabRowsWithParents);
     const matSnackbarRef = this.snackBar.open('Loading... Please wait', 'close');
-    for(const spreadSheetRow of orderedSheetTabRows) {
+    for (const spreadSheetRow of orderedSheetTabRows) {
       // CONTRACT ID
       // Create/retreive the contract
       let contract = initContractWithVersion();
@@ -1502,7 +1566,7 @@ export class ViewExtractedElementsComponent {
               const licensorParts = licensorName.split(this.subSeparator);
               const licensor = createContractPartyDetail();
               licensor.party.displayName = licensorParts[0].trim();
-              if(licensorParts[1]) {
+              if (licensorParts[1]) {
                 licensor.party.orgId = licensorParts[1].trim();
               }
               licensor.party.role = getCodeIfExists('LEGAL_ROLES', 'licensor');
@@ -1518,7 +1582,7 @@ export class ViewExtractedElementsComponent {
             const licenseeParts = spreadSheetRow[SpreadSheetContract.licensee].split(this.subSeparator);
             const licensee = createContractPartyDetail();
             licensee.party.displayName = licenseeParts[0].trim();
-            if(licenseeParts[1]) {
+            if (licenseeParts[1]) {
               licensee.party.orgId = licenseeParts[1].trim();
             }
             licensee.party.role = getCodeIfExists('LEGAL_ROLES', 'licensee');
