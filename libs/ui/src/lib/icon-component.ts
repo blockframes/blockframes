@@ -332,6 +332,14 @@ const ICONS_SVG = [
   // DARK ICON //
   ////////////////
   {
+    name: 'check',
+    url: 'assets/icons/dark/Check.svg'
+  },
+  {
+    name: 'comment',
+    url: 'assets/icons/dark/Comment.svg'
+  },
+  {
     name: 'dashboard',
     url: 'assets/icons/dark/Dashboard.svg'
   },
@@ -342,6 +350,10 @@ const ICONS_SVG = [
   {
     name: 'mail',
     url: 'assets/icons/dark/Mail.svg'
+  },
+  {
+    name: 'refuse',
+    url: 'assets/icons/dark/Refuse.svg'
   },
   {
     name: 'shoppingCart',
