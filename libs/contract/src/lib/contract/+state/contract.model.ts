@@ -25,7 +25,7 @@ export interface ContractWithLastVersion {
 }
 
 export interface Contract extends ContractDocumentWithDates {
-  lastVersion?: ContractVersion;
+  versions?: ContractVersion[];
 };
 
 export type ContractPartyDetail = ContractPartyDetailDocumentWithDates;

@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 import { Movie, MovieQuery } from '@blockframes/movie';
 import { startWith, switchMap, share, map } from 'rxjs/operators';
 import { Observable, combineLatest } from 'rxjs';
-import { ContractQuery, Contract } from '@blockframes/contract/+state';
+import { ContractQuery, Contract, getLastVersionIndex } from '@blockframes/contract/contract/+state';
 
 interface TitleView {
   title: string;
@@ -14,12 +14,12 @@ interface TitleView {
 }
 
 function createTitleView(movie: Movie, contracts: Contract[]): TitleView {
-  const ownContracts = contracts.filter(c => c.lastVersion.titles[movie.id]);
+  const ownContracts = contracts.filter(c => c.versions[getLastVersionIndex(c)].titles[movie.id]);
   return {
     title: movie.main.title.international,
     view: 'View',
     sales: ownContracts.length,
-    receipt: ownContracts.reduce((sum, contract) => sum + contract.lastVersion.titles[movie.id].price.amount, 0),
+    receipt: ownContracts.reduce((sum, contract) => sum + contract.versions[getLastVersionIndex(contract)].titles[movie.id].price.amount, 0),
     status: movie.main.storeConfig.display ? 'PUBLISHED' : 'DRAFT'
   }
 }
