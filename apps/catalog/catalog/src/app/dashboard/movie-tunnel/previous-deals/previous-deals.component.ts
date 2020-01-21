@@ -3,7 +3,6 @@ import { ContractForm, PartyDetailsForm } from '@blockframes/contract/contract/f
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { DistributionDealForm } from '@blockframes/movie/distribution-deals/form/distribution-deal.form';
-import { ContractPartyForm } from '@blockframes/contract/contract/forms/party-name/party-name.form';
 
 @Component({
   selector: 'catalog-tunnel-previous-deals',

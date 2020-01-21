@@ -1,0 +1,13 @@
+<mat-form-field appearance="outline">
+  <mat-label>Language</mat-label>
+  <input type="text" matInput [formControl]="form" [matAutocomplete]="auto" name="language" required>
+  <mat-error *ngIf="form.hasError('invalidValue')">
+    Please select one of the country suggested.
+  </mat-error>
+</mat-form-field>
+
+<mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+  <mat-option *ngFor="let language of filteredLanguages$ | async" [value]="language.slug">
+    {{ language.label }}
+  </mat-option>
+</mat-autocomplete>
