@@ -1,15 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { MoviePromotionalElementForm } from '../promotional-elements.form';
 @Component({
-  selector: 'movie-form-promotional-links',
+  selector: '[form] movie-form-promotional-links',
   templateUrl: './promotional-links.component.html',
-  styleUrls: ['./promotional-links.component.scss']
+  styleUrls: ['./promotional-links.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PromotionalLinksComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit() {
-  }
-
+export class PromotionalLinksComponent {
+  @Input() form: MoviePromotionalElementForm;
 }

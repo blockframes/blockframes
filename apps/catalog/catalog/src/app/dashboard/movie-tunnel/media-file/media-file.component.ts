@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
 
 @Component({
   selector: 'catalog-movie-tunnel-media-file',
   templateUrl: './media-file.component.html',
-  styleUrls: ['./media-file.component.scss']
+  styleUrls: ['./media-file.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MediaFileComponent {
 
@@ -14,4 +15,8 @@ export class MediaFileComponent {
     return this.form.get('promotionalElements');
   }
 
+  importPDF(bytes: Uint8Array) {
+    console.log(bytes)
+   console.log(this.form.get('promotionalElements'))
+  }
 }

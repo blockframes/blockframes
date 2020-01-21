@@ -8,7 +8,7 @@
         <mat-card-title>Presentation deck</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <file-upload></file-upload>
+        <file-upload path="pdf" accept="['.pdf']" [types]="['application/pdf']" (uploaded)="importPDF($event)"></file-upload>
       </mat-card-content>
     </mat-card>
     <!-- Scenario -->
@@ -17,7 +17,7 @@
         <mat-card-title>Scenario</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <file-upload></file-upload>
+        <file-upload path="pdf" accept="['.pdf']" [types]="['application/pdf']" (uploaded)="importPDF($event)"></file-upload>
       </mat-card-content>
     </mat-card>
     <!-- File Links -->
@@ -26,9 +26,7 @@
         <mat-card-title>File Links</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <movie-form-promo-reel-link></movie-form-promo-reel-link>
-        <mat-divider [inset]="true"></mat-divider>
-        <movie-form-promotional-links></movie-form-promotional-links>
+        <movie-form-promotional-links [form]="promotionalElements"></movie-form-promotional-links>
       </mat-card-content>
     </mat-card>
   </section>
