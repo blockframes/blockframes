@@ -1,23 +1,40 @@
 @mixin mat-bf-table-theme($theme) {
+  $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
 
-  td.mat-cell:first-of-type {
-    border-left: solid 1px mat-color($foreground, divider);
-  }
+  .mat-table {
+    background-color: transparent;
 
-  td.mat-cell:last-of-type {
-    border-right: solid 1px mat-color($foreground, divider);
-  }
-
-  .mat-header-cell {
-    border-top: solid 1px mat-color($foreground, divider);
-    &:first-of-type {
-      border-radius: 10px 0 0 0;
+    thead {
+      background-color: mat-color($background, card);
+    }
+    td.mat-cell:first-of-type {
       border-left: solid 1px mat-color($foreground, divider);
     }
-    &:last-of-type {
+  
+    td.mat-cell:last-of-type {
       border-right: solid 1px mat-color($foreground, divider);
-      border-radius: 0 10px 0 0;
+    }
+  
+    .mat-header-cell {
+      border-top: solid 1px mat-color($foreground, divider);
+      &:first-of-type {
+        border-radius: 10px 0 0 0;
+        border-left: solid 1px mat-color($foreground, divider);
+      }
+      &:last-of-type {
+        border-right: solid 1px mat-color($foreground, divider);
+        border-radius: 0 10px 0 0;
+      }
     }
   }
+
+  // Style all paginator that are direcly after a mat table
+  .mat-table + .mat-paginator {
+    border: solid 1px mat-color($foreground, divider);
+    border-top: none;
+    border-radius: 0 0 10px 10px;
+  }
+
+
 }
