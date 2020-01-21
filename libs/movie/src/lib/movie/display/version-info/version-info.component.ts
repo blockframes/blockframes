@@ -10,6 +10,7 @@ import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 export class MovieDisplayVersionInfoComponent {
 
   public data: MovieLanguageSpecification;
+  // TODO #1562
 /*   public getLabelByCode = getLabelByCode;
   @Input() set info(versionInfo: Partial<MovieLanguageSpecification>) {
     this.data = createMovieVersionInfo(versionInfo);
