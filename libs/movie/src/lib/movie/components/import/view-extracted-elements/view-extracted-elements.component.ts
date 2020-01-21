@@ -1036,7 +1036,7 @@ export class ViewExtractedElementsComponent {
     }
 
     /*
-    @todo #1562
+    @todo #1562  Wait for  #1411
     if (movie.versionInfo.captions.length === 0) {
       errors.push({
         type: 'warning',
@@ -1499,9 +1499,12 @@ export class ViewExtractedElementsComponent {
           */
           if (spreadSheetRow[SpreadSheetContract.licensors]) {
             spreadSheetRow[SpreadSheetContract.licensors].split(this.separator).forEach((licensorName: string) => {
+              const licensorParts = licensorName.split(this.subSeparator);
               const licensor = createContractPartyDetail();
-              // licensor.orgId @TODO (#1397) try to match with an existing org
-              licensor.party.displayName = licensorName.trim();
+              licensor.party.displayName = licensorParts[0].trim();
+              if(licensorParts[1]) {
+                licensor.party.orgId = licensorParts[1].trim();
+              }
               licensor.party.role = getCodeIfExists('LEGAL_ROLES', 'licensor');
               contract.doc.parties.push(licensor);
               if (licensor.party.orgId) {
@@ -1512,9 +1515,12 @@ export class ViewExtractedElementsComponent {
 
           // LICENSEE
           if (spreadSheetRow[SpreadSheetContract.licensee]) {
+            const licenseeParts = spreadSheetRow[SpreadSheetContract.licensee].split(this.subSeparator);
             const licensee = createContractPartyDetail();
-            // licensee.orgId @TODO (#1397) try to match with an existing org
-            licensee.party.displayName = spreadSheetRow[SpreadSheetContract.licensee];
+            licensee.party.displayName = licenseeParts[0].trim();
+            if(licenseeParts[1]) {
+              licensee.party.orgId = licenseeParts[1].trim();
+            }
             licensee.party.role = getCodeIfExists('LEGAL_ROLES', 'licensee');
             contract.doc.parties.push(licensee);
             if (licensee.party.orgId) {

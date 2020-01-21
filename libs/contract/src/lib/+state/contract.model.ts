@@ -170,7 +170,9 @@ export function convertToContractDocument(params: Partial<Contract> = {}): Contr
     id: params.id,
     parties: params.parties || [],
     titleIds: params.titleIds || [],
-    partyIds: params.partyIds ||[]
+    partyIds: params.partyIds ||[],
+    parentContractIds: params.parentContractIds || [],
+    childContractIds: params.childContractIds || [],
   };
 }
 

@@ -197,19 +197,17 @@ export class ContractService extends CollectionService<ContractState> {
     }
 
     parentContracts.forEach(parentContract => {
-      if (parentContract) {
-        const partiesHavingRoleForChilds = parentContract.parties.filter(p => p.childRoles && p.childRoles.length);
-        partiesHavingRoleForChilds.forEach(parentPartyDetails => {
-          parentPartyDetails.childRoles.forEach(childRole => {
-            const partyDetails = createContractPartyDetail({ party: parentPartyDetails.party });
-            partyDetails.party.role = childRole;
-            contract.parties.push(partyDetails);
-            if (partyDetails.party.orgId) {
-              contract.partyIds.push(partyDetails.party.orgId);
-            }
-          });
+      const partiesHavingRoleForChilds = parentContract.parties.filter(p => p.childRoles && p.childRoles.length);
+      partiesHavingRoleForChilds.forEach(parentPartyDetails => {
+        parentPartyDetails.childRoles.forEach(childRole => {
+          const partyDetails = createContractPartyDetail({ party: parentPartyDetails.party });
+          partyDetails.party.role = childRole;
+          contract.parties.push(partyDetails);
+          if (partyDetails.party.orgId) {
+            contract.partyIds.push(partyDetails.party.orgId);
+          }
         });
-      }
+      });
     });
 
     return contract;
