@@ -5,7 +5,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Components
 import { PromotionalLinksComponent } from './promotional-links/promotional-links.component';
-import { PromoReelLinkComponent } from './promo-reel-link/promo-reel-link.component';
 
 // Material
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -15,7 +14,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
-  declarations: [PromotionalLinksComponent, PromoReelLinkComponent],
+  declarations: [PromotionalLinksComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -27,6 +26,6 @@ import { MatButtonModule } from '@angular/material/button';
     MatIconModule,
     MatButtonModule
   ],
-  exports: [PromotionalLinksComponent, PromoReelLinkComponent]
+  exports: [PromotionalLinksComponent]
 })
 export class PromotionalElementsModule { }
