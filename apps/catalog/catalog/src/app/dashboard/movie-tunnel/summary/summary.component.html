@@ -6,6 +6,11 @@
   </p>
 
   <section tunnel-form>
-    <movie-display-main></movie-display-main>
+    <movie-display-main
+      [main]="form.main"
+      [salesCast]="form.salesCast"
+      [salesInfo]="form.salesInfo"
+      [festivalPrizes]="form.festivalPrizes">
+    </movie-display-main>
   </section>
 </tunnel-page>
