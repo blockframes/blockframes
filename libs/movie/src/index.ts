@@ -20,6 +20,6 @@ export { MovieCreateModule } from './lib/movie/components/movie-create/movie-cre
 // Movie Component Module
 export * from './lib/movie/components/movie-picker/movie-picker.module';
 
-// Movie Form Moudles
+// Movie Form Modules
 export * from './lib/movie/form/sales-info/format/format.module';
 export * from './lib/movie/form/version-info/version-info.module';

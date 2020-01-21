@@ -8,7 +8,6 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatDividerModule } from '@angular/material/divider';
 // Componenents
 import { MovieDisplayComponent } from './root/root.component';
-import { MovieDisplayMainComponent } from './main/main.component';
 import { MovieDisplayPromotionalElementsComponent } from './promotional-elements/promotional-elements.component';
 import { MovieDisplayPromotionalDescriptionComponent } from './promotional-description/promotional-description.component';
 import { MovieDisplayStoryComponent } from './story/story.component';
@@ -17,12 +16,14 @@ import { MovieDisplaySalesInfoComponent } from './sales-info/sales-info.componen
 import { MovieDisplayVersionInfoComponent } from './version-info/version-info.component';
 import { MovieDisplayFestivalPrizesComponent } from './festival-prizes/festival-prizes.component';
 import { MovieDisplaySalesAgentDealComponent } from './sales-agent-deal/sales-agent-deal.component';
+import { MovieDisplayMainComponent } from './main/main.component';
+import { MissingPipeModule } from '@blockframes/utils/pipes/missing.module';
 
 @NgModule({
-  imports: [CommonModule, ImageReferenceModule, MatCardModule, MatDividerModule, MatGridListModule, MatListModule],
+  imports: [CommonModule, ImageReferenceModule, MatCardModule, MatDividerModule, MatGridListModule, MatListModule, MissingPipeModule],
   declarations: [
-    MovieDisplayComponent,
     MovieDisplayMainComponent,
+    MovieDisplayComponent,
     MovieDisplayPromotionalElementsComponent,
     MovieDisplayPromotionalDescriptionComponent,
     MovieDisplayStoryComponent,
@@ -32,6 +33,6 @@ import { MovieDisplaySalesAgentDealComponent } from './sales-agent-deal/sales-ag
     MovieDisplayFestivalPrizesComponent,
     MovieDisplaySalesAgentDealComponent,
   ],
-  exports: [MovieDisplayComponent]
+  exports: [MovieDisplayComponent, MovieDisplayMainComponent]
 })
 export class MovieDisplayModule {}
