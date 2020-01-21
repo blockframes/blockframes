@@ -10,5 +10,5 @@ import { MovieForm } from '@blockframes/movie/movieform/movie.form';
 
 export class TunnelSummaryComponent {
 
-  constructor(private form: MovieForm) { }
+  constructor(public form: MovieForm) { }
 }
