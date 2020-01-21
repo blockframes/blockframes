@@ -5,7 +5,7 @@ export type ContractVersion = ContractVersionDocumentWithDates;
 
 /** An interface for a single document to display versions subcollection count. */
 export interface VersionMeta extends ContractVersion {
-  count: number;
+  count?: number;
 }
 
 export function createVersionMeta(params: Partial<VersionMeta>): VersionMeta {

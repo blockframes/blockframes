@@ -10,6 +10,7 @@ import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/st
 import { LegalRolesSlug } from '@blockframes/utils/static-model/types';
 import { cleanModel } from '@blockframes/utils';
 import { ContractDocumentWithDates } from './contract.firestore';
+import { VersionMeta } from '@blockframes/contract/version/+state/contract-version.model';
 
 /**
  * Get all the contracts where user organization is party.
@@ -18,13 +19,24 @@ import { ContractDocumentWithDates } from './contract.firestore';
  */
 const contractsListQuery = (orgId: string): Query<Contract[]> => ({
   path: 'contracts',
-  queryFn: ref => ref.where('partyIds', 'array-contains', orgId).where('childContractIds', '==', [])
+  queryFn: ref => ref.where('partyIds', 'array-contains', orgId).where('childContractIds', '==', []),
+    versions: (contract: Contract) => ({
+      path: `contracts/${contract.id}/versions`
+    })
 });
 
 /** Get the active contract and put his lastVersion in it. */
 const contractQuery = (contractId: string): Query<Contract> => ({
-  path: `contracts/${contractId}`
+  path: `contracts/${contractId}`,
+    versions: (contract: Contract) => ({
+    path: `contracts/${contract.id}/versions`
+  })
 })
+
+export function getLastVersionIndex(contract: Contract): number {
+  const { count }: VersionMeta = contract.versions.find(v => v.id === '_meta')
+  return contract.versions.map(v => v.id).indexOf(count.toString())
+}
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'contracts' })
