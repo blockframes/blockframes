@@ -1,14 +1,13 @@
 <ng-container *ngIf="units$ | async as units">
   <ng-container *ngFor="let control of form.controls; let i = index; let last = last">
-    <form [formGroup]="control">
       <span>World-wide</span>
       <article fxLayout="row" fxLayoutGap="24px">
-        <movie-form-origin-country [form]="control.get('territory')"></movie-form-origin-country>
+        <form-country [form]="control.get('territory')"></form-country>
 
         <mat-form-field appearance="outline">
           <mat-label>Metrics</mat-label>
-          <mat-select formGroupName="unit">
-            <mat-option *ngFor="let unit of unitBox | keyvalue" [value]="unit.key">
+          <mat-select [formControl]="control.get('unit')">
+            <mat-option *ngFor="let unit of unitBox | keyvalue" [value]="unit.value">
               {{ unit.value }}
             </mat-option>
           </mat-select>
@@ -16,39 +15,25 @@
     
         <mat-form-field appearance="outline">
           <mat-label>Earnings</mat-label>
-          <input matInput type="number" formGroupName="value">
-          <span *ngIf="units[i] === '$'" matPrefix>{{ units[i] }}</span>
-          <span *ngIf="units[i] !== '$'" matSuffix>{{ units[i] }}</span>
+          <input matInput type="number" [formControl]="control.get('value')">
+          <span *ngIf="units[i] === '$'" matPrefix>{{ units[i] }}&nbsp;</span>
+          <span *ngIf="units[i] !== '$'" matSuffix>&nbsp;{{ units[i] }}</span>
         </mat-form-field>
       </article>
     
-      <mat-divider [inset]="true"></mat-divider>
-    
-      <!-- <div formArrayName="boxOffice" *ngFor="let boxOffice of boxOffice.controls; let i = index">
-        <div [formGroup]="i" class="full-width">
-          <span>National</span>
-          <article fxLayout="row" fxLayoutGap="24px">
-            <mat-form-field appearance="outline">
-              <mat-label>Country</mat-label>
-              <input matInput type="text" formControl="territory">
-            </mat-form-field>
-    
-            <mat-form-field appearance="outline">
-              <mat-label>Metrics</mat-label>
-              <mat-select formControl="unit">
-                <mat-option>
-                  blabla
-                </mat-option>
-              </mat-select>
-            </mat-form-field>
-    
-            <mat-form-field appearance="outline">
-              <mat-label>Number of tickets sold</mat-label>
-              <input matInput type="number" formControl="value">
-            </mat-form-field>
-          </article>
-        </div>
-      </div> -->
-    </form>
+      <!-- Remove -->
+      <footer *ngIf="!last" fxLayout="column" fxLayoutAlign="center center">
+        <button mat-mini-fab color="warn" (click)="form.removeAt(i)" aria-label="Remove a director form">
+          <mat-icon>delete</mat-icon>
+        </button>
+        <span class="mat-caption">Delete a Country</span>
+      </footer>
+      <!-- Add-->
+      <footer *ngIf="last" fxLayout="column" fxLayoutAlign="center center">
+        <button mat-mini-fab color="primary" (click)="form.add()" aria-label="Remove a director form">
+          <mat-icon>add</mat-icon>
+        </button>
+        <span class="mat-caption">Add a Country</span>
+      </footer>
   </ng-container>
 </ng-container>

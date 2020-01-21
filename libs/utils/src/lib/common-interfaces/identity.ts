@@ -45,6 +45,7 @@ export interface Stakeholder extends StakeholderRaw {
   countries?: TerritoriesSlug[],
 }
 
+
 /**
  * @dev interface to represent a movie credit
  */
@@ -113,7 +114,7 @@ export function createParty(params: Partial<Party> = {}): Party {
   }
 }
 
-export function createCredit(params: Partial<Credit> = {}): Credit {
+export function createCredit<T extends Credit>(params: Partial<T> = {}): T {
   return {
     firstName: '',
     lastName: '',
@@ -121,17 +122,5 @@ export function createCredit(params: Partial<Credit> = {}): Credit {
     shortBiography: '',
     avatar: createImgRef(),
     ...params
-  };
-}
-
-export function createProducer(params: Partial<Credit> = {}): Producer {
-  return createCredit(params) as Producer;
-}
-
-export function createCrew(params: Partial<Credit> = {}): Crew {
-  return createCredit(params) as Crew;
-}
-
-export function createCast(params: Partial<Credit> = {}): Cast {
-  return createCredit(params) as Cast;
+  } as T;
 }

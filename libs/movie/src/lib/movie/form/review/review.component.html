@@ -1,0 +1,31 @@
+<ng-container *ngFor="let control of form.controls; let i = index; let last = last">
+  <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="24px">
+    <mat-form-field appearance="outline">
+      <mat-label>Revue of Journal Name</mat-label>
+      <input matInput [formControl]="control.get('journalName')"  name="journalName"/>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Revue Link</mat-label>
+      <input matInput [formControl]="control.get('revueLink')"  name="revueLink"/>
+    </mat-form-field>
+  </div>
+  <mat-form-field appearance="outline" class="full-width">
+    <mat-label>Film Critic Quote</mat-label>
+    <textarea matInput [formControl]="control.get('criticQuote')"  name="criticQuote"></textarea>
+  </mat-form-field>
+
+  <!-- Remove -->
+  <footer *ngIf="!last" fxLayout="column" fxLayoutAlign="center center">
+    <button mat-mini-fab color="warn" (click)="form.removeAt(i)" aria-label="Remove a critic form">
+      <mat-icon>delete</mat-icon>
+    </button>
+    <span class="mat-caption">Delete a critic</span>
+  </footer>
+  <!-- Add-->
+  <footer *ngIf="last" fxLayout="column" fxLayoutAlign="center center">
+    <button mat-mini-fab color="primary" (click)="form.add()" aria-label="Remove a critic form">
+      <mat-icon>add</mat-icon>
+    </button>
+    <span class="mat-caption">Add another critic</span>
+  </footer>
+</ng-container>

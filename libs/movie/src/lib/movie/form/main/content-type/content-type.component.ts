@@ -16,4 +16,8 @@ export class ContentTypeComponent {
   get title() {
     return this.form.get('title');
   }
+
+  get storeType() {
+    return this.form.get('storeConfig').get('storeType');
+  }
 }

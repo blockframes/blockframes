@@ -7,7 +7,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { BoxOfficeComponent } from './box-office.component';
 
 // Form
-import { MovieFormOriginCountryModule } from '../../main/origin-country/origin-country.module';
+import { FormCountryModule } from '@blockframes/ui/form';
 
 // Material
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -26,7 +26,7 @@ import { MatIconModule } from '@angular/material/icon';
     ReactiveFormsModule,
     FlexLayoutModule,
     // Forms
-    MovieFormOriginCountryModule,
+    FormCountryModule,
     // Material
     MatFormFieldModule,
     MatInputModule,

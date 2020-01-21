@@ -1,21 +1,28 @@
 <tunnel-page>
   <h4 title>TITLE INFORMATION</h4>
   <h1 subtitle>Credits</h1>
-  <section tunnel-form>
+  <ng-container tunnel-form>
     <mat-card>
       <mat-card-header>
         <mat-card-title>Production information</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <movie-form-production-year [form]="productionYear"></movie-form-production-year>
-        <movie-form-stakeholders [form]="stakeholders"></movie-form-stakeholders>
+        <movie-form-production-year [form]="main.get('productionYear')"></movie-form-production-year>
+        <mat-divider></mat-divider>
+        <movie-form-stakeholders [form]="main.get('stakeholders')"></movie-form-stakeholders>
+        <mat-divider></mat-divider>
+        <p class="mat-body-2">Producers Name</p>
+        <movie-form-sales-cast role="producer" [form]="salesCast.get('producers')"></movie-form-sales-cast>
       </mat-card-content>
     </mat-card>
+
     <mat-card>
       <mat-card-header>
-        <mat-card-title><h3>More information</h3></mat-card-title>
+        <mat-card-title>Crew Members</mat-card-title>
       </mat-card-header>
-      <mat-card-content> </mat-card-content>
+      <mat-card-content>
+        <movie-form-sales-cast role="crew" [form]="salesCast.get('crew')"></movie-form-sales-cast>
+      </mat-card-content>
     </mat-card>
-  </section>
+  </ng-container>
 </tunnel-page>

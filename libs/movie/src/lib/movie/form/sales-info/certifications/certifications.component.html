@@ -1,6 +1,6 @@
 <mat-button-toggle-group [formControl]="form" multiple name="certifications" aria-label="Certifications">
-  <mat-button-toggle value="european">European</mat-button-toggle>
-  <mat-button-toggle value="eof">EOF</mat-button-toggle>
-  <mat-button-toggle value="french-art-essai-label">French Art & Essai label</mat-button-toggle>
+  <ng-container *ngFor="let certification of certifications">
+    <mat-button-toggle [value]="certification.slug">{{ certification.label }}</mat-button-toggle>
+  </ng-container>
 </mat-button-toggle-group>
 <p>Select all that apply</p>

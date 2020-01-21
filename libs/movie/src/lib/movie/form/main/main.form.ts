@@ -3,6 +3,7 @@ import { MovieMain, Credit, createMovieMain, Movie, createTitle, createStoreConf
 import { Validators, FormControl } from '@angular/forms';
 import { createCredit, Stakeholder, createStakeholder } from '@blockframes/utils/common-interfaces/identity';
 import { isSlugValidator } from '@blockframes/utils/form/validators/validators';
+import { FormStaticValue } from '@blockframes/utils/form';
 
 // CREDIT
 
@@ -79,7 +80,7 @@ type TitleFormControl = ReturnType<typeof createTitleFormControl>;
 
 // STORE CONFIG
 
-export class StoreConfigForm extends FormEntity<TitleFormControl> {
+export class StoreConfigForm extends FormEntity<StoreConfigControl> {
   constructor(storeConfig?: Partial<Movie['main']['storeConfig']>) {
     super(createStoreConfigFormControl(storeConfig));
   }
@@ -105,8 +106,8 @@ function createMovieMainControls(main : Partial<MovieMain> = {}) {
     poster: new FormControl(entity.poster),
     productionYear: new FormControl(entity.productionYear, yearValidators),
     genres: FormList.factory(entity.genres),
-    originCountries: FormList.factory(entity.originCountries, el => new FormControl(el, isSlugValidator('TERRITORIES'))),
-    originalLanguages: FormList.factory(entity.originalLanguages, el => new FormControl(el, isSlugValidator('LANGUAGES'))),
+    originCountries: FormList.factory(entity.originCountries, el => new FormStaticValue(el, 'TERRITORIES')),
+    originalLanguages: FormList.factory(entity.originalLanguages, el => new FormStaticValue(el, 'LANGUAGES')),
     status: new FormControl(entity.status , [Validators.required]),
     totalRunTime: new FormControl(entity.totalRunTime),
     shortSynopsis: new FormControl(entity.shortSynopsis, [Validators.maxLength(500)] ),

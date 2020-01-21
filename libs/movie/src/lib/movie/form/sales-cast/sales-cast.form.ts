@@ -1,19 +1,18 @@
 import { MovieSalesCast, Credit, createMovieSalesCast } from '../../+state';
 import { FormEntity, FormList } from '@blockframes/utils';
 import { FormControl } from '@angular/forms';
-import { MovieCreditForm } from '../main/main.form';
 import { createCredit } from '@blockframes/utils/common-interfaces/identity';
 
 function createMovieSalesCastControls(salesCast?: Partial<MovieSalesCast>) {
   const entity = createMovieSalesCast(salesCast);
   return {
-    producers: FormList.factory(entity.producers, el => new MovieCreditForm(el)),
-    cast: FormList.factory(entity.cast, el => new MovieCreditForm(el)),
-    crew: FormList.factory(entity.crew, el => new MovieCreditForm(el)),
+    producers: FormList.factory(entity.producers, el => new CreditForm(el)),
+    cast: FormList.factory(entity.cast, el => new CreditForm(el)),
+    crew: FormList.factory(entity.crew, el => new CreditForm(el)),
   }
 }
 
-type MovieSalesCastControl = ReturnType<typeof createMovieSalesCastControls>
+export type MovieSalesCastControl = ReturnType<typeof createMovieSalesCastControls>
 
 function createCreditControls(credit?: Partial<Credit>) {
   const { firstName, lastName, role } = createCredit(credit);

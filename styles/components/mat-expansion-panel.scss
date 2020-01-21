@@ -4,8 +4,9 @@
   .mat-expansion-panel {
     @include _mat-theme-overridable-elevation(0, $theme);
   }
-  .expansion-panel-body {
+  .mat-expansion-panel-body {
     padding: 0;
+    padding-bottom: 16px;
   }
   .mat-expansion-panel-spacing {
     margin: 0;

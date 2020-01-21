@@ -3,22 +3,16 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-import { CertificationsComponent } from './certifications/certifications.component';
 import { MovieFormSalesInfoComponent } from './sales-info.component';
 
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
-import { MatSelectModule, MatOptionModule, MatButtonModule, MatIconModule } from '@angular/material';
+import { MatSelectModule } from '@angular/material/select';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 @NgModule({
-  declarations: [
-    CertificationsComponent,
-    MovieFormSalesInfoComponent,
-  ],
-  exports: [
-    CertificationsComponent,
-    MovieFormSalesInfoComponent
-  ],
+  declarations: [MovieFormSalesInfoComponent],
+  exports: [MovieFormSalesInfoComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -29,10 +23,8 @@ import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
     // Material
     MatSelectModule,
-    MatOptionModule,
     MatButtonModule,
-    MatIconModule,
-    MatButtonToggleModule,
+    MatIconModule
   ]
 })
-export class MovieFormSalesInfoModule { }
+export class MovieFormSalesInfoModule {}

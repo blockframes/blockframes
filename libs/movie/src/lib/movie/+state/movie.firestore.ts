@@ -249,7 +249,7 @@ interface MovieRaw<D> {
   festivalPrizes: MovieFestivalPrizes;
   salesAgentDeal: MovieSalesAgentDealRaw<D>;
   budget: MovieBudget;
-  movieReview: MovieReview;
+  movieReview: MovieReview[];
 }
 
 /** Document model of a Movie */

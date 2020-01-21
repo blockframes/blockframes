@@ -4,7 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { OriginalReleaseComponent } from './original-releases.component';
 
-import { MovieFormOriginCountryModule } from '../../main/origin-country/origin-country.module';
+import { FormCountryModule } from '@blockframes/ui/form';
 
 // Material
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -22,7 +22,7 @@ import { MatNativeDateModule } from '@angular/material/core';
     CommonModule,
     ReactiveFormsModule,
     FlexLayoutModule,
-    MovieFormOriginCountryModule,
+    FormCountryModule,
     // Material
     MatFormFieldModule,
     MatInputModule,

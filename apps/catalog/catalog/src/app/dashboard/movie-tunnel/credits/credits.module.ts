@@ -11,6 +11,7 @@ import { MovieFormSalesCastModule } from '@blockframes/movie/movie/form/sales-ca
 
 // Material
 import { MatCardModule } from '@angular/material/card';
+import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
     declarations: [CreditsComponent],
@@ -24,6 +25,7 @@ import { MatCardModule } from '@angular/material/card';
       MovieFormSalesCastModule,
       // Material
       MatCardModule,
+      MatDividerModule,
       // Route
       RouterModule.forChild([{ path: '', component: CreditsComponent }])
     ]

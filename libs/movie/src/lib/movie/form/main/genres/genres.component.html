@@ -10,18 +10,12 @@
       </mat-select>
     </mat-form-field>
     <!-- Add / Delete -->
-    <div class="action" *ngIf="!last" fxLayout="row" fxLayoutAlign="center center">
-      <button mat-mini-fab color="warn" (click)="genresForm.removeAt(i)" aria-label="Remove a director form">
-        <mat-icon>delete</mat-icon>
-      </button>
-      <span class="mat-caption">Delete additional genre</span>
-    </div>
-    <div class="action" *ngIf="last" fxLayout="row" fxLayoutAlign="center center">
-      <button mat-mini-fab color="primary" (click)="genresForm.add()" aria-label="Remove a director form">
-        <mat-icon>add</mat-icon>
-      </button>
-      <span class="mat-caption">Add another genre</span>
-    </div>
+    <button *ngIf="!last" mat-mini-fab color="warn" (click)="genresForm.removeAt(i)" matTooltip="Remove a Genre" aria-label="Remove a Genre">
+      <mat-icon>delete</mat-icon>
+    </button>
+    <button *ngIf="last" mat-mini-fab color="primary" (click)="genresForm.add()" matTooltip="Add a Genre" aria-label="Add a Genre">
+      <mat-icon>add</mat-icon>
+    </button>
   </article>
 </ng-container>
 
@@ -35,18 +29,12 @@
         <input matInput [formControl]="control" type="text" />
       </mat-form-field>
       <!-- Add / Delete -->
-      <div class="action" *ngIf="!last" fxLayout="row" fxLayoutAlign="center center">
-        <button mat-mini-fab color="warn" (click)="customGenreForm.removeAt(i)" aria-label="Remove a director form">
-          <mat-icon>delete</mat-icon>
-        </button>
-        <span class="mat-caption">Delete additional genre</span>
-      </div>
-      <div class="action" *ngIf="last" fxLayout="row" fxLayoutAlign="center center">
-        <button mat-mini-fab color="primary" (click)="customGenreForm.add()" aria-label="Remove a director form">
-          <mat-icon>add</mat-icon>
-        </button>
-        <span class="mat-caption">Add another genre</span>
-      </div>
+      <button *ngIf="!last" mat-mini-fab color="warn" (click)="customGenreForm.removeAt(i)" matTooltip="Remove a Custom Genre" aria-label="Remove a Custom Genre">
+        <mat-icon>delete</mat-icon>
+      </button>
+      <button *ngIf="last" mat-mini-fab color="primary" (click)="customGenreForm.add()" matTooltip="Add a Custom Genre" aria-label="Add a Custom Genre">
+        <mat-icon>add</mat-icon>
+      </button>
     </article>
   </ng-container>
 </ng-container>
