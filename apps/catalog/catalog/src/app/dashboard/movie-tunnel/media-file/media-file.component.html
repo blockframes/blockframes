@@ -1,0 +1,49 @@
+<tunnel-page>
+  <h4 title>UPLOADED MEDIA</h4>
+  <h1 subtitle>Files & links</h1>
+  <ng-container tunnel-form>
+    <!-- Presentation deck -->
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Presentation deck</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <file-upload 
+          path="pdf" 
+          uploadOnFirestore="true" 
+          accept="['.pdf']" 
+          [types]="['application/pdf']" 
+          (storeUploaded)="importPDF($event, 'presentation_deck')">
+          <h3 type>Presentation Deck</h3>
+          <p class="mat-caption" format>Accepted Formats: .pdf</p>
+        </file-upload>
+        </mat-card-content>
+      </mat-card>
+      <!-- Scenario -->
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Scenario</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <file-upload 
+          path="pdf" 
+          uploadOnFirestore="true" 
+          accept="['.pdf']" 
+          [types]="['application/pdf']" 
+          (storeUploaded)="importPDF($event, 'scenario')">
+          <h3 type>Scenario</h3>
+          <p class="mat-caption" format>Accepted Formats: .pdf</p>
+        </file-upload>
+        </mat-card-content>
+      </mat-card>
+    <!-- File Links -->
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>File Links</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <movie-form-promotional-links [form]="promotionalElements"></movie-form-promotional-links>
+      </mat-card-content>
+    </mat-card>
+  </ng-container>
+</tunnel-page>

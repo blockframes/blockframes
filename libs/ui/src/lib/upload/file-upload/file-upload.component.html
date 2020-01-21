@@ -2,10 +2,12 @@
   <!-- Waiting -->
   <section *ngSwitchCase="'waiting'">
     <label>
-        <mat-icon class="material-icons-outlined">cloud_upload</mat-icon>
-      <input [accept]="accept" type="file" (change)="upload($event.target.files)" />
+        <mat-icon color="primary" class="material-icons-outlined">cloud_upload</mat-icon>
+      <input #fileExplorer [accept]="accept" type="file" (change)="upload($event.target.files)" />
     </label>
-    <p>Drag and drop your file here, or click to upload it from your file explorer</p>
+    <ng-content select="[type]"></ng-content>
+    <ng-content select="[format]"></ng-content>
+    <p class="mat-caption">Drag and drop a file here or <button mat-button color="primary" (click)="fileExplorer.click()">Browse</button></p>
   </section>
 
   <!-- Hovering -->
