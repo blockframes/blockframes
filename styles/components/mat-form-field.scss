@@ -10,16 +10,14 @@
       }
     }
   
-    .mat-form-field {
-      &-underline {
-        position: static;
-      }
-  
-      &-subscript-wrapper {
-        position: static;
-      }
+    &-underline {
+      position: static;
     }
-  
+
+    &-subscript-wrapper {
+      position: static;
+    }
+    
     &[no-underline] {
       .mat-form-field-underline {
         display: none;
