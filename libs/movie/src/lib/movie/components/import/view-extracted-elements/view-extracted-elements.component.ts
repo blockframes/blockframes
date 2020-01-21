@@ -316,19 +316,20 @@ export class ViewExtractedElementsComponent {
         }
 
         // PRODUCTION COMPANIES (Production Companie(s))
-        if (spreadSheetRow[SpreadSheetMovie.stakeholdersWithRole]) {
-          movie.main.stakeholders = [];
-          spreadSheetRow[SpreadSheetMovie.stakeholdersWithRole].split(this.separator).forEach((p: string) => {
-            const stakeHolderParts = p.split(this.subSeparator);
-            const stakeHolder = createStakeholder({ displayName: stakeHolderParts[0] });
-            const role = getCodeIfExists('STAKEHOLDER_ROLES', stakeHolderParts[1] as ExtractCode<'STAKEHOLDER_ROLES'>);
-            if (role) {
-              stakeHolder.role = role;
-            }
+        // @todo(#1562)
+        // if (spreadSheetRow[SpreadSheetMovie.stakeholdersWithRole]) {
+        //   movie.main.stakeholders = [];
+        //   spreadSheetRow[SpreadSheetMovie.stakeholdersWithRole].split(this.separator).forEach((p: string) => {
+        //     const stakeHolderParts = p.split(this.subSeparator);
+        //     const stakeHolder = createStakeholder({ displayName: stakeHolderParts[0] });
+        //     const role = getCodeIfExists('STAKEHOLDER_ROLES', stakeHolderParts[1] as ExtractCode<'STAKEHOLDER_ROLES'>);
+        //     if (role) {
+        //       stakeHolder.role = role;
+        //     }
 
-            movie.main.stakeholders.push(stakeHolder);
-          });
-        }
+        //     movie.main.stakeholders.push(stakeHolder);
+        //   });
+        // }
 
         // COLOR (Color / Black & White )
         if (spreadSheetRow[SpreadSheetMovie.color]) {
@@ -895,15 +896,16 @@ export class ViewExtractedElementsComponent {
       });
     }
 
-    if (movie.main.stakeholders.length === 0) {
-      errors.push({
-        type: 'warning',
-        field: 'main.stakeholders',
-        name: 'Stakeholder(s)',
-        reason: 'Optional field is missing',
-        hint: 'Edit corresponding sheet field.'
-      });
-    }
+    // @todo(#1562)
+    // if (movie.main.stakeholders.length === 0) {
+    //   errors.push({
+    //     type: 'warning',
+    //     field: 'main.stakeholders',
+    //     name: 'Stakeholder(s)',
+    //     reason: 'Optional field is missing',
+    //     hint: 'Edit corresponding sheet field.'
+    //   });
+    // }
 
     if (!movie.salesInfo.color) {
       errors.push({
