@@ -1,1 +1,7 @@
-<p>view works!</p>
+<section *ngIf="(contract$ | async) as contract">
+  <article *ngIf="licensees[0].party as licensee">
+    <h2>{{ licensees[0].party.displayName }}</h2>
+    <span> {{ licensee.address.street}}, {{ licensee.address.city }}, {{ licensee.address.region}}</span>
+    <span> {{ licensee.address.zipCode}}, {{ licensee.address.country }}</span>
+  </article>
+</section>
