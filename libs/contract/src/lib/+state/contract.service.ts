@@ -84,7 +84,7 @@ export class ContractService extends CollectionService<ContractState> {
 
       return contractWithVersion;
     } catch (error) {
-      console.error(`Contract ${typeof contractOrId === 'string' ? contractOrId : contractOrId.id} not found`);
+      console.warn(`Contract ${typeof contractOrId === 'string' ? contractOrId : contractOrId.id} not found.`);
     }
   }
 

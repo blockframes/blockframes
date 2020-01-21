@@ -38,23 +38,20 @@ export class ContractVersionService extends CollectionService<ContractVersionSta
    * @param contractId
    * @param contractWithLastVersion
    */
-  public addContractVersion(contractWithLastVersion: ContractWithLastVersion): string {
-    this.db.firestore.runTransaction(async tx => {
-      this.contractId = contractWithLastVersion.doc.id;
+  public async addContractVersion(contractWithLastVersion: ContractWithLastVersion): Promise<string> {
+    this.contractId = contractWithLastVersion.doc.id;
+    await this.db.firestore.runTransaction(async tx => {
       // Get the _meta document from versions subcollection.
       const _metaSnap = await tx.get(this.db.doc(`${this.path}/_meta`).ref);
       let _meta = createVersionMeta(_metaSnap.data());
       // Increment count and then assign it to contractVersion id.
       contractWithLastVersion.last.id = (++_meta.count).toString();
+      const versionRef = this.db.collection(`${this.path}`).doc(contractWithLastVersion.last.id).ref;
 
-      // Add the version and update _meta.
-      if (_metaSnap.data() === undefined) {
-        await this.add(contractWithLastVersion.last, { write: tx.set(_metaSnap.ref, _meta) })
-      } else {
-        await this.add(contractWithLastVersion.last, { write: tx.update(_metaSnap.ref, _meta) });
-      }
-
-    })
+      // Update/create _meta and add the version.
+      tx.set(_metaSnap.ref, _meta);
+      tx.set(versionRef, contractWithLastVersion.last);
+    });
     return contractWithLastVersion.last.id;
   }
 

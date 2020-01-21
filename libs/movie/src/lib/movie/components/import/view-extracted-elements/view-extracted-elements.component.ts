@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { MatTableDataSource } from '@angular/material';
+import { MatTableDataSource, MatSnackBar } from '@angular/material';
 import {
   Movie,
   MovieQuery,
@@ -59,6 +59,7 @@ export interface DealsImportState {
 
 export interface ContractsImportState {
   errors?: SpreadsheetImportError[];
+  newContract: boolean;
   contract: ContractWithLastVersion;
 }
 
@@ -168,6 +169,7 @@ export class ViewExtractedElementsComponent {
 
   constructor(
     private movieQuery: MovieQuery,
+    private snackBar: MatSnackBar,
     private movieService: MovieService,
     private distributionDealService: DistributionDealService,
     private contractService: ContractService,
@@ -1445,7 +1447,7 @@ export class ViewExtractedElementsComponent {
     return importErrors;
   }
 
-  public formatContracts(sheetTab: SheetTab) {
+  public async formatContracts(sheetTab: SheetTab) {
     this.clearDataSources();
 
     const titlesFieldsCount = Object.keys(SpreadSheetContractTitle).length / 2; // To get enum length
@@ -1463,8 +1465,8 @@ export class ViewExtractedElementsComponent {
     });
 
     const orderedSheetTabRows: any[] = sheetTabRowsWithNoParents.concat(sheetTabRowsWithParents);
-
-    orderedSheetTabRows.forEach(async spreadSheetRow => {
+    const matSnackbarRef = this.snackBar.open('Loading... Please wait', 'close');
+    for(const spreadSheetRow of orderedSheetTabRows) {
       // CONTRACT ID
       // Create/retreive the contract
       let contract = initContractWithVersion();
@@ -1483,6 +1485,7 @@ export class ViewExtractedElementsComponent {
       if (spreadSheetRow[SpreadSheetContract.contractId]) {
         const importErrors = {
           contract,
+          newContract: newContract,
           errors: [],
         } as ContractsImportState;
 
@@ -1651,6 +1654,7 @@ export class ViewExtractedElementsComponent {
 
         // TITLES STUFF
         let titleIndex = 0;
+        // @dev this while is why we need to do a for(const of ...) (pretty sure)
         while (spreadSheetRow[SpreadSheetContract.titleStuffIndexStart + titleIndex]) {
           const currentIndex = SpreadSheetContract.titleStuffIndexStart + titleIndex;
           titleIndex += titlesFieldsCount;
@@ -1681,7 +1685,7 @@ export class ViewExtractedElementsComponent {
 
         contractWithErrors.contract.doc = await this.contractService.populatePartiesWithParentRoles(contractWithErrors.contract.doc, parentContracts);
 
-        if (contractWithErrors.contract.doc.id) {
+        if (!contractWithErrors.newContract) {
           this.contractsToUpdate.data.push(contractWithErrors);
           this.contractsToUpdate.data = [... this.contractsToUpdate.data];
         } else {
@@ -1692,8 +1696,8 @@ export class ViewExtractedElementsComponent {
 
         this.cdRef.detectChanges();
       }
-    });
-
+    };
+    matSnackbarRef.closeWithAction(); // loading ended
   }
 
   private async validateMovieContract(importErrors: ContractsImportState): Promise<ContractsImportState> {

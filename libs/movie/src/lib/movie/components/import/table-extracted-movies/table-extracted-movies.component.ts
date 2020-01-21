@@ -57,9 +57,7 @@ export class TableExtractedMoviesComponent implements OnInit {
   }
 
   async createMovie(importState: MovieImportState): Promise<boolean> {
-    const data = this.rows.data;
     await this.addMovie(importState);
-    this.rows.data = data;
     this.snackBar.open('Movie created!', 'close', { duration: 3000 });
     return true;
   }
