@@ -28,8 +28,6 @@ const routes: Routes = [
       },
       {
         path: 'titles',
-        // canActivate: [ActiveOrganizationContractsGuard],
-        // canDeactivate: [ActiveOrganizationContractsGuard],
         children: [{
           path: '',
           loadChildren: () => import('./title/list/list.module').then(m => m.TitleListModule)

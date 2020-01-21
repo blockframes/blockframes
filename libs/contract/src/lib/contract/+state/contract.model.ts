@@ -7,14 +7,13 @@ import {
   ContractTitleDetail,
   ContractPartyDetailDocumentWithDates,
   ContractPartyDetailDocumentWithDatesDocument,
-  ContractVersionDocumentWithDates
+  LegalDocument,
+  LegalDocuments
 } from './contract.firestore';
-import { LegalDocument, LegalDocuments } from '@blockframes/contract/+state/contract.firestore';
 import { createParty } from '@blockframes/utils/common-interfaces/identity';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 import { createTerms } from '@blockframes/utils/common-interfaces/terms';
-
-export type ContractVersion = ContractVersionDocumentWithDates;
+import { ContractVersion } from '../../version/+state/contract-version.model';
 
 /**
  * @dev this should not be saved to firestore,
@@ -189,7 +188,7 @@ export function createLegalDocuments(
 export function createLegalDocument(
   legalDocument: Partial<LegalDocument> = {}
 ): LegalDocument {
-  return { 
+  return {
     label: '',
     media: createImgRef(legalDocument.media),
   }

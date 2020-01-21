@@ -1,7 +1,7 @@
 import { FormList } from '@blockframes/utils';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { Injectable } from '@angular/core';
-import { createContract, createPartyDetails } from '@blockframes/contract/+state/contract.model';
+import { createContract, createPartyDetails } from '@blockframes/contract/contract/+state/contract.model';
 import { Contract } from './../+state/contract.model';
 import { ContractPartyForm } from './party-name/party-name.form';
 import { ContractPartyDetail } from '../+state/contract.model';

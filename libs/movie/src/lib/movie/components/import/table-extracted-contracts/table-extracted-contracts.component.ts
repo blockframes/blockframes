@@ -7,7 +7,7 @@ import { Component, Input, ViewChild, OnInit, ChangeDetectionStrategy } from '@a
 import { SelectionModel } from '@angular/cdk/collections';
 import { SpreadsheetImportError, ContractsImportState } from '../view-extracted-elements/view-extracted-elements.component';
 import { ViewImportErrorsComponent } from '../view-import-errors/view-import-errors.component';
-import { ContractService } from '@blockframes/contract/+state/contract.service';
+import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 
 const hasImportErrors = (importState: ContractsImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -102,7 +102,7 @@ export class TableExtractedContractsComponent implements OnInit {
 
   /**
    * Adds a contract to database and prevents multi-insert by refreshing mat-table
-   * @param importState 
+   * @param importState
    */
   private async addContract(importState: ContractsImportState): Promise<boolean> {
     const data = this.rows.data;

@@ -12,8 +12,8 @@ import { createMovie, Movie } from './movie.model';
 import { MovieState, MovieStore } from './movie.store';
 import { AuthQuery } from '@blockframes/auth';
 import { createImgRef } from '@blockframes/utils/image-uploader';
-import { ContractQuery } from '@blockframes/contract/+state/contract.query';
-import { Contract } from '@blockframes/contract/+state/contract.model';
+import { ContractQuery } from '@blockframes/contract/contract/+state/contract.query';
+import { Contract } from '@blockframes/contract/contract/+state/contract.model';
 import { cleanModel } from '@blockframes/utils/helpers';
 import { Organization } from '@blockframes/organization/+state/organization.model';
 
