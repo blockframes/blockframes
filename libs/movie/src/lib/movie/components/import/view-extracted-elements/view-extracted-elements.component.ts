@@ -540,12 +540,8 @@ export class ViewExtractedElementsComponent {
         } */
 
         // SUBTILES (Available subtitle(s))
-<<<<<<< HEAD
         // @todo #1562 Wait for  #1411
-        if (spreadSheetRow[SpreadSheetMovie.subtitles]) {
-=======
    /*      if (spreadSheetRow[SpreadSheetMovie.subtitles]) {
->>>>>>> updated the apps to MovieLangSpec
           movie.versionInfo.subtitles = [];
           spreadSheetRow[SpreadSheetMovie.subtitles].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
             const subtitle = getCodeIfExists('LANGUAGES', g);
