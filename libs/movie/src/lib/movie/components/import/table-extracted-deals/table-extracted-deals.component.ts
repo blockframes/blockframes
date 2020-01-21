@@ -4,12 +4,14 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Component, Input, ViewChild, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { MovieQuery, createMovie } from '../../../+state';
+import { createMovie, MovieService } from '../../../+state';
 import { SelectionModel } from '@angular/cdk/collections';
 import { SpreadsheetImportError, DealsImportState } from '../view-extracted-elements/view-extracted-elements.component';
 import { ViewImportErrorsComponent } from '../view-import-errors/view-import-errors.component';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state/distribution-deal.service';
 import { cleanModel } from '@blockframes/utils/helpers';
+import { Terms } from '@blockframes/utils/common-interfaces/terms';
+import { DatePipe } from '@angular/common';
 
 const hasImportErrors = (importState: DealsImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -19,14 +21,16 @@ const hasImportErrors = (importState: DealsImportState, type: string = 'error'):
   selector: 'movie-table-extracted-deals',
   templateUrl: './table-extracted-deals.component.html',
   styleUrls: ['./table-extracted-deals.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [DatePipe]
 })
 export class TableExtractedDealsComponent implements OnInit {
 
   @Input() rows: MatTableDataSource<DealsImportState>;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-
+  private movies: any = {};
+  public processedDeals = 0;
   public selection = new SelectionModel<DealsImportState>(true, []);
   public displayedColumns: string[] = [
     'id',
@@ -46,7 +50,8 @@ export class TableExtractedDealsComponent implements OnInit {
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
     private distributionDealService: DistributionDealService,
-    private movieQuery: MovieQuery,
+    private movieService: MovieService,
+    private datepipe: DatePipe
   ) { }
 
   ngOnInit() {
@@ -58,10 +63,40 @@ export class TableExtractedDealsComponent implements OnInit {
   }
 
   async createDeal(importState: DealsImportState): Promise<boolean> {
-    const existingMovie = this.movieQuery.existingMovie(importState.movieInternalRef);
+    await this.addDeal(importState);
+    this.snackBar.open('Distribution deal added!', 'close', { duration: 3000 });
+    return true;
+  }
+
+  async createSelectedDeals(): Promise<boolean> {
+    try {
+      const creations = this.selection.selected.filter(importState => !hasImportErrors(importState));
+      for (const contract of creations) {
+        this.processedDeals++;
+        await this.addDeal(contract);
+      }
+      this.snackBar.open(`${this.processedDeals} deals created!`, 'close', { duration: 3000 });
+      this.processedDeals = 0;
+      return true;
+    } catch (err) {
+      this.snackBar.open(`Could not import all deals (${this.processedDeals} / ${this.selection.selected})`, 'close', { duration: 3000 });
+      this.processedDeals = 0;
+    }
+  }
+
+  /**
+   * Adds a deal to database and prevents multi-insert by refreshing mat-table
+   * @param importState 
+   */
+  private async addDeal(importState: DealsImportState): Promise<boolean> {
     const data = this.rows.data;
 
-    await this.distributionDealService.addDistributionDeal(existingMovie.id, importState.distributionDeal, importState.contract);
+    if (!this.movies[importState.movieInternalRef]) {
+      const existingMovie = await this.movieService.getFromInternalRef(importState.movieInternalRef);
+      this.movies[importState.movieInternalRef] = createMovie(cleanModel(existingMovie));
+    }
+
+    await this.distributionDealService.addDistributionDeal(this.movies[importState.movieInternalRef].id, importState.distributionDeal, importState.contract);
     importState.errors.push({
       type: 'error',
       field: 'distributionDeal',
@@ -69,42 +104,31 @@ export class TableExtractedDealsComponent implements OnInit {
       reason: 'Distribution deal already added',
       hint: 'Distribution deal already added'
     });
+
     this.rows.data = data;
-    this.snackBar.open('Distribution deal added!', 'close', { duration: 3000 });
     return true;
   }
 
-  async createSelectedDeals(): Promise<boolean> {
-    try {
-      const data = this.rows.data;
-      const movies = {};
-      const promises = [];
-      this.selection.selected
-        .filter(importState => !hasImportErrors(importState))
-        .map(importState => {
-
-          if (!movies[importState.movieInternalRef]) {
-            const existingMovie = this.movieQuery.existingMovie(importState.movieInternalRef);
-            movies[importState.movieInternalRef] = createMovie(cleanModel(existingMovie));
-          }
-          importState.errors.push({
-            type: 'error',
-            field: 'distributionDeal',
-            name: 'Distribution deal',
-            reason: 'Distribution deal already added',
-            hint: 'Distribution deal already added'
-          });
-
-          return promises.push(this.distributionDealService.addDistributionDeal(movies[importState.movieInternalRef].id, importState.distributionDeal, importState.contract));
-        });
-      this.rows.data = data;
-
-      await Promise.all(promises); // @TODO #1389
-      this.snackBar.open(`${promises.length} distribution deals inserted!`, 'close', { duration: 3000 });
-      return true;
-    } catch (err) {
-      console.log(err);
-      this.snackBar.open(`Could not insert distribution deals`, 'close', { duration: 3000 });
+  toPrettyDate(term: Terms, type: 'start' | 'end' = 'start'): string {
+    const noDate = 'no date';
+    switch (type) {
+      case 'start':
+        if (!term.start || isNaN(term.start.getTime())) {
+          return term.startLag ? term.startLag : noDate;
+        } else if (term.start) {
+          return this.datepipe.transform(term.start, 'yyyy-MM-dd');;
+        } else {
+          return noDate;
+        }
+      case 'end':
+      default:
+        if (!term.end || isNaN(term.end.getTime())) {
+          return term.endLag ? term.endLag : noDate;
+        } else if (term.end) {
+          return this.datepipe.transform(term.end, 'yyyy-MM-dd');;
+        } else {
+          return noDate;
+        }
     }
   }
 
@@ -176,7 +200,7 @@ export class TableExtractedDealsComponent implements OnInit {
    * Even for nested objects.
    */
   filterPredicate(data: DealsImportState, filter) {
-    const dataStr = data.movieInternalRef + data.movieTitle + data.distributionDeal.terms.start + data.distributionDeal.terms.end;
+    const dataStr = data.movieInternalRef + data.movieTitle + data.distributionDeal.terms.start + data.distributionDeal.terms.end + data.distributionDeal.id;
     return dataStr.toLowerCase().indexOf(filter) !== -1;
   }
 

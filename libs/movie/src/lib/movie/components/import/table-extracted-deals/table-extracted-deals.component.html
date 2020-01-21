@@ -59,12 +59,12 @@
 
   <ng-container matColumnDef="distributionDeal.terms.start">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Start </th>
-    <td mat-cell *matCellDef="let element"> {{ toPrettyDate(element.distributionDeal.terms.start) }} </td>
+    <td mat-cell *matCellDef="let element"> {{ toPrettyDate(element.distributionDeal.terms, 'start') }} </td>
   </ng-container>
 
   <ng-container matColumnDef="distributionDeal.terms.end">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> End </th>
-    <td mat-cell *matCellDef="let element"> {{ toPrettyDate(element.distributionDeal.terms.end) }} </td>
+    <td mat-cell *matCellDef="let element"> {{ toPrettyDate(element.distributionDeal.terms, 'end') }} </td>
   </ng-container>
 
   <ng-container matColumnDef="distributionDeal.exclusive">

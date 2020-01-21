@@ -1114,7 +1114,7 @@ export class ViewExtractedElementsComponent {
           }
 
           contract = await this.contractService.getContractWithLastVersionFromDeal(movie.id, distributionDeal.id);
-          if(contract) {
+          if (contract) {
             importErrors.contract = contract;
 
             /////////////////
@@ -1145,13 +1145,23 @@ export class ViewExtractedElementsComponent {
             // BEGINNING OF RIGHTS
             if (spreadSheetRow[SpreadSheetDistributionDeal.rightsStart]) {
               const rightsStart: SSF$Date = SSF.parse_date_code(spreadSheetRow[SpreadSheetDistributionDeal.rightsStart]);
-              distributionDeal.terms.start = new Date(`${rightsStart.y}-${rightsStart.m}-${rightsStart.d}`);
+              const dateStart = new Date(`${rightsStart.y}-${rightsStart.m}-${rightsStart.d}`);
+              if (isNaN(dateStart.getTime())) { // ie invalid date
+                distributionDeal.terms.startLag = spreadSheetRow[SpreadSheetDistributionDeal.rightsStart];
+              } else {
+                distributionDeal.terms.start = dateStart
+              }
             }
 
             // END OF RIGHTS
             if (spreadSheetRow[SpreadSheetDistributionDeal.rightsEnd]) {
               const rightsEnd: SSF$Date = SSF.parse_date_code(spreadSheetRow[SpreadSheetDistributionDeal.rightsEnd]);
-              distributionDeal.terms.end = new Date(`${rightsEnd.y}-${rightsEnd.m}-${rightsEnd.d}`);
+              const dateEnd = new Date(`${rightsEnd.y}-${rightsEnd.m}-${rightsEnd.d}`);
+              if (isNaN(dateEnd.getTime())) { // ie invalid date
+                distributionDeal.terms.endLag = spreadSheetRow[SpreadSheetDistributionDeal.rightsEnd];
+              } else {
+                distributionDeal.terms.end = dateEnd
+              }
             }
 
             // TERRITORIES (Mandate Territories)
@@ -1346,8 +1356,8 @@ export class ViewExtractedElementsComponent {
               holdbacks.forEach(h => {
                 const holdbackParts = h.split(this.subSeparator);
                 const media = getCodeIfExists('MEDIAS', holdbackParts[0] as ExtractCode<'MEDIAS'>);
-                
-                if(holdbackParts.length !== 3) {
+
+                if (holdbackParts.length !== 3) {
                   importErrors.errors.push({
                     type: 'error',
                     field: 'holdback',
@@ -1417,7 +1427,7 @@ export class ViewExtractedElementsComponent {
               type: 'error',
               field: 'contract',
               name: 'Contract',
-              reason: `No contract found matching movieId: ${movie.id} and dealId: ${ distributionDeal.id}`,
+              reason: `No contract found matching movieId: ${movie.id} and dealId: ${distributionDeal.id}`,
               hint: 'Try importing it first or check if data is correct.'
             });
           }
@@ -1784,7 +1794,7 @@ export class ViewExtractedElementsComponent {
           titleIndex += titlesFieldsCount;
           const titleDetails = await this.processTitleDetails(spreadSheetRow, currentIndex);
 
-          if(importErrors.newContract && contract.last.titles[titleDetails.titleId] !== undefined) {
+          if (importErrors.newContract && contract.last.titles[titleDetails.titleId] !== undefined) {
             importErrors.errors.push({
               type: 'error',
               field: 'titleIds',
