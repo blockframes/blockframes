@@ -13,7 +13,10 @@
           uploadOnFirestore="true" 
           accept="['.pdf']" 
           [types]="['application/pdf']" 
-          (storeUploaded)="importPDF($event, 'presentation_deck')"></file-upload>
+          (storeUploaded)="importPDF($event, 'presentation_deck')">
+          <h3 type>Presentation Deck</h3>
+          <p class="mat-caption" format>Accepted Formats: .pdf</p>
+        </file-upload>
         </mat-card-content>
       </mat-card>
       <!-- Scenario -->
@@ -27,7 +30,10 @@
           uploadOnFirestore="true" 
           accept="['.pdf']" 
           [types]="['application/pdf']" 
-          (storeUploaded)="importPDF($event, 'scenario')"></file-upload>
+          (storeUploaded)="importPDF($event, 'scenario')">
+          <h3 type>Scenario</h3>
+          <p class="mat-caption" format>Accepted Formats: .pdf</p>
+        </file-upload>
         </mat-card-content>
       </mat-card>
     <!-- File Links -->
