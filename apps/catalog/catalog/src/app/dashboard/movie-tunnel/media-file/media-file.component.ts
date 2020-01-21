@@ -15,8 +15,9 @@ export class MediaFileComponent {
     return this.form.get('promotionalElements');
   }
 
-  importPDF(file, path: 'scenario' | 'presentation_deck') {
-    const url = createImgRef(file)
-    this.form.get('promotionalElements').get(path).get('media').patchValue(url);
+  // get the url generated from firestorage and update url of media for each path
+  importPDF(url: string, path: 'scenario' | 'presentation_deck') {
+    const imgRefurl = createImgRef(url);
+    this.form.get('promotionalElements').get(path).get('media').patchValue(imgRefurl);
   }
 }

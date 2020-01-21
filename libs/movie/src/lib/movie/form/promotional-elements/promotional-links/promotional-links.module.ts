@@ -4,7 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Components
-import { PromotionalLinksComponent } from './promotional-links/promotional-links.component';
+import { PromotionalLinksComponent } from './promotional-links.component';
 
 // Material
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -28,4 +28,4 @@ import { MatButtonModule } from '@angular/material/button';
   ],
   exports: [PromotionalLinksComponent]
 })
-export class PromotionalElementsModule { }
+export class PromotionalLinksModule { }
