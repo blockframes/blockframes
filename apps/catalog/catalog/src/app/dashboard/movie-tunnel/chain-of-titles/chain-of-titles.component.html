@@ -23,13 +23,13 @@
             <button mat-mini-fab color="warn" (click)="chainOfTitles.removeAt(i)" aria-label="Remove a director form">
               <mat-icon>delete</mat-icon>
             </button>
-            <span>Delete Still</span>
+            <span>Delete Document</span>
           </footer>
           <footer *ngIf="last" fxLayout="column" fxLayoutAlign="center center">
             <button mat-mini-fab color="primary" (click)="chainOfTitles.add()" aria-label="Remove a director form">
               <mat-icon>add</mat-icon>
             </button>
-            <span>Add Still</span>
+            <span>Add Document</span>
           </footer>
           <mat-divider [inset]="true"></mat-divider>
         </ng-container>
