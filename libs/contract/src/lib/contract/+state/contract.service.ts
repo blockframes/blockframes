@@ -30,8 +30,8 @@ const contractsListQuery = (orgId: string): Query<Contract[]> => ({
 const contractQuery = (contractId: string): Query<Contract> => ({
   path: `contracts/${contractId}`,
     versions: (contract: Contract) => ({
-    path: `contracts/${contract.id}/versions`
-  })
+      path: `contracts/${contract.id}/versions`
+    })
 })
 
 
@@ -62,16 +62,11 @@ export class ContractService extends CollectionService<ContractState> {
     );
   }
 
-  /**
-   * Sync the store with the given contract.
-   * Create a specific query of contract with a new field (lastVersion)
-   * and set the new entity as active on the contracts store.
-   */
+  /** Sync the store with the given contract. */
   public syncContractQuery(contractId: string) {
     // Reset the store to clean the active contract.
     this.store.reset();
     return awaitSyncQuery.call(this, contractQuery(contractId));
-
   }
 
   onCreate(contract: Contract) {
@@ -110,6 +105,15 @@ export class ContractService extends CollectionService<ContractState> {
     } catch (error) {
       console.warn(`Contract ${typeof contractOrId === 'string' ? contractOrId : contractOrId.id} not found.`);
     }
+  }
+
+  public async getContractListWithLastVersion(contracts: Contract[]) {
+    const promises: Promise<ContractWithLastVersion>[] =[];
+    contracts.forEach(contract => {
+      promises.push(this.getContractWithLastVersion(contract))
+    })
+
+    return Promise.all(promises)
   }
 
   /**

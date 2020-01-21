@@ -1,14 +1,14 @@
-import { Injectable } from "@angular/core";
-import { CollectionGuard, CollectionGuardConfig } from "akita-ng-fire";
-import { ActivatedRouteSnapshot } from "@angular/router";
-import { ContractService } from "../+state/contract.service";
-import { ContractState } from "../+state/contract.store";
+import { Injectable } from '@angular/core';
+import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
+import { ActivatedRouteSnapshot } from '@angular/router';
+import { ContractService } from '../+state/contract.service';
+import { ContractState, ContractStore } from '../+state/contract.store';
+import { tap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 @CollectionGuardConfig({ awaitSync: true })
 export class ActiveContractGuard extends CollectionGuard<ContractState> {
-
-  constructor(protected service: ContractService) {
+  constructor(protected service: ContractService, private store: ContractStore) {
     super(service);
   }
 
@@ -16,7 +16,9 @@ export class ActiveContractGuard extends CollectionGuard<ContractState> {
    * Sync and set active.
    * Use it on a route with :contractId in it.
    */
-  sync(next: ActivatedRouteSnapshot) {
-    return this.service.syncContractQuery(next.params.contractId);
+  sync({ params }: ActivatedRouteSnapshot) {
+    return this.service
+      .syncContractQuery(params.contractId)
+      .pipe(tap(_ => this.store.setActive(params.contractId)));
   }
 }
