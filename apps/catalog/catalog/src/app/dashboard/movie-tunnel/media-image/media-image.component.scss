@@ -1,12 +1,12 @@
-mat-card-content {
+mat-card {
   width: 100%;
-  text-align: center;
-  movie-promotional-elements-images {
+  mat-card-content {
     width: 100%;
+    text-align: center;
   }
 }
 
-.mat-body-2 {
+.still {
   display: flex;
   justify-content: flex-start;
   margin-left: 15px;

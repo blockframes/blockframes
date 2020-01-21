@@ -2,7 +2,7 @@
   <h4 title>Uploaded Media</h4>
   <h1 subtitle>Images</h1>
   <p description class="mat-body-1">Upload your images in .jpeg or .png formats, they will be used for promotional purposes. When you upload an image, we will help you to match the size required.</p>
-  <section tunnel-form>
+  <ng-container tunnel-form>
     <!-- TODO#1625 cropzone doesn't match with source image on large screen -->
     <!-- Banner -->
     <mat-card>
@@ -15,6 +15,9 @@
           [storagePath]="banner" 
           [ratio]="16/9"
           [formControl]="banner.get('media')">
+          <h3 type>Banner Image*</h3>
+          <p class="mat-body-2" dimensions>Ratio : 16:9</p>
+          <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>
       </drop-cropper>
       </mat-card-content>
     </mat-card>
@@ -29,6 +32,9 @@
             [storagePath]="poster" 
             [ratio]="5/7"
             [formControl]="control.get('media')">
+            <h3 type>Movie Poster Image*</h3>
+            <p class="mat-body-2" dimensions>Dimensions : 300 x 700 px</p>
+            <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>  
           </drop-cropper>
         </ng-container>
       </mat-card-content>
@@ -40,11 +46,14 @@
       </mat-card-header>
       <mat-card-content>
         <ng-container *ngFor="let control of stillPhoto.controls; let i = index; let last = last">
-          <span class="mat-body-2">Still # {{i + 1}}</span>
+          <span class="still mat-body-2">Still # {{i + 1}}</span>
           <drop-cropper 
             [storagePath]="stillPhoto" 
             [ratio]="7/5"
             [formControl]="control.get('media')">
+            <h3 type>Still Photos</h3>
+            <p class="mat-body-2" dimensions>Dimensions : 700 x 500 px</p>
+            <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>  
           </drop-cropper>
           <!-- Add / Delete -->
           <footer *ngIf="!last" fxLayout="column" fxLayoutAlign="center center">
@@ -63,5 +72,5 @@
         </ng-container>
         </mat-card-content>
       </mat-card>
-  </section>
+  </ng-container>
 </tunnel-page>
