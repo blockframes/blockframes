@@ -1,0 +1,29 @@
+<ng-container *ngFor="let country of main.originCountries.controls; let i = index">
+  <div class="country">
+    <p class="mat-body-2">Countries of Origin #{{ i + 1 }}</p>
+    <p>
+      <span class="mat-body-1 info-name">Country </span>
+      <span class="mat-body-1">{{ country | missing }}</span>
+    </p>
+    <p>
+      <span class="mat-body-1 info-name">Domestic Distributor </span>
+      <span class="mat-body-1"></span>
+    </p>
+    <p>
+      <span class="mat-body-1 info-name">Release Media </span>
+      <ng-container *ngFor="let release of salesInfo.originalRelease.controls">
+        <span *ngIf="release.get('country').value === country.value" class="mat-body-1">
+          {{ release.get('media') | missing }}
+        </span>
+      </ng-container>
+    </p>
+    <p>
+      <span class="mat-body-1 info-name">Release Date </span>
+      <ng-container *ngFor="let release of salesInfo.originalRelease.controls">
+        <span *ngIf="release.get('country').value === country.value" class="mat-body-1">
+          {{ release.get('date') | missing }}
+        </span>
+      </ng-container>
+    </p>
+  </div>
+</ng-container>
