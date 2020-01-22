@@ -64,11 +64,6 @@ export interface MovieAnalytics {
   promoReelOpened: EventAnalytics[]
 }
 
-export interface MovieVersionInfo {
-  dubbings: string[],
-  subtitles: string[],
-}
-
 export interface StoreConfig {
   display: boolean,
   storeType: StoreType,
