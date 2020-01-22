@@ -7,12 +7,14 @@ import { MovieSummaryMainComponent } from './main.component';
 
 // Material
 import { MatButtonModule, MatCardModule, MatIconModule } from '@angular/material';
+import { MissingPipeModule } from '@blockframes/utils';
 
 @NgModule({
   declarations: [MovieSummaryMainComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
+    MissingPipeModule,
 
     // Material
     MatButtonModule,
