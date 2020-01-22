@@ -8,6 +8,7 @@ import { ContractWithLastVersion, Contract } from '../../contract/+state/contrac
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'contracts/:contractId/versions' })
 export class ContractVersionService extends CollectionService<ContractVersionState> {
+  public contractId: string;
 
   constructor(private contractQuery: ContractQuery, store: ContractVersionStore) {
     super(store);
