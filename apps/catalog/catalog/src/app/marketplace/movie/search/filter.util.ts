@@ -32,15 +32,15 @@ function hasLanguage(
   }
 
   if (language.dubbed) {
-    original = movie.versionInfo.languages[language.name].dubbed;
+    dubbed = movie.versionInfo.languages[language.name].dubbed;
   }
 
   if (language.subtitle) {
-    original = movie.versionInfo.languages[language.name].subtitle;
+    subtitle = movie.versionInfo.languages[language.name].subtitle;
   }
 
   if (language.caption) {
-    original = movie.versionInfo.languages[language.name].caption;
+    caption = movie.versionInfo.languages[language.name].caption;
   }
 
   return original && dubbed && subtitle && caption;
