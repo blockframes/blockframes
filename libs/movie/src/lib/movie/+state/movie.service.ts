@@ -12,7 +12,7 @@ import { createMovie, Movie, MovieAnalytics } from './movie.model';
 import { MovieState, MovieStore } from './movie.store';
 import { AuthQuery } from '@blockframes/auth';
 import { createImgRef } from '@blockframes/utils/image-uploader';
-import { ContractQuery } from '@blockframes/contract/+state/contract.query';
+import { ContractQuery } from '@blockframes/contract/contract/+state/contract.query';
 import { cleanModel } from '@blockframes/utils/helpers';
 import { firestore } from 'firebase/app';
 import { PermissionsService } from '@blockframes/organization/permissions/+state/permissions.service';

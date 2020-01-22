@@ -1,7 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ContractWithLastVersion } from '@blockframes/contract/version/+state/contract-version.model';
-import { ContractQuery, ContractService } from '@blockframes/contract/+state';
+import { ContractQuery, ContractService, ContractWithLastVersion } from '@blockframes/contract/contract/+state';
 import { switchMap } from 'rxjs/operators';
 
 @Component({

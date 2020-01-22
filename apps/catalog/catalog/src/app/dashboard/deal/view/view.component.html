@@ -1,4 +1,4 @@
-<section *ngIf="contract$ | async as contract">
+<section *ngIf="contract$ | async as contract" fxLayout="column" fxLayoutGap="25px">
   <!-- TITLE & PRICE -->
   <article
     *ngIf="licensees[0].party as licensee"
@@ -13,13 +13,13 @@
       </span>
     </div>
     <div fxLayout="column" fxLayoutAlign="center end">
-      <span class="mat-caption"> {{ lastVersion.creationDate.toDate() | date: 'short' }} </span>
+      <span class="mat-caption"> {{ lastVersion.creationDate | date: 'short' }} </span>
       <h2>{{ totalPrice.amount | currency: totalPrice.currency }}</h2>
     </div>
   </article>
 
   <!-- CONTRACT SUMMARY -->
-  <article fxLayout="row">
+  <article fxLayout="row" fxLayoutGap="25px">
     <mat-card>
       <mat-card-title>
         <h3>
@@ -63,7 +63,16 @@
       </mat-card-actions>
     </mat-card>
     <mat-card>
-
+      <mat-card-title>
+        <h3>Proposed Payment Schedule</h3>
+      </mat-card-title>
     </mat-card>
   </article>
+  <mat-card>
+    <bf-table-filter
+      [source]="versions"
+      [columns]="columns"
+      [initialColumns]="initialColumns">
+    </bf-table-filter>
+  </mat-card>
 </section>
