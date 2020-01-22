@@ -1,16 +1,30 @@
-<section test-id="invitations">
-
-  <ng-container *ngFor="let invitation of (docInvitations$ | async)">
-    <invitation-item [invitation]="invitation"></invitation-item>
-    <mat-divider></mat-divider>
-  </ng-container>
-
-  <!-- Only SuperAdmins can get user requests invitations in notification-widget -->
-  <ng-container *ngIf="(isAdmin$ | async)">
-    <ng-container *ngFor="let invitation of (userInvitations$ | async)">
-      <invitation-item [invitation]="invitation"></invitation-item>
-      <mat-divider></mat-divider>
+<mat-card>
+  <ng-container
+    [ngSwitch]="day.key"
+    *ngFor="let day of (invitationsByDate$ | async | keyvalue | reverse)">
+    <ng-container *ngSwitchCase="(today | date)">
+      <h4>Today</h4>
+      <invitation-item
+        *ngFor="let invitation of day.value"
+        [invitation]="invitation"
+        [placeholderUrl]="placeholderUrl">
+      </invitation-item>
+    </ng-container>
+    <ng-container *ngSwitchCase="(yesterday | date)">
+      <h4>Yesterday</h4>
+      <invitation-item
+        *ngFor="let invitation of day.value"
+        [invitation]="invitation"
+        [placeholderUrl]="placeholderUrl">
+      </invitation-item>
+    </ng-container>
+    <ng-container *ngSwitchDefault>
+      <h4>{{ day.key }}</h4>
+      <invitation-item
+        *ngFor="let invitation of day.value; let isLast = last"
+        [invitation]="invitation"
+        [placeholderUrl]="placeholderUrl">
+      </invitation-item>
     </ng-container>
   </ng-container>
-
-</section>
+</mat-card>

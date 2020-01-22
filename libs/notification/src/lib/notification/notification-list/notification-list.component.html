@@ -1,4 +1,28 @@
-<section testId="notifications" *ngFor="let notification of (notifications$ | async)">
-  <notification-item [notification]="notification"></notification-item>
-  <mat-divider></mat-divider>
-</section>
+<mat-card>
+  <ng-container [ngSwitch]="day.key" *ngFor="let day of notificationsByDate$ | async | keyvalue | reverse">
+    <ng-container *ngSwitchCase="today | date">
+      <h4>Today</h4>
+      <notification-item
+        *ngFor="let notification of day.value"
+        [notification]="notification"
+        [theme]="theme$ | async">
+      </notification-item>
+    </ng-container>
+    <ng-container *ngSwitchCase="yesterday | date">
+      <h4>Yesterday</h4>
+      <notification-item
+        *ngFor="let notification of day.value"
+        [notification]="notification"
+        [theme]="theme$ | async">
+      </notification-item>
+    </ng-container>
+    <ng-container *ngSwitchDefault>
+      <h4>{{ day.key }}</h4>
+      <notification-item
+        *ngFor="let notification of day.value; let isLast = last"
+        [notification]="notification"
+        [theme]="theme$ | async">
+      </notification-item>
+    </ng-container>
+  </ng-container>
+</mat-card>

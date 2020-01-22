@@ -2,11 +2,12 @@ import { PublicOrganization } from '@blockframes/organization/types';
 import { NotificationType } from '@blockframes/notification/types';
 import { PublicMovie } from '@blockframes/movie/types';
 
-export { MovieDocument } from '@blockframes/movie/types';
+export { MovieDocument, PublicMovie } from '@blockframes/movie/types';
 export {
   OrganizationDocument,
   OrganizationStatus,
-  createOrganizationDocument
+  createOrganizationDocument,
+  PublicOrganization
 } from '@blockframes/organization/types';
 export {
   InvitationDocument,
@@ -37,6 +38,8 @@ export {
 export { PublicUser } from '@blockframes/auth/types';
 export { RequestDemoInformations } from '@blockframes/catalog/demo-request.model';
 export { MovieAnalytics, EventAnalytics } from '@blockframes/movie/movie+state/movie.firestore';
+export { createNotification, NotificationType, NotificationDocument } from '@blockframes/notification/types';
+export { App } from '@blockframes/utils/apps';
 
 /**
  * Types used by the firebase backend.

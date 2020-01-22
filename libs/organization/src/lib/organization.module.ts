@@ -71,7 +71,8 @@ export const organizationRoutes: Routes = [
         path: 'dao',
         canActivate: [MemberGuard, ActiveDaoGuard],
         canDeactivate: [MemberGuard],
-        loadChildren: () => import('@blockframes/ethers').then(m => m.DaoModule) },
+        loadChildren: () => import('@blockframes/ethers').then(m => m.DaoModule)
+      }
     ]
   }
 ];
@@ -124,7 +125,7 @@ export const organizationRoutes: Routes = [
     MemberRepertoryComponent,
     MemberAddComponent,
     OrganizationEditableComponent,
-    ActivateDaoComponent,
+    ActivateDaoComponent
   ]
 })
 export class OrganizationModule {}

@@ -2,10 +2,9 @@ import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/
 import { InvitationQuery, InvitationService, InvitationStore } from '../+state';
 import { Observable, Subscription } from 'rxjs';
 import { AuthQuery } from '@blockframes/auth';
-import { PermissionsQuery } from 'libs/organization/src/lib/permissions/+state/permissions.query';
-import { Order } from '@datorama/akita';
-import { switchMap } from 'rxjs/operators';
-import { InvitationType, Invitation } from '@blockframes/invitation/types';
+import { DateGroup } from '@blockframes/utils/helpers';
+import { Invitation } from '@blockframes/invitation/types';
+import { ThemeService } from '@blockframes/ui/theme';
 
 @Component({
   selector: 'invitation-list',
@@ -14,53 +13,42 @@ import { InvitationType, Invitation } from '@blockframes/invitation/types';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InvitationListComponent implements OnInit, OnDestroy {
-  public docInvitations$: Observable<Invitation[]>;
-  public userInvitations$: Observable<Invitation[]>;
-  public isAdmin$: Observable<boolean>;
-  private sub: Subscription;
+  public invitationsByDate$: Observable<DateGroup<Invitation[]>>;
+  public theme: string;
+
+  public today: Date = new Date();
+  public yesterday: Date = new Date();
+
+  private collectionSub: Subscription;
+  private themeSub: Subscription;
 
   constructor(
     private query: InvitationQuery,
     private store: InvitationStore,
     private service: InvitationService,
-    private permissionQuery: PermissionsQuery,
-    private authQuery: AuthQuery
+    private authQuery: AuthQuery,
+    private themeService: ThemeService
   ) {}
 
   ngOnInit() {
-    /**
-     * Checks if the user is admin before populating the invitations arrays. If so, we populate
-     * both docInvitations and userInvitations. If not, we populate only docInvitations.
-     */
+    this.yesterday.setDate(this.today.getDate() - 1);
+
     const storeName = this.store.storeName;
-    const queryFn = ref => ref.where('organization.id', '==', this.authQuery.orgId).where('status', '==', 'pending');
-    if (!!this.authQuery.orgId) {
-      this.sub = this.service.syncCollection(queryFn, { storeName }).subscribe();
-      this.isAdmin$ = this.permissionQuery.isAdmin$;
-      this.userInvitations$ = this.permissionQuery.isAdmin$.pipe(
-        switchMap(isAdmin => {
-          const filterBy = invitation => invitation.type === InvitationType.fromUserToOrganization;
-          if (!isAdmin) {
-            const ids = this.query.getAll({ filterBy }).map(entity => entity.id);
-            // TODO: Not working as intended as first value emitted is empty => ISSUE#1056
-            this.store.remove(ids);
-          }
-          return this.query.selectAll({
-            filterBy,
-            sortBy: 'date',
-            sortByOrder: Order.DESC
-          });
-        })
-      );
+    const queryFn = ref =>
+      ref.where('organization.id', '==', this.authQuery.orgId).where('status', '==', 'pending');
+    if (this.authQuery.orgId) {
+      this.collectionSub = this.service.syncCollection(queryFn, { storeName }).subscribe();
+      this.themeSub = this.themeService.theme$.subscribe(theme => this.theme = theme);
+      this.invitationsByDate$ = this.query.groupInvitationsByDate();
     }
-    this.docInvitations$ = this.query.selectAll({
-      filterBy: invitation => invitation.type === InvitationType.toWorkOnDocument,
-      sortBy: 'date',
-      sortByOrder: Order.DESC
-    });
+  }
+
+  public get placeholderUrl() {
+    return `/assets/images/${this.theme}/Avatar_250.png`;
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe(); // TODO: Leads to an error and an empty page when no invitations on /c/organization/home => ISSUE#1337
+    this.collectionSub.unsubscribe(); // TODO: Leads to an error and an empty page when no invitations on /c/organization/home => ISSUE#1337
+    this.themeSub.unsubscribe();
   }
 }

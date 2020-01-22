@@ -7,11 +7,12 @@ import {
   SnapObject,
   DeliveryDocument,
   MaterialDocument,
-  StakeholderDocument
+  StakeholderDocument,
+  App,
+  NotificationType,
+  createNotification
 } from './data/types';
 import { copyMaterialsToMovie } from './material';
-import { createNotification, NotificationType } from '@blockframes/notification/types';
-import { App } from '@blockframes/utils/apps';
 
 export async function onDeliveryUpdate(
   change: functions.Change<FirebaseFirestore.DocumentSnapshot>,

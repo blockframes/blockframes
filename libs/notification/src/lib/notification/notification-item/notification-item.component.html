@@ -1,12 +1,10 @@
-<article *ngIf="notification" class="container" (click)="read()">
-  <span class="message" (click)="goToPath()">
-    {{ message }}
-  </span>
-  <article class="nav-anchor" *ngIf="notification.type === 'pathToDocument'">
-    <a test-id="navigate" mat-flat-button color="accent" (click)="goToPath()">Go to document</a>
+<section fxLayout="row" fxLayoutAlign="start start">
+  <img [placeholderUrl]="getPlaceholderUrl(information.placeholderUrl)" [imgRef]="information.imgRef" alt="Profile picture" />
+  <article fxLayout="column" fxLayoutAlign="start start">
+    <p>{{ information.message }}</p>
+    <small>{{ notification.date.toDate() | date: 'shortTime' }}</small>
   </article>
-  <p>
-    Received {{ notification.date.toDate() | date: 'MMM dd yyyy' }} at
-    {{ notification.date.toDate() | date: 'hh:mm a' }}
-  </p>
-</article>
+  <article *ngIf="notification.type == 'pathToDocument'">
+    <a mat-flat-button (click)="goToPath()">Go to document</a>
+  </article>
+</section>
