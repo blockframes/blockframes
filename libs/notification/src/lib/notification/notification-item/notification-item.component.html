@@ -1,12 +1,5 @@
 <section fxLayout="row" fxLayoutAlign="start start">
-  <article>
-    <ng-container *ngIf="information.imgRef; else defaultAvatar">
-      <avatar-list [refs]="[information.imgRef]"></avatar-list>
-    </ng-container>
-    <ng-template #defaultAvatar>
-      <img [asset]="information.defaultImg" />
-    </ng-template>
-  </article>
+  <img [placeholderUrl]="getPlaceholderUrl(information.placeholderUrl)" [imgRef]="information.imgRef" alt="Profile picture" />
   <article fxLayout="column" fxLayoutAlign="start start">
     <p>{{ information.message }}</p>
     <small>{{ notification.date.toDate() | date: 'shortTime' }}</small>
