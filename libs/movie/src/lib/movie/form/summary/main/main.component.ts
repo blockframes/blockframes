@@ -1,18 +1,14 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { MovieMainForm } from '@blockframes/movie/movieform/main/main.form';
-import { MovieFestivalPrizesForm } from '@blockframes/movie/movieform/festival-prizes/festival-prizes.form';
-import { MovieSalesCastForm } from '@blockframes/movie/movieform/sales-cast/sales-cast.form';
-import { MovieSalesInfoForm } from '@blockframes/movie/movieform/sales-info/sales-info.form';
 
 @Component({
-  selector: '[main] [salesInfo] movie-summary-main',
+  selector: '[main] movie-summary-main',
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieSummaryMainComponent {
   @Input() main: MovieMainForm;
-  @Input() salesInfo: MovieSalesInfoForm;
 
   public get reference() {
     return this.main.get('internalRef');
