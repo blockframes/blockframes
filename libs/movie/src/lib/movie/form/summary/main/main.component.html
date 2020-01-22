@@ -40,22 +40,3 @@
     <span class="mat-body-1">{{ director.get('shortBiography') | missing }}</span>
   </p>
 </ng-container>
-
-<p>
-  <span class="mat-body-1 info-name">Original Languages </span>
-  <ng-container *ngFor="let language of main.originalLanguages.controls; let isLast = last">
-    <span class="mat-body-1">{{ language | missing }}{{ isLast ? '' : ', ' }}</span>
-  </ng-container>
-</p>
-
-<p>
-  <span class="mat-body-1 info-name">Genres </span>
-  <ng-container *ngFor="let genre of genres; let isLast = last">
-    <span class="mat-body-1">{{ genre | missing }}{{ isLast ? '' : ', ' }}</span>
-  </ng-container>
-</p>
-
-<p>
-  <span class="mat-body-1 info-name">Running Time </span>
-  <span class="mat-body-1">{{ totalRunTime | missing }}</span>
-</p>
