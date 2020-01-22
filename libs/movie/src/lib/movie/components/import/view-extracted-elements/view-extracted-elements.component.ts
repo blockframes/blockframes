@@ -316,20 +316,51 @@ export class ViewExtractedElementsComponent {
         }
 
         // PRODUCTION COMPANIES (Production Companie(s))
-        // @todo(#1562)
-        // if (spreadSheetRow[SpreadSheetMovie.stakeholdersWithRole]) {
-        //   movie.main.stakeholders = [];
-        //   spreadSheetRow[SpreadSheetMovie.stakeholdersWithRole].split(this.separator).forEach((p: string) => {
-        //     const stakeHolderParts = p.split(this.subSeparator);
-        //     const stakeHolder = createStakeholder({ displayName: stakeHolderParts[0] });
-        //     const role = getCodeIfExists('STAKEHOLDER_ROLES', stakeHolderParts[1] as ExtractCode<'STAKEHOLDER_ROLES'>);
-        //     if (role) {
-        //       stakeHolder.role = role;
-        //     }
+        if (spreadSheetRow[SpreadSheetMovie.stakeholdersWithRole]) {
+          spreadSheetRow[SpreadSheetMovie.stakeholdersWithRole].split(this.separator).forEach((p: string) => {
+            const stakeHolderParts = p.split(this.subSeparator);
+            const stakeHolder = createStakeholder({ displayName: stakeHolderParts[0].trim() });
+            const role = getCodeIfExists('STAKEHOLDER_ROLES', stakeHolderParts[1] as ExtractCode<'STAKEHOLDER_ROLES'>);
 
-        //     movie.main.stakeholders.push(stakeHolder);
-        //   });
-        // }
+            if (role) {
+              switch (role) {
+                case 'broadcaster-coproducer':
+                  movie.main.stakeholders.broadcasterCoproducer.push(stakeHolder);
+                  break;
+                case 'financier':
+                  movie.main.stakeholders.financier.push(stakeHolder);
+                  break;
+                case 'laboratory':
+                  movie.main.stakeholders.laboratory.push(stakeHolder);
+                  break;
+                case 'sales-agent':
+                  movie.main.stakeholders.salesAgent.push(stakeHolder);
+                  break;
+                case 'distributor':
+                  movie.main.stakeholders.distributor.push(stakeHolder);
+                  break;
+                case 'line-producer':
+                  movie.main.stakeholders.lineProducer.push(stakeHolder);
+                  break;
+                case 'co-producer':
+                  movie.main.stakeholders.coProducer.push(stakeHolder);
+                  break;
+                case 'executive-producer':
+                default:
+                  movie.main.stakeholders.executiveProducer.push(stakeHolder);
+                  break;
+              }
+            } else {
+              importErrors.errors.push({
+                type: 'error',
+                field: 'movie.main.stakeholders',
+                name: 'Stakeholders',
+                reason: `${stakeHolderParts[1]} not found in Stakeholders roles list`,
+                hint: 'Edit corresponding sheet field.'
+              });
+            }
+          });
+        }
 
         // COLOR (Color / Black & White )
         if (spreadSheetRow[SpreadSheetMovie.color]) {
@@ -896,16 +927,17 @@ export class ViewExtractedElementsComponent {
       });
     }
 
-    // @todo(#1562)
-    // if (movie.main.stakeholders.length === 0) {
-    //   errors.push({
-    //     type: 'warning',
-    //     field: 'main.stakeholders',
-    //     name: 'Stakeholder(s)',
-    //     reason: 'Optional field is missing',
-    //     hint: 'Edit corresponding sheet field.'
-    //   });
-    // }
+    let stakeholdersCount = 0;
+    Object.keys(movie.main.stakeholders).forEach(k => { stakeholdersCount += k.length });
+    if (stakeholdersCount === 0) {
+       errors.push({
+         type: 'warning',
+         field: 'main.stakeholders',
+         name: 'Stakeholder(s)',
+         reason: 'Optional field is missing',
+         hint: 'Edit corresponding sheet field.'
+       });
+    }
 
     if (!movie.salesInfo.color) {
       errors.push({
