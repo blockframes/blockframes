@@ -1,0 +1,17 @@
+<p>
+  <span class="mat-body-1 info-name">Principal Cast </span>
+  <ng-container *ngFor="let cast of salesCast.cast.controls; let isLast = last">
+    <span *ngIf="cast.value === 'lead-role'" class="mat-body-1">
+      {{ cast.get('firstName') | missing }} {{ cast.get('lastName') | missing }}{{ isLast ? '' : ', ' }}
+    </span>
+  </ng-container>
+</p>
+
+<p>
+  <span class="mat-body-1 info-name">Secondary Roles </span>
+  <ng-container *ngFor="let cast of salesCast.cast.controls; let isLast = last">
+    <span *ngIf="cast.value === 'secondary-role'" class="mat-body-1">
+      {{ cast.get('firstName') | missing }} {{ cast.get('lastName') | missing }}{{ isLast ? '' : ', ' }}
+    </span>
+  </ng-container>
+</p>
