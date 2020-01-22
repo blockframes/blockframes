@@ -1,5 +1,4 @@
-import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
-import { LegalRolesSlug } from '@blockframes/utils/static-model/types';
+import { getCodeIfExists } from '@blockframes/utils/static-model/staticModels';
 import { createPrice } from '@blockframes/utils/common-interfaces/price';
 import {
   ContractDocumentWithDates,
@@ -8,12 +7,14 @@ import {
   ContractPartyDetailDocumentWithDates,
   ContractPartyDetailDocumentWithDatesDocument,
   LegalDocument,
-  LegalDocuments
+  LegalDocuments,
+  ContractDocument
 } from './contract.firestore';
 import { createParty } from '@blockframes/utils/common-interfaces/identity';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 import { createTerms } from '@blockframes/utils/common-interfaces/terms';
-import { ContractVersion } from '../../version/+state/contract-version.model';
+import { ContractVersion, ContractVersionWithTimeStamp, formatContractVersion } from '../../version/+state/contract-version.model';
+import { firestore } from "firebase/app";
 
 /**
  * @dev this should not be saved to firestore,
@@ -28,6 +29,10 @@ export interface Contract extends ContractDocumentWithDates {
   versions?: ContractVersion[];
 };
 
+export interface ContractWithTimeStamp extends ContractDocument {
+  versions?: ContractVersionWithTimeStamp[];
+};
+
 export type ContractPartyDetail = ContractPartyDetailDocumentWithDates;
 
 export type ContractPartyDetailDocument = ContractPartyDetailDocumentWithDatesDocument;
@@ -40,6 +45,7 @@ export interface ContractWithLastVersion {
   doc: Contract;
   last: ContractVersion;
 }
+
 export function createContract(params: Partial<Contract> = {}): Contract {
   return {
     id: params.id ? params.id : '',
@@ -147,18 +153,6 @@ export function validateContract(contract: Contract): boolean {
   return true;
 }
 
-/**
- * Fetch parties related to a contract given a specific legal role
- * @param contract
- * @param legalRole
- */
-export function getContractParties(
-  contract: Contract,
-  legalRole: LegalRolesSlug
-): ContractPartyDetail[] {
-  return contract.parties.filter(p => p.party.role === getCodeIfExists('LEGAL_ROLES', legalRole as ExtractCode<'LEGAL_ROLES'>));
-}
-
 export function buildChainOfTitle() {
   // ie:  calculate contract prices and fees for each parents
   // @todo #1397 implement this
@@ -197,4 +191,25 @@ export function createLegalDocument(
     ...params,
     media: createImgRef(params.media),
   }
+}
+
+export function creatContractFromFirestore(contract: ContractWithTimeStamp): Contract {
+  return {
+    ...contract,
+    parties: contract.parties.map(partyDetails => formatPartyDetails(partyDetails)),
+    versions: contract.versions.map(version => formatContractVersion(version))
+  }
+}
+
+/**
+ *
+ * @param partyDetails
+ */
+export function formatPartyDetails(partyDetails: any): ContractPartyDetail {
+  // Dates from firebase are Timestamps, we convert it to Dates.
+  if (partyDetails.signDate instanceof firestore.Timestamp) {
+    partyDetails.signDate = partyDetails.signDate.toDate();
+  }
+
+  return partyDetails as ContractPartyDetail;
 }

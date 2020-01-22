@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ContractStore, ContractState } from './contract.store';
 import { CollectionConfig, CollectionService, awaitSyncQuery, Query } from 'akita-ng-fire';
-import { Contract, ContractPartyDetail, convertToContractDocument, createContractPartyDetail, createPartyDetails } from './contract.model';
+import { Contract, ContractPartyDetail, convertToContractDocument, createContractPartyDetail, createPartyDetails, initContractWithVersion, ContractWithLastVersion, ContractWithTimeStamp } from './contract.model';
 import orderBy from 'lodash/orderBy';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { tap, switchMap } from 'rxjs/operators';
@@ -9,27 +9,27 @@ import { ContractVersionService } from '../../version/+state/contract-version.se
 import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
 import { LegalRolesSlug } from '@blockframes/utils/static-model/types';
 import { cleanModel } from '@blockframes/utils';
-import { VersionMeta } from '@blockframes/contract/version/+state/contract-version.model';
 import { PermissionsService } from '@blockframes/organization';
 import { ContractDocumentWithDates, ContractStatus } from './contract.firestore';
+import { VersionMeta } from '../../version/+state/contract-version.model';
 
 /**
  * Get all the contracts where user organization is party.
  * Also check that there is no childContractIds to never fetch
  * contract between organization and Archipel Content.
  */
-const contractsListQuery = (orgId: string): Query<Contract[]> => ({
+const contractsListQuery = (orgId: string): Query<ContractWithTimeStamp[]> => ({
   path: 'contracts',
   queryFn: ref => ref.where('partyIds', 'array-contains', orgId).where('childContractIds', '==', []),
-    versions: (contract: Contract) => ({
+    versions: contract => ({
       path: `contracts/${contract.id}/versions`
     })
 });
 
 /** Get the active contract and put his lastVersion in it. */
-const contractQuery = (contractId: string): Query<Contract> => ({
+const contractQuery = (contractId: string): Query<ContractWithTimeStamp> => ({
   path: `contracts/${contractId}`,
-    versions: (contract: Contract) => ({
+    versions: contract => ({
       path: `contracts/${contract.id}/versions`
     })
 })

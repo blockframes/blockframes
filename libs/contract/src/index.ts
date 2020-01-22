@@ -14,4 +14,4 @@ export * from './lib/contract/forms/party-name/party-name.form';
 
 // Guards
 export * from './lib/contract/guards/active-contract.guard';
-export * from './lib/contract/guards/active-organization-contracts.guard';
+export * from './lib/contract/guards/contract-list.guard';

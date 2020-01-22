@@ -7,8 +7,8 @@ import { MovieTunnelGuard } from './movie-tunnel/movie-tunnel.guard';
 import { MovieTunnelService } from './movie-tunnel/movie-tunnel.service';
 
 // Guards
-import { ActiveContractGuard } from '@blockframes/contract/guards/active-contract.guard';
-import { ContractListGuard } from '@blockframes/contract/guards/contract-list.guard';
+import { ActiveContractGuard } from '@blockframes/contract/contract/guards/active-contract.guard';
+import { ContractListGuard } from '@blockframes/contract/contract/guards/contract-list.guard';
 
 const routes: Routes = [
   {

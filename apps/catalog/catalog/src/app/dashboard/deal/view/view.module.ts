@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { DealViewComponent } from './view.component';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 
 import { MovieContractGuard } from '@blockframes/movie/movieguards/movie-contract.guard';
 
@@ -14,6 +15,7 @@ import { MatButtonModule } from '@angular/material/button';
   declarations: [DealViewComponent],
   imports: [
     FlexLayoutModule,
+    TableFilterModule,
     MatCardModule,
     MatButtonModule,
     MatIconModule,
