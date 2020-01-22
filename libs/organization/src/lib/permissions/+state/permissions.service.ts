@@ -1,17 +1,24 @@
 import { Injectable } from '@angular/core';
 import { PermissionsQuery } from './permissions.query';
 import { OrganizationMember } from '../../member/+state/member.model';
-import { UserRole } from './permissions.firestore';
+import { UserRole, createDocPermissions } from './permissions.firestore';
 import { PermissionsState, PermissionsStore } from './permissions.store';
 import { CollectionService, CollectionConfig } from 'akita-ng-fire';
+import { BFDoc } from '@blockframes/utils/firequery/types';
+import { firestore } from 'firebase';
+import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 
 @Injectable({
   providedIn: 'root'
 })
-@CollectionConfig({ path: 'permissions'})
+@CollectionConfig({ path: 'permissions' })
 export class PermissionsService extends CollectionService<PermissionsState> {
-  constructor(private query: PermissionsQuery, store: PermissionsStore) {
-    super(store)
+  constructor(
+    private query: PermissionsQuery,
+    private organizationQuery: OrganizationQuery,
+    store: PermissionsStore
+  ) {
+    super(store);
   }
 
   /** Update roles of members of the organization */
@@ -20,7 +27,7 @@ export class PermissionsService extends CollectionService<PermissionsState> {
     const permissions = await this.getValue(orgId);
 
     organizationMembers.forEach(({ uid, role }) => {
-      switch(role) {
+      switch (role) {
         case UserRole.superAdmin:
           delete permissions.roles[uid];
           permissions.roles[uid] = UserRole.superAdmin;
@@ -38,6 +45,19 @@ export class PermissionsService extends CollectionService<PermissionsState> {
       }
     });
 
-    return this.update(orgId, { roles: permissions.roles })
+    return this.update(orgId, { roles: permissions.roles });
+  }
+
+  /**
+   * Takes a document (movie or delivery), create relative permissions
+   * and add them to documentPermissions subcollection.
+   * @param doc
+   * @param write
+   */
+  public addDocumentPermissions(doc: BFDoc, write: firestore.WriteBatch) {
+    const organizationId = this.organizationQuery.getActiveId();
+    const documentPermissions = createDocPermissions({ id: doc.id, ownerId: organizationId });
+    const documentPermissionsRef = this.db.doc(`permissions/${organizationId}/documentPermissions/${documentPermissions.id}`).ref;
+    write.set(documentPermissionsRef, documentPermissions);
   }
 }

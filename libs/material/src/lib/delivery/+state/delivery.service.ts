@@ -8,7 +8,7 @@ import {
   deliveryStatuses
 } from './delivery.model';
 import { Movie, MovieQuery } from '@blockframes/movie';
-import { OrganizationQuery, createDocPermissions } from '@blockframes/organization';
+import { OrganizationQuery, createDocPermissions, PermissionsService } from '@blockframes/organization';
 import { BFDoc } from '@blockframes/utils';
 import { MaterialQuery, createMaterial, isTheSame } from '../../material/+state';
 import {
@@ -77,7 +77,8 @@ export class DeliveryService extends CollectionService<DeliveryState> {
     private shService: StakeholderService,
     private walletService: WalletService,
     private movieMaterialService: MovieMaterialService,
-    private authQuery: AuthQuery
+    private authQuery: AuthQuery,
+    private permissionsService: PermissionsService
   ) {
     super(store);
   }
@@ -117,6 +118,11 @@ export class DeliveryService extends CollectionService<DeliveryState> {
   ///////////////////
   // CRUD DELIVERY //
   ///////////////////
+
+  onCreate(delivery: Delivery, { write }: WriteOptions) {
+    // When a delivery is created, we also create a permissions document for it.
+    return this.permissionsService.addDocumentPermissions(delivery, write as firestore.WriteBatch)
+  }
 
   public updateDeliveryStatus(index: number): Promise<any> {
     return this.update(this.query.getActiveId(), { status: deliveryStatuses[index] });
@@ -173,14 +179,6 @@ export class DeliveryService extends CollectionService<DeliveryState> {
     });
 
     return id;
-  }
-
-  onCreate(delivery: Delivery, { write }: WriteOptions) {
-    // When a movie is created, we also create a permissions document for it.
-    const organizationId = this.organizationQuery.getActiveId();
-    const documentPermissions = createDocPermissions({ id: delivery.id, ownerId: organizationId });
-    const documentPermissionsRef = this.db.doc(`permissions/${organizationId}/documentPermissions/${documentPermissions.id}`).ref;
-    (write as firestore.WriteBatch).set(documentPermissionsRef, documentPermissions);
   }
 
   /** Add a new delivery by copying the movie's materials */
