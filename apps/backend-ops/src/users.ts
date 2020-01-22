@@ -77,3 +77,20 @@ export async function syncUsers(): Promise<any> {
   await removeUnexpectedUsers(expectedUsers, auth);
   await createAllUsers(expectedUsers, auth);
 }
+
+export async function printUsers(): Promise<any> {
+  const { auth } = loadAdminServices();
+
+  let pageToken;
+
+  do {
+    const result = await auth.listUsers(1000, pageToken);
+    const users = result.users;
+    pageToken = result.pageToken;
+
+    users.forEach(u => {
+      console.log(JSON.stringify(u.toJSON()));
+    });
+
+  } while (pageToken);
+}
