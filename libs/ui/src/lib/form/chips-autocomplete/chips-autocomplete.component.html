@@ -1,13 +1,15 @@
 <mat-form-field appearance="outline">
   <mat-chip-list #chipList>
-    <mat-chip *ngFor="let key of keys"
-      [selectable]="selectable"
-      [removable]="removable"
-      (removed)="remove(key)"
-    >
-    {{ key }}
-    <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-    </mat-chip>
+    <ng-container *ngFor="let control of form.controls; let i = index">
+      <mat-chip *ngIf="control.value"
+        [selectable]="selectable"
+        [removable]="removable"
+        (removed)="remove(i)"
+      >
+        {{ control.value }}
+        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+      </mat-chip>
+    </ng-container>
     <input
       #inputEl
       [placeholder]="placeholder"
@@ -19,9 +21,9 @@
       (matChipInputTokenEnd)="add($event)"
     />
   </mat-chip-list>
-  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-    <mat-option *ngFor="let item of filteredItems | async" [value]="getKey(item)">
-      {{ item }}
-    </mat-option>
-  </mat-autocomplete>
 </mat-form-field>
+<mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+  <mat-option *ngFor="let item of filteredItems | async" [value]="getKey(item)">
+    {{ getDisplay(item) }}
+  </mat-option>
+</mat-autocomplete>
