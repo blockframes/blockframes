@@ -8,6 +8,7 @@ import { MovieSummaryMainComponent } from './main.component';
 // Material
 import { MatButtonModule, MatCardModule, MatIconModule } from '@angular/material';
 import { MissingPipeModule } from '@blockframes/utils';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   declarations: [MovieSummaryMainComponent],
@@ -20,7 +21,8 @@ import { MissingPipeModule } from '@blockframes/utils';
     MatButtonModule,
     MatCardModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    RouterModule
   ],
   exports: [MovieSummaryMainComponent]
 })
