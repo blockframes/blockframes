@@ -46,8 +46,7 @@ export {
   MoviePromotionalElements,
   MovieSalesCast,
   MovieStory,
-  // TODO #1562
-/*   MovieVersionInfo, */
+  MovieVersionInfo,
   Prize,
   MovieSalesInfoDocumentWithDates as MovieSalesInfo,
   MovieSalesAgentDealDocumentWithDates as MovieSalesAgentDeal
@@ -300,15 +299,4 @@ export function createOfficialIds(params: Partial<MovieOfficialIds> = {}): Movie
     isan: '',
     ...params
   };
-}
-
-export function createMovieLanguage(
-  movieLanguage: Partial<MovieLanguageSpecification> = {}
-): MovieLanguageSpecification {
-  return {
-    original: false,
-    dubbed: false,
-    subtitle: false,
-    ...movieLanguage
-  } as MovieLanguageSpecification;
 }

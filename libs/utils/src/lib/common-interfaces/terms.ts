@@ -1,3 +1,17 @@
+export const enum Event {
+  ContractSignatureDate = 'Contract Signature Date',
+  WordlPremiere = 'World Premiere',
+  AcceptationAllMaterials = 'Acceptation of all delivery materials',
+  FirstTheatricalRelease = 'First theatrical release',
+  FirstTvBroadcast = 'First TV broadcast'
+}
+
+export interface FloatingDuration {
+  label?: string;
+  duration?: number;
+  unit?: 'days' | 'weeks' | 'months' | 'years' 
+}
+
 export interface TermsRaw<D> {
   start?: D ;
   /**
@@ -12,11 +26,11 @@ export interface TermsRaw<D> {
   /**
    * @example: 7 months after theatrical release
    */
-  floatingStart?: string;
+  floatingStart?: Event;
   /**
    * @example: 1 year after floatingStart event occured
    */
-  floatingDuration?: string;
+  floatingDuration?: FloatingDuration;
 }
 
 export interface Terms extends TermsRaw<Date> {

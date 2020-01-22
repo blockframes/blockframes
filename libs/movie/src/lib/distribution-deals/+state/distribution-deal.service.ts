@@ -31,7 +31,7 @@ export class DistributionDealService extends CollectionService<DistributionDealS
    * @param movieId
    * @param distributionDeal
    */
-  public async addDistributionDeal(movieId: string, distributionDeal: DistributionDeal, contract: ContractWithLastVersion) {
+  public async addDistributionDeal(movieId: string, distributionDeal: DistributionDeal, contract: ContractWithLastVersion): Promise<string> {
     // Create an id from DistributionDeal content.
     // A same DistributionDeal document will always have the same hash to prevent multiple insertion of same deal
     if (!distributionDeal.id) {
@@ -63,11 +63,10 @@ export class DistributionDealService extends CollectionService<DistributionDealS
       // Contract may have been updated along with the distribution deal, we update it
       await this.contractService.add(contract.doc);
       await this.contractVersionService.add(contract.last);
-      return distributionDeal.id;
     }
+    await this.db.doc(`movies/${movieId}`).collection('distributiondeals').doc(distributionDeal.id).set(distributionDeal);
 
-
-    /// @todo #1562 add ditribution deal
+    return distributionDeal.id;
   }
 
   public formatDistributionDeal(deal: any): DistributionDeal {

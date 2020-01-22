@@ -12,13 +12,4 @@ export class MovieQuery extends QueryEntity<MovieState, Movie> {
   constructor(protected store: MovieStore) {
     super(store);
   }
-
-
-  /**
-   * @param internalRef
-   */
-  public existingMovie(internalRef: string) : Movie {
-    return this.getAll().find(entity =>  entity.main.internalRef === internalRef );
-  }
-
 }

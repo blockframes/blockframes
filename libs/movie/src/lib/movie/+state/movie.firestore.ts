@@ -34,12 +34,12 @@ export const enum WorkType {
 }
 
 export const enum StoreType {
-  catalog = 'Catalog',
+  library = 'Library',
   line_up = 'Line-Up',
 }
 
 export enum PremiereType {
-  'internationnal' = 'International',
+  'international' = 'International',
   'world' = 'World',
   'market' = 'Market',
   'national' = 'National',
@@ -50,11 +50,6 @@ export enum UnitBox {
   boxoffice_euro = 'Box office in €',
   entrances = '#Entrances',
 }
-/* TODO #1562
-export interface MovieVersionInfo {
-  dubbings: string[],
-  subtitles: string[],
-} */
 
 export interface StoreConfig {
   display: boolean,
@@ -252,7 +247,7 @@ interface MovieRaw<D> {
   movieReview: MovieReview[];
 }
 
-interface MovieVersionInfo {
+export interface MovieVersionInfo {
   languages: Partial<{ [language in LanguagesSlug]: MovieLanguageSpecification }>;
 }
 

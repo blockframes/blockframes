@@ -112,6 +112,7 @@ export class ContractService extends CollectionService<ContractState> {
       const contractWithVersion = initContractWithVersion();
 
       for (const contract of contracts) {
+        this.contractVersionService.setContractId(contract.id);
         const contractVersions = await this.contractVersionService.getValue(ref =>
           ref.where(`titles.${movieId}.distributionDealIds`, 'array-contains', distributionDealId)
         );

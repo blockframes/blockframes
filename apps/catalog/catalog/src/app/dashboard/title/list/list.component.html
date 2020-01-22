@@ -9,7 +9,7 @@
 
 <header mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
   <button mat-tab-link (click)="filter.setValue()" [active]="!(filter$ | async)">All</button>
-  <button mat-tab-link (click)="applyFilter('Catalog')" [active]="(filter$ | async) === 'Catalog'" >Library</button>
+  <button mat-tab-link (click)="applyFilter('Library')" [active]="(filter$ | async) === 'Library'" >Library</button>
   <button mat-tab-link (click)="applyFilter('Line-up')" [active]="(filter$ | async) === 'Line-up'" >Line-up</button>
 </header>
 

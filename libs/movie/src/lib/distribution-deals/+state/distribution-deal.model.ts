@@ -18,6 +18,7 @@ export function createDistributionDeal(params: Partial<DistributionDeal> = {}): 
     titleInternalAlias: '',
     download: false,
     holdbacks: [],
+    multidiffusion: [],
     catchUp: createTerms(params.catchUp),
     ...params
   };

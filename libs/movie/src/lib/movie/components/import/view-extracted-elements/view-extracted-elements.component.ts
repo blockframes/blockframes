@@ -2,7 +2,6 @@ import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/
 import { MatTableDataSource, MatSnackBar } from '@angular/material';
 import {
   Movie,
-  MovieQuery,
   createMovieMain,
   createMoviePromotionalDescription,
   createMovieSalesCast,
@@ -26,13 +25,14 @@ import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/st
 import { SSF } from 'xlsx';
 import { MovieLanguageTypes, PremiereType } from '@blockframes/movie/movie/+state/movie.firestore';
 import { createCredit, createStakeholder } from '@blockframes/utils/common-interfaces/identity';
-import { DistributionDeal, createDistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
+import { DistributionDeal, createDistributionDeal, createHoldback } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
 import { createContractPartyDetail, createContractTitleDetail, Contract, initContractWithVersion, ContractWithLastVersion } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractStatus, ContractTitleDetail } from '@blockframes/contract/contract/+state/contract.firestore';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state/distribution-deal.service';
 import { createFee } from '@blockframes/utils/common-interfaces/price';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { createPaymentSchedule } from '@blockframes/utils/common-interfaces/schedule';
+import { createTerms } from '@blockframes/utils/common-interfaces';
 
 export interface SpreadsheetImportError {
   field: string;
@@ -124,6 +124,10 @@ enum SpreadSheetDistributionDeal {
   exclusive,
   priceAmount,
   priceCurrency,
+  catchUpStartDate,
+  catchUpEndDate,
+  multidiffusion,
+  holdbacks
 }
 
 enum SpreadSheetContract {
@@ -167,7 +171,6 @@ export class ViewExtractedElementsComponent {
   private subSeparator = ',';
 
   constructor(
-    private movieQuery: MovieQuery,
     private snackBar: MatSnackBar,
     private movieService: MovieService,
     private distributionDealService: DistributionDealService,
@@ -181,14 +184,14 @@ export class ViewExtractedElementsComponent {
 
     sheetTab.rows.forEach(async spreadSheetRow => {
       if (spreadSheetRow[SpreadSheetMovie.originalTitle]) {
-        const existingMovie = this.movieQuery.existingMovie(spreadSheetRow[SpreadSheetMovie.internalRef]);
+        const existingMovie = await this.movieService.getFromInternalRef(spreadSheetRow[SpreadSheetMovie.internalRef]);
         const movie = {
           main: createMovieMain(),
           promotionalDescription: createMoviePromotionalDescription(),
           promotionalElements: createMoviePromotionalElements(),
           salesCast: createMovieSalesCast(),
           salesInfo: createMovieSalesInfo(),
-          versionInfo: {}, // TODO issue #1596
+          versionInfo: { languages: {} }, // TODO issue #1596
           festivalPrizes: createMovieFestivalPrizes(),
           salesAgentDeal: createMovieSalesAgentDeal(),
           budget: createMovieBudget(),
@@ -271,7 +274,7 @@ export class ViewExtractedElementsComponent {
               movie.salesAgentDeal.medias.push(media);
             } else {
               importErrors.errors.push({
-                type: 'error',
+                type: 'warning',
                 field: 'salesAgentDeal.medias',
                 name: 'Mandate Medias',
                 reason: `${c} not found in medias list`,
@@ -379,7 +382,6 @@ export class ViewExtractedElementsComponent {
             const ratingParts = r.split(this.subSeparator);
             const country = getCodeIfExists('TERRITORIES', ratingParts[0] as ExtractCode<'TERRITORIES'>);
             const movieRating = createMovieRating({ value: ratingParts[1] });
-            // @todo #1562 missing system & reason (optionnal)
             if (country) {
               movieRating.country = country;
             }
@@ -471,7 +473,7 @@ export class ViewExtractedElementsComponent {
               if (prizeParts.length >= 4) {
                 switch (prizeParts[3].trim()) {
                   case 'International Premiere':
-                    prize.premiere = PremiereType.internationnal;
+                    prize.premiere = PremiereType.international;
                     break;
                   default:
                     prize.premiere = PremiereType[prizeParts[3].trim().toLowerCase()];
@@ -502,11 +504,12 @@ export class ViewExtractedElementsComponent {
 
         // LANGUAGES (Original Language(s))
         if (spreadSheetRow[SpreadSheetMovie.languages]) {
-          movie.main.originalLanguages = []; // @todo #1562 add to movie.versionInfo & check #1589
+          movie.main.originalLanguages = [];
           spreadSheetRow[SpreadSheetMovie.languages].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
             const language = getCodeIfExists('LANGUAGES', g);
             if (language) {
               movie.main.originalLanguages.push(language);
+              populateMovieLanguageSpecification(movie.versionInfo.languages, language, MovieLanguageTypes.original, true);
             } else {
               importErrors.errors.push({
                 type: 'warning',
@@ -518,15 +521,15 @@ export class ViewExtractedElementsComponent {
             }
           });
         }
-        // #1562
+
+
+
         // DUBS (Available dubbing(s))
-        // @todo #1562 Wait for  #1411
-/*         if (spreadSheetRow[SpreadSheetMovie.dubbings]) {
-          movie.versionInfo.dubbings = [];
+        if (spreadSheetRow[SpreadSheetMovie.dubbings]) {
           spreadSheetRow[SpreadSheetMovie.dubbings].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
             const dubbing = getCodeIfExists('LANGUAGES', g);
             if (dubbing) {
-              movie.versionInfo.dubbings.push(dubbing);
+              populateMovieLanguageSpecification(movie.versionInfo.languages, dubbing, MovieLanguageTypes.dubbed, true);
             } else {
               importErrors.errors.push({
                 type: 'warning',
@@ -537,16 +540,14 @@ export class ViewExtractedElementsComponent {
               });
             }
           });
-        } */
+        }
 
         // SUBTILES (Available subtitle(s))
-        // @todo #1562 Wait for  #1411
-   /*      if (spreadSheetRow[SpreadSheetMovie.subtitles]) {
-          movie.versionInfo.subtitles = [];
+        if (spreadSheetRow[SpreadSheetMovie.subtitles]) {
           spreadSheetRow[SpreadSheetMovie.subtitles].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
             const subtitle = getCodeIfExists('LANGUAGES', g);
             if (subtitle) {
-              movie.versionInfo.subtitles.push(subtitle);
+              populateMovieLanguageSpecification(movie.versionInfo.languages, subtitle, MovieLanguageTypes.subtitle, true);
             } else {
               importErrors.errors.push({
                 type: 'warning',
@@ -565,7 +566,7 @@ export class ViewExtractedElementsComponent {
           spreadSheetRow[SpreadSheetMovie.captions].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
             const caption = getCodeIfExists('LANGUAGES', g);
             if (caption) {
-              // @todo #1562 Wait for  #1411
+              populateMovieLanguageSpecification(movie.versionInfo.languages, caption, MovieLanguageTypes.caption, true);
             } else {
               importErrors.errors.push({
                 type: 'warning',
@@ -576,7 +577,7 @@ export class ViewExtractedElementsComponent {
               });
             }
           });
-        } */
+        }
 
         // SCREENER LINK
         if (spreadSheetRow[SpreadSheetMovie.screenerLink]) {
@@ -1014,37 +1015,15 @@ export class ViewExtractedElementsComponent {
       });
     }
 
-/*     if (movie.versionInfo.dubbings.length === 0) {
+    if (movie.versionInfo.languages === {}) {
       errors.push({
         type: 'warning',
-        field: 'versionInfo.dubbings',
-        name: 'Dubbings',
+        field: 'versionInfo.languages',
+        name: 'Dubbings | Subtitles | Captions ',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
-    } */
-
-/*     if (movie.versionInfo.subtitles.length === 0) {
-      errors.push({
-        type: 'warning',
-        field: 'versionInfo.subtitles',
-        name: 'Subtitles',
-        reason: 'Optional field is missing',
-        hint: 'Edit corresponding sheet field.'
-      });
-    } */
-
-    /*
-    @todo #1562  Wait for  #1411
-    if (movie.versionInfo.captions.length === 0) {
-      errors.push({
-        type: 'warning',
-        field: 'versionInfo.captions',
-        name: 'Captions',
-        reason: 'Optional field is missing',
-        hint: 'Edit corresponding sheet field.'
-      });
-    }*/
+    }
 
     if (movie.budget.totalBudget === undefined) {
       errors.push({
@@ -1080,13 +1059,12 @@ export class ViewExtractedElementsComponent {
   }
 
 
-  public formatDistributionDeals(sheetTab: SheetTab) {
+  public async formatDistributionDeals(sheetTab: SheetTab) {
     this.clearDataSources();
     sheetTab.rows.forEach(async spreadSheetRow => {
 
       if (spreadSheetRow[SpreadSheetDistributionDeal.internalRef]) {
-
-        const movie = this.movieQuery.existingMovie(spreadSheetRow[SpreadSheetDistributionDeal.internalRef]);
+        const movie = await this.movieService.getFromInternalRef(spreadSheetRow[SpreadSheetDistributionDeal.internalRef]);
         const distributionDeal = createDistributionDeal();
 
         let contract = initContractWithVersion();
@@ -1112,196 +1090,360 @@ export class ViewExtractedElementsComponent {
           }
 
           contract = await this.contractService.getContractWithLastVersionFromDeal(movie.id, distributionDeal.id);
-          importErrors.contract = contract;
+          if (contract) {
+            importErrors.contract = contract;
 
-          /////////////////
-          // LICENSE STUFF
-          /////////////////
+            /////////////////
+            // LICENSE STUFF
+            /////////////////
 
-          /* LICENSOR */
+            /* LICENSOR */
 
-          // Nothing to do. Should be the same infos already filled in previously imported contract sheet
+            // Nothing to do. Should be the same infos already filled in previously imported contract sheet
 
-          /* LICENSEE */
+            /* LICENSEE */
 
-          // Retreive the licensee inside the contract to update his infos
-          const licensee = this.contractService.getContractParties(contract.doc, 'licensee').shift();
-          if (licensee === undefined) {
-            throw new Error(`No licensee found in contract ${contract.doc.id}.`);
-          }
+            // Retreive the licensee inside the contract to update his infos
+            const licensee = this.contractService.getContractParties(contract.doc, 'licensee').shift();
+            if (licensee === undefined) {
+              throw new Error(`No licensee found in contract : ${contract.doc.id ? contract.doc.id : 'unknown Id'}.`);
+            }
 
-          // SHOW NAME
-          if (spreadSheetRow[SpreadSheetDistributionDeal.displayLicenseeName]) {
-            licensee.party.showName = spreadSheetRow[SpreadSheetDistributionDeal.displayLicenseeName].toLowerCase() === 'yes' ? true : false;
-          }
+            // SHOW NAME
+            if (spreadSheetRow[SpreadSheetDistributionDeal.displayLicenseeName]) {
+              licensee.party.showName = spreadSheetRow[SpreadSheetDistributionDeal.displayLicenseeName].toLowerCase() === 'yes' ? true : false;
+            }
 
-          /////////////////
-          // TERMS STUFF
-          /////////////////
+            /////////////////
+            // TERMS STUFF
+            /////////////////
 
-          // BEGINNING OF RIGHTS
-          if (spreadSheetRow[SpreadSheetDistributionDeal.rightsStart]) {
-            const rightsStart: SSF$Date = SSF.parse_date_code(spreadSheetRow[SpreadSheetDistributionDeal.rightsStart]);
-            distributionDeal.terms.start = new Date(`${rightsStart.y}-${rightsStart.m}-${rightsStart.d}`);
-          }
-
-          // END OF RIGHTS
-          if (spreadSheetRow[SpreadSheetDistributionDeal.rightsEnd]) {
-            const rightsEnd: SSF$Date = SSF.parse_date_code(spreadSheetRow[SpreadSheetDistributionDeal.rightsEnd]);
-            distributionDeal.terms.end = new Date(`${rightsEnd.y}-${rightsEnd.m}-${rightsEnd.d}`);
-          }
-
-          // TERRITORIES (Mandate Territories)
-          if (spreadSheetRow[SpreadSheetDistributionDeal.territories]) {
-            distributionDeal.territory = [];
-            spreadSheetRow[SpreadSheetDistributionDeal.territories].split(this.separator).forEach((c: ExtractCode<'TERRITORIES'>) => {
-              const territory = getCodeIfExists('TERRITORIES', c);
-              if (territory) {
-                distributionDeal.territory.push(territory);
+            // BEGINNING OF RIGHTS
+            if (spreadSheetRow[SpreadSheetDistributionDeal.rightsStart]) {
+              const rightsStart: SSF$Date = SSF.parse_date_code(spreadSheetRow[SpreadSheetDistributionDeal.rightsStart]);
+              const dateStart = new Date(`${rightsStart.y}-${rightsStart.m}-${rightsStart.d}`);
+              if (isNaN(dateStart.getTime())) { // ie invalid date
+                distributionDeal.terms.startLag = spreadSheetRow[SpreadSheetDistributionDeal.rightsStart];
               } else {
-                importErrors.errors.push({
-                  type: 'error',
-                  field: 'territories',
-                  name: 'Territories sold',
-                  reason: `${c} not found in territories list`,
-                  hint: 'Edit corresponding sheet field.'
-                });
+                distributionDeal.terms.start = dateStart
               }
-            });
-          }
+            }
 
-          // TERRITORIES EXCLUDED
-          if (spreadSheetRow[SpreadSheetDistributionDeal.territoriesExcluded]) {
-            distributionDeal.territoryExcluded = [];
-            spreadSheetRow[SpreadSheetDistributionDeal.territoriesExcluded].split(this.separator).forEach((c: ExtractCode<'TERRITORIES'>) => {
-              const territory = getCodeIfExists('TERRITORIES', c);
-              if (territory) {
-                distributionDeal.territoryExcluded.push(territory);
+            // END OF RIGHTS
+            if (spreadSheetRow[SpreadSheetDistributionDeal.rightsEnd]) {
+              const rightsEnd: SSF$Date = SSF.parse_date_code(spreadSheetRow[SpreadSheetDistributionDeal.rightsEnd]);
+              const dateEnd = new Date(`${rightsEnd.y}-${rightsEnd.m}-${rightsEnd.d}`);
+              if (isNaN(dateEnd.getTime())) { // ie invalid date
+                distributionDeal.terms.endLag = spreadSheetRow[SpreadSheetDistributionDeal.rightsEnd];
               } else {
-                importErrors.errors.push({
-                  type: 'error',
-                  field: 'territories excluded',
-                  name: 'Territories excluded',
-                  reason: `${c} not found in territories list`,
-                  hint: 'Edit corresponding sheet field.'
-                });
+                distributionDeal.terms.end = dateEnd
               }
-            });
-          }
+            }
 
-          // MEDIAS (Mandate Medias)
-          if (spreadSheetRow[SpreadSheetDistributionDeal.licenseType]) {
-            distributionDeal.licenseType = [];
-            spreadSheetRow[SpreadSheetDistributionDeal.licenseType].split(this.separator).forEach((c: ExtractCode<'MEDIAS'>) => {
-              const media = getCodeIfExists('MEDIAS', c);
-              if (media) {
-                distributionDeal.licenseType.push(media);
-              } else {
-                importErrors.errors.push({
-                  type: 'error',
-                  field: 'medias',
-                  name: 'Media(s)',
-                  reason: `${c} not found in medias list`,
-                  hint: 'Edit corresponding sheet field.'
-                });
+            // TERRITORIES (Mandate Territories)
+            if (spreadSheetRow[SpreadSheetDistributionDeal.territories]) {
+              distributionDeal.territory = [];
+              spreadSheetRow[SpreadSheetDistributionDeal.territories].split(this.separator).forEach((c: ExtractCode<'TERRITORIES'>) => {
+                const territory = getCodeIfExists('TERRITORIES', c);
+                if (territory) {
+                  distributionDeal.territory.push(territory);
+                } else {
+                  importErrors.errors.push({
+                    type: 'error',
+                    field: 'territories',
+                    name: 'Territories sold',
+                    reason: `${c} not found in territories list`,
+                    hint: 'Edit corresponding sheet field.'
+                  });
+                }
+              });
+            }
+
+            // TERRITORIES EXCLUDED
+            if (spreadSheetRow[SpreadSheetDistributionDeal.territoriesExcluded]) {
+              distributionDeal.territoryExcluded = [];
+              spreadSheetRow[SpreadSheetDistributionDeal.territoriesExcluded].split(this.separator).forEach((c: ExtractCode<'TERRITORIES'>) => {
+                const territory = getCodeIfExists('TERRITORIES', c);
+                if (territory) {
+                  distributionDeal.territoryExcluded.push(territory);
+                } else {
+                  importErrors.errors.push({
+                    type: 'error',
+                    field: 'territories excluded',
+                    name: 'Territories excluded',
+                    reason: `${c} not found in territories list`,
+                    hint: 'Edit corresponding sheet field.'
+                  });
+                }
+              });
+            }
+
+            // MEDIAS (Mandate Medias)
+            if (spreadSheetRow[SpreadSheetDistributionDeal.licenseType]) {
+              distributionDeal.licenseType = [];
+              spreadSheetRow[SpreadSheetDistributionDeal.licenseType].split(this.separator).forEach((c: ExtractCode<'MEDIAS'>) => {
+                const media = getCodeIfExists('MEDIAS', c);
+                if (media) {
+                  distributionDeal.licenseType.push(media);
+                } else {
+                  importErrors.errors.push({
+                    type: 'warning',
+                    field: 'medias',
+                    name: 'Media(s)',
+                    reason: `${c} not found in medias list`,
+                    hint: 'Edit corresponding sheet field.'
+                  });
+                }
+              });
+            }
+
+            // DUBS (Authorized language(s))
+            if (spreadSheetRow[SpreadSheetDistributionDeal.dubbings]) {
+              spreadSheetRow[SpreadSheetDistributionDeal.dubbings].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
+                const dubbing = getCodeIfExists('LANGUAGES', g);
+                if (dubbing) {
+                  distributionDeal.assetLanguage = populateMovieLanguageSpecification(
+                    distributionDeal.assetLanguage,
+                    dubbing,
+                    MovieLanguageTypes.dubbed
+                  );
+                } else {
+                  importErrors.errors.push({
+                    type: 'error',
+                    field: 'dubbing',
+                    name: 'Authorized language(s)',
+                    reason: `${g} not found in languages list`,
+                    hint: 'Edit corresponding sheet field.'
+                  });
+                }
+              });
+
+            }
+
+            // SUBTILES (Available subtitle(s))
+            if (spreadSheetRow[SpreadSheetDistributionDeal.subtitles]) {
+              spreadSheetRow[SpreadSheetDistributionDeal.subtitles].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
+                const subtitle = getCodeIfExists('LANGUAGES', g);
+                if (!!subtitle) {
+                  distributionDeal.assetLanguage = populateMovieLanguageSpecification(
+                    distributionDeal.assetLanguage,
+                    subtitle,
+                    MovieLanguageTypes.subtitle
+                  );
+                } else {
+                  importErrors.errors.push({
+                    type: 'error',
+                    field: 'subtitle',
+                    name: 'Authorized subtitle(s)',
+                    reason: `${g} not found in languages list`,
+                    hint: 'Edit corresponding sheet field.'
+                  });
+                }
+              });
+            }
+
+            // CAPTIONS (Available subtitle(s))
+            if (spreadSheetRow[SpreadSheetDistributionDeal.captions]) {
+              spreadSheetRow[SpreadSheetDistributionDeal.captions].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
+                const caption = getCodeIfExists('LANGUAGES', g);
+                if (!!caption) {
+                  distributionDeal.assetLanguage = populateMovieLanguageSpecification(
+                    distributionDeal.assetLanguage,
+                    caption,
+                    MovieLanguageTypes.caption
+                  );
+                } else {
+                  importErrors.errors.push({
+                    type: 'error',
+                    field: 'caption',
+                    name: 'Authorized caption(s)',
+                    reason: `${g} not found in languages list`,
+                    hint: 'Edit corresponding sheet field.'
+                  });
+                }
+              });
+            }
+
+            // EXCLUSIVE DEAL
+            if (spreadSheetRow[SpreadSheetDistributionDeal.exclusive]) {
+              distributionDeal.exclusive = spreadSheetRow[SpreadSheetDistributionDeal.exclusive].toLowerCase() === 'yes' ? true : false;
+            }
+
+            // PRICE
+            if (!isNaN(Number(spreadSheetRow[SpreadSheetDistributionDeal.priceAmount]))) {
+              // We increment global price for this title with the current deal price.
+              contract.last.titles[movie.id].price.amount += parseInt(spreadSheetRow[SpreadSheetDistributionDeal.priceAmount], 10);
+            }
+
+            // CURRENCY
+            if (spreadSheetRow[SpreadSheetDistributionDeal.priceCurrency]) {
+              contract.last.titles[movie.id].price.currency = spreadSheetRow[SpreadSheetDistributionDeal.priceCurrency];
+            }
+
+            // CATCH UP 
+            if (spreadSheetRow[SpreadSheetDistributionDeal.catchUpStartDate] || spreadSheetRow[SpreadSheetDistributionDeal.catchUpEndDate]) {
+              distributionDeal.catchUp = createTerms();
+
+              // CATCH UP START
+              if (spreadSheetRow[SpreadSheetDistributionDeal.catchUpStartDate]) {
+                try {
+                  const ssfCatchUpStartDate: SSF$Date = SSF.parse_date_code(spreadSheetRow[SpreadSheetDistributionDeal.catchUpStartDate]);
+                  const catchUpStartDate = new Date(`${ssfCatchUpStartDate.y}-${ssfCatchUpStartDate.m}-${ssfCatchUpStartDate.d}`);
+                  if (isNaN(catchUpStartDate.getTime())) {
+                    distributionDeal.catchUp.startLag = spreadSheetRow[SpreadSheetDistributionDeal.catchUpStartDate];
+                    importErrors.errors.push({
+                      type: 'warning',
+                      field: 'distributionDeal.catchUp.start',
+                      name: 'CatchUp start',
+                      reason: `Failed to parse CatchUp start date, moved data to startLag`,
+                      hint: 'Edit corresponding sheet field.'
+                    });
+                  } else {
+                    distributionDeal.catchUp.start = catchUpStartDate;
+                  }
+                } catch (error) {
+                  distributionDeal.catchUp.startLag = spreadSheetRow[SpreadSheetDistributionDeal.catchUpStartDate];
+                  importErrors.errors.push({
+                    type: 'warning',
+                    field: 'distributionDeal.catchUp.start',
+                    name: 'CatchUp start',
+                    reason: `Failed to parse CatchUp start date, moved data to startLag`,
+                    hint: 'Edit corresponding sheet field.'
+                  });
+                }
               }
-            });
-          }
 
-          // DUBS (Authorized language(s))
-          if (spreadSheetRow[SpreadSheetDistributionDeal.dubbings]) {
-            spreadSheetRow[SpreadSheetDistributionDeal.dubbings].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
-              const dubbing = getCodeIfExists('LANGUAGES', g);
-              if (dubbing) {
-                distributionDeal.assetLanguage = populateMovieLanguageSpecification(
-                  distributionDeal.assetLanguage,
-                  dubbing,
-                  MovieLanguageTypes.dubbed
-                );
-              } else {
-                importErrors.errors.push({
-                  type: 'error',
-                  field: 'dubbing',
-                  name: 'Authorized language(s)',
-                  reason: `${g} not found in languages list`,
-                  hint: 'Edit corresponding sheet field.'
-                });
+              // CATCH UP END
+              if (spreadSheetRow[SpreadSheetDistributionDeal.catchUpEndDate]) {
+                const ssfCatchUpEndDate: SSF$Date = SSF.parse_date_code(spreadSheetRow[SpreadSheetDistributionDeal.catchUpEndDate]);
+                const catchUpEndDate = distributionDeal.catchUp.end = new Date(`${ssfCatchUpEndDate.y}-${ssfCatchUpEndDate.m}-${ssfCatchUpEndDate.d}`);
+                if (isNaN(catchUpEndDate.getTime())) {
+                  distributionDeal.catchUp.endLag = spreadSheetRow[SpreadSheetDistributionDeal.catchUpEndDate];
+                  importErrors.errors.push({
+                    type: 'warning',
+                    field: 'distributionDeal.catchUp.end',
+                    name: 'CatchUp end',
+                    reason: `Failed to parse CatchUp end date, moved data to endLag`,
+                    hint: 'Edit corresponding sheet field.'
+                  });
+                } else {
+                  distributionDeal.catchUp.end = catchUpEndDate;
+                }
               }
-            });
+            }
 
-          }
+            // MULTIDIFFUSION
+            if (spreadSheetRow[SpreadSheetDistributionDeal.multidiffusion]) {
+              const multiDiffDates = spreadSheetRow[SpreadSheetDistributionDeal.multidiffusion].split(this.separator)
+              multiDiffDates.forEach(date => {
+                const ssfDiffusionDate: SSF$Date = SSF.parse_date_code(date);
+                const diffusion = createTerms();
+                const diffusionDate = new Date(`${ssfDiffusionDate.y}-${ssfDiffusionDate.m}-${ssfDiffusionDate.d}`);
 
-          // SUBTILES (Available subtitle(s))
-          if (spreadSheetRow[SpreadSheetDistributionDeal.subtitles]) {
-            spreadSheetRow[SpreadSheetDistributionDeal.subtitles].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
-              const subtitle = getCodeIfExists('LANGUAGES', g);
-              if (!!subtitle) {
-                distributionDeal.assetLanguage = populateMovieLanguageSpecification(
-                  distributionDeal.assetLanguage,
-                  subtitle,
-                  MovieLanguageTypes.subtitle
-                );
-              } else {
-                importErrors.errors.push({
-                  type: 'error',
-                  field: 'subtitle',
-                  name: 'Authorized subtitle(s)',
-                  reason: `${g} not found in languages list`,
-                  hint: 'Edit corresponding sheet field.'
-                });
-              }
-            });
-          }
+                if (isNaN(diffusionDate.getTime())) {
+                  diffusion.startLag = date;
+                  importErrors.errors.push({
+                    type: 'warning',
+                    field: 'multidiffusion.start',
+                    name: 'Multidiffusion start',
+                    reason: `Failed to parse multidiffusion start date, moved data to startLag`,
+                    hint: 'Edit corresponding sheet field.'
+                  });
+                } else {
+                  diffusion.start = diffusionDate;
+                }
 
-          // CAPTIONS (Available subtitle(s))
-          if (spreadSheetRow[SpreadSheetDistributionDeal.captions]) {
-            spreadSheetRow[SpreadSheetDistributionDeal.captions].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
-              const caption = getCodeIfExists('LANGUAGES', g);
-              if (!!caption) {
-                distributionDeal.assetLanguage = populateMovieLanguageSpecification(
-                  distributionDeal.assetLanguage,
-                  caption,
-                  MovieLanguageTypes.caption
-                );
-              } else {
-                importErrors.errors.push({
-                  type: 'error',
-                  field: 'caption',
-                  name: 'Authorized caption(s)',
-                  reason: `${g} not found in languages list`,
-                  hint: 'Edit corresponding sheet field.'
-                });
-              }
-            });
-          }
+                distributionDeal.multidiffusion.push(diffusion);
+              });
+            }
 
-          // EXCLUSIVE DEAL
-          if (spreadSheetRow[SpreadSheetDistributionDeal.exclusive]) {
-            distributionDeal.exclusive = spreadSheetRow[SpreadSheetDistributionDeal.exclusive].toLowerCase() === 'yes' ? true : false;
-          }
+            // HOLDBACKS
+            if (spreadSheetRow[SpreadSheetDistributionDeal.holdbacks]) {
+              const holdbacks = spreadSheetRow[SpreadSheetDistributionDeal.holdbacks].split(this.separator)
+              holdbacks.forEach(h => {
+                const holdbackParts = h.split(this.subSeparator);
+                const media = getCodeIfExists('MEDIAS', holdbackParts[0] as ExtractCode<'MEDIAS'>);
 
-          // PRICE
-          if (!isNaN(Number(spreadSheetRow[SpreadSheetDistributionDeal.priceAmount]))) {
-            // We increment global price for this title with the current deal price.
-            contract.last.titles[movie.id].price.amount += parseInt(spreadSheetRow[SpreadSheetDistributionDeal.priceAmount], 10);
-          }
+                if (holdbackParts.length !== 3) {
+                  importErrors.errors.push({
+                    type: 'error',
+                    field: 'holdback',
+                    name: 'Holdback',
+                    reason: `Failed to parse holdback entry`,
+                    hint: 'Edit corresponding sheet field.'
+                  });
+                } else {
+                  const holdBack = createHoldback();
+                  if (media) {
+                    holdBack.media = media;
+                  } else {
+                    importErrors.errors.push({
+                      type: 'warning',
+                      field: 'holdback.media',
+                      name: 'Holdback',
+                      reason: `${holdbackParts[0]} not found in medias list`,
+                      hint: 'Edit corresponding sheet field.'
+                    });
+                  }
 
-          if (spreadSheetRow[SpreadSheetDistributionDeal.priceCurrency]) {
-            contract.last.titles[movie.id].price.currency = spreadSheetRow[SpreadSheetDistributionDeal.priceCurrency];
-          }
+                  const ssfHoldBackStart: SSF$Date = SSF.parse_date_code(holdbackParts[1].trim());
+                  const holdBackStart = new Date(`${ssfHoldBackStart.y}-${ssfHoldBackStart.m}-${ssfHoldBackStart.d}`);
 
-          // Checks if sale already exists
-          const existingDeal = await this.distributionDealService.getValue(distributionDeal.id)
-          if (existingDeal) {
+                  if (isNaN(holdBackStart.getTime())) {
+                    holdBack.terms.startLag = holdbackParts[1].trim();
+                    importErrors.errors.push({
+                      type: 'warning',
+                      field: 'holdback.start',
+                      name: 'Holdback start',
+                      reason: `Failed to parse holdback start date, moved data to startLag`,
+                      hint: 'Edit corresponding sheet field.'
+                    });
+                  } else {
+                    holdBack.terms.start = holdBackStart;
+                  }
+
+                  const ssfHoldBackEnd: SSF$Date = SSF.parse_date_code(holdbackParts[2].trim());
+                  const holdBackEnd = new Date(`${ssfHoldBackEnd.y}-${ssfHoldBackEnd.m}-${ssfHoldBackEnd.d}`);
+
+                  if (isNaN(holdBackEnd.getTime())) {
+                    holdBack.terms.endLag = holdbackParts[2].trim();
+                    importErrors.errors.push({
+                      type: 'warning',
+                      field: 'holdback.end',
+                      name: 'Holdback end',
+                      reason: `Failed to parse holdback end date, moved data to endLag`,
+                      hint: 'Edit corresponding sheet field.'
+                    });
+                  } else {
+                    holdBack.terms.end = holdBackEnd;
+                  }
+
+                  distributionDeal.holdbacks.push(holdBack)
+                }
+
+              });
+            }
+
+            // Checks if sale already exists
+            const existingDeal = await this.distributionDealService.getValue(distributionDeal.id)
+            if (existingDeal) {
+              importErrors.errors.push({
+                type: 'error',
+                field: 'distributionDeal',
+                name: 'Distribution deal',
+                reason: 'Distribution deal already added',
+                hint: 'Distribution deal already added'
+              });
+            }
+          } else {
             importErrors.errors.push({
               type: 'error',
-              field: 'distributionDeal',
-              name: 'Distribution deal',
-              reason: 'Distribution deal already added',
-              hint: 'Distribution deal already added'
+              field: 'contract',
+              name: 'Contract',
+              reason: `No contract found matching movieId: ${movie.id} and dealId: ${distributionDeal.id}`,
+              hint: 'Try importing it first or check if data is correct.'
             });
           }
-
         } else {
           importErrors.errors.push({
             type: 'error',
@@ -1465,7 +1607,7 @@ export class ViewExtractedElementsComponent {
 
     const orderedSheetTabRows: any[] = sheetTabRowsWithNoParents.concat(sheetTabRowsWithParents);
     const matSnackbarRef = this.snackBar.open('Loading... Please wait', 'close');
-    for(const spreadSheetRow of orderedSheetTabRows) {
+    for (const spreadSheetRow of orderedSheetTabRows) {
       // CONTRACT ID
       // Create/retreive the contract
       let contract = initContractWithVersion();
@@ -1501,7 +1643,7 @@ export class ViewExtractedElementsComponent {
               const licensorParts = licensorName.split(this.subSeparator);
               const licensor = createContractPartyDetail();
               licensor.party.displayName = licensorParts[0].trim();
-              if(licensorParts[1]) {
+              if (licensorParts[1]) {
                 licensor.party.orgId = licensorParts[1].trim();
               }
               licensor.party.role = getCodeIfExists('LEGAL_ROLES', 'licensor');
@@ -1517,7 +1659,7 @@ export class ViewExtractedElementsComponent {
             const licenseeParts = spreadSheetRow[SpreadSheetContract.licensee].split(this.subSeparator);
             const licensee = createContractPartyDetail();
             licensee.party.displayName = licenseeParts[0].trim();
-            if(licenseeParts[1]) {
+            if (licenseeParts[1]) {
               licensee.party.orgId = licenseeParts[1].trim();
             }
             licensee.party.role = getCodeIfExists('LEGAL_ROLES', 'licensee');
@@ -1664,9 +1806,20 @@ export class ViewExtractedElementsComponent {
           const currentIndex = SpreadSheetContract.titleStuffIndexStart + titleIndex;
           titleIndex += titlesFieldsCount;
           const titleDetails = await this.processTitleDetails(spreadSheetRow, currentIndex);
-          contract.last.titles[titleDetails.titleId] = titleDetails;
-          if (contract.doc.titleIds.indexOf(titleDetails.titleId) === -1) {
-            contract.doc.titleIds.push(titleDetails.titleId);
+
+          if (importErrors.newContract && contract.last.titles[titleDetails.titleId] !== undefined) {
+            importErrors.errors.push({
+              type: 'error',
+              field: 'titleIds',
+              name: 'Film Code',
+              reason: `Duplicate film code found : ${titleDetails.titleId}`,
+              hint: 'Edit corresponding sheet field.'
+            });
+          } else {
+            contract.last.titles[titleDetails.titleId] = titleDetails;
+            if (contract.doc.titleIds.indexOf(titleDetails.titleId) === -1) {
+              contract.doc.titleIds.push(titleDetails.titleId);
+            }
           }
         }
 
