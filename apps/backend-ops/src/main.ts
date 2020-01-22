@@ -2,7 +2,7 @@ import { prepareForTesting, upgrade } from './firebaseSetup';
 import { migrate } from './migrations';
 import { exitable, showHelp } from './tools';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs } from './algolia';
-import { printUsers, syncUsers } from './users';
+import { clearUsers, printUsers, syncUsers } from './users';
 
 const args = process.argv.slice(2);
 const [cmd, ...rest] = args;
@@ -17,6 +17,8 @@ if (cmd === 'prepareForTesting') {
   exitable(syncUsers)();
 } else if (cmd === 'printUsers') {
   exitable(printUsers)();
+} else if (cmd === 'clearUsers') {
+  exitable(clearUsers)();
 } else if (cmd === 'upgradeAlgoliaOrgs') {
   exitable(upgradeAlgoliaOrgs)();
 } else if (cmd === 'upgradeAlgoliaMovies') {

@@ -94,3 +94,10 @@ export async function printUsers(): Promise<any> {
 
   } while (pageToken);
 }
+
+export async function clearUsers(): Promise<any> {
+  const { auth } = loadAdminServices();
+
+  // clear users is equivalent to "we expect no users", we can reuse the code.
+  return removeUnexpectedUsers([], auth);
+}
