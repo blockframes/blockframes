@@ -1,0 +1,8 @@
+<ng-container *ngFor="let festivalPrize of festivalPrizes.prizes.controls">
+  <p>
+    <span class="mat-body-1 info-name">Festival </span>
+    <span class="mat-body-1">
+      {{ festivalPrize.get('name') | missing }}, {{ festivalPrize.get('prize') | missing }}, {{ festivalPrize.get('year') | missing }}, {{ festivalPrize.get('premiere') | missing }}
+    </span>
+  </p>
+</ng-container>
