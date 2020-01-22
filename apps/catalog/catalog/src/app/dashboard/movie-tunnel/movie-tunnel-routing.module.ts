@@ -9,8 +9,9 @@ const tunnelRoutes: Routes = [
     children: [
       // Page 1
       {
-        path: 'start',
-        loadChildren: () => import('./start/start-tunnel.module').then(m => m.StartTunnelModule)
+        path: '',
+        redirectTo: 'main',
+        pathMatch: 'full'
       },
       // Page 2
       {

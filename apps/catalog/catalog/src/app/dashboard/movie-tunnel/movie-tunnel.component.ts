@@ -131,10 +131,7 @@ export class MovieTunnelComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.sub = this.route.params.subscribe(async ({ movieId }: { movieId: string }) => {
-      const movie =
-        movieId !== 'create'
-          ? await this.service.getValue(movieId) // Edit movie
-          : {}; // Create movie
+      const movie = await this.service.getValue(movieId) // Edit movie
       this.form.patchValue(movie);
     });
   }
