@@ -46,7 +46,8 @@ export {
   MovieStakeholders,
   Prize,
   MovieSalesInfoDocumentWithDates as MovieSalesInfo,
-  MovieSalesAgentDealDocumentWithDates as MovieSalesAgentDeal
+  MovieSalesAgentDealDocumentWithDates as MovieSalesAgentDeal,
+  MovieAnalytics
 } from './movie.firestore';
 
 export interface Movie extends MovieDocumentWithDates {
