@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ContractStore, ContractState } from './contract.store';
-import { CollectionConfig, CollectionService, awaitSyncQuery, Query, WriteOptions } from 'akita-ng-fire';
+import { CollectionConfig, CollectionService, awaitSyncQuery, Query } from 'akita-ng-fire';
 import { Contract, ContractPartyDetail, convertToContractDocument, createContractPartyDetail, initContractWithVersion, ContractWithLastVersion } from './contract.model';
 import orderBy from 'lodash/orderBy';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
@@ -12,7 +12,6 @@ import { cleanModel } from '@blockframes/utils';
 import { ContractDocumentWithDates } from './contract.firestore';
 import { VersionMeta } from '@blockframes/contract/version/+state/contract-version.model';
 import { PermissionsService } from '@blockframes/organization';
-import { firestore } from 'firebase';
 
 /**
  * Get all the contracts where user organization is party.
@@ -124,9 +123,10 @@ export class ContractService extends CollectionService<ContractState> {
       const contractWithVersion = initContractWithVersion();
 
       for (const contract of contracts) {
-        this.contractVersionService.setContractId(contract.id);
+
         const contractVersions = await this.contractVersionService.getValue(ref =>
-          ref.where(`titles.${movieId}.distributionDealIds`, 'array-contains', distributionDealId)
+          ref.where(`titles.${movieId}.distributionDealIds`, 'array-contains', distributionDealId),
+          { params: { contractId: contract.id } }
         );
         if (contractVersions.length) {
           const sortedContractVersions = orderBy(contractVersions, 'id', 'desc');

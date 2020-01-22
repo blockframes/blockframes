@@ -1,29 +1,24 @@
 import { Injectable } from '@angular/core';
 import objectHash from 'object-hash';
 import { firestore } from 'firebase';
-import { CollectionService } from 'akita-ng-fire';
+import { CollectionService, CollectionConfig } from 'akita-ng-fire';
 import { DistributionDealState, DistributionDealStore } from './distribution-deal.store';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
-import { MovieQuery } from '../../movie/+state/movie.query';
 import { DistributionDeal } from './distribution-deal.model';
 import { createContractTitleDetail, ContractWithLastVersion } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractVersionService } from '@blockframes/contract/version/+state/contract-version.service';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 
 @Injectable({ providedIn: 'root' })
+@CollectionConfig({ path: 'movies/:movieId/distributionDeals' })
 export class DistributionDealService extends CollectionService<DistributionDealState> {
   constructor(
-    private movieQuery: MovieQuery,
     private organizationQuery: OrganizationQuery,
     private contractService: ContractService,
     private contractVersionService: ContractVersionService,
     store: DistributionDealStore
   ) {
     super(store);
-  }
-
-  get path() {
-    return `movies/${this.movieQuery.getActiveId()}/distributionDeals`;
   }
 
   /**
@@ -62,9 +57,9 @@ export class DistributionDealService extends CollectionService<DistributionDealS
       distributionDeal.contractId = contract.doc.id;
       // Contract may have been updated along with the distribution deal, we update it
       await this.contractService.add(contract.doc);
-      await this.contractVersionService.add(contract.last);
+      await this.contractVersionService.add(contract.last, { params: { contractId: contract.doc.id } });
     }
-    await this.db.doc(`movies/${movieId}`).collection('distributiondeals').doc(distributionDeal.id).set(distributionDeal);
+    await this.add(distributionDeal, { params: { movieId } });
 
     return distributionDeal.id;
   }
@@ -99,11 +94,7 @@ export class DistributionDealService extends CollectionService<DistributionDealS
    * @param movieId
    */
   public async getMovieDistributionDeals(movieId: string): Promise<DistributionDeal[]> {
-    const distributionDealsSnap = await this.db
-      .collection(`movies/${movieId}/distributionDeals`)
-      .get()
-      .toPromise();
-    const distributionDeals = distributionDealsSnap.docs.map(deal => this.formatDistributionDeal(deal.data()));
+    const distributionDeals = await this.getValue({ params: { movieId } });
     return distributionDeals;
   }
 
