@@ -7,7 +7,7 @@
 
   <mat-card tunnel-form>
     <movie-summary-main [main]="form.main"></movie-summary-main>
-    <movie-summary-country [main]="form.main" [salesInfo]="form.salesInfo"></movie-summary-country>
+    <movie-summary-country [salesInfo]="form.salesInfo" [originCountries]="form.main.originCountries"></movie-summary-country>
     <movie-summary-information [main]="form.main"></movie-summary-information>
     <movie-summary-sales-cast [salesCast]="form.salesCast"></movie-summary-sales-cast>
     <movie-summary-festival-prizes [festivalPrizes]="form.festivalPrizes"></movie-summary-festival-prizes>
