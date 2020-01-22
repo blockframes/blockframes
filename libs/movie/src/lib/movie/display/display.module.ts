@@ -6,10 +6,9 @@ import { MatCardModule } from '@angular/material/card';
 import { MatListModule } from '@angular/material/list';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatIconModule, MatButtonModule } from '@angular/material';
-
-// Components
+// Componenents
 import { MovieDisplayComponent } from './root/root.component';
+import { MovieDisplayMainComponent } from './main/main.component';
 import { MovieDisplayPromotionalElementsComponent } from './promotional-elements/promotional-elements.component';
 import { MovieDisplayPromotionalDescriptionComponent } from './promotional-description/promotional-description.component';
 import { MovieDisplayStoryComponent } from './story/story.component';
@@ -18,28 +17,12 @@ import { MovieDisplaySalesInfoComponent } from './sales-info/sales-info.componen
 import { MovieDisplayVersionInfoComponent } from './version-info/version-info.component';
 import { MovieDisplayFestivalPrizesComponent } from './festival-prizes/festival-prizes.component';
 import { MovieDisplaySalesAgentDealComponent } from './sales-agent-deal/sales-agent-deal.component';
-import { MovieDisplayMainComponent } from './main/main.component';
-import { MissingPipeModule } from '@blockframes/utils/pipes/missing.module';
-import { RouterModule } from '@angular/router';
-import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FlexLayoutModule,
-    ImageReferenceModule,
-    MatCardModule,
-    MatDividerModule,
-    MatGridListModule,
-    MatListModule,
-    MissingPipeModule,
-    MatIconModule,
-    MatButtonModule,
-    RouterModule
-  ],
+  imports: [CommonModule, ImageReferenceModule, MatCardModule, MatDividerModule, MatGridListModule, MatListModule],
   declarations: [
-    MovieDisplayMainComponent,
     MovieDisplayComponent,
+    MovieDisplayMainComponent,
     MovieDisplayPromotionalElementsComponent,
     MovieDisplayPromotionalDescriptionComponent,
     MovieDisplayStoryComponent,
@@ -47,8 +30,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
     MovieDisplaySalesInfoComponent,
     MovieDisplayVersionInfoComponent,
     MovieDisplayFestivalPrizesComponent,
-    MovieDisplaySalesAgentDealComponent
+    MovieDisplaySalesAgentDealComponent,
   ],
-  exports: [MovieDisplayComponent, MovieDisplayMainComponent]
+  exports: [MovieDisplayComponent]
 })
 export class MovieDisplayModule {}
