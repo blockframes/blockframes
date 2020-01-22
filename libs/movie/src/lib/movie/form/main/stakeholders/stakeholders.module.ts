@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { ChipsAutocompleteModule } from '@blockframes/ui/form/chips-autocomplete/chips-autocomplete.module';
 
 // Components
 import { StakeholdersComponent } from './stakeholders.component';
@@ -18,6 +19,7 @@ import { MatFormFieldModule } from '@angular/material/form-field'
     CommonModule,
     ReactiveFormsModule,
     FlexLayoutModule,
+    ChipsAutocompleteModule,
     // Material
     MatTooltipModule,
     MatInputModule,

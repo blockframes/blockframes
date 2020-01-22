@@ -44,16 +44,17 @@ type DirectorFormControl = ReturnType<typeof createDirectorFormControl>;
 
 // STAKEHOLDERS
 
-export class StakeholderForm extends FormEntity<StakeholderControl> {
+export class StakeholderForm extends FormEntity<StakeholderControl, Stakeholder> {
   constructor(stakeholder?: Partial<Stakeholder>) {
     super(createStakeholderControl(stakeholder))
   }
 }
 
 function createStakeholderControl(stakeholder?: Partial<Stakeholder>) {
-  const { displayName } = createStakeholder(stakeholder);
+  const { displayName, countries } = createStakeholder(stakeholder);
   return {
     displayName: new FormControl(displayName),
+    countries: FormList.factory(countries, e => new FormStaticValue(e, 'TERRITORIES'))
   }
 }
 
