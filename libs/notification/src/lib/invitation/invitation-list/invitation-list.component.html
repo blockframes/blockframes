@@ -6,21 +6,24 @@
       <h4>Today</h4>
       <invitation-item
         *ngFor="let invitation of day.value"
-        [invitation]="invitation">
+        [invitation]="invitation"
+        [placeholderUrl]="placeholderUrl">
       </invitation-item>
     </ng-container>
     <ng-container *ngSwitchCase="(yesterday | date)">
       <h4>Yesterday</h4>
       <invitation-item
         *ngFor="let invitation of day.value"
-        [invitation]="invitation">
+        [invitation]="invitation"
+        [placeholderUrl]="placeholderUrl">
       </invitation-item>
     </ng-container>
     <ng-container *ngSwitchDefault>
       <h4>{{ day.key }}</h4>
       <invitation-item
         *ngFor="let invitation of day.value; let isLast = last"
-        [invitation]="invitation">
+        [invitation]="invitation"
+        [placeholderUrl]="placeholderUrl">
       </invitation-item>
     </ng-container>
   </ng-container>

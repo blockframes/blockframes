@@ -12,6 +12,7 @@ import { InvitationDocument, InvitationType, InvitationStatus } from '../+state/
 export class InvitationItemComponent {
   @Input() invitation: InvitationDocument;
   @Input() inWidget: boolean;
+  @Input() placeholderUrl: string;
 
   constructor(private service: InvitationService, private snackBar: MatSnackBar) {}
 

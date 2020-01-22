@@ -1,21 +1,9 @@
 <section fxLayout="row" fxLayoutAlign="space-between center">
   <div fxLayout="row">
-    <article>
-      <ng-container *ngIf="invitation.user.avatar; else defaultAvatar">
-        <avatar-list [refs]="[invitation.user.avatar]"></avatar-list>
-      </ng-container>
-      <ng-template #defaultAvatar>
-        <img asset="Avatar_40.png" />
-      </ng-template>
-    </article>
+    <img [placeholderUrl]="placeholderUrl" [imgRef]="invitation.user.avatar" alt="Profile picture" />
   <article fxLayout="column" fxLayoutAlign="start start">
     <p>{{ message }}</p>
-    <ng-container *ngIf="inWidget; else inFeed">
-      <small>{{ invitation.date.toDate() | date: 'medium' }}</small>
-    </ng-container>
-    <ng-template #inFeed>
-      <small>{{ invitation.date.toDate() | date: 'shortTime' }}</small>
-    </ng-template>
+    <small>{{ invitation.date.toDate() | date: inWidget ? 'medium' : 'shortTime' }}</small>
   </article>
   </div>
   <article fxLayout="row" fxLayoutGap="10px" *ngIf="displayInvitationButtons">

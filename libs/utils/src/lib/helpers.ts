@@ -20,3 +20,8 @@ export function formatDate(date: Date) {
 export function cleanModel<T>(data: T): T {
   return JSON.parse(JSON.stringify(data));
 }
+
+
+export interface DateGroup<T> {
+  [date: string]: T[];
+}

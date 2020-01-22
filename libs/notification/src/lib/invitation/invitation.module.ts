@@ -2,8 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { AvatarListModule } from '@blockframes/ui/avatar-list/avatar-list.module';
 import { ReverseModule } from '@blockframes/utils/pipes/reverse.module';
+import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 
 // Components
 import { InvitationListComponent } from './invitation-list/invitation-list.component';
@@ -27,8 +27,8 @@ import { MatCardModule } from '@angular/material/card';
     CommonModule,
     RouterModule,
     FlexLayoutModule,
-    AvatarListModule,
     ReverseModule,
+    ImageReferenceModule,
 
     // Material
     MatIconModule,
