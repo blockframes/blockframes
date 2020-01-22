@@ -191,7 +191,7 @@ export class ViewExtractedElementsComponent {
           promotionalElements: createMoviePromotionalElements(),
           salesCast: createMovieSalesCast(),
           salesInfo: createMovieSalesInfo(),
-          versionInfo: {}, // TODO issue #1596
+          versionInfo: { languages: {} }, // TODO issue #1596
           festivalPrizes: createMovieFestivalPrizes(),
           salesAgentDeal: createMovieSalesAgentDeal(),
           budget: createMovieBudget(),
@@ -504,11 +504,12 @@ export class ViewExtractedElementsComponent {
 
         // LANGUAGES (Original Language(s))
         if (spreadSheetRow[SpreadSheetMovie.languages]) {
-          movie.main.originalLanguages = []; // @todo #1562 add to movie.versionInfo & check #1589
+          movie.main.originalLanguages = [];
           spreadSheetRow[SpreadSheetMovie.languages].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
             const language = getCodeIfExists('LANGUAGES', g);
             if (language) {
               movie.main.originalLanguages.push(language);
+              populateMovieLanguageSpecification(movie.versionInfo.languages, language, MovieLanguageTypes.original, true);
             } else {
               importErrors.errors.push({
                 type: 'warning',
@@ -520,65 +521,63 @@ export class ViewExtractedElementsComponent {
             }
           });
         }
-        // #1562
+
+
+
         // DUBS (Available dubbing(s))
-        // @todo #1562 Wait for  #1411
-        /*         if (spreadSheetRow[SpreadSheetMovie.dubbings]) {
-                  movie.versionInfo.dubbings = [];
-                  spreadSheetRow[SpreadSheetMovie.dubbings].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
-                    const dubbing = getCodeIfExists('LANGUAGES', g);
-                    if (dubbing) {
-                      movie.versionInfo.dubbings.push(dubbing);
-                    } else {
-                      importErrors.errors.push({
-                        type: 'warning',
-                        field: 'versionInfo.dubbing',
-                        name: 'Dubbings',
-                        reason: `${g} not found in languages list`,
-                        hint: 'Edit corresponding sheet field.'
-                      });
-                    }
-                  });
-                } */
+        if (spreadSheetRow[SpreadSheetMovie.dubbings]) {
+          spreadSheetRow[SpreadSheetMovie.dubbings].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
+            const dubbing = getCodeIfExists('LANGUAGES', g);
+            if (dubbing) {
+              populateMovieLanguageSpecification(movie.versionInfo.languages, dubbing, MovieLanguageTypes.dubbed, true);
+            } else {
+              importErrors.errors.push({
+                type: 'warning',
+                field: 'versionInfo.dubbing',
+                name: 'Dubbings',
+                reason: `${g} not found in languages list`,
+                hint: 'Edit corresponding sheet field.'
+              });
+            }
+          });
+        }
 
         // SUBTILES (Available subtitle(s))
-        // @todo #1562 Wait for  #1411
-        /*      if (spreadSheetRow[SpreadSheetMovie.subtitles]) {
-               movie.versionInfo.subtitles = [];
-               spreadSheetRow[SpreadSheetMovie.subtitles].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
-                 const subtitle = getCodeIfExists('LANGUAGES', g);
-                 if (subtitle) {
-                   movie.versionInfo.subtitles.push(subtitle);
-                 } else {
-                   importErrors.errors.push({
-                     type: 'warning',
-                     field: 'versionInfo.subtitle',
-                     name: 'Subtitles',
-                     reason: `${g} not found in languages list`,
-                     hint: 'Edit corresponding sheet field.'
-                   });
-                 }
-               });
-             }
-     
-             // Captions (Avalaible closed-captioned)
-             if (spreadSheetRow[SpreadSheetMovie.captions]) {
-               //movie.versionInfo.captions = [];
-               spreadSheetRow[SpreadSheetMovie.captions].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
-                 const caption = getCodeIfExists('LANGUAGES', g);
-                 if (caption) {
-                   // @todo #1562 Wait for  #1411
-                 } else {
-                   importErrors.errors.push({
-                     type: 'warning',
-                     field: 'versionInfo.subtitle',
-                     name: 'Subtitles',
-                     reason: `${g} not found in languages list`,
-                     hint: 'Edit corresponding sheet field.'
-                   });
-                 }
-               });
-             } */
+        if (spreadSheetRow[SpreadSheetMovie.subtitles]) {
+          spreadSheetRow[SpreadSheetMovie.subtitles].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
+            const subtitle = getCodeIfExists('LANGUAGES', g);
+            if (subtitle) {
+              populateMovieLanguageSpecification(movie.versionInfo.languages, subtitle, MovieLanguageTypes.subtitle, true);
+            } else {
+              importErrors.errors.push({
+                type: 'warning',
+                field: 'versionInfo.subtitle',
+                name: 'Subtitles',
+                reason: `${g} not found in languages list`,
+                hint: 'Edit corresponding sheet field.'
+              });
+            }
+          });
+        }
+
+        // Captions (Avalaible closed-captioned)
+        if (spreadSheetRow[SpreadSheetMovie.captions]) {
+          //movie.versionInfo.captions = [];
+          spreadSheetRow[SpreadSheetMovie.captions].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
+            const caption = getCodeIfExists('LANGUAGES', g);
+            if (caption) {
+              populateMovieLanguageSpecification(movie.versionInfo.languages, caption, MovieLanguageTypes.caption, true);
+            } else {
+              importErrors.errors.push({
+                type: 'warning',
+                field: 'versionInfo.subtitle',
+                name: 'Subtitles',
+                reason: `${g} not found in languages list`,
+                hint: 'Edit corresponding sheet field.'
+              });
+            }
+          });
+        }
 
         // SCREENER LINK
         if (spreadSheetRow[SpreadSheetMovie.screenerLink]) {
@@ -1016,37 +1015,15 @@ export class ViewExtractedElementsComponent {
       });
     }
 
-    /*     if (movie.versionInfo.dubbings.length === 0) {
-          errors.push({
-            type: 'warning',
-            field: 'versionInfo.dubbings',
-            name: 'Dubbings',
-            reason: 'Optional field is missing',
-            hint: 'Edit corresponding sheet field.'
-          });
-        } */
-
-    /*     if (movie.versionInfo.subtitles.length === 0) {
-          errors.push({
-            type: 'warning',
-            field: 'versionInfo.subtitles',
-            name: 'Subtitles',
-            reason: 'Optional field is missing',
-            hint: 'Edit corresponding sheet field.'
-          });
-        } */
-
-    /*
-    @todo #1562  Wait for  #1411
-    if (movie.versionInfo.captions.length === 0) {
+    if (movie.versionInfo.languages === {}) {
       errors.push({
         type: 'warning',
-        field: 'versionInfo.captions',
-        name: 'Captions',
+        field: 'versionInfo.languages',
+        name: 'Dubbings | Subtitles | Captions ',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
-    }*/
+    }
 
     if (movie.budget.totalBudget === undefined) {
       errors.push({

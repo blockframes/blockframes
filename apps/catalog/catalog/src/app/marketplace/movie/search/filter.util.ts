@@ -2,7 +2,8 @@ import { CatalogSearch } from './search.form';
 import { Movie } from '@blockframes/movie/movie/+state/movie.model';
 import { AFM_DISABLE } from '@env';
 import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
-import { ExtractCode, ExtractSlug } from '@blockframes/utils/static-model/staticModels';
+import { ExtractSlug } from '@blockframes/utils/static-model/staticModels';
+import { LanguagesSlug } from '@blockframes/utils/static-model/types';
 
 function productionYearBetween(movie: Movie, range: { from: number; to: number }): boolean {
   if (!range || !(range.from && range.to)) {
@@ -15,25 +16,34 @@ function productionYearBetween(movie: Movie, range: { from: number; to: number }
 }
 function hasLanguage(
   movie: Movie,
-  language: { name: string; original: boolean; dubbed: boolean; subtitle: boolean }
+  language: { name: LanguagesSlug; original: boolean; dubbed: boolean; subtitle: boolean; caption: boolean }
 ): boolean {
   if (!language) {
     return true;
   }
-  const original = true;
-  const dubbed = true;
-  const subtitle = true;
-     // TODO #1562
-/*   if (language.original) {
-    original = movie.main.languages.includes(language.name.toLowerCase());
+
+  let original = true;
+  let dubbed = true;
+  let subtitle = true;
+  let caption = true;
+
+  if (language.original) {
+    original = movie.versionInfo.languages[language.name].original;
   }
+
   if (language.dubbed) {
-    dubbed = movie.versionInfo.dubbings.includes(language.name.toLowerCase());
+    original = movie.versionInfo.languages[language.name].dubbed;
   }
+
   if (language.subtitle) {
-    subtitle = movie.versionInfo.subtitles.includes(language.name.toLowerCase());
-  } */
-  return original && dubbed && subtitle;
+    original = movie.versionInfo.languages[language.name].subtitle;
+  }
+
+  if (language.caption) {
+    original = movie.versionInfo.languages[language.name].caption;
+  }
+
+  return original && dubbed && subtitle && caption;
 }
 
 function types(movie: Movie, movieGenre: string[]): boolean {
