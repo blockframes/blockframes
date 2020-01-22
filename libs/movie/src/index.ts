@@ -12,6 +12,7 @@ export * from './lib/movie/guards/movie-contract.guard';
 // Movie Modules
 export * from './lib/movie/movie.module';
 export * from './lib/distribution-deals/selection-table/form-selection.module';
+export * from './lib/movie/form/summary/main/main.module';
 // Movie Components
 export { MovieViewComponent } from './lib/movie/pages/movie-view/movie-view.component';
 export { MovieEditableComponent } from './lib/movie/pages/movie-editable/movie-editable.component';
