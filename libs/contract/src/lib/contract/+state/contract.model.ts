@@ -7,14 +7,13 @@ import {
   ContractTitleDetail,
   ContractPartyDetailDocumentWithDates,
   ContractPartyDetailDocumentWithDatesDocument,
-  ContractVersionDocumentWithDates
+  LegalDocument,
+  LegalDocuments
 } from './contract.firestore';
-import { LegalDocument, LegalDocuments } from '@blockframes/contract/+state/contract.firestore';
 import { createParty } from '@blockframes/utils/common-interfaces/identity';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 import { createTerms } from '@blockframes/utils/common-interfaces/terms';
-
-export type ContractVersion = ContractVersionDocumentWithDates;
+import { ContractVersion } from '../../version/+state/contract-version.model';
 
 /**
  * @dev this should not be saved to firestore,
@@ -26,7 +25,7 @@ export interface ContractWithLastVersion {
 }
 
 export interface Contract extends ContractDocumentWithDates {
-  lastVersion?: ContractVersion;
+  versions?: ContractVersion[];
 };
 
 export type ContractPartyDetail = ContractPartyDetailDocumentWithDates;
@@ -47,6 +46,7 @@ export function createContract(params: Partial<Contract> = {}): Contract {
     parties: [],
     titleIds: [],
     partyIds: [],
+    documents: createLegalDocuments(params.documents),
     ...params
   };
 }
@@ -60,7 +60,7 @@ export function createContractVersion(params: Partial<ContractVersion> = {}): Co
     ...params,
     status: ContractStatus.submitted,
     scope: createTerms(params.scope),
-    price: createPrice(params.price),
+    price: createPrice(params.price)
   };
 }
 
@@ -168,11 +168,13 @@ export function buildChainOfTitle() {
 export function convertToContractDocument(params: Partial<Contract> = {}): ContractDocumentWithDates {
   return {
     id: params.id,
-    parties: params.parties || [],
-    titleIds: params.titleIds || [],
-    partyIds: params.partyIds ||[],
-    parentContractIds: params.parentContractIds || [],
-    childContractIds: params.childContractIds || [],
+    parties: [],
+    titleIds: [],
+    partyIds: [],
+    parentContractIds: [],
+    childContractIds: [],
+    documents: createLegalDocuments(params.documents),
+    ...params
   };
 }
 
@@ -180,16 +182,17 @@ export function createLegalDocuments(
   params: Partial<LegalDocuments> = {}
 ): LegalDocuments {
   return {
-    chain_of_titles: [],
+    chainOfTitles: [],
     invoices: [],
-    bill : null
+    bill : createLegalDocument(params.bill),
+    ...params
   }
 }
 
 export function createLegalDocument(
   legalDocument: Partial<LegalDocument> = {}
 ): LegalDocument {
-  return { 
+  return {
     label: '',
     media: createImgRef(legalDocument.media),
   }

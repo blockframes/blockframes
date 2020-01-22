@@ -5,11 +5,12 @@ import { Contract, ContractPartyDetail, convertToContractDocument, createContrac
 import orderBy from 'lodash/orderBy';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { tap, switchMap } from 'rxjs/operators';
-import { ContractVersionService } from '../version/+state/contract-version.service';
+import { ContractVersionService } from '../../version/+state/contract-version.service';
 import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
 import { LegalRolesSlug } from '@blockframes/utils/static-model/types';
 import { cleanModel } from '@blockframes/utils';
 import { ContractDocumentWithDates } from './contract.firestore';
+import { VersionMeta } from '@blockframes/contract/version/+state/contract-version.model';
 
 /**
  * Get all the contracts where user organization is party.
@@ -18,13 +19,24 @@ import { ContractDocumentWithDates } from './contract.firestore';
  */
 const contractsListQuery = (orgId: string): Query<Contract[]> => ({
   path: 'contracts',
-  queryFn: ref => ref.where('partyIds', 'array-contains', orgId).where('childContractIds', '==', [])
+  queryFn: ref => ref.where('partyIds', 'array-contains', orgId).where('childContractIds', '==', []),
+    versions: (contract: Contract) => ({
+      path: `contracts/${contract.id}/versions`
+    })
 });
 
 /** Get the active contract and put his lastVersion in it. */
 const contractQuery = (contractId: string): Query<Contract> => ({
-  path: `contracts/${contractId}`
+  path: `contracts/${contractId}`,
+    versions: (contract: Contract) => ({
+    path: `contracts/${contract.id}/versions`
+  })
 })
+
+export function getLastVersionIndex(contract: Contract): number {
+  const { count }: VersionMeta = contract.versions.find(v => v.id === '_meta')
+  return contract.versions.map(v => v.id).indexOf(count.toString())
+}
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'contracts' })
@@ -52,7 +64,7 @@ export class ContractService extends CollectionService<ContractState> {
     // Reset the store to clean the active contract.
     this.store.reset();
     return awaitSyncQuery.call(this, contractQuery(contractId));
-    
+
   }
 
   /**
@@ -184,7 +196,7 @@ export class ContractService extends CollectionService<ContractState> {
   /**
    * This function appends data to contracts by looking on its parents contracts
    * @param contract
-   * @param parentContracts 
+   * @param parentContracts
    */
   public async populatePartiesWithParentRoles(contract: Contract, parentContracts?: Contract[]): Promise<Contract> {
 

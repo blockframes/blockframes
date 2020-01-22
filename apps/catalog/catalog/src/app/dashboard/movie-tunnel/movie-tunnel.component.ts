@@ -4,7 +4,7 @@ import flatten from 'lodash/flatten';
 // Angular
 import { Component, ChangeDetectionStrategy, Host, OnInit, OnDestroy } from '@angular/core';
 import { DistributionDealForm } from '@blockframes/movie/distribution-deals/form/distribution-deal.form';
-import { ContractForm } from '@blockframes/contract/forms/contract.form';
+import { ContractForm } from '@blockframes/contract/contract/forms/contract.form';
 import { ActivatedRoute } from '@angular/router';
 
 // Akita
@@ -138,7 +138,7 @@ export class MovieTunnelComponent implements OnInit, OnDestroy {
       this.form.patchValue(movie);
     });
   }
-  
+
   ngOnDestroy() {
     this.sub.unsubscribe();
   }
@@ -159,7 +159,7 @@ export class MovieTunnelComponent implements OnInit, OnDestroy {
   // Should save movie, contract & deal
   private save() {
     // Movie
-    this.form.value.id 
+    this.form.value.id
       ? this.service.update(this.form.value)
       : this.service.add(this.form.value);
     // Contract

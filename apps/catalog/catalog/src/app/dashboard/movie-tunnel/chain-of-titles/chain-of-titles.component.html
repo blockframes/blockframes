@@ -1,0 +1,39 @@
+<tunnel-page>
+  <h4 title>Legal Information</h4>
+  <h1 subtitle>Chain of Titles</h1>
+  <p class="mat-body-1" description>Please upload every files justifying the chain of titles.</p>
+  <ng-container tunnel-form>
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Upload Documents</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <ng-container *ngFor="let control of chainOfTitles.controls; let i = index; let last = last">
+          <file-upload 
+            path="pdf" 
+            uploadOnFirestore="true" 
+            accept="['.pdf']" 
+            [types]="['application/pdf']" 
+            (storeUploaded)="importPDF($event, i)">
+            <h3 type>Upload files</h3>
+            <p class="mat-caption" format>Accepted Formats: .pdf</p>
+        </file-upload>
+          <!-- Add / Delete -->
+          <footer *ngIf="!last" fxLayout="column" fxLayoutAlign="center center">
+            <button mat-mini-fab color="warn" (click)="chainOfTitles.removeAt(i)" aria-label="Remove a director form">
+              <mat-icon>delete</mat-icon>
+            </button>
+            <span>Delete Document</span>
+          </footer>
+          <footer *ngIf="last" fxLayout="column" fxLayoutAlign="center center">
+            <button mat-mini-fab color="primary" (click)="chainOfTitles.add()" aria-label="Remove a director form">
+              <mat-icon>add</mat-icon>
+            </button>
+            <span>Add Document</span>
+          </footer>
+          <mat-divider [inset]="true"></mat-divider>
+        </ng-container>
+      </mat-card-content>
+    </mat-card>
+  </ng-container>
+</tunnel-page>

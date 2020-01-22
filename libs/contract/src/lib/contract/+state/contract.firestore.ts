@@ -67,7 +67,8 @@ interface ContractRaw<D> {
   childContractIds?: string[],
   parties: ContractPartyDetailRaw<D>[],
   titleIds: string[],
-  partyIds: string[]
+  partyIds: string[],
+  documents: LegalDocuments
 }
 
 /*
@@ -77,7 +78,7 @@ export interface InvoiceRaw<D> {
 */
 
 export interface LegalDocuments {
-  chain_of_titles: LegalDocument[],
+  chainOfTitles: LegalDocument[],
   invoices: LegalDocument[],
   bill : LegalDocument
 }

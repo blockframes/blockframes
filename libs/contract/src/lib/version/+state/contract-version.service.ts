@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { CollectionService } from 'akita-ng-fire';
 import { ContractVersionState, ContractVersionStore } from './contract-version.store';
-import { VersionMeta, createVersionMeta } from './contract-version.model';
-import { ContractQuery } from '../../+state/contract.query';
-import { ContractWithLastVersion, ContractVersion } from '@blockframes/contract';
+import { VersionMeta, createVersionMeta, ContractVersion } from './contract-version.model';
+import { ContractQuery } from '../../contract/+state/contract.query';
+import { ContractWithLastVersion } from '../../contract/+state/contract.model';
 
 @Injectable({ providedIn: 'root' })
 export class ContractVersionService extends CollectionService<ContractVersionState> {

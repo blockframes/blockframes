@@ -1,0 +1,9 @@
+:host {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+header[mat-tab-nav-bar] button {
+  border: none;
+}

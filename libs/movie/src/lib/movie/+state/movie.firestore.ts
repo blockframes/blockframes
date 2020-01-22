@@ -50,11 +50,11 @@ export enum UnitBox {
   boxoffice_euro = 'Box office in €',
   entrances = '#Entrances',
 }
-
+/* TODO #1562
 export interface MovieVersionInfo {
   dubbings: string[],
   subtitles: string[],
-}
+} */
 
 export interface StoreConfig {
   display: boolean,
@@ -250,6 +250,10 @@ interface MovieRaw<D> {
   salesAgentDeal: MovieSalesAgentDealRaw<D>;
   budget: MovieBudget;
   movieReview: MovieReview[];
+}
+
+interface MovieVersionInfo {
+  languages: Partial<{ [language in LanguagesSlug]: MovieLanguageSpecification }>;
 }
 
 /** Document model of a Movie */

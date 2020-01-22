@@ -9,7 +9,6 @@ import {
   MovieSalesCast,
   MovieSalesInfoDocumentWithDates as MovieSalesInfo,
   MovieStory,
-  MovieVersionInfo,
   Prize,
   PromotionalElement,
   Title,
@@ -47,7 +46,8 @@ export {
   MoviePromotionalElements,
   MovieSalesCast,
   MovieStory,
-  MovieVersionInfo,
+  // TODO #1562
+/*   MovieVersionInfo, */
   Prize,
   MovieSalesInfoDocumentWithDates as MovieSalesInfo,
   MovieSalesAgentDealDocumentWithDates as MovieSalesAgentDeal
@@ -69,7 +69,7 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     promotionalDescription: createMoviePromotionalDescription(params.promotionalDescription),
     salesCast: createMovieSalesCast(params.salesCast),
     salesInfo: createMovieSalesInfo(params.salesInfo),
-    versionInfo: createMovieVersionInfo(params.versionInfo),
+    versionInfo: {languages:{}}, // TODO issue #1596
     festivalPrizes: createMovieFestivalPrizes(params.festivalPrizes),
     salesAgentDeal: createMovieSalesAgentDeal(params.salesAgentDeal),
     budget: createMovieBudget(params.budget),
@@ -95,7 +95,7 @@ export function createMovieMain(params: Partial<MovieMain> = {}): MovieMain {
     status: null,
     customGenres: [],
     ...params,
-    officialIds: createOfficialIds(params.officialIds),
+    officialIds: createOfficialIds(params.officialIds)
   };
 }
 
@@ -145,7 +145,9 @@ export function createMovieSalesCast(params: Partial<MovieSalesCast> = {}): Movi
   };
 }
 
-export function createMovieOriginalRelease(params: Partial<MovieOriginalRelease> = {}): MovieOriginalRelease {
+export function createMovieOriginalRelease(
+  params: Partial<MovieOriginalRelease> = {}
+): MovieOriginalRelease {
   return {
     date: null,
     country: null,
@@ -184,14 +186,6 @@ export function createMovieStory(params: Partial<MovieStory> = {}): MovieStory {
   return {
     synopsis: '',
     logline: '',
-    ...params
-  };
-}
-
-export function createMovieVersionInfo(params: Partial<MovieVersionInfo> = {}): MovieVersionInfo {
-  return {
-    dubbings: [],
-    subtitles: [],
     ...params
   };
 }

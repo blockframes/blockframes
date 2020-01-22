@@ -1,34 +1,38 @@
-<form [formGroup]="form" fxLayout="column" fxLayoutAlign="center start">
+<form [formGroup]="form" fxLayout="row" fxLayoutGap="36px">
+  <div fxLayout="column">
     <mat-form-field appearance="outline">
-        <mat-label>Format</mat-label>
-        <mat-select formControlName="format">
-            <mat-option *ngFor="let format of staticFormats" [value]="format.slug">
-                {{ format.label }}
-            </mat-option>
-        </mat-select>
+      <mat-label>Format</mat-label>
+      <mat-select formControlName="format">
+        <mat-option *ngFor="let format of staticFormats" [value]="format.slug">
+          {{ format.label }}
+        </mat-option>
+      </mat-select>
     </mat-form-field>
     <mat-form-field appearance="outline">
-        <mat-label>Format quality</mat-label>
-        <mat-select formControlName="formatQuality">
-            <mat-option *ngFor="let format of staticFormatsQuality" [value]="format.slug">
-                {{ format.label }}
-            </mat-option>
-        </mat-select>
+      <mat-label>Color</mat-label>
+      <mat-select formControlName="color">
+        <mat-option *ngFor="let format of staticColor" [value]="format.slug">
+          {{ format.label }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <div fxLayout="column">
+    <mat-form-field appearance="outline">
+      <mat-label>Format quality</mat-label>
+      <mat-select formControlName="formatQuality">
+        <mat-option *ngFor="let format of staticFormatsQuality" [value]="format.slug">
+          {{ format.label }}
+        </mat-option>
+      </mat-select>
     </mat-form-field>
     <mat-form-field appearance="outline">
-        <mat-label>Sound quality</mat-label>
-        <mat-select formControlName="soundFormat">
-            <mat-option *ngFor="let format of staticSoundFormats" [value]="format.slug">
-                {{ format.label }}
-            </mat-option>
-        </mat-select>
+      <mat-label>Sound quality</mat-label>
+      <mat-select formControlName="soundFormat">
+        <mat-option *ngFor="let format of staticSoundFormats" [value]="format.slug">
+          {{ format.label }}
+        </mat-option>
+      </mat-select>
     </mat-form-field>
-    <mat-form-field appearance="outline">
-        <mat-label>Color</mat-label>
-        <mat-select formControlName="color">
-            <mat-option *ngFor="let format of staticColor" [value]="format.slug">
-                {{ format.label }}
-            </mat-option>
-        </mat-select>
-    </mat-form-field>
+  </div>
 </form>

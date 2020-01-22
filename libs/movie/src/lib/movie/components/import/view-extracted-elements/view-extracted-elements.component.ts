@@ -6,7 +6,6 @@ import {
   createMoviePromotionalDescription,
   createMovieSalesCast,
   createMovieSalesInfo,
-  createMovieVersionInfo,
   createMovieFestivalPrizes,
   createMovieSalesAgentDeal,
   createPromotionalElement,
@@ -27,11 +26,11 @@ import { SSF } from 'xlsx';
 import { MovieLanguageTypes, PremiereType } from '@blockframes/movie/movie/+state/movie.firestore';
 import { createCredit, createStakeholder } from '@blockframes/utils/common-interfaces/identity';
 import { DistributionDeal, createDistributionDeal, createHoldback } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
-import { createContractPartyDetail, createContractTitleDetail, Contract, initContractWithVersion, ContractWithLastVersion } from '@blockframes/contract/+state/contract.model';
-import { ContractStatus, ContractTitleDetail } from '@blockframes/contract/+state/contract.firestore';
+import { createContractPartyDetail, createContractTitleDetail, Contract, initContractWithVersion, ContractWithLastVersion } from '@blockframes/contract/contract/+state/contract.model';
+import { ContractStatus, ContractTitleDetail } from '@blockframes/contract/contract/+state/contract.firestore';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state/distribution-deal.service';
 import { createFee } from '@blockframes/utils/common-interfaces/price';
-import { ContractService } from '@blockframes/contract/+state/contract.service';
+import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { createPaymentSchedule } from '@blockframes/utils/common-interfaces/schedule';
 import { createTerms } from '@blockframes/utils/common-interfaces';
 
@@ -192,7 +191,7 @@ export class ViewExtractedElementsComponent {
           promotionalElements: createMoviePromotionalElements(),
           salesCast: createMovieSalesCast(),
           salesInfo: createMovieSalesInfo(),
-          versionInfo: createMovieVersionInfo(),
+          versionInfo: {}, // TODO issue #1596
           festivalPrizes: createMovieFestivalPrizes(),
           salesAgentDeal: createMovieSalesAgentDeal(),
           budget: createMovieBudget(),
@@ -521,65 +520,65 @@ export class ViewExtractedElementsComponent {
             }
           });
         }
-
+        // #1562
         // DUBS (Available dubbing(s))
         // @todo #1562 Wait for  #1411
-        if (spreadSheetRow[SpreadSheetMovie.dubbings]) {
-          movie.versionInfo.dubbings = [];
-          spreadSheetRow[SpreadSheetMovie.dubbings].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
-            const dubbing = getCodeIfExists('LANGUAGES', g);
-            if (dubbing) {
-              movie.versionInfo.dubbings.push(dubbing);
-            } else {
-              importErrors.errors.push({
-                type: 'warning',
-                field: 'versionInfo.dubbing',
-                name: 'Dubbings',
-                reason: `${g} not found in languages list`,
-                hint: 'Edit corresponding sheet field.'
-              });
-            }
-          });
-        }
+        /*         if (spreadSheetRow[SpreadSheetMovie.dubbings]) {
+                  movie.versionInfo.dubbings = [];
+                  spreadSheetRow[SpreadSheetMovie.dubbings].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
+                    const dubbing = getCodeIfExists('LANGUAGES', g);
+                    if (dubbing) {
+                      movie.versionInfo.dubbings.push(dubbing);
+                    } else {
+                      importErrors.errors.push({
+                        type: 'warning',
+                        field: 'versionInfo.dubbing',
+                        name: 'Dubbings',
+                        reason: `${g} not found in languages list`,
+                        hint: 'Edit corresponding sheet field.'
+                      });
+                    }
+                  });
+                } */
 
         // SUBTILES (Available subtitle(s))
         // @todo #1562 Wait for  #1411
-        if (spreadSheetRow[SpreadSheetMovie.subtitles]) {
-          movie.versionInfo.subtitles = [];
-          spreadSheetRow[SpreadSheetMovie.subtitles].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
-            const subtitle = getCodeIfExists('LANGUAGES', g);
-            if (subtitle) {
-              movie.versionInfo.subtitles.push(subtitle);
-            } else {
-              importErrors.errors.push({
-                type: 'warning',
-                field: 'versionInfo.subtitle',
-                name: 'Subtitles',
-                reason: `${g} not found in languages list`,
-                hint: 'Edit corresponding sheet field.'
-              });
-            }
-          });
-        }
-
-        // Captions (Avalaible closed-captioned)
-        if (spreadSheetRow[SpreadSheetMovie.captions]) {
-          //movie.versionInfo.captions = [];
-          spreadSheetRow[SpreadSheetMovie.captions].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
-            const caption = getCodeIfExists('LANGUAGES', g);
-            if (caption) {
-              // @todo #1562 Wait for  #1411
-            } else {
-              importErrors.errors.push({
-                type: 'warning',
-                field: 'versionInfo.subtitle',
-                name: 'Subtitles',
-                reason: `${g} not found in languages list`,
-                hint: 'Edit corresponding sheet field.'
-              });
-            }
-          });
-        }
+        /*      if (spreadSheetRow[SpreadSheetMovie.subtitles]) {
+               movie.versionInfo.subtitles = [];
+               spreadSheetRow[SpreadSheetMovie.subtitles].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
+                 const subtitle = getCodeIfExists('LANGUAGES', g);
+                 if (subtitle) {
+                   movie.versionInfo.subtitles.push(subtitle);
+                 } else {
+                   importErrors.errors.push({
+                     type: 'warning',
+                     field: 'versionInfo.subtitle',
+                     name: 'Subtitles',
+                     reason: `${g} not found in languages list`,
+                     hint: 'Edit corresponding sheet field.'
+                   });
+                 }
+               });
+             }
+     
+             // Captions (Avalaible closed-captioned)
+             if (spreadSheetRow[SpreadSheetMovie.captions]) {
+               //movie.versionInfo.captions = [];
+               spreadSheetRow[SpreadSheetMovie.captions].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
+                 const caption = getCodeIfExists('LANGUAGES', g);
+                 if (caption) {
+                   // @todo #1562 Wait for  #1411
+                 } else {
+                   importErrors.errors.push({
+                     type: 'warning',
+                     field: 'versionInfo.subtitle',
+                     name: 'Subtitles',
+                     reason: `${g} not found in languages list`,
+                     hint: 'Edit corresponding sheet field.'
+                   });
+                 }
+               });
+             } */
 
         // SCREENER LINK
         if (spreadSheetRow[SpreadSheetMovie.screenerLink]) {
@@ -1017,25 +1016,25 @@ export class ViewExtractedElementsComponent {
       });
     }
 
-    if (movie.versionInfo.dubbings.length === 0) {
-      errors.push({
-        type: 'warning',
-        field: 'versionInfo.dubbings',
-        name: 'Dubbings',
-        reason: 'Optional field is missing',
-        hint: 'Edit corresponding sheet field.'
-      });
-    }
+    /*     if (movie.versionInfo.dubbings.length === 0) {
+          errors.push({
+            type: 'warning',
+            field: 'versionInfo.dubbings',
+            name: 'Dubbings',
+            reason: 'Optional field is missing',
+            hint: 'Edit corresponding sheet field.'
+          });
+        } */
 
-    if (movie.versionInfo.subtitles.length === 0) {
-      errors.push({
-        type: 'warning',
-        field: 'versionInfo.subtitles',
-        name: 'Subtitles',
-        reason: 'Optional field is missing',
-        hint: 'Edit corresponding sheet field.'
-      });
-    }
+    /*     if (movie.versionInfo.subtitles.length === 0) {
+          errors.push({
+            type: 'warning',
+            field: 'versionInfo.subtitles',
+            name: 'Subtitles',
+            reason: 'Optional field is missing',
+            hint: 'Edit corresponding sheet field.'
+          });
+        } */
 
     /*
     @todo #1562  Wait for  #1411

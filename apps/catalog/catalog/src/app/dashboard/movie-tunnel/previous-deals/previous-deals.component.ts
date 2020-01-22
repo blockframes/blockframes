@@ -1,7 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ContractForm } from '@blockframes/contract/forms/contract.form';
+import { ContractForm } from '@blockframes/contract/contract/forms/contract.form';
 import { DistributionDealForm } from '@blockframes/movie/distribution-deals/form/distribution-deal.form';
-import { MatSlideToggleChange } from '@angular/material';
 
 @Component({
   selector: 'catalog-tunnel-previous-deals',

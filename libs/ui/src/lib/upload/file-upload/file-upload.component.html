@@ -19,7 +19,7 @@
   <section *ngSwitchCase="'uploading'">
     <div class="progress" *ngIf="(percentage | async) as pct">
       <mat-progress-bar mode="determinate" [value]="pct"></mat-progress-bar>
-      <p>{{ pct }} %</p>
+      <p>{{ pct | number: '1.0-0' }} %</p>
     </div>
 
     <button mat-button (click)="task.cancel()">Cancel</button>

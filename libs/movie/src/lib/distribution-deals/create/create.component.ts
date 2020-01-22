@@ -35,9 +35,9 @@ import { MatSnackBar } from '@angular/material';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { createDistributionDeal } from '../+state/distribution-deal.model';
 import { DistributionDealService } from '../+state';
-import { createContractPartyDetail, initContractWithVersion } from '@blockframes/contract/+state/contract.model';
+import { createContractPartyDetail, initContractWithVersion } from '@blockframes/contract/contract/+state/contract.model';
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
-import { ContractService } from '@blockframes/contract/+state/contract.service';
+import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 
 enum ResearchSteps {
   START = 'Start',

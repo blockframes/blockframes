@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { EntityState, ActiveState, EntityStore, StoreConfig } from '@datorama/akita';
-import { formatContractVersion } from './contract-version.model';
-import { ContractVersion } from '@blockframes/contract';
+import { formatContractVersion, ContractVersion } from './contract-version.model';
 
 export interface ContractVersionState extends EntityState<ContractVersion, string>, ActiveState<string> {}
 

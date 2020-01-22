@@ -12,8 +12,8 @@ import { createMovie, Movie } from './movie.model';
 import { MovieState, MovieStore } from './movie.store';
 import { AuthQuery } from '@blockframes/auth';
 import { createImgRef } from '@blockframes/utils/image-uploader';
-import { ContractQuery } from '@blockframes/contract/+state/contract.query';
-import { Contract } from '@blockframes/contract/+state/contract.model';
+import { ContractQuery } from '@blockframes/contract/contract/+state/contract.query';
+import { Contract } from '@blockframes/contract/contract/+state/contract.model';
 import { cleanModel } from '@blockframes/utils/helpers';
 
 /** Query movies from the contract with distributions deals from the last version. */
@@ -22,7 +22,7 @@ const movieListContractQuery = (contract: Contract, movieIds: string[]): Query<M
   queryFn: ref => ref.where('id', 'in', movieIds),
   distributionDeals: (movie: Movie) => ({
     path: `movies/${movie.id}/distributionDeals`,
-    queryFn: ref => ref.where('id', 'in', contract.lastVersion.titles[movie.id].distributionDealIds)
+    queryFn: ref => ref.where('contractId', '==', contract.id)
   })
 });
 

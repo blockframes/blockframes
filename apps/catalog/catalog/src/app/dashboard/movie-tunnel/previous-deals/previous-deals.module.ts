@@ -14,7 +14,7 @@ import { TunnelPageModule } from '@blockframes/ui/tunnel/page/tunnel-page.module
 import { TunnelPreviousDealsComponent } from './previous-deals.component';
 
 // Component Modules
-import { ContractFormPartyNameModule } from '@blockframes/contract/forms/party-name/party-name.module';
+import { ContractFormPartyNameModule } from '@blockframes/contract/contract/forms/party-name/party-name.module';
 import { DistributionDealTerritoryModule } from '@blockframes/movie/distribution-deals/form/territory/territory.module';
 
 @NgModule({

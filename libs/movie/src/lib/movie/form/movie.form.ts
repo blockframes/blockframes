@@ -24,7 +24,7 @@ function createMovieControls(movie: Partial<Movie>) {
     story: new MovieStoryForm(entity.story),
     salesCast: new MovieSalesCastForm(entity.salesCast),
     salesInfo: new MovieSalesInfoForm(entity.salesInfo),
-    versionInfo: new MovieVersionInfoForm(entity.versionInfo),
+    versionInfo: new MovieVersionInfoForm(entity.versionInfo.languages),
     festivalPrizes: new MovieFestivalPrizesForm(entity.festivalPrizes),
     salesAgentDeal: new MovieSalesAgentDealForm(entity.salesAgentDeal),
     budget: new MovieBudgetForm(entity.budget),

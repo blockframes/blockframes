@@ -57,16 +57,21 @@ const tunnelRoutes: Routes = [
         path: 'files&links',
         loadChildren: () => import('./media-file/media-file.module').then(m => m.MediaFileModule)
       },
-      // Last page
+      // Page 12.1
       {
-        path: 'end',
-        loadChildren: () => import('./end/end.module').then(m => m.EndTunnelModule)
+        path: 'chain',
+        loadChildren: () => import('./chain-of-titles/chain-of-titles.module').then(m => m.ChainOfTitlesModule)
       },
       // Page 12.2
       {
         path: 'evaluation',
         loadChildren: () => import('./evaluation/evaluation.module').then(m => m.EvaluationModule)
-      }
+      },
+      // Last page
+      {
+        path: 'end',
+        loadChildren: () => import('./end/end.module').then(m => m.EndTunnelModule)
+      },
     ]
   }
 ];
