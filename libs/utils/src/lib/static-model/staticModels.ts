@@ -467,6 +467,7 @@ const models = {
     { 'slug': 'book-adaptation', 'label': 'Book Adaptation' },
     { 'slug': 'music-publishing', 'label': 'Music Publishing' },
     { 'slug': 'merchandising', 'label': 'Merchandising' },
+    { 'slug': 'ancillary', 'label': 'Ancillary'}
   ] as const,
   'LEGAL_ROLES': [
     { 'slug': 'undefined', 'label': 'Undefined role' },

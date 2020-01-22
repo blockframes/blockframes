@@ -750,7 +750,7 @@ export class ViewExtractedElementsComponent {
         }
 
         // SALES AGENT (name)
-        const salesAgent = createCredit();
+/*         const salesAgent = createCredit();
         if (spreadSheetRow[SpreadSheetMovie.salesAgentName]) {
           salesAgent.displayName = spreadSheetRow[SpreadSheetMovie.salesAgentName];
         }
@@ -758,9 +758,9 @@ export class ViewExtractedElementsComponent {
         // SALES AGENT (avatar)
         if (spreadSheetRow[SpreadSheetMovie.salesAgentImage]) {
           salesAgent.avatar = await this.imageUploader.upload(spreadSheetRow[SpreadSheetMovie.salesAgentImage]);
-        }
-
-        movie.salesAgentDeal.salesAgent = salesAgent;
+        } */
+/* 
+        movie.salesAgentDeal.salesAgent = salesAgent; */
 
         // RESERVED TERRITORIES
         if (spreadSheetRow[SpreadSheetMovie.reservedTerritories]) {

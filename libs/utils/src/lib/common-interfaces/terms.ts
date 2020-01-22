@@ -1,9 +1,16 @@
-export const enum Event {
+export enum Event {
   ContractSignatureDate = 'Contract Signature Date',
   WordlPremiere = 'World Premiere',
   AcceptationAllMaterials = 'Acceptation of all delivery materials',
   FirstTheatricalRelease = 'First theatrical release',
   FirstTvBroadcast = 'First TV broadcast'
+}
+
+export enum TimeUnit {
+  days = 'Days',
+  weeks = 'Weeks',
+  months = 'Months',
+  years = 'years'
 }
 
 export interface FloatingDuration {

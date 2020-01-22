@@ -15,6 +15,7 @@ export * from './lib/pipes/missing-slug.module';
 export * from './lib/intercom.module';
 export * from './lib/analytics/analytics.module';
 export { FireAnalytics } from './lib/analytics/app-analytics';
+export * from './lib/common-interfaces/terms';
 
 export { OrganizationAlgoliaResult } from './lib/algolia';
 export * from './lib/apps';

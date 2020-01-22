@@ -6,8 +6,8 @@ function createPartyControl(party: Partial<Party> = {}) {
   console.log()
   return {
     displayName: new FormControl(party.displayName),
-    showName: new FormControl(party.showName || true),
-    role: new FormControl(party.role !== 'licensee'? 'licensor' : party.role),
+    showName: new FormControl(party.showName),
+    role: new FormControl(party.role),
   };
 }
 

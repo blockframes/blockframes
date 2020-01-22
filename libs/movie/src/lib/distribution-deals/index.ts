@@ -12,4 +12,6 @@ export * from './+state/distribution-deal.model';
 export * from './form/distribution-deal.form';
 
 // Distribution Deals Form Modules
+export * from './form/rights/rights.module';
 export * from './form/territory/territory.module';
+export * from './form/terms/terms.module';
