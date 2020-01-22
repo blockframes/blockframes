@@ -1,5 +1,14 @@
 import { TerritoriesSlug, TerritoriesLabel } from "./types";
 
+export interface EnhancedISO3166Territory {
+  slug: string,
+  label: string,
+  iso_a2: string,
+  iso_a3: string,
+  numeric_code: number,
+  fr: string,
+}
+
 /**
  * List of ISO-3166 compatible territories
  * @see https://en.wikipedia.org/wiki/ISO_3166
@@ -2023,15 +2032,6 @@ export const ISO3166TERRITORIES: EnhancedISO3166Territory[] = [
     fr: "Sahara occidental (le)*",
   },
 ]
-
-export interface EnhancedISO3166Territory {
-  slug: string,
-  label: string,
-  iso_a2: string,
-  iso_a3: string,
-  numeric_code: number,
-  fr: string,
-}
 
 /////////////////////
 // TOOLS FUNCTIONS //
