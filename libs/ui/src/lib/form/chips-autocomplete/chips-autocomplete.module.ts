@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 // Components
-import { PasswordConfirmComponent } from './form-groups/password-confirm/password-confirm.component';
+import { ChipsAutocompleteComponent } from './chips-autocomplete.component';
 
 // Material
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -17,6 +17,7 @@ import { MatInputModule } from '@angular/material/input';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
+    // Material
     MatFormFieldModule,
     MatInputModule,
     MatChipsModule,
@@ -24,10 +25,10 @@ import { MatInputModule } from '@angular/material/input';
     MatIconModule
   ],
   declarations: [
-    PasswordConfirmComponent
+    ChipsAutocompleteComponent,
   ],
   exports: [
-    PasswordConfirmComponent
+    ChipsAutocompleteComponent,
   ],
 })
-export class UiFormModule { }
+export class ChipsAutocompleteModule { }

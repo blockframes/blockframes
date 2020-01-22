@@ -1,4 +1,5 @@
-import { FireAnalytics, AnalyticsEvents } from '@blockframes/utils/analytics/app-analytics';
+import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
+import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
 import { MatTableDataSource, MatSnackBar } from '@angular/material';
 import {
   Component,

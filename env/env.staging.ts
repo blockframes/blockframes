@@ -25,7 +25,9 @@ export const firebase = {
   databaseURL: 'https://blockframes-staging.firebaseio.com',
   projectId: 'blockframes-staging',
   storageBucket: 'blockframes-staging.appspot.com',
-  messagingSenderId: '176629403574'
+  messagingSenderId: '176629403574',
+  appId: "1:176629403574:web:d4d965add159857c3afb17",
+  measurementId: "G-91803TC0PB"
 };
 
 // Algolia
@@ -116,3 +118,7 @@ export const quorum = {
     ethAddress: '0xe795245444d459CD0d8e12A26232646B5521e72F',
   },
 }
+
+// BigQuery
+// ========
+export const bigQueryAnalyticsTable = 'blockframes-staging.analytics_194475853.events_';

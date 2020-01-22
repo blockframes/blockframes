@@ -84,12 +84,13 @@ export class MovieFormRootComponent {
         formatCredits(movie.writer).map(credit => this.form.get('salesCast').addCredit({ ...credit, role: 'writer' }, 'crew'));
 
         // PRODUCTION COMPANY
-        this.form.main.stakeholders.clear();
-        movie.production.split(',').forEach((a: string) => {
-          this.form.main.stakeholders.push(new FormEntity<CreditFormControl>({
-            displayName: new FormControl(a.trim()),
-          }));
-        })
+        // @todo(#1562)
+        // this.form.main.stakeholders.clear();
+        // movie.production.split(',').forEach((a: string) => {
+        //   this.form.main.stakeholders.push(new FormEntity<CreditFormControl>({
+        //     displayName: new FormControl(a.trim()),
+        //   }));
+        // })
 
         // SHORT SYNOPSIS
         this.form.main.get('shortSynopsis').setValue(movie.plot.substring(0, 500));

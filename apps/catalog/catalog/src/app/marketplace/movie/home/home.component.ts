@@ -4,7 +4,8 @@ import { ChangeDetectionStrategy, Component, HostBinding, OnInit } from '@angula
 import { Movie, MovieQuery } from '@blockframes/movie/movie/+state';
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { FireAnalytics, AnalyticsEvents } from '@blockframes/utils/analytics/app-analytics';
+import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
+import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
 import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
 
 interface CarouselSection {

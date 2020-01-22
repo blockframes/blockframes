@@ -19,7 +19,8 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 // Blockframes
 import { Movie } from '@blockframes/movie/movie/+state/movie.model';
 import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
-import { FireAnalytics, AnalyticsEvents } from '@blockframes/utils/analytics/app-analytics';
+import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
+import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
 import {
   GenresLabel,
   GENRES_LABEL,

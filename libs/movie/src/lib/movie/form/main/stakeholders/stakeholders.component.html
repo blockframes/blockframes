@@ -1,14 +1,22 @@
 <ng-container *ngFor="let control of form.controls; let i = index; let last = last">
   <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
     <mat-form-field appearance="outline">
-      <mat-label>Production company</mat-label>
+      <mat-label>Name</mat-label>
       <input matInput [formControl]="control.get('displayName')" required />
     </mat-form-field>
+
+    <chips-autocomplete
+      [form]="control.get('countries')"
+      placeholder="Countries"
+      [items]="countries"
+      store="slug"
+      display="label"></chips-autocomplete>
+
     <!-- Add / Delete -->
-    <button *ngIf="!last" mat-mini-fab color="warn" (click)="form.removeAt(i)" matTooltip="Remove a Production Company" aria-label="Remove a Production Company">
+    <button *ngIf="!last" mat-mini-fab color="warn" (click)="form.removeAt(i)" matTooltip="Remove a Stakeholder" aria-label="Remove a Stakeholder">
       <mat-icon>delete</mat-icon>
     </button>
-    <button *ngIf="last" mat-mini-fab color="primary" (click)="form.add()" matTooltip="Add a Production Company" aria-label="Add a Production Company">
+    <button *ngIf="last" mat-mini-fab color="primary" (click)="form.add()" matTooltip="Add a Stakeholder" aria-label="Add a Stakeholder">
       <mat-icon>add</mat-icon>
     </button>
   </div>

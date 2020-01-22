@@ -15,9 +15,10 @@ import {
   GenresSlug
 } from "@blockframes/utils/static-model";
 import { RawRange, NumberRange } from "@blockframes/utils/common-interfaces/range";
-import { Person, SalesAgent, Company, Producer, Crew, Cast } from "@blockframes/utils/common-interfaces/identity";
+import { Person, SalesAgent, Producer, Crew, Cast, Stakeholder } from "@blockframes/utils/common-interfaces/identity";
 import { firestore } from "firebase/app";
 import { ImgRef } from "@blockframes/utils/image-uploader";
+import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
 
 type Timestamp = firestore.Timestamp;
 
@@ -49,6 +50,18 @@ export enum UnitBox {
   boxoffice_dollar = 'Box office in $',
   boxoffice_euro = 'Box office in €',
   entrances = '#Entrances',
+}
+
+export interface EventAnalytics {
+  event_date: number,
+  event_name: AnalyticsEvents,
+  hits: number
+}
+
+export interface MovieAnalytics {
+  addedToWishlist: EventAnalytics[],
+  movieViews: EventAnalytics[],
+  promoReelOpened: EventAnalytics[]
 }
 
 export interface StoreConfig {
@@ -186,7 +199,7 @@ export interface MovieMain {
   originCountries?: TerritoriesSlug[],
   originalLanguages?: LanguagesSlug[],
   status?: MovieStatusSlug,
-  stakeholders?: Company[],
+  stakeholders?: MovieStakeholders,
   shortSynopsis?: string,
   workType?: WorkType;
   storeConfig?: StoreConfig;
@@ -263,4 +276,15 @@ export interface MovieDocumentWithDates extends MovieRaw<Date> {
 export interface PublicMovie {
   id: string;
   title: Title;
+}
+
+export interface MovieStakeholders {
+  executiveProducer: Stakeholder[];
+  coProducer: Stakeholder[];
+  broadcasterCoproducer: Stakeholder[];
+  lineProducer: Stakeholder[];
+  distributor: Stakeholder[];
+  salesAgent: Stakeholder[];
+  laboratory: Stakeholder[];
+  financier: Stakeholder[];
 }

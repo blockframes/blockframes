@@ -62,7 +62,7 @@
           movie.main.stakeholders &&
           movie.salesAgentDeal &&
           movie.salesAgentDeal.salesAgent"
-          [stakeholders]="movie.main.stakeholders"
+          [stakeholders]="movie.main.stakeholders.executiveProducer"
           [salesAgentDealAvatar]="movie.salesAgentDeal.salesAgent.avatar">
         </catalog-production-informations>
         <!-- Key Assets -->
@@ -87,7 +87,7 @@
           [synopsis]="movie.main.shortSynopsis"
           [keywords]="movie.promotionalDescription.keywords"
           [releaseDate]="movie.AFMOriginCountryReleaseDate"
-          [stakeholders]="movie.main.stakeholders"
+          [stakeholders]="movie.main.stakeholders.executiveProducer"
           [salesAgent]="movie.salesAgentDeal.salesAgent">
         </movie-display-film-info-card>
         <!-- Promotional elements -->

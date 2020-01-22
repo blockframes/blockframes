@@ -1,5 +1,5 @@
 import { ImgRef, createImgRef } from "../image-uploader";
-import { StakeholderRolesSlug, CrewRolesSlug, ProducerRolesSlug, CastRolesSlug, LegalRolesSlug, TerritoriesSlug } from "@blockframes/utils/static-model/types";
+import { CrewRolesSlug, ProducerRolesSlug, CastRolesSlug, LegalRolesSlug, TerritoriesSlug } from "@blockframes/utils/static-model/types";
 import { Location } from "@blockframes/organization/+state/organization.firestore";
 
 
@@ -40,7 +40,6 @@ export interface Person extends IdentityRaw {
 export type StakeholderRaw = IdentityRaw;
 
 export interface Stakeholder extends StakeholderRaw {
-  role?: StakeholderRolesSlug, // overrided role scope from Person interface
   logo?: ImgRef;
   countries?: TerritoriesSlug[],
 }
@@ -85,12 +84,6 @@ export interface Party extends StakeholderRaw {
 // This is just for more readable code :
 
 export type SalesAgent = Person;
-
-export type Company = Stakeholder;
-
-export type Licensee = Stakeholder;
-
-export type Licensor = Stakeholder;
 
 
 ///////////////////

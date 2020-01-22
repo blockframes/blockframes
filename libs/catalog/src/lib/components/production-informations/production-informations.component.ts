@@ -1,5 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import { Company } from '@blockframes/utils/common-interfaces/identity';
+import { Stakeholder } from '@blockframes/utils/common-interfaces/identity';
 import { ImgRef } from '@blockframes/utils';
 
 @Component({
@@ -9,6 +9,6 @@ import { ImgRef } from '@blockframes/utils';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CatalogProductionInformationsComponent {
-  @Input() stakeholders: Company[];
+  @Input() stakeholders: Stakeholder[];
   @Input() salesAgentDealAvatar: ImgRef;
 }

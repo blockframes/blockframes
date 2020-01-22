@@ -1,8 +1,7 @@
 import { FormEntity, FormList, yearValidators } from '@blockframes/utils';
-import { MovieMain, Credit, createMovieMain, Movie, createTitle, createStoreConfig } from '../../+state';
+import { MovieMain, Credit, createMovieMain, Movie, MovieStakeholders, createMovieStakeholders, createTitle, createStoreConfig } from '../../+state';
 import { Validators, FormControl } from '@angular/forms';
 import { createCredit, Stakeholder, createStakeholder } from '@blockframes/utils/common-interfaces/identity';
-import { isSlugValidator } from '@blockframes/utils/form/validators/validators';
 import { FormStaticValue } from '@blockframes/utils/form';
 
 // CREDIT
@@ -45,20 +44,43 @@ type DirectorFormControl = ReturnType<typeof createDirectorFormControl>;
 
 // STAKEHOLDERS
 
-export class StakeholdersForm extends FormEntity<StakeholdersControl> {
+export class StakeholderForm extends FormEntity<StakeholderControl, Stakeholder> {
   constructor(stakeholder?: Partial<Stakeholder>) {
-    super(createStakeholdersControl(stakeholder))
+    super(createStakeholderControl(stakeholder))
   }
 }
 
-function createStakeholdersControl(stakeholder?: Partial<Stakeholder>) {
-  const { displayName } = createStakeholder(stakeholder);
+function createStakeholderControl(stakeholder?: Partial<Stakeholder>) {
+  const { displayName, countries } = createStakeholder(stakeholder);
   return {
     displayName: new FormControl(displayName),
+    countries: FormList.factory(countries, e => new FormStaticValue(e, 'TERRITORIES'))
   }
 }
 
-type StakeholdersControl = ReturnType<typeof createStakeholdersControl>;
+type StakeholderControl = ReturnType<typeof createStakeholderControl>;
+
+
+// STAKEHOLDERS MAP
+export class StakeholderMapForm extends FormEntity<StakeholderMapControl> {
+  constructor(stakeholders?: Partial<MovieStakeholders>) {
+    super(createStakeholderMapControl(stakeholders));
+  }
+}
+
+function createStakeholderMapControl(stakeholders?: Partial<MovieStakeholders>): StakeholderMapControl {
+  const entity = createMovieStakeholders(stakeholders);
+  const control = {};
+  for (const key in entity) {
+    control[key] = FormList.factory(entity[key], e => new StakeholderForm(e))
+  };
+  return control as StakeholderMapControl;
+}
+
+type StakeholderMapControl = {
+  [key in keyof MovieStakeholders]: FormList<Stakeholder, StakeholderForm>
+};
+
 
 // TITLE
 
@@ -111,7 +133,7 @@ function createMovieMainControls(main : Partial<MovieMain> = {}) {
     status: new FormControl(entity.status , [Validators.required]),
     totalRunTime: new FormControl(entity.totalRunTime),
     shortSynopsis: new FormControl(entity.shortSynopsis, [Validators.maxLength(500)] ),
-    stakeholders: FormList.factory(entity.stakeholders, el => new StakeholdersForm(el)),
+    stakeholders: new StakeholderMapForm(entity.stakeholders),
     workType: new FormControl(entity.workType),
     storeConfig: new StoreConfigForm(entity.storeConfig),
     customGenres: FormList.factory(entity.customGenres),
@@ -151,12 +173,4 @@ export class MovieMainForm extends FormEntity<MovieMainControl>{
     this.directors.removeAt(i);
   }
 
-  public addStakeholder(): void {
-    const credit = new StakeholdersForm();
-    this.stakeholders.push(credit);
-  }
-
-  public removeStakeholder(i: number): void {
-    this.stakeholders.removeAt(i);
-  }
 }

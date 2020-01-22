@@ -41,7 +41,8 @@ import { IntercomAppModule } from '@blockframes/utils/intercom.module';
 import { intercomId } from '@env';
 
 // Analytics
-import { FireAnalytics, AnalyticsEvents } from '@blockframes/utils/analytics/app-analytics';
+import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
+import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
 
 @NgModule({
   declarations: [AppComponent],

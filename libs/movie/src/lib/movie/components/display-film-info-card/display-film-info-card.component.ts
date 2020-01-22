@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input } from "@angular/core";
-import { Company } from "@blockframes/utils/common-interfaces/identity";
+import { Stakeholder } from "@blockframes/utils/common-interfaces/identity";
 import { hasSlug } from "@blockframes/utils/static-model/staticModels";
 
 @Component({
@@ -20,7 +20,7 @@ export class MovieDisplayFilmInfoCardComponent {
   @Input() synopsis;
   @Input() keywords;
   @Input() releaseDate;
-  @Input() stakeholders: Company[];
+  @Input() stakeholders: Stakeholder[];
   @Input() salesAgent;
 
   public hasTheatricalRelease() {

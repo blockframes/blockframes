@@ -32,6 +32,9 @@
           [releasesForm]="salesInfo.get('originalRelease')"
           [countriesForm]="main.get('originCountries')"></movie-form-original-releases>
         <mat-divider></mat-divider>
+        <h6 class="mat-body-2">Domestic Distributors</h6>
+        <movie-form-stakeholders [form]="main.get('stakeholders').get('distributor')"></movie-form-stakeholders>
+        <mat-divider></mat-divider>
         <movie-form-languages [form]="main.get('originalLanguages')"></movie-form-languages>
       </mat-card-content>
     </mat-card>
