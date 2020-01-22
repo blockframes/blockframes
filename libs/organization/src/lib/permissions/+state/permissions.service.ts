@@ -5,8 +5,8 @@ import { UserRole, createDocPermissions } from './permissions.firestore';
 import { PermissionsState, PermissionsStore } from './permissions.store';
 import { CollectionService, CollectionConfig } from 'akita-ng-fire';
 import { BFDoc } from '@blockframes/utils/firequery/types';
-import { firestore } from 'firebase';
-import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
+import { firestore } from 'firebase/app';
+import { OrganizationQuery } from '@blockframes/organization/+state';
 import { Contract } from '@blockframes/contract/contract/+state/contract.model';
 
 @Injectable({
@@ -68,7 +68,7 @@ export class PermissionsService extends CollectionService<PermissionsState> {
    * @param contract
    * @param write
    */
-  public addContractPermissions(contract: Contract) {
+  public addContractPermissions(contract: Contract, write: firestore.WriteBatch) {
     this.db.firestore.runTransaction(async tx => {
       contract.partyIds.forEach(partyId => {
         const contractPermissions = createDocPermissions({ id: contract.id });
