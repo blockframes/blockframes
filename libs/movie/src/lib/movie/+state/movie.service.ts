@@ -8,7 +8,7 @@ import {
   Query
 } from 'akita-ng-fire';
 import { switchMap, tap } from 'rxjs/operators';
-import { createMovie, Movie } from './movie.model';
+import { createMovie, Movie, MovieAnalytics } from './movie.model';
 import { MovieState, MovieStore } from './movie.store';
 import { AuthQuery } from '@blockframes/auth';
 import { createImgRef } from '@blockframes/utils/image-uploader';
@@ -17,6 +17,8 @@ import { Contract } from '@blockframes/contract/contract/+state/contract.model';
 import { cleanModel } from '@blockframes/utils/helpers';
 import { firestore } from 'firebase/app';
 import { PermissionsService } from '@blockframes/organization/permissions/+state/permissions.service';
+import { AngularFireFunctions } from '@angular/fire/functions';
+import { MovieQuery } from './movie.query';
 
 /** Query movies from the contract with distributions deals from the last version. */
 const movieListContractQuery = (contract: Contract, movieIds: string[]): Query<Movie[]> => ({
@@ -37,6 +39,8 @@ export class MovieService extends CollectionService<MovieState> {
     private contractQuery: ContractQuery,
     private authQuery: AuthQuery,
     private permissionsService: PermissionsService,
+    private query: MovieQuery,
+    private functions: AngularFireFunctions,
     store: MovieStore
   ) {
     super(store);
@@ -130,5 +134,11 @@ export class MovieService extends CollectionService<MovieState> {
       .get().toPromise();
 
     return movieSnapShot.docs.length ? createMovie(movieSnapShot.docs[0].data()) : undefined;
+  }
+
+  /** Call a firebase function to get analytics specify to a movie.*/
+  public getMovieAnalytics(): Promise<MovieAnalytics> {
+    const f = this.functions.httpsCallable('getMovieAnalytics');
+    return f({ movieId: this.query.getActiveId() }).toPromise();
   }
 }
