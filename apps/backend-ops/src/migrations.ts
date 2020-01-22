@@ -8,7 +8,7 @@ import { IMigrationWithVersion, MIGRATIONS, VERSIONS_NUMBERS } from './firestore
 import { appUrl } from '@env';
 import { endMaintenance, startMaintenance } from '../../backend-functions/src/maintenance';
 
-export const VERSION_ZERO = 1;
+export const VERSION_ZERO = 2;
 
 export interface IVersionDoc {
   currentVersion: number;
