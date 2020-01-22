@@ -1,0 +1,14 @@
+<form [formGroup]="form">
+  <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="75px">
+    <div fxLayout="column">
+      <mat-button-toggle-group multiple>
+        <ng-container *ngFor="let media of staticMedias; let i = index">
+          <mat-button-toggle [value]="media.slug" [checked]="isChecked(media.slug)" (change)="updateForm(media.slug, i)"
+            color="primary">{{media.label}}</mat-button-toggle>
+        </ng-container>
+      </mat-button-toggle-group>
+      <span class="caption">Select all rights that apply</span>
+    </div>
+    <mat-slide-toggle formControlName="exclusive">Exclusivity</mat-slide-toggle>
+  </div>
+</form>

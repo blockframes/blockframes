@@ -7,6 +7,7 @@ import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { Injectable } from '@angular/core';
 import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
 import { TerritoryType } from './territory/territory.component';
+import { DistributionDealTermsForm } from './terms/terms.form';
 
 function createDistributionDealControls(deal: Partial<DistributionDeal>) {
   const entity = createDistributionDeal(deal);
@@ -14,7 +15,8 @@ function createDistributionDealControls(deal: Partial<DistributionDeal>) {
     exclusive: new FormControl(entity.exclusive),
     territory: FormList.factory(entity.territory),
     territoryExcluded: FormList.factory(entity.territoryExcluded),
-    
+    licenseType: FormList.factory(deal.licenseType),
+    terms: new DistributionDealTermsForm(deal.terms)
   };
 }
 

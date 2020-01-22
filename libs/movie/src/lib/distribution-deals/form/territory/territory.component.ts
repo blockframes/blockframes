@@ -7,7 +7,6 @@ import { startWith, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
 // Angular
-import { ENTER } from '@angular/cdk/keycodes';
 import { FormControl } from '@angular/forms';
 import { Component, Input, ChangeDetectionStrategy, ViewChild, ElementRef } from '@angular/core';
 

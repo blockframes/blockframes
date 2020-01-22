@@ -1,9 +1,10 @@
 <tunnel-page>
   <h4 title>LICENSED RIGHTS</h4>
   <h1 subtitle>Ongoing Deals</h1>
-  <h6 description>Please add below all ongoing licensed rights you want to sell on Archipel Content marketplace when
+  <h6 description>
+    Please add below all ongoing licensed rights you want to sell on Archipel Content marketplace when
     they are free.</h6>
-  <section tunnel-form class="full-width">
+  <ng-container tunnel-form>
     <!-- TODO #1523 -->
     <h2>Deal #1</h2>
     <mat-accordion multi>
@@ -18,12 +19,19 @@
         <div class="medium">
           <contract-form-party-name [form]="contract"></contract-form-party-name>
         </div>
-        <mat-divier class="full-width"></mat-divier>
-        <h3 class="mat-body">Territories to this deal</h3>
-
+        <mat-divider></mat-divider>
+        <h3>Territories to this deal</h3>
         <distribution-form-territory [form]="distributionDeal"></distribution-form-territory>
-
+        <mat-divider></mat-divider>
+        <h3>Rights</h3>
+        <span class="caption">Only fill out fields that apply</span>
+        <distribution-form-rights [form]="distributionDeal"></distribution-form-rights>
+        <mat-divider></mat-divider>
+        <h3>Terms</h3>
+        <span class="caption">You can either enter specific term dates or a license period</span>
+        <distribution-form-terms [form]="distributionDealTerms"></distribution-form-terms>
+        <mat-divider></mat-divider>
       </mat-expansion-panel>
     </mat-accordion>
-  </section>
+  </ng-container>
 </tunnel-page>
