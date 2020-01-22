@@ -2056,7 +2056,11 @@ export function IsoTerritoriesToSlugAndLabel(): { slug: string, label: string }[
 export function getTerritoryFromGeoJson(
   code: string,
   system: 'iso_a3' | 'iso_a3' = 'iso_a3'): { slug: TerritoriesSlug, label: TerritoriesLabel } {
-  return ISO3166TERRITORIES.find(i => i[system] === code.toUpperCase());
+  const territory = ISO3166TERRITORIES.find(i => i[system] === code.toUpperCase());
+  if (!territory) {
+    throw new Error(`Failed to retreive: ${code}.`);
+  }
+  return territory;
 }
 
 /**
@@ -2065,7 +2069,10 @@ export function getTerritoryFromGeoJson(
  */
 export function getTerritorySlugFromGeoJson(code: string, system: 'iso_a3' | 'iso_a3' = 'iso_a3'): TerritoriesSlug {
   const territory = getTerritoryFromGeoJson(code, system);
-  return territory ? territory.slug : null;
+  if (!territory) {
+    throw new Error(`Failed to territory: ${code}.`);
+  }
+  return territory.slug;
 }
 
 /**
@@ -2074,12 +2081,19 @@ export function getTerritorySlugFromGeoJson(code: string, system: 'iso_a3' | 'is
  */
 export function getTerritoryLabelFromGeoJson(code: string, system: 'iso_a3' | 'iso_a3' = 'iso_a3'): TerritoriesSlug {
   const territory = getTerritoryFromGeoJson(code, system);
-  return territory ? territory.label : null;
+  if (!territory) {
+    throw new Error(`Failed to territory: ${code}.`);
+  }
+  return territory.label;
 }
 
 /**
  * @param slug
  */
 export function getISO3166TerritoryFromSlug(slug: TerritoriesSlug): EnhancedISO3166Territory {
-  return ISO3166TERRITORIES.find(i => i.slug.toLowerCase() === slug.toLowerCase());
+  const territory = ISO3166TERRITORIES.find(i => i.slug.toLowerCase() === slug.toLowerCase());
+  if (!territory) {
+    throw new Error(`Failed to territory: ${slug}.`);
+  }
+  return territory;
 }
