@@ -10,6 +10,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MovieSummaryFestivalPrizesModule } from '@blockframes/movie/movieform/summary/festival-prizes/festival-prizes.module';
 import { MovieSummarySalesCastModule } from '@blockframes/movie/movieform/summary/sales-cast/sales-cast.module';
 import { MovieSummaryCountryModule } from '@blockframes/movie/movieform/summary/country/country.module';
+import { MovieSummaryInformationModule } from '@blockframes/movie/movieform/summary/information/information.module';
 
 @NgModule({
   declarations: [TunnelSummaryComponent],
@@ -21,6 +22,7 @@ import { MovieSummaryCountryModule } from '@blockframes/movie/movieform/summary/
     MovieSummaryFestivalPrizesModule,
     MovieSummarySalesCastModule,
     MovieSummaryCountryModule,
+    MovieSummaryInformationModule,
     MatCardModule,
     RouterModule.forChild([{ path: '', component: TunnelSummaryComponent }])
   ],

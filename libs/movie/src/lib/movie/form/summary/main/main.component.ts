@@ -14,16 +14,8 @@ export class MovieSummaryMainComponent {
   @Input() main: MovieMainForm;
   @Input() salesInfo: MovieSalesInfoForm;
 
-  public get genres() {
-    return this.main.genres.controls.concat(this.main.customGenres.controls);
-  }
-
   public get reference() {
     return this.main.get('internalRef');
-  }
-
-  public get totalRunTime() {
-    return this.main.get('totalRunTime');
   }
 
   public get status() {
