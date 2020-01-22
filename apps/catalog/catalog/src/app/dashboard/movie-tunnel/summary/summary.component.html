@@ -8,9 +8,11 @@
   <mat-card tunnel-form>
     <movie-summary-main
       [main]="form.main"
-      [salesCast]="form.salesCast"
       [salesInfo]="form.salesInfo"
-      [festivalPrizes]="form.festivalPrizes">
+    >
     </movie-summary-main>
+    <movie-summary-country [main]="form.main" [salesInfo]="form.salesInfo"></movie-summary-country>
+    <movie-summary-sales-cast [salesCast]="form.salesCast"></movie-summary-sales-cast>
+    <movie-summary-festival-prizes [festivalPrizes]="form.festivalPrizes"></movie-summary-festival-prizes>
   </mat-card>
 </tunnel-page>

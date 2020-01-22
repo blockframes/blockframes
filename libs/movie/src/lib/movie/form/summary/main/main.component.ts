@@ -5,15 +5,13 @@ import { MovieSalesCastForm } from '@blockframes/movie/movieform/sales-cast/sale
 import { MovieSalesInfoForm } from '@blockframes/movie/movieform/sales-info/sales-info.form';
 
 @Component({
-  selector: '[main] [festivalPrizes] [salesCast] [salesInfo] movie-summary-main',
+  selector: '[main] [salesInfo] movie-summary-main',
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieSummaryMainComponent {
   @Input() main: MovieMainForm;
-  @Input() festivalPrizes: MovieFestivalPrizesForm;
-  @Input() salesCast: MovieSalesCastForm;
   @Input() salesInfo: MovieSalesInfoForm;
 
   public get genres() {

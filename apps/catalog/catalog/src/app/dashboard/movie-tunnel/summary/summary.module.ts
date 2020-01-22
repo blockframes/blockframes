@@ -7,6 +7,9 @@ import { TunnelPageModule } from '@blockframes/ui/tunnel/page/tunnel-page.module
 import { TunnelSummaryComponent } from './summary.component';
 import { MovieSummaryMainModule } from '@blockframes/movie/movieform/summary/main/main.module';
 import { MatCardModule } from '@angular/material/card';
+import { MovieSummaryFestivalPrizesModule } from '@blockframes/movie/movieform/summary/festival-prizes/festival-prizes.module';
+import { MovieSummarySalesCastModule } from '@blockframes/movie/movieform/summary/sales-cast/sales-cast.module';
+import { MovieSummaryCountryModule } from '@blockframes/movie/movieform/summary/country/country.module';
 
 @NgModule({
   declarations: [TunnelSummaryComponent],
@@ -15,6 +18,9 @@ import { MatCardModule } from '@angular/material/card';
     FlexLayoutModule,
     TunnelPageModule,
     MovieSummaryMainModule,
+    MovieSummaryFestivalPrizesModule,
+    MovieSummarySalesCastModule,
+    MovieSummaryCountryModule,
     MatCardModule,
     RouterModule.forChild([{ path: '', component: TunnelSummaryComponent }])
   ],
