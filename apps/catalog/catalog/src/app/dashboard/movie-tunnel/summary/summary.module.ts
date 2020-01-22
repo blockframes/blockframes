@@ -5,7 +5,8 @@ import { RouterModule } from '@angular/router';
 import { TunnelPageModule } from '@blockframes/ui/tunnel/page/tunnel-page.module';
 // Materials
 import { TunnelSummaryComponent } from './summary.component';
-import { MovieDisplayModule } from '@blockframes/movie/moviedisplay/display.module';
+import { MovieSummaryMainModule } from '@blockframes/movie/movieform/summary/main/main.module';
+import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
   declarations: [TunnelSummaryComponent],
@@ -13,7 +14,8 @@ import { MovieDisplayModule } from '@blockframes/movie/moviedisplay/display.modu
     CommonModule,
     FlexLayoutModule,
     TunnelPageModule,
-    MovieDisplayModule,
+    MovieSummaryMainModule,
+    MatCardModule,
     RouterModule.forChild([{ path: '', component: TunnelSummaryComponent }])
   ],
 })
