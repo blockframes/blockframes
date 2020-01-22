@@ -15,6 +15,10 @@ import {
   OrganizationDocument,
   MovieDocument,
   createDocPermissions,
+  NotificationType,
+  createNotification,
+  UserRole,
+  App,
   PublicUser
 } from './data/types';
 import { triggerNotifications } from './notification';
@@ -25,9 +29,6 @@ import {
   userRequestedToJoinYourOrg,
   userJoinOrgPendingRequest
 } from './assets/mail-templates';
-import { createNotification, NotificationType } from '@blockframes/notification/types';
-import { UserRole } from '@blockframes/permissions/types';
-import { App } from '@blockframes/utils/apps';
 
 /** Checks if an invitation just got accepted. */
 function wasAccepted(before: InvitationDocument, after: InvitationDocument) {

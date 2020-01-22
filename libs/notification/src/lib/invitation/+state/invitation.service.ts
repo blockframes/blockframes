@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
-import { snapshot } from '@blockframes/utils';
 import { InvitationState } from './invitation.store';
 import { AuthQuery, AuthService } from '@blockframes/auth';
 import { createInvitationToDocument, createInvitationFromUserToOrganization, createInvitationFromOrganizationToUser } from './invitation.model';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
-import { Organization, PublicOrganization } from '@blockframes/organization';
+import { PublicOrganization } from '@blockframes/organization';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { Invitation, InvitationStatus } from './invitation.firestore';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'invitations' })
@@ -35,7 +36,7 @@ export class InvitationService extends CollectionService<InvitationState> {
   public async sendInvitationToUser(userEmail: string, organizationId: string) {
     // Get a user or create a ghost user when needed
     const invitationId = this.db.createId();
-    const organization = await snapshot<Organization>(`orgs/${organizationId}`);
+    const organization = await this.orgService.getValue(organizationId);
     const { uid, email } = await this.authService.getOrCreateUserByMail(userEmail, organization.name, invitationId);
     const invitation = createInvitationFromOrganizationToUser({
       id: this.db.createId(),

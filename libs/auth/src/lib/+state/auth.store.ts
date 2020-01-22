@@ -18,14 +18,6 @@ export interface User {
   avatar: string;
 }
 
-/** A user interface with public informations */
-export interface PublicUser {
-  uid: string;
-  email: string;
-  name?: string;
-  surname?: string;
-}
-
 export interface AuthState extends FireAuthState<User> {
   requestedRoute?: string;
 }

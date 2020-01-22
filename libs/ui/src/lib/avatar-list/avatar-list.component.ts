@@ -25,6 +25,7 @@ export class AvatarListComponent {
     }
   }
 
+  // TODO: Avatar-list component must display placeholders when there is no refs => ISSUE#1645
   @Input()
   set refs(newRefs: string[]) {
     this._refs = [];

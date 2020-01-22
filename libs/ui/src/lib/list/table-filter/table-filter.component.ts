@@ -41,7 +41,7 @@ export class TableFilterComponent implements OnInit, AfterViewInit {
       startWith(this.columnFilter.value)
     );
   }
-  
+
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
@@ -54,7 +54,7 @@ export class TableFilterComponent implements OnInit, AfterViewInit {
     }
   }
 
-  /** 
+  /**
    * Get the value of an item based on a path
    * @example item = movie, key = 'budget.totalBudget'
    */

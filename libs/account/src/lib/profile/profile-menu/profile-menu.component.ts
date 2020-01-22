@@ -1,8 +1,9 @@
 
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { AuthQuery, AuthService, User, PLACEHOLDER_AVATAR } from '@blockframes/auth';
+import { Observable, Subscription } from 'rxjs';
+import { AuthQuery, AuthService, User } from '@blockframes/auth';
 import { createProfile } from '../forms/profile-edit.form';
+import { ThemeService } from '@blockframes/ui/theme';
 
 @Component({
   selector: 'account-profile-menu',
@@ -12,15 +13,18 @@ import { createProfile } from '../forms/profile-edit.form';
 })
 export class ProfileMenuComponent implements OnInit{
   public user$: Observable<User>;
-  public placeholderUrl = PLACEHOLDER_AVATAR;
+  public theme: string;
+  private sub = new Subscription();
 
   constructor(
     private service: AuthService,
     private auth: AuthQuery,
+    private themeService: ThemeService,
   ){}
 
   ngOnInit(){
     this.user$ = this.auth.user$;
+    this.sub = this.themeService.theme$.subscribe(theme => this.theme = theme)
   }
 
   public async logout() {
@@ -31,5 +35,9 @@ export class ProfileMenuComponent implements OnInit{
 
   public get profile() {
     return createProfile(this.auth.user)
+  }
+
+  public get placeholderUrl() {
+    return `/assets/images/${this.theme}/Avatar_40.png`;
   }
 }

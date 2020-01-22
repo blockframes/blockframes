@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { Observable, combineLatest } from 'rxjs';
-import { User, AuthQuery } from '@blockframes/auth';
+import { AuthQuery, User } from '@blockframes/auth';
 import { NotificationQuery } from '../notification/+state';
 import { InvitationQuery, InvitationStore } from '../invitation/+state';
 import { switchMap, map } from 'rxjs/operators';

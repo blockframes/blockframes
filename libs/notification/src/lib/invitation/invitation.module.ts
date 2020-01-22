@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { ReverseModule } from '@blockframes/utils/pipes/reverse.module';
+import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 
 // Components
 import { InvitationListComponent } from './invitation-list/invitation-list.component';
@@ -14,6 +16,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatListModule } from '@angular/material/list';
+import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
   declarations: [
@@ -24,6 +27,8 @@ import { MatListModule } from '@angular/material/list';
     CommonModule,
     RouterModule,
     FlexLayoutModule,
+    ReverseModule,
+    ImageReferenceModule,
 
     // Material
     MatIconModule,
@@ -31,8 +36,9 @@ import { MatListModule } from '@angular/material/list';
     MatButtonModule,
     MatDividerModule,
     MatBadgeModule,
-    MatListModule
+    MatListModule,
+    MatCardModule
   ],
-  exports: [InvitationListComponent]
+  exports: [InvitationListComponent, InvitationItemComponent]
 })
 export class InvitationModule {}

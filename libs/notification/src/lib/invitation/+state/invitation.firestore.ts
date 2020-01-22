@@ -1,6 +1,6 @@
 import { PublicOrganization } from "@blockframes/organization/types";
-import { PublicUser } from "@blockframes/auth/types";
 import { firestore } from 'firebase/app';
+import { PublicUser } from "@blockframes/auth/+state/auth.firestore";
 type Timestamp = firestore.Timestamp;
 
 /** Raw type for Invitation. */
@@ -23,6 +23,7 @@ export interface InvitationToWorkOnDocument extends Invitation {
   type: InvitationType.toWorkOnDocument;
   docId: string;
   organization: PublicOrganization;
+  user?: PublicUser;
 }
 
 /**  Specific Invitation send by an Organization to a User to join it. */

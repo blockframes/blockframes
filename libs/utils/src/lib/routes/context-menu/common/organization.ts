@@ -19,6 +19,22 @@ export const baseMenu = [
       { name: 'members', path: `${baseRoute}/:orgId/members` },
       { name: 'blockchain', path: `${baseRoute}/:orgId/dao`},
     ]
+  },
+  {
+    route: `${baseRoute}/:orgId/activity`,
+    items: [
+      { name: 'info', path: `${baseRoute}/:orgId/edit` },
+      { name: 'members', path: `${baseRoute}/:orgId/members` },
+      { name: 'blockchain', path: `${baseRoute}/:orgId/dao`},
+    ]
+  },
+  {
+    route: `${baseRoute}/:orgId/dao`,
+    items: [
+      { name: 'info', path: `${baseRoute}/:orgId/edit` },
+      { name: 'members', path: `${baseRoute}/:orgId/members` },
+      { name: 'blockchain', path: `${baseRoute}/:orgId/dao`},
+    ]
   }
 ];
 

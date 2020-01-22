@@ -1,8 +1,12 @@
-<article class="container">
-  <span class="message">
-    {{ message }}
-  </span>
-  <article fxLayoutAlign="start" fxLayoutGap="15px">
+<section fxLayout="row" fxLayoutAlign="space-between center">
+  <div fxLayout="row">
+    <img [placeholderUrl]="placeholderUrl" [imgRef]="invitation.user.avatar" alt="Profile picture" />
+  <article fxLayout="column" fxLayoutAlign="start start">
+    <p>{{ message }}</p>
+    <small>{{ invitation.date.toDate() | date: inWidget ? 'medium' : 'shortTime' }}</small>
+  </article>
+  </div>
+  <article fxLayout="row" fxLayoutGap="10px" *ngIf="displayInvitationButtons">
     <a test-id="accept" mat-mini-fab color="primary" (click)="acceptInvitation(invitation)">
       <mat-icon>done</mat-icon>
     </a>
@@ -10,8 +14,4 @@
       <mat-icon>clear</mat-icon>
     </a>
   </article>
-  <p class="date">
-    Received {{ invitation.date.toDate() | date: 'MMM dd yyyy' }} at
-    {{ invitation.date.toDate() | date: 'hh:mm a' }}
-  </p>
-</article>
+</section>
