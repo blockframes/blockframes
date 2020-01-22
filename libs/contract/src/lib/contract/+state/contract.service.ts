@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ContractStore, ContractState } from './contract.store';
-import { CollectionConfig, CollectionService, awaitSyncQuery, Query } from 'akita-ng-fire';
+import { CollectionConfig, CollectionService, awaitSyncQuery, Query, WriteOptions } from 'akita-ng-fire';
 import { Contract, ContractPartyDetail, convertToContractDocument, createContractPartyDetail, initContractWithVersion, ContractWithLastVersion } from './contract.model';
 import orderBy from 'lodash/orderBy';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
@@ -11,6 +11,8 @@ import { LegalRolesSlug } from '@blockframes/utils/static-model/types';
 import { cleanModel } from '@blockframes/utils';
 import { ContractDocumentWithDates } from './contract.firestore';
 import { VersionMeta } from '@blockframes/contract/version/+state/contract-version.model';
+import { PermissionsService } from '@blockframes/organization';
+import { firestore } from 'firebase';
 
 /**
  * Get all the contracts where user organization is party.
@@ -42,7 +44,12 @@ export function getLastVersionIndex(contract: Contract): number {
 @CollectionConfig({ path: 'contracts' })
 export class ContractService extends CollectionService<ContractState> {
 
-  constructor(private organizationQuery: OrganizationQuery, private contractVersionService: ContractVersionService, store: ContractStore) {
+  constructor(
+    private organizationQuery: OrganizationQuery,
+    private contractVersionService: ContractVersionService,
+    private permissionsService: PermissionsService,
+    store: ContractStore
+  ) {
     super(store);
   }
 
@@ -65,6 +72,11 @@ export class ContractService extends CollectionService<ContractState> {
     this.store.reset();
     return awaitSyncQuery.call(this, contractQuery(contractId));
 
+  }
+
+  onCreate(contract: Contract) {
+    // When a contract is created, we also create a permissions document for each parties.
+    return this.permissionsService.addContractPermissions(contract)
   }
 
   /**
