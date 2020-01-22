@@ -90,23 +90,33 @@ export class TableExtractedDealsComponent implements OnInit {
    */
   private async addDeal(importState: DealsImportState): Promise<boolean> {
     const data = this.rows.data;
-
-    if (!this.movies[importState.movieInternalRef]) {
-      const existingMovie = await this.movieService.getFromInternalRef(importState.movieInternalRef);
-      this.movies[importState.movieInternalRef] = createMovie(cleanModel(existingMovie));
+    try {
+      if (!this.movies[importState.movieInternalRef]) {
+        const existingMovie = await this.movieService.getFromInternalRef(importState.movieInternalRef);
+        this.movies[importState.movieInternalRef] = createMovie(cleanModel(existingMovie));
+      }
+      await this.distributionDealService.addDistributionDeal(this.movies[importState.movieInternalRef].id, importState.distributionDeal, importState.contract);
+      importState.errors.push({
+        type: 'error',
+        field: 'distributionDeal',
+        name: 'Distribution deal',
+        reason: 'Distribution deal already added',
+        hint: 'Distribution deal already added'
+      });
+  
+      this.rows.data = data;
+      return true;
+    } catch (error) {
+      importState.errors.push({
+        type: 'error',
+        field: 'distributionDeal',
+        name: 'Distribution deal',
+        reason: 'Error while adding distribution deal to DB',
+        hint: 'Contact an administrator'
+      });
+      return false;
     }
 
-    await this.distributionDealService.addDistributionDeal(this.movies[importState.movieInternalRef].id, importState.distributionDeal, importState.contract);
-    importState.errors.push({
-      type: 'error',
-      field: 'distributionDeal',
-      name: 'Distribution deal',
-      reason: 'Distribution deal already added',
-      hint: 'Distribution deal already added'
-    });
-
-    this.rows.data = data;
-    return true;
   }
 
   toPrettyDate(term: Terms, type: 'start' | 'end' = 'start'): string {

@@ -1311,20 +1311,47 @@ export class ViewExtractedElementsComponent {
               // CATCH UP START
               if (spreadSheetRow[SpreadSheetDistributionDeal.catchUpStartDate]) {
                 try {
-                  const catchUpStartDate: SSF$Date = SSF.parse_date_code(spreadSheetRow[SpreadSheetDistributionDeal.catchUpStartDate]);
-                  distributionDeal.catchUp.start = new Date(`${catchUpStartDate.y}-${catchUpStartDate.m}-${catchUpStartDate.d}`);
+                  const ssfCatchUpStartDate: SSF$Date = SSF.parse_date_code(spreadSheetRow[SpreadSheetDistributionDeal.catchUpStartDate]);
+                  const catchUpStartDate = new Date(`${ssfCatchUpStartDate.y}-${ssfCatchUpStartDate.m}-${ssfCatchUpStartDate.d}`);
+                  if (isNaN(catchUpStartDate.getTime())) {
+                    distributionDeal.catchUp.startLag = spreadSheetRow[SpreadSheetDistributionDeal.catchUpStartDate];
+                    importErrors.errors.push({
+                      type: 'warning',
+                      field: 'distributionDeal.catchUp.start',
+                      name: 'CatchUp start',
+                      reason: `Failed to parse CatchUp start date, moved data to startLag`,
+                      hint: 'Edit corresponding sheet field.'
+                    });
+                  } else {
+                    distributionDeal.catchUp.start = catchUpStartDate;
+                  }
                 } catch (error) {
                   distributionDeal.catchUp.startLag = spreadSheetRow[SpreadSheetDistributionDeal.catchUpStartDate];
+                  importErrors.errors.push({
+                    type: 'warning',
+                    field: 'distributionDeal.catchUp.start',
+                    name: 'CatchUp start',
+                    reason: `Failed to parse CatchUp start date, moved data to startLag`,
+                    hint: 'Edit corresponding sheet field.'
+                  });
                 }
               }
 
               // CATCH UP END
               if (spreadSheetRow[SpreadSheetDistributionDeal.catchUpEndDate]) {
-                try {
-                  const catchUpEndDate: SSF$Date = SSF.parse_date_code(spreadSheetRow[SpreadSheetDistributionDeal.catchUpEndDate]);
-                  distributionDeal.catchUp.end = new Date(`${catchUpEndDate.y}-${catchUpEndDate.m}-${catchUpEndDate.d}`);
-                } catch (error) {
+                const ssfCatchUpEndDate: SSF$Date = SSF.parse_date_code(spreadSheetRow[SpreadSheetDistributionDeal.catchUpEndDate]);
+                const catchUpEndDate = distributionDeal.catchUp.end = new Date(`${ssfCatchUpEndDate.y}-${ssfCatchUpEndDate.m}-${ssfCatchUpEndDate.d}`);
+                if (isNaN(catchUpEndDate.getTime())) {
                   distributionDeal.catchUp.endLag = spreadSheetRow[SpreadSheetDistributionDeal.catchUpEndDate];
+                  importErrors.errors.push({
+                    type: 'warning',
+                    field: 'distributionDeal.catchUp.end',
+                    name: 'CatchUp end',
+                    reason: `Failed to parse CatchUp end date, moved data to endLag`,
+                    hint: 'Edit corresponding sheet field.'
+                  });
+                } else {
+                  distributionDeal.catchUp.end = catchUpEndDate;
                 }
               }
             }
@@ -1333,19 +1360,23 @@ export class ViewExtractedElementsComponent {
             if (spreadSheetRow[SpreadSheetDistributionDeal.multidiffusion]) {
               const multiDiffDates = spreadSheetRow[SpreadSheetDistributionDeal.multidiffusion].split(this.separator)
               multiDiffDates.forEach(date => {
-                const diffusionDate: SSF$Date = SSF.parse_date_code(date);
+                const ssfDiffusionDate: SSF$Date = SSF.parse_date_code(date);
                 const diffusion = createTerms();
-                diffusion.start = new Date(`${diffusionDate.y}-${diffusionDate.m}-${diffusionDate.d}`);
-              });
-            }
+                const diffusionDate = new Date(`${ssfDiffusionDate.y}-${ssfDiffusionDate.m}-${ssfDiffusionDate.d}`);
 
-            // MULTIDIFFUSION
-            if (spreadSheetRow[SpreadSheetDistributionDeal.multidiffusion]) {
-              const multiDiffDates = spreadSheetRow[SpreadSheetDistributionDeal.multidiffusion].split(this.separator)
-              multiDiffDates.forEach(date => {
-                const diffusionDate: SSF$Date = SSF.parse_date_code(date);
-                const diffusion = createTerms();
-                diffusion.start = new Date(`${diffusionDate.y}-${diffusionDate.m}-${diffusionDate.d}`);
+                if (isNaN(diffusionDate.getTime())) {
+                  diffusion.startLag = date;
+                  importErrors.errors.push({
+                    type: 'warning',
+                    field: 'multidiffusion.start',
+                    name: 'Multidiffusion start',
+                    reason: `Failed to parse multidiffusion start date, moved data to startLag`,
+                    hint: 'Edit corresponding sheet field.'
+                  });
+                } else {
+                  diffusion.start = diffusionDate;
+                }
+
                 distributionDeal.multidiffusion.push(diffusion);
               });
             }
@@ -1372,37 +1403,43 @@ export class ViewExtractedElementsComponent {
                   } else {
                     importErrors.errors.push({
                       type: 'warning',
-                      field: 'holdback',
+                      field: 'holdback.media',
                       name: 'Holdback',
                       reason: `${holdbackParts[0]} not found in medias list`,
                       hint: 'Edit corresponding sheet field.'
                     });
                   }
 
-                  try {
-                    const holdBackStart: SSF$Date = SSF.parse_date_code(holdbackParts[1].trim());
-                    holdBack.terms.start = new Date(`${holdBackStart.y}-${holdBackStart.m}-${holdBackStart.d}`);
-                  } catch (error) {
+                  const ssfHoldBackStart: SSF$Date = SSF.parse_date_code(holdbackParts[1].trim());
+                  const holdBackStart = new Date(`${ssfHoldBackStart.y}-${ssfHoldBackStart.m}-${ssfHoldBackStart.d}`);
+
+                  if (isNaN(holdBackStart.getTime())) {
+                    holdBack.terms.startLag = holdbackParts[1].trim();
                     importErrors.errors.push({
-                      type: 'error',
-                      field: 'holdback',
-                      name: 'Holdback',
-                      reason: `Failed to parse holdback start date : ${holdbackParts[1].trim()}`,
+                      type: 'warning',
+                      field: 'holdback.start',
+                      name: 'Holdback start',
+                      reason: `Failed to parse holdback start date, moved data to startLag`,
                       hint: 'Edit corresponding sheet field.'
                     });
+                  } else {
+                    holdBack.terms.start = holdBackStart;
                   }
 
-                  try {
-                    const holdBackEnd: SSF$Date = SSF.parse_date_code(holdbackParts[2].trim());
-                    holdBack.terms.end = new Date(`${holdBackEnd.y}-${holdBackEnd.m}-${holdBackEnd.d}`);
-                  } catch (error) {
+                  const ssfHoldBackEnd: SSF$Date = SSF.parse_date_code(holdbackParts[2].trim());
+                  const holdBackEnd = new Date(`${ssfHoldBackEnd.y}-${ssfHoldBackEnd.m}-${ssfHoldBackEnd.d}`);
+
+                  if (isNaN(holdBackEnd.getTime())) {
+                    holdBack.terms.endLag = holdbackParts[2].trim();
                     importErrors.errors.push({
-                      type: 'error',
-                      field: 'holdback',
-                      name: 'Holdback',
-                      reason: `Failed to parse holdback end date : ${holdbackParts[2].trim()}`,
+                      type: 'warning',
+                      field: 'holdback.end',
+                      name: 'Holdback end',
+                      reason: `Failed to parse holdback end date, moved data to endLag`,
                       hint: 'Edit corresponding sheet field.'
                     });
+                  } else {
+                    holdBack.terms.end = holdBackEnd;
                   }
 
                   distributionDeal.holdbacks.push(holdBack)
