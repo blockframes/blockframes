@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LayoutModule } from './layout/layout.module';
 import { LayoutComponent } from './layout/layout.component';
-import { MovieActiveGuard } from '@blockframes/movie';
+import { MovieTunnelGuard } from './movie-tunnel/movie-tunnel.guard';
 
 const routes: Routes = [
   {
@@ -71,9 +71,18 @@ const routes: Routes = [
     ]
   },
   {
-    path: 'movie-tunnel/:movieId',
-    loadChildren: () => import('./movie-tunnel/movie-tunnel.module').then(m => m.MovieTunnelModule)
+    path: 'movie-tunnel',
+    children: [{
+      path: '',
+      loadChildren: () => import('./movie-tunnel/start/start-tunnel.module').then(m => m.StartTunnelModule)
+    }, {
+      path: ':movieId',
+      canActivate: [MovieTunnelGuard],
+      canDeactivate: [MovieTunnelGuard],
+      loadChildren: () => import('./movie-tunnel/movie-tunnel.module').then(m => m.MovieTunnelModule)
+    }]
   }
+
 ];
 
 @NgModule({

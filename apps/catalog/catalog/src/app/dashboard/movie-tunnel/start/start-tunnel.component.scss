@@ -1,25 +1,49 @@
 @import 'mixins';
 
 :host {
-  display: block;
-  margin: 10px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
-
-mat-card {
-  margin: 10px;
-  text-align: center;
-  width: calc(50% - 20px);
+.mat-stroked-button {
+  min-width: 130px;
+  mat-icon {
+    margin-right: 8px;
+  }
 }
-
-@include mobile {
+mat-sidenav-container {
+  flex: 1;
+  
   mat-card {
     margin: 10px;
     text-align: center;
-    width: calc(100% - 20px);
+    width: calc(50% - 20px);
+  }
+  
+  @include mobile {
+    mat-card {
+      margin: 10px;
+      text-align: center;
+      width: calc(100% - 20px);
+    }
+  }
+  
+  .card-image {
+    border-radius: 50%;
+    margin-bottom: 10px;
   }
 }
 
-.card-image {
-  border-radius: 50%;
-  margin-bottom: 10px;
+mat-sidenav {
+  padding: 16px;
+}
+
+.button-box {
+  margin: 50px 0px;
+  a {
+    min-width: 130px;
+    span {
+      margin: 10px;
+    }
+  }
 }

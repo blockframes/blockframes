@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
-import { CanDeactivate } from '@angular/router';
-import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
-import { MovieTunnelComponent } from './movie-tunnel.component';
+import { ActivatedRouteSnapshot } from '@angular/router';
+import { CollectionGuard } from 'akita-ng-fire';
+import { MovieState, MovieService } from '@blockframes/movie';
 
 @Injectable({ providedIn: 'root' })
-export class MovieTunnelGuard implements CanDeactivate<MovieTunnelComponent> {
-  constructor(private form: MovieForm) {}
+export class MovieTunnelGuard extends CollectionGuard<MovieState> {
+  constructor(protected service: MovieService) {
+    super(service);
+  }
 
-  // TODO #1472: canDeactivate in movie tunnel guard
-  canDeactivate(component: MovieTunnelComponent): boolean {
-    this.form.reset();
-    return true;
+  sync(next: ActivatedRouteSnapshot) {
+    return this.service.syncActive({ id: next.params.movieId });
   }
 }
