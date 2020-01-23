@@ -74,7 +74,7 @@ export function createTerms(params: Partial<Terms> = {}): Terms {
 
 export function createScheduledDate(params: Partial<ScheduledDate> = {}): ScheduledDate {
   return {
-    dueDate: null,
+    dueDate: new Date(),
     ...params,
     period: createFloatingDuration(params ? params.period : undefined),
   };

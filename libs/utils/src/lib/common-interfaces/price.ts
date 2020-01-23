@@ -60,8 +60,8 @@ export function createFee(params: Partial<Fee> = {}): Fee {
 export function createPayment(params: Partial<Payment> = {}): Payment {
   return {
     id: '',
-    date: null,
-    type: null,
+    date: new Date(),
+    type: PaymentType.CB,
     price: createPrice(params ? params.price : undefined),
     ...params
   }
