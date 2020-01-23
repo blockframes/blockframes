@@ -1,6 +1,6 @@
 <ng-container *ngFor="let country of originCountries.controls; let i = index">
+  <h5>Countries of Origin #{{ i + 1 }}</h5>
   <ul>
-    <li class="mat-body-2">Countries of Origin #{{ i + 1 }}</li>
     <li>
       <strong>Country </strong>{{ country | missing }}
     </li>
