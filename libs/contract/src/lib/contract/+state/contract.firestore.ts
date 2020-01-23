@@ -9,6 +9,7 @@ import {
 } from "@blockframes/utils/static-model/types";
 import { ImgRef } from "@blockframes/utils/image-uploader";
 import { PaymentScheduleRaw } from "@blockframes/utils/common-interfaces/schedule";
+import { BankAccount } from "@blockframes/utils/common-interfaces/utility";
 
 type Timestamp = firestore.Timestamp;
 
@@ -71,11 +72,20 @@ interface ContractRaw<D> {
   documents: LegalDocuments
 }
 
-/*
 export interface InvoiceRaw<D> {
-   @todo #1397
+  id: string,
+  internalRef: string,
+  paymentRef?: string, // @dev should be comming from blockchain data
+  creationDate: D,
+  price: Price,
+  buyerId: string, // @dev an orgId
+  sellerId: string, // @dev an orgId
+  paymentSchedule: PaymentScheduleRaw<D>,
+  interestRate?: number,
+  account: BankAccount, // @dev should be one of the buyerId bank accounts
+  contractId: string,
+  legalDocumentId: string, // @dev should be a legal document belonging to contractId
 }
-*/
 
 export interface LegalDocuments {
   chainOfTitles: LegalDocument[],

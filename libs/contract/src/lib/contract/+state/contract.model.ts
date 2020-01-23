@@ -161,7 +161,7 @@ export function getContractParties(
 
 export function buildChainOfTitle() {
   // ie:  calculate contract prices and fees for each parents
-  // @todo #1397 implement this
+  // @todo #1657 implement this
 }
 
 /** Function to convert a Contract into a ContractDocument. */
