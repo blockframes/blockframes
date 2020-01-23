@@ -1,10 +1,5 @@
-// Lodash
-import flatten from 'lodash/flatten';
-
 // Angular
 import { Component, ChangeDetectionStrategy, Host, OnInit, OnDestroy } from '@angular/core';
-import { DistributionDealForm } from '@blockframes/movie/distribution-deals/form/distribution-deal.form';
-import { ContractForm } from '@blockframes/contract/contract/forms/contract.form';
 import { ActivatedRoute } from '@angular/router';
 
 // Akita
@@ -90,14 +85,14 @@ const panels = [{
 }];
 
 const allRoutes = panels.map(({ routes }) => routes.map(r => r.path));
-const allPath = flatten(allRoutes);
+const allPath = allRoutes.flat();
 
 
 @Component({
   selector: 'catalog-layout',
   templateUrl: './movie-tunnel.component.html',
   styleUrls: ['./movie-tunnel.component.scss'],
-  providers: [MovieForm, ContractForm, DistributionDealForm],
+  providers: [MovieForm],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieTunnelComponent implements OnInit, OnDestroy {
@@ -122,8 +117,6 @@ export class MovieTunnelComponent implements OnInit, OnDestroy {
 
   constructor(
     @Host() private form: MovieForm,
-    @Host() private contractForm: ContractForm,
-    @Host() private dealForm: DistributionDealForm,
     private service: MovieService,
     private route: ActivatedRoute,
     private routerQuery: RouterQuery
