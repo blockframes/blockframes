@@ -19,5 +19,15 @@
         <movie-summary-festival-prizes [festivalPrizes]="form.festivalPrizes"></movie-summary-festival-prizes>
       </mat-card-content>
     </mat-card>
+
+    <mat-card>
+      <mat-card-header fxLayout="row" fxLayoutAlign="start center">
+        <mat-card-title>Storyline Elements</mat-card-title>
+        <a mat-icon-button routerLink="/c/o/dashboard/movie-tunnel/create/synopsis"><mat-icon svgIcon="edit"></mat-icon></a>
+      </mat-card-header>
+      <mat-card-content>
+        <movie-summary-story [story]="form.story" [promotionalDescription]="form.promotionalDescription"></movie-summary-story>
+      </mat-card-content>
+    </mat-card>
   </ng-container>
 </tunnel-page>
