@@ -2,6 +2,7 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
+
     ///////////////////
     /// COLLECTIONS ///
     ///////////////////
@@ -65,7 +66,7 @@ service cloud.firestore {
     /// PERMISSIONS RULES ///
 
     match /permissions/{orgId} {
-    	allow read: if isOrgMember(orgId);
+    	allow read: if isOrgMember(userId(), orgId);
       allow create: if isOrgAdmin(userId(), orgId)
       	&& incomingData().id == orgId
         && documentIdChecked(orgId, 'permissions');
@@ -74,8 +75,13 @@ service cloud.firestore {
         && documentIdChecked(orgId, 'permissions')
         && incomingData().id == existingData().id;
 
-      match /{documents=**} {
-        allow read, write;
+      match /documentPermissions/{docId} {
+        allow read: if isOrgMember(orgId);
+        allow create: if isOrgMember(userId(), orgId)
+          && incomingData().id == docId;
+        allow update: if isOrgAdmin(userId(), orgId)
+          && incomingData().id == docId
+          && incomingData().id == existingData().id;
       }
     }
 
@@ -102,6 +108,11 @@ service cloud.firestore {
           	&& documentIdChecked(movieId, 'movies')
             && incomingData().id == existingData().id;
           allow delete: if userHasValidOrg();
+        }
+
+        match /distributionDeals/{dealId} {
+        	allow write; // @TODO #1388 Only if contract.status  === 'unknown' ?
+      		allow read; // @TODO #1388 Only if licensee.orgId == currentUser.orgId || if licensor.orgId == currentUser.orgId
         }
     }
 
@@ -132,11 +143,17 @@ service cloud.firestore {
       }
     }
 
-    /// DISTRIBUTION DEALS RULES ///
+    /// CONTRACTS RULES ///
 
-    match /{path=**}/distributionDeals/{dealId} {
-    	allow write: if true; // @TODO #1388 Only if contract.status  === 'unknown' ?
-      allow read: if true; // @TODO #1388 Only if licensee.orgId == currentUser.orgId || if licensor.orgId == currentUser.orgId
+    match /contracts/{contractId} {
+    	allow read: if userHasValidOrg(); // allow read: if isParty(userOrgId()) || isBlockframesAdmin(userId()); => ISSUE#1619
+      allow create: if userHasValidOrg();
+      allow update: if orgCan('canUpdate', userOrgId(), contractId);
+      allow delete: if orgCan('canDelete', userOrgId(), contractId);
+
+      match /{document=**} {
+        allow read, write: if userHasValidOrg();
+      }
     }
 
     /////////////////
@@ -202,6 +219,10 @@ service cloud.firestore {
     // Check is the organization is stakeholder on a delivery.
     function isStakeholder(orgId) {
     	return orgId in resource.data.stakeholderIds;
+    }
+
+    function isParty(orgId) {
+    	return orgId in resource.data.partyIds;
     }
 
     function getDocumentPermissions(orgId, docId) {
