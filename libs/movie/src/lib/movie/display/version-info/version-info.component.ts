@@ -1,6 +1,6 @@
 import { MovieLanguageSpecification } from './../../+state/movie.firestore';
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import { getLabelByCode } from '@blockframes/utils/static-model/staticModels';
+import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 import { createMovieLanguageSpecification } from '@blockframes/movie/movie+state/movie.model';
 
 @Component({
@@ -12,7 +12,7 @@ import { createMovieLanguageSpecification } from '@blockframes/movie/movie+state
 export class MovieDisplayVersionInfoComponent {
 
   public data: MovieLanguageSpecification;
-  public getLabelByCode = getLabelByCode;
+  public getLabelBySlug = getLabelBySlug;
 
   @Input() set info(versionInfo: Partial<MovieLanguageSpecification>) {
     this.data = createMovieLanguageSpecification(versionInfo);

@@ -11,7 +11,7 @@ import {
 import { ErrorStateMatcher } from '@angular/material/core';
 import { LANGUAGES_SLUG } from '../../static-model/types';
 import { network, baseEnsDomain } from '@env';
-import { getLabelByCode, isInSlug, Scope } from '../../static-model/staticModels';
+import { getLabelBySlug, isInSlug, Scope } from '../../static-model/staticModels';
 import { getProvider, orgNameToEnsDomain } from '@blockframes/ethers/helpers';
 
 // TODO issue#1146
@@ -134,7 +134,7 @@ export function validRange(): ValidatorFn {
  */
 export function valueIsInModelValidator(scope: Scope): ValidatorFn {
   return (parent: FormGroup | FormArray): ValidationErrors => {
-    if (parent.value.filter(val => getLabelByCode(scope, val)).length) {
+    if (parent.value.filter(val => getLabelBySlug(scope, val)).length) {
       return null;
     } else {
       return { invalidValue: true };

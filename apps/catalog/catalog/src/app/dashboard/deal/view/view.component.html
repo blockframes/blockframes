@@ -5,7 +5,8 @@
     fxLayout="row"
     fxLayoutAlign="space-between start">
     <article fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="25px">
-      <img class="logo" [imgRef]="licensees[0].party.logo" [placeholderUrl]="placeholderUrl" alt="Organization logo" />
+      <!-- Switch to [imgRef]="getLicenseeLogo(licensees[0].part.orgId) when public orgs are here => ISSUE#1359"-->
+      <img class="logo" [imgRef]="placeholderUrl" [placeholderUrl]="placeholderUrl" alt="Organization logo" />
       <div>
         <p>{{ lastVersion.status | uppercase }}</p>
         <h1>{{ licensees[0].party.displayName }} - {{ moviesLenght$ | async }} films</h1>
@@ -44,9 +45,9 @@
             for the {{ moviesLenght$ | async }} films:
           </span>
         </ng-template>
-        <ul *ngFor="let movie of lastVersion.titles | keyvalue">
-          <ng-container *ngIf="showMovie(movie.key)">
-            <li><b>{{ getMovie(movie.key).main.title.international }}</b></li>
+        <ul *ngFor="let movieWithDeals of moviesWithDeals$ | async">
+          <ng-container *ngIf="showMovie(movieWithDeals.movie.id)">
+            <li><b>{{ movieWithDeals.movie.main.title.international }}</b></li>
           </ng-container>
         </ul>
       </mat-card-content>
@@ -89,23 +90,23 @@
   </mat-card>
 
   <!-- DISTRIBUTION DEALS -->
-  <ng-container *ngFor="let movie of lastVersion.titles | keyvalue">
-    <mat-card *ngIf="showMovie(movie.key)">
+  <ng-container *ngFor="let movieWithDeals of moviesWithDeals$ | async">
+    <mat-card *ngIf="showMovie(movieWithDeals.movie.id)">
       <mat-accordion >
         <mat-expansion-panel
           (opened)="panelOpenState = true"
           (closed)="panelOpenState = false">
           <mat-expansion-panel-header>
             <mat-panel-title fxLayout="row" fxLayoutAlign="space-between">
-              <h3>{{ getMovie(movie.key).main.title.international }}</h3>
-              <span *ngIf="lastVersion.titles[movie.key].price as price">
+              <h3>{{ movieWithDeals.movie.main.title.international }}</h3>
+              <span *ngIf="lastVersion.titles[movieWithDeals.movie.id].price as price">
                 {{ price.amount | currency : getCurrencyCode(price.currency) }}
               </span>
             </mat-panel-title>
           </mat-expansion-panel-header>
           <mat-divider></mat-divider>
           <bf-table-filter
-            [source]="versions"
+            [source]="movieWithDeals.deals"
             [columns]="dealColumns"
             [initialColumns]="initialDealColumns"
             [showFilter]="true">

@@ -14,9 +14,10 @@ import { createPrice } from '@blockframes/utils/common-interfaces';
 import { OrganizationQuery, PLACEHOLDER_LOGO } from '@blockframes/organization';
 import { IntercomAppModule } from '@blockframes/utils/intercom.module';
 import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state';
-import { MovieCurrenciesSlug } from '@blockframes/utils/static-model/types';
-import { getCodeIfExists } from '@blockframes/utils/static-model/staticModels';
-import { formatCurrency } from '@angular/common';
+import { MovieCurrenciesSlug, MediasSlug, LanguagesSlug } from '@blockframes/utils/static-model/types';
+import { getCodeBySlug } from '@blockframes/utils/static-model/staticModels';
+import { CurrencyPipe } from '@angular/common';
+import { MovieLanguageSpecification } from '@blockframes/movie/movie+state/movie.firestore';
 
 const versionColumns = {
   date: 'Date',
@@ -39,23 +40,29 @@ interface VersionView {
   status: string;
 }
 
+interface MovieWithDealViews {
+  movie: Movie;
+  deals: DealView[];
+}
+
 interface DealView {
-  territory: string;
+  territory: string [];
   startDate: string;
-  rights: string;
+  rights: MediasSlug[] | string;
   languages: string;
   holdback: string;
   firstBroadcastDate: string;
 }
 
 function getVersionPrice(version: ContractVersion) {
+  const currencyPipe = new CurrencyPipe('en-US')
   let amount = 0;
-  let currency = '';
+  let currency: MovieCurrenciesSlug;
   for (const title of Object.values(version.titles)) {
     amount += title.price.amount;
-    currency = title.price.currency;
+    currency = getCodeBySlug('MOVIE_CURRENCIES', title.price.currency)
   }
-  return formatCurrency(amount, 'en-US', currency, getCodeIfExists('MOVIE_CURRENCIES', currency as MovieCurrenciesSlug));
+  return currencyPipe.transform(amount, currency, true)
 }
 
 function createVersionView(version: ContractVersion): VersionView {
@@ -67,7 +74,21 @@ function createVersionView(version: ContractVersion): VersionView {
 }
 
 function createDealView(deal: DistributionDeal): DealView {
-  return;
+  return {
+    territory: deal.territory,
+    startDate: deal.terms.start instanceof Date ? deal.terms.start.toLocaleDateString() : '',
+    rights: deal.licenseType,
+    languages: '',
+    holdback: '',
+    firstBroadcastDate: new Date().toLocaleDateString()
+  };
+}
+
+function createMovieWithDealViews(movie: Movie): MovieWithDealViews {
+  return {
+    movie,
+    deals: movie.distributionDeals.map(deal => createDealView(deal))
+  };
 }
 
 @Component({
@@ -88,7 +109,7 @@ export class DealViewComponent implements OnInit {
   public versionColumns = versionColumns;
   public initialVersionColumns = ['date', 'offer', 'status'];
 
-  public deals: DealView[];
+  public moviesWithDeals$: Observable<MovieWithDealViews[]>;
   public dealColumns = dealColumns;
   public initialDealColumns = ['territory', 'startDate', 'rights', 'languages', 'holdback', 'firstBroadcastDate'];
 
@@ -114,6 +135,10 @@ export class DealViewComponent implements OnInit {
 
         this.isSignatory = this.service.isContractSignatory(contract, this.organizationQuery.getActiveId());
         this.lastVersion = contract.versions[getLastVersionIndex(contract)];
+        this.moviesWithDeals$ = this.movieQuery.selectAll().pipe(
+          map(movies => movies.map(movie => createMovieWithDealViews(movie)))
+        )
+
         return contract;
       })
     );
@@ -150,11 +175,7 @@ export class DealViewComponent implements OnInit {
   }
 
   public getCurrencyCode(currency: MovieCurrenciesSlug) {
-    getCodeIfExists('MOVIE_CURRENCIES', currency);
-  }
-
-  public getMovie(movieId: string): Movie {
-    return this.movieQuery.getEntity(movieId);
+    return getCodeBySlug('MOVIE_CURRENCIES', currency);
   }
 
   public showMovie(movieId: string): boolean {

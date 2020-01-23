@@ -17,7 +17,7 @@ import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 // Types
-import { SlugAndLabel, getLabelByCode } from '@blockframes/utils/static-model/staticModels';
+import { SlugAndLabel, getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 import { staticModels, LanguagesSlug } from '@blockframes/utils/static-model';
 import { MovieLanguageSpecification } from '@blockframes/movie/movie/+state/movie.firestore';
 
@@ -54,7 +54,7 @@ export class MovieFormVersionInfoComponent implements OnInit, OnDestroy {
 
   // For tempalte
   public getCode = language => {
-    return getLabelByCode('LANGUAGES', language);
+    return getLabelBySlug('LANGUAGES', language);
   };
 
 
