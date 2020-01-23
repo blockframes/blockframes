@@ -5,17 +5,19 @@
     Please verify that all the information you have entered is correct before submitting to Archipel Content for validation.
   </p>
 
-  <mat-card tunnel-form>
-    <mat-card-header fxLayout="row" fxLayoutAlign="start center">
-      <mat-card-title>Main information</mat-card-title>
-      <a mat-icon-button routerLink="/c/o/dashboard/movie-tunnel/create/main"><mat-icon svgIcon="edit"></mat-icon></a>
-    </mat-card-header>
-    <mat-card-content>
-      <movie-summary-main [main]="form.main"></movie-summary-main>
-      <movie-summary-country [salesInfo]="form.salesInfo" [originCountries]="form.main.originCountries"></movie-summary-country>
-      <movie-summary-information [main]="form.main"></movie-summary-information>
-      <movie-summary-sales-cast [salesCast]="form.salesCast"></movie-summary-sales-cast>
-      <movie-summary-festival-prizes [festivalPrizes]="form.festivalPrizes"></movie-summary-festival-prizes>
-    </mat-card-content>
-  </mat-card>
+  <ng-container tunnel-form>
+    <mat-card>
+      <mat-card-header fxLayout="row" fxLayoutAlign="start center">
+        <mat-card-title>Main information</mat-card-title>
+        <a mat-icon-button routerLink="/c/o/dashboard/movie-tunnel/create/main"><mat-icon svgIcon="edit"></mat-icon></a>
+      </mat-card-header>
+      <mat-card-content>
+        <movie-summary-main [main]="form.main"></movie-summary-main>
+        <movie-summary-country [salesInfo]="form.salesInfo" [originCountries]="form.main.originCountries"></movie-summary-country>
+        <movie-summary-information [main]="form.main"></movie-summary-information>
+        <movie-summary-sales-cast [salesCast]="form.salesCast"></movie-summary-sales-cast>
+        <movie-summary-festival-prizes [festivalPrizes]="form.festivalPrizes"></movie-summary-festival-prizes>
+      </mat-card-content>
+    </mat-card>
+  </ng-container>
 </tunnel-page>

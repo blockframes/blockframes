@@ -13,8 +13,4 @@ export class MovieSummaryInformationComponent {
   public get genres() {
     return this.main.genres.controls.concat(this.main.customGenres.controls);
   }
-
-  public get totalRunTime() {
-    return this.main.get('totalRunTime');
-  }
 }
