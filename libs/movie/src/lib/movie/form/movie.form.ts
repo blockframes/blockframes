@@ -92,4 +92,8 @@ export class MovieForm extends FormEntity<MovieControl, Movie> {
   get budget() {
     return this.get('budget');
   }
+
+  get versionInfo() {
+    return this.get('versionInfo');
+  }
 }
