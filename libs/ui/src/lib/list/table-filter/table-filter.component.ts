@@ -16,6 +16,7 @@ import { startWith } from 'rxjs/operators';
 export class TableFilterComponent implements OnInit, AfterViewInit {
 
   @Input() showFilter = false;
+  @Input() showPaginator = false;
   @Input() columns: Record<string, any>;
   @Input() initialColumns: string[];
   @Input() set source(data: any[]) {

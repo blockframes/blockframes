@@ -4,17 +4,20 @@
     *ngIf="licensees[0].party as licensee"
     fxLayout="row"
     fxLayoutAlign="space-between start">
-    <div>
-      <p>{{ lastVersion.status | uppercase }}</p>
-      <h1>{{ licensees[0].party.displayName }} - {{ (movies$ | async).length }} films</h1>
-      <span class="mat-body-1" *ngIf="licensee.address">
-        {{ licensee.address.street }}, {{ licensee.address.city }}, {{ licensee.address.region }}
-        {{ licensee.address.zipCode }}, {{ licensee.address.country }}
-      </span>
-    </div>
+    <article fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="25px">
+      <img class="logo" [imgRef]="licensees[0].party.logo" [placeholderUrl]="placeholderUrl" alt="Organization logo" />
+      <div>
+        <p>{{ lastVersion.status | uppercase }}</p>
+        <h1>{{ licensees[0].party.displayName }} - {{ moviesLenght$ | async }} films</h1>
+        <span class="mat-body-1" *ngIf="licensee.address">
+          {{ licensee.address.street }}, {{ licensee.address.city }}, {{ licensee.address.region }}
+          {{ licensee.address.zipCode }}, {{ licensee.address.country }}
+        </span>
+      </div>
+    </article>
     <div fxLayout="column" fxLayoutAlign="center end">
-      <span class="mat-caption"> {{ lastVersion.creationDate | date: 'short' }} </span>
-      <h2>{{ totalPrice.amount | currency: totalPrice.currency }}</h2>
+      <caption class="mat-caption"> {{ lastVersion.creationDate | date: 'short' }} </caption>
+      <h2>{{ totalPrice.amount | currency: getCurrencyCode(totalPrice.currency) }}</h2>
     </div>
   </article>
 
@@ -24,25 +27,27 @@
       <mat-card-title>
         <h3>
           {{ licensees[0].party.displayName }} has made an offer for
-          {{ contract.titleIds.length }} titles, {{ (movies$ | async).length }} of which are yours.
+          {{ contract.titleIds.length }} titles, {{ moviesLenght$ | async }} of which are yours.
         </h3>
       </mat-card-title>
       <mat-card-content>
         <span *ngIf="subLicensors.length > 1" class="mat-body-1">
           We are gathering approval from {{ subLicensors.length - 1 }} other sellers.
         </span>
-        <span *ngIf="subLicensors.length > 1; else uniqueSubLicensor" class="mat-body-1">
-          Your share of the deal is <b>{{ totalPrice.amount | currency: totalPrice.currency }}</b>
-          for the {{ (movies$ | async).length }} films:
+        <span i18n *ngIf="subLicensors.length > 1; else uniqueSubLicensor" class="mat-body-1">
+          Your share of the deal is <b>{{ totalPrice.amount | currency: getCurrencyCode(totalPrice.currency) }}</b>
+          for the {{ moviesLenght$ | async }} film:
         </span>
         <ng-template #uniqueSubLicensor>
           <span class="mat-body-1">
             The offer is <b>{{ totalPrice.amount | currency: totalPrice.currency }}</b>
-            for the {{ (movies$ | async).length }} films:
+            for the {{ moviesLenght$ | async }} films:
           </span>
         </ng-template>
-        <ul *ngFor="let movie of (movies$ | async)">
-          <li><b>{{ movie.main.title.international }}</b></li>
+        <ul *ngFor="let movie of lastVersion.titles | keyvalue">
+          <ng-container *ngIf="showMovie(movie.key)">
+            <li><b>{{ getMovie(movie.key).main.title.international }}</b></li>
+          </ng-container>
         </ul>
       </mat-card-content>
       <mat-card-actions *ngIf="isSignatory" fxLayout="row" fxLayoutAlign="space-between center">
@@ -65,14 +70,48 @@
     <mat-card>
       <mat-card-title>
         <h3>Proposed Payment Schedule</h3>
+        <div *ngFor="let payment of lastVersion.paymentSchedule" fxLayout="column" fxLayoutAlign="center start">
+          <span class="mat-body-1">{{ payment.percentage }}% {{ payment.label }}</span>
+          <caption class="mat-caption">{{ payment.date }}</caption>
+        </div>
       </mat-card-title>
     </mat-card>
   </article>
+
+  <!-- NEGOCIATION HISTORY -->
   <mat-card>
+    <mat-card-title><h3>Negociation History</h3></mat-card-title>
     <bf-table-filter
       [source]="versions"
-      [columns]="columns"
-      [initialColumns]="initialColumns">
+      [columns]="versionColumns"
+      [initialColumns]="initialVersionColumns">
     </bf-table-filter>
   </mat-card>
+
+  <!-- DISTRIBUTION DEALS -->
+  <ng-container *ngFor="let movie of lastVersion.titles | keyvalue">
+    <mat-card *ngIf="showMovie(movie.key)">
+      <mat-accordion >
+        <mat-expansion-panel
+          (opened)="panelOpenState = true"
+          (closed)="panelOpenState = false">
+          <mat-expansion-panel-header>
+            <mat-panel-title fxLayout="row" fxLayoutAlign="space-between">
+              <h3>{{ getMovie(movie.key).main.title.international }}</h3>
+              <span *ngIf="lastVersion.titles[movie.key].price as price">
+                {{ price.amount | currency : getCurrencyCode(price.currency) }}
+              </span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <mat-divider></mat-divider>
+          <bf-table-filter
+            [source]="versions"
+            [columns]="dealColumns"
+            [initialColumns]="initialDealColumns"
+            [showFilter]="true">
+          </bf-table-filter>
+        </mat-expansion-panel>
+      </mat-accordion>
+    </mat-card>
+  </ng-container>
 </section>
