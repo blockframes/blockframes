@@ -76,4 +76,12 @@ export class MovieForm extends FormEntity<MovieControl, Movie> {
   get salesInfo() {
     return this.get('salesInfo');
   }
+
+  get promotionalDescription() {
+    return this.get('promotionalDescription');
+  }
+
+  get story() {
+    return this.get('story');
+  }
 }
