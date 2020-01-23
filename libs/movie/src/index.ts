@@ -18,6 +18,7 @@ export * from './lib/movie/form/summary/sales-cast/sales-cast.module';
 export * from './lib/movie/form/summary/country/country.module';
 export * from './lib/movie/form/summary/information/information.module';
 export * from './lib/movie/form/summary/story/story.module';
+export * from './lib/movie/form/summary/credit/credit.module';
 // Movie Components
 export { MovieViewComponent } from './lib/movie/pages/movie-view/movie-view.component';
 export { MovieEditableComponent } from './lib/movie/pages/movie-editable/movie-editable.component';
