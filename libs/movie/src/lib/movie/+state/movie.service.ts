@@ -15,6 +15,8 @@ import { createImgRef } from '@blockframes/utils/image-uploader';
 import { ContractQuery } from '@blockframes/contract/contract/+state/contract.query';
 import { Contract } from '@blockframes/contract/contract/+state/contract.model';
 import { cleanModel } from '@blockframes/utils/helpers';
+import { firestore } from 'firebase/app';
+import { PermissionsService } from '@blockframes/organization/permissions/+state/permissions.service';
 
 /** Query movies from the contract with distributions deals from the last version. */
 const movieListContractQuery = (contract: Contract, movieIds: string[]): Query<Movie[]> => ({
@@ -34,6 +36,7 @@ export class MovieService extends CollectionService<MovieState> {
     private organizationQuery: OrganizationQuery,
     private contractQuery: ContractQuery,
     private authQuery: AuthQuery,
+    private permissionsService: PermissionsService,
     store: MovieStore
   ) {
     super(store);
@@ -62,6 +65,16 @@ export class MovieService extends CollectionService<MovieState> {
     );
   }
 
+  onCreate(movie: Movie, { write }: WriteOptions) {
+    // When a movie is created, we also create a permissions document for it.
+    return this.permissionsService.addDocumentPermissions(movie, write as firestore.WriteBatch)
+  }
+
+  onUpdate(movie: Movie, { write }: WriteOptions) {
+    const movieRef = this.db.doc(`movies/${movie.id}`).ref;
+    write.update(movieRef, { '_meta.updatedBy': this.authQuery.userId });
+  }
+
   /** Update deletedBy (_meta field of movie) with the current user and remove the movie. */
   public async remove(movieId: string) {
     const userId = this.authQuery.userId;
@@ -74,7 +87,7 @@ export class MovieService extends CollectionService<MovieState> {
   public async addMovie(original: string, movie?: Movie): Promise<Movie> {
     const id = this.db.createId();
     const userId = this.authQuery.userId;
-
+​
     if (!movie) {
       // create empty movie
       movie = createMovie({ id, main: { title: { original } }, _meta: { createdBy: userId } });
@@ -82,16 +95,11 @@ export class MovieService extends CollectionService<MovieState> {
       // we set an id for this new movie
       movie = createMovie({ ...movie, id, _meta: { createdBy: userId } });
     }
-
+​
     // Add movie document to the database
     await this.add(cleanModel(movie));
-
+​
     return movie;
-  }
-
-  onUpdate(movie: Movie, { write }: WriteOptions) {
-    const movieRef = this.db.doc(`movies/${movie.id}`).ref;
-    write.update(movieRef, { '_meta.updatedBy': this.authQuery.userId });
   }
 
   public updateById(id: string, movie: any): Promise<void> {

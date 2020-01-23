@@ -11,6 +11,7 @@ import { LegalRolesSlug } from '@blockframes/utils/static-model/types';
 import { cleanModel } from '@blockframes/utils';
 import { ContractDocumentWithDates } from './contract.firestore';
 import { VersionMeta } from '@blockframes/contract/version/+state/contract-version.model';
+import { PermissionsService } from '@blockframes/organization';
 
 /**
  * Get all the contracts where user organization is party.
@@ -42,7 +43,12 @@ export function getLastVersionIndex(contract: Contract): number {
 @CollectionConfig({ path: 'contracts' })
 export class ContractService extends CollectionService<ContractState> {
 
-  constructor(private organizationQuery: OrganizationQuery, private contractVersionService: ContractVersionService, store: ContractStore) {
+  constructor(
+    private organizationQuery: OrganizationQuery,
+    private contractVersionService: ContractVersionService,
+    private permissionsService: PermissionsService,
+    store: ContractStore
+  ) {
     super(store);
   }
 
@@ -65,6 +71,11 @@ export class ContractService extends CollectionService<ContractState> {
     this.store.reset();
     return awaitSyncQuery.call(this, contractQuery(contractId));
 
+  }
+
+  onCreate(contract: Contract) {
+    // When a contract is created, we also create a permissions document for each parties.
+    return this.permissionsService.addContractPermissions(contract)
   }
 
   /**
@@ -112,9 +123,10 @@ export class ContractService extends CollectionService<ContractState> {
       const contractWithVersion = initContractWithVersion();
 
       for (const contract of contracts) {
-        this.contractVersionService.setContractId(contract.id);
+
         const contractVersions = await this.contractVersionService.getValue(ref =>
-          ref.where(`titles.${movieId}.distributionDealIds`, 'array-contains', distributionDealId)
+          ref.where(`titles.${movieId}.distributionDealIds`, 'array-contains', distributionDealId),
+          { params: { contractId: contract.id } }
         );
         if (contractVersions.length) {
           const sortedContractVersions = orderBy(contractVersions, 'id', 'desc');
