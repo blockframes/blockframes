@@ -7,9 +7,20 @@ export class MovieTunnelService {
   previousPage: string;
   constructor(private routerQuery: RouterQuery, private router: Router){}
 
-  openTunnel(movieId?: string){
-    this.previousPage = this.routerQuery.getValue().state.url;
-    const path = 'c/o/dashboard/movie-tunnel' + movieId || '';
+  openTunnel()
+  openTunnel(movieId?: string, page?: string){
+    if (!this.previousPage) {
+      this.previousPage = this.routerQuery.getValue().state.url;
+    }
+    const path = movieId
+      ? `c/o/dashboard/movie-tunnel/${movieId}/${page}`
+      : 'c/o/dashboard/movie-tunnel';
     this.router.navigate([path]);
+  }
+
+  closeTunnel() {
+    const next = this.previousPage;
+    delete this.previousPage;
+    this.router.navigate([next]);
   }
 }
