@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LayoutModule } from './layout/layout.module';
 import { LayoutComponent } from './layout/layout.component';
+import { MovieActiveGuard } from '@blockframes/movie';
 import { MovieTunnelGuard } from './movie-tunnel/movie-tunnel.guard';
 
 const routes: Routes = [
