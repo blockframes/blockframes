@@ -11,6 +11,7 @@ import { MovieSummaryFestivalPrizesModule } from '@blockframes/movie/movieform/s
 import { MovieSummarySalesCastModule } from '@blockframes/movie/movieform/summary/sales-cast/sales-cast.module';
 import { MovieSummaryCountryModule } from '@blockframes/movie/movieform/summary/country/country.module';
 import { MovieSummaryInformationModule } from '@blockframes/movie/movieform/summary/information/information.module';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [TunnelSummaryComponent],
@@ -24,6 +25,7 @@ import { MovieSummaryInformationModule } from '@blockframes/movie/movieform/summ
     MovieSummaryCountryModule,
     MovieSummaryInformationModule,
     MatCardModule,
+    MatIconModule,
     RouterModule.forChild([{ path: '', component: TunnelSummaryComponent }])
   ],
 })
