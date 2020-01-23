@@ -50,21 +50,28 @@ export async function migrate(withBackup: boolean = true) {
   console.info('start the migration process...');
   const { db } = loadAdminServices();
 
-  await startMaintenance();
-
-  if (withBackup) {
-    console.info('backup the database before doing anything');
-    await backup(appUrl);
-    console.info('backup done, moving on to the migrations...');
-  } else {
-    console.warn('⚠️ skipping the backup before running migrations, are you sure?');
-  }
   try {
+    await startMaintenance();
+
     const currentVersion = await loadDBVersion(db);
     const migrations = selectAndOrderMigrations(currentVersion);
+
+    if (migrations.length === 0) {
+      console.info('No migrations to run, leaving...');
+      return;
+    }
+
+    if (withBackup) {
+      console.info('backup the database before doing anything');
+      await backup(appUrl);
+      console.info('backup done, moving on to the migrations...');
+    } else {
+      console.warn('⚠️ skipping the backup before running migrations, are you sure?');
+    }
+
     const lastVersion = last(migrations).version;
 
-    console.info(`Running ${migrations.length} between ]${currentVersion}, ${lastVersion}]`);
+    console.info(`Running migrations: ${migrations.map(x => x.version).join(', ')}`);
 
     for (const migration of migrations) {
       console.info(`applying migration: ${migration.version}`);
