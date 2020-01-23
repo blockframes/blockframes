@@ -58,7 +58,7 @@ service cloud.firestore {
       allow delete: if isSuperAdmin(userId(), orgId);
       allow read: if isSignedIn();
 
-      match /{documents=**} {
+      match /{subCollection}/{documents=**} {
         allow read, write;
       }
     }
