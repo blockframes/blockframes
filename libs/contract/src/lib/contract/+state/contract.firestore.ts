@@ -79,11 +79,11 @@ export interface InvoiceRaw<D> {
 
 export interface LegalDocuments {
   chainOfTitles: LegalDocument[],
-  invoices: LegalDocument[],
-  bill : LegalDocument
+  invoices: LegalDocument[]
 }
 
 export interface LegalDocument {
+  id: string,
   label: string,
   media: ImgRef,
   language?: LanguagesSlug,
