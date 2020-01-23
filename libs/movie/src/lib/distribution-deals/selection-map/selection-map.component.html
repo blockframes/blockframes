@@ -13,6 +13,9 @@
     <mat-card-content fxFlex>
       <ng-container *ngIf="country; else noSelection">
         <h3>{{ country.name }}</h3>
+        <!-- this is an example to show how to get static from country and vice versa -->
+        <p>slug: {{ getTerritorySlugFromGeoJson(country.iso_a3) }} </p>
+        <p>label: {{ getTerritoryLabelFromGeoJson(country.iso_a3) }}</p>
       </ng-container>
       <ng-template #noSelection>
         <p>Please select a Country</p>

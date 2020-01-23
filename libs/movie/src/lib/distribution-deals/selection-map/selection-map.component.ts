@@ -1,7 +1,8 @@
 import { Component, AfterViewInit, ViewChild, ElementRef, ChangeDetectionStrategy, ChangeDetectorRef, NgZone, Input } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Movie } from '@blockframes/movie/movie+state';
-import { map , geoJSON, GeoJSON,  Layer } from 'leaflet';
+import { map, geoJSON, GeoJSON, Layer } from 'leaflet';
+import { getTerritorySlugFromGeoJson, getTerritoryLabelFromGeoJson } from '@blockframes/utils/static-model/territories-ISO-3166';
 
 @Component({
   selector: 'distribution-deals-selection-map',
@@ -15,7 +16,7 @@ export class SelectionMapComponent implements AfterViewInit {
   private geojson: GeoJSON;
   private layer: Layer;
   public country: any;
-  
+
   @ViewChild('leaflet', { static: false }) leafletEl: ElementRef;
 
   constructor(
@@ -36,7 +37,7 @@ export class SelectionMapComponent implements AfterViewInit {
 
   /** Set the default style of this  */
   private setStyle(feature: GeoJSON.Feature) {
-    return  {
+    return {
       fillColor: '#ECEFF9',
       weight: 1,
       color: '#000000A0',
@@ -66,5 +67,13 @@ export class SelectionMapComponent implements AfterViewInit {
         }
       });
     })
+  }
+
+  public getTerritorySlugFromGeoJson(code: string) {
+    return getTerritorySlugFromGeoJson(code);
+  }
+
+  public getTerritoryLabelFromGeoJson(code: string) {
+    return getTerritoryLabelFromGeoJson(code);
   }
 }
