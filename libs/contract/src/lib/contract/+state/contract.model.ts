@@ -184,7 +184,6 @@ export function createLegalDocuments(
   return {
     chainOfTitles: [],
     invoices: [],
-    bill : createLegalDocument(params.bill),
     ...params
   }
 }
