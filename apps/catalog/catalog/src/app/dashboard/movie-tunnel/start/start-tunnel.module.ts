@@ -10,6 +10,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
 
 @NgModule({
   declarations: [StartTunnelComponent],
@@ -23,6 +25,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     MatIconModule,
     MatSidenavModule,
     MatToolbarModule,
+    MatProgressSpinnerModule,
+    // Router
     RouterModule.forChild([{ path: '', component: StartTunnelComponent }])
   ],
 })

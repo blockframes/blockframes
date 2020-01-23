@@ -5,12 +5,11 @@
   flex-direction: column;
   height: 100%;
 }
-.mat-stroked-button {
-  min-width: 130px;
-  mat-icon {
-    margin-right: 8px;
-  }
+
+mat-toolbar mat-spinner {
+  height: 80%;
 }
+
 mat-sidenav-container {
   flex: 1;
   
@@ -36,14 +35,4 @@ mat-sidenav-container {
 
 mat-sidenav {
   padding: 16px;
-}
-
-.button-box {
-  margin: 50px 0px;
-  a {
-    min-width: 130px;
-    span {
-      margin: 10px;
-    }
-  }
 }

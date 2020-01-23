@@ -1,8 +1,13 @@
-<mat-toolbar fxLayout="row" fxLayoutAlign="space-between center">
+<mat-toolbar fxLayout="row" fxLayoutAlign="end center">
 
-  <button mat-icon-button>
-    <mat-icon svgIcon="cross"></mat-icon>
-  </button>
+  <ng-container *ngIf="!loading else isLoading">
+    <button mat-icon-button>
+      <mat-icon svgIcon="cross"></mat-icon>
+    </button>
+  </ng-container>
+  <ng-template #isLoading>
+    <mat-spinner diameter="50"></mat-spinner>
+  </ng-template>
 </mat-toolbar>
 
 <mat-sidenav-container>
