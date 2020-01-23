@@ -84,6 +84,7 @@ export interface LegalDocuments {
 }
 
 export interface LegalDocument {
+  id: string,
   label: string,
   media: ImgRef,
   language?: LanguagesSlug,

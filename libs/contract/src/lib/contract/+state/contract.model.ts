@@ -190,10 +190,12 @@ export function createLegalDocuments(
 }
 
 export function createLegalDocument(
-  legalDocument: Partial<LegalDocument> = {}
+  params: Partial<LegalDocument> = {}
 ): LegalDocument {
   return {
+    id: '',
     label: '',
-    media: createImgRef(legalDocument.media),
+    ...params,
+    media: createImgRef(params.media),
   }
 }
