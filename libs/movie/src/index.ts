@@ -12,6 +12,11 @@ export * from './lib/movie/guards/movie-contract.guard';
 // Movie Modules
 export * from './lib/movie/movie.module';
 export * from './lib/distribution-deals/selection-table/form-selection.module';
+export * from './lib/movie/form/summary/main/main.module';
+export * from './lib/movie/form/summary/festival-prizes/festival-prizes.module';
+export * from './lib/movie/form/summary/sales-cast/sales-cast.module';
+export * from './lib/movie/form/summary/country/country.module';
+export * from './lib/movie/form/summary/information/information.module';
 // Movie Components
 export { MovieViewComponent } from './lib/movie/pages/movie-view/movie-view.component';
 export { MovieEditableComponent } from './lib/movie/pages/movie-editable/movie-editable.component';
@@ -20,6 +25,6 @@ export { MovieCreateModule } from './lib/movie/components/movie-create/movie-cre
 // Movie Component Module
 export * from './lib/movie/components/movie-picker/movie-picker.module';
 
-// Movie Form Moudles
+// Movie Form Modules
 export * from './lib/movie/form/sales-info/format/format.module';
 export * from './lib/movie/form/version-info/version-info.module';

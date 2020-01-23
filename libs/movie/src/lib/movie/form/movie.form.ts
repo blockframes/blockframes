@@ -64,4 +64,16 @@ export class MovieForm extends FormEntity<MovieControl> {
   get main() {
     return this.get('main');
   }
+
+  get festivalPrizes() {
+    return this.get('festivalPrizes');
+  }
+
+  get salesCast() {
+    return this.get('salesCast');
+  }
+
+  get salesInfo() {
+    return this.get('salesInfo');
+  }
 }

@@ -1,0 +1,28 @@
+<ul>
+  <li >
+    <strong>Content Type </strong>{{ main.get('workType') | missing }}
+  </li>
+  <li>
+    <strong>Freshness </strong>{{ main.storeConfig.get('storeType') | missing }}
+  </li>
+  <li>
+    <strong>Production Status Mandatory </strong>{{ main.get('status') | missing }}
+  </li>
+  <li>
+    <strong>Original Title </strong>{{ main.title.get('original') | missing }}
+  </li>
+  <li>
+    <strong>International Title </strong>{{ main.title.get('international') | missing }}
+  </li>
+  <li>
+    <strong>Reference # </strong>{{ main.get('internalRef') | missing }}
+  </li>
+  <ng-container *ngFor="let director of main.directors.controls; let isLast = last">
+    <li>
+      <strong>Director Names </strong>{{ director.get('firstName') | missing }} {{ director.get('lastName') | missing }}
+    </li>
+    <li>
+      <strong>Director's Filmography </strong>{{ director.get('shortBiography') | missing }}
+    </li>
+  </ng-container>
+</ul>

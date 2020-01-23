@@ -49,8 +49,9 @@ export class PartyDetailsForm extends FormEntity<PartyDetailsControl> {
 
 
 function createLegalDocumentControl(legalDocument?: Partial<LegalDocument>) {
-  const { label, media, language, country } = createLegalDocument(legalDocument);
+  const { id, label, media, language, country } = createLegalDocument(legalDocument);
   return {
+    id: new FormControl(id),
     label: new FormControl(label),
     media: new FormControl(media.url, urlValidators),
     language: new FormControl(language),
@@ -71,7 +72,6 @@ function createLegalDocumentsControl(legalDocuments?: Partial<LegalDocuments>) {
   return {
     chainOfTitles: FormList.factory(entity.chainOfTitles, el => new LegalDocumentForm(el)),
     invoices: FormList.factory(entity.invoices, el => new LegalDocumentForm(el)),
-    bill : new LegalDocumentForm(entity.bill)
   }
 }
 

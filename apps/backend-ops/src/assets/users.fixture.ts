@@ -2,6 +2,7 @@ export interface UserConfig {
   uid: string;
   email: string;
   password: string;
+  [key: string]: any;
 }
 
 export const USERS: UserConfig[] = [

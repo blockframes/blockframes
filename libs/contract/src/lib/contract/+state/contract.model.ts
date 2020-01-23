@@ -184,16 +184,17 @@ export function createLegalDocuments(
   return {
     chainOfTitles: [],
     invoices: [],
-    bill : createLegalDocument(params.bill),
     ...params
   }
 }
 
 export function createLegalDocument(
-  legalDocument: Partial<LegalDocument> = {}
+  params: Partial<LegalDocument> = {}
 ): LegalDocument {
   return {
+    id: '',
     label: '',
-    media: createImgRef(legalDocument.media),
+    ...params,
+    media: createImgRef(params.media),
   }
 }

@@ -137,6 +137,7 @@ jobs:
       - GOOGLE_APPLICATION_CREDENTIALS: creds.json
     steps:
       - checkout_project
+      - run: echo "export ADMIN_PASSWORD=\"${CI_ADMIN_PASSWORD}\"" >> $BASH_ENV
       - run: echo "${FIREBASE_CI_SERVICE_ACCOUNT}" > creds.json
       - run: npx cypress install
       - run: npm run build:all
@@ -197,20 +198,21 @@ jobs:
     environment:
       - ENV: staging
       - NODE_OPTIONS: '--max_old_space_size=4096'
+      - GOOGLE_APPLICATION_CREDENTIALS: creds.json
     steps:
       - checkout_project
+      - run: echo "${FIREBASE_STAGING_SERVICE_ACCOUNT}" > creds.json
       - run: cp env/env.staging.ts env/env.ts # required for the typechecking & file rewrite to work
       - run: npm run build:all
       - slack/notify:
           message: '🛵 Deploying to staging.. (https://staging.blockframes.io/)'
-      - do-exclusively/do-exclusively:
-          # Note: right now do-exclusively excludes cross-jobs (staging & prod).
-          token: $CIRCLE_TOKEN
+      - run:
           command: |
             npm install --save-dev firebase-tools &&
             npx firebase use staging &&
             ENV=staging npx firebase deploy --except functions &&
             ENV=staging npx firebase deploy --only functions --force
+      - run: node dist/apps/backend-ops/main.js upgrade
       - slack/status
 workflows:
   version: 2.1
