@@ -1,42 +1,28 @@
-<h2>Title Information</h2>
-<div class="information" fxLayout="row" fxLayoutAlign="start center">
-  <h3>Main Information</h3>
-  <a mat-icon-button routerLink="/c/o/dashboard/movie-tunnel/create/main"><mat-icon svgIcon="edit"></mat-icon></a>
-</div>
-
-<p>
-  <span class="mat-body-1 info-name">Content Type </span>
-  <span class="mat-body-1">{{ workType | missing }}</span>
-</p>
-<p>
-  <span class="mat-body-1 info-name">Freshness </span>
-  <span class="mat-body-1">{{ storeType | missing }}</span>
-</p>
-<p>
-  <span class="mat-body-1 info-name">Production Status Mandatory </span>
-  <span class="mat-body-1">{{ status | missing }}</span>
-</p>
-<p>
-  <span class="mat-body-1 info-name">Original Title </span>
-  <span class="mat-body-1">{{ original | missing }}</span>
-</p>
-<p>
-  <span class="mat-body-1 info-name">International Title </span>
-  <span class="mat-body-1">{{ international | missing }}</span>
-</p>
-<p>
-  <span class="mat-body-1 info-name">Reference # </span>
-  <span class="mat-body-1">{{ reference | missing }}</span>
-</p>
-<ng-container *ngFor="let director of main.directors.controls; let isLast = last">
-  <p>
-    <span class="mat-body-1 info-name">Director Names </span>
-    <span class="mat-body-1">
-      {{ director.get('firstName') | missing }} {{ director.get('lastName') | missing }}
-    </span>
-  </p>
-  <p>
-    <span class="mat-body-1 info-name">Director's Filmography </span>
-    <span class="mat-body-1">{{ director.get('shortBiography') | missing }}</span>
-  </p>
-</ng-container>
+<ul>
+  <li >
+    <strong>Content Type </strong>{{ main.get('workType') | missing }}
+  </li>
+  <li>
+    <strong>Freshness </strong>{{ main.storeConfig.get('storeType') | missing }}
+  </li>
+  <li>
+    <strong>Production Status Mandatory </strong>{{ main.get('status') | missing }}
+  </li>
+  <li>
+    <strong>Original Title </strong>{{ main.title.get('original') | missing }}
+  </li>
+  <li>
+    <strong>International Title </strong>{{ main.title.get('international') | missing }}
+  </li>
+  <li>
+    <strong>Reference # </strong>{{ main.get('internalRef') | missing }}
+  </li>
+  <ng-container *ngFor="let director of main.directors.controls; let isLast = last">
+    <li>
+      <strong>Director Names </strong>{{ director.get('firstName') | missing }} {{ director.get('lastName') | missing }}
+    </li>
+    <li>
+      <strong>Director's Filmography </strong>{{ director.get('shortBiography') | missing }}
+    </li>
+  </ng-container>
+</ul>
