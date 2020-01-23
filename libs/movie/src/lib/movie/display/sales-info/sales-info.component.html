@@ -1,16 +1,16 @@
 <ng-container *ngIf="data">
   <mat-list>
     <mat-list-item *ngIf="data.scoring">
-      <strong>Scoring :</strong>  {{ getLabelByCode('SCORING', data.scoring) }}
+      <strong>Scoring :</strong>  {{ getLabelBySlug('SCORING', data.scoring) }}
     </mat-list-item>
     <mat-list-item *ngIf="data.color">
-      <strong>Color :</strong> {{ getLabelByCode('COLORS', data.color) }}
+      <strong>Color :</strong> {{ getLabelBySlug('COLORS', data.color) }}
     </mat-list-item>
     <mat-list-item *ngIf="data.rating">
-      <strong>Rating :</strong> 
+      <strong>Rating :</strong>
       <ul>
         <li *ngFor="let rating of data.rating">
-          {{ getLabelByCode('RATING', rating.system) }} {{ getLabelByCode('TERRITORIES', rating.country) }} : {{ rating.value }} ({{ rating.reason }})
+          {{ getLabelBySlug('RATING', rating.system) }} {{ getLabelBySlug('TERRITORIES', rating.country) }} : {{ rating.value }} ({{ rating.reason }})
         </li>
       </ul>
     </mat-list-item>
@@ -18,14 +18,14 @@
       <strong>Certifications :</strong>
       <ul>
         <li *ngFor="let item of data.certifications">
-          {{ getLabelByCode('CERTIFICATIONS', item) }}
+          {{ getLabelBySlug('CERTIFICATIONS', item) }}
         </li>
       </ul>
     </mat-list-item>
     <mat-list-item *ngIf="data.originalRelease">
       <span><b>Release dates in Origin Countries</b></span>
       <ul>
-        <li *ngFor="let release of data.originalRelease">{{ getLabelByCode('TERRITORIES', release.country) }} : {{ release.date }} ({{ getLabelByCode('MEDIAS', release.media) }})</li>
+        <li *ngFor="let release of data.originalRelease">{{ getLabelBySlug('TERRITORIES', release.country) }} : {{ release.date }} ({{ getLabelBySlug('MEDIAS', release.media) }})</li>
       </ul>
     </mat-list-item>
     <mat-list-item *ngIf="data.broadcasterCoproducers.length">

@@ -21,7 +21,7 @@ import {
 import { Validators, FormArray } from '@angular/forms';
 import { FormGroup, FormControl } from '@angular/forms';
 import { FormEntity, yearValidators, numberRangeValidator } from '@blockframes/utils';
-import { getLabelByCode } from '@blockframes/utils/static-model/staticModels';
+import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 import { MovieLanguageSpecification } from '@blockframes/movie/movie/+state/movie.firestore';
 import { createMovieLanguageSpecification } from '@blockframes/movie/movie+state/movie.model';
 
@@ -257,7 +257,7 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
     // Check it's part of the list available
     if (!TERRITORIES_SLUG.includes(territory)) {
       throw new Error(
-        `Territory ${getLabelByCode('TERRITORIES', territory)} is not part of the list`
+        `Territory ${getLabelBySlug('TERRITORIES', territory)} is not part of the list`
       );
     }
     // Check it's not already in the form control

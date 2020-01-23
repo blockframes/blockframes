@@ -12,7 +12,7 @@
       <li fxLayout="row" fxLayout.lt-sm="column">
         <span><b>Rating</b></span>
         <ul>
-          <li *ngFor="let rating of salesInfo.rating">{{ rating.system }} {{ getLabelByCode('TERRITORIES', rating.country) }} : {{ rating.value }} ({{ rating.reason }})</li>
+          <li *ngFor="let rating of salesInfo.rating">{{ rating.system }} {{ getLabelBySlug('TERRITORIES', rating.country) }} : {{ rating.value }} ({{ rating.reason }})</li>
         </ul>
       </li>
     </ng-container>
@@ -31,7 +31,7 @@
         <span>{{ color | titlecase }}</span>
       </li>
     </ng-container>
-    <ng-container *ngIf="hasTheatricalRelease(); else noRelease"> 
+    <ng-container *ngIf="hasTheatricalRelease(); else noRelease">
       <li fxLayout="row" fxLayout.lt-sm="column">
         <span><b>Theatrical Release</b></span>
         <span>Yes</span>
@@ -47,7 +47,7 @@
   <ng-container *ngIf="salesInfo.originalRelease">
     <span><b>Release dates in Origin Countries</b></span>
     <ul>
-      <li *ngFor="let release of salesInfo.originalRelease">{{ getLabelByCode('TERRITORIES', release.country) }} : {{ release.date }} ({{ getLabelByCode('MEDIAS', release.media) }})</li>
+      <li *ngFor="let release of salesInfo.originalRelease">{{ getLabelBySlug('TERRITORIES', release.country) }} : {{ release.date }} ({{ getLabelBySlug('MEDIAS', release.media) }})</li>
     </ul>
   </ng-container>
 </article>

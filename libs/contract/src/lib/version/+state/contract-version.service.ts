@@ -8,8 +8,6 @@ import { ContractWithLastVersion, Contract } from '../../contract/+state/contrac
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'contracts/:contractId/versions' })
 export class ContractVersionService extends CollectionService<ContractVersionState> {
-  public contractId: string;
-
   constructor(private contractQuery: ContractQuery, store: ContractVersionStore) {
     super(store);
   }
@@ -24,7 +22,7 @@ export class ContractVersionService extends CollectionService<ContractVersionSta
       --_meta.count;
 
       tx.update(_metaSnap.ref, _meta);
-    })
+    });
   }
 
   /**
@@ -55,7 +53,7 @@ export class ContractVersionService extends CollectionService<ContractVersionSta
    * @param contractId
    */
   public async getLastVersionContract(contractId: string): Promise<ContractVersion> {
-    const { count } = await this.getValue('_meta', { params: { contractId } }) as VersionMeta;
+    const { count } = (await this.getValue('_meta', { params: { contractId } })) as VersionMeta;
     if (!!count) {
       const lastVersion = await this.getValue(count.toString(), { params: { contractId } });
       return lastVersion;
