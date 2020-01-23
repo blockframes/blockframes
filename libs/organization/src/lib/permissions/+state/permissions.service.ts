@@ -68,7 +68,7 @@ export class PermissionsService extends CollectionService<PermissionsState> {
    * @param contract
    * @param write
    */
-  public addContractPermissions(contract: Contract, write: firestore.WriteBatch) {
+  public addContractPermissions(contract: Contract) {
     this.db.firestore.runTransaction(async tx => {
       contract.partyIds.forEach(partyId => {
         const contractPermissions = createDocPermissions({ id: contract.id });

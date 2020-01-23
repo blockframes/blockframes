@@ -88,11 +88,6 @@ export class MovieService extends CollectionService<MovieState> {
     return super.remove(movieId);
   }
 
-  onCreate(movie: Movie, { write }: WriteOptions) {
-    // When a movie is created, we also create a permissions document for it.
-    return this.permissionsService.addDocumentPermissions(movie, write as firestore.WriteBatch)
-  }
-
   /** Add a partial or a full movie to the database. */
   public async addMovie(original: string, movie?: Movie): Promise<Movie> {
     const id = this.db.createId();

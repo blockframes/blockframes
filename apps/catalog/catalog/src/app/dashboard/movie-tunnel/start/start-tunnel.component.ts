@@ -39,9 +39,6 @@ export class StartTunnelComponent{
   constructor(
     private db: AngularFirestore,
     private movieService: MovieService,
-    private contractService: ContractService,
-    private dealService: DistributionDealService,
-    private contractVersionService: ContractVersionService,
     private router: Router,
     private route: ActivatedRoute
   ) {}
@@ -49,24 +46,7 @@ export class StartTunnelComponent{
   async begin() {
     this.loading = true;
     try {
-      const write = this.db.firestore.batch();
-      ///////////////
-      // Create Movie
-      const movieId = await this.movieService.add({}, { write });
-      // Create Contract
-      const contractId = await this.contractService.add({ titleIds: [movieId]}, { write });
-      // Create first Distribution Deal for this contract 
-      const dealId = await this.dealService.add({ contractId }, { write, params: { movieId } });
-      // Create Details for this movie on the first contract version
-      const details = createContractTitleDetail({ titleId: movieId, distributionDealIds: [dealId] });
-      const titles = { [movieId]: details };
-      const versionId = await this.contractVersionService.add({ id: '1', titles }, {
-        write,
-        params: { contractId }
-      });
-      console.log({ movieId, contractId, dealId, versionId })
-      ///////////////
-      write.commit();
+      const movieId = await this.movieService.add({});
       this.loading = false;
       this.router.navigate([movieId], { relativeTo: this.route });
     } catch (err) {

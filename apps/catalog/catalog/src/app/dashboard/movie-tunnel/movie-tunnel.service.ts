@@ -7,8 +7,9 @@ export class MovieTunnelService {
   previousPage: string;
   constructor(private routerQuery: RouterQuery, private router: Router){}
 
-  openTunnel(){
+  openTunnel(movieId?: string){
     this.previousPage = this.routerQuery.getValue().state.url;
-    this.router.navigate(['dashboard/movie-tunnel']);
+    const path = 'c/o/dashboard/movie-tunnel' + movieId || '';
+    this.router.navigate([path]);
   }
 }
