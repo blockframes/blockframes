@@ -19,6 +19,7 @@ import { firestore } from 'firebase/app';
 import { PermissionsService } from '@blockframes/organization/permissions/+state/permissions.service';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { MovieQuery } from './movie.query';
+import { Observable } from 'rxjs';
 
 /** Query movies from the contract with distributions deals from the last version. */
 const movieListContractQuery = (contract: Contract, movieIds: string[]): Query<Movie[]> => ({
@@ -137,8 +138,8 @@ export class MovieService extends CollectionService<MovieState> {
   }
 
   /** Call a firebase function to get analytics specify to a movie.*/
-  public getMovieAnalytics(): Promise<MovieAnalytics> {
+  public getMovieAnalytics(): Observable<MovieAnalytics> {
     const f = this.functions.httpsCallable('getMovieAnalytics');
-    return f({ movieId: this.query.getActiveId() }).toPromise();
+    return f({ movieId: this.query.getActiveId() });
   }
 }
