@@ -14,10 +14,9 @@ import { createPrice } from '@blockframes/utils/common-interfaces';
 import { OrganizationQuery, PLACEHOLDER_LOGO } from '@blockframes/organization';
 import { IntercomAppModule } from '@blockframes/utils/intercom.module';
 import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state';
-import { MovieCurrenciesSlug, MediasSlug, LanguagesSlug } from '@blockframes/utils/static-model/types';
+import { MovieCurrenciesSlug, MediasSlug } from '@blockframes/utils/static-model/types';
 import { getCodeBySlug } from '@blockframes/utils/static-model/staticModels';
 import { CurrencyPipe } from '@angular/common';
-import { MovieLanguageSpecification } from '@blockframes/movie/movie+state/movie.firestore';
 
 const versionColumns = {
   date: 'Date',
@@ -34,17 +33,20 @@ const dealColumns = {
   firstBroadcastDate: '1st Broadcast Date'
 }
 
+/** Flattened data of version to pass in bf-table-filer. */
 interface VersionView {
   date: string;
   offer: string;
   status: string;
 }
 
-interface MovieWithDealViews {
+/** Flattened data of movies to pass in bf-table-filer. */
+interface MovieWithDealsView {
   movie: Movie;
   deals: DealView[];
 }
 
+/** Flattened data of deals to pass in bf-table-filer. */
 interface DealView {
   territory: string [];
   startDate: string;
@@ -54,6 +56,7 @@ interface DealView {
   firstBroadcastDate: string;
 }
 
+/** Returns version price as a formated string. */
 function getVersionPrice(version: ContractVersion) {
   const currencyPipe = new CurrencyPipe('en-US')
   let amount = 0;
@@ -65,6 +68,7 @@ function getVersionPrice(version: ContractVersion) {
   return currencyPipe.transform(amount, currency, true)
 }
 
+/** Factory function to create VersionView. */
 function createVersionView(version: ContractVersion): VersionView {
   return {
     date: version.creationDate.toLocaleDateString(),
@@ -73,6 +77,7 @@ function createVersionView(version: ContractVersion): VersionView {
   }
 }
 
+/** Factory function to create DealView. */
 function createDealView(deal: DistributionDeal): DealView {
   return {
     territory: deal.territory,
@@ -84,7 +89,8 @@ function createDealView(deal: DistributionDeal): DealView {
   };
 }
 
-function createMovieWithDealViews(movie: Movie): MovieWithDealViews {
+/** Factory function to create MovieWithDealsView. */
+function createMovieWithDealViews(movie: Movie): MovieWithDealsView {
   return {
     movie,
     deals: movie.distributionDeals.map(deal => createDealView(deal))
@@ -109,7 +115,7 @@ export class DealViewComponent implements OnInit {
   public versionColumns = versionColumns;
   public initialVersionColumns = ['date', 'offer', 'status'];
 
-  public moviesWithDeals$: Observable<MovieWithDealViews[]>;
+  public moviesWithDeals$: Observable<MovieWithDealsView[]>;
   public dealColumns = dealColumns;
   public initialDealColumns = ['territory', 'startDate', 'rights', 'languages', 'holdback', 'firstBroadcastDate'];
 
@@ -166,18 +172,22 @@ export class DealViewComponent implements OnInit {
     return this.intercomModule.intercom.show();
   }
 
+  /** Accept the offer and sign with a timestamp. */
   public acceptOffer(contract: Contract): void {
     return this.service.acceptOffer(contract, this.organizationQuery.getActiveId());
   }
 
+  /** Decline the offer. */
   public declineOffer(contract: Contract): void {
     return this.service.declineOffer(contract, this.organizationQuery.getActiveId());
   }
 
+  /** Utils function to get currency code for currency pipe. */
   public getCurrencyCode(currency: MovieCurrenciesSlug) {
     return getCodeBySlug('MOVIE_CURRENCIES', currency);
   }
 
+  /** Check if the movie is in the store. */
   public showMovie(movieId: string): boolean {
     return this.movieQuery.hasEntity(movieId);
   }

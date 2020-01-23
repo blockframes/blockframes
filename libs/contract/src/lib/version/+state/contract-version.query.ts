@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { QueryEntity, QueryConfig, Order } from '@datorama/akita';
+import { QueryEntity } from '@datorama/akita';
 import { ContractVersionState, ContractVersionStore } from './contract-version.store';
 
 @Injectable({ providedIn: 'root' })
