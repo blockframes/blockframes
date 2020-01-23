@@ -1158,6 +1158,7 @@ export class ViewExtractedElementsComponent {
               const dateStart = new Date(`${rightsStart.y}-${rightsStart.m}-${rightsStart.d}`);
               if (isNaN(dateStart.getTime())) { // ie invalid date
                 distributionDeal.terms.startLag = spreadSheetRow[SpreadSheetDistributionDeal.rightsStart];
+                // @approx date #1397
               } else {
                 distributionDeal.terms.start = dateStart
               }

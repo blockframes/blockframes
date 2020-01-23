@@ -124,7 +124,7 @@ export class TableExtractedDealsComponent implements OnInit {
     switch (type) {
       case 'start':
         if (!term.start || isNaN(term.start.getTime())) {
-          return term.startLag ? term.startLag : noDate;
+          return term.startLag ? term.startLag : noDate; // @approx date #1397
         } else if (term.start) {
           return this.datepipe.transform(term.start, 'yyyy-MM-dd');;
         } else {
