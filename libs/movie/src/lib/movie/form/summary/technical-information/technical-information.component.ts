@@ -10,6 +10,6 @@ import { MovieVersionInfoForm } from '../../version-info/version-info.form';
 })
 export class MovieSummaryTechnicalInformationComponent {
   //@Input() salesInfo: MovieSalesInfoForm;
-  public salesInfo = new MovieSalesInfoForm({ });
+  public salesInfo = new MovieSalesInfoForm({ color: 'b', format: '1_33', formatQuality: '4k', soundFormat: 'mono' });
   @Input() versionInfo: MovieVersionInfoForm;
 }
