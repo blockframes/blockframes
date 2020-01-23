@@ -76,6 +76,7 @@ export class FileUploadComponent {
       file.__proto__ = new File([], file.type);
     }
 
+    // @TODO (#1520) It seems that on windows, file.type is empty
     const isFileTypeValid = this.types && this.types.includes(file.type);
     if (!isFileTypeValid) {
       this.snackBar.open('unsupported file type :( ', 'close', { duration: 1000 });
