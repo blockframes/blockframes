@@ -18,7 +18,7 @@
             </mat-form-field>
         </div>
         <mat-divider vertical></mat-divider>
-        <!-- Event -->
+        <!-- Periode of Event -->
         <div fxLayout="column">
             <mat-slide-toggle [checked]="termCtrl.value" color="primary" (change)="disableInputs($event, 'event')">Event
                 & period</mat-slide-toggle>
@@ -28,21 +28,19 @@
                     <mat-option *ngFor="let event of events" [value]="event">{{ eventEnum[event] }}</mat-option>
                 </mat-select>
             </mat-form-field>
-            <form formGroupName="floatingDuration">
-                <div fxLayout="column">
-                    <mat-form-field appearance="outline">
-                        <mat-label>Duration</mat-label>
-                        <input type="text" matInput autocomplete="off" formControlName="duration">
-                    </mat-form-field>
-                    <mat-form-field appearance="outline">
-                        <mat-label>Period</mat-label>
-                        <mat-select formControlName="unit">
-                            <mat-option *ngFor="let duration of durations" [value]="duration">
-                                {{ duration | titlecase }}
-                            </mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
+            <form formGroupName="floatingDuration" fxLayout="column">
+                <mat-form-field appearance="outline">
+                    <mat-label>Duration</mat-label>
+                    <input type="text" matInput autocomplete="off" formControlName="duration">
+                </mat-form-field>
+                <mat-form-field appearance="outline">
+                    <mat-label>Period</mat-label>
+                    <mat-select formControlName="unit">
+                        <mat-option *ngFor="let duration of durations" [value]="duration">
+                            {{ duration | titlecase }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
             </form>
         </div>
     </div>
