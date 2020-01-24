@@ -4,10 +4,11 @@ import { OrganizationMember } from '../../member/+state/member.model';
 import { UserRole, createDocPermissions } from './permissions.firestore';
 import { PermissionsState, PermissionsStore } from './permissions.store';
 import { CollectionService, CollectionConfig } from 'akita-ng-fire';
-import { BFDoc } from '@blockframes/utils/firequery/types';
 import { firestore } from 'firebase/app';
-import { OrganizationQuery } from '@blockframes/organization/+state';
+import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { Contract } from '@blockframes/contract/contract/+state/contract.model';
+import { Movie } from '@blockframes/movie/movie+state/movie.model';
+import { Delivery } from '@blockframes/material';
 
 @Injectable({
   providedIn: 'root'
@@ -55,7 +56,7 @@ export class PermissionsService extends CollectionService<PermissionsState> {
    * @param doc
    * @param write
    */
-  public addDocumentPermissions(doc: BFDoc, write: firestore.WriteBatch) {
+  public addDocumentPermissions(doc: Movie | Delivery | Contract, write: firestore.WriteBatch) {
     const organizationId = this.organizationQuery.getActiveId();
     const documentPermissions = createDocPermissions({ id: doc.id, ownerId: organizationId });
     const documentPermissionsRef = this.db.doc(`permissions/${organizationId}/documentPermissions/${documentPermissions.id}`).ref;

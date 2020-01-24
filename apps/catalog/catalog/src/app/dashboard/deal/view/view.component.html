@@ -9,10 +9,10 @@
       <img class="logo" [imgRef]="placeholderUrl" [placeholderUrl]="placeholderUrl" alt="Organization logo" />
       <div>
         <p>{{ lastVersion.status | uppercase }}</p>
-        <h1>{{ licensees[0].party.displayName }} - {{ moviesLenght$ | async }} films</h1>
+        <h1>{{ licensees[0].party.displayName }} - {{ (movies$ | async).length }} films</h1>
         <span class="mat-body-1" *ngIf="licensee.address">
           {{ licensee.address.street }}, {{ licensee.address.city }}, {{ licensee.address.region }}
-          {{ licensee.address.zipCode }}, {{ licensee.address.country }}
+          {{ licensee.address.zipCode }} {{ licensee.address.country }}
         </span>
       </div>
     </article>
@@ -28,7 +28,7 @@
       <mat-card-title>
         <h3>
           {{ licensees[0].party.displayName }} has made an offer for
-          {{ contract.titleIds.length }} titles, {{ moviesLenght$ | async }} of which are yours.
+          {{ contract.titleIds.length }} titles, {{ (movies$ | async).length }} of which are yours.
         </h3>
       </mat-card-title>
       <mat-card-content>
@@ -37,31 +37,31 @@
         </span>
         <span i18n *ngIf="subLicensors.length > 1; else uniqueSubLicensor" class="mat-body-1">
           Your share of the deal is <b>{{ totalPrice.amount | currency: getCurrencyCode(totalPrice.currency) }}</b>
-          for the {{ moviesLenght$ | async }} film:
+          for the {{ (movies$ | async).length }} film:
         </span>
         <ng-template #uniqueSubLicensor>
           <span class="mat-body-1">
             The offer is <b>{{ totalPrice.amount | currency: totalPrice.currency }}</b>
-            for the {{ moviesLenght$ | async }} films:
+            for the {{ (movies$ | async).length }} films:
           </span>
         </ng-template>
-        <ul *ngFor="let movieWithDeals of moviesWithDeals$ | async">
-          <ng-container *ngIf="showMovie(movieWithDeals.movie.id)">
-            <li><b>{{ movieWithDeals.movie.main.title.international }}</b></li>
+        <ul *ngFor="let movie of movies$ | async">
+          <ng-container *ngIf="showMovie(movie.id)">
+            <li><b>{{ movie.main.title.international }}</b></li>
           </ng-container>
         </ul>
       </mat-card-content>
       <mat-card-actions *ngIf="isSignatory" fxLayout="row" fxLayoutAlign="space-between center">
-        <button mat-flat-button color="accent" (click)="openIntercom()">
+        <button mat-flat-button color="primary" (click)="openIntercom()">
           <mat-icon svgIcon="comment"></mat-icon>
           Connect with the Archipel Team
         </button>
         <div>
-          <button mat-flat-button color="primary" (click)="acceptOffer(contract)">
+          <button mat-stroked-button color="primary" (click)="acceptOffer(contract)">
             <mat-icon svgIcon="check"></mat-icon>
             Accept
           </button>
-          <button mat-flat-button color="warn" (click)="declineOffer(contract)">
+          <button mat-stroked-button color="warn" (click)="declineOffer(contract)">
             <mat-icon svgIcon="refuse"></mat-icon>
             Decline
           </button>
@@ -90,27 +90,131 @@
   </mat-card>
 
   <!-- DISTRIBUTION DEALS -->
-  <ng-container *ngFor="let movieWithDeals of moviesWithDeals$ | async">
-    <mat-card *ngIf="showMovie(movieWithDeals.movie.id)">
-      <mat-accordion >
+  <ng-container *ngFor="let movie of movies$ | async">
+    <mat-card *ngIf="showMovie(movie.id)">
+      <mat-accordion>
         <mat-expansion-panel
           (opened)="panelOpenState = true"
           (closed)="panelOpenState = false">
           <mat-expansion-panel-header>
             <mat-panel-title fxLayout="row" fxLayoutAlign="space-between">
-              <h3>{{ movieWithDeals.movie.main.title.international }}</h3>
-              <span *ngIf="lastVersion.titles[movieWithDeals.movie.id].price as price">
+              <h3>{{ movie.main.title.international }}</h3>
+              <span *ngIf="lastVersion.titles[movie.id].price as price">
                 {{ price.amount | currency : getCurrencyCode(price.currency) }}
               </span>
             </mat-panel-title>
           </mat-expansion-panel-header>
           <mat-divider></mat-divider>
-          <bf-table-filter
-            [source]="movieWithDeals.deals"
-            [columns]="dealColumns"
-            [initialColumns]="initialDealColumns"
-            [showFilter]="true">
-          </bf-table-filter>
+          <article fxLayout="row" fxLayoutAlign="start start" class="movie-information">
+            <img class="poster" [imgRef]="movie.main.poster" alt="Movie poster" />
+            <div>
+              <span
+                *ngFor="let director of movie.main.directors; let isLast = last"
+                class="mat-body-1">
+                {{ director.firstName }} {{ director.lastName }}{{isLast ? '' : ', '}}
+              </span>
+              <br/>
+              <span
+                *ngFor="let country of movie.main.originCountries; let isLast = last"
+                class="mat-body-2">
+                {{ country | translateSlug: 'TERRITORIES'}}{{isLast ? ',' : ' / '}}
+              </span>
+              <span class="mat-body-2"> {{ movie.main.productionYear }}</span>
+            </div>
+          </article>
+          <div class="container" *ngIf="displayedColumns$ | async as displayedColumns" fxLayout="column" fxLayoutAlign="center end">
+            <button matSuffix mat-icon-button [widgetTarget]="filterColumnWidget">
+              <mat-icon>filter_list</mat-icon>
+            </button>
+            <table mat-table [dataSource]="movie.distributionDeals" matSort>
+              <ng-container matColumnDef="territory">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Territory </th>
+                <td mat-cell *matCellDef="let deal">
+                  <b *ngFor="let territory of getDealTerritories(deal); let isLast = last">
+                    {{ territory | translateSlug: 'TERRITORIES' }}{{isLast ? '' : ', '}}
+                  </b>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="startDate">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Start Date </th>
+                <td mat-cell *matCellDef="let deal">
+                  {{ deal.terms.start.toDate() | date:'shortDate' }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="endDate">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> End Date </th>
+                <td mat-cell *matCellDef="let deal">
+                  {{ deal.terms.end.toDate() | date:'shortDate' }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="rights">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Rights </th>
+                <td mat-cell *matCellDef="let deal">
+                  <b *ngFor="let media of deal.licenseType; let isLast = last">
+                    {{ media | translateSlug: 'MEDIAS' }}{{isLast ? '' : ', '}}
+                  </b>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="languages">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Languages </th>
+                <td mat-cell *matCellDef="let deal">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="holdback">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Holdback </th>
+                <td mat-cell *matCellDef="let deal">
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="firstBroadcastDate">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> 1st Broadcast Date </th>
+                <td mat-cell *matCellDef="let deal">
+                  <ng-container *ngIf="deal.multidiffusion.length">
+                    {{ deal.multidiffusion[0].start.toDate() | date:'shortDate' }}
+                  </ng-container>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="exclusive">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Exclusive </th>
+                <td mat-cell *matCellDef="let deal">
+                  {{ deal.exclusive }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="multidiffusion">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Multidiffusion </th>
+                <td mat-cell *matCellDef="let deal">
+                  {{ deal.multidiffusion.length }}
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="catchUp">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Catch Up </th>
+                <td mat-cell *matCellDef="let deal">
+                  <ng-container *ngIf="deal.catchUp.start && deal.catchUp.end">
+                    {{ deal.catchUp.start.toDate() | date:'shortDate' }} - {{ deal.catchUp.end.toDate() | date:'shortDate' }}
+                  </ng-container>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+            </table>
+          </div>
+
+          <overlay-widget #filterColumnWidget>
+            <mat-selection-list [formControl]="columnFilter" class="mat-elevation-z2">
+              <mat-list-option *ngFor="let column of dealColumns | keyvalue" [value]="column.key">
+                {{ column.value }}
+              </mat-list-option>
+            </mat-selection-list>
+          </overlay-widget>
         </mat-expansion-panel>
       </mat-accordion>
     </mat-card>

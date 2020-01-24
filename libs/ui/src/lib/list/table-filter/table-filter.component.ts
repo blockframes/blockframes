@@ -28,13 +28,11 @@ export class TableFilterComponent implements OnInit, AfterViewInit {
   displayedColumns$: Observable<string[]>;
   dataSource: MatTableDataSource<any>;
 
-  // filters
+  // Filters
   columnFilter = new FormControl([]);
 
   @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: false}) sort: MatSort;
-
-  constructor() { }
 
   ngOnInit() {
     this.columnFilter.patchValue(this.initialColumns);
