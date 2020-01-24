@@ -63,7 +63,7 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.members$ = this.memberQuery.membersWithRole$.pipe(
-      tap(members => this.membersFormList.patchValue(members)),
+      tap(members => this.membersFormList.patchAllValue(members)),
       switchMap(members => this.membersFormList.valueChanges.pipe(startWith(members)))
     );
 

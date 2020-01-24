@@ -35,7 +35,7 @@ function createMovieControls(movie: Partial<Movie>) {
 export type MovieControl = ReturnType<typeof createMovieControls>
 
 @Injectable()
-export class MovieForm extends FormEntity<MovieControl> {
+export class MovieForm extends FormEntity<MovieControl, Movie> {
   constructor() {
     super(createMovieControls({}));
   }
