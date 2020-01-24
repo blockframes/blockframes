@@ -7,9 +7,7 @@ import { map } from 'rxjs/operators';
 @Injectable({ providedIn: 'root' })
 @CollectionGuardConfig({ awaitSync: true })
 export class MovieTunnelGuard extends CollectionGuard<MovieState> {
-  constructor(
-    protected service: MovieService,
-  ) {
+  constructor(protected service: MovieService) {
     super(service);
   }
 

@@ -75,6 +75,10 @@ const panels = [{
 const allRoutes = panels.map(({ routes }) => routes.map(r => r.path));
 const allPath = allRoutes.flat();
 
+/**
+ * Set the position of the page on the current panel
+ * @example { index: 1, length: 3 } will look like 1/3 in the UI
+ */
 function getPageData(url: string, array: string[][]): PageData {
   const pageUrl = url.split('/').pop();
   const panel = array.find(page => page.includes(pageUrl));
@@ -105,8 +109,7 @@ function getPage(url: string, arithmeticOperator: number): string {
   providers: [MovieForm],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieTunnelComponent implements OnInit, OnDestroy {
-  private sub: Subscription;
+export class MovieTunnelComponent implements OnInit {
   private url$ = this.routerQuery.select(({ state }) => state.url);
   public panels = panels;
   
@@ -124,13 +127,8 @@ export class MovieTunnelComponent implements OnInit, OnDestroy {
   ) {}
 
   async ngOnInit() {
-    const movieId = this.query.getActiveId();
-    const movie = await this.service.getValue(movieId) // Edit movie
+    const movie = this.query.getActive();
     this.form.patchAllValue(movie);
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
   }
 
   // Should save movie
