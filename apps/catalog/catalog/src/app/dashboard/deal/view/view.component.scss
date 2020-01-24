@@ -6,4 +6,16 @@
     height: 160px;
     width: 160px;
   }
+
+  .poster {
+    width: 60px;
+    height: 60px;
+    border-radius: 4px;
+    border: solid 1px var(--borderGrey);
+    margin-right: 15px;
+  }
+
+  .movie-information {
+    margin: 15px;
+  }
 }

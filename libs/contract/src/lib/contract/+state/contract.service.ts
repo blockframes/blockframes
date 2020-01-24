@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ContractStore, ContractState } from './contract.store';
-import { CollectionConfig, CollectionService, awaitSyncQuery, Query } from 'akita-ng-fire';
+import { CollectionConfig, CollectionService, awaitSyncQuery, Query, WriteOptions } from 'akita-ng-fire';
 import { Contract, ContractPartyDetail, convertToContractDocument, createContractPartyDetail, createPartyDetails, initContractWithVersion, ContractWithLastVersion, ContractWithTimeStamp } from './contract.model';
 import orderBy from 'lodash/orderBy';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
@@ -12,6 +12,7 @@ import { cleanModel } from '@blockframes/utils';
 import { PermissionsService } from '@blockframes/organization';
 import { ContractDocumentWithDates, ContractStatus } from './contract.firestore';
 import { VersionMeta } from '../../version/+state/contract-version.model';
+import { firestore } from 'firebase/app';
 
 /**
  * Get all the contracts where user organization is party.
@@ -69,9 +70,9 @@ export class ContractService extends CollectionService<ContractState> {
     return awaitSyncQuery.call(this, contractQuery(contractId));
   }
 
-  onCreate(contract: Contract) {
+  onCreate(contract: Contract, { write }: WriteOptions) {
     // When a contract is created, we also create a permissions document for each parties.
-    return this.permissionsService.addContractPermissions(contract)
+    return this.permissionsService.addDocumentPermissions(contract, write as firestore.WriteBatch)
   }
 
   /**

@@ -1,14 +1,3 @@
-/** Format a date into a string to match angular "| date" in html. */
-export function formatDate(date: Date) {
-  return (
-    date.toLocaleString('default', { month: 'short' }) +
-    ' ' +
-    date.getDate() +
-    ', ' +
-    date.getFullYear()
-  );
-}
-
 /**
  * @see #483
  * This method is used before pushing data on db
@@ -19,6 +8,11 @@ export function formatDate(date: Date) {
  */
 export function cleanModel<T>(data: T): T {
   return JSON.parse(JSON.stringify(data));
+}
+
+export const capitalize = (str: string) => {
+  if (typeof str !== 'string') return ''
+  return str.charAt(0).toUpperCase() + str.slice(1)
 }
 
 
