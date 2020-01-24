@@ -13,7 +13,6 @@ import { startWith } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RightListComponent implements OnInit {
-  @Input() initialColumns: string[];
   @Input()
   set source(deals: DistributionDeal[]) {
     this.dataSource = new MatTableDataSource(deals);
@@ -34,7 +33,7 @@ export class RightListComponent implements OnInit {
   };
 
   public displayedColumns$: Observable<string[]>;
-  public dataSource: MatTableDataSource<any>;
+  public dataSource: MatTableDataSource<DistributionDeal>;
   public columnFilter = new FormControl([]);
 
   public initialDealColumns = [

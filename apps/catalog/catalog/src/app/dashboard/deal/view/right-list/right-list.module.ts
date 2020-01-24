@@ -22,6 +22,7 @@ import { MatListModule } from '@angular/material/list';
     TranslateSlugModule,
     FlexLayoutModule,
 
+    // Material
     MatTableModule,
     MatSortModule,
     MatButtonModule,

@@ -193,7 +193,7 @@ export function createLegalDocument(
   }
 }
 
-export function creatContractFromFirestore(contract: ContractWithTimeStamp): Contract {
+export function createContractFromFirestore(contract: ContractWithTimeStamp): Contract {
   return {
     ...contract,
     parties: contract.parties.map(partyDetails => formatPartyDetails(partyDetails)),

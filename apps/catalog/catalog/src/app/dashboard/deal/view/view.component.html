@@ -35,10 +35,12 @@
         <span *ngIf="subLicensors.length > 1" class="mat-body-1">
           We are gathering approval from {{ subLicensors.length - 1 }} other sellers.
         </span>
-        <span i18n *ngIf="subLicensors.length > 1; else uniqueSubLicensor" class="mat-body-1">
-          Your share of the deal is <b>{{ totalPrice.amount | currency: getCurrencyCode(totalPrice.currency) }}</b>
-          for the {{ (movies$ | async).length }} film:
-        </span>
+        <ng-container *ngIf="subLicensors.length > 1; else uniqueSubLicensor">
+          <span class="mat-body-1">
+            Your share of the deal is <b>{{ totalPrice.amount | currency: getCurrencyCode(totalPrice.currency) }}</b>
+            for the {{ (movies$ | async).length }} film:
+          </span>
+        </ng-container>
         <ng-template #uniqueSubLicensor>
           <span class="mat-body-1">
             The offer is <b>{{ totalPrice.amount | currency: totalPrice.currency }}</b>
