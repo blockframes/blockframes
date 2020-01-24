@@ -44,7 +44,7 @@ export class FormList<T, Control extends AbstractControl = any> extends FormArra
       const control = createControl ? createControl() : new FormControl();
       form.push(control);
     } else {
-      form.patchValue(value);
+      form.patchAllValue(value);
     }
     return form;
   }
@@ -121,7 +121,10 @@ export class FormList<T, Control extends AbstractControl = any> extends FormArra
     }
   }
 
-  /** @deprecated This method should not be used as it override the normal behavior. Use patchAllValue instead */
+  /** 
+   * 
+   * @note This method was previously overrided. If you want set the exacte value (add, edit & remove) use patchAllValue
+   */
   patchValue(
     value: Partial<T>[],
     options: {
@@ -129,21 +132,6 @@ export class FormList<T, Control extends AbstractControl = any> extends FormArra
       emitEvent?: boolean;
     } = {}
   ) {
-    value.forEach((newValue, index) => {
-      // If there is a form already patch it
-      if (this.at(index)) {
-        this.at(index).patchValue(newValue, {
-          onlySelf: true,
-          emitEvent: options.emitEvent
-        });
-        // else create one
-      } else {
-        this.setControl(index, this.createControl(newValue));
-      }
-    });
-    // If there is more value than form controls, remove it.
-    while (this.length > value.length) {
-      this.removeAt(this.length - 1);
-    }
+    super.patchValue(value, options)
   }
 }

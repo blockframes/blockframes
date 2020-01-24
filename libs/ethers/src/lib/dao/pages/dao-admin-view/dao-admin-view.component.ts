@@ -74,7 +74,7 @@ export class DaoAdminViewComponent implements OnInit {
       tap(dao => this.organizationName = dao.name),
       filter(dao => !!dao.operations),
       map(dao => dao.operations),
-      tap(operations => this.operationFormList.patchValue(operations)),
+      tap(operations => this.operationFormList.patchAllValue(operations)),
       switchMap(operations => this.operationFormList.valueChanges.pipe(startWith(operations)))
     );
     this.operationFormGroup$ = this.selectedOperationId$.pipe(
@@ -85,7 +85,7 @@ export class DaoAdminViewComponent implements OnInit {
 
 
     this.members$ = this.memberQuery.membersWithRole$.pipe(
-      tap(members => this.memberFormList.patchValue(members)),
+      tap(members => this.memberFormList.patchAllValue(members)),
       switchMap(members => this.memberFormList.valueChanges.pipe(startWith(members))),
     );
     this.memberFormGroup$ = this.selectedMemberId$.pipe(
