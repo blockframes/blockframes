@@ -47,7 +47,7 @@ export {
   Prize,
   MovieSalesInfoDocumentWithDates as MovieSalesInfo,
   MovieSalesAgentDealDocumentWithDates as MovieSalesAgentDeal,
-  MovieAnalytics
+  MovieAnalytics,
   MovieReview
 } from './movie.firestore';
 
