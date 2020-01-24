@@ -1,96 +1,66 @@
-<h3>My Marketplace Activity</h3>
-<section fxLayout="row" fxLayoutAlign="space-around center">
-  <mat-card #chart>
-    <div fxLayout="row" fxLayoutAlign="space-between start">
-      <span class="mat-body-2"><mat-icon>remove_red_eye</mat-icon>Page views</span>
-      <span><mat-icon color="primary">arrow_drop_up</mat-icon>40%</span>
-    </div>
-    <apx-chart
-      [series]="[{name:'view', data:[10,70,250,60,80,300,170,150]}]"
-      [chart]="lineChartOptions.chart"
-      [xaxis]="lineChartOptions.xaxis"
-      [dataLabels]="lineChartOptions.dataLabels"
-      [grid]="lineChartOptions.grid"
-      [stroke]="lineChartOptions.stroke"
-    ></apx-chart>
-  </mat-card>
-  <mat-card #chart>
-    <apx-chart
-      [series]="[{name:'click', data:[100,70,50,160,180,30,70,200]}]"
-      [chart]="lineChartOptions.chart"
-      [xaxis]="lineChartOptions.xaxis"
-      [dataLabels]="lineChartOptions.dataLabels"
-      [grid]="lineChartOptions.grid"
-      [stroke]="lineChartOptions.stroke"
-      [title]="{text: 'Clicks on promotional elements', align: 'left'}"
-    ></apx-chart>
-  </mat-card>
-  <mat-card #chart>
-    <apx-chart
-      [series]="[{name:'add', data:[30,70,50,60,80,30,70,20]}]"
-      [chart]="lineChartOptions.chart"
-      [xaxis]="lineChartOptions.xaxis"
-      [dataLabels]="lineChartOptions.dataLabels"
-      [grid]="lineChartOptions.grid"
-      [stroke]="lineChartOptions.stroke"
-      [title]="{text: 'Adds to Wishlist', align: 'left'}"
-    ></apx-chart>
-  </mat-card>
+<!-- Marketplace Activity -->
+<section>
+  <h3>My Marketplace Activity</h3>
+  <article fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="space-around center">
+    <ng-container *ngFor="let lineChart of lineCharts">
+      <mat-card #chart fxFlex="30" fxFlex.lt-md="100">
+        <div fxLayout="row" fxLayoutAlign="space-between start">
+          <span class="mat-body-2">{{ lineChart.title }}</span>
+          <span>
+            <ng-container *ngIf="calculatePercentage(mockData, lineChart.title) > 0; else down">
+              <mat-icon color="primary">arrow_drop_up</mat-icon>
+            </ng-container>
+            <ng-template #down><mat-icon color="accent">arrow_drop_down</mat-icon></ng-template>
+              {{ calculatePercentage(mockData, lineChart.title) }} %</span>
+        </div>
+        <h3>{{ getTotal(mockData, lineChart.title)}}</h3>
+        <apx-chart
+          [series]="populateSeries(mockData, lineChart.title)"
+          [chart]="lineChartOptions.chart"
+          [xaxis]="populateXaxis(mockData, lineChart.title)"
+          [yaxis]="lineChartOptions.yaxis"
+          [dataLabels]="lineChartOptions.dataLabels"
+          [grid]="lineChartOptions.grid"
+          [stroke]="lineChartOptions.stroke"
+          [fill]="lineChartOptions.fill"
+        ></apx-chart>
+      </mat-card>
+    </ng-container>
+  </article>
 </section>
-<h3>Sales Revenue</h3>
-<section fxLayout="row" fxLayoutAlign="space-around center">
-  <mat-card>
-    <div fxLayout="row" fxLayoutAlign="space-between start">
-      <span class="mat-body-2"><mat-icon>remove_red_eye</mat-icon>Total Gross Receipts</span>
-      <span><mat-icon color="primary">arrow_drop_up</mat-icon>40%</span>
-    </div>
-    <mat-card-content>
-      <h1>243,183</h1>
-    </mat-card-content>
-  </mat-card>
-  <mat-card>
-    <div fxLayout="row" fxLayoutAlign="space-between start">
-      <span class="mat-body-2"><mat-icon>remove_red_eye</mat-icon>Remaining Receipts</span>
-      <span><mat-icon color="primary">arrow_drop_up</mat-icon>40%</span>
-    </div>
-    <mat-card-content>
-      <h1>$ 88,315</h1>
-    </mat-card-content>
-  </mat-card>
-  <mat-card>
-    <div fxLayout="row" fxLayoutAlign="space-between start">
-      <span class="mat-body-2"><mat-icon>remove_red_eye</mat-icon>Total Sales</span>
-      <span><mat-icon color="primary">arrow_drop_up</mat-icon>40%</span>
-    </div>
-    <mat-card-content>
-      <h1>83</h1>
-    </mat-card-content>
-  </mat-card>
-</section>
-<section fxLayout="row" fxLayoutAlign="space-around center">
-  <mat-card #chart>
-    <p class="mat-body-2">Total Revenue by Format</p>
-    <apx-chart 
-      [series]="[44, 55, 13]"
-      [chart]="{type: 'donut'}"
-      [labels]="['TV', 'VOD', 'Ancillary']">
-  </apx-chart >
-  </mat-card>
-  <mat-card #chart>
-    <p class="mat-body-2">Revenue by Buyer</p>
-    <apx-chart 
-    [series]="barChartOptions.series"
-    [chart]="barChartOptions.chart"
-    [dataLabels]="barChartOptions.dataLabels"
-    [plotOptions]="barChartOptions.plotOptions"
-    [xaxis]="barChartOptions.xaxis"
-    [stroke]="barChartOptions.stroke"
-    [fill]="barChartOptions.fill"
-    [yaxis]="barChartOptions.yaxis"
-    [title]="barChartOptions.title"
-    [tooltip]="barChartOptions.tooltip"
-    [legend]="barChartOptions.legend"
-      >
-  </apx-chart >
-  </mat-card>
+
+<!-- Sales Revenue -->
+<section *ngIf="contractData$ | async as contractData">
+  <h3>Sales Revenue</h3>
+  <!-- First Row -->
+  <article fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="space-around center">
+    <mat-card fxFlex="30" fxFlex.lt-md="100">
+      <div fxLayout="row" fxLayoutAlign="space-between start">
+        <span class="mat-body-2">Total Gross Receipts</span>
+        <span><mat-icon color="primary">arrow_drop_up</mat-icon>40%</span>
+      </div>
+      <mat-card-content>
+        <h1>{{ sum(contractData.totalGrossReceipt) | number : '4.0-0'}}</h1>
+      </mat-card-content>
+    </mat-card>
+    <mat-card fxFlex="30" fxFlex.lt-md="100">
+      <div fxLayout="row" fxLayoutAlign="space-between start">
+        <span class="mat-body-2">Remaining Receipts</span>
+        <span><mat-icon color="primary">arrow_drop_up</mat-icon>40%</span>
+      </div>
+      <mat-card-content>
+        <h1>{{ sum(contractData.remainingReceipts) | currency:'USD':'symbol':'4.0-0' }}</h1>
+      </mat-card-content>
+    </mat-card>
+    <mat-card fxFlex="30" fxFlex.lt-md="100">
+      <div fxLayout="row" fxLayoutAlign="space-between start">
+        <span class="mat-body-2">Total Sales</span>
+        <span><mat-icon color="primary">arrow_drop_up</mat-icon>40%</span>
+      </div>
+      <mat-card-content>
+        <h1>{{ contractData.totalSales.length }}</h1>
+      </mat-card-content>
+    </mat-card>
+  </article>
+  <!-- Second Row -->
 </section>

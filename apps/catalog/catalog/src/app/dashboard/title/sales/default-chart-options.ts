@@ -28,48 +28,37 @@ export type ChartOptions = {
   legend: ApexLegend;
 };
 
-export const lineChartOptions = {
-  series: [
-    {
-      name: "Desktops",
-      data: [10, 41, 35, 51, 49, 62, 69, 91, 148]
-    }
-  ],
+export const lineChartOptions: Partial<ChartOptions> = {
   chart: {
-    height: 350,
+    height: 100,
     type: "line",
     zoom: {
       enabled: false
+    },
+    toolbar: {
+      show: false
     }
   },
   dataLabels: {
     enabled: false
   },
+  fill: {
+    gradient: {}
+  },
   stroke: {
     curve: "smooth",
     width: 2.5
   },
-  title: {
-    text: "Page views",
-    align: "left"
-  },
   grid: {
-    row: {
-      colors: ["#f3f3f3", "transparent"], // takes an array which will be repeated on columns
-      opacity: 0.5
+    show: false,
+    padding: {
+      left: 0,
+      right: 0
     }
   },
-  xaxis: {
-    categories: [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep"
-    ]
+  yaxis: {
+    labels: {
+      show: false,
+    }
   }
 };
