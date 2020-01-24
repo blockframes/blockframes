@@ -59,6 +59,7 @@ function createVersionView(version: ContractVersion): VersionView {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DealViewComponent implements OnInit {
+  public isLoading$: Observable<boolean>;
   public contract$: Observable<Contract>;
   public licensees: ContractPartyDetail[];
   public subLicensors: ContractPartyDetail[];
@@ -84,6 +85,8 @@ export class DealViewComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.isLoading$ = this.query.selectLoading();
+
     this.contract$ = this.query.selectActive().pipe(
       filter(contract => !!contract),
       map(contract => {

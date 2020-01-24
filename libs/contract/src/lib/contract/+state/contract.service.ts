@@ -108,15 +108,6 @@ export class ContractService extends CollectionService<ContractState> {
     }
   }
 
-  public async getContractListWithLastVersion(contracts: Contract[]) {
-    const promises: Promise<ContractWithLastVersion>[] =[];
-    contracts.forEach(contract => {
-      promises.push(this.getContractWithLastVersion(contract))
-    })
-
-    return Promise.all(promises)
-  }
-
   /**
    *
    * @param movieId
