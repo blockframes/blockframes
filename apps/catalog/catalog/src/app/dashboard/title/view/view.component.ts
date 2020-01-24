@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MovieQuery, Movie } from '@blockframes/movie';
 import { Observable } from 'rxjs';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
+import { ContractService } from '@blockframes/contract/contract/+state';
 
 @Component({
   selector: 'catalog-title-view',
@@ -25,10 +26,11 @@ export class TitleViewComponent implements OnInit {
     label: 'Avails'
   }];
   constructor(
-    private movieQuery: MovieQuery) {}
+    private movieQuery: MovieQuery, private contractService: ContractService) {}
 
   ngOnInit() {
     this.getMovie();
+    this.contractService.syncCollection();
   }
 
   private getMovie() {
@@ -56,5 +58,4 @@ export class TitleViewComponent implements OnInit {
   public getOriginalCountries(movie: Movie) {
     return `${movie.main.originCountries.map(country => getLabelBySlug('TERRITORIES', country)).join(', ')}, ${movie.main.productionYear}`;
   }
-
 }
