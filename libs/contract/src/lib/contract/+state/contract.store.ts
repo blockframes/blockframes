@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Contract, ContractWithTimeStamp, creatContractFromFirestore } from './contract.model';
+import { Contract, ContractWithTimeStamp, createContractFromFirestore } from './contract.model';
 import { EntityState, ActiveState, EntityStore, StoreConfig } from '@datorama/akita';
 
 export interface ContractState extends EntityState<Contract>, ActiveState<string> {}
@@ -14,7 +14,7 @@ export class ContractStore extends EntityStore<ContractState> {
 
   /** Convert all firestore timestamps into dates before populating the store. */
   akitaPreAddEntity(contract: ContractWithTimeStamp): Contract {
-    return creatContractFromFirestore(contract)
+    return createContractFromFirestore(contract)
   }
 
 }

@@ -92,14 +92,12 @@ export class DealViewComponent implements OnInit {
       map(contract => {
         this.licensees = this.service.getContractParties(contract, 'licensee');
         this.subLicensors = this.service.getContractParties(contract, 'sub-licensor');
+        this.isSignatory = this.service.isContractSignatory(contract, this.organizationQuery.getActiveId());
 
+        // Get all contract versions except _meta.
         const versions = contract.versions.filter(version => version.id !== '_meta');
+        // Create flattened version to be send in reusable table.
         this.versions = versions.map(version => createVersionView(version));
-
-        this.isSignatory = this.service.isContractSignatory(
-          contract,
-          this.organizationQuery.getActiveId()
-        );
         this.lastVersion = contract.versions[getLastVersionIndex(contract)];
 
         return contract;
