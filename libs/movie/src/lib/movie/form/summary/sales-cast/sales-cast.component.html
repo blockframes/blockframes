@@ -2,7 +2,7 @@
   <li>
     <strong>Principal Cast </strong>
     <ng-container *ngFor="let cast of salesCast.cast.controls; let isLast = last">
-      <ng-container *ngIf="cast.value === 'lead-role'">
+      <ng-container *ngIf="cast.get('role').value === 'lead-role'">
         {{ cast.get('firstName') | missing }} {{ cast.get('lastName') | missing }}{{ isLast ? '' : ', ' }}
       </ng-container>
     </ng-container>
@@ -10,7 +10,7 @@
   <li>
     <strong>Secondary Roles </strong>
     <ng-container *ngFor="let cast of salesCast.cast.controls; let isLast = last">
-      <ng-container *ngIf="cast.value === 'secondary-role'">
+      <ng-container *ngIf="cast.get('role').value === 'secondary-role'">
         {{ cast.get('firstName') | missing }} {{ cast.get('lastName') | missing }}{{ isLast ? '' : ', ' }}
       </ng-container>
     </ng-container>
