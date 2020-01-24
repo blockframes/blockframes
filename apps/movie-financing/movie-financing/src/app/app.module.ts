@@ -117,7 +117,7 @@ registerLocaleData(localeFr)
     MatMenuModule,
     MatRadioModule,
     // Akita
-    AkitaNgRouterStoreModule.forRoot(),
+    AkitaNgRouterStoreModule,
     AngularFireFunctionsModule,
     AngularFirestoreModule.enablePersistence(environment.persistenceSettings),
     FlexModule,
