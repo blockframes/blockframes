@@ -1,8 +1,8 @@
 <ul>
   <li>
     <strong>Budget </strong>
-    <ng-container *ngIf="budget.get('estimatedBudget').value.from && budget.get('estimatedBudget').value.from">
-      $ {{ budget.get('estimatedBudget').value.from }} - {{ budget.get('estimatedBudget').value.to }}
+    <ng-container *ngIf="budget.get('estimatedBudget').value as estimatedBudget">
+      {{ budgetRange(estimatedBudget) }}
     </ng-container>
   </li>
   <ng-container *ngFor="let boxOffice of budget.get('boxOffice').controls">
