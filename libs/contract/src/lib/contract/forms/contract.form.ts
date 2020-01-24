@@ -9,7 +9,8 @@ import { ContractPartyForm } from './party-name/party-name.form';
 import { ContractPartyDetail } from '../+state/contract.model';
 import {
   createLegalDocument,
-  createLegalDocuments
+  createLegalDocuments,
+  createContractTitleDetail
 } from '@blockframes/contract/contract/+state/contract.model';
 import {
   LegalDocument,
@@ -34,8 +35,8 @@ type ContractControl = ReturnType<typeof createContractControls>;
 
 @Injectable()
 export class ContractForm extends FormEntity<ContractControl> {
-  constructor() {
-    super(createContractControls({}));
+  constructor(contract: Partial<Contract> = {}) {
+    super(createContractControls(contract));
   }
 }
 
@@ -82,8 +83,7 @@ function createLegalDocumentsControl(legalDocuments?: Partial<LegalDocuments>) {
   const entity = createLegalDocuments(legalDocuments);
   return {
     chainOfTitles: FormList.factory(entity.chainOfTitles, el => new LegalDocumentForm(el)),
-    invoices: FormList.factory(entity.invoices, el => new LegalDocumentForm(el)),
-    bill: new LegalDocumentForm(entity.bill)
+    invoices: FormList.factory(entity.invoices, el => new LegalDocumentForm(el))
   };
 }
 
@@ -114,10 +114,10 @@ export class ContractVersionForm extends FormEntity<ContractVersionControl> {
 function createContractTitlesControls(
   titles: Record<string, Partial<ContractTitleDetail>>
 ): ContractTitlesControl {
-  const controls = {}
+  const controls = {};
   const ids = Object.keys(titles);
-  for(const id in titles) {
-    controls[id] = new ContractTitleDetailForm(titles[id])
+  for (const id in titles) {
+    controls[id] = new ContractTitleDetailForm(titles[id]);
   }
   return controls;
 }
@@ -125,24 +125,24 @@ function createContractTitlesControls(
 type ContractTitlesControl = Record<string, ContractTitleDetailForm>;
 
 export class ContractTitlesForm extends FormEntity<ContractTitlesControl> {
-  constructor(titleDetail: Partial<ContractTitleDetail> = {}) {
+  constructor(titleDetail: Record<string, Partial<ContractTitleDetail>> = {}) {
     super(createContractTitlesControls(titleDetail));
   }
 }
 
 // Contract Title Details
 
-function createContractTitleDetailControl(detail?: Partial<ContractTitleDetail>){
-  const entity = createContractTitleDetail(detail)
+function createContractTitleDetailControl(detail?: Partial<ContractTitleDetail>) {
+  const entity = createContractTitleDetail(detail);
   return {
     distributionDealIds: FormList.factory(entity.distributionDealIds)
-  }
+  };
 }
 
 type ContractTitleDetailControl = ReturnType<typeof createContractTitleDetailControl>;
 
 export class ContractTitleDetailForm extends FormEntity<ContractTitleDetailControl> {
-  constructor(detail?: Partial<ContractTitleDetail>){
-    super(createContractTitleDetailControl(detail))
+  constructor(detail?: Partial<ContractTitleDetail>) {
+    super(createContractTitleDetailControl(detail));
   }
 }

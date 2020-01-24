@@ -1,12 +1,9 @@
-import {
-  ContractForm,
-  PartyDetailsForm,
-  ContractTitleDetailForm
-} from '@blockframes/contract/contract/forms/contract.form';
+import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
+import { FormList } from '@blockframes/utils/form/forms/list.form';
+import { ContractForm } from '@blockframes/contract/contract/forms/contract.form';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { DistributionDealForm } from '@blockframes/movie/distribution-deals/form/distribution-deal.form';
-import { ContractStatus } from '@blockframes/contract/contract/+state';
 
 @Component({
   selector: 'catalog-tunnel-previous-deals',
@@ -15,15 +12,26 @@ import { ContractStatus } from '@blockframes/contract/contract/+state';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TunnelPreviousDealsComponent implements OnInit {
-  constructor(
-    private formContract: ContractForm,
-    private formDistributionDeal: DistributionDealForm,
-    private routerQuery: RouterQuery
-  ) {}
+  private formContract = FormList.factory([], contract => new ContractForm(contract));
+  private formDistributionDeal = new DistributionDealForm();
 
-  ngOnInit() {
-    this.addDefaultValue();
-    console.log(this.formContract);
+  public loading: boolean;
+
+  constructor(private routerQuery: RouterQuery, private contractService: ContractService) {}
+
+  async ngOnInit() {
+    this.loading = true;
+    const { movieId } = this.activeMovieId;
+    const contracts = await this.contractService.getValue(
+      ref =>
+        ref
+          .where(movieId, 'in', 'titleIds') // only contract on this movie
+          .where('childContractIds', '==', []) // only without Archipel Content
+    );
+    for (const contract of contracts) {
+      this.formContract.add(contract);
+    }
+    this.loading = false;
   }
 
   get contract() {
@@ -44,32 +52,5 @@ export class TunnelPreviousDealsComponent implements OnInit {
 
   get activeMovieId() {
     return this.routerQuery.getValue().state.root.params.movieId;
-  }
-
-  private addDefaultValue() {
-    // If there is alredy a second default party added, we don't want another one
-    if (!this.contractParty.controls[0]) {
-      this.contractParty.setControl(
-        new PartyDetailsForm({ party: { role: 'licensor' }, status: ContractStatus.accepted })
-      );
-    }
-
-    if (!this.formContract.get('parties').controls[1]) {
-      this.formContract
-        .get('parties')
-        .push(
-          new PartyDetailsForm({ party: { role: 'licensee' }, status: ContractStatus.accepted })
-        );
-    }
-
-    if (!this.formContract.get('titleIds').value) {
-      this.formContract.get('titleIds').setValue(this.activeMovieId);
-    }
-    /*     if (!this.formContract.get('versions').get('titles')) {
-      this.formContract
-        .get('versions')
-        .get('titles')
-        .setValue(this.activeMovieId, new ContractTitleDetailForm());
-    } */
   }
 }
