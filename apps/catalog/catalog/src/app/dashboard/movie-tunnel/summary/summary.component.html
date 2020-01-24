@@ -69,5 +69,15 @@
         <movie-summary-image></movie-summary-image>
       </mat-card-content>
     </mat-card>
+
+    <mat-card>
+      <mat-card-header fxLayout="row" fxLayoutAlign="start center">
+        <mat-card-title>Files & links</mat-card-title>
+        <a mat-icon-button routerLink="/c/o/dashboard/movie-tunnel/create/files&links"><mat-icon svgIcon="edit"></mat-icon></a>
+      </mat-card-header>
+      <mat-card-content>
+        <movie-summary-file [promotionalElements]="form.promotionalElements"></movie-summary-file>
+      </mat-card-content>
+    </mat-card>
   </ng-container>
 </tunnel-page>
