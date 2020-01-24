@@ -1,1 +1,96 @@
-<p>sales works!</p>
+<h3>My Marketplace Activity</h3>
+<section fxLayout="row" fxLayoutAlign="space-around center">
+  <mat-card #chart>
+    <div fxLayout="row" fxLayoutAlign="space-between start">
+      <span class="mat-body-2"><mat-icon>remove_red_eye</mat-icon>Page views</span>
+      <span><mat-icon color="primary">arrow_drop_up</mat-icon>40%</span>
+    </div>
+    <apx-chart
+      [series]="[{name:'view', data:[10,70,250,60,80,300,170,150]}]"
+      [chart]="lineChartOptions.chart"
+      [xaxis]="lineChartOptions.xaxis"
+      [dataLabels]="lineChartOptions.dataLabels"
+      [grid]="lineChartOptions.grid"
+      [stroke]="lineChartOptions.stroke"
+    ></apx-chart>
+  </mat-card>
+  <mat-card #chart>
+    <apx-chart
+      [series]="[{name:'click', data:[100,70,50,160,180,30,70,200]}]"
+      [chart]="lineChartOptions.chart"
+      [xaxis]="lineChartOptions.xaxis"
+      [dataLabels]="lineChartOptions.dataLabels"
+      [grid]="lineChartOptions.grid"
+      [stroke]="lineChartOptions.stroke"
+      [title]="{text: 'Clicks on promotional elements', align: 'left'}"
+    ></apx-chart>
+  </mat-card>
+  <mat-card #chart>
+    <apx-chart
+      [series]="[{name:'add', data:[30,70,50,60,80,30,70,20]}]"
+      [chart]="lineChartOptions.chart"
+      [xaxis]="lineChartOptions.xaxis"
+      [dataLabels]="lineChartOptions.dataLabels"
+      [grid]="lineChartOptions.grid"
+      [stroke]="lineChartOptions.stroke"
+      [title]="{text: 'Adds to Wishlist', align: 'left'}"
+    ></apx-chart>
+  </mat-card>
+</section>
+<h3>Sales Revenue</h3>
+<section fxLayout="row" fxLayoutAlign="space-around center">
+  <mat-card>
+    <div fxLayout="row" fxLayoutAlign="space-between start">
+      <span class="mat-body-2"><mat-icon>remove_red_eye</mat-icon>Total Gross Receipts</span>
+      <span><mat-icon color="primary">arrow_drop_up</mat-icon>40%</span>
+    </div>
+    <mat-card-content>
+      <h1>243,183</h1>
+    </mat-card-content>
+  </mat-card>
+  <mat-card>
+    <div fxLayout="row" fxLayoutAlign="space-between start">
+      <span class="mat-body-2"><mat-icon>remove_red_eye</mat-icon>Remaining Receipts</span>
+      <span><mat-icon color="primary">arrow_drop_up</mat-icon>40%</span>
+    </div>
+    <mat-card-content>
+      <h1>$ 88,315</h1>
+    </mat-card-content>
+  </mat-card>
+  <mat-card>
+    <div fxLayout="row" fxLayoutAlign="space-between start">
+      <span class="mat-body-2"><mat-icon>remove_red_eye</mat-icon>Total Sales</span>
+      <span><mat-icon color="primary">arrow_drop_up</mat-icon>40%</span>
+    </div>
+    <mat-card-content>
+      <h1>83</h1>
+    </mat-card-content>
+  </mat-card>
+</section>
+<section fxLayout="row" fxLayoutAlign="space-around center">
+  <mat-card #chart>
+    <p class="mat-body-2">Total Revenue by Format</p>
+    <apx-chart 
+      [series]="[44, 55, 13]"
+      [chart]="{type: 'donut'}"
+      [labels]="['TV', 'VOD', 'Ancillary']">
+  </apx-chart >
+  </mat-card>
+  <mat-card #chart>
+    <p class="mat-body-2">Revenue by Buyer</p>
+    <apx-chart 
+    [series]="barChartOptions.series"
+    [chart]="barChartOptions.chart"
+    [dataLabels]="barChartOptions.dataLabels"
+    [plotOptions]="barChartOptions.plotOptions"
+    [xaxis]="barChartOptions.xaxis"
+    [stroke]="barChartOptions.stroke"
+    [fill]="barChartOptions.fill"
+    [yaxis]="barChartOptions.yaxis"
+    [title]="barChartOptions.title"
+    [tooltip]="barChartOptions.tooltip"
+    [legend]="barChartOptions.legend"
+      >
+  </apx-chart >
+  </mat-card>
+</section>
