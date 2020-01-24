@@ -1,9 +1,9 @@
 <mat-toolbar fxLayout="row" fxLayoutAlign="end center">
 
   <ng-container *ngIf="!loading else isLoading">
-    <button mat-icon-button>
+    <a mat-icon-button [routerLink]="routeBeforeTunnel">
       <mat-icon svgIcon="cross"></mat-icon>
-    </button>
+    </a>
   </ng-container>
   <ng-template #isLoading>
     <mat-spinner diameter="50"></mat-spinner>

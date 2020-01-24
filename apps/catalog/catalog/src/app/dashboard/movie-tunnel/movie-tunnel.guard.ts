@@ -1,19 +1,18 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot } from '@angular/router';
-import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
-import { MovieState, MovieService } from '@blockframes/movie';
-import { map } from 'rxjs/operators';
+import { CanActivate, CanDeactivate } from '@angular/router';
+import { MovieTunnelService } from './movie-tunnel.service';
 
 @Injectable({ providedIn: 'root' })
-@CollectionGuardConfig({ awaitSync: true })
-export class MovieTunnelGuard extends CollectionGuard<MovieState> {
-  constructor(protected service: MovieService) {
-    super(service);
+export class MovieTunnelGuard implements CanActivate, CanDeactivate<any> {
+  constructor(private service: MovieTunnelService) {}
+
+  canActivate() {
+    this.service.isInTunnel = true;
+    return true;
+  }
+  canDeactivate() {
+    this.service.isInTunnel = false;
+    return true;
   }
 
-  sync(next: ActivatedRouteSnapshot) {
-    return this.service.syncActive({ id: next.params.movieId }).pipe(
-      map(movie => !!movie ? true : 'c/o/dashboard/movie-tunnel')
-    )
-  }
 }

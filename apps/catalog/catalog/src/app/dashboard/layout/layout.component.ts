@@ -20,7 +20,4 @@ export class LayoutComponent{
 
   constructor(private breakpointObserver: BreakpointObserver, private service: MovieTunnelService) {}
 
-  startTunnel(){
-    this.service.openTunnel();
-  }
 }

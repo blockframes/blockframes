@@ -4,6 +4,7 @@ import { LayoutModule } from './layout/layout.module';
 import { LayoutComponent } from './layout/layout.component';
 import { MovieActiveGuard } from '@blockframes/movie';
 import { MovieTunnelGuard } from './movie-tunnel/movie-tunnel.guard';
+import { MovieTunnelService } from './movie-tunnel/movie-tunnel.service';
 
 const routes: Routes = [
   {
@@ -73,14 +74,19 @@ const routes: Routes = [
   },
   {
     path: 'movie-tunnel',
+    canActivate: [MovieTunnelGuard],
+    canDeactivate: [MovieTunnelGuard],
     children: [{
       path: '',
       loadChildren: () => import('./movie-tunnel/start/start-tunnel.module').then(m => m.StartTunnelModule)
     }, {
       path: ':movieId',
-      canActivate: [MovieTunnelGuard],
-      canDeactivate: [MovieTunnelGuard],
-      loadChildren: () => import('./movie-tunnel/movie-tunnel.module').then(m => m.MovieTunnelModule)
+      canActivate: [MovieActiveGuard],
+      canDeactivate: [MovieActiveGuard],
+      loadChildren: () => import('./movie-tunnel/movie-tunnel.module').then(m => m.MovieTunnelModule),
+      data: {
+        redirect: '/c/o/dashboard/movie-tunnel'
+      },
     }]
   }
 
@@ -90,4 +96,7 @@ const routes: Routes = [
   imports: [LayoutModule, RouterModule.forChild(routes)],
   declarations: []
 })
-export class DashboardModule {}
+export class DashboardModule {
+  // Start listening on the change the routes
+  constructor(tunnelServie: MovieTunnelService) {}
+}
