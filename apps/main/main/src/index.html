@@ -10,8 +10,20 @@
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Material+Icons+Outlined" rel="stylesheet">
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#1976d2">
-  <!-- issue#1146: Redirect to Catalog app for AMF -->
-  <!-- <meta http-equiv="Refresh" content="2; url=/catalog-marketplace"> -->
+
+  <!-- issue#1146: Redirect to delivery / catalog / etc app for Berlin, quick hack -->
+  <script>
+    const hostname = window.location.hostname;
+
+    if (hostname.includes('delivery')) {
+      window.location = '/delivery';
+    } else if (hostname.includes('archipelcontent')) {
+      window.location = '/catalog';
+    } else  {
+      // skip
+    }
+  </script>
+
 </head>
 <body class="light-theme mat-app-background mat-typography">
     <main-root></main-root>
