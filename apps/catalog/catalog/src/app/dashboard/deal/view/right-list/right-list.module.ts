@@ -9,7 +9,9 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 // Material
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
-import { MatButtonModule, MatIconModule, MatListModule } from '@angular/material';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
 
 @NgModule({
   declarations: [RightListComponent],

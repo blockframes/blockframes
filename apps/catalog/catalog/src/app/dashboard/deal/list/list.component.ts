@@ -1,7 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs';
-import { ContractQuery, ContractService, ContractWithLastVersion } from '@blockframes/contract/contract/+state';
-import { switchMap } from 'rxjs/operators';
+import { ContractQuery, Contract } from '@blockframes/contract/contract/+state';
 
 @Component({
   selector: 'catalog-deal-list',
@@ -10,18 +9,12 @@ import { switchMap } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DealListComponent implements OnInit {
-  public contracts$: Observable<ContractWithLastVersion[]>;
+  public contracts$: Observable<Contract[]>;
 
-  constructor(private contractQuery: ContractQuery, private contractService: ContractService) {}
+  constructor(private contractQuery: ContractQuery) {}
 
   ngOnInit() {
-    // Get all organization's contract and return them with the last version in each one.
-    this.contracts$ = this.contractQuery
-      .selectAll()
-      .pipe(
-        switchMap(
-          async contracts => await this.contractService.getContractListWithLastVersion(contracts)
-        )
-      );
+    // Get all organization's contract and return them with all their versions.
+    this.contracts$ = this.contractQuery.selectAll();
   }
 }
