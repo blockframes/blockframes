@@ -1,6 +1,6 @@
-<mat-toolbar fxLayout="row" [fxLayoutAlign]="(pageData$ | async) ? 'space-between center' : 'end center'">
+<mat-toolbar fxLayout="row" fxLayoutAlign="space-between center">
   <article  class="mat-body-2" *ngIf="(pageData$ | async) as pageData">
-    <b>Step {{ pageData.index }}/{{ pageData.length }}</b>
+    <b *ngIf="pageData.length">Step {{ pageData.index }}/{{ pageData.length }}</b>
   </article>
 
   <article fxLayoutGap="24px">
@@ -17,7 +17,7 @@
 
 <mat-sidenav-container>
   <mat-sidenav opened mode="side">
-    <section fxLayout="column" fxLayoutAlign="space-between center">
+    <section fxLayout="column">
       <mat-accordion>
         <mat-expansion-panel *ngFor="let panel of panels">
           <mat-expansion-panel-header>
@@ -35,6 +35,13 @@
           </mat-nav-list>
         </mat-expansion-panel>
       </mat-accordion>
+      <mat-divider></mat-divider>
+       <mat-nav-list>
+        <a mat-list-item routerLink="summary">
+          <mat-icon mat-list-icon svgIcon="document" bf-color="primary"></mat-icon>
+          <span mat-line>Summary & Submit</span>
+        </a>
+      </mat-nav-list>
     </section>
   </mat-sidenav>
 
