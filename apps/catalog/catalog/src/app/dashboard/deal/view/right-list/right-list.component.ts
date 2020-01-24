@@ -1,10 +1,4 @@
-import {
-  Component,
-  OnInit,
-  ChangeDetectionStrategy,
-  Input,
-  ViewChild
-} from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input, ViewChild } from '@angular/core';
 import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state';
 import { MatTableDataSource } from '@angular/material/table';
 import { Observable } from 'rxjs';
@@ -65,4 +59,10 @@ export class RightListComponent implements OnInit {
     );
   }
 
+  /** Returns only eligible territories for a deal. */
+  public getDealTerritories(deal: DistributionDeal) {
+    const territories = deal.territory;
+    const excludedTerritories = deal.territoryExcluded;
+    return territories.filter(territory => !excludedTerritories.includes(territory));
+  }
 }

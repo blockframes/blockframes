@@ -9,7 +9,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 // Material
 import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
-import { MatButtonModule, MatIconModule } from '@angular/material';
+import { MatButtonModule, MatIconModule, MatListModule } from '@angular/material';
 
 @NgModule({
   declarations: [RightListComponent],
@@ -23,7 +23,8 @@ import { MatButtonModule, MatIconModule } from '@angular/material';
     MatTableModule,
     MatSortModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    MatListModule
   ],
   exports: [RightListComponent]
 })

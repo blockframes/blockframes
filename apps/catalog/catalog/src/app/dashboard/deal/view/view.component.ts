@@ -7,7 +7,7 @@ import {
   getLastVersionIndex
 } from '@blockframes/contract/contract/+state';
 import { Observable } from 'rxjs/internal/Observable';
-import { map, filter, startWith } from 'rxjs/operators';
+import { map, filter } from 'rxjs/operators';
 import { ContractVersion } from '@blockframes/contract/version/+state/contract-version.model';
 import { MovieQuery, Movie } from '@blockframes/movie';
 import { createPrice } from '@blockframes/utils/common-interfaces';
@@ -17,27 +17,11 @@ import { MovieCurrenciesSlug } from '@blockframes/utils/static-model/types';
 import { getCodeBySlug } from '@blockframes/utils/static-model/staticModels';
 import { CurrencyPipe } from '@angular/common';
 import { capitalize } from '@blockframes/utils/helpers';
-import { FormControl } from '@angular/forms';
-import { MatTableDataSource } from '@angular/material/table';
-import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
 
 const versionColumns = {
   date: 'Date',
   offer: 'Offer Amount',
   status: 'Status'
-};
-
-const dealColumns = {
-  territory: 'Territory',
-  startDate: 'Start Date',
-  endDate: 'End Date',
-  rights: 'Rights',
-  languages: 'Languages',
-  holdback: 'Holdback',
-  firstBroadcastDate: '1st Broadcast Date',
-  exclusive: 'Exclusive',
-  multidiffusion: 'Multidiffusion',
-  catchUp: 'Catch Up'
 };
 
 /** Flattened data of version to pass in bf-table-filer. */
@@ -86,27 +70,10 @@ export class DealViewComponent implements OnInit {
   public versionColumns = versionColumns;
   public initialVersionColumns = ['date', 'offer', 'status'];
 
-  public dealColumns = dealColumns;
-  public initialDealColumns = [
-    'territory',
-    'startDate',
-    'endDate',
-    'rights',
-    'languages',
-    'holdback',
-    'firstBroadcastDate',
-    'exclusive',
-    'multidiffusion',
-    'catchUp'
-  ];
-
   public placeholderUrl = PLACEHOLDER_LOGO;
 
   // Column & rows
   public displayedColumns$: Observable<string[]>;
-  public dataSource: MatTableDataSource<any>;
-
-  public columnFilter = new FormControl([]);
 
   constructor(
     private query: ContractQuery,
@@ -137,11 +104,6 @@ export class DealViewComponent implements OnInit {
     );
 
     this.movies$ = this.movieQuery.selectAll();
-
-    this.columnFilter.patchValue(this.initialDealColumns);
-    this.displayedColumns$ = this.columnFilter.valueChanges.pipe(
-      startWith(this.initialDealColumns)
-    );
   }
 
   /**
@@ -182,12 +144,5 @@ export class DealViewComponent implements OnInit {
   /** Check if the movie is in the store. */
   public showMovie(movieId: string): boolean {
     return this.movieQuery.hasEntity(movieId);
-  }
-
-  /** Returns only eligible territories for a deal. */
-  public getDealTerritories(deal: DistributionDeal) {
-    const territories = deal.territory;
-    const excludedTerritories = deal.territoryExcluded;
-    return territories.filter(territory => !excludedTerritories.includes(territory));
   }
 }
