@@ -5,7 +5,7 @@ import { Component, ChangeDetectionStrategy, Host, OnInit, OnDestroy } from '@an
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 // Blockframes
-import { MovieService, MovieQuery } from '@blockframes/movie/movie/+state';
+import { MovieService, MovieQuery, createMovie } from '@blockframes/movie/movie/+state';
 import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
 
 // RxJs
@@ -126,7 +126,8 @@ export class MovieTunnelComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     const movieId = this.query.getActiveId();
     const movie = await this.service.getValue(movieId) // Edit movie
-    this.form.patchValue(movie);
+    this.form.patchValue(createMovie(movie));
+    console.log(this.form);
   }
 
   ngOnDestroy() {
@@ -135,8 +136,8 @@ export class MovieTunnelComponent implements OnInit, OnDestroy {
 
   // Should save movie
   public async save() {
-    const movieId = this.query.getActiveId();
-    await this.service.update(movieId, this.form.value);
+    const id = this.query.getActiveId();
+    await this.service.update({ id, ...this.form.value });
     this.snackBar.open('Saved', 'close', { duration: 500 });
   }
 }
