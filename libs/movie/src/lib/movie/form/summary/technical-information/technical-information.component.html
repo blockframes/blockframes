@@ -4,4 +4,16 @@
   <li><strong>Format Quality </strong>{{ salesInfo.get('formatQuality') | missingWithSlug: 'MOVIE_FORMAT_QUALITY' }}</li>
   <li><strong>Color </strong>{{ salesInfo.get('color') | missingWithSlug: 'COLORS' }}</li>
   <li><strong>Sound Format </strong>{{ salesInfo.get('soundFormat') | missingWithSlug: 'SOUND_FORMAT' }}</li>
+  <li>
+    <strong>Versions </strong>
+    <ng-container *ngFor="let version of versionInfo.controls | keyvalue; let isLast = last">
+      {{ version.key | translateSlug: 'LANGUAGES'}}:
+      <ng-container *ngFor="let info of version.value.controls | keyvalue; let isLast = last">
+        <ng-container *ngIf="info.value.value === true">
+          {{ info.key | translateSlug: 'VERSION_INFO' }}{{ isLast ? '' : ', ' }}
+        </ng-container>
+      </ng-container>
+      {{ isLast ? '' : '| ' }}
+    </ng-container>
+  </li>
 </ul>
