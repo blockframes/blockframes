@@ -126,8 +126,7 @@ export class MovieTunnelComponent implements OnInit, OnDestroy {
   async ngOnInit() {
     const movieId = this.query.getActiveId();
     const movie = await this.service.getValue(movieId) // Edit movie
-    this.form.patchValue(createMovie(movie));
-    console.log(this.form);
+    this.form.patchAllValue(movie);
   }
 
   ngOnDestroy() {

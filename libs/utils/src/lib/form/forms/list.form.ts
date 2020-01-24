@@ -41,10 +41,9 @@ export class FormList<T, Control extends AbstractControl = any> extends FormArra
       form['createControl'] = createControl.bind(form);
     }
     if (!value || !value.length) {
-      const control = createControl ? createControl() : new FormControl();
-      form.push(control);
+      form.add();
     } else {
-      form.patchAllValue(value);
+      value.forEach(v => form.add(v))
     }
     return form;
   }
@@ -106,10 +105,17 @@ export class FormList<T, Control extends AbstractControl = any> extends FormArra
     value.forEach((newValue, index) => {
       // If there is a form already patch it
       if (this.at(index)) {
-        this.at(index).patchValue(newValue, {
-          onlySelf: true,
-          emitEvent: options.emitEvent
-        });
+        if (this.at(index)['patchAllValue']) {
+          this.at(index)['patchAllValue'](newValue, {
+            onlySelf: true,
+            emitEvent: options.emitEvent
+          });
+        } else {
+          this.at(index).patchValue(newValue, {
+            onlySelf: true,
+            emitEvent: options.emitEvent
+          });
+        }
         // else create one
       } else {
         this.setControl(index, this.createControl(newValue));
