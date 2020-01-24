@@ -7,7 +7,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
-import { OverlayWidgetModule } from '@blockframes/ui/overlay-widget/overlay-widget.module';
+import { RightListModule } from './right-list/right-list.module';
 
 // Guard
 import { MovieContractGuard } from '@blockframes/movie/movieguards/movie-contract.guard';
@@ -18,9 +18,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatListModule } from '@angular/material/list';
-import { MatTableModule } from '@angular/material/table';
-import { MatSortModule } from '@angular/material/sort';
 
 @NgModule({
   declarations: [DealViewComponent],
@@ -30,7 +27,7 @@ import { MatSortModule } from '@angular/material/sort';
     TableFilterModule,
     ImageReferenceModule,
     TranslateSlugModule,
-    OverlayWidgetModule,
+    RightListModule,
 
     // Material
     MatCardModule,
@@ -38,9 +35,6 @@ import { MatSortModule } from '@angular/material/sort';
     MatIconModule,
     MatExpansionModule,
     MatDividerModule,
-    MatListModule,
-    MatTableModule,
-    MatSortModule,
 
     CommonModule,
     RouterModule.forChild([

@@ -24,7 +24,7 @@
 
   <!-- CONTRACT SUMMARY -->
   <article fxLayout="row" fxLayoutGap="25px">
-    <mat-card>
+    <mat-card class="summary">
       <mat-card-title>
         <h3>
           {{ licensees[0].party.displayName }} has made an offer for
@@ -122,99 +122,8 @@
               <span class="mat-body-2"> {{ movie.main.productionYear }}</span>
             </div>
           </article>
-          <div class="container" *ngIf="displayedColumns$ | async as displayedColumns" fxLayout="column" fxLayoutAlign="center end">
-            <button matSuffix mat-icon-button [widgetTarget]="filterColumnWidget">
-              <mat-icon>filter_list</mat-icon>
-            </button>
-            <table mat-table [dataSource]="movie.distributionDeals" matSort>
-              <ng-container matColumnDef="territory">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Territory </th>
-                <td mat-cell *matCellDef="let deal">
-                  <b *ngFor="let territory of getDealTerritories(deal); let isLast = last">
-                    {{ territory | translateSlug: 'TERRITORIES' }}{{isLast ? '' : ', '}}
-                  </b>
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="startDate">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Start Date </th>
-                <td mat-cell *matCellDef="let deal">
-                  {{ deal.terms.start.toDate() | date:'shortDate' }}
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="endDate">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> End Date </th>
-                <td mat-cell *matCellDef="let deal">
-                  {{ deal.terms.end.toDate() | date:'shortDate' }}
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="rights">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Rights </th>
-                <td mat-cell *matCellDef="let deal">
-                  <b *ngFor="let media of deal.licenseType; let isLast = last">
-                    {{ media | translateSlug: 'MEDIAS' }}{{isLast ? '' : ', '}}
-                  </b>
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="languages">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Languages </th>
-                <td mat-cell *matCellDef="let deal">
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="holdback">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Holdback </th>
-                <td mat-cell *matCellDef="let deal">
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="firstBroadcastDate">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> 1st Broadcast Date </th>
-                <td mat-cell *matCellDef="let deal">
-                  <ng-container *ngIf="deal.multidiffusion.length">
-                    {{ deal.multidiffusion[0].start.toDate() | date:'shortDate' }}
-                  </ng-container>
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="exclusive">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Exclusive </th>
-                <td mat-cell *matCellDef="let deal">
-                  {{ deal.exclusive }}
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="multidiffusion">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Multidiffusion </th>
-                <td mat-cell *matCellDef="let deal">
-                  {{ deal.multidiffusion.length }}
-                </td>
-              </ng-container>
-
-              <ng-container matColumnDef="catchUp">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Catch Up </th>
-                <td mat-cell *matCellDef="let deal">
-                  <ng-container *ngIf="deal.catchUp.start && deal.catchUp.end">
-                    {{ deal.catchUp.start.toDate() | date:'shortDate' }} - {{ deal.catchUp.end.toDate() | date:'shortDate' }}
-                  </ng-container>
-                </td>
-              </ng-container>
-
-              <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-            </table>
-          </div>
-
-          <overlay-widget #filterColumnWidget>
-            <mat-selection-list [formControl]="columnFilter" class="mat-elevation-z2">
-              <mat-list-option *ngFor="let column of dealColumns | keyvalue" [value]="column.key">
-                {{ column.value }}
-              </mat-list-option>
-            </mat-selection-list>
-          </overlay-widget>
+          <!-- MOVIE DISTRIBUTION DEAL LIST -->
+          <catalog-right-list [source]="movie.distributionDeals"></catalog-right-list>
         </mat-expansion-panel>
       </mat-accordion>
     </mat-card>
