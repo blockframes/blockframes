@@ -1,7 +1,8 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { MovieService } from '@blockframes/movie';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthQuery } from '@blockframes/auth';
+import { MovieTunnelService } from '../movie-tunnel.service';
 
 const cardContents = [
   {
@@ -29,16 +30,22 @@ const cardContents = [
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
-export class StartTunnelComponent{
+export class StartTunnelComponent implements OnInit {
   public cardContents = cardContents;
   public loading: boolean;
+  public routeBeforeTunnel: string;
 
   constructor(
     private movieService: MovieService,
+    private tunnelService: MovieTunnelService,
     private auth: AuthQuery,
     private router: Router,
     private route: ActivatedRoute
   ) {}
+
+  ngOnInit() {
+    this.routeBeforeTunnel = this.tunnelService.previousUrl;
+  }
 
   async begin() {
     this.loading = true;
@@ -52,4 +59,5 @@ export class StartTunnelComponent{
       console.error(err);
     }
   }
+
 }

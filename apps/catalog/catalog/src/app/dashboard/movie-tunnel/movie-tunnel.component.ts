@@ -1,17 +1,17 @@
 // Angular
-import { Component, ChangeDetectionStrategy, Host, OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Host, OnInit } from '@angular/core';
 
 // Akita
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 // Blockframes
-import { MovieService, MovieQuery, createMovie } from '@blockframes/movie/movie/+state';
+import { MovieService, MovieQuery } from '@blockframes/movie/movie/+state';
 import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
 
 // RxJs
-import { map, shareReplay } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material';
+import { MovieTunnelService } from './movie-tunnel.service';
 
 interface PageData {
   index: number;
@@ -111,6 +111,7 @@ function getPage(url: string, arithmeticOperator: number): string {
 })
 export class MovieTunnelComponent implements OnInit {
   private url$ = this.routerQuery.select(({ state }) => state.url);
+  public routeBeforeTunnel: string;
   public panels = panels;
   
   public next$ = this.url$.pipe(map(url => getPage(url, 1)));
@@ -120,6 +121,7 @@ export class MovieTunnelComponent implements OnInit {
 
   constructor(
     @Host() private form: MovieForm,
+    private tunnelService: MovieTunnelService,
     private service: MovieService,
     private query: MovieQuery,
     private routerQuery: RouterQuery,
@@ -127,6 +129,7 @@ export class MovieTunnelComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
+    this.routeBeforeTunnel = this.tunnelService.previousUrl;
     const movie = this.query.getActive();
     this.form.patchAllValue(movie);
   }
@@ -137,4 +140,5 @@ export class MovieTunnelComponent implements OnInit {
     await this.service.update({ id, ...this.form.value });
     this.snackBar.open('Saved', 'close', { duration: 500 });
   }
+
 }
