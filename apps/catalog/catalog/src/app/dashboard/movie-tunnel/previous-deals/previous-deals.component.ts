@@ -34,6 +34,10 @@ export class TunnelPreviousDealsComponent implements OnInit {
     return this.formDistributionDeal;
   }
 
+  get contractParty() {
+    return this.formContract.get('parties');
+  }
+
   get distributionDealTerms() {
     return this.formDistributionDeal.get('terms');
   }
@@ -44,13 +48,10 @@ export class TunnelPreviousDealsComponent implements OnInit {
 
   private addDefaultValue() {
     // If there is alredy a second default party added, we don't want another one
-    if (!this.formContract.get('parties').controls[0]) {
-      console.log('went here')
-      this.formContract
-        .get('parties')
-        .push(
-          new PartyDetailsForm({ party: { role: 'licensor' }, status: ContractStatus.accepted })
-        );
+    if (!this.contractParty.controls[0]) {
+      this.contractParty.setControl(
+        new PartyDetailsForm({ party: { role: 'licensor' }, status: ContractStatus.accepted })
+      );
     }
 
     if (!this.formContract.get('parties').controls[1]) {
@@ -64,7 +65,7 @@ export class TunnelPreviousDealsComponent implements OnInit {
     if (!this.formContract.get('titleIds').value) {
       this.formContract.get('titleIds').setValue(this.activeMovieId);
     }
-/*     if (!this.formContract.get('versions').get('titles')) {
+    /*     if (!this.formContract.get('versions').get('titles')) {
       this.formContract
         .get('versions')
         .get('titles')
