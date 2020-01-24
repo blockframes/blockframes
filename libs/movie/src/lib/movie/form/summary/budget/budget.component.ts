@@ -14,4 +14,8 @@ export class MovieSummaryBudgetComponent {
   @Input() budget: MovieBudgetForm;
   @Input() salesInfo: MovieSalesInfoForm;
   @Input() movieReview: FormList<MovieReview>;
+
+  public budgetRange({ from, to }) {
+    return (from && to) ? `$ ${from} - ${to}` : '';
+  }
 }
