@@ -1,10 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MovieService } from '@blockframes/movie';
 import { Router, ActivatedRoute } from '@angular/router';
-import { ContractService, createContractTitleDetail } from '@blockframes/contract/contract/+state';
-import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state';
-import { AngularFirestore } from '@angular/fire/firestore';
-import { ContractVersionService } from '@blockframes/contract/version/+state/contract-version.service';
+import { AuthQuery } from '@blockframes/auth';
 
 const cardContents = [
   {
@@ -37,8 +34,8 @@ export class StartTunnelComponent{
   public loading: boolean;
 
   constructor(
-    private db: AngularFirestore,
     private movieService: MovieService,
+    private auth: AuthQuery,
     private router: Router,
     private route: ActivatedRoute
   ) {}
@@ -46,7 +43,8 @@ export class StartTunnelComponent{
   async begin() {
     this.loading = true;
     try {
-      const movieId = await this.movieService.add({});
+      const createdBy = this.auth.getValue().uid;
+      const movieId = await this.movieService.add({ _meta: { createdBy }});
       this.loading = false;
       this.router.navigate([movieId], { relativeTo: this.route });
     } catch (err) {

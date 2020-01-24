@@ -16,6 +16,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [MovieTunnelComponent],
@@ -24,6 +25,7 @@ import { MatListModule } from '@angular/material/list';
     MovieTunnelRoutingModule,
     RouterModule,
     FlexLayoutModule,
+    // Material
     MatToolbarModule,
     MatIconModule,
     MatSidenavModule,
@@ -31,7 +33,7 @@ import { MatListModule } from '@angular/material/list';
     MatProgressSpinnerModule,
     MatButtonModule,
     MatListModule,
+    MatSnackBarModule,
   ],
-  exports: [MovieTunnelComponent]
 })
 export class MovieTunnelModule {}

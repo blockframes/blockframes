@@ -3,10 +3,8 @@
   $foreground: map-get($theme, foreground);
 
   footer {
-    background-color: mat-color($background, app-bar);
-
     a {
-      color: mat-color($background, text);
+      color: mat-color($foreground, text);
     }
   }
 }
