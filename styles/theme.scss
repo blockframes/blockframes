@@ -37,6 +37,17 @@
   @include bf-widget-theme($theme);
   @include bf-color-font($theme);
   @include bf-icon-theme($theme);
+
+  $background: map-get($theme, bakground);
+  $foreground: map-get($theme, foreground);
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+  // Add css variables here when you need one
+  --divider: #{mat-color($foreground, divider)};
+  --primary: #{mat-color($primary)};
+  --accent: #{mat-color($accent)};
+  --warn: #{mat-color($warn)};
 }
 
 @mixin bf-material-typography($typography) {
@@ -47,7 +58,6 @@
 .light-theme {
   @include angular-material-theme($bf-light-theme);
   @include sat-datepicker-theme($bf-light-theme);
-  @include bf-material-typography($bf-typography);
   @include bf-material-theme($bf-light-theme);
   // every components inside of dashboard-navbar should be always in the dark theme
   #dashboard-navbar {
@@ -60,6 +70,5 @@
 .dark-theme {
   @include angular-material-theme($bf-dark-theme);
   @include sat-datepicker-theme($bf-dark-theme);
-  @include bf-material-theme($bf-dark-theme);
   @include bf-material-typography($bf-typography);
 }

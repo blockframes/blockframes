@@ -1,20 +1,10 @@
-@import 'theme.scss';
-
-// Main theme
-$primary: mat-color($bf-light-primary);
-$accent: mat-color($bf-light-accent);
-$warn: mat-color($bf-light-warn);
-
-// Dark-theme
-$dark-primary: mat-color($bf-dark-primary);
-$dark-accent: mat-color($bf-dark-accent);
-$dark-warn: mat-color($bf-dark-warn);
-
 // CSS color variables
+// @deprecated: Do not use those variables in the code.
+// @note variables are defined in the theme.scss file
 :root {
-  --primary: #{$primary};
-  --warn: #{$warn};
-  --accent: #{$accent};
+  // --primary: #{$primary};
+  // --warn: #{$warn};
+  // --accent: #{$accent};
   --lightGrey: rgb(77, 86, 100);
   --label: rgb(181, 189, 206);
   --whiteBackground: rgb(250, 250, 250);
@@ -26,12 +16,4 @@ $dark-warn: mat-color($bf-dark-warn);
   --toolbarHeight: 80px;
   --backgroundDisabled: rgb(248,248,249);
   --textDisabled: rgb(185,194,203);
-}
-
-// CSS dark-theme color variables
-.dark-theme {
-  @extend :root;
-  --primary: #{$dark-primary};
-  --warn: #{$dark-warn};
-  --accent: #{$dark-accent};
 }
