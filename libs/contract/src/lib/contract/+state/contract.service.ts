@@ -14,6 +14,17 @@ import { VersionMeta } from '@blockframes/contract/version/+state/contract-versi
 import { PermissionsService } from '@blockframes/organization';
 
 /**
+ * Get all the contracts for one Movie and one Organization
+ */
+export const contractByMovieAndOrg = (movieId: string, orgId: string) => ({
+  path: 'contracts',
+  queryFn: ref => ref.where('partyIds', 'array-contains', orgId).where(movieId, 'in', 'titleIds'),
+  versions: (contract: Contract) => ({
+    path: `contracts/${contract.id}/versions`
+  })
+})
+
+/**
  * Get all the contracts where user organization is party.
  * Also check that there is no childContractIds to never fetch
  * contract between organization and Archipel Content.
