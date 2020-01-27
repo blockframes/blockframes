@@ -10,6 +10,8 @@ import { MovieTunnelService } from './movie-tunnel/movie-tunnel.service';
 import { ActiveContractGuard } from '@blockframes/contract/contract/guards/active-contract.guard';
 import { ContractListGuard } from '@blockframes/contract/contract/guards/contract-list.guard';
 
+import { ActiveOrganizationContractsGuard } from '@blockframes/contract/contract/guards/active-organization-contracts.guard';
+
 const routes: Routes = [
   {
     path: '',
@@ -47,6 +49,8 @@ const routes: Routes = [
       },
       {
         path: 'deals',
+        canActivate: [ActiveOrganizationContractsGuard],
+        canDeactivate: [ActiveOrganizationContractsGuard],
         children: [{
           path: '',
           canActivate: [ContractListGuard],
