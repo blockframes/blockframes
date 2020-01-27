@@ -6,6 +6,7 @@ import { Observable, of } from 'rxjs';
 import { ChartComponent } from 'ng-apexcharts';
 import { ChartOptions, lineChartOptions } from './default-chart-options';
 import { analyticsMockData, contractMockData } from './mockdata';
+import _ from 'lodash';
 const lineCharts = [
   {
     title: 'movieViews'
@@ -49,11 +50,7 @@ export class TitleSalesComponent implements OnInit {
   }
 
   populateXaxis(analytics, name: string) {
-    const dateArray = analytics[name].map(d => d.event_date.toLocaleDateString('en-US', {
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric'
-    }));
+    const dateArray = analytics[name].map(d => d.event_date);
     return {categories: dateArray, labels: {show: false},  axisBorder: {show: false},  axisTicks: {show: false}};
   }
 
@@ -67,15 +64,20 @@ export class TitleSalesComponent implements OnInit {
   }
 
   calculatePercentage(analytics, name: string): number {
+    console.log(analytics[name])
+    // const groupedByMonth = _.groupBy(analytics[name], function(item) {
+    //   return item.event_date.substring(0, 7); 
+    // });
     const hitsArray = analytics[name].map(d => d.hits);
-    const newNum = hitsArray[hitsArray.length-1];
-    const oldNum = hitsArray[hitsArray.length-2] 
-    if (newNum > oldNum) {
-      return (newNum - oldNum) / oldNum * 100
-    } else if (oldNum > newNum) {
-      return - (oldNum - newNum) / oldNum * 100
+    const current = hitsArray[hitsArray.length-1];
+    const previous = hitsArray[hitsArray.length-2] 
+    if (current > previous) {
+      return (current - previous) / previous * 100
+    } else if (previous > current) {
+      return - (previous - current) / previous * 100
     } else {
       return 0
     }
   }
+
 }
