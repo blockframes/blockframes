@@ -1,9 +1,9 @@
 
 <ul>
-  <li><strong>Shooting Format </strong>{{ salesInfo.get('format') | missingWithSlug: 'MOVIE_FORMAT' }}</li>
-  <li><strong>Format Quality </strong>{{ salesInfo.get('formatQuality') | missingWithSlug: 'MOVIE_FORMAT_QUALITY' }}</li>
-  <li><strong>Color </strong>{{ salesInfo.get('color') | missingWithSlug: 'COLORS' }}</li>
-  <li><strong>Sound Format </strong>{{ salesInfo.get('soundFormat') | missingWithSlug: 'SOUND_FORMAT' }}</li>
+  <li><strong>Shooting Format </strong>{{ salesInfo.get('format') | missingWithLabel: 'MOVIE_FORMAT' }}</li>
+  <li><strong>Format Quality </strong>{{ salesInfo.get('formatQuality') | missingWithLabel: 'MOVIE_FORMAT_QUALITY' }}</li>
+  <li><strong>Color </strong>{{ salesInfo.get('color') | missingWithLabel: 'COLORS' }}</li>
+  <li><strong>Sound Format </strong>{{ salesInfo.get('soundFormat') | missingWithLabel: 'SOUND_FORMAT' }}</li>
   <li>
     <strong>Versions </strong>
     <ng-container *ngFor="let version of versionInfo.controls | keyvalue; let isLast = last">
