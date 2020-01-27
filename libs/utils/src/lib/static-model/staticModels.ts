@@ -441,7 +441,7 @@ const models = {
       'label': 'A-list Cast'
     },
     {
-      'slug': 'europeanQualification',
+      'slug': 'european-qualification',
       'label': 'European Qualification'
     }
   ] as const,
