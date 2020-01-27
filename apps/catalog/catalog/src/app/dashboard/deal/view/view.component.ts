@@ -64,6 +64,7 @@ export class DealViewComponent implements OnInit {
   public licensees: ContractPartyDetail[];
   public subLicensors: ContractPartyDetail[];
   public movies$: Observable<Movie[]>;
+  public moviesLenght: number;
   public lastVersion: ContractVersion;
   public isSignatory: boolean;
 
@@ -105,6 +106,10 @@ export class DealViewComponent implements OnInit {
     );
 
     this.movies$ = this.movieQuery.selectAll();
+
+    // We need to to get movies lenght snapshot in a variable because we
+    // can't use (observable | async).lenght with pluralization in HTML.
+    this.moviesLenght = this.movieQuery.getCount();
   }
 
   /**
