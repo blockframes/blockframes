@@ -26,25 +26,26 @@
   <article fxLayout="row" fxLayoutGap="25px">
     <mat-card class="summary">
       <mat-card-title>
-        <h3>
+        <h3 i18n>
           {{ licensees[0].party.displayName }} has made an offer for
-          {{ contract.titleIds.length }} titles, {{ (movies$ | async).length }} of which are yours.
+          {{ contract.titleIds.length }} title{contract.titleIds.length, plural, =1 {} other {s}},
+          {{ (movies$ | async).length }} of which are yours.
         </h3>
       </mat-card-title>
       <mat-card-content>
-        <span *ngIf="subLicensors.length > 1" class="mat-body-1">
-          We are gathering approval from {{ subLicensors.length - 1 }} other sellers.
+        <span i18n *ngIf="subLicensors.length > 1" class="mat-body-1">
+          We are gathering approval from {{ subLicensors.length - 1 }} other seller{subLicensors.length - 1, plural, =1 {} other {s}}.
         </span>
         <ng-container *ngIf="subLicensors.length > 1; else uniqueSubLicensor">
-          <span class="mat-body-1">
+          <span i18n class="mat-body-1">
             Your share of the deal is <b>{{ totalPrice.amount | currency: getCurrencyCode(totalPrice.currency) }}</b>
-            for the {{ (movies$ | async).length }} film:
+            for the {{ (movies$ | async).length }} film{moviesLenght, plural, =1 {} other {s}}:
           </span>
         </ng-container>
         <ng-template #uniqueSubLicensor>
-          <span class="mat-body-1">
+          <span i18n class="mat-body-1">
             The offer is <b>{{ totalPrice.amount | currency: totalPrice.currency }}</b>
-            for the {{ (movies$ | async).length }} films:
+            for the {{ (movies$ | async).length }} film{moviesLenght, plural, =1 {} other {s}}:
           </span>
         </ng-template>
         <ul *ngFor="let movie of movies$ | async">
@@ -60,11 +61,11 @@
         </button>
         <div>
           <button mat-stroked-button color="primary" (click)="acceptOffer(contract)">
-            <mat-icon svgIcon="check"></mat-icon>
+            <mat-icon svgIcon="check" bf-color="primary"></mat-icon>
             Accept
           </button>
           <button mat-stroked-button color="warn" (click)="declineOffer(contract)">
-            <mat-icon svgIcon="refuse"></mat-icon>
+            <mat-icon svgIcon="refuse" bf-color="warn"></mat-icon>
             Decline
           </button>
         </div>
