@@ -7,7 +7,7 @@
       <mat-card-subtitle>
         <table class="movie-credits-table">
           <tr *ngFor="let item of data.credits; let isLast=last">
-            <td class="movie-credit-table-role">{{ getLabelBySlug('CAST_ROLES', item.role) }}</td>
+            <td class="movie-credit-table-role">{{ item.role | translateSlug: 'CAST_ROLES' }}</td>
             <td>{{ item.firstName }} {{ item.lastName }}</td>
           </tr>
         </table>

@@ -10,12 +10,6 @@ export function cleanModel<T>(data: T): T {
   return JSON.parse(JSON.stringify(data));
 }
 
-export const capitalize = (str: string) => {
-  if (typeof str !== 'string') return ''
-  return str.charAt(0).toUpperCase() + str.slice(1)
-}
-
-
 export interface DateGroup<T> {
   [date: string]: T[];
 }

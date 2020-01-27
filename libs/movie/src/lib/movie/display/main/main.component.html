@@ -27,7 +27,7 @@
       <mat-card-title>Genres</mat-card-title>
       <mat-card-subtitle>
         <span *ngFor="let item of data.genres; let isLast=last">
-          {{ getLabelBySlug('GENRES', item) }}{{ isLast ?'':',' }}
+          {{ item | translateSlug: 'GENRES' }}{{ isLast ?'':',' }}
         </span>
       </mat-card-subtitle>
     </ng-container>
@@ -35,7 +35,7 @@
       <mat-card-title>Origin Countries</mat-card-title>
       <mat-card-subtitle>
         <span *ngFor="let item of data.originCountries; let isLast=last">
-          {{ getLabelBySlug('TERRITORIES', item) }}{{ isLast?'':',' }}
+          {{ item | translateSlug: 'TERRITORIES' }}{{ isLast?'':',' }}
         </span>
       </mat-card-subtitle>
     </ng-container>
@@ -43,7 +43,7 @@
       <mat-card-title>Languages</mat-card-title>
       <mat-card-subtitle>
         <span *ngFor="let item of data.originalLanguages; let isLast=last">
-          {{ getLabelBySlug('LANGUAGES', item) }}{{ isLast?'':',' }}
+          {{ item | translateSlug: 'LANGUAGES' }}{{ isLast?'':',' }}
         </span>
       </mat-card-subtitle>
     </ng-container>
@@ -51,7 +51,7 @@
       <mat-card-title>Status</mat-card-title>
       <mat-card-subtitle>
         <span>
-          {{ getLabelBySlug('MOVIE_STATUS', data.status) }}
+          {{ data.status | translateSlug: 'MOVIE_STATUS' }}
         </span>
       </mat-card-subtitle>
     </ng-container>

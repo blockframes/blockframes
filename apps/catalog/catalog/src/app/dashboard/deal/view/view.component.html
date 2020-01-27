@@ -1,49 +1,46 @@
-<section *ngIf="contract$ | async as contract" fxLayout="column" fxLayoutGap="25px">
+<ng-container *ngIf="contract$ | async as contract">
   <!-- TITLE & PRICE -->
-  <article
-    *ngIf="licensees[0].party as licensee"
-    fxLayout="row"
-    fxLayoutAlign="space-between start">
-    <article fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="25px">
-      <!-- Switch to [imgRef]="getLicenseeLogo(licensees[0].part.orgId) when public orgs are here => ISSUE#1359"-->
-      <img class="logo" [imgRef]="placeholderUrl" [placeholderUrl]="placeholderUrl" alt="Organization logo" />
-      <div>
-        <p>{{ lastVersion.status | uppercase }}</p>
-        <h1>{{ licensees[0].party.displayName }} - {{ (movies$ | async).length }} films</h1>
-        <span class="mat-body-1" *ngIf="licensee.address">
-          {{ licensee.address.street }}, {{ licensee.address.city }}, {{ licensee.address.region }}
-          {{ licensee.address.zipCode }} {{ licensee.address.country }}
-        </span>
-      </div>
-    </article>
-    <div fxLayout="column" fxLayoutAlign="center end">
-      <caption class="mat-caption"> {{ lastVersion.creationDate | date: 'short' }} </caption>
-      <h2>{{ totalPrice.amount | currency: getCurrencyCode(totalPrice.currency) }}</h2>
-    </div>
-  </article>
+  <ng-container *ngIf="licensees[0].party as licensee">
+    <section fxLayout="row" fxLayoutAlign="space-between start">
+      <article fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="25px">
+        <!-- Switch to [imgRef]="getLicenseeLogo(licensees[0].part.orgId) when public orgs are here => ISSUE#1359"-->
+        <img class="logo" [imgRef]="placeholderUrl" [placeholderUrl]="placeholderUrl" alt="Organization logo" />
+        <div>
+          <span>{{ lastVersion.status | uppercase }}</span>
+          <h1>{{ licensees[0].party.displayName }} - {{ (movies$ | async).length }} films</h1>
+          <span *ngIf="licensee.address">
+            {{ licensee.address.street }}, {{ licensee.address.city }}, {{ licensee.address.region }}
+            {{ licensee.address.zipCode }} {{ licensee.address.country }}
+          </span>
+        </div>
+      </article>
+      <section fxLayout="column" fxLayoutAlign="center end">
+        <caption class="mat-caption"> {{ lastVersion.creationDate | date: 'short' }} </caption>
+        <h2>{{ totalPrice.amount | currency: getCurrencyCode(totalPrice.currency) }}</h2>
+      </section>
+    </section>
+  </ng-container>
 
   <!-- CONTRACT SUMMARY -->
   <article fxLayout="row" fxLayoutGap="25px">
     <mat-card class="summary">
-      <mat-card-title>
-        <h3 i18n>
+      <h3 i18n>
           {{ licensees[0].party.displayName }} has made an offer for
           {{ contract.titleIds.length }} title{contract.titleIds.length, plural, =1 {} other {s}},
           {{ (movies$ | async).length }} of which are yours.
-        </h3>
-      </mat-card-title>
+      </h3>
       <mat-card-content>
-        <span i18n *ngIf="subLicensors.length > 1" class="mat-body-1">
+        <span i18n *ngIf="subLicensors.length > 1" >
           We are gathering approval from {{ subLicensors.length - 1 }} other seller{subLicensors.length - 1, plural, =1 {} other {s}}.
         </span>
         <ng-container *ngIf="subLicensors.length > 1; else uniqueSubLicensor">
-          <span i18n class="mat-body-1">
+          <span i18n>
             Your share of the deal is <b>{{ totalPrice.amount | currency: getCurrencyCode(totalPrice.currency) }}</b>
             for the {{ (movies$ | async).length }} film{moviesLenght, plural, =1 {} other {s}}:
           </span>
         </ng-container>
         <ng-template #uniqueSubLicensor>
-          <span i18n class="mat-body-1">
+          <span i18n>
             The offer is <b>{{ totalPrice.amount | currency: totalPrice.currency }}</b>
             for the {{ (movies$ | async).length }} film{moviesLenght, plural, =1 {} other {s}}:
           </span>
@@ -57,39 +54,39 @@
       <mat-card-actions *ngIf="isSignatory" fxLayout="row" fxLayoutAlign="space-between center">
         <button mat-flat-button color="primary" (click)="openIntercom()">
           <mat-icon svgIcon="comment"></mat-icon>
-          Connect with the Archipel Team
+          <span>Connect with the Archipel Team</span>
         </button>
         <div>
           <button mat-stroked-button color="primary" (click)="acceptOffer(contract)">
             <mat-icon svgIcon="check" bf-color="primary"></mat-icon>
-            Accept
+            <span>Accept</span>
           </button>
           <button mat-stroked-button color="warn" (click)="declineOffer(contract)">
             <mat-icon svgIcon="refuse" bf-color="warn"></mat-icon>
-            Decline
+            <span>Decline</span>
           </button>
         </div>
       </mat-card-actions>
     </mat-card>
     <mat-card>
-      <mat-card-title>
-        <h3>Proposed Payment Schedule</h3>
-        <div *ngFor="let payment of lastVersion.paymentSchedule" fxLayout="column" fxLayoutAlign="center start">
-          <span class="mat-body-1">{{ payment.percentage }}% {{ payment.label }}</span>
-          <caption class="mat-caption">{{ payment.date }}</caption>
-        </div>
-      </mat-card-title>
+      <h3>Proposed Payment Schedule</h3>
+      <div *ngFor="let payment of lastVersion.paymentSchedule" fxLayout="column" fxLayoutAlign="center start">
+        <span>{{ payment.percentage }}% {{ payment.label }}</span>
+        <caption class="mat-caption">{{ payment.date }}</caption>
+      </div>
     </mat-card>
   </article>
 
   <!-- NEGOCIATION HISTORY -->
   <mat-card>
-    <mat-card-title><h3>Negociation History</h3></mat-card-title>
-    <bf-table-filter
-      [source]="versions"
-      [columns]="versionColumns"
-      [initialColumns]="initialVersionColumns">
-    </bf-table-filter>
+    <h3>Negociation History</h3>
+    <mat-card-content>
+      <bf-table-filter
+        [source]="versions"
+        [columns]="versionColumns"
+        [initialColumns]="initialVersionColumns">
+      </bf-table-filter>
+    </mat-card-content>
   </mat-card>
 
   <!-- DISTRIBUTION DEALS -->
@@ -111,9 +108,7 @@
           <article fxLayout="row" fxLayoutAlign="start start" class="movie-information">
             <img class="poster" [imgRef]="movie.main.poster" alt="Movie poster" />
             <div>
-              <span
-                *ngFor="let director of movie.main.directors; let isLast = last"
-                class="mat-body-1">
+              <span *ngFor="let director of movie.main.directors; let isLast = last">
                 {{ director.firstName }} {{ director.lastName }}{{isLast ? '' : ', '}}
               </span>
               <br/>
@@ -126,9 +121,10 @@
             </div>
           </article>
           <!-- MOVIE DISTRIBUTION DEAL LIST -->
+          <!-- TODO: Use flattened data + reusable table => ISSUE#1744 -->
           <catalog-right-list [source]="movie.distributionDeals"></catalog-right-list>
         </mat-expansion-panel>
       </mat-accordion>
     </mat-card>
   </ng-container>
-</section>
+</ng-container>

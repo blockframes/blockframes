@@ -1,6 +1,5 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { Observable } from 'rxjs';
-import { ContractQuery, Contract } from '@blockframes/contract/contract/+state';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ContractQuery } from '@blockframes/contract/contract/+state';
 
 @Component({
   selector: 'catalog-deal-list',
@@ -8,13 +7,9 @@ import { ContractQuery, Contract } from '@blockframes/contract/contract/+state';
   styleUrls: ['./list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DealListComponent implements OnInit {
-  public contracts$: Observable<Contract[]>;
+export class DealListComponent {
+  // Get all organization's contract and return them with all their versions.
+  public contracts$ = this.contractQuery.selectAll();
 
   constructor(private contractQuery: ContractQuery) {}
-
-  ngOnInit() {
-    // Get all organization's contract and return them with all their versions.
-    this.contracts$ = this.contractQuery.selectAll();
-  }
 }
