@@ -1,9 +1,9 @@
-import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { FormList } from '@blockframes/utils/form/forms/list.form';
-import { ContractForm } from '@blockframes/contract/contract/forms/contract.form';
+import { ContractForm, PartyDetailsForm } from '@blockframes/contract/contract/forms/contract.form';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { DistributionDealForm } from '@blockframes/movie/distribution-deals/form/distribution-deal.form';
+import { ContractPartyForm } from '@blockframes/contract/contract/forms/party-name/party-name.form';
 
 @Component({
   selector: 'catalog-tunnel-previous-deals',
@@ -12,45 +12,39 @@ import { DistributionDealForm } from '@blockframes/movie/distribution-deals/form
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TunnelPreviousDealsComponent implements OnInit {
-  private formContract = FormList.factory([], contract => new ContractForm(contract));
-  private formDistributionDeal = new DistributionDealForm();
+  private formContract: FormList<any, ContractForm>;
+  private formDistributionDeal: FormList<any, DistributionDealForm>;
 
   public loading: boolean;
 
-  constructor(private routerQuery: RouterQuery, private contractService: ContractService) {}
+  constructor(private routerQuery: RouterQuery) {}
 
-  async ngOnInit() {
-    this.loading = true;
-    const { movieId } = this.activeMovieId;
-    const contracts = await this.contractService.getValue(
-      ref =>
-        ref
-          .where(movieId, 'in', 'titleIds') // only contract on this movie
-          .where('childContractIds', '==', []) // only without Archipel Content
-    );
-    for (const contract of contracts) {
-      this.formContract.add(contract);
-    }
-    this.loading = false;
+  ngOnInit() {}
+
+  public contract(index: number) {
+    return this.formContract.at(index);
   }
 
-  get contract() {
-    return this.formContract.get('parties');
+  public distributionDeal(index: number) {
+    return this.formDistributionDeal.at(index);
   }
 
-  get distributionDeal() {
-    return this.formDistributionDeal;
+  public contractParty(index: number) {
+    return this.formContract.at(index);
   }
 
-  get contractParty() {
-    return this.formContract.get('parties');
+  public distributionDealTerms(index: number) {
+    return this.formDistributionDeal.at(index).get('terms');
   }
 
-  get distributionDealTerms() {
-    return this.formDistributionDeal.get('terms');
-  }
-
-  get activeMovieId() {
-    return this.routerQuery.getValue().state.root.params.movieId;
+  public addContract() {
+    this.formContract
+      ? (this.formContract.push(new ContractForm()),
+        this.formDistributionDeal.push(new DistributionDealForm()))
+      : ((this.formContract = FormList.factory([], contract => new ContractForm(contract))),
+        (this.formDistributionDeal = FormList.factory(
+          [],
+          distribution => new DistributionDealForm(distribution)
+        )));
   }
 }

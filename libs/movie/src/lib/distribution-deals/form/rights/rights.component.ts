@@ -11,15 +11,15 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
   styleUrls: ['./rights.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DistributionDealRightsComponent {
+export class DistributionDealRightsComponent{
   @Input() form: DistributionDealForm;
 
   public staticMedias = staticModels['MEDIAS'].filter(media => {
     const wantedMedias = ['Pay TV', 'Free TV', 'S-VOD', 'A-VOD', 'Ancillary'];
-    if(wantedMedias.includes(media.label)) {
-      return true
+    if (wantedMedias.includes(media.label)) {
+      return true;
     }
-  })
+  });
 
   get licenseType() {
     return this.form.get('licenseType');

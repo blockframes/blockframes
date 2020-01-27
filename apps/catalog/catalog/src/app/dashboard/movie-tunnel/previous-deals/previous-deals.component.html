@@ -5,31 +5,38 @@
     Please add below all ongoing licensed rights you want to sell on Archipel Content marketplace when
     they are free.</p>
   <ng-container tunnel-form>
-    <!-- TODO #1523 -->
-    <h2>Deal #1</h2>
-    <mat-accordion multi>
-      <mat-expansion-panel expanded>
-        <mat-expansion-panel-header>
-          <mat-panel-title>
-            <!-- TODO #1523 -->
-            # Deal
-          </mat-panel-title>
-        </mat-expansion-panel-header>
-        <h3>Deal</h3>
-        <contract-form-party-name [form]="contract"></contract-form-party-name>
-        <mat-divider></mat-divider>
-        <h3>Territories to this deal</h3>
-        <distribution-form-territory [form]="distributionDeal"></distribution-form-territory>
-        <mat-divider></mat-divider>
-        <h3>Rights</h3>
-        <span class="caption">Only fill out fields that apply</span>
-        <distribution-form-rights [form]="distributionDeal"></distribution-form-rights>
-        <mat-divider></mat-divider>
-        <h3>Terms</h3>
-        <span class="caption">You can either enter specific term dates or a license period</span>
-        <distribution-form-terms [form]="distributionDealTerms"></distribution-form-terms>
-        <mat-divider></mat-divider>
-      </mat-expansion-panel>
-    </mat-accordion>
+    <ng-container *ngIf="formContract">
+      <ng-container *ngFor="let controls of formContract.controls; let i = index">
+        <!-- TODO #1523 -->
+        <h2>Deal #1</h2>
+        <mat-accordion multi>
+          <mat-expansion-panel expanded>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                <!-- TODO #1523 -->
+                # Deal
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <h3>Deal</h3>
+            <contract-form-party-name [form]="contract(i)" *ngIf="i%2 === 0"></contract-form-party-name>
+            <mat-divider></mat-divider>
+            <h3>Territories to this deal</h3>
+            <distribution-form-territory [form]="distributionDeal(i)"></distribution-form-territory>
+            <mat-divider></mat-divider>
+            <h3>Rights</h3>
+            <span class="caption">Only fill out fields that apply</span>
+            <distribution-form-rights [form]="distributionDeal(i)"></distribution-form-rights>
+            <mat-divider></mat-divider>
+            <h3>Terms</h3>
+            <span class="caption">You can either enter specific term dates or a license period</span>
+            <distribution-form-terms [form]="distributionDealTerms(i)"></distribution-form-terms>
+            <mat-divider></mat-divider>
+          </mat-expansion-panel>
+        </mat-accordion>
+      </ng-container>
+    </ng-container>
+    <button mat-fab color="primary" (click)="addContract()">
+      <mat-icon>add</mat-icon>
+    </button>
   </ng-container>
 </tunnel-page>

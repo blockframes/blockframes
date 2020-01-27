@@ -1,4 +1,4 @@
-import { ContractPartyForm } from './party-name.form';
+import { ContractForm } from '@blockframes/contract/contract/forms/contract.form';
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { PartyDetailsForm } from '../contract.form'
 
@@ -9,7 +9,11 @@ import { PartyDetailsForm } from '../contract.form'
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContractFormPartyNameComponent { 
-    @Input() form: ContractPartyForm;
+    @Input() form: ContractForm;
+
+    get partyControls() {
+        return this.form.get('parties');
+    }
 
     public displayNameControl(control: PartyDetailsForm) {
         return control.get('party').get('displayName');
