@@ -1,11 +1,20 @@
-import { Component, OnInit, ViewChild, ElementRef, Input, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
+import { SlugAndLabel } from '@blockframes/utils/static-model/staticModels';
+import {
+  Component,
+  OnInit,
+  ViewChild,
+  ElementRef,
+  Input,
+  ChangeDetectionStrategy,
+  Output,
+  EventEmitter
+} from '@angular/core';
 import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { FormControl, FormArray } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
-
 
 @Component({
   selector: '[form]chips-autocomplete',
@@ -14,7 +23,6 @@ import { startWith, map } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ChipsAutocompleteComponent implements OnInit {
-
   /** List of items displayed in the autocomplete */
   @Input() items: any[];
   /** Key of the item to get store */
@@ -26,14 +34,15 @@ export class ChipsAutocompleteComponent implements OnInit {
   @Input() placeholder = 'New Items';
 
   // The form to connect to
-  @Input() form: FormArray;
+  @Input()
+  form: FormArray;
 
   @Output() added = new EventEmitter<any>();
   @Output() removed = new EventEmitter<number>();
 
   public separatorKeysCodes: number[] = [ENTER, COMMA];
   public ctrl = new FormControl();
-  public filteredItems : Observable<any[]>;
+  public filteredItems: Observable<any[]>;
 
   @ViewChild('inputEl', { static: true }) inputEl: ElementRef<HTMLInputElement>;
   @ViewChild('auto', { static: true }) matAutocomplete: MatAutocomplete;
@@ -43,7 +52,7 @@ export class ChipsAutocompleteComponent implements OnInit {
   ngOnInit() {
     this.filteredItems = this.ctrl.valueChanges.pipe(
       startWith(''),
-      map(value => value ? this._filter(value) : this.items)
+      map(value => (value ? this._filter(value) : this.items))
     );
   }
 
@@ -53,7 +62,12 @@ export class ChipsAutocompleteComponent implements OnInit {
     return this.items.filter(item => {
       const key: string = this.store ? item[this.store] : item;
       return key.toLowerCase().indexOf(filterValue) === 0;
-    })
+    });
+  }
+
+  public getLabel(value: string) {
+    const item = this.items.find(i => i.slug === value);
+    return item ? item.label : '';
   }
 
   /** Get the item based on the key */
@@ -62,17 +76,17 @@ export class ChipsAutocompleteComponent implements OnInit {
   }
 
   /** Get the value of the item to store */
-  public getKey(item: any) {
+  public getKey(item: SlugAndLabel) {
     return this.store ? item[this.store] : item;
   }
 
   /** Get the value of the item to display */
-  public getDisplay(item: any) {
+  public getDisplay(item: SlugAndLabel) {
     return this.store ? item[this.display] : item;
   }
 
   /** Add a chip based on the input */
-  public add({input, value}: MatChipInputEvent) {
+  public add({ input, value }: MatChipInputEvent) {
     if (this.matAutocomplete.isOpen) return;
     if ((value || '').trim()) this.form.push(new FormControl(value));
     if (input) input.value = '';
@@ -80,7 +94,7 @@ export class ChipsAutocompleteComponent implements OnInit {
   }
 
   /** Select based on the option */
-  public selected({option}: MatAutocompleteSelectedEvent): void {
+  public selected({ option }: MatAutocompleteSelectedEvent): void {
     this.added.emit(option.viewValue);
     this.form.push(new FormControl(option.value));
     this.inputEl.nativeElement.value = '';
@@ -92,5 +106,4 @@ export class ChipsAutocompleteComponent implements OnInit {
     this.form.removeAt(i);
     this.removed.emit(i);
   }
-
 }
