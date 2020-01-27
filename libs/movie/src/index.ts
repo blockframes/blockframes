@@ -23,6 +23,7 @@ export * from './lib/movie/form/summary/budget/budget.module';
 export * from './lib/movie/form/summary/technical-information/technical-information.module';
 export * from './lib/movie/form/summary/image/image.module';
 export * from './lib/movie/form/summary/file/file.module';
+export * from './lib/movie/form/summary/evaluation/evaluation.module';
 
 // Movie Components
 export { MovieViewComponent } from './lib/movie/pages/movie-view/movie-view.component';
