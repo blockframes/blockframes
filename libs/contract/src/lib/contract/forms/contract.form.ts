@@ -53,7 +53,7 @@ function createPartyDetailsControls(partyDetails: Partial<ContractPartyDetail> =
 type PartyDetailsControl = ReturnType<typeof createPartyDetailsControls>;
 
 export class PartyDetailsForm extends FormEntity<PartyDetailsControl> {
-  constructor(partyDetails: Partial<ContractPartyDetail>) {
+  constructor(partyDetails?: Partial<ContractPartyDetail>) {
     super(createPartyDetailsControls(partyDetails));
   }
 }

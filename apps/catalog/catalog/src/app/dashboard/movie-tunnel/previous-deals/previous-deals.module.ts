@@ -6,8 +6,10 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 
 // Material
+import { MatIconModule } from '@angular/material/icon';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSlideToggleModule } from '@angular/material';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 
 // Tunnel
@@ -39,7 +41,9 @@ import { DistributionDealTermsModule } from '@blockframes/movie/distribution-dea
     // Material
     MatExpansionModule,
     MatDividerModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    MatButtonModule,
+    MatIconModule
   ]
 })
 export class TunnelPreviousDealsModule {}

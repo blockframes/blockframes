@@ -82,7 +82,7 @@ export class ChipsAutocompleteComponent implements OnInit {
   /** Select based on the option */
   public selected({option}: MatAutocompleteSelectedEvent): void {
     this.added.emit(option.viewValue);
-    this.form.push(new FormControl(option.viewValue));
+    this.form.push(new FormControl(option.value));
     this.inputEl.nativeElement.value = '';
     this.ctrl.setValue(null);
   }

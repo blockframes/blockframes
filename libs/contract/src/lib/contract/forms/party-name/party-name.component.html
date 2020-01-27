@@ -1,10 +1,7 @@
-<ng-container *ngFor="let control of form.controls; let isFirst = first" [formGroup]="control">
-    <!-- We only want to work on the first party -->
-    <ng-container *ngIf="isFirst">
-        <mat-slide-toggle [formControl]="showName(control)" color="primary">Display to external users</mat-slide-toggle>
-        <mat-form-field appearance="outline">
-            <mat-label>Licensee Name</mat-label>
-            <input matInput type="text" [formControl]="displayNameControl(control)" autocomplete="off">
-        </mat-form-field>
-    </ng-container>
+<ng-container *ngFor="let control of partyControls.controls; let i = index" [formGroup]="control">
+    <mat-slide-toggle [formControl]="showName(control)" color="primary">Display to external users</mat-slide-toggle>
+    <mat-form-field appearance="outline">
+        <mat-label>Licensee Name</mat-label>
+        <input matInput type="text" [formControl]="displayNameControl(control)" autocomplete="off">
+    </mat-form-field>
 </ng-container>

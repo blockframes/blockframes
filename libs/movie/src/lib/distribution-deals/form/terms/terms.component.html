@@ -2,11 +2,11 @@
     <div fxLayout="row" class="full-width" fxLayoutGap="20px">
         <!-- Period -->
         <div fxLayout="column">
-            <mat-slide-toggle [checked]="!termCtrl.value" color="primary" (change)="disableInputs($event, 'period')">
+            <mat-slide-toggle [formControl]="periodCtrl">
             </mat-slide-toggle>
             <mat-form-field appearance="outline">
                 <mat-label>License Start Date</mat-label>
-                <input matInput type="date" [matDatepicker]="licenseeStart" formControlName="start">
+                <input matInput [matDatepicker]="licenseeStart" formControlName="start">
                 <mat-datepicker-toggle matSuffix [for]="licenseeStart"></mat-datepicker-toggle>
                 <mat-datepicker #licenseeStart></mat-datepicker>
             </mat-form-field>
@@ -20,8 +20,7 @@
         <mat-divider vertical></mat-divider>
         <!-- Periode of Event -->
         <div fxLayout="column">
-            <mat-slide-toggle [checked]="termCtrl.value" color="primary" (change)="disableInputs($event, 'event')">Event
-                & period</mat-slide-toggle>
+            <mat-slide-toggle [formControl]="eventCtrl">Event & period</mat-slide-toggle>
             <mat-form-field appearance="outline">
                 <mat-label>Event triggering holdback</mat-label>
                 <mat-select formControlName="floatingStart">
