@@ -1,4 +1,4 @@
 <h2>Deal list</h2>
 <article *ngFor="let contract of (contracts$ | async)">
-  <a [routerLink]="['./', contract.id]">{{ contract.id }}</a>
+  <a [routerLink]="[contract.id]">{{ contract.id }}</a>
 </article>

@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
 import { ContractStore, ContractState } from './contract.store';
 import { CollectionConfig, CollectionService, awaitSyncQuery, Query, WriteOptions } from 'akita-ng-fire';
-import { Contract, ContractPartyDetail, convertToContractDocument, createContractPartyDetail, createPartyDetails, initContractWithVersion, ContractWithLastVersion, ContractWithTimeStamp } from './contract.model';
+import { Contract, convertToContractDocument, createContractPartyDetail, createPartyDetails, initContractWithVersion, ContractWithLastVersion, ContractWithTimeStamp, getContractParties } from './contract.model';
 import orderBy from 'lodash/orderBy';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { tap, switchMap } from 'rxjs/operators';
 import { ContractVersionService } from '../../version/+state/contract-version.service';
-import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
-import { LegalRolesSlug } from '@blockframes/utils/static-model/types';
 import { cleanModel } from '@blockframes/utils';
 import { PermissionsService } from '@blockframes/organization';
 import { ContractDocumentWithDates, ContractStatus } from './contract.firestore';
@@ -169,8 +167,8 @@ export class ContractService extends CollectionService<ContractState> {
       return false;
     }
 
-    const licensees = this.getContractParties(contract, 'licensee');
-    const licensors = this.getContractParties(contract, 'licensor');
+    const licensees = getContractParties(contract, 'licensee');
+    const licensors = getContractParties(contract, 'licensor');
 
     if (!licensees.length || !licensors.length) {
       return false;
@@ -236,36 +234,10 @@ export class ContractService extends CollectionService<ContractState> {
   }
 
   /**
-   * Fetch parties related to a contract given a specific legal role
-   * @param contract
-   * @param legalRole
+   * Accept an offer from a contract and sign it with a timestamp and a status set to accepted.
+   * @param contract the active contract
+   * @param organizationId the logged in user's organization
    */
-  public getContractParties(contract: Contract, legalRole: LegalRolesSlug): ContractPartyDetail[] {
-    return contract.parties.filter(p => p.party.role === getCodeIfExists('LEGAL_ROLES', legalRole as ExtractCode<'LEGAL_ROLES'>));
-  }
-
-  /**
-   * Takes an organization id and a contract to check
-   * if the organization is party of this contract.
-   * Returns true if so.
-   */
-  public isPartyOfContract(organizationId: string, contract: Contract): boolean {
-    return contract.parties.some(partyDetails => partyDetails.party.orgId === organizationId)
-  }
-
-  /**
-   * Takes an organization id and a contract to check
-   * if the organization is signatory on this contract.
-   * @param orgnizationId
-   * @param contract
-   */
-  public isContractSignatory(contract: Contract, orgnizationId: string): boolean {
-    return contract.parties.some(
-      partyDetails =>
-        partyDetails.party.orgId === orgnizationId && partyDetails.party.role === 'signatory'
-    );
-  }
-
   public acceptOffer(contract: Contract, organizationId: string) {
     const index = contract.parties.findIndex(
       partyDetails =>
@@ -280,6 +252,11 @@ export class ContractService extends CollectionService<ContractState> {
     this.update({ ...contract, parties: updatedParties })
   }
 
+  /**
+   * Decline an offer from a contract, and sign it with a timestamp and a status set to rejected.
+   * @param contract the active contract
+   * @param organizationId the logged in user's organization
+   */
   public declineOffer(contract: Contract, organizationId: string) {
     const index = contract.parties.findIndex(
       partyDetails =>

@@ -7,7 +7,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
-import { RightListModule } from './right-list/right-list.module';
+import { RightListModule } from '@blockframes/movie/distribution-deals/right-list/right-list.module';
 
 // Guard
 import { MovieContractGuard } from '@blockframes/movie/movieguards/movie-contract.guard';

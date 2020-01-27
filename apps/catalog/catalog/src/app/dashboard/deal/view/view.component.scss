@@ -1,17 +1,25 @@
 :host {
   display: block;
-  margin: 50px;
+  padding: 25px;
+
+  mat-card {
+    margin-top: 25px;
+  }
 
   .logo {
     height: 160px;
     width: 160px;
   }
 
+  .archipel-button {
+    width: 100%;
+  }
+
   .poster {
     width: 60px;
     height: 60px;
     border-radius: 4px;
-    border: solid 1px var(--borderGrey);
+    border: solid 1px;
     margin-right: 15px;
   }
 

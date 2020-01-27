@@ -4,7 +4,7 @@
       <strong>Available dubbing(s) :</strong>
       <ul>
         <li *ngFor="let item of data.dubbings">
-          {{ getLabelBySlug('LANGUAGES', item) }}
+          {{ item | translateSlug: 'LANGUAGES' }}
         </li>
       </ul>
     </mat-list-item>
@@ -12,7 +12,7 @@
       <strong>Available subtitles(s) :</strong>
       <ul>
         <li *ngFor="let item of data.subtitles">
-          {{ getLabelBySlug('LANGUAGES', item) }}
+          {{ item | translateSlug: 'LANGUAGES' }}
         </li>
       </ul>
     </mat-list-item>-->

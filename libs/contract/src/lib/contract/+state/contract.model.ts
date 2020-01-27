@@ -1,5 +1,5 @@
-import { getCodeIfExists } from '@blockframes/utils/static-model/staticModels';
-import { createPrice } from '@blockframes/utils/common-interfaces/price';
+import { getCodeIfExists, ExtractCode, getCodeBySlug } from '@blockframes/utils/static-model/staticModels';
+import { createPrice, Price } from '@blockframes/utils/common-interfaces/price';
 import {
   ContractDocumentWithDates,
   ContractStatus,
@@ -15,6 +15,8 @@ import { createImgRef } from '@blockframes/utils/image-uploader';
 import { createTerms } from '@blockframes/utils/common-interfaces/terms';
 import { ContractVersion, ContractVersionWithTimeStamp, formatContractVersion } from '../../version/+state/contract-version.model';
 import { firestore } from "firebase/app";
+import { LegalRolesSlug } from '@blockframes/utils/static-model/types';
+import { CurrencyPipe } from '@angular/common';
 
 /**
  * @dev this should not be saved to firestore,
@@ -196,7 +198,9 @@ export function createLegalDocument(
 export function createContractFromFirestore(contract: ContractWithTimeStamp): Contract {
   return {
     ...contract,
-    parties: contract.parties.map(partyDetails => formatPartyDetails(partyDetails)),
+    parties: contract.parties
+      ? contract.parties.map(partyDetails => formatPartyDetails(partyDetails))
+      : [],
     versions: contract.versions.map(version => formatContractVersion(version))
   }
 }
@@ -213,3 +217,63 @@ export function formatPartyDetails(partyDetails: any): ContractPartyDetail {
 
   return partyDetails as ContractPartyDetail;
 }
+
+/**
+ * Fetch parties related to a contract given a specific legal role
+ * @param contract
+ * @param legalRole
+ */
+export function getContractParties(contract: Contract, legalRole: LegalRolesSlug): ContractPartyDetail[] {
+  return contract.parties.filter(p => p.party.role === getCodeIfExists('LEGAL_ROLES', legalRole as ExtractCode<'LEGAL_ROLES'>));
+}
+
+/**
+ * Takes an organization id and a contract to check
+ * if the organization is party of this contract.
+ * Returns true if so.
+ */
+export function isPartyOfContract(organizationId: string, contract: Contract): boolean {
+  return contract.parties.some(partyDetails => partyDetails.party.orgId === organizationId)
+}
+
+/**
+ * Takes an organization id and a contract to check
+ * if the organization is signatory on this contract.
+ * @param orgnizationId
+ * @param contract
+ */
+export function isContractSignatory(contract: Contract, orgnizationId: string): boolean {
+  return contract.parties.some(
+    partyDetails =>
+      partyDetails.party.orgId === orgnizationId && partyDetails.party.role === 'signatory'
+  );
+}
+
+/**
+ * Combine prices of all distributionDeals to get the total price of the contract.
+ *
+ * @dev this is temporary solution, if there is different currencies in distributionDeals
+ * the result will be wrong.
+ */
+export function getTotalPrice(titles: Record<string, ContractTitleDetail>): Price {
+  const result = createPrice();
+  const versionTitles = Object.values(titles);
+  result.amount = versionTitles.reduce((sum, title) => sum += title.price.amount, 0);
+  result.currency = versionTitles[versionTitles.length - 1].price.currency;
+
+  return result;
+}
+
+/**
+ * Same logic as totalPrice function, but returns a string for flattened objects.
+ * @param lastVersion
+ */
+export function getTotalPiceAsString(titles: ContractTitleDetail): string {
+  const currencyPipe = new CurrencyPipe('en-US');
+  const versionTitles = Object.values(titles);
+  const amount = versionTitles.reduce((sum, title) => sum += title.price.amount, 0);
+  const currency = getCodeBySlug('MOVIE_CURRENCIES', versionTitles[versionTitles.length - 1].price.currency);
+
+  return currencyPipe.transform(amount, currency, true);
+}
+
