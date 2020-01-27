@@ -13,11 +13,11 @@
             <ng-template #down><mat-icon color="accent">arrow_drop_down</mat-icon></ng-template>
               {{ calculatePercentage(mockData, lineChart.title) }} %</span>
         </div>
-        <h3>{{ getTotal(mockData, lineChart.title)}}</h3>
+        <h3>{{ sum(populateData(mockData, lineChart.title, 'hits'))}}</h3>
         <apx-chart
-          [series]="populateSeries(mockData, lineChart.title)"
+          [series]="getLineChartSeries(mockData, lineChart.title)"
           [chart]="lineChartOptions.chart"
-          [xaxis]="populateXaxis(mockData, lineChart.title)"
+          [xaxis]="getLineChartXaxis(mockData, lineChart.title)"
           [yaxis]="lineChartOptions.yaxis"
           [dataLabels]="lineChartOptions.dataLabels"
           [grid]="lineChartOptions.grid"
@@ -34,29 +34,14 @@
   <h3>Sales Revenue</h3>
   <!-- First Row -->
   <article fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="space-around center">
-    <mat-card fxFlex="30" fxFlex.lt-md="100">
-      <div fxLayout="row" fxLayoutAlign="space-between start">
-        <span class="mat-body-2">Total Gross Receipts</span>
-        <span><mat-icon color="primary">arrow_drop_up</mat-icon>40%</span>
-      </div>
+    <mat-card fxFlex="45" fxFlex.lt-md="100">
+      <span class="mat-body-2">Total Gross Receipts</span>
       <mat-card-content>
         <h1>{{ sum(contractData.totalGrossReceipt) | number : '4.0-0'}}</h1>
       </mat-card-content>
     </mat-card>
-    <mat-card fxFlex="30" fxFlex.lt-md="100">
-      <div fxLayout="row" fxLayoutAlign="space-between start">
-        <span class="mat-body-2">Remaining Receipts</span>
-        <span><mat-icon color="primary">arrow_drop_up</mat-icon>40%</span>
-      </div>
-      <mat-card-content>
-        <h1>{{ sum(contractData.remainingReceipts) | currency:'USD':'symbol':'4.0-0' }}</h1>
-      </mat-card-content>
-    </mat-card>
-    <mat-card fxFlex="30" fxFlex.lt-md="100">
-      <div fxLayout="row" fxLayoutAlign="space-between start">
-        <span class="mat-body-2">Total Sales</span>
-        <span><mat-icon color="primary">arrow_drop_up</mat-icon>40%</span>
-      </div>
+    <mat-card fxFlex="45" fxFlex.lt-md="100">
+      <span class="mat-body-2">Total Sales</span>
       <mat-card-content>
         <h1>{{ contractData.totalSales.length }}</h1>
       </mat-card-content>
