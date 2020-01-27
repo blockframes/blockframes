@@ -5,7 +5,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 // Components
 import { MovieSummaryMainComponent } from './main.component';
 
-import { MissingPipeModule } from '@blockframes/utils';
+import { MissingPipeModule, MissingSlugPipeModule } from '@blockframes/utils';
 
 @NgModule({
   declarations: [MovieSummaryMainComponent],
@@ -13,6 +13,7 @@ import { MissingPipeModule } from '@blockframes/utils';
     CommonModule,
     FlexLayoutModule,
     MissingPipeModule,
+    MissingSlugPipeModule
   ],
   exports: [MovieSummaryMainComponent]
 })
