@@ -75,6 +75,5 @@ export const analyticsMockData = {
 
 export const contractMockData = {
   totalGrossReceipt: [1561, 13554, 1534, 2348, 3242],
-  remainingReceipts: [13451, ,13544, 135845, 57855, 88354],
   totalSales: ['contract', 'contract', 'contract', 'contract', 'contract', 'contract', 'contract', 'contract', 'contract', 'contract', 'contract'],
 }

@@ -6,7 +6,7 @@ import { Observable, of } from 'rxjs';
 import { ChartComponent } from 'ng-apexcharts';
 import { ChartOptions, lineChartOptions } from './default-chart-options';
 import { analyticsMockData, contractMockData } from './mockdata';
-import _ from 'lodash';
+
 const lineCharts = [
   {
     title: 'movieViews'
@@ -18,6 +18,7 @@ const lineCharts = [
     title: 'promoReelOpened'
   }
 ]
+
 @Component({
   selector: 'catalog-title-sales',
   templateUrl: './sales.component.html',
@@ -44,31 +45,30 @@ export class TitleSalesComponent implements OnInit {
     this.movieAnalytics = this.movieService.getMovieAnalytics([this.movieQuery.getActiveId()]);
   }
 
-  populateSeries(analytics, name: string) {
-    const hitsArray = analytics[name].map(d => d.hits);
-    return [{name, data: hitsArray}];
+  populateData(data: object, name: string, key:string):number[] {
+    const numArray = data[name].map(d => d[key]);
+    return numArray;
   }
 
-  populateXaxis(analytics, name: string) {
-    const dateArray = analytics[name].map(d => d.event_date);
-    return {categories: dateArray, labels: {show: false},  axisBorder: {show: false},  axisTicks: {show: false}};
+  getLineChartSeries(data: object, name: string) {
+    return [{name, data: this.populateData(data, name, 'hits')}];
   }
 
-  getTotal(analytics, name: string): number {
-    const hitsArray = analytics[name].map(d => d.hits);
-    return hitsArray.reduce((p, c) => p + c, 0);
+  getLineChartXaxis(data: object, name: string) {
+    return {categories:  this.populateData(data, name, 'event_date'), labels: {show: false},  axisBorder: {show: false},  axisTicks: {show: false}};
   }
 
   sum(array: number[]): number {
     return array.reduce((p, c) => p + c, 0);
   }
 
-  calculatePercentage(analytics, name: string): number {
-    console.log(analytics[name])
+  calculatePercentage(data: object, name: string): number {
+    console.log(data[name])
     // const groupedByMonth = _.groupBy(analytics[name], function(item) {
     //   return item.event_date.substring(0, 7); 
     // });
-    const hitsArray = analytics[name].map(d => d.hits);
+    const hitsArray = data[name].map(d => d.hits);
+    console.log(hitsArray)
     const current = hitsArray[hitsArray.length-1];
     const previous = hitsArray[hitsArray.length-2] 
     if (current > previous) {
