@@ -1,25 +1,14 @@
 <mat-form-field appearance="outline">
   <mat-chip-list #chipList>
     <ng-container *ngFor="let control of form.controls; let i = index">
-      <mat-chip *ngIf="control.value"
-        [selectable]="selectable"
-        [removable]="removable"
-        (removed)="remove(i)"
-      >
-        {{ control.value }}
+      <mat-chip *ngIf="control.value" [selectable]="selectable" [removable]="removable" (removed)="remove(i)">
+        {{ getLabel(control.value) }}
         <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
       </mat-chip>
     </ng-container>
-    <input
-      #inputEl
-      [placeholder]="placeholder"
-      [formControl]="ctrl"
-      [matAutocomplete]="auto"
-      [matChipInputFor]="chipList"
-      [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-      [matChipInputAddOnBlur]="true"
-      (matChipInputTokenEnd)="add($event)"
-    />
+    <input #inputEl [placeholder]="placeholder" [formControl]="ctrl" [matAutocomplete]="auto"
+      [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="true"
+      (matChipInputTokenEnd)="add($event)" />
   </mat-chip-list>
 </mat-form-field>
 <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
