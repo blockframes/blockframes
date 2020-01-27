@@ -16,7 +16,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MovieSummaryCreditModule } from '@blockframes/movie/movieform/summary/credit/credit.module';
 import { MovieSummaryBudgetModule } from '@blockframes/movie/movieform/summary/budget/budget.module';
 import { MovieSummaryTechnicalInformationModule } from '@blockframes/movie/movieform/summary/technical-information/technical-information.module';
-import { MovieSummaryImageModule, MovieSummaryFileModule } from '@blockframes/movie';
+import { MovieSummaryImageModule } from '@blockframes/movie/movieform/summary/image/image.module';
+import { MovieSummaryFileModule } from '@blockframes/movie/movieform/summary/file/file.module';
+import { MovieSummaryEvaluationModule } from '@blockframes/movie/movieform/summary/evaluation/evaluation.module';
 
 @NgModule({
   declarations: [TunnelSummaryComponent],
@@ -36,6 +38,7 @@ import { MovieSummaryImageModule, MovieSummaryFileModule } from '@blockframes/mo
     MovieSummaryTechnicalInformationModule,
     MovieSummaryImageModule,
     MovieSummaryFileModule,
+    MovieSummaryEvaluationModule,
     // Materials
     MatCardModule,
     MatIconModule,
