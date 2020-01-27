@@ -1,4 +1,15 @@
-<h2>Deal list</h2>
-<article *ngFor="let contract of (contracts$ | async)">
-  <a [routerLink]="[contract.id]">{{ contract.id }}</a>
-</article>
+<h1>Offers & Deals</h1>
+
+<mat-tab-group>
+  <mat-tab [label]="['All' + (contracts$ | async).length]">
+    <bf-table-filter
+      [source]="contracts$ | async"
+      [columns]="columns"
+      [initialColumns]="initialColumns">
+    </bf-table-filter>
+  </mat-tab>
+  <mat-tab label="Offers"> Content 2 </mat-tab>
+  <mat-tab label="Ongoing Deals"> Content 3 </mat-tab>
+  <mat-tab label="Past Deals"> Content 4 </mat-tab>
+  <mat-tab label="Aborted Offers"> Content 5 </mat-tab>
+</mat-tab-group>
