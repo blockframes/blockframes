@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 import { getLabelByCode, Scope } from '../static-model/staticModels';
 
 @Pipe({
-  name: 'missingWithSlug'
+  name: 'missingWithLabel'
 })
 export class MissingSlugPipe implements PipeTransform {
 

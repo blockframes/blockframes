@@ -11,7 +11,10 @@
     </li>
   </ng-container>
   <li>
-    <strong>Quotas </strong>{{ salesInfo.get('certifications') | missing }}
+    <strong>Quotas </strong>
+    <ng-container *ngFor="let value of salesInfo.get('certifications').value; let isLast = last">
+      {{ value | translateSlug: 'CERTIFICATIONS' }}{{ isLast ? '' : ', ' }}
+    </ng-container>
   </li>
   <ng-container *ngFor="let rating of salesInfo.get('rating').controls">
     <li>
