@@ -1,26 +1,20 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { filter } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class MovieTunnelService {
-  previousPage: string;
-  constructor(private routerQuery: RouterQuery, private router: Router){}
+  private currentUrl: string;
+  public previousUrl: string;
+  public isInTunnel = false;
 
-  openTunnel()
-  openTunnel(movieId?: string, page?: string){
-    if (!this.previousPage) {
-      this.previousPage = this.routerQuery.getValue().state.url;
-    }
-    const path = movieId
-      ? `c/o/dashboard/movie-tunnel/${movieId}/${page}`
-      : 'c/o/dashboard/movie-tunnel';
-    this.router.navigate([path]);
-  }
-
-  closeTunnel() {
-    const next = this.previousPage;
-    delete this.previousPage;
-    this.router.navigate([next]);
+  /** Keep in memory the preivous URL to come back to it when leaving the tunnel */
+  constructor(private routerQuery: RouterQuery){
+    this.routerQuery.select(({ state }) => state && state.url).pipe(
+      filter(_ => !this.isInTunnel)
+    ).subscribe(url => {
+      this.previousUrl = this.currentUrl;
+      this.currentUrl = url;
+    });
   }
 }

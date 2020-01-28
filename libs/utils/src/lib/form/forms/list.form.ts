@@ -125,6 +125,11 @@ export class FormList<T, Control extends AbstractControl = any> extends FormArra
     while (this.length > value.length) {
       this.removeAt(this.length - 1);
     }
+
+    // We always want to have one form by default in the list
+    if (this.length === 0) {
+      this.add();
+    }
   }
 
   /** 

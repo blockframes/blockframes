@@ -69,7 +69,7 @@ import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
     sentryDsn ? SentryModule : [],
 
     // Akita
-    AkitaNgRouterStoreModule.forRoot(),
+    AkitaNgRouterStoreModule,
 
     // Yandex Metrika
     NgxMetrikaModule.forRoot({
@@ -88,7 +88,8 @@ import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
       initialNavigation: 'enabled',
       anchorScrolling: 'enabled',
       onSameUrlNavigation: 'reload',
-      paramsInheritanceStrategy: 'always'
+      paramsInheritanceStrategy: 'always',
+      relativeLinkResolution: 'corrected'
     })
   ],
   providers: [],
