@@ -2,7 +2,10 @@
   <ng-container *ngFor="let festivalPrize of festivalPrizes.prizes.controls">
     <li>
       <strong>Festival </strong>
-      {{ festivalPrize.get('name') | missing }}, {{ festivalPrize.get('prize') | missing }}, {{ festivalPrize.get('year') | missing }}, {{ festivalPrize.get('premiere') | missing }}
+      <missing-control [control]="festivalPrize.get('name')" [link]="link"></missing-control>,
+      <missing-control [control]="festivalPrize.get('prize')" [link]="link"></missing-control>,
+      <missing-control [control]="festivalPrize.get('year')" [link]="link"></missing-control>,
+      <missing-control [control]="festivalPrize.get('premiere')" [link]="link"></missing-control>
     </li>
   </ng-container>
 </ul>

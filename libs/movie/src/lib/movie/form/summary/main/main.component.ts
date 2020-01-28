@@ -9,4 +9,5 @@ import { MovieMainForm } from '@blockframes/movie/movieform/main/main.form';
 })
 export class MovieSummaryMainComponent {
   @Input() main: MovieMainForm;
+  @Input() link: string;
 }
