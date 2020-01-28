@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { MovieSalesCastForm } from '../../sales-cast/sales-cast.form';
 
 @Component({
@@ -7,7 +7,13 @@ import { MovieSalesCastForm } from '../../sales-cast/sales-cast.form';
   styleUrls: ['./sales-cast.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieSummarySalesCastComponent {
+export class MovieSummarySalesCastComponent implements OnInit {
   @Input() salesCast: MovieSalesCastForm;
   @Input() link: string;
+
+  constructor(private cdr: ChangeDetectorRef) {}
+
+  ngOnInit() {
+    this.salesCast.valueChanges.subscribe(_ => this.cdr.markForCheck());
+  }
 }

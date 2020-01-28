@@ -1,4 +1,10 @@
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  OnDestroy,
+  ChangeDetectorRef
+} from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MovieQuery } from '@blockframes/movie/movie+state/movie.query';
 import { MovieForm } from '@blockframes/movie/movieform/movie.form';
@@ -14,12 +20,17 @@ export class TitleDetailsComponent implements OnInit, OnDestroy {
   private subscription: Subscription;
   public form = new MovieForm();
 
-  constructor(private route: ActivatedRoute, private movieQuery: MovieQuery) {}
+  constructor(
+    private route: ActivatedRoute,
+    private movieQuery: MovieQuery,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
-    this.subscription = this.movieQuery
-      .selectActive()
-      .subscribe(movie => this.form.patchValue(movie));
+    this.subscription = this.movieQuery.selectActive().subscribe(movie => {
+      this.form.patchValue(movie);
+      this.cdr.markForCheck();
+    });
   }
 
   public getPath(segment: string) {
