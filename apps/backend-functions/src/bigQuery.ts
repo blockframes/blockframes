@@ -1,9 +1,10 @@
 import { CallableContext } from "firebase-functions/lib/providers/https";
 import { BigQuery } from '@google-cloud/bigquery';
-import { PublicUser, OrganizationDocument, MovieAnalytics } from "./data/types";
+import { EventAnalytics, MovieAnalytics, PublicUser, OrganizationDocument } from "./data/types";
 import { getDocument } from './data/internals';
 import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
 import { bigQueryAnalyticsTable } from "./environments/environment";
+import { isAfter, isBefore, parse, subDays } from 'date-fns';
 
 const queryMovieAnalytics = `
   SELECT
@@ -22,7 +23,7 @@ const queryMovieAnalytics = `
       (event_name = @addedToWishlist AND key = 'movieId' and value.string_value = @movieId)
     )
     AND (
-      DATE_DIFF(CURRENT_DATE(), PARSE_DATE('%Y%m%d', event_date), DAY) < 60
+      DATE_DIFF(CURRENT_DATE(), PARSE_DATE('%Y%m%d', event_date), DAY) < @periodSum
     )
   GROUP BY
     event_name, event_date
@@ -30,7 +31,7 @@ const queryMovieAnalytics = `
     event_name, event_date
 `
 
-async function executeQuery(query: any, movieId: string) {
+async function executeQuery(query: any, movieId: string, rangeDays: number) {
   const bigqueryClient = new BigQuery();
 
   const options = {
@@ -41,19 +42,31 @@ async function executeQuery(query: any, movieId: string) {
       movieId,
       pageView: AnalyticsEvents.pageView,
       promoReelOpened: AnalyticsEvents.promoReelOpened,
-      addedToWishlist: AnalyticsEvents.addedToWishlist
+      addedToWishlist: AnalyticsEvents.addedToWishlist,
+      periodSum: rangeDays * 2
     }
   };
 
   return bigqueryClient.query(options);
 }
 
+/** Sorts events into two periods. */
+const aggregateEvents = (events: EventAnalytics[], days: number) => {
+  const now = new Date();
+  const startCurrentRange = subDays(now, days);
+  const parseDate = (event: EventAnalytics)  => parse(event.event_date, 'yyyyMMdd', new Date());
+  return {
+    current: events.filter(event => isAfter(parseDate(event), startCurrentRange)),
+    past: events.filter(event => isBefore(parseDate(event), startCurrentRange))
+  };
+};
+
 /** Call bigQuery with a movieId to get its analytics. */
 export const requestMovieAnalytics = async (
-  data: { movieId: string },
+  data: { movieId: string, rangeDays: number },
   context: CallableContext
 ): Promise<MovieAnalytics> => {
-  const { movieId } = data;
+  const { movieId, rangeDays } = data;
   const uid = context.auth!.uid;
   const user = await getDocument<PublicUser>(`users/${uid}`);
   const org = await getDocument<OrganizationDocument>(`orgs/${user.orgId}`);
@@ -61,12 +74,12 @@ export const requestMovieAnalytics = async (
   // Security: only owner of the movie can load the data
   if (org.movieIds.includes(movieId)) {
     // Request bigQuery
-    const [rows] = await executeQuery(queryMovieAnalytics, movieId);
+    const [rows] = await executeQuery(queryMovieAnalytics, movieId, rangeDays);
     if (rows !== undefined && rows.length >= 0){
       return {
-        addedToWishlist: rows.filter(row => row.event_name === AnalyticsEvents.addedToWishlist),
-        promoReelOpened: rows.filter(row => row.event_name === AnalyticsEvents.promoReelOpened),
-        movieViews: rows.filter(row => row.event_name === AnalyticsEvents.pageView)
+        addedToWishlist: aggregateEvents(rows.filter(row => row.event_name === AnalyticsEvents.addedToWishlist), rangeDays),
+        promoReelOpened: aggregateEvents(rows.filter(row => row.event_name === AnalyticsEvents.promoReelOpened), rangeDays),
+        movieViews: aggregateEvents(rows.filter(row => row.event_name === AnalyticsEvents.pageView), rangeDays)
       };
     } else {
       throw new Error('Unexepected error.');
