@@ -9,6 +9,7 @@ import { TitleViewComponent } from './view.component';
 // Material
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSelectModule } from '@angular/material/select';
 
 const routes = [{
   path: '',
@@ -43,6 +44,7 @@ const routes = [{
     // Material
     MatTabsModule,
     MatProgressSpinnerModule,
+    MatSelectModule,
     // Routes
     RouterModule.forChild(routes)
   ]
