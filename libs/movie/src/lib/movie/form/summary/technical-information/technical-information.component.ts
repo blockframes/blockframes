@@ -11,4 +11,5 @@ import { MovieVersionInfoForm } from '../../version-info/version-info.form';
 export class MovieSummaryTechnicalInformationComponent {
   @Input() salesInfo: MovieSalesInfoForm;
   @Input() versionInfo: MovieVersionInfoForm;
+  @Input() link: string;
 }

@@ -7,7 +7,9 @@
   </li>
   <ng-container *ngFor="let boxOffice of budget.get('boxOffice').controls">
     <li>
-      <strong>{{ boxOffice.get('territory').value }} </strong>{{ boxOffice.get('value') | missing }} {{ boxOffice.get('unit') | missing }}
+      <strong>{{ boxOffice.get('territory').value }} </strong>
+      <missing-control [control]="boxOffice.get('value')" [link]="link"></missing-control>
+      <missing-control [control]="boxOffice.get('unit')" [link]="link"></missing-control>
     </li>
   </ng-container>
   <li>
@@ -18,12 +20,18 @@
   </li>
   <ng-container *ngFor="let rating of salesInfo.get('rating').controls">
     <li>
-      <strong>Rating </strong>{{ rating.get('country') | missing }}: {{ rating.get('value') | missing }}
+      <strong>Rating </strong>
+      <missing-control [control]="rating.get('country')" [link]="link"></missing-control>
+      <missing-control [control]="rating.get('value')" [link]="link"></missing-control>
     </li>
   </ng-container>
   <ng-container *ngFor="let movieReview of movieReview.controls">
     <li>
-      <strong>Film Review </strong>{{ movieReview.get('criticName') | missing }} in {{ movieReview.get('journalName') | missing }} "{{ movieReview.get('criticQuote') | missing }}""
+      <strong>Film Review </strong>
+      <missing-control [control]="movieReview.get('criticName')" [link]="link"></missing-control>
+      in
+      <missing-control [control]="movieReview.get('journalName')" [link]="link"></missing-control>
+      "<missing-control [control]="movieReview.get('criticQuote')" [link]="link"></missing-control>"
     </li>
   </ng-container>
 </ul>

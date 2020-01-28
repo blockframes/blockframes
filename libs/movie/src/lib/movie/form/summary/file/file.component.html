@@ -1,17 +1,17 @@
 <ul>
-  <li >
-    <strong>Promo Reel </strong>{{ promotionalElements.get('promo_reel_link').get('media') | missing }}
+  <li>
+    <strong>Promo Reel </strong><missing-control [control]="promotionalElements.get('promo_reel_link').get('media')" [link]="link"></missing-control>
   </li>
-  <li >
-    <strong>Presentation Deck </strong>{{ promotionalElements.get('presentation_deck').get('media') | missing }}
+  <li>
+    <strong>Presentation Deck </strong><missing-control [control]="promotionalElements.get('presentation_deck').get('media')" [link]="link"></missing-control>
   </li>
-  <li >
-    <strong>Screener </strong>{{ promotionalElements.get('screener_link').get('media') | missing }}
+  <li>
+    <strong>Screener </strong><missing-control [control]="promotionalElements.get('screener_link').get('media')" [link]="link"></missing-control>
   </li>
-  <li >
-    <strong>Trailer </strong>{{ promotionalElements.get('trailer_link').get('media') | missing }}
+  <li>
+    <strong>Trailer </strong><missing-control [control]="promotionalElements.get('trailer_link').get('media')" [link]="link"></missing-control>
   </li>
-  <li >
-    <strong>Pitch Teaser </strong>{{ promotionalElements.get('teaser_link').get('media') | missing }}
+  <li>
+    <strong>Pitch Teaser </strong><missing-control [control]="promotionalElements.get('teaser_link').get('media')" [link]="link"></missing-control>
   </li>
 </ul>

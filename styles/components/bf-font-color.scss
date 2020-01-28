@@ -33,6 +33,20 @@
   .mat-subhheading-1 {
     color: mat-color($color-font, h4);
   }
+  h5 {
+    font-size: 16px;
+    line-height: 26px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: mat-color($color-font, h5)
+  }
+  h6 {
+    font-size: 18px;
+    line-height: 28px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: mat-color($color-font, h6)
+  }
   .mat-body-1,
   .mat-body {
     color: mat-color($color-font, mat-body-1);

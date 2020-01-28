@@ -9,6 +9,7 @@ import { MovieMainForm } from '../../main/main.form';
 })
 export class MovieSummaryInformationComponent {
   @Input() main: MovieMainForm;
+  @Input() link: string;
 
   public get genres() {
     return this.main.genres.controls.concat(this.main.customGenres.controls);

@@ -41,7 +41,6 @@ const models = {
   'LEGAL_DOCUMENT_TYPES': [
     { 'slug': 'chain_of_titles', 'label': 'Chain of titles' },
     { 'slug': 'invoices', 'label': 'Invoices' },
-    { 'slug': 'bill', 'label': 'Bill' },
   ] as const,
   'RESOURCE_SIZES': [
     { 'slug': 'medium', 'label': 'Medium' },
@@ -215,7 +214,7 @@ const models = {
       'label': 'Completed'
     }
   ] as const,
-  'LANGUAGES': [ // @TODO (#1388) transform to RFC-5646
+  'LANGUAGES': [ // @TODO (#1658) Update LANGUAGES static model to be RFC-5646 compliant
     { 'slug': 'albanian', 'label': 'Albanian' },
     { 'slug': 'arabic', 'label': 'Arabic' },
     { 'slug': 'armenian', 'label': 'Armenian' },

@@ -9,4 +9,5 @@ import { MovieSalesCastForm } from '../../sales-cast/sales-cast.form';
 })
 export class MovieSummarySalesCastComponent {
   @Input() salesCast: MovieSalesCastForm;
+  @Input() link: string;
 }

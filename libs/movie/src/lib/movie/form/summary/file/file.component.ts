@@ -9,4 +9,5 @@ import { MoviePromotionalElementsForm } from '../../promotional-elements/promoti
 })
 export class MovieSummaryFileComponent {
   @Input() promotionalElements: MoviePromotionalElementsForm;
+  @Input() link: string;
 }

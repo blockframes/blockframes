@@ -1,5 +1,6 @@
 import { firestore } from 'firebase/app';
 import { CatalogCart } from '@blockframes/organization/cart/+state/cart.model';
+import { Location, BankAccount, createLocation } from '@blockframes/utils/common-interfaces/utility';
 
 type Timestamp = firestore.Timestamp;
 
@@ -21,6 +22,7 @@ interface OrganizationRaw<D> {
   wishlist: WishlistRaw<D>[];
   cart: CatalogCart[];
   isBlockchainEnabled: boolean;
+  bankAccounts: BankAccount[]
 }
 
 export interface OrganizationDocument extends OrganizationRaw<Timestamp> {}
@@ -38,15 +40,6 @@ export interface AddressSet {
   billing?: Location;
   office?: Location;
   // Other can be added here
-}
-
-export interface Location {
-  street: string;
-  zipCode: string;
-  city: string;
-  country: string;
-  region?: string;
-  phoneNumber: string;
 }
 
 export interface WishlistRaw<D> {
@@ -106,6 +99,7 @@ export function createOrganizationRaw(
     wishlist: [],
     cart: [],
     isBlockchainEnabled: false,
+    bankAccounts: [],
     ...params
   };
 }
@@ -114,19 +108,6 @@ export function createOrganizationRaw(
 export function createAddressSet(params: Partial<AddressSet> = {}): AddressSet {
   return {
     main: createLocation(params.main),
-    ...params
-  };
-}
-
-/** A factory function that creates an Address/Location */
-export function createLocation(params: Partial<Location> = {}): Location {
-  return {
-    street: '',
-    zipCode: '',
-    city: '',
-    country: '',
-    phoneNumber: '',
-    region: '',
     ...params
   };
 }

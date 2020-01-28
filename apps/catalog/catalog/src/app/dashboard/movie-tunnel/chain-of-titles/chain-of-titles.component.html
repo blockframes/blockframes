@@ -12,6 +12,7 @@
           <file-upload 
             path="pdf" 
             uploadOnFirestore="true" 
+            return="imgRef" 
             accept="['.pdf']" 
             [types]="['application/pdf']" 
             (storeUploaded)="importPDF($event, i)">

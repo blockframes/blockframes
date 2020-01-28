@@ -9,4 +9,5 @@ import { MovieFestivalPrizesForm } from '@blockframes/movie/movieform/festival-p
 })
 export class MovieSummaryFestivalPrizesComponent {
   @Input() festivalPrizes: MovieFestivalPrizesForm;
+  @Input() link: string;
 }

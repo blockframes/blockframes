@@ -12,7 +12,7 @@
       </mat-card-header>
       <mat-card-content>
         <drop-cropper 
-          [storagePath]="banner" 
+          [storagePath]="bannerPath"
           [ratio]="16/9"
           [formControl]="banner.get('media')">
           <h3 type>Banner Image*</h3>
@@ -29,7 +29,7 @@
       <mat-card-content>
         <ng-container *ngFor="let control of poster.controls">
           <drop-cropper 
-            [storagePath]="poster" 
+            [storagePath]="posterPath" 
             [ratio]="5/7"
             [formControl]="control.get('media')">
             <h3 type>Movie Poster Image*</h3>
@@ -48,7 +48,7 @@
         <ng-container *ngFor="let control of stillPhoto.controls; let i = index; let last = last">
           <span class="still mat-body-2">Still # {{i + 1}}</span>
           <drop-cropper 
-            [storagePath]="stillPhoto" 
+            [storagePath]="stillPath" 
             [ratio]="7/5"
             [formControl]="control.get('media')">
             <h3 type>Still Photos</h3>

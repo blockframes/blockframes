@@ -1,5 +1,6 @@
 <ul>
   <li>
-    <strong>Evaluation Note </strong>{{ salesInfo.get('scoring') | missingWithLabel: 'SCORING' }}
+    <strong>Evaluation Note </strong>
+    <missing-control [control]="salesInfo.get('scoring')" [link]="link" label="SCORING"></missing-control>
   </li>
 </ul>

@@ -11,4 +11,5 @@ import { MoviePromotionalDescriptionForm } from '../../promotional-description/p
 export class MovieSummaryStoryComponent {
   @Input() story: MovieStoryForm;
   @Input() promotionalDescription: MoviePromotionalDescriptionForm;
+  @Input() link: string;
 }

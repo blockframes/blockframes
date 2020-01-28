@@ -1,7 +1,8 @@
 import { FormControl, Validators } from "@angular/forms";
 import { FormEntity, UniqueOrgName } from "@blockframes/utils";
 import { createOrganization, Organization, OrganizationService } from "../+state";
-import { AddressSet, createAddressSet, Location, createLocation } from "@blockframes/organization/types";
+import { AddressSet, createAddressSet } from "@blockframes/organization/types";
+import { Location, createLocation } from '@blockframes/utils/common-interfaces/utility';
 
 export class OrganizationAddressesForm extends FormEntity<OrganizationAddressesControl>{
   constructor(addressSet: AddressSet) {

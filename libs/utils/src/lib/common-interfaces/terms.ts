@@ -13,19 +13,28 @@ export enum TimeUnit {
   years = 'years'
 }
 
+export enum TemporalityUnit {
+  after = 'After',
+  before = 'Before',
+  for = 'For'
+}
+
 export interface FloatingDuration {
   label?: string;
   duration?: number;
-  unit?: 'days' | 'weeks' | 'months' | 'years' 
+  unit?: TimeUnit,
+  temporality?: TemporalityUnit,
 }
 
 export interface TermsRaw<D> {
-  start?: D ;
+  start?: D;
+  approxStart?: string;
   /**
    * @example: 3 months around start
    */
   startLag?: string;
   end?: D;
+  approxEnd?: string;
   /**
    * @example: 3 months around end
    */
@@ -40,11 +49,33 @@ export interface TermsRaw<D> {
   floatingDuration?: FloatingDuration;
 }
 
+export interface ScheduledDateRaw<D> extends TermsRaw<D> {
+  dueDate: D,
+  period: FloatingDuration, // @dev this replace floatingDuration for better readability
+}
+
 export interface Terms extends TermsRaw<Date> {
+}
+
+export interface ScheduledDate extends ScheduledDateRaw<Date> {
+}
+
+export function createFloatingDuration(params: Partial<FloatingDuration> = {}): FloatingDuration {
+  return {
+    ...params
+  };
 }
 
 export function createTerms(params: Partial<Terms> = {}): Terms {
   return {
     ...params
+  };
+}
+
+export function createScheduledDate(params: Partial<ScheduledDate> = {}): ScheduledDate {
+  return {
+    dueDate: new Date(),
+    ...params,
+    period: createFloatingDuration(params ? params.period : undefined),
   };
 }

@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MovieSummaryFestivalPrizesComponent } from './festival-prizes.component';
-import { MissingPipeModule } from '@blockframes/utils/pipes/missing.module';
+import { MissingControlModule } from '@blockframes/ui';
 
 @NgModule({
   declarations: [MovieSummaryFestivalPrizesComponent],
   imports: [
     CommonModule,
-    MissingPipeModule
+    MissingControlModule
   ],
   exports: [MovieSummaryFestivalPrizesComponent]
 })
