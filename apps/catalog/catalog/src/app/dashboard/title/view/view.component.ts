@@ -1,6 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MovieQuery, Movie } from '@blockframes/movie';
-import { OrganizationQuery } from '@blockframes/organization';
 import { Observable } from 'rxjs';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 
@@ -8,7 +7,7 @@ import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
   selector: 'catalog-title-view',
   templateUrl: './view.component.html',
   styleUrls: ['./view.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Default
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TitleViewComponent implements OnInit {
   public movie$: Observable<Movie>;

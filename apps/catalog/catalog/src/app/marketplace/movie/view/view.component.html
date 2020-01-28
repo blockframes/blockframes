@@ -1,15 +1,41 @@
 <ng-template *ngIf="loading$ | async">
   <mat-spinner color="accent" #loading></mat-spinner>
 </ng-template>
-<div *ngIf="(movie$ | async) as movie;" test-id="content">
-  <!-- TODO(issue#1309) create image directive for background image -->
-  <header [style.background-image]="getBackgroundImage(movie.promotionalElements.promotionalElements)" class="banner">
-    <section fxLayout="row" fxLayoutAlign="center">
+<ng-container *ngIf="(movie$ | async) as movie;" test-id="content">
+  <header>
+    <article fxLayout="row" fxLayout.lt-sm="column" fxFlex>
+      <!-- TODO#1763 get poster by countries from promotionalElements -->
+      <ng-container *ngIf=" movie.main.poster || movie.promotionalElements.poster[0].media as poster">
+        <img class="movie-poster" [imgRef]="poster" alt="movie poster"/>
+      </ng-container>
+      <div class="movie-info">
+        <h4> 
+          <span *ngIf="movie.main.workType as type">{{ type | uppercase }}</span>
+          <span *ngIf="movie.main.status || movie.main.totalRunTime"> | </span>
+          <span *ngIf="movie.main.status as status">{{ status | translateSlug: 'MOVIE_STATUS' | uppercase}}</span>
+          <span *ngIf="movie.main.status && movie.main.totalRunTime"> | </span>
+          <span *ngIf="movie.main.totalRunTime as time">{{ time }} <span *ngIf="time !== 'TBC'">MIN</span></span>
+        </h4>
+        <h1>{{ movie.main.title.international }}</h1>
+        <h6>
+          <span *ngFor="let director of movie.main.directors; let isLast=last">
+            {{ director.firstName }} {{ director.lastName }}{{ isLast? '':','}}
+          </span>
+        </h6>
+        <span class="mat-body-2" *ngFor="let country of movie.main.originCountries; let isLast=last">
+          {{ getLabelBySlug('TERRITORIES', country) }}{{ isLast? ', ' + movie.main.productionYear:' /' }}
+        </span>
+      </div>
+    </article>
+  </header>
+    
+    <!-- <section fxLayout="row" fxLayoutAlign="center">
       <article class="titles" fxLayout="column" fxLayoutAlign="start start">
         <h1>{{movie.main.title.international}}</h1>
         <div class="sub-title">
           <span>a film by</span>
-          <span *ngFor="let director of movie.main.directors; let isLast = last"> {{ director.firstName }} {{ director.lastName }}<span *ngIf="!isLast">, </span>
+          <span *ngFor="let director of movie.main.directors; let isLast = last">
+             {{ director.firstName }} {{ director.lastName }}{{ isLast? '':','}}
         </span>
         </div>
         <div  class="movie-info" fxLayout="row" fxLayoutAlign="space-between center">
@@ -20,6 +46,7 @@
             <span *ngIf="movie.main.totalRunTime && movie.main.status"> | </span>
             <span *ngIf="movie.main.totalRunTime as time">| {{ time }} min </span>
           </div>
+
         </div>
       </article>
     </section>
@@ -41,32 +68,33 @@
 
     <div fxLayout="column" class="poster-column" >
       <mat-card class="movie-presentation" fxLayout.lt-md="column" fxLayoutAlign.lt-md="center center">
+      -->
         <!-- poster -->
-        <ng-container *ngIf="movie.main.poster as poster">
+        <!-- <ng-container *ngIf="movie.main.poster as poster">
           <img class="movie-poster" [imgRef]="poster" alt="movie poster" />
-        </ng-container>
+        </ng-container> -->
         <!-- Promotional elements -->
-        <ng-container *ngIf="movie.promotionalElements.promotionalElements.length">
+        <!-- <ng-container *ngIf="movie.promotionalElements.promotionalElements.length">
           <catalog-promotional-elements (promoReelOpened)="sendPromoReelAnalytic()" [promotionalElements]="movie.promotionalElements.promotionalElements">
           </catalog-promotional-elements>
-        </ng-container>
+        </ng-container> -->
         <!-- Reserved territories -->
-        <ng-container
+        <!-- <ng-container
           *ngIf="movie.salesAgentDeal && movie.salesAgentDeal.reservedTerritories && movie.salesAgentDeal.reservedTerritories.length">
           <catalog-reserved-territories [reservedTerritories]="movie.salesAgentDeal.reservedTerritories">
           </catalog-reserved-territories>
-        </ng-container>
+        </ng-container> -->
         <!-- Production information -->
-        <catalog-production-informations *ngIf="
+        <!-- <catalog-production-informations *ngIf="
           movie.main &&
           movie.main.stakeholders &&
           movie.salesAgentDeal &&
           movie.salesAgentDeal.salesAgent"
           [stakeholders]="movie.main.stakeholders.executiveProducer"
           [salesAgentDealAvatar]="movie.salesAgentDeal.salesAgent.avatar">
-        </catalog-production-informations>
+        </catalog-production-informations> -->
         <!-- Key Assets -->
-        <ng-container *ngIf="movie.promotionalDescription.keyAssets.length">
+        <!-- <ng-container *ngIf="movie.promotionalDescription.keyAssets.length">
           <movie-display-assets [assets]="movie.promotionalDescription.keyAssets"></movie-display-assets>
           <mat-divider [inset]="true"></mat-divider>
         </ng-container>
@@ -74,9 +102,9 @@
     </div>
 
     <div fxLayout="column" class="information-column">
-      <mat-card class="informations" fxLayout="column">
+      <mat-card class="informations" fxLayout="column"> -->
         <!-- TODO #1146 -->
-        <movie-display-film-info-card
+        <!-- <movie-display-film-info-card
           [main]="movie.main"
           [salesCast]="movie.salesCast"
           [budget]="movie.budget"
@@ -89,7 +117,7 @@
           [releaseDate]="movie.AFMOriginCountryReleaseDate"
           [stakeholders]="movie.main.stakeholders.executiveProducer"
           [salesAgent]="movie.salesAgentDeal.salesAgent">
-        </movie-display-film-info-card>
+        </movie-display-film-info-card> -->
         <!-- Promotional elements -->
         <!-- <ng-container *ngIf="movie.promotionalElements.promotionalElements.length">
           <catalog-promotional-elements [promotionalElements]="movie.promotionalElements.promotionalElements">
@@ -122,8 +150,8 @@
         <!-- Keywords -->
         <!-- <movie-display-keywords [keywords]="movie.promotionalDescription.keywords"></movie-display-keywords>
         <mat-divider [inset]="true"></mat-divider> -->
-      </mat-card>
+      <!-- </mat-card>
     </div>
-  </section>
+  </section> -->
 
-</div>
+</ng-container>

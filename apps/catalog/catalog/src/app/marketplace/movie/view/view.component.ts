@@ -1,6 +1,6 @@
 import { map } from 'rxjs/operators';
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
-import { Movie, PromotionalElement, MoviePromotionalElements } from '@blockframes/movie';
+import { Movie, MoviePromotionalElements } from '@blockframes/movie';
 import { Component, OnInit, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MovieQuery } from '@blockframes/movie';
@@ -8,6 +8,7 @@ import { OrganizationQuery } from '@blockframes/organization';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
+import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 
 @Component({
   selector: 'catalog-movie-view',
@@ -21,6 +22,7 @@ export class MarketplaceMovieViewComponent implements OnInit {
   public loading$: Observable<boolean>;
   // Flag to indicate which icon and message to show
   public toggle$: Observable<boolean>;
+  public getLabelBySlug = getLabelBySlug;
 
   constructor(
     private movieQuery: MovieQuery,
