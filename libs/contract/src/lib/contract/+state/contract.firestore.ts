@@ -66,6 +66,8 @@ interface ContractRaw<D> {
   id: string,
   parentContractIds?: string[],
   childContractIds?: string[],
+  /** @dev an informative signature date, given that the actual signatures are in parties */
+  signDate?: D,
   parties: ContractPartyDetailRaw<D>[],
   titleIds: string[],
   partyIds: string[],
