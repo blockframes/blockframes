@@ -157,7 +157,7 @@ export function validateContract(contract: Contract): boolean {
 
 export function buildChainOfTitle() {
   // ie:  calculate contract prices and fees for each parents
-  // @todo #1397 implement this
+  // @todo #1657 implement this
 }
 
 /** Function to convert a Contract into a ContractDocument. */
@@ -198,6 +198,7 @@ export function createLegalDocument(
 export function createContractFromFirestore(contract: ContractWithTimeStamp): Contract {
   return {
     ...contract,
+    signDate: (contract.signDate instanceof Date) ? contract.signDate : contract.signDate.toDate(),
     parties: contract.parties
       ? contract.parties.map(partyDetails => formatPartyDetails(partyDetails))
       : [],

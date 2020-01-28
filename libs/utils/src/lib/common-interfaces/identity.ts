@@ -1,12 +1,12 @@
 import { ImgRef, createImgRef } from "../image-uploader";
 import { CrewRolesSlug, ProducerRolesSlug, CastRolesSlug, LegalRolesSlug, TerritoriesSlug } from "@blockframes/utils/static-model/types";
-import { Location } from "@blockframes/organization/+state/organization.firestore";
+import { Location } from "./utility";
 
 
 //////////////////////////
 // VARIOUS IDENTIY OBJECTS
-// @dev [WIP] Inclusive & LGBT compatible model
-// right now even a company can identify as a human! @TODO (#1388)
+// Inclusive & LGBT compatible model
+// Even a company can identify as a human!
 //////////////////////////
 
 /**

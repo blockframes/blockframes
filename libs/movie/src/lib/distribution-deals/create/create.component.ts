@@ -184,7 +184,7 @@ export class DistributionDealCreateComponent implements OnInit, OnDestroy {
   }
 
   public async addDistributionDeal() {
-    const distributionDeal = createDistributionDeal(); // @todo #1388 populate with form values
+    const distributionDeal = createDistributionDeal();
     // Create the contract that will handle the deal
     const contract = initContractWithVersion();
 

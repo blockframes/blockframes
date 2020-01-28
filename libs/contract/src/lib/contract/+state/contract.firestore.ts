@@ -9,6 +9,7 @@ import {
 } from "@blockframes/utils/static-model/types";
 import { ImgRef } from "@blockframes/utils/image-uploader";
 import { PaymentScheduleRaw } from "@blockframes/utils/common-interfaces/schedule";
+import { BankAccount } from "@blockframes/utils/common-interfaces/utility";
 
 type Timestamp = firestore.Timestamp;
 
@@ -19,7 +20,7 @@ export enum ContractStatus {
   unknown = 'unknown',
   undernegotiation = 'under negotiation',
   waitingsignature = 'waiting for signature',
-  waitingpaiment = 'waiting for paiment',
+  waitingpaiment = 'waiting for payment',
   rejected = 'rejected',
   aborted = 'abordted',
 }
@@ -65,17 +66,33 @@ interface ContractRaw<D> {
   id: string,
   parentContractIds?: string[],
   childContractIds?: string[],
+  /** @dev an informative signature date, given that the actual signatures are in parties */
+  signDate?: D,
   parties: ContractPartyDetailRaw<D>[],
   titleIds: string[],
   partyIds: string[],
   documents: LegalDocuments
 }
 
-/*
 export interface InvoiceRaw<D> {
-   @todo #1397
+  id: string,
+  internalRef: string,
+  /** @dev should be comming from blockchain data */
+  paymentRef?: string,
+  creationDate: D,
+  price: Price,
+  /** @dev an orgId */
+  buyerId: string,
+  /** @dev an orgId */
+  sellerId: string,
+  paymentSchedule: PaymentScheduleRaw<D>,
+  interestRate?: number,
+  /** @dev should be one of the buyerId bank accounts */
+  account: BankAccount,
+  contractId: string,
+  /** @dev should be a legal document belonging to contractId */
+  legalDocumentId: string,
 }
-*/
 
 export interface LegalDocuments {
   chainOfTitles: LegalDocument[],
