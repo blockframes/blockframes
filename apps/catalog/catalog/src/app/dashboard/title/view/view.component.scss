@@ -1,8 +1,45 @@
+@import 'mixins';
+
 header, section {
   padding: 0 24px;
 }
 
 header {
   height: 300px;
-  background: linear-gradient(to bottom, var(--primary), transparent);
+  article {
+    padding: 53px 0px 17px 24px;
+    height: 168px;
+  }
+}
+
+.movie-poster {
+  width: 168px;
+  height: 168px;
+  margin-right: 16px;
+}
+
+@include tablet {
+  header {
+    height: auto;
+    article {
+      height: auto;
+    }
+  }
+
+  .movie-info {
+    margin: 20px 0px;
+  }
+}
+
+@include mobile {
+  header {
+    height: auto;
+    article {
+      height: auto;
+    }
+  }
+
+  .movie-info {
+    margin: 20px 0px;
+  }
 }

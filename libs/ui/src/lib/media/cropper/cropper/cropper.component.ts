@@ -1,14 +1,14 @@
-import { Component, Input, Output, forwardRef, Renderer2, ElementRef, EventEmitter } from '@angular/core';
+import { Component, Input, forwardRef, Renderer2, ElementRef } from '@angular/core';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
 import { DropZoneDirective } from '../drop-zone.directive'
-import { finalize, catchError, distinctUntilChanged } from 'rxjs/operators';
+import { finalize, catchError } from 'rxjs/operators';
 import { Observable, BehaviorSubject, of, combineLatest } from 'rxjs';
 import { zoom, zoomDelay, check, finalZoom } from '@blockframes/utils/animations/cropper-animations';
 import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/storage';
 /*import { HttpClient } from '@angular/common/http';*/
-import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormGroup, FormControl } from '@angular/forms';
-import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ImgRef, createImgRef } from '@blockframes/utils/image-uploader';
+import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
 
 type CropStep = 'drop' | 'crop' | 'upload' | 'upload_complete' | 'show';
 
@@ -162,14 +162,14 @@ export class CropperComponent implements ControlValueAccessor {
     this.url$ = this.ref.getDownloadURL();
     // Observable completed once both requests are completed
     combineLatest([this.url$, this.ref.getMetadata()])
-    .subscribe(([url, meta]) => {
-      this.uploaded(createImgRef({
-        url,
-        ref: meta.fullPath,
-        originalFileName: this.originalFileName,
-      }));
-      this.nextStep('show');
-    })
+      .subscribe(([url, meta]) => {
+        this.uploaded(createImgRef({
+          url,
+          ref: meta.fullPath,
+          originalFileName: this.originalFileName,
+        }));
+        this.nextStep('show');
+      })
   }
 
   // TODO#1149: fix resize - get original picture
