@@ -440,7 +440,7 @@ const models = {
       'label': 'A-list Cast'
     },
     {
-      'slug': 'europeanQualification',
+      'slug': 'european-qualification',
       'label': 'European Qualification'
     }
   ] as const,
@@ -512,6 +512,12 @@ const models = {
     { 'slug': 'dolby-5.1', 'label': 'Dolby 5.1' },
     { 'slug': 'dolby-7.1', 'label': 'Dolby 7.1' },
     { 'slug': 'thx', 'label': 'THX' },
+  ],
+  'VERSION_INFO': [
+    { 'slug': 'original', 'label': 'Original' },
+    { 'slug': 'dubbed', 'label': 'Dubbed' },
+    { 'slug': 'subtitle', 'label': 'Subtitled' },
+    { 'slug': 'caption', 'label': 'Closed-Captions' }
   ]
 };
 
@@ -581,9 +587,9 @@ export const enum App {
 
 /**
  * Check if data passed into array have at lease one item belonging to scope
- * @param array 
- * @param scope 
- * @param key 
+ * @param array
+ * @param scope
+ * @param key
  */
 export function hasSlug<S extends Scope, code extends ExtractSlug<S>>(array: string[], scope: Scope, key: code): boolean {
   return array.includes(getCodeIfExists(scope, key));

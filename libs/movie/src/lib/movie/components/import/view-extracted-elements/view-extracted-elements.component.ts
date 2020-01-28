@@ -402,7 +402,7 @@ export class ViewExtractedElementsComponent {
         movie.salesInfo.certifications = [];
         if (spreadSheetRow[SpreadSheetMovie.europeanQualification] &&
           spreadSheetRow[SpreadSheetMovie.europeanQualification].toLowerCase() === 'yes') {
-          const certification = getCodeIfExists('CERTIFICATIONS', 'europeanQualification');
+          const certification = getCodeIfExists('CERTIFICATIONS', 'european-qualification');
           if (certification) {
             movie.salesInfo.certifications.push(certification);
           }
@@ -1314,7 +1314,7 @@ export class ViewExtractedElementsComponent {
               contract.last.titles[movie.id].price.currency = spreadSheetRow[SpreadSheetDistributionDeal.priceCurrency];
             }
 
-            // CATCH UP 
+            // CATCH UP
             if (spreadSheetRow[SpreadSheetDistributionDeal.catchUpStartDate] || spreadSheetRow[SpreadSheetDistributionDeal.catchUpEndDate]) {
               distributionDeal.catchUp = createTerms();
 

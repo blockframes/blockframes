@@ -2,7 +2,7 @@
   <h5>Countries of Origin #{{ i + 1 }}</h5>
   <ul>
     <li>
-      <strong>Country </strong>{{ country | missing }}
+      <strong>Country </strong>{{ country | missingWithLabel: 'TERRITORIES' }}
     </li>
     <li>
       <strong>Domestic Distributor </strong>
@@ -11,7 +11,7 @@
       <strong>Release Media </strong>
       <ng-container *ngFor="let release of salesInfo.originalRelease.controls">
         <ng-container *ngIf="release.get('country').value === country.value">
-          {{ release.get('media') | missing }}
+          {{ release.get('media') | missingWithLabel: 'MEDIAS' }}
         </ng-container>
       </ng-container>
     </li>

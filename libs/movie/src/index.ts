@@ -20,6 +20,11 @@ export * from './lib/movie/form/summary/information/information.module';
 export * from './lib/movie/form/summary/story/story.module';
 export * from './lib/movie/form/summary/credit/credit.module';
 export * from './lib/movie/form/summary/budget/budget.module';
+export * from './lib/movie/form/summary/technical-information/technical-information.module';
+export * from './lib/movie/form/summary/image/image.module';
+export * from './lib/movie/form/summary/file/file.module';
+export * from './lib/movie/form/summary/evaluation/evaluation.module';
+
 // Movie Components
 export { MovieViewComponent } from './lib/movie/pages/movie-view/movie-view.component';
 export { MovieEditableComponent } from './lib/movie/pages/movie-editable/movie-editable.component';

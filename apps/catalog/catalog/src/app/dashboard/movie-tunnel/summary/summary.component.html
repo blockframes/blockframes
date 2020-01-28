@@ -49,5 +49,45 @@
         <movie-summary-budget [budget]="form.budget" [salesInfo]="form.salesInfo" [movieReview]="form.movieReview"></movie-summary-budget>
       </mat-card-content>
     </mat-card>
+
+    <mat-card>
+      <mat-card-header fxLayout="row" fxLayoutAlign="start center">
+        <mat-card-title>Technical Information</mat-card-title>
+        <a mat-icon-button [routerLink]="getPath('technical-info')"><mat-icon svgIcon="edit"></mat-icon></a>
+      </mat-card-header>
+      <mat-card-content>
+        <movie-summary-technical-information [salesInfo]="form.salesInfo" [versionInfo]="form.versionInfo"></movie-summary-technical-information>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+      <mat-card-header fxLayout="row" fxLayoutAlign="start center">
+        <mat-card-title>Images</mat-card-title>
+        <a mat-icon-button [routerLink]="getPath('images')"><mat-icon svgIcon="edit"></mat-icon></a>
+      </mat-card-header>
+      <mat-card-content>
+        <movie-summary-image></movie-summary-image>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+      <mat-card-header fxLayout="row" fxLayoutAlign="start center">
+        <mat-card-title>Files & links</mat-card-title>
+        <a mat-icon-button [routerLink]="getPath('files&links')"><mat-icon svgIcon="edit"></mat-icon></a>
+      </mat-card-header>
+      <mat-card-content>
+        <movie-summary-file [promotionalElements]="form.promotionalElements"></movie-summary-file>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+      <mat-card-header fxLayout="row" fxLayoutAlign="start center">
+        <mat-card-title>Marketplace Evaluation</mat-card-title>
+        <a mat-icon-button [routerLink]="getPath('evaluation')"><mat-icon svgIcon="edit"></mat-icon></a>
+      </mat-card-header>
+      <mat-card-content>
+        <movie-summary-evaluation [salesInfo]="form.salesInfo"></movie-summary-evaluation>
+      </mat-card-content>
+    </mat-card>
   </ng-container>
 </tunnel-page>
