@@ -141,7 +141,9 @@ export class CropperComponent implements ControlValueAccessor {
         throw new Error('No image cropped yet');
       }
       this.nextStep('upload');
-      this.ref = this.storage.ref(`${this.folder}/${this.file.name}`);
+      const part = this.file.name.split('.');
+      const fileName = part[0] + Date.now() + '.' + part[1];
+      this.ref = this.storage.ref(`${this.folder}/${fileName}`);
       const blob = b64toBlob(this.croppedImage);
 
       this.percentage$ = this.ref.put(blob).percentageChanges().pipe(
