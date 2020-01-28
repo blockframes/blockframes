@@ -103,6 +103,8 @@ $bf-dark-background: (
   disabled-button-toggle: rgba(155, 177, 255, 0.12),
   unselected-chip:    map_get($mat-grey, 700),
   disabled-list-option: rgba(155, 177, 255, 0.12),
+  // TODO remove this custom variable when last palette will be imported
+  beware: #F6A92C,
 );
 
 ////////////////

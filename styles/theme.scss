@@ -19,6 +19,7 @@
 @import './components/bf-font-color.scss';
 @import './components/bf-icon.scss';
 @import './components/mat-toggle-button.scss';
+@import './components/missing-control.scss';
 
 @include mat-core($bf-typography);
 
@@ -37,6 +38,7 @@
   @include bf-widget-theme($theme);
   @include bf-color-font($theme);
   @include bf-icon-theme($theme);
+  @include bf-missing-control-theme($theme);
 }
 
 @mixin bf-material-typography($typography) {
