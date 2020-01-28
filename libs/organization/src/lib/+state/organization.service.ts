@@ -76,16 +76,9 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     });
     const permissionsDoc = this.db.doc(`permissions/${orgId}`);
     const userDoc = this.db.doc(`users/${user.uid}`);
-    const apps: App[] = [App.mediaDelivering, App.mediaFinanciers, App.storiesAndMore];
 
     // Set the new organization in permissions collection.
     (write as firestore.WriteBatch).set(permissionsDoc.ref, permissions);
-    // Initialize apps permissions documents in permissions apps sub-collection.
-    apps.map(app => {
-      const newApp = this.db.doc(`permissions/${orgId}/userAppsPermissions/${app}`);
-      const appPermissions = createAppPermissions(app);
-      return (write as firestore.WriteBatch).set(newApp.ref, appPermissions);
-    })
 
     // Update user with orgId.
     return write.update(userDoc.ref, { orgId });
