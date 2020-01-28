@@ -2,15 +2,15 @@
   <mat-sidenav #sidenav>
     <!-- SIDE NAVIGATION -->
     <mat-nav-list>
-      <a mat-list-item routerLink="" routerActiveLink="active">
+      <a mat-list-item routerLink="home" routerActiveLink="active">
         <mat-icon mat-list-icon>home</mat-icon>
         <span mat-line>Home</span>
       </a>
-      <a mat-list-item routerLink="" routerActiveLink="active">
+      <a mat-list-item routerLink="selection" routerActiveLink="active">
         <mat-icon mat-list-icon>shopping_basket</mat-icon>
         <span mat-line>My Selection</span>
       </a>
-      <a mat-list-item routerLink="" routerActiveLink="active">
+      <a mat-list-item routerLink="wishlist" routerActiveLink="active">
         <mat-icon mat-list-icon>favorite</mat-icon>
         <span mat-line>Wishlist</span>
       </a>
@@ -18,7 +18,7 @@
         <mat-icon mat-list-icon>home</mat-icon>
         <span mat-line>Offers & Deals</span>
       </a>
-      <a mat-list-item routerLink="" routerActiveLink="active">
+      <a mat-list-item routerLink="search" routerActiveLink="active">
         <mat-icon mat-list-icon>home</mat-icon>
         <span mat-line>All Titles</span>
       </a>
@@ -43,9 +43,7 @@
         <mat-icon>shopping_basket</mat-icon>
       </button>
       <mat-divider vertical></mat-divider>
-      <button mat-icon-button>
-        <mat-icon>notifications</mat-icon>
-      </button>
+      <overlay-notification-widget></overlay-notification-widget>
       <button mat-icon-button>
         <mat-icon>account_circle</mat-icon>
       </button>

@@ -1,7 +1,5 @@
-<section *ngIf="(user$ | async) as user" test-id="notification-widget">
-  <button
-    mat-icon-button
-    [matMenuTriggerFor]="notifications">
+<section *ngIf="(user$ | async) as user" test-id="notification-widget" >
+  <button mat-icon-button [widgetTarget]="notifications">
     <ng-container *ngIf="(totalCount$ | async) as count; else: empty">
       <mat-icon
         [matBadge]="count"
@@ -10,17 +8,22 @@
         notifications_none
       </mat-icon>
     </ng-container>
-    <ng-template #empty>
+    <ng-template #empty >
       <mat-icon>notifications_none</mat-icon>
     </ng-template>
   </button>
 </section>
-<mat-menu #notifications="matMenu" xPosition="before" class="mat-elevation-z6">
-  <section test-id="notification-list">
+
+<overlay-widget #notifications test-id="notification-list">
+  <widget-card>
+    <header widgetHeader color="primary" fxLayout="row" fxLayoutAlign="space-between center">
+      <span class="mat-caption">Recent Activity</span>
+      <mat-icon>settings</mat-icon>
+    </header>
     <invitation-list></invitation-list>
     <notification-list></notification-list>
     <article *ngIf="(totalCount$ | async) == 0" class="container">
       <span>You have not yet received any notifications</span>
     </article>
-  </section>
-</mat-menu>
+  </widget-card>
+</overlay-widget>
