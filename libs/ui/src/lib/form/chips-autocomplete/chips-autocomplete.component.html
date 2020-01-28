@@ -10,6 +10,9 @@
       [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="true"
       (matChipInputTokenEnd)="add($event)" />
   </mat-chip-list>
+  <mat-hint>
+    <ng-content></ng-content>
+  </mat-hint>
 </mat-form-field>
 <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
   <mat-option *ngFor="let item of filteredItems | async" [value]="getKey(item)">

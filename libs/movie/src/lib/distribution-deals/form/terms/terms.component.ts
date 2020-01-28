@@ -31,24 +31,22 @@ export class DistributionDealTermsComponent implements OnInit, OnDestroy {
     this.periodSub = this.periodCtrl.valueChanges
       .pipe(
         startWith(this.periodCtrl.value),
-        tap(value => {
-          value
-            ? (this.form.get('start').enable(), this.form.get('end').enable())
-            : (this.form.get('start').disable(), this.form.get('end').disable());
-        })
+        tap(value => this.toggleForm(['start', 'end'], value))
       )
       .subscribe();
     this.eventSub = this.eventCtrl.valueChanges
       .pipe(
         startWith(this.eventCtrl.value),
-        tap(value => {
-          value
-            ? (this.form.get('floatingDuration').enable(), this.form.get('floatingStart').enable())
-            : (this.form.get('floatingDuration').disable(value),
-              this.form.get('floatingStart').disable(value));
-        })
+        tap(value => this.toggleForm(['floatingDuration', 'floatingStart'], value))
       )
       .subscribe();
+  }
+
+  private toggleForm(formNames: string[], value: boolean) {
+    for (const name of formNames) {
+      const form = this.form.get(name as 'start' | 'end' | 'floatingStart' | 'floatingDuration');
+      value ? form.enable() : form.disable();
+    }
   }
 
   ngOnDestroy() {

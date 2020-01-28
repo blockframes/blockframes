@@ -15,4 +15,12 @@ export class DistributionDealTerritoryComponent {
   @Input() form: DistributionDealForm;
 
   public territories = staticModels['TERRITORIES'];
+
+  get territory() {
+    return this.form.get('territory');
+  }
+
+  get territoryExcluded() {
+    return this.form.get('territoryExcluded');
+  }
 }
