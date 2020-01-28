@@ -13,7 +13,7 @@
       </mat-card-header>
       <mat-card-content>
         <movie-summary-main [main]="form.main" [link]="getPath('main')"></movie-summary-main>
-        <movie-summary-country [salesInfo]="form.salesInfo" [originCountries]="form.main.originCountries"></movie-summary-country>
+        <movie-summary-country [salesInfo]="form.salesInfo" [originCountries]="form.main.originCountries" [link]="getPath('main')"></movie-summary-country>
         <movie-summary-information [main]="form.main" [link]="getPath('main')"></movie-summary-information>
         <movie-summary-sales-cast [salesCast]="form.salesCast" [link]="getPath('main')"></movie-summary-sales-cast>
         <movie-summary-festival-prizes [festivalPrizes]="form.festivalPrizes" [link]="getPath('main')"></movie-summary-festival-prizes>
@@ -36,7 +36,7 @@
         <a mat-icon-button [routerLink]="getPath('credits')"><mat-icon svgIcon="edit"></mat-icon></a>
       </mat-card-header>
       <mat-card-content>
-        <movie-summary-credit [main]="form.main" [salesCast]="form.salesCast"></movie-summary-credit>
+        <movie-summary-credit [main]="form.main" [salesCast]="form.salesCast" [link]="getPath('credits')"></movie-summary-credit>
       </mat-card-content>
     </mat-card>
 
@@ -46,7 +46,7 @@
         <a mat-icon-button [routerLink]="getPath('budget')"><mat-icon svgIcon="edit"></mat-icon></a>
       </mat-card-header>
       <mat-card-content>
-        <movie-summary-budget [budget]="form.budget" [salesInfo]="form.salesInfo" [movieReview]="form.movieReview"></movie-summary-budget>
+        <movie-summary-budget [budget]="form.budget" [salesInfo]="form.salesInfo" [movieReview]="form.movieReview" [link]="getPath('budget')"></movie-summary-budget>
       </mat-card-content>
     </mat-card>
 
