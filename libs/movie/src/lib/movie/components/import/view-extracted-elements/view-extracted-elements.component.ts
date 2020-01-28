@@ -236,14 +236,14 @@ export class ViewExtractedElementsComponent {
 
         // BEGINNING OF RIGHTS (Mandate beginning of rights)
         if (spreadSheetRow[SpreadSheetMovie.rightsStart]) {
-          const rightsStart: SSF$Date = SSF.parse_date_code(spreadSheetRow[SpreadSheetMovie.rightsStart]);
-          movie.salesAgentDeal.rights.from = new Date(`${rightsStart.y}-${rightsStart.m}-${rightsStart.d}`);
+          const { y, m, d } = SSF.parse_date_code(spreadSheetRow[SpreadSheetMovie.rightsStart]);
+          movie.salesAgentDeal.rights.from = new Date(`${y}-${m}-${d}`);
         }
 
         // END OF RIGHTS (Mandate End of rights)
         if (spreadSheetRow[SpreadSheetMovie.rightsEnd]) {
-          const rightsEnd: SSF$Date = SSF.parse_date_code(spreadSheetRow[SpreadSheetMovie.rightsEnd]);
-          movie.salesAgentDeal.rights.to = new Date(`${rightsEnd.y}-${rightsEnd.m}-${rightsEnd.d}`);
+          const { y, m, d } = SSF.parse_date_code(spreadSheetRow[SpreadSheetMovie.rightsEnd]);
+          movie.salesAgentDeal.rights.to = new Date(`${y}-${m}-${d}`);
         }
 
         // TERRITORIES (Mandate Territories)
@@ -1154,8 +1154,8 @@ export class ViewExtractedElementsComponent {
 
             // BEGINNING OF RIGHTS
             if (spreadSheetRow[SpreadSheetDistributionDeal.rightsStart]) {
-              const rightsStart: SSF$Date = SSF.parse_date_code(spreadSheetRow[SpreadSheetDistributionDeal.rightsStart]);
-              const dateStart = new Date(`${rightsStart.y}-${rightsStart.m}-${rightsStart.d}`);
+              const { y, m, d } = SSF.parse_date_code(spreadSheetRow[SpreadSheetDistributionDeal.rightsStart]);
+              const dateStart = new Date(`${y}-${m}-${d}`);
               if (isNaN(dateStart.getTime())) { // ie invalid date
                 distributionDeal.terms.approxStart = spreadSheetRow[SpreadSheetDistributionDeal.rightsStart];
               } else {
@@ -1165,8 +1165,8 @@ export class ViewExtractedElementsComponent {
 
             // END OF RIGHTS
             if (spreadSheetRow[SpreadSheetDistributionDeal.rightsEnd]) {
-              const rightsEnd: SSF$Date = SSF.parse_date_code(spreadSheetRow[SpreadSheetDistributionDeal.rightsEnd]);
-              const dateEnd = new Date(`${rightsEnd.y}-${rightsEnd.m}-${rightsEnd.d}`);
+              const { y, m, d } = SSF.parse_date_code(spreadSheetRow[SpreadSheetDistributionDeal.rightsEnd]);
+              const dateEnd = new Date(`${y}-${m}-${d}`);
               if (isNaN(dateEnd.getTime())) { // ie invalid date
                 distributionDeal.terms.approxEnd = spreadSheetRow[SpreadSheetDistributionDeal.rightsEnd];
               } else {
@@ -1320,8 +1320,8 @@ export class ViewExtractedElementsComponent {
 
               // CATCH UP START
               if (spreadSheetRow[SpreadSheetDistributionDeal.catchUpStartDate]) {
-                const ssfCatchUpStartDate: SSF$Date = SSF.parse_date_code(spreadSheetRow[SpreadSheetDistributionDeal.catchUpStartDate]);
-                const catchUpStartDate = new Date(`${ssfCatchUpStartDate.y}-${ssfCatchUpStartDate.m}-${ssfCatchUpStartDate.d}`);
+                const { y, m, d } = SSF.parse_date_code(spreadSheetRow[SpreadSheetDistributionDeal.catchUpStartDate]);
+                const catchUpStartDate = new Date(`${y}-${m}-${d}`);
                 if (isNaN(catchUpStartDate.getTime())) {
                   distributionDeal.catchUp.approxStart = spreadSheetRow[SpreadSheetDistributionDeal.catchUpStartDate];
                   importErrors.errors.push({
@@ -1338,8 +1338,8 @@ export class ViewExtractedElementsComponent {
 
               // CATCH UP END
               if (spreadSheetRow[SpreadSheetDistributionDeal.catchUpEndDate]) {
-                const ssfCatchUpEndDate: SSF$Date = SSF.parse_date_code(spreadSheetRow[SpreadSheetDistributionDeal.catchUpEndDate]);
-                const catchUpEndDate = distributionDeal.catchUp.end = new Date(`${ssfCatchUpEndDate.y}-${ssfCatchUpEndDate.m}-${ssfCatchUpEndDate.d}`);
+                const { y, m, d } = SSF.parse_date_code(spreadSheetRow[SpreadSheetDistributionDeal.catchUpEndDate]);
+                const catchUpEndDate = distributionDeal.catchUp.end = new Date(`${y}-${m}-${d}`);
                 if (isNaN(catchUpEndDate.getTime())) {
                   distributionDeal.catchUp.approxEnd = spreadSheetRow[SpreadSheetDistributionDeal.catchUpEndDate];
                   importErrors.errors.push({
@@ -1359,9 +1359,9 @@ export class ViewExtractedElementsComponent {
             if (spreadSheetRow[SpreadSheetDistributionDeal.multidiffusion]) {
               const multiDiffDates = spreadSheetRow[SpreadSheetDistributionDeal.multidiffusion].split(this.separator)
               multiDiffDates.forEach(date => {
-                const ssfDiffusionDate: SSF$Date = SSF.parse_date_code(date);
+                const { y, m, d } = SSF.parse_date_code(date);
                 const diffusion = createTerms();
-                const diffusionDate = new Date(`${ssfDiffusionDate.y}-${ssfDiffusionDate.m}-${ssfDiffusionDate.d}`);
+                const diffusionDate = new Date(`${y}-${m}-${d}`);
 
                 if (isNaN(diffusionDate.getTime())) {
                   diffusion.approxStart = date;
@@ -1749,8 +1749,8 @@ export class ViewExtractedElementsComponent {
 
         // CONTRACT CREATION DATE
         if (spreadSheetRow[SpreadSheetContract.creationDate]) {
-          const creationDate: SSF$Date = SSF.parse_date_code(spreadSheetRow[SpreadSheetContract.creationDate]);
-          contract.last.creationDate = new Date(`${creationDate.y}-${creationDate.m}-${creationDate.d}`);
+          const { y, m, d } = SSF.parse_date_code(spreadSheetRow[SpreadSheetContract.creationDate]);
+          contract.last.creationDate = new Date(`${y}-${m}-${d}`);
         } else {
           importErrors.errors.push({
             type: 'warning',
@@ -1763,8 +1763,8 @@ export class ViewExtractedElementsComponent {
 
         // SCOPE DATE START
         if (spreadSheetRow[SpreadSheetContract.scopeStartDate]) {
-          const scopeStartDate: SSF$Date = SSF.parse_date_code(SpreadSheetContract.scopeStartDate);
-          contract.last.scope.start = new Date(`${scopeStartDate.y}-${scopeStartDate.m}-${scopeStartDate.d}`);
+          const { y, m, d } = SSF.parse_date_code(SpreadSheetContract.scopeStartDate);
+          contract.last.scope.start = new Date(`${y}-${m}-${d}`);
         } else {
           importErrors.errors.push({
             type: 'warning',
@@ -1777,8 +1777,8 @@ export class ViewExtractedElementsComponent {
 
         // SCOPE DATE END
         if (spreadSheetRow[SpreadSheetContract.scopeEndDate]) {
-          const scopeEndDate: SSF$Date = SSF.parse_date_code(SpreadSheetContract.scopeEndDate);
-          contract.last.scope.end = new Date(`${scopeEndDate.y}-${scopeEndDate.m}-${scopeEndDate.d}`);
+          const { y, m, d } = SSF.parse_date_code(SpreadSheetContract.scopeEndDate);
+          contract.last.scope.end = new Date(`${y}-${m}-${d}`);
         } else {
           importErrors.errors.push({
             type: 'warning',
@@ -1939,7 +1939,7 @@ export class ViewExtractedElementsComponent {
     if (spreadSheetRow[SpreadSheetContractTitle.titleCode + currentIndex]) {
       const title = await this.movieService.getFromInternalRef(spreadSheetRow[SpreadSheetContractTitle.titleCode + currentIndex]);
       if (title === undefined) {
-        throw new Error(`Movie ${spreadSheetRow[SpreadSheetContractTitle.titleCode + currentIndex]} is missing id database.`);
+        throw new Error(`Movie ${spreadSheetRow[SpreadSheetContractTitle.titleCode + currentIndex]} is missing in database.`);
       }
       titleDetails.titleId = title.id;
     }

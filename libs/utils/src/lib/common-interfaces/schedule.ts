@@ -17,7 +17,7 @@ export interface PaymentSchedule extends PaymentScheduleRaw<Date> {
 export function createPaymentSchedule(params: Partial<PaymentSchedule> = {}): PaymentSchedule {
   return {
     percentage: 0,
-    date: createScheduledDate(params ? params.date : undefined),
+    date: createScheduledDate(params && params.date),
     label: '',
     ...params,
   }

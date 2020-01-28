@@ -20,7 +20,7 @@ export enum ContractStatus {
   unknown = 'unknown',
   undernegotiation = 'under negotiation',
   waitingsignature = 'waiting for signature',
-  waitingpaiment = 'waiting for paiment',
+  waitingpaiment = 'waiting for payment',
   rejected = 'rejected',
   aborted = 'abordted',
 }
@@ -75,16 +75,21 @@ interface ContractRaw<D> {
 export interface InvoiceRaw<D> {
   id: string,
   internalRef: string,
-  paymentRef?: string, // @dev should be comming from blockchain data
+  /** @dev should be comming from blockchain data */
+  paymentRef?: string,
   creationDate: D,
   price: Price,
-  buyerId: string, // @dev an orgId
-  sellerId: string, // @dev an orgId
+  /** @dev an orgId */
+  buyerId: string,
+  /** @dev an orgId */
+  sellerId: string,
   paymentSchedule: PaymentScheduleRaw<D>,
   interestRate?: number,
-  account: BankAccount, // @dev should be one of the buyerId bank accounts
+  /** @dev should be one of the buyerId bank accounts */
+  account: BankAccount,
   contractId: string,
-  legalDocumentId: string, // @dev should be a legal document belonging to contractId
+  /** @dev should be a legal document belonging to contractId */
+  legalDocumentId: string,
 }
 
 export interface LegalDocuments {

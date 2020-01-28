@@ -30,7 +30,7 @@ export function createLocation(params: Partial<Location> = {}): Location {
 /** A factory function that creates a BankAccount */
 export function createBankAccount(params: Partial<BankAccount> = {}): BankAccount {
   return {
-    address: createLocation(params ? params.address : undefined),
+    address: createLocation(params && params.address),
     IBAN: '',
     BIC: '',
     name: '',
