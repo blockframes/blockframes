@@ -9,7 +9,7 @@
       <strong>Territories :</strong>
       <ul>
         <li *ngFor="let item of data.territories">
-          {{ getLabelByCode('TERRITORIES', item) }}
+          {{ item | translateSlug: 'TERRITORIES' }}
         </li>
       </ul>
     </mat-list-item>
@@ -17,7 +17,7 @@
       <strong>Medias :</strong>
       <ul>
         <li *ngFor="let item of data.medias">
-          {{ getLabelByCode('MEDIAS', item) }}
+          {{ item | translateSlug: 'MEDIAS' }}
         </li>
       </ul>
     </mat-list-item>

@@ -9,8 +9,9 @@ export * from './lib/contract/+state/contract.firestore';
 export * from './lib/contract/forms/party-name/party-name.module';
 
 // Forms
-export * from './lib/contract/forms/contract.form'
+export * from './lib/contract/forms/contract.form';
+export * from './lib/contract/forms/party-name/party-name.form';
 
 // Guards
 export * from './lib/contract/guards/active-contract.guard';
-export * from './lib/contract/guards/active-organization-contracts.guard';
+export * from './lib/contract/guards/contract-list.guard';

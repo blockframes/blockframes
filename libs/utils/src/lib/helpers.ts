@@ -1,13 +1,4 @@
-/** Format a date into a string to match angular "| date" in html. */
-export function formatDate(date: Date) {
-  return (
-    date.toLocaleString('default', { month: 'short' }) +
-    ' ' +
-    date.getDate() +
-    ', ' +
-    date.getFullYear()
-  );
-}
+import { firestore } from "firebase/app";
 
 /**
  * @see #483
@@ -21,7 +12,10 @@ export function cleanModel<T>(data: T): T {
   return JSON.parse(JSON.stringify(data));
 }
 
-
 export interface DateGroup<T> {
   [date: string]: T[];
+}
+
+export function isTimestamp(date: any): date is firestore.Timestamp {
+  return date && date instanceof firestore.Timestamp
 }

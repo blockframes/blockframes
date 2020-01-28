@@ -15,6 +15,8 @@ import { startWith } from 'rxjs/operators';
 })
 export class TableFilterComponent implements OnInit, AfterViewInit {
 
+  @Input() showFilter = false;
+  @Input() showPaginator = false;
   @Input() columns: Record<string, any>;
   @Input() initialColumns: string[];
   @Input() set source(data: any[]) {
@@ -26,16 +28,13 @@ export class TableFilterComponent implements OnInit, AfterViewInit {
   displayedColumns$: Observable<string[]>;
   dataSource: MatTableDataSource<any>;
 
-  // filters
+  // Filters
   columnFilter = new FormControl([]);
 
   @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: false}) sort: MatSort;
 
-  constructor() { }
-
   ngOnInit() {
-    this.dataSource = new MatTableDataSource([]);
     this.columnFilter.patchValue(this.initialColumns);
     this.displayedColumns$ = this.columnFilter.valueChanges.pipe(
       startWith(this.columnFilter.value)

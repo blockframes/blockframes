@@ -4,7 +4,9 @@ import { Party } from '@blockframes/utils/common-interfaces/identity';
 
 function createPartyControl(party: Partial<Party> = {}) {
   return {
-    displayName: new FormControl(party.displayName)
+    displayName: new FormControl(party.displayName),
+    showName: new FormControl(party.showName),
+    role: new FormControl(party.role),
   };
 }
 

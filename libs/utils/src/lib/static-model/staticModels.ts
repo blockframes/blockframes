@@ -466,6 +466,7 @@ const models = {
     { 'slug': 'book-adaptation', 'label': 'Book Adaptation' },
     { 'slug': 'music-publishing', 'label': 'Music Publishing' },
     { 'slug': 'merchandising', 'label': 'Merchandising' },
+    { 'slug': 'ancillary', 'label': 'Ancillary'}
   ] as const,
   'LEGAL_ROLES': [
     { 'slug': 'undefined', 'label': 'Undefined role' },
@@ -555,10 +556,20 @@ export const getCodeIfExists = <S extends Scope, code extends ExtractCode<S>>(
  * @param scope
  * @param slug
  */
-export const getLabelByCode = (scope: Scope, slug: string) => {
+export const getLabelBySlug = (scope: Scope, slug: string) => {
   const item = (models[scope] as any[]).find(i => i.slug === slug);
   return item ? item.label : '';
 };
+
+/**
+ * Returns the code corresponding to a slug (ie:code).
+ * @param scope
+ * @param slug
+ */
+export const getCodeBySlug = (scope: Scope, slug: string) => {
+  const item = (models[scope] as any[]).find(i => i.slug === slug);
+  return item ? item.code : '';
+}
 
 /** Check if the key is a slug of a scope */
 export const isInSlug = (scope: Scope, key: string) => {

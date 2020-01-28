@@ -26,7 +26,7 @@ import { SSF } from 'xlsx';
 import { MovieLanguageTypes, PremiereType } from '@blockframes/movie/movie/+state/movie.firestore';
 import { createCredit, createStakeholder } from '@blockframes/utils/common-interfaces/identity';
 import { DistributionDeal, createDistributionDeal, createHoldback } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
-import { createContractPartyDetail, createContractTitleDetail, Contract, initContractWithVersion, ContractWithLastVersion } from '@blockframes/contract/contract/+state/contract.model';
+import { createContractPartyDetail, createContractTitleDetail, Contract, initContractWithVersion, ContractWithLastVersion, getContractParties } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractStatus, ContractTitleDetail } from '@blockframes/contract/contract/+state/contract.firestore';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state/distribution-deal.service';
 import { createFee } from '@blockframes/utils/common-interfaces/price';
@@ -750,7 +750,7 @@ export class ViewExtractedElementsComponent {
         }
 
         // SALES AGENT (name)
-        const salesAgent = createCredit();
+/*         const salesAgent = createCredit();
         if (spreadSheetRow[SpreadSheetMovie.salesAgentName]) {
           salesAgent.displayName = spreadSheetRow[SpreadSheetMovie.salesAgentName];
         }
@@ -758,9 +758,9 @@ export class ViewExtractedElementsComponent {
         // SALES AGENT (avatar)
         if (spreadSheetRow[SpreadSheetMovie.salesAgentImage]) {
           salesAgent.avatar = await this.imageUploader.upload(spreadSheetRow[SpreadSheetMovie.salesAgentImage]);
-        }
-
-        movie.salesAgentDeal.salesAgent = salesAgent;
+        } */
+/* 
+        movie.salesAgentDeal.salesAgent = salesAgent; */
 
         // RESERVED TERRITORIES
         if (spreadSheetRow[SpreadSheetMovie.reservedTerritories]) {
@@ -1138,7 +1138,7 @@ export class ViewExtractedElementsComponent {
             /* LICENSEE */
 
             // Retreive the licensee inside the contract to update his infos
-            const licensee = this.contractService.getContractParties(contract.doc, 'licensee').shift();
+            const licensee = getContractParties(contract.doc, 'licensee').shift();
             if (licensee === undefined) {
               throw new Error(`No licensee found in contract : ${contract.doc.id ? contract.doc.id : 'unknown Id'}.`);
             }

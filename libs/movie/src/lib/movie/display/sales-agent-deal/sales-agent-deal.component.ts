@@ -1,6 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { createMovieSalesAgentDeal, MovieSalesAgentDeal } from '../../+state';
-import { getLabelByCode } from '@blockframes/utils/static-model/staticModels';
 
 @Component({
   selector: '[deal] movie-display-salesdeal',
@@ -11,7 +10,6 @@ import { getLabelByCode } from '@blockframes/utils/static-model/staticModels';
 export class MovieDisplaySalesAgentDealComponent {
 
   public data : MovieSalesAgentDeal;
-  public getLabelByCode = getLabelByCode;
 
   @Input() set deal(agentDeal: Partial<MovieSalesAgentDeal>) {
     this.data = createMovieSalesAgentDeal(agentDeal);

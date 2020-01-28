@@ -1,4 +1,4 @@
-export const enum Event {
+export enum Event {
   ContractSignatureDate = 'Contract Signature Date',
   WordlPremiere = 'World Premiere',
   AcceptationAllMaterials = 'Acceptation of all delivery materials',

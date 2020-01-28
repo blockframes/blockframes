@@ -48,7 +48,7 @@ const panels = [{
     label: 'Marketplace Rights'
   }, {
     path: 'deals',
-    label: 'Previously Deals'
+    label: 'Ongoing Deals'
   }]
 }, {
   title: 'Uploaded Media',

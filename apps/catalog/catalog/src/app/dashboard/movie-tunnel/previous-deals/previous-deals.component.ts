@@ -1,6 +1,9 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ContractForm } from '@blockframes/contract/contract/forms/contract.form';
+import { FormList } from '@blockframes/utils/form/forms/list.form';
+import { ContractForm, PartyDetailsForm } from '@blockframes/contract/contract/forms/contract.form';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { DistributionDealForm } from '@blockframes/movie/distribution-deals/form/distribution-deal.form';
+import { ContractPartyForm } from '@blockframes/contract/contract/forms/party-name/party-name.form';
 
 @Component({
   selector: 'catalog-tunnel-previous-deals',
@@ -8,21 +11,39 @@ import { DistributionDealForm } from '@blockframes/movie/distribution-deals/form
   styleUrls: ['./previous-deals.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TunnelPreviousDealsComponent {
-  constructor(
-    private formContract: ContractForm,
-    private formDistributionDeal: DistributionDealForm
-  ) {}
+export class TunnelPreviousDealsComponent implements OnInit {
+  public formContract: FormList<any, ContractForm>;
+  public formDistributionDeal: FormList<any, DistributionDealForm>;
 
-  get contract() {
-    return this.formContract.get('parties');
+  public loading: boolean;
+
+  constructor(private routerQuery: RouterQuery) {}
+
+  ngOnInit() {}
+
+  public contract(index: number) {
+    return this.formContract.at(index);
   }
 
-  get distributionDeal() {
-    return this.formDistributionDeal;
+  public distributionDeal(index: number) {
+    return this.formDistributionDeal.at(index);
   }
 
-  get distributionDealExclusiveControl() {
-    return this.formDistributionDeal.get('exclusive');
+  public contractParty(index: number) {
+    return this.formContract.at(index);
+  }
+
+  public distributionDealTerms(index: number) {
+    return this.formDistributionDeal.at(index).get('terms');
+  }
+
+  public addContract() {
+    if (!this.formContract) {
+      this.formContract = FormList.factory([], contract => new ContractForm(contract));
+      this.formDistributionDeal = FormList.factory([], deals => new DistributionDealForm(deals));
+    } else {
+      this.formContract.add(); // specific to FormList
+      this.formDistributionDeal.add();
+    }
   }
 }

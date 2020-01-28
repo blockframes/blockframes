@@ -1,3 +1,12 @@
-.full-width {
+ng-container,
+mat-accordion {
   width: 100%;
+}
+
+mat-expansion-panel {
+  padding: 16px;
+}
+
+ontract-form-party-name {
+  width: 50%;
 }

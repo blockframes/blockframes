@@ -1,37 +1,36 @@
 import { Injectable } from '@angular/core';
 import { ContractStore, ContractState } from './contract.store';
-import { CollectionConfig, CollectionService, awaitSyncQuery, Query } from 'akita-ng-fire';
-import { Contract, ContractPartyDetail, convertToContractDocument, createContractPartyDetail, initContractWithVersion, ContractWithLastVersion } from './contract.model';
+import { CollectionConfig, CollectionService, awaitSyncQuery, Query, WriteOptions } from 'akita-ng-fire';
+import { Contract, convertToContractDocument, createContractPartyDetail, createPartyDetails, initContractWithVersion, ContractWithLastVersion, ContractWithTimeStamp, getContractParties } from './contract.model';
 import orderBy from 'lodash/orderBy';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { tap, switchMap } from 'rxjs/operators';
 import { ContractVersionService } from '../../version/+state/contract-version.service';
-import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
-import { LegalRolesSlug } from '@blockframes/utils/static-model/types';
 import { cleanModel } from '@blockframes/utils';
-import { ContractDocumentWithDates } from './contract.firestore';
-import { VersionMeta } from '@blockframes/contract/version/+state/contract-version.model';
 import { PermissionsService } from '@blockframes/organization';
+import { ContractDocumentWithDates, ContractStatus } from './contract.firestore';
+import { VersionMeta } from '../../version/+state/contract-version.model';
+import { firestore } from 'firebase/app';
 
 /**
  * Get all the contracts where user organization is party.
  * Also check that there is no childContractIds to never fetch
  * contract between organization and Archipel Content.
  */
-const contractsListQuery = (orgId: string): Query<Contract[]> => ({
+const contractsListQuery = (orgId: string): Query<ContractWithTimeStamp[]> => ({
   path: 'contracts',
   queryFn: ref => ref.where('partyIds', 'array-contains', orgId).where('childContractIds', '==', []),
-    versions: (contract: Contract) => ({
+    versions: contract => ({
       path: `contracts/${contract.id}/versions`
     })
 });
 
 /** Get the active contract and put his lastVersion in it. */
-const contractQuery = (contractId: string): Query<Contract> => ({
+const contractQuery = (contractId: string): Query<ContractWithTimeStamp> => ({
   path: `contracts/${contractId}`,
-    versions: (contract: Contract) => ({
-    path: `contracts/${contract.id}/versions`
-  })
+    versions: contract => ({
+      path: `contracts/${contract.id}/versions`
+    })
 })
 
 
@@ -62,21 +61,16 @@ export class ContractService extends CollectionService<ContractState> {
     );
   }
 
-  /**
-   * Sync the store with the given contract.
-   * Create a specific query of contract with a new field (lastVersion)
-   * and set the new entity as active on the contracts store.
-   */
+  /** Sync the store with the given contract. */
   public syncContractQuery(contractId: string) {
     // Reset the store to clean the active contract.
     this.store.reset();
     return awaitSyncQuery.call(this, contractQuery(contractId));
-
   }
 
-  onCreate(contract: Contract) {
+  onCreate(contract: Contract, { write }: WriteOptions) {
     // When a contract is created, we also create a permissions document for each parties.
-    return this.permissionsService.addContractPermissions(contract)
+    return this.permissionsService.addDocumentPermissions(contract, write as firestore.WriteBatch)
   }
 
   /**
@@ -173,8 +167,8 @@ export class ContractService extends CollectionService<ContractState> {
       return false;
     }
 
-    const licensees = this.getContractParties(contract, 'licensee');
-    const licensors = this.getContractParties(contract, 'licensor');
+    const licensees = getContractParties(contract, 'licensee');
+    const licensors = getContractParties(contract, 'licensor');
 
     if (!licensees.length || !licensors.length) {
       return false;
@@ -240,20 +234,50 @@ export class ContractService extends CollectionService<ContractState> {
   }
 
   /**
-   * Fetch parties related to a contract given a specific legal role
-   * @param contract
-   * @param legalRole
+   * Accept an offer from a contract and sign it with a timestamp and a status set to accepted.
+   * @param contract the active contract
+   * @param organizationId the logged in user's organization
    */
-  public getContractParties(contract: Contract, legalRole: LegalRolesSlug): ContractPartyDetail[] {
-    return contract.parties.filter(p => p.party.role === getCodeIfExists('LEGAL_ROLES', legalRole as ExtractCode<'LEGAL_ROLES'>));
+  public acceptOffer(contract: Contract, organizationId: string) {
+    // Get the index of logged in user party.
+    const index = contract.parties.findIndex(partyDetails => {
+      const  { orgId, role } = partyDetails.party;
+      return orgId === organizationId && role === 'signatory';
+    });
+
+    // Create an updated party with new status and a timestamp.
+    const updatedParty = createPartyDetails({
+        ...contract.parties[index],
+        signDate: new Date(),
+        status: ContractStatus.accepted
+    });
+
+    // Replace the party at the index and update all the parties array.
+    const updatedParties = contract.parties.filter((_, i) => i !== index);
+    this.update({ ...contract, parties: [...updatedParties, updatedParty] })
   }
 
   /**
-   * Takes an organization id and a contract to check
-   * if the organization is party of this contract.
-   * Returns true if so.
+   * Decline an offer from a contract, and sign it with a timestamp and a status set to rejected.
+   * @param contract the active contract
+   * @param organizationId the logged in user's organization
    */
-  public isPartyOfContract(organizationId: string, contract: Contract): boolean {
-    return contract.parties.some(partyDetails => partyDetails.party.orgId === organizationId)
+  public declineOffer(contract: Contract, organizationId: string) {
+    // Get the index of logged in user party.
+    const index = contract.parties.findIndex(partyDetails => {
+      const  { orgId, role } = partyDetails.party;
+      return orgId === organizationId && role === 'signatory';
+    });
+
+    // Create an updated party with new status and a timestamp.
+    const updatedParty = createPartyDetails({
+        ...contract.parties[index],
+        signDate: new Date(),
+        status: ContractStatus.rejected
+    });
+
+    // Replace the party at the index and update all the parties array.
+    const updatedParties = contract.parties.filter((_, i) => i !== index);
+    this.update({ ...contract, parties: [...updatedParties, updatedParty] })
   }
 }

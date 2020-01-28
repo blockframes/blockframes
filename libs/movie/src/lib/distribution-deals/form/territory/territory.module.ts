@@ -7,26 +7,11 @@ import { CommonModule } from '@angular/common';
 // Components
 import { DistributionDealTerritoryComponent } from './territory.component';
 
-// Material
-import { MatOptionModule } from '@angular/material/core';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
-import { MatIconModule } from '@angular/material/icon';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatFormFieldModule } from '@angular/material/form-field';
+// Modules
+import { ChipsAutocompleteModule } from '@blockframes/ui/form/chips-autocomplete/chips-autocomplete.module';
 
 @NgModule({
-  imports: [
-    CommonModule,
-    FlexLayoutModule,
-    ReactiveFormsModule,
-
-    // Material
-    MatFormFieldModule,
-    MatChipsModule,
-    MatIconModule,
-    MatAutocompleteModule,
-    MatOptionModule
-  ],
+  imports: [CommonModule, FlexLayoutModule, ReactiveFormsModule, ChipsAutocompleteModule],
   declarations: [DistributionDealTerritoryComponent],
   exports: [DistributionDealTerritoryComponent]
 })

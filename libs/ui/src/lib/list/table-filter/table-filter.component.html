@@ -1,4 +1,4 @@
-<mat-form-field appearance="outline">
+<mat-form-field appearance="outline" *ngIf="showFilter">
   <mat-label>Filter</mat-label>
   <input matInput placeholder="Type to filter in the list below" (keyup)="applyFilter($event.target.value)"/>
   <button matSuffix mat-icon-button [widgetTarget]="filterColumnWidget">
@@ -13,11 +13,11 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columns[column] }} </th>
       <td mat-cell *matCellDef="let row"> {{ row[column] }}</td>
     </ng-container>
-  
+
     <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
   </table>
-  <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons></mat-paginator>
+  <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons *ngIf="showPaginator"></mat-paginator>
 </div>
 
 
