@@ -4,10 +4,12 @@ import { FormControl } from '@angular/forms';
 import { MovieRating, MovieOriginalRelease } from '@blockframes/movie/movie+state/movie.firestore';
 import { FormStaticValue } from '@blockframes/utils/form';
 
+// Ratings
+
 function createRatingFormControl(entity?: Partial<MovieRating>) {
   const { country, reason, system, value } = createMovieRating(entity);
   return { 
-    country: new FormStaticValue(country, 'TERRITORIES'),
+    country: new FormControl(country),  // We don't want to prevent the user to write something different from slug
     reason: new FormControl(reason),
     system: new FormControl(system),
     value: new FormControl(value),
@@ -21,6 +23,8 @@ export class MovieRatingForm extends FormEntity<RatingFormControl> {
     super(createRatingFormControl(rating));
   }
 }
+
+// Original Release
 
 function createOriginalReleaseFormControl(entity?: Partial<MovieOriginalRelease>) {
   const { country, date, media } = createMovieOriginalRelease(entity);
@@ -38,6 +42,8 @@ export class OriginalReleaseForm extends FormEntity<OriginalReleaseFormControl> 
     super(createOriginalReleaseFormControl(originalRelease));
   }
 }
+
+// Sales infos
 
 function createMovieSalesInfoControls(salesInfo: Partial<MovieSalesInfo> = {}){
   const entity = createMovieSalesInfo(salesInfo);
