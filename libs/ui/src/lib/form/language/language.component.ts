@@ -7,13 +7,14 @@ import { FormStaticValue } from '@blockframes/utils/form';
 type LANGUAGES = typeof staticModels.LANGUAGES;
 
 @Component({
-  selector: '[form] form-language',
+  selector: 'form-language',
   templateUrl: './language.component.html',
   styleUrls: ['./language.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FormLanguageComponent implements OnInit {
-  @Input() form: FormStaticValue<'LANGUAGES'>;
+  @Input() public form: FormStaticValue<'LANGUAGES'>;
+
   public languages = staticModels.LANGUAGES;
 
   filteredLanguages$: Observable<LANGUAGES>;
@@ -25,10 +26,10 @@ export class FormLanguageComponent implements OnInit {
     );
   }
 
-   // @dev displayFn "this" is the MatAutocomplete, not the component
-   displayFn(key: string) {
+  // @dev displayFn "this" is the MatAutocomplete, not the component
+  displayFn(key: string) {
     if (key) {
-      return staticModels.TERRITORIES.find(({ slug }) => slug === key).label;
+      return staticModels.LANGUAGES.find(({ slug }) => slug === key).label;
     }
   }
 

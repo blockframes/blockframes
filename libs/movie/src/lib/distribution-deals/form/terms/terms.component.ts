@@ -33,33 +33,33 @@ export class DistributionDealTermsComponent implements OnInit, OnDestroy {
       .pipe(
         startWith(this.periodCtrl.value),
         tap(value => {
-          value
-            ? (this.form.get('start').enable(), this.form.get('end').enable())
-            : (this.form.get('start').disable(), this.form.get('end').disable());
+          this.toggleForm(['start', 'end'], value);
         })
       )
       .subscribe();
     this.eventSub = this.eventCtrl.valueChanges
       .pipe(
         startWith(this.eventCtrl.value),
-        tap(value => {
-          value
-            ? (this.form.get('floatingDuration').enable(), this.form.get('floatingStart').enable())
-            : (this.form.get('floatingDuration').disable(value),
-              this.form.get('floatingStart').disable(value));
-        })
+        tap(value => this.toggleForm(['floatingDuration', 'floatingStart'], value))
       )
       .subscribe();
   }
 
-  public updateState(event: MatSlideToggleChange, type: 'event' | 'period'){
+  private toggleForm(formNames: string[], value: boolean) {
+    for (const name of formNames) {
+      const form = this.form.get(name as 'start' | 'end' | 'floatingStart' | 'floatingDuration');
+      value ? form.enable() : form.disable();
+    }
+  }
+
+  public updateState(event: MatSlideToggleChange, type: 'event' | 'period') {
     // We need a type here otherwise we get a recursion
-    if(type === 'period') {
+    if (type === 'event') {
       this.periodCtrl.setValue(event.checked);
-      this.eventCtrl.setValue(!this.eventCtrl.value)
+      this.eventCtrl.setValue(!this.eventCtrl.value);
     } else {
       this.periodCtrl.setValue(!this.periodCtrl.value);
-      this.eventCtrl.setValue(event.checked)
+      this.eventCtrl.setValue(event.checked);
     }
   }
 
