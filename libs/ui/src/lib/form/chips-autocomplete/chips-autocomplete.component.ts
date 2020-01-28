@@ -34,8 +34,7 @@ export class ChipsAutocompleteComponent implements OnInit {
   @Input() placeholder = 'New Items';
 
   // The form to connect to
-  @Input()
-  form: FormArray;
+  @Input() form: FormArray;
 
   @Output() added = new EventEmitter<any>();
   @Output() removed = new EventEmitter<number>();

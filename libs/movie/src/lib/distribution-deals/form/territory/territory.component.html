@@ -1,5 +1,5 @@
-<chips-autocomplete [form]="form.get('territory')" placeholder="Territories" [items]="territories" store="slug"
-  display="label"></chips-autocomplete>
-<span class="caption">Add as many as apply</span>
-<chips-autocomplete [form]="form.get('territoryExcluded')" placeholder="Excluding the following territories"
-  [items]="territories" store="slug" display="label"></chips-autocomplete>
+<chips-autocomplete [form]="territory" placeholder="Territories" [items]="territories" store="slug" display="label">
+  <span class="caption">Add as many as apply</span></chips-autocomplete>
+<chips-autocomplete [form]="territoryExcluded" placeholder="Excluding the following territories" [items]="territories"
+  store="slug" display="label"><span class="caption">Add as many as apply</span>
+</chips-autocomplete>

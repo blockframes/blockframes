@@ -38,13 +38,12 @@ export class TunnelPreviousDealsComponent implements OnInit {
   }
 
   public addContract() {
-    this.formContract
-      ? (this.formContract.push(new ContractForm()),
-        this.formDistributionDeal.push(new DistributionDealForm()))
-      : ((this.formContract = FormList.factory([], contract => new ContractForm(contract))),
-        (this.formDistributionDeal = FormList.factory(
-          [],
-          distribution => new DistributionDealForm(distribution)
-        )));
+    if (!this.formContract) {
+      this.formContract = FormList.factory([], contract => new ContractForm(contract));
+      this.formDistributionDeal = FormList.factory([], deals => new DistributionDealForm(deals));
+    } else {
+      this.formContract.add(); // specific to FormList
+      this.formDistributionDeal.add();
+    }
   }
 }
