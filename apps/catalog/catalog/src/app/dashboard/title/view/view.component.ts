@@ -14,7 +14,7 @@ export class TitleViewComponent implements OnInit {
   public movie$: Observable<Movie>;
   public loading$: Observable<boolean>;
   public getLabelBySlug = getLabelBySlug;
-  
+
   navLinks = [{
     path: 'sales',
     label: 'Sales'
