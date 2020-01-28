@@ -8,9 +8,7 @@ import { ReverseModule } from '@blockframes/utils/pipes/reverse.module';
 // Components
 import { NotificationListComponent } from '../notification-list/notification-list.component';
 import { NotificationItemComponent } from '../notification-item/notification-item.component';
-
-// Material
-import { MatCardModule } from '@angular/material/card';
+import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 
 @NgModule({
   declarations: [
@@ -23,9 +21,7 @@ import { MatCardModule } from '@angular/material/card';
     FlexLayoutModule,
     AvatarListModule,
     ReverseModule,
-
-    // Material
-    MatCardModule,
+    ImageReferenceModule
   ],
   exports: [NotificationListComponent, NotificationItemComponent]
 })

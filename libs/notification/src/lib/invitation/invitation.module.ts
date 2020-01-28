@@ -16,7 +16,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatListModule } from '@angular/material/list';
-import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
   declarations: [
@@ -37,7 +36,6 @@ import { MatCardModule } from '@angular/material/card';
     MatDividerModule,
     MatBadgeModule,
     MatListModule,
-    MatCardModule
   ],
   exports: [InvitationListComponent, InvitationItemComponent]
 })

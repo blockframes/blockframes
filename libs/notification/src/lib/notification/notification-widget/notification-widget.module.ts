@@ -4,36 +4,38 @@ import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Modules
-import { NotificationModule } from '../notification/notification.module';
-import { InvitationModule } from '../invitation/invitation.module';
+import { NotificationListModule } from '../notification-list/notification-list.module';
+import { InvitationModule } from '../../invitation/invitation.module';
+import { OverlayWidgetModule } from '@blockframes/ui/overlay-widget';
 
 // Components
 import { NotificationWidgetComponent } from './notification-widget.component';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
-import { MatMenuModule } from '@angular/material/menu';
+import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatBadgeModule } from '@angular/material/badge';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 @NgModule({
-  declarations: [
-    NotificationWidgetComponent,
-  ],
+  declarations: [NotificationWidgetComponent],
+  exports: [NotificationWidgetComponent],
   imports: [
     CommonModule,
     RouterModule,
     FlexLayoutModule,
 
-    NotificationModule,
+    NotificationListModule,
     InvitationModule,
+    OverlayWidgetModule,
 
     // Material
     MatIconModule,
-    MatMenuModule,
+    MatCardModule,
     MatButtonModule,
-    MatBadgeModule
+    MatBadgeModule,
+    MatToolbarModule
   ],
-  exports: [NotificationWidgetComponent]
 })
 export class NotificationWidgetModule {}

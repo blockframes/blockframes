@@ -6,17 +6,17 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 
 // Libraries
-import { ToolbarModule } from '@blockframes/ui';
-import { KeyManagerModule } from '@blockframes/ethers';
-import { EmailVerifyModule } from '@blockframes/auth';
+// import { ToolbarModule } from '@blockframes/ui';
+// import { KeyManagerModule } from '@blockframes/ethers';
+// import { EmailVerifyModule } from '@blockframes/auth';
 import { ImgAssetModule } from '@blockframes/ui/theme';
 
 // Widgets
-import { ProfileWidgetModule, ProfileMenuModule } from '@blockframes/account';
+// import { ProfileWidgetModule, ProfileMenuModule } from '@blockframes/account';
 import { NotificationWidgetModule } from '@blockframes/notification';
-import { ThemeWidgetModule } from '@blockframes/ui/theme';
-import { WalletWidgetModule } from '@blockframes/ethers';
-import { OrganizationWidgetModule } from '@blockframes/organization';
+// import { ThemeWidgetModule } from '@blockframes/ui/theme';
+// import { WalletWidgetModule } from '@blockframes/ethers';
+// import { OrganizationWidgetModule } from '@blockframes/organization';
 
 // Material
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -51,18 +51,10 @@ import { LayoutComponent } from './layout.component';
     MatMenuModule,
 
     // Libraries
-    ToolbarModule,
-    ProfileMenuModule,
-    KeyManagerModule,
-    EmailVerifyModule,
     ImgAssetModule,
 
-    // Widget
-    OrganizationWidgetModule,
-    ThemeWidgetModule,
+    // Widgets
     NotificationWidgetModule,
-    WalletWidgetModule,
-    ProfileWidgetModule,
   ],
 })
 export class LayoutModule {}
