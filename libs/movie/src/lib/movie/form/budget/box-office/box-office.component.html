@@ -1,6 +1,6 @@
 <ng-container *ngIf="units$ | async as units">
   <ng-container *ngFor="let control of form.controls; let i = index; let last = last">
-      <span>World-wide</span>
+      <span>You can choose World as a country to indicate World-wide Box Office</span>
       <article fxLayout="row" fxLayoutGap="24px">
         <form-country [form]="control.get('territory')"></form-country>
 

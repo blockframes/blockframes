@@ -7,6 +7,7 @@ import { CertificationsComponent } from './certifications.component';
 
 // Material
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [CertificationsComponent],
@@ -17,6 +18,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
     // Material
     MatButtonToggleModule,
+    MatTooltipModule,
   ],
 })
 export class MovieFormCertificationsModule {}

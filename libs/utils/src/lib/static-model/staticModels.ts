@@ -422,15 +422,13 @@ const models = {
   'CERTIFICATIONS': [
     {
       'slug': 'art-essai',
-      'label': 'Art & Essai'
+      'label': 'Art & Essai',
+      'hint': 'French label for arthouse pictures'
     },
     {
       'slug': 'eof',
-      'label': 'EOF'
-    },
-    {
-      'slug': 'media',
-      'label': 'Media'
+      'label': 'EOF',
+      'hint': 'French speaking film label'
     },
     {
       'slug': 'awarded-film',

@@ -1,5 +1,5 @@
 <ng-container *ngFor="let control of form.controls; let i = index; let last = last">
-  <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="24px">
+  <div fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="24px">
     <form-country [form]="control.get('country')"></form-country>
     <mat-form-field appearance="outline">
       <mat-label>Ratings</mat-label>
@@ -8,19 +8,13 @@
           {{ rating.label }}
         </mat-option>
       </mat-select>
-    </mat-form-field>
+      </mat-form-field>
+      <!-- Add / Delete -->
+      <button *ngIf="!last" mat-mini-fab color="warn" (click)="form.removeAt(i)" matTooltip="Remove a country" aria-label="Remove a country">
+        <mat-icon>delete</mat-icon>
+      </button>
+      <button *ngIf="last" mat-mini-fab color="primary" (click)="form.add()" matTooltip="Add a country" aria-label="Add a country">
+        <mat-icon>add</mat-icon>
+      </button>
   </div>
-  <!-- Add / Delete -->
-  <footer *ngIf="!last" fxLayout="column" fxLayoutAlign="center center">
-    <button mat-mini-fab color="warn" (click)="form.removeAt(i)" aria-label="Remove a rating form">
-      <mat-icon>delete</mat-icon>
-    </button>
-    <span class="mat-caption">Remove a country</span>
-  </footer>
-  <footer *ngIf="last" fxLayout="column" fxLayoutAlign="center center">
-    <button mat-mini-fab color="primary" (click)="form.add()" aria-label="Remove a rating form">
-      <mat-icon>add</mat-icon>
-    </button>
-    <span class="mat-caption">Add another country</span>
-  </footer>
 </ng-container>
