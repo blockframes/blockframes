@@ -1,7 +1,7 @@
 <form [formGroup]="form" fxLayout="row" fxLayoutGap="20px">
     <!-- Period -->
     <div fxLayout="column">
-        <mat-slide-toggle [formControl]="periodCtrl" color="primary">
+        <mat-slide-toggle [formControl]="periodCtrl" color="primary" (change)="updateState($event, 'event')">
         </mat-slide-toggle>
         <mat-form-field appearance="outline">
             <mat-label>License Start Date</mat-label>
@@ -19,7 +19,8 @@
     <mat-divider vertical></mat-divider>
     <!-- Period of Event -->
     <div fxLayout="column">
-        <mat-slide-toggle [formControl]="eventCtrl" color="primary">Event & period</mat-slide-toggle>
+        <mat-slide-toggle [formControl]="eventCtrl" color="primary" (change)="updateState($event, 'period')">Event &
+            period</mat-slide-toggle>
         <mat-form-field appearance="outline">
             <mat-label>Event triggering holdback</mat-label>
             <mat-select formControlName="floatingStart">

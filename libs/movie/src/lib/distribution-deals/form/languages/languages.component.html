@@ -1,3 +1,35 @@
-<form [formGroup]="form">
-<form-languages [form]="form"></form-languages>
-</form>
+<h5>All languages & Versions</h5>
+<mat-slide-toggle color="primary" (change)="stateOfForm($event)">All languages & Versions</mat-slide-toggle>
+<div fxLayout="row">
+    <form-language [form]="languageCtrl"></form-language>
+    <button mat-button (click)="updateForm()">Select Language</button>
+</div>
+<ng-container *ngFor="let control of form.controls | keyvalue">
+    <div fxLayout="row" fxLayoutAlign="space-between center">
+        <span>{{ control.key | translateSlug: 'LANGUAGES'}}</span>
+        <!-- Div is for grouping because of space-between -->
+        <div>
+            <mat-button-toggle-group multiple [disabled]="formIsDisabled">
+                <mat-button-toggle value="original" color="primary" (change)="updateVersionInfo($event, control.key)"
+                    [checked]="isChecked(control.key, 'original')">
+                    Original
+                </mat-button-toggle>
+                <mat-button-toggle value="dubbed" color="primary" (change)="updateVersionInfo($event, control.key)"
+                    [checked]="isChecked(control.key, 'dubbed')">
+                    Dubbed
+                </mat-button-toggle>
+                <mat-button-toggle value="subtitle" color="primary" (change)="updateVersionInfo($event, control.key)"
+                    [checked]="isChecked(control.key, 'subtitle')">
+                    Subtitle
+                </mat-button-toggle>
+                <mat-button-toggle value="caption" color="primary" (change)="updateVersionInfo($event, control.key)"
+                    [checked]="isChecked(control.key, 'caption')">
+                    Closed-Caption
+                </mat-button-toggle>
+            </mat-button-toggle-group>
+            <button mat-fab color="warn" (click)="removeLanguage(control.key)">
+                <mat-icon>delete</mat-icon>
+            </button>
+        </div>
+    </div>
+</ng-container>

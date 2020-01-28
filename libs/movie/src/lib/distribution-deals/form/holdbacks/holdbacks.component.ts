@@ -13,9 +13,7 @@ export class DistributionDealHoldbacksComponent {
 
   public staticMedias = staticModels['MEDIAS'].filter(media => {
     const wantedMedias = ['Pay TV', 'Free TV', 'S-VOD', 'A-VOD', 'Ancillary'];
-    if (wantedMedias.includes(media.label)) {
-      return true;
-    }
+    return wantedMedias.includes(media.label);
   });
 
   get termsForm() {
