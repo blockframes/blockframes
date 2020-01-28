@@ -1,0 +1,12 @@
+@mixin bf-missing-control-theme($theme) {
+  $background: map-get($theme, background);
+  $warn: map-get($theme, warn);
+
+  .missing-control {
+    color: mat-color($background, beware);
+  }
+
+  .mandatory-control {
+    color: mat-color($warn, 500);
+  }
+}

@@ -4,16 +4,14 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Components
 import { MovieSummaryMainComponent } from './main.component';
-
-import { MissingPipeModule, MissingSlugPipeModule } from '@blockframes/utils';
+import { MissingControlModule } from '@blockframes/ui/missing-control/missing-control.module';
 
 @NgModule({
   declarations: [MovieSummaryMainComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
-    MissingPipeModule,
-    MissingSlugPipeModule
+    MissingControlModule
   ],
   exports: [MovieSummaryMainComponent]
 })

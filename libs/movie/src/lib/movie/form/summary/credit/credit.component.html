@@ -1,6 +1,6 @@
 <ul>
   <li>
-    <strong>Production Year </strong>{{ main.get('productionYear') | missing }}
+    <strong>Production Year </strong><missing-control [control]="main.get('productionYear')" [link]="link"></missing-control>
   </li>
   <li>
     <strong>Production Company </strong>
@@ -8,7 +8,10 @@
   <li>
     <strong>Producers </strong>
     <ng-container *ngFor="let producer of salesCast.get('producers').controls; let isLast = last">
-      {{ producer.get('firstName') | missing }} {{ producer.get('lastName') | missing }} ({{ producer.get('role') | missing }}){{ isLast ? '' : ', ' }}
+      <missing-control [control]="producer.get('firstName')" [link]="link"></missing-control>
+      <missing-control [control]="producer.get('lastName')" [link]="link"></missing-control>
+      (<missing-control [control]="producer.get('role')" [link]="link"></missing-control>)
+      {{ isLast ? '' : ', '}}
     </ng-container>
   </li>
   <li>
@@ -19,9 +22,10 @@
   </li>
   <ng-container *ngFor="let artist of salesCast.get('crew').controls; let isLast = last">
     <li>
-      <strong>{{ artist.get('role') | missing }} </strong>
+      <strong><missing-control [control]="artist.get('role')" label="CREW_ROLES" [link]="link"></missing-control> </strong>
       <ng-container>
-        {{ artist.get('firstName') | missing }} {{ artist.get('lastName') | missing }}{{ isLast ? '' : ', ' }}
+        <missing-control [control]="artist.get('firstName')" [link]="link"></missing-control>
+        <missing-control [control]="artist.get('lastName')" [link]="link"></missing-control>
       </ng-container>
     </li>
   </ng-container>

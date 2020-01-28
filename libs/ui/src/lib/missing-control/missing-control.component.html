@@ -1,0 +1,16 @@
+<ng-container *ngIf="control.hasError('required') else missing">
+  <a [routerLink]="link" class="mandatory-control">Mandatory{{ isLast ? '' : ', ' }}</a>
+</ng-container>
+<ng-template #missing>
+  <ng-container *ngIf="!control.value else value">
+    <a [routerLink]="link" class="missing-control">Missing{{ isLast ? '' : ', ' }}</a>
+  </ng-container>
+  <ng-template #value>
+    <ng-container *ngIf="label else withoutLabel">
+      {{ control.value | translateSlug: label }}{{ isLast ? '' : ', ' }}
+    </ng-container>
+    <ng-template #withoutLabel>
+      {{ control.value }}{{ isLast ? '' : ', ' }}
+    </ng-template>
+  </ng-template>
+</ng-template>

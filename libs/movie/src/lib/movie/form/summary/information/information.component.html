@@ -2,16 +2,16 @@
   <li>
     <strong>Original Languages </strong>
     <ng-container *ngFor="let language of main.originalLanguages.controls; let isLast = last">
-      {{ language | missingWithLabel: 'LANGUAGES' }}{{ isLast ? '' : ', ' }}
+      <missing-control [control]="language" label="LANGUAGES" [link]="link" [isLast]="isLast"></missing-control>
     </ng-container>
   </li>
   <li>
     <strong>Genres </strong>
     <ng-container *ngFor="let genre of genres; let isLast = last">
-      {{ genre | missingWithLabel: 'GENRES' }}{{ isLast ? '' : ', ' }}
+      <missing-control [control]="genre" label="GENRES" [link]="link" [isLast]="isLast"></missing-control>
     </ng-container>
   </li>
   <li>
-    <strong>Running Time </strong>{{ main.get('totalRunTime') | missing }}
+    <strong>Running Time </strong><missing-control [control]="main.get('totalRunTime')" [link]="link"></missing-control>
   </li>
 </ul>

@@ -1,28 +1,30 @@
 <ul>
-  <li >
-    <strong>Content Type </strong>{{ main.get('workType') | missing }}
+  <li>
+    <strong>Content Type </strong><missing-control [control]="main.get('workType')" [link]="link"></missing-control>
   </li>
   <li>
-    <strong>Freshness </strong>{{ main.storeConfig.get('storeType') | missing }}
+    <strong>Freshness </strong><missing-control [control]="main.storeConfig.get('storeType')" [link]="link"></missing-control>
   </li>
   <li>
-    <strong>Production Status Mandatory </strong>{{ main.get('status') | missingWithLabel: 'MOVIE_STATUS' }}
+    <strong>Production Status Mandatory </strong><missing-control [control]="main.get('status')" label="MOVIE_STATUS" [link]="link"></missing-control>
   </li>
   <li>
-    <strong>Original Title </strong>{{ main.title.get('original') | missing }}
+    <strong>Original Title </strong><missing-control [control]="main.title.get('original')" [link]="link"></missing-control>
   </li>
   <li>
-    <strong>International Title </strong>{{ main.title.get('international') | missing }}
+    <strong>International Title </strong><missing-control [control]="main.title.get('international')" [link]="link"></missing-control>
   </li>
   <li>
-    <strong>Reference # </strong>{{ main.get('internalRef') | missing }}
+    <strong>Reference # </strong><missing-control [control]="main.get('internalRef')" [link]="link"></missing-control>
   </li>
-  <ng-container *ngFor="let director of main.directors.controls; let isLast = last">
+  <ng-container *ngFor="let director of main.directors.controls">
     <li>
-      <strong>Director Names </strong>{{ director.get('firstName') | missing }} {{ director.get('lastName') | missing }}
+      <strong>Director Name </strong>
+      <missing-control [control]="director.get('firstName')" [link]="link"></missing-control>
+      <missing-control [control]="director.get('lastName')" [link]="link"></missing-control>
     </li>
     <li>
-      <strong>Director's Filmography </strong>{{ director.get('shortBiography') | missing }}
+      <strong>Director's Filmography </strong><missing-control [control]="director.get('shortBiography')" [link]="link"></missing-control>
     </li>
   </ng-container>
 </ul>
