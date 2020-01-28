@@ -1,9 +1,9 @@
 <ng-template *ngIf="loading$ | async">
   <mat-spinner color="accent" #loading></mat-spinner>
 </ng-template>
-<div *ngIf="(movie$ | async) as movie;">
-  <header>
-    <article fxLayout="row" fxLayout.lt-md="column">
+<ng-container *ngIf="(movie$ | async) as movie;">
+  <header fxLayout="row" fxLayoutAlign="start start">
+    <article fxLayout="row" fxLayout.lt-md="column" fxFlex>
       <ng-container *ngIf=" movie.main.poster || movie.promotionalElements.poster[0].media as poster">
         <img class="movie-poster" [imgRef]="poster" alt="movie poster"/>
       </ng-container>
@@ -17,6 +17,15 @@
         </span>
       </div>
     </article>
+    <!-- TODO #1756: create sales report -->
+    <article fxFlex="20" fxFlex.lt-lg="5">
+      <mat-form-field>
+        <mat-label>View Sales Report</mat-label>
+        <mat-select>
+          <mat-option value="1">sales report 1</mat-option>
+        </mat-select>
+      </mat-form-field>
+    </article >
   </header>
   <section>
     <nav mat-tab-nav-bar>
@@ -30,4 +39,4 @@
     </nav>
     <router-outlet></router-outlet>
   </section>
-</div>
+</ng-container>
