@@ -13,7 +13,7 @@
         <h6 *ngFor="let director of movie.main.directors; let isLast=last">
            {{ director.firstName }} {{ director.lastName }}{{ isLast? '':','}}</h6>
         <span class="mat-body-2" *ngFor="let country of movie.main.originCountries; let isLast=last">
-          {{ getLabelByCode('TERRITORIES', country) }}{{ isLast? ', ' + movie.main.productionYear:' /' }}
+          {{ getLabelBySlug('TERRITORIES', country) }}{{ isLast? ', ' + movie.main.productionYear:' /' }}
         </span>
       </div>
     </article>

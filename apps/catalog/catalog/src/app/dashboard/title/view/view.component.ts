@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MovieQuery, Movie } from '@blockframes/movie';
 import { OrganizationQuery } from '@blockframes/organization';
 import { Observable } from 'rxjs';
-import { getLabelByCode } from '@blockframes/utils/static-model/staticModels';
+import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 
 @Component({
   selector: 'catalog-title-view',
@@ -13,7 +13,7 @@ import { getLabelByCode } from '@blockframes/utils/static-model/staticModels';
 export class TitleViewComponent implements OnInit {
   public movie$: Observable<Movie>;
   public loading$: Observable<boolean>;
-  public getLabelByCode = getLabelByCode;
+  public getLabelBySlug = getLabelBySlug;
   
   navLinks = [{
     path: 'sales',
@@ -26,9 +26,7 @@ export class TitleViewComponent implements OnInit {
     label: 'Avails'
   }];
   constructor(
-    private movieQuery: MovieQuery,
-    private orgQuery: OrganizationQuery,
-  ) { }
+    private movieQuery: MovieQuery) {}
 
   ngOnInit() {
     this.getMovie();
