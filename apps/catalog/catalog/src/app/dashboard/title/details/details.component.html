@@ -1,89 +1,95 @@
-<section>
-  <h2>Title Information</h2>
+<h2>Title Information</h2>
 
-  <mat-card>
-    <mat-card-header fxLayout="row" fxLayoutAlign="start center">
-      <mat-card-title>Main information</mat-card-title>
-      <a mat-icon-button [routerLink]="getPath('main')"><mat-icon svgIcon="edit"></mat-icon></a>
-    </mat-card-header>
-    <mat-card-content>
-      <movie-summary-main [main]="form.main" [link]="getPath('main')"></movie-summary-main>
-      <movie-summary-country [salesInfo]="form.salesInfo" [originCountries]="form.main.originCountries" [link]="getPath('main')"></movie-summary-country>
-      <movie-summary-information [main]="form.main" [link]="getPath('main')"></movie-summary-information>
-      <movie-summary-sales-cast [salesCast]="form.salesCast" [link]="getPath('main')"></movie-summary-sales-cast>
-      <movie-summary-festival-prizes [festivalPrizes]="form.festivalPrizes" [link]="getPath('main')"></movie-summary-festival-prizes>
-    </mat-card-content>
-  </mat-card>
+<!-- Main card -->
+<mat-card>
+  <mat-card-header fxLayout="row" fxLayoutAlign="start center">
+    <mat-card-title>Main information</mat-card-title>
+    <a mat-icon-button [routerLink]="getPath('main')"><mat-icon svgIcon="edit"></mat-icon></a>
+  </mat-card-header>
+  <mat-card-content>
+    <movie-summary-main [main]="form.main" [link]="getPath('main')"></movie-summary-main>
+    <movie-summary-country [salesInfo]="form.salesInfo" [originCountries]="form.main.originCountries" [link]="getPath('main')"></movie-summary-country>
+    <movie-summary-information [main]="form.main" [link]="getPath('main')"></movie-summary-information>
+    <movie-summary-sales-cast [salesCast]="form.salesCast" [link]="getPath('main')"></movie-summary-sales-cast>
+    <movie-summary-festival-prizes [festivalPrizes]="form.festivalPrizes" [link]="getPath('main')"></movie-summary-festival-prizes>
+  </mat-card-content>
+</mat-card>
 
-  <mat-card>
-    <mat-card-header fxLayout="row" fxLayoutAlign="start center">
-      <mat-card-title>Storyline Elements</mat-card-title>
-      <a mat-icon-button [routerLink]="getPath('synopsis')"><mat-icon svgIcon="edit"></mat-icon></a>
-    </mat-card-header>
-    <mat-card-content>
-      <movie-summary-story [story]="form.story" [promotionalDescription]="form.promotionalDescription" [link]="getPath('synopsis')"></movie-summary-story>
-    </mat-card-content>
-  </mat-card>
+<!-- Story card -->
+<mat-card>
+  <mat-card-header fxLayout="row" fxLayoutAlign="start center">
+    <mat-card-title>Storyline Elements</mat-card-title>
+    <a mat-icon-button [routerLink]="getPath('synopsis')"><mat-icon svgIcon="edit"></mat-icon></a>
+  </mat-card-header>
+  <mat-card-content>
+    <movie-summary-story [story]="form.story" [promotionalDescription]="form.promotionalDescription" [link]="getPath('synopsis')"></movie-summary-story>
+  </mat-card-content>
+</mat-card>
 
-  <mat-card>
-    <mat-card-header fxLayout="row" fxLayoutAlign="start center">
-      <mat-card-title>Credits</mat-card-title>
-      <a mat-icon-button [routerLink]="getPath('credits')"><mat-icon svgIcon="edit"></mat-icon></a>
-    </mat-card-header>
-    <mat-card-content>
-      <movie-summary-credit [main]="form.main" [salesCast]="form.salesCast" [link]="getPath('credits')"></movie-summary-credit>
-    </mat-card-content>
-  </mat-card>
+<!-- Credit card -->
+<mat-card>
+  <mat-card-header fxLayout="row" fxLayoutAlign="start center">
+    <mat-card-title>Credits</mat-card-title>
+    <a mat-icon-button [routerLink]="getPath('credits')"><mat-icon svgIcon="edit"></mat-icon></a>
+  </mat-card-header>
+  <mat-card-content>
+    <movie-summary-credit [main]="form.main" [salesCast]="form.salesCast" [link]="getPath('credits')"></movie-summary-credit>
+  </mat-card-content>
+</mat-card>
 
-  <mat-card>
-    <mat-card-header fxLayout="row" fxLayoutAlign="start center">
-      <mat-card-title>Budget, Quota & Critics</mat-card-title>
-      <a mat-icon-button [routerLink]="getPath('budget')"><mat-icon svgIcon="edit"></mat-icon></a>
-    </mat-card-header>
-    <mat-card-content>
-      <movie-summary-budget [budget]="form.budget" [salesInfo]="form.salesInfo" [movieReview]="form.movieReview" [link]="getPath('budget')"></movie-summary-budget>
-    </mat-card-content>
-  </mat-card>
+<!-- Budget card -->
+<mat-card>
+  <mat-card-header fxLayout="row" fxLayoutAlign="start center">
+    <mat-card-title>Budget, Quota & Critics</mat-card-title>
+    <a mat-icon-button [routerLink]="getPath('budget')"><mat-icon svgIcon="edit"></mat-icon></a>
+  </mat-card-header>
+  <mat-card-content>
+    <movie-summary-budget [budget]="form.budget" [salesInfo]="form.salesInfo" [movieReview]="form.movieReview" [link]="getPath('budget')"></movie-summary-budget>
+  </mat-card-content>
+</mat-card>
 
-  <h2>Media</h2>
+<h2>Media</h2>
 
-  <mat-card>
-    <mat-card-header fxLayout="row" fxLayoutAlign="start center">
-      <mat-card-title>Technical Information</mat-card-title>
-      <a mat-icon-button [routerLink]="getPath('technical-info')"><mat-icon svgIcon="edit"></mat-icon></a>
-    </mat-card-header>
-    <mat-card-content>
-      <movie-summary-technical-information [salesInfo]="form.salesInfo" [versionInfo]="form.versionInfo" [link]="getPath('technical-info')"></movie-summary-technical-information>
-    </mat-card-content>
-  </mat-card>
+<!-- Technical Information card -->
+<mat-card>
+  <mat-card-header fxLayout="row" fxLayoutAlign="start center">
+    <mat-card-title>Technical Information</mat-card-title>
+    <a mat-icon-button [routerLink]="getPath('technical-info')"><mat-icon svgIcon="edit"></mat-icon></a>
+  </mat-card-header>
+  <mat-card-content>
+    <movie-summary-technical-information [salesInfo]="form.salesInfo" [versionInfo]="form.versionInfo" [link]="getPath('technical-info')"></movie-summary-technical-information>
+  </mat-card-content>
+</mat-card>
 
-  <mat-card>
-    <mat-card-header fxLayout="row" fxLayoutAlign="start center">
-      <mat-card-title>Images</mat-card-title>
-      <a mat-icon-button [routerLink]="getPath('images')"><mat-icon svgIcon="edit"></mat-icon></a>
-    </mat-card-header>
-    <mat-card-content>
-      <movie-summary-image></movie-summary-image>
-    </mat-card-content>
-  </mat-card>
+<!-- Images card -->
+<mat-card>
+  <mat-card-header fxLayout="row" fxLayoutAlign="start center">
+    <mat-card-title>Images</mat-card-title>
+    <a mat-icon-button [routerLink]="getPath('images')"><mat-icon svgIcon="edit"></mat-icon></a>
+  </mat-card-header>
+  <mat-card-content>
+    <movie-summary-image></movie-summary-image>
+  </mat-card-content>
+</mat-card>
 
-  <mat-card>
-    <mat-card-header fxLayout="row" fxLayoutAlign="start center">
-      <mat-card-title>Files & links</mat-card-title>
-      <a mat-icon-button [routerLink]="getPath('files&links')"><mat-icon svgIcon="edit"></mat-icon></a>
-    </mat-card-header>
-    <mat-card-content>
-      <movie-summary-file [promotionalElements]="form.promotionalElements" [link]="getPath('files&links')"></movie-summary-file>
-    </mat-card-content>
-  </mat-card>
+<!-- Files card -->
+<mat-card>
+  <mat-card-header fxLayout="row" fxLayoutAlign="start center">
+    <mat-card-title>Files & links</mat-card-title>
+    <a mat-icon-button [routerLink]="getPath('files&links')"><mat-icon svgIcon="edit"></mat-icon></a>
+  </mat-card-header>
+  <mat-card-content>
+    <movie-summary-file [promotionalElements]="form.promotionalElements" [link]="getPath('files&links')"></movie-summary-file>
+  </mat-card-content>
+</mat-card>
 
-  <mat-card>
-    <mat-card-header fxLayout="row" fxLayoutAlign="start center">
-      <mat-card-title>Marketplace Evaluation</mat-card-title>
-      <a mat-icon-button [routerLink]="getPath('evaluation')"><mat-icon svgIcon="edit"></mat-icon></a>
-    </mat-card-header>
-    <mat-card-content>
-      <movie-summary-evaluation [salesInfo]="form.salesInfo" [link]="getPath('evaluation')"></movie-summary-evaluation>
-    </mat-card-content>
-  </mat-card>
-</section>
+<!-- Evaluation card -->
+<mat-card>
+  <mat-card-header fxLayout="row" fxLayoutAlign="start center">
+    <mat-card-title>Marketplace Evaluation</mat-card-title>
+    <a mat-icon-button [routerLink]="getPath('evaluation')"><mat-icon svgIcon="edit"></mat-icon></a>
+  </mat-card-header>
+  <mat-card-content>
+    <movie-summary-evaluation [salesInfo]="form.salesInfo" [link]="getPath('evaluation')"></movie-summary-evaluation>
+  </mat-card-content>
+</mat-card>
