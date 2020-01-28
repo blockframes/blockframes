@@ -4,5 +4,10 @@ header, section {
 
 header {
   height: 300px;
-  background: linear-gradient(to bottom, var(--primary), transparent);
+  // background: linear-gradient(to bottom, var(--primary), transparent);
+}
+
+.movie-poster {
+  width: 200px;
+  height: auto;
 }
