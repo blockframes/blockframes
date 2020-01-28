@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { firebase } from '@env';
+import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
 
 // Angular Fire
 import { AngularFirestoreModule, FirestoreSettingsToken } from '@angular/fire/firestore';
@@ -57,6 +58,7 @@ import { MovieImdbSearchModule } from './components/movie-imdb-search/movie-imdb
     FormsModule,
     ReactiveFormsModule,
     MovieRoutingModule,
+    TranslateSlugModule,
     // Angular Fire
     AngularFireModule.initializeApp(firebase),
     AngularFirestoreModule,

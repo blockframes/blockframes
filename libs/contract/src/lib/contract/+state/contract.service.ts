@@ -239,17 +239,22 @@ export class ContractService extends CollectionService<ContractState> {
    * @param organizationId the logged in user's organization
    */
   public acceptOffer(contract: Contract, organizationId: string) {
-    const index = contract.parties.findIndex(
-      partyDetails =>
-        partyDetails.party.orgId === organizationId && partyDetails.party.role === 'signatory'
-    );
+    // Get the index of logged in user party.
+    const index = contract.parties.findIndex(partyDetails => {
+      const  { orgId, role } = partyDetails.party;
+      return orgId === organizationId && role === 'signatory';
+    });
+
+    // Create an updated party with new status and a timestamp.
     const updatedParty = createPartyDetails({
         ...contract.parties[index],
         signDate: new Date(),
         status: ContractStatus.accepted
     });
-    const updatedParties = [...contract.parties.slice(0, index), updatedParty, ...contract.parties.slice(index + 1)];
-    this.update({ ...contract, parties: updatedParties })
+
+    // Replace the party at the index and update all the parties array.
+    const updatedParties = contract.parties.filter((_, i) => i !== index);
+    this.update({ ...contract, parties: [...updatedParties, updatedParty] })
   }
 
   /**
@@ -258,15 +263,21 @@ export class ContractService extends CollectionService<ContractState> {
    * @param organizationId the logged in user's organization
    */
   public declineOffer(contract: Contract, organizationId: string) {
-    const index = contract.parties.findIndex(
-      partyDetails =>
-        partyDetails.party.orgId === organizationId && partyDetails.party.role === 'signatory'
-    );
+    // Get the index of logged in user party.
+    const index = contract.parties.findIndex(partyDetails => {
+      const  { orgId, role } = partyDetails.party;
+      return orgId === organizationId && role === 'signatory';
+    });
+
+    // Create an updated party with new status and a timestamp.
     const updatedParty = createPartyDetails({
         ...contract.parties[index],
+        signDate: new Date(),
         status: ContractStatus.rejected
     });
-    const updatedParties = [...contract.parties.slice(0, index), updatedParty, ...contract.parties.slice(index + 1)];
-    this.update({ ...contract, parties: updatedParties })
+
+    // Replace the party at the index and update all the parties array.
+    const updatedParties = contract.parties.filter((_, i) => i !== index);
+    this.update({ ...contract, parties: [...updatedParties, updatedParty] })
   }
 }

@@ -1,6 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { MovieMain, createMovieMain } from '../../+state';
-import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 
 @Component({
   selector: '[main] movie-display-main',
@@ -11,7 +10,6 @@ import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 export class MovieDisplayMainComponent {
 
   public data : MovieMain;
-  public getLabelBySlug = getLabelBySlug;
   @Input() set main(main: Partial<MovieMain>) {
     this.data = createMovieMain(main);
   }

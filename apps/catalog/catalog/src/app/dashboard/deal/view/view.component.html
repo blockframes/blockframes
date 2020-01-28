@@ -15,7 +15,7 @@
         </div>
       </article>
       <section fxLayout="column" fxLayoutAlign="center end">
-        <caption class="mat-caption"> {{ lastVersion.creationDate | date: 'short' }} </caption>
+        <span class="mat-caption"> {{ lastVersion.creationDate | date: 'short' }} </span>
         <h2>{{ totalPrice.amount | currency: getCurrencyCode(totalPrice.currency) }}</h2>
       </section>
     </section>
@@ -36,20 +36,20 @@
         <ng-container *ngIf="subLicensors.length > 1; else uniqueSubLicensor">
           <span i18n>
             Your share of the deal is <b>{{ totalPrice.amount | currency: getCurrencyCode(totalPrice.currency) }}</b>
-            for the {{ (movies$ | async).length }} film{moviesLenght, plural, =1 {} other {s}}:
+            for the {{ (movies$ | async).length }} film{(movies$ | async).length, plural, =1 {} other {s}}:
           </span>
         </ng-container>
         <ng-template #uniqueSubLicensor>
           <span i18n>
             The offer is <b>{{ totalPrice.amount | currency: totalPrice.currency }}</b>
-            for the {{ (movies$ | async).length }} film{moviesLenght, plural, =1 {} other {s}}:
+            for the {{ (movies$ | async).length }} film{(movies$ | async).length, plural, =1 {} other {s}}:
           </span>
         </ng-template>
-        <ul *ngFor="let movie of movies$ | async">
-          <ng-container *ngIf="showMovie(movie.id)">
-            <li><b>{{ movie.main.title.international }}</b></li>
-          </ng-container>
-        </ul>
+        <mat-list >
+          <mat-list-item *ngFor="let movie of movies$ | async">
+            <b *ngIf="showMovie(movie.id)">{{ movie.main.title.international }}</b>
+          </mat-list-item>
+        </mat-list>
       </mat-card-content>
       <mat-card-actions *ngIf="isSignatory" fxLayout="row" fxLayoutAlign="space-between center">
         <button mat-flat-button color="primary" (click)="openIntercom()">
@@ -72,7 +72,7 @@
       <h3>Proposed Payment Schedule</h3>
       <div *ngFor="let payment of lastVersion.paymentSchedule" fxLayout="column" fxLayoutAlign="center start">
         <span>{{ payment.percentage }}% {{ payment.label }}</span>
-        <caption class="mat-caption">{{ payment.date }}</caption>
+        <span class="mat-caption">{{ payment.date }}</span>
       </div>
     </mat-card>
   </article>
@@ -105,21 +105,24 @@
             </mat-panel-title>
           </mat-expansion-panel-header>
           <mat-divider></mat-divider>
-          <article fxLayout="row" fxLayoutAlign="start start" class="movie-information">
+          <section fxLayout="row" fxLayoutAlign="start start" class="movie-information">
             <img class="poster" [imgRef]="movie.main.poster" alt="Movie poster" />
-            <div>
-              <span *ngFor="let director of movie.main.directors; let isLast = last">
-                {{ director.firstName }} {{ director.lastName }}{{isLast ? '' : ', '}}
-              </span>
-              <br/>
-              <span
-                *ngFor="let country of movie.main.originCountries; let isLast = last"
-                class="mat-body-2">
-                {{ country | translateSlug: 'TERRITORIES'}}{{isLast ? ',' : ' / '}}
-              </span>
-              <span class="mat-body-2"> {{ movie.main.productionYear }}</span>
-            </div>
-          </article>
+            <article>
+              <div>
+                <span *ngFor="let director of movie.main.directors; let isLast = last">
+                  {{ director.firstName }} {{ director.lastName }}{{isLast ? '' : ', '}}
+                </span>
+              </div>
+              <div>
+                <span
+                  *ngFor="let country of movie.main.originCountries; let isLast = last"
+                  class="mat-body-2">
+                  {{ country | translateSlug: 'TERRITORIES'}}{{isLast ? ',' : ' / '}}
+                </span>
+                <span class="mat-body-2"> {{ movie.main.productionYear }}</span>
+              </div>
+            </article>
+          </section>
           <!-- MOVIE DISTRIBUTION DEAL LIST -->
           <!-- TODO: Use flattened data + reusable table => ISSUE#1744 -->
           <catalog-right-list [source]="movie.distributionDeals"></catalog-right-list>
