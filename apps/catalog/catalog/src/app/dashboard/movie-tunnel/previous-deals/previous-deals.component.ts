@@ -12,8 +12,8 @@ import { ContractPartyForm } from '@blockframes/contract/contract/forms/party-na
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TunnelPreviousDealsComponent implements OnInit {
-  private formContract: FormList<any, ContractForm>;
-  private formDistributionDeal: FormList<any, DistributionDealForm>;
+  public formContract: FormList<any, ContractForm>;
+  public formDistributionDeal: FormList<any, DistributionDealForm>;
 
   public loading: boolean;
 
