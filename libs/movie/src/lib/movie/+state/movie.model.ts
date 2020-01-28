@@ -25,6 +25,7 @@ import {
   BoxOffice,
   UnitBox,
   MovieStakeholders,
+  StoreStatus,
 } from './movie.firestore';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 import { LanguagesSlug } from '@blockframes/utils/static-model';
@@ -286,7 +287,7 @@ export function populateMovieLanguageSpecification(
 
 export function createStoreConfig(params: Partial<StoreConfig> = {}): StoreConfig {
   return {
-    display: true,
+    status: StoreStatus.draft,
     storeType: StoreType.line_up,
     ...params
   };
