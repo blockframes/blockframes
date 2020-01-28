@@ -15,6 +15,7 @@ export class MovieDisplayPrincipalInformationsComponent {
   @Input() salesInfo;
 
   public hasEuropeanQualification() {
-    return this.salesInfo.certifications.some(r => r === getCodeIfExists('CERTIFICATIONS', 'european-qualification'))
+    const certification = getCodeIfExists('CERTIFICATIONS', 'european-qualification');
+    return this.salesInfo.certifications.some(r => r === certification);
   }
 }
