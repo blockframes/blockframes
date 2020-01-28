@@ -6,11 +6,12 @@ import { sanitizeFileName } from "./file-sanitizer";
 export interface ImgRef {
   url: string;
   ref: string;
-  originalRef: string
+  originalRef: string;
+  originalFileName?: string;
 }
 
 export function createImgRef(ref: Partial<ImgRef> | string = {}): ImgRef {
-  const _ref = typeof ref === 'string' ? { url: ref } : ref;
+  const _ref = typeof ref === 'string' ? { url: ref, originalFileName: ref } : ref;
   return {
     url: '',
     ref: '',
@@ -32,15 +33,15 @@ export class ImageUploader {
    * @param imageUrl
    * @param afPath
    */
-  public async upload(imageUrl: string, afPath: string = 'movies'): Promise<ImgRef|undefined> {
+  public async upload(imageUrl: string, afPath: string = 'movies'): Promise<ImgRef | undefined> {
     try {
       const data = await this.httpClient.get(imageUrl, { responseType: 'blob' }).toPromise();
-      const snapshot = await this.afStorage.upload(`${afPath}/${sanitizeFileName(imageUrl)}`, data)
+      const snapshot = await this.afStorage.upload(`${afPath}/${sanitizeFileName(imageUrl)}`, data);
       const url = await snapshot.ref.getDownloadURL();
       const meta = await snapshot.ref.getMetadata();
-      return { url, ref: meta.fullPath, originalRef: '' };
+      return createImgRef({ url, ref: meta.fullPath, originalFileName: imageUrl });
     } catch (error) {
-      return ;
+      return;
     }
   }
 
