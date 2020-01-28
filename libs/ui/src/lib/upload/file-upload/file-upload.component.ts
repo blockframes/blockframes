@@ -9,7 +9,7 @@ import {
 import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/storage';
 import { Observable } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
+import { sanitizeFileName, getMimeType } from '@blockframes/utils/file-sanitizer';
 
 @Component({
   selector: 'file-upload',
@@ -69,16 +69,18 @@ export class FileUploadComponent {
 
     const file = files.item(0);
 
+    const fileType = getMimeType(file);
+
     // Hack around cypress issue with Files and events,
     // See https://github.com/cypress-io/cypress/issues/3613
     if (!(file instanceof File)) {
       // @ts-ignore
-      file.__proto__ = new File([], file.type);
+      file.__proto__ = new File([], fileType);
     }
 
-    const isFileTypeValid = this.types && this.types.includes(file.type);
+    const isFileTypeValid = this.types && this.types.includes(fileType);
     if (!isFileTypeValid) {
-      this.snackBar.open('unsupported file type :( ', 'close', { duration: 1000 });
+      this.snackBar.open(`Unsupported file type: "${fileType}".`, 'close', { duration: 1000 });
       this.state = 'waiting';
       return;
     }

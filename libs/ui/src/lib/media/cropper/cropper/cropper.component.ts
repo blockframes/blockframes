@@ -8,7 +8,7 @@ import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/s
 /*import { HttpClient } from '@angular/common/http';*/
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormGroup, FormControl } from '@angular/forms';
 import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
-import { ImgRef } from '@blockframes/utils/image-uploader';
+import { ImgRef, createImgRef } from '@blockframes/utils/image-uploader';
 
 type CropStep = 'drop' | 'crop' | 'upload' | 'upload_complete' | 'show';
 
@@ -57,6 +57,7 @@ function isFile(imgRef: ImgRef): boolean {
 export class CropperComponent implements ControlValueAccessor {
   private ref: AngularFireStorageReference;
   private folder: string;
+  private originalFileName: string;
   private step: BehaviorSubject<CropStep> = new BehaviorSubject('drop');
   step$ = this.step.asObservable();
   file: File;
@@ -110,7 +111,7 @@ export class CropperComponent implements ControlValueAccessor {
   // update the parent form field when there is change in the component (component -> parent)
   registerOnChange(fn: any): void {
     this.uploaded = (ref: ImgRef) => fn(ref);
-    this.deleted = () => fn({ url: '', ref: '', originalRef: '' });
+    this.deleted = () => fn(createImgRef());
   }
 
   registerOnTouched(fn: any): void {
@@ -143,6 +144,7 @@ export class CropperComponent implements ControlValueAccessor {
       }
       this.nextStep('upload');
       const fileName = sanitizeFileName(this.file.name);
+      this.originalFileName = this.file.name;
       this.ref = this.storage.ref(`${this.folder}/${fileName}`);
       const blob = b64toBlob(this.croppedImage);
 
@@ -161,11 +163,11 @@ export class CropperComponent implements ControlValueAccessor {
     // Observable completed once both requests are completed
     combineLatest([this.url$, this.ref.getMetadata()])
     .subscribe(([url, meta]) => {
-      this.uploaded({
+      this.uploaded(createImgRef({
         url,
         ref: meta.fullPath,
-        originalRef: ''
-      });
+        originalFileName: this.originalFileName,
+      }));
       this.nextStep('show');
     })
   }
