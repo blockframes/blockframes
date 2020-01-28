@@ -1,12 +1,9 @@
 <ul>
   <li>
-    <strong>Synopsis </strong><missing-control [control]="story.get('synopsis')"></missing-control>
+    <strong>Synopsis </strong><missing-control [control]="story.get('synopsis')" [link]="link"></missing-control>
   </li>
   <li>
-    <strong>Synopsis </strong>{{ story.get('synopsis') | missing }}
-  </li>
-  <li>
-    <strong>Key Assets </strong>{{ promotionalDescription.get('keyAssets') | missing }}
+    <strong>Key Assets </strong><missing-control [control]="promotionalDescription.get('keyAssets')" [link]="link"></missing-control>
   </li>
   <li>
     <strong>Keywords </strong>
