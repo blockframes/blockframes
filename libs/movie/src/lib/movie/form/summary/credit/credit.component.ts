@@ -11,4 +11,5 @@ import { MovieSalesCastForm } from '../../sales-cast/sales-cast.form';
 export class MovieSummaryCreditComponent {
   @Input() main: MovieMainForm;
   @Input() salesCast: MovieSalesCastForm;
+  @Input() link: string;
 }

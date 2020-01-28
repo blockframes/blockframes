@@ -12,4 +12,5 @@ import { TerritoriesSlug } from '@blockframes/utils/static-model/types';
 export class MovieSummaryCountryComponent {
   @Input() salesInfo: MovieSalesInfoForm;
   @Input() originCountries: FormList<TerritoriesSlug>;
+  @Input() link: string;
 }
