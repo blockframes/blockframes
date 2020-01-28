@@ -9,7 +9,7 @@ import { FormStaticValue } from '@blockframes/utils/form';
 function createRatingFormControl(entity?: Partial<MovieRating>) {
   const { country, reason, system, value } = createMovieRating(entity);
   return { 
-    country: new FormControl(country),  // We don't want to prevent the user to write something different from slug
+    country: new FormStaticValue(country, 'TERRITORIES'),
     reason: new FormControl(reason),
     system: new FormControl(system),
     value: new FormControl(value),
