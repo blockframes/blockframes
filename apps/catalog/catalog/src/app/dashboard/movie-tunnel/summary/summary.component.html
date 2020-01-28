@@ -26,7 +26,7 @@
         <a mat-icon-button [routerLink]="getPath('synopsis')"><mat-icon svgIcon="edit"></mat-icon></a>
       </mat-card-header>
       <mat-card-content>
-        <movie-summary-story [story]="form.story" [promotionalDescription]="form.promotionalDescription"></movie-summary-story>
+        <movie-summary-story [story]="form.story" [promotionalDescription]="form.promotionalDescription" [link]="getPath('synopsis')"></movie-summary-story>
       </mat-card-content>
     </mat-card>
 
@@ -86,7 +86,7 @@
         <a mat-icon-button [routerLink]="getPath('evaluation')"><mat-icon svgIcon="edit"></mat-icon></a>
       </mat-card-header>
       <mat-card-content>
-        <movie-summary-evaluation [salesInfo]="form.salesInfo"></movie-summary-evaluation>
+        <movie-summary-evaluation [salesInfo]="form.salesInfo" [link]="getPath('evaluation')"></movie-summary-evaluation>
       </mat-card-content>
     </mat-card>
   </ng-container>
