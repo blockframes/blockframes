@@ -4,7 +4,7 @@ import { FormControl } from '@angular/forms';
 import { Component, Input, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { DistributionDealTermsForm } from './terms.form';
 import { tap, startWith } from 'rxjs/operators';
-import { MatSlideToggleChange } from '@angular/material';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
 @Component({
   selector: '[form] distribution-form-terms',
@@ -32,9 +32,7 @@ export class DistributionDealTermsComponent implements OnInit, OnDestroy {
     this.periodSub = this.periodCtrl.valueChanges
       .pipe(
         startWith(this.periodCtrl.value),
-        tap(value => {
-          this.toggleForm(['start', 'end'], value);
-        })
+        tap(value => this.toggleForm(['start', 'end'], value))
       )
       .subscribe();
     this.eventSub = this.eventCtrl.valueChanges
