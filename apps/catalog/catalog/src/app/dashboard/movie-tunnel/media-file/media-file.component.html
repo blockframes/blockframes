@@ -9,7 +9,7 @@
         </mat-card-header>
         <mat-card-content>
           <file-upload 
-          path="pdf" 
+          [path]="presentationPath" 
           uploadOnFirestore="true" 
           accept="['.pdf']" 
           [types]="['application/pdf']" 
@@ -26,7 +26,7 @@
         </mat-card-header>
         <mat-card-content>
           <file-upload 
-          path="pdf" 
+          [path]="scenarioPath" 
           uploadOnFirestore="true" 
           accept="['.pdf']" 
           [types]="['application/pdf']" 
