@@ -8,6 +8,7 @@ import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/s
 /*import { HttpClient } from '@angular/common/http';*/
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ImgRef } from '@blockframes/utils/image-uploader';
+import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
 
 type CropStep = 'drop' | 'crop' | 'upload' | 'upload_complete' | 'show';
 
@@ -141,8 +142,8 @@ export class CropperComponent implements ControlValueAccessor {
         throw new Error('No image cropped yet');
       }
       this.nextStep('upload');
-      const part = this.file.name.split('.');
-      const fileName = part[0] + Date.now() + '.' + part[1];
+      const fileName = sanitizeFileName(this.file.name);
+      this.ref = this.storage.ref(`${this.folder}/${fileName}`);
       this.ref = this.storage.ref(`${this.folder}/${fileName}`);
       const blob = b64toBlob(this.croppedImage);
 
