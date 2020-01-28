@@ -55,5 +55,4 @@ export function getMimeType(file: File): string {
   } else {
     return file.type;
   }
-
 }
