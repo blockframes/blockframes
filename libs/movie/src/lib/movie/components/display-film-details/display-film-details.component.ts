@@ -1,7 +1,6 @@
 import { AFM_DISABLE } from '@env';
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { getLabelBySlug, hasSlug } from '@blockframes/utils/static-model/staticModels';
-import { MovieOriginalRelease } from '@blockframes/movie/movie+state/movie.firestore';
+import { hasSlug } from '@blockframes/utils/static-model/staticModels';
 
 @Component({
   selector: 'movie-display-film-details',
@@ -10,7 +9,6 @@ import { MovieOriginalRelease } from '@blockframes/movie/movie+state/movie.fires
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieDisplayFilmDetailsComponent {
-  public getLabelBySlug = getLabelBySlug;
   @Input() main;
   @Input() salesInfo;
   @Input() color;

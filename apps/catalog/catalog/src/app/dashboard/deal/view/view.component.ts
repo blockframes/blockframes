@@ -4,21 +4,21 @@ import {
   Contract,
   ContractService,
   ContractPartyDetail,
-  getLastVersionIndex,
   getContractParties,
   isContractSignatory,
-  getTotalPrice
+  getTotalPrice,
+  getLastVersionIndex
 } from '@blockframes/contract/contract/+state';
 import { Observable } from 'rxjs/internal/Observable';
 import { map, filter } from 'rxjs/operators';
 import { ContractVersion } from '@blockframes/contract/version/+state/contract-version.model';
-import { MovieQuery, Movie } from '@blockframes/movie';
+import { MovieQuery } from '@blockframes/movie';
 import { OrganizationQuery, PLACEHOLDER_LOGO } from '@blockframes/organization';
-import { IntercomAppModule } from '@blockframes/utils/intercom.module';
 import { MovieCurrenciesSlug } from '@blockframes/utils/static-model/types';
 import { getCodeBySlug } from '@blockframes/utils/static-model/staticModels';
 import { CurrencyPipe } from '@angular/common';
 import { Price } from '@blockframes/utils/common-interfaces';
+import { Intercom } from 'ng-intercom';
 
 const versionColumns = {
   date: 'Date',
@@ -65,8 +65,7 @@ export class DealViewComponent implements OnInit {
   public contract$: Observable<Contract>;
   public licensees: ContractPartyDetail[];
   public subLicensors: ContractPartyDetail[];
-  public movies$: Observable<Movie[]>;
-  public moviesLenght: number;
+  public movies$ = this.movieQuery.selectAll();
   public lastVersion: ContractVersion;
   public isSignatory: boolean;
   public totalPrice: Price;
@@ -82,12 +81,10 @@ export class DealViewComponent implements OnInit {
     private service: ContractService,
     private movieQuery: MovieQuery,
     private organizationQuery: OrganizationQuery,
-    private intercomModule: IntercomAppModule
+    private intercom: Intercom
   ) {}
 
   ngOnInit() {
-    this.isLoading$ = this.query.selectLoading();
-
     this.contract$ = this.query.selectActive().pipe(
       filter(contract => !!contract),
       map(contract => {
@@ -106,17 +103,11 @@ export class DealViewComponent implements OnInit {
         return contract;
       })
     );
-
-    this.movies$ = this.movieQuery.selectAll();
-
-    // We need to to get movies lenght snapshot in a variable because we
-    // can't use (observable | async).lenght with pluralization in HTML.
-    this.moviesLenght = this.movieQuery.getCount();
   }
 
   /** Opens intercom messenger panel. */
   public openIntercom(): void {
-    return this.intercomModule.intercom.show();
+    return this.intercom.show();
   }
 
   /** Accept the offer and sign with a timestamp. */

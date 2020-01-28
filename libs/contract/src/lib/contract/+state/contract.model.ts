@@ -1,4 +1,4 @@
-import { getCodeIfExists, ExtractCode, getCodeBySlug } from '@blockframes/utils/static-model/staticModels';
+import { getCodeIfExists, getCodeBySlug } from '@blockframes/utils/static-model/staticModels';
 import { createPrice, Price } from '@blockframes/utils/common-interfaces/price';
 import {
   ContractDocumentWithDates,
@@ -14,9 +14,9 @@ import { createParty } from '@blockframes/utils/common-interfaces/identity';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 import { createTerms } from '@blockframes/utils/common-interfaces/terms';
 import { ContractVersion, ContractVersionWithTimeStamp, formatContractVersion } from '../../version/+state/contract-version.model';
-import { firestore } from "firebase/app";
 import { LegalRolesSlug } from '@blockframes/utils/static-model/types';
 import { CurrencyPipe } from '@angular/common';
+import { isTimestamp } from '@blockframes/utils/helpers';
 
 /**
  * @dev this should not be saved to firestore,
@@ -201,7 +201,9 @@ export function createContractFromFirestore(contract: ContractWithTimeStamp): Co
     parties: contract.parties
       ? contract.parties.map(partyDetails => formatPartyDetails(partyDetails))
       : [],
-    versions: contract.versions.map(version => formatContractVersion(version))
+    versions: contract.versions
+      ? contract.versions.map(version => formatContractVersion(version))
+      : []
   }
 }
 
@@ -211,7 +213,7 @@ export function createContractFromFirestore(contract: ContractWithTimeStamp): Co
  */
 export function formatPartyDetails(partyDetails: any): ContractPartyDetail {
   // Dates from firebase are Timestamps, we convert it to Dates.
-  if (partyDetails.signDate instanceof firestore.Timestamp) {
+  if (isTimestamp(partyDetails.signDate)) {
     partyDetails.signDate = partyDetails.signDate.toDate();
   }
 
@@ -224,7 +226,8 @@ export function formatPartyDetails(partyDetails: any): ContractPartyDetail {
  * @param legalRole
  */
 export function getContractParties(contract: Contract, legalRole: LegalRolesSlug): ContractPartyDetail[] {
-  return contract.parties.filter(p => p.party.role === getCodeIfExists('LEGAL_ROLES', legalRole as ExtractCode<'LEGAL_ROLES'>));
+  const roleCode = getCodeIfExists('LEGAL_ROLES', legalRole)
+  return contract.parties.filter(p => p.party.role === roleCode );
 }
 
 /**
@@ -242,11 +245,11 @@ export function isPartyOfContract(organizationId: string, contract: Contract): b
  * @param orgnizationId
  * @param contract
  */
-export function isContractSignatory(contract: Contract, orgnizationId: string): boolean {
-  return contract.parties.some(
-    partyDetails =>
-      partyDetails.party.orgId === orgnizationId && partyDetails.party.role === 'signatory'
-  );
+export function isContractSignatory(contract: Contract, organizationId: string): boolean {
+  return contract.parties.some(partyDetails => {
+    const  { orgId, role } = partyDetails.party;
+    return orgId === organizationId && role === 'signatory';
+  })
 }
 
 /**

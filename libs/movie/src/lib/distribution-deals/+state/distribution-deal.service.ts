@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import objectHash from 'object-hash';
-import { firestore } from 'firebase';
 import { CollectionService, CollectionConfig } from 'akita-ng-fire';
 import { DistributionDealState, DistributionDealStore } from './distribution-deal.store';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
@@ -8,6 +7,7 @@ import { DistributionDeal } from './distribution-deal.model';
 import { createContractTitleDetail, ContractWithLastVersion } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractVersionService } from '@blockframes/contract/version/+state/contract-version.service';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
+import { isTimestamp } from '@blockframes/utils/helpers';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies/:movieId/distributionDeals' })
@@ -66,11 +66,11 @@ export class DistributionDealService extends CollectionService<DistributionDealS
 
   public formatDistributionDeal(deal: any): DistributionDeal {
     // Dates from firebase are Timestamps, we convert it to Dates.
-    if (deal.terms.start instanceof firestore.Timestamp) {
+    if (isTimestamp(deal.terms.start)) {
       deal.terms.start = deal.terms.start.toDate();
     }
 
-    if (deal.terms.end instanceof firestore.Timestamp) {
+    if (isTimestamp(deal.terms.end)) {
       deal.terms.end = deal.terms.end.toDate();
     }
     return deal as DistributionDeal;
