@@ -2,7 +2,6 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
-
     ///////////////////
     /// COLLECTIONS ///
     ///////////////////
@@ -67,16 +66,17 @@ service cloud.firestore {
 
     match /permissions/{orgId} {
     	allow read: if isOrgMember(userId(), orgId);
-      allow create: if isOrgAdmin(userId(), orgId)
+      allow create: if (isOrgAdmin(userId(), orgId)
       	&& incomingData().id == orgId
-        && documentIdChecked(orgId, 'permissions');
+        && documentIdChecked(orgId, 'permissions'))
+        || isCreatingOrganization(orgId);
 			allow update: if isOrgAdmin(userId(), orgId)
       	&& incomingData().id == orgId
         && documentIdChecked(orgId, 'permissions')
         && incomingData().id == existingData().id;
 
       match /documentPermissions/{docId} {
-        allow read: if isOrgMember(orgId);
+        allow read: if isOrgMember(userId(), orgId);
         allow create: if isOrgMember(userId(), orgId)
           && incomingData().id == docId;
         allow update: if isOrgAdmin(userId(), orgId)
@@ -147,7 +147,7 @@ service cloud.firestore {
 
     match /contracts/{contractId} {
     	allow read: if userHasValidOrg(); // allow read: if isParty(userOrgId()) || isBlockframesAdmin(userId()); => ISSUE#1619
-      allow create: if userHasValidOrg();
+      allow create: if canCreateNewPermissions(userOrgId(), contractId);
       allow update: if orgCan('canUpdate', userOrgId(), contractId);
       allow delete: if orgCan('canDelete', userOrgId(), contractId);
 
@@ -231,6 +231,11 @@ service cloud.firestore {
 
     function canCreateNewPermissions(orgId, docId) {
     	return getAfter(/databases/$(database)/documents/permissions/$(orgId)/documentPermissions/$(docId)).data.canCreate == true;
+    }
+
+    function isCreatingOrganization(orgId) {
+			return userId() in getAfter(/databases/$(database)/documents/orgs/$(orgId)).data.userIds
+      	&& exists(/databases/$(database)/documents/orgs/$(orgId)) == false;
     }
 
     function getOrgPermissions(orgId) {
