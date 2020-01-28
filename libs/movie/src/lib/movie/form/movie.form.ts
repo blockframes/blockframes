@@ -35,7 +35,7 @@ function createMovieControls(movie: Partial<Movie>) {
 export type MovieControl = ReturnType<typeof createMovieControls>
 
 @Injectable()
-export class MovieForm extends FormEntity<MovieControl> {
+export class MovieForm extends FormEntity<MovieControl, Movie> {
   constructor() {
     super(createMovieControls({}));
   }
@@ -75,5 +75,21 @@ export class MovieForm extends FormEntity<MovieControl> {
 
   get salesInfo() {
     return this.get('salesInfo');
+  }
+
+  get promotionalDescription() {
+    return this.get('promotionalDescription');
+  }
+
+  get story() {
+    return this.get('story');
+  }
+
+  get movieReview() {
+    return this.get('movieReview');
+  }
+
+  get budget() {
+    return this.get('budget');
   }
 }

@@ -113,7 +113,7 @@ import { sentryDsn } from '@env';
     sentryDsn ? SentryModule : [],
 
     // Akita
-    AkitaNgRouterStoreModule.forRoot(),
+    AkitaNgRouterStoreModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

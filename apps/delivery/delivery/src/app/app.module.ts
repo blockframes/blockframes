@@ -109,7 +109,7 @@ import { sentryDsn } from '@env';
     AngularFireStorageModule,
 
     // Akita
-    AkitaNgRouterStoreModule.forRoot(),
+    AkitaNgRouterStoreModule,
 
     // Router
     RouterModule.forRoot([{

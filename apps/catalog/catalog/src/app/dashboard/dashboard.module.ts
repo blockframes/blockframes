@@ -2,6 +2,9 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { LayoutModule } from './layout/layout.module';
 import { LayoutComponent } from './layout/layout.component';
+import { MovieActiveGuard } from '@blockframes/movie';
+import { MovieTunnelGuard } from './movie-tunnel/movie-tunnel.guard';
+import { MovieTunnelService } from './movie-tunnel/movie-tunnel.service';
 
 const routes: Routes = [
   {
@@ -33,6 +36,8 @@ const routes: Routes = [
           loadChildren: () => import('./title/list/list.module').then(m => m.TitleListModule)
         }, {
           path: ':movieId',
+          canActivate: [MovieActiveGuard],
+          canDeactivate: [MovieActiveGuard],
           loadChildren: () => import('./title/view/view.module').then(m => m.TitleViewModule)
         }]
       },
@@ -68,13 +73,30 @@ const routes: Routes = [
     ]
   },
   {
-    path: 'movie-tunnel/:movieId',
-    loadChildren: () => import('./movie-tunnel/movie-tunnel.module').then(m => m.MovieTunnelModule)
+    path: 'movie-tunnel',
+    canActivate: [MovieTunnelGuard],
+    canDeactivate: [MovieTunnelGuard],
+    children: [{
+      path: '',
+      loadChildren: () => import('./movie-tunnel/start/start-tunnel.module').then(m => m.StartTunnelModule)
+    }, {
+      path: ':movieId',
+      canActivate: [MovieActiveGuard],
+      canDeactivate: [MovieActiveGuard],
+      loadChildren: () => import('./movie-tunnel/movie-tunnel.module').then(m => m.MovieTunnelModule),
+      data: {
+        redirect: '/c/o/dashboard/movie-tunnel'
+      },
+    }]
   }
+
 ];
 
 @NgModule({
   imports: [LayoutModule, RouterModule.forChild(routes)],
   declarations: []
 })
-export class DashboardModule {}
+export class DashboardModule {
+  // Start listening on the change the routes
+  constructor(tunnelServie: MovieTunnelService) {}
+}

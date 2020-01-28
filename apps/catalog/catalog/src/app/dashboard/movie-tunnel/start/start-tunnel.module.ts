@@ -7,6 +7,11 @@ import { TunnelPageModule } from '@blockframes/ui/tunnel/page/tunnel-page.module
 // Materials
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
 
 @NgModule({
   declarations: [StartTunnelComponent],
@@ -14,8 +19,14 @@ import { MatButtonModule } from '@angular/material/button';
     CommonModule,
     FlexLayoutModule,
     TunnelPageModule,
+    // Material
     MatCardModule,
     MatButtonModule,
+    MatIconModule,
+    MatSidenavModule,
+    MatToolbarModule,
+    MatProgressSpinnerModule,
+    // Router
     RouterModule.forChild([{ path: '', component: StartTunnelComponent }])
   ],
 })

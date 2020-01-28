@@ -1,0 +1,26 @@
+<ul>
+  <li>
+    <strong>Budget </strong>
+    <ng-container *ngIf="budget.get('estimatedBudget').value as estimatedBudget">
+      {{ budgetRange(estimatedBudget) }}
+    </ng-container>
+  </li>
+  <ng-container *ngFor="let boxOffice of budget.get('boxOffice').controls">
+    <li>
+      <strong>{{ boxOffice.get('territory').value }} </strong>{{ boxOffice.get('value') | missing }} {{ boxOffice.get('unit') | missing }}
+    </li>
+  </ng-container>
+  <li>
+    <strong>Quotas </strong>{{ salesInfo.get('certifications') | missing }}
+  </li>
+  <ng-container *ngFor="let rating of salesInfo.get('rating').controls">
+    <li>
+      <strong>Rating </strong>{{ rating.get('country') | missing }}: {{ rating.get('value') | missing }}
+    </li>
+  </ng-container>
+  <ng-container *ngFor="let movieReview of movieReview.controls">
+    <li>
+      <strong>Film Review </strong>{{ movieReview.get('criticName') | missing }} in {{ movieReview.get('journalName') | missing }} "{{ movieReview.get('criticQuote') | missing }}""
+    </li>
+  </ng-container>
+</ul>

@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { MovieAnalytics } from '@blockframes/movie/movie+state/movie.model';
+import { MovieService } from '@blockframes/movie/movie+state/movie.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'catalog-title-sales',
@@ -7,9 +10,11 @@ import { Component, OnInit } from '@angular/core';
 })
 export class TitleSalesComponent implements OnInit {
 
-  constructor() { }
+  public movieAnalytics: Observable<MovieAnalytics>;
+
+  constructor(private movieService: MovieService) { }
 
   ngOnInit() {
+    this.movieAnalytics = this.movieService.getMovieAnalytics();
   }
-
 }

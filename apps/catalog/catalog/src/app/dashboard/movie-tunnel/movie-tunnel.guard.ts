@@ -1,15 +1,18 @@
 import { Injectable } from '@angular/core';
-import { CanDeactivate } from '@angular/router';
-import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
-import { MovieTunnelComponent } from './movie-tunnel.component';
+import { CanActivate, CanDeactivate } from '@angular/router';
+import { MovieTunnelService } from './movie-tunnel.service';
 
 @Injectable({ providedIn: 'root' })
-export class MovieTunnelGuard implements CanDeactivate<MovieTunnelComponent> {
-  constructor(private form: MovieForm) {}
+export class MovieTunnelGuard implements CanActivate, CanDeactivate<any> {
+  constructor(private service: MovieTunnelService) {}
 
-  // TODO #1472: canDeactivate in movie tunnel guard
-  canDeactivate(component: MovieTunnelComponent): boolean {
-    this.form.reset();
+  canActivate() {
+    this.service.isInTunnel = true;
     return true;
   }
+  canDeactivate() {
+    this.service.isInTunnel = false;
+    return true;
+  }
+
 }

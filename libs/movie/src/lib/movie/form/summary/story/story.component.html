@@ -1,0 +1,18 @@
+<ul>
+  <li>
+    <strong>Synopsis </strong>{{ story.get('synopsis') | missing }}
+  </li>
+  <li>
+    <strong>Key Assets </strong>{{ promotionalDescription.get('keyAssets') | missing }}
+  </li>
+  <li>
+    <strong>Keywords </strong>
+    <mat-chip-list fxLayout="row" fxLayoutGap="5px">
+      <ng-container *ngFor="let keyword of promotionalDescription.get('keywords').value">
+        <mat-chip>
+          {{ keyword }}
+        </mat-chip>
+      </ng-container>
+    </mat-chip-list>
+  </li>
+</ul>

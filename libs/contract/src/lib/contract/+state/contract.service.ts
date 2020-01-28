@@ -34,6 +34,7 @@ const contractQuery = (contractId: string): Query<Contract> => ({
   })
 })
 
+
 export function getLastVersionIndex(contract: Contract): number {
   const { count }: VersionMeta = contract.versions.find(v => v.id === '_meta')
   return contract.versions.map(v => v.id).indexOf(count.toString())

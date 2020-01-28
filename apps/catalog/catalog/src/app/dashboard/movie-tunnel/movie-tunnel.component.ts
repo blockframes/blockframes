@@ -1,38 +1,21 @@
-// Lodash
-import flatten from 'lodash/flatten';
-
 // Angular
-import { Component, ChangeDetectionStrategy, Host, OnInit, OnDestroy } from '@angular/core';
-import { DistributionDealForm } from '@blockframes/movie/distribution-deals/form/distribution-deal.form';
-import { ContractForm } from '@blockframes/contract/contract/forms/contract.form';
-import { ActivatedRoute } from '@angular/router';
+import { Component, ChangeDetectionStrategy, Host, OnInit } from '@angular/core';
 
 // Akita
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 // Blockframes
-import { MovieService } from '@blockframes/movie/movie/+state';
+import { MovieService, MovieQuery } from '@blockframes/movie/movie/+state';
 import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
 
 // RxJs
 import { map } from 'rxjs/operators';
-import { Observable, Subscription } from 'rxjs';
+import { MatSnackBar } from '@angular/material';
+import { MovieTunnelService } from './movie-tunnel.service';
 
 interface PageData {
   index: number;
   length: number;
-}
-
-function getPageData(url: string, array: string[][]): PageData {
-  const pageUrl = url.split('/').pop();
-  const panel = array.find(page => page.includes(pageUrl));
-  if (panel) {
-    const index = panel.indexOf(pageUrl) + 1;
-    const arrayLength = panel.length;
-    return { index: index, length: arrayLength };
-  } else {
-    return { index: 0, length: 0 };
-  }
 }
 
 const panels = [{
@@ -90,81 +73,72 @@ const panels = [{
 }];
 
 const allRoutes = panels.map(({ routes }) => routes.map(r => r.path));
-const allPath = flatten(allRoutes);
+const allPath = allRoutes.flat();
 
+/**
+ * Set the position of the page on the current panel
+ * @example { index: 1, length: 3 } will look like 1/3 in the UI
+ */
+function getPageData(url: string, array: string[][]): PageData {
+  const pageUrl = url.split('/').pop();
+  const panel = array.find(page => page.includes(pageUrl));
+  if (panel) {
+    const index = panel.indexOf(pageUrl) + 1;
+    const arrayLength = panel.length;
+    return { index: index, length: arrayLength };
+  } else {
+    return { index: 0, length: 0 };
+  }
+}
+
+/**
+ * @description returns the next or previous page where the router should go to
+ * @param current current url
+ * @param arithmeticOperator plus or minus
+ */
+function getPage(url: string, arithmeticOperator: number): string {
+  const current = url.split('/').pop();
+  const i: number = allPath.indexOf(current) + arithmeticOperator;
+  return allPath[i];
+}
 
 @Component({
-  selector: 'catalog-layout',
+  selector: 'catalog-movie-tunnel',
   templateUrl: './movie-tunnel.component.html',
   styleUrls: ['./movie-tunnel.component.scss'],
-  providers: [MovieForm, ContractForm, DistributionDealForm],
+  providers: [MovieForm],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieTunnelComponent implements OnInit, OnDestroy {
-  private sub: Subscription;
+export class MovieTunnelComponent implements OnInit {
+  private url$ = this.routerQuery.select(({ state }) => state.url);
+  public routeBeforeTunnel: string;
   public panels = panels;
-  public pageData$ = this.routerQuery
-    .select('state')
-    .pipe(map(({ url }) => getPageData(url, allRoutes)));
+  
+  public next$ = this.url$.pipe(map(url => getPage(url, 1)));
+  public previous$ = this.url$.pipe(map(url => getPage(url, -1)));
+  public pageData$ = this.url$.pipe(map(url => getPageData(url, allRoutes)));
 
-  public next$: Observable<string> = this.routerQuery.select('state').pipe(
-    map(state => {
-      const url = state.url.split('/').pop();
-      return this.getPage(url, 1);
-    })
-  );
-  public previous$: Observable<string> = this.routerQuery.select('state').pipe(
-    map(state => {
-      const url = state.url.split('/').pop();
-      return this.getPage(url, -1);
-    })
-  );
 
   constructor(
     @Host() private form: MovieForm,
-    @Host() private contractForm: ContractForm,
-    @Host() private dealForm: DistributionDealForm,
+    private tunnelService: MovieTunnelService,
     private service: MovieService,
-    private route: ActivatedRoute,
-    private routerQuery: RouterQuery
+    private query: MovieQuery,
+    private routerQuery: RouterQuery,
+    private snackBar: MatSnackBar
   ) {}
 
-  ngOnInit() {
-    this.sub = this.route.params.subscribe(async ({ movieId }: { movieId: string }) => {
-      const movie =
-        movieId !== 'create'
-          ? await this.service.getValue(movieId) // Edit movie
-          : {}; // Create movie
-      this.form.patchValue(movie);
-    });
+  async ngOnInit() {
+    this.routeBeforeTunnel = this.tunnelService.previousUrl;
+    const movie = this.query.getActive();
+    this.form.patchAllValue(movie);
   }
 
-  ngOnDestroy() {
-    this.sub.unsubscribe();
+  // Should save movie
+  public async save() {
+    const id = this.query.getActiveId();
+    await this.service.update({ id, ...this.form.value });
+    this.snackBar.open('Saved', 'close', { duration: 500 });
   }
 
-  /**
-   * @description returns the next or previous page where the router should go to
-   * @param current current url
-   * @param arithmeticOperator plus or minus
-   */
-  private getPage(current: string, arithmeticOperator: number): string {
-    const i: number = allPath.indexOf(current) + arithmeticOperator;
-    if (i < 0) {
-      return 'start';
-    }
-    return allPath[i];
-  }
-
-  // Should save movie, contract & deal
-  private save() {
-    // Movie
-    this.form.value.id
-      ? this.service.update(this.form.value)
-      : this.service.add(this.form.value);
-    // Contract
-
-    // Deal
-
-  }
 }
