@@ -15,7 +15,7 @@
         <movie-summary-main [main]="form.main"></movie-summary-main>
         <movie-summary-country [salesInfo]="form.salesInfo" [originCountries]="form.main.originCountries"></movie-summary-country>
         <movie-summary-information [main]="form.main"></movie-summary-information>
-        <movie-summary-sales-cast [salesCast]="form.salesCast"></movie-summary-sales-cast>
+        <movie-summary-sales-cast [salesCast]="form.salesCast" [link]="getPath('main')"></movie-summary-sales-cast>
         <movie-summary-festival-prizes [festivalPrizes]="form.festivalPrizes"></movie-summary-festival-prizes>
       </mat-card-content>
     </mat-card>
@@ -56,7 +56,7 @@
         <a mat-icon-button [routerLink]="getPath('technical-info')"><mat-icon svgIcon="edit"></mat-icon></a>
       </mat-card-header>
       <mat-card-content>
-        <movie-summary-technical-information [salesInfo]="form.salesInfo" [versionInfo]="form.versionInfo"></movie-summary-technical-information>
+        <movie-summary-technical-information [salesInfo]="form.salesInfo" [versionInfo]="form.versionInfo" [link]="getPath('technical-info')"></movie-summary-technical-information>
       </mat-card-content>
     </mat-card>
 
