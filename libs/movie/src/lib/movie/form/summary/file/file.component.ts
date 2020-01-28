@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit } from '@angular/core';
 import { MoviePromotionalElementsForm } from '../../promotional-elements/promotional-elements.form';
 
 @Component({
@@ -7,7 +7,13 @@ import { MoviePromotionalElementsForm } from '../../promotional-elements/promoti
   styleUrls: ['./file.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieSummaryFileComponent {
+export class MovieSummaryFileComponent implements OnInit {
   @Input() promotionalElements: MoviePromotionalElementsForm;
   @Input() link: string;
+
+  constructor(private cdr: ChangeDetectorRef) {}
+
+  ngOnInit() {
+    this.promotionalElements.valueChanges.subscribe(_ => this.cdr.markForCheck());
+  }
 }
