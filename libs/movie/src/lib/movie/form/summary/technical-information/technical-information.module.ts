@@ -1,18 +1,15 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MissingPipeModule } from '@blockframes/utils/pipes/missing.module';
-import { MatChipsModule } from '@angular/material/chips';
 import { MovieSummaryTechnicalInformationComponent } from './technical-information.component';
-import { TranslateSlugModule, MissingSlugPipeModule } from '@blockframes/utils';
+import { TranslateSlugModule } from '@blockframes/utils';
+import { MissingControlModule } from '@blockframes/ui/missing-control/missing-control.module';
 
 @NgModule({
   declarations: [MovieSummaryTechnicalInformationComponent],
   imports: [
     CommonModule,
-    MissingPipeModule,
-    MissingSlugPipeModule,
     TranslateSlugModule,
-    MatChipsModule
+    MissingControlModule
   ],
   exports: [MovieSummaryTechnicalInformationComponent]
 })

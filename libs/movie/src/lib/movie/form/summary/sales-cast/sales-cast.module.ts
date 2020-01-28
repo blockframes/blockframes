@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MovieSummarySalesCastComponent } from './sales-cast.component';
-import { MissingPipeModule } from '@blockframes/utils/pipes/missing.module';
+import { MissingControlModule } from '@blockframes/ui/missing-control/missing-control.module';
 
 @NgModule({
   declarations: [MovieSummarySalesCastComponent],
   imports: [
     CommonModule,
-    MissingPipeModule
+    MissingControlModule
   ],
   exports: [MovieSummarySalesCastComponent]
 })

@@ -11,4 +11,5 @@ export class MissingControlComponent {
   @Input() control: FormControl;
   @Input() label: string;
   @Input() link: string;
+  @Input() isLast = true;
 }
