@@ -198,6 +198,7 @@ export function createLegalDocument(
 export function createContractFromFirestore(contract: ContractWithTimeStamp): Contract {
   return {
     ...contract,
+    signDate: (contract.signDate instanceof Date) ? contract.signDate : contract.signDate.toDate(),
     parties: contract.parties
       ? contract.parties.map(partyDetails => formatPartyDetails(partyDetails))
       : [],
