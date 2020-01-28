@@ -11,6 +11,7 @@
           <file-upload 
           [path]="presentationPath" 
           uploadOnFirestore="true" 
+          return="imgRef" 
           accept="['.pdf']" 
           [types]="['application/pdf']" 
           (storeUploaded)="importPDF($event, 'presentation_deck')">
