@@ -3,13 +3,15 @@ import { CommonModule } from '@angular/common';
 import { MissingPipeModule } from '@blockframes/utils/pipes/missing.module';
 import { MovieSummaryStoryComponent } from './story.component';
 import { MatChipsModule } from '@angular/material/chips';
+import { MissingControlModule } from '@blockframes/ui/missing-control/missing-control.module';
 
 @NgModule({
   declarations: [MovieSummaryStoryComponent],
   imports: [
     CommonModule,
     MissingPipeModule,
-    MatChipsModule
+    MatChipsModule,
+    MissingControlModule
   ],
   exports: [MovieSummaryStoryComponent]
 })
