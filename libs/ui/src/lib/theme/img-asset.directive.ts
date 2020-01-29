@@ -1,6 +1,6 @@
 import { Directive, Input, HostBinding, ChangeDetectorRef, OnInit, OnDestroy } from '@angular/core';
 import { Subscription, BehaviorSubject, combineLatest } from 'rxjs';
-import { ThemeService } from '../theme';
+import { ThemeService } from '../theme/theme.service';
 
 @Directive({
   selector: 'img[asset]'

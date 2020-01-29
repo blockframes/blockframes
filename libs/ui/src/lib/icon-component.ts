@@ -212,13 +212,14 @@ const icons = [
   },
   { name: 'spinner', url: 'assets/icons/icons/spinner.svg' },
   { name: 'star', url: 'assets/icons/icons/star.svg' },
+  { name: 'star_fill', url: 'assets/icons/icons/star_fill.svg' },
   {
-    name: 'storiesand_more',
-    url: 'assets/icons/icons/storiesand_more.svg'
+    name: 'stories_and_more',
+    url: 'assets/icons/icons/stories_and_more.svg'
   },
   {
-    name: 'storiesand_more_fill',
-    url: 'assets/icons/icons/storiesand_more_fill.svg'
+    name: 'stories_and_more_fill',
+    url: 'assets/icons/icons/stories_and_more_fill.svg'
   },
   { name: 'template', url: 'assets/icons/icons/template.svg' },
   { name: 'text_area', url: 'assets/icons/icons/text_area.svg' },
