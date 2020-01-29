@@ -11,7 +11,9 @@
     <!-- You need to set the matColumnDef on the same ng-container as the ngFor or it fails -->
     <ng-container *ngFor="let column of displayedColumns" [matColumnDef]="column">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columns[column] }} </th>
-      <td mat-cell *matCellDef="let row"> {{ row[column] }}</td>
+      <td mat-cell *matCellDef="let row">
+        <ng-template [ngTemplateOutlet]="getTemplate(column) || text" [ngTemplateOutletContext]="{ $implicit: row[column] }"></ng-template>
+      </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
@@ -20,6 +22,8 @@
   <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons *ngIf="showPaginator"></mat-paginator>
 </div>
 
+<!-- Fallback if no template is provided for a column -->
+<ng-template #text let-content>{{content}}</ng-template>
 
 <overlay-widget #filterColumnWidget>
   <mat-selection-list [formControl]="columnFilter" class="mat-elevation-z2">

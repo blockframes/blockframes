@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, ViewChild, Input, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ViewChild, Input, AfterViewInit, Directive, TemplateRef, ContentChildren, QueryList } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -6,6 +6,22 @@ import { MatSort } from '@angular/material/sort';
 
 import { Observable } from 'rxjs';
 import { startWith } from 'rxjs/operators';
+
+/**
+ * This directive is to be used inside the table-filter component on a ng-template
+ * @example `<ng-template colRef="director" let-director> {{ director.firstName }}</ng-template>`
+ * @dev Use the name of the column in colRef & let-[name here]
+ */
+@Directive({ selector: '[colRef]' })
+// tslint:disable-next-line: directive-class-suffix
+export class ColRef  {
+  /** This should be the name of the column this template will be used into. */
+  @Input() colRef: string;
+  constructor(public template: TemplateRef<any>) {}
+}
+
+
+
 
 @Component({
   selector: 'bf-table-filter',
@@ -31,6 +47,8 @@ export class TableFilterComponent implements OnInit, AfterViewInit {
   // Filters
   columnFilter = new FormControl([]);
 
+  /** References to template to apply for specific columns */
+  @ContentChildren(ColRef, {descendants: false}) cols: QueryList<ColRef>;
   @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: false}) sort: MatSort;
 
@@ -44,6 +62,15 @@ export class TableFilterComponent implements OnInit, AfterViewInit {
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+  }
+
+  /**
+   * Get the specific template provided by the parent component for a column if any
+   * @param name This should be the name of the column you're looking the template for.
+   */
+  getTemplate(name: string): TemplateRef<any> {
+    const col = this.cols.find(child => child.colRef === name)
+    return col && col.template;
   }
 
   applyFilter(filterValue: string) {

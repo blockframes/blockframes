@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { OverlayWidgetModule } from '../../overlay-widget/overlay-widget.module';
 
-import { TableFilterComponent } from './table-filter.component';
+import { TableFilterComponent, ColRef } from './table-filter.component';
 
 // Material
 import { MatButtonModule } from '@angular/material';
@@ -17,8 +17,8 @@ import { MatSortModule } from '@angular/material/sort';
 
 
 @NgModule({
-  declarations: [TableFilterComponent],
-  exports: [TableFilterComponent],
+  declarations: [TableFilterComponent, ColRef],
+  exports: [TableFilterComponent, ColRef],
   imports: [
     CommonModule,
     ReactiveFormsModule,
