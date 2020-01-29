@@ -344,7 +344,7 @@
                 {{ director.lastName }}{{isLast ? '' : ', '}}</span>
             </mat-card-subtitle>
             <mat-card-content class="table-size-text">
-              <!-- <b *ngFor="let country of movie.main.originCountries | slice:0:2; let isLast=last; let i=index">
+              <b *ngFor="let country of movie.main.originCountries | slice:0:2; let isLast=last; let i=index">
                 {{ country | translateSlug: 'TERRITORIES' }}{{isLast ? '' : ', '}}{{i === 1 && movie.main.originCountries.length > 2 ? ',  ' : ''}}
               </b>
               <b *ngIf="movie.main.originCountries.length > 2">... </b>
@@ -352,7 +352,7 @@
                 {{ movie.main.genres[0] | translateSlug: 'GENRES'}}</b>
               <p *ngIf="movie.salesAgentDeal.salesAgent.displayName">
                 {{ movie.salesAgentDeal.salesAgent.displayName}}
-              </p> -->
+              </p>
             </mat-card-content>
           </ng-container>
           <ng-container movieCardAction>
