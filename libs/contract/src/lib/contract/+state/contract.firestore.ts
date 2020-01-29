@@ -71,7 +71,7 @@ interface ContractRaw<D> {
   id: string,
   /**
    * @dev to facilitate firebase queries 
-   * (insted of doing query in two steps)
+   * (instead of doing query in two steps)
    */
   type: ContractType,
   parentContractIds?: string[],
