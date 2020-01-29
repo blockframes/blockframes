@@ -3,6 +3,7 @@
     <form-country [form]="control.get('country')"></form-country>
     <mat-form-field appearance="outline">
       <mat-label>Ratings</mat-label>
+      <!-- @todo #1754 -->
       <input matInput [formControl]="control.get('value')" placeholder="Specify a rating" autocomplete="off"/>
     </mat-form-field>
     <!-- Add / Delete -->
