@@ -3,11 +3,15 @@ import objectHash from 'object-hash';
 import { CollectionService, CollectionConfig } from 'akita-ng-fire';
 import { DistributionDealState, DistributionDealStore } from './distribution-deal.store';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
-import { DistributionDeal } from './distribution-deal.model';
+import { DistributionDeal, getDealTerritories } from './distribution-deal.model';
 import { createContractTitleDetail, ContractWithLastVersion } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractVersionService } from '@blockframes/contract/version/+state/contract-version.service';
-import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
+import { ContractService, getLastVersionIndex } from '@blockframes/contract/contract/+state/contract.service';
 import { isTimestamp } from '@blockframes/utils/helpers';
+import { ContractQuery } from '@blockframes/contract/contract/+state/contract.query';
+import { switchMap, map } from 'rxjs/operators';
+import { Movie } from '@blockframes/movie/movie+state/movie.model';
+import { combineLatest } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies/:movieId/distributionDeals' })
@@ -16,9 +20,20 @@ export class DistributionDealService extends CollectionService<DistributionDealS
     private organizationQuery: OrganizationQuery,
     private contractService: ContractService,
     private contractVersionService: ContractVersionService,
+    private contractQuery: ContractQuery,
     store: DistributionDealStore
   ) {
     super(store);
+  }
+
+  /** Gets every distribution deals of organization contracts. */
+  public syncContractsDeals() {
+    return this.contractQuery.selectAll().pipe(
+      switchMap(contracts => {
+        const $ = contracts.map(c => this.syncCollectionGroup('distributionDeals', ref => ref.where('contractId', '==', c.id)));
+        return combineLatest($);
+      })
+    );
   }
 
   /**
@@ -109,16 +124,5 @@ export class DistributionDealService extends CollectionService<DistributionDealS
       .toPromise();
     const distributionDeals = distributionDealsSnap.docs.map(deal => this.formatDistributionDeal(deal.data()));
     return distributionDeals;
-  }
-
-  /**
-   * Get all the territories from a list of deals and
-   * return them into an array of string
-   * @param deals
-   */
-  public getDistributionDealsTerritories(deals: DistributionDeal[]): string[] {
-    const territories = deals.map(deal => deal.territory.map(territory => territory));
-    const flattenedTerritories = territories.reduce((acc, nestedArray) => acc.concat(nestedArray));
-    return flattenedTerritories;
   }
 }
