@@ -1,11 +1,10 @@
 <section *ngIf="(user$ | async) as user" test-id="notification-widget" >
   <button mat-icon-button [widgetTarget]="notifications">
     <ng-container *ngIf="(totalCount$ | async) as count; else: empty">
-      <mat-icon
+      <mat-icon svgIcon="bell"
         [matBadge]="count"
         matBadgeColor="accent"
         matBadgeSize="small">
-        notifications_none
       </mat-icon>
     </ng-container>
     <ng-template #empty >
