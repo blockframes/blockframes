@@ -3,7 +3,8 @@ export enum Event {
   WordlPremiere = 'World Premiere',
   AcceptationAllMaterials = 'Acceptation of all delivery materials',
   FirstTheatricalRelease = 'First theatrical release',
-  FirstTvBroadcast = 'First TV broadcast'
+  FirstTvBroadcast = 'First TV broadcast',
+  InvoiceEmittedDate ='Invoice emission date',
 }
 
 export enum TimeUnit {
