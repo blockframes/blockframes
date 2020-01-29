@@ -210,9 +210,17 @@ jobs:
           command: |
             npm install --save-dev firebase-tools &&
             npx firebase use staging &&
+            cp firestore.rules firestore.rules.regular &&
+            cp firestore.maintenance.rules firestore.rules &&
             ENV=staging npx firebase deploy --except functions &&
             ENV=staging npx firebase deploy --only functions --force
       - run: node dist/apps/backend-ops/main.js upgrade
+      - run:
+          command: |
+            cp firestore.rules.regular firestore.rules &&
+            npx firebase use staging &&
+            ENV=staging npx firebase deploy --only firestore:rules
+          when: always
       - slack/status
 workflows:
   version: 2.1
