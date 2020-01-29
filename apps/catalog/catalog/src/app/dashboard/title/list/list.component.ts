@@ -4,13 +4,14 @@ import { Movie, MovieQuery } from '@blockframes/movie';
 import { startWith, switchMap, share, map } from 'rxjs/operators';
 import { Observable, combineLatest } from 'rxjs';
 import { ContractQuery, Contract, getLastVersionIndex } from '@blockframes/contract/contract/+state';
+import { StoreStatus } from '@blockframes/movie/movie+state/movie.firestore';
 
 interface TitleView {
   title: string;
   view: string;
   sales: number;
   receipt: number;
-  status: 'PUBLISHED' | 'DRAFT';
+  status: StoreStatus;
 }
 
 function createTitleView(movie: Movie, contracts: Contract[]): TitleView {
@@ -20,7 +21,7 @@ function createTitleView(movie: Movie, contracts: Contract[]): TitleView {
     view: 'View',
     sales: ownContracts.length,
     receipt: ownContracts.reduce((sum, contract) => sum + contract.versions[getLastVersionIndex(contract)].titles[movie.id].price.amount, 0),
-    status: movie.main.storeConfig.display ? 'PUBLISHED' : 'DRAFT'
+    status: movie.main.storeConfig.status
   }
 }
 

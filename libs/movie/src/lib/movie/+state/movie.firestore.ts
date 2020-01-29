@@ -52,6 +52,13 @@ export enum UnitBox {
   entrances = '#Entrances',
 }
 
+export const enum StoreStatus {
+  submitted = 'Submitted',
+  accepted = 'Accepted',
+  draft = 'Draft',
+  refused = 'Refused',
+}
+
 export interface EventAnalytics {
   event_date: number,
   event_name: AnalyticsEvents,
@@ -65,7 +72,7 @@ export interface MovieAnalytics {
 }
 
 export interface StoreConfig {
-  display: boolean,
+  status: StoreStatus,
   storeType: StoreType,
 }
 
