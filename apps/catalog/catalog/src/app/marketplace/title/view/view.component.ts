@@ -15,7 +15,7 @@ import { Router } from '@angular/router';
   selector: 'catalog-movie-view',
   templateUrl: './view.component.html',
   styleUrls: ['./view.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Default
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MarketplaceMovieViewComponent implements OnInit {
   @HostBinding('attr.page-id') pageId = 'catalog-movie-view';
@@ -23,7 +23,6 @@ export class MarketplaceMovieViewComponent implements OnInit {
   public loading$: Observable<boolean>;
   // Flag to indicate which icon and message to show
   public toggle$: Observable<boolean>;
-  public getLabelBySlug = getLabelBySlug;
 
   navLinks = [{
     path: 'main',
@@ -93,6 +92,24 @@ export class MarketplaceMovieViewComponent implements OnInit {
       movieTitle: movie.main.title.original
     });
     this.snackbar.open(`${title} has been removed from your selection.`, 'close', { duration: 2000 });
+  }
+
+  public getTitle(movie: Movie) {
+    const { workType, totalRunTime, genres, originalLanguages } = movie.main;
+    return [
+      workType,
+      `${totalRunTime} min`,
+      genres.map(genre => getLabelBySlug('GENRES', genre)).join(', '),
+      originalLanguages.map(language => language).join(', ')
+    ].join(' | ');
+  }
+
+  public getDirectors(movie: Movie) {
+    return movie.main.directors.map(d => `${d.firstName}  ${d.lastName}`).join(', ');
+  }
+
+  public getOriginalCountries(movie: Movie) {
+    return `${movie.main.originCountries.map(country => getLabelBySlug('TERRITORIES', country)).join(', ')}, ${movie.main.productionYear}`;
   }
 
 }
