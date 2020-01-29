@@ -254,8 +254,6 @@ workflows:
             - build-and-test-all
       - deploy-to-staging:
           <<: *staging_only
-          requires:
-            - build-and-test-all
   nightly-e2e:
     triggers:
       - schedule:
