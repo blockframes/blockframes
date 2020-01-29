@@ -9,6 +9,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'catalog-movie-view',
@@ -44,7 +45,8 @@ export class MarketplaceMovieViewComponent implements OnInit {
     private cartService: CartService,
     private orgQuery: OrganizationQuery,
     private snackbar: MatSnackBar,
-    private analytics: FireAnalytics
+    private analytics: FireAnalytics,
+    public router: Router
   ) {}
 
   ngOnInit() {
