@@ -34,6 +34,11 @@ const fade = trigger('fade', [
       border-radius: 4px 4px 0 0;
       padding: 16px;
     }
+  `, `
+    .widget-footer {
+      display: block;
+      border-radius: 0 0 4px 4px;
+    }
   `],
   encapsulation: ViewEncapsulation.None,
   animations: [fade]

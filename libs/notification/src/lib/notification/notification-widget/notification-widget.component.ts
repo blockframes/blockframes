@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, Input } from '@angular/core';
 import { Observable, combineLatest } from 'rxjs';
 import { AuthQuery, User } from '@blockframes/auth';
 import { NotificationQuery } from '../+state';
@@ -15,6 +15,7 @@ import { Invitation, InvitationStatus, InvitationType } from '@blockframes/invit
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NotificationWidgetComponent implements OnInit {
+  @Input() page = 'search';
   public user$: Observable<User>;
   public notificationCount$: Observable<number>;
   public invitationCount$: Observable<number>;
