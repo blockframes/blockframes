@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { EntityState, EntityStore, StoreConfig, ActiveState } from '@datorama/akita';
-import { Template } from './template.model';
+import { Template, TemplateWithTimestamps, convertTemplateWithTimestampsToTemplate } from './template.model';
 
 export interface TemplateState extends EntityState<Template>, ActiveState<string> {
   form : Template;
@@ -16,5 +16,13 @@ export class TemplateStore extends EntityStore<TemplateState, Template> {
 
   constructor() {
     super(initialState);
+  }
+
+  akitaPreAddEntity(template: TemplateWithTimestamps): Template {
+    return convertTemplateWithTimestampsToTemplate(template);
+  }
+
+  akitaPreUpdateEntity(template: Template, nextTemplate: TemplateWithTimestamps) {
+    return convertTemplateWithTimestampsToTemplate(nextTemplate);
   }
 }
