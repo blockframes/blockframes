@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit } from '@angular/core';
 import { MovieFestivalPrizesForm } from '@blockframes/movie/movieform/festival-prizes/festival-prizes.form';
 
 @Component({
@@ -7,7 +7,13 @@ import { MovieFestivalPrizesForm } from '@blockframes/movie/movieform/festival-p
   styleUrls: ['./festival-prizes.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieSummaryFestivalPrizesComponent {
+export class MovieSummaryFestivalPrizesComponent implements OnInit {
   @Input() festivalPrizes: MovieFestivalPrizesForm;
   @Input() link: string;
+
+  constructor(private cdr: ChangeDetectorRef) {}
+
+  ngOnInit() {
+    this.festivalPrizes.valueChanges.subscribe(_ => this.cdr.markForCheck());
+  }
 }

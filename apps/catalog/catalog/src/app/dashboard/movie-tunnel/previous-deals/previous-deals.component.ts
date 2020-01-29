@@ -1,9 +1,9 @@
 import { FormList } from '@blockframes/utils/form/forms/list.form';
-import { ContractForm, PartyDetailsForm } from '@blockframes/contract/contract/forms/contract.form';
+import { ContractForm } from '@blockframes/contract/contract/forms/contract.form';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { DistributionDealForm } from '@blockframes/movie/distribution-deals/form/distribution-deal.form';
-import { ContractPartyForm } from '@blockframes/contract/contract/forms/party-name/party-name.form';
+import { DistributionDealHoldbacksForm } from '@blockframes/movie/distribution-deals/form/holdbacks/holdbacks.form';
 
 @Component({
   selector: 'catalog-tunnel-previous-deals',
@@ -37,6 +37,22 @@ export class TunnelPreviousDealsComponent implements OnInit {
     return this.formDistributionDeal.at(index).get('terms');
   }
 
+  public distributionDealHoldbacks(index: number) {
+    return this.formDistributionDeal.at(index).get('holdbacks');
+  }
+
+  public distributionDealAssetLanguages(index: number) {
+    return this.formDistributionDeal.at(index).get('assetLangauage');
+  }
+
+  public addHoldback(index: number) {
+    return this.distributionDealHoldbacks(index).push(new DistributionDealHoldbacksForm())
+  }
+
+  public removeHoldback(index: number, holdbackIndex: number) {
+    return this.distributionDealHoldbacks(index).removeAt(holdbackIndex);
+  }
+
   public addContract() {
     if (!this.formContract) {
       this.formContract = FormList.factory([], contract => new ContractForm(contract));
@@ -45,5 +61,9 @@ export class TunnelPreviousDealsComponent implements OnInit {
       this.formContract.add(); // specific to FormList
       this.formDistributionDeal.add();
     }
+  }
+
+  public addDistributionDeal() {
+    this.formDistributionDeal.add();
   }
 }

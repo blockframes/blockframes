@@ -4,6 +4,8 @@ import { FormControl } from '@angular/forms';
 import { MovieRating, MovieOriginalRelease } from '@blockframes/movie/movie+state/movie.firestore';
 import { FormStaticValue } from '@blockframes/utils/form';
 
+// Ratings
+
 function createRatingFormControl(entity?: Partial<MovieRating>) {
   const { country, reason, system, value } = createMovieRating(entity);
   return { 
@@ -22,6 +24,8 @@ export class MovieRatingForm extends FormEntity<RatingFormControl> {
   }
 }
 
+// Original Release
+
 function createOriginalReleaseFormControl(entity?: Partial<MovieOriginalRelease>) {
   const { country, date, media } = createMovieOriginalRelease(entity);
   return { 
@@ -38,6 +42,8 @@ export class OriginalReleaseForm extends FormEntity<OriginalReleaseFormControl> 
     super(createOriginalReleaseFormControl(originalRelease));
   }
 }
+
+// Sales infos
 
 function createMovieSalesInfoControls(salesInfo: Partial<MovieSalesInfo> = {}){
   const entity = createMovieSalesInfo(salesInfo);

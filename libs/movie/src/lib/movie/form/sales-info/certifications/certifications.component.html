@@ -1,6 +1,8 @@
 <mat-button-toggle-group [formControl]="form" multiple name="certifications" aria-label="Certifications">
   <ng-container *ngFor="let certification of certifications">
-    <mat-button-toggle [value]="certification.slug">{{ certification.label }}</mat-button-toggle>
+    <mat-button-toggle [value]="certification.slug" [matTooltip]="certification.hint" [matTooltipDisabled]="!certification.hint">
+      {{ certification.label }}
+    </mat-button-toggle>
   </ng-container>
 </mat-button-toggle-group>
-<p>Select all that apply</p>
+<p class="mat-caption">Select all that apply</p>

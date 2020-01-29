@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, OnInit, ChangeDetectorRef } from '@angular/core';
 import { MovieMainForm } from '../../main/main.form';
 
 @Component({
@@ -7,9 +7,15 @@ import { MovieMainForm } from '../../main/main.form';
   styleUrls: ['./information.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieSummaryInformationComponent {
+export class MovieSummaryInformationComponent implements OnInit {
   @Input() main: MovieMainForm;
   @Input() link: string;
+
+  constructor(private cdr: ChangeDetectorRef) {}
+
+  ngOnInit() {
+    this.main.valueChanges.subscribe(_ => this.cdr.markForCheck());
+  }
 
   public get genres() {
     return this.main.genres.controls.concat(this.main.customGenres.controls);

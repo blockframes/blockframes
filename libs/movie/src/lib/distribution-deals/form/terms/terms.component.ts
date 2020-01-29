@@ -4,6 +4,7 @@ import { FormControl } from '@angular/forms';
 import { Component, Input, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { DistributionDealTermsForm } from './terms.form';
 import { tap, startWith } from 'rxjs/operators';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
 @Component({
   selector: '[form] distribution-form-terms',
@@ -46,6 +47,17 @@ export class DistributionDealTermsComponent implements OnInit, OnDestroy {
     for (const name of formNames) {
       const form = this.form.get(name as 'start' | 'end' | 'floatingStart' | 'floatingDuration');
       value ? form.enable() : form.disable();
+    }
+  }
+
+  public updateState(event: MatSlideToggleChange, type: 'event' | 'period') {
+    // We need a type here otherwise we get a recursion
+    if (type === 'event') {
+      this.periodCtrl.setValue(event.checked);
+      this.eventCtrl.setValue(!this.eventCtrl.value);
+    } else {
+      this.periodCtrl.setValue(!this.periodCtrl.value);
+      this.eventCtrl.setValue(event.checked);
     }
   }
 

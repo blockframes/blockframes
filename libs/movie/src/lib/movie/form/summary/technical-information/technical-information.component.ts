@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit } from '@angular/core';
 import { MovieSalesInfoForm } from '../../sales-info/sales-info.form';
 import { MovieVersionInfoForm } from '../../version-info/version-info.form';
 
@@ -8,8 +8,15 @@ import { MovieVersionInfoForm } from '../../version-info/version-info.form';
   styleUrls: ['./technical-information.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieSummaryTechnicalInformationComponent {
+export class MovieSummaryTechnicalInformationComponent implements OnInit {
   @Input() salesInfo: MovieSalesInfoForm;
   @Input() versionInfo: MovieVersionInfoForm;
   @Input() link: string;
+
+  constructor(private cdr: ChangeDetectorRef) {}
+
+  ngOnInit() {
+    this.salesInfo.valueChanges.subscribe(_ => this.cdr.markForCheck());
+    this.versionInfo.valueChanges.subscribe(_ => this.cdr.markForCheck());
+  }
 }
