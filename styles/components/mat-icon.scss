@@ -1,31 +1,40 @@
-@mixin bf-icon-theme($theme) {
+@mixin mat-bf-icon-theme($theme) {
   $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);
   $warn: map-get($theme, warn);
   $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
 
-  mat-icon {
-    &[bf-color="primary"] {
+  .mat-icon {
+    g {
+      fill: mat-color($foreground, icon);
+    }
+    &[color="primary"] {
+      color: mat-color($primary, 500);
       g {
         fill: mat-color($primary, 500);
       }
     }
-    &[bf-color="accent"] {
+    &[color="accent"] {
+      color: mat-color($accent, 500);
       g {
         fill: mat-color($accent, 500);
       }
     }
-    &[bf-color="warn"] {
+    &[color="warn"] {
+      color: mat-color($warn, 500);
       g {
         fill: mat-color($warn, 500);
       }
     }
-    &[bf-color="beware"] {
+    &[color="beware"] {
+      color: mat-color($background, beware);
       g {
         fill: mat-color($background, beware);
       }
     }
-    &[bf-color="disabled"] {
+    &[color="disabled"] {
+      color: mat-color($background, disabled-button);
       g {
         fill: mat-color($background, disabled-button);
       }
