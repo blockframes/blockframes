@@ -15,7 +15,7 @@ import { Invitation, InvitationStatus, InvitationType } from '@blockframes/invit
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NotificationWidgetComponent implements OnInit {
-  @Input() page = 'search';
+  @Input() page = 'activity';
   public user$: Observable<User>;
   public notificationCount$: Observable<number>;
   public invitationCount$: Observable<number>;
