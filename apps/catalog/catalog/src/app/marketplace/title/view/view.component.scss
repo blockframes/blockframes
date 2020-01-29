@@ -29,6 +29,10 @@ header {
   margin-top: 20px;
 }
 
+header h4 {
+  text-transform: uppercase;
+}
+
 
 @include tablet {
   header {

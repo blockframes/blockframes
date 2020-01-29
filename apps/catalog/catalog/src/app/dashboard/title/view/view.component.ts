@@ -36,4 +36,21 @@ export class TitleViewComponent implements OnInit {
     this.movie$ = this.movieQuery.selectActive();
   }
 
+  public getTitle(movie: Movie) {
+    const { workType, totalRunTime, status } = movie.main;
+    return [
+      workType,
+      (getLabelBySlug('MOVIE_STATUS', status)),
+      `${totalRunTime} min`
+    ].join(' | ')
+  }
+
+  public getDirectors(movie: Movie) {
+    return movie.main.directors.map(d => `${d.firstName}  ${d.lastName}`).join(', ');
+  }
+
+  public getOriginalCountries(movie: Movie) {
+    return `${movie.main.originCountries.map(country => getLabelBySlug('TERRITORIES', country)).join(', ')}, ${movie.main.productionYear}`;
+  }
+
 }
