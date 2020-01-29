@@ -3,15 +3,15 @@
     <!-- SIDE NAVIGATION -->
     <mat-nav-list>
       <a mat-list-item routerLink="home" routerLinkActive="active">
-        <mat-icon mat-list-icon svgIcon="home_sidebar"></mat-icon>
+        <mat-icon mat-list-icon svgIcon="home"></mat-icon>
         <span mat-line>Home</span>
       </a>
       <a mat-list-item routerLink="selection" routerLinkActive="active">
-        <mat-icon mat-list-icon>shopping_basket</mat-icon>
+        <mat-icon mat-list-icon svgIcon="basket"></mat-icon>
         <span mat-line>My Selection</span>
       </a>
       <a mat-list-item routerLink="wishlist" routerLinkActive="active">
-        <mat-icon mat-list-icon  svgIcon="heart_filled"></mat-icon>
+        <mat-icon mat-list-icon  svgIcon="heart_fill"></mat-icon>
         <span mat-line>Wishlist</span>
       </a>
       <a mat-list-item routerLink="deals" routerLinkActive="active">
@@ -37,10 +37,10 @@
         <input placeholder="Try searching for titles, keywords..." />
       </form>
       <button mat-icon-button>
-        <mat-icon>star_border</mat-icon>
+        <mat-icon svgIcon="star"></mat-icon>
       </button>
       <button mat-icon-button>
-        <mat-icon>shopping_basket</mat-icon>
+        <mat-icon svgIcon="basket"></mat-icon>
       </button>
       <mat-divider vertical></mat-divider>
       <overlay-notification-widget></overlay-notification-widget>
