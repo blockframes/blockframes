@@ -1,13 +1,16 @@
-<section>
-  <article fxLayout="row" fxLayoutAlign="space-between center">
-    <h2>Templates</h2>
-    <mat-divider fxFlex></mat-divider>
-    <a mat-stroked-button color="primary" (click)="addTemplateDialog()">
+<section *ngIf="(templates$ | async) as templates">
+  <header fxLayout="row" fxLayoutAlign="space-between center">
+    <h1>My Templates</h1>
+    <a mat-flat-button color="primary" (click)="addTemplateDialog()">
       <mat-icon>add</mat-icon>
-      <span>Add a template</span>
     </a>
-  </article>
-  <article *ngIf="(templates$ | async) as templates">
-    <template-repertory [templates]="templates" (delete)="deleteTemplate($event)"></template-repertory>
-  </article>
+  </header>
+  <bf-table-filter
+    [source]="templates"
+    [columns]="versionColumns"
+    [initialColumns]="initialVersionColumns"
+    showFilter="true"
+    showPaginator="true"
+    link="../">
+  </bf-table-filter>
 </section>
