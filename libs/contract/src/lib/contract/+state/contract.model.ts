@@ -8,7 +8,8 @@ import {
   ContractPartyDetailDocumentWithDatesDocument,
   LegalDocument,
   LegalDocuments,
-  ContractDocument
+  ContractDocument,
+  ContractType
 } from './contract.firestore';
 import { createParty } from '@blockframes/utils/common-interfaces/identity';
 import { createImgRef } from '@blockframes/utils/image-uploader';
@@ -51,6 +52,7 @@ export interface ContractWithLastVersion {
 export function createContract(params: Partial<Contract> = {}): Contract {
   return {
     id: params.id ? params.id : '',
+    type: ContractType.mandate,
     parties: [],
     titleIds: [],
     partyIds: [],
@@ -98,14 +100,6 @@ export function initContractWithVersion(): ContractWithLastVersion {
   return {
     doc: createContract(),
     last: createContractVersion()
-  };
-}
-
-export function createPartyDetails(params: Partial<ContractPartyDetail>): ContractPartyDetail {
-  return {
-    status: params.status || ContractStatus.unknown,
-    ...params,
-    party: createParty(params.party),
   };
 }
 
@@ -164,6 +158,7 @@ export function buildChainOfTitle() {
 export function convertToContractDocument(params: Partial<Contract> = {}): ContractDocumentWithDates {
   return {
     id: params.id,
+    type: ContractType.mandate, 
     parties: [],
     titleIds: [],
     partyIds: [],

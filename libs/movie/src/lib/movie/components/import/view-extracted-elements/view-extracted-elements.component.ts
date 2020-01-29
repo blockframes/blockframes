@@ -24,7 +24,7 @@ import { SSF$Date } from 'ssf/types';
 import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
 import { SSF } from 'xlsx';
 import { MovieLanguageTypes, PremiereType } from '@blockframes/movie/movie/+state/movie.firestore';
-import { createCredit, createStakeholder } from '@blockframes/utils/common-interfaces/identity';
+import { createStakeholder } from '@blockframes/utils/common-interfaces/identity';
 import { DistributionDeal, createDistributionDeal, createHoldback } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
 import { createContractPartyDetail, createContractTitleDetail, Contract, initContractWithVersion, ContractWithLastVersion, getContractParties } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractStatus, ContractTitleDetail } from '@blockframes/contract/contract/+state/contract.firestore';

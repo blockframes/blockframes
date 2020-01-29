@@ -1,7 +1,7 @@
 import { firestore } from "firebase/app";
 import { TermsRaw } from "@blockframes/utils/common-interfaces/terms";
 import { Party } from "@blockframes/utils/common-interfaces/identity";
-import { Price } from "@blockframes/utils/common-interfaces/price";
+import { Price, PaymentStatus } from "@blockframes/utils/common-interfaces/price";
 import {
   TerritoriesSlug,
   LanguagesSlug,
@@ -22,7 +22,12 @@ export enum ContractStatus {
   waitingsignature = 'waiting for signature',
   waitingpaiment = 'waiting for payment',
   rejected = 'rejected',
-  aborted = 'abordted',
+  aborted = 'aborted',
+}
+
+export const enum ContractType {
+  mandate = 'Mandate',
+  sale = 'Sale'
 }
 
 export interface ContractTitleDetail {
@@ -64,6 +69,11 @@ interface ContractVersionRaw<D> {
 
 interface ContractRaw<D> {
   id: string,
+  /**
+   * @dev to facilitate firebase queries 
+   * (insted of doing query in two steps)
+   */
+  type: ContractType,
   parentContractIds?: string[],
   childContractIds?: string[],
   /** @dev an informative signature date, given that the actual signatures are in parties */
@@ -79,13 +89,28 @@ export interface InvoiceRaw<D> {
   internalRef: string,
   /** @dev should be comming from blockchain data */
   paymentRef?: string,
-  creationDate: D,
+  emittedDate: D,
+  /**
+   * @dev Expected price once each payments have been made
+   */
   price: Price,
+  /**
+   * @dev Collected amount (sum of sub-collection Payments.price).
+   * A function should handle this.
+   * Start with zero.
+   */
+  collected: Price,
   /** @dev an orgId */
   buyerId: string,
   /** @dev an orgId */
   sellerId: string,
   paymentSchedule: PaymentScheduleRaw<D>,
+  /**
+   * @dev Status calculated with price - collected
+   * A function should handle this.
+   * Start with PaymentStatus.notdueyet
+   */
+  status: PaymentStatus,
   interestRate?: number,
   /** @dev should be one of the buyerId bank accounts */
   account: BankAccount,
@@ -123,4 +148,10 @@ export interface ContractVersionDocumentWithDates extends ContractVersionRaw<Dat
 }
 
 export interface ContractVersionDocument extends ContractVersionRaw<Timestamp> {
+}
+
+export interface Invoice extends InvoiceRaw<Date> {
+}
+
+export interface InvoiceDocument extends InvoiceRaw<Timestamp> {
 }
