@@ -3,242 +3,242 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { Injectable } from '@angular/core';
 
 const icons = [
-  { name: 'accept', url: 'assets/icons/icons/accept.svg' },
+  { name: 'accept', url: 'assets/icons/accept.svg' },
   {
     name: 'accept_member',
-    url: 'assets/icons/icons/accept_member.svg'
+    url: 'assets/icons/accept_member.svg'
   },
-  { name: 'access_time', url: 'assets/icons/icons/access_time.svg' },
-  { name: 'add', url: 'assets/icons/icons/add.svg' },
+  { name: 'access_time', url: 'assets/icons/access_time.svg' },
+  { name: 'add', url: 'assets/icons/add.svg' },
   {
     name: 'archipel_content',
-    url: 'assets/icons/icons/archipel_content.svg'
+    url: 'assets/icons/archipel_content.svg'
   },
   {
     name: 'archipel_content_fill',
-    url: 'assets/icons/icons/archipel_content_fill.svg'
+    url: 'assets/icons/archipel_content_fill.svg'
   },
-  { name: 'archive', url: 'assets/icons/icons/archive.svg' },
-  { name: 'arrow_back', url: 'assets/icons/icons/arrow_back.svg' },
-  { name: 'arrow_closed', url: 'assets/icons/icons/arrow_closed.svg' },
+  { name: 'archive', url: 'assets/icons/archive.svg' },
+  { name: 'arrow_back', url: 'assets/icons/arrow_back.svg' },
+  { name: 'arrow_closed', url: 'assets/icons/arrow_closed.svg' },
   {
     name: 'arrow_downward',
-    url: 'assets/icons/icons/arrow_downward.svg'
+    url: 'assets/icons/arrow_downward.svg'
   },
   {
     name: 'arrow_forward',
-    url: 'assets/icons/icons/arrow_forward.svg'
+    url: 'assets/icons/arrow_forward.svg'
   },
-  { name: 'arrow_left', url: 'assets/icons/icons/arrow_left.svg' },
-  { name: 'arrow_open', url: 'assets/icons/icons/arrow_open.svg' },
-  { name: 'arrow_right', url: 'assets/icons/icons/arrow_right.svg' },
-  { name: 'arrow_upward', url: 'assets/icons/icons/arrow_upward.svg' },
-  { name: 'basket', url: 'assets/icons/icons/basket.svg' },
-  { name: 'bell', url: 'assets/icons/icons/bell.svg' },
-  { name: 'blank', url: 'assets/icons/icons/blank.svg' },
-  { name: 'blind_eye', url: 'assets/icons/icons/blind_eye.svg' },
-  { name: 'blog', url: 'assets/icons/icons/blog.svg' },
-  { name: 'building', url: 'assets/icons/icons/building.svg' },
-  { name: 'calendar', url: 'assets/icons/icons/calendar.svg' },
-  { name: 'certificate', url: 'assets/icons/icons/certificate.svg' },
-  { name: 'check', url: 'assets/icons/icons/check.svg' },
+  { name: 'arrow_left', url: 'assets/icons/arrow_left.svg' },
+  { name: 'arrow_open', url: 'assets/icons/arrow_open.svg' },
+  { name: 'arrow_right', url: 'assets/icons/arrow_right.svg' },
+  { name: 'arrow_upward', url: 'assets/icons/arrow_upward.svg' },
+  { name: 'basket', url: 'assets/icons/basket.svg' },
+  { name: 'bell', url: 'assets/icons/bell.svg' },
+  { name: 'blank', url: 'assets/icons/blank.svg' },
+  { name: 'blind_eye', url: 'assets/icons/blind_eye.svg' },
+  { name: 'blog', url: 'assets/icons/blog.svg' },
+  { name: 'building', url: 'assets/icons/building.svg' },
+  { name: 'calendar', url: 'assets/icons/calendar.svg' },
+  { name: 'certificate', url: 'assets/icons/certificate.svg' },
+  { name: 'check', url: 'assets/icons/check.svg' },
   {
     name: 'check_box_indeterminate',
-    url: 'assets/icons/icons/check_box_indeterminate.svg'
+    url: 'assets/icons/check_box_indeterminate.svg'
   },
   {
     name: 'check_box_marked',
-    url: 'assets/icons/icons/check_box_marked.svg'
+    url: 'assets/icons/check_box_marked.svg'
   },
   {
     name: 'checkbox_outline',
-    url: 'assets/icons/icons/checkbox_outline.svg'
+    url: 'assets/icons/checkbox_outline.svg'
   },
   {
     name: 'chevron_bottom',
-    url: 'assets/icons/icons/chevron_bottom.svg'
+    url: 'assets/icons/chevron_bottom.svg'
   },
-  { name: 'chevron_left', url: 'assets/icons/icons/chevron_left.svg' },
+  { name: 'chevron_left', url: 'assets/icons/chevron_left.svg' },
   {
     name: 'chevron_right',
-    url: 'assets/icons/icons/chevron_right.svg'
+    url: 'assets/icons/chevron_right.svg'
   },
-  { name: 'chevron_top', url: 'assets/icons/icons/chevron_top.svg' },
-  { name: 'clear_all', url: 'assets/icons/icons/clear_all.svg' },
-  { name: 'close', url: 'assets/icons/icons/close.svg' },
-  { name: 'comment', url: 'assets/icons/icons/comment.svg' },
-  { name: 'create_movie', url: 'assets/icons/icons/create_movie.svg' },
-  { name: 'cross', url: 'assets/icons/icons/cross.svg' },
-  { name: 'dashboard', url: 'assets/icons/icons/dashboard.svg' },
-  { name: 'document', url: 'assets/icons/icons/document.svg' },
+  { name: 'chevron_top', url: 'assets/icons/chevron_top.svg' },
+  { name: 'clear_all', url: 'assets/icons/clear_all.svg' },
+  { name: 'close', url: 'assets/icons/close.svg' },
+  { name: 'comment', url: 'assets/icons/comment.svg' },
+  { name: 'create_movie', url: 'assets/icons/create_movie.svg' },
+  { name: 'cross', url: 'assets/icons/cross.svg' },
+  { name: 'dashboard', url: 'assets/icons/dashboard.svg' },
+  { name: 'document', url: 'assets/icons/document.svg' },
   {
     name: 'document_signed',
-    url: 'assets/icons/icons/document_signed.svg'
+    url: 'assets/icons/document_signed.svg'
   },
   {
     name: 'document_to_signed',
-    url: 'assets/icons/icons/document_to_signed.svg'
+    url: 'assets/icons/document_to_signed.svg'
   },
-  { name: 'dollar', url: 'assets/icons/icons/dollar.svg' },
-  { name: 'dot_menu', url: 'assets/icons/icons/dot_menu.svg' },
-  { name: 'download', url: 'assets/icons/icons/download.svg' },
-  { name: 'eye', url: 'assets/icons/icons/eye.svg' },
-  { name: 'facebook', url: 'assets/icons/icons/facebook.svg' },
-  { name: 'film', url: 'assets/icons/icons/film.svg' },
-  { name: 'filter_list', url: 'assets/icons/icons/filter_list.svg' },
-  { name: 'first_page', url: 'assets/icons/icons/first_page.svg' },
-  { name: 'floppy', url: 'assets/icons/icons/floppy.svg' },
-  { name: 'grid', url: 'assets/icons/icons/grid.svg' },
-  { name: 'group', url: 'assets/icons/icons/group.svg' },
-  { name: 'heart_fill', url: 'assets/icons/icons/heart_fill.svg' },
+  { name: 'dollar', url: 'assets/icons/dollar.svg' },
+  { name: 'dot_menu', url: 'assets/icons/dot_menu.svg' },
+  { name: 'download', url: 'assets/icons/download.svg' },
+  { name: 'eye', url: 'assets/icons/eye.svg' },
+  { name: 'facebook', url: 'assets/icons/facebook.svg' },
+  { name: 'film', url: 'assets/icons/film.svg' },
+  { name: 'filter_list', url: 'assets/icons/filter_list.svg' },
+  { name: 'first_page', url: 'assets/icons/first_page.svg' },
+  { name: 'floppy', url: 'assets/icons/floppy.svg' },
+  { name: 'grid', url: 'assets/icons/grid.svg' },
+  { name: 'group', url: 'assets/icons/group.svg' },
+  { name: 'heart_fill', url: 'assets/icons/heart_fill.svg' },
   {
     name: 'heart_outline',
-    url: 'assets/icons/icons/heart_outline.svg'
+    url: 'assets/icons/heart_outline.svg'
   },
-  { name: 'home', url: 'assets/icons/icons/home.svg' },
-  { name: 'import', url: 'assets/icons/icons/import.svg' },
-  { name: 'info', url: 'assets/icons/icons/info.svg' },
-  { name: 'instagram', url: 'assets/icons/icons/instagram.svg' },
-  { name: 'key', url: 'assets/icons/icons/key.svg' },
-  { name: 'last_page', url: 'assets/icons/icons/last_page.svg' },
-  { name: 'linkedin', url: 'assets/icons/icons/linkedin.svg' },
-  { name: 'list', url: 'assets/icons/icons/list.svg' },
+  { name: 'home', url: 'assets/icons/home.svg' },
+  { name: 'import', url: 'assets/icons/import.svg' },
+  { name: 'info', url: 'assets/icons/info.svg' },
+  { name: 'instagram', url: 'assets/icons/instagram.svg' },
+  { name: 'key', url: 'assets/icons/key.svg' },
+  { name: 'last_page', url: 'assets/icons/last_page.svg' },
+  { name: 'linkedin', url: 'assets/icons/linkedin.svg' },
+  { name: 'list', url: 'assets/icons/list.svg' },
   {
     name: 'list_material',
-    url: 'assets/icons/icons/list_material.svg'
+    url: 'assets/icons/list_material.svg'
   },
-  { name: 'log_out', url: 'assets/icons/icons/log_out.svg' },
+  { name: 'log_out', url: 'assets/icons/log_out.svg' },
   {
     name: 'logo_archipel_content',
-    url: 'assets/icons/icons/logo_archipel_content.svg'
+    url: 'assets/icons/logo_archipel_content.svg'
   },
   {
     name: 'logo_archipel_content_fill',
-    url: 'assets/icons/icons/logo_archipel_content_fill.svg'
+    url: 'assets/icons/logo_archipel_content_fill.svg'
   },
   {
     name: 'logo_blockframes',
-    url: 'assets/icons/icons/logo_blockframes.svg'
+    url: 'assets/icons/logo_blockframes.svg'
   },
   {
     name: 'logo_blockframes_fill',
-    url: 'assets/icons/icons/logo_blockframes_fill.svg'
+    url: 'assets/icons/logo_blockframes_fill.svg'
   },
   {
     name: 'logo_media_delivery',
-    url: 'assets/icons/icons/logo_media_delivery.svg'
+    url: 'assets/icons/logo_media_delivery.svg'
   },
   {
     name: 'logo_media_delivery_fill',
-    url: 'assets/icons/icons/logo_media_delivery_fill.svg'
+    url: 'assets/icons/logo_media_delivery_fill.svg'
   },
   {
     name: 'logo_media_financiers',
-    url: 'assets/icons/icons/logo_media_financiers.svg'
+    url: 'assets/icons/logo_media_financiers.svg'
   },
   {
     name: 'logo_media_financiers_fill',
-    url: 'assets/icons/icons/logo_media_financiers_fill.svg'
+    url: 'assets/icons/logo_media_financiers_fill.svg'
   },
   {
     name: 'logo_storiesand_more',
-    url: 'assets/icons/icons/logo_storiesand_more.svg'
+    url: 'assets/icons/logo_storiesand_more.svg'
   },
   {
     name: 'logo_storiesand_more_fill',
-    url: 'assets/icons/icons/logo_storiesand_more_fill.svg'
+    url: 'assets/icons/logo_storiesand_more_fill.svg'
   },
   {
     name: 'magnifying_glasses',
-    url: 'assets/icons/icons/magnifying_glasses.svg'
+    url: 'assets/icons/magnifying_glasses.svg'
   },
-  { name: 'mail', url: 'assets/icons/icons/mail.svg' },
-  { name: 'map_marker', url: 'assets/icons/icons/map_marker.svg' },
+  { name: 'mail', url: 'assets/icons/mail.svg' },
+  { name: 'map_marker', url: 'assets/icons/map_marker.svg' },
   {
     name: 'media_delivery',
-    url: 'assets/icons/icons/media_delivery.svg'
+    url: 'assets/icons/media_delivery.svg'
   },
   {
     name: 'media_delivery_fill',
-    url: 'assets/icons/icons/media_delivery_fill.svg'
+    url: 'assets/icons/media_delivery_fill.svg'
   },
   {
     name: 'media_financiers',
-    url: 'assets/icons/icons/media_financiers.svg'
+    url: 'assets/icons/media_financiers.svg'
   },
   {
     name: 'media_financiers_fill',
-    url: 'assets/icons/icons/media_financiers_fill.svg'
+    url: 'assets/icons/media_financiers_fill.svg'
   },
-  { name: 'monetization', url: 'assets/icons/icons/monetization.svg' },
-  { name: 'more_vert', url: 'assets/icons/icons/more_vert.svg' },
+  { name: 'monetization', url: 'assets/icons/monetization.svg' },
+  { name: 'more_vert', url: 'assets/icons/more_vert.svg' },
   {
     name: 'mouse_pointer',
-    url: 'assets/icons/icons/mouse_pointer.svg'
+    url: 'assets/icons/mouse_pointer.svg'
   },
-  { name: 'open_to', url: 'assets/icons/icons/open_to.svg' },
-  { name: 'pdf', url: 'assets/icons/icons/pdf.svg' },
-  { name: 'padlock', url: 'assets/icons/icons/padlock.svg' },
-  { name: 'paid', url: 'assets/icons/icons/paid.svg' },
-  { name: 'pencil', url: 'assets/icons/icons/pencil.svg' },
-  { name: 'percent', url: 'assets/icons/icons/percent.svg' },
-  { name: 'picture', url: 'assets/icons/icons/picture.svg' },
-  { name: 'profil', url: 'assets/icons/icons/profil.svg' },
+  { name: 'open_to', url: 'assets/icons/open_to.svg' },
+  { name: 'pdf', url: 'assets/icons/pdf.svg' },
+  { name: 'padlock', url: 'assets/icons/padlock.svg' },
+  { name: 'paid', url: 'assets/icons/paid.svg' },
+  { name: 'pencil', url: 'assets/icons/pencil.svg' },
+  { name: 'percent', url: 'assets/icons/percent.svg' },
+  { name: 'picture', url: 'assets/icons/picture.svg' },
+  { name: 'profil', url: 'assets/icons/profil.svg' },
   {
     name: 'radio_box_blank',
-    url: 'assets/icons/icons/radio_box_blank.svg'
+    url: 'assets/icons/radio_box_blank.svg'
   },
   {
     name: 'radio_box_marked',
-    url: 'assets/icons/icons/radio_box_marked.svg'
+    url: 'assets/icons/radio_box_marked.svg'
   },
-  { name: 'refresh', url: 'assets/icons/icons/refresh.svg' },
-  { name: 'refuse', url: 'assets/icons/icons/refuse.svg' },
-  { name: 'review', url: 'assets/icons/icons/review.svg' },
-  { name: 'sales', url: 'assets/icons/icons/sales.svg' },
-  { name: 'schedules', url: 'assets/icons/icons/schedules.svg' },
-  { name: 'search_table', url: 'assets/icons/icons/search_table.svg' },
-  { name: 'send', url: 'assets/icons/icons/send.svg' },
-  { name: 'settings', url: 'assets/icons/icons/settings.svg' },
-  { name: 'share', url: 'assets/icons/icons/share.svg' },
+  { name: 'refresh', url: 'assets/icons/refresh.svg' },
+  { name: 'refuse', url: 'assets/icons/refuse.svg' },
+  { name: 'review', url: 'assets/icons/review.svg' },
+  { name: 'sales', url: 'assets/icons/sales.svg' },
+  { name: 'schedules', url: 'assets/icons/schedules.svg' },
+  { name: 'search_table', url: 'assets/icons/search_table.svg' },
+  { name: 'send', url: 'assets/icons/send.svg' },
+  { name: 'settings', url: 'assets/icons/settings.svg' },
+  { name: 'share', url: 'assets/icons/share.svg' },
   {
     name: 'shopping_cart',
-    url: 'assets/icons/icons/shopping_cart.svg'
+    url: 'assets/icons/shopping_cart.svg'
   },
-  { name: 'sign_ok', url: 'assets/icons/icons/sign_ok.svg' },
+  { name: 'sign_ok', url: 'assets/icons/sign_ok.svg' },
   {
     name: 'specific_delivery_list',
-    url: 'assets/icons/icons/specific_delivery_list.svg'
+    url: 'assets/icons/specific_delivery_list.svg'
   },
-  { name: 'spinner', url: 'assets/icons/icons/spinner.svg' },
-  { name: 'star', url: 'assets/icons/icons/star.svg' },
-  { name: 'star_fill', url: 'assets/icons/icons/star_fill.svg' },
+  { name: 'spinner', url: 'assets/icons/spinner.svg' },
+  { name: 'star', url: 'assets/icons/star.svg' },
+  { name: 'star_fill', url: 'assets/icons/star_fill.svg' },
   {
     name: 'stories_and_more',
-    url: 'assets/icons/icons/stories_and_more.svg'
+    url: 'assets/icons/stories_and_more.svg'
   },
   {
     name: 'stories_and_more_fill',
-    url: 'assets/icons/icons/stories_and_more_fill.svg'
+    url: 'assets/icons/stories_and_more_fill.svg'
   },
-  { name: 'template', url: 'assets/icons/icons/template.svg' },
-  { name: 'text_area', url: 'assets/icons/icons/text_area.svg' },
-  { name: 'thumb_down', url: 'assets/icons/icons/thumb_down.svg' },
-  { name: 'translate', url: 'assets/icons/icons/translate.svg' },
-  { name: 'trash', url: 'assets/icons/icons/trash.svg' },
-  { name: 'twitter', url: 'assets/icons/icons/twitter.svg' },
-  { name: 'update', url: 'assets/icons/icons/update.svg' },
+  { name: 'template', url: 'assets/icons/template.svg' },
+  { name: 'text_area', url: 'assets/icons/text_area.svg' },
+  { name: 'thumb_down', url: 'assets/icons/thumb_down.svg' },
+  { name: 'translate', url: 'assets/icons/translate.svg' },
+  { name: 'trash', url: 'assets/icons/trash.svg' },
+  { name: 'twitter', url: 'assets/icons/twitter.svg' },
+  { name: 'update', url: 'assets/icons/update.svg' },
   {
     name: 'validation_required',
-    url: 'assets/icons/icons/validation_required.svg'
+    url: 'assets/icons/validation_required.svg'
   },
   {
     name: 'video_library',
-    url: 'assets/icons/icons/video_library.svg'
+    url: 'assets/icons/video_library.svg'
   },
-  { name: 'wallet', url: 'assets/icons/icons/wallet.svg' },
-  { name: 'world', url: 'assets/icons/icons/world.svg' },
-  { name: 'wrench', url: 'assets/icons/icons/wrench.svg' }
+  { name: 'wallet', url: 'assets/icons/wallet.svg' },
+  { name: 'world', url: 'assets/icons/world.svg' },
+  { name: 'wrench', url: 'assets/icons/wrench.svg' }
 ] as const;
 
 export type IconSvg = typeof icons[number]['name'];

@@ -1,8 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-  <title id="videoLibraryTitle">Video Library</title>
-  <desc id="videoLibraryDesc">An icon for videos</desc>
-  <g fill="#B7BCD9" fill-rule="evenodd" transform="translate(2 2)">
-    <path d="M18,0 L6,0 C4.9,0 4,0.9 4,2 L4,14 C4,15.1 4.9,16 6,16 L18,16 C19.1,16 20,15.1 20,14 L20,2 C20,0.9 19.1,0 18,0 Z" opacity=".3"/>
-    <path d="M2,4 L0,4 L0,18 C0,19.1 0.9,20 2,20 L16,20 L16,18 L2,18 L2,4 Z M18,0 L6,0 C4.9,0 4,0.9 4,2 L4,14 C4,15.1 4.9,16 6,16 L18,16 C19.1,16 20,15.1 20,14 L20,2 C20,0.9 19.1,0 18,0 Z M18,14 L6,14 L6,2 L18,2 L18,14 Z M10,3.5 L10,12.5 L16,8 L10,3.5 Z"/>
-  </g>
-</svg>
