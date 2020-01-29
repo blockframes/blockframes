@@ -57,7 +57,7 @@ const routes: Routes = [{
         { path: '', redirectTo: 'view', pathMatch: 'full' },
         {
           path: 'view',
-          loadChildren: () => import('./movie/view/view.module').then(m => m.MovieViewModule)
+          loadChildren: () => import('./movie/film-page/view/view.module').then(m => m.MovieViewModule)
         },
         {
           path: 'create',
