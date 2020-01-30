@@ -47,3 +47,13 @@ export function getContractInitialCreationDate(contract: Contract): Date {
   const firstContract = contract.versions.find(version => version.id === '1');
   return firstContract.creationDate;
 }
+
+/**
+ * Returns the last version of a contract.
+ * @param contract
+ */
+export function getContractLastVersion(contract: Contract): ContractVersion {
+  const { count }: VersionMeta = contract.versions.find(v => v.id === '_meta')
+  const index = contract.versions.map(v => v.id).indexOf(count.toString())
+  return contract.versions[index];
+}

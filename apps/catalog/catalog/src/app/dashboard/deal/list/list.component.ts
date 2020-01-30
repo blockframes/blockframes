@@ -2,11 +2,11 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import {
   ContractQuery,
   Contract,
-  getLastVersionIndex,
   ContractStatus
 } from '@blockframes/contract/contract/+state';
 import { FormControl } from '@angular/forms';
 import { startWith, share } from 'rxjs/operators';
+import { getContractLastVersion } from '@blockframes/contract/version/+state/contract-version.model';
 
 interface Tabs {
   name: string;
@@ -53,13 +53,25 @@ export class DealListComponent {
 
   constructor(private contractQuery: ContractQuery) {}
 
+  /**
+   * Create a custom label with a name and a length for the tab.
+   * @param label
+   * @param contracts
+   */
   public getLabel(label: string, contracts: Contract[]) {
     return `${label} (${contracts.length.toString()})`;
   }
 
-  public filterByStatus(contracts: Contract[], statuses?: string[]) {
-    return statuses
-      ? contracts.filter(contract => statuses.includes(contract.versions[getLastVersionIndex(contract)].status))
-      : contracts;
+  /**
+   * Returns a filtered list of contracts according to their statuses.
+   * @param contracts
+   * @param statuses
+   */
+  public filterByStatus(contracts: Contract[], statuses?: ContractStatus[]) {
+    if (statuses) {
+      const lastVersionStatus = (contract: Contract) => getContractLastVersion(contract).status;
+      return contracts.filter(contract => statuses.includes(lastVersionStatus(contract)));
+    }
+      return contracts;
   }
 }

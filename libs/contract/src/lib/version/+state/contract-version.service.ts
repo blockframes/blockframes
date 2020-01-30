@@ -52,7 +52,7 @@ export class ContractVersionService extends CollectionService<ContractVersionSta
    * Returns last contract version.
    * @param contractId
    */
-  public async getLastVersionContract(contractId: string): Promise<ContractVersion> {
+  public async getContractLastVersion(contractId: string): Promise<ContractVersion> {
     const { count } = await this.getValue('_meta', { params: { contractId } }) as VersionMeta;
     if (!!count) {
       const lastVersion = await this.getValue(count.toString(), { params: { contractId } });

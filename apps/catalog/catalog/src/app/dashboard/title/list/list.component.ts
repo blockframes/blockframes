@@ -3,7 +3,8 @@ import { FormControl } from '@angular/forms';
 import { Movie, MovieQuery } from '@blockframes/movie';
 import { startWith, switchMap, share, map } from 'rxjs/operators';
 import { Observable, combineLatest } from 'rxjs';
-import { ContractQuery, Contract, getLastVersionIndex } from '@blockframes/contract/contract/+state';
+import { ContractQuery, Contract } from '@blockframes/contract/contract/+state';
+import { getContractLastVersion } from '@blockframes/contract/version/+state/contract-version.model';
 import { StoreStatus } from '@blockframes/movie/movie+state/movie.firestore';
 
 interface TitleView {
@@ -15,12 +16,12 @@ interface TitleView {
 }
 
 function createTitleView(movie: Movie, contracts: Contract[]): TitleView {
-  const ownContracts = contracts.filter(c => c.versions[getLastVersionIndex(c)].titles[movie.id]);
+  const ownContracts = contracts.filter(c => getContractLastVersion(c).titles[movie.id]);
   return {
     title: movie.main.title.international,
     view: 'View',
     sales: ownContracts.length,
-    receipt: ownContracts.reduce((sum, contract) => sum + contract.versions[getLastVersionIndex(contract)].titles[movie.id].price.amount, 0),
+    receipt: ownContracts.reduce((sum, contract) => sum + getContractLastVersion(contract).titles[movie.id].price.amount, 0),
     status: movie.main.storeConfig.status
   }
 }
