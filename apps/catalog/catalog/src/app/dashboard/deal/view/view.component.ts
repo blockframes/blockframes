@@ -6,12 +6,11 @@ import {
   ContractPartyDetail,
   getContractParties,
   isContractSignatory,
-  getTotalPrice,
-  getLastVersionIndex
+  getTotalPrice
 } from '@blockframes/contract/contract/+state';
 import { Observable } from 'rxjs/internal/Observable';
 import { map, filter } from 'rxjs/operators';
-import { ContractVersion } from '@blockframes/contract/version/+state/contract-version.model';
+import { ContractVersion, getContractLastVersion } from '@blockframes/contract/version/+state/contract-version.model';
 import { MovieQuery } from '@blockframes/movie';
 import { OrganizationQuery, PLACEHOLDER_LOGO } from '@blockframes/organization';
 import { MovieCurrenciesSlug } from '@blockframes/utils/static-model/types';
@@ -96,7 +95,7 @@ export class DealViewComponent implements OnInit {
         const versions = contract.versions.filter(version => version.id !== '_meta');
         // Create flattened version to be send in reusable table.
         this.versions = versions.map(version => createVersionView(version));
-        this.lastVersion = contract.versions[getLastVersionIndex(contract)];
+        this.lastVersion = getContractLastVersion(contract);
 
         this.totalPrice = getTotalPrice(this.lastVersion.titles);
 

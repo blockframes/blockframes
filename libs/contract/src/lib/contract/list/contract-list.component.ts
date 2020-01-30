@@ -6,12 +6,10 @@ import { MatSort } from '@angular/material/sort';
 import { startWith } from 'rxjs/operators';
 import { Contract, getTotalPrice } from '../+state/contract.model';
 import { MatPaginator } from '@angular/material/paginator';
-import { getLastVersionIndex } from '../+state';
-import { ContractVersion } from '@blockframes/contract/version/+state';
+import { ContractVersion, ContractVersionService, getContractLastVersion } from '@blockframes/contract/version/+state';
 import { Price } from '@blockframes/utils/common-interfaces/price';
 import { MovieQuery, getMovieTitleList } from '@blockframes/movie';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state/distribution-deal.service';
-import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
 
 @Component({
   selector: 'contract-list',
@@ -71,7 +69,7 @@ export class ContractListComponent implements OnInit {
 
   /** Returns the last version of a given contract. */
   public getLastVersion(contract: Contract): ContractVersion {
-    return contract.versions[getLastVersionIndex(contract)];
+    return getContractLastVersion(contract);
   }
 
   /** Returns the conctract licensee name. */

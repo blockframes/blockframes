@@ -138,7 +138,7 @@ export class DistributionDealService extends CollectionService<DistributionDealS
   public getTerritoriesFromContract(contractVersion: ContractVersion) {
     const dealIds: string[] = [];
     for (const title of Object.values(contractVersion.titles)) {
-      dealIds.push(...title.distributionDealIds);
+      dealIds.concat(title.distributionDealIds);
     }
     const deals = dealIds.map(dealId => this.dealQuery.getEntity(dealId))
     const territories = deals.map(deal => deal ? getDealTerritories(deal) : []);
