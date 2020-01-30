@@ -10,28 +10,30 @@ const queryMovieAnalytics = `
   SELECT
     event_name as event_name,
     COUNT(*) as hits,
-    event_date
+    event_date,
+    value.string_value as movieId,
+    REGEXP_EXTRACT(value.string_value, '.*/marketplace/([^/]+)/view') as movieIdPage
   FROM
     \`${bigQueryAnalyticsTable}*\`,
     UNNEST(event_params) AS params
   WHERE
     (
-      (event_name = @pageView AND key = 'page_path' AND REGEXP_EXTRACT(value.string_value, '.*/marketplace/([^/]+)/view') = @movieId)
+      (event_name = @pageView AND key = 'page_path' AND REGEXP_EXTRACT(value.string_value, '.*/marketplace/([^/]+)/view') in UNNEST(@movieIds))
       OR
-      (event_name = @promoReelOpened AND key = 'movieId' AND value.string_value = @movieId)
+      (event_name = @promoReelOpened AND key = 'movieId' AND value.string_value in UNNEST(@movieIds))
       OR
-      (event_name = @addedToWishlist AND key = 'movieId' and value.string_value = @movieId)
+      (event_name = @addedToWishlist AND key = 'movieId' and value.string_value in UNNEST(@movieIds))
     )
     AND (
       DATE_DIFF(CURRENT_DATE(), PARSE_DATE('%Y%m%d', event_date), DAY) < @periodSum
     )
   GROUP BY
-    event_name, event_date
+    event_name, event_date, movieId, movieIdPage
   ORDER BY
     event_name, event_date
 `
 
-async function executeQuery(query: any, movieId: string, daysPerRange: number) {
+async function executeQuery(query: any, movieIds: string[], daysPerRange: number) {
   const bigqueryClient = new BigQuery();
 
   const options = {
@@ -39,7 +41,7 @@ async function executeQuery(query: any, movieId: string, daysPerRange: number) {
     timeoutMs: 100000,
     useLegacySql: false,
     params: {
-      movieId,
+      movieIds,
       pageView: AnalyticsEvents.pageView,
       promoReelOpened: AnalyticsEvents.promoReelOpened,
       addedToWishlist: AnalyticsEvents.addedToWishlist,
@@ -61,20 +63,25 @@ const aggregateEvents = (events: EventAnalytics[], daysPerRange: number) => {
   };
 };
 
+const mergeMovieIdPageInMovieId = (rows: any[]) => {
+  return rows.map(row => row.movieIdPage ? { ...row, movieId: row.movieIdPage } : row)
+};
+
 /** Call bigQuery with a movieId to get its analytics. */
 export const requestMovieAnalytics = async (
-  data: { movieId: string, daysPerRange: number },
+  data: { movieIds: string[], daysPerRange: number },
   context: CallableContext
 ): Promise<MovieAnalytics> => {
-  const { movieId, daysPerRange } = data;
+  const { movieIds, daysPerRange } = data;
   const uid = context.auth!.uid;
   const user = await getDocument<PublicUser>(`users/${uid}`);
   const org = await getDocument<OrganizationDocument>(`orgs/${user.orgId}`);
 
   // Security: only owner of the movie can load the data
-  if (org.movieIds.includes(movieId)) {
+  if (movieIds.every(movieId => org.movieIds.includes(movieId))) {
     // Request bigQuery
-    const [rows] = await executeQuery(queryMovieAnalytics, movieId, daysPerRange);
+    let [rows] = await executeQuery(queryMovieAnalytics, movieIds, daysPerRange);
+    rows = mergeMovieIdPageInMovieId(rows);
     if (rows !== undefined && rows.length >= 0){
       return {
         addedToWishlist: aggregateEvents(rows.filter(row => row.event_name === AnalyticsEvents.addedToWishlist), daysPerRange),

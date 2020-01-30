@@ -62,7 +62,9 @@ export const enum StoreStatus {
 export interface EventAnalytics {
   event_date: string,
   event_name: AnalyticsEvents,
-  hits: number
+  hits: number,
+  movieId: string,
+  movieIdPage: string
 }
 
 export interface MovieAnalytics {
