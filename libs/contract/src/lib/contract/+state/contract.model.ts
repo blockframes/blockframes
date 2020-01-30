@@ -1,5 +1,5 @@
 import { getCodeIfExists, getCodeBySlug } from '@blockframes/utils/static-model/staticModels';
-import { createPrice, Price } from '@blockframes/utils/common-interfaces/price';
+import { createPrice, Price, PaymentStatus } from '@blockframes/utils/common-interfaces/price';
 import {
   ContractDocumentWithDates,
   ContractStatus,
@@ -9,7 +9,9 @@ import {
   LegalDocument,
   LegalDocuments,
   ContractDocument,
-  ContractType
+  ContractType,
+  InvoiceTitleDetails,
+  Invoice
 } from './contract.firestore';
 import { createParty } from '@blockframes/utils/common-interfaces/identity';
 import { createImgRef } from '@blockframes/utils/image-uploader';
@@ -18,6 +20,8 @@ import { ContractVersion, ContractVersionWithTimeStamp, formatContractVersion } 
 import { LegalRolesSlug } from '@blockframes/utils/static-model/types';
 import { CurrencyPipe } from '@angular/common';
 import { isTimestamp } from '@blockframes/utils/helpers';
+import { createPaymentSchedule } from '@blockframes/utils/common-interfaces/schedule';
+import { createBankAccount } from '@blockframes/utils/common-interfaces/utility';
 
 /**
  * @dev this should not be saved to firestore,
@@ -200,6 +204,40 @@ export function createContractFromFirestore(contract: ContractWithTimeStamp): Co
     versions: contract.versions
       ? contract.versions.map(version => formatContractVersion(version))
       : []
+  }
+}
+
+export function createInvoiceTitleDetails(
+  params: Partial<InvoiceTitleDetails> = {}
+): InvoiceTitleDetails {
+  return {
+    titleId: '',
+    ...params,
+    price: createPrice(params.price),
+  }
+}
+
+export function createInvoice(
+  params: Partial<Invoice> = {}
+): Invoice {
+  return {
+    id: '',
+    internalRef: '',
+    payments: [],
+    emittedDate: new Date(),
+    titles: [],
+    ...params,
+    price: createPrice(params.price),
+    collected: createPrice(params.collected),
+    buyerId: '',
+    sellerId: '',
+    paymentSchedule: createPaymentSchedule(params.paymentSchedule),
+    status: PaymentStatus.unknown,
+    account: createBankAccount(params.account),
+    contractId: '',
+    legalDocumentId: '',
+    reportIds: [],
+    reportInternalRefs: [],
   }
 }
 

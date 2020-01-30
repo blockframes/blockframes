@@ -1,5 +1,14 @@
-import { FinancialReport, FinancialReportVersion, FinancialReportTitleDetail, SendType, ReportStatus } from "./financial-report.firestore";
+import { FinancialReport, FinancialReportVersion, FinancialReportTitleDetail, SendType, ReportStatus, Taxes } from "./financial-report.firestore";
 import { createRange } from "@blockframes/utils/common-interfaces/range";
+
+export function createTaxes(params: Partial<Taxes> = {}): Taxes {
+  return {
+    CNCContribution: {
+      percentage: 0,
+    },
+    ...params
+  };
+}
 
 export function createFinancialReport(params: Partial<FinancialReport> = {}): FinancialReport {
   return {
@@ -8,6 +17,12 @@ export function createFinancialReport(params: Partial<FinancialReport> = {}): Fi
     titles: {},
     contractId: '',
     senderId: '',
+    reportFrequency: [],
+    choosenCurrency: 'euro',
+    recipientId: '',
+    totalContractGrossReceipts: 0,
+    totalPaidGrossReceipts: 0,
+    totalNetReceipts: 0,
     ...params
   };
 }
@@ -15,9 +30,19 @@ export function createFinancialReport(params: Partial<FinancialReport> = {}): Fi
 export function createFinancialReportVersion(params: Partial<FinancialReportVersion> = {}): FinancialReportVersion {
   return {
     id: '',
-    sendType: SendType.email,
+    contractVersionCount: 0,
+    titles: {},
+    sendDate: new Date(),
+    sendType: [],
     status: ReportStatus.waiting,
-    recipientId: '',
+    contractGrossReceipts: 0,
+    paidGrossReceipts: 0,
+    netReceipts: 0,
+    expenses: 0,
+    taxes: createTaxes(params.taxes),
+    sumTaxes: 0,
+    recipentShare: 0,
+    invoicedAmount: 0,
     ...params
   };
 }
@@ -25,13 +50,10 @@ export function createFinancialReportVersion(params: Partial<FinancialReportVers
 export function createFinancialReportTitleDetail(params: Partial<FinancialReportTitleDetail> = {}): FinancialReportTitleDetail {
   return {
     titleId: '',
-    recipientId: '',
-    fees: [],
-    reportFrequency: 0,
-    choosenCurrency: 'euro',
-    sumFees: 0,
-    sumCollectedFees: 0,
-    percentageMarketFees: 0,
+    expenses: [],
+    sumExpenses: 0,
+    sumCollectedExpenses: 0,
+    percentageMarketExpenses: 0,
     ...params
   };
 }

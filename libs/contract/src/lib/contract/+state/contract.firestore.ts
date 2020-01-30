@@ -1,7 +1,7 @@
 import { firestore } from "firebase/app";
 import { TermsRaw } from "@blockframes/utils/common-interfaces/terms";
 import { Party } from "@blockframes/utils/common-interfaces/identity";
-import { Price, PaymentStatus, Payment } from "@blockframes/utils/common-interfaces/price";
+import { Price, PaymentStatus, Payment, createPrice, PriceRaw } from "@blockframes/utils/common-interfaces/price";
 import {
   TerritoriesSlug,
   LanguagesSlug,
@@ -84,6 +84,18 @@ interface ContractRaw<D> {
   documents: LegalDocuments
 }
 
+export interface InvoiceTitleDetailsRaw<D> {
+  price: PriceRaw<D>;
+  reportId?: string;
+  titleId: string;
+}
+
+export interface InvoiceTitleDetails extends InvoiceTitleDetailsRaw<Date> {
+}
+
+export interface InvoiceTitleDetailsDocument extends InvoiceTitleDetailsRaw<Timestamp> {
+}
+
 export interface InvoiceRaw<D> {
   id: string,
   internalRef: string,
@@ -91,6 +103,10 @@ export interface InvoiceRaw<D> {
   paymentRef?: string,
   payments: Payment[],
   emittedDate: D,
+  /**
+   * @dev Contains Ids of titles that this invoice is about
+   */
+  titles: InvoiceTitleDetailsRaw<D>[],
   /**
    * @dev Expected price once each payments have been made
    */
@@ -118,10 +134,6 @@ export interface InvoiceRaw<D> {
   contractId: string,
   /** @dev should be a legal document belonging to contractId */
   legalDocumentId: string,
-  /**
-   * @dev Ids of titles that this invoice is about
-   */
-  titleIds: string[],
   /**
    * @dev
    * reportIds : array of FinancialReport ids
