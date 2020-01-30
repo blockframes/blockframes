@@ -53,20 +53,25 @@ async function executeQuery(query: any, movieIds: string[], daysPerRange: number
   return bigqueryClient.query(options);
 }
 
-/** Sorts events by movieId and into two periods. */
-const aggregateEvents = (events: EventAnalytics[], movieId: string, daysPerRange: number) => {
+/** Sorts events into two periods. */
+const groupEventsPerDayRange = (events: EventAnalytics[], daysPerRange: number) => {
   const now = new Date();
   const startCurrentRange = subDays(now, daysPerRange);
   const parseDate = (event: EventAnalytics)  => parse(event.event_date, 'yyyyMMdd', new Date());
   return {
-    current: events.filter(event => isAfter(parseDate(event), startCurrentRange) && event.movieId === movieId),
-    past: events.filter(event => isBefore(parseDate(event), startCurrentRange) && event.movieId === movieId)
+    current: events.filter(event => isAfter(parseDate(event), startCurrentRange)),
+    past: events.filter(event => isBefore(parseDate(event), startCurrentRange))
   };
+};
+
+/** Sorts analytic events by movieId. */
+const filterByMovieId = (events: EventAnalytics[], movieId: string) => {
+  return events.filter(event => event.movieId === movieId);
 };
 
 /** Merge the movieIdPage field from bigquery with the movieId field when relevant. */
 const mergeMovieIdPageInMovieId = (rows: any[]) => {
-  // Remove the movieIdPage that it is not relevant to keep.
+  // Remove the movieIdPage because it's a detail of implementation of the query to BigQuery.
   return rows.map(row => omit({ ...row, movieId: row.movieIdPage || row.movieId }, 'movieIdPage'));
 };
 
@@ -85,13 +90,14 @@ export const requestMovieAnalytics = async (
     // Request bigQuery
     let [rows] = await executeQuery(queryMovieAnalytics, movieIds, daysPerRange);
     rows = mergeMovieIdPageInMovieId(rows);
-    if (rows !== undefined && rows.length >= 0){
+    if (rows !== undefined && rows.length >= 0) {
       return movieIds.map(movieId => {
+        const movieRows = filterByMovieId(rows, movieId);
         return {
           movieId,
-          addedToWishlist: aggregateEvents(rows.filter(row => row.event_name === AnalyticsEvents.addedToWishlist), movieId, daysPerRange),
-          promoReelOpened: aggregateEvents(rows.filter(row => row.event_name === AnalyticsEvents.promoReelOpened), movieId, daysPerRange),
-          movieViews: aggregateEvents(rows.filter(row => row.event_name === AnalyticsEvents.pageView), movieId, daysPerRange)
+          addedToWishlist: groupEventsPerDayRange(movieRows.filter(row => row.event_name === AnalyticsEvents.addedToWishlist), daysPerRange),
+          promoReelOpened: groupEventsPerDayRange(movieRows.filter(row => row.event_name === AnalyticsEvents.promoReelOpened), daysPerRange),
+          movieViews: groupEventsPerDayRange(movieRows.filter(row => row.event_name === AnalyticsEvents.pageView), daysPerRange)
         }
       })
     } else {
