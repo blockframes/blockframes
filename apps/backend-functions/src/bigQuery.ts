@@ -5,6 +5,7 @@ import { getDocument } from './data/internals';
 import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
 import { bigQueryAnalyticsTable } from "./environments/environment";
 import { isAfter, isBefore, parse, subDays } from 'date-fns';
+import { omit } from 'lodash';
 
 const queryMovieAnalytics = `
   SELECT
@@ -63,8 +64,9 @@ const aggregateEvents = (events: EventAnalytics[], daysPerRange: number) => {
   };
 };
 
+/** Merge the movieIdPage field from bigquery with the movieId field when relevant. */
 const mergeMovieIdPageInMovieId = (rows: any[]) => {
-  return rows.map(row => row.movieIdPage ? { ...row, movieId: row.movieIdPage } : row)
+  return rows.map(row => omit({ ...row, movieId: row.movieIdPage || row.movieId }, 'movieIdPage'));
 };
 
 /** Call bigQuery with a movieId to get its analytics. */

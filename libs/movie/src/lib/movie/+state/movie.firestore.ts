@@ -63,8 +63,7 @@ export interface EventAnalytics {
   event_date: string,
   event_name: AnalyticsEvents,
   hits: number,
-  movieId: string,
-  movieIdPage: string
+  movieId: string
 }
 
 export interface MovieAnalytics {
