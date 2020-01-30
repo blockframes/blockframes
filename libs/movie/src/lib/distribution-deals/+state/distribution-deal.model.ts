@@ -4,9 +4,7 @@ import {
 } from './distribution-deal.firestore';
 import { createTerms } from '@blockframes/utils/common-interfaces/terms';
 
-export {
-  DistributionDealDocumentWithDates as DistributionDeal
-} from './distribution-deal.firestore';
+export { DistributionDealDocumentWithDates as DistributionDeal } from './distribution-deal.firestore';
 
 export function createDistributionDeal(params: Partial<DistributionDeal> = {}): DistributionDeal {
   return {

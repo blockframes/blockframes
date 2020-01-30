@@ -32,11 +32,14 @@ export class DistributionDealService extends CollectionService<DistributionDealS
   public syncContractsDeals() {
     return this.contractQuery.selectAll().pipe(
       switchMap(contracts => {
-        const $ = contracts.map(c => this.syncCollectionGroup('distributionDeals', ref => ref.where('contractId', '==', c.id)));
+        const $ = contracts.map(c =>
+          this.syncCollectionGroup('distributionDeals', ref => ref.where('contractId', '==', c.id))
+        );
         return combineLatest($);
       })
     );
   }
+
 
   /**
    *
@@ -128,12 +131,17 @@ export class DistributionDealService extends CollectionService<DistributionDealS
     return distributionDeals;
   }
 
+  /**
+   * Returns all eligible territories from contract's deals.
+   * @param contractVersion
+   */
   public getTerritoriesFromContract(contractVersion: ContractVersion) {
     const dealIds: string[] = [];
     for (const title of Object.values(contractVersion.titles)) {
       dealIds.push(...title.distributionDealIds);
     }
     const deals = dealIds.map(dealId => this.dealQuery.getEntity(dealId))
-    return deals.map(deal => deal ? getDealTerritories(deal) : []).flat();
+    const territories = deals.map(deal => deal ? getDealTerritories(deal) : []);
+    return territories.flat();
   }
 }
