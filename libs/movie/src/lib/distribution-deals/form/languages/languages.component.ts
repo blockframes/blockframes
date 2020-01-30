@@ -5,6 +5,7 @@ import { MovieVersionInfoForm } from '@blockframes/movie/movieform/version-info/
 import { FormStaticValue } from '@blockframes/utils/form';
 import { LanguagesSlug } from '@blockframes/utils/static-model';
 import { MatSlideToggleChange } from '@angular/material';
+import { createMovieLanguageSpecification } from '@blockframes/movie/movie+state/movie.model';
 
 @Component({
   selector: '[form] distribution-form-languages',
@@ -53,9 +54,20 @@ export class DistributionDealLanguagesComponent {
     if(event.checked) {
       this.languageCtrl.disable();
       this.formIsDisabled = true
+
+      const languageSpec: MovieLanguageSpecification = createMovieLanguageSpecification({
+        original: false,
+        dubbed: true,
+        subtitle: true,
+        caption: true,
+      });
+
+      this.form.addLanguage('all', languageSpec);
     } else {
       this.languageCtrl.enable();
       this.formIsDisabled = false;
+
+      this.form.removeLanguage('all');
     }
   }
 }
