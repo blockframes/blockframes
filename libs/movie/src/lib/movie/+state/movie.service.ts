@@ -139,6 +139,6 @@ export class MovieService extends CollectionService<MovieState> {
   /** Call a firebase function to get analytics specify to a movie.*/
   public getMovieAnalytics(): Observable<MovieAnalytics> {
     const f = this.functions.httpsCallable('getMovieAnalytics');
-    return f({ movieId: [this.query.getActiveId()], daysPerRange: 28 });
+    return f({ movieIds: [this.query.getActiveId()], daysPerRange: 28 });
   }
 }
