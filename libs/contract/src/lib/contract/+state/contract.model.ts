@@ -18,7 +18,6 @@ import { createImgRef } from '@blockframes/utils/image-uploader';
 import { createTerms } from '@blockframes/utils/common-interfaces/terms';
 import { ContractVersion, ContractVersionWithTimeStamp, formatContractVersion } from '../../version/+state/contract-version.model';
 import { LegalRolesSlug } from '@blockframes/utils/static-model/types';
-import { CurrencyPipe } from '@angular/common';
 import { isTimestamp } from '@blockframes/utils/helpers';
 import { createPaymentSchedule } from '@blockframes/utils/common-interfaces/schedule';
 import { createBankAccount } from '@blockframes/utils/common-interfaces/utility';
@@ -300,17 +299,3 @@ export function getTotalPrice(titles: Record<string, ContractTitleDetail>): Pric
 
   return result;
 }
-
-/**
- * Same logic as totalPrice function, but returns a string for flattened objects.
- * @param lastVersion
- */
-export function getTotalPiceAsString(titles: ContractTitleDetail): string {
-  const currencyPipe = new CurrencyPipe('en-US');
-  const versionTitles = Object.values(titles);
-  const amount = versionTitles.reduce((sum, title) => sum += title.price.amount, 0);
-  const currency = getCodeBySlug('MOVIE_CURRENCIES', versionTitles[versionTitles.length - 1].price.currency);
-
-  return currencyPipe.transform(amount, currency, true);
-}
-

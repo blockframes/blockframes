@@ -280,4 +280,5 @@ export class ContractService extends CollectionService<ContractState> {
     const updatedParties = contract.parties.filter((_, i) => i !== index);
     this.update({ ...contract, parties: [...updatedParties, updatedParty] })
   }
+
 }

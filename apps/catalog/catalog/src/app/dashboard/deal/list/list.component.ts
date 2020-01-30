@@ -1,51 +1,39 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import {
   ContractQuery,
   Contract,
-  ContractStatus,
-  getContractParties
+  getLastVersionIndex,
+  ContractStatus
 } from '@blockframes/contract/contract/+state';
 import { FormControl } from '@angular/forms';
-import { startWith, share, map } from 'rxjs/operators';
+import { startWith, share } from 'rxjs/operators';
 
-interface ContractView {
-  buyerName: string;
-  territories: string;
-  dateReceived: string;
-  moviesLenght: number;
-  titles: string;
-  price: string;
-  paid: boolean;
-  remaining: string;
-  status: ContractStatus;
+interface Tabs {
+  name: string;
+  statuses?: ContractStatus[];
 }
 
-function createContractView(contract: Contract): ContractView {
-  return {
-    buyerName: getContractParties(contract, 'licensee')[0].party.displayName,
-    territories: 'View',
-    dateReceived: 'Date receveid',
-    moviesLenght: 0,
-    titles: 'Titles',
-    price: 'Price',
-    paid: false,
-    remaining: 'Remaining',
-    status: contract.versions[0].status
-  };
-}
-
-const columns = {
-  buyerName: 'Buyer name',
-  territories: 'Territories',
-  dateReceived: 'Date receveid',
-  moviesLenght: ' # Films',
-  titles: 'Titles',
-  price: 'Price',
-  paid: 'Paid',
-  remaining: 'Remaining',
-  status: 'Status'
-};
+const contractTabs: Tabs[] = [
+  {
+    name: 'All'
+  },
+  {
+    name: 'Offers',
+    statuses: [ContractStatus.submitted, ContractStatus.undernegotiation, ContractStatus.waitingsignature]
+  },
+  {
+    name: 'Ongoing Deals',
+    statuses: [ContractStatus.accepted, ContractStatus.waitingpaiment]
+  },
+  {
+    name: 'Past Deals',
+    statuses: [ContractStatus.paid]
+  },
+  {
+    name: 'Aborted Offers',
+    statuses: [ContractStatus.rejected]
+  }
+];
 
 @Component({
   selector: 'catalog-deal-list',
@@ -53,35 +41,25 @@ const columns = {
   styleUrls: ['./list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DealListComponent implements OnInit {
-  public columns = columns;
-  public initialColumns = [
-    'buyerName',
-    'territories',
-    'dateReceived',
-    'moviesLenght',
-    'titles',
-    'price',
-    'paid',
-    'remaining',
-    'status'
-  ];
+export class DealListComponent {
+  public contracts$ = this.contractQuery.selectAll();
+  public contractTabs = contractTabs;
 
-  contracts$: Observable<ContractView[]>;
-  filter = new FormControl();
-  filter$ = this.filter.valueChanges.pipe(
+  public filter = new FormControl();
+  public filter$ = this.filter.valueChanges.pipe(
     startWith(this.filter.value),
     share()
   );
 
   constructor(private contractQuery: ContractQuery) {}
 
-  ngOnInit() {
-    // Get all organization's contract and return them with all their versions.
-    this.contracts$ = this.contractQuery
-      .selectAll()
-      .pipe(map(contracts => contracts.map(contract => createContractView(contract))));
+  public getLabel(label: string, contracts: Contract[]) {
+    return `${label} (${contracts.length.toString()})`;
+  }
 
-      this.contracts$.subscribe(x => console.log(x))
+  public filterByStatus(contracts: Contract[], statuses?: string[]) {
+    return statuses
+      ? contracts.filter(contract => statuses.includes(contract.versions[getLastVersionIndex(contract)].status))
+      : contracts;
   }
 }
