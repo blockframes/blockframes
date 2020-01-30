@@ -1,7 +1,7 @@
 import { firestore } from "firebase/app";
 import { TermsRaw } from "@blockframes/utils/common-interfaces/terms";
 import { Party } from "@blockframes/utils/common-interfaces/identity";
-import { Price, PaymentStatus } from "@blockframes/utils/common-interfaces/price";
+import { Price, PaymentStatus, Payment } from "@blockframes/utils/common-interfaces/price";
 import {
   TerritoriesSlug,
   LanguagesSlug,
@@ -89,13 +89,14 @@ export interface InvoiceRaw<D> {
   internalRef: string,
   /** @dev should be comming from blockchain data */
   paymentRef?: string,
+  payments: Payment[],
   emittedDate: D,
   /**
    * @dev Expected price once each payments have been made
    */
   price: Price,
   /**
-   * @dev Collected amount (sum of sub-collection Payments.price).
+   * @dev Collected amount (sum of payments.price).
    * A function should handle this.
    * Start with zero.
    */
@@ -117,6 +118,17 @@ export interface InvoiceRaw<D> {
   contractId: string,
   /** @dev should be a legal document belonging to contractId */
   legalDocumentId: string,
+  /**
+   * @dev Ids of titles that this invoice is about
+   */
+  titleIds: string[],
+  /**
+   * @dev
+   * reportIds : array of FinancialReport ids
+   * reportInternalRefs : array of FinancialReport interalRef
+   */
+  reportIds: string[],
+  reportInternalRefs: string[],
 }
 
 export interface LegalDocuments {
