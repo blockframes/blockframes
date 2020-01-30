@@ -1,6 +1,6 @@
 import { map } from 'rxjs/operators';
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
-import { Movie, PromotionalElement, MoviePromotionalElements } from '@blockframes/movie';
+import { Movie } from '@blockframes/movie';
 import { Component, OnInit, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MovieQuery } from '@blockframes/movie';
@@ -8,12 +8,14 @@ import { OrganizationQuery } from '@blockframes/organization';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
+import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'catalog-movie-view',
   templateUrl: './view.component.html',
   styleUrls: ['./view.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Default
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MarketplaceMovieViewComponent implements OnInit {
   @HostBinding('attr.page-id') pageId = 'catalog-movie-view';
@@ -22,12 +24,28 @@ export class MarketplaceMovieViewComponent implements OnInit {
   // Flag to indicate which icon and message to show
   public toggle$: Observable<boolean>;
 
+  navLinks = [{
+    path: 'main',
+    label: 'Main'
+  }, {
+    path: 'technical-information',
+    label: 'Technical Information'
+  },
+  {
+    path: 'media',
+    label: 'Media'
+  }, {
+    path: 'avails',
+    label: 'Avails'
+  }];
+
   constructor(
     private movieQuery: MovieQuery,
     private cartService: CartService,
     private orgQuery: OrganizationQuery,
     private snackbar: MatSnackBar,
-    private analytics: FireAnalytics
+    private analytics: FireAnalytics,
+    public router: Router
   ) {}
 
   ngOnInit() {
@@ -76,23 +94,22 @@ export class MarketplaceMovieViewComponent implements OnInit {
     this.snackbar.open(`${title} has been removed from your selection.`, 'close', { duration: 2000 });
   }
 
-  public getBackgroundImage(promotionalElements: MoviePromotionalElements) {
-    const element = promotionalElements.banner;
-    /** TODO(issue#1309) create image directive for background image*/
-    return element
-    ? `url(${element.media.url})`
-    : 'url(/assets/images/banner_movie_view.png)'
+  public getTitle(movie: Movie) {
+    const { workType, totalRunTime, genres, originalLanguages } = movie.main;
+    return [
+      workType,
+      `${totalRunTime} min`,
+      genres.map(genre => getLabelBySlug('GENRES', genre)).join(', '),
+      originalLanguages.map(language => language).join(', ')
+    ].join(' | ');
   }
 
-  get internationalPremiere() {
-    const name = this.movieQuery.getActive().main.title.original;
-    const year = this.movieQuery.getActive().main.productionYear;
-    return name !== '' ? `${name}, ${year}` : null;
+  public getDirectors(movie: Movie) {
+    return movie.main.directors.map(d => `${d.firstName}  ${d.lastName}`).join(', ');
   }
 
-  get color() {
-    const color = this.movieQuery.getActive().salesInfo.color;
-    return color === 'c' ? 'Color' : 'Black & white';
+  public getOriginalCountries(movie: Movie) {
+    return `${movie.main.originCountries.map(country => getLabelBySlug('TERRITORIES', country)).join(', ')}, ${movie.main.productionYear}`;
   }
 
 }

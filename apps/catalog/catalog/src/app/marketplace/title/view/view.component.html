@@ -1,0 +1,58 @@
+<ng-template *ngIf="loading$ | async">
+  <mat-spinner color="accent" #loading></mat-spinner>
+</ng-template>
+<ng-container *ngIf="(movie$ | async) as movie;" test-id="content">
+  <header fxLayout="row" fxLayoutAlign="center" fxLayout.lt-sm="column">
+    <article fxLayout="row" fxLayout.lt-sm="column" fxFlex>
+      <!-- TODO#1763 get poster by countries from promotionalElements -->
+      <ng-container *ngIf=" movie.main.poster || movie.promotionalElements.poster[0].media as poster">
+        <img class="movie-poster" [imgRef]="poster" [placeholderUrl]="'assets/images/movieposter-placeholder.png'" alt="movie poster"/>
+      </ng-container>
+      <div class="movie-info">
+        <!-- <h4> 
+          <span *ngIf="movie.main.workType as type">{{ type | uppercase }}</span>
+          <span *ngIf="movie.main.totalRunTime || movie.main.genres.length || movie.main.originalLanguages.length"> | </span>
+          <span *ngIf="movie.main.totalRunTime as time">{{ time }} <span *ngIf="time !== 'TBC'">MIN</span></span>
+          <span *ngIf="movie.main.genres.length || movie.main.originalLanguages.length"> | </span>
+          <span *ngIf="movie.main.genres.length && movie.main.genres as genre">{{ genre[0] | translateSlug: 'GENRES' | uppercase }}</span>
+          <span *ngIf="movie.main.genres.length && movie.main.originalLanguages.length"> | </span>
+          <span *ngIf="movie.main.originalLanguages as languages">{{ languages }}</span>
+        </h4> -->
+        <!-- TODO#1658 Update LANGUAGES static model to be RFC-5646 compliant -->
+        <h4>{{ getTitle(movie) }}</h4>
+        <h1>{{ movie.main.title.international }}</h1>
+        <h2>{{ movie.main.title.original }}</h2>
+        <h6>{{ getDirectors(movie) }}</h6>
+        <span class="mat-body-2">{{ getOriginalCountries(movie) }}</span>
+      </div>
+    </article>
+    <article fxLayout="column" fxLayoutAlign="center">
+      <a *ngIf="router.url.split('/').pop() !== 'avails'" class="switch-button" mat-stroked-button color="primary" routerLink="avails">Switch to Avails</a>
+      <a *ngIf="router.url.split('/').pop() === 'avails'" class="switch-button" mat-stroked-button color="primary" routerLink="main">Switch to Film Info</a>
+      <ng-container *ngIf="(toggle$ | async); else alreadyAdded">
+        <button class="heart-button" mat-button color="accent" (click)="removeFromWishlist()">
+          <mat-icon svgIcon="heart_fill" color="accent"></mat-icon>
+          <span>Remove from list</span>
+        </button>
+      </ng-container>
+      <ng-template #alreadyAdded>
+        <button class="heart-button" mat-button color="accent" (click)="addToWishlist()">
+          <mat-icon svgIcon="heart_outline" color="accent"></mat-icon>
+          <span>Add to Wishlist</span>
+        </button>
+      </ng-template>
+    </article>
+  </header>
+  <section>
+    <nav mat-tab-nav-bar>
+      <a mat-tab-link
+      *ngFor="let link of navLinks"
+      [routerLink]="link.path"
+      routerLinkActive #rla="routerLinkActive"
+      [active]="rla.isActive">
+     {{link.label}}
+      </a>
+    </nav>
+    <router-outlet></router-outlet>
+  </section>
+</ng-container>

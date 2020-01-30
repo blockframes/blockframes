@@ -60,15 +60,26 @@ export const enum StoreStatus {
 }
 
 export interface EventAnalytics {
-  event_date: number,
+  event_date: string,
   event_name: AnalyticsEvents,
-  hits: number
+  hits: number,
+  movieId: string
 }
 
 export interface MovieAnalytics {
-  addedToWishlist: EventAnalytics[],
-  movieViews: EventAnalytics[],
-  promoReelOpened: EventAnalytics[]
+  movieId: string,
+  addedToWishlist: {
+    current: EventAnalytics[],
+    past: EventAnalytics[]
+  },
+  movieViews: {
+    current: EventAnalytics[],
+    past: EventAnalytics[]
+  },
+  promoReelOpened: {
+    current: EventAnalytics[],
+    past: EventAnalytics[]
+  }
 }
 
 export interface StoreConfig {
