@@ -38,7 +38,7 @@ export const enum PaymentStatus {
   notdueyet = 'Not due yet',
 }
 
-interface PriceRaw<D> {
+export interface PriceRaw<D> {
   amount: number;
   currency: MovieCurrenciesSlug;
   /**

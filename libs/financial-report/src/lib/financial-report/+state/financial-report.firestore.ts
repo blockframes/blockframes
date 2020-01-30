@@ -94,13 +94,13 @@ interface FinancialReportVersionRaw<D> {
   sumTaxes: number;
   /**
    * @dev This represents the share that recipientId should invoice for.
-   * recipentShare is calculated as follow:
+   * recipientShare is calculated as follow:
    *  if (netReceipts - sumTaxes - expenses >= 0)
-   *    recipentShare = netReceipts - sumTaxes - expenses;
+   *    recipientShare = netReceipts - sumTaxes - expenses;
    *  else 
-   *    recipentShare = 0;
+   *    recipientShare = 0;
    */
-  recipentShare: number;
+  recipientShare: number;
   /**
    * @dev summ (invoices.price.amount) of invoices that have the contractId referenced 
    * and where contract.titles array-contains { reportId = this report id }

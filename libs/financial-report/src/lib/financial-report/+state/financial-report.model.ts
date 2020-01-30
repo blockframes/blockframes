@@ -41,7 +41,7 @@ export function createFinancialReportVersion(params: Partial<FinancialReportVers
     expenses: 0,
     taxes: createTaxes(params.taxes),
     sumTaxes: 0,
-    recipentShare: 0,
+    recipientShare: 0,
     invoicedAmount: 0,
     ...params
   };
