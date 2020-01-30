@@ -31,7 +31,7 @@ const queryMovieAnalytics = `
     event_name, event_date
 `
 
-async function executeQuery(query: any, movieId: string, rangeDays: number) {
+async function executeQuery(query: any, movieId: string, daysPerRange: number) {
   const bigqueryClient = new BigQuery();
 
   const options = {
@@ -43,7 +43,7 @@ async function executeQuery(query: any, movieId: string, rangeDays: number) {
       pageView: AnalyticsEvents.pageView,
       promoReelOpened: AnalyticsEvents.promoReelOpened,
       addedToWishlist: AnalyticsEvents.addedToWishlist,
-      periodSum: rangeDays * 2
+      periodSum: daysPerRange * 2
     }
   };
 
@@ -51,9 +51,9 @@ async function executeQuery(query: any, movieId: string, rangeDays: number) {
 }
 
 /** Sorts events into two periods. */
-const aggregateEvents = (events: EventAnalytics[], days: number) => {
+const aggregateEvents = (events: EventAnalytics[], daysPerRange: number) => {
   const now = new Date();
-  const startCurrentRange = subDays(now, days);
+  const startCurrentRange = subDays(now, daysPerRange);
   const parseDate = (event: EventAnalytics)  => parse(event.event_date, 'yyyyMMdd', new Date());
   return {
     current: events.filter(event => isAfter(parseDate(event), startCurrentRange)),
@@ -63,10 +63,10 @@ const aggregateEvents = (events: EventAnalytics[], days: number) => {
 
 /** Call bigQuery with a movieId to get its analytics. */
 export const requestMovieAnalytics = async (
-  data: { movieId: string, rangeDays: number },
+  data: { movieId: string, daysPerRange: number },
   context: CallableContext
 ): Promise<MovieAnalytics> => {
-  const { movieId, rangeDays } = data;
+  const { movieId, daysPerRange } = data;
   const uid = context.auth!.uid;
   const user = await getDocument<PublicUser>(`users/${uid}`);
   const org = await getDocument<OrganizationDocument>(`orgs/${user.orgId}`);
@@ -74,12 +74,12 @@ export const requestMovieAnalytics = async (
   // Security: only owner of the movie can load the data
   if (org.movieIds.includes(movieId)) {
     // Request bigQuery
-    const [rows] = await executeQuery(queryMovieAnalytics, movieId, rangeDays);
+    const [rows] = await executeQuery(queryMovieAnalytics, movieId, daysPerRange);
     if (rows !== undefined && rows.length >= 0){
       return {
-        addedToWishlist: aggregateEvents(rows.filter(row => row.event_name === AnalyticsEvents.addedToWishlist), rangeDays),
-        promoReelOpened: aggregateEvents(rows.filter(row => row.event_name === AnalyticsEvents.promoReelOpened), rangeDays),
-        movieViews: aggregateEvents(rows.filter(row => row.event_name === AnalyticsEvents.pageView), rangeDays)
+        addedToWishlist: aggregateEvents(rows.filter(row => row.event_name === AnalyticsEvents.addedToWishlist), daysPerRange),
+        promoReelOpened: aggregateEvents(rows.filter(row => row.event_name === AnalyticsEvents.promoReelOpened), daysPerRange),
+        movieViews: aggregateEvents(rows.filter(row => row.event_name === AnalyticsEvents.pageView), daysPerRange)
       };
     } else {
       throw new Error('Unexepected error.');
