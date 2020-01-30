@@ -1,1 +1,168 @@
-<p>main works!</p>
+<ng-template *ngIf="loading$ | async">
+  <mat-spinner color="accent" #loading></mat-spinner>
+</ng-template>
+<ng-container *ngIf="(movie$ | async) as movie;" test-id="content">
+  <section fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="20px">
+    <!-- PROMO LINKS -->
+    <mat-card fxLayout="column" fxLayoutAlign="start start" fxFlex="30">
+      <a *ngIf="movie.promotionalElements.promo_reel_link" mat-stroked-button color="accent" [href]="movie.promotionalElements.promo_reel_link.media.url">
+        <mat-icon svgIcon="play" color="accent"></mat-icon>Watch Prmomo Reel</a>
+      <a *ngIf="movie.promotionalElements.scenario" mat-stroked-button color="accent" [href]="movie.promotionalElements.scenario.media.url">
+        <mat-icon svgIcon="download" color="accent"></mat-icon>Download Scenarios</a>
+      <a *ngIf="movie.promotionalElements.screener_link" mat-stroked-button color="primary" [href]="movie.promotionalElements.screener_link.media.url">
+        <mat-icon svgIcon="play" color="primary"></mat-icon>Watch Screener</a>
+      <a *ngIf="movie.promotionalElements.teaser_link" mat-stroked-button color="primary" [href]="movie.promotionalElements.teaser_link.media.url">
+        <mat-icon svgIcon="play" color="primary"></mat-icon>Watch Pitch Teaser</a>
+      <a *ngIf="movie.promotionalElements.presentation_deck" mat-stroked-button color="primary" [href]="movie.promotionalElements.presentation_deck.media.url">
+        <mat-icon svgIcon="download" color="primary"></mat-icon>Download Pres. Deck</a>
+      <a *ngIf="movie.promotionalElements.trailer_link" mat-stroked-button color="primary" [href]="movie.promotionalElements.trailer_link.media.url">
+        <mat-icon svgIcon="play" color="primary"></mat-icon>Watch Trailer</a>
+    </mat-card>
+    <article fxFlex="70">
+      <!-- STORY CARD -->
+      <mat-card *ngIf="movie.story.synopsis || movie.promotionalDescription.keywords.length > 0 || movie.promotionalDescription.keyAssets">
+        <mat-card-header>
+          <mat-card-title>Storyline Elements</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <ul>
+            <li *ngIf="movie.story.synopsis as synopsis">
+              <strong>Synopsis </strong><span>{{ synopsis }}</span>
+            </li>
+            <li *ngIf="movie.promotionalDescription.keywords.length > 0">
+              <strong>Keywords </strong>
+              <mat-chip-list fxLayout="row" fxLayoutGap="5px">
+                <ng-container *ngFor="let keyword of movie.promotionalDescription.keywords">
+                  <mat-chip>{{ keyword }}</mat-chip>
+                </ng-container>
+              </mat-chip-list>
+            </li>
+            <li *ngIf="movie.promotionalDescription.keyAssets">
+              <strong>Key Assets </strong><span>{{ movie.promotionalDescription.keyAssets }}</span>
+            </li>
+          </ul>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- FESTIVALS -->
+      <mat-card *ngIf="movie.festivalPrizes.prizes.length > 0">
+        <mat-card-header>
+          <mat-card-title>Festivals</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+            <ul>
+              <ng-container  *ngIf="movie.festivalPrizes.prizes as prizes">
+                <li><strong>Festivals </strong></li>
+                <li *ngFor="let prize of prizes">{{ getPrize(prize) }}</li>
+                <li *ngFor="let prize of prizes">
+                  <img *ngIf="prize.logo.url" [src]="prize.logo.url"/>
+                </li>
+              </ng-container>
+            </ul>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- CREDIT CARD -->
+      <mat-card *ngIf="movie.salesCast || movie.main.stakeholders">
+        <mat-card-header>
+          <mat-card-title>Credits</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <ul>
+            <ng-container *ngIf="movie.salesCast.cast.length > 0">
+              <b>CAST</b>
+              <li><strong i18n>Principal Cast{movie.salesCast.cast.length, plural,=0 {} other {s}}</strong>
+                <span>{{ getSalesCast(movie, 'cast') }}</span></li>
+            </ng-container>
+            <ng-container *ngIf="movie.main.stakeholders || movie.salesCast.producers.length > 0">
+              <b>COMPANY CREDITS</b>
+              <ng-container *ngIf="movie.main.stakeholders as stakeholders">
+                <li *ngIf="stakeholders.executiveProducer.length > 0"><strong i18n>Executive Producer{stakeholders.executiveProducer.length, plural,=1 {} other {s}} </strong>
+                  <span>{{ getStakeholder(movie, 'executiveProducer') }}</span></li>
+                <li *ngIf="stakeholders.coProducer.length > 0"><strong i18n>Co-Producer{stakeholders.coProducer.length, plural,=1 {} other {s}} </strong>
+                  <span>{{ getStakeholder(movie, 'coProducer') }}</span></li>
+              </ng-container>
+              <ng-container *ngIf="movie.salesCast.producers.length > 0">
+                <li><strong i18n>Producer{movie.salesCast.producers.length, plural,=1 {} other {s}} </strong>
+                  <span>{{ getSalesCast(movie, 'producers') }}</span></li>
+              </ng-container>
+              <ng-container *ngIf="movie.main.stakeholders as stakeholders">
+                <li *ngIf="stakeholders.distributor.length > 0"><strong i18n>Distributor{stakeholders.distributor.length, plural,=1 {} other {s}} </strong>
+                  <span>{{ getStakeholder(movie, 'distributor') }}</span></li>
+                <li *ngIf="stakeholders.salesAgent.length > 0"><strong i18n>Sales Agent{stakeholders.salesAgent.length, plural,=1 {} other {s}} </strong>
+                  <span>{{ getStakeholder(movie, 'salesAgent') }}</span></li>
+              </ng-container>
+            </ng-container>
+            <ng-container *ngIf="movie.salesCast.crew.length > 0">
+              <b>ARTISIC CREW</b>
+              <ng-container *ngFor="let crew of movie.salesCast.crew; let isLast = last">
+                <li *ngIf="crew.role === 'score-composer'"><strong i18n>Score Composer{crew.length, plural,=1 {} other {s}} </strong>
+                  <span>{{ crew.firstName }} {{ crew.lastName }} ({{ crew.role }}) {{ isLast ? '' : ', ' }}</span>
+                <li *ngIf="crew.role === 'writer' as writer"><strong i18n>Writer{writer.length, plural,=1 {} other {s}} </strong>
+                  <span>{{ crew.firstName }} {{ crew.lastName }} ({{ crew.role }}) {{ isLast ? '' : ', ' }}</span>
+              </ng-container>
+            </ng-container>
+          </ul>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- BUDGET CARD -->
+      <mat-card *ngIf="movie.budget.estimatedBudget || 
+      movie.budget.boxOffice.length > 0 ||
+      movie.salesInfo.certifications.length > 0 ||
+      movie.salesInfo.rating.length > 0 ||
+      movie.movieReview.length > 0">
+        <mat-card-header>
+          <mat-card-title>Budget, Quota & Critics</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <ul>
+            <li *ngIf="movie.budget.estimatedBudget.from && movie.budget.estimatedBudget.to"><strong>Budget </strong>
+              <span>{{ budgetRange(movie.budget.estimatedBudget) }}</span></li>
+            <li *ngIf="movie.budget.boxOffice.length > 0"><strong>Box Office </strong>
+              <span *ngFor="let boxOffice of movie.budget.boxOffice; let isLast = last">{{ boxOffice.unit }} {{ boxOffice.value }} ({{ boxOffice.territory }}){{ isLast ? '' : ', ' }}</span></li>
+            <li *ngIf="movie.salesInfo.certifications.length > 0"><strong>Quotas </strong>
+              <span *ngFor="let quota of movie.salesInfo.certifications; let isLast = last">{{ quota | translateSlug: 'CERTIFICATIONS' }}{{ isLast ? '' : ', ' }}</span></li>
+            <li *ngIf="movie.salesInfo.rating.length > 0"><strong>Rating </strong>
+            <span *ngFor="let rating of movie.salesInfo.rating; let isLast = last">{{ rating.country }} : {{ rating.value }}{{ isLast ? '' : '; ' }}</span></li>
+            <li *ngIf="movie.movieReview.length > 0"><strong>Film Review </strong>
+            <span *ngFor="let review of movie.movieReview">{{ review.criticName }} in {{ review.journalName}} "{{ review.criticQuote }}" {{ review.revueLink }}</span></li>
+          </ul>
+        </mat-card-content>
+      </mat-card>
+
+    <!-- TECHNICAL INFORMATION CARD -->
+    <mat-card *ngIf="movie.salesInfo || movie.versionInfo">
+      <mat-card-header>
+        <mat-card-title>Technical Information</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <ul>
+          <ng-container *ngIf="movie.salesInfo as salesInfo">
+            <li *ngIf="salesInfo.format"><strong>Shooting Format </strong>
+              <span>{{ salesInfo.format | translateSlug: 'MOVIE_FORMAT'}}</span></li>
+            <li *ngIf="salesInfo.formatQuality"><strong>Format Quality </strong>
+            <span>{{ salesInfo.formatQuality }}</span></li>
+            <li *ngIf="salesInfo.color"><strong>Color </strong>
+            <span>{{ salesInfo.color | translateSlug: 'COLORS'}}</span></li>
+            <li *ngIf="salesInfo.soundFormat"><strong>Sound Format </strong>
+            <span>{{ salesInfo.soundFormat | translateSlug: 'SOUND_FORMAT' }}</span></li>
+          </ng-container>
+          <li *ngIf="movie.versionInfo"><strong>Versions </strong>
+            <ng-container *ngFor="let version of movie.versionInfo | keyvalue; let isLast = last">
+              {{ version.key | translateSlug: 'LANGUAGES'}}:
+              <ng-container *ngFor="let info of version.value | keyvalue; let isLast = last">
+                <ng-container *ngIf="info.value === true">
+                  {{ info.key | translateSlug: 'VERSION_INFO' }}{{ isLast ? '' : ', ' }}
+                </ng-container>
+              </ng-container>
+              {{ isLast ? '' : '| ' }}
+            </ng-container>
+          </li>
+        </ul>
+      </mat-card-content>
+    </mat-card>
+
+    </article>
+  </section>
+</ng-container>
