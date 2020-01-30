@@ -109,9 +109,9 @@ export class StoreConfigForm extends FormEntity<StoreConfigControl> {
 }
 
 function createStoreConfigFormControl(storeConfig?: Partial<Movie['main']['storeConfig']>) {
-  const { display, storeType } = createStoreConfig(storeConfig);
+  const { status, storeType } = createStoreConfig(storeConfig);
   return {
-    display: new FormControl(display),
+    status: new FormControl(status),
     storeType: new FormControl(storeType),
   }
 }

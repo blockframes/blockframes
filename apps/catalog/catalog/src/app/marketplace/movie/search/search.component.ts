@@ -180,22 +180,22 @@ export class MarketplaceSearchComponent implements OnInit {
           );
         });
       }),
-      tap((movies: MovieAlgoliaResult[]) => {
-        movies.forEach(index => {
-          if (!this.salesAgents.includes(index.movie.salesAgentDeal.salesAgent.displayName)) {
-            this.salesAgents.push(index.movie.salesAgentDeal.salesAgent.displayName);
-          }
-        });
-        this.allTitles = movies.map(index => index.movie.main.title.international);
-        this.allKeywords = flatten(
-          movies.map(index => index.movie.promotionalDescription.keywords)
-        );
-        this.allDirectors = flatten(
-          movies.map(index =>
-            index.movie.main.directors.map(name => `${name.firstName} ${name.lastName}`)
-          )
-        );
-      })
+      // tap((movies: MovieAlgoliaResult[]) => {
+      //   movies.forEach(index => {
+      //     if (!this.salesAgents.includes(index.movie.salesAgentDeal.salesAgent.displayName)) {
+      //       this.salesAgents.push(index.movie.salesAgentDeal.salesAgent.displayName);
+      //     }
+      //   });
+      //   this.allTitles = movies.map(index => index.movie.main.title.international);
+      //   this.allKeywords = flatten(
+      //     movies.map(index => index.movie.promotionalDescription.keywords)
+      //   );
+      //   this.allDirectors = flatten(
+      //     movies.map(index =>
+      //       index.movie.main.directors.map(name => `${name.firstName} ${name.lastName}`)
+      //     )
+      //   );
+      // })
     );
 
     this.movieSearchResults$ = combineLatest([

@@ -1,3 +1,69 @@
+<mat-sidenav-container>
+  <mat-sidenav #sidenav>
+    <!-- SIDE NAVIGATION -->
+    <mat-nav-list>
+      <a mat-list-item routerLink="home" routerLinkActive="active">
+        <mat-icon mat-list-icon svgIcon="home"></mat-icon>
+        <span mat-line>Home</span>
+      </a>
+      <a mat-list-item routerLink="selection" routerLinkActive="active">
+        <mat-icon mat-list-icon svgIcon="basket"></mat-icon>
+        <span mat-line>My Selection</span>
+      </a>
+      <a mat-list-item routerLink="wishlist" routerLinkActive="active">
+        <mat-icon mat-list-icon  svgIcon="heart_fill"></mat-icon>
+        <span mat-line>Wishlist</span>
+      </a>
+      <a mat-list-item routerLink="deals" routerLinkActive="active">
+        <mat-icon mat-list-icon svgIcon="wallet"></mat-icon>
+        <span mat-line>Offers & Deals</span>
+      </a>
+      <a mat-list-item routerLink="search" routerLinkActives="active">
+        <mat-icon mat-list-icon svgIcon="video_library"></mat-icon>
+        <span mat-line>All Titles</span>
+      </a>
+   </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <!-- TOOLBAR -->
+    <mat-toolbar fxLayout="row" fxLayoutGap="24px">
+      <button mat-icon-button (click)="sidenav.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <img asset="archipel-content.svg" type="logo" />
+      <form fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="12px">
+        <mat-icon>search</mat-icon>
+        <input placeholder="Try searching for titles, keywords..." />
+      </form>
+      <button mat-icon-button>
+        <mat-icon svgIcon="star_fill"></mat-icon>
+      </button>
+      <button mat-icon-button>
+        <mat-icon svgIcon="basket"></mat-icon>
+      </button>
+      <mat-divider vertical></mat-divider>
+      <overlay-notification-widget></overlay-notification-widget>
+      <button mat-icon-button>
+        <mat-icon>account_circle</mat-icon>
+      </button>
+    </mat-toolbar>
+
+    <!-- CONTENT -->
+    <router-outlet></router-outlet>
+
+    <!-- FOOTER -->
+    <footer page-id="footer" fxLayout="row" fxLayoutAlign="center center">
+      <a routerLink="/c/o/catalog/terms">Terms and Conditions</a>
+      <a routerLink="/c/o/catalog/about">About</a>
+      <a routerLink="/c/o/catalog/who-are-we">Who are we?</a>
+      <a routerLink="/c/o/catalog/contact">Contact</a>
+    </footer>
+  </mat-sidenav-content>
+</mat-sidenav-container>
+
+
+<!--
 <mat-sidenav-container class="sidenav-container">
   <mat-sidenav #leftSidenav mode="over">
     <toolbar-catalog-left-menu [sidenav]="leftSidenav">
@@ -44,7 +110,7 @@
             <organization-widget></organization-widget>
             <mat-divider></mat-divider>
             <ng-container *ngIf="AFM_DISABLE">
-              <!-- TODO #1146 -->
+              <!-- TODO #1146 --
               <mat-divider></mat-divider>
               <wallet-widget></wallet-widget>
             </ng-container>
@@ -65,3 +131,4 @@
     </main>
   </mat-sidenav-content>
 </mat-sidenav-container>
+-->

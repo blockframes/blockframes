@@ -1,28 +1,14 @@
-<mat-card>
-  <ng-container [ngSwitch]="day.key" *ngFor="let day of notificationsByDate$ | async | keyvalue | reverse">
-    <ng-container *ngSwitchCase="today | date">
-      <h4>Today</h4>
-      <notification-item
-        *ngFor="let notification of day.value"
-        [notification]="notification"
-        [theme]="theme$ | async">
-      </notification-item>
-    </ng-container>
-    <ng-container *ngSwitchCase="yesterday | date">
-      <h4>Yesterday</h4>
-      <notification-item
-        *ngFor="let notification of day.value"
-        [notification]="notification"
-        [theme]="theme$ | async">
-      </notification-item>
-    </ng-container>
-    <ng-container *ngSwitchDefault>
-      <h4>{{ day.key }}</h4>
-      <notification-item
-        *ngFor="let notification of day.value; let isLast = last"
-        [notification]="notification"
-        [theme]="theme$ | async">
-      </notification-item>
-    </ng-container>
+<mat-list *ngFor="let byDate of notificationsByDate$ | async | keyvalue | reverse; let last = last">
+  <h3 mat-subheader>{{ byDate.key }}</h3>
+  <ng-container *ngFor="let notification of byDate.value">
+    <mat-list-item [matTooltip]="notification.message" matTooltipPosition="left">
+      <img matListAvatar [placeholderUrl]="notification.placeholderUrl | asset" [imgRef]="notification.imgRef" alt="Profile picture" />
+      <p mat-line>{{ notification.message }}</p>
+      <small class="mat-caption" mat-line>{{ notification.date | date: 'shortTime' }}</small>
+      <ng-container *ngIf="notification.type == 'pathToDocument'">
+        <a mat-flat-button (click)="goToPath()">Go to document</a>
+      </ng-container>
+    </mat-list-item>
   </ng-container>
-</mat-card>
+  <mat-divider *ngIf="!last"></mat-divider>
+</mat-list>

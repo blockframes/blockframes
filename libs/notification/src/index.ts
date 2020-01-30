@@ -12,7 +12,6 @@ export * from './lib/notification/+state/notification.store';
 export * from './lib/notification/+state/notification.service';
 export * from './lib/notification/+state/notification.model';
 export * from './lib/notification/notifications.guard';
-export * from './lib/notification/notification.module';
 
 // Widget export
-export * from './lib/notification-widget/notification-widget.module';
+export * from './lib/notification/notification-widget/notification-widget.module';

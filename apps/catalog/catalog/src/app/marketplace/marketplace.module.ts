@@ -12,6 +12,10 @@ const routes: Routes = [{
   children: [
     { path: '', redirectTo: 'home', pathMatch: 'full' },
     {
+      path: 'home',
+      loadChildren: () => import('./movie/home/home.module').then(m => m.MarketplaceHomeModule)
+    },
+    {
       path: 'about',
       loadChildren: () => import('./pages/about-page/about.module').then(m => m.AboutModule)
     },
@@ -26,10 +30,6 @@ const routes: Routes = [{
     {
       path: 'terms',
       loadChildren: () => import('./pages/privacy-page/privacy.module').then(m => m.PrivacyModule)
-    },
-    {
-      path: 'home',
-      loadChildren: () => import('./movie/home/home.module').then(m => m.MarketplaceHomeModule)
     },
     {
       path: 'search',
@@ -57,7 +57,7 @@ const routes: Routes = [{
         { path: '', redirectTo: 'view', pathMatch: 'full' },
         {
           path: 'view',
-          loadChildren: () => import('./movie/view/view.module').then(m => m.MovieViewModule)
+          loadChildren: () => import('./title/view/view.module').then(m => m.MovieViewModule)
         },
         {
           path: 'create',

@@ -1,12 +1,9 @@
-import { Component, ChangeDetectionStrategy, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
-import { ContextMenuService } from '@blockframes/ui';
-import { CONTEXT_MENU, CONTEXT_MENU_AFM } from '@blockframes/utils/routes/context-menu/app/catalog-marketplace';
-import { AFM_DISABLE } from '@env';
+import { Component, ChangeDetectionStrategy, OnInit, ViewChild, OnDestroy, AfterViewInit} from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { Wishlist, WishlistStatus } from '@blockframes/organization';
 import { map } from 'rxjs/operators';
 import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
-import { AuthService } from '@blockframes/auth';
+import { AuthService, AuthQuery } from '@blockframes/auth';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { MatSidenav } from '@angular/material';
 
@@ -18,46 +15,36 @@ import { MatSidenav } from '@angular/material';
 })
 
 export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
-  public AFM_DISABLE: boolean;
+  private sub: Subscription;
+  public user$ = this.authQuery.select('profile');
   public currentWishlist$: Observable<Wishlist>;
-  public subscription: Subscription;
 
-  @ViewChild(MatSidenav, { static: false }) sidenav: MatSidenav;
+  @ViewChild('sidenav', { static: false }) sidenav: MatSidenav;
 
   constructor(
-    private routerQuery: RouterQuery,
-    private contextMenuService: ContextMenuService,
     private catalogCartQuery: CatalogCartQuery,
-    private service: AuthService
-  ) {
-    this.AFM_DISABLE = AFM_DISABLE;
-  }
+    private authService: AuthService,
+    private authQuery: AuthQuery,
+    private routerQuery: RouterQuery
+  ) {}
 
   ngOnInit() {
-    this.contextMenuService.setMenu(CONTEXT_MENU);
-    // TODO #1146
-    if (!this.AFM_DISABLE) {
-      this.contextMenuService.setMenu(CONTEXT_MENU_AFM);
-    } else {
-      this.contextMenuService.setMenu(CONTEXT_MENU);
-    }
-
     this.currentWishlist$ = this.catalogCartQuery.wishlistWithMovies$.pipe(
       map(wishlists => wishlists.find(wishlist => wishlist.status === WishlistStatus.pending))
-    );
-  }
-
+      );
+    }
+    
   ngAfterViewInit() {
-    this.subscription = this.routerQuery.select('navigationId').subscribe(() => this.sidenav.close());
-  }
-
-  public async logout() {
-    await this.service.signOut();
-    // TODO: issue#879, navigate with router
-    window.location.reload();
+    this.sub = this.routerQuery.select('navigationId').subscribe(_ => this.sidenav.close());
   }
 
   ngOnDestroy() {
-    this.subscription.unsubscribe();
+    this.sub.unsubscribe();
+  }
+
+  public async logout() {
+    await this.authService.signOut();
+    // TODO: issue#879, navigate with router
+    window.location.reload();
   }
 }

@@ -1,31 +1,43 @@
-.app-icon,
-.app-icon-button {
-  border-radius: 0;
-  width: 157px;
-}
-
-button {
-  margin-top: 5px;
-  margin-right: 10px;
-  margin-bottom: 10px;
-}
-
-main {
+:host {
+  display: block;
   height: 100%;
-  padding-top: var(--toolbarHeight);
-}
-
-account-profile-menu {
-  margin-left: 20px;
-}
-
-mat-sidenav {
-  position: fixed;
-  width: 360px;
-  border-radius: 0 5px 5px 0;
 }
 
 mat-sidenav-container {
   height: 100%;
 }
 
+mat-sidenav {
+  width: 256px;
+}
+
+mat-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+
+  img {
+    height: 48px;
+  }
+
+  form {
+    flex: 1;
+
+    input {
+      flex: 1;
+      height: 100%;
+      border: none;
+      font-size: 18px;
+      line-height: 1.44;
+      letter-spacing: 0.5px;
+      background-color: transparent;
+    }
+    input:focus {
+      outline: none;
+    }
+  }
+
+  mat-divider {
+    height: 60%;
+  }
+}

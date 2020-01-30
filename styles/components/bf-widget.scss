@@ -1,9 +1,21 @@
 @mixin bf-widget-theme($theme) {
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
 
   .bf-widget .mat-card .mat-card-footer {
     background-color: mat-color($background, hover);
     border-radius: none;
+  }
+
+  .widget-card {
+    background-color: mat-color($background, card);
+
+    .widget-header[color="primary"] {
+      color: mat-color($primary, default-contrast);
+      background-color: mat-color($primary);
+    }
   }
 }

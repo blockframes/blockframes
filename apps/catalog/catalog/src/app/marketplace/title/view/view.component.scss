@@ -1,0 +1,61 @@
+@import 'mixins';
+
+
+header, section {
+  padding: 0 24px;
+}
+
+header {
+  height: 300px;
+  article {
+    padding: 53px 0px 17px 24px;
+    height: 168px;
+  }
+}
+
+.movie-poster {
+  width: 168px;
+  height: 168px;
+  margin-right: 16px;
+  border-radius: 5px;
+}
+
+.switch-button {
+  width: 200px;
+}
+
+.heart-button {
+  width: 200px;
+  margin-top: 20px;
+}
+
+header h4 {
+  text-transform: uppercase;
+}
+
+
+@include tablet {
+  header {
+    height: auto;
+    article {
+      height: auto;
+    }
+  }
+
+  .movie-info {
+    margin: 20px 0px;
+  }
+}
+
+@include mobile {
+  header {
+    height: auto;
+    article {
+      height: auto;
+    }
+  }
+
+  .movie-info {
+    margin: 20px 0px;
+  }
+}
