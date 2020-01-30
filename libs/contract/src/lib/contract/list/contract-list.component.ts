@@ -9,7 +9,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { getLastVersionIndex } from '../+state';
 import { ContractVersion } from '@blockframes/contract/version/+state';
 import { Price } from '@blockframes/utils/common-interfaces/price';
-import { MovieQuery, getMovieNameList } from '@blockframes/movie';
+import { MovieQuery, getMovieTitleList } from '@blockframes/movie';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state/distribution-deal.service';
 import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
 
@@ -20,7 +20,6 @@ import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state/d
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContractListComponent implements OnInit {
-  @Input() deals: DistributionDeal[];
   @Input()
   set source(contracts: Contract[]) {
     this.dataSource = new MatTableDataSource(contracts);
@@ -35,7 +34,6 @@ export class ContractListComponent implements OnInit {
     titles: 'Titles',
     price: 'Price',
     paid: 'Paid',
-    remaining: 'Remaining',
     status: 'Status'
   };
 
@@ -47,7 +45,6 @@ export class ContractListComponent implements OnInit {
     'titles',
     'price',
     'paid',
-    'remaining',
     'status'
   ];
 
@@ -77,26 +74,26 @@ export class ContractListComponent implements OnInit {
     return contract.versions[getLastVersionIndex(contract)];
   }
 
+  /** Returns the conctract licensee name. */
   public getBuyerName(contract: Contract): string {
     const buyer = contract.parties.find(({party}) => party.role === 'licensee').party;
     return buyer.displayName;
   }
 
+  /** Returns the total price of the contract. */
   public getContractTotalPrice(contract: Contract): Price {
     return getTotalPrice(this.getLastVersion(contract).titles);
   }
 
+  /** Returns all the eligible territories of the contract. */
   public getContractTerritories(contract: Contract): string[] {
     const lastVersion = this.getLastVersion(contract);
     return this.dealService.getTerritoriesFromContract(lastVersion);
   }
 
-
+  /** Returns a list of movie's names of the contract. */
   public getMovieNames(contract: Contract): string[] {
-    const movies = this.movieQuery.getAll({
-      filterBy: movie => contract.titleIds.includes(movie.id)
-    });
-
-    return getMovieNameList(movies);
+    const movies = this.movieQuery.getAll({ filterBy: movie => contract.titleIds.includes(movie.id) });
+    return getMovieTitleList(movies);
   }
 }
