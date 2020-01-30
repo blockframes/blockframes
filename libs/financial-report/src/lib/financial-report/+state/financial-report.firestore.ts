@@ -1,7 +1,8 @@
 import { firestore } from "firebase";
-import { Fee } from "@blockframes/utils/common-interfaces/price";
+import { Expense } from "@blockframes/utils/common-interfaces/price";
 import { RawRange } from '@blockframes/utils/common-interfaces/range';
 import { MovieCurrenciesSlug } from "@blockframes/utils/static-model/types";
+import { ScheduledDateWithCounterRaw } from "@blockframes/utils/common-interfaces/terms";
 
 type Timestamp = firestore.Timestamp;
 
@@ -18,6 +19,24 @@ export const enum ReportStatus {
   errored = 'Errored',
 }
 
+/*
+--- WIP ---
+totalGrossReicepts: Price // cumul a date
+
+
+--- VERSION ---
+grossReicepts: Price // cumul a date de la version
+paidGrossReceipts: Price
+commission: number
+netReceipts: Price (= paidGrossReceipts - commission* paidGrossReceipts)
+Tax: number
+LicensorShare: Price
+paidLicensorShare: Price
+amountToInvoice: Price
+*/
+
+
+
 /**
  * Subcollection of a financial report document.
  * @dev Allows to handle multiple number of a financial report
@@ -28,9 +47,8 @@ interface FinancialReportVersionRaw<D> {
    * If empty, the report have not been sent yet
    */
   sendDate?: D;
-  sendType: SendType;
+  sendType: SendType[];
   status: ReportStatus;
-  recipientId: string; // @todo #1657 askJackSeed added to know for wich orgId we are sending the report
   /**
    * @dev the location where the report should be sent to if sendType = 'mail' | 'fax'
    * one of the locations of the FinancialReportTitleDetail.recipientId
@@ -45,47 +63,50 @@ interface FinancialReportVersionRaw<D> {
 interface FinancialReportRaw<D> {
   id: string;
   scope: RawRange<D>;
-  titles: Record<string, FinancialReportTitleDetail[]>; // @todo #1657 askJackSeed transformed into array
+  titles: Record<string, FinancialReportTitleDetail>;
   contractId: string;
   /**
    * @dev orgId of the sender
    */
   senderId: string;
-}
-
-export interface FinancialReportTitleDetail {
-  titleId: string,
-  /**
-   * @dev this is an OrgId that belongs to a party of FinancialReport.contractId
-   * This org will receive the report
-   */
-  recipientId: string; // @todo #1657 askJackSeed moved from FinancialReportRaw
-  /**
-   * @dev this contains the various fees that apply to this this FinancialReportTitleDetail
-   */
-  fees: Fee[],
-  /**
-   * @dev this is the sum of the expected fees (price) (fees: Fee[]).
-   * Details: 
-   * (sum Fees[] where type = 'market' * percentageMarketFees) 
-   * + 
-   * (sum Fees[] where type = 'export')
-   */
-  sumFees: number,
-  /**
-   * @dev this represents the collected fees (collected) from fees: Fee[]
-   */
-  sumCollectedFees: number,
-  percentageMarketFees: number,
   /**
    * @dev this represents the frequency of financial report sending (mail or email)
    * This data is stored here so we can have different frequencies & currencies
    * for each recipient of a financialReport.
    * 
-   * 1 = each months, 2 = each two months, 0,5 = twice a month
    */
-  reportFrequency: number; // @todo #1657 askJackSeed moved from ContractPartyDetail
-  choosenCurrency: MovieCurrenciesSlug; // @todo #1657 askJackSeed moved from ContractPartyDetail
+  reportFrequency: ScheduledDateWithCounterRaw<D>[];
+  choosenCurrency: MovieCurrenciesSlug;
+  /**
+   * @dev this is an OrgId that belongs to a party of FinancialReport.contractId
+   * This org will receive the report.
+   * Given that a FinancialReportRaw is linked only one recipient,
+   * There will be as much as FinancialReport documents as we have recipients for 
+   * a report.
+   */
+  recipientId: string;
+}
+
+export interface FinancialReportTitleDetail {
+  titleId: string,
+  /**
+   * @dev this contains the various expenses that apply to this this FinancialReportTitleDetail
+   */
+  expenses: Expense[],
+  /**
+   * @dev this is the sum of the expected expenses (price) (expenses: Expense[]).
+   * Details: 
+   * (sum Expense[] where type = 'market' * percentageMarketExpenses) 
+   * + 
+   * (sum Expense[] where type = 'export')
+   */
+  sumExpenses: number,
+  /**
+   * @dev this represents the collected expenses (collected) from expenses: Expense[]
+   */
+  sumCollectedExpenses: number,
+  percentageMarketExpenses: number,
+
 }
 
 export interface FinancialReport extends FinancialReportRaw<Date> {

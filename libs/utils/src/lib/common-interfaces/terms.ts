@@ -55,10 +55,20 @@ export interface ScheduledDateRaw<D> extends TermsRaw<D> {
   period: FloatingDuration, // @dev this replace floatingDuration for better readability
 }
 
+/**
+ * A ScheduledDateRaw interface with a counter to keep schedule order
+ */
+export interface ScheduledDateWithCounterRaw<D> extends ScheduledDateRaw<D> {
+  count: 0;
+}
+
 export interface Terms extends TermsRaw<Date> {
 }
 
 export interface ScheduledDate extends ScheduledDateRaw<Date> {
+}
+
+export interface ScheduledDateWithCounter extends ScheduledDateWithCounterRaw<Date> {
 }
 
 export function createFloatingDuration(params: Partial<FloatingDuration> = {}): FloatingDuration {
@@ -78,5 +88,13 @@ export function createScheduledDate(params: Partial<ScheduledDate> = {}): Schedu
     dueDate: new Date(),
     ...params,
     period: createFloatingDuration(params ? params.period : undefined),
+  };
+}
+
+export function createScheduledDateWithCounter(params: Partial<ScheduledDateWithCounter> = {}): ScheduledDateWithCounter {
+  return {
+    count: 0,
+    ...params,
+    ...createScheduledDate(params),
   };
 }

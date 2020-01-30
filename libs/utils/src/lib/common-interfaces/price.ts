@@ -1,7 +1,6 @@
 import { MovieCurrenciesSlug } from "@blockframes/utils/static-model/types";
 import { getCodeIfExists } from "@blockframes/utils/static-model/staticModels";
 import { firestore } from "firebase";
-import { LegalDocument } from "@blockframes/contract/contract/+state/contract.firestore";
 
 type Timestamp = firestore.Timestamp;
 
@@ -18,16 +17,16 @@ export const enum CommissionBase {
   amountplusvat = 'Amount + VAT',
 }
 
-export const enum FeeType {
-  market = 'Market fees (price.commission)',
-  export = 'Export fees (price.amount)'
+export const enum ExpenseType {
+  market = 'Market expenses (price.commission)',
+  export = 'Export expenses (price.amount)'
 }
 
-export const enum FeeSubType {
-  technical = 'Technical fees',
-  delivery = 'Delivery fees',
-  marketing = 'Marketing fees',
-  translation = 'Translation fees',
+export const enum ExpenseSubType {
+  technical = 'Technical expenses',
+  delivery = 'Delivery expenses',
+  marketing = 'Marketing expenses',
+  translation = 'Translation expenses',
 }
 
 export const enum PaymentStatus {
@@ -46,7 +45,7 @@ interface PriceRaw<D> {
    * @dev percentage
    */
   vat?: number;
-  fees?: FeeRaw<D>[];
+  recoupableExpenses?: ExpenseRaw<D>[];
   /**
    * @dev about commission & commissionBase : 
    * commission is a percentage (of amount)
@@ -66,10 +65,10 @@ export interface Price extends PriceRaw<Date> {
 export interface PriceDocument extends PriceRaw<Timestamp> {
 }
 
-interface FeeRaw<D> {
+interface ExpenseRaw<D> {
   label: string;
-  type: FeeType;
-  subType: FeeSubType;
+  type: ExpenseType;
+  subType: ExpenseSubType;
   /**
    * @dev Expected (actual) price for this fee
    */
@@ -85,18 +84,21 @@ interface FeeRaw<D> {
    * A function should handle this
    */
   status: PaymentStatus
-  paymentIds: PaymentRaw<D>[];
   /**
-   * @dev ie: can be the bill of a meeting in a restaurant
+   * @dev the various payments associated with this expense
    */
-  legalDocuments?: LegalDocument[];
-
+  payments: PaymentRaw<D>[];
+  /**
+   * @dev Id of the actual Expense in collection
+   * contains raw informations about the current expense.
+   */
+  expenseId?: string;
 }
 
-export interface Fee extends FeeRaw<Date> {
+export interface Expense extends ExpenseRaw<Date> {
 }
 
-export interface FeeDocument extends FeeRaw<Timestamp> {
+export interface ExpenseDocument extends ExpenseRaw<Timestamp> {
 }
 
 interface PaymentRaw<D> {
@@ -123,15 +125,15 @@ export function createPrice(price: Partial<Price> = {}): Price {
 }
 
 /**
- * A factory function that creates Fee
+ * A factory function that creates Expense
  */
-export function createFee(params: Partial<Fee> = {}): Fee {
+export function createExpense(params: Partial<Expense> = {}): Expense {
   return {
     label: '',
-    type: FeeType.export,
-    subType: FeeSubType.delivery,
+    type: ExpenseType.export,
+    subType: ExpenseSubType.delivery,
     status: PaymentStatus.unknown,
-    paymentIds: [],
+    payments: [],
     ...params,
     price: createPrice(params.price),
     collected: createPrice(params.collected),
