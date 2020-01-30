@@ -1,4 +1,4 @@
-import { firestore } from "firebase";
+import { firestore } from 'firebase/app';
 
 export interface IMaintenanceDoc {
   endedAt:firestore.Timestamp

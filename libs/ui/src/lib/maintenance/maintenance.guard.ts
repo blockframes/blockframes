@@ -1,34 +1,26 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
 import { MaintenanceService } from './maintenance.service';
-import { map } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class MaintenanceGuard implements CanActivate {
-  private sub: Subscription;
 
   constructor(private service: MaintenanceService, private router: Router) {}
 
   canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
-    const segments = state.url.split('/');
-    const path = segments.pop(); // After this mutation segment should be empty is url "/maintenance"
-    // If path is 
-    if (path === 'maintenance' && !segments.length) {
+    if (state.url === '/maintenance') {
       return this.service.isInMaintenance$.pipe(
         map(isInMaintenance => isInMaintenance ? true : this.router.parseUrl('/'))
       );
     } else {
-      this.sub = this.service.redirectOnMaintenance().subscribe();
+      // Listen on maintenance change only if you're not on the maintenance page && not in maintenance already
       return this.service.isInMaintenance$.pipe(
-        map(isInMaintenance => isInMaintenance ? this.router.parseUrl('/maintenance') : true)
+        // Required verification to avoid infinite reload when page goes to maintenance
+        // note: redirectOnMaintenance auto-unsubscribe with "first()"
+        tap(isInMaintenance => isInMaintenance ? null : this.service.redirectOnMaintenance().subscribe()),
+        map(isInMaintenance => isInMaintenance ? this.router.parseUrl('/maintenance') : true),
       );
-    }
-  }
-
-  canDeactivate() {
-    if (this.sub) {
-      this.sub.unsubscribe();
     }
   }
 }

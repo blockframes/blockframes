@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MaintenanceService } from './maintenance.service';
+import { startWith } from 'rxjs/operators';
 
 @Component({
   selector: 'blockframes-maintenance',
@@ -9,12 +10,10 @@ import { MaintenanceService } from './maintenance.service';
 })
 export class MaintenanceComponent {
 
-  isInMaintenance = true;
-  // isInMaintenance$ = this.service.isInMaintenance('');
+  // Use startWth true to avoid flash
+  isInMaintenance$ = this.service.isInMaintenance$.pipe(startWith(true));
 
-  constructor(
-    private service: MaintenanceService
-  ) { }
+  constructor(private service: MaintenanceService) { }
 
   refresh() {
     window.location.reload();
