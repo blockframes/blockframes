@@ -1,6 +1,6 @@
 import { CallableContext } from "firebase-functions/lib/providers/https";
 import { BigQuery } from '@google-cloud/bigquery';
-import { EventAnalytics, MovieAnalytics, PublicUser, OrganizationDocument } from "./data/types";
+import { EventAnalytics, PublicUser, OrganizationDocument, MovieAnalytics } from "./data/types";
 import { getDocument } from './data/internals';
 import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
 import { bigQueryAnalyticsTable } from "./environments/environment";
@@ -53,19 +53,20 @@ async function executeQuery(query: any, movieIds: string[], daysPerRange: number
   return bigqueryClient.query(options);
 }
 
-/** Sorts events into two periods. */
-const aggregateEvents = (events: EventAnalytics[], daysPerRange: number) => {
+/** Sorts events by movieId and into two periods. */
+const aggregateEvents = (events: EventAnalytics[], movieId: string, daysPerRange: number) => {
   const now = new Date();
   const startCurrentRange = subDays(now, daysPerRange);
   const parseDate = (event: EventAnalytics)  => parse(event.event_date, 'yyyyMMdd', new Date());
   return {
-    current: events.filter(event => isAfter(parseDate(event), startCurrentRange)),
-    past: events.filter(event => isBefore(parseDate(event), startCurrentRange))
+    current: events.filter(event => isAfter(parseDate(event), startCurrentRange) && event.movieId === movieId),
+    past: events.filter(event => isBefore(parseDate(event), startCurrentRange) && event.movieId === movieId)
   };
 };
 
 /** Merge the movieIdPage field from bigquery with the movieId field when relevant. */
 const mergeMovieIdPageInMovieId = (rows: any[]) => {
+  // Remove the movieIdPage that it is not relevant to keep.
   return rows.map(row => omit({ ...row, movieId: row.movieIdPage || row.movieId }, 'movieIdPage'));
 };
 
@@ -73,7 +74,7 @@ const mergeMovieIdPageInMovieId = (rows: any[]) => {
 export const requestMovieAnalytics = async (
   data: { movieIds: string[], daysPerRange: number },
   context: CallableContext
-): Promise<MovieAnalytics> => {
+): Promise<MovieAnalytics[]> => {
   const { movieIds, daysPerRange } = data;
   const uid = context.auth!.uid;
   const user = await getDocument<PublicUser>(`users/${uid}`);
@@ -85,11 +86,14 @@ export const requestMovieAnalytics = async (
     let [rows] = await executeQuery(queryMovieAnalytics, movieIds, daysPerRange);
     rows = mergeMovieIdPageInMovieId(rows);
     if (rows !== undefined && rows.length >= 0){
-      return {
-        addedToWishlist: aggregateEvents(rows.filter(row => row.event_name === AnalyticsEvents.addedToWishlist), daysPerRange),
-        promoReelOpened: aggregateEvents(rows.filter(row => row.event_name === AnalyticsEvents.promoReelOpened), daysPerRange),
-        movieViews: aggregateEvents(rows.filter(row => row.event_name === AnalyticsEvents.pageView), daysPerRange)
-      };
+      return movieIds.map(movieId => {
+        return {
+          movieId,
+          addedToWishlist: aggregateEvents(rows.filter(row => row.event_name === AnalyticsEvents.addedToWishlist), movieId, daysPerRange),
+          promoReelOpened: aggregateEvents(rows.filter(row => row.event_name === AnalyticsEvents.promoReelOpened), movieId, daysPerRange),
+          movieViews: aggregateEvents(rows.filter(row => row.event_name === AnalyticsEvents.pageView), movieId, daysPerRange)
+        }
+      })
     } else {
       throw new Error('Unexepected error.');
     }

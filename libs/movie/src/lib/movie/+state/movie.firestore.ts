@@ -67,6 +67,7 @@ export interface EventAnalytics {
 }
 
 export interface MovieAnalytics {
+  movieId: string,
   addedToWishlist: {
     current: EventAnalytics[],
     past: EventAnalytics[]
