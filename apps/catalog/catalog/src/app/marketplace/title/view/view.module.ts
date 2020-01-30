@@ -47,14 +47,6 @@ const routes = [{
       loadChildren: () => import('../main/main.module').then(m => m.MarketplaceMovieMainModule)
     },
     {
-      path: 'technical-information',
-      loadChildren: () => import('../technical-information/technical-information.module').then(m => m.MarketplaceMovieTechnicalInformationModule)
-    },
-    {
-      path: 'media',
-      loadChildren: () => import('../media/media.module').then(m => m.MarketplaceMovieMediaModule)
-    },
-    {
       path: 'avails',
       loadChildren: () => import('../avails/avails.module').then(m => m.MarketplaceMovieAvailsModule)
     }

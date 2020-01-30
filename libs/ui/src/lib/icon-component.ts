@@ -185,6 +185,7 @@ const icons = [
   { name: 'pencil', url: 'assets/icons/pencil.svg' },
   { name: 'percent', url: 'assets/icons/percent.svg' },
   { name: 'picture', url: 'assets/icons/picture.svg' },
+  { name: 'play', url: 'assets/icons/play.svg'},
   { name: 'profile', url: 'assets/icons/profile.svg' },
   {
     name: 'radio_box_blank',

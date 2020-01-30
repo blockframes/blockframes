@@ -27,14 +27,7 @@ export class MarketplaceMovieViewComponent implements OnInit {
   navLinks = [{
     path: 'main',
     label: 'Main'
-  }, {
-    path: 'technical-information',
-    label: 'Technical Information'
-  },
-  {
-    path: 'media',
-    label: 'Media'
-  }, {
+  },{
     path: 'avails',
     label: 'Avails'
   }];
@@ -108,6 +101,7 @@ export class MarketplaceMovieViewComponent implements OnInit {
     return movie.main.directors.map(d => `${d.firstName}  ${d.lastName}`).join(', ');
   }
 
+  // TODO#1658 Update LANGUAGES static model to be RFC-5646 compliant
   public getOriginalCountries(movie: Movie) {
     return `${movie.main.originCountries.map(country => getLabelBySlug('TERRITORIES', country)).join(', ')}, ${movie.main.productionYear}`;
   }
