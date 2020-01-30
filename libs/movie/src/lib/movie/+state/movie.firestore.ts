@@ -189,8 +189,8 @@ export interface MovieOriginalReleaseRaw<D> {
 
 export interface MovieRating {
   country: TerritoriesSlug;
-  reason: string,
-  system: RatingSlug,
+  reason?: string,
+  system?: RatingSlug,
   value: string,
 }
 
