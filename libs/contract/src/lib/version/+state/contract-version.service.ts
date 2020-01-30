@@ -3,7 +3,7 @@ import { CollectionService, CollectionConfig } from 'akita-ng-fire';
 import { ContractVersionState, ContractVersionStore } from './contract-version.store';
 import { VersionMeta, createVersionMeta, ContractVersion } from './contract-version.model';
 import { ContractQuery } from '../../contract/+state/contract.query';
-import { ContractWithLastVersion, Contract } from '../../contract/+state/contract.model';
+import { ContractWithLastVersion } from '../../contract/+state/contract.model';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'contracts/:contractId/versions' })
@@ -58,14 +58,5 @@ export class ContractVersionService extends CollectionService<ContractVersionSta
       const lastVersion = await this.getValue(count.toString(), { params: { contractId } });
       return lastVersion;
     }
-  }
-
-  /**
-   * Returns the creation date of the contract.
-   * @param contract
-   */
-  public getContractInitialCreationDate(contract: Contract): Date {
-    const firstContract = contract.versions.find(version => version.id === '1');
-    return firstContract.creationDate;
   }
 }

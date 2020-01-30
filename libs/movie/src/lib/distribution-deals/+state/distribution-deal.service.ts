@@ -6,12 +6,13 @@ import { OrganizationQuery } from '@blockframes/organization/+state/organization
 import { DistributionDeal, getDealTerritories } from './distribution-deal.model';
 import { createContractTitleDetail, ContractWithLastVersion } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractVersionService } from '@blockframes/contract/version/+state/contract-version.service';
-import { ContractService, getLastVersionIndex } from '@blockframes/contract/contract/+state/contract.service';
+import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { isTimestamp } from '@blockframes/utils/helpers';
 import { ContractQuery } from '@blockframes/contract/contract/+state/contract.query';
-import { switchMap, map } from 'rxjs/operators';
-import { Movie } from '@blockframes/movie/movie+state/movie.model';
+import { switchMap } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
+import { ContractVersion } from '@blockframes/contract/version/+state/contract-version.model';
+import { DistributionDealQuery } from './distribution-deal.query';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies/:movieId/distributionDeals' })
@@ -21,6 +22,7 @@ export class DistributionDealService extends CollectionService<DistributionDealS
     private contractService: ContractService,
     private contractVersionService: ContractVersionService,
     private contractQuery: ContractQuery,
+    private dealQuery: DistributionDealQuery,
     store: DistributionDealStore
   ) {
     super(store);
@@ -124,5 +126,14 @@ export class DistributionDealService extends CollectionService<DistributionDealS
       .toPromise();
     const distributionDeals = distributionDealsSnap.docs.map(deal => this.formatDistributionDeal(deal.data()));
     return distributionDeals;
+  }
+
+  public getTerritoriesFromContract(contractVersion: ContractVersion) {
+    const dealIds: string[] = [];
+    for (const title of Object.values(contractVersion.titles)) {
+      dealIds.push(...title.distributionDealIds);
+    }
+    const deals = dealIds.map(dealId => this.dealQuery.getEntity(dealId))
+    return deals.map(deal => deal ? getDealTerritories(deal) : []).flat();
   }
 }

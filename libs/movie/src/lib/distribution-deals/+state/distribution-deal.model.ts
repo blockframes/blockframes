@@ -1,10 +1,12 @@
 import {
   DistributionDealDocumentWithDates as DistributionDeal,
-  HoldbackWithDates as Holdback,
+  HoldbackWithDates as Holdback
 } from './distribution-deal.firestore';
 import { createTerms } from '@blockframes/utils/common-interfaces/terms';
 
-export { DistributionDealDocumentWithDates as DistributionDeal } from './distribution-deal.firestore';
+export {
+  DistributionDealDocumentWithDates as DistributionDeal
+} from './distribution-deal.firestore';
 
 export function createDistributionDeal(params: Partial<DistributionDeal> = {}): DistributionDeal {
   return {
@@ -30,4 +32,11 @@ export function createHoldback(params: Partial<Holdback> = {}): Holdback {
     media: null,
     ...params
   };
+}
+
+/** Returns only eligible territories for a deal. */
+export function getDealTerritories(deal: DistributionDeal): string[] {
+  const territories = deal.territory;
+  const excludedTerritories = deal.territoryExcluded;
+  return territories.filter(territory => !excludedTerritories.includes(territory));
 }

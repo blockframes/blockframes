@@ -1,5 +1,6 @@
 import { ContractVersionDocumentWithDates, ContractVersionDocument } from "../../contract/+state/contract.firestore";
 import { isTimestamp } from "@blockframes/utils/helpers";
+import { Contract } from "../../contract/+state/contract.model";
 
 export type ContractVersion = ContractVersionDocumentWithDates;
 
@@ -36,4 +37,13 @@ export function formatContractVersion(contractVersion: any): ContractVersion {
   }
 
   return contractVersion as ContractVersion;
+}
+
+/**
+ * Returns the creation date of the contract.
+ * @param contract
+ */
+export function getContractInitialCreationDate(contract: Contract): Date {
+  const firstContract = contract.versions.find(version => version.id === '1');
+  return firstContract.creationDate;
 }
