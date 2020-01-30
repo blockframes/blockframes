@@ -1,9 +1,20 @@
+import { AngularFirestore } from '@angular/fire/firestore';
+import { isTimestamp } from '@blockframes/utils/helpers';
 import { FormList } from '@blockframes/utils/form/forms/list.form';
 import { ContractForm } from '@blockframes/contract/contract/forms/contract.form';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  OnInit,
+  OnDestroy,
+  ChangeDetectorRef
+} from '@angular/core';
 import { DistributionDealForm } from '@blockframes/movie/distribution-deals/form/distribution-deal.form';
 import { DistributionDealHoldbacksForm } from '@blockframes/movie/distribution-deals/form/holdbacks/holdbacks.form';
+import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
+import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state';
+import { ContractStatus, Contract } from '@blockframes/contract/contract/+state';
 
 @Component({
   selector: 'catalog-tunnel-previous-deals',
@@ -11,59 +22,147 @@ import { DistributionDealHoldbacksForm } from '@blockframes/movie/distribution-d
   styleUrls: ['./previous-deals.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TunnelPreviousDealsComponent implements OnInit {
-  public formContract: FormList<any, ContractForm>;
-  public formDistributionDeal: FormList<any, DistributionDealForm>;
+export class TunnelPreviousDealsComponent implements OnInit, OnDestroy {
+  public formContract: FormList<any, ContractForm> = FormList.factory(
+    [],
+    newContract => new ContractForm(newContract || this.contractInitialValues)
+  );
+  public formDistributionDeal: FormList<any, DistributionDealForm> = FormList.factory(
+    [],
+    newDeal =>
+      new DistributionDealForm(newDeal || { contractId: this.idForInitPage, id: this.newId })
+  );
 
-  public loading: boolean;
+  // Dont use this variable, only for init page
+  private idForInitPage = this.newId;
 
-  constructor(private routerQuery: RouterQuery) {}
+  private contractInitialValues = {
+    id: this.idForInitPage,
+    parties: [
+      {
+        party: { role: 'licensor', showName: true },
+        status: ContractStatus.accepted
+      },
+      {
+        party: { role: 'licensee', showName: true },
+        status: ContractStatus.accepted
+      }
+    ],
+    titleIds: [this.movieId],
+    versions: [
+      {
+        status: ContractStatus.accepted,
+        titles: {
+          [this.movieId]: {
+            distributionDealIds: [this.idForInitPage],
+            titleId: this.movieId,
+            price: { amount: 0, currency: 'euro' }
+          }
+        }
+      }
+    ]
+  } as Partial<Contract>;
 
-  ngOnInit() {}
+  constructor(
+    private routerQuery: RouterQuery,
+    private contractService: ContractService,
+    private dealsService: DistributionDealService,
+    private changeDetector: ChangeDetectorRef,
+    private db: AngularFirestore
+  ) {}
 
-  public contract(index: number) {
-    return this.formContract.at(index);
+  async ngOnInit() {
+    const { movieId } = this.routerQuery.getValue().state.root.params;
+    const contracts = await this.contractService.getValue(ref => {
+      return ref.where('titleIds', 'array-contains', movieId); // only contract on this movie
+    });
+    for (const contract of contracts) {
+      this.formContract.add(contract);
+    }
+    const deals = await this.dealsService.getValue({ params: { movieId } });
+    for (const deal of deals) {
+      if (isTimestamp(deal.terms.start) && isTimestamp(deal.terms.end)) {
+        deal.terms.start = deal.terms.start.toDate();
+        deal.terms.end = deal.terms.end.toDate();
+      }
+      this.formDistributionDeal.add(deal);
+    }
+    this.changeDetector.markForCheck();
   }
 
-  public distributionDeal(index: number) {
-    return this.formDistributionDeal.at(index);
+  get movieId(): string {
+    const { movieId } = this.routerQuery.getValue().state.root.params;
+    return movieId;
+  }
+
+  get newId() {
+    return this.db.createId();
+  }
+
+  public contractParties(index: number) {
+    return this.formContract.at(index).get('parties');
   }
 
   public contractParty(index: number) {
     return this.formContract.at(index);
   }
 
-  public distributionDealTerms(index: number) {
-    return this.formDistributionDeal.at(index).get('terms');
+  public distributionDealTerms(control: DistributionDealForm) {
+    return control.get('terms');
   }
 
-  public distributionDealHoldbacks(index: number) {
-    return this.formDistributionDeal.at(index).get('holdbacks');
+  public distributionDealHoldbacks(control: DistributionDealForm) {
+    return control.get('holdbacks');
   }
 
-  public distributionDealAssetLanguages(index: number) {
-    return this.formDistributionDeal.at(index).get('assetLangauage');
+  public distributionDealAssetLanguages(control: DistributionDealForm) {
+    return control.get('assetLangauage');
   }
 
-  public addHoldback(index: number) {
-    return this.distributionDealHoldbacks(index).push(new DistributionDealHoldbacksForm())
+  public addHoldback(control: DistributionDealForm) {
+    return control.get('holdbacks').push(new DistributionDealHoldbacksForm());
   }
 
-  public removeHoldback(index: number, holdbackIndex: number) {
-    return this.distributionDealHoldbacks(index).removeAt(holdbackIndex);
+  public removeHoldback(control: DistributionDealForm, holdbackIndex: number) {
+    control.get('holdbacks').removeAt(holdbackIndex);
   }
 
   public addContract() {
-    if (!this.formContract) {
-      this.formContract = FormList.factory([], contract => new ContractForm(contract));
-      this.formDistributionDeal = FormList.factory([], deals => new DistributionDealForm(deals));
-    } else {
-      this.formContract.add(); // specific to FormList
-      this.formDistributionDeal.add();
-    }
+    const newContract = this.contractInitialValues;
+    newContract.id = this.newId;
+    this.formContract.add(new ContractForm(newContract));
+    this.formDistributionDeal.add(
+      new DistributionDealForm({ contractId: newContract.id, id: this.newId })
+    );
   }
 
-  public addDistributionDeal() {
-    this.formDistributionDeal.add();
+  public contractToDeal(control: ContractForm) {
+    const contractId = control.value.id;
+    const deals = this.formDistributionDeal.controls.filter(
+      enitity => enitity.value.contractId === contractId
+    );
+    if (!!deals) {
+      this.formDistributionDeal.add(
+        new DistributionDealForm({ contractId: control.value.id, id: this.newId })
+      );
+      this.changeDetector.markForCheck();
+      return this.formDistributionDeal.controls;
+    }
+    this.changeDetector.markForCheck();
+    return deals;
+  }
+
+  public addDistributionDeal(control: ContractForm) {
+    this.formDistributionDeal.add(new DistributionDealForm({ id: control.value.id }));
+    this.changeDetector.markForCheck();
+  }
+
+  public deleteContract(index: number) {
+    this.formContract.removeAt(index);
+  }
+
+  ngOnDestroy() {
+    this.contractService.upsert(this.formContract);
+    this.dealsService.upsert(this.formDistributionDeal);
   }
 }
