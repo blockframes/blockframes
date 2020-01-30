@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
-
+import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
 import { TitleViewComponent } from './view.component';
 
 // Material
@@ -41,6 +41,7 @@ const routes = [{
     CommonModule,
     FlexLayoutModule,
     ImageReferenceModule,
+    TranslateSlugModule,
     // Material
     MatTabsModule,
     MatProgressSpinnerModule,

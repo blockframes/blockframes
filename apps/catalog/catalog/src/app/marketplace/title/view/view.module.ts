@@ -30,7 +30,36 @@ import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material';
 import { MatButtonModule } from '@angular/material/button';
-import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
+import { MatTabsModule } from '@angular/material/tabs';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+
+const routes = [{
+  path: '',
+  component: MarketplaceMovieViewComponent,
+  children: [
+    {
+      path: '',
+      redirectTo: 'main',
+      pathMatch: 'full'
+    },
+    {
+      path: 'main',
+      loadChildren: () => import('../main/main.module').then(m => m.MarketplaceMovieMainModule)
+    },
+    {
+      path: 'technical-information',
+      loadChildren: () => import('../technical-information/technical-information.module').then(m => m.MarketplaceMovieTechnicalInformationModule)
+    },
+    {
+      path: 'media',
+      loadChildren: () => import('../media/media.module').then(m => m.MarketplaceMovieMediaModule)
+    },
+    {
+      path: 'avails',
+      loadChildren: () => import('../avails/avails.module').then(m => m.MarketplaceMovieAvailsModule)
+    }
+  ]
+}];
 
 @NgModule({
   declarations: [MarketplaceMovieViewComponent],
@@ -38,7 +67,6 @@ import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.mod
     CommonModule,
     FlexLayoutModule,
     // Custom Modules
-    TranslateSlugModule,
     MovieDisplayAvailabilitiesModule,
     MovieDisplayProductionModule,
     MovieDisplayPrincipalInformationsModule,
@@ -53,13 +81,16 @@ import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.mod
     CatalogPromotionalElementsModule,
     MovieDisplayFilmInfoCardModule,
     ImageReferenceModule,
-    //Material
+    // Material
     MatCardModule,
     MatDividerModule,
     MatProgressSpinnerModule,
     MatButtonModule,
     MatIconModule,
-    RouterModule.forChild([{ path: '', component: MarketplaceMovieViewComponent }])
+    MatTabsModule,
+    MatSnackBarModule,
+    // Routes
+    RouterModule.forChild(routes)
   ]
 })
 export class MovieViewModule {}
