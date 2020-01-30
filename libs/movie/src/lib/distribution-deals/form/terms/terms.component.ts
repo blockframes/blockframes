@@ -14,6 +14,7 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 })
 export class DistributionDealTermsComponent implements OnInit, OnDestroy {
   @Input() form: DistributionDealTermsForm;
+
   public eventEnum = Event;
 
   public events = Object.keys(Event);
@@ -29,15 +30,20 @@ export class DistributionDealTermsComponent implements OnInit, OnDestroy {
   private eventSub: Subscription;
 
   ngOnInit() {
+    // If start is defined we want to change the toggle button state
+    if (!!this.form.value.start) {
+      this.periodCtrl.setValue(true);
+      this.eventCtrl.setValue(false);
+    }
     this.periodSub = this.periodCtrl.valueChanges
       .pipe(
-        startWith(this.periodCtrl.value),
+        startWith(!!this.form.value.start && !!this.form.value.end),
         tap(value => this.toggleForm(['start', 'end'], value))
       )
       .subscribe();
     this.eventSub = this.eventCtrl.valueChanges
       .pipe(
-        startWith(this.eventCtrl.value),
+        startWith(!!this.form.value.floatingDuration),
         tap(value => this.toggleForm(['floatingDuration', 'floatingStart'], value))
       )
       .subscribe();

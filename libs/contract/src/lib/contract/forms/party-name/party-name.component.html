@@ -1,7 +1,19 @@
-<ng-container *ngFor="let control of partyControls.controls; let i = index" [formGroup]="control">
-    <mat-slide-toggle [formControl]="showName(control)" color="primary">Display to external users</mat-slide-toggle>
-    <mat-form-field appearance="outline">
-        <mat-label>Licensee Name</mat-label>
-        <input matInput type="text" [formControl]="displayNameControl(control)" autocomplete="off">
-    </mat-form-field>
+<ng-container *ngFor="let control of form.controls; let i = index" [formGroup]="control">
+    <form formGroupName="party">
+        <mat-form-field appearance="outline">
+            <mat-label>Name</mat-label>
+            <input matInput type="text" formControlName="displayName" autocomplete="off">
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Role</mat-label>
+            <mat-select formControlName="role">
+                <mat-option *ngFor="let role of staticRoles" [value]="role.slug">
+                    {{role.label}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </form>
+    <button mat-button color="warn" (click)="removeEntity(i)"><mat-icon>delete</mat-icon> Remove entity</button>
+    <mat-divider></mat-divider>
 </ng-container>
+<button mat-button color="primary" (click)="addEntity()"><mat-icon>add</mat-icon> Add entity</button>

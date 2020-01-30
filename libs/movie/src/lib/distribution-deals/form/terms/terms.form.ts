@@ -30,8 +30,9 @@ function createFloatingDuration(floating: Partial<FloatingDuration>) {
 
 type DistributionDealFloatingDurationControl = ReturnType<typeof createFloatingDuration>;
 
-export class DistributionDealFloatingDurationForm extends 
-FormEntity<DistributionDealFloatingDurationControl> {
+export class DistributionDealFloatingDurationForm extends FormEntity<
+  DistributionDealFloatingDurationControl
+> {
   constructor(floatingDuration: Partial<FloatingDuration> = {}) {
     super(createFloatingDuration(floatingDuration));
   }
