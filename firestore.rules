@@ -156,6 +156,12 @@ service cloud.firestore {
       }
     }
 
+    /// META ///
+    match /_META/_MAINTENANCE {
+      allow read;
+      allow write: if false;
+    }
+
     /////////////////
     /// FUNCTIONS ///
     /////////////////
