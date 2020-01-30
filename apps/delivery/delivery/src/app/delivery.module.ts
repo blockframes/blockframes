@@ -7,13 +7,7 @@ import { LayoutComponent } from './layout/layout.component';
 import { createRoutes } from '@blockframes/utils/routes';
 import { App } from '@blockframes/utils/apps';
 
-export const routes: Routes = [
-  {
-    path: '',
-    redirectTo: 'c',
-    pathMatch: 'full',
-  },
-  ...createRoutes({
+export const routes: Routes = createRoutes({
   appName: App.mediaDelivering,
   appsRoutes: [{
     path: '',
@@ -22,32 +16,27 @@ export const routes: Routes = [
       path: '',
       redirectTo: App.mediaDelivering,
       pathMatch: 'full'
-    },
-    {
+    }, {
       path: App.mediaDelivering,
       children: [{
-          path: '',
-          redirectTo: 'home',
-          pathMatch: 'full'
-        },
-        {
-          path: 'home',
-          canActivate: [MovieOrganizationListGuard],
-          canDeactivate: [MovieOrganizationListGuard],
-          loadChildren: () => import('./home/home.module').then(m => m.DeliveryHomeModule),
-        },
-        {
-          path: 'templates',
-          loadChildren: () => import('@blockframes/material').then(m => m.TemplateModule)
-        },
-        {
-          path: 'movie',
-          loadChildren: () => import('@blockframes/material').then(m => m.DeliveryModule)
-        }]
+        path: '',
+        redirectTo: 'home',
+        pathMatch: 'full'
+      }, {
+        path: 'home',
+        canActivate: [MovieOrganizationListGuard],
+        canDeactivate: [MovieOrganizationListGuard],
+        loadChildren: () => import('./home/home.module').then(m => m.DeliveryHomeModule),
+      }, {
+        path: 'templates',
+        loadChildren: () => import('@blockframes/material').then(m => m.TemplateModule)
+      }, {
+        path: 'movie',
+        loadChildren: () => import('@blockframes/material').then(m => m.DeliveryModule)
       }]
     }]
-  })
-];
+  }]
+});
 
 @NgModule({
   imports: [CommonModule, RouterModule.forChild(routes)]

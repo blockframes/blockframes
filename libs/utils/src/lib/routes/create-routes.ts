@@ -29,7 +29,6 @@ export function createRoutes({ appsRoutes, appName, landing = defaultLanding }: 
     {
     path: '',
     canActivate: [MaintenanceGuard],
-    canDeactivate: [MaintenanceGuard],
     data: { app: appName },
     children: [
       landing,
