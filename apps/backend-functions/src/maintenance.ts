@@ -1,4 +1,4 @@
-import { db } from './internals/firebase';
+import { db, DocumentSnapshot } from './internals/firebase';
 import * as admin from 'firebase-admin';
 
 type Timestamp = admin.firestore.Timestamp;
@@ -10,12 +10,15 @@ interface IMaintenanceDoc {
   endedAt: Timestamp | null;
 }
 
-const maintenanceRef = () => {
+export const maintenanceRef = () => {
   return db.collection('_META').doc('_MAINTENANCE');
 };
 
 export async function startMaintenance() {
-  return maintenanceRef().set({ startedAt: admin.firestore.FieldValue.serverTimestamp(), endedAt: null });
+  return maintenanceRef().set({
+    startedAt: admin.firestore.FieldValue.serverTimestamp(),
+    endedAt: null
+  });
 }
 
 export async function endMaintenance() {
@@ -25,10 +28,7 @@ export async function endMaintenance() {
   });
 }
 
-export async function isInMaintenance() {
-  const ref = maintenanceRef();
-  const doc = await ref.get();
-
+export function isDocInMaintenance(doc: DocumentSnapshot) {
   // we've never seen any maintenance
   if (!doc.exists) {
     return false;
@@ -51,6 +51,12 @@ export async function isInMaintenance() {
   throw new Error(
     'Unexpected cases for maintenance check! please check the _META/_MAINTENANCE document.'
   );
+}
+
+export async function isInMaintenance() {
+  const ref = maintenanceRef();
+  const doc = await ref.get();
+  return isDocInMaintenance(doc);
 }
 
 // TODO: take the time to fix the types,

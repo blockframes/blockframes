@@ -2,6 +2,7 @@ import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
 
 export type DocumentReference = admin.firestore.DocumentReference;
+export type DocumentSnapshot = admin.firestore.DocumentSnapshot;
 
 import { backupBucket } from '../environments/environment';
 import { PublicUser } from '../data/types';
