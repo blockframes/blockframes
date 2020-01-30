@@ -1,0 +1,31 @@
+:host {
+  display: block;
+  height: 100%;
+  background-image: url('/assets/images/background_maintenance.png');
+  background-position: center;
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  // Whatever the theme we have a black background so we want text to be white
+  * {
+    color: white;
+  }
+
+  h1 {
+    margin-bottom: 5px
+  }
+}
+
+button {
+  margin-top: 48px;
+}
+
+mat-icon {
+  margin-right: 10px;
+  g {
+    fill: white;
+  }
+}
