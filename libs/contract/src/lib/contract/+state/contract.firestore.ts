@@ -70,8 +70,13 @@ interface ContractVersionRaw<D> {
 interface ContractRaw<D> {
   id: string,
   /**
-   * @dev to facilitate firebase queries 
-   * (instead of doing query in two steps)
+   * @dev to facilitate firebase queries:
+   * Without ContratType :
+   *   if we wanted to fetch "Archipel" contracts where partyIds array-contains 'orgId Archipel' 
+   *   and where the corresponding party role is "licensor", we could not do it in a single Firebase query because
+   *   of the index limitations.
+   * With ContracType :
+   *   we can fetch contracts where partyIds array-contains 'orgId Archipel' and where ContractType = "mandate".
    */
   type: ContractType,
   parentContractIds?: string[],
@@ -103,13 +108,9 @@ export interface InvoiceRaw<D> {
   paymentRef?: string,
   payments: Payment[],
   emittedDate: D,
-  /**
-   * @dev Contains Ids of titles that this invoice is about
-   */
+  /** @dev Contains Ids of titles that this invoice is about */
   titles: InvoiceTitleDetailsRaw<D>[],
-  /**
-   * @dev Expected price once each payments have been made
-   */
+  /** @dev Expected price once each payments have been made */
   price: Price,
   /**
    * @dev Collected amount (sum of payments.price).

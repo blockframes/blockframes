@@ -55,7 +55,7 @@ export interface ContractWithLastVersion {
 
 export function createContract(params: Partial<Contract> = {}): Contract {
   return {
-    id: params.id ? params.id : '',
+    id: params.id || '',
     type: ContractType.mandate,
     parties: [],
     titleIds: [],
@@ -67,7 +67,7 @@ export function createContract(params: Partial<Contract> = {}): Contract {
 
 export function createContractVersion(params: Partial<ContractVersion> = {}): ContractVersion {
   return {
-    id: params.id ? params.id : '1',
+    id: params.id || '1',
     titles: {},
     creationDate: new Date(),
     paymentSchedule: [],
@@ -226,18 +226,18 @@ export function createInvoice(
     payments: [],
     emittedDate: new Date(),
     titles: [],
-    ...params,
-    price: createPrice(params.price),
-    collected: createPrice(params.collected),
     buyerId: '',
     sellerId: '',
-    paymentSchedule: createPaymentSchedule(params.paymentSchedule),
     status: PaymentStatus.unknown,
-    account: createBankAccount(params.account),
     contractId: '',
     legalDocumentId: '',
     reportIds: [],
     reportInternalRefs: [],
+    ...params,
+    price: createPrice(params.price),
+    collected: createPrice(params.collected),
+    paymentSchedule: createPaymentSchedule(params.paymentSchedule),
+    account: createBankAccount(params.account),
   }
 }
 

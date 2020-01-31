@@ -13,7 +13,6 @@ export function createTaxes(params: Partial<Taxes> = {}): Taxes {
 export function createFinancialReport(params: Partial<FinancialReport> = {}): FinancialReport {
   return {
     id: '',
-    scope: createRange(params.scope),
     titles: {},
     contractId: '',
     senderId: '',
@@ -23,7 +22,8 @@ export function createFinancialReport(params: Partial<FinancialReport> = {}): Fi
     totalContractGrossReceipts: 0,
     totalPaidGrossReceipts: 0,
     totalNetReceipts: 0,
-    ...params
+    ...params,
+    scope: createRange(params.scope),
   };
 }
 
@@ -39,11 +39,11 @@ export function createFinancialReportVersion(params: Partial<FinancialReportVers
     paidGrossReceipts: 0,
     netReceipts: 0,
     expenses: 0,
-    taxes: createTaxes(params.taxes),
     sumTaxes: 0,
     recipientShare: 0,
     invoicedAmount: 0,
-    ...params
+    ...params,
+    taxes: createTaxes(params.taxes),
   };
 }
 

@@ -59,7 +59,7 @@ export interface ScheduledDateRaw<D> extends TermsRaw<D> {
  * A ScheduledDateRaw interface with a counter to keep schedule order
  */
 export interface ScheduledDateWithCounterRaw<D> extends ScheduledDateRaw<D> {
-  count: 0;
+  count: number;
 }
 
 export interface Terms extends TermsRaw<Date> {
@@ -87,7 +87,7 @@ export function createScheduledDate(params: Partial<ScheduledDate> = {}): Schedu
   return {
     dueDate: new Date(),
     ...params,
-    period: createFloatingDuration(params ? params.period : undefined),
+    period: createFloatingDuration(params.period),
   };
 }
 

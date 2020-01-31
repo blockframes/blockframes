@@ -48,9 +48,7 @@ interface FinancialReportVersionRaw<D> {
    * But this represent the state for the current FinancialReport version date.
    */
   titles: Record<string, FinancialReportTitleDetail>;
-  /**
-   * If empty, the report have not been sent yet
-   */
+  /** @dev If empty, the report have not been sent yet*/
   sendDate?: D;
   sendType: SendType[];
   status: ReportStatus;
@@ -59,17 +57,11 @@ interface FinancialReportVersionRaw<D> {
    * one of the locations of the FinancialReportTitleDetail.recipientId
    */
   location?: Location;
-  /**
-   * @dev the email address where the report should be sent to if sentType = 'email',
-   */
+  /**  @dev the email address where the report should be sent to if sentType = 'email' */
   email?: string;
-  /**
-   * @dev This represents the sum of contract.Price and all his childrens at a given date
-   */
+  /** @dev This represents the sum of contract.Price and all his childrens at a given date */
   contractGrossReceipts: number;
-  /**
-   * @dev This represents the sum of contract.collected and all his childrens at a given date
-   */
+  /** @dev This represents the sum of contract.collected and all his childrens at a given date */
   paidGrossReceipts: number;
   /**
    * @dev This represents the net receipts at a given date
@@ -84,13 +76,9 @@ interface FinancialReportVersionRaw<D> {
    *  expenses = sumExpenses - sumCollectedExpenses;
    */
   expenses: number;
-  /**
-   * @dev detail of each taxes that must be applied
-   */
+  /** @dev detail of each taxes that must be applied */
   taxes: Taxes;
-  /**
-   * @dev summ of taxes: {...}
-   */
+  /** @dev summ of taxes: {...} */
   sumTaxes: number;
   /**
    * @dev This represents the share that recipientId should invoice for.
@@ -118,9 +106,7 @@ interface FinancialReportRaw<D> {
   scope: RawRange<D>;
   titles: Record<string, FinancialReportTitleDetail>;
   contractId: string;
-  /**
-   * @dev orgId of the sender
-   */
+  /** @dev orgId of the sender */
   senderId: string;
   /**
    * @dev this represents the frequency of financial report sending (mail or email)
@@ -138,13 +124,9 @@ interface FinancialReportRaw<D> {
    * a report.
    */
   recipientId: string;
-  /**
-   * @dev This represents the up-to-date sum of contract.Price and all his childrens
-   */
+  /**  @dev This represents the up-to-date sum of contract.Price and all his childrens */
   totalContractGrossReceipts: number;
-  /**
-   * @dev This represents the up-to-date sum of contract.collected and all his childrens
-   */
+  /** @dev This represents the up-to-date sum of contract.collected and all his childrens */
   totalPaidGrossReceipts: number;
 
   /**
@@ -157,9 +139,7 @@ interface FinancialReportRaw<D> {
 
 export interface FinancialReportTitleDetail {
   titleId: string,
-  /**
-   * @dev this contains the various expenses that apply to this this FinancialReportTitleDetail
-   */
+  /** @dev this contains the various expenses that apply to this this FinancialReportTitleDetail */
   expenses: Expense[],
   /**
    * @dev this is the sum of the expected expenses (price) (expenses: Expense[]).
@@ -169,9 +149,7 @@ export interface FinancialReportTitleDetail {
    * (sum Expense[] where type = 'export')
    */
   sumExpenses: number,
-  /**
-   * @dev this represents the collected expenses (collected) from expenses: Expense[]
-   */
+  /** @dev this represents the collected expenses (collected) from expenses: Expense[] */
   sumCollectedExpenses: number,
   percentageMarketExpenses: number,
 }

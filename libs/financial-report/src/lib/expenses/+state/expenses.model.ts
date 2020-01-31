@@ -28,9 +28,7 @@ export interface ExpensesRaw<D>  {
   }
   price: Price;
   date: D;
-  /**
-   * @dev ie: can be the bill of a meeting in a restaurant
-   */
+  /** @dev ie: can be the bill of a meeting in a restaurant */
   legalDocuments: LegalDocument[];
   label: string;
 }
