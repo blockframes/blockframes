@@ -3,10 +3,7 @@ import { Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { TemplateAddComponent } from '../../components/template-add/template-add.component';
 import { TemplateQuery } from '../../+state/template.query';
-import { map } from 'rxjs/operators';
-import { TemplateRaw } from '../../+state/template.model';
-
-interface TemplateDateWithString extends TemplateRaw<string> {}
+import { Template } from '../../+state/template.model';
 
 @Component({
   selector: 'template-list',
@@ -16,12 +13,13 @@ interface TemplateDateWithString extends TemplateRaw<string> {}
 })
 export class TemplateListComponent implements OnInit {
   @HostBinding('attr.page-id') pageId = 'template-list';
-  public templates$: Observable<TemplateDateWithString[]>;
+  public templates$: Observable<Template[]>;
 
   public versionColumns = {
     name: 'Title',
     created: 'Creation Date',
-    updated: 'Last Modification'
+    updated: 'Last Modification',
+    id: 'Link'
   };
   public initialVersionColumns = ['name', 'created', 'updated', 'id'];
 
@@ -31,13 +29,7 @@ export class TemplateListComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.templates$ = this.query.selectAll().pipe(
-      map(templates => templates.map(template => ({
-        ...template,
-        created: template.created.toDateString(),
-        updated: template.updated.toDateString()
-      })))
-    );
+    this.templates$ = this.query.selectAll();
   }
 
   public addTemplateDialog(): void {
