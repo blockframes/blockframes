@@ -11,6 +11,7 @@
   }
 
   .widget-card {
+    @include _mat-theme-overridable-elevation(3, $theme);
     background-color: mat-color($background, card);
 
     .widget-header[color="primary"] {
