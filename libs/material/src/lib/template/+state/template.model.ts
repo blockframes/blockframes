@@ -2,7 +2,6 @@ import { TemplateDocument, TemplateDocumentWithDates } from './template.firestor
 
 export type Template = TemplateDocumentWithDates;
 export type TemplateWithTimestamps = TemplateDocument;
-export { TemplateRaw } from './template.firestore';
 
 /** A factory function that creates Template */
 export function createTemplate(template: Partial<Template>): Template {

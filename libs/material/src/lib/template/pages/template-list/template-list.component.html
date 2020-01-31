@@ -11,6 +11,12 @@
     [initialColumns]="initialVersionColumns"
     showFilter="true"
     showPaginator="true">
+    <ng-template colRef="created" let-created>
+      {{ created | date: 'MM/dd/yyyy' }}
+    </ng-template>
+    <ng-template colRef="updated" let-updated>
+      {{ updated | date: 'MM/dd/yyyy' }}
+    </ng-template>
     <ng-template colRef="id" let-id>
       <a mat-stroked-button color="primary" [routerLink]="['../', id]">View</a>
     </ng-template>
