@@ -3,10 +3,9 @@ import { LayoutComponent } from './layout.component';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 
 // Widgets
-import { OverlayWidgetModule } from '@blockframes/ui/overlay-widget/overlay-widget.module.ts';
+import { NotificationWidgetModule } from '@blockframes/notification';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -36,11 +35,10 @@ const material = [
 @NgModule({
   declarations: [LayoutComponent],
   imports: [CommonModule,
-    OverlayWidgetModule,
     FlexLayoutModule,
     RouterModule,
-    ImageReferenceModule,
-  ...material
+    NotificationWidgetModule,
+    ...material
   ],
   exports: [LayoutComponent]
 })

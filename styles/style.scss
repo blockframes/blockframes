@@ -1,21 +1,9 @@
 /* You can add global styles to this file, and also import other style files */
-@import url('https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900');
 
 // Theme with variables
 @import './theme.scss';
 @import './variables.scss';
 
-// Footer
-@import './footer.scss';
-
-// Components style
-@import './components/mat-expansion-panel';
-@import './components/mat-button';
-@import './components/mat-card';
-@import './components/mat-list';
-@import './components/mat-toolbar';
-@import './components/mat-table';
-@import './components/bf-widget';
 
 * {
   box-sizing: border-box;
@@ -23,7 +11,7 @@
 
 html,
 body {
-  height: calc(100%);
+  height: 100%;
 }
 
 body {

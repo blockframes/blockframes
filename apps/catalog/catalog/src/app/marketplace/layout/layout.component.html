@@ -31,7 +31,9 @@
       <button mat-icon-button (click)="sidenav.toggle()">
         <mat-icon>menu</mat-icon>
       </button>
-      <img asset="archipel-content.svg" type="logo" />
+      <a class="logo" routerLink="/">
+        <img asset="archipel-content.svg" type="logo" alt="Archipel Content Logo" />
+      </a>
       <form fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="12px">
         <mat-icon>search</mat-icon>
         <input placeholder="Try searching for titles, keywords..." />
