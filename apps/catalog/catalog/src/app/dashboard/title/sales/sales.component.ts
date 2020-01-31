@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MovieAnalytics } from '@blockframes/movie/movie+state/movie.model';
 import { MovieService } from '@blockframes/movie/movie+state/movie.service';
 import { Observable } from 'rxjs';
+import { MovieQuery } from '@blockframes/movie/movie+state/movie.query';
 
 @Component({
   selector: 'catalog-title-sales',
@@ -11,11 +12,11 @@ import { Observable } from 'rxjs';
 })
 export class TitleSalesComponent implements OnInit {
 
-  public movieAnalytics: Observable<MovieAnalytics>;
+  public movieAnalytics: Observable<MovieAnalytics[]>;
 
-  constructor(private movieService: MovieService) { }
+  constructor(private movieService: MovieService, private movieQuery: MovieQuery) { }
 
   ngOnInit() {
-    this.movieAnalytics = this.movieService.getMovieAnalytics();
+    this.movieAnalytics = this.movieService.getMovieAnalytics([this.movieQuery.getActiveId()]);
   }
 }
