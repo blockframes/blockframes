@@ -238,7 +238,10 @@ const icons = [
   },
   { name: 'wallet', url: 'assets/icons/wallet.svg' },
   { name: 'world', url: 'assets/icons/world.svg' },
-  { name: 'wrench', url: 'assets/icons/wrench.svg' }
+  { name: 'wrench', url: 'assets/icons/wrench.svg' },
+  { name: 'profile', url: 'assets/icons/profil.svg' },
+  { name: 'logout',url: 'assets/icons/log_out.svg' },
+  { name: 'applications', url: 'assets/apps/applications.svg' },
 ] as const;
 
 export type IconSvg = typeof icons[number]['name'];
