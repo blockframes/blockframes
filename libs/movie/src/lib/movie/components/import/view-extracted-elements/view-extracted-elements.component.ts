@@ -291,11 +291,11 @@ export class ViewExtractedElementsComponent {
 
         // POSTER (Poster)
         const poster = await this.imageUploader.upload(spreadSheetRow[SpreadSheetMovie.poster]);
-        const promotionalElement = createPromotionalElement({
+        const moviePoster = createPromotionalElement({
           label: 'Poster',
           media: poster,
         });
-        movie.promotionalElements.poster.push(promotionalElement);
+        movie.promotionalElements.poster.push(moviePoster);
 
         //////////////////
         // OPTIONAL FIELDS
