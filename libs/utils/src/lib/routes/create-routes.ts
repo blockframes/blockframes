@@ -20,6 +20,18 @@ const defaultLanding = {
 }
 
 export function createRoutes({ appsRoutes, appName, landing = defaultLanding }: RouteOptions) {
+  // We need to put the spread operator in a local variable to make build works on prod
+  const children = [
+    ...appsRoutes,
+    {
+      path: 'organization',
+      loadChildren: () => import('@blockframes/organization').then(m => m.OrganizationModule)
+    },
+    {
+      path: 'account',
+      loadChildren: () => import('@blockframes/account').then(m => m.AccountModule)
+    },
+  ];
   return [
     {
       path: 'maintenance',
@@ -55,17 +67,7 @@ export function createRoutes({ appsRoutes, appName, landing = defaultLanding }: 
             path: 'o',
             canActivate: [NotificationsGuard, PermissionsGuard, OrganizationGuard],
             canDeactivate: [NotificationsGuard, PermissionsGuard, OrganizationGuard],
-            children: [
-              ...appsRoutes,
-              {
-                path: 'organization',
-                loadChildren: () => import('@blockframes/organization').then(m => m.OrganizationModule)
-              },
-              {
-                path: 'account',
-                loadChildren: () => import('@blockframes/account').then(m => m.AccountModule)
-              },
-            ]
+            children
           }
         ]
       },
