@@ -755,21 +755,34 @@ export class ViewExtractedElementsComponent {
         }
 
         // SALES AGENT (name)
-        /* const salesAgent = createCredit();
+        const salesAgent = createStakeholder();
         if (spreadSheetRow[SpreadSheetMovie.salesAgentName]) {
           salesAgent.displayName = spreadSheetRow[SpreadSheetMovie.salesAgentName];
         }
 
         // SALES AGENT (avatar)
         if (spreadSheetRow[SpreadSheetMovie.salesAgentImage]) {
-          salesAgent.avatar = await this.imageUploader.upload(spreadSheetRow[SpreadSheetMovie.salesAgentImage]);
-        } */
-        /*
-        movie.salesAgentDeal.salesAgent = salesAgent; */
+          salesAgent.logo = await this.imageUploader.upload(spreadSheetRow[SpreadSheetMovie.salesAgentImage]);
+        }
+
+        movie.salesAgentDeal.salesAgent = salesAgent;
 
         // RESERVED TERRITORIES
         if (spreadSheetRow[SpreadSheetMovie.reservedTerritories]) {
-          movie.salesAgentDeal.reservedTerritories = spreadSheetRow[SpreadSheetMovie.reservedTerritories].split(this.separator);
+          spreadSheetRow[SpreadSheetMovie.reservedTerritories].split(this.separator).forEach(t => {
+            const territory = getCodeIfExists('TERRITORIES', t);
+            if (territory) {
+              movie.salesAgentDeal.reservedTerritories.push(territory);
+            } else {
+              importErrors.errors.push({
+                type: 'warning',
+                field: 'salesAgentDeal.reservedTerritories',
+                name: 'Reserved Territories',
+                reason: `Territory "${t.trim().toLowerCase()}" could not be parsed`,
+                hint: 'Edit corresponding sheet field.'
+              });
+            }
+          })
         }
 
 
@@ -1749,6 +1762,14 @@ export class ViewExtractedElementsComponent {
         if (spreadSheetRow[SpreadSheetContract.status]) {
           if (spreadSheetRow[SpreadSheetContract.status] in ContractStatus) {
             contract.last.status = spreadSheetRow[SpreadSheetContract.status];
+          } else {
+            importErrors.errors.push({
+              type: 'warning',
+              field: 'contract.last.status ',
+              name: 'Contract Status',
+              reason: `Contract status "${spreadSheetRow[SpreadSheetContract.status]}" could not be parsed.`,
+              hint: 'Edit corresponding sheet field.'
+            });
           }
         }
 
@@ -1768,30 +1789,38 @@ export class ViewExtractedElementsComponent {
 
         // SCOPE DATE START
         if (spreadSheetRow[SpreadSheetContract.scopeStartDate]) {
-          const { y, m, d } = SSF.parse_date_code(SpreadSheetContract.scopeStartDate);
-          contract.last.scope.start = new Date(`${y}-${m}-${d}`);
-        } else {
-          importErrors.errors.push({
-            type: 'warning',
-            field: 'contract.last.scope.start',
-            name: 'Scope Start date',
-            reason: 'Scope Start date not found',
-            hint: 'Edit corresponding sheet field.'
-          });
+          const { y, m, d } = SSF.parse_date_code(spreadSheetRow[SpreadSheetContract.scopeStartDate]);
+          const scopeStart = new Date(`${y}-${m}-${d}`);
+          if (isNaN(scopeStart.getTime())) {
+            contract.last.scope.approxStart = spreadSheetRow[SpreadSheetContract.scopeStartDate];
+            importErrors.errors.push({
+              type: 'warning',
+              field: 'contract.last.scope',
+              name: 'Contract scope start',
+              reason: `Failed to parse contract scope start date, moved data to approxStart`,
+              hint: 'Edit corresponding sheet field.'
+            });
+          } else {
+            contract.last.scope.start = scopeStart;
+          }
         }
 
         // SCOPE DATE END
         if (spreadSheetRow[SpreadSheetContract.scopeEndDate]) {
-          const { y, m, d } = SSF.parse_date_code(SpreadSheetContract.scopeEndDate);
-          contract.last.scope.end = new Date(`${y}-${m}-${d}`);
-        } else {
-          importErrors.errors.push({
-            type: 'warning',
-            field: 'contract.last.scope.end',
-            name: 'Scope End date',
-            reason: 'Scope End date not found',
-            hint: 'Edit corresponding sheet field.'
-          });
+          const { y, m, d } = SSF.parse_date_code(spreadSheetRow[SpreadSheetContract.scopeEndDate]);
+          const scopeEnd = new Date(`${y}-${m}-${d}`);
+          if (isNaN(scopeEnd.getTime())) {
+            contract.last.scope.approxEnd = spreadSheetRow[SpreadSheetContract.scopeEndDate];
+            importErrors.errors.push({
+              type: 'warning',
+              field: 'contract.last.scope',
+              name: 'Contract scope end',
+              reason: `Failed to parse contract scope end date, moved data to approxEnd`,
+              hint: 'Edit corresponding sheet field.'
+            });
+          } else {
+            contract.last.scope.end = scopeEnd;
+          }
         }
 
         // PAYMENT SCHEDULES
@@ -1907,6 +1936,16 @@ export class ViewExtractedElementsComponent {
       });
     }
 
+    // SCOPE
+    if (Object.entries(contract.last.scope).length === 0 && contract.last.scope.constructor === Object) {
+      importErrors.errors.push({
+        type: 'error',
+        field: 'contract.last.scope',
+        name: 'Scope Start',
+        reason: 'Contract scope not defined',
+        hint: 'Edit corresponding sheet field.'
+      });
+    }
 
     //////////////////
     // OPTIONAL FIELDS
