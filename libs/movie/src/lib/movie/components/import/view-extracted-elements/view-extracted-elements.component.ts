@@ -24,7 +24,7 @@ import { SSF$Date } from 'ssf/types';
 import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
 import { SSF } from 'xlsx';
 import { MovieLanguageTypes, PremiereType } from '@blockframes/movie/movie/+state/movie.firestore';
-import { createCredit, createStakeholder } from '@blockframes/utils/common-interfaces/identity';
+import { createStakeholder } from '@blockframes/utils/common-interfaces/identity';
 import { DistributionDeal, createDistributionDeal, createHoldback } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
 import { createContractPartyDetail, createContractTitleDetail, Contract, initContractWithVersion, ContractWithLastVersion, getContractParties } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractStatus, ContractTitleDetail } from '@blockframes/contract/contract/+state/contract.firestore';
@@ -290,7 +290,12 @@ export class ViewExtractedElementsComponent {
         }
 
         // POSTER (Poster)
-        movie.main.poster = await this.imageUploader.upload(spreadSheetRow[SpreadSheetMovie.poster]);
+        const poster = await this.imageUploader.upload(spreadSheetRow[SpreadSheetMovie.poster]);
+        const promotionalElement = createPromotionalElement({
+          label: 'Poster',
+          media: poster,
+        });
+        movie.promotionalElements.poster.push(promotionalElement);
 
         //////////////////
         // OPTIONAL FIELDS
@@ -750,7 +755,7 @@ export class ViewExtractedElementsComponent {
         }
 
         // SALES AGENT (name)
-/*         const salesAgent = createCredit();
+        /* const salesAgent = createCredit();
         if (spreadSheetRow[SpreadSheetMovie.salesAgentName]) {
           salesAgent.displayName = spreadSheetRow[SpreadSheetMovie.salesAgentName];
         }
@@ -759,7 +764,7 @@ export class ViewExtractedElementsComponent {
         if (spreadSheetRow[SpreadSheetMovie.salesAgentImage]) {
           salesAgent.avatar = await this.imageUploader.upload(spreadSheetRow[SpreadSheetMovie.salesAgentImage]);
         } */
-/* 
+        /*
         movie.salesAgentDeal.salesAgent = salesAgent; */
 
         // RESERVED TERRITORIES
@@ -883,10 +888,10 @@ export class ViewExtractedElementsComponent {
       });
     }
 
-    if (!movie.main.poster) {
+    if (movie.promotionalElements.poster.length === 0) {
       errors.push({
         type: 'error',
-        field: 'main.poster',
+        field: 'promotionalElements.poster',
         name: 'Poster',
         reason: 'Required field is missing',
         hint: 'Add poster URL in corresponding column.'
@@ -930,13 +935,13 @@ export class ViewExtractedElementsComponent {
     let stakeholdersCount = 0;
     Object.keys(movie.main.stakeholders).forEach(k => { stakeholdersCount += k.length });
     if (stakeholdersCount === 0) {
-       errors.push({
-         type: 'warning',
-         field: 'main.stakeholders',
-         name: 'Stakeholder(s)',
-         reason: 'Optional field is missing',
-         hint: 'Edit corresponding sheet field.'
-       });
+      errors.push({
+        type: 'warning',
+        field: 'main.stakeholders',
+        name: 'Stakeholder(s)',
+        reason: 'Optional field is missing',
+        hint: 'Edit corresponding sheet field.'
+      });
     }
 
     if (!movie.salesInfo.color) {
