@@ -1,5 +1,5 @@
 import { ContractVersionDocumentWithDates, ContractVersionDocument } from "../../contract/+state/contract.firestore";
-import { isTimestamp } from "@blockframes/utils/helpers";
+import { toDate } from "@blockframes/utils/helpers";
 import { Contract } from "../../contract/+state/contract.model";
 
 export type ContractVersion = ContractVersionDocumentWithDates;
@@ -19,21 +19,21 @@ export function createVersionMeta(params: Partial<VersionMeta>): VersionMeta {
 }
 
 /**
- *
+ *  Format version dates from Timestamps into Dates.
  * @param contractVersion
  */
 export function formatContractVersion(contractVersion: any): ContractVersion {
   // Dates from firebase are Timestamps, we convert it to Dates.
-  if (contractVersion.scope && isTimestamp(contractVersion.scope)) {
-    contractVersion.scope.start = contractVersion.scope.start.toDate();
+  if (contractVersion.scope) {
+    contractVersion.scope.start = toDate(contractVersion.scope.start);
   }
 
-  if (contractVersion.scope && isTimestamp(contractVersion.scope)) {
-    contractVersion.scope.end = contractVersion.scope.end.toDate();
+  if (contractVersion.scope) {
+    contractVersion.scope.end = toDate(contractVersion.scope.end);
   }
 
-  if (contractVersion.creationDate && isTimestamp(contractVersion.creationDate)) {
-    contractVersion.creationDate = contractVersion.creationDate.toDate();
+  if (contractVersion.creationDate) {
+    contractVersion.creationDate = toDate(contractVersion.creationDate);
   }
 
   return contractVersion as ContractVersion;

@@ -7,7 +7,7 @@ import { DistributionDeal, getDealTerritories } from './distribution-deal.model'
 import { createContractTitleDetail, ContractWithLastVersion } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractVersionService } from '@blockframes/contract/version/+state/contract-version.service';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
-import { isTimestamp } from '@blockframes/utils/helpers';
+import { toDate } from '@blockframes/utils/helpers';
 import { ContractQuery } from '@blockframes/contract/contract/+state/contract.query';
 import { switchMap } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
@@ -84,15 +84,10 @@ export class DistributionDealService extends CollectionService<DistributionDealS
     return distributionDeal.id;
   }
 
+  /** Format deals dates from Timestamps into Dates. */
   public formatDistributionDeal(deal: any): DistributionDeal {
-    // Dates from firebase are Timestamps, we convert it to Dates.
-    if (isTimestamp(deal.terms.start)) {
-      deal.terms.start = deal.terms.start.toDate();
-    }
-
-    if (isTimestamp(deal.terms.end)) {
-      deal.terms.end = deal.terms.end.toDate();
-    }
+    deal.terms.start = toDate(deal.terms.start);
+    deal.terms.end = toDate(deal.terms.end);
     return deal as DistributionDeal;
   }
 

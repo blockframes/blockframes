@@ -1,4 +1,4 @@
-import { getCodeIfExists, getCodeBySlug } from '@blockframes/utils/static-model/staticModels';
+import { getCodeIfExists } from '@blockframes/utils/static-model/staticModels';
 import { createPrice, Price, PaymentStatus } from '@blockframes/utils/common-interfaces/price';
 import {
   ContractDocumentWithDates,
@@ -18,7 +18,7 @@ import { createImgRef } from '@blockframes/utils/image-uploader';
 import { createTerms } from '@blockframes/utils/common-interfaces/terms';
 import { ContractVersion, ContractVersionWithTimeStamp, formatContractVersion } from '../../version/+state/contract-version.model';
 import { LegalRolesSlug } from '@blockframes/utils/static-model/types';
-import { isTimestamp } from '@blockframes/utils/helpers';
+import { toDate } from '@blockframes/utils/helpers';
 import { createPaymentSchedule } from '@blockframes/utils/common-interfaces/schedule';
 import { createBankAccount } from '@blockframes/utils/common-interfaces/utility';
 
@@ -161,7 +161,7 @@ export function buildChainOfTitle() {
 export function convertToContractDocument(params: Partial<Contract> = {}): ContractDocumentWithDates {
   return {
     id: params.id,
-    type: ContractType.mandate, 
+    type: ContractType.mandate,
     parties: [],
     titleIds: [],
     partyIds: [],
@@ -196,7 +196,7 @@ export function createLegalDocument(
 export function createContractFromFirestore(contract: ContractWithTimeStamp): Contract {
   return {
     ...contract,
-    signDate: isTimestamp(contract.signDate) ? contract.signDate.toDate() : contract.signDate,
+    signDate: toDate(contract.signDate),
     parties: contract.parties
       ? contract.parties.map(partyDetails => formatPartyDetails(partyDetails))
       : [],
@@ -246,9 +246,8 @@ export function createInvoice(
  */
 export function formatPartyDetails(partyDetails: any): ContractPartyDetail {
   // Dates from firebase are Timestamps, we convert it to Dates.
-  if (isTimestamp(partyDetails.signDate)) {
-    partyDetails.signDate = partyDetails.signDate.toDate();
-  }
+  partyDetails.signDate = toDate(partyDetails.signDate);
+
 
   return partyDetails as ContractPartyDetail;
 }
