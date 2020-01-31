@@ -1,5 +1,5 @@
+import { toDate } from '@blockframes/utils/helpers';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { isTimestamp } from '@blockframes/utils/helpers';
 import { FormList } from '@blockframes/utils/form/forms/list.form';
 import { ContractForm } from '@blockframes/contract/contract/forms/contract.form';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
@@ -10,11 +10,10 @@ import {
   OnDestroy,
   ChangeDetectorRef
 } from '@angular/core';
-import { DistributionDealForm } from '@blockframes/movie/distribution-deals/form/distribution-deal.form';
 import { DistributionDealHoldbacksForm } from '@blockframes/movie/distribution-deals/form/holdbacks/holdbacks.form';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state';
-import { ContractStatus, Contract } from '@blockframes/contract/contract/+state';
+import { DistributionDealForm } from '@blockframes/movie/distribution-deals/form/distribution-deal.form';
 
 @Component({
   selector: 'catalog-tunnel-previous-deals',
@@ -24,44 +23,20 @@ import { ContractStatus, Contract } from '@blockframes/contract/contract/+state'
 })
 export class TunnelPreviousDealsComponent implements OnInit, OnDestroy {
   public formContract: FormList<any, ContractForm> = FormList.factory(
-    [],
-    newContract => new ContractForm(newContract || this.contractInitialValues)
+    [{ id: this.newId(), titleIds: [this.movieId] }],
+    contract => new ContractForm(contract)
   );
   public formDistributionDeal: FormList<any, DistributionDealForm> = FormList.factory(
     [],
-    newDeal =>
-      new DistributionDealForm(newDeal || { contractId: this.idForInitPage, id: this.newId })
+    deal => new DistributionDealForm(deal)
   );
 
-  // Dont use this variable, only for init page
-  private idForInitPage = this.newId;
+  private distMap: Record<string, DistributionDealForm[]> = {};
 
-  private contractInitialValues = {
-    id: this.idForInitPage,
-    parties: [
-      {
-        party: { role: 'licensor', showName: true },
-        status: ContractStatus.accepted
-      },
-      {
-        party: { role: 'licensee', showName: true },
-        status: ContractStatus.accepted
-      }
-    ],
-    titleIds: [this.movieId],
-    versions: [
-      {
-        status: ContractStatus.accepted,
-        titles: {
-          [this.movieId]: {
-            distributionDealIds: [this.idForInitPage],
-            titleId: this.movieId,
-            price: { amount: 0, currency: 'euro' }
-          }
-        }
-      }
-    ]
-  } as Partial<Contract>;
+  private contractIds: string[];
+  private dealsIds: string[];
+  private toRemoveContracts: string[] = [];
+  private toRemoveDeals: string[] = [];
 
   constructor(
     private routerQuery: RouterQuery,
@@ -71,21 +46,29 @@ export class TunnelPreviousDealsComponent implements OnInit, OnDestroy {
     private db: AngularFirestore
   ) {}
 
-  async ngOnInit() {
+  ngOnInit() {
+    this.fetchData();
+  }
+
+  private async fetchData() {
     const { movieId } = this.routerQuery.getValue().state.root.params;
     const contracts = await this.contractService.getValue(ref => {
       return ref.where('titleIds', 'array-contains', movieId); // only contract on this movie
     });
-    for (const contract of contracts) {
-      this.formContract.add(contract);
+    if (contracts.length) {
+      this.formContract.patchAllValue(contracts);
     }
+    this.contractIds = contracts.map(contract => contract.id);
     const deals = await this.dealsService.getValue({ params: { movieId } });
     for (const deal of deals) {
-      if (isTimestamp(deal.terms.start) && isTimestamp(deal.terms.end)) {
-        deal.terms.start = deal.terms.start.toDate();
-        deal.terms.end = deal.terms.end.toDate();
+      if (!!deal.terms.start && !!deal.terms.end) {
+        deal.terms.start = toDate(deal.terms.start);
+        deal.terms.end = toDate(deal.terms.end);
       }
-      this.formDistributionDeal.add(deal);
+    }
+    this.dealsIds = deals.map(deal => deal.id);
+    if (deals.length) {
+      this.formDistributionDeal.patchAllValue(deals);
     }
     this.changeDetector.markForCheck();
   }
@@ -95,7 +78,7 @@ export class TunnelPreviousDealsComponent implements OnInit, OnDestroy {
     return movieId;
   }
 
-  get newId() {
+  private newId() {
     return this.db.createId();
   }
 
@@ -128,12 +111,9 @@ export class TunnelPreviousDealsComponent implements OnInit, OnDestroy {
   }
 
   public addContract() {
-    const newContract = this.contractInitialValues;
-    newContract.id = this.newId;
-    this.formContract.add(new ContractForm(newContract));
-    this.formDistributionDeal.add(
-      new DistributionDealForm({ contractId: newContract.id, id: this.newId })
-    );
+    const id = this.newId();
+    this.formContract.add({ id: id });
+    this.formDistributionDeal.add({ contractId: id, id: this.newId() });
   }
 
   public contractToDeal(control: ContractForm) {
@@ -141,28 +121,40 @@ export class TunnelPreviousDealsComponent implements OnInit, OnDestroy {
     const deals = this.formDistributionDeal.controls.filter(
       enitity => enitity.value.contractId === contractId
     );
-    if (!!deals) {
-      this.formDistributionDeal.add(
-        new DistributionDealForm({ contractId: control.value.id, id: this.newId })
-      );
-      this.changeDetector.markForCheck();
-      return this.formDistributionDeal.controls;
+    if (deals.length) {
+      return deals;
+    } else {
+      const id = this.newId();
+      this.formDistributionDeal.add({ contractId: control.value.id, id: id });
+      return [new DistributionDealForm({ contractId: control.value.id, id: id })];
     }
-    this.changeDetector.markForCheck();
-    return deals;
   }
 
   public addDistributionDeal(control: ContractForm) {
-    this.formDistributionDeal.add(new DistributionDealForm({ id: control.value.id }));
+    const newDeal = this.formDistributionDeal.add({
+      contractId: control.value.id,
+      id: this.newId()
+    });
+    this.distMap[control.value.id] = [...this.distMap[control.value.id], newDeal];
     this.changeDetector.markForCheck();
   }
 
   public deleteContract(index: number) {
+    const id = this.formContract.at(index).value.id;
+    if (this.contractIds.includes(id)) {
+      this.toRemoveContracts.push(id);
+    }
     this.formContract.removeAt(index);
   }
 
+  trackDeals(index, control) {
+    return control.value.id;
+  }
+
   ngOnDestroy() {
-    this.contractService.upsert(this.formContract);
-    this.dealsService.upsert(this.formDistributionDeal);
+    this.contractService.update(this.formContract.value);
+    this.dealsService.update(this.formDistributionDeal.value);
+    this.contractService.remove(this.toRemoveContracts);
+    this.dealsService.remove(this.toRemoveDeals);
   }
 }
