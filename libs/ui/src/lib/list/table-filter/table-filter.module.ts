@@ -24,6 +24,7 @@ import { RouterModule } from '@angular/router';
     CommonModule,
     ReactiveFormsModule,
     OverlayWidgetModule,
+    RouterModule,
     // Material
     MatButtonModule,
     MatIconModule,

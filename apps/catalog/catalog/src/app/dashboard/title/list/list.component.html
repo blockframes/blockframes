@@ -1,7 +1,7 @@
 <h1>My Titles</h1>
 
 <div fxLayout="row" fxLayoutAlign="end center">
-  <a  mat-flat-button color="primary" routerLink="../movie-tunnel" test-id="add-movie">
+  <a mat-flat-button color="primary" routerLink="../movie-tunnel" test-id="add-movie">
     <span>New Movie</span>
     <mat-icon>add</mat-icon>
   </a>
@@ -10,11 +10,15 @@
 <header mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
   <button mat-tab-link (click)="filter.setValue()" [active]="!(filter$ | async)">All</button>
   <button mat-tab-link (click)="applyFilter('Library')" [active]="(filter$ | async) === 'Library'" >Library</button>
-  <button mat-tab-link (click)="applyFilter('Line-up')" [active]="(filter$ | async) === 'Line-up'" >Line-up</button>
+  <button mat-tab-link (click)="applyFilter('Line-Up')" [active]="(filter$ | async) === 'Line-Up'" >Line-up</button>
 </header>
 
 <bf-table-filter
   [source]="titles$ | async"
   [columns]="columns"
-  [initialColumns]="initialColumns">
+  [initialColumns]="initialColumns"
+  [showFilter]="true"
+  [showPaginator]="true">
+  <ng-template colRef="title" let-title><b>{{ title }}</b></ng-template>
+  <ng-template colRef="receipt" let-receipt> <b>{{ receipt }}</b> </ng-template>
 </bf-table-filter>
