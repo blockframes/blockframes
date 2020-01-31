@@ -34,8 +34,8 @@ export class DirectorForm extends FormEntity<DirectorFormControl> {
 function createDirectorFormControl(director?: Partial<Credit>) {
   const { firstName, lastName, shortBiography } = createCredit(director);
   return {
-    firstName: new FormControl(firstName),
-    lastName: new FormControl(lastName),
+    firstName: new FormControl(firstName, Validators.required),
+    lastName: new FormControl(lastName, Validators.required),
     shortBiography: new FormControl(shortBiography)
   }
 }
@@ -94,7 +94,7 @@ function createTitleFormControl(title?: Partial<Movie['main']['title']>) {
   const { original, international } = createTitle(title);
   return {
     original: new FormControl(original),
-    international: new FormControl(international),
+    international: new FormControl(international, Validators.required),
   }
 }
 
@@ -125,7 +125,7 @@ function createMovieMainControls(main : Partial<MovieMain> = {}) {
     isan: new FormControl(entity.isan),
     title: new TitleForm(entity.title),
     directors: FormList.factory(entity.directors, el => new DirectorForm(el)),
-    productionYear: new FormControl(entity.productionYear, yearValidators),
+    productionYear: new FormControl(entity.productionYear, [Validators.required, yearValidators]),
     genres: FormList.factory(entity.genres),
     originCountries: FormList.factory(entity.originCountries, el => new FormStaticValue(el, 'TERRITORIES')),
     originalLanguages: FormList.factory(entity.originalLanguages, el => new FormStaticValue(el, 'LANGUAGES')),
