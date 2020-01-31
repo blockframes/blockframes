@@ -48,8 +48,7 @@ const columns = {
   view: 'View',
   sales: 'Sales',
   receipt: 'Total Gross Receipts',
-  status: 'Status',
-  id: 'Link'
+  status: 'Status'
 };
 
 @Component({
@@ -80,12 +79,25 @@ export class TitleListComponent implements OnInit {
     );
     // Transform movies into a TitleView
     this.titles$ = combineLatest([movies$, this.contractQuery.selectAll()]).pipe(
-      map(([movies, contracts]) => movies.map(movie => createTitleView(movie, contracts)))
+      map(([movies, contracts]) => movies.map(movie => this.createTitleView(movie, contracts)))
     );
   }
 
   /** Dynamic filter of movies for each tab. */
   applyFilter(filter?: Movie['main']['storeConfig']['storeType']) {
     this.filter.setValue(filter);
+  }
+
+  /** Factory function to flatten movie data. */
+  public createTitleView(movie: Movie, contracts: Contract[]): TitleView {
+    const ownContracts = contracts.filter(c => c.versions[getLastVersionIndex(c)].titles[movie.id]);
+    return {
+      id: movie.id,
+      title: movie.main.title.international,
+      view: 'View',
+      sales: ownContracts.length,
+      receipt: getMovieReceipt(ownContracts, movie.id),
+      status: movie.main.storeConfig.status
+    };
   }
 }
