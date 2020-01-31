@@ -16,8 +16,11 @@ mat-toolbar {
   top: 0;
   z-index: 1;
 
-  img {
+  .logo {
     height: 48px;
+    img {
+      height: 100%;
+    }
   }
 
   form {
