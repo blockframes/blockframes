@@ -169,6 +169,7 @@ export class ViewExtractedElementsComponent {
   public contractsToCreate = new MatTableDataSource<ContractsImportState>();
   private separator = ';';
   private subSeparator = ',';
+  private deepDatesRegex = /^(0?[1-9]|[12][0-9]|3[01])[\/\-](0?[1-9]|1[012])[\/\-](\d{4})$/;
 
   constructor(
     private snackBar: MatSnackBar,
@@ -1346,7 +1347,7 @@ export class ViewExtractedElementsComponent {
                     type: 'warning',
                     field: 'distributionDeal.catchUp.start',
                     name: 'CatchUp start',
-                    reason: `Failed to parse CatchUp start date, moved data to approxStart`,
+                    reason: `Failed to parse CatchUp start date : ${spreadSheetRow[SpreadSheetDistributionDeal.catchUpStartDate]}, moved data to approxStart`,
                     hint: 'Edit corresponding sheet field.'
                   });
                 } else {
@@ -1364,7 +1365,7 @@ export class ViewExtractedElementsComponent {
                     type: 'warning',
                     field: 'distributionDeal.catchUp.end',
                     name: 'CatchUp end',
-                    reason: `Failed to parse CatchUp end date, moved data to approxEnd`,
+                    reason: `Failed to parse CatchUp end date : ${spreadSheetRow[SpreadSheetDistributionDeal.catchUpEndDate]}, moved data to approxEnd`,
                     hint: 'Edit corresponding sheet field.'
                   });
                 } else {
@@ -1377,9 +1378,13 @@ export class ViewExtractedElementsComponent {
             if (spreadSheetRow[SpreadSheetDistributionDeal.multidiffusion]) {
               const multiDiffDates = spreadSheetRow[SpreadSheetDistributionDeal.multidiffusion].split(this.separator)
               multiDiffDates.forEach(date => {
-                const { y, m, d } = SSF.parse_date_code(date);
+                const dateParts = date.trim().match(this.deepDatesRegex);
+                let diffusionDate;
+                if (dateParts.length === 4) {
+                  diffusionDate = new Date(`${dateParts[3]}-${dateParts[2]}-${dateParts[1]}`);
+                }
+
                 const diffusion = createTerms();
-                const diffusionDate = new Date(`${y}-${m}-${d}`);
 
                 if (isNaN(diffusionDate.getTime())) {
                   diffusion.approxStart = date;
@@ -1387,7 +1392,7 @@ export class ViewExtractedElementsComponent {
                     type: 'warning',
                     field: 'multidiffusion.start',
                     name: 'Multidiffusion start',
-                    reason: `Failed to parse multidiffusion start date, moved data to approxStart`,
+                    reason: `Failed to parse multidiffusion start date : ${date}, moved data to approxStart`,
                     hint: 'Edit corresponding sheet field.'
                   });
                 } else {
@@ -1427,8 +1432,11 @@ export class ViewExtractedElementsComponent {
                     });
                   }
 
-                  const ssfHoldBackStart: SSF$Date = SSF.parse_date_code(holdbackParts[1].trim());
-                  const holdBackStart = new Date(`${ssfHoldBackStart.y}-${ssfHoldBackStart.m}-${ssfHoldBackStart.d}`);
+                  const holdBackStartParts = holdbackParts[1].trim().match(this.deepDatesRegex);
+                  let holdBackStart;
+                  if (holdBackStartParts.length === 4) {
+                    holdBackStart = new Date(`${holdBackStartParts[3]}-${holdBackStartParts[2]}-${holdBackStartParts[1]}`);
+                  }
 
                   if (isNaN(holdBackStart.getTime())) {
                     holdBack.terms.approxStart = holdbackParts[1].trim();
@@ -1436,15 +1444,18 @@ export class ViewExtractedElementsComponent {
                       type: 'warning',
                       field: 'holdback.start',
                       name: 'Holdback start',
-                      reason: `Failed to parse holdback start date, moved data to approxStart`,
+                      reason: `Failed to parse holdback start date : ${holdbackParts[1].trim()}, moved data to approxStart`,
                       hint: 'Edit corresponding sheet field.'
                     });
                   } else {
                     holdBack.terms.start = holdBackStart;
                   }
 
-                  const ssfHoldBackEnd: SSF$Date = SSF.parse_date_code(holdbackParts[2].trim());
-                  const holdBackEnd = new Date(`${ssfHoldBackEnd.y}-${ssfHoldBackEnd.m}-${ssfHoldBackEnd.d}`);
+                  const holdBackEndParts = holdbackParts[2].trim().match(this.deepDatesRegex);
+                  let holdBackEnd;
+                  if (holdBackEndParts.length === 4) {
+                    holdBackEnd = new Date(`${holdBackEndParts[3]}-${holdBackEndParts[2]}-${holdBackEndParts[1]}`);
+                  }
 
                   if (isNaN(holdBackEnd.getTime())) {
                     holdBack.terms.approxEnd = holdbackParts[2].trim();
@@ -1452,7 +1463,7 @@ export class ViewExtractedElementsComponent {
                       type: 'warning',
                       field: 'holdback.end',
                       name: 'Holdback end',
-                      reason: `Failed to parse holdback end date, moved data to approxEnd`,
+                      reason: `Failed to parse holdback end date : ${holdbackParts[2].trim()}, moved data to approxEnd`,
                       hint: 'Edit corresponding sheet field.'
                     });
                   } else {
@@ -1614,17 +1625,15 @@ export class ViewExtractedElementsComponent {
     //////////////////
 
     // TITLE PRICE VALIDATION
-    Object.keys(contract.last.titles).forEach(titleId => {
-      if (!contract.last.titles[titleId].price.amount) {
-        errors.push({
-          type: 'warning',
-          field: 'price',
-          name: 'Distribution deal price',
-          reason: `Optional field is missing for ${titleId}`,
-          hint: 'Edit corresponding sheet field.'
-        });
-      }
-    })
+    if (!contract.last.titles[importErrors.movieId] || !contract.last.titles[importErrors.movieId].price.amount) {
+      errors.push({
+        type: 'warning',
+        field: 'price',
+        name: 'Distribution deal price',
+        reason: `Optional field is missing for "${importErrors.movieTitle}"`,
+        hint: 'Edit corresponding sheet field.'
+      });
+    }
 
     return importErrors;
   }
@@ -1797,7 +1806,7 @@ export class ViewExtractedElementsComponent {
               type: 'warning',
               field: 'contract.last.scope',
               name: 'Contract scope start',
-              reason: `Failed to parse contract scope start date, moved data to approxStart`,
+              reason: `Failed to parse contract scope start date : ${spreadSheetRow[SpreadSheetContract.scopeStartDate]}, moved data to approxStart`,
               hint: 'Edit corresponding sheet field.'
             });
           } else {
@@ -1815,7 +1824,7 @@ export class ViewExtractedElementsComponent {
               type: 'warning',
               field: 'contract.last.scope',
               name: 'Contract scope end',
-              reason: `Failed to parse contract scope end date, moved data to approxEnd`,
+              reason: `Failed to parse contract scope end date : ${spreadSheetRow[SpreadSheetContract.scopeEndDate]}, moved data to approxEnd`,
               hint: 'Edit corresponding sheet field.'
             });
           } else {
