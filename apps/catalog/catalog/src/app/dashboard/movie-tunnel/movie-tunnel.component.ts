@@ -42,7 +42,7 @@ const panels = [{
   }]
 }, {
   title: 'Licensed Rights',
-  icon: 'mapMarker',
+  icon: 'map_marker',
   routes: [{
     path: 'rights',
     label: 'Marketplace Rights'

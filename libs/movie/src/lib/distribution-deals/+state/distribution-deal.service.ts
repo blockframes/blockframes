@@ -1,18 +1,18 @@
-import { DistributionDealForm } from './../form/distribution-deal.form';
 import { Injectable } from '@angular/core';
 import objectHash from 'object-hash';
-import { CollectionService, CollectionConfig, WriteOptions } from 'akita-ng-fire';
+import { CollectionService, CollectionConfig } from 'akita-ng-fire';
 import { DistributionDealState, DistributionDealStore } from './distribution-deal.store';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
-import { DistributionDeal } from './distribution-deal.model';
-import {
-  createContractTitleDetail,
-  ContractWithLastVersion
-} from '@blockframes/contract/contract/+state/contract.model';
+import { DistributionDeal, getDealTerritories } from './distribution-deal.model';
+import { createContractTitleDetail, ContractWithLastVersion } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractVersionService } from '@blockframes/contract/version/+state/contract-version.service';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
-import { isTimestamp } from '@blockframes/utils/helpers';
-import { FormList } from '@blockframes/utils';
+import { toDate } from '@blockframes/utils/helpers';
+import { ContractQuery } from '@blockframes/contract/contract/+state/contract.query';
+import { switchMap } from 'rxjs/operators';
+import { combineLatest } from 'rxjs';
+import { ContractVersion } from '@blockframes/contract/version/+state/contract-version.model';
+import { DistributionDealQuery } from './distribution-deal.query';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies/:movieId/distributionDeals' })
@@ -46,11 +46,7 @@ export class DistributionDealService extends CollectionService<DistributionDealS
    * @param movieId
    * @param distributionDeal
    */
-  public async addDistributionDeal(
-    movieId: string,
-    distributionDeal: DistributionDeal,
-    contract: ContractWithLastVersion
-  ): Promise<string> {
+  public async addDistributionDeal(movieId: string, distributionDeal: DistributionDeal, contract: ContractWithLastVersion): Promise<string> {
     // Create an id from DistributionDeal content.
     // A same DistributionDeal document will always have the same hash to prevent multiple insertion of same deal
     if (!distributionDeal.id) {
@@ -81,9 +77,7 @@ export class DistributionDealService extends CollectionService<DistributionDealS
       distributionDeal.contractId = contract.doc.id;
       // Contract may have been updated along with the distribution deal, we update it
       await this.contractService.add(contract.doc);
-      await this.contractVersionService.add(contract.last, {
-        params: { contractId: contract.doc.id }
-      });
+      await this.contractVersionService.add(contract.last, { params: { contractId: contract.doc.id } });
     }
     await this.add(distributionDeal, { params: { movieId } });
 
@@ -103,9 +97,7 @@ export class DistributionDealService extends CollectionService<DistributionDealS
    */
   public async getMyDeals(type: string = 'licensor'): Promise<DistributionDeal[]> {
     const myDealsSnap = await this.db
-      .collectionGroup('distributionDeals', ref =>
-        ref.where(`${type}.orgId`, '==', this.organizationQuery.getActiveId())
-      )
+      .collectionGroup('distributionDeals', ref => ref.where(`${type}.orgId`, '==', this.organizationQuery.getActiveId()))
       .get()
       .toPromise();
     const myDeals = myDealsSnap.docs.map(deal => this.formatDistributionDeal(deal.data()));
@@ -130,9 +122,7 @@ export class DistributionDealService extends CollectionService<DistributionDealS
       .collectionGroup('distributionDeals', ref => ref.where('contractId', '==', contractId))
       .get()
       .toPromise();
-    const distributionDeals = distributionDealsSnap.docs.map(deal =>
-      this.formatDistributionDeal(deal.data())
-    );
+    const distributionDeals = distributionDealsSnap.docs.map(deal => this.formatDistributionDeal(deal.data()));
     return distributionDeals;
   }
 
@@ -148,30 +138,5 @@ export class DistributionDealService extends CollectionService<DistributionDealS
     const deals = dealIds.map(dealId => this.dealQuery.getEntity(dealId))
     const territories = deals.map(deal => deal ? getDealTerritories(deal) : []);
     return territories.flat();
-  }
-
-  /**
-   * @description function to call when you need to update the DB with new and old deals
-   * @param deals contract
-   */
-  public async upsert(deals: Partial<FormList<any, DistributionDealForm>>) {
-    const state = await this.getValue();
-    const alteredDeals: DistributionDeal[] = [];
-    const newDeals: DistributionDeal[] = [];
-    // @ts-ignore: Unreachable code error
-    deals.forEach(control => {
-      if (control.dirty) {
-        state.forEach(oldValue => {
-          if (oldValue.id === control.value.id) {
-            alteredDeals.push(control.value);
-          } else {
-            newDeals.push(control.value);
-          }
-        });
-      }
-    });
-    Promise.all([this.update(alteredDeals), this.add(newDeals)]).catch(err => {
-      console.error(err);
-    });
   }
 }

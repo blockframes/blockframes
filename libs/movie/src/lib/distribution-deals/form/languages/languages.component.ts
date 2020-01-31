@@ -65,11 +65,12 @@ export class DistributionDealLanguagesComponent {
    */
   public stateOfForm(event: MatSlideToggleChange) {
     if (event.checked) {
+      this.form.addLanguage('all');
       this.languageCtrl.disable();
       this.formIsDisabled = true;
       const languages = Object.keys(this.form.controls);
       languages.forEach(language => {
-        const buttons = ['original', 'dubbed', 'subtitle', 'caption'];
+        const buttons = ['dubbed', 'subtitle', 'caption'];
         buttons.forEach(button => {
           this.isChecked(language, button);
           this.addAllVersions(language, button);
@@ -78,7 +79,6 @@ export class DistributionDealLanguagesComponent {
     } else {
       this.languageCtrl.enable();
       this.formIsDisabled = false;
-
       this.form.removeLanguage('all');
     }
   }
