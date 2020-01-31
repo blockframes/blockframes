@@ -31,6 +31,9 @@ import { createImgRef } from '@blockframes/utils/image-uploader';
 import { LanguagesSlug } from '@blockframes/utils/static-model';
 import { createRange } from '@blockframes/utils/common-interfaces/range';
 import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
+import { Contract, getValidatedContracts } from '@blockframes/contract/contract/+state/contract.model';
+import { CurrencyPipe } from '@angular/common';
+import { getContractLastVersion } from '@blockframes/contract/version/+state/contract-version.model';
 
 // Export for other files
 export { Credit, SalesAgent } from '@blockframes/utils/common-interfaces/identity';
@@ -334,5 +337,13 @@ export function getMovieTitleList(movies: Movie[]): string[] {
     : movie.main.title.original
   )
   return movieTitles;
+}
 
+/** Returns the total gross receipts of a movie from the contracts. */
+export function getMovieReceipt(contracts: Contract[], movieId: string) {
+  const currencyPipe = new CurrencyPipe('en-US');
+  const sales = getValidatedContracts(contracts);
+  const amount = sales.reduce((sum, contract) => sum + getContractLastVersion(contract).titles[movieId].price.amount, 0);
+  // We use USD as default currency as we can have different currencies for each deals and contracts.
+  return currencyPipe.transform(amount, 'USD', 'symbol');
 }

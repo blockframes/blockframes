@@ -3,7 +3,6 @@ import { FormControl } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-
 import { Observable } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 
@@ -19,9 +18,6 @@ export class ColRef  {
   @Input() colRef: string;
   constructor(public template: TemplateRef<any>) {}
 }
-
-
-
 
 @Component({
   selector: 'bf-table-filter',

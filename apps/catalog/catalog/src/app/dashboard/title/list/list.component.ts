@@ -1,12 +1,12 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Movie, MovieQuery } from '@blockframes/movie';
+import { Movie, MovieQuery, MovieService, getMovieReceipt } from '@blockframes/movie';
 import { startWith, switchMap, map } from 'rxjs/operators';
 import { Observable, combineLatest } from 'rxjs';
-import { Contract, getValidatedContracts, getLastVersionIndex } from '@blockframes/contract/contract/+state/contract.model';
-import { StoreStatus } from '@blockframes/movie/movie+state/movie.firestore';
-import { CurrencyPipe } from '@angular/common';
+import { Contract } from '@blockframes/contract/contract/+state/contract.model';
+import { StoreStatus, MovieAnalytics } from '@blockframes/movie/movie+state/movie.firestore';
 import { ContractQuery } from '@blockframes/contract/contract/+state/contract.query';
+import { getContractLastVersion } from '@blockframes/contract/version/+state';
 
 interface TitleView {
   id: string;
@@ -17,39 +17,24 @@ interface TitleView {
   status: StoreStatus;
 }
 
-/**
- * Factory function that flattens movie properties and make it usable in a reusable table.
- * @param movie
- * @param contracts
- */
-function createTitleView(movie: Movie, contracts: Contract[]): TitleView {
-  const ownContracts = contracts.filter(c => getContractLastVersion(c).titles[movie.id]);
-  return {
-    id: movie.id,
-    title: movie.main.title.international,
-    view: 'View',
-    sales: ownContracts.length,
-    receipt: getMovieReceipt(ownContracts, movie.id),
-    status: movie.main.storeConfig.status
-  };
-}
-
-/** Returns the total gross receipts of a movie from the contracts. */
-function getMovieReceipt(contracts: Contract[], movieId: string) {
-  const currencyPipe = new CurrencyPipe('en-US');
-  const sales = getValidatedContracts(contracts);
-  const amount = sales.reduce((sum, contract) => sum + contract.versions[getLastVersionIndex(contract)].titles[movieId].price.amount, 0);
-  // We use USD as default currency as we can have different currencies for each deals and contracts.
-  return currencyPipe.transform(amount, 'USD', 'symbol');
-}
-
 const columns = {
   title: 'Title',
-  view: 'View',
+  view: '# View',
   sales: 'Sales',
   receipt: 'Total Gross Receipts',
   status: 'Status'
 };
+
+/**
+ * Returns the number of views of a movie page.
+ * @param analytics
+ * @param movieId
+ */
+function getTotalViews(analytics: MovieAnalytics[], movieId: string): number {
+  const movieAnalytic = analytics.find(analytic => analytic.movieId === movieId);
+  const movieHits = movieAnalytic.movieViews.current.map(event => event.hits);
+  return movieHits.reduce((acc, val) => acc + val, 0);
+}
 
 @Component({
   selector: 'catalog-title-list',
@@ -58,15 +43,22 @@ const columns = {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TitleListComponent implements OnInit {
-  columns = columns;
-  initialColumns = ['title', 'view', 'sales', 'receipt', 'status', 'id'];
-  titles$: Observable<TitleView[]>;
-  filter = new FormControl();
-  filter$ = this.filter.valueChanges.pipe(
-    startWith(this.filter.value)
+  public columns = columns;
+  public initialColumns = ['title', 'view', 'sales', 'receipt', 'status'];
+  public titles$: Observable<TitleView[]>;
+
+  public filter = new FormControl();
+  public filter$ = this.filter.valueChanges.pipe(startWith(this.filter.value));
+
+  public moviesAnalytics$ = this.service.getMovieAnalytics(
+    this.query.getAll().map(movie => movie.id)
   );
 
-  constructor(private query: MovieQuery, private contractQuery: ContractQuery) {}
+  constructor(
+    private query: MovieQuery,
+    private contractQuery: ContractQuery,
+    private service: MovieService
+  ) {}
 
   ngOnInit() {
     // Filtered movies
@@ -78,8 +70,14 @@ export class TitleListComponent implements OnInit {
       )
     );
     // Transform movies into a TitleView
-    this.titles$ = combineLatest([movies$, this.contractQuery.selectAll()]).pipe(
-      map(([movies, contracts]) => movies.map(movie => this.createTitleView(movie, contracts)))
+    this.titles$ = combineLatest([
+      movies$,
+      this.contractQuery.selectAll(),
+      this.moviesAnalytics$
+    ]).pipe(
+      map(([movies, contracts, analytics]) =>
+        movies.map(movie => this.createTitleView(movie, contracts, analytics))
+      )
     );
   }
 
@@ -89,12 +87,12 @@ export class TitleListComponent implements OnInit {
   }
 
   /** Factory function to flatten movie data. */
-  public createTitleView(movie: Movie, contracts: Contract[]): TitleView {
-    const ownContracts = contracts.filter(c => c.versions[getLastVersionIndex(c)].titles[movie.id]);
+  public createTitleView(movie: Movie, contracts: Contract[], analytics: MovieAnalytics[]): TitleView {
+    const ownContracts = contracts.filter(c => getContractLastVersion(c).titles[movie.id]);
     return {
       id: movie.id,
       title: movie.main.title.international,
-      view: 'View',
+      view: getTotalViews(analytics, movie.id).toString(),
       sales: ownContracts.length,
       receipt: getMovieReceipt(ownContracts, movie.id),
       status: movie.main.storeConfig.status
