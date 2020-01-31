@@ -1,6 +1,7 @@
-import { Component, OnInit, ChangeDetectionStrategy, HostBinding } from '@angular/core';
+import { Component, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { MovieQuery, Movie } from '@blockframes/movie';
 import { Observable } from 'rxjs';
+import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 
 @Component({
   selector: 'catalog-movie-main',
@@ -8,25 +9,21 @@ import { Observable } from 'rxjs';
   styleUrls: ['./main.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceMovieMainComponent implements OnInit {
+export class MarketplaceMovieMainComponent {
   @HostBinding('attr.page-id') pageId = 'catalog-movie-main';
-  public movie$: Observable<Movie>;
-  public loading$: Observable<boolean>;
+  public movie$ = this.movieQuery.selectActive();
+  public loading$ = this.movieQuery.selectLoading();
   constructor(private movieQuery: MovieQuery,) { }
 
-  ngOnInit() {
-    this.getMovie();
-  }
-
-  private getMovie() {
-    this.loading$ = this.movieQuery.selectLoading();
-    this.movie$ = this.movieQuery.selectActive();
+  public hasStory({ story, promotionalDescription }: Movie): boolean {
+    if(story.synopsis || promotionalDescription.keywords.length > 0 || promotionalDescription.keyAssets)
+    return true;
   }
 
   public getPrize(prize) {
-    return [prize.name, prize.prize, prize.year, prize.premiere].join(' | ');
+    return [`${prize.name}  ${prize.year}`, prize.prize,prize.premiere].join(' | ');
   }
-
+  
   // TODO#1658 Update LANGUAGES static model to be RFC-5646 compliant
   public getStakeholder(movie: Movie, role: string) {
     const array = movie.main.stakeholders[role];
@@ -35,7 +32,7 @@ export class MarketplaceMovieMainComponent implements OnInit {
         return `${e.displayName} (${e.countries})`;
       }
       return e.displayName;
-    })
+    }).join(', ');
   }
 
   public getSalesCast(movie: Movie, role: string) {
@@ -44,7 +41,16 @@ export class MarketplaceMovieMainComponent implements OnInit {
         return `${e.firstName} ${e.lastName} (${e.role})`;
       }
       return `${e.firstName} ${e.lastName}`;
-    });
+    }).join(', ');
+  }
+
+  public hasBudget({ budget, salesInfo, movieReview}: Movie): boolean {
+    if(budget.estimatedBudget ||
+       budget.boxOffice.length > 0 ||
+       salesInfo.certifications.length > 0||
+       salesInfo.rating.length > 0||
+       movieReview.length > 0)
+       return true;
   }
 
   public budgetRange({ from, to }) {
