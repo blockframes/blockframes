@@ -17,7 +17,12 @@
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
-    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    <ng-template [ngIf]="link" [ngIfElse]="withoutLink">
+      <tr mat-row *matRowDef="let row; columns: displayedColumns" [routerLink]="[link, row.id]" style="cursor: pointer;"></tr>
+    </ng-template>
+    <ng-template #withoutLink>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </ng-template>
   </table>
   <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons *ngIf="showPaginator"></mat-paginator>
 </div>

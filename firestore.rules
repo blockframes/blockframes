@@ -163,6 +163,16 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    /// TEMPLATES RULES ///
+
+    match /templates/{templateId} {
+    	allow read, write: if userHasValidOrg();
+
+      match /materials/{materialId} {
+        allow read, write: if userHasValidOrg();
+      }
+    }
+
     /////////////////
     /// FUNCTIONS ///
     /////////////////
