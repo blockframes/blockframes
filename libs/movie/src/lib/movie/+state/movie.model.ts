@@ -157,8 +157,6 @@ export function createMovieOriginalRelease(
 export function createMovieRating(params: Partial<MovieRating> = {}): MovieRating {
   return {
     country: null,
-    reason: '',
-    system: null,
     value: '',
     ...params
   };

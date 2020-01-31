@@ -215,6 +215,7 @@ const models = {
     }
   ] as const,
   'LANGUAGES': [ // @TODO (#1658) Update LANGUAGES static model to be RFC-5646 compliant
+    { 'slug': 'all', 'label': 'All languages'},
     { 'slug': 'albanian', 'label': 'Albanian' },
     { 'slug': 'arabic', 'label': 'Arabic' },
     { 'slug': 'armenian', 'label': 'Armenian' },
@@ -442,7 +443,13 @@ const models = {
       'label': 'European Qualification'
     }
   ] as const,
-  'TERRITORIES': IsoTerritoriesToSlugAndLabel(),
+  'TERRITORIES': [
+    {
+      'slug': 'world',
+      'label': 'World'
+    },
+    ...IsoTerritoriesToSlugAndLabel()
+  ],
   'MEDIAS': [
     { 'slug': 'pay-tv', 'label': 'Pay TV' },
     { 'slug': 'pay-per-view', 'label': 'Pay Per View' },
