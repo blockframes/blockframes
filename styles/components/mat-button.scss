@@ -28,8 +28,13 @@
 
 // TYPOGRAPHY
 @mixin mat-bf-button-typography($config) {
-  .mat-button, .mat-raised-button, .mat-icon-button, .mat-stroked-button,
-  .mat-flat-button, .mat-fab, .mat-mini-fab {
-    letter-spacing: mat-letter-spacing($config, button);
+  
+  // need to wrap around something to win the battle against Material CSS priority
+  body {
+    .mat-button, .mat-raised-button, .mat-icon-button, .mat-stroked-button,
+    .mat-flat-button, .mat-fab, .mat-mini-fab {
+      letter-spacing: mat-letter-spacing($config, button);
+      line-height: mat-line-height($config, button);
+    }
   }
 }
