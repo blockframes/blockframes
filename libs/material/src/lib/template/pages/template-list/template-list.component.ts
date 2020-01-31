@@ -18,8 +18,7 @@ export class TemplateListComponent implements OnInit {
   public versionColumns = {
     name: 'Title',
     created: 'Creation Date',
-    updated: 'Last Modification',
-    id: 'Link'
+    updated: 'Last Modification'
   };
   public initialVersionColumns = ['name', 'created', 'updated'];
 
