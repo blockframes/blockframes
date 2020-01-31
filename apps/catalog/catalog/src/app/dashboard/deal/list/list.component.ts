@@ -1,11 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import {
-  ContractQuery,
-  Contract,
-  ContractStatus
-} from '@blockframes/contract/contract/+state';
-import { FormControl } from '@angular/forms';
-import { startWith, share } from 'rxjs/operators';
+import { ContractQuery, Contract, ContractStatus } from '@blockframes/contract/contract/+state';
 import { getContractLastVersion } from '@blockframes/contract/version/+state/contract-version.model';
 
 interface Tabs {
@@ -19,7 +13,11 @@ const contractTabs: Tabs[] = [
   },
   {
     name: 'Offers',
-    statuses: [ContractStatus.submitted, ContractStatus.undernegotiation, ContractStatus.waitingsignature]
+    statuses: [
+      ContractStatus.submitted,
+      ContractStatus.undernegotiation,
+      ContractStatus.waitingsignature
+    ]
   },
   {
     name: 'Ongoing Deals',
@@ -45,12 +43,6 @@ export class DealListComponent {
   public contracts$ = this.contractQuery.selectAll();
   public contractTabs = contractTabs;
 
-  public filter = new FormControl();
-  public filter$ = this.filter.valueChanges.pipe(
-    startWith(this.filter.value),
-    share()
-  );
-
   constructor(private contractQuery: ContractQuery) {}
 
   /**
@@ -72,6 +64,6 @@ export class DealListComponent {
       const lastVersionStatus = (contract: Contract) => getContractLastVersion(contract).status;
       return contracts.filter(contract => statuses.includes(lastVersionStatus(contract)));
     }
-      return contracts;
+    return contracts;
   }
 }

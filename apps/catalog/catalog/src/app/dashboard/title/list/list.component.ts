@@ -15,6 +15,11 @@ interface TitleView {
   status: StoreStatus;
 }
 
+/**
+ * Factory function that flattens movie properties and make it usable in a reusable table.
+ * @param movie
+ * @param contracts
+ */
 function createTitleView(movie: Movie, contracts: Contract[]): TitleView {
   const ownContracts = contracts.filter(c => getContractLastVersion(c).titles[movie.id]);
   return {
@@ -71,6 +76,7 @@ export class TitleListComponent implements OnInit {
     )
   }
 
+  /** Dynamic filter of movies for each tab. */
   applyFilter(filter?: Movie['main']['storeConfig']['storeType']) {
     this.filter.setValue(filter);
   }

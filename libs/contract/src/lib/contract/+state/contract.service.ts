@@ -5,7 +5,6 @@ import {
   Contract,
   convertToContractDocument,
   createContractPartyDetail,
-  createPartyDetails,
   initContractWithVersion,
   ContractWithLastVersion,
   ContractWithTimeStamp,
