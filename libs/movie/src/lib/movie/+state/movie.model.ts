@@ -25,6 +25,7 @@ import {
   BoxOffice,
   UnitBox,
   MovieStakeholders,
+  StoreStatus,
 } from './movie.firestore';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 import { LanguagesSlug } from '@blockframes/utils/static-model';
@@ -156,8 +157,6 @@ export function createMovieOriginalRelease(
 export function createMovieRating(params: Partial<MovieRating> = {}): MovieRating {
   return {
     country: null,
-    reason: '',
-    system: null,
     value: '',
     ...params
   };
@@ -286,7 +285,7 @@ export function populateMovieLanguageSpecification(
 
 export function createStoreConfig(params: Partial<StoreConfig> = {}): StoreConfig {
   return {
-    display: true,
+    status: StoreStatus.draft,
     storeType: StoreType.line_up,
     ...params
   };
@@ -323,4 +322,17 @@ export function createMovieStakeholders(stakeholders: Partial<MovieStakeholders>
     financier: [],
     ...stakeholders
   }
+}
+
+/**
+ * Takes an array of movies and returns a list of their titles.
+ * @param movies
+ */
+export function getMovieTitleList(movies: Movie[]): string[] {
+  const movieTitles = movies.map(movie => movie.main.title.international
+    ? movie.main.title.international
+    : movie.main.title.original
+  )
+  return movieTitles;
+
 }

@@ -1,59 +1,26 @@
-import { Routes } from '@angular/router';
+import { Routes, Route } from '@angular/router';
 import { AuthGuard } from '@blockframes/auth';
 import { PermissionsGuard, OrganizationGuard } from '@blockframes/organization';
 import { NotificationsGuard } from '@blockframes/notification';
+import { MaintenanceGuard } from '@blockframes/ui/maintenance';
 
 interface RouteOptions {
   /** The routes of the apps */
   appsRoutes: Routes,
   /** Name of the app to put in data of the route */
   appName: string,
+  /** The route to the landing page if any */
+  landing?: Route,
 }
 
-function root(children: Routes, appName: string) {
-  return [
-    {
-      path: 'auth',
-      loadChildren: () => import('@blockframes/auth/auth.module').then(m => m.AuthModule)
-    },
-    {
-      path: 'c',
-      canActivate: [AuthGuard],
-      canDeactivate: [AuthGuard],
-      data: { app: appName },
-      children: [
-        {
-          path: '',
-          redirectTo: 'o',
-          pathMatch: 'full'
-        },
-        {
-          // The redirection route when user has no organization
-          path: 'organization',
-          loadChildren: () => import('@blockframes/organization').then(m => m.NoOrganizationModule)
-        },
-        {
-          path: 'o',
-          canActivate: [NotificationsGuard, PermissionsGuard, OrganizationGuard],
-          canDeactivate: [NotificationsGuard, PermissionsGuard, OrganizationGuard],
-          children
-        }
-      ]
-    },
-    {
-      path: 'not-found',
-      loadChildren: () => import('@blockframes/ui').then(m => m.ErrorNotFoundModule)
-    },
-    {
-      path: '**',
-      loadChildren: () => import('@blockframes/ui').then(m => m.ErrorNotFoundModule)
-    }
-  ]
+const defaultLanding = {
+  path: '',
+  redirectTo: 'c',
+  pathMatch: 'full'
 }
 
-
-
-export function createRoutes({ appsRoutes, appName }: RouteOptions) {
+export function createRoutes({ appsRoutes, appName, landing = defaultLanding }: RouteOptions) {
+  // We need to put the spread operator in a local variable to make build works on prod
   const children = [
     ...appsRoutes,
     {
@@ -65,7 +32,55 @@ export function createRoutes({ appsRoutes, appName }: RouteOptions) {
       loadChildren: () => import('@blockframes/account').then(m => m.AccountModule)
     },
   ];
-  return root(children, appName);
+  return [
+    {
+      path: 'maintenance',
+      canActivate: [MaintenanceGuard],
+      loadChildren: () => import('@blockframes/ui/maintenance').then(m => m.MaintenanceModule)
+    },
+    {
+    path: '',
+    canActivate: [MaintenanceGuard],
+    data: { app: appName },
+    children: [
+      landing,
+      {
+        path: 'auth',
+        loadChildren: () => import('@blockframes/auth/auth.module').then(m => m.AuthModule)
+      },
+      {
+        path: 'c',
+        canActivate: [AuthGuard],
+        canDeactivate: [AuthGuard],
+        children: [
+          {
+            path: '',
+            redirectTo: 'o',
+            pathMatch: 'full'
+          },
+          {
+            // The redirection route when user has no organization
+            path: 'organization',
+            loadChildren: () => import('@blockframes/organization').then(m => m.NoOrganizationModule)
+          },
+          {
+            path: 'o',
+            canActivate: [NotificationsGuard, PermissionsGuard, OrganizationGuard],
+            canDeactivate: [NotificationsGuard, PermissionsGuard, OrganizationGuard],
+            children
+          }
+        ]
+      },
+      {
+        path: 'not-found',
+        loadChildren: () => import('@blockframes/ui').then(m => m.ErrorNotFoundModule)
+      },
+      {
+        path: '**',
+        loadChildren: () => import('@blockframes/ui').then(m => m.ErrorNotFoundModule)
+      }
+    ]
+  }]
 }
 
 

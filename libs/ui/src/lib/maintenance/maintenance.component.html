@@ -1,0 +1,13 @@
+<ng-container *ngIf="isInMaintenance$ | async; else canRefresh">
+  <h1 class="mat-display-1">We are in maintenance</h1>
+  <h3>This should take about 20min</h3>
+</ng-container>
+
+<ng-template #canRefresh>
+  <h1 class="mat-display-1">Maintenance is over</h1>
+  <h3>Please refresh the page</h3>
+  <button mat-flat-button color="warn" (click)="refresh()">
+    <mat-icon svgIcon="refresh"></mat-icon>
+    <span>Refresh</span>
+  </button>
+</ng-template>

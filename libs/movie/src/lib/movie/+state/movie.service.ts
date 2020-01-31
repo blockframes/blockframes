@@ -136,9 +136,9 @@ export class MovieService extends CollectionService<MovieState> {
     return movieSnapShot.docs.length ? createMovie(movieSnapShot.docs[0].data()) : undefined;
   }
 
-  /** Call a firebase function to get analytics specify to a movie.*/
-  public getMovieAnalytics(): Observable<MovieAnalytics> {
+  /** Call a firebase function to get analytics specify to an array of movieIds.*/
+  public getMovieAnalytics(movieIds: string[]): Observable<MovieAnalytics[]> {
     const f = this.functions.httpsCallable('getMovieAnalytics');
-    return f({ movieId: this.query.getActiveId() });
+    return f({ movieIds, daysPerRange: 28 });
   }
 }

@@ -13,12 +13,10 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatIconModule } from '@angular/material/icon';
 import { MatRippleModule } from '@angular/material/core';
+import { MatSnackBarModule } from '@angular/material';
 
 // Components
 import { WishlistCurrentRepertoryComponent } from './wishlist-current-repertory/wishlist-current-repertory.component';
-
-// Angular Fire
-import { AngularFireAnalyticsModule } from '@blockframes/utils';
 
 @NgModule({
   declarations: [WishlistViewComponent, WishlistCurrentRepertoryComponent],
@@ -34,9 +32,7 @@ import { AngularFireAnalyticsModule } from '@blockframes/utils';
     MatSortModule,
     MatIconModule,
     MatRippleModule,
-
-    // Angular Fire
-    AngularFireAnalyticsModule,
+    MatSnackBarModule,
 
     RouterModule.forChild([
       {

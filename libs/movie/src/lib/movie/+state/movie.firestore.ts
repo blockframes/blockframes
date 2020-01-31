@@ -52,20 +52,38 @@ export enum UnitBox {
   entrances = '#Entrances',
 }
 
+export const enum StoreStatus {
+  submitted = 'Submitted',
+  accepted = 'Accepted',
+  draft = 'Draft',
+  refused = 'Refused',
+}
+
 export interface EventAnalytics {
-  event_date: number,
+  event_date: string,
   event_name: AnalyticsEvents,
-  hits: number
+  hits: number,
+  movieId: string
 }
 
 export interface MovieAnalytics {
-  addedToWishlist: EventAnalytics[],
-  movieViews: EventAnalytics[],
-  promoReelOpened: EventAnalytics[]
+  movieId: string,
+  addedToWishlist: {
+    current: EventAnalytics[],
+    past: EventAnalytics[]
+  },
+  movieViews: {
+    current: EventAnalytics[],
+    past: EventAnalytics[]
+  },
+  promoReelOpened: {
+    current: EventAnalytics[],
+    past: EventAnalytics[]
+  }
 }
 
 export interface StoreConfig {
-  display: boolean,
+  status: StoreStatus,
   storeType: StoreType,
 }
 
@@ -171,8 +189,8 @@ export interface MovieOriginalReleaseRaw<D> {
 
 export interface MovieRating {
   country: TerritoriesSlug;
-  reason: string,
-  system: RatingSlug,
+  reason?: string,
+  system?: RatingSlug,
   value: string,
 }
 

@@ -2,7 +2,7 @@ import { FormControl } from '@angular/forms';
 import { Injectable } from '@angular/core';
 import {
   createContract,
-  createPartyDetails
+  createContractPartyDetail
 } from '@blockframes/contract/contract/+state/contract.model';
 import { Contract } from './../+state/contract.model';
 import { ContractPartyForm } from './party-name/party-name.form';
@@ -43,7 +43,7 @@ export class ContractForm extends FormEntity<ContractControl> {
 // PARTY DETAILS
 
 function createPartyDetailsControls(partyDetails: Partial<ContractPartyDetail> = {}) {
-  const entity = createPartyDetails(partyDetails);
+  const entity = createContractPartyDetail(partyDetails);
   return {
     party: new ContractPartyForm(entity.party),
     status: new FormControl(entity.status)

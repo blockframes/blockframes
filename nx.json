@@ -23,6 +23,9 @@
     "contract": {
       "tags": []
     },
+    "financial-report": {
+      "tags": []
+    },
     "ethers": {
       "tags": ["ethereum", "smart-contract"]
     },

@@ -1,0 +1,99 @@
+<ng-container *ngIf="displayedColumns$ | async as displayedColumns">
+  <mat-form-field appearance="outline">
+    <mat-label>Filter</mat-label>
+    <input
+      matInput
+      placeholder="Type to filter in the list below"
+      (keyup)="applyFilter($event.target.value)">
+    <button matSuffix mat-icon-button [widgetTarget]="filterColumnWidget">
+      <mat-icon>filter_list</mat-icon>
+    </button>
+  </mat-form-field>
+
+  <table mat-table [dataSource]="dataSource" matSort>
+    <ng-container matColumnDef="buyerName">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Buyer name</th>
+      <td mat-cell *matCellDef="let contract" class="mat-body-2">
+        <article class="mat-body-2">
+          <b>{{ getBuyerName(contract) }}</b>
+        </article>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="dateReceived">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Date received</th>
+      <td mat-cell *matCellDef="let contract">
+        <article class="mat-body-2">
+          {{ getLastVersion(contract).creationDate | date: 'shortDate' }}
+        </article>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="territories">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Territories</th>
+      <td mat-cell *matCellDef="let contract">
+        <article *ngFor="let territory of getContractTerritories(contract)" class="mat-body-2">
+          {{ territory | translateSlug: 'TERRITORIES'}}
+        </article>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="moviesLenght">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header># Films</th>
+      <td mat-cell *matCellDef="let contract">
+        <article class="mat-body-2">
+          {{ getMovieNames(contract).length }}
+        </article>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="titles">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Titles</th>
+      <td mat-cell *matCellDef="let contract">
+        <article *ngFor="let movieName of getMovieNames(contract)" class="mat-body-2">
+          {{ movieName }}
+        </article>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="price">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Price</th>
+      <td mat-cell *matCellDef="let contract" class="mat-body-2">
+        <article *ngIf="getContractTotalPrice(contract) as price" class="mat-body-2">
+          <b>{{ price.amount | currency: price.currency }}</b>
+        </article>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="paid">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Paid</th>
+      <td mat-cell *matCellDef="let contract">
+        <article class="mat-body-2">
+          {{ getLastVersion(contract).status == 'paid' ? 'Yes' : 'No' }}
+        </article>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="status">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
+      <td mat-cell *matCellDef="let contract">
+        <span class="mat-body-2">
+          {{ getLastVersion(contract).status | titlecase }}
+        </span>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns" [routerLink]="[row.id]"></tr>
+  </table>
+
+  <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons></mat-paginator>
+</ng-container>
+
+<overlay-widget #filterColumnWidget>
+  <mat-selection-list [formControl]="columnFilter" class="mat-elevation-z2">
+    <mat-list-option *ngFor="let column of columns | keyvalue" [value]="column.key">
+      {{ column.value }}
+    </mat-list-option>
+  </mat-selection-list>
+</overlay-widget>

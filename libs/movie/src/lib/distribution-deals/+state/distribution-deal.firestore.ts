@@ -33,7 +33,6 @@ interface DistributionDealRaw<D> {
   titleInternalAlias: string;
   download: boolean;
   contractId?: string;
-  reportingId?: string;
   deliveryIds?: string;
   multidiffusion?: TermsRaw<D>[];
   holdbacks?: HoldbackRaw<D>[];

@@ -1,5 +1,5 @@
-import { getCodeIfExists, getCodeBySlug } from '@blockframes/utils/static-model/staticModels';
-import { createPrice, Price } from '@blockframes/utils/common-interfaces/price';
+import { getCodeIfExists } from '@blockframes/utils/static-model/staticModels';
+import { createPrice, Price, PaymentStatus } from '@blockframes/utils/common-interfaces/price';
 import {
   ContractDocumentWithDates,
   ContractStatus,
@@ -8,15 +8,19 @@ import {
   ContractPartyDetailDocumentWithDatesDocument,
   LegalDocument,
   LegalDocuments,
-  ContractDocument
+  ContractDocument,
+  ContractType,
+  InvoiceTitleDetails,
+  Invoice
 } from './contract.firestore';
 import { createParty } from '@blockframes/utils/common-interfaces/identity';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 import { createTerms } from '@blockframes/utils/common-interfaces/terms';
 import { ContractVersion, ContractVersionWithTimeStamp, formatContractVersion } from '../../version/+state/contract-version.model';
 import { LegalRolesSlug } from '@blockframes/utils/static-model/types';
-import { CurrencyPipe } from '@angular/common';
-import { isTimestamp } from '@blockframes/utils/helpers';
+import { toDate } from '@blockframes/utils/helpers';
+import { createPaymentSchedule } from '@blockframes/utils/common-interfaces/schedule';
+import { createBankAccount } from '@blockframes/utils/common-interfaces/utility';
 
 /**
  * @dev this should not be saved to firestore,
@@ -50,7 +54,8 @@ export interface ContractWithLastVersion {
 
 export function createContract(params: Partial<Contract> = {}): Contract {
   return {
-    id: params.id ? params.id : '',
+    id: params.id || '',
+    type: ContractType.mandate,
     parties: [],
     titleIds: [],
     partyIds: [],
@@ -61,7 +66,7 @@ export function createContract(params: Partial<Contract> = {}): Contract {
 
 export function createContractVersion(params: Partial<ContractVersion> = {}): ContractVersion {
   return {
-    id: params.id ? params.id : '1',
+    id: params.id || '1',
     titles: {},
     creationDate: new Date(),
     paymentSchedule: [],
@@ -98,14 +103,6 @@ export function initContractWithVersion(): ContractWithLastVersion {
   return {
     doc: createContract(),
     last: createContractVersion()
-  };
-}
-
-export function createPartyDetails(params: Partial<ContractPartyDetail>): ContractPartyDetail {
-  return {
-    status: params.status || ContractStatus.unknown,
-    ...params,
-    party: createParty(params.party),
   };
 }
 
@@ -164,6 +161,7 @@ export function buildChainOfTitle() {
 export function convertToContractDocument(params: Partial<Contract> = {}): ContractDocumentWithDates {
   return {
     id: params.id,
+    type: ContractType.mandate,
     parties: [],
     titleIds: [],
     partyIds: [],
@@ -198,7 +196,7 @@ export function createLegalDocument(
 export function createContractFromFirestore(contract: ContractWithTimeStamp): Contract {
   return {
     ...contract,
-    signDate: (contract.signDate instanceof Date) ? contract.signDate : contract.signDate.toDate(),
+    signDate: toDate(contract.signDate),
     parties: contract.parties
       ? contract.parties.map(partyDetails => formatPartyDetails(partyDetails))
       : [],
@@ -208,15 +206,48 @@ export function createContractFromFirestore(contract: ContractWithTimeStamp): Co
   }
 }
 
+export function createInvoiceTitleDetails(
+  params: Partial<InvoiceTitleDetails> = {}
+): InvoiceTitleDetails {
+  return {
+    titleId: '',
+    ...params,
+    price: createPrice(params.price),
+  }
+}
+
+export function createInvoice(
+  params: Partial<Invoice> = {}
+): Invoice {
+  return {
+    id: '',
+    internalRef: '',
+    payments: [],
+    emittedDate: new Date(),
+    titles: [],
+    buyerId: '',
+    sellerId: '',
+    status: PaymentStatus.unknown,
+    contractId: '',
+    legalDocumentId: '',
+    reportIds: [],
+    reportInternalRefs: [],
+    ...params,
+    price: createPrice(params.price),
+    collected: createPrice(params.collected),
+    paymentSchedule: createPaymentSchedule(params.paymentSchedule),
+    account: createBankAccount(params.account),
+  }
+}
+
 /**
  *
  * @param partyDetails
  */
 export function formatPartyDetails(partyDetails: any): ContractPartyDetail {
   // Dates from firebase are Timestamps, we convert it to Dates.
-  if (isTimestamp(partyDetails.signDate)) {
-    partyDetails.signDate = partyDetails.signDate.toDate();
-  }
+  partyDetails.signDate = toDate(partyDetails.signDate);
+
 
   return partyDetails as ContractPartyDetail;
 }
@@ -267,17 +298,3 @@ export function getTotalPrice(titles: Record<string, ContractTitleDetail>): Pric
 
   return result;
 }
-
-/**
- * Same logic as totalPrice function, but returns a string for flattened objects.
- * @param lastVersion
- */
-export function getTotalPiceAsString(titles: ContractTitleDetail): string {
-  const currencyPipe = new CurrencyPipe('en-US');
-  const versionTitles = Object.values(titles);
-  const amount = versionTitles.reduce((sum, title) => sum += title.price.amount, 0);
-  const currency = getCodeBySlug('MOVIE_CURRENCIES', versionTitles[versionTitles.length - 1].price.currency);
-
-  return currencyPipe.transform(amount, currency, true);
-}
-

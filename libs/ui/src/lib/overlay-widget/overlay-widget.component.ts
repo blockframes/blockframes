@@ -1,4 +1,4 @@
-import { Component, TemplateRef, ViewChild } from '@angular/core';
+import { Component, TemplateRef, ViewChild, Directive, ViewEncapsulation } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 
 const fade = trigger('fade', [
@@ -18,9 +18,61 @@ const fade = trigger('fade', [
       <ng-content></ng-content>
     </div>
   </ng-template>
-`,
-animations: [fade]
+  `,
+  styles: [`
+    .bf-widget:focus {
+      outline: none;
+    }
+  `,`
+    .widget-card {
+      display: block;
+      border-radius: 4px;
+    }
+  `, `
+    .widget-header {
+      display: block;
+      border-radius: 4px 4px 0 0;
+      padding: 16px;
+    }
+  `, `
+    .widget-footer {
+      display: block;
+      border-radius: 0 0 4px 4px;
+    }
+  `],
+  encapsulation: ViewEncapsulation.None,
+  animations: [fade]
 })
 export class OverlayWidgetComponent {
   @ViewChild('ref', { static: false }) public ref: TemplateRef<any>;
 }
+
+
+// CARD
+@Directive({
+  selector: `widget-card, [widgetCard]`,
+  host: {
+    'class': 'widget-card'
+  }
+})
+export class WidgetCardDirective {}
+
+// HEADER
+@Directive({
+  selector: `widget-header, [widgetHeader]`,
+  host: {
+    'class': 'widget-header'
+  }
+})
+export class WidgetHeaderDirective {}
+
+
+// FOOTER
+@Directive({
+  selector: `widget-footer, [widgetFooter]`,
+  host: {
+    'class': 'widget-footer'
+  }
+})
+export class WidgetFooterDirective {}
+

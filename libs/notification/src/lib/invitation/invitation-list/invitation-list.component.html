@@ -1,30 +1,28 @@
-<mat-card>
-  <ng-container
-    [ngSwitch]="day.key"
-    *ngFor="let day of (invitationsByDate$ | async | keyvalue | reverse)">
-    <ng-container *ngSwitchCase="(today | date)">
-      <h4>Today</h4>
-      <invitation-item
-        *ngFor="let invitation of day.value"
-        [invitation]="invitation"
-        [placeholderUrl]="placeholderUrl">
-      </invitation-item>
-    </ng-container>
-    <ng-container *ngSwitchCase="(yesterday | date)">
-      <h4>Yesterday</h4>
-      <invitation-item
-        *ngFor="let invitation of day.value"
-        [invitation]="invitation"
-        [placeholderUrl]="placeholderUrl">
-      </invitation-item>
-    </ng-container>
-    <ng-container *ngSwitchDefault>
-      <h4>{{ day.key }}</h4>
-      <invitation-item
-        *ngFor="let invitation of day.value; let isLast = last"
-        [invitation]="invitation"
-        [placeholderUrl]="placeholderUrl">
-      </invitation-item>
-    </ng-container>
+<ng-container
+  [ngSwitch]="day.key"
+  *ngFor="let day of (invitationsByDate$ | async | keyvalue | reverse)">
+  <ng-container *ngSwitchCase="(today | date)">
+    <h4>Today</h4>
+    <invitation-item
+      *ngFor="let invitation of day.value"
+      [invitation]="invitation"
+      [placeholderUrl]="placeholderUrl">
+    </invitation-item>
   </ng-container>
-</mat-card>
+  <ng-container *ngSwitchCase="(yesterday | date)">
+    <h4>Yesterday</h4>
+    <invitation-item
+      *ngFor="let invitation of day.value"
+      [invitation]="invitation"
+      [placeholderUrl]="placeholderUrl">
+    </invitation-item>
+  </ng-container>
+  <ng-container *ngSwitchDefault>
+    <h4>{{ day.key }}</h4>
+    <invitation-item
+      *ngFor="let invitation of day.value; let isLast = last"
+      [invitation]="invitation"
+      [placeholderUrl]="placeholderUrl">
+    </invitation-item>
+  </ng-container>
+</ng-container>
