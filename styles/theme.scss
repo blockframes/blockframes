@@ -74,6 +74,9 @@
     @include angular-material-theme($bf-dark-theme);
     @include bf-material-theme($bf-dark-theme);
   }
+
+  // Not supported yet. Here for future support
+  scrollbar-color: light;
 }
 
 // DARK THEME
@@ -82,4 +85,7 @@
   @include angular-material-theme($bf-dark-theme);
   @include sat-datepicker-theme($bf-dark-theme);
   @include bf-material-theme($bf-dark-theme);
+
+  // Not supported yet. Here for future support
+  scrollbar-color: dark;
 }
