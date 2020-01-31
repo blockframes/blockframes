@@ -93,8 +93,8 @@ export type SalesAgent = Person;
 export function createStakeholder(params: Partial<Stakeholder> = {}): Stakeholder {
   return {
     orgId: '',
-    logo: createImgRef(),
     ...params,
+    logo: createImgRef(params.logo),
   }
 }
 
