@@ -9,6 +9,11 @@ import { App } from '@blockframes/utils/apps';
 
 export const routes: Routes = createRoutes({
   appName: App.mediaDelivering,
+  landing: {
+    path: '',
+    redirectTo: 'c',
+    pathMatch: 'full'
+  },
   appsRoutes: [{
     path: '',
     component: LayoutComponent,
