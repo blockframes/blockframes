@@ -40,13 +40,16 @@
   @include bf-color-font($theme);
   @include bf-missing-control-theme($theme);
 
-  $background: map-get($theme, bakground);
+  $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
   $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);
   $warn: map-get($theme, warn);
   // Add css variables here when you need one
-  --divider: #{mat-color($foreground, divider)};
+  // Background
+  --background-disabled-button: #{mat-color($background, disabled-button)};
+  // Foreground
+  --foreground-divider: #{mat-color($foreground, divider)};
   --primary: #{mat-color($primary)};
   --accent: #{mat-color($accent)};
   --warn: #{mat-color($warn)};
