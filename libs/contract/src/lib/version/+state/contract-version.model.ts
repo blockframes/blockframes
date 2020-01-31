@@ -13,7 +13,7 @@ export interface VersionMeta extends ContractVersion {
 export function createVersionMeta(params: Partial<VersionMeta>): VersionMeta {
   return {
     id: '_meta',
-    count: params && params.count || 0,
+    count: params.count || 0,
   } as VersionMeta;
 }
 

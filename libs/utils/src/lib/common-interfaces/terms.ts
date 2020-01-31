@@ -3,7 +3,8 @@ export enum Event {
   WordlPremiere = 'World Premiere',
   AcceptationAllMaterials = 'Acceptation of all delivery materials',
   FirstTheatricalRelease = 'First theatrical release',
-  FirstTvBroadcast = 'First TV broadcast'
+  FirstTvBroadcast = 'First TV broadcast',
+  InvoiceEmittedDate ='Invoice emission date',
 }
 
 export enum TimeUnit {
@@ -54,10 +55,20 @@ export interface ScheduledDateRaw<D> extends TermsRaw<D> {
   period: FloatingDuration, // @dev this replace floatingDuration for better readability
 }
 
+/**
+ * A ScheduledDateRaw interface with a counter to keep schedule order
+ */
+export interface ScheduledDateWithCounterRaw<D> extends ScheduledDateRaw<D> {
+  count: number;
+}
+
 export interface Terms extends TermsRaw<Date> {
 }
 
 export interface ScheduledDate extends ScheduledDateRaw<Date> {
+}
+
+export interface ScheduledDateWithCounter extends ScheduledDateWithCounterRaw<Date> {
 }
 
 export function createFloatingDuration(params: Partial<FloatingDuration> = {}): FloatingDuration {
@@ -76,6 +87,14 @@ export function createScheduledDate(params: Partial<ScheduledDate> = {}): Schedu
   return {
     dueDate: new Date(),
     ...params,
-    period: createFloatingDuration(params ? params.period : undefined),
+    period: createFloatingDuration(params.period),
+  };
+}
+
+export function createScheduledDateWithCounter(params: Partial<ScheduledDateWithCounter> = {}): ScheduledDateWithCounter {
+  return {
+    count: 0,
+    ...params,
+    ...createScheduledDate(params),
   };
 }
