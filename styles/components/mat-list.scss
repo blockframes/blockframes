@@ -12,10 +12,6 @@
     border: 1px solid mat-color($foreground, divider);
   }
 
-  .mat-nav-list .mat-list-item.mat-list-item-with-avatar {
-    height: 72px;
-  }
-
   // Removed as it create weird behaviour with mat-selection-list (21/01/2020)
   // If you need that somewhere please specify the type of list you want to apply this style on
   // .mat-list-base .mat-list-item .mat-list-item-content {
@@ -24,15 +20,21 @@
 
   // Use to let active link in color in mat-nav-list, used with routerLinkActive
   .mat-nav-list a.active {
-    color: mat-color($primary, 500);
+    color: mat-color($primary, 200);
     &:focus {
       background: transparent;
+    }
+
+    // Mat icons inside active link should be colored too
+    .mat-list-icon svg g {
+      fill: mat-color($primary, 200);
     }
   }
 
   // Every nav-list in a sidenav won't get border
   .mat-sidenav .mat-nav-list, .mat-list-base {
     border: none;
+    background: transparent;
   }
 }
 

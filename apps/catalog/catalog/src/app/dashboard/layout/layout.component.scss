@@ -1,36 +1,42 @@
-mat-sidenav-container {
+:host {
+  display: block;
   height: 100%;
-  #dashboard-navbar {
-    width: 300px;
-    border: none;
-    .mat-toolbar {
-      border: none;
-    }
-  }
 }
 
-mat-sidenav-content {
-  #catalog-toolbar {
-    border: none;
-  }
+mat-sidenav-container {
+  height: 100%;
+}
+
+mat-sidenav {
+  width: 256px;
 }
 
 .logo {
-  height: 80%;
+  height: 48px;
+  img {
+    height: 100%;
+  }
 }
 
+mat-sidenav-content mat-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 1;
 
-.search-bar {
-  flex: 1;
-  margin: 0 15px 0 15px;
-  padding-top: 20px;
-   .mat-form-field{
-     width: 100%;
-   }
-}
+  form {
+    flex: 1;
 
-.avatar {
-  border-radius: 50%;
-  height: 50px;
-  width: 50px;
+    input {
+      flex: 1;
+      height: 100%;
+      border: none;
+      font-size: 18px;
+      line-height: 1.44;
+      letter-spacing: 0.5px;
+      background-color: transparent;
+    }
+    input:focus {
+      outline: none;
+    }
+  }
 }

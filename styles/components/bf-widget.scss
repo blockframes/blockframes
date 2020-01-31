@@ -11,6 +11,7 @@
   }
 
   .widget-card {
+    @include mat-elevation(16);
     background-color: mat-color($background, card);
 
     .widget-header[color="primary"] {
