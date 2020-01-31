@@ -1,11 +1,13 @@
 @mixin mat-bf-button-theme($theme) {
+  $foreground: map-get($theme, foreground);
   $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);
   $warn: map-get($theme, warn);
 
   .mat-stroked-button {
-    height: 52px;
+    padding: 9px 16px;
     border-radius: 26px;
+    border-color: mat-color($foreground, text);
     &.mat-primary {
       border-color: mat-color($primary);
     }
@@ -19,6 +21,15 @@
 
   .mat-flat-button {
     padding: 14px 32px;
-    border-radius: 32px;
+    border-radius: 26px;
+  }
+}
+
+
+// TYPOGRAPHY
+@mixin mat-bf-button-typography($config) {
+  .mat-button, .mat-raised-button, .mat-icon-button, .mat-stroked-button,
+  .mat-flat-button, .mat-fab, .mat-mini-fab {
+    letter-spacing: mat-letter-spacing($config, button);
   }
 }

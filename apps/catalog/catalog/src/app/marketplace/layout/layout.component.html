@@ -31,7 +31,7 @@
       <button mat-icon-button (click)="sidenav.toggle()">
         <mat-icon>menu</mat-icon>
       </button>
-      <a class="logo" routerLink="/">
+      <a class="logo" routerLink=".">
         <img asset="archipel-content.svg" type="logo" alt="Archipel Content Logo" />
       </a>
       <form fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="12px">
@@ -63,74 +63,3 @@
     </footer>
   </mat-sidenav-content>
 </mat-sidenav-container>
-
-
-<!--
-<mat-sidenav-container class="sidenav-container">
-  <mat-sidenav #leftSidenav mode="over">
-    <toolbar-catalog-left-menu [sidenav]="leftSidenav">
-      <context-menu-sidebar fxHide.gt-xs></context-menu-sidebar>
-      <account-profile-widget fxHide.gt-xs></account-profile-widget>
-      <organization-widget fxHide.gt-xs></organization-widget>
-      <button fxHide.gt-xs mat-menu-item test-id="logout" (click)="logout()" class="important">
-        <mat-icon svgIcon="logout"></mat-icon>
-        <span class="important">Log out</span>
-      </button>
-      <toolbar-apps-list></toolbar-apps-list>
-    </toolbar-catalog-left-menu>
-  </mat-sidenav>
-  <mat-sidenav-content>
-    <toolbar-header id="navbar" [sidenav]="leftSidenav">
-      <ng-container app-icon>
-        <button test-id="home" mat-icon-button class="app-icon-button" routerLink="/c">
-          <img src="assets/logo/LogoAC.svg" class="app-icon" />
-        </button>
-      </ng-container>
-
-      <ng-container wishlist>
-        <a *ngIf="(currentWishlist$ | async) as wishlist else emptywishlist" mat-icon-button
-          routerLink="/c/o/marketplace/wishlist/view" test-id="heartIcon">
-          <mat-icon [matBadge]="wishlist.movieIds.length" matBadgeColor="accent" matBadgeSize="small" svgIcon="heart">
-          </mat-icon>
-        </a>
-      </ng-container>
-      <ng-template #emptywishlist>
-        <a mat-icon-button routerLink="/c/o/marketplace/wishlist/view" test-id="heartIcon">
-          <mat-icon matBadge="0" matBadgeColor="accent" matBadgeSize="small" svgIcon="heart">
-          </mat-icon>
-        </a>
-      </ng-template>
-
-      <ng-container notifications>
-        <overlay-notification-widget fxHide.xs></overlay-notification-widget>
-      </ng-container>
-
-      <ng-container profile-menu>
-        <account-profile-menu fxHide.xs>
-          <ng-container widgets>
-            <account-profile-widget></account-profile-widget>
-            <organization-widget></organization-widget>
-            <mat-divider></mat-divider>
-            <ng-container *ngIf="AFM_DISABLE">
-              <!-- TODO #1146 --
-              <mat-divider></mat-divider>
-              <wallet-widget></wallet-widget>
-            </ng-container>
-            <mat-divider></mat-divider>
-            <theme-widget></theme-widget>
-          </ng-container>
-        </account-profile-menu>
-      </ng-container>
-    </toolbar-header>
-    <main>
-      <router-outlet></router-outlet>
-      <footer page-id="footer" fxLayout="row" fxLayoutAlign="center center">
-        <a routerLink="/c/o/catalog/terms">Terms and Conditions</a>
-        <a routerLink="/c/o/catalog/about">About</a>
-        <a routerLink="/c/o/catalog/who-are-we">Who are we?</a>
-        <a routerLink="/c/o/catalog/contact">Contact</a>
-      </footer>
-    </main>
-  </mat-sidenav-content>
-</mat-sidenav-container>
--->
