@@ -4,7 +4,7 @@ import { ContractService, ContractState } from '../+state';
 
 @Injectable({ providedIn: 'root' })
 @CollectionGuardConfig({ awaitSync: true })
-export class ContractListGuard extends CollectionGuard<ContractState> {
+export class OrganizationContractListGuard extends CollectionGuard<ContractState> {
   constructor(protected service: ContractService) {
     super(service);
   }
