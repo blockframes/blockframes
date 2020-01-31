@@ -21,7 +21,7 @@ export class TemplateListComponent implements OnInit {
     updated: 'Last Modification',
     id: 'Link'
   };
-  public initialVersionColumns = ['name', 'created', 'updated', 'id'];
+  public initialVersionColumns = ['name', 'created', 'updated'];
 
   constructor(
     private query: TemplateQuery,

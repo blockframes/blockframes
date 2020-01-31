@@ -14,6 +14,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatTableModule } from '@angular/material/table';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
+import { RouterModule } from '@angular/router';
 
 
 @NgModule({
@@ -32,6 +33,7 @@ import { MatSortModule } from '@angular/material/sort';
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
+    RouterModule
   ]
 })
 export class TableFilterModule { }
