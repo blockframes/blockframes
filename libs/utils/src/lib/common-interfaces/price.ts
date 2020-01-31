@@ -1,5 +1,8 @@
 import { MovieCurrenciesSlug } from "@blockframes/utils/static-model/types";
 import { getCodeIfExists } from "@blockframes/utils/static-model/staticModels";
+import { firestore } from "firebase";
+
+type Timestamp = firestore.Timestamp;
 
 export enum PaymentType {
   CB = 'Credit Card',
@@ -8,28 +11,106 @@ export enum PaymentType {
   BTC = 'Bitcoin',
 }
 
-export interface Price {
+export const enum CommissionBase {
+  amount = 'Amount',
+  amountminusvat = 'Amount - VAT',
+  amountplusvat = 'Amount + VAT',
+}
+
+export const enum ExpenseType {
+  market = 'Market expenses (price.commission)',
+  export = 'Export expenses (price.amount)'
+}
+
+export const enum ExpenseSubType {
+  technical = 'Technical expenses',
+  delivery = 'Delivery expenses',
+  marketing = 'Marketing expenses',
+  translation = 'Translation expenses',
+}
+
+export const enum PaymentStatus {
+  unknown = 'unknown',
+  waitingpaiment = 'waiting for payment',
+  due = 'Due',
+  paid = 'Paid',
+  partialpaid = 'Partially paid',
+  notdueyet = 'Not due yet',
+}
+
+export interface PriceRaw<D> {
   amount: number;
   currency: MovieCurrenciesSlug;
-  vat?: number; // percentage
-  fees?: Fee[];
+  /**
+   * @dev percentage
+   */
+  vat?: number;
+  recoupableExpenses?: ExpenseRaw<D>[];
+  /**
+   * @dev about commission & commissionBase : 
+   * commission is a percentage (of amount)
+   * commissionBase define if we take the amount minus VAT or plus VAT for example
+   */
   commission?: number;
-  mg?: Price; // ie: minimun guaranteed
+  commissionBase?: CommissionBase,
+  /**
+   * @dev : minimum guaranteed
+   */
+  mg?: PriceRaw<D>;
 }
 
-export interface Fee {
+export interface Price extends PriceRaw<Date> {
+}
+
+export interface PriceDocument extends PriceRaw<Timestamp> {
+}
+
+interface ExpenseRaw<D> {
   label: string;
-  price: Price;
+  type: ExpenseType;
+  subType: ExpenseSubType;
+  /**
+   * @dev Expected (actual) price for this fee
+   */
+  price: PriceRaw<D>;
+  /**
+   * @dev Since a fee can be payed trhough various payments
+   * Collected is the sum of price of paymentIds: Payments.
+   * A function should handle this
+   */
+  collected: PriceRaw<D>;
+  /**
+   * @dev Status is determined by doing price - collected
+   * A function should handle this
+   */
+  status: PaymentStatus
+  /**
+   * @dev the various payments associated with this expense
+   */
+  payments: PaymentRaw<D>[];
+  /**
+   * @dev Id of the actual Expense in collection
+   * contains raw informations about the current expense.
+   */
+  expenseId?: string;
 }
 
-export interface PaymentRaw<D> {
+export interface Expense extends ExpenseRaw<Date> {
+}
+
+export interface ExpenseDocument extends ExpenseRaw<Timestamp> {
+}
+
+interface PaymentRaw<D> {
   id: string;
   date: D;
   type: PaymentType;
-  price: Price;
+  price: PriceRaw<D>;
 }
 
 export interface Payment extends PaymentRaw<Date> { }
+
+export interface PaymentDocument extends PaymentRaw<Timestamp> { }
 
 /**
  * A factory function that creates Price
@@ -44,13 +125,18 @@ export function createPrice(price: Partial<Price> = {}): Price {
 }
 
 /**
- * A factory function that creates Fee
+ * A factory function that creates Expense
  */
-export function createFee(params: Partial<Fee> = {}): Fee {
+export function createExpense(params: Partial<Expense> = {}): Expense {
   return {
     label: '',
+    type: ExpenseType.export,
+    subType: ExpenseSubType.delivery,
+    status: PaymentStatus.unknown,
+    payments: [],
+    ...params,
     price: createPrice(params.price),
-    ...params
+    collected: createPrice(params.collected),
   }
 }
 
