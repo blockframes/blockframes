@@ -22,6 +22,7 @@ export function convertTemplateWithTimestampsToTemplate(
 ): Template {
   return {
     ...template,
+    // Change it for the reusable convert Date function when it's ready
     created: (template.created instanceof Date) ? template.created : template.created.toDate(), // prevent error in case the guard is wrongly called twice in a row
     updated: (template.updated instanceof Date) ? template.updated : template.updated.toDate()
   };
