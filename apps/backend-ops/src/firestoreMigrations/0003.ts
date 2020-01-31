@@ -1,5 +1,7 @@
 import { Firestore } from '../admin';
 import { createStakeholder } from '@blockframes/utils/common-interfaces/identity';
+import { createImgRef } from '@blockframes/utils/image-uploader';
+import { createPromotionalElement } from '@blockframes/movie';
 
 /**
  * Update stakeholders in movie documents.
@@ -76,6 +78,40 @@ export async function updateStakeholdersMovieStructure(db: Firestore) {
   console.log('Updating stakeholders in movie documents done.');
 }
 
+/**
+ * Update posters in movie documents.
+ */
+export async function updatePosterStructure(db: Firestore) {
+  const movies = await db.collection('movies').get();
+
+  const newMovieData = movies.docs.map(async (movieDocSnapshot: any): Promise<any> => {
+    const movieData = movieDocSnapshot.data();
+
+    if (movieData.main && movieData.main.poster) {
+      const media = createImgRef(movieData.main.poster);
+
+      const moviePoster = createPromotionalElement({
+        label: 'Poster',
+        media,
+      });
+
+      const newData = { ...movieData };
+      delete newData.main.poster;
+
+      if(!newData.promotionalElements.poster){
+        newData.promotionalElements.poster =[];
+      }
+
+      newData.promotionalElements.poster.push(moviePoster);
+      return movieDocSnapshot.ref.set(newData);
+    }
+
+  });
+  await Promise.all(newMovieData);
+  console.log('Updating posters in movie documents done.');
+}
+
 export async function upgrade(db: Firestore) {
   await updateStakeholdersMovieStructure(db);
+  await updatePosterStructure(db);
 }
