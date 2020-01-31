@@ -98,8 +98,8 @@ export async function updatePosterStructure(db: Firestore) {
       const newData = { ...movieData };
       delete newData.main.poster;
 
-      if(!newData.promotionalElements.poster){
-        newData.promotionalElements.poster =[];
+      if (!newData.promotionalElements.poster) {
+        newData.promotionalElements.poster = [];
       }
 
       newData.promotionalElements.poster.push(moviePoster);
