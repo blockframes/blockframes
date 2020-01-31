@@ -1200,6 +1200,42 @@
         }
       }
     },
+    "financial-report": {
+      "projectType": "library",
+      "root": "libs/financial-report",
+      "sourceRoot": "libs/financial-report/src",
+      "prefix": "financial-report",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "libs/financial-report/tsconfig.lib.json",
+            "project": "libs/financial-report/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/financial-report/jest.config.js",
+            "tsConfig": "libs/financial-report/tsconfig.spec.json",
+            "setupFile": "libs/financial-report/src/test-setup.ts"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/financial-report/tsconfig.lib.json",
+              "libs/financial-report/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/financial-report/**"
+            ]
+          }
+        }
+      }
+    },
     "catalog": {
       "projectType": "application",
       "schematics": {
