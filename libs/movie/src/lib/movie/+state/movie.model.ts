@@ -323,3 +323,16 @@ export function createMovieStakeholders(stakeholders: Partial<MovieStakeholders>
     ...stakeholders
   }
 }
+
+/**
+ * Takes an array of movies and returns a list of their titles.
+ * @param movies
+ */
+export function getMovieTitleList(movies: Movie[]): string[] {
+  const movieTitles = movies.map(movie => movie.main.title.international
+    ? movie.main.title.international
+    : movie.main.title.original
+  )
+  return movieTitles;
+
+}

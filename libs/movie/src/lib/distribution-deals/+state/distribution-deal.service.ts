@@ -3,11 +3,16 @@ import objectHash from 'object-hash';
 import { CollectionService, CollectionConfig } from 'akita-ng-fire';
 import { DistributionDealState, DistributionDealStore } from './distribution-deal.store';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
-import { DistributionDeal } from './distribution-deal.model';
+import { DistributionDeal, getDealTerritories } from './distribution-deal.model';
 import { createContractTitleDetail, ContractWithLastVersion } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractVersionService } from '@blockframes/contract/version/+state/contract-version.service';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
-import { isTimestamp } from '@blockframes/utils/helpers';
+import { toDate } from '@blockframes/utils/helpers';
+import { ContractQuery } from '@blockframes/contract/contract/+state/contract.query';
+import { switchMap } from 'rxjs/operators';
+import { combineLatest } from 'rxjs';
+import { ContractVersion } from '@blockframes/contract/version/+state/contract-version.model';
+import { DistributionDealQuery } from './distribution-deal.query';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies/:movieId/distributionDeals' })
@@ -16,10 +21,25 @@ export class DistributionDealService extends CollectionService<DistributionDealS
     private organizationQuery: OrganizationQuery,
     private contractService: ContractService,
     private contractVersionService: ContractVersionService,
+    private contractQuery: ContractQuery,
+    private dealQuery: DistributionDealQuery,
     store: DistributionDealStore
   ) {
     super(store);
   }
+
+  /** Gets every distribution deals of organization contracts. */
+  public syncContractsDeals() {
+    return this.contractQuery.selectAll().pipe(
+      switchMap(contracts => {
+        const $ = contracts.map(c =>
+          this.syncCollectionGroup('distributionDeals', ref => ref.where('contractId', '==', c.id))
+        );
+        return combineLatest($);
+      })
+    );
+  }
+
 
   /**
    *
@@ -64,15 +84,10 @@ export class DistributionDealService extends CollectionService<DistributionDealS
     return distributionDeal.id;
   }
 
+  /** Format deals dates from Timestamps into Dates. */
   public formatDistributionDeal(deal: any): DistributionDeal {
-    // Dates from firebase are Timestamps, we convert it to Dates.
-    if (isTimestamp(deal.terms.start)) {
-      deal.terms.start = deal.terms.start.toDate();
-    }
-
-    if (isTimestamp(deal.terms.end)) {
-      deal.terms.end = deal.terms.end.toDate();
-    }
+    deal.terms.start = toDate(deal.terms.start);
+    deal.terms.end = toDate(deal.terms.end);
     return deal as DistributionDeal;
   }
 
@@ -112,13 +127,16 @@ export class DistributionDealService extends CollectionService<DistributionDealS
   }
 
   /**
-   * Get all the territories from a list of deals and
-   * return them into an array of string
-   * @param deals
+   * Returns all eligible territories from contract's deals.
+   * @param contractVersion
    */
-  public getDistributionDealsTerritories(deals: DistributionDeal[]): string[] {
-    const territories = deals.map(deal => deal.territory.map(territory => territory));
-    const flattenedTerritories = territories.reduce((acc, nestedArray) => acc.concat(nestedArray));
-    return flattenedTerritories;
+  public getTerritoriesFromContract(contractVersion: ContractVersion) {
+    const dealIds: string[] = [];
+    for (const title of Object.values(contractVersion.titles)) {
+      dealIds.concat(title.distributionDealIds);
+    }
+    const deals = dealIds.map(dealId => this.dealQuery.getEntity(dealId))
+    const territories = deals.map(deal => deal ? getDealTerritories(deal) : []);
+    return territories.flat();
   }
 }

@@ -1,4 +1,18 @@
-<h2>Deal list</h2>
-<article *ngFor="let contract of (contracts$ | async)">
-  <a [routerLink]="[contract.id]">{{ contract.id }}</a>
-</article>
+<ng-container *ngIf="contracts$ | async as contracts">
+  <h1>Offers & Deals</h1>
+
+  <mat-tab-group>
+    <mat-tab
+      *ngFor="let tab of contractTabs"
+      [label]="getLabel(tab.name, filterByStatus(contracts, tab.statuses))">
+      <ng-template matTabContent>
+        <ng-container *ngIf="filterByStatus(contracts, tab.statuses).length; else noContracts">
+          <contract-list [source]="filterByStatus(contracts, tab.statuses)"></contract-list>
+        </ng-container>
+        <ng-template #noContracts>
+          <span>There are no {{ tab.name }}</span>
+        </ng-template>
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
+</ng-container>

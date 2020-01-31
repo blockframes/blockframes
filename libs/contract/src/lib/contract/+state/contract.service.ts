@@ -1,7 +1,15 @@
 import { Injectable } from '@angular/core';
 import { ContractStore, ContractState } from './contract.store';
 import { CollectionConfig, CollectionService, awaitSyncQuery, Query, WriteOptions } from 'akita-ng-fire';
-import { Contract, convertToContractDocument, createContractPartyDetail, initContractWithVersion, ContractWithLastVersion, ContractWithTimeStamp, getContractParties } from './contract.model';
+import {
+  Contract,
+  convertToContractDocument,
+  createContractPartyDetail,
+  initContractWithVersion,
+  ContractWithLastVersion,
+  ContractWithTimeStamp,
+  getContractParties
+} from './contract.model';
 import orderBy from 'lodash/orderBy';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { tap, switchMap } from 'rxjs/operators';
@@ -9,7 +17,6 @@ import { ContractVersionService } from '../../version/+state/contract-version.se
 import { cleanModel } from '@blockframes/utils';
 import { PermissionsService } from '@blockframes/organization';
 import { ContractDocumentWithDates, ContractStatus } from './contract.firestore';
-import { VersionMeta } from '../../version/+state/contract-version.model';
 import { firestore } from 'firebase/app';
 
 /**
@@ -32,12 +39,6 @@ const contractQuery = (contractId: string): Query<ContractWithTimeStamp> => ({
       path: `contracts/${contract.id}/versions`
     })
 })
-
-
-export function getLastVersionIndex(contract: Contract): number {
-  const { count }: VersionMeta = contract.versions.find(v => v.id === '_meta')
-  return contract.versions.map(v => v.id).indexOf(count.toString())
-}
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'contracts' })
@@ -95,7 +96,7 @@ export class ContractService extends CollectionService<ContractState> {
         : contractOrId
 
       contractWithVersion.doc = this.formatContract(contract);
-      const lastVersion = await this.contractVersionService.getLastVersionContract(contract.id);
+      const lastVersion = await this.contractVersionService.getContractLastVersion(contract.id);
       if (lastVersion) {
         contractWithVersion.last = lastVersion;
       }
@@ -280,4 +281,5 @@ export class ContractService extends CollectionService<ContractState> {
     const updatedParties = contract.parties.filter((_, i) => i !== index);
     this.update({ ...contract, parties: [...updatedParties, updatedParty] })
   }
+
 }
