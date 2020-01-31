@@ -39,6 +39,8 @@ const routes: Routes = [
         path: 'titles',
         children: [{
           path: '',
+          canActivate: [MovieOrganizationListGuard, ContractListGuard],
+          canDeactivate: [MovieOrganizationListGuard, ContractListGuard],
           loadChildren: () => import('./title/list/list.module').then(m => m.TitleListModule)
         }, {
           path: ':movieId',
