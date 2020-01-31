@@ -24,12 +24,12 @@ import { SSF$Date } from 'ssf/types';
 import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
 import { SSF } from 'xlsx';
 import { MovieLanguageTypes, PremiereType } from '@blockframes/movie/movie/+state/movie.firestore';
-import { createCredit, createStakeholder } from '@blockframes/utils/common-interfaces/identity';
+import { createStakeholder } from '@blockframes/utils/common-interfaces/identity';
 import { DistributionDeal, createDistributionDeal, createHoldback } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
 import { createContractPartyDetail, createContractTitleDetail, Contract, initContractWithVersion, ContractWithLastVersion, getContractParties } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractStatus, ContractTitleDetail } from '@blockframes/contract/contract/+state/contract.firestore';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state/distribution-deal.service';
-import { createFee } from '@blockframes/utils/common-interfaces/price';
+import { createExpense } from '@blockframes/utils/common-interfaces/price';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { createPaymentSchedule } from '@blockframes/utils/common-interfaces/schedule';
 import { createTerms } from '@blockframes/utils/common-interfaces';
@@ -149,9 +149,9 @@ enum SpreadSheetContractTitle {
   titleCode, // ie: filmCode
   licensedRightIds, // ie: distributionDealIds
   commission,
-  feeLabel,
-  feeValue,
-  feeCurrency,
+  expenseLabel,
+  expenseValue,
+  expenseCurrency,
 }
 
 @Component({
@@ -1934,7 +1934,7 @@ export class ViewExtractedElementsComponent {
 
   private async processTitleDetails(spreadSheetRow: any[], currentIndex: number): Promise<ContractTitleDetail> {
     const titleDetails = createContractTitleDetail();
-    titleDetails.price.fees = [];
+    titleDetails.price.recoupableExpenses = [];
 
     if (spreadSheetRow[SpreadSheetContractTitle.titleCode + currentIndex]) {
       const title = await this.movieService.getFromInternalRef(spreadSheetRow[SpreadSheetContractTitle.titleCode + currentIndex]);
@@ -1954,22 +1954,22 @@ export class ViewExtractedElementsComponent {
       titleDetails.price.commission = spreadSheetRow[SpreadSheetContractTitle.commission + currentIndex]
     }
 
-    const fee = createFee();
-    if (spreadSheetRow[SpreadSheetContractTitle.feeLabel + currentIndex]) {
-      fee.label = spreadSheetRow[SpreadSheetContractTitle.feeLabel + currentIndex];
+    const recoupableExpense = createExpense();
+    if (spreadSheetRow[SpreadSheetContractTitle.expenseLabel + currentIndex]) {
+      recoupableExpense.label = spreadSheetRow[SpreadSheetContractTitle.expenseLabel + currentIndex];
     }
 
-    if (spreadSheetRow[SpreadSheetContractTitle.feeValue + currentIndex]) {
-      fee.price.amount = spreadSheetRow[SpreadSheetContractTitle.feeValue + currentIndex];
+    if (spreadSheetRow[SpreadSheetContractTitle.expenseValue + currentIndex]) {
+      recoupableExpense.price.amount = spreadSheetRow[SpreadSheetContractTitle.expenseValue + currentIndex];
     }
 
-    if (spreadSheetRow[SpreadSheetContractTitle.feeCurrency + currentIndex]) {
-      if (spreadSheetRow[SpreadSheetContractTitle.feeCurrency + currentIndex].toLowerCase() === 'eur') {
-        fee.price.currency = 'euro';
+    if (spreadSheetRow[SpreadSheetContractTitle.expenseCurrency + currentIndex]) {
+      if (spreadSheetRow[SpreadSheetContractTitle.expenseCurrency + currentIndex].toLowerCase() === 'eur') {
+        recoupableExpense.price.currency = 'euro';
       }
     }
 
-    titleDetails.price.fees.push(fee);
+    titleDetails.price.recoupableExpenses.push(recoupableExpense);
 
     return titleDetails;
   }

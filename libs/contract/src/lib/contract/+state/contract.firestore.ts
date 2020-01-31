@@ -1,7 +1,7 @@
 import { firestore } from "firebase/app";
 import { TermsRaw } from "@blockframes/utils/common-interfaces/terms";
 import { Party } from "@blockframes/utils/common-interfaces/identity";
-import { Price } from "@blockframes/utils/common-interfaces/price";
+import { Price, PaymentStatus, Payment, createPrice, PriceRaw } from "@blockframes/utils/common-interfaces/price";
 import {
   TerritoriesSlug,
   LanguagesSlug,
@@ -22,7 +22,12 @@ export enum ContractStatus {
   waitingsignature = 'waiting for signature',
   waitingpaiment = 'waiting for payment',
   rejected = 'rejected',
-  aborted = 'abordted',
+  aborted = 'aborted',
+}
+
+export const enum ContractType {
+  mandate = 'Mandate',
+  sale = 'Sale'
 }
 
 export interface ContractTitleDetail {
@@ -64,6 +69,16 @@ interface ContractVersionRaw<D> {
 
 interface ContractRaw<D> {
   id: string,
+  /**
+   * @dev to facilitate firebase queries:
+   * Without ContratType :
+   *   if we wanted to fetch "Archipel" contracts where partyIds array-contains 'orgId Archipel' 
+   *   and where the corresponding party role is "licensor", we could not do it in a single Firebase query because
+   *   of the index limitations.
+   * With ContracType :
+   *   we can fetch contracts where partyIds array-contains 'orgId Archipel' and where ContractType = "mandate".
+   */
+  type: ContractType,
   parentContractIds?: string[],
   childContractIds?: string[],
   /** @dev an informative signature date, given that the actual signatures are in parties */
@@ -74,24 +89,59 @@ interface ContractRaw<D> {
   documents: LegalDocuments
 }
 
+export interface InvoiceTitleDetailsRaw<D> {
+  price: PriceRaw<D>;
+  reportId?: string;
+  titleId: string;
+}
+
+export interface InvoiceTitleDetails extends InvoiceTitleDetailsRaw<Date> {
+}
+
+export interface InvoiceTitleDetailsDocument extends InvoiceTitleDetailsRaw<Timestamp> {
+}
+
 export interface InvoiceRaw<D> {
   id: string,
   internalRef: string,
   /** @dev should be comming from blockchain data */
   paymentRef?: string,
-  creationDate: D,
+  payments: Payment[],
+  emittedDate: D,
+  /** @dev Contains Ids of titles that this invoice is about */
+  titles: InvoiceTitleDetailsRaw<D>[],
+  /** @dev Expected price once each payments have been made */
   price: Price,
+  /**
+   * @dev Collected amount (sum of payments.price).
+   * A function should handle this.
+   * Start with zero.
+   */
+  collected: Price,
   /** @dev an orgId */
   buyerId: string,
   /** @dev an orgId */
   sellerId: string,
   paymentSchedule: PaymentScheduleRaw<D>,
+  /**
+   * @dev Status calculated with price - collected
+   * A function should handle this.
+   * Start with PaymentStatus.notdueyet
+   */
+  status: PaymentStatus,
   interestRate?: number,
   /** @dev should be one of the buyerId bank accounts */
   account: BankAccount,
   contractId: string,
   /** @dev should be a legal document belonging to contractId */
   legalDocumentId: string,
+  /**
+   * @dev
+   * reportIds : array of FinancialReport ids
+   * reportInternalRefs : array of FinancialReport interalRef
+   */
+  reportIds: string[],
+  reportInternalRefs: string[],
 }
 
 export interface LegalDocuments {
@@ -123,4 +173,10 @@ export interface ContractVersionDocumentWithDates extends ContractVersionRaw<Dat
 }
 
 export interface ContractVersionDocument extends ContractVersionRaw<Timestamp> {
+}
+
+export interface Invoice extends InvoiceRaw<Date> {
+}
+
+export interface InvoiceDocument extends InvoiceRaw<Timestamp> {
 }

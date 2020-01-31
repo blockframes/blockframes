@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ContractStore, ContractState } from './contract.store';
 import { CollectionConfig, CollectionService, awaitSyncQuery, Query, WriteOptions } from 'akita-ng-fire';
-import { Contract, convertToContractDocument, createContractPartyDetail, createPartyDetails, initContractWithVersion, ContractWithLastVersion, ContractWithTimeStamp, getContractParties } from './contract.model';
+import { Contract, convertToContractDocument, createContractPartyDetail, initContractWithVersion, ContractWithLastVersion, ContractWithTimeStamp, getContractParties } from './contract.model';
 import orderBy from 'lodash/orderBy';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { tap, switchMap } from 'rxjs/operators';
@@ -246,7 +246,7 @@ export class ContractService extends CollectionService<ContractState> {
     });
 
     // Create an updated party with new status and a timestamp.
-    const updatedParty = createPartyDetails({
+    const updatedParty = createContractPartyDetail({
         ...contract.parties[index],
         signDate: new Date(),
         status: ContractStatus.accepted
@@ -270,7 +270,7 @@ export class ContractService extends CollectionService<ContractState> {
     });
 
     // Create an updated party with new status and a timestamp.
-    const updatedParty = createPartyDetails({
+    const updatedParty = createContractPartyDetail({
         ...contract.parties[index],
         signDate: new Date(),
         status: ContractStatus.rejected
