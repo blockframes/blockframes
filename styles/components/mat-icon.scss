@@ -6,36 +6,36 @@
   $foreground: map-get($theme, foreground);
 
   .mat-icon {
-    g {
+    g, polygon {
       fill: mat-color($foreground, icon);
     }
     &[color="primary"] {
       color: mat-color($primary, 500);
-      g {
+      g, polygon {
         fill: mat-color($primary, 500);
       }
     }
     &[color="accent"] {
       color: mat-color($accent, 500);
-      g {
+      g, polygon {
         fill: mat-color($accent, 500);
       }
     }
     &[color="warn"] {
       color: mat-color($warn, 500);
-      g {
+      g, polygon {
         fill: mat-color($warn, 500);
       }
     }
     &[color="beware"] {
       color: mat-color($background, beware);
-      g {
+      g, polygon {
         fill: mat-color($background, beware);
       }
     }
     &[color="disabled"] {
       color: mat-color($background, disabled-button);
-      g {
+      g, polygon {
         fill: mat-color($background, disabled-button);
       }
     }
