@@ -40,7 +40,7 @@
 
 
 
-@mixin bf-list-typography($config) {
+@mixin mat-bf-list-typography($config) {
   $font-family: mat-font-family($config);
 
   // Default list

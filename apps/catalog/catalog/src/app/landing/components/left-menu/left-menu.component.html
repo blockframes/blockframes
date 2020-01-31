@@ -1,16 +1,14 @@
 <mat-toolbar fxLayout="row" fxLayoutAlign="space-between center">
-  <a mat-icon-button routerLink="/welcome" aria-label="Archipel Content Logo">
-    <img src="assets/logo/LogoAC.svg" class="app-icon" />
+  <a routerLink="/welcome" class="logo">
+    <img asset="archipel-content.svg" type="logo" alt="Archipel Content Logo"/>
   </a>
   <button mat-icon-button (click)="sidenav.toggle()" aria-label="toggle button">
-    <mat-icon svgIcon="chevron_left" class="left-chevron"></mat-icon>
+    <mat-icon svgIcon="chevron_left"></mat-icon>
   </button>
 </mat-toolbar>
 <mat-divider></mat-divider>
-<nav fxLayout="column" fxLayoutAlign="center start">
-  <!-- ISSUE#1391 -->
-  <a routerLink=""><b>About us</b></a>
-  <!-- ISSUE#1391 -->
-  <a routerLink=""><b>FAQ</b></a>
-  <a routerLink="/welcome" fragment="demo"><b>Schedule a demo</b></a>
-</nav>
+<mat-nav-list>
+  <a mat-list-item routerLink="about">About Us</a>
+  <a mat-list-item routerLink="faq">FAQ</a>
+  <a mat-list-item routerLink="Welcome">Schedule a demo</a>
+</mat-nav-list>

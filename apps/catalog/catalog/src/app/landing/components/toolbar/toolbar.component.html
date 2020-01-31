@@ -1,22 +1,20 @@
-<mat-toolbar [ngClass]="setBackground ? 'plain-toolbar' : 'transparent-toolbar'" (scroll)="scrollHandler()" fxLayout="row" fxLayoutAlign="space-between center">
+<mat-toolbar [ngClass]="toolbarColor$ | async" (scroll)="scrollHandler()" fxLayout="row" fxLayoutAlign="space-between center">
   <!-- Burger menu -->
-  <button fxHide.gt-xs mat-icon-button (click)="sidenav.toggle();">
+  <button fxHide.gt-sm mat-icon-button (click)="sidenav.toggle();">
     <mat-icon>menu</mat-icon>
   </button>
-  <span fxHide.xs fxLayout="row" fxLayoutAlign="space-between center">
-    <a>
-      <img src="assets/logo/LogoAC.svg" class="app-icon" />
+  <nav fxHide.lt-md fxLayout="row" fxLayoutAlign="space-between center">
+    <a routerLink="/" class="logo">
+      <img asset="archipel-content.svg" type="logo" alt="Archipel Content Logo"/>
     </a>
-    <nav mat-tab-nav-bar mat-align-tabs="center" fxLayout="row" fxLayoutAlign="center center">
-      <!-- ISSUE#1391 -->
-      <a mat-tab-link routerLink=""><b>About us</b></a>
-      <!-- ISSUE#1391 -->
-      <a mat-tab-link routerLink=""><b>FAQ</b></a>
-      <a mat-tab-link routerLink="/welcome" fragment="demo"><b>Schedule a demo</b></a>
-    </nav>
-  </span>
-  <span>
-    <a mat-button routerLink="/auth/connexion" fragment="signin"><span><b>Login</b></span></a>
-    <a mat-stroked-button routerLink="/auth/connexion" fragment="signup"><span><b>Sign up</b></span></a>
-  </span>
+    <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="16px">
+      <a mat-button routerLink="about">About us</a>
+      <a mat-button routerLink="faq">FAQ</a>
+      <a mat-button routerLink="welcome" fragment="demo">Schedule a demo</a>
+    </div>
+  </nav>
+  <div fxLayout="row" fxLayoutAlign="space-around center" fxLayoutGap="16px">
+    <a mat-button routerLink="/auth/connexion" fragment="signin">Login</a>
+    <a mat-stroked-button routerLink="/auth/connexion" fragment="signup"><b>Sign up</b></a>
+  </div>
 </mat-toolbar>
