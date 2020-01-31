@@ -13,12 +13,20 @@
   <button mat-tab-link (click)="applyFilter('Line-Up')" [active]="(filter$ | async) === 'Line-Up'" >Line-up</button>
 </header>
 
-<bf-table-filter
-  [source]="titles$ | async"
-  [columns]="columns"
-  [initialColumns]="initialColumns"
-  [showFilter]="true"
-  [showPaginator]="true">
-  <ng-template colRef="title" let-title><b>{{ title }}</b></ng-template>
-  <ng-template colRef="receipt" let-receipt> <b>{{ receipt }}</b> </ng-template>
-</bf-table-filter>
+<ng-container *ngIf="(titles$ | async) as titles; else isLoading">
+  <bf-table-filter
+    [source]="titles"
+    [columns]="columns"
+    [initialColumns]="initialColumns"
+    [showFilter]="true"
+    [showPaginator]="true"
+    [link]="'./'">
+    <ng-template colRef="title" let-title><b>{{ title }}</b></ng-template>
+    <ng-template colRef="receipt" let-receipt> <b>{{ receipt }}</b> </ng-template>
+  </bf-table-filter>
+</ng-container>
+<ng-template #isLoading>
+  <mat-spinner diameter="50"></mat-spinner>
+</ng-template>
+
+
