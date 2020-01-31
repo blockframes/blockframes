@@ -10,6 +10,7 @@ import { EditableModule, EditableSidenavModule } from '@blockframes/ui';
 import { ConfirmModule } from '@blockframes/ui';
 import { MaterialModule } from '../material/material.module';
 import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
+import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 
 // Components
 import { TemplateAddComponent } from './components/template-add/template-add.component';
@@ -105,6 +106,7 @@ const routes: Routes = [
     MatTableModule,
     MatSelectModule,
     MatSortModule,
+    TableFilterModule,
     RouterModule.forChild(routes),
     ImgAssetModule
   ],

@@ -1,0 +1,27 @@
+mat-card {
+  margin-top: 20px;
+  .mat-card-content {
+    padding-left: 20px;
+  }
+}
+
+.mat-stroked-button {
+  padding-top: 10px;
+  margin-bottom: 10px;
+  mat-icon {
+    margin-right: 5px;
+  }
+}
+
+li {
+  margin-bottom: 4px;
+  strong {
+    opacity: 0.5;
+    font-weight: normal;
+  }
+}
+
+mat-card {
+  width: 100%;
+  word-break: break-all;
+}

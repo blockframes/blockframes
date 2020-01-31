@@ -10,6 +10,7 @@ const icons = [
   },
   { name: 'access_time', url: 'assets/icons/access_time.svg' },
   { name: 'add', url: 'assets/icons/add.svg' },
+  { name: 'applications', url: 'assets/apps/applications.svg' },
   {
     name: 'archipel_content',
     url: 'assets/icons/archipel_content.svg'
@@ -148,6 +149,7 @@ const icons = [
     name: 'logo_storiesand_more_fill',
     url: 'assets/icons/logo_storiesand_more_fill.svg'
   },
+  { name: 'logout',url: 'assets/icons/log_out.svg' },
   {
     name: 'magnifying_glasses',
     url: 'assets/icons/magnifying_glasses.svg'
@@ -183,7 +185,8 @@ const icons = [
   { name: 'pencil', url: 'assets/icons/pencil.svg' },
   { name: 'percent', url: 'assets/icons/percent.svg' },
   { name: 'picture', url: 'assets/icons/picture.svg' },
-  { name: 'profil', url: 'assets/icons/profil.svg' },
+  { name: 'play', url: 'assets/icons/play.svg'},
+  { name: 'profile', url: 'assets/icons/profile.svg' },
   {
     name: 'radio_box_blank',
     url: 'assets/icons/radio_box_blank.svg'
@@ -238,7 +241,7 @@ const icons = [
   },
   { name: 'wallet', url: 'assets/icons/wallet.svg' },
   { name: 'world', url: 'assets/icons/world.svg' },
-  { name: 'wrench', url: 'assets/icons/wrench.svg' }
+  { name: 'wrench', url: 'assets/icons/wrench.svg' },
 ] as const;
 
 export type IconSvg = typeof icons[number]['name'];

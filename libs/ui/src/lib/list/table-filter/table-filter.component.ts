@@ -35,6 +35,7 @@ export class TableFilterComponent implements OnInit, AfterViewInit {
   @Input() showPaginator = false;
   @Input() columns: Record<string, any>;
   @Input() initialColumns: string[];
+  @Input() link: string;
   @Input() set source(data: any[]) {
     this.dataSource = new MatTableDataSource(data);
     this.dataSource.paginator = this.paginator;

@@ -59,6 +59,10 @@ export class TemplateMaterialService extends CollectionService<MaterialState> {
       const isExisting = !!oldMaterials.find(oldMaterial => oldMaterial.id === material.id);
       this.upsertTemplateMaterials(material, isExisting, batch);
     });
+    // Not using templateService here so as not to cause a circular dependency, templateService using templateMaterialService.
+    const templateRef = this.db.doc(`templates/${this.templateQuery.getActiveId()}`).ref;
+    batch.update(templateRef, { updated: new Date() });
+
     batch.commit();
   }
 
