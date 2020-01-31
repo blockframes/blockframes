@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 // Components
-import { PasswordConfirmComponent } from './form-groups/password-confirm/password-confirm.component';
+import { PasswordConfirmComponent } from './password-confirm.component';
 
 // Material
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -30,4 +30,4 @@ import { MatInputModule } from '@angular/material/input';
     PasswordConfirmComponent
   ],
 })
-export class UiFormModule { }
+export class PasswordConfirmModule { }

@@ -1,5 +1,5 @@
 export * from './lib/upload/upload.module';
-export * from './lib/form/form.module';
+export * from './lib/form';
 export * from './lib/toolbar/toolbar.module';
 export * from './lib/error/error-not-found.module';
 export * from './lib/confirm/confirm.module';

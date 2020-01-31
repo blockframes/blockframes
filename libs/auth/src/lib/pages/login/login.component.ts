@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, ViewChild, HostBinding } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService, AuthQuery } from '../../+state';
+import { AuthService } from '../../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSidenav } from '@angular/material/sidenav';
 import { SignupForm } from '../../forms/signup.form';
@@ -8,11 +8,11 @@ import { SigninForm } from '../../forms/signin.form';
 
 @Component({
   selector: 'auth-login-view',
-  templateUrl: './login-view.component.html',
-  styleUrls: ['./login-view.component.scss'],
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoginViewComponent {
+export class LoginComponent {
   @HostBinding('attr.page-id') pageId = 'login-view';
   @ViewChild('signinSidenav', { static: false }) loginSidenav: MatSidenav;
   @ViewChild('signupSidenav', { static: false }) signupSidenav: MatSidenav;
@@ -22,7 +22,6 @@ export class LoginViewComponent {
 
   constructor(
     private service: AuthService,
-    private query: AuthQuery,
     private router: Router,
     private snackBar: MatSnackBar,
   ) {}
