@@ -6,8 +6,9 @@ import { isInMaintenance, IMaintenanceDoc, maintenancePath } from '@blockframes/
 @Injectable({ providedIn: 'root' })
 export class MaintenanceService {
   
+  // if document doesn't exist, we are not in the maintenance
   isInMaintenance$ = this.db.doc<IMaintenanceDoc>(maintenancePath).valueChanges().pipe(
-    map(isInMaintenance),
+    map(maintenanceDoc => maintenanceDoc ? isInMaintenance(maintenanceDoc) : false)
   );
 
   constructor(private db: AngularFirestore) {}
