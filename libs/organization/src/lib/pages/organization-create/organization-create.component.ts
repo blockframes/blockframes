@@ -53,10 +53,4 @@ export class OrganizationCreateComponent {
 
     this.router.navigate(['../congratulations'], { relativeTo: this.route });
   }
-
-  /** Clear current form with cancellation */
-  public clear() {
-    this.form.reset();
-    this.snackBar.open('Cleared', 'close', { duration: 2000 });
-  }
 }

@@ -6,7 +6,7 @@ section {
 }
 
 article {
-  margin-left: 50px;
+  padding: 0 25px;
 }
 
 img {
@@ -27,6 +27,14 @@ mat-form-field {
 
 button {
   margin-top: 8px;
+}
+
+@include large {
+  img {
+    position: sticky;
+    top: 0;
+    margin-top: calc(100vh / 2);
+  }
 }
 
 @include mobile {
