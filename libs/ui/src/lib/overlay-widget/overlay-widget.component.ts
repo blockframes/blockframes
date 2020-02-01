@@ -52,7 +52,7 @@ export class OverlayWidgetComponent {
 @Directive({
   selector: `widget-card, [widgetCard]`,
   host: {
-    'class': 'widget-card'
+    'class': 'widget-card',
   }
 })
 export class WidgetCardDirective {}
