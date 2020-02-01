@@ -75,7 +75,7 @@
     @include bf-material-theme($bf-dark-theme);
   }
 
-  // Not supported yet. Here for future support
+  // Not supported yet by browser. Here for future support
   scrollbar-color: light;
 }
 
@@ -86,6 +86,6 @@
   @include sat-datepicker-theme($bf-dark-theme);
   @include bf-material-theme($bf-dark-theme);
 
-  // Not supported yet. Here for future support
+  // Not supported yet by browser. Here for future support
   scrollbar-color: dark;
 }

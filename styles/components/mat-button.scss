@@ -23,6 +23,29 @@
     padding: 14px 32px;
     border-radius: 26px;
   }
+
+  .mat-button:not(.mat-flat-button) {
+    &.mat-primary {
+      svg g, svg polygon {
+        fill: mat-color($primary);
+      }
+    }
+    &.mat-accent {
+      svg g, svg polygon {
+        fill: mat-color($accent);
+      }
+    }
+    &.mat-warn {
+      svg g, svg polygon {
+        fill: mat-color($warn);
+      }
+    }
+  }
+
+  // Icon in buttons
+  .mat-button .mat-icon {
+    margin: 0 8px;
+  }
 }
 
 
