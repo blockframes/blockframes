@@ -1,4 +1,5 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input, Directive } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, Directive, ElementRef, ViewChild } from '@angular/core';
+import { OverlayWidgetComponent } from '../overlay-widget/overlay-widget.component';
 
 export interface SearchResult {
   title: string;
@@ -12,18 +13,18 @@ export interface SearchResult {
   styleUrls: ['./search-widget.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SearchWidgetComponent implements OnInit {
+export class SearchWidgetComponent {
 
   @Input() link = 'search';
   @Input() results: SearchResult[] = [];
+  @ViewChild(OverlayWidgetComponent, { static: false }) searchWidget: OverlayWidgetComponent;
 
   constructor() { }
 
-  ngOnInit() {
-  }
-
-  open(widget) {
-    console.log('has open', !!widget['open']);
+  open(ref: ElementRef) {
+    if (this.results.length) {
+      this.searchWidget.open(ref);
+    }
   }
 
 }
