@@ -1,16 +1,14 @@
-<section fxLayout="row" fxLayoutAlign="center center">
-  <article *ngIf="(user$ | async) as user" fxLayout="column" fxLayoutAlign="center center">
-    <h2>Join the community</h2>
+<section *ngIf="(user$ | async) as user" fxLayout="column" fxLayoutAlign="space-around center" fxLayoutGap="16px">
+  <h2>Join the community</h2>
 
-    <p class="community" *ngIf="!user.orgId; else hasOrg">
-      To access our applications you have to be a member of an organization. Please join one if it already exists or create it.
-    </p>
-    <ng-template #hasOrg>
-      <p class="community">Congratulations your request has been accepted.</p>
-      <a mat-flat-button color="accent" routerLink="../../">Explore your dashboard</a>
-    </ng-template>
+  <p class="community" *ngIf="!user.orgId; else hasOrg">
+    To access our applications you have to be a member of an organization. Please join one if it already exists or create it.
+  </p>
+  <ng-template #hasOrg>
+    <p class="community">Congratulations your request has been accepted.</p>
+    <a mat-flat-button color="accent" routerLink="../../">Explore your dashboard</a>
+  </ng-template>
 
-    <actions-list [items]="items$ | async"></actions-list>
-    <img asset="JoinTeam_500.png">
-  </article>
+  <actions-list [items]="items$ | async"></actions-list>
+  <img asset="JoinTeam_500.png">
 </section>

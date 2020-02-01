@@ -1,8 +1,4 @@
-<section fxLayout="column" fxLayoutAlign="center center">
-  <h2>{{ title }}</h2>
-  <p>{{ subTitle }}</p>
-  <div fxLayout="row" fxLayoutAlign="center">
-    <img asset="imageUrl" alt="congratulation" />
-  </div>
-  <a test-id="feedback-link" [disabled]="!enabled" (click)="redirectUser.emit()" mat-flat-button color="accent">{{ buttonMessage }}</a>
-</section>
+<h2>{{ title }}</h2>
+<p>{{ subTitle }}</p>
+<img [asset]="imageUrl" alt="congratulation" />
+<a test-id="feedback-link" [disabled]="!enabled" (click)="redirectUser.emit()" mat-flat-button color="accent">{{ buttonMessage }}</a>

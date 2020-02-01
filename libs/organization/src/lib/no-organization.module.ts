@@ -28,7 +28,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { OrganizationHomeComponent } from './pages/organization-home/organization-home.component';
 import { OrganizationFindComponent } from './pages/organization-find/organization-find.component';
 import { OrganizationFeedbackComponent } from './pages/organization-feedback/organization-feedback.component';
-import { OrganizationCreateComponent } from './components/organization-create/organization-create.component';
+import { OrganizationCreateComponent } from './pages/organization-create/organization-create.component';
 import { NoOrganizationGuard } from './guard/no-organization.guard';
 import { OrganizationLoadingComponent } from './pages/organization-loading/organization-loading.component';
 import { NoOrganizationInvitationGuard } from '@blockframes/notification';
