@@ -2,7 +2,7 @@ import { Directive, Input, HostListener, ElementRef } from '@angular/core';
 import { OverlayWidgetComponent } from './overlay-widget.component';
 
 // OVERLAY TRIGGERED ON CLICK
-@Directive({ selector: "a[widgetTarget], button[widgetTarget]" })
+@Directive({ selector: "button[widgetTarget]" })
 export class OverlayWidgetButtonDirective {
 
   @Input() widgetTarget: OverlayWidgetComponent;
@@ -21,7 +21,7 @@ export class OverlayWidgetInputDirective {
     this.widgetTarget.open(this.el);
   }
   @HostListener('blur') onblur() {
-    this.widgetTarget.open(this.el);
+    this.widgetTarget.close();
   }
 
   constructor(private el: ElementRef) {}

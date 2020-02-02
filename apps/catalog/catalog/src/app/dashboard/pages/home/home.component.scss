@@ -1,0 +1,16 @@
+:host {
+  display: block;
+  padding: 24px;
+
+  & > * {
+    margin-bottom: 24px;
+  }
+}
+
+header h1 {
+  margin: 0;
+}
+
+section > * {
+  margin-bottom: 16px;
+}

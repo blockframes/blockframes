@@ -1,4 +1,29 @@
-<h1 class="mat-display-3">Welcome to Catalog - Dashboard</h1>
+<header fxLayout="row" fxLayoutAlign="space-between center">
+  <h1>Dashboard</h1>
+  <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="24px">
+    <a mat-stroked-button color="primary" routerLink="./titles">
+      <mat-icon svgIcon="document"></mat-icon>
+      <span>View my titles</span>
+    </a>
+    <a mat-mini-fab color="primary" routerLink="./movie-tunnel" matTooltip="Import a new title">
+      <mat-icon>add</mat-icon>
+    </a>
+  </div>
+</header>
+<section>
+  <h3>My Marketplace Activity</h3>
+  <article fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="16px">
+
+  </article>
+</section>
+<section>
+  <h3>Sales Revenue</h3>
+</section>
+<section>
+  <h3>Sales Deals</h3>
+</section>
+
+<!--
 <p class="mat-body-1"> A consolidation of film libraries to create new opportunities through secure transactions.</p>
 <button mat-button color="accent" test-id="import" [routerLink]="['/c/o/dashboard/import']">Upload avails &
   films doc</button>
@@ -10,7 +35,6 @@
 
       <ng-template #loaded>
         <article fxLayout="row wrap" fxLayoutGap="30px" fxLayout.lt-md="column">
-          <!-- Movie Cards -->
           <movie-card *ngFor="let movie of movies" [movie]="movie"
             [link]="['/c/o/dashboard/catalog', movie.id]">
             <ng-container movieCardAction>
@@ -43,8 +67,8 @@
     </article>
   </ng-container>
 
-  <!-- Component to display if there is no movie -->
   <ng-template #noMovies>
     <movie-create (addMovie)="addNewMovie()"></movie-create>
   </ng-template>
 </ng-container>
+-->
