@@ -13,7 +13,10 @@
       <ng-container profile-menu>
         <account-profile-menu>
           <ng-container widgets>
-            <account-profile-widget></account-profile-widget>
+            <a test-id="profile" mat-menu-item routerLink="/c/o/account/profile" routerLinkActive="active">
+              <mat-icon svgIcon="profile"></mat-icon>
+              <span>My account</span>
+            </a>
             <mat-divider></mat-divider>
             <organization-widget></organization-widget>
             <mat-divider></mat-divider>

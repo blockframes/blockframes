@@ -13,11 +13,6 @@ input:focus {
   outline: none;
 }
 
-footer a {
-  padding: 16px;
-  width: 100%;
-}
-
 @include large {
   widget-card {
     width: 800px;

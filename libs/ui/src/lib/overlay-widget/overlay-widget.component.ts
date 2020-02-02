@@ -43,6 +43,10 @@ const fade = trigger('fade', [
       display: block;
       border-radius: 0 0 4px 4px;
     }
+    .widget-footer .mat-button {
+        padding: 16px;
+        width: 100%;
+      }
   `],
   encapsulation: ViewEncapsulation.None,
   animations: [fade]
