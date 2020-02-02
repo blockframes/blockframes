@@ -18,5 +18,9 @@
       color: mat-color($primary, default-contrast);
       background-color: mat-color($primary);
     }
+
+    .widget-footer {
+      border-top: solid 1px mat-color($foreground, divider);
+    }
   }
 }

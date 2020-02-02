@@ -4,6 +4,10 @@
   $accent: map-get($theme, accent);
   $warn: map-get($theme, warn);
 
+  ///////////////////////
+  // BUTTON WITH ICONS //
+  ///////////////////////
+
   // Icon related modifications
   .mat-button-base {
     // Apply space of 8px between span & icon in button
@@ -11,6 +15,8 @@
     span + .mat-icon {
       margin-left: 8px;
     }
+  }
+  .mat-stroked-button, .mat-button {
     &.mat-primary {
       svg g, svg polygon {
         fill: mat-color($primary);
@@ -24,6 +30,23 @@
     &.mat-warn {
       svg g, svg polygon {
         fill: mat-color($warn);
+      }
+    }
+  }
+  .mat-raised-button, .mat-flat-button, .mat-fab, .mat-mini-fab {
+    &.mat-primary {
+      svg g, svg polygon {
+        fill: mat-color($primary, default-contrast);
+      }
+    }
+    &.mat-accent {
+      svg g, svg polygon {
+        fill: mat-color($accent, default-contrast);
+      }
+    }
+    &.mat-warn {
+      svg g, svg polygon {
+        fill: mat-color($warn, default-contrast);
       }
     }
   }
