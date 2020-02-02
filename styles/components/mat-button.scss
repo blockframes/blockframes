@@ -4,8 +4,33 @@
   $accent: map-get($theme, accent);
   $warn: map-get($theme, warn);
 
+  // Icon related modifications
+  .mat-button-base {
+    // Apply space of 8px between span & icon in button
+    .mat-icon + span,
+    span + .mat-icon {
+      margin-left: 8px;
+    }
+    &.mat-primary {
+      svg g, svg polygon {
+        fill: mat-color($primary);
+      }
+    }
+    &.mat-accent {
+      svg g, svg polygon {
+        fill: mat-color($accent);
+      }
+    }
+    &.mat-warn {
+      svg g, svg polygon {
+        fill: mat-color($warn);
+      }
+    }
+  }
+
+
   .mat-stroked-button {
-    padding: 9px 16px;
+    padding: 14px 32px;
     border-radius: 26px;
     border-color: mat-color($foreground, text);
     &.mat-primary {
@@ -24,28 +49,7 @@
     border-radius: 26px;
   }
 
-  .mat-button:not(.mat-flat-button) {
-    &.mat-primary {
-      svg g, svg polygon {
-        fill: mat-color($primary);
-      }
-    }
-    &.mat-accent {
-      svg g, svg polygon {
-        fill: mat-color($accent);
-      }
-    }
-    &.mat-warn {
-      svg g, svg polygon {
-        fill: mat-color($warn);
-      }
-    }
-  }
 
-  // Icon in buttons
-  .mat-button .mat-icon {
-    margin: 0 8px;
-  }
 }
 
 

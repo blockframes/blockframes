@@ -45,10 +45,7 @@
       <button mat-icon-button (click)="sidenav.toggle()">
         <mat-icon>menu</mat-icon>
       </button>
-      <form fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="12px">
-        <mat-icon>search</mat-icon>
-        <input placeholder="Search for clients, negotiations, titles instead of listings..." />
-      </form>
+      <search-widget></search-widget>
       <overlay-notification-widget></overlay-notification-widget>
       <button mat-icon-button>
         <mat-icon>account_circle</mat-icon>

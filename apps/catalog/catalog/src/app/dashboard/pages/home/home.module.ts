@@ -6,11 +6,9 @@ import { CommonModule } from '@angular/common';
 //Material
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatInputModule } from '@angular/material/input';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatDialogModule } from '@angular/material/dialog';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatCardModule } from '@angular/material/card';
+
 
 // Libraries
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -31,13 +29,12 @@ import { MovieCardModule } from '@blockframes/ui/movie-card/movie-card.module';
     FlexLayoutModule,
     MovieCardModule,
     MovieCreateModule,
+    // Material
     MatButtonModule,
     MatIconModule,
-    MatDividerModule,
-    MatInputModule,
-    MatMenuModule,
-    MatDialogModule,
-    MatSnackBarModule,
+    MatTooltipModule,
+    MatCardModule,
+    // Routing
     RouterModule.forChild([{ path: '', component: HomeComponent }])
   ]
 })
