@@ -83,6 +83,7 @@ const icons = [
   { name: 'dollar', url: 'assets/icons/dollar.svg' },
   { name: 'dot_menu', url: 'assets/icons/dot_menu.svg' },
   { name: 'download', url: 'assets/icons/download.svg' },
+  { name: 'edit', url: 'assets/icons/edit.svg' },
   { name: 'eye', url: 'assets/icons/eye.svg' },
   { name: 'facebook', url: 'assets/icons/facebook.svg' },
   { name: 'film', url: 'assets/icons/film.svg' },
