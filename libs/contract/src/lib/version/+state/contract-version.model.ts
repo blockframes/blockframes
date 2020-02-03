@@ -32,7 +32,9 @@ export function formatContractVersion(contractVersion: any): ContractVersion {
     contractVersion.scope.end = toDate(contractVersion.scope.end);
   }
 
-  contractVersion.creationDate = toDate(contractVersion.creationDate);
+  if (contractVersion.creationDate) {
+    contractVersion.creationDate = toDate(contractVersion.creationDate);
+  }
 
   return contractVersion as ContractVersion;
 }

@@ -14,7 +14,7 @@ import { MatSelectModule } from '@angular/material/select';
 // Guards
 import { MovieContractListGuard } from '@blockframes/contract/contract/guards/movie-contract-list.guard';
 import { MovieOrganizationListGuard } from '@blockframes/movie/movieguards/movie-organization-list.guard';
-import { ActiveMovieContractsDealsGuard } from '@blockframes/movie/distribution-deals/guards/active-movie-contracts-deals.guard';
+import { ContractsDealListGuard } from '@blockframes/movie/distribution-deals/guards/contracts-deal-list.guard';
 
 const routes = [{
   path: '',
@@ -37,8 +37,8 @@ const routes = [{
     },
     {
       path: 'avails',
-      canActivate: [MovieOrganizationListGuard, ActiveMovieContractsDealsGuard],
-      canDeactivate: [MovieOrganizationListGuard, ActiveMovieContractsDealsGuard],
+      canActivate: [MovieOrganizationListGuard, ContractsDealListGuard],
+      canDeactivate: [MovieOrganizationListGuard, ContractsDealListGuard],
       loadChildren: () => import('../avails/avails.module').then(m => m.TitleAvailsModule)
     }
   ]
