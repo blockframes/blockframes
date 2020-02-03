@@ -11,8 +11,9 @@ import { toDate } from '@blockframes/utils/helpers';
 import { ContractQuery } from '@blockframes/contract/contract/+state/contract.query';
 import { switchMap } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
-import { ContractVersion } from '@blockframes/contract/version/+state/contract-version.model';
+import { ContractVersion, getContractLastVersion } from '@blockframes/contract/version/+state/contract-version.model';
 import { DistributionDealQuery } from './distribution-deal.query';
+import { MovieQuery } from '@blockframes/movie/movie+state';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies/:movieId/distributionDeals' })
@@ -40,6 +41,20 @@ export class DistributionDealService extends CollectionService<DistributionDealS
     );
   }
 
+  /** Gets every distribution deals of active movie contracts titleIds. */
+  public syncActiveMovieContractDeals() {
+    return this.contractQuery.selectAll().pipe(
+      switchMap(contracts => {
+        const $ = contracts.map(c =>{
+          const lastVersion = getContractLastVersion(c);
+          for (const { distributionDealIds } of Object.values(lastVersion.titles)) {
+            return this.syncCollectionGroup('distributionDeals', ref => ref.where('id', 'in', distributionDealIds))
+          }
+        });
+        return combineLatest($);
+      })
+    );
+  }
 
   /**
    *
@@ -131,11 +146,11 @@ export class DistributionDealService extends CollectionService<DistributionDealS
    * @param contractVersion
    */
   public getTerritoriesFromContract(contractVersion: ContractVersion) {
-    const dealIds: string[] = [];
-    for (const title of Object.values(contractVersion.titles)) {
-      dealIds.concat(title.distributionDealIds);
+    let dealIds: string[] = [];
+    for (const { distributionDealIds } of Object.values(contractVersion.titles)) {
+      dealIds = dealIds.concat(distributionDealIds);
     }
-    const deals = dealIds.map(dealId => this.dealQuery.getEntity(dealId))
+    const deals = dealIds.map(dealId => this.dealQuery.getEntity(dealId));
     const territories = deals.map(deal => deal ? getDealTerritories(deal) : []);
     return territories.flat();
   }

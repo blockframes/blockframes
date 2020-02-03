@@ -74,7 +74,7 @@ export class ContractService extends CollectionService<ContractState> {
     return this.movieQuery.selectActiveId().pipe(
       // Clear the store everytime the active movieId change.
       tap(_ => this.store.reset()),
-      switchMap(movieId => awaitSyncQuery.call(this, movieContractsQuery(movieId)))
+      switchMap(movieId =>  awaitSyncQuery.call(this, movieContractsQuery(movieId)))
     );
   }
 

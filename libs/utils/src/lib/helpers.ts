@@ -19,7 +19,7 @@ export interface DateGroup<T> {
 
 /** Checks if the date is a firestore Timestamp. */
 export function isTimeStamp(date: firestore.Timestamp | Date): boolean {
-  return date instanceof firestore.Timestamp
+  return date && date instanceof firestore.Timestamp
 }
 
 /** Takes a Date or a Timestamp and returns it as a Date. */

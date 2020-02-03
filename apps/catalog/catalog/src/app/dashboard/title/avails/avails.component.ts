@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ContractQuery } from '@blockframes/contract/contract/+state/contract.query';
 
 @Component({
@@ -7,13 +7,8 @@ import { ContractQuery } from '@blockframes/contract/contract/+state/contract.qu
   styleUrls: ['./avails.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TitleAvailsComponent implements OnInit {
-
+export class TitleAvailsComponent {
   public contracts$ = this.contractQuery.selectAll();
 
-  constructor(private contractQuery: ContractQuery) { }
-
-  ngOnInit() {
-  }
-
+  constructor(private contractQuery: ContractQuery) {}
 }
