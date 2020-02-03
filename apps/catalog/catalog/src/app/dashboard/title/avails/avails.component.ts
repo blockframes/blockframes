@@ -1,4 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ContractQuery } from '@blockframes/contract/contract/+state/contract.query';
 
 @Component({
   selector: 'catalog-title-avails',
@@ -8,7 +9,9 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 })
 export class TitleAvailsComponent implements OnInit {
 
-  constructor() { }
+  public contracts$ = this.contractQuery.selectAll();
+
+  constructor(private contractQuery: ContractQuery) { }
 
   ngOnInit() {
   }
