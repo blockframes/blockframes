@@ -18,8 +18,12 @@
       (imageCropped)="imageCropped($event)"
     ></image-cropper>
     <div class="buttons" fxLayout="row" fxLayoutAlign="space-evenly center">
-      <mat-icon (click)="cropIt()" mat-button fontSet="material-icons-outlined" color="primary">check_circle</mat-icon>
-      <mat-icon (click)="nextStep(prev)" mat-button fontSet="material-icons-outlined" color="warn">cancel</mat-icon>
+      <button mat-mini-fab color="primary">
+        <mat-icon (click)="cropIt()" fontSet="material-icons-outlined">check_circle</mat-icon>
+      </button>
+      <button mat-mini-fab color="warn">
+        <mat-icon (click)="nextStep(prev)" fontSet="material-icons-outlined">cancel</mat-icon>
+      </button>
     </div>
   </article>
   <article *ngSwitchCase="'upload'" @zoomDelay>
@@ -49,12 +53,16 @@
       <div class="buttons" fxLayout="row" fxLayoutAlign="space-evenly center">
         <ng-container *ngIf="useFileuploader">
           <input #fileUploader multiple hidden type="file" (change)="filesSelected($event.target.files)" />
-          <mat-icon (click)="fileUploader.click()" mat-button fontSet="material-icons-outlined" color="primary" matTooltip="select new picture">photo_size_select_actual</mat-icon>
+          <button mat-mini-fab color="primary">
+            <mat-icon (click)="fileUploader.click()" fontSet="material-icons-outlined" matTooltip="select new picture">photo_size_select_actual</mat-icon>
+          </button>
         </ng-container>
         <!-- TODO #1149: fix resize in cropper -->
         <!-- <mat-icon (click)="resize(url)" mat-button fontSet="material-icons-outlined" color="primary" matTooltip="resize current picture">icon</mat-icon> -->
         <ng-container *ngIf="useDelete">
-          <mat-icon (click)="delete()" mat-button fontSet="material-icons-outlined" color="warn" matTooltip="delete current picture">delete_forever</mat-icon>
+          <button mat-mini-fab color="warn">
+            <mat-icon (click)="delete()" fontSet="material-icons-outlined" matTooltip="delete current picture">delete_forever</mat-icon>
+          </button>
         </ng-container>
       </div>
     </ng-container>
