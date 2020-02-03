@@ -1,27 +1,29 @@
-<ng-container *ngFor="let country of originCountries.controls; let i = index">
-  <h5>Countries of Origin #{{ i + 1 }}</h5>
-  <ul>
-    <li>
-      <strong>Country </strong><missing-control [control]="country" label="TERRITORIES" [link]="link"></missing-control>
-    </li>
-    <li>
-      <strong>Domestic Distributor </strong>
-    </li>
-    <li>
-      <strong>Release Media </strong>
-      <ng-container *ngFor="let release of salesInfo.originalRelease.controls">
-        <ng-container *ngIf="release.get('country').value === country.value">
-          <missing-control [control]="release.get('media')" label="MEDIAS" [link]="link"></missing-control>
+<section fxLayout="row wrap">
+  <article *ngFor="let country of originCountries.controls; let i = index">
+    <h5>Countries of Origin #{{ i + 1 }}</h5>
+    <ul>
+      <li>
+        <strong>Country </strong><missing-control [control]="country" label="TERRITORIES" [link]="link"></missing-control>
+      </li>
+      <li>
+        <strong>Domestic Distributor </strong>
+      </li>
+      <li>
+        <strong>Release Media </strong>
+        <ng-container *ngFor="let release of salesInfo.originalRelease.controls">
+          <ng-container *ngIf="release.get('country').value === country.value">
+            <missing-control [control]="release.get('media')" label="MEDIAS" [link]="link"></missing-control>
+          </ng-container>
         </ng-container>
-      </ng-container>
-    </li>
-    <li>
-      <strong>Release Date </strong>
-      <ng-container *ngFor="let release of salesInfo.originalRelease.controls">
-        <ng-container *ngIf="release.get('country').value === country.value">
-          <missing-control [control]="release.get('date')" [link]="link"></missing-control>
+      </li>
+      <li>
+        <strong>Release Date </strong>
+        <ng-container *ngFor="let release of salesInfo.originalRelease.controls">
+          <ng-container *ngIf="release.get('country').value === country.value">
+            <missing-control [control]="release.get('date')" [link]="link"></missing-control>
+          </ng-container>
         </ng-container>
-      </ng-container>
-    </li>
-  </ul>
-</ng-container>
+      </li>
+    </ul>
+  </article>
+</section>
