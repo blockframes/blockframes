@@ -1,6 +1,6 @@
 // Distribution Deals guards
 export * from './guards/active-movie-distribution-deals.guard';
-export * from './guards/active-movie-contracts-deals.guard';
+export * from './guards/contracts-deal-list.guard';
 
 // Distribution Deals state
 

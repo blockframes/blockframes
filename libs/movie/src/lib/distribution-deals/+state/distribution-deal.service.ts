@@ -11,9 +11,8 @@ import { toDate } from '@blockframes/utils/helpers';
 import { ContractQuery } from '@blockframes/contract/contract/+state/contract.query';
 import { switchMap } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
-import { ContractVersion, getContractLastVersion } from '@blockframes/contract/version/+state/contract-version.model';
+import { ContractVersion } from '@blockframes/contract/version/+state/contract-version.model';
 import { DistributionDealQuery } from './distribution-deal.query';
-import { MovieQuery } from '@blockframes/movie/movie+state';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies/:movieId/distributionDeals' })
@@ -29,28 +28,13 @@ export class DistributionDealService extends CollectionService<DistributionDealS
     super(store);
   }
 
-  /** Gets every distribution deals of organization contracts. */
+  /** Gets every distribution deals of contracts in the store. */
   public syncContractsDeals() {
     return this.contractQuery.selectAll().pipe(
       switchMap(contracts => {
         const $ = contracts.map(c =>
           this.syncCollectionGroup('distributionDeals', ref => ref.where('contractId', '==', c.id))
         );
-        return combineLatest($);
-      })
-    );
-  }
-
-  /** Gets every distribution deals of active movie contracts titleIds. */
-  public syncActiveMovieContractDeals() {
-    return this.contractQuery.selectAll().pipe(
-      switchMap(contracts => {
-        const $ = contracts.map(c =>{
-          const lastVersion = getContractLastVersion(c);
-          for (const { distributionDealIds } of Object.values(lastVersion.titles)) {
-            return this.syncCollectionGroup('distributionDeals', ref => ref.where('id', 'in', distributionDealIds))
-          }
-        });
         return combineLatest($);
       })
     );
