@@ -17,7 +17,7 @@ export class MovieCardComponent {
   }
 
   public get firstFestivalPrizeLogo() {
-    if(this.movie.festivalPrizes.prizes.length && this.movie.festivalPrizes.prizes[0].logo) {
+    if(this.movie.festivalPrizes.prizes.length && !!this.movie.festivalPrizes.prizes[0].logo.url) {
       return this.movie.festivalPrizes.prizes[0].logo;
     } else {
       return '';
