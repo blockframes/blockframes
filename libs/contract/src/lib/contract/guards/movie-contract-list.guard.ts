@@ -1,14 +1,16 @@
 import { Injectable } from '@angular/core';
-import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
-import { ContractService, ContractState } from '../+state';
+import { CollectionGuard } from 'akita-ng-fire';
+import { ContractService, ContractState, ContractQuery } from '../+state';
 
 @Injectable({ providedIn: 'root' })
-@CollectionGuardConfig({ awaitSync: true })
 export class MovieContractListGuard extends CollectionGuard<ContractState> {
-  constructor(protected service: ContractService) {
+  constructor(protected service: ContractService, private query: ContractQuery) {
     super(service);
   }
 
+  get awaitSync() {
+    return this.query.getCount() === 0;
+  }
   /**
    * Sync on the active movie contracts.
    */
