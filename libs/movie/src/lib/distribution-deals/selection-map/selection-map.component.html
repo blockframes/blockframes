@@ -5,7 +5,7 @@
     <mat-card-content>
       <!-- <div #leaflet class="leaflet"></div> -->
       <world-map (select)="select($event)">
-        <ng-container *ngFor="let tag of countries$ | async; trackBy: tackByTag">
+        <ng-container *ngFor="let tag of countries$ | async; trackBy: trackByTag">
           <map-feature [tag]="tag" color="primary" (click)="select($event)"></map-feature>
         </ng-container>
         <ng-container *ngIf="country$ | async as country" >
