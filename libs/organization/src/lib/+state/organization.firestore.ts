@@ -5,8 +5,8 @@ import { Location, BankAccount, createLocation } from '@blockframes/utils/common
 type Timestamp = firestore.Timestamp;
 
 interface AppAccess {
-  dashboard: boolean;
-  marketplace: boolean;
+  catalogDashboard: boolean;
+  catalogMarketplace: boolean;
 }
 
 /** Document model of an Organization */

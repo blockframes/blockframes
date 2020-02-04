@@ -25,11 +25,11 @@ export class OrganizationAppAccessComponent implements OnInit, OnDestroy {
     this.subscription = this.service.syncOrgActive().subscribe();
   }
 
-  public submit(dashboard: boolean, marketplace: boolean) {
-    if (!dashboard && !marketplace) {
+  public submit(catalogDashboard: boolean, catalogMarketplace: boolean) {
+    if (!catalogDashboard && !catalogMarketplace) {
       return this.snackBar.open('You have to select an application.', 'close', { duration: 2000 });
     }
-    this.service.update(this.query.getActiveId(), { appAccess: { marketplace, dashboard } });
+    this.service.update(this.query.getActiveId(), { appAccess: { catalogMarketplace, catalogDashboard } });
     this.router.navigate(['../congratulations'], { relativeTo: this.route });
   }
 
