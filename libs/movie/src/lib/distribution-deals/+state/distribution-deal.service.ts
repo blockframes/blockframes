@@ -129,13 +129,12 @@ export class DistributionDealService extends CollectionService<DistributionDealS
    * Returns all eligible territories from contract's deals.
    * @param contractVersion
    */
-  public getTerritoriesFromContract(contractVersion: ContractVersion) {
-    let dealIds: string[] = [];
-    for (const { distributionDealIds } of Object.values(contractVersion.titles)) {
-      dealIds = dealIds.concat(distributionDealIds);
-    }
-    const deals = dealIds.map(dealId => this.dealQuery.getEntity(dealId));
-    const territories = deals.map(deal => deal ? getDealTerritories(deal) : []);
-    return territories.flat();
+  public getTerritoriesFromContract(contractVersion: ContractVersion): string[] {
+    // Get all the deals from the contract titles.
+    const deals = Object.values(contractVersion.titles).map(({ distributionDealIds }) =>
+      this.dealQuery.getEntity(distributionDealIds)
+    );
+    // Returns all deals eligible territories as an array of string.
+    return deals.map(deal => deal ? getDealTerritories(deal) : []).flat();
   }
 }
