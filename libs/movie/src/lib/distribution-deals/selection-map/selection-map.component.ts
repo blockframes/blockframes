@@ -35,7 +35,7 @@ export class SelectionMapComponent {
     this.country.next(e['iso_a3']);
   }
 
-  public tackByTag(tag) {
+  public trackByTag(tag) {
     return tag;
   }
 
