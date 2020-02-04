@@ -7,6 +7,8 @@ export * from './lib/contract/+state/contract.firestore';
 
 // Modules
 export * from './lib/contract/forms/party-name/party-name.module';
+export * from './lib/tunnel/contract-tunnel.module';
+export * from './lib/tunnel/type/type.module';
 
 // Forms
 export * from './lib/contract/forms/contract.form';
