@@ -1,16 +1,31 @@
-<section test-id="member-add">
-  <h4>Send invitation</h4>
-  <span fxLayout="row" fxLayoutAlign="start baseline">
-    <mat-form-field appearance="outline">
-      <mat-label>Add new member</mat-label>
-      <input matInput type="email" placeholder="Email" aria-label="Email" [formControl]="emailControl" />
-      <mat-hint>Please enter a valid email address</mat-hint>
-      <mat-error *ngIf="emailControl.hasError('email')">
-        Please enter a <strong>valid</strong> email address.
-      </mat-error>
-    </mat-form-field>
-    <button mat-button test-id="add" (click)="sendInvitation()" color="primary">
-      Send invitation
-    </button>
-  </span>
-</section>
+<mat-card test-id="member-add">
+  <h3>Invite Members</h3>
+  <p>Invite your co-workers to join your company so that they can use the application.</p>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Member's work email address</mat-label>
+    <input matInput type="email" placeholder="Invite by E-mail Address" aria-label="Email" [formControl]="emailControl" />
+    <mat-icon matSuffix svgIcon="mail"></mat-icon>
+    <mat-hint>Please enter a valid email address</mat-hint>
+    <mat-error *ngIf="emailControl.hasError('email')">
+      Please enter a <strong>valid</strong> email address.
+    </mat-error>
+  </mat-form-field>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Grant permissions</mat-label>
+    <mat-select>
+      <mat-option>
+        Admin
+      </mat-option>
+      <mat-option>
+        Member
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</mat-card>
+
+<button mat-flat-button color="accent" test-id="add" (click)="sendInvitation()">
+  <mat-icon svgIcon="send"></mat-icon>
+  <span>Send invitations</span>
+</button>
