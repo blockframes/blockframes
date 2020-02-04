@@ -85,6 +85,7 @@
         [source]="versions"
         [columns]="versionColumns"
         [initialColumns]="initialVersionColumns">
+        <ng-template colRef="status" let-status>{{ status | titlecase }}</ng-template>
       </bf-table-filter>
     </mat-card-content>
   </mat-card>

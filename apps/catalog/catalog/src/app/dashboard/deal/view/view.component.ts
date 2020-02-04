@@ -6,7 +6,8 @@ import {
   ContractPartyDetail,
   getContractParties,
   isContractSignatory,
-  getTotalPrice
+  getTotalPrice,
+  ContractStatus
 } from '@blockframes/contract/contract/+state';
 import { Observable } from 'rxjs/internal/Observable';
 import { map, filter } from 'rxjs/operators';
@@ -48,7 +49,7 @@ function createVersionView(version: ContractVersion): VersionView {
     return {
       date: version.creationDate.toLocaleDateString(),
       offer: getVersionPrice(version),
-      status: version.status
+      status: ContractStatus[version.status]
     };
   }
 }
