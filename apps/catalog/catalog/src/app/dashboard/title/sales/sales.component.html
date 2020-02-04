@@ -1,23 +1,26 @@
 <!-- Marketplace Activity -->
-<section>
+<section *ngIf="movieAnalytics$ | async as movieAnalytics">
   <h3>My Marketplace Activity</h3>
   <article fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="space-around center">
     <ng-container *ngFor="let lineChart of lineCharts">
       <mat-card #chart fxFlex="30" fxFlex.lt-md="100">
         <div fxLayout="row" fxLayoutAlign="space-between start">
-          <span class="mat-body-2">{{ lineChart.title }}</span>
-          <span>
-            <ng-container *ngIf="calculatePercentage(mockData, lineChart.title) > 0; else down">
+          <div class="chart-title" fxFlex="50">
+            <mat-icon [svgIcon]="lineChart.icon"></mat-icon><span class="mat-body-2">{{ lineChart.title }}</span>
+          </div>
+          <span class="mat-caption chart-percent" *ngIf="calculatePercentage(movieAnalytics, lineChart.label) as percent">
+            <ng-container *ngIf="percent > 0; else down">
               <mat-icon color="primary">arrow_drop_up</mat-icon>
             </ng-container>
             <ng-template #down><mat-icon color="accent">arrow_drop_down</mat-icon></ng-template>
-              {{ calculatePercentage(mockData, lineChart.title) }} %</span>
+              {{ percent }} %
+            </span>
         </div>
-        <h3>{{ sum(populateData(mockData, lineChart.title, 'hits'))}}</h3>
+        <h3>{{ sum(populateData(movieAnalytics, lineChart.label, 'hits', 'current'))}}</h3>
         <apx-chart
-          [series]="getLineChartSeries(mockData, lineChart.title)"
+          [series]="getLineChartSeries(movieAnalytics, lineChart.label)"
           [chart]="lineChartOptions.chart"
-          [xaxis]="getLineChartXaxis(mockData, lineChart.title)"
+          [xaxis]="getLineChartXaxis(movieAnalytics, lineChart.label)"
           [yaxis]="lineChartOptions.yaxis"
           [dataLabels]="lineChartOptions.dataLabels"
           [grid]="lineChartOptions.grid"
@@ -28,9 +31,9 @@
     </ng-container>
   </article>
 </section>
-
 <!-- Sales Revenue -->
 <section *ngIf="contractData$ | async as contractData">
+  {{contractData | json}}
   <h3>Sales Revenue</h3>
   <!-- First Row -->
   <article fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="space-around center">
