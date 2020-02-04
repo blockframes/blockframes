@@ -11,7 +11,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 export class ErrorLoggerHandler implements ErrorHandler {
   constructor(private snackBar: MatSnackBar) {}
 
-  handleError(error) {
+  handleError(error: any) {
     console.error(error);
     this.snackBar.open(`${error}`.substring(0, 100));
   }
