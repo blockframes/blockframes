@@ -16,11 +16,7 @@ export class ContractFormPartyNameComponent {
     return wantedRoles.includes(role.slug);
   });
 
-  public removeEntity(index: number) {
-    this.form.removeAt(index);
-  }
-
   public addEntity() {
-    this.form.add(new PartyDetailsForm({ party: { showName: true, role: 'licensee' } }));
+    this.form.add({ party: { showName: true, role: 'licensee' } });
   }
 }

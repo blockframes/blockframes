@@ -68,14 +68,13 @@ export class DistributionDealLanguagesComponent {
       this.form.addLanguage('all');
       this.languageCtrl.disable();
       this.formIsDisabled = true;
-      const languages = Object.keys(this.form.controls);
-      languages.forEach(language => {
+      for (const language in this.form.controls) {
         const buttons = ['dubbed', 'subtitle', 'caption'];
         buttons.forEach(button => {
           this.isChecked(language, button);
           this.addAllVersions(language, button);
         });
-      });
+      }
     } else {
       this.languageCtrl.enable();
       this.formIsDisabled = false;
