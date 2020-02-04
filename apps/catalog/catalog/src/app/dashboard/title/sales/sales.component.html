@@ -1,5 +1,5 @@
 <!-- Marketplace Activity -->
-<section *ngIf="mockData$ | async as movieAnalytics">
+<section *ngIf="movieAnalytics$ | async as movieAnalytics">
   <h3>My Marketplace Activity</h3>
   <article fxLayout="row wrap" fxLayoutAlign="flex-start" fxLayoutAlign.lt-md="center" fxLayoutGap="25px">
     <ng-container *ngFor="let lineChart of lineCharts">
@@ -32,22 +32,4 @@
   </article>
 </section>
 <!-- Sales Revenue -->
-<section *ngIf="contractData$ | async as contractData">
-  <h3>Sales Revenue</h3>
-  <!-- First Row -->
-  <article fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="space-around center">
-    <mat-card fxFlex="45" fxFlex.lt-md="100">
-      <span class="mat-body-2"><mat-icon svgIcon="monetization"></mat-icon>Total Gross Receipts</span>
-      <mat-card-content>
-        <h1>{{ sum(contractData.totalGrossReceipt) | number : '4.0-0'}}</h1>
-      </mat-card-content>
-    </mat-card>
-    <mat-card fxFlex="45" fxFlex.lt-md="100">
-      <span class="mat-body-2"><mat-icon svgIcon="sales"></mat-icon>Total Sales</span>
-      <mat-card-content>
-        <h1>{{ contractData.totalSales.length }}</h1>
-      </mat-card-content>
-    </mat-card>
-  </article>
-  <!-- Second Row -->
-</section>
+

@@ -2,11 +2,9 @@ import { Component, OnInit, ChangeDetectionStrategy, ViewChild } from '@angular/
 import { MovieAnalytics } from '@blockframes/movie/movie+state/movie.model';
 import { MovieService } from '@blockframes/movie/movie+state/movie.service';
 import { MovieQuery } from '@blockframes/movie/movie+state/movie.query';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { ChartComponent } from 'ng-apexcharts';
 import { ChartOptions, lineChartOptions } from './default-chart-options';
-import { analyticsMockData, contractMockData } from './mockdata';
-import { ContractQuery } from '@blockframes/contract/contract/+state';
 
 const lineCharts = [
   {
@@ -37,18 +35,9 @@ export class TitleSalesComponent implements OnInit {
   public lineChartOptions: Partial<ChartOptions>;
   public barChartOptions: Partial<ChartOptions>;
   public movieAnalytics$: Observable<MovieAnalytics[]>;
-
-
-  mockData = analyticsMockData;
-  mockData$ = of(analyticsMockData)
-  contractMockData = contractMockData;
-  contractData$ = of(contractMockData);
   lineCharts = lineCharts;
   
-  constructor(
-    private movieService: MovieService, 
-    private movieQuery: MovieQuery,
-    private contractQuery: ContractQuery) {   
+  constructor(private movieService: MovieService, private movieQuery: MovieQuery) {   
     this.lineChartOptions = lineChartOptions;
   }
 
