@@ -5,7 +5,7 @@
   <ng-container matColumnDef="movie">
     <th mat-header-cell *matHeaderCellDef>International title</th>
     <td fxLayout="row" fxLayoutAlign="start center" mat-cell *matCellDef="let element" class="bf-strong" matRipple>
-      <img *ngIf="element.main.poster; else defaultPoster" [imgRef]="element.main.poster" alt="Poster of movie" />
+      <img *ngIf="movie.promotionalElements.poster[0].media as poster; else defaultPoster" [imgRef]="poster" alt="Poster of movie" />
       <ng-template #defaultPoster>
         <img src="/assets/images/default-movie-poster.png" alt="Default poster of movie" />
       </ng-template>

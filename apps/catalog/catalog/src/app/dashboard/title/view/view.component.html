@@ -5,7 +5,7 @@
   <header fxLayout="row" fxLayoutAlign="start start">
     <article fxLayout="row" fxLayout.lt-md="column" fxFlex>
        <!-- TODO#1763 get poster by countries from promotionalElements -->
-       <ng-container *ngIf=" movie.main.poster || movie.promotionalElements.poster[0].media as poster">
+       <ng-container *ngIf="movie.promotionalElements.poster[0].media as poster">
         <img class="movie-poster" [imgRef]="poster" alt="movie poster"/>
       </ng-container>
       <div class="movie-info">

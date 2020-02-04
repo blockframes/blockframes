@@ -210,7 +210,6 @@ export interface MovieMain {
   title: Title,
   directors?: Person[],
   officialIds?: MovieOfficialIds,
-  poster?: ImgRef,
   productionYear?: number,
   genres?: GenresSlug[],
   customGenres?: string[],

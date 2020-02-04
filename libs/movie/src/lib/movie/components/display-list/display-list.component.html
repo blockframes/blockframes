@@ -2,7 +2,9 @@
   <!-- Picture column -->
   <ng-container matColumnDef="picture">
     <th mat-header-cell *matHeaderCellDef></th>
-    <td mat-cell *matCellDef="let element"><img [src]="element.movie.main.poster" /></td>
+    <td mat-cell *matCellDef="let element">
+      <img *ngIf="element.movie.promotionalElements.poster[0].media as poster" [imgRef]="poster" />
+    </td>
   </ng-container>
 
   <!-- Movie title column -->

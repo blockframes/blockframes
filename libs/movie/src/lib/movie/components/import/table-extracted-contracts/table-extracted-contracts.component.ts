@@ -79,7 +79,7 @@ export class TableExtractedContractsComponent implements OnInit {
       this.processedContracts = 0;
       return true;
     } catch (err) {
-      this.snackBar.open(`Could not import all contracts (${this.processedContracts} / ${this.selection.selected})`, 'close', { duration: 3000 });
+      this.snackBar.open(`Could not import all contracts (${this.processedContracts} / ${this.selection.selected.length})`, 'close', { duration: 3000 });
       this.processedContracts = 0;
     }
   }
@@ -95,7 +95,7 @@ export class TableExtractedContractsComponent implements OnInit {
       this.processedContracts = 0;
       return true;
     } catch (err) {
-      this.snackBar.open(`Could not update all contracts (${this.processedContracts} / ${this.selection.selected})`, 'close', { duration: 3000 });
+      this.snackBar.open(`Could not update all contracts (${this.processedContracts} / ${this.selection.selected.length})`, 'close', { duration: 3000 });
       this.processedContracts = 0;
     }
   }
