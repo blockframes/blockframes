@@ -18,12 +18,12 @@ export interface DateGroup<T> {
 }
 
 /** Checks if the date is a firestore Timestamp. */
-export function isTimeStamp(date: firestore.Timestamp | Date): boolean {
+export function isTimeStamp(date: firestore.Timestamp | Date): date is firestore.Timestamp {
   return date && date instanceof firestore.Timestamp
 }
 
 /** Takes a Date or a Timestamp and returns it as a Date. */
-export function toDate(date: any): Date {
+export function toDate(date: firestore.Timestamp | Date): Date {
   if (isTimeStamp(date)) {
     return date.toDate();
   }

@@ -41,6 +41,7 @@ const contractQuery = (contractId: string): Query<ContractWithTimeStamp> => ({
     })
 })
 
+/** Get all the contracts where the active movie appears. */
 const movieContractsQuery = (movieId: string): Query<ContractWithTimeStamp[]> => ({
   path: 'contracts',
   queryFn: ref => ref.where('titleIds', 'array-contains', movieId).where('childContractIds', '==', []),
@@ -66,6 +67,8 @@ export class ContractService extends CollectionService<ContractState> {
   /** Sync the store with every contracts of the active organization. */
   public syncOrganizationContracts() {
     return this.organizationQuery.selectActiveId().pipe(
+      // Clear the store everytime the active orgId changes.
+      tap(_ => this.store.reset()),
       switchMap(orgId => awaitSyncQuery.call(this, organizationContractsListQuery(orgId)))
     );
   }
@@ -73,7 +76,7 @@ export class ContractService extends CollectionService<ContractState> {
   /** Sync the store with every contracts of the active movie. */
   public syncMovieContracts() {
     return this.movieQuery.selectActiveId().pipe(
-      // Clear the store everytime the active movieId change.
+      // Clear the store everytime the active movieId changes.
       tap(_ => this.store.reset()),
       switchMap(movieId => awaitSyncQuery.call(this, movieContractsQuery(movieId)))
     );
