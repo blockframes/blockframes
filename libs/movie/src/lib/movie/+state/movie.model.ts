@@ -26,6 +26,7 @@ import {
   UnitBox,
   MovieStakeholders,
   StoreStatus,
+  MovieAnalytics,
 } from './movie.firestore';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 import { LanguagesSlug } from '@blockframes/utils/static-model';
@@ -339,11 +340,26 @@ export function getMovieTitleList(movies: Movie[]): string[] {
   return movieTitles;
 }
 
-/** Returns the total gross receipts of a movie from the contracts. */
+/**
+ * Returns the total gross receipts of a movie from the contracts.
+ * @param contracts
+ * @param movieId
+ */
 export function getMovieReceipt(contracts: Contract[], movieId: string) {
   const currencyPipe = new CurrencyPipe('en-US');
   const sales = getValidatedContracts(contracts);
   const amount = sales.reduce((sum, contract) => sum + getContractLastVersion(contract).titles[movieId].price.amount, 0);
   // We use USD as default currency as we can have different currencies for each deals and contracts.
   return currencyPipe.transform(amount, 'USD', 'symbol');
+}
+
+/**
+ * Returns the number of views of a movie page.
+ * @param analytics
+ * @param movieId
+ */
+export function getMovieTotalViews(analytics: MovieAnalytics[], movieId: string): number {
+  const movieAnalytic = analytics.find(analytic => analytic.movieId === movieId);
+  const movieHits = movieAnalytic.movieViews.current.map(event => event.hits);
+  return movieHits.reduce((acc, val) => acc + val, 0);
 }
