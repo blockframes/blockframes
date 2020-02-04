@@ -2,17 +2,11 @@ section {
   margin-top: 15px;
 }
 
-mat-card {
-  width: 100%;
+.chart {
+  height: 215px;
+  margin-bottom: 15px;
 }
 
-.chart-title {
-  width: 100%;
-  overflow: auto;
-  .mat-body-2 {
-    word-wrap: break-word;
-  }
-  .chart-percent {
-    min-width: 66.5px;
-  }
+mat-icon {
+  margin-right: 8px;
 }

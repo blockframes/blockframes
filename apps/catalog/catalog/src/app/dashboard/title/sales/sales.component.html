@@ -1,50 +1,49 @@
 <!-- Marketplace Activity -->
-<section *ngIf="movieAnalytics$ | async as movieAnalytics">
+<section *ngIf="mockData$ | async as movieAnalytics">
   <h3>My Marketplace Activity</h3>
-  <article fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="space-around center">
+  <article fxLayout="row wrap" fxLayoutAlign="flex-start" fxLayoutAlign.lt-md="center" fxLayoutGap="25px">
     <ng-container *ngFor="let lineChart of lineCharts">
-      <mat-card #chart fxFlex="30" fxFlex.lt-md="100">
-        <div fxLayout="row" fxLayoutAlign="space-between start">
-          <div class="chart-title" fxFlex="50">
-            <mat-icon [svgIcon]="lineChart.icon"></mat-icon><span class="mat-body-2">{{ lineChart.title }}</span>
-          </div>
-          <span class="mat-caption chart-percent" *ngIf="calculatePercentage(movieAnalytics, lineChart.label) as percent">
+      <mat-card #chart class="chart">
+        <div fxLayout="row" fxLayoutAlign="space-between center">
+          <span class="mat-body-2"><mat-icon [svgIcon]="lineChart.icon"></mat-icon>{{ lineChart.title }}</span>
+          <span class="mat-caption percent" *ngIf="calculatePercentage(movieAnalytics, lineChart.label) as percent">
             <ng-container *ngIf="percent > 0; else down">
               <mat-icon color="primary">arrow_drop_up</mat-icon>
             </ng-container>
             <ng-template #down><mat-icon color="accent">arrow_drop_down</mat-icon></ng-template>
               {{ percent }} %
-            </span>
+          </span>
         </div>
         <h3>{{ sum(populateData(movieAnalytics, lineChart.label, 'hits', 'current'))}}</h3>
-        <apx-chart
-          [series]="getLineChartSeries(movieAnalytics, lineChart.label)"
-          [chart]="lineChartOptions.chart"
-          [xaxis]="getLineChartXaxis(movieAnalytics, lineChart.label)"
-          [yaxis]="lineChartOptions.yaxis"
-          [dataLabels]="lineChartOptions.dataLabels"
-          [grid]="lineChartOptions.grid"
-          [stroke]="lineChartOptions.stroke"
-          [fill]="lineChartOptions.fill"
-        ></apx-chart>
+        <mat-card-content>
+          <apx-chart
+            [series]="getLineChartSeries(movieAnalytics, lineChart.label)"
+            [chart]="lineChartOptions.chart"
+            [xaxis]="getLineChartXaxis(movieAnalytics, lineChart.label)"
+            [yaxis]="lineChartOptions.yaxis"
+            [dataLabels]="lineChartOptions.dataLabels"
+            [grid]="lineChartOptions.grid"
+            [stroke]="lineChartOptions.stroke"
+            [fill]="lineChartOptions.fill"
+          ></apx-chart>
+        </mat-card-content>
       </mat-card>
     </ng-container>
   </article>
 </section>
 <!-- Sales Revenue -->
 <section *ngIf="contractData$ | async as contractData">
-  {{contractData | json}}
   <h3>Sales Revenue</h3>
   <!-- First Row -->
   <article fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="space-around center">
     <mat-card fxFlex="45" fxFlex.lt-md="100">
-      <span class="mat-body-2">Total Gross Receipts</span>
+      <span class="mat-body-2"><mat-icon svgIcon="monetization"></mat-icon>Total Gross Receipts</span>
       <mat-card-content>
         <h1>{{ sum(contractData.totalGrossReceipt) | number : '4.0-0'}}</h1>
       </mat-card-content>
     </mat-card>
     <mat-card fxFlex="45" fxFlex.lt-md="100">
-      <span class="mat-body-2">Total Sales</span>
+      <span class="mat-body-2"><mat-icon svgIcon="sales"></mat-icon>Total Sales</span>
       <mat-card-content>
         <h1>{{ contractData.totalSales.length }}</h1>
       </mat-card-content>

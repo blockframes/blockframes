@@ -6,6 +6,7 @@ import { Observable, of } from 'rxjs';
 import { ChartComponent } from 'ng-apexcharts';
 import { ChartOptions, lineChartOptions } from './default-chart-options';
 import { analyticsMockData, contractMockData } from './mockdata';
+import { ContractQuery } from '@blockframes/contract/contract/+state';
 
 const lineCharts = [
   {
@@ -44,7 +45,10 @@ export class TitleSalesComponent implements OnInit {
   contractData$ = of(contractMockData);
   lineCharts = lineCharts;
   
-  constructor(private movieService: MovieService, private movieQuery: MovieQuery) {   
+  constructor(
+    private movieService: MovieService, 
+    private movieQuery: MovieQuery,
+    private contractQuery: ContractQuery) {   
     this.lineChartOptions = lineChartOptions;
   }
 
@@ -66,7 +70,8 @@ export class TitleSalesComponent implements OnInit {
       categories:  this.populateData(data, name, 'event_date', 'current'), 
       labels: {show: false},  
       axisBorder: {show: false},  
-      axisTicks: {show: false}};
+      axisTicks: {show: false}
+    };
   }
 
   sum(array: number[]): number {
@@ -74,9 +79,6 @@ export class TitleSalesComponent implements OnInit {
   }
 
   calculatePercentage(data: object, name: string): number {
-    // console.log(data[name])
-    // const hitsArray = data[name].map(d => d.hits);
-    // console.log(hitsArray)
     const current = this.sum(this.populateData(data, name, 'hits', 'current'));
     const past = this.sum(this.populateData(data, name, 'hits', 'past'));
     if (current && past && (current > past)) {
