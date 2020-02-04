@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { MovieCollectionGuard } from '@blockframes/movie/movieguards/movie-collection.guard';
 import { createRoutes } from '@blockframes/utils/routes';
+import { CatalogAppGuard } from './guards/catalog-app.guard';
 
 const routes: Routes = createRoutes({
   appName: 'catalog',
@@ -16,12 +17,13 @@ const routes: Routes = createRoutes({
   },
   {
     path: 'marketplace',
-    canActivate: [MovieCollectionGuard],
+    canActivate: [CatalogAppGuard, MovieCollectionGuard],
     canDeactivate: [MovieCollectionGuard],
     loadChildren: () => import('./marketplace/marketplace.module').then(m => m.MarketplaceModule)
   },
   {
     path: 'dashboard',
+    canActivate: [CatalogAppGuard],
     loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule)
   }]
 });
