@@ -22,7 +22,7 @@
     [showPaginator]="true"
     [link]="'./'">
     <ng-template colRef="title" let-title><b>{{ title }}</b></ng-template>
-    <ng-template colRef="receipt" let-receipt> <b>{{ receipt }}</b> </ng-template>
+    <ng-template colRef="receipt" let-receipt> <b>{{ receipt | currency }}</b> </ng-template>
   </bf-table-filter>
 </ng-container>
 <ng-template #isLoading>

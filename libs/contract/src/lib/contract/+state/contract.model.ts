@@ -304,11 +304,6 @@ export function getTotalPrice(titles: Record<string, ContractTitleDetail>): Pric
  * @param contracts
  */
 export function getValidatedContracts(contracts: Contract[]): Contract[] {
-  const filteredContracts = contracts.filter(
-    contract =>
-      getContractLastVersion(contract).status ===
-      (ContractStatus.paid || ContractStatus.waitingpaiment || ContractStatus.accepted)
-  );
-
-  return filteredContracts
+  const validStatus = ContractStatus.paid || ContractStatus.waitingpayment || ContractStatus.accepted;
+  return contracts.filter(contract => getContractLastVersion(contract).status === validStatus)
 }
