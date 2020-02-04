@@ -31,7 +31,7 @@ export const enum ExpenseSubType {
 
 export const enum PaymentStatus {
   unknown = 'unknown',
-  waitingpaiment = 'waiting for payment',
+  waitingpayment = 'waiting for payment',
   due = 'Due',
   paid = 'Paid',
   partialpaid = 'Partially paid',
@@ -47,7 +47,7 @@ export interface PriceRaw<D> {
   vat?: number;
   recoupableExpenses?: ExpenseRaw<D>[];
   /**
-   * @dev about commission & commissionBase : 
+   * @dev about commission & commissionBase :
    * commission is a percentage (of amount)
    * commissionBase define if we take the amount minus VAT or plus VAT for example
    */

@@ -9,7 +9,7 @@ export const enum LicenseStatus {
   unknown = 'unknown',
   undernegotiation = 'under negotiation',
   waitingsignature = 'waiting for signature',
-  waitingpaiment = 'waiting for paiment',
+  waitingpayment = 'waiting for paiment',
   paid = 'paid'
 }
 

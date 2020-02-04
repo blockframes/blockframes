@@ -20,7 +20,7 @@ export enum ContractStatus {
   unknown = 'unknown',
   undernegotiation = 'under negotiation',
   waitingsignature = 'waiting for signature',
-  waitingpaiment = 'waiting for payment',
+  waitingpayment = 'waiting for payment',
   rejected = 'rejected',
   aborted = 'aborted',
 }
@@ -72,7 +72,7 @@ interface ContractRaw<D> {
   /**
    * @dev to facilitate firebase queries:
    * Without ContratType :
-   *   if we wanted to fetch "Archipel" contracts where partyIds array-contains 'orgId Archipel' 
+   *   if we wanted to fetch "Archipel" contracts where partyIds array-contains 'orgId Archipel'
    *   and where the corresponding party role is "licensor", we could not do it in a single Firebase query because
    *   of the index limitations.
    * With ContracType :

@@ -8,14 +8,17 @@
     thead {
       background-color: mat-color($background, card);
     }
+    td.mat-cell {
+      font-size: 16px;
+    }
     td.mat-cell:first-of-type {
       border-left: solid 1px mat-color($foreground, divider);
     }
-  
+
     td.mat-cell:last-of-type {
       border-right: solid 1px mat-color($foreground, divider);
     }
-  
+
     .mat-header-cell {
       border-top: solid 1px mat-color($foreground, divider);
       &:first-of-type {
