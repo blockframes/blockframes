@@ -31,7 +31,7 @@ export type ChartOptions = {
 export const lineChartOptions: Partial<ChartOptions> = {
   chart: {
     height: 100,
-    type: "line",
+    type: "area",
     zoom: {
       enabled: false
     },

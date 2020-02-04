@@ -9,13 +9,19 @@ import { analyticsMockData, contractMockData } from './mockdata';
 
 const lineCharts = [
   {
-    title: 'movieViews'
+    label: 'movieViews',
+    title: 'Page views',
+    icon: 'eye'
   },
   {
-    title: 'addedToWishlist'
+    label: 'addedToWishlist',
+    title: 'Adds to Wishlist',
+    icon: 'mouse_pointer'
   },
   {
-    title: 'promoReelOpened'
+    label: 'promoReelOpened',
+    title: 'Clicks on promotional elements',
+    icon: 'specific_delivery_list'
   }
 ]
 
@@ -29,12 +35,13 @@ export class TitleSalesComponent implements OnInit {
   @ViewChild('chart', { static: false }) chart: ChartComponent;
   public lineChartOptions: Partial<ChartOptions>;
   public barChartOptions: Partial<ChartOptions>;
-  public movieAnalytics: Observable<MovieAnalytics[]>;
+  public movieAnalytics$: Observable<MovieAnalytics[]>;
 
 
   mockData = analyticsMockData;
-  contractData$ = of(contractMockData);
+  mockData$ = of(analyticsMockData)
   contractMockData = contractMockData;
+  contractData$ = of(contractMockData);
   lineCharts = lineCharts;
   
   constructor(private movieService: MovieService, private movieQuery: MovieQuery) {   
@@ -42,20 +49,24 @@ export class TitleSalesComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.movieAnalytics = this.movieService.getMovieAnalytics([this.movieQuery.getActiveId()]);
+    this.movieAnalytics$ = this.movieService.getMovieAnalytics([this.movieQuery.getActiveId()]);
   }
 
-  populateData(data: object, name: string, key:string):number[] {
-    const numArray = data[name].map(d => d[key]);
+  populateData(data: object, name: string, key: string, period: string):number[] {
+    const numArray = data[0][name][period].map(d => d[key]);
     return numArray;
   }
 
   getLineChartSeries(data: object, name: string) {
-    return [{name, data: this.populateData(data, name, 'hits')}];
+    return [{name, data: this.populateData(data, name, 'hits', 'current')}];
   }
 
   getLineChartXaxis(data: object, name: string) {
-    return {categories:  this.populateData(data, name, 'event_date'), labels: {show: false},  axisBorder: {show: false},  axisTicks: {show: false}};
+    return {
+      categories:  this.populateData(data, name, 'event_date', 'current'), 
+      labels: {show: false},  
+      axisBorder: {show: false},  
+      axisTicks: {show: false}};
   }
 
   sum(array: number[]): number {
@@ -63,18 +74,15 @@ export class TitleSalesComponent implements OnInit {
   }
 
   calculatePercentage(data: object, name: string): number {
-    console.log(data[name])
-    // const groupedByMonth = _.groupBy(analytics[name], function(item) {
-    //   return item.event_date.substring(0, 7); 
-    // });
-    const hitsArray = data[name].map(d => d.hits);
-    console.log(hitsArray)
-    const current = hitsArray[hitsArray.length-1];
-    const previous = hitsArray[hitsArray.length-2] 
-    if (current > previous) {
-      return (current - previous) / previous * 100
-    } else if (previous > current) {
-      return - (previous - current) / previous * 100
+    // console.log(data[name])
+    // const hitsArray = data[name].map(d => d.hits);
+    // console.log(hitsArray)
+    const current = this.sum(this.populateData(data, name, 'hits', 'current'));
+    const past = this.sum(this.populateData(data, name, 'hits', 'past'));
+    if (current && past && (current > past)) {
+      return (current - past) / past * 100
+    } else if (past > current) {
+      return - (past - current) / past * 100
     } else {
       return 0
     }

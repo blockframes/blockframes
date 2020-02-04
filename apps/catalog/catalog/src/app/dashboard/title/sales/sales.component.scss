@@ -5,3 +5,14 @@ section {
 mat-card {
   width: 100%;
 }
+
+.chart-title {
+  width: 100%;
+  overflow: auto;
+  .mat-body-2 {
+    word-wrap: break-word;
+  }
+  .chart-percent {
+    min-width: 66.5px;
+  }
+}
