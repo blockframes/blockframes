@@ -1,10 +1,19 @@
-import { Component, ChangeDetectionStrategy, Input, Directive, ElementRef, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { FormControl } from '@angular/forms';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  Input,
+  Directive,
+  ElementRef,
+  ViewChild
+} from '@angular/core';
 import { OverlayWidgetComponent } from '../overlay-widget/overlay-widget.component';
 
 export interface SearchResult {
   title: string;
   icon: string;
-  items: string[];
+  items: Record<string, string>[];
 }
 
 @Component({
@@ -14,12 +23,12 @@ export interface SearchResult {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SearchWidgetComponent {
-
+  @Input() searchCtrl: FormControl;
   @Input() link = 'search';
   @Input() results: SearchResult[] = [];
   @ViewChild(OverlayWidgetComponent, { static: false }) searchWidget: OverlayWidgetComponent;
 
-  constructor() { }
+  constructor(private acitvatedRoute: ActivatedRoute, private router: Router) {}
 
   open(ref: ElementRef) {
     if (this.results.length) {
@@ -27,6 +36,21 @@ export class SearchWidgetComponent {
     }
   }
 
+  public setParams() {
+    let ids: string[];
+    for (const result of this.results) {
+      ids = result.items.map(item => Object.keys(item)).flat(1);
+    }
+    this.router.navigate([this.link], {
+      relativeTo: this.acitvatedRoute,
+      queryParams: {
+        ids: ids,
+        searchTerm: this.searchCtrl.value
+      },
+      queryParamsHandling: 'merge'
+    });
+    this.searchWidget.close();
+  }
 }
 
 @Directive({
