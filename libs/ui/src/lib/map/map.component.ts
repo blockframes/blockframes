@@ -1,7 +1,8 @@
 import { Component, AfterViewInit, ViewChild, ElementRef, EventEmitter, ChangeDetectorRef, NgZone, Input, ContentChildren, Directive, QueryList, Output, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { map, geoJSON, Layer } from 'leaflet';
-import { Subscription } from 'rxjs';
+import { map as toMap, geoJSON, Layer } from 'leaflet';
+import { Subscription, BehaviorSubject, combineLatest } from 'rxjs';
+import { startWith, switchMap, map } from 'rxjs/operators';
 
 @Directive({
   selector: 'map-feature, [mapFeature]'
@@ -9,8 +10,23 @@ import { Subscription } from 'rxjs';
 // tslint:disable-next-line: directive-class-suffix
 export class MapFeature {
 
-  @Input() color: string;
-  @Input() tag: string;
+  color$ = new BehaviorSubject('');
+  tag$ = new BehaviorSubject('');
+
+  @Input()
+  set color(color: string) {
+    this.color$.next(color);
+  }
+  get color(): string {
+    return this.color$.getValue();
+  }
+  @Input()
+  set tag(tag: string) {
+    this.tag$.next(tag);
+  }
+  get tag(): string {
+    return this.tag$.getValue();
+  }
   @Output() mouseover = new EventEmitter();
   @Output() mouseout = new EventEmitter();
   @Output() click = new EventEmitter();
@@ -34,24 +50,32 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   constructor(
     private el: ElementRef,
     private http: HttpClient,
-    private cdr: ChangeDetectorRef,
-    private ngZone: NgZone
   ) { }
 
   async ngAfterViewInit() {
-    const world = map(this.el.nativeElement, { zoomSnap: 0.5, attributionControl: false }).setView([40, 40], 1.5);
+    const world = toMap(this.el.nativeElement, { zoomSnap: 0.5, attributionControl: false }).setView([40, 40], 1.5);
     const countries = await this.http.get<GeoJSON.GeoJsonObject>('assets/maps/world.geo.json').toPromise();
     const geojson = geoJSON(countries, {
       style: this.setStyle.bind(this),
       onEachFeature: this.addFeature.bind(this)
     });
     geojson.addTo(world);
-    this.sub = this.features.changes.subscribe((features: QueryList<MapFeature>) => {
-      features.forEach(({ color, tag }) => {
-        if (!!this.layers[tag]) {
-          this.layers[tag].setStyle({ fillColor: `var(--${color})` })
-        }
+
+    // TODO(#1813) improve subscription system here
+    let tags = [];
+    this.sub = this.features.changes.pipe(
+      startWith(this.features),
+      switchMap((features: QueryList<MapFeature>) => {
+        // Listen on changes of color & tag
+        return combineLatest(features.map(f => combineLatest([f.color$, f.tag$]).pipe(map(_ => f))))
       })
+    ).subscribe((features: MapFeature[]) => {
+      // reset all previous tags
+      tags.forEach(tag => this.layers[tag].setStyle({ fillColor: '#ECEFF9' }));
+      // Add new style
+      features.forEach(({ color, tag }) => this.layers[tag].setStyle({ fillColor: `var(--${color})` }));
+      // Keep in memory all current tags
+      tags = features.map(({ tag }) => tag);
     });
   }
 

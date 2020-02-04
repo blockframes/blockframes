@@ -36,6 +36,10 @@ export class TitleViewComponent implements OnInit {
     this.movie$ = this.movieQuery.selectActive();
   }
 
+  public getPoster(movie: Movie) {
+    return movie.promotionalElements.poster.length && movie.promotionalElements.poster[0].media;
+  }
+
   public getTitle(movie: Movie) {
     const { workType, totalRunTime, status } = movie.main;
     return [
