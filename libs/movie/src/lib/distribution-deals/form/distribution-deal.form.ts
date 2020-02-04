@@ -11,6 +11,7 @@ import { MovieVersionInfoForm } from '@blockframes/movie/movieform/version-info/
 function createDistributionDealControls(deal: Partial<DistributionDeal>) {
   const entity = createDistributionDeal(deal);
   return {
+    contractId: new FormControl(entity.contractId),
     exclusive: new FormControl(entity.exclusive),
     territory: FormList.factory(entity.territory),
     territoryExcluded: FormList.factory(entity.territoryExcluded),

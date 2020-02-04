@@ -79,6 +79,7 @@ export class FormList<T, Control extends AbstractControl = any> extends FormArra
   add(value?: Partial<T>) {
     const control = this.createControl(value);
     this.push(control);
+    return control;
   }
 
   setValue(

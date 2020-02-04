@@ -1,6 +1,7 @@
-import { ContractForm } from '@blockframes/contract/contract/forms/contract.form';
+import { staticModels } from '@blockframes/utils/static-model';
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { PartyDetailsForm } from '../contract.form';
+import { FormList } from '@blockframes/utils';
 
 @Component({
   selector: '[form] contract-form-party-name',
@@ -9,17 +10,13 @@ import { PartyDetailsForm } from '../contract.form';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContractFormPartyNameComponent {
-  @Input() form: ContractForm;
+  @Input() form: FormList<any, PartyDetailsForm>;
+  public staticRoles = staticModels['LEGAL_ROLES'].filter(role => {
+    const wantedRoles = ['licensor', 'licensee'];
+    return wantedRoles.includes(role.slug);
+  });
 
-  get partyControls() {
-    return this.form.get('parties');
-  }
-
-  public displayNameControl(control: PartyDetailsForm) {
-    return control.get('party').get('displayName');
-  }
-
-  public showName(control: PartyDetailsForm) {
-    return control.get('party').get('showName');
+  public addEntity() {
+    this.form.add({ party: { showName: true, role: 'licensee' } });
   }
 }
