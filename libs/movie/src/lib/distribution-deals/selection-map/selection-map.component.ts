@@ -17,22 +17,21 @@ const territories = ISO3166TERRITORIES.map(t => t['iso_a3']);
 export class SelectionMapComponent {
 
   @Input() movie: Movie;
-  public country: any;
+  // Selected country on the map
+  private country = new BehaviorSubject('');
+  public country$ = this.country.asObservable().pipe(
+    // map(country => IMPLEMENT MAPPING LOGIC HERE TO GET THE RIGHT CONTENT)
+  );
+  // Countries you want to display in blue on the map
   public countries$ = new BehaviorSubject([]);
 
 
   constructor() { }
 
+  /** Whenever you click on a country */
   public select(e) {
-    this.countries$.next([...this.countries$.getValue(), e['iso_a3'] ]);
-    console.log(this.countries$.getValue());
+    const territory = getTerritorySlugFromGeoJson(e['iso_a3']);
+    this.country.next(territory);
   }
 
-  public getTerritorySlugFromGeoJson(code: string) {
-    return getTerritorySlugFromGeoJson(code);
-  }
-
-  public getTerritoryLabelFromGeoJson(code: string) {
-    return getTerritoryLabelFromGeoJson(code);
-  }
 }
