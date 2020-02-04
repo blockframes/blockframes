@@ -13,8 +13,6 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
-
-
 @NgModule({
   declarations: [TitleListComponent],
   imports: [

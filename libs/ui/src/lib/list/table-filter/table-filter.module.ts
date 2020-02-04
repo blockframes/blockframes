@@ -33,8 +33,7 @@ import { RouterModule } from '@angular/router';
     MatListModule,
     MatTableModule,
     MatPaginatorModule,
-    MatSortModule,
-    RouterModule
+    MatSortModule
   ]
 })
 export class TableFilterModule { }

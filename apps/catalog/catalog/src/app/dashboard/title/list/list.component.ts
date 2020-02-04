@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Movie, MovieQuery, MovieService, getMovieReceipt } from '@blockframes/movie';
+import { Movie, MovieQuery, MovieService, getMovieReceipt, getMovieTotalViews } from '@blockframes/movie';
 import { startWith, switchMap, map } from 'rxjs/operators';
 import { Observable, combineLatest } from 'rxjs';
 import { Contract } from '@blockframes/contract/contract/+state/contract.model';
@@ -25,15 +25,17 @@ const columns = {
   status: 'Status'
 };
 
-/**
- * Returns the number of views of a movie page.
- * @param analytics
- * @param movieId
- */
-function getTotalViews(analytics: MovieAnalytics[], movieId: string): number {
-  const movieAnalytic = analytics.find(analytic => analytic.movieId === movieId);
-  const movieHits = movieAnalytic.movieViews.current.map(event => event.hits);
-  return movieHits.reduce((acc, val) => acc + val, 0);
+/** Factory function to flatten movie data. */
+function createTitleView(movie: Movie, contracts: Contract[], analytics: MovieAnalytics[]): TitleView {
+  const ownContracts = contracts.filter(c => getContractLastVersion(c).titles[movie.id]);
+  return {
+    id: movie.id,
+    title: movie.main.title.international,
+    view: getMovieTotalViews(analytics, movie.id).toString(),
+    sales: ownContracts.length,
+    receipt: getMovieReceipt(ownContracts, movie.id),
+    status: movie.main.storeConfig.status
+  };
 }
 
 @Component({
@@ -76,7 +78,7 @@ export class TitleListComponent implements OnInit {
       this.moviesAnalytics$
     ]).pipe(
       map(([movies, contracts, analytics]) =>
-        movies.map(movie => this.createTitleView(movie, contracts, analytics))
+        movies.map(movie => createTitleView(movie, contracts, analytics))
       )
     );
   }
@@ -84,18 +86,5 @@ export class TitleListComponent implements OnInit {
   /** Dynamic filter of movies for each tab. */
   applyFilter(filter?: Movie['main']['storeConfig']['storeType']) {
     this.filter.setValue(filter);
-  }
-
-  /** Factory function to flatten movie data. */
-  public createTitleView(movie: Movie, contracts: Contract[], analytics: MovieAnalytics[]): TitleView {
-    const ownContracts = contracts.filter(c => getContractLastVersion(c).titles[movie.id]);
-    return {
-      id: movie.id,
-      title: movie.main.title.international,
-      view: getTotalViews(analytics, movie.id).toString(),
-      sales: ownContracts.length,
-      receipt: getMovieReceipt(ownContracts, movie.id),
-      status: movie.main.storeConfig.status
-    };
   }
 }

@@ -40,7 +40,7 @@ function getVersionPrice(version: ContractVersion): string {
   const amount = titles.reduce((sum, title) => sum += title.price.amount, 0);
   const currency = getCodeBySlug('MOVIE_CURRENCIES', titles[titles.length - 1].price.currency);
 
-  return currencyPipe.transform(amount, currency, true);
+  return currencyPipe.transform(amount, currency, 'symbol');
 }
 
 /** Factory function to create VersionView. */
