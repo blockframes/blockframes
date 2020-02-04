@@ -51,6 +51,6 @@ export class OrganizationCreateComponent {
 
     this.snackBar.open(`The organization ${this.form.get('name').value} has been created`, 'close', { duration: 2000 });
 
-    this.router.navigate(['../congratulations'], { relativeTo: this.route });
+    this.router.navigate(['../app-access'], { relativeTo: this.route });
   }
 }

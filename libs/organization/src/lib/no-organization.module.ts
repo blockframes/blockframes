@@ -23,6 +23,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatRadioModule } from '@angular/material/radio';
 
 // Components
 import { OrganizationHomeComponent } from './pages/organization-home/organization-home.component';
@@ -32,6 +33,7 @@ import { OrganizationCreateComponent } from './pages/organization-create/organiz
 import { NoOrganizationGuard } from './guard/no-organization.guard';
 import { OrganizationLoadingComponent } from './pages/organization-loading/organization-loading.component';
 import { NoOrganizationInvitationGuard } from '@blockframes/notification';
+import { OrganizationAppAccessComponent } from './pages/organization-app-access/organization-app-access.component';
 
 export const noOrganizationRoutes: Routes = [
   {
@@ -58,6 +60,11 @@ export const noOrganizationRoutes: Routes = [
     path: 'create',
     canActivate: [NoOrganizationGuard, NoOrganizationInvitationGuard],
     component: OrganizationCreateComponent,
+  },
+  {
+    path: 'app-access',
+    canActivate: [NoOrganizationInvitationGuard],
+    component: OrganizationAppAccessComponent,
   },
   {
     path: 'loading',
@@ -88,6 +95,7 @@ export const noOrganizationRoutes: Routes = [
     MatProgressSpinnerModule,
     MatProgressBarModule,
     MatSnackBarModule,
+    MatRadioModule,
 
     // UI
     ActionsListModule,
@@ -101,6 +109,7 @@ export const noOrganizationRoutes: Routes = [
     OrganizationFeedbackComponent,
     OrganizationCreateComponent,
     OrganizationLoadingComponent,
+    OrganizationAppAccessComponent
   ]
 })
 export class NoOrganizationModule {}
