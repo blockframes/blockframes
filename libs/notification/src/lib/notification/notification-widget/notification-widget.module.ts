@@ -17,7 +17,6 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatDividerModule } from '@angular/material/divider';
 
 @NgModule({
   declarations: [NotificationWidgetComponent],
@@ -37,7 +36,6 @@ import { MatDividerModule } from '@angular/material/divider';
     MatButtonModule,
     MatBadgeModule,
     MatToolbarModule,
-    MatDividerModule
   ],
 })
 export class NotificationWidgetModule {}

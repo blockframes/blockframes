@@ -4,7 +4,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Modules
-import { UiFormModule } from '@blockframes/ui';
+import { PasswordConfirmModule } from '@blockframes/ui/form';
 import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
 
 // Material
@@ -23,7 +23,7 @@ import { OrganizationFormAddressComponent } from './organization-form-address/or
     ReactiveFormsModule,
     FormsModule,
     FlexLayoutModule,
-    UiFormModule,
+    PasswordConfirmModule,
     CropperModule,
 
     // Material

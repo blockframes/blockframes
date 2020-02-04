@@ -1,0 +1,38 @@
+@import 'mixins';
+
+input {
+  flex: 1;
+  height: 100%;
+  border: none;
+  font-size: 18px;
+  line-height: 1.44;
+  letter-spacing: 0.5px;
+  background-color: transparent;
+}
+input:focus {
+  outline: none;
+}
+
+@include large {
+  widget-card {
+    width: 800px;
+  }
+}
+
+@include medium {
+  widget-card {
+    width: 500px;
+  }
+}
+
+@include tablet {
+  widget-card {
+    width: 200px;
+  }
+}
+
+@include mobile {
+  widget-card {
+    width: 200px;
+  }
+}

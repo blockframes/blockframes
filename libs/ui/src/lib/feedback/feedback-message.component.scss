@@ -1,17 +1,25 @@
 @import 'mixins';
 
-section {
-  max-width: 1000px;
-  p {
-    max-width: 430px;
-    text-align: center;
-  }
-  button {
-    margin-top: 80px;
-  }
-  img {
-    width: 50%;
-  }
+:host {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+}
+
+h2 {
+  text-align: center;
+}
+
+p {
+  max-width: 430px;
+  text-align: center;
+}
+button {
+  margin-top: 80px;
+}
+img {
+  max-width: 50%;
 }
 
 .mat-flat-button {

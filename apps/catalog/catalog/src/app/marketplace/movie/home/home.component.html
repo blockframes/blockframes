@@ -4,7 +4,7 @@
     <h3>Archipel Content</h3>
     <span class="first-header-text">The only marketplace offering package deals</span>
     <span class="second-header-text">for TV, VOD and ancillary rights</span>
-    <a mat-flat-button color="accent" test-id="discover" routerLink="/c/o/catalog/search">View the line-up</a>
+    <a mat-flat-button color="accent" test-id="discover" routerLink="/c/o/marketplace/search">View the line-up</a>
   </header>
 
   <section fxLayout="column" fxLayoutAlign="start center">
@@ -14,7 +14,7 @@
         <aside fxLayout="column" [fxLayoutAlign]="alignment(i)" fxLayoutAlign.lt-md="center center" fxLayoutGap="20px">
           <h1>{{ section.title }}</h1>
           <h4>{{ section.subline}} </h4>
-          <a mat-flat-button test-id="seeMore1" color="accent" routerLink="/c/o/catalog/search">See more</a>
+          <a mat-flat-button test-id="seeMore1" color="accent" routerLink="/c/o/marketplace/search">See more</a>
         </aside>
         <mat-carousel test-id="mat-carousel1" proportion="50" [hideArrows]="true" [hideIndicators]="true">
           <!-- We only want to use the first image in the promotinalElements.images array-->
@@ -23,7 +23,7 @@
                 fxLayout="column"
                 fxLayoutAlign="end start"
                 class="black-bg-opacity-30 overlay"
-                [routerLink]="['/c/o/catalog', movie.id]">
+                [routerLink]="['/c/o/marketplace', movie.id]">
                 <ng-container *ngIf="(toggle$(movie.id) | async); else alreadyAdded">
                   <button mat-icon-button (click)="removeFromWishlist(movie, $event)">
                     <mat-icon svgIcon="heart_filled"></mat-icon>
@@ -31,7 +31,7 @@
                 </ng-container>
                 <ng-template #alreadyAdded>
                   <button mat-icon-button (click)="addToWishlist(movie, $event)">
-                    <mat-icon svgIcon="heart"></mat-icon>
+                    <mat-icon svgIcon="heart_outline"></mat-icon>
                   </button>
                 </ng-template>
                 <div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="5px" class="informations">

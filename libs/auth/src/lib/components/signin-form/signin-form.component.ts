@@ -2,7 +2,7 @@ import { Component, Output, EventEmitter, ChangeDetectionStrategy, HostBinding }
 import { SigninForm } from '../../forms/signin.form';
 
 @Component({
-  selector: 'auth-login-form',
+  selector: 'auth-signin-form',
   templateUrl: './signin-form.component.html',
   styleUrls: ['./signin-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

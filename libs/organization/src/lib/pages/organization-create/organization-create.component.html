@@ -51,20 +51,19 @@
       </mat-form-field>
       <h3>Logo</h3>
       <drop-cropper [ratio]="1" storagePath="logo" formControlName="logo"></drop-cropper>
-      <div fxLayout="column" fxLayoutAlign="center center">
+      <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="16px">
         <button mat-flat-button color="accent" (click)="addOrganization()">
           <ng-container *ngIf="(loading$ | async); else: notLoading">
             <mat-progress-spinner
               mode="indeterminate"
-              color="accent"
               diameter="20"
             ></mat-progress-spinner>
           </ng-container>
           <ng-template #notLoading>Submit</ng-template>
         </button>
-        <button class="cancel" mat-button color="primary" type="button" (click)="clear()">
+        <a mat-button color="primary" routerLink="../home">
           Cancel
-        </button>
+        </a>
       </div>
     </form>
   </article>

@@ -23,6 +23,8 @@
 
 @include mat-core($bf-typography);
 
+// COMPONENT THEMES
+
 @mixin bf-material-theme($theme) {
   @include mat-bf-button-theme($theme);
   @include mat-bf-card-theme($theme);
@@ -55,27 +57,35 @@
   --warn: #{mat-color($warn)};
 }
 
-@mixin bf-material-typography($typography) {
-  @include bf-expansion-panel-typography($typography);
-  @include bf-list-typography($typography);
-}
+// COMPONENT TYPOGRAPHY
+@include mat-bf-expansion-panel-typography($bf-typography);
+@include mat-bf-list-typography($bf-typography);
+@include mat-bf-button-typography($bf-typography);
+
+// LIGHT THEME
 
 .light-theme {
   @include angular-material-theme($bf-light-theme);
   @include sat-datepicker-theme($bf-light-theme);
   @include bf-material-theme($bf-light-theme);
-  @include bf-material-typography($bf-typography);
   // every components inside of dashboard-navbar should be always in the dark theme
   #dashboard-navbar {
     background-color: mat-color($bf-dark-background, app-bar);
     @include angular-material-theme($bf-dark-theme);
     @include bf-material-theme($bf-dark-theme);
   }
+
+  // Not supported yet by browser. Here for future support
+  scrollbar-color: light;
 }
+
+// DARK THEME
 
 .dark-theme {
   @include angular-material-theme($bf-dark-theme);
   @include sat-datepicker-theme($bf-dark-theme);
   @include bf-material-theme($bf-dark-theme);
-  @include bf-material-typography($bf-typography);
+
+  // Not supported yet by browser. Here for future support
+  scrollbar-color: dark;
 }

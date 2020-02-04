@@ -7,7 +7,6 @@ mat-sidenav-container {
 }
 
 mat-sidenav-content {
-  background-image: url('/assets/images/dark-sign-1080.png');
   background-size: cover;
 }
 
@@ -17,8 +16,9 @@ button {
   }
 }
 
-.rotate {
-  transform: rotate(180deg);
+auth-signup-form {
+  display: block;
+  padding: 20px 0;
 }
 
 .mat-fab {

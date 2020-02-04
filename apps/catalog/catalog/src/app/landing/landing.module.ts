@@ -4,6 +4,8 @@ import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
+import { ImgAssetModule } from '@blockframes/ui/theme';
+
 // Pages
 import { CatalogLandingPageComponent } from './pages/landing-page/landing-page.component';
 
@@ -29,6 +31,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatListModule } from '@angular/material/list';
 
 const routes = [{
   path: '',
@@ -61,6 +64,7 @@ const routes = [{
     CommonModule,
     FlexLayoutModule,
     ReactiveFormsModule,
+    ImgAssetModule,
 
     // Material
     MatSidenavModule,
@@ -74,6 +78,7 @@ const routes = [{
     MatDividerModule,
     MatButtonModule,
     MatSnackBarModule,
+    MatListModule,
 
     RouterModule.forChild([{ path: '', component: CatalogLandingPageComponent }])
   ]

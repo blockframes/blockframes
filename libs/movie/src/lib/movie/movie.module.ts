@@ -28,7 +28,9 @@ import { MatMenuModule} from '@angular/material/menu';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 // Libraries
-import { UploadModule, UiFormModule, MovieCardModule } from '@blockframes/ui';
+import { UploadModule } from '@blockframes/ui/upload';
+import { PasswordConfirmModule } from '@blockframes/ui/form';
+import { MovieCardModule } from '@blockframes/ui';
 import { MovieDisplayModule } from './display/display.module';
 
 // Components
@@ -85,7 +87,7 @@ import { MovieImdbSearchModule } from './components/movie-imdb-search/movie-imdb
     MatProgressSpinnerModule,
     // Librairies
     UploadModule,
-    UiFormModule,
+    PasswordConfirmModule,
     MovieDisplayModule,
     MovieFormModule,
     MovieCardModule,

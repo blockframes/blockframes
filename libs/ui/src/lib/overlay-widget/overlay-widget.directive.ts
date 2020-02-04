@@ -1,52 +1,28 @@
-import { Directive, Input, HostListener, ViewContainerRef, ElementRef, OnDestroy } from '@angular/core';
-import { Overlay, OverlayRef } from '@angular/cdk/overlay';
-import { TemplatePortal } from '@angular/cdk/portal';
+import { Directive, Input, HostListener, ElementRef } from '@angular/core';
 import { OverlayWidgetComponent } from './overlay-widget.component';
 
-@Directive({
-  selector: "[widgetTarget]"
-})
-
-export class OverlayWidgetDirective implements OnDestroy{
-  private overlayRef: OverlayRef;
-  private widget: TemplatePortal;
+// OVERLAY TRIGGERED ON CLICK
+@Directive({ selector: "button[widgetTarget]" })
+export class OverlayWidgetButtonDirective {
 
   @Input() widgetTarget: OverlayWidgetComponent;
-  @HostListener('click')
-    open() {
-      if (!this.overlayRef) {
-        const positionStrategy = this.overlay
-        .position()
-        .flexibleConnectedTo(this._elementRef)
-        .withPositions([{
-          originX: 'start',
-          originY: 'bottom',
-          overlayX: 'start',
-          overlayY: 'top'
-        }]);
-        this.overlayRef = this.overlay.create({
-          hasBackdrop: true,
-          backdropClass: 'cdk-overlay-transparent-backdrop',
-          positionStrategy,
-        });
-        this.widget = new TemplatePortal(this.widgetTarget.ref, this.viewContainerRef);
-        this.overlayRef.backdropClick().subscribe(() => this.overlayRef.detach());
-      }
-
-      this.overlayRef.attach(this.widget);
-    }
-constructor(
-  private overlay : Overlay,
-  private viewContainerRef: ViewContainerRef,
-  private _elementRef: ElementRef,
-){}
-
-// Destroy the reference from the DOM if it exists and clean up overlayRef
-ngOnDestroy() {
-  if (this.overlayRef) {
-    this.overlayRef.dispose();
-    delete this.overlayRef;
+  @HostListener('click') onclick() {
+    this.widgetTarget.open(this.el);
   }
+  constructor(private el: ElementRef) {}
 }
 
+// OVERLAY TRIGGERED ON FOCUS / CLOSED ON BLUT
+@Directive({ selector: "input[widgetTarget]" })
+export class OverlayWidgetInputDirective {
+  
+  @Input() widgetTarget: OverlayWidgetComponent;
+  @HostListener('focus') onfocus() {
+    this.widgetTarget.open(this.el);
+  }
+  @HostListener('blur') onblur() {
+    this.widgetTarget.close();
+  }
+
+  constructor(private el: ElementRef) {}
 }

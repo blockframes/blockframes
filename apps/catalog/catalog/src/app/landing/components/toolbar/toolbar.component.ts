@@ -1,5 +1,8 @@
 import { Component, ChangeDetectionStrategy, Input, HostListener } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
+import { BehaviorSubject } from 'rxjs';
+import { throttleTime, debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+
 
 @Component({
   selector: 'catalog-toolbar',
@@ -10,11 +13,16 @@ import { MatSidenav } from '@angular/material/sidenav';
 export class CatalogToolbarComponent {
 
   @Input() sidenav: MatSidenav;
-  public setBackground = false;
+  private scroll = new BehaviorSubject<number>(0);
+  public toolbarColor$ = this.scroll.asObservable().pipe(
+    map(position => position === 0),
+    distinctUntilChanged(),
+    map(isTop => isTop ? 'transparent-toolbar' : '')
+  );
 
   /** Change the toolbar class when page is scrolled. */
-  @HostListener('window:scroll')
-    scrollHandler() {
-      this.setBackground = window.pageYOffset > 0;
-    }
+  @HostListener('window:scroll', ['$event'])
+  scrollHandler(event: Event) {
+    this.scroll.next(window.pageYOffset);
+  }
 }

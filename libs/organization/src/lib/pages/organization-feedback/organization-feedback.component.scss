@@ -1,7 +1,32 @@
+@import 'mixins';
+
 section {
   height: 100%;
 }
 
 button {
   margin-top: 20px;
+}
+
+@include large {
+  feedback-message {
+    width: 50%;
+  }  
+}
+
+@include medium {
+  feedback-message {
+    width: 60%;
+  }  
+}
+
+@include tablet {
+  feedback-message {
+    width: 80%;
+  }
+}
+@include mobile {
+  feedback-message {
+    width: 90%;
+  }
 }

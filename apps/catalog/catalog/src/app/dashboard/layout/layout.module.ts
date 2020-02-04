@@ -6,6 +6,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Widgets
 import { NotificationWidgetModule } from '@blockframes/notification';
+import { SearchWidgetModule } from '@blockframes/ui/search-widget';
+import { ProfileWidgetModule } from '@blockframes/account/profile';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -38,6 +40,8 @@ const material = [
     FlexLayoutModule,
     RouterModule,
     NotificationWidgetModule,
+    SearchWidgetModule,
+    ProfileWidgetModule,
     ...material
   ],
   exports: [LayoutComponent]
