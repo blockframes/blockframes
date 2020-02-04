@@ -3,9 +3,6 @@ import { sentryDsn } from '@env';
 import * as Sentry from '@sentry/browser';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 
-// Analytics
-const providers: any[] = [];
-
 @Injectable()
 export class SentryErrorHandler implements ErrorHandler {
   constructor(private authQuery: AuthQuery) {
@@ -35,10 +32,8 @@ export class SentryErrorHandler implements ErrorHandler {
 Sentry.init({
   dsn: sentryDsn
 });
-providers.push({ provide: ErrorHandler, useClass: SentryErrorHandler });
-
 
 @NgModule({
-  providers
+  providers: [{ provide: ErrorHandler, useClass: SentryErrorHandler }]
 })
 export class SentryModule {}
