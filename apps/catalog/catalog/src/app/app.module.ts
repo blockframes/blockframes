@@ -43,6 +43,7 @@ import { intercomId } from '@env';
 // Analytics
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
+import { ErrorLoggerModule } from '@blockframes/utils/error-logger.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -66,7 +67,7 @@ import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
     AngularFireStorageModule,
     AngularFireAnalyticsModule,
     // Analytics
-    sentryDsn ? SentryModule : [],
+    sentryDsn ? SentryModule : ErrorLoggerModule,
 
     // Akita
     AkitaNgRouterStoreModule,
