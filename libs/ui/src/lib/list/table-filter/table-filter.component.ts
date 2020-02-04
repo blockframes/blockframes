@@ -1,4 +1,15 @@
-import { Component, OnInit, ChangeDetectionStrategy, ViewChild, Input, AfterViewInit, Directive, TemplateRef, ContentChildren, QueryList } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  ViewChild,
+  Input,
+  AfterViewInit,
+  Directive,
+  TemplateRef,
+  ContentChildren,
+  QueryList
+} from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -13,10 +24,10 @@ import { startWith } from 'rxjs/operators';
  */
 @Directive({ selector: '[colRef]' })
 // tslint:disable-next-line: directive-class-suffix
-export class ColRef  {
+export class ColRef {
   /** This should be the name of the column this template will be used into. */
   @Input() colRef: string;
-  constructor(public template: TemplateRef<any>) {}
+  constructor(public template: TemplateRef<any>) { }
 }
 
 @Component({
@@ -26,9 +37,9 @@ export class ColRef  {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableFilterComponent implements OnInit, AfterViewInit {
-
   @Input() showFilter = false;
   @Input() showPaginator = false;
+  // Name of the column headers
   @Input() columns: Record<string, any>;
   @Input() initialColumns: string[];
   @Input() link: string;
@@ -37,6 +48,7 @@ export class TableFilterComponent implements OnInit, AfterViewInit {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
+  
   // Column & rows
   displayedColumns$: Observable<string[]>;
   dataSource: MatTableDataSource<any>;
@@ -45,9 +57,9 @@ export class TableFilterComponent implements OnInit, AfterViewInit {
   columnFilter = new FormControl([]);
 
   /** References to template to apply for specific columns */
-  @ContentChildren(ColRef, {descendants: false}) cols: QueryList<ColRef>;
-  @ViewChild(MatPaginator, {static: false}) paginator: MatPaginator;
-  @ViewChild(MatSort, {static: false}) sort: MatSort;
+  @ContentChildren(ColRef, { descendants: false }) cols: QueryList<ColRef>;
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  @ViewChild(MatSort, { static: false }) sort: MatSort;
 
   ngOnInit() {
     this.columnFilter.patchValue(this.initialColumns);
@@ -66,7 +78,7 @@ export class TableFilterComponent implements OnInit, AfterViewInit {
    * @param name This should be the name of the column you're looking the template for.
    */
   getTemplate(name: string): TemplateRef<any> {
-    const col = this.cols.find(child => child.colRef === name)
+    const col = this.cols.find(child => child.colRef === name);
     return col && col.template;
   }
 
@@ -83,9 +95,9 @@ export class TableFilterComponent implements OnInit, AfterViewInit {
    */
   getValue(item: any, key: string) {
     const path = key.split('.');
-    for (let i=0; i < path.length; i++) {
+    for (let i = 0; i < path.length; i++) {
       item = item[path[i]];
-    };
+    }
     return item;
   }
 }
