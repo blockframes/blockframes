@@ -1,35 +1,6 @@
 <!-- Marketplace Activity -->
-<section *ngIf="movieAnalytics$ | async as movieAnalytics">
+<movie-analytics-chart [analyticsData]="movieAnalytics$" [events]="eventList">
   <h3>My Marketplace Activity</h3>
-  <article fxLayout="row wrap" fxLayoutAlign="flex-start" fxLayoutAlign.lt-md="center" fxLayoutGap="25px">
-    <ng-container *ngFor="let lineChart of lineCharts">
-      <mat-card #chart class="chart">
-        <div fxLayout="row" fxLayoutAlign="space-between center">
-          <span class="mat-body-2"><mat-icon [svgIcon]="lineChart.icon"></mat-icon>{{ lineChart.title }}</span>
-          <span class="mat-caption percent" *ngIf="calculatePercentage(movieAnalytics, lineChart.label) as percent">
-            <ng-container *ngIf="percent > 0; else down">
-              <mat-icon color="primary">arrow_drop_up</mat-icon>
-            </ng-container>
-            <ng-template #down><mat-icon color="accent">arrow_drop_down</mat-icon></ng-template>
-              {{ percent }} %
-          </span>
-        </div>
-        <h3>{{ sum(populateData(movieAnalytics, lineChart.label, 'hits', 'current'))}}</h3>
-        <mat-card-content>
-          <apx-chart
-            [series]="getLineChartSeries(movieAnalytics, lineChart.label)"
-            [chart]="lineChartOptions.chart"
-            [xaxis]="getLineChartXaxis(movieAnalytics, lineChart.label)"
-            [yaxis]="lineChartOptions.yaxis"
-            [dataLabels]="lineChartOptions.dataLabels"
-            [grid]="lineChartOptions.grid"
-            [stroke]="lineChartOptions.stroke"
-            [fill]="lineChartOptions.fill"
-          ></apx-chart>
-        </mat-card-content>
-      </mat-card>
-    </ng-container>
-  </article>
-</section>
+</movie-analytics-chart>
 <!-- Sales Revenue -->
 
