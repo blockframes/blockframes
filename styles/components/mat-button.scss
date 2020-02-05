@@ -8,14 +8,6 @@
   // BUTTON WITH ICONS //
   ///////////////////////
 
-  // Icon related modifications
-  .mat-button-base {
-    // Apply space of 8px between span & icon in button
-    .mat-icon + span,
-    span + .mat-icon {
-      margin-left: 8px;
-    }
-  }
   .mat-stroked-button, .mat-button {
     &.mat-primary {
       svg g, svg polygon {
@@ -51,9 +43,12 @@
     }
   }
 
+  .mat-button, .mat-flat-button, .mat-raised-button, .mat-stroked-button {
+    padding: 14px 32px;
+  }
+
 
   .mat-stroked-button {
-    padding: 14px 32px;
     border-radius: 26px;
     border-color: mat-color($foreground, text);
     &.mat-primary {
@@ -68,7 +63,6 @@
   }
 
   .mat-flat-button {
-    padding: 14px 32px;
     border-radius: 26px;
   }
 
@@ -81,7 +75,8 @@
   
   // need to wrap around something to win the battle against Material CSS priority
   body {
-    .mat-button, .mat-raised-button, .mat-icon-button, .mat-stroked-button,
+    // note: mat-icon-button is not here on purpose
+    .mat-button, .mat-raised-button, .mat-stroked-button,
     .mat-flat-button, .mat-fab, .mat-mini-fab {
       letter-spacing: mat-letter-spacing($config, button);
       line-height: mat-line-height($config, button);

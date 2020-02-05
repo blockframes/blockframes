@@ -1,4 +1,4 @@
-<mat-toolbar fxLayout="row" fxLayoutAlign="space-between center">
+<!-- <mat-toolbar fxLayout="row" fxLayoutAlign="space-between center">
   <article  class="mat-body-2" *ngIf="(pageData$ | async) as pageData">
     <b *ngIf="pageData.length">Step {{ pageData.index }}/{{ pageData.length }}</b>
   </article>
@@ -46,17 +46,14 @@
   </mat-sidenav>
 
   <mat-sidenav-content>
-    <!-- Skip to next -->
     <ng-container *ngIf="next$ | async as next">
       <span fxLayoutAlign="end start" fxLayout="row" *ngIf="next !== 'main'">
         <a mat-button color="primary" [routerLink]="next" class="mat-body-2">Skip and do later <mat-icon>arrow_forward</mat-icon></a>
       </span>
     </ng-container>
 
-    <!-- Main Content -->
     <router-outlet></router-outlet>
 
-    <!-- Previous / Next -->
     <footer class="button-box" fxLayout="row" fxLayoutGap="24px" fxLayoutAlign="center center">
       <ng-container *ngIf="previous$ | async as previous">
         <a test-id="back" mat-stroked-button color="accent" [routerLink]="previous" fxLayoutAlign="center center">
@@ -72,4 +69,26 @@
       </ng-container>
     </footer>
   </mat-sidenav-content>
-</mat-sidenav-container>
+</mat-sidenav-container> -->
+<tunnel-layout [nav]="panels">
+  <header fxLayout="row" fxLayoutAlign="space-between center">
+    <img asset="archipel-content.svg" type="logo" alt="Archipel Content Logo" />
+    <button mat-stroked-button color="primary" (click)="save()">
+      <mat-icon svgIcon="floppy" class="primary-icon"></mat-icon>
+      <span>Save</span>
+    </button>
+  </header>
+  <ng-container tunnel-nav-header>
+
+  </ng-container>
+
+  <ng-container tunnel-nav-footer>
+    <mat-divider></mat-divider>
+    <mat-nav-list dense>
+      <a mat-list-item routerLink="summary">
+        <mat-icon mat-list-icon svgIcon="document" bf-color="primary"></mat-icon>
+        <span mat-line>Summary & Submit</span>
+      </a>
+    </mat-nav-list>
+  </ng-container>
+</tunnel-layout>

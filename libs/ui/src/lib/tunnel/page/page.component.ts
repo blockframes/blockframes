@@ -2,8 +2,8 @@ import { Component, ChangeDetectionStrategy, ViewEncapsulation } from '@angular/
 
 @Component({
   selector: 'tunnel-page',
-  templateUrl: './tunnel-page.component.html',
-  styleUrls: ['./tunnel-page.component.scss'],
+  templateUrl: './page.component.html',
+  styleUrls: ['./page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None
 })

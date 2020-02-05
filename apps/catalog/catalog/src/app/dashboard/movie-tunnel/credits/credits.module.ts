@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
-import { TunnelPageModule } from '@blockframes/ui/tunnel/page/tunnel-page.module';
+import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { CreditsComponent } from './credits.component';
 import { MovieFormProductionYearModule } from '@blockframes/movie/movie/form/main/production-year/production-year.module';
 import { MovieFormStakeholdersModule } from '@blockframes/movie/movie/form/main/stakeholders/stakeholders.module';

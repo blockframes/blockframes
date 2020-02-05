@@ -21,6 +21,7 @@ interface PageData {
 const panels = [{
   title: 'Title Information',
   icon: 'document',
+  time: 27,
   routes: [{
     path: 'main',
     label: 'Main Informations'
@@ -43,6 +44,7 @@ const panels = [{
 }, {
   title: 'Licensed Rights',
   icon: 'map_marker',
+  time: 15,
   routes: [{
     path: 'rights',
     label: 'Marketplace Rights'
@@ -53,6 +55,7 @@ const panels = [{
 }, {
   title: 'Uploaded Media',
   icon: 'import',
+  time: 12,
   routes: [{
     path: 'images',
     label: 'Images'
@@ -63,6 +66,7 @@ const panels = [{
 }, {
   title: 'Legal Information',
   icon: 'certificate',
+  time: 5,
   routes: [{
     path: 'chain',
     label: 'Chain of Titles'
