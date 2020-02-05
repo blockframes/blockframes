@@ -50,6 +50,7 @@ export function exclusiveDistributionDeals(distributionDeals: DistributionDeal[]
  * Note don't put the exclusive deals array in here
  */
 export function getDistributionDealsInDateRange(formDates: DateRange, distributionDeals: DistributionDeal[]): DistributionDeal[] {
+  console.log(formDates)
   if (!distributionDeals) {
     return [];
   }
