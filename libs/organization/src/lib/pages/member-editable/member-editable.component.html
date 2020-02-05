@@ -1,10 +1,6 @@
 <editable-sidenav (closed)="opened = false" [opened]="opened" (saved)="updateRole()">
   <!-- Content -->
   <ng-container content>
-    <article fxLayout="row" fxLayoutAlign="start center">
-      <h2>{{orgName}}</h2>
-      <mat-divider fxFlex></mat-divider>
-    </article>
     <div class="space-between-component" *ngIf="(invitationsToJoinOrganization$ | async) as invitations">
       <member-pending *ngIf="invitations.length > 0"
         (declined)="declineInvitation($event)"
@@ -20,14 +16,14 @@
         (editing)="openSidenav($event)">
       </member-repertory>
     </div>
-    <div class="space-send-invitation large"><member-add *ngIf="(isAdmin$ | async)"> </member-add></div>
-    <div class="space-pending-invitation" *ngIf="(invitationsFromOrganization$ | async) as invitationsMember">
+    <div class="space-between-component" *ngIf="(invitationsFromOrganization$ | async) as invitationsMember">
       <member-invitation *ngIf="invitationsMember.length > 0"
         [invitations]="invitationsMember"
         (declined)="declineInvitation($event)"
         [isAdmin]="isAdmin$ | async">
       </member-invitation>
     </div>
+    <div class="space-between-component"><member-add *ngIf="(isAdmin$ | async)"> </member-add></div>
   </ng-container>
   <!-- Sidenav -->
   <ng-container *ngIf="(memberFormGroup$ | async) as memberFormGroup" sidenav>
