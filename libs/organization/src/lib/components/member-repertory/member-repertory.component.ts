@@ -8,6 +8,12 @@ import { OrganizationMember } from '../../member/+state/member.model';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MemberRepertoryComponent {
+  @Input() members: OrganizationMember[];
+
+  @Input() isSuperAdmin: boolean;
+
+  @Output() memberRemoved = new EventEmitter<string>();
+
   public memberColumns = {
     name: 'Name',
     surname: 'Lastname',
@@ -16,15 +22,9 @@ export class MemberRepertoryComponent {
     role: 'Permissions'
   };
 
-  @Input() members: OrganizationMember[];
-
-  @Input() isSuperAdmin: boolean;
-
-  @Output() editing = new EventEmitter<string>();
-
   get initialColumns() {
     return this.isSuperAdmin
-    ? [ 'name', 'surname', 'email', 'position', 'role', 'action' ]
+    ? [ 'name', 'surname', 'email', 'position', 'role', 'uid' ]
     : [ 'name', 'surname', 'email', 'position', 'role' ]
   }
 }
