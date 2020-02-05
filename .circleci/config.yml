@@ -184,8 +184,8 @@ jobs:
       - ENV: production
       - NODE_OPTIONS: '--max_old_space_size=4096'
     steps:
-      - run: echo "${FIREBASE_CI_SERVICE_ACCOUNT}" > creds.json
       - checkout_project
+      - run: echo "${FIREBASE_CI_SERVICE_ACCOUNT}" > creds.json
       - run: cp env/env.prod.ts env/env.ts # required for the typechecking & file rewrite to work
       - run: npm run build:all
       - slack/notify:
@@ -195,8 +195,17 @@ jobs:
           token: $CIRCLE_TOKEN
           command: |
             npx firebase use prod &&
-            ENV=production npx firebase deploy --except functions &&
-            ENV=production npx firebase deploy --only functions --force
+            cp firestore.rules firestore.rules.regular &&
+            cp firestore.maintenance.rules firestore.rules &&
+            npx firebase deploy --except functions &&
+            npx firebase deploy --only functions --force
+      - run: node dist/apps/backend-ops/main.js upgrade
+      - run:
+          command: |
+            cp firestore.rules.regular firestore.rules &&
+            npx firebase use prod &&
+            npx firebase deploy --only firestore:rules
+          when: always
       - slack/status
   deploy-to-staging:
     executor: blockframes-ci
@@ -216,14 +225,14 @@ jobs:
             npx firebase use staging &&
             cp firestore.rules firestore.rules.regular &&
             cp firestore.maintenance.rules firestore.rules &&
-            ENV=staging npx firebase deploy --except functions &&
-            ENV=staging npx firebase deploy --only functions --force
+            npx firebase deploy --except functions &&
+            npx firebase deploy --only functions --force
       - run: node dist/apps/backend-ops/main.js upgrade
       - run:
           command: |
             cp firestore.rules.regular firestore.rules &&
             npx firebase use staging &&
-            ENV=staging npx firebase deploy --only firestore:rules
+            npx firebase deploy --only firestore:rules
           when: always
       - slack/status
 workflows:
