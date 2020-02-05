@@ -25,7 +25,7 @@ function fillMovieSteps(movies: Movie[]): TunnelStep[] {
   const steps = Object.assign(STEP_TEMPLATE, {});
   const routes = movies.length
     ? movies.map(movie => ({ path: movie.id, label: movie.main.title.international }))
-    : [{ path: 'no-movie', label: 'No Movie' }];
+    : [{ path: 'no-title', label: 'No Title yet' }];
   steps[1].routes = routes;
   return steps;
 }
