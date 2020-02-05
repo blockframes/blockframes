@@ -52,3 +52,28 @@
     <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
   </table>
 </mat-card>
+
+<mat-card>
+  <bf-table-filter
+    [source]="members"
+    [columns]="memberColumns"
+    [initialColumns]="initialColumns"
+    showPaginator="true" >
+    <ng-template colRef="name" let-name>
+      <b>{{ name }}</b>
+    </ng-template>
+    <ng-template colRef="surname" let-surname>
+      <b>{{ surname }}</b>
+    </ng-template>
+    <ng-template colRef="action" let-action>
+      <button mat-icon-button [matMenuTriggerFor]="menu">
+        <mat-icon svgIcon="more_vert"></mat-icon>
+      </button>
+      <mat-menu #menu>
+        <button mat-menu-item>
+          <mat-icon color="warn" svgIcon="remove_member"></mat-icon>
+        </button>
+      </mat-menu>
+    </ng-template>
+  </bf-table-filter>
+</mat-card>

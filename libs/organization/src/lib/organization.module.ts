@@ -41,6 +41,7 @@ import { MemberAddComponent } from './components/member-add/member-add.component
 import { MemberPendingComponent } from './components/member-pending/member-pending.component';
 import { MemberInvitationComponent } from './components/member-invitation/member-invitation.component';
 import { MemberFormRoleComponent } from './components/member-form-role/member-form-role.component';
+import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 
 // Pages
 import { MemberRepertoryComponent } from './components/member-repertory/member-repertory.component';
@@ -117,6 +118,7 @@ export const organizationRoutes: Routes = [
     MatProgressSpinnerModule,
     MatProgressBarModule,
     MatTooltipModule,
+    TableFilterModule,
     RouterModule.forChild(organizationRoutes)
   ],
   declarations: [
