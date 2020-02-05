@@ -11,15 +11,24 @@
     <ng-template colRef="surname" let-surname>
       <b>{{ surname }}</b>
     </ng-template>
-    <ng-template colRef="action" let-action>
+    <ng-template colRef="uid" let-uid>
       <button mat-icon-button [matMenuTriggerFor]="menu">
         <mat-icon svgIcon="more_vert"></mat-icon>
       </button>
       <mat-menu #menu>
-        <button mat-menu-item>
+        <button mat-menu-item (click)="memberRemoved.emit(uid)">
           <mat-icon color="warn" svgIcon="remove_member"></mat-icon>
+          <span>Remove from Company</span>
         </button>
       </mat-menu>
+      <mat-form-field>
+        <mat-label>Grant Permissions</mat-label>
+        <mat-select>
+          <mat-option value="superAdmin">Super Admin</mat-option>
+          <mat-option value="admin">Admin</mat-option>
+          <mat-option value="member">Member</mat-option>
+        </mat-select>
+      </mat-form-field>
     </ng-template>
   </bf-table-filter>
 </mat-card>

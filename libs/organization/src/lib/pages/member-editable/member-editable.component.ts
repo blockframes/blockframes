@@ -1,18 +1,14 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, HostBinding } from '@angular/core';
-import { Observable, BehaviorSubject, Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { OrganizationQuery } from '../../+state/organization.query';
-import { FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { InvitationService, InvitationQuery, InvitationStore } from '@blockframes/notification';
-import { PermissionsService, PermissionsQuery } from '../../permissions/+state';
-import { tap, switchMap, startWith, map, filter } from 'rxjs/operators';
-import { createMemberFormList } from '../../forms/member.form';
+import { PermissionsQuery } from '../../permissions/+state';
 import { Order } from '@datorama/akita';
 import { Invitation, InvitationType } from '@blockframes/invitation/types';
 import { OrganizationMember } from '../../member/+state/member.model';
 import { MemberService } from '../../member/+state/member.service';
 import { MemberQuery } from '../../member/+state/member.query';
-import { UserRole } from '@blockframes/permissions/types';
 
 @Component({
   selector: 'member-editable',
@@ -24,12 +20,7 @@ import { UserRole } from '@blockframes/permissions/types';
 export class MemberEditableComponent implements OnInit, OnDestroy {
   @HostBinding('attr.page-id') pageId = 'member-editable';
 
-  public orgName: string = this.query.getActive().name
-
-  /** Observable of the selected memberId */
-  private selectedMemberId$ = new BehaviorSubject<string>(null);
-
-  public opened = false;
+  public orgName: string = this.query.getActive().name;
 
   /** Observable of all members of the organization */
   public members$: Observable<OrganizationMember[]>;
@@ -43,11 +34,6 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
   public isAdmin$: Observable<boolean>;
   public isSuperAdmin$: Observable<boolean>;
 
-  public membersFormList = createMemberFormList();
-
-  /** Observable of the selected memberFormGroup in the membersFormList */
-  public memberFormGroup$: Observable<FormGroup>;
-
   private invitationSubscription: Subscription;
 
   constructor(
@@ -56,23 +42,13 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
     private invitationService: InvitationService,
     private invitationQuery: InvitationQuery,
     private invitationStore: InvitationStore,
-    private permissionsService: PermissionsService,
     private permissionQuery: PermissionsQuery,
-    private memberQuery: MemberQuery
+    private memberQuery: MemberQuery,
+    private memberService: MemberService
   ) {}
 
   ngOnInit() {
-    this.members$ = this.memberQuery.membersWithRole$.pipe(
-      tap(members => this.membersFormList.patchAllValue(members)),
-      switchMap(members => this.membersFormList.valueChanges.pipe(startWith(members)))
-    );
-
-    /** Return the memberFormGroup linked to the selected memberId */
-    this.memberFormGroup$ = this.selectedMemberId$.pipe(
-      filter(memberId => !!memberId),
-      map(memberId => this.membersFormList.value.findIndex(member => member.uid === memberId)),
-      map(index => this.membersFormList.controls[index])
-    );
+    this.members$ = this.memberQuery.membersWithRole$;
 
     this.isAdmin$ = this.permissionQuery.isAdmin$;
     this.isSuperAdmin$ = this.permissionQuery.isSuperAdmin$;
@@ -94,11 +70,6 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
     });
   }
 
-  public openSidenav(memberId: string) {
-    this.selectedMemberId$.next(memberId);
-    this.opened = true;
-  }
-
   public acceptInvitation(invitation: Invitation) {
     this.invitationService.acceptInvitation(invitation);
   }
@@ -109,13 +80,22 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
 
   /** Update every user roles in the form list. */
   public updateRole() {
+    // try {
+    //   if (!this.membersFormList.value.find(member => member.role === UserRole.superAdmin)) {
+    //     throw new Error('There must be at least one Super Admin in the organization.')
+    //   }
+    //   this.permissionsService.updateMembersRole(this.membersFormList.value);
+    //   this.snackBar.open('Roles updated', 'close', { duration: 2000 });
+    //   this.opened = false;
+    // } catch (error) {
+    //   this.snackBar.open(error.message, 'close', { duration: 2000 });
+    // }
+  }
+
+  public removeMember(uid: string) {
     try {
-      if (!this.membersFormList.value.find(member => member.role === UserRole.superAdmin)) {
-        throw new Error('There must be at least one Super Admin in the organization.')
-      }
-      this.permissionsService.updateMembersRole(this.membersFormList.value);
-      this.snackBar.open('Roles updated', 'close', { duration: 2000 });
-      this.opened = false;
+      this.memberService.removeMember(uid);
+      this.snackBar.open('Member removed.', 'close', { duration: 2000 });
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });
     }

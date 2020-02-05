@@ -1,32 +1,25 @@
-<editable-sidenav (closed)="opened = false" [opened]="opened" (saved)="updateRole()">
-  <!-- Content -->
-  <ng-container content>
-    <div class="space-between-component" *ngIf="(invitationsToJoinOrganization$ | async) as invitations">
-      <member-request *ngIf="invitations.length > 0"
-        (declined)="declineInvitation($event)"
-        (accepted)="acceptInvitation($event)"
-        [invitations]="invitations"
-        [isAdmin]="isAdmin$ | async">
-      </member-request>
-    </div>
-    <div class="space-between-component">
-      <member-repertory
-        [members]="members$ | async"
-        [isSuperAdmin]="isSuperAdmin$ | async"
-        (editing)="openSidenav($event)">
-      </member-repertory>
-    </div>
-    <div class="space-between-component" *ngIf="(invitationsFromOrganization$ | async) as invitationsMember">
-      <member-pending *ngIf="invitationsMember.length > 0"
-        [invitations]="invitationsMember"
-        (declined)="declineInvitation($event)"
-        [isAdmin]="isAdmin$ | async">
-      </member-pending>
-    </div>
-    <div class="space-between-component"><member-add *ngIf="(isAdmin$ | async)"> </member-add></div>
-  </ng-container>
-  <!-- Sidenav -->
-  <ng-container *ngIf="(memberFormGroup$ | async) as memberFormGroup" sidenav>
-    <member-form-role [formGroup]="memberFormGroup"></member-form-role>
-  </ng-container>
-</editable-sidenav>
+<section>
+  <div class="space-between-component" *ngIf="(invitationsToJoinOrganization$ | async) as invitations">
+    <member-request *ngIf="invitations.length > 0"
+      (declined)="declineInvitation($event)"
+      (accepted)="acceptInvitation($event)"
+      [invitations]="invitations"
+      [isAdmin]="isAdmin$ | async">
+    </member-request>
+  </div>
+  <div class="space-between-component">
+    <member-repertory
+      [members]="members$ | async"
+      [isSuperAdmin]="isSuperAdmin$ | async"
+      (memberRemoved)="removeMember($event)">
+    </member-repertory>
+  </div>
+  <div class="space-between-component" *ngIf="(invitationsFromOrganization$ | async) as invitationsMember">
+    <member-pending *ngIf="invitationsMember.length > 0"
+      [invitations]="invitationsMember"
+      (declined)="declineInvitation($event)"
+      [isAdmin]="isAdmin$ | async">
+    </member-pending>
+  </div>
+  <div class="space-between-component"><member-add *ngIf="(isAdmin$ | async)"> </member-add></div>
+</section>
