@@ -151,7 +151,6 @@ jobs:
       - slack/notify:
           message: '🚲 Deploying & testing e2e (https://blockframes-ci.web.app/)'
       - run: |
-          npm install --save-dev firebase-tools &&
           npx firebase use ci &&
           npx firebase deploy --force || true;
           npx ng build backend-ops --configuration=$ENV
@@ -195,7 +194,6 @@ jobs:
           # Note: right now do-exclusively excludes cross-jobs (staging & prod).
           token: $CIRCLE_TOKEN
           command: |
-            npm install --save-dev firebase-tools &&
             npx firebase use prod &&
             ENV=production npx firebase deploy --except functions &&
             ENV=production npx firebase deploy --only functions --force
@@ -215,7 +213,6 @@ jobs:
           message: '🛵 Deploying to staging.. (https://staging.blockframes.io/)'
       - run:
           command: |
-            npm install --save-dev firebase-tools &&
             npx firebase use staging &&
             cp firestore.rules firestore.rules.regular &&
             cp firestore.maintenance.rules firestore.rules &&
