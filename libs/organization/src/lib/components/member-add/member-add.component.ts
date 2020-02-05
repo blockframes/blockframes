@@ -3,6 +3,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { OrganizationQuery } from '../../+state';
 import { InvitationService } from '@blockframes/notification';
+import { createAddMemberFormList } from '../../forms/member.form';
 
 @Component({
   selector: 'member-add',
@@ -13,6 +14,14 @@ import { InvitationService } from '@blockframes/notification';
 export class MemberAddComponent {
   /** The control to send an invitation with the given email */
   public emailControl = new FormControl('', Validators.email);
+  public form = createAddMemberFormList();
+  public tooltipInfo = `
+    What is “Grant permissions?”
+    Permissions give your company’s members access to the different platform features.
+    “Super Admin” - user can add and delete members and admins.
+    “Admin” - user can add and delete members.
+    “Members” - user can only see the company’s members.
+  `;
 
   constructor(
     private snackBar: MatSnackBar,

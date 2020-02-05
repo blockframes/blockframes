@@ -1,3 +1,27 @@
-mat-form-field {
+@import 'mixins';
+
+.email {
   width: 60%;
+}
+.role {
+  width: 30%;
+}
+.info {
+  margin-top: 20px;
+}
+.send {
+  margin-top: 40px;
+}
+
+mat-card-content {
+  margin-bottom: 0;
+}
+
+@include mobile {
+  .email {
+    width: 100%;
+  }
+  .role {
+    width: 100%;
+  }
 }

@@ -33,6 +33,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatTooltipModule } from '@angular/material';
 
 // Components
 import { OrganizationDisplayComponent } from './components/organization-display/organization-display.component';
@@ -115,6 +116,7 @@ export const organizationRoutes: Routes = [
     MatSlideToggleModule,
     MatProgressSpinnerModule,
     MatProgressBarModule,
+    MatTooltipModule,
     RouterModule.forChild(organizationRoutes)
   ],
   declarations: [
