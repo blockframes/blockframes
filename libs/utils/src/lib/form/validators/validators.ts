@@ -103,10 +103,10 @@ export function languageValidator(control: AbstractControl): { [key: string]: bo
  * @param from range from
  * @param to range to
  */
-export function numberRangeValidator(from: string, to: string): ValidatorFn {
+export function numberRangeValidator(startDate: string, endDate: string): ValidatorFn {
   return (group: FormGroup): ValidationErrors => {
-    const controlFrom = group.controls[from];
-    const controlTo = group.controls[to];
+    const controlFrom = group.controls[startDate];
+    const controlTo = group.controls[endDate];
     if (controlFrom instanceof Date && controlTo instanceof Date) {
       return controlFrom.value.getTime() > controlTo.value.getTime() &&
         group.touched &&

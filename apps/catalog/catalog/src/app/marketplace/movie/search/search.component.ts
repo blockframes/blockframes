@@ -49,19 +49,18 @@ import { MoviesIndex } from '@blockframes/utils/algolia';
 import { Observable, combineLatest } from 'rxjs';
 import { startWith, map, debounceTime, switchMap, tap, distinctUntilChanged } from 'rxjs/operators';
 // Others
-import { CatalogSearchForm } from './search.form';
 import { filterMovie } from './filter.util';
 import { AFM_DISABLE } from '@env';
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Index } from 'algoliasearch';
-import flatten from 'lodash/flatten';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
 import { MovieDocumentWithDates } from '@blockframes/movie/movie/+state/movie.firestore';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state/distribution-deal.service';
 import { NumberRange } from '@blockframes/utils/common-interfaces/range';
-import { BUDGET_LIST } from '@blockframes/movie/movie/form/budget/budget.form';
+import { BUDGET_LIST } from '@blockframes/movie/movieform/budget/budget.form';
+import { CatalogSearchForm } from '@blockframes/catalog/form/search.form';
 
 @Component({
   selector: 'catalog-movie-search',
@@ -581,5 +580,9 @@ export class MarketplaceSearchComponent implements OnInit {
     } else {
       this.searchbarTypeForm.setValue('');
     }
+  }
+
+  public formLog(form) {
+    console.log(form)
   }
 }

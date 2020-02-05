@@ -1,11 +1,13 @@
-import { CatalogSearch } from './search.form';
 import { Movie } from '@blockframes/movie/movie/+state/movie.model';
 import { AFM_DISABLE } from '@env';
 import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
 import { ExtractSlug } from '@blockframes/utils/static-model/staticModels';
 import { NumberRange } from '@blockframes/utils/common-interfaces';
 import { LanguagesLabel } from '@blockframes/utils/static-model/types';
-import { MovieLanguageSpecification } from '@blockframes/movie/movie/+state/movie.firestore';
+import { TerritoriesSlug, MediasSlug } from '@blockframes/utils/static-model/types';
+import { CatalogSearch } from '@blockframes/catalog/form/search.form';
+import { getDistributionDealsWithMediasTerritoriesAndLanguagesInCommon, getDistributionDealsInDateRange } from '@blockframes/movie/distribution-deals/create/availabilities.util';
+import { MovieLanguageSpecification } from '@blockframes/movie/movie+state/movie.firestore';
 
 function productionYearBetween(movie: Movie, range: { from: number; to: number }): boolean {
   if (!range || !(range.from && range.to)) {
@@ -119,26 +121,29 @@ function certifications(movie: Movie, movieCertification: string[]): boolean {
     }
   }
 }
-// TODO #979 - check if availabilities filter is needed
-function availabilities(deals: DistributionDeal[], range: { from: Date; to: Date }): boolean {
+
+/**
+ * Returns a boolean weither a deal is matching with our search or not.
+ * @param deals all the deals from the movies in the filterForm
+ * @param range the range of date specified in the filterForm
+ * @param territories the territories added in the filterForm
+ * @param medias the medias checked in the filterForm
+ * @param langages the langages from the filterForm
+ */
+function availabilities(
+  deals: DistributionDeal[],
+  range: { from: Date; to: Date },
+  territories: TerritoriesSlug[],
+  medias: MediasSlug[],
+  langages?: MovieLanguageSpecification
+  ): boolean {
   if (!range || !(range.from && range.to)) {
     return true;
   }
-  return (
-    deals.some(deal => {
-      if (deal.terms) {
-        /**
-         * Check if terms.start is inside of a deal
-         */
-        return deal.terms.start.getTime() < range.from.getTime();
-      }
-    }) &&
-    deals.some(deal => {
-      if (deal.terms) {
-        return deal.terms.end.getTime() > range.to.getTime();
-      }
-    })
-  );
+  const matchingRangeDeals = getDistributionDealsInDateRange(range, deals);
+  const matchingDeals = getDistributionDealsWithMediasTerritoriesAndLanguagesInCommon(territories, medias, matchingRangeDeals, langages);
+
+  return matchingDeals ? true : false;
 }
 
 function hasCountry(movie: Movie, countries: string[]): boolean {

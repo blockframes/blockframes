@@ -50,6 +50,9 @@ export function exclusiveDistributionDeals(distributionDeals: DistributionDeal[]
  * Note don't put the exclusive deals array in here
  */
 export function getDistributionDealsInDateRange(formDates: DateRange, distributionDeals: DistributionDeal[]): DistributionDeal[] {
+  if (!distributionDeals) {
+    return [];
+  }
   const intersectedDateRangeDeals: DistributionDeal[] = [];
 
   for (const deal of distributionDeals) {
@@ -100,8 +103,8 @@ export function getDistributionDealsInDateRange(formDates: DateRange, distributi
 export function getDistributionDealsWithMediasTerritoriesAndLanguagesInCommon(
   formTerritories: string[],
   formMedias: string[],
-  formLanguages: MovieLanguageSpecification,
-  deals: DistributionDeal[]
+  deals: DistributionDeal[],
+  formLanguages?: MovieLanguageSpecification
 ): DistributionDeal[] {
 
   /**
@@ -130,22 +133,24 @@ export function getDistributionDealsWithMediasTerritoriesAndLanguagesInCommon(
       }
     }
 
-    // TODO: Add language when language is moved inside of deals object
+    let dubbingInCommon = false;
+    let subtitlesInCommon = false;
+
+    if (formLanguages) {
     const languagesName: string[] = Object.keys(formLanguages);
 
-    let dubbingInCommon = false;
-    for (const language of languagesName) {
-      if (deal.assetLanguage[language] && deal.assetLanguage[language].dubbed) {
-        dubbingInCommon = true;
-        break;
+      for (const language of languagesName) {
+        if (deal.assetLanguage[language] && deal.assetLanguage[language].dubbed) {
+          dubbingInCommon = true;
+          break;
+        }
       }
-    }
 
-    let subtitlesInCommon = false;
-    for (const language of languagesName) {
-      if (deal.assetLanguage[language] && deal.assetLanguage[language].subtitle) {
-        subtitlesInCommon = true;
-        break;
+      for (const language of languagesName) {
+        if (deal.assetLanguage[language] && deal.assetLanguage[language].subtitle) {
+          subtitlesInCommon = true;
+          break;
+        }
       }
     }
 
