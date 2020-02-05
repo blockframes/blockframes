@@ -116,7 +116,6 @@ function createContractTitlesControls(
   titles: Record<string, Partial<ContractTitleDetail>>
 ): ContractTitlesControl {
   const controls = {};
-  const ids = Object.keys(titles);
   for (const id in titles) {
     controls[id] = new ContractTitleDetailForm(titles[id]);
   }

@@ -1,4 +1,4 @@
-<tunnel-layout>
+<tunnel-layout [steps]="steps$ | async">
   <header fxLayout="row" fxLayoutAlign="space-between center">
     <img asset="archipel-content.svg" type="logo" alt="Archipel Content Logo" />
     <button mat-stroked-button color="primary" (click)="save()">
