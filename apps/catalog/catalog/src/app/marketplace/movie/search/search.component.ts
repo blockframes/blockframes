@@ -61,6 +61,7 @@ import { DistributionDealService } from '@blockframes/movie/distribution-deals/+
 import { NumberRange } from '@blockframes/utils/common-interfaces/range';
 import { BUDGET_LIST } from '@blockframes/movie/movieform/budget/budget.form';
 import { CatalogSearchForm } from '@blockframes/catalog/form/search.form';
+import { DistributionDealQuery } from '@blockframes/movie/distribution-deals/+state';
 
 @Component({
   selector: 'catalog-movie-search',
@@ -168,7 +169,6 @@ export class MarketplaceSearchComponent implements OnInit {
   constructor(
     private router: Router,
     private routerQuery: RouterQuery,
-    private distributionDealService: DistributionDealService,
     private cartService: CartService,
     private catalogCartQuery: CatalogCartQuery,
     private snackbar: MatSnackBar,
