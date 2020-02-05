@@ -1,11 +1,11 @@
-<ng-container *ngIf="analyticsData | async as movieAnalytics">
+<ng-container *ngIf="analyticsData">
   <ng-content></ng-content>
   <article fxLayout="row wrap" fxLayoutAlign="flex-start" fxLayoutAlign.lt-md="center" fxLayoutGap="25px">
     <ng-container *ngFor="let info of filteredEvent">
       <mat-card #chart class="chart">
         <div fxLayout="row" fxLayoutAlign="space-between center">
           <span class="mat-body-2"><mat-icon [svgIcon]="info.icon"></mat-icon>{{ info.title }}</span>
-          <!-- <span class="mat-caption percent" *ngIf="calculatePercentage(movieAnalytics, info.eventName) as percent">
+          <span class="mat-caption percent" *ngIf="calculatePercentage(info.eventName) as percent">
             <ng-container *ngIf="percent > 0; else down">
               <mat-icon color="primary" svgIcon="arrow_closed"></mat-icon>
             </ng-container>
@@ -13,14 +13,14 @@
               <mat-icon color="accent" svgIcon="arrow_open"></mat-icon>
             </ng-template>
               {{ percent }} %
-          </span> -->
+          </span>
         </div>
-        <h3>{{ totalHitsOnCurrentMonth(movieAnalytics, info.eventName) }}</h3>
+        <h3>{{ totalHitsOnCurrentMonth(info.eventName) }}</h3>
         <mat-card-content>
           <apx-chart
-            [series]="getLineChartSeries(movieAnalytics, info.eventName)"
+            [series]="getLineChartSeries(info.eventName)"
             [chart]="lineChartOptions.chart"
-            [xaxis]="getLineChartXaxis(movieAnalytics, info.eventName)"
+            [xaxis]="getLineChartXaxis(info.eventName)"
             [yaxis]="lineChartOptions.yaxis"
             [dataLabels]="lineChartOptions.dataLabels"
             [grid]="lineChartOptions.grid"

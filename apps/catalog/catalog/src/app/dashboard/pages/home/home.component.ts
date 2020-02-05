@@ -3,7 +3,6 @@ import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
 import { Observable } from 'rxjs';
 import { MovieAnalytics } from '@blockframes/movie/movie+state/movie.firestore';
 import { MovieService } from '@blockframes/movie/movie+state/movie.service';
-import { Movie } from '@blockframes/movie/movie+state/movie.model';
 import { map } from 'rxjs/operators';
 
 const eventList = ['movieViews', 'addedToWishlist', 'promoReelOpened'];
@@ -27,7 +26,6 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
     const moiveIds = this.movies$.subscribe(id => this.movieIdList = id)
-    console.log(this.movieIdList)
     this.movieAnalytics$ = this.movieService.getMovieAnalytics(this.movieIdList);
   }
 

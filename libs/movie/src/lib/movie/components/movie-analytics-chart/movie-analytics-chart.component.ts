@@ -1,8 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
-import { MovieAnalytics, EventAnalytics } from '@blockframes/movie/movie+state/movie.firestore';
-import { Observable, of } from 'rxjs';
+import { MovieAnalytics } from '@blockframes/movie/movie+state/movie.firestore';
 import { ChartOptions, lineChartOptions } from './default-chart-options';
-import { analyticsMockData } from './mockData';
 
 const chartInfo = [
   {
@@ -28,8 +26,22 @@ function sum(array: number[]): number {
   return array.reduce((sum, num) => sum + num, 0);
 }
 
-function sumArray(arr) {
-  return arr.length >= 1 ? arr.reduce((t, e) => t.concat(e)).reduce((t, e) => t + e, 0) : 0;
+function getLastDays(from: number, to: number = 0) {
+  if (from < to) {
+    throw new Error('from should be larger than to')
+  } else {
+    return Array(from - to).fill(null).map((_, i) => {
+      const today = new Date();
+      const time = (new Date()).setDate(today.getDate() - (i + to));
+      return new Date(time);
+    }).reverse()
+  }
+}
+
+function toYMD(date: Date) {
+  const m = date.getMonth()
+  const d = date.getDate()
+  return `${date.getFullYear()}${m < 10 ? `0${m+1}` : m+1}${d < 10 ? `0${d}` : d}`;
 }
 
 @Component({
@@ -42,9 +54,8 @@ export class MovieAnalyticsChartComponent implements OnInit {
   public lineChartOptions: Partial<ChartOptions>;
   public chartInfo = chartInfo;
   public filteredEvent;
-  analyticsMockData$ = of(analyticsMockData)
 
-  @Input() analyticsData: Observable<MovieAnalytics[]>;
+  @Input() analyticsData: MovieAnalytics[];
   @Input() events: string[];
   
   constructor() {   
@@ -55,53 +66,41 @@ export class MovieAnalyticsChartComponent implements OnInit {
     this.filteredEvent = chartInfo.filter(({ eventName }) => this.events.includes(eventName));
   }
 
-  populateData(
-    data: EventAnalytics[], 
-    name: MovieAnalyticsEventName, 
-    key: 'event_date' | 'hits', 
-    period: 'current' | 'past'
-  ):number[] {
-    if(data.length === 1) {
-      return data[0][name][period].map(analyticsData => analyticsData[key]);
-    } else {
-      if (key === 'hits') {
-        const hitsArray = data.map(movie => movie[name][period].map(analyticsData => analyticsData[key]))
-        console.log(hitsArray)
-        console.log(sumArray(hitsArray))
-        return hitsArray;
-      } else if (key === 'event_date') {
-        const uniqueDate = [];
-        const dateArray = data.map(movie => movie[name][period].map(analyticsData => {
-          return uniqueDate.includes(analyticsData[key]) ? 0 : uniqueDate.push(analyticsData[key])
-        }
-        ))
-        console.log(uniqueDate)
-        return uniqueDate;
+  populate(eventName: MovieAnalyticsEventName, period: 'current' | 'past') {
+    const x = period === 'current' ? getLastDays(28) : getLastDays(56, 28);
+    const y = [];
+    for(const date of x.map(toYMD)) {
+      let sum = 0;
+      for(const movieAnalytic of this.analyticsData) {
+        const event = movieAnalytic[eventName][period].find(e => e.event_date === date);
+        sum += event ? event.hits : 0;
       }
+      y.push(sum);
     }
+    return { x , y }
   }
 
-  getLineChartSeries(data: EventAnalytics[], name: MovieAnalyticsEventName) {
-    return [{name, data: this.populateData(data, name, 'hits', 'current')}];
+  getLineChartSeries(eventName: MovieAnalyticsEventName) {
+    return [{name, data: this.populate(eventName, 'current').y}];
   }
 
-  getLineChartXaxis(data: EventAnalytics[], name: MovieAnalyticsEventName) {
+  getLineChartXaxis(eventName: MovieAnalyticsEventName) {
     return {
-      categories:  this.populateData(data, name, 'event_date', 'current'), 
+      categories:  this.populate(eventName, 'current').x, 
       labels: {show: false},  
       axisBorder: {show: false},  
       axisTicks: {show: false}
     };
   }
 
-  totalHitsOnCurrentMonth(data: EventAnalytics[], name: MovieAnalyticsEventName) {
-    const total = this.populateData(data, name, 'hits', 'current')
-    data.length === 1 ? sum(total) : sumArray(total);
+  totalHitsOnCurrentMonth(eventName: MovieAnalyticsEventName) {
+    const total = this.populate(eventName, 'current').y
+    return sum(total);
   }
 
-  calculatePercentage(data: EventAnalytics[], name: MovieAnalyticsEventName): number {
-    const current = sum(this.populateData(data, name, 'hits', 'current'));
-    const past = sum(this.populateData(data, name, 'hits', 'past'));
+  calculatePercentage(eventName: MovieAnalyticsEventName): number {
+    const current = sum(this.populate(eventName, 'current').y);
+    const past = sum(this.populate(eventName, 'past').y);
     if (current && past && (current > past)) {
       return (current - past) / past * 100
     } else if (past > current) {
