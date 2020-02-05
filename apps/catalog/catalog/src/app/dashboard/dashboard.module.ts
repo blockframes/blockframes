@@ -18,6 +18,8 @@ const routes: Routes = [
     children: [
       {
         path: '',   // Home (dashboard if film, welcome if not)
+        canActivate: [MovieOrganizationListGuard],
+        canDeactivate: [MovieOrganizationListGuard],
         loadChildren: () => import('./pages/home/home.module').then(m => m.HomeModule)
       },
       {

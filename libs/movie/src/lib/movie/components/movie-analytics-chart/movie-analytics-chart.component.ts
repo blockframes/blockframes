@@ -25,7 +25,11 @@ const chartInfo = [
 type MovieAnalyticsEventName = typeof chartInfo[number]['eventName']
 
 function sum(array: number[]): number {
-  return array.reduce((p, c) => p + c, 0);
+  return array.reduce((sum, num) => sum + num, 0);
+}
+
+function sumArray(arr) {
+  return arr.length >= 1 ? arr.reduce((t, e) => t.concat(e)).reduce((t, e) => t + e, 0) : 0;
 }
 
 @Component({
@@ -57,7 +61,24 @@ export class MovieAnalyticsChartComponent implements OnInit {
     key: 'event_date' | 'hits', 
     period: 'current' | 'past'
   ):number[] {
-    return data[0][name][period].map(analyticsData => analyticsData[key]);
+    if(data.length === 1) {
+      return data[0][name][period].map(analyticsData => analyticsData[key]);
+    } else {
+      if (key === 'hits') {
+        const hitsArray = data.map(movie => movie[name][period].map(analyticsData => analyticsData[key]))
+        console.log(hitsArray)
+        console.log(sumArray(hitsArray))
+        return hitsArray;
+      } else if (key === 'event_date') {
+        const uniqueDate = [];
+        const dateArray = data.map(movie => movie[name][period].map(analyticsData => {
+          return uniqueDate.includes(analyticsData[key]) ? 0 : uniqueDate.push(analyticsData[key])
+        }
+        ))
+        console.log(uniqueDate)
+        return uniqueDate;
+      }
+    }
   }
 
   getLineChartSeries(data: EventAnalytics[], name: MovieAnalyticsEventName) {
@@ -74,7 +95,8 @@ export class MovieAnalyticsChartComponent implements OnInit {
   }
 
   totalHitsOnCurrentMonth(data: EventAnalytics[], name: MovieAnalyticsEventName) {
-    return sum(this.populateData(data, name, 'hits', 'current'))
+    const total = this.populateData(data, name, 'hits', 'current')
+    data.length === 1 ? sum(total) : sumArray(total);
   }
 
   calculatePercentage(data: EventAnalytics[], name: MovieAnalyticsEventName): number {

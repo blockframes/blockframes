@@ -11,10 +11,9 @@
   </div>
 </header>
 <section>
-  <h3>My Marketplace Activity</h3>
-  <article fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="16px">
-
-  </article>
+  <movie-analytics-chart [analyticsData]="movieAnalytics$" [events]="eventList">
+    <h3>My Marketplace Activity</h3>
+  </movie-analytics-chart>
 </section>
 <section>
   <h3>Sales Revenue</h3>
