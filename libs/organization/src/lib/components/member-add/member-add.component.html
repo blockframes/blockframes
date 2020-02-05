@@ -2,30 +2,56 @@
   <h3>Invite Members</h3>
   <p>Invite your co-workers to join your company so that they can use the application.</p>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Member's work email address</mat-label>
-    <input matInput type="email" placeholder="Invite by E-mail Address" aria-label="Email" [formControl]="emailControl" />
-    <mat-icon matSuffix svgIcon="mail"></mat-icon>
-    <mat-hint>Please enter a valid email address</mat-hint>
-    <mat-error *ngIf="emailControl.hasError('email')">
-      Please enter a <strong>valid</strong> email address.
-    </mat-error>
-  </mat-form-field>
+  <ng-container *ngFor="let control of form.controls; let i = index; let last = last">
+    <mat-card-content fxLayout="row" fxLayout.xs="column" fxLayoutAlign.xs="center center" fxLayoutGap="20px">
+      <mat-form-field appearance="outline" class="email">
+        <mat-label>Member's work email address</mat-label>
+        <input matInput type="email" placeholder="Invite by E-mail Address" aria-label="Email" [formControl]="emailControl" />
+        <mat-icon matSuffix svgIcon="mail"></mat-icon>
+        <mat-error *ngIf="emailControl.hasError('email')">
+          Please enter a <strong>valid</strong> email address.
+        </mat-error>
+      </mat-form-field>
 
-  <mat-form-field appearance="outline">
-    <mat-label>Grant permissions</mat-label>
-    <mat-select>
-      <mat-option>
-        Admin
-      </mat-option>
-      <mat-option>
-        Member
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
+      <mat-form-field appearance="outline" class="role">
+        <mat-label>Grant permissions</mat-label>
+        <mat-select>
+          <mat-option value="superAdmin">
+            Super Admin
+          </mat-option>
+          <mat-option value="admin">
+            Admin
+          </mat-option>
+          <mat-option value="member">
+            Member
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <button
+        class="info"
+        mat-icon-button
+        [matTooltip]="tooltipInfo"
+        matTooltipPosition="below"
+        aria-label="Display member role's information">
+        <mat-icon svgIcon="info" color="primary"></mat-icon>
+      </button>
+    </mat-card-content>
+    <mat-card-actions fxLayout="row" fxLayoutAlign="center">
+      <!-- Add / Delete -->
+      <button *ngIf="!last" mat-mini-fab color="warn" (click)="form.removeAt(i)" matTooltip="Remove a Member" aria-label="Remove a Member">
+        <mat-icon>delete</mat-icon>
+      </button>
+      <button class="add" *ngIf="last" mat-mini-fab color="primary" (click)="form.add()" matTooltip="Add a Member" aria-label="Add a Member">
+        <mat-icon>add</mat-icon>
+      </button>
+    </mat-card-actions>
+  </ng-container>
 </mat-card>
 
-<button mat-flat-button color="accent" test-id="add" (click)="sendInvitation()">
-  <mat-icon svgIcon="send"></mat-icon>
-  <span>Send invitations</span>
-</button>
+<div fxLayout="row" fxLayoutAlign="center">
+  <button class="send" mat-flat-button color="accent" test-id="add" (click)="sendInvitation()">
+    <mat-icon svgIcon="send"></mat-icon>
+    <span>Send invitation(s)</span>
+  </button>
+</div>
