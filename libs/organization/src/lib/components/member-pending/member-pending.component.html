@@ -1,26 +1,14 @@
 <mat-card>
-  <h3>New Member Requests</h3>
-  <bf-table-filter
-    [source]="users"
-    [columns]="invitationColumns"
-    [initialColumns]="initialColumns"
-    showPaginator="true" >
-    <ng-template colRef="name" let-name>
-      <b>{{ name }}</b>
-    </ng-template>
-    <ng-template colRef="surname" let-surname>
-      <b>{{ surname }}</b>
-    </ng-template>
-    <ng-template colRef="email" let-email>
-      <b>{{ email }}</b>
-    </ng-template>
-    <ng-template colRef="uid" let-uid>
-      <button mat-icon-button (click)="accepted.emit(findInvitation(uid))">
-        <mat-icon svgIcon="accept_member"></mat-icon>
-      </button>
-      <button mat-icon-button (click)="declined.emit(findInvitation(uid))">
+  <h3>Pending members ({{ invitations.length }})</h3>
+  <mat-list *ngIf="invitations.length; else empty" role="list" class="bf-list">
+    <span matListItem *ngFor="let invitation of invitations" fxLayout="row" fxLayoutAlign="space-between center">
+      <p>{{ invitation.user.email }}</p>
+      <button *ngIf="isAdmin" (click)="declined.emit(invitation)" mat-icon-button>
         <mat-icon svgIcon="refuse"></mat-icon>
       </button>
-    </ng-template>
-  </bf-table-filter>
+    </span>
+  </mat-list>
+  <ng-template #empty>
+    <span>No pending invitations</span>
+  </ng-template>
 </mat-card>

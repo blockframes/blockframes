@@ -2,12 +2,12 @@
   <!-- Content -->
   <ng-container content>
     <div class="space-between-component" *ngIf="(invitationsToJoinOrganization$ | async) as invitations">
-      <member-pending *ngIf="invitations.length > 0"
+      <member-request *ngIf="invitations.length > 0"
         (declined)="declineInvitation($event)"
         (accepted)="acceptInvitation($event)"
         [invitations]="invitations"
         [isAdmin]="isAdmin$ | async">
-      </member-pending>
+      </member-request>
     </div>
     <div class="space-between-component">
       <member-repertory
@@ -17,11 +17,11 @@
       </member-repertory>
     </div>
     <div class="space-between-component" *ngIf="(invitationsFromOrganization$ | async) as invitationsMember">
-      <member-invitation *ngIf="invitationsMember.length > 0"
+      <member-pending *ngIf="invitationsMember.length > 0"
         [invitations]="invitationsMember"
         (declined)="declineInvitation($event)"
         [isAdmin]="isAdmin$ | async">
-      </member-invitation>
+      </member-pending>
     </div>
     <div class="space-between-component"><member-add *ngIf="(isAdmin$ | async)"> </member-add></div>
   </ng-container>
