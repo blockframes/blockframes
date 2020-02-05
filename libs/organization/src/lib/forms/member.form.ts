@@ -14,10 +14,8 @@ function createMemberFormGroup(member: Partial<OrganizationMember> = {}) {
 }
 
 function createAddMemberFormGroup() {
-  return new FormGroup({
-    email: new FormControl('', Validators.email),
-    role: new FormControl(),
-  });
+  return new FormControl('', [Validators.required, Validators.email]);
+
 }
 
 export function createMemberFormList() {
