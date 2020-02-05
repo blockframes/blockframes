@@ -10,23 +10,24 @@ import { OrganizationMember } from '../../member/+state/member.model';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MemberRepertoryComponent {
+  public memberColumns = {
+    name: 'Name',
+    surname: 'Lastname',
+    email: 'Email Address',
+    position: 'Position',
+    role: 'Permissions'
+  };
 
-  @Input() set members(members: OrganizationMember[]) {
-    this.dataSource = new MatTableDataSource(members);
-    this.dataSource.sort = this.sort;
-  }
+  @Input() members: OrganizationMember[];
+
   @Input() isSuperAdmin: boolean;
 
   @Output() editing = new EventEmitter<string>();
 
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
-
-  public dataSource: MatTableDataSource<OrganizationMember>;
-
-  get displayedColumns() {
+  get initialColumns() {
     return this.isSuperAdmin
-    ? [ 'name', 'email', 'role', 'action' ]
-    : [ 'name', 'email', 'role' ]
+    ? [ 'name', 'surname', 'email', 'position', 'role', 'action' ]
+    : [ 'name', 'surname', 'email', 'position', 'role' ]
   }
 
 }
