@@ -1,4 +1,4 @@
-import { setup, teardown } from './helpers';
+import { setup, teardown } from './helpers.spec';
 import { mockData, userMarie, userMax } from './mock';
 
 describe('Users rules', () => {

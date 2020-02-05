@@ -1,4 +1,4 @@
-import { setup, teardown } from './helpers';
+import { setup, teardown } from './helpers.spec';
 import { mockData, userGilles, userMarie, userMax, userVincentBlockframesAdmin } from './mock';
 
 describe('blockframes admins rules', () => {

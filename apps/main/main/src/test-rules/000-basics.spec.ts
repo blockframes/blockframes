@@ -1,4 +1,4 @@
-import { setup, teardown } from './helpers';
+import { setup, teardown } from './helpers.spec';
 import { mockData, userMax } from './mock';
 
 describe('database rules: basic', () => {
