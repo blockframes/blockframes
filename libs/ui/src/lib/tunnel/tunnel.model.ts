@@ -3,7 +3,7 @@ export interface TunnelRoute {
   label: string;
 }
 
-export interface TunnelNavigation {
+export interface TunnelStep {
   title: string;
   icon: string;
   time?: number;

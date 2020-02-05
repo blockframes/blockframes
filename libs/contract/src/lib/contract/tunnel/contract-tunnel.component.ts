@@ -1,7 +1,8 @@
 import { Component, ChangeDetectionStrategy, Host, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ContractForm } from '../contract/forms/contract.form';
-import { ContractQuery, ContractService } from '../contract/+state';
+import { ContractForm } from '../forms/contract.form';
+import { ContractQuery, ContractService } from '../+state';
+import { TunnelStep } from '@blockframes/ui/tunnel'
 
 @Component({
   selector: 'contract-tunnel',
@@ -20,8 +21,8 @@ export class ContractTunnelComponent implements OnInit {
   ) {}
 
   async ngOnInit() {
-    const movie = this.query.getActive();
-    this.form.patchAllValue(movie);
+    const contract = this.query.getActive();
+    this.form.patchAllValue(contract);
   }
 
   // Should save movie

@@ -27,7 +27,7 @@
     <aside fxLayout="column">
       <ng-content select="[tunnel-nav-header]"></ng-content>
       <mat-accordion>
-        <mat-expansion-panel *ngFor="let panel of navigation$ | async">
+        <mat-expansion-panel *ngFor="let panel of steps$ | async">
           <mat-expansion-panel-header>
             <mat-panel-title>
               <mat-icon [svgIcon]="panel.icon" bf-color="primary"></mat-icon>
