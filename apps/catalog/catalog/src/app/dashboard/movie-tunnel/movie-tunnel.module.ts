@@ -18,6 +18,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
+import { TunnelLayoutModule } from '@blockframes/ui/tunnel';
+import { ImgAssetModule } from '@blockframes/ui/theme';
+
 @NgModule({
   declarations: [MovieTunnelComponent],
   imports: [
@@ -25,6 +28,9 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MovieTunnelRoutingModule,
     RouterModule,
     FlexLayoutModule,
+    TunnelLayoutModule,
+    ImgAssetModule,
+
     // Material
     MatToolbarModule,
     MatIconModule,

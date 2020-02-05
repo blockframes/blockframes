@@ -6,10 +6,12 @@ export interface TunnelRoute {
 export interface TunnelNavigation {
   title: string;
   icon: string;
+  time?: number;
   routes: TunnelRoute[];
 }
 
-export interface TunnelPageData {
+export interface TunnelStepData {
   index: number;
   length: number;
+  time?: number;
 }

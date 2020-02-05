@@ -23,6 +23,16 @@ ul {
   padding-left: 0;
 }
 
+// Apply space of 8px between span & icon everywhere
+.mat-icon + span,
+span + .mat-icon {
+  margin-left: 8px;
+}
+
+
+
+
+
 .important {
   color: mat-color($mat-dark-bf-orange, 400);
 }

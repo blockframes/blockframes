@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, Renderer2, ChangeDetectorRef, NgZone } from '@angular/core';
 import { ThemeService } from '@blockframes/ui/theme';
 import { IconComponent } from '@blockframes/ui/icon-component';
+import { TunnelService } from '@blockframes/ui/tunnel';
 
 @Component({
   selector: 'catalog-root',
@@ -11,6 +12,7 @@ export class AppComponent {
   constructor(
     renderer: Renderer2,
     theme: ThemeService,
+    tunnelService: TunnelService, // Start listening on routes changes
     icons: IconComponent  // even if not used in component, keep this to load icons
   ) {
     theme.initTheme(renderer, 'light');

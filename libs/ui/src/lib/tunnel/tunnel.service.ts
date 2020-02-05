@@ -4,7 +4,7 @@ import { filter } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class TunnelService {
-  private currentUrl: string;
+  public currentUrl: string;
   public previousUrl: string;
   public isInTunnel = false;
 
@@ -12,9 +12,13 @@ export class TunnelService {
   constructor(private routerQuery: RouterQuery){
     this.routerQuery.select(({ state }) => state && state.url).pipe(
       filter(_ => !this.isInTunnel)
-    ).subscribe(url => {
-      this.previousUrl = this.currentUrl;
-      this.currentUrl = url;
-    });
+    ).subscribe(url => this.setUrls(url));
+  }
+
+  setUrls(url: string) {
+    this.previousUrl = this.currentUrl;
+    this.currentUrl = url;
+    console.log('previous', this.previousUrl);
+    console.log('currentUrl', this.currentUrl);
   }
 }

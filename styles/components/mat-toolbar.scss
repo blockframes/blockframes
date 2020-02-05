@@ -3,8 +3,17 @@
   $foreground: map-get($theme, foreground);
 
   .mat-toolbar {
+    height: 80px;
     box-shadow: none;
     border-bottom: 1px solid mat-color($foreground, divider);
     background-color: mat-color($background, app-bar);
+  }
+}
+
+// TYPOGRAPHY
+@mixin mat-bf-toolbar-typography($config) {
+  
+  .mat-toolbar {
+    font: inherit;
   }
 }
