@@ -5,7 +5,7 @@
       <mat-card #chart class="chart">
         <div fxLayout="row" fxLayoutAlign="space-between center">
           <span class="mat-body-2"><mat-icon [svgIcon]="info.icon"></mat-icon>{{ info.title }}</span>
-          <span class="mat-caption percent" *ngIf="calculatePercentage(movieAnalytics, info.eventName) as percent">
+          <!-- <span class="mat-caption percent" *ngIf="calculatePercentage(movieAnalytics, info.eventName) as percent">
             <ng-container *ngIf="percent > 0; else down">
               <mat-icon color="primary" svgIcon="arrow_closed"></mat-icon>
             </ng-container>
@@ -13,7 +13,7 @@
               <mat-icon color="accent" svgIcon="arrow_open"></mat-icon>
             </ng-template>
               {{ percent }} %
-          </span>
+          </span> -->
         </div>
         <h3>{{ totalHitsOnCurrentMonth(movieAnalytics, info.eventName) }}</h3>
         <mat-card-content>

@@ -4,7 +4,7 @@ import { MovieService } from '@blockframes/movie/movie+state/movie.service';
 import { MovieQuery } from '@blockframes/movie/movie+state/movie.query';
 import { Observable } from 'rxjs';
 
-const eventList = ['movieViews', 'addedToWishlist', 'promoReelOpened']
+const eventList = ['movieViews', 'addedToWishlist', 'promoReelOpened'];
 
 @Component({
   selector: 'catalog-title-sales',
