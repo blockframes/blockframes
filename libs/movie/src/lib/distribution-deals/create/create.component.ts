@@ -300,8 +300,8 @@ export class DistributionDealCreateComponent implements OnInit, OnDestroy {
           const dealsWithMediasTerritoriesAndLanguagesInCommon = getDistributionDealsWithMediasTerritoriesAndLanguagesInCommon(
             value.territories,
             value.medias,
-            value.languages,
-            dealsInDateRange
+            dealsInDateRange,
+            value.languages
           );
 
           if (dealsWithMediasTerritoriesAndLanguagesInCommon.length) {

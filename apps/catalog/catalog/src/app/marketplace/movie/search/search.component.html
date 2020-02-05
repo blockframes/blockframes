@@ -227,8 +227,6 @@
             </div>
           </mat-expansion-panel>
 
-          <catalog-avails-filter></catalog-avails-filter>
-
           <!-- Certifications -->
           <!-- TODO #1146 -->
           <!-- <mat-expansion-panel>
@@ -246,8 +244,7 @@
             </mat-expansion-panel> -->
 
           <!-- Availabilities -->
-          <!-- TODO #1146 -->
-          <!-- <mat-expansion-panel>
+          <mat-expansion-panel>
               <mat-expansion-panel-header>
                 <mat-panel-title test-id="availabilities-panel">
                   Availabilities
@@ -269,13 +266,13 @@
                   <input matInput formControlName="to" [matDatepicker]="pickerAvailableTo" placeholder="To" />
                   <mat-datepicker-toggle test-id="datepicker-to" matSuffix [for]="pickerAvailableTo">
                   </mat-datepicker-toggle>
-                  <mat-datepicker #pickerAvailableTo startView="multi-year" startAt="2019"></mat-datepicker>
+                  <mat-datepicker #pickerAvailableTo startView="multi-year" startAt="2020"></mat-datepicker>
                 </mat-form-field>
               </div>
               <mat-error *ngIf="filterForm.get('availabilities').hasError('invalidRange')">
                 The value <i>To</i> can't be smaller than the value <i>From</i>!
               </mat-error>
-            </mat-expansion-panel> -->
+            </mat-expansion-panel>
 
 
           <!-- Territories -->
@@ -321,6 +318,7 @@
             </mat-expansion-panel> -->
 
         </mat-accordion>
+        <button (click)="formLog(filterForm.value)">LOG THE FORM</button>
       </mat-card-content>
     </mat-card>
   </aside>

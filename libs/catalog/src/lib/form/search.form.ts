@@ -150,12 +150,12 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
     super(control);
   }
 
-  get languages() {
-    return this.get('languages') as FormGroup;
-  }
-
   get genres() {
     return this.get('genres');
+  }
+
+  get languages() {
+    return this.get('languages');
   }
 
   addLanguage(language: LanguagesSlug, value: Partial<MovieLanguageSpecification> = {}) {
