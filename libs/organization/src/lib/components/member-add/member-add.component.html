@@ -15,10 +15,10 @@
     </mat-card-content>
     <mat-card-actions fxLayout="row" fxLayoutAlign="center">
       <!-- Add / Delete -->
-      <button *ngIf="!last" mat-mini-fab color="warn" (click)="form.removeAt(i)" matTooltip="Remove a Member" aria-label="Remove a Member">
+      <button class="mat-elevation-z0" *ngIf="!last" mat-mini-fab color="warn" (click)="form.removeAt(i)" matTooltip="Remove a Member" aria-label="Remove a Member">
         <mat-icon>delete</mat-icon>
       </button>
-      <button class="add" *ngIf="last" mat-mini-fab color="primary" (click)="form.add()" matTooltip="Add a Member" aria-label="Add a Member">
+      <button class="mat-elevation-z0" *ngIf="last" mat-mini-fab color="primary" (click)="form.add()" matTooltip="Add a Member" aria-label="Add a Member">
         <mat-icon>add</mat-icon>
       </button>
     </mat-card-actions>

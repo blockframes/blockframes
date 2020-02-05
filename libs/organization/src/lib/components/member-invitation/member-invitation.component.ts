@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy, HostBinding } from '@angular/core';
-import { Invitation } from '@blockframes/invitation/types';
+import { Invitation, InvitationFromOrganizationToUser } from '@blockframes/invitation/types';
 @Component({
   selector: 'member-invitation',
   templateUrl: './member-invitation.component.html',
@@ -9,7 +9,7 @@ import { Invitation } from '@blockframes/invitation/types';
 
 export class MemberInvitationComponent {
   @HostBinding('attr.page-id') pageId = 'member-invitation';
-  @Output() declined = new EventEmitter<Invitation>();
-  @Input() invitations: Invitation[];
+  @Output() declined = new EventEmitter<InvitationFromOrganizationToUser>();
+  @Input() invitations: InvitationFromOrganizationToUser[];
   @Input() isAdmin: boolean;
 }
