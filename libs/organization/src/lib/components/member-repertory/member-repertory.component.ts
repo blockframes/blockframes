@@ -1,6 +1,4 @@
-import { Component, ViewChild, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatSort } from '@angular/material/sort';
+import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { OrganizationMember } from '../../member/+state/member.model';
 
 @Component({
@@ -29,5 +27,4 @@ export class MemberRepertoryComponent {
     ? [ 'name', 'surname', 'email', 'position', 'role', 'action' ]
     : [ 'name', 'surname', 'email', 'position', 'role' ]
   }
-
 }
