@@ -47,6 +47,13 @@ export const teardown = () => {
   return Promise.all(firebase.apps().map(app => app.delete()));
 };
 
+// we define custom matchers to validate firestore rules allow / deny.
+// source: https://angularfirebase.com/lessons/testing-firestore-security-rules-with-the-emulator/
+//
+// the "correct" location for these extensions is `test-setup.ts` but it is not loaded
+// correctly at the moment.
+// This is a quick and simple way to inject the extension in the test environment:
+// this helper file will be included by every test using firestore rules.
 expect.extend({
   async toAllow(x) {
     let pass = false;
@@ -85,3 +92,8 @@ declare global {
     }
   }
 }
+
+describe('smoke test', () => {
+  // This file is a spec file so it's included ONLY during test
+  test('smoky', () => {});
+});
