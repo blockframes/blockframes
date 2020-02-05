@@ -11,6 +11,11 @@
 #
 version: 2.1
 references:
+  start_firestore_emulator: &start_firestore_emulator
+    run:
+      name: start firestore emulator in background
+      command: npm run firebase:emulator
+      background: true
   production_only: &production_only
     filters:
       branches:
@@ -72,6 +77,7 @@ jobs:
     steps:
       - checkout_project
       - run: echo "${FIREBASE_CI_SERVICE_ACCOUNT}" > creds.json
+      - *start_firestore_emulator
       - run: npm run build:all
       - run: npm run test
       - run: npm run lint
@@ -93,6 +99,7 @@ jobs:
     steps:
       - checkout_project
       - run: echo "${FIREBASE_CI_SERVICE_ACCOUNT}" > creds.json
+      - *start_firestore_emulator
       - run:
           # npm run affected:build tries to build the libs which are broken,
           # the following command only build affected apps.
