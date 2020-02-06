@@ -16,6 +16,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Observable } from 'rxjs';
 import { startWith } from 'rxjs/operators';
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
 /**
  * This directive is to be used inside the table-filter component on a ng-template
@@ -37,8 +38,18 @@ export class ColRef {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableFilterComponent implements OnInit, AfterViewInit {
-  @Input() showFilter = false;
-  @Input() showPaginator = false;
+  _showFilter: boolean;
+  @Input()
+  get showFilter(): boolean { return this._showFilter }
+  set showFilter(value: boolean) {
+    this._showFilter = coerceBooleanProperty(value);
+  }
+  _showPaginator: boolean;
+  @Input()
+  get showPaginator(): boolean { return this._showPaginator };
+  set showPaginator(value: boolean) {
+    this._showPaginator = coerceBooleanProperty(value);
+  }
   // Name of the column headers
   @Input() columns: Record<string, any>;
   @Input() initialColumns: string[];
@@ -48,7 +59,7 @@ export class TableFilterComponent implements OnInit, AfterViewInit {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
   }
-  
+
   // Column & rows
   displayedColumns$: Observable<string[]>;
   dataSource: MatTableDataSource<any>;
