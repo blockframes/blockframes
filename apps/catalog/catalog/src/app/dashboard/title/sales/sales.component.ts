@@ -1,8 +1,10 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { MovieAnalytics } from '@blockframes/movie/movie+state/movie.model';
+import { MovieAnalytics } from '@blockframes/movie/movie+state/movie.firestore';
 import { MovieService } from '@blockframes/movie/movie+state/movie.service';
-import { Observable } from 'rxjs';
 import { MovieQuery } from '@blockframes/movie/movie+state/movie.query';
+import { Observable } from 'rxjs';
+
+const eventList = ['movieViews', 'addedToWishlist', 'promoReelOpened'];
 
 @Component({
   selector: 'catalog-title-sales',
@@ -11,12 +13,13 @@ import { MovieQuery } from '@blockframes/movie/movie+state/movie.query';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TitleSalesComponent implements OnInit {
-
-  public movieAnalytics: Observable<MovieAnalytics[]>;
-
-  constructor(private movieService: MovieService, private movieQuery: MovieQuery) { }
+  public movieAnalytics$: Observable<MovieAnalytics[]>;
+  public eventList = eventList;
+  
+  constructor(private movieService: MovieService, private movieQuery: MovieQuery) {}
 
   ngOnInit() {
-    this.movieAnalytics = this.movieService.getMovieAnalytics([this.movieQuery.getActiveId()]);
+    const movieId = this.movieQuery.getActiveId();
+    this.movieAnalytics$ = this.movieService.getMovieAnalytics([movieId]);
   }
 }

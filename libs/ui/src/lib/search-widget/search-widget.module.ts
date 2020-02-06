@@ -1,3 +1,4 @@
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -18,10 +19,12 @@ import { MatListModule } from '@angular/material/list';
     RouterModule,
     FlexLayoutModule,
     OverlayWidgetModule,
+    FormsModule,
+    ReactiveFormsModule,
     // Material
     MatIconModule,
     MatButtonModule,
-    MatListModule,
+    MatListModule
   ]
 })
-export class SearchWidgetModule { }
+export class SearchWidgetModule {}

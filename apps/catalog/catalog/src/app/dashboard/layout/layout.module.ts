@@ -1,3 +1,4 @@
+import { ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { LayoutComponent } from './layout.component';
 import { CommonModule } from '@angular/common';
@@ -39,6 +40,7 @@ const material = [
   imports: [CommonModule,
     FlexLayoutModule,
     RouterModule,
+    ReactiveFormsModule,
     NotificationWidgetModule,
     SearchWidgetModule,
     ProfileWidgetModule,

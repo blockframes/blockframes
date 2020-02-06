@@ -1,27 +1,30 @@
-<header fxLayout="row" fxLayoutAlign="space-between center">
-  <h1>Dashboard</h1>
-  <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="24px">
-    <a mat-stroked-button color="primary" routerLink="./titles">
-      <mat-icon svgIcon="document"></mat-icon>
-      <span>View my titles</span>
-    </a>
-    <a mat-mini-fab color="primary" routerLink="./movie-tunnel" matTooltip="Import a new title">
-      <mat-icon>add</mat-icon>
-    </a>
-  </div>
-</header>
-<section>
-  <h3>My Marketplace Activity</h3>
-  <article fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="16px">
-
-  </article>
-</section>
-<section>
-  <h3>Sales Revenue</h3>
-</section>
-<section>
-  <h3>Sales Deals</h3>
-</section>
+<ng-template *ngIf="loading$ | async">
+  <mat-spinner color="accent" #loading></mat-spinner>
+</ng-template>
+<ng-container *ngIf="(movieAnalytics$ | async) as movieAnalytics;">
+  <header fxLayout="row" fxLayoutAlign="space-between center">
+    <h1>Dashboard</h1>
+    <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="24px">
+      <a mat-stroked-button color="primary" routerLink="./titles">
+        <mat-icon svgIcon="document"></mat-icon>
+        <span>View my titles</span>
+      </a>
+      <a mat-mini-fab color="primary" routerLink="./movie-tunnel" matTooltip="Import a new title">
+        <mat-icon>add</mat-icon>
+      </a>
+    </div>
+  </header>
+  <section>
+    <h3>My Marketplace Activity</h3>
+    <movie-analytics-chart [analyticsData]="movieAnalytics"></movie-analytics-chart>
+  </section>
+  <section>
+    <h3>Sales Revenue</h3>
+  </section>
+  <section>
+    <h3>Sales Deals</h3>
+  </section>
+</ng-container>
 
 <!--
 <p class="mat-body-1"> A consolidation of film libraries to create new opportunities through secure transactions.</p>

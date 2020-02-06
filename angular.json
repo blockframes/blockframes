@@ -22,9 +22,7 @@
             "main": "apps/main/main/src/main.ts",
             "polyfills": "apps/main/main/src/polyfills.ts",
             "stylePreprocessorOptions": {
-              "includePaths": [
-                "styles"
-              ]
+              "includePaths": ["styles"]
             },
             "tsConfig": "apps/main/main/tsconfig.app.json",
             "assets": [
@@ -36,9 +34,7 @@
                 "output": "./assets"
               }
             ],
-            "styles": [
-              "apps/main/main/src/styles.scss"
-            ],
+            "styles": ["apps/main/main/src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -156,13 +152,8 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "apps/main/main/tsconfig.app.json",
-              "apps/main/main/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "tsConfig": ["apps/main/main/tsconfig.app.json", "apps/main/main/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -201,9 +192,7 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": "apps/main/main-e2e/tsconfig.e2e.json",
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         }
       }
@@ -224,13 +213,8 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "libs/ip/tsconfig.lib.json",
-              "libs/ip/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "tsConfig": ["libs/ip/tsconfig.lib.json", "libs/ip/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -259,13 +243,8 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "libs/auth/tsconfig.lib.json",
-              "libs/auth/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "tsConfig": ["libs/auth/tsconfig.lib.json", "libs/auth/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -287,13 +266,8 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "libs/ui/tsconfig.lib.json",
-              "libs/ui/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "tsConfig": ["libs/ui/tsconfig.lib.json", "libs/ui/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -322,13 +296,8 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "libs/ethers/tsconfig.lib.json",
-              "libs/ethers/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "tsConfig": ["libs/ethers/tsconfig.lib.json", "libs/ethers/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -360,9 +329,7 @@
             "main": "apps/movie-financing/movie-financing/src/main.ts",
             "polyfills": "apps/movie-financing/movie-financing/src/polyfills.ts",
             "stylePreprocessorOptions": {
-              "includePaths": [
-                "styles"
-              ]
+              "includePaths": ["styles"]
             },
             "tsConfig": "apps/movie-financing/movie-financing/tsconfig.app.json",
             "assets": [
@@ -374,9 +341,7 @@
                 "output": "./assets"
               }
             ],
-            "styles": [
-              "apps/movie-financing/movie-financing/src/styles.scss"
-            ],
+            "styles": ["apps/movie-financing/movie-financing/src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -492,9 +457,7 @@
               "apps/movie-financing/movie-financing/tsconfig.app.json",
               "apps/movie-financing/movie-financing/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -533,9 +496,7 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": "apps/movie-financing/movie-financing-e2e/tsconfig.e2e.json",
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         }
       }
@@ -556,13 +517,8 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "libs/movie/tsconfig.lib.json",
-              "libs/movie/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "tsConfig": ["libs/movie/tsconfig.lib.json", "libs/movie/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -595,9 +551,7 @@
               "libs/organization/tsconfig.lib.json",
               "libs/organization/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -632,13 +586,8 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "libs/account/tsconfig.lib.json",
-              "libs/account/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "tsConfig": ["libs/account/tsconfig.lib.json", "libs/account/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**"]
           }
         }
       },
@@ -665,9 +614,7 @@
               "libs/notification/tsconfig.lib.json",
               "libs/notification/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         }
       },
@@ -692,9 +639,7 @@
             "main": "apps/delivery/delivery/src/main.ts",
             "polyfills": "apps/delivery/delivery/src/polyfills.ts",
             "stylePreprocessorOptions": {
-              "includePaths": [
-                "styles"
-              ]
+              "includePaths": ["styles"]
             },
             "tsConfig": "apps/delivery/delivery/tsconfig.app.json",
             "assets": [
@@ -706,9 +651,7 @@
                 "output": "./assets"
               }
             ],
-            "styles": [
-              "apps/delivery/delivery/src/styles.scss"
-            ],
+            "styles": ["apps/delivery/delivery/src/styles.scss"],
             "scripts": []
           },
           "configurations": {
@@ -830,9 +773,7 @@
               "apps/delivery/delivery/tsconfig.app.json",
               "apps/delivery/delivery/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -871,9 +812,7 @@
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
             "tsConfig": "apps/delivery/delivery-e2e/tsconfig.e2e.json",
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         }
       }
@@ -894,13 +833,8 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "libs/material/tsconfig.lib.json",
-              "libs/material/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "tsConfig": ["libs/material/tsconfig.lib.json", "libs/material/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -934,13 +868,8 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "libs/utils/tsconfig.lib.json",
-              "libs/utils/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "tsConfig": ["libs/utils/tsconfig.lib.json", "libs/utils/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -971,9 +900,7 @@
             "outputPath": "dist/apps/backend-functions",
             "main": "apps/backend-functions/src/main.ts",
             "tsConfig": "apps/backend-functions/tsconfig.app.json",
-            "assets": [
-              "apps/backend-functions/src/assets"
-            ]
+            "assets": ["apps/backend-functions/src/assets"]
           },
           "configurations": {
             "dev": {},
@@ -1040,9 +967,7 @@
               "apps/backend-functions/tsconfig.app.json",
               "apps/backend-functions/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -1068,9 +993,7 @@
             "outputPath": "dist/apps/backend-ops",
             "main": "apps/backend-ops/src/main.ts",
             "tsConfig": "apps/backend-ops/tsconfig.app.json",
-            "assets": [
-              "apps/backend-ops/src/assets"
-            ]
+            "assets": ["apps/backend-ops/src/assets"]
           },
           "configurations": {
             "dev": {},
@@ -1116,9 +1039,7 @@
               "apps/backend-ops/tsconfig.app.json",
               "apps/backend-ops/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**"
-            ]
+            "exclude": ["**/node_modules/**"]
           }
         },
         "test": {
@@ -1139,14 +1060,8 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "libs/catalog/tsconfig.lib.json",
-              "libs/catalog/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/catalog/**"
-            ]
+            "tsConfig": ["libs/catalog/tsconfig.lib.json", "libs/catalog/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**", "!libs/catalog/**"]
           }
         },
         "test": {
@@ -1188,14 +1103,8 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "libs/contract/tsconfig.lib.json",
-              "libs/contract/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/contract/**"
-            ]
+            "tsConfig": ["libs/contract/tsconfig.lib.json", "libs/contract/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**", "!libs/contract/**"]
           }
         }
       }
@@ -1256,9 +1165,7 @@
             "polyfills": "apps/catalog/catalog/src/polyfills.ts",
             "tsConfig": "apps/catalog/catalog/tsconfig.app.json",
             "stylePreprocessorOptions": {
-              "includePaths": [
-                "styles"
-              ]
+              "includePaths": ["styles"]
             },
             "assets": [
               "apps/catalog/catalog/src/favicon.ico",
@@ -1270,10 +1177,8 @@
                 "output": "./assets"
               }
             ],
-            "styles": [
-              "apps/catalog/catalog/src/styles.scss"
-            ],
-            "scripts": []
+            "styles": ["apps/catalog/catalog/src/styles.scss"],
+            "scripts": ["node_modules/apexcharts/dist/apexcharts.min.js"]
           },
           "configurations": {
             "dev": {},
@@ -1396,10 +1301,7 @@
               "apps/catalog/catalog/tsconfig.app.json",
               "apps/catalog/catalog/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/catalog/**"
-            ]
+            "exclude": ["**/node_modules/**", "!apps/catalog/**"]
           }
         },
         "test": {
@@ -1437,13 +1339,8 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "apps/catalog/catalog-e2e/tsconfig.e2e.json"
-            ],
-            "exclude": [
-              "**/node_modules/**",
-              "!apps/catalog/catalog-e2e/**"
-            ]
+            "tsConfig": ["apps/catalog/catalog-e2e/tsconfig.e2e.json"],
+            "exclude": ["**/node_modules/**", "!apps/catalog/catalog-e2e/**"]
           }
         }
       }

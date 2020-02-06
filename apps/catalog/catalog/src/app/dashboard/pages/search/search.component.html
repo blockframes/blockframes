@@ -1,1 +1,14 @@
-<p>search-result works!</p>
+<ng-container *ngIf="(movies$ | async) as movies">
+    <h1>Search {movies.length, plural, =1 {result} other
+        {results}} for "{{ searchTerm }}"</h1>
+    <span class="caption" i18n>{{ movies.length }} {movies.length, plural, =0 {no results} =1 {result} other
+        {results}}</span>
+
+    <header mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
+        <button mat-tab-link (click)="applyFilter('Titles')" [active]="filter.value === 'Titles'">Titles</button>
+    </header>
+
+    <bf-table-filter showFilter="true" showPaginator="true" [initialColumns]="initialColumns" [columns]="columns"
+        [source]="movies">
+    </bf-table-filter>
+</ng-container>
