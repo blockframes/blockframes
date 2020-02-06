@@ -1,3 +1,4 @@
+import { DistributionDealTermsForm } from '@blockframes/movie/distribution-deals/form/terms/terms.form';
 import { createContractTitleDetail } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractTitleDetail } from '@blockframes/contract/contract/+state/contract.firestore';
 import { ContractVersion } from '@blockframes/contract/version/+state';
@@ -7,7 +8,8 @@ import { ContractVersionPriceForm } from './price/price.form';
 function createContractVersionControls(contractVersion: Partial<ContractVersion>) {
   return {
     price: new ContractVersionPriceForm(contractVersion.price),
-    titles: new ContractTitlesForm(contractVersion.titles)
+    titles: new ContractTitlesForm(contractVersion.titles),
+    scope: new DistributionDealTermsForm(contractVersion.scope)
   }
 }
 
