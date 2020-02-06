@@ -13,7 +13,7 @@ import {
   ApexLegend
 } from "ng-apexcharts";
 
-export type ChartOptions = {
+export interface ChartOptions {
   series: ApexAxisChartSeries;
   chart: ApexChart;
   xaxis: ApexXAxis;
@@ -28,7 +28,7 @@ export type ChartOptions = {
   legend: ApexLegend;
 };
 
-export const lineChartOptions: Partial<ChartOptions> = {
+export const lineChartOptions = {
   chart: {
     height: 100,
     type: "area",

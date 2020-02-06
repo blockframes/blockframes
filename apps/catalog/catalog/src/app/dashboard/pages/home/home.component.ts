@@ -14,18 +14,20 @@ const eventList = ['movieViews', 'addedToWishlist', 'promoReelOpened'];
 })
 export class HomeComponent implements OnInit {
   public movies$ = this.movieQuery.selectAll().pipe(
-    map(movie => movie.map(movie => movie.id))
+    map(movies => movies.map(movie => movie.id))
   );
   public movieAnalytics$: Observable<MovieAnalytics[]>;
   public eventList = eventList;
   public movieIdList: string[];
+  public loading$: Observable<boolean>;
 
   constructor(
     private movieQuery: MovieQuery, private movieService: MovieService
   ) {}
 
   ngOnInit() {
-    const moiveIds = this.movies$.subscribe(id => this.movieIdList = id)
+    this.loading$ = this.movieQuery.selectLoading();
+    this.movies$.subscribe(id => this.movieIdList = id)
     this.movieAnalytics$ = this.movieService.getMovieAnalytics(this.movieIdList);
   }
 

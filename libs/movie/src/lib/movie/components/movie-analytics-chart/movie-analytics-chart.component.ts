@@ -22,8 +22,8 @@ const chartInfo = [
 
 type MovieAnalyticsEventName = typeof chartInfo[number]['eventName']
 
-function sum(array: number[]): number {
-  return array.reduce((sum, num) => sum + num, 0);
+function getSum(array: number[]): number {
+  return array.reduce((acc, num) => acc + num, 0);
 }
 
 function getLastDays(from: number, to: number = 0) {
@@ -51,7 +51,7 @@ function toYMD(date: Date) {
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class MovieAnalyticsChartComponent {
-  public lineChartOptions: Partial<ChartOptions>;
+  public lineChartOptions;
   public chartInfo = chartInfo;
   public filteredEvent;
   public chartData: any[] = [];
@@ -106,12 +106,12 @@ export class MovieAnalyticsChartComponent {
 
   totalHitsOnCurrentMonth(eventName: MovieAnalyticsEventName) {
     const total = this.chartData.find(chart => chart.eventName === eventName).y
-    return sum(total);
+    return getSum(total);
   }
 
   calculatePercentage(currentHits: number[], pastHits: number[]): number {
-    const current = sum(currentHits);
-    const past = sum(pastHits);
+    const current = getSum(currentHits);
+    const past = getSum(pastHits);
     if (current && past && (current > past)) {
       return (current - past) / past * 100
     } else if (past > current) {
