@@ -28,7 +28,7 @@ export class SearchWidgetComponent {
   @Input() results: SearchResult[] = [];
   @ViewChild(OverlayWidgetComponent, { static: false }) searchWidget: OverlayWidgetComponent;
 
-  constructor(private acitvatedRoute: ActivatedRoute, private router: Router) {}
+  constructor(private acitvatedRoute: ActivatedRoute, private router: Router) { }
 
   open(ref: ElementRef) {
     if (this.results.length) {
@@ -37,9 +37,10 @@ export class SearchWidgetComponent {
   }
 
   public setParams() {
+    // TODO #1830 we might ran out of space for all of the search ids
     let ids: string[];
     for (const result of this.results) {
-      ids = result.items.map(item => Object.keys(item)).flat(1);
+      ids = result.items.map(item => item.id).flat(1);
     }
     this.router.navigate([this.link], {
       relativeTo: this.acitvatedRoute,
@@ -56,4 +57,4 @@ export class SearchWidgetComponent {
 @Directive({
   selector: '[searchResult]'
 })
-export class SearchResultDirective {}
+export class SearchResultDirective { }
