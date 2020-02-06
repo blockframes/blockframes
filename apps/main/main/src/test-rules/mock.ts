@@ -188,5 +188,18 @@ export const mockData = [
   {
     docPath: `contracts/${contractAznavour.id}`,
     content: contractAznavour
+  },
+  // Permissions
+  {
+    docPath: `permissions/${userGilles.orgId}/documentPermissions/${contractAznavour.id}`,
+    content: {
+      canUpdate: true,
+      id: contractAznavour.id,
+      isAdmin: true,
+      ownerId: userGilles.orgId,
+      canCreate: true,
+      canRead: true,
+      canDelete: true
+    }
   }
 ];
