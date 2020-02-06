@@ -143,7 +143,7 @@ function availabilities(
   const matchingRangeDeals = getDistributionDealsInDateRange(range, deals);
   const matchingDeals = getDistributionDealsWithMediasTerritoriesAndLanguagesInCommon(territories, medias, matchingRangeDeals, langages);
 
-  return matchingDeals ? true : false;
+  return matchingDeals.length ? true : false;
 }
 
 function hasCountry(movie: Movie, countries: string[]): boolean {
@@ -157,41 +157,43 @@ function hasCountry(movie: Movie, countries: string[]): boolean {
   }
 }
 
-function territories(movie: Movie, territory: string): boolean {
-  if (!territory) {
+function hasTerritories(movie: Movie, filterTerritories: string[]): boolean {
+  if (!filterTerritories.length) {
     return true;
   }
-  return movie.salesAgentDeal.territories.includes(territory.toLowerCase() as ExtractSlug<'TERRITORIES'>);
+  return filterTerritories.every(territory =>
+    movie.salesAgentDeal.territories.includes(territory.toLowerCase() as ExtractSlug<'TERRITORIES'>)
+  );
 }
-function media(movie: Movie, movieMediaType: string): boolean {
-  if (!movieMediaType) {
+
+function hasMedias(movie: Movie, filterMedias: string[]): boolean {
+  if (!filterMedias.length) {
     return true;
   }
-  return movie.salesAgentDeal.medias.includes(movieMediaType.toLowerCase() as any);
+  return filterMedias.every(movieMedia =>
+    movie.salesAgentDeal.medias.includes(movieMedia.toLowerCase() as ExtractSlug<'MEDIAS'>)
+  );
 }
 
 // TODO #1306 - remove when algolia is ready
 export function filterMovie(movie: Movie, filter: CatalogSearch, deals?: DistributionDeal[]): boolean {
-  const hasMedia = filter.medias.every(movieMedia => media(movie, movieMedia));
-  const hasTerritory = filter.territories.every(territory => territories(movie, territory));
-  if (AFM_DISABLE) {
-    //TODO: #1146
-    return (
-      productionYearBetween(movie, filter.productionYear) &&
-      certifications(movie, filter.certifications) &&
-      productionStatus(movie, filter.status) &&
-      availabilities(deals, filter.availabilities) &&
-      hasTerritory &&
-      hasMedia
-    );
-  } else {
-    return (
-      genres(movie, filter.genres) &&
-      productionStatus(movie, filter.status) &&
-      salesAgent(movie, filter.salesAgent) &&
-      hasBudget(movie, filter.estimatedBudget) &&
-      hasCountry(movie, filter.originCountries) &&
-      hasLanguage(movie, filter.languages)
-    );
-  }
+  const hasEveryLanguage = Object.keys(filter.languages)
+    .map(name => ({
+      ...filter.languages[name],
+      name
+    }))
+    .every(language => hasLanguage(movie, language));
+
+  return (
+    productionYearBetween(movie, filter.productionYear) &&
+    hasEveryLanguage &&
+    genres(movie, filter.genres) &&
+    certifications(movie, filter.certifications) &&
+    productionStatus(movie, filter.status) &&
+    availabilities(deals, filter.availabilities, filter.territories, filter.medias) &&
+    hasTerritories(movie, filter.territories) &&
+    hasMedias(movie, filter.medias) &&
+    hasCountry(movie, filter.originCountries) &&
+    hasLanguage(movie, filter.languages)
+  );
 }
