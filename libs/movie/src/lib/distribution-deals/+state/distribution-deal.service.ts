@@ -3,7 +3,7 @@ import objectHash from 'object-hash';
 import { CollectionService, CollectionConfig } from 'akita-ng-fire';
 import { DistributionDealState, DistributionDealStore } from './distribution-deal.store';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
-import { DistributionDeal, getDealTerritories } from './distribution-deal.model';
+import { DistributionDeal, getDealTerritories, formatDistributionDeal } from './distribution-deal.model';
 import { createContractTitleDetail, ContractWithLastVersion } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractVersionService } from '@blockframes/contract/version/+state/contract-version.service';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
@@ -83,13 +83,6 @@ export class DistributionDealService extends CollectionService<DistributionDealS
     return distributionDeal.id;
   }
 
-  /** Format deals dates from Timestamps into Dates. */
-  public formatDistributionDeal(deal: any): DistributionDeal {
-    deal.terms.start = toDate(deal.terms.start);
-    deal.terms.end = toDate(deal.terms.end);
-    return deal as DistributionDeal;
-  }
-
   /**
    * Performs a collection group query accross movies to retreive sales
    * @param type  licensee | licensor
@@ -99,7 +92,7 @@ export class DistributionDealService extends CollectionService<DistributionDealS
       .collectionGroup('distributionDeals', ref => ref.where(`${type}.orgId`, '==', this.organizationQuery.getActiveId()))
       .get()
       .toPromise();
-    const myDeals = myDealsSnap.docs.map(deal => this.formatDistributionDeal(deal.data()));
+    const myDeals = myDealsSnap.docs.map(deal => formatDistributionDeal(deal.data()));
     return myDeals;
   }
 
@@ -121,7 +114,7 @@ export class DistributionDealService extends CollectionService<DistributionDealS
       .collectionGroup('distributionDeals', ref => ref.where('contractId', '==', contractId))
       .get()
       .toPromise();
-    const distributionDeals = distributionDealsSnap.docs.map(deal => this.formatDistributionDeal(deal.data()));
+    const distributionDeals = distributionDealsSnap.docs.map(deal => formatDistributionDeal(deal.data()));
     return distributionDeals;
   }
 
