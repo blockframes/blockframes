@@ -9,6 +9,8 @@ import { ImgAssetModule } from '@blockframes/ui/theme';
 // Material
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatListModule } from '@angular/material/list';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
@@ -22,6 +24,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatButtonModule,
     MatIconModule,
     MatSnackBarModule,
+    MatDividerModule,
+    MatListModule,
   ],
   declarations: [ContractTunnelComponent],
 })
