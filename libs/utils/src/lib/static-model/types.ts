@@ -132,6 +132,12 @@ export const LEGAL_ROLES_SLUG = models['LEGAL_ROLES'].map(key => key.slug);
 export type LegalRolesLabel = typeof LEGAL_ROLES_LABEL[number];
 export type LegalRolesSlug = typeof LEGAL_ROLES_SLUG[number];
 
+export const SUB_LICENSOR_ROLES_LABEL = models['SUB_LICENSOR_ROLES'].map(key => key.label);
+export const SUB_LICENSOR_ROLES_SLUG = models['SUB_LICENSOR_ROLES'].map(key => key.slug);
+
+export type SubLicensorRoleLabel = typeof SUB_LICENSOR_ROLES_LABEL[number];
+export type SubLicensorRoleSlug = typeof SUB_LICENSOR_ROLES_SLUG[number];
+
 export const MOVIE_FORMAT_LABEL = models['MOVIE_FORMAT'].map(key => key.label);
 export const MOVIE_FORMAT_SLUG = models['MOVIE_FORMAT'].map(key => key.slug);
 

@@ -71,7 +71,8 @@ export function createContractVersion(params: Partial<ContractVersion> = {}): Co
     creationDate: new Date(),
     paymentSchedule: [],
     ...params,
-    status: ContractStatus.submitted,
+    status: ContractStatus.draft,
+    paymentTerm: createTerms(params.paymentTerm),
     scope: createTerms(params.scope),
     price: createPrice(params.price)
   };
@@ -236,6 +237,7 @@ export function createInvoice(
     price: createPrice(params.price),
     collected: createPrice(params.collected),
     paymentSchedule: createPaymentSchedule(params.paymentSchedule),
+    paymentTerm: createTerms(params.paymentTerm),
     account: createBankAccount(params.account),
   }
 }
