@@ -26,6 +26,7 @@ function getSum(array: number[]): number {
   return array.reduce((acc, num) => acc + num, 0);
 }
 
+/** Generate each past date for chart's x axis, number means how far from today's date */
 function getLastDays(from: number, to: number = 0) {
   if (from < to) {
     throw new Error('from should be larger than to')
@@ -38,6 +39,7 @@ function getLastDays(from: number, to: number = 0) {
   }
 }
 
+/** Format date: Date -> YYYYMMDD */
 function toYMD(date: Date) {
   const m = date.getMonth()
   const d = date.getDate()
@@ -92,7 +94,10 @@ export class MovieAnalyticsChartComponent {
   }
 
   getLineChartSeries(eventName: MovieAnalyticsEventName) {
-    return [{name: eventName, data: this.chartData.find(chart => chart.eventName === eventName).y}];
+    return [{
+      name: eventName, 
+      data: this.chartData.find(chart => chart.eventName === eventName).y
+    }];
   }
 
   getLineChartXaxis(eventName: MovieAnalyticsEventName) {

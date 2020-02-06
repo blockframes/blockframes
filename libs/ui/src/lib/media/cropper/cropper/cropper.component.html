@@ -19,10 +19,10 @@
     ></image-cropper>
     <div class="buttons" fxLayout="row" fxLayoutAlign="space-evenly center">
       <button mat-mini-fab color="primary">
-        <mat-icon (click)="cropIt()" fontSet="material-icons-outlined">check_circle</mat-icon>
+        <mat-icon (click)="cropIt()" svgIcon="check"></mat-icon>
       </button>
       <button mat-mini-fab color="warn">
-        <mat-icon (click)="nextStep(prev)" fontSet="material-icons-outlined">cancel</mat-icon>
+        <mat-icon (click)="nextStep(prev)" svgIcon="cross">cancel</mat-icon>
       </button>
     </div>
   </article>
@@ -54,14 +54,14 @@
         <ng-container *ngIf="useFileuploader">
           <input #fileUploader multiple hidden type="file" (change)="filesSelected($event.target.files)" />
           <button mat-mini-fab color="primary">
-            <mat-icon (click)="fileUploader.click()" fontSet="material-icons-outlined" matTooltip="select new picture">photo_size_select_actual</mat-icon>
+            <mat-icon (click)="fileUploader.click()" svgIcon="picture" matTooltip="select new picture"></mat-icon>
           </button>
         </ng-container>
         <!-- TODO #1149: fix resize in cropper -->
         <!-- <mat-icon (click)="resize(url)" mat-button fontSet="material-icons-outlined" color="primary" matTooltip="resize current picture">icon</mat-icon> -->
         <ng-container *ngIf="useDelete">
           <button mat-mini-fab color="warn">
-            <mat-icon (click)="delete()" fontSet="material-icons-outlined" matTooltip="delete current picture">delete_forever</mat-icon>
+            <mat-icon (click)="delete()" svgIcon="trash" matTooltip="delete current picture"></mat-icon>
           </button>
         </ng-container>
       </div>
