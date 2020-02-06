@@ -15,7 +15,6 @@ const eventList = ['movieViews', 'addedToWishlist', 'promoReelOpened'];
 export class HomeComponent implements OnInit {
   public movieAnalytics$: Observable<MovieAnalytics[]>;
   public eventList = eventList;
-  public movieIdList: string[];
   public loading$: Observable<boolean>;
 
   constructor(private movieQuery: MovieQuery, private movieService: MovieService) {}
