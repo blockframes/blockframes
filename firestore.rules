@@ -2,6 +2,25 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
 
+    ////////////////////////////////
+    // Blockframes Administrators //
+    ////////////////////////////////
+
+    // blockframe admins can access ALL the db.
+    // this overwrites every other rules.
+    match /{document=**} {
+      allow read, write: if isBlockframesAdmin(userId());
+    }
+
+    match /blockframesAdmin/{userId} {
+      allow read: if userId() == userId;
+      allow write: if false;
+    }
+
+    function isBlockframesAdmin(userId) {
+      return exists(/databases/$(database)/documents/blockframesAdmin/$(userId));
+    }
+
     ///////////////////
     /// COLLECTIONS ///
     ///////////////////
@@ -57,7 +76,7 @@ service cloud.firestore {
       allow delete: if isSuperAdmin(userId(), orgId);
       allow read: if isSignedIn();
 
-      match /{documents=**} {
+      match /{subCollection}/{documents=**} {
         allow read, write;
       }
     }
