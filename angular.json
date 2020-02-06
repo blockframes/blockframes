@@ -1236,6 +1236,42 @@
         }
       }
     },
+    "admin": {
+      "projectType": "library",
+      "root": "libs/admin",
+      "sourceRoot": "libs/admin/src",
+      "prefix": "admin",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-ng-packagr:build",
+          "options": {
+            "tsConfig": "libs/admin/tsconfig.lib.json",
+            "project": "libs/admin/ng-package.json"
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/admin/jest.config.js",
+            "tsConfig": "libs/admin/tsconfig.spec.json",
+            "setupFile": "libs/admin/src/test-setup.ts"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "libs/admin/tsconfig.lib.json",
+              "libs/admin/tsconfig.spec.json"
+            ],
+            "exclude": [
+              "**/node_modules/**",
+              "!libs/admin/**"
+            ]
+          }
+        }
+      }
+    },
     "catalog": {
       "projectType": "application",
       "schematics": {

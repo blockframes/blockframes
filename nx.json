@@ -26,6 +26,9 @@
     "financial-report": {
       "tags": []
     },
+    "admin": {
+      "tags": []
+    },
     "ethers": {
       "tags": ["ethereum", "smart-contract"]
     },
