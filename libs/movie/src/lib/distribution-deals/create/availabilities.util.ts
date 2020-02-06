@@ -2,6 +2,7 @@ import { MovieSalesAgentDeal } from '../../movie/+state/movie.model';
 import { MovieLanguageSpecification } from '../../movie/+state/movie.firestore';
 import { DistributionDeal } from '../+state/distribution-deal.model';
 import { DateRange } from '@blockframes/utils/common-interfaces/range';
+import { toDate } from '@blockframes/utils/helpers';
 
 /**
  * These function should be used in connection. For instance, we look for movie distribution deals in
@@ -57,8 +58,8 @@ export function getDistributionDealsInDateRange(formDates: DateRange, distributi
   const intersectedDateRangeDeals: DistributionDeal[] = [];
 
   for (const deal of distributionDeals) {
-    const dealsFrom: Date = new Date(deal.terms.start);
-    const dealsTo: Date = new Date(deal.terms.end);
+    const dealsFrom: Date = toDate(deal.terms.start);
+    const dealsTo: Date = toDate(deal.terms.end);
     /**
      * If the form date 'from' is between a deal from and to, it means that there
      * are already deals made, but it is still possible to buy a distribution right
