@@ -25,6 +25,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatCardModule } from '@angular/material/card';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 
 // Angular
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -64,6 +65,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     MatDatepickerModule,
     MatOptionModule,
     MatSnackBarModule,
+    MatSlideToggleModule,
 
     RouterModule.forChild([
       {

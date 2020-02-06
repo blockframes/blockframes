@@ -6,7 +6,7 @@ import { NumberRange } from '@blockframes/utils/common-interfaces';
 import { LanguagesLabel } from '@blockframes/utils/static-model/types';
 import { TerritoriesSlug, MediasSlug } from '@blockframes/utils/static-model/types';
 import { CatalogSearch } from '@blockframes/catalog/form/search.form';
-import { getDistributionDealsWithMediasTerritoriesAndLanguagesInCommon, getDistributionDealsInDateRange } from '@blockframes/movie/distribution-deals/create/availabilities.util';
+import { getDistributionDealsWithMediasTerritoriesAndLanguagesInCommon, getDistributionDealsInDateRange, getExclusiveDeals } from '@blockframes/movie/distribution-deals/create/availabilities.util';
 import { MovieLanguageSpecification } from '@blockframes/movie/movie+state/movie.firestore';
 
 function productionYearBetween(movie: Movie, range: { from: number; to: number }): boolean {
@@ -128,6 +128,7 @@ function certifications(movie: Movie, movieCertification: string[]): boolean {
  * @param range the range of date specified in the filterForm
  * @param territories the territories added in the filterForm
  * @param medias the medias checked in the filterForm
+ * @param exclusivity the value of the exclusivity toggle
  * @param langages the langages from the filterForm
  */
 function availabilities(
@@ -135,12 +136,15 @@ function availabilities(
   range: { from: Date; to: Date },
   territories: TerritoriesSlug[],
   medias: MediasSlug[],
+  exclusivity: boolean,
   langages?: MovieLanguageSpecification
   ): boolean {
   if (!range || !(range.from && range.to)) {
     return true;
   }
-  const matchingRangeDeals = getDistributionDealsInDateRange(range, deals);
+
+  const matchingExclusivityDeals = getExclusiveDeals(exclusivity, deals);
+  const matchingRangeDeals = getDistributionDealsInDateRange(range, matchingExclusivityDeals);
   const matchingDeals = getDistributionDealsWithMediasTerritoriesAndLanguagesInCommon(territories, medias, matchingRangeDeals, langages);
 
   return matchingDeals.length ? true : false;
@@ -190,7 +194,7 @@ export function filterMovie(movie: Movie, filter: CatalogSearch, deals?: Distrib
     genres(movie, filter.genres) &&
     certifications(movie, filter.certifications) &&
     productionStatus(movie, filter.status) &&
-    availabilities(deals, filter.availabilities, filter.territories, filter.medias) &&
+    availabilities(deals, filter.availabilities, filter.territories, filter.medias, filter.exclusivity) &&
     hasTerritories(movie, filter.territories) &&
     hasMedias(movie, filter.medias) &&
     hasCountry(movie, filter.originCountries) &&

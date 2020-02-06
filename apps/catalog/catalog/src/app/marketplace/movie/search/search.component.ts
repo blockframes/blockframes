@@ -62,6 +62,7 @@ import { NumberRange } from '@blockframes/utils/common-interfaces/range';
 import { BUDGET_LIST } from '@blockframes/movie/movieform/budget/budget.form';
 import { CatalogSearchForm } from '@blockframes/catalog/form/search.form';
 import { DistributionDealQuery } from '@blockframes/movie/distribution-deals/+state';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'catalog-movie-search',

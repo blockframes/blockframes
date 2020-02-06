@@ -48,6 +48,7 @@ export interface CatalogSearch {
   territories: TerritoriesLabel[];
   originCountries: TerritoriesLabel[];
   estimatedBudget: NumberRange[];
+  exclusivity: boolean,
   searchbar: {
     text: string;
     type: string;
@@ -70,6 +71,7 @@ function createCatalogSearch(search: Partial<CatalogSearch>): CatalogSearch {
     medias: [],
     territories: [],
     originCountries: [],
+    exclusivity: false,
     searchbar: {},
     estimatedBudget: [],
     ...search
@@ -131,6 +133,7 @@ function createCatalogSearchControl(search: CatalogSearch) {
     estimatedBudget: new FormControl(search.estimatedBudget),
     territories: new FormArray(search.territories.map(territory => new FormControl(territory))),
     originCountries: FormList.factory(search.originCountries, country => new FormStaticValue(country, 'TERRITORIES')),
+    exclusivity: new FormControl(search.exclusivity),
     searchbar: new FormGroup({
       text: new FormControl(''),
       type: new FormControl('')
@@ -156,6 +159,10 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
 
   get languages() {
     return this.get('languages');
+  }
+
+  get exclusivity() {
+    return this.get('exclusivity');
   }
 
   addLanguage(language: LanguagesSlug, value: Partial<MovieLanguageSpecification> = {}) {

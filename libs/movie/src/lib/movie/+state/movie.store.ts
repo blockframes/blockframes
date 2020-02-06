@@ -7,7 +7,9 @@ export interface MovieState extends EntityState<Movie, string>, ActiveState<stri
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'movies', idKey: 'id' })
 export class MovieStore extends EntityStore<MovieState> {
+
   constructor() {
     super();
   }
+
 }

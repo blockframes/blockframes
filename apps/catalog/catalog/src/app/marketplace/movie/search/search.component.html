@@ -243,17 +243,19 @@
               </span>
             </mat-expansion-panel> -->
 
+          <span class="mat-subheading-1">AVAILS</span>
+          <p class="mat-caption">You need to fill in Terms, Territory and Media before applying the Avails filter</p>
           <!-- Availabilities -->
           <mat-expansion-panel>
               <mat-expansion-panel-header>
                 <mat-panel-title test-id="availabilities-panel">
-                  Availabilities
+                  Terms
                 </mat-panel-title>
               </mat-expansion-panel-header>
-              <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="10px" formGroupName="availabilities">
+              <article formGroupName="availabilities">
                 <mat-form-field appearance="outline">
-                  <mat-label>From</mat-label>
-                  <input matInput formControlName="from" [matDatepicker]="pickerAvailableFrom" placeholder="From" />
+                  <mat-label>Start Date</mat-label>
+                  <input matInput formControlName="from" [matDatepicker]="pickerAvailableFrom" placeholder="Start Date" />
                   <mat-error *ngIf="filterForm.get('availabilities').get('from').hasError('min')">
                     You only can choose the current year and above.
                   </mat-error>
@@ -262,13 +264,13 @@
                   <mat-datepicker #pickerAvailableFrom startView="multi-year"></mat-datepicker>
                 </mat-form-field>
                 <mat-form-field appearance="outline">
-                  <mat-label>To</mat-label>
-                  <input matInput formControlName="to" [matDatepicker]="pickerAvailableTo" placeholder="To" />
+                  <mat-label>End Date</mat-label>
+                  <input matInput formControlName="to" [matDatepicker]="pickerAvailableTo" placeholder="End Date" />
                   <mat-datepicker-toggle test-id="datepicker-to" matSuffix [for]="pickerAvailableTo">
                   </mat-datepicker-toggle>
                   <mat-datepicker #pickerAvailableTo startView="multi-year" startAt="2020"></mat-datepicker>
                 </mat-form-field>
-              </div>
+              </article>
               <mat-error *ngIf="filterForm.get('availabilities').hasError('invalidRange')">
                 The value <i>To</i> can't be smaller than the value <i>From</i>!
               </mat-error>
@@ -276,11 +278,10 @@
 
 
           <!-- Territories -->
-          <!-- TODO #1146 -->
-          <!-- <mat-expansion-panel>
+          <mat-expansion-panel>
               <mat-expansion-panel-header>
                 <mat-panel-title test-id="territories-panel">
-                  Territories
+                  Territory
                 </mat-panel-title>
               </mat-expansion-panel-header>
               <mat-form-field appearance="outline">
@@ -300,22 +301,35 @@
                 </mat-autocomplete>
                 <mat-hint>Please choose a territory out of the drop down menu!</mat-hint>
               </mat-form-field>
-            </mat-expansion-panel> -->
+            </mat-expansion-panel>
 
-          <!-- Mandate Medias -->
-          <!-- TODO #1146 -->
-          <!-- <mat-expansion-panel>
-              <mat-expansion-panel-header>
-                <mat-panel-title test-id="mandate-medias-panel">
-                  Mandate Medias
-                </mat-panel-title>
-              </mat-expansion-panel-header>
-              <div fxLayout="column" fxLayoutAlign="start space-between" class="filter-checkboxes-media">
-                <mat-checkbox *ngFor="let media of movieMedias" (change)="checkMedia(media)">
-                  {{media}}
-                </mat-checkbox>
-              </div>
-            </mat-expansion-panel> -->
+          <!-- Media -->
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title test-id="mandate-medias-panel">
+                Media
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div fxLayout="column" fxLayoutAlign="start space-between" class="filter-checkboxes-media">
+              <mat-checkbox *ngFor="let media of movieMedias" (change)="checkMedia(media)">
+                {{media}}
+              </mat-checkbox>
+            </div>
+          </mat-expansion-panel>
+
+          <!-- Exclusivity -->
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Exclusivity
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <article fxLayout="row" fxLayoutGap="10px">
+              <span>No</span>
+              <mat-slide-toggle formControlName="exclusivity" color="primary"></mat-slide-toggle>
+              <span>Yes</span>
+            </article>
+          </mat-expansion-panel>
 
         </mat-accordion>
         <button (click)="formLog(filterForm.value)">LOG THE FORM</button>
