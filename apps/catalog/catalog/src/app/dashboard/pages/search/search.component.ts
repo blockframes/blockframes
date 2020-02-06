@@ -38,8 +38,7 @@ export class SearchComponent implements OnInit {
   ngOnInit() {
     const { ids, searchTerm } = this.routerQuery.getValue().state.root.queryParams;
     this.searchTerm = searchTerm;
-    this.movieService
-      .getValue(ids)
+    this.movieService.getValue(ids)
       .then(movies => this.movies$.next(this.prepareTableView(movies)));
   }
 

@@ -9,8 +9,7 @@ import { Index } from 'algoliasearch';
 import { MoviesIndex, MovieAlgoliaResult } from '@blockframes/utils/algolia';
 
 // RxJs
-import { Observable, bindCallback } from 'rxjs';
-
+import { Observable } from 'rxjs';
 import {
   map,
   shareReplay,
@@ -45,10 +44,11 @@ export class LayoutComponent {
       debounceTime(200),
       distinctUntilChanged(),
       switchMap(searchText => {
-        const search$ = bindCallback(this.movieIndex.search);
-        return search$(searchText);
-      }),
-      map(result => this.toSearchResult(result))
+        // TODO #1829 try bindCallback
+        return new Promise<MovieAlgoliaResult[]>((res, rej) => {
+          this.movieIndex.search(searchText, (err, result) => (err ? rej(err) : res(result.hits)));
+        }).then(results => this.toSearchResult(results));
+      })
     );
   }
 
