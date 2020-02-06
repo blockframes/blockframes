@@ -18,7 +18,5 @@ export class TunnelService {
   setUrls(url: string) {
     this.previousUrl = this.currentUrl;
     this.currentUrl = url;
-    console.log('previous', this.previousUrl);
-    console.log('currentUrl', this.currentUrl);
   }
 }
