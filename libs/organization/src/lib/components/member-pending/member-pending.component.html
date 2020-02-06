@@ -1,12 +1,16 @@
 <mat-card>
   <h3>Pending members ({{ invitations.length }})</h3>
-  <mat-list *ngIf="invitations.length; else empty" role="list" class="bf-list">
-    <span matListItem *ngFor="let invitation of invitations" fxLayout="row" fxLayoutAlign="space-between center">
-      <p>{{ invitation.user.email }}</p>
-      <button *ngIf="isAdmin" (click)="declined.emit(invitation)" mat-icon-button>
-        <mat-icon svgIcon="refuse"></mat-icon>
-      </button>
-    </span>
+  <mat-list role="list">
+    <ng-container *ngIf="invitations.length; else empty">
+      <mat-list-item *ngFor="let invitation of invitations; let first = first">
+        <mat-divider *ngIf="first" matSubheader></mat-divider>
+        <span matLine>{{ invitation.user.email }}</span>
+        <button *ngIf="isAdmin" (click)="declined.emit(invitation)" mat-icon-button>
+          <mat-icon svgIcon="refuse"></mat-icon>
+        </button>
+        <mat-divider></mat-divider>
+      </mat-list-item>
+    </ng-container>
   </mat-list>
   <ng-template #empty>
     <span>No pending invitations</span>
