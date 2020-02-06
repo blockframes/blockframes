@@ -1,0 +1,9 @@
+
+<mat-form-field>
+  <mat-label>Currency</mat-label>
+  <mat-select >
+    <mat-option *ngFor="let currency of staticCurrencies" [value]="currency.slug">
+      {{ currency.label }}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
