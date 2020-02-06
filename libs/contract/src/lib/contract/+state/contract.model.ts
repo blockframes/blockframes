@@ -70,8 +70,8 @@ export function createContractVersion(params: Partial<ContractVersion> = {}): Co
     titles: {},
     creationDate: new Date(),
     paymentSchedule: [],
-    ...params,
     status: ContractStatus.draft,
+    ...params,
     paymentTerm: createTerms(params.paymentTerm),
     scope: createTerms(params.scope),
     price: createPrice(params.price)
