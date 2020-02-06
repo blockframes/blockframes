@@ -1,6 +1,6 @@
 import { MovieSalesAgentDeal } from '../../movie/+state/movie.model';
 import { MovieLanguageSpecification } from '../../movie/+state/movie.firestore';
-import { DistributionDeal } from '../+state/distribution-deal.model';
+import { DistributionDeal, getDealTerritories } from '../+state/distribution-deal.model';
 import { DateRange } from '@blockframes/utils/common-interfaces/range';
 import { toDate } from '@blockframes/utils/helpers';
 
@@ -115,6 +115,10 @@ export function getDistributionDealsWithMediasTerritoriesAndLanguagesInCommon(
    */
   const dealsWithMediasTerritoriesAndLanguagesInCommon: DistributionDeal[] = [];
   for (const deal of deals) {
+
+    // Filter deal territories
+    const dealTerritories = getDealTerritories(deal);
+
     let mediasInCommon = false;
     mediaLoop : for (const media of formMedias) {
       for (const licenseType of deal.licenseType) {
@@ -127,7 +131,7 @@ export function getDistributionDealsWithMediasTerritoriesAndLanguagesInCommon(
 
     let territoriesInCommon = false;
     territoryLoop : for (const territory of formTerritories) {
-      for (const saleTerritory of deal.territory) {
+      for (const saleTerritory of dealTerritories) {
         if (saleTerritory === territory) {
           territoriesInCommon = true;
           break territoryLoop;
@@ -167,4 +171,13 @@ export function getDistributionDealsWithMediasTerritoriesAndLanguagesInCommon(
     }
   }
   return dealsWithMediasTerritoriesAndLanguagesInCommon;
+}
+
+/**
+ * Returns deals with same exclusivity value as the one passed as an argument.
+ * @param exclusivity
+ * @param deals
+ */
+export function getExclusiveDeals(exclusivity: boolean, deals: DistributionDeal[]) {
+  return deals.filter(deal => deal.exclusive === exclusivity);
 }
