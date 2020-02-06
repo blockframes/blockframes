@@ -18,13 +18,42 @@ export const userVincentBlockframesAdmin = {
   orgId: 'jnbH0000000000000000'
 };
 
+export const contractAznavour = {
+  parties: [
+    {
+      childRoles: [],
+      party: {
+        showName: false,
+        role: 'licensor',
+        orgId: 'e1VX0000000000000000',
+        displayName: 'PC'
+      },
+      status: 'unknown'
+    },
+    {
+      party: { showName: true, role: 'licensee', orgId: 'TBD', displayName: 'BE' },
+      status: 'unknown',
+      childRoles: []
+    }
+  ],
+  titleIds: ['dYhnPajGZYMEj69Y52E7'],
+  childContractIds: [],
+  parentContractIds: [],
+  type: 'Mandate',
+  id: 'aznavourPCSales2',
+  partyIds: ['e1VX0000000000000000', 'TBD'],
+  documents: { chainOfTitles: [], invoices: [] }
+};
+
 export const mockData = [
+  // Administration Management
   {
     docPath: 'blockframesAdmin/MDnN000000000000000000000000',
     content: {
-      exists: true,
+      exists: true
     }
   },
+  // Users
   {
     docPath: 'users/MDnN000000000000000000000000',
     content: {
@@ -60,6 +89,19 @@ export const mockData = [
       uid: '1M9D000000000000000000000000'
     }
   },
+  {
+    docPath: 'users/NGKw000000000000000000000000',
+    content: {
+      orgId: 'e1VX0000000000000000',
+      email: 'gs@pc.com',
+      surname: 'S',
+      name: 'Gilles',
+      avatar: '',
+      uid: 'NGKw000000000000000000000000'
+    }
+  },
+  // Organizations
+  // c8: with Vincent, Marie, and Max
   {
     docPath: 'orgs/jnbH0000000000000000',
     content: {
@@ -110,17 +152,7 @@ export const mockData = [
       movieIds: []
     }
   },
-  {
-    docPath: 'users/NGKw000000000000000000000000',
-    content: {
-      orgId: 'e1VX0000000000000000',
-      email: 'gs@pc.com',
-      surname: 'S',
-      name: 'Gilles',
-      avatar: '',
-      uid: 'NGKw000000000000000000000000'
-    }
-  },
+  // pc: with Gilles
   {
     docPath: 'orgs/e1VX0000000000000000',
     content: {
@@ -152,5 +184,9 @@ export const mockData = [
       status: 'accepted',
       movieIds: []
     }
+  },
+  {
+    docPath: `contracts/${contractAznavour.id}`,
+    content: contractAznavour
   }
 ];
