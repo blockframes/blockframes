@@ -10,8 +10,14 @@ import { FormList } from '@blockframes/utils';
 })
 export class ContractFormPartyNameComponent {
   @Input() form: FormList<any, PartyDetailsForm>;
-  @Input() type?: 'licensee' | 'licensor' = 'licensee';
-  public addEntity(){
-    this.form.add({ party: { role: this.type}});
+  @Input() type: 'licensee' | 'licensor' = 'licensee';
+  
+  public addRole() {
+    this.form.add({ party: { role: this.type } });
+  }
+
+  public showTooltip(type: 'add' | 'remove') {
+    const titlecase = this.type.charAt(0).toUpperCase() + this.type.slice(1)
+    return type === 'add' ? `Add ${titlecase}` : `Remove ${titlecase}`
   }
 }

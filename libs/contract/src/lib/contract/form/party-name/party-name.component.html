@@ -7,16 +7,14 @@
             </mat-form-field>
         </form>
         <ng-container *ngIf="!isLast; else add">
-            <button (click)="form.removeAt(i)" mat-mini-fab color="warn">
+            <button (click)="form.removeAt(i)" mat-mini-fab color="warn" [matTooltip]="showTooltip('remove')">
                 <mat-icon>delete</mat-icon>
             </button>
-            <span>Remove {{ type | titlecase  }}</span>
         </ng-container>
         <ng-template #add>
-            <button (click)="addEntity()" mat-mini-fab color="primary">
+            <button (click)="addRole()" mat-mini-fab color="primary" [matTooltip]="showTooltip('add')">
                 <mat-icon svgIcon="add"></mat-icon>
             </button>
-            <span>Add {{ type | titlecase }}</span>
         </ng-template>
     </div>
 </ng-container>
