@@ -1,5 +1,5 @@
 import { setup, teardown } from './helpers.spec';
-import { mockData, userMarie, userMax, userTom } from './mock';
+import { contractAznavour, mockData, userMarie, userMax, userTom } from './mock';
 
 describe('permission table', () => {
   afterAll(async () => {
@@ -17,12 +17,44 @@ describe('permission table', () => {
 
   test('deny a user from another org to access the permission doc', async () => {
     const db = await setup(userTom, mockData);
+    const permDoc = db.doc(
+      `permissions/${userMarie.orgId}/documentPermissions/${contractAznavour.id}`
+    );
+
+    await expect(permDoc.get()).toDeny();
+    await expect(permDoc.update({ updated: true })).toDeny();
+    await expect(permDoc.set({ id: contractAznavour.id, set: true })).toDeny();
+    await expect(permDoc.delete()).toDeny();
+  });
+
+  test('deny a user from another org to create a permission doc', async () => {
+    const db = await setup(userTom, mockData);
+    const permDoc = db.doc(`permissions/${userMarie.orgId}/documentPermissions/newId`);
+
+    await expect(permDoc.get()).toDeny();
+    await expect(permDoc.set({ id: 'newId', set: true })).toDeny();
+    await expect(permDoc.update({ updated: true })).toDeny();
+    await expect(permDoc.delete()).toDeny();
+  });
+
+  test('deny a user from another org to access the object permission doc', async () => {
+    const db = await setup(userTom, mockData);
     const orgRef = db.doc(`permissions/${userMax.orgId}`);
 
     await expect(orgRef.get()).toDeny();
     await expect(orgRef.update({ updated: true })).toDeny();
     await expect(orgRef.set({ set: true })).toDeny();
     await expect(orgRef.delete()).toDeny();
+  });
+
+  test.skip('deny a user from another org to give them auth on something owned by another org', async () => {
+    // R003: a user can give themselves a permission for a document owned by another org.
+    const db = await setup(userTom, mockData);
+    const orgRef = db.doc(
+      `permissions/${userTom.orgId}/documentPermissions/${contractAznavour.id}`
+    );
+
+    await expect(orgRef.set({ id: contractAznavour.id, updated: true, canRead: true })).toDeny();
   });
 
   test('allow a user to access their org docs', async () => {

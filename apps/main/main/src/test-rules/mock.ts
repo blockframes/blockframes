@@ -222,15 +222,20 @@ export const mockData = [
   {
     docPath: `permissions/${userMax.orgId}`,
     content: {
-      canCreate: [],
-      canRead: [],
-      canDelete: [],
       roles: {
         [userMarie.uid]: 'superAdmin',
         [userMax.uid]: 'member'
       },
-      canUpdate: [],
       id: userMax.orgId
+    }
+  },
+  {
+    docPath: `permissions/${userTom.orgId}`,
+    content: {
+      roles: {
+        [userTom.uid]: 'superAdmin'
+      },
+      id: userTom.orgId
     }
   }
 ];
