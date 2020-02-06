@@ -1,4 +1,4 @@
-import { MatSelectModule } from '@angular/material/select';
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { ContractFormPartyNameComponent } from './party-name.component';
@@ -13,10 +13,10 @@ import { MatIconModule } from '@angular/material/icon';
   declarations: [ContractFormPartyNameComponent],
   imports: [
     CommonModule,
+    FlexLayoutModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
-    MatSelectModule,
     MatDividerModule,
     MatButtonModule,
     MatIconModule
