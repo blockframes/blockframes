@@ -24,7 +24,8 @@ import { PasswordConfirmModule } from '@blockframes/ui/form';
 import { PasswordFormComponent } from './components/password-form/password-form.component';
 
 export const profileRoutes: Routes = [
-  { path: '', redirectTo: 'edit', pathMatch: 'full' },
+  { path: '', redirectTo: 'view', pathMatch: 'full' },
+  { path: 'view', loadChildren: () => import('./pages/view/view.module').then(m => m.ProfileViewModule)},
   { path: 'edit', component: ProfileEditableComponent },
 ];
 @NgModule({

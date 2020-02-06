@@ -1,0 +1,19 @@
+header, section {
+  padding: 0 176px
+}
+
+header {
+  height: 300px;
+  padding-top: 31px;
+  background: linear-gradient(to bottom, var(--background-disabled-button), transparent);
+}
+
+.user-info {
+  margin-left: 25px;
+}
+
+img {
+  height: 168px;
+  width: 168px;
+  border-radius: 50%;
+}
