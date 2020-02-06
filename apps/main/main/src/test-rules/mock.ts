@@ -13,6 +13,11 @@ export const userGilles = {
   orgId: 'e1VX0000000000000000'
 };
 
+export const userTom = {
+  uid: 'uTOM0000000000000000000000000',
+  orgId: 'oTOM0000000000000000'
+};
+
 export const userVincentBlockframesAdmin = {
   uid: 'MDnN000000000000000000000000',
   orgId: 'jnbH0000000000000000'
@@ -200,6 +205,18 @@ export const mockData = [
       canCreate: true,
       canRead: true,
       canDelete: true
+    }
+  },
+  {
+    docPath: `permissions/${userMax.orgId}/documentPermissions/${contractAznavour.id}`,
+    content: {
+      canUpdate: false,
+      id: contractAznavour.id,
+      isAdmin: false,
+      ownerId: userGilles.orgId,
+      canCreate: false,
+      canRead: true,
+      canDelete: false
     }
   }
 ];
