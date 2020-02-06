@@ -18,6 +18,31 @@ export interface HoldbackRaw<D> {
   media: MediasSlug;
 }
 
+export enum DistributionDealStatus {
+ 
+  /** 
+   * @dev first status of a deal 
+   * Starting from this status, the deal is visible by creator only
+   */
+  draft = 'Draft',
+
+    /** 
+   * @dev first status of a deal 
+   * Starting from this status, the deal is visible by creator only
+   */
+  cart = 'In cart',
+
+  /** 
+   * @dev the deal have been sold
+   */
+  sold = 'Sold',
+  /** 
+   * @dev in this status, a contract should exists regarding this distribution deal.
+   * When Contract status changes, this could chance too
+   */
+  undernegotiation = 'Under negotiation',
+}
+
 export interface HoldbackWithDates extends HoldbackRaw<Date> {}
 
 // Distribution deal raw interface, formerly called MovieSaleRaw
@@ -37,6 +62,7 @@ interface DistributionDealRaw<D> {
   multidiffusion?: TermsRaw<D>[];
   holdbacks?: HoldbackRaw<D>[];
   catchUp?: TermsRaw<D>;
+  status: DistributionDealStatus,
 }
 
 export interface DistributionDealDocumentWithDates extends DistributionDealRaw<Date> {}

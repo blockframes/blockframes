@@ -1,23 +1,29 @@
-export enum Event {
+export enum PaymentEvent {
   ContractSignatureDate = 'Contract Signature Date',
-  WordlPremiere = 'World Premiere',
   AcceptationAllMaterials = 'Acceptation of all delivery materials',
+  InvoiceEmittedDate ='Invoice emission date',
+}
+
+export enum MovieEvent {
+  WordlPremiere = 'World Premiere',
   FirstTheatricalRelease = 'First theatrical release',
   FirstTvBroadcast = 'First TV broadcast',
-  InvoiceEmittedDate ='Invoice emission date',
 }
 
 export enum TimeUnit {
   days = 'Days',
   weeks = 'Weeks',
   months = 'Months',
-  years = 'years'
+  years = 'Years',
+  calendarSemester= 'Calendar Semester',
+  calendarQuarter= 'Calendar Quarter'
 }
 
 export enum TemporalityUnit {
   after = 'After',
   before = 'Before',
-  for = 'For'
+  for = 'For',
+  every= 'Every'
 }
 
 export interface FloatingDuration {
@@ -43,7 +49,7 @@ export interface TermsRaw<D> {
   /**
    * @example: 7 months after theatrical release
    */
-  floatingStart?: Event;
+  floatingStart?: MovieEvent | PaymentEvent;
   /**
    * @example: 1 year after floatingStart event occured
    */
@@ -52,7 +58,7 @@ export interface TermsRaw<D> {
 
 export interface ScheduledDateRaw<D> extends TermsRaw<D> {
   dueDate: D,
-  period: FloatingDuration, // @dev this replace floatingDuration for better readability
+  period: FloatingDuration,
 }
 
 /**

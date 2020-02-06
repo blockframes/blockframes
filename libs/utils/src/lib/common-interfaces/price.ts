@@ -15,6 +15,8 @@ export const enum CommissionBase {
   amount = 'Amount',
   amountminusvat = 'Amount - VAT',
   amountplusvat = 'Amount + VAT',
+  grossreceipts = 'Gross Receipts',
+  netreceipts = 'Net Receipts',
 }
 
 export const enum ExpenseType {

@@ -1727,7 +1727,7 @@ export class ViewExtractedElementsComponent {
               const party = contract.doc.parties.find(p => p.party.displayName === partyName && p.party.role === getCodeIfExists('LEGAL_ROLES', 'licensor'));
               if (party) {
                 childRoleParts.forEach(childRole => {
-                  const role = getCodeIfExists('LEGAL_ROLES', childRole.trim() as ExtractCode<'LEGAL_ROLES'>);
+                  const role = getCodeIfExists('SUB_LICENSOR_ROLES', childRole.trim() as ExtractCode<'SUB_LICENSOR_ROLES'>);
                   if (role) {
                     party.childRoles.push(role);
                   } else {

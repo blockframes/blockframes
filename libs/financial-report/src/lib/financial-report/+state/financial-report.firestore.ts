@@ -139,7 +139,7 @@ interface FinancialReportRaw<D> {
 
 export interface FinancialReportTitleDetail {
   titleId: string,
-  /** @dev this contains the various expenses that apply to this this FinancialReportTitleDetail */
+  /** @dev this contains the various expenses that applies to this FinancialReportTitleDetail */
   expenses: Expense[],
   /**
    * @dev this is the sum of the expected expenses (price) (expenses: Expense[]).

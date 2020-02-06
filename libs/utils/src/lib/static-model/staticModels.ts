@@ -481,13 +481,15 @@ const models = {
     { 'slug': 'licensee', 'label': 'Licensee' },
     { 'slug': 'seller', 'label': 'Seller' },
     { 'slug': 'lender', 'label': 'Lender' },
-    { 'slug': 'signatory', 'label': 'Signatory' },
-    { 'slug': 'observator', 'label': 'Observator' },
     { 'slug': 'promisor', 'label': 'Promisor' },
     { 'slug': 'promisee', 'label': 'Promisee' },
     { 'slug': 'beneficiary', 'label': 'Beneficiary' },
     { 'slug': 'third-party', 'label': 'Third party' },
     { 'slug': 'purchaser', 'label': 'Purchaser' },
+  ] as const,
+  'SUB_LICENSOR_ROLES': [
+    { 'slug': 'signatory', 'label': 'Signatory' },
+    { 'slug': 'observator', 'label': 'Observator' },
   ] as const,
   'MOVIE_FORMAT': [
     { 'slug': '1_33', 'label': '1.33' },
