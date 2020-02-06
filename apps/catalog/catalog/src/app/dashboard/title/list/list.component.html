@@ -9,15 +9,12 @@
 
 <header mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
   <button mat-tab-link (click)="filter.setValue()" [active]="!(filter$ | async)">All</button>
-  <button mat-tab-link (click)="applyFilter('Library')" [active]="(filter$ | async) === 'Library'" >Library</button>
-  <button mat-tab-link (click)="applyFilter('Line-Up')" [active]="(filter$ | async) === 'Line-Up'" >Line-up</button>
+  <button mat-tab-link (click)="applyFilter('Library')" [active]="(filter$ | async) === 'Library'">Library</button>
+  <button mat-tab-link (click)="applyFilter('Line-Up')" [active]="(filter$ | async) === 'Line-Up'">Line-up</button>
 </header>
 
 <ng-container *ngIf="(titles$ | async) as titles; else isLoading">
-  <bf-table-filter
-    [source]="titles"
-    [columns]="columns"
-    [initialColumns]="initialColumns"
+  <bf-table-filter [source]="titles" [columns]="columns" [initialColumns]="initialColumns">
     [showFilter]="true"
     [showPaginator]="true"
     [link]="'./'">
@@ -28,5 +25,3 @@
 <ng-template #isLoading>
   <mat-spinner></mat-spinner>
 </ng-template>
-
-

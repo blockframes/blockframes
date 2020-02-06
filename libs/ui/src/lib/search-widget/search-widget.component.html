@@ -1,6 +1,6 @@
 <form #ref fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="12px">
   <mat-icon svgIcon="magnifying_glasses"></mat-icon>
-  <input placeholder="Try searching for titles, keywords..." (focus)="open(ref)" (blur)="search.close()">
+  <input placeholder="Try searching for titles, keywords..." (focus)="open(ref)" [formControl]="searchCtrl">
 </form>
 
 <!-- Should be able to open overlay widget progammatically (without widgettarget directive) -->
@@ -11,16 +11,16 @@
         <ng-container *ngIf="result.items.length">
           <h3 mat-subheader>{{ result.title }} ({{ result.items.length }})</h3>
           <ng-container *ngFor="let item of result.items">
-            <a mat-list-item>
+            <a mat-list-item [routerLink]="item.id">
               <mat-icon mat-list-icon [svgIcon]="result.icon"></mat-icon>
-              <span mat-line>{{ item }}</span>
+              <span mat-line>{{ item.value }}</span>
             </a>
           </ng-container>
         </ng-container>
       </ng-container>
     </mat-nav-list>
     <footer widget-footer>
-      <a mat-button color="primary" [routerLink]="link">
+      <a mat-button color="primary" (click)="setParams()">
         <span>View all Activity</span>
         <mat-icon svgIcon="arrow_forward"></mat-icon>
       </a>

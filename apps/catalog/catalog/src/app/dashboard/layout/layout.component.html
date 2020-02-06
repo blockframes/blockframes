@@ -1,11 +1,9 @@
 <mat-sidenav-container>
-  <mat-sidenav #sidenav id="dashboard-navbar"
-    [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-    [mode]="(isHandset$ | async) ? 'over' : 'side'"
-    [opened]="(isHandset$ | async) === false">
+  <mat-sidenav #sidenav id="dashboard-navbar" [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="(isHandset$ | async) === false">
     <mat-toolbar>
       <a class="logo" routerLink=".">
-        <img src="assets/logo/dark/archipel-content.svg" alt="Archipel Content Logo"/>
+        <img src="assets/logo/dark/archipel-content.svg" alt="Archipel Content Logo" />
       </a>
     </mat-toolbar>
     <mat-nav-list>
@@ -41,11 +39,11 @@
 
   <mat-sidenav-content>
     <!-- TOOLBAR -->
-    <mat-toolbar fxLayout="row" fxLayoutGap="24px"  id="catalog-toolbar">
+    <mat-toolbar fxLayout="row" fxLayoutGap="24px" id="catalog-toolbar">
       <button mat-icon-button (click)="sidenav.toggle()">
         <mat-icon>menu</mat-icon>
       </button>
-      <search-widget></search-widget>
+      <search-widget [searchCtrl]="searchCtrl" [results]="algoliaSearchResults$ | async"></search-widget>
       <overlay-notification-widget></overlay-notification-widget>
       <account-profile-widget></account-profile-widget>
     </mat-toolbar>

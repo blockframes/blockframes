@@ -1,6 +1,12 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { Movie, MovieQuery, MovieService, getMovieReceipt, getMovieTotalViews } from '@blockframes/movie';
+import {
+  Movie,
+  MovieQuery,
+  MovieService,
+  getMovieReceipt,
+  getMovieTotalViews
+} from '@blockframes/movie';
 import { startWith, switchMap, map, distinctUntilChanged } from 'rxjs/operators';
 import { Observable, combineLatest } from 'rxjs';
 import { Contract } from '@blockframes/contract/contract/+state/contract.model';
@@ -26,7 +32,11 @@ const columns = {
 };
 
 /** Factory function to flatten movie data. */
-function createTitleView(movie: Movie, contracts: Contract[], analytics: MovieAnalytics[]): TitleView {
+function createTitleView(
+  movie: Movie,
+  contracts: Contract[],
+  analytics: MovieAnalytics[]
+): TitleView {
   const ownContracts = contracts.filter(c => getContractLastVersion(c).titles[movie.id]);
   return {
     id: movie.id,
@@ -45,12 +55,11 @@ function createTitleView(movie: Movie, contracts: Contract[], analytics: MovieAn
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TitleListComponent implements OnInit {
-  public columns = columns;
-  public initialColumns = ['title', 'view', 'sales', 'receipt', 'status'];
-  public titles$: Observable<TitleView[]>;
-
-  public filter = new FormControl();
-  public filter$ = this.filter.valueChanges.pipe(startWith(this.filter.value));
+  columns = columns;
+  initialColumns = ['title', 'view', 'sales', 'receipt', 'status'];
+  titles$: Observable<TitleView[]>;
+  filter = new FormControl();
+  filter$ = this.filter.valueChanges.pipe(startWith(this.filter.value));
 
   constructor(
     private query: MovieQuery,
@@ -70,9 +79,11 @@ export class TitleListComponent implements OnInit {
 
     // Filtered movies
     const movies$ = this.filter$.pipe(
-      switchMap(filter => this.query.selectAll({
+      switchMap(filter =>
+        this.query.selectAll({
           filterBy: movie => (filter ? movie.main.storeConfig.storeType === filter : true)
-      }))
+        })
+      )
     );
     // Transform movies into a TitleView
     this.titles$ = combineLatest([movies$, this.contractQuery.selectAll(), moviesAnalytics$]).pipe(
