@@ -29,15 +29,12 @@ export class PermissionsService extends CollectionService<PermissionsState> {
 
     switch (role) {
       case UserRole.superAdmin:
-        delete permissions.roles[uid];
         permissions.roles[uid] = UserRole.superAdmin;
         break;
       case UserRole.admin:
-        delete permissions.roles[uid];
         permissions.roles[uid] = UserRole.admin;
         break;
       case UserRole.member:
-        delete permissions.roles[uid];
         permissions.roles[uid] = UserRole.member;
         break;
       default:
