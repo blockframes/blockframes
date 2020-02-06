@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Host, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ContractForm } from '../forms/contract.form';
+import { ContractForm } from '../form/contract.form';
 import { ContractQuery, ContractService } from '../+state';
 import { TunnelStep } from '@blockframes/ui/tunnel'
 import { Observable } from 'rxjs';
@@ -46,7 +46,7 @@ export class ContractTunnelComponent implements OnInit {
     private service: ContractService,
     private query: ContractQuery,
     private movieService: MovieService,
-  ) {}
+  ) { }
 
   async ngOnInit() {
     const contract = this.query.getActive();
