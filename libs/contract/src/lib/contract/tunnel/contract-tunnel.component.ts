@@ -3,7 +3,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ContractForm } from '../forms/contract.form';
 import { ContractQuery, ContractService } from '../+state';
 import { TunnelStep } from '@blockframes/ui/tunnel'
-import { Observable, combineLatest } from 'rxjs';
+import { Observable } from 'rxjs';
 import { startWith, map, switchMap } from 'rxjs/operators';
 import { MovieService, Movie } from '@blockframes/movie';
 
