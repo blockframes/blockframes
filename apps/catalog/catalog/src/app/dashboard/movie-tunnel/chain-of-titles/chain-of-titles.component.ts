@@ -1,6 +1,6 @@
+import { ContractForm } from '@blockframes/contract/contract/form/contract.form';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ContractForm } from '@blockframes/contract/contract/forms/contract.form';
-import { createImgRef, ImgRef } from "@blockframes/utils/image-uploader";
+import { ImgRef } from "@blockframes/utils/image-uploader";
 
 @Component({
   selector: 'catalog-chain-of-titles',

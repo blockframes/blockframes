@@ -1,5 +1,5 @@
 import { ImgRef, createImgRef } from "../image-uploader";
-import { CrewRolesSlug, ProducerRolesSlug, CastRolesSlug, LegalRolesSlug, TerritoriesSlug } from "@blockframes/utils/static-model/types";
+import { CrewRolesSlug, ProducerRolesSlug, CastRolesSlug, LegalRolesSlug, TerritoriesSlug, SubLicensorRoleSlug } from "@blockframes/utils/static-model/types";
 import { Location } from "./utility";
 
 
@@ -77,7 +77,7 @@ export interface Crew extends Credit {
  * @dev interface to represent an entity within contracts
  */
 export interface Party extends StakeholderRaw {
-  role: LegalRolesSlug, // overrided role scope from Person interface
+  role: LegalRolesSlug | SubLicensorRoleSlug, // overrided role scope from Person interface
   address?: Location
 }
 
@@ -93,8 +93,8 @@ export type SalesAgent = Stakeholder;
 export function createStakeholder(params: Partial<Stakeholder> = {}): Stakeholder {
   return {
     orgId: '',
-    logo: createImgRef(),
     ...params,
+    logo: createImgRef(params.logo),
   }
 }
 

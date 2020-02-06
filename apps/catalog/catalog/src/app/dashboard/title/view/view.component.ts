@@ -24,8 +24,7 @@ export class TitleViewComponent implements OnInit {
     path: 'avails',
     label: 'Avails'
   }];
-  constructor(
-    private movieQuery: MovieQuery) {}
+  constructor(private movieQuery: MovieQuery) {}
 
   ngOnInit() {
     this.getMovie();
@@ -56,5 +55,4 @@ export class TitleViewComponent implements OnInit {
   public getOriginalCountries(movie: Movie) {
     return `${movie.main.originCountries.map(country => getLabelBySlug('TERRITORIES', country)).join(', ')}, ${movie.main.productionYear}`;
   }
-
 }

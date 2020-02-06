@@ -1,11 +1,11 @@
 import { firestore } from "firebase/app";
 import { TermsRaw } from "@blockframes/utils/common-interfaces/terms";
 import { Party } from "@blockframes/utils/common-interfaces/identity";
-import { Price, PaymentStatus, Payment, createPrice, PriceRaw } from "@blockframes/utils/common-interfaces/price";
+import { Price, PaymentStatus, Payment, PriceRaw } from "@blockframes/utils/common-interfaces/price";
 import {
   TerritoriesSlug,
   LanguagesSlug,
-  LegalRolesSlug
+  SubLicensorRoleSlug
 } from "@blockframes/utils/static-model/types";
 import { ImgRef } from "@blockframes/utils/image-uploader";
 import { PaymentScheduleRaw } from "@blockframes/utils/common-interfaces/schedule";
@@ -14,15 +14,28 @@ import { BankAccount } from "@blockframes/utils/common-interfaces/utility";
 type Timestamp = firestore.Timestamp;
 
 export enum ContractStatus {
-  submitted = 'submitted',
   accepted = 'accepted',
   paid = 'paid',
   unknown = 'unknown',
-  undernegotiation = 'under negotiation',
   waitingsignature = 'waiting for signature',
   waitingpayment = 'waiting for payment',
   rejected = 'rejected',
   aborted = 'aborted',
+  /** 
+   * @dev first status of a contract 
+   * Starting from this status, the contract is visible by creator only
+   */
+  draft = 'draft',
+  /** 
+   * @dev once the user hit the submit button, the contract is waiting for approvment 
+   * Starting from this status, the contract is visible by creator (but not editable anymore) and by admins
+   */
+  submitted = 'submitted',
+  /** 
+   * @dev when an admin checked a "submitted" contract and all seems good.
+   * Starting from this status, contract is visible for every parties
+   */
+  undernegotiation = 'under negotiation',
 }
 
 export const enum ContractType {
@@ -50,7 +63,7 @@ interface ContractPartyDetailRaw<D> {
    * For example, the licensor for a movie can have to approve sub-sells of the license for this movie.
    * A more explicit naming would have been: rolesForChildContracts
    */
-  childRoles?: LegalRolesSlug[],
+  childRoles?: SubLicensorRoleSlug[],
 }
 
 /**
@@ -64,7 +77,21 @@ interface ContractVersionRaw<D> {
   creationDate?: D,
   titles: Record<string, ContractTitleDetail>,
   price: Price;
-  paymentSchedule?: PaymentScheduleRaw<D>[];
+  /** @dev informations about payments date */
+  paymentSchedule?: PaymentScheduleRaw<D>[],
+  /** @dev if paymentSchedule is empty, we use this string field */
+  customPaymentSchedule?: string,
+  /** @dev payment conditions */
+  paymentTerm: TermsRaw<D>,
+  renewalConditions?: string,
+  terminationConditions?: string,
+  /**
+   * @dev this is a string field (for now) to determine which
+   * kind of expenses can be attributed to this contract.
+   * This will be used by admins when they ventilate expenses
+   * into various contracts for generating financial reports.
+   */
+  AuthorizedRecoupableExpenses?: string;
 }
 
 interface ContractRaw<D> {
@@ -122,7 +149,10 @@ export interface InvoiceRaw<D> {
   buyerId: string,
   /** @dev an orgId */
   sellerId: string,
+  /** @dev informations about payment date */
   paymentSchedule: PaymentScheduleRaw<D>,
+  /** @dev payment conditions */
+  paymentTerm: TermsRaw<D>,
   /**
    * @dev Status calculated with price - collected
    * A function should handle this.

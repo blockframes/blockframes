@@ -1,7 +1,7 @@
 import { toDate } from '@blockframes/utils/helpers';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { FormList } from '@blockframes/utils/form/forms/list.form';
-import { ContractForm } from '@blockframes/contract/contract/forms/contract.form';
+import { ContractForm } from '@blockframes/contract/contract/form/contract.form';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import {
   Component,

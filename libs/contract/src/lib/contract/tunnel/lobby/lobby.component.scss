@@ -1,0 +1,41 @@
+@import 'mixins';
+
+:host {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 30px;
+}
+
+article {
+  margin-top: 30px;
+}
+
+mat-card {
+  cursor: pointer;
+  width: 300px;
+  margin: 16px;
+}
+
+mat-card-footer {
+  padding: 10px 0;
+}
+
+@include large {
+  :host {
+    height: 100%;
+  }
+  article {
+    width: 60%;
+  }
+}
+@include tablet {
+  :host {
+    height: 100%;
+  }
+  article {
+    width: 80%;
+  }
+}

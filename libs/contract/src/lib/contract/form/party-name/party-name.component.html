@@ -1,0 +1,20 @@
+<ng-container *ngFor="let control of form.controls; let i = index; let isLast = last" [formGroup]="control">
+    <div fxLayout="row" fxLayoutAlign="start center">
+        <form formGroupName="party">
+            <mat-form-field appearance="outline">
+                <mat-label>{{ type | titlecase }} Name</mat-label>
+                <input matInput type="text" formControlName="displayName" autocomplete="off">
+            </mat-form-field>
+        </form>
+        <ng-container *ngIf="!isLast; else add">
+            <button (click)="form.removeAt(i)" mat-mini-fab color="warn" [matTooltip]="showTooltip('remove')">
+                <mat-icon>delete</mat-icon>
+            </button>
+        </ng-container>
+        <ng-template #add>
+            <button (click)="addRole()" mat-mini-fab color="primary" [matTooltip]="showTooltip('add')">
+                <mat-icon svgIcon="add"></mat-icon>
+            </button>
+        </ng-template>
+    </div>
+</ng-container>
