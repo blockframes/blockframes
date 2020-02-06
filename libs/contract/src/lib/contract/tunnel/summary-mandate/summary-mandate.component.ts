@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'contract-summary-mandate',
+  selector: 'contract-tunnel-summary-mandate',
   templateUrl: './summary-mandate.component.html',
   styleUrls: ['./summary-mandate.component.scss']
 })

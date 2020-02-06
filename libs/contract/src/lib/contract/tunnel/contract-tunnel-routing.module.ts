@@ -1,8 +1,11 @@
 import { Routes, RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
+import { ContractTunnelComponent } from './contract-tunnel.component';
 
-const routes: Routes = [
-  {
+const routes: Routes = [{
+  path: '',
+  component: ContractTunnelComponent,
+  children: [{
     path: '',
     redirectTo: 'overview',
     pathMatch: 'full'
@@ -29,8 +32,8 @@ const routes: Routes = [
   },{
     path: 'deals/:titleId',
     
-  }
-];
+  }]
+}];
 
 @NgModule({ imports: [RouterModule.forChild(routes)], exports: [RouterModule] })
 export class ContractTunnelRoutingModule {}

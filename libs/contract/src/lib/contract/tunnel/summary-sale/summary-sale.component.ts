@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'contract-summary-sale',
+  selector: 'contract-tunnel-summary-sale',
   templateUrl: './summary-sale.component.html',
   styleUrls: ['./summary-sale.component.scss']
 })
