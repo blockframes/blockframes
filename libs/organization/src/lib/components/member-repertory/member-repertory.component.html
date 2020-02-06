@@ -16,19 +16,25 @@
         <mat-icon svgIcon="more_vert"></mat-icon>
       </button>
       <mat-menu #menu>
+        <button mat-menu-item [matMenuTriggerFor]="subMenu">
+          Grant Permissions
+        </button>
         <button mat-menu-item (click)="memberRemoved.emit(uid)">
           <mat-icon color="warn" svgIcon="remove_member"></mat-icon>
           <span>Remove from Company</span>
         </button>
       </mat-menu>
-      <mat-form-field>
-        <mat-label>Grant Permissions</mat-label>
-        <mat-select>
-          <mat-option value="superAdmin">Super Admin</mat-option>
-          <mat-option value="admin">Admin</mat-option>
-          <mat-option value="member">Member</mat-option>
-        </mat-select>
-      </mat-form-field>
+      <mat-menu #subMenu>
+        <button mat-menu-item (click)="updatedToSuperAdmin.emit(uid)">
+          Super Admin
+        </button>
+        <button mat-menu-item (click)="updatedToAdmin.emit(uid)">
+          Admin
+        </button>
+        <button mat-menu-item (click)="updatedToMember.emit(uid)">
+          Member
+        </button>
+      </mat-menu>
     </ng-template>
   </bf-table-filter>
 </mat-card>

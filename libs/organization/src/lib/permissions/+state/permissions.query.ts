@@ -36,8 +36,17 @@ export class PermissionsQuery extends QueryEntity<PermissionsState, Permissions>
     return Object.values(this.getActive().roles).filter(value => value === UserRole.superAdmin).length;
   }
 
-  /** Checks if the user is SuperAdmin of his organization. */
+  /** Checks if the user is admin of his organization. */
   public isUserAdmin(userId: string): boolean {
     return this.getActive().roles[userId] === UserRole.admin;
+  }
+
+  /** Checks if the user is superAdmin of his organization. */
+  public isUserSuperAdmin(userId: string): boolean {
+    return this.getActive().roles[userId] === UserRole.superAdmin;
+  }
+
+  public hasAlreadyThisRole(userId: string, role: UserRole): boolean {
+    return this.getActive().roles[userId] === role;
   }
 }
