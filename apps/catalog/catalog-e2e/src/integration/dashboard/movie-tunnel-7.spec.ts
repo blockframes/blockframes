@@ -1,10 +1,10 @@
 /// <reference types="cypress" />
 
-import { TunnelKeywordsPage, TunnelDistributionRightPage } from '../../support/pages/dashboard';
+import { TunnelDistributionRightPage, TunnelKeywordsPage } from '../../support/pages/dashboard';
 import { HomePage } from '../../support/pages/marketplace';
 import { User } from '../../support/utils/type';
 import { USERS } from '../../support/utils/users';
-import { WelcomeViewPage, LoginViewPage } from '../../support/pages/auth';
+import { LoginViewPage, WelcomeViewPage } from '../../support/pages/auth';
 
 // TEST
 
@@ -21,7 +21,7 @@ beforeEach(() => {
 });
 
 describe('User can navigate to the movie tunnel page 7, complete the field, and navigate to page 8', () => {
-  it('Login into an existing account, navigate on keywords page, complete the field keywords, go on movie tunnel page 8', () => {
+  it.skip('Login into an existing account, navigate on keywords page, complete the field keywords, go on movie tunnel page 8', () => {
     // Connexion
     const p1: WelcomeViewPage = new WelcomeViewPage();
     const p2: LoginViewPage = p1.clickCallToAction();
