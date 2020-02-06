@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { MovieAnalytics } from '@blockframes/movie/movie+state/movie.firestore';
 import { ChartOptions, lineChartOptions } from './default-chart-options';
 
@@ -48,30 +48,41 @@ function toYMD(date: Date) {
   selector: '[analyticsData] movie-analytics-chart',
   templateUrl: './movie-analytics-chart.component.html',
   styleUrls: ['./movie-analytics-chart.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.Default
 })
-export class MovieAnalyticsChartComponent implements OnInit {
+export class MovieAnalyticsChartComponent {
   public lineChartOptions: Partial<ChartOptions>;
   public chartInfo = chartInfo;
   public filteredEvent;
+  public chartData: any[] = [];
 
-  @Input() analyticsData: MovieAnalytics[];
-  @Input() events: string[];
+  @Input() set analyticsData(data: MovieAnalytics[]){
+    if (data && data.length) {
+      this.chartData = chartInfo.map(chart => {
+        const current = this.getXY(data, chart.eventName, 'current');
+        const past = this.getXY(data, chart.eventName, 'past');
+        const percentage = this.calculatePercentage(current.y, past.y);
+        return {
+          ...chart,
+          x: current.x.map(date => date.toLocaleDateString()), 
+          y: current.y, 
+          percentage
+        }
+      })
+    }
+  };
   
   constructor() {   
     this.lineChartOptions = lineChartOptions;
   }
 
-  ngOnInit() {
-    this.filteredEvent = chartInfo.filter(({ eventName }) => this.events.includes(eventName));
-  }
-
-  populate(eventName: MovieAnalyticsEventName, period: 'current' | 'past') {
+  // get date by period for x, get sum of hits each day by event for y
+  getXY(data: MovieAnalytics[], eventName: MovieAnalyticsEventName, period: 'current' | 'past') {
     const x = period === 'current' ? getLastDays(28) : getLastDays(56, 28);
-    const y = [];
+    const y: number[] = [];
     for(const date of x.map(toYMD)) {
       let sum = 0;
-      for(const movieAnalytic of this.analyticsData) {
+      for(const movieAnalytic of data) {
         const event = movieAnalytic[eventName][period].find(e => e.event_date === date);
         sum += event ? event.hits : 0;
       }
@@ -81,12 +92,12 @@ export class MovieAnalyticsChartComponent implements OnInit {
   }
 
   getLineChartSeries(eventName: MovieAnalyticsEventName) {
-    return [{name, data: this.populate(eventName, 'current').y}];
+    return [{name: eventName, data: this.chartData.find(chart => chart.eventName === eventName).y}];
   }
 
   getLineChartXaxis(eventName: MovieAnalyticsEventName) {
     return {
-      categories:  this.populate(eventName, 'current').x, 
+      categories: this.chartData.find(chart => chart.eventName === eventName).x, 
       labels: {show: false},  
       axisBorder: {show: false},  
       axisTicks: {show: false}
@@ -94,13 +105,13 @@ export class MovieAnalyticsChartComponent implements OnInit {
   }
 
   totalHitsOnCurrentMonth(eventName: MovieAnalyticsEventName) {
-    const total = this.populate(eventName, 'current').y
+    const total = this.chartData.find(chart => chart.eventName === eventName).y
     return sum(total);
   }
 
-  calculatePercentage(eventName: MovieAnalyticsEventName): number {
-    const current = sum(this.populate(eventName, 'current').y);
-    const past = sum(this.populate(eventName, 'past').y);
+  calculatePercentage(currentHits: number[], pastHits: number[]): number {
+    const current = sum(currentHits);
+    const past = sum(pastHits);
     if (current && past && (current > past)) {
       return (current - past) / past * 100
     } else if (past > current) {

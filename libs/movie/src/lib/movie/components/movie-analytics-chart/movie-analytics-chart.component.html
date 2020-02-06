@@ -1,34 +1,31 @@
-<ng-container *ngIf="analyticsData">
-  <ng-content></ng-content>
-  <article fxLayout="row wrap" fxLayoutAlign="flex-start" fxLayoutAlign.lt-md="center" fxLayoutGap="25px">
-    <ng-container *ngFor="let info of filteredEvent">
-      <mat-card #chart class="chart">
-        <div fxLayout="row" fxLayoutAlign="space-between center">
-          <span class="mat-body-2"><mat-icon [svgIcon]="info.icon"></mat-icon>{{ info.title }}</span>
-          <span class="mat-caption percent" *ngIf="calculatePercentage(info.eventName) as percent">
-            <ng-container *ngIf="percent > 0; else down">
-              <mat-icon color="primary" svgIcon="arrow_closed"></mat-icon>
-            </ng-container>
-            <ng-template #down>
-              <mat-icon color="accent" svgIcon="arrow_open"></mat-icon>
-            </ng-template>
-              {{ percent }} %
-          </span>
+<article fxLayout="row wrap" fxLayoutAlign="flex-start" fxLayoutAlign.lt-md="center" fxLayoutGap="25px">
+  <ng-container *ngFor="let info of chartData">
+    <mat-card #chart class="chart">
+      <div fxLayout="row" fxLayoutAlign="space-between center">
+        <div class="mat-body-2"><mat-icon [svgIcon]="info.icon"></mat-icon><span>{{ info.title }}</span></div>
+        <div class="mat-caption" *ngIf="info.percentage">
+          <ng-container *ngIf="info.percentage> 0; else down">
+            <mat-icon color="primary" svgIcon="arrow_closed"></mat-icon>
+          </ng-container>
+          <ng-template #down>
+            <mat-icon color="accent" svgIcon="arrow_open"></mat-icon>
+          </ng-template>
+          <span>{{ info.percentage }} %</span>
         </div>
-        <h3>{{ totalHitsOnCurrentMonth(info.eventName) }}</h3>
-        <mat-card-content>
-          <apx-chart
-            [series]="getLineChartSeries(info.eventName)"
-            [chart]="lineChartOptions.chart"
-            [xaxis]="getLineChartXaxis(info.eventName)"
-            [yaxis]="lineChartOptions.yaxis"
-            [dataLabels]="lineChartOptions.dataLabels"
-            [grid]="lineChartOptions.grid"
-            [stroke]="lineChartOptions.stroke"
-            [fill]="lineChartOptions.fill"
-          ></apx-chart>
-        </mat-card-content>
-      </mat-card>
-    </ng-container>
-  </article>
-</ng-container>
+      </div>
+      <h3>{{ totalHitsOnCurrentMonth(info.eventName) }}</h3>
+      <mat-card-content>
+        <apx-chart
+          [series]="getLineChartSeries(info.eventName)"
+          [chart]="lineChartOptions.chart"
+          [xaxis]="getLineChartXaxis(info.eventName)"
+          [yaxis]="lineChartOptions.yaxis"
+          [dataLabels]="lineChartOptions.dataLabels"
+          [grid]="lineChartOptions.grid"
+          [stroke]="lineChartOptions.stroke"
+          [fill]="lineChartOptions.fill"
+        ></apx-chart>
+      </mat-card-content>
+    </mat-card>
+  </ng-container>
+</article>

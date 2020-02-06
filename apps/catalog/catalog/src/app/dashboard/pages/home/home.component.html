@@ -11,9 +11,8 @@
   </div>
 </header>
 <section>
-  <movie-analytics-chart [analyticsData]="movieAnalytics$ | async" [events]="eventList">
-    <h3>My Marketplace Activity</h3>
-  </movie-analytics-chart>
+  <h3>My Marketplace Activity</h3>
+  <movie-analytics-chart [analyticsData]="movieAnalytics$ | async"></movie-analytics-chart>
 </section>
 <section>
   <h3>Sales Revenue</h3>
