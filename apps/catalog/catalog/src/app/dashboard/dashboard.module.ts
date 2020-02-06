@@ -86,23 +86,59 @@ const routes: Routes = [
     ]
   },
   {
-    path: 'movie-tunnel',
+    path: 'tunnel',
     canActivate: [TunnelGuard],
     canDeactivate: [TunnelGuard],
     children: [{
-      path: '',
-      loadChildren: () => import('./movie-tunnel/start/start-tunnel.module').then(m => m.StartTunnelModule)
+      path: 'movie',
+      children: [{
+        path: '',
+        loadChildren: () => import('./movie-tunnel/start/start-tunnel.module').then(m => m.StartTunnelModule)
+      }, {
+        path: ':movieId',
+        canActivate: [MovieActiveGuard],
+        canDeactivate: [MovieActiveGuard],
+        loadChildren: () => import('./movie-tunnel/movie-tunnel.module').then(m => m.MovieTunnelModule),
+        data: {
+          redirect: '/c/o/dashboard/tunnel/movie'
+        },
+      }]
     }, {
-      path: ':movieId',
-      canActivate: [MovieActiveGuard],
-      canDeactivate: [MovieActiveGuard],
-      loadChildren: () => import('./movie-tunnel/movie-tunnel.module').then(m => m.MovieTunnelModule),
-      data: {
-        redirect: '/c/o/dashboard/movie-tunnel'
-      },
+      path: 'contract',
+      children: [{
+        path: '',
+        loadChildren: () => import('@blockframes/contract/contract/tunnel').then(m => m.ContractTunnelLobbyModule)
+      }, {
+        path: 'sale',
+        children: [{
+          path: '',
+          loadChildren: () => import('@blockframes/contract/contract/tunnel').then(m => m.ContractTunnelLobbyModule)
+        }, {
+          path: ':contractId',
+          canActivate: [ActiveContractGuard],
+          canDeactivate: [ActiveContractGuard],
+          loadChildren: () => import('@blockframes/contract/contract/tunnel').then(m => m.ContractTunnelModule),
+          data: {
+            redirect: '/c/o/dashboard/tunnel/mandate'
+          },
+        }]
+      }, {
+        path: 'mandate',
+        children: [{
+          path: '',
+          loadChildren: () => import('@blockframes/contract/contract/tunnel').then(m => m.ContractTunnelLobbyModule)
+        }, {
+          path: ':contractId',
+          canActivate: [ActiveContractGuard],
+          canDeactivate: [ActiveContractGuard],
+          loadChildren: () => import('@blockframes/contract/contract/tunnel').then(m => m.ContractTunnelModule),
+          data: {
+            redirect: '/c/o/dashboard/tunnel/mandate'
+          },
+        }]
+      }]
     }]
   }
-
 ];
 
 @NgModule({
