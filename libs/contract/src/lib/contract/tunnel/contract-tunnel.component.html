@@ -1,0 +1,9 @@
+<tunnel-layout [steps]="steps$ | async">
+  <header fxLayout="row" fxLayoutAlign="space-between center">
+    <img asset="archipel-content.svg" type="logo" alt="Archipel Content Logo" />
+    <button mat-stroked-button color="primary" (click)="save()">
+      <mat-icon svgIcon="floppy" class="primary-icon"></mat-icon>
+      <span>Save</span>
+    </button>
+  </header>
+</tunnel-layout>
