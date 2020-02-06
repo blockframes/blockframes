@@ -218,5 +218,19 @@ export const mockData = [
       canRead: true,
       canDelete: false
     }
+  },
+  {
+    docPath: `permissions/${userMax.orgId}`,
+    content: {
+      canCreate: [],
+      canRead: [],
+      canDelete: [],
+      roles: {
+        [userMarie.uid]: 'superAdmin',
+        [userMax.uid]: 'member'
+      },
+      canUpdate: [],
+      id: userMax.orgId
+    }
   }
 ];

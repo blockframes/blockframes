@@ -86,9 +86,9 @@ service cloud.firestore {
     match /permissions/{orgId} {
     	allow read: if isOrgMember(userId(), orgId);
       allow create: if (isOrgAdmin(userId(), orgId)
-      	&& incomingData().id == orgId
-        && documentIdChecked(orgId, 'permissions'))
-        || isCreatingOrganization(orgId);
+      	  && incomingData().id == orgId
+          && documentIdChecked(orgId, 'permissions')
+        ) || isCreatingOrganization(orgId);
 			allow update: if isOrgAdmin(userId(), orgId)
       	&& incomingData().id == orgId
         && documentIdChecked(orgId, 'permissions')
