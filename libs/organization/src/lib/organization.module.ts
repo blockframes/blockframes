@@ -38,7 +38,6 @@ import { MatTooltipModule } from '@angular/material';
 // Components
 import { OrganizationDisplayComponent } from './components/organization-display/organization-display.component';
 import { MemberAddComponent } from './components/member-add/member-add.component';
-import { MemberFormRoleComponent } from './components/member-form-role/member-form-role.component';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { MemberRequestComponent } from './components/member-request/member-request.component';
 import { MemberPendingComponent } from './components/member-pending/member-pending.component';
@@ -123,7 +122,6 @@ export const organizationRoutes: Routes = [
   ],
   declarations: [
     MemberRequestComponent,
-    MemberFormRoleComponent,
     MemberPendingComponent,
     OrganizationDisplayComponent,
     MemberEditableComponent,
