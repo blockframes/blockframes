@@ -1,5 +1,5 @@
 import { staticModels } from '@blockframes/utils/static-model';
-import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { ContractVersionPriceForm } from './price.form';
 
 @Component({
@@ -8,14 +8,9 @@ import { ContractVersionPriceForm } from './price.form';
   styleUrls: ['./price.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PriceComponent implements OnInit {
+export class PriceComponent {
   @Input() form: ContractVersionPriceForm;
 
   public staticCurrencies = staticModels.MOVIE_CURRENCIES;
-
-  constructor() { }
-
-  ngOnInit() {
-  }
 
 }
