@@ -1,4 +1,5 @@
-import { ActivatedRoute, Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import {
   Component,
@@ -6,13 +7,18 @@ import {
   Input,
   Directive,
   ElementRef,
-  ViewChild
+  ViewChild,
+  AfterViewInit,
+  OnDestroy
 } from '@angular/core';
 import { OverlayWidgetComponent } from '../overlay-widget/overlay-widget.component';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 export interface SearchResult {
   title: string;
   icon: string;
+  /** path between current route and item */
+  path: string;
   items: Record<string, string>[];
 }
 
@@ -22,13 +28,19 @@ export interface SearchResult {
   styleUrls: ['./search-widget.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SearchWidgetComponent {
+export class SearchWidgetComponent implements AfterViewInit, OnDestroy {
   @Input() searchCtrl: FormControl;
   @Input() link = 'search';
   @Input() results: SearchResult[] = [];
   @ViewChild(OverlayWidgetComponent, { static: false }) searchWidget: OverlayWidgetComponent;
 
-  constructor(private acitvatedRoute: ActivatedRoute, private router: Router) { }
+  private sub: Subscription;
+
+  constructor(private acitvatedRoute: ActivatedRoute, private router: Router, private routerQuery: RouterQuery) { }
+
+  ngAfterViewInit() {
+    this.sub = this.routerQuery.select('navigationId').subscribe(_ => this.searchWidget.close())
+  }
 
   open(ref: ElementRef) {
     if (this.results.length) {
@@ -51,6 +63,10 @@ export class SearchWidgetComponent {
       queryParamsHandling: 'merge'
     });
     this.searchWidget.close();
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 }
 
