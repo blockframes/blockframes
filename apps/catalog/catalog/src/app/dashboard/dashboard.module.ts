@@ -139,24 +139,6 @@ const routes: Routes = [
       }]
     }]
   }
-  // {
-  //   path: 'movie-tunnel',
-  //   canActivate: [TunnelGuard],
-  //   canDeactivate: [TunnelGuard],
-  //   children: [{
-  //     path: '',
-  //     loadChildren: () => import('./movie-tunnel/start/start-tunnel.module').then(m => m.StartTunnelModule)
-  //   }, {
-  //     path: ':movieId',
-  //     canActivate: [MovieActiveGuard],
-  //     canDeactivate: [MovieActiveGuard],
-  //     loadChildren: () => import('./movie-tunnel/movie-tunnel.module').then(m => m.MovieTunnelModule),
-  //     data: {
-  //       redirect: '/c/o/dashboard/movie-tunnel'
-  //     },
-  //   }]
-  // },
-
 ];
 
 @NgModule({
