@@ -14,17 +14,13 @@ export class MemberService extends CollectionService<MemberState> {
   constructor(
     protected store: MemberStore,
     private organizationQuery: OrganizationQuery,
-    private organizationService: OrganizationService,
-    private permissionsQuery: PermissionsQuery,
-    private permissionsService: PermissionsService,
-    private authService: AuthService
+    private organizationService: OrganizationService
     ) {
     super(store);
   }
 
   private userIds$ = this.organizationQuery.selectActive().pipe(
-    map(org => org.userIds),
-    distinctUntilChanged((old, curr) => old.every(user => curr.includes(user)))
+    map(org => org.userIds)
   );
 
   public syncOrgMembers() {
@@ -34,6 +30,7 @@ export class MemberService extends CollectionService<MemberState> {
   }
 
   /** Remove a member from the organization. */
+  // TODO: issue#1719: do backend function to remove permissions and the orgId of the user
   public removeMember(uid: string) {
     const org = this.organizationQuery.getActive();
     const userIds = org.userIds.filter(userId => userId !== uid);

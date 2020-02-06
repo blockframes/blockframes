@@ -11,7 +11,10 @@
     <member-repertory
       [members]="members$ | async"
       [isSuperAdmin]="isSuperAdmin$ | async"
-      (memberRemoved)="removeMember($event)">
+      (memberRemoved)="removeMember($event)"
+      (updatedToSuperAdmin)="updateRole($event, 'superAdmin')"
+      (updatedToAdmin)="updateRole($event, 'admin')"
+      (updatedToMember)="updateRole($event, 'member')">
     </member-repertory>
   </div>
   <div class="space-between-component" *ngIf="(invitationsFromOrganization$ | async) as invitationsMember">

@@ -14,6 +14,10 @@ export class MemberRepertoryComponent {
 
   @Output() memberRemoved = new EventEmitter<string>();
 
+  @Output() updatedToSuperAdmin = new EventEmitter<string>();
+  @Output() updatedToAdmin = new EventEmitter<string>();
+  @Output() updatedToMember = new EventEmitter<string>();
+
   public memberColumns = {
     name: 'Name',
     surname: 'Lastname',

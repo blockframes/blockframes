@@ -3,7 +3,7 @@ import { Observable, Subscription } from 'rxjs';
 import { OrganizationQuery } from '../../+state/organization.query';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { InvitationService, InvitationQuery, InvitationStore } from '@blockframes/notification';
-import { PermissionsQuery } from '../../permissions/+state';
+import { PermissionsQuery, UserRole, PermissionsService } from '../../permissions/+state';
 import { Order } from '@datorama/akita';
 import { Invitation, InvitationType } from '@blockframes/invitation/types';
 import { OrganizationMember } from '../../member/+state/member.model';
@@ -43,6 +43,7 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
     private invitationQuery: InvitationQuery,
     private invitationStore: InvitationStore,
     private permissionQuery: PermissionsQuery,
+    private permissionService: PermissionsService,
     private memberQuery: MemberQuery,
     private memberService: MemberService
   ) {}
@@ -78,18 +79,30 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
     this.invitationService.declineInvitation(invitation);
   }
 
-  /** Update every user roles in the form list. */
-  public updateRole() {
-    // try {
-    //   if (!this.membersFormList.value.find(member => member.role === UserRole.superAdmin)) {
-    //     throw new Error('There must be at least one Super Admin in the organization.')
-    //   }
-    //   this.permissionsService.updateMembersRole(this.membersFormList.value);
-    //   this.snackBar.open('Roles updated', 'close', { duration: 2000 });
-    //   this.opened = false;
-    // } catch (error) {
-    //   this.snackBar.open(error.message, 'close', { duration: 2000 });
-    // }
+  /** Ensures that there is always at least one super Admin in the organization. */
+  public hasLastSuperAdmin(uid:string, role: UserRole) {
+    if (role !== UserRole.superAdmin && this.permissionQuery.isUserSuperAdmin(uid)) {
+      const superAdminNumber = this.permissionQuery.superAdminCount;
+      return superAdminNumber > 1 ? true : false;
+    } else {
+      return true;
+    }
+  }
+
+  /** Update user role. */
+  public updateRole(uid: string, role: UserRole) {
+    if (this.permissionQuery.hasAlreadyThisRole(uid, role)) {
+      return this.snackBar.open('This user already has this role.', 'close', { duration: 2000 });
+    }
+    try {
+      if (!this.hasLastSuperAdmin(uid, role)) {
+        throw new Error('There must be at least one Super Admin in the organization.');
+      }
+      this.permissionService.updateMemberRole(uid, role);
+      this.snackBar.open('Role updated', 'close', { duration: 2000 });
+    } catch (error) {
+      this.snackBar.open(error.message, 'close', { duration: 2000 });
+    }
   }
 
   public removeMember(uid: string) {
