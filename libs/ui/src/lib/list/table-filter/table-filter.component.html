@@ -1,6 +1,7 @@
 <mat-form-field appearance="outline" *ngIf="showFilter">
   <mat-label>Filter</mat-label>
   <input matInput placeholder="Type to filter in the list below" (keyup)="applyFilter($event.target.value)"/>
+  <!-- TODO issue#1819 -->
   <button matSuffix mat-icon-button [widgetTarget]="filterColumnWidget">
     <mat-icon>filter_list</mat-icon>
   </button>

@@ -22,10 +22,7 @@ export class TemplateListComponent implements OnInit {
   };
   public initialVersionColumns = ['name', 'created', 'updated'];
 
-  constructor(
-    private query: TemplateQuery,
-    public dialog: MatDialog
-  ) {}
+  constructor(private query: TemplateQuery, public dialog: MatDialog) {}
 
   ngOnInit() {
     this.templates$ = this.query.selectAll();
