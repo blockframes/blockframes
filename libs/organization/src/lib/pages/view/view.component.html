@@ -1,10 +1,11 @@
-<ng-container *ngIf="user$ | async as user; else: loading">
+<ng-container *ngIf="organization$ | async as org; else: loading">
   <header fxLayout="row" fxLayoutAlign="space-between start">
     <article fxLayout="row" fxLayoutAlign="space-around start">
-      <img [imgRef]="user.avatar" [placeholderAsset]="placeholderAvatar" alt="profile picture" />
-      <div class="user-info" *ngIf="organization$ | async as org">
-        <h1>{{ user.name }} {{ user.surname }}</h1>
-        <p class="mat-body-2">{{ user.position }} at {{ org.name }}</p>
+      <img [imgRef]="org.logo" [placeholderAsset]="placeholderLogo" alt="organization logo" />
+      <div class="org-info">
+        <h1>{{ org.name }}</h1>
+        <h2>{{ org.activity }}</h2>
+        <p class="mat-body-2">{{ org.addresses.main.street }}</p>
       </div>
     </article>
     <ng-container>
@@ -15,8 +16,15 @@
     </ng-container>
   </header>
   <section>
-    <!-- <profile-form [formGroup]="profileForm"></profile-form>
-    <profile-password-form [formGroup]="editPasswordForm"></profile-password-form> -->
+    <nav mat-tab-nav-bar>
+      <a mat-tab-link
+         *ngFor="let link of navLinks"
+         [routerLink]="link.path"
+         routerLinkActive #rla="routerLinkActive"
+         [active]="rla.isActive">
+        {{link.label}}
+      </a>
+    </nav>
   </section>
 </ng-container>
 <ng-template #loading>

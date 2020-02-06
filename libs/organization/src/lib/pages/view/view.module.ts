@@ -4,9 +4,10 @@ import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
-import { ProfileViewComponent } from './view.component';
+import { OrganizationViewComponent } from './view.component';
 
 // Material
+import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
@@ -14,18 +15,19 @@ import { MatIconModule } from '@angular/material/icon';
 
 
 @NgModule({
-  declarations: [ProfileViewComponent],
+  declarations: [OrganizationViewComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
     ImageReferenceModule,
     ImgAssetModule,
     // Material
+    MatTabsModule,
     MatProgressSpinnerModule,
     MatSelectModule,
     MatButtonModule,
     MatIconModule,
-    RouterModule.forChild([{ path: '', component: ProfileViewComponent}])
+    RouterModule.forChild([{ path: '', component: OrganizationViewComponent}])
   ]
 })
-export class ProfileViewModule { }
+export class OrganizationViewModule { }
