@@ -1,7 +1,6 @@
-section {
-  margin: 100px 200px 0 200px;
+:host {
+  padding: 100px 200px 0 200px;
 }
-
-.space-between-component {
+:host > * {
   margin-bottom: 24px;
 }

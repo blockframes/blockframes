@@ -1,28 +1,25 @@
-<section>
-  <div class="space-between-component" *ngIf="(invitationsToJoinOrganization$ | async) as invitations">
-    <member-request *ngIf="invitations.length > 0"
-      (declined)="declineInvitation($event)"
-      (accepted)="acceptInvitation($event)"
-      [invitations]="invitations"
-      [isAdmin]="isAdmin$ | async">
-    </member-request>
-  </div>
-  <div class="space-between-component">
-    <member-repertory
-      [members]="members$ | async"
-      [isSuperAdmin]="isSuperAdmin$ | async"
-      (memberRemoved)="removeMember($event)"
-      (updatedToSuperAdmin)="updateRole($event, 'superAdmin')"
-      (updatedToAdmin)="updateRole($event, 'admin')"
-      (updatedToMember)="updateRole($event, 'member')">
-    </member-repertory>
-  </div>
-  <div class="space-between-component" *ngIf="(invitationsFromOrganization$ | async) as invitationsMember">
-    <member-pending *ngIf="invitationsMember.length > 0"
-      [invitations]="invitationsMember"
-      (declined)="declineInvitation($event)"
-      [isAdmin]="isAdmin$ | async">
-    </member-pending>
-  </div>
-  <div class="space-between-component"><member-add *ngIf="(isAdmin$ | async)"> </member-add></div>
-</section>
+<ng-container *ngIf="(invitationsToJoinOrganization$ | async) as invitations">
+  <member-request *ngIf="invitations.length > 0"
+    (declined)="declineInvitation($event)"
+    (accepted)="acceptInvitation($event)"
+    [invitations]="invitations"
+    [isAdmin]="isAdmin$ | async">
+  </member-request>
+</ng-container>
+<member-repertory
+  [members]="members$ | async"
+  [isSuperAdmin]="isSuperAdmin$ | async"
+  (memberRemoved)="removeMember($event)"
+  (updatedToSuperAdmin)="updateRole($event, 'superAdmin')"
+  (updatedToAdmin)="updateRole($event, 'admin')"
+  (updatedToMember)="updateRole($event, 'member')">
+</member-repertory>
+<ng-container *ngIf="(invitationsFromOrganization$ | async) as invitationsMember">
+  <member-pending *ngIf="invitationsMember.length > 0"
+    [invitations]="invitationsMember"
+    (declined)="declineInvitation($event)"
+    [isAdmin]="isAdmin$ | async">
+  </member-pending>
+</ng-container>
+<member-add *ngIf="(isAdmin$ | async)"> </member-add>
+
