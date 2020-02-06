@@ -53,7 +53,7 @@ export class TunnelLayoutComponent implements OnInit {
   public routeBeforeTunnel: string;
 
   @Input() set steps(steps: TunnelStep[]) {
-    this.navigation.next(steps);
+    this.navigation.next(steps || []);
   }
   
   constructor(

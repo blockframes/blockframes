@@ -3,7 +3,7 @@ import { ContractService, ContractType } from '../../+state';
 import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'contract-lobby',
+  selector: 'contract-tunnel-lobby',
   templateUrl: './lobby.component.html',
   styleUrls: ['./lobby.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -19,6 +19,6 @@ export class LobbyComponent {
   async select(contractType: 'sale' | 'mandate') {
     const type = contractType === 'sale' ? ContractType.sale : ContractType.mandate;
     const contractId = await this.service.add({ type });
-    this.router.navigate([type, contractId], { relativeTo: this.route })
+    this.router.navigate([contractId], { relativeTo: this.route })
   }
 }
