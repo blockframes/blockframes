@@ -160,14 +160,14 @@ service cloud.firestore {
     /// CONTRACTS RULES ///
 
     match /contracts/{contractId} {
-    	allow read: if userHasValidOrg(); // allow read: if isParty(userOrgId()) || isBlockframesAdmin(userId()); => ISSUE#1619
+    	allow read: if isParty(userOrgId());
       allow create: if canCreateNewPermissions(userOrgId(), contractId);
       allow update: if orgCan('canUpdate', userOrgId(), contractId);
       allow delete: if orgCan('canDelete', userOrgId(), contractId);
 
-      match /{document=**} {
-        allow read, write: if userHasValidOrg();
-      }
+      // match /{document=**} {
+      //   allow read, write: if userHasValidOrg();
+      // }
     }
 
     /// DISTRIBUTION DEALS RULES ///
