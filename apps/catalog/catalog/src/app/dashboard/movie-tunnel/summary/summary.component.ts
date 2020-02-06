@@ -16,6 +16,6 @@ export class TunnelSummaryComponent {
 
   public getPath(segment: string) {
     const movieId = this.route.snapshot.params.movieId;
-    return `/c/o/dashboard/movie-tunnel/${movieId}/${segment}`;
+    return `/c/o/dashboard/tunnel/movie/${movieId}/${segment}`;
   }
 }
