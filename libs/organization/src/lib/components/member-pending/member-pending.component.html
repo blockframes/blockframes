@@ -1,5 +1,5 @@
 <mat-card>
-  <h3>Pending members ({{ invitations.length }})</h3>
+  <mat-card-title>Pending members ({{ invitations.length }})</mat-card-title>
   <mat-list role="list">
     <ng-container *ngIf="invitations.length; else empty">
       <mat-list-item *ngFor="let invitation of invitations; let first = first">
