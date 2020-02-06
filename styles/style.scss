@@ -23,6 +23,16 @@ ul {
   padding-left: 0;
 }
 
+// Apply space of 8px between span & icon everywhere
+.mat-icon + span,
+span + .mat-icon {
+  margin-left: 8px;
+}
+
+
+
+
+
 .important {
   color: mat-color($mat-dark-bf-orange, 400);
 }
@@ -64,4 +74,28 @@ main {
 
 .black-bg-opacity-30 {
   background-color: rgba(#000000, 0.3);
+}
+
+
+// SCROLL
+.dark-theme {
+  /* width */
+  ::-webkit-scrollbar {
+    width: 14px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
+  }
 }

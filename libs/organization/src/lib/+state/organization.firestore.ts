@@ -4,6 +4,11 @@ import { Location, BankAccount, createLocation } from '@blockframes/utils/common
 
 type Timestamp = firestore.Timestamp;
 
+interface AppAccess {
+  catalogDashboard: boolean;
+  catalogMarketplace: boolean;
+}
+
 /** Document model of an Organization */
 interface OrganizationRaw<D> {
   id: string;
@@ -22,7 +27,8 @@ interface OrganizationRaw<D> {
   wishlist: WishlistRaw<D>[];
   cart: CatalogCart[];
   isBlockchainEnabled: boolean;
-  bankAccounts: BankAccount[]
+  bankAccounts: BankAccount[];
+  appAccess?: AppAccess;
 }
 
 export interface OrganizationDocument extends OrganizationRaw<Timestamp> {}

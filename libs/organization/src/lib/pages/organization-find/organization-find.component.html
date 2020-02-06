@@ -12,7 +12,7 @@
         [formControl]="orgControl"
         [matAutocomplete]="auto"
       />
-      <mat-icon matSuffix svgIcon="magnifying_glass"></mat-icon>
+      <mat-icon matSuffix svgIcon="magnifying_glasses"></mat-icon>
       <mat-autocomplete #auto="matAutocomplete">
         <mat-option *ngFor="let org of searchResults$ | async" [value]="org.name" (click)="selectOrganization(org)">
           <b>{{ org.name }}</b>

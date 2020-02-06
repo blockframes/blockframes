@@ -12,11 +12,9 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ImgAssetModule } from '@blockframes/ui/theme';
 
 // Widgets
-// import { ProfileWidgetModule, ProfileMenuModule } from '@blockframes/account';
+import { SearchWidgetModule } from '@blockframes/ui/search-widget';
 import { NotificationWidgetModule } from '@blockframes/notification';
-// import { ThemeWidgetModule } from '@blockframes/ui/theme';
-// import { WalletWidgetModule } from '@blockframes/ethers';
-// import { OrganizationWidgetModule } from '@blockframes/organization';
+import { ProfileWidgetModule } from '@blockframes/account';
 
 // Material
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -55,6 +53,8 @@ import { LayoutComponent } from './layout.component';
 
     // Widgets
     NotificationWidgetModule,
+    SearchWidgetModule,
+    ProfileWidgetModule,
   ],
 })
 export class LayoutModule {}

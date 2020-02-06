@@ -1,11 +1,56 @@
 @mixin mat-bf-button-theme($theme) {
+  $foreground: map-get($theme, foreground);
   $primary: map-get($theme, primary);
   $accent: map-get($theme, accent);
   $warn: map-get($theme, warn);
 
+  ///////////////////////
+  // BUTTON WITH ICONS //
+  ///////////////////////
+
+  .mat-stroked-button, .mat-button {
+    &.mat-primary {
+      svg g, svg polygon {
+        fill: mat-color($primary);
+      }
+    }
+    &.mat-accent {
+      svg g, svg polygon {
+        fill: mat-color($accent);
+      }
+    }
+    &.mat-warn {
+      svg g, svg polygon {
+        fill: mat-color($warn);
+      }
+    }
+  }
+  .mat-raised-button, .mat-flat-button, .mat-fab, .mat-mini-fab {
+    &.mat-primary {
+      svg g, svg polygon {
+        fill: mat-color($primary, default-contrast);
+      }
+    }
+    &.mat-accent {
+      svg g, svg polygon {
+        fill: mat-color($accent, default-contrast);
+      }
+    }
+    &.mat-warn {
+      svg g, svg polygon {
+        fill: mat-color($warn, default-contrast);
+      }
+    }
+  }
+
+  .mat-button, .mat-flat-button, .mat-raised-button, .mat-stroked-button {
+    padding: 14px 32px;
+  }
+
+
   .mat-stroked-button {
-    height: 52px;
     border-radius: 26px;
+    border-color: mat-color($foreground, text);
     &.mat-primary {
       border-color: mat-color($primary);
     }
@@ -18,7 +63,23 @@
   }
 
   .mat-flat-button {
-    padding: 14px 32px;
-    border-radius: 32px;
+    border-radius: 26px;
+  }
+
+
+}
+
+
+// TYPOGRAPHY
+@mixin mat-bf-button-typography($config) {
+  
+  // need to wrap around something to win the battle against Material CSS priority
+  body {
+    // note: mat-icon-button is not here on purpose
+    .mat-button, .mat-raised-button, .mat-stroked-button,
+    .mat-flat-button, .mat-fab, .mat-mini-fab {
+      letter-spacing: mat-letter-spacing($config, button);
+      line-height: mat-line-height($config, button);
+    }
   }
 }

@@ -18,7 +18,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatDividerModule } from '@angular/material/divider';
 
-import { UploadModule, UiFormModule, FeedbackMessageModule } from '@blockframes/ui';
+import { UploadModule, FeedbackMessageModule } from '@blockframes/ui';
+import { PasswordConfirmModule } from '@blockframes/ui/form';
 import { KeyManagerModule } from '../key-manager/key-manager.module';
 
 import { WalletActiveGuard } from './guards/wallet-active.guard';
@@ -82,7 +83,7 @@ export const walletRoutes: Routes = [
     MatStepperModule,
     UploadModule,
     RouterModule.forChild(walletRoutes),
-    UiFormModule,
+    PasswordConfirmModule,
     FeedbackMessageModule,
     MatDividerModule,
     ImgAssetModule

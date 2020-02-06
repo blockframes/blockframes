@@ -12,13 +12,19 @@ export function cleanModel<T>(data: T): T {
   return JSON.parse(JSON.stringify(data));
 }
 
+/** A custom interface for group of dates. Used in notifications/invitations components. */
 export interface DateGroup<T> {
   [date: string]: T[];
 }
 
+/** Checks if the date is a firestore Timestamp. */
+export function isTimeStamp(date: firestore.Timestamp | Date): date is firestore.Timestamp {
+  return date && date instanceof firestore.Timestamp
+}
+
 /** Takes a Date or a Timestamp and returns it as a Date. */
-export function toDate(date: firestore.Timestamp | Date) {
-  if (date instanceof firestore.Timestamp) {
+export function toDate(date: firestore.Timestamp | Date): Date {
+  if (isTimeStamp(date)) {
     return date.toDate();
   }
   return date;

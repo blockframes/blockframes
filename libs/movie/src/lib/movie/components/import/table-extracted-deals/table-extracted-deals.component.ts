@@ -79,7 +79,7 @@ export class TableExtractedDealsComponent implements OnInit {
       this.processedDeals = 0;
       return true;
     } catch (err) {
-      this.snackBar.open(`Could not import all deals (${this.processedDeals} / ${this.selection.selected})`, 'close', { duration: 3000 });
+      this.snackBar.open(`Could not import all deals (${this.processedDeals} / ${this.selection.selected.length})`, 'close', { duration: 3000 });
       this.processedDeals = 0;
     }
   }

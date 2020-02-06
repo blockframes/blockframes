@@ -24,6 +24,7 @@ import { FormStaticValue, FormList, FormEntity } from '@blockframes/utils/form';
 function createContractControls(contract: Partial<Contract>) {
   const entity = createContract(contract);
   return {
+    id: new FormControl(contract.id),
     parties: FormList.factory(entity.parties, partyDetails => new PartyDetailsForm(partyDetails)),
     documents: new LegalDocumentsForm(entity.documents),
     titleIds: FormList.factory(contract.titleIds),
@@ -115,7 +116,6 @@ function createContractTitlesControls(
   titles: Record<string, Partial<ContractTitleDetail>>
 ): ContractTitlesControl {
   const controls = {};
-  const ids = Object.keys(titles);
   for (const id in titles) {
     controls[id] = new ContractTitleDetailForm(titles[id]);
   }

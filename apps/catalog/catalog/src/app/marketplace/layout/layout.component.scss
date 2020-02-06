@@ -7,10 +7,6 @@ mat-sidenav-container {
   height: 100%;
 }
 
-mat-sidenav {
-  width: 256px;
-}
-
 mat-toolbar {
   position: sticky;
   top: 0;
@@ -23,21 +19,8 @@ mat-toolbar {
     }
   }
 
-  form {
+  search-widget {
     flex: 1;
-
-    input {
-      flex: 1;
-      height: 100%;
-      border: none;
-      font-size: 18px;
-      line-height: 1.44;
-      letter-spacing: 0.5px;
-      background-color: transparent;
-    }
-    input:focus {
-      outline: none;
-    }
   }
 
   mat-divider {

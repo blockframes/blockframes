@@ -4,7 +4,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule, Routes } from '@angular/router';
 import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
-import { BackgroundAssetModule } from '@blockframes/ui/theme/background-asset.module';
 
 // Angular Fire
 import { AngularFireAuthModule } from '@angular/fire/auth';
@@ -22,10 +21,8 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 
 // Component
-import { LoginViewComponent } from './pages/login-view/login-view.component';
-import { UiFormModule, FeedbackMessageModule } from '@blockframes/ui';
-import { SignupFormComponent } from './components/signup-form/signup-form.component';
-import { SigninFormComponent } from './components/signin-form/signin-form.component';
+import { FeedbackMessageModule } from '@blockframes/ui';
+import { PasswordConfirmModule } from '@blockframes/ui/form';
 import { WelcomeViewComponent } from './pages/welcome-view/welcome-view.component';
 import { IdentityComponent } from './pages/identity/identity.component';
 import { IdentityFeedbackComponent } from './pages/identity-feedback/identity-feedback.component';
@@ -38,7 +35,10 @@ import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
 export const AuthRoutes: Routes = [
   { path: '', redirectTo: 'welcome', pathMatch: 'full' },
   { path: 'welcome', component: WelcomeViewComponent },
-  { path: 'connexion', component: LoginViewComponent },
+  {
+    path: 'connexion',
+    loadChildren: () => import('./pages/login/login.module').then(m => m.LoginModule)
+  },
   { path: 'identity', component: IdentityComponent },
   { path: 'congratulation', component: IdentityFeedbackComponent },
   { path: 'email-verification', component: EmailVerificationComponent},
@@ -53,9 +53,8 @@ export const AuthRoutes: Routes = [
     CropperModule,
     TermsConditionsModule,
     AcceptConditionsModule,
-    UiFormModule,
+    PasswordConfirmModule,
     ImgAssetModule,
-    BackgroundAssetModule,
 
     // Material
     MatSnackBarModule,
@@ -75,9 +74,6 @@ export const AuthRoutes: Routes = [
     RouterModule.forChild(AuthRoutes),
   ],
   declarations: [
-    LoginViewComponent,
-    SigninFormComponent,
-    SignupFormComponent,
     WelcomeViewComponent,
     IdentityComponent,
     IdentityFeedbackComponent,

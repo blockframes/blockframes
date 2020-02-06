@@ -9,6 +9,6 @@ export interface VersionMeta extends FinancialReportVersion {
 export function createVersionMeta(params: Partial<VersionMeta>): VersionMeta {
   return {
     id: '_meta',
-    count: params.count || 0,
+    count: params && params.count ? params.count : 0,
   } as VersionMeta;
 }

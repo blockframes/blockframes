@@ -1,0 +1,39 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.mat-stroked-button {
+  min-width: 130px;
+  mat-icon {
+    margin-right: 8px;
+  }
+}
+
+mat-sidenav-container {
+  flex: 1;
+}
+
+mat-sidenav section {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+
+  mat-accordion {
+    width: 100%;
+    mat-expansion-panel {
+      border: none;
+    }
+    .spinner-section {
+      margin-bottom: 50px;
+    }
+  }
+}
+
+mat-sidenav-content {
+  padding: 40px 48px;
+}
+
+footer {
+  margin-top: 50px;
+}

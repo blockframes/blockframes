@@ -23,7 +23,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 // Libraries
-import { UploadModule, UiFormModule } from '@blockframes/ui';
+import { PasswordConfirmModule } from '@blockframes/ui/form';
+import { UploadModule } from '@blockframes/ui/upload';
 import { MovieDisplayModule } from '../../display/display.module';
 import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
@@ -88,7 +89,7 @@ const routes: Routes = [
 
     // Librairies
     UploadModule,
-    UiFormModule,
+    PasswordConfirmModule,
     MovieDisplayModule,
     CropperModule,
     ImageReferenceModule,

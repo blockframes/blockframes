@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input, ViewChild } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input, ViewChild, AfterViewInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Observable } from 'rxjs';
 import { FormControl } from '@angular/forms';
@@ -6,7 +6,7 @@ import { MatSort } from '@angular/material/sort';
 import { startWith } from 'rxjs/operators';
 import { Contract, getTotalPrice } from '../+state/contract.model';
 import { MatPaginator } from '@angular/material/paginator';
-import { ContractVersion, ContractVersionService, getContractLastVersion } from '@blockframes/contract/version/+state';
+import { ContractVersion, getContractLastVersion } from '@blockframes/contract/version/+state';
 import { Price } from '@blockframes/utils/common-interfaces/price';
 import { MovieQuery, getMovieTitleList } from '@blockframes/movie';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state/distribution-deal.service';
@@ -17,7 +17,7 @@ import { DistributionDealService } from '@blockframes/movie/distribution-deals/+
   styleUrls: ['./contract-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ContractListComponent implements OnInit {
+export class ContractListComponent implements OnInit, AfterViewInit {
   @Input()
   set source(contracts: Contract[]) {
     this.dataSource = new MatTableDataSource(contracts);
@@ -58,6 +58,11 @@ export class ContractListComponent implements OnInit {
   ngOnInit() {
     this.columnFilter.patchValue(this.initialColumns);
     this.displayedColumns$ = this.columnFilter.valueChanges.pipe(startWith(this.initialColumns));
+  }
+
+  ngAfterViewInit() {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
   }
 
   public applyFilter(filterValue: string) {

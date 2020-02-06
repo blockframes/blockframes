@@ -1,6 +1,7 @@
 ng-container,
 mat-accordion,
-distribution-form-holdbacks {
+distribution-form-holdbacks,
+div {
   width: 100%;
 }
 
@@ -14,4 +15,8 @@ ontract-form-party-name {
 
 button {
   margin: 10px;
+}
+
+mat-divider {
+  margin: 20px;
 }

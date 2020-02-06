@@ -13,7 +13,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 
 // Tunnel
-import { TunnelPageModule } from '@blockframes/ui/tunnel/page/tunnel-page.module';
+import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { TunnelPreviousDealsComponent } from './previous-deals.component';
 
 // Component Modules

@@ -8,7 +8,7 @@ import { DateGroup } from '@blockframes/utils/helpers';
 import { formatDate } from '@angular/common';
 import { MovieQuery } from '@blockframes/movie';
 import { NotificationType } from './notification.firestore';
-import { ImgRef } from '@blockframes/utils';
+import { ImgRef, createImgRef } from '@blockframes/utils';
 
 function getYesterday() {
   const today = new Date();
@@ -150,6 +150,6 @@ export class NotificationQuery extends QueryEntity<NotificationState, Notificati
 
   public getPoster(id: string): ImgRef {
     const movie = this.movieQuery.getEntity(id)
-    return movie.main.poster
+    return movie.promotionalElements.poster.length ? movie.promotionalElements.poster[0].media : createImgRef();
   }
 }

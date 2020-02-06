@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule } from '@angular/router';
-import { TunnelPageModule } from '@blockframes/ui/tunnel/page/tunnel-page.module';
+import { TunnelPageModule } from '@blockframes/ui/tunnel';
 // Materials
 import { TunnelSummaryComponent } from './summary.component';
 import { MovieSummaryMainModule } from '@blockframes/movie/movieform/summary/main/main.module';

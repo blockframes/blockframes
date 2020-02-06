@@ -16,7 +16,7 @@ import {
 import { createParty } from '@blockframes/utils/common-interfaces/identity';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 import { createTerms } from '@blockframes/utils/common-interfaces/terms';
-import { ContractVersion, ContractVersionWithTimeStamp, formatContractVersion } from '../../version/+state/contract-version.model';
+import { ContractVersion, ContractVersionWithTimeStamp, formatContractVersion, VersionMeta, getContractLastVersion } from '../../version/+state/contract-version.model';
 import { LegalRolesSlug } from '@blockframes/utils/static-model/types';
 import { toDate } from '@blockframes/utils/helpers';
 import { createPaymentSchedule } from '@blockframes/utils/common-interfaces/schedule';
@@ -297,4 +297,13 @@ export function getTotalPrice(titles: Record<string, ContractTitleDetail>): Pric
   result.currency = versionTitles[versionTitles.length - 1].price.currency;
 
   return result;
+}
+
+/**
+ * Returns only the validated contracts.
+ * @param contracts
+ */
+export function getValidatedContracts(contracts: Contract[]): Contract[] {
+  const validStatus = ContractStatus.paid || ContractStatus.waitingpayment || ContractStatus.accepted;
+  return contracts.filter(contract => getContractLastVersion(contract).status === validStatus)
 }

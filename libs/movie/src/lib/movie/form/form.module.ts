@@ -18,7 +18,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
-import { UploadModule, UiFormModule } from '@blockframes/ui';
+import { PasswordConfirmModule } from '@blockframes/ui/form';
+import { UploadModule } from '@blockframes/ui/upload';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -67,7 +68,7 @@ import { MovieFormVersionInfoModule } from './version-info/version-info.module';
     MatSlideToggleModule,
 
     // Librairies
-    UiFormModule,
+    PasswordConfirmModule,
     UploadModule,
     CropperModule,
 

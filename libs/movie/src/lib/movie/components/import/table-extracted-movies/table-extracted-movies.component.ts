@@ -34,7 +34,7 @@ export class TableExtractedMoviesComponent implements OnInit {
     'movie.main.internalRef',
     'select',
     'movie.main.title.original',
-    'movie.main.poster',
+    'movie.promotionalElements.poster',
     'movie.main.productionYear',
     'errors',
     'warnings',
@@ -73,7 +73,7 @@ export class TableExtractedMoviesComponent implements OnInit {
       this.processedMovies = 0;
       return true;
     } catch (err) {
-      this.snackBar.open(`Could not create all movies (${this.processedMovies} / ${this.selection.selected})`, 'close', { duration: 3000 });
+      this.snackBar.open(`Could not create all movies (${this.processedMovies} / ${this.selection.selected.length})`, 'close', { duration: 3000 });
       this.processedMovies = 0;
     }
   }
@@ -113,7 +113,7 @@ export class TableExtractedMoviesComponent implements OnInit {
       this.processedMovies = 0;
       return true;
     } catch (err) {
-      this.snackBar.open(`Could not update all movies (${this.processedMovies} / ${this.selection.selected})`, 'close', { duration: 3000 });
+      this.snackBar.open(`Could not update all movies (${this.processedMovies} / ${this.selection.selected.length})`, 'close', { duration: 3000 });
       this.processedMovies = 0;
     }
   }

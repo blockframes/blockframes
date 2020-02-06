@@ -1,8 +1,13 @@
 import { Component, AfterViewInit, ViewChild, ElementRef, ChangeDetectionStrategy, ChangeDetectorRef, NgZone, Input } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Movie } from '@blockframes/movie/movie+state';
-import { map, geoJSON, GeoJSON, Layer } from 'leaflet';
+import { geoJSON, GeoJSON, Layer } from 'leaflet';
 import { getTerritorySlugFromGeoJson, getTerritoryLabelFromGeoJson } from '@blockframes/utils/static-model/territories-ISO-3166';
+import { ISO3166TERRITORIES } from '@blockframes/utils/static-model/territories-ISO-3166';
+import { BehaviorSubject } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+const territories = ISO3166TERRITORIES.map(t => t['iso_a3']);
 
 @Component({
   selector: 'distribution-deals-selection-map',
@@ -10,70 +15,28 @@ import { getTerritorySlugFromGeoJson, getTerritoryLabelFromGeoJson } from '@bloc
   styleUrls: ['./selection-map.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SelectionMapComponent implements AfterViewInit {
+export class SelectionMapComponent {
 
   @Input() movie: Movie;
-  private geojson: GeoJSON;
-  private layer: Layer;
-  public country: any;
+  // Selected country on the map
+  private country = new BehaviorSubject('');
+  public country$ = this.country.asObservable();
+  // Countries you want to display in blue on the map
+  public countries$ = new BehaviorSubject(['RUS', 'ZAF']);
+  public contract$ = this.country$.pipe(
+    map(tag => getTerritorySlugFromGeoJson(tag))
+    // map(country => IMPLEMENT MAPPING LOGIC HERE TO GET THE RIGHT CONTENT)
+  );
 
-  @ViewChild('leaflet', { static: false }) leafletEl: ElementRef;
+  constructor(private cdr: ChangeDetectorRef) { }
 
-  constructor(
-    private http: HttpClient,
-    private cdr: ChangeDetectorRef,
-    private ngZone: NgZone
-  ) { }
-
-  async ngAfterViewInit() {
-    const world = map(this.leafletEl.nativeElement, { zoomSnap: 0.5, attributionControl: false }).setView([40, 40], 1.5);
-    const countries = await this.http.get<GeoJSON.GeoJsonObject>('assets/maps/world.geo.json').toPromise();
-    this.geojson = geoJSON(countries, {
-      style: this.setStyle.bind(this),
-      onEachFeature: this.addFeature.bind(this)
-    });
-    this.geojson.addTo(world);
+  /** Whenever you click on a country */
+  public select(e) {
+    this.country.next(e['iso_a3']);
   }
 
-  /** Set the default style of this  */
-  private setStyle(feature: GeoJSON.Feature) {
-    return {
-      fillColor: '#ECEFF9',
-      weight: 1,
-      color: '#000000A0',
-      fillOpacity: 1
-    };
+  public trackByTag(tag) {
+    return tag;
   }
 
-  private addFeature(feature: GeoJSON.Feature, layer: Layer): void {
-    this.ngZone.runOutsideAngular(() => {
-      layer.on({
-        mouseover: ({ target }) => {
-          if (layer !== this.layer) {
-            target.setStyle({ fillColor: '#8788A3' });
-          }
-        },
-        mouseout: () => {
-          if (layer !== this.layer) {
-            this.geojson.resetStyle(layer);
-          }
-        },
-        click: ({ target }) => {
-          this.geojson.resetStyle(this.layer);
-          this.layer = layer;
-          this.country = feature.properties;
-          this.cdr.markForCheck();
-          target.setStyle({ fillColor: '#334AEC' });
-        }
-      });
-    })
-  }
-
-  public getTerritorySlugFromGeoJson(code: string) {
-    return getTerritorySlugFromGeoJson(code);
-  }
-
-  public getTerritoryLabelFromGeoJson(code: string) {
-    return getTerritoryLabelFromGeoJson(code);
-  }
 }

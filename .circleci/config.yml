@@ -11,6 +11,11 @@
 #
 version: 2.1
 references:
+  start_firestore_emulator: &start_firestore_emulator
+    run:
+      name: start firestore emulator in background
+      command: npm run firebase:emulator
+      background: true
   production_only: &production_only
     filters:
       branches:
@@ -72,6 +77,7 @@ jobs:
     steps:
       - checkout_project
       - run: echo "${FIREBASE_CI_SERVICE_ACCOUNT}" > creds.json
+      - *start_firestore_emulator
       - run: npm run build:all
       - run: npm run test
       - run: npm run lint
@@ -93,6 +99,7 @@ jobs:
     steps:
       - checkout_project
       - run: echo "${FIREBASE_CI_SERVICE_ACCOUNT}" > creds.json
+      - *start_firestore_emulator
       - run:
           # npm run affected:build tries to build the libs which are broken,
           # the following command only build affected apps.
@@ -144,7 +151,6 @@ jobs:
       - slack/notify:
           message: '🚲 Deploying & testing e2e (https://blockframes-ci.web.app/)'
       - run: |
-          npm install --save-dev firebase-tools &&
           npx firebase use ci &&
           npx firebase deploy --force || true;
           npx ng build backend-ops --configuration=$ENV
@@ -178,8 +184,8 @@ jobs:
       - ENV: production
       - NODE_OPTIONS: '--max_old_space_size=4096'
     steps:
-      - run: echo "${FIREBASE_CI_SERVICE_ACCOUNT}" > creds.json
       - checkout_project
+      - run: echo "${FIREBASE_CI_SERVICE_ACCOUNT}" > creds.json
       - run: cp env/env.prod.ts env/env.ts # required for the typechecking & file rewrite to work
       - run: npm run build:all
       - slack/notify:
@@ -188,10 +194,18 @@ jobs:
           # Note: right now do-exclusively excludes cross-jobs (staging & prod).
           token: $CIRCLE_TOKEN
           command: |
-            npm install --save-dev firebase-tools &&
             npx firebase use prod &&
-            ENV=production npx firebase deploy --except functions &&
-            ENV=production npx firebase deploy --only functions --force
+            cp firestore.rules firestore.rules.regular &&
+            cp firestore.maintenance.rules firestore.rules &&
+            npx firebase deploy --except functions &&
+            npx firebase deploy --only functions --force
+      - run: node dist/apps/backend-ops/main.js upgrade
+      - run:
+          command: |
+            cp firestore.rules.regular firestore.rules &&
+            npx firebase use prod &&
+            npx firebase deploy --only firestore:rules
+          when: always
       - slack/status
   deploy-to-staging:
     executor: blockframes-ci
@@ -208,18 +222,17 @@ jobs:
           message: '🛵 Deploying to staging.. (https://staging.blockframes.io/)'
       - run:
           command: |
-            npm install --save-dev firebase-tools &&
             npx firebase use staging &&
             cp firestore.rules firestore.rules.regular &&
             cp firestore.maintenance.rules firestore.rules &&
-            ENV=staging npx firebase deploy --except functions &&
-            ENV=staging npx firebase deploy --only functions --force
+            npx firebase deploy --except functions &&
+            npx firebase deploy --only functions --force
       - run: node dist/apps/backend-ops/main.js upgrade
       - run:
           command: |
             cp firestore.rules.regular firestore.rules &&
             npx firebase use staging &&
-            ENV=staging npx firebase deploy --only firestore:rules
+            npx firebase deploy --only firestore:rules
           when: always
       - slack/status
 workflows:

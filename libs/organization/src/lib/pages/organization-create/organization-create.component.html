@@ -1,0 +1,70 @@
+<section
+  fxLayout="row"
+  fxLayoutAlign="center start"
+  fxLayout.lt-md="column"
+  fxLayoutAlign.lt-md="center center">
+  <img asset="Rocket_500.png" alt="Rocket taking off in the air" />
+  <article>
+    <h2>Create your organization</h2>
+    <form [formGroup]="form">
+      <h3>Your company</h3>
+      <mat-form-field appearance="outline">
+        <mat-label>Organization name</mat-label>
+        <input
+          matInput
+          placeholder="Organization name"
+          aria-label="organization name"
+          formControlName="name"
+          required
+        />
+        <mat-error *ngIf="notProvided">You must enter a name</mat-error>
+        <mat-error *ngIf="notUnique">{{ name }} is already taken, please use another name</mat-error>
+      </mat-form-field>
+
+      <h3>Contact information</h3>
+      <organization-form-address [formGroup]="form.addresses.main"></organization-form-address>
+      <h4>Email address</h4>
+      <mat-form-field appearance="outline">
+        <mat-label>Organization email address</mat-label>
+        <input
+          matInput
+          placeholder="Organization email address"
+          aria-label="organization email address"
+          formControlName="email"
+        />
+        <mat-error *ngIf="form.get('email').hasError('email')">Email not valid</mat-error>
+      </mat-form-field>
+
+      <h3>Activity details</h3>
+      <mat-form-field appearance="outline">
+        <mat-label>Activity description</mat-label>
+        <input matInput placeholder="Activity description" aria-label="activity description" formControlName="activity" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Fiscal number</mat-label>
+        <input
+          matInput
+          placeholder="Fiscal number"
+          aria-label="fiscal number"
+          formControlName="fiscalNumber"
+        />
+      </mat-form-field>
+      <h3>Logo</h3>
+      <drop-cropper [ratio]="1" storagePath="logo" formControlName="logo"></drop-cropper>
+      <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="16px">
+        <button mat-flat-button color="accent" (click)="addOrganization()">
+          <ng-container *ngIf="(loading$ | async); else: notLoading">
+            <mat-progress-spinner
+              mode="indeterminate"
+              diameter="20"
+            ></mat-progress-spinner>
+          </ng-container>
+          <ng-template #notLoading>Submit</ng-template>
+        </button>
+        <a mat-button color="primary" routerLink="../home">
+          Cancel
+        </a>
+      </div>
+    </form>
+  </article>
+</section>

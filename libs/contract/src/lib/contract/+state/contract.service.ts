@@ -18,13 +18,14 @@ import { cleanModel } from '@blockframes/utils';
 import { PermissionsService } from '@blockframes/organization';
 import { ContractDocumentWithDates, ContractStatus } from './contract.firestore';
 import { firestore } from 'firebase/app';
+import { MovieQuery } from '@blockframes/movie';
 
 /**
  * Get all the contracts where user organization is party.
  * Also check that there is no childContractIds to never fetch
  * contract between organization and Archipel Content.
  */
-const contractsListQuery = (orgId: string): Query<ContractWithTimeStamp[]> => ({
+const organizationContractsListQuery = (orgId: string): Query<ContractWithTimeStamp[]> => ({
   path: 'contracts',
   queryFn: ref => ref.where('partyIds', 'array-contains', orgId).where('childContractIds', '==', []),
     versions: contract => ({
@@ -40,6 +41,15 @@ const contractQuery = (contractId: string): Query<ContractWithTimeStamp> => ({
     })
 })
 
+/** Get all the contracts where the active movie appears. */
+const movieContractsQuery = (movieId: string): Query<ContractWithTimeStamp[]> => ({
+  path: 'contracts',
+  queryFn: ref => ref.where('titleIds', 'array-contains', movieId).where('childContractIds', '==', []),
+    versions: contract => ({
+      path: `contracts/${contract.id}/versions`
+    })
+});
+
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'contracts' })
 export class ContractService extends CollectionService<ContractState> {
@@ -47,6 +57,7 @@ export class ContractService extends CollectionService<ContractState> {
   constructor(
     private organizationQuery: OrganizationQuery,
     private contractVersionService: ContractVersionService,
+    private movieQuery: MovieQuery,
     private permissionsService: PermissionsService,
     store: ContractStore
   ) {
@@ -56,9 +67,18 @@ export class ContractService extends CollectionService<ContractState> {
   /** Sync the store with every contracts of the active organization. */
   public syncOrganizationContracts() {
     return this.organizationQuery.selectActiveId().pipe(
-      // Reset the store everytime the movieId changes.
+      // Clear the store everytime the active orgId changes.
       tap(_ => this.store.reset()),
-      switchMap(orgId => awaitSyncQuery.call(this, contractsListQuery(orgId)))
+      switchMap(orgId => awaitSyncQuery.call(this, organizationContractsListQuery(orgId)))
+    );
+  }
+
+  /** Sync the store with every contracts of the active movie. */
+  public syncMovieContracts() {
+    return this.movieQuery.selectActiveId().pipe(
+      // Clear the store everytime the active movieId changes.
+      tap(_ => this.store.reset()),
+      switchMap(movieId => awaitSyncQuery.call(this, movieContractsQuery(movieId)))
     );
   }
 

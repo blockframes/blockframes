@@ -83,7 +83,7 @@ export interface Party extends StakeholderRaw {
 
 // This is just for more readable code :
 
-export type SalesAgent = Person;
+export type SalesAgent = Stakeholder;
 
 
 ///////////////////

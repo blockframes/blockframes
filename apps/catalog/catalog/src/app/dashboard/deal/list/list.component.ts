@@ -21,7 +21,7 @@ const contractTabs: Tabs[] = [
   },
   {
     name: 'Ongoing Deals',
-    statuses: [ContractStatus.accepted, ContractStatus.waitingpaiment]
+    statuses: [ContractStatus.accepted, ContractStatus.waitingpayment]
   },
   {
     name: 'Past Deals',

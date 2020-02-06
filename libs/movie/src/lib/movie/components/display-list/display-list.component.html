@@ -2,7 +2,9 @@
   <!-- Picture column -->
   <ng-container matColumnDef="picture">
     <th mat-header-cell *matHeaderCellDef></th>
-    <td mat-cell *matCellDef="let element"><img [src]="element.movie.main.poster" /></td>
+    <td mat-cell *matCellDef="let element">
+      <img *ngIf="element.movie.promotionalElements.poster[0].media as poster" [imgRef]="poster" />
+    </td>
   </ng-container>
 
   <!-- Movie title column -->
@@ -34,7 +36,7 @@
         <mat-icon (click)="removeFromWishlist(element.movie, $event)" svgIcon="heart_filled"></mat-icon>
       </ng-container>
       <ng-template #alreadyAdded>
-        <mat-icon (click)="addToWishlist(element.movie, $event)" svgIcon="heart"></mat-icon>
+        <mat-icon (click)="addToWishlist(element.movie, $event)" svgIcon="heart_outline"></mat-icon>
       </ng-template>
     </td>
   </ng-container>

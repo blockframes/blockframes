@@ -1,0 +1,71 @@
+@import '~@angular/material/theming';
+@import 'mixins';
+
+mat-sidenav-container {
+  height: 100%;
+  width: 100%;
+}
+
+mat-sidenav-content {
+  background-size: cover;
+}
+
+button {
+  &:hover {
+    @include mat-elevation(4);
+  }
+}
+
+auth-signup-form {
+  display: block;
+  padding: 20px 0;
+}
+
+.mat-fab {
+  height: 120px;
+  width: 120px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+mat-sidenav {
+  width: 730px;
+}
+
+// large
+@include large {
+  mat-sidenav {
+    width: 600px;
+  }
+}
+
+// medium
+@include medium {
+  mat-sidenav {
+    width: 500px;
+  }
+  mat-sidenav-content {
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position-y: center;
+  }
+}
+
+// small
+@include tablet {
+  mat-sidenav {
+    width: 500px;
+  }
+  mat-sidenav-content {
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position-y: center;
+  }
+}
+
+// extra small
+@include mobile {
+  mat-sidenav {
+    width: 100%;
+  }
+}

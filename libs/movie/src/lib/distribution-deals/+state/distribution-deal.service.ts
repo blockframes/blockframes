@@ -28,7 +28,7 @@ export class DistributionDealService extends CollectionService<DistributionDealS
     super(store);
   }
 
-  /** Gets every distribution deals of organization contracts. */
+  /** Gets every distribution deals of contracts in the store. */
   public syncContractsDeals() {
     return this.contractQuery.selectAll().pipe(
       switchMap(contracts => {
@@ -39,7 +39,6 @@ export class DistributionDealService extends CollectionService<DistributionDealS
       })
     );
   }
-
 
   /**
    *
@@ -130,13 +129,12 @@ export class DistributionDealService extends CollectionService<DistributionDealS
    * Returns all eligible territories from contract's deals.
    * @param contractVersion
    */
-  public getTerritoriesFromContract(contractVersion: ContractVersion) {
-    const dealIds: string[] = [];
-    for (const title of Object.values(contractVersion.titles)) {
-      dealIds.concat(title.distributionDealIds);
-    }
-    const deals = dealIds.map(dealId => this.dealQuery.getEntity(dealId))
-    const territories = deals.map(deal => deal ? getDealTerritories(deal) : []);
-    return territories.flat();
+  public getTerritoriesFromContract(contractVersion: ContractVersion): string[] {
+    // Get all the deals from the contract titles.
+    const deals = Object.values(contractVersion.titles).map(({ distributionDealIds }) =>
+      this.dealQuery.getEntity(distributionDealIds)
+    );
+    // Returns all deals eligible territories as an array of string.
+    return deals.map(deal => deal ? getDealTerritories(deal) : []).flat();
   }
 }

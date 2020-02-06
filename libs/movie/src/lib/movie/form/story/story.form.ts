@@ -6,7 +6,7 @@ function createMovieStoryControls(story?: Partial<MovieStory>) {
   const entity = createMovieStory(story);
   return {
     logline:  new FormControl(entity.logline, [Validators.maxLength(180)]),
-    synopsis: new FormControl(entity.synopsis, [Validators.maxLength(1000)]),
+    synopsis: new FormControl(entity.synopsis, [Validators.required, Validators.maxLength(1000)]),
   }
 }
 

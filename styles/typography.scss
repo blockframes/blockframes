@@ -13,6 +13,6 @@ $bf-typography: mat-typography-config(
   $body-2: mat-typography-level(16px, 26px, 400, $letter-spacing: 0.5px),
   $body-1: mat-typography-level(18px, 28px, 400, $letter-spacing: 0.5px),
   $caption: mat-typography-level(13px, 21px, 400),
-  $button: mat-typography-level(16px, 25px, 600, $letter-spacing: 0.5px),
+  $button: mat-typography-level(16px, 25px, 600, $letter-spacing: 1.25px),
   $input: mat-typography-level(inherit, 1.125, 400)
 );

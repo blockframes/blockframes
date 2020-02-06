@@ -4,7 +4,7 @@
     [mode]="(isHandset$ | async) ? 'over' : 'side'"
     [opened]="(isHandset$ | async) === false">
     <mat-toolbar>
-      <a class="logo" routerLink="/">
+      <a class="logo" routerLink=".">
         <img src="assets/logo/dark/archipel-content.svg" alt="Archipel Content Logo"/>
       </a>
     </mat-toolbar>
@@ -45,14 +45,9 @@
       <button mat-icon-button (click)="sidenav.toggle()">
         <mat-icon>menu</mat-icon>
       </button>
-      <form fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="12px">
-        <mat-icon>search</mat-icon>
-        <input placeholder="Search for clients, negotiations, titles instead of listings..." />
-      </form>
+      <search-widget></search-widget>
       <overlay-notification-widget></overlay-notification-widget>
-      <button mat-icon-button>
-        <mat-icon>account_circle</mat-icon>
-      </button>
+      <account-profile-widget></account-profile-widget>
     </mat-toolbar>
     <!-- CONTENT -->
     <router-outlet></router-outlet>

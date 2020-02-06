@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
-import { TunnelPageModule } from '@blockframes/ui/tunnel/page/tunnel-page.module';
+import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { BudgetComponent } from './budget.component';
 
 // Forms

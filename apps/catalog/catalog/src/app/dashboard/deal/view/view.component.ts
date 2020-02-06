@@ -6,7 +6,8 @@ import {
   ContractPartyDetail,
   getContractParties,
   isContractSignatory,
-  getTotalPrice
+  getTotalPrice,
+  ContractStatus
 } from '@blockframes/contract/contract/+state';
 import { Observable } from 'rxjs/internal/Observable';
 import { map, filter } from 'rxjs/operators';
@@ -39,7 +40,7 @@ function getVersionPrice(version: ContractVersion): string {
   const amount = titles.reduce((sum, title) => sum += title.price.amount, 0);
   const currency = getCodeBySlug('MOVIE_CURRENCIES', titles[titles.length - 1].price.currency);
 
-  return currencyPipe.transform(amount, currency, true);
+  return currencyPipe.transform(amount, currency, 'symbol');
 }
 
 /** Factory function to create VersionView. */
@@ -48,7 +49,7 @@ function createVersionView(version: ContractVersion): VersionView {
     return {
       date: version.creationDate.toLocaleDateString(),
       offer: getVersionPrice(version),
-      status: version.status
+      status: ContractStatus[version.status]
     };
   }
 }

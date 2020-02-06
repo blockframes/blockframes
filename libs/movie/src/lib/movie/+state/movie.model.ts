@@ -26,11 +26,15 @@ import {
   UnitBox,
   MovieStakeholders,
   StoreStatus,
+  MovieAnalytics,
 } from './movie.firestore';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 import { LanguagesSlug } from '@blockframes/utils/static-model';
 import { createRange } from '@blockframes/utils/common-interfaces/range';
 import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
+import { Contract, getValidatedContracts } from '@blockframes/contract/contract/+state/contract.model';
+import { CurrencyPipe } from '@angular/common';
+import { getContractLastVersion } from '@blockframes/contract/version/+state/contract-version.model';
 
 // Export for other files
 export { Credit, SalesAgent } from '@blockframes/utils/common-interfaces/identity';
@@ -334,5 +338,25 @@ export function getMovieTitleList(movies: Movie[]): string[] {
     : movie.main.title.original
   )
   return movieTitles;
+}
 
+/**
+ * Returns the total gross receipts of a movie from the contracts.
+ * @param contracts
+ * @param movieId
+ */
+export function getMovieReceipt(contracts: Contract[], movieId: string): number {
+  const sales = getValidatedContracts(contracts);
+  return sales.reduce((sum, contract) => sum + getContractLastVersion(contract).titles[movieId].price.amount, 0);
+}
+
+/**
+ * Returns the number of views of a movie page.
+ * @param analytics
+ * @param movieId
+ */
+export function getMovieTotalViews(analytics: MovieAnalytics[], movieId: string): number {
+  const movieAnalytic = analytics.find(analytic => analytic.movieId === movieId);
+  const movieHits = movieAnalytic.movieViews.current.map(event => event.hits);
+  return movieHits.reduce((sum, val) => sum + val, 0);
 }

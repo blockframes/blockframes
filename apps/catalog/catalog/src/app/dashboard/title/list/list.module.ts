@@ -8,11 +8,10 @@ import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filte
 import { TitleListComponent } from './list.component';
 
 // Material
-import { MatButtonModule } from '@angular/material';
+import { MatButtonModule } from '@angular/material/button';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
-
-
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [TitleListComponent],
@@ -25,6 +24,7 @@ import { MatIconModule } from '@angular/material/icon';
     MatButtonModule,
     MatTabsModule,
     MatIconModule,
+    MatProgressSpinnerModule,
     // Router
     RouterModule.forChild([{ path: '', component: TitleListComponent }])
   ]

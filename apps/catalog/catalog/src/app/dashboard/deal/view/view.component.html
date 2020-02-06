@@ -85,6 +85,7 @@
         [source]="versions"
         [columns]="versionColumns"
         [initialColumns]="initialVersionColumns">
+        <ng-template colRef="status" let-status><span class="status">{{ status }}</span></ng-template>
       </bf-table-filter>
     </mat-card-content>
   </mat-card>
@@ -106,7 +107,7 @@
           </mat-expansion-panel-header>
           <mat-divider></mat-divider>
           <section fxLayout="row" fxLayoutAlign="start start" class="movie-information">
-            <img class="poster" [imgRef]="movie.main.poster" alt="Movie poster" />
+            <img *ngIf="movie.promotionalElements.poster[0].media as poster" class="poster" [imgRef]="poster" alt="Movie poster" />
             <article>
               <div>
                 <span *ngFor="let director of movie.main.directors; let isLast = last">

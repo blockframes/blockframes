@@ -41,13 +41,13 @@ export class OrganizationHomeComponent implements OnInit, OnDestroy {
   defaultItems: ActionItem[] = [
     {
       routerLink: '../create',
-      icon: 'darkAdjustableWrench',
+      icon: 'wrench',
       title: 'Create your organization',
       description: ''
     },
     {
       routerLink: '../find',
-      icon: 'darkMagnifyingGlass',
+      icon: 'magnifying_glasses',
       title: 'Find your organization',
       description: ''
     }

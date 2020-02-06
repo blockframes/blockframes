@@ -1,0 +1,80 @@
+<mat-toolbar fxLayout="row" fxLayoutAlign="start center">
+  <ng-container *ngIf="(stepData$ | async) as stepData">
+    <article class="page-data" fxLayout="column" fxLayoutAlign="center start">
+      <b class="mat-body-2" *ngIf="stepData.length">
+        Step {{ stepData.index }}/{{ stepData.length }}
+      </b>
+      <div fxLayout="row" fxLayoutAlign="start center" *ngIf="stepData.time">
+        <mat-icon svgIcon="access_time"></mat-icon>
+        <span class="mat-caption">{{ stepData.time }} min ≃</span>
+      </div>
+    </article>
+  </ng-container>
+
+  <article fxFlex fxLayout="row" fxLayoutAlign="space-between center">
+    <div  fxFlex>
+      <ng-content select="header, [tunnel-nav-header]"></ng-content>
+    </div>
+
+    <a mat-icon-button [routerLink]="routeBeforeTunnel">
+      <mat-icon svgIcon="cross"></mat-icon>
+    </a>
+  </article>
+</mat-toolbar>
+
+<mat-sidenav-container>
+  <mat-sidenav opened mode="side">
+    <aside fxLayout="column">
+      <ng-content select="[tunnel-nav-header]"></ng-content>
+      <mat-accordion>
+        <mat-expansion-panel *ngFor="let panel of steps$ | async">
+          <mat-expansion-panel-header>
+            <mat-panel-title>
+              <mat-icon [svgIcon]="panel.icon" bf-color="primary"></mat-icon>
+              <span>{{ panel.title }}</span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <mat-nav-list dense>
+            <ng-container *ngFor="let route of panel.routes">
+              <a mat-list-item [routerLink]="route.path" routerLinkActive="active">
+                {{ route.label }}
+              </a>
+            </ng-container>
+          </mat-nav-list>
+        </mat-expansion-panel>
+      </mat-accordion>
+      <ng-content select="[tunnel-nav-footer]"></ng-content>
+    </aside>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <!-- Skip to next -->
+    <ng-container *ngIf="next$ | async as next">
+      <div fxLayout="row" fxLayoutAlign="end center">
+        <a mat-button color="primary" [routerLink]="next" class="mat-body-2">
+          <span>Skip and do later</span>
+          <mat-icon svgIcon="arrow_forward"></mat-icon>
+        </a>
+      </div>
+    </ng-container>
+
+    <!-- Main Content -->
+    <router-outlet></router-outlet>
+
+    <!-- Previous / Next -->
+    <footer fxLayout="row" fxLayoutGap="24px" fxLayoutAlign="center center">
+      <ng-container *ngIf="previous$ | async as previous">
+        <a test-id="back" mat-stroked-button color="accent" [routerLink]="previous" fxLayoutAlign="center center">
+          <mat-icon svgIcon="arrow_back"></mat-icon>
+          <span>Back</span>
+        </a>
+      </ng-container>
+      <ng-container *ngIf="next$ | async as next">
+        <a test-id="next" mat-flat-button color="accent" [routerLink]="next" fxLayoutAlign="center center">
+          <span>Next</span>
+          <mat-icon svgIcon="arrow_forward"></mat-icon>
+        </a>
+      </ng-container>
+    </footer>
+  </mat-sidenav-content>
+</mat-sidenav-container>

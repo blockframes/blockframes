@@ -7,10 +7,6 @@ mat-sidenav-container {
   height: 100%;
 }
 
-mat-sidenav {
-  width: 256px;
-}
-
 .logo {
   height: 48px;
   img {
@@ -23,20 +19,7 @@ mat-sidenav-content mat-toolbar {
   top: 0;
   z-index: 1;
 
-  form {
+  search-widget {
     flex: 1;
-
-    input {
-      flex: 1;
-      height: 100%;
-      border: none;
-      font-size: 18px;
-      line-height: 1.44;
-      letter-spacing: 0.5px;
-      background-color: transparent;
-    }
-    input:focus {
-      outline: none;
-    }
   }
 }

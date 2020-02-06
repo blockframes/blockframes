@@ -24,6 +24,7 @@ import { RouterModule } from '@angular/router';
     CommonModule,
     ReactiveFormsModule,
     OverlayWidgetModule,
+    RouterModule,
     // Material
     MatButtonModule,
     MatIconModule,
@@ -32,8 +33,7 @@ import { RouterModule } from '@angular/router';
     MatListModule,
     MatTableModule,
     MatPaginatorModule,
-    MatSortModule,
-    RouterModule
+    MatSortModule
   ]
 })
 export class TableFilterModule { }

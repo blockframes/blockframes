@@ -65,12 +65,6 @@ export class MovieFormRootComponent {
         // PRODUCTION YEAR
         this.form.main.get('productionYear').setValue(movie.year);
 
-        // POSTER
-        const poster = await this.imageUploader.upload(movie.poster);
-        if (poster) {
-          this.form.main.get('poster').setValue(poster);
-        }
-
         // DIRECTOR
         this.form.main.directors.clear();
         this.form.main.addDirector(formatCredit(movie.director));

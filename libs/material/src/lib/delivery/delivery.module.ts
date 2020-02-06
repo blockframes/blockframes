@@ -43,10 +43,10 @@ import {
   ConfirmModule,
   EditableModule,
   FeedbackMessageModule,
-  UiFormModule,
   EditableSidenavModule,
   AvatarListModule
 } from '@blockframes/ui';
+import { PasswordConfirmModule } from '@blockframes/ui/form';
 import { OrganizationSearchModule } from '@blockframes/organization';
 import { MaterialModule } from '../material/material.module';
 import { DeliveryRoutingModule } from './delivery-routing-module';
@@ -114,7 +114,7 @@ import { MatStepperModule } from '@angular/material/stepper';
 
     // Library
     ConfirmModule,
-    UiFormModule,
+    PasswordConfirmModule,
     ActionsListModule,
     ActionsPickerModule,
     ActionsPickerListModule,

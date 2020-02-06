@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
-import { TunnelPageModule } from '@blockframes/ui/tunnel/page/tunnel-page.module';
+import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
 import { MediaImageComponent } from './media-image.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
