@@ -2,9 +2,9 @@ import { Component, ChangeDetectionStrategy, Host, OnInit } from '@angular/core'
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieService, Movie } from '@blockframes/movie';
 import { TunnelStep } from '@blockframes/ui/tunnel'
-import { ContractForm } from '../forms/contract.form';
+import { ContractForm } from '../form/contract.form';
 import { ContractQuery, ContractService, ContractType } from '../+state';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { startWith, map, switchMap } from 'rxjs/operators';
 
 /** Fill the steps depending on the movie */
@@ -29,7 +29,7 @@ function fillMovieSteps(movies: Movie[] = []): TunnelStep[] {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContractTunnelComponent implements OnInit {
-  public steps$: Observable<TunnelStep[]> = of([]);
+  public steps$: Observable<TunnelStep[]>;
   public type: ContractType;
 
   constructor(
