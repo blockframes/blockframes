@@ -3,7 +3,6 @@ import { MovieAnalytics } from '@blockframes/movie/movie+state/movie.firestore';
 import { MovieService } from '@blockframes/movie/movie+state/movie.service';
 import { MovieQuery } from '@blockframes/movie/movie+state/movie.query';
 import { Observable } from 'rxjs';
-import { analyticsMockData } from './mockData'
 
 const eventList = ['movieViews', 'addedToWishlist', 'promoReelOpened'];
 
@@ -16,11 +15,11 @@ const eventList = ['movieViews', 'addedToWishlist', 'promoReelOpened'];
 export class TitleSalesComponent implements OnInit {
   public movieAnalytics$: Observable<MovieAnalytics[]>;
   public eventList = eventList;
-  public analyticsMockData = analyticsMockData;
   
   constructor(private movieService: MovieService, private movieQuery: MovieQuery) {}
 
   ngOnInit() {
-    this.movieAnalytics$ = this.movieService.getMovieAnalytics([this.movieQuery.getActiveId()]);
+    const movieId = this.movieQuery.getActiveId();
+    this.movieAnalytics$ = this.movieService.getMovieAnalytics([movieId]);
   }
 }

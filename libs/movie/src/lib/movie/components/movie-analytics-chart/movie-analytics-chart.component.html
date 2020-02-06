@@ -2,7 +2,9 @@
   <ng-container *ngFor="let info of chartData">
     <mat-card #chart class="chart">
       <div fxLayout="row" fxLayoutAlign="space-between center">
-        <div class="mat-body-2"><mat-icon [svgIcon]="info.icon"></mat-icon><span>{{ info.title }}</span></div>
+        <div class="mat-body-2">
+          <mat-icon [svgIcon]="info.icon"></mat-icon>
+          <span>{{ info.title }}</span></div>
         <div class="mat-caption" *ngIf="info.percentage">
           <ng-container *ngIf="info.percentage> 0; else down">
             <mat-icon color="primary" svgIcon="arrow_closed"></mat-icon>
