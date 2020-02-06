@@ -9,7 +9,7 @@ import { functions, db } from './internals/firebase';
 import { deleteSearchableOrg, storeSearchableOrg } from './internals/algolia';
 import { sendMail, sendMailFromTemplate } from './internals/email';
 import { organizationCreated, organizationWasAccepted } from './assets/mail-templates';
-import { OrganizationDocument, OrganizationStatus, PublicUser } from './data/types';
+import { OrganizationDocument, OrganizationStatus, PublicUser, PermissionsDocument } from './data/types';
 import { RelayerConfig, relayerDeployOrganizationLogic, relayerRegisterENSLogic, isENSNameRegistered } from './relayer';
 import { mnemonic, relayer } from './environments/environment';
 import { emailToEnsDomain, precomputeAddress as precomputeEthAddress, getProvider } from '@blockframes/ethers/helpers';
@@ -34,6 +34,22 @@ function notifUser(userId: string, notificationType: NotificationType, org: Orga
   });
 }
 
+/** Remove the user's orgId and user's role in permissions. */
+async function removeMemberPermissionsAndOrgId(user :PublicUser) {
+  return db.runTransaction(async tx => {
+    const userDoc = db.doc(`users/${user.uid}`);
+    const permissionsDoc = db.doc(`permissions/${user.orgId}`);
+
+    const permissionSnapshot = await tx.get(permissionsDoc);
+    const permissions = permissionSnapshot.data() as PermissionsDocument;
+    const roles = permissions.roles;
+    delete roles[user.uid];
+
+    tx.update(userDoc, { orgId: '' });
+    tx.update(permissionsDoc, { roles });
+  });
+}
+
 /** Send notifications to all org's members when a member is added or removed. */
 async function notifyOnOrgMemberChanges(before: OrganizationDocument, after: OrganizationDocument) {
   // Member added
@@ -50,6 +66,8 @@ async function notifyOnOrgMemberChanges(before: OrganizationDocument, after: Org
     const userRemovedId = difference(before.userIds, after.userIds)[0];
     const userSnapshot = await db.doc(`users/${userRemovedId}`).get();
     const userRemoved = userSnapshot.data() as PublicUser;
+
+    await removeMemberPermissionsAndOrgId(userRemoved);
 
     const notifications = after.userIds.map(userId => notifUser(userId, NotificationType.memberRemovedFromOrg, after, userRemoved));
     return triggerNotifications(notifications);
