@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { MovieService } from '@blockframes/movie';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthQuery } from '@blockframes/auth';
-import { MovieTunnelService } from '../movie-tunnel.service';
+import { TunnelService } from '@blockframes/ui/tunnel';
 
 const cardContents = [
   {
@@ -37,7 +37,7 @@ export class StartTunnelComponent implements OnInit {
 
   constructor(
     private movieService: MovieService,
-    private tunnelService: MovieTunnelService,
+    private tunnelService: TunnelService,
     private auth: AuthQuery,
     private router: Router,
     private route: ActivatedRoute
