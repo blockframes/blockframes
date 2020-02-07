@@ -17,11 +17,11 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { ProfileDisplayComponent } from './components/profile-display/profile-display.component';
-import { ProfileFormComponent } from './components/profile-form/profile-form.component';
+import { ProfileFormComponent } from './forms/profile/profile.component';
 import { ProfileEditableComponent } from './pages/profile-editable/profile-editable.component';
 import { EditableSidenavModule, UploadModule } from '@blockframes/ui';
 import { PasswordConfirmModule } from '@blockframes/ui/form';
-import { PasswordFormComponent } from './components/password-form/password-form.component';
+import { PasswordFormComponent } from './forms/password/password.component';
 
 export const profileRoutes: Routes = [
   { path: '', redirectTo: 'view', pathMatch: 'full' },

@@ -3,8 +3,8 @@ import { ControlContainer } from '@angular/forms';
 
 @Component({
   selector: '[formGroupName] profile-form, [formGroup] profile-form, profile-form',
-  templateUrl: './profile-form.component.html',
-  styleUrls: ['./profile-form.component.scss'],
+  templateUrl: './profile.component.html',
+  styleUrls: ['./profile.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProfileFormComponent implements OnInit {
