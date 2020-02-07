@@ -46,7 +46,7 @@ function hasLanguage(
   return original && dubbed && subtitle && caption;
 }
 
-function types(movie: Movie, movieGenre: string[]): boolean {
+function genres(movie: Movie, movieGenre: string[]): boolean {
   if (!movieGenre.length) {
     return true;
   }
@@ -154,7 +154,7 @@ export function filterMovie(movie: Movie, filter: CatalogSearch, deals?: Distrib
     return (
       productionYearBetween(movie, filter.productionYear) &&
       hasEveryLanguage &&
-      types(movie, filter.type) &&
+      genres(movie, filter.genres) &&
       certifications(movie, filter.certifications) &&
       productionStatus(movie, filter.status) &&
       availabilities(deals, filter.availabilities) &&
@@ -164,7 +164,7 @@ export function filterMovie(movie: Movie, filter: CatalogSearch, deals?: Distrib
   } else {
     return (
       hasEveryLanguage &&
-      types(movie, filter.type) &&
+      genres(movie, filter.genres) &&
       productionStatus(movie, filter.status) &&
       salesAgent(movie, filter.salesAgent)
     );
