@@ -2,6 +2,10 @@ mat-form-field {
   flex: 1;
 }
 
+mat-chip-list {
+  margin: 10x 0;
+}
+
 button[mat-mini-fab] {
   margin-right: 20px;
   margin-top: 20px; // Average value of the button to be in the center of mat-form-field
