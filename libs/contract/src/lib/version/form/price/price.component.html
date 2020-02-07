@@ -19,7 +19,7 @@
   <mat-form-field appearance="outline" fxLayout="row" fxLayoutAlign="baseline start">
     <input matInput type="text" [formControl]="movieCtrl">
     <button *ngIf="movieCtrl.value" matSuffix mat-icon-button aria-label="Clear" (click)="movieCtrl.reset()">
-      <mat-icon>close</mat-icon>
+      <mat-icon svgIcon="close"></mat-icon>
     </button>
     <button mat-icon-button matPrefix aria-label="Search">
       <mat-icon>search</mat-icon>

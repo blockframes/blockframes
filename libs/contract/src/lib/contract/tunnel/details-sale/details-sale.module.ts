@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 // Page
 import { DistributionDealTermsModule } from '@blockframes/movie/distribution-deals/form/terms/terms.module';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
-import { ContractFormPartyNameModule } from '../../form/party-name/party-name.module';
+import { ContractFormPartyModule } from '../../form/party/party.module';
 import { DetailsSaleComponent } from './details-sale.component';
 
 // Material
@@ -23,7 +23,7 @@ import { ContractVersionFormPriceModule } from '@blockframes/contract/version/fo
 
     // Page
     TunnelPageModule,
-    ContractFormPartyNameModule,
+    ContractFormPartyModule,
     DistributionDealTermsModule,
     ContractVersionFormPriceModule,
 

@@ -5,12 +5,12 @@ import { PartyDetailsForm } from '../contract.form';
 import { FormList } from '@blockframes/utils';
 
 @Component({
-  selector: '[form] contract-form-party-name',
-  templateUrl: 'party-name.component.html',
-  styleUrls: ['party-name.component.scss'],
+  selector: '[form] contract-form-party',
+  templateUrl: 'party.component.html',
+  styleUrls: ['party.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ContractFormPartyNameComponent {
+export class ContractFormPartyComponent {
   @Input() form: FormList<any, PartyDetailsForm>;
   @Input() type: 'licensee' | 'licensor' = 'licensee';
   public _hasRole: boolean;
@@ -20,9 +20,14 @@ export class ContractFormPartyNameComponent {
     this._hasRole = coerceBooleanProperty(value);
   }
 
+  public staticRoles = staticModels.LEGAL_ROLES.filter(role => {
+    const wantedRoles = ['licensee', 'licensor'];
+    return wantedRoles.includes(role.slug);
+  })
+
   public staticSubRoles = staticModels.SUB_LICENSOR_ROLES.filter(role => {
-    const wantedRoles = ['observator', 'signatory'];
-    return wantedRoles.includes(role.slug)
+    const wantedSubRoles = ['observator', 'signatory'];
+    return wantedSubRoles.includes(role.slug)
   })
 
   private getRoleValue(index: number) {

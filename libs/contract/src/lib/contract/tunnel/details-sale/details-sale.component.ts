@@ -9,9 +9,9 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 })
 export class DetailsSaleComponent {
 
-  constructor(private form: ContractForm) {}
+  constructor(private form: ContractForm) { }
 
-  get parties(){
+  get parties() {
     return this.form.get('parties')
   }
 
@@ -19,7 +19,7 @@ export class DetailsSaleComponent {
     return this.form.get('versions');
   }
 
-  public terms(index: number){
+  public terms(index: number) {
     return this.versions.at(index).get('scope');
   }
 
