@@ -4,4 +4,24 @@
   <movie-analytics-chart [analyticsData]="movieAnalytics$ | async"></movie-analytics-chart>
 </section>
 <!-- Sales Revenue -->
-
+<section>
+  <h3>Sales Revenue</h3>
+  <div fxLayout="row wrap" fxLayoutAlign="flex-start" fxLayout.lt-md="column" fxLayoutAlign.lt-md="center" fxLayoutGap="25px">
+    <mat-card fxFlex="45">
+      <div fxLayout="row" fxLayoutAlign="space-between center">
+        <div class="mat-body-2">
+          <mat-icon svgIcon="monetization"></mat-icon>
+          <span>Total Gross Receipts</span></div>
+      </div>
+      <mat-card-title>{{ receipts }}</mat-card-title>
+    </mat-card>
+    <mat-card fxFlex="45">
+      <div fxLayout="row" fxLayoutAlign="space-between center">
+        <div class="mat-body-2">
+          <mat-icon svgIcon="sales"></mat-icon>
+          <span>Total Sales</span></div>
+      </div>
+      <mat-card-title>{{ sales }}</mat-card-title>
+    </mat-card>
+  </div>
+</section>
