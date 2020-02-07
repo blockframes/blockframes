@@ -56,11 +56,29 @@ service cloud.firestore {
     match /invitations/{invitationId} {
     	allow read: if userId() == existingData().user.uid
       	|| userOrgId() == existingData().organization.id;
-    	allow update, create: if userId() == incomingData().user.uid
+
+      allow create: if userId() == incomingData().user.uid
       	|| userOrgId() == incomingData().organization.id
-        || isOwner(userOrgId(), incomingData().docId)
         || orgCan('isAdmin', userOrgId(), incomingData().docId);
-      allow delete: if isOrgAdmin(userId(), orgId) || userId() == existingData().user.uid;
+
+
+    	allow update: if (
+        (
+          (incomingData().user.uid == existingData().user.uid)
+          && (incomingData().organization.id == existingData().organization.id)
+        )
+        &&
+        (
+          (userId() == existingData().user.uid)
+          || (userOrgId() == incomingData().organization.id)
+          || (orgCan('isAdmin', userOrgId(), incomingData().docId))
+        )
+      );
+
+      allow delete: if (
+        isOrgAdmin(userId(), existingData().organization.id)
+        || userId() == existingData().user.uid
+      );
     }
 
     /// ORGANIZATION RULES ///
