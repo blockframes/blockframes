@@ -105,21 +105,7 @@
                 Genres
               </mat-panel-title>
             </mat-expansion-panel-header>
-            <mat-form-field class="genres-chip-list">
-              <mat-chip-list #genreChipList aria-label="Genres selection">
-                <mat-chip *ngFor="let genre of selectedGenres" selectable removable (removed)="removeGenre(genre)">
-                  {{ genre }}
-                  <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                </mat-chip>
-                <input placeholder="Genres" #genreInput [formControl]="genreControl" [matAutocomplete]="genre"
-                  [matChipInputFor]="genreChipList">
-              </mat-chip-list>
-              <mat-autocomplete #genre="matAutocomplete" (optionSelected)="addGenre($event)">
-                <mat-option *ngFor="let genre of (genresFilter$ | async)" [value]="genre">
-                  {{ genre }}
-                </mat-option>
-              </mat-autocomplete>
-            </mat-form-field>
+            <movie-form-genre [form]="filterForm.genres"></movie-form-genre>
           </mat-expansion-panel>
 
           <!-- Languages -->
