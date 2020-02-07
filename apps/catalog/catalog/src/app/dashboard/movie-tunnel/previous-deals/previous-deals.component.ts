@@ -24,7 +24,7 @@ import { DistributionDealForm } from '@blockframes/movie/distribution-deals/form
 export class TunnelPreviousDealsComponent implements OnInit, OnDestroy {
   public formContract: FormList<any, ContractForm> = FormList.factory(
     [{ id: this.newId(), titleIds: [this.movieId] }],
-    contract => new ContractForm(contract)
+    contract => new ContractForm()
   );
   public formDistributionDeal: FormList<any, DistributionDealForm> = FormList.factory(
     [],

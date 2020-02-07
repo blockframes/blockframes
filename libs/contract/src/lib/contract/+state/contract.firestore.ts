@@ -39,8 +39,8 @@ export enum ContractStatus {
 }
 
 export const enum ContractType {
-  mandate = 'Mandate',
-  sale = 'Sale'
+  mandate = 'mandate',
+  sale = 'sale'
 }
 
 export interface ContractTitleDetail {

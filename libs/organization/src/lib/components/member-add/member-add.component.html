@@ -1,16 +1,33 @@
-<section test-id="member-add">
-  <h4>Send invitation</h4>
-  <span fxLayout="row" fxLayoutAlign="start baseline">
-    <mat-form-field appearance="outline">
-      <mat-label>Add new member</mat-label>
-      <input matInput type="email" placeholder="Email" aria-label="Email" [formControl]="emailControl" />
-      <mat-hint>Please enter a valid email address</mat-hint>
-      <mat-error *ngIf="emailControl.hasError('email')">
-        Please enter a <strong>valid</strong> email address.
-      </mat-error>
-    </mat-form-field>
-    <button mat-button test-id="add" (click)="sendInvitation()" color="primary">
-      Send invitation
-    </button>
-  </span>
-</section>
+<mat-card  test-id="member-add">
+  <mat-card-title>Invite Members</mat-card-title>
+  <p>Invite your co-workers to join your company so that they can use the application.</p>
+
+  <ng-container *ngFor="let control of form.controls; let i = index; let last = last">
+    <mat-card-content fxLayout="row" fxLayoutAlign="center">
+      <mat-form-field appearance="outline" class="email">
+        <mat-label>Member's work email address</mat-label>
+        <input matInput type="email" placeholder="Invite by E-mail Address" aria-label="Email" [formControl]="control" />
+        <mat-icon matSuffix svgIcon="mail"></mat-icon>
+        <mat-error *ngIf="control.hasError('email')">
+          Please enter a <strong>valid</strong> email address.
+        </mat-error>
+      </mat-form-field>
+    </mat-card-content>
+    <mat-card-actions fxLayout="row" fxLayoutAlign="center">
+      <!-- Add / Delete -->
+      <button class="mat-elevation-z0" *ngIf="!last" mat-mini-fab color="warn" (click)="form.removeAt(i)" matTooltip="Remove a Member" aria-label="Remove a Member">
+        <mat-icon>delete</mat-icon>
+      </button>
+      <button class="mat-elevation-z0" *ngIf="last" mat-mini-fab color="primary" (click)="form.add()" matTooltip="Add a Member" aria-label="Add a Member">
+        <mat-icon>add</mat-icon>
+      </button>
+    </mat-card-actions>
+  </ng-container>
+</mat-card>
+
+<div fxLayout="row" fxLayoutAlign="center">
+  <button class="send" mat-flat-button color="accent" test-id="add" [disabled]="isSending" (click)="sendInvitations()">
+    <mat-icon svgIcon="send"></mat-icon>
+    <span>Send invitation(s)</span>
+  </button>
+</div>

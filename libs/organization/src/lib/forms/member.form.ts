@@ -1,5 +1,5 @@
 import { FormList } from "@blockframes/utils";
-import { FormGroup, FormControl } from "@angular/forms";
+import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { OrganizationMember } from "../member/+state/member.model";
 
 function createMemberFormGroup(member: Partial<OrganizationMember> = {}) {
@@ -13,6 +13,15 @@ function createMemberFormGroup(member: Partial<OrganizationMember> = {}) {
   });
 }
 
+function createAddMemberFormGroup() {
+  return new FormControl('', [Validators.required, Validators.email]);
+
+}
+
 export function createMemberFormList() {
   return FormList.factory([], createMemberFormGroup);
+}
+
+export function createAddMemberFormList() {
+  return FormList.factory([], createAddMemberFormGroup);
 }

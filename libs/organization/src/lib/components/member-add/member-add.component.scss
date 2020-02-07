@@ -1,3 +1,18 @@
-mat-form-field {
-  width: 35%;
+@import 'mixins';
+
+.email {
+  width: 60%;
+}
+.send {
+  margin-top: 40px;
+}
+
+mat-card-content {
+  margin-bottom: 0;
+}
+
+@include mobile {
+  .email {
+    width: 100%;
+  }
 }

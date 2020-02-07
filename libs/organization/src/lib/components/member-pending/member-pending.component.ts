@@ -1,6 +1,5 @@
-import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
-import { Invitation } from '@blockframes/invitation/types';
-
+import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy, HostBinding } from '@angular/core';
+import { InvitationFromOrganizationToUser } from '@blockframes/invitation/types';
 @Component({
   selector: 'member-pending',
   templateUrl: './member-pending.component.html',
@@ -9,8 +8,8 @@ import { Invitation } from '@blockframes/invitation/types';
 })
 
 export class MemberPendingComponent {
-  @Output() accepted = new EventEmitter<Invitation>();
-  @Output() declined = new EventEmitter<Invitation>();
-  @Input() invitations: Invitation[];
+  @HostBinding('attr.page-id') pageId = 'member-invitation';
+  @Output() declined = new EventEmitter<InvitationFromOrganizationToUser>();
+  @Input() invitations: InvitationFromOrganizationToUser[];
   @Input() isAdmin: boolean;
 }

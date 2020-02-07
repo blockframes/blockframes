@@ -108,34 +108,14 @@ const routes: Routes = [
       children: [{
         path: '',
         loadChildren: () => import('@blockframes/contract/contract/tunnel').then(m => m.ContractTunnelLobbyModule)
-      }, {
-        path: 'sale',
-        children: [{
-          path: '',
-          loadChildren: () => import('@blockframes/contract/contract/tunnel').then(m => m.ContractTunnelLobbyModule)
-        }, {
-          path: ':contractId',
-          canActivate: [ActiveContractGuard],
-          canDeactivate: [ActiveContractGuard],
-          loadChildren: () => import('@blockframes/contract/contract/tunnel').then(m => m.ContractTunnelModule),
-          data: {
-            redirect: '/c/o/dashboard/tunnel/mandate'
-          },
-        }]
-      }, {
-        path: 'mandate',
-        children: [{
-          path: '',
-          loadChildren: () => import('@blockframes/contract/contract/tunnel').then(m => m.ContractTunnelLobbyModule)
-        }, {
-          path: ':contractId',
-          canActivate: [ActiveContractGuard],
-          canDeactivate: [ActiveContractGuard],
-          loadChildren: () => import('@blockframes/contract/contract/tunnel').then(m => m.ContractTunnelModule),
-          data: {
-            redirect: '/c/o/dashboard/tunnel/mandate'
-          },
-        }]
+      },{
+        path: ':contractId',
+        canActivate: [ActiveContractGuard],
+        canDeactivate: [ActiveContractGuard],
+        loadChildren: () => import('@blockframes/contract/contract/tunnel').then(m => m.ContractTunnelModule),
+        data: {
+          redirect: '/c/o/dashboard/tunnel/contract'
+        },
       }]
     }]
   }

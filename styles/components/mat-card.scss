@@ -6,5 +6,10 @@
     @include _mat-theme-overridable-elevation(0, $theme);
     background-color: mat-color($background, card);
     border: 1px solid mat-color($foreground, divider);
+    .mat-card-title {
+      font-size: 20px;
+      color: mat-color($foreground, secondary-text);
+      font-weight: bold;
+    }
   }
 }

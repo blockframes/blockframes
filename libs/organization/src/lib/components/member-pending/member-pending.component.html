@@ -1,22 +1,18 @@
-<section>
-  <h4>Pending members ({{invitations.length}})</h4>
-
-  <mat-list *ngIf="invitations.length; else empty" class="bf-list">
-    <section matListItem *ngFor="let invitation of invitations"  fxLayout="row" fxLayoutAlign="space-between center">
-      <article>
-        <span><span class="bold">{{ invitation.user.name }} {{ invitation.user.surname }} </span>{{ invitation.user.email }}</span>
-      </article>
-      <article *ngIf="isAdmin">
-        <button (click)="accepted.emit(invitation)" mat-icon-button>
-          <mat-icon>done</mat-icon>
+<mat-card>
+  <mat-card-title>Pending members ({{ invitations.length }})</mat-card-title>
+  <mat-list role="list">
+    <ng-container *ngIf="invitations.length; else empty">
+      <mat-list-item *ngFor="let invitation of invitations; let first = first">
+        <mat-divider *ngIf="first" matSubheader></mat-divider>
+        <span matLine>{{ invitation.user.email }}</span>
+        <button *ngIf="isAdmin" (click)="declined.emit(invitation)" mat-icon-button>
+          <mat-icon svgIcon="refuse"></mat-icon>
         </button>
-        <button (click)="declined.emit(invitation)" mat-icon-button>
-          <mat-icon>clear</mat-icon>
-        </button>
-      </article>
-    </section>
+        <mat-divider></mat-divider>
+      </mat-list-item>
+    </ng-container>
   </mat-list>
   <ng-template #empty>
-    <span>No pending members</span>
+    <span>No pending invitations</span>
   </ng-template>
-</section>
+</mat-card>

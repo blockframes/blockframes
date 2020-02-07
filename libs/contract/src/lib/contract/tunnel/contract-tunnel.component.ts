@@ -1,44 +1,36 @@
 import { Component, ChangeDetectionStrategy, Host, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ContractForm } from '../form/contract.form';
-import { ContractQuery, ContractService } from '../+state';
+import { MovieService, Movie } from '@blockframes/movie';
 import { TunnelStep } from '@blockframes/ui/tunnel'
+import { ContractForm } from '../form/contract.form';
+import { ContractQuery, ContractService, ContractType } from '../+state';
 import { Observable } from 'rxjs';
 import { startWith, map, switchMap } from 'rxjs/operators';
-import { MovieService, Movie } from '@blockframes/movie';
-
-const STEP_TEMPLATE: TunnelStep[] = [{
-  title: 'Contract',
-  icon: 'document',
-  routes: [{
-    path: 'details',
-    label: 'Contract Details'
-  }]
-}, {
-  title: 'Exploitation Rights',
-  icon: 'world',
-  routes: []
-}];
 
 /** Fill the steps depending on the movie */
-function fillMovieSteps(movies: Movie[]): TunnelStep[] {
-  const steps = Object.assign(STEP_TEMPLATE, {});
-  const routes = movies.length
-    ? movies.map(movie => ({ path: movie.id, label: movie.main.title.international }))
-    : [{ path: 'no-title', label: 'No Title yet' }];
-  steps[1].routes = routes;
-  return steps;
+function fillMovieSteps(movies: Movie[] = []): TunnelStep[] {
+  if (!movies.length) {
+    return []
+  }
+  return [{
+    title: 'Exploitation Rights',
+    icon: 'world',
+    routes: movies.map(movie => ({
+      path: movie.id, label: movie.main.title.international
+    }))
+  }]
 }
 
 @Component({
   selector: 'contract-tunnel',
   templateUrl: './contract-tunnel.component.html',
   styleUrls: ['./contract-tunnel.component.scss'],
+  providers: [ContractForm],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [ContractForm]
 })
 export class ContractTunnelComponent implements OnInit {
   public steps$: Observable<TunnelStep[]>;
+  public type: ContractType;
 
   constructor(
     @Host() private form: ContractForm,
@@ -50,6 +42,7 @@ export class ContractTunnelComponent implements OnInit {
 
   async ngOnInit() {
     const contract = this.query.getActive();
+    this.type = contract.type;
     this.form.patchAllValue(contract);
     const titlesForm = this.form.get('versions').last().get('titles');
     // Dynamic steps depending of the titles in the last contract version titles

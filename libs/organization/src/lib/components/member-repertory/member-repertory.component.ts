@@ -1,7 +1,6 @@
-import { Component, ViewChild, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
-import { MatTableDataSource } from '@angular/material/table';
-import { MatSort } from '@angular/material/sort';
+import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { OrganizationMember } from '../../member/+state/member.model';
+import { UserRole } from '@blockframes/organization/permissions/+state/permissions.model';
 
 @Component({
   selector: 'member-repertory',
@@ -10,23 +9,40 @@ import { OrganizationMember } from '../../member/+state/member.model';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MemberRepertoryComponent {
+  @Input() members: OrganizationMember[];
 
-  @Input() set members(members: OrganizationMember[]) {
-    this.dataSource = new MatTableDataSource(members);
-    this.dataSource.sort = this.sort;
-  }
   @Input() isSuperAdmin: boolean;
 
-  @Output() editing = new EventEmitter<string>();
+  @Output() memberRemoved = new EventEmitter<string>();
 
-  @ViewChild(MatSort, { static: true }) sort: MatSort;
+  @Output() updatedToSuperAdmin = new EventEmitter<string>();
+  @Output() updatedToAdmin = new EventEmitter<string>();
+  @Output() updatedToMember = new EventEmitter<string>();
 
-  public dataSource: MatTableDataSource<OrganizationMember>;
+  public memberColumns = {
+    name: 'Name',
+    surname: 'Lastname',
+    email: 'Email Address',
+    position: 'Position',
+    role: 'Permissions'
+  };
 
-  get displayedColumns() {
+  get initialColumns() {
     return this.isSuperAdmin
-    ? [ 'name', 'email', 'role', 'action' ]
-    : [ 'name', 'email', 'role' ]
+    ? [ 'name', 'surname', 'email', 'position', 'role', 'uid' ]
+    : [ 'name', 'surname', 'email', 'position', 'role' ]
   }
 
+  public displayRole(role: UserRole) {
+    switch (role) {
+      case UserRole.superAdmin:
+        return 'Super Admin';
+      case UserRole.admin:
+        return 'Admin';
+      case UserRole.member:
+        return 'Member';
+      default:
+        return 'Member';
+    }
+  }
 }

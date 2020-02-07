@@ -4,7 +4,7 @@ import { TunnelBudgetPage, TunnelVersionInfoPage } from '../../support/pages/das
 import { HomePage } from '../../support/pages/marketplace';
 import { User } from '../../support/utils/type';
 import { USERS } from '../../support/utils/users';
-import { WelcomeViewPage, LoginViewPage } from '../../support/pages/auth';
+import { LoginViewPage, WelcomeViewPage } from '../../support/pages/auth';
 
 // TEST
 
@@ -22,7 +22,7 @@ beforeEach(() => {
 });
 
 describe('User can navigate to the movie tunnel page 5, complete the fields, and navigate to page 6', () => {
-  it('Login into an existing account, navigate on budget page, complete budget and quotas fields, go on movie tunnel page 6', () => {
+  it.skip('Login into an existing account, navigate on budget page, complete budget and quotas fields, go on movie tunnel page 6', () => {
     // Connexion
     const p1: WelcomeViewPage = new WelcomeViewPage();
     const p2: LoginViewPage = p1.clickCallToAction();

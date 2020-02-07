@@ -1,10 +1,10 @@
 /// <reference types="cypress" />
 
-import { HomePage, WishlistPage } from "../../support/pages/marketplace";
-import { User } from "../../support/utils/type";
-import { USERS } from "../../support/utils/users";
-import { MOVIENAMELIST } from "../../support/utils/movies";
-import { WelcomeViewPage, LoginViewPage } from "../../support/pages/auth";
+import { HomePage, WishlistPage } from '../../support/pages/marketplace';
+import { User } from '../../support/utils/type';
+import { USERS } from '../../support/utils/users';
+import { MOVIENAMELIST } from '../../support/utils/movies';
+import { LoginViewPage, WelcomeViewPage } from '../../support/pages/auth';
 
 // Select user: cytest@blockframes.com
 const LOGIN_CREDENTIALS: Partial<User> = USERS[0];
@@ -17,7 +17,7 @@ beforeEach(() => {
 });
 
 describe('Test submit wishlist to sellers', () => {
-  it('Login into an existing account, verify if the current wishlist is empty, add movies to current wishlist from the home page, send wishlist to sellers.', () => {
+  it.skip('Login into an existing account, verify if the current wishlist is empty, add movies to current wishlist from the home page, send wishlist to sellers.', () => {
     // Connexion
     const p1: WelcomeViewPage = new WelcomeViewPage();
     const p2: LoginViewPage = p1.clickCallToAction();

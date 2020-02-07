@@ -197,6 +197,7 @@ const icons = [
   },
   { name: 'refresh', url: 'assets/icons/refresh.svg' },
   { name: 'refuse', url: 'assets/icons/refuse.svg' },
+  { name: 'remove_member', url: 'assets/icons/remove_member.svg' },
   { name: 'review', url: 'assets/icons/review.svg' },
   { name: 'sales', url: 'assets/icons/sales.svg' },
   { name: 'schedules', url: 'assets/icons/schedules.svg' },

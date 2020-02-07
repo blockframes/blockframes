@@ -1,36 +1,25 @@
-<editable-sidenav (closed)="opened = false" [opened]="opened" (saved)="updateRole()">
-  <!-- Content -->
-  <ng-container content>
-    <article fxLayout="row" fxLayoutAlign="start center">
-      <h2>{{orgName}}</h2>
-      <mat-divider fxFlex></mat-divider>
-    </article>
-    <div class="space-between-component" *ngIf="(invitationsToJoinOrganization$ | async) as invitations">
-      <member-pending *ngIf="invitations.length > 0"
-        (declined)="declineInvitation($event)"
-        (accepted)="acceptInvitation($event)"
-        [invitations]="invitations"
-        [isAdmin]="isAdmin$ | async">
-      </member-pending>
-    </div>
-    <div class="space-between-component">
-      <member-repertory
-        [members]="members$ | async"
-        [isSuperAdmin]="isSuperAdmin$ | async"
-        (editing)="openSidenav($event)">
-      </member-repertory>
-    </div>
-    <div class="space-send-invitation large"><member-add *ngIf="(isAdmin$ | async)"> </member-add></div>
-    <div class="space-pending-invitation" *ngIf="(invitationsFromOrganization$ | async) as invitationsMember">
-      <member-invitation *ngIf="invitationsMember.length > 0"
-        [invitations]="invitationsMember"
-        (declined)="declineInvitation($event)"
-        [isAdmin]="isAdmin$ | async">
-      </member-invitation>
-    </div>
-  </ng-container>
-  <!-- Sidenav -->
-  <ng-container *ngIf="(memberFormGroup$ | async) as memberFormGroup" sidenav>
-    <member-form-role [formGroup]="memberFormGroup"></member-form-role>
-  </ng-container>
-</editable-sidenav>
+<ng-container *ngIf="(invitationsToJoinOrganization$ | async) as invitations">
+  <member-request *ngIf="invitations.length > 0"
+    (declined)="declineInvitation($event)"
+    (accepted)="acceptInvitation($event)"
+    [invitations]="invitations"
+    [isAdmin]="isAdmin$ | async">
+  </member-request>
+</ng-container>
+<member-repertory
+  [members]="members$ | async"
+  [isSuperAdmin]="isSuperAdmin$ | async"
+  (memberRemoved)="removeMember($event)"
+  (updatedToSuperAdmin)="updateRole($event, 'superAdmin')"
+  (updatedToAdmin)="updateRole($event, 'admin')"
+  (updatedToMember)="updateRole($event, 'member')">
+</member-repertory>
+<ng-container *ngIf="(invitationsFromOrganization$ | async) as invitationsMember">
+  <member-pending *ngIf="invitationsMember.length > 0"
+    [invitations]="invitationsMember"
+    (declined)="declineInvitation($event)"
+    [isAdmin]="isAdmin$ | async">
+  </member-pending>
+</ng-container>
+<member-add *ngIf="(isAdmin$ | async)"> </member-add>
+

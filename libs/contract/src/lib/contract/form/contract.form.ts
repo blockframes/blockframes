@@ -1,43 +1,19 @@
 import { FormControl } from '@angular/forms';
 import { Injectable } from '@angular/core';
-import {
-  createContract,
-  createContractPartyDetail
-} from '@blockframes/contract/contract/+state/contract.model';
-import { Contract } from './../+state/contract.model';
-import { ContractPartyForm } from './party-name/party-name.form';
-import { ContractPartyDetail } from '../+state/contract.model';
-import {
-  createLegalDocument,
-  createLegalDocuments
-} from '@blockframes/contract/contract/+state/contract.model';
-import {
-  LegalDocument,
-  LegalDocuments
-} from '@blockframes/contract/contract/+state/contract.firestore';
 import { urlValidators } from '@blockframes/utils/form/validators';
 import { FormStaticValue, FormList, FormEntity } from '@blockframes/utils/form';
+import {
+  createContract,
+  createContractPartyDetail,
+  Contract,
+  ContractPartyDetail,
+  createLegalDocument,
+  createLegalDocuments,
+  LegalDocument,
+  LegalDocuments,
+} from '../+state';
+import { ContractPartyForm } from './party-name/party-name.form';
 import { ContractVersionForm } from '@blockframes/contract/version/form/version.form';
-
-function createContractControls(contract: Partial<Contract>) {
-  const entity = createContract(contract);
-  return {
-    id: new FormControl(contract.id),
-    parties: FormList.factory(entity.parties, partyDetails => new PartyDetailsForm(partyDetails)),
-    documents: new LegalDocumentsForm(entity.documents),
-    titleIds: FormList.factory(contract.titleIds),
-    versions: FormList.factory(contract.versions, version => new ContractVersionForm(version))
-  };
-}
-
-type ContractControl = ReturnType<typeof createContractControls>;
-
-@Injectable()
-export class ContractForm extends FormEntity<ContractControl> {
-  constructor(contract: Partial<Contract> = {}) {
-    super(createContractControls(contract));
-  }
-}
 
 // PARTY DETAILS
 
@@ -91,5 +67,28 @@ export type LegalDocumentsControl = ReturnType<typeof createLegalDocumentsContro
 export class LegalDocumentsForm extends FormEntity<LegalDocumentsControl> {
   constructor(legalDocuments?: Partial<LegalDocuments>) {
     super(createLegalDocumentsControl(legalDocuments));
+  }
+}
+
+// CONTRACT
+
+
+function createContractControls(contract: Partial<Contract>) {
+  const entity = createContract(contract);
+  return {
+    id: new FormControl(contract.id),
+    parties: FormList.factory(entity.parties, partyDetails => new PartyDetailsForm(partyDetails)),
+    documents: new LegalDocumentsForm(entity.documents),
+    titleIds: FormList.factory(contract.titleIds),
+    versions: FormList.factory(contract.versions, version => new ContractVersionForm(version))
+  };
+}
+
+type ContractControl = ReturnType<typeof createContractControls>;
+
+@Injectable()
+export class ContractForm extends FormEntity<ContractControl> {
+  constructor() {
+    super(createContractControls({}));
   }
 }

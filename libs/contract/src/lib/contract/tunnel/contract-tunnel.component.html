@@ -6,4 +6,27 @@
       <span>Save</span>
     </button>
   </header>
+
+  <aside>
+    <!-- Overview -->
+    <mat-nav-list dense>
+      <a mat-list-item routerLink="overview">
+        <mat-icon mat-list-icon svgIcon="world"></mat-icon>
+        <span matLine>Overview</span>
+      </a>
+      <a mat-list-item [routerLink]="[type, 'details']">
+        <mat-icon mat-list-icon svgIcon="world"></mat-icon>
+        <span matLine>Contract</span>
+      </a>
+    </mat-nav-list>
+    <tunnel-nav></tunnel-nav>
+    <!-- Summary -->
+    <mat-divider></mat-divider>
+    <mat-nav-list dense>
+      <a mat-list-item [routerLink]="[type, 'summary']">
+        <mat-icon mat-list-icon svgIcon="document"></mat-icon>
+        <span mat-line>Summary</span>
+      </a>
+    </mat-nav-list>
+  </aside>
 </tunnel-layout>
