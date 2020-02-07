@@ -94,6 +94,17 @@ describe('permission table', () => {
     await expect(permDoc.delete()).toDeny();
   });
 
+  test('disallow users to access the docsIndex', async () => {
+    const db = await setup(userMarie, mockData);
+    const permDoc = db.doc(`docsIndex/${contractAznavour.id}`);
+
+    await expect(permDoc.set({ id: 'wrongId', set: true })).toDeny();
+    await expect(permDoc.set({ id: 'newId', set: true })).toDeny();
+    await expect(permDoc.get()).toDeny();
+    await expect(permDoc.update({ updated: true })).toDeny();
+    await expect(permDoc.delete()).toDeny();
+  });
+
   test('disallow a user not admin to UPDATE a permission document', async () => {
     // they can create!
 
