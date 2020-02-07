@@ -1,0 +1,34 @@
+<h1><a routerLink="/c/o/admin/dashboard/">Administration panel</a> > Organization > {{ orgId }} </h1>
+
+<ng-container *ngIf="orgForm">
+  <form [formGroup]="orgForm" fxLayout="column">
+    <div>
+      <mat-form-field appearance="outline">
+        <mat-label>Org Status</mat-label>
+        <mat-select formControlName="status" required>
+          <mat-option *ngFor="let status of statuses" [value]="status">
+            {{ status }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div>
+      <h2>App Access</h2>
+      <mat-checkbox formControlName="catalogDashboard">
+        Catalog Dashboard
+      </mat-checkbox>
+    </div>
+    <div>
+      <mat-checkbox formControlName="catalogMarketplace">
+        Catalog Marketplace
+      </mat-checkbox>
+    </div>
+    <mat-card-actions align="end">
+      <button type="submit" mat-raised-button class="main-btn" (click)="update()">Update</button>
+    </mat-card-actions>
+  </form>
+</ng-container>
+
+
+
+

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { MatIconModule } from '@angular/material';
+import { MatIconModule, MatCardModule, MatFormFieldModule, MatCheckboxModule, MatInputModule, MatSelectModule } from '@angular/material';
 
 // Modules
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
@@ -15,6 +15,7 @@ import { MovieComponent } from './pages/movies/movies.component';
 import { DistributionDealsComponent } from './pages/distribution-deals/distribution-deals.component';
 import { ContractsComponent } from './pages/contracts/contracts.component';
 import { OrganizationsComponent } from './pages/organizations/organizations.component';
+import { OrganizationComponent } from './pages/organization/organization.component';
 
 export const dashboardRoutes: Routes = [
   { path: '', redirectTo: 'overview', pathMatch: 'full' },
@@ -25,6 +26,7 @@ export const dashboardRoutes: Routes = [
   { path: 'contracts', component: ContractsComponent },
   { path: 'contracts/:movieId', component: ContractsComponent },
   { path: 'organizations', component: OrganizationsComponent },
+  { path: 'organization/:orgId', component: OrganizationComponent },
 ];
 @NgModule({
   imports: [
@@ -32,6 +34,11 @@ export const dashboardRoutes: Routes = [
     FormsModule,
     ReactiveFormsModule,
     MatIconModule,
+    MatCardModule,
+    MatInputModule,
+    MatFormFieldModule,
+    MatSelectModule,
+    MatCheckboxModule,
     FlexLayoutModule,
     TableFilterModule,
     ImageReferenceModule,
@@ -43,6 +50,7 @@ export const dashboardRoutes: Routes = [
     DistributionDealsComponent,
     ContractsComponent,
     OrganizationsComponent,
+    OrganizationComponent,
   ],
 })
 export class DashboardModule {}

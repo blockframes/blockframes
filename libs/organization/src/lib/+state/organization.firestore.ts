@@ -31,12 +31,12 @@ interface OrganizationRaw<D> {
   appAccess?: AppAccess;
 }
 
-export interface OrganizationDocument extends OrganizationRaw<Timestamp> {}
+export interface OrganizationDocument extends OrganizationRaw<Timestamp> { }
 
-export interface OrganizationDocumentWithDates extends OrganizationRaw<Date> {}
+export interface OrganizationDocumentWithDates extends OrganizationRaw<Date> { }
 
 /** Status of an Organization, set to pending by default when an Organization is created. */
-export const enum OrganizationStatus {
+export enum OrganizationStatus {
   pending = 'pending',
   accepted = 'accepted'
 }
@@ -54,9 +54,9 @@ export interface WishlistRaw<D> {
   sent?: D;
   name?: string;
 }
-export interface WishlistDocument extends WishlistRaw<Timestamp> {}
+export interface WishlistDocument extends WishlistRaw<Timestamp> { }
 
-export interface WishlistDocumentWithDates extends WishlistRaw<Date> {}
+export interface WishlistDocumentWithDates extends WishlistRaw<Date> { }
 
 export const enum WishlistStatus {
   pending = 'pending',

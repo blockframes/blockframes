@@ -17,6 +17,6 @@
     </ng-template>
   </ng-template>
   <ng-template colRef="edit" let-edit>
-    {{ edit.link }}
+    <a [routerLink]="edit.link"><mat-icon>edit</mat-icon></a>
   </ng-template>
 </bf-table-filter>

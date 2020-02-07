@@ -11,12 +11,12 @@ import { OrganizationStore, OrganizationState } from './organization.store';
 import { OrganizationQuery } from './organization.query';
 import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
 import { AngularFireFunctions } from '@angular/fire/functions';
-import { APPS_DETAILS, App } from '@blockframes/utils';
-import { createPermissions, UserRole, createAppPermissions } from '../permissions/+state/permissions.model';
+import { APPS_DETAILS } from '@blockframes/utils';
+import { createPermissions, UserRole } from '../permissions/+state/permissions.model';
 import { firestore } from 'firebase/app';
 
 @Injectable({ providedIn: 'root' })
-@CollectionConfig({ path: 'orgs'})
+@CollectionConfig({ path: 'orgs' })
 export class OrganizationService extends CollectionService<OrganizationState> {
 
   constructor(
@@ -137,7 +137,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     return this.update(orgId, { isBlockchainEnabled: value });
   }
 
-    /**
+  /**
    * @dev ADMIN method
    * Fetch all organizations for administration uses
    */
