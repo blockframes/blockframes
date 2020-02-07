@@ -6,9 +6,10 @@
       <span>Save</span>
     </button>
   </header>
-  <!-- Overview -->
-  <ng-container tunnel-nav-header>
-    <mat-nav-list>
+
+  <aside>
+    <!-- Overview -->
+    <mat-nav-list dense>
       <a mat-list-item routerLink="overview">
         <mat-icon mat-list-icon svgIcon="world"></mat-icon>
         <span matLine>Overview</span>
@@ -18,10 +19,8 @@
         <span matLine>Contract</span>
       </a>
     </mat-nav-list>
-    <mat-divider></mat-divider>
-  </ng-container>
-  <!-- Summary -->
-  <ng-container tunnel-nav-footer>
+    <tunnel-nav></tunnel-nav>
+    <!-- Summary -->
     <mat-divider></mat-divider>
     <mat-nav-list dense>
       <a mat-list-item [routerLink]="[type, 'summary']">
@@ -29,5 +28,5 @@
         <span mat-line>Summary</span>
       </a>
     </mat-nav-list>
-  </ng-container>
+  </aside>
 </tunnel-layout>
