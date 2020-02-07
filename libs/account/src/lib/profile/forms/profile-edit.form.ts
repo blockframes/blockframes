@@ -1,6 +1,6 @@
 import { FormControl } from '@angular/forms';
 import { FormEntity } from '@blockframes/utils';
-
+import { Injectable } from '@angular/core';
 export interface Profile {
   name: string;
   surname: string;
@@ -34,10 +34,14 @@ function createProfileControls(entity: Partial<Profile>) {
   };
 }
 
-type ProfileControl = ReturnType<typeof createProfileControls>;
+export type ProfileControl = ReturnType<typeof createProfileControls>;
 
+@Injectable({ providedIn: 'root' })
 export class ProfileForm extends FormEntity<ProfileControl> {
-  constructor(data?: Profile) {
-    super(createProfileControls(data));
+  // constructor(data?: Profile) {
+  //   super(createProfileControls(data));
+  // }
+  constructor() {
+    super(createProfileControls({}))
   }
 }

@@ -1,21 +1,12 @@
-import { Component, ChangeDetectionStrategy, HostBinding, OnInit } from '@angular/core';
-import { ControlContainer } from '@angular/forms';
-
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { ProfileForm } from '@blockframes/account/profile/forms/profile-edit.form';
 @Component({
-  selector: '[formGroupName] profile-form, [formGroup] profile-form, profile-form',
+  selector: '[formGroupName] profile-form, [formGroup] profile-form, [form] profile-form',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ProfileFormComponent implements OnInit {
-  @HostBinding('attr.page-id') pageId = 'profile-form';
+export class ProfileFormComponent {
 
-  constructor(public controlContainer: ControlContainer) {}
-
-  public get control() {
-    return this.controlContainer.control;
-  }
-  ngOnInit() {
-    this.control.get('email').disable();
-  }
+  @Input() form: ProfileForm;
 }

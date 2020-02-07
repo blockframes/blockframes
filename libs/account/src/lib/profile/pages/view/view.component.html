@@ -1,4 +1,4 @@
-<ng-container *ngIf="user$ | async as user; else: loading">
+<ng-container *ngIf="user; else: loading">
   <header fxLayout="row" fxLayoutAlign="space-between start">
     <article fxLayout="row" fxLayoutAlign="space-around start">
       <img [imgRef]="user.avatar" [placeholderAsset]="placeholderAvatar" alt="profile picture" />
@@ -15,9 +15,14 @@
     </ng-container>
   </header>
   <section>
-    <profile-form [formGroup]="profileForm"></profile-form>
-    <profile-password-form [formGroup]="editPasswordForm"></profile-password-form>
+    <profile-form [form]="form"></profile-form>
+    <!-- <profile-password-form [formGroup]="editPasswordForm"></profile-password-form> -->
   </section>
+  <footer fxLayout="row" fxLayoutAlign="center center">
+    <button mat-flat-button color="accent">
+      <mat-icon svgIcon="floppy"></mat-icon><span>Update</span>
+    </button>
+  </footer>
 </ng-container>
 <ng-template #loading>
   <div fxLayout="column" fxLayoutAlign="center center">
