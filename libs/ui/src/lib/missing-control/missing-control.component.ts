@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { getLabelBySlug, Scope } from '@blockframes/utils/static-model/staticModels';
+import { Scope } from '@blockframes/utils/static-model/staticModels';
 
 @Component({
   selector: '[control] [link] missing-control',
@@ -18,10 +18,5 @@ export class MissingControlComponent implements OnInit {
 
   ngOnInit() {
     this.control.valueChanges.subscribe(_ => this.cdr.markForCheck());
-  }
-
-  get values() {
-    const values = Array.isArray(this.control.value) ? this.control.value : [this.control.value];
-    return values.map(value => getLabelBySlug(this.scope, value)).join(', ');
   }
 }
