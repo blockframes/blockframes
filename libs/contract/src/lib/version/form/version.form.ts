@@ -4,12 +4,16 @@ import { ContractTitleDetail } from '@blockframes/contract/contract/+state/contr
 import { ContractVersion } from '@blockframes/contract/version/+state';
 import { FormEntity, FormList } from '@blockframes/utils';
 import { ContractVersionPriceForm } from './price/price.form';
+import { ContractVersionPaymentScheduleForm } from './payment-schedule/payment-schedule.form';
 
 function createContractVersionControls(contractVersion: Partial<ContractVersion>) {
   return {
     price: new ContractVersionPriceForm(contractVersion.price),
-    titles: new ContractTitlesForm(contractVersion.titles),
-    scope: new DistributionDealTermsForm(contractVersion.scope)
+    titles: new ContractVersionTitlesForm(contractVersion.titles),
+    scope: new DistributionDealTermsForm(contractVersion.scope),
+    paymentSchedule: FormList.factory(contractVersion.paymentSchedule, payment => {
+      return new ContractVersionPaymentScheduleForm(payment)
+    })
   }
 }
 
@@ -35,7 +39,7 @@ function createContractTitlesControls(
 
 type ContractTitlesControl = Record<string, ContractTitleDetailForm>;
 
-export class ContractTitlesForm extends FormEntity<ContractTitlesControl> {
+export class ContractVersionTitlesForm extends FormEntity<ContractTitlesControl> {
   constructor(titleDetail: Record<string, Partial<ContractTitleDetail>> = {}) {
     super(createContractTitlesControls(titleDetail));
   }

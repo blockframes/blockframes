@@ -1,24 +1,29 @@
 import { ContractForm } from '@blockframes/contract/contract/form/contract.form';
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'contract-details-sale',
   templateUrl: './details-sale.component.html',
-  styleUrls: ['./details-sale.component.scss']
+  styleUrls: ['./details-sale.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DetailsSaleComponent {
 
-  constructor(private form: ContractForm) { }
+  constructor(private form: ContractForm) {}
 
-  get partiesForm(){
+  get parties(){
     return this.form.get('parties')
   }
 
-  get getVersions() {
+  get versions() {
     return this.form.get('versions');
   }
 
-  public getTerms(index: number){
-    return this.getVersions.at(index).get('scope');
+  public terms(index: number){
+    return this.versions.at(index).get('scope');
+  }
+
+  public price(index: number) {
+    return this.versions.at(index).get('price');
   }
 }
