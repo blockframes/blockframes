@@ -99,7 +99,7 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
         throw new Error('There must be at least one Super Admin in the organization.');
       }
       this.permissionService.updateMemberRole(uid, role);
-      this.snackBar.open('Role updated', 'close', { duration: 2000 });
+      this.snackBar.open('Role updated.', 'close', { duration: 2000 });
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });
     }
