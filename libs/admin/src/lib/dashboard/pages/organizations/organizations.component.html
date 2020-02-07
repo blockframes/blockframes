@@ -1,0 +1,22 @@
+<h1><a routerLink="/c/o/admin/dashboard/">Administration panel</a> > Organizations</h1>
+
+<bf-table-filter 
+  [source]="rows" 
+  [columns]="versionColumns" 
+  [initialColumns]="initialColumns" 
+  [filterPredicate]="filterPredicate"
+  showFilter="true"
+  showLoader="true"
+  showPaginator="true">
+  <ng-template colRef="logo" let-logo>
+    <ng-container *ngIf="logo; else nologo">
+      <img class="logo" [src]="logo">
+    </ng-container>
+    <ng-template #nologo>
+      --
+    </ng-template>
+  </ng-template>
+  <ng-template colRef="edit" let-edit>
+    {{ edit.link }}
+  </ng-template>
+</bf-table-filter>

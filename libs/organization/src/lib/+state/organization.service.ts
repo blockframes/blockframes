@@ -136,4 +136,16 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     const orgId = this.query.getActiveId();
     return this.update(orgId, { isBlockchainEnabled: value });
   }
+
+    /**
+   * @dev ADMIN method
+   * Fetch all organizations for administration uses
+   */
+  public async getAllOrganizations(): Promise<Organization[]> {
+    const orgs = await this.db
+      .collection('orgs')
+      .get().toPromise()
+
+    return orgs.docs.map(m => createOrganization(m.data()));
+  }
 }
