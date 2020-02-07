@@ -1,0 +1,48 @@
+<tunnel-page>
+  <h4 title>Step 1</h4>
+  <h1 subtitle>Contract Details</h1>
+  <ng-container tunnel-form>
+    <!-- Parties -->
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>
+          Parties
+        </mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <contract-form-party [form]="parties" type="licensee"></contract-form-party>
+        <mat-divider></mat-divider>
+      </mat-card-content>
+    </mat-card>
+    <!-- Terms -->
+    <ng-container *ngFor="let control of versions.controls; let versionIndex = index">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>
+            Terms
+          </mat-card-title>
+          <mat-card-subtitle>
+            You can either enter specific term dates or opt for a period triggered by an event
+          </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <distribution-form-terms [form]="terms(versionIndex)"></distribution-form-terms>
+        </mat-card-content>
+      </mat-card>
+      <!-- Payment schedule -->
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>
+            Title Selection & Price
+          </mat-card-title>
+          <mat-card-subtitle>
+            You may choose to put a price for the entire package or one for each title.
+          </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <contract-version-form-price [form]="price(versionIndex)"></contract-version-form-price>
+        </mat-card-content>
+      </mat-card>
+    </ng-container>
+  </ng-container>
+</tunnel-page>

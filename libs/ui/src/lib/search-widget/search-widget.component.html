@@ -11,7 +11,7 @@
         <ng-container *ngIf="result.items.length">
           <h3 mat-subheader>{{ result.title }} ({{ result.items.length }})</h3>
           <ng-container *ngFor="let item of result.items">
-            <a mat-list-item [routerLink]="item.id">
+            <a mat-list-item [routerLink]="[result.path, item.id]">
               <mat-icon mat-list-icon [svgIcon]="result.icon"></mat-icon>
               <span mat-line>{{ item.value }}</span>
             </a>

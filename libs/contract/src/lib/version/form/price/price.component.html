@@ -1,9 +1,28 @@
-
-<mat-form-field [formGroup]="form">
+<!-- Currency -->
+<h5>CONTRACT CURRENCY</h5>
+<mat-form-field [formGroup]="form" appearance="outline">
   <mat-label>Currency</mat-label>
-  <mat-select formControlName="currency" >
+  <mat-select formControlName="currency">
     <mat-option *ngFor="let currency of staticCurrencies" [value]="currency.slug">
       {{ currency.label }}
     </mat-option>
   </mat-select>
 </mat-form-field>
+
+<!-- Movie selection-->
+<article fxLayout="column">
+  <h5>YOUR SELECTION</h5>
+  <span class="capation">
+    Add titles to your selection if needed and then offer a price. You may
+    choose to put a price forthe entire package or one for each title.
+  </span>
+  <mat-form-field appearance="outline" fxLayout="row" fxLayoutAlign="baseline start">
+    <input matInput type="text" [formControl]="movieCtrl">
+    <button *ngIf="movieCtrl.value" matSuffix mat-icon-button aria-label="Clear" (click)="movieCtrl.reset()">
+      <mat-icon svgIcon="close"></mat-icon>
+    </button>
+    <button mat-icon-button matPrefix aria-label="Search">
+      <mat-icon>search</mat-icon>
+    </button>
+  </mat-form-field>
+</article>
