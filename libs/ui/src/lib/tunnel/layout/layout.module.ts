@@ -5,7 +5,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { TunnelLayoutComponent } from './layout.component';
 import { TunnelNavComponent } from './nav/nav.component';
-import { StepStatComponent } from './step-stat/step-stat.component';
+import { TunnelStepStatComponent } from './step-stat/step-stat.component';
+import { TunnelConfirmComponent } from './confirm/confirm.component';
 
 import { TunnelExitModule } from '../exit/exit.module';
 
@@ -18,11 +19,12 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDialogModule } from '@angular/material/dialog';
 
 
 @NgModule({
-  declarations: [TunnelLayoutComponent, TunnelNavComponent, StepStatComponent],
-  exports: [TunnelLayoutComponent, TunnelNavComponent, StepStatComponent],
+  declarations: [TunnelLayoutComponent, TunnelNavComponent, TunnelStepStatComponent, TunnelConfirmComponent],
+  exports: [TunnelLayoutComponent, TunnelNavComponent, TunnelStepStatComponent, TunnelConfirmComponent],
   imports: [
     CommonModule,
     RouterModule,
@@ -37,6 +39,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatButtonModule,
     MatListModule,
     MatSnackBarModule,
+    MatDialogModule,
   ]
 })
 export class TunnelLayoutModule { }

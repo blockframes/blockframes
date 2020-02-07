@@ -1,11 +1,12 @@
 import { Component, ChangeDetectionStrategy, Host, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieService, Movie } from '@blockframes/movie';
-import { TunnelStep } from '@blockframes/ui/tunnel'
+import { TunnelStep, TunnelConfirmComponent } from '@blockframes/ui/tunnel'
 import { ContractForm } from '../form/contract.form';
 import { ContractQuery, ContractService, ContractType } from '../+state';
-import { Observable } from 'rxjs';
-import { startWith, map, switchMap } from 'rxjs/operators';
+import { Observable, from, of } from 'rxjs';
+import { startWith, map, switchMap, tap } from 'rxjs/operators';
+import { MatDialog } from '@angular/material';
 
 /** Fill the steps depending on the movie */
 function fillMovieSteps(movies: Movie[] = []): TunnelStep[] {
@@ -38,6 +39,7 @@ export class ContractTunnelComponent implements OnInit {
     private service: ContractService,
     private query: ContractQuery,
     private movieService: MovieService,
+    private dialog: MatDialog,
   ) { }
 
   async ngOnInit() {
@@ -54,10 +56,30 @@ export class ContractTunnelComponent implements OnInit {
     );
   }
 
-  // Should save movie
-  public async save() {
+  public save() {
     const id = this.query.getActiveId();
-    await this.service.update({ id, ...this.form.value });
-    this.snackBar.open('Saved', 'close', { duration: 500 });
+    const update = this.service.update({ id, ...this.form.value });
+    // Return an observable<boolean> for the confirmExit
+    return from(update).pipe(
+      tap(_ => this.form.markAsPristine()),
+      switchMap(_ => this.snackBar.open('Saved', '', { duration: 500 }).afterDismissed()),
+      map(_ => true) 
+    )
+  }
+
+  confirmExit() {
+    if (this.form.pristine) {
+      return of(true);
+    }
+    const dialogRef = this.dialog.open(TunnelConfirmComponent, {
+      width: '80%',
+      data: {
+        title: 'You are going to leave the Movie Form.',
+        subtitle: 'Pay attention, if you leave now your changes will not be saved.'
+      }
+    });
+    return dialogRef.afterClosed().pipe(
+      switchMap(shouldSave => shouldSave ? this.save() : of(false))
+    );
   }
 }

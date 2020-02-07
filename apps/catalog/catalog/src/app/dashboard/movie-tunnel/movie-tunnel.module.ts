@@ -13,6 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatDialogModule } from '@angular/material/dialog';
 
 import { TunnelLayoutModule } from '@blockframes/ui/tunnel';
 import { ImgAssetModule } from '@blockframes/ui/theme';
@@ -32,6 +33,7 @@ import { ImgAssetModule } from '@blockframes/ui/theme';
     MatButtonModule,
     MatListModule,
     MatSnackBarModule,
+    MatDialogModule,
   ],
 })
 export class MovieTunnelModule {}
