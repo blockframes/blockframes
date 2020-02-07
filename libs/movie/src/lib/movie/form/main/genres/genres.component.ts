@@ -1,8 +1,10 @@
 import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core';
-import { MovieMainForm } from '../main.form';
 import { default as staticModel } from '@blockframes/utils/static-model/staticModels';
-import { startWith, map } from 'rxjs/operators';
+import { startWith, map, filter, shareReplay } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { FormStaticArray } from '@blockframes/utils/form';
+import { FormList } from '@blockframes/utils/form/forms/list.form';
+import { GenresSlug } from '@blockframes/utils/static-model/types';
 
 @Component({
   selector: 'movie-form-genre',
@@ -11,23 +13,34 @@ import { Observable } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class GenreComponent implements OnInit {
-
-  @Input() form: MovieMainForm;
+  @Input() form: FormStaticArray<'GENRES'>;
+  @Input() customGenreForm: FormList<string>;
   hasOtherGenre$: Observable<boolean>;
-  genres = staticModel.GENRES;
-
-  get genresForm() {
-    return this.form.get('genres');
-  }
-
-  get customGenreForm() {
-    return this.form.get('customGenres');
-  }
+  genres$: Observable<any[]>;
+  values$: Observable<GenresSlug[]>;
 
   ngOnInit() {
-    this.hasOtherGenre$ = this.genresForm.valueChanges.pipe(
-      startWith(this.genresForm.value),
-      map(genres => genres.includes('other'))
+    this.values$ = this.form.valueChanges.pipe(
+      startWith(this.form.value),
+      shareReplay()
+    );
+
+    this.genres$ = this.values$.pipe(
+      map(genres => staticModel.GENRES.filter(genre => !genres.includes(genre.slug)))
     )
+
+    this.hasOtherGenre$ = this.values$.pipe(
+      filter(_ => !!this.customGenreForm),
+      map(genres => genres.includes('other'))
+    );
+  }
+
+  add(genreSlug: GenresSlug) {
+    this.form.setValue([...this.form.value, genreSlug]);
+  }
+
+  remove(genreSlug: GenresSlug) {
+    const genres = this.form.value.filter(genre => genre !== genreSlug);
+    this.form.setValue(genres);
   }
 }

@@ -2,7 +2,7 @@ import { FormEntity, FormList, yearValidators } from '@blockframes/utils';
 import { MovieMain, Credit, createMovieMain, Movie, MovieStakeholders, createMovieStakeholders, createTitle, createStoreConfig } from '../../+state';
 import { Validators, FormControl } from '@angular/forms';
 import { createCredit, Stakeholder, createStakeholder } from '@blockframes/utils/common-interfaces/identity';
-import { FormStaticValue } from '@blockframes/utils/form';
+import { FormStaticValue, FormStaticArray } from '@blockframes/utils/form';
 
 // CREDIT
 
@@ -126,7 +126,7 @@ function createMovieMainControls(main : Partial<MovieMain> = {}) {
     title: new TitleForm(entity.title),
     directors: FormList.factory(entity.directors, el => new DirectorForm(el)),
     productionYear: new FormControl(entity.productionYear, [Validators.required, yearValidators]),
-    genres: FormList.factory(entity.genres, el => new FormControl(el, Validators.required)),
+    genres: new FormStaticArray(entity.genres, 'GENRES', [Validators.required]),
     originCountries: FormList.factory(entity.originCountries, el => new FormStaticValue(el, 'TERRITORIES', [Validators.required])),
     originalLanguages: FormList.factory(entity.originalLanguages, el => new FormStaticValue(el, 'LANGUAGES')),
     status: new FormControl(entity.status , [Validators.required]),
