@@ -1,5 +1,6 @@
 import { Component, OnInit, Input, ChangeDetectionStrategy, ViewEncapsulation } from '@angular/core';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { fade } from '@blockframes/utils/animations/fade';
 import { TunnelStep } from '../tunnel.model';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
@@ -26,8 +27,10 @@ function getPage(steps: TunnelStep[], url: string, arithmeticOperator: number): 
   styleUrls: ['./layout.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  animations: [fade],
   host: {
-    class: 'tunnel-layout'
+    'class': 'tunnel-layout',
+    '[@fade]': 'fade'
   }
 })
 export class TunnelLayoutComponent implements OnInit {
