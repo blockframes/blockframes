@@ -38,21 +38,21 @@
         <movie-form-languages [form]="main.get('originalLanguages')"></movie-form-languages>
       </mat-card-content>
     </mat-card>
-  
+
     <!-- General Information -->
     <mat-card>
       <mat-card-header>
         <mat-card-title>General Information</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <movie-form-genre [form]="main"></movie-form-genre>
+        <movie-form-genre [form]="main.genres" [customGenreForm]="main.customGenres"></movie-form-genre>
         <mat-divider></mat-divider>
         <movie-form-total-runtime [form]="main.get('totalRunTime')"></movie-form-total-runtime>
         <p class="mat-body-2">Principal Cast Members</p>
         <movie-form-sales-cast role="cast" [form]="salesCast.get('cast')"></movie-form-sales-cast>
       </mat-card-content>
     </mat-card>
-  
+
     <!-- Festival -->
     <mat-card>
       <mat-card-header>
