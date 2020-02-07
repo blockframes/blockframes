@@ -196,6 +196,10 @@ export const mockData = [
   },
   // Permissions
   {
+    docPath: `docsIndex/${contractAznavour.id}`,
+    content: { authorOrgId: userGilles.orgId }
+  },
+  {
     docPath: `permissions/${userGilles.orgId}/documentPermissions/${contractAznavour.id}`,
     content: {
       canUpdate: true,
