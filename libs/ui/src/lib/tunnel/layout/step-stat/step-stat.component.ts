@@ -26,7 +26,7 @@ function getPageData(steps: TunnelStep[], url: string): TunnelStepData {
   styleUrls: ['./step-stat.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class StepStatComponent implements OnInit {
+export class TunnelStepStatComponent implements OnInit {
 
   stepData$: Observable<TunnelStepData>;
 
@@ -34,7 +34,6 @@ export class StepStatComponent implements OnInit {
 
   ngOnInit() {
     this.stepData$ = this.layout.urlBynav$.pipe(
-      tap(console.log),
       map(([ url, steps ]) => getPageData(steps, url))
     );
   }

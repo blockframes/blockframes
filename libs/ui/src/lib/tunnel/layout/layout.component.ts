@@ -16,8 +16,10 @@ function getPage(steps: TunnelStep[], url: string, arithmeticOperator: number): 
   const allRoutes = steps.map(({ routes }) => routes.map(r => r.path));
   const allPath = allRoutes.flat();
   const current = url.split('/').pop();
-  const i: number = allPath.indexOf(current) + arithmeticOperator;
-  return allPath[i];
+  const index = allPath.indexOf(current);
+  if (index >= 0) {
+    return allPath[index + arithmeticOperator];
+  }
 }
 
 

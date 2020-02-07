@@ -1,11 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { MovieTunnelComponent } from './movie-tunnel.component';
+import { TunnelGuard } from '@blockframes/ui/tunnel';
 
 const tunnelRoutes: Routes = [
   {
     path: '',
     component: MovieTunnelComponent,
+    canDeactivate: [TunnelGuard],
     children: [
       // Page 1
       {
