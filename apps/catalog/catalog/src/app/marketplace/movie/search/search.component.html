@@ -98,11 +98,13 @@
             </mat-error>
           </mat-expansion-panel> -->
 
+          <mat-divider></mat-divider>
+          <mat-card-subtitle>TITLE METADATA</mat-card-subtitle>
           <!-- Genres -->
           <mat-expansion-panel>
             <mat-expansion-panel-header>
               <mat-panel-title test-id="genres-panel">
-                Genres
+                Genre
               </mat-panel-title>
             </mat-expansion-panel-header>
             <movie-form-genre [form]="filterForm.genres"></movie-form-genre>
@@ -112,7 +114,7 @@
           <mat-expansion-panel>
             <mat-expansion-panel-header>
               <mat-panel-title test-id="languages-panel">
-                Languages
+                Language & Version
               </mat-panel-title>
             </mat-expansion-panel-header>
             <form formGroupName="languages" fxLayout="column">
@@ -134,9 +136,9 @@
                     </mat-option>
                   </mat-autocomplete>
                 </mat-form-field>
-                <button test-id="languages" mat-button [disabled]="!languageControl.valid" color="accent"
-                  (click)="addLanguage(languageControl.value); languageControl.reset()">Add
-                  language
+                <button test-id="languages" mat-raised-button color="warn" [disabled]="!languageControl.valid" color="accent"
+                  (click)="addLanguage(languageControl.value); languageControl.reset()">
+                  <mat-icon svgIcon="add"></mat-icon>
                 </button>
               </div>
               <ng-container *ngIf="filterForm.get('languages').value">
