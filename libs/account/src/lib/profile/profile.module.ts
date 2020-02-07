@@ -26,7 +26,6 @@ import { PasswordFormModule } from '@blockframes/account/profile/forms/password/
 export const profileRoutes: Routes = [
   { path: '', redirectTo: 'view', pathMatch: 'full' },
   { path: 'view', loadChildren: () => import('./pages/view/view.module').then(m => m.ProfileViewModule)},
-  { path: 'edit', component: ProfileEditableComponent },
 ];
 @NgModule({
   imports: [
@@ -48,13 +47,10 @@ export const profileRoutes: Routes = [
     EditableSidenavModule,
     PasswordConfirmModule,
     UploadModule,
-    ProfileFormModule,
-    PasswordFormModule,
     RouterModule.forChild(profileRoutes),
   ],
   declarations: [
     ProfileDisplayComponent,
-    ProfileEditableComponent,
   ],
 })
 export class ProfileModule {}

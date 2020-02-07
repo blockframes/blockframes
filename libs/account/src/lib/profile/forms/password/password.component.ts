@@ -1,20 +1,14 @@
 
-import { Component, ChangeDetectionStrategy, HostBinding } from '@angular/core';
-import { ControlContainer } from '@angular/forms';
-
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { ConfirmPasswordForm } from '@blockframes/utils/form/controls/password.control';
 @Component({
-  selector: '[formGroup] editPasswordForm, profile-password-form',
+  selector: '[form] profile-password-form',
   templateUrl: './password.component.html',
   styleUrls: ['./password.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
 export class PasswordFormComponent {
-  @HostBinding('attr.page-id') pageId = 'password-form';
 
-  constructor(public controlContainer: ControlContainer) {}
-
-  public get control() {
-    return this.controlContainer.control;
-  }
+  @Input() form: ConfirmPasswordForm;
 }

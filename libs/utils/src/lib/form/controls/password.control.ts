@@ -24,6 +24,7 @@ export class PasswordControl extends FormControl {
   }
 }
 
+// Confirm Password
 export interface ConfirmPassword {
   password: string,
   confirm: string,
@@ -41,5 +42,26 @@ type ConfirmPasswordControl = ReturnType<typeof createConfirmPasswordControls>;
 export class ConfirmPasswordForm extends FormEntity<ConfirmPasswordControl> {
   constructor(password?: string) {
     super(createConfirmPasswordControls(password), { validators: confirmPasswords() });
+  }
+}
+
+// Edit Password
+export interface EditPassword {
+  current: string,
+  next: string,
+}
+
+function createEditPasswordControls() {
+  return {
+    current: new PasswordControl(),
+    next: new PasswordControl(),
+  }
+}
+
+type EditPasswordControl = ReturnType<typeof createEditPasswordControls>;
+
+export class EditPasswordForm extends FormEntity<EditPasswordControl> {
+  constructor() {
+    super(createEditPasswordControls());
   }
 }

@@ -1,32 +1,24 @@
-<ng-container *ngIf="user; else: loading">
-  <header fxLayout="row" fxLayoutAlign="space-between start">
-    <article fxLayout="row" fxLayoutAlign="space-around start">
-      <img [imgRef]="user.avatar" [placeholderAsset]="placeholderAvatar" alt="profile picture" />
-      <div class="user-info" *ngIf="organization$ | async as org">
-        <h1>{{ user.name }} {{ user.surname }}</h1>
-        <p class="mat-body-2">{{ user.position }} at {{ org.name }}</p>
-      </div>
-    </article>
-    <ng-container>
-      <a mat-stroked-button color="primary" [routerLink]="previousPage" fxLayoutAlign="center center">
-        <mat-icon svgIcon="arrow_back"></mat-icon>
-        <span>Previous page</span>
-      </a>
-    </ng-container>
-  </header>
-  <section>
-    <profile-form [form]="form"></profile-form>
-    <!-- <profile-password-form [formGroup]="editPasswordForm"></profile-password-form> -->
-  </section>
-  <footer fxLayout="row" fxLayoutAlign="center center">
-    <button mat-flat-button color="accent">
-      <mat-icon svgIcon="floppy"></mat-icon><span>Update</span>
-    </button>
-  </footer>
-</ng-container>
-<ng-template #loading>
-  <div fxLayout="column" fxLayoutAlign="center center">
-    <p>Your Profile is loading...</p>
-    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-  </div>
-</ng-template>
+ <ng-container *ngIf="user$ | async as user">
+   <header fxLayout="row" fxLayoutAlign="space-between start">
+     <article fxLayout="row" fxLayoutAlign="space-around start">
+       <img [imgRef]="user.avatar" placeholderAsset="Avatar_250.png" alt="profile picture" />
+       <div class="user-info" *ngIf="organization$ | async as org">
+         <h1>{{ user.name }} {{ user.surname }}</h1>
+         <p class="mat-body-2">{{ user.position }} at {{ org.name }}</p>
+       </div>
+     </article>
+       <a mat-stroked-button color="primary" [routerLink]="previousPage" fxLayoutAlign="center center">
+         <mat-icon svgIcon="arrow_back"></mat-icon>
+         <span>Previous page</span>
+       </a>
+   </header>
+  </ng-container> 
+   <section>
+     <profile-form [form]="profileForm"></profile-form>
+     <profile-password-form [form]="passwordForm"></profile-password-form>
+   </section>
+   <footer fxLayout="row" fxLayoutAlign="center center">
+     <button mat-flat-button color="accent" (click)="update()">
+       <mat-icon svgIcon="floppy"></mat-icon><span>Update</span>
+     </button>
+   </footer>

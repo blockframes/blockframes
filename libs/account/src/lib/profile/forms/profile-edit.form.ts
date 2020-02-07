@@ -1,6 +1,6 @@
 import { FormControl } from '@angular/forms';
 import { FormEntity } from '@blockframes/utils';
-import { Injectable } from '@angular/core';
+import { User } from '@blockframes/auth/+state/auth.store';
 export interface Profile {
   name: string;
   surname: string;
@@ -10,7 +10,7 @@ export interface Profile {
   email: string;
 }
 
-export function createProfile(params: Partial<Profile> = {}): Profile {
+export function createProfile(params: Partial<User> = {}): Profile {
   return {
     name: '',
     surname: '',
@@ -22,7 +22,7 @@ export function createProfile(params: Partial<Profile> = {}): Profile {
   };
 }
 
-function createProfileControls(entity: Partial<Profile>) {
+function createProfileControls(entity: Partial<User>) {
   const profile = createProfile(entity);
   return {
     name: new FormControl(profile.name),
@@ -36,12 +36,8 @@ function createProfileControls(entity: Partial<Profile>) {
 
 export type ProfileControl = ReturnType<typeof createProfileControls>;
 
-@Injectable({ providedIn: 'root' })
-export class ProfileForm extends FormEntity<ProfileControl> {
-  // constructor(data?: Profile) {
-  //   super(createProfileControls(data));
-  // }
-  constructor() {
-    super(createProfileControls({}))
+export class ProfileForm extends FormEntity<ProfileControl, User> {
+  constructor(profile?: Profile) {
+    super(createProfileControls(profile));
   }
 }
