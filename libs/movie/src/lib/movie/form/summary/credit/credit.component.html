@@ -22,7 +22,7 @@
   </li>
   <ng-container *ngFor="let artist of salesCast.get('crew').controls; let isLast = last">
     <li>
-      <strong><missing-control [control]="artist.get('role')" label="CREW_ROLES" [link]="link"></missing-control> </strong>
+      <strong><missing-control [control]="artist.get('role')" scope="CREW_ROLES" [link]="link"></missing-control> </strong>
       <ng-container>
         <missing-control [control]="artist.get('firstName')" [link]="link"></missing-control>
         <missing-control [control]="artist.get('lastName')" [link]="link"></missing-control>

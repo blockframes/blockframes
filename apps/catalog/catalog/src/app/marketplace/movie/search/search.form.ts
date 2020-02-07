@@ -24,6 +24,7 @@ import { FormEntity, yearValidators, numberRangeValidator } from '@blockframes/u
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 import { MovieLanguageSpecification } from '@blockframes/movie/movie/+state/movie.firestore';
 import { createMovieLanguageSpecification } from '@blockframes/movie/movie+state/movie.model';
+import { FormStaticArray } from '@blockframes/utils/form';
 
 /////////////////////////
 // CatalogGenresFilter //
@@ -38,7 +39,7 @@ export interface CatalogSearch {
     from: Date;
     to: Date;
   };
-  type: GenresLabel[];
+  genres: GenresSlug[];
   status: MovieStatusLabel[];
   salesAgent: string[];
   languages: { [language in LanguagesLabel]: MovieLanguageSpecification };
@@ -59,7 +60,7 @@ function createCatalogSearch(search: Partial<CatalogSearch>): CatalogSearch {
   return {
     productionYear: {},
     availabilities: {},
-    type: [],
+    genres: [],
     status: [],
     salesAgent: [],
     languages: {},
@@ -116,7 +117,7 @@ function createCatalogSearchControl(search: CatalogSearch) {
       },
       numberRangeValidator('from', 'to')
     ),
-    type: new FormControl(search.type),
+    genres: new FormStaticArray(search.genres, 'GENRES', [Validators.required]),
     status: new FormControl(search.status),
     salesAgent: new FormControl(search.salesAgent),
     languages: new FormGroup(languageControl),
@@ -146,6 +147,10 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
     return this.get('languages') as FormGroup;
   }
 
+  get genres() {
+    return this.get('genres');
+  }
+
   addLanguage(language: LanguagesSlug, value: Partial<MovieLanguageSpecification> = {}) {
     const movieLanguage = createMovieLanguageSpecification(value);
     this.get('languages').addControl(language, createLanguageControl(movieLanguage));
@@ -156,22 +161,22 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
     this.updateValueAndValidity();
   }
 
-  addType(type: GenresSlug) {
-    if (!GENRES_SLUG.includes(type)) {
+  addGenre(genre: GenresSlug) {
+    if (!GENRES_SLUG.includes(genre)) {
       throw new Error(
-        `Type ${type} is not part of the defined types, here is the complete list currently available: ${GENRES_LABEL}`
+        `Genre ${genre} is not part of the defined genres, here is the complete list currently available: ${GENRES_LABEL}`
       );
     } else {
-      this.get('type').setValue([...this.get('type').value, type]);
+      this.get('genres').setValue([...this.get('genres').value, genre]);
     }
   }
 
-  removeType(type: GenresSlug) {
-    if (GENRES_SLUG.includes(type)) {
-      const newControls = this.get('type').value.filter(typeToRemove => typeToRemove !== type);
-      this.get('type').setValue(newControls);
+  removeGenre(genre: GenresSlug) {
+    if (GENRES_SLUG.includes(genre)) {
+      const newControls = this.get('genres').value.filter(genreToRemove => genreToRemove !== genre);
+      this.get('genres').setValue(newControls);
     } else {
-      throw new Error(`The type ${type} was not found!`);
+      throw new Error(`The genre ${genre} was not found!`);
     }
   }
 
@@ -194,15 +199,6 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
     } else {
       throw new Error(`The production status ${status} was not found!`);
     }
-  }
-
-  addGenre(genre: string) {
-    this.get('type').setValue([...this.get('type').value, genre]);
-  }
-
-  removeGenre(genre: string) {
-    const newControls = this.get('type').value.filter(genreToRemove => genreToRemove !== genre);
-    this.get('type').setValue(newControls);
   }
 
   addSalesAgent(salesAgent: string) {

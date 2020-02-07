@@ -143,7 +143,7 @@ export function valueIsInModelValidator(scope: Scope): ValidatorFn {
 }
 
 /**
- * @description Check if value if a slug of the scope provided, inside the static model
+ * @description Check if value is a slug of the scope provided, inside the static model
  * @param scope Scope inside the static model
  */
 export function isSlugValidator(scope: Scope): ValidatorFn {
@@ -152,6 +152,15 @@ export function isSlugValidator(scope: Scope): ValidatorFn {
   };
 }
 
+/**
+ * @description Check if all values are slugs of the scope provided, inside the static model
+ * @param scope Scope inside the static model
+ */
+export function isSlugArrayValidator(scope: Scope): ValidatorFn {
+  return (control: FormControl): ValidationErrors => {
+    return control.value.every(value => isInSlug(scope, value)) ? null : { invalidValue: true }
+  };
+}
 
 /**
  * @description Error state matcher which is just like in the docs from angular material.
