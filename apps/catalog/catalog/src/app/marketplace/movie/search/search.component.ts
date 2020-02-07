@@ -501,29 +501,6 @@ export class MarketplaceSearchComponent implements OnInit {
     }
   }
 
-  public addSalesAgent(event: MatAutocompleteSelectedEvent) {
-    const salesAgent = event.option.value;
-
-    if ((salesAgent || '').trim() && !this.selectedSalesAgents.includes(salesAgent)) {
-      this.selectedSalesAgents.push(salesAgent.trim());
-    }
-
-    this.filterForm.addSalesAgent(salesAgent);
-    this.salesAgentControl.setValue('');
-    this.salesAgentInput.nativeElement.value = '';
-    this.analytics.event(AnalyticsEvents.addedSalesAgent, { salesAgent });
-  }
-
-  public removeSalesAgent(salesAgent: string) {
-    const index = this.selectedSalesAgents.indexOf(salesAgent);
-
-    if (index >= 0) {
-      this.selectedSalesAgents.splice(index, 1);
-      this.filterForm.removeSalesAgent(salesAgent);
-      this.analytics.event(AnalyticsEvents.removedSalesAgent, { salesAgent });
-    }
-  }
-
   public toggle$(movieId: string) {
     return this.catalogCartQuery.isAddedToWishlist(movieId);
   }

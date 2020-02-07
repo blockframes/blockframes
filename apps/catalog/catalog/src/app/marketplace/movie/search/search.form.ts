@@ -41,7 +41,6 @@ export interface CatalogSearch {
   };
   genres: GenresSlug[];
   status: MovieStatusLabel[];
-  salesAgent: string[];
   languages: { [language in LanguagesLabel]: MovieLanguageSpecification };
   certifications: CertificationsLabel[];
   medias: MediasLabel[];
@@ -120,7 +119,6 @@ function createCatalogSearchControl(search: CatalogSearch) {
     ),
     genres: new FormStaticArray(search.genres, 'GENRES', [Validators.required]),
     status: new FormControl(search.status),
-    salesAgent: new FormControl(search.salesAgent),
     languages: new FormGroup(languageControl),
     certifications: new FormControl(search.certifications),
     medias: new FormControl(search.medias),

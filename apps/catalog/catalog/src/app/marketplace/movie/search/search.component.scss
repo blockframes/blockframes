@@ -12,6 +12,11 @@ header {
   width: 70%;
 }
 
+.language-button {
+  margin-top: 15px;
+  margin-left: 16px;
+}
+
 .searchbar-header {
   text-align: center;
 }
@@ -22,6 +27,10 @@ mat-form-field {
 
 mat-divider {
   width: 100%;
+}
+
+mat-checkbox {
+  margin-top: 16px;
 }
 
 .mat-chip.active {

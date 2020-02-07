@@ -130,13 +130,18 @@
                     [disabled]="!languageControl.valid">
                     <mat-icon>search</mat-icon>
                   </button>
-                  <mat-autocomplete #language="matAutocomplete" (optionSelected)="addLanguage(languageControl.value)">
+                  <mat-autocomplete #language="matAutocomplete">
                     <mat-option *ngFor="let language of languagesFilter$ | async" [value]="language">
                       {{language}}
                     </mat-option>
                   </mat-autocomplete>
                 </mat-form-field>
-                <button test-id="languages" mat-raised-button color="warn" [disabled]="!languageControl.valid" color="accent"
+                <button
+                  test-id="languages"
+                  class="language-button"
+                  mat-mini-fab
+                  [disabled]="!languageControl.valid"
+                  color="primary"
                   (click)="addLanguage(languageControl.value); languageControl.reset()">
                   <mat-icon svgIcon="add"></mat-icon>
                 </button>
@@ -152,14 +157,16 @@
                         </mat-chip>
                       </span>
                       <i mat-line>Options are cumulative</i>
-                      <mat-checkbox test-id="languages-checkbox-original" mat-line formControlName="original">Original
+                      <mat-checkbox color="primary" test-id="languages-checkbox-original" mat-line formControlName="original">
+                        Original
                       </mat-checkbox>
-                      <mat-checkbox test-id="languages-checkbox-dubbed" mat-line formControlName="dubbed">Dubbed
+                      <mat-checkbox color="primary" test-id="languages-checkbox-dubbed" mat-line formControlName="dubbed">
+                        Dubbed
                       </mat-checkbox>
-                      <mat-checkbox test-id="languages-checkbox-subtitle" mat-line formControlName="subtitle">
+                      <mat-checkbox color="primary" test-id="languages-checkbox-subtitle" mat-line formControlName="subtitle">
                         Subtitles
                       </mat-checkbox>
-                      <mat-checkbox test-id="languages-checkbox-subtitle" mat-line formControlName="caption">
+                      <mat-checkbox color="primary" test-id="languages-checkbox-subtitle" mat-line formControlName="caption">
                         Closed-Captioned
                       </mat-checkbox>
                     </mat-list-item>
@@ -176,36 +183,11 @@
                 Production Status
               </mat-panel-title>
             </mat-expansion-panel-header>
-            <div fxLayout="column" fxLayoutAlign="start space-between" class="filter-checkboxes-status">
-              <mat-checkbox (change)="hasStatus(status)" *ngFor="let status of movieProductionStatuses">
+            <div fxLayout="column" fxLayoutAlign="start start">
+              <mat-checkbox color="primary" (change)="hasStatus(status)" *ngFor="let status of movieProductionStatuses">
                 {{status}}
               </mat-checkbox>
             </div>
-          </mat-expansion-panel>
-
-          <!-- Sales Agents -->
-          <mat-expansion-panel>
-            <mat-expansion-panel-header>
-              <mat-panel-title test-id="sales-agent-panel">
-                Sales Agents
-              </mat-panel-title>
-            </mat-expansion-panel-header>
-            <mat-form-field class="sales-agents-chip-list">
-              <mat-chip-list #salesAgentChipList aria-label="Sales Agents selection">
-                <mat-chip *ngFor="let salesAgent of selectedSalesAgents" selectable removable
-                  (removed)="removeSalesAgent(salesAgent)">
-                  {{ salesAgent }}
-                  <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                </mat-chip>
-                <input placeholder="Sales Agents" #salesAgentInput [formControl]="salesAgentControl"
-                  [matAutocomplete]="salesAgent" [matChipInputFor]="salesAgentChipList">
-              </mat-chip-list>
-              <mat-autocomplete #salesAgent="matAutocomplete" (optionSelected)="addSalesAgent($event)">
-                <mat-option *ngFor="let salesAgent of salesAgentFilter$ | async" [value]="salesAgent">
-                  {{ salesAgent }}
-                </mat-option>
-              </mat-autocomplete>
-            </mat-form-field>
           </mat-expansion-panel>
 
           <!-- Certifications -->

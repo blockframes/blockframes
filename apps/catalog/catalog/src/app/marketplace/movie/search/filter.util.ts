@@ -74,17 +74,6 @@ function productionStatus(movie: Movie, movieStatus: string[]): boolean {
   }
 }
 
-function salesAgent(movie: Movie, salesAgents: string[]): boolean {
-  if (!salesAgents.length) {
-    return true;
-  }
-  for (let i = 0; i < salesAgents.length; i++) {
-    if (salesAgents[i] === movie.salesAgentDeal.salesAgent.displayName) {
-      return true;
-    }
-  }
-}
-
 function certifications(movie: Movie, movieCertification: string[]): boolean {
   if (!movieCertification.length) {
     return true;
@@ -167,6 +156,8 @@ export function filterMovie(movie: Movie, filter: CatalogSearch, deals?: Distrib
       genres(movie, filter.genres) &&
       productionStatus(movie, filter.status) &&
       salesAgent(movie, filter.salesAgent)
+      types(movie, filter.type) &&
+      productionStatus(movie, filter.status)
     );
   }
 }
