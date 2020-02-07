@@ -81,6 +81,9 @@ export const requestMovieAnalytics = async (
   context: CallableContext
 ): Promise<MovieAnalytics[]> => {
   const { movieIds, daysPerRange } = data;
+  if (!movieIds.length) {
+    return [];
+  }
   const uid = context.auth!.uid;
   const user = await getDocument<PublicUser>(`users/${uid}`);
   const org = await getDocument<OrganizationDocument>(`orgs/${user.orgId}`);
@@ -89,8 +92,8 @@ export const requestMovieAnalytics = async (
   if (movieIds.every(movieId => org.movieIds.includes(movieId))) {
     // Request bigQuery
     let [rows] = await executeQuery(queryMovieAnalytics, movieIds, daysPerRange);
-    rows = mergeMovieIdPageInMovieId(rows);
     if (rows !== undefined && rows.length >= 0) {
+      rows = mergeMovieIdPageInMovieId(rows);
       return movieIds.map(movieId => {
         const movieRows = filterByMovieId(rows, movieId);
         return {
