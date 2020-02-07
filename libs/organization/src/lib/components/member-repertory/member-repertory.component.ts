@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { OrganizationMember } from '../../member/+state/member.model';
+import { UserRole } from '@blockframes/organization/permissions/+state/permissions.model';
 
 @Component({
   selector: 'member-repertory',
@@ -30,5 +31,18 @@ export class MemberRepertoryComponent {
     return this.isSuperAdmin
     ? [ 'name', 'surname', 'email', 'position', 'role', 'uid' ]
     : [ 'name', 'surname', 'email', 'position', 'role' ]
+  }
+
+  public displayRole(role: UserRole) {
+    switch (role) {
+      case UserRole.superAdmin:
+        return 'Super Admin';
+      case UserRole.admin:
+        return 'Admin';
+      case UserRole.member:
+        return 'Member';
+      default:
+        return 'Member';
+    }
   }
 }
