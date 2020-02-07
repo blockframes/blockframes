@@ -1,0 +1,41 @@
+<h1>Administration dashboard > Movie list</h1>
+
+<bf-table-filter 
+  [source]="rows" 
+  [columns]="versionColumns" 
+  [initialColumns]="initialColumns" 
+  [filterPredicate]="filterPredicate"
+  showFilter="true"
+  showLoader="true"
+  showPaginator="true">
+  <ng-template colRef="promotionalElements.poster" let-posters>
+    <ng-container *ngIf="posters[0].media as poster; else noposter">
+      <img class="poster" [imgRef]="poster">
+    </ng-container>
+    <ng-template #noposter>
+      --
+    </ng-template>
+  </ng-template>
+  <ng-template colRef="id" let-id>
+    <a target="_blank" [routerLink]="getPath(id)" routerLinkActive="active"> {{ id }}</a>
+  </ng-template>
+  <ng-template colRef="distributionDeals" let-distributionDeals>
+    {{ distributionDeals.length }}
+  </ng-template>
+  <ng-template colRef="distributionDealsInfo" let-distributionDealsInfo>
+    <ng-container *ngIf="distributionDealsInfo.count else noDeals">
+      <a [routerLink]="distributionDealsInfo.link" routerLinkActive="active"><mat-icon>launch</mat-icon></a> ({{ distributionDealsInfo.count }})
+    </ng-container>
+    <ng-template #noDeals>
+      --
+    </ng-template>
+  </ng-template>
+  <ng-template colRef="contractsInfo" let-contractsInfo>
+    <ng-container *ngIf="contractsInfo.count else noDeals">
+      <a [routerLink]="contractsInfo.link" routerLinkActive="active"><mat-icon>launch</mat-icon></a> ({{ contractsInfo.count }})
+    </ng-container>
+    <ng-template #noDeals>
+      --
+    </ng-template>
+  </ng-template>
+</bf-table-filter>

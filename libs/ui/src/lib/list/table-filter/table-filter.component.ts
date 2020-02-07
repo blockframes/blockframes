@@ -16,6 +16,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Observable } from 'rxjs';
 import { startWith } from 'rxjs/operators';
+import { getValue } from '@blockframes/utils/helpers';
 
 /**
  * This directive is to be used inside the table-filter component on a ng-template
@@ -43,18 +44,28 @@ export class TableFilterComponent implements OnInit, AfterViewInit {
   @Input() columns: Record<string, any>;
   @Input() initialColumns: string[];
   @Input() link: string;
+  @Input() showLoader = false;
+  @Input() filterPredicate: any;
   @Input() set source(data: any[]) {
     this.dataSource = new MatTableDataSource(data);
     this.dataSource.paginator = this.paginator;
+    if (this.filterPredicate) {
+      this.dataSource.filterPredicate = this.filterPredicate;
+    } else {
+      this.dataSource.filterPredicate = this.fallbackFilterPredicate;
+    }
+    this.dataSource.sortingDataAccessor = this.sortingDataAccessor;
     this.dataSource.sort = this.sort;
   }
-  
+
   // Column & rows
   displayedColumns$: Observable<string[]>;
   dataSource: MatTableDataSource<any>;
 
   // Filters
   columnFilter = new FormControl([]);
+  public getValue = getValue;
+  public noData = false;
 
   /** References to template to apply for specific columns */
   @ContentChildren(ColRef, { descendants: false }) cols: QueryList<ColRef>;
@@ -66,6 +77,10 @@ export class TableFilterComponent implements OnInit, AfterViewInit {
     this.displayedColumns$ = this.columnFilter.valueChanges.pipe(
       startWith(this.columnFilter.value)
     );
+
+    setTimeout(() => {
+      this.noData = true;
+    }, 5000)
   }
 
   ngAfterViewInit() {
@@ -82,6 +97,17 @@ export class TableFilterComponent implements OnInit, AfterViewInit {
     return col && col.template;
   }
 
+  /**
+   * @dev Allows to sort nested object
+   */
+  sortingDataAccessor(item, property) {
+    if (property.includes('.')) {
+      return property.split('.')
+        .reduce((object, key) => object[key], item);
+    }
+    return item[property];
+  }
+
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
     if (this.dataSource.paginator) {
@@ -89,15 +115,7 @@ export class TableFilterComponent implements OnInit, AfterViewInit {
     }
   }
 
-  /**
-   * Get the value of an item based on a path
-   * @example item = movie, key = 'budget.totalBudget'
-   */
-  getValue(item: any, key: string) {
-    const path = key.split('.');
-    for (let i = 0; i < path.length; i++) {
-      item = item[path[i]];
-    }
-    return item;
+  fallbackFilterPredicate(data: any, filter) {
+    return JSON.stringify(data).toLowerCase().indexOf(filter) !== -1;
   }
 }

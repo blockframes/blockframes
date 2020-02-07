@@ -40,3 +40,16 @@ export function getDealTerritories(deal: DistributionDeal): string[] {
   const excludedTerritories = deal.territoryExcluded;
   return territories.filter(territory => !excludedTerritories.includes(territory));
 }
+
+export interface DistributionDealWithMovieId {
+  deal: DistributionDeal;
+  movieId: string;
+}
+
+export function createDistributionDealWithMovieId(params: Partial<DistributionDealWithMovieId> = {}): DistributionDealWithMovieId {
+  return {
+    deal: createDistributionDeal(params.deal),
+    movieId: params.movieId,
+    ...params
+  };
+}

@@ -1,0 +1,27 @@
+<h1>Administration dashboard >{{ movieId ? ' ' + movieId + ' >':'' }} Contracts</h1>
+
+<bf-table-filter 
+  [source]="rows" 
+  [columns]="versionColumns" 
+  [initialColumns]="initialColumns" 
+  [filterPredicate]="filterPredicate"
+  showFilter="true"
+  showLoader="true"
+  showPaginator="true">
+  <ng-template colRef="doc.parentContractIds" let-parentContractIds>
+    <ul *ngIf="parentContractIds.length else noParents">
+      <li *ngFor="let parentId of parentContractIds">{{ parentId }}</li>
+    </ul>
+    <ng-template #noParents>
+      --
+    </ng-template>
+  </ng-template>
+  <ng-template colRef="doc.childContractIds" let-childContractIds>
+    <ul *ngIf="childContractIds.length else noParents">
+      <li *ngFor="let childId of childContractIds">{{ childId }}</li>
+    </ul>
+    <ng-template #noParents>
+      --
+    </ng-template>
+  </ng-template>
+</bf-table-filter>

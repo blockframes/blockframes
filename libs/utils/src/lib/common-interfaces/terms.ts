@@ -1,3 +1,5 @@
+import { formatDate } from '@angular/common';
+
 export enum PaymentEvent {
   ContractSignatureDate = 'Contract Signature Date',
   AcceptationAllMaterials = 'Acceptation of all delivery materials',
@@ -103,4 +105,27 @@ export function createScheduledDateWithCounter(params: Partial<ScheduledDateWith
     ...params,
     ...createScheduledDate(params),
   };
+}
+
+export function termToPrettyDate(term: Terms, type: 'start' | 'end' = 'start'): string {
+  const noDate = 'no date';
+  switch (type) {
+    case 'start':
+      if (!term.start || isNaN(term.start.getTime())) {
+        return term.approxStart || noDate;
+      } else if (term.start) {
+        return formatDate(term.start, 'yyyy-MM-dd', 'en-US');
+      } else {
+        return noDate;
+      }
+    case 'end':
+    default:
+      if (!term.end || isNaN(term.end.getTime())) {
+        return term.approxEnd || noDate;
+      } else if (term.end) {
+        return formatDate(term.end, 'yyyy-MM-dd', 'en-US');
+      } else {
+        return noDate;
+      }
+  }
 }

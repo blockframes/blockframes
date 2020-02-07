@@ -28,26 +28,26 @@ import { MovieQuery } from '@blockframes/movie';
 const organizationContractsListQuery = (orgId: string): Query<ContractWithTimeStamp[]> => ({
   path: 'contracts',
   queryFn: ref => ref.where('partyIds', 'array-contains', orgId).where('childContractIds', '==', []),
-    versions: contract => ({
-      path: `contracts/${contract.id}/versions`
-    })
+  versions: contract => ({
+    path: `contracts/${contract.id}/versions`
+  })
 });
 
 /** Get the active contract and put his lastVersion in it. */
 const contractQuery = (contractId: string): Query<ContractWithTimeStamp> => ({
   path: `contracts/${contractId}`,
-    versions: contract => ({
-      path: `contracts/${contract.id}/versions`
-    })
+  versions: contract => ({
+    path: `contracts/${contract.id}/versions`
+  })
 })
 
 /** Get all the contracts where the active movie appears. */
 const movieContractsQuery = (movieId: string): Query<ContractWithTimeStamp[]> => ({
   path: 'contracts',
   queryFn: ref => ref.where('titleIds', 'array-contains', movieId).where('childContractIds', '==', []),
-    versions: contract => ({
-      path: `contracts/${contract.id}/versions`
-    })
+  versions: contract => ({
+    path: `contracts/${contract.id}/versions`
+  })
 });
 
 @Injectable({ providedIn: 'root' })
@@ -262,15 +262,15 @@ export class ContractService extends CollectionService<ContractState> {
   public acceptOffer(contract: Contract, organizationId: string) {
     // Get the index of logged in user party.
     const index = contract.parties.findIndex(partyDetails => {
-      const  { orgId, role } = partyDetails.party;
+      const { orgId, role } = partyDetails.party;
       return orgId === organizationId && role === 'signatory';
     });
 
     // Create an updated party with new status and a timestamp.
     const updatedParty = createContractPartyDetail({
-        ...contract.parties[index],
-        signDate: new Date(),
-        status: ContractStatus.accepted
+      ...contract.parties[index],
+      signDate: new Date(),
+      status: ContractStatus.accepted
     });
 
     // Replace the party at the index and update all the parties array.
@@ -286,20 +286,43 @@ export class ContractService extends CollectionService<ContractState> {
   public declineOffer(contract: Contract, organizationId: string) {
     // Get the index of logged in user party.
     const index = contract.parties.findIndex(partyDetails => {
-      const  { orgId, role } = partyDetails.party;
+      const { orgId, role } = partyDetails.party;
       return orgId === organizationId && role === 'signatory';
     });
 
     // Create an updated party with new status and a timestamp.
     const updatedParty = createContractPartyDetail({
-        ...contract.parties[index],
-        signDate: new Date(),
-        status: ContractStatus.rejected
+      ...contract.parties[index],
+      signDate: new Date(),
+      status: ContractStatus.rejected
     });
 
     // Replace the party at the index and update all the parties array.
     const updatedParties = contract.parties.filter((_, i) => i !== index);
     this.update({ ...contract, parties: [...updatedParties, updatedParty] })
+  }
+
+  /**
+   * @dev ADMIN method
+   * Get all contracts.
+   */
+  public async getAllContracts(): Promise<Contract[]> {
+    const contractsSnap = await this.db
+      .collection('contracts')
+      .get()
+      .toPromise();
+    return contractsSnap.docs.map(contract => this.formatContract(contract));
+  }
+
+  /**
+   * Get all contracts for a given movie.
+   */
+  public async getMovieContracts(movieId: string): Promise<Contract[]> {
+    const contractsSnap = await this.db
+      .collection('contracts', ref => ref.where('titleIds', 'array-contains', movieId))
+      .get()
+      .toPromise();
+    return contractsSnap.docs.map(contract => this.formatContract(contract));
   }
 
 }

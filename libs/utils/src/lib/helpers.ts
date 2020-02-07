@@ -29,3 +29,15 @@ export function toDate(date: firestore.Timestamp | Date): Date {
   }
   return date;
 }
+
+/**
+ * Get the value of an item based on a path
+ * @example item = movie, key = 'budget.totalBudget'
+ */
+export function getValue(item: any, key: string) {
+  const path = key.split('.');
+  for (let i = 0; i < path.length; i++) {
+    item = item[path[i]];
+  }
+  return item;
+}

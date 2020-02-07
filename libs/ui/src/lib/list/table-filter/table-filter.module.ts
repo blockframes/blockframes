@@ -6,7 +6,7 @@ import { OverlayWidgetModule } from '../../overlay-widget/overlay-widget.module'
 import { TableFilterComponent, ColRef } from './table-filter.component';
 
 // Material
-import { MatButtonModule } from '@angular/material';
+import { MatButtonModule, MatProgressSpinnerModule } from '@angular/material';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -33,7 +33,8 @@ import { RouterModule } from '@angular/router';
     MatListModule,
     MatTableModule,
     MatPaginatorModule,
-    MatSortModule
+    MatSortModule,
+    MatProgressSpinnerModule,
   ]
 })
 export class TableFilterModule { }
