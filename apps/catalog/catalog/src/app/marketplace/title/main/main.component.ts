@@ -1,6 +1,10 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MovieQuery, Movie } from '@blockframes/movie';
+import { ExtractCode, getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 
+const promoLinks = [
+  'promo_reel_link', 'scenario', 'screener_link', 'teaser_link', 'presentation_deck', 'trailer_link'
+]
 @Component({
   selector: 'catalog-movie-main',
   templateUrl: './main.component.html',
@@ -10,7 +14,23 @@ import { MovieQuery, Movie } from '@blockframes/movie';
 export class MarketplaceMovieMainComponent {
   public movie$ = this.movieQuery.selectActive();
   public loading$ = this.movieQuery.selectLoading();
+  promoLinks = promoLinks;
   constructor(private movieQuery: MovieQuery) { }
+
+  public hasLink({ promotionalElements }: Movie): boolean {
+    return this.promoLinks.some(link => !!promotionalElements[link].media.url);
+  }
+
+  public getLink(movie: Movie, link: ExtractCode<'PROMOTIONAL_ELEMENT_TYPES'>) {
+    if(movie.promotionalElements[link].media.url) {
+      const isDownload = link === 'scenario' || link === 'presentation_deck';
+      return {
+        url: movie.promotionalElements[link].media.url,
+        icon: isDownload ? 'download' : 'play',
+        label: getLabelBySlug('PROMOTIONAL_ELEMENT_TYPES', link)
+      }
+    }
+  }
 
   public hasStory({ story, promotionalDescription }: Movie): boolean {
     return !!(story.synopsis || promotionalDescription.keywords.length > 0 || promotionalDescription.keyAssets)
