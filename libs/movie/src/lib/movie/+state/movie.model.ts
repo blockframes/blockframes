@@ -33,7 +33,6 @@ import { LanguagesSlug } from '@blockframes/utils/static-model';
 import { createRange } from '@blockframes/utils/common-interfaces/range';
 import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
 import { Contract, getValidatedContracts } from '@blockframes/contract/contract/+state/contract.model';
-import { CurrencyPipe } from '@angular/common';
 import { getContractLastVersion } from '@blockframes/contract/version/+state/contract-version.model';
 
 // Export for other files

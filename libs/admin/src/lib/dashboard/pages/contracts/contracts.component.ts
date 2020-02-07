@@ -17,11 +17,10 @@ export class ContractsComponent implements OnInit {
     'last.id': 'Version',
     'last.status': 'Status',
     'doc.parentContractIds': 'Parent Ids',
-    'doc.childContractIds': 'Child Ids'
-    // parent
-    // childs
-    // movies
-    // parties => go to org
+    'doc.childContractIds': 'Child Ids',
+    'last.scope': 'Scope',
+    'doc.partyIds': 'Parties',
+    'doc.titleIds': 'Titles',
   };
 
   public initialColumns: string[] = [
@@ -30,7 +29,10 @@ export class ContractsComponent implements OnInit {
     'last.id',
     'last.status',
     'doc.parentContractIds',
-    'doc.childContractIds'
+    'doc.childContractIds',
+    'last.scope',
+    'doc.partyIds',
+    'doc.titleIds',
   ];
   public rows: ContractWithLastVersion[] = [];
   public toPrettyDate = termToPrettyDate;

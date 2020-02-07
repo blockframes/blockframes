@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CollectionService, CollectionConfig } from 'akita-ng-fire';
 import { ContractVersionState, ContractVersionStore } from './contract-version.store';
-import { VersionMeta, createVersionMeta, ContractVersion } from './contract-version.model';
+import { VersionMeta, createVersionMeta, ContractVersion, formatContractVersion } from './contract-version.model';
 import { ContractQuery } from '../../contract/+state/contract.query';
 import { ContractWithLastVersion } from '../../contract/+state/contract.model';
 
@@ -56,7 +56,7 @@ export class ContractVersionService extends CollectionService<ContractVersionSta
     const { count } = await this.getValue('_meta', { params: { contractId } }) as VersionMeta;
     if (!!count) {
       const lastVersion = await this.getValue(count.toString(), { params: { contractId } });
-      return lastVersion;
+      return formatContractVersion(lastVersion);
     }
   }
 }

@@ -19,6 +19,7 @@ import { PermissionsService } from '@blockframes/organization';
 import { ContractDocumentWithDates, ContractStatus } from './contract.firestore';
 import { firestore } from 'firebase/app';
 import { MovieQuery } from '@blockframes/movie';
+import { formatContractVersion } from '@blockframes/contract/version/+state/contract-version.model';
 
 /**
  * Get all the contracts where user organization is party.
@@ -147,7 +148,7 @@ export class ContractService extends CollectionService<ContractState> {
         if (contractVersions.length) {
           const sortedContractVersions = orderBy(contractVersions, 'id', 'desc');
           contractWithVersion.doc = this.formatContract(contract);
-          contractWithVersion.last = sortedContractVersions[0];
+          contractWithVersion.last = formatContractVersion(sortedContractVersions[0]);
           return contractWithVersion;
         }
       }

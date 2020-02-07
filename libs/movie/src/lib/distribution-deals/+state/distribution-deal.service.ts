@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import objectHash from 'object-hash';
 import { CollectionService, CollectionConfig } from 'akita-ng-fire';
 import { DistributionDealState, DistributionDealStore } from './distribution-deal.store';
-import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { DistributionDeal, getDealTerritories, createDistributionDealWithMovieId, DistributionDealWithMovieId } from './distribution-deal.model';
 import { createContractTitleDetail, ContractWithLastVersion } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractVersionService } from '@blockframes/contract/version/+state/contract-version.service';

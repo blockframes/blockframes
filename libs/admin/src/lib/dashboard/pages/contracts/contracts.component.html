@@ -1,4 +1,4 @@
-<h1>Administration dashboard >{{ movieId ? ' ' + movieId + ' >':'' }} Contracts</h1>
+<h1><a routerLink="/c/o/admin/dashboard/">Administration panel</a> >{{ movieId ? ' ' + movieId + ' >':'' }} Contracts</h1>
 
 <bf-table-filter 
   [source]="rows" 
@@ -17,10 +17,29 @@
     </ng-template>
   </ng-template>
   <ng-template colRef="doc.childContractIds" let-childContractIds>
-    <ul *ngIf="childContractIds.length else noParents">
+    <ul *ngIf="childContractIds.length else noChilds">
       <li *ngFor="let childId of childContractIds">{{ childId }}</li>
     </ul>
-    <ng-template #noParents>
+    <ng-template #noChilds>
+      --
+    </ng-template>
+  </ng-template>
+  <ng-template colRef="last.scope" let-terms>
+    <strong>From : </strong>{{ toPrettyDate(terms,'start') }} <strong>To : </strong>{{ toPrettyDate(terms,'end') }}
+  </ng-template>
+  <ng-template colRef="doc.partyIds" let-partyIds>
+    <ul *ngIf="partyIds.length else noParties">
+      <li *ngFor="let partyId of partyIds">{{ partyId }}</li>
+    </ul>
+    <ng-template #noParties>
+      --
+    </ng-template>
+  </ng-template>
+  <ng-template colRef="doc.titleIds" let-titleIds>
+    <ul *ngIf="titleIds.length else noTitles">
+      <li *ngFor="let titleId of titleIds">{{ titleId }}</li>
+    </ul>
+    <ng-template #noTitles>
       --
     </ng-template>
   </ng-template>
