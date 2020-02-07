@@ -16,12 +16,12 @@
     Add titles to your selection if needed and then offer a price. You may
     choose to put a price forthe entire package or one for each title.
   </span>
-  <mat-form-field appearance="outline">
+  <mat-form-field appearance="outline" fxLayout="row" fxLayoutAlign="baseline start">
     <input matInput type="text" [formControl]="movieCtrl">
-    <button mat-button *ngIf="movieCtrl.value" matSuffix mat-icon-button aria-label="Clear" (click)="movieCtrl.reset()">
+    <button *ngIf="movieCtrl.value" matSuffix mat-icon-button aria-label="Clear" (click)="movieCtrl.reset()">
       <mat-icon>close</mat-icon>
     </button>
-    <button mat-button mat-icon-button aria-label="Search">
+    <button mat-icon-button matPrefix aria-label="Search">
       <mat-icon>search</mat-icon>
     </button>
   </mat-form-field>
