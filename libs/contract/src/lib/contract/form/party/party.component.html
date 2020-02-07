@@ -1,9 +1,14 @@
-<ng-container *ngFor="let control of form.controls; let i = index" [formGroup]="control">
-    <form formGroupName="party"  *ngIf="partyIsType(i)">
+<ng-container *ngFor="let control of form.controls; let i = index; let isLast = last" [formGroup]="control">
+    <form formGroupName="party" *ngIf="partyIsType(i)">
         <div fxLayout="row" fxLayoutAlign="start center">
             <mat-form-field appearance="outline">
                 <mat-label>{{ type | titlecase }} Name</mat-label>
                 <input matInput type="text" formControlName="displayName" autocomplete="off">
+                <mat-select formControlName="role">
+                    <mat-option *ngFor="let role of staticRoles" [value]="role.slug">
+                        {{ role.label }}
+                    </mat-option>
+                </mat-select>
                 <ng-container *ngIf="hasRole">
                     <mat-select formControlName="role">
                         <mat-option *ngFor="let role of staticSubRoles" [value]="role.slug">
@@ -12,7 +17,7 @@
                     </mat-select>
                 </ng-container>
             </mat-form-field>
-            <ng-container *ngIf="true; else add">
+            <ng-container *ngIf="isLast; else add">
                 <button (click)="form.removeAt(i)" mat-mini-fab color="warn" [matTooltip]="showTooltip('remove')">
                     <mat-icon>delete</mat-icon>
                 </button>
