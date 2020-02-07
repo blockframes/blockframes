@@ -54,4 +54,28 @@ describe('blockframes admins rules', () => {
     await expect(marieAdminDoc.set({ set: true })).toDeny();
     await expect(marieAdminDoc.delete()).toDeny();
   });
+
+  test('when user is not logged, they can not access other users admin status', async () => {
+    const db = await setup(undefined, mockData);
+
+    const adminsCollection = db.collection('blockframesAdmin');
+    const vincentAdminDoc = adminsCollection.doc(userVincentBlockframesAdmin.uid);
+    const marieAdminDoc = adminsCollection.doc(userMarie.uid);
+
+    // Listing and creating in admin collection is forbidden
+    await expect(adminsCollection.get()).toDeny();
+    await expect(adminsCollection.add({ exists: true })).toDeny();
+
+    // Toying with an admin doc is forbidden
+    await expect(vincentAdminDoc.get()).toDeny();
+    await expect(vincentAdminDoc.update({ updated: true })).toDeny();
+    await expect(vincentAdminDoc.set({ set: true })).toDeny();
+    await expect(vincentAdminDoc.delete()).toDeny();
+
+    // Toying with a non-admin doc is forbidden
+    await expect(marieAdminDoc.get()).toDeny();
+    await expect(marieAdminDoc.update({ updated: true })).toDeny();
+    await expect(marieAdminDoc.set({ set: true })).toDeny();
+    await expect(marieAdminDoc.delete()).toDeny();
+  });
 });

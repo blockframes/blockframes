@@ -12,7 +12,7 @@ import {
   LegalDocument,
   LegalDocuments,
 } from '../+state';
-import { ContractPartyForm } from './party-name/party-name.form';
+import { ContractPartyForm } from './party/party.form';
 import { ContractVersionForm } from '@blockframes/contract/version/form/version.form';
 
 // PARTY DETAILS

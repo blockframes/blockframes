@@ -1,4 +1,4 @@
-import { ContractFormPartyNameComponent } from './party-name.component';
+import { ContractFormPartyComponent } from './party.component';
 
 // Angular
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -9,24 +9,28 @@ import { NgModule } from '@angular/core';
 
 // Material
 import { MatInputModule } from '@angular/material/input';
+import { MatSelectModule } from '@angular/material/select';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
-  declarations: [ContractFormPartyNameComponent],
+  declarations: [ContractFormPartyComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
     ReactiveFormsModule,
+
+    // Material
     MatFormFieldModule,
     MatInputModule,
     MatDividerModule,
     MatButtonModule,
     MatIconModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatSelectModule
   ],
-  exports: [ContractFormPartyNameComponent]
+  exports: [ContractFormPartyComponent]
 })
-export class ContractFormPartyNameModule {}
+export class ContractFormPartyModule {}
