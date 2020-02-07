@@ -1,0 +1,35 @@
+<ng-container *ngIf="organization$ | async as org; else: loading">
+  <header fxLayout="row" fxLayoutAlign="space-between start">
+    <article fxLayout="row" fxLayoutAlign="space-around start">
+      <img [imgRef]="org.logo" [placeholderAsset]="placeholderLogo" alt="organization logo" />
+      <div class="org-info">
+        <h1>{{ org.name }}</h1>
+        <h2>{{ org.activity }}</h2>
+        <p class="mat-body-2">{{ org.addresses.main.street }}</p>
+      </div>
+    </article>
+    <ng-container>
+      <a mat-stroked-button color="primary" [routerLink]="previousPage" fxLayoutAlign="center center">
+        <mat-icon svgIcon="arrow_back"></mat-icon>
+        <span>Previous page</span>
+      </a>
+    </ng-container>
+  </header>
+  <section>
+    <nav mat-tab-nav-bar>
+      <a mat-tab-link
+         *ngFor="let link of navLinks"
+         [routerLink]="link.path"
+         routerLinkActive #rla="routerLinkActive"
+         [active]="rla.isActive">
+        {{link.label}}
+      </a>
+    </nav>
+  </section>
+</ng-container>
+<ng-template #loading>
+  <div fxLayout="column" fxLayoutAlign="center center">
+    <p>Your Profile is loading...</p>
+    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+  </div>
+</ng-template>

@@ -6,7 +6,7 @@ import { AngularFireFunctions } from '@angular/fire/functions';
 import { FireAuthService, CollectionConfig } from 'akita-ng-fire';
 
 @Injectable({ providedIn: 'root' })
-@CollectionConfig({ path: 'users' })
+@CollectionConfig({ path: 'users', idKey: 'uid' })
 export class AuthService extends FireAuthService<AuthState> {
   constructor(
     protected store: AuthStore,
@@ -68,11 +68,6 @@ export class AuthService extends FireAuthService<AuthState> {
       name: ctx.name,
       surname: ctx.surname
     };
-  }
-
-  /** Redirect the user after he is signin. */
-  onSignin() {
-    return this.router.navigate(['c']);
   }
 
   //////////

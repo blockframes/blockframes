@@ -41,7 +41,7 @@ export class ProfileEditableComponent implements OnInit, OnDestroy {
   ngOnInit() {
     const user = this.authQuery.user;
     this.userEmail = user.email;
-    this.profileForm = new ProfileForm(user);
+    // this.profileForm = new ProfileForm(user);
     this.organization$ = this.organizationQuery.selectActive();
     this.sub = this.themeService.theme$.subscribe(theme => this.theme = theme)
   }
