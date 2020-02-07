@@ -1,6 +1,7 @@
 import * as v0001 from './0001';
 import * as v0002 from './0002';
 import * as v0003 from './0003';
+import * as v0004 from './0004';
 import { Firestore } from '../admin';
 
 export interface IMigration {
@@ -15,6 +16,7 @@ export const MIGRATIONS = {
   1: v0001,
   2: v0002,
   3: v0003,
+  4: v0004,
 };
 
 export const VERSIONS_NUMBERS = Object.keys(MIGRATIONS).map(s => parseInt(s, 10));
