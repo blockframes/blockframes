@@ -82,6 +82,11 @@ service cloud.firestore {
     }
 
     /// PERMISSIONS RULES ///
+    match /docsIndex/{docId} {
+      // index of every doc create with a permission doc associated:
+      // essential for isBrandNewDocument.
+      allow read, write: if false;
+    }
 
     match /permissions/{orgId} {
     	allow read: if isOrgMember(userId(), orgId);
