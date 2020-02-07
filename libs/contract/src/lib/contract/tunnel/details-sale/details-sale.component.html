@@ -4,21 +4,43 @@
   <ng-container tunnel-form>
     <mat-card>
       <mat-card-header>
-        Parties
+        <mat-card-title>
+          Parties
+        </mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <contract-form-party-name [form]="partiesForm" type="licensee"></contract-form-party-name>
+        <contract-form-party-name [form]="parties" type="licensee"></contract-form-party-name>
         <mat-divider></mat-divider>
-        <contract-form-party-name [form]="partiesForm" type="licensor"></contract-form-party-name>
+        <contract-form-party-name [form]="parties" type="licensor"></contract-form-party-name>
       </mat-card-content>
     </mat-card>
-    <mat-card *ngFor="let control of getVersions; let versionIndex = index">
-      <mat-card-header>
-        Terms
-      </mat-card-header>
-      <mat-card-content>
-        <distribution-form-terms [form]="getTerms(versionIndex)"></distribution-form-terms>
-      </mat-card-content>
-    </mat-card>
+    <ng-container *ngFor="let control of versions.controls; let versionIndex = index">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>
+            Terms
+          </mat-card-title>
+          <mat-card-subtitle>
+            You can either enter specific term dates or opt for a period triggered by an event
+          </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <distribution-form-terms [form]="terms(versionIndex)"></distribution-form-terms>
+        </mat-card-content>
+      </mat-card>
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>
+            Title Selection & Price
+          </mat-card-title>
+          <mat-card-subtitle>
+            You may choose to put a price for the entire package or one for each title.
+          </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <contract-version-form-price [form]="price(versionIndex)"></contract-version-form-price>
+        </mat-card-content>
+      </mat-card>
+    </ng-container>
   </ng-container>
 </tunnel-page>

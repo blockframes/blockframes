@@ -1,5 +1,5 @@
-<ng-container *ngFor="let control of form.controls; let i = index; let isLast = last" [formGroup]="control">
-    <form formGroupName="party" *ngIf="partyIsType(i)">
+<ng-container *ngFor="let control of form.controls; let i = index" [formGroup]="control">
+    <form formGroupName="party"  *ngIf="partyIsType(i)">
         <div fxLayout="row" fxLayoutAlign="start center">
             <mat-form-field appearance="outline">
                 <mat-label>{{ type | titlecase }} Name</mat-label>
@@ -12,7 +12,7 @@
                     </mat-select>
                 </ng-container>
             </mat-form-field>
-            <ng-container *ngIf="!isLast; else add">
+            <ng-container *ngIf="true; else add">
                 <button (click)="form.removeAt(i)" mat-mini-fab color="warn" [matTooltip]="showTooltip('remove')">
                     <mat-icon>delete</mat-icon>
                 </button>

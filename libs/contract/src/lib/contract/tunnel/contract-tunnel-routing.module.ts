@@ -9,18 +9,19 @@ const routes: Routes = [{
     path: '',
     redirectTo: 'overview',
     pathMatch: 'full'
-  },{
+  }, {
     path: 'overview',
     loadChildren: () => import('./overview/overview.module').then(m => m.OverviewModule)
-  },{
+  }, {
     path: 'sale',
     children: [{
       path: 'details',
+      loadChildren: () => import('./details-sale/details-sale.module').then(m => m.DetailsSaleModule)
     }, {
       path: 'summary',
       loadChildren: () => import('./summary-sale/summary-sale.module').then(m => m.SummarySaleModule)
     }]
-  },{
+  }, {
     path: 'mandate',
     children: [{
       path: 'details',
@@ -29,11 +30,11 @@ const routes: Routes = [{
       path: 'summary',
       loadChildren: () => import('./summary-mandate/summary-mandate.module').then(m => m.SummaryMandateModule)
     }]
-  },{
+  }, {
     path: 'deals/:titleId',
-    
+
   }]
 }];
 
 @NgModule({ imports: [RouterModule.forChild(routes)], exports: [RouterModule] })
-export class ContractTunnelRoutingModule {}
+export class ContractTunnelRoutingModule { }
