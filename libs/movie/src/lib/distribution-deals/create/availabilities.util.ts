@@ -1,7 +1,7 @@
 import { MovieSalesAgentDeal } from '../../movie/+state/movie.model';
-import { MovieLanguageSpecification } from '../../movie/+state/movie.firestore';
 import { DistributionDeal, getDealTerritories } from '../+state/distribution-deal.model';
 import { DateRange } from '@blockframes/utils/common-interfaces/range';
+import { CatalogSearch } from '@blockframes/catalog/form/search.form';
 import { toDate } from '@blockframes/utils/helpers';
 
 /**
@@ -50,7 +50,7 @@ export function exclusiveDistributionDeals(distributionDeals: DistributionDeal[]
  * @param distributionDeals Array of the movie distribution deals.
  * Note don't put the exclusive deals array in here
  */
-export function getDistributionDealsInDateRange(formDates: DateRange, distributionDeals: DistributionDeal[]): DistributionDeal[] {
+export function getDealsInDateRange(formDates: DateRange, distributionDeals: DistributionDeal[]): DistributionDeal[] {
   if (!distributionDeals) {
     return [];
   }
@@ -98,16 +98,15 @@ export function getDistributionDealsInDateRange(formDates: DateRange, distributi
 
 /**
  * @description We want to check if user search and salesAgentMedias have medias and territories in common
- * @param formTerritories The territories which got specified by the buyer
- * @param formMedias The medias which got specified by the buyer
+ * @param filter The filter options defined by the buyer
  * @param deals The array of deals from a movie in the previously specified date range
  */
-export function getDistributionDealsWithMediasTerritoriesAndLanguagesInCommon(
-  formTerritories: string[],
-  formMedias: string[],
-  deals: DistributionDeal[],
-  formLanguages?: MovieLanguageSpecification
+export function getFilterMatchingDeals(
+  filter: CatalogSearch,
+  deals: DistributionDeal[]
 ): DistributionDeal[] {
+
+  const { territories, medias, languages } = filter
 
   /**
    * We have to look on the already exisitng
@@ -120,7 +119,7 @@ export function getDistributionDealsWithMediasTerritoriesAndLanguagesInCommon(
     const dealTerritories = getDealTerritories(deal);
 
     let mediasInCommon = false;
-    mediaLoop : for (const media of formMedias) {
+    mediaLoop : for (const media of medias) {
       for (const licenseType of deal.licenseType) {
         if (licenseType === media) {
           mediasInCommon = true;
@@ -130,7 +129,7 @@ export function getDistributionDealsWithMediasTerritoriesAndLanguagesInCommon(
     }
 
     let territoriesInCommon = false;
-    territoryLoop : for (const territory of formTerritories) {
+    territoryLoop : for (const territory of territories) {
       for (const saleTerritory of dealTerritories) {
         if (saleTerritory === territory) {
           territoriesInCommon = true;
@@ -142,8 +141,8 @@ export function getDistributionDealsWithMediasTerritoriesAndLanguagesInCommon(
     let dubbingInCommon = false;
     let subtitlesInCommon = false;
 
-    if (formLanguages) {
-    const languagesName: string[] = Object.keys(formLanguages);
+    if (languages) {
+    const languagesName: string[] = Object.keys(languages);
 
       for (const language of languagesName) {
         if (deal.assetLanguage[language] && deal.assetLanguage[language].dubbed) {
