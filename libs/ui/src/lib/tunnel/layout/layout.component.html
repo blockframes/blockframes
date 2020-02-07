@@ -1,50 +1,11 @@
-<mat-toolbar fxLayout="row" fxLayoutAlign="start center">
-  <ng-container *ngIf="(stepData$ | async) as stepData">
-    <article class="page-data" fxLayout="column" fxLayoutAlign="center start">
-      <b class="mat-body-2" *ngIf="stepData.length">
-        Step {{ stepData.index }}/{{ stepData.length }}
-      </b>
-      <div fxLayout="row" fxLayoutAlign="start center" *ngIf="stepData.time">
-        <mat-icon svgIcon="access_time"></mat-icon>
-        <span class="mat-caption">{{ stepData.time }} min ≃</span>
-      </div>
-    </article>
-  </ng-container>
-
-  <article fxFlex fxLayout="row" fxLayoutAlign="space-between center">
-    <div  fxFlex>
-      <ng-content select="header, [tunnel-header]"></ng-content>
-    </div>
-
-    <a mat-icon-button [routerLink]="routeBeforeTunnel">
-      <mat-icon svgIcon="cross"></mat-icon>
-    </a>
-  </article>
+<mat-toolbar fxLayout="row" fxLayoutAlign="space-between center">
+  <ng-content select="header, [tunnel-header]"></ng-content>
+  <tunnel-exit></tunnel-exit>
 </mat-toolbar>
 
 <mat-sidenav-container>
   <mat-sidenav opened mode="side">
-    <aside fxLayout="column">
-      <ng-content select="[tunnel-nav-header]"></ng-content>
-      <mat-accordion>
-        <mat-expansion-panel *ngFor="let panel of steps$ | async">
-          <mat-expansion-panel-header>
-            <mat-panel-title>
-              <mat-icon [svgIcon]="panel.icon" bf-color="primary"></mat-icon>
-              <span>{{ panel.title }}</span>
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <mat-nav-list dense>
-            <ng-container *ngFor="let route of panel.routes">
-              <a mat-list-item [routerLink]="route.path" routerLinkActive="active">
-                {{ route.label }}
-              </a>
-            </ng-container>
-          </mat-nav-list>
-        </mat-expansion-panel>
-      </mat-accordion>
-      <ng-content select="[tunnel-nav-footer]"></ng-content>
-    </aside>
+    <ng-content select="aside"></ng-content>
   </mat-sidenav>
 
   <mat-sidenav-content>

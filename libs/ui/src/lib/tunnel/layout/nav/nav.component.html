@@ -1,0 +1,19 @@
+<ng-container *ngIf="steps$ | async as steps">
+  <mat-accordion *ngIf="steps.length">
+    <mat-expansion-panel *ngFor="let panel of steps">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          <mat-icon [svgIcon]="panel.icon" bf-color="primary"></mat-icon>
+          <span>{{ panel.title }}</span>
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <mat-nav-list dense>
+        <ng-container *ngFor="let route of panel.routes">
+          <a mat-list-item [routerLink]="route.path" routerLinkActive="active">
+            {{ route.label }}
+          </a>
+        </ng-container>
+      </mat-nav-list>
+    </mat-expansion-panel>
+  </mat-accordion>
+</ng-container>

@@ -1,16 +1,15 @@
 <tunnel-layout [steps]="steps">
   <header fxLayout="row" fxLayoutAlign="space-between center">
+    <tunnel-step-stat></tunnel-step-stat>
     <img asset="archipel-content.svg" type="logo" alt="Archipel Content Logo" />
     <button mat-stroked-button color="primary" (click)="save()">
       <mat-icon svgIcon="floppy" class="primary-icon"></mat-icon>
       <span>Save</span>
     </button>
   </header>
-  <ng-container tunnel-nav-header>
 
-  </ng-container>
-
-  <ng-container tunnel-nav-footer>
+  <aside>
+    <tunnel-nav></tunnel-nav>
     <mat-divider></mat-divider>
     <mat-nav-list dense>
       <a mat-list-item routerLink="summary">
@@ -18,5 +17,5 @@
         <span mat-line>Summary & Submit</span>
       </a>
     </mat-nav-list>
-  </ng-container>
+  </aside>
 </tunnel-layout>
