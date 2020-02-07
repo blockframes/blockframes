@@ -7,7 +7,7 @@
   </ng-container>
   <ng-template #value>
     <ng-container *ngIf="scope else withoutScope">
-      {{ values }}
+      {{ control.value | translateSlug: scope }}
     </ng-container>
     <ng-template #withoutScope>
       {{ control.value }}{{ isLast ? '' : ', ' }}
