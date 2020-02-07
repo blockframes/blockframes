@@ -2,13 +2,13 @@
   <li>
     <strong>Original Languages </strong>
     <ng-container *ngFor="let language of main.originalLanguages.controls; let isLast = last">
-      <missing-control [control]="language" label="LANGUAGES" [link]="link" [isLast]="isLast"></missing-control>
+      <missing-control [control]="language" scope="LANGUAGES" [link]="link" [isLast]="isLast"></missing-control>
     </ng-container>
   </li>
   <li>
     <strong>Genres </strong>
     <ng-container *ngFor="let genre of genres; let isLast = last">
-      <missing-control [control]="genre" label="GENRES" [link]="link" [isLast]="isLast"></missing-control>
+      <missing-control [control]="genre" scope="GENRES" [link]="link" [isLast]="isLast"></missing-control>
     </ng-container>
   </li>
   <li>
