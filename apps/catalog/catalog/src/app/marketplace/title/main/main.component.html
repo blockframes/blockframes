@@ -5,8 +5,8 @@
   <section fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="20px">
     <!-- PROMO LINKS -->
     <mat-card *ngIf="hasLink(movie)" fxLayout="column" fxLayoutAlign="start start" fxFlex="30">
-      <ng-container *ngFor="let promo_link of promo_links">
-        <a *ngIf="getLink(movie, promo_link) as link" mat-stroked-button color="primary" [href]="link.url">
+      <ng-container *ngFor="let promoLink of promoLinks">
+        <a *ngIf="getLink(movie, promoLink) as link" mat-stroked-button color="primary" [href]="link.url">
           <mat-icon [svgIcon]="link.icon" color="primary"></mat-icon><span>{{ link.label }}</span></a>
       </ng-container>
     </mat-card>
