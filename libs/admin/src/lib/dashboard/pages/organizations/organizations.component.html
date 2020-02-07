@@ -19,4 +19,10 @@
   <ng-template colRef="edit" let-edit>
     <a [routerLink]="edit.link"><mat-icon>edit</mat-icon></a>
   </ng-template>
+  <ng-template colRef="appAccess" let-appAccess>
+    <ul>
+      <li>Dashboard: {{ appAccess.catalogDashboard ? 'yes': 'no' }}</li>
+      <li>Marketplace: {{ appAccess.catalogMarketplace ? 'yes': 'no' }}</li>
+    </ul>
+  </ng-template>
 </bf-table-filter>

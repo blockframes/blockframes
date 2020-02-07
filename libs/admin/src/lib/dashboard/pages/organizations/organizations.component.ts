@@ -14,6 +14,7 @@ export class OrganizationsComponent implements OnInit {
     'logo': 'Logo',
     'name': 'Name',
     'email': 'Email',
+    'appAccess': 'Authorizations',
     'edit': 'Edit',
   };
 
@@ -23,6 +24,7 @@ export class OrganizationsComponent implements OnInit {
     'name',
     'status',
     'email',
+    'appAccess',
     'edit',
   ];
   public rows: any[] = [];
