@@ -47,7 +47,7 @@ describe('permission table', () => {
     await expect(orgRef.delete()).toDeny();
   });
 
-  test.skip('deny a user from another org to give them auth on something owned by another org', async () => {
+  test('deny a user from another org to give them auth on something owned by another org', async () => {
     // R003: a user can give themselves a permission for a document owned by another org.
     const db = await setup(userTom, mockData);
     const orgRef = db.doc(
