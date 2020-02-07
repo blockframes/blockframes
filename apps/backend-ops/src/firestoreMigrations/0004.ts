@@ -7,9 +7,9 @@ export async function updateOrgStructure(db: Firestore) {
 
   const newOrgData = orgs.docs.map(async (orgDocSnapshot: any): Promise<any> => {
     const orgData = orgDocSnapshot.data();
-    const newData = {...orgData};
+    const newData = { ...orgData };
 
-    if(!newData.appAccess) {
+    if (!newData.appAccess) {
       newData.appAccess = {
         catalogDashboard: true,
         catalogMarketplace: true,
@@ -31,9 +31,9 @@ export async function updateDistributionDealsStructure(db: Firestore) {
 
   const newDealData = deals.docs.map(async (dealDocSnapshot: any): Promise<any> => {
     const dealData = dealDocSnapshot.data();
-    const newData = {...dealData};
+    const newData = { ...dealData };
 
-    if(!newData.status) {
+    if (!newData.status) {
       newData.status = 'draft';
       return dealDocSnapshot.ref.set(newData);
     }
