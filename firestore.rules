@@ -86,9 +86,9 @@ service cloud.firestore {
     match /permissions/{orgId} {
     	allow read: if isOrgMember(userId(), orgId);
       allow create: if (isOrgAdmin(userId(), orgId)
-      	&& incomingData().id == orgId
-        && documentIdChecked(orgId, 'permissions'))
-        || isCreatingOrganization(orgId);
+      	  && incomingData().id == orgId
+          && documentIdChecked(orgId, 'permissions')
+        ) || isCreatingOrganization(orgId);
 			allow update: if isOrgAdmin(userId(), orgId)
       	&& incomingData().id == orgId
         && documentIdChecked(orgId, 'permissions')
@@ -159,15 +159,11 @@ service cloud.firestore {
 
     /// CONTRACTS RULES ///
 
-    match /contracts/{contractId} {
-    	allow read: if userHasValidOrg(); // allow read: if isParty(userOrgId()) || isBlockframesAdmin(userId()); => ISSUE#1619
-      allow create: if canCreateNewPermissions(userOrgId(), contractId);
+    match /contracts/{contractId}/{document=**} {
+    	allow read:if orgCan('canRead', userOrgId(), contractId);
+      allow create: if canCreateNewPermissions(userOrgId(), contractId); // this depends on the fact that you can create a permission document in your own org.
       allow update: if orgCan('canUpdate', userOrgId(), contractId);
       allow delete: if orgCan('canDelete', userOrgId(), contractId);
-
-      match /{document=**} {
-        allow read, write: if userHasValidOrg();
-      }
     }
 
     /// DISTRIBUTION DEALS RULES ///
