@@ -24,10 +24,10 @@ import {
 import { DateRange } from '@blockframes/utils/common-interfaces/range';
 import { ControlErrorStateMatcher, languageValidator } from '@blockframes/utils';
 import {
-  getDistributionDealsInDateRange,
+  getDealsInDateRange,
   exclusiveDistributionDeals,
   salesAgentHasDateRange,
-  getDistributionDealsWithMediasTerritoriesAndLanguagesInCommon
+  getFilterMatchingDeals
 } from './availabilities.util';
 import { DistributionDealForm } from './create.form';
 import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
@@ -287,7 +287,7 @@ export class DistributionDealCreateComponent implements OnInit, OnDestroy {
 
           // Do we have others distribution deals overrlapping current daterange ?
           const deals = await this.distributionDealService.getValue();
-          const dealsInDateRange = getDistributionDealsInDateRange(value.duration, deals);
+          const dealsInDateRange = getDealsInDateRange(value.duration, deals);
           if (dealsInDateRange.length === 0) {
             // We have no intersection with other deals, so we are OK !
             console.log('YOU CAN BUY YOUR DIST RIGHT, NO INTERSECTION FOUND');
@@ -297,12 +297,7 @@ export class DistributionDealCreateComponent implements OnInit, OnDestroy {
 
           // We have territories and medias in common with some existing distribution deals,
           // Lets check if territories and medias in common belongs to the same deals and if those deals are exclusives.
-          const dealsWithMediasTerritoriesAndLanguagesInCommon = getDistributionDealsWithMediasTerritoriesAndLanguagesInCommon(
-            value.territories,
-            value.medias,
-            dealsInDateRange,
-            value.languages
-          );
+          const dealsWithMediasTerritoriesAndLanguagesInCommon = getFilterMatchingDeals(value, dealsInDateRange);
 
           if (dealsWithMediasTerritoriesAndLanguagesInCommon.length) {
             const exclusiveSalesWithMediasAndTerritoriesInCommon = exclusiveDistributionDeals(

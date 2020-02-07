@@ -1,15 +1,15 @@
 import { Movie } from '@blockframes/movie/movie/+state/movie.model';
-import { AFM_DISABLE } from '@env';
 import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
 import { ExtractSlug } from '@blockframes/utils/static-model/staticModels';
 import { NumberRange } from '@blockframes/utils/common-interfaces';
 import { LanguagesLabel } from '@blockframes/utils/static-model/types';
 import { TerritoriesSlug, MediasSlug } from '@blockframes/utils/static-model/types';
+import { LanguagesSlug } from '@blockframes/utils/static-model/types';
 import { CatalogSearch } from '@blockframes/catalog/form/search.form';
-import { getDistributionDealsWithMediasTerritoriesAndLanguagesInCommon, getDistributionDealsInDateRange, getExclusiveDeals } from '@blockframes/movie/distribution-deals/create/availabilities.util';
+import { getFilterMatchingDeals, getDealsInDateRange, getExclusiveDeals } from '@blockframes/movie/distribution-deals/create/availabilities.util';
 import { MovieLanguageSpecification } from '@blockframes/movie/movie+state/movie.firestore';
 
-function productionYearBetween(movie: Movie, range: { from: number; to: number }): boolean {
+function isProductionYearBetween(movie: Movie, range: { from: number; to: number }): boolean {
   if (!range || !(range.from && range.to)) {
     return true;
   }
@@ -51,7 +51,7 @@ function hasLanguage(movie: Movie, language: { [languageLabel in LanguagesLabel]
     }
 }
 
-function genres(movie: Movie, movieGenre: string[]): boolean {
+function hasGenres(movie: Movie, movieGenre: string[]): boolean {
   if (!movieGenre.length) {
     return true;
   }
@@ -78,7 +78,7 @@ function hasBudget(movie: Movie, movieBudget: NumberRange[]) {
   }
 }
 
-function productionStatus(movie: Movie, movieStatus: string[]): boolean {
+function isProductionStatus(movie: Movie, movieStatus: string[]): boolean {
   if (!movieStatus.length) {
     return true;
   }
@@ -102,7 +102,7 @@ function salesAgent(movie: Movie, salesAgents: string[]): boolean {
   }
 }
 
-function certifications(movie: Movie, movieCertification: string[]): boolean {
+function hasCertifications(movie: Movie, movieCertification: string[]): boolean {
   if (!movieCertification.length) {
     return true;
   }
@@ -125,27 +125,20 @@ function certifications(movie: Movie, movieCertification: string[]): boolean {
 /**
  * Returns a boolean weither a deal is matching with our search or not.
  * @param deals all the deals from the movies in the filterForm
- * @param range the range of date specified in the filterForm
- * @param territories the territories added in the filterForm
- * @param medias the medias checked in the filterForm
- * @param exclusivity the value of the exclusivity toggle
- * @param langages the langages from the filterForm
+ * @param filter The filter options defined by the buyer
  */
-function availabilities(
+function hasAvailabilities(
   deals: DistributionDeal[],
-  range: { from: Date; to: Date },
-  territories: TerritoriesSlug[],
-  medias: MediasSlug[],
-  exclusivity: boolean,
-  langages?: MovieLanguageSpecification
+  filter: CatalogSearch
   ): boolean {
-  if (!range || !(range.from && range.to)) {
+
+  if (!filter.availabilities || !(filter.availabilities.from && filter.availabilities.to)) {
     return true;
   }
 
-  const matchingExclusivityDeals = getExclusiveDeals(exclusivity, deals);
-  const matchingRangeDeals = getDistributionDealsInDateRange(range, matchingExclusivityDeals);
-  const matchingDeals = getDistributionDealsWithMediasTerritoriesAndLanguagesInCommon(territories, medias, matchingRangeDeals, langages);
+  const matchingExclusivityDeals = getExclusiveDeals(filter.exclusivity, deals);
+  const matchingRangeDeals = getDealsInDateRange(filter.availabilities, matchingExclusivityDeals);
+  const matchingDeals = getFilterMatchingDeals(filter, matchingRangeDeals);
 
   return matchingDeals.length ? true : false;
 }
@@ -189,12 +182,12 @@ export function filterMovie(movie: Movie, filter: CatalogSearch, deals?: Distrib
     .every(language => hasLanguage(movie, language));
 
   return (
-    productionYearBetween(movie, filter.productionYear) &&
+    isProductionYearBetween(movie, filter.productionYear) &&
     hasEveryLanguage &&
-    genres(movie, filter.genres) &&
-    certifications(movie, filter.certifications) &&
-    productionStatus(movie, filter.status) &&
-    availabilities(deals, filter.availabilities, filter.territories, filter.medias, filter.exclusivity) &&
+    hasGenres(movie, filter.genres) &&
+    hasCertifications(movie, filter.certifications) &&
+    isProductionStatus(movie, filter.status) &&
+    hasAvailabilities(deals, filter) &&
     hasTerritories(movie, filter.territories) &&
     hasMedias(movie, filter.medias) &&
     hasCountry(movie, filter.originCountries) &&
