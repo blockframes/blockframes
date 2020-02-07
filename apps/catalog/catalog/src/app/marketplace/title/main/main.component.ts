@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MovieQuery, Movie } from '@blockframes/movie';
 import { ExtractCode, getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 
-const promo_links = [
+const promoLinks = [
   'promo_reel_link', 'scenario', 'screener_link', 'teaser_link', 'presentation_deck', 'trailer_link'
 ]
 @Component({
@@ -14,33 +14,22 @@ const promo_links = [
 export class MarketplaceMovieMainComponent {
   public movie$ = this.movieQuery.selectActive();
   public loading$ = this.movieQuery.selectLoading();
-  promo_links = promo_links;
+  promoLinks = promoLinks;
   constructor(private movieQuery: MovieQuery) { }
 
   public hasLink({ promotionalElements }: Movie): boolean {
-    return this.promo_links.some(link => {
-      if(promotionalElements[link].media.url) {
-        return true;
-      }
-    })
+    return this.promoLinks.some(link => !!promotionalElements[link].media.url);
   }
 
   public getLink(movie: Movie, link: ExtractCode<'PROMOTIONAL_ELEMENT_TYPES'>) {
     if(movie.promotionalElements[link].media.url) {
-      if(link === 'scenario' || link === 'presentation_deck' ) {
-        return { 
-          url: movie.promotionalElements[link].media.url, 
-          icon: 'download',
-          label: getLabelBySlug('PROMOTIONAL_ELEMENT_TYPES', link)
-        }
-      }
-      return { 
-        url: movie.promotionalElements[link].media.url, 
-        icon: 'play',
+      const isDownload = link === 'scenario' || link === 'presentation_deck';
+      return {
+        url: movie.promotionalElements[link].media.url,
+        icon: isDownload ? 'download' : 'play',
         label: getLabelBySlug('PROMOTIONAL_ELEMENT_TYPES', link)
       }
     }
-    return;
   }
 
   public hasStory({ story, promotionalDescription }: Movie): boolean {
