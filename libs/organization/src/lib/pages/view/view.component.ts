@@ -8,7 +8,7 @@ const   navLinks = [{
   path: 'org',
   label: 'Organization'
 }, {
-  path: 'member',
+  path: 'members',
   label: 'Members'
 }];
 
@@ -21,7 +21,6 @@ const   navLinks = [{
 export class OrganizationViewComponent implements OnInit {
   public organization$: Observable<Organization>;
   public previousPage: string;
-  public placeholderLogo = 'Organization_250.png';
   public navLinks = navLinks;
 
   constructor(

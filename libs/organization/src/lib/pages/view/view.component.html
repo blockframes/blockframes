@@ -1,7 +1,7 @@
 <ng-container *ngIf="organization$ | async as org; else: loading">
   <header fxLayout="row" fxLayoutAlign="space-between start">
     <article fxLayout="row" fxLayoutAlign="space-around start">
-      <img [imgRef]="org.logo" [placeholderAsset]="placeholderLogo" alt="organization logo" />
+      <img [imgRef]="org.logo" placeholderAsset="Organization_250.png" alt="organization logo" />
       <div class="org-info">
         <h1>{{ org.name }}</h1>
         <h2>{{ org.activity }}</h2>
@@ -25,6 +25,7 @@
         {{link.label}}
       </a>
     </nav>
+    <router-outlet></router-outlet>
   </section>
 </ng-container>
 <ng-template #loading>

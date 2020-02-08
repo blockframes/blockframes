@@ -44,8 +44,8 @@ import { MemberPendingComponent } from './components/member-pending/member-pendi
 
 // Pages
 import { MemberRepertoryComponent } from './components/member-repertory/member-repertory.component';
-import { OrganizationEditableComponent } from './pages/organization-editable/organization-editable.component';
-import { MemberEditableComponent } from './pages/member-editable/member-editable.component';
+// import { OrganizationEditableComponent } from './pages/organization-editable/organization-editable.component';
+// import { MemberEditableComponent } from './pages/member-editable/member-editable.component';
 import { ActivateDaoComponent } from './pages/activate-dao/activate-dao.component';
 
 import { MemberGuard } from './member/guard/member.guard';
@@ -57,13 +57,13 @@ export const organizationRoutes: Routes = [
     children: [
       { path: '', redirectTo: 'view', pathMatch: 'full' },
       { path: 'view', loadChildren: () => import('./pages/view/view.module').then(m => m.OrganizationViewModule)},
-      { path: 'edit', component: OrganizationEditableComponent },
-      {
-        path: 'members',
-        canActivate: [MemberGuard],
-        canDeactivate: [MemberGuard],
-        component: MemberEditableComponent
-      },
+      // { path: 'edit', component: OrganizationEditableComponent },
+      // {
+      //   path: 'members',
+      //   canActivate: [MemberGuard],
+      //   canDeactivate: [MemberGuard],
+      //   component: MemberEditableComponent
+      // },
       {
         path: 'activate',
         canActivate: [MemberGuard],
@@ -125,10 +125,10 @@ export const organizationRoutes: Routes = [
     MemberRequestComponent,
     MemberPendingComponent,
     OrganizationDisplayComponent,
-    MemberEditableComponent,
+    // MemberEditableComponent,
     MemberRepertoryComponent,
     MemberAddComponent,
-    OrganizationEditableComponent,
+    // OrganizationEditableComponent,
     ActivateDaoComponent
   ]
 })
