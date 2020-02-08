@@ -1,10 +1,24 @@
+@import 'mixins';
+
 header, section {
-  padding: 0 176px
+  padding: 0 176px;
+}
+
+@include tablet {
+  header, section {
+    padding: 0 100px
+  }
+}
+
+@include mobile {
+  header, section {
+    padding: 0px;
+  }
 }
 
 header {
   height: 300px;
-  padding-top: 31px;
+  padding-top: 30px;
   background: linear-gradient(to bottom, var(--background-disabled-button), transparent);
 }
 
@@ -13,7 +27,7 @@ header {
 }
 
 img {
-  height: 168px;
-  width: 168px;
+  height: 170px;
+  width: 170px;
   border-radius: 50%;
 }
