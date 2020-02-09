@@ -20,7 +20,7 @@
           />
           <mat-error *ngIf="form.get('email').hasError('email')">Email not valid</mat-error>
         </mat-form-field>
-        <!-- <organization-form-address [formGroup]="mainAddress"></organization-form-address> -->
+        <organization-form-address [form]="form.get('addresses').get('main')"></organization-form-address>
       </mat-card-content>
     </mat-card>
     <mat-card>
