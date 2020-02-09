@@ -11,7 +11,7 @@ import { UploadModule } from '@blockframes/ui/upload';
 import { PasswordConfirmModule } from '@blockframes/ui/form';
 import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
-import { OrganizationFormModule } from './components/organization-form/organization-form.module';
+import { OrganizationFormModule } from './forms/organization-form/organization-form.module';
 import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
 
 // Material
