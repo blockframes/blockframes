@@ -110,6 +110,7 @@ export class MarketplaceSearchComponent implements OnInit {
   /* Filter for autocompletion */
   public genresFilter$: Observable<string[]>;
   public territoriesFilter$: Observable<string[]>;
+  public countriesFilter$: Observable<string[]>;
   public languagesFilter$: Observable<string[]>;
   public salesAgentFilter$: Observable<string[]>;
   public resultFilter$: Observable<any[]>;
@@ -121,6 +122,7 @@ export class MarketplaceSearchComponent implements OnInit {
     languageValidator
   ]);
   public territoryControl: FormControl = new FormControl('');
+  public countryControl: FormControl = new FormControl('');
   public salesAgentControl: FormControl = new FormControl('');
   public sortByControl: FormControl = new FormControl('');
   public searchbarTextControl: FormControl = new FormControl('');
@@ -130,6 +132,9 @@ export class MarketplaceSearchComponent implements OnInit {
 
   /* Arrays for showing the selected entities in the UI */
   public selectedMovieTerritories: string[] = [];
+
+  /* Arrays for showing the selected countries in the UI */
+  public selectedMovieCountries: string[] = [];
 
   /* Flags for Sales Agents chip input*/
   public selectedSalesAgents: string[] = [];
@@ -159,6 +164,8 @@ export class MarketplaceSearchComponent implements OnInit {
   @ViewChild('territoryInput', { static: false }) territoryInput: ElementRef<HTMLInputElement>;
   @ViewChild('autoCompleteInput', { static: false, read: MatAutocompleteTrigger })
   public autoComplete: MatAutocompleteTrigger;
+
+  @ViewChild('countryInput', { static: false }) countryInput: ElementRef<HTMLInputElement>;
 
   constructor(
     private router: Router,
@@ -234,6 +241,12 @@ export class MarketplaceSearchComponent implements OnInit {
       startWith(''),
       debounceTime(300),
       map(territory => this._territoriesFilter(territory))
+    );
+
+    this.countriesFilter$ = this.countryControl.valueChanges.pipe(
+      startWith(''),
+      debounceTime(300),
+      map(country => this._countriesFilter(country))
     );
 
     this.salesAgentFilter$ = this.salesAgentControl.valueChanges.pipe(
@@ -326,6 +339,17 @@ export class MarketplaceSearchComponent implements OnInit {
     const filterValue = territory.toLowerCase();
     return TERRITORIES_LABEL.filter(movieTerritory => {
       return movieTerritory.toLowerCase().includes(filterValue);
+    });
+  }
+
+  /**
+ * @description returns an array of strings for the autocompletion component
+ * @param value string which got typed in into an input field
+ */
+  private _countriesFilter(country: string): string[] {
+    const filterValue = country.toLowerCase();
+    return TERRITORIES_LABEL.filter(movieCountry => {
+      return movieCountry.toLowerCase().includes(filterValue);
     });
   }
 
@@ -439,6 +463,31 @@ export class MarketplaceSearchComponent implements OnInit {
     if (this.movieMedias.includes(media)) {
       this.filterForm.checkMedia(mediaSlug);
     }
+  }
+
+  public removeCountry(country: string, index: number) {
+    const i = this.selectedMovieCountries.indexOf(country);
+
+    if (i >= 0) {
+      this.selectedMovieCountries.splice(i, 1);
+    }
+    this.filterForm.removeCountry(index);
+  }
+
+  public selectedCountry(country: MatAutocompleteSelectedEvent) {
+    if (!this.selectedMovieCountries.includes(country.option.viewValue)) {
+      this.selectedMovieCountries.push(country.option.value);
+    }
+    /**
+     * We want to exchange the label for the slug,
+     * because for our backend we need to store the slug.
+     */
+    const territorySlug: TerritoriesSlug = getCodeIfExists(
+      'TERRITORIES',
+      country.option.viewValue as ExtractCode<'TERRITORIES'>
+    );
+    this.filterForm.addCountry(territorySlug);
+    this.countryInput.nativeElement.value = '';
   }
 
   public removeTerritory(territory: string, index: number) {

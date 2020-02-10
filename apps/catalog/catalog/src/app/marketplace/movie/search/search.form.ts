@@ -46,6 +46,7 @@ export interface CatalogSearch {
   certifications: CertificationsLabel[];
   medias: MediasLabel[];
   territories: TerritoriesLabel[];
+  originCountries: TerritoriesLabel[];
   estimatedBudget: NumberRange[];
   searchbar: {
     text: string;
@@ -68,6 +69,7 @@ function createCatalogSearch(search: Partial<CatalogSearch>): CatalogSearch {
     certifications: [],
     medias: [],
     territories: [],
+    originCountries: [],
     searchbar: {},
     estimatedBudget: [],
     ...search
@@ -127,6 +129,7 @@ function createCatalogSearchControl(search: CatalogSearch) {
     medias: new FormControl(search.medias),
     estimatedBudget: new FormControl(search.estimatedBudget),
     territories: new FormArray(search.territories.map(territory => new FormControl(territory))),
+    originCountries: new FormArray(search.originCountries.map(country => new FormControl(country))),
     searchbar: new FormGroup({
       text: new FormControl(''),
       type: new FormControl('')
@@ -269,5 +272,24 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
 
   removeTerritory(index: number) {
     this.get('territories').removeAt(index);
+  }
+
+  addCountry(country: TerritoriesSlug) {
+    // Check it's part of the list available
+    if (!TERRITORIES_SLUG.includes(country)) {
+      throw new Error(
+        `Country ${getLabelBySlug('TERRITORIES', country)} is not part of the list`
+      );
+    }
+    // Check it's not already in the form control
+    const territoriesValue = this.get('originCountries').value;
+    if (!territoriesValue.includes(country)) {
+      this.get('originCountries').push(new FormControl(country));
+    }
+    // Else do nothing as it's already in the list
+  }
+
+  removeCountry(index: number) {
+    this.get('originCountries').removeAt(index);
   }
 }

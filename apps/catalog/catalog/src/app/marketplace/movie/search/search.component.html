@@ -110,6 +110,30 @@
             <movie-form-genre [form]="filterForm.genres"></movie-form-genre>
           </mat-expansion-panel>
 
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Country of Origin
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-form-field appearance="outline">
+              <mat-chip-list #chipList>
+                <mat-chip *ngFor="let country of selectedMovieCountries; let i = index" [selectable]="selectable"
+                  [removable]="removable" (removed)="removeCountry(country, i)">
+                  {{country}}
+                  <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                </mat-chip>
+                <input placeholder="Country available" #countryInput
+                  [matAutocomplete]="auto" [matChipInputFor]="chipList" [formControl]="countryControl" />
+              </mat-chip-list>
+              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedCountry($event)">
+                <mat-option *ngFor="let country of countriesFilter$ | async" [value]="country">
+                  {{ country }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </mat-expansion-panel>
+
           <!-- Languages -->
           <mat-expansion-panel>
             <mat-expansion-panel-header>
@@ -251,6 +275,7 @@
                 The value <i>To</i> can't be smaller than the value <i>From</i>!
               </mat-error>
             </mat-expansion-panel> -->
+
 
           <!-- Territories -->
           <!-- TODO #1146 -->
