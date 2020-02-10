@@ -1,3 +1,4 @@
+import { FormControl } from '@angular/forms';
 import { DistributionDealTermsForm } from '@blockframes/movie/distribution-deals/form/terms/terms.form';
 import { createContractTitleDetail } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractTitleDetail } from '@blockframes/contract/contract/+state/contract.firestore';
@@ -13,7 +14,8 @@ function createContractVersionControls(contractVersion: Partial<ContractVersion>
     scope: new DistributionDealTermsForm(contractVersion.scope),
     paymentSchedule: FormList.factory(contractVersion.paymentSchedule, payment => {
       return new ContractVersionPaymentScheduleForm(payment)
-    })
+    }),
+    customPaymentSchedule: new FormControl(contractVersion.customPaymentSchedule)
   }
 }
 

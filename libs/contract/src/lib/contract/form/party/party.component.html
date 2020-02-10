@@ -1,23 +1,27 @@
 <ng-container *ngFor="let control of form.controls; let i = index; let isLast = last" [formGroup]="control">
-    <form formGroupName="party" *ngIf="partyIsType(i)">
-        <div fxLayout="row" fxLayoutAlign="start center">
+    <form formGroupName="party">
+        <div fxLayout="column" fxLayoutAlign="start start">
             <mat-form-field appearance="outline">
                 <mat-label>{{ type | titlecase }} Name</mat-label>
                 <input matInput type="text" formControlName="displayName" autocomplete="off">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Select role</mat-label>
                 <mat-select formControlName="role">
                     <mat-option *ngFor="let role of staticRoles" [value]="role.slug">
                         {{ role.label }}
                     </mat-option>
                 </mat-select>
-                <ng-container *ngIf="hasRole">
-                    <mat-select formControlName="role">
-                        <mat-option *ngFor="let role of staticSubRoles" [value]="role.slug">
-                            {{ role.label }}
-                        </mat-option>
-                    </mat-select>
-                </ng-container>
             </mat-form-field>
-            <ng-container *ngIf="isLast; else add">
+            <mat-form-field appearance="outline" *ngIf="hasRole">
+                <mat-label>Select sub role</mat-label>
+                <mat-select [formControl]="childRoleForm(i)">
+                    <mat-option *ngFor="let role of staticSubRoles" [value]="role.slug">
+                        {{ role.label }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <ng-container *ngIf="!isLast; else add">
                 <button (click)="form.removeAt(i)" mat-mini-fab color="warn" [matTooltip]="showTooltip('remove')">
                     <mat-icon>delete</mat-icon>
                 </button>

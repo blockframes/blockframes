@@ -1,5 +1,5 @@
 import { ContractForm } from '@blockframes/contract/contract/form/contract.form';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 
 @Component({
   selector: 'contract-details-sale',
@@ -7,9 +7,15 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   styleUrls: ['./details-sale.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DetailsSaleComponent {
+export class DetailsSaleComponent implements OnInit {
 
   constructor(private form: ContractForm) { }
+
+  ngOnInit() {
+    if (this.parties.controls.length >= 1) {
+      this.parties.add({ party: { role: 'undefined' } })
+    }
+  }
 
   get parties() {
     return this.form.get('parties')
