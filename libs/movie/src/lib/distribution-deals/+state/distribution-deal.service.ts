@@ -129,4 +129,5 @@ export class DistributionDealService extends CollectionService<DistributionDealS
     // Returns all deals eligible territories as an array of string.
     return deals.map(deal => deal ? getDealTerritories(deal) : []).flat();
   }
+
 }

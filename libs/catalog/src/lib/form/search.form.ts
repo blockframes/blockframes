@@ -34,47 +34,65 @@ export interface CatalogSearch {
     from: number;
     to: number;
   };
-  availabilities: {
-    from: Date;
-    to: Date;
-  };
   genres: GenresSlug[];
   status: MovieStatusLabel[];
   salesAgent: string[];
   languages: { [language in LanguagesLabel]: MovieLanguageSpecification };
   certifications: CertificationsLabel[];
-  medias: MediasLabel[];
-  territories: TerritoriesLabel[];
   originCountries: TerritoriesLabel[];
   estimatedBudget: NumberRange[];
-  exclusivity: boolean,
   searchbar: {
     text: string;
     type: string;
   };
 }
 
+export interface AvailsSearch {
+  terms: {
+    from: Date;
+    to: Date;
+  };
+  territories: TerritoriesSlug[];
+  medias: MediasSlug[];
+  exclusivity: boolean;
+  isActive: boolean;
+}
+
 /* ------------- */
 /* CREATE OBJECT */
 /* ------------- */
 
-function createCatalogSearch(search: Partial<CatalogSearch>): CatalogSearch {
+function createCatalogSearch(search: Partial<CatalogSearch> = {}): CatalogSearch {
   return {
-    productionYear: {},
-    availabilities: {},
+    productionYear: {
+      from: null,
+      to: null
+    },
     genres: [],
     status: [],
     salesAgent: [],
-    languages: {},
+    languages: null,
     certifications: [],
-    medias: [],
-    territories: [],
-    originCountries: [],
-    exclusivity: false,
-    searchbar: {},
-    estimatedBudget: [],
+    searchbar: {
+      text: '',
+      type: ''
+    },
     ...search
-  } as CatalogSearch;
+  }
+}
+
+function createAvailsSearch(search: Partial<AvailsSearch> = {}): AvailsSearch {
+  return {
+    terms: {
+      to: null,
+      from: null
+    },
+    territories: [],
+    medias: [],
+    exclusivity: false,
+    isActive: false,
+    ...search
+  }
 }
 
 /* -------------- */
@@ -114,32 +132,40 @@ function createCatalogSearchControl(search: CatalogSearch) {
       },
       numberRangeValidator('from', 'to')
     ),
-    availabilities: new FormGroup(
-      {
-        from: new FormControl(search.availabilities.from, [
-          Validators.min(new Date().getFullYear())
-        ]),
-        to: new FormControl(search.availabilities.to)
-      },
-      numberRangeValidator('from', 'to')
-    ),
     genres: new FormStaticArray(search.genres, 'GENRES', [Validators.required]),
     status: new FormControl(search.status),
     salesAgent: new FormControl(search.salesAgent),
     languages: new FormGroup(languageControl),
     certifications: new FormControl(search.certifications),
-    medias: new FormControl(search.medias),
     estimatedBudget: new FormControl(search.estimatedBudget),
-    territories: new FormArray(search.territories.map(territory => new FormControl(territory))),
     originCountries: FormList.factory(search.originCountries, country => new FormStaticValue(country, 'TERRITORIES')),
-    exclusivity: new FormControl(search.exclusivity),
     searchbar: new FormGroup({
       text: new FormControl(''),
       type: new FormControl('')
     })
   };
 }
+
+function createAvailsSearchControl(search: AvailsSearch) {
+  return {
+    terms: new FormGroup(
+      {
+        from: new FormControl(search.terms.from, [
+          Validators.min(new Date().getFullYear())
+        ]),
+        to: new FormControl(search.terms.to)
+      },
+      numberRangeValidator('from', 'to')
+    ),
+    medias: new FormControl(search.medias),
+    territories: new FormArray(search.territories.map(territory => new FormControl(territory))),
+    exclusivity: new FormControl(search.exclusivity),
+    isActive: new FormControl(search.isActive)
+  }
+}
+
 export type CatalogSearchControl = ReturnType<typeof createCatalogSearchControl>;
+export type AvailsSearchControl = ReturnType<typeof createAvailsSearchControl>;
 
 /* ---- */
 /* FROM */
@@ -158,13 +184,6 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
 
   get languages() {
     return this.get('languages');
-  }
-
-  get exclusivity() {
-    return this.get('exclusivity');
-  }
-  get medias() {
-    return this.get('medias');
   }
 
   addLanguage(language: LanguagesSlug, value: Partial<MovieLanguageSpecification> = {}) {
@@ -227,24 +246,53 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
     } else {
       throw new Error(`Certification ${certificationChecked} doesn't exist`);
     }
+
   }
 
-  checkMedia(checkedMedia: MediasSlug) {
-    // check if media is already checked by the user
-    if (MEDIAS_SLUG.includes(checkedMedia) && !this.get('medias').value.includes(checkedMedia)) {
-      this.get('medias').setValue([...this.get('medias').value, checkedMedia]);
-    } else if (
-      MEDIAS_SLUG.includes(checkedMedia) &&
-      this.get('medias').value.includes(checkedMedia)
-    ) {
-      const checkedMedias = this.get('medias').value.filter(
-        (alreadyCheckedMedia: MediasSlug) => alreadyCheckedMedia !== checkedMedia
+  addCountry(country: TerritoriesSlug) {
+    // Check it's part of the list available
+    if (!TERRITORIES_SLUG.includes(country)) {
+      throw new Error(
+        `Country ${country} is not part of the list.`
       );
-      this.get('medias').setValue(checkedMedias);
-    } else {
-      throw new Error(`Media ${checkedMedia} doesn't exist`);
     }
+    // Check it's not already in the form control
+    const territoriesValue = this.get('originCountries').value;
+    if (!territoriesValue.includes(country)) {
+      this.get('originCountries').push(new FormControl(country));
+    }
+    // Else do nothing as it's already in the list
   }
+
+  removeCountry(index: number) {
+    this.get('originCountries').removeAt(index);
+  }
+
+}
+
+export class AvailsSearchForm extends FormEntity<AvailsSearchControl> {
+  constructor(search: Partial<AvailsSearch> = {}) {
+    const availsSearch = createAvailsSearch(search);
+    const control = createAvailsSearchControl(availsSearch);
+    super(control);
+  }
+
+  get exclusivity() {
+    return this.get('exclusivity');
+  }
+
+  get medias() {
+    return this.get('medias');
+  }
+
+  get territories() {
+    return this.get('territories');
+  }
+
+  set isActive(value: boolean) {
+    this.get('isActive').setValue(value);
+  }
+
 
   addTerritory(territory: TerritoriesSlug) {
     // Check it's part of the list available
@@ -265,22 +313,20 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
     this.get('territories').removeAt(index);
   }
 
-  addCountry(country: TerritoriesSlug) {
-    // Check it's part of the list available
-    if (!TERRITORIES_SLUG.includes(country)) {
-      throw new Error(
-        `Country ${country} is not part of the list.`
+  checkMedia(checkedMedia: MediasSlug) {
+    // check if media is already checked by the user
+    if (MEDIAS_SLUG.includes(checkedMedia) && !this.get('medias').value.includes(checkedMedia)) {
+      this.get('medias').setValue([...this.get('medias').value, checkedMedia]);
+    } else if (
+      MEDIAS_SLUG.includes(checkedMedia) &&
+      this.get('medias').value.includes(checkedMedia)
+    ) {
+      const checkedMedias = this.get('medias').value.filter(
+        (alreadyCheckedMedia: MediasSlug) => alreadyCheckedMedia !== checkedMedia
       );
+      this.get('medias').setValue(checkedMedias);
+    } else {
+      throw new Error(`Media ${getLabelBySlug('MEDIAS', checkedMedia)} doesn't exist`);
     }
-    // Check it's not already in the form control
-    const territoriesValue = this.get('originCountries').value;
-    if (!territoriesValue.includes(country)) {
-      this.get('originCountries').push(new FormControl(country));
-    }
-    // Else do nothing as it's already in the list
-  }
-
-  removeCountry(index: number) {
-    this.get('originCountries').removeAt(index);
   }
 }

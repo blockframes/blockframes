@@ -36,7 +36,7 @@ export function createHoldback(params: Partial<Holdback> = {}): Holdback {
 }
 
 /** Format deals dates from Timestamps into Dates. */
-export function formatDistributionDeal(deal: DistributionDeal): DistributionDeal {
+export function formatDistributionDeal(deal: any): DistributionDeal {
   deal.terms.start = toDate(deal.terms.start);
   deal.terms.end = toDate(deal.terms.end);
   return deal as DistributionDeal;

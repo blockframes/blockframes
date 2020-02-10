@@ -20,6 +20,7 @@ import { ContractDocumentWithDates, ContractStatus } from './contract.firestore'
 import { firestore } from 'firebase/app';
 import { MovieQuery } from '@blockframes/movie';
 import { ContractVersion } from '@blockframes/contract/version/+state';
+import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
 
 /**
  * Get all the contracts where user organization is party.
@@ -316,6 +317,13 @@ export class ContractService extends CollectionService<ContractState> {
     // Replace the party at the index and update all the parties array.
     const updatedParties = contract.parties.filter((_, i) => i !== index);
     this.update({ ...contract, parties: [...updatedParties, updatedParty] })
+  }
+
+  /**
+   * Returns the contract related to a specific deal.
+   */
+  public getContractFromDeal(deal: DistributionDeal): Promise<Contract> {
+    return this.getValue(deal.contractId);
   }
 
 }
