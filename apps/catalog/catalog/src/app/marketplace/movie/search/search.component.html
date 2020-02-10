@@ -175,12 +175,11 @@
                   <ng-container *ngFor="let language of languages$ | async">
                     <mat-list-item [formGroupName]="language">
                       <span mat-line>
-                        <mat-chip removable (removed)="removeLanguage(language)">
+                        <mat-chip class="chip-language" removable (removed)="removeLanguage(language)">
                           {{ language | translateSlug: 'LANGUAGES' }}
                           <mat-icon matChipRemove>cancel</mat-icon>
                         </mat-chip>
                       </span>
-                      <i mat-line>Options are cumulative</i>
                       <mat-checkbox color="primary" test-id="languages-checkbox-original" mat-line formControlName="original">
                         Original
                       </mat-checkbox>
