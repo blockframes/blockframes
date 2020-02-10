@@ -12,4 +12,8 @@ export class OrganizationFormComponent {
   constructor() {}
 
   @Input() form: OrganizationForm;
+
+  get bankAccounts() {
+    return this.form.get('bankAccounts');
+  }
 }
