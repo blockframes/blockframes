@@ -17,6 +17,14 @@ header {
   margin-left: 16px;
 }
 
+mat-checkbox {
+  margin-top: 16px;
+}
+
+.chip-language {
+  margin-bottom: 16px;
+}
+
 .searchbar-header {
   text-align: center;
 }
@@ -27,14 +35,6 @@ mat-form-field {
 
 mat-divider {
   width: 100%;
-}
-
-mat-checkbox {
-  margin-top: 16px;
-}
-
-.chip-language {
-  margin-bottom: 16px;
 }
 
 .mat-chip.active {
