@@ -4,7 +4,9 @@
       <img [imgRef]="org.logo" placeholderAsset="Organization_250.png" alt="organization logo" />
       <div class="org-info">
         <h1>{{ org.name }}</h1>
-        <h2>{{ org.activity }}</h2>
+        <ng-container *ngIf="user$ | async as user">
+          <h2>{{ user.position }}</h2>
+        </ng-container>
         <p class="mat-body-2">{{ org.addresses.main.street }}, {{ org.addresses.main.zipCode }} {{ org.addresses.main.country }}</p>
       </div>
     </article>
