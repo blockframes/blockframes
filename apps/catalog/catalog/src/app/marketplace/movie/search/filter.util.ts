@@ -3,9 +3,7 @@ import { Movie } from '@blockframes/movie/movie/+state/movie.model';
 import { AFM_DISABLE } from '@env';
 import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
 import { ExtractSlug } from '@blockframes/utils/static-model/staticModels';
-import { LanguagesSlug } from '@blockframes/utils/static-model/types';
 import { NumberRange } from '@blockframes/utils/common-interfaces';
-import { includes } from 'lodash';
 
 function productionYearBetween(movie: Movie, range: { from: number; to: number }): boolean {
   if (!range || !(range.from && range.to)) {
@@ -89,6 +87,17 @@ function productionStatus(movie: Movie, movieStatus: string[]): boolean {
   }
 }
 
+function salesAgent(movie: Movie, salesAgents: string[]): boolean {
+  if (!salesAgents.length) {
+    return true;
+  }
+  for (let i = 0; i < salesAgents.length; i++) {
+    if (salesAgents[i] === movie.salesAgentDeal.salesAgent.displayName) {
+      return true;
+    }
+  }
+}
+
 function certifications(movie: Movie, movieCertification: string[]): boolean {
   if (!movieCertification.length) {
     return true;
@@ -162,8 +171,6 @@ export function filterMovie(movie: Movie, filter: CatalogSearch, deals?: Distrib
     //TODO: #1146
     return (
       productionYearBetween(movie, filter.productionYear) &&
-      //hasEveryLanguage &&
-      types(movie, filter.type) &&
       certifications(movie, filter.certifications) &&
       productionStatus(movie, filter.status) &&
       availabilities(deals, filter.availabilities) &&
@@ -172,12 +179,9 @@ export function filterMovie(movie: Movie, filter: CatalogSearch, deals?: Distrib
     );
   } else {
     return (
-      hasEveryLanguage &&
       genres(movie, filter.genres) &&
       productionStatus(movie, filter.status) &&
-      salesAgent(movie, filter.salesAgent)
-      types(movie, filter.type) &&
-      productionStatus(movie, filter.status) &&
+      salesAgent(movie, filter.salesAgent) &&
       hasBudget(movie, filter.estimatedBudget) &&
       hasCountry(movie, filter.originCountries) &&
       hasLanguage(movie, filter.languages)

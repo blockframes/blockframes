@@ -120,7 +120,7 @@
               <mat-chip-list #chipList>
                 <mat-chip *ngFor="let country of selectedMovieCountries; let i = index" [selectable]="selectable"
                   [removable]="removable" (removed)="removeCountry(country, i)">
-                  {{country}}
+                  {{ country }}
                   <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
                 </mat-chip>
                 <input placeholder="Country available" #countryInput
