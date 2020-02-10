@@ -1,11 +1,11 @@
-<ng-container *ngIf="organization$ | async as org; else: loading">
+<ng-container *ngIf="organization$ | async as org">
   <header fxLayout="row" fxLayoutAlign="space-between start">
     <article fxLayout="row" fxLayoutAlign="space-around start">
       <img [imgRef]="org.logo" placeholderAsset="Organization_250.png" alt="organization logo" />
       <div class="org-info">
         <h1>{{ org.name }}</h1>
         <h2>{{ org.activity }}</h2>
-        <p class="mat-body-2">{{ org.addresses.main.street }}</p>
+        <p class="mat-body-2">{{ org.addresses.main.street }}, {{ org.addresses.main.zipCode }} {{ org.addresses.main.country }}</p>
       </div>
     </article>
     <ng-container>
@@ -25,12 +25,8 @@
         {{link.label}}
       </a>
     </nav>
-    <router-outlet></router-outlet>
   </section>
 </ng-container>
-<ng-template #loading>
-  <div fxLayout="column" fxLayoutAlign="center center">
-    <p>Your Profile is loading...</p>
-    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
-  </div>
-</ng-template>
+<section>
+  <router-outlet></router-outlet>
+</section>
