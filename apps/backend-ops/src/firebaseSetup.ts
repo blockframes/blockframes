@@ -30,7 +30,7 @@ export async function prepareForTesting() {
   process.exit(0);
 }
 
-export async function restoreShorcut() {
+export async function restoreShortcut() {
   return restore(appUrl);
 }
 
