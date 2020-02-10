@@ -1,9 +1,4 @@
 <form [formGroup]="form">
-  <mat-form-field appearance="outline">
-    <mat-label>Company phone number</mat-label>
-    <input matInput placeholder="Company phone number" aria-label="Company phone number"
-      formControlName="phoneNumber" />
-  </mat-form-field>
   <mat-card-header>
     <mat-card-title>Headquarters Address</mat-card-title>
   </mat-card-header>
@@ -24,5 +19,10 @@
   <mat-form-field appearance="outline">
     <mat-label>Country</mat-label>
     <input matInput placeholder="Country" aria-label="country" formControlName="country" />
+  </mat-form-field>
+  <mat-form-field appearance="outline">
+    <mat-label>Company phone number</mat-label>
+    <input matInput placeholder="Company phone number" aria-label="Company phone number"
+      formControlName="phoneNumber" />
   </mat-form-field>
 </form>
