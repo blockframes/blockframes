@@ -4,6 +4,7 @@ import { OrganizationQuery } from '@blockframes/organization/+state/organization
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { Observable, Subscription } from 'rxjs';
 import { Organization } from '@blockframes/organization/+state/organization.model';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'organization-edit',
@@ -18,12 +19,25 @@ export class OrganizationComponent implements OnInit, OnDestroy {
   constructor(
     private query: OrganizationQuery,
     private service: OrganizationService,
+    private snackBar: MatSnackBar,
   ) { }
 
   ngOnInit() {
     this.sub = this.query
       .selectActive()
       .subscribe(org => this.organizationForm.patchValue(org));
+  }
+
+  public update() {
+    try {
+      if (this.organizationForm.invalid) {
+        throw new Error('Your organization profile informations are not valid');
+      }
+      this.service.update(this.query.getActiveId(), this.organizationForm.value);
+      this.snackBar.open('Organization profile change succesfull', 'close', { duration: 2000 });
+    } catch (error) {
+      this.snackBar.open(error.message, 'close', { duration: 2000 });
+    }
   }
 
   ngOnDestroy() {

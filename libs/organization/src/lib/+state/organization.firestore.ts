@@ -1,6 +1,7 @@
 import { firestore } from 'firebase/app';
 import { CatalogCart } from '@blockframes/organization/cart/+state/cart.model';
 import { Location, BankAccount, createLocation } from '@blockframes/utils/common-interfaces/utility';
+import { ImgRef, createImgRef } from '@blockframes/utils/image-uploader';
 
 type Timestamp = firestore.Timestamp;
 
@@ -21,7 +22,7 @@ interface OrganizationRaw<D> {
   movieIds: string[];
   templateIds: string[];
   status: OrganizationStatus;
-  logo: string;
+  logo: ImgRef;
   fiscalNumber: string;
   activity: string;
   wishlist: WishlistRaw<D>[];
@@ -101,7 +102,7 @@ export function createOrganizationRaw(
     templateIds: [],
     created: new Date(),
     updated: new Date(),
-    logo: PLACEHOLDER_LOGO,
+    logo: createImgRef(),
     wishlist: [],
     cart: [],
     isBlockchainEnabled: false,

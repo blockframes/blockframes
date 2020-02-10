@@ -3,6 +3,8 @@ import { Observable } from 'rxjs';
 import { Organization } from '@blockframes/organization/+state/organization.model';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { TunnelService } from '@blockframes/ui/tunnel/tunnel.service';
+import { OrganizationService } from '@blockframes/organization/+state/organization.service';
+import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
 
 const   navLinks = [{
   path: 'org',
@@ -22,15 +24,17 @@ export class OrganizationViewComponent implements OnInit {
   public organization$: Observable<Organization>;
   public previousPage: string;
   public navLinks = navLinks;
+  public organizationForm = new OrganizationForm(this.service);
+
 
   constructor(
-    private organizationQuery: OrganizationQuery,
-    private tunnelService: TunnelService
+    private query: OrganizationQuery,
+    private tunnelService: TunnelService,
+    private service: OrganizationService,
   ) { }
 
   ngOnInit() {
-    this.organization$ = this.organizationQuery.selectActive();
+    this.organization$ = this.query.selectActive();
     this.previousPage = this.tunnelService.previousUrl;
   }
-
 }
