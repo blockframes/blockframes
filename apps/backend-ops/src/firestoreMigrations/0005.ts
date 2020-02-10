@@ -1,5 +1,20 @@
 import { Firestore } from '../admin';
 
+/**
+ * Rename a key in a SIMPLE object. pure function: returns a NEW object,
+ * with SHALLOW cloning.
+ *
+ * @param m: object (mapping)
+ * @param k: old key name
+ * @param newK: new key name
+ */
+const renameKey = (m: { [key: string]: any }, k: string, newK: string) => {
+  const result = { ...m };
+  result[newK] = result[k];
+  delete result[k];
+  return result;
+};
+
 export async function upgrade(db: Firestore) {
   const permissions = await db.collection('permissions').get();
   const batch = db.batch();
@@ -23,7 +38,9 @@ export async function upgrade(db: Firestore) {
       const newRef = permission.ref.collection('documentPermissions').doc(orgDocPerm.id);
 
       const data = orgDocPerm.data();
-      batch.set(newRef, data);
+
+      const newData = renameKey(data, 'owner', 'ownerId');
+      batch.set(newRef, newData);
 
       const { id, owner } = data;
 
