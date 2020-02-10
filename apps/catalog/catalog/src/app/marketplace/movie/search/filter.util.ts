@@ -4,6 +4,8 @@ import { AFM_DISABLE } from '@env';
 import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
 import { ExtractSlug } from '@blockframes/utils/static-model/staticModels';
 import { LanguagesSlug } from '@blockframes/utils/static-model/types';
+import { NumberRange } from '@blockframes/utils/common-interfaces';
+import { includes } from 'lodash';
 
 function productionYearBetween(movie: Movie, range: { from: number; to: number }): boolean {
   if (!range || !(range.from && range.to)) {
@@ -57,6 +59,18 @@ function genres(movie: Movie, movieGenre: string[]): boolean {
       if (movie.main.genres[i] === movieGenreToLowerCase[k]) {
         return true;
       }
+    }
+  }
+}
+
+function hasBudget(movie: Movie, movieBudget: NumberRange[]) {
+  if (!movieBudget.length) {
+    return true;
+  }
+  const movieEstimatedBudget = movie.budget.estimatedBudget;
+  for (let i = 0; i < movieBudget.length; i++) {
+    if (movieBudget[i].from === movieEstimatedBudget.from && movieBudget[i].to === movieEstimatedBudget.to) {
+      return true;
     }
   }
 }
@@ -157,7 +171,8 @@ export function filterMovie(movie: Movie, filter: CatalogSearch, deals?: Distrib
       productionStatus(movie, filter.status) &&
       salesAgent(movie, filter.salesAgent)
       types(movie, filter.type) &&
-      productionStatus(movie, filter.status)
+      productionStatus(movie, filter.status) &&
+      hasBudget(movie, filter.estimatedBudget)
     );
   }
 }

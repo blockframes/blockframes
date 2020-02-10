@@ -25,6 +25,7 @@ import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 import { MovieLanguageSpecification } from '@blockframes/movie/movie/+state/movie.firestore';
 import { createMovieLanguageSpecification } from '@blockframes/movie/movie+state/movie.model';
 import { FormStaticArray } from '@blockframes/utils/form';
+import { NumberRange } from '@blockframes/utils/common-interfaces';
 
 /////////////////////////
 // CatalogGenresFilter //
@@ -45,6 +46,7 @@ export interface CatalogSearch {
   certifications: CertificationsLabel[];
   medias: MediasLabel[];
   territories: TerritoriesLabel[];
+  estimatedBudget: NumberRange[];
   searchbar: {
     text: string;
     type: string;
@@ -67,6 +69,7 @@ function createCatalogSearch(search: Partial<CatalogSearch>): CatalogSearch {
     medias: [],
     territories: [],
     searchbar: {},
+    estimatedBudget: [],
     ...search
   } as CatalogSearch;
 }
@@ -122,6 +125,7 @@ function createCatalogSearchControl(search: CatalogSearch) {
     languages: new FormGroup(languageControl),
     certifications: new FormControl(search.certifications),
     medias: new FormControl(search.medias),
+    estimatedBudget: new FormControl(search.estimatedBudget),
     territories: new FormArray(search.territories.map(territory => new FormControl(territory))),
     searchbar: new FormGroup({
       text: new FormControl(''),

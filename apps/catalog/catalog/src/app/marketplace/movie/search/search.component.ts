@@ -60,6 +60,8 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
 import { MovieDocumentWithDates } from '@blockframes/movie/movie/+state/movie.firestore';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state/distribution-deal.service';
+import { NumberRange } from '@blockframes/utils/common-interfaces/range';
+import { BUDGET_LIST } from '@blockframes/movie/movieform/budget/budget.form';
 
 @Component({
   selector: 'catalog-movie-search',
@@ -133,6 +135,8 @@ export class MarketplaceSearchComponent implements OnInit {
   public selectedSalesAgents: string[] = [];
   public salesAgents: string[] = [];
 
+  public budgetList: NumberRange[] = BUDGET_LIST;
+
   @ViewChild('salesAgentInput', { static: false }) salesAgentInput: ElementRef<HTMLInputElement>;
   @ViewChild('salesAgent', { static: false }) salesAgentMatAutocomplete: MatAutocomplete;
 
@@ -204,36 +208,14 @@ export class MarketplaceSearchComponent implements OnInit {
       this.sortBy$
     ]).pipe(
       map(([algoliaMovies, filterOptions, sortBy]) => {
-        const filteredMovies = algoliaMovies.filter(index =>
-          filterMovie(index.movie, filterOptions)
-        );
-        const movieIds = filteredMovies.map(index => index.objectID);
-        const movies = this.movieQuery.getAll({
-          filterBy: movie => movieIds.includes(movie.id)
+        const movieIds = algoliaMovies.map(index => index.objectID);
+        const filteredIds = movieIds.filter(movieId => {
+          const movie = this.movieQuery.getEntity(movieId);
+          return filterMovie(movie, filterOptions)
         });
-        if (AFM_DISABLE) {
-          //TODO #1146
-          return movies.filter(async movie => {
-            const deals = await this.distributionDealService.getMovieDistributionDeals(movie.id);
-            return filterMovie(movie, filterOptions, deals);
-          });
-        } else {
-          //TODO #1146 : remove the two line for movieGenres
-          const removeGenre = ['TV Show', 'Web Series'];
-          this.movieGenres = this.movieGenres.filter(value => !removeGenre.includes(value));
-          const sortedMovies = movies.sort((a, b) => {
-            switch (sortBy) {
-              case 'Title':
-                return a.main.title.international.localeCompare(b.main.title.international);
-              case 'Director':
-                return a.main.directors[0].lastName.localeCompare(b.main.directors[0].lastName);
-              default:
-                return 0;
-            }
-          });
-          this.movieCount = sortedMovies.length;
-          return sortedMovies;
-        }
+        const movies = this.movieQuery.getAll({ filterBy: movie => filteredIds.includes(movie.id) });
+        this.movieCount = movies.length;
+        return movies
       })
     );
 
@@ -407,6 +389,16 @@ export class MarketplaceSearchComponent implements OnInit {
     const languageSlug: LanguagesSlug = getCodeIfExists('LANGUAGES', language);
     this.filterForm.removeLanguage(languageSlug);
     this.analytics.event(AnalyticsEvents.removedLanguage, { language });
+  }
+
+  public hasBudget(budget: NumberRange) {
+    const value = this.filterForm.get('estimatedBudget').value;
+    if (!value.includes(budget)) {
+      this.filterForm.get('estimatedBudget').setValue([...value, budget]);
+    } else {
+      const valueWithoutBudget = value.filter(v =>  v !== budget);
+      this.filterForm.get('estimatedBudget').setValue(valueWithoutBudget);
+    }
   }
 
   public hasStatus(status: MovieStatusLabel) {
