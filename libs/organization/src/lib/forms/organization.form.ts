@@ -1,8 +1,8 @@
 import { FormControl, Validators } from "@angular/forms";
-import { FormEntity, UniqueOrgName } from "@blockframes/utils";
+import { FormEntity, UniqueOrgName, FormList } from "@blockframes/utils";
 import { createOrganization, Organization, OrganizationService } from "../+state";
 import { AddressSet, createAddressSet } from "@blockframes/organization/types";
-import { Location, createLocation } from '@blockframes/utils/common-interfaces/utility';
+import { Location, createLocation, BankAccount, createBankAccount } from '@blockframes/utils/common-interfaces/utility';
 
 export class OrganizationAddressesForm extends FormEntity<OrganizationAddressesControl>{
   constructor(addressSet: AddressSet) {
@@ -45,7 +45,8 @@ function createOrganizationFormControl(service: OrganizationService, params?: Or
     email: new FormControl(organization.email, Validators.email),
     fiscalNumber: new FormControl(organization.fiscalNumber),
     activity: new FormControl(organization.activity),
-    logo: new FormControl(organization.logo)
+    logo: new FormControl(organization.logo),
+    bankAccounts: FormList.factory(organization.bankAccounts, el => new OrganizationBankAccountForm(el))
   }
 }
 
@@ -71,3 +72,20 @@ function createOrganizationAddressesControls(addresses: Partial<AddressSet> = {}
 type OrganizationAddressesControl = ReturnType<typeof createOrganizationAddressesControls>
 
 
+function createOrganizationBankAccountFormControl(account: Partial<BankAccount>) {
+  const entity = createBankAccount(account);
+  return {
+    address: new AddressForm(entity.address),
+    IBAN: new FormControl(entity.IBAN),
+    BIC: new FormControl(entity.BIC),
+    name: new FormControl(entity.name),
+  }
+}
+
+export type OrganizationBankAccountFormControl = ReturnType<typeof createOrganizationBankAccountFormControl>;
+
+export class OrganizationBankAccountForm extends FormEntity<OrganizationBankAccountFormControl> {
+  constructor(account: Partial<BankAccount>) {
+    super(createOrganizationBankAccountFormControl(account));
+  }
+}
