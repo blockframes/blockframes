@@ -190,6 +190,20 @@
             </div>
           </mat-expansion-panel>
 
+          <!-- Budget -->
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Budget
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <div fxLayout="column" fxLayoutAlign="start start">
+              <mat-checkbox (change)="hasBudget(budget)" color="primary" *ngFor="let budget of budgetList">
+                {{ budget.label }}
+              </mat-checkbox>
+            </div>
+          </mat-expansion-panel>
+
           <!-- Certifications -->
           <!-- TODO #1146 -->
           <!-- <mat-expansion-panel>
