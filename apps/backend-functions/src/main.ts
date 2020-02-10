@@ -125,9 +125,8 @@ export const onDocumentPermissionCreateEvent = onDocumentCreate(
   onDocumentPermissionCreate
 );
 
-
 //--------------------------------
-//       Movies Management        //
+//       Movies Management      //
 //--------------------------------
 
 /**
