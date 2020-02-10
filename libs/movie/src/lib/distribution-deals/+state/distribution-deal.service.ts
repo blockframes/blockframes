@@ -7,7 +7,6 @@ import { DistributionDeal, getDealTerritories, formatDistributionDeal } from './
 import { createContractTitleDetail, ContractWithLastVersion } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractVersionService } from '@blockframes/contract/version/+state/contract-version.service';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
-import { toDate } from '@blockframes/utils/helpers';
 import { ContractQuery } from '@blockframes/contract/contract/+state/contract.query';
 import { switchMap } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
@@ -92,8 +91,8 @@ export class DistributionDealService extends CollectionService<DistributionDealS
       .collectionGroup('distributionDeals', ref => ref.where(`${type}.orgId`, '==', this.organizationQuery.getActiveId()))
       .get()
       .toPromise();
-    const myDeals = myDealsSnap.docs.map(deal => formatDistributionDeal(deal.data()));
-    return myDeals;
+
+    return myDealsSnap.docs.map(deal => formatDistributionDeal(deal.data() as DistributionDeal));
   }
 
   /**
@@ -114,8 +113,8 @@ export class DistributionDealService extends CollectionService<DistributionDealS
       .collectionGroup('distributionDeals', ref => ref.where('contractId', '==', contractId))
       .get()
       .toPromise();
-    const distributionDeals = distributionDealsSnap.docs.map(deal => formatDistributionDeal(deal.data()));
-    return distributionDeals;
+
+    return distributionDealsSnap.docs.map(deal => formatDistributionDeal(deal.data() as DistributionDeal));
   }
 
   /**

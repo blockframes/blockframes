@@ -31,14 +31,13 @@ import {
   CERTIFICATIONS_LABEL,
   MEDIAS_LABEL,
   TERRITORIES_LABEL,
-  GenresSlug,
   CertificationsSlug,
   LanguagesSlug,
   MediasSlug,
   TerritoriesSlug,
   MovieStatusLabel,
   MOVIE_STATUS_LABEL,
-  MovieStatusSlug
+  MEDIAS_SLUG
 } from '@blockframes/utils/static-model/types';
 import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
 import { languageValidator } from '@blockframes/utils/form/validators/validators';
@@ -50,7 +49,6 @@ import { Observable, combineLatest } from 'rxjs';
 import { startWith, map, debounceTime, switchMap, tap, distinctUntilChanged } from 'rxjs/operators';
 // Others
 import { filterMovie } from './filter.util';
-import { AFM_DISABLE } from '@env';
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Index } from 'algoliasearch';
@@ -61,8 +59,6 @@ import { DistributionDealService } from '@blockframes/movie/distribution-deals/+
 import { NumberRange } from '@blockframes/utils/common-interfaces/range';
 import { BUDGET_LIST } from '@blockframes/movie/movieform/budget/budget.form';
 import { CatalogSearchForm } from '@blockframes/catalog/form/search.form';
-import { DistributionDealQuery } from '@blockframes/movie/distribution-deals/+state';
-import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'catalog-movie-search',
@@ -106,7 +102,7 @@ export class MarketplaceSearchComponent implements OnInit {
   public movieGenres: GenresLabel[] = GENRES_LABEL;
   public movieProductionStatuses: MovieStatusLabel[] = MOVIE_STATUS_LABEL;
   public movieCertifications: CertificationsLabel[] = CERTIFICATIONS_LABEL;
-  public movieMedias: MediasLabel[] = MEDIAS_LABEL;
+  public movieMedias: MediasSlug[] = MEDIAS_SLUG;
 
   /* Filter for autocompletion */
   public genresFilter$: Observable<string[]>;
@@ -452,14 +448,9 @@ export class MarketplaceSearchComponent implements OnInit {
     }
   }
 
-  public checkMedia(media: MediasLabel) {
-    /**
-     * We want to exchange the label for the slug,
-     * because for our backend we need to store the slug.
-     */
-    const mediaSlug: MediasSlug = getCodeIfExists('MEDIAS', media);
+  public checkMedia(media: MediasSlug) {
     if (this.movieMedias.includes(media)) {
-      this.filterForm.checkMedia(mediaSlug);
+      this.filterForm.checkMedia(media);
     }
   }
 
@@ -513,30 +504,26 @@ export class MarketplaceSearchComponent implements OnInit {
     this.territoryInput.nativeElement.value = '';
   }
 
-  public addGenre(event: MatAutocompleteSelectedEvent) {
-    const genre = event.option.value;
+  public addSalesAgent(event: MatAutocompleteSelectedEvent) {
+    const salesAgent = event.option.value;
 
-    if ((genre || '').trim() && !this.selectedGenres.includes(genre)) {
-      this.selectedGenres.push(genre.trim());
+    if ((salesAgent || '').trim() && !this.selectedSalesAgents.includes(salesAgent)) {
+      this.selectedSalesAgents.push(salesAgent.trim());
     }
-    /**
-     * We want to exchange the label for the slug,
-     * because for our backend we need to store the slug.
-     */
-    const genreSlug: GenresSlug = getCodeIfExists('GENRES', genre);
-    this.filterForm.addGenre(genreSlug);
-    this.genreControl.setValue('');
-    this.genreInput.nativeElement.value = '';
-    this.analytics.event(AnalyticsEvents.addedGenre, { genre });
+
+    this.filterForm.addSalesAgent(salesAgent);
+    this.salesAgentControl.setValue('');
+    this.salesAgentInput.nativeElement.value = '';
+    this.analytics.event(AnalyticsEvents.addedSalesAgent, { salesAgent });
   }
 
-  public removeGenre(genre: ExtractCode<'GENRES'>) {
-    const index = this.selectedGenres.indexOf(genre);
+  public removeSalesAgent(salesAgent: string) {
+    const index = this.selectedSalesAgents.indexOf(salesAgent);
+
     if (index >= 0) {
-      this.selectedGenres.splice(index, 1);
-      const genreSlug: GenresSlug = getCodeIfExists('GENRES', genre);
-      this.filterForm.removeGenre(genreSlug);
-      this.analytics.event(AnalyticsEvents.removedGenre, { genre });
+      this.selectedSalesAgents.splice(index, 1);
+      this.filterForm.removeSalesAgent(salesAgent);
+      this.analytics.event(AnalyticsEvents.removedSalesAgent, { salesAgent });
     }
   }
 
@@ -583,7 +570,7 @@ export class MarketplaceSearchComponent implements OnInit {
     }
   }
 
-  public formLog(form) {
-    console.log(form)
+  formLog() {
+    console.log(this.filterForm)
   }
 }
