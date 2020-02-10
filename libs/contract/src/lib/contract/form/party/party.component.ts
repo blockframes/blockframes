@@ -15,7 +15,7 @@ export class ContractFormPartyComponent {
   @Input() type: 'licensee' | 'licensor' = 'licensee';
   public _hasRole: boolean;
   @Input()
-  get hastRole() { return this._hasRole; }
+  get hasRole() { return this._hasRole; }
   set hasRole(value: boolean) {
     this._hasRole = coerceBooleanProperty(value);
   }
@@ -30,12 +30,8 @@ export class ContractFormPartyComponent {
     return wantedSubRoles.includes(role.slug)
   })
 
-  private getRoleValue(index: number) {
-    return this.form.at(index).get('party').get('role').value
-  }
-
-  public partyIsType(index: number) {
-    return this.getRoleValue(index) === this.type ? true : this.getRoleValue(index) === 'undefined' ? true : false;
+  public childRoleForm(index: number) {
+    return this.form.at(index).get('childRoles');
   }
 
   public addRole() {
