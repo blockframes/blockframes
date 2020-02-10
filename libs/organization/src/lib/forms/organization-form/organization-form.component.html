@@ -29,7 +29,11 @@
         <mat-card-subtitle>Upload your Logo</mat-card-subtitle>
       </mat-card-header>
       <mat-card-content>
-        <drop-cropper [ratio]="1" storagePath="logo" formControlName="logo"></drop-cropper>
+        <drop-cropper [ratio]="1" storagePath="logo" formControlName="logo">
+          <h3 type>Logo</h3>
+            <p class="mat-body-2" dimensions>Recommanded : 512 x 512 px</p>
+            <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>  
+        </drop-cropper>
       </mat-card-content>
     </mat-card>
     <mat-card>
