@@ -16,36 +16,37 @@ function productionYearBetween(movie: Movie, range: { from: number; to: number }
     return movie.main.productionYear >= range.from && movie.main.productionYear <= range.to;
   }
 }
-function hasLanguage(
-  movie: Movie,
-  language: { name: LanguagesSlug; original: boolean; dubbed: boolean; subtitle: boolean; caption: boolean }
-): boolean {
-  if (!language) {
-    return true;
-  }
 
-  let original = true;
-  let dubbed = true;
-  let subtitle = true;
-  let caption = true;
+function hasLanguage(movie: Movie, language: any) {
+    if (Object.entries(language).length === 0) {
+      return true;
+    }
+    const languages = Object.keys(language);
+    for (let i = 0; i < languages.length; i++) {
+      if (movie.versionInfo.languages.hasOwnProperty(languages[i])) {
 
-  if (language.original) {
-    original = movie.versionInfo.languages[language.name].original;
-  }
+        const movieLanguage = movie.versionInfo.languages[languages[i]];
+        const filterLanguage = language[languages[i]];
 
-  if (language.dubbed) {
-    dubbed = movie.versionInfo.languages[language.name].dubbed;
-  }
+        // When no checkbox is checked, we just verify the key.
+        if (!filterLanguage.original && !filterLanguage.dubbed && !filterLanguage.subtitle && !filterLanguage.caption) {
+          return true;
+        }
 
-  if (language.subtitle) {
-    subtitle = movie.versionInfo.languages[language.name].subtitle;
-  }
-
-  if (language.caption) {
-    caption = movie.versionInfo.languages[language.name].caption;
-  }
-
-  return original && dubbed && subtitle && caption;
+        if (filterLanguage.original && movieLanguage.original) {
+          return true;
+        }
+        if (filterLanguage.dubbed && movieLanguage.dubbed) {
+          return true;
+        }
+        if (filterLanguage.subtitle && movieLanguage.subtitle) {
+          return true;
+        }
+        if (filterLanguage.caption && movieLanguage.caption) {
+          return true;
+        }
+      }
+    }
 }
 
 function genres(movie: Movie, movieGenre: string[]): boolean {
@@ -155,20 +156,14 @@ function media(movie: Movie, movieMediaType: string): boolean {
 
 // TODO #1306 - remove when algolia is ready
 export function filterMovie(movie: Movie, filter: CatalogSearch, deals?: DistributionDeal[]): boolean {
-  const hasEveryLanguage = Object.keys(filter.languages)
-    .map(name => ({
-      ...filter.languages[name],
-      name
-    }))
-    .every(language => hasLanguage(movie, language));
   const hasMedia = filter.medias.every(movieMedia => media(movie, movieMedia));
   const hasTerritory = filter.territories.every(territory => territories(movie, territory));
   if (AFM_DISABLE) {
     //TODO: #1146
     return (
       productionYearBetween(movie, filter.productionYear) &&
-      hasEveryLanguage &&
-      genres(movie, filter.genres) &&
+      //hasEveryLanguage &&
+      types(movie, filter.type) &&
       certifications(movie, filter.certifications) &&
       productionStatus(movie, filter.status) &&
       availabilities(deals, filter.availabilities) &&
@@ -184,7 +179,8 @@ export function filterMovie(movie: Movie, filter: CatalogSearch, deals?: Distrib
       types(movie, filter.type) &&
       productionStatus(movie, filter.status) &&
       hasBudget(movie, filter.estimatedBudget) &&
-      hasCountry(movie, filter.originCountries)
+      hasCountry(movie, filter.originCountries) &&
+      hasLanguage(movie, filter.languages)
     );
   }
 }

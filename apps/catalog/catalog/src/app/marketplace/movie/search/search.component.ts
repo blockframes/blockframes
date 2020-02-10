@@ -118,8 +118,7 @@ export class MarketplaceSearchComponent implements OnInit {
   /* Individual form controls for filtering */
   public genreControl: FormControl = new FormControl('');
   public languageControl: FormControl = new FormControl('', [
-    Validators.required,
-    languageValidator
+    Validators.required
   ]);
   public territoryControl: FormControl = new FormControl('');
   public countryControl: FormControl = new FormControl('');
@@ -358,7 +357,9 @@ export class MarketplaceSearchComponent implements OnInit {
    * @param value string which got typed in into an input field
    */
   private _languageFilter(value: string): string[] {
-    return LANGUAGES_LABEL.filter(language => language.toLowerCase().includes(value.toLowerCase()));
+    if (value) {
+      return LANGUAGES_LABEL.filter(language => language.toLowerCase().includes(value.toLowerCase()));
+    }
   }
 
   /**
