@@ -1,7 +1,7 @@
 import { MovieSalesAgentDeal } from '../../movie/+state/movie.model';
 import { DistributionDeal, getDealTerritories } from '../+state/distribution-deal.model';
 import { DateRange } from '@blockframes/utils/common-interfaces/range';
-import { CatalogSearch } from '@blockframes/catalog/form/search.form';
+import { CatalogSearch, AvailsSearch } from '@blockframes/catalog/form/search.form';
 import { toDate } from '@blockframes/utils/helpers';
 
 /**
@@ -102,17 +102,17 @@ export function getDealsInDateRange(formDates: DateRange, distributionDeals: Dis
  * @param deals The array of deals from a movie in the previously specified date range
  */
 export function getFilterMatchingDeals(
-  filter: CatalogSearch,
+  filter: AvailsSearch,
   deals: DistributionDeal[]
 ): DistributionDeal[] {
 
-  const { territories, medias, languages } = filter
+  const { territories, medias } = filter
 
   /**
    * We have to look on the already exisitng
    * deals in the movie and check if there is any overlapping medias
    */
-  const dealsWithMediasTerritoriesAndLanguagesInCommon: DistributionDeal[] = [];
+  const dealsWithTerritoriesAndMediasInCommon: DistributionDeal[] = [];
   for (const deal of deals) {
 
     // Filter deal territories
@@ -138,38 +138,15 @@ export function getFilterMatchingDeals(
       }
     }
 
-    let dubbingInCommon = false;
-    let subtitlesInCommon = false;
-
-    if (languages) {
-    const languagesName: string[] = Object.keys(languages);
-
-      for (const language of languagesName) {
-        if (deal.assetLanguage[language] && deal.assetLanguage[language].dubbed) {
-          dubbingInCommon = true;
-          break;
-        }
-      }
-
-      for (const language of languagesName) {
-        if (deal.assetLanguage[language] && deal.assetLanguage[language].subtitle) {
-          subtitlesInCommon = true;
-          break;
-        }
-      }
-    }
-
     if (
       mediasInCommon &&
       territoriesInCommon &&
-      dubbingInCommon &&
-      subtitlesInCommon &&
-      !dealsWithMediasTerritoriesAndLanguagesInCommon.includes(deal)
+      !dealsWithTerritoriesAndMediasInCommon.includes(deal)
     ) {
-      dealsWithMediasTerritoriesAndLanguagesInCommon.push(deal);
+      dealsWithTerritoriesAndMediasInCommon.push(deal);
     }
   }
-  return dealsWithMediasTerritoriesAndLanguagesInCommon;
+  return dealsWithTerritoriesAndMediasInCommon;
 }
 
 /**

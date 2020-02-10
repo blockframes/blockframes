@@ -48,17 +48,16 @@ import { MoviesIndex } from '@blockframes/utils/algolia';
 import { Observable, combineLatest } from 'rxjs';
 import { startWith, map, debounceTime, switchMap, tap, distinctUntilChanged } from 'rxjs/operators';
 // Others
-import { filterMovie } from './filter.util';
+import { filterMovie, filterMovieWithAvails } from './filter.util';
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Index } from 'algoliasearch';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
-import { MovieDocumentWithDates } from '@blockframes/movie/movie/+state/movie.firestore';
-import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state/distribution-deal.service';
 import { NumberRange } from '@blockframes/utils/common-interfaces/range';
 import { BUDGET_LIST } from '@blockframes/movie/movieform/budget/budget.form';
-import { CatalogSearchForm } from '@blockframes/catalog/form/search.form';
+import { CatalogSearchForm, AvailsSearchForm } from '@blockframes/catalog/form/search.form';
+import { ContractService } from '@blockframes/contract/contract/+state';
 
 @Component({
   selector: 'catalog-movie-search',
@@ -73,10 +72,11 @@ export class MarketplaceSearchComponent implements OnInit {
   private algoliaSearchResults$: Observable<MovieAlgoliaResult[]>;
 
   /* Observable of all movies */
-  public movieSearchResults$: Observable<MovieDocumentWithDates[]>;
+  public movieSearchResults$: Observable<Movie[]>;
 
   /* Instance of the search form */
   public filterForm = new CatalogSearchForm();
+  public availsForm = new AvailsSearchForm();
 
   /* Variables for searchbar autocompletion */
   public allDirectors: string[] = [];
@@ -124,6 +124,7 @@ export class MarketplaceSearchComponent implements OnInit {
   public searchbarTextControl: FormControl = new FormControl('');
 
   private filterBy$ = this.filterForm.valueChanges.pipe(startWith(this.filterForm.value));
+  private filterByAvails$ = this.availsForm.valueChanges.pipe(startWith(this.availsForm.value));
   private sortBy$ = this.sortByControl.valueChanges.pipe(startWith(this.sortByControl.value));
 
   /* Arrays for showing the selected entities in the UI */
@@ -170,6 +171,7 @@ export class MarketplaceSearchComponent implements OnInit {
     private catalogCartQuery: CatalogCartQuery,
     private snackbar: MatSnackBar,
     private movieQuery: MovieQuery,
+    private contractService: ContractService,
     private breakpointObserver: BreakpointObserver,
     @Inject(MoviesIndex) private movieIndex: Index,
     private analytics: FireAnalytics
@@ -207,15 +209,21 @@ export class MarketplaceSearchComponent implements OnInit {
     this.movieSearchResults$ = combineLatest([
       this.algoliaSearchResults$,
       this.filterBy$,
+      this.filterByAvails$,
       this.sortBy$
     ]).pipe(
-      switchMap(([algoliaMovies, filterOptions, sortBy]) => {
+      switchMap(([algoliaMovies, filterOptions, availsOptions, sortBy]) => {
         const movieIds = algoliaMovies.map(index => index.objectID);
         return this.movieQuery.selectAll({
           sortBy,
           filterBy: movie => filterMovie(movie, filterOptions) && movieIds.includes(movie.id)
-        })
-      })
+        }).pipe(
+          map(movies => availsOptions
+            ? movies.filter(movie =>filterMovieWithAvails(movie.distributionDeals, availsOptions, this.contractService))
+            : movies
+          )
+        );
+      }),
     )
 
     this.genresFilter$ = this.genreControl.valueChanges.pipe(
@@ -282,29 +290,26 @@ export class MarketplaceSearchComponent implements OnInit {
    * @param formGroupName name of the form group which determine the logic.
    */
   public showFormGroupError(formGroupName: string): boolean {
+
+    const filterHasErrors = (
+      !this.filterForm.get('productionYear').get('from').hasError('pattern') &&
+      !this.filterForm.get('productionYear').get('from').hasError('max') &&
+      (
+        !this.filterForm.get('productionYear').get('to').hasError('pattern') &&
+        this.filterForm.get('productionYear').hasError('invalidRange')
+      )
+    )
+    const availsHasErrors = (
+      !this.availsForm.get('terms').get('from').hasError('min') &&
+      this.availsForm.get('terms').hasError('invalidRange')
+    )
+
     if (formGroupName === 'productionYear') {
-      return (
-        !this.filterForm
-          .get('productionYear')
-          .get('from')
-          .hasError('pattern') &&
-        !this.filterForm
-          .get('productionYear')
-          .get('from')
-          .hasError('max') &&
-        (!this.filterForm
-          .get('productionYear')
-          .get('to')
-          .hasError('pattern') &&
-          this.filterForm.get('productionYear').hasError('invalidRange'))
-      );
+
+      return filterHasErrors
     } else {
-      return (
-        !this.filterForm
-          .get('availabilities')
-          .get('from')
-          .hasError('min') && this.filterForm.get('availabilities').hasError('invalidRange')
-      );
+
+      return availsHasErrors;
     }
   }
 
@@ -448,9 +453,10 @@ export class MarketplaceSearchComponent implements OnInit {
     }
   }
 
+  /** Check media or uncheck it if it's already in the array. */
   public checkMedia(media: MediasSlug) {
     if (this.movieMedias.includes(media)) {
-      this.filterForm.checkMedia(media);
+      this.availsForm.checkMedia(media);
     }
   }
 
@@ -485,7 +491,7 @@ export class MarketplaceSearchComponent implements OnInit {
     if (i >= 0) {
       this.selectedMovieTerritories.splice(i, 1);
     }
-    this.filterForm.removeTerritory(index);
+    this.availsForm.removeTerritory(index);
   }
 
   public selectedTerritory(territory: MatAutocompleteSelectedEvent) {
@@ -500,7 +506,7 @@ export class MarketplaceSearchComponent implements OnInit {
       'TERRITORIES',
       territory.option.viewValue as ExtractCode<'TERRITORIES'>
     );
-    this.filterForm.addTerritory(territorySlug);
+    this.availsForm.addTerritory(territorySlug);
     this.territoryInput.nativeElement.value = '';
   }
 
@@ -570,7 +576,7 @@ export class MarketplaceSearchComponent implements OnInit {
     }
   }
 
-  formLog() {
-    console.log(this.filterForm)
+  public applyAvailsFilter() {
+    this.availsForm.get('isActive').setValue(true);
   }
 }
