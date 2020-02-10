@@ -1,4 +1,4 @@
-import { prepareForTesting, restoreShorcut, upgrade } from './firebaseSetup';
+import { prepareForTesting, restoreShortcut, upgrade } from './firebaseSetup';
 import { migrate } from './migrations';
 import { exitable, showHelp } from './tools';
 import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs } from './algolia';
@@ -12,7 +12,7 @@ if (cmd === 'prepareForTesting') {
 } else if (cmd === 'upgrade') {
   exitable(upgrade)();
 } else if (cmd === 'restore') {
-  exitable(restoreShorcut)();
+  exitable(restoreShortcut)();
 } else if (cmd === 'migrate') {
   exitable(migrate)();
 } else if (cmd === 'syncUsers') {
