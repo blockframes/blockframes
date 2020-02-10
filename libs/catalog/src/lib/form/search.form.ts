@@ -6,7 +6,6 @@ import {
   GENRES_LABEL,
   LanguagesSlug,
   GenresSlug,
-  GENRES_SLUG,
   CertificationsSlug,
   CERTIFICATIONS_SLUG,
   MediasSlug,
@@ -164,6 +163,9 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
   get exclusivity() {
     return this.get('exclusivity');
   }
+  get medias() {
+    return this.get('medias');
+  }
 
   addLanguage(language: LanguagesSlug, value: Partial<MovieLanguageSpecification> = {}) {
     const movieLanguage = createMovieLanguageSpecification(value);
@@ -173,25 +175,6 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
   removeLanguage(language: LanguagesSlug) {
     this.languages.removeControl(language);
     this.updateValueAndValidity();
-  }
-
-  addGenre(genre: GenresSlug) {
-    if (!GENRES_SLUG.includes(genre)) {
-      throw new Error(
-        `Genre ${genre} is not part of the defined genres, here is the complete list currently available: ${GENRES_LABEL}`
-      );
-    } else {
-      this.get('genres').setValue([...this.get('genres').value, genre]);
-    }
-  }
-
-  removeGenre(genre: GenresSlug) {
-    if (GENRES_SLUG.includes(genre)) {
-      const newControls = this.get('genres').value.filter(genreToRemove => genreToRemove !== genre);
-      this.get('genres').setValue(newControls);
-    } else {
-      throw new Error(`The genre ${genre} was not found!`);
-    }
   }
 
   addStatus(status: MovieStatusSlug) {
@@ -246,20 +229,20 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
     }
   }
 
-  checkMedia(mediaChecked: MediasSlug) {
+  checkMedia(checkedMedia: MediasSlug) {
     // check if media is already checked by the user
-    if (MEDIAS_SLUG.includes(mediaChecked) && !this.get('medias').value.includes(mediaChecked)) {
-      this.get('medias').setValue([...this.get('medias').value, mediaChecked]);
+    if (MEDIAS_SLUG.includes(checkedMedia) && !this.get('medias').value.includes(checkedMedia)) {
+      this.get('medias').setValue([...this.get('medias').value, checkedMedia]);
     } else if (
-      MEDIAS_SLUG.includes(mediaChecked) &&
-      this.get('medias').value.includes(mediaChecked)
+      MEDIAS_SLUG.includes(checkedMedia) &&
+      this.get('medias').value.includes(checkedMedia)
     ) {
-      const uncheckMedia = this.get('medias').value.filter(
-        removeMedia => removeMedia !== mediaChecked
+      const checkedMedias = this.get('medias').value.filter(
+        (alreadyCheckedMedia: MediasSlug) => alreadyCheckedMedia !== checkedMedia
       );
-      this.get('medias').setValue(uncheckMedia);
+      this.get('medias').setValue(checkedMedias);
     } else {
-      throw new Error(`Media ${mediaChecked} doesn't exist`);
+      throw new Error(`Media ${checkedMedia} doesn't exist`);
     }
   }
 

@@ -248,11 +248,9 @@
           <!-- Availabilities -->
           <mat-expansion-panel>
               <mat-expansion-panel-header>
-                <mat-panel-title test-id="availabilities-panel">
-                  Terms
-                </mat-panel-title>
+                <mat-panel-title test-id="availabilities-panel">Terms</mat-panel-title>
               </mat-expansion-panel-header>
-              <article formGroupName="availabilities">
+              <ng-container formGroupName="availabilities">
                 <mat-form-field appearance="outline">
                   <mat-label>Start Date</mat-label>
                   <input matInput formControlName="from" [matDatepicker]="pickerAvailableFrom" placeholder="Start Date" />
@@ -270,7 +268,7 @@
                   </mat-datepicker-toggle>
                   <mat-datepicker #pickerAvailableTo startView="multi-year" startAt="2020"></mat-datepicker>
                 </mat-form-field>
-              </article>
+              </ng-container>
               <mat-error *ngIf="filterForm.get('availabilities').hasError('invalidRange')">
                 The value <i>To</i> can't be smaller than the value <i>From</i>!
               </mat-error>
@@ -280,9 +278,7 @@
           <!-- Territories -->
           <mat-expansion-panel>
               <mat-expansion-panel-header>
-                <mat-panel-title test-id="territories-panel">
-                  Territory
-                </mat-panel-title>
+                <mat-panel-title test-id="territories-panel">Territory </mat-panel-title>
               </mat-expansion-panel-header>
               <mat-form-field appearance="outline">
                 <mat-chip-list #chipList>
@@ -306,13 +302,11 @@
           <!-- Media -->
           <mat-expansion-panel>
             <mat-expansion-panel-header>
-              <mat-panel-title test-id="mandate-medias-panel">
-                Media
-              </mat-panel-title>
+              <mat-panel-title test-id="mandate-medias-panel">Media</mat-panel-title>
             </mat-expansion-panel-header>
             <div fxLayout="column" fxLayoutAlign="start space-between" class="filter-checkboxes-media">
               <mat-checkbox *ngFor="let media of movieMedias" (change)="checkMedia(media)">
-                {{media}}
+                {{ media | translateSlug: 'MEDIAS'}}
               </mat-checkbox>
             </div>
           </mat-expansion-panel>
@@ -320,9 +314,7 @@
           <!-- Exclusivity -->
           <mat-expansion-panel>
             <mat-expansion-panel-header>
-              <mat-panel-title>
-                Exclusivity
-              </mat-panel-title>
+              <mat-panel-title>Exclusivity</mat-panel-title>
             </mat-expansion-panel-header>
             <article fxLayout="row" fxLayoutGap="10px">
               <span>No</span>
@@ -332,7 +324,7 @@
           </mat-expansion-panel>
 
         </mat-accordion>
-        <button (click)="formLog(filterForm.value)">LOG THE FORM</button>
+        <button (click)="formLog()">LOG THE FORM</button>
       </mat-card-content>
     </mat-card>
   </aside>

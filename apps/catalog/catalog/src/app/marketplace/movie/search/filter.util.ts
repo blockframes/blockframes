@@ -132,7 +132,7 @@ function hasAvailabilities(
   filter: CatalogSearch
   ): boolean {
 
-  if (!filter.availabilities || !(filter.availabilities.from && filter.availabilities.to)) {
+  if (!filter.availabilities || !(filter.availabilities.from && filter.availabilities.to) || !deals) {
     return true;
   }
 
@@ -154,31 +154,18 @@ function hasCountry(movie: Movie, countries: string[]): boolean {
   }
 }
 
-function hasTerritories(movie: Movie, filterTerritories: string[]): boolean {
-  if (!filterTerritories.length) {
-    return true;
-  }
-  return filterTerritories.every(territory =>
-    movie.salesAgentDeal.territories.includes(territory.toLowerCase() as ExtractSlug<'TERRITORIES'>)
-  );
+function hasTerritories(movie: Movie, filterTerritories: ExtractSlug<'TERRITORIES'>[]): boolean {
+  return filterTerritories.every(territory => movie.salesAgentDeal.territories.includes(territory));
 }
 
-function hasMedias(movie: Movie, filterMedias: string[]): boolean {
-  if (!filterMedias.length) {
-    return true;
-  }
-  return filterMedias.every(movieMedia =>
-    movie.salesAgentDeal.medias.includes(movieMedia.toLowerCase() as ExtractSlug<'MEDIAS'>)
-  );
+function hasMedias(movie: Movie, filterMedias: ExtractSlug<'MEDIAS'>[]): boolean {
+  return filterMedias.every(media => movie.salesAgentDeal.medias.includes(media));
 }
 
 // TODO #1306 - remove when algolia is ready
 export function filterMovie(movie: Movie, filter: CatalogSearch, deals?: DistributionDeal[]): boolean {
   const hasEveryLanguage = Object.keys(filter.languages)
-    .map(name => ({
-      ...filter.languages[name],
-      name
-    }))
+    .map(name => ({ ...filter.languages[name], name }))
     .every(language => hasLanguage(movie, language));
 
   return (
