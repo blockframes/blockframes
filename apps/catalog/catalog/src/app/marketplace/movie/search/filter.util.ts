@@ -129,6 +129,17 @@ function availabilities(deals: DistributionDeal[], range: { from: Date; to: Date
   );
 }
 
+function hasCountry(movie: Movie, countries: string[]): boolean {
+  if (!countries.length) {
+    return true;
+  }
+  for (let i = 0; i < countries.length; i++) {
+    if (movie.main.originCountries.includes(countries[i].toLowerCase() as ExtractSlug<'TERRITORIES'>)) {
+      return true;
+    }
+  }
+}
+
 function territories(movie: Movie, territory: string): boolean {
   if (!territory) {
     return true;
@@ -172,7 +183,8 @@ export function filterMovie(movie: Movie, filter: CatalogSearch, deals?: Distrib
       salesAgent(movie, filter.salesAgent)
       types(movie, filter.type) &&
       productionStatus(movie, filter.status) &&
-      hasBudget(movie, filter.estimatedBudget)
+      hasBudget(movie, filter.estimatedBudget) &&
+      hasCountry(movie, filter.originCountries)
     );
   }
 }
