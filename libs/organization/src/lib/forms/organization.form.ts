@@ -39,7 +39,7 @@ function createOrganizationFormControl(service: OrganizationService, params?: Or
   return {
     name: new FormControl(organization.name, {
       validators: [Validators.required],
-      asyncValidators: [UniqueOrgName(service)],
+      asyncValidators: [UniqueOrgName(service, name)],
     }),
     addresses: new OrganizationAddressesForm(organization.addresses),
     email: new FormControl(organization.email, Validators.email),

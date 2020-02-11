@@ -30,11 +30,13 @@ export class OrganizationComponent implements OnInit, OnDestroy {
 
   public update() {
     try {
-      if (this.organizationForm.invalid) {
-        throw new Error('Your organization profile informations are not valid');
+      if (this.organizationForm.dirty) {
+        if (this.organizationForm.invalid) {
+          throw new Error('Your organization profile informations are not valid');
+        }
+        this.service.update(this.query.getActiveId(), this.organizationForm.value);
+        this.snackBar.open('Organization profile change succesfull', 'close', { duration: 2000 });
       }
-      this.service.update(this.query.getActiveId(), this.organizationForm.value);
-      this.snackBar.open('Organization profile change succesfull', 'close', { duration: 2000 });
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });
     }
