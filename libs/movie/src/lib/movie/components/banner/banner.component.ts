@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Directive } from '@angular/core';
 import { Movie } from '../../+state';
 import { Title } from '../../+state/movie.firestore';
 import { ImgRef } from '@blockframes/utils';
@@ -17,9 +17,9 @@ export class BannerComponent implements OnInit {
   public date: number;
 
   @Input() set movie(movie: Movie) {
-    this.poster = movie.promotionalElements.poster[0].media;
+    this.poster = movie.promotionalElements.poster[0] && movie.promotionalElements.poster[0].media;
     this.title = movie.main.title;
-    this.director = movie.main.directors[0].displayName;
+    this.director = movie.main.directors[0] && movie.main.directors[0].displayName;
     this.countries = movie.main.originCountries.join(', ');
     this.date = movie.main.productionYear;
   }
@@ -30,3 +30,12 @@ export class BannerComponent implements OnInit {
   }
 
 }
+
+
+@Directive({
+  selector: 'movie-banner-actions, [movieBannerActions]',
+  host: {
+    class: '.movie-banner-actions'
+  }
+})
+export class BannerActionsDirective {}
