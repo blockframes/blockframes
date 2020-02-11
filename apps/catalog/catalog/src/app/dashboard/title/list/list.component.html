@@ -14,9 +14,9 @@
 </header>
 
 <ng-container *ngIf="(titles$ | async) as titles; else isLoading">
-  <bf-table-filter [source]="titles" [columns]="columns" [initialColumns]="initialColumns">
-    [showFilter]="true"
-    [showPaginator]="true"
+  <bf-table-filter [source]="titles" [columns]="columns" [initialColumns]="initialColumns"
+    showFilter
+    showPaginator
     [link]="'./'">
     <ng-template colRef="title" let-title><b>{{ title }}</b></ng-template>
     <ng-template colRef="receipt" let-receipt> <b>{{ receipt | currency }}</b> </ng-template>

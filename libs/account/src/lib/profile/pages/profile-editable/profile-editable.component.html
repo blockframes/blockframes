@@ -10,7 +10,7 @@
     </profile-display>
   </ng-container>
   <ng-container sidenav [ngSwitch]="editContent">
-    <profile-form [formGroup]="profileForm" *ngSwitchCase="'profile'"></profile-form>
-    <profile-password-form [formGroup]="editPasswordForm" *ngSwitchCase="'password'"></profile-password-form>
+    <!-- <profile-form [form]="profile" *ngSwitchCase="'profile'"></profile-form> -->
+    <!-- <profile-password-form [formGroup]="editPasswordForm" *ngSwitchCase="'password'"></profile-password-form> -->
   </ng-container>
 </editable-sidenav>

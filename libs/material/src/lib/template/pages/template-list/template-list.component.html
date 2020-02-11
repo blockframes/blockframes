@@ -9,8 +9,8 @@
     [source]="templates"
     [columns]="versionColumns"
     [initialVersionColumns]="initialVersionColumns"
-    showFilter="true"
-    showPaginator="true"
+    showFilter
+    showPaginator
     link="../" >
     <ng-template colRef="created" let-created>
       {{ created | date: 'MM/dd/yyyy' }}

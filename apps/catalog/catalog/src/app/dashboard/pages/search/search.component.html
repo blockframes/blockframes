@@ -8,7 +8,6 @@
         <button mat-tab-link (click)="applyFilter('Titles')" [active]="filter.value === 'Titles'">Titles</button>
     </header>
 
-    <bf-table-filter showFilter="true" showPaginator="true" [initialColumns]="initialColumns" [columns]="columns"
-        [source]="movies">
+    <bf-table-filter showFilter showPaginator [initialColumns]="initialColumns" [columns]="columns" [source]="movies">
     </bf-table-filter>
 </ng-container>

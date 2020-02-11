@@ -24,7 +24,8 @@ export class DistributionDealTermsForm extends FormEntity<DistributionDealTermsC
 function createFloatingDuration(floating: Partial<FloatingDuration>) {
   return {
     unit: new FormControl(floating.unit),
-    duration: new FormControl(floating.duration)
+    duration: new FormControl(floating.duration),
+    temporality: new FormControl(floating.temporality)
   };
 }
 

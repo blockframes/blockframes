@@ -97,5 +97,12 @@
         <movie-summary-evaluation [salesInfo]="form.salesInfo" [link]="getPath('evaluation')"></movie-summary-evaluation>
       </mat-card-content>
     </mat-card>
+
+    <!-- Submit -->
+    <button mat-flat-button color="accent" class="submit" (click)="submit()">
+      <span>Submit to Archipel Content</span>
+      <mat-icon svgIcon="arrow_forward"></mat-icon>
+    </button>
   </ng-container>
+  
 </tunnel-page>

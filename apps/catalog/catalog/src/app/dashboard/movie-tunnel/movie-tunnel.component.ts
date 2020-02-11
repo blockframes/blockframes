@@ -3,10 +3,12 @@ import { Component, ChangeDetectionStrategy, Host, OnInit } from '@angular/core'
 // Blockframes
 import { MovieService, MovieQuery } from '@blockframes/movie/movie/+state';
 import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar, MatDialog } from '@angular/material';
+import { TunnelStep, TunnelRoot, TunnelConfirmComponent } from '@blockframes/ui/tunnel';
+import { switchMap, map, tap } from 'rxjs/operators';
+import { of, from } from 'rxjs';
 
-
-const steps = [{
+const steps: TunnelStep[] = [{
   title: 'Title Information',
   icon: 'document',
   time: 40,
@@ -62,6 +64,13 @@ const steps = [{
     path: 'evaluation',
     label: 'Marketplace Eval.'
   }]
+}, {
+  title: 'Summary',
+  icon: 'document',
+  routes: [{
+    path: 'summary',
+    label: 'Summary & Sumbit'
+  }]
 }];
 
 @Component({
@@ -71,14 +80,15 @@ const steps = [{
   providers: [MovieForm],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieTunnelComponent implements OnInit {
+export class MovieTunnelComponent implements OnInit, TunnelRoot {
   steps = steps;
 
   constructor(
     @Host() private form: MovieForm,
     private service: MovieService,
     private query: MovieQuery,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) {}
 
   async ngOnInit() {
@@ -87,10 +97,30 @@ export class MovieTunnelComponent implements OnInit {
   }
 
   // Should save movie
-  public async save() {
+  public save() {
     const id = this.query.getActiveId();
-    await this.service.update({ id, ...this.form.value });
-    this.snackBar.open('Saved', 'close', { duration: 500 });
+    const update = this.service.update({ id, ...this.form.value });
+    // Return an observable<boolean> for the confirmExit
+    return from(update).pipe(
+      tap(_ => this.form.markAsPristine()),
+      switchMap(_ => this.snackBar.open('Saved', '', { duration: 500 }).afterDismissed()),
+      map(_ => true) 
+    )
   }
 
+  confirmExit() {
+    if (this.form.pristine) {
+      return of(true);
+    }
+    const dialogRef = this.dialog.open(TunnelConfirmComponent, {
+      width: '80%',
+      data: {
+        title: 'You are going to leave the Movie Form.',
+        subtitle: 'Pay attention, if you leave now your changes will not be saved.'
+      }
+    });
+    return dialogRef.afterClosed().pipe(
+      switchMap(shouldSave => shouldSave ? this.save() : of(false))
+    );
+  }
 }

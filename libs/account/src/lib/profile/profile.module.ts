@@ -17,15 +17,15 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { ProfileDisplayComponent } from './components/profile-display/profile-display.component';
-import { ProfileFormComponent } from './components/profile-form/profile-form.component';
 import { ProfileEditableComponent } from './pages/profile-editable/profile-editable.component';
 import { EditableSidenavModule, UploadModule } from '@blockframes/ui';
 import { PasswordConfirmModule } from '@blockframes/ui/form';
-import { PasswordFormComponent } from './components/password-form/password-form.component';
+import { ProfileFormModule } from '@blockframes/account/profile/forms/profile/profile.module';
+import { PasswordFormModule } from '@blockframes/account/profile/forms/password/password.module';
 
 export const profileRoutes: Routes = [
-  { path: '', redirectTo: 'edit', pathMatch: 'full' },
-  { path: 'edit', component: ProfileEditableComponent },
+  { path: '', redirectTo: 'view', pathMatch: 'full' },
+  { path: 'view', loadChildren: () => import('./pages/view/view.module').then(m => m.ProfileViewModule)},
 ];
 @NgModule({
   imports: [
@@ -51,9 +51,6 @@ export const profileRoutes: Routes = [
   ],
   declarations: [
     ProfileDisplayComponent,
-    ProfileFormComponent,
-    ProfileEditableComponent,
-    PasswordFormComponent
   ],
 })
 export class ProfileModule {}

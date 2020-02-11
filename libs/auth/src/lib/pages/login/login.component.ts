@@ -34,6 +34,7 @@ export class LoginComponent {
     try {
       const { email, password } = signinForm.value;
       await this.service.signin(email, password);
+      this.router.navigate(['c']);
     } catch (err) {
       console.error(err); // let the devs see what happened
       this.snackBar.open(err.message, 'close', { duration: this.snackbarDuration });

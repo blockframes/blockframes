@@ -34,6 +34,7 @@ import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate } from
 import { adminApp, onRequestAccessToAppWrite } from './admin';
 import { onMovieUpdate, onMovieCreate, onMovieDelete } from './movie';
 import * as bigQuery from './bigQuery';
+import { onDocumentPermissionCreate } from './permissions';
 
 /** Trigger: when eth-events-server pushes contract events. */
 export const onIpHashEvent = functions.pubsub.topic('eth-events.ipHash').onPublish(onIpHash);
@@ -118,8 +119,14 @@ export const onInvitationUpdateEvent = onDocumentWrite(
   onInvitationWrite
 );
 
+/** Trigger: when a permission document is created. */
+export const onDocumentPermissionCreateEvent = onDocumentCreate(
+  'permissions/{orgID}/documentPermissions/{docId}',
+  onDocumentPermissionCreate
+);
+
 //--------------------------------
-//       Movies Management        //
+//       Movies Management      //
 //--------------------------------
 
 /**

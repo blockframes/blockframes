@@ -82,10 +82,15 @@ export async function migrate(withBackup: boolean = true) {
     await updateDBVersion(db, lastVersion);
   } catch (e) {
     console.error(e);
-    console.error("the migration failed, revert'ing!");
+    console.error('the migration failed, revert\'ing!');
     await restore(appUrl);
     throw e;
   } finally {
+    if (withBackup) {
+      console.info('running a backup post-migration');
+      await backup(appUrl);
+      console.info('done with the backup post-migration');
+    }
     await endMaintenance();
     console.info('end the migration process...');
   }

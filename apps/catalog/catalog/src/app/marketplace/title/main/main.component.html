@@ -4,19 +4,11 @@
 <ng-container *ngIf="(movie$ | async) as movie;" test-id="content">
   <section fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="20px">
     <!-- PROMO LINKS -->
-    <mat-card fxLayout="column" fxLayoutAlign="start start" fxFlex="30">
-      <a *ngIf="movie.promotionalElements.promo_reel_link" mat-stroked-button color="accent" [href]="movie.promotionalElements.promo_reel_link.media.url">
-        <mat-icon svgIcon="play" color="accent"></mat-icon>Watch Prmomo Reel</a>
-      <a *ngIf="movie.promotionalElements.scenario" mat-stroked-button color="accent" [href]="movie.promotionalElements.scenario.media.url">
-        <mat-icon svgIcon="download" color="accent"></mat-icon>Download Scenarios</a>
-      <a *ngIf="movie.promotionalElements.screener_link" mat-stroked-button color="primary" [href]="movie.promotionalElements.screener_link.media.url">
-        <mat-icon svgIcon="play" color="primary"></mat-icon>Watch Screener</a>
-      <a *ngIf="movie.promotionalElements.teaser_link" mat-stroked-button color="primary" [href]="movie.promotionalElements.teaser_link.media.url">
-        <mat-icon svgIcon="play" color="primary"></mat-icon>Watch Pitch Teaser</a>
-      <a *ngIf="movie.promotionalElements.presentation_deck" mat-stroked-button color="primary" [href]="movie.promotionalElements.presentation_deck.media.url">
-        <mat-icon svgIcon="download" color="primary"></mat-icon>Download Pres. Deck</a>
-      <a *ngIf="movie.promotionalElements.trailer_link" mat-stroked-button color="primary" [href]="movie.promotionalElements.trailer_link.media.url">
-        <mat-icon svgIcon="play" color="primary"></mat-icon>Watch Trailer</a>
+    <mat-card *ngIf="hasLink(movie)" fxLayout="column" fxLayoutAlign="start start" fxFlex="30">
+      <ng-container *ngFor="let promoLink of promoLinks">
+        <a *ngIf="getLink(movie, promoLink) as link" mat-stroked-button color="primary" [href]="link.url">
+          <mat-icon [svgIcon]="link.icon" color="primary"></mat-icon><span>{{ link.label }}</span></a>
+      </ng-container>
     </mat-card>
     <article fxFlex="70">
       <!-- STORY CARD -->
@@ -55,7 +47,7 @@
                 <li><strong>Festivals </strong></li>
                 <li *ngFor="let prize of prizes">{{ getPrize(prize) }}</li>
                 <li *ngFor="let prize of prizes">
-                  <img *ngIf="prize.logo.url" [imgRef]="prize.logo.url"/>
+                  <img *ngIf="prize.logo.url" [imgRef]="prize.logo"/>
                 </li>
               </ng-container>
             </ul>

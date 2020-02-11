@@ -55,7 +55,8 @@ export const organizationRoutes: Routes = [
   {
     path: ':orgId',
     children: [
-      { path: '', redirectTo: 'edit', pathMatch: 'full' },
+      { path: '', redirectTo: 'view', pathMatch: 'full' },
+      { path: 'view', loadChildren: () => import('./pages/view/view.module').then(m => m.OrganizationViewModule)},
       { path: 'edit', component: OrganizationEditableComponent },
       {
         path: 'members',

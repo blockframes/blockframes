@@ -1,0 +1,37 @@
+@import 'mixins';
+
+header, section {
+  padding: 0 176px;
+}
+
+@include tablet {
+  header, section {
+    padding: 0 100px
+  }
+}
+
+@include mobile {
+  header, section {
+    padding: 0px;
+  }
+}
+
+header {
+  height: 300px;
+  padding-top: 30px;
+  background: linear-gradient(to bottom, var(--background-disabled-button), transparent);
+}
+
+.user-info {
+  margin-left: 25px;
+}
+
+img {
+  height: 170px;
+  width: 170px;
+  border-radius: 50%;
+}
+
+footer {
+  margin-top: 20px;
+}

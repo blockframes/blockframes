@@ -58,6 +58,6 @@ export class LayoutComponent {
    */
   private toSearchResult(results: MovieAlgoliaResult[]): SearchResult[] {
     const titles = results.map(result => ({ id: result.objectID, value: result.movie.main.title.original }));
-    return [{ title: 'Movies', icon: 'picture', items: titles }]
+    return [{ title: 'Movies', icon: 'picture', path: 'titles', items: titles }]
   }
 }

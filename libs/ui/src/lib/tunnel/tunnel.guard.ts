@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, CanDeactivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
 import { TunnelService } from './tunnel.service';
+import { TunnelRoot } from './tunnel.model';
+import { map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class TunnelGuard implements CanActivate, CanDeactivate<any> {
@@ -11,14 +13,19 @@ export class TunnelGuard implements CanActivate, CanDeactivate<any> {
     return true;
   }
   canDeactivate(
-    component: any,
+    component: TunnelRoot,
     currentRoute: ActivatedRouteSnapshot,
     currentState: RouterStateSnapshot,
     nextState: RouterStateSnapshot
   ) {
-    this.service.isInTunnel = false;
-    this.service.setUrls(nextState.url);
-    return true;
+    return component.confirmExit().pipe(
+      map(canLeave => {
+        if (!canLeave) return false;
+        this.service.isInTunnel = false;
+        this.service.setUrls(nextState.url);
+        return true;
+      })
+    )
   }
 
 }

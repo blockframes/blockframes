@@ -33,6 +33,7 @@ import { createExpense } from '@blockframes/utils/common-interfaces/price';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { createPaymentSchedule } from '@blockframes/utils/common-interfaces/schedule';
 import { createTerms } from '@blockframes/utils/common-interfaces';
+import { DistributionDealStatus } from '@blockframes/movie/distribution-deals/+state/distribution-deal.firestore';
 
 export interface SpreadsheetImportError {
   field: string;
@@ -1316,6 +1317,9 @@ export class ViewExtractedElementsComponent {
                 }
               });
             }
+
+            // STATUS
+            distributionDeal.status = DistributionDealStatus.draft;
 
             // EXCLUSIVE DEAL
             if (spreadSheetRow[SpreadSheetDistributionDeal.exclusive]) {

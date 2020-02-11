@@ -30,6 +30,10 @@ export async function prepareForTesting() {
   process.exit(0);
 }
 
+export async function restoreShortcut() {
+  return restore(appUrl);
+}
+
 export async function upgrade() {
   console.info('Preparing the database...');
   await migrate(true);

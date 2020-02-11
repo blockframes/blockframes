@@ -17,10 +17,8 @@ export class MovieCardComponent {
   }
 
   public get firstFestivalPrizeLogo() {
-    if(this.movie.festivalPrizes.prizes.length && this.movie.festivalPrizes.prizes[0].logo) {
-      return this.movie.festivalPrizes.prizes[0].logo;
-    } else {
-      return '';
-    }
+    const { prizes } = this.movie.festivalPrizes;
+    const hasPrizeUrl = !!(prizes.length && prizes[0].logo.url);
+    return hasPrizeUrl ? prizes[0].logo : '';
   }
 }
