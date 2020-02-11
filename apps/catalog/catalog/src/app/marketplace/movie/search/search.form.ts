@@ -23,7 +23,7 @@ import { FormEntity, yearValidators, numberRangeValidator } from '@blockframes/u
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 import { MovieLanguageSpecification } from '@blockframes/movie/movie/+state/movie.firestore';
 import { createMovieLanguageSpecification } from '@blockframes/movie/movie+state/movie.model';
-import { FormStaticArray } from '@blockframes/utils/form';
+import { FormStaticArray, FormList, FormStaticValue } from '@blockframes/utils/form';
 import { NumberRange } from '@blockframes/utils/common-interfaces';
 
 /////////////////////////
@@ -130,7 +130,7 @@ function createCatalogSearchControl(search: CatalogSearch) {
     medias: new FormControl(search.medias),
     estimatedBudget: new FormControl(search.estimatedBudget),
     territories: new FormArray(search.territories.map(territory => new FormControl(territory))),
-    originCountries: new FormArray(search.originCountries.map(country => new FormControl(country))),
+    originCountries: FormList.factory(search.originCountries, country => new FormStaticValue(country, 'TERRITORIES')),
     searchbar: new FormGroup({
       text: new FormControl(''),
       type: new FormControl('')
@@ -279,7 +279,7 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
     // Check it's part of the list available
     if (!TERRITORIES_SLUG.includes(country)) {
       throw new Error(
-        `Country ${getLabelBySlug('TERRITORIES', country)} is not part of the list`
+        `Country ${country} is not part of the list.`
       );
     }
     // Check it's not already in the form control
