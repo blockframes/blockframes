@@ -43,7 +43,9 @@
                     </span>
                   </div>
                     <span>{{ getMainInfo(movie) }}</span>
-                    <span *ngIf="movie.salesAgentDeal && movie.salesAgentDeal.salesAgent">{{ movie.salesAgentDeal.salesAgent.displayName}}</span>
+                    <span *ngFor="let salesAgent of movie.main.stakeholders.salesAgent; let isLast=last">
+                      {{ salesAgent.displayName }}{{isLast ? '' : ', '}}
+                    </span>
                   </div>
               </div>
             </mat-carousel-slide>
@@ -51,5 +53,4 @@
       </article>
     </ng-container>
   </section>
-
 </div>
