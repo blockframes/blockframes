@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit, TemplateRef, ContentChild } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Scope } from '@blockframes/utils/static-model/staticModels';
 
@@ -13,6 +13,8 @@ export class MissingControlComponent implements OnInit {
   @Input() scope: Scope;
   @Input() link: string;
   @Input() isLast = true;
+
+  @ContentChild(TemplateRef, { static: false }) child: TemplateRef<any>;
 
   constructor(private cdr: ChangeDetectorRef) {}
 
