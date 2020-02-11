@@ -1,27 +1,27 @@
-<section>
-  <header>
-    <h1>Contact</h1>
-  </header>
-  <article fxLayout="row" fxLayoutAlign="center">
-    <mat-card>
-      <mat-card-content>
-        <article>
-          <h3>Contact</h3>
-          <p>
-            The Archipel Content platform is currently animated by Marie. You can contact her if you have any questions
-            regarding Archipel Content. She’ll be happy to answer you and help you with anything you need!
-          </p>
-        </article>
-
-        <article fxLayout="row" fxLayout.lt-sm="column">
-          <img class="photo-contact" src="/assets/photo/marie-photo-avatar.jpg">
-          <div fxLayout="column">
-            <h4>Marie</h4>
-            <span>Altmayer</span>
-            <span class="margin-top"><span class="bf-dark-text">Email address</span> maltmayer@cascade8.com</span>
-          </div>
-        </article>
-      </mat-card-content>
-    </mat-card>
+<section fxLayout="row">
+  <article>
+    <header>
+      <h1>Contact Us</h1>
+      <h3>+33 (0)1 83 92 71 98</h3>
+      <span class="mat-caption">Mon - Fri 10:00 AM - 8:00 PM CET</span>
+      <p>Send us a message and we’ll quickly get back to you :</p>
+    </header>
+    <form [formGroup]="form" fxLayout="column">
+      <mat-form-field appearance="outline">
+        <input formControlName="subject" matInput placeholder="Subject">
+      </mat-form-field>
+      <mat-form-field class="textarea" appearance="outline">
+        <textarea formControlName="message" matInput placeholder="Message"></textarea>
+      </mat-form-field>
+    </form>
+    <div fxLayout="row" fxLayoutAlign="center">
+      <button (click)="sendMessage()" type="submit" color="primary" mat-stroked-button>
+        <mat-icon svgIcon="mail"></mat-icon>
+        <span>Send a message</span>
+      </button>
+    </div>
+  </article>
+  <article>
+    <p>Our offices are located at 59-61, Passage Choiseul, 75002, Paris</p>
   </article>
 </section>

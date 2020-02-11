@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { FormGroup, FormControl, Validators } from "@angular/forms";
 
 @Component({
   selector: 'catalog-contact-page',
@@ -7,4 +8,12 @@ import { ChangeDetectionStrategy, Component } from "@angular/core";
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class ContactPageComponent {}
+export class ContactPageComponent {
+  public form = new FormGroup({
+    subject: new FormControl('', Validators.required),
+    message: new FormControl('', Validators.required)
+  });
+
+  public sendMessage() {
+  }
+}
