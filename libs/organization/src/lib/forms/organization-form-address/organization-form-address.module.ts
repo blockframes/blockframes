@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { FormCountryModule } from '@blockframes/ui/form/country/country.module';
 
 // Material
 import { MatDividerModule } from '@angular/material/divider';
@@ -18,7 +19,7 @@ import { OrganizationFormAddressComponent } from './organization-form-address.co
     CommonModule,
     ReactiveFormsModule,
     FlexLayoutModule,
-
+    FormCountryModule,
     // Material
     MatFormFieldModule,
     MatDividerModule,

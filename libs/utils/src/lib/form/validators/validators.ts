@@ -67,9 +67,9 @@ export function validPercentage(control: FormControl): ValidationErrors {
 }
 
 /** Check if the `name` field of an Organization create form already exists as an ENS domain */
-export function UniqueOrgName(service: OrganizationService, c: FormControl): AsyncValidatorFn {
+export function UniqueOrgName(service: OrganizationService, formControl: FormControl): AsyncValidatorFn {
   return async (control: AbstractControl): Promise<ValidationErrors | null> => {
-    if(!c.dirty) {
+    if(!formControl.dirty) {
       return null;
     }
     // TODO issue#1146
