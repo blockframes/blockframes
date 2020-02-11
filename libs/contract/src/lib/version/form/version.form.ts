@@ -15,7 +15,8 @@ function createContractVersionControls(contractVersion: Partial<ContractVersion>
     paymentSchedule: FormList.factory(contractVersion.paymentSchedule, payment => {
       return new ContractVersionPaymentScheduleForm(payment)
     }),
-    customPaymentSchedule: new FormControl(contractVersion.customPaymentSchedule)
+    customPaymentSchedule: new FormControl(contractVersion.customPaymentSchedule),
+    paymentTerm: new DistributionDealTermsForm(contractVersion.paymentTerm)
   }
 }
 
