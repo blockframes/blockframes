@@ -38,7 +38,7 @@
     PERIODIC PAYMENTS
   </mat-radio-button>
   <!-- We only need the first index here, cause the user set the amount of iteration -->
-  <ng-container *ngFor="let control of paymentSchedule.controls; let isLast = last; let i = index; trackBy: trackBy">
+  <ng-container *ngFor="let control of paymentSchedule.controls; let isLast = last; let i = index">
     <form [formGroup]="control" *ngIf="isLast">
       <mat-form-field appearance="outline">
         <mat-label>Percentage</mat-label>
@@ -75,7 +75,7 @@
           </div>
           <mat-divider vertical></mat-divider>
           <div fxLayout="column" fxLayoutGap="20px">
-            <mat-slide-toggle [formControl]="eventCtrl" color="primary" (change)="updateState($event, 'period')">
+            <mat-slide-toggle [formControl]="eventCtrl" color="primary" (change)="updateState($event, 'event')">
               Triggering Event
             </mat-slide-toggle>
             <mat-form-field appearance="outline">
@@ -92,6 +92,7 @@
     </form>
   </ng-container>
   <mat-divider></mat-divider>
+  <!-- Specific payment schedule -->
   <mat-radio-button value="other" color="primary">
     Other
   </mat-radio-button>
@@ -100,6 +101,7 @@
     <input matInput type="text" [formControl]="customPaymentSchedule">
   </mat-form-field>
   <h3>PAYMENT TERM</h3>
+  <!-- We are using the first index cause it has nothing in common with event schedule -->
   <form *ngFor="let control of paymentSchedule.controls; let isFirst = first" [formGroup]="control">
     <form formGroupName="date" *ngIf="isFirst">
       <div fxLayout="row" fxLayoutGap="20px">
@@ -121,7 +123,7 @@
 </mat-radio-group>
 <div fxLayout="row" fxLayoutAlign="center start">
   <ng-container *ngIf="paymentSchedule.controls.length; else add">
-    <button mat-fab (click)="resetVersionForm()" color="warn" matTooltip="Delete Payment Schedule">
+    <button mat-fab (click)="resetVersionForm()" color="warn" matTooltip="Reset Payment Schedule">
       <mat-icon>delete</mat-icon>
     </button>
   </ng-container>

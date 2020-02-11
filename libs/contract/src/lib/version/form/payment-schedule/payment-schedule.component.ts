@@ -74,10 +74,14 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
       const start = control.get('date').get('start');
       start.setValue(toDate(start.value));
     })
-    this.form.valueChanges.subscribe(console.log);
   }
 
   ngAfterViewInit() {
+    /**
+     * Everytime the user switches to another radio button,
+     * we want to disable everything and only enable the inputs
+     * we need
+     */
     this.radioSub = this.radioCtrl.valueChanges.pipe(
       startWith(this.setRadioButton()),
       tap(value => {
@@ -91,11 +95,14 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
           this.periodCtrl.enable();
           this.toggleDurationPeriod('last');
           this.paymentSchedule.last().get('percentage').enable();
-          this.paymentSchedule.last().get('date').get('start').enable();
-          this.paymentSchedule.last().get('date').get('floatingStart').enable();
+          if (this.periodCtrl.value) {
+            this.paymentSchedule.last().get('date').get('start').enable();
+          } else {
+            this.paymentSchedule.last().get('date').get('floatingStart').enable();
+          }
         } else if (value === 'event') {
           this.disableAll();
-          this.updateForm('event')
+          this.updateFormExceptEventForm()
         } else {
           this.disableAll();
         }
@@ -133,14 +140,26 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
    * @param event event value from toggle button
    * @param type from where the functino was called
    */
-  public updateState(event: MatSlideToggleChange, type: 'start' | 'period') {
+  public updateState(event: MatSlideToggleChange, type: 'start' | 'event') {
+    const floatingStartForm = this.paymentSchedule.last().get('date').get('floatingStart');
+    const startForm = this.paymentSchedule.last().get('date').get('start');
     // We need a type here otherwise we get a recursion
     if (type === 'start') {
       this.periodCtrl.setValue(event.checked);
       this.eventCtrl.setValue(!this.eventCtrl.value);
+      if (event.checked) {
+        startForm.enable(), floatingStartForm.disable()
+      } else {
+        startForm.disable(), floatingStartForm.enable()
+      }
     } else {
       this.periodCtrl.setValue(!this.periodCtrl.value);
       this.eventCtrl.setValue(event.checked);
+      if (event.checked) {
+        floatingStartForm.enable(), startForm.disable()
+      } else {
+        floatingStartForm.disable(), startForm.enable()
+      }
     }
   }
 
@@ -148,8 +167,8 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
    * @description adds a payment schedule array
    */
   public addPayment() {
-    this.updateForm('event');
-    this.paymentSchedule.add()
+    this.paymentSchedule.add();
+    this.updateFormExceptEventForm();
   }
 
   /**
@@ -165,9 +184,11 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
    */
   public resetVersionForm() {
     const index = this.paymentSchedule.controls.length;
-    for (let i = 0; i < index; i++) {
+    for (let i = 0; i < index - 2; i++) {
       this.removePayment(i);
     }
+    this.disableAll();
+    this.radioCtrl.reset();
     this.form.reset();
   }
 
@@ -183,17 +204,7 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
     }
     return length < index + 2 ? false : true;
   }
-
-  /**
-   * @description https://angular.io/api/common/NgForOf#properties
-   * @param index index of current iteration
-   * @param form form from current index
-   */
-  public trackBy(index: number, form: ContractVersionForm) {
-    return index;
-  }
-
-
+  
   /**
    * @description helper function, disables all inputs and buttons
    */
@@ -272,8 +283,10 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
     }
   }
 
-
-  private updateForm(type: 'event') {
+  /**
+   * @description function that renders the view
+   */
+  private updateFormExceptEventForm() {
     this.disableAll();
     const index = this.paymentSchedule.controls.length - 1;
     for (let i = 0; i < index; i++) {
