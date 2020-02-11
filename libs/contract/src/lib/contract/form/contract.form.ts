@@ -87,7 +87,7 @@ function createContractControls(contract: Partial<Contract>) {
 type ContractControl = ReturnType<typeof createContractControls>;
 
 @Injectable()
-export class ContractForm extends FormEntity<ContractControl> {
+export class ContractForm extends FormEntity<ContractControl, Contract> {
   constructor() {
     super(createContractControls({}));
   }

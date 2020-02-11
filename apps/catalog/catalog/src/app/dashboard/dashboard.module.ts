@@ -88,7 +88,6 @@ const routes: Routes = [
   {
     path: 'tunnel',
     canActivate: [TunnelGuard],
-    canDeactivate: [TunnelGuard],
     children: [{
       path: 'movie',
       children: [{

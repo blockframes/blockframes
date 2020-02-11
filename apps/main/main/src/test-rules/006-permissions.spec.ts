@@ -47,7 +47,7 @@ describe('permission table', () => {
     await expect(orgRef.delete()).toDeny();
   });
 
-  test.skip('deny a user from another org to give them auth on something owned by another org', async () => {
+  test('deny a user from another org to give them auth on something owned by another org', async () => {
     // R003: a user can give themselves a permission for a document owned by another org.
     const db = await setup(userTom, mockData);
     const orgRef = db.doc(
@@ -91,6 +91,17 @@ describe('permission table', () => {
     await expect(permDoc.set({ id: 'newId', set: true })).toAllow();
     await expect(permDoc.get()).toAllow();
     await expect(permDoc.update({ updated: true })).toAllow();
+    await expect(permDoc.delete()).toDeny();
+  });
+
+  test('disallow users to access the docsIndex', async () => {
+    const db = await setup(userMarie, mockData);
+    const permDoc = db.doc(`docsIndex/${contractAznavour.id}`);
+
+    await expect(permDoc.set({ id: 'wrongId', set: true })).toDeny();
+    await expect(permDoc.set({ id: 'newId', set: true })).toDeny();
+    await expect(permDoc.get()).toDeny();
+    await expect(permDoc.update({ updated: true })).toDeny();
     await expect(permDoc.delete()).toDeny();
   });
 

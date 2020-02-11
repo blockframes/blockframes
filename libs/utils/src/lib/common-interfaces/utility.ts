@@ -1,8 +1,10 @@
+import { TerritoriesSlug } from "@blockframes/utils/static-model";
+
 export interface Location {
   street: string;
   zipCode: string;
   city: string;
-  country: string;
+  country: TerritoriesSlug;
   region?: string;
   phoneNumber: string;
 }
@@ -12,6 +14,7 @@ export interface BankAccount {
   IBAN: string;
   BIC: string;
   name: string;
+  holderName: string;
 }
 
 /** A factory function that creates an Address/Location */
@@ -34,6 +37,7 @@ export function createBankAccount(params: Partial<BankAccount> = {}): BankAccoun
     IBAN: '',
     BIC: '',
     name: '',
+    holderName: '',
     ...params
   };
 }

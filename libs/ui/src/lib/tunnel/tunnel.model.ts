@@ -1,3 +1,5 @@
+import { Observable } from "rxjs";
+
 export interface TunnelRoute {
   path: string;
   label: string;
@@ -14,4 +16,8 @@ export interface TunnelStepData {
   index: number;
   length: number;
   time?: number;
+}
+
+export interface TunnelRoot {
+  confirmExit: () => Observable<boolean>;
 }
