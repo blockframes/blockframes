@@ -9,7 +9,7 @@ import { ContractService } from '@blockframes/contract/contract/+state/contract.
   templateUrl: './movies.component.html',
   styleUrls: ['./movies.component.scss']
 })
-export class MovieComponent implements OnInit {
+export class MoviesComponent implements OnInit {
   public versionColumns = {
     'id': 'Id',
     'main.internalRef': 'Internal Ref',
@@ -19,7 +19,8 @@ export class MovieComponent implements OnInit {
     'main.storeConfig.status': 'Status',
     'main.storeConfig.storeType': 'Store type',
     'distributionDealsInfo': 'Distribution deals',
-    'contractsInfo': 'Contracts'
+    'contractsInfo': 'Contracts',
+    'edit': 'Edit',
   };
 
   public initialColumns: string[] = [
@@ -32,6 +33,7 @@ export class MovieComponent implements OnInit {
     'main.storeConfig.storeType',
     'distributionDealsInfo',
     'contractsInfo',
+    'edit',
   ];
   public rows: any[] = [];
   constructor(
@@ -45,16 +47,26 @@ export class MovieComponent implements OnInit {
 
     const promises = movies.map(async m => {
       const row = cleanModel({...m}) as any;
+
+      // We add distribution deals infos to the row
       const distributionDeals = await this.distributionDealService.getMovieDistributionDeals(m.id);
       row.distributionDealsInfo =  { 
         link: `/c/o/admin/dashboard/deals/${m.id}`,
         count: distributionDeals.length
       };
+
+      // We add contracts infos to the row
       const contract = await this.contractService.getMovieContracts(m.id);
       row.contractsInfo =  { 
         link: `/c/o/admin/dashboard/contracts/${m.id}`,
         count: contract.length
       };
+
+      // Edit link
+      row.edit = {
+        id: m.id,
+        link: `/c/o/admin/dashboard/movie/${m.id}`,
+      }
 
       return row;
     })

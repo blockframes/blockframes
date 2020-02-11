@@ -11,22 +11,24 @@ import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filte
 
 // Components
 import { OverviewComponent } from './pages/overview/overview.component';
-import { MovieComponent } from './pages/movies/movies.component';
+import { MoviesComponent } from './pages/movies/movies.component';
 import { DistributionDealsComponent } from './pages/distribution-deals/distribution-deals.component';
 import { ContractsComponent } from './pages/contracts/contracts.component';
 import { OrganizationsComponent } from './pages/organizations/organizations.component';
 import { OrganizationComponent } from './pages/organization/organization.component';
+import { MovieComponent } from './pages/movie/movie.component';
 
 export const dashboardRoutes: Routes = [
   { path: '', redirectTo: 'overview', pathMatch: 'full' },
   { path: 'overview', component: OverviewComponent },
-  { path: 'movies', component: MovieComponent },
+  { path: 'movies', component: MoviesComponent },
   { path: 'deals', component: DistributionDealsComponent },
   { path: 'deals/:movieId', component: DistributionDealsComponent },
   { path: 'contracts', component: ContractsComponent },
   { path: 'contracts/:movieId', component: ContractsComponent },
   { path: 'organizations', component: OrganizationsComponent },
   { path: 'organization/:orgId', component: OrganizationComponent },
+  { path: 'movie/:movieId', component: MovieComponent },
 ];
 @NgModule({
   imports: [
@@ -46,11 +48,12 @@ export const dashboardRoutes: Routes = [
   ],
   declarations: [
     OverviewComponent,
-    MovieComponent,
+    MoviesComponent,
     DistributionDealsComponent,
     ContractsComponent,
     OrganizationsComponent,
     OrganizationComponent,
+    MovieComponent,
   ],
 })
 export class DashboardModule {}

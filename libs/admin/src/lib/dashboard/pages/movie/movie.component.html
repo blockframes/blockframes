@@ -1,0 +1,33 @@
+<h1><a routerLink="/c/o/admin/dashboard/">Administration panel</a> > Movie > {{ movieId }} </h1>
+
+<ng-container *ngIf="movieForm">
+  <form [formGroup]="movieForm" fxLayout="column">
+    <div>
+      <mat-form-field appearance="outline">
+        <mat-label>Movie Store Status</mat-label>
+        <mat-select formControlName="storeStatus" required>
+          <mat-option *ngFor="let status of storeStatuses" [value]="status">
+            {{ status }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field appearance="outline">
+        <mat-label>Movie Store Type</mat-label>
+        <mat-select formControlName="storeType" required>
+          <mat-option *ngFor="let status of storeTypes" [value]="status">
+            {{ status }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <mat-card-actions align="end">
+      <button type="submit" mat-raised-button class="main-btn" (click)="update()">Update</button>
+    </mat-card-actions>
+  </form>
+</ng-container>
+
+
+
+
