@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { MovieFestivalPrizesForm } from './festival-prizes.form';
-import { PremiereType } from '@blockframes/movie/movie+state/movie.firestore';
+import { PremiereType } from '@blockframes/movie/movie/+state/movie.firestore';
 
 
 @Component({

@@ -1,6 +1,6 @@
 import { Component, AfterViewInit, ViewChild, ElementRef, ChangeDetectionStrategy, ChangeDetectorRef, NgZone, Input } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Movie } from '@blockframes/movie/movie+state';
+import { Movie } from '@blockframes/movie/movie/+state';
 import { geoJSON, GeoJSON, Layer } from 'leaflet';
 import { getTerritorySlugFromGeoJson, getTerritoryLabelFromGeoJson } from '@blockframes/utils/static-model/territories-ISO-3166';
 import { ISO3166TERRITORIES } from '@blockframes/utils/static-model/territories-ISO-3166';

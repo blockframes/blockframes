@@ -19,7 +19,7 @@ export class BannerComponent implements OnInit {
   @Input() set movie(movie: Movie) {
     this.poster = movie.promotionalElements.poster[0] && movie.promotionalElements.poster[0].media;
     this.title = movie.main.title;
-    this.director = movie.main.directors[0] && movie.main.directors[0].displayName;
+    this.director = movie.main.directors.map(d => `${d.firstName} ${d.lastName}`).join(', ');
     this.countries = movie.main.originCountries.join(', ');
     this.date = movie.main.productionYear;
   }
