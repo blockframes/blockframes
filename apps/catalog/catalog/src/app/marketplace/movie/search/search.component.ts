@@ -61,7 +61,7 @@ import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.que
 import { MovieDocumentWithDates } from '@blockframes/movie/movie/+state/movie.firestore';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state/distribution-deal.service';
 import { NumberRange } from '@blockframes/utils/common-interfaces/range';
-import { BUDGET_LIST } from '@blockframes/movie/movieform/budget/budget.form';
+import { BUDGET_LIST } from '@blockframes/movie/movie/form/budget/budget.form';
 
 @Component({
   selector: 'catalog-movie-search',

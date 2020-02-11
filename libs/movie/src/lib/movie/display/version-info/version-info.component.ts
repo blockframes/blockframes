@@ -1,6 +1,6 @@
 import { MovieLanguageSpecification } from './../../+state/movie.firestore';
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import { createMovieLanguageSpecification } from '@blockframes/movie/movie+state/movie.model';
+import { createMovieLanguageSpecification } from '@blockframes/movie/movie/+state/movie.model';
 
 @Component({
   selector: '[info] movie-display-version-info',

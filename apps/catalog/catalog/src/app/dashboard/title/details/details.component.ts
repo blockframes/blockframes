@@ -6,8 +6,8 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { MovieQuery } from '@blockframes/movie/movie+state/movie.query';
-import { MovieForm } from '@blockframes/movie/movieform/movie.form';
+import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
+import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
 import { Subscription } from 'rxjs/internal/Subscription';
 
 @Component({

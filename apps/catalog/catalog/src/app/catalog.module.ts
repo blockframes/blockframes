@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { MovieCollectionGuard } from '@blockframes/movie/movieguards/movie-collection.guard';
+import { MovieCollectionGuard } from '@blockframes/movie/movie/guards/movie-collection.guard';
 import { createRoutes } from '@blockframes/utils/routes';
 import { CatalogAppGuard } from './guards/catalog-app.guard';
 

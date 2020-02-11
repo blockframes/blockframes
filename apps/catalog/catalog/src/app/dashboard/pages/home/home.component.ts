@@ -1,8 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
 import { Observable } from 'rxjs';
-import { MovieAnalytics } from '@blockframes/movie/movie+state/movie.firestore';
-import { MovieService } from '@blockframes/movie/movie+state/movie.service';
+import { MovieAnalytics } from '@blockframes/movie/movie/+state/movie.firestore';
+import { MovieService } from '@blockframes/movie/movie/+state/movie.service';
 import { map, switchMap } from 'rxjs/operators';
 
 const eventList = ['movieViews', 'addedToWishlist', 'promoReelOpened'];

@@ -22,7 +22,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { FormEntity, yearValidators, numberRangeValidator } from '@blockframes/utils';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 import { MovieLanguageSpecification } from '@blockframes/movie/movie/+state/movie.firestore';
-import { createMovieLanguageSpecification } from '@blockframes/movie/movie+state/movie.model';
+import { createMovieLanguageSpecification } from '@blockframes/movie/movie/+state/movie.model';
 import { FormStaticArray, FormList, FormStaticValue } from '@blockframes/utils/form';
 import { NumberRange } from '@blockframes/utils/common-interfaces';
 

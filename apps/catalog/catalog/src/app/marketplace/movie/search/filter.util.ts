@@ -5,7 +5,7 @@ import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state/d
 import { ExtractSlug } from '@blockframes/utils/static-model/staticModels';
 import { NumberRange } from '@blockframes/utils/common-interfaces';
 import { LanguagesLabel } from '@blockframes/utils/static-model/types';
-import { MovieLanguageSpecification } from '@blockframes/movie/movie+state/movie.firestore';
+import { MovieLanguageSpecification } from '@blockframes/movie/movie/+state/movie.firestore';
 
 function productionYearBetween(movie: Movie, range: { from: number; to: number }): boolean {
   if (!range || !(range.from && range.to)) {
