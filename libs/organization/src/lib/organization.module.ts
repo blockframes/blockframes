@@ -37,15 +37,9 @@ import { MatTooltipModule } from '@angular/material';
 
 // Components
 import { OrganizationDisplayComponent } from './components/organization-display/organization-display.component';
-import { MemberAddComponent } from './components/member-add/member-add.component';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
-import { MemberRequestComponent } from './components/member-request/member-request.component';
-import { MemberPendingComponent } from './components/member-pending/member-pending.component';
 
 // Pages
-import { MemberRepertoryComponent } from './components/member-repertory/member-repertory.component';
-// import { OrganizationEditableComponent } from './pages/organization-editable/organization-editable.component';
-// import { MemberEditableComponent } from './pages/member-editable/member-editable.component';
 import { ActivateDaoComponent } from './pages/activate-dao/activate-dao.component';
 
 import { MemberGuard } from './member/guard/member.guard';
@@ -57,13 +51,6 @@ export const organizationRoutes: Routes = [
     children: [
       { path: '', redirectTo: 'view', pathMatch: 'full' },
       { path: 'view', loadChildren: () => import('./pages/view/view.module').then(m => m.OrganizationViewModule)},
-      // { path: 'edit', component: OrganizationEditableComponent },
-      // {
-      //   path: 'members',
-      //   canActivate: [MemberGuard],
-      //   canDeactivate: [MemberGuard],
-      //   component: MemberEditableComponent
-      // },
       {
         path: 'activate',
         canActivate: [MemberGuard],
@@ -122,13 +109,7 @@ export const organizationRoutes: Routes = [
     RouterModule.forChild(organizationRoutes)
   ],
   declarations: [
-    MemberRequestComponent,
-    MemberPendingComponent,
     OrganizationDisplayComponent,
-    // MemberEditableComponent,
-    MemberRepertoryComponent,
-    MemberAddComponent,
-    // OrganizationEditableComponent,
     ActivateDaoComponent
   ]
 })
