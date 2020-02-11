@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
@@ -9,10 +9,11 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 @Component({
   selector: 'organization-edit',
   templateUrl: './organization.component.html',
-  styleUrls: ['./organization.component.scss']
+  styleUrls: ['./organization.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationComponent implements OnInit, OnDestroy {
-  public organizationForm = new OrganizationForm(this.service);
+  public organizationForm;
   public organization$: Observable<Organization>;
   public sub: Subscription;
   
@@ -23,9 +24,12 @@ export class OrganizationComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    this.sub = this.query
-      .selectActive()
-      .subscribe(org => this.organizationForm.patchValue(org));
+    // this.sub = this.query
+    //   .selectActive()
+    //   .subscribe(org => this.organizationForm.patchAllValue(org));
+    const organization = this.query.getActive();
+    this.organizationForm = new OrganizationForm(this.service, organization);
+
   }
 
   public update() {

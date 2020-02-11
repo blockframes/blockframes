@@ -3,6 +3,7 @@ import { FormEntity, UniqueOrgName, FormList } from "@blockframes/utils";
 import { createOrganization, Organization, OrganizationService } from "../+state";
 import { AddressSet, createAddressSet } from "@blockframes/organization/types";
 import { Location, createLocation, BankAccount, createBankAccount } from '@blockframes/utils/common-interfaces/utility';
+import { FormStaticValue } from '@blockframes/utils/form';
 
 export class OrganizationAddressesForm extends FormEntity<OrganizationAddressesControl>{
   constructor(addressSet: AddressSet) {
@@ -20,7 +21,7 @@ function createLoactionControls(location: Partial<Location> = {}) {
     street: new FormControl(entity.street),
     zipCode: new FormControl(entity.zipCode),
     city: new FormControl(entity.city),
-    country: new FormControl(entity.country),
+    country: new FormStaticValue(entity.country, 'TERRITORIES'),
     phoneNumber: new FormControl(entity.phoneNumber),
     region: new FormControl(entity.phoneNumber),
   }
@@ -72,7 +73,7 @@ function createOrganizationAddressesControls(addresses: Partial<AddressSet> = {}
 type OrganizationAddressesControl = ReturnType<typeof createOrganizationAddressesControls>
 
 
-function createOrganizationBankAccountFormControl(account: Partial<BankAccount>) {
+function createOrganizationBankAccountFormControl(account?: Partial<BankAccount>) {
   const entity = createBankAccount(account);
   return {
     address: new AddressForm(entity.address),
@@ -86,7 +87,7 @@ function createOrganizationBankAccountFormControl(account: Partial<BankAccount>)
 export type OrganizationBankAccountFormControl = ReturnType<typeof createOrganizationBankAccountFormControl>;
 
 export class OrganizationBankAccountForm extends FormEntity<OrganizationBankAccountFormControl> {
-  constructor(account: Partial<BankAccount>) {
+  constructor(account?: Partial<BankAccount>) {
     super(createOrganizationBankAccountFormControl(account));
   }
 }

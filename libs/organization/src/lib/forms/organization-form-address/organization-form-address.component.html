@@ -16,10 +16,7 @@
       <input matInput placeholder="Zip code" aria-label="zip code" formControlName="zipCode" />
     </mat-form-field>
   </div>
-  <mat-form-field appearance="outline">
-    <mat-label>Country</mat-label>
-    <input matInput placeholder="Country" aria-label="country" formControlName="country" />
-  </mat-form-field>
+  <form-country [form]="form.get('country')"></form-country>
   <mat-form-field appearance="outline">
     <mat-label>Company phone number</mat-label>
     <input matInput placeholder="Company phone number" aria-label="Company phone number"
