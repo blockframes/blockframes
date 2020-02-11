@@ -12,7 +12,7 @@ export class DetailsSaleComponent implements OnInit {
   constructor(private form: ContractForm) { }
 
   ngOnInit() {
-    if (this.parties.controls.length >= 1) {
+    if (this.parties.controls.length <= 1) {
       this.parties.add({ party: { role: 'undefined' } })
     }
   }

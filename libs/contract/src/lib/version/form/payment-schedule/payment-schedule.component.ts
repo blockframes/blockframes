@@ -1,9 +1,18 @@
+import { toDate } from '@blockframes/utils/helpers';
 import { ContractVersionForm } from '@blockframes/contract/version/form/version.form';
 import { startWith, tap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { ContractVersionPaymentScheduleForm } from './payment-schedule.form';
-import { Component, OnInit, ChangeDetectionStrategy, Input, OnDestroy, AfterViewInit, } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  Input, OnDestroy,
+  QueryList,
+  ViewChildren,
+  AfterViewInit,
+} from '@angular/core';
 import { MovieEvent, PaymentEvent, TimeUnit, TemporalityUnit } from '@blockframes/utils/common-interfaces/terms'
 import { FormList } from '@blockframes/utils/form/forms/list.form';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
@@ -15,9 +24,10 @@ import { PaymentScheduleRaw } from '@blockframes/utils/common-interfaces';
   styleUrls: ['payment-schedule.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PaymentScheduleComponent implements OnInit, OnDestroy {
+export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewInit {
   @Input() form: FormList<any, ContractVersionForm>;
 
+  // concated enums
   public triggerEvents = Object.assign({}, MovieEvent, PaymentEvent)
 
   public paymentEvents = PaymentEvent;
@@ -28,53 +38,96 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy {
 
   public eventCtrl: FormControl = new FormControl(true);
 
-  public radioCtrl: FormControl = new FormControl('default');
+  public radioCtrl: FormControl = new FormControl('');
 
   private periodSub: Subscription;
 
   private eventSub: Subscription;
 
+  private radioSub: Subscription;
+
+  // Inputs from event section
+  @ViewChildren('eventButtons') eventButtons: QueryList<HTMLButtonElement>
+
   ngOnInit() {
-    // If start is defined we want to change the toggle button state
-    if (!this.findStartValue(this.paymentSchedule)) {
-      this.periodCtrl.setValue(true);
-      this.eventCtrl.setValue(false);
+    /**
+     * We want to have two paymen schedules form groups from the begining,
+     * so we can disable or enable only the inputs we want.
+     */
+    if (this.paymentSchedule.controls.length <= 1) {
+      this.paymentSchedule.add()
     }
     this.periodSub = this.periodCtrl.valueChanges
       .pipe(
-        startWith(this.paymentSchedule),
+        startWith(this.findStartValue(this.paymentSchedule)),
         tap(value => this.toggleForm('start', value))
       )
       .subscribe();
     this.eventSub = this.eventCtrl.valueChanges
       .pipe(
-        startWith(this.findStartValue(this.paymentSchedule)),
+        startWith(!this.findStartValue(this.paymentSchedule)),
         tap(value => this.toggleForm('floatingStart', value))
       )
       .subscribe();
+    // If we got data from the DB, convert it into date
+    this.form.first().get('paymentSchedule').controls.forEach(control => {
+      const start = control.get('date').get('start');
+      start.setValue(toDate(start.value));
+    })
+    this.form.valueChanges.subscribe(console.log);
+  }
+
+  ngAfterViewInit() {
+    this.radioSub = this.radioCtrl.valueChanges.pipe(
+      startWith(this.setRadioButton()),
+      tap(value => {
+        if (value === 'other') {
+          this.disableAll();
+          this.customPaymentSchedule.enable();
+          this.toggleDurationPeriod('first');
+        } else if (value === 'periodic') {
+          this.disableAll();
+          this.eventCtrl.enable();
+          this.periodCtrl.enable();
+          this.toggleDurationPeriod('last');
+          this.paymentSchedule.last().get('percentage').enable();
+          this.paymentSchedule.last().get('date').get('start').enable();
+          this.paymentSchedule.last().get('date').get('floatingStart').enable();
+        } else if (value === 'event') {
+          this.disableAll();
+          this.updateForm('event')
+        } else {
+          this.disableAll();
+        }
+      })
+    ).subscribe()
   }
 
   get paymentTermFloatingStart() {
-    return this.form.at(0).get('paymentTerm').get('floatingStart');
+    return this.form.first().get('paymentTerm').get('floatingStart');
   }
 
   get customPaymentSchedule() {
-    return this.form.at(0).get('customPaymentSchedule');
+    return this.form.first().get('customPaymentSchedule');
   }
 
   get paymentSchedule() {
-    return this.form.at(0).get('paymentSchedule');
+    return this.form.first().get('paymentSchedule');
   }
 
   /**
-   * @description enables or disables a form
-   * @param formName name of the control
-   * @param value for determine what should happen
+   * @description checks if contract is new or a draft by determine the default value is set
    */
-  private toggleForm(formName: string, value: boolean) {
-    const form = this.paymentSchedule.at(0).get('date').get(formName as 'start' | 'floatingStart');
-    value ? form.enable() : form.disable();
+  get hasTemporallyValue(): boolean {
+    const tempValue = []
+    for (const control of this.paymentSchedule.controls) {
+      if (control.get('date').get('floatingDuration').get('temporality').value) {
+        tempValue.push(control.get('date').get('floatingDuration').get('temporality').value)
+      }
+    }
+    return tempValue.includes(TemporalityUnit.every);
   }
+
   /**paymentTerm
    * @description when one toggle button is set, unset the other one for the UI
    * @param event event value from toggle button
@@ -92,23 +145,10 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @description helper function. Looks up a value and determines whether or not to toggle a button
-   * @param form to get the value from
-   */
-  private findStartValue(form: FormList<PaymentScheduleRaw<Date>, ContractVersionPaymentScheduleForm>): boolean {
-    const hasStartDate = [];
-    for (const control of form.controls) {
-      if (control.get('date').get('start').value) {
-        hasStartDate.push(control.get('date').get('start').value)
-      }
-    }
-    return !!hasStartDate
-  }
-
-  /**
    * @description adds a payment schedule array
    */
   public addPayment() {
+    this.updateForm('event');
     this.paymentSchedule.add()
   }
 
@@ -120,21 +160,136 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy {
     this.paymentSchedule.removeAt(index)
   }
 
+  /**
+   * @description reset the form and start over
+   */
+  public resetVersionForm() {
+    const index = this.paymentSchedule.controls.length;
+    for (let i = 0; i < index; i++) {
+      this.removePayment(i);
+    }
+    this.form.reset();
+  }
+
+  /**
+   * @description helper function to determine if remove button should be shown
+   * @param index of current iteration
+   * @param isFirst if first element, dont show remove button
+   */
+  public showRemoveButton(index: number, isFirst: boolean): boolean {
+    const length = this.paymentSchedule.controls.length;
+    if (isFirst) {
+      return false;
+    }
+    return length < index + 2 ? false : true;
+  }
+
+  /**
+   * @description https://angular.io/api/common/NgForOf#properties
+   * @param index index of current iteration
+   * @param form form from current index
+   */
+  public trackBy(index: number, form: ContractVersionForm) {
+    return index;
+  }
+
+
+  /**
+   * @description helper function, disables all inputs and buttons
+   */
+  private disableAll() {
+    this.customPaymentSchedule.disable();
+    this.eventCtrl.disable();
+    this.periodCtrl.disable();
+    this.eventButtons.forEach(button => button.disabled = true)
+    this.paymentSchedule.controls.forEach(control => {
+      const date = control.get('date');
+      control.get('percentage').disable()
+      date.get('floatingStart').disable();
+      date.get('floatingDuration').get('unit').disable();
+      date.get('floatingDuration').get('duration').disable();
+      date.get('start').disable()
+    });
+  }
+
+  /**
+   * @description helper function to enable the paymentSchedule form controls
+   * @param position specifies where to enable the inputs
+   */
+  private toggleDurationPeriod(position: 'last' | 'first') {
+    const last = this.paymentSchedule.last().get('date').get('floatingDuration');
+    const first = this.paymentSchedule.first().get('date').get('floatingDuration');
+    if (position === 'last') {
+      last.get('duration').enable();
+      last.get('unit').enable();
+    } else {
+      first.get('duration').enable();
+      first.get('unit').enable();
+    }
+  }
+
+  /**
+   * @description enables or disables a form
+   * @param formName name of the control
+   * @param value for determine what should happen
+   */
+  private toggleForm(formName: string, value: boolean) {
+    const form = this.paymentSchedule.first().get('date').get(formName as 'start' | 'floatingStart');
+    value ? form.enable() : form.disable();
+  }
+
+  /**
+   * @description helper function. Looks up a value and determines whether or not to toggle a button
+   * @param form to get the value from
+   */
+  private findStartValue(form: FormList<PaymentScheduleRaw<Date>, ContractVersionPaymentScheduleForm>): boolean {
+    const hasStartDate = [];
+    for (const control of form.controls) {
+      if (control.get('date').get('start').value) {
+        hasStartDate.push(control.get('date').get('start').value)
+      }
+    }
+    return !!hasStartDate.length;
+  }
+
+  /**
+   * @description checks which button should be active initiale
+   * @param form 
+   */
+  private setRadioButton() {
+    if (this.form.first().get('customPaymentSchedule').value) {
+      this.radioCtrl.setValue('other');
+      return 'other';
+    } else if (this.hasTemporallyValue) {
+      this.radioCtrl.setValue('periodic');
+      return 'periodic';
+    } else if (this.paymentSchedule.first().get('percentage').value) {
+      this.radioCtrl.setValue('event');
+      return 'event';
+    } else {
+      this.radioCtrl.reset('')
+      return '';
+    }
+  }
+
+
+  private updateForm(type: 'event') {
+    this.disableAll();
+    const index = this.paymentSchedule.controls.length - 1;
+    for (let i = 0; i < index; i++) {
+      this.paymentSchedule.at(i).get('percentage').enable();
+      this.paymentSchedule.at(i).get('date').get('floatingStart').enable();
+    }
+    this.eventButtons.forEach((button: any) => button.disabled = false)
+  }
+
   ngOnDestroy() {
     this.eventSub.unsubscribe();
     this.periodSub.unsubscribe();
+    this.radioSub.unsubscribe();
     // If user checked radio button periodic, we want to update the form and set a default value
     if (this.radioCtrl.value === 'periodic') {
-      const state = []
-      this.form.controls.forEach(control => {
-        control.get('paymentSchedule').controls.forEach(payment => {
-          if (payment.get('date').get('floatingDuration').get('duration').value) {
-            payment.get('date').get('floatingDuration').get('temporality').setValue(TemporalityUnit.every)
-            state.push(payment.value)
-          }
-        })
-      })
-      this.paymentSchedule.patchAllValue(state);
+      this.paymentSchedule.last().get('date').get('floatingDuration').get('temporality').setValue(TemporalityUnit.every)
     }
   }
 }
