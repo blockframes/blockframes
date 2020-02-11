@@ -477,7 +477,6 @@ const models = {
     { 'slug': 'undefined', 'label': 'Undefined role' },
     { 'slug': 'service-provider', 'label': 'Service provider' },
     { 'slug': 'licensor', 'label': 'Licensor' },
-    { 'slug': 'sub-licensor', 'label': 'Sub Licensor' },
     { 'slug': 'licensee', 'label': 'Licensee' },
     { 'slug': 'seller', 'label': 'Seller' },
     { 'slug': 'lender', 'label': 'Lender' },

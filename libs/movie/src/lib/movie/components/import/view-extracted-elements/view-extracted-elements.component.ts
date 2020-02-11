@@ -20,14 +20,13 @@ import {
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { formatCredits } from '@blockframes/utils/spreadsheet/format';
 import { ImageUploader, cleanModel } from '@blockframes/utils';
-import { SSF$Date } from 'ssf/types';
 import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
 import { SSF } from 'xlsx';
 import { MovieLanguageTypes, PremiereType } from '@blockframes/movie/movie/+state/movie.firestore';
 import { createStakeholder } from '@blockframes/utils/common-interfaces/identity';
 import { DistributionDeal, createDistributionDeal, createHoldback } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
 import { createContractPartyDetail, createContractTitleDetail, Contract, initContractWithVersion, ContractWithLastVersion, getContractParties } from '@blockframes/contract/contract/+state/contract.model';
-import { ContractStatus, ContractTitleDetail } from '@blockframes/contract/contract/+state/contract.firestore';
+import { ContractStatus, ContractTitleDetail, ContractType } from '@blockframes/contract/contract/+state/contract.firestore';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state/distribution-deal.service';
 import { createExpense } from '@blockframes/utils/common-interfaces/price';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
@@ -136,6 +135,7 @@ enum SpreadSheetContract {
   licensee,
   childRoles,
   contractId,
+  contractType,
   parentContractIds,
   childContractIds,
   status,
@@ -328,7 +328,20 @@ export class ViewExtractedElementsComponent {
             const stakeHolderParts = p.split(this.subSeparator);
             const stakeHolder = createStakeholder({ displayName: stakeHolderParts[0].trim() });
             const role = getCodeIfExists('STAKEHOLDER_ROLES', stakeHolderParts[1] as ExtractCode<'STAKEHOLDER_ROLES'>);
-
+            if (stakeHolderParts[2]) {
+              const country = getCodeIfExists('TERRITORIES', stakeHolderParts[2] as ExtractCode<'TERRITORIES'>);
+              if (country) {
+                stakeHolder.countries.push(country);
+              } else {
+                importErrors.errors.push({
+                  type: 'warning',
+                  field: 'movie.main.stakeholders',
+                  name: 'Stakeholders',
+                  reason: `${stakeHolderParts[2]} not found in territories list`,
+                  hint: 'Edit corresponding sheet field.'
+                });
+              }
+            }
             if (role) {
               switch (role) {
                 case 'broadcaster-coproducer':
@@ -420,7 +433,28 @@ export class ViewExtractedElementsComponent {
           spreadSheetRow[SpreadSheetMovie.rating].split(this.separator).forEach((r: string) => {
             const ratingParts = r.split(this.subSeparator);
             const country = getCodeIfExists('TERRITORIES', ratingParts[0] as ExtractCode<'TERRITORIES'>);
-            const movieRating = createMovieRating({ value: ratingParts[1] });
+            const movieRating = createMovieRating({ value: ratingParts[1].trim() });
+
+            if(ratingParts[2]) { // System
+              const system = getCodeIfExists('RATING', ratingParts[2] as ExtractCode<'RATING'>);
+
+              if(system) {
+                movieRating.system = system;
+              } else {
+                importErrors.errors.push({
+                  type: 'warning',
+                  field: 'rating',
+                  name: 'Movie rating',
+                  reason: `Could not parse rating : ${ratingParts[2].trim().toLowerCase()}`,
+                  hint: 'Edit corresponding sheet field.'
+                });
+              }
+            }
+
+            if(ratingParts[3]) { // Reason
+              movieRating.reason = ratingParts[3].trim();
+            }
+
             if (country) {
               movieRating.country = country;
             }
@@ -1753,6 +1787,29 @@ export class ViewExtractedElementsComponent {
                   hint: 'Edit corresponding sheet field.'
                 });
               }
+            });
+          }
+
+          // CONTRACT TYPE
+          if (spreadSheetRow[SpreadSheetContract.contractType]) {
+            if (Object.values(ContractType).includes(spreadSheetRow[SpreadSheetContract.contractType].trim().toLowerCase())) {
+              contract.doc.type = spreadSheetRow[SpreadSheetContract.contractType].trim().toLowerCase();
+            } else {
+              importErrors.errors.push({
+                type: 'warning',
+                field: 'contract.type',
+                name: 'Contract Type',
+                reason: `Could not parse contract type : ${spreadSheetRow[SpreadSheetContract.contractType].trim().toLowerCase()}`,
+                hint: 'Edit corresponding sheet field.'
+              });
+            }
+          } else {
+            importErrors.errors.push({
+              type: 'warning',
+              field: 'contract.type',
+              name: 'Contract Type',
+              reason: 'Optional field is missing',
+              hint: 'Edit corresponding sheet field.'
             });
           }
 

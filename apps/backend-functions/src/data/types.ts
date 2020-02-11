@@ -3,6 +3,7 @@ import { NotificationType } from '@blockframes/notification/types';
 import { PublicMovie } from '@blockframes/movie/types';
 
 export { MovieDocument, PublicMovie } from '@blockframes/movie/types';
+export { ContractDocument, PublicContractDocument, ContractVersionDocument } from '@blockframes/contract/contract/+state/contract.firestore';
 export {
   OrganizationDocument,
   OrganizationStatus,
