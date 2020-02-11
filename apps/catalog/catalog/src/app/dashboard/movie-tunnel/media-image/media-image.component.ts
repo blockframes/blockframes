@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
-import { MovieQuery } from '@blockframes/movie/movie+state/movie.query';
+import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
 @Component({
   selector: 'catalog-tunnel-media-image',
   templateUrl: './media-image.component.html',

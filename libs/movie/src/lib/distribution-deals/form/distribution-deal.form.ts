@@ -5,7 +5,7 @@ import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
 import { DistributionDealTermsForm } from './terms/terms.form';
 import { DistributionDealHoldbacksForm } from './holdbacks/holdbacks.form';
-import { MovieVersionInfoForm } from '@blockframes/movie/movieform/version-info/version-info.form';
+import { MovieVersionInfoForm } from '@blockframes/movie/movie/form/version-info/version-info.form';
 
 
 function createDistributionDealControls(deal: Partial<DistributionDeal>) {
