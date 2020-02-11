@@ -1,10 +1,10 @@
-import { Component, ChangeDetectionStrategy, Host, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Host, OnInit, OnDestroy } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MovieService, Movie } from '@blockframes/movie';
+import { MovieService, Movie, MovieStore, MovieQuery } from '@blockframes/movie';
 import { TunnelStep, TunnelConfirmComponent } from '@blockframes/ui/tunnel'
 import { ContractForm } from '../form/contract.form';
 import { ContractQuery, ContractService, ContractType } from '../+state';
-import { Observable, from, of } from 'rxjs';
+import { Observable, from, of, Subscription } from 'rxjs';
 import { startWith, map, switchMap, tap } from 'rxjs/operators';
 import { MatDialog } from '@angular/material';
 
@@ -49,7 +49,8 @@ function fillMovieSteps(movies: Movie[] = []): TunnelStep[] {
   providers: [ContractForm],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ContractTunnelComponent implements OnInit {
+export class ContractTunnelComponent implements OnInit, OnDestroy {
+  private sub: Subscription;
   public steps$: Observable<TunnelStep[]>;
   public type: ContractType;
 
@@ -59,6 +60,7 @@ export class ContractTunnelComponent implements OnInit {
     private service: ContractService,
     private query: ContractQuery,
     private movieService: MovieService,
+    private movieQuery: MovieQuery,
     private dialog: MatDialog,
   ) { }
 
@@ -66,15 +68,22 @@ export class ContractTunnelComponent implements OnInit {
     const contract = this.query.getActive();
     this.type = contract.type;
     this.form.patchAllValue(contract);
-  
-    // Dynamic steps depending of the titles in the last contract version titles
+
+    // Listen on title ids
     const titlesForm = this.form.get('versions').last().get('titles');
-    this.steps$ = titlesForm.valueChanges.pipe(
+    this.sub = titlesForm.valueChanges.pipe(
       startWith(titlesForm.value),
       map(titles => Object.keys(titles)),
-      switchMap(titleIds => this.movieService.getValue(titleIds)),
+      switchMap(titleIds => this.movieService.syncManyDocs(titleIds)),
+    ).subscribe();
+  
+    this.steps$ = this.movieQuery.selectAll().pipe(
       map(movies => fillMovieSteps(movies))
     );
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
   public save() {
