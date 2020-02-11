@@ -7,6 +7,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
 import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
+import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 
 interface CarouselSection {
   title: string;
@@ -103,5 +104,15 @@ export class MarketplaceHomeComponent implements OnInit {
   public getBanner(movie: Movie): string {
     const movieElement = movie.promotionalElements.banner;
     return movieElement && movieElement.media && movieElement.media.url;
+  }
+
+  // TODO 1880 country short code
+  public getMainInfo(movie: Movie) {
+    const { originCountries, totalRunTime, genres } = movie.main;
+    return [
+      originCountries.slice(0, 2).map(country => country.toUpperCase()).join(', '),
+      typeof totalRunTime === 'number' ? `${totalRunTime} min` : 'TBC',
+      genres.slice(0, 2).map(genre => getLabelBySlug('GENRES', genre)).join(', '),
+    ].filter(value => !!value).join(' | ');
   }
 }
