@@ -13,7 +13,7 @@
       <article [fxLayout]="layout(i)" fxLayout.lt-md="column" fxLayoutAlign="center start">
         <aside fxLayout="column" [fxLayoutAlign]="alignment(i)" fxLayoutAlign.lt-md="center center" fxLayoutGap="20px">
           <h1>{{ section.title }}</h1>
-          <h4>{{ section.subline}} </h4>
+          <p class="mat-body-2">{{ section.subline}} </p>
           <a mat-flat-button test-id="seeMore1" color="accent" routerLink="/c/o/marketplace/search">See more</a>
         </aside>
         <mat-carousel test-id="mat-carousel1" proportion="50" [hideArrows]="true" [hideIndicators]="true">
@@ -26,7 +26,7 @@
                 [routerLink]="['/c/o/marketplace', movie.id]">
                 <ng-container *ngIf="(toggle$(movie.id) | async); else alreadyAdded">
                   <button mat-icon-button (click)="removeFromWishlist(movie, $event)">
-                    <mat-icon svgIcon="heart_filled"></mat-icon>
+                    <mat-icon svgIcon="heart_fill" color="accent"></mat-icon>
                   </button>
                 </ng-container>
                 <ng-template #alreadyAdded>
@@ -35,23 +35,16 @@
                   </button>
                 </ng-template>
                 <div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="5px" class="informations">
-                  <b *ngIf="movie.main.status as status" class="status-text">{{ (status | translateSlug: 'MOVIE_STATUS').toUpperCase() }}</b>
-                  <h2>{{ movie.main.title.international }}</h2>
+                  <!-- <b *ngIf="movie.main.status as status" class="status-text">{{ (status | translateSlug: 'MOVIE_STATUS').toUpperCase() }}</b> -->
+                  <h3>{{ movie.main.title.international }}</h3>
                   <div>
                     <span *ngFor="let director of movie.main.directors; let isLast=last">
                       {{ director.firstName }} {{ director.lastName }}{{isLast ? '' : ', '}}
                     </span>
                   </div>
-                  <b>
-                    <span *ngFor="let country of movie.main.originCountries | slice:0:2; let isLast=last; let i=index">
-                      {{ country | translateSlug: 'TERRITORIES'}}{{isLast ? '' : ', '}}{{i == 1 && movie.main.originCountries.length > 2 ? ',  ' : ''}}
-                    </span>
-                    <span *ngIf="movie.main.originCountries.length > 2">... </span>
-                    <span *ngIf="movie.main.totalRunTime as time">| {{ time }} min </span>
-                    <span>| {{ movie.main.genres[0] | translateSlug: 'GENRES' }} </span>
-                  </b>
-                  <span *ngIf="movie.salesAgentDeal && movie.salesAgentDeal.salesAgent">{{ movie.salesAgentDeal.salesAgent.displayName}}</span>
-                </div>
+                    <span>{{ getMainInfo(movie) }}</span>
+                    <span *ngIf="movie.salesAgentDeal && movie.salesAgentDeal.salesAgent">{{ movie.salesAgentDeal.salesAgent.displayName}}</span>
+                  </div>
               </div>
             </mat-carousel-slide>
         </mat-carousel>
