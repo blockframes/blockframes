@@ -23,7 +23,7 @@ export function createLocation(params: Partial<Location> = {}): Location {
     street: '',
     zipCode: '',
     city: '',
-    country: null,
+    country: '',
     phoneNumber: '',
     region: '',
     ...params
