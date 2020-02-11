@@ -96,7 +96,6 @@ export class MovieAnalyticsChartComponent {
 
   getLineChartSeries(eventName: MovieAnalyticsEventName, title: MovieAnalyticsTitle) {
     const hits = this.chartData.find(chart => chart.eventName === eventName).y
-    console.log(hits)
     return [{
       name: title, 
       data: hits
