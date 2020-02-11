@@ -3,7 +3,6 @@ import {
   CertificationsLabel,
   MediasLabel,
   TerritoriesLabel,
-  GenresLabel,
   GENRES_LABEL,
   LanguagesSlug,
   GenresSlug,
@@ -24,7 +23,8 @@ import { FormEntity, yearValidators, numberRangeValidator } from '@blockframes/u
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 import { MovieLanguageSpecification } from '@blockframes/movie/movie/+state/movie.firestore';
 import { createMovieLanguageSpecification } from '@blockframes/movie/movie+state/movie.model';
-import { FormStaticArray } from '@blockframes/utils/form';
+import { FormStaticArray, FormList, FormStaticValue } from '@blockframes/utils/form';
+import { NumberRange } from '@blockframes/utils/common-interfaces';
 
 /////////////////////////
 // CatalogGenresFilter //
@@ -46,6 +46,8 @@ export interface CatalogSearch {
   certifications: CertificationsLabel[];
   medias: MediasLabel[];
   territories: TerritoriesLabel[];
+  originCountries: TerritoriesLabel[];
+  estimatedBudget: NumberRange[];
   searchbar: {
     text: string;
     type: string;
@@ -67,7 +69,9 @@ function createCatalogSearch(search: Partial<CatalogSearch>): CatalogSearch {
     certifications: [],
     medias: [],
     territories: [],
+    originCountries: [],
     searchbar: {},
+    estimatedBudget: [],
     ...search
   } as CatalogSearch;
 }
@@ -83,7 +87,8 @@ export function createLanguageControl(
   return new FormGroup({
     original: new FormControl(language.original),
     dubbed: new FormControl({ value: language.dubbed, disabled: disableDubbed }),
-    subtitle: new FormControl(language.subtitle)
+    subtitle: new FormControl(language.subtitle),
+    caption: new FormControl(language.caption)
   });
 }
 
@@ -123,7 +128,9 @@ function createCatalogSearchControl(search: CatalogSearch) {
     languages: new FormGroup(languageControl),
     certifications: new FormControl(search.certifications),
     medias: new FormControl(search.medias),
+    estimatedBudget: new FormControl(search.estimatedBudget),
     territories: new FormArray(search.territories.map(territory => new FormControl(territory))),
+    originCountries: FormList.factory(search.originCountries, country => new FormStaticValue(country, 'TERRITORIES')),
     searchbar: new FormGroup({
       text: new FormControl(''),
       type: new FormControl('')
@@ -266,5 +273,24 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
 
   removeTerritory(index: number) {
     this.get('territories').removeAt(index);
+  }
+
+  addCountry(country: TerritoriesSlug) {
+    // Check it's part of the list available
+    if (!TERRITORIES_SLUG.includes(country)) {
+      throw new Error(
+        `Country ${country} is not part of the list.`
+      );
+    }
+    // Check it's not already in the form control
+    const territoriesValue = this.get('originCountries').value;
+    if (!territoriesValue.includes(country)) {
+      this.get('originCountries').push(new FormControl(country));
+    }
+    // Else do nothing as it's already in the list
+  }
+
+  removeCountry(index: number) {
+    this.get('originCountries').removeAt(index);
   }
 }

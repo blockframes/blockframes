@@ -60,6 +60,8 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
 import { MovieDocumentWithDates } from '@blockframes/movie/movie/+state/movie.firestore';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state/distribution-deal.service';
+import { NumberRange } from '@blockframes/utils/common-interfaces/range';
+import { BUDGET_LIST } from '@blockframes/movie/movieform/budget/budget.form';
 
 @Component({
   selector: 'catalog-movie-search',
@@ -108,6 +110,7 @@ export class MarketplaceSearchComponent implements OnInit {
   /* Filter for autocompletion */
   public genresFilter$: Observable<string[]>;
   public territoriesFilter$: Observable<string[]>;
+  public countriesFilter$: Observable<string[]>;
   public languagesFilter$: Observable<string[]>;
   public salesAgentFilter$: Observable<string[]>;
   public resultFilter$: Observable<any[]>;
@@ -115,10 +118,10 @@ export class MarketplaceSearchComponent implements OnInit {
   /* Individual form controls for filtering */
   public genreControl: FormControl = new FormControl('');
   public languageControl: FormControl = new FormControl('', [
-    Validators.required,
-    languageValidator
+    Validators.required
   ]);
   public territoryControl: FormControl = new FormControl('');
+  public countryControl: FormControl = new FormControl('');
   public salesAgentControl: FormControl = new FormControl('');
   public sortByControl: FormControl = new FormControl('');
   public searchbarTextControl: FormControl = new FormControl('');
@@ -129,9 +132,14 @@ export class MarketplaceSearchComponent implements OnInit {
   /* Arrays for showing the selected entities in the UI */
   public selectedMovieTerritories: string[] = [];
 
+  /* Arrays for showing the selected countries in the UI */
+  public selectedMovieCountries: string[] = [];
+
   /* Flags for Sales Agents chip input*/
   public selectedSalesAgents: string[] = [];
   public salesAgents: string[] = [];
+
+  public budgetList: NumberRange[] = BUDGET_LIST;
 
   @ViewChild('salesAgentInput', { static: false }) salesAgentInput: ElementRef<HTMLInputElement>;
   @ViewChild('salesAgent', { static: false }) salesAgentMatAutocomplete: MatAutocomplete;
@@ -155,6 +163,8 @@ export class MarketplaceSearchComponent implements OnInit {
   @ViewChild('territoryInput', { static: false }) territoryInput: ElementRef<HTMLInputElement>;
   @ViewChild('autoCompleteInput', { static: false, read: MatAutocompleteTrigger })
   public autoComplete: MatAutocompleteTrigger;
+
+  @ViewChild('countryInput', { static: false }) countryInput: ElementRef<HTMLInputElement>;
 
   constructor(
     private router: Router,
@@ -203,39 +213,14 @@ export class MarketplaceSearchComponent implements OnInit {
       this.filterBy$,
       this.sortBy$
     ]).pipe(
-      map(([algoliaMovies, filterOptions, sortBy]) => {
-        const filteredMovies = algoliaMovies.filter(index =>
-          filterMovie(index.movie, filterOptions)
-        );
-        const movieIds = filteredMovies.map(index => index.objectID);
-        const movies = this.movieQuery.getAll({
-          filterBy: movie => movieIds.includes(movie.id)
-        });
-        if (AFM_DISABLE) {
-          //TODO #1146
-          return movies.filter(async movie => {
-            const deals = await this.distributionDealService.getMovieDistributionDeals(movie.id);
-            return filterMovie(movie, filterOptions, deals);
-          });
-        } else {
-          //TODO #1146 : remove the two line for movieGenres
-          const removeGenre = ['TV Show', 'Web Series'];
-          this.movieGenres = this.movieGenres.filter(value => !removeGenre.includes(value));
-          const sortedMovies = movies.sort((a, b) => {
-            switch (sortBy) {
-              case 'Title':
-                return a.main.title.international.localeCompare(b.main.title.international);
-              case 'Director':
-                return a.main.directors[0].lastName.localeCompare(b.main.directors[0].lastName);
-              default:
-                return 0;
-            }
-          });
-          this.movieCount = sortedMovies.length;
-          return sortedMovies;
-        }
+      switchMap(([algoliaMovies, filterOptions, sortBy]) => {
+        const movieIds = algoliaMovies.map(index => index.objectID);
+        return this.movieQuery.selectAll({
+          sortBy,
+          filterBy: movie => filterMovie(movie, filterOptions) && movieIds.includes(movie.id)
+        })
       })
-    );
+    )
 
     this.genresFilter$ = this.genreControl.valueChanges.pipe(
       startWith(''),
@@ -252,6 +237,12 @@ export class MarketplaceSearchComponent implements OnInit {
       startWith(''),
       debounceTime(300),
       map(territory => this._territoriesFilter(territory))
+    );
+
+    this.countriesFilter$ = this.countryControl.valueChanges.pipe(
+      startWith(''),
+      debounceTime(300),
+      map(country => this._countriesFilter(country))
     );
 
     this.salesAgentFilter$ = this.salesAgentControl.valueChanges.pipe(
@@ -348,11 +339,24 @@ export class MarketplaceSearchComponent implements OnInit {
   }
 
   /**
+ * @description returns an array of strings for the autocompletion component
+ * @param value string which got typed in into an input field
+ */
+  private _countriesFilter(country: string): string[] {
+    const filterValue = country.toLowerCase();
+    return TERRITORIES_LABEL.filter(movieCountry => {
+      return movieCountry.toLowerCase().includes(filterValue);
+    });
+  }
+
+  /**
    * @description returns an array of strings for the autocompletion component
    * @param value string which got typed in into an input field
    */
   private _languageFilter(value: string): string[] {
-    return LANGUAGES_LABEL.filter(language => language.toLowerCase().includes(value.toLowerCase()));
+    if (value) {
+      return LANGUAGES_LABEL.filter(language => language.toLowerCase().includes(value.toLowerCase()));
+    }
   }
 
   /**
@@ -409,6 +413,16 @@ export class MarketplaceSearchComponent implements OnInit {
     this.analytics.event(AnalyticsEvents.removedLanguage, { language });
   }
 
+  public hasBudget(budget: NumberRange) {
+    const value = this.filterForm.get('estimatedBudget').value;
+    if (!value.includes(budget)) {
+      this.filterForm.get('estimatedBudget').setValue([...value, budget]);
+    } else {
+      const valueWithoutBudget = value.filter(v =>  v !== budget);
+      this.filterForm.get('estimatedBudget').setValue(valueWithoutBudget);
+    }
+  }
+
   public hasStatus(status: MovieStatusLabel) {
     /**
      * We want to exchange the label for the slug,
@@ -447,6 +461,31 @@ export class MarketplaceSearchComponent implements OnInit {
     if (this.movieMedias.includes(media)) {
       this.filterForm.checkMedia(mediaSlug);
     }
+  }
+
+  public removeCountry(country: string, index: number) {
+    const i = this.selectedMovieCountries.indexOf(country);
+
+    if (i >= 0) {
+      this.selectedMovieCountries.splice(i, 1);
+    }
+    this.filterForm.removeCountry(index);
+  }
+
+  public selectedCountry(country: MatAutocompleteSelectedEvent) {
+    if (!this.selectedMovieCountries.includes(country.option.viewValue)) {
+      this.selectedMovieCountries.push(country.option.value);
+    }
+    /**
+     * We want to exchange the label for the slug,
+     * because for our backend we need to store the slug.
+     */
+    const territorySlug: TerritoriesSlug = getCodeIfExists(
+      'TERRITORIES',
+      country.option.viewValue as ExtractCode<'TERRITORIES'>
+    );
+    this.filterForm.addCountry(territorySlug);
+    this.countryInput.nativeElement.value = '';
   }
 
   public removeTerritory(territory: string, index: number) {
@@ -498,29 +537,6 @@ export class MarketplaceSearchComponent implements OnInit {
       const genreSlug: GenresSlug = getCodeIfExists('GENRES', genre);
       this.filterForm.removeGenre(genreSlug);
       this.analytics.event(AnalyticsEvents.removedGenre, { genre });
-    }
-  }
-
-  public addSalesAgent(event: MatAutocompleteSelectedEvent) {
-    const salesAgent = event.option.value;
-
-    if ((salesAgent || '').trim() && !this.selectedSalesAgents.includes(salesAgent)) {
-      this.selectedSalesAgents.push(salesAgent.trim());
-    }
-
-    this.filterForm.addSalesAgent(salesAgent);
-    this.salesAgentControl.setValue('');
-    this.salesAgentInput.nativeElement.value = '';
-    this.analytics.event(AnalyticsEvents.addedSalesAgent, { salesAgent });
-  }
-
-  public removeSalesAgent(salesAgent: string) {
-    const index = this.selectedSalesAgents.indexOf(salesAgent);
-
-    if (index >= 0) {
-      this.selectedSalesAgents.splice(index, 1);
-      this.filterForm.removeSalesAgent(salesAgent);
-      this.analytics.event(AnalyticsEvents.removedSalesAgent, { salesAgent });
     }
   }
 

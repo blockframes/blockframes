@@ -3,7 +3,9 @@ import { Movie } from '@blockframes/movie/movie/+state/movie.model';
 import { AFM_DISABLE } from '@env';
 import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
 import { ExtractSlug } from '@blockframes/utils/static-model/staticModels';
-import { LanguagesSlug } from '@blockframes/utils/static-model/types';
+import { NumberRange } from '@blockframes/utils/common-interfaces';
+import { LanguagesLabel } from '@blockframes/utils/static-model/types';
+import { MovieLanguageSpecification } from '@blockframes/movie/movie+state/movie.firestore';
 
 function productionYearBetween(movie: Movie, range: { from: number; to: number }): boolean {
   if (!range || !(range.from && range.to)) {
@@ -14,36 +16,37 @@ function productionYearBetween(movie: Movie, range: { from: number; to: number }
     return movie.main.productionYear >= range.from && movie.main.productionYear <= range.to;
   }
 }
-function hasLanguage(
-  movie: Movie,
-  language: { name: LanguagesSlug; original: boolean; dubbed: boolean; subtitle: boolean; caption: boolean }
-): boolean {
-  if (!language) {
-    return true;
-  }
 
-  let original = true;
-  let dubbed = true;
-  let subtitle = true;
-  let caption = true;
+function hasLanguage(movie: Movie, language: { [languageLabel in LanguagesLabel]: MovieLanguageSpecification }) {
+    if (Object.entries(language).length === 0) {
+      return true;
+    }
+    const languages = Object.keys(language);
+    for (const lang of languages) {
+      if (movie.versionInfo.languages.hasOwnProperty(lang)) {
 
-  if (language.original) {
-    original = movie.versionInfo.languages[language.name].original;
-  }
+        const movieLanguage = movie.versionInfo.languages[lang];
+        const filterLanguage = language[lang];
 
-  if (language.dubbed) {
-    dubbed = movie.versionInfo.languages[language.name].dubbed;
-  }
+        // When no checkbox is checked, we just verify the key.
+        if (!filterLanguage.original && !filterLanguage.dubbed && !filterLanguage.subtitle && !filterLanguage.caption) {
+          return true;
+        }
 
-  if (language.subtitle) {
-    subtitle = movie.versionInfo.languages[language.name].subtitle;
-  }
-
-  if (language.caption) {
-    caption = movie.versionInfo.languages[language.name].caption;
-  }
-
-  return original && dubbed && subtitle && caption;
+        if (filterLanguage.original && movieLanguage.original) {
+          return true;
+        }
+        if (filterLanguage.dubbed && movieLanguage.dubbed) {
+          return true;
+        }
+        if (filterLanguage.subtitle && movieLanguage.subtitle) {
+          return true;
+        }
+        if (filterLanguage.caption && movieLanguage.caption) {
+          return true;
+        }
+      }
+    }
 }
 
 function genres(movie: Movie, movieGenre: string[]): boolean {
@@ -57,6 +60,18 @@ function genres(movie: Movie, movieGenre: string[]): boolean {
       if (movie.main.genres[i] === movieGenreToLowerCase[k]) {
         return true;
       }
+    }
+  }
+}
+
+function hasBudget(movie: Movie, movieBudget: NumberRange[]) {
+  if (!movieBudget.length) {
+    return true;
+  }
+  const movieEstimatedBudget = movie.budget.estimatedBudget;
+  for (const budget of movieBudget) {
+    if (budget.from === movieEstimatedBudget.from && budget.to === movieEstimatedBudget.to) {
+      return true;
     }
   }
 }
@@ -126,6 +141,17 @@ function availabilities(deals: DistributionDeal[], range: { from: Date; to: Date
   );
 }
 
+function hasCountry(movie: Movie, countries: string[]): boolean {
+  if (!countries.length) {
+    return true;
+  }
+  for (const country of countries) {
+    if (movie.main.originCountries.includes(country.toLowerCase() as ExtractSlug<'TERRITORIES'>)) {
+      return true;
+    }
+  }
+}
+
 function territories(movie: Movie, territory: string): boolean {
   if (!territory) {
     return true;
@@ -141,20 +167,12 @@ function media(movie: Movie, movieMediaType: string): boolean {
 
 // TODO #1306 - remove when algolia is ready
 export function filterMovie(movie: Movie, filter: CatalogSearch, deals?: DistributionDeal[]): boolean {
-  const hasEveryLanguage = Object.keys(filter.languages)
-    .map(name => ({
-      ...filter.languages[name],
-      name
-    }))
-    .every(language => hasLanguage(movie, language));
   const hasMedia = filter.medias.every(movieMedia => media(movie, movieMedia));
   const hasTerritory = filter.territories.every(territory => territories(movie, territory));
   if (AFM_DISABLE) {
     //TODO: #1146
     return (
       productionYearBetween(movie, filter.productionYear) &&
-      hasEveryLanguage &&
-      genres(movie, filter.genres) &&
       certifications(movie, filter.certifications) &&
       productionStatus(movie, filter.status) &&
       availabilities(deals, filter.availabilities) &&
@@ -163,10 +181,12 @@ export function filterMovie(movie: Movie, filter: CatalogSearch, deals?: Distrib
     );
   } else {
     return (
-      hasEveryLanguage &&
       genres(movie, filter.genres) &&
       productionStatus(movie, filter.status) &&
-      salesAgent(movie, filter.salesAgent)
+      salesAgent(movie, filter.salesAgent) &&
+      hasBudget(movie, filter.estimatedBudget) &&
+      hasCountry(movie, filter.originCountries) &&
+      hasLanguage(movie, filter.languages)
     );
   }
 }
