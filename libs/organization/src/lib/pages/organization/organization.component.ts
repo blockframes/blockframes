@@ -1,9 +1,7 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
-import { Observable, Subscription } from 'rxjs';
-import { Organization } from '@blockframes/organization/+state/organization.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
@@ -12,10 +10,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./organization.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OrganizationComponent implements OnInit, OnDestroy {
+export class OrganizationComponent implements OnInit {
   public organizationForm;
-  public organization$: Observable<Organization>;
-  public sub: Subscription;
   
   constructor(
     private query: OrganizationQuery,
@@ -41,10 +37,6 @@ export class OrganizationComponent implements OnInit, OnDestroy {
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });
     }
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
   }
 
 }
