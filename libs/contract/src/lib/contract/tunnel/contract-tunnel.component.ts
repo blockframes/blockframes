@@ -17,7 +17,7 @@ const steps = [{
   }]
 }, {
   title: 'Summary',
-  icon: '',
+  icon: 'send',
   routes: [{
     path: 'summary',
     label: 'Summary'
@@ -79,7 +79,8 @@ export class ContractTunnelComponent implements OnInit {
 
   public save() {
     const id = this.query.getActiveId();
-    const update = this.service.update({ id, ...this.form.value });
+    const titles = this.form.get('versions').last().get('titles').value;
+    const update = this.service.update({ id, titleIds: Object.keys(titles), ...this.form.value });
     // Return an observable<boolean> for the confirmExit
     return from(update).pipe(
       tap(_ => this.form.markAsPristine()),
