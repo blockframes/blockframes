@@ -213,17 +213,14 @@ export class MarketplaceSearchComponent implements OnInit {
       this.filterBy$,
       this.sortBy$
     ]).pipe(
-      map(([algoliaMovies, filterOptions, sortBy]) => {
+      switchMap(([algoliaMovies, filterOptions, sortBy]) => {
         const movieIds = algoliaMovies.map(index => index.objectID);
-        const filteredIds = movieIds.filter(movieId => {
-          const movie = this.movieQuery.getEntity(movieId);
-          return filterMovie(movie, filterOptions)
-        });
-        const movies = this.movieQuery.getAll({ filterBy: movie => filteredIds.includes(movie.id) });
-        this.movieCount = movies.length;
-        return movies
+        return this.movieQuery.selectAll({
+          sortBy,
+          filterBy: movie => filterMovie(movie, filterOptions) && movieIds.includes(movie.id)
+        })
       })
-    );
+    )
 
     this.genresFilter$ = this.genreControl.valueChanges.pipe(
       startWith(''),
