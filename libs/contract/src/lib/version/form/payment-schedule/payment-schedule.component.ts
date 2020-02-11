@@ -110,8 +110,7 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
           this.disableAll();
         }
       })
-    ).subscribe()
-    this.form.valueChanges.subscribe(console.log);
+    ).subscribe();
   }
 
   get paymentTermFloatingStart() {
