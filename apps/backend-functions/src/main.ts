@@ -201,7 +201,7 @@ export const onContractVersionCreateEvent = onDocumentCreate(
  * Trigger: when a contractVersion is updated
  */
 export const onContractVersionUpdateEvent = onDocumentUpdate(
-  'contracts/{contractId}',
+  'contracts/{contractId}/versions/{versionId}',
   onContractVersionUpdate
 )
 
@@ -209,7 +209,7 @@ export const onContractVersionUpdateEvent = onDocumentUpdate(
  * Trigger: when a contractVersion is deleted
  */
 export const onContractVersionDeleteEvent = onDocumentDelete(
-  'contracts/{contractId}}/versions/{versionId}',
+  'contracts/{contractId}/versions/{versionId}',
   onContractVersionDelete
 )
 
