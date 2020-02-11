@@ -19,10 +19,6 @@
               <mat-icon matListIcon svgIcon="building"></mat-icon>
               <span matLine>Organization</span>
             </a>
-            <a mat-list-item [routerLink]="['/c/o/organization', organization.id, 'members']">
-              <mat-icon matListIcon svgIcon="group"></mat-icon>
-              <span matLine>Members</span>
-            </a>
             <mat-list-item *ngIf="theme$ | async as theme">
               <mat-slide-toggle [checked]="theme === 'dark'" (change)="setTheme($event)">
                 Use {{ theme === 'dark' ? 'Light' : 'Dark' }} Theme
