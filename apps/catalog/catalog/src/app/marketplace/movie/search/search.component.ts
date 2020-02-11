@@ -58,6 +58,7 @@ import { NumberRange } from '@blockframes/utils/common-interfaces/range';
 import { BUDGET_LIST } from '@blockframes/movie/movieform/budget/budget.form';
 import { CatalogSearchForm, AvailsSearchForm } from '@blockframes/catalog/form/search.form';
 import { ContractService } from '@blockframes/contract/contract/+state';
+import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state';
 
 @Component({
   selector: 'catalog-movie-search',
@@ -171,7 +172,7 @@ export class MarketplaceSearchComponent implements OnInit {
     private catalogCartQuery: CatalogCartQuery,
     private snackbar: MatSnackBar,
     private movieQuery: MovieQuery,
-    private contractService: ContractService,
+    private dealService: DistributionDealService,
     private breakpointObserver: BreakpointObserver,
     @Inject(MoviesIndex) private movieIndex: Index,
     private analytics: FireAnalytics
@@ -218,10 +219,25 @@ export class MarketplaceSearchComponent implements OnInit {
           sortBy,
           filterBy: movie => filterMovie(movie, filterOptions) && movieIds.includes(movie.id)
         }).pipe(
-          map(movies => availsOptions
-            ? movies.filter(movie =>filterMovieWithAvails(movie.distributionDeals, availsOptions, this.contractService))
-            : movies
-          )
+          map(movies => {
+            // If Avails filter button is clicked
+            if (availsOptions.isActive) {
+              const moviesWithAvails = movies.filter(
+                movie => {
+                  // Filters the deals before sending them to the avails filter function
+                  if (!movie.distributionDeals) {
+                    return true;
+                  }
+
+                  const mandateDeal = this.dealService.getMandateDeal(movie.distributionDeals);
+                  const filteredDeals = movie.distributionDeals.filter(deal => deal.id !== mandateDeal.id);
+                  return filterMovieWithAvails(filteredDeals, availsOptions, mandateDeal);
+                }
+              )
+              return moviesWithAvails;
+            }
+            return movies;
+          })
         );
       }),
     )
