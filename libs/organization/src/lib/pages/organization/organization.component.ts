@@ -24,9 +24,6 @@ export class OrganizationComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    // this.sub = this.query
-    //   .selectActive()
-    //   .subscribe(org => this.organizationForm.patchAllValue(org));
     const organization = this.query.getActive();
     this.organizationForm = new OrganizationForm(this.service, organization);
 
