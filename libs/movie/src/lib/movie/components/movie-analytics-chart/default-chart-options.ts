@@ -59,7 +59,7 @@ export const lineChartOptions = {
   yaxis: {
     labels: {
       show: false,
-      formatter: (value) => { return value }
+      formatter: (value) => value
     }
   }
 };
