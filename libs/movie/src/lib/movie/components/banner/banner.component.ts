@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, Directive } from '@angular/core';
+import { Component, Input, Directive, ChangeDetectionStrategy } from '@angular/core';
 import { Movie } from '../../+state';
 import { Title } from '../../+state/movie.firestore';
 import { ImgRef } from '@blockframes/utils';
@@ -6,9 +6,10 @@ import { ImgRef } from '@blockframes/utils';
 @Component({
   selector: 'movie-banner',
   templateUrl: './banner.component.html',
-  styleUrls: ['./banner.component.scss']
+  styleUrls: ['./banner.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class BannerComponent implements OnInit {
+export class BannerComponent {
 
   public poster: ImgRef;
   public title: Title;
@@ -23,12 +24,6 @@ export class BannerComponent implements OnInit {
     this.countries = movie.main.originCountries.join(', ');
     this.date = movie.main.productionYear;
   }
-
-  constructor() { }
-
-  ngOnInit() {
-  }
-
 }
 
 
