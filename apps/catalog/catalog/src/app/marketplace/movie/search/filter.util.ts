@@ -4,6 +4,8 @@ import { AFM_DISABLE } from '@env';
 import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
 import { ExtractSlug } from '@blockframes/utils/static-model/staticModels';
 import { NumberRange } from '@blockframes/utils/common-interfaces';
+import { LanguagesLabel } from '@blockframes/utils/static-model/types';
+import { MovieLanguageSpecification } from '@blockframes/movie/movie+state/movie.firestore';
 
 function productionYearBetween(movie: Movie, range: { from: number; to: number }): boolean {
   if (!range || !(range.from && range.to)) {
@@ -15,16 +17,16 @@ function productionYearBetween(movie: Movie, range: { from: number; to: number }
   }
 }
 
-function hasLanguage(movie: Movie, language: any) {
+function hasLanguage(movie: Movie, language: { [languageLabel in LanguagesLabel]: MovieLanguageSpecification }) {
     if (Object.entries(language).length === 0) {
       return true;
     }
     const languages = Object.keys(language);
-    for (let i = 0; i < languages.length; i++) {
-      if (movie.versionInfo.languages.hasOwnProperty(languages[i])) {
+    for (const lang of languages) {
+      if (movie.versionInfo.languages.hasOwnProperty(lang)) {
 
-        const movieLanguage = movie.versionInfo.languages[languages[i]];
-        const filterLanguage = language[languages[i]];
+        const movieLanguage = movie.versionInfo.languages[lang];
+        const filterLanguage = language[lang];
 
         // When no checkbox is checked, we just verify the key.
         if (!filterLanguage.original && !filterLanguage.dubbed && !filterLanguage.subtitle && !filterLanguage.caption) {
@@ -67,8 +69,8 @@ function hasBudget(movie: Movie, movieBudget: NumberRange[]) {
     return true;
   }
   const movieEstimatedBudget = movie.budget.estimatedBudget;
-  for (let i = 0; i < movieBudget.length; i++) {
-    if (movieBudget[i].from === movieEstimatedBudget.from && movieBudget[i].to === movieEstimatedBudget.to) {
+  for (const budget of movieBudget) {
+    if (budget.from === movieEstimatedBudget.from && budget.to === movieEstimatedBudget.to) {
       return true;
     }
   }
@@ -143,8 +145,8 @@ function hasCountry(movie: Movie, countries: string[]): boolean {
   if (!countries.length) {
     return true;
   }
-  for (let i = 0; i < countries.length; i++) {
-    if (movie.main.originCountries.includes(countries[i].toLowerCase() as ExtractSlug<'TERRITORIES'>)) {
+  for (const country of countries) {
+    if (movie.main.originCountries.includes(country.toLowerCase() as ExtractSlug<'TERRITORIES'>)) {
       return true;
     }
   }
