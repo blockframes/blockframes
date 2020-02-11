@@ -123,7 +123,7 @@
 </mat-radio-group>
 <div fxLayout="row" fxLayoutAlign="center start">
   <ng-container *ngIf="paymentSchedule.controls.length; else add">
-    <button mat-fab (click)="resetVersionForm()" color="warn" matTooltip="Reset Payment Schedule">
+    <button mat-fab (click)="resetVersionForm(true)" color="warn" matTooltip="Reset Payment Schedule">
       <mat-icon>delete</mat-icon>
     </button>
   </ng-container>

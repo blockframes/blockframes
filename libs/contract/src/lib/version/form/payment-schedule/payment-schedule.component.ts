@@ -86,10 +86,12 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
       startWith(this.setRadioButton()),
       tap(value => {
         if (value === 'other') {
+          this.resetVersionForm();
           this.disableAll();
           this.customPaymentSchedule.enable();
           this.toggleDurationPeriod('first');
         } else if (value === 'periodic') {
+          this.resetVersionForm();
           this.disableAll();
           this.eventCtrl.enable();
           this.periodCtrl.enable();
@@ -101,6 +103,7 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
             this.paymentSchedule.last().get('date').get('floatingStart').enable();
           }
         } else if (value === 'event') {
+          this.resetVersionForm();
           this.disableAll();
           this.updateFormExceptEventForm()
         } else {
@@ -108,6 +111,7 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
         }
       })
     ).subscribe()
+    this.form.valueChanges.subscribe(console.log);
   }
 
   get paymentTermFloatingStart() {
@@ -181,15 +185,20 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
 
   /**
    * @description reset the form and start over
+   * @param fromButton we need to distinguish if the user wants to reset the form
+   * or if the user only switches between the radio buttons
    */
-  public resetVersionForm() {
+  public resetVersionForm(fromResetButton?: boolean) {
     const index = this.paymentSchedule.controls.length;
     for (let i = 0; i < index - 2; i++) {
       this.removePayment(i);
     }
     this.disableAll();
-    this.radioCtrl.reset();
-    this.form.reset();
+    this.paymentSchedule.reset();
+    this.form.first().get('customPaymentSchedule').reset();
+    if (fromResetButton) {
+      this.radioCtrl.reset();
+    }
   }
 
   /**
@@ -204,7 +213,7 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
     }
     return length < index + 2 ? false : true;
   }
-  
+
   /**
    * @description helper function, disables all inputs and buttons
    */
@@ -304,5 +313,6 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
     if (this.radioCtrl.value === 'periodic') {
       this.paymentSchedule.last().get('date').get('floatingDuration').get('temporality').setValue(TemporalityUnit.every)
     }
+    console.log(this.form);
   }
 }
