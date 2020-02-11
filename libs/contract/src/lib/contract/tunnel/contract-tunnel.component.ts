@@ -8,17 +8,37 @@ import { Observable, from, of } from 'rxjs';
 import { startWith, map, switchMap, tap } from 'rxjs/operators';
 import { MatDialog } from '@angular/material';
 
+const steps = [{
+  title: 'Step 1',
+  icon: 'document',
+  routes: [{
+    path: 'details',
+    label: 'contract Details'
+  }]
+}, {
+  title: 'Summary',
+  icon: '',
+  routes: [{
+    path: 'summary',
+    label: 'Summary'
+  }]
+}]
+
 /** Fill the steps depending on the movie */
 function fillMovieSteps(movies: Movie[] = []): TunnelStep[] {
   if (!movies.length) {
-    return []
+    return steps
   }
   return [{
+    ...steps[0]
+  }, {
     title: 'Exploitation Rights',
     icon: 'world',
     routes: movies.map(movie => ({
       path: movie.id, label: movie.main.title.international
     }))
+  }, {
+    ...steps[1]
   }]
 }
 
@@ -46,8 +66,9 @@ export class ContractTunnelComponent implements OnInit {
     const contract = this.query.getActive();
     this.type = contract.type;
     this.form.patchAllValue(contract);
-    const titlesForm = this.form.get('versions').last().get('titles');
+  
     // Dynamic steps depending of the titles in the last contract version titles
+    const titlesForm = this.form.get('versions').last().get('titles');
     this.steps$ = titlesForm.valueChanges.pipe(
       startWith(titlesForm.value),
       map(titles => Object.keys(titles)),

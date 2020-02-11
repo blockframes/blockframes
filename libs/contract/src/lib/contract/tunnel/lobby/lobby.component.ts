@@ -19,6 +19,6 @@ export class LobbyComponent {
   async select(contractType: 'sale' | 'mandate') {
     const type = contractType === 'sale' ? ContractType.sale : ContractType.mandate;
     const contractId = await this.service.add({ type });
-    this.router.navigate([contractId], { relativeTo: this.route })
+    this.router.navigate([contractId, type], { relativeTo: this.route })
   }
 }
