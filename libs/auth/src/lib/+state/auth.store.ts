@@ -20,6 +20,7 @@ export interface User {
 
 export interface AuthState extends FireAuthState<User> {
   requestedRoute?: string;
+  isSignin: boolean;
 }
 
 export function createUser(user: Partial<User> = {}) {
@@ -37,5 +38,8 @@ export class AuthStore extends Store<AuthState> {
   }
   public updateProfile(profile: Partial<User>) {
     this.update(authState => ({ profile: { ...authState.profile, profile }}))
+  }
+  public updateIsSignin(isSignin: boolean) {
+    this.update(({ isSignin }));
   }
 }

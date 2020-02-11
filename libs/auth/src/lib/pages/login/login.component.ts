@@ -1,6 +1,6 @@
-import { Component, ChangeDetectionStrategy, ViewChild, HostBinding } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewChild, HostBinding, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { AuthService } from '../../+state';
+import { AuthService, AuthQuery } from '../../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSidenav } from '@angular/material/sidenav';
 import { SignupForm } from '../../forms/signup.form';
@@ -12,7 +12,7 @@ import { SigninForm } from '../../forms/signin.form';
   styleUrls: ['./login.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   @HostBinding('attr.page-id') pageId = 'login-view';
   @ViewChild('signinSidenav', { static: false }) loginSidenav: MatSidenav;
   @ViewChild('signupSidenav', { static: false }) signupSidenav: MatSidenav;
@@ -24,7 +24,15 @@ export class LoginComponent {
     private service: AuthService,
     private router: Router,
     private snackBar: MatSnackBar,
+    private authQuery: AuthQuery
   ) {}
+
+  ngOnInit() {
+    const isSignin = this.authQuery.isSignin;
+    if (isSignin !== undefined) {
+      this.isSignin = isSignin;
+    }
+  }
 
   public async signin(signinForm: SigninForm) {
     if (signinForm.invalid) {

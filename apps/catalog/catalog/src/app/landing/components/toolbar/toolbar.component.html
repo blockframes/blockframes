@@ -14,7 +14,7 @@
     </div>
   </nav>
   <div fxLayout="row" fxLayoutAlign="space-around center" fxLayoutGap="16px">
-    <a mat-button routerLink="/auth/connexion" fragment="signin">Login</a>
-    <a mat-stroked-button routerLink="/auth/connexion" fragment="signup"><b>Sign up</b></a>
+    <a mat-button (click)="isSignin(false)" routerLink="/auth/connexion" fragment="signin">Login</a>
+    <a mat-stroked-button (click)="isSignin(true)" routerLink="/auth/connexion" fragment="signup"><b>Sign up</b></a>
   </div>
 </mat-toolbar>

@@ -13,6 +13,10 @@ export class AuthQuery extends Query<AuthState> {
     super(store);
   }
 
+  get isSignin() {
+    return this.getValue().isSignin;
+  }
+
   get user() {
     return this.getValue().profile;
   }
