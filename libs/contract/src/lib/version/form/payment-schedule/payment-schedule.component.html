@@ -1,43 +1,45 @@
-<mat-radio-group [formControl]="radioCtrl" color="primary">
-  <!-- Payments Upon Event -->
-  <mat-radio-button value="event">
-    PAYMENTS UPON EVENT
-  </mat-radio-button>
-  <ng-container *ngFor="let control of paymentSchedule.controls; let isLast = last; let i = index">
-    <form [formGroup]="control" fxLayout="row" fxLayoutAlign="center baseline" fxLayoutGap="20px">
-      <mat-form-field appearance="outline">
-        <mat-label>Percentage</mat-label>
-        <input matInput type="number" formControlName="percentage" max="100" min="1">
-        <mat-icon matSuffix svgIcon="percent"></mat-icon>
-      </mat-form-field>
-      <mat-form-field appearance="outline" formGroupName="date">
-        <mat-label>Triggering event</mat-label>
-        <mat-select formControlName="floatingStart">
-          <mat-option *ngFor="let event of triggerEvents | keyvalue" [value]="event.key">
-            {{event.value}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      <ng-container *ngIf="isLast; else remove">
-        <button mat-fab (click)="addPayment()" color="primary">
-          <mat-icon svgIcon="add"></mat-icon>
-        </button>
+<ng-container *ngFor="let control of paymentSchedule.controls; let isLast = last; let i = index">
+  <form [formGroup]="control">
+    <mat-radio-group [formControl]="radioCtrl" color="primary">
+      <!-- Payments Upon Event -->
+      <mat-radio-button value="event">
+        PAYMENTS UPON EVENT
+      </mat-radio-button>
+      <ng-container *ngFor="let event of paymentSchedule.controls; let isLast = last; let i = index">
+        <form [formGroup]="event">
+          <div fxLayout="row" fxLayoutAlign="center baseline" fxLayoutGap="20px">
+            <mat-form-field appearance="outline">
+              <mat-label>Percentage</mat-label>
+              <input matInput type="number" formControlName="percentage" max="100" min="1">
+              <mat-icon matSuffix svgIcon="percent"></mat-icon>
+            </mat-form-field>
+            <mat-form-field appearance="outline" formGroupName="date">
+              <mat-label>Triggering event</mat-label>
+              <mat-select formControlName="floatingStart">
+                <mat-option *ngFor="let event of triggerEvents | keyvalue" [value]="event.key">
+                  {{event.value}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <ng-container *ngIf="isLast; else remove">
+              <button mat-mini-fab (click)="addPayment()" color="primary">
+                <mat-icon svgIcon="add"></mat-icon>
+              </button>
+            </ng-container>
+            <ng-template #remove>
+              <button mat-mini-fab (click)="removePayment(i)" color="warn">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </ng-template>
+          </div>
+        </form>
       </ng-container>
-      <ng-template #remove>
-        <button mat-fab (click)="removePayment(i)" color="warn">
-          <mat-icon>delete</mat-icon>
-        </button>
-      </ng-template>
-    </form>
-  </ng-container>
-  <mat-divider></mat-divider>
-  <!-- Periodic Payments -->
-  <mat-radio-button value="periodic" color="primary">
-    PERIODIC PAYMENTS
-  </mat-radio-button>
-  <!-- We only need the first index here, cause the user set the amount of iteration -->
-  <ng-container *ngFor="let control of paymentSchedule.controls; let isLast = last; let i = index">
-    <form [formGroup]="control" fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="20px" *ngIf="last">
+      <mat-divider></mat-divider>
+      <!-- Periodic Payments -->
+      <mat-radio-button value="periodic" color="primary">
+        PERIODIC PAYMENTS
+      </mat-radio-button>
+      <!-- We only need the first index here, cause the user set the amount of iteration -->
       <mat-form-field appearance="outline">
         <mat-label>Percentage</mat-label>
         <input matInput type="number" formControlName="percentage" max="100" min="1">
@@ -52,7 +54,7 @@
           </mat-form-field>
           <mat-form-field appearance="outline" formGroupName="floatingDuration">
             <mat-label>Period</mat-label>
-            <mat-select formControlName="unit" >
+            <mat-select formControlName="unit">
               <mat-option *ngFor="let duration of durations | keyvalue" [value]="duration.key">
                 {{ duration.value }}
               </mat-option>
@@ -87,13 +89,45 @@
           </div>
         </div>
       </form>
-    </form>
-  </ng-container>
-  <mat-radio-button value="other" color="primary">
-    Other
-  </mat-radio-button>
-  <mat-form-field appearance="outline">
-    <mat-label>Other, please specify</mat-label>
-    <input matInput type="text" [formControl]="customPaymentSchedule">
-  </mat-form-field>
-</mat-radio-group>
+      <mat-divider></mat-divider>
+      <mat-radio-button value="other" color="primary">
+        Other
+      </mat-radio-button>
+      <mat-form-field appearance="outline">
+        <mat-label>Other, please specify</mat-label>
+        <input matInput type="text" [formControl]="customPaymentSchedule">
+      </mat-form-field>
+      <h3>PAYMENT TERM</h3>
+      <form *ngFor="let control of paymentSchedule.controls" [formGroup]="control">
+        <form formGroupName="date">
+          <div fxLayout="row" fxLayoutGap="20px">
+            <mat-form-field appearance="outline" formGroupName="floatingDuration">
+              <mat-label>Duration</mat-label>
+              <input matInput type="number" formControlName="duration">
+            </mat-form-field>
+            <mat-form-field appearance="outline" formGroupName="floatingDuration">
+              <mat-label>Period</mat-label>
+              <mat-select formControlName="unit">
+                <mat-option *ngFor="let duration of durations | keyvalue" [value]="duration.key">
+                  {{ duration.value }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </form>
+      </form>
+    </mat-radio-group>
+  </form>
+  <div fxLayout="row" fxLayoutAlign="center start">
+    <ng-container *ngIf="isLast; else remove">
+      <button mat-fab (click)="addPayment()" color="primary">
+        <mat-icon svgIcon="add"></mat-icon>
+      </button>
+    </ng-container>
+    <ng-template #remove>
+      <button mat-fab (click)="removePayment(i)" color="warn" matTooltip="Delete Payment Schedule">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </ng-template>
+  </div>
+</ng-container>

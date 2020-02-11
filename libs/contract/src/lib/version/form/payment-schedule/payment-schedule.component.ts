@@ -1,11 +1,11 @@
 import { ContractVersionForm } from '@blockframes/contract/version/form/version.form';
+import { startWith, tap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { ContractVersionPaymentScheduleForm } from './payment-schedule.form';
 import { Component, OnInit, ChangeDetectionStrategy, Input, OnDestroy, AfterViewInit, } from '@angular/core';
 import { MovieEvent, PaymentEvent, TimeUnit, TemporalityUnit } from '@blockframes/utils/common-interfaces/terms'
 import { FormList } from '@blockframes/utils/form/forms/list.form';
-import { startWith, tap, filter } from 'rxjs/operators';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { PaymentScheduleRaw } from '@blockframes/utils/common-interfaces';
 
@@ -52,11 +52,10 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy {
         tap(value => this.toggleForm('floatingStart', value))
       )
       .subscribe();
-    // should add one so we dont get in trouble with event inputs
-    if (this.paymentSchedule) {
+  }
 
-    }
-    this.paymentSchedule.add();
+  get paymentTermFloatingStart() {
+    return this.form.at(0).get('paymentTerm').get('floatingStart');
   }
 
   get customPaymentSchedule() {
@@ -76,7 +75,7 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy {
     const form = this.paymentSchedule.at(0).get('date').get(formName as 'start' | 'floatingStart');
     value ? form.enable() : form.disable();
   }
-  /**
+  /**paymentTerm
    * @description when one toggle button is set, unset the other one for the UI
    * @param event event value from toggle button
    * @param type from where the functino was called
