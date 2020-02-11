@@ -319,11 +319,4 @@ export class ContractService extends CollectionService<ContractState> {
     this.update({ ...contract, parties: [...updatedParties, updatedParty] })
   }
 
-  /**
-   * Returns the contract related to a specific deal.
-   */
-  public getContractFromDeal(deal: DistributionDeal): Promise<Contract> {
-    return this.getValue(deal.contractId);
-  }
-
 }

@@ -9,6 +9,7 @@ import { CatalogSearch, AvailsSearch } from '@blockframes/catalog/form/search.fo
 import { getFilterMatchingDeals, getDealsInDateRange, getExclusiveDeals } from '@blockframes/movie/distribution-deals/create/availabilities.util';
 import { MovieLanguageSpecification } from '@blockframes/movie/movie+state/movie.firestore';
 import { toDate } from '@blockframes/utils/helpers';
+import { Scope } from '@sentry/browser';
 
 function isProductionYearBetween(movie: Movie, range: { from: number; to: number }): boolean {
   if (!range || !(range.from && range.to)) {
@@ -166,14 +167,10 @@ function hasTerritories(movie: Movie, filterTerritories: ExtractSlug<'TERRITORIE
  * Looks for the deal matching the mandate and checks if Archipel can sells
  * rights according to the filter options set by the buyer.
  */
-function archipelCanSells(deals: DistributionDeal[], filter: AvailsSearch, contractService): boolean {
-  const mandateDeal = deals.find(async deal => {
-    const contract = await contractService.getValue(deal.contractId);
-    return contract.status === 'mandate'
-  })
+function archipelCanSells(filter: AvailsSearch, mandateDeal: DistributionDeal): boolean {
 
-  const mandateHasTerritories = filter.territories.every(country => mandateDeal.territory.includes(country))
-  const mandateHasMedias = filter.medias.every(media => mandateDeal.licenseType.includes(media));
+  const mandateHasTerritories = mandateHas(filter.territories, mandateDeal.territory);
+  const mandateHasMedias = mandateHas(filter.medias, mandateDeal.licenseType);
   const mandateHasTerms = (
     toDate(filter.terms.from).getTime() > toDate(mandateDeal.terms.start).getTime() &&
     toDate(filter.terms.to).getTime() < toDate(mandateDeal.terms.end).getTime()
@@ -182,9 +179,12 @@ function archipelCanSells(deals: DistributionDeal[], filter: AvailsSearch, contr
   return mandateHasTerritories && mandateHasMedias && mandateHasTerms;
 }
 
-/**
- * Returns a list of deals without the mandate deal.
- */
+/** Checks if every items of the list from filters are in the list from the deal. */
+function mandateHas(listFromFilter: string[], listFromDeal: string[]) {
+  return listFromFilter.every(item => listFromDeal.includes(item));
+}
+
+/**  Returns a list of deals without the mandate deal. */
 function getDealsWithoutMandate(deals: DistributionDeal[], contractService): DistributionDeal[] {
   return deals.filter(async deal => {
     const contract = await contractService.getValue(deal.contractId);
@@ -214,9 +214,24 @@ export function filterMovie(movie: Movie, filter: CatalogSearch): boolean {
 }
 
 /**
- * Takes deals from a filtered movie and return true only if no deals
- * matches the options in the avails filter.
+ * Returns a boolean weither a deal is matching with our search or not.
+ * @param deals All the deals from the movies in the filterForm
+ * @param filter The filter options defined by the buyer
+ * @param mandateDeal The deal between Archipel and the seller
  */
-export function filterMovieWithAvails(deals: DistributionDeal[], filter: AvailsSearch, contractService) {
-  return hasAvailabilities(deals, filter, contractService) ;
+export function filterMovieWithAvails(deals: DistributionDeal[], filter: AvailsSearch, mandateDeal: DistributionDeal) {
+  if (!filter.terms || !(filter.terms.from && filter.terms.to) || !deals) {
+    return true;
+  }
+
+  // If Archipel Content is not allowed to sells rights from this movie on the mandate, don't show the movie
+  if (archipelCanSells(filter, mandateDeal)) {
+    return false;
+  }
+
+  const matchingExclusivityDeals = getExclusiveDeals(deals, filter.exclusivity);
+  const matchingRangeDeals = getDealsInDateRange(filter.terms, matchingExclusivityDeals);
+  const matchingDeals = getFilterMatchingDeals(filter, matchingRangeDeals);
+
+  return matchingDeals.length ? false : true;
 }

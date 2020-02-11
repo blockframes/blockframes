@@ -92,7 +92,7 @@ export class DistributionDealService extends CollectionService<DistributionDealS
       .get()
       .toPromise();
 
-    return myDealsSnap.docs.map(deal => formatDistributionDeal(deal.data() as DistributionDeal));
+    return myDealsSnap.docs.map(deal => formatDistributionDeal(deal.data()));
   }
 
   /**
@@ -128,6 +128,14 @@ export class DistributionDealService extends CollectionService<DistributionDealS
     );
     // Returns all deals eligible territories as an array of string.
     return deals.map(deal => deal ? getDealTerritories(deal) : []).flat();
+  }
+
+  /** Get the deal linked to the Archipel Contract (of type 'mandate') */
+  public getMandateDeal(deals: DistributionDeal[]) {
+    return deals.find(async deal => {
+      const contract = await this.contractService.getValue(deal.contractId);
+      return contract.type === 'mandate'
+    })
   }
 
 }

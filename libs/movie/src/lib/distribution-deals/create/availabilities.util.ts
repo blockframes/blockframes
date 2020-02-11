@@ -154,6 +154,6 @@ export function getFilterMatchingDeals(
  * @param exclusivity
  * @param deals
  */
-export function getExclusiveDeals(exclusivity: boolean, deals: DistributionDeal[]) {
+export function getExclusiveDeals(deals: DistributionDeal[], exclusivity: boolean) {
   return deals.filter(deal => deal.exclusive === exclusivity);
 }

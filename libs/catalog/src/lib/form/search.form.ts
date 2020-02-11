@@ -37,7 +37,7 @@ export interface CatalogSearch {
   genres: GenresSlug[];
   status: MovieStatusLabel[];
   salesAgent: string[];
-  languages: { [language in LanguagesLabel]: MovieLanguageSpecification };
+  languages: Partial<{ [language in LanguagesLabel]: MovieLanguageSpecification }>;
   certifications: CertificationsLabel[];
   originCountries: TerritoriesLabel[];
   estimatedBudget: NumberRange[];
@@ -71,7 +71,7 @@ function createCatalogSearch(search: Partial<CatalogSearch> = {}): CatalogSearch
     genres: [],
     status: [],
     salesAgent: [],
-    languages: null,
+    languages: {},
     certifications: [],
     searchbar: {
       text: '',
