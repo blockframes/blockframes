@@ -79,6 +79,7 @@ function createOrganizationBankAccountFormControl(account: Partial<BankAccount>)
     IBAN: new FormControl(entity.IBAN),
     BIC: new FormControl(entity.BIC),
     name: new FormControl(entity.name),
+    holderName: new FormControl(entity.holderName)
   }
 }
 
