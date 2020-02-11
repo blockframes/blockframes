@@ -30,6 +30,7 @@ const icons = [
     name: 'arrow_forward',
     url: 'assets/icons/arrow_forward.svg'
   },
+  { name: 'aud', url: 'assets/icons/aud.svg' },
   { name: 'arrow_left', url: 'assets/icons/arrow_left.svg' },
   { name: 'arrow_open', url: 'assets/icons/arrow_open.svg' },
   { name: 'arrow_right', url: 'assets/icons/arrow_right.svg' },
@@ -40,6 +41,7 @@ const icons = [
   { name: 'blind_eye', url: 'assets/icons/blind_eye.svg' },
   { name: 'blog', url: 'assets/icons/blog.svg' },
   { name: 'building', url: 'assets/icons/building.svg' },
+  { name: 'cad', url: 'assets/icons/cad.svg' },
   { name: 'calendar', url: 'assets/icons/calendar.svg' },
   { name: 'certificate', url: 'assets/icons/certificate.svg' },
   { name: 'check', url: 'assets/icons/check.svg' },
@@ -65,11 +67,13 @@ const icons = [
     url: 'assets/icons/chevron_right.svg'
   },
   { name: 'chevron_top', url: 'assets/icons/chevron_top.svg' },
+  { name: 'chf', url: 'assets/icons/chf.svg' },
   { name: 'clear_all', url: 'assets/icons/clear_all.svg' },
   { name: 'close', url: 'assets/icons/close.svg' },
   { name: 'comment', url: 'assets/icons/comment.svg' },
   { name: 'create_movie', url: 'assets/icons/create_movie.svg' },
   { name: 'cross', url: 'assets/icons/cross.svg' },
+  { name: 'cny', url: 'assets/icons/cny.svg' },
   { name: 'dashboard', url: 'assets/icons/dashboard.svg' },
   { name: 'document', url: 'assets/icons/document.svg' },
   {
@@ -83,12 +87,14 @@ const icons = [
   { name: 'dollar', url: 'assets/icons/dollar.svg' },
   { name: 'dot_menu', url: 'assets/icons/dot_menu.svg' },
   { name: 'download', url: 'assets/icons/download.svg' },
+  { name: 'euro', url: 'assets/icons/euro.svg' },
   { name: 'eye', url: 'assets/icons/eye.svg' },
   { name: 'facebook', url: 'assets/icons/facebook.svg' },
   { name: 'film', url: 'assets/icons/film.svg' },
   { name: 'filter_list', url: 'assets/icons/filter_list.svg' },
   { name: 'first_page', url: 'assets/icons/first_page.svg' },
   { name: 'floppy', url: 'assets/icons/floppy.svg' },
+  { name: 'gbp', url: 'assets/icons/gbp.svg' },
   { name: 'grid', url: 'assets/icons/grid.svg' },
   { name: 'group', url: 'assets/icons/group.svg' },
   { name: 'heart_fill', url: 'assets/icons/heart_fill.svg' },
@@ -100,6 +106,8 @@ const icons = [
   { name: 'import', url: 'assets/icons/import.svg' },
   { name: 'info', url: 'assets/icons/info.svg' },
   { name: 'instagram', url: 'assets/icons/instagram.svg' },
+  { name: 'jpy', url: 'assets/icons/jpy.svg' },
+  { name: 'ker', url: 'assets/icons/ker.svg' },
   { name: 'key', url: 'assets/icons/key.svg' },
   { name: 'last_page', url: 'assets/icons/last_page.svg' },
   { name: 'linkedin', url: 'assets/icons/linkedin.svg' },
@@ -149,7 +157,7 @@ const icons = [
     name: 'logo_storiesand_more_fill',
     url: 'assets/icons/logo_storiesand_more_fill.svg'
   },
-  { name: 'logout',url: 'assets/icons/log_out.svg' },
+  { name: 'logout', url: 'assets/icons/log_out.svg' },
   {
     name: 'magnifying_glasses',
     url: 'assets/icons/magnifying_glasses.svg'
@@ -178,6 +186,7 @@ const icons = [
     name: 'mouse_pointer',
     url: 'assets/icons/mouse_pointer.svg'
   },
+  { name: 'nzd', url: 'assets/icons/nzd.svg' },
   { name: 'open_to', url: 'assets/icons/open_to.svg' },
   { name: 'pdf', url: 'assets/icons/pdf.svg' },
   { name: 'padlock', url: 'assets/icons/padlock.svg' },
@@ -185,7 +194,7 @@ const icons = [
   { name: 'pencil', url: 'assets/icons/pencil.svg' },
   { name: 'percent', url: 'assets/icons/percent.svg' },
   { name: 'picture', url: 'assets/icons/picture.svg' },
-  { name: 'play', url: 'assets/icons/play.svg'},
+  { name: 'play', url: 'assets/icons/play.svg' },
   { name: 'profile', url: 'assets/icons/profile.svg' },
   {
     name: 'radio_box_blank',
