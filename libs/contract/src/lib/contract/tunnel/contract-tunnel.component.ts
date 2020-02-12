@@ -56,8 +56,7 @@ export type DealControls = Record<string, FormList<DistributionDeal, Distributio
   styleUrls: ['./contract-tunnel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ContractTunnelComponent implements OnInit, OnDestroy {
-  private sub: Subscription;
+export class ContractTunnelComponent implements OnInit {
   /** Keep track of the deals removed */
   private removedDeals: Record<string, string[]> = {};
   public steps$: Observable<TunnelStep[]>;
@@ -82,16 +81,19 @@ export class ContractTunnelComponent implements OnInit, OnDestroy {
     const contract = this.query.getActive();
     this.type = contract.type;
     this.contractForm = new ContractForm(contract);
+    
+    // Set the initial deals
+    contract.titleIds.forEach(async movieId => {
+      const deals = await this.dealService.getValue({ params: { movieId }});
+      this.dealForms.setControl(movieId, FormList.factory(deals, deal => new DistributionDealForm(deal)));
+    });
+
 
     // Listen on the changes of the titles from the contract form
     const titlesForm = this.contractForm.get('versions').last().get('titles');
-    const titleIds$ = titlesForm.valueChanges.pipe(
+    this.movies$ = titlesForm.valueChanges.pipe(
       startWith(titlesForm.value),
       map(titles => Object.keys(titles)),
-    );
-
-    // Get all the movies of the contract
-    this.movies$ = titleIds$.pipe(
       switchMap(titleIds => this.movieService.getValue(titleIds)),
       shareReplay()
     );
@@ -100,32 +102,12 @@ export class ContractTunnelComponent implements OnInit, OnDestroy {
     this.steps$ = this.movies$.pipe(
       map(movies => fillMovieSteps(movies))
     );
-
-    // Update the deal form for each title
-    this.sub = titleIds$.pipe(
-      switchMap(titleIds => {
-        const setDealForms = titleIds.map(async movieId => {
-          const deals = await this.dealService.getValue({ params: { movieId }});
-          if (this.dealForms.get(movieId)) {
-            this.dealForms.get(movieId).patchAllValue(deals);
-          } else {
-            this.dealForms.setControl(movieId, FormList.factory(deals, deal => new DistributionDealForm(deal)))
-          }
-        })
-        return combineLatest(setDealForms)
-      })
-    ).subscribe();
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
   }
 
   /** Add a title to this contract */
   addTitle(movieId: string) {
     this.contractForm.get('versions').last().get('titles').setControl(movieId, new ContractTitleDetailForm());
     this.dealForms.setControl(movieId, FormList.factory([], deal => new DistributionDealForm(deal)));
-    this.addDeal(movieId);
   }
 
   /** Remove a title to this contract */
@@ -133,7 +115,7 @@ export class ContractTunnelComponent implements OnInit, OnDestroy {
     this.contractForm.get('versions').last().get('titles').removeControl(movieId);
     const deals = this.dealForms.get(movieId).value;
     // start from the end to remove to avoid shift effects
-    for (let i = deals.length - 1; i !== 0; i--) {
+    for (let i = deals.length - 1; i >= 0; i--) {
       this.removeDeal(movieId, i);
     }
     this.dealForms.removeControl(movieId);
@@ -159,7 +141,7 @@ export class ContractTunnelComponent implements OnInit, OnDestroy {
   public save() {
     const write = this.db.firestore.batch();
     const contractId = this.query.getActiveId();
-    const contract = this.contractForm.value;
+    const contract = { ...this.contractForm.value };
 
     // Upate Version
     const lastIndex = contract.versions.length - 1;

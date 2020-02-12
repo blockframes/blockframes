@@ -25,8 +25,10 @@
             <a mat-stroked-button color="primary" [routerLink]="['..', movie.id]">Edit</a>
           </movie-banner-actions>
         </movie-banner>
-        <ng-container *ngIf="dealForms.get(movie.id).value as deals" >
-          <catalog-right-list [source]="deals"></catalog-right-list>
+        <ng-container *ngIf="dealForms.get(movie.id) as deals" >
+          <ng-container *ngIf="deals.value.length">
+            <catalog-right-list [source]="deals.value"></catalog-right-list>
+          </ng-container>
         </ng-container>
       </mat-card>
     </ng-container>
