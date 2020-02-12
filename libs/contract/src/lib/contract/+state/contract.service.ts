@@ -227,7 +227,7 @@ export class ContractService extends CollectionService<ContractState> {
    * @param contract
    * @param parentContracts
    */
-  public async populatePartiesWithParentRoles(contract: Contract, parentContracts?: Contract[]): Promise<Contract> {
+  public async populatePartiesWithParentRoles(contract: Contract, parentContracts: Contract[] = []): Promise<Contract> {
 
     /**
      * @dev If any parent contracts of this current contract have parties with childRoles defined,
@@ -235,7 +235,9 @@ export class ContractService extends CollectionService<ContractState> {
      */
     if (parentContracts.length === 0) {
       const promises = contract.parentContractIds.map(id => this.getValue(id));
-      parentContracts = await Promise.all(promises);
+      if (promises.length) {
+        parentContracts = await Promise.all(promises);
+      }
     }
 
     parentContracts.forEach(parentContract => {
