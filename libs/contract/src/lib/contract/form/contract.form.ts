@@ -27,7 +27,7 @@ function createPartyDetailsControls(partyDetails: Partial<ContractPartyDetail> =
 
 type PartyDetailsControl = ReturnType<typeof createPartyDetailsControls>;
 
-export class PartyDetailsForm extends FormEntity<PartyDetailsControl> {
+export class PartyDetailsForm extends FormEntity<PartyDetailsControl, ContractPartyDetail> {
   constructor(partyDetails?: Partial<ContractPartyDetail>) {
     super(createPartyDetailsControls(partyDetails));
   }
@@ -48,7 +48,7 @@ function createLegalDocumentControl(legalDocument?: Partial<LegalDocument>) {
 
 export type LegalDocumentControl = ReturnType<typeof createLegalDocumentControl>;
 
-export class LegalDocumentForm extends FormEntity<LegalDocumentControl> {
+export class LegalDocumentForm extends FormEntity<LegalDocumentControl, LegalDocument> {
   constructor(legalDocument?: Partial<LegalDocument>) {
     super(createLegalDocumentControl(legalDocument));
   }
@@ -64,7 +64,7 @@ function createLegalDocumentsControl(legalDocuments?: Partial<LegalDocuments>) {
 
 export type LegalDocumentsControl = ReturnType<typeof createLegalDocumentsControl>;
 
-export class LegalDocumentsForm extends FormEntity<LegalDocumentsControl> {
+export class LegalDocumentsForm extends FormEntity<LegalDocumentsControl, LegalDocuments> {
   constructor(legalDocuments?: Partial<LegalDocuments>) {
     super(createLegalDocumentsControl(legalDocuments));
   }

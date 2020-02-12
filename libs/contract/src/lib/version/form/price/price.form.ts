@@ -10,9 +10,9 @@ function createContractVersionPriceControls(price: Partial<Price>){
     }
 }
 
-type ContractVersionPriceControl = ReturnType<typeof createContractVersionPriceControls>;
+export type ContractVersionPriceControl = ReturnType<typeof createContractVersionPriceControls>;
 
-export class ContractVersionPriceForm extends FormEntity<ContractVersionPriceControl> {
+export class ContractVersionPriceForm extends FormEntity<ContractVersionPriceControl, Price> {
   constructor(price: Partial<Price> = {}) {
     super(createContractVersionPriceControls(price));
   }
