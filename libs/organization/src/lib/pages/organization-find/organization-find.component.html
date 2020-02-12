@@ -14,14 +14,8 @@
       />
       <mat-icon matPrefix svgIcon="magnifying_glasses"></mat-icon>
       <mat-autocomplete #auto="matAutocomplete">
-        <mat-option *ngFor="let result of searchResults$ | async" [value]="result.name" (click)="selectOrganization(org)">
-          <!-- <div *ngIf="(organizationResult$ | async) as org"> -->
-            <!-- <img class="org-logo" placeholderAsset="Organization_250.png" alt="Organization Logo" /> -->
-            <!-- <ng-container *ngFor="let logo of org">
-              <img class="org-logo" placeholderAsset="Organization_250.png" [imgRef]="logo" alt="Organization Logo" />
-            </ng-container> -->
-            <b>{{ result.name }}</b>
-          <!-- </div> -->
+        <mat-option *ngFor="let org of searchResults$ | async" [value]="org.name" (click)="selectOrganization(org)">
+            <b>{{ org.name }}</b>
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>

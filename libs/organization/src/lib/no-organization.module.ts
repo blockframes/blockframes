@@ -9,6 +9,7 @@ import { FeedbackMessageModule, ActionsListModule } from '@blockframes/ui';
 import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
 import { OrganizationFormModule } from './forms/organization-form/organization-form.module';
 import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
+import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 
 // Material
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -81,7 +82,8 @@ export const noOrganizationRoutes: Routes = [
     CropperModule,
     OrganizationFormModule,
     ImgAssetModule,
-
+    ImageReferenceModule,
+    
     // Material
     MatFormFieldModule,
     MatListModule,

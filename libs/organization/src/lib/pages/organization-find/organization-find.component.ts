@@ -1,13 +1,13 @@
 import { Component, ChangeDetectionStrategy, OnInit, Inject } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap, map } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { InvitationService } from '@blockframes/notification';
 import { OrganizationAlgoliaResult, OrganizationsIndex } from '@blockframes/utils';
 import { Index } from 'algoliasearch';
-import { OrganizationQuery, OrganizationDocumentWithDates } from '@blockframes/organization/+state';
+import { OrganizationDocumentWithDates } from '@blockframes/organization/+state';
 
 @Component({
   selector: 'organization-find',
@@ -27,7 +27,6 @@ export class OrganizationFindComponent implements OnInit {
     private snackBar: MatSnackBar,
     private router: Router,
     private invitationService: InvitationService,
-    private orgQuery: OrganizationQuery
   ) {}
 
   ngOnInit() {
@@ -36,18 +35,7 @@ export class OrganizationFindComponent implements OnInit {
       distinctUntilChanged(),
       switchMap(name => {
         return new Promise<OrganizationAlgoliaResult[]>((res, rej) => {
-          this.organizationIndex.search(name, (err, result) => {
-            if(err){
-              return rej(err)
-            } else {
-              // const orgIds = result.hits.map(index => index.objectID)
-              // this.organizationResult$ = this.orgQuery.selectAll({ filterBy: org => {
-              //   console.log('filterBy org', org)
-              //   return orgIds.includes(org.id)}})
-              //   this.organizationResult$.subscribe()
-              return res(result.hits)
-            }
-          });
+          this.organizationIndex.search(name, (err, result) => (err ? rej(err) : res(result.hits)));
         });
       })
     )    
