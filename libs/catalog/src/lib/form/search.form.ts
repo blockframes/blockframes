@@ -1,9 +1,7 @@
 import {
   LanguagesLabel,
   CertificationsLabel,
-  MediasLabel,
   TerritoriesLabel,
-  GENRES_LABEL,
   LanguagesSlug,
   GenresSlug,
   CertificationsSlug,
@@ -18,22 +16,19 @@ import {
 } from '@blockframes/utils/static-model/types';
 import { Validators, FormArray } from '@angular/forms';
 import { FormGroup, FormControl } from '@angular/forms';
-import { FormEntity, yearValidators, numberRangeValidator } from '@blockframes/utils';
+import { FormEntity, numberRangeValidator } from '@blockframes/utils';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 import { MovieLanguageSpecification } from '@blockframes/movie/movie/+state/movie.firestore';
 import { createMovieLanguageSpecification } from '@blockframes/movie/movie/+state/movie.model';
 import { FormStaticArray, FormList, FormStaticValue } from '@blockframes/utils/form';
-import { NumberRange } from '@blockframes/utils/common-interfaces';
+import { NumberRange, DateRange } from '@blockframes/utils/common-interfaces';
 
 /////////////////////////
 // CatalogGenresFilter //
 /////////////////////////
 
 export interface CatalogSearch {
-  productionYear: {
-    from: number;
-    to: number;
-  };
+  productionYear: DateRange;
   genres: GenresSlug[];
   status: MovieStatusLabel[];
   salesAgent: string[];
@@ -48,10 +43,7 @@ export interface CatalogSearch {
 }
 
 export interface AvailsSearch {
-  terms: {
-    from: Date;
-    to: Date;
-  };
+  terms: DateRange;
   territories: TerritoriesSlug[];
   medias: MediasSlug[];
   exclusivity: boolean;
@@ -73,6 +65,8 @@ function createCatalogSearch(search: Partial<CatalogSearch> = {}): CatalogSearch
     salesAgent: [],
     languages: {},
     certifications: [],
+    originCountries: [],
+    estimatedBudget: [],
     searchbar: {
       text: '',
       type: ''
@@ -84,8 +78,8 @@ function createCatalogSearch(search: Partial<CatalogSearch> = {}): CatalogSearch
 function createAvailsSearch(search: Partial<AvailsSearch> = {}): AvailsSearch {
   return {
     terms: {
-      to: null,
-      from: null
+      from: null,
+      to: null
     },
     territories: [],
     medias: [],
@@ -111,6 +105,18 @@ export function createLanguageControl(
   });
 }
 
+function createTermsControl(terms: DateRange) {
+  return new FormGroup(
+    {
+      from: new FormControl(terms.from, [
+        Validators.min(new Date().getFullYear())
+      ]),
+      to: new FormControl(terms.to)
+    },
+    numberRangeValidator('from', 'to')
+  )
+}
+
 function createCatalogSearchControl(search: CatalogSearch) {
   // Create controls for the languages
   const languageControl = Object.keys(search.languages).reduce(
@@ -122,16 +128,7 @@ function createCatalogSearchControl(search: CatalogSearch) {
     {} // Initial value. No controls at the beginning
   );
   return {
-    productionYear: new FormGroup(
-      {
-        from: new FormControl(search.productionYear.from, [
-          yearValidators,
-          Validators.max(new Date().getFullYear())
-        ]),
-        to: new FormControl(search.productionYear.to, [yearValidators])
-      },
-      numberRangeValidator('from', 'to')
-    ),
+    productionYear: createTermsControl(search.productionYear),
     genres: new FormStaticArray(search.genres, 'GENRES', [Validators.required]),
     status: new FormControl(search.status),
     salesAgent: new FormControl(search.salesAgent),
@@ -148,15 +145,7 @@ function createCatalogSearchControl(search: CatalogSearch) {
 
 function createAvailsSearchControl(search: AvailsSearch) {
   return {
-    terms: new FormGroup(
-      {
-        from: new FormControl(search.terms.from, [
-          Validators.min(new Date().getFullYear())
-        ]),
-        to: new FormControl(search.terms.to)
-      },
-      numberRangeValidator('from', 'to')
-    ),
+    terms: createTermsControl(search.terms),
     medias: new FormControl(search.medias),
     territories: new FormArray(search.territories.map(territory => new FormControl(territory))),
     exclusivity: new FormControl(search.exclusivity),

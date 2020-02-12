@@ -113,21 +113,19 @@
 
           <mat-expansion-panel>
             <mat-expansion-panel-header>
-              <mat-panel-title>
-                Country of Origin
-              </mat-panel-title>
+              <mat-panel-title> Country of Origin </mat-panel-title>
             </mat-expansion-panel-header>
             <mat-form-field appearance="outline">
-              <mat-chip-list #chipList>
-                <mat-chip *ngFor="let country of selectedMovieCountries; let i = index" [selectable]="selectable"
-                  [removable]="removable" (removed)="removeCountry(country, i)">
+              <mat-chip-list #countryOriginChipList>
+                <mat-chip *ngFor="let country of selectedMovieCountries; let i = index" [selectable]="selectableCountry"
+                  [removable]="removableCountry" (removed)="removeCountry(country, i)">
                   <span>{{ country }}</span>
-                  <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                  <mat-icon matChipRemove>cancel</mat-icon>
                 </mat-chip>
-                <input placeholder="Country available" #countryInput
-                  [matAutocomplete]="auto" [matChipInputFor]="chipList" [formControl]="countryControl" />
+                <input placeholder="Countries available" #countryInput
+                  [matAutocomplete]="countryMatAutoComplete" [matChipInputFor]="countryOriginChipList" [formControl]="countryControl" />
               </mat-chip-list>
-              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedCountry($event)">
+              <mat-autocomplete #countryMatAutoComplete="matAutocomplete" (optionSelected)="selectedCountry($event)">
                 <mat-option *ngFor="let country of countriesFilter$ | async" [value]="country">
                   {{ country }}
                 </mat-option>
@@ -145,22 +143,11 @@
             <form formGroupName="languages" fxLayout="column">
               <div fxLayout="row" fxLayoutAlign="start start">
                 <mat-form-field appearance="outline">
-                  <mat-label>From</mat-label>
-                  <input test-id="production-year-input-from" matInput type="number" formControlName="from"
-                    placeholder="From" autocomplete="off" [errorStateMatcher]="matcher" />
-                  <mat-error *ngIf="filterForm.get('productionYear').get('from').hasError('pattern')">
-                    Please type in a valid year! Example: <i>{{ getCurrentYear }}</i>
-                  </mat-error>
-                  <mat-error *ngIf="filterForm.get('productionYear').get('from').hasError('max')">
-                    The year can't be above the current year, {{ getCurrentYear }}
-                  </mat-error>
-                </mat-form-field>
-                <mat-form-field appearance="outline">
-                  <mat-label>To</mat-label>
-                  <input test-id="production-year-input-to" matInput type="number" formControlName="to" placeholder="To"
-                    autocomplete="off" [errorStateMatcher]="matcher" />
-                  <mat-error *ngIf="filterForm.get('productionYear').get('to').hasError('pattern')">
-                    Please type in a valid year! Example: <i>{{ getCurrentYear }}</i>
+                  <mat-label>New language</mat-label>
+                  <input test-id="languages-panel-input" matInput type="text" [matAutocomplete]="language"
+                    [formControl]="languageControl" placeholder="Add new language" [errorStateMatcher]="matcher" />
+                  <mat-error *ngIf="languageControl.hasError('languageNotSupported')">
+                    Please enter a valid language or choose from the dropdown menu!
                   </mat-error>
                   <button matSuffix mat-icon-button (click)="addLanguage(languageControl.value)"
                     [disabled]="!languageControl.valid">
@@ -239,62 +226,6 @@
             </div>
           </mat-expansion-panel>
 
-                      <!-- Languages -->
-            <mat-expansion-panel>
-              <mat-expansion-panel-header>
-                <mat-panel-title test-id="languages-panel">
-                  Languages
-                </mat-panel-title>
-              </mat-expansion-panel-header>
-              <form formGroupName="languages" fxLayout="column">
-                <div fxLayout="row" fxLayoutAlign="start start">
-                  <mat-form-field appearance="outline">
-                    <mat-label>New language</mat-label>
-                    <input test-id="languages-panel-input" matInput type="text" [matAutocomplete]="language"
-                      [formControl]="languageControl" placeholder="Add new language" [errorStateMatcher]="matcher" />
-                    <mat-error *ngIf="languageControl.hasError('languageNotSupported')">
-                      Please enter a valid language or choose from the dropdown menu!
-                    </mat-error>
-                    <button matSuffix mat-icon-button (click)="addLanguage(languageControl.value)"
-                      [disabled]="!languageControl.valid">
-                      <mat-icon>search</mat-icon>
-                    </button>
-                    <mat-autocomplete #language="matAutocomplete" (optionSelected)="addLanguage(languageControl.value)">
-                      <mat-option *ngFor="let language of languagesFilter$ | async" [value]="language">
-                        {{language}}
-                      </mat-option>
-                    </mat-autocomplete>
-                  </mat-form-field>
-                  <button test-id="languages" mat-button [disabled]="!languageControl.valid" color="accent"
-                    (click)="addLanguage(languageControl.value); languageControl.reset()">Add
-                    language
-                  </button>
-                </div>
-                <ng-container *ngIf="filterForm.get('languages').value">
-                  <mat-list [formGroup]="filterForm.get('languages')" role="list">
-                    <ng-container *ngFor="let language of languages$ | async">
-                      <mat-list-item [formGroupName]="language">
-                        <span mat-line>
-                          <h3 class="mat-h3">{{ language | translateSlug: 'LANGUAGES' }}</h3>
-                          <button mat-icon-button (click)="removeLanguage(language)">
-                            <mat-icon class="cancel-btn">cancel</mat-icon>
-                          </button>
-                        </span>
-                        <i mat-line>Options are cumulative</i>
-                        <mat-checkbox test-id="languages-checkbox-original" mat-line formControlName="original">Original
-                        </mat-checkbox>
-                        <mat-checkbox test-id="languages-checkbox-dubbed" mat-line formControlName="dubbed">Dubbed
-                        </mat-checkbox>
-                        <mat-checkbox test-id="languages-checkbox-subtitle" mat-line formControlName="subtitle">
-                          Subtitles
-                        </mat-checkbox>
-                      </mat-list-item>
-                    </ng-container>
-                  </mat-list>
-                </ng-container>
-              </form>
-            </mat-expansion-panel>
-
             <!-- Production Statuses -->
             <mat-expansion-panel>
               <mat-expansion-panel-header>
@@ -307,31 +238,6 @@
                   {{status}}
                 </mat-checkbox>
               </div>
-            </mat-expansion-panel>
-
-            <!-- Sales Agents -->
-            <mat-expansion-panel>
-              <mat-expansion-panel-header>
-                <mat-panel-title test-id="sales-agent-panel">
-                  Sales Agents
-                </mat-panel-title>
-              </mat-expansion-panel-header>
-              <mat-form-field class="sales-agents-chip-list">
-                <mat-chip-list #salesAgentChipList aria-label="Sales Agents selection">
-                  <mat-chip *ngFor="let salesAgent of selectedSalesAgents" selectable removable
-                    (removed)="removeSalesAgent(salesAgent)">
-                    {{ salesAgent }}
-                    <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                  </mat-chip>
-                  <input placeholder="Sales Agents" #salesAgentInput [formControl]="salesAgentControl"
-                    [matAutocomplete]="salesAgent" [matChipInputFor]="salesAgentChipList">
-                </mat-chip-list>
-                <mat-autocomplete #salesAgent="matAutocomplete" (optionSelected)="addSalesAgent($event)">
-                  <mat-option *ngFor="let salesAgent of salesAgentFilter$ | async" [value]="salesAgent">
-                    {{ salesAgent }}
-                  </mat-option>
-                </mat-autocomplete>
-              </mat-form-field>
             </mat-expansion-panel>
 
             <!-- Certifications -->
@@ -385,21 +291,21 @@
               <!-- Territories -->
               <mat-expansion-panel>
                 <mat-expansion-panel-header>
-                  <mat-panel-title test-id="territories-panel">Territory </mat-panel-title>
+                  <mat-panel-title test-id="territories-panel"> Territory </mat-panel-title>
                 </mat-expansion-panel-header>
                 <mat-form-field appearance="outline">
-                  <mat-chip-list #chipList>
-                    <mat-chip *ngFor="let territory of selectedMovieTerritories; let i = index" [selectable]="selectable"
-                      [removable]="removable" (removed)="removeTerritory(territory, i)">
-                      {{territory}}
-                      <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                  <mat-chip-list #territoryChipList>
+                    <mat-chip *ngFor="let territory of selectedMovieTerritories; let i = index" [selectable]="selectableTerritory"
+                      [removable]="removableTerritory" (removed)="removeTerritory(territory, i)">
+                      {{ territory }}
+                      <mat-icon matChipRemove>cancel</mat-icon>
                     </mat-chip>
                     <input test-id="territories-panel-input" placeholder="Territories available" #territoryInput
-                      [matAutocomplete]="auto" [matChipInputFor]="chipList" [formControl]="territoryControl" />
+                      [matAutocomplete]="territoryMatAutoComplete" [matChipInputFor]="territoryChipList" [formControl]="territoryControl" />
                   </mat-chip-list>
-                  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedTerritory($event)">
+                  <mat-autocomplete #territoryMatAutoComplete="matAutocomplete" (optionSelected)="selectedTerritory($event)">
                     <mat-option *ngFor="let territory of territoriesFilter$ | async" [value]="territory">
-                      {{territory}}
+                      {{ territory }}
                     </mat-option>
                   </mat-autocomplete>
                   <mat-hint>Please choose a territory out of the drop down menu!</mat-hint>
@@ -429,7 +335,7 @@
                   <span>Yes</span>
                 </article>
               </mat-expansion-panel>
-              <button mat-stroked-button color="primary" (click)="applyAvailsFilter()">Apply Avails Filter</button>
+              <button mat-stroked-button color="primary" (click)="applyAvailsFilter()" [disabled]="!availsForm.valid">Apply Avails Filter</button>
             </ng-container>
         </mat-accordion>
       </mat-card-content>
@@ -467,17 +373,6 @@
                 <span *ngFor="let director of movie.main.directors; let isLast=last">{{ director.firstName }}
                   {{ director.lastName }}{{isLast ? '' : ', '}}</span>
               </mat-card-subtitle>
-              <mat-card-content class="table-size-text">
-                <!-- <b *ngFor="let country of movie.main.originCountries | slice:0:2; let isLast=last; let i=index">
-                  {{ country | translateSlug: 'TERRITORIES' }}{{isLast ? '' : ', '}}{{i === 1 && movie.main.originCountries.length > 2 ? ',  ' : ''}}
-                </b>
-                <b *ngIf="movie.main.originCountries.length > 2">... </b>
-                <b *ngIf="movie.main.totalRunTime">| {{ movie.main.totalRunTime }} min </b><b>|
-                  {{ movie.main.genres[0] | translateSlug: 'GENRES'}}</b>
-                <p *ngIf="movie.salesAgentDeal.salesAgent.displayName">
-                  {{ movie.salesAgentDeal.salesAgent.displayName}}
-                </p> -->
-              </mat-card-content>
             </ng-container>
             <ng-container movieCardAction>
               <div fxLayout="row" fxLayoutAlign="end">

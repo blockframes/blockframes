@@ -22,14 +22,10 @@ import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
 import {
-  GenresLabel,
-  GENRES_LABEL,
   LANGUAGES_LABEL,
   LanguagesLabel,
   CertificationsLabel,
-  MediasLabel,
   CERTIFICATIONS_LABEL,
-  MEDIAS_LABEL,
   TERRITORIES_LABEL,
   CertificationsSlug,
   LanguagesSlug,
@@ -40,7 +36,6 @@ import {
   MEDIAS_SLUG
 } from '@blockframes/utils/static-model/types';
 import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
-import { languageValidator } from '@blockframes/utils/form/validators/validators';
 import { ControlErrorStateMatcher } from '@blockframes/utils/form/validators/validators';
 import { MovieAlgoliaResult } from '@blockframes/utils/algolia';
 import { MoviesIndex } from '@blockframes/utils/algolia';
@@ -57,7 +52,6 @@ import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.que
 import { NumberRange } from '@blockframes/utils/common-interfaces/range';
 import { BUDGET_LIST } from '@blockframes/movie/movieform/budget/budget.form';
 import { CatalogSearchForm, AvailsSearchForm } from '@blockframes/catalog/form/search.form';
-import { ContractService } from '@blockframes/contract/contract/+state';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state';
 
 @Component({
@@ -100,27 +94,22 @@ export class MarketplaceSearchComponent implements OnInit {
   public searchbarOptions: string[] = ['director', 'title', 'keywords'];
 
   /* Data for UI */
-  public movieGenres: GenresLabel[] = GENRES_LABEL;
   public movieProductionStatuses: MovieStatusLabel[] = MOVIE_STATUS_LABEL;
   public movieCertifications: CertificationsLabel[] = CERTIFICATIONS_LABEL;
   public movieMedias: MediasSlug[] = MEDIAS_SLUG;
 
   /* Filter for autocompletion */
-  public genresFilter$: Observable<string[]>;
   public territoriesFilter$: Observable<string[]>;
   public countriesFilter$: Observable<string[]>;
   public languagesFilter$: Observable<string[]>;
-  public salesAgentFilter$: Observable<string[]>;
   public resultFilter$: Observable<any[]>;
 
   /* Individual form controls for filtering */
-  public genreControl: FormControl = new FormControl('');
   public languageControl: FormControl = new FormControl('', [
     Validators.required
   ]);
   public territoryControl: FormControl = new FormControl('');
   public countryControl: FormControl = new FormControl('');
-  public salesAgentControl: FormControl = new FormControl('');
   public sortByControl: FormControl = new FormControl('');
   public searchbarTextControl: FormControl = new FormControl('');
 
@@ -134,36 +123,28 @@ export class MarketplaceSearchComponent implements OnInit {
   /* Arrays for showing the selected countries in the UI */
   public selectedMovieCountries: string[] = [];
 
-  /* Flags for Sales Agents chip input*/
-  public selectedSalesAgents: string[] = [];
-  public salesAgents: string[] = [];
-
   public budgetList: NumberRange[] = BUDGET_LIST;
 
-  @ViewChild('salesAgentInput', { static: false }) salesAgentInput: ElementRef<HTMLInputElement>;
-  @ViewChild('salesAgent', { static: false }) salesAgentMatAutocomplete: MatAutocomplete;
+  public matcher = new ControlErrorStateMatcher();
+  public isMobile: boolean = this.breakpointObserver.isMatched('(max-width: 599px)');
+
+  /* Flags for the Country of Origin chip input */
+  public visibleCountry = true;
+  public selectableCountry = true;
+  public removableCountry = true;
+
+  @ViewChild('countryInput', { static: false }) countryInput: ElementRef<HTMLInputElement>;
+  @ViewChild('autoCompleteInput', { static: false, read: MatAutocompleteTrigger })
+  public countryMatAutoComplete: MatAutocompleteTrigger;
 
   /* Flags for the Territories chip input */
-  public visible = true;
-  public selectable = true;
-  public removable = true;
-
-  /* Number of available movies in the database */
-  public movieCount: number;
-
-  public selectedGenres: string[] = [];
-  @ViewChild('genreInput', { static: false }) genreInput: ElementRef<HTMLInputElement>;
-  @ViewChild('genre', { static: false }) genreMatAutocomplete: MatAutocomplete;
-
-  public matcher = new ControlErrorStateMatcher();
-
-  public isMobile: boolean = this.breakpointObserver.isMatched('(max-width: 599px)');
+  public visibleTerritory = true;
+  public selectableTerritory = true;
+  public removableTerritory = true;
 
   @ViewChild('territoryInput', { static: false }) territoryInput: ElementRef<HTMLInputElement>;
   @ViewChild('autoCompleteInput', { static: false, read: MatAutocompleteTrigger })
-  public autoComplete: MatAutocompleteTrigger;
-
-  @ViewChild('countryInput', { static: false }) countryInput: ElementRef<HTMLInputElement>;
+  public territoryMatAutoComplete: MatAutocompleteTrigger;
 
   constructor(
     private router: Router,
@@ -189,22 +170,6 @@ export class MarketplaceSearchComponent implements OnInit {
           );
         });
       }),
-      // tap((movies: MovieAlgoliaResult[]) => {
-      //   movies.forEach(index => {
-      //     if (!this.salesAgents.includes(index.movie.salesAgentDeal.salesAgent.displayName)) {
-      //       this.salesAgents.push(index.movie.salesAgentDeal.salesAgent.displayName);
-      //     }
-      //   });
-      //   this.allTitles = movies.map(index => index.movie.main.title.international);
-      //   this.allKeywords = flatten(
-      //     movies.map(index => index.movie.promotionalDescription.keywords)
-      //   );
-      //   this.allDirectors = flatten(
-      //     movies.map(index =>
-      //       index.movie.main.directors.map(name => `${name.firstName} ${name.lastName}`)
-      //     )
-      //   );
-      // })
     );
 
     this.movieSearchResults$ = combineLatest([
@@ -226,7 +191,9 @@ export class MarketplaceSearchComponent implements OnInit {
                 movie => {
                   // Filters the deals before sending them to the avails filter function
                   if (!movie.distributionDeals) {
-                    return true;
+                    // If movie has no deals, it means there is also no mandate deal,
+                    // Archipel can't sells rights for this movie, so we don't display it.
+                    return false;
                   }
 
                   const mandateDeal = this.dealService.getMandateDeal(movie.distributionDeals);
@@ -241,11 +208,6 @@ export class MarketplaceSearchComponent implements OnInit {
         );
       }),
     )
-
-    this.genresFilter$ = this.genreControl.valueChanges.pipe(
-      startWith(''),
-      map(genre => (genre ? this._genreFilter(genre) : this.movieGenres))
-    );
 
     this.languagesFilter$ = this.languageControl.valueChanges.pipe(
       startWith(''),
@@ -265,10 +227,6 @@ export class MarketplaceSearchComponent implements OnInit {
       map(country => this._countriesFilter(country))
     );
 
-    this.salesAgentFilter$ = this.salesAgentControl.valueChanges.pipe(
-      startWith(''),
-      map(salesAgent => (salesAgent ? this._salesAgentsFilter(salesAgent) : this.salesAgents))
-    );
     this.resultFilter$ = this.searchbarTextControl.valueChanges.pipe(
       startWith(''),
       tap(value => this.searchbarForm.get('text').setValue(value)),
@@ -296,9 +254,9 @@ export class MarketplaceSearchComponent implements OnInit {
     return this.routerQuery.getValue().state.root.data.app;
   }
 
-  public toggleAutoCompletion() {
-    this.autoComplete.closePanel();
-  }
+  // public toggleAutoCompletion() {
+  //   this.autoComplete.closePanel();
+  // }
 
   /**
    * @description function for determine if FormGroup error should be shown.
@@ -337,17 +295,6 @@ export class MarketplaceSearchComponent implements OnInit {
    * @description returns an array of strings for the autocompletion component
    * @param value string which got typed in into an input field
    */
-  private _genreFilter(genre: string): string[] {
-    const filterValue = genre.toLowerCase();
-    return GENRES_LABEL.filter(movieGenre => {
-      return movieGenre.toLowerCase().includes(filterValue);
-    });
-  }
-
-  /**
-   * @description returns an array of strings for the autocompletion component
-   * @param value string which got typed in into an input field
-   */
   private _territoriesFilter(territory: string): string[] {
     const filterValue = territory.toLowerCase();
     return TERRITORIES_LABEL.filter(movieTerritory => {
@@ -374,15 +321,6 @@ export class MarketplaceSearchComponent implements OnInit {
     if (value) {
       return LANGUAGES_LABEL.filter(language => language.toLowerCase().includes(value.toLowerCase()));
     }
-  }
-
-  /**
-   * @description returns an array of strings for the autocompletion component
-   * @param value string which got typed in into an input field
-   */
-  private _salesAgentsFilter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-    return this.salesAgents.filter(salesAgent => salesAgent.toLowerCase().includes(filterValue));
   }
 
   /**
@@ -526,28 +464,6 @@ export class MarketplaceSearchComponent implements OnInit {
     this.territoryInput.nativeElement.value = '';
   }
 
-  public addSalesAgent(event: MatAutocompleteSelectedEvent) {
-    const salesAgent = event.option.value;
-
-    if ((salesAgent || '').trim() && !this.selectedSalesAgents.includes(salesAgent)) {
-      this.selectedSalesAgents.push(salesAgent.trim());
-    }
-
-    this.filterForm.addSalesAgent(salesAgent);
-    this.salesAgentControl.setValue('');
-    this.salesAgentInput.nativeElement.value = '';
-    this.analytics.event(AnalyticsEvents.addedSalesAgent, { salesAgent });
-  }
-
-  public removeSalesAgent(salesAgent: string) {
-    const index = this.selectedSalesAgents.indexOf(salesAgent);
-
-    if (index >= 0) {
-      this.selectedSalesAgents.splice(index, 1);
-      this.filterForm.removeSalesAgent(salesAgent);
-      this.analytics.event(AnalyticsEvents.removedSalesAgent, { salesAgent });
-    }
-  }
 
   public toggle$(movieId: string) {
     return this.catalogCartQuery.isAddedToWishlist(movieId);
@@ -594,5 +510,6 @@ export class MarketplaceSearchComponent implements OnInit {
 
   public applyAvailsFilter() {
     this.availsForm.get('isActive').setValue(true);
+    console.log(this.availsForm.value)
   }
 }
