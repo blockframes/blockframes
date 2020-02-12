@@ -1,27 +1,24 @@
 import { Movie } from '@blockframes/movie/movie/+state/movie.model';
 import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
 import { ExtractSlug } from '@blockframes/utils/static-model/staticModels';
-import { NumberRange } from '@blockframes/utils/common-interfaces';
+import { NumberRange, Terms, DateRange } from '@blockframes/utils/common-interfaces';
 import { LanguagesLabel } from '@blockframes/utils/static-model/types';
-import { TerritoriesSlug, MediasSlug } from '@blockframes/utils/static-model/types';
-import { LanguagesSlug } from '@blockframes/utils/static-model/types';
 import { CatalogSearch, AvailsSearch } from '@blockframes/catalog/form/search.form';
 import { getFilterMatchingDeals, getDealsInDateRange, getExclusiveDeals } from '@blockframes/movie/distribution-deals/create/availabilities.util';
 import { MovieLanguageSpecification } from '@blockframes/movie/movie+state/movie.firestore';
 import { toDate } from '@blockframes/utils/helpers';
-import { Scope } from '@sentry/browser';
 
-function isProductionYearBetween(movie: Movie, range: { from: number; to: number }): boolean {
+function isProductionYearBetween(movie: Movie, range: DateRange): boolean {
   if (!range || !(range.from && range.to)) {
     return true;
   }
   // prevent from default error that property is undefined
   if (typeof range.from && typeof range.to) {
-    return movie.main.productionYear >= range.from && movie.main.productionYear <= range.to;
+    return movie.main.productionYear >= range.from.getFullYear() && movie.main.productionYear <= range.to.getFullYear();
   }
 }
 
-function hasLanguage(movie: Movie, language: { [languageLabel in LanguagesLabel]: MovieLanguageSpecification }) {
+function hasLanguage(movie: Movie, language: Partial<{ [languageLabel in LanguagesLabel]: MovieLanguageSpecification }>) {
     if (Object.entries(language).length === 0) {
       return true;
     }
@@ -129,19 +126,18 @@ function hasCertifications(movie: Movie, movieCertification: string[]): boolean 
  * @param deals all the deals from the movies in the filterForm
  * @param filter The filter options defined by the buyer
  */
-function hasAvailabilities(deals: DistributionDeal[], filter: AvailsSearch, contractService): boolean {
+function hasAvailabilities(deals: DistributionDeal[], filter: AvailsSearch, mandateDeal: DistributionDeal): boolean {
 
   if (!filter.terms || !(filter.terms.from && filter.terms.to) || !deals) {
     return true;
   }
 
   // If Archipel Content is not allowed to sells rights from this movie on the mandate, don't show the movie
-  if (archipelCanSells(deals, filter, contractService)) {
+  if (archipelCanSells(filter, mandateDeal)) {
     return false;
   }
 
-  const dealsWithoutMandate = getDealsWithoutMandate(deals, contractService);
-  const matchingExclusivityDeals = getExclusiveDeals(filter.exclusivity, dealsWithoutMandate);
+  const matchingExclusivityDeals = getExclusiveDeals(deals, filter.exclusivity);
   const matchingRangeDeals = getDealsInDateRange(filter.terms, matchingExclusivityDeals);
   const matchingDeals = getFilterMatchingDeals(filter, matchingRangeDeals);
 
@@ -171,10 +167,10 @@ function archipelCanSells(filter: AvailsSearch, mandateDeal: DistributionDeal): 
 
   const mandateHasTerritories = mandateHas(filter.territories, mandateDeal.territory);
   const mandateHasMedias = mandateHas(filter.medias, mandateDeal.licenseType);
-  const mandateHasTerms = (
+  const mandateHasTerms =
     toDate(filter.terms.from).getTime() > toDate(mandateDeal.terms.start).getTime() &&
     toDate(filter.terms.to).getTime() < toDate(mandateDeal.terms.end).getTime()
-  );
+  ;
 
   return mandateHasTerritories && mandateHasMedias && mandateHasTerms;
 }
@@ -182,14 +178,6 @@ function archipelCanSells(filter: AvailsSearch, mandateDeal: DistributionDeal): 
 /** Checks if every items of the list from filters are in the list from the deal. */
 function mandateHas(listFromFilter: string[], listFromDeal: string[]) {
   return listFromFilter.every(item => listFromDeal.includes(item));
-}
-
-/**  Returns a list of deals without the mandate deal. */
-function getDealsWithoutMandate(deals: DistributionDeal[], contractService): DistributionDeal[] {
-  return deals.filter(async deal => {
-    const contract = await contractService.getValue(deal.contractId);
-    return contract.status !== 'mandate'
-  });
 }
 
 // TODO #1306 - remove when algolia is ready
@@ -204,9 +192,6 @@ export function filterMovie(movie: Movie, filter: CatalogSearch): boolean {
     hasGenres(movie, filter.genres) &&
     hasCertifications(movie, filter.certifications) &&
     isProductionStatus(movie, filter.status) &&
-    hasAvailabilities(deals, filter) &&
-    hasTerritories(movie, filter.territories) &&
-    hasMedias(movie, filter.medias) &&
     hasCountry(movie, filter.originCountries) &&
     hasLanguage(movie, filter.languages) &&
     isProductionStatus(movie, filter.status)
@@ -220,12 +205,12 @@ export function filterMovie(movie: Movie, filter: CatalogSearch): boolean {
  * @param mandateDeal The deal between Archipel and the seller
  */
 export function filterMovieWithAvails(deals: DistributionDeal[], filter: AvailsSearch, mandateDeal: DistributionDeal) {
-  if (!filter.terms || !(filter.terms.from && filter.terms.to) || !deals) {
+  if (!filter.terms || !(filter.terms.from && filter.terms.to)) {
     return true;
   }
 
   // If Archipel Content is not allowed to sells rights from this movie on the mandate, don't show the movie
-  if (archipelCanSells(filter, mandateDeal)) {
+  if (!archipelCanSells(filter, mandateDeal)) {
     return false;
   }
 

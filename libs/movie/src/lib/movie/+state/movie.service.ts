@@ -19,6 +19,7 @@ import { firestore } from 'firebase/app';
 import { PermissionsService } from '@blockframes/organization/permissions/+state/permissions.service';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { Observable } from 'rxjs';
+import { StoreStatus } from './movie.firestore';
 
 /** Query movies from the contract with distributions deals from the last version. */
 const movieListContractQuery = (contractId: string, movieIds: string[]): Query<Movie[]> => ({
@@ -33,6 +34,7 @@ const movieListContractQuery = (contractId: string, movieIds: string[]): Query<M
 /** Query all the movies with their distributionDeals */
 const movieListWithDealsQuery = () => ({
   path: 'movies',
+  queryFn: ref => ref.where('main.storeConfig.status', '==', StoreStatus.accepted),
   distributionDeals: (movie: Movie) => ({
     path: `movies/${movie.id}/distributionDeals`
   })
