@@ -35,14 +35,7 @@ import { adminApp, onRequestAccessToAppWrite } from './admin';
 import { onMovieUpdate, onMovieCreate, onMovieDelete } from './movie';
 import * as bigQuery from './bigQuery';
 import { onDocumentPermissionCreate } from './permissions';
-import { 
-  onContractCreate,
-  onContractUpdate,
-  onContractDelete,
-  onContractVersionCreate,
-  onContractVersionUpdate,
-  onContractVersionDelete
-} from './contract';
+import { onContractWrite, onContractVersionWrite } from './contract';
 
 /** Trigger: when eth-events-server pushes contract events. */
 export const onIpHashEvent = functions.pubsub.topic('eth-events.ipHash').onPublish(onIpHash);
@@ -165,52 +158,22 @@ export const onMovieDeleteEvent = onDocumentDelete(
 //   Contracts & Contracts Version Management   //
 //------------------------------------------------
 
+
 /**
- * Trigger: when a contract is created
+ * Trigger: when a contract is created/updated/deleted
  */
-export const onContractCreateEvent = onDocumentCreate(
+export const onContractWriteEvent = onDocumentWrite(
   'contracts/{contractId}',
-  onContractCreate
+  onContractWrite
 );
 
-/**
- * Trigger: when a contract is updated
- */
-export const onContractUpdateEvent = onDocumentUpdate(
-  'contracts/{contractId}',
-  onContractUpdate
-)
 
 /**
- * Trigger: when a contract is deleted
+ * Trigger: when a contractVersion is created/updated/deleted
  */
-export const onContractDeleteEvent = onDocumentDelete(
-  'contracts/{contractId}',
-  onContractDelete
-)
-
-/**
- * Trigger: when a contractVersion is created
- */
-export const onContractVersionCreateEvent = onDocumentCreate(
+export const onContractVersionWriteEvent = onDocumentWrite(
   'contracts/{contractId}/versions/{versionId}',
-  onContractVersionCreate
-);
-
-/**
- * Trigger: when a contractVersion is updated
- */
-export const onContractVersionUpdateEvent = onDocumentUpdate(
-  'contracts/{contractId}/versions/{versionId}',
-  onContractVersionUpdate
-)
-
-/**
- * Trigger: when a contractVersion is deleted
- */
-export const onContractVersionDeleteEvent = onDocumentDelete(
-  'contracts/{contractId}/versions/{versionId}',
-  onContractVersionDelete
+  onContractVersionWrite
 )
 
 

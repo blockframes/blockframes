@@ -38,6 +38,9 @@ export enum ContractStatus {
   undernegotiation = 'under negotiation',
 }
 
+/** @dev Valid values of ContractStatus */
+export const ValidContractStatuses = ['waitingpayment', 'paid', 'accepted'];
+
 export enum ContractType {
   mandate = 'mandate',
   sale = 'sale'
@@ -121,9 +124,8 @@ interface ContractRaw<D> {
  * This represents a contract merged with its last version.
  * We keep only the fields that are not critical and viewable by every logged in user
  */
-interface PublicContractRaw<D> {
+interface PublicContractRaw {
   id: string,
-  scope: TermsRaw<D>,
   type: ContractType,
   titleIds: string[],
 }
@@ -223,8 +225,6 @@ export interface Invoice extends InvoiceRaw<Date> {
 export interface InvoiceDocument extends InvoiceRaw<Timestamp> {
 }
 
-export interface PublicContractDocumentWithDates extends PublicContractRaw<Date> {
-}
+export type PublicContractDocumentWithDates = PublicContractRaw;
 
-export interface PublicContractDocument extends PublicContractRaw<Timestamp> {
-}
+export type PublicContractDocument = PublicContractRaw;

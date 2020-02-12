@@ -92,7 +92,6 @@ export function createPublicContract(params: Partial<PublicContract> = {}): Publ
     type: ContractType.mandate,
     titleIds: [],
     ...params,
-    scope: createTerms(params.scope),
   };
 }
 

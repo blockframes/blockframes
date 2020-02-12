@@ -1,5 +1,6 @@
 import { functions, db } from './internals/firebase';
-import { ContractDocument, PublicContractDocument, ContractVersionDocument } from './data/types';
+import { ContractDocument, PublicContractDocument } from './data/types';
+import { ValidContractStatuses } from '@blockframes/contract/contract/+state/contract.firestore';
 /**
  * 
  * @param contract 
@@ -11,11 +12,17 @@ async function transformContractToPublic(contract: ContractDocument, versionToSk
 
     // Fetching the current version to compare it against versionToSkip value
     const versionSnap = await tx.get(db.doc(`contracts/${contract.id}/versions/_meta`));
+    // @TODO (#1887) using _meta to keep the id of the last version is too dangerous since triggers are not necessary in order.
     const versionDoc = versionSnap.data();
     let lastVersionDoc;
     if (!!versionDoc) {
       // If the current version is the one to skip/delete (versionToSkip), we update _meta version with versionToSkip - 1
-      const versionToFetch = !versionToSkip || parseInt(versionToSkip, 10) !== parseInt(versionDoc.count, 10) ? versionDoc.count : parseInt(versionToSkip, 10) - 1;
+      const versionToFetch = !versionToSkip || parseInt(versionToSkip, 10) !== parseInt(versionDoc.count, 10)
+        ? versionDoc.count
+        // @TODO (#1887) Counting and assuming ids are sequential and ordered is too dangerous.
+        // A solution should be to fetch all version ordered by id desc limit 1
+        : parseInt(versionToSkip, 10) - 1;
+
       const lastVersionSnap = await tx.get(db.doc(`contracts/${contract.id}/versions/${versionToFetch}`));
       lastVersionDoc = lastVersionSnap.data();
 
@@ -25,19 +32,18 @@ async function transformContractToPublic(contract: ContractDocument, versionToSk
         console.log(`updating _meta.count to : "${versionDoc.count}" contractId : ${contract.id}`)
         await tx.set(versionSnap.ref, versionDoc);
       } else {
-        // There is no remaining contract version we delete _meta document and the corresponding publicContract will be deleted
+        // There is no remaining contract version, we delete _meta document and the corresponding publicContract will be deleted
         console.log(`deleting _meta document for contractId : ${contract.id}`);
         tx.delete(versionSnap.ref);
       }
     }
 
     /** @dev public contract document is created only it status is OK */
-    if (lastVersionDoc && ['waitingpayment', 'paid', 'accepted'].includes(lastVersionDoc.status)) {
+    if (lastVersionDoc && ValidContractStatuses.includes(lastVersionDoc.status)) {
       const publicContract: PublicContractDocument = {
         id: contract.id,
         type: contract.type,
         titleIds: contract.titleIds,
-        scope: lastVersionDoc ? lastVersionDoc.scope : {},
       };
       await tx.set(publicContractSnap.ref, publicContract)
     } else {
@@ -47,13 +53,23 @@ async function transformContractToPublic(contract: ContractDocument, versionToSk
   });
 }
 
-export async function onContractCreate(
-  snap: FirebaseFirestore.DocumentSnapshot,
+export async function onContractWrite(
+  change: functions.Change<FirebaseFirestore.DocumentSnapshot>,
 ): Promise<any> {
-  const contract = snap.data() as ContractDocument;
+
+  const before = change.before.data();
+  const after = change.after.data();
+
+  if (!after && !!before) { // Deletion
+    return db.runTransaction(async tx => {
+      await tx.delete(db.doc(`publicContracts/${before.id}`));
+    });
+  }
+
+  const contract = after as ContractDocument;
 
   if (!contract) {
-    const msg = 'Found invalid contract data on creation.'
+    const msg = 'Found invalid contract data.'
     console.error(msg);
     throw new Error(msg);
   }
@@ -61,45 +77,11 @@ export async function onContractCreate(
   return await transformContractToPublic(contract);
 }
 
-export async function onContractVersionCreate(
-  snap: FirebaseFirestore.DocumentSnapshot,
+export async function onContractVersionWrite(
+  change: functions.Change<FirebaseFirestore.DocumentSnapshot>,
+  context: functions.EventContext
 ): Promise<any> {
-  const contractId = snap.ref.parent.parent ? snap.ref.parent.parent.id : undefined;
-
-  if (!contractId) {
-    const msg = 'Found invalid contractVersion data on creation.'
-    console.error(msg);
-    throw new Error(msg);
-  }
-
-  const contractRef = db.doc(`contracts/${contractId}`);
-  const contractSnap = await contractRef.get();
-  const contract = contractSnap.data() as ContractDocument;
-  return await transformContractToPublic(contract);
-}
-
-export async function onContractDelete(
-  snap: FirebaseFirestore.DocumentSnapshot
-): Promise<any> {
-  const contract = snap.data() as ContractDocument;
-
-  if (!contract) {
-    const msg = 'Found invalid contract data on deletion.'
-    console.error(msg);
-    throw new Error(msg);
-  }
-
-  return db.runTransaction(async tx => {
-    await tx.delete(db.doc(`publicContracts/${contract.id}`));
-  });
-}
-
-export async function onContractVersionDelete(
-  snap: FirebaseFirestore.DocumentSnapshot,
-): Promise<any> {
-  const contractId = snap.ref.parent.parent ? snap.ref.parent.parent.id : undefined;
-  // We retreive the version ID beeing currently removed
-  const { id } = snap.data() as ContractVersionDocument;
+  const { contractId, versionId } = context.params;
 
   if (!contractId) {
     const msg = 'Found invalid contractVersion data on deletion.'
@@ -107,39 +89,19 @@ export async function onContractVersionDelete(
     throw new Error(msg);
   }
 
-  console.log(`deleting ContractVersion : "${id}" for : ${contractId}`);
-  const contractRef = db.doc(`contracts/${contractId}`);
-  const contractSnap = await contractRef.get();
-  const contract = contractSnap.data() as ContractDocument;
-  return await transformContractToPublic(contract, id);
-}
+  const before = change.before.data();
+  const after = change.after.data();
 
-export async function onContractUpdate(
-  change: functions.Change<FirebaseFirestore.DocumentSnapshot>,
-): Promise<any> {
-  const contract = change.after.data() as ContractDocument;
-
-  if (!contract) {
-    const msg = 'Found invalid contract data when updating.'
-    console.error(msg);
-    throw new Error(msg);
-  }
-
-  return await transformContractToPublic(contract);
-}
-
-export async function onContractVersionUpdate(
-  change: functions.Change<FirebaseFirestore.DocumentSnapshot>,
-): Promise<any> {
-  const contractId = change.before.ref.parent.parent ? change.before.ref.parent.parent.id : undefined;
-  if (!contractId) {
-    const msg = 'Found invalid contractVersion data when updating.'
-    console.error(msg);
-    throw new Error(msg);
-  }
 
   const contractRef = db.doc(`contracts/${contractId}`);
   const contractSnap = await contractRef.get();
   const contract = contractSnap.data() as ContractDocument;
-  return await transformContractToPublic(contract);
+
+  if (!after && !!before) { // Deletion
+    console.log(`deleting ContractVersion : "${versionId}" for : ${contractId}`);
+    return await transformContractToPublic(contract, versionId);
+  } else {
+    return await transformContractToPublic(contract);
+  }
+
 }
