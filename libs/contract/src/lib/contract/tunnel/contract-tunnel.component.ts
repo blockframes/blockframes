@@ -12,7 +12,7 @@ import { ContractVersionService } from '@blockframes/contract/version/+state';
 import { DistributionDealForm } from '@blockframes/movie/distribution-deals/form/distribution-deal.form';
 import { FormEntity, FormList } from '@blockframes/utils';
 import { ContractTitleDetailForm } from '@blockframes/contract/version/form';
-import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state';
+import { DistributionDealService, DistributionDeal } from '@blockframes/movie/distribution-deals/+state';
 
 const steps = [{
   title: 'Step 1',
@@ -48,7 +48,7 @@ function fillMovieSteps(movies: Movie[] = []): TunnelStep[] {
   }]
 }
 
-type DealControl = Record<string, FormList<DistributionDealForm>>;
+export type DealControls = Record<string, FormList<DistributionDeal, DistributionDealForm>>;
 
 @Component({
   selector: 'contract-tunnel',
@@ -58,11 +58,13 @@ type DealControl = Record<string, FormList<DistributionDealForm>>;
 })
 export class ContractTunnelComponent implements OnInit, OnDestroy {
   private sub: Subscription;
+  /** Keep track of the deals removed */
+  private removedDeals: Record<string, string[]> = {};
   public steps$: Observable<TunnelStep[]>;
   public type: ContractType;
 
   public movies$: Observable<Movie[]>;
-  public dealForms = new FormEntity<DealControl>({});
+  public dealForms = new FormEntity<DealControls>({});
   public contractForm: ContractForm;
 
   constructor(
@@ -123,25 +125,34 @@ export class ContractTunnelComponent implements OnInit, OnDestroy {
   addTitle(movieId: string) {
     this.contractForm.get('versions').last().get('titles').setControl(movieId, new ContractTitleDetailForm());
     this.dealForms.setControl(movieId, FormList.factory([], deal => new DistributionDealForm(deal)));
-    const contractId = this.query.getActiveId();
-    this.dealService.add({ contractId }, { params: { movieId }});
+    this.addDeal(movieId);
   }
 
   /** Remove a title to this contract */
   removeTitle(movieId: string) {
     this.contractForm.get('versions').last().get('titles').removeControl(movieId);
+    const deals = this.dealForms.get(movieId).value;
+    // start from the end to remove to avoid shift effects
+    for (let i = deals.length - 1; i !== 0; i--) {
+      this.removeDeal(movieId, i);
+    }
     this.dealForms.removeControl(movieId);
-    this.dealService.removeAll({ params: { movieId }});
   }
 
   /** Add a deal to a title */
   addDeal(movieId: string) {
-    this.dealService.add({}, { params: { movieId }});
+    this.dealForms.get(movieId).add();
   }
 
   /** Remove a deal from a title */
-  removeDeal(movieId: string, dealId: string) {
-    this.dealService.remove(dealId, { params: { movieId }});
+  removeDeal(movieId: string, index: number) {
+    const deal = this.dealForms.get(movieId).at(index).value;
+    if (deal.id) {
+      this.removedDeals[movieId]
+        ? this.removedDeals[movieId].push(deal.id)
+        : this.removedDeals[movieId] = [deal.id];
+    }
+    this.dealForms.get(movieId).removeAt(index);
   }
 
   /** Save Contract, Contract Version and deals */
@@ -156,26 +167,41 @@ export class ContractTunnelComponent implements OnInit, OnDestroy {
     this.versionService.update({ id: `${lastIndex}`, ...version }, { params: { contractId }, write })
 
     // Update Contract
-    contract.titleIds = Object.keys(version.titles);
+    contract.titleIds = Object.keys(version.titles || {});
     delete contract.versions;
     this.service.update({ id: contractId, ...contract }, { write });
 
-    // Update deals
+    // Upsert deals
     for (const movieId in this.dealForms.controls) {
       const deal = this.dealForms.controls[movieId].value;
-      this.dealService.update(deal, { params: { movieId }, write });
+      if (deal.id) {
+        this.dealService.add({ contractId, ...deal }, { params: { movieId }, write })
+      } else {
+        this.dealService.update(deal, { params: { movieId }, write });
+      }
     }
+
+    // Remove deals
+    for (const movieId in this.removedDeals) {
+      for (const dealId of this.removedDeals[movieId]) {
+        this.dealService.remove(dealId, { params: { movieId }, write })
+      }
+    }
+    this.removedDeals = {};
 
     // Return an observable<boolean> for the confirmExit
     return from(write.commit()).pipe(
-      tap(_ => this.contractForm.markAsPristine()),
+      tap(_ => {
+        this.contractForm.markAsPristine();
+        this.dealForms.markAsPristine();
+      }),
       switchMap(_ => this.snackBar.open('Saved', '', { duration: 500 }).afterDismissed()),
       map(_ => true) 
     )
   }
 
   confirmExit() {
-    if (this.contractForm.pristine) {
+    if (this.contractForm.pristine && this.dealForms.pristine) {
       return of(true);
     }
     const dialogRef = this.dialog.open(TunnelConfirmComponent, {
