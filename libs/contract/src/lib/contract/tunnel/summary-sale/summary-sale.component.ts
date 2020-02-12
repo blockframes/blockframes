@@ -13,9 +13,9 @@ import { FormEntity } from '@blockframes/utils';
 })
 export class SummarySaleComponent implements OnInit {
 
-  movies$: Observable<Movie[]>;
-  dealForms: FormEntity<DealControls>;
-  form: ContractForm;
+  public movies$: Observable<Movie[]>;
+  public dealForms: FormEntity<DealControls>;
+  public form: ContractForm;
 
   constructor(private tunnel: ContractTunnelComponent) { }
 

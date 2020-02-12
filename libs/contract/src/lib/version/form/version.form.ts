@@ -6,9 +6,11 @@ import { ContractVersion } from '@blockframes/contract/version/+state';
 import { FormEntity, FormList } from '@blockframes/utils';
 import { ContractVersionPriceForm } from './price/price.form';
 import { ContractVersionPaymentScheduleForm } from './payment-schedule/payment-schedule.form';
+import { FormControl } from '@angular/forms';
 
 function createContractVersionControls(contractVersion: Partial<ContractVersion>) {
   return {
+    id: new FormControl(contractVersion.id),  // Require or FormList can remove empty Form
     price: new ContractVersionPriceForm(contractVersion.price),
     titles: new ContractVersionTitlesForm(contractVersion.titles),
     scope: new DistributionDealTermsForm(contractVersion.scope),

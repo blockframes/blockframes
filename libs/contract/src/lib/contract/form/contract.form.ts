@@ -76,12 +76,14 @@ export class LegalDocumentsForm extends FormEntity<LegalDocumentsControl> {
 
 function createContractControls(contract: Partial<Contract> = {}) {
   const entity = createContract(contract);
+  // @todo(#1887)
+  const versions = entity.versions.filter(({ id }) => id !== '_meta');
   return {
     id: new FormControl(contract.id),
     parties: FormList.factory(entity.parties, partyDetails => new PartyDetailsForm(partyDetails)),
     documents: new LegalDocumentsForm(entity.documents),
     titleIds: FormList.factory(contract.titleIds),
-    versions: FormList.factory(contract.versions, version => new ContractVersionForm(version))
+    versions: FormList.factory(versions, version => new ContractVersionForm(version))
   };
 }
 
