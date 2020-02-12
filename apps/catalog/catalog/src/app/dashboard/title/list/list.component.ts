@@ -10,7 +10,7 @@ import {
 import { startWith, switchMap, map, distinctUntilChanged } from 'rxjs/operators';
 import { Observable, combineLatest } from 'rxjs';
 import { Contract } from '@blockframes/contract/contract/+state/contract.model';
-import { StoreStatus, MovieAnalytics } from '@blockframes/movie/movie+state/movie.firestore';
+import { StoreStatus, MovieAnalytics } from '@blockframes/movie/movie/+state/movie.firestore';
 import { ContractQuery } from '@blockframes/contract/contract/+state/contract.query';
 import { getContractLastVersion } from '@blockframes/contract/version/+state';
 

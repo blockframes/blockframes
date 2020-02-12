@@ -18,7 +18,7 @@
       <h3>{{ totalHitsOnCurrentMonth(info.eventName) }}</h3>
       <mat-card-content>
         <apx-chart
-          [series]="getLineChartSeries(info.eventName)"
+          [series]="getLineChartSeries(info.eventName, info.title)"
           [chart]="lineChartOptions.chart"
           [xaxis]="getLineChartXaxis(info.eventName)"
           [yaxis]="lineChartOptions.yaxis"

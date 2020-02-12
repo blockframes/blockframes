@@ -1,37 +1,39 @@
 <ng-container *ngIf="(user$ | async) as user else login">
   <ng-container *ngIf="(organization$ | async) as organization">
-    <button mat-icon-button [widgetTarget]="menu" test-id="profile-avatar">
-      <img placeholderAsset="Avatar_40.png" [imgRef]="user.avatar" alt="Profile picture" />
-    </button>
-    <overlay-widget #menu >
-      <widget-card>
-        <mat-nav-list>
-          <a mat-list-item routerLink="/c/o/account/profile">
-            <mat-icon matListIcon svgIcon="profile"></mat-icon>
-            <span matLine>Profile</span>
-          </a>
-          <a mat-list-item [routerLink]="['/c/o/organization', organization.id]">
-            <mat-icon matListIcon svgIcon="building"></mat-icon>
-            <span matLine>Organization</span>
-          </a>
-          <a mat-list-item [routerLink]="['/c/o/organization', organization.id, 'members']">
-            <mat-icon matListIcon svgIcon="group"></mat-icon>
-            <span matLine>Members</span>
-          </a>
-          <mat-list-item *ngIf="theme$ | async as theme">
-            <mat-slide-toggle [checked]="theme === 'dark'" (change)="setTheme($event)">
-              Use {{ theme === 'dark' ? 'Light' : 'Dark' }} Theme
-            </mat-slide-toggle>
-          </mat-list-item>
-        </mat-nav-list>
-        <footer widgetFooter>
-          <button mat-button test-id="logout" color="warn" (click)="logout()" >
-            <mat-icon svgIcon="logout"></mat-icon>
-            <span>Log out</span>
-          </button>
-        </footer>
-      </widget-card>
-    </overlay-widget>
+    <article fxLayout="row">
+      <div class="user-info" fxLayout="column" fxLayoutAlign="center end">
+        <span class="mat-body-2">{{ user.name }} {{ user.surname }}</span>
+        <span class="mat-caption">{{ user.position }}</span>
+      </div>
+      <button mat-icon-button [widgetTarget]="menu" test-id="profile-avatar">
+        <img placeholderAsset="Avatar_40.png" [imgRef]="user.avatar" alt="Profile picture" />
+      </button>
+      <overlay-widget #menu >
+        <widget-card>
+          <mat-nav-list>
+            <a mat-list-item routerLink="/c/o/account/profile">
+              <mat-icon matListIcon svgIcon="profile"></mat-icon>
+              <span matLine>Profile</span>
+            </a>
+            <a mat-list-item [routerLink]="['/c/o/organization', organization.id]">
+              <mat-icon matListIcon svgIcon="building"></mat-icon>
+              <span matLine>Organization</span>
+            </a>
+            <mat-list-item *ngIf="theme$ | async as theme">
+              <mat-slide-toggle [checked]="theme === 'dark'" (change)="setTheme($event)">
+                Use {{ theme === 'dark' ? 'Light' : 'Dark' }} Theme
+              </mat-slide-toggle>
+            </mat-list-item>
+          </mat-nav-list>
+          <footer widgetFooter>
+            <button mat-button test-id="logout" color="warn" (click)="logout()" >
+              <mat-icon svgIcon="logout"></mat-icon>
+              <span>Log out</span>
+            </button>
+          </footer>
+        </widget-card>
+      </overlay-widget>
+    </article>
   </ng-container>
 </ng-container>
 

@@ -12,6 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 const material = [
   MatListModule,
@@ -24,6 +25,7 @@ const material = [
   imports: [
     CommonModule,
     RouterModule,
+    FlexLayoutModule,
     OverlayWidgetModule,
     ImageReferenceModule,
     ...material

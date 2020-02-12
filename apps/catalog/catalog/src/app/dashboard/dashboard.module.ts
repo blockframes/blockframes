@@ -17,7 +17,12 @@ const routes: Routes = [
     component: LayoutComponent,
     children: [
       {
-        path: '',   // Home (dashboard if film, welcome if not)
+        path: '',
+        pathMatch: 'full',
+        redirectTo: 'home'
+      },
+      {
+        path: 'home',   // Home (dashboard if film, welcome if not)
         canActivate: [MovieOrganizationListGuard],
         canDeactivate: [MovieOrganizationListGuard],
         loadChildren: () => import('./pages/home/home.module').then(m => m.HomeModule)
@@ -63,9 +68,6 @@ const routes: Routes = [
           canDeactivate: [ActiveContractGuard],
           loadChildren: () => import('./deal/view/view.module').then(m => m.DealViewModule)
         }]
-      },
-      {
-        path: 'faq'
       },
       {
         path: 'about',

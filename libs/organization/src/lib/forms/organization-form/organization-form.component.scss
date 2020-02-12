@@ -2,16 +2,15 @@ mat-form-field {
   width: 100%;
 }
 
-img {
-  width: 200px;
-  height: 200px;
-}
-
-.actions {
-  padding: 8px 0;
-}
-
 drop-cropper {
   display: block;
   width: 100%;
+}
+
+mat-card {
+  margin-bottom: 15px;
+}
+
+h5 {
+  text-transform: uppercase;
 }

@@ -1,1 +1,31 @@
-<p>summary-sale works!</p>
+<tunnel-page>
+  <h4 title>Summary & Submit</h4>
+  <h1 subtitle>Contract Offer Summary</h1>
+  <p description class="mat-body-1">
+    Please verify that all the information you have entered is correct before submitting you contract offer.
+  </p>
+
+  <ng-container tunnel-form>
+
+    <!-- Cntract Details -->
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Contract Details</mat-card-title>
+        <a mat-icon-button routerLink="../details">
+          <mat-icon svgIcon="pencil"></mat-icon>
+        </a>
+      </mat-card-header>
+    </mat-card>
+  
+    <!-- Distribution Deals -->
+    <ng-container *ngFor="let movie of movies$ | async">
+      <mat-card>
+        <movie-banner [movie]="movie">
+          <movie-banner-actions>
+            <a mat-stroked-button color="primary" [routerLink]="['..', movie.id]">Edit</a>
+          </movie-banner-actions>
+        </movie-banner>
+      </mat-card>
+    </ng-container>
+  </ng-container>
+</tunnel-page>

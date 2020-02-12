@@ -91,10 +91,10 @@ export class MarketplaceMovieViewComponent implements OnInit {
     const { workType, totalRunTime, genres, originalLanguages } = movie.main;
     return [
       workType,
-      `${totalRunTime} min`,
+      typeof totalRunTime === 'number' ? `${totalRunTime} min` : 'TBC',
       genres.map(genre => getLabelBySlug('GENRES', genre)).join(', '),
       originalLanguages.map(language => language).join(', ')
-    ].join(' | ');
+    ].filter(value => !!value).join(' | ');
   }
 
   public getDirectors(movie: Movie) {
