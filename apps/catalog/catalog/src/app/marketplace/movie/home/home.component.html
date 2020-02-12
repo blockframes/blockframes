@@ -1,7 +1,7 @@
 <!-- TODO(#838): Use HostBinding instead of root div -->
 <div test-id="content">
-  <header class="banner" fxLayout="column" fxLayoutAlign="center start" fxLayoutAlign.xs="center center" fxLayoutGap="20px">
-    <h3>Archipel Content</h3>
+  <header class="banner light-text" fxLayout="column" fxLayoutAlign="center start" fxLayoutAlign.xs="center center" fxLayoutGap="20px">
+    <h3 class="light-text">Archipel Content</h3>
     <span class="first-header-text">The only marketplace offering package deals</span>
     <span class="second-header-text">for TV, VOD and ancillary rights</span>
     <a mat-flat-button color="accent" test-id="discover" routerLink="/c/o/marketplace/search">View the line-up</a>
@@ -34,19 +34,19 @@
                     <mat-icon svgIcon="heart_outline"></mat-icon>
                   </button>
                 </ng-template>
-                <div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="5px" class="informations">
+                <div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="5px" class="informations light-text">
                   <!-- <b *ngIf="movie.main.status as status" class="status-text">{{ (status | translateSlug: 'MOVIE_STATUS').toUpperCase() }}</b> -->
-                  <h3>{{ movie.main.title.international }}</h3>
+                  <h3 class="light-text">{{ movie.main.title.international }}</h3>
                   <div>
                     <span *ngFor="let director of movie.main.directors; let isLast=last">
                       {{ director.firstName }} {{ director.lastName }}{{isLast ? '' : ', '}}
                     </span>
                   </div>
-                    <span>{{ getMainInfo(movie) }}</span>
-                    <span *ngFor="let salesAgent of movie.main.stakeholders.salesAgent; let isLast=last">
-                      {{ salesAgent.displayName }}{{isLast ? '' : ', '}}
-                    </span>
-                  </div>
+                  <span>{{ getMainInfo(movie) }}</span>
+                  <span *ngFor="let salesAgent of movie.main.stakeholders.salesAgent; let isLast=last">
+                    {{ salesAgent.displayName }}{{isLast ? '' : ', '}}
+                  </span>
+                </div>
               </div>
             </mat-carousel-slide>
         </mat-carousel>
