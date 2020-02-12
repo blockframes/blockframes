@@ -1,12 +1,14 @@
 import { Component, ChangeDetectionStrategy, Host, OnInit, OnDestroy } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/firestore';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MovieService, Movie, MovieStore, MovieQuery } from '@blockframes/movie';
+import { MovieService, Movie, MovieQuery } from '@blockframes/movie';
 import { TunnelStep, TunnelConfirmComponent } from '@blockframes/ui/tunnel'
 import { ContractForm } from '../form/contract.form';
 import { ContractQuery, ContractService, ContractType } from '../+state';
 import { Observable, from, of, Subscription } from 'rxjs';
 import { startWith, map, switchMap, tap } from 'rxjs/operators';
 import { MatDialog } from '@angular/material';
+import { ContractVersionService } from '@blockframes/contract/version/+state';
 
 const steps = [{
   title: 'Step 1',
@@ -56,8 +58,10 @@ export class ContractTunnelComponent implements OnInit, OnDestroy {
 
   constructor(
     @Host() private form: ContractForm,
+    private db: AngularFirestore,
     private snackBar: MatSnackBar,
     private service: ContractService,
+    private versionService: ContractVersionService,
     private query: ContractQuery,
     private movieService: MovieService,
     private movieQuery: MovieQuery,
@@ -87,11 +91,22 @@ export class ContractTunnelComponent implements OnInit, OnDestroy {
   }
 
   public save() {
+    const write = this.db.firestore.batch();
     const id = this.query.getActiveId();
-    const titles = this.form.get('versions').last().get('titles').value;
-    const update = this.service.update({ id, titleIds: Object.keys(titles), ...this.form.value });
+    const contract = this.form.value;
+
+    // Upate Version
+    const lastIndex = contract.versions.length - 1;
+    const version = { ...contract.versions[lastIndex] };
+    this.versionService.update({ id: `${lastIndex}`, ...version }, { write })
+
+    // Update Contract
+    contract.titleIds = Object.keys(version.titles);
+    delete contract.versions;
+    this.service.update({ id, ...contract }, { write });
+
     // Return an observable<boolean> for the confirmExit
-    return from(update).pipe(
+    return from(write.commit()).pipe(
       tap(_ => this.form.markAsPristine()),
       switchMap(_ => this.snackBar.open('Saved', '', { duration: 500 }).afterDismissed()),
       map(_ => true) 
