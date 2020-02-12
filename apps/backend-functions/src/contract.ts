@@ -9,19 +9,23 @@ async function transformContractToPublic(contract: ContractDocument, versionToSk
   return db.runTransaction(async tx => {
     const publicContractSnap = await tx.get(db.doc(`publicContracts/${contract.id}`));
 
+    // Fetching the current version to compare it against versionToSkip value
     const versionSnap = await tx.get(db.doc(`contracts/${contract.id}/versions/_meta`));
     const versionDoc = versionSnap.data();
     let lastVersionDoc;
     if (!!versionDoc) {
+      // If the current version is the one to skip/delete (versionToSkip), we update _meta version with versionToSkip - 1
       const versionToFetch = !versionToSkip || parseInt(versionToSkip, 10) !== parseInt(versionDoc.count, 10) ? versionDoc.count : parseInt(versionToSkip, 10) - 1;
       const lastVersionSnap = await tx.get(db.doc(`contracts/${contract.id}/versions/${versionToFetch}`));
       lastVersionDoc = lastVersionSnap.data();
 
       versionDoc.count = versionToFetch;
       if (parseInt(versionDoc.count, 10) > 0) {
+        // We update _meta.count document with new latest version
         console.log(`updating _meta.count to : "${versionDoc.count}" contractId : ${contract.id}`)
         await tx.set(versionSnap.ref, versionDoc);
       } else {
+        // There is no remaining contract version we delete _meta document and the corresponding publicContract will be deleted
         console.log(`deleting _meta document for contractId : ${contract.id}`);
         tx.delete(versionSnap.ref);
       }
