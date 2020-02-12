@@ -13,9 +13,18 @@ async function transformContractToPublic(contract: ContractDocument, versionToSk
     const versionDoc = versionSnap.data();
     let lastVersionDoc;
     if (!!versionDoc) {
-      const versionToFetch = !versionToSkip || versionToSkip !== versionDoc.count ? versionDoc.count : parseInt(versionDoc.count, 10) - 1;
+      const versionToFetch = !versionToSkip || parseInt(versionToSkip, 10) !== parseInt(versionDoc.count, 10) ? versionDoc.count : parseInt(versionToSkip, 10) - 1;
       const lastVersionSnap = await tx.get(db.doc(`contracts/${contract.id}/versions/${versionToFetch}`));
       lastVersionDoc = lastVersionSnap.data();
+
+      versionDoc.count = versionToFetch;
+      if (parseInt(versionDoc.count, 10) > 0) {
+        console.log(`updating _meta.count to : "${versionDoc.count}" contractId : ${contract.id}`)
+        await tx.set(versionSnap.ref, versionDoc);
+      } else {
+        console.log(`deleting _meta document for contractId : ${contract.id}`);
+        tx.delete(versionSnap.ref);
+      }
     }
 
     /** @dev public contract document is created only it status is OK */
@@ -94,6 +103,7 @@ export async function onContractVersionDelete(
     throw new Error(msg);
   }
 
+  console.log(`deleting ContractVersion : "${id}" for : ${contractId}`);
   const contractRef = db.doc(`contracts/${contractId}`);
   const contractSnap = await contractRef.get();
   const contract = contractSnap.data() as ContractDocument;
