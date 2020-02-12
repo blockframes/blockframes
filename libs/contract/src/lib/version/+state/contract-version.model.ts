@@ -22,7 +22,7 @@ export function createVersionMeta(params: Partial<VersionMeta>): VersionMeta {
  *  Format version dates from Timestamps into Dates.
  * @param contractVersion
  */
-export function formatContractVersion(contractVersion: any): ContractVersion {
+export function createContractVersionFromFirestore(contractVersion: any): ContractVersion {
   // Dates from firebase are Timestamps, we convert it to Dates.
   if (contractVersion.scope) {
     contractVersion.scope.start = toDate(contractVersion.scope.start);

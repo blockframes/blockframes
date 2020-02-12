@@ -150,7 +150,7 @@ export class MovieService extends CollectionService<MovieState> {
       .collection('movies')
       .get().toPromise()
 
-    return movies.docs.map(m => createMovie(m.data()));
+    return movies.docs.map(m => createMovie(m.data())); // @todo #1832 use formatting method
   }
 
 }

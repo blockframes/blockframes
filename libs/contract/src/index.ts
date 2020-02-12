@@ -6,10 +6,10 @@ export * from './lib/contract/+state/contract.store';
 export * from './lib/contract/+state/contract.firestore';
 
 // Modules
-export * from './lib/contract/form/party-name/party-name.module';
+export * from './lib/contract/form/party/party.module';
 // Forms
 export * from './lib/contract/form/contract.form';
-export * from './lib/contract/form/party-name/party-name.form';
+export * from './lib/contract/form/party/party.form';
 
 // Guards
 export * from './lib/contract/guards/active-contract.guard';

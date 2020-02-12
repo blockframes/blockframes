@@ -8,7 +8,8 @@ import {
   initContractWithVersion,
   ContractWithLastVersion,
   ContractWithTimeStamp,
-  getContractParties
+  getContractParties,
+  createContractFromFirestore
 } from './contract.model';
 import orderBy from 'lodash/orderBy';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
@@ -19,7 +20,7 @@ import { PermissionsService } from '@blockframes/organization';
 import { ContractDocumentWithDates, ContractStatus } from './contract.firestore';
 import { firestore } from 'firebase/app';
 import { MovieQuery } from '@blockframes/movie';
-import { formatContractVersion } from '@blockframes/contract/version/+state/contract-version.model';
+import { createContractVersionFromFirestore } from '@blockframes/contract/version/+state/contract-version.model';
 
 /**
  * Get all the contracts where user organization is party.
@@ -116,7 +117,7 @@ export class ContractService extends CollectionService<ContractState> {
         ? await this.getValue(contractOrId)
         : contractOrId
 
-      contractWithVersion.doc = this.formatContract(contract);
+      contractWithVersion.doc = createContractFromFirestore(contract);
       const lastVersion = await this.contractVersionService.getContractLastVersion(contract.id);
       if (lastVersion) {
         contractWithVersion.last = lastVersion;
@@ -147,8 +148,8 @@ export class ContractService extends CollectionService<ContractState> {
         );
         if (contractVersions.length) {
           const sortedContractVersions = orderBy(contractVersions, 'id', 'desc');
-          contractWithVersion.doc = this.formatContract(contract);
-          contractWithVersion.last = formatContractVersion(sortedContractVersions[0]);
+          contractWithVersion.doc = createContractFromFirestore(contract);
+          contractWithVersion.last = createContractVersionFromFirestore(sortedContractVersions[0]);
           return contractWithVersion;
         }
       }
@@ -166,14 +167,6 @@ export class ContractService extends CollectionService<ContractState> {
     await this.add(contract.doc);
     await this.contractVersionService.addContractVersion(contract);
     return contract.doc.id;
-  }
-
-  /**
-   *
-   * @param contract
-   */
-  private formatContract(contract: any): Contract {
-    return contract;
   }
 
   /**
@@ -314,7 +307,7 @@ export class ContractService extends CollectionService<ContractState> {
       .collection('contracts')
       .get()
       .toPromise();
-    return contractsSnap.docs.map(contract => this.formatContract(contract));
+    return contractsSnap.docs.map(c => createContractFromFirestore(c.data()));
   }
 
   /**
@@ -325,7 +318,7 @@ export class ContractService extends CollectionService<ContractState> {
       .collection('contracts', ref => ref.where('titleIds', 'array-contains', movieId))
       .get()
       .toPromise();
-    return contractsSnap.docs.map(contract => this.formatContract(contract));
+    return contractsSnap.docs.map(c => createContractFromFirestore(c.data()));
   }
 
 }

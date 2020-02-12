@@ -121,7 +121,7 @@ export class DistributionDealService extends CollectionService<DistributionDealS
       .toPromise();
     const distributionDeals = distributionDealsSnap.docs.map(deal => createDistributionDealWithMovieId({
       movieId: deal.ref.parent.parent.id,
-      deal: this.formatDistributionDeal(deal.data()),
+      deal: this.formatDistributionDeal(deal.data()), // @todo #1832 rename formatDd?
     }));
     return distributionDeals;
   }

@@ -1,6 +1,7 @@
 import { MovieCurrenciesSlug } from "@blockframes/utils/static-model/types";
 import { getCodeIfExists } from "@blockframes/utils/static-model/staticModels";
 import { firestore } from "firebase";
+import { toDate } from "@blockframes/utils";
 
 type Timestamp = firestore.Timestamp;
 
@@ -103,7 +104,7 @@ export interface Expense extends ExpenseRaw<Date> {
 export interface ExpenseDocument extends ExpenseRaw<Timestamp> {
 }
 
-interface PaymentRaw<D> {
+export interface PaymentRaw<D> {
   id: string;
   date: D;
   type: PaymentType;
@@ -126,6 +127,22 @@ export function createPrice(price: Partial<Price> = {}): Price {
   }
 }
 
+export function formatPrice(price: any): Price {
+  const p = {
+    ...price
+  }
+
+  if(price.recoupableExpenses) {
+    p.recoupableExpense = price.recoupableExpenses.map(r => formatExpense(r))
+  }
+
+  if (price.mg) {
+    p.mg = formatPrice(price.mg);
+  }
+
+  return price;
+}
+
 /**
  * A factory function that creates Expense
  */
@@ -142,6 +159,15 @@ export function createExpense(params: Partial<Expense> = {}): Expense {
   }
 }
 
+export function formatExpense(expense: any): Expense {
+  return {
+    ...expense,
+    price: formatPrice(expense.price),
+    collected: formatPrice(expense.collected),
+    payments: expense.payments.map(p => formatPayment(p)),
+  }
+}
+
 /**
  * A factory function that creates a payment
  */
@@ -152,5 +178,13 @@ export function createPayment(params: Partial<Payment> = {}): Payment {
     type: PaymentType.CB,
     price: createPrice(params ? params.price : undefined),
     ...params
+  }
+}
+
+export function formatPayment(payment: any): Payment {
+  return {
+    ...payment,
+    date: toDate(payment.date),
+    price: formatPrice(payment ? payment.price : undefined),
   }
 }

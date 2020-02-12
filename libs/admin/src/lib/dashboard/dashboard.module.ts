@@ -17,6 +17,7 @@ import { ContractsComponent } from './pages/contracts/contracts.component';
 import { OrganizationsComponent } from './pages/organizations/organizations.component';
 import { OrganizationComponent } from './pages/organization/organization.component';
 import { MovieComponent } from './pages/movie/movie.component';
+import { InvoicesComponent } from './pages/invoices/invoices.component';
 
 export const dashboardRoutes: Routes = [
   { path: '', redirectTo: 'overview', pathMatch: 'full' },
@@ -29,6 +30,7 @@ export const dashboardRoutes: Routes = [
   { path: 'organizations', component: OrganizationsComponent },
   { path: 'organization/:orgId', component: OrganizationComponent },
   { path: 'movie/:movieId', component: MovieComponent },
+  { path: 'invoices', component: InvoicesComponent },
 ];
 @NgModule({
   imports: [
@@ -54,6 +56,7 @@ export const dashboardRoutes: Routes = [
     OrganizationsComponent,
     OrganizationComponent,
     MovieComponent,
+    InvoicesComponent,
   ],
 })
-export class DashboardModule {}
+export class DashboardModule { }

@@ -5,7 +5,9 @@ import {
   Organization,
   createOrganization,
   cleanOrganization,
-  AppStatus
+  AppStatus,
+  convertOrganizationWithTimestampsToOrganization,
+  OrganizationWithTimestamps
 } from './organization.model';
 import { OrganizationStore, OrganizationState } from './organization.store';
 import { OrganizationQuery } from './organization.query';
@@ -146,6 +148,6 @@ export class OrganizationService extends CollectionService<OrganizationState> {
       .collection('orgs')
       .get().toPromise()
 
-    return orgs.docs.map(m => createOrganization(m.data()));
+    return orgs.docs.map(m => convertOrganizationWithTimestampsToOrganization(m.data() as OrganizationWithTimestamps)); // @todo #1832 rename ?
   }
 }

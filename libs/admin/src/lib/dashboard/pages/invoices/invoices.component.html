@@ -1,0 +1,11 @@
+<h1><a routerLink="/c/o/admin/dashboard/">Administration panel</a> > Invoice list</h1>
+
+<bf-table-filter 
+  [source]="rows" 
+  [columns]="versionColumns" 
+  [initialColumns]="initialColumns" 
+  [filterPredicate]="filterPredicate"
+  showFilter="true"
+  showLoader="true"
+  showPaginator="true">
+</bf-table-filter>
