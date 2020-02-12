@@ -104,7 +104,7 @@ export class ContractTunnelComponent implements OnInit, OnDestroy {
     // Update the deal form for each title
     this.sub = titleIds$.pipe(
       switchMap(titleIds => {
-        const setdealForms = titleIds.map(async movieId => {
+        const setDealForms = titleIds.map(async movieId => {
           const deals = await this.dealService.getValue({ params: { movieId }});
           if (this.dealForms.get(movieId)) {
             this.dealForms.get(movieId).patchAllValue(deals);
@@ -112,7 +112,7 @@ export class ContractTunnelComponent implements OnInit, OnDestroy {
             this.dealForms.setControl(movieId, FormList.factory(deals, deal => new DistributionDealForm(deal)))
           }
         })
-        return combineLatest(setdealForms)
+        return combineLatest(setDealForms)
       })
     ).subscribe();
   }

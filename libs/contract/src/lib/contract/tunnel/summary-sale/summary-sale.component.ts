@@ -1,8 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ContractForm } from '../../form/contract.form';
-import { MovieQuery, Movie } from '@blockframes/movie';
-import { ContractTunnelComponent } from '../contract-tunnel.component';
+import { Movie } from '@blockframes/movie';
+import { ContractTunnelComponent, DealControls } from '../contract-tunnel.component';
 import { Observable } from 'rxjs';
+import { FormEntity } from '@blockframes/utils';
 
 @Component({
   selector: 'contract-tunnel-summary-sale',
@@ -10,13 +11,18 @@ import { Observable } from 'rxjs';
   styleUrls: ['./summary-sale.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SummarySaleComponent {
+export class SummarySaleComponent implements OnInit {
 
-  movies$ = this.tunnel.movies$;
-  dealForms = this.tunnel.dealForms;
-  form = this.tunnel.contractForm;
+  movies$: Observable<Movie[]>;
+  dealForms: FormEntity<DealControls>;
+  form: ContractForm;
 
   constructor(private tunnel: ContractTunnelComponent) { }
 
-
+  ngOnInit() {
+    // Need to create it in the ngOnInit or it's not updated
+    this.movies$ = this.tunnel.movies$;
+    this.dealForms = this.tunnel.dealForms;
+    this.form = this.tunnel.contractForm;
+  }
 }

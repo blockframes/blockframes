@@ -86,7 +86,7 @@ export class FormList<T, Control extends AbstractControl = any> extends FormArra
   /**
    * Custom method to add a Control using the createControl method
    */
-  add(value?: Partial<T>) {
+  add(value?: Partial<T>): Control {
     const control = this.createControl(value);
     this.push(control);
     return control;
