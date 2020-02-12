@@ -99,7 +99,7 @@ export class TunnelPreviousDealsComponent implements OnInit, OnDestroy {
   }
 
   public distributionDealAssetLanguages(control: DistributionDealForm) {
-    return control.get('assetLangauage');
+    return control.get('assetLanguage');
   }
 
   public addHoldback(control: DistributionDealForm) {
