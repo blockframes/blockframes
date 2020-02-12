@@ -198,8 +198,8 @@ export class MarketplaceSearchComponent implements OnInit {
               return of(movies)
             }
 
-            return from((async () => {
-              const moviesWithAvails = await filter(movies,
+            return from(
+              filter(movies,
                 async movie => {
                   // Filters the deals before sending them to the avails filter function
                   if (!movie.distributionDeals) {
@@ -214,8 +214,7 @@ export class MarketplaceSearchComponent implements OnInit {
                   return filterMovieWithAvails(filteredDeals, availsOptions, mandateDeals);
                 }
               )
-              return moviesWithAvails;
-            })())
+            )
           })
         );
       }),
