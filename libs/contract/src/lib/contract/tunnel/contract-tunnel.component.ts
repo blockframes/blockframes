@@ -155,11 +155,13 @@ export class ContractTunnelComponent implements OnInit {
 
     // Upsert deals
     for (const movieId in this.dealForms.controls) {
-      const deal = this.dealForms.controls[movieId].value;
-      if (deal.id) {
-        this.dealService.add({ contractId, ...deal }, { params: { movieId }, write })
-      } else {
-        this.dealService.update(deal, { params: { movieId }, write });
+      const deals = this.dealForms.controls[movieId].value;
+      for (const deal of deals) {
+        if (deal.id) {
+          this.dealService.add({ contractId, ...deal }, { params: { movieId }, write })
+        } else {
+          this.dealService.update(deal, { params: { movieId }, write });
+        }
       }
     }
 

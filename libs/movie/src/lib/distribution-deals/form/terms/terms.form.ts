@@ -12,9 +12,9 @@ function createTermsControl(terms: Partial<Terms>) {
   };
 }
 
-type DistributionDealTermsControl = ReturnType<typeof createTermsControl>;
+export type DistributionDealTermsControl = ReturnType<typeof createTermsControl>;
 
-export class DistributionDealTermsForm extends FormEntity<DistributionDealTermsControl> {
+export class DistributionDealTermsForm extends FormEntity<DistributionDealTermsControl, Terms> {
   constructor(terms: Partial<Terms> = {}) {
     super(createTermsControl(terms));
   }
@@ -32,7 +32,8 @@ function createFloatingDuration(floating: Partial<FloatingDuration>) {
 type DistributionDealFloatingDurationControl = ReturnType<typeof createFloatingDuration>;
 
 export class DistributionDealFloatingDurationForm extends FormEntity<
-  DistributionDealFloatingDurationControl
+  DistributionDealFloatingDurationControl,
+  FloatingDuration
 > {
   constructor(floatingDuration: Partial<FloatingDuration> = {}) {
     super(createFloatingDuration(floatingDuration));
