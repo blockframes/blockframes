@@ -35,7 +35,6 @@
                   </button>
                 </ng-template>
                 <div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="5px" class="informations light-text">
-                  <!-- <b *ngIf="movie.main.status as status" class="status-text">{{ (status | translateSlug: 'MOVIE_STATUS').toUpperCase() }}</b> -->
                   <h3 class="light-text">{{ movie.main.title.international }}</h3>
                   <div>
                     <span *ngFor="let director of movie.main.directors; let isLast=last">
