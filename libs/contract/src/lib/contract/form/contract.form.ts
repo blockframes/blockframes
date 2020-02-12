@@ -74,7 +74,7 @@ export class LegalDocumentsForm extends FormEntity<LegalDocumentsControl> {
 // CONTRACT
 
 
-function createContractControls(contract: Partial<Contract>) {
+function createContractControls(contract: Partial<Contract> = {}) {
   const entity = createContract(contract);
   return {
     id: new FormControl(contract.id),
@@ -87,9 +87,8 @@ function createContractControls(contract: Partial<Contract>) {
 
 type ContractControl = ReturnType<typeof createContractControls>;
 
-@Injectable()
 export class ContractForm extends FormEntity<ContractControl, Contract> {
-  constructor() {
-    super(createContractControls({}));
+  constructor(contract?: Partial<Contract>) {
+    super(createContractControls(contract));
   }
 }
