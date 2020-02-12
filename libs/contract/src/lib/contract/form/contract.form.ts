@@ -21,7 +21,8 @@ function createPartyDetailsControls(partyDetails: Partial<ContractPartyDetail> =
   const entity = createContractPartyDetail(partyDetails);
   return {
     party: new ContractPartyForm(entity.party),
-    status: new FormControl(entity.status)
+    status: new FormControl(entity.status),
+    childRoles: new FormControl(partyDetails.childRoles)
   };
 }
 

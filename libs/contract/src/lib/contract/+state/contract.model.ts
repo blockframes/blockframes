@@ -112,9 +112,9 @@ export function createContractPartyDetail(
 ): ContractPartyDetail {
   return {
     status: ContractStatus.unknown,
-    childRoles: [],
     ...params,
     party: createParty(params.party),
+    childRoles: ['observator'],
   };
 }
 
