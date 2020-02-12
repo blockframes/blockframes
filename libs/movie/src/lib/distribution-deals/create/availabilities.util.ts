@@ -58,16 +58,17 @@ export function getDealsInDateRange(formDates: DateRange, distributionDeals: Dis
   const intersectedDateRangeDeals: DistributionDeal[] = [];
 
   for (const deal of distributionDeals) {
-    const dealsFrom: Date = toDate(deal.terms.start);
-    const dealsTo: Date = toDate(deal.terms.end);
+    const dealFrom: Date = toDate(deal.terms.start);
+    const dealTo: Date = toDate(deal.terms.end);
+
     /**
      * If the form date 'from' is between a deal from and to, it means that there
      * are already deals made, but it is still possible to buy a distribution right
      * at this point.
      */
     if (
-      formDates.from.getTime() >= dealsFrom.getTime() &&
-      formDates.from.getTime() <= dealsTo.getTime()
+      formDates.from.getTime() >= dealFrom.getTime() &&
+      formDates.from.getTime() <= dealTo.getTime()
     ) {
       intersectedDateRangeDeals.push(deal);
     }
@@ -76,8 +77,8 @@ export function getDealsInDateRange(formDates: DateRange, distributionDeals: Dis
      * and 'to' date is younger than sales agent 'from' date, it is in range
      */
     if (
-      formDates.to.getTime() <= dealsTo.getTime() &&
-      formDates.to.getTime() >= dealsFrom.getTime()
+      formDates.to.getTime() <= dealTo.getTime() &&
+      formDates.to.getTime() >= dealFrom.getTime()
     ) {
       intersectedDateRangeDeals.push(deal);
     }
@@ -87,8 +88,8 @@ export function getDealsInDateRange(formDates: DateRange, distributionDeals: Dis
      * 'to' date if younger than sales agent 'to' date , it is in range
      */
     if (
-      formDates.from.getTime() <= dealsFrom.getTime() &&
-      formDates.to.getTime() >= dealsTo.getTime()
+      formDates.from.getTime() <= dealFrom.getTime() &&
+      formDates.to.getTime() >= dealTo.getTime()
     ) {
       intersectedDateRangeDeals.push(deal);
     }
@@ -155,5 +156,10 @@ export function getFilterMatchingDeals(
  * @param deals
  */
 export function getExclusiveDeals(deals: DistributionDeal[], exclusivity: boolean): DistributionDeal[] {
-  return deals.filter(deal => deal.exclusive === exclusivity);
+  if (exclusivity === true) {
+    return deals
+  }
+  if (exclusivity === false) {
+    return deals.filter(deal => deal.exclusive === true);
+  }
 }
