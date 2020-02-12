@@ -60,7 +60,7 @@ export function createRoutes({ appsRoutes, appName, landing = defaultLanding }: 
           },
           {
             // The redirection route when user has no organization
-            path: 'o',
+            path: 'organization',
             loadChildren: () => import('@blockframes/organization').then(m => m.NoOrganizationModule)
           },
           {
