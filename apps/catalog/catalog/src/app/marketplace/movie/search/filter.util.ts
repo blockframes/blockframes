@@ -17,7 +17,7 @@ function productionYearBetween(movie: Movie, range: { from: number; to: number }
   }
 }
 
-function hasLanguage(movie: Movie, language: { [languageLabel in LanguagesLabel]: MovieLanguageSpecification }) {
+export function hasLanguage(movie: Movie, language: { [languageLabel in LanguagesLabel]: MovieLanguageSpecification }) {
     if (Object.entries(language).length === 0) {
       return true;
     }
@@ -47,6 +47,7 @@ function hasLanguage(movie: Movie, language: { [languageLabel in LanguagesLabel]
         }
       }
     }
+    return false;
 }
 
 function genres(movie: Movie, movieGenre: string[]): boolean {
