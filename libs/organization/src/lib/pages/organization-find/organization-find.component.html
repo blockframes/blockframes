@@ -1,30 +1,33 @@
-<section fxLayout="row" fxLayoutAlign="center" test-id="content" page-id="organization-find">
-  <article fxLayout="column" fxLayoutAlign="center center">
-    <h2>Search for your company</h2>
-
+<section fxLayout="column" fxLayoutAlign="center center" test-id="content" page-id="organization-find">
+  <h1>Find your Organization</h1>
+  <mat-card fxLayout="column" fxLayoutAlign="center center">
+    <img asset="find_organization.svg">
     <mat-form-field appearance="outline">
-      <mat-label>Company name</mat-label>
+      <mat-label>Organization name</mat-label>
       <input
         aria-label="search"
         type="text"
-        placeholder="Company name"
+        placeholder="Organization name"
         matInput
         [formControl]="orgControl"
         [matAutocomplete]="auto"
       />
-      <mat-icon matSuffix svgIcon="magnifying_glasses"></mat-icon>
+      <mat-icon matPrefix svgIcon="magnifying_glasses"></mat-icon>
       <mat-autocomplete #auto="matAutocomplete">
-        <mat-option *ngFor="let org of searchResults$ | async" [value]="org.name" (click)="selectOrganization(org)">
-          <b>{{ org.name }}</b>
-          <mat-divider></mat-divider>
+        <mat-option *ngFor="let result of searchResults$ | async" [value]="result.name" (click)="selectOrganization(org)">
+          <!-- <div *ngIf="(organizationResult$ | async) as org"> -->
+            <!-- <img class="org-logo" placeholderAsset="Organization_250.png" alt="Organization Logo" /> -->
+            <!-- <ng-container *ngFor="let logo of org">
+              <img class="org-logo" placeholderAsset="Organization_250.png" [imgRef]="logo" alt="Organization Logo" />
+            </ng-container> -->
+            <b>{{ result.name }}</b>
+          <!-- </div> -->
         </mat-option>
       </mat-autocomplete>
     </mat-form-field>
-    <!-- TODO #1387 -->
-    <img asset="Search_380.png">
+  </mat-card>
     <button test-id="join-org" class="join-org" (click)="requestToJoinOrganization()" mat-flat-button color="accent" [disabled]="!selected">Send a request</button>
     <a routerLink="../create">
-      <button mat-button color="primary">Create my company</button>
+      <button mat-button color="primary">Create an Organization</button>
     </a>
-  </article>
 </section>
