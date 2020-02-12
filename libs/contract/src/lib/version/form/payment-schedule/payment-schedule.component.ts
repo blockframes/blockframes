@@ -51,7 +51,7 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
 
   ngOnInit() {
     /**
-     * We want to have two paymen schedules form groups from the begining,
+     * We want to have two paymen schedules form groups from the beginning,
      * so we can disable or enable only the inputs we want.
      */
     if (this.paymentSchedule.controls.length <= 1) {
@@ -86,12 +86,10 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
       startWith(this.setRadioButton()),
       tap(value => {
         if (value === 'other') {
-          this.resetVersionForm();
           this.disableAll();
           this.customPaymentSchedule.enable();
           this.toggleDurationPeriod('first');
         } else if (value === 'periodic') {
-          this.resetVersionForm();
           this.disableAll();
           this.eventCtrl.enable();
           this.periodCtrl.enable();
@@ -103,7 +101,6 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
             this.paymentSchedule.last().get('date').get('floatingStart').enable();
           }
         } else if (value === 'event') {
-          this.resetVersionForm();
           this.disableAll();
           this.updateFormExceptEventForm()
         } else {
@@ -170,7 +167,7 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
    * @description adds a payment schedule array
    */
   public addPayment() {
-    this.paymentSchedule.add();
+    this.paymentSchedule.add()
     this.updateFormExceptEventForm();
   }
 
@@ -301,7 +298,7 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
       this.paymentSchedule.at(i).get('percentage').enable();
       this.paymentSchedule.at(i).get('date').get('floatingStart').enable();
     }
-    this.eventButtons.forEach((button: any) => button.disabled = false)
+    this.eventButtons.forEach(button => button.disabled = false)
   }
 
   ngOnDestroy() {
@@ -312,6 +309,5 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
     if (this.radioCtrl.value === 'periodic') {
       this.paymentSchedule.last().get('date').get('floatingDuration').get('temporality').setValue(TemporalityUnit.every)
     }
-    console.log(this.form);
   }
 }
