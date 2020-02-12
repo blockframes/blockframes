@@ -60,7 +60,7 @@
       "@blockframes/movie": [
         "libs/movie/src/index.ts"
       ],
-      "@blockframes/movie/movie*": [
+      "@blockframes/movie/movie/*": [
         "libs/movie/src/lib/movie/*"
       ],
       "@blockframes/movie/import": [

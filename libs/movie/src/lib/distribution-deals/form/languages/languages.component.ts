@@ -1,11 +1,11 @@
 import { MovieLanguageSpecification } from '@blockframes/movie/movie/+state/movie.firestore';
 import { MatButtonToggleChange } from '@angular/material/button-toggle';
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { MovieVersionInfoForm } from '@blockframes/movie/movieform/version-info/version-info.form';
+import { MovieVersionInfoForm } from '@blockframes/movie/movie/form/version-info/version-info.form';
 import { FormStaticValue } from '@blockframes/utils/form';
 import { LanguagesSlug } from '@blockframes/utils/static-model';
 import { MatSlideToggleChange } from '@angular/material';
-import { createMovieLanguageSpecification } from '@blockframes/movie/movie+state/movie.model';
+import { createMovieLanguageSpecification } from '@blockframes/movie/movie/+state/movie.model';
 
 @Component({
   selector: '[form] distribution-form-languages',

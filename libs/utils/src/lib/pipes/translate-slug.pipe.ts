@@ -5,8 +5,13 @@ import { getLabelBySlug, Scope } from '@blockframes/utils/static-model/staticMod
   name: 'translateSlug'
 })
 export class TranslateSlugPipe implements PipeTransform {
-  transform(value: string, property: Scope, language?: string): string {
+  transform(value: string | string[], property: Scope, language?: string): string {
     // TODO(MF, BD): add language parameter, when translation exist
-    return getLabelBySlug(property, value.trim().toLocaleLowerCase());
+    const formatSlug = (slug: string) => getLabelBySlug(property, slug.trim().toLocaleLowerCase());
+    if (Array.isArray(value)) {
+      return value.map(formatSlug).join(', ');
+    } else {
+      return formatSlug(value);
+    }
   }
 }

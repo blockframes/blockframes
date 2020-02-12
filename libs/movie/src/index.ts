@@ -11,7 +11,7 @@ export * from './lib/movie/guards/movie-collection.guard';
 export * from './lib/movie/guards/movie-contract.guard';
 // Movie Modules
 export * from './lib/movie/movie.module';
-export * from './lib/distribution-deals/selection-table/form-selection.module';
+export * from './lib/distribution-deals/components/selection-table/form-selection.module';
 export * from './lib/movie/form/summary/main/main.module';
 export * from './lib/movie/form/summary/festival-prizes/festival-prizes.module';
 export * from './lib/movie/form/summary/sales-cast/sales-cast.module';

@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { MovieAnalytics } from '@blockframes/movie/movie+state/movie.firestore';
+import { MovieAnalytics } from '@blockframes/movie/movie/+state/movie.firestore';
 import { ChartOptions, lineChartOptions } from './default-chart-options';
 
 const chartInfo = [
@@ -21,6 +21,7 @@ const chartInfo = [
 ] as const;
 
 type MovieAnalyticsEventName = typeof chartInfo[number]['eventName']
+type MovieAnalyticsTitle = typeof chartInfo[number]['title']
 
 function getSum(array: number[]): number {
   return array.reduce((acc, num) => acc + num, 0);
@@ -66,7 +67,7 @@ export class MovieAnalyticsChartComponent {
         const percentage = this.calculatePercentage(current.y, past.y);
         return {
           ...chart,
-          x: current.x.map(date => date.toLocaleDateString()), 
+          x: current.x.map(date => date.toLocaleDateString('en-US')), 
           y: current.y, 
           percentage
         }
@@ -93,10 +94,11 @@ export class MovieAnalyticsChartComponent {
     return { x , y }
   }
 
-  getLineChartSeries(eventName: MovieAnalyticsEventName) {
+  getLineChartSeries(eventName: MovieAnalyticsEventName, title: MovieAnalyticsTitle) {
+    const hits = this.chartData.find(chart => chart.eventName === eventName).y
     return [{
-      name: eventName, 
-      data: this.chartData.find(chart => chart.eventName === eventName).y
+      name: title, 
+      data: hits
     }];
   }
 
