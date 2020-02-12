@@ -90,17 +90,6 @@ function isProductionStatus(movie: Movie, movieStatus: string[]): boolean {
   }
 }
 
-function salesAgent(movie: Movie, salesAgents: string[]): boolean {
-  if (!salesAgents.length) {
-    return true;
-  }
-  for (let i = 0; i < salesAgents.length; i++) {
-    if (salesAgents[i] === movie.salesAgentDeal.salesAgent.displayName) {
-      return true;
-    }
-  }
-}
-
 function hasCertifications(movie: Movie, movieCertification: string[]): boolean {
   if (!movieCertification.length) {
     return true;
@@ -121,29 +110,6 @@ function hasCertifications(movie: Movie, movieCertification: string[]): boolean 
   }
 }
 
-/**
- * Returns a boolean weither a deal is matching with our search or not.
- * @param deals all the deals from the movies in the filterForm
- * @param filter The filter options defined by the buyer
- */
-function hasAvailabilities(deals: DistributionDeal[], filter: AvailsSearch, mandateDeal: DistributionDeal): boolean {
-
-  if (!filter.terms || !(filter.terms.from && filter.terms.to) || !deals) {
-    return true;
-  }
-
-  // If Archipel Content is not allowed to sells rights from this movie on the mandate, don't show the movie
-  if (archipelCanSells(filter, mandateDeal)) {
-    return false;
-  }
-
-  const matchingExclusivityDeals = getExclusiveDeals(deals, filter.exclusivity);
-  const matchingRangeDeals = getDealsInDateRange(filter.terms, matchingExclusivityDeals);
-  const matchingDeals = getFilterMatchingDeals(filter, matchingRangeDeals);
-
-  return matchingDeals.length ? false : true;
-}
-
 function hasCountry(movie: Movie, countries: string[]): boolean {
   if (!countries.length) {
     return true;
@@ -155,24 +121,25 @@ function hasCountry(movie: Movie, countries: string[]): boolean {
   }
 }
 
-function hasTerritories(movie: Movie, filterTerritories: ExtractSlug<'TERRITORIES'>[]): boolean {
-  return filterTerritories.every(territory => movie.salesAgentDeal.territories.includes(territory));
-}
-
 /**
  * Looks for the deal matching the mandate and checks if Archipel can sells
  * rights according to the filter options set by the buyer.
  */
-function archipelCanSells(filter: AvailsSearch, mandateDeal: DistributionDeal): boolean {
+function archipelCanSells(filter: AvailsSearch, mandateDeals: DistributionDeal[]): boolean {
 
-  const mandateHasTerritories = mandateHas(filter.territories, mandateDeal.territory);
-  const mandateHasMedias = mandateHas(filter.medias, mandateDeal.licenseType);
-  const mandateHasTerms =
+  const mandatesHaveTerritories = mandateDeals.map(mandateDeal => mandateHas(filter.territories, mandateDeal.territory))
+  const mandatesHaveMedias = mandateDeals.map(mandateDeal => mandateHas(filter.medias, mandateDeal.licenseType))
+  const mandatesHaveTerms = mandateDeals.map(mandateDeal =>
     toDate(filter.terms.from).getTime() > toDate(mandateDeal.terms.start).getTime() &&
     toDate(filter.terms.to).getTime() < toDate(mandateDeal.terms.end).getTime()
-  ;
+  )
 
-  return mandateHasTerritories && mandateHasMedias && mandateHasTerms;
+  const hasTerritories = mandatesHaveTerritories.every(boolean => boolean === true);
+  const hasMedias = mandatesHaveMedias.every(boolean => boolean === true);
+  const hasTerms = mandatesHaveTerms.every(boolean => boolean === true);
+
+  console.log(hasTerritories && hasMedias && hasTerms)
+  return hasTerritories && hasMedias && hasTerms;
 }
 
 /** Checks if every items of the list from filters are in the list from the deal. */
@@ -204,13 +171,14 @@ export function filterMovie(movie: Movie, filter: CatalogSearch): boolean {
  * @param filter The filter options defined by the buyer
  * @param mandateDeal The deal between Archipel and the seller
  */
-export function filterMovieWithAvails(deals: DistributionDeal[], filter: AvailsSearch, mandateDeal: DistributionDeal) {
+export function filterMovieWithAvails(deals: DistributionDeal[], filter: AvailsSearch, mandateDeals: DistributionDeal[]) {
   if (!filter.terms || !(filter.terms.from && filter.terms.to)) {
     return true;
   }
+  console.log('filter avails')
 
   // If Archipel Content is not allowed to sells rights from this movie on the mandate, don't show the movie
-  if (!archipelCanSells(filter, mandateDeal)) {
+  if (!archipelCanSells(filter, mandateDeals)) {
     return false;
   }
 

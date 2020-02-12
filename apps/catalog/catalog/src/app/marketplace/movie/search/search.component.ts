@@ -40,7 +40,7 @@ import { ControlErrorStateMatcher } from '@blockframes/utils/form/validators/val
 import { MovieAlgoliaResult } from '@blockframes/utils/algolia';
 import { MoviesIndex } from '@blockframes/utils/algolia';
 // RxJs
-import { Observable, combineLatest } from 'rxjs';
+import { Observable, combineLatest, of, from } from 'rxjs';
 import { startWith, map, debounceTime, switchMap, tap, distinctUntilChanged } from 'rxjs/operators';
 // Others
 import { filterMovie, filterMovieWithAvails } from './filter.util';
@@ -53,6 +53,13 @@ import { NumberRange } from '@blockframes/utils/common-interfaces/range';
 import { BUDGET_LIST } from '@blockframes/movie/movieform/budget/budget.form';
 import { CatalogSearchForm, AvailsSearchForm } from '@blockframes/catalog/form/search.form';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state';
+
+async function filter<T>(items: T[], filterFunction: (item: T) => Promise<boolean>) {
+  const _null = Symbol();
+  const x = items.map(async item => (await filterFunction(item)) ? item : _null);
+  const y = await Promise.all(x);
+  return y.filter(w => w !== _null) as T[];
+}
 
 @Component({
   selector: 'catalog-movie-search',
@@ -184,11 +191,16 @@ export class MarketplaceSearchComponent implements OnInit {
           sortBy,
           filterBy: movie => filterMovie(movie, filterOptions) && movieIds.includes(movie.id)
         }).pipe(
-          map(movies => {
+          switchMap(movies => {
+
             // If Avails filter button is clicked
-            if (availsOptions.isActive) {
-              const moviesWithAvails = movies.filter(
-                movie => {
+            if (!availsOptions.isActive) {
+              return of(movies)
+            }
+
+            return from((async () => {
+              const moviesWithAvails = await filter(movies,
+                async movie => {
                   // Filters the deals before sending them to the avails filter function
                   if (!movie.distributionDeals) {
                     // If movie has no deals, it means there is also no mandate deal,
@@ -196,14 +208,14 @@ export class MarketplaceSearchComponent implements OnInit {
                     return false;
                   }
 
-                  const mandateDeal = this.dealService.getMandateDeal(movie.distributionDeals);
-                  const filteredDeals = movie.distributionDeals.filter(deal => deal.id !== mandateDeal.id);
-                  return filterMovieWithAvails(filteredDeals, availsOptions, mandateDeal);
+                  const mandateDeals = await this.dealService.getMandateDeals(movie);
+                  const mandateDealIds = mandateDeals.map(deal => deal.id);
+                  const filteredDeals = movie.distributionDeals.filter(deal => !mandateDealIds.includes(deal.id));
+                  return filterMovieWithAvails(filteredDeals, availsOptions, mandateDeals);
                 }
               )
               return moviesWithAvails;
-            }
-            return movies;
+            })())
           })
         );
       }),
