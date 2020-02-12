@@ -41,7 +41,7 @@ export interface Contract extends ContractDocumentWithDates {
   versions?: ContractVersion[];
 };
 
-export interface PublicContract extends PublicContractDocumentWithDates { }
+export type PublicContract = PublicContractDocumentWithDates;
 
 export interface ContractWithTimeStamp extends ContractDocument {
   versions?: ContractVersionWithTimeStamp[];
