@@ -12,6 +12,7 @@ import { switchMap } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
 import { ContractVersion } from '@blockframes/contract/version/+state/contract-version.model';
 import { DistributionDealQuery } from './distribution-deal.query';
+import { Movie } from '@blockframes/movie/movie+state';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies/:movieId/distributionDeals' })
@@ -130,12 +131,12 @@ export class DistributionDealService extends CollectionService<DistributionDealS
     return deals.map(deal => deal ? getDealTerritories(deal) : []).flat();
   }
 
-  /** Get the deal linked to the Archipel Contract (of type 'mandate') */
-  public getMandateDeal(deals: DistributionDeal[]) {
-    return deals.find(async deal => {
-      const contract = await this.contractService.getValue(deal.contractId);
-      return contract.type === 'mandate'
-    })
+  /** Get the deals linked to the Archipel Contract (of type 'mandate') */
+  public async getMandateDeals(movie: Movie): Promise<DistributionDeal[]> {
+    const contractsSnap = await this.db.collection(
+      `publicContracts/`, ref => ref.where('type', '==', 'mandate').where('titleIds', 'array-contains', movie.id))
+      .get().toPromise();
+    const contracts = contractsSnap.docs.map(contract => contract.data())
+    return movie.distributionDeals.filter(deal => deal.contractId === contracts[0].id)
   }
-
 }
