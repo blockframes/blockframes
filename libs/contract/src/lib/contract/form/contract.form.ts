@@ -1,5 +1,4 @@
 import { FormControl } from '@angular/forms';
-import { Injectable } from '@angular/core';
 import { urlValidators } from '@blockframes/utils/form/validators';
 import { FormStaticValue, FormList, FormEntity } from '@blockframes/utils/form';
 import {
