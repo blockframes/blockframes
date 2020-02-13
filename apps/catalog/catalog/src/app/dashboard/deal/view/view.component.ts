@@ -7,7 +7,8 @@ import {
   getContractParties,
   isContractSignatory,
   getTotalPrice,
-  ContractStatus
+  ContractStatus,
+  getContractSubLicensors
 } from '@blockframes/contract/contract/+state';
 import { Observable } from 'rxjs/internal/Observable';
 import { map, filter } from 'rxjs/operators';
@@ -89,7 +90,7 @@ export class DealViewComponent implements OnInit {
       filter(contract => !!contract),
       map(contract => {
         this.licensees = getContractParties(contract, 'licensee');
-        this.subLicensors = getContractParties(contract, 'sub-licensor');
+        this.subLicensors = getContractSubLicensors(contract);
         this.isSignatory = isContractSignatory(contract, this.organizationQuery.getActiveId());
 
         // Get all contract versions except _meta.

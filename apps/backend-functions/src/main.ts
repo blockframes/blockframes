@@ -35,6 +35,7 @@ import { adminApp, onRequestAccessToAppWrite } from './admin';
 import { onMovieUpdate, onMovieCreate, onMovieDelete } from './movie';
 import * as bigQuery from './bigQuery';
 import { onDocumentPermissionCreate } from './permissions';
+import { onContractWrite, onContractVersionWrite } from './contract';
 
 /** Trigger: when eth-events-server pushes contract events. */
 export const onIpHashEvent = functions.pubsub.topic('eth-events.ipHash').onPublish(onIpHash);
@@ -151,6 +152,26 @@ export const onMovieUpdateEvent = onDocumentUpdate(
 export const onMovieDeleteEvent = onDocumentDelete(
   'movies/{movieId}',
   logErrors(onMovieDelete)
+)
+
+//------------------------------------------------
+//   Contracts & Contracts Version Management   //
+//------------------------------------------------
+
+/**
+ * Trigger: when a contract is created/updated/deleted
+ */
+export const onContractWriteEvent = onDocumentWrite(
+  'contracts/{contractId}',
+  onContractWrite
+);
+
+/**
+ * Trigger: when a contractVersion is created/updated/deleted
+ */
+export const onContractVersionWriteEvent = onDocumentWrite(
+  'contracts/{contractId}/versions/{versionId}',
+  onContractVersionWrite
 )
 
 //--------------------------------

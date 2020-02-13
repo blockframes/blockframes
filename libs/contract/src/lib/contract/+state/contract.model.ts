@@ -11,12 +11,18 @@ import {
   ContractDocument,
   ContractType,
   InvoiceTitleDetails,
-  Invoice
+  Invoice,
+  PublicContractDocumentWithDates
 } from './contract.firestore';
 import { createParty } from '@blockframes/utils/common-interfaces/identity';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 import { createTerms } from '@blockframes/utils/common-interfaces/terms';
-import { ContractVersion, ContractVersionWithTimeStamp, formatContractVersion, VersionMeta, getContractLastVersion } from '../../version/+state/contract-version.model';
+import {
+  ContractVersion,
+  ContractVersionWithTimeStamp,
+  formatContractVersion,
+  getContractLastVersion
+} from '../../version/+state/contract-version.model';
 import { LegalRolesSlug } from '@blockframes/utils/static-model/types';
 import { toDate } from '@blockframes/utils/helpers';
 import { createPaymentSchedule } from '@blockframes/utils/common-interfaces/schedule';
@@ -34,6 +40,8 @@ export interface ContractWithLastVersion {
 export interface Contract extends ContractDocumentWithDates {
   versions?: ContractVersion[];
 };
+
+export type PublicContract = PublicContractDocumentWithDates;
 
 export interface ContractWithTimeStamp extends ContractDocument {
   versions?: ContractVersionWithTimeStamp[];
@@ -75,6 +83,15 @@ export function createContractVersion(params: Partial<ContractVersion> = {}): Co
     paymentTerm: createTerms(params.paymentTerm),
     scope: createTerms(params.scope),
     price: createPrice(params.price)
+  };
+}
+
+export function createPublicContract(params: Partial<PublicContract> = {}): PublicContract {
+  return {
+    id: params.id || '',
+    type: ContractType.mandate,
+    titleIds: [],
+    ...params,
   };
 }
 
@@ -260,7 +277,15 @@ export function formatPartyDetails(partyDetails: any): ContractPartyDetail {
  */
 export function getContractParties(contract: Contract, legalRole: LegalRolesSlug): ContractPartyDetail[] {
   const roleCode = getCodeIfExists('LEGAL_ROLES', legalRole)
-  return contract.parties.filter(p => p.party.role === roleCode );
+  return contract.parties.filter(p => p.party.role === roleCode);
+}
+
+/**
+ * Fetch parties related to a contract with childRoles
+ * @param contract
+ */
+export function getContractSubLicensors(contract: Contract): ContractPartyDetail[] {
+  return contract.parties.filter(p => p.childRoles.length > 0);
 }
 
 /**
@@ -280,7 +305,7 @@ export function isPartyOfContract(organizationId: string, contract: Contract): b
  */
 export function isContractSignatory(contract: Contract, organizationId: string): boolean {
   return contract.parties.some(partyDetails => {
-    const  { orgId, role } = partyDetails.party;
+    const { orgId, role } = partyDetails.party;
     return orgId === organizationId && role === 'signatory';
   })
 }

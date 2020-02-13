@@ -190,6 +190,11 @@ service cloud.firestore {
       allow delete: if orgCan('canDelete', userOrgId(), contractId);
     }
 
+    match /publicContracts/{publicContractId} {
+      allow read: if userHasValidOrg();
+      allow write: if false;
+    }
+
     /// DISTRIBUTION DEALS RULES ///
     match /{path=**}/distributionDeals/{dealId} {
     	allow write: if true; // @TODO #1388 Only if contract.status  === 'unknown' ?
