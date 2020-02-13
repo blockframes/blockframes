@@ -158,7 +158,6 @@ export const onMovieDeleteEvent = onDocumentDelete(
 //   Contracts & Contracts Version Management   //
 //------------------------------------------------
 
-
 /**
  * Trigger: when a contract is created/updated/deleted
  */
@@ -167,7 +166,6 @@ export const onContractWriteEvent = onDocumentWrite(
   onContractWrite
 );
 
-
 /**
  * Trigger: when a contractVersion is created/updated/deleted
  */
@@ -175,7 +173,6 @@ export const onContractVersionWriteEvent = onDocumentWrite(
   'contracts/{contractId}/versions/{versionId}',
   onContractVersionWrite
 )
-
 
 //--------------------------------
 //       Apps Management        //
