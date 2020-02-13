@@ -1,5 +1,4 @@
 import { FormControl } from '@angular/forms';
-import { Injectable } from '@angular/core';
 import { urlValidators } from '@blockframes/utils/form/validators';
 import { FormStaticValue, FormList, FormEntity } from '@blockframes/utils/form';
 import {
@@ -21,7 +20,8 @@ function createPartyDetailsControls(partyDetails: Partial<ContractPartyDetail> =
   const entity = createContractPartyDetail(partyDetails);
   return {
     party: new ContractPartyForm(entity.party),
-    status: new FormControl(entity.status)
+    status: new FormControl(entity.status),
+    childRoles: new FormControl(partyDetails.childRoles)
   };
 }
 
@@ -73,22 +73,23 @@ export class LegalDocumentsForm extends FormEntity<LegalDocumentsControl> {
 // CONTRACT
 
 
-function createContractControls(contract: Partial<Contract>) {
+function createContractControls(contract: Partial<Contract> = {}) {
   const entity = createContract(contract);
+  // @todo(#1887)
+  const versions = entity.versions.filter(({ id }) => id !== '_meta');
   return {
     id: new FormControl(contract.id),
     parties: FormList.factory(entity.parties, partyDetails => new PartyDetailsForm(partyDetails)),
     documents: new LegalDocumentsForm(entity.documents),
     titleIds: FormList.factory(contract.titleIds),
-    versions: FormList.factory(contract.versions, version => new ContractVersionForm(version))
+    versions: FormList.factory(versions, version => new ContractVersionForm(version))
   };
 }
 
 type ContractControl = ReturnType<typeof createContractControls>;
 
-@Injectable()
 export class ContractForm extends FormEntity<ContractControl, Contract> {
-  constructor() {
-    super(createContractControls({}));
+  constructor(contract?: Partial<Contract>) {
+    super(createContractControls(contract));
   }
 }

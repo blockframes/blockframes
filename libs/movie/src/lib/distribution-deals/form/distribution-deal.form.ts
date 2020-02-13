@@ -5,12 +5,13 @@ import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
 import { DistributionDealTermsForm } from './terms/terms.form';
 import { DistributionDealHoldbacksForm } from './holdbacks/holdbacks.form';
-import { MovieVersionInfoForm } from '@blockframes/movie/movieform/version-info/version-info.form';
+import { MovieVersionInfoForm } from '@blockframes/movie/movie/form/version-info/version-info.form';
 
 
 function createDistributionDealControls(deal: Partial<DistributionDeal>) {
   const entity = createDistributionDeal(deal);
   return {
+    id: new FormControl(entity.id),
     contractId: new FormControl(entity.contractId),
     exclusive: new FormControl(entity.exclusive),
     territory: FormList.factory(entity.territory),
@@ -18,7 +19,7 @@ function createDistributionDealControls(deal: Partial<DistributionDeal>) {
     licenseType: new FormControl(entity.licenseType),
     terms: new DistributionDealTermsForm(entity.terms),
     holdbacks: FormList.factory(entity.holdbacks, holdback => new DistributionDealHoldbacksForm(holdback)),
-    assetLangauage: new MovieVersionInfoForm(deal.assetLanguage)
+    assetLanguage: new MovieVersionInfoForm(deal.assetLanguage)
   };
 }
 

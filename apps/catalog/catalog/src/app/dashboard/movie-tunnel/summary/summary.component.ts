@@ -1,8 +1,8 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { MovieForm } from '@blockframes/movie/movieform/movie.form';
+import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
 import { ActivatedRoute } from '@angular/router';
 import { MovieService, Movie } from '@blockframes/movie';
-import { StoreStatus } from '@blockframes/movie/movie+state/movie.firestore';
+import { StoreStatus } from '@blockframes/movie/movie/+state/movie.firestore';
 import { MatSnackBar } from '@angular/material';
 
 @Component({

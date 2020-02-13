@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 
 import { TitleAvailsComponent } from './avails.component';
 
-import { DistributionDealSelectionMapModule } from '@blockframes/movie/distribution-deals/selection-map/selection-map.module';
+import { DistributionDealSelectionMapModule } from '@blockframes/movie/distribution-deals/components/selection-map/selection-map.module';
 import { ContractListModule } from '@blockframes/contract/contract/list/contract-list.module';
 
 @NgModule({

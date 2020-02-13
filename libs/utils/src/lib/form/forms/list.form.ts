@@ -78,10 +78,15 @@ export class FormList<T, Control extends AbstractControl = any> extends FormArra
     return this.at(this.length - 1);
   }
 
+  /** Custom Method to get the last control */
+  first(): Control {
+    return this.at(0);
+  }
+
   /**
    * Custom method to add a Control using the createControl method
    */
-  add(value?: Partial<T>) {
+  add(value?: Partial<T>): Control {
     const control = this.createControl(value);
     this.push(control);
     return control;

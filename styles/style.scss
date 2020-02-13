@@ -56,6 +56,11 @@ span + .mat-icon {
   font-size: 12px;
 }
 
+/** Used for marketplace header & carousel */
+.light-theme .light-text {
+  color: mat-color($bf-light-foreground, light-text);
+}
+
 /** Used for movie status in banners. */
 .status-text {
   font-size: 8px;

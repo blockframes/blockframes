@@ -1,6 +1,6 @@
 import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { BudgetFormControl } from '../budget.form';
-import { UnitBox } from '@blockframes/movie/movie+state/movie.firestore';
+import { UnitBox } from '@blockframes/movie/movie/+state/movie.firestore';
 import { startWith, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 

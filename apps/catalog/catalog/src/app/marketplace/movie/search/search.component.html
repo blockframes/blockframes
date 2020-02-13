@@ -98,21 +98,47 @@
             </mat-error>
           </mat-expansion-panel> -->
 
+          <mat-divider></mat-divider>
+          <mat-card-subtitle>TITLE METADATA</mat-card-subtitle>
           <!-- Genres -->
           <mat-expansion-panel>
             <mat-expansion-panel-header>
               <mat-panel-title test-id="genres-panel">
-                Genres
+                Genre
               </mat-panel-title>
             </mat-expansion-panel-header>
             <movie-form-genre [form]="filterForm.genres"></movie-form-genre>
+          </mat-expansion-panel>
+
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <mat-panel-title>
+                Country of Origin
+              </mat-panel-title>
+            </mat-expansion-panel-header>
+            <mat-form-field appearance="outline">
+              <mat-chip-list #chipList>
+                <mat-chip *ngFor="let country of selectedMovieCountries; let i = index" [selectable]="selectable"
+                  [removable]="removable" (removed)="removeCountry(country, i)">
+                  <span>{{ country }}</span>
+                  <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                </mat-chip>
+                <input placeholder="Country available" #countryInput
+                  [matAutocomplete]="auto" [matChipInputFor]="chipList" [formControl]="countryControl" />
+              </mat-chip-list>
+              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selectedCountry($event)">
+                <mat-option *ngFor="let country of countriesFilter$ | async" [value]="country">
+                  {{ country }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
           </mat-expansion-panel>
 
           <!-- Languages -->
           <mat-expansion-panel>
             <mat-expansion-panel-header>
               <mat-panel-title test-id="languages-panel">
-                Languages
+                Language & Version
               </mat-panel-title>
             </mat-expansion-panel-header>
             <form formGroupName="languages" fxLayout="column">
@@ -128,15 +154,20 @@
                     [disabled]="!languageControl.valid">
                     <mat-icon>search</mat-icon>
                   </button>
-                  <mat-autocomplete #language="matAutocomplete" (optionSelected)="addLanguage(languageControl.value)">
+                  <mat-autocomplete #language="matAutocomplete">
                     <mat-option *ngFor="let language of languagesFilter$ | async" [value]="language">
                       {{language}}
                     </mat-option>
                   </mat-autocomplete>
                 </mat-form-field>
-                <button test-id="languages" mat-button [disabled]="!languageControl.valid" color="accent"
-                  (click)="addLanguage(languageControl.value); languageControl.reset()">Add
-                  language
+                <button
+                  test-id="languages"
+                  class="language-button"
+                  mat-mini-fab
+                  [disabled]="!languageControl.valid"
+                  color="primary"
+                  (click)="addLanguage(languageControl.value); languageControl.reset()">
+                  <mat-icon svgIcon="add"></mat-icon>
                 </button>
               </div>
               <ng-container *ngIf="filterForm.get('languages').value">
@@ -144,18 +175,22 @@
                   <ng-container *ngFor="let language of languages$ | async">
                     <mat-list-item [formGroupName]="language">
                       <span mat-line>
-                        <h3 class="mat-h3">{{ language | translateSlug: 'LANGUAGES' }}</h3>
-                        <button mat-icon-button (click)="removeLanguage(language)">
-                          <mat-icon class="cancel-btn">cancel</mat-icon>
-                        </button>
+                        <mat-chip class="chip-language" removable (removed)="removeLanguage(language)">
+                          <span>{{ language | translateSlug: 'LANGUAGES' }}</span>
+                          <mat-icon matChipRemove>cancel</mat-icon>
+                        </mat-chip>
                       </span>
-                      <i mat-line>Options are cumulative</i>
-                      <mat-checkbox test-id="languages-checkbox-original" mat-line formControlName="original">Original
+                      <mat-checkbox color="primary" test-id="languages-checkbox-original" mat-line formControlName="original">
+                        Original
                       </mat-checkbox>
-                      <mat-checkbox test-id="languages-checkbox-dubbed" mat-line formControlName="dubbed">Dubbed
+                      <mat-checkbox color="primary" test-id="languages-checkbox-dubbed" mat-line formControlName="dubbed">
+                        Dubbed
                       </mat-checkbox>
-                      <mat-checkbox test-id="languages-checkbox-subtitle" mat-line formControlName="subtitle">
+                      <mat-checkbox color="primary" test-id="languages-checkbox-subtitle" mat-line formControlName="subtitle">
                         Subtitles
+                      </mat-checkbox>
+                      <mat-checkbox color="primary" test-id="languages-checkbox-subtitle" mat-line formControlName="caption">
+                        Closed-Captioned
                       </mat-checkbox>
                     </mat-list-item>
                   </ng-container>
@@ -171,36 +206,25 @@
                 Production Status
               </mat-panel-title>
             </mat-expansion-panel-header>
-            <div fxLayout="column" fxLayoutAlign="start space-between" class="filter-checkboxes-status">
-              <mat-checkbox (change)="hasStatus(status)" *ngFor="let status of movieProductionStatuses">
+            <div fxLayout="column" fxLayoutAlign="start start">
+              <mat-checkbox color="primary" (change)="hasStatus(status)" *ngFor="let status of movieProductionStatuses">
                 {{status}}
               </mat-checkbox>
             </div>
           </mat-expansion-panel>
 
-          <!-- Sales Agents -->
+          <!-- Budget -->
           <mat-expansion-panel>
             <mat-expansion-panel-header>
-              <mat-panel-title test-id="sales-agent-panel">
-                Sales Agents
+              <mat-panel-title>
+                Budget
               </mat-panel-title>
             </mat-expansion-panel-header>
-            <mat-form-field class="sales-agents-chip-list">
-              <mat-chip-list #salesAgentChipList aria-label="Sales Agents selection">
-                <mat-chip *ngFor="let salesAgent of selectedSalesAgents" selectable removable
-                  (removed)="removeSalesAgent(salesAgent)">
-                  {{ salesAgent }}
-                  <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-                </mat-chip>
-                <input placeholder="Sales Agents" #salesAgentInput [formControl]="salesAgentControl"
-                  [matAutocomplete]="salesAgent" [matChipInputFor]="salesAgentChipList">
-              </mat-chip-list>
-              <mat-autocomplete #salesAgent="matAutocomplete" (optionSelected)="addSalesAgent($event)">
-                <mat-option *ngFor="let salesAgent of salesAgentFilter$ | async" [value]="salesAgent">
-                  {{ salesAgent }}
-                </mat-option>
-              </mat-autocomplete>
-            </mat-form-field>
+            <div fxLayout="column" fxLayoutAlign="start start">
+              <mat-checkbox (change)="hasBudget(budget)" color="primary" *ngFor="let budget of budgetList">
+                {{ budget.label }}
+              </mat-checkbox>
+            </div>
           </mat-expansion-panel>
 
           <!-- Certifications -->
@@ -250,6 +274,7 @@
                 The value <i>To</i> can't be smaller than the value <i>From</i>!
               </mat-error>
             </mat-expansion-panel> -->
+
 
           <!-- Territories -->
           <!-- TODO #1146 -->
