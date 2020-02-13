@@ -33,8 +33,11 @@
           <li *ngIf="terms">
             <b>Terms: </b> {{ terms }}
           </li>
-          <li *ngIf="version.get('renewalConditions')">
-            <b>Renewal Conditions: </b> {{ version.get('renewalConditions').value }}
+          <li *ngIf="version.get('renewalConditions').value as condition">
+            <b>Renewal Conditions: </b> {{ condition }}
+          </li>
+          <li *ngIf="version.get('terminationConditions').value as condition">
+            <b>Contract Termination Conditions: </b> {{ condition }}
           </li>
 
           <!-- Title Selection & Price -->
@@ -47,23 +50,22 @@
           <ng-container *ngIf="movies$ | async as movies">
             <ng-container *ngIf="movies.length else noTitles">
               <li *ngFor="let movie of movies$ | async">
-                <b>{{ movie.main.title.international }}</b>
-                <missing-control [control]="moviePrices[movie.id]" link="../details">
-                  <ng-template let-amount>{{ amount | currency: currency }}</ng-template>
-                </missing-control>
+                <b>{{ movie.main.title.international }}</b> {{ deals[movie.id] }}
               </li>
             </ng-container>
             <ng-template #noTitles >
               <a mat-button color="warn" routerLink="../details">You need at least one title.</a>
             </ng-template>
           </ng-container>
-          <!-- Total price -->
-          <li>
-            <b>Total Selection Price: </b>
-            <missing-control [control]="price.amount" link="../details">
-              <ng-template let-amount>{{ amount | currency: currency }}</ng-template>
-            </missing-control>
-          </li>
+
+          <!-- Fees -->
+          <ng-container *ngIf="version.get('AuthorizedRecoupableExpenses').value as fee" >
+            <h5>Fees</h5>
+            <li>
+              <b>Recoupable expenses: </b> {{ fee }}
+            </li>
+          </ng-container>
+          
 
           <!-- Payment schedules -->
           <h5>Payment Schedules</h5>

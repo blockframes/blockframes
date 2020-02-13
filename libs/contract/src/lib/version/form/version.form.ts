@@ -18,7 +18,8 @@ function createContractVersionControls(version: Partial<ContractVersion>) {
     }),
     customPaymentSchedule: new FormControl(version.customPaymentSchedule),
     paymentTerm: new DistributionDealTermsForm(version.paymentTerm),
-    renewalConditions: new FormControl(version.renewalConditions)
+    renewalConditions: new FormControl(version.renewalConditions),
+    terminationConditions: new FormControl(version.terminationConditions)
   }
 }
 

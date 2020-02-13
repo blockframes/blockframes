@@ -30,7 +30,7 @@ export function displayPaymentSchedule(version: ContractVersion): { type: string
     };
 }
 
-/** Frmat Terms to display it */
+/** Format Terms to display it */
 export function displayTerms(terms: Terms): string {
   const { start, end, floatingDuration, floatingStart } = terms;
   if (start && end) {
