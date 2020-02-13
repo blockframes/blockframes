@@ -90,7 +90,7 @@ export class ContractComponent implements OnInit {
 
     const update = {
       ...cleanModel(this.contract.last),
-      creationDate: Date.now(),
+      creationDate: new Date(),
       status: this.contractVersionForm.get('status').value,
     }
 
