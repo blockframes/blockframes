@@ -236,7 +236,6 @@ export function createInvoice(
     ...params,
     price: createPrice(params.price),
     collected: createPrice(params.collected),
-    paymentSchedule: createPaymentSchedule(params.paymentSchedule),
     paymentTerm: createTerms(params.paymentTerm),
     account: createBankAccount(params.account),
   }

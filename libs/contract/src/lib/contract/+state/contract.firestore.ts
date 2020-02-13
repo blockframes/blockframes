@@ -77,7 +77,7 @@ interface ContractVersionRaw<D> {
   creationDate?: D,
   titles: Record<string, ContractTitleDetail>,
   price: Price;
-  /** @dev informations about payments date */
+  /** @dev informations about payments dates */
   paymentSchedule?: PaymentScheduleRaw<D>[],
   /** @dev if paymentSchedule is empty, we use this string field */
   customPaymentSchedule?: string,
@@ -149,8 +149,6 @@ export interface InvoiceRaw<D> {
   buyerId: string,
   /** @dev an orgId */
   sellerId: string,
-  /** @dev informations about payment date */
-  paymentSchedule: PaymentScheduleRaw<D>,
   /** @dev payment conditions */
   paymentTerm: TermsRaw<D>,
   /**
