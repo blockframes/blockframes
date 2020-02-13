@@ -1,18 +1,22 @@
 <ng-container *ngIf="control.hasError('required') else missing">
-  <a [routerLink]="link" class="mandatory-control">Mandatory{{ isLast ? '' : ', ' }}</a>
+  <a [routerLink]="link" class="mandatory-control">
+    Mandatory{{ isLast ? '' : ', ' }}
+  </a>
 </ng-container>
 <ng-template #missing>
   <ng-container *ngIf="!control.value else content">
-    <a [routerLink]="link" class="missing-control">Missing{{ isLast ? '' : ', ' }}</a>
+    <a [routerLink]="link" class="missing-control">
+      Missing{{ isLast ? '' : ', ' }}
+    </a>
   </ng-container>
   <!-- Display projected content if provided -->
-  <ng-template #content 
+  <ng-template #content
     [ngTemplateOutlet]="child || value"
     [ngTemplateOutletContext]="{ $implicit: control.value }">
   </ng-template>
   <!-- Display value if no projected content -->
   <ng-template #value>
-    <ng-container *ngIf="scope else withoutScope">
+    <ng-container *ngIf="(scope && !!control.value) else withoutScope">
       {{ control.value | translateSlug: scope }}
     </ng-container>
     <ng-template #withoutScope>
