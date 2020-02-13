@@ -1,7 +1,7 @@
 import { firestore } from "firebase/app";
 import { TermsRaw } from "@blockframes/utils/common-interfaces/terms";
 import { Party } from "@blockframes/utils/common-interfaces/identity";
-import { Price } from "@blockframes/utils/common-interfaces/price";
+import { PriceRaw } from "@blockframes/utils/common-interfaces/price";
 import {
   TerritoriesSlug,
   LanguagesSlug,
@@ -42,14 +42,20 @@ export const enum ContractType {
   sale = 'sale'
 }
 
-export interface ContractTitleDetail {
+interface ContractTitleDetailRaw<D> {
   /**
    * @dev titleId is replacing movieId
    * since we are going to handle series, movies etc..
    */
   titleId: string,
-  price: Price,
+  price: PriceRaw<D>,
   distributionDealIds: string[];
+}
+
+export interface ContractTitleDetail extends ContractTitleDetailRaw<Date> {
+}
+
+export interface ContractTitleDetailDocument extends ContractTitleDetailRaw<Timestamp> {
 }
 
 interface ContractPartyDetailRaw<D> {
@@ -74,9 +80,9 @@ interface ContractVersionRaw<D> {
   status: ContractStatus,
   scope: TermsRaw<D>,
   creationDate?: D,
-  titles: Record<string, ContractTitleDetail>,
-  price: Price;
-  /** @dev informations about payments date */
+  titles: Record<string, ContractTitleDetailRaw<D>>,
+  price: PriceRaw<D>;
+  /** @dev informations about payments dates */
   paymentSchedule?: PaymentScheduleRaw<D>[],
   /** @dev if paymentSchedule is empty, we use this string field */
   customPaymentSchedule?: string,

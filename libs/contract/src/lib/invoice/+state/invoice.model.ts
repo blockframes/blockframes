@@ -1,6 +1,6 @@
 import { createPrice, PaymentStatus, formatPayment, formatPrice } from "@blockframes/utils/common-interfaces/price"
-import { InvoiceTitleDetails, Invoice, InvoiceDocument, InvoiceTitleDetailsDocument } from "./invoice.firestore"
-import { createPaymentSchedule, formatPaymentSchedule } from "@blockframes/utils/common-interfaces/schedule"
+import { InvoiceTitleDetails, Invoice } from "./invoice.firestore"
+import { formatPaymentSchedule } from "@blockframes/utils/common-interfaces/schedule"
 import { createBankAccount } from "@blockframes/utils/common-interfaces/utility"
 import { createTerms, formatTerms } from "@blockframes/utils/common-interfaces/terms"
 import { toDate } from "@blockframes/utils"
@@ -41,7 +41,6 @@ export function createInvoice(
     ...params,
     price: createPrice(params.price),
     collected: createPrice(params.collected),
-    paymentSchedule: createPaymentSchedule(params.paymentSchedule),
     paymentTerm: createTerms(params.paymentTerm),
     account: createBankAccount(params.account),
   }
