@@ -1,23 +1,58 @@
 <h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Contract > {{ contractId }} </h1>
+<ng-container *ngIf="contract">
 
-<ng-container *ngIf="invoiceForm">
-  <form [formGroup]="invoiceForm" fxLayout="column">
-    <div>
-      <mat-form-field appearance="outline">
-        <mat-label>Invoice Status</mat-label>
-        <mat-select formControlName="status" required>
-          <mat-option *ngFor="let status of statuses" [value]="status">
-            {{ status }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-    <mat-card-actions align="end">
-      <button type="submit" mat-raised-button class="main-btn" (click)="update()">Update</button>
-    </mat-card-actions>
-  </form>
+  <h2>Current version : {{ version }} </h2>
+
+  <ng-container *ngIf="contractForm">
+    <form [formGroup]="contractForm" fxLayout="column">
+      <div>
+        <mat-form-field appearance="outline">
+          <mat-label>Contract type</mat-label>
+          <mat-select formControlName="type" required>
+            <mat-option *ngFor="let type of types" [value]="type">
+              {{ type }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <mat-card-actions align="end">
+        <button type="submit" mat-raised-button class="main-btn" (click)="updateContract()">Update contract</button>
+      </mat-card-actions>
+    </form>
+  </ng-container>
+
+  <h2>Previous versions :</h2>
+
+  <bf-table-filter 
+    [source]="contractVersions" 
+    [columns]="versionColumns" 
+    [initialColumns]="initialColumns" 
+    [filterPredicate]="filterPredicate"
+    showFilter="true"
+    showLoader="true"
+    showPaginator="true">
+    <ng-template colRef="creationDate" let-creationDate>
+      {{ creationDate | date: 'short' }}
+    </ng-template>
+  </bf-table-filter>
+
+  <h2>Create new version</h2>
+
+  <ng-container *ngIf="contractVersionForm">
+    <form [formGroup]="contractVersionForm" fxLayout="column">
+      <div>
+        <mat-form-field appearance="outline">
+          <mat-label>Version Status</mat-label>
+          <mat-select formControlName="status" required>
+            <mat-option *ngFor="let status of statuses" [value]="status">
+              {{ status }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <mat-card-actions align="end">
+      <button type="submit" mat-raised-button class="main-btn" (click)="updateVersion()">Update to v-{{ version +1 }}</button>
+      </mat-card-actions>
+    </form>
+  </ng-container>
 </ng-container>
-
-
-
-

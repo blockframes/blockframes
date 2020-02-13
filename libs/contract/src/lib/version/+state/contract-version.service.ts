@@ -67,4 +67,16 @@ export class ContractVersionService extends CollectionService<ContractVersionSta
       return createContractVersionFromFirestore(lastVersion);
     }
   }
+
+  /**
+   * Returns contract versions.
+   * @param contractId
+   */
+  public async getContractVersions(contractId: string): Promise<ContractVersion[]> {
+    const contractsSnap = await this.db
+      .collection(`contracts/${contractId}/versions`)
+      .get()
+      .toPromise();
+    return contractsSnap.docs.filter(v => v.id !== '_meta').map(c => createContractVersionFromFirestore(c.data()));
+  }
 }

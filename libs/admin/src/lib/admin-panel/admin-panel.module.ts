@@ -3,7 +3,15 @@ import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { MatIconModule, MatCardModule, MatFormFieldModule, MatCheckboxModule, MatInputModule, MatSelectModule } from '@angular/material';
+import {
+  MatIconModule,
+  MatCardModule,
+  MatFormFieldModule,
+  MatCheckboxModule,
+  MatInputModule,
+  MatSelectModule,
+  MatButtonModule 
+} from '@angular/material';
 
 // Modules
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
@@ -19,6 +27,7 @@ import { OrganizationComponent } from './pages/organization/organization.compone
 import { MovieComponent } from './pages/movie/movie.component';
 import { InvoicesComponent } from './pages/invoices/invoices.component';
 import { InvoiceComponent } from './pages/invoice/invoice.component';
+import { ContractComponent } from './pages/contract/contract.component';
 
 export const panelRoutes: Routes = [
   { path: '', redirectTo: 'overview', pathMatch: 'full' },
@@ -28,6 +37,7 @@ export const panelRoutes: Routes = [
   { path: 'deals/:movieId', component: DistributionDealsComponent },
   { path: 'contracts', component: ContractsComponent },
   { path: 'contracts/:movieId', component: ContractsComponent },
+  { path: 'contract/:contractId', component: ContractComponent },
   { path: 'organizations', component: OrganizationsComponent },
   { path: 'organization/:orgId', component: OrganizationComponent },
   { path: 'movie/:movieId', component: MovieComponent },
@@ -42,6 +52,7 @@ export const panelRoutes: Routes = [
     MatIconModule,
     MatCardModule,
     MatInputModule,
+    MatButtonModule,
     MatFormFieldModule,
     MatSelectModule,
     MatCheckboxModule,
@@ -55,6 +66,7 @@ export const panelRoutes: Routes = [
     MoviesComponent,
     DistributionDealsComponent,
     ContractsComponent,
+    ContractComponent,
     OrganizationsComponent,
     OrganizationComponent,
     MovieComponent,

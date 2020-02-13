@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { getValue } from '@blockframes/utils/helpers';
+import { getValue, cleanModel } from '@blockframes/utils/helpers';
 import { termToPrettyDate } from '@blockframes/utils/common-interfaces/terms';
 import { ActivatedRoute } from '@angular/router';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
@@ -21,6 +21,7 @@ export class ContractsComponent implements OnInit {
     'last.scope': 'Scope',
     'doc.partyIds': 'Parties',
     'doc.titleIds': 'Titles',
+    'edit': 'Edit',
   };
 
   public initialColumns: string[] = [
@@ -33,6 +34,7 @@ export class ContractsComponent implements OnInit {
     'last.scope',
     'doc.partyIds',
     'doc.titleIds',
+    'edit',
   ];
   public rows: ContractWithLastVersion[] = [];
   public toPrettyDate = termToPrettyDate;
@@ -52,7 +54,16 @@ export class ContractsComponent implements OnInit {
       contracts = await this.contractService.getAllContracts();
     }
 
-    const promises = contracts.map(async contract => await this.contractService.getContractWithLastVersion(contract.id));
+    const promises = contracts.map(async contract => {
+      const c = await this.contractService.getContractWithLastVersion(contract.id);
+      const row = cleanModel({...c}) as any;
+      row.edit = {
+        id: c.doc.id,
+        link: `/c/o/admin/panel/contract/${c.doc.id}`,
+      }
+      return row;
+    });
+
     this.rows = await Promise.all(promises);
   }
 
