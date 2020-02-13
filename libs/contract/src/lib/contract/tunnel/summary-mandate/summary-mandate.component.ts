@@ -3,12 +3,10 @@ import { ContractForm } from '../../form/contract.form';
 import { Movie } from '@blockframes/movie';
 import { ContractTunnelComponent, DealControls } from '../contract-tunnel.component';
 import { Observable } from 'rxjs';
-import { FormEntity, TemporalityUnit } from '@blockframes/utils';
+import { FormEntity } from '@blockframes/utils';
 import { FormControl } from '@angular/forms';
-import { DistributionDealTermsControl } from '@blockframes/movie/distribution-deals/form/terms/terms.form';
 import { ContractVersionPriceControl, ContractVersionForm } from '@blockframes/contract/version/form';
 import { MovieCurrenciesSlug } from '@blockframes/utils/static-model';
-import { ContractVersion } from '@blockframes/contract/version/+state';
 import { displayPaymentSchedule, displayTerms } from '../utils';
 
 @Component({
@@ -26,7 +24,7 @@ export class SummaryMandateComponent implements OnInit {
   public parties: { licensee: FormControl[], licensor: { subRole: FormControl, displayName: FormControl}[] };
   public terms: string;
   public price: ContractVersionPriceControl;
-  public moviePrices: Record<string, FormControl> = {}
+  public deals: Record<string, string> = {}
   public currency: MovieCurrenciesSlug;
   public payments: { type: string, list: string[] } = { type: '', list: [] };
 
@@ -38,7 +36,6 @@ export class SummaryMandateComponent implements OnInit {
     this.dealForms = this.tunnel.dealForms;
     this.form = this.tunnel.contractForm;
     this.version = this.form.get('versions').last();
-
     // Parties
     this.parties = { licensee: [], licensor: [] };
     for (const party of this.form.get('parties').controls) {
@@ -55,8 +52,20 @@ export class SummaryMandateComponent implements OnInit {
     this.terms = displayTerms(this.version.get('scope').value);
     this.price = this.version.get('price').controls;
     this.currency = this.price.currency.value;
-    for (const movieId in this.version.get('titles').controls) {
-      this.moviePrices[movieId] = this.version.get('titles').get(movieId).get('price').get('amount');
+
+    // Distribution fees
+    const { price, titles } = this.version.value;
+    for (const movieId in titles) {
+      if (price.commission) {
+        // Title Distribution Fee
+        const { commission, commissionBase } = titles[movieId].price;
+        this.deals[movieId] = `${commission} Distribution fee on ${commissionBase}.`;
+      } else {
+        // Common Distribution Fee
+        const { commission } = price;
+        const { commissionBase } = titles[movieId].price;
+        this.deals[movieId] = `${commission} Distribution fee on ${commissionBase}.`;
+      }
     }
 
     this.payments = displayPaymentSchedule(this.version.value);
