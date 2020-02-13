@@ -96,10 +96,8 @@ export class MarketplaceSearchComponent implements OnInit {
   /* Data for UI */
   public movieProductionStatuses: MovieStatusLabel[] = MOVIE_STATUS_LABEL;
   public movieCertifications: CertificationsLabel[] = CERTIFICATIONS_LABEL;
-  public movieMedias: MediasSlug[] = MEDIAS_SLUG;
 
   /* Filter for autocompletion */
-  public territoriesFilter$: Observable<string[]>;
   public countriesFilter$: Observable<string[]>;
   public languagesFilter$: Observable<string[]>;
   public resultFilter$: Observable<any[]>;
@@ -108,7 +106,6 @@ export class MarketplaceSearchComponent implements OnInit {
   public languageControl: FormControl = new FormControl('', [
     Validators.required
   ]);
-  public territoryControl: FormControl = new FormControl('');
   public countryControl: FormControl = new FormControl('');
   public sortByControl: FormControl = new FormControl('');
   public searchbarTextControl: FormControl = new FormControl('');
@@ -116,9 +113,6 @@ export class MarketplaceSearchComponent implements OnInit {
   private filterBy$ = this.filterForm.valueChanges.pipe(startWith(this.filterForm.value));
   private filterByAvails$ = this.availsForm.valueChanges.pipe(startWith(this.availsForm.value));
   private sortBy$ = this.sortByControl.valueChanges.pipe(startWith(this.sortByControl.value));
-
-  /* Arrays for showing the selected entities in the UI */
-  public selectedMovieTerritories: string[] = [];
 
   /* Arrays for showing the selected countries in the UI */
   public selectedMovieCountries: string[] = [];
@@ -134,13 +128,6 @@ export class MarketplaceSearchComponent implements OnInit {
   public removableCountry = true;
 
   @ViewChild('countryInput', { static: false }) countryInput: ElementRef<HTMLInputElement>;
-
-  /* Flags for the Territories chip input */
-  public visibleTerritory = true;
-  public selectableTerritory = true;
-  public removableTerritory = true;
-
-  @ViewChild('territoryInput', { static: false }) territoryInput: ElementRef<HTMLInputElement>;
 
   @ViewChild('autoCompleteInput', { static: false, read: MatAutocompleteTrigger })
   public autoComplete: MatAutocompleteTrigger;
@@ -216,12 +203,6 @@ export class MarketplaceSearchComponent implements OnInit {
       map(value => this._languageFilter(value))
     );
 
-    this.territoriesFilter$ = this.territoryControl.valueChanges.pipe(
-      startWith(''),
-      debounceTime(300),
-      map(territory => this._territoriesFilter(territory))
-    );
-
     this.countriesFilter$ = this.countryControl.valueChanges.pipe(
       startWith(''),
       debounceTime(300),
@@ -291,17 +272,6 @@ export class MarketplaceSearchComponent implements OnInit {
   ////////////////////
   // Filter section //
   ////////////////////
-
-  /**
-   * @description returns an array of strings for the autocompletion component
-   * @param value string which got typed in into an input field
-   */
-  private _territoriesFilter(territory: string): string[] {
-    const filterValue = territory.toLowerCase();
-    return TERRITORIES_LABEL.filter(movieTerritory => {
-      return movieTerritory.toLowerCase().includes(filterValue);
-    });
-  }
 
   /**
  * @description returns an array of strings for the autocompletion component
@@ -408,13 +378,6 @@ export class MarketplaceSearchComponent implements OnInit {
     }
   }
 
-  /** Check media or uncheck it if it's already in the array. */
-  public checkMedia(media: MediasSlug) {
-    if (this.movieMedias.includes(media)) {
-      this.availsForm.checkMedia(media);
-    }
-  }
-
   public removeCountry(country: string, index: number) {
     const i = this.selectedMovieCountries.indexOf(country);
 
@@ -439,32 +402,6 @@ export class MarketplaceSearchComponent implements OnInit {
     this.filterForm.addCountry(territorySlug);
     this.countryInput.nativeElement.value = '';
   }
-
-  public removeTerritory(territory: string, index: number) {
-    const i = this.selectedMovieTerritories.indexOf(territory);
-
-    if (i >= 0) {
-      this.selectedMovieTerritories.splice(i, 1);
-    }
-    this.availsForm.removeTerritory(index);
-  }
-
-  public selectedTerritory(territory: MatAutocompleteSelectedEvent) {
-    if (!this.selectedMovieTerritories.includes(territory.option.viewValue)) {
-      this.selectedMovieTerritories.push(territory.option.value);
-    }
-    /**
-     * We want to exchange the label for the slug,
-     * because for our backend we need to store the slug.
-     */
-    const territorySlug: TerritoriesSlug = getCodeIfExists(
-      'TERRITORIES',
-      territory.option.viewValue as ExtractCode<'TERRITORIES'>
-    );
-    this.availsForm.addTerritory(territorySlug);
-    this.territoryInput.nativeElement.value = '';
-  }
-
 
   public toggle$(movieId: string) {
     return this.catalogCartQuery.isAddedToWishlist(movieId);
@@ -507,17 +444,5 @@ export class MarketplaceSearchComponent implements OnInit {
     } else {
       this.searchbarTypeForm.setValue('');
     }
-  }
-
-  public applyAvailsFilter() {
-    this.availsForm.get('isActive').setValue(true);
-    this.availsForm.disable();
-    this.territoryControl.disable();
-    // TODO: use controls for territories and medias to make it disablable.
-  }
-
-  public deactivateAvailsFilter() {
-    this.availsForm.get('isActive').setValue(false);
-    this.availsForm.enable();
   }
 }
