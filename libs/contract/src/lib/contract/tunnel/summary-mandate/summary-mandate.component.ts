@@ -71,4 +71,6 @@ export class SummaryMandateComponent implements OnInit {
     this.payments = displayPaymentSchedule(this.version.value);
   }
 
+
+  submit() {}
 }

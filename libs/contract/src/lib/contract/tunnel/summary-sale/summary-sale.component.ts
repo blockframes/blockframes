@@ -57,4 +57,6 @@ export class SummarySaleComponent implements OnInit {
     return parties.map(p => p.get('party').get('displayName'));
   }
 
+  
+  submit() {}
 }
