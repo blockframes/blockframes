@@ -14,4 +14,8 @@ export class OrganizationHomeComponent {
 
   constructor() {}
 
+  get routerLink() {
+    return this.link.value ? ['..', this.link.value] : '.';
+  }
+
 }
