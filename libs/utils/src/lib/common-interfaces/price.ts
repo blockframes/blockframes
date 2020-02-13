@@ -32,7 +32,7 @@ export const enum ExpenseSubType {
   translation = 'Translation expenses',
 }
 
-export const enum PaymentStatus {
+export enum PaymentStatus {
   unknown = 'unknown',
   waitingpayment = 'waiting for payment',
   due = 'Due',

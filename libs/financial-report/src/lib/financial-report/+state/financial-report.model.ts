@@ -1,5 +1,6 @@
 import { FinancialReport, FinancialReportVersion, FinancialReportTitleDetail, SendType, ReportStatus, Taxes } from "./financial-report.firestore";
 import { createRange } from "@blockframes/utils/common-interfaces/range";
+import { createTerms } from "@blockframes/utils";
 
 export function createTaxes(params: Partial<Taxes> = {}): Taxes {
   return {
@@ -24,6 +25,7 @@ export function createFinancialReport(params: Partial<FinancialReport> = {}): Fi
     totalNetReceipts: 0,
     ...params,
     scope: createRange(params.scope),
+    reportingTerm: createTerms(params.reportingTerm),
   };
 }
 
