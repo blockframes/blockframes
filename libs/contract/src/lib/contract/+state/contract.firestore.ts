@@ -100,7 +100,7 @@ interface ContractVersionRaw<D> {
    * This will be used by admins when they ventilate expenses
    * into various contracts for generating financial reports.
    */
-  AuthorizedRecoupableExpenses?: string;
+  authorizedRecoupableExpenses?: string;
 }
 
 interface ContractRaw<D> {
