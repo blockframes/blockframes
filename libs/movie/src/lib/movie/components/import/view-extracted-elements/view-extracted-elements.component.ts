@@ -2079,7 +2079,7 @@ export class ViewExtractedElementsComponent {
 
     if (spreadSheetRow[SpreadSheetContractTitle.expenseCurrency + currentIndex]) {
         // @TODO(BRUCE) #1894
-        recoupableExpense.price.currency = spreadSheetRow[SpreadSheetContractTitle.expenseCurrency + currentIndex].ToUpperCase()
+        recoupableExpense.price.currency = spreadSheetRow[SpreadSheetContractTitle.expenseCurrency + currentIndex].toUpperCase()
     }
 
     titleDetails.price.recoupableExpenses.push(recoupableExpense);
