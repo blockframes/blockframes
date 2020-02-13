@@ -4,11 +4,16 @@ import { ContractVersionState, ContractVersionStore } from './contract-version.s
 import { VersionMeta, createVersionMeta, ContractVersion } from './contract-version.model';
 import { ContractQuery } from '../../contract/+state/contract.query';
 import { ContractWithLastVersion } from '../../contract/+state/contract.model';
+import { ContractStatus } from '@blockframes/contract/contract/+state/contract.firestore';
+import { DistributionDealStatus } from '@blockframes/movie/distribution-deals/+state/distribution-deal.firestore';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'contracts/:contractId/versions' })
 export class ContractVersionService extends CollectionService<ContractVersionState> {
-  constructor(private contractQuery: ContractQuery, store: ContractVersionStore) {
+  constructor(
+    private contractQuery: ContractQuery,
+    store: ContractVersionStore
+  ) {
     super(store);
   }
 
@@ -58,4 +63,5 @@ export class ContractVersionService extends CollectionService<ContractVersionSta
       return lastVersion;
     }
   }
+
 }

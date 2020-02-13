@@ -8,6 +8,11 @@ import { FormControl } from '@angular/forms';
 import { ContractVersionPriceControl, ContractVersionForm } from '@blockframes/contract/version/form';
 import { MovieCurrenciesSlug } from '@blockframes/utils/static-model';
 import { displayPaymentSchedule, displayTerms } from '../utils';
+import { ContractQuery, ContractStatus, ContractService } from '../../+state';
+import { ContractVersionService } from '@blockframes/contract/version/+state';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { DistributionDealStatus } from '@blockframes/movie/distribution-deals/+state/distribution-deal.firestore';
+import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state';
 
 @Component({
   selector: 'contract-tunnel-summary-mandate',
@@ -28,7 +33,13 @@ export class SummaryMandateComponent implements OnInit {
   public currency: MovieCurrenciesSlug;
   public payments: { type: string, list: string[] };
 
-  constructor(private tunnel: ContractTunnelComponent) { }
+  constructor(
+    private tunnel: ContractTunnelComponent,
+    private db: AngularFirestore,
+    private service: ContractVersionService,
+    private dealService: DistributionDealService,
+    private query: ContractQuery
+  ) { }
 
   ngOnInit() {
     // Need to create it in the ngOnInit or it's not updated
@@ -73,5 +84,25 @@ export class SummaryMandateComponent implements OnInit {
     this.payments = displayPaymentSchedule(this.version.value);
   }
 
-  submit() {}
+  /**
+   * Submit a contract version to Archipel Content
+   * @todo(#1887) should update the version on the contract
+   * @note cannot put this function on the service or you hit cyrcular dependancies
+   */
+  async submit() {
+    const lastIndex = this.form.get('versions').value.length - 1;
+    const contractId = this.query.getActiveId();
+
+    // Make sure everything is saved first and that deals have ids
+    await this.tunnel.save();
+    const write = this.db.firestore.batch();
+    this.service.update(`${lastIndex}`, { status: ContractStatus.submitted }, { params: { contractId }, write });
+    
+    for (const movieId in this.dealForms.value) {
+      const undernegotiation = { status: DistributionDealStatus.undernegotiation };
+      const dealIds = this.dealForms.get(movieId).value.map(deal => deal.id);
+      this.dealService.update(dealIds, undernegotiation, { params: { movieId }, write });
+    }
+    return write.commit();
+  }
 }
