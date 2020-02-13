@@ -1,5 +1,37 @@
 <ul>
   <li>
-    image works
+    <strong>Banner </strong>
+    <ng-container *ngIf="!promotionalElements.get('banner').get('media').value.originalFileName else banner">
+      <a [routerLink]="link" class="missing-control">
+        Missing
+      </a>
+    </ng-container>
+    <ng-template #banner>
+      {{ promotionalElements.get('banner').get('media').value.originalFileName }}
+    </ng-template>
+  </li>
+  <li>
+    <strong>Movie Poster </strong>
+    <ng-container *ngIf="!promotionalElements.get('poster').controls[0].controls['media'].value.originalFileName else poster">
+      <a [routerLink]="link" class="missing-control">
+        Missing
+      </a>
+    </ng-container>
+    <ng-template #poster>
+      {{ promotionalElements.get('poster').controls[0].controls['media'].value.originalFileName }}
+    </ng-template>
+  </li>
+  <li>
+    <strong>Still Photos </strong>
+    <ng-container *ngIf="!promotionalElements.get('still_photo').controls[0].controls['media'].value.originalFileName else photos">
+      <a [routerLink]="link" class="missing-control">
+        Missing
+      </a>
+    </ng-container>
+    <ng-template #photos>
+      <ng-container *ngFor="let photo of promotionalElements.get('still_photo').controls; let isLast = last">
+        {{ photo.controls['media'].value.originalFileName }} {{ isLast ? '' : '| '}}
+      </ng-container>
+    </ng-template>
   </li>
 </ul>
