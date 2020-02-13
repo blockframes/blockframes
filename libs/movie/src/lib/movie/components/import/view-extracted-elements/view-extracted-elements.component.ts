@@ -2078,8 +2078,9 @@ export class ViewExtractedElementsComponent {
     }
 
     if (spreadSheetRow[SpreadSheetContractTitle.expenseCurrency + currentIndex]) {
-      if (spreadSheetRow[SpreadSheetContractTitle.expenseCurrency + currentIndex].toLowerCase() === 'eur') {
-        recoupableExpense.price.currency = 'euro';
+      if (spreadSheetRow[SpreadSheetContractTitle.expenseCurrency + currentIndex].toLowerCase() === 'EUR') {
+        // @TODO(BRUCE)
+        recoupableExpense.price.currency = spreadSheetRow[SpreadSheetContractTitle.expenseCurrency + currentIndex].ToUpperCase()
       }
     }
 

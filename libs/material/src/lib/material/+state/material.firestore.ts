@@ -1,6 +1,4 @@
-import { default as staticModels } from '@blockframes/utils/static-model/staticModels';
-
-type CurrencyCode = ((typeof staticModels)['MOVIE_CURRENCIES'])[number]['code'];
+import { CurrencySlug } from '@blockframes/material/delivery/types';
 
 export const enum MaterialStatus {
   pending = 'pending',
@@ -19,7 +17,7 @@ export interface MaterialRaw {
 /** Document model of a material specific to a template. */
 export interface MaterialTemplateDocument extends MaterialRaw {
   price: number; // TODO: Create "Price" type with currencies from static-models => ISSUE#818
-  currency: CurrencyCode;
+  currency: CurrencySlug;
 }
 
 
@@ -30,7 +28,7 @@ export interface MaterialDocument extends MaterialRaw {
   status?: MaterialStatus;
   deliveryIds: string[];
   price?: number; // TODO: Create "Price" type with currencies from static-models => ISSUE#818
-  currency?: CurrencyCode;
+  currency?: CurrencySlug;
   isOrdered?: boolean;
   isPaid?: boolean;
   storage?: string;
