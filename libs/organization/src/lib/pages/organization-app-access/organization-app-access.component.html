@@ -3,18 +3,18 @@
   <p>After your organization is validated, you'll be directed to your Archipel Content<br>working space !</p>
 
   <mat-radio-group [formControl]="access" fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-between center" fxLayoutGap="20px">
-    <mat-card matRipple (click)="dashboard.checked = true && access.value = 'dashboard'" fxLayout="column" fxLayoutAlign="center center">
+    <mat-card matRipple (click)="access.setValue('dashboard')" fxLayout="column" fxLayoutAlign="center center">
       <img asset="seller_dashboard.svg" />
-      <mat-radio-button #dashboard value="dashboard">Seller's Dashboard</mat-radio-button>
+      <mat-radio-button value="dashboard">Seller's Dashboard</mat-radio-button>
       <p>I want to <b>maximaze my library's potential</b> !</p>
     </mat-card>
 
-    <mat-card matRipple (click)="marketplace.checked = true && access.value = 'marketplace'" fxLayout="column" fxLayoutAlign="center center">
+    <mat-card matRipple (click)="access.setValue('marketplace')" fxLayout="column" fxLayoutAlign="center center">
       <img asset="buyer_marketplace.svg" />
-      <mat-radio-button #marketplace value="marketplace">Buyer's Marketplace</mat-radio-button>
+      <mat-radio-button value="marketplace">Buyer's Marketplace</mat-radio-button>
       <p>I want to <b>buy quality content in one package</b> !</p>
     </mat-card>
   </mat-radio-group>
 
-  <button mat-flat-button color="accent" (click)="submit(dashboard.checked, marketplace.checked)" [disabled]="!access.value">Submit</button>
+  <button mat-flat-button color="accent" (click)="submit()" [disabled]="!access.value">Submit</button>
 </section>
