@@ -41,10 +41,6 @@ mat-divider {
   background-color: var(--primary);
 }
 
-h2 {
-  white-space: nowrap;
-}
-
 .input-form {
   display: block;
   height: 100%;
@@ -70,6 +66,10 @@ form {
 
 section {
   padding: 20px 100px;
+}
+
+section.filters {
+  padding: 20px 100px;
   min-height: calc(100vh - (var(--toolbarHeight) * 2) - 30px); // TODO #1212
 
   aside {
@@ -91,11 +91,6 @@ section {
 
     .filter-checkboxes {
       height: 270px;
-      flex-wrap: wrap;
-    }
-
-    .filter-checkboxes-media {
-      height: 260px;
       flex-wrap: wrap;
     }
 
@@ -124,26 +119,6 @@ section {
 
   }
 
-  .sales-agents-chip-list .genres-chip-list {
-    width: 100%;
-  }
-
-  .cancel-btn {
-    height: 18px;
-    width: 18px;
-    line-height: 18px;
-    font-size: 18px;
-  }
-
-  h3.mat-h3 {
-    display: inline;
-    font-weight: inherit;
-    font-size: 16px;
-  }
-}
-
-.filter-buttons {
-  margin: 24px 0;
 }
 
 @include mobile {

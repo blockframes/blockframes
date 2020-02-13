@@ -1,10 +1,10 @@
 <ng-container [formGroup]="availsForm">
-  <span class="mat-subheading-1">AVAILS</span>
+  <h5>AVAILS</h5>
   <p class="mat-caption">You need to fill in Terms, Territory and Media before applying the Avails filter</p>
   <!-- Availabilities -->
   <mat-expansion-panel>
     <mat-expansion-panel-header>
-      <mat-panel-title test-id="availabilities-panel">Terms</mat-panel-title>
+      <span class="mat-body-1" test-id="availabilities-panel">Terms</span>
     </mat-expansion-panel-header>
     <ng-container formGroupName="terms">
       <mat-form-field appearance="outline">
@@ -31,9 +31,9 @@
   </mat-expansion-panel>
 
   <!-- Territories -->
-  <mat-expansion-panel>
+  <mat-expansion-panel *ngIf="territories">
     <mat-expansion-panel-header>
-      <mat-panel-title test-id="territories-panel"> Territory </mat-panel-title>
+      <span class="mat-body-1" test-id="territories-panel">Territory</span>
     </mat-expansion-panel-header>
     <mat-form-field appearance="outline">
       <mat-chip-list #territoryChipList>
@@ -57,10 +57,10 @@
   <!-- Media -->
   <mat-expansion-panel>
     <mat-expansion-panel-header>
-      <mat-panel-title test-id="mandate-medias-panel">Media</mat-panel-title>
+      <span class="mat-body-1" test-id="mandate-medias-panel">Media</span>
     </mat-expansion-panel-header>
-    <div fxLayout="column" fxLayoutAlign="start space-between" class="filter-checkboxes-media">
-      <mat-checkbox *ngFor="let media of movieMedias" (change)="checkMedia(media)" [disabled]="availsForm.value.isActive">
+    <div fxLayout="column" fxLayoutAlign="start space-between">
+      <mat-checkbox *ngFor="let media of movieMedias" (change)="checkMedia(media)" color="primary" [disabled]="availsForm.value.isActive">
         {{  media | translateSlug: 'MEDIAS' }}
       </mat-checkbox>
     </div>
@@ -69,7 +69,7 @@
   <!-- Exclusivity -->
   <mat-expansion-panel>
     <mat-expansion-panel-header>
-      <mat-panel-title>Exclusivity</mat-panel-title>
+      <span class="mat-body-1">Media</span>
     </mat-expansion-panel-header>
     <article fxLayout="row" fxLayoutGap="10px">
       <span>No</span>
@@ -86,7 +86,7 @@
     </button>
     <button
       *ngIf="availsForm.value.isActive"
-      mat-stroked-button color="warn"
+      mat-stroked-button color="accent"
       (click)="deactivateAvailsFilter()">
       Deactivate Avails Filter
     </button>
