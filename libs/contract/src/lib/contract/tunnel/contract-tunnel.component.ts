@@ -138,7 +138,7 @@ export class ContractTunnelComponent implements OnInit {
   }
 
   /** Save Contract, Contract Version and deals */
-  public save() {
+  public async save() {
     const write = this.db.firestore.batch();
     const contractId = this.query.getActiveId();
     const contract = { ...this.contractForm.value };
@@ -155,14 +155,15 @@ export class ContractTunnelComponent implements OnInit {
 
     // Upsert deals
     for (const movieId in this.dealForms.controls) {
-      const deals = this.dealForms.controls[movieId].value;
-      for (const deal of deals) {
+      const deals = this.dealForms.get(movieId).value;
+      deals.forEach(async (deal, i) =>  {
         if (deal.id) {
-          this.dealService.add({ contractId, ...deal }, { params: { movieId }, write })
-        } else {
           this.dealService.update(deal, { params: { movieId }, write });
+        } else {
+          const id = await this.dealService.add({ contractId, ...deal }, { params: { movieId }, write });
+          this.dealForms.get(movieId).at(i).patchValue({ id });
         }
-      }
+      })
     }
 
     // Remove deals
@@ -174,14 +175,11 @@ export class ContractTunnelComponent implements OnInit {
     this.removedDeals = {};
 
     // Return an observable<boolean> for the confirmExit
-    return from(write.commit()).pipe(
-      tap(_ => {
-        this.contractForm.markAsPristine();
-        this.dealForms.markAsPristine();
-      }),
-      switchMap(_ => this.snackBar.open('Saved', '', { duration: 500 }).afterDismissed()),
-      map(_ => true) 
-    )
+    await write.commit();
+    this.contractForm.markAsPristine();
+    this.dealForms.markAsPristine();
+    await this.snackBar.open('Saved', '', { duration: 500 }).afterDismissed().toPromise();
+    return true;
   }
 
   confirmExit() {
