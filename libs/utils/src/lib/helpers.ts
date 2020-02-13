@@ -29,3 +29,16 @@ export function toDate(date: firestore.Timestamp | Date): Date {
   }
   return date;
 }
+
+/**
+ * Takes a list of items and an asynchronous filtering function and
+ * returns a promise of the filtered list.
+ * @param items A list of item to filter with an asynchronous function
+ * @param filterFunction Asynchronous function that filters items
+ */
+export async function asyncFilter<T>(items: T[], filterFunction: (item: T) => Promise<boolean>) {
+  const _null = Symbol();
+  const x = items.map(async item => (await filterFunction(item)) ? item : _null);
+  const y = await Promise.all(x);
+  return y.filter(w => w !== _null) as T[];
+}
