@@ -26,7 +26,7 @@ export class SummaryMandateComponent implements OnInit {
   public price: ContractVersionPriceControl;
   public deals: Record<string, string> = {}
   public currency: MovieCurrenciesSlug;
-  public payments: { type: string, list: string[] } = { type: '', list: [] };
+  public payments: { type: string, list: string[] };
 
   constructor(private tunnel: ContractTunnelComponent) { }
 
@@ -56,21 +56,22 @@ export class SummaryMandateComponent implements OnInit {
     // Distribution fees
     const { price, titles } = this.version.value;
     for (const movieId in titles) {
-      if (price.commission) {
-        // Title Distribution Fee
-        const { commission, commissionBase } = titles[movieId].price;
-        this.deals[movieId] = `${commission} Distribution fee on ${commissionBase}.`;
-      } else {
+      if (price.commission && titles[movieId].price.commissionBase) {
         // Common Distribution Fee
         const { commission } = price;
         const { commissionBase } = titles[movieId].price;
         this.deals[movieId] = `${commission} Distribution fee on ${commissionBase}.`;
+      } else if (titles[movieId].price.commission && titles[movieId].price.commissionBase) {
+        // Title Distribution Fee
+        const { commission, commissionBase } = titles[movieId].price;
+        this.deals[movieId] = `${commission} Distribution fee on ${commissionBase}.`;
+      } else {
+        return undefined;
       }
     }
 
     this.payments = displayPaymentSchedule(this.version.value);
   }
-
 
   submit() {}
 }

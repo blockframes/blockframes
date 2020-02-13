@@ -27,10 +27,12 @@
           </li>
 
           <!-- Terms -->
-          <h5>Terms</h5>
-          <li>
-            <strong>Terms: </strong> {{ terms }}.
-          </li>
+          <ng-container *ngIf="terms">
+            <h5>Terms</h5>
+            <li>
+              <strong>Terms: </strong> {{ terms }}
+            </li>
+          </ng-container>
 
           <!-- Title Selection & Price -->
           <h5>Title Selection & Price</h5>
@@ -39,19 +41,13 @@
             <missing-control [control]="price.currency" link="../details"></missing-control>
           </li>
           <!-- Titles -->
-          <ng-container *ngIf="movies$ | async as movies">
-            <ng-container *ngIf="movies.length else noTitles">
-              <li *ngFor="let movie of movies$ | async">
-                <strong>{{ movie.main.title.international }}</strong>
-                <missing-control [control]="moviePrices[movie.id]" link="../details">
-                  <ng-template let-amount>{{ amount | currency: currency }}</ng-template>
-                </missing-control>
-              </li>
-            </ng-container>
-            <ng-template #noTitles >
-              <a mat-button color="warn" routerLink="../details">You need at least one title.</a>
-            </ng-template>
-          </ng-container>
+          <li *ngFor="let movie of movies$ | async">
+            <strong>{{ movie.main.title.international }}: </strong>
+            <missing-control [control]="moviePrices[movie.id]" link="../details">
+              <ng-template let-amount>{{ amount | currency: currency }}</ng-template>
+            </missing-control>
+          </li>
+
           <!-- Total price -->
           <li>
             <strong>Total Selection Price: </strong>
@@ -71,25 +67,40 @@
       </mat-card-content>
     </mat-card>
   
-    <!-- Distribution Deals -->
-    <h2>Exploitation Rights</h2>
-    <ng-container *ngFor="let movie of movies$ | async">
-      <mat-card>
-        <movie-banner [movie]="movie">
-          <movie-banner-actions>
-            <a mat-stroked-button color="primary" [routerLink]="['..', movie.id]">Edit</a>
-          </movie-banner-actions>
-        </movie-banner>
-        <ng-container *ngIf="dealForms.get(movie.id) as deals" >
-          <ng-container *ngIf="deals.value.length">
-            <catalog-right-list [source]="deals.value"></catalog-right-list>
-          </ng-container>
+    <ng-container *ngIf="movies$ | async as movies">
+      <!-- Distribution Deals -->
+      <ng-container *ngIf="movies.length else noTitle">
+        <h2>Exploitation Rights</h2>
+        <ng-container *ngFor="let movie of movies$ | async">
+          <mat-card>
+            <movie-banner [movie]="movie">
+              <movie-banner-actions>
+                <a mat-stroked-button color="primary" [routerLink]="['..', movie.id]">Edit</a>
+              </movie-banner-actions>
+            </movie-banner>
+            <ng-container *ngIf="dealForms.get(movie.id) as deals else noDeal" >
+              <ng-container *ngIf="deals.value.length else noDeal" >
+                <catalog-right-list [source]="deals.value"></catalog-right-list>
+              </ng-container>
+              <ng-template #noDeal >
+                <a [routerLink]="['..', movie.id]" color="warn">
+                  Add a right on this title.
+                </a>
+              </ng-template>
+            </ng-container>
+          </mat-card>
         </ng-container>
-      </mat-card>
+        <button class="submit" mat-flat-button color="accent" (click)="submit()">
+          <span>Submit you Contract Offer</span>
+          <mat-icon svgIcon="arrow_forward"></mat-icon>
+        </button>
+      </ng-container>
+      <!-- If no deal -->
+      <ng-template #noTitle >
+        <a mat-button color="warn" routerLink="../details">Add a Title to your contract</a>
+      </ng-template>
     </ng-container>
   </ng-container>
   
-  <button class="submit" mat-flat-button (click)="submit()">
-    Submit
-  </button>
+
 </tunnel-page>
