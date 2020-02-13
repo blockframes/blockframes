@@ -20,7 +20,7 @@ function createContractVersionControls(version: Partial<ContractVersion>) {
     paymentTerm: new DistributionDealTermsForm(version.paymentTerm),
     renewalConditions: new FormControl(version.renewalConditions),
     terminationConditions: new FormControl(version.terminationConditions),
-    AuthorizedRecoupableExpenses: new FormControl(version.AuthorizedRecoupableExpenses),
+    authorizedRecoupableExpenses: new FormControl(version.authorizedRecoupableExpenses),
   }
 }
 
