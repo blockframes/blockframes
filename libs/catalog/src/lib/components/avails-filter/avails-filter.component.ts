@@ -15,6 +15,7 @@ import { ExtractCode, getCodeIfExists } from '@blockframes/utils/static-model/st
 })
 export class AvailsFilterComponent implements OnInit{
   @Input() availsForm: AvailsSearchForm;
+  @Input() territories = false;
 
 
   public movieMedias: MediasSlug[] = MEDIAS_SLUG;
@@ -92,5 +93,6 @@ export class AvailsFilterComponent implements OnInit{
   public deactivateAvailsFilter() {
     this.availsForm.get('isActive').setValue(false);
     this.availsForm.enable();
+    this.territoryControl.enable();
   }
 }

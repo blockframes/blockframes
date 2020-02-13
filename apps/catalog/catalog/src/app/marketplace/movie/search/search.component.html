@@ -55,12 +55,33 @@
   </ng-container>
 </header>
 
+<section fxLayout="row" fxLayoutAlign="space-between center">
+  <h1 class="mat-headline">Library</h1>
+  <article>
+    <button mat-icon-button (click)="listView = !listView">
+      <ng-container *ngIf="!listView">
+        <mat-icon>list</mat-icon>
+      </ng-container>
+      <ng-container *ngIf="listView">
+        <mat-icon>grid_on</mat-icon>
+      </ng-container>
+    </button>
+    <mat-label>Sort by</mat-label>
+    <mat-select [formControl]="sortByControl">
+      <mat-option *ngFor="let option of sortOptions" [value]="option">
+        {{option}}
+      </mat-option>
+    </mat-select>
+  </article>
+</section>
+
 <section fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="50px" fxLayout.lt-md="column"
-  fxLayoutAlign.lt-md="center center">
+  fxLayoutAlign.lt-md="center center" class="filters">
   <!-- Search -->
   <aside fxLayout="column" class="filter">
     <mat-card>
-      <mat-card-title>Filters</mat-card-title>
+      <h6>Filters</h6>
+      <span class="mat-caption">On a specific filter, multiple choices are consider with  an "or" statement.</span>
       <mat-card-content>
         <mat-accordion multi="true">
           <ng-container [formGroup]="filterForm">
@@ -100,20 +121,18 @@
           </mat-expansion-panel> -->
 
           <mat-divider></mat-divider>
-          <mat-card-subtitle>TITLE METADATA</mat-card-subtitle>
+          <h5>TITLE METADATA</h5>
           <!-- Genres -->
           <mat-expansion-panel>
             <mat-expansion-panel-header>
-              <mat-panel-title test-id="genres-panel">
-                Genre
-              </mat-panel-title>
+              <span class="mat-body-1">Genres</span>
             </mat-expansion-panel-header>
             <movie-form-genre [form]="filterForm.genres"></movie-form-genre>
           </mat-expansion-panel>
 
           <mat-expansion-panel>
             <mat-expansion-panel-header>
-              <mat-panel-title> Country of Origin </mat-panel-title>
+              <span class="mat-body-1">Country of Origin</span>
             </mat-expansion-panel-header>
             <mat-form-field appearance="outline">
               <mat-chip-list #countryOriginChipList>
@@ -136,9 +155,7 @@
           <!-- Languages -->
           <mat-expansion-panel>
             <mat-expansion-panel-header>
-              <mat-panel-title test-id="languages-panel">
-                Language & Version
-              </mat-panel-title>
+              <span class="mat-body-1">Language & Version</span>
             </mat-expansion-panel-header>
             <form formGroupName="languages" fxLayout="column">
               <div fxLayout="row" fxLayoutAlign="start start">
@@ -201,9 +218,7 @@
           <!-- Production Statuses -->
           <mat-expansion-panel>
             <mat-expansion-panel-header>
-              <mat-panel-title test-id="status-panel">
-                Production Status
-              </mat-panel-title>
+              <span class="mat-body-1">Production Status</span>
             </mat-expansion-panel-header>
             <div fxLayout="column" fxLayoutAlign="start start">
               <mat-checkbox color="primary" (change)="hasStatus(status)" *ngFor="let status of movieProductionStatuses">
@@ -215,9 +230,7 @@
           <!-- Budget -->
           <mat-expansion-panel>
             <mat-expansion-panel-header>
-              <mat-panel-title>
-                Budget
-              </mat-panel-title>
+              <span class="mat-body-1">Budget</span>
             </mat-expansion-panel-header>
             <div fxLayout="column" fxLayoutAlign="start start">
               <mat-checkbox (change)="hasBudget(budget)" color="primary" *ngFor="let budget of budgetList">
@@ -226,37 +239,23 @@
             </div>
           </mat-expansion-panel>
 
-            <!-- Production Statuses -->
-            <mat-expansion-panel>
+          <!-- Certifications -->
+          <!-- TODO #1146 -->
+          <!-- <mat-expansion-panel>
               <mat-expansion-panel-header>
-                <mat-panel-title test-id="status-panel">
-                  Production Status
+                <mat-panel-title test-id="certifications-panel">
+                  Certifications
                 </mat-panel-title>
               </mat-expansion-panel-header>
-              <div fxLayout="column" fxLayoutAlign="start space-between" class="filter-checkboxes-status">
-                <mat-checkbox (change)="hasStatus(status)" *ngFor="let status of movieProductionStatuses">
-                  {{status}}
+              <h6>You can choose multiple certifications</h6>
+              <span fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
+                <mat-checkbox *ngFor="let certification of movieCertifications"
+                  (change)="checkCertification(certification)">{{certification}}
                 </mat-checkbox>
-              </div>
-            </mat-expansion-panel>
-
-            <!-- Certifications -->
-            <!-- TODO #1146 -->
-            <!-- <mat-expansion-panel>
-                <mat-expansion-panel-header>
-                  <mat-panel-title test-id="certifications-panel">
-                    Certifications
-                  </mat-panel-title>
-                </mat-expansion-panel-header>
-                <h6>You can choose multiple certifications</h6>
-                <span fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
-                  <mat-checkbox *ngFor="let certification of movieCertifications"
-                    (change)="checkCertification(certification)">{{certification}}
-                  </mat-checkbox>
-                </span>
-              </mat-expansion-panel> -->
-            </ng-container>
-            <catalog-avails-filter [availsForm]="availsForm"></catalog-avails-filter>
+              </span>
+            </mat-expansion-panel> -->
+          </ng-container>
+          <catalog-avails-filter [availsForm]="availsForm" [territories]="true"></catalog-avails-filter>
         </mat-accordion>
       </mat-card-content>
     </mat-card>
@@ -264,26 +263,6 @@
 
   <!-- List || card of result -->
   <article>
-    <div class="movies" fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
-      <h2>Line-up</h2>
-      <mat-divider></mat-divider>
-      <button mat-icon-button (click)="listView = !listView">
-        <ng-container *ngIf="!listView">
-          <mat-icon>list</mat-icon>
-        </ng-container>
-        <ng-container *ngIf="listView">
-          <mat-icon>grid_on</mat-icon>
-        </ng-container>
-      </button>
-      <mat-form-field>
-        <mat-label>Sort by</mat-label>
-        <mat-select [formControl]="sortByControl">
-          <mat-option *ngFor="let option of sortOptions" [value]="option">
-            {{option}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
     <ng-container *ngIf="(movieSearchResults$ | async) as movies">
       <div fxLayout="row wrap" fxLayoutGap="30px" fxLayout.lt-md="column" fxLayoutAlign.lt-md="center center">
         <ng-container *ngFor="let movie of movies">
