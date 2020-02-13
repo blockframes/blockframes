@@ -13,6 +13,7 @@ import {
 } from '../+state';
 import { ContractPartyForm } from './party/party.form';
 import { ContractVersionForm } from '@blockframes/contract/version/form/version.form';
+import { createParty } from '@blockframes/utils/common-interfaces';
 
 // PARTY DETAILS
 
@@ -75,6 +76,15 @@ export class LegalDocumentsForm extends FormEntity<LegalDocumentsControl, LegalD
 
 function createContractControls(contract: Partial<Contract> = {}) {
   const entity = createContract(contract);
+
+  // If there is no party, set a licensee & a licensor by default
+  if (!entity.parties.length) {
+    entity.parties = [
+      createContractPartyDetail({ party: createParty({ role: 'licensee' })}),
+      createContractPartyDetail({ party: createParty({ role: 'licensor' })})
+    ]
+  }
+
   // @todo(#1887)
   const versions = entity.versions.filter(({ id }) => id !== '_meta');
   return {
