@@ -2021,8 +2021,8 @@ export class ViewExtractedElementsComponent {
     }
 
     if (spreadSheetRow[SpreadSheetContractTitle.expenseCurrency + currentIndex]) {
-      if (spreadSheetRow[SpreadSheetContractTitle.expenseCurrency + currentIndex].toLowerCase() === 'eur') {
-        recoupableExpense.price.currency = 'euro';
+      if (spreadSheetRow[SpreadSheetContractTitle.expenseCurrency + currentIndex].toLowerCase() === 'EUR') {
+        recoupableExpense.price.currency = 'EUR';
       }
     }
 
