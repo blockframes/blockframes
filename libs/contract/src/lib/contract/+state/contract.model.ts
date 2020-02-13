@@ -157,19 +157,11 @@ export function buildChainOfTitle() {
   // @todo #1657 implement this
 }
 
-/** Function to convert a Contract into a ContractDocument. */
-export function convertToContractDocument(params: Partial<Contract> = {}): ContractDocumentWithDates {  // @todo #1832 revoir
-  return {
-    id: params.id,
-    type: ContractType.mandate,
-    parties: [],
-    titleIds: [],
-    partyIds: [],
-    parentContractIds: [],
-    childContractIds: [],
-    documents: createLegalDocuments(params.documents),
-    ...params
-  };
+/** Cleans an organization of its optional parameters */
+export function cleanContract(contract: Contract) {
+  const c = { ...contract };
+  delete c.versions; // Remove local values
+  return c;
 }
 
 export function createLegalDocuments(

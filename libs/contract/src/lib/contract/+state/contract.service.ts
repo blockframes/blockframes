@@ -3,13 +3,13 @@ import { ContractStore, ContractState } from './contract.store';
 import { CollectionConfig, CollectionService, awaitSyncQuery, Query, WriteOptions } from 'akita-ng-fire';
 import {
   Contract,
-  convertToContractDocument,
   createContractPartyDetail,
   initContractWithVersion,
   ContractWithLastVersion,
   ContractWithTimeStamp,
   getContractParties,
-  createContractFromFirestore
+  createContractFromFirestore,
+  cleanContract
 } from './contract.model';
 import orderBy from 'lodash/orderBy';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
@@ -22,7 +22,6 @@ import { firestore } from 'firebase/app';
 import { MovieQuery } from '@blockframes/movie';
 import { createContractVersionFromFirestore } from '@blockframes/contract/version/+state/contract-version.model';
 import { ContractVersion } from '@blockframes/contract/version/+state';
-import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
 
 /**
  * Get all the contracts where user organization is party.
@@ -103,7 +102,7 @@ export class ContractService extends CollectionService<ContractState> {
    * to clean the unused properties in the database (lastVersion).
   */
   formatToFirestore(contract: Contract): ContractDocumentWithDates {
-    return convertToContractDocument(contract);
+    return cleanContract(contract);
   }
 
   /**

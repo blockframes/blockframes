@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { CollectionService, CollectionConfig } from 'akita-ng-fire';
 import { ContractVersionState, ContractVersionStore } from './contract-version.store';
-import { VersionMeta, createVersionMeta, ContractVersion, createContractVersionFromFirestore } from './contract-version.model';
+import { VersionMeta, createVersionMeta, ContractVersion, createContractVersionFromFirestore, cleanContractVersion } from './contract-version.model';
 import { ContractQuery } from '../../contract/+state/contract.query';
 import { ContractWithLastVersion } from '../../contract/+state/contract.model';
+import { ContractVersionDocumentWithDates } from '@blockframes/contract/contract/+state/contract.firestore';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'contracts/:contractId/versions' })
@@ -45,6 +46,14 @@ export class ContractVersionService extends CollectionService<ContractVersionSta
       tx.set(versionRef, contractWithLastVersion.last);
     });
     return contractWithLastVersion.last.id;
+  }
+
+  /**
+   * This convert the ContractVersion into a ContractVersionDocumentWithDates
+   * to clean the unwanted properties in the database.
+  */
+  formatToFirestore(contract: ContractVersion): ContractVersionDocumentWithDates {
+    return cleanContractVersion(contract);
   }
 
   /**

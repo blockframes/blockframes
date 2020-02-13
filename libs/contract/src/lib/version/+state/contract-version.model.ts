@@ -57,3 +57,10 @@ export function getContractLastVersion(contract: Contract): ContractVersion {
   const index = contract.versions.map(v => v.id).indexOf(count.toString())
   return contract.versions[index];
 }
+
+/** Cleans an organization of its optional parameters */
+export function cleanContractVersion(version: ContractVersion) {
+  const v = { ...version };
+  // Remove local values in any
+  return v;
+}

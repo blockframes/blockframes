@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
 import { CollectionService, CollectionConfig } from 'akita-ng-fire';
 import { InvoiceState, InvoiceStore } from './invoice.store';
-import { InvoiceQuery } from './invoice.query';
 import { Invoice } from './invoice.firestore';
 import { createInvoiceFromFirestore } from './invoice.model';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'invoices' })
 export class InvoiceService extends CollectionService<InvoiceState> {
-  constructor(private invoiceQuery: InvoiceQuery, store: InvoiceStore) {
+  constructor(store: InvoiceStore) {
     super(store);
   }
 

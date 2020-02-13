@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { getValue } from '@blockframes/utils/helpers';
-import { DistributionDealService, DistributionDealWithMovieId, createDistributionDealWithMovieId } from '@blockframes/movie/distribution-deals';
+import { DistributionDealService, DistributionDealWithMovieId, createDistributionDealWithMovieId, formatDistributionDeal } from '@blockframes/movie/distribution-deals';
 import { termToPrettyDate } from '@blockframes/utils/common-interfaces/terms';
 import { ActivatedRoute } from '@angular/router';
 
@@ -44,7 +44,7 @@ export class DistributionDealsComponent implements OnInit {
     if (this.movieId) {
       this.rows = (await this.distributionDealService.getMovieDistributionDeals(this.movieId))
       .map(deal => createDistributionDealWithMovieId({ 
-        deal: this.distributionDealService.formatDistributionDeal(deal), 
+        deal: formatDistributionDeal(deal), 
         movieId: this.movieId,
        }))
     } else {
