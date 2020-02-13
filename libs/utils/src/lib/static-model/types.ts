@@ -54,11 +54,9 @@ export type LanguagesSlug = typeof LANGUAGES_SLUG[number];
 
 export const MOVIE_CURRENCIES_LABEL = models['MOVIE_CURRENCIES'].map(key => key.label);
 export const MOVIE_CURRENCIES_SLUG = models['MOVIE_CURRENCIES'].map(key => key.slug);
-export const MOVIE_CURRENCIES_CODE = models['MOVIE_CURRENCIES'].map(key => key.code);
 
 export type MovieCurrenciesLabel = typeof MOVIE_CURRENCIES_LABEL[number];
 export type MovieCurrenciesSlug = typeof MOVIE_CURRENCIES_SLUG[number];
-export type MovieCurrenciesCode = typeof MOVIE_CURRENCIES_CODE[number];
 
 export const SELECTION_CATEGORIES_LABEL = models['SELECTION_CATEGORIES'].map(key => key.label);
 export const SELECTION_CATEGORIES_SLUG = models['SELECTION_CATEGORIES'].map(key => key.slug);

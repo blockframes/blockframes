@@ -3,7 +3,7 @@ import { firestore } from 'firebase';
 import { ScheduleRaw } from "@blockframes/utils/common-interfaces/schedule";
 
 export type Timestamp = firestore.Timestamp;
-export type CurrencyCode = ((typeof staticModels)['MOVIE_CURRENCIES'])[number]['code'];
+export type CurrencySlug = ((typeof staticModels)['MOVIE_CURRENCIES'])[number]['slug'];
 
 export const enum DeliveryStatus {
   negociation = 'Delivery in negotiation',
@@ -40,7 +40,7 @@ interface DeliveryRaw<D> {
   /** Time to return a refused material */
   reWorkingPeriod?: number;
   mgAmount?: number;
-  mgCurrency?: CurrencyCode;
+  mgCurrency?: CurrencySlug;
   mgDeadlines?: MGDeadlineRaw<D>[];
   steps: StepRaw<D>[];
   validated: string[]; // Stakeholder.id[];
