@@ -1,6 +1,5 @@
 import { ContractForm } from '@blockframes/contract/contract/form/contract.form';
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { ContractTunnelComponent } from '../contract-tunnel.component';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
   selector: 'contract-details-sale',
@@ -8,16 +7,8 @@ import { ContractTunnelComponent } from '../contract-tunnel.component';
   styleUrls: ['./details-sale.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DetailsSaleComponent implements OnInit {
+export class DetailsSaleComponent {
   private form: ContractForm;
-  constructor(private tunnel: ContractTunnelComponent) { }
-
-  ngOnInit() {
-    this.form = this.tunnel.contractForm;
-    if (this.parties.controls.length <= 1) {
-      this.parties.add({ party: { role: 'undefined' } })
-    }
-  }
 
   get parties() {
     return this.form.get('parties')
@@ -29,9 +20,5 @@ export class DetailsSaleComponent implements OnInit {
 
   public terms(index: number) {
     return this.versions.at(index).get('scope');
-  }
-
-  public price(index: number) {
-    return this.versions.at(index).get('price');
   }
 }
