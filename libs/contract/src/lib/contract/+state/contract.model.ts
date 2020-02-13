@@ -39,15 +39,6 @@ export type ContractPartyDetail = ContractPartyDetailDocumentWithDates;
 
 export type ContractPartyDetailDocument = ContractPartyDetailDocumentWithDatesDocument;
 
-/**
- * @dev this should not be saved to firestore,
- * used only in front
- */
-export interface ContractWithLastVersion {
-  doc: Contract;
-  last: ContractVersion;
-}
-
 export function createContract(params: Partial<Contract> = {}): Contract {
   return {
     id: params.id || '',

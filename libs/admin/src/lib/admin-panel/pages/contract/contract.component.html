@@ -1,0 +1,23 @@
+<h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Contract > {{ contractId }} </h1>
+
+<ng-container *ngIf="invoiceForm">
+  <form [formGroup]="invoiceForm" fxLayout="column">
+    <div>
+      <mat-form-field appearance="outline">
+        <mat-label>Invoice Status</mat-label>
+        <mat-select formControlName="status" required>
+          <mat-option *ngFor="let status of statuses" [value]="status">
+            {{ status }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <mat-card-actions align="end">
+      <button type="submit" mat-raised-button class="main-btn" (click)="update()">Update</button>
+    </mat-card-actions>
+  </form>
+</ng-container>
+
+
+
+

@@ -37,7 +37,7 @@ export enum ContractStatus {
   undernegotiation = 'under negotiation',
 }
 
-export const enum ContractType {
+export enum ContractType {
   mandate = 'mandate',
   sale = 'sale'
 }
