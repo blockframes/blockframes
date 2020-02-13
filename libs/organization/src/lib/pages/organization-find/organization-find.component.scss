@@ -1,44 +1,49 @@
 @import 'mixins';
 
 section {
-  height: 100%;
+  padding: 0 180px;
+  text-align: center;
+  a {
+    margin-top: 40px;
+  }
 }
 
-article {
-  width: 30%;
+@include tablet {
+  section {
+    padding: 0 100px
+  }
 }
 
-img {
-  width: 380px;
+@include mobile {
+  section {
+    padding: 10px;
+  }
 }
 
-h2 {
-  margin: 0;
-  margin-bottom: 40px;
+
+.mat-option {
+  height: 50px;
+  margin: 5px 0;
+}
+.org-logo {
+  height: 50px;
+  width: 50px;
+  margin-right: 10px;
+  vertical-align: middle;
 }
 
-p {
-  margin-top: 8px;
-  margin-bottom: 50px;
+h1 {
+  margin: 60px 0 80px 0;
 }
 
-mat-form-field {
+mat-card, mat-form-field {
   width: 100%;
+    img {
+      width: 150px;
+      margin-bottom: 60px;
+    }
 }
 
 .join-org {
-  margin-top: 80px;
-}
-
-// extra small
-@include mobile {
-  section {
-    height: auto;
-  }
-  article {
-    width: 80%;
-  }
-  .join-org {
-    margin-top: 40px;
-  }
+  margin-top: 60px;
 }

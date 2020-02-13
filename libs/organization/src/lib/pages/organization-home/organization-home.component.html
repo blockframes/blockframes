@@ -1,14 +1,23 @@
-<section *ngIf="(user$ | async) as user" fxLayout="column" fxLayoutAlign="space-around center" fxLayoutGap="16px">
-  <h2>Join the community</h2>
-
-  <p class="community" *ngIf="!user.orgId; else hasOrg">
-    To access our applications you have to be a member of an organization. Please join one if it already exists or create it.
-  </p>
-  <ng-template #hasOrg>
-    <p class="community">Congratulations your request has been accepted.</p>
-    <a mat-flat-button color="accent" routerLink="../../">Explore your dashboard</a>
-  </ng-template>
-
-  <actions-list [items]="items$ | async"></actions-list>
-  <img asset="JoinTeam_500.png">
+<section>
+  <h1>Join the Community</h1>
+    <p class="community mat-body-1">
+      It seems to be your first time using one of the Blockframes applications. 
+      To use it correctly, you need to be a member of your company’s community. 
+      To proceed further, choose one of the actions that is most suitable for you! 
+    </p>
+    <mat-radio-group [formControl]="link" fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-between center" fxLayoutGap="20px">
+      <!-- Create Org -->
+      <mat-card matRipple (click)="link.setValue('create')" fxLayout="column" fxLayoutAlign="center center">
+        <img asset="add_organization.svg" />
+        <mat-radio-button value="create" >Create your Organization</mat-radio-button>
+        <p>I know that my company has no community page yet. I’m going to create one and invite members!</p>
+      </mat-card>
+      <!-- Find Org -->
+      <mat-card matRipple (click)="link.setValue('find')" fxLayout="column" fxLayoutAlign="center center">
+        <img asset="find_organization.svg" />
+        <mat-radio-button value="find">Find your organization</mat-radio-button>
+        <p>I know that someone has already created my company’s community page. I’m going to search for it !</p>
+      </mat-card>
+    </mat-radio-group>
+    <a mat-flat-button color="accent" [routerLink]="routerLink" [disabled]="!link.value">Submit</a>
 </section>

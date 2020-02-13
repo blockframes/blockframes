@@ -25,18 +25,6 @@ export class OrganizationCreateComponent {
   ) {
   }
 
-  public get name() {
-    return this.form.get('name').value;
-  }
-
-  public get notProvided() {
-    return this.form.get('name').hasError('required');
-  }
-
-  public get notUnique() {
-    return this.form.get('name').hasError('notUnique');
-  }
-
   /** Add a new Organization */
   public async addOrganization() {
     this.loading$.next(true);

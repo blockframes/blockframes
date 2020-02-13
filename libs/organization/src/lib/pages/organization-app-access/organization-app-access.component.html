@@ -1,18 +1,20 @@
 <section fxLayout="column" fxLayoutAlign="center center">
-  <h1>Please choose the Archipel Content<br>application you would like tu use...</h1>
+  <h1>Please choose the Archipel Content<br>application you would like to use...</h1>
   <p>After your organization is validated, you'll be directed to your Archipel Content<br>working space !</p>
 
-  <article fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-between center" fxLayoutGap="20px">
-    <mat-card fxLayout="column" fxLayoutAlign="center center">
-      <mat-radio-button #dashboard>Seller's Dashboard</mat-radio-button>
+  <mat-radio-group [formControl]="access" fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-between center" fxLayoutGap="20px">
+    <mat-card matRipple (click)="access.setValue('dashboard')" fxLayout="column" fxLayoutAlign="center center">
+      <img asset="seller_dashboard.svg" />
+      <mat-radio-button value="dashboard">Seller's Dashboard</mat-radio-button>
       <p>I want to <b>maximaze my library's potential</b> !</p>
     </mat-card>
 
-    <mat-card fxLayout="column" fxLayoutAlign="center center">
-      <mat-radio-button #marketplace>Buyer's Marketplace</mat-radio-button>
+    <mat-card matRipple (click)="access.setValue('marketplace')" fxLayout="column" fxLayoutAlign="center center">
+      <img asset="buyer_marketplace.svg" />
+      <mat-radio-button value="marketplace">Buyer's Marketplace</mat-radio-button>
       <p>I want to <b>buy quality content in one package</b> !</p>
     </mat-card>
-  </article>
+  </mat-radio-group>
 
-  <button mat-flat-button color="accent" (click)="submit(dashboard.checked, marketplace.checked)">Submit</button>
+  <button mat-flat-button color="accent" (click)="submit()" [disabled]="!access.value">Submit</button>
 </section>
