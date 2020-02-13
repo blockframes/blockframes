@@ -1,5 +1,5 @@
 import { FormStaticValue } from '@blockframes/utils/form';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { Price } from '@blockframes/utils/common-interfaces/price';
 import { FormEntity } from '@blockframes/utils';
 

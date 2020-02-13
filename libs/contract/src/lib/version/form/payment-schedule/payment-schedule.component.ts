@@ -70,7 +70,7 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
       )
       .subscribe();
     // If we got data from the DB, convert it into date
-    this.form.first().get('paymentSchedule').controls.forEach(control => {
+    this.form.at(0).get('paymentSchedule').controls.forEach(control => {
       const start = control.get('date').get('start');
       start.setValue(toDate(start.value));
     })
@@ -111,15 +111,15 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   get paymentTermFloatingStart() {
-    return this.form.first().get('paymentTerm').get('floatingStart');
+    return this.form.at(0).get('paymentTerm').get('floatingStart');
   }
 
   get customPaymentSchedule() {
-    return this.form.first().get('customPaymentSchedule');
+    return this.form.at(0).get('customPaymentSchedule');
   }
 
   get paymentSchedule() {
-    return this.form.first().get('paymentSchedule');
+    return this.form.at(0).get('paymentSchedule');
   }
 
   /**
@@ -191,7 +191,7 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
     }
     this.disableAll();
     this.paymentSchedule.reset();
-    this.form.first().get('customPaymentSchedule').reset();
+    this.form.at(0).get('customPaymentSchedule').reset();
     if (fromResetButton) {
       this.radioCtrl.reset();
     }
@@ -234,7 +234,7 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
    */
   private toggleDurationPeriod(position: 'last' | 'first') {
     const last = this.paymentSchedule.last().get('date').get('floatingDuration');
-    const first = this.paymentSchedule.first().get('date').get('floatingDuration');
+    const first = this.paymentSchedule.at(0).get('date').get('floatingDuration');
     if (position === 'last') {
       last.get('duration').enable();
       last.get('unit').enable();
@@ -250,7 +250,7 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
    * @param value for determine what should happen
    */
   private toggleForm(formName: string, value: boolean) {
-    const form = this.paymentSchedule.first().get('date').get(formName as 'start' | 'floatingStart');
+    const form = this.paymentSchedule.at(0).get('date').get(formName as 'start' | 'floatingStart');
     value ? form.enable() : form.disable();
   }
 
@@ -273,13 +273,13 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
    * @param form 
    */
   private setRadioButton() {
-    if (this.form.first().get('customPaymentSchedule').value) {
+    if (this.form.at(0).get('customPaymentSchedule').value) {
       this.radioCtrl.setValue('other');
       return 'other';
     } else if (this.hasTemporallyValue) {
       this.radioCtrl.setValue('periodic');
       return 'periodic';
-    } else if (this.paymentSchedule.first().get('percentage').value) {
+    } else if (this.paymentSchedule.at(0).get('percentage').value) {
       this.radioCtrl.setValue('event');
       return 'event';
     } else {

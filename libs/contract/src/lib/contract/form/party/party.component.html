@@ -2,8 +2,8 @@
     <form formGroupName="party">
         <div fxLayout="column" fxLayoutAlign="start start">
             <mat-form-field appearance="outline">
-                <mat-label>{{ type | titlecase }} Name</mat-label>
-                <input matInput type="text" formControlName="displayName" autocomplete="off">
+                <mat-label>Party name</mat-label>
+                <input matInput type="text" formControlName="displayName" autocomplete="off" required>
             </mat-form-field>
             <mat-form-field appearance="outline">
                 <mat-label>Select role</mat-label>

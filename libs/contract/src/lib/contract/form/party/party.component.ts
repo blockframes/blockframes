@@ -12,7 +12,6 @@ import { FormList } from '@blockframes/utils';
 })
 export class ContractFormPartyComponent {
   @Input() form: FormList<any, PartyDetailsForm>;
-  @Input() type: 'licensee' | 'licensor' = 'licensee';
   public _hasRole: boolean;
   @Input()
   get hasRole() { return this._hasRole; }
@@ -35,11 +34,11 @@ export class ContractFormPartyComponent {
   }
 
   public addRole() {
-    this.form.add({ party: { role: this.type } });
+    console.log(this.form);
+    this.form.add();
   }
 
   public showTooltip(type: 'add' | 'remove') {
-    const titlecase = this.type.charAt(0).toUpperCase() + this.type.slice(1)
-    return type === 'add' ? `Add ${titlecase}` : `Remove ${titlecase}`
+    return type === 'add' ? `Add role` : `Remove role`
   }
 }
