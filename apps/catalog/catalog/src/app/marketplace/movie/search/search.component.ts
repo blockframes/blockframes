@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import {
   MatAutocompleteSelectedEvent,
-  MatAutocomplete,
   MatAutocompleteTrigger
 } from '@angular/material/autocomplete';
 import {
@@ -53,13 +52,7 @@ import { NumberRange } from '@blockframes/utils/common-interfaces/range';
 import { BUDGET_LIST } from '@blockframes/movie/movieform/budget/budget.form';
 import { CatalogSearchForm, AvailsSearchForm } from '@blockframes/catalog/form/search.form';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state';
-
-async function filter<T>(items: T[], filterFunction: (item: T) => Promise<boolean>) {
-  const _null = Symbol();
-  const x = items.map(async item => (await filterFunction(item)) ? item : _null);
-  const y = await Promise.all(x);
-  return y.filter(w => w !== _null) as T[];
-}
+import { asyncFilter } from '@blockframes/utils/helpers';
 
 @Component({
   selector: 'catalog-movie-search',
@@ -141,8 +134,6 @@ export class MarketplaceSearchComponent implements OnInit {
   public removableCountry = true;
 
   @ViewChild('countryInput', { static: false }) countryInput: ElementRef<HTMLInputElement>;
-  @ViewChild('autoCompleteInput', { static: false, read: MatAutocompleteTrigger })
-  public countryMatAutoComplete: MatAutocompleteTrigger;
 
   /* Flags for the Territories chip input */
   public visibleTerritory = true;
@@ -150,8 +141,9 @@ export class MarketplaceSearchComponent implements OnInit {
   public removableTerritory = true;
 
   @ViewChild('territoryInput', { static: false }) territoryInput: ElementRef<HTMLInputElement>;
+
   @ViewChild('autoCompleteInput', { static: false, read: MatAutocompleteTrigger })
-  public territoryMatAutoComplete: MatAutocompleteTrigger;
+  public autoComplete: MatAutocompleteTrigger;
 
   constructor(
     private router: Router,
@@ -199,8 +191,7 @@ export class MarketplaceSearchComponent implements OnInit {
             }
 
             return from(
-              filter(movies,
-                async movie => {
+              asyncFilter(movies, async movie => {
                   // Filters the deals before sending them to the avails filter function
                   if (!movie.distributionDeals) {
                     // If movie has no deals, it means there is also no mandate deal,
@@ -212,8 +203,7 @@ export class MarketplaceSearchComponent implements OnInit {
                   const mandateDealIds = mandateDeals.map(deal => deal.id);
                   const filteredDeals = movie.distributionDeals.filter(deal => !mandateDealIds.includes(deal.id));
                   return filterMovieWithAvails(filteredDeals, availsOptions, mandateDeals);
-                }
-              )
+              })
             )
           })
         );
@@ -265,9 +255,9 @@ export class MarketplaceSearchComponent implements OnInit {
     return this.routerQuery.getValue().state.root.data.app;
   }
 
-  // public toggleAutoCompletion() {
-  //   this.autoComplete.closePanel();
-  // }
+  public toggleAutoCompletion() {
+    this.autoComplete.closePanel();
+  }
 
   /**
    * @description function for determine if FormGroup error should be shown.
