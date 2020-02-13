@@ -3,29 +3,20 @@
     <strong>Production Year </strong><missing-control [control]="main.get('productionYear')" [link]="link"></missing-control>
   </li>
   <li>
-    <strong>Production Company </strong>
-  </li>
-  <li>
     <strong>Producers </strong>
     <ng-container *ngFor="let producer of salesCast.get('producers').controls; let isLast = last">
-      <ng-container *ngIf="(!producer.get('firstName').value || !producer.get('lastName').value || !producer.get('role').value) else display">
+      <ng-container *ngIf="(!producer.get('firstName').value || !producer.get('lastName').value || !producer.get('role').value) else displayProducer">
         <a [routerLink]="link" class="missing-control">
           Missing
         </a>
       </ng-container>
-      <ng-template #display>
+      <ng-template #displayProducer>
         <missing-control [control]="producer.get('firstName')" [link]="link"></missing-control>
         <missing-control [control]="producer.get('lastName')" [link]="link"></missing-control>
         (<missing-control [control]="producer.get('role')" [link]="link"></missing-control>)
         {{ isLast ? '' : ', '}}
       </ng-template>
     </ng-container>
-  </li>
-  <li>
-    <strong>Co-Production </strong>
-  </li>
-  <li>
-    <strong>Distributors </strong>
   </li>
   <ng-container *ngFor="let artist of salesCast.get('crew').controls; let isLast = last">
     <li>
@@ -35,12 +26,12 @@
       <ng-template #role>
         <strong>Role</strong>
       </ng-template>
-      <ng-container *ngIf="!artist.get('firstName').value || !artist.get('lastName').value else display">
+      <ng-container *ngIf="!artist.get('firstName').value || !artist.get('lastName').value else displayArtist">
         <a [routerLink]="link" class="missing-control">
           Missing
         </a>
       </ng-container>
-      <ng-template #display>
+      <ng-template #displayArtist>
         <missing-control [control]="artist.get('firstName')" [link]="link"></missing-control>
         <missing-control [control]="artist.get('lastName')" [link]="link"></missing-control>
       </ng-template>
