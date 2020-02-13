@@ -20,8 +20,15 @@
   <ng-container *ngFor="let director of main.directors.controls">
     <li>
       <strong>Director Name </strong>
-      <missing-control [control]="director.get('firstName')" [link]="link"></missing-control>
-      <missing-control [control]="director.get('lastName')" [link]="link"></missing-control>
+      <ng-container *ngIf="(director.get('firstName').hasError('required') || director.get('lastName').hasError('required')) else display">
+        <a [routerLink]="link" class="mandatory-control">
+          Mandatory
+        </a>
+      </ng-container>
+      <ng-template #display>
+        <missing-control [control]="director.get('firstName')" [link]="link" isLast=false></missing-control>
+        <missing-control [control]="director.get('lastName')" [link]="link"></missing-control>
+      </ng-template>
     </li>
     <li>
       <strong>Director's Filmography </strong><missing-control [control]="director.get('shortBiography')" [link]="link"></missing-control>
