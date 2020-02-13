@@ -23,7 +23,8 @@ export class ContractVersionPaymentScheduleForm extends FormEntity<ContractVersi
 function createContractVersionDateControls(date: Partial<ScheduledDateRaw<Date>>) {
     return {
         floatingStart: new FormControl(date.floatingStart),
-        floatingDuration: new DistributionDealFloatingDurationForm(date.floatingDuration)
+        floatingDuration: new DistributionDealFloatingDurationForm(date.floatingDuration),
+        start: new FormControl(date.start)
     }
 }
 

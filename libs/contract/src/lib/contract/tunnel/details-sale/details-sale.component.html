@@ -11,7 +11,6 @@
       </mat-card-header>
       <mat-card-content>
         <contract-form-party [form]="parties" type="licensee"></contract-form-party>
-        <mat-divider></mat-divider>
       </mat-card-content>
     </mat-card>
     <!-- Terms -->
@@ -29,7 +28,7 @@
           <distribution-form-terms [form]="terms(versionIndex)"></distribution-form-terms>
         </mat-card-content>
       </mat-card>
-      <!-- Payment schedule -->
+      <!-- Price -->
       <mat-card>
         <mat-card-header>
           <mat-card-title>
@@ -41,6 +40,21 @@
         </mat-card-header>
         <mat-card-content>
           <contract-version-form-price [form]="price(versionIndex)"></contract-version-form-price>
+        </mat-card-content>
+      </mat-card>
+      <!-- Payment Schedules -->
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>
+            Payment Schedules
+          </mat-card-title>
+          <mat-card-subtitle>
+            Please choose the payment schedules most adapted to your needs.
+            Pay attention, percentage is always the percentage of total amount
+          </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <contract-version-form-schedule [form]="versions"></contract-version-form-schedule>
         </mat-card-content>
       </mat-card>
     </ng-container>

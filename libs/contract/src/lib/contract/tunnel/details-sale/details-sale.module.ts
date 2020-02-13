@@ -8,6 +8,7 @@ import { CommonModule } from '@angular/common';
 import { DistributionDealTermsModule } from '@blockframes/movie/distribution-deals/form/terms/terms.module';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { ContractFormPartyModule } from '../../form/party/party.module';
+import { ContractVersionPaymentScheduleModule } from '@blockframes/contract/version/form/payment-schedule/payment-schedule.module';
 import { DetailsSaleComponent } from './details-sale.component';
 
 // Material
@@ -26,6 +27,7 @@ import { ContractVersionFormPriceModule } from '@blockframes/contract/version/fo
     ContractFormPartyModule,
     DistributionDealTermsModule,
     ContractVersionFormPriceModule,
+    ContractVersionPaymentScheduleModule,
 
     // Material
     MatCardModule,

@@ -15,14 +15,18 @@
     <ng-container matColumnDef="startDate">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Start Date </th>
       <td mat-cell *matCellDef="let deal">
-        {{ deal.terms.start.toDate() | date:'shortDate' }}
+        <ng-container *ngIf="deal.terms.start as start">
+          {{ start.toDate() | date:'shortDate' }}
+        </ng-container>
       </td>
     </ng-container>
 
     <ng-container matColumnDef="endDate">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> End Date </th>
       <td mat-cell *matCellDef="let deal">
-        {{ deal.terms.end.toDate() | date:'shortDate' }}
+        <ng-container *ngIf="deal.terms.end as end">
+          {{ end.toDate() | date:'shortDate' }}
+        </ng-container>
       </td>
     </ng-container>
 
@@ -50,8 +54,10 @@
     <ng-container matColumnDef="firstBroadcastDate">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> 1st Broadcast Date </th>
       <td mat-cell *matCellDef="let deal">
-        <ng-container *ngIf="deal.multidiffusion.length">
-          {{ deal.multidiffusion[0].start.toDate() | date:'shortDate' }}
+        <ng-container *ngIf="deal.multidiffusion && deal.multidiffusion.length">
+          <ng-container *ngIf="deal.multidiffusion[0].start as start">
+            {{ start.toDate() | date:'shortDate' }}
+          </ng-container>
         </ng-container>
       </td>
     </ng-container>
@@ -66,15 +72,19 @@
     <ng-container matColumnDef="multidiffusion">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Multidiffusion </th>
       <td mat-cell *matCellDef="let deal">
-        {{ deal.multidiffusion.length }}
+        <ng-container *ngIf="deal.multidiffusion">
+          {{ deal.multidiffusion.length }}
+        </ng-container>
       </td>
     </ng-container>
 
     <ng-container matColumnDef="catchUp">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> Catch Up </th>
       <td mat-cell *matCellDef="let deal">
-        <ng-container *ngIf="deal.catchUp.start && deal.catchUp.end">
-          {{ deal.catchUp.start.toDate() | date:'shortDate' }} - {{ deal.catchUp.end.toDate() | date:'shortDate' }}
+        <ng-container *ngIf="deal.catchUp as catchUp">
+          <ng-container *ngIf="catchUp.start && catchUp.end">
+            {{ deal.catchUp.start.toDate() | date:'shortDate' }} - {{ deal.catchUp.end.toDate() | date:'shortDate' }}
+          </ng-container>
         </ng-container>
       </td>
     </ng-container>

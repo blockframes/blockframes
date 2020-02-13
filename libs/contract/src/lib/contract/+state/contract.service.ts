@@ -21,6 +21,7 @@ import { ContractDocumentWithDates, ContractStatus } from './contract.firestore'
 import { firestore } from 'firebase/app';
 import { MovieQuery } from '@blockframes/movie';
 import { createContractVersionFromFirestore } from '@blockframes/contract/version/+state/contract-version.model';
+import { ContractVersion } from '@blockframes/contract/version/+state';
 
 /**
  * Get all the contracts where user organization is party.
@@ -154,6 +155,21 @@ export class ContractService extends CollectionService<ContractState> {
         }
       }
     }
+  }
+
+  /**
+   * Create a new contract and a new version
+   * @note We need this method because `addContractAndVersion` only work on the import.
+   * @param contract The contract to add
+   * @param version Optional content for the first version
+   */
+  public async create(contract: Partial<Contract>, version: Partial<ContractVersion> = {}) {
+    const write = this.db.firestore.batch();
+    const contractId = await this.add(contract, { write });
+    this.contractVersionService.add({ id: '0' }, { params: { contractId }, write });
+    this.contractVersionService.add({ id: '_meta', count: 1 }, { params: { contractId }, write });
+    await write.commit();
+    return contractId;
   }
 
   /**
