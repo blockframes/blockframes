@@ -7,7 +7,12 @@
   </li>
   <ng-container *ngFor="let boxOffice of budget.get('boxOffice').controls">
     <li>
-      <strong>{{ boxOffice.get('territory').value }} </strong>
+      <ng-container *ngIf="boxOffice.get('territory').value else country">
+        <strong>{{ boxOffice.get('territory').value }} </strong>
+      </ng-container>
+      <ng-template #country>
+        <strong>Country </strong>
+      </ng-template>
       <missing-control [control]="boxOffice.get('value')" [link]="link"></missing-control>
       <missing-control [control]="boxOffice.get('unit')" [link]="link"></missing-control>
     </li>
@@ -21,17 +26,24 @@
   <ng-container *ngFor="let rating of salesInfo.get('rating').controls">
     <li>
       <strong>Rating </strong>
-      <missing-control [control]="rating.get('country')" [link]="link"></missing-control>
+      <missing-control [control]="rating.get('country')" scope="TERRITORIES" [link]="link"></missing-control>
       <missing-control [control]="rating.get('value')" [link]="link"></missing-control>
     </li>
   </ng-container>
   <ng-container *ngFor="let movieReview of movieReview.controls">
     <li>
       <strong>Film Review </strong>
-      <missing-control [control]="movieReview.get('criticName')" [link]="link"></missing-control>
-      in
-      <missing-control [control]="movieReview.get('journalName')" [link]="link"></missing-control>
-      "<missing-control [control]="movieReview.get('criticQuote')" [link]="link"></missing-control>"
+      <ng-container *ngIf="(!movieReview.get('criticName').value || !movieReview.get('journalName').value || !movieReview.get('criticQuote').value) else display">
+        <a [routerLink]="link" class="missing-control">
+          Missing
+        </a>
+      </ng-container>
+      <ng-template #display>
+        <missing-control [control]="movieReview.get('criticName')" [link]="link"></missing-control>
+        in
+        <missing-control [control]="movieReview.get('journalName')" [link]="link"></missing-control>
+        "<missing-control [control]="movieReview.get('criticQuote')" [link]="link"></missing-control>"
+      </ng-template>
     </li>
   </ng-container>
 </ul>

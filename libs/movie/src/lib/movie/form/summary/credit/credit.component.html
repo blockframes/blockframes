@@ -8,10 +8,17 @@
   <li>
     <strong>Producers </strong>
     <ng-container *ngFor="let producer of salesCast.get('producers').controls; let isLast = last">
-      <missing-control [control]="producer.get('firstName')" [link]="link"></missing-control>
-      <missing-control [control]="producer.get('lastName')" [link]="link"></missing-control>
-      (<missing-control [control]="producer.get('role')" [link]="link"></missing-control>)
-      {{ isLast ? '' : ', '}}
+      <ng-container *ngIf="(!producer.get('firstName').value || !producer.get('lastName').value || !producer.get('role').value) else display">
+        <a [routerLink]="link" class="missing-control">
+          Missing
+        </a>
+      </ng-container>
+      <ng-template #display>
+        <missing-control [control]="producer.get('firstName')" [link]="link"></missing-control>
+        <missing-control [control]="producer.get('lastName')" [link]="link"></missing-control>
+        (<missing-control [control]="producer.get('role')" [link]="link"></missing-control>)
+        {{ isLast ? '' : ', '}}
+      </ng-template>
     </ng-container>
   </li>
   <li>
@@ -22,11 +29,21 @@
   </li>
   <ng-container *ngFor="let artist of salesCast.get('crew').controls; let isLast = last">
     <li>
-      <strong><missing-control [control]="artist.get('role')" scope="CREW_ROLES" [link]="link"></missing-control> </strong>
-      <ng-container>
+      <ng-container *ngIf="artist.get('role').value else role">
+        <strong>{{ artist.get('role').value | translateSlug: 'CREW_ROLES' }}</strong>
+      </ng-container>
+      <ng-template #role>
+        <strong>Role</strong>
+      </ng-template>
+      <ng-container *ngIf="!artist.get('firstName').value || !artist.get('lastName').value else display">
+        <a [routerLink]="link" class="missing-control">
+          Missing
+        </a>
+      </ng-container>
+      <ng-template #display>
         <missing-control [control]="artist.get('firstName')" [link]="link"></missing-control>
         <missing-control [control]="artist.get('lastName')" [link]="link"></missing-control>
-      </ng-container>
+      </ng-template>
     </li>
   </ng-container>
 </ul>
