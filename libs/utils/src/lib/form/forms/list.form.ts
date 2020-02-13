@@ -143,8 +143,8 @@ export class FormList<T, Control extends AbstractControl = any> extends FormArra
     }
   }
 
-  /** 
-   * 
+  /**
+   *
    * @note This method was previously overrided. If you want set the exacte value (add, edit & remove) use patchAllValue
    */
   patchValue(

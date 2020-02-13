@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { AvailsSearchForm } from '@blockframes/catalog/form/search.form';
-import { MediasSlug, MEDIAS_SLUG, TerritoriesSlug, TERRITORIES_LABEL } from '@blockframes/utils/static-model';
+import { MediasSlug, MEDIAS_SLUG, TerritoriesSlug, TERRITORIES_LABEL, staticModels } from '@blockframes/utils/static-model';
 import { Observable } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { startWith, debounceTime, map } from 'rxjs/operators';
@@ -15,8 +15,7 @@ import { ExtractCode, getCodeIfExists } from '@blockframes/utils/static-model/st
 })
 export class AvailsFilterComponent implements OnInit{
   @Input() availsForm: AvailsSearchForm;
-  @Input() territories = false;
-
+  @Input() territory = false;
 
   public movieMedias: MediasSlug[] = MEDIAS_SLUG;
 
@@ -85,7 +84,7 @@ export class AvailsFilterComponent implements OnInit{
 
   public applyAvailsFilter() {
     this.availsForm.get('isActive').setValue(true);
-    this.availsForm.disable();
+    this.availsForm.disable({onlySelf: false});
     this.territoryControl.disable();
     // TODO: use controls for territories and medias to make it disablable.
   }

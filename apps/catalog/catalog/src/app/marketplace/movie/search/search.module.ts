@@ -33,6 +33,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ChipsAutocompleteModule } from "@blockframes/ui/form/chips-autocomplete/chips-autocomplete.module";
 
 @NgModule({
   declarations: [MarketplaceSearchComponent],
@@ -46,6 +47,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     TranslateSlugModule,
     MovieFormGenresModule,
     AvailsFilterModule,
+    ChipsAutocompleteModule,
 
     // Material
     MatIconModule,
