@@ -1,12 +1,9 @@
 import {
   LanguagesLabel,
   CertificationsLabel,
-  MediasLabel,
   TerritoriesLabel,
-  GENRES_LABEL,
   LanguagesSlug,
   GenresSlug,
-  GENRES_SLUG,
   CertificationsSlug,
   CERTIFICATIONS_SLUG,
   MediasSlug,
@@ -19,33 +16,24 @@ import {
 } from '@blockframes/utils/static-model/types';
 import { Validators, FormArray } from '@angular/forms';
 import { FormGroup, FormControl } from '@angular/forms';
-import { FormEntity, yearValidators, numberRangeValidator } from '@blockframes/utils';
+import { FormEntity, numberRangeValidator } from '@blockframes/utils';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 import { MovieLanguageSpecification } from '@blockframes/movie/movie/+state/movie.firestore';
 import { createMovieLanguageSpecification } from '@blockframes/movie/movie/+state/movie.model';
 import { FormStaticArray, FormList, FormStaticValue } from '@blockframes/utils/form';
-import { NumberRange } from '@blockframes/utils/common-interfaces';
+import { NumberRange, DateRange } from '@blockframes/utils/common-interfaces';
 
 /////////////////////////
 // CatalogGenresFilter //
 /////////////////////////
 
 export interface CatalogSearch {
-  productionYear: {
-    from: number;
-    to: number;
-  };
-  availabilities: {
-    from: Date;
-    to: Date;
-  };
+  productionYear: DateRange;
   genres: GenresSlug[];
   status: MovieStatusLabel[];
   salesAgent: string[];
-  languages: { [language in LanguagesLabel]: MovieLanguageSpecification };
+  languages: Partial<{ [language in LanguagesLabel]: MovieLanguageSpecification }>;
   certifications: CertificationsLabel[];
-  medias: MediasLabel[];
-  territories: TerritoriesLabel[];
   originCountries: TerritoriesLabel[];
   estimatedBudget: NumberRange[];
   searchbar: {
@@ -54,26 +42,51 @@ export interface CatalogSearch {
   };
 }
 
+export interface AvailsSearch {
+  terms: DateRange;
+  territories: TerritoriesSlug[];
+  medias: MediasSlug[];
+  exclusivity: boolean;
+  isActive: boolean;
+}
+
 /* ------------- */
 /* CREATE OBJECT */
 /* ------------- */
 
-function createCatalogSearch(search: Partial<CatalogSearch>): CatalogSearch {
+function createCatalogSearch(search: Partial<CatalogSearch> = {}): CatalogSearch {
   return {
-    productionYear: {},
-    availabilities: {},
+    productionYear: {
+      from: null,
+      to: null
+    },
     genres: [],
     status: [],
     salesAgent: [],
     languages: {},
     certifications: [],
-    medias: [],
-    territories: [],
     originCountries: [],
-    searchbar: {},
     estimatedBudget: [],
+    searchbar: {
+      text: '',
+      type: ''
+    },
     ...search
-  } as CatalogSearch;
+  }
+}
+
+function createAvailsSearch(search: Partial<AvailsSearch> = {}): AvailsSearch {
+  return {
+    terms: {
+      from: null,
+      to: null
+    },
+    territories: [],
+    medias: [],
+    exclusivity: false,
+    isActive: false,
+    ...search
+  }
 }
 
 /* -------------- */
@@ -92,6 +105,18 @@ export function createLanguageControl(
   });
 }
 
+function createTermsControl(terms: DateRange) {
+  return new FormGroup(
+    {
+      from: new FormControl(terms.from, [
+        Validators.min(new Date().getFullYear())
+      ]),
+      to: new FormControl(terms.to)
+    },
+    numberRangeValidator('from', 'to')
+  )
+}
+
 function createCatalogSearchControl(search: CatalogSearch) {
   // Create controls for the languages
   const languageControl = Object.keys(search.languages).reduce(
@@ -103,33 +128,13 @@ function createCatalogSearchControl(search: CatalogSearch) {
     {} // Initial value. No controls at the beginning
   );
   return {
-    productionYear: new FormGroup(
-      {
-        from: new FormControl(search.productionYear.from, [
-          yearValidators,
-          Validators.max(new Date().getFullYear())
-        ]),
-        to: new FormControl(search.productionYear.to, [yearValidators])
-      },
-      numberRangeValidator('from', 'to')
-    ),
-    availabilities: new FormGroup(
-      {
-        from: new FormControl(search.availabilities.from, [
-          Validators.min(new Date().getFullYear())
-        ]),
-        to: new FormControl(search.availabilities.to)
-      },
-      numberRangeValidator('from', 'to')
-    ),
+    productionYear: createTermsControl(search.productionYear),
     genres: new FormStaticArray(search.genres, 'GENRES', [Validators.required]),
     status: new FormControl(search.status),
     salesAgent: new FormControl(search.salesAgent),
     languages: new FormGroup(languageControl),
     certifications: new FormControl(search.certifications),
-    medias: new FormControl(search.medias),
     estimatedBudget: new FormControl(search.estimatedBudget),
-    territories: new FormArray(search.territories.map(territory => new FormControl(territory))),
     originCountries: FormList.factory(search.originCountries, country => new FormStaticValue(country, 'TERRITORIES')),
     searchbar: new FormGroup({
       text: new FormControl(''),
@@ -137,7 +142,19 @@ function createCatalogSearchControl(search: CatalogSearch) {
     })
   };
 }
+
+function createAvailsSearchControl(search: AvailsSearch) {
+  return {
+    terms: createTermsControl(search.terms),
+    medias: new FormControl(search.medias),
+    territories: new FormArray(search.territories.map(territory => new FormControl(territory))),
+    exclusivity: new FormControl(search.exclusivity),
+    isActive: new FormControl(search.isActive)
+  }
+}
+
 export type CatalogSearchControl = ReturnType<typeof createCatalogSearchControl>;
+export type AvailsSearchControl = ReturnType<typeof createAvailsSearchControl>;
 
 /* ---- */
 /* FROM */
@@ -150,12 +167,12 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
     super(control);
   }
 
-  get languages() {
-    return this.get('languages') as FormGroup;
-  }
-
   get genres() {
     return this.get('genres');
+  }
+
+  get languages() {
+    return this.get('languages');
   }
 
   addLanguage(language: LanguagesSlug, value: Partial<MovieLanguageSpecification> = {}) {
@@ -166,25 +183,6 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
   removeLanguage(language: LanguagesSlug) {
     this.languages.removeControl(language);
     this.updateValueAndValidity();
-  }
-
-  addGenre(genre: GenresSlug) {
-    if (!GENRES_SLUG.includes(genre)) {
-      throw new Error(
-        `Genre ${genre} is not part of the defined genres, here is the complete list currently available: ${GENRES_LABEL}`
-      );
-    } else {
-      this.get('genres').setValue([...this.get('genres').value, genre]);
-    }
-  }
-
-  removeGenre(genre: GenresSlug) {
-    if (GENRES_SLUG.includes(genre)) {
-      const newControls = this.get('genres').value.filter(genreToRemove => genreToRemove !== genre);
-      this.get('genres').setValue(newControls);
-    } else {
-      throw new Error(`The genre ${genre} was not found!`);
-    }
   }
 
   addStatus(status: MovieStatusSlug) {
@@ -237,24 +235,53 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
     } else {
       throw new Error(`Certification ${certificationChecked} doesn't exist`);
     }
+
   }
 
-  checkMedia(mediaChecked: MediasSlug) {
-    // check if media is already checked by the user
-    if (MEDIAS_SLUG.includes(mediaChecked) && !this.get('medias').value.includes(mediaChecked)) {
-      this.get('medias').setValue([...this.get('medias').value, mediaChecked]);
-    } else if (
-      MEDIAS_SLUG.includes(mediaChecked) &&
-      this.get('medias').value.includes(mediaChecked)
-    ) {
-      const uncheckMedia = this.get('medias').value.filter(
-        removeMedia => removeMedia !== mediaChecked
+  addCountry(country: TerritoriesSlug) {
+    // Check it's part of the list available
+    if (!TERRITORIES_SLUG.includes(country)) {
+      throw new Error(
+        `Country ${country} is not part of the list.`
       );
-      this.get('medias').setValue(uncheckMedia);
-    } else {
-      throw new Error(`Media ${mediaChecked} doesn't exist`);
     }
+    // Check it's not already in the form control
+    const territoriesValue = this.get('originCountries').value;
+    if (!territoriesValue.includes(country)) {
+      this.get('originCountries').push(new FormControl(country));
+    }
+    // Else do nothing as it's already in the list
   }
+
+  removeCountry(index: number) {
+    this.get('originCountries').removeAt(index);
+  }
+
+}
+
+export class AvailsSearchForm extends FormEntity<AvailsSearchControl> {
+  constructor(search: Partial<AvailsSearch> = {}) {
+    const availsSearch = createAvailsSearch(search);
+    const control = createAvailsSearchControl(availsSearch);
+    super(control);
+  }
+
+  get exclusivity() {
+    return this.get('exclusivity');
+  }
+
+  get medias() {
+    return this.get('medias');
+  }
+
+  get territories() {
+    return this.get('territories');
+  }
+
+  set isActive(value: boolean) {
+    this.get('isActive').setValue(value);
+  }
+
 
   addTerritory(territory: TerritoriesSlug) {
     // Check it's part of the list available
@@ -275,22 +302,20 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
     this.get('territories').removeAt(index);
   }
 
-  addCountry(country: TerritoriesSlug) {
-    // Check it's part of the list available
-    if (!TERRITORIES_SLUG.includes(country)) {
-      throw new Error(
-        `Country ${country} is not part of the list.`
+  checkMedia(checkedMedia: MediasSlug) {
+    // check if media is already checked by the user
+    if (MEDIAS_SLUG.includes(checkedMedia) && !this.get('medias').value.includes(checkedMedia)) {
+      this.get('medias').setValue([...this.get('medias').value, checkedMedia]);
+    } else if (
+      MEDIAS_SLUG.includes(checkedMedia) &&
+      this.get('medias').value.includes(checkedMedia)
+    ) {
+      const checkedMedias = this.get('medias').value.filter(
+        (alreadyCheckedMedia: MediasSlug) => alreadyCheckedMedia !== checkedMedia
       );
+      this.get('medias').setValue(checkedMedias);
+    } else {
+      throw new Error(`Media ${getLabelBySlug('MEDIAS', checkedMedia)} doesn't exist`);
     }
-    // Check it's not already in the form control
-    const territoriesValue = this.get('originCountries').value;
-    if (!territoriesValue.includes(country)) {
-      this.get('originCountries').push(new FormControl(country));
-    }
-    // Else do nothing as it's already in the list
-  }
-
-  removeCountry(index: number) {
-    this.get('originCountries').removeAt(index);
   }
 }

@@ -301,54 +301,44 @@ const models = {
   ] as const,
   'MOVIE_CURRENCIES': [
     {
-      'slug': 'us-dollar',
+      'slug': 'USD',
       'label': 'US dollar',
-      'code': 'USD'
     },
     {
-      'slug': 'euro',
-      'label': 'Euro',
-      'code': 'EUR'
+      'slug': 'EUR',
+      'label': 'Euro'
     },
     {
-      'slug': 'japanese-yen',
+      'slug': 'JPY',
       'label': 'Japanese yen',
-      'code': 'JPY'
     },
     {
-      'slug': 'pound-sterling',
-      'label': 'Pound sterling',
-      'code': 'GBP'
+      'slug': 'GBP',
+      'label': 'Pound sterling'
     },
     {
-      'slug': 'australian-dollar',
-      'label': 'Australian Dollar',
-      'code': 'AUD'
+      'slug': 'AUD',
+      'label': 'Australian Dollar'
     },
     {
-      'slug': 'canadian-dollar',
-      'label': 'Canadian Dollar',
-      'code': 'CAD'
+      'slug': 'CAD',
+      'label': 'Canadian Dollar'
     },
     {
-      'slug': 'swiss-franc',
-      'label': 'Swiss Franc',
-      'code': 'CHF'
+      'slug': 'CHF',
+      'label': 'Swiss Franc'
     },
     {
-      'slug': 'chinese-renminbi',
-      'label': 'Chinese Renminbi',
-      'code': 'CNY'
+      'slug': 'CNY',
+      'label': 'Chinese Renminbi'
     },
     {
-      'slug': 'swedish-krona',
-      'label': 'Swedish krona',
-      'code': 'SEK'
+      'slug': 'SEK',
+      'label': 'Swedish krona'
     },
     {
-      'slug': 'new-zealand-dollar',
-      'label': 'New Zealand dollar',
-      'code': 'NZD'
+      'slug': 'NZD',
+      'label': 'New Zealand dollar'
     }
   ] as const,
   'SELECTION_CATEGORIES': [
@@ -477,7 +467,6 @@ const models = {
     { 'slug': 'undefined', 'label': 'Undefined role' },
     { 'slug': 'service-provider', 'label': 'Service provider' },
     { 'slug': 'licensor', 'label': 'Licensor' },
-    { 'slug': 'sub-licensor', 'label': 'Sub Licensor' },
     { 'slug': 'licensee', 'label': 'Licensee' },
     { 'slug': 'seller', 'label': 'Seller' },
     { 'slug': 'lender', 'label': 'Lender' },

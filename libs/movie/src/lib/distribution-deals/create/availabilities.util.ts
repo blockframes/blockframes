@@ -1,7 +1,8 @@
 import { MovieSalesAgentDeal } from '../../movie/+state/movie.model';
-import { MovieLanguageSpecification } from '../../movie/+state/movie.firestore';
-import { DistributionDeal } from '../+state/distribution-deal.model';
+import { DistributionDeal, getDealTerritories } from '../+state/distribution-deal.model';
 import { DateRange } from '@blockframes/utils/common-interfaces/range';
+import { CatalogSearch, AvailsSearch } from '@blockframes/catalog/form/search.form';
+import { toDate } from '@blockframes/utils/helpers';
 
 /**
  * These function should be used in connection. For instance, we look for movie distribution deals in
@@ -49,20 +50,25 @@ export function exclusiveDistributionDeals(distributionDeals: DistributionDeal[]
  * @param distributionDeals Array of the movie distribution deals.
  * Note don't put the exclusive deals array in here
  */
-export function getDistributionDealsInDateRange(formDates: DateRange, distributionDeals: DistributionDeal[]): DistributionDeal[] {
+export function getDealsInDateRange(formDates: DateRange, distributionDeals: DistributionDeal[]): DistributionDeal[] {
+  if (!distributionDeals) {
+    return [];
+  }
+
   const intersectedDateRangeDeals: DistributionDeal[] = [];
 
   for (const deal of distributionDeals) {
-    const dealsFrom: Date = new Date(deal.terms.start);
-    const dealsTo: Date = new Date(deal.terms.end);
+    const dealFrom: Date = toDate(deal.terms.start);
+    const dealTo: Date = toDate(deal.terms.end);
+
     /**
      * If the form date 'from' is between a deal from and to, it means that there
      * are already deals made, but it is still possible to buy a distribution right
      * at this point.
      */
     if (
-      formDates.from.getTime() >= dealsFrom.getTime() &&
-      formDates.from.getTime() <= dealsTo.getTime()
+      formDates.from.getTime() >= dealFrom.getTime() &&
+      formDates.from.getTime() <= dealTo.getTime()
     ) {
       intersectedDateRangeDeals.push(deal);
     }
@@ -71,8 +77,8 @@ export function getDistributionDealsInDateRange(formDates: DateRange, distributi
      * and 'to' date is younger than sales agent 'from' date, it is in range
      */
     if (
-      formDates.to.getTime() <= dealsTo.getTime() &&
-      formDates.to.getTime() >= dealsFrom.getTime()
+      formDates.to.getTime() <= dealTo.getTime() &&
+      formDates.to.getTime() >= dealFrom.getTime()
     ) {
       intersectedDateRangeDeals.push(deal);
     }
@@ -82,8 +88,8 @@ export function getDistributionDealsInDateRange(formDates: DateRange, distributi
      * 'to' date if younger than sales agent 'to' date , it is in range
      */
     if (
-      formDates.from.getTime() <= dealsFrom.getTime() &&
-      formDates.to.getTime() >= dealsTo.getTime()
+      formDates.from.getTime() <= dealFrom.getTime() &&
+      formDates.to.getTime() >= dealTo.getTime()
     ) {
       intersectedDateRangeDeals.push(deal);
     }
@@ -93,25 +99,28 @@ export function getDistributionDealsInDateRange(formDates: DateRange, distributi
 
 /**
  * @description We want to check if user search and salesAgentMedias have medias and territories in common
- * @param formTerritories The territories which got specified by the buyer
- * @param formMedias The medias which got specified by the buyer
+ * @param filter The filter options defined by the buyer
  * @param deals The array of deals from a movie in the previously specified date range
  */
-export function getDistributionDealsWithMediasTerritoriesAndLanguagesInCommon(
-  formTerritories: string[],
-  formMedias: string[],
-  formLanguages: MovieLanguageSpecification,
+export function getFilterMatchingDeals(
+  filter: AvailsSearch,
   deals: DistributionDeal[]
 ): DistributionDeal[] {
+
+  const { territories, medias } = filter
 
   /**
    * We have to look on the already exisitng
    * deals in the movie and check if there is any overlapping medias
    */
-  const dealsWithMediasTerritoriesAndLanguagesInCommon: DistributionDeal[] = [];
+  const dealsWithTerritoriesAndMediasInCommon: DistributionDeal[] = [];
   for (const deal of deals) {
+
+    // Filter deal territories
+    const dealTerritories = getDealTerritories(deal);
+
     let mediasInCommon = false;
-    mediaLoop : for (const media of formMedias) {
+    mediaLoop : for (const media of medias) {
       for (const licenseType of deal.licenseType) {
         if (licenseType === media) {
           mediasInCommon = true;
@@ -121,8 +130,8 @@ export function getDistributionDealsWithMediasTerritoriesAndLanguagesInCommon(
     }
 
     let territoriesInCommon = false;
-    territoryLoop : for (const territory of formTerritories) {
-      for (const saleTerritory of deal.territory) {
+    territoryLoop : for (const territory of territories) {
+      for (const saleTerritory of dealTerritories) {
         if (saleTerritory === territory) {
           territoriesInCommon = true;
           break territoryLoop;
@@ -130,34 +139,27 @@ export function getDistributionDealsWithMediasTerritoriesAndLanguagesInCommon(
       }
     }
 
-    // TODO: Add language when language is moved inside of deals object
-    const languagesName: string[] = Object.keys(formLanguages);
-
-    let dubbingInCommon = false;
-    for (const language of languagesName) {
-      if (deal.assetLanguage[language] && deal.assetLanguage[language].dubbed) {
-        dubbingInCommon = true;
-        break;
-      }
-    }
-
-    let subtitlesInCommon = false;
-    for (const language of languagesName) {
-      if (deal.assetLanguage[language] && deal.assetLanguage[language].subtitle) {
-        subtitlesInCommon = true;
-        break;
-      }
-    }
-
     if (
       mediasInCommon &&
       territoriesInCommon &&
-      dubbingInCommon &&
-      subtitlesInCommon &&
-      !dealsWithMediasTerritoriesAndLanguagesInCommon.includes(deal)
+      !dealsWithTerritoriesAndMediasInCommon.includes(deal)
     ) {
-      dealsWithMediasTerritoriesAndLanguagesInCommon.push(deal);
+      dealsWithTerritoriesAndMediasInCommon.push(deal);
     }
   }
-  return dealsWithMediasTerritoriesAndLanguagesInCommon;
+  return dealsWithTerritoriesAndMediasInCommon;
+}
+
+/**
+ * Returns deals with same exclusivity value as the one passed as an argument.
+ * @param exclusivity
+ * @param deals
+ */
+export function getExclusiveDeals(deals: DistributionDeal[], exclusivity: boolean): DistributionDeal[] {
+  if (exclusivity === true) {
+    return deals
+  }
+  if (exclusivity === false) {
+    return deals.filter(deal => deal.exclusive === true);
+  }
 }

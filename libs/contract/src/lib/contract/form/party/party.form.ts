@@ -12,7 +12,7 @@ function createPartyControl(party: Partial<Party> = {}) {
 
 type ContractPartyControl = ReturnType<typeof createPartyControl>;
 
-export class ContractPartyForm extends FormEntity<ContractPartyControl> {
+export class ContractPartyForm extends FormEntity<ContractPartyControl, Party> {
   constructor(party: Partial<Party>) {
     super(createPartyControl(party));
   }

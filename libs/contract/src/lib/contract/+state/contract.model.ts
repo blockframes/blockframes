@@ -9,7 +9,8 @@ import {
   LegalDocument,
   LegalDocuments,
   ContractDocument,
-  ContractType
+  ContractType,
+  PublicContractDocumentWithDates
 } from './contract.firestore';
 import { createParty } from '@blockframes/utils/common-interfaces/identity';
 import { createImgRef } from '@blockframes/utils/image-uploader';
@@ -30,6 +31,8 @@ export interface ContractWithLastVersion {
 export interface Contract extends ContractDocumentWithDates {
   versions?: ContractVersion[];
 };
+
+export type PublicContract = PublicContractDocumentWithDates;
 
 export interface ContractWithTimeStamp extends ContractDocument {
   versions?: ContractVersionWithTimeStamp[];
@@ -62,6 +65,15 @@ export function createContractVersion(params: Partial<ContractVersion> = {}): Co
     paymentTerm: createTerms(params.paymentTerm),
     scope: createTerms(params.scope),
     price: createPrice(params.price)
+  };
+}
+
+export function createPublicContract(params: Partial<PublicContract> = {}): PublicContract {
+  return {
+    id: params.id || '',
+    type: ContractType.mandate,
+    titleIds: [],
+    ...params,
   };
 }
 
@@ -213,7 +225,15 @@ export function formatPartyDetails(partyDetails: any): ContractPartyDetail {
  */
 export function getContractParties(contract: Contract, legalRole: LegalRolesSlug): ContractPartyDetail[] {
   const roleCode = getCodeIfExists('LEGAL_ROLES', legalRole)
-  return contract.parties.filter(p => p.party.role === roleCode );
+  return contract.parties.filter(p => p.party.role === roleCode);
+}
+
+/**
+ * Fetch parties related to a contract with childRoles
+ * @param contract
+ */
+export function getContractSubLicensors(contract: Contract): ContractPartyDetail[] {
+  return contract.parties.filter(p => p.childRoles.length > 0);
 }
 
 /**
@@ -233,7 +253,7 @@ export function isPartyOfContract(organizationId: string, contract: Contract): b
  */
 export function isContractSignatory(contract: Contract, organizationId: string): boolean {
   return contract.parties.some(partyDetails => {
-    const  { orgId, role } = partyDetails.party;
+    const { orgId, role } = partyDetails.party;
     return orgId === organizationId && role === 'signatory';
   })
 }

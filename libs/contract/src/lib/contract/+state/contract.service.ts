@@ -22,6 +22,7 @@ import { firestore } from 'firebase/app';
 import { MovieQuery } from '@blockframes/movie';
 import { createContractVersionFromFirestore } from '@blockframes/contract/version/+state/contract-version.model';
 import { ContractVersion } from '@blockframes/contract/version/+state';
+import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
 
 /**
  * Get all the contracts where user organization is party.
@@ -166,7 +167,7 @@ export class ContractService extends CollectionService<ContractState> {
   public async create(contract: Partial<Contract>, version: Partial<ContractVersion> = {}) {
     const write = this.db.firestore.batch();
     const contractId = await this.add(contract, { write });
-    this.contractVersionService.add({ id: '0' }, { params: { contractId }, write });
+    this.contractVersionService.add({ id: '0', ...version }, { params: { contractId }, write });
     this.contractVersionService.add({ id: '_meta', count: 1 }, { params: { contractId }, write });
     await write.commit();
     return contractId;

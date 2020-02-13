@@ -15,22 +15,92 @@
           <mat-icon svgIcon="pencil"></mat-icon>
         </a>
       </mat-card-header>
+      <mat-card-content>
+        <ul>
+          <!-- Party -->
+          <h5>Parties</h5>
+          <li *ngFor="let licensee of parties.licensee">
+            <strong>Licensee Name: </strong> <missing-control [control]="licensee" link="../details"></missing-control>
+          </li>
+          <li *ngFor="let licensor of parties.licensor">
+            <strong>Licensor Name: </strong> <missing-control [control]="licensor" link="../details"></missing-control>
+          </li>
+
+          <!-- Terms -->
+          <ng-container *ngIf="terms">
+            <h5>Terms</h5>
+            <li>
+              <strong>Terms: </strong> {{ terms }}
+            </li>
+          </ng-container>
+
+          <!-- Title Selection & Price -->
+          <h5>Title Selection & Price</h5>
+          <li>
+            <strong>Contract Currency: </strong>
+            <missing-control [control]="price.currency" link="../details"></missing-control>
+          </li>
+          <!-- Titles -->
+          <li *ngFor="let movie of movies$ | async">
+            <strong>{{ movie.main.title.international }}: </strong>
+            <missing-control [control]="moviePrices[movie.id]" link="../details">
+              <ng-template let-amount>{{ amount | currency: currency }}</ng-template>
+            </missing-control>
+          </li>
+
+          <!-- Total price -->
+          <li>
+            <strong>Total Selection Price: </strong>
+            <missing-control [control]="price.amount" link="../details">
+              <ng-template let-amount>{{ amount | currency: currency }}</ng-template>
+            </missing-control>
+          </li>
+
+          <!-- Payment schedules -->
+          <ng-container *ngIf="payments">
+            <h5>Payment Schedules</h5>
+            <li *ngFor="let payment of payments.list">
+              <strong>{{ payments.type }}</strong> {{ payment }}
+            </li>
+          </ng-container>
+        </ul>
+      </mat-card-content>
     </mat-card>
   
-    <!-- Distribution Deals -->
-    <ng-container *ngFor="let movie of movies$ | async">
-      <mat-card>
-        <movie-banner [movie]="movie">
-          <movie-banner-actions>
-            <a mat-stroked-button color="primary" [routerLink]="['..', movie.id]">Edit</a>
-          </movie-banner-actions>
-        </movie-banner>
-        <ng-container *ngIf="dealForms.get(movie.id) as deals" >
-          <ng-container *ngIf="deals.value.length">
-            <catalog-right-list [source]="deals.value"></catalog-right-list>
-          </ng-container>
+    <ng-container *ngIf="movies$ | async as movies">
+      <!-- Distribution Deals -->
+      <ng-container *ngIf="movies.length else noTitle">
+        <h2>Exploitation Rights</h2>
+        <ng-container *ngFor="let movie of movies$ | async">
+          <mat-card>
+            <movie-banner [movie]="movie">
+              <movie-banner-actions>
+                <a mat-stroked-button color="primary" [routerLink]="['..', movie.id]">Edit</a>
+              </movie-banner-actions>
+            </movie-banner>
+            <ng-container *ngIf="dealForms.get(movie.id) as deals else noDeal" >
+              <ng-container *ngIf="deals.value.length else noDeal" >
+                <catalog-right-list [source]="deals.value"></catalog-right-list>
+              </ng-container>
+              <ng-template #noDeal >
+                <a [routerLink]="['..', movie.id]" color="warn">
+                  Add a right on this title.
+                </a>
+              </ng-template>
+            </ng-container>
+          </mat-card>
         </ng-container>
-      </mat-card>
+        <button class="submit" mat-flat-button color="accent" (click)="submit()">
+          <span>Submit you Contract Offer</span>
+          <mat-icon svgIcon="arrow_forward"></mat-icon>
+        </button>
+      </ng-container>
+      <!-- If no deal -->
+      <ng-template #noTitle >
+        <a mat-button color="warn" routerLink="../details">Add a Title to your contract</a>
+      </ng-template>
     </ng-container>
   </ng-container>
+  
+
 </tunnel-page>

@@ -9,6 +9,7 @@ import { FeedbackMessageModule, ActionsListModule } from '@blockframes/ui';
 import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
 import { OrganizationFormModule } from './forms/organization-form/organization-form.module';
 import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
+import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 
 // Material
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -24,6 +25,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatRippleModule } from '@angular/material/core';
 
 // Components
 import { OrganizationHomeComponent } from './pages/organization-home/organization-home.component';
@@ -81,7 +83,8 @@ export const noOrganizationRoutes: Routes = [
     CropperModule,
     OrganizationFormModule,
     ImgAssetModule,
-
+    ImageReferenceModule,
+    
     // Material
     MatFormFieldModule,
     MatListModule,
@@ -96,6 +99,7 @@ export const noOrganizationRoutes: Routes = [
     MatProgressBarModule,
     MatSnackBarModule,
     MatRadioModule,
+    MatRippleModule,
 
     // UI
     ActionsListModule,

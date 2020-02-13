@@ -26,7 +26,7 @@ import {
   UnitBox,
   MovieStakeholders,
   StoreStatus,
-  MovieAnalytics,
+  MovieAnalytics
 } from './movie.firestore';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 import { LanguagesSlug } from '@blockframes/utils/static-model';

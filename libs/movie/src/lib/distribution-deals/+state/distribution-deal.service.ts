@@ -2,16 +2,16 @@ import { Injectable } from '@angular/core';
 import objectHash from 'object-hash';
 import { CollectionService, CollectionConfig } from 'akita-ng-fire';
 import { DistributionDealState, DistributionDealStore } from './distribution-deal.store';
-import { DistributionDeal, getDealTerritories, createDistributionDealWithMovieId, DistributionDealWithMovieId } from './distribution-deal.model';
+import { DistributionDeal, getDealTerritories, createDistributionDealWithMovieId, DistributionDealWithMovieId, formatDistributionDeal } from './distribution-deal.model';
 import { createContractTitleDetail, ContractWithLastVersion } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractVersionService } from '@blockframes/contract/version/+state/contract-version.service';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
-import { toDate } from '@blockframes/utils/helpers';
 import { ContractQuery } from '@blockframes/contract/contract/+state/contract.query';
 import { switchMap } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
 import { ContractVersion } from '@blockframes/contract/version/+state/contract-version.model';
 import { DistributionDealQuery } from './distribution-deal.query';
+import { Movie } from '@blockframes/movie/movie/+state';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies/:movieId/distributionDeals' })
@@ -81,13 +81,6 @@ export class DistributionDealService extends CollectionService<DistributionDealS
     return distributionDeal.id;
   }
 
-  /** Format deals dates from Timestamps into Dates. */
-  public formatDistributionDeal(deal: any): DistributionDeal {
-    deal.terms.start = toDate(deal.terms.start);
-    deal.terms.end = toDate(deal.terms.end);
-    return deal as DistributionDeal;
-  }
-
   /**
    * Get distributionDeals from a specific movie.
    * @param movieId
@@ -106,8 +99,8 @@ export class DistributionDealService extends CollectionService<DistributionDealS
       .collectionGroup('distributionDeals', ref => ref.where('contractId', '==', contractId))
       .get()
       .toPromise();
-    const distributionDeals = distributionDealsSnap.docs.map(deal => this.formatDistributionDeal(deal.data()));
-    return distributionDeals;
+
+    return distributionDealsSnap.docs.map(deal => formatDistributionDeal(deal.data() as DistributionDeal));
   }
 
   /**
@@ -121,7 +114,7 @@ export class DistributionDealService extends CollectionService<DistributionDealS
       .toPromise();
     const distributionDeals = distributionDealsSnap.docs.map(deal => createDistributionDealWithMovieId({
       movieId: deal.ref.parent.parent.id,
-      deal: this.formatDistributionDeal(deal.data()), // @todo #1832 rename formatDd?
+      deal: formatDistributionDeal(deal.data()), // @todo #1832 rename formatDd?
     }));
     return distributionDeals;
   }
@@ -137,5 +130,14 @@ export class DistributionDealService extends CollectionService<DistributionDealS
     );
     // Returns all deals eligible territories as an array of string.
     return deals.map(deal => deal ? getDealTerritories(deal) : []).flat();
+  }
+
+  /** Get the deals linked to the Archipel Contract (of type 'mandate') */
+  public async getMandateDeals(movie: Movie): Promise<DistributionDeal[]> {
+    const contractsSnap = await this.db.collection(
+      `publicContracts/`, ref => ref.where('type', '==', 'mandate').where('titleIds', 'array-contains', movie.id))
+      .get().toPromise();
+    const contracts = contractsSnap.docs.map(contract => contract.data())
+    return movie.distributionDeals.filter(deal => deal.contractId === contracts[0].id)
   }
 }
