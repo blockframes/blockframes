@@ -11,6 +11,7 @@ import { MovieVersionInfoForm } from '@blockframes/movie/movie/form/version-info
 function createDistributionDealControls(deal: Partial<DistributionDeal>) {
   const entity = createDistributionDeal(deal);
   return {
+    id: new FormControl(entity.id),
     contractId: new FormControl(entity.contractId),
     exclusive: new FormControl(entity.exclusive),
     territory: FormList.factory(entity.territory),
@@ -18,7 +19,7 @@ function createDistributionDealControls(deal: Partial<DistributionDeal>) {
     licenseType: new FormControl(entity.licenseType),
     terms: new DistributionDealTermsForm(entity.terms),
     holdbacks: FormList.factory(entity.holdbacks, holdback => new DistributionDealHoldbacksForm(holdback)),
-    assetLangauage: new MovieVersionInfoForm(deal.assetLanguage)
+    assetLanguage: new MovieVersionInfoForm(deal.assetLanguage)
   };
 }
 

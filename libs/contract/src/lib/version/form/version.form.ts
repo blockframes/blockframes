@@ -9,6 +9,7 @@ import { ContractVersionPaymentScheduleForm } from './payment-schedule/payment-s
 
 function createContractVersionControls(contractVersion: Partial<ContractVersion>) {
   return {
+    id: new FormControl(contractVersion.id),  // Require or FormList can remove empty Form
     price: new ContractVersionPriceForm(contractVersion.price),
     titles: new ContractVersionTitlesForm(contractVersion.titles),
     scope: new DistributionDealTermsForm(contractVersion.scope),
@@ -33,8 +34,7 @@ function createContractTitlesControls(
   titles: Record<string, Partial<ContractTitleDetail>>
 ): ContractTitlesControl {
   const controls = {};
-  const ids = Object.keys(titles);
-  for (const id in ids) {
+  for (const id in titles) {
     controls[id] = new ContractTitleDetailForm(titles[id]);
   }
   return controls;
