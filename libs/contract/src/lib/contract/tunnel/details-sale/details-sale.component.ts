@@ -30,8 +30,4 @@ export class DetailsSaleComponent implements OnInit {
   public terms(index: number) {
     return this.versions.at(index).get('scope');
   }
-
-  public price(index: number) {
-    return this.versions.at(index).get('price');
-  }
 }
