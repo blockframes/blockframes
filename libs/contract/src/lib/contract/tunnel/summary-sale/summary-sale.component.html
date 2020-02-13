@@ -20,29 +20,29 @@
           <!-- Party -->
           <h5>Parties</h5>
           <li *ngFor="let licensee of parties.licensee">
-            <b>Licensee Name: </b> <missing-control [control]="licensee" link="../details"></missing-control>
+            <strong>Licensee Name: </strong> <missing-control [control]="licensee" link="../details"></missing-control>
           </li>
           <li *ngFor="let licensor of parties.licensor">
-            <b>Licensor Name: </b> <missing-control [control]="licensor" link="../details"></missing-control>
+            <strong>Licensor Name: </strong> <missing-control [control]="licensor" link="../details"></missing-control>
           </li>
 
           <!-- Terms -->
           <h5>Terms</h5>
           <li>
-            <b>Terms: </b> {{ terms }}.
+            <strong>Terms: </strong> {{ terms }}.
           </li>
 
           <!-- Title Selection & Price -->
           <h5>Title Selection & Price</h5>
           <li>
-            <b>Contract Currency: </b>
+            <strong>Contract Currency: </strong>
             <missing-control [control]="price.currency" link="../details"></missing-control>
           </li>
           <!-- Titles -->
           <ng-container *ngIf="movies$ | async as movies">
             <ng-container *ngIf="movies.length else noTitles">
               <li *ngFor="let movie of movies$ | async">
-                <b>{{ movie.main.title.international }}</b>
+                <strong>{{ movie.main.title.international }}</strong>
                 <missing-control [control]="moviePrices[movie.id]" link="../details">
                   <ng-template let-amount>{{ amount | currency: currency }}</ng-template>
                 </missing-control>
@@ -54,7 +54,7 @@
           </ng-container>
           <!-- Total price -->
           <li>
-            <b>Total Selection Price: </b>
+            <strong>Total Selection Price: </strong>
             <missing-control [control]="price.amount" link="../details">
               <ng-template let-amount>{{ amount | currency: currency }}</ng-template>
             </missing-control>
@@ -64,7 +64,7 @@
           <ng-container *ngIf="payments">
             <h5>Payment Schedules</h5>
             <li *ngFor="let payment of payments.list">
-              <b>{{ payments.type }}</b> {{ payment }}
+              <strong>{{ payments.type }}</strong> {{ payment }}
             </li>
           </ng-container>
         </ul>
@@ -88,4 +88,8 @@
       </mat-card>
     </ng-container>
   </ng-container>
+  
+  <button class="submit" mat-flat-button (click)="submit()">
+    Submit
+  </button>
 </tunnel-page>

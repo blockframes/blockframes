@@ -20,10 +20,10 @@
           <!-- Party -->
           <h5>Parties</h5>
           <li *ngFor="let licensee of parties.licensee">
-            <b>Licensee Name: </b> <missing-control [control]="licensee" link="../details"></missing-control>
+            <strong>Licensee Name: </strong> <missing-control [control]="licensee" link="../details"></missing-control>
           </li>
           <li *ngFor="let licensor of parties.licensor">
-            <b>Licensor Name: </b>
+            <strong>Licensor Name: </strong>
             <missing-control [control]="licensor.displayName" link="../details"></missing-control>
             (sub-role: <missing-control [control]="licensor.subRole" link="../details"></missing-control>)
           </li>
@@ -31,26 +31,26 @@
           <!-- Terms -->
           <h5>Terms</h5>
           <li *ngIf="terms">
-            <b>Terms: </b> {{ terms }}
+            <strong>Terms: </strong> {{ terms }}
           </li>
           <li *ngIf="version.get('renewalConditions').value as condition">
-            <b>Renewal Conditions: </b> {{ condition }}
+            <strong>Renewal Conditions: </strong> {{ condition }}
           </li>
           <li *ngIf="version.get('terminationConditions').value as condition">
-            <b>Contract Termination Conditions: </b> {{ condition }}
+            <strong>Contract Termination Conditions: </strong> {{ condition }}
           </li>
 
           <!-- Title Selection & Price -->
           <h5>Title Selection & Price</h5>
           <li>
-            <b>Contract Currency: </b>
+            <strong>Contract Currency: </strong>
             <missing-control [control]="price.currency" link="../details"></missing-control>
           </li>
           <!-- Titles -->
           <ng-container *ngIf="movies$ | async as movies">
             <ng-container *ngIf="movies.length else noTitles">
               <li *ngFor="let movie of movies$ | async">
-                <b>{{ movie.main.title.international }}</b> {{ deals[movie.id] }}
+                <strong>{{ movie.main.title.international }}</strong> {{ deals[movie.id] }}
               </li>
             </ng-container>
             <ng-template #noTitles >
@@ -62,7 +62,7 @@
           <ng-container *ngIf="version.get('AuthorizedRecoupableExpenses').value as fee" >
             <h5>Fees</h5>
             <li>
-              <b>Recoupable expenses: </b> {{ fee }}
+              <strong>Recoupable expenses: </strong> {{ fee }}
             </li>
           </ng-container>
           
@@ -71,7 +71,7 @@
           <h5>Payment Schedules</h5>
           <ng-container *ngIf="payments else missingPayment">
             <li *ngFor="let payment of payments.list">
-              <b>{{ payments.type }}</b> {{ payment }}
+              <strong>{{ payments.type }}</strong> {{ payment }}
             </li>
           </ng-container>
           <ng-template #missingPayment>
@@ -98,4 +98,8 @@
       </mat-card>
     </ng-container>
   </ng-container>
+
+  <button class="submit" mat-flat-button (click)="submit()">
+    Submit
+  </button>
 </tunnel-page>
