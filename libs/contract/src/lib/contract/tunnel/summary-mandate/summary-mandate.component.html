@@ -1,1 +1,99 @@
-<p>summary-mandate works!</p>
+<tunnel-page>
+  <h4 title>Summary & Submit</h4>
+  <h1 subtitle>Contract Offer Summary</h1>
+  <p description class="mat-body-1">
+    Please verify that all the information you have entered is correct before submitting you contract offer.
+  </p>
+
+  <ng-container tunnel-form>
+
+    <!-- Cntract Details -->
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Contract Details</mat-card-title>
+        <a mat-icon-button routerLink="../details">
+          <mat-icon svgIcon="pencil"></mat-icon>
+        </a>
+      </mat-card-header>
+      <mat-card-content>
+        <ul>
+          <!-- Party -->
+          <h5>Parties</h5>
+          <li *ngFor="let licensee of parties.licensee">
+            <b>Licensee Name: </b> <missing-control [control]="licensee" link="../details"></missing-control>
+          </li>
+          <li *ngFor="let licensor of parties.licensor">
+            <b>Licensor Name: </b>
+            <missing-control [control]="licensor.displayName" link="../details"></missing-control>
+            (sub-role: <missing-control [control]="licensor.subRole" link="../details"></missing-control>)
+          </li>
+
+          <!-- Terms -->
+          <h5>Terms</h5>
+          <li *ngIf="terms">
+            <b>Terms: </b> {{ terms }}
+          </li>
+          <li *ngIf="version.get('renewalConditions')">
+            <b>Renewal Conditions: </b> {{ version.get('renewalConditions').value }}
+          </li>
+
+          <!-- Title Selection & Price -->
+          <h5>Title Selection & Price</h5>
+          <li>
+            <b>Contract Currency: </b>
+            <missing-control [control]="price.currency" link="../details"></missing-control>
+          </li>
+          <!-- Titles -->
+          <ng-container *ngIf="movies$ | async as movies">
+            <ng-container *ngIf="movies.length else noTitles">
+              <li *ngFor="let movie of movies$ | async">
+                <b>{{ movie.main.title.international }}</b>
+                <missing-control [control]="moviePrices[movie.id]" link="../details">
+                  <ng-template let-amount>{{ amount | currency: currency }}</ng-template>
+                </missing-control>
+              </li>
+            </ng-container>
+            <ng-template #noTitles >
+              <a mat-button color="warn" routerLink="../details">You need at least one title.</a>
+            </ng-template>
+          </ng-container>
+          <!-- Total price -->
+          <li>
+            <b>Total Selection Price: </b>
+            <missing-control [control]="price.amount" link="../details">
+              <ng-template let-amount>{{ amount | currency: currency }}</ng-template>
+            </missing-control>
+          </li>
+
+          <!-- Payment schedules -->
+          <h5>Payment Schedules</h5>
+          <ng-container *ngIf="payments else missingPayment">
+            <li *ngFor="let payment of payments.list">
+              <b>{{ payments.type }}</b> {{ payment }}
+            </li>
+          </ng-container>
+          <ng-template #missingPayment>
+            <a mat-button color="warn" routerLink="../details">Add .</a>
+          </ng-template>
+        </ul>
+      </mat-card-content>
+    </mat-card>
+  
+    <!-- Distribution Deals -->
+    <h2>Exploitation Rights</h2>
+    <ng-container *ngFor="let movie of movies$ | async">
+      <mat-card>
+        <movie-banner [movie]="movie">
+          <movie-banner-actions>
+            <a mat-stroked-button color="primary" [routerLink]="['..', movie.id]">Edit</a>
+          </movie-banner-actions>
+        </movie-banner>
+        <ng-container *ngIf="dealForms.get(movie.id) as deals" >
+          <ng-container *ngIf="deals.value.length">
+            <catalog-right-list [source]="deals.value"></catalog-right-list>
+          </ng-container>
+        </ng-container>
+      </mat-card>
+    </ng-container>
+  </ng-container>
+</tunnel-page>

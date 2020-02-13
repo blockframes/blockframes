@@ -7,17 +7,18 @@ import { FormEntity, FormList } from '@blockframes/utils';
 import { ContractVersionPriceForm } from './price/price.form';
 import { ContractVersionPaymentScheduleForm } from './payment-schedule/payment-schedule.form';
 
-function createContractVersionControls(contractVersion: Partial<ContractVersion>) {
+function createContractVersionControls(version: Partial<ContractVersion>) {
   return {
-    id: new FormControl(contractVersion.id),  // Require or FormList can remove empty Form
-    price: new ContractVersionPriceForm(contractVersion.price),
-    titles: new ContractVersionTitlesForm(contractVersion.titles),
-    scope: new DistributionDealTermsForm(contractVersion.scope),
-    paymentSchedule: FormList.factory(contractVersion.paymentSchedule, payment => {
+    id: new FormControl(version.id),  // Require or FormList can remove empty Form
+    price: new ContractVersionPriceForm(version.price),
+    titles: new ContractVersionTitlesForm(version.titles),
+    scope: new DistributionDealTermsForm(version.scope),
+    paymentSchedule: FormList.factory(version.paymentSchedule, payment => {
       return new ContractVersionPaymentScheduleForm(payment)
     }),
-    customPaymentSchedule: new FormControl(contractVersion.customPaymentSchedule),
-    paymentTerm: new DistributionDealTermsForm(contractVersion.paymentTerm)
+    customPaymentSchedule: new FormControl(version.customPaymentSchedule),
+    paymentTerm: new DistributionDealTermsForm(version.paymentTerm),
+    renewalConditions: new FormControl(version.renewalConditions)
   }
 }
 
