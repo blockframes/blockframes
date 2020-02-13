@@ -13,4 +13,3 @@ export class MovieStore extends EntityStore<MovieState> {
   }
 
 }
-

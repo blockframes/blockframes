@@ -1,23 +1,24 @@
-import { CatalogSearch } from './search.form';
 import { Movie } from '@blockframes/movie/movie/+state/movie.model';
-import { AFM_DISABLE } from '@env';
 import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
 import { ExtractSlug } from '@blockframes/utils/static-model/staticModels';
-import { NumberRange } from '@blockframes/utils/common-interfaces';
+import { NumberRange, DateRange } from '@blockframes/utils/common-interfaces';
 import { LanguagesLabel } from '@blockframes/utils/static-model/types';
+import { CatalogSearch, AvailsSearch } from '@blockframes/catalog/form/search.form';
+import { getFilterMatchingDeals, getDealsInDateRange, getExclusiveDeals } from '@blockframes/movie/distribution-deals/create/availabilities.util';
 import { MovieLanguageSpecification } from '@blockframes/movie/movie/+state/movie.firestore';
+import { toDate } from '@blockframes/utils/helpers';
 
-function productionYearBetween(movie: Movie, range: { from: number; to: number }): boolean {
+function isProductionYearBetween(movie: Movie, range: DateRange): boolean {
   if (!range || !(range.from && range.to)) {
     return true;
   }
   // prevent from default error that property is undefined
   if (typeof range.from && typeof range.to) {
-    return movie.main.productionYear >= range.from && movie.main.productionYear <= range.to;
+    return movie.main.productionYear >= range.from.getFullYear() && movie.main.productionYear <= range.to.getFullYear();
   }
 }
 
-function hasLanguage(movie: Movie, language: { [languageLabel in LanguagesLabel]: MovieLanguageSpecification }) {
+function hasLanguage(movie: Movie, language: Partial<{ [languageLabel in LanguagesLabel]: MovieLanguageSpecification }>) {
     if (Object.entries(language).length === 0) {
       return true;
     }
@@ -49,7 +50,7 @@ function hasLanguage(movie: Movie, language: { [languageLabel in LanguagesLabel]
     }
 }
 
-function genres(movie: Movie, movieGenre: string[]): boolean {
+function hasGenres(movie: Movie, movieGenre: string[]): boolean {
   if (!movieGenre.length) {
     return true;
   }
@@ -76,7 +77,7 @@ function hasBudget(movie: Movie, movieBudget: NumberRange[]) {
   }
 }
 
-function productionStatus(movie: Movie, movieStatus: string[]): boolean {
+function isProductionStatus(movie: Movie, movieStatus: string[]): boolean {
   if (!movieStatus.length) {
     return true;
   }
@@ -89,18 +90,7 @@ function productionStatus(movie: Movie, movieStatus: string[]): boolean {
   }
 }
 
-function salesAgent(movie: Movie, salesAgents: string[]): boolean {
-  if (!salesAgents.length) {
-    return true;
-  }
-  for (let i = 0; i < salesAgents.length; i++) {
-    if (salesAgents[i] === movie.salesAgentDeal.salesAgent.displayName) {
-      return true;
-    }
-  }
-}
-
-function certifications(movie: Movie, movieCertification: string[]): boolean {
+function hasCertifications(movie: Movie, movieCertification: string[]): boolean {
   if (!movieCertification.length) {
     return true;
   }
@@ -119,27 +109,6 @@ function certifications(movie: Movie, movieCertification: string[]): boolean {
     }
   }
 }
-// TODO #979 - check if availabilities filter is needed
-function availabilities(deals: DistributionDeal[], range: { from: Date; to: Date }): boolean {
-  if (!range || !(range.from && range.to)) {
-    return true;
-  }
-  return (
-    deals.some(deal => {
-      if (deal.terms) {
-        /**
-         * Check if terms.start is inside of a deal
-         */
-        return deal.terms.start.getTime() < range.from.getTime();
-      }
-    }) &&
-    deals.some(deal => {
-      if (deal.terms) {
-        return deal.terms.end.getTime() > range.to.getTime();
-      }
-    })
-  );
-}
 
 function hasCountry(movie: Movie, countries: string[]): boolean {
   if (!countries.length) {
@@ -152,41 +121,63 @@ function hasCountry(movie: Movie, countries: string[]): boolean {
   }
 }
 
-function territories(movie: Movie, territory: string): boolean {
-  if (!territory) {
-    return true;
-  }
-  return movie.salesAgentDeal.territories.includes(territory.toLowerCase() as ExtractSlug<'TERRITORIES'>);
+/**
+ * Looks for the deal matching the mandate and checks if Archipel can sells
+ * rights according to the filter options set by the buyer.
+ */
+function archipelCanSells(filter: AvailsSearch, mandateDeal: DistributionDeal): boolean {
+
+  const hasTerritories = mandateHas(filter.territories, mandateDeal.territory)
+  const hasMedias = mandateHas(filter.medias, mandateDeal.licenseType)
+  const hasTerms =
+    toDate(filter.terms.from).getTime() > toDate(mandateDeal.terms.start).getTime() &&
+    toDate(filter.terms.to).getTime() < toDate(mandateDeal.terms.end).getTime()
+
+  return hasTerritories && hasMedias && hasTerms;
 }
-function media(movie: Movie, movieMediaType: string): boolean {
-  if (!movieMediaType) {
-    return true;
-  }
-  return movie.salesAgentDeal.medias.includes(movieMediaType.toLowerCase() as any);
+
+/** Checks if every items of the list from filters are in the list from the deal. */
+function mandateHas(listFromFilter: string[], listFromDeal: string[]) {
+  return listFromFilter.every(item => listFromDeal.includes(item));
 }
 
 // TODO #1306 - remove when algolia is ready
-export function filterMovie(movie: Movie, filter: CatalogSearch, deals?: DistributionDeal[]): boolean {
-  const hasMedia = filter.medias.every(movieMedia => media(movie, movieMedia));
-  const hasTerritory = filter.territories.every(territory => territories(movie, territory));
-  if (AFM_DISABLE) {
-    //TODO: #1146
-    return (
-      productionYearBetween(movie, filter.productionYear) &&
-      certifications(movie, filter.certifications) &&
-      productionStatus(movie, filter.status) &&
-      availabilities(deals, filter.availabilities) &&
-      hasTerritory &&
-      hasMedia
-    );
-  } else {
-    return (
-      genres(movie, filter.genres) &&
-      productionStatus(movie, filter.status) &&
-      salesAgent(movie, filter.salesAgent) &&
-      hasBudget(movie, filter.estimatedBudget) &&
-      hasCountry(movie, filter.originCountries) &&
-      hasLanguage(movie, filter.languages)
-    );
+export function filterMovie(movie: Movie, filter: CatalogSearch): boolean {
+  const hasEveryLanguage = Object.keys(filter.languages)
+    .map(name => ({ ...filter.languages[name], name }))
+    .every(language => hasLanguage(movie, language));
+
+  return (
+    isProductionYearBetween(movie, filter.productionYear) &&
+    hasEveryLanguage &&
+    hasGenres(movie, filter.genres) &&
+    hasCertifications(movie, filter.certifications) &&
+    isProductionStatus(movie, filter.status) &&
+    hasCountry(movie, filter.originCountries) &&
+    hasLanguage(movie, filter.languages) &&
+    isProductionStatus(movie, filter.status)
+  );
+}
+
+/**
+ * Returns a boolean weither a deal is matching with our search or not.
+ * @param deals All the deals from the movies in the filterForm
+ * @param filter The filter options defined by the buyer
+ * @param mandateDeal The deal between Archipel and the seller
+ */
+export function filterMovieWithAvails(deals: DistributionDeal[], filter: AvailsSearch, mandateDeals: DistributionDeal[]) {
+  if (!filter.terms || !(filter.terms.from && filter.terms.to)) {
+    return true;
   }
+
+  // If Archipel Content is not allowed to sells rights from this movie on the mandate, don't show the movie
+  if (mandateDeals.map(mandateDeal => archipelCanSells(filter, mandateDeal)).every(canSell => canSell === false )) {
+    return false;
+  }
+
+  const matchingExclusivityDeals = getExclusiveDeals(deals, filter.exclusivity);
+  const matchingRangeDeals = getDealsInDateRange(filter.terms, matchingExclusivityDeals);
+  const matchingDeals = getFilterMatchingDeals(filter, matchingRangeDeals);
+
+  return matchingDeals.length ? false : true;
 }

@@ -7,7 +7,7 @@ import { StoreStatus } from '../+state/movie.firestore';
 
 @Injectable({ providedIn: 'root' })
 export class MovieCollectionGuard extends CollectionGuard<MovieState> {
-  constructor(service: MovieService, private query: MovieQuery) {
+  constructor(protected service: MovieService, private query: MovieQuery) {
     super(service);
   }
 
@@ -16,6 +16,6 @@ export class MovieCollectionGuard extends CollectionGuard<MovieState> {
   }
 
   sync() {
-    return this.service.syncCollection(ref => ref.where('main.storeConfig.status', '==', StoreStatus.accepted))
+    return this.service.syncMoviesWithDeals();
   }
 }

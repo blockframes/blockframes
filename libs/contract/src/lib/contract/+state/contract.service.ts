@@ -20,6 +20,7 @@ import { ContractDocumentWithDates, ContractStatus } from './contract.firestore'
 import { firestore } from 'firebase/app';
 import { MovieQuery } from '@blockframes/movie';
 import { ContractVersion } from '@blockframes/contract/version/+state';
+import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
 
 /**
  * Get all the contracts where user organization is party.
