@@ -42,7 +42,7 @@ import { MoviesIndex } from '@blockframes/utils/algolia';
 import { Observable, combineLatest, of, from } from 'rxjs';
 import { startWith, map, debounceTime, switchMap, tap, distinctUntilChanged } from 'rxjs/operators';
 // Others
-import { filterMovie, filterMovieWithAvails } from './filter.util';
+import { filterMovie, filterMovieWithAvails } from '@blockframes/catalog/filter.util';
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Index } from 'algoliasearch';

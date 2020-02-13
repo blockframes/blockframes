@@ -4,6 +4,7 @@ export * from './lib/components/production-informations/production-informations.
 export * from './lib/components/promotional-elements/promotional-elements.module';
 export * from './lib/components/avails-filter/avails-filter.module';
 export * from './lib/demo-request.model';
+export * from './lib/filter.util';
 
 // Form
 
