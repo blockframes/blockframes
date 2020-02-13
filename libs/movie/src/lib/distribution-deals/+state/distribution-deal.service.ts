@@ -12,7 +12,7 @@ import { switchMap } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
 import { ContractVersion } from '@blockframes/contract/version/+state/contract-version.model';
 import { DistributionDealQuery } from './distribution-deal.query';
-import { Movie } from '@blockframes/movie/movie+state';
+import { Movie } from '@blockframes/movie/movie/+state';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies/:movieId/distributionDeals' })

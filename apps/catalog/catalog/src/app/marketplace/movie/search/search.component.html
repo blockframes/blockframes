@@ -296,9 +296,9 @@
                 <mat-form-field appearance="outline">
                   <mat-chip-list #territoryChipList>
                     <mat-chip *ngFor="let territory of selectedMovieTerritories; let i = index" [selectable]="selectableTerritory"
-                      [removable]="removableTerritory" (removed)="removeTerritory(territory, i)">
+                      [removable]="!availsForm.value.isActive" (removed)="removeTerritory(territory, i)">
                       {{ territory }}
-                      <mat-icon matChipRemove>cancel</mat-icon>
+                      <mat-icon matChipRemove *ngIf="!availsForm.value.isActive">cancel</mat-icon>
                     </mat-chip>
                     <input test-id="territories-panel-input" placeholder="Territories available" #territoryInput
                       [matAutocomplete]="territoryMatAutoComplete" [matChipInputFor]="territoryChipList" [formControl]="territoryControl" />
@@ -318,7 +318,7 @@
                   <mat-panel-title test-id="mandate-medias-panel">Media</mat-panel-title>
                 </mat-expansion-panel-header>
                 <div fxLayout="column" fxLayoutAlign="start space-between" class="filter-checkboxes-media">
-                  <mat-checkbox *ngFor="let media of movieMedias" (change)="checkMedia(media)">
+                  <mat-checkbox *ngFor="let media of movieMedias" (change)="checkMedia(media)" [disabled]="availsForm.value.isActive">
                     {{  media | translateSlug: 'MEDIAS' }}
                   </mat-checkbox>
                 </div>
@@ -335,7 +335,20 @@
                   <span>Yes</span>
                 </article>
               </mat-expansion-panel>
-              <button mat-stroked-button color="primary" (click)="applyAvailsFilter()" [disabled]="!availsForm.valid">Apply Avails Filter</button>
+              <article fxLayoutAlign="center center" class="filter-buttons">
+                <button
+                  *ngIf="!availsForm.value.isActive"
+                  mat-stroked-button color="primary"
+                  (click)="applyAvailsFilter()">
+                  Apply Avails Filter
+                </button>
+                <button
+                  *ngIf="availsForm.value.isActive"
+                  mat-stroked-button color="warn"
+                  (click)="deactivateAvailsFilter()">
+                  Deactivate Avails Filter
+                </button>
+              </article>
             </ng-container>
         </mat-accordion>
       </mat-card-content>
