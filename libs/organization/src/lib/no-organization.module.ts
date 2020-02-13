@@ -25,6 +25,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatRadioModule } from '@angular/material/radio';
+import { MatRippleModule } from '@angular/material/core';
 
 // Components
 import { OrganizationHomeComponent } from './pages/organization-home/organization-home.component';
@@ -98,6 +99,7 @@ export const noOrganizationRoutes: Routes = [
     MatProgressBarModule,
     MatSnackBarModule,
     MatRadioModule,
+    MatRippleModule,
 
     // UI
     ActionsListModule,

@@ -7,15 +7,15 @@
     </p>
     <mat-radio-group [formControl]="link" fxLayout="row" fxLayout.xs="column" fxLayoutAlign="space-between center" fxLayoutGap="20px">
       <!-- Create Org -->
-      <mat-card fxLayout="column" fxLayoutAlign="center center">
+      <mat-card matRipple (click)="create.checked = true" fxLayout="column" fxLayoutAlign="center center">
         <img asset="add_organization.svg" />
-        <mat-radio-button value="create" >Create your Organization</mat-radio-button>
+        <mat-radio-button #create value="create" >Create your Organization</mat-radio-button>
         <p>I know that my company has no community page yet. I’m going to create one and invite members!</p>
       </mat-card>
       <!-- Find Org -->
-      <mat-card fxLayout="column" fxLayoutAlign="center center">
+      <mat-card matRipple (click)="find.checked = true" fxLayout="column" fxLayoutAlign="center center">
         <img asset="find_organization.svg" />
-        <mat-radio-button value="find">Find your organization</mat-radio-button>
+        <mat-radio-button #find value="find">Find your organization</mat-radio-button>
         <p>I know that someone has already created my company’s community page. I’m going to search for it !</p>
       </mat-card>
     </mat-radio-group>
