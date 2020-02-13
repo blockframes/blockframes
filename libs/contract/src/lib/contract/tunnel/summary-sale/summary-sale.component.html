@@ -25,51 +25,54 @@
           <li *ngFor="let licensor of parties.licensor">
             <b>Licensor Name: </b> <missing-control [control]="licensor" link="../details"></missing-control>
           </li>
+
           <!-- Terms -->
           <h5>Terms</h5>
           <li>
-            <b>Terms: </b>
-            From
-            <missing-control [control]="terms.start" link="../details">
-              <ng-template let-start>{{ start | date }}</ng-template>
-            </missing-control>
-            to
-            <missing-control [control]="terms.end" link="../details">
-              <ng-template let-end>{{ end | date }}</ng-template>
-            </missing-control>
-            for
-            <missing-control [control]="terms.floatingDuration.get('duration')" link="../details"></missing-control>
-            <missing-control [control]="terms.floatingDuration.get('unit')" link="../details"></missing-control>
-            starting from
-            <missing-control [control]="terms.floatingStart" link="../details"></missing-control>.
+            <b>Terms: </b> {{ terms }}.
           </li>
+
           <!-- Title Selection & Price -->
           <h5>Title Selection & Price</h5>
           <li>
             <b>Contract Currency: </b>
             <missing-control [control]="price.currency" link="../details"></missing-control>
           </li>
-          <li *ngFor="let movie of movies$ | async">
-            <b>{{ movie.main.title.international }}</b>
-            <missing-control [control]="moviePrices[movie.id]" link="../details">
-              <ng-template let-amount>{{ amount | currency: currency }}</ng-template>
-            </missing-control>
-          </li>
+          <!-- Titles -->
+          <ng-container *ngIf="movies$ | async as movies">
+            <ng-container *ngIf="movies.length else noTitles">
+              <li *ngFor="let movie of movies$ | async">
+                <b>{{ movie.main.title.international }}</b>
+                <missing-control [control]="moviePrices[movie.id]" link="../details">
+                  <ng-template let-amount>{{ amount | currency: currency }}</ng-template>
+                </missing-control>
+              </li>
+            </ng-container>
+            <ng-template #noTitles >
+              <a mat-button color="warn" routerLink="../details">You need at least one title.</a>
+            </ng-template>
+          </ng-container>
+          <!-- Total price -->
           <li>
             <b>Total Selection Price: </b>
             <missing-control [control]="price.amount" link="../details">
               <ng-template let-amount>{{ amount | currency: currency }}</ng-template>
             </missing-control>
           </li>
+
           <!-- Payment schedules -->
-          <li>
-            <!-- display list here -->
-          </li>
+          <ng-container *ngIf="payments">
+            <h5>Payment Schedules</h5>
+            <li *ngFor="let payment of payments.list">
+              <b>{{ payments.type }}</b> {{ payment }}
+            </li>
+          </ng-container>
         </ul>
       </mat-card-content>
     </mat-card>
   
     <!-- Distribution Deals -->
+    <h2>Exploitation Rights</h2>
     <ng-container *ngFor="let movie of movies$ | async">
       <mat-card>
         <movie-banner [movie]="movie">
