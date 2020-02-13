@@ -31,6 +31,7 @@ export class ChipsAutocompleteComponent implements OnInit {
   @Input() display: string;
   @Input() selectable = true;
   @Input() removable = true;
+  @Input() disabled = false;
   @Input() placeholder = 'New Items';
 
   // The form to connect to

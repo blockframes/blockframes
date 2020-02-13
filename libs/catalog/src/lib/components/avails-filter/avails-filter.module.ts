@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
+import { ChipsAutocompleteModule } from "@blockframes/ui/form/chips-autocomplete/chips-autocomplete.module";
 
 import { AvailsFilterComponent } from './avails-filter.component';
 
@@ -26,6 +27,7 @@ import { MatInputModule } from '@angular/material/input';
     ReactiveFormsModule,
     FlexLayoutModule,
     TranslateSlugModule,
+    ChipsAutocompleteModule,
 
     // Material
     MatExpansionModule,

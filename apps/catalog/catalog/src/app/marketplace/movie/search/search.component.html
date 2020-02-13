@@ -22,7 +22,7 @@
               </mat-option>
             </mat-autocomplete>
             <button mat-icon-button matSuffix>
-              <mat-icon>search</mat-icon>
+              <mat-icon svgIcon="search_table"></mat-icon>
             </button>
           </div>
         </mat-form-field>
@@ -134,22 +134,13 @@
             <mat-expansion-panel-header>
               <span class="mat-body-1">Country of Origin</span>
             </mat-expansion-panel-header>
-            <mat-form-field appearance="outline">
-              <mat-chip-list #countryOriginChipList>
-                <mat-chip *ngFor="let country of selectedMovieCountries; let i = index" [selectable]="selectableCountry"
-                  [removable]="removableCountry" (removed)="removeCountry(country, i)">
-                  <span>{{ country }}</span>
-                  <mat-icon matChipRemove>cancel</mat-icon>
-                </mat-chip>
-                <input placeholder="Countries available" #countryInput
-                  [matAutocomplete]="countryMatAutoComplete" [matChipInputFor]="countryOriginChipList" [formControl]="countryControl" />
-              </mat-chip-list>
-              <mat-autocomplete #countryMatAutoComplete="matAutocomplete" (optionSelected)="selectedCountry($event)">
-                <mat-option *ngFor="let country of countriesFilter$ | async" [value]="country">
-                  {{ country }}
-                </mat-option>
-              </mat-autocomplete>
-            </mat-form-field>
+            <chips-autocomplete
+              [form]="filterForm.originCountries"
+              placeholder="Country of Origin"
+              [items]="countries"
+              store="slug"
+              display="label">
+            </chips-autocomplete>
           </mat-expansion-panel>
 
           <!-- Languages -->
@@ -255,7 +246,7 @@
               </span>
             </mat-expansion-panel> -->
           </ng-container>
-          <catalog-avails-filter [availsForm]="availsForm" [territories]="true"></catalog-avails-filter>
+          <catalog-avails-filter [availsForm]="availsForm" [territory]="true"></catalog-avails-filter>
         </mat-accordion>
       </mat-card-content>
     </mat-card>
