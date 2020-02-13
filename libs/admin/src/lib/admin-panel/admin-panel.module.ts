@@ -18,8 +18,9 @@ import { OrganizationsComponent } from './pages/organizations/organizations.comp
 import { OrganizationComponent } from './pages/organization/organization.component';
 import { MovieComponent } from './pages/movie/movie.component';
 import { InvoicesComponent } from './pages/invoices/invoices.component';
+import { InvoiceComponent } from './pages/invoice/invoice.component';
 
-export const dashboardRoutes: Routes = [
+export const panelRoutes: Routes = [
   { path: '', redirectTo: 'overview', pathMatch: 'full' },
   { path: 'overview', component: OverviewComponent },
   { path: 'movies', component: MoviesComponent },
@@ -31,6 +32,7 @@ export const dashboardRoutes: Routes = [
   { path: 'organization/:orgId', component: OrganizationComponent },
   { path: 'movie/:movieId', component: MovieComponent },
   { path: 'invoices', component: InvoicesComponent },
+  { path: 'invoice/:invoiceId', component: InvoiceComponent },
 ];
 @NgModule({
   imports: [
@@ -46,7 +48,7 @@ export const dashboardRoutes: Routes = [
     FlexLayoutModule,
     TableFilterModule,
     ImageReferenceModule,
-    RouterModule.forChild(dashboardRoutes),
+    RouterModule.forChild(panelRoutes),
   ],
   declarations: [
     OverviewComponent,
@@ -57,6 +59,8 @@ export const dashboardRoutes: Routes = [
     OrganizationComponent,
     MovieComponent,
     InvoicesComponent,
+    InvoiceComponent,
   ],
+  exports: [RouterModule]
 })
-export class DashboardModule { }
+export class AdminPanelModule { }

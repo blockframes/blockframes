@@ -4,11 +4,11 @@ import { RouterModule, Routes } from '@angular/router';
 export const adminRoutes: Routes = [
   { path: '',
     children: [
-      { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
+      { path: '', redirectTo: 'panel', pathMatch: 'full' },
       { 
-        path: 'dashboard',
+        path: 'panel',
         // canActivate: [SomeGuardIfNeeded],
-        loadChildren: () => import('../dashboard/dashboard.module').then(m => m.DashboardModule)
+        loadChildren: () => import('../admin-panel/admin-panel.module').then(m => m.AdminPanelModule)
       },
     ]
   }

@@ -39,7 +39,7 @@ export class OrganizationsComponent implements OnInit {
 
       org.edit = {
         id: org.id,
-        link: `/c/o/admin/dashboard/organization/${org.id}`,
+        link: `/c/o/admin/panel/organization/${org.id}`,
       }
 
       return org;

@@ -51,21 +51,21 @@ export class MoviesComponent implements OnInit {
       // We add distribution deals infos to the row
       const distributionDeals = await this.distributionDealService.getMovieDistributionDeals(m.id);
       row.distributionDealsInfo =  { 
-        link: `/c/o/admin/dashboard/deals/${m.id}`,
+        link: `/c/o/admin/panel/deals/${m.id}`,
         count: distributionDeals.length
       };
 
       // We add contracts infos to the row
       const contract = await this.contractService.getMovieContracts(m.id);
       row.contractsInfo =  { 
-        link: `/c/o/admin/dashboard/contracts/${m.id}`,
+        link: `/c/o/admin/panel/contracts/${m.id}`,
         count: contract.length
       };
 
       // Edit link
       row.edit = {
         id: m.id,
-        link: `/c/o/admin/dashboard/movie/${m.id}`,
+        link: `/c/o/admin/panel/movie/${m.id}`,
       }
 
       return row;
