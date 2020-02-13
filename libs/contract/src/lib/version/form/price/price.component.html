@@ -23,7 +23,7 @@
       </mat-option>
     </mat-autocomplete>
   </mat-form-field>
-  <ng-container *ngFor="let movie of movies">
+  <ng-container *ngFor="let movie of movies; let i = index">
     <div fxLayout="row" fxLayoutAlign="space-between start">
       <movie-banner [movie]="movie"></movie-banner>
       <div fxLayout="column" fxLayoutAlign="start end">
@@ -32,7 +32,7 @@
           <input matInput type="number" [formControl]="titleIdPrice(movie.id)">
           <mat-icon [svgIcon]="currencyIcon" matSuffix></mat-icon>
         </mat-form-field>
-        <button color="warn" (click)="removeTitle(movie.id)" mat-mini-fab>
+        <button color="warn" (click)="removeTitle(i, movie.id)" mat-mini-fab>
           <mat-icon>delete</mat-icon>
         </button>
       </div>
@@ -44,6 +44,10 @@
   <h3>Offer a total Package Price</h3>
   <mat-form-field appearance="outline">
     <mat-label>Package Price</mat-label>
-    <input matInput >
+    <input matInput [formControl]="totalAmount" type="number">
+    <mat-error *ngIf="totalAmount.dirty && totalAmount.value < 20">
+      Your Package Price msut be equal to the sum of each Title Price.
+    </mat-error>
+    <mat-icon matSuffix [svgIcon]="this.currencyIcon"></mat-icon>
   </mat-form-field>
 </div>
