@@ -49,10 +49,8 @@ export async function onContractWrite(
   const before = change.before.data();
   const after = change.after.data();
 
-  if (!after && !!before) { // Deletion
-    return db.runTransaction(async tx => {
-      await tx.delete(db.doc(`publicContracts/${before.id}`));
-    });
+  if (!after && !!before) { // Deletion*
+    return db.doc(`publicContracts/${before.id}`).delete();
   }
 
   const contract = after as ContractDocument;
@@ -63,7 +61,7 @@ export async function onContractWrite(
     throw new Error(msg);
   }
 
-  return await transformContractToPublic(contract);
+  return transformContractToPublic(contract);
 }
 
 export async function onContractVersionWrite(
@@ -87,9 +85,9 @@ export async function onContractVersionWrite(
 
   if (!after && !!before) { // Deletion
     console.log(`deleting ContractVersion : "${versionId}" for : ${contractId}`);
-    return await transformContractToPublic(contract, versionId);
+    return transformContractToPublic(contract, versionId);
   } else {
-    return await transformContractToPublic(contract);
+    return transformContractToPublic(contract);
   }
 
 }
