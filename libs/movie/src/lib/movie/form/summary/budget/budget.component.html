@@ -1,9 +1,14 @@
 <ul>
   <li>
     <strong>Budget </strong>
-    <ng-container *ngIf="budget.get('estimatedBudget').value as estimatedBudget">
-      {{ budgetRange(estimatedBudget) }}
+    <ng-container *ngIf="!budget.get('estimatedBudget').value.label else displayBudget">
+      <a [routerLink]="link" class="missing-control">
+        Missing
+      </a>
     </ng-container>
+    <ng-template #displayBudget>
+      {{ budgetRange(budget.get('estimatedBudget').value) }}
+    </ng-template>
   </li>
   <ng-container *ngFor="let boxOffice of budget.get('boxOffice').controls">
     <li>
@@ -19,9 +24,16 @@
   </ng-container>
   <li>
     <strong>Quotas </strong>
-    <ng-container *ngFor="let value of salesInfo.get('certifications').value; let isLast = last">
-      {{ value | translateSlug: 'CERTIFICATIONS' }}{{ isLast ? '' : ', ' }}
+    <ng-container *ngIf="!salesInfo.get('certifications').value.length else displayQuotas">
+      <a [routerLink]="link" class="missing-control">
+        Missing
+      </a>
     </ng-container>
+    <ng-template #displayQuotas>
+      <ng-container *ngFor="let value of salesInfo.get('certifications').value; let isLast = last">
+        {{ value | translateSlug: 'CERTIFICATIONS' }}{{ isLast ? '' : ', ' }}
+      </ng-container>
+    </ng-template>
   </li>
   <ng-container *ngFor="let rating of salesInfo.get('rating').controls">
     <li>

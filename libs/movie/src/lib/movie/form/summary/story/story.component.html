@@ -8,11 +8,18 @@
   <li>
     <strong>Keywords </strong>
     <mat-chip-list fxLayout="row" fxLayoutGap="5px">
-      <ng-container *ngFor="let keyword of promotionalDescription.get('keywords').value">
-        <mat-chip>
-          {{ keyword }}
-        </mat-chip>
+      <ng-container *ngIf="!this.promotionalDescription.get('keywords').value.length else display">
+        <a [routerLink]="link" class="missing-control">
+          Missing
+        </a>
       </ng-container>
+      <ng-template #display>
+        <ng-container *ngFor="let keyword of promotionalDescription.get('keywords').value">
+          <mat-chip>
+            {{ keyword }}
+          </mat-chip>
+        </ng-container>
+      </ng-template>
     </mat-chip-list>
   </li>
 </ul>

@@ -6,9 +6,6 @@
         <strong>Country </strong><missing-control [control]="country" scope="TERRITORIES" [link]="link"></missing-control>
       </li>
       <li>
-        <strong>Domestic Distributor </strong>
-      </li>
-      <li>
         <strong>Release Media </strong>
         <ng-container *ngFor="let release of salesInfo.originalRelease.controls">
           <ng-container *ngIf="release.get('country').value === country.value">
