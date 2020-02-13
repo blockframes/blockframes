@@ -1,7 +1,7 @@
 import { firestore } from "firebase/app";
 import { TermsRaw } from "@blockframes/utils/common-interfaces/terms";
 import { Party } from "@blockframes/utils/common-interfaces/identity";
-import { Price, PaymentStatus, Payment, PriceRaw } from "@blockframes/utils/common-interfaces/price";
+import { PaymentStatus, Payment, PriceRaw } from "@blockframes/utils/common-interfaces/price";
 import {
   TerritoriesSlug,
   LanguagesSlug,
@@ -43,14 +43,20 @@ export const enum ContractType {
   sale = 'sale'
 }
 
-export interface ContractTitleDetail {
+interface ContractTitleDetailRaw<D> {
   /**
    * @dev titleId is replacing movieId
    * since we are going to handle series, movies etc..
    */
   titleId: string,
-  price: Price,
+  price: PriceRaw<D>,
   distributionDealIds: string[];
+}
+
+export interface ContractTitleDetail extends ContractTitleDetailRaw<Date> {
+}
+
+export interface ContractTitleDetailDocument extends ContractTitleDetailRaw<Timestamp> {
 }
 
 interface ContractPartyDetailRaw<D> {
@@ -75,9 +81,9 @@ interface ContractVersionRaw<D> {
   status: ContractStatus,
   scope: TermsRaw<D>,
   creationDate?: D,
-  titles: Record<string, ContractTitleDetail>,
-  price: Price;
-  /** @dev informations about payments date */
+  titles: Record<string, ContractTitleDetailRaw<D>>,
+  price: PriceRaw<D>;
+  /** @dev informations about payments dates */
   paymentSchedule?: PaymentScheduleRaw<D>[],
   /** @dev if paymentSchedule is empty, we use this string field */
   customPaymentSchedule?: string,
@@ -138,19 +144,17 @@ export interface InvoiceRaw<D> {
   /** @dev Contains Ids of titles that this invoice is about */
   titles: InvoiceTitleDetailsRaw<D>[],
   /** @dev Expected price once each payments have been made */
-  price: Price,
+  price: PriceRaw<D>,
   /**
    * @dev Collected amount (sum of payments.price).
    * A function should handle this.
    * Start with zero.
    */
-  collected: Price,
+  collected: PriceRaw<D>,
   /** @dev an orgId */
   buyerId: string,
   /** @dev an orgId */
   sellerId: string,
-  /** @dev informations about payment date */
-  paymentSchedule: PaymentScheduleRaw<D>,
   /** @dev payment conditions */
   paymentTerm: TermsRaw<D>,
   /**

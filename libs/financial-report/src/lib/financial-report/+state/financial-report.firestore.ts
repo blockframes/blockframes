@@ -1,8 +1,8 @@
 import { firestore } from "firebase";
-import { Expense, Price } from "@blockframes/utils/common-interfaces/price";
+import { Expense } from "@blockframes/utils/common-interfaces/price";
 import { RawRange } from '@blockframes/utils/common-interfaces/range';
 import { MovieCurrenciesSlug } from "@blockframes/utils/static-model/types";
-import { ScheduledDateWithCounterRaw } from "@blockframes/utils/common-interfaces/terms";
+import { ScheduledDateWithCounterRaw, TermsRaw } from "@blockframes/utils/common-interfaces/terms";
 import { Location } from "@blockframes/utils/common-interfaces/utility";
 
 type Timestamp = firestore.Timestamp;
@@ -115,6 +115,13 @@ interface FinancialReportRaw<D> {
    * 
    */
   reportFrequency: ScheduledDateWithCounterRaw<D>[];
+  /** 
+   * @dev reporting conditions 
+   * This represents the acceptable lag between an expected report generation ( defined by reportFrequency)
+   * and it's actual send.
+   * 
+   */
+  reportingTerm: TermsRaw<D>,
   choosenCurrency: MovieCurrenciesSlug;
   /**
    * @dev this is an OrgId that belongs to a party of FinancialReport.contractId
