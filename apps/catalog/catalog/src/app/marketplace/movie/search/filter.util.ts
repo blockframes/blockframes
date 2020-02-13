@@ -1,11 +1,11 @@
 import { Movie } from '@blockframes/movie/movie/+state/movie.model';
 import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
 import { ExtractSlug } from '@blockframes/utils/static-model/staticModels';
-import { NumberRange, Terms, DateRange } from '@blockframes/utils/common-interfaces';
+import { NumberRange, DateRange } from '@blockframes/utils/common-interfaces';
 import { LanguagesLabel } from '@blockframes/utils/static-model/types';
 import { CatalogSearch, AvailsSearch } from '@blockframes/catalog/form/search.form';
 import { getFilterMatchingDeals, getDealsInDateRange, getExclusiveDeals } from '@blockframes/movie/distribution-deals/create/availabilities.util';
-import { MovieLanguageSpecification } from '@blockframes/movie/movie+state/movie.firestore';
+import { MovieLanguageSpecification } from '@blockframes/movie/movie/+state/movie.firestore';
 import { toDate } from '@blockframes/utils/helpers';
 
 function isProductionYearBetween(movie: Movie, range: DateRange): boolean {

@@ -49,7 +49,7 @@ import { Index } from 'algoliasearch';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
 import { NumberRange } from '@blockframes/utils/common-interfaces/range';
-import { BUDGET_LIST } from '@blockframes/movie/movieform/budget/budget.form';
+import { BUDGET_LIST } from '@blockframes/movie/movie/form/budget/budget.form';
 import { CatalogSearchForm, AvailsSearchForm } from '@blockframes/catalog/form/search.form';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state';
 import { asyncFilter } from '@blockframes/utils/helpers';
@@ -511,6 +511,13 @@ export class MarketplaceSearchComponent implements OnInit {
 
   public applyAvailsFilter() {
     this.availsForm.get('isActive').setValue(true);
-    console.log(this.availsForm.value)
+    this.availsForm.disable();
+    this.territoryControl.disable();
+    // TODO: use controls for territories and medias to make it disablable.
+  }
+
+  public deactivateAvailsFilter() {
+    this.availsForm.get('isActive').setValue(false);
+    this.availsForm.enable();
   }
 }

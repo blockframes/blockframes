@@ -121,6 +121,7 @@ section {
       width: 100%;
       cursor: pointer;
     }
+
   }
 
   .sales-agents-chip-list .genres-chip-list {
@@ -139,6 +140,10 @@ section {
     font-weight: inherit;
     font-size: 16px;
   }
+}
+
+.filter-buttons {
+  margin: 24px 0;
 }
 
 @include mobile {
