@@ -12,6 +12,15 @@
         </mat-select>
       </mat-form-field>
     </div>
+    <div>
+      <mat-form-field appearance="outline">
+        <mat-label>Contract Id</mat-label>
+        <input matInput type="text" placeholder="Contract Id" formControlName="contractId" required />
+        <mat-error *ngIf="invoiceForm.get('contractId').hasError('required')">
+          Contract Id is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+    </div>
     <mat-card-actions align="end">
       <button type="submit" mat-raised-button class="main-btn" (click)="update()">Update</button>
     </mat-card-actions>
