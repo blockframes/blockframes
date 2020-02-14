@@ -1,5 +1,5 @@
-<section>
-  <h1>Your request to join {{ orgName }} <br> organization was successully sent! </h1>
+<section *ngIf="!isCanceled else canceled">
+  <h1>Your request to join the organization was successfully sent!</h1>
   <article class="mat-body-1">
     <p>You’ll receive <b>a confirmation link by mail</b> once your request is treated. Thank you for your patience. </p>
     <p>If ever you change your mind, you can always cancel your request.</p>
@@ -7,8 +7,14 @@
   <article fxLayout="column" fxLayoutAlign="center center">
     <button mat-button color="accent" (click)="removeInvitation()">
       <mat-icon svgIcon="close"></mat-icon>
-      <span>Cancel my request to join {{ orgName }}</span>
+      <span>Cancel my request</span>
     </button>
     <img asset="congratulations.svg" />
   </article>
 </section>
+<ng-template #canceled>
+  <section>
+    <h1>Your request to join the organization was canceled</h1>
+    <button mat-button color="primary" routerLink="../home">back to home</button>
+  </section>
+</ng-template>
