@@ -36,6 +36,12 @@ const routes: Routes = [{
       loadChildren: () => import('./movie/search/search.module').then(m => m.MarketplaceSearchModule)
     },
     {
+      path: 'selection',
+      canActivate: [CatalogCartGuard],
+      canDeactivate: [CatalogCartGuard],
+      loadChildren: () => import('./movie/selection/selection.module').then(m => m.SelectionModule)
+    },
+    {
       path: 'wishlist',
       children: [
         {
@@ -65,18 +71,6 @@ const routes: Routes = [{
             import('@blockframes/movie/distribution-deals/create/create.module').then(
               m => m.DistributionDealCreateModule
             )
-        }
-      ]
-    },
-    {
-      path: 'selection',
-      canActivate: [CatalogCartGuard],
-      canDeactivate: [CatalogCartGuard],
-      children: [
-        { path: '', redirectTo: 'overview', pathMatch: 'full' },
-        {
-          path: 'overview',
-          loadChildren: () => import('./movie/selection/selection.module').then(m => m.SelectionModule)
         }
       ]
     }
