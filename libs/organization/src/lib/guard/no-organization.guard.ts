@@ -22,7 +22,7 @@ export class NoOrganizationGuard {
     const org = await this.service.getValue(orgId);
 
     if (org.status === OrganizationStatus.pending) {
-      return org.appAccess ? this.router.parseUrl('c/organization/congratulations') : this.router.parseUrl('c/organization/app-access');
+      return org.appAccess ? this.router.parseUrl('c/organization/create-congratulations') : this.router.parseUrl('c/organization/app-access');
     } else {
       return this.router.parseUrl('c/o');
     }
