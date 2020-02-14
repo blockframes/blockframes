@@ -1,5 +1,5 @@
 import { LegalDocument } from "@blockframes/contract/contract/+state/contract.firestore";
-import { Price } from "@blockframes/utils/common-interfaces/price";
+import { PriceRaw } from "@blockframes/utils/common-interfaces/price";
 import { Location } from "@blockframes/utils/common-interfaces/utility";
 
 export interface ExpenseDetails {
@@ -26,7 +26,7 @@ export interface ExpensesRaw<D>  {
     name: string;
     location?: Location,
   }
-  price: Price;
+  price: PriceRaw<D>;
   date: D;
   /** @dev ie: can be the bill of a meeting in a restaurant */
   legalDocuments: LegalDocument[];

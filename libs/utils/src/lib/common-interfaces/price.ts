@@ -103,7 +103,7 @@ export interface Expense extends ExpenseRaw<Date> {
 export interface ExpenseDocument extends ExpenseRaw<Timestamp> {
 }
 
-interface PaymentRaw<D> {
+export interface PaymentRaw<D> {
   id: string;
   date: D;
   type: PaymentType;
