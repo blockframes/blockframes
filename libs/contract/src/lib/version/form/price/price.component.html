@@ -3,7 +3,7 @@
 <static-select scope="MOVIE_CURRENCIES" [control]="currencyCtrl" label="Currency">
   <ng-template let-currency>
     <mat-icon [svgIcon]="currency.slug" matPrefix></mat-icon>
-    {{ currency.label }}
+    <span>{{ currency.label }}</span>
   </ng-template>
 </static-select>
 
