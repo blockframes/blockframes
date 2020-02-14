@@ -137,7 +137,10 @@ export class ContractComponent implements OnInit {
         id,
         price: title.price,
         movie,
-        deals: title.distributionDealIds.map( d => {return { id: d, movie: id}}),
+        deals: title.distributionDealIds.map(d => {
+          const deal = { id: d, movie: id };
+          return deal;
+        }),
         exploredeals: `/c/o/admin/panel/deals/${id}`,
       });
 
