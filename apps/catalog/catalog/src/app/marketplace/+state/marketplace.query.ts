@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Query, QueryEntity } from '@datorama/akita';
+import { QueryEntity } from '@datorama/akita';
 import { MovieQuery, Movie } from '@blockframes/movie';
-import { Wishlist } from '@blockframes/organization';
 import { Observable, combineLatest } from 'rxjs';
-import { map, filter, switchMap } from 'rxjs/operators';
-import { MarketplaceState, MarketplaceStore } from './marketplace.store';
+import { map, switchMap } from 'rxjs/operators';
+import { MarketplaceState, MarketplaceStore, TitleCart } from './marketplace.store';
 
 @Injectable({ providedIn: 'root' })
-export class CatalogCartQuery extends QueryEntity<MarketplaceState> {
+export class MarketplaceQuery extends QueryEntity<MarketplaceState> {
   constructor(protected store: MarketplaceStore, private movieQuery: MovieQuery) {
     super(store);
   }
@@ -17,16 +16,11 @@ export class CatalogCartQuery extends QueryEntity<MarketplaceState> {
     switchMap(movieIds => this.movieQuery.selectMany(movieIds))
   )
 
-  /** The list of titles in the cart filled with distribution deals */
-  cart$: Observable<Movie[]> = this.select('ids').pipe(
-    switchMap(movieIds => this.movieQuery.selectMany(movieIds)),
-    switchMap(movies => {
-      const movies$ = movies.map(movie => {
-        return this.selectEntity(movie.id).pipe(
-          map(distributionDeals => ({ ...movie, distributionDeals }))
-        );
-      });
-      return combineLatest(movies$);
-    })
-  )
+  /** Check if a titl is in the wishlist */
+  isInWishlist(movieId: string) {
+    return this.select('wishlist').pipe(
+      map(wishlist => wishlist.includes(movieId))
+    );
+  }
+
 }

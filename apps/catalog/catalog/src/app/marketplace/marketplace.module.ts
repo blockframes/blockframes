@@ -5,6 +5,8 @@ import { CatalogCartGuard } from '@blockframes/organization/cart/guards/catalog-
 import { MovieActiveGuard } from '@blockframes/movie';
 import { LayoutComponent } from './layout/layout.component';
 import { LayoutModule } from './layout/layout.module';
+import { TunnelGuard } from '@blockframes/ui/tunnel';
+import { ActiveContractGuard } from '@blockframes/contract/contract/guards/active-contract.guard';
 
 const routes: Routes = [{
   path: '',
@@ -75,6 +77,18 @@ const routes: Routes = [{
       ]
     }
   ]
+}, {
+  path: 'tunnel',
+  canActivate: [TunnelGuard],
+  children: [{
+    path: 'contract/:contractId',
+    canActivate: [ActiveContractGuard],
+    canDeactivate: [ActiveContractGuard],
+    loadChildren: () => import('@blockframes/contract/contract/tunnel').then(m => m.ContractTunnelModule),
+    data: {
+      redirect: '/c/o/dashboard/selection'
+    },
+  }]
 }];
 
 @NgModule({
