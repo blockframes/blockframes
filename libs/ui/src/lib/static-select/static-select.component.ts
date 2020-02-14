@@ -15,6 +15,6 @@ export class StaticSelectComponent {
     this._scope = staticModels[value];
   }
   @Input() control: FormStaticValue<Scope>;
-  @Input() label = 'Currency';
+  @Input() label?: string
   @ContentChild(TemplateRef, { static: false }) template: TemplateRef<any>;
 }

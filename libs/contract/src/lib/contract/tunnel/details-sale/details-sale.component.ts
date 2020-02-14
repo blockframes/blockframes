@@ -9,14 +9,14 @@ import { ContractTunnelComponent } from '../contract-tunnel.component';
 })
 export class DetailsSaleComponent {
 
-  constructor(private tunnelComponent: ContractTunnelComponent) {}
+  constructor(private tunnel: ContractTunnelComponent) {}
 
   get parties() {
-    return this.tunnelComponent.contractForm.get('parties')
+    return this.tunnel.contractForm.get('parties')
   }
 
   get versions() {
-    return this.tunnelComponent.contractForm.get('versions');
+    return this.tunnel.contractForm.get('versions');
   }
 
   public terms(index: number) {
