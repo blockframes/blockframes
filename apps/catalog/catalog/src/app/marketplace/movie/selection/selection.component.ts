@@ -38,9 +38,8 @@ export class MarketplaceSelectionComponent implements OnInit {
     return this.movieQuery.selectEntity(movieId);
   }
 
-  inWishlist(movieId: string) {
-
-    return this.query.isInWishlist(movieId);
+  removeTitle(movieId: string) {
+    this.store.remove(movieId);
   }
 
   /** Create a Contract, remove the current selection, move to tunnel */

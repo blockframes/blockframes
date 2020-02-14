@@ -12,11 +12,8 @@
     <article *ngFor="let title of titles">
       <movie-banner [movie]="selectMovie(title.movieId) | async">
         <movie-banner-actions fxLayout="column" fxLayoutAlign="space-between end">
-          <button mat-stroked-button color="primary">
-            <mat-icon svgIcon="star"></mat-icon>
-            <span>Move to wishlist</span>
-          </button>
-          <button mat-button color="warn">
+          <catalog-wishlist-button [movieId]="title.movieId"></catalog-wishlist-button>
+          <button mat-button color="warn" (click)="removeTitle(title.movieId)">
             <mat-icon svgIcon="trash"></mat-icon>
             <span>Remove Title</span>
           </button>
@@ -34,20 +31,21 @@
     </article>
     
     <footer fxLayout="column" fxLayoutAlign="center center">
-      <button mat-flat-button color="warn" (click)="create()">Create an Offer</button>
+      <button mat-flat-button color="accent" (click)="create()">Create an Offer</button>
       <p>
         Pay attention, if you create an offer, you’ll <b>find your current offer</b> on your “<b>Offers & Deals</b>” page 
       </p>
-      <a routerLink="../home">Continue Browsing the Library</a>
+      <a mat-button color="primary" routerLink="../home">Continue Browsing the Library</a>
     </footer>
   </ng-container>
 </ng-container>
 
 <ng-template #noTitles >
+  <button mat-button color="primary" (click)="store.upsert('EtVJsbtCxhVXjH923F0E', { deals: [] })">Add</button>
   <article fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="40px">
     <h1>You have not yet selected any titles</h1>
     <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="24px">
-      <a mat-flat-button color="accent">Continue browsing the Library</a>
+      <a mat-flat-button color="accent" routerLink="../home">Continue browsing the Library</a>
       <span>Or</span>
       <a mat-stroked-button color="primary">Consult your current Offers and Deals</a>
     </div>

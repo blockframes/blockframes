@@ -1,0 +1,12 @@
+<ng-container *ngIf="(toggle$ | async); else alreadyAdded">
+  <button mat-stroked-button color="warn" (click)="removeFromWishlist()">
+    <mat-icon svgIcon="star_fill"></mat-icon>
+    <span>Remove from Wishlist</span>
+  </button>
+</ng-container>
+<ng-template #alreadyAdded>
+  <button mat-stroked-button color="primary" (click)="addToWishlist()">
+    <mat-icon svgIcon="star"></mat-icon>
+    <span>Move to Wishlist</span>
+  </button>
+</ng-template>
