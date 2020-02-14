@@ -249,8 +249,8 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
    * @param formName name of the control
    * @param value for determine what should happen
    */
-  private toggleForm(formName: string, value: boolean) {
-    const form = this.paymentSchedule.last().get('date').get(formName as 'start' | 'floatingStart');
+  private toggleForm(formName: 'start' | 'floatingStart', value: boolean) {
+    const form = this.paymentSchedule.last().get('date').get(formName);
     value ? form.enable() : form.disable();
   }
 
