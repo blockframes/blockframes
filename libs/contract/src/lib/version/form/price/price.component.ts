@@ -3,7 +3,6 @@ import { ContractTunnelComponent } from '@blockframes/contract/contract/tunnel/c
 import { ContractVersionForm } from '@blockframes/contract/version/form/version.form';
 import { Movie } from '@blockframes/movie/movie/+state/movie.model';
 import { FormStaticValue, FormList } from '@blockframes/utils/form';
-import { MovieService } from '@blockframes/movie/movie/+state/movie.service';
 import { MoviesIndex, MovieAlgoliaResult } from '@blockframes/utils/algolia';
 
 // Angular
@@ -12,9 +11,10 @@ import { Component, Input, ChangeDetectionStrategy, OnInit, Inject, OnDestroy } 
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 // RxJs & Algolia
-import { Observable, Subscription } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap, startWith, tap } from 'rxjs/operators';
+import { Observable, Subscription, BehaviorSubject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { Index } from 'algoliasearch';
+import { MovieService } from '@blockframes/movie';
 
 @Component({
   selector: '[form] contract-version-form-price',
@@ -36,12 +36,13 @@ export class PriceComponent implements OnInit, OnDestroy {
 
   private currencySub: Subscription;
 
-  private movieSub: Subscription;
+  public movies$: Observable<Movie[]> = this.tunnel.movies$.pipe(
+    distinctUntilChanged((a, b) => a.length === b.length));
 
   constructor(
     @Inject(MoviesIndex) private movieIndex: Index,
     private movieService: MovieService,
-    private tunnelComponent: ContractTunnelComponent) { }
+    private tunnel: ContractTunnelComponent) { }
 
   ngOnInit() {
     this.currencyCtrl = this.form.last().get('price').get('currency');
@@ -57,11 +58,6 @@ export class PriceComponent implements OnInit, OnDestroy {
         return this.transformAlgoliaMovies(results)
       })
     )
-    this.movieSub = this.form.valueChanges.pipe(
-      startWith(this.form.value),
-      distinctUntilChanged((a, b) => a.length === b.length),
-      tap(() => this.transformFormToMovie())
-    ).subscribe();
   }
 
   /**
@@ -71,12 +67,22 @@ export class PriceComponent implements OnInit, OnDestroy {
     return Object.keys(this.form.last().get('titles').controls)
   }
 
-  get totalPrice(): boolean {
-    let accumilatedPrice: number;
+  /**
+   * @description checks if packgae price is equal or above all the title price
+   */
+  get totalPrice(): Observable<boolean> {
+    let accumilatedPrice = 0;
+    const state = new BehaviorSubject(false)
     for (const id of this.activeMovieIds) {
-      accumilatedPrice += this.form.last().get('titles').get(id).get('price').get('amount').value
+      const version = this.form.last().value;
+      accumilatedPrice += version.titles[id].price.amount;
     }
-    return accumilatedPrice < this.totalAmount.value
+    if (accumilatedPrice > this.totalAmount.value) {
+      state.next(true)
+    } else {
+      state.next(false)
+    }
+    return state
   }
 
 
@@ -88,11 +94,11 @@ export class PriceComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * @description gets the control for the corresponding movie id
-   * @param movieId
+   * @description gets the price form group back for the parameter
+   * @param movieId 
    */
-  public titleIdPrice(movieId: string) {
-    return this.form.last().get('titles').get(movieId).get('price').get('amount');
+  public priceForm(movieId: string) {
+    return this.form.last().get('titles').get(movieId).get('price');
   }
 
   /**
@@ -102,7 +108,7 @@ export class PriceComponent implements OnInit, OnDestroy {
    */
   public removeTitle(index: number, movieId: string) {
     this.movies.splice(index, 1)
-    this.tunnelComponent.removeTitle(movieId);
+    this.tunnel.removeTitle(movieId);
   }
 
   /**
@@ -112,7 +118,7 @@ export class PriceComponent implements OnInit, OnDestroy {
   public addMovie(event: MatAutocompleteSelectedEvent) {
     const isMovieAdded = this.movies.filter(movie => movie.id === event.option.value.id);
     if (!isMovieAdded.length) {
-      this.tunnelComponent.addTitle(event.option.value.id)
+      this.tunnel.addTitle(event.option.value.id)
     }
     this.movieCtrl.reset();
   }
@@ -122,23 +128,12 @@ export class PriceComponent implements OnInit, OnDestroy {
    * @param movies movies to transform
    */
   private async transformAlgoliaMovies(movies: Promise<MovieAlgoliaResult[]>): Promise<Movie[]> {
-    let movieIds: string[];
-    await movies.then(resMovies => movieIds = resMovies.map(movie => movie.objectID));
-    let moviesFromDB: Movie[];
-    await this.movieService.getValue(movieIds).then(moviesDB => moviesFromDB = moviesDB)
-    return moviesFromDB;
-  }
-
-  /**
-   * @description gets the value from DB if there are set previously 
-   */
-  private async transformFormToMovie() {
-    const movies = await this.movieService.getValue(this.activeMovieIds);
-    this.movies = movies;
+    const resovledMovies = await movies;
+    const movieIds = resovledMovies.map(movie => movie.objectID)
+    return this.movieService.getValue(movieIds);
   }
 
   ngOnDestroy() {
     this.currencySub.unsubscribe();
-    this.movieSub.unsubscribe();
   }
 }

@@ -37,7 +37,7 @@ export class ContractFormPartyComponent {
     this.form.add();
   }
 
-  public showTooltip(type: 'add' | 'remove') {
-    return type === 'add' ? `Add role` : `Remove role`
+  public tooltipMsg(type: 'add' | 'remove') {
+    return type === 'add' ? 'Add role' : 'Remove role'
   }
 }

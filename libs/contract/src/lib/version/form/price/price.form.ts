@@ -3,9 +3,9 @@ import { FormControl, Validators } from '@angular/forms';
 import { Price } from '@blockframes/utils/common-interfaces/price';
 import { FormEntity } from '@blockframes/utils';
 
-function createContractVersionPriceControls(price: Partial<Price>){
+function createContractVersionPriceControls(price: Partial<Price>) {
   return {
-    amount: new FormControl(price.amount),
+    amount: new FormControl(price.amount, [Validators.required, Validators.min(1)]),
     currency: new FormStaticValue(price.currency, 'MOVIE_CURRENCIES'),
     commission: new FormControl(price.commission),
     commissionBase: new FormControl(price.commissionBase),

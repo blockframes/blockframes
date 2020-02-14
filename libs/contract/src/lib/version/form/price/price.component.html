@@ -1,6 +1,6 @@
 <!-- Currency -->
 <h5>CONTRACT CURRENCY</h5>
-<static-select scope="MOVIE_CURRENCIES" [control]="currencyCtrl">
+<static-select scope="MOVIE_CURRENCIES" [control]="currencyCtrl" label="Currency">
   <ng-template let-currency>
     <mat-icon [svgIcon]="currency.slug" matPrefix></mat-icon>
     {{ currency.label }}
@@ -24,13 +24,13 @@
       </mat-option>
     </mat-autocomplete>
   </mat-form-field>
-  <ng-container *ngFor="let movie of movies; let i = index">
+  <form *ngFor="let movie of movies$ | async; let i = index" [formGroup]="priceForm(movie.id)">
     <div fxLayout="row" fxLayoutAlign="space-between start">
       <movie-banner [movie]="movie"></movie-banner>
       <div fxLayout="column" fxLayoutAlign="start end">
         <mat-form-field appearance="outline">
           <mat-label>Title Price</mat-label>
-          <input matInput type="number" [formControl]="titleIdPrice(movie.id)" required>
+          <input matInput type="number" formControlName="amount" required>
           <mat-icon [svgIcon]="currencyCtrl.value" matSuffix></mat-icon>
         </mat-form-field>
         <button color="warn" (click)="removeTitle(i, movie.id)" mat-mini-fab>
@@ -38,7 +38,7 @@
         </button>
       </div>
     </div>
-  </ng-container>
+  </form>
 </article>
 <mat-divider></mat-divider>
 <div fxLayout="row" fxLayoutAlign="space-between center" class="package-price">
@@ -46,9 +46,9 @@
   <mat-form-field appearance="outline" class="currency">
     <mat-label>Package Price</mat-label>
     <input matInput [formControl]="totalAmount" type="number">
-    <mat-error *ngIf="totalPrice">
-      Your Package Price msut be equal to the sum of each Title Price.
-    </mat-error>
+    <mat-hint *ngIf="totalPrice | async">
+      Your Package Price must be equal to the sum of each Title Price.
+    </mat-hint>
     <mat-icon matSuffix [svgIcon]="currencyCtrl.value"></mat-icon>
   </mat-form-field>
 </div>
