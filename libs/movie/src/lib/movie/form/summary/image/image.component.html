@@ -1,7 +1,7 @@
 <ul>
   <li>
     <strong>Banner </strong>
-    <ng-container *ngIf="!promotionalElements.get('banner').get('media').value.originalFileName else banner">
+    <ng-container *ngIf="bannerHasNoValue else banner">
       <a [routerLink]="link" class="missing-control">
         Missing
       </a>
@@ -12,7 +12,7 @@
   </li>
   <li>
     <strong>Movie Poster </strong>
-    <ng-container *ngIf="!promotionalElements.get('poster').controls[0].controls['media'].value.originalFileName else poster">
+    <ng-container *ngIf="posterHasNoValue else poster">
       <a [routerLink]="link" class="missing-control">
         Missing
       </a>
@@ -23,7 +23,7 @@
   </li>
   <li>
     <strong>Still Photos </strong>
-    <ng-container *ngIf="!promotionalElements.get('still_photo').controls[0].controls['media'].value.originalFileName else photos">
+    <ng-container *ngIf="photoHasNoValue else photos">
       <a [routerLink]="link" class="missing-control">
         Missing
       </a>

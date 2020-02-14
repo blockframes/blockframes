@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit } from '@angular/core';
 import { MovieMainForm } from '../../main/main.form';
-import { MovieSalesCastForm } from '../../sales-cast/sales-cast.form';
+import { MovieSalesCastForm, CreditForm } from '../../sales-cast/sales-cast.form';
 
 @Component({
   selector: '[salesCast] [main] movie-summary-credit',
@@ -18,5 +18,9 @@ export class MovieSummaryCreditComponent implements OnInit {
   ngOnInit() {
     this.main.valueChanges.subscribe(_ => this.cdr.markForCheck());
     this.salesCast.valueChanges.subscribe(_ => this.cdr.markForCheck());
+  }
+
+  public producerHasNoValue(producer: CreditForm) {
+    return !producer.get('firstName').value || !producer.get('lastName').value || !producer.get('role').value;
   }
 }
