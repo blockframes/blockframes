@@ -91,9 +91,9 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
           this.toggleDurationPeriod('first');
         } else if (value === 'periodic') {
           this.disableAll();
+          this.toggleDurationPeriod('last');
           this.eventCtrl.enable();
           this.periodCtrl.enable();
-          this.toggleDurationPeriod('last');
           this.paymentSchedule.last().get('percentage').enable();
           if (this.periodCtrl.value) {
             this.paymentSchedule.last().get('date').get('start').enable();
@@ -250,7 +250,7 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
    * @param value for determine what should happen
    */
   private toggleForm(formName: string, value: boolean) {
-    const form = this.paymentSchedule.at(0).get('date').get(formName as 'start' | 'floatingStart');
+    const form = this.paymentSchedule.last().get('date').get(formName as 'start' | 'floatingStart');
     value ? form.enable() : form.disable();
   }
 

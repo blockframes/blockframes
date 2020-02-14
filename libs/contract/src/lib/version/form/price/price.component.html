@@ -2,7 +2,7 @@
 <h5>CONTRACT CURRENCY</h5>
 <static-select scope="MOVIE_CURRENCIES" [control]="currencyCtrl">
   <ng-template let-currency>
-    <!--  <mat-icon [svgIcon]="currency.slug" matPrefix></mat-icon> -->
+    <mat-icon [svgIcon]="currency.slug" matPrefix></mat-icon>
     {{ currency.label }}
   </ng-template>
 </static-select>
@@ -46,7 +46,7 @@
   <mat-form-field appearance="outline" class="currency">
     <mat-label>Package Price</mat-label>
     <input matInput [formControl]="totalAmount" type="number">
-    <mat-error *ngIf="totalAmount.dirty">
+    <mat-error *ngIf="totalPrice">
       Your Package Price msut be equal to the sum of each Title Price.
     </mat-error>
     <mat-icon matSuffix [svgIcon]="currencyCtrl.value"></mat-icon>

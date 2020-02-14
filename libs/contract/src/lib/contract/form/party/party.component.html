@@ -21,16 +21,12 @@
                     </mat-option>
                 </mat-select>
             </mat-form-field>
-            <ng-container *ngIf="!isLast; else add">
-                <button (click)="form.removeAt(i)" mat-mini-fab color="warn" [matTooltip]="showTooltip('remove')">
-                    <mat-icon>delete</mat-icon>
-                </button>
-            </ng-container>
-            <ng-template #add>
-                <button (click)="addRole()" mat-mini-fab color="primary" [matTooltip]="showTooltip('add')">
-                    <mat-icon svgIcon="add"></mat-icon>
-                </button>
-            </ng-template>
+            <button (click)="form.removeAt(i)" mat-mini-fab color="warn" [matTooltip]="showTooltip('remove')">
+                <mat-icon>delete</mat-icon>
+            </button>
         </div>
     </form>
 </ng-container>
+<button (click)="addRole()" mat-mini-fab color="primary" [matTooltip]="showTooltip('add')">
+    <mat-icon svgIcon="add"></mat-icon>
+</button>
