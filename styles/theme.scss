@@ -54,9 +54,13 @@
   --background-disabled-button: #{mat-color($background, disabled-button)};
   // Foreground
   --foreground-divider: #{mat-color($foreground, divider)};
+  --foreground-available: #{mat-color($foreground, available)};
+  --foreground-sold: #{mat-color($foreground, sold)};
+  --foreground-unlicensed : #{mat-color($foreground, unlicensed)};
   --primary: #{mat-color($primary)};
   --accent: #{mat-color($accent)};
   --warn: #{mat-color($warn)};
+
 }
 
 // COMPONENT TYPOGRAPHY
