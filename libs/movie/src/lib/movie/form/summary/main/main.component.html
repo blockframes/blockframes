@@ -20,7 +20,7 @@
   <ng-container *ngFor="let director of main.directors.controls">
     <li>
       <strong>Director Name </strong>
-      <ng-container *ngIf="(director.get('firstName').hasError('required') || director.get('lastName').hasError('required')) else display">
+      <ng-container *ngIf="directorHasErrorRequired(director) else display">
         <a [routerLink]="link" class="mandatory-control">
           Mandatory
         </a>

@@ -5,7 +5,7 @@
   <li>
     <strong>Producers </strong>
     <ng-container *ngFor="let producer of salesCast.get('producers').controls; let isLast = last">
-      <ng-container *ngIf="(!producer.get('firstName').value || !producer.get('lastName').value || !producer.get('role').value) else displayProducer">
+      <ng-container *ngIf="producerHasNoValue(producer) else displayProducer">
         <a [routerLink]="link" class="missing-control">
           Missing
         </a>

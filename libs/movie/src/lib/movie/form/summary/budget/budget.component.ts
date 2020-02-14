@@ -3,6 +3,7 @@ import { MovieBudgetForm } from '../../budget/budget.form';
 import { MovieSalesInfoForm } from '../../sales-info/sales-info.form';
 import { FormList } from '@blockframes/utils';
 import { MovieReview } from '@blockframes/movie/movie/+state/movie.model';
+import { MovieReviewForm } from '../../review/review.form';
 
 @Component({
   selector: '[budget] [salesInfo] [movieReview] movie-summary-budget',
@@ -26,5 +27,9 @@ export class MovieSummaryBudgetComponent implements OnInit {
 
   public budgetRange({ from, to }) {
     return (from && to) ? `$ ${from} - ${to}` : '';
+  }
+
+  public reviewHasNoValue(review: MovieReviewForm) {
+    return !review.get('criticName').value || !review.get('journalName').value || !review.get('criticQuote').value;
   }
 }

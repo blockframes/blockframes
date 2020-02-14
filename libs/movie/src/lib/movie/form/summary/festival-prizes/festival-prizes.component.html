@@ -2,7 +2,7 @@
   <ng-container *ngFor="let festivalPrize of festivalPrizes.prizes.controls">
     <li>
       <strong>Festival </strong>
-      <ng-container *ngIf="(!festivalPrize.get('name').value || !festivalPrize.get('prize').value || !festivalPrize.get('year').value || !festivalPrize.get('premiere').value) else display">
+      <ng-container *ngIf="festivalPrizeHasNoValue(festivalPrize) else display">
         <a [routerLink]="link" class="missing-control">
           Missing
         </a>
