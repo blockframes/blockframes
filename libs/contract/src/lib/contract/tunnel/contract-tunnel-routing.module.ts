@@ -22,7 +22,7 @@ const routes: Routes = [{
     loadChildren: () => import('./summary-sale/summary-sale.module').then(m => m.SummarySaleModule)
   }, {
     path: 'deals/:titleId',
-    
+    loadChildren: () => import('./deal/deal.module').then(m => m.DealModule)
   }]
 }, {
   path: 'mandate',
@@ -43,7 +43,7 @@ const routes: Routes = [{
     loadChildren: () => import('./summary-mandate/summary-mandate.module').then(m => m.SummaryMandateModule)
   }, {
     path: 'deals/:titleId',
-
+    loadChildren: () => import('./deal/deal.module').then(m => m.DealModule)
   }]
 }];
 

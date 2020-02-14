@@ -28,11 +28,20 @@
     <div fxLayout="row" fxLayoutAlign="space-between start">
       <movie-banner [movie]="movie"></movie-banner>
       <div fxLayout="column" fxLayoutAlign="start end">
-        <mat-form-field appearance="outline">
-          <mat-label>Title Price</mat-label>
-          <input matInput type="number" formControlName="amount" required>
-          <mat-icon [svgIcon]="currencyCtrl.value" matSuffix></mat-icon>
-        </mat-form-field>
+        <ng-container *ngIf="hasMandate; else currency">
+          <mat-form-field appearance="outline">
+            <mat-label>Distribution Fee</mat-label>
+            <input matInput type="number" formControlName="commission">
+            <mat-icon svgIcon="percent" matSuffix></mat-icon>
+          </mat-form-field>
+        </ng-container>
+        <ng-template #currency>
+          <mat-form-field appearance="outline">
+            <mat-label>Title Price</mat-label>
+            <input matInput type="number" formControlName="amount" required>
+            <mat-icon [svgIcon]="currencyCtrl.value" matSuffix></mat-icon>
+          </mat-form-field>
+        </ng-template>
         <button color="warn" (click)="removeTitle(i, movie.id)" mat-mini-fab>
           <mat-icon>delete</mat-icon>
         </button>
@@ -43,12 +52,24 @@
 <mat-divider></mat-divider>
 <div fxLayout="row" fxLayoutAlign="space-between center" class="package-price">
   <h3>Offer a total Package Price</h3>
-  <mat-form-field appearance="outline" class="currency">
-    <mat-label>Package Price</mat-label>
-    <input matInput [formControl]="totalAmount" type="number">
-    <mat-hint *ngIf="totalPrice | async">
-      Your Package Price must be equal to the sum of each Title Price.
-    </mat-hint>
-    <mat-icon matSuffix [svgIcon]="currencyCtrl.value"></mat-icon>
-  </mat-form-field>
+  <ng-container *ngIf="hasMandate; else currency">
+    <mat-form-field appearance="outline" class="currency">
+      <mat-label>Distribution Fee</mat-label>
+      <input matInput [formControl]="commissionFee" type="number">
+      <mat-hint *ngIf="isFeeSet$ | async">
+        You can't add a common distribution fee if a title has a specific distribution fee.
+      </mat-hint>
+      <mat-icon svgIcon="percent" matSuffix></mat-icon>
+    </mat-form-field>
+  </ng-container>
+  <ng-template #currency>
+    <mat-form-field appearance="outline" class="currency">
+      <mat-label>Package Price</mat-label>
+      <input matInput [formControl]="totalAmount" type="number">
+      <mat-hint *ngIf="totalPrice$ | async">
+        Your Package Price must be equal to the sum of each Title Price.
+      </mat-hint>
+      <mat-icon [svgIcon]="currencyCtrl.value" matSuffix></mat-icon>
+    </mat-form-field>
+  </ng-template>
 </div>

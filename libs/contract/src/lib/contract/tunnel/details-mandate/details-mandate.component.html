@@ -10,7 +10,7 @@
                 </mat-card-title>
             </mat-card-header>
             <mat-card-content>
-                <contract-form-party [form]="parties" type="licensee" hasRole></contract-form-party>
+                <contract-form-party [form]="parties" hasRole></contract-form-party>
             </mat-card-content>
         </mat-card>
         <!-- Terms -->
@@ -30,14 +30,13 @@
                         <mat-label>Renewal Conditions</mat-label>
                         <textarea matInput
                             placeholder="The Contract will be automatically renewed for 3-(three)-month period."
-                            cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="3"
+                            cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="5"
                             [formControl]="conditions(versionIndex)"></textarea>
                     </mat-form-field>
                     <mat-form-field appearance="outline">
                         <mat-label>Renewal Conditions</mat-label>
-                        <textarea matInput
-                            placeholder="The Contract will be automatically renewed for 3-(three)-month period."
-                            cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="3"
+                        <textarea matInput [placeholder]="placeholderCondition" cdkTextareaAutosize
+                            #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="5"
                             [formControl]="terminations(versionIndex)"></textarea>
                     </mat-form-field>
                 </mat-card-content>
@@ -46,7 +45,7 @@
             <mat-card>
                 <mat-card-header>
                     <mat-card-title>
-                        Title Selection & Distribution Fee
+                        Title Selection & Price
                     </mat-card-title>
                     <mat-card-subtitle>
                         You may choose to put the same distribution fee for all the titles or a specific to each one.
@@ -56,7 +55,7 @@
                     </mat-card-subtitle>
                 </mat-card-header>
                 <mat-card-content>
-                    <contract-version-form-price [form]="price(versionIndex)"></contract-version-form-price>
+                    <contract-version-form-price [form]="versions" hasMandate></contract-version-form-price>
                 </mat-card-content>
             </mat-card>
             <!-- Fees -->
@@ -69,7 +68,7 @@
                 <mat-card-content>
                     <mat-form-field appearance="outline">
                         <mat-label>Recoupable expenses</mat-label>
-                        <textarea matInput [placeholder]="placeholderText" cdkTextareaAutosize
+                        <textarea matInput [placeholder]="placeholderTermination" cdkTextareaAutosize
                             #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="5"
                             [formControl]="fees(versionIndex)"></textarea>
                     </mat-form-field>
