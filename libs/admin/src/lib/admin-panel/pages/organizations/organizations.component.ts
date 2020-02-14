@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { getValue, cleanModel } from '@blockframes/utils/helpers';
+import { getValue } from '@blockframes/utils/helpers';
 import { OrganizationService } from '@blockframes/organization';
 
 @Component({
@@ -35,7 +35,7 @@ export class OrganizationsComponent implements OnInit {
   async ngOnInit() {
     const orgs = await this.organizationService.getAllOrganizations();
     this.rows = orgs.map(o => {
-      const org = cleanModel({...o}) as any;
+      const org = {...o} as any;
 
       org.edit = {
         id: org.id,

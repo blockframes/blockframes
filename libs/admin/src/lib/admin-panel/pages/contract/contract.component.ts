@@ -7,7 +7,7 @@ import { ContractAdminForm } from '../../forms/contract-admin.form';
 import { ContractVersionAdminForm } from '../../forms/contract-version-admin.form';
 import { ContractStatus, ContractType } from '@blockframes/contract/contract/+state/contract.firestore';
 import { ContractVersionService } from '@blockframes/contract/version/+state/contract-version.service';
-import { cleanModel, getValue, termToPrettyDate } from '@blockframes/utils';
+import { getValue, termToPrettyDate } from '@blockframes/utils';
 import { ContractVersion } from '@blockframes/contract/version/+state';
 import { Observable } from 'rxjs/internal/Observable';
 import { MovieCurrenciesSlug } from '@blockframes/utils/static-model/types';
@@ -167,7 +167,7 @@ export class ContractComponent implements OnInit {
     }
 
     const update = {
-      ...cleanModel(this.contract.last),
+      ...this.contract.last,
       creationDate: new Date(),
       status: this.contractVersionForm.get('status').value,
     }

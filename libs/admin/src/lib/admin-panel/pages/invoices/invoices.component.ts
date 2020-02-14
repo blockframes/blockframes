@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { getValue, cleanModel } from '@blockframes/utils/helpers';
+import { getValue } from '@blockframes/utils/helpers';
 import { InvoiceService } from '@blockframes/contract/invoice/+state/invoice.service';
 import { MovieCurrenciesSlug } from '@blockframes/utils/static-model';
 import { getCodeBySlug } from '@blockframes/utils/static-model/staticModels';
@@ -44,7 +44,7 @@ export class InvoicesComponent implements OnInit {
   async ngOnInit() {
     const invoices = await this.invoiceService.getAllInvoices();
     this.rows =  invoices.map(i => {
-      const row = cleanModel({...i}) as any;
+      const row = {...i} as any;
       // Edit link
       row.edit = {
         id: i.id,
