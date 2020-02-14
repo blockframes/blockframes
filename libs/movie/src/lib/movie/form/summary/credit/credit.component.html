@@ -3,6 +3,16 @@
     <strong>Production Year </strong><missing-control [control]="main.get('productionYear')" [link]="link"></missing-control>
   </li>
   <li>
+    <strong>Production Company </strong>
+    <ng-container *ngFor="let producer of main.get('stakeholders').get('executiveProducer').controls; let isLast = last">
+      <missing-control [control]="producer.get('displayName')" [link]="link"></missing-control>
+      (<ng-container *ngFor="let country of producer.get('countries').value; let last = last">
+        {{ country | translateSlug: 'TERRITORIES' }}{{ last ? '' : ', '}}
+      </ng-container>)
+      {{ isLast ? '' : ', '}}
+    </ng-container>
+  </li>
+  <li>
     <strong>Producers </strong>
     <ng-container *ngFor="let producer of salesCast.get('producers').controls; let isLast = last">
       <ng-container *ngIf="producerHasNoValue(producer) else displayProducer">
@@ -16,6 +26,16 @@
         (<missing-control [control]="producer.get('role')" [link]="link"></missing-control>)
         {{ isLast ? '' : ', '}}
       </ng-template>
+    </ng-container>
+  </li>
+  <li>
+    <strong>Co-Production </strong>
+    <ng-container *ngFor="let coProducer of main.get('stakeholders').get('coProducer').controls; let isLast = last">
+      <missing-control [control]="coProducer.get('displayName')" [link]="link"></missing-control>
+      (<ng-container *ngFor="let country of coProducer.get('countries').value; let last = last">
+        {{ country | translateSlug: 'TERRITORIES' }}{{ last ? '' : ', '}}
+      </ng-container>)
+      {{ isLast ? '' : ', '}}
     </ng-container>
   </li>
   <ng-container *ngFor="let artist of salesCast.get('crew').controls; let isLast = last">

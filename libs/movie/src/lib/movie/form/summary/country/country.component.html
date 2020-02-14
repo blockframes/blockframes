@@ -1,9 +1,17 @@
 <section fxLayout="row wrap">
-  <article *ngFor="let country of originCountries.controls; let i = index">
+  <article *ngFor="let country of main.originCountries.controls; let i = index">
     <h5>Countries of Origin #{{ i + 1 }}</h5>
     <ul>
       <li>
         <strong>Country </strong><missing-control [control]="country" scope="TERRITORIES" [link]="link"></missing-control>
+      </li>
+      <li>
+        <strong>Domestic Distributor </strong>
+        <ng-container *ngFor="let distributor of main.get('stakeholders').get('distributor').controls; let isLast = last">
+          <ng-container *ngIf="distributor.get('countries').value.includes(country.value)">
+            <missing-control [control]="distributor.get('displayName')" [link]="link" [isLast]="isLast"></missing-control>
+          </ng-container>
+        </ng-container>
       </li>
       <li>
         <strong>Release Media </strong>
