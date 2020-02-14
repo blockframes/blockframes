@@ -10,6 +10,8 @@ import { ContractFormPartyModule } from '../../form/party/party.module';
 import { DistributionDealTermsModule } from '@blockframes/movie/distribution-deals/form/terms/terms.module';
 import { MatInputModule } from '@angular/material/input';
 import { TextFieldModule } from '@angular/cdk/text-field';
+import { ContractVersionFormPriceModule } from '@blockframes/contract/version/form/price/price.module';
+import { ContractVersionPaymentScheduleModule } from '@blockframes/contract/version/form/payment-schedule/payment-schedule.module';
 
 
 
@@ -24,6 +26,8 @@ import { TextFieldModule } from '@angular/cdk/text-field';
     TunnelPageModule,
     ContractFormPartyModule,
     DistributionDealTermsModule,
+    ContractVersionFormPriceModule,
+    ContractVersionPaymentScheduleModule,
 
     // Material
     MatCardModule,
