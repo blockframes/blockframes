@@ -1,7 +1,7 @@
 import { MovieCurrenciesSlug } from "@blockframes/utils/static-model/types";
 import { getCodeIfExists } from "@blockframes/utils/static-model/staticModels";
 import { firestore } from "firebase";
-import { toDate } from "@blockframes/utils";
+import { toDate } from "@blockframes/utils/helpers"
 
 type Timestamp = firestore.Timestamp;
 
@@ -132,8 +132,8 @@ export function formatPrice(price: any): Price {
     ...price
   }
 
-  if(price.recoupableExpenses) {
-    p.recoupableExpense = price.recoupableExpenses.map(r => formatExpense(r))
+  if (price.recoupableExpenses) {
+    p.recoupableExpense = price.recoupableExpenses.map((r: any) => formatExpense(r))
   }
 
   if (price.mg) {
@@ -164,7 +164,7 @@ export function formatExpense(expense: any): Expense {
     ...expense,
     price: formatPrice(expense.price),
     collected: formatPrice(expense.collected),
-    payments: expense.payments.map(p => formatPayment(p)),
+    payments: expense.payments.map((p: any) => formatPayment(p)),
   }
 }
 

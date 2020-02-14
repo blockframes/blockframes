@@ -1,6 +1,6 @@
-import { FinancialReport, FinancialReportVersion, FinancialReportTitleDetail, SendType, ReportStatus, Taxes } from "./financial-report.firestore";
+import { FinancialReport, FinancialReportVersion, FinancialReportTitleDetail, ReportStatus, Taxes } from "./financial-report.firestore";
 import { createRange } from "@blockframes/utils/common-interfaces/range";
-import { createTerms } from "@blockframes/utils";
+import { createTerms } from "@blockframes/utils/common-interfaces/terms";
 
 export function createTaxes(params: Partial<Taxes> = {}): Taxes {
   return {
@@ -23,7 +23,6 @@ export function createFinancialReport(params: Partial<FinancialReport> = {}): Fi
     totalContractGrossReceipts: 0,
     totalPaidGrossReceipts: 0,
     totalNetReceipts: 0,
-    reportingTerm: params.reportingTerm,
     ...params,
     scope: createRange(params.scope),
     reportingTerm: createTerms(params.reportingTerm),

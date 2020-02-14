@@ -3,7 +3,7 @@ import { InvoiceTitleDetails, Invoice } from "./invoice.firestore"
 import { formatPaymentSchedule } from "@blockframes/utils/common-interfaces/schedule"
 import { createBankAccount } from "@blockframes/utils/common-interfaces/utility"
 import { createTerms, formatTerms } from "@blockframes/utils/common-interfaces/terms"
-import { toDate } from "@blockframes/utils"
+import { toDate } from "@blockframes/utils/helpers"
 
 export function createInvoiceTitleDetails(
   params: Partial<InvoiceTitleDetails> = {}
