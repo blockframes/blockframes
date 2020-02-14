@@ -71,7 +71,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       })
     ).subscribe((features: MapFeature[]) => {
       // reset all previous tags
-      tags.forEach(tag => this.layers[tag].setStyle({ fillColor: '#ECEFF9' }));
+      tags.forEach(tag => {
+        if (!!this.layers[tag]) {
+          this.layers[tag].setStyle({ fillColor: '#ECEFF9' })
+        }
+      });
       // Add new style
       features.forEach(({ color, tag }) => {
         if (!!this.layers[tag]) {
