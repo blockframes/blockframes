@@ -1,7 +1,7 @@
 import { firestore } from "firebase/app";
 import { TermsRaw } from "@blockframes/utils/common-interfaces/terms";
 import { Party } from "@blockframes/utils/common-interfaces/identity";
-import { PaymentStatus, Payment, PriceRaw } from "@blockframes/utils/common-interfaces/price";
+import { PaymentStatus, PaymentRaw, PriceRaw } from "@blockframes/utils/common-interfaces/price";
 import {
   TerritoriesSlug,
   LanguagesSlug,
@@ -153,7 +153,7 @@ export interface InvoiceRaw<D> {
   internalRef: string,
   /** @dev should be comming from blockchain data */
   paymentRef?: string,
-  payments: Payment[],
+  payments: PaymentRaw<D>[],
   emittedDate: D,
   /** @dev Contains Ids of titles that this invoice is about */
   titles: InvoiceTitleDetailsRaw<D>[],
