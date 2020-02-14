@@ -14,7 +14,7 @@
       </mat-card-header>
       <mat-card-content>
         <movie-summary-main [main]="form.main" [link]="getPath('main')"></movie-summary-main>
-        <movie-summary-country [salesInfo]="form.salesInfo" [originCountries]="form.main.originCountries" [link]="getPath('main')"></movie-summary-country>
+        <movie-summary-country [salesInfo]="form.salesInfo" [main]="form.main" [link]="getPath('main')"></movie-summary-country>
         <movie-summary-information [main]="form.main" [link]="getPath('main')"></movie-summary-information>
         <movie-summary-sales-cast [salesCast]="form.salesCast" [link]="getPath('main')"></movie-summary-sales-cast>
         <movie-summary-festival-prizes [festivalPrizes]="form.festivalPrizes" [link]="getPath('main')"></movie-summary-festival-prizes>

@@ -1,10 +1,9 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { Observable, Subscription } from 'rxjs';
-import { OrganizationQuery } from '../../+state/organization.query';
-import { OrganizationService } from '../../+state/organization.service';
-import { MatSnackBar } from '@angular/material';
+import { ChangeDetectionStrategy, Component, OnInit, NgZone } from '@angular/core';
 import { AuthQuery } from '@blockframes/auth';
+import { InvitationService } from '@blockframes/notification/invitation/+state/invitation.service';
+import { MatSnackBar } from '@angular/material';
+import { InvitationFromUserToOrganization } from '@blockframes/invitation/types';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'organization-feedback',
@@ -12,40 +11,31 @@ import { AuthQuery } from '@blockframes/auth';
   styleUrls: ['./organization-feedback.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OrganizationFeedbackComponent implements OnInit, OnDestroy {
-  /** The organization status should be `accepted' before we can move on to the app */
-  public canMoveOn: Observable<boolean>;
-  private subscription: Subscription;
+export class OrganizationFeedbackComponent implements OnInit {
+  public invitations: InvitationFromUserToOrganization[];
+  public orgName: Observable<string>;
+  public isCanceled: boolean;
 
   constructor(
-    private router: Router,
-    private service: OrganizationService,
-    private query: OrganizationQuery,
+    private service: InvitationService,
+    private authQuery: AuthQuery,
     private snackBar: MatSnackBar,
-    private authQuery: AuthQuery
+    private _ngZone: NgZone
   ) {}
 
-  ngOnInit(): void {
-    this.subscription = this.service.syncOrgActive().subscribe();
-    this.canMoveOn = this.query.isAccepted$;
+  async ngOnInit() {
+    const uid = this.authQuery.userId;
+    this.invitations = await this.service.getValue(ref => ref.where('user.uid', '==', uid)) as any;
   }
-
-  public async removeOrganization() {
+  
+  public removeInvitation() {
     try {
-      const orgId = this.authQuery.orgId;
-      await this.service.remove(orgId);
-      this.snackBar.open('Your request to create an organization has been canceled.', 'close', { duration: 2000 });
-      return this.router.navigate(['../']);
+      this.service.remove(this.invitations[0].id)
+      this.snackBar.open('Your request to join an organization has been canceled.', 'close', { duration: 2000 });
+      this.isCanceled = true;
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });
     }
   }
 
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
-  }
-
-  public navigate() {
-    this.router.navigate(['../../c']);
-  }
 }
