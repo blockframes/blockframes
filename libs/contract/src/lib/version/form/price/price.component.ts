@@ -7,7 +7,7 @@ import { MoviesIndex, MovieAlgoliaResult } from '@blockframes/utils/algolia';
 
 // Angular
 import { FormControl } from '@angular/forms';
-import { Component, Input, ChangeDetectionStrategy, OnInit, Inject, OnDestroy } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, OnInit, Inject } from '@angular/core';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 // RxJs & Algolia
@@ -22,7 +22,7 @@ import { MovieService } from '@blockframes/movie';
   styleUrls: ['price.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class PriceComponent implements OnInit, OnDestroy {
+export class PriceComponent implements OnInit {
   @Input() form: FormList<any, ContractVersionForm>;
 
   public movieCtrl = new FormControl();
@@ -33,8 +33,6 @@ export class PriceComponent implements OnInit, OnDestroy {
   public movieSearchResults$: Observable<Movie[]>;
 
   public movies: Movie[] = [];
-
-  private currencySub: Subscription;
 
   public movies$: Observable<Movie[]> = this.tunnel.movies$.pipe(
     distinctUntilChanged((a, b) => a.length === b.length));
@@ -131,9 +129,5 @@ export class PriceComponent implements OnInit, OnDestroy {
     const resovledMovies = await movies;
     const movieIds = resovledMovies.map(movie => movie.objectID)
     return this.movieService.getValue(movieIds);
-  }
-
-  ngOnDestroy() {
-    this.currencySub.unsubscribe();
   }
 }
