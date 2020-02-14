@@ -35,14 +35,10 @@
         <img asset="archipel-content.svg" type="logo" alt="Archipel Content Logo" />
       </a>
       <search-widget></search-widget>
-      <!-- <form fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="12px">
-        <mat-icon>search</mat-icon>
-        <input placeholder="Try searching for titles, keywords..." />
-      </form> -->
-      <button mat-icon-button>
-        <mat-icon svgIcon="star_fill"></mat-icon>
-      </button>
-      <button mat-icon-button>
+      <a mat-icon-button routerLink="selection">
+        <mat-icon svgIcon="star_fill" [matBadge]="cartCount$ | async" [matBadgeHidden]="!(cartCount$ | async)" matBadgeColor="accent" matBadgeSize="small" ></mat-icon>
+      </a>
+      <button mat-icon-button >
         <mat-icon svgIcon="basket"></mat-icon>
       </button>
       <mat-divider vertical></mat-divider>

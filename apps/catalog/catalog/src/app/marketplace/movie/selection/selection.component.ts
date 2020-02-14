@@ -46,7 +46,7 @@ export class MarketplaceSelectionComponent implements OnInit {
   async create() {
     const titleIds = this.query.getValue().ids;
     const contract: Partial<Contract> = { titleIds };
-    const version: Partial<ContractVersion> = {};
+    const version: Partial<ContractVersion> = { titles: {} };
     for (const movieId of titleIds) {
       (version.titles[movieId] as Partial<ContractTitleDetail>) = {
         price: { commissionBase: CommissionBase.grossreceipts, amount: 0, currency: 'USD' }
