@@ -59,6 +59,7 @@ export class PriceComponent implements OnInit, OnDestroy {
     )
     this.movieSub = this.form.valueChanges.pipe(
       startWith(this.form.value),
+      distinctUntilChanged((a, b) => a.length === b.length),
       tap(() => this.transformFormToMovie())
     ).subscribe();
   }
@@ -75,7 +76,6 @@ export class PriceComponent implements OnInit, OnDestroy {
     for (const id of this.activeMovieIds) {
       accumilatedPrice += this.form.last().get('titles').get(id).get('price').get('amount').value
     }
-    console.log(accumilatedPrice);
     return accumilatedPrice < this.totalAmount.value
   }
 

@@ -34,7 +34,6 @@ export class ContractFormPartyComponent {
   }
 
   public addRole() {
-    console.log(this.form);
     this.form.add();
   }
 

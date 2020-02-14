@@ -1,5 +1,5 @@
-import { ContractForm } from '@blockframes/contract/contract/form/contract.form';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ContractTunnelComponent } from '../contract-tunnel.component';
 
 @Component({
   selector: 'contract-details-sale',
@@ -8,14 +8,15 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DetailsSaleComponent {
-  private form: ContractForm;
+
+  constructor(private tunnelComponent: ContractTunnelComponent) {}
 
   get parties() {
-    return this.form.get('parties')
+    return this.tunnelComponent.contractForm.get('parties')
   }
 
   get versions() {
-    return this.form.get('versions');
+    return this.tunnelComponent.contractForm.get('versions');
   }
 
   public terms(index: number) {
