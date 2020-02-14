@@ -32,7 +32,7 @@ export class OrganizationAppAccessComponent implements OnInit, OnDestroy {
       catalogMarketplace: this.access.value === 'marketplace',
       catalogDashboard: this.access.value === 'dashboard'
      }});
-    this.router.navigate(['../congratulations'], { relativeTo: this.route });
+    this.router.navigate(['../create-congratulations'], { relativeTo: this.route });
   }
 
   ngOnDestroy() {

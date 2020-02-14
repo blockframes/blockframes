@@ -1,11 +1,20 @@
-<section fxLayout="column" fxLayoutAlign="center center" test-id="content" page-id="organization-feedback">
-  <!-- TODO #1387 -->
-  <feedback-message
-    title="We have received your organization request"
-    subTitle="We will send you an email confirming your organization. Please verify your email to continue the registration process."
-    imageUrl="Congrats_380.png"
-    [enabled]="canMoveOn | async"
-    (redirectUser)="navigate()">
-  </feedback-message>
-  <button mat-button color="primary" *ngIf="!(canMoveOn | async)" (click)="removeOrganization()">Cancel request</button>
+<section *ngIf="!isCanceled else canceled">
+  <h1>Your request to join the organization was successfully sent!</h1>
+  <article class="mat-body-1">
+    <p>You’ll receive <b>a confirmation link by mail</b> once your request is treated. Thank you for your patience. </p>
+    <p>If ever you change your mind, you can always cancel your request.</p>
+  </article>
+  <article fxLayout="column" fxLayoutAlign="center center">
+    <button mat-button color="accent" (click)="removeInvitation()">
+      <mat-icon svgIcon="close"></mat-icon>
+      <span>Cancel my request</span>
+    </button>
+    <img asset="congratulations.svg" />
+  </article>
 </section>
+<ng-template #canceled>
+  <section>
+    <h1>Your request to join the organization was canceled</h1>
+    <button mat-button color="primary" routerLink="../home">back to home</button>
+  </section>
+</ng-template>
