@@ -50,7 +50,7 @@ export class OrganizationFindComponent implements OnInit {
       try {
         await this.invitationService.sendInvitationToOrg(this.selected.objectID);
         this.snackBar.open('Request sent !', 'close', { duration: 2000});
-        return this.router.navigate(['c/organization/home']);
+        return this.router.navigate(['c/organization/join-congratulations']);
       } catch (error) {
         this.snackBar.open(error.message, 'close', { duration: 2000 });
       }

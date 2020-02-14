@@ -31,6 +31,7 @@ import { MatRippleModule } from '@angular/material/core';
 import { OrganizationHomeComponent } from './pages/organization-home/organization-home.component';
 import { OrganizationFindComponent } from './pages/organization-find/organization-find.component';
 import { OrganizationFeedbackComponent } from './pages/organization-feedback/organization-feedback.component';
+import { OrganizationCreateFeedbackComponent } from './pages/organization-create-feedback/organization-create-feedback.component';
 import { OrganizationCreateComponent } from './pages/organization-create/organization-create.component';
 import { NoOrganizationGuard } from './guard/no-organization.guard';
 import { OrganizationLoadingComponent } from './pages/organization-loading/organization-loading.component';
@@ -45,7 +46,7 @@ export const noOrganizationRoutes: Routes = [
   },
   {
     path: 'home',
-    canActivate: [NoOrganizationGuard],
+    canActivate: [NoOrganizationGuard, NoOrganizationInvitationGuard],
     component: OrganizationHomeComponent,
   },
   {
@@ -54,9 +55,12 @@ export const noOrganizationRoutes: Routes = [
     component: OrganizationFindComponent,
   },
   {
-    path: 'congratulations',
-    canActivate: [NoOrganizationInvitationGuard],
+    path: 'join-congratulations',
     component: OrganizationFeedbackComponent
+  },
+  {
+    path: 'create-congratulations',
+    component: OrganizationCreateFeedbackComponent
   },
   {
     path: 'create',
@@ -65,7 +69,6 @@ export const noOrganizationRoutes: Routes = [
   },
   {
     path: 'app-access',
-    canActivate: [NoOrganizationInvitationGuard],
     component: OrganizationAppAccessComponent,
   },
   {
@@ -113,7 +116,8 @@ export const noOrganizationRoutes: Routes = [
     OrganizationFeedbackComponent,
     OrganizationCreateComponent,
     OrganizationLoadingComponent,
-    OrganizationAppAccessComponent
+    OrganizationAppAccessComponent,
+    OrganizationCreateFeedbackComponent
   ]
 })
 export class NoOrganizationModule {}
