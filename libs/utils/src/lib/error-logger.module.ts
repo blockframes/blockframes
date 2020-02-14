@@ -13,7 +13,7 @@ export class ErrorLoggerHandler implements ErrorHandler {
 
   handleError(error: any) {
     console.error(error);
-    this.snackBar.open(`${error}`.substring(0, 100));
+    this.snackBar.open(`${error}`.substring(0, 100), 'close');
   }
 }
 
