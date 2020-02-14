@@ -25,4 +25,12 @@ export class DetailsMandateComponent implements OnInit {
   public terms(index: number) {
     return this.versions.at(index).get('scope');
   }
+
+  public conditions(index: number) {
+    return this.versions.at(index).get('renewalConditions')
+  }
+
+  public terminations(index: number) {
+    return this.versions.at(index).get('terminationConditions');
+  }
 }

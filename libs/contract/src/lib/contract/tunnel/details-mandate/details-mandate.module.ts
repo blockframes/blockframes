@@ -1,3 +1,5 @@
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { RouterModule } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { NgModule } from '@angular/core';
@@ -6,6 +8,8 @@ import { DetailsMandateComponent } from './details-mandate.component';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { ContractFormPartyModule } from '../../form/party/party.module';
 import { DistributionDealTermsModule } from '@blockframes/movie/distribution-deals/form/terms/terms.module';
+import { MatInputModule } from '@angular/material/input';
+import { TextFieldModule } from '@angular/cdk/text-field';
 
 
 
@@ -14,6 +18,7 @@ import { DistributionDealTermsModule } from '@blockframes/movie/distribution-dea
   imports: [
     CommonModule,
     RouterModule.forChild([{ path: '', component: DetailsMandateComponent }]),
+    ReactiveFormsModule,
 
     // Components
     TunnelPageModule,
@@ -21,7 +26,10 @@ import { DistributionDealTermsModule } from '@blockframes/movie/distribution-dea
     DistributionDealTermsModule,
 
     // Material
-    MatCardModule
+    MatCardModule,
+    MatFormFieldModule,
+    MatInputModule,
+    TextFieldModule
   ]
 })
 export class DetailsMandateModule { }
