@@ -8,6 +8,7 @@ import { EnhancedISO3166Territory, ISO3166TERRITORIES } from '@blockframes/utils
 import { getNotLicensedTerritories, getAvailableTerritories, getRightsSoldTerritories } from './territories-filter';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state';
 import { MatSnackBar } from '@angular/material';
+import { DistributionDealForm } from '@blockframes/movie/distribution-deals/form/distribution-deal.form';
 
 @Component({
   selector: 'catalog-movie-avails',
@@ -17,6 +18,7 @@ import { MatSnackBar } from '@angular/material';
 })
 export class MarketplaceMovieAvailsComponent implements OnInit {
   public availsForm: AvailsSearchForm = new AvailsSearchForm();
+  public dealForm: DistributionDealForm = new DistributionDealForm();
   public movie: Movie = this.movieQuery.getActive();
   public territories = ISO3166TERRITORIES;
 
@@ -67,12 +69,21 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
 
     this.availableTerritories = getAvailableTerritories(this.availsForm.value, mandateDeals, this.territories, filteredDeals)
     this.rightsSoldTerritories = getRightsSoldTerritories(this.availsForm.value, mandateDeals, this.territories, filteredDeals)
+
+    this.dealForm.get('licenseType').setValue(this.availsForm.value.medias);
+    this.dealForm.get('exclusive').setValue(this.availsForm.value.exclusivity);
+    this.dealForm.get('terms').setValue(this.availsForm.value.terms);
+
     this.availsForm.disable();
   }
 
   public deactivateAvailsFilter(){
     this.availsForm.get('isActive').setValue(false);
     this.availsForm.enable();
+  }
+
+  public addDeal() {
+    console.log(this.dealForm.value)
   }
 
 }

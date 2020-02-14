@@ -32,4 +32,8 @@ export class DistributionDealForm extends FormEntity<DistributionDealControls> {
   constructor(deal: Partial<DistributionDeal> = {}) {
     super(createDistributionDealControls(deal));
   }
+
+  get territory() {
+    return this.get('territory');
+  }
 }
