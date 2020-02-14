@@ -1,4 +1,4 @@
-<ng-container *ngFor="let control of form.controls; let i = index; let isLast = last" [formGroup]="control">
+<ng-container *ngFor="let control of form.controls; let i = index; let isLast = last; let isFirst = first;" [formGroup]="control">
     <form formGroupName="party">
         <div fxLayout="column" fxLayoutAlign="start start">
             <mat-form-field appearance="outline">
@@ -13,7 +13,7 @@
                     </mat-option>
                 </mat-select>
             </mat-form-field>
-            <mat-form-field appearance="outline" *ngIf="hasRole">
+            <mat-form-field appearance="outline" *ngIf="hasRole && !isFirst">
                 <mat-label>Select sub role</mat-label>
                 <mat-select [formControl]="childRoleForm(i)">
                     <mat-option *ngFor="let role of staticSubRoles" [value]="role.slug">
