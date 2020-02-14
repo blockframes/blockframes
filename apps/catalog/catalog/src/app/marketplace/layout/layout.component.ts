@@ -6,6 +6,7 @@ import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.que
 import { AuthService, AuthQuery } from '@blockframes/auth';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { MatSidenav } from '@angular/material';
+import { MarketplaceQuery } from '../+state';
 
 @Component({
   selector: 'catalog-layout',
@@ -18,10 +19,12 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   private sub: Subscription;
   public user$ = this.authQuery.select('profile');
   public currentWishlist$: Observable<Wishlist>;
+  public cartCount$ = this.marketplaceQuery.selectCount();
 
   @ViewChild('sidenav', { static: false }) sidenav: MatSidenav;
 
   constructor(
+    private marketplaceQuery: MarketplaceQuery,
     private catalogCartQuery: CatalogCartQuery,
     private authService: AuthService,
     private authQuery: AuthQuery,
