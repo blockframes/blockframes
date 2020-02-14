@@ -3,6 +3,7 @@ import { DistributionDeal, getDealTerritories } from '../+state/distribution-dea
 import { DateRange } from '@blockframes/utils/common-interfaces/range';
 import { CatalogSearch, AvailsSearch } from '@blockframes/catalog/form/search.form';
 import { toDate } from '@blockframes/utils/helpers';
+import { MediasSlug } from '@blockframes/utils/static-model';
 
 /**
  * These function should be used in connection. For instance, we look for movie distribution deals in
@@ -149,6 +150,32 @@ export function getFilterMatchingDeals(
   }
   return dealsWithTerritoriesAndMediasInCommon;
 }
+
+/**
+ * @description We want to check if user search and deals have medias in common
+ * @param medias The medias from the filter defined by the buyer
+ * @param deals The array of deals from a movie in the previously specified date range
+ */
+export function getDealsWithMedias(medias: MediasSlug[], deals: DistributionDeal[]): DistributionDeal[] {
+  const dealsWithMediasInCommon: DistributionDeal[] = [];
+  deals.forEach(deal => {
+    let mediasInCommon = false;
+    mediaLoop : for (const media of medias) {
+      for (const licenseType of deal.licenseType) {
+        if (licenseType === media) {
+          mediasInCommon = true;
+          break mediaLoop;
+        }
+      }
+    }
+    if (mediasInCommon) {
+      dealsWithMediasInCommon.push(deal);
+    }
+  })
+
+  return dealsWithMediasInCommon;
+
+  }
 
 /**
  * Returns deals with same exclusivity value as the one passed as an argument.

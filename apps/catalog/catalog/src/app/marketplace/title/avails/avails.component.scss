@@ -1,0 +1,53 @@
+@import 'mixins';
+
+section {
+  padding: 15px 0;
+}
+
+aside {
+  position: sticky;
+  top: calc(var(--toolbarHeight) + 20px);
+  width: 500px;
+}
+
+.map-card {
+  flex: 1;
+
+  world-map {
+    height: 500px;
+    background-color: transparent;
+    z-index: 1;
+  }
+}
+
+.colors-card {
+  position: absolute;
+  bottom: 30px;
+  right: 15px;
+  z-index: 999;
+}
+
+@include mobile {
+  section {
+    padding: 10px 10px;
+    aside {
+      width: 100%;
+      position: static;
+      mat-card {
+        height: 100%;
+      }
+    }
+  }
+}
+
+@include tablet {
+  section aside {
+    position: static;
+  }
+}
+
+@include medium {
+  aside {
+    width: 50%;
+  }
+}

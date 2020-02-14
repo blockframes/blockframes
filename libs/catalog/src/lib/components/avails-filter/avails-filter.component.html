@@ -31,7 +31,7 @@
   </mat-expansion-panel>
 
   <!-- Territories -->
-  <mat-expansion-panel *ngIf="territory">
+  <mat-expansion-panel *ngIf="territoryControl">
     <mat-expansion-panel-header>
       <span class="mat-body-1" test-id="territories-panel">Territory</span>
     </mat-expansion-panel-header>
@@ -76,18 +76,4 @@
       <span>Yes</span>
     </article>
   </mat-expansion-panel>
-  <article fxLayoutAlign="center center" class="filter-buttons">
-    <button
-      *ngIf="!availsForm.value.isActive"
-      mat-stroked-button color="primary"
-      (click)="applyAvailsFilter()">
-      Apply Avails Filter
-    </button>
-    <button
-      *ngIf="availsForm.value.isActive"
-      mat-stroked-button color="accent"
-      (click)="deactivateAvailsFilter()">
-      Deactivate Avails Filter
-    </button>
-  </article>
 </ng-container>
