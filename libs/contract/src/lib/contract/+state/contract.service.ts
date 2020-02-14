@@ -9,7 +9,8 @@ import {
   ContractWithTimeStamp,
   getContractParties,
   createContractFromFirestore,
-  cleanContract
+  cleanContract,
+  PublicContract
 } from './contract.model';
 import orderBy from 'lodash/orderBy';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
@@ -22,6 +23,7 @@ import { firestore } from 'firebase/app';
 import { MovieQuery } from '@blockframes/movie';
 import { createContractVersionFromFirestore } from '@blockframes/contract/version/+state/contract-version.model';
 import { ContractVersion } from '@blockframes/contract/version/+state';
+import { Observable } from 'rxjs';
 
 /**
  * Get all the contracts where user organization is party.
@@ -312,6 +314,10 @@ export class ContractService extends CollectionService<ContractState> {
     // Replace the party at the index and update all the parties array.
     const updatedParties = contract.parties.filter((_, i) => i !== index);
     this.update({ ...contract, parties: [...updatedParties, updatedParty] })
+  }
+
+  public listenOnPublicContract(contractId: string) : Observable<PublicContract>{
+    return this.db.collection('publicContracts').doc<PublicContract>(contractId).valueChanges();
   }
 
   /**

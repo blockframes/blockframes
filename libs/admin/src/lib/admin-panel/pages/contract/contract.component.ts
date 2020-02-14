@@ -1,18 +1,18 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material';
-import { InvoiceService } from '@blockframes/contract/invoice/+state/invoice.service';
-import { Invoice } from '@blockframes/contract/invoice/+state/invoice.firestore';
-import { InvoiceAdminForm } from '../../forms/invoice-admin.form';
-import { PaymentStatus } from '@blockframes/utils/common-interfaces/price';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
-import { Contract, ContractWithLastVersion } from '@blockframes/contract/contract/+state/contract.model';
+import { ContractWithLastVersion, PublicContract } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractAdminForm } from '../../forms/contract-admin.form';
 import { ContractVersionAdminForm } from '../../forms/contract-version-admin.form';
 import { ContractStatus, ContractType } from '@blockframes/contract/contract/+state/contract.firestore';
 import { ContractVersionService } from '@blockframes/contract/version/+state/contract-version.service';
-import { cleanModel, getValue } from '@blockframes/utils';
+import { cleanModel, getValue, termToPrettyDate } from '@blockframes/utils';
 import { ContractVersion } from '@blockframes/contract/version/+state';
+import { Observable } from 'rxjs/internal/Observable';
+import { MovieCurrenciesSlug } from '@blockframes/utils/static-model/types';
+import { getCodeBySlug } from '@blockframes/utils/static-model/staticModels';
+import { MovieService } from '@blockframes/movie';
 
 
 @Component({
@@ -29,22 +29,83 @@ export class ContractComponent implements OnInit {
   public statuses: string[];
   public types: string[];
   public version: number;
+  public publicContract$: Observable<PublicContract>;
+  public toPrettyDate = termToPrettyDate;
 
-  public versionColumns = {
+  // Tables 
+  public contractVersions: ContractVersion[] = [];
+  public titles: any = [];
+  public distributionDeals = [];
+
+  // Table VERSION
+  public versionColumnsTableVersions = {
     'id': 'Version',
     'status': 'Status',
     'creationDate': 'Creation date',
+    'scope': 'Scope',
+    'price': 'Price',
   };
 
-  public initialColumns: string[] = [
+  public initialColumnsTableVersions: string[] = [
     'id',
     'status',
     'creationDate',
+    'scope',
+    'price',
   ];
 
-  public contractVersions: ContractVersion[] = [];
+  filterPredicateTableVersions(data: any, filter) {
+    const columnsToFilter = [
+      'id',
+    ];
+    const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
+    return dataStr.toLowerCase().indexOf(filter) !== -1;
+  }
+
+  // Table TITLES
+  public versionColumnsTableTitles = {
+    'id': 'Movie Id',
+    'movie.main.internalRef': 'Internal Ref',
+    'movie.promotionalElements.poster': 'Poster',
+    'movie.main.title.original': 'Original title',
+    'movie.main.productionYear': 'Production year',
+    'price': 'Price',
+    'movie.main.storeConfig.status': 'Status',
+    'movie.main.storeConfig.storeType': 'Store type',
+    'deals': 'Deals',
+    'exploredeals': 'All deals for this title'
+  };
+
+  public initialColumnsTableTitles: string[] = [
+    'id',
+    'movie.main.internalRef',
+    'movie.promotionalElements.poster',
+    'movie.main.title.original',
+    'movie.main.productionYear',
+    'price',
+    'movie.main.storeConfig.status',
+    'movie.main.storeConfig.storeType',
+    'deals',
+    'exploredeals',
+  ];
+
+  filterPredicateTableTitles(data: any, filter) {
+    const columnsToFilter = [
+      'id',
+      'movie.main.internalRef',
+      'movie.promotionalElements.poster',
+      'movie.main.title.original',
+      'movie.main.productionYear',
+      'price',
+      'movie.main.storeConfig.status',
+      'movie.main.storeConfig.storeType',
+    ];
+    const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
+    return dataStr.toLowerCase().indexOf(filter) !== -1;
+  }
 
   constructor(
+    private movieService: MovieService,
     private contractService: ContractService,
     private contractVersionService: ContractVersionService,
     private route: ActivatedRoute,
@@ -58,13 +119,28 @@ export class ContractComponent implements OnInit {
     this.contractForm = new ContractAdminForm(this.contract.doc);
     this.contractVersionForm = new ContractVersionAdminForm(this.contract.last);
     this.version = parseInt(this.contract.last.id, 10);
-
+    this.publicContract$ = this.contractService.listenOnPublicContract(this.contractId);
     this.contractVersions = await this.contractVersionService.getContractVersions(this.contractId);
 
     this.statuses = Object.keys(ContractStatus);
     this.types = Object.keys(ContractType);
 
     this.cdRef.detectChanges();
+
+    Object.keys(this.contract.last.titles).forEach(async id => {
+      const title = this.contract.last.titles[id];
+      const movie = await this.movieService.getValue(id);
+
+      this.titles.push({
+        id,
+        price: title.price,
+        movie,
+        deals: title.distributionDealIds.map( d => {return { id: d, movie: id}}),
+        exploredeals: `/c/o/admin/panel/deals/${id}`,
+      });
+
+      this.titles = [...this.titles];
+    })
   }
 
   public async updateContract() {
@@ -102,11 +178,12 @@ export class ContractComponent implements OnInit {
     this.snackBar.open('Informations updated !', 'close', { duration: 5000 });
   }
 
-  filterPredicate(data: any, filter) {
-    const columnsToFilter = [
-      'id',
-    ];
-    const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
-    return dataStr.toLowerCase().indexOf(filter) !== -1;
+  /** Utils function to get currency code for currency pipe. */
+  public getCurrencyCode(currency: MovieCurrenciesSlug) {
+    return getCodeBySlug('MOVIE_CURRENCIES', currency);
+  }
+
+  public getDealPath(dealId: string, movieId: string) {
+    return `/c/o/admin/panel/deal/${dealId}/m/${movieId}`;
   }
 }

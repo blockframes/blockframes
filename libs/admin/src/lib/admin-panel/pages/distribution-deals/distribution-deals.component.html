@@ -8,8 +8,11 @@
   showFilter="true"
   showLoader="true"
   showPaginator="true">
+  <ng-template colRef="dealLink" let-dealLink>
+    <a target="_blank" [routerLink]="getDealPath(dealLink.id, dealLink.movieId)" routerLinkActive="active">{{ dealLink.id }}</a>
+  </ng-template>
   <ng-template colRef="movieId" let-id>
-    <a target="_blank" [routerLink]="getPath(id)" routerLinkActive="active"><mat-icon>launch</mat-icon></a>
+    <a target="_blank" [routerLink]="getMoviePath(id)" routerLinkActive="active"><mat-icon>launch</mat-icon></a>
   </ng-template>
   <ng-template colRef="deal.publicId" let-publicId>
     {{ publicId ? publicId : '-- '}}

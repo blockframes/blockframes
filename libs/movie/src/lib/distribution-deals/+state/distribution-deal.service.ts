@@ -106,6 +106,7 @@ export class DistributionDealService extends CollectionService<DistributionDealS
   /**
    * @dev ADMIN method
    * Get all distributionDeals.
+   * This method need an index @see firestore.indexes.json
    */
   public async getAllDistributionDealsWithMovieId(): Promise<DistributionDealWithMovieId[]> {
     const distributionDealsSnap = await this.db

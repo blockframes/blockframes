@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { MovieService, Movie } from '@blockframes/movie';
-import { getValue, cleanModel } from '@blockframes/utils/helpers';
+import { MovieService } from '@blockframes/movie';
+import { getValue } from '@blockframes/utils/helpers';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 
@@ -46,7 +46,7 @@ export class MoviesComponent implements OnInit {
     const movies = await this.movieService.getAllMovies();
 
     const promises = movies.map(async m => {
-      const row = cleanModel({...m}) as any;
+      const row = {...m} as any;
 
       // We add distribution deals infos to the row
       const distributionDeals = await this.distributionDealService.getMovieDistributionDeals(m.id);

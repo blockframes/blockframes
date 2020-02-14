@@ -1,60 +1,153 @@
 <h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Contract > {{ contractId }} </h1>
 <ng-container *ngIf="contract">
+  <article id="contract-section" fxLayout="row" fxLayoutAlign="space-around start" >
+    <article fxLayout="column" fxLayoutAlign="space-between start">
+      <h2>Edit Form : </h2>
+      <ng-container *ngIf="contractForm">
+        <form [formGroup]="contractForm">
+          <div>
+            <mat-form-field appearance="outline">
+              <mat-label>Contract type</mat-label>
+              <mat-select formControlName="type" required>
+                <mat-option *ngFor="let type of types" [value]="type">
+                  {{ type }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <mat-card-actions align="end">
+            <button type="submit" mat-raised-button class="main-btn" (click)="updateContract()">Update contract</button>
+          </mat-card-actions>
+        </form>
+      </ng-container>
+    </article>
+    <article fxLayout="column" fxLayoutAlign="space-between start">
+      <h2>Current version : {{ version }} </h2>
 
-  <h2>Current version : {{ version }} </h2>
-
-  <ng-container *ngIf="contractForm">
-    <form [formGroup]="contractForm" fxLayout="column">
-      <div>
-        <mat-form-field appearance="outline">
-          <mat-label>Contract type</mat-label>
-          <mat-select formControlName="type" required>
-            <mat-option *ngFor="let type of types" [value]="type">
-              {{ type }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+      <h3>Parties : </h3>
+      <div *ngFor="let partyDetails of contract.doc.parties">
+        <h4>Party : {{ partyDetails.party.displayName }} ( org: {{ partyDetails.party.orgId }} ) </h4>
+        <ul>
+          <li><strong>Status : </strong>{{ partyDetails.status }}</li>
+          <li><strong>Sign date : </strong>{{ partyDetails.signDate ? (partyDetails.signDate | date: 'short') : ' -- ' }}</li>
+          <li><strong>Role : </strong>{{ partyDetails.party.role }}</li>
+          <li><strong>Show name : </strong>{{ partyDetails.party.showName ? 'yes' : 'no' }}</li>
+          <li>
+            <span>Child roles : </span>
+            <ng-container *ngFor="let childRole of partyDetails.childRoles; let isLast = last">
+              {{ childRole }}{{isLast ? '' : ' - '}}
+            </ng-container>
+          </li>
+        </ul>
       </div>
-      <mat-card-actions align="end">
-        <button type="submit" mat-raised-button class="main-btn" (click)="updateContract()">Update contract</button>
-      </mat-card-actions>
-    </form>
-  </ng-container>
+    </article>
+    <article fxLayout="column" fxLayoutAlign="space-between start">
+      <h2>Public contract : </h2>
 
-  <h2>Previous versions :</h2>
+      <i>
+        Public contract is created automaticaly with data of Contract document and it's latest version.
+        Public contract will appear only if status is OK.
+      </i>
+      <h3>Content : </h3>
+      <ng-container *ngIf="publicContract$ | async as publicContract else nopubliccontract">
+        <ul>
+          <li><strong>Id : </strong>{{ publicContract.id }}</li>
+          <li><strong>Type : </strong>{{ publicContract.type }}</li>
+          <li><strong>Title Ids : </strong>
+            <ng-container *ngFor="let title of publicContract.titleIds">
+              <span>{{ title }} </span><br />
+            </ng-container>
+          </li>
+        </ul>
+      </ng-container>
+      <ng-template #nopubliccontract>
+        <strong>No public contract found</strong>  
+      </ng-template>
+    </article>
+  </article>
+  <hr />
+  <article id="version-section" fxLayout="row" fxLayoutAlign="space-around start" >
+    <article fxLayout="column" fxLayoutAlign="space-between start">
+      <h2>Create new version</h2>
 
-  <bf-table-filter 
-    [source]="contractVersions" 
-    [columns]="versionColumns" 
-    [initialColumns]="initialColumns" 
-    [filterPredicate]="filterPredicate"
-    showFilter="true"
-    showLoader="true"
-    showPaginator="true">
-    <ng-template colRef="creationDate" let-creationDate>
-      {{ creationDate | date: 'short' }}
-    </ng-template>
-  </bf-table-filter>
+      <ng-container *ngIf="contractVersionForm">
+        <form [formGroup]="contractVersionForm" fxLayout="column">
+          <div>
+            <mat-form-field appearance="outline">
+              <mat-label>Version Status</mat-label>
+              <mat-select formControlName="status" required>
+                <mat-option *ngFor="let status of statuses" [value]="status">
+                  {{ status }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <mat-card-actions align="end">
+          <button type="submit" mat-raised-button class="main-btn" (click)="updateVersion()">Update to v-{{ version +1 }}</button>
+          </mat-card-actions>
+        </form>
+      </ng-container>
+    </article>
+    <article  fxLayout="column" fxLayoutAlign="space-between start">
+      <h2>Previous versions :</h2>
 
-  <h2>Create new version</h2>
+      <bf-table-filter class="version-table"
+        [source]="contractVersions" 
+        [columns]="versionColumnsTableVersions" 
+        [initialColumns]="initialColumnsTableVersions" 
+        [filterPredicate]="filterPredicateTableVersions"
+        showFilter="true"
+        showLoader="true"
+        showPaginator="true">
+        <ng-template colRef="creationDate" let-creationDate>
+          {{ creationDate | date: 'short' }}
+        </ng-template>
+        <ng-template colRef="scope" let-scope>
+          <strong>From : </strong>{{ toPrettyDate(scope,'start') }} <strong>To : </strong>{{ toPrettyDate(scope,'end') }}
+        </ng-template>
+        <ng-template colRef="price" let-price>
+          {{ price.amount | currency: getCurrencyCode(price.currency) }}
+        </ng-template>
+      </bf-table-filter>
+    </article>
+  </article>
+  <hr />
+  <article  fxLayout="row" fxLayoutAlign="space-around start" >
+    <article  fxLayout="column" fxLayoutAlign="space-between start">
+      <h2>Titles :</h2>
 
-  <ng-container *ngIf="contractVersionForm">
-    <form [formGroup]="contractVersionForm" fxLayout="column">
-      <div>
-        <mat-form-field appearance="outline">
-          <mat-label>Version Status</mat-label>
-          <mat-select formControlName="status" required>
-            <mat-option *ngFor="let status of statuses" [value]="status">
-              {{ status }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
-      <mat-card-actions align="end">
-      <button type="submit" mat-raised-button class="main-btn" (click)="updateVersion()">Update to v-{{ version +1 }}</button>
-      </mat-card-actions>
-    </form>
-  </ng-container>
+      <bf-table-filter class="version-table"
+        [source]="titles" 
+        [columns]="versionColumnsTableTitles" 
+        [initialColumns]="initialColumnsTableTitles" 
+        [filterPredicate]="filterPredicateTableTitles"
+        showFilter="true"
+        showLoader="true"
+        showPaginator="true">
+        <ng-template colRef="movie.promotionalElements.poster" let-posters>
+          <ng-container *ngIf="posters[0].media as poster; else noposter">
+            <img class="poster" [imgRef]="poster">
+          </ng-container>
+          <ng-template #noposter>
+            --
+          </ng-template>
+        </ng-template>
+        <ng-template colRef="price" let-price>
+          {{ price.amount | currency: getCurrencyCode(price.currency) }}
+        </ng-template>
+        <ng-template colRef="deals" let-deals>
+          <ul>
+            <li *ngFor="let deal of deals">
+              <a target="_blank" [routerLink]="getDealPath(deal.id, deal.movie)" routerLinkActive="active"> {{ deal.id }}</a>
+            </li>  
+          </ul>
+        </ng-template>
+        <ng-template colRef="exploredeals" let-dealslink>
+          <a [routerLink]="dealslink"><mat-icon>edit</mat-icon></a>
+        </ng-template>
+      </bf-table-filter>
+    </article>
+  </article>
 </ng-container>
 
 <!-- @todo #1832 afficher les invoices-->

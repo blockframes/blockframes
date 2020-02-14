@@ -8,8 +8,10 @@ function createInvoiceAdminControls(entity: Partial<Invoice>) {
   const invoice = createInvoice(entity);
   return {
     status: new FormControl(invoice.status),
-    // @todo #1832 buyerId
     contractId: new FormControl(invoice.contractId, [
+      Validators.required
+    ]),
+    buyerId:  new FormControl(invoice.buyerId, [
       Validators.required
     ]),
   };

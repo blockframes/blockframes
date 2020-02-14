@@ -11,7 +11,7 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class DistributionDealsComponent implements OnInit {
   public versionColumns = {
-    'deal.id': 'Id',
+    'dealLink': 'Id',
     'deal.publicId': 'Public id',
     'movieId': 'Movie',
     'deal.status': 'Status',
@@ -21,7 +21,7 @@ export class DistributionDealsComponent implements OnInit {
   };
 
   public initialColumns: string[] = [
-    'deal.id',
+    'dealLink',
     'deal.publicId',
     'movieId',
     'deal.status',
@@ -29,7 +29,7 @@ export class DistributionDealsComponent implements OnInit {
     'deal.terms',
     'deal.exclusive'
   ];
-  public rows: DistributionDealWithMovieId[] = [];
+  public rows: any[] = [];
   public toPrettyDate = termToPrettyDate;
   public movieId = '';
   constructor(
@@ -43,12 +43,28 @@ export class DistributionDealsComponent implements OnInit {
 
     if (this.movieId) {
       this.rows = (await this.distributionDealService.getMovieDistributionDeals(this.movieId))
-      .map(deal => createDistributionDealWithMovieId({ 
-        deal: formatDistributionDeal(deal), 
-        movieId: this.movieId,
-       }))
+        .map(deal => {
+          const d: DistributionDealWithMovieId = createDistributionDealWithMovieId({
+            deal: formatDistributionDeal(deal),
+            movieId: this.movieId,
+          })
+
+          const row = { ...d } as any;
+          row.dealLink = {
+            id: d.deal.id,
+            movieId: d.movieId,
+          }
+          return row;
+        })
     } else {
-      this.rows = await this.distributionDealService.getAllDistributionDealsWithMovieId();
+      this.rows = await (await this.distributionDealService.getAllDistributionDealsWithMovieId()).map( d => {
+        const row = { ...d } as any;
+        row.dealLink = {
+          id: d.deal.id,
+          movieId: d.movieId,
+        }
+        return row;
+      });
     }
 
   }
@@ -65,8 +81,12 @@ export class DistributionDealsComponent implements OnInit {
     return dataStr.toLowerCase().indexOf(filter) !== -1;
   }
 
-  public getPath(movieId: string) {
+  public getMoviePath(movieId: string) {
     return `/c/o/dashboard/tunnel/movie/${movieId}/deals`;
+  }
+
+  public getDealPath(dealId: string) {
+    return `/c/o/admin/panel/deal/${dealId}/m/${this.movieId}`;
   }
 
 }

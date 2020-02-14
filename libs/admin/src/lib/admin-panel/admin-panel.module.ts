@@ -28,6 +28,7 @@ import { MovieComponent } from './pages/movie/movie.component';
 import { InvoicesComponent } from './pages/invoices/invoices.component';
 import { InvoiceComponent } from './pages/invoice/invoice.component';
 import { ContractComponent } from './pages/contract/contract.component';
+import { DistributionDealComponent } from './pages/distribution-deal/distribution-deal.component';
 
 export const panelRoutes: Routes = [
   { path: '', redirectTo: 'overview', pathMatch: 'full' },
@@ -35,6 +36,7 @@ export const panelRoutes: Routes = [
   { path: 'movies', component: MoviesComponent },
   { path: 'deals', component: DistributionDealsComponent },
   { path: 'deals/:movieId', component: DistributionDealsComponent },
+  { path: 'deal/:dealId/m/:movieId', component: DistributionDealComponent },
   { path: 'contracts', component: ContractsComponent },
   { path: 'contracts/:movieId', component: ContractsComponent },
   { path: 'contract/:contractId', component: ContractComponent },
@@ -65,6 +67,7 @@ export const panelRoutes: Routes = [
     OverviewComponent,
     MoviesComponent,
     DistributionDealsComponent,
+    DistributionDealComponent,
     ContractsComponent,
     ContractComponent,
     OrganizationsComponent,

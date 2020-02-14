@@ -1,10 +1,11 @@
-<h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Invoice > {{ invoiceId }} </h1>
+<h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Distribution deal > {{ dealId }} </h1>
 
-<ng-container *ngIf="invoiceForm">
-  <form [formGroup]="invoiceForm" fxLayout="column">
+<h2><strong>movie Id : </strong>{{ movieId }} </h2>
+<ng-container *ngIf="dealForm">
+  <form [formGroup]="dealForm" fxLayout="column">
     <div>
       <mat-form-field appearance="outline">
-        <mat-label>Invoice Status</mat-label>
+        <mat-label>Deal Status</mat-label>
         <mat-select formControlName="status" required>
           <mat-option *ngFor="let status of statuses" [value]="status">
             {{ status }}
@@ -16,19 +17,15 @@
       <mat-form-field appearance="outline">
         <mat-label>Contract Id</mat-label>
         <input matInput type="text" placeholder="Contract Id" formControlName="contractId" required />
-        <mat-error *ngIf="invoiceForm.get('contractId').hasError('required')">
+        <mat-error *ngIf="dealForm.get('contractId').hasError('required')">
           Contract Id is <strong>required</strong>
         </mat-error>
       </mat-form-field>
     </div>
     <div>
-      <mat-form-field appearance="outline">
-        <mat-label>Buyer Id</mat-label>
-        <input matInput type="text" placeholder="Buyer Id" formControlName="buyerId" required />
-        <mat-error *ngIf="invoiceForm.get('buyerId').hasError('required')">
-          Buyer Id is <strong>required</strong>
-        </mat-error>
-      </mat-form-field>
+      <mat-checkbox formControlName="exclusive">
+        Exclusive 
+      </mat-checkbox>
     </div>
     <mat-card-actions align="end">
       <button type="submit" mat-raised-button class="main-btn" (click)="update()">Update</button>

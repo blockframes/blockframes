@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { getValue, cleanModel } from '@blockframes/utils/helpers';
+import { getValue } from '@blockframes/utils/helpers';
 import { termToPrettyDate } from '@blockframes/utils/common-interfaces/terms';
 import { ActivatedRoute } from '@angular/router';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
@@ -56,7 +56,7 @@ export class ContractsComponent implements OnInit {
 
     const promises = contracts.map(async contract => {
       const c = await this.contractService.getContractWithLastVersion(contract.id);
-      const row = cleanModel({...c}) as any;
+      const row = {...c} as any;
       row.edit = {
         id: c.doc.id,
         link: `/c/o/admin/panel/contract/${c.doc.id}`,

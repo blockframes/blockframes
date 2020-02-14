@@ -44,6 +44,7 @@ export class InvoiceComponent implements OnInit {
     const update = {
       contractId: this.invoiceForm.get('contractId').value,
       status : this.invoiceForm.get('status').value,
+      buyerId: this.invoiceForm.get('buyerId').value,
     }
 
     await this.invoiceService.update(this.invoiceId, update);
