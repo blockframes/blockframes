@@ -1,14 +1,20 @@
 import { Injectable } from '@angular/core';
-import { EntityState, EntityStore, StoreConfig, Store } from '@datorama/akita';
+import { EntityState, EntityStore, StoreConfig } from '@datorama/akita';
 import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state';
+import { Movie } from '@blockframes/movie';
 
+export interface TitleCart {
+  movieId: string;
+  movie?: Movie;
+  deals: DistributionDeal[];
+}
 
-export interface MarketplaceState extends EntityState<DistributionDeal[]> {
+export interface MarketplaceState extends EntityState<TitleCart> {
   wishlist: string[];
 }
 
 @Injectable({ providedIn: 'root' })
-@StoreConfig({ name: 'marketplace' })
+@StoreConfig({ name: 'marketplace', idKey: 'movieId' })
 export class MarketplaceStore extends EntityStore<MarketplaceState> {
   constructor() {
     super();

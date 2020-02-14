@@ -1,14 +1,12 @@
-import { Subscription } from 'rxjs';
-import { OrganizationQuery, Wishlist } from '@blockframes/organization';
-import { AFM_DISABLE } from '@env';
-import { ChangeDetectionStrategy, HostBinding } from '@angular/core';
-import { Component, OnInit } from '@angular/core';
-import {
-  MOVIE_CURRENCIES_SLUG,
-  MovieCurrenciesSlug
-} from '@blockframes/utils/static-model/types';
-import { FormControl } from '@angular/forms';
-import { CartService } from '@blockframes/organization/cart/+state/cart.service';
+import { Component, ChangeDetectionStrategy, HostBinding, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { MarketplaceQuery, MarketplaceStore } from '../../+state';
+import { MovieQuery } from '@blockframes/movie';
+import { ContractService, Contract, ContractTitleDetail } from '@blockframes/contract/contract/+state';
+import { ContractVersion } from '@blockframes/contract/version/+state';
+import { CommissionBase } from '@blockframes/utils/common-interfaces';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'catalog-selection',
@@ -18,35 +16,45 @@ import { CartService } from '@blockframes/organization/cart/+state/cart.service'
 })
 export class MarketplaceSelectionComponent implements OnInit {
   @HostBinding('attr.page-id') pageId = 'catalog-selection';
-  public priceControl: FormControl = new FormControl(null);
-  public currencyList: MovieCurrenciesSlug[];
-  public selectedCurrency;
-  // TODO issue#1146 rename it
-  public moviesOnWishlist: Wishlist[] = [];
-  public wishlist: Subscription;
+
+  count$ = this.query.selectCount();
+  titles$ = this.query.selectAll();
+  isInWishist$: Observable<Record<string, Observable<boolean>>>;
 
   constructor(
-    private cartService: CartService,
-    private orgQuery: OrganizationQuery,
+    public store: MarketplaceStore,
+    private query: MarketplaceQuery,
+    private service: ContractService,
+    private movieQuery: MovieQuery,
+    private router: Router,
   ) {}
 
   ngOnInit() {
-    // TODO issue#1146
-    if (!AFM_DISABLE) {
-      this.wishlist = this.orgQuery.select().subscribe(wishlist => {
-        this.moviesOnWishlist = wishlist.org.wishlist;
-      });
-    } else {
-      this.currencyList = MOVIE_CURRENCIES_SLUG;
-      // TODO #922: make an observable out of the cartquery
+
+  }
+
+  /** Select a movie for a specific movie Id */
+  selectMovie(movieId: string) {
+    return this.movieQuery.selectEntity(movieId);
+  }
+
+  inWishlist(movieId: string) {
+
+    return this.query.isInWishlist(movieId);
+  }
+
+  /** Create a Contract, remove the current selection, move to tunnel */
+  async create() {
+    const titleIds = this.query.getValue().ids;
+    const contract: Partial<Contract> = { titleIds };
+    const version: Partial<ContractVersion> = {};
+    for (const movieId of titleIds) {
+      (version.titles[movieId] as Partial<ContractTitleDetail>) = {
+        price: { commissionBase: CommissionBase.grossreceipts, amount: 0, currency: 'USD' }
+      };
     }
+    const contractId = await this.service.create(contract, version);
+    this.router.navigate(['c/o/marketplace/contract', contractId, 'mandate']);
   }
 
-  public async deleteDistributionDeal(dealId) {
-    // @TODO to implement
-  }
-
-  public submitCart() {
-    return this.cartService.submitCart(this.priceControl.value, this.selectedCurrency);
-  }
 }
