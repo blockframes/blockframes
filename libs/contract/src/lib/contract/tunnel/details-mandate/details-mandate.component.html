@@ -1,1 +1,33 @@
-<p>details-mandate works!</p>
+<tunnel-page>
+    <h4 title>Step 1</h4>
+    <h1 subtitle>Contract Details</h1>
+    <ng-container tunnel-form>
+        <!-- Parties -->
+        <mat-card>
+            <mat-card-header>
+                <mat-card-title>
+                    Parties
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <contract-form-party [form]="parties" type="licensee" hasRole></contract-form-party>
+            </mat-card-content>
+        </mat-card>
+        <!-- Terms -->
+        <ng-container *ngFor="let control of versions.controls; let versionIndex = index">
+            <mat-card>
+                <mat-card-header>
+                    <mat-card-title>
+                        Terms
+                    </mat-card-title>
+                    <mat-card-subtitle>
+                        You can either enter specific term dates or opt for a period triggered by an event
+                    </mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                    <distribution-form-terms [form]="terms(versionIndex)"></distribution-form-terms>
+                </mat-card-content>
+            </mat-card>
+        </ng-container>
+    </ng-container>
+</tunnel-page>
