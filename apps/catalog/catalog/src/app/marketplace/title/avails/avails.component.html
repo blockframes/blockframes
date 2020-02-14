@@ -1,1 +1,79 @@
-<p>avails works!</p>
+<section fxLayout="row" fxLayout="space-between center" fxLayoutGap="24px">
+
+  <!-- Filters -->
+  <aside>
+    <mat-card>
+      <mat-card-content>
+        <mat-accordion multi="true">
+          <catalog-avails-filter [availsForm]="availsForm"></catalog-avails-filter>
+          <article fxLayoutAlign="center center" class="filter-buttons">
+            <button
+              *ngIf="!availsForm.value.isActive"
+              mat-stroked-button color="primary"
+              (click)="applyAvailsFilter()">
+              Apply Avails Filter
+            </button>
+            <button
+              *ngIf="availsForm.value.isActive"
+              mat-stroked-button color="accent"
+              (click)="deactivateAvailsFilter()">
+              Deactivate Avails Filter
+            </button>
+          </article>
+        </mat-accordion>
+      </mat-card-content>
+    </mat-card>
+  </aside>
+
+  <!-- World Map -->
+  <mat-card class="map-card">
+    <mat-card-header></mat-card-header>
+    <mat-card-content>
+      <world-map (select)="select($event)">
+        <ng-container *ngFor="let tag of notLicensedTerritories$ | async; trackBy: trackByTag">
+          <map-feature [tag]="tag.iso_a3" color="foreground-unlicensed" (click)="select($event)"></map-feature>
+        </ng-container>
+        <ng-container *ngFor="let tag of rightsSoldTerritories; trackBy: trackByTag">
+          <map-feature [tag]="tag.iso_a3" color="foreground-sold" (click)="select($event)"></map-feature>
+        </ng-container>
+        <ng-container *ngFor="let tag of availableTerritories; trackBy: trackByTag">
+          <map-feature [tag]="tag.iso_a3" color="foreground-available" (click)="select($event)"></map-feature>
+        </ng-container>
+        <ng-container *ngIf="country$ | async as country" >
+          <map-feature [tag]="country" color="accent"></map-feature>
+        </ng-container>
+        <mat-card class="colors-card">
+          <mat-list>
+            <mat-list-item>
+              <span class="mat-caption">Available</span>
+            </mat-list-item>
+            <mat-list-item>
+              <span class="mat-caption">Rights Sold</span>
+            </mat-list-item>
+            <mat-list-item>
+              <span class="mat-caption">Not Licensed</span>
+            </mat-list-item>
+          </mat-list>
+        </mat-card>
+      </world-map>
+    <chips-autocomplete
+      [form]="availsForm.territories"
+      placeholder="Choose your territories"
+      [items]="territories"
+      store="slug" display="label">
+    </chips-autocomplete>
+    </mat-card-content>
+    <mat-card>
+      <mat-card-content>
+        <span class="mat-body-1">Please select a country to check if exploitation rights are available</span>
+      </mat-card-content>
+      <mat-card-footer>
+        <a mat-button class="mat-body-2">
+          <span>Add to Selection</span>
+          <mat-icon>arrow_forward</mat-icon>
+        </a>
+      </mat-card-footer>
+    </mat-card>
+  </mat-card>
+
+</section>

@@ -109,6 +109,7 @@ export class MarketplaceSearchComponent implements OnInit {
   ]);
   public sortByControl: FormControl = new FormControl('');
   public searchbarTextControl: FormControl = new FormControl('');
+  public territoryControl: FormControl = new FormControl('');
 
   private filterBy$ = this.filterForm.valueChanges.pipe(startWith(this.filterForm.value));
   private filterByAvails$ = this.availsForm.valueChanges.pipe(startWith(this.availsForm.value));
@@ -396,5 +397,19 @@ export class MarketplaceSearchComponent implements OnInit {
     } else {
       this.searchbarTypeForm.setValue('');
     }
+  }
+
+  public applyAvailsFilter() {
+    this.availsForm.get('isActive').setValue(true);
+    this.availsForm.disable({onlySelf: false});
+    this.territoryControl.disable();
+    console.log(this.availsForm.value)
+    // TODO: use controls for territories and medias to make it disablable.
+  }
+
+  public deactivateAvailsFilter() {
+    this.availsForm.get('isActive').setValue(false);
+    this.availsForm.enable();
+    this.territoryControl.enable();
   }
 }
