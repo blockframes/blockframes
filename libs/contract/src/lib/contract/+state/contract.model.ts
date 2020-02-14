@@ -93,9 +93,9 @@ export function createContractPartyDetail(
 ): ContractPartyDetail {
   return {
     status: ContractStatus.unknown,
+    childRoles: [],
     ...params,
     party: createParty(params.party),
-    childRoles: ['observator'],
   };
 }
 
@@ -194,7 +194,7 @@ export function createContractFromFirestore(contract: any): Contract {
       : []
   }
 
-  if(contract.versions) {
+  if (contract.versions) {
     c.versions = contract.versions.map(version => createContractVersionFromFirestore(version));
   }
 

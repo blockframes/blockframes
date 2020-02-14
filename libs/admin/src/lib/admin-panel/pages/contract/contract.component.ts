@@ -54,13 +54,6 @@ export class ContractComponent implements OnInit {
     'price',
   ];
 
-  filterPredicateTableVersions(data: any, filter) {
-    const columnsToFilter = [
-      'id',
-    ];
-    const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
-    return dataStr.toLowerCase().indexOf(filter) !== -1;
-  }
 
   // Table TITLES
   public versionColumnsTableTitles = {
@@ -89,6 +82,7 @@ export class ContractComponent implements OnInit {
     'exploredeals',
   ];
 
+  // FILTERS
   filterPredicateTableTitles(data: any, filter) {
     const columnsToFilter = [
       'id',
@@ -99,6 +93,14 @@ export class ContractComponent implements OnInit {
       'price',
       'movie.main.storeConfig.status',
       'movie.main.storeConfig.storeType',
+    ];
+    const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
+    return dataStr.toLowerCase().indexOf(filter) !== -1;
+  }
+
+  filterPredicateTableVersions(data: any, filter) {
+    const columnsToFilter = [
+      'id',
     ];
     const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
     return dataStr.toLowerCase().indexOf(filter) !== -1;
