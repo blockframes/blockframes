@@ -19,4 +19,8 @@ export class MovieSummaryTechnicalInformationComponent implements OnInit {
     this.salesInfo.valueChanges.subscribe(_ => this.cdr.markForCheck());
     this.versionInfo.valueChanges.subscribe(_ => this.cdr.markForCheck());
   }
+
+  get hasKeys() {
+    return Object.keys(this.versionInfo.controls).length;
+  }
 }

@@ -129,7 +129,7 @@ function createMovieMainControls(main : Partial<MovieMain> = {}) {
     genres: new FormStaticArray(entity.genres, 'GENRES', [Validators.required]),
     originCountries: FormList.factory(entity.originCountries, el => new FormStaticValue(el, 'TERRITORIES', [Validators.required])),
     originalLanguages: FormList.factory(entity.originalLanguages, el => new FormStaticValue(el, 'LANGUAGES')),
-    status: new FormControl(entity.status , [Validators.required]),
+    status: new FormControl(entity.status),
     totalRunTime: new FormControl(entity.totalRunTime),
     shortSynopsis: new FormControl(entity.shortSynopsis, [Validators.maxLength(500)] ),
     stakeholders: new StakeholderMapForm(entity.stakeholders),

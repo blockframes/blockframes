@@ -175,6 +175,10 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
     return this.get('languages');
   }
 
+  get originCountries() {
+    return this.get('originCountries');
+  }
+
   addLanguage(language: LanguagesSlug, value: Partial<MovieLanguageSpecification> = {}) {
     const movieLanguage = createMovieLanguageSpecification(value);
     this.get('languages').addControl(language, createLanguageControl(movieLanguage));
@@ -206,17 +210,6 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
     }
   }
 
-  addSalesAgent(salesAgent: string) {
-    this.get('salesAgent').setValue([...this.get('salesAgent').value, salesAgent]);
-  }
-
-  removeSalesAgent(salesAgent: string) {
-    const newControls = this.get('salesAgent').value.filter(
-      salesAgentToRemove => salesAgentToRemove !== salesAgent
-    );
-    this.get('salesAgent').setValue(newControls);
-  }
-
   checkCertification(certificationChecked: CertificationsSlug) {
     // check if certification is already checked by the user
     if (
@@ -236,25 +229,6 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
       throw new Error(`Certification ${certificationChecked} doesn't exist`);
     }
 
-  }
-
-  addCountry(country: TerritoriesSlug) {
-    // Check it's part of the list available
-    if (!TERRITORIES_SLUG.includes(country)) {
-      throw new Error(
-        `Country ${country} is not part of the list.`
-      );
-    }
-    // Check it's not already in the form control
-    const territoriesValue = this.get('originCountries').value;
-    if (!territoriesValue.includes(country)) {
-      this.get('originCountries').push(new FormControl(country));
-    }
-    // Else do nothing as it's already in the list
-  }
-
-  removeCountry(index: number) {
-    this.get('originCountries').removeAt(index);
   }
 
 }

@@ -83,7 +83,7 @@
                 <catalog-right-list [source]="deals.value"></catalog-right-list>
               </ng-container>
               <ng-template #noDeal >
-                <a [routerLink]="['..', movie.id]" color="warn">
+                <a mat-button [routerLink]="['..', movie.id]" color="warn">
                   Add a right on this title.
                 </a>
               </ng-template>

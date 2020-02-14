@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit } from '@angular/core';
-import { MovieMainForm } from '@blockframes/movie/movie/form/main/main.form';
+import { MovieMainForm, DirectorForm } from '@blockframes/movie/movie/form/main/main.form';
 
 @Component({
   selector: '[main] movie-summary-main',
@@ -15,5 +15,9 @@ export class MovieSummaryMainComponent implements OnInit {
 
   ngOnInit() {
     this.main.valueChanges.subscribe(_ => this.cdr.markForCheck());
+  }
+
+  public directorHasErrorRequired(director: DirectorForm) {
+    return director.get('firstName').hasError('required') || director.get('lastName').hasError('required');
   }
 }

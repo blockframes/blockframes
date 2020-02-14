@@ -78,11 +78,6 @@ export class FormList<T, Control extends AbstractControl = any> extends FormArra
     return this.at(this.length - 1);
   }
 
-  /** Custom Method to get the last control */
-  first(): Control {
-    return this.at(0);
-  }
-
   /**
    * Custom method to add a Control using the createControl method
    */
@@ -143,8 +138,8 @@ export class FormList<T, Control extends AbstractControl = any> extends FormArra
     }
   }
 
-  /** 
-   * 
+  /**
+   *
    * @note This method was previously overrided. If you want set the exacte value (add, edit & remove) use patchAllValue
    */
   patchValue(

@@ -15,6 +15,10 @@ export class FormEntity<C extends EntityControl<T>, T = any> extends FormGroup {
     return super.get(path) as C[K];
   }
 
+  setControl<K extends keyof C>(path: Extract<K, string>, control: C[K]) {
+    super.setControl(path, control);
+  }
+
   /**
    * Use to apply patchAllValue to FormList
    * @note this method is specific from FormList and is not part and Angular FormArray interface

@@ -14,14 +14,21 @@
   </li>
   <li>
     <strong>Versions </strong>
-    <ng-container *ngFor="let version of versionInfo.controls | keyvalue; let isLast = last">
-      {{ version.key | translateSlug: 'LANGUAGES'}}:
-      <ng-container *ngFor="let info of version.value.controls | keyvalue; let isLast = last">
-        <ng-container *ngIf="info.value.value === true">
-          {{ info.key | translateSlug: 'VERSION_INFO' }}{{ isLast ? '' : ', ' }}
-        </ng-container>
-      </ng-container>
-      {{ isLast ? '' : '| ' }}
+    <ng-container *ngIf="!hasKeys else displayVersions">
+      <a [routerLink]="link" class="missing-control">
+        Missing
+      </a>
     </ng-container>
+    <ng-template #displayVersions>
+      <ng-container *ngFor="let version of versionInfo.controls | keyvalue; let isLast = last">
+        {{ version.key | translateSlug: 'LANGUAGES'}}:
+        <ng-container *ngFor="let info of version.value.controls | keyvalue; let isLast = last">
+          <ng-container *ngIf="info.value.value === true">
+            {{ info.key | translateSlug: 'VERSION_INFO' }}{{ isLast ? '' : ', ' }}
+          </ng-container>
+        </ng-container>
+        {{ isLast ? '' : '| ' }}
+      </ng-container>
+    </ng-template>
   </li>
 </ul>

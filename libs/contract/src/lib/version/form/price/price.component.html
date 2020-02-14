@@ -1,13 +1,11 @@
 <!-- Currency -->
 <h5>CONTRACT CURRENCY</h5>
-<mat-form-field [formGroup]="form" appearance="outline">
-  <mat-label>Currency</mat-label>
-  <mat-select formControlName="currency">
-    <mat-option *ngFor="let currency of staticCurrencies" [value]="currency.slug">
-      {{ currency.label }}
-    </mat-option>
-  </mat-select>
-</mat-form-field>
+<static-select scope="MOVIE_CURRENCIES" [control]="currencyCtrl" label="Currency">
+  <ng-template let-currency>
+    <mat-icon [svgIcon]="currency.slug" matPrefix></mat-icon>
+    <span>{{ currency.label }}</span>
+  </ng-template>
+</static-select>
 
 <!-- Movie selection-->
 <article fxLayout="column">
@@ -16,13 +14,41 @@
     Add titles to your selection if needed and then offer a price. You may
     choose to put a price forthe entire package or one for each title.
   </span>
-  <mat-form-field appearance="outline" fxLayout="row" fxLayoutAlign="baseline start">
-    <input matInput type="text" [formControl]="movieCtrl">
-    <button *ngIf="movieCtrl.value" matSuffix mat-icon-button aria-label="Clear" (click)="movieCtrl.reset()">
-      <mat-icon svgIcon="close"></mat-icon>
-    </button>
-    <button mat-icon-button matPrefix aria-label="Search">
-      <mat-icon>search</mat-icon>
-    </button>
+  <mat-form-field appearance="outline">
+    <input matInput type="text" [formControl]="movieCtrl" autocomplete="off" [matAutocomplete]="auto"
+      placeholder="Search for a movie..." aria-label="Search for a movie">
+    <mat-icon svgIcon="magnifying_glasses" matPrefix></mat-icon>
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addMovie($event)">
+      <mat-option *ngFor="let movie of movieSearchResults$ | async" [value]="movie">
+        {{ movie.main.title.international }}
+      </mat-option>
+    </mat-autocomplete>
   </mat-form-field>
+  <form *ngFor="let movie of movies$ | async; let i = index" [formGroup]="priceForm(movie.id)">
+    <div fxLayout="row" fxLayoutAlign="space-between start">
+      <movie-banner [movie]="movie"></movie-banner>
+      <div fxLayout="column" fxLayoutAlign="start end">
+        <mat-form-field appearance="outline">
+          <mat-label>Title Price</mat-label>
+          <input matInput type="number" formControlName="amount" required>
+          <mat-icon [svgIcon]="currencyCtrl.value" matSuffix></mat-icon>
+        </mat-form-field>
+        <button color="warn" (click)="removeTitle(i, movie.id)" mat-mini-fab>
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </div>
+  </form>
 </article>
+<mat-divider></mat-divider>
+<div fxLayout="row" fxLayoutAlign="space-between center" class="package-price">
+  <h3>Offer a total Package Price</h3>
+  <mat-form-field appearance="outline" class="currency">
+    <mat-label>Package Price</mat-label>
+    <input matInput [formControl]="totalAmount" type="number">
+    <mat-hint *ngIf="totalPrice | async">
+      Your Package Price must be equal to the sum of each Title Price.
+    </mat-hint>
+    <mat-icon matSuffix [svgIcon]="currencyCtrl.value"></mat-icon>
+  </mat-form-field>
+</div>

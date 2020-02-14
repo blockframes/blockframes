@@ -2,10 +2,17 @@
   <ng-container *ngFor="let festivalPrize of festivalPrizes.prizes.controls">
     <li>
       <strong>Festival </strong>
-      <missing-control [control]="festivalPrize.get('name')" [link]="link"></missing-control>,
-      <missing-control [control]="festivalPrize.get('prize')" [link]="link"></missing-control>,
-      <missing-control [control]="festivalPrize.get('year')" [link]="link"></missing-control>,
-      <missing-control [control]="festivalPrize.get('premiere')" [link]="link"></missing-control>
+      <ng-container *ngIf="festivalPrizeHasNoValue(festivalPrize) else display">
+        <a [routerLink]="link" class="missing-control">
+          Missing
+        </a>
+      </ng-container>
+      <ng-template #display>
+        <missing-control [control]="festivalPrize.get('name')" [link]="link"></missing-control>,
+        <missing-control [control]="festivalPrize.get('prize')" [link]="link"></missing-control>,
+        <missing-control [control]="festivalPrize.get('year')" [link]="link"></missing-control>,
+        <missing-control [control]="festivalPrize.get('premiere')" [link]="link"></missing-control>
+      </ng-template>
     </li>
   </ng-container>
 </ul>

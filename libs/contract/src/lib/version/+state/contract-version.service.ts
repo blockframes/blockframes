@@ -9,7 +9,10 @@ import { ContractVersionDocumentWithDates } from '@blockframes/contract/contract
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'contracts/:contractId/versions' })
 export class ContractVersionService extends CollectionService<ContractVersionState> {
-  constructor(private contractQuery: ContractQuery, store: ContractVersionStore) {
+  constructor(
+    private contractQuery: ContractQuery,
+    store: ContractVersionStore
+  ) {
     super(store);
   }
 

@@ -3,12 +3,12 @@ import { MovieCardModule } from "@blockframes/ui/movie-card/movie-card.module";
 import { MovieDisplayListModule } from '@blockframes/movie/movie/components/display-list/display-list.module';
 import { TranslateSlugModule } from "@blockframes/utils/pipes/translate-slug.module";
 import { MovieFormGenresModule } from "@blockframes/movie/movie/form/main/genres/genres.module";
+import { AvailsFilterModule } from '@blockframes/catalog/components/avails-filter/avails-filter.module';
 
 // Pages
 import { MarketplaceSearchComponent } from './search.component';
 
 // Material
-import { MatNativeDateModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
@@ -25,7 +25,6 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatCardModule } from '@angular/material/card';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 
 // Angular
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -34,6 +33,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+import { ChipsAutocompleteModule } from "@blockframes/ui/form/chips-autocomplete/chips-autocomplete.module";
 
 @NgModule({
   declarations: [MarketplaceSearchComponent],
@@ -46,6 +46,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     MovieDisplayListModule,
     TranslateSlugModule,
     MovieFormGenresModule,
+    AvailsFilterModule,
+    ChipsAutocompleteModule,
 
     // Material
     MatIconModule,
@@ -59,13 +61,11 @@ import { ReactiveFormsModule } from '@angular/forms';
     MatAutocompleteModule,
     MatListModule,
     MatChipsModule,
-    MatNativeDateModule,
     MatCardModule,
     MatSelectModule,
     MatDatepickerModule,
     MatOptionModule,
     MatSnackBarModule,
-    MatSlideToggleModule,
 
     RouterModule.forChild([
       {

@@ -8,7 +8,13 @@
   <li>
     <strong>Genres </strong>
     <ng-container *ngFor="let genre of genres; let isLast = last">
-      <missing-control [control]="genre" scope="GENRES" [link]="link" [isLast]="isLast"></missing-control>
+      <!-- We don't want to display missing for custom genres so we display the value without missing-control -->
+      <ng-container *ngIf="!isLast else last">
+        <missing-control [control]="genre" scope="GENRES" [link]="link" [isLast]="isLast"></missing-control>
+      </ng-container>
+      <ng-template #last>
+        {{ genre.value }}
+      </ng-template>
     </ng-container>
   </li>
   <li>

@@ -1,37 +1,61 @@
 <ul>
   <li>
     <strong>Budget </strong>
-    <ng-container *ngIf="budget.get('estimatedBudget').value as estimatedBudget">
-      {{ budgetRange(estimatedBudget) }}
+    <ng-container *ngIf="!budget.get('estimatedBudget').value.label else displayBudget">
+      <a [routerLink]="link" class="missing-control">
+        Missing
+      </a>
     </ng-container>
+    <ng-template #displayBudget>
+      {{ budgetRange(budget.get('estimatedBudget').value) }}
+    </ng-template>
   </li>
   <ng-container *ngFor="let boxOffice of budget.get('boxOffice').controls">
     <li>
-      <strong>{{ boxOffice.get('territory').value }} </strong>
+      <ng-container *ngIf="boxOffice.get('territory').value else country">
+        <strong>{{ boxOffice.get('territory').value }} </strong>
+      </ng-container>
+      <ng-template #country>
+        <strong>Country </strong>
+      </ng-template>
       <missing-control [control]="boxOffice.get('value')" [link]="link"></missing-control>
       <missing-control [control]="boxOffice.get('unit')" [link]="link"></missing-control>
     </li>
   </ng-container>
   <li>
     <strong>Quotas </strong>
-    <ng-container *ngFor="let value of salesInfo.get('certifications').value; let isLast = last">
-      {{ value | translateSlug: 'CERTIFICATIONS' }}{{ isLast ? '' : ', ' }}
+    <ng-container *ngIf="!salesInfo.get('certifications').value.length else displayQuotas">
+      <a [routerLink]="link" class="missing-control">
+        Missing
+      </a>
     </ng-container>
+    <ng-template #displayQuotas>
+      <ng-container *ngFor="let value of salesInfo.get('certifications').value; let isLast = last">
+        {{ value | translateSlug: 'CERTIFICATIONS' }}{{ isLast ? '' : ', ' }}
+      </ng-container>
+    </ng-template>
   </li>
   <ng-container *ngFor="let rating of salesInfo.get('rating').controls">
     <li>
       <strong>Rating </strong>
-      <missing-control [control]="rating.get('country')" [link]="link"></missing-control>
+      <missing-control [control]="rating.get('country')" scope="TERRITORIES" [link]="link"></missing-control>
       <missing-control [control]="rating.get('value')" [link]="link"></missing-control>
     </li>
   </ng-container>
-  <ng-container *ngFor="let movieReview of movieReview.controls">
+  <ng-container *ngFor="let review of movieReview.controls">
     <li>
       <strong>Film Review </strong>
-      <missing-control [control]="movieReview.get('criticName')" [link]="link"></missing-control>
-      in
-      <missing-control [control]="movieReview.get('journalName')" [link]="link"></missing-control>
-      "<missing-control [control]="movieReview.get('criticQuote')" [link]="link"></missing-control>"
+      <ng-container *ngIf="reviewHasNoValue(review) else display">
+        <a [routerLink]="link" class="missing-control">
+          Missing
+        </a>
+      </ng-container>
+      <ng-template #display>
+        <missing-control [control]="review.get('criticName')" [link]="link"></missing-control>
+        in
+        <missing-control [control]="review.get('journalName')" [link]="link"></missing-control>
+        "<missing-control [control]="review.get('criticQuote')" [link]="link"></missing-control>"
+      </ng-template>
     </li>
   </ng-container>
 </ul>
