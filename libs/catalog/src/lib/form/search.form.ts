@@ -16,12 +16,13 @@ import {
 } from '@blockframes/utils/static-model/types';
 import { Validators, FormArray } from '@angular/forms';
 import { FormGroup, FormControl } from '@angular/forms';
-import { FormEntity, numberRangeValidator } from '@blockframes/utils';
+import { FormEntity, numberRangeValidator, Terms } from '@blockframes/utils';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 import { MovieLanguageSpecification } from '@blockframes/movie/movie/+state/movie.firestore';
 import { createMovieLanguageSpecification } from '@blockframes/movie/movie/+state/movie.model';
 import { FormStaticArray, FormList, FormStaticValue } from '@blockframes/utils/form';
 import { NumberRange, DateRange } from '@blockframes/utils/common-interfaces';
+import { DistributionDealTermsForm } from '@blockframes/movie/distribution-deals/form/terms/terms.form'
 
 /////////////////////////
 // CatalogGenresFilter //
@@ -43,7 +44,7 @@ export interface CatalogSearch {
 }
 
 export interface AvailsSearch {
-  terms: DateRange;
+  terms: Terms;
   territories: TerritoriesSlug[];
   medias: MediasSlug[];
   exclusivity: boolean;
@@ -78,8 +79,8 @@ function createCatalogSearch(search: Partial<CatalogSearch> = {}): CatalogSearch
 function createAvailsSearch(search: Partial<AvailsSearch> = {}): AvailsSearch {
   return {
     terms: {
-      from: null,
-      to: null
+      start: null,
+      end: null
     },
     territories: [],
     medias: [],
@@ -145,7 +146,7 @@ function createCatalogSearchControl(search: CatalogSearch) {
 
 function createAvailsSearchControl(search: AvailsSearch) {
   return {
-    terms: createTermsControl(search.terms),
+    terms: new DistributionDealTermsForm(search.terms),
     medias: new FormControl(search.medias),
     territories: new FormArray(search.territories.map(territory => new FormControl(territory))),
     exclusivity: new FormControl(search.exclusivity),

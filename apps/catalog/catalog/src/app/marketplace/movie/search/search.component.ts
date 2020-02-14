@@ -245,7 +245,7 @@ export class MarketplaceSearchComponent implements OnInit {
       )
     )
     const availsHasErrors = (
-      !this.availsForm.get('terms').get('from').hasError('min') &&
+      !this.availsForm.get('terms').get('start').hasError('min') &&
       this.availsForm.get('terms').hasError('invalidRange')
     )
 
