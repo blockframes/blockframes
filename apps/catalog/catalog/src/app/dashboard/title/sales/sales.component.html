@@ -13,15 +13,15 @@
           <mat-icon svgIcon="monetization"></mat-icon>
           <span>Total Gross Receipts</span></div>
       </div>
-      <mat-card-title>{{ receipts }}</mat-card-title>
+      <mat-card-title>{{ getMovieReceipt(contracts$ | async, movieId) }}</mat-card-title>
     </mat-card>
-    <mat-card fxFlex="45">
+    <mat-card fxFlex="45" *ngIf="(contracts$ | async) as contracts">
       <div fxLayout="row" fxLayoutAlign="space-between center">
         <div class="mat-body-2">
           <mat-icon svgIcon="sales"></mat-icon>
           <span>Total Sales</span></div>
       </div>
-      <mat-card-title>{{ sales }}</mat-card-title>
+      <mat-card-title>{{ contracts.length }}</mat-card-title>
     </mat-card>
   </div>
 </section>
