@@ -1416,14 +1416,6 @@ export const ISO3166TERRITORIES: EnhancedISO3166Territory[] = [
     fr: "Libéria (le)",
   },
   {
-    slug: "malaysia",
-    label: "Malaysia",
-    iso_a2: "MY",
-    iso_a3: "MYS",
-    numeric_code: 458,
-    fr: "Malaisie (la) ",
-  },
-  {
     slug: "martinique",
     label: "Martinique",
     iso_a2: "MQ",
@@ -1662,14 +1654,6 @@ export const ISO3166TERRITORIES: EnhancedISO3166Territory[] = [
     iso_a3: "LBY",
     numeric_code: 434,
     fr: "Libye (la)",
-  },
-  {
-    slug: "maldives",
-    label: "Maldives",
-    iso_a2: "MV",
-    iso_a3: "MDV",
-    numeric_code: 462,
-    fr: "Maldives (les)",
   },
   {
     slug: "mauritania",
@@ -1912,14 +1896,6 @@ export const ISO3166TERRITORIES: EnhancedISO3166Territory[] = [
     fr: "Liechtenstein (le)",
   },
   {
-    slug: "mali",
-    label: "Mali",
-    iso_a2: "ML",
-    iso_a3: "MLI",
-    numeric_code: 466,
-    fr: "Mali (le)",
-  },
-  {
     slug: "mauritius",
     label: "Mauritius",
     iso_a2: "MU",
@@ -2038,7 +2014,7 @@ export const ISO3166TERRITORIES: EnhancedISO3166Territory[] = [
 /////////////////////
 
 /**
- * @dev Simplify ISO3166TERRITORIES array by returning only slug and label 
+ * @dev Simplify ISO3166TERRITORIES array by returning only slug and label
  */
 export function IsoTerritoriesToSlugAndLabel(): { slug: string, label: string }[] {
   return ISO3166TERRITORIES.map(t => {
