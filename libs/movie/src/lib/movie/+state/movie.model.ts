@@ -345,8 +345,7 @@ export function getMovieTitleList(movies: Movie[]): string[] {
  * @param movieId
  */
 export function getMovieReceipt(contracts: Contract[], movieId: string): number {
-  const sales = getValidatedContracts(contracts);
-  return sales.reduce((sum, contract) => sum + getContractLastVersion(contract).titles[movieId].price.amount, 0);
+  return contracts.reduce((sum, contract) => sum + getContractLastVersion(contract).titles[movieId].price.amount, 0);
 }
 
 /**
