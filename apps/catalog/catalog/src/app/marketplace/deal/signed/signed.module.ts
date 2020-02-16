@@ -1,15 +1,15 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { SignedComponent } from './signed.component';
 
-import { ListComponent } from './list.component';
 
 
 @NgModule({
-  declarations: [ListComponent],
+  declarations: [SignedComponent],
   imports: [
     CommonModule,
-    RouterModule.forChild([{ path: '', component: ListComponent }])
+    RouterModule.forChild([{ path: '', component: SignedComponent }])
   ]
 })
-export class DealListModule { }
+export class SignedModule { }
