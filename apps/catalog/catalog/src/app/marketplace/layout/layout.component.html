@@ -35,11 +35,11 @@
         <img asset="archipel-content.svg" type="logo" alt="Archipel Content Logo" />
       </a>
       <search-widget></search-widget>
-      <a mat-icon-button routerLink="selection">
-        <mat-icon svgIcon="star_fill" [matBadge]="cartCount$ | async" [matBadgeHidden]="!(cartCount$ | async)" matBadgeColor="accent" matBadgeSize="small" ></mat-icon>
+      <a mat-icon-button>
+        <mat-icon svgIcon="star_fill" ></mat-icon>
       </a>
-      <button mat-icon-button >
-        <mat-icon svgIcon="basket"></mat-icon>
+      <button mat-icon-button routerLink="selection">
+        <mat-icon svgIcon="basket" [matBadge]="cartCount$ | async" [matBadgeHidden]="!(cartCount$ | async)" matBadgeColor="accent" matBadgeSize="small"></mat-icon>
       </button>
       <mat-divider vertical></mat-divider>
       <overlay-notification-widget></overlay-notification-widget>
