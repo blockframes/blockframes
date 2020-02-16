@@ -1,12 +1,12 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
-  selector: 'marketplace-deal-list',
-  templateUrl: './list.component.html',
-  styleUrls: ['./list.component.scss'],
+  selector: 'catalog-negociation',
+  templateUrl: './negociation.component.html',
+  styleUrls: ['./negociation.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ListComponent implements OnInit {
+export class NegociationComponent implements OnInit {
 
   constructor() { }
 

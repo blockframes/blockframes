@@ -6,7 +6,7 @@ import { MovieActiveGuard } from '@blockframes/movie';
 import { LayoutComponent } from './layout/layout.component';
 import { LayoutModule } from './layout/layout.module';
 import { TunnelGuard } from '@blockframes/ui/tunnel';
-import { ActiveContractGuard } from '@blockframes/contract/contract/guards/active-contract.guard';
+import { ActiveContractGuard } from '@blockframes/contract';
 
 const routes: Routes = [{
   path: '',
@@ -64,6 +64,8 @@ const routes: Routes = [{
         loadChildren: () => import('./deal/list/list.module'),
       },{
         path: ':dealId',
+        canActivate: [ActiveContractGuard],
+        canDeactivate: [ActiveContractGuard],
         loadChildren: () => import('./deal/view/view.module') 
       }]
     },
