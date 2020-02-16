@@ -58,6 +58,16 @@ const routes: Routes = [{
       ]
     },
     {
+      path: 'deal',
+      children: [{
+        path: '',
+        loadChildren: () => import('./deal/list/list.module'),
+      },{
+        path: ':dealId',
+        loadChildren: () => import('./deal/view/view.module') 
+      }]
+    },
+    {
       path: ':movieId',
       canActivate: [MovieActiveGuard],
       canDeactivate: [MovieActiveGuard],
