@@ -28,12 +28,17 @@ export class OverlayWidgetInputDirective {
 }
 
 // OVERLAY TRIGGERED ON Hover
-@Directive({ selector: "mat-icon[widgetTarget]" })
-export class OverlayWidgetIconDirective {
+@Directive({ selector: "[widgetTooltip]" })
+export class OverlayWidgetTooltipDirective {
 
-  @Input() widgetTarget: OverlayWidgetComponent;
-  @HostListener('mouseover') onMouseOver() {
-    this.widgetTarget.open(this.el);
+  @Input() widgetTooltip: OverlayWidgetComponent;
+  @HostListener('mouseenter') onMouseEnter() {
+    this.widgetTooltip.open(this.el);
+  }
+  @HostListener('mouseleave') onMouseLeave() {
+    setTimeout(() => {
+      this.widgetTooltip.close();
+    }, 1000)
   }
 
   constructor(private el: ElementRef) {}

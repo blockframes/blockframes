@@ -1,12 +1,12 @@
 import { NgModule } from '@angular/core';
-import { OverlayWidgetButtonDirective, OverlayWidgetInputDirective, OverlayWidgetIconDirective } from './overlay-widget.directive';
+import { OverlayWidgetButtonDirective, OverlayWidgetInputDirective, OverlayWidgetTooltipDirective } from './overlay-widget.directive';
 import { OverlayModule } from '@angular/cdk/overlay';
 import { OverlayWidgetComponent, WidgetHeaderDirective, WidgetCardDirective, WidgetFooterDirective } from './overlay-widget.component';
 
 const components = [
   OverlayWidgetButtonDirective,
   OverlayWidgetInputDirective,
-  OverlayWidgetIconDirective,
+  OverlayWidgetTooltipDirective,
   OverlayWidgetComponent,
   WidgetHeaderDirective,
   WidgetCardDirective,
