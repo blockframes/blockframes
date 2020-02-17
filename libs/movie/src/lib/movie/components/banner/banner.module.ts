@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { BannerComponent, BannerActionsDirective } from './banner.component';
 import { ImageReferenceModule } from '@blockframes/ui/media';
+import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
 
 
 
@@ -11,6 +12,7 @@ import { ImageReferenceModule } from '@blockframes/ui/media';
   imports: [
     CommonModule,
     ImageReferenceModule,
+    TranslateSlugModule,
   ]
 })
 export class MovieBannerModule { }
