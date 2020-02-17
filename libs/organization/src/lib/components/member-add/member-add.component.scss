@@ -5,10 +5,14 @@
 }
 .send {
   margin-top: 40px;
+  margin-bottom: 20px;
 }
 
 mat-card-content {
   margin-bottom: 0;
+  .action {
+    margin-bottom: 24px;
+  }
 }
 
 @include mobile {
