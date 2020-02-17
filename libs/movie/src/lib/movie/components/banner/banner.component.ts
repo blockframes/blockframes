@@ -14,14 +14,14 @@ export class BannerComponent {
   public poster: ImgRef;
   public title: Title;
   public director: string;
-  public countries: string;
+  public countries: string[];
   public date: number;
 
   @Input() set movie(movie: Movie) {
     this.poster = movie.promotionalElements.poster[0] && movie.promotionalElements.poster[0].media;
     this.title = movie.main.title;
     this.director = movie.main.directors.map(d => `${d.firstName} ${d.lastName}`).join(', ');
-    this.countries = movie.main.originCountries.join(', ');
+    this.countries = movie.main.originCountries;
     this.date = movie.main.productionYear;
   }
 }
