@@ -9,8 +9,6 @@ import { getContractLastVersion } from '@blockframes/contract/version/+state/con
 import { ContractQuery } from '@blockframes/contract/contract/+state';
 import { map } from 'rxjs/operators';
 
-const eventList = ['movieViews', 'addedToWishlist', 'promoReelOpened'];
-
 @Component({
   selector: 'catalog-title-sales',
   templateUrl: './sales.component.html',
@@ -33,7 +31,7 @@ export class TitleSalesComponent implements OnInit {
     this.movieId = this.movieQuery.getActiveId();
     this.movieAnalytics$ = this.movieService.getMovieAnalytics([this.movieId]);
     this.contracts$ = this.contractQuery.selectAll().pipe(
-      map(contracts => contracts.filter((contract)=>getContractLastVersion(contract).titles[this.movieId]))
+      map(contracts => contracts.filter(contract =>getContractLastVersion(contract).titles[this.movieId]))
     )
   }
 }
