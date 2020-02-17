@@ -1,11 +1,9 @@
-import { MovieLanguageSpecification } from '@blockframes/movie/movie/+state/movie.firestore';
-import { MatButtonToggleChange } from '@angular/material/button-toggle';
-import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { tap } from 'rxjs/operators';
+import { FormControl } from '@angular/forms';
+import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core';
 import { MovieVersionInfoForm } from '@blockframes/movie/movie/form/version-info/version-info.form';
 import { FormStaticValue } from '@blockframes/utils/form';
 import { LanguagesSlug } from '@blockframes/utils/static-model';
-import { MatSlideToggleChange } from '@angular/material';
-import { createMovieLanguageSpecification } from '@blockframes/movie/movie/+state/movie.model';
 
 @Component({
   selector: '[form] distribution-form-languages',
@@ -13,12 +11,18 @@ import { createMovieLanguageSpecification } from '@blockframes/movie/movie/+stat
   styleUrls: ['./languages.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DistributionDealLanguagesComponent {
+export class DistributionDealLanguagesComponent implements OnInit {
   @Input() form: MovieVersionInfoForm;
 
   public languageCtrl = new FormStaticValue(null, 'LANGUAGES');
 
-  public formIsDisabled = false;
+  public toggleCtrl = new FormControl();
+
+  ngOnInit() {
+    this.toggleCtrl.valueChanges.pipe(
+      tap(value => this.stateOfForm(value))
+    ).subscribe()
+  }
 
   public updateForm() {
     if (this.languageCtrl.valid) {
@@ -28,26 +32,11 @@ export class DistributionDealLanguagesComponent {
   }
 
   public removeLanguage(language: LanguagesSlug) {
+    if (language === 'all') {
+      this.form.removeLanguage(language);
+      this.stateOfForm(false);
+    }
     this.form.removeLanguage(language);
-  }
-
-  /**
-   * @description when user changes languages we want to update the state of the toggle buttons
-   * @param language language for checking the value
-   * @param button which button should be checked
-   */
-  public isChecked(language: string, button: string) {
-    return this.form.get(language).value[button];
-  }
-
-  /**
-   * @description update the specification of this language
-   * @param event emitted by button
-   * @param language language which should be updated
-   */
-  public updateVersionInfo(event: MatButtonToggleChange, language: string) {
-    const state: MovieLanguageSpecification = this.form.get(language).value;
-    this.form.get(language).setValue({ ...state, [event.value]: !state[event.value] });
   }
 
   /**
@@ -56,28 +45,26 @@ export class DistributionDealLanguagesComponent {
    * @param prop the property which should be set to true
    */
   private addAllVersions(language: string, prop: string) {
-    this.form.get(language).value[prop] = true;
+    this.form.get(language).get(prop).setValue(true);
   }
 
   /**
    * @description disable the form and set all versions to true
    * @param event boolean value if button is checked or not
    */
-  public stateOfForm(event: MatSlideToggleChange) {
-    if (event.checked) {
+  public stateOfForm(value: boolean) {
+    if (value) {
       this.form.addLanguage('all');
       this.languageCtrl.disable();
-      this.formIsDisabled = true;
       for (const language in this.form.controls) {
         const buttons = ['dubbed', 'subtitle', 'caption'];
         buttons.forEach(button => {
-          this.isChecked(language, button);
           this.addAllVersions(language, button);
         });
+        this.form.disable();
       }
     } else {
       this.languageCtrl.enable();
-      this.formIsDisabled = false;
       this.form.removeLanguage('all');
     }
   }

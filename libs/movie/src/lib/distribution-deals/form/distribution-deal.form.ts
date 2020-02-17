@@ -19,7 +19,10 @@ function createDistributionDealControls(deal: Partial<DistributionDeal>) {
     licenseType: new FormControl(entity.licenseType),
     terms: new DistributionDealTermsForm(entity.terms),
     holdbacks: FormList.factory(entity.holdbacks, holdback => new DistributionDealHoldbacksForm(holdback)),
-    assetLanguage: new MovieVersionInfoForm(deal.assetLanguage)
+    assetLanguage: new MovieVersionInfoForm(deal.assetLanguage),
+    multidiffusion: FormList.factory(entity.multidiffusion, multi => new DistributionDealTermsForm(multi)),
+    catchUp: new DistributionDealTermsForm(entity.catchUp),
+    download: new FormControl(entity.download)
   };
 }
 

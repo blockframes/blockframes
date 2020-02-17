@@ -1,95 +1,113 @@
 <tunnel-page>
-  <h4 title>LICENSED RIGHTS</h4>
-  <h1 subtitle>Ongoing Deals</h1>
-  <p description>
-    Please add below all ongoing licensed rights you want to sell on Archipel Content marketplace when
-    they are free.
-  </p>
+  <h4 title>STEP 2</h4>
+  <h1 subtitle>Exploitation Rights</h1>
+  <article description fxLayout="row" fxLayoutAlign="space-between start">
+    <movie-banner *ngIf="movie$ | async as movie" [movie]="movie"></movie-banner>
+    <div fxLayout="column">
+      <button></button>
+      <button></button>
+    </div>
+  </article>
   <ng-container tunnel-form>
-    <ng-container *ngIf="formContract">
-      <ng-container *ngFor="let control of formContract.controls; let contractIndex = index;">
-        <!-- TODO #1523 -->
-        <h2>Deal #{{ contractIndex + 1 }}</h2>
-        <mat-accordion>
-          <mat-expansion-panel>
-            <mat-expansion-panel-header>
-              <mat-panel-title>
-                Deal {{ contractIndex + 1 }}
-              </mat-panel-title>
-            </mat-expansion-panel-header>
-            <ng-template matExpansionPanelContent>
-              <h3>Deal</h3>
-              <!-- Licensee Name -->
-              <contract-form-party-name [form]="contractParties(contractIndex)">
-              </contract-form-party-name>
-              <mat-divider></mat-divider>
-              <!-- All Deals -->
-              <ng-container
-                *ngFor="let dealControl of distMap[control.value.id]; let dealIndex = index; trackBy: trackDeals">
-                <ng-template [ngTemplateOutlet]="deal" [ngTemplateOutletContext]="{ $implicit: dealControl }">
-                  <ng-content></ng-content>
-                </ng-template>
-              </ng-container>
-            </ng-template>
-          </mat-expansion-panel>
-          <button mat-flat-button color="warn" (click)="deleteContract(contractIndex)">
-            <mat-icon>delete</mat-icon>
-            <span>Delete deal</span>
-          </button>
-        </mat-accordion>
-      </ng-container>
+    <h2>Exploitation Rights</h2>
+    <!-- All Deals -->
+    <ng-container *ngFor="let dealControl of dealForm.controls; let dealIndex = index;">
+      <ng-template [ngTemplateOutlet]="deal"
+        [ngTemplateOutletContext]="{$implicit: { control: dealControl, index: dealIndex }}">
+        <ng-content></ng-content>
+      </ng-template>
     </ng-container>
-    <button mat-flat-button (click)="addContract()">
-      <!-- TODO #1523 another or new-->
-      <mat-icon>account_balance_wallet</mat-icon>
-      <span>Add another deal</span>
+    <button mat-flat-button (click)="addDeal()">
+      <mat-icon svgIcon="world"></mat-icon>
+      <span>Add Exploitation Rights</span>
     </button>
   </ng-container>
 </tunnel-page>
 ​
 <!-- TEMPLATE DEAL -->
-<ng-template #deal let-dealControl>
-  <!-- Territories -->
-  <h3>Territories to this deal</h3>
-  <distribution-form-territory [form]="dealControl"></distribution-form-territory>
-  <mat-divider></mat-divider>
-  <!-- Territories -->
-  <h3>Territories to this deal</h3>
-  <distribution-form-territory [form]="dealControl"></distribution-form-territory>
-  <mat-divider></mat-divider>
-  <!-- Media rights -->
-  <h3>Rights</h3>
-  <span class="caption">Only fill out fields that apply</span>
-  <distribution-form-rights [form]="dealControl"></distribution-form-rights>
-  <mat-divider></mat-divider>
-  <!-- Terms specification -->
-  <h3>Terms</h3>
-  <span class="caption">You can either enter specific term dates or a license period</span>
-  <distribution-form-terms [form]="distributionDealTerms(dealControl)"></distribution-form-terms>
-  <mat-divider></mat-divider>
-  <!-- Holdbacks -->
-  <!-- TODO #1523 -->
-  <h3>Holdbacks</h3>
-  <span class="caption">Please specify the holdbacks related to this deal, if any.</span>
-  <h6>Holdback Rights</h6>
-  <div fxLayout="column" fxLayoutAlign="start center">
-    <ng-container *ngFor="let holdback of distributionDealHoldbacks(dealControl).controls; let holdbackIndex = index">
-      <distribution-form-holdbacks [form]="holdback"></distribution-form-holdbacks>
-      <button mat-fab color="warn" (click)="removeHoldback(dealControl, holdbackIndex)">
-        <mat-icon>delete</mat-icon>
-      </button>
-    </ng-container>
-    <button mat-fab color="primary" (click)="addHoldback(dealControl)">
-      <mat-icon>add</mat-icon>
-    </button>
-  </div>
-  <mat-divider></mat-divider>
-  <!-- Languages -->
-  <!-- TODO #1523 -->
-  <h3>Languages</h3>
-  <distribution-form-languages [form]="distributionDealAssetLanguages(dealControl)"></distribution-form-languages>
-  <button mat-button (click)="addDistributionDeal(control)">
-    <mat-icon>add</mat-icon>
-    <span>Add any other licensed rights to this sale</span>
-  </button>
+<ng-template #deal let-value>
+  <mat-accordion>
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          #{{ value.index +1 }} Exploitation Right
+        </mat-panel-title>
+      </mat-expansion-panel-header>
+      <ng-template matExpansionPanelContent>
+        <!-- Territories -->
+        <h3>Territories to this deal</h3>
+        <distribution-form-territory [form]="value.control"></distribution-form-territory>
+        <mat-divider></mat-divider>
+        <!-- Media rights -->
+        <h3>Rights</h3>
+        <span class="caption">Only fill out fields that apply</span>
+        <distribution-form-rights [form]="value.control"></distribution-form-rights>
+        <mat-divider></mat-divider>
+        <!-- Terms specification -->
+        <h3>Terms</h3>
+        <span class="caption">You can either enter specific term dates or a license period</span>
+        <distribution-form-terms [form]="distributionDealTerms(value.control)"></distribution-form-terms>
+        <mat-divider></mat-divider>
+        <!-- Holdbacks -->
+        <!-- TODO #1523 -->
+        <h3>Holdbacks</h3>
+        <span class="caption">Please specify the holdbacks related to this deal, if any.</span>
+        <h6>Holdback Rights</h6>
+        <div fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="20px">
+          <ng-container
+            *ngFor="let holdback of distributionDealHoldbacks(value.control).controls; let holdbackIndex = index">
+            <distribution-form-holdbacks [form]="holdback"></distribution-form-holdbacks>
+            <button mat-mini-fab color="warn" (click)="removeHoldback(value.control, holdbackIndex)">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </ng-container>
+          <button mat-mini-fab color="primary" (click)="addHoldback(value.control)">
+            <mat-icon svgIcon="add"></mat-icon>
+          </button>
+        </div>
+        <mat-divider></mat-divider>
+        <!-- Languages -->
+        <!-- TODO #1523 -->
+        <h3>Languages</h3>
+        <distribution-form-languages [form]="distributionDealAssetLanguages(value.control)">
+        </distribution-form-languages>
+        <mat-divider></mat-divider>
+        <!-- Broadcast -->
+        <h3>TV Criteria</h3>
+        <ng-container *ngIf="showTVCriteria | async; else add">
+          <distribution-form-broadcast [form]="value.control"></distribution-form-broadcast>
+          <mat-slide-toggle (change)="toggleCatchUp($event, value.control)" [formControl]="toggleStateCtrl"
+            color="primary">CATCHUP</mat-slide-toggle>
+          <distribution-form-terms [form]="distributionDealCatchUp(value.control)"
+            [slideButtonState]="toggleStateCtrl.value">
+          </distribution-form-terms>
+          <h5>TEMPORARY DOWNLOAD</h5>
+          <div fxLayout="row">
+            <span>No</span>
+            <mat-slide-toggle [formControl]="distributionDealDownload(value.control)" color="primary">Yes
+            </mat-slide-toggle>
+          </div>
+          <div fxLayout="row" fxLayoutAlign="center start">
+            <button mat-mini-fab matTooltip="Delete TV Criteria" (click)="removeTVCriteria(value.control)" color="warn">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </ng-container>
+        <ng-template #add>
+          <div fxLayout="row" fxLayoutAlign="center start">
+            <button mat-mini-fab (click)="showTVCriteria.next(true)" matTooltip="Add TV Criteria" color="primary">
+              <mat-icon svgIcon="add"></mat-icon>
+            </button>
+          </div>
+        </ng-template>
+        <mat-divider></mat-divider>
+        <div fxLayout="row" fxLayoutAlign="center start">
+          <button mat-stroked-button color="warn" color="warn" (click)="removeDeal(value.index)">
+            <mat-icon>delete</mat-icon>
+            <span>Delete Exploitation Rights</span>
+          </button>
+        </div>
+      </ng-template>
+    </mat-expansion-panel>
+  </mat-accordion>
 </ng-template>

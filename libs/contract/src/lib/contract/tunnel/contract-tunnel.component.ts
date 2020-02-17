@@ -81,10 +81,10 @@ export class ContractTunnelComponent implements OnInit {
     const contract = this.query.getActive();
     this.type = contract.type;
     this.contractForm = new ContractForm(contract);
-    
+
     // Set the initial deals
     contract.titleIds.forEach(async movieId => {
-      const deals = await this.dealService.getValue({ params: { movieId }});
+      const deals = await this.dealService.getValue({ params: { movieId } });
       this.dealForms.setControl(movieId, FormList.factory(deals, deal => new DistributionDealForm(deal)));
     });
 
@@ -97,7 +97,7 @@ export class ContractTunnelComponent implements OnInit {
       switchMap(titleIds => this.movieService.getValue(titleIds)),
       shareReplay()
     );
-    
+
     // Update the step
     this.steps$ = this.movies$.pipe(
       map(movies => fillMovieSteps(movies))
@@ -156,7 +156,7 @@ export class ContractTunnelComponent implements OnInit {
     // Upsert deals
     for (const movieId in this.dealForms.controls) {
       const deals = this.dealForms.get(movieId).value;
-      deals.forEach(async (deal, i) =>  {
+      deals.forEach(async (deal, i) => {
         if (deal.id) {
           this.dealService.update(deal, { params: { movieId }, write });
         } else {

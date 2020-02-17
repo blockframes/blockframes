@@ -19,6 +19,16 @@ export class DistributionDealTermsComponent implements OnInit, OnDestroy {
 
   @Input() events = Object.keys(PaymentEvent);
 
+  @Input() set slideButtonState(value: boolean) {
+    if (value) {
+      this.eventCtrl.disable();
+      this.periodCtrl.disable();
+    } else {
+      this.eventCtrl.enable();
+      this.periodCtrl.enable();
+    }
+  }
+
   public durations = Object.keys(TimeUnit);
 
   public periodCtrl: FormControl = new FormControl(false);

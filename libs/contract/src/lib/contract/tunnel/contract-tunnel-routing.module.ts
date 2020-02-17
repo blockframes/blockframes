@@ -21,7 +21,7 @@ const routes: Routes = [{
     path: 'summary',
     loadChildren: () => import('./summary-sale/summary-sale.module').then(m => m.SummarySaleModule)
   }, {
-    path: 'deals/:titleId',
+    path: ':titleId',
     loadChildren: () => import('./deal/deal.module').then(m => m.DealModule)
   }]
 }, {
@@ -42,7 +42,7 @@ const routes: Routes = [{
     path: 'summary',
     loadChildren: () => import('./summary-mandate/summary-mandate.module').then(m => m.SummaryMandateModule)
   }, {
-    path: 'deals/:titleId',
+    path: ':titleId',
     loadChildren: () => import('./deal/deal.module').then(m => m.DealModule)
   }]
 }];
