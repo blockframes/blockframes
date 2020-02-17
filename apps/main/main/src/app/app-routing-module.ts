@@ -6,10 +6,12 @@ import { LayoutComponent } from './layout/layout.component';
 import { AppGridComponent } from './app-grid/app-grid.component';
 // Routes utils
 import { App } from '@blockframes/utils';
+import { MaintenanceGuard } from '@blockframes/ui/maintenance';
 
 const routes = [{
   path: '',
-  component: AppGridComponent
+  component: AppGridComponent,
+  canActivate: [MaintenanceGuard],
 },{
   path: 'catalog',
   loadChildren: () => import('@blockframes/apps/catalog/catalog.module').then(m => m.CatalogModule)
