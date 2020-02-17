@@ -1,10 +1,11 @@
 @import 'mixins';
 
-header {
-  padding: 100px 0;
-  background-image: url('/assets/images/banner_empty.png');
-  background-position: center center;
-  background-attachment: fixed;
+.search {
+  margin-top: 0;
+  margin-bottom: 0;
+  mat-label {
+    margin-left: 20px;;
+  }
 }
 
 .grid {
@@ -17,11 +18,6 @@ header {
 
 h5 {
   margin-top: 20px;
-}
-
-.searchbar-section {
-  display: inherit;
-  width: 70%;
 }
 
 .language-button {
@@ -37,10 +33,6 @@ mat-checkbox {
   margin-bottom: 16px;
 }
 
-.searchbar-header {
-  text-align: center;
-}
-
 mat-form-field {
   width: 100%;
 }
@@ -51,19 +43,6 @@ mat-divider {
 
 .mat-chip.active {
   background-color: var(--primary);
-}
-
-.input-form {
-  display: block;
-  height: 100%;
-}
-
-.searchbar-select {
-  border-left: 1px solid var(--lightGrey);
-  border-right: 1px solid var(--lightGrey);
-  padding: 10px;
-  height: 100%;
-  width: 20%;
 }
 
 movie-card {
