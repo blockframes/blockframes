@@ -1,8 +1,8 @@
 import { DistributionDeal, getDealTerritories } from '@blockframes/movie/distribution-deals/+state';
-import { EnhancedISO3166Territory } from '@blockframes/utils/static-model/territories-ISO-3166';
 import { TerritoriesSlug } from '@blockframes/utils/static-model';
 import { AvailsSearch } from '@blockframes/catalog';
-import { getExclusiveDeals, getDealsInDateRange, getFilterMatchingDeals, getDealsWithMedias } from '@blockframes/movie/distribution-deals/create/availabilities.util';
+import { getExclusiveDeals, getDealsInDateRange, getDealsWithMedias } from '@blockframes/movie/distribution-deals/create/availabilities.util';
+import { Model } from '@blockframes/utils/static-model/staticModels';
 
 /**
  * Returns an array of unlicensed territories to display on the world map.
@@ -11,8 +11,8 @@ import { getExclusiveDeals, getDealsInDateRange, getFilterMatchingDeals, getDeal
  */
 export function getNotLicensedTerritories(
   mandateDeals: DistributionDeal[],
-  territories: EnhancedISO3166Territory[]
-): EnhancedISO3166Territory[] {
+  territories: Model['TERRITORIES']
+): Model['TERRITORIES'] {
   const licensedTerritorySlugs = getLicensedTerritorySlugs(mandateDeals);
 
   return territories.filter(territory => !licensedTerritorySlugs.includes(territory.slug));
@@ -29,9 +29,9 @@ export function getNotLicensedTerritories(
 export function getRightsSoldTerritories(
   filter: AvailsSearch,
   mandateDeals: DistributionDeal[],
-  territories: EnhancedISO3166Territory[],
+  territories: Model['TERRITORIES'],
   deals: DistributionDeal[]
-): EnhancedISO3166Territory[] {
+): Model['TERRITORIES'] {
   // Grab the territorySlugs from all sales deals, filtered with licensed territories.
   const territorySlugsWithDeals = getTerritorySlugsWithDeals(filter, mandateDeals, deals)
   // Filter again to only keep territories with ongoing sales.
@@ -49,9 +49,9 @@ export function getRightsSoldTerritories(
 export function getAvailableTerritories(
   filter: AvailsSearch,
   mandateDeals: DistributionDeal[],
-  territories: EnhancedISO3166Territory[],
+  territories: Model['TERRITORIES'],
   deals: DistributionDeal[]
-): EnhancedISO3166Territory[] {
+): Model['TERRITORIES'] {
   // Grab the territorySlugs from all sales deals, filtered with licensed territories.
   const territorySlugsWithoutDeals = getTerritorySlugsWithoutDeals(filter, mandateDeals, deals)
   // Filter again to only keep territories without any ongoing deals.

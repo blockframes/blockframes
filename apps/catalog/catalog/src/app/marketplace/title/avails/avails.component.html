@@ -29,18 +29,18 @@
   <mat-card class="map-card">
     <mat-card-header></mat-card-header>
     <mat-card-content>
-      <world-map (select)="select($event)">
+      <world-map>
         <ng-container *ngFor="let tag of notLicensedTerritories$ | async; trackBy: trackByTag">
-          <map-feature [tag]="tag.iso_a3" color="foreground-unlicensed" (click)="select($event)"></map-feature>
+          <map-feature [tag]="tag['iso_a3']" color="foreground-unlicensed"></map-feature>
         </ng-container>
         <ng-container *ngFor="let tag of rightsSoldTerritories; trackBy: trackByTag">
-          <map-feature [tag]="tag.iso_a3" color="foreground-sold" (click)="select($event)"></map-feature>
+          <map-feature [tag]="tag['iso_a3']" color="foreground-sold"></map-feature>
         </ng-container>
         <ng-container *ngFor="let tag of availableTerritories; trackBy: trackByTag">
-          <map-feature [tag]="tag.iso_a3" color="foreground-available" (click)="select($event)"></map-feature>
+          <map-feature [tag]="tag['iso_a3']" color="foreground-available" (click)="select($event)"></map-feature>
         </ng-container>
-        <ng-container *ngIf="country$ | async as country" >
-          <map-feature [tag]="country" color="accent"></map-feature>
+        <ng-container *ngFor="let tag of territoriesIsoA3">
+          <map-feature [tag]="tag" color="foreground-selected"></map-feature>
         </ng-container>
         <mat-card class="colors-card">
           <mat-list>
@@ -70,11 +70,37 @@
     </chips-autocomplete>
     </mat-card-content>
     <mat-card [formGroup]="availsForm">
-      <mat-card-content *ngIf="!(country$ | async)">
-        <span class="mat-body-1">Please select a country to check if exploitation rights are available</span>
+      <mat-card-content>
+        <ng-container *ngIf="!availsForm.territories.value.length && !availsForm.value.isActive; else displayDeal">
+          <span class="mat-body-1">Please select a country to check if exploitation rights are available</span>
+        </ng-container>
+        <ng-template #displayDeal>
+          <span class="mat-subheading-2" *ngFor="let territory of availsForm.territories.controls; let isLast = last">
+            {{ territory.value | translateSlug: 'TERRITORIES'}}{{ isLast ? '' : ', ' }}
+          </span>
+          <ul>
+            <li class="mat-body-1">
+              <strong>Terms</strong>
+              <span>
+                {{ availsForm.terms.value.start | date: 'shortDate'}} - {{ availsForm.terms.value.end | date: 'shortDate' }}
+              </span>
+            </li>
+            <li class="mat-body-1"><strong>Media</strong>
+              <span>
+                {{ availsForm.medias.value |  translateSlug: 'MEDIAS'}}
+              </span>
+            </li>
+            <li class="mat-body-1"><strong>Exclusivity</strong>
+              <span>
+                {{ availsForm.exclusivity.value == true ? 'Yes' : 'No'}}
+              </span>
+            </li>
+          </ul>
+        </ng-template>
       </mat-card-content>
-      <mat-card-footer>
-        <a mat-button class="mat-body-2" (click)="addDeal()">
+      <mat-divider></mat-divider>
+      <mat-card-footer fxLayoutAlign="center center">
+        <a mat-button color="primary" class="mat-body-2" (click)="addDeal()">
           <span>Add to Selection</span>
           <mat-icon>arrow_forward</mat-icon>
         </a>

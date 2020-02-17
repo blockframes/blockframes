@@ -8,6 +8,7 @@ import { MarketplaceMovieAvailsComponent } from './avails.component';
 import { AvailsFilterModule } from '@blockframes/catalog/components/avails-filter/avails-filter.module';
 import { MapModule } from '@blockframes/ui/map';
 import { ChipsAutocompleteModule } from '@blockframes/ui/form/chips-autocomplete/chips-autocomplete.module';
+import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -25,6 +26,7 @@ import { MatButtonModule } from '@angular/material/button';
     ReactiveFormsModule,
     MapModule,
     ChipsAutocompleteModule,
+    TranslateSlugModule,
 
     // Material
     MatCardModule,

@@ -9,7 +9,7 @@
     <ng-container formGroupName="terms">
       <mat-form-field appearance="outline">
         <mat-label>Start Date</mat-label>
-        <input matInput formControlName="start" [matDatepicker]="pickerAvailableFrom" placeholder="Start Date" />
+        <input matInput formControlName="start" [matDatepicker]="pickerAvailableFrom" placeholder="Start Date" required/>
         <mat-error *ngIf="availsForm.get('terms').get('start').hasError('min')">
           You only can choose the current year and above.
         </mat-error>
@@ -19,7 +19,7 @@
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>End Date</mat-label>
-        <input matInput formControlName="end" [matDatepicker]="pickerAvailableTo" placeholder="End Date" />
+        <input matInput formControlName="end" [matDatepicker]="pickerAvailableTo" placeholder="End Date" required/>
         <mat-datepicker-toggle test-id="datepicker-to" matSuffix [for]="pickerAvailableTo">
         </mat-datepicker-toggle>
         <mat-datepicker #pickerAvailableTo startView="multi-year" startAt="2020"></mat-datepicker>
