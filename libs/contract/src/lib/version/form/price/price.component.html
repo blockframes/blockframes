@@ -56,7 +56,7 @@
     <mat-form-field appearance="outline" class="currency">
       <mat-label>Distribution Fee</mat-label>
       <input matInput [formControl]="commissionFee" type="number">
-      <mat-hint *ngIf="isFeeSet$ | async">
+      <mat-hint *ngIf="isFeeSet">
         You can't add a common distribution fee if a title has a specific distribution fee.
       </mat-hint>
       <mat-icon svgIcon="percent" matSuffix></mat-icon>

@@ -89,16 +89,13 @@ export class PriceComponent implements OnInit {
   /**
    * @description checks if film has specific fees
    */
-  get isFeeSet$(): Observable<boolean> {
-    const state = new BehaviorSubject(false)
+  get isFeeSet(): boolean {
     for (const id of this.activeMovieIds) {
-      if (this.form.last().get('titles').get(id).get('price').get('commission').value) {
-        state.next(true);
-        return state
+      if (!!this.form.last().value[id].price.commission) {
+        return true
       }
     }
-    state.next(false);
-    return state;
+    return false;
   }
 
   /**

@@ -70,8 +70,9 @@
                 <mat-card-content>
                     <mat-form-field appearance="outline">
                         <mat-label>Recoupable expenses</mat-label>
-                        <textarea matInput [placeholder]="placeholderTermination" cdkTextareaAutosize
-                            #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="5"
+                        <textarea matInput
+                            placeholder="Any actual, direct, third-party, out-of-pocket expenses (which shall exclude overhead) will be recouped if they are incurred for the exploitation of the film(s) in connection with Technical, Marketing, Delivery or Translation will be recouped on Net Receipts. Net Receipts are calculated on 100% of the Gross Receipts excluding taxes, Commission being deducted."
+                            cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="5"
                             [formControl]="fees(versionIndex)"></textarea>
                     </mat-form-field>
                 </mat-card-content>
