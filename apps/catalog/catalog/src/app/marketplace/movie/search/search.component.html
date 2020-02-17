@@ -1,60 +1,3 @@
-<!-- TODO #1146 header stays? -->
-<header class="banner" fxLayout="column" fxLayoutAlign="center center" fxLayoutAlign.xs="center center"
-  fxLayoutGap="20px">
-  <h3 class="searchbar-header">Find the content you're looking for</h3>
-  <!-- Desktop version -->
-  <ng-container *ngIf="!isMobile">
-    <div class="searchbar-section">
-      <form [formGroup]="searchbarForm">
-        <mat-form-field appearance="outline">
-          <mat-label>Find a content</mat-label>
-          <div fxLayout="row nowrap" fxLayoutAlign="end center" class="input-form">
-            <input matInput type="text" [formControl]="searchbarTextControl" autocomplete="off"
-              [matAutocomplete]="searchbar" #autoCompleteInput>
-            <mat-select placeholder="Search by ..." formControlName="type" class="searchbar-select"
-              (openedChange)="toggleAutoCompletion()" required>
-              <mat-option *ngFor="let option of searchbarOptions" [value]="option">{{ option | titlecase }}
-              </mat-option>
-            </mat-select>
-            <mat-autocomplete #searchbar="matAutocomplete" (optionSelected)="addSearchbarValue($event)">
-              <mat-option *ngFor="let result of (resultFilter$ | async)" [value]="result">
-                {{ result }}
-              </mat-option>
-            </mat-autocomplete>
-            <button mat-icon-button matSuffix>
-              <mat-icon svgIcon="search_table"></mat-icon>
-            </button>
-          </div>
-        </mat-form-field>
-      </form>
-    </div>
-    <mat-hint>Please choose a value from the selection</mat-hint>
-  </ng-container>
-  <!-- Mobile version -->
-  <ng-container *ngIf="isMobile">
-    <div class="searchbar" fxLayout="column">
-      <form [formGroup]="searchbarForm">
-        <mat-form-field appearance="outline">
-          <mat-label>Find a content</mat-label>
-          <input matInput type="text" [formControl]="searchbarTextControl" autocomplete="off"
-            [matAutocomplete]="searchbarMobile">
-          <mat-autocomplete #searchbarMobile="matAutocomplete" (optionSelected)="addSearchbarValue($event)">
-            <mat-option *ngFor="let result of (resultFilter$ | async)" [value]="result">
-              {{ result }}
-            </mat-option>
-          </mat-autocomplete>
-        </mat-form-field>
-      </form>
-      <mat-chip-list fxLayout="row" fxLayoutGap="5px">
-        <mat-chip *ngFor="let option of searchbarOptions" [value]="option"
-          [ngClass]="{'active': option === searchbarTypeForm.value}" (click)="selectSearchType(option)">
-          {{ option | titlecase }}
-        </mat-chip>
-      </mat-chip-list>
-    </div>
-  </ng-container>
-</header>
-
 <section fxLayout="row" fxLayoutAlign="space-between center">
   <h1 class="mat-headline">Library</h1>
   <article fxLayout="row" fxLayoutAlign="center center">
@@ -75,6 +18,22 @@
       </mat-select>
     </mat-form-field>
   </article>
+</section>
+
+<section class="search">
+  <form [formGroup]="searchbarForm">
+    <mat-form-field appearance="outline">
+      <mat-label>Search</mat-label>
+      <mat-icon matPrefix svgIcon="magnifying_glasses"></mat-icon>
+      <input matInput type="text" [formControl]="searchbarTextControl" autocomplete="off"
+      [matAutocomplete]="searchbar" #autoCompleteInput>
+      <mat-autocomplete #searchbar="matAutocomplete" (optionSelected)="addSearchbarValue($event)">
+        <mat-option *ngFor="let result of (resultFilter$ | async)" [value]="result">
+          {{ result }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </form>
 </section>
 
 <section fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="50px" fxLayout.lt-md="column"

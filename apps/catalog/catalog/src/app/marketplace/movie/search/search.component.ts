@@ -142,6 +142,7 @@ export class MarketplaceSearchComponent implements OnInit {
     this.algoliaSearchResults$ = this.searchbarForm.valueChanges.pipe(
       debounceTime(200),
       distinctUntilChanged(),
+      startWith(''),
       switchMap(searchText => {
         return new Promise<MovieAlgoliaResult[]>((res, rej) => {
           this.movieIndex.search(searchText.text, (err, result) =>
