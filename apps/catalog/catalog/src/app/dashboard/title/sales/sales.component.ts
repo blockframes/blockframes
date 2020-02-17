@@ -8,6 +8,7 @@ import { Contract } from '@blockframes/contract/contract/+state/contract.model';
 import { getContractLastVersion } from '@blockframes/contract/version/+state/contract-version.model';
 import { ContractQuery } from '@blockframes/contract/contract/+state';
 import { map } from 'rxjs/operators';
+import { OrganizationQuery } from '@blockframes/organization';
 
 @Component({
   selector: 'catalog-title-sales',
@@ -24,14 +25,16 @@ export class TitleSalesComponent implements OnInit {
   constructor(
     private movieService: MovieService, 
     private movieQuery: MovieQuery,
-    private contractQuery: ContractQuery
+    private contractQuery: ContractQuery,
+    private orgQuery: OrganizationQuery
   ) {}
   
   ngOnInit() {
     this.movieId = this.movieQuery.getActiveId();
     this.movieAnalytics$ = this.movieService.getMovieAnalytics([this.movieId]);
     this.contracts$ = this.contractQuery.selectAll().pipe(
-      map(contracts => contracts.filter(contract =>getContractLastVersion(contract).titles[this.movieId]))
+      map(contracts => contracts.filter(contract => contract.partyIds.includes(this.orgQuery.getActiveId()) ? 
+      getContractLastVersion(contract).titles[this.movieId] : null ))
     )
   }
 }
