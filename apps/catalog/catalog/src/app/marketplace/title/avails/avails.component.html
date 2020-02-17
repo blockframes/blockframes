@@ -57,13 +57,19 @@
         </mat-card>
       </world-map>
     <chips-autocomplete
-      [form]="dealForm.territory"
+      [form]="availsForm.territories"
       placeholder="Choose your territories"
       [items]="territories"
       store="slug" display="label">
     </chips-autocomplete>
+    <chips-autocomplete
+      [form]="availsForm.territoriesExcluded"
+      placeholder="Territories to exclude"
+      [items]="territories"
+      store="slug" display="label">
+    </chips-autocomplete>
     </mat-card-content>
-    <mat-card [formGroup]="dealForm">
+    <mat-card [formGroup]="availsForm">
       <mat-card-content *ngIf="!(country$ | async)">
         <span class="mat-body-1">Please select a country to check if exploitation rights are available</span>
       </mat-card-content>

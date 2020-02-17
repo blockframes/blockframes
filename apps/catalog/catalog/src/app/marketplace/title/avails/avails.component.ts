@@ -18,7 +18,6 @@ import { DistributionDealForm } from '@blockframes/movie/distribution-deals/form
 })
 export class MarketplaceMovieAvailsComponent implements OnInit {
   public availsForm: AvailsSearchForm = new AvailsSearchForm();
-  public dealForm: DistributionDealForm = new DistributionDealForm();
   public movie: Movie = this.movieQuery.getActive();
   public territories = ISO3166TERRITORIES;
 
@@ -70,10 +69,6 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
     this.availableTerritories = getAvailableTerritories(this.availsForm.value, mandateDeals, this.territories, filteredDeals)
     this.rightsSoldTerritories = getRightsSoldTerritories(this.availsForm.value, mandateDeals, this.territories, filteredDeals)
 
-    this.dealForm.get('licenseType').setValue(this.availsForm.value.medias);
-    this.dealForm.get('exclusive').setValue(this.availsForm.value.exclusivity);
-    this.dealForm.get('terms').setValue(this.availsForm.value.terms);
-
     this.availsForm.disable();
   }
 
@@ -83,7 +78,14 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
   }
 
   public addDeal() {
-    console.log(this.dealForm.value)
+    const distributionDeal = this.dealService.addCartDeal({
+      terms: this.availsForm.value.terms,
+      territory: this.availsForm.value.territories,
+      territoryExcluded: this.availsForm.value.territoriesExcluded,
+      licenseType: this.availsForm.value.medias,
+      exclusive: this.availsForm.value.exclusive
+    })
+    console.log(distributionDeal)
   }
 
 }

@@ -81,6 +81,11 @@ export class DistributionDealService extends CollectionService<DistributionDealS
     return distributionDeal.id;
   }
 
+  public addCartDeal(deal: Partial<DistributionDeal>) {
+    const dealId = this.db.createId();
+
+  }
+
   /**
    * Get distributionDeals from a specific movie.
    * @param movieId
