@@ -42,7 +42,7 @@
           {{ territory }}
           <mat-icon matChipRemove *ngIf="!availsForm.value.isActive">cancel</mat-icon>
         </mat-chip>
-        <input test-id="territories-panel-input" placeholder="Territories available" #territoryInput
+        <input test-id="territories-panel-input" placeholder="Territory" #territoryInput
           [matAutocomplete]="territoryMatAutoComplete" [matChipInputFor]="territoryChipList" [formControl]="territoryControl" />
       </mat-chip-list>
       <mat-autocomplete #territoryMatAutoComplete="matAutocomplete" (optionSelected)="selectedTerritory($event)">
@@ -50,7 +50,6 @@
           {{ territory }}
         </mat-option>
       </mat-autocomplete>
-      <mat-hint>Please choose a territory out of the drop down menu!</mat-hint>
     </mat-form-field>
   </mat-expansion-panel>
 

@@ -9,7 +9,7 @@
 </mat-chip-list>
 <article fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="24px">
   <mat-form-field appearance="outline">
-    <mat-label>Original Genre</mat-label>
+    <mat-label>Genres</mat-label>
     <mat-select>
       <mat-option [value]="genre.slug" *ngFor="let genre of genres$ | async" (click)="add(genre.slug)">
         {{ genre.label }}
