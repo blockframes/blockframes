@@ -260,6 +260,10 @@ export class AvailsSearchForm extends FormEntity<AvailsSearchControl> {
     return this.get('territoriesExcluded');
   }
 
+  get terms() {
+    return this.get('terms');
+  }
+
   set isActive(value: boolean) {
     this.get('isActive').setValue(value);
   }

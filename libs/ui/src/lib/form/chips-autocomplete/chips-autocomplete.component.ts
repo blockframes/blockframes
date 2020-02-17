@@ -7,7 +7,8 @@ import {
   Input,
   ChangeDetectionStrategy,
   Output,
-  EventEmitter
+  EventEmitter,
+  ChangeDetectorRef
 } from '@angular/core';
 import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { FormControl, FormArray } from '@angular/forms';
@@ -47,9 +48,11 @@ export class ChipsAutocompleteComponent implements OnInit {
   @ViewChild('inputEl', { static: true }) inputEl: ElementRef<HTMLInputElement>;
   @ViewChild('auto', { static: true }) matAutocomplete: MatAutocomplete;
 
-  constructor() {}
+  constructor(private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
+    this.form.valueChanges.subscribe(_ => this.cdr.markForCheck());
+
     this.filteredItems = this.ctrl.valueChanges.pipe(
       startWith(''),
       map(value => (value ? this._filter(value) : this.items))

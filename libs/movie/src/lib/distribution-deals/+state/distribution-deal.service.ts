@@ -2,7 +2,15 @@ import { Injectable } from '@angular/core';
 import objectHash from 'object-hash';
 import { CollectionService, CollectionConfig } from 'akita-ng-fire';
 import { DistributionDealState, DistributionDealStore } from './distribution-deal.store';
-import { DistributionDeal, getDealTerritories, createDistributionDealWithMovieId, DistributionDealWithMovieId, formatDistributionDeal } from './distribution-deal.model';
+import {
+  DistributionDeal,
+  getDealTerritories,
+  createDistributionDealWithMovieId,
+  DistributionDealWithMovieId,
+  formatDistributionDeal,
+  createDistributionDeal
+} from './distribution-deal.model';
+import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { createContractTitleDetail, ContractWithLastVersion } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractVersionService } from '@blockframes/contract/version/+state/contract-version.service';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
@@ -12,6 +20,7 @@ import { combineLatest } from 'rxjs';
 import { ContractVersion } from '@blockframes/contract/version/+state/contract-version.model';
 import { DistributionDealQuery } from './distribution-deal.query';
 import { Movie } from '@blockframes/movie/movie/+state';
+import { AvailsSearchForm } from '@blockframes/catalog/form/search.form';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies/:movieId/distributionDeals' })
@@ -20,7 +29,7 @@ export class DistributionDealService extends CollectionService<DistributionDealS
     private contractService: ContractService,
     private contractVersionService: ContractVersionService,
     private contractQuery: ContractQuery,
-    private dealQuery: DistributionDealQuery,
+    private query: DistributionDealQuery,
     store: DistributionDealStore
   ) {
     super(store);
@@ -81,9 +90,17 @@ export class DistributionDealService extends CollectionService<DistributionDealS
     return distributionDeal.id;
   }
 
-  public addCartDeal(deal: Partial<DistributionDeal>) {
+  public createCartDeal(form: Partial<AvailsSearchForm>): DistributionDeal {
     const dealId = this.db.createId();
-
+    const dealToAdd = createDistributionDeal({
+      id: dealId,
+      terms: form.value.terms,
+      territory: form.value.territories,
+      territoryExcluded: form.value.territoriesExcluded,
+      licenseType: form.value.medias,
+      exclusive: form.value.exclusive
+    })
+    return dealToAdd;
   }
 
   /**
@@ -132,7 +149,7 @@ export class DistributionDealService extends CollectionService<DistributionDealS
   public getTerritoriesFromContract(contractVersion: ContractVersion): string[] {
     // Get all the deals from the contract titles.
     const deals = Object.values(contractVersion.titles).map(({ distributionDealIds }) =>
-      this.dealQuery.getEntity(distributionDealIds)
+      this.query.getEntity(distributionDealIds)
     );
     // Returns all deals eligible territories as an array of string.
     return deals.map(deal => deal ? getDealTerritories(deal) : []).flat();
