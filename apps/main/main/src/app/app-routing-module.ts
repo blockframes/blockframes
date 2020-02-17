@@ -8,19 +8,18 @@ import { AppGridComponent } from './app-grid/app-grid.component';
 import { App } from '@blockframes/utils';
 import { MaintenanceGuard } from '@blockframes/ui/maintenance';
 
-const routes = [{
-  path: '',
-  component: AppGridComponent,
-  canActivate: [MaintenanceGuard],
-},{
-  path: 'catalog',
-  loadChildren: () => import('@blockframes/apps/catalog/catalog.module').then(m => m.CatalogModule)
-},
-{
-  path: App.mediaDelivering,
-  data: { app: App.mediaDelivering },
-  loadChildren: () => import('@blockframes/apps/delivery/delivery.module').then(m => m.DeliveryModule)
-}]
+const routes = [
+  {
+    path: '',
+    component: AppGridComponent,
+    canActivate: [MaintenanceGuard]
+  },
+  {
+    path: 'maintenance',
+    canActivate: [MaintenanceGuard],
+    loadChildren: () => import('@blockframes/ui/maintenance').then(m => m.MaintenanceModule)
+  }
+];
 
 @NgModule({
   imports: [
