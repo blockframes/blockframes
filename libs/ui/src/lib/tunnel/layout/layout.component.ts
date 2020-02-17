@@ -60,6 +60,7 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
     this.next$ = this.urlBynav$.pipe(map(([ url, steps ]) => getPage(steps, url, 1)));
     this.previous$ = this.urlBynav$.pipe(map(([ url, steps ]) => getPage(steps, url, -1)));
 
+    // TODO: issue#1935 unify responsive
     this.mobileQuery = this.media.matchMedia('(max-width: 959px)');
     this._mobileQueryListener = () => this.changeDetectorRef.detectChanges();
     this.mobileQuery.addEventListener('change', this._mobileQueryListener);
