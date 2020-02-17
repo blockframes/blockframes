@@ -46,6 +46,7 @@ export interface CatalogSearch {
 export interface AvailsSearch {
   terms: Terms;
   territories: TerritoriesSlug[];
+  territoriesExcluded: TerritoriesSlug[];
   medias: MediasSlug[];
   exclusivity: boolean;
   isActive: boolean;
@@ -83,6 +84,7 @@ function createAvailsSearch(search: Partial<AvailsSearch> = {}): AvailsSearch {
       end: null
     },
     territories: [],
+    territoriesExcluded: [],
     medias: [],
     exclusivity: false,
     isActive: false,
@@ -149,6 +151,7 @@ function createAvailsSearchControl(search: AvailsSearch) {
     terms: new DistributionDealTermsForm(search.terms),
     medias: new FormControl(search.medias),
     territories: new FormArray(search.territories.map(territory => new FormControl(territory))),
+    territoriesExcluded: new FormArray(search.territoriesExcluded.map(territory => new FormControl(territory))),
     exclusivity: new FormControl(search.exclusivity),
     isActive: new FormControl(search.isActive)
   }
@@ -251,6 +254,10 @@ export class AvailsSearchForm extends FormEntity<AvailsSearchControl> {
 
   get territories() {
     return this.get('territories');
+  }
+
+  get territoriesExcluded() {
+    return this.get('territoriesExcluded');
   }
 
   set isActive(value: boolean) {
