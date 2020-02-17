@@ -15,6 +15,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MovieContractListGuard } from '@blockframes/contract/contract/guards/movie-contract-list.guard';
 import { MovieOrganizationListGuard } from '@blockframes/movie/movie/guards/movie-organization-list.guard';
 import { ContractsDealListGuard } from '@blockframes/movie/distribution-deals/guards/contracts-deal-list.guard';
+import { OrganizationContractListGuard } from '@blockframes/contract/contract/guards/organization-contract-list.guard';
 
 const routes = [{
   path: '',
@@ -29,6 +30,8 @@ const routes = [{
     },
     {
       path: 'sales',
+      canActivate: [OrganizationContractListGuard],
+      canDeactivate: [OrganizationContractListGuard],
       loadChildren: () => import('../sales/sales.module').then(m => m.TitleSalesModule)
     },
     {

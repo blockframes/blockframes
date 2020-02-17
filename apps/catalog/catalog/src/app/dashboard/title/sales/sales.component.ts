@@ -33,8 +33,7 @@ export class TitleSalesComponent implements OnInit {
     this.movieId = this.movieQuery.getActiveId();
     this.movieAnalytics$ = this.movieService.getMovieAnalytics([this.movieId]);
     this.contracts$ = this.contractQuery.selectAll().pipe(
-      map(contracts => contracts.filter(contract => contract.partyIds.includes(this.orgQuery.getActiveId()) ? 
-      getContractLastVersion(contract).titles[this.movieId] : null ))
+      map(contracts => contracts.filter(contract => getContractLastVersion(contract).titles[this.movieId]))
     )
   }
 }
