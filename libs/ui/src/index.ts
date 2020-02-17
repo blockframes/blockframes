@@ -15,6 +15,7 @@ export * from './lib/icon-component';
 export * from './lib/movie-card/movie-card.module';
 export * from './lib/missing-control/missing-control.module';
 export * from './lib/static-select/static-select.module';
+export * from './lib/wishlist-button/wishlist-button.module';
 // toolbar State
 export * from './lib/toolbar/+state/context-menu.model';
 export * from './lib/toolbar/+state/context-menu.query';

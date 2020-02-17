@@ -1,4 +1,7 @@
+import { DealComponent } from './deal.component';
+
 // Blockframes
+import { WishlistButtonModule } from '@blockframes/ui';
 import { DistributionDealBroadcastModule } from '@blockframes/movie/distribution-deals/form/broadcast/broadcast.module';
 import { DistributionDealHoldbacksModule } from '@blockframes/movie/distribution-deals/form/holdbacks/holdbacks.module';
 import { DistributionDealLanguagesModule } from '@blockframes/movie/distribution-deals/form/languages/languages.module';
@@ -8,7 +11,6 @@ import { DistributionDealTerritoryModule } from '@blockframes/movie/distribution
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { MovieBannerModule } from '@blockframes/movie/movie/components/banner';
 
-import { DealComponent } from './deal.component';
 
 // Angular
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -41,6 +43,7 @@ import { MatIconModule } from '@angular/material/icon';
     DistributionDealHoldbacksModule,
     MovieBannerModule,
     DistributionDealBroadcastModule,
+    WishlistButtonModule,
 
     // Material
     MatExpansionModule,

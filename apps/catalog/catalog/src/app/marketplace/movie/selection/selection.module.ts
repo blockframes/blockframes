@@ -7,7 +7,7 @@ import { MarketplaceSelectionComponent } from './selection.component';
 
 import { MovieBannerModule } from '@blockframes/movie/movie/components/banner/banner.module';
 import { RightListModule } from '@blockframes/movie/distribution-deals/components/right-list/right-list.module';
-import { WishlistButtonModule } from '../../components/wishlist-button/wishlist-button.module';
+import { WishlistButtonModule } from '@blockframes/ui';
 
 // Material
 import { MatDividerModule } from '@angular/material/divider';

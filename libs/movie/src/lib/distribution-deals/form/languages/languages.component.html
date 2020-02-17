@@ -1,14 +1,16 @@
 <h5>All languages & Versions</h5>
 <mat-slide-toggle color="primary" [formControl]="toggleCtrl">All languages & Versions</mat-slide-toggle>
-<div fxLayout="row">
+<div fxLayout="row" fxLayoutAlign="center start" fxLayoutGap="20px">
     <form-language [form]="languageCtrl"></form-language>
-    <button mat-button (click)="updateForm()">Select Language</button>
+    <button mat-mini-fab (click)="updateForm()" matTooltip="Select Language" color="primary">
+        <mat-icon svgIcon="add"></mat-icon>
+    </button>
 </div>
 <ng-container *ngFor="let control of form.controls | keyvalue">
     <div fxLayout="column">
         <span (click)="log(control)">{{ control.key | translateSlug: 'LANGUAGES'}}</span>
         <!-- Div is for grouping because of space-between -->
-        <div fxLayout="row" fxLayoutAlign="space-between center">
+        <div fxLayout="row">
             <span>
                 <mat-checkbox [formControl]="control.value.controls.dubbed" color="primary">
                     Dubbed

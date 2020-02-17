@@ -11,6 +11,7 @@ import { FormLanguageModule } from '@blockframes/ui/form/language/language.modul
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -29,7 +30,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MatCheckboxModule,
     MatSlideToggleModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    MatTooltipModule
   ],
   declarations: [DistributionDealLanguagesComponent],
   exports: [DistributionDealLanguagesComponent]

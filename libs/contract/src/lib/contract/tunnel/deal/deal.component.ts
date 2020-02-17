@@ -1,4 +1,3 @@
-import { FormControl } from '@angular/forms';
 import { DistributionDealForm } from '@blockframes/movie/distribution-deals/form/distribution-deal.form';
 import { filter, flatMap } from 'rxjs/operators';
 import { Movie } from '@blockframes/movie/movie/+state';
@@ -7,7 +6,6 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ContractTunnelComponent } from '../contract-tunnel.component';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { DistributionDealHoldbacksForm } from '@blockframes/movie/distribution-deals/form/holdbacks/holdbacks.form';
-import { MatSlideToggleChange } from '@angular/material';
 
 @Component({
   selector: 'contract-deal',
@@ -19,15 +17,11 @@ export class DealComponent implements OnInit {
 
   public movie$: Observable<Movie>;
 
-  public toggleStateCtrl = new FormControl(false);
-
   public showTVCriteria = new BehaviorSubject(true);
 
   constructor(private tunnel: ContractTunnelComponent, private routerQuery: RouterQuery) { }
 
   ngOnInit() {
-    // DEBUG
-    this.tunnel.addTitle('gAtEjV3hGVI9nojSo5vX')
     // only the movie with corresponding ID
     this.movie$ = this.tunnel.movies$.pipe(
       flatMap(movies => movies),
@@ -35,7 +29,7 @@ export class DealComponent implements OnInit {
   }
 
   get dealForm() {
-    return this.tunnel.dealForms.controls['gAtEjV3hGVI9nojSo5vX'];
+    return this.tunnel.dealForms.controls[this.titleId];
   }
 
   get titleId(): string {
@@ -72,7 +66,6 @@ export class DealComponent implements OnInit {
     control.get('multidiffusion').reset();
     control.get('download').reset();
     control.get('multidiffusion').reset();
-    this.toggleStateCtrl.reset();
     this.showTVCriteria.next(false);
   }
 
@@ -92,7 +85,7 @@ export class DealComponent implements OnInit {
     this.tunnel.removeDeal(this.titleId, index)
   }
 
-  public toggleCatchUp(event: MatSlideToggleChange, control: DistributionDealForm) {
-    event.checked ? this.distributionDealCatchUp(control).enable() : this.distributionDealCatchUp(control).disable();
+  public removeTitle() {
+    this.tunnel.removeTitle(this.titleId)
   }
 }
