@@ -105,6 +105,9 @@ $bf-dark-background: (
   disabled-list-option: rgba(155, 177, 255, 0.12),
   // TODO remove this custom variable when last palette will be imported
   beware: #F6A92C,
+
+  // World map variables
+  map-background:   #232641
 );
 
 ////////////////
@@ -134,9 +137,10 @@ $bf-dark-foreground: (
   dark-text:    #80818a,
 
   // World map variables
-  available:    #4B69D7,
-  sold:         #D7DEF5,
-  unlicensed:   #0C114A,
+  available:    #7088FF,
+  sold:         #BBC8FF,
+  unlicensed:   #4D5063,
+  selected:     mat-color($mat-dark-bf-blue, 500, 0.9),
 );
 
 //////////
