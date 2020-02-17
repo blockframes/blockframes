@@ -26,3 +26,15 @@ export class OverlayWidgetInputDirective {
 
   constructor(private el: ElementRef) {}
 }
+
+// OVERLAY TRIGGERED ON Hover
+@Directive({ selector: "mat-icon[widgetTarget]" })
+export class OverlayWidgetIconDirective {
+
+  @Input() widgetTarget: OverlayWidgetComponent;
+  @HostListener('mouseover') onMouseOver() {
+    this.widgetTarget.open(this.el);
+  }
+
+  constructor(private el: ElementRef) {}
+}
