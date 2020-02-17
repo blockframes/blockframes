@@ -1,5 +1,6 @@
 {
   "hosting": {
+    "site": "blockframes-maintenance",
     "public": "dist/apps/",
     "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
     "rewrites": [

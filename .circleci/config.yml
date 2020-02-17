@@ -16,6 +16,11 @@ references:
       name: start firestore emulator in background
       command: npm run firebase:emulator
       background: true
+  maintenance_only: &maintenance_only
+    filters:
+      branches:
+        only:
+          - maintenance
   production_only: &production_only
     filters:
       branches:
@@ -207,6 +212,25 @@ jobs:
             npx firebase deploy --only firestore:rules
           when: always
       - slack/status
+  deploy-to-maintenance:
+    executor: blockframes-ci
+    environment:
+      - ENV: production
+      - NODE_OPTIONS: '--max_old_space_size=4096'
+    steps:
+      - checkout_project
+      - run: echo "${FIREBASE_CI_SERVICE_ACCOUNT}" > creds.json
+      - run: cp env/env.prod.ts env/env.ts # required for the typechecking & file rewrite to work
+      - run: npm run build:all
+      - slack/notify:
+          message: '🧹 Deploying to maintenance production...'
+      - do-exclusively/do-exclusively:
+          # Note: right now do-exclusively excludes cross-jobs (staging & prod).
+          token: $CIRCLE_TOKEN
+          command: |
+            npx firebase use prod &&
+            npx firebase deploy --only hosting:blockframes-maintenance
+      - slack/status
   deploy-to-staging:
     executor: blockframes-ci
     environment:
@@ -267,6 +291,8 @@ workflows:
             - build-and-test-all
       - deploy-to-staging:
           <<: *staging_only
+      - deploy-to-maintenance:
+          <<: *maintenance_only
   nightly-e2e:
     triggers:
       - schedule:
