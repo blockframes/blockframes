@@ -1,11 +1,10 @@
 import { DistributionDealForm } from '@blockframes/movie/distribution-deals/form/distribution-deal.form';
-import { filter, flatMap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { Movie } from '@blockframes/movie/movie/+state';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ContractTunnelComponent } from '../contract-tunnel.component';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { DistributionDealHoldbacksForm } from '@blockframes/movie/distribution-deals/form/holdbacks/holdbacks.form';
 
 @Component({
   selector: 'contract-deal',
@@ -23,9 +22,12 @@ export class DealComponent implements OnInit {
 
   ngOnInit() {
     // only the movie with corresponding ID
-    this.movie$ = this.tunnel.movies$.pipe(
-      flatMap(movies => movies),
-      filter(movie => movie.id === this.titleId))
+    this.movie$ = combineLatest([
+      this.tunnel.movies$,
+      this.routerQuery.selectParams('titleId')
+    ]).pipe(
+      map(([movies, titleId]) => movies.find(movie => movie.id === titleId)
+      ))
   }
 
   get dealForm() {
@@ -37,28 +39,28 @@ export class DealComponent implements OnInit {
     return titleId;
   }
 
-  public distributionDealTerms(control: DistributionDealForm) {
+  public terms(control: DistributionDealForm) {
     return control.get('terms');
   }
 
-  public distributionDealCatchUp(control: DistributionDealForm) {
+  public catchUp(control: DistributionDealForm) {
     return control.get('catchUp');
   }
 
-  public distributionDealDownload(control: DistributionDealForm) {
+  public download(control: DistributionDealForm) {
     return control.get('download');
   }
 
-  public distributionDealHoldbacks(control: DistributionDealForm) {
+  public holdbacks(control: DistributionDealForm) {
     return control.get('holdbacks');
   }
 
-  public distributionDealAssetLanguages(control: DistributionDealForm) {
+  public assetLanguages(control: DistributionDealForm) {
     return control.get('assetLanguage');
   }
 
   public addHoldback(control: DistributionDealForm) {
-    return control.get('holdbacks').push(new DistributionDealHoldbacksForm());
+    control.get('holdbacks').add();
   }
 
   public removeTVCriteria(control: DistributionDealForm) {
@@ -71,10 +73,6 @@ export class DealComponent implements OnInit {
 
   public removeHoldback(control: DistributionDealForm, holdbackIndex: number) {
     control.get('holdbacks').removeAt(holdbackIndex);
-  }
-
-  public addDistributionDeal() {
-    this.tunnel.addDeal(this.titleId);
   }
 
   public addDeal() {

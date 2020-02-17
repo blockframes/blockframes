@@ -19,14 +19,6 @@ export class DetailsMandateComponent {
     return this.tunnel.contractForm.get('versions');
   }
 
-  get placeholderTermination() {
-    return 'Any actual, direct, third-party, out-of-pocket expenses (which shall exclude overhead) will be recouped if they are incurred for the exploitation of the film(s) in connection with Technical, Marketing, Delivery or Translation will be recouped on Net Receipts. Net Receipts are calculated on 100% of the Gross Receipts excluding taxes, Commission being deducted.'
-  }
-
-  get placeholderCondition() {
-    return 'The Contract may be terminated by each Party by sending a registered letter with acknowledgement of receipt to the other Party, at least one month before the renewal of the Contract.'
-  }
-
   public terms(index: number) {
     return this.versions.at(index).get('scope');
   }

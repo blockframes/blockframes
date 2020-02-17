@@ -1,4 +1,3 @@
-import { tap } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core';
 import { MovieVersionInfoForm } from '@blockframes/movie/movie/form/version-info/version-info.form';
@@ -19,9 +18,7 @@ export class DistributionDealLanguagesComponent implements OnInit {
   public toggleCtrl = new FormControl();
 
   ngOnInit() {
-    this.toggleCtrl.valueChanges.pipe(
-      tap(value => this.stateOfForm(value))
-    ).subscribe()
+    this.toggleCtrl.valueChanges.subscribe(value => this.stateOfForm(value));
   }
 
   public updateForm() {
@@ -33,7 +30,6 @@ export class DistributionDealLanguagesComponent implements OnInit {
 
   public removeLanguage(language: LanguagesSlug) {
     if (language === 'all') {
-      this.form.removeLanguage(language);
       this.stateOfForm(false);
     }
     this.form.removeLanguage(language);
