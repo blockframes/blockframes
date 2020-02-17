@@ -155,7 +155,8 @@ export function filterMovie(movie: Movie, filter: CatalogSearch): boolean {
     isProductionStatus(movie, filter.status) &&
     hasCountry(movie, filter.originCountries) &&
     hasLanguage(movie, filter.languages) &&
-    isProductionStatus(movie, filter.status)
+    isProductionStatus(movie, filter.status) &&
+    hasBudget(movie, filter.estimatedBudget)
   );
 }
 
