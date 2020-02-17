@@ -57,8 +57,8 @@
 
 <section fxLayout="row" fxLayoutAlign="space-between center">
   <h1 class="mat-headline">Library</h1>
-  <article>
-    <button mat-icon-button (click)="listView = !listView">
+  <article fxLayout="row" fxLayoutAlign="center center">
+    <button class="grid" mat-icon-button (click)="listView = !listView">
       <ng-container *ngIf="!listView">
         <mat-icon>list</mat-icon>
       </ng-container>
@@ -66,12 +66,14 @@
         <mat-icon>grid_on</mat-icon>
       </ng-container>
     </button>
-    <mat-label>Sort by</mat-label>
-    <mat-select [formControl]="sortByControl">
-      <mat-option *ngFor="let option of sortOptions" [value]="option">
-        {{option}}
-      </mat-option>
-    </mat-select>
+    <mat-form-field class="sort">
+      <mat-label>Sort by</mat-label>
+      <mat-select [formControl]="sortByControl">
+        <mat-option *ngFor="let option of sortOptions" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
   </article>
 </section>
 
@@ -120,7 +122,7 @@
             </mat-error>
           </mat-expansion-panel> -->
 
-          <mat-divider></mat-divider>
+          <mat-divider inset></mat-divider>
           <h5>TITLE METADATA</h5>
           <!-- Genres -->
           <mat-expansion-panel>

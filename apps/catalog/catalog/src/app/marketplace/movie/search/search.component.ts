@@ -53,6 +53,7 @@ import { CatalogSearchForm, AvailsSearchForm } from '@blockframes/catalog/form/s
 import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state';
 import { asyncFilter } from '@blockframes/utils/helpers';
 import { staticModels } from '@blockframes/utils/static-model';
+import { sortMovieBy } from '@blockframes/utils/akita-helper/sort-movie-by';
 
 @Component({
   selector: 'catalog-movie-search',
@@ -159,7 +160,7 @@ export class MarketplaceSearchComponent implements OnInit {
       switchMap(([algoliaMovies, filterOptions, availsOptions, sortBy]) => {
         const movieIds = algoliaMovies.map(index => index.objectID);
         return this.movieQuery.selectAll({
-          sortBy,
+          sortBy: (a, b) => sortMovieBy(a, b, sortBy),
           filterBy: movie => filterMovie(movie, filterOptions) && movieIds.includes(movie.id)
         }).pipe(
           switchMap(movies => {
