@@ -4,8 +4,10 @@
   <article description fxLayout="row" fxLayoutAlign="space-between start">
     <movie-banner *ngIf="movie$ | async as movie" [movie]="movie"></movie-banner>
     <div fxLayout="column">
-      <button></button>
-      <button></button>
+      <catalog-wishlist-button [movieId]="titleId" (click)="removeTitle()"></catalog-wishlist-button>
+      <button mat-button color="warn" (click)="removeTitle()">
+        <mat-icon>delete</mat-icon><span>Remove Title</span>
+      </button>
     </div>
   </article>
   <ng-container tunnel-form>
@@ -25,6 +27,7 @@
 </tunnel-page>
 ​
 <!-- TEMPLATE DEAL -->
+<!-- TODO #1947 -->
 <ng-template #deal let-value>
   <mat-accordion>
     <mat-expansion-panel>
@@ -49,8 +52,7 @@
         <distribution-form-terms [form]="distributionDealTerms(value.control)"></distribution-form-terms>
         <mat-divider></mat-divider>
         <!-- Holdbacks -->
-        <!-- TODO #1523 -->
-        <h3>Holdbacks</h3>
+        <h3>Holdback{distributionDealHoldbacks(value.control).controls.length, plural, =1 {} other {s}}</h3>
         <span class="caption">Please specify the holdbacks related to this deal, if any.</span>
         <h6>Holdback Rights</h6>
         <div fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="20px">
@@ -67,7 +69,6 @@
         </div>
         <mat-divider></mat-divider>
         <!-- Languages -->
-        <!-- TODO #1523 -->
         <h3>Languages</h3>
         <distribution-form-languages [form]="distributionDealAssetLanguages(value.control)">
         </distribution-form-languages>
@@ -76,10 +77,8 @@
         <h3>TV Criteria</h3>
         <ng-container *ngIf="showTVCriteria | async; else add">
           <distribution-form-broadcast [form]="value.control"></distribution-form-broadcast>
-          <mat-slide-toggle (change)="toggleCatchUp($event, value.control)" [formControl]="toggleStateCtrl"
-            color="primary">CATCHUP</mat-slide-toggle>
-          <distribution-form-terms [form]="distributionDealCatchUp(value.control)"
-            [slideButtonState]="toggleStateCtrl.value">
+          <h5>CATCHUP</h5>
+          <distribution-form-terms [form]="distributionDealCatchUp(value.control)">
           </distribution-form-terms>
           <h5>TEMPORARY DOWNLOAD</h5>
           <div fxLayout="row">
@@ -100,14 +99,13 @@
             </button>
           </div>
         </ng-template>
-        <mat-divider></mat-divider>
-        <div fxLayout="row" fxLayoutAlign="center start">
-          <button mat-stroked-button color="warn" color="warn" (click)="removeDeal(value.index)">
-            <mat-icon>delete</mat-icon>
-            <span>Delete Exploitation Rights</span>
-          </button>
-        </div>
       </ng-template>
     </mat-expansion-panel>
   </mat-accordion>
+  <div fxLayout="row" fxLayoutAlign="center start">
+    <button mat-stroked-button color="warn" color="warn" (click)="removeDeal(value.index)">
+      <mat-icon>delete</mat-icon>
+      <span>Delete Exploitation Rights</span>
+    </button>
+  </div>
 </ng-template>
