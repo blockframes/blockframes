@@ -221,7 +221,7 @@ jobs:
       - checkout_project
       - run: echo "${FIREBASE_CI_SERVICE_ACCOUNT}" > creds.json
       - run: cp env/env.prod.ts env/env.ts # required for the typechecking & file rewrite to work
-      - run: npm run build:all
+      - run: npm run build:maintenance
       - slack/notify:
           message: '🧹 Deploying to maintenance production...'
       - do-exclusively/do-exclusively:
