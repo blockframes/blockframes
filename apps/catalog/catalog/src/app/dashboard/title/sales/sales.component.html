@@ -13,7 +13,7 @@
           <mat-icon svgIcon="monetization"></mat-icon>
           <span>Total Gross Receipts</span></div>
       </div>
-      <mat-card-title>{{ getMovieReceipt(contracts$ | async, movieId) }}</mat-card-title>
+      <mat-card-title>{{ getMovieReceipt(contracts$ | async, movieId) | currency }}</mat-card-title>
     </mat-card>
     <mat-card fxFlex="45" *ngIf="(contracts$ | async) as contracts">
       <div fxLayout="row" fxLayoutAlign="space-between center">
