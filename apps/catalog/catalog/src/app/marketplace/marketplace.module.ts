@@ -58,15 +58,15 @@ const routes: Routes = [{
       ]
     },
     {
-      path: 'deal',
+      path: 'deals',
       children: [{
         path: '',
-        loadChildren: () => import('./deal/list/list.module'),
+        loadChildren: () => import('./deal/list/list.module').then(m => m.DealListModule),
       },{
-        path: ':dealId',
+        path: ':contractId',
         canActivate: [ActiveContractGuard],
         canDeactivate: [ActiveContractGuard],
-        loadChildren: () => import('./deal/view/view.module') 
+        loadChildren: () => import('./deal/view/view.module').then(m => m.DealViewModule)
       }]
     },
     {

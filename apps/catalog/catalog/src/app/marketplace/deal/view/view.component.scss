@@ -1,5 +1,7 @@
 header {
+  display: block;
   padding: 16px 24px;
+  background-image: linear-gradient(to bottom, var(--background-disabled-button), transparent);
   img {
     height: 160px;
     width: 160px;

@@ -11,12 +11,9 @@ const routes = [{
   path: '',
   component: ViewComponent,
   children: [{
-    path: 'signed',
-    loadChildren: () => import('../signed/signed.module').then(m => m.SignedModule)
-  }, {
-    path: 'negociation',
+    path: '',
     loadChildren: () => import('../negociation/negociation.module').then(m => m.NegociationModule)
-  }]
+  } ]
 }]
 
 @NgModule({
