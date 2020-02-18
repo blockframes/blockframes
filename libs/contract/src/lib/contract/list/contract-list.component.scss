@@ -5,3 +5,9 @@ table, mat-form-field {
 tr {
   cursor: pointer;
 }
+
+widget-card {
+  display: block;
+  max-height: 300px;
+  overflow: auto;
+}

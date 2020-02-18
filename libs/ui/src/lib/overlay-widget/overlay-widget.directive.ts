@@ -1,5 +1,7 @@
 import { Directive, Input, HostListener, ElementRef } from '@angular/core';
 import { OverlayWidgetComponent } from './overlay-widget.component';
+import { FocusMonitor } from '@angular/cdk/a11y';
+import { Subscription } from 'rxjs';
 
 // OVERLAY TRIGGERED ON CLICK
 @Directive({ selector: "button[widgetTarget]" })
@@ -35,11 +37,12 @@ export class OverlayWidgetTooltipDirective {
   @HostListener('mouseenter') onMouseEnter() {
     this.widgetTooltip.open(this.el);
   }
-  @HostListener('mouseleave') onMouseLeave() {
-    setTimeout(() => {
-      this.widgetTooltip.close();
-    }, 1000)
-  }
+  // TODO##1958 update widgetTooltip to listen to mouseleave event
+  // @HostListener('mouseleave') onMouseLeave() {
+  //   setTimeout(() => {
+  //     this.widgetTooltip.close();
+  //   }, 1000)
+  // }
 
   constructor(private el: ElementRef) {}
 }
