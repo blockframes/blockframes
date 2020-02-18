@@ -67,18 +67,18 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     deliveryIds: [],
     _type: 'movies',
     documents: createMovieLegalDocuments(params.documents),
+    versionInfo: {languages:{}}, // TODO issue #1596
+    movieReview: [],
+    ...params,
     main: createMovieMain(params.main),
     story: createMovieStory(params.story),
     promotionalElements: createMoviePromotionalElements(params.promotionalElements),
     promotionalDescription: createMoviePromotionalDescription(params.promotionalDescription),
     salesCast: createMovieSalesCast(params.salesCast),
     salesInfo: createMovieSalesInfo(params.salesInfo),
-    versionInfo: {languages:{}}, // TODO issue #1596
     festivalPrizes: createMovieFestivalPrizes(params.festivalPrizes),
     salesAgentDeal: createMovieSalesAgentDeal(params.salesAgentDeal),
     budget: createMovieBudget(params.budget),
-    movieReview: [],
-    ...params
   };
 }
 
@@ -108,9 +108,11 @@ export function createMoviePromotionalElements(
 ): MoviePromotionalElements {
   return {
     trailer: [],
-    banner: createPromotionalElement(params.banner),
-    poster: [],
     still_photo: [],
+    ...params,
+    // We want a default poster as we look for the first one
+    poster: params.poster.length ? params.poster : [createPromotionalElement()],
+    banner: createPromotionalElement(params.banner),
     presentation_deck: createPromotionalElement(params.presentation_deck),
     scenario: createPromotionalElement(params.scenario),
     promo_reel_link: createPromotionalElement(params.promo_reel_link),

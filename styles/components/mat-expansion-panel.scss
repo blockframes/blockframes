@@ -6,6 +6,9 @@
     // HEADER
     .mat-expansion-panel-header {
       padding: 0 16px;
+      .mat-expansion-panel-header-title * {
+        margin: 0;  // Force heading to have no margin
+      }
     }
 
     // BODY
