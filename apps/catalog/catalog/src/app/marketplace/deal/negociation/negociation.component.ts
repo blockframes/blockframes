@@ -16,7 +16,7 @@ const versionColumns = {
   styleUrls: ['./negociation.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NegociationComponent implements OnInit {
+export class NegociationComponent {
 
   activeVersion$ = this.query.activeVersion$;
   versionView$ = this.query.activeVersionView$;
@@ -28,9 +28,6 @@ export class NegociationComponent implements OnInit {
   initialVersionColumns = ['date', 'offer', 'status'];
 
   constructor(private query: ContractQuery) { }
-
-  ngOnInit() {
-  }
 
   getDirectors(movie: Movie) {
     return  movie.main.directors.map(d => `${d.firstName} ${d.lastName}`).join(', ');

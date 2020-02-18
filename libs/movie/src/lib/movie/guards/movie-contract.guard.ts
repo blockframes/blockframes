@@ -32,7 +32,7 @@ export class MovieContractGuard extends CollectionGuard<MovieState> {
    * It means that this guard must always be used after the ActiveContractGuard.
   */
   sync() {
-    return  this.contractQuery.selectActive().pipe(
+    return this.contractQuery.selectActive().pipe(
       // Reset the store everytime the movieId changes.
       tap(_ => this.store.reset()),
       switchMap(contract => {
@@ -41,8 +41,7 @@ export class MovieContractGuard extends CollectionGuard<MovieState> {
         const movieIds = contract.titleIds.filter(titleId => organizationMovieIds.includes(titleId));
 
         return awaitSyncQuery.call(this.service, movieListContractQuery(contract.id, movieIds))
-      }
-      )
+      })
     );
   }
 }
