@@ -15,7 +15,7 @@ export class ExitComponent implements OnInit {
   constructor(private service: TunnelService) { }
 
   ngOnInit() {
-    this.routeBeforeTunnel = this.service.previousUrl || this.exitRedirect || 'c/o/';
+    this.routeBeforeTunnel = this.service.previousUrl || this.exitRedirect || '/c/o/';
   }
 
 }
