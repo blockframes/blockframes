@@ -202,6 +202,12 @@ export function createContractFromFirestore(contract: any): Contract {
   return c;
 }
 
+
+///////////
+// UTILS //
+///////////
+
+
 /**
  *
  * @param partyDetails
@@ -251,20 +257,7 @@ export function isContractSignatory(contract: Contract, organizationId: string):
   })
 }
 
-/**
- * Combine prices of all distributionDeals to get the total price of the contract.
- *
- * @dev this is temporary solution, if there is different currencies in distributionDeals
- * the result will be wrong.
- */
-export function getTotalPrice(titles: Record<string, ContractTitleDetail>): Price {
-  const result = createPrice();
-  const versionTitles = Object.values(titles);
-  result.amount = versionTitles.reduce((sum, title) => sum += title.price.amount, 0);
-  result.currency = versionTitles[versionTitles.length - 1].price.currency;
 
-  return result;
-}
 
 /**
  * Returns only the validated contracts.

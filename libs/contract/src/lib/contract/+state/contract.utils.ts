@@ -1,6 +1,41 @@
 import { ContractVersion } from "@blockframes/contract/version/+state";
 import { TemporalityUnit, Terms } from "@blockframes/utils";
-import { DatePipe } from '@angular/common';
+import { ContractTitleDetail } from "./contract.firestore";
+import { Price, createPrice } from "@blockframes/utils/common-interfaces";
+
+/**
+ * Combine prices of all distributionDeals to get the total price of the contract.
+ *
+ * @dev this is temporary solution, if there is different currencies in distributionDeals
+ * the result will be wrong.
+ */
+export function getTotalPrice(titles: Record<string, ContractTitleDetail>): Price {
+  const result = createPrice();
+  const versionTitles = Object.values(titles);
+  result.amount = versionTitles.reduce((sum, title) => sum += title.price.amount, 0);
+  result.currency = versionTitles[versionTitles.length - 1].price.currency;
+
+  return result;
+}
+
+// @todo(#1951) Merge this with content in dashboard/deal/view
+
+export interface VersionView {
+  date: Date;
+  price: Price;
+  status: ContractVersion['status'];
+  titleIds: string[];
+}
+
+/** Create a flatten object to be easily display on the frontend */
+export function getVersonView(version: ContractVersion): VersionView {
+  return {
+    date: version.creationDate,
+    titleIds: Object.keys(version.titles),
+    price: getTotalPrice(version.titles),
+    status: version.status
+  }
+}
 
 /** Format the Payment schedule to be displayed  */
 export function displayPaymentSchedule(version: ContractVersion): { type: string, list: string[] } {

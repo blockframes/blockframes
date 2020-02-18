@@ -21,6 +21,8 @@ import { CurrencyPipe } from '@angular/common';
 import { Price } from '@blockframes/utils/common-interfaces';
 import { Intercom } from 'ng-intercom';
 
+// @todo(#1951) transformation should be done in the contract.query & contract.utils
+
 const versionColumns = {
   date: 'Date',
   offer: 'Offer Amount',

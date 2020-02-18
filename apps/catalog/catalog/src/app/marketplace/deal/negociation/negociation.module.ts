@@ -8,6 +8,7 @@ import { NegociationComponent } from './negociation.component';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
 
 @NgModule({
   declarations: [NegociationComponent],
@@ -18,6 +19,7 @@ import { MatIconModule } from '@angular/material/icon';
     MatCardModule,
     MatButtonModule,
     MatIconModule,
+    MatListModule,
     // Router
     RouterModule.forChild([{ path: '', component: NegociationComponent }])
   ]
