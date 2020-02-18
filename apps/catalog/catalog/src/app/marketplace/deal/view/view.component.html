@@ -7,8 +7,8 @@
       <span class="payment">{{ version.status | uppercase }}</span>
       <h1>Achipel Content - {{ version.titleIds.length }} titles</h1>
     </div>
-    <div *ngIf="version.price as price" >
-      <span class="mat-caption"> {{ version.date | date: 'short' }} </span>
+    <div fxLayout="column" fxLayoutAlign="start end" *ngIf="version.price as price" >
+      <span class="mat-caption"> {{ version.date | date }} </span>
       <h2>{{ price.amount | currency: price.currency }}</h2> 
     </div>
   </header>
