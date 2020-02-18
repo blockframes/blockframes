@@ -1,6 +1,6 @@
-import { ContractForm } from '@blockframes/contract/contract/form/contract.form';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ImgRef } from "@blockframes/utils/image-uploader";
+import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
 
 @Component({
   selector: 'catalog-chain-of-titles',
@@ -10,14 +10,14 @@ import { ImgRef } from "@blockframes/utils/image-uploader";
 })
 export class ChainOfTitlesComponent {
 
-  constructor(private form: ContractForm) { }
+  constructor(private form: MovieForm) { }
 
   get chainOfTitles() {
     return this.form.get('documents').get('chainOfTitles');
   }
 
-    // get the ImgRef generated from firestorage and update url of media for each path
-    importPDF(imgRef: ImgRef, i: number) {
-      this.chainOfTitles.at(i).get('media').patchValue(imgRef);
-    }
+  // get the ImgRef generated from firestorage and update url of media for each path
+  importPDF(imgRef: ImgRef, i: number) {
+    this.chainOfTitles.at(i).get('media').patchValue(imgRef);
+  }
 }
