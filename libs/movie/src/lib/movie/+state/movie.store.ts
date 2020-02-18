@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { EntityStore, StoreConfig, EntityState, ActiveState } from '@datorama/akita';
-import { Movie } from './movie.model';
+import { Movie, createMovie } from './movie.model';
 
 export interface MovieState extends EntityState<Movie, string>, ActiveState<string> {}
 
@@ -12,4 +12,7 @@ export class MovieStore extends EntityStore<MovieState> {
     super();
   }
 
+  akitaPreAddEntity(movie: Partial<Movie>) {
+    return createMovie(movie);
+  }
 }
