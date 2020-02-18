@@ -1,33 +1,10 @@
 <h4 *ngIf="!isCurrent">Submitted on {{ date | date: 'EEEE, MMMM d, y' }}</h4>
-<p class="important" *ngIf="isCurrent">Please submit this order for it to be processed.</p>
 <table mat-table [dataSource]="dataSource">
   <!-- Movie -->
   <ng-container matColumnDef="movie">
     <th mat-header-cell *matHeaderCellDef>International title</th>
     <td fxLayout="row" fxLayoutAlign="start center" mat-cell *matCellDef="let element" class="bf-strong" matRipple>
-      <img *ngIf="movie.promotionalElements.poster[0].media as poster; else defaultPoster" [imgRef]="poster" alt="Poster of movie" />
-      <ng-template #defaultPoster>
-        <img src="/assets/images/default-movie-poster.png" alt="Default poster of movie" />
-      </ng-template>
       <span>{{ element.main.title.international | titlecase }}</span>
-    </td>
-  </ng-container>
-
-  <!-- Sales Agent -->
-  <ng-container matColumnDef="salesAgent">
-    <th mat-header-cell *matHeaderCellDef>Sales agent</th>
-    <td mat-cell *matCellDef="let element">
-      <div fxLayout="row" fxLayoutAlign="none center">
-        <ng-container *ngIf="element.salesAgentDeal.salesAgent && element.salesAgentDeal.salesAgent.avatar as avatar; else defaultPicture">
-          <img class="picture" [imgRef]="avatar" alt="Picture of sales agent" />
-        </ng-container>
-        <ng-template #defaultPicture>
-          <img src="/assets/images/placeHolder_logo.png" alt="Default picture of sales agent" />
-        </ng-template>
-        <span *ngIf="element.salesAgentDeal && element.salesAgentDeal.salesAgent">
-          {{ element.salesAgentDeal.salesAgent.displayName | titlecase }}
-        </span>
-      </div>
     </td>
   </ng-container>
 
@@ -79,8 +56,3 @@
   <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
   <tr mat-row *matRowDef="let row; columns: columnsToDisplay" (click)="redirectToMovie(row.id)"></tr>
 </table>
-
-<div *ngIf="isCurrent" fxLayout="row" fxLayoutAlign="center">
-  <button test-id="submit-to-sellers" class="express-button" mat-flat-button color="accent" (click)="sent.emit()">Submit to sellers</button>
-</div>
-
