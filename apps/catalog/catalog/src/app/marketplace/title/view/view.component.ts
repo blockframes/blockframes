@@ -26,7 +26,7 @@ export class MarketplaceMovieViewComponent implements OnInit {
 
   navLinks = [{
     path: 'main',
-    label: 'Main'
+    label: 'Main Information'
   },{
     path: 'avails',
     label: 'Avails'
