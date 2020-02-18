@@ -224,9 +224,7 @@ jobs:
       - run: npm run build:maintenance
       - slack/notify:
           message: '🧹 Deploying to maintenance production...'
-      - do-exclusively/do-exclusively:
-          # Note: right now do-exclusively excludes cross-jobs (staging & prod).
-          token: $CIRCLE_TOKEN
+      - run:
           command: |
             npx firebase use prod &&
             npx firebase deploy --only hosting:blockframes-maintenance
