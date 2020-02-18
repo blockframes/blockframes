@@ -4,12 +4,9 @@
   <ng-container tunnel-form>
     <div fxLayout="row" fxLayoutAlign="space-between start">
       <movie-banner *ngIf="movie$ | async as movie" [movie]="movie"></movie-banner>
-      <div fxLayout="column" fxLayoutAlign="start end">
-        <catalog-wishlist-button [movieId]="titleId" (click)="removeTitle()"></catalog-wishlist-button>
-        <button mat-button color="warn" (click)="removeTitle()">
-          <mat-icon>delete</mat-icon><span>Remove Title</span>
-        </button>
-      </div>
+      <button mat-button color="warn" (click)="removeTitle()">
+        <mat-icon>delete</mat-icon><span>Remove Title</span>
+      </button>
     </div>
     <h2>Exploitation Rights</h2>
     <!-- All Deals -->
