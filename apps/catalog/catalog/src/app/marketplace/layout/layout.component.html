@@ -6,6 +6,10 @@
         <mat-icon mat-list-icon svgIcon="home"></mat-icon>
         <span mat-line>Home</span>
       </a>
+      <a mat-list-item routerLink="search" routerLinkActives="active">
+        <mat-icon mat-list-icon svgIcon="video_library"></mat-icon>
+        <span mat-line>All Titles</span>
+      </a>
       <a mat-list-item routerLink="selection" routerLinkActive="active">
         <mat-icon mat-list-icon svgIcon="basket"></mat-icon>
         <span mat-line>My Selection</span>
@@ -17,10 +21,6 @@
       <a mat-list-item routerLink="deals" routerLinkActive="active">
         <mat-icon mat-list-icon svgIcon="wallet"></mat-icon>
         <span mat-line>Offers & Deals</span>
-      </a>
-      <a mat-list-item routerLink="search" routerLinkActives="active">
-        <mat-icon mat-list-icon svgIcon="video_library"></mat-icon>
-        <span mat-line>All Titles</span>
       </a>
    </mat-nav-list>
   </mat-sidenav>
@@ -37,8 +37,8 @@
         </a>
       </div>
       <div fxLayout="row" fxLayoutGap="24px">
-        <a mat-icon-button>
-          <mat-icon svgIcon="star_fill" ></mat-icon>
+        <a mat-icon-button routerLink="wishlist">
+          <mat-icon svgIcon="heart_fill" ></mat-icon>
         </a>
         <button mat-icon-button routerLink="selection">
           <mat-icon svgIcon="basket" [matBadge]="cartCount$ | async" [matBadgeHidden]="!(cartCount$ | async)" matBadgeColor="accent" matBadgeSize="small"></mat-icon>
@@ -52,12 +52,5 @@
     <!-- CONTENT -->
     <router-outlet></router-outlet>
 
-    <!-- FOOTER -->
-    <footer page-id="footer" fxLayout="row" fxLayoutAlign="center center">
-      <a routerLink="/c/o/catalog/terms">Terms and Conditions</a>
-      <a routerLink="/c/o/catalog/about">About</a>
-      <a routerLink="/c/o/catalog/who-are-we">Who are we?</a>
-      <a routerLink="/c/o/catalog/contact">Contact</a>
-    </footer>
   </mat-sidenav-content>
 </mat-sidenav-container>
