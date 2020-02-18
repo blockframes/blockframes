@@ -1,11 +1,11 @@
-import { EntityControl, FormEntity, FormList } from '@blockframes/utils';
-import { FormArray } from '@angular/forms';
+import { EntityControl, FormEntity, FormList, urlValidators } from '@blockframes/utils';
+import { FormArray, FormControl } from '@angular/forms';
 import { MovieMainForm } from './main/main.form';
 import { MoviePromotionalElementsForm } from './promotional-elements/promotional-elements.form';
 import { MoviePromotionalDescriptionForm } from './promotional-description/promotional-description.form';
 import { MovieStoryForm } from './story/story.form';
 import { MovieSalesCastForm } from './sales-cast/sales-cast.form';
-import { Movie, createMovie } from '../+state';
+import { Movie, createMovie, createMovieLegalDocuments } from '../+state';
 import { MovieSalesInfoForm } from './sales-info/sales-info.form';
 import { MovieVersionInfoForm } from './version-info/version-info.form';
 import { MovieFestivalPrizesForm } from './festival-prizes/festival-prizes.form';
@@ -13,7 +13,46 @@ import { MovieSalesAgentDealForm } from './sales-agent-deal/sales-agent-deal.for
 import { MovieReviewForm } from './review/review.form';
 import { MovieBudgetForm } from './budget/budget.form';
 import { Injectable } from '@angular/core';
+import { LegalDocument } from '@blockframes/contract/contract/+state/contract.firestore';
+import { FormStaticValue } from '@blockframes/utils/form/forms/static-value.form';
+import { createLegalDocument } from '@blockframes/contract/contract/+state/contract.model';
+import { MovieLegalDocuments } from '../+state/movie.firestore';
 
+// LEGAL DOCUMENTS
+
+function createLegalDocumentControl(legalDocument?: Partial<LegalDocument>) {
+  const { id, label, media, language, country } = createLegalDocument(legalDocument);
+  return {
+    id: new FormControl(id),
+    label: new FormControl(label),
+    media: new FormControl(media.url, urlValidators),
+    language: new FormStaticValue(language, 'LANGUAGES'),
+    country: new FormStaticValue(country, 'TERRITORIES')
+  };
+}
+
+export type LegalDocumentControl = ReturnType<typeof createLegalDocumentControl>;
+
+export class LegalDocumentForm extends FormEntity<LegalDocumentControl, LegalDocument> {
+  constructor(legalDocument?: Partial<LegalDocument>) {
+    super(createLegalDocumentControl(legalDocument));
+  }
+}
+
+function createMovieLegalDocumentsControl(legalDocuments?: Partial<MovieLegalDocuments>) {
+  const entity = createMovieLegalDocuments(legalDocuments);
+  return {
+    chainOfTitles: FormList.factory(entity.chainOfTitles, el => new LegalDocumentForm(el)),
+  };
+}
+
+export type MovieLegalDocumentsControl = ReturnType<typeof createMovieLegalDocumentsControl>;
+
+export class MovieLegalDocumentsForm extends FormEntity<MovieLegalDocumentsControl, MovieLegalDocuments> {
+  constructor(legalDocuments?: Partial<MovieLegalDocuments>) {
+    super(createMovieLegalDocumentsControl(legalDocuments));
+  }
+}
 
 function createMovieControls(movie: Partial<Movie>) {
   const entity = createMovie(movie);
@@ -29,6 +68,7 @@ function createMovieControls(movie: Partial<Movie>) {
     salesAgentDeal: new MovieSalesAgentDealForm(entity.salesAgentDeal),
     budget: new MovieBudgetForm(entity.budget),
     movieReview: FormList.factory(entity.movieReview, review => new MovieReviewForm(review)),
+    documents: new MovieLegalDocumentsForm(entity.documents),
   }
 }
 
@@ -41,8 +81,8 @@ export class MovieForm extends FormEntity<MovieControl, Movie> {
   }
 
   reset(value?: EntityControl<Movie>, options?: {
-      onlySelf?: boolean;
-      emitEvent?: boolean;
+    onlySelf?: boolean;
+    emitEvent?: boolean;
   }): void {
     super.reset(value, options);
     this.clearFormArrays();

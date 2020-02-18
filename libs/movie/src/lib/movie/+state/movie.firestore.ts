@@ -19,6 +19,7 @@ import { Person, SalesAgent, Producer, Crew, Cast, Stakeholder } from "@blockfra
 import { firestore } from "firebase/app";
 import { ImgRef } from "@blockframes/utils/image-uploader";
 import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
+import { LegalDocument } from "@blockframes/contract/contract/+state/contract.firestore";
 
 type Timestamp = firestore.Timestamp;
 
@@ -262,6 +263,7 @@ interface MovieRaw<D> {
   _meta?: DocumentMeta;
   id: string;
   deliveryIds: string[];
+  documents: MovieLegalDocuments;
 
   // Sections
   main: MovieMain;
@@ -275,6 +277,10 @@ interface MovieRaw<D> {
   salesAgentDeal: MovieSalesAgentDealRaw<D>;
   budget: MovieBudget;
   movieReview: MovieReview[];
+}
+
+export interface MovieLegalDocuments {
+  chainOfTitles: LegalDocument[],
 }
 
 export interface MovieVersionInfo {

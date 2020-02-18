@@ -122,7 +122,7 @@ interface ContractRaw<D> {
   parties: ContractPartyDetailRaw<D>[],
   titleIds: string[],
   partyIds: string[],
-  documents: LegalDocuments
+  documents: ContractLegalDocuments
 }
 
 /**
@@ -192,9 +192,9 @@ export interface InvoiceRaw<D> {
   reportInternalRefs: string[],
 }
 
-export interface LegalDocuments {
-  chainOfTitles: LegalDocument[],
-  invoices: LegalDocument[]
+export interface ContractLegalDocuments {
+  invoices: LegalDocument[],
+  expenses?: LegalDocument[]
 }
 
 export interface LegalDocument {

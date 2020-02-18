@@ -47,7 +47,7 @@ export const contractAznavour = {
   type: 'Mandate',
   id: 'aznavourPCSales2',
   partyIds: ['e1VX0000000000000000', 'TBD'],
-  documents: { chainOfTitles: [], invoices: [] }
+  documents: { invoices: [], expenses: [] }
 };
 
 export const mockData = [

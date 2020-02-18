@@ -26,7 +26,8 @@ import {
   UnitBox,
   MovieStakeholders,
   StoreStatus,
-  MovieAnalytics
+  MovieAnalytics,
+  MovieLegalDocuments
 } from './movie.firestore';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 import { LanguagesSlug } from '@blockframes/utils/static-model';
@@ -65,6 +66,7 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     id: params.id,
     deliveryIds: [],
     _type: 'movies',
+    documents: createMovieLegalDocuments(params.documents),
     main: createMovieMain(params.main),
     story: createMovieStory(params.story),
     promotionalElements: createMoviePromotionalElements(params.promotionalElements),
@@ -324,6 +326,15 @@ export function createMovieStakeholders(stakeholders: Partial<MovieStakeholders>
     laboratory: [],
     financier: [],
     ...stakeholders
+  }
+}
+
+export function createMovieLegalDocuments(
+  params: Partial<MovieLegalDocuments> = {}
+): MovieLegalDocuments {
+  return {
+    chainOfTitles: [],
+    ...params
   }
 }
 

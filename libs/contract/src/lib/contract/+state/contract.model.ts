@@ -7,7 +7,7 @@ import {
   ContractPartyDetailDocumentWithDates,
   ContractPartyDetailDocumentWithDatesDocument,
   LegalDocument,
-  LegalDocuments,
+  ContractLegalDocuments,
   ContractDocument,
   ContractType,
   InvoiceTitleDetails,
@@ -25,7 +25,6 @@ import {
 } from '../../version/+state/contract-version.model';
 import { LegalRolesSlug } from '@blockframes/utils/static-model/types';
 import { toDate } from '@blockframes/utils/helpers';
-import { createPaymentSchedule } from '@blockframes/utils/common-interfaces/schedule';
 import { createBankAccount } from '@blockframes/utils/common-interfaces/utility';
 
 /**
@@ -67,7 +66,7 @@ export function createContract(params: Partial<Contract> = {}): Contract {
     parties: [],
     titleIds: [],
     partyIds: [],
-    documents: createLegalDocuments(params.documents),
+    documents: createContractLegalDocuments(params.documents),
     ...params
   };
 }
@@ -185,17 +184,17 @@ export function convertToContractDocument(params: Partial<Contract> = {}): Contr
     partyIds: [],
     parentContractIds: [],
     childContractIds: [],
-    documents: createLegalDocuments(params.documents),
+    documents: createContractLegalDocuments(params.documents),
     ...params
   };
 }
 
-export function createLegalDocuments(
-  params: Partial<LegalDocuments> = {}
-): LegalDocuments {
+export function createContractLegalDocuments(
+  params: Partial<ContractLegalDocuments> = {}
+): ContractLegalDocuments {
   return {
-    chainOfTitles: [],
     invoices: [],
+    expenses: [],
     ...params
   }
 }
