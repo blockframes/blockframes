@@ -23,7 +23,7 @@
 <section class="search">
   <form [formGroup]="searchbarForm">
     <mat-form-field appearance="outline">
-      <mat-label>Search</mat-label>
+      <mat-label>Search for titles, directors, keywords, ...</mat-label>
       <mat-icon matPrefix svgIcon="magnifying_glasses"></mat-icon>
       <input matInput type="text" [formControl]="searchbarTextControl" autocomplete="off"
       [matAutocomplete]="searchbar" #autoCompleteInput>
@@ -155,7 +155,7 @@
                         Dubbed
                       </mat-checkbox>
                       <mat-checkbox color="primary" test-id="languages-checkbox-subtitle" mat-line formControlName="subtitle">
-                        Subtitles
+                        Subtitled
                       </mat-checkbox>
                       <mat-checkbox color="primary" test-id="languages-checkbox-subtitle" mat-line formControlName="caption">
                         Closed-Captioned
