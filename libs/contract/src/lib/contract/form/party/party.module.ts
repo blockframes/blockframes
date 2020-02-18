@@ -13,7 +13,6 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatTooltipModule } from '@angular/material/tooltip';
 
 @NgModule({
   declarations: [ContractFormPartyComponent],
@@ -28,7 +27,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MatDividerModule,
     MatButtonModule,
     MatIconModule,
-    MatTooltipModule,
     MatSelectModule
   ],
   exports: [ContractFormPartyComponent]
