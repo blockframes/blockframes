@@ -1,4 +1,4 @@
-import { ContractVersionDocumentWithDates } from './../../+state/contract.firestore';
+import { ContractVersion } from '@blockframes/contract/version/+state';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ContractService, ContractType } from '../../+state';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -20,9 +20,9 @@ export class LobbyComponent {
 
   async select(contractType: 'sale' | 'mandate') {
     const type = contractType === 'sale' ? ContractType.sale : ContractType.mandate;
-    const version = {
+    const version: Partial<ContractVersion> = {
       price: { commissionBase: CommissionBase.grossreceipts, amount: 0, currency: 'EUR' }
-    } as ContractVersionDocumentWithDates;
+    }
     const contractId = await this.service.create({ type }, version);
     this.router.navigate([contractId, contractType], { relativeTo: this.route })
   }

@@ -1,16 +1,16 @@
 <tunnel-page>
   <h4 title>STEP 2</h4>
   <h1 subtitle>Exploitation Rights</h1>
-  <article description fxLayout="row" fxLayoutAlign="space-between start">
-    <movie-banner *ngIf="movie$ | async as movie" [movie]="movie"></movie-banner>
-    <div fxLayout="column">
-      <catalog-wishlist-button [movieId]="titleId" (click)="removeTitle()"></catalog-wishlist-button>
-      <button mat-button color="warn" (click)="removeTitle()">
-        <mat-icon>delete</mat-icon><span>Remove Title</span>
-      </button>
-    </div>
-  </article>
   <ng-container tunnel-form>
+    <div fxLayout="row" fxLayoutAlign="space-between start">
+      <movie-banner *ngIf="movie$ | async as movie" [movie]="movie"></movie-banner>
+      <div fxLayout="column" fxLayoutAlign="start end">
+        <catalog-wishlist-button [movieId]="titleId" (click)="removeTitle()"></catalog-wishlist-button>
+        <button mat-button color="warn" (click)="removeTitle()">
+          <mat-icon>delete</mat-icon><span>Remove Title</span>
+        </button>
+      </div>
+    </div>
     <h2>Exploitation Rights</h2>
     <!-- All Deals -->
     <ng-container *ngFor="let dealControl of dealForm.controls; let dealIndex = index;">
