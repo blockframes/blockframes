@@ -190,9 +190,7 @@ jobs:
       - run: npm run build:all
       - slack/notify:
           message: '🚚 Deploying to production...'
-      - do-exclusively/do-exclusively:
-          # Note: right now do-exclusively excludes cross-jobs (staging & prod).
-          token: $CIRCLE_TOKEN
+      - run:
           command: |
             npx firebase use prod &&
             cp firestore.rules firestore.rules.regular &&
