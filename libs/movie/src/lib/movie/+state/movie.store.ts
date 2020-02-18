@@ -8,6 +8,10 @@ export interface MovieState extends EntityState<Movie, string>, ActiveState<stri
 @StoreConfig({ name: 'movies', idKey: 'id' })
 export class MovieStore extends EntityStore<MovieState> {
 
+  constructor() {
+    super();
+  }
+
   akitaPreAddEntity(movie: Partial<Movie>) {
     return createMovie(movie);
   }
