@@ -262,8 +262,6 @@ workflows:
             - build-and-test-all
       - deploy-to-prod:
           <<: *production_only
-          requires:
-            - build-and-test-all
       - deploy-to-staging:
           <<: *staging_only
   nightly-e2e:
