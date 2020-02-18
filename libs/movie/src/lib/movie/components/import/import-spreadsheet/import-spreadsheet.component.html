@@ -1,9 +1,7 @@
 <article fxLayout="column" fxLayoutAlign="center">
   <section fxLayout="column" fxLayoutAlign="center center">
-    <h4>Upload avails & film doc</h4>
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam mollis velit consectetur felis malesuada, id
-      maximus
-      neque mattis. Vivamus quis massa eros. Integer in euismod nunc.</p>
+    <h1>Add your titles using the Archipel Content Excel template</h1>
+
     <div fxLayout="column" fxLayoutAlign="center">
       <button mat-button color="primary" (click)="downloadTemplate('movie')">
         Download our excel movie template
@@ -26,6 +24,10 @@
         <mat-option value="contracts">Contracts</mat-option>
       </mat-select>
     </mat-form-field>
+  </section>
+  <section fxLayout="column" fxLayoutAlign="center center">
+    <p>Once you have filled it out, please upload it below.</p>
+    <div><a href="#">Need help ?</a></div>
   </section>
   <section fxLayout="column" fxLayoutAlign="center">
     <ng-container *ngIf="sheets.length; else fileUpload">

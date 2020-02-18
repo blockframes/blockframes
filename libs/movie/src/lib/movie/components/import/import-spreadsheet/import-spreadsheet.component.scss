@@ -1,8 +1,12 @@
 article {
-  width: 500px;
+  width: 50%;
   margin: 0 auto;
   img {
     width: 220px;
+  }
+
+  h1 {
+    text-align: center;
   }
 
   min-height: calc(100vh - (var(--toolbarHeight) * 2) - 30px); // TODO #1212
