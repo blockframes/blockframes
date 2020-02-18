@@ -1,9 +1,11 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
-import { DealViewComponent } from './view.component';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { DealViewComponent } from './view.component';
+
+// Module components
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';

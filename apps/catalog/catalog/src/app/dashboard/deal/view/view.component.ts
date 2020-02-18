@@ -21,8 +21,7 @@ import { CurrencyPipe } from '@angular/common';
 import { Price } from '@blockframes/utils/common-interfaces';
 import { Intercom } from 'ng-intercom';
 
-// @todo(#1951) transformation should be done in the contract.query & contract.utils
-
+// @todo(#1952) Implement logic as a reusable component in library "version"
 const versionColumns = {
   date: 'Date',
   offer: 'Offer Amount',
@@ -36,6 +35,7 @@ interface VersionView {
   status: string;
 }
 
+// @todo(#1951) transformation should be done in the contract.query & contract.utils
 /** Returns version price as a formated string. */
 function getVersionPrice(version: ContractVersion): string {
   const currencyPipe = new CurrencyPipe('en-US');
