@@ -61,10 +61,13 @@
             </mat-select>
           </mat-form-field>
         </div>
+        <div fxLayout="row" fxLayoutAlign="start start">
+          <h5 class="mat-body-2">Starting from</h5>
+        </div>
         <div fxLayout="row" fxLayoutGap="20px">
           <div fxLayout="column" fxLayoutGap="20px">
             <mat-slide-toggle [formControl]="periodCtrl" color="primary" (change)="updateState($event, 'start')">
-              Starting from
+              Date
             </mat-slide-toggle>
             <mat-form-field appearance="outline">
               <mat-label>Start Date</mat-label>
@@ -101,6 +104,7 @@
     <input matInput type="text" [formControl]="customPaymentSchedule">
   </mat-form-field>
   <h3>PAYMENT TERM</h3>
+  <span class="caption">Please indicate the payment term you need regarding invoices.</span>
   <!-- We are using the first index cause it has nothing in common with event schedule -->
   <form *ngFor="let control of paymentSchedule.controls; let isFirst = first" [formGroup]="control">
     <form formGroupName="date" *ngIf="isFirst">
