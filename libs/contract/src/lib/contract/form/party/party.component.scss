@@ -1,6 +1,11 @@
 mat-form-field {
-    width: 100%;
+  width: 100%;
 }
-mat-divider, button {
-    margin: 20px
+mat-divider,
+button {
+  margin: 20px;
+}
+
+span {
+  white-space: nowrap;
 }
