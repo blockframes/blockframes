@@ -1,4 +1,3 @@
-import { formatDate } from '@angular/common';
 import { toDate } from '../helpers';
 
 export enum PaymentEvent {
