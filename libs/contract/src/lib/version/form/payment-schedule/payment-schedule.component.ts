@@ -89,12 +89,15 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
           this.disableAll();
           this.customPaymentSchedule.enable();
           this.toggleDurationPeriod('first');
+          this.activateFirstDuration();
         } else if (value === 'periodic') {
           this.disableAll();
+
           this.toggleDurationPeriod('last');
           this.eventCtrl.enable();
           this.periodCtrl.enable();
           this.paymentSchedule.last().get('percentage').enable();
+          this.activateFirstDuration();
           if (this.periodCtrl.value) {
             this.paymentSchedule.last().get('date').get('start').enable();
           } else {
@@ -102,9 +105,11 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
           }
         } else if (value === 'event') {
           this.disableAll();
-          this.updateFormExceptEventForm()
+          this.updateFormExceptEventForm();
+          this.activateFirstDuration();
         } else {
           this.disableAll();
+          this.activateFirstDuration();
         }
       })
     ).subscribe();
@@ -190,6 +195,7 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
       this.removePayment(i);
     }
     this.disableAll();
+    this.activateFirstDuration()
     this.paymentSchedule.reset();
     this.form.at(0).get('customPaymentSchedule').reset();
     if (fromResetButton) {
@@ -222,10 +228,18 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
       const date = control.get('date');
       control.get('percentage').disable()
       date.get('floatingStart').disable();
+      date.get('start').disable()
       date.get('floatingDuration').get('unit').disable();
       date.get('floatingDuration').get('duration').disable();
-      date.get('start').disable()
     });
+  }
+
+  /**
+   * @description keeps the payment term active
+   */
+  private activateFirstDuration() {
+    this.paymentSchedule.at(0).get('date').get('floatingDuration').get('unit').enable();
+    this.paymentSchedule.at(0).get('date').get('floatingDuration').get('duration').enable();
   }
 
   /**
