@@ -12,6 +12,6 @@ article {
   min-height: calc(100vh - (var(--toolbarHeight) * 2) - 30px); // TODO #1212
 
   section.help-section {
-    margin-bottom: 20px;
+    margin: 20px 0;
   }
 }

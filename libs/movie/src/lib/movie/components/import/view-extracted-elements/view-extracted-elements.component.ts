@@ -83,7 +83,7 @@ enum SpreadSheetMovie {
   rating,
   certifications,
   cast,
-  shortSynopsis,
+  synopsis,
   originCountryReleaseDate,
   genres,
   festivalPrizes,
@@ -435,10 +435,10 @@ export class ViewExtractedElementsComponent {
             const country = getCodeIfExists('TERRITORIES', ratingParts[0] as ExtractCode<'TERRITORIES'>);
             const movieRating = createMovieRating({ value: ratingParts[1].trim() });
 
-            if(ratingParts[2]) { // System
+            if (ratingParts[2]) { // System
               const system = getCodeIfExists('RATING', ratingParts[2] as ExtractCode<'RATING'>);
 
-              if(system) {
+              if (system) {
                 movieRating.system = system;
               } else {
                 importErrors.errors.push({
@@ -451,7 +451,7 @@ export class ViewExtractedElementsComponent {
               }
             }
 
-            if(ratingParts[3]) { // Reason
+            if (ratingParts[3]) { // Reason
               movieRating.reason = ratingParts[3].trim();
             }
 
@@ -488,9 +488,9 @@ export class ViewExtractedElementsComponent {
             .map(credit => ({ ...credit, role: 'actor' }));
         }
 
-        // SYNOPSIS (Short Synopsis)
-        if (spreadSheetRow[SpreadSheetMovie.shortSynopsis]) {
-          movie.main.shortSynopsis = spreadSheetRow[SpreadSheetMovie.shortSynopsis];
+        // SYNOPSIS (Synopsis)
+        if (spreadSheetRow[SpreadSheetMovie.synopsis]) {
+          movie.story.synopsis = spreadSheetRow[SpreadSheetMovie.synopsis];
         }
 
         // ORIGIN COUNTRY RELEASE DATE (Release date in Origin Country)
@@ -834,8 +834,7 @@ export class ViewExtractedElementsComponent {
           this.moviesToCreate.data.push(movieWithErrors);
           this.moviesToCreate.data = [... this.moviesToCreate.data];
         }
-
-        this.cdRef.detectChanges();
+        this.cdRef.markForCheck();
       }
     });
   }
@@ -1043,10 +1042,10 @@ export class ViewExtractedElementsComponent {
       });
     }
 
-    if (!movie.main.shortSynopsis) {
+    if (!movie.story.synopsis) {
       errors.push({
         type: 'warning',
-        field: 'main.shortSynopsis',
+        field: 'movie.story.synopsis',
         name: 'Synopsis',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
@@ -1548,7 +1547,7 @@ export class ViewExtractedElementsComponent {
         this.deals.data.push(saleWithErrors);
         this.deals.data = [... this.deals.data];
 
-        this.cdRef.detectChanges();
+        this.cdRef.markForCheck();
       }
 
     });
@@ -1979,7 +1978,7 @@ export class ViewExtractedElementsComponent {
           this.contractsToCreate.data = [... this.contractsToCreate.data];
         }
 
-        this.cdRef.detectChanges();
+        this.cdRef.markForCheck();
       }
     };
     matSnackbarRef.dismissWithAction(); // loading ended
@@ -2078,8 +2077,8 @@ export class ViewExtractedElementsComponent {
     }
 
     if (spreadSheetRow[SpreadSheetContractTitle.expenseCurrency + currentIndex]) {
-        // @TODO(BRUCE) #1832 
-        recoupableExpense.price.currency = spreadSheetRow[SpreadSheetContractTitle.expenseCurrency + currentIndex].toUpperCase();
+      // @TODO(BRUCE) #1832 
+      recoupableExpense.price.currency = spreadSheetRow[SpreadSheetContractTitle.expenseCurrency + currentIndex].toUpperCase();
     }
 
     titleDetails.price.recoupableExpenses.push(recoupableExpense);
