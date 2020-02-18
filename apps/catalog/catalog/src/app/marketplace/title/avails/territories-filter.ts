@@ -1,24 +1,22 @@
 import { DistributionDeal, getDealTerritories } from '@blockframes/movie/distribution-deals/+state';
-import { TerritoriesSlug } from '@blockframes/utils/static-model';
+import { TerritoriesSlug, staticModels } from '@blockframes/utils/static-model';
 import { AvailsSearch } from '@blockframes/catalog';
 import { getExclusiveDeals, getDealsInDateRange, getDealsWithMedias } from '@blockframes/movie/distribution-deals/create/availabilities.util';
 import { Model } from '@blockframes/utils/static-model/staticModels';
 import { inDateRange } from '@blockframes/utils/common-interfaces/terms';
+
+const TERRITORIES = staticModels['TERRITORIES'];
 
 /**
  * Returns an array of unlicensed territories to display on the world map.
  * @param mandateDeals Mandate deals from the movie
  * @param territories All the territories
  */
-export function getNotLicensedTerritories(
-  filter: AvailsSearch,
-  mandateDeals: DistributionDeal[],
-  territories: Model['TERRITORIES']
-): Model['TERRITORIES'] {
+export function getNotLicensedTerritories(filter: AvailsSearch, mandateDeals: DistributionDeal[]): Model['TERRITORIES'] {
 
   const licensedTerritorySlugs = getLicensedTerritorySlugs(mandateDeals, filter)
 
-  return territories.filter(territory => !licensedTerritorySlugs.includes(territory.slug));
+  return TERRITORIES.filter(territory => !licensedTerritorySlugs.includes(territory.slug));
 }
 
 /**
@@ -32,13 +30,12 @@ export function getNotLicensedTerritories(
 export function getRightsSoldTerritories(
   filter: AvailsSearch,
   mandateDeals: DistributionDeal[],
-  territories: Model['TERRITORIES'],
   deals: DistributionDeal[]
 ): Model['TERRITORIES'] {
   // Grab the territorySlugs from all sales deals, filtered with licensed territories.
   const territorySlugsWithDeals = getTerritorySlugsWithDeals(filter, mandateDeals, deals)
   // Filter again to only keep territories with ongoing sales.
-  return territories.filter(territory => territorySlugsWithDeals.includes(territory.slug));
+  return TERRITORIES.filter(territory => territorySlugsWithDeals.includes(territory.slug));
 }
 
 /**
@@ -52,13 +49,12 @@ export function getRightsSoldTerritories(
 export function getAvailableTerritories(
   filter: AvailsSearch,
   mandateDeals: DistributionDeal[],
-  territories: Model['TERRITORIES'],
   deals: DistributionDeal[]
 ): Model['TERRITORIES'] {
   // Grab the territorySlugs from all sales deals, filtered with licensed territories.
   const territorySlugsWithoutDeals = getTerritorySlugsWithoutDeals(filter, mandateDeals, deals)
   // Filter again to only keep territories without any ongoing deals.
-  return territories.filter(territory => territorySlugsWithoutDeals.includes(territory.slug));
+  return TERRITORIES.filter(territory => territorySlugsWithoutDeals.includes(territory.slug));
 }
 
 /**

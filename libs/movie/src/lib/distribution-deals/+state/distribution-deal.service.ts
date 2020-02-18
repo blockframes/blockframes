@@ -20,8 +20,8 @@ import { combineLatest } from 'rxjs';
 import { ContractVersion } from '@blockframes/contract/version/+state/contract-version.model';
 import { DistributionDealQuery } from './distribution-deal.query';
 import { Movie } from '@blockframes/movie/movie/+state';
-import { AvailsSearchForm, AvailsSearch } from '@blockframes/catalog/form/search.form';
-import { ISO3166TERRITORIES } from '@blockframes/utils/static-model/territories-ISO-3166';
+import { AvailsSearch } from '@blockframes/catalog/form/search.form';
+
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies/:movieId/distributionDeals' })
@@ -96,10 +96,7 @@ export class DistributionDealService extends CollectionService<DistributionDealS
     const dealToAdd = createDistributionDeal({
       id: dealId,
       terms: formValue.terms,
-      // if 'world' is in territories, just add every territories
-      territory: formValue.territories.includes('world')
-        ? ISO3166TERRITORIES.map(tag => tag.slug)
-        : formValue.territories,
+      territory: formValue.territories,
       territoryExcluded: formValue.territoriesExcluded,
       licenseType: formValue.medias,
       exclusive: formValue.exclusivity

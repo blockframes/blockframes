@@ -36,7 +36,7 @@
           <map-feature [tag]="tag['iso_a3']" color="foreground-unlicensed"></map-feature>
         </ng-container>
         <ng-container *ngFor="let tag of rightsSoldTerritories; trackBy: trackByTag">
-          <map-feature [tag]="tag['iso_a3']" color="foreground-sold"></map-feature>
+          <map-feature [tag]="tag['iso_a3']" color=""></map-feature>
         </ng-container>
         <ng-container *ngFor="let tag of availableTerritories; trackBy: trackByTag">
           <map-feature [tag]="tag['iso_a3']" color="foreground-available" (click)="select($event)"></map-feature>
@@ -47,12 +47,21 @@
         <mat-card class="colors-card">
           <mat-list>
             <mat-list-item>
+              <svg viewBox="0 0 100 100" width="10px" height="10px">
+                <rect fill="var(--foreground-available)" x="0" y="0" width="100" height="100"/>
+              </svg>
               <span class="mat-caption">Available</span>
             </mat-list-item>
             <mat-list-item>
+              <svg viewBox="0 0 100 100" width="10px" height="10px">
+                <rect fill="var(--foreground-sold)" x="0" y="0" width="100" height="100"/>
+              </svg>
               <span class="mat-caption">Rights Sold</span>
             </mat-list-item>
             <mat-list-item>
+              <svg viewBox="0 0 100 100" width="10px" height="10px">
+                <rect fill="var(--foreground-unlicensed)" x="0" y="0" width="100" height="100"/>
+              </svg>
               <span class="mat-caption">Not Licensed</span>
             </mat-list-item>
           </mat-list>
