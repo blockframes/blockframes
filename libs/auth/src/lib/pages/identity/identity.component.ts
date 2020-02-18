@@ -12,21 +12,9 @@ import { PasswordControl } from '@blockframes/utils/form/controls/password.contr
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IdentityComponent {
-  // TODO issue#1146
-  public mobile =
-    navigator.userAgent.match(/Android/i) ||
-    navigator.userAgent.match(/webOS/i) ||
-    navigator.userAgent.match(/iPhone/i) ||
-    navigator.userAgent.match(/iPad/i) ||
-    navigator.userAgent.match(/iPod/i) ||
-    navigator.userAgent.match(/BlackBerry/i)
-      ? false
-      : true;
-
   public form = new FormGroup({
     name: new FormControl(''),
     surname: new FormControl(''),
-    avatar: new FormControl(''),
     email: new FormControl({ value: this.query.user.email, disabled: true }),
     generatedPassword: new FormControl(''),
     newPassword: new PasswordControl()
@@ -55,7 +43,6 @@ export class IdentityComponent {
       await this.service.update({
         name: this.form.get('name').value,
         surname: this.form.get('surname').value,
-        avatar: this.form.get('avatar').value
       });
       this.router.navigateByUrl('/');
     } catch (error) {

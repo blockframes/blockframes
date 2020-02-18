@@ -31,6 +31,7 @@ import { PasswordResetComponent } from './pages/password-reset/password-reset.co
 import { TermsConditionsModule } from './components/terms-conditions/terms-conditions.module';
 import { AcceptConditionsModule } from './components/accept-conditions/accept-conditions.module';
 import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
+import { IdentityGuard } from './guard/identity.guard';
 
 export const AuthRoutes: Routes = [
   { path: '', redirectTo: 'welcome', pathMatch: 'full' },
@@ -39,7 +40,12 @@ export const AuthRoutes: Routes = [
     path: 'connexion',
     loadChildren: () => import('./pages/login/login.module').then(m => m.LoginModule)
   },
-  { path: 'identity', component: IdentityComponent },
+  {
+    path: 'identity',
+    canActivate: [IdentityGuard],
+    canDeactivate: [IdentityGuard],
+    component: IdentityComponent
+  },
   { path: 'congratulation', component: IdentityFeedbackComponent },
   { path: 'email-verification', component: EmailVerificationComponent},
   { path: 'password-reset', component: PasswordResetComponent}

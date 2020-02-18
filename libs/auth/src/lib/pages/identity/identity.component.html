@@ -7,10 +7,6 @@
         Please fill out the form to connect.
       </p>
       <mat-form-field appearance="outline">
-        <mat-label>Email</mat-label>
-        <input matInput type="email" formControlName="email" required />
-      </mat-form-field>
-      <mat-form-field appearance="outline">
         <mat-label>First name</mat-label>
         <input matInput type="text" placeholder="First name" formControlName="name" required />
         <mat-error *ngIf="form.get('name').hasError('required')">
@@ -24,6 +20,10 @@
           Last name is <strong>required</strong>
         </mat-error>
       </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" required />
+      </mat-form-field>
       <ng-container>
         <mat-form-field appearance="outline">
           <mat-label>Pre generated password</mat-label>
@@ -32,11 +32,6 @@
         </mat-form-field>
       </ng-container>
       <password-confirm formControlName="newPassword"></password-confirm>
-      <!-- TODO issue#1146 -->
-      <ng-container *ngIf="mobile">
-        <h3>Profile picture</h3>
-        <drop-cropper [ratio]="1" storagePath="avatar" formControlName="avatar"></drop-cropper>
-      </ng-container>
       <auth-accept-conditions (termsOfUseChecked)="checkTermsOfUse($event)">
         <ng-template conditions>
           <auth-terms-conditions></auth-terms-conditions>
