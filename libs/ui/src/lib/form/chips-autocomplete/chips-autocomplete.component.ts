@@ -103,10 +103,7 @@ export class ChipsAutocompleteComponent implements OnInit, OnDestroy {
   /** Select based on the option */
   public selected({ option }: MatAutocompleteSelectedEvent): void {
     this.added.emit(option.viewValue);
-    // TODO: Find a clean solution to handle 'world' choice in territories selects => ISSUE#1960
-    option.value === 'world'
-      ? ISO3166TERRITORIES.forEach(tag => this.form.push(new FormControl(tag.slug)))
-      : this.form.push(new FormControl(option.value));
+    this.form.push(new FormControl(option.value));
     this.inputEl.nativeElement.value = '';
     this.ctrl.setValue(null);
   }

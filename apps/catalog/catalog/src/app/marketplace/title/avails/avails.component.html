@@ -71,9 +71,21 @@
           <span class="mat-body-1">Please select a country to check if exploitation rights are available</span>
         </ng-container>
         <ng-template #displayDeal>
-          <span class="mat-subheading-2" *ngFor="let territory of availsForm.territories.controls; let isLast = last">
-            {{ territory.value | translateSlug: 'TERRITORIES'}}{{ isLast ? '' : ', ' }}
+          <span class="mat-subheading-2" *ngFor="let territory of availsForm.territories.controls; let i=index; let isLast = last">
+            <ng-container *ngIf="i < 4">
+              {{ territory.value | translateSlug: 'TERRITORIES'}}{{ isLast ? '' : ', ' }}
+            </ng-container>
           </span>
+          <span [widgetTooltip]="territories" class="tooltip">...</span>
+          <overlay-widget #territories>
+            <widget-card>
+              <span class="mat-body-2" *ngFor="let territory of availsForm.territories.controls; let i=index; let isLast = last">
+                <ng-container *ngIf="i>4">
+                  {{ territory.value | translateSlug: 'TERRITORIES'}}{{ isLast? '' : ','}}
+                </ng-container>
+              </span>
+            </widget-card>
+          </overlay-widget>
           <ul>
             <li class="mat-body-1">
               <strong>Terms</strong>
