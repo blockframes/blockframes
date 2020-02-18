@@ -1,12 +1,13 @@
-import { Component, ChangeDetectionStrategy, Host, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieService, Movie } from '@blockframes/movie';
 import { TunnelStep, TunnelConfirmComponent } from '@blockframes/ui/tunnel'
 import { ContractForm } from '../form/contract.form';
 import { ContractQuery, ContractService, ContractType } from '../+state';
-import { Observable, from, of, Subscription, combineLatest } from 'rxjs';
-import { startWith, map, switchMap, tap, shareReplay } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { startWith, map, switchMap, shareReplay } from 'rxjs/operators';
 import { MatDialog } from '@angular/material';
 import { ContractVersionService } from '@blockframes/contract/version/+state';
 import { DistributionDealForm } from '@blockframes/movie/distribution-deals/form/distribution-deal.form';
@@ -75,6 +76,8 @@ export class ContractTunnelComponent implements OnInit {
     private movieService: MovieService,
     private dealService: DistributionDealService,
     private dialog: MatDialog,
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
 
   async ngOnInit() {
@@ -119,6 +122,9 @@ export class ContractTunnelComponent implements OnInit {
       this.removeDeal(movieId, i);
     }
     this.dealForms.removeControl(movieId);
+    if (!this.dealForms.controls) {
+      this.router.navigate(['details'], { relativeTo: this.route })
+    }
   }
 
   /** Add a deal to a title */

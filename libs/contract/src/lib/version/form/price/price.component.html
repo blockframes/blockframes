@@ -20,7 +20,7 @@
     <mat-icon svgIcon="magnifying_glasses" matPrefix></mat-icon>
     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addMovie($event)">
       <mat-option *ngFor="let movie of movieSearchResults$ | async" [value]="movie">
-        {{ movie.main.title.international }}
+        {{ movie.main.title.original }}
       </mat-option>
     </mat-autocomplete>
   </mat-form-field>
