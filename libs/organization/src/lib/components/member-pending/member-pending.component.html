@@ -5,8 +5,8 @@
       <mat-list-item *ngFor="let invitation of invitations; let first = first">
         <mat-divider *ngIf="first" matSubheader></mat-divider>
         <span matLine>{{ invitation.user.email }}</span>
-        <button *ngIf="isAdmin" (click)="declined.emit(invitation)" mat-icon-button>
-          <mat-icon svgIcon="refuse"></mat-icon>
+        <button class="mat-elevation-z0" *ngIf="isAdmin" mat-mini-fab color="warn" (click)="declined.emit(invitation)">
+          <mat-icon svgIcon="cross"></mat-icon>
         </button>
         <mat-divider></mat-divider>
       </mat-list-item>
