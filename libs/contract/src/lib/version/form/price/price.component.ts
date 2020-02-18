@@ -9,6 +9,7 @@ import { MoviesIndex, MovieAlgoliaResult } from '@blockframes/utils/algolia';
 import { FormControl } from '@angular/forms';
 import { Component, Input, ChangeDetectionStrategy, OnInit, Inject } from '@angular/core';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
 // RxJs & Algolia
 import { Observable, Subscription, BehaviorSubject } from 'rxjs';
@@ -24,6 +25,12 @@ import { MovieService } from '@blockframes/movie';
 })
 export class PriceComponent implements OnInit {
   @Input() form: FormList<any, ContractVersionForm>;
+  public _hasMandate
+  @Input()
+  get hasMandate() { return this._hasMandate; }
+  set hasMandate(value: boolean) {
+    this._hasMandate = coerceBooleanProperty(value);
+  }
 
   public movieCtrl = new FormControl();
 
@@ -66,23 +73,30 @@ export class PriceComponent implements OnInit {
   }
 
   /**
-   * @description checks if packgae price is equal or above all the title price
+   * @description checks if package price is equal or above all the title price
    */
-  get totalPrice(): Observable<boolean> {
+  get totalPrice$(): Observable<boolean> {
     let accumilatedPrice = 0;
     const state = new BehaviorSubject(false)
     for (const id of this.activeMovieIds) {
       const version = this.form.last().value;
       accumilatedPrice += version.titles[id].price.amount;
     }
-    if (accumilatedPrice > this.totalAmount.value) {
-      state.next(true)
-    } else {
-      state.next(false)
-    }
+    accumilatedPrice > this.totalAmount.value ? state.next(true) : state.next(false)
     return state
   }
 
+  /**
+   * @description checks if film has specific fees
+   */
+  get isFeeSet(): boolean {
+    for (const id of this.activeMovieIds) {
+      if (!!this.form.last().value[id].price.commission) {
+        return true
+      }
+    }
+    return false;
+  }
 
   /**
    * @description gets the control for the total amount of the package
@@ -97,6 +111,13 @@ export class PriceComponent implements OnInit {
    */
   public priceForm(movieId: string) {
     return this.form.last().get('titles').get(movieId).get('price');
+  }
+
+  /**
+   * @description gets the control for the commision amount of the package
+   */
+  get commissionFee() {
+    return this.form.last().get('price').get('commission');
   }
 
   /**

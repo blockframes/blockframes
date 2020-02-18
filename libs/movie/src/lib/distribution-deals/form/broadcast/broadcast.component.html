@@ -1,0 +1,19 @@
+<h5>BROADCASTS</h5>
+<mat-form-field appearance="outline">
+  <mat-label># of Broadcast</mat-label>
+  <input matInput [formControl]="diffusionCtrl" type="number" autocomplete="off">
+</mat-form-field>
+<h5>Expected Broadcast Dates</h5>
+<span class="caption">
+  Please indicate the amount of broadcasts you need before fill in your broadcasts dates.
+</span>
+<form *ngFor="let control of diffusion.controls; let i = index;" [formGroup]="control" fxLayout="column">
+  <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="20px">
+    <mat-form-field appearance="outline">
+      <mat-label>Expected Rebroadcast Date #{{ i+1 }}</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="start" autocomplete="off">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+  </div>
+</form>

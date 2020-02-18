@@ -1,12 +1,13 @@
-import { Component, ChangeDetectionStrategy, Host, OnInit, OnDestroy, ChangeDetectorRef } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieService, Movie } from '@blockframes/movie';
 import { TunnelStep, TunnelConfirmComponent } from '@blockframes/ui/tunnel'
 import { ContractForm } from '../form/contract.form';
 import { ContractQuery, ContractService, ContractType } from '../+state';
-import { Observable, from, of, Subscription, combineLatest } from 'rxjs';
-import { startWith, map, switchMap, tap, shareReplay } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { startWith, map, switchMap, shareReplay } from 'rxjs/operators';
 import { MatDialog } from '@angular/material';
 import { ContractVersionService } from '@blockframes/contract/version/+state';
 import { DistributionDealForm } from '@blockframes/movie/distribution-deals/form/distribution-deal.form';
@@ -75,16 +76,18 @@ export class ContractTunnelComponent implements OnInit {
     private movieService: MovieService,
     private dealService: DistributionDealService,
     private dialog: MatDialog,
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
 
   async ngOnInit() {
     const contract = this.query.getActive();
     this.type = contract.type;
     this.contractForm = new ContractForm(contract);
-    
+
     // Set the initial deals
     contract.titleIds.forEach(async movieId => {
-      const deals = await this.dealService.getValue({ params: { movieId }});
+      const deals = await this.dealService.getValue({ params: { movieId } });
       this.dealForms.setControl(movieId, FormList.factory(deals, deal => new DistributionDealForm(deal)));
     });
 
@@ -97,7 +100,7 @@ export class ContractTunnelComponent implements OnInit {
       switchMap(titleIds => this.movieService.getValue(titleIds)),
       shareReplay()
     );
-    
+
     // Update the step
     this.steps$ = this.movies$.pipe(
       map(movies => fillMovieSteps(movies))
@@ -119,6 +122,9 @@ export class ContractTunnelComponent implements OnInit {
       this.removeDeal(movieId, i);
     }
     this.dealForms.removeControl(movieId);
+    if (!this.dealForms.controls) {
+      this.router.navigate(['details'], { relativeTo: this.route })
+    }
   }
 
   /** Add a deal to a title */
@@ -156,7 +162,7 @@ export class ContractTunnelComponent implements OnInit {
     // Upsert deals
     for (const movieId in this.dealForms.controls) {
       const deals = this.dealForms.get(movieId).value;
-      deals.forEach(async (deal, i) =>  {
+      deals.forEach(async (deal, i) => {
         if (deal.id) {
           this.dealService.update(deal, { params: { movieId }, write });
         } else {

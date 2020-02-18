@@ -1,14 +1,20 @@
-import { MatIconModule } from '@angular/material/icon';
+// Angular
 import { TranslateSlugModule } from '@blockframes/utils';
-import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+
+// Custom
 import { DistributionDealLanguagesComponent } from './languages.component';
 import { FormLanguageModule } from '@blockframes/ui/form/language/language.module';
-import { MatButtonToggleModule } from '@angular/material/button-toggle';
+
+// Material
 import { MatButtonModule } from '@angular/material/button';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatIconModule } from '@angular/material/icon';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @NgModule({
   imports: [
@@ -21,10 +27,11 @@ import { MatButtonModule } from '@angular/material/button';
     FormLanguageModule,
 
     // Material
-    MatButtonToggleModule,
+    MatCheckboxModule,
     MatSlideToggleModule,
     MatButtonModule,
-    MatIconModule
+    MatIconModule,
+    MatTooltipModule
   ],
   declarations: [DistributionDealLanguagesComponent],
   exports: [DistributionDealLanguagesComponent]

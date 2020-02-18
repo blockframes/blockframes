@@ -18,7 +18,6 @@ export class BannerComponent {
   public date: number;
 
   @Input() set movie(movie: Movie) {
-    console.log(movie);
     this.poster = movie.promotionalElements.poster[0] && movie.promotionalElements.poster[0].media;
     this.title = movie.main.title;
     this.director = movie.main.directors.map(d => `${d.firstName} ${d.lastName}`).join(', ');
