@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, ViewEncapsulation, Input } from '@angular/core';
-import { MovieQuery, MovieService } from '../../+state';
+import { MovieQuery, MovieService, createMovieRating, createMovieOriginalRelease } from '../../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieForm } from './../movie.form';
 import { MatDialog } from '@angular/material';
@@ -7,7 +7,7 @@ import { MovieImdbSearchComponent } from '../../components/movie-imdb-search/mov
 import { SearchRequest, ImdbMovie, FormEntity, ImageUploader } from '@blockframes/utils';
 import { formatCredit, formatCredits } from '@blockframes/utils/spreadsheet/format';
 import { FormControl } from '@angular/forms';
-import { getCodeIfExists } from '../../static-model/staticModels';
+import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
 import { CreditFormControl } from '../main/main.form';
 import { Router } from '@angular/router';
 
@@ -16,11 +16,9 @@ import { Router } from '@angular/router';
   templateUrl: './root.component.html',
   styleUrls: ['./root.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None, //@todo #643 do not use
+  encapsulation: ViewEncapsulation.None,
 })
 export class MovieFormRootComponent {
-  // @todo #643 => navigation arrows , not mat-tab
-  // @see https://projects.invisionapp.com/d/main#/console/17971669/374982976/preview
   @Input() public form: MovieForm;
 
   constructor(
@@ -67,30 +65,17 @@ export class MovieFormRootComponent {
         // PRODUCTION YEAR
         this.form.main.get('productionYear').setValue(movie.year);
 
-        // POSTER
-        const poster = await this.imageUploader.upload(movie.poster);
-        if (poster) {
-          this.form.main.get('poster').setValue(poster);
-        }
-
         // DIRECTOR
         this.form.main.directors.clear();
         this.form.main.addDirector(formatCredit(movie.director));
 
         // ACTORS
-        this.form.get('salesCast').credits.clear();
-        formatCredits(movie.actors).map(credit => this.form.get('salesCast').addCredit({ ...credit, creditRole: 'actor' }));
+        this.form.get('salesCast').cast.clear();
+        formatCredits(movie.actors).map(credit => this.form.get('salesCast').addCredit({ ...credit, role: 'actor' }, 'cast'));
 
         // WRITERS
-        formatCredits(movie.writer).map(credit => this.form.get('salesCast').addCredit({ ...credit, creditRole: 'writer' }));
-
-        // PRODUCTION COMPANY
-        this.form.main.productionCompanies.clear();
-        movie.production.split(',').forEach((a: string) => {
-          this.form.main.productionCompanies.push(new FormEntity<CreditFormControl>({
-            firstName: new FormControl(a.trim()),
-          }));
-        })
+        this.form.get('salesCast').crew.clear();
+        formatCredits(movie.writer).map(credit => this.form.get('salesCast').addCredit({ ...credit, role: 'writer' }, 'crew'));
 
         // SHORT SYNOPSIS
         this.form.main.get('shortSynopsis').setValue(movie.plot.substring(0, 500));
@@ -101,39 +86,41 @@ export class MovieFormRootComponent {
         // LANGUAGES
         const languages = [];
         movie.languages.split(',').forEach((g: string) => {
-          const language = getCodeIfExists('LANGUAGES', g.trim());
+          const language = getCodeIfExists('LANGUAGES', g.trim() as ExtractCode<'LANGUAGES'>);
           if (language) { languages.push(language) }
         });
-        this.form.main.get('languages').setValue(languages);
-
-        // ORIGIN COUNTRY RELEASE DATE (Release date in Origin Country)
-        this.form.get('salesInfo').get('originCountryReleaseDate').setValue(movie.released);
+        this.form.main.get('originalLanguages').setValue(languages);
 
         // ORIGIN COUNTRY
         const countries = [];
         movie.country.split(',').forEach((c: string) => {
           c = c.trim();
           if (c === 'USA') { c = 'United States' };
-          const country = getCodeIfExists('TERRITORIES', c);
+          const country = getCodeIfExists('TERRITORIES', c as ExtractCode<'TERRITORIES'>);
           if (country) { countries.push(country) }
           this.form.main.get('originCountries').setValue(countries);
         });
+
+        // ORIGINAL RELEASE 
+        // We put the same date for various origin countries
+        const releases = countries.map(country => createMovieOriginalRelease({country, date: movie.released}));
+        this.form.get('salesInfo').get('originalRelease').setValue(releases);
 
         // GENRES
         const genres = [];
         movie.genres.split(',').forEach((g: string) => {
           g = g.trim();
           if (g === 'Sci-Fi') { g = 'Science Fiction' };
-          const genre = getCodeIfExists('GENRES', g);
+          const genre = getCodeIfExists('GENRES', g as ExtractCode<'GENRES'>);
           if (genre) { genres.push(genre) }
         });
         this.form.main.get('genres').setValue(genres);
 
-        // LENGTH
-        this.form.main.get('length').setValue(parseInt(movie.runtime.replace(' min', ''), 10));
+        // TOTAL RUN TIME
+        this.form.main.get('totalRunTime').setValue(parseInt(movie.runtime.replace(' min', ''), 10));
 
         // PEGI (Rating)
-        this.form.get('salesInfo').get('pegi').setValue(movie.rated);
+        this.form.get('salesInfo').get('rating').setValue([createMovieRating({value: movie.rated})]);
 
         // STATUS
         this.form.main.get('status').setValue('finished');

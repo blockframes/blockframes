@@ -2,17 +2,17 @@
 <article fxLayout="row" fxLayout.md="column" fxLayout.sm="row" fxLayout.xs="column" fxLayoutAlign="space-between start">
   <!-- first column -->
   <ul class="size-column">
-    <ng-container *ngIf="main.languages">
+    <ng-container *ngIf="main.originalLanguages">
       <li fxLayout="row wrap" fxLayout.lt-sm="column">
-        <span><b>Original {{main.languages.length <= 1 ? 'language': 'languages'}}</b></span>
-        <span *ngFor="let languages of main.languages; let isLast=last">
+        <span><b>Original {{main.originalLanguages.length <= 1 ? 'language': 'languages'}}</b></span>
+        <span *ngFor="let languages of main.originalLanguages; let isLast=last">
           {{ languages | translateSlug: 'LANGUAGES' }}{{isLast ? '' : ', '}}
         </span>
       </li>
     </ng-container>
     <ng-container *ngIf="versionInfo.dubbings.length">
       <li fxLayout="row wrap">
-        <span><b>Available {{main.languages.length <= 1 ? 'dubbing': 'dubbings'}}</b></span>
+        <span><b>Available {{main.originalLanguages.length <= 1 ? 'dubbing': 'dubbings'}}</b></span>
         <span *ngFor="let dubbing of versionInfo.dubbings; let isLast=last">
           {{ dubbing | translateSlug: 'LANGUAGES'}}{{isLast ? '' : ', '}}
         </span>
@@ -23,7 +23,7 @@
   <ul class="size-column" fxLayout.lt-sm="column">
     <ng-container *ngIf="versionInfo.subtitles.length">
       <li fxLayout="row wrap">
-        <span><b>Available {{main.languages.length <= 1 ? 'substitle': 'subtitles'}}</b></span>
+        <span><b>Available {{main.originalLanguages.length <= 1 ? 'substitle': 'subtitles'}}</b></span>
         <span *ngFor="let subtitle of versionInfo.subtitles; let isLast=last">
           {{ subtitle | translateSlug: 'LANGUAGES'}}{{isLast ? '' : ', '}}
         </span>

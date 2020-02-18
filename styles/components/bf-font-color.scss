@@ -1,0 +1,66 @@
+@mixin bf-color-font($theme) {
+  $foreground: map-get($theme, foreground);
+  $color-font: map-get($theme, font);
+
+  .mat-display-4 {
+    color: mat-color($color-font, display-4);
+  }
+  .mat-display-3 {
+    color: mat-color($color-font, display-3);
+  }
+  .mat-display-2 {
+    color: mat-color($color-font, display-2);
+  }
+  .mat-display-1 {
+    color: mat-color($color-font, display-1);
+  }
+  h1,
+  .mat-h1,
+  .mat-headline {
+    color: mat-color($color-font, h1);
+  }
+  h2,
+  .mat-h2,
+  .mat-title {
+    color: mat-color($color-font, h2);
+  }
+  h3,
+  .mat-h3,
+  .mat-subheading-2 {
+    color: mat-color($color-font, h3);
+  }
+  h4,
+  .mat-h4,
+  .mat-subhheading-1 {
+    color: mat-color($color-font, h4);
+  }
+  h5 {
+    font-size: 16px;
+    line-height: 26px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: mat-color($color-font, h5)
+  }
+  h6 {
+    font-size: 18px;
+    line-height: 28px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: mat-color($color-font, h6)
+  }
+  .mat-body-1,
+  .mat-body {
+    color: mat-color($color-font, mat-body-1);
+  }
+  .mat-body-2,
+  .mat-body-strong {
+    color: mat-color($color-font, mat-body-2);
+  }
+  .mat-caption,
+  .mat-small {
+    color: mat-color($color-font, mat-caption);
+  }
+  input {
+    color: mat-color($foreground, text);
+  }
+}

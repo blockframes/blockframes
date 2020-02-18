@@ -53,7 +53,7 @@ export class DeliveryAddSpecificDeliveryListPickerComponent implements OnInit {
     const movieId = this.movieQuery.getActiveId();
     // TODO(issue#590): refactor the other page to add template to the URL
     // const deliveryID = this.currentDeliveryList.id;
-    return `/layout/o/delivery/add/${movieId}/4-settings`;
+    return `/c/o/delivery/add/${movieId}/4-settings`;
   }
 
   ngOnInit(): void {

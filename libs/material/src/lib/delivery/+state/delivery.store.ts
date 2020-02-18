@@ -1,6 +1,6 @@
-import { EntityState, EntityStore, StoreConfig, ActiveState } from '@datorama/akita';
+import { EntityStore, StoreConfig, EntityState, ActiveState } from '@datorama/akita';
 import { Injectable } from '@angular/core';
-import { Delivery } from './delivery.model';
+import { Delivery, createDeliveryFromFirestore, DeliveryWithTimestamps } from './delivery.model';
 
 export const enum DeliveryOption {
   mustChargeMaterials = 'mustChargeMaterials',
@@ -42,6 +42,14 @@ const initialState = {
 export class DeliveryStore extends EntityStore<DeliveryState, Delivery> {
   constructor() {
     super(initialState);
+  }
+
+  akitaPreAddEntity(delivery: DeliveryWithTimestamps): Delivery {
+    return createDeliveryFromFirestore(delivery);
+  }
+
+  akitaPreUpdateEntity(currentDelivery: Delivery, nextDelivery: DeliveryWithTimestamps): Delivery {
+    return createDeliveryFromFirestore(nextDelivery);
   }
 
   public updateWizard(content?: Partial<DeliveryWizard>) {

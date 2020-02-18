@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { InvitationService } from '../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { InvitationDocument, InvitationType } from '@blockframes/invitation/types';
+import { InvitationDocument, InvitationType, InvitationStatus } from '../+state/invitation.firestore';
 
 @Component({
   selector: 'invitation-item',
@@ -11,17 +11,21 @@ import { InvitationDocument, InvitationType } from '@blockframes/invitation/type
 })
 export class InvitationItemComponent {
   @Input() invitation: InvitationDocument;
+  @Input() inWidget: boolean;
+  @Input() placeholderUrl: string;
 
   constructor(private service: InvitationService, private snackBar: MatSnackBar) {}
 
   /** Creates a message based on the invitation.type. */
   public get message(): string {
-    if (this.invitation.type === InvitationType.toWorkOnDocument) {
-      return 'You have been invited to work on a delivery.';
-    }
-    if (this.invitation.type === InvitationType.fromUserToOrganization) {
-      // TODO #1140 Put message in an other file dedicated to that
-      return `${this.invitation.user.name} ${this.invitation.user.surname} wants to join your organization`;
+    switch (this.invitation.type) {
+      case InvitationType.toWorkOnDocument:
+        return 'You have been invited to work on a delivery.';
+      case InvitationType.fromUserToOrganization:
+        // TODO #1140 Put message in an other file dedicated to that
+        return `${this.invitation.user.name} ${this.invitation.user.surname} wants to join your organization`;
+      case InvitationType.fromOrganizationToUser:
+        return `Your organization sent an invitation to this user email: ${this.invitation.user.email}`;
     }
   }
 
@@ -41,5 +45,12 @@ export class InvitationItemComponent {
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 5000 });
     }
+  }
+
+  public get displayInvitationButtons(): boolean {
+    return (
+      this.invitation.type === InvitationType.fromUserToOrganization &&
+      this.invitation.status === InvitationStatus.pending
+    );
   }
 }

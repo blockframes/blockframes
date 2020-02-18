@@ -1,0 +1,13 @@
+<mat-sidenav-container>
+  <mat-sidenav #signinSidenav [opened]="!isSignin" mode="side" position="end">
+    <auth-signin-form (opened)="isSignin=true" (submited)="signin($event)"></auth-signin-form>
+  </mat-sidenav>
+  <mat-sidenav-content backgroundAsset="Sign_1080.png" test-id="switch-mode" [fxLayoutAlign]="align">
+    <button class="mat-elevation-z0" mat-icon-button mat-fab  (click)="isSignin = !isSignin">
+      <mat-icon [svgIcon]="isSignin ? 'arrow_forward' : 'arrow_back'"></mat-icon>
+    </button>
+  </mat-sidenav-content>
+  <mat-sidenav #signupSidenav [opened]="isSignin" mode="side">
+    <auth-signup-form (opened)="isSignin=false" (submited)="signup($event)"></auth-signup-form>
+  </mat-sidenav>
+</mat-sidenav-container>

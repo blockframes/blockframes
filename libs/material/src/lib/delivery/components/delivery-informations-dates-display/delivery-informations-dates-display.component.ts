@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input, EventEmitter, Output } from '@angular/core';
-import { Delivery } from '../../+state';
+import { Delivery } from '../../+state/delivery.model';
 
 @Component({
   selector: 'delivery-informations-dates-display',

@@ -14,7 +14,7 @@ echo "INPUT=${FILE}"
 echo "NAME=${RAW}"
 
 for i in {1..4}; do
-    OUTPUT="${RAW}-DEMO${i}.jsonl"
-    echo "OUTPUT TO: ${OUTPUT}"
-    cat ${FILE} | sed -E "s;({\"docPath\":\"orgs/[a-zA-Z0-9]+\".*\"name\":)\"([^\"]+)\"(.*);\1\"\2 ${i}\"\3;" > ${OUTPUT}
+  OUTPUT="${RAW}-DEMO${i}.jsonl"
+  echo "OUTPUT TO: ${OUTPUT}"
+  cat "${FILE}" | sed -E "s;({\"docPath\":\"orgs/[a-zA-Z0-9]+\".*\"name\":)\"([^\"]+)\"(.*);\1\"\2 ${i}\"\3;" >"${OUTPUT}"
 done

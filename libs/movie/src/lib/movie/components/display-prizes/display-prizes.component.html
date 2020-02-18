@@ -2,7 +2,7 @@
 <article fxLayout="column">
   <div class="prize-logo-container">
     <ng-container *ngFor="let prize of prizes">
-      <img *ngIf="prize.logo" [src]="prize.logo">
+      <img *ngIf="prize.logo" [imgRef]="prize.logo" alt="Prize logo" />
     </ng-container>
   </div>
   <span *ngFor="let prize of prizes">

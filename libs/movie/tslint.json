@@ -4,13 +4,13 @@
     "directive-selector": [
       true,
       "attribute",
-      ["stakeholder","movie"],
+      ["movie", "distribution", "catalog"],
       "camelCase"
     ],
     "component-selector": [
       true,
       "element",
-      ["stakeholder","movie"],
+      ["movie", "distribution", "catalog"],
       "kebab-case"
     ]
   }

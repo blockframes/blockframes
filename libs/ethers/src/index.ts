@@ -4,8 +4,15 @@ export * from './lib/types';
 export * from './lib/helpers';
 export * from './lib/create-tx';
 
+// Quorum
+export * from './lib/quorum/quorum';
+
 // Wallet
 export * from './lib/wallet/wallet.module';
+
+// Wallet Component Module
+export * from './lib/wallet/components/wallet-widget/wallet-widget.module';
+
 // Wallet State
 export * from './lib/wallet/+state/wallet.query';
 export * from './lib/wallet/+state/wallet.service';
@@ -17,3 +24,6 @@ export * from './lib/key-manager/key-manager.module';
 export * from './lib/key-manager/+state/key-manager.query';
 export * from './lib/key-manager/+state/key-manager.service';
 export * from './lib/key-manager/+state/key-manager.store';
+
+// DAO
+export * from './lib/dao/dao.module';

@@ -1,0 +1,108 @@
+<article>
+  <form [formGroup]="form">
+    <!-- Contact Information -->
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Contact Information</mat-card-title>
+      </mat-card-header>
+      <mat-card-content fxLayout="column">
+        <mat-form-field appearance="outline">
+          <mat-label>Company Name</mat-label>
+          <input matInput placeholder="Company Name" formControlName="name" type="text"/>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Contact Email Address</mat-label>
+          <input
+            matInput
+            placeholder="Contact Email Address"
+            aria-label="Contact Email Address"
+            type="email"
+            formControlName="email"
+          />
+          <mat-error *ngIf="form.get('email').hasError('email')">Email not valid</mat-error>
+        </mat-form-field>
+        <organization-form-address [form]="form.get('addresses').get('main')"></organization-form-address>
+      </mat-card-content>
+    </mat-card>
+    <!-- Company Logo -->
+    <mat-card>
+      <mat-card-header> 
+        <mat-card-title>Company Logo</mat-card-title>
+        <mat-card-subtitle>Upload your Logo</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <drop-cropper [ratio]="1" storagePath="logo" formControlName="logo">
+          <h3 type>Logo</h3>
+          <p class="mat-body-2" dimensions>Recommanded : 512 x 512 px</p>
+          <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>  
+        </drop-cropper>
+      </mat-card-content>
+    </mat-card>
+    <!-- Legal Entity -->
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>Legal Entity</mat-card-title>
+      </mat-card-header>
+      <mat-card-content fxLayout="column">
+        <mat-form-field appearance="outline">
+          <mat-label>Activity description</mat-label>
+          <input matInput placeholder="Activity description" aria-label="activity description" formControlName="activity" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Fiscal number</mat-label>
+          <input
+            matInput
+            placeholder="Fiscal number"
+            aria-label="fiscal number"
+            formControlName="fiscalNumber"
+          />
+        </mat-form-field>
+      </mat-card-content>
+    </mat-card>
+    <!-- Bank Information -->
+    <ng-container *ngFor="let control of bankAccounts.controls">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Bank Information</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <h5>bank account detail</h5>
+          <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="15px">
+            <mat-form-field appearance="outline">
+              <mat-label>IBAN</mat-label>
+              <input matInput placeholder="IBAN" [formControl]="control.get('IBAN')" />
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>BIC or SWIFT</mat-label>
+              <input matInput placeholder="BIC or SWIFT" [formControl]="control.get('BIC')" />
+            </mat-form-field>
+          </div>
+          <mat-form-field appearance="outline">
+            <mat-label>Account Holder Name</mat-label>
+            <input matInput placeholder="Account Holder Name" [formControl]="control.get('holderName')" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Bank Name</mat-label>
+            <input matInput placeholder="Bank Name" [formControl]="control.get('name')" />
+          </mat-form-field>
+          <h5>bank address</h5>
+          <mat-form-field appearance="outline">
+            <mat-label>Street</mat-label>
+            <input matInput placeholder="Street" aria-label="street" [formControl]="control.get('address').get('street')" />
+          </mat-form-field>
+          <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="15px">
+            <mat-form-field appearance="outline">
+              <mat-label>City</mat-label>
+              <input matInput placeholder="City" aria-label="city" [formControl]="control.get('address').get('city')" />
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Zip code</mat-label>
+              <input matInput placeholder="Zip code" aria-label="zip code" [formControl]="control.get('address').get('zipCode')" />
+            </mat-form-field>
+          </div>
+          <form-country [form]="control.get('address').get('country')"></form-country>
+        </mat-card-content>
+      </mat-card>
+    </ng-container>
+  </form>
+</article>

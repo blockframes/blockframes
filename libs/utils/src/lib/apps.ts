@@ -5,7 +5,8 @@ export const enum App {
   mediaDelivering = 'delivery',
   mediaFinanciers = 'movie-financing',
   storiesAndMore = 'stories-and-more',
-  biggerBoat = 'catalog'
+  biggerBoat = 'catalog',
+  blockframes = 'blockframes'
 }
 
 export interface AppDetails {
@@ -19,7 +20,7 @@ export const APPS_DETAILS: AppDetails[] = [
   {
     name: 'Media Financiers',
     logo: '/assets/logo/mediaFinanciersLogo.png',
-    href: '/movie-financing/explorer',
+    href: 'movie-financing/explorer',
     id: App.mediaFinanciers
   },
   {
@@ -31,19 +32,13 @@ export const APPS_DETAILS: AppDetails[] = [
   {
     name: 'Media Delivering',
     logo: '/assets/logo/mediaDeliveringLogo.png',
-    href: '/delivery',
+    href: 'delivery',
     id: App.mediaDelivering
   },
   {
-    name: 'Bigger Boat - Marketplace',
+    name: 'Archipel Content',
     logo: '/assets/logo/biggerBoatMarketplaceLogo.png',
-    href: '/catalog-marketplace',
-    id: App.biggerBoat
-  },
-  {
-    name: 'Bigger Boat - Dashboard',
-    logo: '/assets/logo/biggerBoatDashboard.png',
-    href: '/catalog-dashboard',
+    href: 'catalog',
     id: App.biggerBoat
   }
 ];

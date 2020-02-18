@@ -1,0 +1,14 @@
+table, mat-form-field {
+  width: 100%;
+}
+
+tr {
+  cursor: pointer;
+}
+
+widget-card {
+  display: block;
+  max-height: 300px;
+  max-width: 500px;
+  overflow: auto;
+}

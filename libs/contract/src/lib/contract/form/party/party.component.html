@@ -1,0 +1,39 @@
+<ng-container *ngFor="let control of form.controls; let i = index; let isLast = last; let isFirst = first;"
+    [formGroup]="control">
+    <form formGroupName="party">
+        <div fxLayout="row" fxLayoutAlign="center start" fxLayoutGap="20px">
+            <mat-form-field appearance="outline">
+                <mat-label>Party name</mat-label>
+                <input matInput type="text" formControlName="displayName" autocomplete="off" required>
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Select role</mat-label>
+                <mat-select formControlName="role">
+                    <mat-option *ngFor="let role of staticRoles" [value]="role.slug">
+                        {{ role.label }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <mat-form-field appearance="outline" *ngIf="hasRole && !isFirst">
+                <mat-label>Select sub role</mat-label>
+                <mat-select [formControl]="childRoleForm(i)">
+                    <mat-option *ngFor="let role of staticSubRoles" [value]="role.slug">
+                        {{ role.label }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+            <div fxLayout="row" fxLayoutAlign="center center" *ngIf="i > 1">
+                <button (click)="form.removeAt(i)" mat-mini-fab color="warn">
+                    <mat-icon>delete</mat-icon>
+                </button>
+                <span>Remove role</span>
+            </div>
+        </div>
+    </form>
+</ng-container>
+<div fxLayout="row" fxLayoutAlign="center center">
+    <button (click)="addRole()" mat-mini-fab color="primary">
+        <mat-icon svgIcon="add"></mat-icon>
+    </button>
+    <span>Add role</span>
+</div>

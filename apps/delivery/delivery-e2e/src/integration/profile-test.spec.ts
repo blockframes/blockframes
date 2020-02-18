@@ -29,7 +29,7 @@ beforeEach(() => {
 });
 
 describe('Test profile', () => {
-  it('should login, navigate to profile, change several information', () => {
+  it.skip('should login, navigate to profile, change several information', () => {
     const p1: MovieListPage = new MovieListPage();
 
     p1.openProfileMenu();
@@ -62,7 +62,7 @@ describe('Test profile', () => {
 });
 
 describe('Test change password', () => {
-  it('should login, navigate to profile, change password', () => {
+  it.skip('should login, navigate to profile, change password', () => {
     const p1: MovieListPage = new MovieListPage();
 
     p1.openProfileMenu();

@@ -67,7 +67,7 @@ export class ExplorerComponent implements OnInit {
         this.snackBar.open('Ip created. Redirecting ..', 'close', { duration: 5000 });
 
         this.service.add({ title }).then((ipId) => {
-          this.router.navigate(['/layout','ip', ipId, 'edit']);
+          this.router.navigate(['/c','ip', ipId, 'edit']);
         })
       }
     });

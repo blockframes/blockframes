@@ -1,82 +1,77 @@
 import { Injectable } from '@angular/core';
-import { Organization, PermissionsService, OrganizationQuery } from '@blockframes/organization';
+import { OrganizationQuery, OrganizationService } from '@blockframes/organization';
+import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
+import { distinctUntilChanged, map, switchMap } from 'rxjs/operators';
+import { Material } from '../../material/+state/material.model';
 import { createTemplate, Template } from './template.model';
-import { Material, MaterialTemplate, createMaterialTemplate } from '../../material/+state';
 import { TemplateQuery } from './template.query';
-import { FireQuery, Query } from '@blockframes/utils';
-import { TemplateStore } from './template.store';
-import { switchMap, tap } from 'rxjs/operators';
-import { combineLatest } from 'rxjs';
-
-const templateQuery = (id: string): Query<Template> => ({
-  path: `templates/${id}`
-});
+import { TemplateState, TemplateStore } from './template.store';
+import { TemplateMaterialService } from '../../material/+state/template-material.service';
 
 @Injectable({ providedIn: 'root' })
-export class TemplateService {
+@CollectionConfig({ path: 'templates' })
+export class TemplateService extends CollectionService<TemplateState>{
+  /** An observable of organization's templateIds */
+  private templateIds$ = this.organizationQuery.selectActive().pipe(
+    map(org => org.templateIds),
+    distinctUntilChanged(
+      (old, curr) => old.every(tpl => curr.includes(tpl))
+    )
+  );
+
   constructor(
-    private db: FireQuery,
+    store: TemplateStore,
+    private templateMaterialService: TemplateMaterialService,
+    private organizationService: OrganizationService,
     private query: TemplateQuery,
-    private store: TemplateStore,
-    private organizationQuery: OrganizationQuery,
-    private permissionsService: PermissionsService
-  ) {}
-
-  /** Create a template without materials. */
-  public async addTemplate(templateName: string): Promise<string> {
-    const templateId = this.db.createId();
-    const organization = this.organizationQuery.getValue().org;
-    const organizationDoc = this.db.doc<Organization>(`orgs/${organization.id}`);
-    const template = createTemplate({
-      id: templateId,
-      name: templateName,
-      orgId: organization.id
-    });
-
-    await this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
-      const organizationSnap = await tx.get(organizationDoc.ref);
-      const templateIds = organizationSnap.data().templateIds || [];
-
-      // Create document permissions
-      await this.permissionsService.createDocAndPermissions(template, organization, tx);
-
-      // Update the organization templateIds
-      const nextTemplateIds = [...templateIds, template.id];
-      tx.update(organizationDoc.ref, {templateIds: nextTemplateIds});
-    })
-
-    return templateId;
+    private organizationQuery: OrganizationQuery
+  ) {
+    super(store)
   }
 
-  /** Delete a template and materials subcollection. */
-  public async deleteTemplate(templateId: string): Promise<void> {
-    const org = this.organizationQuery.getValue().org;
-    const templateIds = org.templateIds.filter(id => id !== templateId);
-    const organizationDoc = this.db.doc<Organization>(`orgs/${org.id}`);
-    const templateDoc = this.db.doc<Template>(`templates/${templateId}`);
+  /** Gets every templateIds of the user active organization and sync them. */
+  public syncOrgTemplates() {
+    return this.templateIds$.pipe(
+      switchMap(ids => this.syncManyDocs(ids))
+    )
+  }
 
-    await this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
-      tx.delete(templateDoc.ref);
-      tx.update(organizationDoc.ref, { templateIds })
-      this.store.remove(templateId)
-    })
+  /** Create a template with an id, a name and an orgId. */
+  public createTemplate(templateName: string): Template {
+    const template = createTemplate({
+      id: this.db.createId(),
+      name: templateName,
+      orgId: this.organizationQuery.getActiveId()
+    });
+
+    this.add(template);
+
+    return template;
+  }
+
+  /** Hook that triggers when a template is added to the database. */
+  onCreate(template: Template, write: WriteOptions) {
+    const organization = this.organizationQuery.getActive();
+    this.organizationService.update(organization.id, { templateIds: [...organization.templateIds, template.id] });
+   }
+
+  /** Hook that triggers when a template is removed from the database. */
+  onDelete(templateId: string, write: WriteOptions) {
+    const organization = this.organizationQuery.getActive();
+    const templateIds = organization.templateIds.filter(id => id !== templateId);
+
+    this.organizationService.update(organization.id, { templateIds });
   }
 
   /** Save a delivery as new template. */
   public async saveAsTemplate(materials: Material[], templateName: string) {
     if (materials.length > 0) {
       // Add a new template
-      const templateId = await this.addTemplate(templateName);
+      const template = this.createTemplate(templateName);
 
-      // Add the delivery's materials in the template
-      const batch = this.db.firestore.batch();
-      materials.forEach(material => {
-        // Create a MaterialTemplate from a Material to save only the corresponding fields on the database
-        const materialTemplate = createMaterialTemplate(material);
-        const materialDoc = this.db.doc<Material>(`templates/${templateId}/materials/${material.id}`);
-        return batch.set(materialDoc.ref, materialTemplate);
-      });
-      return batch.commit();
+      // Set active the template, and add the delivery's materials in the template
+      this.store.setActive(template.id);
+      this.templateMaterialService.add(materials);
     }
   }
 
@@ -84,22 +79,15 @@ export class TemplateService {
   public async updateTemplate(materials: Material[], name: string) {
     const templates = this.query.getAll();
     const selectedTemplate = templates.find(template => template.name === name);
-    const templateMaterials = await this.db.snapshot<MaterialTemplate[]>(`templates/${selectedTemplate.id}/materials`);
+    const templateMaterials = await this.templateMaterialService.getTemplateMaterials(selectedTemplate.id);
 
     if (materials.length > 0) {
       const batch = this.db.firestore.batch();
       // Delete all materials of template
-      templateMaterials.forEach(material => {
-        const materialDoc = this.db.doc<MaterialTemplate>(`templates/${selectedTemplate.id}/materials/${material.id}`);
-        return batch.delete(materialDoc.ref);
-      });
+      const ids = templateMaterials.map(({ id }) => id);
+      this.templateMaterialService.remove(ids, { write: batch });
       // Add delivery's materials in template
-      materials.forEach(material => {
-        // Create a MaterialTemplate from a Material to save only the corresponding fields on the database
-        const materialTemplate = createMaterialTemplate(material);
-        const materialDoc = this.db.doc<MaterialTemplate>(`templates/${selectedTemplate.id}/materials/${material.id}`);
-        return batch.set(materialDoc.ref, materialTemplate);
-      });
+      this.templateMaterialService.add(materials, { write: batch });
       return batch.commit();
     }
   }
@@ -110,17 +98,4 @@ export class TemplateService {
     return templates.find(template => template.name === name);
   }
 
-  /** Subscribe on organization templates (outside the TemplateListGuard) and set the template store. */
-  public subscribeOnTemplates() {
-    return this.organizationQuery
-      .select(state => state.org.templateIds)
-      .pipe(
-        switchMap(ids => {
-          if (!ids || ids.length === 0) throw new Error('No template yet')
-          const queries = ids.map(id => this.db.fromQuery<Template>(templateQuery(id)))
-          return combineLatest(queries);
-        }),
-        tap(templates => this.store.set(templates))
-      );
-  }
 }

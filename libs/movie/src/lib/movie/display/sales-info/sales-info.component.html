@@ -1,30 +1,32 @@
 <ng-container *ngIf="data">
   <mat-list>
     <mat-list-item *ngIf="data.scoring">
-      <strong>Scoring :</strong>  {{ getLabelByCode('SCORING', data.scoring) }}
+      <strong>Scoring :</strong>  {{ data.scoring | translateSlug: 'SCORING' }}
     </mat-list-item>
     <mat-list-item *ngIf="data.color">
-      <strong>Color :</strong> {{ getLabelByCode('COLORS', data.color) }}
+      <strong>Color :</strong> {{ data.color | translateSlug: 'COLORS' }}
     </mat-list-item>
-    <mat-list-item *ngIf="data.europeanQualification">
-      <strong>Eureopean Qualification :</strong> {{data.europeanQualification}}
-    </mat-list-item>
-    <mat-list-item *ngIf="data.pegi">
-      <strong>Rating (PEGI) :</strong> {{data.pegi}}
+    <mat-list-item *ngIf="data.rating">
+      <strong>Rating :</strong>
+      <ul>
+        <li *ngFor="let rating of data.rating">
+          {{ rating.system | translateSlug: 'RATING' }} {{ rating.country | translateSlug: 'TERRITORIES' }} : {{ rating.value }} ({{ rating.reason }})
+        </li>
+      </ul>
     </mat-list-item>
     <mat-list-item *ngIf="data.certifications.length">
       <strong>Certifications :</strong>
       <ul>
         <li *ngFor="let item of data.certifications">
-          {{ getLabelByCode('CERTIFICATIONS', item) }}
+          {{ item | translateSlug: 'CERTIFICATIONS' }}
         </li>
       </ul>
     </mat-list-item>
-    <mat-list-item *ngIf="data.internationalPremiere.name">
-      <strong>International Premiere :</strong> {{data.internationalPremiere.name}} ({{data.internationalPremiere.year}})
-    </mat-list-item>
-    <mat-list-item *ngIf="data.originCountryReleaseDate">
-      <strong>Release date in Origin Country :</strong> {{data.originCountryReleaseDate | date: 'dd MMM yyyy' }}
+    <mat-list-item *ngIf="data.originalRelease">
+      <span><b>Release dates in Origin Countries</b></span>
+      <ul>
+        <li *ngFor="let release of data.originalRelease">{{ release.country | translateSlug: 'TERRITORIES' }} : {{ release.date }} ({{ release.media | translateSlug: 'MEDIAS' }})</li>
+      </ul>
     </mat-list-item>
     <mat-list-item *ngIf="data.broadcasterCoproducers.length">
       <strong>TV / Platform coproducer(s) :</strong>

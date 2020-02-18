@@ -42,8 +42,17 @@ export interface User {
 }
 
 export interface Organization {
-  officeAddress: string;
-  phoneNumber: string;
+  name: string;
+  addresses: {
+    main: {  
+      street: string,
+      zipCode: string,
+      city: string,
+      country: string,
+      region?: string,
+      phoneNumber: string
+    }
+  }
 }
 
 export function createUser(): User {
@@ -56,11 +65,16 @@ export function createUser(): User {
 }
 
 export function createOrganization(): Organization {
-  return { officeAddress: randomString(), phoneNumber: randomString() };
-}
-
-export interface Material {
-  title: string;
-  category: string;
-  description: string;
+  return { 
+    name: randomString(),
+    addresses: {
+      main: {  
+        street: randomString(),
+        zipCode: randomString(),
+        city: randomString(),
+        country: randomString(),
+        phoneNumber: randomString()
+      }
+    }
+  };
 }

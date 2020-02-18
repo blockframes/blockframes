@@ -1,0 +1,21 @@
+<tunnel-layout [steps]="steps$ | async">
+  <header fxLayout="row" fxLayoutAlign="space-between center">
+    <img asset="archipel-content.svg" type="logo" alt="Archipel Content Logo" />
+    <button mat-stroked-button color="primary" (click)="save()">
+      <mat-icon svgIcon="floppy" class="primary-icon"></mat-icon>
+      <span>Save</span>
+    </button>
+  </header>
+
+  <aside>
+    <!-- Overview -->
+    <mat-nav-list>
+      <a mat-list-item routerLink="overview">
+        <mat-icon mat-list-icon svgIcon="world"></mat-icon>
+        <span matLine>Overview</span>
+      </a>
+    </mat-nav-list>
+    <mat-divider></mat-divider>
+    <tunnel-nav></tunnel-nav>
+  </aside>
+</tunnel-layout>

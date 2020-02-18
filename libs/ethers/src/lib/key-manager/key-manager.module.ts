@@ -16,7 +16,7 @@ import { MatTooltipModule } from "@angular/material/tooltip";
 
 import { KeyManagerListComponent } from "./key-manager-list/key-manager-list.component";
 import { KeyManagerItemComponent } from "./key-manager-item/key-manager-item.component";
-import { UiFormModule } from '@blockframes/ui';
+import { PasswordConfirmModule } from '@blockframes/ui/form';
 import { UploadModule } from "@blockframes/ui";
 
 @NgModule({
@@ -35,7 +35,7 @@ import { UploadModule } from "@blockframes/ui";
     MatFormFieldModule,
     MatInputModule,
     MatTabsModule,
-    UiFormModule,
+    PasswordConfirmModule,
     UploadModule,
   ],
   declarations: [

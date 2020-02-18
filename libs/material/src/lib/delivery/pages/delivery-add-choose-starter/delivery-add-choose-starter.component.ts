@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
 import { ActionItem } from '@blockframes/ui';
 import { DeliveryStore, DeliveryWizardKind } from '../../+state';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MovieQuery } from '@blockframes/movie';
 
 /**
@@ -22,7 +22,8 @@ export class DeliveryAddChooseStarterComponent {
   constructor(
     private store: DeliveryStore,
     private router: Router,
-    private movieQuery: MovieQuery
+    private movieQuery: MovieQuery,
+    private route: ActivatedRoute
   ) {
     this.items = [
       {
@@ -48,14 +49,12 @@ export class DeliveryAddChooseStarterComponent {
 
   public onPickMaterialList() {
     this.store.updateWizard({ kind: DeliveryWizardKind.materialList });
-    const movieId = this.movieQuery.getActiveId();
-    this.router.navigate([`/layout/o/delivery/add/${movieId}/4-settings`]);
+    this.router.navigate([`../4-settings`], {relativeTo: this.route});
   }
 
   public onPickBlank() {
     this.store.updateWizard({ kind: DeliveryWizardKind.blankList });
-    const movieId = this.movieQuery.getActiveId();
-    this.router.navigate([`/layout/o/delivery/add/${movieId}/4-settings`]);
+    this.router.navigate([`../4-settings`], {relativeTo: this.route});
   }
 
   public get movieName() {

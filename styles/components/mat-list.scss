@@ -2,38 +2,55 @@
   border-radius: 10px;
 }
 
-.dark-theme .mat-nav-list .mat-list-item.mat-list-item-with-avatar,
-.light-theme .mat-nav-list .mat-list-item.mat-list-item-with-avatar {
-  height: 72px;
-}
+@mixin mat-bf-list-theme($theme) {
+  $primary: map-get($theme, primary);
+  $background: map-get($theme, background);
+  $foreground: map-get($theme , foreground);
 
-.light-theme .mat-nav-list,
-.light-theme .mat-list,
-.light-theme .mat-selection-list {
-  background-color: mat-color($bf-light-background, app-bar);
-  border: 1px solid mat-color($bf-light-background, border);
-}
+  .mat-list-base {
+    background-color: mat-color($background, app-bar);
+    border: 1px solid mat-color($foreground, divider);
+  }
 
-.dark-theme .mat-list.bf-list,
-.dark-theme .mat-nav-list,
-.dark-theme .mat-selection-list {
-  background-color: mat-color($bf-dark-background, app-bar);
-  border: 1px solid mat-color($bf-dark-foreground, border);
-}
+  // Removed as it create weird behaviour with mat-selection-list (21/01/2020)
+  // If you need that somewhere please specify the type of list you want to apply this style on
+  // .mat-list-base .mat-list-item .mat-list-item-content {
+  //   padding: 0 0 0 20px;
+  // }
 
-.dark-theme .mat-list [matlistitem] {
-  height: 60px;
-  border-bottom: 1px solid mat-color($bf-dark-foreground, border);
-  &:last-of-type {
-    border-bottom: none;
+  // Use to let active link in color in mat-nav-list, used with routerLinkActive
+  .mat-nav-list a.active {
+    color: mat-color($primary, 200);
+    &:focus {
+      background: transparent;
+    }
+
+    // Mat icons inside active link should be colored too
+    .mat-list-icon svg g {
+      fill: mat-color($primary, 200);
+    }
+  }
+
+  // Every nav-list in a sidenav won't get border
+  .mat-sidenav .mat-nav-list, .mat-list-base {
+    border: none;
+    background: transparent;
   }
 }
 
-.dark-theme .mat-menu-content,
-.dark-theme .mat-select-panel {
-  background: mat-color($bf-dark-background, autocomplete);
-}
 
-.active-list-item mat-icon {
-  color: mat-color($bf-light-primary) !important;
+
+@mixin mat-bf-list-typography($config) {
+  $font-family: mat-font-family($config);
+
+  // Default list
+  .mat-list-base {
+    .mat-list-item {
+      font-size: mat-font-size($config, body-2);
+    }
+
+    .mat-list-option {
+      font-size: mat-font-size($config, body-2);
+    }
+  }
 }

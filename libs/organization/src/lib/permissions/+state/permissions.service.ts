@@ -1,70 +1,76 @@
 import { Injectable } from '@angular/core';
-import { BFDoc, FireQuery } from '@blockframes/utils';
-import { createOrgDocPermissions, createUserDocPermissions, Permissions } from './permissions.model';
 import { PermissionsQuery } from './permissions.query';
-import { Organization, OrganizationMember, UserRole } from '../../+state';
+import { UserRole, createDocPermissions } from './permissions.firestore';
+import { PermissionsState, PermissionsStore } from './permissions.store';
+import { CollectionService, CollectionConfig } from 'akita-ng-fire';
+import { firestore } from 'firebase/app';
+import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
+import { Contract } from '@blockframes/contract/contract/+state/contract.model';
+import { Movie } from '@blockframes/movie/movie/+state/movie.model';
+import { Delivery } from '@blockframes/material';
 
 @Injectable({
   providedIn: 'root'
 })
-export class PermissionsService {
-  constructor(private db: FireQuery, private query: PermissionsQuery) {}
-
-  //////////////////////
-  // DOC TRANSACTIONS //
-  //////////////////////
-
-  /** Create a transaction for the document and add document permissions (organization document permissions and shared document permissions) at the same time */
-  public async createDocAndPermissions<T>(
-    document: BFDoc,
-    organization: Organization,
-    tx: firebase.firestore.Transaction
+@CollectionConfig({ path: 'permissions' })
+export class PermissionsService extends CollectionService<PermissionsState> {
+  constructor(
+    private query: PermissionsQuery,
+    private organizationQuery: OrganizationQuery,
+    store: PermissionsStore
   ) {
-    const promises = [];
-    const orgDocPermissions = createOrgDocPermissions(document.id, organization.id);
-    const userDocPermissions = createUserDocPermissions(document.id);
-
-    const orgDocPermissionsRef = this.db.doc<T>(`permissions/${organization.id}/orgDocsPermissions/${document.id}`).ref;
-    promises.push(tx.set(orgDocPermissionsRef, orgDocPermissions));
-
-    const userDocPermissionsRef = this.db.doc<T>(`permissions/${organization.id}/userDocsPermissions/${document.id}`).ref;
-    promises.push(tx.set(userDocPermissionsRef, userDocPermissions));
-
-    const documentRef = this.db.doc<T>(`${document._type}/${document.id}`).ref;
-    promises.push(tx.set(documentRef, document));
-
-    return Promise.all(promises);
+    super(store);
   }
 
-  /** Update roles of members of the organization */
-  public async updateMembersRole(members: OrganizationMember[]) {
-    const orgId = this.query.getValue().orgId;
-    const orgPermissionsDocRef = this.db.doc<Permissions>(`permissions/${orgId}`).ref;
+  /** Update role of a member of the organization */
+  public async updateMemberRole(uid: string, role: UserRole) {
+    const orgId = this.query.getActiveId();
+    const permissions = await this.getValue(orgId);
 
-    return this.db.firestore.runTransaction(async tx => {
-      const orgPermissionsDoc = await tx.get(orgPermissionsDocRef);
-      let {superAdmins, admins} = orgPermissionsDoc.data() as Permissions;
+    switch (role) {
+      case UserRole.superAdmin:
+        permissions.roles[uid] = UserRole.superAdmin;
+        break;
+      case UserRole.admin:
+        permissions.roles[uid] = UserRole.admin;
+        break;
+      case UserRole.member:
+        permissions.roles[uid] = UserRole.member;
+        break;
+      default:
+        throw new Error(`User with id : ${uid} have no role.`);
+    }
 
-      const isAdmin = (uid) => admins.includes(uid)
-      const isSuperAdmin = (uid) => superAdmins.includes(uid)
 
-      members.forEach(({uid, role}) => {
-        // Case of role = 'admin': we remove the memberId of admins and insert it in superAdmins
-        if (role === UserRole.admin) {
-          if (isAdmin(uid) && !isSuperAdmin(uid)) {
-            admins = admins.filter(admin => admin !== uid);
-            superAdmins = [...superAdmins, uid];
-          }
-        }
-        // Case of role = 'member': we remove the memberId of superAdmins and insert it in admins
-        else {
-          if (!isAdmin(uid) && isSuperAdmin(uid)) {
-            superAdmins = superAdmins.filter(superAdmin => superAdmin !== uid);
-            admins = [...admins, uid]
-          };
-        }
-      });
-      return tx.update(orgPermissionsDocRef, { admins, superAdmins });
+    return this.update(orgId, { roles: permissions.roles });
+  }
+
+  /**
+   * Takes a document (movie or delivery), create relative permissions
+   * and add them to documentPermissions subcollection.
+   * @param doc
+   * @param write
+   */
+  public addDocumentPermissions(doc: Movie | Delivery | Contract, write: firestore.WriteBatch) {
+    const organizationId = this.organizationQuery.getActiveId();
+    const documentPermissions = createDocPermissions({ id: doc.id, ownerId: organizationId });
+    const documentPermissionsRef = this.db.doc(`permissions/${organizationId}/documentPermissions/${documentPermissions.id}`).ref;
+    write.set(documentPermissionsRef, documentPermissions);
+  }
+
+  /**
+   * Takes a contract, create relative permissions for each party of
+   * the contract, then add them to documentPermissions subcollection.
+   * @param contract
+   * @param write
+   */
+  public addContractPermissions(contract: Contract) {
+    this.db.firestore.runTransaction(async tx => {
+      contract.partyIds.forEach(partyId => {
+        const contractPermissions = createDocPermissions({ id: contract.id });
+        const contractPermissionsRef = this.db.doc(`permissions/${partyId}/documentPermissions/${contractPermissions.id}`).ref;
+        tx.set(contractPermissionsRef, contractPermissions)
+      })
     })
   }
 }

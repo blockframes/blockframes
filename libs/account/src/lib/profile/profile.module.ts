@@ -4,7 +4,8 @@ import { Routes, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { CropperModule } from '@blockframes/ui/cropper/cropper.module';
+import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
+import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialogModule } from '@angular/material/dialog';
@@ -16,17 +17,15 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { ProfileDisplayComponent } from './components/profile-display/profile-display.component';
-import { ProfileFormComponent } from './components/profile-form/profile-form.component';
-import { ProfileDeleteComponent } from './profile-delete/profile-delete.component';
-import { ProfileWidgetComponent } from './profile-widget/profile-widget.component';
-import { ProfileMenuComponent } from './profile-menu/profile-menu.component';
 import { ProfileEditableComponent } from './pages/profile-editable/profile-editable.component';
-import { EditableSidenavModule, UiFormModule, UploadModule } from '@blockframes/ui';
-import { PasswordFormComponent } from './components/password-form/password-form.component';
+import { EditableSidenavModule, UploadModule } from '@blockframes/ui';
+import { PasswordConfirmModule } from '@blockframes/ui/form';
+import { ProfileFormModule } from '@blockframes/account/profile/forms/profile/profile.module';
+import { PasswordFormModule } from '@blockframes/account/profile/forms/password/password.module';
 
 export const profileRoutes: Routes = [
-  { path: '', redirectTo: 'edit', pathMatch: 'full' },
-  { path: 'edit', component: ProfileEditableComponent },
+  { path: '', redirectTo: 'view', pathMatch: 'full' },
+  { path: 'view', loadChildren: () => import('./pages/view/view.module').then(m => m.ProfileViewModule)},
 ];
 @NgModule({
   imports: [
@@ -35,6 +34,7 @@ export const profileRoutes: Routes = [
     ReactiveFormsModule,
     FlexLayoutModule,
     CropperModule,
+    ImageReferenceModule,
     MatListModule,
     MatCardModule,
     MatButtonModule,
@@ -45,23 +45,12 @@ export const profileRoutes: Routes = [
     MatDialogModule,
     MatMenuModule,
     EditableSidenavModule,
-    UiFormModule,
+    PasswordConfirmModule,
     UploadModule,
     RouterModule.forChild(profileRoutes),
   ],
   declarations: [
     ProfileDisplayComponent,
-    ProfileFormComponent,
-    ProfileDeleteComponent,
-    ProfileWidgetComponent,
-    ProfileMenuComponent,
-    ProfileEditableComponent,
-    PasswordFormComponent
-  ],
-  exports: [
-    ProfileDeleteComponent,
-    ProfileWidgetComponent,
-    ProfileMenuComponent,
   ],
 })
 export class ProfileModule {}

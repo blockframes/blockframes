@@ -9,14 +9,13 @@ import {
   AsyncValidatorFn
 } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
-import { LANGUAGES_SLUG } from '@blockframes/movie/movie/static-model/types';
+import { LANGUAGES_SLUG } from '../../static-model/types';
 import { network, baseEnsDomain } from '@env';
-import { getLabelByCode, Scope } from '@blockframes/movie/movie/static-model/staticModels';
+import { getLabelBySlug, isInSlug, Scope } from '../../static-model/staticModels';
 import { getProvider, orgNameToEnsDomain } from '@blockframes/ethers/helpers';
 
 // TODO issue#1146
 import { AFM_DISABLE } from '@env';
-import { FireQuery } from '@blockframes/utils/firequery/firequery';
 import { OrganizationService } from '@blockframes/organization';
 
 export const urlValidators = [Validators.pattern('^(http|https)://[^ "]+$')];
@@ -68,8 +67,11 @@ export function validPercentage(control: FormControl): ValidationErrors {
 }
 
 /** Check if the `name` field of an Organization create form already exists as an ENS domain */
-export function UniqueOrgName(service: OrganizationService): AsyncValidatorFn {
+export function UniqueOrgName(service: OrganizationService, formControl: FormControl): AsyncValidatorFn {
   return async (control: AbstractControl): Promise<ValidationErrors | null> => {
+    if(!formControl.dirty) {
+      return null;
+    }
     // TODO issue#1146
     let uniqueOnEthereum = true; // set to true by default in case of AFM_DISABLE
     let uniqueOnFirestore = false;
@@ -85,7 +87,7 @@ export function UniqueOrgName(service: OrganizationService): AsyncValidatorFn {
     uniqueOnFirestore = await service.orgNameExist(control.value).then(exist => !exist);
 
     return uniqueOnEthereum && uniqueOnFirestore ? null : { notUnique: true };
-  }
+  };
 }
 
 /**
@@ -120,17 +122,46 @@ export function numberRangeValidator(from: string, to: string): ValidatorFn {
 }
 
 /**
+ * @description Check in a number-range that from is below to, and to is above from
+ */
+export function validRange(): ValidatorFn {
+  return (parent: FormGroup): ValidationErrors => {
+    return parent.value.from > parent.value.to ? { invalidOrder: true } : null;
+  };
+}
+
+/**
  * @description This validator checks if the value in the form group
  * or form array is in the static model and then valid
  * @param scope defines where to look. For instance 'TERRITORIES'
  */
 export function valueIsInModelValidator(scope: Scope): ValidatorFn {
   return (parent: FormGroup | FormArray): ValidationErrors => {
-    if (parent.value.filter(val => getLabelByCode(scope, val)).length) {
+    if (parent.value.filter(val => getLabelBySlug(scope, val)).length) {
       return null;
     } else {
       return { invalidValue: true };
     }
+  };
+}
+
+/**
+ * @description Check if value is a slug of the scope provided, inside the static model
+ * @param scope Scope inside the static model
+ */
+export function isSlugValidator(scope: Scope): ValidatorFn {
+  return (control: FormControl): ValidationErrors => {
+    return isInSlug(scope, control.value) ? null : { invalidValue: true }
+  };
+}
+
+/**
+ * @description Check if all values are slugs of the scope provided, inside the static model
+ * @param scope Scope inside the static model
+ */
+export function isSlugArrayValidator(scope: Scope): ValidatorFn {
+  return (control: FormControl): ValidationErrors => {
+    return control.value.every(value => isInSlug(scope, value)) ? null : { invalidValue: true }
   };
 }
 
@@ -143,3 +174,4 @@ export class ControlErrorStateMatcher implements ErrorStateMatcher {
     return !!(control && control.invalid && control.touched);
   }
 }
+

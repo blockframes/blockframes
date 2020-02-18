@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, Router, UrlTree } from '@angular/router';
+import { AuthQuery, User, AuthService, AuthState } from '../+state';
+import { map, switchMap } from 'rxjs/operators';
+import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { AuthQuery, AuthStore, User } from '../+state';
-import { Subscription } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
-import { FireQuery } from '@blockframes/utils';
+import { of } from 'rxjs';
 
 // Verify if the user exists and has a name and surname.
 function hasIdentity(user: User) {
@@ -14,43 +13,27 @@ function hasIdentity(user: User) {
 @Injectable({
   providedIn: 'root'
 })
-export class AuthGuard implements CanActivate {
+@CollectionGuardConfig({ awaitSync: true })
+export class AuthGuard extends CollectionGuard<AuthState> {
   constructor(
-    private afAuth: AngularFireAuth,
-    private store: AuthStore,
+    service: AuthService,
     private query: AuthQuery,
-    private db: FireQuery,
-    private router: Router
-  ) {}
-
-  public subscription: Subscription;
-
-  canActivate(): boolean | Promise<boolean | UrlTree> {
-    this.store.update({ requestedRoute: null });
-    // Connected on the app
-    if (hasIdentity(this.query.user)) {
-      return true;
-    };
-    // Wait for the server to give first answer
-    return new Promise((res, rej) => {
-      this.subscription = this.afAuth.authState
-        .pipe(
-          switchMap(userAuth => {
-            if (!userAuth) throw new Error('Not connected');
-            this.store.update({ auth: { emailVerified: userAuth.emailVerified } });
-            return this.db.doc<User>(`users/${userAuth.uid}`).valueChanges();
-          }),
-          tap(user => this.store.update({ user })),
-          map(user => hasIdentity(user) ? true : this.router.parseUrl('auth/identity'))
-        )
-        .subscribe({
-          next: (response: boolean | UrlTree) => res(response),
-          error: error => res(this.router.parseUrl('auth'))
-        });
-    });
+    private afAuth: AngularFireAuth
+  ) {
+    super(service);
   }
 
-  canDeactivate() {
-    this.subscription.unsubscribe();
+  sync() {
+    return this.afAuth.authState.pipe(
+      switchMap(userAuth => {
+        if (!userAuth) {
+          return of('auth');
+        };
+        return this.service.sync().pipe(
+          map(_ => this.query.user),
+          map(user => hasIdentity(user) ? true : 'auth/identity')
+        );
+      })
+    );
   }
 }

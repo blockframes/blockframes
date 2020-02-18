@@ -30,7 +30,7 @@ beforeEach(() => {
 });
 
 describe('I m a user and I can save a delivery as template', () => {
-  it('should login, go to a delivery, save it as a new template, go to an other delivery and save it as uptade existing template', () => {
+  it.skip('should login, go to a delivery, save it as a new template, go to an other delivery and save it as uptade existing template', () => {
     // Go to the first delivery and save it as new template
     const p1 = new MovieListPage();
     const p2: DeliveryListPage = p1.clickOnMovie(MOVIE_CYTEST);

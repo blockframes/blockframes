@@ -7,6 +7,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { InvitationService } from '@blockframes/notification';
 import { OrganizationAlgoliaResult, OrganizationsIndex } from '@blockframes/utils';
 import { Index } from 'algoliasearch';
+import { OrganizationDocumentWithDates } from '@blockframes/organization/+state';
 
 @Component({
   selector: 'organization-find',
@@ -19,12 +20,13 @@ export class OrganizationFindComponent implements OnInit {
   public selected: OrganizationAlgoliaResult;
   public searchResults$: Observable<OrganizationAlgoliaResult[]>;
   public orgControl = new FormControl();
+  public organizationResult$: Observable<OrganizationDocumentWithDates[]>;
 
   constructor(
     @Inject(OrganizationsIndex) private organizationIndex: Index,
     private snackBar: MatSnackBar,
     private router: Router,
-    private invitationService: InvitationService
+    private invitationService: InvitationService,
   ) {}
 
   ngOnInit() {
@@ -36,7 +38,7 @@ export class OrganizationFindComponent implements OnInit {
           this.organizationIndex.search(name, (err, result) => (err ? rej(err) : res(result.hits)));
         });
       })
-    )
+    )    
   }
 
   public selectOrganization(result: OrganizationAlgoliaResult) {
@@ -48,7 +50,7 @@ export class OrganizationFindComponent implements OnInit {
       try {
         await this.invitationService.sendInvitationToOrg(this.selected.objectID);
         this.snackBar.open('Request sent !', 'close', { duration: 2000});
-        return this.router.navigate(['layout/organization/home']);
+        return this.router.navigate(['c/organization/join-congratulations']);
       } catch (error) {
         this.snackBar.open(error.message, 'close', { duration: 2000 });
       }

@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input } from "@angular/core";
-import { Person } from '@blockframes/movie/movie/+state/movie.firestore';
+import { Stakeholder } from "@blockframes/utils/common-interfaces/identity";
+import { hasSlug } from "@blockframes/utils/static-model/staticModels";
 
 @Component({
   selector: 'movie-display-film-info-card',
@@ -14,12 +15,19 @@ export class MovieDisplayFilmInfoCardComponent {
   @Input() budget;
   @Input() salesInfo;
   @Input() color;
-  @Input() europeanQualification;
   @Input() versionInfo;
   @Input() prizes;
   @Input() synopsis;
   @Input() keywords;
   @Input() releaseDate;
-  @Input() productionCompanies: Person[];
+  @Input() stakeholders: Stakeholder[];
   @Input() salesAgent;
+
+  public hasTheatricalRelease() {
+    return hasSlug(this.salesInfo.originalRelease.map(r => r.media), 'MEDIAS', 'theatrical');
+  }
+
+  public hasEuropeanQualification() {
+    return hasSlug(this.salesInfo.certifications, 'CERTIFICATIONS', 'europeanQualification');
+  }
 }

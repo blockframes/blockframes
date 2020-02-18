@@ -1,7 +1,7 @@
 import { Delivery } from '../../delivery/+state';
 import { MaterialStatus, MaterialDocument, MaterialTemplateDocument } from './material.firestore';
 
-export { MaterialStatus } from './material.firestore';
+export { MaterialStatus, MaterialTemplateDocument } from './material.firestore';
 
 export type MaterialTemplate = MaterialTemplateDocument
 
@@ -29,7 +29,6 @@ export function createMaterial(material: Partial<Material>): Material {
 }
 
 export function getMaterialStep(material: Material, delivery: Delivery) {
-  // Add the step of a material by the step of delivery
   return {
     ...material,
     step: delivery.steps.find(deliveryStep =>
@@ -39,7 +38,7 @@ export function getMaterialStep(material: Material, delivery: Delivery) {
 }
 
 /** A factory function that creates a Material Template */
-export function createMaterialTemplate(material: Partial<MaterialTemplate>): MaterialTemplate {
+export function createMaterialTemplate(material: Partial<MaterialTemplate> | Partial<MaterialDocument>): MaterialTemplate {
   return {
     id: material.id,
     category: material.category || '',
@@ -48,4 +47,15 @@ export function createMaterialTemplate(material: Partial<MaterialTemplate>): Mat
     price: material.price || null,
     currency: material.currency || null
   };
+}
+
+/**  Checks properties of two material to tell if they are the same or not. */
+export function isTheSame(matA: Material, matB: Material): boolean {
+  const getProperties = ({ value, description, category, stepId }: Material) => ({
+    value,
+    description,
+    category,
+    stepId
+  });
+  return JSON.stringify(getProperties(matA)) === JSON.stringify(getProperties(matB));
 }

@@ -1,0 +1,15 @@
+catalog-toolbar {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  z-index: 2;
+}
+
+.transparent-toolbar {
+  background-color: transparent;
+  transition-duration: 0;
+}
+
+.plain-toolbar {
+  transition-duration: 1000ms;
+}

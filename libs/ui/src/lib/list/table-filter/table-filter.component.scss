@@ -1,0 +1,20 @@
+:host {
+  display: flex;
+  flex-direction: column;
+}
+.container {
+  overflow: auto;
+}
+
+table {
+  width: 100%;
+}
+
+.loader-container {
+  padding-top: 30px;
+  background-color: white;
+}
+
+mat-spinner { 
+  margin:auto;
+}

@@ -1,0 +1,26 @@
+@import 'mixins';
+
+section {
+  margin-top: 50px;
+  padding: 0 170px;
+}
+
+@include tablet {
+  section {
+    padding: 0 100px
+  }
+}
+
+@include mobile {
+  section {
+    padding: 0px;
+  }
+}
+
+organization-form {
+  width: 100%;
+}
+
+button {
+  margin-bottom: 50px;
+}

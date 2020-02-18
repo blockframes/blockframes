@@ -1,7 +1,11 @@
-import { Component, Output, EventEmitter, ChangeDetectionStrategy, HostBinding } from '@angular/core';
+import {
+  Component,
+  Output,
+  EventEmitter,
+  ChangeDetectionStrategy,
+  HostBinding
+} from '@angular/core';
 import { SignupForm } from '../../forms/signup.form';
-import { PrivacyPageComponent } from 'apps/catalog/marketplace/marketplace/src/app/pages/privacy-page/privacy-page.component';
-import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'auth-signup-form',
@@ -9,24 +13,16 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrls: ['./signup-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-
 export class SignupFormComponent {
   @HostBinding('attr.page-id') pageId = 'signup-form';
   @Output() opened = new EventEmitter();
   @Output() submited = new EventEmitter();
 
   public signupForm = new SignupForm();
-  public isTermsOfUseChecked = false;
+  public isTermsChecked: boolean;
 
-  constructor(private dialog: MatDialog) {}
-
-  /** Opens a dialog with terms of use and privacy policy. */
-  // Create a reusable component for Term of use checkbox and dialog => ISSUE #1233
-  public openTermsOfUse() {
-    this.dialog.open(PrivacyPageComponent, { maxHeight: '100vh' })
-  }
-
-  public toggleTermsOfUse() {
-    this.isTermsOfUseChecked = !this.isTermsOfUseChecked;
+  /** Check the value of the boolean outputed by TermsAndConditionsComponent */
+  public checkTermsOfUse(checked: boolean) {
+    this.isTermsChecked = checked;
   }
 }

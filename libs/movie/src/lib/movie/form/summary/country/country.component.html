@@ -1,0 +1,34 @@
+<section fxLayout="row wrap">
+  <article *ngFor="let country of main.originCountries.controls; let i = index">
+    <h5>Countries of Origin #{{ i + 1 }}</h5>
+    <ul>
+      <li>
+        <strong>Country </strong><missing-control [control]="country" scope="TERRITORIES" [link]="link"></missing-control>
+      </li>
+      <li>
+        <strong>Domestic Distributor </strong>
+        <ng-container *ngFor="let distributor of main.get('stakeholders').get('distributor').controls; let isLast = last">
+          <ng-container *ngIf="distributor.get('countries').value.includes(country.value)">
+            <missing-control [control]="distributor.get('displayName')" [link]="link" [isLast]="isLast"></missing-control>
+          </ng-container>
+        </ng-container>
+      </li>
+      <li>
+        <strong>Release Media </strong>
+        <ng-container *ngFor="let release of salesInfo.originalRelease.controls">
+          <ng-container *ngIf="release.get('country').value === country.value">
+            <missing-control [control]="release.get('media')" scope="MEDIAS" [link]="link"></missing-control>
+          </ng-container>
+        </ng-container>
+      </li>
+      <li>
+        <strong>Release Date </strong>
+        <ng-container *ngFor="let release of salesInfo.originalRelease.controls">
+          <ng-container *ngIf="release.get('country').value === country.value">
+            <missing-control [control]="release.get('date')" [link]="link"></missing-control>
+          </ng-container>
+        </ng-container>
+      </li>
+    </ul>
+  </article>
+</section>

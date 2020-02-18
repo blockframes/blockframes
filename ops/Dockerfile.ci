@@ -13,3 +13,23 @@ RUN sudo apt-get -y install xvfb libgtk2.0-0 libnotify-dev libgconf-2-4 libnss3 
 
 # Add vim for debugging purposes
 RUN sudo apt-get -y install vim
+
+## Install Java
+RUN sudo apt-get update && \
+    sudo apt-get install -y openjdk-8-jdk && \
+    sudo apt-get install -y ant && \
+    sudo apt-get clean;
+
+# Fix certificate issues
+RUN sudo apt-get update && \
+    sudo apt-get install ca-certificates-java && \
+    sudo apt-get clean && \
+    sudo update-ca-certificates -f;
+
+# Setup JAVA_HOME -- useful for docker commandline
+ENV JAVA_HOME /usr/lib/jvm/java-8-openjdk-amd64/
+RUN export JAVA_HOME
+
+## Install firebase and the emulator (requires java)
+RUN sudo npm install --global firebase-tools
+RUN firebase setup:emulators:firestore

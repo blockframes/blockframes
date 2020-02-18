@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input } from "@angular/core";
+import { getCodeIfExists } from "@blockframes/utils/static-model/staticModels";
 
 @Component({
   selector: 'movie-display-principal-informations',
@@ -12,4 +13,9 @@ export class MovieDisplayPrincipalInformationsComponent {
   @Input() salesCast;
   @Input() budget;
   @Input() salesInfo;
+
+  public hasEuropeanQualification() {
+    const certification = getCodeIfExists('CERTIFICATIONS', 'european-qualification');
+    return this.salesInfo.certifications.some(r => r === certification);
+  }
 }

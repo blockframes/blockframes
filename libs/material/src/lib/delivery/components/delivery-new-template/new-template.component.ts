@@ -1,10 +1,10 @@
-import { ChangeDetectionStrategy, Component, OnInit, OnDestroy, Inject, HostBinding } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, Inject, HostBinding, OnDestroy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TemplateService } from '../../../template/+state/template.service';
 import { FormControl } from '@angular/forms';
-import { takeUntil } from 'rxjs/operators';
 import { Material } from '../../../material/+state';
+import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 
 @Component({
@@ -30,8 +30,10 @@ export class NewTemplateComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.templateService.subscribeOnTemplates().pipe(takeUntil(this.destroyed$)).subscribe();
-
+    // TODO: Find a new way to subscribe on organization templates => ISSUE #1276
+    this.templateService.syncOrgTemplates()
+      .pipe(takeUntil(this.destroyed$))
+      .subscribe();
     // Check if the name already exists in the selected organization
     this.templateNameControl.valueChanges.pipe(takeUntil(this.destroyed$)).subscribe(templateName =>
       this.templateService.nameExists(templateName)
@@ -68,4 +70,5 @@ export class NewTemplateComponent implements OnInit, OnDestroy {
     this.destroyed$.next();
     this.destroyed$.unsubscribe();
   }
+
 }

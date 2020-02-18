@@ -1,41 +1,35 @@
-
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { StateListGuard, FireQuery, Query } from '@blockframes/utils';
-import { MaterialStore, Material, getMaterialStep } from '../+state';
-import { switchMap, map } from 'rxjs/operators';
-import { DeliveryQuery, Delivery } from '../../delivery/+state';
-
-const deliveryMaterialsQuery = (delivery: Delivery): Query<Material[]> => ({
-  path: `movies/${delivery.movieId}/materials`,
-  queryFn: ref => ref.where('deliveryIds', 'array-contains', delivery.id )
-});
-
-const deliveryToBeSignedMaterialsQuery = (delivery: Delivery): Query<Material[]> => ({
-  path: `deliveries/${delivery.id}/materials`
-});
+import { CollectionGuard } from 'akita-ng-fire';
+import { MaterialState, MaterialStore } from '../+state/material.store';
+import { ActivatedRouteSnapshot } from '@angular/router';
+import { DeliveryQuery } from '../../delivery/+state/delivery.query';
+import { MaterialQuery } from '../+state/material.query';
+import { MovieMaterialService } from '../+state/movie-material.service';
+import { DeliveryMaterialService } from '../+state/delivery-material.service';
 
 @Injectable({ providedIn: 'root' })
-export class DeliveryMaterialsGuard extends StateListGuard<Material> {
-  urlFallback = 'layout';
-
+export class DeliveryMaterialsGuard extends CollectionGuard<MaterialState> {
   constructor(
-    private fireQuery: FireQuery,
-    private deliveryQuery: DeliveryQuery,
-    store: MaterialStore,
-    router: Router
+    private store: MaterialStore,
+    protected deliveryMaterialService: DeliveryMaterialService,
+    private movieMaterialService: MovieMaterialService,
+    private materialQuery: MaterialQuery,
+    private deliveryQuery: DeliveryQuery
   ) {
-    super(store, router);
+    super(deliveryMaterialService);
   }
 
-  get query() {
-    return this.deliveryQuery.selectActive().pipe(
-      switchMap(delivery => {
-        const query = delivery.mustBeSigned
-          ? deliveryToBeSignedMaterialsQuery(delivery)
-          : deliveryMaterialsQuery(delivery);
-          return this.fireQuery.fromQuery<Material[]>(query)
-      })
-    );
+  get awaitSync() {
+    return this.materialQuery.getCount() === 0;
+  }
+
+  sync(next: ActivatedRouteSnapshot) {
+    const deliveryId = next.params.deliveryId;
+    this.store.reset();
+    return this.deliveryQuery.getActive().mustBeSigned
+      ? this.deliveryMaterialService.syncCollection()
+      : this.movieMaterialService.syncCollection(
+          ref => ref.where('deliveryIds', 'array-contains', deliveryId)
+        );
   }
 }

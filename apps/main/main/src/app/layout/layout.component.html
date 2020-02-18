@@ -5,19 +5,24 @@
   <mat-sidenav-content>
     <toolbar-header id="navbar" [sidenav]="leftSidenav">
       <ng-container app-icon>
-        <button test-id="home" mat-icon-button class="app-icon-button" routerLink="/layout">
-          <mat-icon svgIcon="logoBFlight" class="app-icon"></mat-icon>
+        <button test-id="home" mat-icon-button class="app-icon-button" routerLink="/c">
+          <mat-icon svgIcon="logo_blockframes" class="app-icon"></mat-icon>
         </button>
       </ng-container>
 
       <ng-container profile-menu>
         <account-profile-menu>
           <ng-container widgets>
-            <account-profile-widget></account-profile-widget>
+            <a test-id="profile" mat-menu-item routerLink="/c/o/account/profile" routerLinkActive="active">
+              <mat-icon svgIcon="profile"></mat-icon>
+              <span>My account</span>
+            </a>
             <mat-divider></mat-divider>
             <organization-widget></organization-widget>
             <mat-divider></mat-divider>
             <wallet-widget></wallet-widget>
+            <mat-divider></mat-divider>
+            <theme-widget></theme-widget>
           </ng-container>
         </account-profile-menu>
       </ng-container>
@@ -25,7 +30,6 @@
     </toolbar-header>
     <main>
       <router-outlet></router-outlet>
-      <toolbar-footer></toolbar-footer>
     </main>
   </mat-sidenav-content>
 </mat-sidenav-container>

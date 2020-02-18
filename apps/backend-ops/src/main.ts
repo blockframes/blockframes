@@ -1,58 +1,33 @@
-import { createAllUsers, prepareFirebase, trashAllOtherUsers } from './firebaseSetup';
-import { MIGRATIONS } from './firestoreMigrations';
-import { updateDBVersion } from './migrations';
-import { loadAdminServices } from './admin';
-import { USERS } from './users.toronto.fixture';
-import { storeSearchableOrg } from '../../backend-functions/src/internals/algolia';
-
-async function prepareForTesting() {
-  console.info('Preparing firebase...');
-  await prepareFirebase();
-  console.info('Firebase ready for testing!');
-  process.exit(0);
-}
-
-async function migrateToV1() {
-  // NOTE: this is draft stage, the whole select the migration / enter / upgrade should be automated.
-  console.info('migrating to v1...');
-  const { db } = loadAdminServices();
-  await MIGRATIONS['1'].upgrade(db);
-  await updateDBVersion(db, 1);
-  process.exit(0);
-}
-
-async function upgradeAlgoliaOrgs() {
-  const { db } = loadAdminServices();
-  const orgs = await db.collection('orgs').get();
-
-  const promises = [];
-  orgs.forEach(org => {
-    const { id, name } = org.data();
-    promises.push(storeSearchableOrg(id, name, process.env['ALGOLIA_API_KEY']));
-  });
-
-  return Promise.all(promises);
-}
-
-async function prepareToronto() {
-  const { auth } = loadAdminServices();
-  console.info('clearing other users...');
-  await trashAllOtherUsers(USERS, auth);
-  console.info('create all users...');
-  await createAllUsers(USERS, auth);
-  console.info('done.');
-  process.exit(0);
-}
+import { prepareForTesting, restoreShortcut, upgrade } from './firebaseSetup';
+import { migrate } from './migrations';
+import { exitable, showHelp } from './tools';
+import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs } from './algolia';
+import { clearUsers, createUsers, printUsers, syncUsers } from './users';
 
 const args = process.argv.slice(2);
 const [cmd, ...rest] = args;
 
 if (cmd === 'prepareForTesting') {
-  prepareForTesting();
-} else if (cmd === 'migrateToV1') {
-  migrateToV1();
-} else if (cmd === 'prepareToronto') {
-  prepareToronto();
+  exitable(prepareForTesting)();
+} else if (cmd === 'upgrade') {
+  exitable(upgrade)();
+} else if (cmd === 'restore') {
+  exitable(restoreShortcut)();
+} else if (cmd === 'migrate') {
+  exitable(migrate)();
+} else if (cmd === 'syncUsers') {
+  exitable(syncUsers)();
+} else if (cmd === 'printUsers') {
+  exitable(printUsers)();
+} else if (cmd === 'clearUsers') {
+  exitable(clearUsers)();
+} else if (cmd === 'createUsers') {
+  exitable(createUsers)();
 } else if (cmd === 'upgradeAlgoliaOrgs') {
-  upgradeAlgoliaOrgs();
+  exitable(upgradeAlgoliaOrgs)();
+} else if (cmd === 'upgradeAlgoliaMovies') {
+  exitable(upgradeAlgoliaMovies)();
+} else {
+  showHelp();
+  process.exit(1);
 }

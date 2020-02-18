@@ -1,64 +1,38 @@
-import { CatalogBasket } from '@blockframes/marketplace';
 /** Gives information about an application */
 import { AppDetails } from '@blockframes/utils';
-import { OrganizationDocument, WishlistWithDates } from './organization.firestore';
+import {
+  OrganizationDocumentWithDates,
+  WishlistDocumentWithDates,
+  WishlistDocument,
+  OrganizationDocument,
+  createOrganizationRaw
+} from './organization.firestore';
 import { Movie } from '@blockframes/movie';
-export { OrganizationStatus, createOrganization, WishlistStatus } from './organization.firestore';
+
+export {
+  OrganizationStatus,
+  WishlistStatus,
+  OrganizationDocument,
+  createOrganizationDocument,
+  PLACEHOLDER_LOGO
+} from './organization.firestore';
+
 export const enum AppStatus {
   none = 'none', // no request nor accept.
   requested = 'requested',
   accepted = 'accepted'
 }
 
-export const PLACEHOLDER_LOGO = '/assets/logo/organisation_avatar_250.svg';
-
 /** An application details with the organization authorizations */
 export interface AppDetailsWithStatus extends AppDetails {
   status: AppStatus;
 }
 
-export interface OrganizationMemberRequest {
-  email: string;
-  roles: string[];
-}
+export type OrganizationWithTimestamps = OrganizationDocument;
 
-export interface OrganizationMember extends OrganizationMemberRequest {
-  uid: string;
-  name?: string;
-  surname?: string;
-  avatar?: string;
-  role?: UserRole;
-}
+export type Organization = OrganizationDocumentWithDates;
 
-export const enum UserRole {
-  admin = 'admin',
-  member = 'member'
-}
-
-export interface OrganizationOperation {
-  id: string;
-  name: string;
-  quorum: number;
-  members: OrganizationMember[];
-}
-
-export interface OrganizationAction {
-  id: string;
-  opId: string;
-  name: string;
-  signers: OrganizationMember[];
-  isApproved: boolean;
-  approvalDate?: string;
-}
-
-export interface Organization extends OrganizationDocument {
-  members?: OrganizationMember[];
-  operations?: OrganizationOperation[];
-  actions?: OrganizationAction[];
-  baskets: CatalogBasket[]; // TODO: Create a specific Organization interface for Catalog Marketplace application => ISSUE#1062
-}
-
-export interface Wishlist extends WishlistWithDates {
+export interface Wishlist extends WishlistDocumentWithDates {
   movies?: Movie[];
 }
 
@@ -66,17 +40,50 @@ export interface OrganizationForm {
   name: string;
 }
 
-export interface PublicOrganization {
-  id: string;
-  name: string;
+/** A factory function that creates an Organization. */
+export function createOrganization(
+  params: Partial<Organization> = {}
+): Organization {
+  const org = createOrganizationRaw(params) as Organization;
+
+  return {
+    ...org,
+    // Here, "created" & "updated" fields are Date objects
+    created: new Date(),
+    updated: new Date(),
+  }
 }
 
-export function createOperation(
-  operation: Partial<OrganizationOperation> = {}
-): OrganizationOperation {
+/** Cleans an organization of its optional parameters */
+export function cleanOrganization(organization: Organization) {
+  return organization;
+}
+
+/** Convert an OrganizationWithTimestamps to an Organization (that uses Date). */
+export function convertOrganizationWithTimestampsToOrganization(
+  org: OrganizationWithTimestamps
+): Organization {
   return {
-    quorum: 0,
-    members: [],
-    ...operation
-  } as OrganizationOperation;
+    ...org,
+    created: (org.created instanceof Date) ? org.created : org.created.toDate(), // prevent error in case the guard is wrongly called twice in a row
+    updated: (org.updated instanceof Date) ? org.updated : org.updated.toDate(),
+    wishlist: convertWishlistDocumentToWishlistDocumentWithDate(org.wishlist)
+  };
+}
+
+/** Convert a WishlistDocument to a WishlistDocumentWithDates (that uses Date). */
+export function convertWishlistDocumentToWishlistDocumentWithDate(
+  wishlist: WishlistDocument[]
+): WishlistDocumentWithDates[] {
+  if (!wishlist) {
+    return [];
+  }
+
+  return wishlist.map(wish => {
+    if (!!wish.sent) {
+      return { ...wish, sent: wish.sent.toDate() };
+    } else {
+      return { ...wish, sent: null };
+    }
+  });
 }

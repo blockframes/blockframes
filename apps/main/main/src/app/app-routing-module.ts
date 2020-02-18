@@ -1,77 +1,32 @@
 // Angular
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule, NoPreloading } from '@angular/router';
 // Components
 import { LayoutComponent } from './layout/layout.component';
-// Guards
-import { AuthGuard } from '@blockframes/auth';
-import { HomeComponent } from './home/home.component';
-import { OrganizationGuard, PermissionsGuard } from '@blockframes/organization';
+import { AppGridComponent } from './app-grid/app-grid.component';
+// Routes utils
+import { App } from '@blockframes/utils';
 
-export const routes: Routes = [
-  { path: '', redirectTo: 'layout', pathMatch: 'full' },
-  {
-    path: 'auth',
-    loadChildren: () => import('@blockframes/auth').then(m => m.AuthModule)
-  },
-  {
-    path: 'layout',
-    component: LayoutComponent,
-    canActivate: [AuthGuard],
-    canDeactivate: [AuthGuard],
-    children: [
-      {
-        path: '',
-        redirectTo: 'o',
-        pathMatch: 'full'
-      },
-      {
-        // The redirection route when user has no organization
-        path: 'organization',
-        loadChildren: () => import('@blockframes/organization').then(m => m.NoOrganizationModule)
-      },
-      {
-        path: 'o',
-        canActivate: [PermissionsGuard, OrganizationGuard],
-        canDeactivate: [PermissionsGuard, OrganizationGuard],
-        children: [
-          {
-            path: '',
-            redirectTo: 'home',
-            pathMatch: 'full'
-          },
-          {
-            path: 'organization',
-            loadChildren: () => import('@blockframes/organization').then(m => m.OrganizationModule)
-          },
-          {
-            path: 'account',
-            loadChildren: () => import('@blockframes/account').then(m => m.AccountModule)
-          },
-          {
-            path: 'home',
-            component: HomeComponent
-          }
-        ]
-      }
-    ]
-  },
-  {
-    path: 'not-found',
-    loadChildren: () => import('@blockframes/ui').then(m => m.ErrorNotFoundModule)
-  },
-  {
-    path: '**',
-    loadChildren: () => import('@blockframes/ui').then(m => m.ErrorNotFoundModule)
-  }
-];
+const routes = [{
+  path: '',
+  component: AppGridComponent
+},{
+  path: 'catalog',
+  loadChildren: () => import('@blockframes/apps/catalog/catalog.module').then(m => m.CatalogModule)
+},
+{
+  path: App.mediaDelivering,
+  data: { app: App.mediaDelivering },
+  loadChildren: () => import('@blockframes/apps/delivery/delivery.module').then(m => m.DeliveryModule)
+}]
 
 @NgModule({
   imports: [
     RouterModule.forRoot(routes, {
       anchorScrolling: 'enabled',
       onSameUrlNavigation: 'reload',
-      paramsInheritanceStrategy: 'always'
+      paramsInheritanceStrategy: 'always',
+      preloadingStrategy: NoPreloading
     })
   ],
   exports: [RouterModule]

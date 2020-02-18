@@ -6,13 +6,22 @@
     </button>
   </ng-container>
 
+  <!-- Burger menu -->
+  <ng-container *ngIf="!AFM_DISABLE"> <!-- TODO #1146 -->
+    <div fxHide.gt-xs>
+        <button mat-icon-button (click)="sidenav.toggle();">
+            <mat-icon>menu</mat-icon>
+        </button>
+    </div>
+  </ng-container>
+
   <!-- Dynamic content -->
   <section class="app-icon-container-toolbar">
     <ng-content select="[app-icon]"></ng-content>
   </section>
 
   <!-- Contextual menu -->
-  <context-menu></context-menu>
+  <context-menu fxHide.xs></context-menu>
 
   <span class="fill-remaining-space"></span>
 

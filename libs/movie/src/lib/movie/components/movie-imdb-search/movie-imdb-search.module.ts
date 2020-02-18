@@ -12,7 +12,7 @@ import { MatTableModule } from "@angular/material/table";
 import { MatPaginatorModule, MatDialogModule, MatRadioModule } from "@angular/material";
 
 // Libraries
-import { UiFormModule } from "@blockframes/ui";
+import { PasswordConfirmModule } from "@blockframes/ui/form";
 
 // Components
 import { MovieImdbSearchComponent } from "./movie-imdb-search.component";
@@ -38,7 +38,7 @@ import { MovieImdbSearchComponent } from "./movie-imdb-search.component";
     MatRadioModule,
 
     // Librairies
-    UiFormModule,
+    PasswordConfirmModule,
   ],
   providers: [ ],
   entryComponents: [

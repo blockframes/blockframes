@@ -1,0 +1,9 @@
+:host {
+  display: block;
+  padding-top: calc(var(--toolbarHeight) * 2);
+  padding-bottom: 50px;
+  padding-left: 20%;
+  padding-right: 20%;
+  background-image: url('/assets/images/banner_home.png');
+  background-size: cover;
+}

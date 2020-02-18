@@ -1,0 +1,42 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Contact information</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <mat-form-field appearance="outline">
+      <mat-label>First name</mat-label>
+      <input matInput test-id="name-form" placeholder="First name" type="text" [formControl]="form.get('name')" required />
+      <mat-error *ngIf="form.get('name').hasError('required')">
+        First name is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Last name</mat-label>
+      <input matInput test-id="surname-form" placeholder="Last name" type="text" [formControl]="form.get('surname')" required />
+      <mat-error *ngIf="form.get('surname').hasError('required')">
+        Last name is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Position</mat-label>
+      <input matInput test-id="position-form" placeholder="Position" type="text" [formControl]="form.get('position')" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Email Address</mat-label>
+      <input matInput test-id="phone-form" placeholder="Email Address" type="tel" [formControl]="form.get('email')" />
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Phone number</mat-label>
+      <input matInput test-id="phone-form" placeholder="Phone number" type="tel" [formControl]="form.get('phoneNumber')" />
+    </mat-form-field>
+  </mat-card-content>
+</mat-card>
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Profile Image</mat-card-title>
+    <mat-card-subtitle>Choose your avatar</mat-card-subtitle>
+  </mat-card-header>
+  <mat-card-content>
+    <drop-cropper [ratio]="1" storagePath="avatar" [formControl]="form.get('avatar')"></drop-cropper>
+  </mat-card-content>
+</mat-card>

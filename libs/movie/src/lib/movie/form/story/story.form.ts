@@ -6,11 +6,11 @@ function createMovieStoryControls(story?: Partial<MovieStory>) {
   const entity = createMovieStory(story);
   return {
     logline:  new FormControl(entity.logline, [Validators.maxLength(180)]),
-    synopsis: new FormControl(entity.synopsis, [Validators.maxLength(500)]),
+    synopsis: new FormControl(entity.synopsis, [Validators.required, Validators.maxLength(1000)]),
   }
 }
 
-type MovieStoryControl = ReturnType<typeof createMovieStoryControls>
+export type MovieStoryControl = ReturnType<typeof createMovieStoryControls>
 
 export class MovieStoryForm extends FormEntity<MovieStoryControl>{
 

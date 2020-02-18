@@ -1,83 +1,39 @@
 /* You can add global styles to this file, and also import other style files */
-@import url('https://fonts.googleapis.com/css?family=Montserrat:200,300,400,500,600,700,800,900');
 
 // Theme with variables
 @import './theme.scss';
 @import './variables.scss';
 
-// Footer
-@import './footer.scss';
-
-// Components style
-@import './components/mat-expansion-panel';
-@import './components/mat-dialog';
-@import './components/mat-menu';
-@import './components/mat-button';
-@import './components/mat-card';
-@import './components/mat-list';
-@import './components/mat-toolbar';
-@import './components/mat-divider';
-@import './components/mat-form';
-@import './components/mat-table';
 
 * {
   box-sizing: border-box;
-  font-family: 'Montserrat', 'Helvetica Neue', sans-serif;
 }
 
 html,
 body {
-  height: calc(100%);
+  height: 100%;
 }
 
 body {
   margin: 0;
 }
 
-h1 {
-  font-size: 45px;
-  font-weight: 800;
+ul {
+  list-style-type: none;
+  padding-left: 0;
 }
 
-.light-theme h2 {
-  font-size: 30px;
-  font-weight: 800;
+// Apply space of 8px between span & icon everywhere
+.mat-icon + span,
+span + .mat-icon {
+  margin-left: 8px;
 }
 
-.dark-theme h2 {
-  font-size: 30px;
-  font-weight: 800;
-  color: mat-color($bf-dark-foreground, title);
+a {
+  text-decoration: none;
 }
 
-.light-theme h3 {
-  font-size: 20px;
-  font-weight: 700;
-  color: mat-color($bf-light-foreground, subheading);
-}
 
-.dark-theme h3 {
-  font-size: 20px;
-  font-weight: 700;
-  color: mat-color($bf-dark-foreground, subheading);
-}
-
-.light-theme h4 {
-  font-size: 16px;
-  font-weight: 700;
-  color: mat-color($bf-light-foreground, subheading);
-}
-
-.dark-theme h4 {
-  font-size: 16px;
-  font-weight: 700;
-  color: mat-color($bf-dark-foreground, text);
-}
-
-p,
-span {
-  font-size: 14px;
-}
 
 .important {
   color: mat-color($mat-dark-bf-orange, 400);
@@ -85,7 +41,7 @@ span {
 
 .banner {
   border-top: 1px solid mat-color($mat-dark-bf-blue, 200);
-  border-bottom: 1px solid mat-color($mat-dark-bf-blue, 200);;
+  border-bottom: 1px solid mat-color($mat-dark-bf-blue, 200);
   box-shadow: 0 0 4px 4px mat-color($mat-dark-bf-blue, 200, 0.5);
 }
 
@@ -102,10 +58,15 @@ span {
   font-size: 12px;
 }
 
+/** Used for marketplace header & carousel */
+.light-theme .light-text {
+  color: mat-color($bf-light-foreground, light-text);
+}
+
 /** Used for movie status in banners. */
 .status-text {
   font-size: 8px;
-  color: mat-color($bf-dark-foreground, blue-icon)
+  color: mat-color($bf-dark-foreground, blue-icon);
 }
 
 /** Used for Terms and Condition of Use links. */
@@ -122,12 +83,26 @@ main {
   background-color: rgba(#000000, 0.3);
 }
 
-.account-profile-menu mat-list button.mat-menu-item { // @todo #1176
-  padding-left: 5px;
-  mat-icon {
-    height: 40px;
-    width: 40px;
-    font-size: 40px;
-    margin-right: 0px;
+
+// SCROLL
+.dark-theme {
+  /* width */
+  ::-webkit-scrollbar {
+    width: 14px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background: #f1f1f1;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: #888;
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: #555;
   }
 }

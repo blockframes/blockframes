@@ -57,11 +57,12 @@ import { AngularFullpageModule } from '@fullpage/angular-fullpage';
 import { FinancingMovieCardHorizontalComponent } from './explorer/movie-card-horizontal/movie-card-horizontal.component';
 import { registerLocaleData } from '@angular/common';
 import { FinancingExplorerCompareComponent } from './explorer/compare/compare.component';
-import { UtilsModule } from '@blockframes/utils';
+import { SentryModule, UtilsModule } from '@blockframes/utils';
 import { AccountModule, ProfileModule } from '@blockframes/account';
 import { WalletModule, KeyManagerModule } from '@blockframes/ethers';
 import { MatRadioModule } from '@angular/material';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { sentryDsn } from '@env';
 
 registerLocaleData(localeFr)
 
@@ -116,10 +117,12 @@ registerLocaleData(localeFr)
     MatMenuModule,
     MatRadioModule,
     // Akita
-    AkitaNgRouterStoreModule.forRoot(),
+    AkitaNgRouterStoreModule,
     AngularFireFunctionsModule,
     AngularFirestoreModule.enablePersistence(environment.persistenceSettings),
     FlexModule,
+    // Analytics
+    sentryDsn ? SentryModule : [],
     // Fullpage (homepage)
     AngularFullpageModule,
     MatProgressBarModule,

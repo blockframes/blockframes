@@ -1,11 +1,11 @@
 import { ChangeDetectionStrategy, Component, OnInit, HostBinding } from '@angular/core';
-import { Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ActionPickerItem } from '@blockframes/ui';
-import { MovieQuery } from '@blockframes/movie';
-import { Template, TemplateQuery } from '../../../template/+state';
 import { DeliveryStore, DeliveryWizardKind } from '../../+state';
+import { Template } from '../../../template/+state/template.model';
+import { TemplateStore } from '../../../template/+state/template.store';
+import { TemplateQuery } from '../../../template/+state/template.query';
 
 /** Turn an array of templates into a list of ActionPickerItem */
 const createActions = (templates: Template[]): ActionPickerItem<Template>[] =>
@@ -33,8 +33,7 @@ export class DeliveryAddTemplatePickerComponent implements OnInit {
 
   constructor(
     private templateQuery: TemplateQuery,
-    private router: Router,
-    private movieQuery: MovieQuery,
+    private templateStore: TemplateStore,
     private store: DeliveryStore
   ) {}
 
@@ -53,8 +52,7 @@ export class DeliveryAddTemplatePickerComponent implements OnInit {
       return '#';
     }
 
-    const templateId = this.currentTemplate.id;
-    const movieId = this.movieQuery.getActiveId();
-    return `/layout/o/delivery/add/${movieId}/${templateId}/4-settings`;
+    this.templateStore.setActive(this.currentTemplate.id);
+    return `../4-settings`;
   }
 }

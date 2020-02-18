@@ -2,8 +2,15 @@ import { db, functions } from './internals/firebase';
 import { triggerNotifications } from './notification';
 import { isTheSame, removeAllSubcollections } from './utils';
 import { getCollection, getDocument, getOrganizationsOfDocument } from './data/internals';
-import { MovieDocument, OrganizationDocument, DeliveryDocument, MaterialDocument } from './data/types';
-import { createNotification, NotificationType } from '@blockframes/notification/types';
+import {
+  MovieDocument,
+  OrganizationDocument,
+  DeliveryDocument,
+  MaterialDocument,
+  NotificationType,
+  createNotification,
+  App
+} from './data/types';
 
 export async function deleteFirestoreMovie(
   snap: FirebaseFirestore.DocumentSnapshot,
@@ -23,7 +30,7 @@ export async function deleteFirestoreMovie(
 
   const batch = db.batch();
 
-  const organizations = await db.collection(`orgs`).get()
+  const organizations = await db.collection(`orgs`).get();
   // TODO: .where('movieIds', 'array-contains', movie.id) doesn't seem to work. => ISSUE#908
 
   organizations.forEach(async doc => {
@@ -35,10 +42,9 @@ export async function deleteFirestoreMovie(
         movieIds: doc.data().movieIds.filter((movieId: string) => movieId !== movie.id)
       });
     }
-  }
-  );
+  });
 
-  const deliveries = await db.collection(`deliveries`).get()
+  const deliveries = await db.collection(`deliveries`).get();
   // TODO: .where(movie.deliveryIds, 'array-contains', 'id') doesn't seem to work. => ISSUE#908
 
   deliveries.forEach(doc => {
@@ -68,11 +74,6 @@ export async function deleteFirestoreDelivery(
   const organizations = await getOrganizationsOfDocument(delivery.id, 'deliveries');
 
   const batch = db.batch();
-  const deliveryMaterials = await db.collection(`deliveries/${delivery.id}/materials`).get();
-  deliveryMaterials.forEach(doc => batch.delete(doc.ref));
-
-  const stakeholders = await db.collection(`deliveries/${delivery.id}/stakeholders`).get();
-  stakeholders.forEach(doc => batch.delete(doc.ref));
 
   const movieMaterials = await db.collection(`movies/${delivery.movieId}/materials`).get();
   movieMaterials.forEach(doc => {
@@ -92,19 +93,23 @@ export async function deleteFirestoreDelivery(
     batch.update(movieDoc.ref, { deliveryIds: movie.deliveryIds.filter((id: string) => id !== delivery.id) });
   }
 
+  // Delete sub-collections
+  await removeAllSubcollections(snap, batch);
   await batch.commit();
 
   // When delivery is deleted, notifications are created for each organization of this delivery
   const notifications = organizations
     .filter(organization => !!organization && !!organization.userIds)
     .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
-    .map(userId =>
-      createNotification({
+    .map(userId =>{
+      return createNotification({
         userId,
         docId: delivery.id,
         movie: { id: movie.id, title: movie.main.title },
-        type: NotificationType.deleteDocument
+        type: NotificationType.deleteDocument,
+        app: App.mediaDelivering
       })
+    }
     );
 
   await triggerNotifications(notifications);

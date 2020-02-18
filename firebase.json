@@ -16,12 +16,8 @@
         "destination": "/delivery/index.html"
       },
       {
-        "source": "/catalog-marketplace{,/**}",
-        "destination": "/catalog-marketplace/index.html"
-      },
-      {
-        "source": "/catalog-dashboard{,/**}",
-        "destination": "/catalog-dashboard/index.html"
+        "source": "/catalog{,/**}",
+        "destination": "/catalog/index.html"
       },
       {
         "source": "/movie-financing{,/**}",
@@ -37,7 +33,7 @@
     "predeploy": [
       "cp ./package.json dist/apps/backend-functions/package.json",
       "npm run lint backend-functions",
-      "npm run build:functions",
+      "npm run build:backend-functions",
       "./ops/deploy_secrets.sh"
     ],
     "source": "dist/apps/backend-functions/"

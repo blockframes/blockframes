@@ -1,14 +1,6 @@
 <ng-container *ngIf="data">
   <mat-card-content *ngIf="data.logline || data.synopsis" class="movie-card-section">
     <mat-divider></mat-divider>
-    <!-- @todo #643 
-    
-    I'm surprise to see that amount of mat-card-title.
-
-    If this is one OR the other, you shoud use ngSwitch.
-    If this is one AND the other, then you should use mat-list.
-
-    -->
     <mat-card-title class="movie-card-meta-title">Story description</mat-card-title>
     <ng-container *ngIf="data.logline">
       <mat-card-title>Logline</mat-card-title>

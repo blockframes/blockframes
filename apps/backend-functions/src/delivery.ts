@@ -7,10 +7,12 @@ import {
   SnapObject,
   DeliveryDocument,
   MaterialDocument,
-  StakeholderDocument
+  StakeholderDocument,
+  App,
+  NotificationType,
+  createNotification
 } from './data/types';
 import { copyMaterialsToMovie } from './material';
-import { createNotification, NotificationType } from '@blockframes/notification/types';
 
 export async function onDeliveryUpdate(
   change: functions.Change<FirebaseFirestore.DocumentSnapshot>,
@@ -109,7 +111,7 @@ async function notifyOnNewSignee(
     throw new Error("This stakeholder doesn't exist !");
   }
 
-  const newStakeholderOrg = await getDocument<OrganizationDocument>(`orgs/${newStakeholder!.id}`);
+  const newStakeholderOrg = await getDocument<OrganizationDocument>(`orgs/${newStakeholder!.orgId}`);
 
   if (!newStakeholderOrg) {
     throw new Error("This organization doesn't exist !");
@@ -141,7 +143,8 @@ function createSignatureNotifications(
         organization: snapObject.organization,
         type: snapObject.type,
         docId: snapObject.docId,
-        movie: snapObject.movie
+        movie: snapObject.movie,
+        app: App.mediaDelivering
       });
     });
 }

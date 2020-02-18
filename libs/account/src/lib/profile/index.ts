@@ -1,0 +1,1 @@
+export * from './profile-widget/profile-widget.module';

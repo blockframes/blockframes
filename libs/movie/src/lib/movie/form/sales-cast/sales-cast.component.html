@@ -1,34 +1,24 @@
-<form [formGroup]="salesCast">
-  <!-- CREDITS -->
-  <h3> Credits </h3>
-  <div formArrayName="credits" *ngFor="let credit of salesCast.credits.controls; let i = index">
-    <div [formGroupName]="i" class="full-width">
-      <mat-form-field appearance="outline" class="small-margin">
-        <mat-label>Firstname</mat-label>
-        <input matInput formControlName="firstName" placeholder="First Name">
-      </mat-form-field>
-      <mat-form-field appearance="outline" class="small-margin">
-        <mat-label>Lastname</mat-label>
-        <input matInput formControlName="lastName" placeholder="Last Name">
-      </mat-form-field>
-      <mat-form-field appearance="outline" class="small-margin">
-        <mat-select formControlName="creditRole" placeholder="Position">
-          <mat-option *ngFor="let creditRole of staticModels.CREDIT_ROLES" [value]="creditRole.slug">
-            {{ creditRole.label }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      <button mat-icon-button color="primary" (click)="salesCast.addCredit()">
-        <mat-icon>add_circle</mat-icon>
-      </button>
-      <button mat-icon-button color="primary" (click)="salesCast.removeCredit(i)">
-        <mat-icon>delete_circle</mat-icon>
-      </button>
-    </div>
-  </div>
-  <ng-container *ngIf="salesCast.credits.controls.length == 0">
-    <button mat-icon-button color="primary" (click)="salesCast.addCredit()">
-      <mat-icon>add_circle</mat-icon>
+<ng-container *ngFor="let control of form.controls; let i = index; let last = last">
+  <form-display-name [form]="control"></form-display-name>
+  <mat-form-field appearance="outline">
+    <mat-label>Role</mat-label>
+    <mat-select [formControl]="control.get('role')">
+      <mat-option *ngFor="let role of roles" [value]="role.slug">
+        {{ role.label }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+  <!-- Add / Delete -->
+  <footer *ngIf="!last" fxLayout="column" fxLayoutAlign="center center">
+    <button mat-mini-fab color="warn" (click)="form.removeAt(i)" aria-label="Remove a director form">
+      <mat-icon>delete</mat-icon>
     </button>
-  </ng-container>
-</form>
+    <span class="mat-caption">Delete Cast</span>
+  </footer>
+  <footer *ngIf="last" fxLayout="column" fxLayoutAlign="center center">
+    <button mat-mini-fab color="primary" (click)="form.add()" aria-label="Remove a director form">
+      <mat-icon>add</mat-icon>
+    </button>
+    <span class="mat-caption">Add another Cast member</span>
+  </footer>
+</ng-container>

@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../dist/out-tsc/global-custom-jest-integration",
+    "module": "commonjs",
+    "types": ["jest", "node"]
+  },
+  "files": ["./test-setup.ts"],
+  "include": ["**/*.spec.ts", "**/*.d.ts"]
+}

@@ -20,5 +20,7 @@ export * from './lib/material/material.module';
 // Material State
 export * from './lib/material/+state/material.query';
 export * from './lib/material/+state/material.store';
-export * from './lib/material/+state/material.service';
+export * from './lib/material/+state/delivery-material.service';
+export * from './lib/material/+state/movie-material.service';
+export * from './lib/material/+state/template-material.service';
 export * from './lib/material/+state/material.model';

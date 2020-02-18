@@ -89,12 +89,12 @@ $mat-dark-bf-red: (
 
 // Background palette for dark themes.
 $bf-dark-background: (
-  app-bar:      #0d0f1f,
+  app-bar:      #06081B,
   status-bar:   black,
   background:   #010314,
   card:         #0D0F1F,
-  hover:        rgba(255,255,255,0.08),
-  dialog:             map_get($mat-grey, 800),
+  hover:        rgba(93, 110, 132, 0.08),
+  dialog:           #0d0f1f,
   disabled-button:  rgba(155,177,255,0.12),
   raised-button:    rgba(0,0,0,0.3),
   focused-button:     $light-focused,
@@ -103,11 +103,8 @@ $bf-dark-background: (
   disabled-button-toggle: rgba(155, 177, 255, 0.12),
   unselected-chip:    map_get($mat-grey, 700),
   disabled-list-option: rgba(155, 177, 255, 0.12),
-
-  // Custom variables
-  border:           #34364c,
-  autocomplete:     #242737,
-  stroked-button:   rgba(255, 255, 255, 0.1)
+  // TODO remove this custom variable when last palette will be imported
+  beware: #F6A92C,
 );
 
 ////////////////
@@ -126,20 +123,36 @@ $bf-dark-foreground: (
   elevation:      black,
   hint-text:        $light-disabled-text,
   secondary-text:   $light-secondary-text,
-  icon:           #e1e1e3,
-  icons:          #e1e1e3,
+  icon:           #B7BCD9,
+  icons:          #B7BCD9,
   slider-min:       rgba(#000000, 0.3),
   slider-off:       rgba(#000000, 0.3),
   slider-off-active: rgba(#000000, 0.3),
 
   // Custom variables
-  title:        #e2e8ff,
-  subheading:   #CFD8FF,
-  dynamic:      #3b414d,
   blue-icon:    #9eb1ff,
   dark-text:    #80818a,
-  border:       #1A1B2E,
 );
+
+//////////
+// FONT //
+//////////
+$bf-dark-font: (
+  display-4: #444960,
+  display-3: #d0d9ff,
+  display-2: #b1b8db,
+  display-1: #444960,
+  h1: #b1b8db,
+  h2: #d0d9ff,
+  h3: #b1b8db,
+  h4: #444960,
+  h5: #444960,
+  h6: #878eac,
+  mat-body-1: #878EAC,
+  mat-body-2: #b1b8db,
+  mat-caption: #444960
+);
+
 
 ///////////
 // THEME //
@@ -156,5 +169,7 @@ $bf-dark-theme: (
   warn: $bf-dark-warn,
   is-dark: true,
   foreground: $bf-dark-foreground,
-  background: $bf-dark-background
+  background: $bf-dark-background,
+  // font key is not standard angular theme, we've created font palette for each typography config except button & input
+  font: $bf-dark-font
 );

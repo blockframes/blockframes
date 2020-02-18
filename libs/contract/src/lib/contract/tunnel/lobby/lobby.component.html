@@ -1,0 +1,17 @@
+<h1>How would you like to proceed with this deal ?</h1>
+<p>Please choose the contract type that is more suitable for you.</p>
+
+<article fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="space-around center">
+  <mat-card matRipple (click)="select('sale')">
+    <img mat-card-image asset="Upload_380.png" alt="Sale Contract">
+    <mat-card-footer fxLayout="row" fxLayoutAlign="center center">
+      <span>Sale</span>
+    </mat-card-footer>
+  </mat-card>
+  <mat-card matRipple (click)="select('mandate')">
+    <img mat-card-image asset="Upload_380.png" alt="Mandate Contract">
+    <mat-card-footer fxLayout="row" fxLayoutAlign="center center">
+      <span>Mandate</span>
+    </mat-card-footer>
+  </mat-card>
+</article>

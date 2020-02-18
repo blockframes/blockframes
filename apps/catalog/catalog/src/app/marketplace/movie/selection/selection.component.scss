@@ -1,0 +1,19 @@
+:host {
+  display: block;
+  padding: 24px;
+  min-height: 100%;
+}
+
+article {
+  margin-top: 50px;
+}
+
+footer {
+  margin-top: 60px;
+  p {
+    max-width: 600px;
+    text-align: center;
+    margin-top: 24px;
+    margin-bottom: 94px;
+  }
+}

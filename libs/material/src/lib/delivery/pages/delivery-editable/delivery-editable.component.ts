@@ -3,19 +3,22 @@ import { Observable, combineLatest } from 'rxjs';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { NewTemplateComponent } from '../../components/delivery-new-template/new-template.component';
-import { Material, MaterialService, MaterialStore, MaterialStatus } from '../../../material/+state';
+import { Material, MaterialStore, MaterialStatus } from '../../../material/+state';
 import { MaterialQuery } from '../../../material/+state';
 import { DeliveryService } from '../../+state/delivery.service';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MovieQuery, Movie } from '@blockframes/movie';
-import { DeliveryQuery, Delivery } from '../../+state';
 import { ConfirmComponent } from '@blockframes/ui';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { map, switchMap, tap, filter } from 'rxjs/operators';
 import { MaterialForm, MaterialControl } from '../../forms/material.form';
 import { applyTransaction } from '@datorama/akita';
 import { id as keccak256 } from '@ethersproject/hash';
-import { OrganizationService, OrganizationQuery } from '@blockframes/organization';
 import { FormEntity } from '@blockframes/utils';
+import { DaoService } from 'libs/ethers/src/lib/dao/+state';
+import { MovieMaterialService } from '../../../material/+state/movie-material.service';
+import { DeliveryMaterialService } from '../../../material/+state/delivery-material.service';
+import { Delivery } from '../../+state/delivery.model';
+import { DeliveryQuery } from '../../+state/delivery.query';
 
 @Component({
   selector: 'delivery-editable',
@@ -30,7 +33,6 @@ export class DeliveryEditableComponent implements OnInit {
   public materials$: Observable<Material[]>;
   public movie$: Observable<Movie>;
   public opened = false;
-  public displayedColumns: string[];
   public pdfLink: string;
 
   public form = new MaterialForm();
@@ -41,13 +43,14 @@ export class DeliveryEditableComponent implements OnInit {
     private query: DeliveryQuery,
     private movieQuery: MovieQuery,
     private dialog: MatDialog,
-    private materialService: MaterialService,
+    private deliveryMaterialService: DeliveryMaterialService,
     private service: DeliveryService,
     private materialStore: MaterialStore,
-    private organizationService: OrganizationService,
-    private organizationQuery: OrganizationQuery,
+    private daoService: DaoService,
     private snackBar: MatSnackBar,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute,
+    private movieMaterialService: MovieMaterialService
   ) {}
 
   ngOnInit() {
@@ -55,6 +58,7 @@ export class DeliveryEditableComponent implements OnInit {
       this.query.selectActive(),
       this.materialQuery.selectAll()
     ]).pipe(
+      filter(([delivery, materials]) => !!delivery),
       tap(([delivery, materials]) => {
         this.form.upsertValue(materials);
         // Disable or enable form depending on delivery isSigned property
@@ -68,7 +72,6 @@ export class DeliveryEditableComponent implements OnInit {
     this.pdfLink = `/delivery/contract.pdf?deliveryId=${this.query.getActiveId()}`;
     this.movie$ = this.movieQuery.selectActive();
     this.delivery$ = this.query.selectActive();
-    this.displayedColumns = this.setDisplayedColumns();
   }
 
   /* Open the sidenav with selected material form **/
@@ -83,8 +86,9 @@ export class DeliveryEditableComponent implements OnInit {
       const delivery = this.query.getActive();
       const materials = this.form.getAll();
       delivery.mustBeSigned
-        ? this.materialService.updateDeliveryMaterials(materials, delivery)
-        : this.materialService.update(materials, delivery);
+        ? this.deliveryMaterialService.updateDeliveryMaterials(materials)
+        : this.movieMaterialService.updateMaterials(materials, delivery);
+      this.snackBar.open('Material list updated !', 'close', { duration: 2000 });
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });
     }
@@ -92,7 +96,7 @@ export class DeliveryEditableComponent implements OnInit {
 
   /* Add a material formGroup to the form **/
   public addMaterial() {
-    const newMaterial = this.materialService.add();
+    const newMaterial = this.deliveryMaterialService.createMaterial();
     this.form.add(newMaterial);
     this.openSidenav(newMaterial.id);
   }
@@ -117,8 +121,8 @@ export class DeliveryEditableComponent implements OnInit {
     const materials = this.materialQuery.getActive();
     const delivery = this.query.getActive();
     delivery.mustBeSigned
-      ? this.materialService.updateDeliveryMaterialStatus(materials, status, delivery.id)
-      : this.materialService.updateStatus(materials, status, delivery.movieId);
+      ? this.deliveryMaterialService.updateDeliveryMaterialStatus(materials, status, delivery.id)
+      : this.movieMaterialService.updateStatus(materials, status);
     this.snackBar.open(`Material status updated to ${status}`, 'close', { duration: 2000 });
     this.materialStore.returnToInitialState();
   }
@@ -128,8 +132,8 @@ export class DeliveryEditableComponent implements OnInit {
     const materials = this.materialQuery.getActive();
     const delivery = this.query.getActive();
     delivery.mustBeSigned
-      ? this.materialService.updateDeliveryMaterialIsOrdered(materials, delivery.id)
-      : this.materialService.updateIsOrdered(materials, delivery.movieId);
+      ? this.deliveryMaterialService.updateDeliveryMaterialIsOrdered(materials)
+      : this.movieMaterialService.updateIsOrdered(materials);
     this.materialStore.returnToInitialState();
   }
 
@@ -138,8 +142,8 @@ export class DeliveryEditableComponent implements OnInit {
     const materials = this.materialQuery.getActive();
     const delivery = this.query.getActive();
     delivery.mustBeSigned
-      ? this.materialService.updateDeliveryMaterialIsPaid(materials, delivery.id)
-      : this.materialService.updateIsPaid(materials, delivery.movieId);
+      ? this.deliveryMaterialService.updateDeliveryMaterialIsPaid(materials)
+      : this.movieMaterialService.updateIsPaid(materials);
     this.materialStore.returnToInitialState();
   }
 
@@ -172,8 +176,8 @@ export class DeliveryEditableComponent implements OnInit {
       }
       const delivery = this.query.getActive();
       delivery.mustBeSigned
-        ? this.materialService.deleteDeliveryMaterial(materialId, delivery.id)
-        : this.materialService.delete(materialId, delivery);
+        ? this.deliveryMaterialService.deleteDeliveryMaterial(materialId)
+        : this.movieMaterialService.delete(materialId, delivery);
       this.snackBar.open('Material deleted', 'close', { duration: 2000 });
       this.opened = false;
     } catch (error) {
@@ -194,9 +198,13 @@ export class DeliveryEditableComponent implements OnInit {
   }
 
   private async deleteDelivery() {
-    await this.service.deleteDelivery();
-    this.router.navigate([`/layout/o/delivery/${this.movieQuery.getActiveId()}/list`]);
-    this.snackBar.open('Delivery deleted', 'close', { duration: 2000 });
+    try {
+      await this.service.deleteDelivery();
+      this.router.navigate([`../../list`], { relativeTo: this.route });
+      this.snackBar.open('Delivery deleted', 'close', { duration: 2000 });
+    } catch (error) {
+      this.snackBar.open(error.message, 'close', { duration: 2000 });
+    }
   }
 
   public openUnsealDelivery() {
@@ -225,34 +233,15 @@ export class DeliveryEditableComponent implements OnInit {
     const jsonMaterials = JSON.stringify(materials);
 
     const deliveryHash = keccak256(jsonDelivery + jsonMaterials);
-    const orgEthAddress = await this.organizationService.getOrganizationEthAddress();
+    const orgEthAddress = await this.daoService.getOrganizationEthAddress();
     const movieId = this.movieQuery.getValue().active;
 
     this.service.setSignDeliveryTx(orgEthAddress, delivery.id, deliveryHash, movieId);
-    this.router.navigateByUrl('/layout/o/account/wallet/send');
+    this.router.navigateByUrl('/c/o/account/wallet/send');
   }
 
   public disableDelivery() {
     // No clue about what to do here
-  }
-
-  /* Define an array of columns to be displayed in the list depending on delivery settings **/
-  public setDisplayedColumns() {
-    const delivery = this.query.getActive();
-    return delivery.mustChargeMaterials
-      ? [
-          'select',
-          'value',
-          'description',
-          'step',
-          'category',
-          'price',
-          'isOrdered',
-          'isPaid',
-          'status',
-          'action'
-        ]
-      : ['select', 'value', 'description', 'step', 'category', 'status', 'action'];
   }
 
   public get deliveryContractURL$(): Observable<string> {

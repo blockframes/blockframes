@@ -2,8 +2,14 @@ import { PublicOrganization } from '@blockframes/organization/types';
 import { NotificationType } from '@blockframes/notification/types';
 import { PublicMovie } from '@blockframes/movie/types';
 
-export { MovieDocument } from '@blockframes/movie/types';
-export { OrganizationDocument, OrganizationStatus } from '@blockframes/organization/types';
+export { MovieDocument, PublicMovie } from '@blockframes/movie/types';
+export { ContractDocument, PublicContractDocument, ContractVersionDocument } from '@blockframes/contract/contract/+state/contract.firestore';
+export {
+  OrganizationDocument,
+  OrganizationStatus,
+  createOrganizationDocument,
+  PublicOrganization
+} from '@blockframes/organization/types';
 export {
   InvitationDocument,
   InvitationOrUndefined,
@@ -14,13 +20,27 @@ export {
   InvitationToWorkOnDocument
 } from '@blockframes/invitation/types';
 export { MaterialDocument, MaterialStatus } from '@blockframes/material/material/types';
-export { StakeholderDocument } from '@blockframes/organization/stakeholder/types';
+export { StakeholderDocument } from '@blockframes/material/delivery/stakeholder/types';
 export {
   DeliveryDocument,
   StepDocument,
   StepDocumentWithDate,
   convertStepDocumentToStepDocumentWithDate
 } from '@blockframes/material/delivery/types';
+export {
+  PermissionsDocument,
+  AppPermissionsDocument,
+  UserPermissionsDocument,
+  DocPermissionsDocument,
+  createAppPermissions,
+  createDocPermissions,
+  UserRole
+} from '@blockframes/permissions/types';
+export { PublicUser } from '@blockframes/auth/types';
+export { RequestDemoInformations } from '@blockframes/catalog/demo-request.model';
+export { MovieAnalytics, EventAnalytics } from '@blockframes/movie/movie/+state/movie.firestore';
+export { createNotification, NotificationType, NotificationDocument } from '@blockframes/notification/types';
+export { App } from '@blockframes/utils/apps';
 
 /**
  * Types used by the firebase backend.
@@ -41,28 +61,6 @@ interface DocWithID {
 // ======================
 // Business & App Related
 
-export interface OrganizationPermissions {
-  superAdmins: string[];
-}
-
-export interface OrganizationDocPermissions {
-  id: string;
-  canCreate: boolean;
-  canRead: boolean;
-  canUpdate: boolean;
-  canDelete: boolean;
-  owner: boolean;
-}
-
-export interface UserDocPermissions {
-  id: string;
-  admins: string[];
-  canCreate: string[];
-  canDelete: string[];
-  canRead: string[];
-  canUpdate: string[];
-}
-
 export enum AppAccessStatus {
   requested = 'requested',
   pending = 'pending',
@@ -75,6 +73,16 @@ export interface SnapObject {
   movie: PublicMovie;
   docId: string;
   type: NotificationType;
+}
+
+/** Custom object used to create an invitation. */
+export interface RequestToJoinOrganization {
+  adminEmail: string;
+  adminName: string;
+  organizationName: string;
+  organizationId: string;
+  userFirstname: string;
+  userLastname: string;
 }
 
 /**

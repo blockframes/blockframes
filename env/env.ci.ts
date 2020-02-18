@@ -9,10 +9,15 @@ export const persistenceSettings = {
   synchronizeTabs: true
 };
 
+// Analytics
+// =========
+
+export const sentryDsn = undefined;
+
 // Firebase
 // ========
 
-export const appUrl = 'https://ci.blockframes.io';
+export const appUrl = 'https://blockframes-ci.web.app';
 
 export const firebase = {
   apiKey: 'AIzaSyATQHmR6iTCgaBkCXansUcA3pJma3jCgC0',
@@ -20,7 +25,9 @@ export const firebase = {
   databaseURL: 'https://blockframes-ci.firebaseio.com',
   projectId: 'blockframes-ci',
   storageBucket: 'blockframes-ci.appspot.com',
-  messagingSenderId: '973979650792'
+  messagingSenderId: '973979650792',
+  appId: "1:973979650792:web:8b3ec4caab8dd5ef",
+  measurementId: "G-GE7LPQ7MBX"
 };
 
 // Algolia
@@ -29,7 +36,8 @@ export const firebase = {
 export const algolia = {
   appId: '8E9YO1I9HB',
   searchKey: '4a2990a293c0ee0bfde9ebd66270a47f',
-  indexNameOrganizations: 'ci_orgs'
+  indexNameOrganizations: 'ci_orgs',
+  indexNameMovies: 'ci_movies'
 };
 
 // Ethereum
@@ -62,7 +70,7 @@ export const relayer = {
 // Functions
 // =========
 
-export const backupBucket = 'ci-backups';
+export const backupBucket = 'ci-backups-blockframes';
 export const sendgridAPIKey = '';
 
 // Sendgrid Emails
@@ -80,3 +88,37 @@ export const templateIds = {
   userRequestAccepted: 'd-d32b25a504874a708de6bfc50a1acba7',
   wishlistPending: 'd-e0cd8970d19346eea499a81f67f1a557',
 }
+
+// Yandex Metrika Id
+export const yandexId = 0;
+
+// Intercom
+// ========
+export const intercomId = '';
+
+// Quorum
+// ========
+export const quorum = {
+  archipelNode: {
+    url: 'https://e0rf4hbql8-e0cy67u40h-rpc.de0-aws.kaleido.io',
+    user: 'e0xwcvgknw',
+    privateFor: 'PJg4NoFMk73mGCbkJ7/griaiKfkbS+edhfjO5PzztQs=',
+    ethAddress: '0x7E5D163D7390A6068d44C8e2F3c2861B5133daa4',
+  },
+  pulsarlNode: {
+    url: 'https://e0rf4hbql8-e0zhtusyfh-rpc.de0-aws.kaleido.io',
+    user: 'e0xwcvgknw',
+    privateFor: 'fnF4IPKvDcmM9bgmEKHoYjNyXG6cXqJjv806RK1F5y8=',
+    ethAddress: '0x43c92D51ba8c0B83062F8116B036D6616ebe4746',
+  },
+  bankNode: {
+    url: 'https://e0rf4hbql8-e0jbt507aa-rpc.de0-aws.kaleido.io',
+    user: 'e0xwcvgknw',
+    privateFor: 'Tj879+7P6IgX2UJTOLtWx5IjrPlABb7HO//kNNbnt28=',
+    ethAddress: '0xe795245444d459CD0d8e12A26232646B5521e72F',
+  },
+}
+
+// BigQuery
+// ========
+export const bigQueryAnalyticsTable = 'blockframes-ci.analytics_197180636.events_';

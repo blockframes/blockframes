@@ -5,7 +5,6 @@ import { OrganizationForm } from '../../forms/organization.form';
 import { Observable } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { startWith, tap } from 'rxjs/operators';
-import { FireQuery } from '@blockframes/utils';
 
 @Component({
   selector: 'organization-editable',
@@ -18,7 +17,7 @@ export class OrganizationEditableComponent implements OnInit {
   public opened = false;
   public organizationProfileForm = new OrganizationForm(this.service);
   public organization$: Observable<Organization>;
-  public isSuperAdmin$: Observable<boolean>;
+  public isAdmin$: Observable<boolean>;
 
   constructor(
     private query: OrganizationQuery,
@@ -29,9 +28,9 @@ export class OrganizationEditableComponent implements OnInit {
 
   ngOnInit() {
     this.organization$ = this.query
-      .select('org')
+      .selectActive()
       .pipe(tap(org => this.organizationProfileForm.patchValue(org)));
-    this.isSuperAdmin$ = this.permissionsQuery.isSuperAdmin$;
+    this.isAdmin$ = this.permissionsQuery.isAdmin$;
   }
 
   public get organizationInformations$() {
@@ -49,7 +48,7 @@ export class OrganizationEditableComponent implements OnInit {
       if (this.organizationProfileForm.invalid) {
         throw new Error('Your organization profile informations are not valid');
       }
-      this.service.update(this.organizationProfileForm.value);
+      this.service.update(this.query.getActiveId(), this.organizationProfileForm.value);
       this.snackBar.open('Organization profile change succesfull', 'close', { duration: 2000 });
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });

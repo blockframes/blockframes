@@ -43,14 +43,14 @@ import {
   ConfirmModule,
   EditableModule,
   FeedbackMessageModule,
-  UiFormModule,
   EditableSidenavModule,
   AvatarListModule
 } from '@blockframes/ui';
-import { OrganizationModule } from '@blockframes/organization';
+import { PasswordConfirmModule } from '@blockframes/ui/form';
+import { OrganizationSearchModule } from '@blockframes/organization';
 import { MaterialModule } from '../material/material.module';
 import { DeliveryRoutingModule } from './delivery-routing-module';
-import { MovieModule } from '@blockframes/movie';
+import { MoviePickerModule } from '@blockframes/movie';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -111,16 +111,18 @@ import { MatStepperModule } from '@angular/material/stepper';
     ReactiveFormsModule,
     TextFieldModule,
     MaterialModule,
+
+    // Library
     ConfirmModule,
-    UiFormModule,
+    PasswordConfirmModule,
     ActionsListModule,
     ActionsPickerModule,
     ActionsPickerListModule,
     EditableModule,
-    OrganizationModule,
+    OrganizationSearchModule,
     EditableSidenavModule,
     DeliveryRoutingModule,
-    MovieModule,
+    MoviePickerModule,
     FeedbackMessageModule,
     AvatarListModule,
 

@@ -8,7 +8,7 @@ import { Subscription } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class WalletKeyGuard implements CanActivate {
 
-  urlFallback = 'layout/o/account/wallet/no-key';
+  urlFallback = 'c/o/account/wallet/no-key';
   subscription: Subscription;
 
   constructor(

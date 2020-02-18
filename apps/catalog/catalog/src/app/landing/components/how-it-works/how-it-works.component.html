@@ -1,0 +1,62 @@
+<span class="mat-display-2">How it works?</span>
+<mat-tab-group animationDuration="1000ms" selectedIndex="0">
+  <mat-tab label="Seller">
+    <article fxLayout="row" fxLayoutGap="70px" fxLayoutAlign="space-between start" fxLayout.lt-md="column">
+      <div>
+        <h3>
+          Mutualize forces to access volume content buyers.
+          Make the most of your library, maximize its potential and benefit from the potential of
+          libraries that you don’t own / of other rights holders.
+        </h3>
+        <span><b>Pricing</b></span><!-- TODO #1396 change for custom typo -->
+        <p>
+          A simple commission on all successful transactions : 50% off the primary sales fee for
+          mandated Sellers (Sales Agents and Distributors), and a flat 10% commission for
+          Producers/Library Owners.
+        </p>
+      </div>
+      <!-- TODO: Add picture when existing #1382 -->
+      <img fxHide.xs src="http://via.placeholder.com/430x250" alt="Placeholder image"/>
+    </article>
+    <span><b>Features</b></span><!-- TODO #1396 change for custom typo -->
+    <article fxLayout="row wrap" fxLayoutAlign="space-between" fxLayout.lt-md="column">
+      <mat-card *ngFor="let feature of sellerFeatures">
+        <article fxLayout="row" fxLayoutAlign="space-between start">
+          <!-- TODO: Add picture when existing #1382 -->
+          <img src="http://via.placeholder.com/150x150" alt="Placeholder image">
+          <div>
+            <span><b>{{ feature.title }}</b></span>
+            <p class="mat-caption">{{ feature.description }}</p>
+          </div>
+        </article>
+      </mat-card>
+    </article>
+  </mat-tab>
+  <mat-tab label="Buyer">
+    <article fxLayout="row" fxLayoutGap="70px" fxLayoutAlign="space-between start" fxLayout.lt-md="column">
+      <h3>
+        Find quality content from a multitude of different Rights Holders in one single place. Create your own package and make a simple offer for all the content you want.
+        Buy quality content from a multitude of different rights holders in one simple package : one offer, one point of contact, one contract.
+      </h3>
+      <span><b>Pricing</b></span>
+      <p>
+        Does everybody know that pig named Lorem Ipsum? An ‘extremely credible source’ has
+        called my office and told me that Barack Obama’s placeholder text is a fraud.
+      </p>
+      <!-- TODO: Add picture when existing #1382 -->
+      <img fxHide.xs src="http://via.placeholder.com/430x250" alt="Placeholder image"/>
+    </article>
+    <span><b>Features</b></span>
+    <article fxLayout="row wrap" fxLayoutAlign="space-between space-between" fxLayout.lt-md="column">
+      <mat-card *ngFor="let feature of buyerFeatures">
+        <article fxLayout="row" fxLayoutAlign="space-between start">
+          <img src="http://via.placeholder.com/150x150" alt="Placeholder image">
+          <div>
+            <span><b>{{ feature.title }}</b></span>
+            <p class="mat-caption">{{ feature.description }}</p>
+          </div>
+        </article>
+      </mat-card>
+    </article>
+  </mat-tab>
+</mat-tab-group>

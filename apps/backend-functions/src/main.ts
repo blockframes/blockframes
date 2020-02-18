@@ -13,7 +13,6 @@ import { mnemonic, relayer } from './environments/environment';
 import {
   deleteFirestoreDelivery,
   deleteFirestoreMaterial,
-  deleteFirestoreMovie,
   deleteFirestoreTemplate
 } from './delete';
 import {
@@ -21,7 +20,6 @@ import {
   onDeliveryStakeholderDelete
 } from './stakeholder';
 import * as users from './users';
-import * as migrations from './migrations';
 import {
   onDocumentCreate,
   onDocumentDelete,
@@ -30,9 +28,14 @@ import {
   onOrganizationDocumentUpdate
 } from './utils';
 import { onGenerateDeliveryPDFRequest } from './internals/pdf';
+import { logErrors } from './internals/sentry';
 import { onInvitationWrite } from './invitation';
 import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate } from './orgs';
 import { adminApp, onRequestAccessToAppWrite } from './admin';
+import { onMovieUpdate, onMovieCreate, onMovieDelete } from './movie';
+import * as bigQuery from './bigQuery';
+import { onDocumentPermissionCreate } from './permissions';
+import { onContractWrite, onContractVersionWrite } from './contract';
 
 /** Trigger: when eth-events-server pushes contract events. */
 export const onIpHashEvent = functions.pubsub.topic('eth-events.ipHash').onPublish(onIpHash);
@@ -54,12 +57,10 @@ export const generateHash = functions.storage
  * We create a corresponding document in `users/userID`.
  */
 export const onUserCreate = functions.auth
-  .user()
-  .onCreate(users.onUserCreate);
 
 /** Trigger: REST call to find a list of users by email. */
 export const findUserByMail = functions.https
-  .onCall(users.findUserByMail);
+  .onCall(logErrors(users.findUserByMail));
 
 /** Trigger: REST call to send a verify email to a user. */
 export const sendVerifyEmail = functions.https
@@ -75,14 +76,16 @@ export const sendWishlistEmails = functions.https
 
 /** Trigger: REST call to find a list of organizations by name. */
 export const findOrgByName = functions.https
-  .onCall(users.findOrgByName);
+  .onCall(logErrors(users.findOrgByName));
 
 /** Trigger: REST call to get or create a user. */
-export const getOrCreateUserByMail = functions.https.onCall(users.getOrCreateUserByMail);
+export const getOrCreateUserByMail = functions.https.onCall(logErrors(users.getOrCreateUserByMail));
 
-/** Trigger: REST call to migrate the database to V2. */
-export const updateToV2 = functions.https
-  .onRequest(migrations.updateToV2);
+/** Trigger: REST call to send a mail to an admin for demo request. */
+export const sendDemoRequest = functions.https.onCall(logErrors(users.sendDemoRequest));
+
+/** Trigger: REST call bigQuery with a movieId to get its analytics. */
+export const getMovieAnalytics = functions.https.onCall(logErrors(bigQuery.requestMovieAnalytics));
 
 /**
  * Trigger: REST call to the /admin app
@@ -94,8 +97,7 @@ export const updateToV2 = functions.https
  *    Organization cannot access applications until they requested it and
  *    a cascade8 administrator accept their request.
  */
-export const admin = functions.https
-  .onRequest(adminApp);
+export const admin = functions.https.onRequest(adminApp);
 
 /** Trigger: when signature (`orgId`) is added to or removed from `validated[]`. */
 export const onDeliveryUpdateEvent = onDocumentUpdate('deliveries/{deliveryID}', onDeliveryUpdate);
@@ -117,6 +119,60 @@ export const onInvitationUpdateEvent = onDocumentWrite(
   'invitations/{invitationID}',
   onInvitationWrite
 );
+
+/** Trigger: when a permission document is created. */
+export const onDocumentPermissionCreateEvent = onDocumentCreate(
+  'permissions/{orgID}/documentPermissions/{docId}',
+  onDocumentPermissionCreate
+);
+
+//--------------------------------
+//       Movies Management      //
+//--------------------------------
+
+/**
+ * Trigger: when a movie is created
+ */
+export const onMovieCreateEvent = onDocumentCreate(
+  'movies/{movieId}',
+  onMovieCreate
+);
+
+/**
+ * Trigger: when a movie is updated
+ */
+export const onMovieUpdateEvent = onDocumentUpdate(
+  'movies/{movieId}',
+  onMovieUpdate
+)
+
+/**
+ * Trigger: when a movie is deleted
+ */
+export const onMovieDeleteEvent = onDocumentDelete(
+  'movies/{movieId}',
+  logErrors(onMovieDelete)
+)
+
+//------------------------------------------------
+//   Contracts & Contracts Version Management   //
+//------------------------------------------------
+
+/**
+ * Trigger: when a contract is created/updated/deleted
+ */
+export const onContractWriteEvent = onDocumentWrite(
+  'contracts/{contractId}',
+  onContractWrite
+);
+
+/**
+ * Trigger: when a contractVersion is created/updated/deleted
+ */
+export const onContractVersionWriteEvent = onDocumentWrite(
+  'contracts/{contractId}/versions/{versionId}',
+  onContractVersionWrite
+)
 
 //--------------------------------
 //       Apps Management        //
@@ -150,13 +206,12 @@ export const onOrganizationDeleteEvent = onDocumentDelete(
   onOrganizationDelete
 );
 
-
 //--------------------------------
 //        GENERATE PDF          //
 //--------------------------------
 
 /** Trigger: REST call to generate a delivery PDF. */
-export const generateDeliveryPDF = functions.https.onRequest(onGenerateDeliveryPDFRequest);
+export const generateDeliveryPDF = functions.https.onRequest(logErrors(onGenerateDeliveryPDFRequest));
 
 
 //--------------------------------
@@ -167,23 +222,21 @@ const RELAYER_CONFIG: RelayerConfig = {
   mnemonic
 };
 
-export const relayerDeploy = functions.runWith({timeoutSeconds: 540}).https
-  .onCall((data, context) => relayerDeployLogic(data, RELAYER_CONFIG));
+export const relayerDeploy = functions.runWith({ timeoutSeconds: 540 }).https
+  .onCall((data, context) => logErrors(relayerDeployLogic(data, RELAYER_CONFIG)));
 
-export const relayerRegister = functions.runWith({timeoutSeconds: 540}).https
-  .onCall((data, context) => relayerRegisterENSLogic(data, RELAYER_CONFIG));
+export const relayerRegister = functions.runWith({ timeoutSeconds: 540 }).https
+  .onCall((data, context) => logErrors(relayerRegisterENSLogic(data, RELAYER_CONFIG)));
 
 export const relayerSend = functions.https
-  .onCall((data, context) => relayerSendLogic(data, RELAYER_CONFIG));
+  .onCall((data, context) => logErrors(relayerSendLogic(data, RELAYER_CONFIG)));
 
 //--------------------------------
 //   PROPER FIRESTORE DELETION  //
 //--------------------------------
 
-export const deleteMovie = onDocumentDelete('movies/{movieId}', deleteFirestoreMovie);
+export const deleteDelivery = onDocumentDelete('deliveries/{deliveryId}', logErrors(deleteFirestoreDelivery));
 
-export const deleteDelivery = onDocumentDelete('deliveries/{deliveryId}', deleteFirestoreDelivery);
+export const deleteMaterial = onDocumentDelete('deliveries/{deliveryId}/materials/{materialId}', logErrors(deleteFirestoreMaterial));
 
-export const deleteMaterial = onDocumentDelete('deliveries/{deliveryId}/materials/{materialId}', deleteFirestoreMaterial);
-
-export const deleteTemplate = onDocumentDelete('templates/{templateId}', deleteFirestoreTemplate);
+export const deleteTemplate = onDocumentDelete('templates/{templateId}', logErrors(deleteFirestoreTemplate));

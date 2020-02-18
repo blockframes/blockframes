@@ -1,27 +1,21 @@
 <mat-form-field appearance="outline">
   <mat-chip-list #chipList>
-    <mat-chip *ngFor="let key of keys"
-      [selectable]="selectable"
-      [removable]="removable"
-      (removed)="remove(key)"
-    >
-    {{ key }}
-    <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
-    </mat-chip>
-    <input
-      #inputEl
-      [placeholder]="placeholder"
-      [formControl]="ctrl"
-      [matAutocomplete]="auto"
-      [matChipInputFor]="chipList"
-      [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-      [matChipInputAddOnBlur]="true"
-      (matChipInputTokenEnd)="add($event)"
-    />
+    <ng-container *ngFor="let control of form.controls; let i = index">
+      <mat-chip *ngIf="control.value" [selectable]="selectable" [removable]="removable" (removed)="remove(i)">
+        {{ getLabel(control.value) }}
+        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+      </mat-chip>
+    </ng-container>
+    <input #inputEl [placeholder]="placeholder" [formControl]="ctrl" [matAutocomplete]="auto" [disabled]="disabled"
+      [matChipInputFor]="chipList" [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="true"
+      (matChipInputTokenEnd)="add($event)" />
   </mat-chip-list>
-  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-    <mat-option *ngFor="let item of filteredItems | async" [value]="getKey(item)">
-      {{ item }}
-    </mat-option>
-  </mat-autocomplete>
+  <mat-hint>
+    <ng-content></ng-content>
+  </mat-hint>
 </mat-form-field>
+<mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+  <mat-option *ngFor="let item of filteredItems | async" [value]="getKey(item)">
+    {{ getDisplay(item) }}
+  </mat-option>
+</mat-autocomplete>

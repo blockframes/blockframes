@@ -1,12 +1,7 @@
 /**
  * Manage invitations updates.
  */
-import {
-  createOrganizationDocPermissions,
-  createUserDocPermissions,
-  getDocument,
-  getSuperAdminIds
-} from './data/internals';
+import { getDocument, getAdminIds } from './data/internals';
 import { db, functions, getUserMail, getUser } from './internals/firebase';
 import {
   DeliveryDocument,
@@ -18,7 +13,13 @@ import {
   InvitationStatus,
   InvitationType,
   OrganizationDocument,
-  MovieDocument
+  MovieDocument,
+  createDocPermissions,
+  NotificationType,
+  createNotification,
+  UserRole,
+  App,
+  PublicUser
 } from './data/types';
 import { triggerNotifications } from './notification';
 import { sendMailFromTemplate } from './internals/email';
@@ -28,11 +29,15 @@ import {
   userRequestedToJoinYourOrg,
   userJoinOrgPendingRequest
 } from './assets/mail-templates';
-import { createNotification, NotificationType } from '@blockframes/notification/types';
 
 /** Checks if an invitation just got accepted. */
 function wasAccepted(before: InvitationDocument, after: InvitationDocument) {
   return before.status === InvitationStatus.pending && after.status === InvitationStatus.accepted;
+}
+
+/** Checks if an invitation just got declined. */
+function wasDeclined(before: InvitationDocument, after: InvitationDocument) {
+  return before.status === InvitationStatus.pending && after.status === InvitationStatus.declined;
 }
 
 /** Checks if an invitation just got created. */
@@ -72,6 +77,9 @@ async function addUserToOrg(userId: string, organizationId: string) {
       return;
     }
 
+    // Add the new user and his role to the permissions object.
+    permissionData.roles[userId] = UserRole.member;
+
     return Promise.all([
       // Update user's orgId
       tx.set(userRef, { ...userData, orgId: organizationId }),
@@ -81,14 +89,14 @@ async function addUserToOrg(userId: string, organizationId: string) {
         userIds: [...organizationData.userIds, userId]
       }),
       // Update Permissions
-      tx.set(permissionsRef, { ...permissionData, admins: [...permissionData.admins, userId] })
+      tx.set(permissionsRef, { ...permissionData, roles: permissionData.roles })
     ]);
   });
 }
 
 async function mailOnInvitationAccept(userId: string, organizationId: string) {
   const userEmail = await getUserMail(userId);
-  const adminIds = await getSuperAdminIds(organizationId);
+  const adminIds = await getAdminIds(organizationId);
   const adminEmails = await Promise.all(adminIds.map(getUserMail));
 
   const adminEmailPromises = adminEmails
@@ -99,18 +107,44 @@ async function mailOnInvitationAccept(userId: string, organizationId: string) {
 }
 
 /** Updates the user, orgs, and permissions when the user accepts an invitation to an organization. */
-async function onInvitationToOrgAccept({
-  user,
-  organization
-}: InvitationFromOrganizationToUser) {
+async function onInvitationToOrgAccept({ user, organization }: InvitationFromOrganizationToUser) {
   // TODO(issue#739): When a user is added to an org, clear other invitations
   await addUserToOrg(user.uid, organization.id);
   // TODO maybe send an email "you have accepted to join OrgNAme ! Congratz, you are now part of this org !"
   return mailOnInvitationAccept(user.uid, organization.id);
 }
 
+/** Send a notification to admins of organization to notify them that the user declined their invitation. */
+async function onInvitationToOrgDecline(invitation: InvitationFromOrganizationToUser) {
+  const orgSnapshot = await db.doc(`orgs/${invitation.organization.id}`).get();
+  const org = orgSnapshot.data() as OrganizationDocument;
+
+  const userSnapshot = await db.doc(`users/${invitation.user.uid}`).get();
+  const user = userSnapshot.data() as PublicUser;
+
+  const adminIds = await getAdminIds(org.id);
+
+  const notifications = adminIds.map(userId =>
+    createNotification({
+      userId,
+      user: {
+        name: user.name,
+        surname: user.surname
+      },
+      app: App.blockframes,
+      type: NotificationType.invitationFromOrganizationToUserDecline
+    })
+  );
+
+  return triggerNotifications(notifications);
+}
+
 /** Sends an email when an organization invites a user to join. */
-async function onInvitationToOrgCreate({ user, organization, id }: InvitationFromOrganizationToUser) {
+async function onInvitationToOrgCreate({
+  user,
+  organization,
+  id
+}: InvitationFromOrganizationToUser) {
   const userMail = await getUserMail(user.uid);
 
   if (!userMail) {
@@ -134,30 +168,32 @@ async function onDocumentInvitationAccept(invitation: InvitationToWorkOnDocument
   const movie = await getDocument<MovieDocument>(`movies/${delivery.movieId}`);
 
   const [
-    organizationDocPermissionsSnap,
-    userDocPermissionsSnap,
+    deliverySnap,
+    documentPermissionsSnap,
     stakeholderSnap,
     organizationSnap,
-    organizationMoviePermissionsSnap,
-    userMoviePermissionsSnap,
+    moviePermissionsSnap,
     organization
   ] = await Promise.all([
-    db.doc(`permissions/${stakeholderId}/orgDocsPermissions/${docId}`).get(),
-    db.doc(`permissions/${stakeholderId}/userDocsPermissions/${docId}`).get(),
+    db.doc(`deliveries/${docId}`).get(),
+    db.doc(`permissions/${stakeholderId}/documentPermissions/${docId}`).get(),
     db.doc(`deliveries/${docId}/stakeholders/${stakeholderId}`).get(),
     db.doc(`orgs/${stakeholderId}`).get(),
-    db.doc(`permissions/${stakeholderId}/orgDocsPermissions/${delivery.movieId}`).get(),
-    db.doc(`permissions/${stakeholderId}/userDocsPermissions/${delivery.movieId}`).get(),
+    db.doc(`permissions/${stakeholderId}/documentPermissions/${delivery.movieId}`).get(),
     getDocument<OrganizationDocument>(`orgs/${stakeholderId}`)
   ]);
 
-  const orgDocPermissions = createOrganizationDocPermissions({
+  const documentPermissions = createDocPermissions({
     id: docId,
-    canUpdate: true
+    canDelete: false,
+    isAdmin: false
   });
-  const userDocPermissions = createUserDocPermissions({ id: docId });
-  const orgMoviePermissions = createOrganizationDocPermissions({ id: delivery.movieId });
-  const userMoviePermissions = createUserDocPermissions({ id: delivery.movieId });
+  const moviePermissions = createDocPermissions({
+    id: delivery.movieId,
+    canDelete: false,
+    canUpdate: false,
+    isAdmin: false
+  });
 
   return db.runTransaction(tx => {
     const promises = [];
@@ -166,40 +202,44 @@ async function onDocumentInvitationAccept(invitation: InvitationToWorkOnDocument
     // Push the delivery's movie into stakeholder Organization's movieIds so users have access to the new doc
     // Only if organization doesn't already have access to this movie.
     if (!organization.movieIds.includes(delivery.movieId)) {
-      promises.push(tx.update(organizationSnap.ref, {
-        movieIds: [...organization.movieIds, delivery.movieId]
-      }))
+      promises.push(
+        tx.update(organizationSnap.ref, {
+          movieIds: [...organization.movieIds, delivery.movieId]
+        })
+      );
     }
 
     return Promise.all([
-      // Initialize organization permissions on a document owned by another organization
-      tx.set(organizationDocPermissionsSnap.ref, orgDocPermissions),
+      // Initialize organization permissions on a document owned by another organization.
+      tx.set(documentPermissionsSnap.ref, documentPermissions),
 
-      // Then Initialize user permissions document
-      tx.set(userDocPermissionsSnap.ref, userDocPermissions),
-
-      // Make the new stakeholder active on the delivery by switch isAccepted property from false to true
+      // Make the new stakeholder active on the delivery by switch isAccepted property from false to true.
       tx.update(stakeholderSnap.ref, { isAccepted: true }),
 
-      // Push the delivery's movie into stakeholder Organization's movieIds so users have access to the new doc
+      // Push the delivery's movie into stakeholder Organization's movieIds so users have access to the new doc.
       tx.update(organizationSnap.ref, {
         movieIds: [...organization.movieIds, delivery.movieId]
       }),
 
-      // Finally, also initialize reading rights on the movie for the invited organization
-      tx.set(organizationMoviePermissionsSnap.ref, orgMoviePermissions),
-      tx.set(userMoviePermissionsSnap.ref, userMoviePermissions),
+      // Push the stakeholder's id into delivery stakeholdersIds array.
+      tx.update(deliverySnap.ref, {
+        stakeholderIds: [...delivery.stakeholderIds, stakeholderId]
+      }),
+
+      // Finally, also initialize reading rights on the movie for the invited organization.
+      tx.set(moviePermissionsSnap.ref, moviePermissions),
 
       ...promises,
 
-      // Now that permissions are in the database, notify organization users with direct link to the document
+      // Now that permissions are in the database, notify organization users with direct link to the document.
       triggerNotifications(
         organization.userIds.map(userId => {
           return createNotification({
             userId,
             docId,
-            movie: {id: movie.id, title: movie.main.title},
-            type: NotificationType.pathToDocument
+            movie: { id: movie.id, title: movie.main.title },
+            type: NotificationType.pathToDocument,
+            app: App.mediaDelivering
           });
         })
       )
@@ -220,6 +260,8 @@ async function onInvitationToOrgUpdate(
     return onInvitationToOrgCreate(invitation);
   } else if (wasAccepted(before!, after)) {
     return onInvitationToOrgAccept(invitation);
+  } else if (wasDeclined(before!, after)) {
+    return onInvitationToOrgDecline(invitation);
   }
   return;
 }
@@ -235,18 +277,29 @@ async function onInvitationFromUserToJoinOrgCreate({
     throw new Error(`no email for userId: ${user.uid}`);
   }
 
-  const superAdminIds = await getSuperAdminIds(organization.id);
+  const adminIds = await getAdminIds(organization.id);
 
-  const superAdmins = await Promise.all(superAdminIds.map(getUser));
+  const admins = await Promise.all(adminIds.map(getUser));
   // const validSuperAdminMails = superAdminsMails.filter(adminEmail => !!adminEmail);
 
   // send invitation pending email to user
-  await sendMailFromTemplate(userJoinOrgPendingRequest(userData.email, organization.name, userData.name!));
+  await sendMailFromTemplate(
+    userJoinOrgPendingRequest(userData.email, organization.name, userData.name!)
+  );
 
   // send invitation received to every org admin
   return Promise.all(
-    superAdmins.map(admin =>
-      sendMailFromTemplate(userRequestedToJoinYourOrg(admin.email, admin.name!, organization.name, organization.id, userData.name!, userData.surname!))
+    admins.map(admin =>
+      sendMailFromTemplate(
+        userRequestedToJoinYourOrg({
+          adminEmail: admin.email,
+          adminName: admin.name!,
+          organizationName: organization.name,
+          organizationId: organization.id,
+          userFirstname: userData.name!,
+          userLastname: userData.surname!
+        })
+      )
     )
   );
 }
@@ -258,8 +311,29 @@ async function onInvitationFromUserToJoinOrgAccept({
 }: InvitationFromUserToOrganization) {
   // TODO(issue#739): When a user is added to an org, clear other invitations
   await addUserToOrg(user.uid, organization.id);
-  await sendMailFromTemplate(userJoinedAnOrganization(user.email, organization.id))
+  await sendMailFromTemplate(userJoinedAnOrganization(user.email, organization.id));
   return mailOnInvitationAccept(user.uid, organization.id);
+}
+
+/** Send a notification to admins of organization to notify them that the request is declined. */
+async function onInvitationFromUserToJoinOrgDecline(invitation: InvitationFromUserToOrganization) {
+  const orgSnapshot = await db.doc(`orgs/${invitation.organization.id}`).get();
+  const org = orgSnapshot.data() as OrganizationDocument;
+  const adminIds = await getAdminIds(org.id);
+
+  const notifications = adminIds.map(userId =>
+    createNotification({
+      userId,
+      user: {
+        name: invitation.user.name,
+        surname: invitation.user.surname
+      },
+      app: App.blockframes,
+      type: NotificationType.invitationFromUserToJoinOrgDecline
+    })
+  );
+
+  return triggerNotifications(notifications);
 }
 
 /**
@@ -275,6 +349,8 @@ async function onInvitationFromUserToJoinOrgUpdate(
     return onInvitationFromUserToJoinOrgCreate(invitation);
   } else if (wasAccepted(before!, after)) {
     return onInvitationFromUserToJoinOrgAccept(invitation);
+  } else if (wasDeclined(before!, after)) {
+    return onInvitationFromUserToJoinOrgDecline(invitation);
   }
   return;
 }
@@ -323,7 +399,9 @@ export async function onInvitationWrite(
   }
 
   // Prevent duplicate events with the processedId workflow
-  const invitation: InvitationDocument = await getDocument<InvitationDocument>(`invitations/${invitationDoc.id}`);
+  const invitation: InvitationDocument = await getDocument<InvitationDocument>(
+    `invitations/${invitationDoc.id}`
+  );
   const processedId = invitation.processedId;
 
   if (processedId === context.eventId) {
@@ -343,11 +421,7 @@ export async function onInvitationWrite(
       case InvitationType.fromOrganizationToUser:
         return onInvitationToOrgUpdate(invitationDocBefore, invitationDoc, invitation);
       case InvitationType.fromUserToOrganization:
-        return onInvitationFromUserToJoinOrgUpdate(
-          invitationDocBefore,
-          invitationDoc,
-          invitation
-        );
+        return onInvitationFromUserToJoinOrgUpdate(invitationDocBefore, invitationDoc, invitation);
       default:
         throw new Error(`Unhandled invitation: ${JSON.stringify(invitation)}`);
     }

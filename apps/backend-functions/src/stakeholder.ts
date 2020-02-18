@@ -1,10 +1,18 @@
 import { db, functions } from './internals/firebase';
 import { triggerNotifications } from './notification';
 import { getDocument, getOrganizationsOfDocument } from './data/internals';
-import { OrganizationDocument, SnapObject, MovieDocument, StakeholderDocument, DeliveryDocument } from './data/types';
-import { PublicOrganization } from '@blockframes/organization/types';
-import { createNotification, NotificationType } from '@blockframes/notification/types';
-import { PublicMovie } from '@blockframes/movie/types';
+import {
+  OrganizationDocument,
+  SnapObject,
+  MovieDocument,
+  StakeholderDocument,
+  DeliveryDocument,
+  NotificationType,
+  createNotification,
+  App,
+  PublicMovie,
+  PublicOrganization
+} from './data/types';
 
 export async function onDeliveryStakeholderCreate(
   snap: FirebaseFirestore.DocumentSnapshot,
@@ -37,8 +45,8 @@ async function stakeholdersCollectionEvent(
 
   // TODO(issue#686): extract semi-generic part, too many if then else, won't work with more types.
   const delivery = await getDocument<DeliveryDocument>(`deliveries/${context.params.deliveryID}`);
-  const movie = await getDocument<MovieDocument>(`movies/${delivery.movieId}`)
-  const organization = await getDocument<PublicOrganization>(`orgs/${newStakeholder.id}`);
+  const movie = await getDocument<MovieDocument>(`movies/${delivery.movieId}`);
+  const organization = await getDocument<PublicOrganization>(`orgs/${newStakeholder.orgId}`);
 
   if (!!delivery.id && !!newStakeholder && !!organization) {
     const documentSnapshot = await db.doc(`deliveries/${delivery.id}`).get();
@@ -50,7 +58,7 @@ async function stakeholdersCollectionEvent(
 
     try {
       await db
-        .doc(`deliveries/${delivery.id}/stakeholders/${newStakeholder.id}`)
+        .doc(`deliveries/${delivery.id}/stakeholders/${newStakeholder.orgId}`)
         .update({ processedId: context.eventId });
       const organizationsOfDocument = await getOrganizationsOfDocument(delivery.id, 'deliveries');
 
@@ -60,18 +68,27 @@ async function stakeholdersCollectionEvent(
           : NotificationType.removeOrganization;
 
       const snapObject: SnapObject = {
-        organization: {id: organization.id, name: organization.name} as PublicOrganization,
-        movie: {id: movie.id, title: movie.main.title} as PublicMovie,
+        organization: { id: organization.id, name: organization.name } as PublicOrganization,
+        movie: { id: movie.id, title: movie.main.title } as PublicMovie,
         docId: delivery.id,
         type
       };
+
+      // Remove stakeholder id reference from delivery's stakeholderIds array.
+      // Remove documentPermissions for this delivery.
+      if (type === NotificationType.removeOrganization) {
+        await db.doc(`deliveries/${delivery.id}`).update({
+          stakeholderIds: delivery.stakeholderIds.filter((id: string) => id !== newStakeholder.orgId)
+        });
+        await db.doc(`permissions/${newStakeholder.orgId}/documentPermissions/${delivery.id}`).delete();
+      }
 
       const notifications = createNotifications(organizationsOfDocument, snapObject);
 
       return Promise.all([triggerNotifications(notifications)]);
     } catch (e) {
       await db
-        .doc(`deliveries/${delivery.id}/stakeholders/${newStakeholder.id}`)
+        .doc(`deliveries/${delivery.id}/stakeholders/${newStakeholder.orgId}`)
         .update({ processedId: null });
       throw e;
     }
@@ -104,7 +121,8 @@ function createNotifications(
         organization: snapObject.organization,
         movie: snapObject.movie,
         type: snapObject.type,
-        docId: snapObject.docId
+        docId: snapObject.docId,
+        app: App.mediaDelivering
       });
     });
 }

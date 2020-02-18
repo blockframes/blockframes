@@ -18,14 +18,14 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatDividerModule } from '@angular/material/divider';
 
-import { UploadModule, UiFormModule, FeedbackMessageModule } from '@blockframes/ui';
+import { UploadModule, FeedbackMessageModule } from '@blockframes/ui';
+import { PasswordConfirmModule } from '@blockframes/ui/form';
 import { KeyManagerModule } from '../key-manager/key-manager.module';
 
 import { WalletActiveGuard } from './guards/wallet-active.guard';
 import { WalletKeyGuard } from './guards/wallet-key.guard';
 import { WalletViewComponent } from './pages/wallet-view/wallet-view.component';
 import { WalletImportKeyFormComponent } from './components/wallet-import-key-form/wallet-import-key-form.component';
-import { WalletWidgetComponent } from './components/wallet-widget/wallet-widget.component';
 import { WalletAddKeyTunnelComponent } from './pages/wallet-add-key/wallet-add-key.component';
 import { WalletSendTxTunnelComponent } from './pages/wallet-send-tx/wallet-send-tx.component';
 import { WalletAskPasswordFormComponent } from './components/wallet-ask-password-form/wallet-ask-password-form.component';
@@ -36,6 +36,7 @@ import { WalletImportKeyComponent } from './components/wallet-import-key/wallet-
 import { WalletNoKeyComponent } from './pages/wallet-no-key/wallet-no-key.component';
 import { WalletRevealMnemonicComponent } from './pages/wallet-reveal-mnemonic/wallet-reveal-mnemonic.component';
 import { WalletTxGuard } from './guards/wallet-tx.guard';
+import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
 
 
 export const walletRoutes: Routes = [
@@ -82,14 +83,14 @@ export const walletRoutes: Routes = [
     MatStepperModule,
     UploadModule,
     RouterModule.forChild(walletRoutes),
-    UiFormModule,
+    PasswordConfirmModule,
     FeedbackMessageModule,
-    MatDividerModule
+    MatDividerModule,
+    ImgAssetModule
   ],
   declarations: [
     WalletViewComponent,
     WalletImportKeyFormComponent,
-    WalletWidgetComponent,
     WalletAddKeyTunnelComponent,
     WalletSendTxTunnelComponent,
     WalletAskPasswordFormComponent,
@@ -99,9 +100,6 @@ export const walletRoutes: Routes = [
     WalletImportKeyComponent,
     WalletNoKeyComponent,
     WalletRevealMnemonicComponent,
-  ],
-  exports: [
-    WalletWidgetComponent,
-  ],
+  ]
 })
 export class WalletModule {}

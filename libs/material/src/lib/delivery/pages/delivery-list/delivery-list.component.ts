@@ -1,11 +1,12 @@
 import { ChangeDetectionStrategy, Component, OnInit, ViewChild, HostBinding } from '@angular/core';
 import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
-import { DeliveryQuery, Delivery } from '../../+state';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MatSort } from '@angular/material/sort';
 import { Observable} from 'rxjs';
 import { Organization, OrganizationQuery } from '@blockframes/organization';
 import { Movie } from '@blockframes/movie/movie/+state/movie.model';
+import { Delivery } from '../../+state/delivery.model';
+import { DeliveryQuery } from '../../+state/delivery.query';
 
 @Component({
   selector: 'delivery-list',
@@ -24,11 +25,12 @@ export class DeliveryListComponent implements OnInit {
     private query: DeliveryQuery,
     private organizationQuery: OrganizationQuery,
     private movieQuery: MovieQuery,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
-    this.userOrganization$ = this.organizationQuery.select('org');
+    this.userOrganization$ = this.organizationQuery.selectActive();
     this.deliveries$ = this.query.selectAll();
     this.movie$ = this.movieQuery.selectActive();
   }
@@ -37,7 +39,10 @@ export class DeliveryListComponent implements OnInit {
    * Navigates directly to second step of delivery creation flow as we already are on a movie
    */
   public addDelivery() {
-    const movieId = this.movieQuery.getActiveId();
-    this.router.navigate([`/layout/o/delivery/add/${movieId}/2-choose-starter`]);
+    // TODO: We are redirected by DeliveryActiveGuard here, will be fixed with akita-ng-fire version of it => ISSUE #1334
+    // this.router.navigate(['../2-choose-starter'], { relativeTo: this.route });
+
+    // Temporary route
+    this.router.navigate([`/c/o/delivery/movie/add/1-find-movie`]);
   }
 }

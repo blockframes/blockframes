@@ -23,8 +23,12 @@ import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 // Libraries
-import { UploadModule, UiFormModule } from '@blockframes/ui';
+import { PasswordConfirmModule } from '@blockframes/ui/form';
+import { UploadModule } from '@blockframes/ui/upload';
 import { MovieDisplayModule } from '../../display/display.module';
+import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
+import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
+import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
 
 // Components
 import { ImportSpreadsheetComponent } from './import-spreadsheet/import-spreadsheet.component';
@@ -34,14 +38,15 @@ import { PreviewMovieComponent } from './preview-movie/preview-movie.component';
 import { ViewExtractedElementsComponent } from './view-extracted-elements/view-extracted-elements.component';
 import { TableExtractedMoviesComponent } from './table-extracted-movies/table-extracted-movies.component';
 import { ViewImportErrorsComponent } from './view-import-errors/view-import-errors.component';
-import { TableExtractedSalesComponent } from './table-extracted-sales/table-extracted-sales.component';
+import { TableExtractedDealsComponent } from './table-extracted-deals/table-extracted-deals.component';
 import { MovieOrganizationListGuard } from '../../guards/movie-organization-list.guard';
+import { TableExtractedContractsComponent } from './table-extracted-contracts/table-extracted-contracts.component';
 
 const routes: Routes = [
   {
     path: '',
     component: ImportStepperComponent,
-    canActivate: [MovieOrganizationListGuard], // @todo #643 not working if user does not have at least one movie in his list
+    canActivate: [MovieOrganizationListGuard],
     canDeactivate: [MovieOrganizationListGuard],
   }
 ];
@@ -52,7 +57,8 @@ const routes: Routes = [
     ImportSpreadsheetComponent,
     ViewExtractedElementsComponent,
     TableExtractedMoviesComponent,
-    TableExtractedSalesComponent,
+    TableExtractedDealsComponent,
+    TableExtractedContractsComponent,
     PreviewSheetComponent,
     PreviewMovieComponent,
     ViewImportErrorsComponent,
@@ -83,8 +89,11 @@ const routes: Routes = [
 
     // Librairies
     UploadModule,
-    UiFormModule,
+    PasswordConfirmModule,
     MovieDisplayModule,
+    CropperModule,
+    ImageReferenceModule,
+    ImgAssetModule,
   ],
   entryComponents: [
     PreviewSheetComponent,

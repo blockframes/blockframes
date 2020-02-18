@@ -17,7 +17,7 @@ export class OrganizationDisplayComponent {
   @Input() opened: boolean;
   @Input() organization: Organization;
   @Input() organizationInformations: OrganizationForm;
-  @Input() isSuperAdmin: boolean;
+  @Input() isAdmin: boolean;
 
   get layout() {
     return this.opened ? 'column' : 'row';

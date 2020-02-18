@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, ViewChild, Output, EventEmitter, HostBinding } from '@angular/core';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-import { Template } from '../../+state';
+import { Template } from '../../+state/template.model';
 
 @Component({
   selector: 'template-repertory',
@@ -23,4 +23,9 @@ export class TemplateRepertoryComponent {
 
   public dataSource: MatTableDataSource<Template>;
   public displayedColumns: string[] = ['name', 'created', 'action'];
+
+  public removeTemplate(template: Template, event: Event) {
+    this.delete.emit(template);
+    event.stopPropagation();
+  };
 }

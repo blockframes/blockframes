@@ -5,7 +5,7 @@ import { KeyManagerQuery, KeyManagerService } from "../../../key-manager/+state"
 import { Wallet as EthersWallet } from "@ethersproject/wallet";
 import { Router } from "@angular/router";
 import { Wallet, Key } from "../../../types";
-import { AuthQuery } from "@blockframes/auth";
+import { OrganizationQuery } from "@blockframes/organization";
 
 enum steps {
   select,
@@ -29,7 +29,8 @@ export class WalletSendTxTunnelComponent implements OnInit {
   public loadingProgress$: Observable<number>;
   public isDeploying$ = new BehaviorSubject(false);
   public isPending$ = new BehaviorSubject(false);
-  public feedbackImage = '/assets/images/ppl_celebrating.png';
+  // TODO #1387
+  public feedbackImage = 'Fine_380.png';
   public feedbackTitle = 'Congratulation !';
 
   private key: Key;
@@ -41,7 +42,7 @@ export class WalletSendTxTunnelComponent implements OnInit {
     private walletService: WalletService,
     private keyManagerQuery: KeyManagerQuery,
     private keyManagerService: KeyManagerService,
-    private authQuery: AuthQuery
+    private orgQuery: OrganizationQuery,
   ){}
 
   ngOnInit(){
@@ -65,7 +66,7 @@ export class WalletSendTxTunnelComponent implements OnInit {
         + 'If you forget the password to this key, please delete it and use another one. '
         + 'If you do not have another key, contact an admin of your organization to recover your wallet. '
       );
-      this.feedbackImage = '/assets/images/delete.png';
+      this.feedbackImage = 'Delete_500.png';
       this.feedbackTitle = 'Wrong Password :/';
       this.step = this.steps.end;
     }
@@ -73,13 +74,13 @@ export class WalletSendTxTunnelComponent implements OnInit {
     try {
       if (!this.query.getValue().hasERC1077) { // we have to wait for password decryption to prevent deploying if the user entered a wrong password
         this.isDeploying$.next(true);
-        const orgId = this.authQuery.orgId;
-        await this.walletService.deployERC1077(this.key.ensDomain, this.key.address, orgId);
+        const orgName = this.orgQuery.getActive().name
+        await this.walletService.deployERC1077(this.key.ensDomain, this.key.address, orgName);
         this.isDeploying$.next(false);
       }
     } catch(err) {
       console.warn('Some Blockchain transaction has failed : ', err);
-      this.feedbackImage = '/assets/images/delete.png';
+      this.feedbackImage = 'Delete_500.png';
       this.feedbackTitle = 'The deploy of your wallet has failed :/';
       this.step = this.steps.end;
     } finally {
@@ -96,11 +97,12 @@ export class WalletSendTxTunnelComponent implements OnInit {
       this.isPending$.next(true);
       const signedMetaTx = await this.walletService.prepareMetaTx(this.activeKey);
       await this.walletService.sendSignedMetaTx(this.key.ensDomain, signedMetaTx); // await to ensure tx has been mined (tx failure will throw)
-      this.feedbackImage = '/assets/images/ppl_celebrating.png';
+      // TODO #1387
+      this.feedbackImage = 'Fine_380.png';
       this.feedbackTitle = 'Congratulation !';
     } catch(err) {
       console.warn('Some Blockchain transaction has failed : ', err);
-      this.feedbackImage = '/assets/images/delete.png';
+      this.feedbackImage = 'Delete_500.png';
       this.feedbackTitle = 'An error as occurred :/';
     } finally {
       this.isPending$.next(false);

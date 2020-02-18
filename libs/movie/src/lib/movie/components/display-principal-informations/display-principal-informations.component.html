@@ -21,9 +21,9 @@
         <span><b>Production Status</b></span>
         <span class="capitalized">{{ main.status }}</span>
       </li>
-      <li fxLayout="row" fxLayout.lt-sm="column" *ngIf="main.length">
+      <li fxLayout="row" fxLayout.lt-sm="column" *ngIf="main.totalRunTime">
         <span><b>Running Time</b></span>
-        <span>{{ main.length }} min</span>
+        <span>{{ main.totalRunTime }} min</span>
       </li>
     </ng-container>
   </ul>
@@ -33,7 +33,7 @@
       <li fxLayout="row wrap" fxLayout.lt-sm="column" *ngIf="salesCast.credits.length > 0">
         <span><b>Principal Cast</b></span>
         <span *ngFor="let cast of salesCast.credits; let i = index; let isLast = last">
-          <ng-container *ngIf="cast.creditRole === 'actor' && i <= 1; else end">
+          <ng-container *ngIf="cast.role === 'actor' && i <= 1; else end">
             {{ cast.lastName }} {{ cast.firstName }} {{ isLast ? '' : ', '}}
           </ng-container>
           <ng-template #end>...</ng-template>
@@ -56,7 +56,7 @@
       <span><b>Budget</b></span>
       <span>{{budget.totalBudget}}</span>
     </li>
-    <li fxLayout="row" fxLayout.lt-sm="column" *ngIf="salesInfo.europeanQualification">
+    <li fxLayout="row" fxLayout.lt-sm="column" *ngIf="hasEuropeanQualification()">
       <span><b>Quotas</b></span>
       <span>European Qualification</span>
     </li>

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24" height="24" viewBox="0 0 24 24">
+  <defs>
+    <path id="film-a" d="M0.01,2 L0,14 C0,15.1 0.9,16 2,16 L18,16 C19.1,16 20,15.1 20,14 L20,0 L16,0 L18,4 L15,4 L13,0 L11,0 L13,4 L10,4 L8,0 L6,0 L8,4 L5,4 L3,0 L2,0 C0.9,0 0.01,0.9 0.01,2 Z M2,2.47 L3.76,6 L18,6 L18,14 L2,14 L2,2.47 Z"/>
+  </defs>
+  <g fill="none" fill-rule="evenodd" transform="translate(2 4)">
+    <polygon fill="#B7BCD9" points="2 2.47 3.76 6 18 6 18 14 2 14" opacity=".3"/>
+    <use fill="#B7BCD9" xlink:href="#film-a"/>
+  </g>
+</svg>

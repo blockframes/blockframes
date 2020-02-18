@@ -1,0 +1,6 @@
+<ng-container *ngFor="let link of links">
+  <mat-form-field appearance="outline">
+    <mat-label>{{ link.label }}</mat-label>
+    <input [formControl]="form.get(link.key).get('media')" matInput type="url" placeholder="http://www.privio.com"/>
+  </mat-form-field>
+</ng-container>

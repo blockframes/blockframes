@@ -1,6 +1,6 @@
 import algoliasearch from 'algoliasearch';
-
 import { algolia } from '../environments/environment';
+import pick from 'lodash/pick';
 
 const indexOrganizationsBuilder = (adminKey?: string) => {
   const client = algoliasearch(algolia.appId, adminKey || algolia.adminKey);
@@ -24,4 +24,46 @@ export function deleteSearchableOrg(orgId: string): Promise<any> {
   }
 
   return indexOrganizationsBuilder().deleteObject(orgId);
+}
+
+const indexMoviesBuilder = (adminKey?: string) => {
+  const client = algoliasearch(algolia.appId, adminKey || algolia.adminKey);
+  const INDEX_NAME_MOVIES = algolia.indexNameMovies;
+  return client.initIndex(INDEX_NAME_MOVIES);
+};
+
+export function storeSearchableMovie(
+  movie: FirebaseFirestore.DocumentData,
+  adminKey?: string
+): Promise<any> {
+  if (!algolia.adminKey && !adminKey) {
+    console.warn('No algolia id set, assuming dev config: skipping');
+    return Promise.resolve(true);
+  }
+  const ALGOLIA_FIELDS: string[] = [
+    'main.genres',
+    'main.title.international',
+    'main.title.original',
+    'main.directors',
+    'main.originalLanguages',
+    'main.status',
+    'main.originCountries',
+    'promotionalDescription.keywords',
+    'salesAgentDeal.salesAgent.displayName',
+    'versionInfo.dubbings',
+    'versionInfo.subtitles'
+  ];
+  return indexMoviesBuilder(adminKey).saveObject({
+    objectID: movie.id,
+    movie: pick(movie, ALGOLIA_FIELDS)
+  });
+}
+
+export function deleteSearchableMovie(movieId: string): Promise<any> {
+  if (!algolia.adminKey) {
+    console.warn('No algolia id set, assuming dev config: skipping');
+    return Promise.resolve(true);
+  }
+
+  return indexMoviesBuilder().deleteObject(movieId);
 }

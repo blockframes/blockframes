@@ -1,6 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { MovieMain, createMovieMain } from '../../+state';
-import { getLabelByCode } from '../../static-model/staticModels';
 
 @Component({
   selector: '[main] movie-display-main',
@@ -11,7 +10,6 @@ import { getLabelByCode } from '../../static-model/staticModels';
 export class MovieDisplayMainComponent {
 
   public data : MovieMain;
-  public getLabelByCode = getLabelByCode;
   @Input() set main(main: Partial<MovieMain>) {
     this.data = createMovieMain(main);
   }
@@ -19,10 +17,10 @@ export class MovieDisplayMainComponent {
   get shouldDisplayMainInformations()  {
     return this.data.genres.length > 0 ||
       this.data.originCountries ||
-      this.data.languages.length > 0 ||
-      this.data.productionCompanies.length > 0 ||
+      this.data.originalLanguages.length > 0 ||
+      this.data.stakeholders.executiveProducer.length > 0 ||
       this.data.shortSynopsis ||
-      this.data.length ||
+      this.data.totalRunTime ||
       this.data.status
   }
 }

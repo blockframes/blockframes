@@ -9,7 +9,7 @@ import { PreviewMovieComponent } from './../preview-movie/preview-movie.componen
 import { SelectionModel } from '@angular/cdk/collections';
 import { MovieImportState, SpreadsheetImportError } from '../view-extracted-elements/view-extracted-elements.component';
 import { ViewImportErrorsComponent } from '../view-import-errors/view-import-errors.component';
-
+import { sortingDataAccessor } from '@blockframes/utils/table';
 
 const hasImportErrors = (importState: MovieImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -34,7 +34,7 @@ export class TableExtractedMoviesComponent implements OnInit {
     'movie.main.internalRef',
     'select',
     'movie.main.title.original',
-    'movie.main.poster',
+    'movie.promotionalElements.poster',
     'movie.main.productionYear',
     'errors',
     'warnings',
@@ -52,14 +52,12 @@ export class TableExtractedMoviesComponent implements OnInit {
     // Mat table setup
     this.rows.paginator = this.paginator;
     this.rows.filterPredicate = this.filterPredicate;
-    this.rows.sortingDataAccessor = this.sortingDataAccessor;
+    this.rows.sortingDataAccessor = sortingDataAccessor;
     this.rows.sort = this.sort;
   }
 
   async createMovie(importState: MovieImportState): Promise<boolean> {
-    const data = this.rows.data;
     await this.addMovie(importState);
-    this.rows.data = data;
     this.snackBar.open('Movie created!', 'close', { duration: 3000 });
     return true;
   }
@@ -67,7 +65,7 @@ export class TableExtractedMoviesComponent implements OnInit {
   async createSelectedMovies(): Promise<boolean> {
     try {
       const creations = this.selection.selected.filter(importState => !importState.movie.id && !hasImportErrors(importState));
-      for (const movie of creations) { // @todo #1178
+      for (const movie of creations) { // @TODO #1389
         this.processedMovies++;
         await this.addMovie(movie);
       }
@@ -75,7 +73,7 @@ export class TableExtractedMoviesComponent implements OnInit {
       this.processedMovies = 0;
       return true;
     } catch (err) {
-      this.snackBar.open(`Could not create all movies (${this.processedMovies} / ${this.selection.selected})`, 'close', { duration: 3000 });
+      this.snackBar.open(`Could not create all movies (${this.processedMovies} / ${this.selection.selected.length})`, 'close', { duration: 3000 });
       this.processedMovies = 0;
     }
   }
@@ -107,7 +105,7 @@ export class TableExtractedMoviesComponent implements OnInit {
   async updateSelectedMovies(): Promise<boolean> {
     try {
       const updates = this.selection.selected.filter(importState => importState.movie.id && !hasImportErrors(importState));
-      for (const importState of updates) { // @todo #1178
+      for (const importState of updates) { // @TODO #1389
         this.processedMovies++;
         await this.movieService.updateById(importState.movie.id, importState.movie);
       }
@@ -115,7 +113,7 @@ export class TableExtractedMoviesComponent implements OnInit {
       this.processedMovies = 0;
       return true;
     } catch (err) {
-      this.snackBar.open(`Could not update all movies (${this.processedMovies} / ${this.selection.selected})`, 'close', { duration: 3000 });
+      this.snackBar.open(`Could not update all movies (${this.processedMovies} / ${this.selection.selected.length})`, 'close', { duration: 3000 });
       this.processedMovies = 0;
     }
   }
@@ -153,9 +151,9 @@ export class TableExtractedMoviesComponent implements OnInit {
    * Selects all rows if they are not all selected; otherwise clear selection.
    */
   masterToggle() {
-    this.isAllSelected() ?
-      this.selection.clear() :
-      this.rows.data.forEach(row => this.selection.select(row));
+    this.isAllSelected() 
+      ? this.selection.clear()
+      : this.rows.data.forEach(row => this.selection.select(row));
   }
 
   /**
@@ -166,17 +164,6 @@ export class TableExtractedMoviesComponent implements OnInit {
       return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
     }
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row`;
-  }
-
-  /**
-   * Allow to sort nested object
-   */
-  sortingDataAccessor(item, property) {
-    if (property.includes('.')) {
-      return property.split('.')
-        .reduce((object, key) => object[key], item);
-    }
-    return item[property];
   }
 
   /**

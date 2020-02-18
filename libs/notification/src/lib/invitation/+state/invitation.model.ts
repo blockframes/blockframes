@@ -1,7 +1,7 @@
 import { firestore } from 'firebase/app';
-import { PublicOrganization } from '@blockframes/organization';
 import { InvitationType, InvitationStatus, InvitationFromUserToOrganization, InvitationFromOrganizationToUser, InvitationToWorkOnDocument } from './invitation.firestore';
 import { PublicUser } from '@blockframes/auth/types';
+import { PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
 
 export { InvitationStatus } from './invitation.firestore';
 
@@ -30,6 +30,7 @@ export interface InvitationToWorkOnDocumentOptions {
 /** Factory function that create an Invitation of type fromUserToOrganization. */
 export function createInvitationFromUserToOrganization(params: InvitationFromUserToOrganizationOptions): InvitationFromUserToOrganization {
   return {
+    id: '',
     app: 'main',
     type: InvitationType.fromUserToOrganization,
     status: InvitationStatus.pending,

@@ -1,52 +1,47 @@
 import { Injectable } from '@angular/core';
-import { Organization, OrganizationService, OrganizationStatus } from '../+state';
+import {
+  OrganizationService,
+  OrganizationStatus,
+  OrganizationState,
+  OrganizationQuery
+} from '../+state';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
+import { map, switchMap } from 'rxjs/operators';
+import { AuthQuery } from '@blockframes/auth';
+import { of } from 'rxjs';
 
-// TODO issue#1146
-import { AFM_DISABLE } from '@env';
-
-// TODO: issue#1171, use a CollectionGuard
 @Injectable({ providedIn: 'root' })
-export class OrganizationGuard {
-  private subscription: Subscription;
-
-  constructor(private orgService: OrganizationService, private router: Router) {}
-
-  canActivate() {
-    return new Promise(res => {
-      this.subscription = this.orgService.sync().subscribe({
-        next: (organization: Organization) => {
-          if (!organization) {
-            return res(false);
-          }
-          if (organization.status === OrganizationStatus.pending) {
-            return res(this.router.parseUrl('layout/organization/congratulation'));
-          }
-
-          // TODO issue#1146
-          if (AFM_DISABLE) {
-            this.orgService.retrieveDataAndAddListeners();
-          }
-
-          return res(true);
-        },
-        error: err => {
-          console.log('Error: ', err);
-          res(this.router.parseUrl('layout/organization'));
-        }
-      });
-    });
+@CollectionGuardConfig({ awaitSync: true })
+export class OrganizationGuard extends CollectionGuard<OrganizationState> {
+  constructor(
+    protected service: OrganizationService,
+    protected router: Router,
+    private query: OrganizationQuery,
+    private authQuery: AuthQuery
+  ) {
+    super(service);
   }
 
-  canDeactivate() {
-    this.subscription.unsubscribe();
-
-    // TODO issue#1146
-    if (AFM_DISABLE) {
-      this.orgService.removeAllListeners();
-    }
-
-    return true;
+  sync() {
+    return this.authQuery.user$.pipe(
+      switchMap(user => {
+        if (!user.orgId) {
+          return of('/c/organization');
+        } else {
+          return this.service.syncActive({ id: user.orgId }).pipe(
+            map(_ => this.query.getActive()),
+            map(org => {
+              if (!org) {
+                return '/c/organization';
+              }
+              if (org.status === OrganizationStatus.pending) {
+                return '/c/organization/create-congratulations';
+              }
+            })
+          );
+        }
+      })
+    );
   }
 }

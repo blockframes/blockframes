@@ -6,7 +6,10 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Modules
 import { FeedbackMessageModule, ActionsListModule } from '@blockframes/ui';
-import { CropperModule } from '@blockframes/ui/cropper/cropper.module'
+import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
+import { OrganizationFormModule } from './forms/organization-form/organization-form.module';
+import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
+import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 
 // Material
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -20,15 +23,20 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatRadioModule } from '@angular/material/radio';
+import { MatRippleModule } from '@angular/material/core';
 
 // Components
 import { OrganizationHomeComponent } from './pages/organization-home/organization-home.component';
 import { OrganizationFindComponent } from './pages/organization-find/organization-find.component';
 import { OrganizationFeedbackComponent } from './pages/organization-feedback/organization-feedback.component';
-import { OrganizationCreateComponent } from './components/organization-create/organization-create.component';
+import { OrganizationCreateFeedbackComponent } from './pages/organization-create-feedback/organization-create-feedback.component';
+import { OrganizationCreateComponent } from './pages/organization-create/organization-create.component';
 import { NoOrganizationGuard } from './guard/no-organization.guard';
 import { OrganizationLoadingComponent } from './pages/organization-loading/organization-loading.component';
 import { NoOrganizationInvitationGuard } from '@blockframes/notification';
+import { OrganizationAppAccessComponent } from './pages/organization-app-access/organization-app-access.component';
 
 export const noOrganizationRoutes: Routes = [
   {
@@ -38,26 +46,30 @@ export const noOrganizationRoutes: Routes = [
   },
   {
     path: 'home',
-    canActivate: [NoOrganizationGuard],
-    canDeactivate: [NoOrganizationGuard],
+    canActivate: [NoOrganizationGuard, NoOrganizationInvitationGuard],
     component: OrganizationHomeComponent,
   },
   {
     path: 'find',
     canActivate: [NoOrganizationGuard, NoOrganizationInvitationGuard],
-    canDeactivate: [NoOrganizationGuard],
     component: OrganizationFindComponent,
   },
   {
-    path: 'congratulations',
-    canActivate: [NoOrganizationInvitationGuard],
+    path: 'join-congratulations',
     component: OrganizationFeedbackComponent
+  },
+  {
+    path: 'create-congratulations',
+    component: OrganizationCreateFeedbackComponent
   },
   {
     path: 'create',
     canActivate: [NoOrganizationGuard, NoOrganizationInvitationGuard],
-    canDeactivate: [NoOrganizationGuard],
     component: OrganizationCreateComponent,
+  },
+  {
+    path: 'app-access',
+    component: OrganizationAppAccessComponent,
   },
   {
     path: 'loading',
@@ -72,7 +84,10 @@ export const noOrganizationRoutes: Routes = [
     FormsModule,
     FlexLayoutModule,
     CropperModule,
-
+    OrganizationFormModule,
+    ImgAssetModule,
+    ImageReferenceModule,
+    
     // Material
     MatFormFieldModule,
     MatListModule,
@@ -85,6 +100,9 @@ export const noOrganizationRoutes: Routes = [
     MatAutocompleteModule,
     MatProgressSpinnerModule,
     MatProgressBarModule,
+    MatSnackBarModule,
+    MatRadioModule,
+    MatRippleModule,
 
     // UI
     ActionsListModule,
@@ -98,6 +116,8 @@ export const noOrganizationRoutes: Routes = [
     OrganizationFeedbackComponent,
     OrganizationCreateComponent,
     OrganizationLoadingComponent,
+    OrganizationAppAccessComponent,
+    OrganizationCreateFeedbackComponent
   ]
 })
 export class NoOrganizationModule {}

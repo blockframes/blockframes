@@ -4,6 +4,7 @@ import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { firebase } from '@env';
+import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
 
 // Angular Fire
 import { AngularFirestoreModule, FirestoreSettingsToken } from '@angular/fire/firestore';
@@ -27,37 +28,31 @@ import { MatMenuModule} from '@angular/material/menu';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 // Libraries
-import { UploadModule, UiFormModule, MovieCardModule } from '@blockframes/ui';
+import { UploadModule } from '@blockframes/ui/upload';
+import { PasswordConfirmModule } from '@blockframes/ui/form';
+import { MovieCardModule } from '@blockframes/ui';
 import { MovieDisplayModule } from './display/display.module';
 
 // Components
 import { MovieEditableComponent } from './pages/movie-editable/movie-editable.component';
-import { MovieListComponent } from './pages/movie-list/movie-list.component';
-import { MovieEmptyComponent } from './components/movie-empty/movie-empty.component';
 import { MovieRoutingModule } from './movie-routing.module';
 import { AngularFireModule } from '@angular/fire';
-import { MovieTitleFormComponent } from './components/movie-title-form/movie-title-form.component';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTabsModule } from '@angular/material/tabs';
 import { HomeEmptyComponent } from './components/home-empty/home-empty.component';
-import { MovieCreateComponent } from './pages/movie-create/movie-create.component';
 import { MovieViewComponent } from './pages/movie-view/movie-view.component';
 import { MovieFormModule } from './form/form.module';
-import { MoviePickerComponent } from './components/movie-picker/movie-picker.component';
+
+import { MoviePickerModule } from './components/movie-picker/movie-picker.module';
 import { MovieImdbSearchModule } from './components/movie-imdb-search/movie-imdb-search.module';
 
 @NgModule({
   declarations: [
     MovieEditableComponent,
-    MovieListComponent,
-    MovieTitleFormComponent,
     HomeEmptyComponent,
-    MovieEmptyComponent,
-    MovieCreateComponent,
-    MovieViewComponent,
-    MoviePickerComponent,
+    MovieViewComponent
   ],
   imports: [
     CommonModule,
@@ -65,6 +60,7 @@ import { MovieImdbSearchModule } from './components/movie-imdb-search/movie-imdb
     FormsModule,
     ReactiveFormsModule,
     MovieRoutingModule,
+    TranslateSlugModule,
     // Angular Fire
     AngularFireModule.initializeApp(firebase),
     AngularFirestoreModule,
@@ -91,16 +87,15 @@ import { MovieImdbSearchModule } from './components/movie-imdb-search/movie-imdb
     MatProgressSpinnerModule,
     // Librairies
     UploadModule,
-    UiFormModule,
+    PasswordConfirmModule,
     MovieDisplayModule,
     MovieFormModule,
     MovieCardModule,
     MovieImdbSearchModule,
+    MoviePickerModule
   ],
   providers: [
     { provide: FirestoreSettingsToken, useValue: {} },// TODO: Remove when @angular/fire is updated
-  ],
-  entryComponents: [MovieTitleFormComponent],
-  exports: [MovieTitleFormComponent, MoviePickerComponent],
+  ]
 })
 export class MovieModule {}

@@ -14,9 +14,10 @@ export class MovieDisplayPromotionalElementsComponent {
     this.data = createMoviePromotionalElements(promotionalElements);
   }
 
-  get shouldDisplayPromotionalElements()  {
-    return this.data.images.length > 0 ||
-    this.data.promotionalElements.length > 0
-  }
+  // TODO#1573 update movie/display
+  // get shouldDisplayPromotionalElements()  {
+  //   return this.data.images.length > 0 ||
+  //   this.data.promotionalElements.length > 0
+  // }
 
 }

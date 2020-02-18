@@ -8,7 +8,7 @@
 import * as functions from 'firebase-functions';
 
 import { algolia as algoliaClient } from '@env';
-export { factoryContract, backupBucket, relayer, appUrl } from '@env';
+export { factoryContract, backupBucket, relayer, appUrl, sentryDsn, bigQueryAnalyticsTable } from '@env';
 
 /**
  * Helper to work in local / remote dev mode:
@@ -30,3 +30,4 @@ export const algolia = {
 };
 
 export const adminEmail = mockConfigIfNeeded('admin', 'email');
+export const adminPassword = mockConfigIfNeeded('admin', 'password');

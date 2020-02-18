@@ -1,9 +1,11 @@
 import { Component, OnInit, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Delivery, DeliveryQuery, DeliveryService } from '../../+state';
 import { tap, switchMap, startWith } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material';
 import { createInformationsFormGroup } from '../../forms/informations.form';
+import { Delivery } from '../../+state/delivery.model';
+import { DeliveryQuery } from '../../+state/delivery.query';
+import { DeliveryService } from '../../+state/delivery.service';
 
 @Component({
   selector: 'delivery-informations-editable',

@@ -4,9 +4,10 @@
 import { adminEmail, appUrl } from '../environments/environment';
 import { EmailRequest, EmailTemplateRequest } from '../internals/email';
 import { templateIds } from '@env';
+import { RequestToJoinOrganization, RequestDemoInformations } from '../data/types';
 
-const ORG_HOME = '/layout/o/organization/';
-const USER_ORG_INVITATION = '/layout/organization/home';
+const ORG_HOME = '/c/o/organization/';
+const USER_ORG_INVITATION = '/c/organization/home';
 export const ADMIN_ACCEPT_ORG_PATH = '/admin/acceptOrganization';
 export const ADMIN_ACCESS_TO_APP_PATH = '/admin/allowAccessToApp';
 export const ADMIN_DATA_PATH = '/admin/data'; // backup / restore
@@ -101,15 +102,15 @@ export function userJoinedYourOrganization(orgAdminEmail: string, userEmail: str
 }
 
 /** Generates a transactional email to let an admin now that a user requested to join their org */
-export function userRequestedToJoinYourOrg(orgAdminEmail: string, adminName: string, orgName: string, orgId: string, userFirstName: string, userLastName: string): EmailTemplateRequest { // TODO
+export function userRequestedToJoinYourOrg(request: RequestToJoinOrganization): EmailTemplateRequest { // TODO
   const data = {
-    adminFirstName: adminName,
-    userFirstName,
-    userLastName,
-    orgName,
-    pageURL: `${appUrl}${ORG_HOME}${orgId}/members`
+    adminFirstName: request.adminName,
+    userFirstName: request.userFirstname,
+    userLastName: request.userLastname,
+    orgName: request.organizationName,
+    pageURL: `${appUrl}${ORG_HOME}${request.organizationId}/members`
   };
-  return { to: orgAdminEmail, templateId: templateIds.joinYourOrg, data };
+  return { to: request.adminEmail, templateId: templateIds.joinYourOrg, data };
 }
 
 // ------------------------- //
@@ -159,5 +160,22 @@ export function sendWishlist(userName: string, orgName: string, wishlist: string
     to: adminEmail,
     subject: 'A wishlist has been sent',
     text: wishlistSent(userName, orgName, wishlist)
+  }
+}
+
+export function sendDemoRequestMail(information: RequestDemoInformations) {
+  return {
+    to: adminEmail,
+    subject: 'A demo has been requested',
+    text: `A user wants to schedule a demo of Archipel Content.
+
+    User informations
+
+    First name: ${information.firstName}
+    Last name: ${information.lastName}
+    Email: ${information.email}
+    Phone number: ${information.phoneNumber}
+    Company name: ${information.companyName}
+    Role: ${information.role}`
   }
 }

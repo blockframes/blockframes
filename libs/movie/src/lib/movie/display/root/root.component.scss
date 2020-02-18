@@ -1,5 +1,4 @@
 .movie-card-view {
-  // @todo #643 remove that. This should be at the root.
   * {
     font-family: 'Roboto', "Helvetica Neue", sans-serif !important;
   }
@@ -7,11 +6,6 @@
   min-width: 120px;
   margin: 20px auto;
   max-width: 500px;
-  /*
-  @todo #643
-  If you want it to be transparent, then I don't understand why you want a mat-card ...
-   Especially when you set the elevation yourself...
-  */
   background-color: transparent;
   .movie-card-header, mat-card-content {
     text-align: center;

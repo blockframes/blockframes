@@ -20,6 +20,15 @@
     "utils": {
       "tags": ["utils", "shared"]
     },
+    "contract": {
+      "tags": []
+    },
+    "financial-report": {
+      "tags": []
+    },
+    "admin": {
+      "tags": []
+    },
     "ethers": {
       "tags": ["ethereum", "smart-contract"]
     },
@@ -59,26 +68,17 @@
     "backend-ops": {
       "tags": []
     },
-    "notification": {
-      "tags": ["notification"]
-    },
-    "catalog-dashboard-e2e": {
-      "tags": []
-    },
-    "catalog-dashboard": {
-      "tags": []
-    },
-    "catalog-marketplace-e2e": {
-      "tags": []
-    },
-    "catalog-marketplace": {
-      "tags": []
-    },
-    "catalog": {
+    "catalog-lib": {
       "tags": ["catalog"]
     },
     "notification": {
       "tags": ["notification"]
+    },
+    "catalog": {
+      "tags": ["catalog"]
+    },
+    "catalog-e2e": {
+      "tags": []
     }
   }
 }

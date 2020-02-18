@@ -1,37 +1,30 @@
 import { Injectable } from '@angular/core';
-import { Organization, OrganizationService, OrganizationStatus } from '../+state';
+import {
+  OrganizationService,
+  OrganizationStatus
+} from '../+state';
+import { AuthQuery } from '@blockframes/auth';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
 
-// TODO: issue#1171, use a CollectionGuard
 @Injectable({ providedIn: 'root' })
 export class NoOrganizationGuard {
-  private subscription: Subscription;
+  constructor(
+    protected service: OrganizationService,
+    private authQuery: AuthQuery,
+    protected router: Router
+  ) {}
 
-  constructor(private orgService: OrganizationService, private router: Router) {}
+  async canActivate() {
+    const { orgId } = this.authQuery.user;
+    if (!orgId) {
+      return true;
+    }
+    const org = await this.service.getValue(orgId);
 
-  canActivate() {
-    return new Promise(res => {
-      this.subscription = this.orgService.sync().subscribe({
-        next: (organization: Organization) => {
-          if (!organization) {
-            return res(true);
-          }
-          if (organization.status === OrganizationStatus.pending) {
-            return res(this.router.parseUrl('layout/organization/congratulations'));
-          }
-          return res(true);
-        },
-        error: err => {
-          res(true);
-        }
-      });
-    });
-  }
-
-  canDeactivate() {
-    this.subscription.unsubscribe();
-    return true;
+    if (org.status === OrganizationStatus.pending) {
+      return org.appAccess ? this.router.parseUrl('c/organization/create-congratulations') : this.router.parseUrl('c/organization/app-access');
+    } else {
+      return this.router.parseUrl('c/o');
+    }
   }
 }
-

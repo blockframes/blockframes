@@ -1,36 +1,40 @@
 import { Injectable } from '@angular/core';
-import { Store, StoreConfig } from '@datorama/akita';
-import { Organization } from './organization.model';
+import {
+  StoreConfig,
+  EntityStore,
+  ActiveState,
+  EntityState,
+} from '@datorama/akita';
 
-export const enum DeploySteps { notDeployed, registered, resolved, ready };
-export interface OrganizationState {
-  org: Organization;
-  form: {
-    name: string,
-    address: string
-  };
-  isDeploying: boolean;
-  deployStep: DeploySteps;
+import {
+  Organization,
+  convertOrganizationWithTimestampsToOrganization,
+  AppDetailsWithStatus,
+  OrganizationWithTimestamps,
+} from './organization.model';
+
+
+export interface OrganizationState extends EntityState<Organization>, ActiveState<string> {
+  appsDetails: AppDetailsWithStatus[];
 }
 
 // TODO #687: Create a proper interface for creating a organization
 const initialState: OrganizationState = {
-  org: null,
-  form: {
-    name: '',
-    address: ''
-  },
-  isDeploying: false,
-  deployStep: DeploySteps.notDeployed,
+  active: null,
+  appsDetails: null
 };
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'organization' })
-export class OrganizationStore extends Store<OrganizationState> {
+export class OrganizationStore extends EntityStore<OrganizationState, Organization> {
   constructor() {
     super(initialState);
   }
 
-  public updateOrganization(org: Organization) {
-    this.update(({ org }));
+  akitaPreAddEntity(organization: OrganizationWithTimestamps): Organization {
+    return convertOrganizationWithTimestampsToOrganization(organization);
+  }
+
+  akitaPreUpdateEntity(currentOrg: Organization, nextOrg: OrganizationWithTimestamps) {
+    return convertOrganizationWithTimestampsToOrganization(nextOrg);
   }
 }

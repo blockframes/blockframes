@@ -3,7 +3,7 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
-import { persistState, akitaDevtools, enableAkitaProdMode } from '@datorama/akita';
+import { persistState, akitaDevtools, enableAkitaProdMode, akitaConfig } from '@datorama/akita';
 import { LocalStorageVault } from 'libs/ethers/src/lib/vault/vault';
 
 // ethereum private keys storage
@@ -15,6 +15,10 @@ persistState({
     return state;
   },
   storage: LocalStorageVault // could use different type of vault as long as they implement `PersistStateStorage`
+});
+
+akitaConfig({
+  resettable: true
 });
 
 // TODO uncomment this one day

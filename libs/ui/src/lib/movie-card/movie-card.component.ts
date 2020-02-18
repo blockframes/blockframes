@@ -1,5 +1,5 @@
-import { Movie } from 'libs/movie/src/lib/movie/+state/movie.model';
-import { Component, ChangeDetectionStrategy, Input, EventEmitter, Output, HostBinding } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, HostBinding } from '@angular/core';
+import { Movie } from '@blockframes/movie/movie/+state/movie.model';
 
 @Component({
   selector: '[movie] movie-card',
@@ -12,15 +12,13 @@ export class MovieCardComponent {
   @Input() movie: Movie;
   @Input() link: string;
 
-  get posterSrc() {
-    return this.movie.main.poster || '/assets/images/default-movie-poster.png';
+  public get posterSrc() {
+    return this.movie.promotionalElements.poster[0].media || '/assets/images/default-movie-poster.png';
   }
 
-  get firstFestivalPrizeLogo() {
-    if(this.movie.festivalPrizes.prizes.length && this.movie.festivalPrizes.prizes[0].logo) {
-      return this.movie.festivalPrizes.prizes[0].logo;
-    } else {
-      return '';
-    }
+  public get firstFestivalPrizeLogo() {
+    const { prizes } = this.movie.festivalPrizes;
+    const hasPrizeUrl = !!(prizes.length && prizes[0].logo.url);
+    return hasPrizeUrl ? prizes[0].logo : '';
   }
 }

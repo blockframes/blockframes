@@ -14,10 +14,21 @@ export class ImportStepperComponent {
 
   constructor() {}
 
-  next(importEvent : SpreadsheetImportEvent) {
-    importEvent.fileType === 'movies' ?
-      this.viewExtractedElementsComponent.formatMovies(importEvent.sheet) :
-      this.viewExtractedElementsComponent.formatSales(importEvent.sheet);
+  async next(importEvent : SpreadsheetImportEvent) {
+    switch (importEvent.fileType) {
+      case 'movies':
+        this.viewExtractedElementsComponent.formatMovies(importEvent.sheet);
+        break;
+      case 'deals':
+        this.viewExtractedElementsComponent.formatDistributionDeals(importEvent.sheet);
+        break;
+      case 'contracts':
+        await this.viewExtractedElementsComponent.formatContracts(importEvent.sheet);
+        break;
+        
+      default:
+        break;
+    }
   }
 
 }

@@ -1,0 +1,16 @@
+mat-toolbar {
+  transition: background-color 300ms ease-in-out;
+}
+
+.transparent-toolbar {
+  background-color: transparent;
+}
+
+.logo {
+  height: 48px;
+  margin-right: 96px;
+
+  img {
+    height: 100%;
+  }
+}

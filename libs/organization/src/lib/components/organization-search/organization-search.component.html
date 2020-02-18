@@ -12,8 +12,7 @@
   <mat-autocomplete
     #autoName="matAutocomplete"
     [displayWith]="displayFn"
-    (optionSelected)="submit($event)"
-  >
+    (optionSelected)="submit($event)">
     <mat-option test-id="option" *ngFor="let organization of (searchResults$ | async)" [value]="organization">
       <span fxLayout="row" fxLayoutAlign="space-between center">
         <span>{{ organization.name }}</span>

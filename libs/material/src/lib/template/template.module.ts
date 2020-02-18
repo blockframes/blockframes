@@ -9,6 +9,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { EditableModule, EditableSidenavModule } from '@blockframes/ui';
 import { ConfirmModule } from '@blockframes/ui';
 import { MaterialModule } from '../material/material.module';
+import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
+import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 
 // Components
 import { TemplateAddComponent } from './components/template-add/template-add.component';
@@ -39,6 +41,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTableModule } from '@angular/material/table';
+import { TemplateMaterialsGuard } from '../material/guards/template-materials.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: 'list', pathMatch: 'full' },
@@ -54,11 +57,23 @@ const routes: Routes = [
   },
   {
     path: ':templateId',
-    component: TemplateEditableComponent,
     canActivate: [TemplateActiveGuard],
-    canDeactivate: [TemplateActiveGuard]
+    canDeactivate: [TemplateActiveGuard],
+    children: [
+      {
+        path: '',
+        redirectTo: 'list',
+        pathMatch: 'full'
+      },
+      {
+        path: 'list',
+        canActivate: [TemplateMaterialsGuard],
+        canDeactivate: [TemplateMaterialsGuard],
+        component: TemplateEditableComponent,
+      },
+    ]
   }
-];
+]
 
 @NgModule({
   declarations: [
@@ -91,7 +106,9 @@ const routes: Routes = [
     MatTableModule,
     MatSelectModule,
     MatSortModule,
-    RouterModule.forChild(routes)
+    TableFilterModule,
+    RouterModule.forChild(routes),
+    ImgAssetModule
   ],
   entryComponents: [TemplateAddComponent]
 })

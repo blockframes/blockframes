@@ -1,17 +1,17 @@
 import { MoviePromotionalDescription, createMoviePromotionalDescription } from '../../+state';
 import { FormEntity, FormList } from '@blockframes/utils';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 
 function createMoviePromotionalDescriptionControls(promotionalDescription?: Partial<MoviePromotionalDescription>) {
   const entity = createMoviePromotionalDescription(promotionalDescription);
   return {
     keywords: FormList.factory(entity.keywords),
-    keyAssets: FormList.factory(entity.keyAssets),
+    keyAssets: new FormControl(entity.keyAssets, [Validators.maxLength(750)])
   }
 }
 
-type MoviePromotionalDescriptionControl = ReturnType<typeof createMoviePromotionalDescriptionControls>
+export type MoviePromotionalDescriptionControl = ReturnType<typeof createMoviePromotionalDescriptionControls>
 
 export class MoviePromotionalDescriptionForm extends FormEntity<MoviePromotionalDescriptionControl>{
   constructor(promotionalDescription?: MoviePromotionalDescription) {
@@ -43,13 +43,5 @@ export class MoviePromotionalDescriptionForm extends FormEntity<MoviePromotional
 
   public removeKeyword(i: number): void {
     this.keywords.removeAt(i);
-  }
-
-  public addKeyAsset(): void {
-    this.keyAssets.push(new FormControl(''));
-  }
-
-  public removeKeyAsset(i: number): void {
-   this.keyAssets.removeAt(i);
   }
 }

@@ -3,19 +3,20 @@ import { FormEntity, FormList } from '@blockframes/utils';
 import { FormControl } from '@angular/forms';
 
 function createPrizeFormControl(entity?: Partial<Prize>) {
-  const { name, year, prize, logo } = createPrize(entity);
+  const { name, year, prize, logo, premiere } = createPrize(entity);
   return {
     name: new FormControl(name),
     year: new FormControl(year),
     prize: new FormControl(prize),
     logo: new FormControl(logo),
+    premiere: new FormControl(premiere),
   }
 }
 
 type PrizeFormControl = ReturnType<typeof createPrizeFormControl>;
 
 export class MoviePrizeForm extends FormEntity<PrizeFormControl> {
-  constructor(prize?: Prize) {
+  constructor(prize?: Partial<Prize>) {
     super(createPrizeFormControl(prize));
   }
 }
@@ -27,7 +28,7 @@ function createMovieFestivalPrizesControls(festivalprizes?: Partial<MovieFestiva
   }
 }
 
-type MovieFestivalPrizesControl = ReturnType<typeof createMovieFestivalPrizesControls>
+export type MovieFestivalPrizesControl = ReturnType<typeof createMovieFestivalPrizesControls>
 
 export class MovieFestivalPrizesForm extends FormEntity<MovieFestivalPrizesControl>{
 

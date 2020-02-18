@@ -24,6 +24,6 @@ export class OrganizationWidgetComponent implements OnInit {
 
   ngOnInit() {
     this.user$ = this.auth.user$;
-    this.organization$ = this.query.select('org');
+    this.organization$ = this.query.selectActive();
   }
 }

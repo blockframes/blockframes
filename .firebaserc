@@ -18,6 +18,7 @@
     "ci": "blockframes-ci",
     "max": "blockframes-max",
     "victor": "blockframes-victor",
-    "clelia": "blockframes-clelia"
+    "clelia": "blockframes-clelia",
+    "dajung": "blockframes-dajung"
   }
 }

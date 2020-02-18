@@ -14,23 +14,10 @@
   </mat-form-field>
   <!-- Key assets -->
   <h3> Key assets </h3>
-  <div formArrayName="keyAssets" *ngFor="let keyAssets of promotionalDescription.keyAssets.controls; let i = index">
-    <div class="full-width">
-      <mat-form-field appearance="outline" class="small-margin">
-        <mat-label>Key asset</mat-label>
-        <textarea matInput #synopsis [formControlName]="i" maxlength="500" placeholder="Key asset" type="string"></textarea>
-      </mat-form-field>
-      <button *ngIf="promotionalDescription.keyAssets.controls.length < 3" mat-icon-button color="primary" (click)="promotionalDescription.addKeyAsset()">
-        <mat-icon>add_circle</mat-icon>
-      </button>
-      <button mat-icon-button color="primary" (click)="promotionalDescription.removeKeyAsset(i)">
-        <mat-icon>delete_circle</mat-icon>
-      </button>
-    </div>
+  <div class="full-width">
+    <mat-form-field appearance="outline" class="small-margin">
+      <mat-label>Key asset</mat-label>
+      <textarea matInput #synopsis formControlName="keyAssets" maxlength="500" placeholder="Key asset" type="string"></textarea>
+    </mat-form-field>
   </div>
-  <ng-container *ngIf="promotionalDescription.keyAssets.controls.length === 0">
-    <button mat-icon-button color="primary" (click)="promotionalDescription.addKeyAsset()">
-      <mat-icon>add_circle</mat-icon>
-    </button>
-  </ng-container>
 </form>

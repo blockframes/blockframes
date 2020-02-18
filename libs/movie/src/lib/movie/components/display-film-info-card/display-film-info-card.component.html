@@ -32,9 +32,9 @@
     <span class="bf-dark-text">Release Date on Country of Origin</span>
     <span>{{ releaseDate }}</span>
   </li>
-  <li fxLayout="row wrap" fxLayout.lt-sm="column" *ngIf="main.languages">
-    <span class="bf-dark-text">{{main.languages.length <= 1 ? 'Original Language': 'Original Languages'}}</span>
-    <span *ngFor="let languages of main.languages; let isLast=last">
+  <li fxLayout="row wrap" fxLayout.lt-sm="column" *ngIf="main.originalLanguages">
+    <span class="bf-dark-text">{{main.originalLanguages.length <= 1 ? 'Original Language': 'Original Languages'}}</span>
+    <span *ngFor="let languages of main.originalLanguages; let isLast=last">
       {{ languages | translateSlug: 'LANGUAGES' }}{{isLast ? '' : ', '}}
     </span>
   </li>
@@ -45,7 +45,7 @@
     </span>
   </li>
   <li fxLayout="row wrap" *ngIf="versionInfo.dubbings.length">
-    <span class="bf-dark-text">Available {{main.languages.length <= 1 ? 'Dubbing': 'Dubbings'}}</span>
+    <span class="bf-dark-text">Available {{main.originalLanguages.length <= 1 ? 'Dubbing': 'Dubbings'}}</span>
     <span *ngFor="let dubbing of versionInfo.dubbings; let isLast=last">
       {{ dubbing | translateSlug: 'LANGUAGES'}}{{isLast ? '' : ', '}}
     </span>
@@ -54,7 +54,7 @@
     <span class="bf-dark-text">Budget</span>
     <span>{{budget.totalBudget}}</span>
   </li>
-  <ng-container *ngIf="salesInfo.theatricalRelease; else noRelease">
+  <ng-container *ngIf="hasTheatricalRelease(); else noRelease"> 
     <li fxLayout="row" fxLayout.lt-sm="column">
       <span class="bf-dark-text">Theatrical Release</span>
       <span>Yes</span>
@@ -66,8 +66,8 @@
       <span>No</span>
     </li>
   </ng-template>
-  <li fxLayout="row" fxLayout.lt-sm="column" *ngIf="salesInfo.europeanQualification">
-    <span class="bf-dark-text">{{salesInfo.europeanQualification.length <= 1 ? 'Quota': 'Quotas'}}</span>
+  <li fxLayout="row" fxLayout.lt-sm="column" *ngIf="hasEuropeanQualification()">
+    <span class="bf-dark-text">Quota</span>
     <span>European Qualification</span>
   </li>
   <li fxLayout="row" fxLayout.lt-sm="column" *ngIf="color">
@@ -78,7 +78,7 @@
     <span class="bf-dark-text">{{prizes.length <= 1 ? 'Festival Selection': 'Festival Selections'}}</span>
     <div class="prize-logo-container">
       <ng-container *ngFor="let prize of prizes">
-        <img *ngIf="prize.logo" [src]="prize.logo">
+        <img *ngIf="prize.logo" [imgRef]="prize.logo" alt="Prize logo" />
       </ng-container>
     </div>
     <span *ngFor="let prize of prizes">

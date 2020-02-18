@@ -1,0 +1,34 @@
+section {
+  width: 100%;
+  text-align: center;
+  article {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+.mat-button {
+  padding: 0;
+  margin: 0;
+}
+
+.cropper,
+.show {
+  height: 100%;
+}
+
+.croppedImage {
+  max-width: 500px;
+  max-height: 1000px;
+}
+
+.buttons {
+  mat-icon {
+    cursor: pointer;
+  }
+  padding: 20px;
+}
+
+caption {
+  width: 100%;
+}

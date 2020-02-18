@@ -1,0 +1,11 @@
+<figure>
+  <img [imgRef]="poster" placeholderAsset="Avatar_250.png" alt="Movie Poster"/>
+  <figcaption>
+    <h1>{{ title.international }}</h1>
+    <h4>{{ title.original }}</h4>
+    <h3>{{ director }}</h3>
+    <p>{{ countries }} - {{ date }}</p>
+  </figcaption>
+</figure>
+
+<ng-content select="movie-banner-actions"></ng-content>

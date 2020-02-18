@@ -1,25 +1,33 @@
 import { Injectable } from '@angular/core';
-import { Movie, createMovie, MovieSale } from './movie.model';
-import { PermissionsService, OrganizationQuery, Organization } from '@blockframes/organization';
-import { MovieStore, MovieState } from './movie.store';
-import { CollectionService, CollectionConfig } from 'akita-ng-fire';
-import { switchMap } from 'rxjs/operators';
-import { AngularFirestoreDocument } from '@angular/fire/firestore/document/document';
-import { AngularFirestoreCollection } from '@angular/fire/firestore/collection/collection';
-import objectHash from 'object-hash';
-import { firestore } from 'firebase';
+import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
+import {
+  CollectionConfig,
+  CollectionService,
+  WriteOptions,
+  awaitSyncQuery,
+  Query,
+  syncQuery
+} from 'akita-ng-fire';
+import { switchMap, tap } from 'rxjs/operators';
+import { createMovie, Movie, MovieAnalytics } from './movie.model';
+import { MovieState, MovieStore } from './movie.store';
+import { AuthQuery } from '@blockframes/auth';
+import { createImgRef } from '@blockframes/utils/image-uploader';
+import { cleanModel } from '@blockframes/utils/helpers';
+import { firestore } from 'firebase/app';
+import { PermissionsService } from '@blockframes/organization/permissions/+state/permissions.service';
+import { AngularFireFunctions } from '@angular/fire/functions';
+import { Observable } from 'rxjs';
+import { StoreStatus } from './movie.firestore';
 
-/**
- * @see #483
- * This method is used before pushing data on db
- * to prevent "Unsupported field value: undefined" errors.
- * Doing JSON.parse(JSON.stringify(data)) clones object and
- * removes undefined fields and empty arrays.
- * This methods also removes readonly settings on objects coming from Akita
- */
-export function cleanModel<T>(data: T): T {
-  return JSON.parse(JSON.stringify(data));
-}
+/** Query all the movies with their distributionDeals */
+const movieListWithDealsQuery = () => ({
+  path: 'movies',
+  queryFn: ref => ref.where('main.storeConfig.status', '==', StoreStatus.accepted),
+  distributionDeals: (movie: Movie) => ({
+    path: `movies/${movie.id}/distributionDeals`
+  })
+});
 
 // TODO#944 - refactor CRUD operations
 @Injectable({ providedIn: 'root' })
@@ -27,7 +35,9 @@ export function cleanModel<T>(data: T): T {
 export class MovieService extends CollectionService<MovieState> {
   constructor(
     private organizationQuery: OrganizationQuery,
+    private authQuery: AuthQuery,
     private permissionsService: PermissionsService,
+    private functions: AngularFireFunctions,
     store: MovieStore
   ) {
     super(store);
@@ -35,39 +45,49 @@ export class MovieService extends CollectionService<MovieState> {
 
   /** Gets every movieIds of the user active organization and sync them. */
   public syncOrgMovies() {
-    return this.organizationQuery.select('org').pipe(
+    return this.organizationQuery.selectActive().pipe(
       switchMap(org => this.syncManyDocs(org.movieIds))
-    )
+    );
   }
 
+  public syncMoviesWithDeals() {
+    return syncQuery.call(this, movieListWithDealsQuery());
+  }
+
+  onCreate(movie: Movie, { write }: WriteOptions) {
+    // When a movie is created, we also create a permissions document for it.
+    return this.permissionsService.addDocumentPermissions(movie, write as firestore.WriteBatch)
+  }
+
+  onUpdate(movie: Movie, { write }: WriteOptions) {
+    const movieRef = this.db.doc(`movies/${movie.id}`).ref;
+    write.update(movieRef, { '_meta.updatedBy': this.authQuery.userId });
+  }
+
+  /** Update deletedBy (_meta field of movie) with the current user and remove the movie. */
+  public async remove(movieId: string) {
+    const userId = this.authQuery.userId;
+    // We need to update the _meta field before remove to get the userId in the backend function: onMovieDeleteEvent
+    await this.db.doc(`movies/${movieId}`).update({ '_meta.deletedBy': userId });
+    return super.remove(movieId);
+  }
+
+  /** Add a partial or a full movie to the database. */
   public async addMovie(original: string, movie?: Movie): Promise<Movie> {
     const id = this.db.createId();
-    const organization = this.organizationQuery.getValue().org;
-    const organizationDoc = this.db.doc<Organization>(`orgs/${organization.id}`);
+    const userId = this.authQuery.userId;
 
     if (!movie) {
       // create empty movie
-      movie = createMovie({ id, main: { title: { original } } });
+      movie = createMovie({ id, main: { title: { original } }, _meta: { createdBy: userId } });
     } else {
       // we set an id for this new movie
-      movie = createMovie({ id, ...movie });
+      movie = createMovie({ ...movie, id, _meta: { createdBy: userId } });
     }
 
-    await this.db.firestore.runTransaction(async (tx: firebase.firestore.Transaction) => {
-      const organizationSnap = await tx.get(organizationDoc.ref);
-      const movieIds = organizationSnap.data().movieIds || [];
+    // Add movie document to the database
+    await this.add(cleanModel(movie));
 
-      // Create movie document and permissions
-      await this.permissionsService.createDocAndPermissions<Movie>(
-        cleanModel(movie),
-        organization,
-        tx
-      );
-
-      // Update the org movieIds
-      const nextMovieIds = [...movieIds, movie.id];
-      tx.update(organizationDoc.ref, { movieIds: nextMovieIds });
-    });
     return movie;
   }
 
@@ -76,64 +96,49 @@ export class MovieService extends CollectionService<MovieState> {
     if (movie.organization) delete movie.organization;
     if (movie.stakeholders) delete movie.stakeholders;
 
-    return this.db.doc<Movie>(`movies/${id}`).update(cleanModel(movie));
-  }
+    // transform { media: string } into { media: ImgRef }
+    if (!!movie.promotionalElements && !!movie.promotionalElements.promotionalElements) {
+      movie.promotionalElements.promotionalElements.forEach(el => {
+        if (typeof el.media === typeof 'string') {
+          el.media = createImgRef(el.media);
+        }
+      });
+    }
 
-  private movieDoc(movieId: string): AngularFirestoreDocument<Movie> {
-    return this.db.doc(`movies/${movieId}`);
-  }
-
-  /////////////////////////////
-  // CRUD DISTRIBUTION DEALS //
-  /////////////////////////////
-
-  /**
-   * 
-   * @param movieId 
-   */
-  private distributionDealsCollection(movieId: string): AngularFirestoreCollection<MovieSale> {
-    return this.movieDoc(movieId).collection('distributiondeals');
+    return this.update(id, cleanModel(movie));
   }
 
   /**
-   * 
-   * @param movieId 
-   * @param distributionDeal 
+   * Fetch a movie from its internal reference (example : AAA1)
+   * @param internalRef
    */
-  public addDistributionDeal(movieId: string, distributionDeal: MovieSale): Promise<void> {
-    // Create an id from MovieSale content.
-    // A same MovieSale document will always have the same hash to prevent multiple insertion of same deal
-    const dealId = objectHash(distributionDeal); 
-    return this.distributionDealsCollection(movieId).doc(dealId).set(distributionDeal);
+  // @TODO #1389 Use native akita-ng-fire functions
+  public async getFromInternalRef(internalRef: string): Promise<Movie> {
+    const movieSnapShot = await this.db
+      .collection('movies', ref => ref.where('main.internalRef', '==', internalRef))
+      .get().toPromise();
+
+    return movieSnapShot.docs.length ? createMovie(movieSnapShot.docs[0].data()) : undefined;
   }
+
+  /** Call a firebase function to get analytics specify to an array of movieIds.*/
+  public getMovieAnalytics(movieIds: string[]): Observable<MovieAnalytics[]> {
+    const f = this.functions.httpsCallable('getMovieAnalytics');
+    return f({ movieIds, daysPerRange: 28 });
+  }
+
 
   /**
-   * Checks if a distribution deal is already existing for a given movie and returns it.
-   * @param movieId 
-   * @param distributionDeal 
+   * @dev ADMIN method
+   * Fetch all movies for administration uses
    */
-  public async existingDistributionDeal(movieId: string, distributionDeal: MovieSale): Promise<MovieSale> {
-    const dealId = objectHash(distributionDeal); 
-    const distributionDealSnapshot = await this.distributionDealsCollection(movieId).doc(dealId).get().toPromise();
-    return distributionDealSnapshot.exists ? distributionDealSnapshot.data() as MovieSale : undefined;
+  // @TODO #1389 Use native akita-ng-fire functions
+  public async getAllMovies(): Promise<Movie[]> {
+    const movies = await this.db
+      .collection('movies')
+      .get().toPromise()
+
+    return movies.docs.map(m => createMovie(m.data())); // @todo #1832 use formatting method
   }
 
-  /**
-   * @param movieId 
-   */
-  public async getDistributionDeals(movieId: string): Promise<MovieSale[]> {
-    const deals = await this.distributionDealsCollection(movieId).get().toPromise();
-    return deals.docs.map(doc => {
-      const data = doc.data();
-      // Dates from firebase are Timestamps, we convert it to Dates.
-      if(data.rights.from instanceof firestore.Timestamp) {
-        data.rights.from = data.rights.from.toDate();
-      }
-
-      if(data.rights.to instanceof firestore.Timestamp) {
-        data.rights.to = data.rights.to.toDate();
-      }
-      return data as MovieSale;
-    })
-  }
 }

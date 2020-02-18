@@ -1,4 +1,4 @@
-import { NotificationDocument } from '@blockframes/notification/types';
+import { NotificationDocument } from './data/types';
 import { db } from './internals/firebase'
 
 /** Takes one or more notifications and add them on the notifications collection */

@@ -1,11 +1,14 @@
-import { Component, Input } from '@angular/core';
-import { Person } from '@blockframes/movie/movie/+state/movie.firestore';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Stakeholder } from '@blockframes/utils/common-interfaces/identity';
+import { ImgRef } from '@blockframes/utils';
+
 @Component({
   selector: 'catalog-production-informations',
   templateUrl: './production-informations.component.html',
-  styleUrls: ['./production-informations.component.scss']
+  styleUrls: ['./production-informations.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CatalogProductionInformationsComponent {
-  @Input() productionCompanies: Person[];
-  @Input() salesAgentDealLogo: string;
+  @Input() stakeholders: Stakeholder[];
+  @Input() salesAgentDealAvatar: ImgRef;
 }

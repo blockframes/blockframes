@@ -19,16 +19,21 @@ import { HomeComponent } from './home/home.component';
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireFunctionsModule } from '@angular/fire/functions';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { AngularFirePerformanceModule } from '@angular/fire/performance';
+import { AngularFireAuthModule } from '@angular/fire/auth';
+import { AngularFireStorageModule } from '@angular/fire/storage';
 
 // Libraries
-import { AuthModule } from '@blockframes/auth';
-import { UiFormModule, UploadModule, ToolbarModule } from '@blockframes/ui';
-import { OrganizationModule } from '@blockframes/organization';
-import { ProfileModule } from '@blockframes/account';
-import { AccountModule } from '@blockframes/account';
-import { WalletModule } from '@blockframes/ethers';
+import { ToolbarModule } from '@blockframes/ui';
 import { KeyManagerModule } from '@blockframes/ethers';
+import { EmailVerifyModule } from '@blockframes/auth';
+
+// Widgets
+import { ProfileWidgetModule, ProfileMenuModule } from '@blockframes/account';
 import { NotificationWidgetModule } from '@blockframes/notification';
+import { ThemeWidgetModule } from '@blockframes/ui/theme';
+import { WalletWidgetModule } from '@blockframes/ethers';
+import { OrganizationWidgetModule } from '@blockframes/organization';
 
 // Material
 import { MatBadgeModule } from '@angular/material/badge';
@@ -49,6 +54,10 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { AppGridComponent } from './app-grid/app-grid.component';
+
+// Sentry
+import { SentryModule } from '@blockframes/utils';
+import { sentryDsn } from '@env';
 
 @NgModule({
   declarations: [AppComponent, LayoutComponent, HomeComponent, AppGridComponent],
@@ -80,24 +89,31 @@ import { AppGridComponent } from './app-grid/app-grid.component';
     MatBadgeModule,
 
     // Libraries
-    AuthModule,
-    UploadModule,
-    UiFormModule,
-    OrganizationModule,
     ToolbarModule,
-    AccountModule,
-    ProfileModule,
-    WalletModule,
+    ProfileMenuModule,
     KeyManagerModule,
+    EmailVerifyModule,
+
+    // Widget
+    OrganizationWidgetModule,
+    ThemeWidgetModule,
     NotificationWidgetModule,
+    WalletWidgetModule,
+    ProfileWidgetModule,
 
     // Firebase
     AngularFireModule.initializeApp(environment.firebase),
     AngularFirestoreModule.enablePersistence(environment.persistenceSettings),
     AngularFireFunctionsModule,
+    AngularFirePerformanceModule,
+    AngularFireAuthModule,
+    AngularFireStorageModule,
+
+    // Analytics
+    sentryDsn ? SentryModule : [],
 
     // Akita
-    AkitaNgRouterStoreModule.forRoot(),
+    AkitaNgRouterStoreModule,
   ],
   providers: [],
   bootstrap: [AppComponent]

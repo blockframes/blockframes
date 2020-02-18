@@ -1,0 +1,11 @@
+<ng-container *ngIf="(stepData$ | async) as stepData">
+  <article class="page-data" fxLayout="column" fxLayoutAlign="center start">
+    <b class="mat-body-2" *ngIf="stepData.length">
+      Step {{ stepData.index }}/{{ stepData.length }}
+    </b>
+    <div fxLayout="row" fxLayoutAlign="start center" *ngIf="stepData.time">
+      <mat-icon svgIcon="access_time"></mat-icon>
+      <span class="mat-caption">{{ stepData.time }} min ≃</span>
+    </div>
+  </article>
+</ng-container>

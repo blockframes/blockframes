@@ -5,7 +5,7 @@
   "pluginsFile": "../../../dist/out-tsc/apps/delivery/delivery-e2e/src/plugins/index.js",
   "supportFile": false,
   "video": true,
-  "videosFolder": "../../../dist/out-tsc/apps/delivery/delivery-e2e/videos",
-  "screenshotsFolder": "../../../dist/out-tsc/apps/delivery/delivery-e2e/screenshots",
+  "videosFolder": "../../../dist/cypress/apps/delivery/delivery-e2e/videos",
+  "screenshotsFolder": "../../../dist/cypress/apps/delivery/delivery-e2e/screenshots",
   "chromeWebSecurity": false
 }

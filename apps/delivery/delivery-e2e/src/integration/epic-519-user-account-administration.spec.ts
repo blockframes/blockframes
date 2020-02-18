@@ -16,7 +16,7 @@ beforeEach(() => {
 });
 
 describe('story #529 - account creation', () => {
-  it('should let me create a user account and send me to the organization creation page', () => {
+  it.skip('should let me create a user account and send me to the organization creation page', () => {
     const p1: WelcomeViewPage = new WelcomeViewPage();
     const p2: LoginViewPage = p1.clickCallToAction();
 

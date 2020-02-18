@@ -1,0 +1,12 @@
+<section fxLayout="column" fxLayoutAlign="start center">
+  <article fxLayout="row" fxLayoutAlign="space-between start" class="full-width">
+    <div fxLayout="column" fxFlex.gt-sm="75">
+      <ng-content select="[title]"></ng-content>
+      <ng-content select="[subtitle]"></ng-content>
+      <ng-content select="[description]"></ng-content>
+    </div>
+  </article>
+  <article fxLayout="column" fxLayoutAlign="start center" class="full-width">
+      <ng-content select="[tunnel-form]"></ng-content>
+  </article>
+</section>

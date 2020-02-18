@@ -1,0 +1,30 @@
+@import 'mixins';
+
+footer {
+
+  section {
+    width: 100%;
+
+    article {
+      width: 100%;
+    }
+
+    .ac-logo {
+      width: 100px;
+      height: 36px;
+    }
+
+    img {
+      height: 40px;
+      margin-top: 50px;
+    }
+
+    .partner-header {
+      text-align: center;
+    }
+  }
+
+  section:last-child {
+    margin: 50px 0px;
+  }
+}

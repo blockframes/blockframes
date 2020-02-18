@@ -1,14 +1,6 @@
 <ng-container *ngIf="data">
   <span>internal ref: {{ data.internalRef }}</span>
   <span>ISAN number: {{ data.isan }}</span>
-  <!-- @todo #643 
-  check css / HTML:
-  A card is not supposed to have several content and title, ... 
-  Prefer regular section + material typography
-
-  Don't use mat-card-*** if you don't have the mat-card in the same HTML. 
-  This shows that you should use section/article instead.
-  -->
   <mat-card-header class="movie-card-header">
     <mat-card-title class="movie-card-meta-title" *ngIf="data.title">
       {{ data.title.original }}
@@ -19,7 +11,7 @@
       {{ data.title.international }}
     </mat-card-subtitle>
   </mat-card-header>
-  <img mat-card-image class="movie-poster" *ngIf="data.poster" [src]="data.poster">
+  <!-- <img mat-card-image class="movie-poster" *ngIf="data.poster" [imgRef]="data.poster" alt="movie poster" /> -->
   <mat-card-content *ngIf="data.directors.length" class="movie-card-section">
     <mat-card-title>Directors</mat-card-title>
     <mat-card-subtitle>
@@ -35,7 +27,7 @@
       <mat-card-title>Genres</mat-card-title>
       <mat-card-subtitle>
         <span *ngFor="let item of data.genres; let isLast=last">
-          {{ getLabelByCode('GENRES', item) }}{{ isLast ?'':',' }}
+          {{ item | translateSlug: 'GENRES' }}{{ isLast ?'':',' }}
         </span>
       </mat-card-subtitle>
     </ng-container>
@@ -43,15 +35,15 @@
       <mat-card-title>Origin Countries</mat-card-title>
       <mat-card-subtitle>
         <span *ngFor="let item of data.originCountries; let isLast=last">
-          {{ getLabelByCode('TERRITORIES', item) }}{{ isLast?'':',' }}
+          {{ item | translateSlug: 'TERRITORIES' }}{{ isLast?'':',' }}
         </span>
       </mat-card-subtitle>
     </ng-container>
-    <ng-container *ngIf="data.languages.length">
+    <ng-container *ngIf="data.originalLanguages.length">
       <mat-card-title>Languages</mat-card-title>
       <mat-card-subtitle>
-        <span *ngFor="let item of data.languages; let isLast=last">
-          {{ getLabelByCode('LANGUAGES', item) }}{{ isLast?'':',' }}
+        <span *ngFor="let item of data.originalLanguages; let isLast=last">
+          {{ item | translateSlug: 'LANGUAGES' }}{{ isLast?'':',' }}
         </span>
       </mat-card-subtitle>
     </ng-container>
@@ -59,7 +51,7 @@
       <mat-card-title>Status</mat-card-title>
       <mat-card-subtitle>
         <span>
-          {{ getLabelByCode('MOVIE_STATUS', data.status) }}
+          {{ data.status | translateSlug: 'MOVIE_STATUS' }}
         </span>
       </mat-card-subtitle>
     </ng-container>
@@ -70,18 +62,18 @@
       </mat-card-subtitle>
     </ng-container>
 
-    <ng-container *ngIf="data.length">
-      <mat-card-title>Length</mat-card-title>
+    <ng-container *ngIf="data.totalRunTime">
+      <mat-card-title>Total Run Time</mat-card-title>
       <mat-card-subtitle>
-        <p>{{ data.length }} min</p>
+        <p>{{ data.totalRunTime }} min</p>
       </mat-card-subtitle>
     </ng-container>
 
-    <ng-container *ngIf="data.productionCompanies.length">
+    <ng-container *ngIf="data.stakeholders.executiveProducer.length">
       <mat-card-title>Production Companies</mat-card-title>
       <mat-card-subtitle>
-        <span *ngFor="let item of data.productionCompanies; let isLast=last">
-          {{ item.firstName }} {{ isLast? '':',' }}
+        <span *ngFor="let item of data.stakeholders.executiveProducer; let isLast=last">
+          {{ item.displayName }} {{ isLast? '':',' }}
         </span>
       </mat-card-subtitle>
     </ng-container>

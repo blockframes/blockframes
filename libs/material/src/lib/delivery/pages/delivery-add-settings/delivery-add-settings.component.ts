@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
 import { ActionPickerListItem } from '@blockframes/ui';
 import { DeliveryOption, DeliveryQuery, DeliveryService, DeliveryStore } from '../../+state';
-import { TemplateQuery } from '../../../template/+state';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { MovieQuery } from '@blockframes/movie';
+import { TemplateQuery } from '../../../template/+state/template.query';
 
 /**
  * Page for the flow: "create a delivery"
@@ -36,20 +36,22 @@ export class DeliveryAddSettingsComponent {
     private templateQuery: TemplateQuery,
     private movieQuery: MovieQuery,
     private router: Router,
-    private store: DeliveryStore
+    private store: DeliveryStore,
+    private route: ActivatedRoute
   ) {}
 
   public picked(options: DeliveryOption[]) {
     this.store.updateWizard({ options });
     this.options = options;
   }
-  //TODO: remove dead code from delivery-add-complete
+
+  /** Generate the delivery with all previously selected settings and navigate on it. */
   public async onCompleteFlow() {
     const { wizard } = this.query;
     const movieId = this.movieQuery.getActiveId();
     const templateId = this.templateQuery.getActiveId();
     const deliveryId = await this.service.addDeliveryFromWizard(wizard, movieId, templateId);
-    this.store.setActive(deliveryId);
-    return this.router.navigate([`/layout/o/delivery/${movieId}/${deliveryId}/list`]);
+
+    return this.router.navigate([`../../../${movieId}/${deliveryId}`], {relativeTo: this.route})
   }
 }

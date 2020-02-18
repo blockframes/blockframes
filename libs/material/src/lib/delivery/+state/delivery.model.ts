@@ -1,8 +1,8 @@
-import { staticModels } from '@blockframes/movie';
+import { staticModels } from '@blockframes/utils/static-model';
 import { DeliveryStatus, MGDeadlineRaw, DeliveryDocument, DeliveryDocumentWithDates, StepDocumentWithDate } from './delivery.firestore';
-import { Stakeholder } from '@blockframes/organization';
+import { Stakeholder } from '../stakeholder/+state/stakeholder.model';
 
-export { DeliveryStatus, CurrencyCode } from './delivery.firestore';
+export { DeliveryStatus } from './delivery.firestore';
 export const Currencies = ( staticModels)['MOVIE_CURRENCIES'];
 
 export type Step = StepDocumentWithDate;
@@ -40,4 +40,20 @@ export function createDelivery(params: Partial<Delivery>) {
     mustBeSigned: params.mustBeSigned || false,
     ...params
   } as Delivery;
+}
+
+export function timestampObjectsToDate(docs: any[] = []) {
+  return docs.map(doc => doc.date ? { ...doc, date: doc.date.toDate() } : doc);
+}
+
+/** Takes a DeliveryDB (dates in Timestamp) and returns a Delivery with dates in type Date */
+export function createDeliveryFromFirestore(delivery: DeliveryWithTimestamps): Delivery {
+  const mgDeadlines = delivery.mgDeadlines || [];
+
+  return {
+    ...delivery,
+    dueDate: delivery.dueDate ? delivery.dueDate.toDate() : null,
+    steps: timestampObjectsToDate(delivery.steps),
+    mgDeadlines: timestampObjectsToDate(mgDeadlines)
+  };
 }

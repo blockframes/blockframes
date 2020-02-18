@@ -16,7 +16,6 @@
       ISAN number is <strong>required</strong>
     </mat-error>
   </mat-form-field>
-  <!-- @todo #643 Use articles and sections.-->
   <div formGroupName="title">
     <!-- TITLES -->
     <h3> Titles </h3>
@@ -61,22 +60,9 @@
     </button>
   </ng-container>
   <!-- POSTER -->
-  <h3> Poster </h3>
-  <mat-card class="movie-poster-thumbnail mat-elevation-z0">
-    <ng-container *ngIf="main.get('poster').value; else fileUpload">
-      <img mat-card-image [src]="main.get('poster').value">
-      <mat-card-actions>
-        <button mat-raised-button color="warn" (click)="main.get('poster').patchValue('')">
-          <mat-icon>delete_circle</mat-icon> Remove
-        </button>
-      </mat-card-actions>
-    </ng-container>
-    <ng-template #fileUpload>
-      <file-upload accept="['.jpg', '.png']" path='test' [types]="['image/jpeg', 'image/png']"
-        [uploadOnFirestore]="true" (storeUploaded)="main.get('poster').patchValue($event)">
-      </file-upload>
-    </ng-template>
-  </mat-card>
+  <!-- <h3> Poster </h3>
+  <drop-cropper [ratio]="2/3" storagePath="poster" formControlName="poster"></drop-cropper>
+  -->
   <!-- PRODUCTION -->
   <h3> Production </h3>
   <mat-form-field appearance="outline" class="full-width">
@@ -115,7 +101,7 @@
   <!-- LANGUAGES -->
   <h3> Languages </h3>
   <mat-form-field appearance="outline" class="full-width">
-    <mat-select formControlName="languages" placeholder="Film Languages" multiple>
+    <mat-select formControlName="originalLanguages" placeholder="Film Languages" multiple>
       <mat-option>
         <ngx-mat-select-search [formControl]="languagesFilterCtrl" [placeholderLabel]="'Search...'"
           [noEntriesFoundLabel]="'no matching language found'"></ngx-mat-select-search>
@@ -142,35 +128,36 @@
       type="string"></textarea>
     <mat-hint align="end">{{ main.shortSynopsis.value?.length }} / 500</mat-hint>
   </mat-form-field>
-  <!-- LENGTH -->
-  <h3> Length </h3>
+  <!-- TOTAL RUN TIME -->
+  <h3> Total Run Time </h3>
   <mat-form-field appearance="outline" class="full-width">
-    <mat-label>Length</mat-label>
-    <input matInput type="number" placeholder="Length" formControlName="length" />
-    <mat-error *ngIf="main.get('length').hasError('required')">
-      Length is <strong>required</strong>
+    <mat-label>Total Run Time</mat-label>
+    <input matInput type="number" placeholder="Total Run Time" formControlName="totalRunTime" />
+    <mat-error *ngIf="main.get('totalRunTime').hasError('required')">
+        Total Run Time is <strong>required</strong>
     </mat-error>
   </mat-form-field>
-  <!-- PRODUCTION COMPANIES -->
+  <!-- PRODUCTION COMPANIES 
   <h3> Production companies </h3>
-  <div formArrayName="productionCompanies"
-    *ngFor="let productionCompany of main.productionCompanies.controls; let i = index">
+  <div formArrayName="stakeholders"
+    *ngFor="let stakeholder of main.stakeholders.controls; let i = index">
     <div [formGroupName]="i" class="full-width">
       <mat-form-field appearance="outline" class="small-margin">
-        <mat-label>Company name</mat-label>
-        <input matInput formControlName="firstName" placeholder="Company name">
+        <mat-label>Stakeholder</mat-label>
+        <input matInput formControlName="displayName" placeholder="Company name">
       </mat-form-field>
-      <button mat-icon-button color="primary" (click)="main.addProductionCompany()">
+      <button mat-icon-button color="primary" (click)="main.addStakeholder()">
         <mat-icon>add_circle</mat-icon>
       </button>
-      <button mat-icon-button color="primary" (click)="main.removeProductionCompany(i)">
+      <button mat-icon-button color="primary" (click)="main.removeStakeholder(i)">
         <mat-icon>delete_circle</mat-icon>
       </button>
     </div>
   </div>
-  <ng-container *ngIf="main.productionCompanies.controls.length === 0">
-    <button mat-icon-button color="primary" (click)="main.addProductionCompany()">
+  <ng-container *ngIf="main.stakeholders.controls.length === 0">
+    <button mat-icon-button color="primary" (click)="main.addStakeholder()">
       <mat-icon>add_circle</mat-icon>
     </button>
   </ng-container>
+  -->
 </form>

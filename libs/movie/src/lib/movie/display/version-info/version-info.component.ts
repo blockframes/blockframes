@@ -1,6 +1,6 @@
+import { MovieLanguageSpecification } from './../../+state/movie.firestore';
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import { MovieVersionInfo, createMovieVersionInfo } from '../../+state';
-import { getLabelByCode } from '../../static-model/staticModels';
+import { createMovieLanguageSpecification } from '@blockframes/movie/movie/+state/movie.model';
 
 @Component({
   selector: '[info] movie-display-version-info',
@@ -10,10 +10,9 @@ import { getLabelByCode } from '../../static-model/staticModels';
 })
 export class MovieDisplayVersionInfoComponent {
 
-  public data: MovieVersionInfo;
-  public getLabelByCode = getLabelByCode;
-  @Input() set info(versionInfo: Partial<MovieVersionInfo>) {
-    this.data = createMovieVersionInfo(versionInfo);
-  }
+  public data: MovieLanguageSpecification;
 
+  @Input() set info(versionInfo: Partial<MovieLanguageSpecification>) {
+    this.data = createMovieLanguageSpecification(versionInfo);
+  }
 }

@@ -1,23 +1,29 @@
 import { FormEntity, FormList, yearValidators } from '@blockframes/utils';
-import { MovieMain, Credit, createMovieMain, createCredit, Movie, createTitle } from '../../+state';
+import { MovieMain, Credit, createMovieMain, Movie, MovieStakeholders, createMovieStakeholders, createTitle, createStoreConfig } from '../../+state';
 import { Validators, FormControl } from '@angular/forms';
+import { createCredit, Stakeholder, createStakeholder } from '@blockframes/utils/common-interfaces/identity';
+import { FormStaticValue, FormStaticArray } from '@blockframes/utils/form';
+
+// CREDIT
 
 function createCreditFormControl(credit?: Partial<Credit>) {
-  const { firstName, lastName, creditRole } = createCredit(credit);
+  const { firstName, lastName, role } = createCredit(credit);
   return {
     firstName: new FormControl(firstName),
     lastName: new FormControl(lastName),
-    creditRole: new FormControl(creditRole),
+    role: new FormControl(role),
   }
 }
 
 export type CreditFormControl = ReturnType<typeof createCreditFormControl>;
 
 export class MovieCreditForm extends FormEntity<CreditFormControl> {
-  constructor(credit?: Credit) {
+  constructor(credit?: Partial<Credit>) {
     super(createCreditFormControl(credit));
   }
 }
+
+// DIRECTOR
 
 export class DirectorForm extends FormEntity<DirectorFormControl> {
   constructor(director?: Partial<Credit>) {
@@ -26,30 +32,57 @@ export class DirectorForm extends FormEntity<DirectorFormControl> {
 }
 
 function createDirectorFormControl(director?: Partial<Credit>) {
-  const { firstName, lastName } = createCredit(director);
+  const { firstName, lastName, shortBiography } = createCredit(director);
   return {
-    firstName: new FormControl(firstName),
-    lastName: new FormControl(lastName),
+    firstName: new FormControl(firstName, Validators.required),
+    lastName: new FormControl(lastName, Validators.required),
+    shortBiography: new FormControl(shortBiography)
   }
 }
 
 type DirectorFormControl = ReturnType<typeof createDirectorFormControl>;
 
-export class ProductionCompagnyForm extends FormEntity<ProductionCompagnyControl> {
-  constructor(compagny?: Partial<Credit>) {
-    super(createProductionCompagnyControl(compagny))
+// STAKEHOLDERS
+
+export class StakeholderForm extends FormEntity<StakeholderControl, Stakeholder> {
+  constructor(stakeholder?: Partial<Stakeholder>) {
+    super(createStakeholderControl(stakeholder))
   }
 }
 
-function createProductionCompagnyControl(compagny?: Partial<Credit>) {
-  const { firstName } = createCredit(compagny);
+function createStakeholderControl(stakeholder?: Partial<Stakeholder>) {
+  const { displayName, countries } = createStakeholder(stakeholder);
   return {
-    firstName: new FormControl(firstName),
+    displayName: new FormControl(displayName),
+    countries: FormList.factory(countries, e => new FormStaticValue(e, 'TERRITORIES'))
   }
 }
 
-type ProductionCompagnyControl = ReturnType<typeof createProductionCompagnyControl>;
+type StakeholderControl = ReturnType<typeof createStakeholderControl>;
 
+
+// STAKEHOLDERS MAP
+export class StakeholderMapForm extends FormEntity<StakeholderMapControl> {
+  constructor(stakeholders?: Partial<MovieStakeholders>) {
+    super(createStakeholderMapControl(stakeholders));
+  }
+}
+
+function createStakeholderMapControl(stakeholders?: Partial<MovieStakeholders>): StakeholderMapControl {
+  const entity = createMovieStakeholders(stakeholders);
+  const control = {};
+  for (const key in entity) {
+    control[key] = FormList.factory(entity[key], e => new StakeholderForm(e))
+  };
+  return control as StakeholderMapControl;
+}
+
+type StakeholderMapControl = {
+  [key in keyof MovieStakeholders]: FormList<Stakeholder, StakeholderForm>
+};
+
+
+// TITLE
 
 export class TitleForm extends FormEntity<TitleFormControl> {
   constructor(title?: Movie['main']['title']) {
@@ -61,11 +94,29 @@ function createTitleFormControl(title?: Partial<Movie['main']['title']>) {
   const { original, international } = createTitle(title);
   return {
     original: new FormControl(original),
-    international: new FormControl(international),
+    international: new FormControl(international, Validators.required),
   }
 }
 
 type TitleFormControl = ReturnType<typeof createTitleFormControl>;
+
+// STORE CONFIG
+
+export class StoreConfigForm extends FormEntity<StoreConfigControl> {
+  constructor(storeConfig?: Partial<Movie['main']['storeConfig']>) {
+    super(createStoreConfigFormControl(storeConfig));
+  }
+}
+
+function createStoreConfigFormControl(storeConfig?: Partial<Movie['main']['storeConfig']>) {
+  const { status, storeType } = createStoreConfig(storeConfig);
+  return {
+    status: new FormControl(status),
+    storeType: new FormControl(storeType),
+  }
+}
+
+type StoreConfigControl = ReturnType<typeof createStoreConfigFormControl>;
 
 function createMovieMainControls(main : Partial<MovieMain> = {}) {
   const entity = createMovieMain(main);
@@ -74,23 +125,45 @@ function createMovieMainControls(main : Partial<MovieMain> = {}) {
     isan: new FormControl(entity.isan),
     title: new TitleForm(entity.title),
     directors: FormList.factory(entity.directors, el => new DirectorForm(el)),
-    poster: new FormControl(entity.poster),
-    productionYear: new FormControl(entity.productionYear, yearValidators),
-    genres: new FormControl(entity.genres),
-    originCountries: new FormControl(entity.originCountries),
-    languages: new FormControl(entity.languages),
-    status: new FormControl(entity.status , [Validators.required]),
-    length: new FormControl(entity.length),
+    productionYear: new FormControl(entity.productionYear, [Validators.required, yearValidators]),
+    genres: new FormStaticArray(entity.genres, 'GENRES', [Validators.required]),
+    originCountries: FormList.factory(entity.originCountries, el => new FormStaticValue(el, 'TERRITORIES', [Validators.required])),
+    originalLanguages: FormList.factory(entity.originalLanguages, el => new FormStaticValue(el, 'LANGUAGES')),
+    status: new FormControl(entity.status),
+    totalRunTime: new FormControl(entity.totalRunTime),
     shortSynopsis: new FormControl(entity.shortSynopsis, [Validators.maxLength(500)] ),
-    productionCompanies: FormList.factory(entity.productionCompanies, el => new ProductionCompagnyForm(el)),
+    stakeholders: new StakeholderMapForm(entity.stakeholders),
+    workType: new FormControl(entity.workType),
+    storeConfig: new StoreConfigForm(entity.storeConfig),
+    customGenres: FormList.factory(entity.customGenres),
   }
 }
 
-type MovieMainControl = ReturnType<typeof createMovieMainControls>
+export type MovieMainControl = ReturnType<typeof createMovieMainControls>
 
 export class MovieMainForm extends FormEntity<MovieMainControl>{
   constructor(main: MovieMain) {
     super(createMovieMainControls(main));
+  }
+
+  public get genres() {
+    return this.get('genres');
+  }
+
+  public get customGenres() {
+    return this.get('customGenres');
+  }
+
+  get originCountries() {
+    return this.get('originCountries');
+  }
+
+  get originalLanguages() {
+    return this.get('originalLanguages');
+  }
+
+  get storeConfig() {
+    return this.get('storeConfig');
   }
 
   get title() {
@@ -101,8 +174,8 @@ export class MovieMainForm extends FormEntity<MovieMainControl>{
     return this.get('directors');
   }
 
-  get productionCompanies() {
-    return this.get('productionCompanies');
+  get stakeholders() {
+    return this.get('stakeholders');
   }
 
   get shortSynopsis() {
@@ -119,12 +192,4 @@ export class MovieMainForm extends FormEntity<MovieMainControl>{
     this.directors.removeAt(i);
   }
 
-  public addProductionCompany(): void {
-    const credit = new ProductionCompagnyForm();
-    this.productionCompanies.push(credit);
-  }
-
-  public removeProductionCompany(i: number): void {
-    this.productionCompanies.removeAt(i);
-  }
 }

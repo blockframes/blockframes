@@ -5,13 +5,15 @@ import {
   Input,
   Output,
   ViewChild,
-  HostBinding
+  HostBinding,
+  OnInit
 } from '@angular/core';
 import { Material, getMaterialStep } from '../../../material/+state';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { Delivery } from '../../+state';
+import { Delivery, DeliveryQuery } from '../../+state';
 import { SelectionModel } from '@angular/cdk/collections';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'delivery-material-list',
@@ -19,19 +21,15 @@ import { SelectionModel } from '@angular/cdk/collections';
   styleUrls: ['./delivery-material-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DeliveryMaterialListComponent {
+export class DeliveryMaterialListComponent implements OnInit {
   @HostBinding('attr.page-id') pageId = 'delivery-material-list';
-  @Input() delivery: Delivery;
 
   @Input()
   set materials(materials: Material[]) {
-    // Add step with the stepId in materials
-    materials = materials.map(material => getMaterialStep(material, this.delivery));
+    materials = materials.map(material => getMaterialStep(material, this.deliveryQuery.getActive()));
     this.dataSource = new MatTableDataSource(materials);
     this.dataSource.sort = this.sort;
   }
-
-  @Input() displayedColumns: string[]
 
   @Output() editing = new EventEmitter<string>();
   @Output() selectedMaterial = new EventEmitter<Material>();
@@ -40,8 +38,22 @@ export class DeliveryMaterialListComponent {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
 
   public dataSource: MatTableDataSource<Material>;
-
   public selection = new SelectionModel<Material>(true, []);
+  public delivery$: Observable<Delivery>;
+  public displayedColumns: string[] = this.setDisplayedColumns();
+
+  constructor(private deliveryQuery: DeliveryQuery) {}
+
+  ngOnInit() {
+    this.delivery$ = this.deliveryQuery.selectActive();
+  }
+
+  /* Define an array of columns to be displayed in the list depending on delivery settings **/
+  public setDisplayedColumns(): string[] {
+    return this.deliveryQuery.getActive().mustChargeMaterials
+      ? ['select', 'value', 'description', 'step', 'category', 'price', 'isOrdered', 'isPaid', 'status', 'action']
+      : ['select', 'value', 'description', 'step', 'category', 'status', 'action'];
+  }
 
   public selectMaterial(material: Material) {
     this.selectedMaterial.emit(material);
