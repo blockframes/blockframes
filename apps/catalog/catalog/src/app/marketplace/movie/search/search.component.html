@@ -216,7 +216,7 @@
   <!-- List || card of result -->
   <article>
     <ng-container *ngIf="(movieSearchResults$ | async) as movies">
-      <div fxLayout="row wrap" fxLayoutGap="30px" fxLayout.lt-md="column" fxLayoutAlign.lt-md="center center">
+      <div fxLayout="row wrap" fxLayoutGap="20px" fxLayout.lt-md="column" fxLayoutAlign.lt-md="center center">
         <ng-container *ngFor="let movie of movies">
           <movie-card [movie]="movie" [link]="['/c/o/marketplace',  movie.id]" *ngIf="!listView">
             <ng-container movieInformation>

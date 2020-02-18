@@ -3,12 +3,12 @@
 }
 
 img {
-  height: 230px;
+  height: 300px;
   object-fit: cover;
 }
 
-.img-container img {
-  border-radius: 10px 10px 0 0;
+mat-card-content {
+  height: 100px;
 }
 
 mat-chip {
