@@ -44,7 +44,7 @@ export class IdentityComponent {
         name: this.form.get('name').value,
         surname: this.form.get('surname').value,
       });
-      this.router.navigateByUrl('/');
+      this.router.navigate(['/c']);
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 5000 });
     }

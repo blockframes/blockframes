@@ -1,11 +1,8 @@
 <section fxLayout="column" fxLayoutAlign="center center">
-  <article fxLayout="row" fxLayoutAlign="center center" fxLayout.lt-md="column">
-    <img src="/assets/images/dark-rocket.png">
+  <h1>Join your organization</h1>
+  <img asset="join_orga.svg" alt="Join Organization Illustration"/>
+  <mat-card>
     <form [formGroup]="form">
-      <h2>Your identity</h2>
-      <p>
-        Please fill out the form to connect.
-      </p>
       <mat-form-field appearance="outline">
         <mat-label>First name</mat-label>
         <input matInput type="text" placeholder="First name" formControlName="name" required />
@@ -33,11 +30,11 @@
       </ng-container>
       <password-confirm formControlName="newPassword"></password-confirm>
       <auth-accept-conditions (termsOfUseChecked)="checkTermsOfUse($event)">
-        <ng-template conditions>
+        <ng-template authConditions>
           <auth-terms-conditions></auth-terms-conditions>
         </ng-template>
       </auth-accept-conditions>
     </form>
-  </article>
-  <button (click)="update()" type="submit" mat-flat-button color="accent" [disabled]="!isTermsChecked">Next</button>
+  </mat-card>
+  <button (click)="update()" type="submit" mat-flat-button color="accent" [disabled]="!isTermsChecked">Sign up</button>
 </section>
