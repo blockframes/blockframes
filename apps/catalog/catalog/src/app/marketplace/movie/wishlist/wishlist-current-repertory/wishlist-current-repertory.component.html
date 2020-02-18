@@ -1,10 +1,9 @@
-<h4 *ngIf="!isCurrent">Submitted on {{ date | date: 'EEEE, MMMM d, y' }}</h4>
 <table mat-table [dataSource]="dataSource">
   <!-- Movie -->
   <ng-container matColumnDef="movie">
     <th mat-header-cell *matHeaderCellDef>International title</th>
-    <td fxLayout="row" fxLayoutAlign="start center" mat-cell *matCellDef="let element" class="bf-strong" matRipple>
-      <span>{{ element.main.title.international | titlecase }}</span>
+    <td mat-cell *matCellDef="let element" class="bf-strong">
+      {{ element.main.title.international | titlecase }}
     </td>
   </ng-container>
 
@@ -44,11 +43,11 @@
   </ng-container>
 
   <!-- Action -->
-  <ng-container *ngIf="isCurrent" matColumnDef="delete">
+  <ng-container matColumnDef="delete">
     <th mat-header-cell *matHeaderCellDef></th>
     <td mat-cell *matCellDef="let element">
       <button mat-icon-button (click)="remove(element, $event)">
-        <mat-icon>clear</mat-icon>
+        <mat-icon svgIcon="trash"></mat-icon>
       </button>
     </td>
   </ng-container>
