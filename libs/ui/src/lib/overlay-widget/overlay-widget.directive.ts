@@ -1,7 +1,5 @@
 import { Directive, Input, HostListener, ElementRef } from '@angular/core';
 import { OverlayWidgetComponent } from './overlay-widget.component';
-import { FocusMonitor } from '@angular/cdk/a11y';
-import { Subscription } from 'rxjs';
 
 // OVERLAY TRIGGERED ON CLICK
 @Directive({ selector: "button[widgetTarget]" })
