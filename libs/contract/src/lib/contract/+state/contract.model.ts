@@ -54,6 +54,7 @@ export function createContract(params: Partial<Contract> = {}): Contract {
   };
 }
 
+// @todo(#1887) Move this fatory function into version.model
 export function createContractVersion(params: Partial<ContractVersion> = {}): ContractVersion {
   return {
     id: params.id || '1',
