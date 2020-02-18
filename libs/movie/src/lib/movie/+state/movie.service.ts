@@ -13,23 +13,12 @@ import { createMovie, Movie, MovieAnalytics } from './movie.model';
 import { MovieState, MovieStore } from './movie.store';
 import { AuthQuery } from '@blockframes/auth';
 import { createImgRef } from '@blockframes/utils/image-uploader';
-import { ContractQuery } from '@blockframes/contract/contract/+state/contract.query';
 import { cleanModel } from '@blockframes/utils/helpers';
 import { firestore } from 'firebase/app';
 import { PermissionsService } from '@blockframes/organization/permissions/+state/permissions.service';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { Observable } from 'rxjs';
 import { StoreStatus } from './movie.firestore';
-
-/** Query movies from the contract with distributions deals from the last version. */
-const movieListContractQuery = (contractId: string, movieIds: string[]): Query<Movie[]> => ({
-  path: 'movies',
-  queryFn: ref => ref.where('id', 'in', movieIds),
-  distributionDeals: (movie: Movie) => ({
-    path: `movies/${movie.id}/distributionDeals`,
-    queryFn: ref => ref.where('contractId', '==', contractId)
-  })
-});
 
 /** Query all the movies with their distributionDeals */
 const movieListWithDealsQuery = () => ({
@@ -46,7 +35,6 @@ const movieListWithDealsQuery = () => ({
 export class MovieService extends CollectionService<MovieState> {
   constructor(
     private organizationQuery: OrganizationQuery,
-    private contractQuery: ContractQuery,
     private authQuery: AuthQuery,
     private permissionsService: PermissionsService,
     private functions: AngularFireFunctions,
@@ -59,21 +47,6 @@ export class MovieService extends CollectionService<MovieState> {
   public syncOrgMovies() {
     return this.organizationQuery.selectActive().pipe(
       switchMap(org => this.syncManyDocs(org.movieIds))
-    );
-  }
-
-  /** Gets every movies Id from contract and sync them if they belong to active organization. */
-  public syncContractMovies() {
-    return this.contractQuery.selectActive().pipe(
-      // Reset the store everytime the movieId changes.
-      tap(_ => this.store.reset()),
-      switchMap(contract => {
-        // Filter movieIds before the query to relieve it.
-        const organizationMovieIds = this.organizationQuery.getActive().movieIds;
-        const movieIds = contract.titleIds.filter(titleId => organizationMovieIds.includes(titleId));
-
-        return awaitSyncQuery.call(this, movieListContractQuery(contract.id, movieIds))
-      })
     );
   }
 
