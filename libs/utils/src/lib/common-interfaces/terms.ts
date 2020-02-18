@@ -140,7 +140,7 @@ export function termToPrettyDate(term: Terms, type: 'start' | 'end' = 'start'): 
       if (!term.start || isNaN(term.start.getTime())) {
         return term.approxStart || noDate;
       } else if (term.start) {
-        return formatDate(term.start, 'yyyy-MM-dd', 'en-US');
+        return term.start.toLocaleDateString();
       } else {
         return noDate;
       }
@@ -149,7 +149,7 @@ export function termToPrettyDate(term: Terms, type: 'start' | 'end' = 'start'): 
       if (!term.end || isNaN(term.end.getTime())) {
         return term.approxEnd || noDate;
       } else if (term.end) {
-        return formatDate(term.end, 'yyyy-MM-dd', 'en-US');
+        return term.end.toLocaleDateString();
       } else {
         return noDate;
       }

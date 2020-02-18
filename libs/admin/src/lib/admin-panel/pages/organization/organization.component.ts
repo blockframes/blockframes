@@ -32,7 +32,7 @@ export class OrganizationComponent implements OnInit {
 
     this.statuses = Object.keys(OrganizationStatus);
     this.organizationStatus = OrganizationStatus;
-    this.cdRef.detectChanges();
+    this.cdRef.markForCheck();
   }
 
   public async update() {

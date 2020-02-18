@@ -37,7 +37,7 @@ export class MovieComponent implements OnInit {
     this.storeType = StoreType;
     this.storeStatuses = Object.keys(StoreStatus);
     this.storeStatus = StoreStatus;
-    this.cdRef.detectChanges();
+    this.cdRef.markForCheck();
   }
 
   public async update() {

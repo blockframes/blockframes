@@ -8,6 +8,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { SpreadsheetImportError, ContractsImportState } from '../view-extracted-elements/view-extracted-elements.component';
 import { ViewImportErrorsComponent } from '../view-import-errors/view-import-errors.component';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
+import { sortingDataAccessor } from '@blockframes/utils/table';
 
 const hasImportErrors = (importState: ContractsImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -52,7 +53,7 @@ export class TableExtractedContractsComponent implements OnInit {
     // Mat table setup
     this.rows.paginator = this.paginator;
     this.rows.filterPredicate = this.filterPredicate;
-    this.rows.sortingDataAccessor = this.sortingDataAccessor;
+    this.rows.sortingDataAccessor = sortingDataAccessor;
     this.rows.sort = this.sort;
   }
 
@@ -165,17 +166,6 @@ export class TableExtractedContractsComponent implements OnInit {
       return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
     }
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row`;
-  }
-
-  /**
-   * Allow to sort nested object
-   */
-  sortingDataAccessor(item, property) {
-    if (property.includes('.')) {
-      return property.split('.')
-        .reduce((object, key) => object[key], item);
-    }
-    return item[property];
   }
 
   /**

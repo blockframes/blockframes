@@ -35,7 +35,7 @@ export class DistributionDealComponent implements OnInit {
 
     this.distributionDealStatus = DistributionDealStatus;
     this.statuses = Object.keys(DistributionDealStatus);
-    this.cdRef.detectChanges();
+    this.cdRef.markForCheck();
   }
 
   public async update() {

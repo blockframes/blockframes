@@ -11,6 +11,7 @@ import { ViewImportErrorsComponent } from '../view-import-errors/view-import-err
 import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state/distribution-deal.service';
 import { cleanModel } from '@blockframes/utils/helpers';
 import { termToPrettyDate } from '@blockframes/utils/common-interfaces/terms';
+import { sortingDataAccessor } from '@blockframes/utils/table';
 
 const hasImportErrors = (importState: DealsImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -56,7 +57,7 @@ export class TableExtractedDealsComponent implements OnInit {
     // Mat table setup
     this.rows.paginator = this.paginator;
     this.rows.filterPredicate = this.filterPredicate;
-    this.rows.sortingDataAccessor = this.sortingDataAccessor;
+    this.rows.sortingDataAccessor = sortingDataAccessor;
     this.rows.sort = this.sort;
   }
 
@@ -160,17 +161,6 @@ export class TableExtractedDealsComponent implements OnInit {
       return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
     }
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row`;
-  }
-
-  /**
-   * Allow to sort nested object
-   */
-  sortingDataAccessor(item, property) {
-    if (property.includes('.')) {
-      return property.split('.')
-        .reduce((object, key) => object[key], item);
-    }
-    return item[property];
   }
 
   /**

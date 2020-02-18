@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { getValue } from '@blockframes/utils/helpers';
 import { DistributionDealService, DistributionDealWithMovieId, createDistributionDealWithMovieId, formatDistributionDeal } from '@blockframes/movie/distribution-deals';
 import { termToPrettyDate } from '@blockframes/utils/common-interfaces/terms';
@@ -35,6 +35,7 @@ export class DistributionDealsComponent implements OnInit {
   constructor(
     private distributionDealService: DistributionDealService,
     private route: ActivatedRoute,
+    private cdRef: ChangeDetectorRef,
   ) { }
 
   async ngOnInit() {
@@ -42,23 +43,26 @@ export class DistributionDealsComponent implements OnInit {
     this.movieId = this.route.snapshot.paramMap.get('movieId');
 
     if (this.movieId) {
-      this.rows = (await this.distributionDealService.getMovieDistributionDeals(this.movieId))
-        .map(deal => {
-          const d: DistributionDealWithMovieId = createDistributionDealWithMovieId({
-            deal: formatDistributionDeal(deal),
-            movieId: this.movieId,
-          })
-
-          const row = { ...d } as any;
-          row.dealLink = {
-            id: d.deal.id,
-            movieId: d.movieId,
-          }
-          return row;
+      const deals = await this.distributionDealService.getMovieDistributionDeals(this.movieId);
+      this.rows = deals.map(deal => {
+        const d: DistributionDealWithMovieId = createDistributionDealWithMovieId({
+          deal: formatDistributionDeal(deal),
+          movieId: this.movieId,
         })
-    } else {
-      this.rows = await (await this.distributionDealService.getAllDistributionDealsWithMovieId()).map(d => {
+
+        // Append new data for table display
         const row = { ...d } as any;
+        row.dealLink = {
+          id: d.deal.id,
+          movieId: d.movieId,
+        }
+        return row;
+      })
+    } else {
+      const deals = await this.distributionDealService.getAllDistributionDealsWithMovieId();
+      this.rows = await deals.map(d => {
+        const row = { ...d } as any;
+        // Append new data for table display
         row.dealLink = {
           id: d.deal.id,
           movieId: d.movieId,
@@ -67,6 +71,7 @@ export class DistributionDealsComponent implements OnInit {
       });
     }
 
+    this.cdRef.markForCheck();
   }
 
   filterPredicate(data: any, filter) {

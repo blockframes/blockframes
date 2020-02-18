@@ -18,6 +18,7 @@ import { Observable } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 import { getValue } from '@blockframes/utils/helpers';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { sortingDataAccessor, fallbackFilterPredicate } from '@blockframes/utils/table';
 
 /**
  * This directive is to be used inside the table-filter component on a ng-template
@@ -63,9 +64,9 @@ export class TableFilterComponent implements OnInit, AfterViewInit {
     if (this.filterPredicate) {
       this.dataSource.filterPredicate = this.filterPredicate;
     } else {
-      this.dataSource.filterPredicate = this.fallbackFilterPredicate;
+      this.dataSource.filterPredicate = fallbackFilterPredicate;
     }
-    this.dataSource.sortingDataAccessor = this.sortingDataAccessor;
+    this.dataSource.sortingDataAccessor = sortingDataAccessor;
     this.dataSource.sort = this.sort;
   }
 
@@ -108,17 +109,6 @@ export class TableFilterComponent implements OnInit, AfterViewInit {
     return col && col.template;
   }
 
-  /**
-   * @dev Allows to sort nested object
-   */
-  sortingDataAccessor(item, property) {
-    if (property.includes('.')) {
-      return property.split('.')
-        .reduce((object, key) => object[key], item);
-    }
-    return item[property];
-  }
-
   applyFilter(filterValue: string) {
     this.dataSource.filter = filterValue.trim().toLowerCase();
     if (this.dataSource.paginator) {
@@ -126,7 +116,4 @@ export class TableFilterComponent implements OnInit, AfterViewInit {
     }
   }
 
-  fallbackFilterPredicate(data: any, filter) {
-    return JSON.stringify(data).toLowerCase().indexOf(filter) !== -1;
-  }
 }

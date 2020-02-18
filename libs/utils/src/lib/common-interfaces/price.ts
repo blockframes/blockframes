@@ -127,13 +127,13 @@ export function createPrice(price: Partial<Price> = {}): Price {
   }
 }
 
-export function formatPrice(price: any): Price {
+export function formatPrice(price: Price): Price {
   const p = {
     ...price
   }
 
   if (price.recoupableExpenses) {
-    p.recoupableExpense = price.recoupableExpenses.map((r: any) => formatExpense(r))
+    p.recoupableExpenses = price.recoupableExpenses.map((r: any) => formatExpense(r))
   }
 
   if (price.mg) {

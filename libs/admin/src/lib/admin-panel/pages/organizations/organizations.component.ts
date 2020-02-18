@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { getValue } from '@blockframes/utils/helpers';
 import { OrganizationService } from '@blockframes/organization';
 
@@ -30,6 +30,7 @@ export class OrganizationsComponent implements OnInit {
   public rows: any[] = [];
   constructor(
     private organizationService: OrganizationService,
+    private cdRef: ChangeDetectorRef,
   ) { }
 
   async ngOnInit() {
@@ -37,6 +38,7 @@ export class OrganizationsComponent implements OnInit {
     this.rows = orgs.map(o => {
       const org = {...o} as any;
 
+      // Append new data for table display
       org.edit = {
         id: org.id,
         link: `/c/o/admin/panel/organization/${org.id}`,
@@ -44,7 +46,7 @@ export class OrganizationsComponent implements OnInit {
 
       return org;
     });
-
+    this.cdRef.markForCheck();
   }
 
   filterPredicate(data: any, filter) {

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { MovieService } from '@blockframes/movie';
 import { getValue } from '@blockframes/utils/helpers';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals';
@@ -40,6 +40,7 @@ export class MoviesComponent implements OnInit {
     private movieService: MovieService,
     private distributionDealService: DistributionDealService,
     private contractService: ContractService,
+    private cdRef: ChangeDetectorRef,
   ) { }
 
   async ngOnInit() {
@@ -47,6 +48,8 @@ export class MoviesComponent implements OnInit {
 
     const promises = movies.map(async m => {
       const row = {...m} as any;
+
+      // Append new data for table display
 
       // We add distribution deals infos to the row
       const distributionDeals = await this.distributionDealService.getMovieDistributionDeals(m.id);
@@ -72,6 +75,8 @@ export class MoviesComponent implements OnInit {
     })
 
     this.rows = await Promise.all(promises);
+
+    this.cdRef.markForCheck();
   }
 
 

@@ -131,12 +131,13 @@ export class ContractComponent implements OnInit {
     this.types = Object.keys(ContractType);
     this.contractType = ContractType;
 
-    this.cdRef.detectChanges();
+    this.cdRef.markForCheck();
 
     Object.keys(this.contract.last.titles).forEach(async id => {
       const title = this.contract.last.titles[id];
       const movie = await this.movieService.getValue(id);
-
+      
+      // Append new data for table display
       this.titles.push({
         id,
         price: title.price,
@@ -152,6 +153,9 @@ export class ContractComponent implements OnInit {
     })
   }
 
+  /**
+   * Update contract document
+   */
   public async updateContract() {
     if (this.contractForm.invalid) {
       this.snackBar.open('Information not valid', 'close', { duration: 5000 });
@@ -167,6 +171,9 @@ export class ContractComponent implements OnInit {
     this.snackBar.open('Informations updated !', 'close', { duration: 5000 });
   }
 
+  /**
+   * Create a new contract version
+   */
   public async updateVersion() {
     if (this.contractVersionForm.invalid) {
       this.snackBar.open('Information not valid', 'close', { duration: 5000 });
@@ -182,7 +189,7 @@ export class ContractComponent implements OnInit {
     const newVersionId = await this.contractVersionService.addContractVersion({ doc: this.contract.doc, last: update });
     this.version = parseInt(newVersionId, 10);
     this.contractVersions = await this.contractVersionService.getContractVersions(this.contractId);
-    this.cdRef.detectChanges();
+    this.cdRef.markForCheck();
 
     this.snackBar.open('Informations updated !', 'close', { duration: 5000 });
   }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { getValue } from '@blockframes/utils/helpers';
 import { termToPrettyDate } from '@blockframes/utils/common-interfaces/terms';
 import { ActivatedRoute } from '@angular/router';
@@ -42,6 +42,7 @@ export class ContractsComponent implements OnInit {
   constructor(
     private contractService: ContractService,
     private route: ActivatedRoute,
+    private cdRef: ChangeDetectorRef,
   ) { }
 
   async ngOnInit() {
@@ -55,16 +56,19 @@ export class ContractsComponent implements OnInit {
     }
 
     const promises = contracts.map(async contract => {
-      const c = await this.contractService.getContractWithLastVersion(contract.id);
-      const row = {...c} as any;
+      const contractWithLastVersion = await this.contractService.getContractWithLastVersion(contract.id);
+      const row = { ...contractWithLastVersion } as any;
+
+      // Append new data for table display
       row.edit = {
-        id: c.doc.id,
-        link: `/c/o/admin/panel/contract/${c.doc.id}`,
+        id: contractWithLastVersion.doc.id,
+        link: `/c/o/admin/panel/contract/${contractWithLastVersion.doc.id}`,
       }
       return row;
     });
 
     this.rows = await Promise.all(promises);
+    this.cdRef.markForCheck();
   }
 
   filterPredicate(data: any, filter) {

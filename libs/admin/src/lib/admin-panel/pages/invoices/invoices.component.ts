@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { getValue } from '@blockframes/utils/helpers';
 import { InvoiceService } from '@blockframes/contract/invoice/+state/invoice.service';
 import { MovieCurrenciesSlug } from '@blockframes/utils/static-model';
@@ -38,14 +38,14 @@ export class InvoicesComponent implements OnInit {
   public rows: any[] = [];
   constructor(
     private invoiceService: InvoiceService,
-
+    private cdRef: ChangeDetectorRef,
   ) { }
 
   async ngOnInit() {
     const invoices = await this.invoiceService.getAllInvoices();
     this.rows =  invoices.map(i => {
       const row = {...i} as any;
-      // Edit link
+      // Append new data for table display
       row.edit = {
         id: i.id,
         link: `/c/o/admin/panel/invoice/${i.id}`,
@@ -58,6 +58,8 @@ export class InvoicesComponent implements OnInit {
 
       return row;
     });
+
+    this.cdRef.markForCheck();
   }
 
 

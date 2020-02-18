@@ -34,7 +34,7 @@ export class InvoiceComponent implements OnInit {
 
     this.statuses = Object.keys(PaymentStatus);
     this.paymentStatus = PaymentStatus;
-    this.cdRef.detectChanges();
+    this.cdRef.markForCheck();
   }
 
   public async update() {
