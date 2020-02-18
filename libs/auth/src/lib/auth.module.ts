@@ -19,7 +19,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatCardModule } from '@angular/material';
+import { MatCardModule } from '@angular/material/card';
 
 // Component
 import { FeedbackMessageModule } from '@blockframes/ui';
