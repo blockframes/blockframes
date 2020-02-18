@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { QueryEntity } from '@datorama/akita';
 import { MovieQuery, Movie } from '@blockframes/movie';
-import { Observable } from 'rxjs';
+import { Observable, combineLatest } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import { MarketplaceState, MarketplaceStore } from './marketplace.store';
+import { MarketplaceState, MarketplaceStore, TitleCart } from './marketplace.store';
 
 @Injectable({ providedIn: 'root' })
 export class MarketplaceQuery extends QueryEntity<MarketplaceState> {

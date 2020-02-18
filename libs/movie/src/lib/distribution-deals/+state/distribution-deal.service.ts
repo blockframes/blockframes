@@ -20,7 +20,8 @@ import { combineLatest } from 'rxjs';
 import { ContractVersion } from '@blockframes/contract/version/+state/contract-version.model';
 import { DistributionDealQuery } from './distribution-deal.query';
 import { Movie } from '@blockframes/movie/movie/+state';
-import { AvailsSearchForm } from '@blockframes/catalog/form/search.form';
+import { AvailsSearchForm, AvailsSearch } from '@blockframes/catalog/form/search.form';
+import { ISO3166TERRITORIES } from '@blockframes/utils/static-model/territories-ISO-3166';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies/:movieId/distributionDeals' })
@@ -90,15 +91,18 @@ export class DistributionDealService extends CollectionService<DistributionDealS
     return distributionDeal.id;
   }
 
-  public createCartDeal(form: Partial<AvailsSearchForm>): DistributionDeal {
+  public createCartDeal(formValue: Partial<AvailsSearch>): DistributionDeal {
     const dealId = this.db.createId();
     const dealToAdd = createDistributionDeal({
       id: dealId,
-      terms: form.value.terms,
-      territory: form.value.territories,
-      territoryExcluded: form.value.territoriesExcluded,
-      licenseType: form.value.medias,
-      exclusive: form.value.exclusive
+      terms: formValue.terms,
+      // if 'world' is in territories, just add every territories
+      territory: formValue.territories.includes('world')
+        ? ISO3166TERRITORIES.map(tag => tag.slug)
+        : formValue.territories,
+      territoryExcluded: formValue.territoriesExcluded,
+      licenseType: formValue.medias,
+      exclusive: formValue.exclusivity
     })
     return dealToAdd;
   }

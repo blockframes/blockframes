@@ -48,11 +48,13 @@ strong {
 @include tablet {
   section aside {
     position: static;
+    width: 100%;
   }
 }
 
 @include medium {
   aside {
-    width: 50%;
+    position: static;
+    width: 100%;
   }
 }

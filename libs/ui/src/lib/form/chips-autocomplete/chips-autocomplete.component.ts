@@ -8,14 +8,16 @@ import {
   ChangeDetectionStrategy,
   Output,
   EventEmitter,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  OnDestroy
 } from '@angular/core';
 import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { FormControl, FormArray } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
+import { ISO3166TERRITORIES } from '@blockframes/utils/static-model/territories-ISO-3166';
 
 @Component({
   selector: '[form]chips-autocomplete',
@@ -23,7 +25,7 @@ import { startWith, map } from 'rxjs/operators';
   styleUrls: ['./chips-autocomplete.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ChipsAutocompleteComponent implements OnInit {
+export class ChipsAutocompleteComponent implements OnInit, OnDestroy {
   /** List of items displayed in the autocomplete */
   @Input() items: any[];
   /** Key of the item to get store */
@@ -45,13 +47,15 @@ export class ChipsAutocompleteComponent implements OnInit {
   public ctrl = new FormControl();
   public filteredItems: Observable<any[]>;
 
+  private sub = new Subscription();
+
   @ViewChild('inputEl', { static: true }) inputEl: ElementRef<HTMLInputElement>;
   @ViewChild('auto', { static: true }) matAutocomplete: MatAutocomplete;
 
   constructor(private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
-    this.form.valueChanges.subscribe(_ => this.cdr.markForCheck());
+    this.sub = this.form.valueChanges.subscribe(_ => this.cdr.markForCheck());
 
     this.filteredItems = this.ctrl.valueChanges.pipe(
       startWith(''),
@@ -99,7 +103,10 @@ export class ChipsAutocompleteComponent implements OnInit {
   /** Select based on the option */
   public selected({ option }: MatAutocompleteSelectedEvent): void {
     this.added.emit(option.viewValue);
-    this.form.push(new FormControl(option.value));
+    // TODO: Find a clean solution to handle 'world' choice in territories selects => ISSUE#1960
+    option.value === 'world'
+      ? ISO3166TERRITORIES.forEach(tag => this.form.push(new FormControl(tag.slug)))
+      : this.form.push(new FormControl(option.value));
     this.inputEl.nativeElement.value = '';
     this.ctrl.setValue(null);
   }
@@ -108,5 +115,9 @@ export class ChipsAutocompleteComponent implements OnInit {
   public remove(i: number) {
     this.form.removeAt(i);
     this.removed.emit(i);
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 }

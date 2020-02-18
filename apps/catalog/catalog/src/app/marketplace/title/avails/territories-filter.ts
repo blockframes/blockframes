@@ -3,6 +3,7 @@ import { TerritoriesSlug } from '@blockframes/utils/static-model';
 import { AvailsSearch } from '@blockframes/catalog';
 import { getExclusiveDeals, getDealsInDateRange, getDealsWithMedias } from '@blockframes/movie/distribution-deals/create/availabilities.util';
 import { Model } from '@blockframes/utils/static-model/staticModels';
+import { inDateRange } from '@blockframes/utils/common-interfaces/terms';
 
 /**
  * Returns an array of unlicensed territories to display on the world map.
@@ -10,10 +11,12 @@ import { Model } from '@blockframes/utils/static-model/staticModels';
  * @param territories All the territories
  */
 export function getNotLicensedTerritories(
+  filter: AvailsSearch,
   mandateDeals: DistributionDeal[],
   territories: Model['TERRITORIES']
 ): Model['TERRITORIES'] {
-  const licensedTerritorySlugs = getLicensedTerritorySlugs(mandateDeals);
+
+  const licensedTerritorySlugs = getLicensedTerritorySlugs(mandateDeals, filter)
 
   return territories.filter(territory => !licensedTerritorySlugs.includes(territory.slug));
 }
@@ -65,7 +68,7 @@ export function getAvailableTerritories(
  * @param deals Sales deals from the movie
  */
 function getTerritorySlugsWithDeals(filter: AvailsSearch, mandateDeals: DistributionDeal[], salesDeals: DistributionDeal[]): TerritoriesSlug[] {
-  const licensedTerritorySlugs = getLicensedTerritorySlugs(mandateDeals);
+  const licensedTerritorySlugs = getLicensedTerritorySlugs(mandateDeals, filter);
 
   const matchingExclusivityDeals = getExclusiveDeals(salesDeals, filter.exclusivity);
   const matchingRangeDeals = getDealsInDateRange(filter.terms, matchingExclusivityDeals);
@@ -88,7 +91,7 @@ function getTerritorySlugsWithDeals(filter: AvailsSearch, mandateDeals: Distribu
  * @param deals Sales deals from the movie
  */
 function getTerritorySlugsWithoutDeals(filter: AvailsSearch, mandateDeals: DistributionDeal[], salesDeals: DistributionDeal[]): TerritoriesSlug[] {
-  const licensedTerritorySlugs = getLicensedTerritorySlugs(mandateDeals);
+  const licensedTerritorySlugs = getLicensedTerritorySlugs(mandateDeals, filter);
 
   const matchingExclusivityDeals = getExclusiveDeals(salesDeals, filter.exclusivity);
   const matchingRangeDeals = getDealsInDateRange(filter.terms, matchingExclusivityDeals);
@@ -108,13 +111,21 @@ function getTerritorySlugsWithoutDeals(filter: AvailsSearch, mandateDeals: Distr
  * Returns an array of slugs of eligible territories for a specific movie.
  * @param deals Mandate deals from the movie
  */
-function getLicensedTerritorySlugs(deals: DistributionDeal[]): TerritoriesSlug[] {
-  const territorySlugs: TerritoriesSlug[] = [];
+function getLicensedTerritorySlugs(mandateDeals: DistributionDeal[], filter: AvailsSearch): TerritoriesSlug[] {
+  const licensedTerritorySlugs: TerritoriesSlug[] = [];
 
-  deals.forEach(deal => {
-    const filteredTerritories = getDealTerritories(deal);
-    territorySlugs.push(...filteredTerritories);
-  });
+  // Iterate on every mandate deals of the movie
+  mandateDeals.forEach(deal => {
+    const hasMedias = filter.medias.every(media => deal.licenseType.includes(media));
+    const hasTermsInRange = inDateRange(filter.terms, deal.terms);
 
-  return territorySlugs;
+    // If mandate contain all filter medias and filter
+    // terms are in date range, deal territories are licensed.
+    if (hasMedias && hasTermsInRange) {
+      const filteredTerritories = getDealTerritories(deal)
+      licensedTerritorySlugs.push(...filteredTerritories);
+    }
+  })
+
+  return licensedTerritorySlugs;
 }
