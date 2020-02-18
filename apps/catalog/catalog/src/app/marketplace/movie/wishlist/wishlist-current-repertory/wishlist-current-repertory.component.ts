@@ -5,13 +5,10 @@ import {
   Component,
   ChangeDetectionStrategy,
   Input,
-  Output,
-  EventEmitter,
-  OnInit,
   HostBinding
 } from '@angular/core';
 import { Movie } from '@blockframes/movie';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
 
 @Component({
@@ -20,21 +17,16 @@ import { CartService } from '@blockframes/organization/cart/+state/cart.service'
   styleUrls: ['./wishlist-current-repertory.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class WishlistCurrentRepertoryComponent implements OnInit {
-  @HostBinding('attr.test-id') testId = 'sentWishlist';
-
-  @Output() sent = new EventEmitter();
-
-  @Input() isCurrent = false;
-  @Input() date: Date;
+export class WishlistCurrentRepertoryComponent {
+  @HostBinding('attr.test-id') testId = 'currentWishlist';
 
   public columnsToDisplay = [
     'movie',
-    'salesAgent',
     'director',
     'productionStatus',
     'originCountry',
-    'totalRunTime'
+    'totalRunTime',
+    'delete'
   ];
   public dataSource: MatTableDataSource<Movie>;
 
@@ -47,19 +39,12 @@ export class WishlistCurrentRepertoryComponent implements OnInit {
     private router: Router,
     private service: CartService,
     private snackbar: MatSnackBar,
-    private analytics: FireAnalytics
+    private analytics: FireAnalytics,
+    private route: ActivatedRoute
   ) {}
 
-  async ngOnInit() {
-    if (this.isCurrent) {
-      this.columnsToDisplay.push('delete');
-      this.testId = 'currentWishlist';
-    }
-  }
-
-  // TODO: issue#1203 use a relative path
   public async redirectToMovie(movieId: string) {
-    this.router.navigate([`c/o/catalog/${movieId}/view`]);
+    this.router.navigate([`../../${movieId}/view`], { relativeTo: this.route });
   }
 
   public remove(movie: Movie, event: Event) {

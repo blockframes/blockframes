@@ -1,6 +1,7 @@
-<ng-container *ngFor="let control of form.controls; let i = index; let isLast = last; let isFirst = first;" [formGroup]="control">
+<ng-container *ngFor="let control of form.controls; let i = index; let isLast = last; let isFirst = first;"
+    [formGroup]="control">
     <form formGroupName="party">
-        <div fxLayout="column" fxLayoutAlign="start start">
+        <div fxLayout="row" fxLayoutAlign="center start" fxLayoutGap="20px">
             <mat-form-field appearance="outline">
                 <mat-label>Party name</mat-label>
                 <input matInput type="text" formControlName="displayName" autocomplete="off" required>
@@ -21,12 +22,18 @@
                     </mat-option>
                 </mat-select>
             </mat-form-field>
-            <button (click)="form.removeAt(i)" mat-mini-fab color="warn" matTooltip="Remove role">
-                <mat-icon>delete</mat-icon>
-            </button>
+            <div fxLayout="row" fxLayoutAlign="center center" *ngIf="i > 1">
+                <button (click)="form.removeAt(i)" mat-mini-fab color="warn">
+                    <mat-icon>delete</mat-icon>
+                </button>
+                <span>Remove role</span>
+            </div>
         </div>
     </form>
 </ng-container>
-<button (click)="addRole()" mat-mini-fab color="primary" matTooltip="Add role">
-    <mat-icon svgIcon="add"></mat-icon>
-</button>
+<div fxLayout="row" fxLayoutAlign="center center">
+    <button (click)="addRole()" mat-mini-fab color="primary">
+        <mat-icon svgIcon="add"></mat-icon>
+    </button>
+    <span>Add role</span>
+</div>
