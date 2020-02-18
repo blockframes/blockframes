@@ -26,3 +26,20 @@ export class OverlayWidgetInputDirective {
 
   constructor(private el: ElementRef) {}
 }
+
+// OVERLAY TRIGGERED ON Hover
+@Directive({ selector: "[widgetTooltip]" })
+export class OverlayWidgetTooltipDirective {
+
+  @Input() widgetTooltip: OverlayWidgetComponent;
+  @HostListener('mouseenter') onMouseEnter() {
+    this.widgetTooltip.open(this.el);
+  }
+  @HostListener('mouseleave') onMouseLeave() {
+    setTimeout(() => {
+      this.widgetTooltip.close();
+    }, 1000)
+  }
+
+  constructor(private el: ElementRef) {}
+}

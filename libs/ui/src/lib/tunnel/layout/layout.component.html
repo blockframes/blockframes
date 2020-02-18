@@ -1,10 +1,13 @@
 <mat-toolbar fxLayout="row" fxLayoutAlign="space-between center">
+  <ng-container *ngIf="mobileQuery.matches">
+    <button mat-icon-button (click)="sidenav.toggle()"><mat-icon>menu</mat-icon></button>
+  </ng-container>
   <ng-content select="header, [tunnel-header]"></ng-content>
   <tunnel-exit></tunnel-exit>
 </mat-toolbar>
 
 <mat-sidenav-container>
-  <mat-sidenav opened mode="side">
+  <mat-sidenav #sidenav [opened]="!mobileQuery.matches" [mode]="mobileQuery.matches ? 'over' : 'side'">
     <ng-content select="aside"></ng-content>
   </mat-sidenav>
 

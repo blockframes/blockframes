@@ -1,9 +1,13 @@
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { MarketplaceSelectionComponent } from './selection.component';
-import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MarketplaceSelectionComponent } from './selection.component';
+
+import { MovieBannerModule } from '@blockframes/movie/movie/components/banner/banner.module';
+import { RightListModule } from '@blockframes/movie/distribution-deals/components/right-list/right-list.module';
+import { WishlistButtonModule } from '../../components/wishlist-button/wishlist-button.module';
 
 // Material
 import { MatDividerModule } from '@angular/material/divider';
@@ -13,16 +17,17 @@ import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 
-// Custom modules
-import { CatalogFormSelectionModule } from '@blockframes/movie/distribution-deals/components/selection-table/form-selection.module';
-
 @NgModule({
   declarations: [MarketplaceSelectionComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
     ReactiveFormsModule,
-    CatalogFormSelectionModule,
+
+    MovieBannerModule,
+    RightListModule,
+    WishlistButtonModule,
+
     // Material
     MatButtonModule,
     MatDividerModule,

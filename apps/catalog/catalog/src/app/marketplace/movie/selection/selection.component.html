@@ -1,33 +1,53 @@
-<!-- TODO(#838): Use HostBinding instead of root div -->
-<div test-id="content">
-  <header fxLayout="column" fxLayoutAlign="center center">
-    <h1>Global Selection</h1>
-  </header>
-  <section>
-    <article fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="20px">
-        <h2>My films selection</h2>
-        <mat-divider fxFlex></mat-divider>
+<ng-container *ngIf="titles$ | async as titles">
+  <ng-container *ngIf="titles.length else noTitles">
+    <header fxLayout="row" fxLayoutAlign="space-between center">
+      <h1>{{ count$ | async }} titles in the cart</h1>
+      <a mat-button color="primary" routerLink="../deals">
+        <mat-icon svgIcon="wallet"></mat-icon>
+        <span>Consult your Current Offers and Deals</span>
+      </a>
+    </header>
+    
+    <!-- Movies documents here are filled with the distribution deals from the cart -->
+    <article *ngFor="let title of titles">
+      <movie-banner [movie]="selectMovie(title.movieId) | async">
+        <movie-banner-actions fxLayout="column" fxLayoutAlign="space-between end">
+          <catalog-wishlist-button [movieId]="title.movieId"></catalog-wishlist-button>
+          <button mat-button color="warn" (click)="removeTitle(title.movieId)">
+            <mat-icon svgIcon="trash"></mat-icon>
+            <span>Remove Title</span>
+          </button>
+          <a mat-button color="primary" [routerLink]="['..', title.movieId, 'view/avails']">
+            <mat-icon svgIcon="add"></mat-icon>
+            <span>Add Exploitation Rights</span>
+          </a>
+        </movie-banner-actions>
+      </movie-banner>
+    
+      <ng-container *ngIf="title.deals.length">
+        <h3>Exploitation Rights</h3>
+        <catalog-right-list [source]="title.deals"></catalog-right-list>
+      </ng-container>
     </article>
-    <article>
-      <catalog-form-selection [selectedMovieDetail]="moviesOnWishlist"
-        (delete)="deleteDistributionDeal($event)">
-      </catalog-form-selection>
-    </article>
-    <div fxLayout="row" fxLayoutAlign="center baseline" fxLayoutGap="20px" class="input">
-      <mat-form-field appearance="outline">
-        <mat-label>Offer</mat-label>
-        <input test-id="selection-offer" type="number" matInput placeholder="Enter your offer..." [formControl]="priceControl" autocomplete="off">
-      </mat-form-field>
-      <mat-form-field appearance="outline">
-        <mat-label>Currency</mat-label>
-        <mat-select test-id="selection-currency" [(value)]="selectedCurrency">
-          <mat-option *ngFor="let currency of currencyList" [value]="currency">
-            {{currency}}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-      <a test-id="selection-send" mat-flat-button color="primary" (click)="submitCart()"
-        routerLink="../wishlist/success">Send your offer</a>
+    
+    <footer fxLayout="column" fxLayoutAlign="center center">
+      <button mat-flat-button color="accent" (click)="create()">Create an Offer</button>
+      <p>
+        Pay attention, if you create an offer, you’ll <b>find your current offer</b> on your “<b>Offers & Deals</b>” page 
+      </p>
+      <a mat-button color="primary" routerLink="../home">Continue Browsing the Library</a>
+    </footer>
+  </ng-container>
+</ng-container>
+
+<ng-template #noTitles >
+  <article fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="40px">
+    <h1>You have not yet selected any titles</h1>
+    <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="24px">
+      <a mat-flat-button color="accent" routerLink="../home">Continue browsing the Library</a>
+      <span>Or</span>
+      <a mat-stroked-button color="primary" routerLink="../deals">Consult your current Offers and Deals</a>
     </div>
-  </section>
-</div>
+    <p>Do you need help ? Explore our FAQ page or chat with us.</p>
+  </article>
+</ng-template>

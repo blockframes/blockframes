@@ -1,7 +1,7 @@
-<ng-template *ngIf="loading$ | async">
-  <mat-spinner color="accent" #loading></mat-spinner>
+<ng-template #loading>
+  <mat-spinner color="primary"></mat-spinner>
 </ng-template>
-<ng-container *ngIf="(movieAnalytics$ | async) as movieAnalytics;">
+<ng-container *ngIf="(movieAnalytics$ | async) as movieAnalytics; else loading">
   <header fxLayout="row" fxLayoutAlign="space-between center">
     <h1>Dashboard</h1>
     <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="24px">
@@ -18,60 +18,10 @@
     <h3>My Marketplace Activity</h3>
     <movie-analytics-chart [analyticsData]="movieAnalytics"></movie-analytics-chart>
   </section>
-  <section>
+  <!-- <section>
     <h3>Sales Revenue</h3>
   </section>
   <section>
     <h3>Sales Deals</h3>
   </section>
-</ng-container>
-
-<!--
-<p class="mat-body-1"> A consolidation of film libraries to create new opportunities through secure transactions.</p>
-<button mat-button color="accent" test-id="import" [routerLink]="['/c/o/dashboard/import']">Upload avails &
-  films doc</button>
-<ng-container *ngIf="movies$ | async as movies">
-  <ng-container *ngIf="movies.length; else noMovies">
-    <article fxLayout="column">
-
-      <ng-container *ngIf="loading$ | async; else loaded"> Loading </ng-container>
-
-      <ng-template #loaded>
-        <article fxLayout="row wrap" fxLayoutGap="30px" fxLayout.lt-md="column">
-          <movie-card *ngFor="let movie of movies" [movie]="movie"
-            [link]="['/c/o/dashboard/catalog', movie.id]">
-            <ng-container movieCardAction>
-              <div fxLayout="row" fxLayoutAlign="end end">
-                <button mat-icon-button [matMenuTriggerFor]="menu">
-                  <mat-icon color="primary">more_vert</mat-icon>
-                </button>
-                <mat-menu #menu="matMenu" xPosition="before">
-                  <button mat-menu-item [matMenuTriggerFor]="subMenu">
-                    <mat-icon color="primary">control_camera</mat-icon>
-                    <span>Open in...</span>
-                  </button>
-                  <a mat-menu-item [routerLink]="['/c/o/dashboard/catalog', movie.id, 'edit']">
-                    <mat-icon color="primary">edit</mat-icon>
-                    <span>Edit</span>
-                  </a>
-                  <button mat-menu-item (click)="remove(movie)">
-                    <mat-icon color="primary">delete_outline</mat-icon>
-                    <span>Delete</span>
-                  </button>
-                </mat-menu>
-                <mat-menu #subMenu="matMenu">
-                  <a mat-menu-item [routerLink]="[movie.id]">Explorer</a>
-                </mat-menu>
-              </div>
-            </ng-container>
-          </movie-card>
-        </article>
-      </ng-template>
-    </article>
-  </ng-container>
-
-  <ng-template #noMovies>
-    <movie-create (addMovie)="addNewMovie()"></movie-create>
-  </ng-template>
-</ng-container>
--->
+</ng-container> -->

@@ -1,21 +1,19 @@
-header {
-  padding: 150px 0;
-  // TODO: replace image when the real one is available.
-  background-image: url('/assets/images/catalog-marketplace-banner.png');
-  background-position: center center;
-  background-attachment: fixed;
-  background-size: cover;
+:host {
+  display: block;
+  padding: 24px;
+  min-height: 100%;
 }
 
-mat-divider {
-  width: 100%;
-  margin-left: 30px;
+article {
+  margin-top: 50px;
 }
 
-section {
-  padding: 100px;
-}
-
-.input {
-  margin: 20px;
+footer {
+  margin-top: 60px;
+  p {
+    max-width: 600px;
+    text-align: center;
+    margin-top: 24px;
+    margin-bottom: 94px;
+  }
 }

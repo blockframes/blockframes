@@ -27,27 +27,26 @@
 
   <mat-sidenav-content>
     <!-- TOOLBAR -->
-    <mat-toolbar fxLayout="row" fxLayoutGap="24px">
-      <button mat-icon-button (click)="sidenav.toggle()">
-        <mat-icon>menu</mat-icon>
-      </button>
-      <a class="logo" routerLink=".">
-        <img asset="archipel-content.svg" type="logo" alt="Archipel Content Logo" />
-      </a>
-      <search-widget></search-widget>
-      <!-- <form fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="12px">
-        <mat-icon>search</mat-icon>
-        <input placeholder="Try searching for titles, keywords..." />
-      </form> -->
-      <button mat-icon-button>
-        <mat-icon svgIcon="star_fill"></mat-icon>
-      </button>
-      <button mat-icon-button>
-        <mat-icon svgIcon="basket"></mat-icon>
-      </button>
-      <mat-divider vertical></mat-divider>
-      <overlay-notification-widget></overlay-notification-widget>
-      <account-profile-widget></account-profile-widget>
+    <mat-toolbar fxLayout="row" fxLayoutAlign="space-between center">
+      <div fxLayout="row" fxLayoutAlign="default center" fxLayoutGap="24px">
+        <button mat-icon-button (click)="sidenav.toggle()">
+          <mat-icon>menu</mat-icon>
+        </button>
+        <a class="logo" routerLink=".">
+          <img asset="archipel-content.svg" type="logo" alt="Archipel Content Logo" />
+        </a>
+      </div>
+      <div fxLayout="row" fxLayoutGap="24px">
+        <a mat-icon-button>
+          <mat-icon svgIcon="star_fill" ></mat-icon>
+        </a>
+        <button mat-icon-button routerLink="selection">
+          <mat-icon svgIcon="basket" [matBadge]="cartCount$ | async" [matBadgeHidden]="!(cartCount$ | async)" matBadgeColor="accent" matBadgeSize="small"></mat-icon>
+        </button>
+        <mat-divider vertical></mat-divider>
+        <overlay-notification-widget></overlay-notification-widget>
+        <account-profile-widget></account-profile-widget>
+      </div>
     </mat-toolbar>
 
     <!-- CONTENT -->
