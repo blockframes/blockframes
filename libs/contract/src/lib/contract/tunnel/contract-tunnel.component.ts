@@ -5,15 +5,15 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieService, Movie } from '@blockframes/movie';
 import { TunnelStep, TunnelConfirmComponent } from '@blockframes/ui/tunnel'
 import { ContractForm } from '../form/contract.form';
-import { ContractQuery, ContractService, ContractType } from '../+state';
-import { Observable, of } from 'rxjs';
-import { startWith, map, switchMap, shareReplay } from 'rxjs/operators';
+import { ContractQuery, ContractService, ContractType, createContract, createContractVersion } from '../+state';
 import { MatDialog } from '@angular/material';
 import { ContractVersionService } from '@blockframes/contract/version/+state';
 import { DistributionDealForm } from '@blockframes/movie/distribution-deals/form/distribution-deal.form';
 import { FormEntity, FormList } from '@blockframes/utils';
 import { ContractTitleDetailForm } from '@blockframes/contract/version/form';
-import { DistributionDealService, DistributionDeal } from '@blockframes/movie/distribution-deals/+state';
+import { DistributionDealService, DistributionDeal, createDistributionDeal } from '@blockframes/movie/distribution-deals/+state';
+import { startWith, map, switchMap, shareReplay } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
 
 const steps = [{
   title: 'Step 1',
@@ -147,22 +147,22 @@ export class ContractTunnelComponent implements OnInit {
   public async save() {
     const write = this.db.firestore.batch();
     const contractId = this.query.getActiveId();
-    const contract = { ...this.contractForm.value };
+    const contract = createContract({ id: contractId, ...this.contractForm.value });
 
     // Upate Version
     const lastIndex = contract.versions.length - 1;
-    const version = { ...contract.versions[lastIndex] };
+    const version = createContractVersion({ ...contract.versions[lastIndex] });
     this.versionService.update({ id: `${lastIndex}`, ...version }, { params: { contractId }, write })
+    delete contract.versions;
 
     // Update Contract
     contract.titleIds = Object.keys(version.titles || {});
-    delete contract.versions;
-    this.service.update({ id: contractId, ...contract }, { write });
+    this.service.update(contract, { write });
 
     // Upsert deals
     for (const movieId in this.dealForms.controls) {
-      const deals = this.dealForms.get(movieId).value;
-      deals.forEach(async (deal, i) => {
+      const deals = this.dealForms.get(movieId).value.map(deal => createDistributionDeal(deal));
+      deals.forEach(async (deal, i) =>  {
         if (deal.id) {
           this.dealService.update(deal, { params: { movieId }, write });
         } else {
