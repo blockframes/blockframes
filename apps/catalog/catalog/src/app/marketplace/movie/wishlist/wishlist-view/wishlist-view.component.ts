@@ -12,7 +12,6 @@ import { map } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WishlistViewComponent implements OnInit {
-  public wishlists$: Observable<Wishlist[]>;
   public currentWishlist$: Observable<Wishlist>;
 
   constructor(
@@ -22,9 +21,6 @@ export class WishlistViewComponent implements OnInit {
   ngOnInit() {
     this.currentWishlist$ = this.catalogCartQuery.wishlistWithMovies$.pipe(
       map(wishlist => wishlist.find(wish => wish.status === WishlistStatus.pending))
-    );
-    this.wishlists$ = this.catalogCartQuery.wishlistWithMovies$.pipe(
-      map(wishlist => wishlist.filter(wish => wish.status === WishlistStatus.sent))
     );
   }
 }
