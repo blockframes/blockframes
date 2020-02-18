@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { AuthService, AuthQuery } from '../../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { PasswordControl } from '@blockframes/utils/form/controls/password.control';
 
 @Component({
@@ -26,7 +26,8 @@ export class IdentityComponent {
     private service: AuthService,
     private query: AuthQuery,
     private snackBar: MatSnackBar,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute,
   ) {}
 
   public async update() {
@@ -44,7 +45,7 @@ export class IdentityComponent {
         name: this.form.get('name').value,
         surname: this.form.get('surname').value,
       });
-      this.router.navigate(['/c']);
+      this.router.navigate(['/c'], { relativeTo: this.route });
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 5000 });
     }
