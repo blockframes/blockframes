@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
 import { TunnelService } from '../tunnel.service';
 
 @Component({
@@ -10,10 +10,12 @@ import { TunnelService } from '../tunnel.service';
 export class ExitComponent implements OnInit {
   routeBeforeTunnel: string;
 
+  @Input() exitRedirect: string;
+
   constructor(private service: TunnelService) { }
 
   ngOnInit() {
-    this.routeBeforeTunnel = this.service.previousUrl;
+    this.routeBeforeTunnel = this.service.previousUrl || this.exitRedirect || 'c/o/';
   }
 
 }
