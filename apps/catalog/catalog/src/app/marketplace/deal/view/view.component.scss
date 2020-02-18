@@ -2,8 +2,14 @@ header {
   display: block;
   padding: 16px 24px;
   background-image: linear-gradient(to bottom, var(--background-disabled-button), transparent);
-  img {
+  .logo-container {
     height: 160px;
     width: 160px;
+    padding: 30px;
+    border-radius: 50%;
+    border: solid 1px var(--primary);
+    img {
+      height: 100%;
+    }
   }
 }

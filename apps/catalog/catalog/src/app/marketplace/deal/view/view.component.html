@@ -1,6 +1,8 @@
 <ng-container *ngIf="versionView$ | async as version">
   <header fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="24px" >
-    <img asset="archipel-content-icon.svg" type="logo" alt="Archipel Content logo" />
+    <div class="logo-container">
+      <img asset="archipel-content-icon.svg" type="logo" alt="Archipel Content logo" />
+    </div>
     <div fxFlex fxLayout="column">
       <span class="payment">{{ version.status | uppercase }}</span>
       <h1>Achipel Content - {{ version.titleIds.length }} titles</h1>
