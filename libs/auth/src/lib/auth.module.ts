@@ -19,6 +19,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatCardModule } from '@angular/material/card';
 
 // Component
 import { FeedbackMessageModule } from '@blockframes/ui';
@@ -31,6 +32,7 @@ import { PasswordResetComponent } from './pages/password-reset/password-reset.co
 import { TermsConditionsModule } from './components/terms-conditions/terms-conditions.module';
 import { AcceptConditionsModule } from './components/accept-conditions/accept-conditions.module';
 import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
+import { IdentityGuard } from './guard/identity.guard';
 
 export const AuthRoutes: Routes = [
   { path: '', redirectTo: 'welcome', pathMatch: 'full' },
@@ -39,7 +41,12 @@ export const AuthRoutes: Routes = [
     path: 'connexion',
     loadChildren: () => import('./pages/login/login.module').then(m => m.LoginModule)
   },
-  { path: 'identity', component: IdentityComponent },
+  {
+    path: 'identity',
+    canActivate: [IdentityGuard],
+    canDeactivate: [IdentityGuard],
+    component: IdentityComponent
+  },
   { path: 'congratulation', component: IdentityFeedbackComponent },
   { path: 'email-verification', component: EmailVerificationComponent},
   { path: 'password-reset', component: PasswordResetComponent}
@@ -67,6 +74,7 @@ export const AuthRoutes: Routes = [
     MatBadgeModule,
     MatCheckboxModule,
     FeedbackMessageModule,
+    MatCardModule,
 
     // Fire
     AngularFireAuthModule,
