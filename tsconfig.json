@@ -164,6 +164,22 @@
         "libs/contract/src/lib/*"
       ],
 
+      // FINANCIAL REPORTS
+      "@blockframes/financial-report": [
+        "libs/financial-report/src/index.ts"
+      ],
+      "@blockframes/financial-report/*": [
+        "libs/financial-report/src/lib/*"
+      ],
+
+      // ADMIN
+      "@blockframes/admin": [
+        "libs/admin/src/index.ts"
+      ],
+      "@blockframes/admin/*": [
+        "libs/admin/src/lib/*"
+      ],
+
       // APPS
       "@blockframes/apps/delivery/*": [
         "apps/delivery/delivery/src/app/*"

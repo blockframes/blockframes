@@ -1,7 +1,9 @@
+import { toDate } from '../helpers';
+
 export enum PaymentEvent {
   ContractSignatureDate = 'Contract Signature Date',
   AcceptationAllMaterials = 'Acceptation of all delivery materials',
-  InvoiceEmittedDate ='Invoice emission date',
+  InvoiceEmittedDate = 'Invoice emission date',
 }
 
 export enum MovieEvent {
@@ -15,15 +17,15 @@ export enum TimeUnit {
   weeks = 'Weeks',
   months = 'Months',
   years = 'Years',
-  calendarSemester= 'Calendar Semester',
-  calendarQuarter= 'Calendar Quarter'
+  calendarSemester = 'Calendar Semester',
+  calendarQuarter = 'Calendar Quarter'
 }
 
 export enum TemporalityUnit {
   after = 'After',
   before = 'Before',
   for = 'For',
-  every= 'Every'
+  every = 'Every'
 }
 
 export interface FloatingDuration {
@@ -89,6 +91,23 @@ export function createTerms(params: Partial<Terms> = {}): Terms {
   };
 }
 
+export function formatTerms(terms: any): Terms {
+  const t = {
+    ...terms,
+  }
+
+  if (terms.start) {
+    t.start = toDate(terms.start);
+  }
+
+
+  if (terms.end) {
+    t.end = toDate(terms.end);
+  }
+
+  return t;
+}
+
 export function createScheduledDate(params: Partial<ScheduledDate> = {}): ScheduledDate {
   return {
     dueDate: new Date(),
@@ -97,10 +116,41 @@ export function createScheduledDate(params: Partial<ScheduledDate> = {}): Schedu
   };
 }
 
+export function formatScheduledDate(scheduledDate: any): ScheduledDate {
+  return {
+    ...scheduledDate,
+    ...formatTerms(scheduledDate),
+    dueDate: toDate(scheduledDate.dueDate)
+  }
+}
+
 export function createScheduledDateWithCounter(params: Partial<ScheduledDateWithCounter> = {}): ScheduledDateWithCounter {
   return {
     count: 0,
     ...params,
     ...createScheduledDate(params),
   };
+}
+
+export function termToPrettyDate(term: Terms, type: 'start' | 'end' = 'start'): string {
+  const noDate = 'no date';
+  switch (type) {
+    case 'start':
+      if (!term.start || isNaN(term.start.getTime())) {
+        return term.approxStart || noDate;
+      } else if (term.start) {
+        return term.start.toLocaleDateString();
+      } else {
+        return noDate;
+      }
+    case 'end':
+    default:
+      if (!term.end || isNaN(term.end.getTime())) {
+        return term.approxEnd || noDate;
+      } else if (term.end) {
+        return term.end.toLocaleDateString();
+      } else {
+        return noDate;
+      }
+  }
 }

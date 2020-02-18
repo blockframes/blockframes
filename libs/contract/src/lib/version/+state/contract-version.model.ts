@@ -22,13 +22,13 @@ export function createVersionMeta(params: Partial<VersionMeta>): VersionMeta {
  *  Format version dates from Timestamps into Dates.
  * @param contractVersion
  */
-export function formatContractVersion(contractVersion: any): ContractVersion {
+export function createContractVersionFromFirestore(contractVersion: any): ContractVersion {
   // Dates from firebase are Timestamps, we convert it to Dates.
-  if (contractVersion.scope) {
+  if (contractVersion.scope && contractVersion.scope.start) {
     contractVersion.scope.start = toDate(contractVersion.scope.start);
   }
 
-  if (contractVersion.scope) {
+  if (contractVersion.scope && contractVersion.scope.end) {
     contractVersion.scope.end = toDate(contractVersion.scope.end);
   }
 
@@ -56,4 +56,11 @@ export function getContractLastVersion(contract: Contract): ContractVersion {
   const { count }: VersionMeta = contract.versions.find(v => v.id === '_meta')
   const index = contract.versions.map(v => v.id).indexOf(count.toString())
   return contract.versions[index];
+}
+
+/** Cleans an organization of its optional parameters */
+export function cleanContractVersion(version: ContractVersion) {
+  const v = { ...version };
+  // Remove local values in any
+  return v;
 }
