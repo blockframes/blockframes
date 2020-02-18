@@ -9,8 +9,8 @@
             <mat-form-field appearance="outline">
               <mat-label>Contract type</mat-label>
               <mat-select formControlName="type" required>
-                <mat-option *ngFor="let type of types" [value]="type">
-                  {{ type }}
+                <mat-option *ngFor="let type of types" [value]="contractType[type]">
+                  {{ contractType[type] }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -76,8 +76,8 @@
             <mat-form-field appearance="outline">
               <mat-label>Version Status</mat-label>
               <mat-select formControlName="status" required>
-                <mat-option *ngFor="let status of statuses" [value]="status">
-                  {{ status }}
+                <mat-option *ngFor="let status of statuses" [value]="contractStatus[status]">
+                  {{ contractStatus[status] }}
                 </mat-option>
               </mat-select>
             </mat-form-field>

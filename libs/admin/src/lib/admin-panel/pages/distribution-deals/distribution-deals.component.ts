@@ -57,7 +57,7 @@ export class DistributionDealsComponent implements OnInit {
           return row;
         })
     } else {
-      this.rows = await (await this.distributionDealService.getAllDistributionDealsWithMovieId()).map( d => {
+      this.rows = await (await this.distributionDealService.getAllDistributionDealsWithMovieId()).map(d => {
         const row = { ...d } as any;
         row.dealLink = {
           id: d.deal.id,
@@ -85,8 +85,8 @@ export class DistributionDealsComponent implements OnInit {
     return `/c/o/dashboard/tunnel/movie/${movieId}/deals`;
   }
 
-  public getDealPath(dealId: string) {
-    return `/c/o/admin/panel/deal/${dealId}/m/${this.movieId}`;
+  public getDealPath(dealId: string, movieId: string) {
+    return `/c/o/admin/panel/deal/${dealId}/m/${movieId}`;
   }
 
 }

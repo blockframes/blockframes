@@ -6,8 +6,8 @@
       <mat-form-field appearance="outline">
         <mat-label>Invoice Status</mat-label>
         <mat-select formControlName="status" required>
-          <mat-option *ngFor="let status of statuses" [value]="status">
-            {{ status }}
+          <mat-option *ngFor="let status of statuses" [value]="paymentStatus[status]">
+            {{ paymentStatus[status] }}
           </mat-option>
         </mat-select>
       </mat-form-field>

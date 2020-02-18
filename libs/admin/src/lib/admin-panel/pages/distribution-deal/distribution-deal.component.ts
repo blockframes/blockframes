@@ -18,6 +18,7 @@ export class DistributionDealComponent implements OnInit {
   private deal: DistributionDeal;
   public dealForm: DealAdminForm;
   public statuses: string[];
+  public distributionDealStatus: any;
 
   constructor(
     private distributionDealService: DistributionDealService,
@@ -32,6 +33,7 @@ export class DistributionDealComponent implements OnInit {
     this.deal = await this.distributionDealService.getValue(this.dealId, { params: { movieId: this.movieId } });
     this.dealForm = new DealAdminForm(this.deal);
 
+    this.distributionDealStatus = DistributionDealStatus;
     this.statuses = Object.keys(DistributionDealStatus);
     this.cdRef.detectChanges();
   }

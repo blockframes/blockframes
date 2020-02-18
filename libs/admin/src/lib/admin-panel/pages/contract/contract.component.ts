@@ -27,7 +27,9 @@ export class ContractComponent implements OnInit {
   public contractForm: ContractAdminForm;
   public contractVersionForm: ContractVersionAdminForm;
   public statuses: string[];
+  public contractStatus: any;
   public types: string[];
+  public contractType: any;
   public version: number;
   public publicContract$: Observable<PublicContract>;
   public toPrettyDate = termToPrettyDate;
@@ -125,7 +127,9 @@ export class ContractComponent implements OnInit {
     this.contractVersions = await this.contractVersionService.getContractVersions(this.contractId);
 
     this.statuses = Object.keys(ContractStatus);
+    this.contractStatus = ContractStatus;
     this.types = Object.keys(ContractType);
+    this.contractType = ContractType;
 
     this.cdRef.detectChanges();
 

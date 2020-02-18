@@ -16,6 +16,7 @@ export class OrganizationComponent implements OnInit {
   private org: Organization;
   public orgForm: OrganizationAdminForm;
   public statuses: string[];
+  public organizationStatus: any;
 
   constructor(
     private organizationService: OrganizationService,
@@ -30,6 +31,7 @@ export class OrganizationComponent implements OnInit {
     this.orgForm = new OrganizationAdminForm(this.org);
 
     this.statuses = Object.keys(OrganizationStatus);
+    this.organizationStatus = OrganizationStatus;
     this.cdRef.detectChanges();
   }
 
@@ -40,10 +42,10 @@ export class OrganizationComponent implements OnInit {
     }
 
     const update = {
-      status : this.orgForm.get('status').value,
-      appAccess : {
-        catalogDashboard : this.orgForm.get('catalogDashboard').value,
-        catalogMarketplace : this.orgForm.get('catalogMarketplace').value,
+      status: this.orgForm.get('status').value,
+      appAccess: {
+        catalogDashboard: this.orgForm.get('catalogDashboard').value,
+        catalogMarketplace: this.orgForm.get('catalogMarketplace').value,
       }
     }
 

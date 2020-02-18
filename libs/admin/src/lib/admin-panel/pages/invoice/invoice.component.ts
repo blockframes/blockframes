@@ -18,6 +18,7 @@ export class InvoiceComponent implements OnInit {
   private invoice: Invoice;
   public invoiceForm: InvoiceAdminForm;
   public statuses: string[];
+  public paymentStatus: any;
 
   constructor(
     private invoiceService: InvoiceService,
@@ -32,6 +33,7 @@ export class InvoiceComponent implements OnInit {
     this.invoiceForm = new InvoiceAdminForm(this.invoice);
 
     this.statuses = Object.keys(PaymentStatus);
+    this.paymentStatus = PaymentStatus;
     this.cdRef.detectChanges();
   }
 
@@ -43,7 +45,7 @@ export class InvoiceComponent implements OnInit {
 
     const update = {
       contractId: this.invoiceForm.get('contractId').value,
-      status : this.invoiceForm.get('status').value,
+      status: this.invoiceForm.get('status').value,
       buyerId: this.invoiceForm.get('buyerId').value,
     }
 
