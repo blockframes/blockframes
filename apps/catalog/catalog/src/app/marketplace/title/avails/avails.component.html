@@ -7,18 +7,20 @@
         <mat-accordion multi="true">
           <catalog-avails-filter [availsForm]="availsForm"></catalog-avails-filter>
           <article fxLayoutAlign="center center" class="filter-buttons">
-            <button
-              *ngIf="!availsForm.value.isActive"
-              mat-stroked-button color="primary"
-              (click)="applyAvailsFilter()">
-              Apply Avails Filter
-            </button>
-            <button
-              *ngIf="availsForm.value.isActive"
-              mat-stroked-button color="accent"
-              (click)="deactivateAvailsFilter()">
-              Deactivate Avails Filter
-            </button>
+            <ng-container *ngIf="!availsForm.get('isActive').value; else active">
+              <button
+                mat-stroked-button color="primary"
+                (click)="applyAvailsFilter()">
+                Apply Avails Filter
+              </button>
+            </ng-container>
+            <ng-template #active>
+              <button
+                mat-stroked-button color="accent"
+                (click)="deactivateAvailsFilter()">
+                Deactivate Avails Filter
+              </button>
+            </ng-template>
           </article>
         </mat-accordion>
       </mat-card-content>
@@ -30,7 +32,7 @@
     <mat-card-header></mat-card-header>
     <mat-card-content>
       <world-map>
-        <ng-container *ngFor="let tag of notLicensedTerritories$ | async; trackBy: trackByTag">
+        <ng-container *ngFor="let tag of notLicensedTerritories; trackBy: trackByTag">
           <map-feature [tag]="tag['iso_a3']" color="foreground-unlicensed"></map-feature>
         </ng-container>
         <ng-container *ngFor="let tag of rightsSoldTerritories; trackBy: trackByTag">
@@ -62,16 +64,10 @@
       [items]="territories"
       store="slug" display="label">
     </chips-autocomplete>
-    <chips-autocomplete
-      [form]="availsForm.territoriesExcluded"
-      placeholder="Territories to exclude"
-      [items]="territories"
-      store="slug" display="label">
-    </chips-autocomplete>
     </mat-card-content>
     <mat-card [formGroup]="availsForm">
       <mat-card-content>
-        <ng-container *ngIf="!availsForm.territories.value.length && !availsForm.value.isActive; else displayDeal">
+        <ng-container *ngIf="!availsForm.territories.value.length && !availsForm.get('isActive').value; else displayDeal">
           <span class="mat-body-1">Please select a country to check if exploitation rights are available</span>
         </ng-container>
         <ng-template #displayDeal>

@@ -237,6 +237,7 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
 
 }
 
+// TODO: bind every controls to the form to avoid tricky disable => ISSUE#1942
 export class AvailsSearchForm extends FormEntity<AvailsSearchControl> {
   constructor(search: Partial<AvailsSearch> = {}) {
     const availsSearch = createAvailsSearch(search);
@@ -267,7 +268,6 @@ export class AvailsSearchForm extends FormEntity<AvailsSearchControl> {
   set isActive(value: boolean) {
     this.get('isActive').setValue(value);
   }
-
 
   addTerritory(territory: TerritoriesSlug) {
     // Check it's part of the list available

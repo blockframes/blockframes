@@ -23,7 +23,8 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
   public movie: Movie = this.movieQuery.getActive();
   public territories = staticModels['TERRITORIES'];
 
-  public notLicensedTerritories$: Observable<Model['TERRITORIES']>;
+  /** List of world map territories */
+  public notLicensedTerritories: Model['TERRITORIES'] = [];
   public rightsSoldTerritories: Model['TERRITORIES'] = [];
   public availableTerritories: Model['TERRITORIES'] = [];
 
@@ -36,15 +37,6 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.notLicensedTerritories$ = this.movieQuery.selectActive().pipe(
-      switchMap(async movie => {
-        if (!movie.distributionDeals) {
-          return this.territories;
-        }
-        const mandateDeals = await this.dealService.getMandateDeals(movie);
-        return getNotLicensedTerritories(mandateDeals, this.territories);
-      })
-    );
   }
 
   /** Whenever you click on a territory, add it to availsForm.territories. */
@@ -65,13 +57,14 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
   /** Apply filters and display results on the world map. */
   public async applyAvailsFilter() {
     try {
-      if (this.availsForm.invalid) {
-        throw new Error('Please fill all the required fields');
+      // TODO: bind every controls to the form to avoid tricky error handling => ISSUE#1942
+      if (this.availsForm.invalid || !this.availsForm.value.medias.length) {
+        throw new Error('Please fill all the required fields (Terms and Media)');
       }
 
       this.availsForm.get('isActive').setValue(true);
 
-      if (!this.movie.distributionDeals || !this.availsForm.value.isActive) {
+      if (!this.movie.distributionDeals) {
         throw new Error('Archipel Content got no mandate on this movie');
       }
 
@@ -80,6 +73,12 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
       const filteredDeals = this.movie.distributionDeals.filter(
         deal => !mandateDealIds.includes(deal.id)
       );
+
+      this.notLicensedTerritories = getNotLicensedTerritories(
+        this.availsForm.value,
+        mandateDeals,
+        this.territories
+      )
 
       this.availableTerritories = getAvailableTerritories(
         this.availsForm.value,
@@ -108,25 +107,26 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
     this.availsForm.enable();
   }
 
+  /** Add a distribution deal to the user selection for the active movie. */
   public addDeal() {
-    this.availsForm.enable();
-    this.availsForm.get('isActive').setValue(false);
-
     try {
-
+      const formValue = this.availsForm.getRawValue();
+      // Make sure all the field are filled and throw an error for each missing field
       switch (true) {
-        case !this.availsForm.terms.value.start || !this.availsForm.terms.value.end:
+        case !formValue.terms.start || !formValue.terms.end:
           throw new Error('Fill terms "Start Date" and "End Date" in order to create an Exploitation Right');
-        case !this.availsForm.territories.value.length:
+        case !formValue.territories.length:
           throw new Error('Select at least one available territory to create an Exploitation Right');
-        case !this.availsForm.medias.value.length:
+        case !formValue.medias.length:
           throw new Error('Select at least one media to create an Exploitation Right');
+        case formValue.territories.some(territory => !this.availableTerritories.find(({ slug }) => slug === territory)):
+          throw new Error('One or more selected territories are not available');
         default:
           break;
       }
 
       // Create a distribution deal from the avails form values.
-      const distributionDeal: DistributionDeal = this.dealService.createCartDeal(this.availsForm);
+      const distributionDeal: DistributionDeal = this.dealService.createCartDeal(formValue);
 
       // If title don't exist in the marketplace store, create one.
       if (!this.marketplaceQuery.getEntity(this.movie.id)) {
