@@ -74,25 +74,9 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
         deal => !mandateDealIds.includes(deal.id)
       );
 
-      this.notLicensedTerritories = getNotLicensedTerritories(
-        this.availsForm.value,
-        mandateDeals,
-        this.territories
-      )
-
-      this.availableTerritories = getAvailableTerritories(
-        this.availsForm.value,
-        mandateDeals,
-        this.territories,
-        filteredDeals
-      );
-
-      this.rightsSoldTerritories = getRightsSoldTerritories(
-        this.availsForm.value,
-        mandateDeals,
-        this.territories,
-        filteredDeals
-      );
+      this.notLicensedTerritories = getNotLicensedTerritories(this.availsForm.value, mandateDeals)
+      this.availableTerritories = getAvailableTerritories(this.availsForm.value, mandateDeals, filteredDeals);
+      this.rightsSoldTerritories = getRightsSoldTerritories(this.availsForm.value, mandateDeals, filteredDeals);
 
       this.availsForm.disable();
     } catch (error) {
