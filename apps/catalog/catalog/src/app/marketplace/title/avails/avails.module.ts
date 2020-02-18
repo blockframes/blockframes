@@ -9,6 +9,7 @@ import { AvailsFilterModule } from '@blockframes/catalog/components/avails-filte
 import { MapModule } from '@blockframes/ui/map';
 import { ChipsAutocompleteModule } from '@blockframes/ui/form/chips-autocomplete/chips-autocomplete.module';
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
+import { OverlayWidgetModule } from '@blockframes/ui/overlay-widget/overlay-widget.module';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -28,6 +29,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     MapModule,
     ChipsAutocompleteModule,
     TranslateSlugModule,
+    OverlayWidgetModule,
 
     // Material
     MatCardModule,
