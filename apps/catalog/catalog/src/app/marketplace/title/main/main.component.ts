@@ -37,7 +37,7 @@ export class MarketplaceMovieMainComponent {
   }
 
   public getPrize(prize) {
-    return [`${prize.name}  ${prize.year}`, prize.prize,prize.premiere].join(' | ');
+    return [`${prize.name}  ${prize.year}`, prize.prize,prize.premiere ? `${prize.prize,prize.premiere} Premiere` : null].filter(value => !!value).join(' | ');
   }
   
   // TODO#1658 Update LANGUAGES static model to be RFC-5646 compliant
