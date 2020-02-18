@@ -53,7 +53,6 @@ export class NotificationQuery extends QueryEntity<NotificationState, Notificati
     );
   }
 
-  
   public createNotificationInformation(notification: Notification) {
     switch (notification.type) {
       case NotificationType.inviteOrganization:
@@ -63,7 +62,7 @@ export class NotificationQuery extends QueryEntity<NotificationState, Notificati
           placeholderUrl: 'WelcomeDelivery_500.png'
         };
       case NotificationType.removeOrganization:
-        return  {
+        return {
           message: `${notification.organization.name} has been removed from ${notification.movie.title.original}'s delivery.`,
           imgRef: this.getPoster(notification.movie.id),
           placeholderUrl: 'WelcomeDelivery_500.png'
@@ -150,6 +149,6 @@ export class NotificationQuery extends QueryEntity<NotificationState, Notificati
 
   public getPoster(id: string): ImgRef {
     const movie = this.movieQuery.getEntity(id)
-    return movie.promotionalElements.poster.length ? movie.promotionalElements.poster[0].media : createImgRef();
+    return !!movie && movie.promotionalElements.poster.length ? movie.promotionalElements.poster[0].media : createImgRef();
   }
 }
