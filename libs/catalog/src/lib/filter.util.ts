@@ -24,28 +24,27 @@ function hasLanguage(movie: Movie, language: Partial<{ [languageLabel in Languag
     }
     const languages = Object.keys(language);
     for (const lang of languages) {
-      if (movie.versionInfo.languages.hasOwnProperty(lang)) {
-
         const movieLanguage = movie.versionInfo.languages[lang];
         const filterLanguage = language[lang];
 
-        // When no checkbox is checked, we just verify the key.
+        // When no checkbox is checked, don't filter.
         if (!filterLanguage.original && !filterLanguage.dubbed && !filterLanguage.subtitle && !filterLanguage.caption) {
           return true;
         }
 
-        if (filterLanguage.original && movieLanguage.original) {
-          return true;
-        }
-        if (filterLanguage.dubbed && movieLanguage.dubbed) {
-          return true;
-        }
-        if (filterLanguage.subtitle && movieLanguage.subtitle) {
-          return true;
-        }
-        if (filterLanguage.caption && movieLanguage.caption) {
-          return true;
-        }
+        if (movie.versionInfo.languages.hasOwnProperty(lang)) {
+          if (filterLanguage.original && movieLanguage.original) {
+            return true;
+          }
+          if (filterLanguage.dubbed && movieLanguage.dubbed) {
+            return true;
+          }
+          if (filterLanguage.subtitle && movieLanguage.subtitle) {
+            return true;
+          }
+          if (filterLanguage.caption && movieLanguage.caption) {
+            return true;
+          }
       }
     }
 }
@@ -143,19 +142,15 @@ function mandateHas(listFromFilter: string[], listFromDeal: string[]) {
 
 // TODO #1306 - remove when algolia is ready
 export function filterMovie(movie: Movie, filter: CatalogSearch): boolean {
-  const hasEveryLanguage = Object.keys(filter.languages)
-    .map(name => ({ ...filter.languages[name], name }))
-    .every(language => hasLanguage(movie, language));
-
   return (
     isProductionYearBetween(movie, filter.productionYear) &&
-    hasEveryLanguage &&
     hasGenres(movie, filter.genres) &&
     hasCertifications(movie, filter.certifications) &&
     isProductionStatus(movie, filter.status) &&
     hasCountry(movie, filter.originCountries) &&
     hasLanguage(movie, filter.languages) &&
-    isProductionStatus(movie, filter.status)
+    isProductionStatus(movie, filter.status) &&
+    hasBudget(movie, filter.estimatedBudget)
   );
 }
 

@@ -66,7 +66,6 @@ import { ChipsAutocompleteModule } from "@blockframes/ui/form/chips-autocomplete
     MatDatepickerModule,
     MatOptionModule,
     MatSnackBarModule,
-
     RouterModule.forChild([
       {
         path: '',

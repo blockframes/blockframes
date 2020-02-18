@@ -29,13 +29,14 @@
 
   <mat-sidenav-content>
     <!-- TOOLBAR -->
-    <mat-toolbar fxLayout="row" fxLayoutGap="24px" id="catalog-toolbar">
+    <mat-toolbar fxLayout="row" fxLayoutAlign="space-between center" id="catalog-toolbar">
       <button mat-icon-button (click)="sidenav.toggle()">
         <mat-icon>menu</mat-icon>
       </button>
-      <search-widget [searchCtrl]="searchCtrl" [results]="algoliaSearchResults$ | async"></search-widget>
-      <overlay-notification-widget></overlay-notification-widget>
-      <account-profile-widget></account-profile-widget>
+      <div fxLayout="row" fxLayoutGap="24px">
+        <overlay-notification-widget></overlay-notification-widget>
+        <account-profile-widget></account-profile-widget>
+      </div>
     </mat-toolbar>
     <!-- CONTENT -->
     <router-outlet></router-outlet>
