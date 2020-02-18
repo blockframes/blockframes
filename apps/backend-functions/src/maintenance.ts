@@ -10,8 +10,10 @@ interface IMaintenanceDoc {
   endedAt: Timestamp | null;
 }
 
+export const META_COLLECTION_NAME = '_META';
+
 const maintenanceRef = () => {
-  return db.collection('_META').doc('_MAINTENANCE');
+  return db.collection(META_COLLECTION_NAME).doc('_MAINTENANCE');
 };
 
 export async function startMaintenance() {
