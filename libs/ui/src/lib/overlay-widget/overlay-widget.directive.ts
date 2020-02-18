@@ -35,11 +35,12 @@ export class OverlayWidgetTooltipDirective {
   @HostListener('mouseenter') onMouseEnter() {
     this.widgetTooltip.open(this.el);
   }
-  @HostListener('mouseleave') onMouseLeave() {
-    setTimeout(() => {
-      this.widgetTooltip.close();
-    }, 1000)
-  }
+  // TODO##1958 update widgetTooltip to listen to mouseleave event
+  // @HostListener('mouseleave') onMouseLeave() {
+  //   setTimeout(() => {
+  //     this.widgetTooltip.close();
+  //   }, 1000)
+  // }
 
   constructor(private el: ElementRef) {}
 }
