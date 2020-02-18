@@ -64,8 +64,8 @@
             <ng-container *ngIf="movie.salesCast.cast.length > 0">
               <b>CAST</b>
               <li><strong i18n>Principal Cast </strong>
-                <ng-container *ngFor="let cast of movie.salesCast.cast">
-                  <span>{{ cast.firstName }} {{ cast.lastName }}</span>
+                <ng-container *ngFor="let cast of movie.salesCast.cast; let isLast = last">
+                  <span>{{ cast.firstName }} {{ cast.lastName }}{{ isLast? '' : ', '}}</span>
                 </ng-container>
               </li>
             </ng-container>
@@ -115,7 +115,10 @@
             <li *ngIf="movie.salesInfo.certifications.length > 0"><strong>Quotas </strong>
               <span *ngFor="let quota of movie.salesInfo.certifications; let isLast = last">{{ quota | translateSlug: 'CERTIFICATIONS' }}{{ isLast ? '' : ', ' }}</span></li>
             <li *ngIf="movie.salesInfo.rating.length > 0"><strong>Rating </strong>
-            <span *ngFor="let rating of movie.salesInfo.rating; let isLast = last">{{ rating.country | translateSlug: 'TERRITORIES' }} : {{ rating.value }}{{ isLast ? '' : '; ' }}</span></li>
+              <span *ngFor="let rating of movie.salesInfo.rating; let isLast = last">
+              {{ rating.country | translateSlug: 'TERRITORIES' }} : {{ rating.value }}{{ isLast ? '' : '; ' }}
+              </span>
+            </li>
             <li *ngIf="movie.movieReview.length > 0"><strong>Film Review </strong>
             <span *ngFor="let review of movie.movieReview">{{ review.criticName }} in {{ review.journalName}} "{{ review.criticQuote }}" {{ review.revueLink }}</span></li>
           </ul>
@@ -143,7 +146,7 @@
             <ng-container *ngFor="let version of movie.versionInfo.languages | keyvalue; let isLast = last">
               {{ version.key | translateSlug: 'LANGUAGES'}}:
               <ng-container *ngFor="let info of version.value | keyvalue; let isLast = last">
-                <ng-container *ngIf="info.value === true">
+                <ng-container *ngIf="info.value">
                   {{ info.key | translateSlug: 'VERSION_INFO' }}
                 </ng-container>
               </ng-container>
