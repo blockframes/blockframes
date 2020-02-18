@@ -24,12 +24,7 @@
   <div fxLayout="row" fxLayoutAlign="center">
     <button class="send" mat-flat-button color="accent" test-id="add" [disabled]="isSending" (click)="sendInvitations()">
       <mat-icon svgIcon="send"></mat-icon>
-      <ng-container *ngIf="form.controls.length === 1 else several">
-        <span>Send invitation</span>
-      </ng-container>
-      <ng-template #several>
-        <span>Send invitation(s)</span>
-      </ng-template>
+      <span>Send invitation{form.controls.length, plural, =1 {} other {s}}</span>
     </button>
   </div>
 </mat-card>
