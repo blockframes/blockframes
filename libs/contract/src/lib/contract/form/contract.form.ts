@@ -7,9 +7,9 @@ import {
   Contract,
   ContractPartyDetail,
   createLegalDocument,
-  createLegalDocuments,
+  createContractLegalDocuments,
   LegalDocument,
-  LegalDocuments,
+  ContractLegalDocuments,
 } from '../+state';
 import { ContractPartyForm } from './party/party.form';
 import { ContractVersionForm } from '@blockframes/contract/version/form/version.form';
@@ -55,18 +55,18 @@ export class LegalDocumentForm extends FormEntity<LegalDocumentControl, LegalDoc
   }
 }
 
-function createLegalDocumentsControl(legalDocuments?: Partial<LegalDocuments>) {
-  const entity = createLegalDocuments(legalDocuments);
+function createLegalDocumentsControl(legalDocuments?: Partial<ContractLegalDocuments>) {
+  const entity = createContractLegalDocuments(legalDocuments);
   return {
-    chainOfTitles: FormList.factory(entity.chainOfTitles, el => new LegalDocumentForm(el)),
+    expenses: FormList.factory(entity.expenses, el => new LegalDocumentForm(el)),
     invoices: FormList.factory(entity.invoices, el => new LegalDocumentForm(el))
   };
 }
 
 export type LegalDocumentsControl = ReturnType<typeof createLegalDocumentsControl>;
 
-export class LegalDocumentsForm extends FormEntity<LegalDocumentsControl, LegalDocuments> {
-  constructor(legalDocuments?: Partial<LegalDocuments>) {
+export class LegalDocumentsForm extends FormEntity<LegalDocumentsControl, ContractLegalDocuments> {
+  constructor(legalDocuments?: Partial<ContractLegalDocuments>) {
     super(createLegalDocumentsControl(legalDocuments));
   }
 }
@@ -80,8 +80,8 @@ function createContractControls(contract: Partial<Contract> = {}) {
   // If there is no party, set a licensee & a licensor by default
   if (!entity.parties.length) {
     entity.parties = [
-      createContractPartyDetail({ party: createParty({ role: 'licensee' })}),
-      createContractPartyDetail({ party: createParty({ role: 'licensor' })})
+      createContractPartyDetail({ party: createParty({ role: 'licensee' }) }),
+      createContractPartyDetail({ party: createParty({ role: 'licensor' }) })
     ]
   }
 

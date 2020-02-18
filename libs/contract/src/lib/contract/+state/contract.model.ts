@@ -7,7 +7,7 @@ import {
   ContractPartyDetailDocumentWithDates,
   ContractPartyDetailDocumentWithDatesDocument,
   LegalDocument,
-  LegalDocuments,
+  ContractLegalDocuments,
   ContractDocument,
   ContractType,
   PublicContractDocumentWithDates
@@ -49,7 +49,7 @@ export function createContract(params: Partial<Contract> = {}): Contract {
     parties: [],
     titleIds: [],
     partyIds: [],
-    documents: createLegalDocuments(params.documents),
+    documents: createContractLegalDocuments(params.documents),
     ...params
   };
 }
@@ -157,6 +157,7 @@ export function buildChainOfTitle() {
   // @todo #1657 implement this
 }
 
+
 /** Cleans an organization of its optional parameters */
 export function cleanContract(contract: Contract) {
   const c = { ...contract };
@@ -164,12 +165,12 @@ export function cleanContract(contract: Contract) {
   return c;
 }
 
-export function createLegalDocuments(
-  params: Partial<LegalDocuments> = {}
-): LegalDocuments {
+export function createContractLegalDocuments(
+  params: Partial<ContractLegalDocuments> = {}
+): ContractLegalDocuments {
   return {
-    chainOfTitles: [],
     invoices: [],
+    expenses: [],
     ...params
   }
 }
