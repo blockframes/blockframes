@@ -5,18 +5,20 @@ import {
   Organization,
   createOrganization,
   cleanOrganization,
-  AppStatus
+  AppStatus,
+  convertOrganizationWithTimestampsToOrganization,
+  OrganizationWithTimestamps
 } from './organization.model';
 import { OrganizationStore, OrganizationState } from './organization.store';
 import { OrganizationQuery } from './organization.query';
 import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
 import { AngularFireFunctions } from '@angular/fire/functions';
-import { APPS_DETAILS, App } from '@blockframes/utils';
-import { createPermissions, UserRole, createAppPermissions } from '../permissions/+state/permissions.model';
+import { APPS_DETAILS } from '@blockframes/utils';
+import { createPermissions, UserRole } from '../permissions/+state/permissions.model';
 import { firestore } from 'firebase/app';
 
 @Injectable({ providedIn: 'root' })
-@CollectionConfig({ path: 'orgs'})
+@CollectionConfig({ path: 'orgs' })
 export class OrganizationService extends CollectionService<OrganizationState> {
 
   constructor(
@@ -135,5 +137,17 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   public async setBlockchainFeature(value: boolean) {
     const orgId = this.query.getActiveId();
     return this.update(orgId, { isBlockchainEnabled: value });
+  }
+
+  /**
+   * @dev ADMIN method
+   * Fetch all organizations for administration uses
+   */
+  public async getAllOrganizations(): Promise<Organization[]> {
+    const orgs = await this.db
+      .collection('orgs')
+      .get().toPromise()
+
+    return orgs.docs.map(m => convertOrganizationWithTimestampsToOrganization(m.data() as OrganizationWithTimestamps)); // @todo #1832 rename ?
   }
 }

@@ -12,7 +12,7 @@ export class DistributionDealHoldbacksComponent {
   @Input() form: DistributionDealHoldbacksForm;
 
   public staticMedias = staticModels['MEDIAS'].filter(media => {
-    const wantedMedias = ['Pay TV', 'Free TV', 'S-VOD', 'A-VOD', 'Ancillary'];
+    const wantedMedias = ['Pay TV', 'Free TV', 'S-VOD', 'A-VOD', 'Planes', 'Trains', 'Hotels'];
     return wantedMedias.includes(media.label);
   });
 

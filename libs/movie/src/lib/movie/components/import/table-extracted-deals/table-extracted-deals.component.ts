@@ -10,8 +10,8 @@ import { SpreadsheetImportError, DealsImportState } from '../view-extracted-elem
 import { ViewImportErrorsComponent } from '../view-import-errors/view-import-errors.component';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state/distribution-deal.service';
 import { cleanModel } from '@blockframes/utils/helpers';
-import { Terms } from '@blockframes/utils/common-interfaces/terms';
-import { DatePipe } from '@angular/common';
+import { termToPrettyDate } from '@blockframes/utils/common-interfaces/terms';
+import { sortingDataAccessor } from '@blockframes/utils/table';
 
 const hasImportErrors = (importState: DealsImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -22,7 +22,6 @@ const hasImportErrors = (importState: DealsImportState, type: string = 'error'):
   templateUrl: './table-extracted-deals.component.html',
   styleUrls: ['./table-extracted-deals.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [DatePipe]
 })
 export class TableExtractedDealsComponent implements OnInit {
 
@@ -32,6 +31,7 @@ export class TableExtractedDealsComponent implements OnInit {
   private movies: any = {};
   public processedDeals = 0;
   public selection = new SelectionModel<DealsImportState>(true, []);
+  public toPrettyDate = termToPrettyDate;
   public displayedColumns: string[] = [
     'id',
     'select',
@@ -50,15 +50,14 @@ export class TableExtractedDealsComponent implements OnInit {
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
     private distributionDealService: DistributionDealService,
-    private movieService: MovieService,
-    private datepipe: DatePipe
+    private movieService: MovieService
   ) { }
 
   ngOnInit() {
     // Mat table setup
     this.rows.paginator = this.paginator;
     this.rows.filterPredicate = this.filterPredicate;
-    this.rows.sortingDataAccessor = this.sortingDataAccessor;
+    this.rows.sortingDataAccessor = sortingDataAccessor;
     this.rows.sort = this.sort;
   }
 
@@ -119,29 +118,6 @@ export class TableExtractedDealsComponent implements OnInit {
 
   }
 
-  toPrettyDate(term: Terms, type: 'start' | 'end' = 'start'): string {
-    const noDate = 'no date';
-    switch (type) {
-      case 'start':
-        if (!term.start || isNaN(term.start.getTime())) {
-          return term.approxStart || noDate;
-        } else if (term.start) {
-          return this.datepipe.transform(term.start, 'yyyy-MM-dd');;
-        } else {
-          return noDate;
-        }
-      case 'end':
-      default:
-        if (!term.end || isNaN(term.end.getTime())) {
-          return term.approxEnd || noDate;
-        } else if (term.end) {
-          return this.datepipe.transform(term.end, 'yyyy-MM-dd');;
-        } else {
-          return noDate;
-        }
-    }
-  }
-
   errorCount(data: DealsImportState, type: string = 'error') {
     return data.errors.filter((error: SpreadsheetImportError) => error.type === type).length;
   }
@@ -185,17 +161,6 @@ export class TableExtractedDealsComponent implements OnInit {
       return `${this.isAllSelected() ? 'select' : 'deselect'} all`;
     }
     return `${this.selection.isSelected(row) ? 'deselect' : 'select'} row`;
-  }
-
-  /**
-   * Allow to sort nested object
-   */
-  sortingDataAccessor(item, property) {
-    if (property.includes('.')) {
-      return property.split('.')
-        .reduce((object, key) => object[key], item);
-    }
-    return item[property];
   }
 
   /**

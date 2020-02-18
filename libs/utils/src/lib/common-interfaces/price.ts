@@ -1,6 +1,7 @@
 import { MovieCurrenciesSlug } from "@blockframes/utils/static-model/types";
 import { getCodeIfExists } from "@blockframes/utils/static-model/staticModels";
 import { firestore } from "firebase";
+import { toDate } from "@blockframes/utils/helpers"
 
 type Timestamp = firestore.Timestamp;
 
@@ -31,7 +32,7 @@ export const enum ExpenseSubType {
   translation = 'Translation expenses',
 }
 
-export const enum PaymentStatus {
+export enum PaymentStatus {
   unknown = 'unknown',
   waitingpayment = 'waiting for payment',
   due = 'Due',
@@ -126,6 +127,22 @@ export function createPrice(price: Partial<Price> = {}): Price {
   }
 }
 
+export function formatPrice(price: Price): Price {
+  const p = {
+    ...price
+  }
+
+  if (price.recoupableExpenses) {
+    p.recoupableExpenses = price.recoupableExpenses.map((r: any) => formatExpense(r))
+  }
+
+  if (price.mg) {
+    p.mg = formatPrice(price.mg);
+  }
+
+  return price;
+}
+
 /**
  * A factory function that creates Expense
  */
@@ -142,6 +159,15 @@ export function createExpense(params: Partial<Expense> = {}): Expense {
   }
 }
 
+export function formatExpense(expense: any): Expense {
+  return {
+    ...expense,
+    price: formatPrice(expense.price),
+    collected: formatPrice(expense.collected),
+    payments: expense.payments.map((p: any) => formatPayment(p)),
+  }
+}
+
 /**
  * A factory function that creates a payment
  */
@@ -152,5 +178,13 @@ export function createPayment(params: Partial<Payment> = {}): Payment {
     type: PaymentType.CB,
     price: createPrice(params ? params.price : undefined),
     ...params
+  }
+}
+
+export function formatPayment(payment: any): Payment {
+  return {
+    ...payment,
+    date: toDate(payment.date),
+    price: formatPrice(payment ? payment.price : undefined),
   }
 }

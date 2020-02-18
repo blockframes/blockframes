@@ -45,11 +45,11 @@ const tunnelRoutes: Routes = [
           import('./technical-info/technical-info.module').then(m => m.TunnelTechnicalInfoModule)
       },
       // Page 9
-      {
+ /*      {
         path: 'deals',
         loadChildren: () =>
           import('./previous-deals/previous-deals.module').then(m => m.TunnelPreviousDealsModule)
-      },
+      }, */
       // Page 10
       {
         path: 'images',

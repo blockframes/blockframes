@@ -1,1 +1,97 @@
-<p>details-mandate works!</p>
+<tunnel-page>
+    <h4 title>Step 1</h4>
+    <h1 subtitle>Contract Details</h1>
+    <ng-container tunnel-form>
+        <!-- Parties -->
+        <mat-card>
+            <mat-card-header>
+                <mat-card-title>
+                    Parties
+                </mat-card-title>
+            </mat-card-header>
+            <mat-card-content>
+                <contract-form-party [form]="parties" hasRole></contract-form-party>
+            </mat-card-content>
+        </mat-card>
+        <!-- Terms -->
+        <ng-container *ngFor="let control of versions.controls; let versionIndex = index">
+            <mat-card>
+                <mat-card-header>
+                    <mat-card-title>
+                        Termsof
+                    </mat-card-title>
+                    <mat-card-subtitle>
+                        You can either enter specific term dates or opt for a period triggered by an event
+                    </mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                    <distribution-form-terms [form]="terms(versionIndex)"></distribution-form-terms>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Renewal Conditions</mat-label>
+                        <textarea matInput
+                            placeholder="The Contract will be automatically renewed for 3-(three)-month period."
+                            cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="5"
+                            [formControl]="conditions(versionIndex)"></textarea>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Renewal Conditions</mat-label>
+                        <textarea matInput placeholder="The Contract may be terminated by each Party by sending a registered 
+                            letter with acknowledgement of receipt to the other Party, 
+                            at least one month before the renewal of the Contract." cdkTextareaAutosize
+                            #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="3"
+                            [formControl]="terminations(versionIndex)"></textarea>
+                    </mat-form-field>
+                </mat-card-content>
+            </mat-card>
+            <!-- Price -->
+            <mat-card>
+                <mat-card-header>
+                    <mat-card-title>
+                        Title Selection & Price
+                    </mat-card-title>
+                    <mat-card-subtitle>
+                        You may choose to put the same distribution fee for all the titles or a specific to each one.
+                        Distribution fee is calculated on 100% of the Gross Receipts excluding taxes,
+                        that is to say all non-refundable revenues actually received and retained by Licensee from its
+                        exploitation of the Rights in connection with eacht title.
+                    </mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                    <contract-version-form-price [form]="versions" hasMandate></contract-version-form-price>
+                </mat-card-content>
+            </mat-card>
+            <!-- Fees -->
+            <mat-card>
+                <mat-card-header>
+                    <mat-card-title>
+                        Fees
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Recoupable expenses</mat-label>
+                        <textarea matInput
+                            placeholder="Any actual, direct, third-party, out-of-pocket expenses (which shall exclude overhead) will be recouped if they are incurred for the exploitation of the film(s) in connection with Technical, Marketing, Delivery or Translation will be recouped on Net Receipts. Net Receipts are calculated on 100% of the Gross Receipts excluding taxes, Commission being deducted."
+                            cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="5"
+                            [formControl]="fees(versionIndex)"></textarea>
+                    </mat-form-field>
+                </mat-card-content>
+            </mat-card>
+            <!-- Payment Schedules -->
+            <mat-card>
+                <mat-card-header>
+                    <mat-card-title>
+                        Payment Schedules
+                    </mat-card-title>
+                    <mat-card-subtitle>
+                        Please choose the payment schedules most adapted to your needs.
+                        Pay attention, percentage is always the percentage of total amount
+                    </mat-card-subtitle>
+                </mat-card-header>
+                <mat-card-content>
+                    <contract-version-form-schedule [form]="versions"></contract-version-form-schedule>
+                </mat-card-content>
+            </mat-card>
+        </ng-container>
+    </ng-container>
+</tunnel-page>

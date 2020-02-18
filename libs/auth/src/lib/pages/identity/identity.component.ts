@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { AuthService, AuthQuery } from '../../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { PasswordControl } from '@blockframes/utils/form/controls/password.control';
 
 @Component({
@@ -12,21 +12,9 @@ import { PasswordControl } from '@blockframes/utils/form/controls/password.contr
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IdentityComponent {
-  // TODO issue#1146
-  public mobile =
-    navigator.userAgent.match(/Android/i) ||
-    navigator.userAgent.match(/webOS/i) ||
-    navigator.userAgent.match(/iPhone/i) ||
-    navigator.userAgent.match(/iPad/i) ||
-    navigator.userAgent.match(/iPod/i) ||
-    navigator.userAgent.match(/BlackBerry/i)
-      ? false
-      : true;
-
   public form = new FormGroup({
     name: new FormControl(''),
     surname: new FormControl(''),
-    avatar: new FormControl(''),
     email: new FormControl({ value: this.query.user.email, disabled: true }),
     generatedPassword: new FormControl(''),
     newPassword: new PasswordControl()
@@ -38,7 +26,8 @@ export class IdentityComponent {
     private service: AuthService,
     private query: AuthQuery,
     private snackBar: MatSnackBar,
-    private router: Router
+    private router: Router,
+    private route: ActivatedRoute,
   ) {}
 
   public async update() {
@@ -55,9 +44,8 @@ export class IdentityComponent {
       await this.service.update({
         name: this.form.get('name').value,
         surname: this.form.get('surname').value,
-        avatar: this.form.get('avatar').value
       });
-      this.router.navigateByUrl('/');
+      this.router.navigate(['/c'], { relativeTo: this.route });
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 5000 });
     }

@@ -20,3 +20,4 @@ export * from './form/territory/territory.module';
 export * from './form/terms/terms.module';
 export * from './form/holdbacks/holdbacks.module';
 export * from './form/languages/languages.module';
+export * from './form/broadcast/broadcast.module';
