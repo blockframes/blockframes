@@ -5,8 +5,6 @@ import {
   Component,
   ChangeDetectionStrategy,
   Input,
-  Output,
-  EventEmitter,
   OnInit,
   HostBinding
 } from '@angular/core';
@@ -23,14 +21,11 @@ import { CartService } from '@blockframes/organization/cart/+state/cart.service'
 export class WishlistCurrentRepertoryComponent implements OnInit {
   @HostBinding('attr.test-id') testId = 'sentWishlist';
 
-  @Output() sent = new EventEmitter();
-
   @Input() isCurrent = false;
   @Input() date: Date;
 
   public columnsToDisplay = [
     'movie',
-    'salesAgent',
     'director',
     'productionStatus',
     'originCountry',

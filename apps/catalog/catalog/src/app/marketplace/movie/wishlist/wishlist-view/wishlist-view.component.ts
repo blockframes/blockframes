@@ -1,13 +1,8 @@
-import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
-import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
 import { ChangeDetectionStrategy } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Wishlist, WishlistStatus } from '@blockframes/organization';
 import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
-import { CartService } from '@blockframes/organization/cart/+state/cart.service';
-import { Movie } from '@blockframes/movie';
-import { MatSnackBar } from '@angular/material';
 import { map } from 'rxjs/operators';
 
 @Component({
@@ -21,10 +16,7 @@ export class WishlistViewComponent implements OnInit {
   public currentWishlist$: Observable<Wishlist>;
 
   constructor(
-    private catalogCartQuery: CatalogCartQuery,
-    private cartService: CartService,
-    private snackBar: MatSnackBar,
-    private analytics: FireAnalytics
+    private catalogCartQuery: CatalogCartQuery
   ) {}
 
   ngOnInit() {
@@ -34,18 +26,5 @@ export class WishlistViewComponent implements OnInit {
     this.wishlists$ = this.catalogCartQuery.wishlistWithMovies$.pipe(
       map(wishlist => wishlist.filter(wish => wish.status === WishlistStatus.sent))
     );
-  }
-
-  // Update the status of the wishlist
-  public updateWishlistStatus(movies: Movie[]) {
-    try {
-      this.cartService.updateWishlistStatus(movies);
-      this.snackBar.open('Your current wishlist has been sent.', 'close', { duration: 2000 });
-      this.analytics.event(AnalyticsEvents.wishlistSend, {
-        wishlist: movies
-      });
-    } catch (err) {
-      this.snackBar.open(err.message, 'close', { duration: 2000 });
-    }
   }
 }
