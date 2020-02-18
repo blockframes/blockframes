@@ -38,8 +38,8 @@ export class MarketplaceMovieMainComponent {
 
   public getPrize(prize) {
     const festivalInfo = `${prize.name}  ${prize.year}`;
-    const premiere = `${prize.prize,prize.premiere} Premiere`;
-    return [festivalInfo, prize.prize,prize.premiere ? premiere : null].filter(value => !!value).join(' | ');
+    const premiere = `${prize.premiere} Premiere`;
+    return [festivalInfo, prize.prize , prize.premiere ? premiere : null].filter(value => !!value).join(' | ');
   }
   
   // TODO#1658 Update LANGUAGES static model to be RFC-5646 compliant
