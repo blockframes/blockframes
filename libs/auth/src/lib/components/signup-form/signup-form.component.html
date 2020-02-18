@@ -27,7 +27,7 @@
     </mat-form-field>
     <password-confirm formControlName="password"></password-confirm>
     <auth-accept-conditions (termsOfUseChecked)="checkTermsOfUse($event)">
-      <ng-template conditions>
+      <ng-template authConditions>
         <auth-terms-conditions></auth-terms-conditions>
       </ng-template>
     </auth-accept-conditions>
