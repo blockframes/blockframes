@@ -4,10 +4,10 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MarketplaceSelectionComponent } from './selection.component';
+import { WishlistButtonModule } from '../wishlist/wishlist-button/wishlist-button.module';
 
 import { MovieBannerModule } from '@blockframes/movie/movie/components/banner/banner.module';
 import { RightListModule } from '@blockframes/movie/distribution-deals/components/right-list/right-list.module';
-import { WishlistButtonModule } from '../../components/wishlist-button/wishlist-button.module';
 
 // Material
 import { MatDividerModule } from '@angular/material/divider';
@@ -44,4 +44,4 @@ import { MatSelectModule } from '@angular/material/select';
     ])
   ]
 })
-export class SelectionModule {}
+export class SelectionModule { }
