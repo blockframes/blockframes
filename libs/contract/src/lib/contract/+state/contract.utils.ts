@@ -46,9 +46,25 @@ export function displayPaymentSchedule(version: ContractVersion): { type: string
         list: [version.customPaymentSchedule]
       };
     }
+    // Verify if payment schedule is incomplete
     if (!version.paymentSchedule.length) {
       return undefined;
-    } 
+    }
+    const isIncomplete = version.paymentSchedule.some(({ percentage, date }) => {
+      if (!percentage || !date) {
+        return true;
+      }
+      const { start, floatingStart, floatingDuration } = date;
+      if (!start || !floatingStart || !floatingDuration) {
+        return true
+      }
+      const { temporality, duration, unit } = floatingDuration;
+      return !temporality || !duration || !unit
+    })
+    if (isIncomplete) {
+      return undefined;
+    }
+
     if (version.paymentSchedule[0].date.floatingDuration.temporality === TemporalityUnit.every) {
       return {
         type: 'Periodic Payment',

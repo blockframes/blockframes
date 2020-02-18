@@ -46,10 +46,10 @@
 
 
 <!-- DISTRIBUTION DEALS -->
-<section>
-  <mat-card>
+<section *ngIf="titles$ | async as titles">
+  <mat-card *ngIf="titles.length">
     <mat-accordion multi="false">
-      <ng-container *ngFor="let movie of titles$ | async">
+      <ng-container *ngFor="let movie of titles">
         <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
           <mat-expansion-panel-header>
             <mat-panel-title fxLayout="row" fxLayoutAlign="space-between center">
