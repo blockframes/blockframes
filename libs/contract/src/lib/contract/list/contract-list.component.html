@@ -32,26 +32,26 @@
     <ng-container matColumnDef="territories">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Territories</th>
       <td mat-cell *matCellDef="let contract">
-        <ng-container *ngIf="getContractTerritories(contract).length < 5">
-          <article *ngFor="let territory of getContractTerritories(contract); let i=index" class="mat-body-2">
-            {{ territory | translateSlug: 'TERRITORIES'}}
-          </article>
+        <ng-container *ngIf="getContractTerritories(contract).length < 4">
+          <span *ngFor="let territory of getContractTerritories(contract); let i=index; let last=last" class="mat-body-2">
+            {{ territory | translateSlug: 'TERRITORIES'}}{{ last? '' : ',' }}
+          </span>
         </ng-container>
-        <ng-container *ngIf="getContractTerritories(contract).length >= 5;">
-          <article *ngFor="let territory of getContractTerritories(contract);let i=index" class="mat-body-2">
-            <ng-container *ngIf="i<5">
-              {{ territory | translateSlug: 'TERRITORIES'}}
+        <ng-container *ngIf="getContractTerritories(contract).length >= 4;">
+          <span *ngFor="let territory of getContractTerritories(contract);let i=index; let last=last" class="mat-body-2">
+            <ng-container *ngIf="i<4">
+              {{ territory | translateSlug: 'TERRITORIES'}}{{ last? '' : ','}}
             </ng-container>
-            </article>
+            </span>
             <p [widgetTooltip]="territories" class="tooltip">...</p>
         </ng-container>
         <overlay-widget #territories>
           <widget-card>
-            <article *ngFor="let territory of getContractTerritories(contract);let i=index" class="mat-body-2">
-              <ng-container *ngIf="i>5">
-                {{ territory | translateSlug: 'TERRITORIES'}}
+            <span *ngFor="let territory of getContractTerritories(contract);let i=index; let last=last" class="mat-body-2">
+              <ng-container *ngIf="i>4">
+                {{ territory | translateSlug: 'TERRITORIES'}}{{ last? '' : ','}}
               </ng-container>
-            </article>
+            </span>
           </widget-card>
         </overlay-widget>
       </td>
