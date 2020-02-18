@@ -1,13 +1,14 @@
 <section fxLayout="row" fxLayout="space-between stretch" fxLayoutGap="24px">
-  <mat-card fxFlex>
+  <mat-card fxFlex *ngIf="versionView$ | async as version">
     <mat-card-header>
-      <mat-card-title>You made an offer for {{ count$ | async }} titles</mat-card-title>
+      <mat-card-title>You made an offer for {{ version.titleIds.length }} titles</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <p></p>
-      <p></p>
+      <p *ngIf="version.price as price">
+        Your offer is {{ price.amount | currency: price.currency }} for {{ version.titleIds.length }} titles: 
+      </p>
       <ul>
-        <li></li>
+        <li *ngFor="let title of titles$ | async">{{ title.main.title.international }}</li>
       </ul>
     </mat-card-content>
     <mat-card-actions fxLayout="row" fxLayoutAlign="end end">
@@ -17,4 +18,25 @@
       </button>
     </mat-card-actions>
   </mat-card>
+
+  <mat-card>
+    <mat-card-header>
+      <mat-card-title>Payment Schedule</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-list *ngIf="payment$ | async as payments">
+        <mat-list-item *ngFor="let payment of payments.list">{{ payment }}</mat-list-item>
+      </mat-list>
+    </mat-card-content>
+  </mat-card>
 </section>
+
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>Negotiation History</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    
+  </mat-card-content>
+</mat-card>
+

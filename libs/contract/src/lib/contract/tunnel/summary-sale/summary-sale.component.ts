@@ -11,7 +11,7 @@ import { DistributionDealService } from '@blockframes/movie/distribution-deals/+
 import { DistributionDealStatus } from '@blockframes/movie/distribution-deals/+state/distribution-deal.firestore';
 import { ContractTunnelComponent, DealControls } from '../contract-tunnel.component';
 import { ContractQuery, ContractStatus } from '../../+state';
-import { displayPaymentSchedule, displayTerms } from '../utils';
+import { displayPaymentSchedule, displayTerms } from '../../+state/contract.utils';
 import { Observable } from 'rxjs';
 
 @Component({

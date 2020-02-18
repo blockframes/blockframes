@@ -1,4 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { ContractQuery, displayPaymentSchedule } from '@blockframes/contract/contract/+state';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'catalog-negociation',
@@ -8,7 +10,11 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 })
 export class NegociationComponent implements OnInit {
 
-  constructor() { }
+  versionView$ = this.query.activeVersionView$;
+  titles$ = this.query.titles$;
+  payment$ = this.query.activeVersion$.pipe(map(displayPaymentSchedule));
+
+  constructor(private query: ContractQuery) { }
 
   ngOnInit() {
   }

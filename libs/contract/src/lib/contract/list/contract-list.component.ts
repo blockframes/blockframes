@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { MatSort } from '@angular/material/sort';
 import { startWith } from 'rxjs/operators';
-import { Contract, getTotalPrice } from '../+state/contract.model';
+import { Contract, getTotalPrice } from '../+state';
 import { MatPaginator } from '@angular/material/paginator';
 import { ContractVersion, getContractLastVersion } from '@blockframes/contract/version/+state';
 import { Price } from '@blockframes/utils/common-interfaces/price';

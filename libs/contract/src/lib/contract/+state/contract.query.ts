@@ -1,7 +1,9 @@
 import { Injectable } from '@angular/core';
 import { QueryEntity } from '@datorama/akita';
 import { ContractStore, ContractState } from './contract.store';
-import { map } from 'rxjs/operators';
+import { map, shareReplay, distinctUntilChanged, pluck, switchMap } from 'rxjs/operators';
+import { getVersonView } from './contract.utils';
+import { MovieQuery } from '@blockframes/movie';
 
 @Injectable({ providedIn: 'root' })
 export class ContractQuery extends QueryEntity<ContractState> {
@@ -11,8 +13,19 @@ export class ContractQuery extends QueryEntity<ContractState> {
     map(contract => contract.versions[contract.versions.length - 1])
   );
 
+  public activeVersionView$ = this.activeVersion$.pipe(
+    map(getVersonView),
+    shareReplay()
+  );
 
-  constructor(protected store: ContractStore) {
+  /** Get all movies of a contract */
+  public titles$ = this.activeVersionView$.pipe(
+    pluck('titleIds'),
+    distinctUntilChanged((prev, next) => prev.length === next.length),
+    switchMap(titeIds => this.movieQuery.selectMany(titeIds))
+  )
+
+  constructor(protected store: ContractStore, private movieQuery: MovieQuery) {
     super(store);
   }
 

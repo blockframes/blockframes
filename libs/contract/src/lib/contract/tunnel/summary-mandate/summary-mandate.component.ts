@@ -7,7 +7,7 @@ import { FormEntity } from '@blockframes/utils';
 import { FormControl } from '@angular/forms';
 import { ContractVersionPriceControl, ContractVersionForm } from '@blockframes/contract/version/form';
 import { MovieCurrenciesSlug } from '@blockframes/utils/static-model';
-import { displayPaymentSchedule, displayTerms } from '../utils';
+import { displayPaymentSchedule, displayTerms } from '../../+state/contract.utils';
 import { ContractQuery, ContractStatus, ContractService } from '../../+state';
 import { ContractVersionService } from '@blockframes/contract/version/+state';
 import { AngularFirestore } from '@angular/fire/firestore';
