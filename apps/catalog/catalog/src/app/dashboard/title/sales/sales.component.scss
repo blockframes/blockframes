@@ -1,3 +1,10 @@
 section > * {
   margin-bottom: 16px;
 }
+
+.mat-card {
+  height: 95px;
+  .mat-card-title {
+    margin-top: 10px;
+  }
+}
