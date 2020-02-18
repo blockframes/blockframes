@@ -37,7 +37,9 @@ export class MarketplaceMovieMainComponent {
   }
 
   public getPrize(prize) {
-    return [`${prize.name}  ${prize.year}`, prize.prize,prize.premiere].join(' | ');
+    const festivalInfo = `${prize.name}  ${prize.year}`;
+    const premiere = `${prize.premiere} Premiere`;
+    return [festivalInfo, prize.prize , prize.premiere ? premiere : null].filter(value => !!value).join(' | ');
   }
   
   // TODO#1658 Update LANGUAGES static model to be RFC-5646 compliant
