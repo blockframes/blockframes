@@ -9,10 +9,4 @@
       isCurrent="true" >
     </catalog-wishlist-current-repertory>
   </article>
-  <article *ngFor="let wishlist of wishlists$ | async">
-    <catalog-wishlist-current-repertory
-      [movies]="wishlist.movies"
-      [date]="wishlist.sent" >
-    </catalog-wishlist-current-repertory>
-  </article>
 </section>
