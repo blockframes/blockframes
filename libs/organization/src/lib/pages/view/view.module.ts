@@ -26,6 +26,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatListModule } from '@angular/material/list';
 
 const routes = [{
   path: '',
@@ -76,6 +78,8 @@ const routes = [{
     MatFormFieldModule,
     MatInputModule,
     MatMenuModule,
+    MatDividerModule,
+    MatListModule,
     RouterModule.forChild(routes)
   ]
 })
