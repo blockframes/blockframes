@@ -1,5 +1,6 @@
-import { ScheduledDateRaw, createScheduledDate } from "./terms";
+import { ScheduledDateRaw, createScheduledDate, formatScheduledDate } from "./terms";
 import { PaymentStatus } from "./price";
+
 export interface ScheduleRaw<D> {
   percentage: number;
   date?: D | ScheduledDateRaw<D>;
@@ -22,5 +23,12 @@ export function createPaymentSchedule(params: Partial<PaymentSchedule> = {}): Pa
     label: '',
     status: PaymentStatus.unknown,
     ...params,
+  }
+}
+
+export function formatPaymentSchedule(paymentSchedule: any): PaymentSchedule {
+  return {
+    ...paymentSchedule,
+    date: formatScheduledDate(paymentSchedule.date)
   }
 }

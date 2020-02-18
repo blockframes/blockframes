@@ -1,5 +1,5 @@
 import { getCodeIfExists } from '@blockframes/utils/static-model/staticModels';
-import { createPrice, Price, PaymentStatus } from '@blockframes/utils/common-interfaces/price';
+import { createPrice, Price } from '@blockframes/utils/common-interfaces/price';
 import {
   ContractDocumentWithDates,
   ContractStatus,
@@ -10,23 +10,14 @@ import {
   LegalDocuments,
   ContractDocument,
   ContractType,
-  InvoiceTitleDetails,
-  Invoice,
   PublicContractDocumentWithDates
 } from './contract.firestore';
 import { createParty } from '@blockframes/utils/common-interfaces/identity';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 import { createTerms } from '@blockframes/utils/common-interfaces/terms';
-import {
-  ContractVersion,
-  ContractVersionWithTimeStamp,
-  formatContractVersion,
-  getContractLastVersion
-} from '../../version/+state/contract-version.model';
+import { ContractVersion, ContractVersionWithTimeStamp, createContractVersionFromFirestore, getContractLastVersion } from '../../version/+state/contract-version.model';
 import { LegalRolesSlug } from '@blockframes/utils/static-model/types';
 import { toDate } from '@blockframes/utils/helpers';
-import { createPaymentSchedule } from '@blockframes/utils/common-interfaces/schedule';
-import { createBankAccount } from '@blockframes/utils/common-interfaces/utility';
 
 /**
  * @dev this should not be saved to firestore,
@@ -50,15 +41,6 @@ export interface ContractWithTimeStamp extends ContractDocument {
 export type ContractPartyDetail = ContractPartyDetailDocumentWithDates;
 
 export type ContractPartyDetailDocument = ContractPartyDetailDocumentWithDatesDocument;
-
-/**
- * @dev this should not be saved to firestore,
- * used only in front
- */
-export interface ContractWithLastVersion {
-  doc: Contract;
-  last: ContractVersion;
-}
 
 export function createContract(params: Partial<Contract> = {}): Contract {
   return {
@@ -111,9 +93,9 @@ export function createContractPartyDetail(
 ): ContractPartyDetail {
   return {
     status: ContractStatus.unknown,
+    childRoles: [],
     ...params,
     party: createParty(params.party),
-    childRoles: ['observator'],
   };
 }
 
@@ -175,19 +157,11 @@ export function buildChainOfTitle() {
   // @todo #1657 implement this
 }
 
-/** Function to convert a Contract into a ContractDocument. */
-export function convertToContractDocument(params: Partial<Contract> = {}): ContractDocumentWithDates {
-  return {
-    id: params.id,
-    type: ContractType.mandate,
-    parties: [],
-    titleIds: [],
-    partyIds: [],
-    parentContractIds: [],
-    childContractIds: [],
-    documents: createLegalDocuments(params.documents),
-    ...params
-  };
+/** Cleans an organization of its optional parameters */
+export function cleanContract(contract: Contract) {
+  const c = { ...contract };
+  delete c.versions; // Remove local values
+  return c;
 }
 
 export function createLegalDocuments(
@@ -211,51 +185,20 @@ export function createLegalDocument(
   }
 }
 
-export function createContractFromFirestore(contract: ContractWithTimeStamp): Contract {
-  return {
+export function createContractFromFirestore(contract: any): Contract {
+  const c = {
     ...contract,
     signDate: toDate(contract.signDate),
     parties: contract.parties
       ? contract.parties.map(partyDetails => formatPartyDetails(partyDetails))
-      : [],
-    versions: contract.versions
-      ? contract.versions.map(version => formatContractVersion(version))
       : []
   }
-}
 
-export function createInvoiceTitleDetails(
-  params: Partial<InvoiceTitleDetails> = {}
-): InvoiceTitleDetails {
-  return {
-    titleId: '',
-    ...params,
-    price: createPrice(params.price),
+  if (contract.versions) {
+    c.versions = contract.versions.map(version => createContractVersionFromFirestore(version));
   }
-}
 
-export function createInvoice(
-  params: Partial<Invoice> = {}
-): Invoice {
-  return {
-    id: '',
-    internalRef: '',
-    payments: [],
-    emittedDate: new Date(),
-    titles: [],
-    buyerId: '',
-    sellerId: '',
-    status: PaymentStatus.unknown,
-    contractId: '',
-    legalDocumentId: '',
-    reportIds: [],
-    reportInternalRefs: [],
-    ...params,
-    price: createPrice(params.price),
-    collected: createPrice(params.collected),
-    paymentTerm: createTerms(params.paymentTerm),
-    account: createBankAccount(params.account),
-  }
+  return c;
 }
 
 /**
@@ -263,10 +206,7 @@ export function createInvoice(
  * @param partyDetails
  */
 export function formatPartyDetails(partyDetails: any): ContractPartyDetail {
-  // Dates from firebase are Timestamps, we convert it to Dates.
   partyDetails.signDate = toDate(partyDetails.signDate);
-
-
   return partyDetails as ContractPartyDetail;
 }
 

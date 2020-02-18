@@ -16,7 +16,9 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Observable } from 'rxjs';
 import { startWith } from 'rxjs/operators';
+import { getValue } from '@blockframes/utils/helpers';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
+import { sortingDataAccessor, fallbackFilterPredicate } from '@blockframes/utils/table';
 
 /**
  * This directive is to be used inside the table-filter component on a ng-template
@@ -54,9 +56,17 @@ export class TableFilterComponent implements OnInit, AfterViewInit {
   @Input() columns: Record<string, any>;
   @Input() initialColumns: string[];
   @Input() link: string;
+  @Input() showLoader = false;
+  @Input() filterPredicate: any;
   @Input() set source(data: any[]) {
     this.dataSource = new MatTableDataSource(data);
     this.dataSource.paginator = this.paginator;
+    if (this.filterPredicate) {
+      this.dataSource.filterPredicate = this.filterPredicate;
+    } else {
+      this.dataSource.filterPredicate = fallbackFilterPredicate;
+    }
+    this.dataSource.sortingDataAccessor = sortingDataAccessor;
     this.dataSource.sort = this.sort;
   }
 
@@ -66,6 +76,8 @@ export class TableFilterComponent implements OnInit, AfterViewInit {
 
   // Filters
   columnFilter = new FormControl([]);
+  public getValue = getValue;
+  public noData = false;
 
   /** References to template to apply for specific columns */
   @ContentChildren(ColRef, { descendants: false }) cols: QueryList<ColRef>;
@@ -77,6 +89,10 @@ export class TableFilterComponent implements OnInit, AfterViewInit {
     this.displayedColumns$ = this.columnFilter.valueChanges.pipe(
       startWith(this.columnFilter.value)
     );
+
+    setTimeout(() => {
+      this.noData = true;
+    }, 5000)
   }
 
   ngAfterViewInit() {
@@ -100,15 +116,4 @@ export class TableFilterComponent implements OnInit, AfterViewInit {
     }
   }
 
-  /**
-   * Get the value of an item based on a path
-   * @example item = movie, key = 'budget.totalBudget'
-   */
-  getValue(item: any, key: string) {
-    const path = key.split('.');
-    for (let i = 0; i < path.length; i++) {
-      item = item[path[i]];
-    }
-    return item;
-  }
 }
