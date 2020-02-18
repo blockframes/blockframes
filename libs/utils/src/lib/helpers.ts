@@ -31,6 +31,18 @@ export function toDate(date: firestore.Timestamp | Date): Date {
 }
 
 /**
+ * Get the value of an item based on a path
+ * @example item = movie, key = 'budget.totalBudget'
+ */
+export function getValue(item: any, key: string) {
+  const path = key.split('.');
+  for (let i = 0; i < path.length; i++) {
+    item = item[path[i]];
+  }
+  return item;
+}
+
+/*
  * Takes a list of items and an asynchronous filtering function and
  * returns a promise of the filtered list.
  * @param items A list of item to filter with an asynchronous function

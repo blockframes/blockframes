@@ -3,12 +3,14 @@ import { ContractStore, ContractState } from './contract.store';
 import { CollectionConfig, CollectionService, awaitSyncQuery, Query, WriteOptions } from 'akita-ng-fire';
 import {
   Contract,
-  convertToContractDocument,
   createContractPartyDetail,
   initContractWithVersion,
   ContractWithLastVersion,
   ContractWithTimeStamp,
-  getContractParties
+  getContractParties,
+  createContractFromFirestore,
+  cleanContract,
+  PublicContract
 } from './contract.model';
 import orderBy from 'lodash/orderBy';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
@@ -19,8 +21,9 @@ import { PermissionsService } from '@blockframes/organization';
 import { ContractDocumentWithDates, ContractStatus } from './contract.firestore';
 import { firestore } from 'firebase/app';
 import { MovieQuery } from '@blockframes/movie';
+import { createContractVersionFromFirestore } from '@blockframes/contract/version/+state/contract-version.model';
 import { ContractVersion } from '@blockframes/contract/version/+state';
-import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
+import { Observable } from 'rxjs';
 
 /**
  * Get all the contracts where user organization is party.
@@ -30,26 +33,26 @@ import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state/d
 const organizationContractsListQuery = (orgId: string): Query<ContractWithTimeStamp[]> => ({
   path: 'contracts',
   queryFn: ref => ref.where('partyIds', 'array-contains', orgId).where('childContractIds', '==', []),
-    versions: contract => ({
-      path: `contracts/${contract.id}/versions`
-    })
+  versions: contract => ({
+    path: `contracts/${contract.id}/versions`
+  })
 });
 
 /** Get the active contract and put his lastVersion in it. */
 const contractQuery = (contractId: string): Query<ContractWithTimeStamp> => ({
   path: `contracts/${contractId}`,
-    versions: contract => ({
-      path: `contracts/${contract.id}/versions`
-    })
+  versions: contract => ({
+    path: `contracts/${contract.id}/versions`
+  })
 })
 
 /** Get all the contracts where the active movie appears. */
 const movieContractsQuery = (movieId: string): Query<ContractWithTimeStamp[]> => ({
   path: 'contracts',
   queryFn: ref => ref.where('titleIds', 'array-contains', movieId).where('childContractIds', '==', []),
-    versions: contract => ({
-      path: `contracts/${contract.id}/versions`
-    })
+  versions: contract => ({
+    path: `contracts/${contract.id}/versions`
+  })
 });
 
 @Injectable({ providedIn: 'root' })
@@ -101,7 +104,7 @@ export class ContractService extends CollectionService<ContractState> {
    * to clean the unused properties in the database (lastVersion).
   */
   formatToFirestore(contract: Contract): ContractDocumentWithDates {
-    return convertToContractDocument(contract);
+    return cleanContract(contract);
   }
 
   /**
@@ -117,7 +120,7 @@ export class ContractService extends CollectionService<ContractState> {
         ? await this.getValue(contractOrId)
         : contractOrId
 
-      contractWithVersion.doc = this.formatContract(contract);
+      contractWithVersion.doc = createContractFromFirestore(contract);
       const lastVersion = await this.contractVersionService.getContractLastVersion(contract.id);
       if (lastVersion) {
         contractWithVersion.last = lastVersion;
@@ -148,8 +151,8 @@ export class ContractService extends CollectionService<ContractState> {
         );
         if (contractVersions.length) {
           const sortedContractVersions = orderBy(contractVersions, 'id', 'desc');
-          contractWithVersion.doc = this.formatContract(contract);
-          contractWithVersion.last = sortedContractVersions[0];
+          contractWithVersion.doc = createContractFromFirestore(contract);
+          contractWithVersion.last = createContractVersionFromFirestore(sortedContractVersions[0]);
           return contractWithVersion;
         }
       }
@@ -182,14 +185,6 @@ export class ContractService extends CollectionService<ContractState> {
     await this.add(contract.doc);
     await this.contractVersionService.addContractVersion(contract);
     return contract.doc.id;
-  }
-
-  /**
-   *
-   * @param contract
-   */
-  private formatContract(contract: any): Contract {
-    return contract;
   }
 
   /**
@@ -243,7 +238,7 @@ export class ContractService extends CollectionService<ContractState> {
    * @param contract
    * @param parentContracts
    */
-  public async populatePartiesWithParentRoles(contract: Contract, parentContracts?: Contract[]): Promise<Contract> {
+  public async populatePartiesWithParentRoles(contract: Contract, parentContracts: Contract[] = []): Promise<Contract> {
 
     /**
      * @dev If any parent contracts of this current contract have parties with childRoles defined,
@@ -251,7 +246,9 @@ export class ContractService extends CollectionService<ContractState> {
      */
     if (parentContracts.length === 0) {
       const promises = contract.parentContractIds.map(id => this.getValue(id));
-      parentContracts = await Promise.all(promises);
+      if (promises.length) {
+        parentContracts = await Promise.all(promises);
+      }
     }
 
     parentContracts.forEach(parentContract => {
@@ -279,15 +276,15 @@ export class ContractService extends CollectionService<ContractState> {
   public acceptOffer(contract: Contract, organizationId: string) {
     // Get the index of logged in user party.
     const index = contract.parties.findIndex(partyDetails => {
-      const  { orgId, role } = partyDetails.party;
+      const { orgId, role } = partyDetails.party;
       return orgId === organizationId && role === 'signatory';
     });
 
     // Create an updated party with new status and a timestamp.
     const updatedParty = createContractPartyDetail({
-        ...contract.parties[index],
-        signDate: new Date(),
-        status: ContractStatus.accepted
+      ...contract.parties[index],
+      signDate: new Date(),
+      status: ContractStatus.accepted
     });
 
     // Replace the party at the index and update all the parties array.
@@ -303,20 +300,47 @@ export class ContractService extends CollectionService<ContractState> {
   public declineOffer(contract: Contract, organizationId: string) {
     // Get the index of logged in user party.
     const index = contract.parties.findIndex(partyDetails => {
-      const  { orgId, role } = partyDetails.party;
+      const { orgId, role } = partyDetails.party;
       return orgId === organizationId && role === 'signatory';
     });
 
     // Create an updated party with new status and a timestamp.
     const updatedParty = createContractPartyDetail({
-        ...contract.parties[index],
-        signDate: new Date(),
-        status: ContractStatus.rejected
+      ...contract.parties[index],
+      signDate: new Date(),
+      status: ContractStatus.rejected
     });
 
     // Replace the party at the index and update all the parties array.
     const updatedParties = contract.parties.filter((_, i) => i !== index);
     this.update({ ...contract, parties: [...updatedParties, updatedParty] })
+  }
+
+  public listenOnPublicContract(contractId: string) : Observable<PublicContract>{
+    return this.db.collection('publicContracts').doc<PublicContract>(contractId).valueChanges();
+  }
+
+  /**
+   * @dev ADMIN method
+   * Get all contracts.
+   */
+  public async getAllContracts(): Promise<Contract[]> {
+    const contractsSnap = await this.db
+      .collection('contracts')
+      .get()
+      .toPromise();
+    return contractsSnap.docs.map(c => createContractFromFirestore(c.data()));
+  }
+
+  /**
+   * Get all contracts for a given movie.
+   */
+  public async getMovieContracts(movieId: string): Promise<Contract[]> {
+    const contractsSnap = await this.db
+      .collection('contracts', ref => ref.where('titleIds', 'array-contains', movieId))
+      .get()
+      .toPromise();
+    return contractsSnap.docs.map(c => createContractFromFirestore(c.data()));
   }
 
 }

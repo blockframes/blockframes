@@ -1,0 +1,28 @@
+<h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Organizations</h1>
+
+<bf-table-filter 
+  [source]="rows" 
+  [columns]="versionColumns" 
+  [initialColumns]="initialColumns" 
+  [filterPredicate]="filterPredicate"
+  showFilter="true"
+  showLoader="true"
+  showPaginator="true">
+  <ng-template colRef="logo" let-logo>
+    <ng-container *ngIf="logo; else nologo">
+      <img class="logo" [src]="logo">
+    </ng-container>
+    <ng-template #nologo>
+      --
+    </ng-template>
+  </ng-template>
+  <ng-template colRef="edit" let-edit>
+    <a [routerLink]="edit.link"><mat-icon>edit</mat-icon></a>
+  </ng-template>
+  <ng-template colRef="appAccess" let-appAccess>
+    <ul>
+      <li>Dashboard: {{ appAccess.catalogDashboard ? 'yes': 'no' }}</li>
+      <li>Marketplace: {{ appAccess.catalogMarketplace ? 'yes': 'no' }}</li>
+    </ul>
+  </ng-template>
+</bf-table-filter>

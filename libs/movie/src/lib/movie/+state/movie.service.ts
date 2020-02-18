@@ -73,8 +73,7 @@ export class MovieService extends CollectionService<MovieState> {
         const movieIds = contract.titleIds.filter(titleId => organizationMovieIds.includes(titleId));
 
         return awaitSyncQuery.call(this, movieListContractQuery(contract.id, movieIds))
-      }
-      )
+      })
     );
   }
 
@@ -104,7 +103,7 @@ export class MovieService extends CollectionService<MovieState> {
   public async addMovie(original: string, movie?: Movie): Promise<Movie> {
     const id = this.db.createId();
     const userId = this.authQuery.userId;
-​
+
     if (!movie) {
       // create empty movie
       movie = createMovie({ id, main: { title: { original } }, _meta: { createdBy: userId } });
@@ -112,10 +111,10 @@ export class MovieService extends CollectionService<MovieState> {
       // we set an id for this new movie
       movie = createMovie({ ...movie, id, _meta: { createdBy: userId } });
     }
-​
+
     // Add movie document to the database
     await this.add(cleanModel(movie));
-​
+
     return movie;
   }
 
@@ -154,4 +153,19 @@ export class MovieService extends CollectionService<MovieState> {
     const f = this.functions.httpsCallable('getMovieAnalytics');
     return f({ movieIds, daysPerRange: 28 });
   }
+
+
+  /**
+   * @dev ADMIN method
+   * Fetch all movies for administration uses
+   */
+  // @TODO #1389 Use native akita-ng-fire functions
+  public async getAllMovies(): Promise<Movie[]> {
+    const movies = await this.db
+      .collection('movies')
+      .get().toPromise()
+
+    return movies.docs.map(m => createMovie(m.data())); // @todo #1832 use formatting method
+  }
+
 }

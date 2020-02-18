@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import objectHash from 'object-hash';
 import { CollectionService, CollectionConfig } from 'akita-ng-fire';
 import { DistributionDealState, DistributionDealStore } from './distribution-deal.store';
-import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
-import { DistributionDeal, getDealTerritories, formatDistributionDeal } from './distribution-deal.model';
+import { DistributionDeal, getDealTerritories, createDistributionDealWithMovieId, DistributionDealWithMovieId, formatDistributionDeal } from './distribution-deal.model';
 import { createContractTitleDetail, ContractWithLastVersion } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractVersionService } from '@blockframes/contract/version/+state/contract-version.service';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
@@ -18,7 +17,6 @@ import { Movie } from '@blockframes/movie/movie/+state';
 @CollectionConfig({ path: 'movies/:movieId/distributionDeals' })
 export class DistributionDealService extends CollectionService<DistributionDealState> {
   constructor(
-    private organizationQuery: OrganizationQuery,
     private contractService: ContractService,
     private contractVersionService: ContractVersionService,
     private contractQuery: ContractQuery,
@@ -84,19 +82,6 @@ export class DistributionDealService extends CollectionService<DistributionDealS
   }
 
   /**
-   * Performs a collection group query accross movies to retreive sales
-   * @param type  licensee | licensor
-   */
-  public async getMyDeals(type: string = 'licensor'): Promise<DistributionDeal[]> {
-    const myDealsSnap = await this.db
-      .collectionGroup('distributionDeals', ref => ref.where(`${type}.orgId`, '==', this.organizationQuery.getActiveId()))
-      .get()
-      .toPromise();
-
-    return myDealsSnap.docs.map(deal => formatDistributionDeal(deal.data()));
-  }
-
-  /**
    * Get distributionDeals from a specific movie.
    * @param movieId
    */
@@ -116,6 +101,23 @@ export class DistributionDealService extends CollectionService<DistributionDealS
       .toPromise();
 
     return distributionDealsSnap.docs.map(deal => formatDistributionDeal(deal.data() as DistributionDeal));
+  }
+
+  /**
+   * @dev ADMIN method
+   * Get all distributionDeals.
+   * This method need an index @see firestore.indexes.json
+   */
+  public async getAllDistributionDealsWithMovieId(): Promise<DistributionDealWithMovieId[]> {
+    const distributionDealsSnap = await this.db
+      .collectionGroup('distributionDeals')
+      .get()
+      .toPromise();
+    const distributionDeals = distributionDealsSnap.docs.map(deal => createDistributionDealWithMovieId({
+      movieId: deal.ref.parent.parent.id,
+      deal: formatDistributionDeal(deal.data()), // @todo #1832 rename formatDd?
+    }));
+    return distributionDeals;
   }
 
   /**

@@ -35,7 +35,7 @@ export const enum WorkType {
   flow = 'Flow'
 }
 
-export const enum StoreType {
+export enum StoreType {
   library = 'Library',
   line_up = 'Line-Up',
 }
@@ -53,7 +53,7 @@ export enum UnitBox {
   entrances = '#Entrances',
 }
 
-export const enum StoreStatus {
+export enum StoreStatus {
   submitted = 'Submitted',
   accepted = 'Accepted',
   draft = 'Draft',
