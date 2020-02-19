@@ -27,6 +27,13 @@ const baseColumns : ColumnsKeys[] = [
   'status'
 ];
 
+function getColumns(keys: ColumnsKeys[]): Partial<typeof columns> {
+  return keys.reduce((acc, key) => {
+    acc[key] = columns[key];
+    return acc
+  }, {});
+}
+
 @Component({
   selector: 'contract-table',
   templateUrl: './table.component.html',
@@ -35,9 +42,16 @@ const baseColumns : ColumnsKeys[] = [
 })
 export class ContractTableComponent{
 
-  columns = columns;
+  columns: Partial<typeof columns> = getColumns(baseColumns);
   initialColumns = baseColumns;
   sources: any[];
+
+  @Input() set hasBuyer(hasBuyer: string | boolean) {
+    if (hasBuyer === '' || hasBuyer === true) {
+      this.initialColumns = ['buyerName', ...baseColumns];
+      this.columns = columns;
+    }
+  }
 
   @Input() set contracts(contracts: Contract[]) {
     this.sources = contracts.map(contract => this.createContractListView(contract));

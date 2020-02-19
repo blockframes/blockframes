@@ -18,3 +18,10 @@ table {
 mat-spinner { 
   margin:auto;
 }
+
+widget-card {
+  display: block;
+  max-height: 300px;
+  max-width: 500px;
+  overflow: auto;
+} 

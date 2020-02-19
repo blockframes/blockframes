@@ -1,7 +1,9 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { ContractQuery, Contract, ContractStatus } from '@blockframes/contract/contract/+state';
 import { getContractLastVersion } from '@blockframes/contract/version/+state/contract-version.model';
-import { map } from 'rxjs/operators';
+import { DistributionDealService } from '@blockframes/movie/distribution-deals';
+import { map, switchMap } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 
 interface Tab {
   name: string;
@@ -69,8 +71,19 @@ function createContractTabs(allContracts: Contract[]): ContractTab[] {
   styleUrls: ['./list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DealListComponent {
-  public tabs$ = this.contractQuery.sales$.pipe(map(createContractTabs));
+export class DealListComponent implements OnInit, OnDestroy {
+  private sub: Subscription;
+  public tabs$ = this.query.sales$.pipe(map(createContractTabs));
 
-  constructor(private contractQuery: ContractQuery) {}
+  constructor(private query: ContractQuery, private dealService: DistributionDealService) {}
+
+  ngOnInit() {
+    this.sub = this.query.sales$.pipe(
+      switchMap(contracts => this.dealService.syncContractsDeals(contracts))
+    ).subscribe();
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
+  }
 }
