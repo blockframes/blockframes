@@ -1,6 +1,6 @@
 <tunnel-page>
   <h4 title>Uploaded Media</h4>
-  <h1 subtitle>Images</h1>
+  <h1 subtitle>Promotional Images</h1>
   <p description class="mat-body-1">Upload your images in .jpeg or .png formats, they will be used for promotional purposes. When you upload an image, we will help you to match the size required.</p>
   <ng-container tunnel-form>
     <!-- TODO#1625 cropzone doesn't match with source image on large screen -->
@@ -32,7 +32,7 @@
             [storagePath]="posterPath" 
             [ratio]="5/7"
             [formControl]="control.get('media')">
-            <h3 type>Movie Poster Image*</h3>
+            <h3 type>Poster</h3>
             <p class="mat-body-2" dimensions>Dimensions : 300 x 700 px</p>
             <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>  
           </drop-cropper>
@@ -42,7 +42,7 @@
     <!-- Still Photos -->
     <mat-card>
       <mat-card-header>
-        <mat-card-title>Still photos</mat-card-title>
+        <mat-card-title>Stills</mat-card-title>
       </mat-card-header>
       <mat-card-content>
         <ng-container *ngFor="let control of stillPhoto.controls; let i = index; let last = last">
@@ -51,7 +51,7 @@
             [storagePath]="stillPath" 
             [ratio]="7/5"
             [formControl]="control.get('media')">
-            <h3 type>Still Photos</h3>
+            <h3 type>Stills</h3>
             <p class="mat-body-2" dimensions>Dimensions : 700 x 500 px</p>
             <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>  
           </drop-cropper>
