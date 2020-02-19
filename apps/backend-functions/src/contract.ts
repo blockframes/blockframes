@@ -1,9 +1,11 @@
 import { functions, db } from './internals/firebase';
-import { ContractDocument, PublicContractDocument } from './data/types';
-import { ValidContractStatuses } from '@blockframes/contract/contract/+state/contract.firestore';
+import { ContractDocument, PublicContractDocument, createNotification, App, NotificationType } from './data/types';
+import { ValidContractStatuses, ContractStatus } from '@blockframes/contract/contract/+state/contract.firestore';
+import { getOrganizationsOfContract } from './data/internals';
+import { triggerNotifications } from './notification';
 /**
- * 
- * @param contract 
+ *
+ * @param contract
  * @param deletedVersionId Used only when a version is removed from DB. We update public data with previous version.
  */
 async function transformContractToPublic(contract: ContractDocument, deletedVersionId?: string): Promise<void> {
@@ -86,8 +88,29 @@ export async function onContractVersionWrite(
   if (!after && !!before) { // Deletion
     console.log(`deleting ContractVersion : "${versionId}" for : ${contractId}`);
     return transformContractToPublic(contract, versionId);
-  } else {
-    return transformContractToPublic(contract);
   }
 
+  const contractInNegociation =
+    (before && before.status === ContractStatus.submitted) &&
+    (after && after.status === ContractStatus.undernegotiation);
+
+  if (contractInNegociation) {
+    const organizations = await getOrganizationsOfContract(contract);
+
+    const notifications = organizations
+    .filter(organizationDocument => !!organizationDocument && !!organizationDocument.userIds)
+    .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
+    .map(userId => {
+      return createNotification({
+        userId,
+        type: NotificationType.contractInNegotiation,
+        docId: contractId,
+        app: App.biggerBoat
+      });
+    });
+
+    await triggerNotifications(notifications);
+  }
+
+  return transformContractToPublic(contract);
 }
