@@ -45,22 +45,16 @@ mat-divider {
   background-color: var(--primary);
 }
 
-movie-card {
-  height: 390px;
-  width: 310px;
-  margin: 15px;
-}
-
 form {
   width: 100%;
 }
 
 section {
-  padding: 20px 100px;
+  padding: 20px 20px;
 }
 
 section.filters {
-  padding: 20px 100px;
+  padding: 20px 20px;
   min-height: calc(100vh - (var(--toolbarHeight) * 2) - 30px); // TODO #1212
 
   aside {
@@ -99,7 +93,7 @@ section.filters {
 
     movie-card {
       height: auto;
-      width: 300px;
+      width: 250px;
       margin: 15px;
     }
 

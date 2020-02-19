@@ -15,12 +15,14 @@
       {{ email }}
     </ng-template>
     <ng-template colRef="uid" let-uid>
-      <button mat-icon-button (click)="accepted.emit(findInvitation(uid))">
-        <mat-icon svgIcon="accept_member"></mat-icon>
-      </button>
-      <button mat-icon-button (click)="declined.emit(findInvitation(uid))">
-        <mat-icon svgIcon="refuse"></mat-icon>
-      </button>
+      <div fxLayout="row" fxLayoutAlign="end">
+        <button class="mat-elevation-z0" mat-mini-fab color="primary" (click)="accepted.emit(findInvitation(uid))">
+          <mat-icon>done</mat-icon>
+        </button>
+        <button class="mat-elevation-z0" mat-mini-fab color="warn" (click)="declined.emit(findInvitation(uid))">
+          <mat-icon>clear</mat-icon>
+        </button>
+      </div>
     </ng-template>
   </bf-table-filter>
 </mat-card>

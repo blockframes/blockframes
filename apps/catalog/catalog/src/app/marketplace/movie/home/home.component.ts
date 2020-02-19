@@ -61,7 +61,7 @@ export class MarketplaceHomeComponent implements OnInit {
           },
           {
             title: 'Completed Films',
-            subline: 'Explore our selection of acclaimed and unreleased films',
+            subline: 'Explore our selection of fresh or library titles',
             movies: completed
           }
         ];

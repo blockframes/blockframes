@@ -57,6 +57,8 @@ export const generateHash = functions.storage
  * We create a corresponding document in `users/userID`.
  */
 export const onUserCreate = functions.auth
+  .user()
+  .onCreate(logErrors(users.onUserCreate));
 
 /** Trigger: REST call to find a list of users by email. */
 export const findUserByMail = functions.https
