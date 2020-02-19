@@ -151,7 +151,11 @@ export function valueIsInModelValidator(scope: Scope): ValidatorFn {
  */
 export function isSlugValidator(scope: Scope): ValidatorFn {
   return (control: FormControl): ValidationErrors => {
-    return isInSlug(scope, control.value) ? null : { invalidValue: true }
+    if (!control.value) {
+      return null;
+    } else {
+      return isInSlug(scope, control.value) ? null : { invalidValue: true }
+    };
   };
 }
 
