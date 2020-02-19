@@ -16,30 +16,23 @@
     <p>
       You can fill it out in one go or over time. You may navigate between steps, but all sections must be completed before submitting to Archipel Content for validation. Your title will be published on the platform only once you have signed a contract with us. 
     </p>
-
-    <h5 class="mat-body-2"><b>Files you will need</b></h5>
-    <p>
-      Poster(s), banner image, still photos and the promo reel. You will also need to provide the links to the screener and trailer .
-    </p>
   </mat-sidenav>
 
-  <mat-sidenav-content fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center center" fxLayoutGap="30px">
+  <mat-sidenav-content fxLayout="column" fxLayout.lt-md="column" fxLayoutAlign="center start" fxLayoutGap="30px">
     <section fxFlex.gt-sm="45">
-      <h1>Add a Title and Licensed Rights</h1>
-      <h2>The 4-step process of adding a listing and distribution rights will take about a half-hour to complete. </h2>
-      <p>You can fill it out in one go or over time. You may navigate between steps, but all sections must be completed before submitting to Archipel Content for validation. </p>
+      <h1>Add a Title</h1>
+      <h2>The 3-step process will take about a half-hour to complete.</h2>
       <button test-id="begin" mat-flat-button color="accent" (click)="begin()">
         Begin
       </button>
     </section>
-    <section fxFlex.gt-sm="45" fxLayout="row wrap" fxLayoutAlign="flex-start" fxLayoutAlign.lt-sm="center">
+    <section fxFlex.gt-sm="45" fxLayout="row" fxLayoutAlign="flex-start" fxLayoutAlign.lt-sm="center">
       <ng-container *ngFor="let content of cardContents">
         <mat-card>
-          <article fxLayout="column" fxLayoutAlign="space-between center">
+          <article fxLayout="column" fxLayoutAlign="center">
             <img class="card-image" src="http://via.placeholder.com/100x100" alt="Placeholder image">
             <div>
               <h3>{{ content.title }}</h3>
-              <p class="mat-caption">{{ content.description }}</p>
             </div>
           </article>
         </mat-card>
