@@ -14,10 +14,11 @@ import { Organization } from '@blockframes/organization/+state';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationAutocompleteComponent implements OnInit {
-  @Input() control: FormControl;
+  @Input() control: FormControl = new FormControl();
   @Input() label?: string;
   @Output() emitSelect = new EventEmitter();
   public searchResults$: Observable<OrganizationAlgoliaResult[]>;
+
   constructor(@Inject(OrganizationsIndex) private organizationIndex: Index) { }
 
   ngOnInit() {
@@ -39,10 +40,6 @@ export class OrganizationAutocompleteComponent implements OnInit {
         }
       })
     );
-  }
-
-  public displayFn(organization?: Organization): string | undefined {
-    return organization ? organization.name : undefined;
   }
 
   public selected(event: MatAutocompleteSelectedEvent) {
