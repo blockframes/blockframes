@@ -1,18 +1,30 @@
 :host {
   display: block;
-  margin-left: 20%;
-  margin-right: 20%;
+  margin: 30px 20%;
 
+  article {
+    margin: 15px 0;
+  }
+  
   span b {
     text-transform: uppercase;
   }
-
+  
   mat-card {
     width: 400px;
     margin: 15px 0;
-
-    div {
-      width: 50%;
-    }
+    text-align: center;
   }
+}
+
+.join-section {
+  margin: 20px 0;
+}
+
+.perspective-image {
+  width: 350px;
+}
+
+.feature-image {
+  width: 150px;
 }

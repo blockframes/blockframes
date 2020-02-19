@@ -4,6 +4,19 @@
   padding-bottom: 50px;
   padding-left: 20%;
   padding-right: 20%;
-  background-image: url('/assets/images/banner_home.png');
+  background-image: url('/assets/images/banner_header.png');
   background-size: cover;
+}
+
+h2, .mat-display-2 {
+  color: white;
+}
+
+h4 {
+  text-transform: uppercase;
+  color: white;
+}
+
+a {
+  margin: 70px 0;
 }

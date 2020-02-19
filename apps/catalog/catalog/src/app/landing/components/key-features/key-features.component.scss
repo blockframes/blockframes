@@ -1,15 +1,26 @@
-:host {
-  display: block;
-  margin-left: 20%;
-  margin-right: 20%;
-  padding: 30px 0;
+@import 'mixins';
 
-  div {
-    width: 45%;
+section {
+  background-color: var(--whiteBackground);
+  article {
+    display: block;
+    margin-left: 20%;
+    margin-right: 20%;
+    padding: 30px 0;
   }
+}
 
-  img {
-    width: 300px;
-    margin: 20px;
+div {
+  width: 45%;
+}
+
+img {
+  width: 300px;
+  margin: 20px;
+}
+
+@include tablet {
+  div {
+    width: 100%;
   }
 }
