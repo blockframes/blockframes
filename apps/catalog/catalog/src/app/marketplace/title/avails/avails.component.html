@@ -33,46 +33,52 @@
     <mat-card-content>
       <world-map>
         <ng-container *ngFor="let tag of notLicensedTerritories; trackBy: trackByTag">
-          <map-feature [tag]="tag['iso_a3']" color="foreground-unlicensed"></map-feature>
+          <map-feature [tag]="tag['iso_a3']" color="primary-lighter"></map-feature>
         </ng-container>
         <ng-container *ngFor="let tag of rightsSoldTerritories; trackBy: trackByTag">
-          <map-feature [tag]="tag['iso_a3']" color=""></map-feature>
+          <map-feature [tag]="tag['iso_a3']" color="primary-light"></map-feature>
         </ng-container>
         <ng-container *ngFor="let tag of availableTerritories; trackBy: trackByTag">
-          <map-feature [tag]="tag['iso_a3']" color="foreground-available" (click)="select($event)"></map-feature>
+          <map-feature [tag]="tag['iso_a3']" color="primary-darker" (click)="select($event)"></map-feature>
         </ng-container>
         <ng-container *ngFor="let tag of territoriesIsoA3">
-          <map-feature [tag]="tag" color="foreground-selected"></map-feature>
+          <map-feature [tag]="tag" color="primary"></map-feature>
         </ng-container>
+
+        <!-- World Map Legends -->
         <mat-card class="colors-card">
           <mat-list>
             <mat-list-item>
               <svg viewBox="0 0 100 100" width="10px" height="10px">
-                <rect fill="var(--foreground-available)" x="0" y="0" width="100" height="100"/>
+                <rect fill="var(--primary-darker)" x="0" y="0" width="100" height="100"/>
               </svg>
               <span class="mat-caption">Available</span>
             </mat-list-item>
             <mat-list-item>
               <svg viewBox="0 0 100 100" width="10px" height="10px">
-                <rect fill="var(--foreground-sold)" x="0" y="0" width="100" height="100"/>
+                <rect fill="var(--primary-light)" x="0" y="0" width="100" height="100"/>
               </svg>
               <span class="mat-caption">Rights Sold</span>
             </mat-list-item>
             <mat-list-item>
               <svg viewBox="0 0 100 100" width="10px" height="10px">
-                <rect fill="var(--foreground-unlicensed)" x="0" y="0" width="100" height="100"/>
+                <rect fill="var(--primary-lighter)" x="0" y="0" width="100" height="100"/>
               </svg>
               <span class="mat-caption">Not Licensed</span>
             </mat-list-item>
           </mat-list>
         </mat-card>
       </world-map>
+
+    <!-- Territories Input -->
     <chips-autocomplete
       [form]="availsForm.territories"
       placeholder="Choose your territories"
       [items]="territories"
       store="slug" display="label">
     </chips-autocomplete>
+
+    <!-- View of deal in preparation -->
     </mat-card-content>
     <mat-card [formGroup]="availsForm">
       <mat-card-content>
@@ -80,17 +86,15 @@
           <span class="mat-body-1">Please select a country to check if exploitation rights are available</span>
         </ng-container>
         <ng-template #displayDeal>
-          <span class="mat-subheading-2" *ngFor="let territory of availsForm.territories.controls; let i=index; let isLast = last">
-            <ng-container *ngIf="i < 4">
-              {{ territory.value | translateSlug: 'TERRITORIES'}}{{ isLast ? '' : ', ' }}
-            </ng-container>
+          <span class="mat-subheading-2">
+            {{ availsForm.territories.value | slice:0:4 | translateSlug: 'TERRITORIES' }}
           </span>
-          <span [widgetTooltip]="territories" class="tooltip">...</span>
+          <span *ngIf="availsForm.territories.value.length > 4" [widgetTooltip]="territories">...</span>
           <overlay-widget #territories>
             <widget-card>
-              <span class="mat-body-2" *ngFor="let territory of availsForm.territories.controls; let i=index; let isLast = last">
-                <ng-container *ngIf="i>4">
-                  {{ territory.value | translateSlug: 'TERRITORIES'}}{{ isLast? '' : ','}}
+              <span class="mat-body-2">
+                <ng-container *ngIf="availsForm.territories.value.length > 4">
+                  {{ availsForm.territories.value | slice:4:availsForm.territories.value.length | translateSlug: 'TERRITORIES' }}
                 </ng-container>
               </span>
             </widget-card>
@@ -115,13 +119,16 @@
           </ul>
         </ng-template>
       </mat-card-content>
+
       <mat-divider></mat-divider>
+
       <mat-card-footer fxLayoutAlign="center center">
         <a mat-button color="primary" class="mat-body-2" (click)="addDeal()">
           <span>Add to Selection</span>
-          <mat-icon>arrow_forward</mat-icon>
+          <mat-icon svgIcon="arrow_forward"></mat-icon>
         </a>
       </mat-card-footer>
+
     </mat-card>
   </mat-card>
 

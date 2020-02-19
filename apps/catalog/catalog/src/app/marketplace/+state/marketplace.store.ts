@@ -29,7 +29,7 @@ export class MarketplaceStore extends EntityStore<MarketplaceState> {
   }
 
   /** Set an empty title cart. */
-  setTitleCart(movieId: string) {
+  addTitle(movieId: string) {
     this.add({movieId, deals: []})
   }
 }

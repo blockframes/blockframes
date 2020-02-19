@@ -1,8 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { AvailsSearchForm } from '@blockframes/catalog';
 import { MovieQuery, Movie } from '@blockframes/movie/movie/+state';
-import { Observable } from 'rxjs/internal/Observable';
-import { switchMap } from 'rxjs/operators';
 import { EnhancedISO3166Territory } from '@blockframes/utils/static-model/territories-ISO-3166';
 import { getNotLicensedTerritories, getAvailableTerritories, getRightsSoldTerritories } from './territories-filter';
 import { DistributionDealService, DistributionDeal } from '@blockframes/movie/distribution-deals/+state';
@@ -94,27 +92,16 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
   /** Add a distribution deal to the user selection for the active movie. */
   public addDeal() {
     try {
-      const formValue = this.availsForm.getRawValue();
-      // Make sure all the field are filled and throw an error for each missing field
-      switch (true) {
-        case !formValue.terms.start || !formValue.terms.end:
-          throw new Error('Fill terms "Start Date" and "End Date" in order to create an Exploitation Right');
-        case !formValue.territories.length:
-          throw new Error('Select at least one available territory to create an Exploitation Right');
-        case !formValue.medias.length:
-          throw new Error('Select at least one media to create an Exploitation Right');
-        case formValue.territories.some(territory => !this.availableTerritories.find(({ slug }) => slug === territory)):
-          throw new Error('One or more selected territories are not available');
-        default:
-          break;
-      }
+
+      // Verify the form values and throw errors if some are missing/incorrect.
+      this.dealService.verifyDeal(this.availsForm.getRawValue(), this.availableTerritories)
 
       // Create a distribution deal from the avails form values.
-      const distributionDeal: DistributionDeal = this.dealService.createCartDeal(formValue);
+      const distributionDeal: DistributionDeal = this.dealService.createCartDeal(this.availsForm.getRawValue());
 
       // If title don't exist in the marketplace store, create one.
       if (!this.marketplaceQuery.getEntity(this.movie.id)) {
-        this.marketplaceStore.setTitleCart(this.movie.id);
+        this.marketplaceStore.addTitle(this.movie.id);
       }
 
       // Update the title with the new deal.

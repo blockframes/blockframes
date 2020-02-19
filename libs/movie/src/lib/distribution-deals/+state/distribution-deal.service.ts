@@ -21,6 +21,7 @@ import { ContractVersion } from '@blockframes/contract/version/+state/contract-v
 import { DistributionDealQuery } from './distribution-deal.query';
 import { Movie } from '@blockframes/movie/movie/+state';
 import { AvailsSearch } from '@blockframes/catalog/form/search.form';
+import { Model } from '@blockframes/utils/static-model/staticModels';
 
 
 @Injectable({ providedIn: 'root' })
@@ -92,9 +93,7 @@ export class DistributionDealService extends CollectionService<DistributionDealS
   }
 
   public createCartDeal(formValue: Partial<AvailsSearch>): DistributionDeal {
-    const dealId = this.db.createId();
     const dealToAdd = createDistributionDeal({
-      id: dealId,
       terms: formValue.terms,
       territory: formValue.territories,
       territoryExcluded: formValue.territoriesExcluded,
@@ -163,5 +162,22 @@ export class DistributionDealService extends CollectionService<DistributionDealS
       .get().toPromise();
     const contracts = contractsSnap.docs.map(contract => contract.data())
     return movie.distributionDeals.filter(deal => deal.contractId === contracts[0].id)
+  }
+
+  /** Check if the formValue is valid to create a deal, throw an error for each case. */
+  public verifyDeal(formValue: Partial<AvailsSearch>, territories: Model['TERRITORIES']) {
+    if (!formValue.terms.start || !formValue.terms.end) {
+      throw new Error('Fill terms "Start Date" and "End Date" in order to create an Exploitation Right');
+    }
+    if (!formValue.territories.length) {
+      throw new Error('Select at least one available territory to create an Exploitation Right');
+    }
+    if (!formValue.medias.length) {
+      throw new Error('Select at least one available territory to create an Exploitation Right');
+    }
+    if (formValue.territories.some(territory => !territories.find(({ slug }) => slug === territory))) {
+      throw new Error('One or more selected territories are not available');
+    }
+    return true;
   }
 }

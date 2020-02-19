@@ -1,0 +1,9 @@
+@mixin bf-world-map-theme($theme) {
+  $primary: map-get($theme, primary);
+
+  world-map {
+    background-color: mat-color($primary, 500, 0.05);
+  }
+
+}
+
