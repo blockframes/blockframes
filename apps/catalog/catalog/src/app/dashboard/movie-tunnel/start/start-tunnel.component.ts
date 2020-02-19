@@ -6,20 +6,13 @@ import { TunnelService } from '@blockframes/ui/tunnel';
 
 const cardContents = [
   {
-    title: 'Title Information',
-    description: 'Your title will be published on the platform only once you have signed a contract with us.'
+    title: 'Title Information'
   },
   {
-    title: 'Licensed Rights',
-    description: 'Your title will be published on the platform only once you have signed a contract with us.'
+    title: 'Media'
   },
   {
-    title: 'Upload Media',
-    description: 'Your title will be published on the platform only once you have signed a contract with us.'
-  },
-  {
-    title: 'Legal Information',
-    description: 'Your title will be published on the platform only once you have signed a contract with us.'
+    title: 'Legal Information'
   },
 ];
 
