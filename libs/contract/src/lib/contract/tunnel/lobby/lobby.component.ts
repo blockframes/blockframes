@@ -1,4 +1,3 @@
-import { ContractVersion } from '@blockframes/contract/version/+state/contract-version.model';
 import { createContractVersion, createContract, createVersionMandate } from '@blockframes/contract/contract/+state/contract.model';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ContractService, ContractType } from '../../+state';
@@ -21,10 +20,9 @@ export class LobbyComponent {
   async select(contractType: 'sale' | 'mandate') {
     const type = contractType === 'sale' ? ContractType.sale : ContractType.mandate;
     const contract = createContract({ type });
-    let version: Partial<ContractVersion> = createContractVersion();
-    if (contractType === 'mandate') {
-      version = createVersionMandate()
-    }
+    const version = contractType === 'mandate'
+      ? createVersionMandate()
+      : createContractVersion();
     const contractId = await this.service.create(contract, version);
     this.router.navigate([contractId, contractType], { relativeTo: this.route })
   }

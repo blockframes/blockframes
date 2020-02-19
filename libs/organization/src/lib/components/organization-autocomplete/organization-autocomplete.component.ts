@@ -30,6 +30,7 @@ export class OrganizationAutocompleteComponent implements OnInit {
             this.organizationIndex.search(name, (err, result) => (err ? rej(err) : res(result.hits)));
           });
         } else {
+          // TODO #1829
           /**
            * reset observable otherwise algolia search index 
            * gets an object of strings and throw error
