@@ -4,7 +4,9 @@
       <img [imgRef]="user.avatar" placeholderAsset="Avatar_250.png" alt="profile picture" />
       <div class="user-info" *ngIf="organization$ | async as org">
         <h1>{{ user.name }} {{ user.surname }}</h1>
-        <p class="mat-body-2">{{ user.position }} at {{ org.name }}</p>
+        <ng-container *ngIf="user.position && org.name">
+          <p class="mat-body-2">{{ user.position }} at {{ org.name }}</p>
+        </ng-container>
       </div>
     </article>
       <a mat-stroked-button color="primary" [routerLink]="previousPage" fxLayoutAlign="center center">
@@ -12,7 +14,7 @@
         <span>Previous page</span>
       </a>
   </header>
-</ng-container> 
+</ng-container>
 <section>
   <profile-form [form]="profileForm"></profile-form>
   <profile-password-form [form]="passwordForm"></profile-password-form>

@@ -7,7 +7,13 @@
         <ng-container *ngIf="user$ | async as user">
           <h2>{{ user.position }}</h2>
         </ng-container>
-        <p class="mat-body-2">{{ org.addresses.main.street }}, {{ org.addresses.main.zipCode }} {{ org.addresses.main.country }}</p>
+        <p class="mat-body-2">
+          {{ org.addresses.main.street | titlecase }}
+          <ng-container *ngIf="org.addresses.main.street && org.addresses.main.zipCode">, </ng-container>
+          {{ org.addresses.main.zipCode | titlecase }}
+          <ng-container *ngIf="org.addresses.main.zipCode && org.addresses.main.city">, </ng-container>
+          {{ org.addresses.main.city | titlecase }}
+        </p>
       </div>
     </article>
     <ng-container>
