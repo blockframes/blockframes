@@ -13,7 +13,7 @@ import { OrganizationsIndex, OrganizationAlgoliaResult } from '@blockframes/util
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationAutocompleteComponent implements OnInit {
-  @Input() control: FormControl = new FormControl();
+  @Input() control: FormControl;
   @Input() label?: string;
   @Output() emitSelect = new EventEmitter();
   public searchResults$: Observable<OrganizationAlgoliaResult[]>;
