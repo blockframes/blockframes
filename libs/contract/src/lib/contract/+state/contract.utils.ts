@@ -12,9 +12,10 @@ import { Price, createPrice } from "@blockframes/utils/common-interfaces";
 export function getTotalPrice(titles: Record<string, ContractTitleDetail>): Price {
   const result = createPrice();
   const versionTitles = Object.values(titles);
-  result.amount = versionTitles.reduce((sum, title) => sum += title.price.amount, 0);
-  result.currency = versionTitles[versionTitles.length - 1].price.currency;
-
+  if (versionTitles.length) {
+    result.amount = versionTitles.reduce((sum, title) => sum += title.price.amount, 0);
+    result.currency = versionTitles[versionTitles.length - 1].price.currency;
+  }
   return result;
 }
 

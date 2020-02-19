@@ -1,4 +1,4 @@
-<bf-table-filter [source]="sources" showFilter showPaginator>
+<bf-table-filter [source]="sources" [columns]="columns" [initialColumns]="initialColumns" showFilter showPaginator>
   <!-- buyerName -->
   <ng-template colRef="buyerName" let-name>
     <b>{{ name }}</b>
@@ -27,7 +27,7 @@
 
   <!-- price -->
   <ng-template colRef="price" let-price>
-    {{ price.amount | currency: price.currency:'symbol':1.0-0 }}
+    {{ price.amount | currency: price.currency:'symbol':'1.0-0' }}
   </ng-template>
 
   <!-- paid -->

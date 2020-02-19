@@ -38,15 +38,10 @@ export class DistributionDealService extends CollectionService<DistributionDealS
   }
 
   /** Gets every distribution deals of contracts in the store. */
-  public syncContractsDeals() {
-    return this.contractQuery.selectAll().pipe(
-      switchMap(contracts => {
-        const $ = contracts.map(c =>
-          this.syncCollectionGroup('distributionDeals', ref => ref.where('contractId', '==', c.id))
-        );
-        return combineLatest($);
-      })
-    );
+  public syncContractsDeals(contracts: Contract[]) {
+    const queryContrat = (contract: Contract) => ref => ref.where('contractId', '==', contract.id);
+    const $ = contracts.map(c => this.syncCollectionGroup('distributionDeals', queryContrat(c)));
+    return combineLatest($);
   }
 
   /**

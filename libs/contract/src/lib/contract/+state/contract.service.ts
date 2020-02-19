@@ -13,30 +13,18 @@ import {
   PublicContract
 } from './contract.model';
 import orderBy from 'lodash/orderBy';
-import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { tap, switchMap } from 'rxjs/operators';
 import { ContractVersionService } from '../../version/+state/contract-version.service';
 import { cleanModel } from '@blockframes/utils';
 import { PermissionsService } from '@blockframes/organization';
-import { ContractDocumentWithDates, ContractStatus } from './contract.firestore';
+import { ContractDocumentWithDates, ContractStatus, ContractType } from './contract.firestore';
 import { firestore } from 'firebase/app';
 import { MovieQuery } from '@blockframes/movie';
 import { createContractVersionFromFirestore } from '@blockframes/contract/version/+state/contract-version.model';
 import { ContractVersion } from '@blockframes/contract/version/+state';
 import { Observable } from 'rxjs';
 
-/**
- * Get all the contracts where user organization is party.
- * Also check that there is no childContractIds to never fetch
- * contract between organization and Archipel Content.
- */
-const organizationContractsListQuery = (orgId: string): Query<ContractWithTimeStamp[]> => ({
-  path: 'contracts',
-  queryFn: ref => ref.where('partyIds', 'array-contains', orgId).where('childContractIds', '==', []),
-  versions: contract => ({
-    path: `contracts/${contract.id}/versions`
-  })
-});
+
 
 /** Get the active contract and put his lastVersion in it. */
 const contractQuery = (contractId: string): Query<ContractWithTimeStamp> => ({
@@ -49,7 +37,7 @@ const contractQuery = (contractId: string): Query<ContractWithTimeStamp> => ({
 /** Get all the contracts where the active movie appears. */
 const movieContractsQuery = (movieId: string): Query<ContractWithTimeStamp[]> => ({
   path: 'contracts',
-  queryFn: ref => ref.where('titleIds', 'array-contains', movieId).where('childContractIds', '==', []),
+  queryFn: ref => ref.where('titleIds', 'array-contains', movieId).where('type', '==', ContractType.sale),
   versions: contract => ({
     path: `contracts/${contract.id}/versions`
   })
@@ -60,7 +48,6 @@ const movieContractsQuery = (movieId: string): Query<ContractWithTimeStamp[]> =>
 export class ContractService extends CollectionService<ContractState> {
 
   constructor(
-    private organizationQuery: OrganizationQuery,
     private contractVersionService: ContractVersionService,
     private movieQuery: MovieQuery,
     private permissionsService: PermissionsService,
@@ -69,14 +56,9 @@ export class ContractService extends CollectionService<ContractState> {
     super(store);
   }
 
-  /** Sync the store with every contracts of the active organization. */
-  public syncOrganizationContracts() {
-    return this.organizationQuery.selectActiveId().pipe(
-      // Clear the store everytime the active orgId changes.
-      tap(_ => this.store.reset()),
-      switchMap(orgId => awaitSyncQuery.call(this, organizationContractsListQuery(orgId)))
-    );
-  }
+  //////////
+  // SYNC //
+  //////////
 
   /** Sync the store with every contracts of the active movie. */
   public syncMovieContracts() {
@@ -93,6 +75,18 @@ export class ContractService extends CollectionService<ContractState> {
     this.store.reset();
     return awaitSyncQuery.call(this, contractQuery(contractId));
   }
+
+  /////////
+  // GET //
+  /////////
+
+  /** Get the mandate contract of an organization */
+  public async getMandate(orgId: string) {
+    const query = ref => ref.where('partyIds', 'array-contains', orgId).where('type', '==', ContractType.sale);
+    const mandates = await this.getValue(query);
+    return (mandates && mandates.length) ? mandates[0] : undefined;
+  }
+
 
   onCreate(contract: Contract, { write }: WriteOptions) {
     // When a contract is created, we also create a permissions document for each parties.
