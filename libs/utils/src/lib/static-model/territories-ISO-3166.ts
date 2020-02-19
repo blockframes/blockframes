@@ -2044,7 +2044,8 @@ export function IsoTerritoriesToSlugAndLabel(): { slug: string, label: string }[
   return ISO3166TERRITORIES.map(t => {
     return {
       slug: t.slug,
-      label: t.label
+      label: t.label,
+      iso_a3: t.iso_a3
     }
   });
 }

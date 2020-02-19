@@ -129,8 +129,8 @@ function archipelCanSells(filter: AvailsSearch, mandateDeal: DistributionDeal): 
   const hasTerritories = mandateHas(filter.territories, mandateDeal.territory)
   const hasMedias = mandateHas(filter.medias, mandateDeal.licenseType)
   const hasTerms =
-    toDate(filter.terms.from).getTime() > toDate(mandateDeal.terms.start).getTime() &&
-    toDate(filter.terms.to).getTime() < toDate(mandateDeal.terms.end).getTime()
+    toDate(filter.terms.start).getTime() > toDate(mandateDeal.terms.start).getTime() &&
+    toDate(filter.terms.end).getTime() < toDate(mandateDeal.terms.end).getTime()
 
   return hasTerritories && hasMedias && hasTerms;
 }
@@ -161,7 +161,7 @@ export function filterMovie(movie: Movie, filter: CatalogSearch): boolean {
  * @param mandateDeal The deal between Archipel and the seller
  */
 export function filterMovieWithAvails(deals: DistributionDeal[], filter: AvailsSearch, mandateDeals: DistributionDeal[]) {
-  if (!filter.terms || !(filter.terms.from && filter.terms.to)) {
+  if (!filter.terms || !(filter.terms.start && filter.terms.end)) {
     return true;
   }
 

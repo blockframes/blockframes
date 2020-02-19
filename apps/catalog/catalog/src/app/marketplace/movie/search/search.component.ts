@@ -1,6 +1,6 @@
 // Angular
 import { Router } from '@angular/router';
-import { FormControl, FormGroup, Validators, FormArray } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import {
   MatAutocompleteSelectedEvent,
   MatAutocompleteTrigger
@@ -9,7 +9,6 @@ import {
   Component,
   ChangeDetectionStrategy,
   OnInit,
-  ElementRef,
   ViewChild,
   HostBinding,
   Inject
@@ -25,15 +24,12 @@ import {
   LanguagesLabel,
   CertificationsLabel,
   CERTIFICATIONS_LABEL,
-  TERRITORIES_LABEL,
   CertificationsSlug,
   LanguagesSlug,
-  TerritoriesSlug,
   MovieStatusLabel,
   MOVIE_STATUS_LABEL,
-  TERRITORIES_SLUG,
 } from '@blockframes/utils/static-model/types';
-import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
+import { getCodeIfExists } from '@blockframes/utils/static-model/staticModels';
 import { ControlErrorStateMatcher } from '@blockframes/utils/form/validators/validators';
 import { MovieAlgoliaResult } from '@blockframes/utils/algolia';
 import { MoviesIndex } from '@blockframes/utils/algolia';
@@ -109,6 +105,7 @@ export class MarketplaceSearchComponent implements OnInit {
   ]);
   public sortByControl: FormControl = new FormControl('');
   public searchbarTextControl: FormControl = new FormControl('');
+  public territoryControl: FormControl = new FormControl('');
 
   private filterBy$ = this.filterForm.valueChanges.pipe(startWith(this.filterForm.value));
   private filterByAvails$ = this.availsForm.valueChanges.pipe(startWith(this.availsForm.value));
@@ -244,7 +241,7 @@ export class MarketplaceSearchComponent implements OnInit {
       )
     )
     const availsHasErrors = (
-      !this.availsForm.get('terms').get('from').hasError('min') &&
+      !this.availsForm.get('terms').get('start').hasError('min') &&
       this.availsForm.get('terms').hasError('invalidRange')
     )
 
@@ -396,5 +393,18 @@ export class MarketplaceSearchComponent implements OnInit {
     } else {
       this.searchbarTypeForm.setValue('');
     }
+  }
+
+  public applyAvailsFilter() {
+    this.availsForm.get('isActive').setValue(true);
+    this.availsForm.disable({onlySelf: false});
+    this.territoryControl.disable();
+    // TODO: use controls for territories and medias to make it disablable
+  }
+
+  public deactivateAvailsFilter() {
+    this.availsForm.get('isActive').setValue(false);
+    this.availsForm.enable();
+    this.territoryControl.enable();
   }
 }

@@ -27,4 +27,9 @@ export class MarketplaceStore extends EntityStore<MarketplaceState> {
   removeFromWishlist(movieId: string) {
     this.update(state => ({ wishlist: state.wishlist.filter(id => id !== movieId )}));
   }
+
+  /** Set an empty title cart. */
+  addTitle(movieId: string) {
+    this.add({movieId, deals: []})
+  }
 }

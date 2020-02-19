@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ViewChild, ElementRef, EventEmitter, ChangeDetectorRef, NgZone, Input, ContentChildren, Directive, QueryList, Output, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Component, AfterViewInit, ElementRef, EventEmitter, Input, ContentChildren, Directive, QueryList, Output, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { map as toMap, geoJSON, Layer } from 'leaflet';
 import { Subscription, BehaviorSubject, combineLatest } from 'rxjs';
@@ -30,19 +30,18 @@ export class MapFeature {
   @Output() mouseover = new EventEmitter();
   @Output() mouseout = new EventEmitter();
   @Output() click = new EventEmitter();
-  
 }
 
 @Component({
   selector: 'world-map',
   template: '<ng-content></ng-content>',
-  styles: [':host { display: block }'],
+  styles: [`:host { display: block; }`],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MapComponent implements AfterViewInit, OnDestroy {
   private sub: Subscription;
   layers = {};
-  
+
   @Input() featureTag = 'iso_a3';
   @Output() select = new EventEmitter();
   @ContentChildren(MapFeature, {descendants: true}) features: QueryList<MapFeature>
@@ -71,9 +70,13 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       })
     ).subscribe((features: MapFeature[]) => {
       // reset all previous tags
-      tags.forEach(tag => this.layers[tag].setStyle({ fillColor: '#ECEFF9' }));
+      tags.filter(tag => this.layers[tag]).forEach(tag => this.layers[tag].setStyle({ fillColor: '#ECEFF9' }));
       // Add new style
-      features.forEach(({ color, tag }) => this.layers[tag].setStyle({ fillColor: `var(--${color})` }));
+      features.forEach(({ color, tag }) => {
+        if (!!this.layers[tag]) {
+          this.layers[tag].setStyle({ fillColor: `var(--${color})` })
+        }
+      });
       // Keep in memory all current tags
       tags = features.map(({ tag }) => tag);
     });
