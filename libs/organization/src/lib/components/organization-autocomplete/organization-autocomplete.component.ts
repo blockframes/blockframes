@@ -3,7 +3,7 @@ import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { Index } from 'algoliasearch';
-import { Component, OnInit, ChangeDetectionStrategy, Inject, Input } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Inject, Input, EventEmitter, Output } from '@angular/core';
 import { OrganizationsIndex, OrganizationAlgoliaResult } from '@blockframes/utils';
 import { Organization } from '@blockframes/organization/+state';
 
@@ -15,6 +15,8 @@ import { Organization } from '@blockframes/organization/+state';
 })
 export class OrganizationAutocompleteComponent implements OnInit {
   @Input() control: FormControl;
+  @Input() label?: string;
+  @Output() emitSelect = new EventEmitter();
   public searchResults$: Observable<OrganizationAlgoliaResult[]>;
   constructor(@Inject(OrganizationsIndex) private organizationIndex: Index) { }
 
@@ -23,9 +25,17 @@ export class OrganizationAutocompleteComponent implements OnInit {
       debounceTime(200),
       distinctUntilChanged(),
       switchMap(name => {
-        return new Promise<OrganizationAlgoliaResult[]>((res, rej) => {
-          this.organizationIndex.search(name, (err, result) => (err ? rej(err) : res(result.hits)));
-        });
+        if (typeof name === 'string') {
+          return new Promise<OrganizationAlgoliaResult[]>((res, rej) => {
+            this.organizationIndex.search(name, (err, result) => (err ? rej(err) : res(result.hits)));
+          });
+        } else {
+          /**
+           * reset observable otherwise algolia search index 
+           * gets an object of strings and throw error
+           */
+          return new Observable<OrganizationAlgoliaResult[]>();
+        }
       })
     );
   }
@@ -35,6 +45,14 @@ export class OrganizationAutocompleteComponent implements OnInit {
   }
 
   public selected(event: MatAutocompleteSelectedEvent) {
-    this.control.setValue(event.option.value)
+    if (event.option.value.objectID) {
+      this.emitSelect.emit(event);
+    } else {
+      /**
+       * If the user change the org name to a non existing org,
+       * we want to erase the ID fromt he form
+       */
+      this.emitSelect.emit('')
+    }
   }
 }
