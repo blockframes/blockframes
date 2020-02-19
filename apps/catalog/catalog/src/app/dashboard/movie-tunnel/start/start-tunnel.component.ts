@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { MovieService } from '@blockframes/movie';
+import { MovieService, createMovie } from '@blockframes/movie';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthQuery } from '@blockframes/auth';
 import { TunnelService } from '@blockframes/ui/tunnel';
@@ -34,7 +34,7 @@ export class StartTunnelComponent implements OnInit {
     private auth: AuthQuery,
     private router: Router,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.routeBeforeTunnel = this.tunnelService.previousUrl;
@@ -44,7 +44,8 @@ export class StartTunnelComponent implements OnInit {
     this.loading = true;
     try {
       const createdBy = this.auth.getValue().uid;
-      const movieId = await this.movieService.add({ _meta: { createdBy }});
+      const movie = createMovie({ _meta: { createdBy } });
+      const movieId = await this.movieService.add(movie);
       this.loading = false;
       this.router.navigate([movieId], { relativeTo: this.route });
     } catch (err) {
@@ -52,5 +53,4 @@ export class StartTunnelComponent implements OnInit {
       console.error(err);
     }
   }
-
 }

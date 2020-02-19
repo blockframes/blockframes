@@ -5,22 +5,21 @@ import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { MovieFormPromotionalDescriptionModule } from '@blockframes/movie/movie/form/promotional-description/promotional-description.module';
 import { MovieFormStoryModule } from '@blockframes/movie/movie/form/story/story.module';
 import { ReactiveFormsModule } from '@angular/forms';
+import { MovieFormKeywordsComponent } from '@blockframes/movie';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
 
-const material = [
-  MatCardModule
-]
 @NgModule({
   declarations: [TunnelSynopsisComponent],
   imports: [
     ReactiveFormsModule,
     TunnelPageModule,
+    MovieFormKeywordsComponent,
     MovieFormPromotionalDescriptionModule,
     MovieFormStoryModule,
     RouterModule.forChild([{ path: '', component: TunnelSynopsisComponent }]),
-    ...material
+    MatCardModule
   ],
 })
-export class TunnelSynopsisModule {}
+export class TunnelSynopsisModule { }

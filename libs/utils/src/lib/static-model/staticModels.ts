@@ -128,7 +128,7 @@ const models = {
       'slug': 'production-manager',
       'label': 'Production Manager'
     },
-  ],
+  ] as const,
   'CAST_ROLES': [
     {
       'slug': 'lead-role',
