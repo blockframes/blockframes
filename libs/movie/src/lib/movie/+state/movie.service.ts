@@ -4,11 +4,9 @@ import {
   CollectionConfig,
   CollectionService,
   WriteOptions,
-  awaitSyncQuery,
-  Query,
   syncQuery
 } from 'akita-ng-fire';
-import { switchMap, tap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { createMovie, Movie, MovieAnalytics } from './movie.model';
 import { MovieState, MovieStore } from './movie.store';
 import { AuthQuery } from '@blockframes/auth';
@@ -19,6 +17,7 @@ import { PermissionsService } from '@blockframes/organization/permissions/+state
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { Observable } from 'rxjs';
 import { StoreStatus } from './movie.firestore';
+import { Contract } from '@blockframes/contract/contract/+state/contract.model';
 
 /** Query all the movies with their distributionDeals */
 const movieListWithDealsQuery = () => ({
@@ -52,6 +51,13 @@ export class MovieService extends CollectionService<MovieState> {
 
   public syncMoviesWithDeals() {
     return syncQuery.call(this, movieListWithDealsQuery());
+  }
+
+  /** Sync all movies from a list of contracts */
+  public syncContractsMovie(contracts: Contract[]) {
+    const rawTitleIds = new Set(contracts.map(c => c.titleIds));
+    const titleIds = Array.from(rawTitleIds).flat();
+    return this.syncManyDocs(titleIds);
   }
 
   onCreate(movie: Movie, { write }: WriteOptions) {

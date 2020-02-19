@@ -1,7 +1,12 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ContractQuery, Contract, ContractStatus } from '@blockframes/contract/contract/+state';
+import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
+import { ContractQuery, ContractService, Contract, ContractStatus, ContractType, createContract, createVersionMandate } from '@blockframes/contract/contract/+state';
 import { getContractLastVersion } from '@blockframes/contract/version/+state/contract-version.model';
-import { map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
+import { MovieService } from '@blockframes/movie';
+import { DistributionDealService } from '@blockframes/movie/distribution-deals';
+import { Subscription, combineLatest } from 'rxjs';
+import { OrganizationQuery } from '@blockframes/organization';
+import { Router, ActivatedRoute } from '@angular/router';
 
 interface Tab {
   name: string;
@@ -71,8 +76,44 @@ function createContractTab(allContracts: Contract[]): ContractTab[] {
   styleUrls: ['./list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DealListComponent {
-  public tabs$ = this.contractQuery.sales$.pipe(map(createContractTab));
+export class DealListComponent implements OnInit, OnDestroy {
+  private sub: Subscription;
+  public tabs$ = this.query.sales$.pipe(map(createContractTab));
 
-  constructor(private contractQuery: ContractQuery) {}
+  constructor(
+    private orgQuery: OrganizationQuery,
+    private query: ContractQuery,
+    private service: ContractService,
+    private movieService: MovieService,
+    private dealService: DistributionDealService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {}
+
+  ngOnInit() {
+    // Subscribe on Movie & Deals
+    this.sub = this.query.sales$.pipe(
+      switchMap(contracts => combineLatest([
+        this.movieService.syncContractsMovie(contracts),
+        this.dealService.syncContractsDeals(contracts),
+      ]))
+    ).subscribe();
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
+  }
+
+  async createMandate() {
+    const orgId = this.orgQuery.getActiveId();
+    const mandate = await this.service.getMandate(orgId);
+    if (mandate) {
+      this.router.navigate([mandate.id], { relativeTo: this.route })
+    } else {
+      const contract = createContract({ type: ContractType.mandate });
+      const version = createVersionMandate();
+      const contractId = await this.service.create(contract, version);
+      this.router.navigate(['../tunnel/contract', contractId, 'mandate'], { relativeTo: this.route })
+    }
+  }
 }

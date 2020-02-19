@@ -1,8 +1,8 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input, ChangeDetectorRef } from '@angular/core';
 import { Contract, getTotalPrice, ContractStatus } from '../../+state';
 import { getContractLastVersion } from '@blockframes/contract/version/+state';
 import { MovieQuery } from '@blockframes/movie';
-import { DistributionDealQuery, DistributionDealService } from '@blockframes/movie/distribution-deals/+state';
+import { DistributionDealQuery } from '@blockframes/movie/distribution-deals/+state';
 
 const columns = {
   buyerName: 'Buyer name',
@@ -35,6 +35,8 @@ const baseColumns : ColumnsKeys[] = [
 })
 export class ContractTableComponent{
 
+  columns = columns;
+  initialColumns = baseColumns;
   sources: any[];
 
   @Input() set contracts(contracts: Contract[]) {
@@ -44,7 +46,7 @@ export class ContractTableComponent{
   constructor(
     private movieQuery: MovieQuery,
     private dealQuery: DistributionDealQuery,
-    private dealService: DistributionDealService
+    private cdr: ChangeDetectorRef
   ) { }
 
   private createContractListView(contract: Contract) {
