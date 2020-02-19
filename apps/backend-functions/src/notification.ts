@@ -1,4 +1,5 @@
-import { NotificationDocument } from './data/types';
+import { NotificationDocument, NotificationOptions } from './data/types';
+import * as admin from 'firebase-admin';
 import { db } from './internals/firebase'
 
 /** Takes one or more notifications and add them on the notifications collection */
@@ -11,4 +12,14 @@ export function triggerNotifications(notifications: NotificationDocument[]): Pro
   });
 
   return batch.commit();
+}
+
+/** Create a Notification with required and generic informations. */
+export function createNotification(notification: NotificationOptions): NotificationDocument {
+  return {
+    id: db.collection('notifications').doc().id,
+    isRead: false,
+    date: admin.firestore.Timestamp.now(),
+    ...notification
+  };
 }

@@ -14,6 +14,7 @@ import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/imag
 import { MatListModule } from '@angular/material/list';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [NotificationListComponent],
@@ -28,7 +29,8 @@ import { MatDividerModule } from '@angular/material/divider';
     // Material
     MatListModule,
     MatTooltipModule,
-    MatDividerModule
+    MatDividerModule,
+    MatButtonModule
   ],
   exports: [NotificationListComponent]
 })

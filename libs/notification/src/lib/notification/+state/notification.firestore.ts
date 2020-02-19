@@ -22,6 +22,7 @@ export const enum NotificationType {
   invitationFromOrganizationToUserDecline = 'invitationFromOrganizationToUserDecline',
   memberAddedToOrg = 'memberAddedToOrg',
   memberRemovedFromOrg = 'memberRemovedFromOrg',
+  newContract = 'newContract',
   contractInNegotiation = 'contractInNegotiation',
 }
 
@@ -42,13 +43,3 @@ export interface NotificationDocument extends NotificationOptions {
   isRead: boolean;
   date: firestore.Timestamp;
 };
-
-/** Createa a Notification with required and generic informations. */
-export function createNotification(notification: NotificationOptions): NotificationDocument {
-  return {
-    id: firestore().collection('notifications').doc().id,
-    isRead: false,
-    date: firestore.Timestamp.now(),
-    ...notification
-  };
-}

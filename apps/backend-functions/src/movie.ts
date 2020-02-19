@@ -1,8 +1,8 @@
 import { functions, db } from './internals/firebase';
 import { MovieDocument, OrganizationDocument, PublicUser } from './data/types';
-import { createNotification, NotificationType } from '@blockframes/notification/types';
+import { NotificationType } from '@blockframes/notification/types';
 import { App } from '@blockframes/utils/apps';
-import { triggerNotifications } from './notification';
+import { triggerNotifications, createNotification } from './notification';
 import { flatten, isEqual } from 'lodash';
 import { getDocument } from './data/internals';
 import { removeAllSubcollections } from './utils';
