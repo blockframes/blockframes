@@ -59,8 +59,8 @@ const routes: Routes = [
         path: 'deals',
         children: [{
           path: '',
-          canActivate: [OrganizationContractListGuard, ContractsDealListGuard, MovieOrganizationListGuard],
-          canDeactivate: [OrganizationContractListGuard, ContractsDealListGuard, MovieOrganizationListGuard],
+          canActivate: [OrganizationContractListGuard],
+          canDeactivate: [OrganizationContractListGuard],
           loadChildren: () => import('./deal/list/list.module').then(m => m.DealListModule)
         }, {
           path: ':contractId', // One deal: different state of a deal (offer, counter-offer, payment),

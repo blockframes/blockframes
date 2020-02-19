@@ -70,7 +70,7 @@ function createContractTabs(allContracts: Contract[]): ContractTab[] {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DealListComponent {
-  public tabs$ = this.contractQuery.selectAll().pipe(map(createContractTabs));
+  public tabs$ = this.contractQuery.sales$.pipe(map(createContractTabs));
 
   constructor(private contractQuery: ContractQuery) {}
 }
