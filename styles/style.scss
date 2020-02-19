@@ -83,6 +83,10 @@ main {
   background-color: rgba(#000000, 0.3);
 }
 
+/* Leaflet WorldMap default pane */
+.leaflet-pane {
+  z-index: 1;
+}
 
 // SCROLL
 .dark-theme {

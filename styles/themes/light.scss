@@ -124,9 +124,6 @@ $bf-light-background: (
   tooltip: rgba(mat-color($mat-grey, 700), 0.9),
   // TODO remove this custom variable when last palette will be imported
   beware: #F6A92C,
-
-  // World map variables
-  map-background:   #F2F8FF
 );
 
 ////////////////
@@ -152,12 +149,6 @@ $bf-light-foreground: (
 
   // Custom variables
   light-text: #BBC8D4,
-
-  // World map variables
-  available:    #4B69D7,
-  sold:         #0C114A,
-  unlicensed:   #D7DEF5,
-  selected:     mat-color($mat-light-bf-blue, 500, 0.5)
 );
 
 //////////

@@ -3,16 +3,20 @@
 //////////////
 
 $mat-dark-bf-orange: (
-  50: #ffeef1,
-  100: #ffd5d9,
-  200: #f8a8a5,
-  300: #f28882,
-  400: #ff6e61,
-  500: #ff6247,
-  600: #f75b48,
-  700: #e45141,
-  800: #d74b3b,
-  900: #c8412f,
+  50: #ffeeec,
+  100: #ffd4d0,
+  200: #ffb7b0,
+  300: #ff9a90,
+  400: #ff8479,
+  500: #ff6e61,
+  600: #ff6659,
+  700: #ff5b4f,
+  800: #ff5145,
+  900: #ff3d31,
+  A100 : #fffdfd,
+  A200 : #fffafa,
+  A400 : #ffe0de,
+  A700 : #ffc7c4,
   contrast: (
     50: #24374e,
     100: #24374e,
@@ -27,16 +31,20 @@ $mat-dark-bf-orange: (
   )
 );
 $mat-dark-bf-blue: (
-  50: #e9ecff,
-  100: #c6d0ff,
-  200: #9eb1ff,
-  300: #7492fa,
-  400: #5679f0,
-  500: #3560e6,
-  600: #2e57db,
-  700: #234cce,
-  800: #1a41c1,
-  900: #092daa,
+  50: #f3f6ff,
+  100: #e2e8ff,
+  200: #cfd8ff,
+  300: #bbc8ff,
+  400: #adbdff,
+  500: #9eb1ff,
+  600: #96aaff,
+  700: #8ca1ff,
+  800: #8298ff,
+  900: #7088ff,
+  A100 : #ffffff,
+  A200 : #fdfdff,
+  A400 : #f9faff,
+  A700 : #f8f9ff,
   contrast: (
     50: #24374e,
     100: #24374e,
@@ -51,20 +59,20 @@ $mat-dark-bf-blue: (
   )
 );
 $mat-dark-bf-red: (
-  50: #ffecef,
-  100: #ffcfd5,
-  200: #f49c9f,
-  300: #ec7679,
-  400: #f75557,
-  500: #fe453e,
-  600: #ef3a3d,
-  700: #dc3036,
-  800: #cf292f,
-  900: #c01c23,
-  A100: #ffffff,
-  A200: #fffdfd,
-  A400: #ffcbca,
-  A700: #ffb2b1,
+  50 : #ffe8e7,
+  100 : #ffc5c2,
+  200 : #ff9f99,
+  300 : #ff7970,
+  400 : #ff5c52,
+  500 : #ff3f33,
+  600 : #ff392e,
+  700 : #ff3127,
+  800 : #ff2920,
+  900 : #ff1b14,
+  A100 : #fffcfc,
+  A200 : #fffbfb,
+  A400 : #ffc9c8,
+  A700 : #ffb0ae,
   contrast: (
     50: #24374e,
     100: #24374e,
@@ -105,9 +113,6 @@ $bf-dark-background: (
   disabled-list-option: rgba(155, 177, 255, 0.12),
   // TODO remove this custom variable when last palette will be imported
   beware: #F6A92C,
-
-  // World map variables
-  map-background:   #232641
 );
 
 ////////////////
@@ -135,12 +140,6 @@ $bf-dark-foreground: (
   // Custom variables
   blue-icon:    #9eb1ff,
   dark-text:    #80818a,
-
-  // World map variables
-  available:    #7088FF,
-  sold:         #BBC8FF,
-  unlicensed:   #4D5063,
-  selected:     mat-color($mat-dark-bf-blue, 500, 0.9),
 );
 
 //////////
