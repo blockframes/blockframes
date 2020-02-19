@@ -183,16 +183,15 @@ jobs:
     environment:
       - ENV: production
       - NODE_OPTIONS: '--max_old_space_size=4096'
+      - GOOGLE_APPLICATION_CREDENTIALS: creds.json
     steps:
       - checkout_project
-      - run: echo "${FIREBASE_CI_SERVICE_ACCOUNT}" > creds.json
+      - run: echo "${FIREBASE_PRODUCTION_SERVICE_ACCOUNT}" > creds.json
       - run: cp env/env.prod.ts env/env.ts # required for the typechecking & file rewrite to work
       - run: npm run build:all
       - slack/notify:
           message: '🚚 Deploying to production...'
-      - do-exclusively/do-exclusively:
-          # Note: right now do-exclusively excludes cross-jobs (staging & prod).
-          token: $CIRCLE_TOKEN
+      - run:
           command: |
             npx firebase use prod &&
             cp firestore.rules firestore.rules.regular &&
@@ -263,8 +262,6 @@ workflows:
             - build-and-test-all
       - deploy-to-prod:
           <<: *production_only
-          requires:
-            - build-and-test-all
       - deploy-to-staging:
           <<: *staging_only
   nightly-e2e:
