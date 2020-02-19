@@ -154,3 +154,18 @@ export function termToPrettyDate(term: Terms, type: 'start' | 'end' = 'start'): 
       }
   }
 }
+
+/** Check if termsA is in range of termsB */
+export function inDateRange(termsA: any, termsB: any): boolean {
+
+  if (termsA && termsB) {
+    termsA = formatTerms(termsA);
+    termsB = formatTerms(termsB);;
+  }
+  return (
+    (termsA.start.getTime() >= termsB.start.getTime() &&
+    termsA.start.getTime() <= termsB.end.getTime()) &&
+    (termsA.end.getTime() >= termsB.start.getTime() &&
+    termsA.end.getTime() <= termsB.end.getTime())
+  )
+}

@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input, ViewChild, ElementRef, OnInit } from '@angular/core';
 import { AvailsSearchForm } from '@blockframes/catalog/form/search.form';
-import { MediasSlug, MEDIAS_SLUG, TerritoriesSlug, TERRITORIES_LABEL, staticModels } from '@blockframes/utils/static-model';
+import { MediasSlug, MEDIAS_SLUG, TerritoriesSlug, TERRITORIES_LABEL } from '@blockframes/utils/static-model';
 import { Observable } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { startWith, debounceTime, map } from 'rxjs/operators';
@@ -15,38 +15,32 @@ import { ExtractCode, getCodeIfExists } from '@blockframes/utils/static-model/st
 })
 export class AvailsFilterComponent implements OnInit{
   @Input() availsForm: AvailsSearchForm;
-  @Input() territory = false;
+  @Input() territoryControl: FormControl;
 
   public movieMedias: MediasSlug[] = MEDIAS_SLUG;
 
   /* Arrays for showing the selected entities in the UI */
   public selectedMovieTerritories: string[] = [];
   public territoriesFilter$: Observable<string[]>;
-  public territoryControl: FormControl = new FormControl('');
+
+  @ViewChild('territoryInput', { static: false }) territoryInput: ElementRef<HTMLInputElement>;
 
   /* Flags for the Territories chip input */
   public visibleTerritory = true;
   public selectableTerritory = true;
   public removableTerritory = true;
 
-  @ViewChild('territoryInput', { static: false }) territoryInput: ElementRef<HTMLInputElement>;
-
   ngOnInit() {
-    this.territoriesFilter$ = this.territoryControl.valueChanges.pipe(
-      startWith(''),
-      debounceTime(300),
-      map(territory => this._territoriesFilter(territory))
-    );
-  }
-
-  /** Check media or uncheck it if it's already in the array. */
-  public checkMedia(media: MediasSlug) {
-    if (this.movieMedias.includes(media)) {
-      this.availsForm.checkMedia(media);
+    if (this.territoryControl) {
+      this.territoriesFilter$ = this.territoryControl.valueChanges.pipe(
+        startWith(''),
+        debounceTime(300),
+        map(territory => this._territoriesFilter(territory))
+      );
     }
   }
 
-    /**
+  /**
    * @description returns an array of strings for the autocompletion component
    * @param value string which got typed in into an input field
    */
@@ -82,16 +76,10 @@ export class AvailsFilterComponent implements OnInit{
     this.territoryInput.nativeElement.value = '';
   }
 
-  public applyAvailsFilter() {
-    this.availsForm.get('isActive').setValue(true);
-    this.availsForm.disable({onlySelf: false});
-    this.territoryControl.disable();
-    // TODO: use controls for territories and medias to make it disablable.
-  }
-
-  public deactivateAvailsFilter() {
-    this.availsForm.get('isActive').setValue(false);
-    this.availsForm.enable();
-    this.territoryControl.enable();
+  /** Check media or uncheck it if it's already in the array. */
+  public checkMedia(media: MediasSlug) {
+    if (this.movieMedias.includes(media)) {
+      this.availsForm.checkMedia(media);
+    }
   }
 }
