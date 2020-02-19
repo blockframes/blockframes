@@ -5,7 +5,6 @@ import { FormControl } from '@angular/forms';
 import { Index } from 'algoliasearch';
 import { Component, OnInit, ChangeDetectionStrategy, Inject, Input, EventEmitter, Output } from '@angular/core';
 import { OrganizationsIndex, OrganizationAlgoliaResult } from '@blockframes/utils';
-import { Organization } from '@blockframes/organization/+state';
 
 @Component({
   selector: '[control] organization-autocomplete',
