@@ -37,6 +37,7 @@ export function getVersonView(version: ContractVersion): VersionView {
   }
 }
 
+
 /** Format the Payment schedule to be displayed  */
 export function displayPaymentSchedule(version: ContractVersion): { type: string, list: string[] } {
     // Payment Schedule

@@ -1,18 +1,17 @@
-<ng-container *ngIf="contracts$ | async as contracts">
-  <h1>Offers & Deals</h1>
+<h1>Offers & Deals</h1>
 
-  <mat-tab-group>
-    <mat-tab
-      *ngFor="let tab of contractTabs"
-      [label]="getLabel(tab.name, filterByStatus(contracts, tab.statuses))">
-      <ng-template matTabContent>
-        <ng-container *ngIf="filterByStatus(contracts, tab.statuses).length; else noContracts">
-          <contract-list [source]="filterByStatus(contracts, tab.statuses)" [displayBuyer]="true"></contract-list>
-        </ng-container>
-        <ng-template #noContracts >
-          <span>There are no contract in {{ tab.name }}</span>
-        </ng-template>
+<mat-tab-group>
+  <mat-tab *ngFor="let tab of tabs$ | async">
+    <ng-template mat-tab-label>
+      {{ tab.name }} ({{ tab.contracts.length }})
+    </ng-template>
+    <ng-template matTabContent>
+      <ng-container *ngIf="tab.contracts.length; else noContracts">
+        <contract-list [source]="tab.contracts" displayBuyer="true"></contract-list>
+      </ng-container>
+      <ng-template #noContracts >
+        <span>There are no contract in {{ tab.name }}</span>
       </ng-template>
-    </mat-tab>
-  </mat-tab-group>
-</ng-container>
+    </ng-template>
+  </mat-tab>
+</mat-tab-group>
