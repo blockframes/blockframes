@@ -62,8 +62,13 @@ export class TableExtractedDealsComponent implements OnInit {
   }
 
   async createDeal(importState: DealsImportState): Promise<boolean> {
-    await this.addDeal(importState);
-    this.snackBar.open('Distribution deal added!', 'close', { duration: 3000 });
+    const output = await this.addDeal(importState);
+    if(output) {
+      this.snackBar.open('Distribution deal added!', 'close', { duration: 3000 });
+    } else {
+      this.snackBar.open('Error while adding distribution deal', 'close', { duration: 3000 });
+    }
+    
     return true;
   }
 
@@ -71,8 +76,8 @@ export class TableExtractedDealsComponent implements OnInit {
     try {
       const creations = this.selection.selected.filter(importState => !hasImportErrors(importState));
       for (const contract of creations) {
-        this.processedDeals++;
-        await this.addDeal(contract);
+        const output = await this.addDeal(contract);
+        if(output) this.processedDeals ++;
       }
       this.snackBar.open(`${this.processedDeals} deals created!`, 'close', { duration: 3000 });
       this.processedDeals = 0;
