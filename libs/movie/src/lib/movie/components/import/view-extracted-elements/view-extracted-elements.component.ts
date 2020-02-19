@@ -23,7 +23,7 @@ import { formatCredits } from '@blockframes/utils/spreadsheet/format';
 import { ImageUploader, cleanModel } from '@blockframes/utils';
 import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
 import { SSF } from 'xlsx';
-import { MovieLanguageTypes, PremiereType } from '@blockframes/movie/movie/+state/movie.firestore';
+import { MovieLanguageTypes, PremiereType, WorkType } from '@blockframes/movie/movie/+state/movie.firestore';
 import { createStakeholder } from '@blockframes/utils/common-interfaces/identity';
 import { DistributionDeal, createDistributionDeal, createHoldback } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
 import { createContractPartyDetail, createContractTitleDetail, Contract, initContractWithVersion, ContractWithLastVersion, getContractParties } from '@blockframes/contract/contract/+state/contract.model';
@@ -32,7 +32,7 @@ import { DistributionDealService } from '@blockframes/movie/distribution-deals/+
 import { createExpense } from '@blockframes/utils/common-interfaces/price';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { createPaymentSchedule } from '@blockframes/utils/common-interfaces/schedule';
-import { createTerms } from '@blockframes/utils/common-interfaces';
+import { createTerms, createRange } from '@blockframes/utils/common-interfaces';
 import { DistributionDealStatus } from '@blockframes/movie/distribution-deals/+state/distribution-deal.firestore';
 import { Intercom } from 'ng-intercom';
 
@@ -65,47 +65,52 @@ export interface ContractsImportState {
 }
 
 enum SpreadSheetMovie {
-  internalRef,
-  originalTitle,
-  productionYear,
-  scoring,
-  rightsStart,
-  rightsEnd,
-  territories,
-  medias,
-  directors,
-  poster,
-  isan,
   internationalTitle,
-  length,
-  stakeholdersWithRole,
-  color,
+  originalTitle,
+  internalRef,
+  workType,
+  productionStatus,
+  directors,
   originCountries,
-  europeanQualification,
-  rating,
-  certifications,
-  cast,
-  synopsis,
+  stakeholdersWithRole,
   originCountryReleaseDate,
+  languages,
   genres,
+  length,
+  cast,
   festivalPrizes,
+  synopsis,
   keyAssets,
   keywords,
-  languages,
-  dubbings,
-  subtitles,
-  captions,
+  productionYear,
+  producers,
+  crewMembers,
+  budget,
+  worldwideBoxOffice, // @todo #1906
+  nationalBoxOffice, // @todo #1906
+  quotas,
+  rating,
+  filmReviews, // @todo #1906
+  color,
+  shootingFormat,  // @todo #1906
+  availableFormat,  // @todo #1906
+  soundQuality,  // @todo #1906
+  availableVersions, /* replace   dubbings, subtitles,captions, */
+  poster,
+  bannerLink,
+  stillLinks,
+  presentationDeck,
+  scenarioLink,
   screenerLink,
   promoReelLink,
   trailerLink,
   pitchTeaserLink,
-  scenarioLink,
-  productionStatus,
-  budget,
-  bannerLink,
-  salesAgentName,
-  salesAgentImage,
-  reservedTerritories
+
+  // OPTIONNALS FOR CASCADE8 ADMINS ONLY
+  scoring,
+  storeType,
+  movieStatus,
+  orgId,
 }
 
 enum SpreadSheetDistributionDeal {
@@ -188,7 +193,7 @@ export class ViewExtractedElementsComponent {
     this.clearDataSources();
 
     sheetTab.rows.forEach(async spreadSheetRow => {
-      if (spreadSheetRow[SpreadSheetMovie.originalTitle]) {
+      if (spreadSheetRow[SpreadSheetMovie.originalTitle] && spreadSheetRow[SpreadSheetMovie.internalRef]) {
         const existingMovie = await this.movieService.getFromInternalRef(spreadSheetRow[SpreadSheetMovie.internalRef]);
         const movie = {
           main: createMovieMain(),
@@ -212,6 +217,21 @@ export class ViewExtractedElementsComponent {
 
         // INTERNAL REF (Film Code)
         movie.main.internalRef = spreadSheetRow[SpreadSheetMovie.internalRef];
+
+        // WORK TYPE
+        if (spreadSheetRow[SpreadSheetMovie.workType]) {
+          if (Object.values(WorkType).map(t => t.toLowerCase()).includes(spreadSheetRow[SpreadSheetMovie.workType].trim().toLowerCase())) {
+            movie.main.workType = spreadSheetRow[SpreadSheetMovie.workType].trim().toLowerCase();
+          } else {
+            importErrors.errors.push({
+              type: 'warning',
+              field: 'movie.main.workType',
+              name: 'Work Type',
+              reason: `Could not parse work type : ${spreadSheetRow[SpreadSheetMovie.workType].trim().toLowerCase()}`,
+              hint: 'Edit corresponding sheet field.'
+            });
+          }
+        }
 
         // ORIGINAL TITLE (Original Title)
         if (spreadSheetRow[SpreadSheetMovie.originalTitle]) {
@@ -240,56 +260,6 @@ export class ViewExtractedElementsComponent {
           }
         }
 
-        // BEGINNING OF RIGHTS (Mandate beginning of rights)
-        if (spreadSheetRow[SpreadSheetMovie.rightsStart]) {
-          const { y, m, d } = SSF.parse_date_code(spreadSheetRow[SpreadSheetMovie.rightsStart]);
-          movie.salesAgentDeal.rights.from = new Date(`${y}-${m}-${d}`);
-        }
-
-        // END OF RIGHTS (Mandate End of rights)
-        if (spreadSheetRow[SpreadSheetMovie.rightsEnd]) {
-          const { y, m, d } = SSF.parse_date_code(spreadSheetRow[SpreadSheetMovie.rightsEnd]);
-          movie.salesAgentDeal.rights.to = new Date(`${y}-${m}-${d}`);
-        }
-
-        // TERRITORIES (Mandate Territories)
-        if (spreadSheetRow[SpreadSheetMovie.territories]) {
-          movie.salesAgentDeal.territories = [];
-          spreadSheetRow[SpreadSheetMovie.territories].split(this.separator).forEach((c: ExtractCode<'TERRITORIES'>) => {
-            const territory = getCodeIfExists('TERRITORIES', c);
-            if (territory) {
-              movie.salesAgentDeal.territories.push(territory);
-            } else {
-              importErrors.errors.push({
-                type: 'error',
-                field: 'salesAgentDeal.territories',
-                name: 'Mandate Territories',
-                reason: `${c} not found in territories list`,
-                hint: 'Edit corresponding sheet field.'
-              });
-            }
-          });
-        }
-
-        // MEDIAS (Mandate Medias)
-        if (spreadSheetRow[SpreadSheetMovie.medias]) {
-          movie.salesAgentDeal.medias = [];
-          spreadSheetRow[SpreadSheetMovie.medias].split(';').forEach((c: ExtractCode<'MEDIAS'>) => {
-            const media = getCodeIfExists('MEDIAS', c);
-            if (media) {
-              movie.salesAgentDeal.medias.push(media);
-            } else {
-              importErrors.errors.push({
-                type: 'warning',
-                field: 'salesAgentDeal.medias',
-                name: 'Mandate Medias',
-                reason: `${c} not found in medias list`,
-                hint: 'Edit corresponding sheet field.'
-              });
-            }
-          });
-        }
-
         // DIRECTORS (Director(s))
         if (spreadSheetRow[SpreadSheetMovie.directors]) {
           movie.main.directors = formatCredits(spreadSheetRow[SpreadSheetMovie.directors], this.separator, this.subSeparator);
@@ -306,11 +276,6 @@ export class ViewExtractedElementsComponent {
         //////////////////
         // OPTIONAL FIELDS
         //////////////////
-
-        // ISAN (ISAN Number)
-        if (spreadSheetRow[SpreadSheetMovie.isan]) {
-          movie.main.isan = spreadSheetRow[SpreadSheetMovie.isan];
-        }
 
         // INTERNATIONAL TITLE (International Title)
         if (spreadSheetRow[SpreadSheetMovie.internationalTitle]) {
@@ -422,16 +387,6 @@ export class ViewExtractedElementsComponent {
           });
         }
 
-        // CERTIFICATIONS (European Qualification)
-        movie.salesInfo.certifications = [];
-        if (spreadSheetRow[SpreadSheetMovie.europeanQualification] &&
-          spreadSheetRow[SpreadSheetMovie.europeanQualification].toLowerCase() === 'yes') {
-          const certification = getCodeIfExists('CERTIFICATIONS', 'european-qualification');
-          if (certification) {
-            movie.salesInfo.certifications.push(certification);
-          }
-        }
-
         // PEGI (Rating)
         if (spreadSheetRow[SpreadSheetMovie.rating]) {
           spreadSheetRow[SpreadSheetMovie.rating].split(this.separator).forEach((r: string) => {
@@ -468,8 +423,8 @@ export class ViewExtractedElementsComponent {
         }
 
         // CERTIFICATIONS (Certifications)
-        if (spreadSheetRow[SpreadSheetMovie.certifications]) {
-          spreadSheetRow[SpreadSheetMovie.certifications].split(this.separator).forEach((c: ExtractCode<'CERTIFICATIONS'>) => {
+        if (spreadSheetRow[SpreadSheetMovie.quotas]) {
+          spreadSheetRow[SpreadSheetMovie.quotas].split(this.separator).forEach((c: ExtractCode<'CERTIFICATIONS'>) => {
             const certification = getCodeIfExists('CERTIFICATIONS', c);
             if (certification) {
               movie.salesInfo.certifications.push(certification);
@@ -488,8 +443,17 @@ export class ViewExtractedElementsComponent {
 
         // CREDITS (Principal Cast)
         if (spreadSheetRow[SpreadSheetMovie.cast]) {
-          movie.salesCast.cast = formatCredits(spreadSheetRow[SpreadSheetMovie.cast], this.separator)
-            .map(credit => ({ ...credit, role: 'actor' }));
+          movie.salesCast.cast = formatCredits(spreadSheetRow[SpreadSheetMovie.cast], this.separator, '\\s+', 'CAST_ROLES');
+        }
+
+        // CREDITS (Producers)
+        if (spreadSheetRow[SpreadSheetMovie.producers]) {
+          movie.salesCast.producers = formatCredits(spreadSheetRow[SpreadSheetMovie.producers], this.separator, this.subSeparator, 'PRODUCER_ROLES');
+        }
+
+        // CREDITS (Crew members)
+        if (spreadSheetRow[SpreadSheetMovie.crewMembers]) {
+          movie.salesCast.crew = formatCredits(spreadSheetRow[SpreadSheetMovie.crewMembers], this.separator, this.subSeparator, 'CREW_ROLES');
         }
 
         // SYNOPSIS (Synopsis)
@@ -602,7 +566,7 @@ export class ViewExtractedElementsComponent {
 
 
         // DUBS (Available dubbing(s))
-        if (spreadSheetRow[SpreadSheetMovie.dubbings]) {
+        /*if (spreadSheetRow[SpreadSheetMovie.dubbings]) {
           spreadSheetRow[SpreadSheetMovie.dubbings].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
             const dubbing = getCodeIfExists('LANGUAGES', g);
             if (dubbing) {
@@ -655,6 +619,7 @@ export class ViewExtractedElementsComponent {
             }
           });
         }
+        */
 
         // SCREENER LINK
         if (spreadSheetRow[SpreadSheetMovie.screenerLink]) {
@@ -772,7 +737,27 @@ export class ViewExtractedElementsComponent {
 
         // BUDGET
         if (spreadSheetRow[SpreadSheetMovie.budget]) {
-          movie.budget.totalBudget = spreadSheetRow[SpreadSheetMovie.budget];
+          if (spreadSheetRow[SpreadSheetMovie.budget].indexOf('-') !== -1) {
+            const budgetParts = spreadSheetRow[SpreadSheetMovie.budget].split('-');
+            const currency = budgetParts[0].slice(0, 1);
+            const from = parseInt(budgetParts[0].slice(1).trim(), 10);
+            const to = parseInt(budgetParts[1].replace('millions', '').trim(), 10);
+
+            switch (currency) {
+              case '$':
+                movie.budget.budgetCurrency = 'USD';
+                break;
+              case '€':
+              default:
+                movie.budget.budgetCurrency = 'EUR';
+                break;
+            }
+
+            movie.budget.estimatedBudget = createRange({ from: from * 1000000, to: to * 1000000 }); 7
+          } else {
+            movie.budget.totalBudget = spreadSheetRow[SpreadSheetMovie.budget];
+          }
+
         }
 
         // IMAGE BANNIERE LINK
@@ -794,37 +779,40 @@ export class ViewExtractedElementsComponent {
           });
         }
 
-        // SALES AGENT (name)
-        const salesAgent = createStakeholder();
-        if (spreadSheetRow[SpreadSheetMovie.salesAgentName]) {
-          salesAgent.displayName = spreadSheetRow[SpreadSheetMovie.salesAgentName];
+        // IMAGE STILLS LINK
+        if (spreadSheetRow[SpreadSheetMovie.stillLinks]) {
+          movie.promotionalElements.still_photo = [];
+          for (const still of spreadSheetRow[SpreadSheetMovie.stillLinks].split(this.separator)) {
+            const media = await this.imageUploader.upload(still);
+            const element = createPromotionalElement({ label: 'Still', media });
+            movie.promotionalElements.still_photo.push(element);
+          }
+        } else {
+          importErrors.errors.push({
+            type: 'warning',
+            field: 'promotionalElements',
+            name: 'Stills',
+            reason: 'Optional field is missing',
+            hint: 'Edit corresponding sheet field.'
+          });
         }
 
-        // SALES AGENT (avatar)
-        if (spreadSheetRow[SpreadSheetMovie.salesAgentImage]) {
-          salesAgent.logo = await this.imageUploader.upload(spreadSheetRow[SpreadSheetMovie.salesAgentImage]);
+        // PRESENTATION DECK
+        if (spreadSheetRow[SpreadSheetMovie.presentationDeck]) {
+          const promotionalElement = createPromotionalElement({
+            label: 'Presentation deck',
+            media: spreadSheetRow[SpreadSheetMovie.presentationDeck],
+          });
+          movie.promotionalElements.presentation_deck = promotionalElement;
+        } else {
+          importErrors.errors.push({
+            type: 'warning',
+            field: 'promotionalElements',
+            name: 'Presentation deck',
+            reason: 'Optional field is missing',
+            hint: 'Edit corresponding sheet field.'
+          });
         }
-
-        movie.salesAgentDeal.salesAgent = salesAgent;
-
-        // RESERVED TERRITORIES
-        if (spreadSheetRow[SpreadSheetMovie.reservedTerritories]) {
-          spreadSheetRow[SpreadSheetMovie.reservedTerritories].split(this.separator).forEach(t => {
-            const territory = getCodeIfExists('TERRITORIES', t);
-            if (territory) {
-              movie.salesAgentDeal.reservedTerritories.push(territory);
-            } else {
-              importErrors.errors.push({
-                type: 'warning',
-                field: 'salesAgentDeal.reservedTerritories',
-                name: 'Reserved Territories',
-                reason: `Territory "${t.trim().toLowerCase()}" could not be parsed`,
-                hint: 'Edit corresponding sheet field.'
-              });
-            }
-          })
-        }
-
 
         ///////////////
         // VALIDATION
@@ -890,46 +878,6 @@ export class ViewExtractedElementsComponent {
       });
     }
 
-    if (!movie.salesAgentDeal.rights.from) {
-      errors.push({
-        type: 'error',
-        field: 'salesAgentDeal.rights.from',
-        name: 'Mandate Beginning of rights',
-        reason: 'Required field is missing',
-        hint: 'Edit corresponding sheet field.'
-      });
-    }
-
-    if (!movie.salesAgentDeal.rights.to) {
-      errors.push({
-        type: 'error',
-        field: 'salesAgentDeal.rights.to',
-        name: 'Mandate End of rights',
-        reason: 'Required field is missing',
-        hint: 'Edit corresponding sheet field.'
-      });
-    }
-
-    if (!movie.salesAgentDeal.territories) {
-      errors.push({
-        type: 'error',
-        field: 'salesAgentDeal.territories',
-        name: 'Mandate Territories',
-        reason: 'Required field is missing',
-        hint: 'Edit corresponding sheet field.'
-      });
-    }
-
-    if (!movie.salesAgentDeal.medias) {
-      errors.push({
-        type: 'error',
-        field: 'salesAgentDeal.medias',
-        name: 'Mandate Medias',
-        reason: 'Required field is missing',
-        hint: 'Edit corresponding sheet field.'
-      });
-    }
-
     if (movie.main.directors.length === 0) {
       errors.push({
         type: 'error',
@@ -953,16 +901,6 @@ export class ViewExtractedElementsComponent {
     //////////////////
     // OPTIONAL FIELDS
     //////////////////
-
-    if (!movie.main.isan) {
-      errors.push({
-        type: 'warning',
-        field: 'main.isan',
-        name: 'ISAN number',
-        reason: 'Optional field is missing',
-        hint: 'Edit corresponding sheet field.'
-      });
-    }
 
     if (!movie.main.title.international) {
       errors.push({
@@ -1121,26 +1059,6 @@ export class ViewExtractedElementsComponent {
         type: 'warning',
         field: 'budget.totalBudget',
         name: 'Budget',
-        reason: 'Optional field is missing',
-        hint: 'Edit corresponding sheet field.'
-      });
-    }
-
-    if (movie.salesAgentDeal.salesAgent === undefined) {
-      errors.push({
-        type: 'warning',
-        field: 'salesAgentDeal.salesAgent',
-        name: 'Sales agent',
-        reason: 'Optional field is missing',
-        hint: 'Edit corresponding sheet field.'
-      });
-    }
-
-    if (movie.salesAgentDeal.reservedTerritories.length === 0) {
-      errors.push({
-        type: 'warning',
-        field: 'salesAgentDeal.reservedTerritories',
-        name: 'Reserved territories',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -1795,7 +1713,7 @@ export class ViewExtractedElementsComponent {
 
           // CONTRACT TYPE
           if (spreadSheetRow[SpreadSheetContract.contractType]) {
-            if (Object.values(ContractType).includes(spreadSheetRow[SpreadSheetContract.contractType].trim().toLowerCase())) {
+            if (Object.values(ContractType).map(t => t.toLowerCase()).includes(spreadSheetRow[SpreadSheetContract.contractType].trim().toLowerCase())) {
               contract.doc.type = spreadSheetRow[SpreadSheetContract.contractType].trim().toLowerCase();
             } else {
               importErrors.errors.push({

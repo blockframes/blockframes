@@ -12,10 +12,11 @@ import {
   SoundFormatSlug,
   FormatQualitySlug,
   FormatSlug,
-  GenresSlug
+  GenresSlug,
+  MovieCurrenciesSlug
 } from "@blockframes/utils/static-model";
 import { RawRange, NumberRange } from "@blockframes/utils/common-interfaces/range";
-import { Person, SalesAgent, Producer, Crew, Cast, Stakeholder } from "@blockframes/utils/common-interfaces/identity";
+import { SalesAgent, Producer, Crew, Cast, Stakeholder, Credit } from "@blockframes/utils/common-interfaces/identity";
 import { firestore } from "firebase/app";
 import { ImgRef } from "@blockframes/utils/image-uploader";
 import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
@@ -23,7 +24,7 @@ import { LegalDocument } from "@blockframes/contract/contract/+state/contract.fi
 
 type Timestamp = firestore.Timestamp;
 
-export const enum WorkType {
+export enum WorkType {
   movie = 'Movie',
   short = 'Short',
   serie = 'Serie',
@@ -162,7 +163,7 @@ export interface BoxOffice {
 
 export interface MovieBudget {
   totalBudget: string, // WIP #1052 use Price Interface?
-  budgetCurrency?: string, // WIP #1052
+  budgetCurrency?: MovieCurrenciesSlug,
   detailledBudget?: any, // WIP #1052
   estimatedBudget?: NumberRange,
   boxOffice?: BoxOffice[],
@@ -209,7 +210,7 @@ export interface MovieMain {
   internalRef?: string,
   isan?: string,
   title: Title,
-  directors?: Person[],
+  directors?: Credit[],
   officialIds?: MovieOfficialIds,
   productionYear?: number,
   genres?: GenresSlug[],
