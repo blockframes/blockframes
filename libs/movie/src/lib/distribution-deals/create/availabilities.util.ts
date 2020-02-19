@@ -159,7 +159,9 @@ export function getFilterMatchingDeals(
  */
 export function getDealsWithMedias(medias: MediasSlug[], deals: DistributionDeal[]): DistributionDeal[] {
   const dealsWithMediasInCommon: DistributionDeal[] = [];
-  deals.forEach(deal => {
+
+  for (const deal of deals) {
+
     let mediasInCommon = false;
     mediaLoop : for (const media of medias) {
       for (const licenseType of deal.licenseType) {
@@ -172,7 +174,7 @@ export function getDealsWithMedias(medias: MediasSlug[], deals: DistributionDeal
     if (mediasInCommon) {
       dealsWithMediasInCommon.push(deal);
     }
-  })
+  }
 
   return dealsWithMediasInCommon;
 

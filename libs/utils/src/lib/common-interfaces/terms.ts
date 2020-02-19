@@ -156,13 +156,16 @@ export function termToPrettyDate(term: Terms, type: 'start' | 'end' = 'start'): 
 }
 
 /** Check if termsA is in range of termsB */
-export function inDateRange(termsA: Terms, termsB: Terms) {
-  const termsX = {...formatTerms(termsA)};
-  const termsY = {...formatTerms(termsB)};
+export function inDateRange(termsA: any, termsB: any): boolean {
+
+  if (termsA && termsB) {
+    termsA = formatTerms(termsA);
+    termsB = formatTerms(termsB);;
+  }
   return (
-    (termsX.start.getTime() >= termsY.start.getTime() &&
-    termsX.start.getTime() <= termsY.end.getTime()) &&
-    (termsX.end.getTime() >= termsY.start.getTime() &&
-    termsX.end.getTime() <= termsY.end.getTime())
+    (termsA.start.getTime() >= termsB.start.getTime() &&
+    termsA.start.getTime() <= termsB.end.getTime()) &&
+    (termsA.end.getTime() >= termsB.start.getTime() &&
+    termsA.end.getTime() <= termsB.end.getTime())
   )
 }

@@ -15,8 +15,7 @@ aside {
 
   world-map {
     height: 500px;
-    z-index: 1;
-    background-color: var(--background-map-background)
+    z-index: 0;
   }
 }
 
@@ -24,7 +23,7 @@ aside {
   position: absolute;
   bottom: 30px;
   right: 15px;
-  z-index: 999;
+  z-index: 2;
 
   svg {
     margin-right: 10px;

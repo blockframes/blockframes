@@ -209,18 +209,16 @@
           </ng-container>
           <catalog-avails-filter [availsForm]="availsForm" [territoryControl]="territoryControl"></catalog-avails-filter>
           <article fxLayoutAlign="center center" class="filter-buttons">
-            <button
-              *ngIf="!availsForm.value.isActive"
-              mat-stroked-button color="primary"
-              (click)="applyAvailsFilter()">
-              Apply Avails Filter
-            </button>
-            <button
-              *ngIf="availsForm.value.isActive"
-              mat-stroked-button color="accent"
-              (click)="deactivateAvailsFilter()">
-              Deactivate Avails Filter
-            </button>
+            <ng-container *ngIf="!availsForm.get('isActive').value ; else active">
+              <button mat-stroked-button color="primary" (click)="applyAvailsFilter()">
+                Apply Avails Filter
+              </button>
+            </ng-container>
+            <ng-template #active>
+              <button mat-stroked-button color="accent" (click)="deactivateAvailsFilter()">
+                Deactivate Avails Filter
+              </button>
+            </ng-template>
           </article>
         </mat-accordion>
       </mat-card-content>

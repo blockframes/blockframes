@@ -21,6 +21,7 @@
 @import './components/bf-tunnel.scss';
 @import './components/bf-font-color.scss';
 @import './components/missing-control.scss';
+@import './components/bf-world-map.scss';
 
 @include mat-core($bf-typography);
 
@@ -43,6 +44,7 @@
   @include bf-tunnel-theme($theme);
   @include bf-color-font($theme);
   @include bf-missing-control-theme($theme);
+  @include bf-world-map-theme($theme);
 
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
@@ -52,13 +54,13 @@
   // Add css variables here when you need one
   // Background
   --background-disabled-button: #{mat-color($background, disabled-button)};
-  --background-map: #{mat-color($primary, 500, 0.05)};
   // Foreground
   --foreground-divider: #{mat-color($foreground, divider)};
-  --foreground-available: #{mat-color($primary, 900)};
-  --foreground-sold: #{mat-color($primary, 200)};
-  --foreground-unlicensed : #{mat-color($primary, 100, 0.3)};
-  --foreground-selected : #{mat-color($background, beware)}; //TODO:  Find a better color for the selected country on world map => #1973
+  // TODO: Move world-map variables into its own component.scss => #1975
+  --primary-darker: #{mat-color($primary, 900, 0.5)};
+  --primary-light: #{mat-color($primary, 800, 0.3)};
+  --primary-lighter : #{mat-color($primary, 100, 0.3)};
+  --foreground-selected : #{mat-color($primary, 500)}; // TODO: Find a better color for the selected country on world map => #1973
   --primary: #{mat-color($primary)};
   --accent: #{mat-color($accent)};
   --warn: #{mat-color($warn)};
