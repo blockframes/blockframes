@@ -1,32 +1,33 @@
-<mat-toolbar fxLayout="row" fxLayoutAlign="end center">
-
-  <ng-container *ngIf="!loading else isLoading">
-    <a mat-icon-button [routerLink]="routeBeforeTunnel">
-      <mat-icon svgIcon="cross"></mat-icon>
-    </a>
-  </ng-container>
-  <ng-template #isLoading>
-    <mat-spinner diameter="50"></mat-spinner>
-  </ng-template>
+<mat-toolbar class="flex-container">
+  <img asset="logo_archipel_content_primary.svg" type="logo" alt="Archipel Content Logo" class="item-center" />
+  <span class="item-right">
+    <ng-container *ngIf="!loading else isLoading">
+      <a mat-icon-button [routerLink]="routeBeforeTunnel">
+        <mat-icon svgIcon="cross"></mat-icon>
+      </a>
+    </ng-container>
+    <ng-template #isLoading>
+      <mat-spinner diameter="50"></mat-spinner>
+    </ng-template>
+  </span>
 </mat-toolbar>
 
 <mat-sidenav-container>
   <mat-sidenav opened="true" position="start" mode="side">
     <h5 class="mat-body-2"><b>Instructions</b></h5>
     <p>
-      You can fill it out in one go or over time. You may navigate between steps, but all sections must be completed before submitting to Archipel Content for validation. Your title will be published on the platform only once you have signed a contract with us. 
+      You can fill it out in one go or over time. You may navigate between steps, but all sections must be completed
+      before submitting to Archipel Content for validation. Your title will be published on the platform only once you
+      have signed a contract with us.
     </p>
   </mat-sidenav>
 
-  <mat-sidenav-content fxLayout="column" fxLayout.lt-md="column" fxLayoutAlign="center start" fxLayoutGap="30px">
-    <section fxFlex.gt-sm="45">
+  <mat-sidenav-content fxLayout="column" fxLayout.lt-md="column" fxLayoutAlign="center start" fxLayoutGap="56px">
+    <section>
       <h1>Add a Title</h1>
       <h2>The 3-step process will take about a half-hour to complete.</h2>
-      <button test-id="begin" mat-flat-button color="accent" (click)="begin()">
-        Begin
-      </button>
     </section>
-    <section fxFlex.gt-sm="45" fxLayout="row" fxLayoutAlign="flex-start" fxLayoutAlign.lt-sm="center">
+    <section fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="30px">
       <ng-container *ngFor="let content of cardContents">
         <mat-card>
           <article fxLayout="column" fxLayoutAlign="center">
@@ -38,5 +39,10 @@
         </mat-card>
       </ng-container>
     </section>
+    <div fxLayout="row" fxLayoutAlign="center start">
+      <button test-id="begin" mat-flat-button color="accent" (click)="begin()">
+        Begin
+      </button>
+    </div>
   </mat-sidenav-content>
 </mat-sidenav-container>

@@ -1,13 +1,6 @@
 <ng-container *ngFor="let control of form.controls; let i = index; let last = last">
   <form-display-name [form]="control"></form-display-name>
-  <mat-form-field appearance="outline">
-    <mat-label>Role</mat-label>
-    <mat-select [formControl]="control.get('role')">
-      <mat-option *ngFor="let role of roles" [value]="role.slug">
-        {{ role.label }}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
+  <static-select [control]="control.get('role')" scope="PRODUCER_ROLES" label="Role"></static-select>
   <!-- Add / Delete -->
   <footer *ngIf="!last" fxLayout="column" fxLayoutAlign="center center">
     <button mat-mini-fab color="warn" (click)="form.removeAt(i)" aria-label="Remove a director form">
