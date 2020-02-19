@@ -7,10 +7,10 @@
       [label]="getLabel(tab.name, filterByStatus(contracts, tab.statuses))">
       <ng-template matTabContent>
         <ng-container *ngIf="filterByStatus(contracts, tab.statuses).length; else noContracts">
-          <contract-list [source]="filterByStatus(contracts, tab.statuses)"></contract-list>
+          <contract-list [source]="filterByStatus(contracts, tab.statuses)" [displayBuyer]="true"></contract-list>
         </ng-container>
-        <ng-template #noContracts>
-          <span>There are no {{ tab.name }}</span>
+        <ng-template #noContracts >
+          <span>There are no contract in {{ tab.name }}</span>
         </ng-template>
       </ng-template>
     </mat-tab>
