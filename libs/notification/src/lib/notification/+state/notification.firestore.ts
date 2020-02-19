@@ -21,7 +21,8 @@ export const enum NotificationType {
   invitationFromUserToJoinOrgDecline = 'invitationFromUserToJoinOrgDecline',
   invitationFromOrganizationToUserDecline = 'invitationFromOrganizationToUserDecline',
   memberAddedToOrg = 'memberAddedToOrg',
-  memberRemovedFromOrg = 'memberRemovedFromOrg'
+  memberRemovedFromOrg = 'memberRemovedFromOrg',
+  contractInNegotiation = 'contractInNegotiation',
 }
 
 /** Minimum required informations to create a Notification. */

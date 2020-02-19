@@ -6,6 +6,7 @@
 import { db } from '../internals/firebase';
 import { OrganizationDocument, StakeholderDocument } from './types';
 import { PermissionsDocument, UserRole } from '@blockframes/permissions/types';
+import { ContractDocument } from '@blockframes/contract/contract/+state/contract.firestore';
 
 export function getCollection<T>(path: string): Promise<T[]> {
   return db
@@ -39,6 +40,16 @@ export async function getOrganizationsOfDocument(
     `${collection}/${documentId}/stakeholders`
   );
   const promises = stakeholders.map(({ orgId }) => getDocument<OrganizationDocument>(`orgs/${orgId}`));
+  return Promise.all(promises);
+}
+
+/**
+ * Gets all the organizations from contract.partyIds
+ * @param contract
+ * @returns the organizations that are in the contract
+ */
+export async function getOrganizationsOfContract(contract: ContractDocument): Promise<OrganizationDocument[]> {
+  const promises = contract.partyIds.map(orgId => getDocument<OrganizationDocument>(`orgs/${orgId}`));
   return Promise.all(promises);
 }
 
