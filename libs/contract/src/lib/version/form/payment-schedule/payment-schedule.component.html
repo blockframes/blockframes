@@ -61,9 +61,7 @@
             </mat-select>
           </mat-form-field>
         </div>
-        <div fxLayout="row" fxLayoutAlign="start start">
-          <h5 class="mat-body-2">Starting from</h5>
-        </div>
+        <h5 class="mat-body-2">Starting from</h5>
         <div fxLayout="row" fxLayoutGap="20px">
           <div fxLayout="column" fxLayoutGap="20px">
             <mat-slide-toggle [formControl]="periodCtrl" color="primary" (change)="updateState($event, 'start')">

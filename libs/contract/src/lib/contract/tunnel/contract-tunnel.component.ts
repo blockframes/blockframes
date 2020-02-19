@@ -110,10 +110,8 @@ export class ContractTunnelComponent implements OnInit {
 
   /** Add a title to this contract */
   addTitle(movieId: string, mandate?: boolean) {
-    mandate ?
-      this.contractForm.get('versions').last().get('titles').setControl(movieId,
-        new ContractTitleDetailForm({ price: { commissionBase: CommissionBase.grossreceipts, amount: 0 } }))
-      : this.contractForm.get('versions').last().get('titles').setControl(movieId, new ContractTitleDetailForm());
+    const params = mandate ? { price: { commissionBase: CommissionBase.grossreceipts, amount: 0 } } : {};
+    this.contractForm.get('versions').last().get('titles').setControl(movieId, new ContractTitleDetailForm(params));
     this.dealForms.setControl(movieId, FormList.factory([], deal => new DistributionDealForm(deal)));
   }
 
@@ -126,11 +124,11 @@ export class ContractTunnelComponent implements OnInit {
       this.removeDeal(movieId, i);
     }
     this.dealForms.removeControl(movieId);
-    const route = Object.keys(this.dealForms.controls)
-    if (!route.length) {
+    const dealIds = Object.keys(this.dealForms.controls)
+    if (!dealIds.length) {
       this.router.navigate(['details'], { relativeTo: this.route })
     } else {
-      this.router.navigate([route[route.length - 1]], { relativeTo: this.route })
+      this.router.navigate([dealIds[dealIds.length - 1]], { relativeTo: this.route })
     }
   }
 
@@ -170,7 +168,7 @@ export class ContractTunnelComponent implements OnInit {
     // Upsert deals
     for (const movieId in this.dealForms.controls) {
       const deals = this.dealForms.get(movieId).value.map(deal => createDistributionDeal(deal));
-      deals.forEach(async (deal, i) =>  {
+      deals.forEach(async (deal, i) => {
         if (deal.id) {
           this.dealService.update(deal, { params: { movieId }, write });
         } else {

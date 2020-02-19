@@ -44,7 +44,8 @@ export class ContractFormPartyComponent {
   }
 
   public patchOrgId(event: MatAutocompleteSelectedEvent, control: PartyDetailsForm) {
-    event.option.value === '' ? control.get('party').get('orgId').setValue(event.option.value) 
-    : control.get('party').get('orgId').setValue(event.option.value.objectID);
+    event.option.value === ''
+      ? control.get('party').get('orgId').setValue(event.option.value)
+      : control.get('party').get('orgId').setValue(event.option.value.objectID);
   }
 }

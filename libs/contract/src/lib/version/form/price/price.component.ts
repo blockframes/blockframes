@@ -64,6 +64,7 @@ export class PriceComponent implements OnInit {
           });
           return this.transformAlgoliaMovies(results)
         } else {
+          // TODO #1829
           /**
           * reset observable otherwise algolia search index 
           * gets an object of strings and throw error
