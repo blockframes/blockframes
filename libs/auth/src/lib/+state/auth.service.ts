@@ -88,8 +88,7 @@ export class AuthService extends FireAuthService<AuthState> {
    * If document exists, user is blockframeAdmin (like an ancient god).
    * @param uid 
    */
-  public async isBlockframesAdmin(uid?: string): Promise<boolean> {
-    if (!uid) { uid = this.query.userId };
+  public async isBlockframesAdmin(uid: string = this.query.userId): Promise<boolean> {
     const snap = await this.db.collection('blockframesAdmin').doc(uid).get().toPromise();
     return snap.exists;
   }

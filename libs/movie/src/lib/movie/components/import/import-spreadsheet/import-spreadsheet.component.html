@@ -4,14 +4,14 @@
 
     <div fxLayout="column" fxLayoutAlign="center">
       <button mat-stroked-button color="primary" (click)="downloadTemplate('movie')">
-        <mat-icon>cloud_upload</mat-icon> Download our template to import in bulk
+        <mat-icon>cloud_upload</mat-icon><span>Download our template to import in bulk</span>
       </button>
       <ng-container *ngIf="isUserBlockframesAdmin">
         <button mat-stroked-button color="primary" (click)="downloadTemplate('deals')">
-          <mat-icon>cloud_upload</mat-icon> Download our excel deals template
+          <mat-icon>cloud_upload</mat-icon><span>Download our excel deals template</span>
         </button>
         <button mat-stroked-button color="primary" (click)="downloadTemplate('contracts')">
-          <mat-icon>cloud_upload</mat-icon> Download our excel contracts template
+          <mat-icon>cloud_upload</mat-icon><span>Download our excel contracts template</span>
         </button>
       </ng-container>
     </div>
@@ -30,7 +30,7 @@
 
   <section class="help-section" fxLayout="column" fxLayoutAlign="center center">
     <p>Once you have filled it out, please upload it below.</p>
-    <div><a [routerLink]="['./']" (click)="openIntercom()">Need help ?</a></div>
+    <a [routerLink]="['./']" (click)="openIntercom()">Need help ?</a>
   </section>
   <section fxLayout="column" fxLayoutAlign="center center">
     <ng-container *ngIf="sheets.length; else fileUpload">

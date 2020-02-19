@@ -8,10 +8,8 @@
       <mat-icon>create</mat-icon>
     </ng-container>
     <ng-template #createinprogress>
-      <span>
-        Creating... {{ processedDeals }} / {{ selection.selected.length}}
-        <mat-spinner [diameter]="20" [strokeWidth]="2" class="upload-spinner"></mat-spinner>
-      </span>
+      <span>Creating... {{ processedDeals }} / {{ selection.selected.length}}</span>
+      <mat-spinner [diameter]="20" [strokeWidth]="2" class="upload-spinner"></mat-spinner>
     </ng-template>
   </button>
 </p>
