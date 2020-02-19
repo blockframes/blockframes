@@ -48,6 +48,7 @@ export class ContractListComponent implements OnInit, AfterViewInit {
   public columnFilter = new FormControl([]);
 
   // quick fix to remove buyer name in marketplace
+  // @todo(#1744) improve this quick fix when switching to bf-table
   @Input() displayBuyer: boolean;
 
   @Input()
