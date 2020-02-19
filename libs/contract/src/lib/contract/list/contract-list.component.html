@@ -110,10 +110,12 @@
   <mat-paginator [pageSizeOptions]="[10, 25, 50]" showFirstLastButtons></mat-paginator>
 </ng-container>
 
-<overlay-widget #filterColumnWidget>
-  <mat-selection-list [formControl]="columnFilter" class="mat-elevation-z2">
-    <mat-list-option *ngFor="let column of columns | keyvalue" [value]="column.key">
-      {{ column.value }}
-    </mat-list-option>
-  </mat-selection-list>
+<overlay-widget #filterColumnWidget >
+  <widget-card>
+    <mat-selection-list [formControl]="columnFilter" class="mat-elevation-z2">
+      <mat-list-option *ngFor="let column of columns | keyvalue" [value]="column.key">
+        {{ column.value }}
+      </mat-list-option>
+    </mat-selection-list>
+  </widget-card>
 </overlay-widget>
