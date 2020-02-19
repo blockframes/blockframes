@@ -2,10 +2,8 @@
     [formGroup]="control">
     <form formGroupName="party">
         <div fxLayout="row" fxLayoutAlign="center start" fxLayoutGap="20px">
-            <mat-form-field appearance="outline">
-                <mat-label>Party name</mat-label>
-                <input matInput type="text" formControlName="displayName" autocomplete="off" required>
-            </mat-form-field>
+            <organization-autocomplete [control]="displayNameControl(control)" label="Licensee Name"
+                (emitSelect)="patchOrgId($event, control)"></organization-autocomplete>
             <mat-form-field appearance="outline">
                 <mat-label>Select role</mat-label>
                 <mat-select formControlName="role">

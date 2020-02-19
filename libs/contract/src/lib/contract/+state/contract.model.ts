@@ -1,5 +1,5 @@
 import { getCodeIfExists } from '@blockframes/utils/static-model/staticModels';
-import { createPrice, Price } from '@blockframes/utils/common-interfaces/price';
+import { createPrice, Price, CommissionBase } from '@blockframes/utils/common-interfaces/price';
 import {
   ContractDocumentWithDates,
   ContractStatus,
@@ -68,6 +68,15 @@ export function createContractVersion(params: Partial<ContractVersion> = {}): Co
     price: createPrice(params.price)
   };
 }
+
+/**
+ * @description create a contract version specific to mandate
+ * @param params 
+ */
+export function createVersionMandate(params: Partial<ContractVersion> = {}) {
+  return createContractVersion({ price: { commissionBase: CommissionBase.grossreceipts, amount: 0 }, ...params })
+}
+
 
 export function createPublicContract(params: Partial<PublicContract> = {}): PublicContract {
   return {
@@ -194,6 +203,7 @@ export function createContractFromFirestore(contract: any): Contract {
   const c = {
     ...contract,
     signDate: toDate(contract.signDate),
+    titleIds: [],
     parties: contract.parties
       ? contract.parties.map(partyDetails => formatPartyDetails(partyDetails))
       : []

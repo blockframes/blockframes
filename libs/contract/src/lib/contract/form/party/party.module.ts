@@ -1,4 +1,5 @@
 import { ContractFormPartyComponent } from './party.component';
+import { OrganizationAutocompleteModule } from '@blockframes/organization';
 
 // Angular
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -20,6 +21,9 @@ import { MatIconModule } from '@angular/material/icon';
     CommonModule,
     FlexLayoutModule,
     ReactiveFormsModule,
+
+    // Components
+    OrganizationAutocompleteModule,
 
     // Material
     MatFormFieldModule,

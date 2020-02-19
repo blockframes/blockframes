@@ -20,7 +20,7 @@
     <mat-icon svgIcon="magnifying_glasses" matPrefix></mat-icon>
     <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addMovie($event)">
       <mat-option *ngFor="let movie of movieSearchResults$ | async" [value]="movie">
-        {{ movie.main.title.original }}
+        {{ movie.main.title.international }}
       </mat-option>
     </mat-autocomplete>
   </mat-form-field>
@@ -31,7 +31,7 @@
         <ng-container *ngIf="hasMandate; else currency">
           <mat-form-field appearance="outline">
             <mat-label>Distribution Fee</mat-label>
-            <input matInput type="number" formControlName="commission">
+            <input matInput type="number" formControlName="commission" max="100" autocomplete="off">
             <mat-icon svgIcon="percent" matSuffix></mat-icon>
           </mat-form-field>
         </ng-container>
@@ -55,8 +55,8 @@
   <ng-container *ngIf="hasMandate; else currency">
     <mat-form-field appearance="outline" class="currency">
       <mat-label>Distribution Fee</mat-label>
-      <input matInput [formControl]="commissionFee" type="number">
-      <mat-hint *ngIf="isFeeSet">
+      <input matInput [formControl]="commissionFee" type="number" autocomplete="off" max="100">
+      <mat-hint>
         You can't add a common distribution fee if a title has a specific distribution fee.
       </mat-hint>
       <mat-icon svgIcon="percent" matSuffix></mat-icon>
