@@ -1,7 +1,7 @@
 <p>Found <strong>{{ rows.data.length }}</strong> row(s).</p>
 
 <p>For selection ({{this.selection.selected.length}} items selected) :
-  <button mat-flat-button color="primary" [disabled]="this.selection.selected.length === 0"
+  <button mat-stroked-button color="primary" [disabled]="this.selection.selected.length === 0"
     (click)="createSelectedDeals()">
     <ng-container *ngIf="processedDeals === 0 else createinprogress">
       <span>Create</span>

@@ -5,6 +5,7 @@ import { SheetTab, importSpreadsheet } from '@blockframes/utils/spreadsheet';
 import { FormControl } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '@blockframes/auth';
+import { Intercom } from 'ng-intercom';
 
 export interface SpreadsheetImportEvent {
   sheet: SheetTab,
@@ -29,6 +30,7 @@ export class ImportSpreadsheetComponent implements OnInit {
     private http: HttpClient,
     private authService: AuthService,
     private cdRef: ChangeDetectorRef,
+    private intercom: Intercom,
   ) {
     this.fileType.setValue('movies');
   }
@@ -61,6 +63,10 @@ export class ImportSpreadsheetComponent implements OnInit {
 
   removeFile() {
     this.sheets = [];
+  }
+
+  public openIntercom(): void {
+    return this.intercom.show();
   }
 
   downloadTemplate(templateType: string) {

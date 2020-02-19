@@ -33,7 +33,6 @@ import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
 import { ImportSpreadsheetComponent } from './import-spreadsheet/import-spreadsheet.component';
 import { ImportContainerComponent } from './import-container/import-container.component';
 import { PreviewSheetComponent } from './preview-sheet/preview-sheet.component';
-import { PreviewMovieComponent } from './preview-movie/preview-movie.component';
 import { ViewExtractedElementsComponent } from './view-extracted-elements/view-extracted-elements.component';
 import { TableExtractedMoviesComponent } from './table-extracted-movies/table-extracted-movies.component';
 import { ViewImportErrorsComponent } from './view-import-errors/view-import-errors.component';
@@ -59,7 +58,6 @@ const routes: Routes = [
     TableExtractedDealsComponent,
     TableExtractedContractsComponent,
     PreviewSheetComponent,
-    PreviewMovieComponent,
     ViewImportErrorsComponent,
   ],
   imports: [
@@ -95,7 +93,6 @@ const routes: Routes = [
   ],
   entryComponents: [
     PreviewSheetComponent,
-    PreviewMovieComponent,
     ViewImportErrorsComponent
   ],
   exports: [],

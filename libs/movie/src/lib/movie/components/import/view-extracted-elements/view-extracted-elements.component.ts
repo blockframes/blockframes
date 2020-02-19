@@ -34,6 +34,7 @@ import { ContractService } from '@blockframes/contract/contract/+state/contract.
 import { createPaymentSchedule } from '@blockframes/utils/common-interfaces/schedule';
 import { createTerms } from '@blockframes/utils/common-interfaces';
 import { DistributionDealStatus } from '@blockframes/movie/distribution-deals/+state/distribution-deal.firestore';
+import { Intercom } from 'ng-intercom';
 
 export interface SpreadsheetImportError {
   field: string;
@@ -179,7 +180,8 @@ export class ViewExtractedElementsComponent {
     private distributionDealService: DistributionDealService,
     private contractService: ContractService,
     private imageUploader: ImageUploader,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
+    private intercom: Intercom,
   ) { }
 
   public formatMovies(sheetTab: SheetTab) {
@@ -2086,6 +2088,10 @@ export class ViewExtractedElementsComponent {
     titleDetails.price.recoupableExpenses.push(recoupableExpense);
 
     return titleDetails;
+  }
+
+  public openIntercom(): void {
+    return this.intercom.show();
   }
 
   private clearDataSources() {

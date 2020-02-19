@@ -2,7 +2,7 @@
 
 <ng-container *ngIf="mode === 'create'; else update">
   <p>For selection ({{ selection.selected.length }} items selected) :
-    <button mat-flat-button color="primary" [disabled]="!selection.selected.length"
+    <button mat-stroked-button color="primary" [disabled]="!selection.selected.length"
       (click)="createSelectedContracts()">
       <ng-container *ngIf="processedContracts === 0 else createinprogress">
         <span>Create</span>
@@ -19,7 +19,7 @@
 </ng-container>
 <ng-template #update>
   <p>For selection ({{ selection.selected.length }} items selected) :
-    <button mat-flat-button color="primary" [disabled]="!selection.selected.length"
+    <button mat-stroked-button color="primary" [disabled]="!selection.selected.length"
       (click)="updateSelectedContracts()">
       <ng-container *ngIf="processedContracts === 0 else updateinprogress">
         <span>Update</span>

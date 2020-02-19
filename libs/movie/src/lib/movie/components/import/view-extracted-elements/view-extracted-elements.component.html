@@ -2,17 +2,17 @@
   <h1>Submit your titles to finalize your import</h1>
   <section class="help-section" fxLayout="column" fxLayoutAlign="center">
     <p>Please review and submit to Archipel Content for validation.</p>
-    <div><a href="#">Need help ?</a></div>
+    <div><a [routerLink]="" (click)="openIntercom()">Need help ?</a></div>
   </section>
   <ng-container *ngIf="moviesToUpdate.data.length || moviesToCreate.data.length || deals.data.length || contractsToUpdate.data.length || contractsToCreate.data.length else isLoading">
     <section class="result-tables">
-      <ng-container *ngIf="moviesToUpdate.data.length">
-        <h3>Movies to Update</h3>
-        <movie-table-extracted-movies [rows]="moviesToUpdate" mode="update"></movie-table-extracted-movies>
-      </ng-container>
       <ng-container *ngIf="moviesToCreate.data.length">
-        <h3>Movies to Create</h3>
+        <h3>Titles to Create</h3>
         <movie-table-extracted-movies [rows]="moviesToCreate" mode="create"></movie-table-extracted-movies>
+      </ng-container>
+      <ng-container *ngIf="moviesToUpdate.data.length">
+        <h3>Titles to Update & Submit</h3>
+        <movie-table-extracted-movies [rows]="moviesToUpdate" mode="update"></movie-table-extracted-movies>
       </ng-container>
       <ng-container *ngIf="deals.data.length">
         <h3>Distribution deals</h3>
