@@ -58,7 +58,7 @@
   --foreground-divider: #{mat-color($foreground, divider)};
   // TODO: Move world-map variables into its own component.scss => #1975
   --primary-darker: #{mat-color($primary, 900, 0.5)};
-  --primary-light: #{mat-color($primary, 800, 0.3)};
+  --primary-light: #{mat-color($primary, 500, 0.3)};
   --primary-lighter : #{mat-color($primary, 100, 0.3)};
   --foreground-selected : #{mat-color($primary, 500)}; // TODO: Find a better color for the selected country on world map => #1973
   --primary: #{mat-color($primary)};

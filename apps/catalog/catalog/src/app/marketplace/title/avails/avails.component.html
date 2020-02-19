@@ -33,17 +33,40 @@
     <mat-card-content>
       <world-map>
         <ng-container *ngFor="let tag of notLicensedTerritories; trackBy: trackByTag">
-          <map-feature [tag]="tag['iso_a3']" color="primary-lighter"></map-feature>
+          <map-feature
+            [tag]="tag['iso_a3']"
+            color="primary-lighter"
+            (mouseover)="dislpayTerritoryTooltip(tag.label, 'Not licensed')"
+            (mouseout)="clearTerritoryTooltip()">
+          </map-feature>
         </ng-container>
         <ng-container *ngFor="let tag of rightsSoldTerritories; trackBy: trackByTag">
-          <map-feature [tag]="tag['iso_a3']" color="primary-light"></map-feature>
+          <map-feature
+            [tag]="tag['iso_a3']"
+            color="primary-light"
+            (mouseover)="dislpayTerritoryTooltip(tag.label, 'Rights sold')"
+            (mouseout)="clearTerritoryTooltip()">
+          </map-feature>
         </ng-container>
         <ng-container *ngFor="let tag of availableTerritories; trackBy: trackByTag">
-          <map-feature [tag]="tag['iso_a3']" color="primary-darker" (click)="select($event)"></map-feature>
-        </ng-container>
+          <map-feature
+            [tag]="tag['iso_a3']"
+            color="primary-darker"
+            (click)="select($event)"
+            (mouseover)="dislpayTerritoryTooltip(tag.label, 'Available')"
+            (mouseout)="clearTerritoryTooltip()"></map-feature>
+          </ng-container>
         <ng-container *ngFor="let tag of territoriesIsoA3">
           <map-feature [tag]="tag" color="primary"></map-feature>
         </ng-container>
+
+        <!-- Territory Informations Tooltip -->
+        <mat-card *ngIf="hoveredTerritory" class="hovered-territory-card">
+          <ul>
+            <li> {{ hoveredTerritory.name }} </li>
+            <li class="mat-caption"> {{ hoveredTerritory.status }} </li>
+          </ul>
+        </mat-card>
 
         <!-- World Map Legends -->
         <mat-card class="colors-card">

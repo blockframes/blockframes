@@ -7,7 +7,7 @@ import { DistributionDealService, DistributionDeal } from '@blockframes/movie/di
 import { MatSnackBar } from '@angular/material';
 import { MarketplaceStore, MarketplaceQuery } from '../../+state';
 import { getSlugByIsoA3, getIsoA3bySlug, Model } from '@blockframes/utils/static-model/staticModels';
-import { staticModels } from '@blockframes/utils/static-model';
+import { staticModels, TerritoriesLabel } from '@blockframes/utils/static-model';
 import { arrayAdd } from '@datorama/akita';
 
 @Component({
@@ -25,6 +25,11 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
   public notLicensedTerritories: Model['TERRITORIES'] = [];
   public rightsSoldTerritories: Model['TERRITORIES'] = [];
   public availableTerritories: Model['TERRITORIES'] = [];
+
+  public hoveredTerritory: {
+    name: string;
+    status: string;
+  }
 
   constructor(
     private movieQuery: MovieQuery,
@@ -116,6 +121,16 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 3000 });
     }
+  }
+
+  /** Display the territories information in the tooltip */
+  public dislpayTerritoryTooltip(territory: TerritoriesLabel, status: string) {
+    this.hoveredTerritory = { name: territory, status}
+  }
+
+  /** Clear the territories information */
+  public clearTerritoryTooltip() {
+    this.hoveredTerritory = null;
   }
 
 }
