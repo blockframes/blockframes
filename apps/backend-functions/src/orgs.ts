@@ -13,9 +13,9 @@ import { OrganizationDocument, OrganizationStatus, PublicUser, PermissionsDocume
 import { RelayerConfig, relayerDeployOrganizationLogic, relayerRegisterENSLogic, isENSNameRegistered } from './relayer';
 import { mnemonic, relayer } from './environments/environment';
 import { emailToEnsDomain, precomputeAddress as precomputeEthAddress, getProvider } from '@blockframes/ethers/helpers';
-import { createNotification, NotificationType } from '@blockframes/notification/types';
+import { NotificationType } from '@blockframes/notification/types';
 import { App } from '@blockframes/utils/apps';
-import { triggerNotifications } from './notification';
+import { triggerNotifications, createNotification } from './notification';
 
 /** Create a notification with user and org. */
 function notifUser(userId: string, notificationType: NotificationType, org: OrganizationDocument, user: PublicUser) {

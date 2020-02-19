@@ -1,8 +1,9 @@
 import { functions, db } from './internals/firebase';
-import { ContractDocument, PublicContractDocument, createNotification, App, NotificationType } from './data/types';
-import { ValidContractStatuses, ContractStatus } from '@blockframes/contract/contract/+state/contract.firestore';
-import { getOrganizationsOfContract } from './data/internals';
-import { triggerNotifications } from './notification';
+import { ContractDocument, PublicContractDocument, App, NotificationType, OrganizationDocument, PublicOrganization } from './data/types';
+import { ValidContractStatuses, ContractStatus, ContractVersionDocument } from '@blockframes/contract/contract/+state/contract.firestore';
+import { getOrganizationsOfContract, getDocument } from './data/internals';
+import { triggerNotifications, createNotification } from './notification';
+import { centralOrgID } from '@env';
 /**
  *
  * @param contract
@@ -51,7 +52,7 @@ export async function onContractWrite(
   const before = change.before.data();
   const after = change.after.data();
 
-  if (!after && !!before) { // Deletion*
+  if (!after && !!before) { // Deletion
     return db.doc(`publicContracts/${before.id}`).delete();
   }
 
@@ -78,23 +79,41 @@ export async function onContractVersionWrite(
     throw new Error(msg);
   }
 
-  const before = change.before.data();
-  const after = change.after.data();
-
-  const contractRef = db.doc(`contracts/${contractId}`);
-  const contractSnap = await contractRef.get();
-  const contract = contractSnap.data() as ContractDocument;
+  const before = change.before.data() as ContractVersionDocument;
+  const after = change.after.data() as ContractVersionDocument;
+  const contract = await getDocument<ContractDocument>(`contracts/${contractId}`);
 
   if (!after && !!before) { // Deletion
     console.log(`deleting ContractVersion : "${versionId}" for : ${contractId}`);
     return transformContractToPublic(contract, versionId);
   }
 
-  const contractInNegociation =
-    (before && before.status === ContractStatus.submitted) &&
-    (after && after.status === ContractStatus.undernegotiation);
+  // Prepare data to create notifications
+  const previousVersionId = parseInt(after.id, 10) - 1; // @TODO (#1887)
+  const previousVersion = await getDocument<ContractVersionDocument>(`contracts/${contractId}/versions/${previousVersionId}`)
+  const contractInNegociation = (previousVersion.status === ContractStatus.submitted) && (after.status === ContractStatus.undernegotiation);
+  const contractSubmitted = (previousVersion.status === ContractStatus.draft) && (after.status === ContractStatus.submitted);
 
-  if (contractInNegociation) {
+  if (contractSubmitted) { // Contract is submitted by organization to Archipel Content
+
+    const { id, name } = await getDocument<PublicOrganization>(`orgs/${contract.partyIds[0]}`); // TODO: Find real creator
+
+    const archipelContent = await getDocument<OrganizationDocument>(`orgs/${centralOrgID}`);
+    const notifications = archipelContent.userIds.map(
+      userId => createNotification({
+        userId,
+        organization: { id, name }, // TODO: Add the logo to display if orgs collection is not public to Archipel Content
+        type: NotificationType.newContract,
+        docId: contractId,
+        app: App.biggerBoat
+      })
+    );
+
+    await triggerNotifications(notifications);
+  }
+
+  if (contractInNegociation) { // Contract is validated by Archipel Content
+
     const organizations = await getOrganizationsOfContract(contract);
 
     const notifications = organizations

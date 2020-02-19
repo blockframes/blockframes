@@ -1,5 +1,5 @@
 import { db, functions } from './internals/firebase';
-import { triggerNotifications } from './notification';
+import { triggerNotifications, createNotification } from './notification';
 import { getCollection, getCount, getDocument, getOrganizationsOfDocument } from './data/internals';
 import {
   MovieDocument,
@@ -9,8 +9,7 @@ import {
   MaterialDocument,
   StakeholderDocument,
   App,
-  NotificationType,
-  createNotification
+  NotificationType
 } from './data/types';
 import { copyMaterialsToMovie } from './material';
 

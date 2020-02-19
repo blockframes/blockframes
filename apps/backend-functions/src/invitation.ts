@@ -16,12 +16,11 @@ import {
   MovieDocument,
   createDocPermissions,
   NotificationType,
-  createNotification,
   UserRole,
   App,
   PublicUser
 } from './data/types';
-import { triggerNotifications } from './notification';
+import { triggerNotifications, createNotification } from './notification';
 import { sendMailFromTemplate } from './internals/email';
 import {
   userJoinedAnOrganization,

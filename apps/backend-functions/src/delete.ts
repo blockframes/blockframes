@@ -1,5 +1,5 @@
 import { db, functions } from './internals/firebase';
-import { triggerNotifications } from './notification';
+import { triggerNotifications, createNotification } from './notification';
 import { isTheSame, removeAllSubcollections } from './utils';
 import { getCollection, getDocument, getOrganizationsOfDocument } from './data/internals';
 import {
@@ -8,7 +8,6 @@ import {
   DeliveryDocument,
   MaterialDocument,
   NotificationType,
-  createNotification,
   App
 } from './data/types';
 

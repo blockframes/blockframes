@@ -9,6 +9,7 @@ import { formatDate } from '@angular/common';
 import { MovieQuery } from '@blockframes/movie';
 import { NotificationType } from './notification.firestore';
 import { ImgRef, createImgRef } from '@blockframes/utils';
+import { PLACEHOLDER_LOGO } from '@blockframes/organization/+state/organization.model';
 
 function getYesterday() {
   const today = new Date();
@@ -54,6 +55,8 @@ export class NotificationQuery extends QueryEntity<NotificationState, Notificati
   }
 
   public createNotificationInformation(notification: Notification) {
+    const organizationPlaceholderLogo = PLACEHOLDER_LOGO;
+
     switch (notification.type) {
       case NotificationType.inviteOrganization:
         return {
@@ -143,6 +146,16 @@ export class NotificationQuery extends QueryEntity<NotificationState, Notificati
           message: `${notification.user.name} ${notification.user.surname} has been removed from ${notification.organization.name}.`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'Avatar_40.png'
+        };
+      case NotificationType.newContract:
+        return {
+          message: `${notification.organization.name} submitted a contract.`,
+          placeholderUrl: 'Organization_250.png'
+        };
+      case NotificationType.contractInNegotiation:
+        return {
+          message: `A new offer has been created.`,
+          placeholderUrl: 'WelcomeArchipelContent_500.png'
         };
     }
   }
