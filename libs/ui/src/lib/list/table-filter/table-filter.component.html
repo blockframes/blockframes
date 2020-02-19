@@ -1,4 +1,4 @@
-<mat-form-field appearance="outline" *ngIf="showFilter">
+<mat-form-field appearance="outline" *ngIf="showFilter" class="bf-table-filter">
   <mat-label>Filter</mat-label>
   <input matInput placeholder="Type to filter in the list below" (keyup)="applyFilter($event.target.value)"/>
   <!-- TODO issue#1819 -->
@@ -21,7 +21,7 @@
     <ng-template [ngIf]="link" [ngIfElse]="withoutLink">
       <tr mat-row *matRowDef="let row; columns: displayedColumns" [routerLink]="[link, row.id]" style="cursor: pointer;"></tr>
     </ng-template>
-    <ng-template #withoutLink>
+    <ng-template #withoutLink >
       <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </ng-template>
   </table>
@@ -30,7 +30,7 @@
       <ng-container *ngIf="noData else spinner">
         <div class="no-data">No data found</div>
       </ng-container>
-      <ng-template #spinner>
+      <ng-template #spinner >
         <mat-spinner diameter="30"></mat-spinner>
       </ng-template>
     </div>
