@@ -1,16 +1,18 @@
 @import 'mixins';
 
-section {
-  background-color: var(--whiteBackground);
-  article {
-    display: block;
-    margin-left: 20%;
-    margin-right: 20%;
-    padding: 30px 0;
-  }
+:host {
+  display: block;
+  background-color: white;
 }
 
-div {
+article {
+  display: block;
+  width: 60%;
+  margin: auto;
+  padding: 30px 0;
+}
+
+.feature-description {
   width: 45%;
 }
 

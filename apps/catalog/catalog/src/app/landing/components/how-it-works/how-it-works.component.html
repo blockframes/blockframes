@@ -10,7 +10,7 @@
       <mat-card *ngFor="let feature of sellerFeatures">
         <img class="feature-image" [asset]="feature.image" alt="seller feature image">
         <div>
-          <span><b>{{ feature.title }}</b></span>
+          <b>{{ feature.title }}</b>
           <p class="mat-caption">{{ feature.description }}</p>
         </div>
       </mat-card>
