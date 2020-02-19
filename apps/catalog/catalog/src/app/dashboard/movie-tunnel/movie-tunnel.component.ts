@@ -1,7 +1,7 @@
 // Angular
 import { Component, ChangeDetectionStrategy, Host, OnInit } from '@angular/core';
 // Blockframes
-import { MovieService, MovieQuery } from '@blockframes/movie/movie/+state';
+import { MovieService, MovieQuery, createMovie } from '@blockframes/movie/movie/+state';
 import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
 import { MatSnackBar, MatDialog } from '@angular/material';
 import { TunnelStep, TunnelRoot, TunnelConfirmComponent } from '@blockframes/ui/tunnel';
@@ -97,15 +97,13 @@ export class MovieTunnelComponent implements OnInit, TunnelRoot {
   }
 
   // Should save movie
-  public save() {
+  public async save() {
     const id = this.query.getActiveId();
-    const update = this.service.update({ id, ...this.form.value });
-    // Return an observable<boolean> for the confirmExit
-    return from(update).pipe(
-      tap(_ => this.form.markAsPristine()),
-      switchMap(_ => this.snackBar.open('Saved', '', { duration: 500 }).afterDismissed()),
-      map(_ => true) 
-    )
+    const movie = createMovie({ id, ...this.form.value });
+    await this.service.update(movie);
+    this.form.markAsPristine();
+    await this.snackBar.open('Saved', '', { duration: 500 }).afterDismissed().toPromise();
+    return true;
   }
 
   confirmExit() {

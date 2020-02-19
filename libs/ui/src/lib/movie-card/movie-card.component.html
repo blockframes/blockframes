@@ -18,7 +18,7 @@
 
   <!-- Movie Informations -->
   <mat-card-content>
-    <mat-card-title-group>
+    <mat-card-title-group fxLayout="row" fxLayoutAlign="start">
       <ng-container *ngIf="!!movie.main.title.international; else originalTitle">
         <mat-card-title>{{ movie.main.title.international }}</mat-card-title>
       </ng-container>

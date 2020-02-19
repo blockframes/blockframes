@@ -48,6 +48,9 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
     this.navigation.next(steps || []);
   }
 
+  /** Fallback link to redirect on exit */
+  @Input() exitRedirect: string;
+
   constructor(
     private routerQuery: RouterQuery,
     private changeDetectorRef: ChangeDetectorRef,
