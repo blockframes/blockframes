@@ -1,7 +1,6 @@
-import { Component, ChangeDetectionStrategy, Input, HostListener } from '@angular/core';
-import { MatSidenav } from '@angular/material/sidenav';
+import { Component, ChangeDetectionStrategy, HostListener } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { throttleTime, debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+import { distinctUntilChanged, map } from 'rxjs/operators';
 
 
 @Component({
@@ -11,8 +10,6 @@ import { throttleTime, debounceTime, distinctUntilChanged, map } from 'rxjs/oper
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CatalogToolbarComponent {
-
-  @Input() sidenav: MatSidenav;
   private scroll = new BehaviorSubject<number>(0);
   public toolbarColor$ = this.scroll.asObservable().pipe(
     map(position => position === 0),
