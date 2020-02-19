@@ -15,7 +15,8 @@ import {
   populateMovieLanguageSpecification,
   MovieService,
   createMovieRating,
-  createMovieOriginalRelease
+  createMovieOriginalRelease,
+  createMovieStory
 } from '../../../+state';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { formatCredits } from '@blockframes/utils/spreadsheet/format';
@@ -197,6 +198,7 @@ export class ViewExtractedElementsComponent {
           festivalPrizes: createMovieFestivalPrizes(),
           salesAgentDeal: createMovieSalesAgentDeal(),
           budget: createMovieBudget(),
+          story: createMovieStory(),
           ...existingMovie ? cleanModel(existingMovie) : undefined
         } as Movie;
 

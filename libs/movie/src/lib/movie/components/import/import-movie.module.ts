@@ -17,7 +17,6 @@ import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatDialogModule } from '@angular/material/dialog'
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatStepperModule } from '@angular/material/stepper';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -32,7 +31,7 @@ import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
 
 // Components
 import { ImportSpreadsheetComponent } from './import-spreadsheet/import-spreadsheet.component';
-import { ImportStepperComponent } from './import-stepper/import-stepper.component';
+import { ImportContainerComponent } from './import-container/import-container.component';
 import { PreviewSheetComponent } from './preview-sheet/preview-sheet.component';
 import { PreviewMovieComponent } from './preview-movie/preview-movie.component';
 import { ViewExtractedElementsComponent } from './view-extracted-elements/view-extracted-elements.component';
@@ -45,7 +44,7 @@ import { TableExtractedContractsComponent } from './table-extracted-contracts/ta
 const routes: Routes = [
   {
     path: '',
-    component: ImportStepperComponent,
+    component: ImportContainerComponent,
     canActivate: [MovieOrganizationListGuard],
     canDeactivate: [MovieOrganizationListGuard],
   }
@@ -53,7 +52,7 @@ const routes: Routes = [
 
 @NgModule({
   declarations: [
-    ImportStepperComponent,
+    ImportContainerComponent,
     ImportSpreadsheetComponent,
     ViewExtractedElementsComponent,
     TableExtractedMoviesComponent,
@@ -82,7 +81,6 @@ const routes: Routes = [
     MatSortModule,
     MatDialogModule,
     MatCheckboxModule,
-    MatStepperModule,
     MatExpansionModule,
     MatSelectModule,
     MatProgressSpinnerModule,

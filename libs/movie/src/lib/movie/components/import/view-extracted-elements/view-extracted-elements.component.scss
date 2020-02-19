@@ -1,5 +1,12 @@
-section {
+article {
+    padding: 20px;
     min-height: calc(100vh - (var(--toolbarHeight) * 2) - 30px); // TODO #1212
+}
+
+.result-tables {
+    h3 {
+        margin-top: 20px;
+    }
 }
 
 mat-spinner {

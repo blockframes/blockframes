@@ -1,0 +1,3 @@
+<movie-import-spreadsheet *ngIf="start" (importEvent)="next($event)"></movie-import-spreadsheet>
+<movie-view-extracted-elements *ngIf="!start" #viewExtractedElementsComponent></movie-view-extracted-elements>
+<button *ngIf="!start" mat-flat-button color="warn" (click)="back()">Back</button>

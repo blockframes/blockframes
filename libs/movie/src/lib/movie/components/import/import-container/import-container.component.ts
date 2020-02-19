@@ -1,20 +1,26 @@
-import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ViewExtractedElementsComponent } from '../view-extracted-elements/view-extracted-elements.component';
 import { SpreadsheetImportEvent } from '../import-spreadsheet/import-spreadsheet.component';
 
 @Component({
-  selector: 'movie-import-stepper',
-  templateUrl: './import-stepper.component.html',
-  styleUrls: ['./import-stepper.component.scss'],
+  selector: 'movie-import-container',
+  templateUrl: './import-container.component.html',
+  styleUrls: ['./import-container.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ImportStepperComponent {
+export class ImportContainerComponent {
 
-  @ViewChild('viewExtractedElementsComponent', { static: true }) viewExtractedElementsComponent: ViewExtractedElementsComponent;
+  @ViewChild('viewExtractedElementsComponent', { static: false }) viewExtractedElementsComponent: ViewExtractedElementsComponent;
 
-  constructor() {}
+  public importedFiles = false;
+  public start = true;
 
-  async next(importEvent : SpreadsheetImportEvent) {
+  constructor(private cdRef: ChangeDetectorRef) { }
+
+  async next(importEvent: SpreadsheetImportEvent) {
+    this.start = false;
+    this.cdRef.detectChanges();
+
     switch (importEvent.fileType) {
       case 'movies':
         this.viewExtractedElementsComponent.formatMovies(importEvent.sheet);
@@ -25,10 +31,14 @@ export class ImportStepperComponent {
       case 'contracts':
         await this.viewExtractedElementsComponent.formatContracts(importEvent.sheet);
         break;
-        
       default:
         break;
     }
+  }
+
+  back() {
+    this.start = true;
+    this.cdRef.markForCheck();
   }
 
 }
