@@ -4,7 +4,7 @@ import { Writable } from 'stream';
 import * as admin from 'firebase-admin';
 import { Bucket, File as GFile } from '@google-cloud/storage';
 import { db, getBackupBucketName } from './internals/firebase';
-import { endMaintenance, startMaintenance } from './maintenance';
+import { endMaintenance, META_COLLECTION_NAME, startMaintenance } from './maintenance';
 
 type Firestore = admin.firestore.Firestore;
 type CollectionReference = admin.firestore.CollectionReference;
@@ -61,13 +61,23 @@ const getBackupOutput = async (bucket: Bucket, name: string): Promise<Writable> 
 /**
  * Return all collection in the firestore instance provided, skip the "meta" collection
  * that should not be backup'd or restored.
- *
  * @param firestore
  */
 const backupedCollections = async (firestore: Firestore): Promise<CollectionReference[]> => {
   // NOTE: this is legacy code, once upon a time we'd skip the backup of the _restore / _META collection
   // we disabled that, and this function might be useless now.
   return await firestore.listCollections();
+};
+
+/**
+ * Return all collection in the firestore instance provided, skip the collections
+ * that should not be clear'd.
+ * @param firestore
+ */
+const clearedCollection = async (firestore: Firestore): Promise<CollectionReference[]> => {
+  // NOTE: this is legacy code, once upon a time we'd skip the backup of the _restore / _META collection
+  // we disabled that, and this function might be useless now.
+  return (await firestore.listCollections()).filter(x => x.id !== META_COLLECTION_NAME);
 };
 
 export const freeze = async (req: any, resp: any) => {
@@ -135,7 +145,7 @@ const clear = async () => {
   // and use it in both functions.
 
   // retrieve all the collections at the root.
-  const collections: CollectionReference[] = await backupedCollections(db);
+  const collections: CollectionReference[] = await clearedCollection(db);
   collections.forEach(x => processingQueue.push(x.path));
 
   while (!processingQueue.isEmpty()) {
