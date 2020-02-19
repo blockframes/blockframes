@@ -1,4 +1,11 @@
-<section fxLayout="column" fxLayoutAlign="start center" class="video-section">
-  <iframe src="https://player.vimeo.com/video/391939808" width="1024" height="560" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+<section fxLayout="column" fxLayoutAlign="center center" class="video-section">
+  <div class="video-container">
+    <iframe [src]="url" width="1024" height="560" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+    <div [ngClass]="cover ? 'cover' : 'show'">
+      <p class="mat-display-1">What is Archipel Content?</p>
+      <button mat-flat-button color="accent" (click)="play()">
+        <mat-icon svgIcon="play"></mat-icon><span>Play Video</span>
+      </button>
+    </div>
+  </div>
 </section>
-
