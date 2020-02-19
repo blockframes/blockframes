@@ -4,12 +4,12 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Component, Input, ViewChild, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { Movie, MovieService } from '../../../+state';
-import { PreviewMovieComponent } from './../preview-movie/preview-movie.component';
+import { MovieService } from '../../../+state';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MovieImportState, SpreadsheetImportError } from '../view-extracted-elements/view-extracted-elements.component';
 import { ViewImportErrorsComponent } from '../view-import-errors/view-import-errors.component';
 import { sortingDataAccessor } from '@blockframes/utils/table';
+import { StoreStatus } from '@blockframes/movie/movie/+state/movie.firestore';
 
 const hasImportErrors = (importState: MovieImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -27,7 +27,8 @@ export class TableExtractedMoviesComponent implements OnInit {
   @Input() mode: string;
   @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator;
   @ViewChild(MatSort, { static: true }) sort: MatSort;
-  public processedMovies = 0;
+  public processedTitles = 0;
+  public submittedTitles = 0;
 
   public selection = new SelectionModel<MovieImportState>(true, []);
   public displayedColumns: string[] = [
@@ -36,10 +37,11 @@ export class TableExtractedMoviesComponent implements OnInit {
     'movie.main.title.original',
     'movie.promotionalElements.poster',
     'movie.main.productionYear',
+    'movie.main.storeConfig.status',
+    'movie.main.storeConfig.storeType',
     'errors',
     'warnings',
     'actions',
-    'preview',
   ];
 
   constructor(
@@ -58,23 +60,51 @@ export class TableExtractedMoviesComponent implements OnInit {
 
   async createMovie(importState: MovieImportState): Promise<boolean> {
     await this.addMovie(importState);
-    this.snackBar.open('Movie created!', 'close', { duration: 3000 });
+    this.snackBar.open('Title created!', 'close', { duration: 3000 });
+    return true;
+  }
+
+  /**
+ * @dev Once created (as draft), titls can be submitted to Archipel Content
+ */
+  async submitMovie(importState: MovieImportState): Promise<boolean> {
+    await this.submitToArchipelContent(importState);
+    this.snackBar.open('Title submitted !', 'close', { duration: 3000 });
     return true;
   }
 
   async createSelectedMovies(): Promise<boolean> {
     try {
       const creations = this.selection.selected.filter(importState => !importState.movie.id && !hasImportErrors(importState));
-      for (const movie of creations) { // @TODO #1389
-        this.processedMovies++;
+      for (const movie of creations) {
+        this.processedTitles++;
         await this.addMovie(movie);
       }
-      this.snackBar.open(`${this.processedMovies} movies created!`, 'close', { duration: 3000 });
-      this.processedMovies = 0;
+      this.snackBar.open(`${this.processedTitles} titles created!`, 'close', { duration: 3000 });
+      this.processedTitles = 0;
       return true;
     } catch (err) {
-      this.snackBar.open(`Could not create all movies (${this.processedMovies} / ${this.selection.selected.length})`, 'close', { duration: 3000 });
-      this.processedMovies = 0;
+      this.snackBar.open(`Could not create all titles (${this.processedTitles} / ${this.selection.selected.length})`, 'close', { duration: 3000 });
+      this.processedTitles = 0;
+    }
+  }
+
+  /**
+   * @dev Once created (as draft), titles can be submitted to Archipel Content
+   */
+  async submitSelectedMovies(): Promise<boolean> {
+    try {
+      const creations = this.selection.selected.filter(importState => importState.movie.id && !hasImportErrors(importState) && this.isTitleValidForSubmit(importState));
+      for (const movie of creations) {
+        this.submittedTitles++;
+        await this.submitToArchipelContent(movie);
+      }
+      this.snackBar.open(`${this.submittedTitles} titles submitted!`, 'close', { duration: 3000 });
+      this.submittedTitles = 0;
+      return true;
+    } catch (err) {
+      this.snackBar.open(`Could not submit all titles (${this.submittedTitles} / ${this.selection.selected.length})`, 'close', { duration: 3000 });
+      this.submittedTitles = 0;
     }
   }
 
@@ -84,7 +114,8 @@ export class TableExtractedMoviesComponent implements OnInit {
    */
   private async addMovie(importState: MovieImportState): Promise<boolean> {
     const data = this.rows.data;
-    await this.movieService.addMovie(importState.movie.main.title.original, importState.movie);
+    const { id } = await this.movieService.addMovie(importState.movie.main.title.original, importState.movie);
+    importState.movie.id = id;
     importState.errors.push({
       type: 'error',
       field: 'main.internalRef',
@@ -93,6 +124,29 @@ export class TableExtractedMoviesComponent implements OnInit {
       hint: 'Movie already saved'
     });
     this.rows.data = data;
+    return true;
+  }
+
+  /**
+   * Change title status from 'Draft' to 'Submitted to Archipel Content'
+   * @param importState 
+   */
+  private async submitToArchipelContent(importState: MovieImportState): Promise<boolean> {
+    const data = this.rows.data;
+    importState.movie.main.storeConfig.status = StoreStatus.submitted;
+    await this.movieService.updateById(importState.movie.id, importState.movie);
+    this.rows.data = data;
+    return true;
+  }
+
+  public isTitleValidForSubmit(importState: MovieImportState): boolean {
+    // Already valid or submitted
+    if (
+      importState.movie.main.storeConfig.status === StoreStatus.submitted ||
+      importState.movie.main.storeConfig.status === StoreStatus.accepted) {
+      return false;
+    }
+
     return true;
   }
 
@@ -106,15 +160,15 @@ export class TableExtractedMoviesComponent implements OnInit {
     try {
       const updates = this.selection.selected.filter(importState => importState.movie.id && !hasImportErrors(importState));
       for (const importState of updates) { // @TODO #1389
-        this.processedMovies++;
+        this.processedTitles++;
         await this.movieService.updateById(importState.movie.id, importState.movie);
       }
-      this.snackBar.open(`${this.processedMovies} movies updated!`, 'close', { duration: 3000 });
-      this.processedMovies = 0;
+      this.snackBar.open(`${this.processedTitles} movies updated!`, 'close', { duration: 3000 });
+      this.processedTitles = 0;
       return true;
     } catch (err) {
-      this.snackBar.open(`Could not update all movies (${this.processedMovies} / ${this.selection.selected.length})`, 'close', { duration: 3000 });
-      this.processedMovies = 0;
+      this.snackBar.open(`Could not update all titles (${this.processedTitles} / ${this.selection.selected.length})`, 'close', { duration: 3000 });
+      this.processedTitles = 0;
     }
   }
 
@@ -122,13 +176,13 @@ export class TableExtractedMoviesComponent implements OnInit {
     return data.errors.filter((error: SpreadsheetImportError) => error.type === type).length;
   }
 
+  isSaveOrUpdateDisabledForTitle(element) {
+    return this.errorCount(element) > 0 || this.processedTitles > 0;
+  }
+
   ///////////////////
   // POPINS
   ///////////////////
-
-  previewMovie(movie: Movie) {
-    this.dialog.open(PreviewMovieComponent, { data: movie });
-  }
 
   displayErrors(data: MovieImportState) {
     this.dialog.open(ViewImportErrorsComponent, { data: { title: data.movie.main.title.original, errors: data.errors }, width: '50%' });
@@ -151,7 +205,7 @@ export class TableExtractedMoviesComponent implements OnInit {
    * Selects all rows if they are not all selected; otherwise clear selection.
    */
   masterToggle() {
-    this.isAllSelected() 
+    this.isAllSelected()
       ? this.selection.clear()
       : this.rows.data.forEach(row => this.selection.select(row));
   }

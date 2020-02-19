@@ -61,6 +61,10 @@ export class DistributionDealService extends CollectionService<DistributionDealS
       distributionDeal.id = objectHash(distributionDeal);
     }
 
+    // Cleaning before save
+    contract.doc = this.contractService.formatToFirestore(contract.doc);
+    contract.last = this.contractVersionService.formatToFirestore(contract.last);
+
     // If a contract does not have an id, we update contract and link it to this distrubution deal
     // If there is already a contract id, this means it have been created before
     if (!contract.doc.id) {

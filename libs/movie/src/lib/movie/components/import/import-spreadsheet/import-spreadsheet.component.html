@@ -1,23 +1,23 @@
 <article fxLayout="column" fxLayoutAlign="center">
   <section fxLayout="column" fxLayoutAlign="center center">
-    <h4>Upload avails & film doc</h4>
-    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam mollis velit consectetur felis malesuada, id
-      maximus
-      neque mattis. Vivamus quis massa eros. Integer in euismod nunc.</p>
+    <h1>Add your titles using the Archipel Content Excel template</h1>
+
     <div fxLayout="column" fxLayoutAlign="center">
-      <button mat-button color="primary" (click)="downloadTemplate('movie')">
-        Download our excel movie template
+      <button mat-stroked-button color="primary" (click)="downloadTemplate('movie')">
+        <mat-icon>cloud_upload</mat-icon><span>Download our template to import in bulk</span>
       </button>
-      <button mat-button color="primary" (click)="downloadTemplate('deals')">
-        Download our excel deals template
-      </button>
-      <button mat-button color="primary" (click)="downloadTemplate('contracts')">
-        Download our excel contracts template
-      </button>
+      <ng-container *ngIf="isUserBlockframesAdmin">
+        <button mat-stroked-button color="primary" (click)="downloadTemplate('deals')">
+          <mat-icon>cloud_upload</mat-icon><span>Download our excel deals template</span>
+        </button>
+        <button mat-stroked-button color="primary" (click)="downloadTemplate('contracts')">
+          <mat-icon>cloud_upload</mat-icon><span>Download our excel contracts template</span>
+        </button>
+      </ng-container>
     </div>
   </section>
 
-  <section fxLayout="row" fxLayoutAlign="center center">
+  <section fxLayout="row" fxLayoutAlign="center center" *ngIf="isUserBlockframesAdmin">
     <mat-form-field appearance="outline">
       <mat-label>Select import type</mat-label>
       <mat-select [formControl]="fileType">
@@ -27,10 +27,14 @@
       </mat-select>
     </mat-form-field>
   </section>
-  <section fxLayout="column" fxLayoutAlign="center">
+
+  <section class="help-section" fxLayout="column" fxLayoutAlign="center center">
+    <p>Once you have filled it out, please upload it below.</p>
+    <a [routerLink]="['./']" (click)="openIntercom()">Need help ?</a>
+  </section>
+  <section fxLayout="column" fxLayoutAlign="center center">
     <ng-container *ngIf="sheets.length; else fileUpload">
-      <mat-icon>attachment</mat-icon>
-      <span>File with {{ sheets.length }} sheets found!</span>
+      <span><mat-icon>attachment</mat-icon> File uploaded, click on "Start import" to continue!</span>
     </ng-container>
     <ng-template #fileUpload>
       <file-upload accept="['.xls', '.xlsx', '.ods', '.csv']" [types]="[
@@ -41,7 +45,6 @@
     </ng-template>
   </section>
 
-
   <section fxLayout="column" fxLayoutAlign="center center">
     <img asset="Upload_380.png">
     <!-- TODO #1387 -->
@@ -50,12 +53,11 @@
         <button mat-flat-button color="warn" (click)="removeFile()">
           <mat-icon>delete_circle</mat-icon>
         </button>
-        <button mat-flat-button color="primary" (click)="previewFile()">
+        <button mat-flat-button color="primary" (click)="previewFile()" *ngIf="isUserBlockframesAdmin">
           <mat-icon>open_in_new</mat-icon>
         </button>
       </ng-container>
-      <button mat-flat-button color="primary" matStepperNext (click)="next()" [disabled]="sheets.length === 0">Import
-        your doc
+      <button mat-flat-button color="primary" (click)="next()" [disabled]="sheets.length === 0">Start import
         <mat-icon>arrow_downward</mat-icon></button>
     </section>
   </section>

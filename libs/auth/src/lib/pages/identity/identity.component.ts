@@ -40,7 +40,7 @@ export class IdentityComponent {
         this.form.get('generatedPassword').value,
         this.form.get('newPassword').value
       );
-      const uid = this.query.userId;
+
       await this.service.update({
         name: this.form.get('name').value,
         surname: this.form.get('surname').value,

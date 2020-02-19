@@ -172,6 +172,9 @@ export function buildChainOfTitle() {
 export function cleanContract(contract: Contract) {
   const c = { ...contract };
   delete c.versions; // Remove local values
+  if (!c.signDate) {
+    delete c.signDate;
+  }
   return c;
 }
 
@@ -225,7 +228,12 @@ export function createContractFromFirestore(contract: any): Contract {
  * @param partyDetails
  */
 export function formatPartyDetails(partyDetails: any): ContractPartyDetail {
-  partyDetails.signDate = toDate(partyDetails.signDate);
+  if (partyDetails.signDate) {
+    partyDetails.signDate = toDate(partyDetails.signDate);
+  } else {
+    delete partyDetails.signDate;
+  }
+
   return partyDetails as ContractPartyDetail;
 }
 
