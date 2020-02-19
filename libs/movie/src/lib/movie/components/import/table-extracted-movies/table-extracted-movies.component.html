@@ -136,7 +136,7 @@
           <mat-icon svgIcon="archipel_content"></mat-icon>
           <span>Submit to AC</span>
         </button>
-        <button mat-stroked-button color="primary" [routerLink]="['/c/o/dashboard/titles/', element.id ]" target='_blank'><mat-icon>launch</mat-icon></button>
+        <button mat-stroked-button color="primary" [routerLink]="['/c/o/dashboard/titles/', element.movie.id ]" target='_blank'><mat-icon>launch</mat-icon></button>
       </ng-container>
       <ng-template #create>
         <button mat-stroked-button color="primary" [disabled]="errorCount(element) > 0 || processedTitles > 0"
