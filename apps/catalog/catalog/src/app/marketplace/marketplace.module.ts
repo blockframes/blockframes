@@ -6,7 +6,7 @@ import { MovieActiveGuard } from '@blockframes/movie';
 import { LayoutComponent } from './layout/layout.component';
 import { LayoutModule } from './layout/layout.module';
 import { TunnelGuard } from '@blockframes/ui/tunnel';
-import { ActiveContractGuard } from '@blockframes/contract';
+import { ActiveContractGuard, OrganizationContractListGuard } from '@blockframes/contract';
 
 const routes: Routes = [{
   path: '',
@@ -61,6 +61,8 @@ const routes: Routes = [{
       path: 'deals',
       children: [{
         path: '',
+        canActivate: [OrganizationContractListGuard],
+        canDeactivate: [OrganizationContractListGuard],
         loadChildren: () => import('./deal/list/list.module').then(m => m.DealListModule),
       },{
         path: ':contractId',

@@ -206,6 +206,7 @@ export function createContractFromFirestore(contract: any): Contract {
       : []
   }
 
+  // @todo(#1887)
   if (contract.versions) {
     c.versions = contract.versions.map(version => createContractVersionFromFirestore(version));
   }
