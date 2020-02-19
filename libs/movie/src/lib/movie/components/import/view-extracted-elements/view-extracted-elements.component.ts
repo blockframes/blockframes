@@ -193,7 +193,7 @@ export class ViewExtractedElementsComponent {
         const movie = {
           main: createMovieMain(),
           promotionalDescription: createMoviePromotionalDescription(),
-          promotionalElements: createMoviePromotionalElements(),
+          promotionalElements: createMoviePromotionalElements({}, false),
           salesCast: createMovieSalesCast(),
           salesInfo: createMovieSalesInfo(),
           versionInfo: { languages: {} }, // TODO issue #1596
