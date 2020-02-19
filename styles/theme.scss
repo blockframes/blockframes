@@ -52,13 +52,13 @@
   // Add css variables here when you need one
   // Background
   --background-disabled-button: #{mat-color($background, disabled-button)};
-  --background-map-background: #{mat-color($background, map-background)};
+  --background-map: #{mat-color($primary, 500, 0.05)};
   // Foreground
   --foreground-divider: #{mat-color($foreground, divider)};
-  --foreground-available: #{mat-color($foreground, available)};
-  --foreground-sold: #{mat-color($foreground, sold)};
-  --foreground-unlicensed : #{mat-color($foreground, unlicensed)};
-  --foreground-selected : #{mat-color($foreground, selected)};
+  --foreground-available: #{mat-color($primary, 900)};
+  --foreground-sold: #{mat-color($primary, 200)};
+  --foreground-unlicensed : #{mat-color($primary, 100, 0.3)};
+  --foreground-selected : #{mat-color($background, beware)}; //TODO:  Find a better color for the selected country on world map => #1973
   --primary: #{mat-color($primary)};
   --accent: #{mat-color($accent)};
   --warn: #{mat-color($warn)};
