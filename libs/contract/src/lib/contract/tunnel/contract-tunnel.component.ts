@@ -14,6 +14,7 @@ import { ContractTitleDetailForm } from '@blockframes/contract/version/form';
 import { DistributionDealService, DistributionDeal, createDistributionDeal } from '@blockframes/movie/distribution-deals/+state';
 import { startWith, map, switchMap, shareReplay } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
+import { CommissionBase } from '@blockframes/utils/common-interfaces';
 
 const steps = [{
   title: 'Step 1',
@@ -108,8 +109,9 @@ export class ContractTunnelComponent implements OnInit {
   }
 
   /** Add a title to this contract */
-  addTitle(movieId: string) {
-    this.contractForm.get('versions').last().get('titles').setControl(movieId, new ContractTitleDetailForm());
+  addTitle(movieId: string, mandate?: boolean) {
+    const params = mandate ? { price: { commissionBase: CommissionBase.grossreceipts, amount: 0 } } : {};
+    this.contractForm.get('versions').last().get('titles').setControl(movieId, new ContractTitleDetailForm(params));
     this.dealForms.setControl(movieId, FormList.factory([], deal => new DistributionDealForm(deal)));
   }
 
@@ -122,8 +124,11 @@ export class ContractTunnelComponent implements OnInit {
       this.removeDeal(movieId, i);
     }
     this.dealForms.removeControl(movieId);
-    if (!this.dealForms.controls) {
+    const dealIds = Object.keys(this.dealForms.controls)
+    if (!dealIds.length) {
       this.router.navigate(['details'], { relativeTo: this.route })
+    } else {
+      this.router.navigate([dealIds[dealIds.length - 1]], { relativeTo: this.route })
     }
   }
 
@@ -156,13 +161,14 @@ export class ContractTunnelComponent implements OnInit {
     delete contract.versions;
 
     // Update Contract
+    contract.partyIds = contract.parties.filter(p => p.party.orgId).map(p => p.party.orgId);
     contract.titleIds = Object.keys(version.titles || {});
     this.service.update(contract, { write });
 
     // Upsert deals
     for (const movieId in this.dealForms.controls) {
       const deals = this.dealForms.get(movieId).value.map(deal => createDistributionDeal(deal));
-      deals.forEach(async (deal, i) =>  {
+      deals.forEach(async (deal, i) => {
         if (deal.id) {
           this.dealService.update(deal, { params: { movieId }, write });
         } else {

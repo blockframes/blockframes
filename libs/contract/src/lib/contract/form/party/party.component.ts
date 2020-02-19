@@ -1,3 +1,4 @@
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { staticModels } from '@blockframes/utils/static-model';
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
@@ -29,11 +30,22 @@ export class ContractFormPartyComponent {
     return wantedSubRoles.includes(role.slug)
   })
 
+
+  public displayNameControl(control: PartyDetailsForm) {
+    return control.get('party').get('displayName');
+  }
+
   public childRoleForm(index: number) {
     return this.form.at(index).get('childRoles');
   }
 
   public addRole() {
     this.form.add();
+  }
+
+  public patchOrgId(event: MatAutocompleteSelectedEvent, control: PartyDetailsForm) {
+    event.option.value === ''
+      ? control.get('party').get('orgId').setValue(event.option.value)
+      : control.get('party').get('orgId').setValue(event.option.value.objectID);
   }
 }

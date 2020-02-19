@@ -43,7 +43,7 @@ export enum PaymentStatus {
 
 export interface PriceRaw<D> {
   amount: number;
-  currency: MovieCurrenciesSlug;
+  currency?: MovieCurrenciesSlug;
   /**
    * @dev percentage
    */
