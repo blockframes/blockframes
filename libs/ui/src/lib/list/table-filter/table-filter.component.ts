@@ -37,6 +37,7 @@ export class ColRef {
   selector: 'bf-table-filter',
   templateUrl: './table-filter.component.html',
   styleUrls: ['./table-filter.component.scss'],
+  host: { class: 'bf-table' },
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableFilterComponent implements OnInit, AfterViewInit {
