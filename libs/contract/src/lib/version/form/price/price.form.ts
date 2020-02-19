@@ -7,7 +7,7 @@ function createContractVersionPriceControls(price: Partial<Price>) {
   return {
     amount: new FormControl(price.amount, [Validators.required, Validators.min(1)]),
     currency: new FormStaticValue(price.currency, 'MOVIE_CURRENCIES'),
-    commission: new FormControl(price.commission),
+    commission: new FormControl(price.commission, Validators.max(100)),
     commissionBase: new FormControl(price.commissionBase),
     vat: new FormControl(price.vat),
   }

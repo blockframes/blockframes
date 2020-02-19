@@ -11,9 +11,9 @@ import { Component, Input, ChangeDetectionStrategy, OnInit, Inject } from '@angu
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
-// RxJs & Algolia
-import { Observable, Subscription, BehaviorSubject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+// RxJs & Algolia & etc
+import { Observable, BehaviorSubject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap, startWith, tap } from 'rxjs/operators';
 import { Index } from 'algoliasearch';
 import { MovieService } from '@blockframes/movie';
 
@@ -41,8 +41,7 @@ export class PriceComponent implements OnInit {
 
   public movies: Movie[] = [];
 
-  public movies$: Observable<Movie[]> = this.tunnel.movies$.pipe(
-    distinctUntilChanged((a, b) => a.length === b.length));
+  public movies$: Observable<Movie[]>;
 
   constructor(
     @Inject(MoviesIndex) private movieIndex: Index,
@@ -50,17 +49,27 @@ export class PriceComponent implements OnInit {
     private tunnel: ContractTunnelComponent) { }
 
   ngOnInit() {
+    this.movies$ = this.tunnel.movies$.pipe(
+      distinctUntilChanged((a, b) => a.length === b.length));
     this.currencyCtrl = this.form.last().get('price').get('currency');
     this.movieSearchResults$ = this.movieCtrl.valueChanges.pipe(
       debounceTime(200),
       distinctUntilChanged(),
       switchMap(searchText => {
-        const results = new Promise<MovieAlgoliaResult[]>((res, rej) => {
-          this.movieIndex.search(searchText, (err, result) =>
-            err ? rej(err) : res(result.hits)
-          );
-        });
-        return this.transformAlgoliaMovies(results)
+        if (typeof searchText === 'string') {
+          const results = new Promise<MovieAlgoliaResult[]>((res, rej) => {
+            this.movieIndex.search(searchText, (err, result) =>
+              err ? rej(err) : res(result.hits)
+            );
+          });
+          return this.transformAlgoliaMovies(results)
+        } else {
+          /**
+          * reset observable otherwise algolia search index 
+          * gets an object of strings and throw error
+          */
+          return new Observable<Movie[]>()
+        }
       })
     )
   }
@@ -84,18 +93,6 @@ export class PriceComponent implements OnInit {
     }
     accumilatedPrice > this.totalAmount.value ? state.next(true) : state.next(false)
     return state
-  }
-
-  /**
-   * @description checks if film has specific fees
-   */
-  get isFeeSet(): boolean {
-    for (const id of this.activeMovieIds) {
-      if (!!this.form.last().value[id].price.commission) {
-        return true
-      }
-    }
-    return false;
   }
 
   /**
@@ -137,7 +134,7 @@ export class PriceComponent implements OnInit {
   public addMovie(event: MatAutocompleteSelectedEvent) {
     const isMovieAdded = this.movies.filter(movie => movie.id === event.option.value.id);
     if (!isMovieAdded.length) {
-      this.tunnel.addTitle(event.option.value.id)
+      this.tunnel.addTitle(event.option.value.id, this._hasMandate)
     }
     this.movieCtrl.reset();
   }

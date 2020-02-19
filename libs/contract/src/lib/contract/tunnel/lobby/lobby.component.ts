@@ -1,8 +1,8 @@
-import { ContractVersion } from '@blockframes/contract/version/+state';
+import { ContractVersion } from '@blockframes/contract/version/+state/contract-version.model';
+import { createContractVersion, createContract, createVersionMandate } from '@blockframes/contract/contract/+state/contract.model';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ContractService, ContractType } from '../../+state';
 import { Router, ActivatedRoute } from '@angular/router';
-import { CommissionBase } from '@blockframes/utils/common-interfaces';
 
 @Component({
   selector: 'contract-tunnel-lobby',
@@ -20,10 +20,12 @@ export class LobbyComponent {
 
   async select(contractType: 'sale' | 'mandate') {
     const type = contractType === 'sale' ? ContractType.sale : ContractType.mandate;
-    const version: Partial<ContractVersion> = {
-      price: { commissionBase: CommissionBase.grossreceipts, amount: 0, currency: 'EUR' }
+    const contract = createContract({ type });
+    let version: Partial<ContractVersion> = createContractVersion();
+    if (contractType === 'mandate') {
+      version = createVersionMandate()
     }
-    const contractId = await this.service.create({ type }, version);
+    const contractId = await this.service.create(contract, version);
     this.router.navigate([contractId, contractType], { relativeTo: this.route })
   }
 }

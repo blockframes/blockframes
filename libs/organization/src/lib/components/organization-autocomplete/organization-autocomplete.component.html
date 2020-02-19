@@ -1,14 +1,11 @@
-<mat-form-field appearance="outline">
-  <input matInput [formControl]="control" type="text" autocomplete="off"  [matAutocomplete]="autoName">
+<mat-form-field appearance="outline" >
+  <mat-label *ngIf="label">{{label}}</mat-label>
+  <input matInput [formControl]="control" type="text" [matAutocomplete]="autoName">
 </mat-form-field>
-<mat-autocomplete
-    #autoName="matAutocomplete"
-    [displayWith]="displayFn"
-    (optionSelected)="submit($event)">
-    <mat-option test-id="option" *ngFor="let organization of (searchResults$ | async)" [value]="organization.name">
-      <span fxLayout="row" fxLayoutAlign="space-between center">
-        <span>{{ organization.name }}</span>
-        <mat-icon color="primary" svgIcon="add"></mat-icon>
-      </span>
-    </mat-option>
-  </mat-autocomplete>
+<mat-autocomplete #autoName="matAutocomplete" [displayWith]="displayFn" (optionSelected)="selected($event)">
+  <mat-option test-id="option" *ngFor="let organization of (searchResults$ | async)" [value]="organization">
+    <span fxLayout="row" fxLayoutAlign="space-between center">
+      <span>{{ organization.name }}</span>
+    </span>
+  </mat-option>
+</mat-autocomplete>
