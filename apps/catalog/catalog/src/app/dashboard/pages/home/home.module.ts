@@ -21,6 +21,7 @@ import { HomeComponent } from './home.component';
 import { MovieCreateModule } from '@blockframes/movie/movie/components/movie-create/movie-create.module';
 import { MovieCardModule } from '@blockframes/ui/movie-card/movie-card.module';
 import { MovieAnalyticsChartModule } from '@blockframes/movie/movie/components/movie-analytics-chart/movie-analytics-chart.module';
+import { NoMovieModule } from '../no-movie/no-movie.module';
 
 @NgModule({
   declarations: [HomeComponent],
@@ -30,6 +31,7 @@ import { MovieAnalyticsChartModule } from '@blockframes/movie/movie/components/m
     MovieCardModule,
     MovieCreateModule,
     MovieAnalyticsChartModule,
+    NoMovieModule,
     // Material
     MatButtonModule,
     MatIconModule,
