@@ -38,6 +38,10 @@ const routes: Routes = [{
       loadChildren: () => import('./movie/search/search.module').then(m => m.MarketplaceSearchModule)
     },
     {
+      path: 'activity',   // List of notifications
+      loadChildren: () => import('@blockframes/notification/notification/activity-feed/activity-feed.module').then(m => m.ActivityFeedModule)
+    },
+    {
       path: 'selection',
       canActivate: [CatalogCartGuard],
       canDeactivate: [CatalogCartGuard],

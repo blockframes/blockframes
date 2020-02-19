@@ -30,7 +30,7 @@ const routes: Routes = [
       {
         // TODO(#1522)
         path: 'activity',   // List of notifications
-        // loadChildren: () => import('@blockframes/notifications/pages/list/list.module').then(m => m.NotificationsListModule)
+        loadChildren: () => import('@blockframes/notification/notification/activity-feed/activity-feed.module').then(m => m.ActivityFeedModule)
       },
       {
         path: 'import', // Import bulk of movies
