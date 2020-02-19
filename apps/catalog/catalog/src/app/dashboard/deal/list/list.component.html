@@ -9,7 +9,7 @@
         <ng-container *ngIf="filterByStatus(contracts, tab.statuses).length; else noContracts">
           <contract-list [source]="filterByStatus(contracts, tab.statuses)"></contract-list>
         </ng-container>
-        <ng-template #noContracts>
+        <ng-template #noContracts >
           <span>There are no {{ tab.name }}</span>
         </ng-template>
       </ng-template>
