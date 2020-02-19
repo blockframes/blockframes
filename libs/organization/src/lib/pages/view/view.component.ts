@@ -39,6 +39,6 @@ export class OrganizationViewComponent implements OnInit {
   ngOnInit() {
     this.user$ = this.authQuery.user$;
     this.organization$ = this.query.selectActive();
-    this.previousPage = this.tunnelService.previousUrl;
+    this.previousPage = this.tunnelService.previousUrl || '../../..';
   }
 }
