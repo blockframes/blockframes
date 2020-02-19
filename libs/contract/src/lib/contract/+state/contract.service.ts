@@ -164,11 +164,12 @@ export class ContractService extends CollectionService<ContractState> {
    * @note We need this method because `addContractAndVersion` only work on the import.
    * @param contract The contract to add
    * @param version Optional content for the first version
+   * @todo(#1887) Don't create _meta
    */
   public async create(contract: Partial<Contract>, version: Partial<ContractVersion> = {}) {
     const write = this.db.firestore.batch();
     const contractId = await this.add(contract, { write });
-    this.contractVersionService.add({ id: '0', ...version }, { params: { contractId }, write });
+    this.contractVersionService.add({ id: '1', ...version }, { params: { contractId }, write });
     this.contractVersionService.add({ id: '_meta', count: 1 }, { params: { contractId }, write });
     await write.commit();
     return contractId;
