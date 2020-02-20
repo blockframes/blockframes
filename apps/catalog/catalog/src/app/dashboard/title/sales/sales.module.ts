@@ -1,26 +1,19 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { NgApexchartsModule } from "ng-apexcharts";
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { MovieAnalyticsChartModule } from '@blockframes/movie/movie/components/movie-analytics-chart/movie-analytics-chart.module';
 
 import { TitleSalesComponent } from './sales.component';
 
-// Material
-import { MatCardModule } from '@angular/material/card';
-import { MatIconModule } from '@angular/material/icon';
+import { DistributionDealSelectionMapModule } from '@blockframes/movie/distribution-deals/components/selection-map/selection-map.module';
+import { ContractListModule } from '@blockframes/contract/contract/list/contract-list.module';
+
 @NgModule({
   declarations: [TitleSalesComponent],
   imports: [
     CommonModule,
-    NgApexchartsModule,
-    FlexLayoutModule,
-    MovieAnalyticsChartModule,
-    // Material
-    MatCardModule,
-    MatIconModule,
+    DistributionDealSelectionMapModule,
+    ContractListModule,
     RouterModule.forChild([{ path: '', component: TitleSalesComponent }])
   ]
 })
-export class TitleSalesModule {}
+export class TitleSalesModule { }
