@@ -2,6 +2,7 @@
   <button mat-icon-button [widgetTarget]="notifications">
     <ng-container *ngIf="(totalCount$ | async) as count; else: empty">
       <mat-icon svgIcon="bell"
+        color="primary"
         [matBadge]="count"
         matBadgeColor="accent"
         matBadgeSize="medium">
