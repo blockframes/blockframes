@@ -31,7 +31,7 @@
       <ng-container *ngFor="let content of cardContents">
         <mat-card>
           <article fxLayout="column" fxLayoutAlign="center">
-            <img class="card-image" src="http://via.placeholder.com/100x100" alt="Placeholder image">
+            <img class="card-image" [asset]="content.img"  alt="Archipel Content Logo">
             <div>
               <h3>{{ content.title }}</h3>
             </div>
