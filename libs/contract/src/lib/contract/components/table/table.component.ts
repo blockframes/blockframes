@@ -1,9 +1,22 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
 import { Contract, getTotalPrice, ContractStatus } from '../../+state';
 import { getContractLastVersion } from '@blockframes/contract/version/+state';
 import { MovieQuery } from '@blockframes/movie';
 import { DistributionDealQuery } from '@blockframes/movie/distribution-deals/+state';
 import { Router, ActivatedRoute } from '@angular/router';
+import { Price } from '@blockframes/utils/common-interfaces';
+
+interface ContractView {
+  id: string;
+  buyerName: string;
+  territories: string[];
+  creationDate: Date;
+  moviesLength: number;
+  titles: string[];
+  price: Price;
+  paid: 'Yes' | 'No',
+  status: ContractStatus
+}
 
 const columns = {
   buyerName: 'Buyer name',
@@ -45,7 +58,7 @@ export class ContractTableComponent{
 
   columns: Partial<typeof columns> = getColumns(baseColumns);
   initialColumns = baseColumns;
-  sources: any[];
+  sources: ContractView[];
 
   @Input() set hasBuyer(hasBuyer: string | boolean) {
     if (hasBuyer === '' || hasBuyer === true) {
@@ -65,10 +78,11 @@ export class ContractTableComponent{
     private route: ActivatedRoute
   ) { }
 
-  private createContractListView(contract: Contract) {
+  private createContractListView(contract: Contract): ContractView {
     // @todo(#1887) Don't use getContractLastVersion function
     const version = getContractLastVersion(contract);
     return {
+      id: contract.id,
       buyerName: contract.parties.find(({party}) => party.role === 'licensee').party.displayName,
       territories: this.dealQuery.getTerritoriesFromContract(version),
       creationDate: version.creationDate,
@@ -81,10 +95,9 @@ export class ContractTableComponent{
   }
 
   /** Navigate to tunnel if status is draft, else go to page */
-  public goToSale(contract: Contract) {
+  public goToSale(contract: ContractView) {
     // @todo(#1887) Don't use getContractLastVersion function
-    const version = getContractLastVersion(contract);
-    const path = (version.status === ContractStatus.draft) ? `../tunnel/contract/${contract.id}/sale` : contract.id;
+    const path = (contract.status === ContractStatus.draft) ? `../tunnel/contract/${contract.id}/sale` : contract.id;
     this.router.navigate([path], { relativeTo: this.route });
   }
 }

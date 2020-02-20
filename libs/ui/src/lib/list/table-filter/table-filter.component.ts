@@ -120,5 +120,4 @@ export class TableFilterComponent implements OnInit, AfterViewInit {
       this.dataSource.paginator.firstPage();
     }
   }
-
 }

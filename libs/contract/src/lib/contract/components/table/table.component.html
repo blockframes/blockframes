@@ -1,5 +1,5 @@
 <bf-table-filter [source]="sources" [columns]="columns" [initialColumns]="initialColumns" showFilter showPaginator
-  (rowClicked)="goToSale(contract)">
+  (rowClick)="goToSale($event)">
   <!-- buyerName -->
   <ng-template colRef="buyerName" let-name>
     <b>{{ name || '-' }}</b>
