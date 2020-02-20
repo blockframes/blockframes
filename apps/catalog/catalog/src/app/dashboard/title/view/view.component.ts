@@ -15,14 +15,14 @@ export class TitleViewComponent implements OnInit {
   public getLabelBySlug = getLabelBySlug;
 
   navLinks = [{
-    path: 'sales',
-    label: 'Sales'
+    path: 'activity',
+    label: 'Marketplace Activity'
   }, {
     path: 'details',
     label: 'Film Details'
   },{
-    path: 'avails',
-    label: 'Avails'
+    path: 'sales',
+    label: 'Sales'
   }];
   constructor(private movieQuery: MovieQuery) {}
 
