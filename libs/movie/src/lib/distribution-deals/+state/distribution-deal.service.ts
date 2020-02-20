@@ -10,12 +10,10 @@ import {
   formatDistributionDeal,
   createDistributionDeal
 } from './distribution-deal.model';
-import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
-import { createContractTitleDetail, ContractWithLastVersion } from '@blockframes/contract/contract/+state/contract.model';
+import { createContractTitleDetail, ContractWithLastVersion, Contract } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractVersionService } from '@blockframes/contract/version/+state/contract-version.service';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { ContractQuery } from '@blockframes/contract/contract/+state/contract.query';
-import { switchMap } from 'rxjs/operators';
 import { combineLatest } from 'rxjs';
 import { ContractVersion } from '@blockframes/contract/version/+state/contract-version.model';
 import { DistributionDealQuery } from './distribution-deal.query';
@@ -30,7 +28,6 @@ export class DistributionDealService extends CollectionService<DistributionDealS
   constructor(
     private contractService: ContractService,
     private contractVersionService: ContractVersionService,
-    private contractQuery: ContractQuery,
     private query: DistributionDealQuery,
     store: DistributionDealStore
   ) {

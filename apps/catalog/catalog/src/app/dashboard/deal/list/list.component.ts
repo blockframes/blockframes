@@ -23,6 +23,13 @@ const contractTab: Tab[] = [
     name: 'All'
   },
   {
+    name: 'Draft',
+    statuses: [
+      ContractStatus.draft,
+      ContractStatus.submitted,
+    ]
+  },
+  {
     name: 'Offers',
     statuses: [
       ContractStatus.submitted,
@@ -32,11 +39,11 @@ const contractTab: Tab[] = [
   },
   {
     name: 'Ongoing Deals',
-    statuses: [ContractStatus.accepted, ContractStatus.waitingpayment]
-  },
-  {
-    name: 'Past Deals',
-    statuses: [ContractStatus.paid]
+    statuses: [
+      ContractStatus.accepted,
+      ContractStatus.waitingpayment,
+      ContractStatus.paid
+    ]
   },
   {
     name: 'Aborted Offers',

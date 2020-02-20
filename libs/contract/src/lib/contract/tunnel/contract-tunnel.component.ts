@@ -161,7 +161,6 @@ export class ContractTunnelComponent implements OnInit {
     delete contract.versions;
 
     // Update Contract
-    contract.partyIds = contract.parties.filter(p => p.party.orgId).map(p => p.party.orgId);
     contract.titleIds = Object.keys(version.titles || {});
     this.service.update(contract, { write });
 
