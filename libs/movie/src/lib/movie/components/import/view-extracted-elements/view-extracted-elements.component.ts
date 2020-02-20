@@ -502,7 +502,12 @@ export class ViewExtractedElementsComponent {
 
           spreadSheetRow[SpreadSheetMovie.originCountryReleaseDate].split(this.separator).forEach((o: ExtractCode<'TERRITORIES'>) => {
             const originalReleaseParts = o.split(this.subSeparator);
-            const originalRelease = createMovieOriginalRelease({ date: originalReleaseParts[2] });
+            const dateParts = originalReleaseParts[2].trim().match(this.deepDatesRegex)
+            let date: Date;
+            if (dateParts.length === 4) {
+              date = new Date(`${dateParts[3]}-${dateParts[2]}-${dateParts[1]}`);
+            }
+            const originalRelease = createMovieOriginalRelease({ date });
             const country = getCodeIfExists('TERRITORIES', originalReleaseParts[0] as ExtractCode<'TERRITORIES'>);
             if (country) {
               originalRelease.country = country;
