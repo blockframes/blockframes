@@ -3,7 +3,7 @@ import { ContractDocument, PublicContractDocument, App, NotificationType, Organi
 import { ValidContractStatuses, ContractStatus, ContractVersionDocument } from '@blockframes/contract/contract/+state/contract.firestore';
 import { getOrganizationsOfContract, getDocument, versionExists } from './data/internals';
 import { triggerNotifications, createNotification } from './notification';
-import { centralOrgID } from '@env';
+import { centralOrgID } from './environments/environment';
 /**
  *
  * @param contract
