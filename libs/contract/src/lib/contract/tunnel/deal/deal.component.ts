@@ -36,7 +36,6 @@ export class DealComponent implements OnInit {
 
   get titleId(): string {
     const { titleId } = this.routerQuery.getValue().state.root.params;
-    console.log(titleId);
     return titleId;
   }
 
