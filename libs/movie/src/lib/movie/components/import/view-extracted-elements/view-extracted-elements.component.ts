@@ -538,7 +538,7 @@ export class ViewExtractedElementsComponent implements OnInit {
             const originalReleaseParts = o.split(this.subSeparator);
             const dateParts = originalReleaseParts[2].trim().match(this.deepDatesRegex)
             let date: Date;
-            if (dateParts.length === 4) {
+            if (dateParts && dateParts.length === 4) {
               date = new Date(`${dateParts[3]}-${dateParts[2]}-${dateParts[1]}`);
             }
             const originalRelease = createMovieOriginalRelease({ date });
@@ -809,7 +809,7 @@ export class ViewExtractedElementsComponent implements OnInit {
                 break;
             }
 
-            movie.budget.estimatedBudget = createRange({ from: from * 1000000, to: to * 1000000 });
+            movie.budget.estimatedBudget = createRange({ from: from * 1000000, to: to * 1000000, label: spreadSheetRow[SpreadSheetMovie.budget] });
           } else {
             movie.budget.totalBudget = spreadSheetRow[SpreadSheetMovie.budget];
           }
@@ -1537,7 +1537,7 @@ export class ViewExtractedElementsComponent implements OnInit {
               multiDiffDates.forEach(date => {
                 const dateParts = date.trim().match(this.deepDatesRegex);
                 let diffusionDate;
-                if (dateParts.length === 4) {
+                if (dateParts && dateParts.length === 4) {
                   diffusionDate = new Date(`${dateParts[3]}-${dateParts[2]}-${dateParts[1]}`);
                 }
 
@@ -1591,7 +1591,7 @@ export class ViewExtractedElementsComponent implements OnInit {
 
                   const holdBackStartParts = holdbackParts[1].trim().match(this.deepDatesRegex);
                   let holdBackStart;
-                  if (holdBackStartParts.length === 4) {
+                  if (holdBackStartParts && holdBackStartParts.length === 4) {
                     holdBackStart = new Date(`${holdBackStartParts[3]}-${holdBackStartParts[2]}-${holdBackStartParts[1]}`);
                   }
 
@@ -1610,7 +1610,7 @@ export class ViewExtractedElementsComponent implements OnInit {
 
                   const holdBackEndParts = holdbackParts[2].trim().match(this.deepDatesRegex);
                   let holdBackEnd;
-                  if (holdBackEndParts.length === 4) {
+                  if (holdBackEndParts && holdBackEndParts.length === 4) {
                     holdBackEnd = new Date(`${holdBackEndParts[3]}-${holdBackEndParts[2]}-${holdBackEndParts[1]}`);
                   }
 
