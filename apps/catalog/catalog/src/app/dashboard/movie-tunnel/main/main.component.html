@@ -29,13 +29,15 @@
         <mat-card-title>Countr{ main.get('originCountries').controls.length, plural,=1 {y} other {ies}} of Origin</mat-card-title>
       </mat-card-header>
       <mat-card-content>
-        <movie-form-original-releases [releasesForm]="salesInfo.get('originalRelease')"
-          [countriesForm]="main.get('originCountries')"></movie-form-original-releases>
+        <movie-form-original-releases
+          [releasesForm]="salesInfo.get('originalRelease')"
+          [countriesForm]="main.get('originCountries')">
+        </movie-form-original-releases>
         <mat-divider></mat-divider>
         <h6 class="mat-body-2">
           Domestic Distributor{ main.get('stakeholders').get('distributor').controls.length, plural,=1 {} other {s}}
         </h6>
-        <movie-form-stakeholders [form]="main.get('stakeholders').get('distributor')"></movie-form-stakeholders>
+        <movie-form-stakeholders [form]="distributors"></movie-form-stakeholders>
         <mat-divider></mat-divider>
         <movie-form-languages [form]="main.get('originalLanguages')"></movie-form-languages>
       </mat-card-content>

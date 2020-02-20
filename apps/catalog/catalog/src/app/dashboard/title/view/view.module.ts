@@ -25,24 +25,24 @@ const routes = [{
   children: [
     {
       path: '',
-      redirectTo: 'sales',
+      redirectTo: 'activity',
       pathMatch: 'full'
     },
     {
-      path: 'sales',
+      path: 'activity',
       canActivate: [OrganizationContractListGuard],
       canDeactivate: [OrganizationContractListGuard],
-      loadChildren: () => import('../sales/sales.module').then(m => m.TitleSalesModule)
+      loadChildren: () => import('../activity/activity.module').then(m => m.TitleActivityModule)
     },
     {
       path: 'details',
       loadChildren: () => import('../details/details.module').then(m => m.TitleDetailsModule)
     },
     {
-      path: 'avails',
+      path: 'sales',
       canActivate: [MovieOrganizationListGuard, ContractsDealListGuard],
       canDeactivate: [MovieOrganizationListGuard, ContractsDealListGuard],
-      loadChildren: () => import('../avails/avails.module').then(m => m.TitleAvailsModule)
+      loadChildren: () => import('../sales/sales.module').then(m => m.TitleSalesModule)
     }
   ]
 }];

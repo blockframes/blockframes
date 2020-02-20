@@ -29,13 +29,16 @@ export class NotificationListComponent implements OnInit {
     this.notificationsByDate$ = this.query.groupNotificationsByDate();
   }
 
+  public getInformation(notification: Notification) {
+    return this.query.createNotificationInformation(notification)
+  }
+
   public goToPath(notification: Notification) {
     try {
-      const path = notification.type === NotificationType.pathToDocument
-        ? `c/o/delivery/${notification.movie.id}/${notification.docId}/list`
-        : `c/o/delivery/${notification.movie.id}/${notification.docId}/stakeholders`;
-      this.router.navigateByUrl(path);
-      this.service.readNotification(notification);
+      if (notification.type === NotificationType.newContract || NotificationType.contractInNegotiation) {
+        this.router.navigateByUrl(`c/o/dashboard/deals/${notification.docId}`);
+        this.service.readNotification(notification);
+      }
     } catch (error) {
       throw new Error(error.message);
     }

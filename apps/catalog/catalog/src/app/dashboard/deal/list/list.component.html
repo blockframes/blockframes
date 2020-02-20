@@ -12,15 +12,15 @@
     </header>
 
     <mat-tab-group>
-      <mat-tab *ngFor="let tab of tabs">
+      <mat-tab *ngFor="let tab of tabs$ | async">
         <ng-template mat-tab-label>
           {{ tab.name }} ({{ tab.contracts.length }})
         </ng-template>
         <ng-template matTabContent>
           <ng-container *ngIf="tab.contracts.length; else noContracts">
-            <contract-table [contracts]="tab.contracts" hasBuyer></contract-table>
+            <contract-table [contracts]="tab.contracts" hasBuyer app="dashboard"></contract-table>
           </ng-container>
-          <ng-template #noContracts >
+          <ng-template #noContracts>
             <span>There are no contract in {{ tab.name }}</span>
           </ng-template>
         </ng-template>

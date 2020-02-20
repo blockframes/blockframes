@@ -1,5 +1,5 @@
 import { db, functions } from './internals/firebase';
-import { triggerNotifications } from './notification';
+import { triggerNotifications, createNotification } from './notification';
 import { getDocument, getOrganizationsOfDocument } from './data/internals';
 import {
   OrganizationDocument,
@@ -8,7 +8,6 @@ import {
   StakeholderDocument,
   DeliveryDocument,
   NotificationType,
-  createNotification,
   App,
   PublicMovie,
   PublicOrganization

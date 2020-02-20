@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ImgRef } from "@blockframes/utils/image-uploader";
-import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
+import { MovieTunnelComponent } from '../movie-tunnel.component';
 
 @Component({
   selector: 'catalog-chain-of-titles',
@@ -9,8 +9,9 @@ import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ChainOfTitlesComponent {
+  form = this.tunnel.form;
 
-  constructor(private form: MovieForm) { }
+  constructor(private tunnel: MovieTunnelComponent) { }
 
   get chainOfTitles() {
     return this.form.get('documents').get('chainOfTitles');

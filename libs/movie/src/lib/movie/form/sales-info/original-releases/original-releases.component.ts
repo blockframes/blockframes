@@ -20,7 +20,7 @@ export class OriginalReleaseComponent implements OnInit, OnDestroy {
   private sub: Subscription;
   media = staticModel.MEDIAS;
 
-  constructor() { }
+  constructor() {}
 
   get originalRelease() {
     return this.releasesForm;

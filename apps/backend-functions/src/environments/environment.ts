@@ -8,7 +8,7 @@
 import * as functions from 'firebase-functions';
 
 import { algolia as algoliaClient } from '@env';
-export { factoryContract, backupBucket, relayer, appUrl, sentryDsn, bigQueryAnalyticsTable } from '@env';
+export { factoryContract, backupBucket, relayer, appUrl, sentryDsn, bigQueryAnalyticsTable, centralOrgID } from '@env';
 
 /**
  * Helper to work in local / remote dev mode:

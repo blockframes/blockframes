@@ -7,6 +7,7 @@ import { ActivityFeedComponent } from './activity-feed.component';
 
 // Material
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
   declarations: [ActivityFeedComponent],
@@ -14,6 +15,7 @@ import { MatTabsModule } from '@angular/material/tabs';
     CommonModule,
     NotificationListModule,
     MatTabsModule,
+    MatCardModule,
     RouterModule.forChild([{ path: '', component: ActivityFeedComponent }]),
   ]
 })
