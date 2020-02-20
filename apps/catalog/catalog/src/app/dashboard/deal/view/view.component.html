@@ -32,9 +32,6 @@
           {{ (movies$ | async).length }} of which are yours.
       </h3>
       <mat-card-content>
-        <span i18n *ngIf="subLicensors.length > 1" >
-          We are gathering approval from {{ subLicensors.length - 1 }} other seller{subLicensors.length - 1, plural, =1 {} other {s}}.
-        </span>
         <ng-container *ngIf="subLicensors.length > 1; else uniqueSubLicensor">
           <span i18n>
             Your share of the deal is <b>{{ totalPrice.amount | currency: getCurrencyCode(totalPrice.currency) }}</b>
@@ -53,21 +50,11 @@
           </mat-list-item>
         </mat-list>
       </mat-card-content>
-      <mat-card-actions *ngIf="isSignatory" fxLayout="row" fxLayoutAlign="space-between center">
+      <mat-card-actions fxLayout="row" fxLayoutAlign="space-between center">
         <button mat-flat-button color="primary" (click)="openIntercom()">
           <mat-icon svgIcon="comment"></mat-icon>
           <span>Connect with the Archipel Team</span>
         </button>
-        <div>
-          <button mat-stroked-button color="primary" (click)="acceptOffer(contract)">
-            <mat-icon svgIcon="check" bf-color="primary"></mat-icon>
-            <span>Accept</span>
-          </button>
-          <button mat-stroked-button color="warn" (click)="declineOffer(contract)">
-            <mat-icon svgIcon="refuse" bf-color="warn"></mat-icon>
-            <span>Decline</span>
-          </button>
-        </div>
       </mat-card-actions>
     </mat-card>
     <mat-card>
