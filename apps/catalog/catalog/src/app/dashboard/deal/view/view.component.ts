@@ -8,7 +8,8 @@ import {
   isContractSignatory,
   getTotalPrice,
   ContractStatus,
-  getContractSubLicensors
+  getContractSubLicensors,
+  displayPaymentSchedule
 } from '@blockframes/contract/contract/+state';
 import { Observable } from 'rxjs/internal/Observable';
 import { map, filter } from 'rxjs/operators';
@@ -72,6 +73,7 @@ export class DealViewComponent implements OnInit {
   public lastVersion: ContractVersion;
   public isSignatory: boolean;
   public totalPrice: Price;
+  public payments: { type: string, list: string[] } = { type: '', list: [] };
 
   public versions: VersionView[];
   public versionColumns = versionColumns;
@@ -100,6 +102,7 @@ export class DealViewComponent implements OnInit {
         // Create flattened version to be send in reusable table.
         this.versions = versions.map(version => createVersionView(version));
         this.lastVersion = getContractLastVersion(contract);
+        this.payments = displayPaymentSchedule(this.lastVersion);
 
         this.totalPrice = getTotalPrice(this.lastVersion.titles);
 
