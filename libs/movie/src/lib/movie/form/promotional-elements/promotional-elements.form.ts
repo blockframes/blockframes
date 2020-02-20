@@ -9,7 +9,7 @@ function createPromotionalElementControl(promotionalElement?: Partial<Promotiona
     label: new FormControl(label),
     size: new FormControl(size),
     ratio: new FormControl(ratio),
-    media: new FormControl(media.url, urlValidators),
+    media: new FormControl(media, urlValidators),
     language: new FormControl(language),
     country: new FormControl(country),
   }

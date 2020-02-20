@@ -11,7 +11,7 @@ import { MovieTunnelComponent } from '../movie-tunnel.component';
 export class MediaImageComponent {
   form = this.tunnel.form;
 
-  constructor(private tunnel: MovieTunnelComponent, private movieQuery: MovieQuery) { }
+  constructor(private tunnel: MovieTunnelComponent, private movieQuery: MovieQuery) {}
 
   public movie = this.movieQuery.getActive();
   public bannerPath = `movie/${this.movie.id}/Banner`;
