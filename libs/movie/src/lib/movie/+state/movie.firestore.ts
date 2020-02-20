@@ -183,7 +183,7 @@ export interface MovieLanguageSpecification {
 }
 
 export interface MovieOriginalReleaseRaw<D> {
-  date: D | string;
+  date: D;
   country: TerritoriesSlug;
   media?: MediasSlug
 }

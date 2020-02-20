@@ -11,10 +11,14 @@ import { MovieTunnelComponent } from '../movie-tunnel.component';
 export class TunnelMainComponent {
   form = this.tunnel.form;
 
-  constructor(private tunnel: MovieTunnelComponent) { }
+  constructor(private tunnel: MovieTunnelComponent) {}
 
   get main() {
     return this.form.get('main');
+  }
+
+  get distributors() {
+    return this.main.get('stakeholders').get('distributor');
   }
 
   get salesInfo() {

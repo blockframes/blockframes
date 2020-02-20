@@ -35,6 +35,7 @@ import { createRange } from '@blockframes/utils/common-interfaces/range';
 import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
 import { Contract, getValidatedContracts } from '@blockframes/contract/contract/+state/contract.model';
 import { getContractLastVersion } from '@blockframes/contract/version/+state/contract-version.model';
+import { toDate } from '@blockframes/utils';
 
 // Export for other files
 export { Credit, SalesAgent } from '@blockframes/utils/common-interfaces/identity';
@@ -163,9 +164,9 @@ export function createMovieOriginalRelease(
   params: Partial<MovieOriginalRelease> = {}
 ): MovieOriginalRelease {
   return {
-    date: null,
     country: null,
-    ...params
+    ...params,
+    date: toDate(params.date),
   };
 }
 
