@@ -3,12 +3,20 @@
   <ng-container *ngFor="let notification of byDate.value">
     <ng-container *ngIf="getInformation(notification) as information">
       <mat-list-item [matTooltip]="information.message" matTooltipPosition="left">
-        <img matListAvatar [placeholderUrl]="information.placeholderUrl | asset" [imgRef]="information.imgRef" alt="Profile picture" />
-        <p mat-line>{{ notification.message }}</p>
-        <small class="mat-caption" mat-line>{{ notification.date | date: 'shortTime' }}</small>
-        <ng-container *ngIf="notification.type == 'newContract' || 'contractInNegotiation'">
-          <a mat-flat-button (click)="goToPath(notification)">Go to document</a>
-        </ng-container>
+        <section fxLayout="row" fxLayoutAlign="space-bewteen center">
+          <article fxLayout="row" fxLayout="start center">
+            <img matListAvatar [placeholderUrl]="information.placeholderUrl | asset" [imgRef]="information.imgRef" alt="Profile picture" />
+            <article fxLayout="column">
+              <p mat-line>{{ notification.message }}</p>
+              <small class="mat-caption" mat-line>{{ notification.date | date: 'shortTime' }}</small>
+            </article>
+          </article>
+          <article>
+            <ng-container *ngIf="notification.type == 'newContract' || 'contractInNegotiation'">
+              <a mat-flat-button (click)="goToPath(notification)">Go to document</a>
+            </ng-container>
+          </article>
+        </section>
       </mat-list-item>
     </ng-container>
   </ng-container>

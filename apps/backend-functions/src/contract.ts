@@ -1,7 +1,7 @@
 import { functions, db } from './internals/firebase';
 import { ContractDocument, PublicContractDocument, App, NotificationType, OrganizationDocument, PublicOrganization } from './data/types';
 import { ValidContractStatuses, ContractStatus, ContractVersionDocument } from '@blockframes/contract/contract/+state/contract.firestore';
-import { getOrganizationsOfContract, getDocument } from './data/internals';
+import { getOrganizationsOfContract, getDocument, versionExists } from './data/internals';
 import { triggerNotifications, createNotification } from './notification';
 import { centralOrgID } from '@env';
 /**
@@ -64,7 +64,7 @@ export async function onContractWrite(
     throw new Error(msg);
   }
 
-  return transformContractToPublic(contract);
+  return (contract);
 }
 
 export async function onContractVersionWrite(
@@ -89,20 +89,29 @@ export async function onContractVersionWrite(
   }
 
   // Prepare data to create notifications
-  const previousVersionId = parseInt(after.id, 10) - 1; // @TODO (#1887)
+  const previousVersionId = (parseInt(after.id, 10) - 1).toString(); // @TODO (#1887)
+
+  if (!versionExists(contractId, previousVersionId)) {
+    const msg = 'Contract does not have a previous version';
+    console.error(msg);
+    throw new Error(msg);
+  }
+
+  await transformContractToPublic(contract);
+
   const previousVersion = await getDocument<ContractVersionDocument>(`contracts/${contractId}/versions/${previousVersionId}`)
   const contractInNegociation = (previousVersion.status === ContractStatus.submitted) && (after.status === ContractStatus.undernegotiation);
   const contractSubmitted = (previousVersion.status === ContractStatus.draft) && (after.status === ContractStatus.submitted);
 
   if (contractSubmitted) { // Contract is submitted by organization to Archipel Content
 
-    const { id, name } = await getDocument<PublicOrganization>(`orgs/${contract.partyIds[0]}`); // TODO: Find real creator
+    const { id, name } = await getDocument<PublicOrganization>(`orgs/${contract.partyIds[0]}`); // TODO (#1999): Find real creator
 
     const archipelContent = await getDocument<OrganizationDocument>(`orgs/${centralOrgID}`);
     const notifications = archipelContent.userIds.map(
       userId => createNotification({
         userId,
-        organization: { id, name }, // TODO: Add the logo to display if orgs collection is not public to Archipel Content
+        organization: { id, name }, // TODO (#1999): Add the logo to display if orgs collection is not public to Archipel Content
         type: NotificationType.newContract,
         docId: contractId,
         app: App.biggerBoat
@@ -131,5 +140,5 @@ export async function onContractVersionWrite(
     await triggerNotifications(notifications);
   }
 
-  return transformContractToPublic(contract);
+  return true;
 }
