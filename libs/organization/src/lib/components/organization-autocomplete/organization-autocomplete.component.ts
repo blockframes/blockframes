@@ -49,7 +49,7 @@ export class OrganizationAutocompleteComponent implements OnInit {
        * If the user change the org name to a non existing org,
        * we want to erase the ID fromt he form
        */
-      this.emitSelect.emit('remove')
+      this.emitSelect.emit('')
     }
   }
 }
