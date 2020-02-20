@@ -4,7 +4,7 @@
 </mat-form-field>
 <mat-autocomplete #autoName="matAutocomplete" (optionSelected)="selected($event)">
   <ng-container *ngFor="let organization of (searchResults$ | async)">
-    <mat-option test-id="option" [value]="organization" fxLayout="row" fxLayoutAlign="space-between center">
+    <mat-option test-id="option" [value]="organization.name" fxLayout="row" fxLayoutAlign="space-between center">
       <span>{{ organization.name }}</span>
     </mat-option>
   </ng-container>

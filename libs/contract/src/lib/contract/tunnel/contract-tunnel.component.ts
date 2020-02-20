@@ -21,7 +21,7 @@ const steps = [{
   icon: 'document',
   routes: [{
     path: 'details',
-    label: 'contract Details'
+    label: 'Contract Details'
   }]
 }, {
   title: 'Summary',
@@ -63,6 +63,7 @@ export class ContractTunnelComponent implements OnInit {
   private removedDeals: Record<string, string[]> = {};
   public steps$: Observable<TunnelStep[]>;
   public type: ContractType;
+  public exitRoute: Observable<string>;
 
   public movies$: Observable<Movie[]>;
   public dealForms = new FormEntity<DealControls>({});
@@ -106,6 +107,18 @@ export class ContractTunnelComponent implements OnInit {
     this.steps$ = this.movies$.pipe(
       map(movies => fillMovieSteps(movies))
     );
+
+    this.exitRoute = this.route.paramMap.pipe(map(value => {
+      /**
+       * We need to distinguish between exit on details
+       * or on exploitation rights, different sizes of routes
+       */
+      if (value.keys.length === 1) {
+        return `../../../../deals/${value.get('contractId')}`;
+      } else {
+        return `../../../../../deals/${value.get('contractId')}`;
+      }
+    }))
   }
 
   /** Add a title to this contract */
@@ -157,7 +170,7 @@ export class ContractTunnelComponent implements OnInit {
     // Upate Version
     const lastIndex = contract.versions.length - 1;
     const version = createContractVersion({ ...contract.versions[lastIndex] });
-    this.versionService.update({ id: `${lastIndex}`, ...version }, { params: { contractId }, write })
+    this.versionService.update({ id: `${lastIndex} `, ...version }, { params: { contractId }, write })
     delete contract.versions;
 
     // Update Contract

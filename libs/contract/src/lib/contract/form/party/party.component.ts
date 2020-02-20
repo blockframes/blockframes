@@ -43,9 +43,9 @@ export class ContractFormPartyComponent {
     this.form.add();
   }
 
-  public patchOrgId(event: MatAutocompleteSelectedEvent, control: PartyDetailsForm) {
-    event.option.value === ''
-      ? control.get('party').get('orgId').setValue(event.option.value)
+  public patchOrgId(event: MatAutocompleteSelectedEvent | string, control: PartyDetailsForm) {
+    typeof event === 'string'
+      ? control.get('party').get('orgId').setValue(event)
       : control.get('party').get('orgId').setValue(event.option.value.objectID);
   }
 }
