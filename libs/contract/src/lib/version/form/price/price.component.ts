@@ -110,7 +110,7 @@ export class PriceComponent implements OnInit {
     return this.form.last().get('titles').get(movieId).get('price');
   }
 
-  public getMovie(movieId: string) {
+  public selectMovie(movieId: string) {
     return this.movies$.pipe(map(movies => movies.find(movie => movie.id === movieId)))
   }
 

@@ -27,7 +27,7 @@
   <div *ngFor="let control of form.last().get('titles').controls | keyvalue; let i = index;"
     [formGroup]="priceForm(control.key)">
     <div fxLayout="row" fxLayoutAlign="space-between start">
-      <movie-banner [movie]="getMovie(control.key) | async" *ngIf="getMovie(control.key) | async">
+      <movie-banner [movie]="selectMovie(control.key) | async" *ngIf="selectMovie(control.key) | async">
       </movie-banner>
       <div fxLayout="column" fxLayoutAlign="start end">
         <ng-container *ngIf="hasMandate; else currency">
