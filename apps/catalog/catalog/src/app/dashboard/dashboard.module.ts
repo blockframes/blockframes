@@ -6,7 +6,6 @@ import { LayoutComponent } from './layout/layout.component';
 // Guards
 import { ActiveContractGuard } from '@blockframes/contract/contract/guards/active-contract.guard';
 import { OrganizationContractListGuard } from '@blockframes/contract/contract/guards/organization-contract-list.guard';
-import { ContractsDealListGuard } from '@blockframes/movie/distribution-deals/guards/contracts-deal-list.guard';
 import { MovieActiveGuard, MovieOrganizationListGuard } from '@blockframes/movie';
 import { TunnelGuard } from '@blockframes/ui/tunnel';
 

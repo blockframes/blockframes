@@ -6,7 +6,7 @@
     <invitation-item
       *ngFor="let invitation of day.value"
       [invitation]="invitation"
-      [placeholderUrl]="placeholderUrl">
+      placeholderAsset="Avatar_40.png">
     </invitation-item>
   </ng-container>
   <ng-container *ngSwitchCase="(yesterday | date)">
@@ -14,7 +14,7 @@
     <invitation-item
       *ngFor="let invitation of day.value"
       [invitation]="invitation"
-      [placeholderUrl]="placeholderUrl">
+      placeholderAsset="Avatar_40.png">
     </invitation-item>
   </ng-container>
   <ng-container *ngSwitchDefault>
@@ -22,7 +22,7 @@
     <invitation-item
       *ngFor="let invitation of day.value; let isLast = last"
       [invitation]="invitation"
-      [placeholderUrl]="placeholderUrl">
+      placeholderAsset="Avatar_40.png">
     </invitation-item>
   </ng-container>
 </ng-container>

@@ -84,6 +84,6 @@ export class DealComponent implements OnInit {
   }
 
   public removeTitle() {
-    this.tunnel.removeTitle(this.titleId)
+    this.tunnel.removeTitle(this.titleId, true)
   }
 }

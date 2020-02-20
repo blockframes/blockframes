@@ -5,7 +5,7 @@
       <div class="org-info">
         <h1>{{ org.name }}</h1>
         <ng-container *ngIf="user$ | async as user">
-          <h2>{{ user.position }}</h2>
+          <h3>{{ user.position }}</h3>
         </ng-container>
         <p class="mat-body-2">
           {{ org.addresses.main.street | titlecase }}

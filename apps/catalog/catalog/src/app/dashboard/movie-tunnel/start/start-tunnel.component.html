@@ -22,7 +22,7 @@
     </p>
   </mat-sidenav>
 
-  <mat-sidenav-content fxLayout="column" fxLayout.lt-md="column" fxLayoutAlign="center start" fxLayoutGap="56px">
+  <mat-sidenav-content fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="56px">
     <section>
       <h1>Add a Title</h1>
       <h2>The 3-step process will take about a half-hour to complete.</h2>
@@ -31,7 +31,7 @@
       <ng-container *ngFor="let content of cardContents">
         <mat-card>
           <article fxLayout="column" fxLayoutAlign="center">
-            <img class="card-image" src="http://via.placeholder.com/100x100" alt="Placeholder image">
+            <img class="card-image" [asset]="content.img"  alt="Archipel Content Logo">
             <div>
               <h3>{{ content.title }}</h3>
             </div>

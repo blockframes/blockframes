@@ -1,12 +1,12 @@
 // Angular
-import { Component, ChangeDetectionStrategy, Host, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 // Blockframes
 import { MovieService, MovieQuery, createMovie } from '@blockframes/movie/movie/+state';
 import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
 import { MatSnackBar, MatDialog } from '@angular/material';
 import { TunnelStep, TunnelRoot, TunnelConfirmComponent } from '@blockframes/ui/tunnel';
-import { switchMap, map, tap } from 'rxjs/operators';
-import { of, from } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 const steps: TunnelStep[] = [{
   title: 'Title Information',
@@ -65,10 +65,12 @@ const steps: TunnelStep[] = [{
   styleUrls: ['./movie-tunnel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieTunnelComponent implements TunnelRoot {
+export class MovieTunnelComponent implements TunnelRoot, OnInit {
   steps = steps;
   // Have to be initialized in the constructor as children page use it in the constructor too
   public form = new MovieForm(this.query.getActive());
+
+  public exitRoute: string;
 
   constructor(
     private service: MovieService,
@@ -77,13 +79,17 @@ export class MovieTunnelComponent implements TunnelRoot {
     private dialog: MatDialog
   ) { }
 
+  async ngOnInit() {
+    this.exitRoute = `../../../titles/${this.query.getActiveId()}`;
+  }
+
   // Should save movie
   public async save() {
     const id = this.query.getActiveId();
     const movie = createMovie({ id, ...this.form.value });
     await this.service.update(movie);
     this.form.markAsPristine();
-    await this.snackBar.open('Saved', '', { duration: 500 }).afterDismissed().toPromise();
+    await this.snackBar.open('Title saved', '', { duration: 500 }).afterDismissed().toPromise();
     return true;
   }
 

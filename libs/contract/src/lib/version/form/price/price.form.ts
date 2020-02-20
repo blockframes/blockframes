@@ -1,15 +1,16 @@
 import { FormStaticValue } from '@blockframes/utils/form';
 import { FormControl, Validators } from '@angular/forms';
-import { Price } from '@blockframes/utils/common-interfaces/price';
+import { Price, createPrice } from '@blockframes/utils/common-interfaces/price';
 import { FormEntity } from '@blockframes/utils';
 
 function createContractVersionPriceControls(price: Partial<Price>) {
+  const entity = createPrice(price)
   return {
-    amount: new FormControl(price.amount, [Validators.required, Validators.min(1)]),
-    currency: new FormStaticValue(price.currency, 'MOVIE_CURRENCIES'),
-    commission: new FormControl(price.commission, Validators.max(100)),
-    commissionBase: new FormControl(price.commissionBase),
-    vat: new FormControl(price.vat),
+    amount: new FormControl(entity.amount, [Validators.required, Validators.min(1)]),
+    currency: new FormStaticValue(entity.currency, 'MOVIE_CURRENCIES'),
+    commission: new FormControl(entity.commission, Validators.max(100)),
+    commissionBase: new FormControl(entity.commissionBase),
+    vat: new FormControl(entity.vat),
   }
 }
 
