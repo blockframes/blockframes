@@ -50,6 +50,7 @@ import { DistributionDealService } from '@blockframes/movie/distribution-deals/+
 import { asyncFilter } from '@blockframes/utils/helpers';
 import { staticModels } from '@blockframes/utils/static-model';
 import { sortMovieBy } from '@blockframes/utils/akita-helper/sort-movie-by';
+import { StoreType } from '@blockframes/movie/movie/+state/movie.firestore';
 
 @Component({
   selector: 'catalog-movie-search',
@@ -407,4 +408,9 @@ export class MarketplaceSearchComponent implements OnInit {
     this.availsForm.enable();
     this.territoryControl.enable();
   }
+
+    /** Check storeType or uncheck it if it's already in the array. */
+    public checkStoreType(storeType: StoreType) {
+      this.filterForm.checkStoreType(storeType);
+    }
 }

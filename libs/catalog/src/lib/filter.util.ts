@@ -5,7 +5,7 @@ import { NumberRange, DateRange } from '@blockframes/utils/common-interfaces';
 import { LanguagesLabel } from '@blockframes/utils/static-model/types';
 import { CatalogSearch, AvailsSearch } from '@blockframes/catalog/form/search.form';
 import { getFilterMatchingDeals, getDealsInDateRange, getExclusiveDeals } from '@blockframes/movie/distribution-deals/create/availabilities.util';
-import { MovieLanguageSpecification } from '@blockframes/movie/movie/+state/movie.firestore';
+import { MovieLanguageSpecification, StoreType } from '@blockframes/movie/movie/+state/movie.firestore';
 import { toDate } from '@blockframes/utils/helpers';
 
 function isProductionYearBetween(movie: Movie, range: DateRange): boolean {
@@ -121,6 +121,21 @@ function hasCountry(movie: Movie, countries: string[]): boolean {
 }
 
 /**
+ * Returns true if movie storeType is included in the search filter.
+ * @param movie
+ * @param storeTypes
+ */
+function hasStoreType(movie: Movie, storeTypes: StoreType[]) {
+  if (!storeTypes.length) {
+    return true;
+  }
+  const storeTypeValues = storeTypes.map(type => StoreType[type]);
+  if (storeTypeValues.includes(movie.main.storeConfig.storeType)) {
+    return true;
+  }
+}
+
+/**
  * Looks for the deal matching the mandate and checks if Archipel can sells
  * rights according to the filter options set by the buyer.
  */
@@ -150,7 +165,8 @@ export function filterMovie(movie: Movie, filter: CatalogSearch): boolean {
     hasCountry(movie, filter.originCountries) &&
     hasLanguage(movie, filter.languages) &&
     isProductionStatus(movie, filter.status) &&
-    hasBudget(movie, filter.estimatedBudget)
+    hasBudget(movie, filter.estimatedBudget) &&
+    hasStoreType(movie, filter.storeType)
   );
 }
 
