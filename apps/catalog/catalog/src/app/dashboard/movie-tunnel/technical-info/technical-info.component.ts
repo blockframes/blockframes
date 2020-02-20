@@ -17,7 +17,7 @@ export class TunnelTechnicalInfoComponent {
     }
 
     get movieVersionInfo() {
-        return this.form.get('versionInfo');
+        return this.form.get('versionInfo').get('languages');
     }
 
     get movieOriginalLanguages() {
