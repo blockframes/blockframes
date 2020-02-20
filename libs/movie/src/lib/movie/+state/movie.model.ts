@@ -27,7 +27,8 @@ import {
   MovieStakeholders,
   StoreStatus,
   MovieAnalytics,
-  MovieLegalDocuments
+  MovieLegalDocuments,
+  DocumentMeta
 } from './movie.firestore';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 import { LanguagesSlug } from '@blockframes/utils/static-model';
@@ -112,8 +113,7 @@ export function createMoviePromotionalElements(
     trailer: [],
     still_photo: [],
     ...params,
-    // We want a default poster as we look for the first one
-    poster: (params.poster && params.poster.length) ? params.poster : [createPromotionalElement()],
+    poster: params.poster && params.poster.length ? params.poster : [],
     banner: createPromotionalElement(params.banner),
     presentation_deck: createPromotionalElement(params.presentation_deck),
     scenario: createPromotionalElement(params.scenario),
@@ -346,6 +346,13 @@ export function createMovieLegalDocuments(
   return {
     chainOfTitles: [],
     ...params
+  }
+}
+
+export function createDocumentMeta(meta: Partial<DocumentMeta> = {}): DocumentMeta {
+  return {
+    createdBy: '',
+    ...meta
   }
 }
 
