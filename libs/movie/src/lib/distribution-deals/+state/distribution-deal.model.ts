@@ -3,8 +3,7 @@ import {
   HoldbackWithDates as Holdback,
   DistributionDealStatus
 } from './distribution-deal.firestore';
-import { createTerms } from '@blockframes/utils/common-interfaces/terms';
-import { toDate } from '@blockframes/utils/helpers';
+import { createTerms, termToPrettyDate, formatTerms } from '@blockframes/utils/common-interfaces/terms';
 
 export { DistributionDealDocumentWithDates as DistributionDeal } from './distribution-deal.firestore';
 
@@ -37,13 +36,17 @@ export function createHoldback(params: Partial<Holdback> = {}): Holdback {
 
 /** Format deals dates from Timestamps into Dates. */
 export function formatDistributionDeal(deal: any): DistributionDeal {
-  deal.terms.start = toDate(deal.terms.start);
-  deal.terms.end = toDate(deal.terms.end);
-  return deal as DistributionDeal;
+  return createDistributionDeal({
+    ...deal,
+    terms: formatTerms(deal.terms)
+  })
 }
 
 /** Returns only eligible territories for a deal. */
 export function getDealTerritories(deal: DistributionDeal): string[] {
+  if (!deal.territory) {
+    return [];
+  }
   const territories = deal.territory;
   const excludedTerritories = deal.territoryExcluded;
   return territories.filter(territory => !excludedTerritories.includes(territory));
