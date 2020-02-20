@@ -13,7 +13,7 @@
   <ng-container *ngFor="let boxOffice of budget.get('boxOffice').controls">
     <li>
       <ng-container *ngIf="boxOffice.get('territory').value else country">
-        <strong>{{ boxOffice.get('territory').value }} </strong>
+        <strong>{{ boxOffice.get('territory').value | translateSlug: 'TERRITORIES' }} </strong>
       </ng-container>
       <ng-template #country>
         <strong>Country </strong>
