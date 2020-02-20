@@ -80,8 +80,6 @@ export class MovieTunnelComponent implements TunnelRoot, OnInit {
   ) { }
 
   async ngOnInit() {
-    const movie = this.query.getActive();
-    this.form.patchAllValue(movie);
     this.exitRoute = `../../../titles/${this.query.getActiveId()}`;
   }
 

@@ -14,7 +14,9 @@ export class CatalogContractGuard implements CanActivate {
         const contract = this.contractQuery.getValue().entities[contractId];
         const lastVersion = getContractLastVersion(contract)
         if (lastVersion.status === 'draft') {
+            // split the route to work with array functions
             const splittedRoute = this.routerQuery.getValue().state.url.split('/');
+            // remove the leading slash and remove the contractId
             const newRoute = splittedRoute.splice(1, splittedRoute.length - 2).join('/');
             this.router.navigate([newRoute]);
         } else {
