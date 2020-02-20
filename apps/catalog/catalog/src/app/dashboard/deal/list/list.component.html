@@ -1,4 +1,12 @@
-<h1>Offers & Deals</h1>
+<header fxLayout="row" fxLayoutAlign="space-between start">
+  <h1>Offers & Deals</h1>
+  <div fxLayout="column" fxLayoutAlign="start end">
+    <button mat-strocked-button color="primary">Archipel Mandate</button>
+    <button mat-flat-button color="primary">
+      Archipel Mandate
+    </button>
+  </div>
+</header>
 
 <mat-tab-group>
   <mat-tab *ngFor="let tab of tabs$ | async">

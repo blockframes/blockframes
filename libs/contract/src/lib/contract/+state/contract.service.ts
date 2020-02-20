@@ -16,7 +16,7 @@ import orderBy from 'lodash/orderBy';
 import { tap, switchMap } from 'rxjs/operators';
 import { ContractVersionService } from '../../version/+state/contract-version.service';
 import { cleanModel } from '@blockframes/utils';
-import { PermissionsService } from '@blockframes/organization';
+import { PermissionsService, Organization, OrganizationService, OrganizationQuery } from '@blockframes/organization';
 import { ContractDocumentWithDates, ContractStatus, ContractType } from './contract.firestore';
 import { firestore } from 'firebase/app';
 import { MovieQuery } from '@blockframes/movie';
@@ -51,6 +51,7 @@ export class ContractService extends CollectionService<ContractState> {
     private contractVersionService: ContractVersionService,
     private movieQuery: MovieQuery,
     private permissionsService: PermissionsService,
+    private orgQuery: OrganizationQuery,
     store: ContractStore
   ) {
     super(store);
@@ -162,7 +163,8 @@ export class ContractService extends CollectionService<ContractState> {
    */
   public async create(contract: Partial<Contract>, version: Partial<ContractVersion> = {}) {
     const write = this.db.firestore.batch();
-    const contractId = await this.add(contract, { write });
+    const partyIds = [ this.orgQuery.getActiveId() ];
+    const contractId = await this.add({ ...contract, partyIds }, { write });
     this.contractVersionService.add({ id: '1', ...version }, { params: { contractId }, write });
     this.contractVersionService.add({ id: '_meta', count: 1 }, { params: { contractId }, write });
     await write.commit();
