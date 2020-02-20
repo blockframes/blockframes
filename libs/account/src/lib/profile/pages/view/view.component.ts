@@ -34,24 +34,26 @@ export class ProfileViewComponent implements OnInit {
     this.user$ = this.authQuery.user$;
     this.profileForm = new ProfileForm(this.authQuery.user)
     this.organization$ = this.organizationQuery.selectActive();
-    this.previousPage = this.tunnelService.previousUrl;
+    this.previousPage = this.tunnelService.previousUrl || '../../..';
   }
 
   public update() {
     try {
     // update profile
-    if (this.profileForm.touched) {
-      if (this.profileForm.invalid) throw new Error('Your profile informations are not valid');
+    if (this.profileForm.invalid) {
+      throw new Error('Your profile informations are not valid.')
+    } else {
       const uid = this.authQuery.userId;
       const user = this.profileForm.value;
       this.authService.update({uid, ...user});
+      this.snackBar.open('Profile updated.', 'close', { duration: 2000 });
     }
     // update password
     if(this.passwordForm.dirty) {
-      if (this.passwordForm.invalid) throw new Error('Your informations for change your password are not valid');
+      if (this.passwordForm.invalid) throw new Error('Your informations for change your password are not valid.');
       const { current, next } = this.passwordForm.value;
       this.authService.updatePassword(current, next);
-      this.snackBar.open('Password change succesfull', 'close', { duration: 2000 });
+      this.snackBar.open('Password changed successfully.', 'close', { duration: 2000 });
     }
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });

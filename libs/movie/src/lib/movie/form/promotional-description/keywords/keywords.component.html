@@ -2,7 +2,7 @@
   <mat-label>Keywords</mat-label>
   <mat-chip-list #chipList>
     <ng-container *ngFor="let value of values$ | async; let i = index">
-      <mat-chip [removable]="true" (removed)="remove(i)">
+      <mat-chip removable="true" (removed)="remove(i)">
         <span>{{ value }}</span>
         <mat-icon matChipRemove>cancel</mat-icon>
       </mat-chip>

@@ -24,10 +24,6 @@ const tunnelRoutes: Routes = [
         path: 'synopsis',
         loadChildren: () => import('./synopsis/synopsis.module').then(m => m.TunnelSynopsisModule)
       },
-      {
-        path: 'keywords',
-        loadChildren: () => import('./keywords/keywords.module').then(m => m.TunnelKeywordsModule)
-      },
       // Page 4
       {
         path: 'credits',
@@ -44,12 +40,6 @@ const tunnelRoutes: Routes = [
         loadChildren: () =>
           import('./technical-info/technical-info.module').then(m => m.TunnelTechnicalInfoModule)
       },
-      // Page 9
- /*      {
-        path: 'deals',
-        loadChildren: () =>
-          import('./previous-deals/previous-deals.module').then(m => m.TunnelPreviousDealsModule)
-      }, */
       // Page 10
       {
         path: 'images',

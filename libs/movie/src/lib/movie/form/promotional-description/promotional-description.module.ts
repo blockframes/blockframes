@@ -4,7 +4,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Components
-import { KeywordsComponent } from './keywords/keywords.component';
 import { KeyAssetsComponent } from './key-assets/key-assets.component';
 
 // Material
@@ -14,7 +13,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
-  declarations: [KeywordsComponent, KeyAssetsComponent],
+  declarations: [KeyAssetsComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -24,6 +23,6 @@ import { MatIconModule } from '@angular/material/icon';
     MatChipsModule,
     MatIconModule
   ],
-  exports: [KeywordsComponent, KeyAssetsComponent]
+  exports: [KeyAssetsComponent]
 })
 export class MovieFormPromotionalDescriptionModule { }

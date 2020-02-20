@@ -19,6 +19,7 @@
 @import 'footer';
 @import './components/bf-widget.scss';
 @import './components/bf-tunnel.scss';
+@import './components/bf-table.scss';
 @import './components/bf-font-color.scss';
 @import './components/missing-control.scss';
 @import './components/bf-world-map.scss';
@@ -42,6 +43,7 @@
   @include bf-footer-theme($theme);
   @include bf-widget-theme($theme);
   @include bf-tunnel-theme($theme);
+  @include bf-table-theme($theme);
   @include bf-color-font($theme);
   @include bf-missing-control-theme($theme);
   @include bf-world-map-theme($theme);

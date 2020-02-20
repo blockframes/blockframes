@@ -7,7 +7,7 @@
     </ng-template>
     <ng-template matTabContent>
       <ng-container *ngIf="tab.contracts.length; else noContracts">
-        <contract-list [source]="tab.contracts"></contract-list>
+        <contract-table [contracts]="tab.contracts"></contract-table>
       </ng-container>
       <ng-template #noContracts >
         <span>There are no contract in {{ tab.name }}</span>

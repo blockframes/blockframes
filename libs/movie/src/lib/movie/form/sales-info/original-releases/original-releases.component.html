@@ -4,7 +4,7 @@
   <ng-container *ngIf="originalRelease.at(i) as releaseControl">
     <form [formGroup]="releaseControl" fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="24px">
       <mat-form-field appearance="outline">
-        <mat-label>Media</mat-label>
+        <mat-label>Release Media</mat-label>
         <mat-select formControlName="media">
           <mat-option *ngFor="let medium of media" [value]="medium.slug">
             {{ medium.label }}

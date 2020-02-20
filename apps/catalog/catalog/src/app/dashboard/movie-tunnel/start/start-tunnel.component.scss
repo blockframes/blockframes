@@ -1,4 +1,4 @@
-@import 'mixins';
+@import "mixins";
 
 :host {
   display: flex;
@@ -10,23 +10,27 @@ mat-toolbar mat-spinner {
   height: 80%;
 }
 
+mat-sidenav-content {
+  padding: 0px 48px;
+}
+
 mat-sidenav-container {
   flex: 1;
-  
+
   mat-card {
-    margin: 10px;
     text-align: center;
     width: calc(50% - 20px);
   }
-  
+
   @include mobile {
     mat-card {
       margin: 10px;
       text-align: center;
+      white-space: nowrap;
       width: calc(100% - 20px);
     }
   }
-  
+
   .card-image {
     border-radius: 50%;
     margin-bottom: 10px;
@@ -35,4 +39,27 @@ mat-sidenav-container {
 
 mat-sidenav {
   padding: 16px;
+}
+
+section, div {
+  width: 100%;
+}
+
+.flex-container {
+  display: flex;
+  justify-content: flex-start;
+  position: relative;
+  width: 100%;
+}
+
+.item-center {
+  flex: 0 1 auto;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.item-right {
+  flex: 0 1 auto;
+  margin-left: auto;
 }

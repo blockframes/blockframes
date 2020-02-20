@@ -1,9 +1,11 @@
 mat-toolbar {
-  transition: background-color 300ms ease-in-out;
+  transition: background-color 500ms ease-in-out;
 }
 
 .transparent-toolbar {
   background-color: transparent;
+  color: white;
+  border: none;
 }
 
 .logo {
@@ -13,4 +15,10 @@ mat-toolbar {
   img {
     height: 100%;
   }
+}
+
+#demo-link {
+  letter-spacing: 0.5px;
+  line-height: 24px;
+  font-weight: 600;
 }

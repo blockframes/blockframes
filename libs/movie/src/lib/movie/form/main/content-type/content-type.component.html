@@ -20,8 +20,9 @@
     <mat-form-field appearance="outline">
       <mat-label>Freshness</mat-label>
       <mat-select [formControl]="storeType">
-        <mat-option value="catalog">Catalog</mat-option>
-        <mat-option value="line_up">Line-Up</mat-option>
+        <mat-option *ngFor="let type of freshness | keyvalue" [value]="type.key">
+          {{ type.value }}
+        </mat-option>
       </mat-select>
     </mat-form-field>
     
@@ -58,6 +59,6 @@
   <mat-form-field appearance="outline" class="last">
     <mat-label>Reference</mat-label>
     <input matInput type="text" placeholder="Reference" formControlName="internalRef" />
-    <mat-hint>This reference is for you only</mat-hint>
+    <mat-hint>This reference is for you only, to help you find your content more easily.</mat-hint>
   </mat-form-field>
 </form>

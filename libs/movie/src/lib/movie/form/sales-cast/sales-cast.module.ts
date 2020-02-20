@@ -1,3 +1,4 @@
+import { StaticSelectModule } from '@blockframes/ui/static-select/static-select.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -19,6 +20,7 @@ import { MatSelectModule } from '@angular/material/select';
       FormDisplayNameModule,
       ReactiveFormsModule,
       FlexLayoutModule,
+      StaticSelectModule,
       MatFormFieldModule,
       MatInputModule,
       MatIconModule,

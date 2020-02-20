@@ -1,7 +1,7 @@
-import { Component, ChangeDetectionStrategy, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { FormGroup } from '@angular/forms';
-import { MatSnackBar, MatSidenav } from '@angular/material';
+import { MatSnackBar } from '@angular/material';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { RequestDemoInformations, createDemoRequestInformations } from '@blockframes/catalog/demo-request.model';
 
@@ -11,19 +11,13 @@ import { RequestDemoInformations, createDemoRequestInformations } from '@blockfr
   styleUrls: ['./landing-page.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CatalogLandingPageComponent implements AfterViewInit {
-  @ViewChild(MatSidenav, { static: false }) sidenav: MatSidenav;
+export class CatalogLandingPageComponent {
 
   constructor(
     private snackBar: MatSnackBar,
     private routerQuery: RouterQuery,
     private functions: AngularFireFunctions
   ) {}
-
-  ngAfterViewInit() {
-    /** Close the sidenav as we navigate. */
-    this.routerQuery.select('navigationId').subscribe(() => this.sidenav.close());
-  }
 
   /** Send a mail to the admin with user's informations. */
   private async sendDemoRequest(information: RequestDemoInformations) {

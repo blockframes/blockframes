@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="170" height="170" viewBox="0 0 170 170">
+  <g fill="none" fill-rule="evenodd">
+    <g fill="#8DA4FA" transform="translate(35 39)">
+      <polygon points="66.47 63.048 71.892 72.687 61.048 72.687" transform="rotate(90 66.47 67.867)"/>
+      <rect width="5" height="50" x="21.687" y="2.41"/>
+      <rect width="30.12" height="2.41" y="89.157"/>
+    </g>
+    <polyline stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" points="61.457 89.685 61.457 40.193 94.562 40.193 109.595 54.871 109.595 74.264"/>
+    <polyline stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" points="94.197 40.193 94.197 55.209 109.595 55.209"/>
+    <line x1="72" x2="86" y1="55" y2="55" stroke="#000" stroke-linecap="round" stroke-width="2"/>
+    <polyline stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" points="72.329 89.685 72.329 75.397 133.928 75.397 133.928 122.534 85.482 122.534"/>
+    <line x1="72" x2="98" y1="66" y2="66" stroke="#000" stroke-linecap="round" stroke-width="2"/>
+    <line x1="73" x2="134" y1="85" y2="85" stroke="#000" stroke-linecap="round" stroke-width="2"/>
+    <polygon stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" points="39.775 90.777 85.482 90.777 85.482 128.157 39.775 128.157"/>
+    <circle cx="54" cy="103" r="4" stroke="#000" stroke-width="2"/>
+    <polyline stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" points="40.24 124.029 50.422 113.797 56.113 119.346 71.918 103.308 85 116.516"/>
+    <polygon stroke="#000" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" points="98.926 97.789 98.926 110.45 109.595 104.11"/>
+  </g>
+</svg>
