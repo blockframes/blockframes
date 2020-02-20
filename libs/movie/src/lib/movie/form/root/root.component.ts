@@ -4,11 +4,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieForm } from './../movie.form';
 import { MatDialog } from '@angular/material';
 import { MovieImdbSearchComponent } from '../../components/movie-imdb-search/movie-imdb-search.component';
-import { SearchRequest, ImdbMovie, FormEntity, ImageUploader } from '@blockframes/utils';
+import { SearchRequest, ImdbMovie, ImageUploader } from '@blockframes/utils';
 import { formatCredit, formatCredits } from '@blockframes/utils/spreadsheet/format';
-import { FormControl } from '@angular/forms';
 import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
-import { CreditFormControl } from '../main/main.form';
 import { Router } from '@angular/router';
 
 @Component({
