@@ -49,7 +49,7 @@ function getColumns(keys: ColumnsKeys[]): Partial<typeof columns> {
 }
 
 @Component({
-  selector: 'contract-table',
+  selector: '[contracts] [app] contract-table',
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -59,6 +59,9 @@ export class ContractTableComponent{
   columns: Partial<typeof columns> = getColumns(baseColumns);
   initialColumns = baseColumns;
   sources: ContractView[];
+
+  /** Specify in which app the contract table is used */
+  @Input() app: 'marketplace' | 'dashboard';
 
   @Input() set hasBuyer(hasBuyer: string | boolean) {
     if (hasBuyer === '' || hasBuyer === true) {
@@ -96,8 +99,11 @@ export class ContractTableComponent{
 
   /** Navigate to tunnel if status is draft, else go to page */
   public goToSale(contract: ContractView) {
+    const basePath = `/c/o/${this.app}`;
     // @todo(#1887) Don't use getContractLastVersion function
-    const path = (contract.status === ContractStatus.draft) ? `../tunnel/contract/${contract.id}/sale` : contract.id;
+    const path = (contract.status === ContractStatus.draft)
+      ? `${basePath}/tunnel/contract/${contract.id}/sale`
+      : `${basePath}/deals/${contract.id}`;
     this.router.navigate([path], { relativeTo: this.route });
   }
 }

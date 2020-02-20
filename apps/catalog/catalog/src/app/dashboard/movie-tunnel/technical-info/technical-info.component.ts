@@ -1,5 +1,5 @@
-import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { MovieTunnelComponent } from '../movie-tunnel.component';
 
 @Component({
     selector: 'catalog-tunnel-technical-info',
@@ -8,7 +8,9 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TunnelTechnicalInfoComponent {
-    constructor(public form: MovieForm) { }
+    form = this.tunnel.form;
+
+    constructor(private tunnel: MovieTunnelComponent) { }
 
     get movieSalesInfo() {
         return this.form.get('salesInfo');

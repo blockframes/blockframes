@@ -13,9 +13,9 @@
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>Release Date</mat-label>
-        <input matInput formControlName="date" [matDatepicker]="releaseDate" placeholder="MM/DD/YYYY">
-        <mat-datepicker-toggle matSuffix [for]="releaseDate"></mat-datepicker-toggle>
-        <mat-datepicker #releaseDate></mat-datepicker>
+        <input matInput formControlName="date" [matDatepicker]="datePicker" placeholder="MM/DD/YYYY">
+        <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
+        <mat-datepicker #datePicker ></mat-datepicker>
       </mat-form-field>
     </form>
   </ng-container>

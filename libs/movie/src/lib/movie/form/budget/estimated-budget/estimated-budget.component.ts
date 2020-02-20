@@ -13,5 +13,14 @@ export class EstimatedBudgetComponent {
 
   @Input() form: FormControl;
 
-  public budgetList: NumberRange[] = BUDGET_LIST;
+  public budgetList: string[] = BUDGET_LIST.map(budget => budget.label);
+
+  getLabel() {
+    return this.form.value.label;
+  }
+
+  setForm(label: string) {
+    const budget = BUDGET_LIST.find(b => b.label === label);
+    this.form.setValue(budget);
+  }
 }
