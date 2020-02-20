@@ -43,10 +43,6 @@ export class InvitationListComponent implements OnInit, OnDestroy {
     }
   }
 
-  public get placeholderUrl() {
-    return `/assets/images/${this.theme}/Avatar_250.png`;
-  }
-
   ngOnDestroy() {
     this.collectionSub.unsubscribe(); // TODO: Leads to an error and an empty page when no invitations on /c/organization/home => ISSUE#1337
     this.themeSub.unsubscribe();

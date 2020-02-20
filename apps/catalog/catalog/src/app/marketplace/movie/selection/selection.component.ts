@@ -54,7 +54,7 @@ export class MarketplaceSelectionComponent implements OnInit {
     }
     const contractId = await this.service.create(contract, version);
     this.store.reset();
-    this.router.navigate(['c/o/marketplace/contract', contractId, 'mandate']);
+    this.router.navigate(['c/o/marketplace/tunnel/contract', contractId, 'sale']);
   }
 
 }

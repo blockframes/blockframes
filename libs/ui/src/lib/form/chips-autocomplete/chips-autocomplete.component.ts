@@ -47,7 +47,7 @@ export class ChipsAutocompleteComponent implements OnInit, OnDestroy {
   public ctrl = new FormControl();
   public filteredItems: Observable<any[]>;
 
-  private sub = new Subscription();
+  private sub: Subscription;
 
   @ViewChild('inputEl', { static: true }) inputEl: ElementRef<HTMLInputElement>;
   @ViewChild('auto', { static: true }) matAutocomplete: MatAutocomplete;

@@ -6,7 +6,6 @@
         <!-- Switch to [imgRef]="getLicenseeLogo(licensees[0].part.orgId) when public orgs are here => ISSUE#1359"-->
         <img class="logo" [imgRef]="placeholderUrl" [placeholderUrl]="placeholderUrl" alt="Organization logo" />
         <div>
-          <span>{{ lastVersion.status | uppercase }}</span>
           <h1>{{ licensees[0].party.displayName }} - {{ (movies$ | async).length }} films</h1>
           <span *ngIf="licensee.address">
             {{ licensee.address.street }}, {{ licensee.address.city }}, {{ licensee.address.region }}
@@ -17,6 +16,9 @@
       <section fxLayout="column" fxLayoutAlign="center end">
         <span class="mat-caption"> {{ lastVersion.creationDate | date: 'short' }} </span>
         <h2>{{ totalPrice.amount | currency: getCurrencyCode(totalPrice.currency) }}</h2>
+        <mat-chip-list>
+          <mat-chip>{{ getStatusValue(lastVersion.status) }}</mat-chip>
+        </mat-chip-list>
       </section>
     </section>
   </ng-container>
@@ -30,9 +32,6 @@
           {{ (movies$ | async).length }} of which are yours.
       </h3>
       <mat-card-content>
-        <span i18n *ngIf="subLicensors.length > 1" >
-          We are gathering approval from {{ subLicensors.length - 1 }} other seller{subLicensors.length - 1, plural, =1 {} other {s}}.
-        </span>
         <ng-container *ngIf="subLicensors.length > 1; else uniqueSubLicensor">
           <span i18n>
             Your share of the deal is <b>{{ totalPrice.amount | currency: getCurrencyCode(totalPrice.currency) }}</b>
@@ -51,29 +50,18 @@
           </mat-list-item>
         </mat-list>
       </mat-card-content>
-      <mat-card-actions *ngIf="isSignatory" fxLayout="row" fxLayoutAlign="space-between center">
+      <mat-card-actions fxLayout="row" fxLayoutAlign="space-between center">
         <button mat-flat-button color="primary" (click)="openIntercom()">
           <mat-icon svgIcon="comment"></mat-icon>
           <span>Connect with the Archipel Team</span>
         </button>
-        <div>
-          <button mat-stroked-button color="primary" (click)="acceptOffer(contract)">
-            <mat-icon svgIcon="check" bf-color="primary"></mat-icon>
-            <span>Accept</span>
-          </button>
-          <button mat-stroked-button color="warn" (click)="declineOffer(contract)">
-            <mat-icon svgIcon="refuse" bf-color="warn"></mat-icon>
-            <span>Decline</span>
-          </button>
-        </div>
       </mat-card-actions>
     </mat-card>
-    <mat-card>
+    <mat-card *ngIf="payments">
       <h3>Proposed Payment Schedule</h3>
-      <div *ngFor="let payment of lastVersion.paymentSchedule" fxLayout="column" fxLayoutAlign="center start">
-        <span>{{ payment.percentage }}% {{ payment.label }}</span>
-        <span class="mat-caption">{{ getPaymentTerms(payment.date) }}</span>
-      </div>
+      <li *ngFor="let payment of payments.list">
+        <strong>{{ payments.type }}</strong> {{ payment }}
+      </li>
     </mat-card>
   </article>
 

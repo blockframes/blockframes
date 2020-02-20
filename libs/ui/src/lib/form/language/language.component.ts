@@ -1,8 +1,9 @@
+import { Component, OnInit, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
+import { staticModels } from '@blockframes/utils/static-model';
+import { FormStaticValue } from '@blockframes/utils/form';
+import { ExtractSlug } from '@blockframes/utils/static-model/staticModels';
 import { startWith, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { staticModels } from '@blockframes/utils/static-model';
-import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
-import { FormStaticValue } from '@blockframes/utils/form';
 
 type LANGUAGES = typeof staticModels.LANGUAGES;
 
@@ -14,6 +15,7 @@ type LANGUAGES = typeof staticModels.LANGUAGES;
 })
 export class FormLanguageComponent implements OnInit {
   @Input() public form: FormStaticValue<'LANGUAGES'>;
+  @Output() selected = new EventEmitter<ExtractSlug<'LANGUAGES'>>();
 
   public languages = staticModels.LANGUAGES;
 

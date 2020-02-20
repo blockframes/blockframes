@@ -81,7 +81,7 @@
       <ng-container matColumnDef="multidiffusion">
         <th mat-header-cell *matHeaderCellDef mat-sort-header> Multidiffusion </th>
         <td mat-cell *matCellDef="let deal">
-          <ng-container *ngIf="deal.multidiffusion">
+          <ng-container *ngIf="deal.multidiffusion.length">
             {{ deal.multidiffusion.length }}
           </ng-container>
         </td>

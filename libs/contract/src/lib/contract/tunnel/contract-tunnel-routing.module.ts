@@ -9,11 +9,8 @@ const routes: Routes = [{
   canDeactivate: [TunnelGuard],
   children: [{
     path: '',
-    redirectTo: 'overview',
+    redirectTo: 'details',
     pathMatch: 'full'
-  }, {
-    path: 'overview',
-    loadChildren: () => import('./overview/overview.module').then(m => m.OverviewModule)
   }, {
     path: 'details',
     loadChildren: () => import('./details-sale/details-sale.module').then(m => m.DetailsSaleModule)
@@ -30,12 +27,9 @@ const routes: Routes = [{
   canDeactivate: [TunnelGuard],
   children: [{
     path: '',
-    redirectTo: 'overview',
+    redirectTo: 'details',
     pathMatch: 'full'
   }, {
-    path: 'overview',
-    loadChildren: () => import('./overview/overview.module').then(m => m.OverviewModule)
-  },{
     path: 'details',
     loadChildren: () => import('./details-mandate/details-mandate.module').then(m => m.DetailsMandateModule)
   }, {

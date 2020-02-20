@@ -13,6 +13,7 @@ import { RightListModule } from '@blockframes/movie/distribution-deals/component
 
 // Guard
 import { MovieContractGuard } from '@blockframes/movie/movie/guards/movie-contract.guard';
+import { CatalogContractGuard } from '@blockframes/apps/catalog/guards/catalog-contract.guard';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -21,6 +22,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
+import { MatChipsModule } from '@angular/material/chips';
 
 @NgModule({
   declarations: [DealViewComponent],
@@ -39,12 +41,13 @@ import { MatListModule } from '@angular/material/list';
     MatExpansionModule,
     MatDividerModule,
     MatListModule,
+    MatChipsModule,
 
     CommonModule,
     RouterModule.forChild([
       {
         path: '',
-        canActivate: [MovieContractGuard],
+        canActivate: [MovieContractGuard, CatalogContractGuard],
         canDeactivate: [MovieContractGuard],
         component: DealViewComponent
       }

@@ -78,7 +78,7 @@ export class ProfileEditableComponent implements OnInit, OnDestroy {
   }
 
   public get placeholderAvatar() {
-    return `/assets/images/${this.theme}/Avatar_250.png`;
+    return `/assets/images/${this.theme}/Avatar_40.png`;
   }
 
   ngOnDestroy() {
