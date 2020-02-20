@@ -60,6 +60,7 @@ export class TitleListComponent implements OnInit {
   titles$: Observable<TitleView[]>;
   filter = new FormControl();
   filter$ = this.filter.valueChanges.pipe(startWith(this.filter.value));
+  public allMovies$ = this.query.selectAll();
 
   constructor(
     private query: MovieQuery,
