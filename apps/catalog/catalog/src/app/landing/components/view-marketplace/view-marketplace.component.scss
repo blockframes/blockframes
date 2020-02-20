@@ -5,6 +5,11 @@ section {
   margin: 50px 0;
 }
 
+.mat-display-1 {
+  color: white;
+  margin-bottom: 20px;
+}
+
 .video-container {
   position: relative;
 }
@@ -17,7 +22,8 @@ section {
   left: 0;
   bottom: 0;
   right: 0;
-  background-color: rgba(0,0,0,0.8);
+  background-image: url('/assets/images/video_cover.png');
+  background-size: cover;
 }
 
 .show {
