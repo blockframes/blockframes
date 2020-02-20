@@ -1,7 +1,7 @@
 <span class="mat-display-1">How it works?</span>
 <mat-tab-group animationDuration="1000ms" selectedIndex="0">
   <mat-tab label="Seller">
-    <article fxLayout="row" fxLayoutGap="70px" fxLayoutAlign="space-between start" fxLayout.lt-md="column">
+    <article class="perspective-box" fxLayout="row" fxLayoutGap="70px" fxLayoutAlign="space-between start" fxLayout.lt-md="column">
       <img class="perspective-image" fxHide.xs src="/assets/images/seller_perspective.jpg" alt="seller image"/>
       <h3>Maximize sales on library titles and access new buyers.</h3>
     </article>
@@ -10,14 +10,14 @@
       <mat-card *ngFor="let feature of sellerFeatures">
         <img class="feature-image" [asset]="feature.image" alt="seller feature image">
         <div>
-          <b>{{ feature.title }}</b>
+          <h3>{{ feature.title }}</h3>
           <p class="mat-caption">{{ feature.description }}</p>
         </div>
       </mat-card>
     </article>
   </mat-tab>
   <mat-tab label="Buyer">
-    <article fxLayout="row" fxLayoutGap="70px" fxLayoutAlign="space-between start" fxLayout.lt-md="column">
+    <article class="perspective-box" fxLayout="row" fxLayoutGap="70px" fxLayoutAlign="space-between start" fxLayout.gt-lg="column">
       <img class="perspective-image" fxHide.xs src="/assets/images/buyer_perspective.jpg" alt="buyer image"/>
       <div>
         <h3>Buy quality content from a multitude of rights holders in one single package.</h3>
@@ -29,7 +29,7 @@
       <mat-card *ngFor="let feature of buyerFeatures">
         <img class="feature-image" [asset]="feature.image" alt="buyer feature image">
         <div>
-          <span><b>{{ feature.title }}</b></span>
+          <h3>{{ feature.title }}</h3>
           <p class="mat-caption">{{ feature.description }}</p>
         </div>
       </mat-card>
@@ -38,7 +38,7 @@
 </mat-tab-group>
 <section fxLayout="column" fxLayoutAlign="start center" class="join-section">
   <p class="mat-display-2">Interested? Join now!</p>
-  <a mat-flat-button color="accent" routerLink="/auth">
+  <a mat-flat-button color="accent" routerLink="/auth/connexion">
     <span>Sign up</span>
     <mat-icon>arrow_forward</mat-icon>
   </a>

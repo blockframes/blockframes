@@ -1,10 +1,6 @@
 :host {
   display: block;
   margin: 30px 20%;
-
-  article {
-    margin: 15px 0;
-  }
   
   span b {
     text-transform: uppercase;
@@ -12,9 +8,14 @@
   
   mat-card {
     width: 400px;
-    margin: 15px 0;
+    margin-bottom: 20px;
     text-align: center;
   }
+}
+
+h5 {
+  text-transform: uppercase;
+  margin-bottom: 5px;
 }
 
 .join-section {
@@ -22,7 +23,11 @@
 }
 
 .perspective-image {
-  width: 350px;
+  width: 550px;
+}
+
+.perspective-box {
+  margin: 15px 0 24px 0;
 }
 
 .feature-image {
