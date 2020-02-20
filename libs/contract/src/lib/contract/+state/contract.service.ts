@@ -10,7 +10,10 @@ import {
   getContractParties,
   createContractFromFirestore,
   cleanContract,
-  PublicContract
+  PublicContract,
+  createContract,
+  createContractVersion,
+  createVersionMandate
 } from './contract.model';
 import orderBy from 'lodash/orderBy';
 import { tap, switchMap } from 'rxjs/operators';
@@ -164,8 +167,14 @@ export class ContractService extends CollectionService<ContractState> {
   public async create(contract: Partial<Contract>, version: Partial<ContractVersion> = {}) {
     const write = this.db.firestore.batch();
     const partyIds = [ this.orgQuery.getActiveId() ];
-    const contractId = await this.add({ ...contract, partyIds }, { write });
-    this.contractVersionService.add({ id: '1', ...version }, { params: { contractId }, write });
+    // Initialize all values
+    const _contract = createContract({ ...contract, partyIds });
+    const _version = contract.type === ContractType.mandate
+      ? createVersionMandate({ id: '1', ...version })
+      : createContractVersion({ id: '1', ...version });
+    // Create contract + verions + _meta version
+    const contractId = await this.add(_contract, { write });
+    this.contractVersionService.add(_version, { params: { contractId }, write });
     this.contractVersionService.add({ id: '_meta', count: 1 }, { params: { contractId }, write });
     await write.commit();
     return contractId;

@@ -9,6 +9,7 @@
 
 <div class="container" *ngIf="displayedColumns$ | async as displayedColumns">
   <table mat-table [dataSource]="dataSource" matSort>
+
     <!-- You need to set the matColumnDef on the same ng-container as the ngFor or it fails -->
     <ng-container *ngFor="let column of displayedColumns" [matColumnDef]="column">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columns[column] }} </th>
@@ -22,9 +23,11 @@
       <tr mat-row *matRowDef="let row; columns: displayedColumns" [routerLink]="[link, row.id]" style="cursor: pointer;"></tr>
     </ng-template>
     <ng-template #withoutLink >
-      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns" (click)="rowClick.emit(row)"></tr>
     </ng-template>
   </table>
+
+  <!-- Loading if no data -->
   <ng-container *ngIf="dataSource.data.length === 0 && showLoader">
     <div class="loader-container">
       <ng-container *ngIf="noData else spinner">
@@ -41,6 +44,7 @@
 <!-- Fallback if no template is provided for a column -->
 <ng-template #text let-content>{{content}}</ng-template>
 
+<!-- Overlay with column selection -->
 <overlay-widget #filterColumnWidget >
   <widget-card>
     <mat-selection-list [formControl]="columnFilter" class="mat-elevation-z2">

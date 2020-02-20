@@ -3,6 +3,7 @@ import { Contract, getTotalPrice, ContractStatus } from '../../+state';
 import { getContractLastVersion } from '@blockframes/contract/version/+state';
 import { MovieQuery } from '@blockframes/movie';
 import { DistributionDealQuery } from '@blockframes/movie/distribution-deals/+state';
+import { Router, ActivatedRoute } from '@angular/router';
 
 const columns = {
   buyerName: 'Buyer name',
@@ -60,7 +61,8 @@ export class ContractTableComponent{
   constructor(
     private movieQuery: MovieQuery,
     private dealQuery: DistributionDealQuery,
-    private cdr: ChangeDetectorRef
+    private router: Router,
+    private route: ActivatedRoute
   ) { }
 
   private createContractListView(contract: Contract) {
@@ -76,5 +78,13 @@ export class ContractTableComponent{
       paid: version.status === 'paid' ? 'Yes' : 'No',
       status: ContractStatus[version.status]
     }
+  }
+
+  /** Navigate to tunnel if status is draft, else go to page */
+  public goToSale(contract: Contract) {
+    // @todo(#1887) Don't use getContractLastVersion function
+    const version = getContractLastVersion(contract);
+    const path = (version.status === ContractStatus.draft) ? `../tunnel/contract/${contract.id}/sale` : contract.id;
+    this.router.navigate([path], { relativeTo: this.route });
   }
 }

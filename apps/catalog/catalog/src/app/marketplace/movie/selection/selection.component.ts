@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, HostBinding, OnInit } from '@angula
 import { Router } from '@angular/router';
 import { MarketplaceQuery, MarketplaceStore } from '../../+state';
 import { MovieQuery } from '@blockframes/movie';
-import { ContractService, Contract, ContractTitleDetail } from '@blockframes/contract/contract/+state';
+import { ContractService, Contract, ContractTitleDetail, ContractType } from '@blockframes/contract/contract/+state';
 import { ContractVersion } from '@blockframes/contract/version/+state';
 import { CommissionBase } from '@blockframes/utils/common-interfaces';
 import { Observable } from 'rxjs';
@@ -45,7 +45,7 @@ export class MarketplaceSelectionComponent implements OnInit {
   /** Create a Contract, remove the current selection, move to tunnel */
   async create() {
     const titleIds = this.query.getValue().ids;
-    const contract: Partial<Contract> = { titleIds };
+    const contract: Partial<Contract> = { titleIds, type: ContractType.sale };
     const version: Partial<ContractVersion> = { titles: {} };
     for (const movieId of titleIds) {
       (version.titles[movieId] as Partial<ContractTitleDetail>) = {
@@ -53,6 +53,7 @@ export class MarketplaceSelectionComponent implements OnInit {
       };
     }
     const contractId = await this.service.create(contract, version);
+    this.store.reset();
     this.router.navigate(['c/o/marketplace/contract', contractId, 'mandate']);
   }
 
