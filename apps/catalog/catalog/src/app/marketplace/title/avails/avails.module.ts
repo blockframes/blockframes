@@ -7,7 +7,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MarketplaceMovieAvailsComponent } from './avails.component';
 import { AvailsFilterModule } from '@blockframes/catalog/components/avails-filter/avails-filter.module';
 import { MapModule } from '@blockframes/ui/map';
-import { ChipsAutocompleteModule } from '@blockframes/ui/form/chips-autocomplete/chips-autocomplete.module';
+import { RegionChipsAutocompleteModule } from '@blockframes/ui/form/region-chips-autocomplete/region-chips-autocomplete.module';
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
 import { OverlayWidgetModule } from '@blockframes/ui/overlay-widget/overlay-widget.module';
 
@@ -27,7 +27,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     FlexLayoutModule,
     ReactiveFormsModule,
     MapModule,
-    ChipsAutocompleteModule,
+    RegionChipsAutocompleteModule,
     TranslateSlugModule,
     OverlayWidgetModule,
 
