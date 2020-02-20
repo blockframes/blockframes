@@ -8,7 +8,9 @@ import {
   Directive,
   TemplateRef,
   ContentChildren,
-  QueryList
+  QueryList,
+  EventEmitter,
+  Output,
 } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { MatTableDataSource } from '@angular/material/table';
@@ -70,6 +72,8 @@ export class TableFilterComponent implements OnInit, AfterViewInit {
     this.dataSource.sortingDataAccessor = sortingDataAccessor;
     this.dataSource.sort = this.sort;
   }
+
+  @Output() rowClick = new EventEmitter();
 
   // Column & rows
   displayedColumns$: Observable<string[]>;

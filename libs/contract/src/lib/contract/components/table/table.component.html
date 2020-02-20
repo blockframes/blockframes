@@ -1,7 +1,8 @@
-<bf-table-filter [source]="sources" [columns]="columns" [initialColumns]="initialColumns" showFilter showPaginator>
+<bf-table-filter [source]="sources" [columns]="columns" [initialColumns]="initialColumns" showFilter showPaginator
+  (rowClicked)="goToSale(contract)">
   <!-- buyerName -->
   <ng-template colRef="buyerName" let-name>
-    <b>{{ name }}</b>
+    <b>{{ name || '-' }}</b>
   </ng-template>
 
   <!-- territories -->

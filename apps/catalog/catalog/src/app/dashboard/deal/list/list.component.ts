@@ -111,15 +111,23 @@ export class DealListComponent implements OnInit, OnDestroy {
     this.sub.unsubscribe();
   }
 
+  /** Create a sale and redirect to tunnel */
+  async createSale() {
+    const contractId = await this.service.create({ type: ContractType.sale });
+    this.router.navigate(['../tunnel/contract', contractId, 'sale'], { relativeTo: this.route })
+  }
+
+  /**
+   * Create a mandate if organization doesn't have one yet
+   * @note This method is not implemented yet because Mandate page doesn't exist yet
+   */
   async createMandate() {
     const orgId = this.orgQuery.getActiveId();
     const mandate = await this.service.getMandate(orgId);
     if (mandate) {
       this.router.navigate([mandate.id], { relativeTo: this.route })
     } else {
-      const contract = createContract({ type: ContractType.mandate });
-      const version = createVersionMandate();
-      const contractId = await this.service.create(contract, version);
+      const contractId = await this.service.create({ type: ContractType.mandate });
       this.router.navigate(['../tunnel/contract', contractId, 'mandate'], { relativeTo: this.route })
     }
   }
