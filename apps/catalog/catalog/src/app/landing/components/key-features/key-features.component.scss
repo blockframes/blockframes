@@ -2,7 +2,10 @@
 
 :host {
   display: block;
-  background-color: white;
+}
+
+mat-card#background-card {
+  border: none;
 }
 
 article {
