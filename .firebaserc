@@ -20,5 +20,20 @@
     "victor": "blockframes-victor",
     "clelia": "blockframes-clelia",
     "dajung": "blockframes-dajung"
+  },
+  "targets": {
+    "blockframes": {
+      "hosting": {
+        "next": [
+          "blockframes-next"
+        ],
+        "current": [
+          "blockframes"
+        ],
+        "maintenance": [
+          "blockframes-maintenance"
+        ]
+      }
+    }
   }
 }

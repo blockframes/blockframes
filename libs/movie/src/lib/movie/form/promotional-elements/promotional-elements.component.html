@@ -53,18 +53,22 @@
           <input formControlName="media" type="url" matInput placeholder="https://" />
           <mat-error *ngIf="element.get('media').hasError('pattern')"> Invalid url. </mat-error>
         </mat-form-field>
+        <!-- I (francois) removed this because I think it's not used (January 2020). Contact me if it's used
         <button mat-icon-button color="primary" (click)="promotionalElements.addPromotionalElement()">
           <mat-icon>add_circle</mat-icon>
         </button>
         <button mat-icon-button color="primary" (click)="promotionalElements.removePromotionalElement(i)">
           <mat-icon>delete_circle</mat-icon>
         </button>
+        -->
       </div>
     </ng-container>
   </div>
-  <ng-container>	
-    <button mat-icon-button color="primary" (click)="promotionalElements.addPromotionalElement()">	
-      <mat-icon>add_circle</mat-icon>	
-    </button>	
-  </ng-container>
+  <!--
+    <ng-container>	
+      <button mat-icon-button color="primary" (click)="promotionalElements.addPromotionalElement()">	
+        <mat-icon>add_circle</mat-icon>	
+      </button>	
+    </ng-container>
+  -->
 </form>

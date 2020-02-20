@@ -63,24 +63,19 @@ const steps: TunnelStep[] = [{
   selector: 'catalog-movie-tunnel',
   templateUrl: './movie-tunnel.component.html',
   styleUrls: ['./movie-tunnel.component.scss'],
-  providers: [MovieForm],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MovieTunnelComponent implements OnInit, TunnelRoot {
+export class MovieTunnelComponent implements TunnelRoot {
   steps = steps;
+  // Have to be initialized in the constructor as children page use it in the constructor too
+  public form = new MovieForm(this.query.getActive());
 
   constructor(
-    @Host() private form: MovieForm,
     private service: MovieService,
     private query: MovieQuery,
     private snackBar: MatSnackBar,
     private dialog: MatDialog
   ) { }
-
-  async ngOnInit() {
-    const movie = this.query.getActive();
-    this.form.patchAllValue(movie);
-  }
 
   // Should save movie
   public async save() {
