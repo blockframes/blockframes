@@ -1,4 +1,6 @@
-<span class="mat-body">Original Language(s)</span>
+<h6 class="mat-body" *ngIf="originalLanguages.controls.length > 1">
+  Original Language{ originalLanguages.controls.length, plural, =0 {} =1 {} other {s}}
+</h6>
 <ng-container *ngFor="let control of originalLanguages.controls; let i = index">
   <ng-container *ngIf="control.value">
     <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="20px">
@@ -26,8 +28,10 @@
   </ng-container>
 </ng-container>
 
-<!-- Additional Languages -->
-<span class="mat-body">Additional Languages</span>
+<!-- Available Versions -->
+<h6 class="mat-body">
+  Additional Language{ versionInfoCtrl.controls.length, plural, =0 {} =1 {} other {s}}
+</h6>
 
 <ng-container *ngFor="let control of versionInfoCtrl.controls; let i = index">
   <div fxLayout="column">

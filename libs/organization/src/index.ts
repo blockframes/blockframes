@@ -7,6 +7,7 @@ export * from './lib/guard/active-dao.guard';
 // Organization Components Modules
 export * from './lib/components/organization-widget/organization-widget.module';
 export * from './lib/components/organization-search/organization-search.module';
+export * from './lib/components/organization-autocomplete/organization-autocomplete.module';
 
 // Organization State
 export * from './lib/+state/organization.model';

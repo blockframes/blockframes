@@ -51,10 +51,11 @@ export function getContractInitialCreationDate(contract: Contract): Date {
 /**
  * Returns the last version of a contract.
  * @param contract
+ * @todo(#1887) Don't use _meta count
  */
 export function getContractLastVersion(contract: Contract): ContractVersion {
-  const { count }: VersionMeta = contract.versions.find(v => v.id === '_meta')
-  const index = contract.versions.map(v => v.id).indexOf(count.toString())
+  const { count }: VersionMeta = contract.versions.find(v => v.id === '_meta');
+  const index = contract.versions.map(v => v.id).indexOf(count.toString());
   return contract.versions[index];
 }
 

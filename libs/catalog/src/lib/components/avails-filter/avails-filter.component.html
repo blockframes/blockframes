@@ -9,8 +9,8 @@
     <ng-container formGroupName="terms">
       <mat-form-field appearance="outline">
         <mat-label>Start Date</mat-label>
-        <input matInput formControlName="from" [matDatepicker]="pickerAvailableFrom" placeholder="Start Date" />
-        <mat-error *ngIf="availsForm.get('terms').get('from').hasError('min')">
+        <input matInput formControlName="start" [matDatepicker]="pickerAvailableFrom" placeholder="Start Date" required/>
+        <mat-error *ngIf="availsForm.get('terms').get('start').hasError('min')">
           You only can choose the current year and above.
         </mat-error>
         <mat-datepicker-toggle test-id="datepicker-from" matSuffix [for]="pickerAvailableFrom">
@@ -19,19 +19,19 @@
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>End Date</mat-label>
-        <input matInput formControlName="to" [matDatepicker]="pickerAvailableTo" placeholder="End Date" />
+        <input matInput formControlName="end" [matDatepicker]="pickerAvailableTo" placeholder="End Date" required/>
         <mat-datepicker-toggle test-id="datepicker-to" matSuffix [for]="pickerAvailableTo">
         </mat-datepicker-toggle>
         <mat-datepicker #pickerAvailableTo startView="multi-year" startAt="2020"></mat-datepicker>
       </mat-form-field>
     </ng-container>
     <mat-error *ngIf="availsForm.get('terms').hasError('invalidRange')">
-      The value <i>To</i> can't be smaller than the value <i>From</i>!
+      The value <i>End</i> can't be smaller than the value <i>Start</i>!
     </mat-error>
   </mat-expansion-panel>
 
   <!-- Territories -->
-  <mat-expansion-panel *ngIf="territory">
+  <mat-expansion-panel *ngIf="territoryControl">
     <mat-expansion-panel-header>
       <span class="mat-body-1" test-id="territories-panel">Territory</span>
     </mat-expansion-panel-header>
@@ -76,18 +76,4 @@
       <span>Yes</span>
     </article>
   </mat-expansion-panel>
-  <article fxLayoutAlign="center center" class="filter-buttons">
-    <button
-      *ngIf="!availsForm.value.isActive"
-      mat-stroked-button color="primary"
-      (click)="applyAvailsFilter()">
-      Apply Avails Filter
-    </button>
-    <button
-      *ngIf="availsForm.value.isActive"
-      mat-stroked-button color="accent"
-      (click)="deactivateAvailsFilter()">
-      Deactivate Avails Filter
-    </button>
-  </article>
 </ng-container>

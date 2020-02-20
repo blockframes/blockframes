@@ -1,10 +1,11 @@
-import { Component, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Output, EventEmitter, ChangeDetectionStrategy, OnInit, ChangeDetectorRef } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { PreviewSheetComponent } from './../preview-sheet/preview-sheet.component';
 import { SheetTab, importSpreadsheet } from '@blockframes/utils/spreadsheet';
 import { FormControl } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-
+import { AuthService } from '@blockframes/auth';
+import { Intercom } from 'ng-intercom';
 
 export interface SpreadsheetImportEvent {
   sheet: SheetTab,
@@ -17,17 +18,26 @@ export interface SpreadsheetImportEvent {
   styleUrls: ['./import-spreadsheet.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ImportSpreadsheetComponent {
+export class ImportSpreadsheetComponent implements OnInit {
 
   @Output() importEvent = new EventEmitter<{ sheet: SheetTab, fileType: string }>();
   public sheets: SheetTab[] = [];
   public fileType = new FormControl();
+  public isUserBlockframesAdmin = false;
 
   constructor(
     private dialog: MatDialog,
     private http: HttpClient,
+    private authService: AuthService,
+    private cdRef: ChangeDetectorRef,
+    private intercom: Intercom,
   ) {
     this.fileType.setValue('movies');
+  }
+
+  async ngOnInit() {
+    this.isUserBlockframesAdmin = await this.authService.isBlockframesAdmin();
+    this.cdRef.markForCheck();
   }
 
   importSpreadsheet(bytes: Uint8Array) {
@@ -55,6 +65,10 @@ export class ImportSpreadsheetComponent {
     this.sheets = [];
   }
 
+  public openIntercom(): void {
+    return this.intercom.show();
+  }
+
   downloadTemplate(templateType: string) {
     const fileName = `import-${templateType}-template.xlsx`;
     this.http.get(`/assets/templates/${fileName}`, { responseType: 'arraybuffer' })
@@ -69,6 +83,5 @@ export class ImportSpreadsheetComponent {
         element.dispatchEvent(event);
       });
   }
-
 
 }

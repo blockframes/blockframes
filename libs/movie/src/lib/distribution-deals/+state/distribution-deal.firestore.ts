@@ -1,7 +1,7 @@
 import { TerritoriesSlug, LanguagesSlug, MediasSlug } from '@blockframes/utils/static-model';
 import { MovieLanguageSpecification } from '@blockframes/movie/movie/+state/movie.firestore';
 import { TermsRaw } from '@blockframes/utils/common-interfaces/terms';
-import { firestore } from 'firebase';
+import { firestore } from 'firebase/app';
 
 type Timestamp = firestore.Timestamp;
 
@@ -19,24 +19,24 @@ export interface HoldbackRaw<D> {
 }
 
 export enum DistributionDealStatus {
- 
-  /** 
-   * @dev first status of a deal 
+
+  /**
+   * @dev first status of a deal
    * Starting from this status, the deal is visible by creator only
    */
   draft = 'Draft',
 
-    /** 
-   * @dev first status of a deal 
+    /**
+   * @dev first status of a deal
    * Starting from this status, the deal is visible by creator only
    */
   cart = 'In cart',
 
-  /** 
+  /**
    * @dev the deal have been sold
    */
   sold = 'Sold',
-  /** 
+  /**
    * @dev in this status, a contract should exists regarding this distribution deal.
    * When Contract status changes, this could chance too
    */

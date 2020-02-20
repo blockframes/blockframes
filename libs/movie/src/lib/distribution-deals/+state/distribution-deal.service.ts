@@ -2,7 +2,15 @@ import { Injectable } from '@angular/core';
 import objectHash from 'object-hash';
 import { CollectionService, CollectionConfig } from 'akita-ng-fire';
 import { DistributionDealState, DistributionDealStore } from './distribution-deal.store';
-import { DistributionDeal, getDealTerritories, createDistributionDealWithMovieId, DistributionDealWithMovieId, formatDistributionDeal } from './distribution-deal.model';
+import {
+  DistributionDeal,
+  getDealTerritories,
+  createDistributionDealWithMovieId,
+  DistributionDealWithMovieId,
+  formatDistributionDeal,
+  createDistributionDeal
+} from './distribution-deal.model';
+import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { createContractTitleDetail, ContractWithLastVersion } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractVersionService } from '@blockframes/contract/version/+state/contract-version.service';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
@@ -12,6 +20,9 @@ import { combineLatest } from 'rxjs';
 import { ContractVersion } from '@blockframes/contract/version/+state/contract-version.model';
 import { DistributionDealQuery } from './distribution-deal.query';
 import { Movie } from '@blockframes/movie/movie/+state';
+import { AvailsSearch } from '@blockframes/catalog/form/search.form';
+import { Model } from '@blockframes/utils/static-model/staticModels';
+
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies/:movieId/distributionDeals' })
@@ -20,7 +31,7 @@ export class DistributionDealService extends CollectionService<DistributionDealS
     private contractService: ContractService,
     private contractVersionService: ContractVersionService,
     private contractQuery: ContractQuery,
-    private dealQuery: DistributionDealQuery,
+    private query: DistributionDealQuery,
     store: DistributionDealStore
   ) {
     super(store);
@@ -49,6 +60,10 @@ export class DistributionDealService extends CollectionService<DistributionDealS
     if (!distributionDeal.id) {
       distributionDeal.id = objectHash(distributionDeal);
     }
+
+    // Cleaning before save
+    contract.doc = this.contractService.formatToFirestore(contract.doc);
+    contract.last = this.contractVersionService.formatToFirestore(contract.last);
 
     // If a contract does not have an id, we update contract and link it to this distrubution deal
     // If there is already a contract id, this means it have been created before
@@ -79,6 +94,17 @@ export class DistributionDealService extends CollectionService<DistributionDealS
     await this.add(distributionDeal, { params: { movieId } });
 
     return distributionDeal.id;
+  }
+
+  public createCartDeal(formValue: Partial<AvailsSearch>): DistributionDeal {
+    const dealToAdd = createDistributionDeal({
+      terms: formValue.terms,
+      territory: formValue.territories,
+      territoryExcluded: formValue.territoriesExcluded,
+      licenseType: formValue.medias,
+      exclusive: formValue.exclusivity
+    })
+    return dealToAdd;
   }
 
   /**
@@ -127,7 +153,7 @@ export class DistributionDealService extends CollectionService<DistributionDealS
   public getTerritoriesFromContract(contractVersion: ContractVersion): string[] {
     // Get all the deals from the contract titles.
     const deals = Object.values(contractVersion.titles).map(({ distributionDealIds }) =>
-      this.dealQuery.getEntity(distributionDealIds)
+      this.query.getEntity(distributionDealIds)
     );
     // Returns all deals eligible territories as an array of string.
     return deals.map(deal => deal ? getDealTerritories(deal) : []).flat();
@@ -140,5 +166,22 @@ export class DistributionDealService extends CollectionService<DistributionDealS
       .get().toPromise();
     const contracts = contractsSnap.docs.map(contract => contract.data())
     return movie.distributionDeals.filter(deal => deal.contractId === contracts[0].id)
+  }
+
+  /** Check if the formValue is valid to create a deal, throw an error for each case. */
+  public verifyDeal(formValue: Partial<AvailsSearch>, territories: Model['TERRITORIES']) {
+    if (!formValue.terms.start || !formValue.terms.end) {
+      throw new Error('Fill terms "Start Date" and "End Date" in order to create an Exploitation Right');
+    }
+    if (!formValue.territories.length) {
+      throw new Error('Select at least one available territory to create an Exploitation Right');
+    }
+    if (!formValue.medias.length) {
+      throw new Error('Select at least one available territory to create an Exploitation Right');
+    }
+    if (formValue.territories.some(territory => !territories.find(({ slug }) => slug === territory))) {
+      throw new Error('One or more selected territories are not available');
+    }
+    return true;
   }
 }

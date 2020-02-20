@@ -1,15 +1,26 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { ReactiveFormsModule } from '@angular/forms';
 
-import { ListComponent } from './list.component';
+import { DealListComponent } from './list.component';
+
+import { ContractListModule } from '@blockframes/contract/contract/list/contract-list.module';
+
+// Material
+import { MatTabsModule } from '@angular/material/tabs';
 
 
 @NgModule({
-  declarations: [ListComponent],
+  declarations: [DealListComponent],
   imports: [
     CommonModule,
-    RouterModule.forChild([{ path: '', component: ListComponent }])
+    ReactiveFormsModule,
+    ContractListModule,
+
+    // Material
+    MatTabsModule,
+    RouterModule.forChild([{ path: '', component: DealListComponent }])
   ]
 })
 export class DealListModule { }

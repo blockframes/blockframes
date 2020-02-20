@@ -11,44 +11,51 @@ import { Price } from '@blockframes/utils/common-interfaces/price';
 import { MovieQuery, getMovieTitleList } from '@blockframes/movie';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state/distribution-deal.service';
 
+const columns = {
+  buyerName: 'Buyer name',
+  territories: 'Territories',
+  creationDate: 'Date of creation',
+  moviesLenght: ' # Films',
+  titles: 'Titles',
+  price: 'Price',
+  paid: 'Paid',
+  status: 'Status'
+} as const;
+
+type ColumnsKeys = keyof typeof columns;
+
+const baseColumns : ColumnsKeys[] = [
+  'territories',
+  'creationDate',
+  'moviesLenght',
+  'titles',
+  'price',
+  'paid',
+  'status'
+];
+
 @Component({
-  selector: 'contract-list',
+  selector: '[source] contract-list',
   templateUrl: './contract-list.component.html',
   styleUrls: ['./contract-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContractListComponent implements OnInit, AfterViewInit {
+  public columns: Partial<typeof columns> = columns;
+  public initialColumns: ColumnsKeys[] = baseColumns;
+  public displayedColumns$: Observable<string[]>;
+  public dataSource: MatTableDataSource<Contract>;
+  public columnFilter = new FormControl([]);
+
+  // quick fix to remove buyer name in marketplace
+  // @todo(#1744) improve this quick fix when switching to bf-table
+  @Input() displayBuyer: boolean;
+
   @Input()
   set source(contracts: Contract[]) {
     this.dataSource = new MatTableDataSource(contracts);
     this.dataSource.sort = this.sort;
   }
-
-  public columns = {
-    buyerName: 'Buyer name',
-    territories: 'Territories',
-    dateReceived: 'Date received',
-    moviesLenght: ' # Films',
-    titles: 'Titles',
-    price: 'Price',
-    paid: 'Paid',
-    status: 'Status'
-  };
-
-  public initialColumns = [
-    'buyerName',
-    'territories',
-    'dateReceived',
-    'moviesLenght',
-    'titles',
-    'price',
-    'paid',
-    'status'
-  ];
-
-  public displayedColumns$: Observable<string[]>;
-  public dataSource: MatTableDataSource<Contract>;
-  public columnFilter = new FormControl([]);
 
   @ViewChild(MatSort, { static: false }) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;

@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
 
 @Component({
@@ -7,7 +7,7 @@ import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
   styleUrls: ['./main.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TunnelMainComponent implements OnInit {
+export class TunnelMainComponent {
 
   constructor(private form: MovieForm) { }
 
@@ -26,8 +26,4 @@ export class TunnelMainComponent implements OnInit {
   get festivalPrizes() {
     return this.form.get('festivalPrizes');
   }
-
-  ngOnInit() {
-  }
-
 }

@@ -7,14 +7,17 @@ import {
   Input,
   ChangeDetectionStrategy,
   Output,
-  EventEmitter
+  EventEmitter,
+  ChangeDetectorRef,
+  OnDestroy
 } from '@angular/core';
 import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { FormControl, FormArray } from '@angular/forms';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
+import { ISO3166TERRITORIES } from '@blockframes/utils/static-model/territories-ISO-3166';
 
 @Component({
   selector: '[form]chips-autocomplete',
@@ -22,7 +25,7 @@ import { startWith, map } from 'rxjs/operators';
   styleUrls: ['./chips-autocomplete.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ChipsAutocompleteComponent implements OnInit {
+export class ChipsAutocompleteComponent implements OnInit, OnDestroy {
   /** List of items displayed in the autocomplete */
   @Input() items: any[];
   /** Key of the item to get store */
@@ -44,12 +47,16 @@ export class ChipsAutocompleteComponent implements OnInit {
   public ctrl = new FormControl();
   public filteredItems: Observable<any[]>;
 
+  private sub = new Subscription();
+
   @ViewChild('inputEl', { static: true }) inputEl: ElementRef<HTMLInputElement>;
   @ViewChild('auto', { static: true }) matAutocomplete: MatAutocomplete;
 
-  constructor() {}
+  constructor(private cdr: ChangeDetectorRef) {}
 
   ngOnInit() {
+    this.sub = this.form.valueChanges.subscribe(_ => this.cdr.markForCheck());
+
     this.filteredItems = this.ctrl.valueChanges.pipe(
       startWith(''),
       map(value => (value ? this._filter(value) : this.items))
@@ -105,5 +112,9 @@ export class ChipsAutocompleteComponent implements OnInit {
   public remove(i: number) {
     this.form.removeAt(i);
     this.removed.emit(i);
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 }

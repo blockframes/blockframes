@@ -83,6 +83,16 @@ export class AuthService extends FireAuthService<AuthState> {
     return f({ email, orgName }).toPromise();
   }
 
+  /**
+   * Check if uid is exists in blockframesAdmin collection.
+   * If document exists, user is blockframeAdmin (like an ancient god).
+   * @param uid 
+   */
+  public async isBlockframesAdmin(uid: string = this.query.userId): Promise<boolean> {
+    const snap = await this.db.collection('blockframesAdmin').doc(uid).get().toPromise();
+    return snap.exists;
+  }
+
   // TODO THIS IS A QUICK FIX OF MOVIE FINANCING RANK MADE FOR TORONTO, THINK OF A BETTER WAY AFTERWARD
   //---------------------------
   //   MOVIE FINANCING RANK

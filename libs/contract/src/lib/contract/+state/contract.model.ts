@@ -1,5 +1,5 @@
 import { getCodeIfExists } from '@blockframes/utils/static-model/staticModels';
-import { createPrice, Price } from '@blockframes/utils/common-interfaces/price';
+import { createPrice, Price, CommissionBase } from '@blockframes/utils/common-interfaces/price';
 import {
   ContractDocumentWithDates,
   ContractStatus,
@@ -68,6 +68,15 @@ export function createContractVersion(params: Partial<ContractVersion> = {}): Co
     price: createPrice(params.price)
   };
 }
+
+/**
+ * @description create a contract version specific to mandate
+ * @param params 
+ */
+export function createVersionMandate(params: Partial<ContractVersion> = {}) {
+  return createContractVersion({ price: { commissionBase: CommissionBase.grossreceipts, amount: 0 }, ...params })
+}
+
 
 export function createPublicContract(params: Partial<PublicContract> = {}): PublicContract {
   return {
@@ -163,6 +172,9 @@ export function buildChainOfTitle() {
 export function cleanContract(contract: Contract) {
   const c = { ...contract };
   delete c.versions; // Remove local values
+  if (!c.signDate) {
+    delete c.signDate;
+  }
   return c;
 }
 
@@ -191,11 +203,13 @@ export function createContractFromFirestore(contract: any): Contract {
   const c = {
     ...contract,
     signDate: toDate(contract.signDate),
+    titleIds: [],
     parties: contract.parties
       ? contract.parties.map(partyDetails => formatPartyDetails(partyDetails))
       : []
   }
 
+  // @todo(#1887)
   if (contract.versions) {
     c.versions = contract.versions.map(version => createContractVersionFromFirestore(version));
   }
@@ -214,7 +228,12 @@ export function createContractFromFirestore(contract: any): Contract {
  * @param partyDetails
  */
 export function formatPartyDetails(partyDetails: any): ContractPartyDetail {
-  partyDetails.signDate = toDate(partyDetails.signDate);
+  if (partyDetails.signDate) {
+    partyDetails.signDate = toDate(partyDetails.signDate);
+  } else {
+    delete partyDetails.signDate;
+  }
+
   return partyDetails as ContractPartyDetail;
 }
 

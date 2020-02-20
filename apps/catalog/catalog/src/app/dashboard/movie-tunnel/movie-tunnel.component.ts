@@ -11,44 +11,30 @@ import { of, from } from 'rxjs';
 const steps: TunnelStep[] = [{
   title: 'Title Information',
   icon: 'document',
-  time: 40,
+  time: 15,
   routes: [{
     path: 'main',
-    label: 'Main Informations'
+    label: 'Main Information'
   }, {
     path: 'synopsis',
-    label: 'Synopsis'
+    label: 'Storyline Elements'
   }, {
     path: 'credits',
     label: 'Credits'
   }, {
     path: 'budget',
-    label: 'Budg., quota, critics',
-  }, {
-    path: 'technical-info',
-    label: 'Technical info.'
-  }, {
-    path: 'keywords',
-    label: 'Keywords'
+    label: 'Budget, Quotas, Critics',
   }]
 }, {
-  title: 'Licensed Rights',
-  icon: 'map_marker',
-  time: 30,
-  routes: [{
-    path: 'rights',
-    label: 'Marketplace Rights'
-  }, {
-    path: 'deals',
-    label: 'Ongoing Deals'
-  }]
-}, {
-  title: 'Uploaded Media',
+  title: 'Media',
   icon: 'import',
-  time: 30,
+  time: 10,
   routes: [{
+    path: 'technical-info',
+    label: 'Technical Info.'
+  }, {
     path: 'images',
-    label: 'Images'
+    label: 'Promotional Images'
   }, {
     path: 'files&links',
     label: 'Files & Links'
@@ -56,7 +42,7 @@ const steps: TunnelStep[] = [{
 }, {
   title: 'Legal Information',
   icon: 'certificate',
-  time: 10,
+  time: 5,
   routes: [{
     path: 'chain',
     label: 'Chain of Titles'
@@ -89,7 +75,7 @@ export class MovieTunnelComponent implements OnInit, TunnelRoot {
     private query: MovieQuery,
     private snackBar: MatSnackBar,
     private dialog: MatDialog
-  ) {}
+  ) { }
 
   async ngOnInit() {
     const movie = this.query.getActive();

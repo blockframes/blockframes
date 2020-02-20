@@ -67,7 +67,7 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     deliveryIds: [],
     _type: 'movies',
     documents: createMovieLegalDocuments(params.documents),
-    versionInfo: {languages:{}}, // TODO issue #1596
+    versionInfo: { languages: {} }, // TODO issue #1596
     movieReview: [],
     ...params,
     main: createMovieMain(params.main),
@@ -104,14 +104,15 @@ export function createMovieMain(params: Partial<MovieMain> = {}): MovieMain {
 }
 
 export function createMoviePromotionalElements(
-  params: Partial<MoviePromotionalElements> = {}
+  params: Partial<MoviePromotionalElements> = {},
+  initDefault: boolean = true
 ): MoviePromotionalElements {
-  return {
+  const elements = {
     trailer: [],
     still_photo: [],
     ...params,
     // We want a default poster as we look for the first one
-    poster: params.poster.length ? params.poster : [createPromotionalElement()],
+    poster: (params.poster && params.poster.length) ? params.poster : [createPromotionalElement()],
     banner: createPromotionalElement(params.banner),
     presentation_deck: createPromotionalElement(params.presentation_deck),
     scenario: createPromotionalElement(params.scenario),
@@ -120,6 +121,13 @@ export function createMoviePromotionalElements(
     trailer_link: createPromotionalElement(params.trailer_link),
     teaser_link: createPromotionalElement(params.teaser_link),
   };
+
+  // We want a default poster as we look for the first one
+  if (initDefault && (!params.poster || params.poster.length === 0)) {
+    elements.poster.push(createPromotionalElement());
+  }
+
+  return elements;
 }
 
 export function createMoviePromotionalDescription(
@@ -238,10 +246,10 @@ export function createMovieSalesAgentDeal(
 
 export function createBoxOffice(params: Partial<BoxOffice> = {}): BoxOffice {
   return {
-      unit: UnitBox.boxoffice_dollar,
-      value: 0,
-      territory: null,
-      ...params,
+    unit: UnitBox.boxoffice_dollar,
+    value: 0,
+    territory: null,
+    ...params,
   }
 }
 

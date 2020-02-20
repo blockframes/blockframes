@@ -18,4 +18,8 @@ export class TunnelSynopsisComponent {
   get keyAssets() {
     return this.form.get('promotionalDescription').get('keyAssets');
   }
+
+  get keywords() {
+    return this.form.get('promotionalDescription').get('keywords');
+  }
 }

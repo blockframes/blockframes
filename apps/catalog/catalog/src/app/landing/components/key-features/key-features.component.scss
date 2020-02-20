@@ -1,15 +1,28 @@
+@import 'mixins';
+
 :host {
   display: block;
-  margin-left: 20%;
-  margin-right: 20%;
+  background-color: white;
+}
+
+article {
+  display: block;
+  width: 60%;
+  margin: auto;
   padding: 30px 0;
+}
 
+.feature-description {
+  width: 45%;
+}
+
+img {
+  width: 300px;
+  margin: 20px;
+}
+
+@include tablet {
   div {
-    width: 45%;
-  }
-
-  img {
-    width: 300px;
-    margin: 20px;
+    width: 100%;
   }
 }

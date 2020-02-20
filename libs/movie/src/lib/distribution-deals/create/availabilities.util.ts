@@ -1,8 +1,10 @@
 import { MovieSalesAgentDeal } from '../../movie/+state/movie.model';
 import { DistributionDeal, getDealTerritories } from '../+state/distribution-deal.model';
 import { DateRange } from '@blockframes/utils/common-interfaces/range';
-import { CatalogSearch, AvailsSearch } from '@blockframes/catalog/form/search.form';
+import { AvailsSearch } from '@blockframes/catalog/form/search.form';
 import { toDate } from '@blockframes/utils/helpers';
+import { MediasSlug } from '@blockframes/utils/static-model';
+import { Terms } from '@blockframes/utils/common-interfaces/terms';
 
 /**
  * These function should be used in connection. For instance, we look for movie distribution deals in
@@ -50,7 +52,7 @@ export function exclusiveDistributionDeals(distributionDeals: DistributionDeal[]
  * @param distributionDeals Array of the movie distribution deals.
  * Note don't put the exclusive deals array in here
  */
-export function getDealsInDateRange(formDates: DateRange, distributionDeals: DistributionDeal[]): DistributionDeal[] {
+export function getDealsInDateRange(formDates: Terms, distributionDeals: DistributionDeal[]): DistributionDeal[] {
   if (!distributionDeals) {
     return [];
   }
@@ -67,8 +69,8 @@ export function getDealsInDateRange(formDates: DateRange, distributionDeals: Dis
      * at this point.
      */
     if (
-      formDates.from.getTime() >= dealFrom.getTime() &&
-      formDates.from.getTime() <= dealTo.getTime()
+      formDates.start.getTime() >= dealFrom.getTime() &&
+      formDates.start.getTime() <= dealTo.getTime()
     ) {
       intersectedDateRangeDeals.push(deal);
     }
@@ -77,8 +79,8 @@ export function getDealsInDateRange(formDates: DateRange, distributionDeals: Dis
      * and 'to' date is younger than sales agent 'from' date, it is in range
      */
     if (
-      formDates.to.getTime() <= dealTo.getTime() &&
-      formDates.to.getTime() >= dealFrom.getTime()
+      formDates.end.getTime() <= dealTo.getTime() &&
+      formDates.end.getTime() >= dealFrom.getTime()
     ) {
       intersectedDateRangeDeals.push(deal);
     }
@@ -88,8 +90,8 @@ export function getDealsInDateRange(formDates: DateRange, distributionDeals: Dis
      * 'to' date if younger than sales agent 'to' date , it is in range
      */
     if (
-      formDates.from.getTime() <= dealFrom.getTime() &&
-      formDates.to.getTime() >= dealTo.getTime()
+      formDates.start.getTime() <= dealFrom.getTime() &&
+      formDates.end.getTime() >= dealTo.getTime()
     ) {
       intersectedDateRangeDeals.push(deal);
     }
@@ -149,6 +151,34 @@ export function getFilterMatchingDeals(
   }
   return dealsWithTerritoriesAndMediasInCommon;
 }
+
+/**
+ * @description We want to check if user search and deals have medias in common
+ * @param medias The medias from the filter defined by the buyer
+ * @param deals The array of deals from a movie in the previously specified date range
+ */
+export function getDealsWithMedias(medias: MediasSlug[], deals: DistributionDeal[]): DistributionDeal[] {
+  const dealsWithMediasInCommon: DistributionDeal[] = [];
+
+  for (const deal of deals) {
+
+    let mediasInCommon = false;
+    mediaLoop : for (const media of medias) {
+      for (const licenseType of deal.licenseType) {
+        if (licenseType === media) {
+          mediasInCommon = true;
+          break mediaLoop;
+        }
+      }
+    }
+    if (mediasInCommon) {
+      dealsWithMediasInCommon.push(deal);
+    }
+  }
+
+  return dealsWithMediasInCommon;
+
+  }
 
 /**
  * Returns deals with same exclusivity value as the one passed as an argument.
