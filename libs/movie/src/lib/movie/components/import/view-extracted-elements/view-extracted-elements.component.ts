@@ -804,7 +804,7 @@ export class ViewExtractedElementsComponent implements OnInit {
                 break;
             }
 
-            movie.budget.estimatedBudget = createRange({ from: from * 1000000, to: to * 1000000 });
+            movie.budget.estimatedBudget = createRange({ from: from * 1000000, to: to * 1000000, label: spreadSheetRow[SpreadSheetMovie.budget] });
           } else {
             movie.budget.totalBudget = spreadSheetRow[SpreadSheetMovie.budget];
           }
