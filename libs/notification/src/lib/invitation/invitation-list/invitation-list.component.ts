@@ -44,7 +44,7 @@ export class InvitationListComponent implements OnInit, OnDestroy {
   }
 
   public get placeholderUrl() {
-    return `/assets/images/${this.theme}/Avatar_250.png`;
+    return `/assets/images/${this.theme}/Avatar_40.png`;
   }
 
   ngOnDestroy() {
