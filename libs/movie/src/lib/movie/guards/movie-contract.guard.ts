@@ -4,6 +4,7 @@ import { MovieState, MovieService, MovieStore, Movie } from '../+state';
 import { ContractQuery } from '@blockframes/contract/contract/+state/contract.query';
 import { tap, switchMap } from 'rxjs/operators';
 import { OrganizationQuery } from '@blockframes/organization';
+import { of } from 'rxjs';
 
 /** Query movies from the contract with distributions deals from the last version. */
 const movieListContractQuery = (contractId: string, movieIds: string[]): Query<Movie[]> => ({
@@ -39,8 +40,7 @@ export class MovieContractGuard extends CollectionGuard<MovieState> {
         // Filter movieIds before the query to relieve it.
         const organizationMovieIds = this.organizationQuery.getActive().movieIds;
         const movieIds = contract.titleIds.filter(titleId => organizationMovieIds.includes(titleId));
-
-        return awaitSyncQuery.call(this.service, movieListContractQuery(contract.id, movieIds))
+        return movieIds.length ? awaitSyncQuery.call(this.service, movieListContractQuery(contract.id, movieIds)) : of([]);
       })
     );
   }

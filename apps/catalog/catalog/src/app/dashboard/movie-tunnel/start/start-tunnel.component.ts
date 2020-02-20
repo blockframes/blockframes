@@ -6,13 +6,16 @@ import { TunnelService } from '@blockframes/ui/tunnel';
 
 const cardContents = [
   {
-    title: 'Title Information'
+    title: 'Title Information',
+    img: 'title_infos.svg'
   },
   {
-    title: 'Media'
+    title: 'Media',
+    img: 'media.svg'
   },
   {
-    title: 'Legal Information'
+    title: 'Legal Information',
+    img: 'legal_information.svg'
   },
 ];
 
@@ -37,7 +40,7 @@ export class StartTunnelComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.routeBeforeTunnel = this.tunnelService.previousUrl;
+    this.routeBeforeTunnel = this.tunnelService.previousUrl || '../../';
   }
 
   async begin() {

@@ -33,4 +33,4 @@ export class BannerComponent {
     class: '.movie-banner-actions'
   }
 })
-export class BannerActionsDirective {}
+export class BannerActionsDirective { }

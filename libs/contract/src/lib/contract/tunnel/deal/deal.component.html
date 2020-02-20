@@ -10,11 +10,14 @@
     </div>
     <h2>Exploitation Rights</h2>
     <!-- All Deals -->
-    <ng-container *ngFor="let dealControl of dealForm.controls; let dealIndex = index;">
-      <ng-template [ngTemplateOutlet]="deal"
+    <!-- We need an if statement here otherwise error will shown that controls = undefined -->
+    <ng-container *ngIf="dealForm">
+      <ng-container *ngFor="let dealControl of dealForm.controls; let dealIndex = index;">
+        <ng-template [ngTemplateOutlet]="deal"
         [ngTemplateOutletContext]="{$implicit: { control: dealControl, index: dealIndex }}">
       </ng-template>
     </ng-container>
+  </ng-container>
     <button mat-flat-button (click)="addDeal()">
       <mat-icon svgIcon="world"></mat-icon>
       <span>Add Exploitation Rights</span>

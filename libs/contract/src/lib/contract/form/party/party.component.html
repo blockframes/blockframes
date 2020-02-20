@@ -1,6 +1,6 @@
 <ng-container *ngFor="let control of form.controls; let i = index; let isLast = last; let isFirst = first;"
     [formGroup]="control">
-    <form formGroupName="party">
+    <div formGroupName="party">
         <div fxLayout="row" fxLayoutAlign="center start" fxLayoutGap="20px">
             <organization-autocomplete [control]="displayNameControl(control)" label="Licensee Name"
                 (emitSelect)="patchOrgId($event, control)"></organization-autocomplete>
@@ -27,7 +27,7 @@
                 <span>Remove role</span>
             </div>
         </div>
-    </form>
+    </div>
 </ng-container>
 <div fxLayout="row" fxLayoutAlign="center center">
     <button (click)="addRole()" mat-mini-fab color="primary">

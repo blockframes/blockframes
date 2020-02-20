@@ -8,9 +8,9 @@
 </div>
 <ng-container *ngFor="let control of form.controls | keyvalue">
     <div fxLayout="column">
-        <span (click)="log(control)">{{ control.key | translateSlug: 'LANGUAGES'}}</span>
+        <span>{{ control.key | translateSlug: 'LANGUAGES'}}</span>
         <!-- Div is for grouping because of space-between -->
-        <div fxLayout="row">
+        <div fxLayout="row" fxLayoutAlign="space-between baseline">
             <span>
                 <mat-checkbox [formControl]="control.value.controls.dubbed" color="primary">
                     Dubbed

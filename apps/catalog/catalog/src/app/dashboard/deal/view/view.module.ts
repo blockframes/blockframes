@@ -13,6 +13,7 @@ import { RightListModule } from '@blockframes/movie/distribution-deals/component
 
 // Guard
 import { MovieContractGuard } from '@blockframes/movie/movie/guards/movie-contract.guard';
+import { CatalogContractGuard } from '@blockframes/apps/catalog/guards/catalog-contract.guard';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -46,7 +47,7 @@ import { MatChipsModule } from '@angular/material/chips';
     RouterModule.forChild([
       {
         path: '',
-        canActivate: [MovieContractGuard],
+        canActivate: [MovieContractGuard, CatalogContractGuard],
         canDeactivate: [MovieContractGuard],
         component: DealViewComponent
       }
