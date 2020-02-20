@@ -129,19 +129,21 @@ export class ContractTunnelComponent implements OnInit {
   }
 
   /** Remove a title to this contract */
-  removeTitle(movieId: string) {
+  removeTitle(movieId: string, isExploitRight?: boolean) {
     this.contractForm.get('versions').last().get('titles').removeControl(movieId);
     const deals = this.dealForms.get(movieId).value;
     // start from the end to remove to avoid shift effects
     for (let i = deals.length - 1; i >= 0; i--) {
       this.removeDeal(movieId, i);
     }
-    this.dealForms.removeControl(movieId);
-    const dealIds = Object.keys(this.dealForms.controls)
-    if (!dealIds.length) {
-      this.router.navigate(['details'], { relativeTo: this.route })
-    } else {
-      this.router.navigate([dealIds[dealIds.length - 1]], { relativeTo: this.route })
+    if (isExploitRight) {
+      this.dealForms.removeControl(movieId);
+      const dealIds = Object.keys(this.dealForms.controls)
+      if (!dealIds.length) {
+        this.router.navigate(['details'], { relativeTo: this.route })
+      } else {
+        this.router.navigate([dealIds[dealIds.length - 1]], { relativeTo: this.route })
+      }
     }
   }
 

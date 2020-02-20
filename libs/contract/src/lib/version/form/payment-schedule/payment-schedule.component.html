@@ -4,7 +4,7 @@
     PAYMENTS UPON EVENT
   </mat-radio-button>
   <ng-container *ngFor="let control of paymentSchedule.controls; let isLast = last; let isFirst = first let i = index">
-    <form [formGroup]="control" *ngIf="!isLast">
+    <div [formGroup]="control" *ngIf="!isLast">
       <div fxLayout="row" fxLayoutAlign="center baseline" fxLayoutGap="20px">
         <mat-form-field appearance="outline">
           <mat-label>Percentage</mat-label>
@@ -30,7 +30,7 @@
           </button>
         </ng-template>
       </div>
-    </form>
+    </div>
   </ng-container>
   <mat-divider></mat-divider>
   <!-- Periodic Payments -->
@@ -39,14 +39,14 @@
   </mat-radio-button>
   <!-- We only need the first index here, cause the user set the amount of iteration -->
   <ng-container *ngFor="let control of paymentSchedule.controls; let isLast = last; let i = index">
-    <form [formGroup]="control" *ngIf="isLast">
+    <div [formGroup]="control" *ngIf="isLast">
       <mat-form-field appearance="outline">
         <mat-label>Percentage</mat-label>
         <input matInput type="number" formControlName="percentage" max="100" min="1" #periodicInputs>
         <mat-icon matSuffix svgIcon="percent"></mat-icon>
       </mat-form-field>
       <span class="caption">Every</span>
-      <form formGroupName="date" fxLayout="column" fxLayoutAlign="baseline center" fxLayoutGap="20px">
+      <div formGroupName="date" fxLayout="column" fxLayoutAlign="baseline center" fxLayoutGap="20px">
         <div fxLayout="row" fxLayoutGap="20px">
           <mat-form-field appearance="outline" formGroupName="floatingDuration">
             <mat-label>Duration</mat-label>
@@ -89,8 +89,8 @@
             </mat-form-field>
           </div>
         </div>
-      </form>
-    </form>
+      </div>
+    </div>
   </ng-container>
   <mat-divider></mat-divider>
   <!-- Specific payment schedule -->
@@ -104,8 +104,8 @@
   <h3>PAYMENT TERM</h3>
   <span class="caption">Please indicate the payment term you need regarding invoices.</span>
   <!-- We are using the first index cause it has nothing in common with event schedule -->
-  <form *ngFor="let control of paymentSchedule.controls; let isFirst = first" [formGroup]="control">
-    <form formGroupName="date" *ngIf="isFirst">
+  <div *ngFor="let control of paymentSchedule.controls; let isFirst = first" [formGroup]="control">
+    <div formGroupName="date" *ngIf="isFirst">
       <div fxLayout="row" fxLayoutGap="20px">
         <mat-form-field appearance="outline" formGroupName="floatingDuration">
           <mat-label>Duration</mat-label>
@@ -120,8 +120,8 @@
           </mat-select>
         </mat-form-field>
       </div>
-    </form>
-  </form>
+    </div>
+  </div>
 </mat-radio-group>
 <div fxLayout="row" fxLayoutAlign="center start">
   <ng-container *ngIf="paymentSchedule.controls.length; else add">

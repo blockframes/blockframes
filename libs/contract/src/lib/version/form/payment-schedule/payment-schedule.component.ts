@@ -174,6 +174,7 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
   public addPayment() {
     this.paymentSchedule.add()
     this.updateFormExceptEventForm();
+    this.activateFirstDuration();
   }
 
   /**
