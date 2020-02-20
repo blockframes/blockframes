@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input, ViewChild } from '@angular/core';
-import { DistributionDeal, getDealTerritories } from '@blockframes/movie/distribution-deals/+state';
+import { DistributionDeal, getDealTerritories, formatDistributionDeal } from '@blockframes/movie/distribution-deals/+state';
 import { MatTableDataSource } from '@angular/material/table';
 import { Observable } from 'rxjs';
 import { FormControl } from '@angular/forms';
@@ -15,7 +15,8 @@ import { startWith } from 'rxjs/operators';
 export class RightListComponent implements OnInit {
   @Input()
   set source(deals: DistributionDeal[]) {
-    this.dataSource = new MatTableDataSource(deals);
+    const formattedDeals = deals.map(deal => formatDistributionDeal(deal));
+    this.dataSource = new MatTableDataSource(formattedDeals);
     this.dataSource.sort = this.sort;
   }
 
