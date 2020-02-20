@@ -75,7 +75,7 @@ export class MovieService extends CollectionService<MovieState> {
   /** Add a partial or a full movie to the database. */
   public async addMovie(original: string, movie?: Movie): Promise<Movie> {
     const id = this.db.createId();
-    const userId = this.authQuery.userId;
+    const userId = movie._meta && movie._meta.createdBy ? movie._meta.createdBy : this.authQuery.userId;
 
     if (!movie) {
       // create empty movie

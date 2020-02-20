@@ -169,7 +169,7 @@ export interface MovieBudget {
   boxOffice?: BoxOffice[],
 }
 
-export const enum MovieLanguageTypes {
+export enum MovieLanguageTypes {
   original = 'original',
   dubbed = 'dubbed',
   subtitle = 'subtitle',
@@ -252,7 +252,7 @@ export interface MovieReview {
   revueLink?: string,
 }
 
-interface DocumentMeta {
+export interface DocumentMeta {
   createdBy: string;
   updatedBy?: string,
   deletedBy?: string

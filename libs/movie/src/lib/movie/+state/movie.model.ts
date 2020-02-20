@@ -27,7 +27,8 @@ import {
   MovieStakeholders,
   StoreStatus,
   MovieAnalytics,
-  MovieLegalDocuments
+  MovieLegalDocuments,
+  DocumentMeta
 } from './movie.firestore';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 import { LanguagesSlug } from '@blockframes/utils/static-model';
@@ -344,6 +345,13 @@ export function createMovieLegalDocuments(
   return {
     chainOfTitles: [],
     ...params
+  }
+}
+
+export function createDocumentMeta(meta: Partial<DocumentMeta> = {}): DocumentMeta {
+  return {
+    createdBy: '',
+    ...meta
   }
 }
 
