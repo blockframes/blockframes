@@ -6,7 +6,7 @@
 import { db } from '../internals/firebase';
 import { OrganizationDocument, StakeholderDocument } from './types';
 import { PermissionsDocument, UserRole } from '@blockframes/permissions/types';
-import { ContractDocument } from '@blockframes/contract/contract/+state/contract.firestore';
+import { ContractDocument, ContractVersionDocument } from '@blockframes/contract/contract/+state/contract.firestore';
 
 export function getCollection<T>(path: string): Promise<T[]> {
   return db
@@ -78,4 +78,9 @@ export async function getAdminIds(organizationId: string): Promise<string[]> {
     );
   });
   return adminIds;
+}
+
+export function versionExists(contractId: string, versionId: string) {
+  const version = getDocument<ContractVersionDocument>(`contracts/${contractId}/versions/${versionId}`);
+  return !!version
 }
