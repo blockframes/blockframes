@@ -112,8 +112,7 @@ export function createMoviePromotionalElements(
     trailer: [],
     still_photo: [],
     ...params,
-    // We want a default poster as we look for the first one
-    poster: (params.poster && params.poster.length) ? params.poster : [createPromotionalElement()],
+    poster: params.poster && params.poster.length ? params.poster : [],
     banner: createPromotionalElement(params.banner),
     presentation_deck: createPromotionalElement(params.presentation_deck),
     scenario: createPromotionalElement(params.scenario),
