@@ -20,7 +20,7 @@
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
     <ng-template [ngIf]="link" [ngIfElse]="withoutLink">
-      <tr mat-row *matRowDef="let row; columns: displayedColumns" [routerLink]="[link, row.id]" style="cursor: pointer;"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns" [routerLink]="[link, row.id]"></tr>
     </ng-template>
     <ng-template #withoutLink >
       <tr mat-row *matRowDef="let row; columns: displayedColumns" (click)="rowClick.emit(row)"></tr>

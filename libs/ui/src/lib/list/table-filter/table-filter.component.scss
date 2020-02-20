@@ -10,6 +10,10 @@ table {
   width: 100%;
 }
 
+td {
+  cursor: pointer;
+}
+
 .loader-container {
   padding-top: 30px;
   background-color: white;
