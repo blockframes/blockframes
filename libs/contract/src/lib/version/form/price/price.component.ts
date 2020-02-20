@@ -1,3 +1,4 @@
+import { filter, map, tap } from 'rxjs/operators';
 // Blockframes
 import { ContractTunnelComponent } from '@blockframes/contract/contract/tunnel/contract-tunnel.component';
 import { ContractVersionForm } from '@blockframes/contract/version/form/version.form';
@@ -13,7 +14,7 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
 // RxJs & Algolia & etc
 import { Observable, BehaviorSubject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap, startWith, tap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { Index } from 'algoliasearch';
 import { MovieService } from '@blockframes/movie';
 
@@ -25,7 +26,7 @@ import { MovieService } from '@blockframes/movie';
 })
 export class PriceComponent implements OnInit {
   @Input() form: FormList<any, ContractVersionForm>;
-  public _hasMandate
+  public _hasMandate: boolean;
   @Input()
   get hasMandate() { return this._hasMandate; }
   set hasMandate(value: boolean) {
@@ -38,8 +39,6 @@ export class PriceComponent implements OnInit {
 
   /* Observable of all movies */
   public movieSearchResults$: Observable<Movie[]>;
-
-  public movies: Movie[] = [];
 
   public movies$: Observable<Movie[]>;
 
@@ -111,6 +110,10 @@ export class PriceComponent implements OnInit {
     return this.form.last().get('titles').get(movieId).get('price');
   }
 
+  public getMovie(movieId: string) {
+    return this.movies$.pipe(map(movies => movies.find(movie => movie.id === movieId)))
+  }
+
   /**
    * @description gets the control for the commision amount of the package
    */
@@ -120,11 +123,9 @@ export class PriceComponent implements OnInit {
 
   /**
    * @description helper function
-   * @param index to remove in array
    * @param movieId movie to remove in the form
    */
-  public removeTitle(index: number, movieId: string) {
-    this.movies.splice(index, 1)
+  public removeTitle(movieId: string) {
     this.tunnel.removeTitle(movieId);
   }
 
@@ -133,10 +134,7 @@ export class PriceComponent implements OnInit {
    * @param event 
    */
   public addMovie(event: MatAutocompleteSelectedEvent) {
-    const isMovieAdded = this.movies.filter(movie => movie.id === event.option.value.id);
-    if (!isMovieAdded.length) {
-      this.tunnel.addTitle(event.option.value.id, this._hasMandate)
-    }
+    this.tunnel.addTitle(event.option.value.id, this._hasMandate)
     this.movieCtrl.reset();
   }
 

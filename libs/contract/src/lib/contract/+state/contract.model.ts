@@ -203,7 +203,6 @@ export function createContractFromFirestore(contract: any): Contract {
   const c = {
     ...contract,
     signDate: toDate(contract.signDate),
-    titleIds: [],
     parties: contract.parties
       ? contract.parties.map(partyDetails => formatPartyDetails(partyDetails))
       : []

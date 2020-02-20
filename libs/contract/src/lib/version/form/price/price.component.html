@@ -24,9 +24,11 @@
       </mat-option>
     </mat-autocomplete>
   </mat-form-field>
-  <form *ngFor="let movie of movies$ | async; let i = index" [formGroup]="priceForm(movie.id)">
+  <div *ngFor="let control of form.last().get('titles').controls | keyvalue; let i = index;"
+    [formGroup]="priceForm(control.key)">
     <div fxLayout="row" fxLayoutAlign="space-between start">
-      <movie-banner [movie]="movie"></movie-banner>
+      <movie-banner [movie]="getMovie(control.key) | async" *ngIf="getMovie(control.key) | async">
+      </movie-banner>
       <div fxLayout="column" fxLayoutAlign="start end">
         <ng-container *ngIf="hasMandate; else currency">
           <mat-form-field appearance="outline">
@@ -42,12 +44,12 @@
             <mat-icon [svgIcon]="currencyCtrl.value" matSuffix></mat-icon>
           </mat-form-field>
         </ng-template>
-        <button color="warn" (click)="removeTitle(i, movie.id)" mat-mini-fab>
+        <button color="warn" (click)="removeTitle(control.key)" mat-mini-fab>
           <mat-icon>delete</mat-icon>
         </button>
       </div>
     </div>
-  </form>
+  </div>
 </article>
 <mat-divider></mat-divider>
 <div fxLayout="row" fxLayoutAlign="space-between center" class="package-price">

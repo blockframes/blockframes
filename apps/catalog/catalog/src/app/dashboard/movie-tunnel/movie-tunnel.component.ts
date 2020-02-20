@@ -91,7 +91,7 @@ export class MovieTunnelComponent implements TunnelRoot {
     const movie = createMovie({ id, ...this.form.value });
     await this.service.update(movie);
     this.form.markAsPristine();
-    await this.snackBar.open('Saved', '', { duration: 500 }).afterDismissed().toPromise();
+    await this.snackBar.open('Title saved', '', { duration: 500 }).afterDismissed().toPromise();
     return true;
   }
 
