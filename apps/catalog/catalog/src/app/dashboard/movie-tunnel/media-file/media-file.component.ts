@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
-import { createImgRef, ImgRef } from "@blockframes/utils/image-uploader";
+import { ImgRef } from "@blockframes/utils/image-uploader";
 import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
+import { MovieTunnelComponent } from '../movie-tunnel.component';
 @Component({
   selector: 'catalog-movie-tunnel-media-file',
   templateUrl: './media-file.component.html',
@@ -9,11 +9,9 @@ import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MediaFileComponent {
+  form = this.tunnel.form;
 
-  constructor(
-    private form: MovieForm,
-    private movieQuery: MovieQuery
-    ) {}
+  constructor(private tunnel: MovieTunnelComponent, private movieQuery: MovieQuery) { }
 
   public movie = this.movieQuery.getActive();
   public presentationPath = `movie/${this.movie.id}/PresentationDeck`;

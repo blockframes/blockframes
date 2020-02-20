@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
+import { MovieTunnelComponent } from '../movie-tunnel.component';
 
 @Component({
   selector: 'catalog-movie-tunnel-budget',
@@ -8,8 +8,9 @@ import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BudgetComponent {
+  form = this.tunnel.form;
 
-  constructor(private form: MovieForm) { }
+  constructor(private tunnel: MovieTunnelComponent) { }
 
   get estimatedBudget() {
     return this.form.get('budget').get('estimatedBudget');
