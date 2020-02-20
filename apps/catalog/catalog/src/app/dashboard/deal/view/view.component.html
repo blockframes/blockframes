@@ -72,7 +72,7 @@
       <h3>Proposed Payment Schedule</h3>
       <div *ngFor="let payment of lastVersion.paymentSchedule" fxLayout="column" fxLayoutAlign="center start">
         <span>{{ payment.percentage }}% {{ payment.label }}</span>
-        <span class="mat-caption">{{ payment.date }}</span>
+        <span class="mat-caption">{{ payment.date.approxStart }}</span>
       </div>
     </mat-card>
   </article>

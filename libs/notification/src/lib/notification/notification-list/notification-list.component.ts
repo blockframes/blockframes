@@ -35,11 +35,10 @@ export class NotificationListComponent implements OnInit {
 
   public goToPath(notification: Notification) {
     try {
-      const path = notification.type === NotificationType.newContract || NotificationType.contractInNegotiation
-        ? `c/o/dashboard/deals/${notification.docId}`
-        : ''
-      this.router.navigateByUrl(path);
-      this.service.readNotification(notification);
+      if (notification.type === NotificationType.newContract || NotificationType.contractInNegotiation) {
+        this.router.navigateByUrl(`c/o/dashboard/deals/${notification.docId}`);
+        this.service.readNotification(notification);
+      }
     } catch (error) {
       throw new Error(error.message);
     }
