@@ -1,9 +1,12 @@
 import { functions, db } from './internals/firebase';
-import { ContractDocument, PublicContractDocument } from './data/types';
-import { ValidContractStatuses } from '@blockframes/contract/contract/+state/contract.firestore';
+import { ContractDocument, PublicContractDocument, App, NotificationType, OrganizationDocument, PublicOrganization } from './data/types';
+import { ValidContractStatuses, ContractStatus, ContractVersionDocument } from '@blockframes/contract/contract/+state/contract.firestore';
+import { getOrganizationsOfContract, getDocument, versionExists } from './data/internals';
+import { triggerNotifications, createNotification } from './notification';
+import { centralOrgID } from './environments/environment';
 /**
- * 
- * @param contract 
+ *
+ * @param contract
  * @param deletedVersionId Used only when a version is removed from DB. We update public data with previous version.
  */
 async function transformContractToPublic(contract: ContractDocument, deletedVersionId?: string): Promise<void> {
@@ -49,7 +52,7 @@ export async function onContractWrite(
   const before = change.before.data();
   const after = change.after.data();
 
-  if (!after && !!before) { // Deletion*
+  if (!after && !!before) { // Deletion
     return db.doc(`publicContracts/${before.id}`).delete();
   }
 
@@ -61,7 +64,7 @@ export async function onContractWrite(
     throw new Error(msg);
   }
 
-  return transformContractToPublic(contract);
+  return (contract);
 }
 
 export async function onContractVersionWrite(
@@ -76,18 +79,66 @@ export async function onContractVersionWrite(
     throw new Error(msg);
   }
 
-  const before = change.before.data();
-  const after = change.after.data();
-
-  const contractRef = db.doc(`contracts/${contractId}`);
-  const contractSnap = await contractRef.get();
-  const contract = contractSnap.data() as ContractDocument;
+  const before = change.before.data() as ContractVersionDocument;
+  const after = change.after.data() as ContractVersionDocument;
+  const contract = await getDocument<ContractDocument>(`contracts/${contractId}`);
 
   if (!after && !!before) { // Deletion
     console.log(`deleting ContractVersion : "${versionId}" for : ${contractId}`);
     return transformContractToPublic(contract, versionId);
-  } else {
-    return transformContractToPublic(contract);
   }
 
+  // Prepare data to create notifications
+  const previousVersionId = (parseInt(after.id, 10) - 1).toString(); // @TODO (#1887)
+
+  if (!versionExists(contractId, previousVersionId)) {
+    const msg = 'Contract does not have a previous version';
+    console.error(msg);
+    throw new Error(msg);
+  }
+
+  await transformContractToPublic(contract);
+
+  const previousVersion = await getDocument<ContractVersionDocument>(`contracts/${contractId}/versions/${previousVersionId}`)
+  const contractInNegociation = (previousVersion.status === ContractStatus.submitted) && (after.status === ContractStatus.undernegotiation);
+  const contractSubmitted = (previousVersion.status === ContractStatus.draft) && (after.status === ContractStatus.submitted);
+
+  if (contractSubmitted) { // Contract is submitted by organization to Archipel Content
+
+    const { id, name } = await getDocument<PublicOrganization>(`orgs/${contract.partyIds[0]}`); // TODO (#1999): Find real creator
+
+    const archipelContent = await getDocument<OrganizationDocument>(`orgs/${centralOrgID}`);
+    const notifications = archipelContent.userIds.map(
+      userId => createNotification({
+        userId,
+        organization: { id, name }, // TODO (#1999): Add the logo to display if orgs collection is not public to Archipel Content
+        type: NotificationType.newContract,
+        docId: contractId,
+        app: App.biggerBoat
+      })
+    );
+
+    await triggerNotifications(notifications);
+  }
+
+  if (contractInNegociation) { // Contract is validated by Archipel Content
+
+    const organizations = await getOrganizationsOfContract(contract);
+
+    const notifications = organizations
+    .filter(organizationDocument => !!organizationDocument && !!organizationDocument.userIds)
+    .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
+    .map(userId => {
+      return createNotification({
+        userId,
+        type: NotificationType.contractInNegotiation,
+        docId: contractId,
+        app: App.biggerBoat
+      });
+    });
+
+    await triggerNotifications(notifications);
+  }
+
+  return true;
 }

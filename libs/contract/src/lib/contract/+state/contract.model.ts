@@ -71,7 +71,7 @@ export function createContractVersion(params: Partial<ContractVersion> = {}): Co
 
 /**
  * @description create a contract version specific to mandate
- * @param params 
+ * @param params
  */
 export function createVersionMandate(params: Partial<ContractVersion> = {}) {
   return createContractVersion({ price: { commissionBase: CommissionBase.grossreceipts, amount: 0 }, ...params })
