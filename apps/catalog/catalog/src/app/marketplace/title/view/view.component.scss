@@ -24,6 +24,12 @@ header {
   border-radius: 5px;
 }
 
+.movie-info {
+  h1, p {
+    margin: 0;
+  }
+}
+
 .heart-button {
   width: 200px;
   margin-top: 20px;
