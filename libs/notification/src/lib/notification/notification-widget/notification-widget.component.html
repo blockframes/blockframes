@@ -4,7 +4,7 @@
       <mat-icon svgIcon="bell"
         [matBadge]="count"
         matBadgeColor="accent"
-        matBadgeSize="small">
+        matBadgeSize="medium">
       </mat-icon>
     </ng-container>
     <ng-template #empty >
@@ -17,7 +17,6 @@
   <widget-card>
     <header widgetHeader color="primary" fxLayout="row" fxLayoutAlign="space-between center">
       <span>Recent Activity</span>
-      <mat-icon>settings</mat-icon>
     </header>
     <invitation-list></invitation-list>
     <notification-list></notification-list>
