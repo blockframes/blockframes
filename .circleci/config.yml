@@ -31,6 +31,12 @@ references:
       branches:
         only:
           - ci
+  release_candidate_only: &release_candidate_only
+    filters:
+      branches:
+        only:
+          - release-candidate
+
 commands:
   checkout_project:
     description: 'Checkout the project with caching'
@@ -178,6 +184,27 @@ jobs:
           name: Uploading screenshots
           path: ~/repo/dist/cypress/apps
       - slack/status
+  deploy-to-release-candidate:
+    executor: blockframes-ci
+    environment:
+      - ENV: production
+      - NODE_OPTIONS: '--max_old_space_size=4096'
+      - GOOGLE_APPLICATION_CREDENTIALS: creds.json
+    steps:
+      - checkout_project
+      - run: echo "${FIREBASE_PRODUCTION_SERVICE_ACCOUNT}" > creds.json
+      - run: cp env/env.prod.ts env/env.ts # required for the typechecking & file rewrite to work
+      - run: npm run build:all
+      - slack/notify:
+          message: '🚂 Deploying to release candidate... (deploy ONLY the frontend part, https://blockframes-next.web.app/)'
+      - run:
+          command: |
+            # tedious inject the target so that we don't need to duplicate the json
+            cat firebase.json | jq '.hosting[0].target = "next"' > firebase.next.json
+            mv firebase.next.json firebase.json
+            npx firebase use prod &&
+            npx firebase deploy --only hosting:next
+      - slack/status
   deploy-to-prod:
     executor: blockframes-ci
     environment:
@@ -264,6 +291,8 @@ workflows:
           <<: *production_only
       - deploy-to-staging:
           <<: *staging_only
+      - deploy-to-release-candidate:
+          <<: *release_candidate_only
   nightly-e2e:
     triggers:
       - schedule:
