@@ -1,27 +1,34 @@
-<h1>My Titles</h1>
+<ng-container *ngIf="(allMovies$ | async).length; else noTitle">
+  <ng-container *ngIf="(titles$ | async) as titles; else isLoading">
+    <h1>My Titles</h1>
 
-<div fxLayout="row" fxLayoutAlign="end center">
-  <a mat-flat-button color="primary" routerLink="../tunnel/movie" test-id="add-movie">
-    <span>New Movie</span>
-    <mat-icon>add</mat-icon>
-  </a>
-</div>
+    <div fxLayout="row" fxLayoutAlign="end center">
+      <a mat-flat-button color="primary" routerLink="../tunnel/movie" test-id="add-movie">
+        <span>New Movie</span>
+        <mat-icon>add</mat-icon>
+      </a>
+    </div>
 
-<header mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
-  <button mat-tab-link (click)="filter.setValue()" [active]="!(filter$ | async)">All</button>
-  <button mat-tab-link (click)="applyFilter('Library')" [active]="(filter$ | async) === 'Library'">Library</button>
-  <button mat-tab-link (click)="applyFilter('Line-Up')" [active]="(filter$ | async) === 'Line-Up'">Line-up</button>
-</header>
+    <header mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
+      <button mat-tab-link (click)="filter.setValue()" [active]="!(filter$ | async)">All</button>
+      <button mat-tab-link (click)="applyFilter('Library')" [active]="(filter$ | async) === 'Library'">Library</button>
+      <button mat-tab-link (click)="applyFilter('Line-Up')" [active]="(filter$ | async) === 'Line-Up'">Line-up</button>
+    </header>
 
-<ng-container *ngIf="(titles$ | async) as titles; else isLoading">
-  <bf-table-filter [source]="titles" [columns]="columns" [initialColumns]="initialColumns"
-    showFilter
-    showPaginator
-    [link]="'./'">
-    <ng-template colRef="title" let-title><b>{{ title }}</b></ng-template>
-    <ng-template colRef="receipt" let-receipt> <b>{{ receipt | currency }}</b> </ng-template>
-  </bf-table-filter>
+    <bf-table-filter [source]="titles" [columns]="columns" [initialColumns]="initialColumns"
+      showFilter
+      showPaginator
+      [link]="'./'">
+      <ng-template colRef="title" let-title><b>{{ title }}</b></ng-template>
+      <ng-template colRef="receipt" let-receipt> <b>{{ receipt | currency }}</b> </ng-template>
+    </bf-table-filter>
+  </ng-container>
+
+  <ng-template #isLoading>
+    <mat-spinner></mat-spinner>
+  </ng-template>
 </ng-container>
-<ng-template #isLoading>
-  <mat-spinner></mat-spinner>
+
+<ng-template #noTitle>
+  <catalog-no-title></catalog-no-title>
 </ng-template>

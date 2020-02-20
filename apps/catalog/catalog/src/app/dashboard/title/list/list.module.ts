@@ -6,6 +6,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 
 import { TitleListComponent } from './list.component';
+import { NoTitleModule } from '../no-title/no-title.module';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -20,6 +21,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     ReactiveFormsModule,
     FlexLayoutModule,
     TableFilterModule,
+    NoTitleModule,
     // Material
     MatButtonModule,
     MatTabsModule,

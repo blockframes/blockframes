@@ -6,6 +6,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { DealListComponent } from './list.component';
 
 import { ContractTableModule } from '@blockframes/contract/contract/components';
+import { NoDealModule } from '../no-deal/no-deal.module';
 
 // Material
 import { MatTabsModule } from '@angular/material/tabs';
@@ -19,6 +20,7 @@ import { MatButtonModule } from '@angular/material/button';
     ReactiveFormsModule,
     FlexLayoutModule,
     ContractTableModule,
+    NoDealModule,
 
     // Material
     MatTabsModule,
