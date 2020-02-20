@@ -21,6 +21,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
+import { MatChipsModule } from '@angular/material/chips';
 
 @NgModule({
   declarations: [DealViewComponent],
@@ -39,6 +40,7 @@ import { MatListModule } from '@angular/material/list';
     MatExpansionModule,
     MatDividerModule,
     MatListModule,
+    MatChipsModule,
 
     CommonModule,
     RouterModule.forChild([
