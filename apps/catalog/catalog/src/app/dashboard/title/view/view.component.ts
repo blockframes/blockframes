@@ -39,15 +39,6 @@ export class TitleViewComponent implements OnInit {
     return movie.promotionalElements.poster.length && movie.promotionalElements.poster[0].media;
   }
 
-  public getTitle(movie: Movie) {
-    const { workType, totalRunTime, status } = movie.main;
-    return [
-      workType,
-      (getLabelBySlug('MOVIE_STATUS', status)),
-      `${totalRunTime} min`
-    ].join(' | ')
-  }
-
   public getDirectors(movie: Movie) {
     return movie.main.directors.map(d => `${d.firstName}  ${d.lastName}`).join(', ');
   }
