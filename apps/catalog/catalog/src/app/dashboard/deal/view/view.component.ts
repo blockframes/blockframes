@@ -113,6 +113,10 @@ export class DealViewComponent implements OnInit {
     return this.intercom.show();
   }
 
+  public getStatusValue(status: ContractStatus){
+    return ContractStatus[status];
+  }
+
   /** Accept the offer and sign with a timestamp. */
   public acceptOffer(contract: Contract): void {
     return this.service.acceptOffer(contract, this.organizationQuery.getActiveId());

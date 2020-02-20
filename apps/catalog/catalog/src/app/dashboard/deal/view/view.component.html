@@ -6,7 +6,6 @@
         <!-- Switch to [imgRef]="getLicenseeLogo(licensees[0].part.orgId) when public orgs are here => ISSUE#1359"-->
         <img class="logo" [imgRef]="placeholderUrl" [placeholderUrl]="placeholderUrl" alt="Organization logo" />
         <div>
-          <span>{{ lastVersion.status | uppercase }}</span>
           <h1>{{ licensees[0].party.displayName }} - {{ (movies$ | async).length }} films</h1>
           <span *ngIf="licensee.address">
             {{ licensee.address.street }}, {{ licensee.address.city }}, {{ licensee.address.region }}
@@ -17,6 +16,9 @@
       <section fxLayout="column" fxLayoutAlign="center end">
         <span class="mat-caption"> {{ lastVersion.creationDate | date: 'short' }} </span>
         <h2>{{ totalPrice.amount | currency: getCurrencyCode(totalPrice.currency) }}</h2>
+        <mat-chip-list>
+          <mat-chip>{{ getStatusValue(lastVersion.status) | uppercase }}</mat-chip>
+        </mat-chip-list>
       </section>
     </section>
   </ng-container>
