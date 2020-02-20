@@ -43,7 +43,7 @@ export class ImportSpreadsheetComponent implements OnInit {
   importSpreadsheet(bytes: Uint8Array) {
     let sheetRange;
     if (this.fileType.value === 'movies') {
-      sheetRange = 'A10:AQ100';
+      sheetRange = 'A14:AZ100';
     } else if (this.fileType.value === 'contracts') {
       sheetRange = 'A1:BD100';
     } else {
