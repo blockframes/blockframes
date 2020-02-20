@@ -17,14 +17,16 @@ import {
   createMovieRating,
   createMovieOriginalRelease,
   createMovieStory,
-  createDocumentMeta
+  createDocumentMeta,
+  createBoxOffice,
+  createMovieReview
 } from '../../../+state';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { formatCredits } from '@blockframes/utils/spreadsheet/format';
 import { ImageUploader, cleanModel } from '@blockframes/utils';
 import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
 import { SSF } from 'xlsx';
-import { MovieLanguageTypes, PremiereType, WorkType, StoreType, StoreStatus } from '@blockframes/movie/movie/+state/movie.firestore';
+import { MovieLanguageTypes, PremiereType, WorkType, StoreType, StoreStatus, UnitBox } from '@blockframes/movie/movie/+state/movie.firestore';
 import { createStakeholder } from '@blockframes/utils/common-interfaces/identity';
 import { DistributionDeal, createDistributionDeal, createHoldback } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
 import { createContractPartyDetail, createContractTitleDetail, Contract, initContractWithVersion, ContractWithLastVersion, getContractParties } from '@blockframes/contract/contract/+state/contract.model';
@@ -88,15 +90,15 @@ enum SpreadSheetMovie {
   producers,
   crewMembers,
   budget,
-  worldwideBoxOffice, // @todo #1906
-  nationalBoxOffice, // @todo #1906
+  worldwideBoxOffice,
+  nationalBoxOffice,
   quotas,
   rating,
-  filmReviews, // @todo #1906
+  filmReviews,
   color,
-  shootingFormat,  // @todo #1906
-  availableFormat,  // @todo #1906
-  soundQuality,  // @todo #1906
+  shootingFormat,
+  availableFormat,
+  soundQuality,
   availableVersions,
   poster,
   bannerLink,
@@ -417,6 +419,79 @@ export class ViewExtractedElementsComponent implements OnInit {
           });
         }
 
+        // FILM REVIEW
+        if (spreadSheetRow[SpreadSheetMovie.filmReviews]) {
+          movie.movieReview = [];
+          spreadSheetRow[SpreadSheetMovie.filmReviews].split(this.separator).forEach(review => {
+            const filmReviewParts = review.split(this.subSeparator);
+            if (filmReviewParts.length >= 3) {
+              const review = createMovieReview({
+                journalName: filmReviewParts[0].trim(),
+                revueLink: filmReviewParts[1].trim(),
+                criticQuote: filmReviewParts[2].trim()
+              })
+
+              movie.movieReview.push(review);
+            } else {
+              importErrors.errors.push({
+                type: 'warning',
+                field: 'movie.movieReview',
+                name: 'Movie review',
+                reason: `Could not parse review : ${review}`,
+                hint: 'Edit corresponding sheet field.'
+              });
+            }
+          })
+        };
+
+        // SHOOTING FORMAT
+        if (spreadSheetRow[SpreadSheetMovie.shootingFormat]) {
+          const shootingFormat = getCodeIfExists('MOVIE_FORMAT', spreadSheetRow[SpreadSheetMovie.shootingFormat].toString().trim());
+          if (shootingFormat) {
+            movie.salesInfo.format = shootingFormat;
+          } else {
+            importErrors.errors.push({
+              type: 'warning',
+              field: 'movie.salesInfo.format',
+              name: 'Shooting format',
+              reason: `Could not parse ${spreadSheetRow[SpreadSheetMovie.shootingFormat]}`,
+              hint: 'Edit corresponding sheet field.'
+            });
+          }
+        };
+
+        // AVAILABLE FORMAT (formatQuality)
+        if (spreadSheetRow[SpreadSheetMovie.availableFormat]) {
+          const availableFormat = getCodeIfExists('MOVIE_FORMAT_QUALITY', spreadSheetRow[SpreadSheetMovie.availableFormat].trim());
+          if (availableFormat) {
+            movie.salesInfo.formatQuality = availableFormat;
+          } else {
+            importErrors.errors.push({
+              type: 'warning',
+              field: 'movie.salesInfo.formatQuality',
+              name: 'formatQuality',
+              reason: `Could not parse ${spreadSheetRow[SpreadSheetMovie.availableFormat]}`,
+              hint: 'Edit corresponding sheet field.'
+            });
+          }
+        };
+
+        // AVAILABLE FORMAT (soundQuality)
+        if (spreadSheetRow[SpreadSheetMovie.soundQuality]) {
+          const soundQuality = getCodeIfExists('SOUND_FORMAT', spreadSheetRow[SpreadSheetMovie.soundQuality].trim());
+          if (soundQuality) {
+            movie.salesInfo.soundFormat = soundQuality;
+          } else {
+            importErrors.errors.push({
+              type: 'warning',
+              field: 'movie.salesInfo.soundQuality',
+              name: 'soundQuality',
+              reason: `Could not parse ${spreadSheetRow[SpreadSheetMovie.soundQuality]}`,
+              hint: 'Edit corresponding sheet field.'
+            });
+          }
+        };
+
         // CERTIFICATIONS (Certifications)
         if (spreadSheetRow[SpreadSheetMovie.quotas]) {
           spreadSheetRow[SpreadSheetMovie.quotas].split(this.separator).forEach((c: ExtractCode<'CERTIFICATIONS'>) => {
@@ -733,7 +808,67 @@ export class ViewExtractedElementsComponent implements OnInit {
           } else {
             movie.budget.totalBudget = spreadSheetRow[SpreadSheetMovie.budget];
           }
+        }
 
+        movie.budget.boxOffice = [];
+        // WORLDWIDE BOX OFFICE
+        if (spreadSheetRow[SpreadSheetMovie.worldwideBoxOffice]) {
+          spreadSheetRow[SpreadSheetMovie.worldwideBoxOffice].split(this.separator).forEach((version: string) => {
+            const boxOfficeParts = version.split(this.subSeparator);
+            if (Object.values(UnitBox).map(t => t.toLowerCase()).includes(boxOfficeParts[0].trim().toLowerCase())) {
+              movie.budget.boxOffice.push(createBoxOffice(
+                {
+                  unit: boxOfficeParts[0].trim() as UnitBox,
+                  value: boxOfficeParts[1] ? parseInt(boxOfficeParts[1], 10) : 0,
+                  territory: getCodeIfExists('TERRITORIES', 'world')
+                }
+              ));
+            } else {
+              importErrors.errors.push({
+                type: 'warning',
+                field: 'movie.budget.boxOffice',
+                name: 'WorldWide Box office',
+                reason: `Could not parse box office UnitBox : ${boxOfficeParts[0].trim()}`,
+                hint: 'Edit corresponding sheet field.'
+              });
+            }
+          });
+        }
+
+        // NATIONAL BOX OFFICE
+        if (spreadSheetRow[SpreadSheetMovie.nationalBoxOffice]) {
+          spreadSheetRow[SpreadSheetMovie.nationalBoxOffice].split(this.separator).forEach((version: string) => {
+            const boxOfficeParts = version.split(this.subSeparator);
+
+            const territory = getCodeIfExists('TERRITORIES', boxOfficeParts[0].trim());
+            if (territory) {
+              if (Object.values(UnitBox).map(t => t.toLowerCase()).includes(boxOfficeParts[1].trim().toLowerCase())) {
+                movie.budget.boxOffice.push(createBoxOffice(
+                  {
+                    unit: boxOfficeParts[1].trim() as UnitBox,
+                    value: boxOfficeParts[2] ? parseInt(boxOfficeParts[2], 10) : 0,
+                    territory: territory
+                  }
+                ));
+              } else {
+                importErrors.errors.push({
+                  type: 'warning',
+                  field: 'movie.budget.boxOffice',
+                  name: 'Box office',
+                  reason: `Could not parse box office UnitBox : ${boxOfficeParts[1].trim()}`,
+                  hint: 'Edit corresponding sheet field.'
+                });
+              }
+            } else {
+              importErrors.errors.push({
+                type: 'error',
+                field: 'movie.budget.boxOffice',
+                name: 'National Box office',
+                reason: `Could not parse box office territory : ${boxOfficeParts[0].trim()}`,
+                hint: 'Edit corresponding sheet field.'
+              });
+            }
+          });
         }
 
         // IMAGE BANNIERE LINK
@@ -1113,10 +1248,10 @@ export class ViewExtractedElementsComponent implements OnInit {
     if (this.isUserBlockframesAdmin) {
       if (!movie.salesInfo.scoring) {
         errors.push({
-          type: 'error',
+          type: 'warning',
           field: 'salesInfo.scoring',
           name: 'Scoring',
-          reason: 'Required field is missing',
+          reason: 'Optional field is missing',
           hint: 'Edit corresponding sheet field.'
         });
       }
