@@ -42,8 +42,4 @@ export class TitleViewComponent implements OnInit {
   public getDirectors(movie: Movie) {
     return movie.main.directors.map(d => `${d.firstName}  ${d.lastName}`).join(', ');
   }
-
-  public getOriginalCountries(movie: Movie) {
-    return `${movie.main.originCountries.map(country => getLabelBySlug('TERRITORIES', country)).join(', ')}, ${movie.main.productionYear}`;
-  }
 }
