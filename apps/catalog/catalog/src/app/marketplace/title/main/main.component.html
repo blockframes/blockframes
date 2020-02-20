@@ -6,15 +6,15 @@
     <!-- PROMO LINKS -->
     <mat-card *ngIf="hasLink(movie)" fxLayout="column" fxLayoutAlign="start start" fxFlex="30">
       <ng-container *ngFor="let promoLink of promoLinks">
-        <a *ngIf="getLink(movie, promoLink) as link" mat-stroked-button color="primary" [href]="link.url" target="_blank">
-          <mat-icon [svgIcon]="link.icon" color="primary"></mat-icon><span>{{ link.label }}</span></a>
+        <a *ngIf="getLink(movie, promoLink) as link" mat-stroked-button [color]="link.color" [href]="link.url" target="_blank">
+          <mat-icon [svgIcon]="link.icon" [color]="link.color"></mat-icon><span>{{ link.label }}</span></a>
       </ng-container>
     </mat-card>
     <article fxFlex="70">
       <!-- STORY CARD -->
       <mat-card *ngIf="hasStory(movie)">
         <mat-card-header>
-          <mat-card-title>Storyline Elements</mat-card-title>
+          <h3>Storyline Elements</h3>
         </mat-card-header>
         <mat-card-content>
           <ul>
@@ -39,7 +39,7 @@
       <!-- FESTIVALS -->
       <mat-card *ngIf="movie.festivalPrizes.prizes.length > 0">
         <mat-card-header>
-          <mat-card-title>Festivals</mat-card-title>
+          <h3>Festivals</h3>
         </mat-card-header>
         <mat-card-content>
             <ul>
@@ -57,12 +57,12 @@
       <!-- CREDIT CARD -->
       <mat-card *ngIf="movie.salesCast || movie.main.stakeholders">
         <mat-card-header>
-          <mat-card-title>Credits</mat-card-title>
+          <h3>Credits</h3>
         </mat-card-header>
         <mat-card-content>
           <ul>
             <ng-container *ngIf="movie.salesCast.cast.length > 0">
-              <b>CAST</b>
+              <h5>CAST</h5>
               <li><strong i18n>Principal Cast </strong>
                 <ng-container *ngFor="let cast of movie.salesCast.cast; let isLast = last">
                   <span>{{ cast.firstName }} {{ cast.lastName }}{{ isLast? '' : ', '}}</span>
@@ -70,7 +70,7 @@
               </li>
             </ng-container>
             <ng-container *ngIf="movie.main.stakeholders || movie.salesCast.producers.length > 0">
-              <b>COMPANY CREDITS</b>
+              <h5>COMPANY CREDITS</h5>
               <ng-container *ngIf="movie.main.stakeholders as stakeholders">
                 <li *ngIf="stakeholders.executiveProducer.length > 0"><strong i18n>Executive Producer{stakeholders.executiveProducer.length, plural,=1 {} other {s}}</strong>
                   <span> {{ getStakeholder(movie, 'executiveProducer') }}</span></li>
@@ -104,7 +104,7 @@
       <!-- BUDGET CARD -->
       <mat-card *ngIf="hasBudget(movie)">
         <mat-card-header>
-          <mat-card-title>Budget, Quota & Critics</mat-card-title>
+          <h3>Budget, Quota & Critics</h3>
         </mat-card-header>
         <mat-card-content>
           <ul>
@@ -128,7 +128,7 @@
     <!-- TECHNICAL INFORMATION CARD -->
     <mat-card *ngIf="movie.salesInfo || movie.versionInfo">
       <mat-card-header>
-        <mat-card-title>Technical Information</mat-card-title>
+        <h3>Technical Information</h3>
       </mat-card-header>
       <mat-card-content>
         <ul>
