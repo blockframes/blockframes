@@ -60,6 +60,9 @@ export class ContractTableComponent{
   initialColumns = baseColumns;
   sources: ContractView[];
 
+  /** Link to the contract page from the parent page component  */
+  @Input() contractLink = '.';
+
   @Input() set hasBuyer(hasBuyer: string | boolean) {
     if (hasBuyer === '' || hasBuyer === true) {
       this.initialColumns = ['buyerName', ...baseColumns];
@@ -97,7 +100,9 @@ export class ContractTableComponent{
   /** Navigate to tunnel if status is draft, else go to page */
   public goToSale(contract: ContractView) {
     // @todo(#1887) Don't use getContractLastVersion function
-    const path = (contract.status === ContractStatus.draft) ? `../tunnel/contract/${contract.id}/sale` : contract.id;
+    const path = (contract.status === ContractStatus.draft)
+      ? `../tunnel/contract/${contract.id}/sale`
+      : `${this.contractLink}/${contract.id}`;
     this.router.navigate([path], { relativeTo: this.route });
   }
 }
