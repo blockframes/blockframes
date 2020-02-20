@@ -1,34 +1,37 @@
 {
-  "hosting": {
-    "public": "dist/apps/",
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-    "rewrites": [
-      {
-        "source": "/delivery/contract.pdf",
-        "function": "generateDeliveryPDF"
-      },
-      {
-        "source": "/admin{,/**}",
-        "function": "admin"
-      },
-      {
-        "source": "/delivery{,/**}",
-        "destination": "/delivery/index.html"
-      },
-      {
-        "source": "/catalog{,/**}",
-        "destination": "/catalog/index.html"
-      },
-      {
-        "source": "/movie-financing{,/**}",
-        "destination": "/movie-financing/index.html"
-      },
-      {
-        "source": "**",
-        "destination": "/index.html"
-      }
-    ]
-  },
+  "hosting": [
+    {
+      "target": "current",
+      "public": "dist/apps/",
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "rewrites": [
+        {
+          "source": "/delivery/contract.pdf",
+          "function": "generateDeliveryPDF"
+        },
+        {
+          "source": "/admin{,/**}",
+          "function": "admin"
+        },
+        {
+          "source": "/delivery{,/**}",
+          "destination": "/delivery/index.html"
+        },
+        {
+          "source": "/catalog{,/**}",
+          "destination": "/catalog/index.html"
+        },
+        {
+          "source": "/movie-financing{,/**}",
+          "destination": "/movie-financing/index.html"
+        },
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    }
+  ],
   "functions": {
     "predeploy": [
       "cp ./package.json dist/apps/backend-functions/package.json",
