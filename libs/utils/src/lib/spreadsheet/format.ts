@@ -36,7 +36,7 @@ export function formatCredit(str: string, separator: string = '\\s+', thirdItemT
         default:
           break;
       }
-      if(role) { credit.role = role }
+      if (role) { credit.role = role }
     }
   }
 
@@ -50,7 +50,12 @@ export function formatCredit(str: string, separator: string = '\\s+', thirdItemT
  * @param subSeparator 
  * @param thirdItemType
  */
-export function formatCredits(str: string, separator: string = ',', subSeparator: string = '\\s+', thirdItemType: string = 'shortBiography'): any[] {
+export function formatCredits(
+  str: string,
+  separator: string = ',',
+  subSeparator: string = '\\s+',
+  thirdItemType: string = 'shortBiography'
+): any[] {
   const credits = [];
   str.split(separator).forEach((a: string) => {
     credits.push(formatCredit(a.trim(), subSeparator, thirdItemType));
