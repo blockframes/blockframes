@@ -1,5 +1,5 @@
-<ng-container *ngIf="(titles$ | async) as titles; else isLoading">
-  <ng-container *ngIf="titles.length > 0 else noTitle">
+<ng-container *ngIf="(allMovies$ | async).length; else noTitle">
+  <ng-container *ngIf="(titles$ | async) as titles; else isLoading">
     <h1>My Titles</h1>
 
     <div fxLayout="row" fxLayoutAlign="end center">
@@ -24,11 +24,11 @@
     </bf-table-filter>
   </ng-container>
 
-  <ng-template #noTitle>
-    <catalog-no-title></catalog-no-title>
+  <ng-template #isLoading>
+    <mat-spinner></mat-spinner>
   </ng-template>
 </ng-container>
 
-<ng-template #isLoading>
-  <mat-spinner></mat-spinner>
+<ng-template #noTitle>
+  <catalog-no-title></catalog-no-title>
 </ng-template>
