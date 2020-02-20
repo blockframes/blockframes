@@ -425,13 +425,13 @@ export class ViewExtractedElementsComponent implements OnInit {
           spreadSheetRow[SpreadSheetMovie.filmReviews].split(this.separator).forEach(review => {
             const filmReviewParts = review.split(this.subSeparator);
             if (filmReviewParts.length >= 3) {
-              const review = createMovieReview({
+              const movieReview = createMovieReview({
                 journalName: filmReviewParts[0].trim(),
                 revueLink: filmReviewParts[1].trim(),
                 criticQuote: filmReviewParts[2].trim()
               })
 
-              movie.movieReview.push(review);
+              movie.movieReview.push(movieReview);
             } else {
               importErrors.errors.push({
                 type: 'warning',
