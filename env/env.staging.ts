@@ -122,3 +122,7 @@ export const quorum = {
 // BigQuery
 // ========
 export const bigQueryAnalyticsTable = 'blockframes-staging.analytics_194475853.events_';
+
+// Archipel Content OrgId
+// ======================
+export const centralOrgID = "theId";
