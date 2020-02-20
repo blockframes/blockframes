@@ -6,7 +6,7 @@
   </mat-error>
 </mat-form-field>
 
-<mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+<mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="selected.emit($event)">
   <mat-option *ngFor="let language of filteredLanguages$ | async" [value]="language.slug">
     {{ language.label }}
   </mat-option>
