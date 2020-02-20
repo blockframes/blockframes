@@ -2,7 +2,7 @@
   <mat-spinner color="primary"></mat-spinner>
 </ng-template>
 <ng-container *ngIf="(movieAnalytics$ | async) as movieAnalytics; else loading">
-  <ng-container *ngIf="movieAnalytics.length > 0 else noMovie">
+  <ng-container *ngIf="movieAnalytics.length else noMovie">
     <header fxLayout="row" fxLayoutAlign="space-between center">
       <h1>Dashboard</h1>
       <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="24px">
