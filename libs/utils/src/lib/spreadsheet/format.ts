@@ -1,5 +1,5 @@
 import { createCredit } from "../common-interfaces/identity";
-import { getCodeIfExists } from "../static-model/staticModels";
+import { getCodeIfExists, ExtractCode } from "../static-model/staticModels";
 
 /**
  * Example : "Steven[separator] Kostanski[separator] shortBiography|role" 
@@ -25,13 +25,13 @@ export function formatCredit(str: string, separator: string = '\\s+', thirdItemT
       let role;
       switch (thirdItemType) {
         case 'PRODUCER_ROLES':
-          role = getCodeIfExists(thirdItemType, roleName);
+          role = getCodeIfExists(thirdItemType, roleName as ExtractCode<'PRODUCER_ROLES'>);
           break;
         case 'CAST_ROLES':
-          role = getCodeIfExists(thirdItemType, roleName);
+          role = getCodeIfExists(thirdItemType, roleName as ExtractCode<'CAST_ROLES'>);
           break;
         case 'CREW_ROLES':
-          role = getCodeIfExists(thirdItemType, roleName);
+          role = getCodeIfExists(thirdItemType, roleName as ExtractCode<'CREW_ROLES'>);
           break;
         default:
           break;
