@@ -5,7 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 
 import { DealListComponent } from './list.component';
 
-import { ContractListModule } from '@blockframes/contract/contract/list/contract-list.module';
+import { ContractTableModule } from '@blockframes/contract/contract/components';
 
 // Material
 import { MatTabsModule } from '@angular/material/tabs';
@@ -16,7 +16,7 @@ import { MatTabsModule } from '@angular/material/tabs';
   imports: [
     CommonModule,
     ReactiveFormsModule,
-    ContractListModule,
+    ContractTableModule,
 
     // Material
     MatTabsModule,

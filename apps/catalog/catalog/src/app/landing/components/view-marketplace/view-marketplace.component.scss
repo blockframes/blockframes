@@ -5,19 +5,27 @@ section {
   margin: 50px 0;
 }
 
+.mat-display-1 {
+  color: white;
+  margin-bottom: 20px;
+}
+
 .video-container {
   position: relative;
 }
 
 .cover {
-  padding-top: 150px;
+  padding-top: 200px;
   text-align: center;
   position: absolute;
   top: 0;
   left: 0;
   bottom: 0;
   right: 0;
-  background-color: rgba(0,0,0,0.8);
+  background-image: url('/assets/images/video_cover.png');
+  background-color: #000000;
+  box-shadow: inset 0px 0px 1000px 200px rgba(0,0,0,0.5);
+  background-size: cover;
 }
 
 .show {

@@ -4,11 +4,9 @@ import {
   CollectionConfig,
   CollectionService,
   WriteOptions,
-  awaitSyncQuery,
-  Query,
   syncQuery
 } from 'akita-ng-fire';
-import { switchMap, tap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import { createMovie, Movie, MovieAnalytics } from './movie.model';
 import { MovieState, MovieStore } from './movie.store';
 import { AuthQuery } from '@blockframes/auth';
@@ -19,6 +17,7 @@ import { PermissionsService } from '@blockframes/organization/permissions/+state
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { Observable } from 'rxjs';
 import { StoreStatus } from './movie.firestore';
+import { Contract } from '@blockframes/contract/contract/+state/contract.model';
 
 /** Query all the movies with their distributionDeals */
 const movieListWithDealsQuery = () => ({
@@ -54,6 +53,13 @@ export class MovieService extends CollectionService<MovieState> {
     return syncQuery.call(this, movieListWithDealsQuery());
   }
 
+  /** Sync all movies from a list of contracts */
+  public syncContractsMovie(contracts: Contract[]) {
+    const rawTitleIds = new Set(contracts.map(c => c.titleIds));
+    const titleIds = Array.from(rawTitleIds).flat();
+    return this.syncManyDocs(titleIds);
+  }
+
   onCreate(movie: Movie, { write }: WriteOptions) {
     // When a movie is created, we also create a permissions document for it.
     return this.permissionsService.addDocumentPermissions(movie, write as firestore.WriteBatch)
@@ -75,7 +81,7 @@ export class MovieService extends CollectionService<MovieState> {
   /** Add a partial or a full movie to the database. */
   public async addMovie(original: string, movie?: Movie): Promise<Movie> {
     const id = this.db.createId();
-    const userId = this.authQuery.userId;
+    const userId = movie._meta && movie._meta.createdBy ? movie._meta.createdBy : this.authQuery.userId;
 
     if (!movie) {
       // create empty movie

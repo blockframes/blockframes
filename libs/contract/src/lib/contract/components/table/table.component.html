@@ -1,0 +1,43 @@
+<bf-table-filter [source]="sources" [columns]="columns" [initialColumns]="initialColumns" showFilter showPaginator
+  (rowClick)="goToSale($event)">
+  <!-- buyerName -->
+  <ng-template colRef="buyerName" let-name>
+    <b>{{ name || '-' }}</b>
+  </ng-template>
+
+  <!-- territories -->
+  <ng-template colRef="territories" let-territories>
+    <ng-container *ngIf="territories.length < 4 else shortenTerritories">
+      {{ territories | translateSlug: 'TERRITORIES'}}
+    </ng-container>
+    <ng-template #shortenTerritories >
+      {{ territories.splice(0, 3) | translateSlug: 'TERRITORIES'}}
+      <b [widgetTooltip]="territories" class="tooltip">...</b>
+    </ng-template>
+  </ng-template>
+
+  <!-- creationDate -->
+  <ng-template colRef="creationDate" let-date>
+    {{ date | date: 'shortDate' }}
+  </ng-template>
+
+  <!-- moviesLength -->
+  <ng-template colRef="moviesLength" let-length>
+    {{ length }}
+  </ng-template>
+
+  <!-- price -->
+  <ng-template colRef="price" let-price>
+    {{ price.amount | currency: price.currency:'symbol':'1.0-0' }}
+  </ng-template>
+
+  <!-- paid -->
+  <ng-template colRef="paid" let-paid>
+    {{ paid }}
+  </ng-template>
+
+  <!-- status -->
+  <ng-template colRef="status" let-status>
+    {{ status }}
+  </ng-template>
+</bf-table-filter>

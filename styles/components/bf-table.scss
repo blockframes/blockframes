@@ -1,0 +1,20 @@
+@mixin bf-table-theme($theme) {
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
+
+  .bf-table {
+    .bf-table-filter {
+      // Doesn't work. We need to find the right class
+      .mat-form-field-outline, input {
+        background-color: mat-color($background, background);
+      }
+    }
+
+    td {
+      background-color: mat-color($background, background);
+    }
+  }
+}

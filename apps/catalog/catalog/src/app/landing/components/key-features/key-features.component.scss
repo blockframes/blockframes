@@ -21,6 +21,11 @@ img {
   margin: 20px;
 }
 
+a {
+  color: inherit;
+  text-decoration: underline;
+}
+
 @include tablet {
   div {
     width: 100%;

@@ -1,6 +1,6 @@
-<mat-form-field appearance="outline" *ngIf="showFilter">
+<mat-form-field appearance="outline" *ngIf="showFilter" >
   <mat-label>Filter</mat-label>
-  <input matInput placeholder="Type to filter in the list below" (keyup)="applyFilter($event.target.value)"/>
+  <input class="bf-table-filter" matInput placeholder="Type to filter in the list below" (keyup)="applyFilter($event.target.value)"/>
   <!-- TODO issue#1819 -->
   <button matSuffix mat-icon-button [widgetTarget]="filterColumnWidget">
     <mat-icon>filter_list</mat-icon>
@@ -9,6 +9,7 @@
 
 <div class="container" *ngIf="displayedColumns$ | async as displayedColumns">
   <table mat-table [dataSource]="dataSource" matSort>
+
     <!-- You need to set the matColumnDef on the same ng-container as the ngFor or it fails -->
     <ng-container *ngFor="let column of displayedColumns" [matColumnDef]="column">
       <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ columns[column] }} </th>
@@ -19,18 +20,20 @@
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
     <ng-template [ngIf]="link" [ngIfElse]="withoutLink">
-      <tr mat-row *matRowDef="let row; columns: displayedColumns" [routerLink]="[link, row.id]" style="cursor: pointer;"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns" [routerLink]="[link, row.id]"></tr>
     </ng-template>
-    <ng-template #withoutLink>
-      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    <ng-template #withoutLink >
+      <tr mat-row *matRowDef="let row; columns: displayedColumns" (click)="rowClick.emit(row)"></tr>
     </ng-template>
   </table>
+
+  <!-- Loading if no data -->
   <ng-container *ngIf="dataSource.data.length === 0 && showLoader">
     <div class="loader-container">
       <ng-container *ngIf="noData else spinner">
         <div class="no-data">No data found</div>
       </ng-container>
-      <ng-template #spinner>
+      <ng-template #spinner >
         <mat-spinner diameter="30"></mat-spinner>
       </ng-template>
     </div>
@@ -41,10 +44,13 @@
 <!-- Fallback if no template is provided for a column -->
 <ng-template #text let-content>{{content}}</ng-template>
 
-<overlay-widget #filterColumnWidget>
-  <mat-selection-list [formControl]="columnFilter" class="mat-elevation-z2">
-    <mat-list-option *ngFor="let column of columns | keyvalue" [value]="column.key">
-      {{ column.value }}
-    </mat-list-option>
-  </mat-selection-list>
+<!-- Overlay with column selection -->
+<overlay-widget #filterColumnWidget >
+  <widget-card>
+    <mat-selection-list [formControl]="columnFilter" class="mat-elevation-z2">
+      <mat-list-option *ngFor="let column of columns | keyvalue" [value]="column.key">
+        {{ column.value }}
+      </mat-list-option>
+    </mat-selection-list>
+  </widget-card>
 </overlay-widget>
