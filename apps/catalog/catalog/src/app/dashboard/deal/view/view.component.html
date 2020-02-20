@@ -57,12 +57,11 @@
         </button>
       </mat-card-actions>
     </mat-card>
-    <mat-card>
+    <mat-card *ngIf="payments">
       <h3>Proposed Payment Schedule</h3>
-      <div *ngFor="let payment of lastVersion.paymentSchedule" fxLayout="column" fxLayoutAlign="center start">
-        <span>{{ payment.percentage }}% {{ payment.label }}</span>
-        <span class="mat-caption">{{ getPaymentTerms(payment.date) }}</span>
-      </div>
+      <li *ngFor="let payment of payments.list">
+        <strong>{{ payments.type }}</strong> {{ payment }}
+      </li>
     </mat-card>
   </article>
 
