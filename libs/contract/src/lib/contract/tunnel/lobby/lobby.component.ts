@@ -1,4 +1,3 @@
-import { createContractVersion, createContract, createVersionMandate } from '@blockframes/contract/contract/+state/contract.model';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ContractService, ContractType } from '../../+state';
 import { Router, ActivatedRoute } from '@angular/router';
