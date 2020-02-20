@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
+import { MovieTunnelComponent } from '../movie-tunnel.component';
 
 @Component({
   selector: 'catalog-movie-tunnel-main',
@@ -8,8 +9,9 @@ import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TunnelMainComponent {
+  form = this.tunnel.form;
 
-  constructor(private form: MovieForm) { }
+  constructor(private tunnel: MovieTunnelComponent) { }
 
   get main() {
     return this.form.get('main');

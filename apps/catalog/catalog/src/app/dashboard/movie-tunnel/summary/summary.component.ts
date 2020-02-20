@@ -1,9 +1,9 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
 import { ActivatedRoute } from '@angular/router';
-import { MovieService, Movie } from '@blockframes/movie';
+import { MovieService } from '@blockframes/movie';
 import { StoreStatus } from '@blockframes/movie/movie/+state/movie.firestore';
 import { MatSnackBar } from '@angular/material';
+import { MovieTunnelComponent } from '../movie-tunnel.component';
 
 @Component({
   selector: 'catalog-summary-tunnel',
@@ -12,8 +12,10 @@ import { MatSnackBar } from '@angular/material';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TunnelSummaryComponent {
+  form = this.tunnel.form;
+
   constructor(
-    public form: MovieForm,
+    private tunnel: MovieTunnelComponent,
     private route: ActivatedRoute,
     private service: MovieService,
     private snackBar: MatSnackBar,

@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
 import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
+import { MovieTunnelComponent } from '../movie-tunnel.component';
+
 @Component({
   selector: 'catalog-tunnel-media-image',
   templateUrl: './media-image.component.html',
@@ -8,11 +9,9 @@ import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MediaImageComponent {
-  
-  constructor(
-    private form: MovieForm,
-    private movieQuery: MovieQuery
-    ) {}
+  form = this.tunnel.form;
+
+  constructor(private tunnel: MovieTunnelComponent, private movieQuery: MovieQuery) { }
 
   public movie = this.movieQuery.getActive();
   public bannerPath = `movie/${this.movie.id}/Banner`;
