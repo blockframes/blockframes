@@ -14,9 +14,12 @@ header {
   }
 }
 
+.mat-card {
+  padding: 24px 16px; 
+}
+
 .movie-poster {
   width: 168px;
-  height: 168px;
   margin-right: 16px;
   border-radius: 5px;
 }
