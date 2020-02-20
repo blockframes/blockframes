@@ -24,10 +24,12 @@ export class MarketplaceMovieMainComponent {
   public getLink(movie: Movie, link: ExtractCode<'PROMOTIONAL_ELEMENT_TYPES'>) {
     if(movie.promotionalElements[link].media.url) {
       const isDownload = link === 'scenario' || link === 'presentation_deck';
+      const isAccent = link === 'scenario' || link === 'promo_reel_link'
       return {
         url: movie.promotionalElements[link].media.url,
         icon: isDownload ? 'download' : 'play',
-        label: getLabelBySlug('PROMOTIONAL_ELEMENT_TYPES', link)
+        label: isDownload ? `Download ${getLabelBySlug('PROMOTIONAL_ELEMENT_TYPES', link)}` : `Watch ${getLabelBySlug('PROMOTIONAL_ELEMENT_TYPES', link)}`,
+        color: isAccent ? 'accent' : 'primary'
       }
     }
   }
