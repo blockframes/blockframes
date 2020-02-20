@@ -66,7 +66,7 @@ export class SummarySaleComponent implements OnInit {
     return parties.map(p => p.get('party').get('displayName'));
   }
 
-  
+
   /**
    * Submit a contract version to Archipel Content
    * @todo(#1887) should update the version on the contract
@@ -80,7 +80,7 @@ export class SummarySaleComponent implements OnInit {
     await this.tunnel.save();
     const write = this.db.firestore.batch();
     this.service.update(`${lastIndex}`, { status: ContractStatus.submitted }, { params: { contractId }, write });
-    
+
     for (const movieId in this.dealForms.value) {
       const undernegotiation = { status: DistributionDealStatus.undernegotiation };
       const dealIds = this.dealForms.get(movieId).value.map(deal => deal.id);
