@@ -6,11 +6,13 @@
     <strong>Production Company </strong>
     <ng-container *ngFor="let producer of main.get('stakeholders').get('executiveProducer').controls; let isLast = last">
       <missing-control [control]="producer.get('displayName')" [link]="link"></missing-control>
-      <ng-container *ngIf="producer.get('countries').value.length">(</ng-container>
-      <ng-container *ngFor="let country of producer.get('countries').value; let last = last">
-        {{ country | translateSlug: 'TERRITORIES' }}{{ last ? '' : ', '}}
+      <ng-container *ngIf="producer.get('countries').value.length">
+        (
+        <ng-container *ngFor="let country of producer.get('countries').value; let last = last">
+          {{ country | translateSlug: 'TERRITORIES' }}{{ last ? '' : ', '}}
+        </ng-container>
+        )
       </ng-container>
-      <ng-container *ngIf="producer.get('countries').value.length">)</ng-container>
       {{ isLast ? '' : ', '}}
     </ng-container>
   </li>
@@ -34,11 +36,13 @@
     <strong>Co-Production </strong>
     <ng-container *ngFor="let coProducer of main.get('stakeholders').get('coProducer').controls; let isLast = last">
       <missing-control [control]="coProducer.get('displayName')" [link]="link"></missing-control>
-      <ng-container *ngIf="coProducer.get('countries').value.length">(</ng-container>
-      <ng-container *ngFor="let country of coProducer.get('countries').value; let last = last">
-        {{ country | translateSlug: 'TERRITORIES' }}{{ last ? '' : ', '}}
+      <ng-container *ngIf="coProducer.get('countries').value.length">
+        (
+        <ng-container *ngFor="let country of coProducer.get('countries').value; let last = last">
+          {{ country | translateSlug: 'TERRITORIES' }}{{ last ? '' : ', '}}
+        </ng-container>
+        )
       </ng-container>
-      <ng-container *ngIf="coProducer.get('countries').value.length">)</ng-container>
       {{ isLast ? '' : ', '}}
     </ng-container>
   </li>
