@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ContractQuery, displayPaymentSchedule } from '@blockframes/contract/contract/+state';
 import { map } from 'rxjs/operators';
 import { Movie } from '@blockframes/movie';
+import { Intercom } from 'ng-intercom';
 
 // @todo(#1952) Implement this logic in a component
 const versionColumns = {
@@ -27,9 +28,13 @@ export class NegociationComponent {
   versionColumns = versionColumns;
   initialVersionColumns = ['date', 'offer', 'status'];
 
-  constructor(private query: ContractQuery) { }
+  constructor(private query: ContractQuery, private intercom: Intercom) { }
 
   getDirectors(movie: Movie) {
     return  movie.main.directors.map(d => `${d.firstName} ${d.lastName}`).join(', ');
+  }
+
+  openIntercom() {
+    this.intercom.show();
   }
 }
