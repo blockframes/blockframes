@@ -34,17 +34,17 @@
                     <mat-icon svgIcon="heart_outline"></mat-icon>
                   </button>
                 </ng-template>
-                <div class="carousel-movie-info" fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="5px" class="informations light-text">
+                <div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="5px" class="informations">
                   <h3 mat-button color="primary">{{ movie.main.title.international }}</h3>
                   <div>
                     <span class="mat-body-2" *ngFor="let director of movie.main.directors; let isLast=last">
                       {{ director.firstName }} {{ director.lastName }}{{isLast ? '' : ', '}}
                     </span>
                   </div>
-                  <caption color="primary-contrast" class="mat-caption">{{ getMainInfo(movie) }}</caption>
-                  <span *ngFor="let salesAgent of movie.main.stakeholders.salesAgent; let isLast=last">
+                  <caption class="mat-caption">{{ getMainInfo(movie) }}</caption>
+                  <caption class="mat-caption" *ngFor="let salesAgent of movie.main.stakeholders.salesAgent; let isLast=last">
                     {{ salesAgent.displayName }}{{isLast ? '' : ', '}}
-                  </span>
+                  </caption>
                 </div>
               </div>
             </mat-carousel-slide>

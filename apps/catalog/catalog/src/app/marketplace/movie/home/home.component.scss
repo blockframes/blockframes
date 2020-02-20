@@ -6,6 +6,10 @@ header {
   background-size: cover;
   text-align: center;
   border: none;
+
+  h2, h1, .mat-body-1 {
+    color: white;
+  }
   
   h3 {
     margin: 0;
@@ -37,6 +41,7 @@ article {
   mat-carousel {
     flex: 1;
     margin: 10px;
+    color: white;
 
     h2 {
       margin: 0;
@@ -49,6 +54,9 @@ article {
     .informations {
       width: 100%;
       padding: 10px 30px;
+      h3, .mat-body-2, .mat-caption {
+        color: white;
+      }
     }
 
     button.mat-icon-button {
