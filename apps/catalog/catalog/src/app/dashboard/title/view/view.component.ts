@@ -14,16 +14,17 @@ export class TitleViewComponent implements OnInit {
   public loading$: Observable<boolean>;
   public getLabelBySlug = getLabelBySlug;
 
-  navLinks = [{
-    path: 'activity',
-    label: 'Marketplace Activity'
-  }, {
-    path: 'details',
-    label: 'Film Details'
-  },{
-    path: 'sales',
-    label: 'Sales'
-  }];
+  navLinks = [
+    {
+      path: 'activity',
+      label: 'Marketplace Activity'
+    },
+    {
+      path: 'details',
+      label: 'Film Details'
+    }
+  ];
+
   constructor(private movieQuery: MovieQuery) {}
 
   ngOnInit() {
