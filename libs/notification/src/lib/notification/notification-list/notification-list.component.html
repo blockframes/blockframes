@@ -11,11 +11,6 @@
               <small class="mat-caption" mat-line>{{ notification.date | date: 'shortTime' }}</small>
             </article>
           </article>
-          <article>
-            <ng-container *ngIf="notification.type == 'newContract' || 'contractInNegotiation'">
-              <a mat-flat-button (click)="goToPath(notification)">Go to document</a>
-            </ng-container>
-          </article>
         </section>
       </mat-list-item>
     </ng-container>
