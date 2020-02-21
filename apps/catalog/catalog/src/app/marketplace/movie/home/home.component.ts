@@ -39,15 +39,15 @@ export class MarketplaceHomeComponent implements OnInit {
     const latest$ = this.movieQuery.selectAll({
       filterBy: movies => movies.main.productionYear >= 2018
     });
-    const preProduction$ = this.movieQuery.selectAll({
-      filterBy: movies => movies.main.status === 'financing'
+    const postProduction$ = this.movieQuery.selectAll({
+      filterBy: movies => movies.main.status === 'post-production'
     });
     const completed$ = this.movieQuery.selectAll({
       filterBy: movies => movies.main.status === 'finished'
     });
 
-    this.moviesBySections$ = combineLatest([latest$, preProduction$, completed$]).pipe(
-      map(([latest, preProduction, completed]) => {
+    this.moviesBySections$ = combineLatest([latest$, postProduction$, completed$]).pipe(
+      map(([latest, postProduction, completed]) => {
         return [
           {
             title: 'New Films',
@@ -55,9 +55,9 @@ export class MarketplaceHomeComponent implements OnInit {
             movies: latest
           },
           {
-            title: 'Pre-production Films',
+            title: 'Post-Production Films',
             subline: 'Brand new projects with great potential',
-            movies: preProduction
+            movies: postProduction
           },
           {
             title: 'Completed Films',
