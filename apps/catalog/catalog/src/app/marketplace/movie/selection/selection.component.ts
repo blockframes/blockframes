@@ -45,7 +45,7 @@ export class MarketplaceSelectionComponent {
 
   /** Create a Contract, remove the current selection, move to tunnel */
   async create() {
-    // (January 2020) need to define it here as we cannot use DistributionDealService in ContractService -> Circular Dependancy
+    // @todo(#2041) need to define it here as we cannot use DistributionDealService in ContractService -> Circular Dependancy
     const contractId = this.db.createId();
     const org = this.orgQuery.getActive();
 
