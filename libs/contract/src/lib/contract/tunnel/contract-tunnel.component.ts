@@ -192,8 +192,10 @@ export class ContractTunnelComponent implements OnInit {
     }
     this.removedDeals = {};
 
-
-    const contract = createContract({ id: contractId, ...this.contractForm.value });
+    const contract = createContract({
+      ...this.query.getActive(),
+      ...this.contractForm.value
+    });
 
     // Upate Version
     // @todo (#1887) don't use last index
