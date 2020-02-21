@@ -196,6 +196,7 @@ export class ContractTunnelComponent implements OnInit {
     const contract = createContract({ id: contractId, ...this.contractForm.value });
 
     // Upate Version
+    // @todo (#1887) don't use last index
     const lastIndex = contract.versions.length - 1;
     const version = createContractVersion({ ...contract.versions[lastIndex] });
     this.versionService.update({ id: lastIndex.toString(), ...version }, { params: { contractId }, write })
