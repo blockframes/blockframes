@@ -35,7 +35,7 @@ export class TunnelSummaryComponent {
       movie.main.storeConfig.status = StoreStatus.submitted;
       await this.service.update({...this.query.getActive(), ...movie});
       this.form.markAsPristine();
-      const ref = this.snackBar.open('Movie Submitted 🎉🎉', '', { duration: 1000 });
+      const ref = this.snackBar.open('Movie Submitted !!', '', { duration: 1000 });
       ref.afterDismissed().subscribe(_ => {
         const movieId = this.query.getActiveId();
         this.router.navigate(['../../../../titles', movieId, 'details'], { relativeTo: this.route })
@@ -51,7 +51,9 @@ export class TunnelSummaryComponent {
     const recursiveFunc = (form:FormGroup|FormArray) => {
       Object.keys(form.controls).forEach(field => { 
         const control = form.get(field);
-        if (control.invalid) invalidControls.push(field);
+        if (control.invalid) {
+          invalidControls.push(field);
+        }
         if (control instanceof FormGroup) {
           recursiveFunc(control);
         } else if (control instanceof FormArray) {
