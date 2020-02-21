@@ -1,11 +1,11 @@
 import { MoviePromotionalElements, PromotionalElement, createMoviePromotionalElements, createPromotionalElement } from '../../+state';
-import { FormEntity, FormList, urlValidators, ImgRef, createImgRef } from '@blockframes/utils';
+import { FormEntity, FormList, ImgRef, createImgRef } from '@blockframes/utils';
 import { FormControl } from '@angular/forms';
 
 function createImgRefForm(reference?: Partial<ImgRef>) {
   const { url, ref, originalRef, originalFileName } = createImgRef(reference);
   return {
-    url: new FormControl(url, urlValidators),
+    url: new FormControl(url),
     ref: new FormControl(ref),
     originalRef: new FormControl(originalRef),
     originalFileName: new FormControl(originalFileName),
@@ -42,7 +42,7 @@ function createPromotionalElementRefControl(promotionalElement?: Partial<Promoti
     label: new FormControl(label),
     size: new FormControl(size),
     ratio: new FormControl(ratio),
-    media: new FormControl(media, urlValidators),
+    media: new FormControl(media),
     language: new FormControl(language),
     country: new FormControl(country),
   }
