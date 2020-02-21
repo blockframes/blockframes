@@ -19,14 +19,14 @@ import orderBy from 'lodash/orderBy';
 import { tap, switchMap } from 'rxjs/operators';
 import { ContractVersionService } from '../../version/+state/contract-version.service';
 import { cleanModel } from '@blockframes/utils';
-import { PermissionsService, Organization, OrganizationService, OrganizationQuery } from '@blockframes/organization';
+import { PermissionsService, OrganizationQuery } from '@blockframes/organization';
 import { ContractDocumentWithDates, ContractStatus, ContractType } from './contract.firestore';
 import { firestore } from 'firebase/app';
 import { MovieQuery } from '@blockframes/movie';
 import { createContractVersionFromFirestore } from '@blockframes/contract/version/+state/contract-version.model';
 import { ContractVersion } from '@blockframes/contract/version/+state';
 import { Observable } from 'rxjs';
-import { createParty } from '@blockframes/utils/common-interfaces';
+import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state';
 
 
 

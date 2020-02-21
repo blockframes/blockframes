@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { Router } from '@angular/router';
 import { MarketplaceQuery, MarketplaceStore } from '../../+state';
 import { MovieQuery } from '@blockframes/movie';
-import { ContractService, Contract, ContractTitleDetail, ContractType, createContractPartyDetail } from '@blockframes/contract/contract/+state';
+import { ContractService, Contract, ContractTitleDetail, ContractType, createContractPartyDetail, createContractTitleDetail } from '@blockframes/contract/contract/+state';
 import { ContractVersion } from '@blockframes/contract/version/+state';
 import { CommissionBase, createParty } from '@blockframes/utils/common-interfaces';
 import { Observable } from 'rxjs';
@@ -45,7 +45,10 @@ export class MarketplaceSelectionComponent {
 
   /** Create a Contract, remove the current selection, move to tunnel */
   async create() {
+    // (January 2020) need to define it here as we cannot use DistributionDealService in ContractService -> Circular Dependancy
+    const contractId = this.db.createId();
     const org = this.orgQuery.getActive();
+
     // Initialize parties
     const parties: Contract['parties'] = [
       createContractPartyDetail({
@@ -54,24 +57,21 @@ export class MarketplaceSelectionComponent {
       createContractPartyDetail({ party: createParty({ role: 'licensor' }) })
     ];
     const titleIds = this.query.getValue().ids;
-  
+
     // Create contract & Version
-    const contract: Partial<Contract> = { titleIds, parties, type: ContractType.sale };
+    const contract: Partial<Contract> = { id: contractId, titleIds, parties, type: ContractType.sale };
     const version: Partial<ContractVersion> = { titles: {} };
-    for (const movieId of titleIds) {
-      (version.titles[movieId] as Partial<ContractTitleDetail>) = {
-        price: { commissionBase: CommissionBase.grossreceipts, amount: 0, currency: 'USD' }
-      };
-    }
-    const contractId = await this.service.create(contract, version);
-    
-    // Create deals
-    const write = this.db.firestore.batch();
+
+    // Create deals per titles
+    // Ideally we would do that in the ContractService, but blocked by Circular Dependancy
     for (const movieId of titleIds) {
       const { deals } = this.query.getEntity(movieId);
-      this.dealService.add(deals, { write, params: { movieId } });
+      const dealDocs = deals.map(deal => ({ ...deal, contractId}));
+      const distributionDealIds = await this.dealService.add(dealDocs, { params: { movieId } });
+      version.titles[movieId] = createContractTitleDetail({ distributionDealIds });
     }
-    await write.commit();
+    await this.service.create(contract, version);
+
     await this.router.navigate(['c/o/marketplace/tunnel/contract', contractId, 'sale']);
     this.store.reset();
   }
