@@ -11,7 +11,8 @@ import {
   MatInputModule,
   MatSelectModule,
   MatButtonModule, 
-  MatDialogModule
+  MatDialogModule,
+  MatProgressSpinnerModule
 } from '@angular/material';
 
 // Modules
@@ -60,6 +61,7 @@ export const panelRoutes: Routes = [
     MatDialogModule,
     MatButtonModule,
     MatFormFieldModule,
+    MatProgressSpinnerModule,
     MatSelectModule,
     MatCheckboxModule,
     FlexLayoutModule,

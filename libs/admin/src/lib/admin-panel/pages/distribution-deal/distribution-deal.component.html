@@ -1,38 +1,41 @@
 <h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Distribution deal > {{ dealId }} </h1>
-
-<h2><strong>movie Id : </strong>{{ movieId }} </h2>
-<ng-container *ngIf="dealForm">
-  <form [formGroup]="dealForm" fxLayout="column">
-    <div>
-      <mat-form-field appearance="outline">
-        <mat-label>Deal Status</mat-label>
-        <mat-select formControlName="status" required>
-          <mat-option *ngFor="let status of statuses" [value]="distributionDealStatus[status]">
-            {{ distributionDealStatus[status] }} 
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-    <div>
-      <mat-form-field appearance="outline">
-        <mat-label>Contract Id</mat-label>
-        <input matInput type="text" placeholder="Contract Id" formControlName="contractId" required />
-        <mat-error *ngIf="dealForm.get('contractId').hasError('required')">
-          Contract Id is <strong>required</strong>
-        </mat-error>
-      </mat-form-field>
-    </div>
-    <div>
-      <mat-checkbox formControlName="exclusive">
-        Exclusive 
-      </mat-checkbox>
-    </div>
-    <mat-card-actions align="end">
-      <button type="submit" mat-raised-button class="main-btn" (click)="update()">Update</button>
-    </mat-card-actions>
-  </form>
-</ng-container>
-
+<article id="deal-section" fxLayout="column" fxLayoutAlign="start start" >
+  <h2><strong>movie Id : </strong> <a [routerLink]="getMoviePath(movieId)">{{ movieId }}</a></h2>
+  <ng-container *ngIf="dealForm else spinner">
+    <form [formGroup]="dealForm" fxLayout="column">
+      <div>
+        <mat-form-field appearance="outline">
+          <mat-label>Deal Status</mat-label>
+          <mat-select formControlName="status" required>
+            <mat-option *ngFor="let status of statuses" [value]="distributionDealStatus[status]">
+              {{ distributionDealStatus[status] }} 
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field appearance="outline">
+          <mat-label>Contract Id</mat-label>
+          <input matInput type="text" placeholder="Contract Id" formControlName="contractId" required />
+          <mat-error *ngIf="dealForm.get('contractId').hasError('required')">
+            Contract Id is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-checkbox formControlName="exclusive">
+          Exclusive 
+        </mat-checkbox>
+      </div>
+      <mat-card-actions align="end">
+        <button type="submit" mat-flat-button color="primary" (click)="update()">Update</button>
+      </mat-card-actions>
+    </form>
+  </ng-container>
+  <ng-template #spinner >
+    <mat-spinner diameter="30"></mat-spinner>
+  </ng-template>
+</article>
 
 
 

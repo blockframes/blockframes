@@ -15,16 +15,8 @@ export class EditPartyComponent implements OnInit {
   public form : PartyDetailsForm;
   public statuses : string[] = [];
   public contractStatus: any;
-  
-  public staticRoles = staticModels.LEGAL_ROLES.filter(role => {
-    const wantedRoles = ['licensee', 'licensor'];
-    return wantedRoles.includes(role.slug);
-  })
-
-  public staticSubRoles = staticModels.SUB_LICENSOR_ROLES.filter(role => {
-    const wantedSubRoles = ['observator', 'signatory'];
-    return wantedSubRoles.includes(role.slug)
-  })
+  public staticRoles = staticModels.LEGAL_ROLES;
+  public staticSubRoles = staticModels.SUB_LICENSOR_ROLES;
 
   constructor(
     public dialogRef: MatDialogRef<EditPartyComponent>,
