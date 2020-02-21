@@ -16,11 +16,6 @@ button {
   }
 }
 
-auth-signup-form {
-  display: block;
-  padding: 20px 0;
-}
-
 .mat-fab {
   height: 120px;
   width: 120px;
@@ -29,13 +24,13 @@ auth-signup-form {
 }
 
 mat-sidenav {
-  width: 730px;
+  width: 800px;
 }
 
 // large
 @include large {
   mat-sidenav {
-    width: 600px;
+    width: 800px;
   }
 }
 

@@ -12,6 +12,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatCardModule } from '@angular/material/card';
 
 // Component
 import { SignupFormComponent } from './signup-form.component';
@@ -33,6 +34,7 @@ import { SignupFormComponent } from './signup-form.component';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    MatCardModule
   ],
 })
 export class SignupFormModule {}
