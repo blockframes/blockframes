@@ -19,7 +19,7 @@
         <mat-card-content>
           <ul>
             <li *ngIf="movie.story.synopsis as synopsis">
-              <strong>Synopsis </strong><span>{{ synopsis }}</span>
+              <strong>Synopsis </strong><span class="synopsis">{{ synopsis }}</span>
             </li>
             <li *ngIf="movie.promotionalDescription.keywords.length > 0">
               <strong>Keywords </strong>

@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MovieQuery, Movie } from '@blockframes/movie';
 import { ExtractCode, getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
+import { getTerritoryFromGeoJson } from '@blockframes/utils/static-model/territories-ISO-3166';
 
 const promoLinks = [
   'promo_reel_link', 'scenario', 'screener_link', 'teaser_link', 'presentation_deck', 'trailer_link'
@@ -48,7 +49,7 @@ export class MarketplaceMovieMainComponent {
   public getStakeholder(movie: Movie, role: string) {
     return movie.main.stakeholders[role].map(stakeholder => {
       return (stakeholder.countries && !!stakeholder.countries.length)
-        ? `${stakeholder.displayName} (${stakeholder.countries})`
+        ? `${stakeholder.displayName} (${stakeholder.countries.map(country => getLabelBySlug('TERRITORIES', country))})`
         :  stakeholder.displayName;
     }).join(', ');
   }
