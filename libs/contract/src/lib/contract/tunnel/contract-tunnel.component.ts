@@ -89,7 +89,7 @@ export class ContractTunnelComponent implements OnInit {
 
     // Set the initial deals
     contract.titleIds.forEach(async movieId => {
-      const deals = await this.dealService.getValue({ params: { movieId } });
+      const deals = await this.dealService.getValue(ref => ref.where('contractId', '==', contract.id), { params: { movieId } });
       this.dealForms.setControl(movieId, FormList.factory(deals, deal => new DistributionDealForm(deal)));
     });
 
@@ -169,17 +169,6 @@ export class ContractTunnelComponent implements OnInit {
   public async save() {
     const write = this.db.firestore.batch();
     const contractId = this.query.getActiveId();
-    const contract = createContract({ id: contractId, ...this.contractForm.value });
-
-    // Upate Version
-    const lastIndex = contract.versions.length - 1;
-    const version = createContractVersion({ ...contract.versions[lastIndex] });
-    this.versionService.update({ id: lastIndex.toString(), ...version }, { params: { contractId }, write })
-    delete contract.versions;
-
-    // Update Contract
-    contract.titleIds = Object.keys(version.titles || {});
-    this.service.update(contract, { write });
 
     // Upsert deals
     for (const movieId in this.dealForms.controls) {
@@ -190,6 +179,7 @@ export class ContractTunnelComponent implements OnInit {
         } else {
           const id = await this.dealService.add({ contractId, ...deal }, { params: { movieId }, write });
           this.dealForms.get(movieId).at(i).patchValue({ id });
+          this.contractForm.get('versions').last().get('titles').get(movieId).get('distributionDealIds').add(id);
         }
       })
     }
@@ -201,6 +191,19 @@ export class ContractTunnelComponent implements OnInit {
       }
     }
     this.removedDeals = {};
+
+
+    const contract = createContract({ id: contractId, ...this.contractForm.value });
+
+    // Upate Version
+    const lastIndex = contract.versions.length - 1;
+    const version = createContractVersion({ ...contract.versions[lastIndex] });
+    this.versionService.update({ id: lastIndex.toString(), ...version }, { params: { contractId }, write })
+    delete contract.versions;
+
+    // Update Contract
+    contract.titleIds = Object.keys(version.titles || {});
+    this.service.update(contract, { write });
 
     // Return an observable<boolean> for the confirmExit
     await write.commit();
