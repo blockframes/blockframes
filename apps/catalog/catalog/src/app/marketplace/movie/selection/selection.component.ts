@@ -1,12 +1,13 @@
-import { Component, ChangeDetectionStrategy, HostBinding, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { Router } from '@angular/router';
 import { MarketplaceQuery, MarketplaceStore } from '../../+state';
 import { MovieQuery } from '@blockframes/movie';
-import { ContractService, Contract, ContractTitleDetail, ContractType } from '@blockframes/contract/contract/+state';
+import { ContractService, Contract, ContractTitleDetail, ContractType, createContractPartyDetail } from '@blockframes/contract/contract/+state';
 import { ContractVersion } from '@blockframes/contract/version/+state';
-import { CommissionBase } from '@blockframes/utils/common-interfaces';
+import { CommissionBase, createParty } from '@blockframes/utils/common-interfaces';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { OrganizationQuery } from '@blockframes/organization';
 
 @Component({
   selector: 'catalog-selection',
@@ -14,7 +15,7 @@ import { map } from 'rxjs/operators';
   styleUrls: ['./selection.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceSelectionComponent implements OnInit {
+export class MarketplaceSelectionComponent {
   @HostBinding('attr.page-id') pageId = 'catalog-selection';
 
   count$ = this.query.selectCount();
@@ -26,12 +27,9 @@ export class MarketplaceSelectionComponent implements OnInit {
     private query: MarketplaceQuery,
     private service: ContractService,
     private movieQuery: MovieQuery,
+    private orgQuery: OrganizationQuery,
     private router: Router,
   ) {}
-
-  ngOnInit() {
-
-  }
 
   /** Select a movie for a specific movie Id */
   selectMovie(movieId: string) {
@@ -44,8 +42,16 @@ export class MarketplaceSelectionComponent implements OnInit {
 
   /** Create a Contract, remove the current selection, move to tunnel */
   async create() {
+    const org = this.orgQuery.getActive();
+    // Initialize parties
+    const parties: Contract['parties'] = [
+      createContractPartyDetail({
+        party: createParty({ role: 'licensee', orgId: org.id, displayName: org.name }),
+      }),
+      createContractPartyDetail({ party: createParty({ role: 'licensor' }) })
+    ];
     const titleIds = this.query.getValue().ids;
-    const contract: Partial<Contract> = { titleIds, type: ContractType.sale };
+    const contract: Partial<Contract> = { titleIds, parties, type: ContractType.sale };
     const version: Partial<ContractVersion> = { titles: {} };
     for (const movieId of titleIds) {
       (version.titles[movieId] as Partial<ContractTitleDetail>) = {
@@ -53,8 +59,8 @@ export class MarketplaceSelectionComponent implements OnInit {
       };
     }
     const contractId = await this.service.create(contract, version);
-    this.store.reset();
     this.router.navigate(['c/o/marketplace/tunnel/contract', contractId, 'sale']);
+    this.store.reset();
   }
 
 }

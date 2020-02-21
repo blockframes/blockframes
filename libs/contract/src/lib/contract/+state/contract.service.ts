@@ -26,6 +26,7 @@ import { MovieQuery } from '@blockframes/movie';
 import { createContractVersionFromFirestore } from '@blockframes/contract/version/+state/contract-version.model';
 import { ContractVersion } from '@blockframes/contract/version/+state';
 import { Observable } from 'rxjs';
+import { createParty } from '@blockframes/utils/common-interfaces';
 
 
 
@@ -166,9 +167,9 @@ export class ContractService extends CollectionService<ContractState> {
    */
   public async create(contract: Partial<Contract>, version: Partial<ContractVersion> = {}) {
     const write = this.db.firestore.batch();
-    const partyIds = [ this.orgQuery.getActiveId() ];
+    const org = this.orgQuery.getActive();
     // Initialize all values
-    const _contract = createContract({ ...contract, partyIds });
+    const _contract = createContract({ ...contract, partyIds: [org.id] });
     const _version = contract.type === ContractType.mandate
       ? createVersionMandate({ id: '1', ...version })
       : createContractVersion({ id: '1', ...version });
