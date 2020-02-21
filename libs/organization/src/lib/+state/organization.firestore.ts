@@ -65,7 +65,7 @@ export const enum WishlistStatus {
 }
 
 /** Default placeholder logo used when an Organization is created. */
-export const PLACEHOLDER_LOGO = '/assets/logo/organisation_avatar_250.svg';
+export const PLACEHOLDER_LOGO = '/assets/logo/empty_organization.png';
 
 /** A public interface or Organization, without sensitive data. */
 export interface PublicOrganization {
