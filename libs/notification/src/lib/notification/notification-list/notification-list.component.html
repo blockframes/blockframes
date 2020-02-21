@@ -11,9 +11,6 @@
         <p mat-line>{{ notification.message }}</p>
         <small mat-line class="mat-caption" mat-line>{{ notification.date | date: 'shortTime' }}</small>
       </mat-list-item>
-      <ng-container *ngIf="notification.type == 'newContract' || 'contractInNegotiation'">
-        <a mat-button (click)="goToPath(notification)">Go to document</a>
-      </ng-container>
     </ng-container>
   </ng-container>
   <mat-divider *ngIf="!last"></mat-divider>
