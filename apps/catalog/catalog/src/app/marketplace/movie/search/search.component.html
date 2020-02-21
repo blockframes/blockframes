@@ -83,6 +83,22 @@
 
           <mat-divider inset></mat-divider>
           <h5>TITLE METADATA</h5>
+
+          <!-- Freshness (Store Type) -->
+          <mat-expansion-panel>
+            <mat-expansion-panel-header>
+              <span class="mat-body-1">Freshness</span>
+            </mat-expansion-panel-header>
+            <div fxLayout="row" fxLayoutAlign="space-around center">
+              <mat-checkbox (change)="checkStoreType('library')" color="primary" [disabled]="availsForm.value.isActive">
+                <span>Library</span>
+              </mat-checkbox>
+              <mat-checkbox (change)="checkStoreType('line_up')" color="primary" [disabled]="availsForm.value.isActive">
+                <span>Line-Up</span>
+              </mat-checkbox>
+            </div>
+          </mat-expansion-panel>
+
           <!-- Genres -->
           <mat-expansion-panel>
             <mat-expansion-panel-header>

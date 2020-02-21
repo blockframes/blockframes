@@ -19,13 +19,14 @@ import orderBy from 'lodash/orderBy';
 import { tap, switchMap } from 'rxjs/operators';
 import { ContractVersionService } from '../../version/+state/contract-version.service';
 import { cleanModel } from '@blockframes/utils';
-import { PermissionsService, Organization, OrganizationService, OrganizationQuery } from '@blockframes/organization';
+import { PermissionsService, OrganizationQuery } from '@blockframes/organization';
 import { ContractDocumentWithDates, ContractStatus, ContractType } from './contract.firestore';
 import { firestore } from 'firebase/app';
 import { MovieQuery } from '@blockframes/movie';
 import { createContractVersionFromFirestore } from '@blockframes/contract/version/+state/contract-version.model';
 import { ContractVersion } from '@blockframes/contract/version/+state';
 import { Observable } from 'rxjs';
+import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state';
 
 
 
@@ -163,12 +164,13 @@ export class ContractService extends CollectionService<ContractState> {
    * @param contract The contract to add
    * @param version Optional content for the first version
    * @todo(#1887) Don't create _meta
+   * @todo(#2041) Use distribution deal service
    */
   public async create(contract: Partial<Contract>, version: Partial<ContractVersion> = {}) {
     const write = this.db.firestore.batch();
-    const partyIds = [ this.orgQuery.getActiveId() ];
+    const org = this.orgQuery.getActive();
     // Initialize all values
-    const _contract = createContract({ ...contract, partyIds });
+    const _contract = createContract({ ...contract, partyIds: [org.id] });
     const _version = contract.type === ContractType.mandate
       ? createVersionMandate({ id: '1', ...version })
       : createContractVersion({ id: '1', ...version });
