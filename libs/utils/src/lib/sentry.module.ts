@@ -22,9 +22,7 @@ export class SentryErrorHandler implements ErrorHandler {
   }
 
   handleError(error) {
-    const eventId = Sentry.captureException(error.originalError || error);
-    const { uid, email } = this.authQuery.user || { uid: undefined, email: undefined };
-    Sentry.showReportDialog({ eventId, user: { email } });
+    Sentry.captureException(error.originalError || error);
   }
 }
 
