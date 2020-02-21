@@ -160,7 +160,7 @@ export class MarketplaceSearchComponent implements OnInit {
         const movieIds = algoliaMovies.map(index => index.objectID);
         return this.movieQuery.selectAll({
           sortBy: (a, b) => sortMovieBy(a, b, sortBy),
-          filterBy: movie => filterMovie(movie, filterOptions) && movieIds.includes(movie.id)
+          filterBy: movie => filterMovie(movie, filterOptions)
         }).pipe(
           switchMap(movies => {
 
