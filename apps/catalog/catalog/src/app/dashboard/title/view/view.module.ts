@@ -37,12 +37,6 @@ const routes = [{
     {
       path: 'details',
       loadChildren: () => import('../details/details.module').then(m => m.TitleDetailsModule)
-    },
-    {
-      path: 'sales',
-      canActivate: [MovieOrganizationListGuard, ContractsDealListGuard],
-      canDeactivate: [MovieOrganizationListGuard, ContractsDealListGuard],
-      loadChildren: () => import('../sales/sales.module').then(m => m.TitleSalesModule)
     }
   ]
 }];
