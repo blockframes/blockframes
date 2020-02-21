@@ -28,10 +28,6 @@ import { AngularFirePerformanceModule } from '@angular/fire/performance';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 
-// Sentry
-import { SentryModule } from '@blockframes/utils/sentry.module';
-import { sentryDsn } from '@env';
-
 // Yandex Metrika
 import { NgxMetrikaModule } from '@kolkov/ngx-metrika';
 import { yandexId } from '@env';
@@ -43,7 +39,6 @@ import { intercomId } from '@env';
 // Analytics
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
-import { ErrorLoggerModule } from '@blockframes/utils/error-logger.module';
 
 @NgModule({
   declarations: [AppComponent],
@@ -66,8 +61,6 @@ import { ErrorLoggerModule } from '@blockframes/utils/error-logger.module';
     AngularFireAuthModule,
     AngularFireStorageModule,
     AngularFireAnalyticsModule,
-    // Analytics
-    sentryDsn ? SentryModule : ErrorLoggerModule,
 
     // Akita
     AkitaNgRouterStoreModule,
