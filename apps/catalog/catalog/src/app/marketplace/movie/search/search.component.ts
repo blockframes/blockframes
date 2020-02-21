@@ -160,8 +160,10 @@ export class MarketplaceSearchComponent implements OnInit {
         const movieIds = algoliaMovies.map(index => index.objectID);
         return this.movieQuery.selectAll({
           sortBy: (a, b) => sortMovieBy(a, b, sortBy),
-          filterBy: movie => filterMovie(movie, filterOptions)
+          // TODO issue #2044
+          filterBy: movie => filterMovie(movie, filterOptions) && movieIds.includes(movie.id)
         }).pipe(
+          tap(console.log),
           switchMap(movies => {
 
             // If Avails filter button is clicked
