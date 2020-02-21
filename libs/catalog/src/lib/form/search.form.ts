@@ -18,7 +18,7 @@ import { Validators, FormArray } from '@angular/forms';
 import { FormGroup, FormControl } from '@angular/forms';
 import { FormEntity, numberRangeValidator, Terms } from '@blockframes/utils';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
-import { MovieLanguageSpecification } from '@blockframes/movie/movie/+state/movie.firestore';
+import { MovieLanguageSpecification, StoreType } from '@blockframes/movie/movie/+state/movie.firestore';
 import { createMovieLanguageSpecification } from '@blockframes/movie/movie/+state/movie.model';
 import { FormStaticArray, FormList, FormStaticValue } from '@blockframes/utils/form';
 import { NumberRange, DateRange } from '@blockframes/utils/common-interfaces';
@@ -37,6 +37,7 @@ export interface CatalogSearch {
   certifications: CertificationsLabel[];
   originCountries: TerritoriesLabel[];
   estimatedBudget: NumberRange[];
+  storeType: StoreType[];
   searchbar: {
     text: string;
     type: string;
@@ -69,6 +70,7 @@ function createCatalogSearch(search: Partial<CatalogSearch> = {}): CatalogSearch
     certifications: [],
     originCountries: [],
     estimatedBudget: [],
+    storeType: [],
     searchbar: {
       text: '',
       type: ''
@@ -139,6 +141,7 @@ function createCatalogSearchControl(search: CatalogSearch) {
     certifications: new FormControl(search.certifications),
     estimatedBudget: new FormControl(search.estimatedBudget),
     originCountries: FormList.factory(search.originCountries, country => new FormStaticValue(country, 'TERRITORIES')),
+    storeType: new FormControl(search.storeType),
     searchbar: new FormGroup({
       text: new FormControl(''),
       type: new FormControl('')
@@ -233,6 +236,20 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
       throw new Error(`Certification ${certificationChecked} doesn't exist`);
     }
 
+  }
+
+  checkStoreType(storeType: StoreType) {
+    // check if media is already checked by the user
+    if (!this.get('storeType').value.includes(storeType)) {
+      this.get('storeType').setValue([...this.get('storeType').value, storeType]);
+    } else if ( this.get('storeType').value.includes(storeType)) {
+        const storeTypes = this.get('storeType').value.filter(
+          (alreadyCheckedStoreType: StoreType) => alreadyCheckedStoreType !== storeType
+        );
+        this.get('storeType').setValue(storeTypes);
+    } else {
+      throw new Error(`Store Type ${StoreType[storeType]} doesn't exist`);
+    }
   }
 
 }
