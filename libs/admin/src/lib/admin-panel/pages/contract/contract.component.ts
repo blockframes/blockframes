@@ -1,8 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar, MatDialog } from '@angular/material';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
-import { ContractWithLastVersion, PublicContract } from '@blockframes/contract/contract/+state/contract.model';
+import { ContractWithLastVersion, PublicContract, createContractPartyDetail } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractAdminForm } from '../../forms/contract-admin.form';
 import { ContractVersionAdminForm } from '../../forms/contract-version-admin.form';
 import { ContractStatus, ContractType } from '@blockframes/contract/contract/+state/contract.firestore';
@@ -13,7 +13,7 @@ import { Observable } from 'rxjs/internal/Observable';
 import { MovieCurrenciesSlug } from '@blockframes/utils/static-model/types';
 import { getCodeBySlug } from '@blockframes/utils/static-model/staticModels';
 import { MovieService } from '@blockframes/movie';
-
+import { EditPartyComponent } from '../../components/edit-party/edit-party.component';
 
 @Component({
   selector: 'admin-contract',
@@ -114,7 +114,8 @@ export class ContractComponent implements OnInit {
     private contractVersionService: ContractVersionService,
     private route: ActivatedRoute,
     private cdRef: ChangeDetectorRef,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private dialog: MatDialog
   ) { }
 
   async ngOnInit() {
@@ -136,7 +137,7 @@ export class ContractComponent implements OnInit {
     Object.keys(this.contract.last.titles).forEach(async id => {
       const title = this.contract.last.titles[id];
       const movie = await this.movieService.getValue(id);
-      
+
       // Append new data for table display
       this.titles.push({
         id,
@@ -192,6 +193,56 @@ export class ContractComponent implements OnInit {
     this.cdRef.markForCheck();
 
     this.snackBar.open('Informations updated !', 'close', { duration: 5000 });
+  }
+
+  public editParty(index: number) {
+    const dialogRef = this.dialog.open(EditPartyComponent, {
+      data: {
+        title: 'Edit contract party.',
+        subtitle: 'If you leave now, your changes will not be saved.',
+        party: this.contract.doc.parties[index]
+      },
+      disableClose: true
+    });
+
+    return dialogRef.afterClosed().subscribe(async (output: any) => this._updateParty(index, output));
+  }
+
+  public addParty() {
+    const party = createContractPartyDetail();
+    const index = this.contract.doc.parties.length;
+    const dialogRef = this.dialog.open(EditPartyComponent, {
+      data: {
+        title: 'Add a contract party.',
+        subtitle: 'If you leave now, your changes will not be saved.',
+        party
+      },
+      disableClose: true
+    });
+    return dialogRef.afterClosed().subscribe(async (output: any) => this._updateParty(index, output));
+  }
+
+  public async _updateParty(index: number, output: any): Promise<Boolean> {
+    if (!output) return false;
+    const writeableContract = { ... this.contract.doc }
+
+    if (output.remove === true) {
+      writeableContract.parties.splice(index, 1);
+    } else {
+      // Hack because we actually need a multiselect form input
+      if (output.childRoles && !Array.isArray(output.childRoles)) {
+        output.childRoles = [output.childRoles];
+      }
+      writeableContract.parties[index] = output;
+    }
+
+    writeableContract.partyIds = this.contract.doc.parties.filter(p => p.party.orgId).map(p => p.party.orgId);
+
+    this.contract.doc = writeableContract;
+    await this.contractService.update(this.contract.doc);
+    this.cdRef.markForCheck();
+    this.snackBar.open('Informations updated !', 'close', { duration: 5000 });
+    return true;
   }
 
   /** Utils function to get currency code for currency pipe. */

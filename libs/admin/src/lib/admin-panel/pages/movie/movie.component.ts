@@ -4,6 +4,7 @@ import { MatSnackBar } from '@angular/material';
 import { MovieService, Movie } from '@blockframes/movie';
 import { MovieAdminForm } from '../../forms/movie-admin.form';
 import { StoreType, StoreStatus } from '@blockframes/movie/movie/+state/movie.firestore';
+import { staticModels } from '@blockframes/utils/static-model';
 
 
 @Component({
@@ -20,6 +21,7 @@ export class MovieComponent implements OnInit {
   public storeType: any;
   public storeStatuses: string[];
   public storeStatus: any;
+  public staticModels = staticModels;
 
   constructor(
     private movieService: MovieService,
@@ -48,6 +50,7 @@ export class MovieComponent implements OnInit {
 
     this.movie.main.storeConfig.status = this.movieForm.get('storeStatus').value;
     this.movie.main.storeConfig.storeType = this.movieForm.get('storeType').value;
+    this.movie.main.status = this.movieForm.get('productionStatus').value;
 
     await this.movieService.updateById(this.movieId, this.movie);
 

@@ -25,8 +25,11 @@
       <h2>Current version : {{ version }} </h2>
 
       <h3>Parties : </h3>
-      <div *ngFor="let partyDetails of contract.doc.parties">
-        <h4>Party : {{ partyDetails.party.displayName }} ( org: {{ partyDetails.party.orgId }} ) </h4>
+      <div *ngFor="let partyDetails of contract.doc.parties; let i = index">
+        <section fxLayout="row" fxLayoutAlign="space-between start">
+          <h4>Party : {{ partyDetails.party.displayName }} ( org: {{ partyDetails.party.orgId }} ) </h4>
+          <button mat-icon-button color="accent" (click)="editParty(i)"><mat-icon>edit</mat-icon></button>
+        </section>
         <ul>
           <li><strong>Status : </strong>{{ partyDetails.status }}</li>
           <li><strong>Sign date : </strong>{{ partyDetails.signDate ? (partyDetails.signDate | date: 'short') : ' -- ' }}</li>
@@ -39,6 +42,12 @@
             </ng-container>
           </li>
         </ul>
+      </div>
+      <div fxLayout="column" fxLayoutAlign="start end">
+        <button mat-flat-button color="primary" (click)="addParty()">
+          <span>Add a party</span>
+          <mat-icon svgIcon="add"></mat-icon>
+        </button>
       </div>
     </article>
     <article fxLayout="column" fxLayoutAlign="space-between start">

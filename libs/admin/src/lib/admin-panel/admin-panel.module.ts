@@ -10,12 +10,14 @@ import {
   MatCheckboxModule,
   MatInputModule,
   MatSelectModule,
-  MatButtonModule 
+  MatButtonModule, 
+  MatDialogModule
 } from '@angular/material';
 
 // Modules
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
+import { OrganizationAutocompleteModule } from '@blockframes/organization/components/organization-autocomplete/organization-autocomplete.module';
 
 // Components
 import { OverviewComponent } from './pages/overview/overview.component';
@@ -29,6 +31,7 @@ import { InvoicesComponent } from './pages/invoices/invoices.component';
 import { InvoiceComponent } from './pages/invoice/invoice.component';
 import { ContractComponent } from './pages/contract/contract.component';
 import { DistributionDealComponent } from './pages/distribution-deal/distribution-deal.component';
+import { EditPartyComponent } from './components/edit-party/edit-party.component';
 
 export const panelRoutes: Routes = [
   { path: '', redirectTo: 'overview', pathMatch: 'full' },
@@ -54,6 +57,7 @@ export const panelRoutes: Routes = [
     MatIconModule,
     MatCardModule,
     MatInputModule,
+    MatDialogModule,
     MatButtonModule,
     MatFormFieldModule,
     MatSelectModule,
@@ -61,6 +65,7 @@ export const panelRoutes: Routes = [
     FlexLayoutModule,
     TableFilterModule,
     ImageReferenceModule,
+    OrganizationAutocompleteModule,
     RouterModule.forChild(panelRoutes),
   ],
   declarations: [
@@ -75,6 +80,7 @@ export const panelRoutes: Routes = [
     MovieComponent,
     InvoicesComponent,
     InvoiceComponent,
+    EditPartyComponent,
   ],
   exports: [RouterModule]
 })

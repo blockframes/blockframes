@@ -22,6 +22,16 @@
         </mat-select>
       </mat-form-field>
     </div>
+    <div>
+      <mat-form-field appearance="outline">
+        <mat-label>Production Status</mat-label>
+        <mat-select formControlName="productionStatus" required>
+          <mat-option *ngFor="let status of staticModels.MOVIE_STATUS" [value]="status.slug">
+            {{ status.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
     <mat-card-actions align="end">
       <button type="submit" mat-raised-button class="main-btn" (click)="update()">Update</button>
     </mat-card-actions>
