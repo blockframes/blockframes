@@ -66,9 +66,9 @@ export function getAvailableTerritories(
 function getTerritorySlugsWithDeals(filter: AvailsSearch, mandateDeals: DistributionDeal[], salesDeals: DistributionDeal[]): TerritoriesSlug[] {
   const licensedTerritorySlugs = getLicensedTerritorySlugs(mandateDeals, filter);
 
-  const matchingExclusivityDeals = getExclusiveDeals(salesDeals, filter.exclusivity);
+  const matchingExclusivityDeals = getExclusiveDeals(salesDeals, filter.exclusive);
   const matchingRangeDeals = getDealsInDateRange(filter.terms, matchingExclusivityDeals);
-  const matchingDeals = getDealsWithMedias(filter.medias, matchingRangeDeals);
+  const matchingDeals = getDealsWithMedias(filter.licenseType, matchingRangeDeals);
 
   const territorySlugsFromDeals: TerritoriesSlug[] = [];
   matchingDeals.forEach(deal => {
@@ -89,9 +89,9 @@ function getTerritorySlugsWithDeals(filter: AvailsSearch, mandateDeals: Distribu
 function getTerritorySlugsWithoutDeals(filter: AvailsSearch, mandateDeals: DistributionDeal[], salesDeals: DistributionDeal[]): TerritoriesSlug[] {
   const licensedTerritorySlugs = getLicensedTerritorySlugs(mandateDeals, filter);
 
-  const matchingExclusivityDeals = getExclusiveDeals(salesDeals, filter.exclusivity);
+  const matchingExclusivityDeals = getExclusiveDeals(salesDeals, filter.exclusive);
   const matchingRangeDeals = getDealsInDateRange(filter.terms, matchingExclusivityDeals);
-  const matchingDeals = getDealsWithMedias(filter.medias, matchingRangeDeals);
+  const matchingDeals = getDealsWithMedias(filter.licenseType, matchingRangeDeals);
 
   const territorySlugsFromDeals: TerritoriesSlug[] = [];
   matchingDeals.forEach(deal => {
@@ -112,7 +112,7 @@ function getLicensedTerritorySlugs(mandateDeals: DistributionDeal[], filter: Ava
 
   // Iterate on every mandate deals of the movie
   mandateDeals.forEach(deal => {
-    const hasMedias = filter.medias.every(media => deal.licenseType.includes(media));
+    const hasMedias = filter.licenseType.every(media => deal.licenseType.includes(media));
     const hasTermsInRange = inDateRange(filter.terms, deal.terms);
 
     // If mandate contain all filter medias and filter

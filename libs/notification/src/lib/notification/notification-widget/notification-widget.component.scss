@@ -1,3 +1,5 @@
+@import "mixins";
+
 mat-card-header {
   background-color: var(--primary);
 }
@@ -8,5 +10,13 @@ mat-card-header {
 
 
 widget-card {
-  max-width: 400px;
+  max-height: 700px;
+  overflow-y: scroll;
+}
+
+@include mobile {
+  widget-card {
+    max-width: 375px;
+  }
+
 }

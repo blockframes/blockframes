@@ -1,9 +1,10 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { MovieService } from '@blockframes/movie';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MovieService, MovieQuery } from '@blockframes/movie';
 import { StoreStatus } from '@blockframes/movie/movie/+state/movie.firestore';
 import { MatSnackBar } from '@angular/material';
 import { MovieTunnelComponent } from '../movie-tunnel.component';
+import { FormGroup, FormArray } from '@angular/forms';
 
 @Component({
   selector: 'catalog-summary-tunnel',
@@ -16,8 +17,10 @@ export class TunnelSummaryComponent {
 
   constructor(
     private tunnel: MovieTunnelComponent,
+    private router: Router,
     private route: ActivatedRoute,
     private service: MovieService,
+    private query: MovieQuery,
     private snackBar: MatSnackBar,
   ) {}
 
@@ -28,13 +31,37 @@ export class TunnelSummaryComponent {
 
   public async submit() {
     if (this.form.valid) {
-      const { movieId } = this.route.snapshot.params;
       const movie = this.form.value;
       movie.main.storeConfig.status = StoreStatus.submitted;
-      await this.service.update({id: movieId, ...movie});
+      await this.service.update({...this.query.getActive(), ...movie});
       this.form.markAsPristine();
+      const ref = this.snackBar.open('Movie Submitted !!', '', { duration: 1000 });
+      ref.afterDismissed().subscribe(_ => {
+        const movieId = this.query.getActiveId();
+        this.router.navigate(['../../../../titles', movieId, 'details'], { relativeTo: this.route })
+      })
     } else {
       this.snackBar.open('Fill all mandatory fields before submitting', '', { duration: 2000 });
     }
+  }
+
+  /* Utils function to get the list of invalid form. Not used yet, but could be useful later */
+  public findInvalidControlsRecursive(formToInvestigate:FormGroup|FormArray):string[] {
+    const invalidControls:string[] = [];
+    const recursiveFunc = (form:FormGroup|FormArray) => {
+      Object.keys(form.controls).forEach(field => { 
+        const control = form.get(field);
+        if (control.invalid) {
+          invalidControls.push(field);
+        }
+        if (control instanceof FormGroup) {
+          recursiveFunc(control);
+        } else if (control instanceof FormArray) {
+          recursiveFunc(control);
+        }        
+      });
+    }
+    recursiveFunc(formToInvestigate);
+    return invalidControls;
   }
 }
