@@ -2,6 +2,7 @@ import { User } from "./type";
 
 /** This list of users is linked to backend-ops/users.fixture. */
 export const USERS: Partial<User>[] = [
+  {email: 'testcycy@lol.com', password: 'azerty'},
   {
     uid: '8sIkEsgILVNIk6gET7SyuphCrGp1',
     email: 'cytest@blockframes.com',
