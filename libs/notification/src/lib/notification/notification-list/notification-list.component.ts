@@ -33,7 +33,7 @@ export class NotificationListComponent implements OnInit {
     return this.query.createNotificationInformation(notification)
   }
 
-  public readNotification(notification: Notification) {
+  public goToPath(notification: Notification) {
     this.service.readNotification(notification);
     const path = this.getInformation(notification).url;
     if (path) {
