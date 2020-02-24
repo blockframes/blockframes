@@ -14,6 +14,8 @@ const STAKEHOLDERS = ['Realitism Films', 'Backup Media'];
 // Select user: cytest@blockframes.com
 const LOGIN_CREDENTIALS: Partial<User> = USERS[0];
 
+const MOVIE_ID = '0DdLhrZCuf6upjPuQwrd';
+
 beforeEach(() => {
   cy.clearCookies();
   cy.clearLocalStorage();
@@ -22,7 +24,7 @@ beforeEach(() => {
 });
 
 describe('User can navigate to the movie tunnel page 5, complete the fields, and navigate to page 6', () => {
-  it.skip('Login into an existing account, navigate on budget page, complete budget and quotas fields, go on movie tunnel page 6', () => {
+  it('Login into an existing account, navigate on budget page, complete budget and quotas fields, go on movie tunnel page 6', () => {
     // Connexion
     const p1: WelcomeViewPage = new WelcomeViewPage();
     const p2: LoginViewPage = p1.clickCallToAction();
@@ -31,11 +33,21 @@ describe('User can navigate to the movie tunnel page 5, complete the fields, and
     const p3: HomePage = p2.clickSignIn();
 
     // Navigate to movie-tunnel-4 and fill the fields
-    const p4: TunnelCreditsPage = TunnelCreditsPage.navigateToPage();
+    const p4: TunnelCreditsPage = TunnelCreditsPage.navigateToPage(MOVIE_ID);
     p4.fillProductionYear(PRODUCTION_YEAR);
     p4.assertProductionYearExists(PRODUCTION_YEAR);
     p4.fillFirstProductioncompany(STAKEHOLDERS[0]);
     p4.assertFirstProductioncompanyExists(STAKEHOLDERS[0]);
+    p4.fillFirstCountryProductioncompany('Fra');
+    p4.selectCountryProductioncompany('France');
+    p4.assertFirstCountryProductioncompanyExists('France');
+    p4.clickAddProductioncompany();
+    p4.fillLastProductioncompany(STAKEHOLDERS[1]);
+    p4.assertLastProductioncompanyExists(STAKEHOLDERS[1]);
+    p4.fillLastCountryProductioncompany('Ger');
+    p4.selectCountryProductioncompany('Germany');
+    p4.assertLastCountryProductioncompanyExists('Germany');
+    p4.assertNumberOfcompanyFields(STAKEHOLDERS.length);
 
     // Go on movie-tunnel-5
     const p5: TunnelBudgetPage = p4.clickNext();
