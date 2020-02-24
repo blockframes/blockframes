@@ -61,7 +61,7 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
   public async applyAvailsFilter() {
     try {
       // TODO: bind every controls to the form to avoid tricky error handling => ISSUE#1942
-      if (this.availsForm.invalid || !this.availsForm.value.medias.length) {
+      if (this.availsForm.invalid || !this.availsForm.value.licenseType.length) {
         throw new Error('Please fill all the required fields (Terms and Media)');
       }
 

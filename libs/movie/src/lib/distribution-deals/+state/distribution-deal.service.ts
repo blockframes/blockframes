@@ -145,8 +145,8 @@ export class DistributionDealService extends CollectionService<DistributionDealS
     const contractsSnap = await this.db.collection(
       `publicContracts/`, ref => ref.where('type', '==', 'mandate').where('titleIds', 'array-contains', movie.id))
       .get().toPromise();
-    const contracts = contractsSnap.docs.map(contract => contract.data())
-    return movie.distributionDeals.filter(deal => deal.contractId === contracts[0].id)
+    const contracts = contractsSnap.docs.map(contract => contract.data());
+    return movie.distributionDeals.filter(deal => deal.contractId === contracts[0].id);
   }
 
   /** Check if the formValue is valid to create a deal, throw an error for each case. */
