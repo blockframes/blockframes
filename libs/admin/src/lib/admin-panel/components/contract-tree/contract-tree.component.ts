@@ -65,6 +65,10 @@ export class ContractTreeComponent implements OnInit {
     return `/c/o/admin/panel/contract/${contractId}`;
   }
 
+  public getContractTunnelPath(contract: Contract) {
+    return `/c/o/marketplace/tunnel/contract/${contract.id}/${contract.type}`;
+  }
+
   public getItems(parentId?: string) {
     const startLevel = Math.max.apply(Math, Object.keys(this.tree).map(contractId => this.tree[contractId].level));
     return Object.keys(this.tree).map(k => this.tree[k]).filter(c => parentId ? c.parents.includes(parentId) : c.level === startLevel);

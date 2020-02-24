@@ -4,9 +4,11 @@
       <li *ngFor="let item of list"> >
         <ng-container *ngIf="item.id === contract.id else displaywithLink">
           <strong>{{ item.id }} ({{ item.contract.type }})</strong>
+          <button mat-icon-button color="accent" [routerLink]="getContractTunnelPath(item.contract)"><mat-icon svgIcon="eye"></mat-icon></button>
         </ng-container>
         <ng-template #displaywithLink>
           <a [routerLink]="getContractPath(item.id)" routerLinkActive="active"> {{ item.id }}  ({{ item.contract.type }})</a>
+          <button mat-icon-button color="accent" [routerLink]="getContractTunnelPath(item.contract)"><mat-icon svgIcon="eye"></mat-icon></button>
         </ng-template>
         <ng-container *ngIf="getItems(item.id).length > 0">
           <ul>

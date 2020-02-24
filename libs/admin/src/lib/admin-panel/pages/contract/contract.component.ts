@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar, MatDialog } from '@angular/material';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
-import { ContractWithLastVersion, PublicContract, createContractPartyDetail } from '@blockframes/contract/contract/+state/contract.model';
+import { ContractWithLastVersion, PublicContract, createContractPartyDetail, Contract } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractAdminForm } from '../../forms/contract-admin.form';
 import { ContractVersionAdminForm } from '../../forms/contract-version-admin.form';
 import { ContractStatus, ContractType } from '@blockframes/contract/contract/+state/contract.firestore';
@@ -255,5 +255,9 @@ export class ContractComponent implements OnInit {
 
   public getDealPath(dealId: string, movieId: string) {
     return `/c/o/admin/panel/deal/${dealId}/m/${movieId}`;
+  }
+
+  public getContractTunnelPath(contract: Contract) {
+    return `/c/o/marketplace/tunnel/contract/${contract.id}/${contract.type}`;
   }
 }
