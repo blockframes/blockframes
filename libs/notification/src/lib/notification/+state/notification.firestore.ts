@@ -15,6 +15,8 @@ export const enum NotificationType {
   removeOrganization = 'removeOrganization',
   pathToDocument = 'pathToDocument',
   organizationAcceptedByArchipelContent = 'organizationAcceptedByArchipelContent',
+  movieSubmitted = 'movieSubmitted',
+  movieAccepted = 'movieAccepted',
   movieTitleUpdated = 'movieTitleUpdated',
   movieTitleCreated = 'movieTitleCreated',
   movieDeleted = 'movieDeleted',

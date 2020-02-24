@@ -1,12 +1,13 @@
 import { functions, db } from './internals/firebase';
-import { MovieDocument, OrganizationDocument, PublicUser } from './data/types';
+import { MovieDocument, OrganizationDocument, PublicUser, StoreConfig, StoreStatus } from './data/types';
 import { NotificationType } from '@blockframes/notification/types';
 import { App } from '@blockframes/utils/apps';
 import { triggerNotifications, createNotification } from './notification';
 import { flatten, isEqual } from 'lodash';
-import { getDocument } from './data/internals';
+import { getDocument, getOrganizationsOfMovie } from './data/internals';
 import { removeAllSubcollections } from './utils';
 import { storeSearchableMovie, deleteSearchableMovie } from './internals/algolia';
+import { centralOrgID } from './environments/environment';
 
 /** Create a notification with user and movie. */
 function notifUser(userId: string, notificationType: NotificationType, movie: MovieDocument, user: PublicUser) {
@@ -134,16 +135,64 @@ export async function onMovieUpdate(
   const before = change.before.data() as MovieDocument;
   const after = change.after.data() as MovieDocument;
 
-  const userSnapshot = await db.doc(`users/${after._meta!.updatedBy}`).get();
-  const user = userSnapshot.data() as PublicUser;
-
+  const isMovieSubmitted = isSubmitted(before.main.storeConfig, after.main.storeConfig);
+  const isMovieAccepted = isAccepted(before.main.storeConfig, after.main.storeConfig);
   const hasTitleChanged = !!before.main.title.international && !isEqual(before.main.title.international, after.main.title.international);
 
+  if (isMovieSubmitted) { // When movie is submitted to Archipel Content
+    const archipelContent = await getDocument<OrganizationDocument>(`orgs/${centralOrgID}`);
+    const notifications = archipelContent.userIds.map(
+      userId => createNotification({
+        userId,
+        type: NotificationType.movieSubmitted,
+        docId: after.id,
+        app: App.biggerBoat
+      })
+    );
+
+    return triggerNotifications(notifications);
+  }
+
+  if (isMovieAccepted) { // When Archipel Content accept the movie
+    const organizations = await getOrganizationsOfMovie(after.id);
+    const notifications = organizations
+    .filter(organizationDocument => !!organizationDocument && !!organizationDocument.userIds)
+    .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
+    .map(userId => {
+      return createNotification({
+        userId,
+        type: NotificationType.movieAccepted,
+        docId: after.id,
+        app: App.biggerBoat
+      });
+    });
+
+    return triggerNotifications(notifications);
+  }
+
   if (hasTitleChanged) {
+    const userSnapshot = await db.doc(`users/${after._meta!.updatedBy}`).get();
+    const user = userSnapshot.data() as PublicUser;
     const notifications = await createNotificationsForUsers(before, NotificationType.movieTitleUpdated, user);
 
     return triggerNotifications(notifications);
   }
 
   return storeSearchableMovie(after);
+}
+
+/** Checks if the store status is going from draft to submitted. */
+function isSubmitted(beforeStore: StoreConfig | undefined, afterStore: StoreConfig | undefined) {
+  return (
+    (beforeStore && beforeStore.status === StoreStatus.draft) &&
+    (afterStore && afterStore.status === StoreStatus.submitted)
+  )
+}
+
+/** Checks if the store status is going from submitted to accepted. */
+function isAccepted(beforeStore: StoreConfig | undefined, afterStore: StoreConfig | undefined) {
+  return (
+    (beforeStore && beforeStore.status === StoreStatus.submitted) &&
+    (afterStore && afterStore.status === StoreStatus.accepted)
+  )
 }
