@@ -33,17 +33,11 @@ export class NotificationListComponent implements OnInit {
     return this.query.createNotificationInformation(notification)
   }
 
-  public goToPath(notification: Notification) {
-    try {
-      if (notification.type === (NotificationType.newContract || NotificationType.contractInNegotiation)) {
-        this.router.navigateByUrl(`c/o/dashboard/deals/${notification.docId}`);
-      }
-      if (notification.type === (NotificationType.movieSubmitted || NotificationType.movieAccepted)) {
-        this.router.navigateByUrl(`c/o/dashboard/titles/${notification.docId}`);
-      }
-      this.service.readNotification(notification);
-    } catch (error) {
-      throw new Error(error.message);
+  public readNotification(notification: Notification) {
+    this.service.readNotification(notification);
+    const path = this.getInformation(notification).url;
+    if (path) {
+      return this.router.navigateByUrl(path);
     }
   }
 
