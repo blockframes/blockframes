@@ -1001,10 +1001,10 @@ export class ViewExtractedElementsComponent implements OnInit {
 
           // USER ID (to override who is creating this title)
           if (spreadSheetRow[SpreadSheetMovie.userId]) {
-            movie._meta = createDocumentMeta(); 
+            movie._meta = createDocumentMeta();
             const uid = spreadSheetRow[SpreadSheetMovie.userId].trim();
             const userExists = await this.authService.userExists(uid);
-            if(userExists) {
+            if (userExists) {
               movie._meta.createdBy = uid;
             } else {
               importErrors.errors.push({
