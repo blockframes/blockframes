@@ -1,11 +1,13 @@
+@import 'mixins';
+
 :host {
   display: block;
   margin: 30px 20%;
-  
+
   span b {
     text-transform: uppercase;
   }
-  
+
   mat-card {
     width: 400px;
     margin-bottom: 20px;
@@ -32,4 +34,16 @@ h5 {
 
 .feature-image {
   width: 150px;
+}
+
+@include mobile {
+  :host {
+    margin: 30px 20px;
+    mat-card {
+      width: 300px;
+    }
+  }
+  .interested {
+    font-size: 45px;
+  }
 }
