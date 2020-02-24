@@ -24,7 +24,6 @@ function createBudgetFormControl(entity?: Partial<MovieBudget>) {
     // We use FormControl because objet { from, to } is one value (cannot update separately)
     estimatedBudget: new FormControl(estimatedBudget),
     boxOffice: FormList.factory(boxOffice, el => new BoxOfficeForm(el))
-    // boxOffice: FormList.factory(boxOffice, el => new BoxOfficeForm(el)),
   }
 }
 
