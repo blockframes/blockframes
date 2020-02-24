@@ -93,6 +93,24 @@ export class AuthService extends FireAuthService<AuthState> {
     return snap.exists;
   }
 
+  /**
+   * Checks if an user exists
+   * @param uid
+   */
+  public async userExists(uid: string): Promise<boolean> {
+    const snap = await this.db.collection('users').doc(uid).get().toPromise();
+    return snap.exists;
+  }
+
+  /**
+   * Fetch an user based on his uid
+   * @param uid
+   */
+  public async getUser(uid: string): Promise<User> {
+    const user = await this.db.collection('users').doc(uid).get().toPromise();
+    return user.data()! as User;
+  }
+
   // TODO THIS IS A QUICK FIX OF MOVIE FINANCING RANK MADE FOR TORONTO, THINK OF A BETTER WAY AFTERWARD
   //---------------------------
   //   MOVIE FINANCING RANK

@@ -1001,8 +1001,20 @@ export class ViewExtractedElementsComponent implements OnInit {
 
           // USER ID (to override who is creating this title)
           if (spreadSheetRow[SpreadSheetMovie.userId]) {
-            movie._meta = createDocumentMeta();
-            movie._meta.createdBy = spreadSheetRow[SpreadSheetMovie.userId];
+            movie._meta = createDocumentMeta(); 
+            const uid = spreadSheetRow[SpreadSheetMovie.userId].trim();
+            const userExists = await this.authService.userExists(uid);
+            if(userExists) {
+              movie._meta.createdBy = uid;
+            } else {
+              importErrors.errors.push({
+                type: 'error',
+                field: 'movie._meta.createdBy',
+                name: 'Movie owned id',
+                reason: `User Id specified for movie admin does not exists "${uid}"`,
+                hint: 'Edit corresponding sheet field.'
+              });
+            }
           }
         }
 

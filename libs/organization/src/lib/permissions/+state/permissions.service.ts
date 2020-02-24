@@ -51,8 +51,7 @@ export class PermissionsService extends CollectionService<PermissionsState> {
    * @param doc
    * @param write
    */
-  public addDocumentPermissions(doc: Movie | Delivery | Contract, write: firestore.WriteBatch) {
-    const organizationId = this.organizationQuery.getActiveId();
+  public addDocumentPermissions(doc: Movie | Delivery | Contract, write: firestore.WriteBatch, organizationId: string = this.organizationQuery.getActiveId()) {
     const documentPermissions = createDocPermissions({ id: doc.id, ownerId: organizationId });
     const documentPermissionsRef = this.db.doc(`permissions/${organizationId}/documentPermissions/${documentPermissions.id}`).ref;
     write.set(documentPermissionsRef, documentPermissions);
