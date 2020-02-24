@@ -53,6 +53,17 @@ export async function getOrganizationsOfContract(contract: ContractDocument): Pr
   return Promise.all(promises);
 }
 
+/**
+ * Gets all the organizations of a movie document
+ * @param movieId
+ * @returns the organizations that have movie id in organization.movieIds
+ */
+export async function getOrganizationsOfMovie(movieId: string): Promise<OrganizationDocument[]> {
+  const organizations = await db.collection(`orgs`).where('movieIds', 'array-contains', movieId).get();
+  const promises = organizations.docs.map(org => org.data() as OrganizationDocument);
+  return Promise.all(promises);
+}
+
 /** Get the number of elements in a firestore collection */
 export function getCount(collection: string): Promise<number> {
   // TODO: implement counters to make this function scalable. => ISSUE#646

@@ -35,10 +35,13 @@ export class NotificationListComponent implements OnInit {
 
   public goToPath(notification: Notification) {
     try {
-      if (notification.type === NotificationType.newContract || NotificationType.contractInNegotiation) {
+      if (notification.type === (NotificationType.newContract || NotificationType.contractInNegotiation)) {
         this.router.navigateByUrl(`c/o/dashboard/deals/${notification.docId}`);
-        this.service.readNotification(notification);
       }
+      if (notification.type === (NotificationType.movieSubmitted || NotificationType.movieAccepted)) {
+        this.router.navigateByUrl(`c/o/dashboard/titles/${notification.docId}`);
+      }
+      this.service.readNotification(notification);
     } catch (error) {
       throw new Error(error.message);
     }
