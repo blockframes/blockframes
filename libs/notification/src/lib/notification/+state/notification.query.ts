@@ -152,10 +152,15 @@ export class NotificationQuery extends QueryEntity<NotificationState, Notificati
           message: `${notification.organization.name} submitted a contract.`,
           placeholderUrl: 'Organization_250.png'
         };
-      case NotificationType.contractInNegotiation:
+      case NotificationType.movieSubmitted:
         return {
-          message: `A new offer has been created.`,
-          placeholderUrl: 'WelcomeArchipelContent_500.png'
+          message: `A new movie has been submitted`,
+          placeholderUrl: this.getPoster(notification.docId)
+        };
+      case NotificationType.movieAccepted:
+        return {
+          message: `Your movie has been accepted by Archipel Content.`,
+          placeholderUrl: this.getPoster(notification.docId)
         };
     }
   }
