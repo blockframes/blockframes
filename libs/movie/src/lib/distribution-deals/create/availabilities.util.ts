@@ -182,14 +182,14 @@ export function getDealsWithMedias(medias: MediasSlug[], deals: DistributionDeal
 
 /**
  * Returns deals with same exclusivity value as the one passed as an argument.
- * @param exclusivity
+ * @param exclusive
  * @param deals
  */
-export function getExclusiveDeals(deals: DistributionDeal[], exclusivity: boolean): DistributionDeal[] {
-  if (exclusivity === true) {
+export function getExclusiveDeals(deals: DistributionDeal[], exclusive: boolean): DistributionDeal[] {
+  if (exclusive === true) {
     return deals
   }
-  if (exclusivity === false) {
+  if (exclusive === false) {
     return deals.filter(deal => deal.exclusive === true);
   }
 }
