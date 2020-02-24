@@ -3,7 +3,7 @@ import { AvailsSearchForm } from '@blockframes/catalog';
 import { MovieQuery, Movie } from '@blockframes/movie/movie/+state';
 import { EnhancedISO3166Territory } from '@blockframes/utils/static-model/territories-ISO-3166';
 import { getNotLicensedTerritories, getAvailableTerritories, getRightsSoldTerritories } from './territories-filter';
-import { DistributionDealService, DistributionDeal } from '@blockframes/movie/distribution-deals/+state';
+import { DistributionDealService, DistributionDeal, createDistributionDeal } from '@blockframes/movie/distribution-deals/+state';
 import { MatSnackBar } from '@angular/material';
 import { MarketplaceStore, MarketplaceQuery } from '../../+state';
 import { getSlugByIsoA3, getIsoA3bySlug, Model } from '@blockframes/utils/static-model/staticModels';
@@ -50,7 +50,7 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
 
   /** Get a list of iso_a3 strings from the territories of the form. */
   public get territoriesIsoA3(): string[] {
-    return this.availsForm.territories.value.map(territorySlug => getIsoA3bySlug(territorySlug));
+    return this.availsForm.territory.value.map(territorySlug => getIsoA3bySlug(territorySlug));
   }
 
   public trackByTag(tag) {
@@ -102,7 +102,10 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
       this.dealService.verifyDeal(this.availsForm.getRawValue(), this.availableTerritories)
 
       // Create a distribution deal from the avails form values.
-      const distributionDeal: DistributionDeal = this.dealService.createCartDeal(this.availsForm.getRawValue());
+      const { terms, licenseType, territory, territoryExcluded, exclusive } = this.availsForm.getRawValue()
+      const distributionDeal: DistributionDeal = createDistributionDeal(
+        { terms, licenseType, territory, territoryExcluded, exclusive }
+      );
 
       // If title don't exist in the marketplace store, create one.
       if (!this.marketplaceQuery.getEntity(this.movie.id)) {

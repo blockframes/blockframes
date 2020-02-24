@@ -88,17 +88,6 @@ export class DistributionDealService extends CollectionService<DistributionDealS
     return distributionDeal.id;
   }
 
-  public createCartDeal(formValue: Partial<AvailsSearch>): DistributionDeal {
-    const dealToAdd = createDistributionDeal({
-      terms: formValue.terms,
-      territory: formValue.territories,
-      territoryExcluded: formValue.territoriesExcluded,
-      licenseType: formValue.medias,
-      exclusive: formValue.exclusivity
-    })
-    return dealToAdd;
-  }
-
   /**
    * Get distributionDeals from a specific movie.
    * @param movieId
@@ -165,13 +154,13 @@ export class DistributionDealService extends CollectionService<DistributionDealS
     if (!formValue.terms.start || !formValue.terms.end) {
       throw new Error('Fill terms "Start Date" and "End Date" in order to create an Exploitation Right');
     }
-    if (!formValue.territories.length) {
+    if (!formValue.territory.length) {
       throw new Error('Select at least one available territory to create an Exploitation Right');
     }
-    if (!formValue.medias.length) {
+    if (!formValue.licenseType.length) {
       throw new Error('Select at least one available territory to create an Exploitation Right');
     }
-    if (formValue.territories.some(territory => !territories.find(({ slug }) => slug === territory))) {
+    if (formValue.territory.some(territory => !territories.find(({ slug }) => slug === territory))) {
       throw new Error('One or more selected territories are not available');
     }
     return true;

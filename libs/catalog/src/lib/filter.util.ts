@@ -141,8 +141,8 @@ function hasStoreType(movie: Movie, storeTypes: StoreType[]) {
  */
 function archipelCanSells(filter: AvailsSearch, mandateDeal: DistributionDeal): boolean {
 
-  const hasTerritories = mandateHas(filter.territories, mandateDeal.territory)
-  const hasMedias = mandateHas(filter.medias, mandateDeal.licenseType)
+  const hasTerritories = mandateHas(filter.territory, mandateDeal.territory)
+  const hasMedias = mandateHas(filter.licenseType, mandateDeal.licenseType)
   const hasTerms =
     toDate(filter.terms.start).getTime() > toDate(mandateDeal.terms.start).getTime() &&
     toDate(filter.terms.end).getTime() < toDate(mandateDeal.terms.end).getTime()
@@ -186,7 +186,7 @@ export function filterMovieWithAvails(deals: DistributionDeal[], filter: AvailsS
     return false;
   }
 
-  const matchingExclusivityDeals = getExclusiveDeals(deals, filter.exclusivity);
+  const matchingExclusivityDeals = getExclusiveDeals(deals, filter.exclusive);
   const matchingRangeDeals = getDealsInDateRange(filter.terms, matchingExclusivityDeals);
   const matchingDeals = getFilterMatchingDeals(filter, matchingRangeDeals);
 

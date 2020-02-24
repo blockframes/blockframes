@@ -109,7 +109,7 @@ export function getFilterMatchingDeals(
   deals: DistributionDeal[]
 ): DistributionDeal[] {
 
-  const { territories, medias } = filter
+  const { territory, licenseType } = filter
 
   /**
    * We have to look on the already exisitng
@@ -122,9 +122,9 @@ export function getFilterMatchingDeals(
     const dealTerritories = getDealTerritories(deal);
 
     let mediasInCommon = false;
-    mediaLoop : for (const media of medias) {
-      for (const licenseType of deal.licenseType) {
-        if (licenseType === media) {
+    mediaLoop : for (const filterMedia of licenseType) {
+      for (const dealMedia of deal.licenseType) {
+        if (dealMedia === filterMedia) {
           mediasInCommon = true;
           break mediaLoop;
         }
@@ -132,9 +132,9 @@ export function getFilterMatchingDeals(
     }
 
     let territoriesInCommon = false;
-    territoryLoop : for (const territory of territories) {
-      for (const saleTerritory of dealTerritories) {
-        if (saleTerritory === territory) {
+    territoryLoop : for (const filterTerritory of territory) {
+      for (const dealTerritory of dealTerritories) {
+        if (dealTerritory === filterTerritory) {
           territoriesInCommon = true;
           break territoryLoop;
         }
