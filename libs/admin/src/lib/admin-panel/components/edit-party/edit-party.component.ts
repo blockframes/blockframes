@@ -6,7 +6,7 @@ import { staticModels } from '@blockframes/utils/static-model';
 import { ContractStatus } from '@blockframes/contract/contract/+state';
 
 @Component({
-  selector: 'tunnel-edit-party',
+  selector: 'admin-edit-party',
   templateUrl: './edit-party.component.html',
   styleUrls: ['./edit-party.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

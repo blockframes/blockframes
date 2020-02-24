@@ -33,6 +33,7 @@ import { InvoiceComponent } from './pages/invoice/invoice.component';
 import { ContractComponent } from './pages/contract/contract.component';
 import { DistributionDealComponent } from './pages/distribution-deal/distribution-deal.component';
 import { EditPartyComponent } from './components/edit-party/edit-party.component';
+import { ContractTreeComponent } from './components/contract-tree/contract-tree.component';
 
 export const panelRoutes: Routes = [
   { path: '', redirectTo: 'overview', pathMatch: 'full' },
@@ -83,7 +84,11 @@ export const panelRoutes: Routes = [
     InvoicesComponent,
     InvoiceComponent,
     EditPartyComponent,
+    ContractTreeComponent,
   ],
-  exports: [RouterModule]
+  exports: [
+    RouterModule,
+    ContractTreeComponent
+  ]
 })
 export class AdminPanelModule { }

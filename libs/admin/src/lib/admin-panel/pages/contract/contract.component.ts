@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatSnackBar, MatDialog } from '@angular/material';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { ContractWithLastVersion, PublicContract, createContractPartyDetail } from '@blockframes/contract/contract/+state/contract.model';
@@ -113,10 +113,13 @@ export class ContractComponent implements OnInit {
     private contractService: ContractService,
     private contractVersionService: ContractVersionService,
     private route: ActivatedRoute,
+    private router: Router,
     private cdRef: ChangeDetectorRef,
     private snackBar: MatSnackBar,
     private dialog: MatDialog
-  ) { }
+  ) {
+    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+  }
 
   async ngOnInit() {
     this.contractId = this.route.snapshot.paramMap.get('contractId');
