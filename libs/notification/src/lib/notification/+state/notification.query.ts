@@ -152,6 +152,11 @@ export class NotificationQuery extends QueryEntity<NotificationState, Notificati
           message: `${notification.organization.name} submitted a contract.`,
           placeholderUrl: 'Organization_250.png'
         };
+      case NotificationType.contractInNegotiation:
+        return {
+          message: `A new offer has been created.`,
+          placeholderUrl: 'WelcomeArchipelContent_500.png'
+        };
       case NotificationType.movieSubmitted:
         return {
           message: `A new movie has been submitted`,
