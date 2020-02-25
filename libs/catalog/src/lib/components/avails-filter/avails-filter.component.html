@@ -9,22 +9,28 @@
     <ng-container formGroupName="terms">
       <mat-form-field appearance="outline">
         <mat-label>Start Date</mat-label>
-        <input matInput formControlName="start" [matDatepicker]="pickerAvailableFrom" placeholder="Start Date" required/>
+        <input matInput formControlName="start" [matDatepicker]="pickerAvailableFrom" placeholder="Start Date"
+          required />
         <mat-error *ngIf="availsForm.get('terms').get('start').hasError('min')">
           You only can choose the current year and above.
         </mat-error>
         <mat-datepicker-toggle test-id="datepicker-from" matSuffix [for]="pickerAvailableFrom">
           <mat-icon matDatepickerToggleIcon svgIcon="calendar"></mat-icon>
         </mat-datepicker-toggle>
-        <mat-datepicker #pickerAvailableFrom startView="multi-year"></mat-datepicker>
+        <mat-datepicker #pickerAvailableFrom startView="multi-year" (yearSelected)="chosenYearHandler($event, 'start')"
+          (monthSelected)="chosenMonthHandler($event, pickerAvailableFrom, 'start')" panelClass="example-month-picker">
+        </mat-datepicker>
       </mat-form-field>
       <mat-form-field appearance="outline">
         <mat-label>End Date</mat-label>
-        <input matInput formControlName="end" [matDatepicker]="pickerAvailableTo" placeholder="End Date" required/>
+        <input matInput formControlName="end" [matDatepicker]="pickerAvailableTo" placeholder="End Date" required />
         <mat-datepicker-toggle test-id="datepicker-to" matSuffix [for]="pickerAvailableTo">
           <mat-icon matDatepickerToggleIcon svgIcon="calendar"></mat-icon>
         </mat-datepicker-toggle>
-        <mat-datepicker #pickerAvailableTo startView="multi-year" startAt="2020"></mat-datepicker>
+        <mat-datepicker #pickerAvailableTo startView="multi-year" [startAt]="currentYear" startView="multi-year"
+          (yearSelected)="chosenYearHandler($event, 'end')"
+          (monthSelected)="chosenMonthHandler($event, pickerAvailableTo, 'end')" panelClass="example-month-picker">
+        </mat-datepicker>
       </mat-form-field>
     </ng-container>
     <mat-error *ngIf="availsForm.get('terms').hasError('invalidRange')">
@@ -33,26 +39,13 @@
   </mat-expansion-panel>
 
   <!-- Territories -->
-  <mat-expansion-panel *ngIf="territoryControl">
+  <mat-expansion-panel>
     <mat-expansion-panel-header>
       <span class="mat-body-1" test-id="territories-panel">Territory</span>
     </mat-expansion-panel-header>
-    <mat-form-field appearance="outline">
-      <mat-chip-list #territoryChipList>
-        <mat-chip *ngFor="let territory of selectedMovieTerritories; let i = index" [selectable]="selectableTerritory"
-          [removable]="!availsForm.value.isActive" (removed)="removeTerritory(territory, i)">
-          {{ territory }}
-          <mat-icon matChipRemove *ngIf="!availsForm.value.isActive" svgIcon="close"></mat-icon>
-        </mat-chip>
-        <input test-id="territories-panel-input" placeholder="Territory" #territoryInput
-          [matAutocomplete]="territoryMatAutoComplete" [matChipInputFor]="territoryChipList" [formControl]="territoryControl" />
-      </mat-chip-list>
-      <mat-autocomplete #territoryMatAutoComplete="matAutocomplete" (optionSelected)="selectedTerritory($event)">
-        <mat-option *ngFor="let territory of territoriesFilter$ | async" [value]="territory">
-          {{ territory }}
-        </mat-option>
-      </mat-autocomplete>
-    </mat-form-field>
+    <chips-autocomplete [form]="territories" [items]="countries" store="slug" display="label" placeholder="Territories"
+      [disabled]="isFormDisabled">
+    </chips-autocomplete>
   </mat-expansion-panel>
 
   <!-- Media -->

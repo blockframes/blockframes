@@ -105,7 +105,6 @@ export class MarketplaceSearchComponent implements OnInit {
   ]);
   public sortByControl: FormControl = new FormControl('Title');
   public searchbarTextControl: FormControl = new FormControl('');
-  public territoryControl: FormControl = new FormControl('');
 
   private filterBy$ = this.filterForm.valueChanges.pipe(startWith(this.filterForm.value));
   private filterByAvails$ = this.availsForm.valueChanges.pipe(startWith(this.availsForm.value));
@@ -400,7 +399,7 @@ export class MarketplaceSearchComponent implements OnInit {
   public deactivateAvailsFilter() {
     this.availsForm.get('isActive').setValue(false);
     this.availsForm.enable();
-    this.territoryControl.enable();
+    this.availsForm.get('territory').enable();
   }
 
   /** Check storeType or uncheck it if it's already in the array. */
