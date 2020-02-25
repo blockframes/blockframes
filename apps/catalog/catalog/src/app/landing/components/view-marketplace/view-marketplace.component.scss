@@ -1,6 +1,5 @@
 @import 'mixins';
 
-
 section {
   margin: 50px 0;
 }
@@ -33,7 +32,13 @@ section {
 }
 
 @include mobile {
-  section video {
-    width: 100%;
+  .cover {
+    padding-top: 0;
+  }
+}
+
+@include tablet {
+  .cover {
+    padding-top: 100px;
   }
 }
