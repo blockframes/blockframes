@@ -95,7 +95,7 @@
 
     <!-- Territories Input -->
     <region-chips-autocomplete
-      [form]="availsForm.territories"
+      [form]="availsForm.territory"
       placeholder="Choose your territories"
       [items]="territories"
       store="slug" display="label">
@@ -105,19 +105,19 @@
     </mat-card-content>
     <mat-card [formGroup]="availsForm">
       <mat-card-content>
-        <ng-container *ngIf="!availsForm.territories.value.length && !availsForm.get('isActive').value; else displayDeal">
+        <ng-container *ngIf="!availsForm.territory.value.length && !availsForm.get('isActive').value; else displayDeal">
           <span class="mat-body-1">Please select a country to check if exploitation rights are available</span>
         </ng-container>
         <ng-template #displayDeal>
           <span class="mat-subheading-2">
-            {{ availsForm.territories.value | slice:0:4 | translateSlug: 'TERRITORIES' }}
+            {{ availsForm.territory.value | slice:0:4 | translateSlug: 'TERRITORIES' }}
           </span>
-          <span *ngIf="availsForm.territories.value.length > 4" [widgetTooltip]="territories">...</span>
+          <span *ngIf="availsForm.territory.value.length > 4" [widgetTooltip]="territories">...</span>
           <overlay-widget #territories>
             <widget-card>
               <span class="mat-body-2">
-                <ng-container *ngIf="availsForm.territories.value.length > 4">
-                  {{ availsForm.territories.value | slice:4:availsForm.territories.value.length | translateSlug: 'TERRITORIES' }}
+                <ng-container *ngIf="availsForm.territory.value.length > 4">
+                  {{ availsForm.territory.value | slice:4:availsForm.territory.value.length | translateSlug: 'TERRITORIES' }}
                 </ng-container>
               </span>
             </widget-card>
@@ -131,12 +131,12 @@
             </li>
             <li class="mat-body-1"><strong>Media</strong>
               <span>
-                {{ availsForm.medias.value |  translateSlug: 'MEDIAS'}}
+                {{ availsForm.licenseType.value |  translateSlug: 'MEDIAS'}}
               </span>
             </li>
             <li class="mat-body-1"><strong>Exclusivity</strong>
               <span>
-                {{ availsForm.exclusivity.value == true ? 'Yes' : 'No'}}
+                {{ availsForm.exclusive.value == true ? 'Yes' : 'No'}}
               </span>
             </li>
           </ul>

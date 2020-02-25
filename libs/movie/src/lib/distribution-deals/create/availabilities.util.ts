@@ -109,7 +109,7 @@ export function getFilterMatchingDeals(
   deals: DistributionDeal[]
 ): DistributionDeal[] {
 
-  const { territories, medias } = filter
+  const { territory, licenseType } = filter
 
   /**
    * We have to look on the already exisitng
@@ -122,9 +122,9 @@ export function getFilterMatchingDeals(
     const dealTerritories = getDealTerritories(deal);
 
     let mediasInCommon = false;
-    mediaLoop : for (const media of medias) {
-      for (const licenseType of deal.licenseType) {
-        if (licenseType === media) {
+    mediaLoop : for (const filterMedia of licenseType) {
+      for (const dealMedia of deal.licenseType) {
+        if (dealMedia === filterMedia) {
           mediasInCommon = true;
           break mediaLoop;
         }
@@ -132,9 +132,9 @@ export function getFilterMatchingDeals(
     }
 
     let territoriesInCommon = false;
-    territoryLoop : for (const territory of territories) {
-      for (const saleTerritory of dealTerritories) {
-        if (saleTerritory === territory) {
+    territoryLoop : for (const filterTerritory of territory) {
+      for (const dealTerritory of dealTerritories) {
+        if (dealTerritory === filterTerritory) {
           territoriesInCommon = true;
           break territoryLoop;
         }
@@ -182,14 +182,14 @@ export function getDealsWithMedias(medias: MediasSlug[], deals: DistributionDeal
 
 /**
  * Returns deals with same exclusivity value as the one passed as an argument.
- * @param exclusivity
+ * @param exclusive
  * @param deals
  */
-export function getExclusiveDeals(deals: DistributionDeal[], exclusivity: boolean): DistributionDeal[] {
-  if (exclusivity === true) {
+export function getExclusiveDeals(deals: DistributionDeal[], exclusive: boolean): DistributionDeal[] {
+  if (exclusive === true) {
     return deals
   }
-  if (exclusivity === false) {
+  if (exclusive === false) {
     return deals.filter(deal => deal.exclusive === true);
   }
 }

@@ -46,10 +46,10 @@ export interface CatalogSearch {
 
 export interface AvailsSearch {
   terms: Terms;
-  territories: TerritoriesSlug[];
-  territoriesExcluded: TerritoriesSlug[];
-  medias: MediasSlug[];
-  exclusivity: boolean;
+  territory: TerritoriesSlug[];
+  territoryExcluded: TerritoriesSlug[];
+  licenseType: MediasSlug[];
+  exclusive: boolean;
   isActive: boolean;
 }
 
@@ -85,10 +85,10 @@ function createAvailsSearch(search: Partial<AvailsSearch> = {}): AvailsSearch {
       start: null,
       end: null
     },
-    territories: [],
-    territoriesExcluded: [],
-    medias: [],
-    exclusivity: false,
+    territory: [],
+    territoryExcluded: [],
+    licenseType: [],
+    exclusive: false,
     isActive: false,
     ...search
   }
@@ -152,10 +152,10 @@ function createCatalogSearchControl(search: CatalogSearch) {
 function createAvailsSearchControl(search: AvailsSearch) {
   return {
     terms: new DistributionDealTermsForm(search.terms),
-    medias: new FormControl(search.medias),
-    territories: new FormArray(search.territories.map(territory => new FormControl(territory))),
-    territoriesExcluded: new FormArray(search.territoriesExcluded.map(territory => new FormControl(territory))),
-    exclusivity: new FormControl(search.exclusivity),
+    licenseType: new FormControl(search.licenseType),
+    territory: new FormArray(search.territory.map(territory => new FormControl(territory))),
+    territoryExcluded: new FormArray(search.territoryExcluded.map(territory => new FormControl(territory))),
+    exclusive: new FormControl(search.exclusive),
     isActive: new FormControl(search.isActive)
   }
 }
@@ -262,20 +262,20 @@ export class AvailsSearchForm extends FormEntity<AvailsSearchControl> {
     super(control);
   }
 
-  get exclusivity() {
-    return this.get('exclusivity');
+  get exclusive() {
+    return this.get('exclusive');
   }
 
-  get medias() {
-    return this.get('medias');
+  get licenseType() {
+    return this.get('licenseType');
   }
 
-  get territories() {
-    return this.get('territories');
+  get territory() {
+    return this.get('territory');
   }
 
-  get territoriesExcluded() {
-    return this.get('territoriesExcluded');
+  get territoryExcluded() {
+    return this.get('territoryExcluded');
   }
 
   get terms() {
@@ -294,29 +294,29 @@ export class AvailsSearchForm extends FormEntity<AvailsSearchControl> {
       );
     }
     // Check it's not already in the form control
-    const territoriesValue = this.get('territories').value;
+    const territoriesValue = this.get('territory').value;
     if (!territoriesValue.includes(territory)) {
-      this.get('territories').push(new FormControl(territory));
+      this.get('territory').push(new FormControl(territory));
     }
     // Else do nothing as it's already in the list
   }
 
   removeTerritory(index: number) {
-    this.get('territories').removeAt(index);
+    this.get('territory').removeAt(index);
   }
 
   checkMedia(checkedMedia: MediasSlug) {
     // check if media is already checked by the user
-    if (MEDIAS_SLUG.includes(checkedMedia) && !this.get('medias').value.includes(checkedMedia)) {
-      this.get('medias').setValue([...this.get('medias').value, checkedMedia]);
+    if (MEDIAS_SLUG.includes(checkedMedia) && !this.get('licenseType').value.includes(checkedMedia)) {
+      this.get('licenseType').setValue([...this.get('licenseType').value, checkedMedia]);
     } else if (
       MEDIAS_SLUG.includes(checkedMedia) &&
-      this.get('medias').value.includes(checkedMedia)
+      this.get('licenseType').value.includes(checkedMedia)
     ) {
-      const checkedMedias = this.get('medias').value.filter(
+      const checkedMedias = this.get('licenseType').value.filter(
         (alreadyCheckedMedia: MediasSlug) => alreadyCheckedMedia !== checkedMedia
       );
-      this.get('medias').setValue(checkedMedias);
+      this.get('licenseType').setValue(checkedMedias);
     } else {
       throw new Error(`Media ${getLabelBySlug('MEDIAS', checkedMedia)} doesn't exist`);
     }
