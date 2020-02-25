@@ -16,11 +16,17 @@ export class MarketplaceQuery extends QueryEntity<MarketplaceState> {
     switchMap(movieIds => this.movieQuery.selectMany(movieIds))
   )
 
-  /** Check if a titl is in the wishlist */
+  /** Check if a title is in the wishlist */
   isInWishlist(movieId: string) {
     return this.select('wishlist').pipe(
       map(wishlist => wishlist.includes(movieId))
     );
+  }
+
+  /** Get the deals from a specific title in the cart */
+  getTitleDeals(titleId: string) {
+    const titleCart = this.getEntity(titleId)
+    return (!!titleCart) ? titleCart.deals : [];
   }
 
 }

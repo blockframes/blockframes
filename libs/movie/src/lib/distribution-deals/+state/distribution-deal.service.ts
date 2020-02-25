@@ -7,19 +7,18 @@ import {
   getDealTerritories,
   createDistributionDealWithMovieId,
   DistributionDealWithMovieId,
-  formatDistributionDeal,
-  createDistributionDeal
+  formatDistributionDeal
 } from './distribution-deal.model';
 import { createContractTitleDetail, ContractWithLastVersion, Contract } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractVersionService } from '@blockframes/contract/version/+state/contract-version.service';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
-import { ContractQuery } from '@blockframes/contract/contract/+state/contract.query';
 import { combineLatest } from 'rxjs';
 import { ContractVersion } from '@blockframes/contract/version/+state/contract-version.model';
 import { DistributionDealQuery } from './distribution-deal.query';
 import { Movie } from '@blockframes/movie/movie/+state';
 import { AvailsSearch } from '@blockframes/catalog/form/search.form';
 import { Model } from '@blockframes/utils/static-model/staticModels';
+import { getFilterMatchingDeals, getDealsInDateRange } from '../create/availabilities.util';
 
 
 @Injectable({ providedIn: 'root' })
@@ -150,7 +149,7 @@ export class DistributionDealService extends CollectionService<DistributionDealS
   }
 
   /** Check if the formValue is valid to create a deal, throw an error for each case. */
-  public verifyDeal(formValue: Partial<AvailsSearch>, territories: Model['TERRITORIES']) {
+  public verifyDeal(formValue: AvailsSearch, territories: Model['TERRITORIES']) {
     if (!formValue.terms.start || !formValue.terms.end) {
       throw new Error('Fill terms "Start Date" and "End Date" in order to create an Exploitation Right');
     }
@@ -164,5 +163,11 @@ export class DistributionDealService extends CollectionService<DistributionDealS
       throw new Error('One or more selected territories are not available');
     }
     return true;
+  }
+
+  public dealExist(formValue: AvailsSearch, titleDeals: DistributionDeal[]): boolean {
+    const dealsInDateRange = getDealsInDateRange(formValue.terms, titleDeals);
+    const matchingDeals = getFilterMatchingDeals(formValue, dealsInDateRange);
+    return matchingDeals.length ? true : false;
   }
 }
