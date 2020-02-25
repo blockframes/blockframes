@@ -104,7 +104,7 @@ export class MarketplaceSearchComponent implements OnInit {
   public languageControl: FormControl = new FormControl('', [
     Validators.required
   ]);
-  public sortByControl: FormControl = new FormControl('');
+  public sortByControl: FormControl = new FormControl('Title');
   public searchbarTextControl: FormControl = new FormControl('');
   public territoryControl: FormControl = new FormControl('');
 
