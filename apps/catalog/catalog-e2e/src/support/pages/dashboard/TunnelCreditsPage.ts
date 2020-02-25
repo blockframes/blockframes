@@ -18,48 +18,102 @@ export default class TunnelCreditsPage {
     cy.get('catalog-movie-tunnel-credits movie-form-production-year input').should('have.value', year);
   }
 
-  public fillFirstProductioncompany(company: string) {
-    cy.get('catalog-movie-tunnel-credits [test-id=production] input[test-id=name]').first().type(company);
+  public fillFirstProductioncompany(testId: string, company: string) {
+    cy.get(`catalog-movie-tunnel-credits [test-id=${testId}] input[test-id=name]`).first().type(company);
   }
 
-  public assertFirstProductioncompanyExists(company: string) {
-    cy.get('catalog-movie-tunnel-credits [test-id=production] input[test-id=name]').first().should('have.value', company);
+  public assertFirstProductioncompanyExists(testId: string, company: string) {
+    cy.get(`catalog-movie-tunnel-credits [test-id=${testId}] input[test-id=name]`).first().should(`have.value`, company);
   }
 
-  public clickAddProductioncompany() {
-    cy.get('catalog-movie-tunnel-credits [test-id=production] button[test-id=add]').click();
+  public clickAddProductioncompany(testId: string) {
+    cy.get(`catalog-movie-tunnel-credits [test-id=${testId}] button[test-id=add]`).click();
   }
 
-  public assertNumberOfcompanyFields(number: number) {
-    cy.get('catalog-movie-tunnel-credits [test-id=production] input[test-id=name]').should('have.length', number);
+  public fillLastProductioncompany(testId: string, company: string) {
+    cy.get(`catalog-movie-tunnel-credits [test-id=${testId}] input[test-id=name]`).last().type(company);
   }
 
-  public fillLastProductioncompany(company: string) {
-    cy.get('catalog-movie-tunnel-credits [test-id=production] input[test-id=name]').last().type(company);
+  public assertLastProductioncompanyExists(testId: string, company: string) {
+    cy.get(`catalog-movie-tunnel-credits [test-id=${testId}] input[test-id=name]`).last().should('have.value', company);
   }
 
-  public assertLastProductioncompanyExists(company: string) {
-    cy.get('catalog-movie-tunnel-credits [test-id=production] input[test-id=name]').last().should('have.value', company);
-  }
-
-  public fillFirstCountryProductioncompany(country: string) {
-    cy.get('catalog-movie-tunnel-credits [test-id=production] [test-id=auto-complete] input').first().type(country);
+  public fillFirstCountryProductioncompany(testId: string, country: string) {
+    cy.get(`catalog-movie-tunnel-credits [test-id=${testId}] [test-id=auto-complete] input`).first().type(country);
   }
 
   public selectCountryProductioncompany(country: string) {
     cy.get('mat-option').contains(country).click();
   }
 
-  public assertFirstCountryProductioncompanyExists(country: string) {
-    cy.get('catalog-movie-tunnel-credits [test-id=production] [test-id=auto-complete] mat-chip').first().contains(country);
+  public assertFirstCountryProductioncompanyExists(testId: string, country: string) {
+    cy.get(`catalog-movie-tunnel-credits [test-id=${testId}] [test-id=auto-complete] mat-chip`).first().contains(country);
   }
 
-  public fillLastCountryProductioncompany(country: string) {
-    cy.get('catalog-movie-tunnel-credits [test-id=production] [test-id=auto-complete] input').last().type(country);
+  public fillLastCountryProductioncompany(testId: string, country: string) {
+    cy.get(`catalog-movie-tunnel-credits [test-id=${testId}] [test-id=auto-complete] input`).last().type(country);
   }
 
-  public assertLastCountryProductioncompanyExists(country: string) {
-    cy.get('catalog-movie-tunnel-credits [test-id=production] [test-id=auto-complete] mat-chip').last().contains(country);
+  public assertLastCountryProductioncompanyExists(testId: string, country: string) {
+    cy.get(`catalog-movie-tunnel-credits [test-id=${testId}] [test-id=auto-complete] mat-chip`).last().contains(country);
+  }
+
+  // Sales Cast
+
+  public fillFirstSalesCastFirstName(testId: string, name: string) {
+    cy.get(`catalog-movie-tunnel-credits [test-id=${testId}] input[test-id=first-name]`).first().type(name);
+  }
+
+  public assertFirstSalesCastFirstNameExists(testId: string, name: string) {
+    cy.get(`catalog-movie-tunnel-credits [test-id=${testId}] input[test-id=first-name]`).first().should(`have.value`, name);
+  }
+
+  public fillFirstSalesCastLastName(testId: string, name: string) {
+    cy.get(`catalog-movie-tunnel-credits [test-id=${testId}] input[test-id=last-name]`).first().type(name);
+  }
+
+  public assertFirstSalesCastLastNameExists(testId: string, name: string) {
+    cy.get(`catalog-movie-tunnel-credits [test-id=${testId}] input[test-id=last-name]`).first().should(`have.value`, name);
+  }
+
+  public clickSelectFirstSalesCastRole(testId: string) {
+    cy.get(`catalog-movie-tunnel-credits [test-id=${testId}] mat-select`).first().click();
+  }
+
+  public selectSalesCastRole(role: string) {
+    cy.get('mat-option').contains(role).click();
+  }
+
+  public assertFirstSalesCastRoleExists(testId: string, role: string) {
+    cy.get(`catalog-movie-tunnel-credits [test-id=${testId}] mat-select`).first().contains(role);
+  }
+
+  public clickAddSalesCast(testId: string) {
+    cy.get(`catalog-movie-tunnel-credits [test-id=${testId}] button`).click();
+  }
+
+  public fillLastSalesCastFirstName(testId: string, name: string) {
+    cy.get(`catalog-movie-tunnel-credits [test-id=${testId}] input[test-id=first-name]`).last().type(name);
+  }
+
+  public assertLastSalesCastFirstNameExists(testId: string, name: string) {
+    cy.get(`catalog-movie-tunnel-credits [test-id=${testId}] input[test-id=first-name]`).last().should(`have.value`, name);
+  }
+
+  public fillLastSalesCastLastName(testId: string, name: string) {
+    cy.get(`catalog-movie-tunnel-credits [test-id=${testId}] input[test-id=last-name]`).last().type(name);
+  }
+
+  public assertLastSalesCastLastNameExists(testId: string, name: string) {
+    cy.get(`catalog-movie-tunnel-credits [test-id=${testId}] input[test-id=last-name]`).last().should(`have.value`, name);
+  }
+
+  public clickSelectLastSalesCastRole(testId: string) {
+    cy.get(`catalog-movie-tunnel-credits [test-id=${testId}] mat-select`).last().click();
+  }
+
+  public assertLastSalesCastRoleExists(testId: string, role: string) {
+    cy.get(`catalog-movie-tunnel-credits [test-id=${testId}] mat-select`).last().contains(role);
   }
 
   public clickNext() {
