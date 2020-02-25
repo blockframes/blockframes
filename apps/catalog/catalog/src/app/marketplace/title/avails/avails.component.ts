@@ -101,6 +101,13 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
       // Verify the form values and throw errors if some are missing/incorrect.
       this.dealService.verifyDeal(this.availsForm.getRawValue(), this.availableTerritories)
 
+      // Then check if the deal in preparation doesn't match an already existing deal.
+      const dealsInStore = this.marketplaceQuery.getTitleDeals(this.movie.id);
+      if (this.dealService.dealExist(this.availsForm.getRawValue(), dealsInStore)) {
+        throw new Error('You already got an Exploitation Right for this availability');
+      }
+
+
       // Create a distribution deal from the avails form values.
       const { terms, licenseType, territory, territoryExcluded, exclusive } = this.availsForm.getRawValue()
       const distributionDeal: DistributionDeal = createDistributionDeal(
