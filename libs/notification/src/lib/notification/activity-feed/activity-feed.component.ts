@@ -12,6 +12,7 @@ import { startWith, switchMap } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 import { NotificationDocument } from '@blockframes/notification/types';
 import { DateGroup } from '@blockframes/utils/helpers';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 @Component({
   selector: 'notification-activity-feed',
@@ -21,11 +22,13 @@ import { DateGroup } from '@blockframes/utils/helpers';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ActivityFeedComponent implements OnInit {
-  public organization: Organization;
-  public app: string;
+  public organization: Organization = this.organizationQuery.getActive();
+  public appName: string = this.routerQuery.getValue().state.root.data.app;
 
+  // Filters (arrays of notification types)
   public titleFilters = ['movieSubmitted', 'movieAccepted'];
   public dealFilters = ['newContract', 'contractInNegotiation'];
+  public deliveryFilters = ['newSignature', 'finalSignature'];
 
   public filter = new FormControl('');
   public filter$ = this.filter.valueChanges.pipe(startWith(this.filter.value));
@@ -34,18 +37,17 @@ export class ActivityFeedComponent implements OnInit {
 
   constructor(
     private notificationQuery: NotificationQuery,
-    private organizationQuery: OrganizationQuery
+    private organizationQuery: OrganizationQuery,
+    private routerQuery: RouterQuery
   ) {}
 
   ngOnInit() {
-    this.organization = this.organizationQuery.getActive();
-
     this.notifications$ = this.filter$.pipe(
       switchMap(filter => this.notificationQuery.groupNotificationsByDate(filter))
     );
   }
 
-  /** Dynamic filter of notifications for each tab. */
+  /** Dynamic filter of notifications for each tab */
   applyFilter(filter?: string | Notification['type'][]) {
     this.filter.setValue(filter);
   }
