@@ -168,16 +168,15 @@ export class MarketplaceSearchComponent implements OnInit {
             return from(
               asyncFilter(movies, async movie => {
                 // Filters the deals before sending them to the avails filter function
-                if (!movie.distributionDeals) {
-                  // If movie has no deals, it means there is also no mandate deal,
-                  // Archipel can't sells rights for this movie, so we don't display it.
-                  return false;
+                if (movie.distributionDeals && movie.distributionDeals.length) {
+                  const mandateDeals = await this.dealService.getMandateDeals(movie);
+                  const mandateDealIds = mandateDeals.map(deal => deal.id);
+                  const filteredDeals = movie.distributionDeals.filter(deal => !mandateDealIds.includes(deal.id));
+                  return filterMovieWithAvails(filteredDeals, availsOptions, mandateDeals);
                 }
-
-                const mandateDeals = await this.dealService.getMandateDeals(movie);
-                const mandateDealIds = mandateDeals.map(deal => deal.id);
-                const filteredDeals = movie.distributionDeals.filter(deal => !mandateDealIds.includes(deal.id));
-                return filterMovieWithAvails(filteredDeals, availsOptions, mandateDeals);
+                // If movie has no deals, it means there is also no mandate deal,
+                // Archipel can't sells rights for this movie, so we don't display it.
+                return false;
               })
             )
           })
