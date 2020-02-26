@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatProgressSpinnerModule, MatIconModule, MatSnackBarModule } from '@angular/material';
+import { MatProgressSpinnerModule, MatIconModule, MatSnackBarModule, MatTreeModule, MatButtonModule } from '@angular/material';
 import { RouterModule } from '@angular/router';
 
 // Components
@@ -13,6 +13,8 @@ import { ContractTreeComponent } from './contract-tree.component';
     MatIconModule,
     MatSnackBarModule,
     RouterModule,
+    MatTreeModule,
+    MatButtonModule,
   ],
   declarations: [
     ContractTreeComponent,
