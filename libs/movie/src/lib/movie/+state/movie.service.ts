@@ -9,7 +9,7 @@ import {
 import { switchMap } from 'rxjs/operators';
 import { createMovie, Movie, MovieAnalytics } from './movie.model';
 import { MovieState, MovieStore } from './movie.store';
-import { AuthQuery } from '@blockframes/auth';
+import { AuthQuery, AuthService } from '@blockframes/auth';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 import { cleanModel } from '@blockframes/utils/helpers';
 import { firestore } from 'firebase/app';
@@ -35,6 +35,7 @@ export class MovieService extends CollectionService<MovieState> {
   constructor(
     private organizationQuery: OrganizationQuery,
     private authQuery: AuthQuery,
+    private authService: AuthService,
     private permissionsService: PermissionsService,
     private functions: AngularFireFunctions,
     store: MovieStore
@@ -60,9 +61,13 @@ export class MovieService extends CollectionService<MovieState> {
     return this.syncManyDocs(titleIds);
   }
 
-  onCreate(movie: Movie, { write }: WriteOptions) {
+  async onCreate(movie: Movie, { write }: WriteOptions) {
     // When a movie is created, we also create a permissions document for it.
-    return this.permissionsService.addDocumentPermissions(movie, write as firestore.WriteBatch)
+    // Since movie can be created on behalf of another user (An admin from admin panel for example)
+    // We use createdBy attribute to fetch OrgId
+    const userId = movie._meta && movie._meta.createdBy ? movie._meta.createdBy : this.authQuery.userId;
+    const user = await this.authService.getUser(userId);
+    return this.permissionsService.addDocumentPermissions(movie, write as firestore.WriteBatch, user.orgId);
   }
 
   onUpdate(movie: Movie, { write }: WriteOptions) {

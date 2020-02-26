@@ -7,13 +7,13 @@ export default abstract class NavbarPage {
   }
 
   public openProfileMenu(){
-    cy.get('[page-id=navbar]')
+    cy.get('[catalog-layout]')
       .get('button[test-id=profile-avatar]')
       .click();
   }
 
   public clickWishlist() {
-    cy.get('[page-id=navbar] a[test-id=heartIcon]').click();
+    cy.get('[catalog-layout] a[test-id=heartIcon]').click();
     return new WishlistPage();
   }
 
