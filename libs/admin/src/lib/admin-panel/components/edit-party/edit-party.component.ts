@@ -1,5 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA, MatAutocompleteSelectedEvent, MatSnackBar } from '@angular/material';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { ContractPartyDetail } from '@blockframes/contract/contract/+state/contract.model';
 import { PartyDetailsForm } from '@blockframes/contract/contract/form/contract.form';
 import { staticModels } from '@blockframes/utils/static-model';
