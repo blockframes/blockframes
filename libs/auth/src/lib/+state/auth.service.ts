@@ -95,6 +95,8 @@ export class AuthService extends FireAuthService<AuthState> {
 
   /**
    * Checks if an user exists
+   * @dev If in the future, we need to keep an user list in the state other than members of an org, 
+   * this will be the time to create a userService and to move this method in it.
    * @param uid
    */
   public async userExists(uid: string): Promise<boolean> {
@@ -104,6 +106,8 @@ export class AuthService extends FireAuthService<AuthState> {
 
   /**
    * Fetch an user based on his uid
+   * @dev If in the future, we need to keep an user list in the state other than members of an org, 
+   * this will be the time to create a userService and to move this method in it.
    * @param uid
    */
   public async getUser(uid: string): Promise<User> {
