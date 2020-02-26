@@ -33,6 +33,7 @@ const routes: Routes = createRoutes({
 });
 
 @NgModule({
+  declarations: [],
   imports: [RouterModule.forChild(routes)],
 })
 export class CatalogModule {}

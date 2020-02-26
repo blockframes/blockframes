@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { AuthStore, User, AuthState } from './auth.store';
-import { Router } from '@angular/router';
 import { AuthQuery } from './auth.query';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { FireAuthService, CollectionConfig } from 'akita-ng-fire';
@@ -10,7 +9,6 @@ import { FireAuthService, CollectionConfig } from 'akita-ng-fire';
 export class AuthService extends FireAuthService<AuthState> {
   constructor(
     protected store: AuthStore,
-    private router: Router,
     private query: AuthQuery,
     private functions: AngularFireFunctions
   ) {
@@ -37,7 +35,7 @@ export class AuthService extends FireAuthService<AuthState> {
   }
 
   public checkResetCode(actionCode: string) {
-    return this.fireAuth.auth.verifyPasswordResetCode(actionCode);
+    return this.fireAuth.verifyPasswordResetCode(actionCode);
   }
 
   /**
@@ -57,7 +55,7 @@ export class AuthService extends FireAuthService<AuthState> {
    * @param newPassword new password set by the owned of email
    */
   public handleResetPassword(actionCode: string, newPassword: string) {
-    this.fireAuth.auth.confirmPasswordReset(actionCode, newPassword)
+    this.fireAuth.confirmPasswordReset(actionCode, newPassword)
   }
 
   /** Create the user in users collection on firestore. */
