@@ -22,7 +22,7 @@ function createPartyDetailsControls(partyDetails: Partial<ContractPartyDetail> =
   return {
     party: new ContractPartyForm(entity.party),
     status: new FormControl(entity.status),
-    childRoles: new FormControl(partyDetails.childRoles)
+    childRoles: new FormControl(entity.childRoles)
   };
 }
 
