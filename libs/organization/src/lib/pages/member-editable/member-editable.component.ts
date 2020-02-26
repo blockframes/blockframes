@@ -81,7 +81,7 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
 
   /** Ensures that there is always at least one super Admin in the organization. */
   public hasLastSuperAdmin(uid:string, role: UserRole) {
-    if (role !== UserRole.superAdmin && this.permissionQuery.isUserSuperAdmin(uid)) {
+    if (role !== 'superAdmin' && this.permissionQuery.isUserSuperAdmin(uid)) {
       const superAdminNumber = this.permissionQuery.superAdminCount;
       return superAdminNumber > 1 ? true : false;
     } else {

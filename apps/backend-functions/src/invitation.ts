@@ -77,7 +77,7 @@ async function addUserToOrg(userId: string, organizationId: string) {
     }
 
     // Add the new user and his role to the permissions object.
-    permissionData.roles[userId] = UserRole.member;
+    permissionData.roles[userId] = 'member';
 
     return Promise.all([
       // Update user's orgId

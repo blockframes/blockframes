@@ -35,11 +35,11 @@ export class MemberRepertoryComponent {
 
   public displayRole(role: UserRole) {
     switch (role) {
-      case UserRole.superAdmin:
+      case 'superAdmin':
         return 'Super Admin';
-      case UserRole.admin:
+      case 'admin':
         return 'Admin';
-      case UserRole.member:
+      case 'member':
         return 'Member';
       default:
         return 'Member';

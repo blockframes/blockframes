@@ -28,14 +28,14 @@ export class PermissionsService extends CollectionService<PermissionsState> {
     const permissions = await this.getValue(orgId);
 
     switch (role) {
-      case UserRole.superAdmin:
-        permissions.roles[uid] = UserRole.superAdmin;
+      case 'superAdmin':
+        permissions.roles[uid] = 'superAdmin';
         break;
-      case UserRole.admin:
-        permissions.roles[uid] = UserRole.admin;
+      case 'admin':
+        permissions.roles[uid] = 'admin';
         break;
-      case UserRole.member:
-        permissions.roles[uid] = UserRole.member;
+      case 'member':
+        permissions.roles[uid] = 'member';
         break;
       default:
         throw new Error(`User with id : ${uid} have no role.`);

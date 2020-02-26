@@ -15,11 +15,13 @@ export interface Roles {
 }
 
 /** Roles a user can have in an organization. */
-export const enum UserRole {
-  superAdmin = 'superAdmin',
-  admin = 'admin',
-  member = 'member'
-}
+// export const enum UserRole {
+//   superAdmin = 'superAdmin',
+//   admin = 'admin',
+//   member = 'member'
+// }
+
+export type UserRole = 'superAdmin' | 'admin' | 'member';
 
 /** Permissions related to a specific application. */
 export interface AppPermissionsDocument {
