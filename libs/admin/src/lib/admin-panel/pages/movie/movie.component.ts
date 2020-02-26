@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieService, Movie } from '@blockframes/movie';
 import { MovieAdminForm } from '../../forms/movie-admin.form';
 import { StoreType, StoreStatus } from '@blockframes/movie/movie/+state/movie.firestore';

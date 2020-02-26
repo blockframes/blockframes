@@ -6,7 +6,8 @@ import { OverlayWidgetModule } from '../../overlay-widget/overlay-widget.module'
 import { TableFilterComponent, ColRef } from './table-filter.component';
 
 // Material
-import { MatButtonModule, MatProgressSpinnerModule } from '@angular/material';
+import { MatButtonModule } from '@angular/material/button';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';

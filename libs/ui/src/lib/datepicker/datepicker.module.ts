@@ -1,11 +1,9 @@
 import { NgModule } from '@angular/core';
-import {
-    MatDatepickerModule, 
-    MatIconModule, 
-    MatButtonModule, 
-    MatInputModule, 
-    MatCardModule, 
-  } from "@angular/material";
+import { MatButtonModule } from "@angular/material/button";
+import { MatCardModule } from "@angular/material/card";
+import { MatDatepickerModule } from "@angular/material/datepicker";
+import { MatIconModule } from "@angular/material/icon";
+import { MatInputModule } from "@angular/material/input";
 import { CommonModule } from '@angular/common';
 import { DatepickerRangeComponent } from './datepicker.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
