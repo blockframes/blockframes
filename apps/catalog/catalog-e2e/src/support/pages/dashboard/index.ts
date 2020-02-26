@@ -1,7 +1,7 @@
 import StartTunnelPage from "./StartTunnelPage";
 import TitlesListPage from "./TitlesListPage";
 import TunnelMainPage from "./TunnelMainPage";
-import TunnelKeywordsPage from "./TunnelKeywordsPage";
+import TunnelStorylinePage from "./TunnelStorylinePage";
 import TunnelDistributionRightPage from "./TunnelDistributionRightPage";
 import TunnelBudgetPage from "./TunnelBudgetPage";
 import TunnelVersionInfoPage from "./TunnelVersionInfoPage";
@@ -11,7 +11,7 @@ export {
   StartTunnelPage,
   TitlesListPage,
   TunnelMainPage,
-  TunnelKeywordsPage,
+  TunnelStorylinePage,
   TunnelDistributionRightPage,
   TunnelBudgetPage,
   TunnelVersionInfoPage,
