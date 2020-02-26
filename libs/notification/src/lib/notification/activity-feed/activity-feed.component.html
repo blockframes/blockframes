@@ -1,19 +1,19 @@
-<ng-container *ngIf="(allNotifications$ | async).length || (allInvitations$ | async).length; else noFeed">
-  <ng-container *ngIf="(notifications$ | async) as notifications; else isLoading">
+<ng-container *ngIf="(allNotifications$ | async); else noFeed">
+  <ng-container *ngIf="(notifications$ | async); else isLoading">
     <h1>Activity Feed</h1>
 
     <header mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
-      <button mat-tab-link (click)="filter.setValue()" [active]="!(filter$ | async)">All</button>
-      <button mat-tab-link (click)="applyFilter('movieSubmitted')" [active]="(filter$ | async) === 'Titles'">Titles</button>
-      <button mat-tab-link (click)="applyFilter('Offers and Deals')" [active]="(filter$ | async) === 'Offers and Deals'">Offers and Deals</button>
-      <button mat-tab-link (click)="applyFilter('Organization')" [active]="(filter$ | async) === 'Organization'">{{ organization.name }}</button>
+      <button mat-tab-link (click)="applyFilter('')" [active]="!(filter$ | async)">All</button>
+      <button mat-tab-link (click)="applyFilter(titleFilters)" [active]="(filter$ | async) === titleFilters">Titles</button>
+      <button mat-tab-link (click)="applyFilter(dealFilters)" [active]="(filter$ | async) === dealFilters">Offers and Deals</button>
+      <button mat-tab-link (click)="applyFilter('Invitations')" [active]="(filter$ | async) === 'Invitations'">{{ organization.name }}</button>
     </header>
 
-    <ng-container *ngIf="">
-      <notification-list></notification-list>
-    </ng-container>
-    <ng-template #invitations>
+    <ng-container *ngIf="(filter$ | async) === 'Invitations'; else notifications">
       <!-- <invitation-list></invitation-list> -->
+    </ng-container>
+    <ng-template #notifications>
+      <notification-list [notificationsByDate]="(notifications$ | async)"></notification-list>
     </ng-template>
 
   </ng-container>

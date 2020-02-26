@@ -20,7 +20,7 @@
       <span>Recent Activity</span>
     </header>
     <invitation-list></invitation-list>
-    <notification-list></notification-list>
+    <notification-list [notificationsByDate]="(notifications$ | async)"></notification-list>
     <footer widgetFooter>
       <a mat-button color="primary" [routerLink]="page">
         <span>View All Activity</span>
