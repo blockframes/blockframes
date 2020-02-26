@@ -35,7 +35,7 @@ import { MovieAlgoliaResult } from '@blockframes/utils/algolia';
 import { MoviesIndex } from '@blockframes/utils/algolia';
 // RxJs
 import { Observable, combineLatest, of, from } from 'rxjs';
-import { startWith, map, debounceTime, switchMap, tap, distinctUntilChanged } from 'rxjs/operators';
+import { startWith, map, debounceTime, switchMap, tap, distinctUntilChanged, pluck } from 'rxjs/operators';
 // Others
 import { filterMovie, filterMovieWithAvails } from '@blockframes/catalog/filter.util';
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
@@ -134,20 +134,16 @@ export class MarketplaceSearchComponent implements OnInit {
     private breakpointObserver: BreakpointObserver,
     @Inject(MoviesIndex) private movieIndex: Index,
     private analytics: FireAnalytics
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.algoliaSearchResults$ = this.searchbarForm.valueChanges.pipe(
       debounceTime(200),
       distinctUntilChanged(),
       startWith(''),
-      switchMap(searchText => {
-        return new Promise<MovieAlgoliaResult[]>((res, rej) => {
-          this.movieIndex.search(searchText.text, (err, result) =>
-            err ? rej(err) : res(result.hits)
-          );
-        });
-      }),
+      pluck('text'),
+      switchMap(text => this.movieIndex.search(text)),
+      pluck('hits'),
     );
 
     this.movieSearchResults$ = combineLatest([
@@ -171,17 +167,17 @@ export class MarketplaceSearchComponent implements OnInit {
 
             return from(
               asyncFilter(movies, async movie => {
-                  // Filters the deals before sending them to the avails filter function
-                  if (!movie.distributionDeals) {
-                    // If movie has no deals, it means there is also no mandate deal,
-                    // Archipel can't sells rights for this movie, so we don't display it.
-                    return false;
-                  }
+                // Filters the deals before sending them to the avails filter function
+                if (!movie.distributionDeals) {
+                  // If movie has no deals, it means there is also no mandate deal,
+                  // Archipel can't sells rights for this movie, so we don't display it.
+                  return false;
+                }
 
-                  const mandateDeals = await this.dealService.getMandateDeals(movie);
-                  const mandateDealIds = mandateDeals.map(deal => deal.id);
-                  const filteredDeals = movie.distributionDeals.filter(deal => !mandateDealIds.includes(deal.id));
-                  return filterMovieWithAvails(filteredDeals, availsOptions, mandateDeals);
+                const mandateDeals = await this.dealService.getMandateDeals(movie);
+                const mandateDealIds = mandateDeals.map(deal => deal.id);
+                const filteredDeals = movie.distributionDeals.filter(deal => !mandateDealIds.includes(deal.id));
+                return filterMovieWithAvails(filteredDeals, availsOptions, mandateDeals);
               })
             )
           })
@@ -319,7 +315,7 @@ export class MarketplaceSearchComponent implements OnInit {
     if (!value.includes(budget)) {
       this.filterForm.get('estimatedBudget').setValue([...value, budget]);
     } else {
-      const valueWithoutBudget = value.filter(v =>  v !== budget);
+      const valueWithoutBudget = value.filter(v => v !== budget);
       this.filterForm.get('estimatedBudget').setValue(valueWithoutBudget);
     }
   }
@@ -398,7 +394,7 @@ export class MarketplaceSearchComponent implements OnInit {
 
   public applyAvailsFilter() {
     this.availsForm.get('isActive').setValue(true);
-    this.availsForm.disable({onlySelf: false});
+    this.availsForm.disable({ onlySelf: false });
     this.territoryControl.disable();
     // TODO: use controls for territories and medias to make it disablable
   }
@@ -409,8 +405,8 @@ export class MarketplaceSearchComponent implements OnInit {
     this.territoryControl.enable();
   }
 
-    /** Check storeType or uncheck it if it's already in the array. */
-    public checkStoreType(storeType: StoreType) {
-      this.filterForm.checkStoreType(storeType);
-    }
+  /** Check storeType or uncheck it if it's already in the array. */
+  public checkStoreType(storeType: StoreType) {
+    this.filterForm.checkStoreType(storeType);
+  }
 }
