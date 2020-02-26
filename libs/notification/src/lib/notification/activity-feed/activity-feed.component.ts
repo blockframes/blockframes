@@ -51,4 +51,16 @@ export class ActivityFeedComponent implements OnInit {
   applyFilter(filter?: string | Notification['type'][]) {
     this.filter.setValue(filter);
   }
+
+  /** Returns the number of notifications according to the filter */
+  getCount(filter?: Notification['type'][]): Observable<number> {
+    return this.notificationQuery.selectCount(notification =>
+      filter ? filter.includes(notification.type) : true
+    )
+  }
+
+  /** Returns the number of keys of an object. */
+  public keysLength(notifications: DateGroup<NotificationDocument[]>): number {
+    return Object.keys(notifications).length;
+  }
 }
