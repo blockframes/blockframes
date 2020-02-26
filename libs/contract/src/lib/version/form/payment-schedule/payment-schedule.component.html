@@ -4,7 +4,7 @@
     PAYMENTS UPON EVENT
   </mat-radio-button>
   <ng-container *ngFor="let control of paymentSchedule.controls; let isLast = last; let isFirst = first let i = index">
-    <div [formGroup]="control" *ngIf="!isLast">
+    <div [formGroup]="control" *ngIf="!isLast && !isFirst">
       <div fxLayout="row" fxLayoutAlign="center baseline" fxLayoutGap="20px">
         <mat-form-field appearance="outline">
           <mat-label>Percentage</mat-label>
@@ -19,7 +19,7 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
-        <ng-container *ngIf="showRemoveButton(i, isFirst); else add">
+        <ng-container *ngIf="showRemoveButton(i, isFirst, isLast); else add">
           <button mat-mini-fab (click)="removePayment(i)" color="warn" #eventButtons>
             <mat-icon>delete</mat-icon>
           </button>
@@ -105,7 +105,7 @@
   <span class="caption">Please indicate the payment term you need regarding invoices.</span>
   <!-- We are using the first index cause it has nothing in common with event schedule -->
   <div *ngFor="let control of paymentSchedule.controls; let isFirst = first" [formGroup]="control">
-    <div formGroupName="date" *ngIf="isFirst">
+    <div formGroupName="date" *ngIf="isFirst" fxLayout="column">
       <div fxLayout="row" fxLayoutGap="20px">
         <mat-form-field appearance="outline" formGroupName="floatingDuration">
           <mat-label>Duration</mat-label>
@@ -116,6 +116,17 @@
           <mat-select formControlName="unit">
             <mat-option *ngFor="let duration of durations | keyvalue" [value]="duration.key">
               {{ duration.value }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <span class="caption">Every</span>
+      <div>
+        <mat-form-field appearance="outline" fxFlex.gt-xs="50" fxFlex="auto">
+          <mat-label>Triggering event</mat-label>
+          <mat-select formControlName="floatingStart">
+            <mat-option *ngFor="let event of triggerEvents | keyvalue" [value]="event.key">
+              {{event.value}}
             </mat-option>
           </mat-select>
         </mat-form-field>

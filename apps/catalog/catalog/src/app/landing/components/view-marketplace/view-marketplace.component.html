@@ -1,6 +1,6 @@
 <section fxLayout="column" fxLayoutAlign="center center" class="video-section">
   <div class="video-container">
-    <iframe [src]="url" width="1024" height="560" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+    <iframe [src]="url" [width]="videoWidth" [height]="videoHeight" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
     <div [ngClass]="cover ? 'cover' : 'show'">
       <p class="mat-display-1">What is Archipel Content?</p>
       <button mat-flat-button color="accent" (click)="play()">
