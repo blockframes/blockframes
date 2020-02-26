@@ -5,6 +5,7 @@ import { RightListComponent } from './right-list.component';
 import { OverlayWidgetModule } from '@blockframes/ui/overlay-widget/overlay-widget.module';
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 
 // Material
 import { MatTableModule } from '@angular/material/table';
@@ -21,6 +22,7 @@ import { MatListModule } from '@angular/material/list';
     OverlayWidgetModule,
     TranslateSlugModule,
     FlexLayoutModule,
+    TableFilterModule,
 
     // Material
     MatTableModule,
