@@ -1,8 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar, MatDialog } from '@angular/material';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
-import { ContractWithLastVersion, PublicContract, createContractPartyDetail, Contract } from '@blockframes/contract/contract/+state/contract.model';
+import { ContractWithLastVersion, PublicContract, createContractPartyDetail, Contract, ContractPartyDetail } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractAdminForm } from '../../forms/contract-admin.form';
 import { ContractVersionAdminForm } from '../../forms/contract-version-admin.form';
 import { ContractStatus, ContractType } from '@blockframes/contract/contract/+state/contract.firestore';
@@ -113,48 +113,49 @@ export class ContractComponent implements OnInit {
     private contractService: ContractService,
     private contractVersionService: ContractVersionService,
     private route: ActivatedRoute,
-    private router: Router,
     private cdRef: ChangeDetectorRef,
     private snackBar: MatSnackBar,
     private dialog: MatDialog
   ) {
-    this.router.routeReuseStrategy.shouldReuseRoute = () => false;
   }
 
   async ngOnInit() {
-    this.contractId = this.route.snapshot.paramMap.get('contractId');
-    this.contract = await this.contractService.getContractWithLastVersion(this.contractId);
-    this.contractForm = new ContractAdminForm(this.contract.doc);
-    this.contractVersionForm = new ContractVersionAdminForm(this.contract.last);
-    this.version = parseInt(this.contract.last.id, 10);
-    this.publicContract$ = this.contractService.listenOnPublicContract(this.contractId);
-    this.contractVersions = await this.contractVersionService.getContractVersions(this.contractId);
+    this.route.params.subscribe(async params => {
+      this.contractId = params.contractId;
+      this.contract = await this.contractService.getContractWithLastVersion(this.contractId);
+      this.contractForm = new ContractAdminForm(this.contract.doc);
+      this.contractVersionForm = new ContractVersionAdminForm(this.contract.last);
+      this.version = parseInt(this.contract.last.id, 10);
+      this.publicContract$ = this.contractService.listenOnPublicContract(this.contractId);
+      this.contractVersions = await this.contractVersionService.getContractVersions(this.contractId);
 
-    this.statuses = Object.keys(ContractStatus);
-    this.contractStatus = ContractStatus;
-    this.types = Object.keys(ContractType);
-    this.contractType = ContractType;
+      this.statuses = Object.keys(ContractStatus);
+      this.contractStatus = ContractStatus;
+      this.types = Object.keys(ContractType);
+      this.contractType = ContractType;
 
-    this.cdRef.markForCheck();
+      this.cdRef.markForCheck();
 
-    Object.keys(this.contract.last.titles).forEach(async id => {
-      const title = this.contract.last.titles[id];
-      const movie = await this.movieService.getValue(id);
+      Object.keys(this.contract.last.titles).forEach(async id => {
+        const title = this.contract.last.titles[id];
+        const movie = await this.movieService.getValue(id);
 
-      // Append new data for table display
-      this.titles.push({
-        id,
-        price: title.price,
-        movie,
-        deals: title.distributionDealIds.map(d => {
-          const deal = { id: d, movie: id };
-          return deal;
-        }),
-        exploredeals: `/c/o/admin/panel/deals/${id}`,
-      });
+        // Append new data for table display
+        this.titles.push({
+          id,
+          price: title.price,
+          movie,
+          deals: title.distributionDealIds.map(d => {
+            const deal = { id: d, movie: id };
+            return deal;
+          }),
+          exploredeals: `/c/o/admin/panel/deals/${id}`,
+        });
 
-      this.titles = [...this.titles];
-    })
+        this.titles = [...this.titles];
+      })
+    });
+    
   }
 
   /**
@@ -208,7 +209,7 @@ export class ContractComponent implements OnInit {
       disableClose: true
     });
 
-    return dialogRef.afterClosed().subscribe(async (output: any) => this._updateParty(index, output));
+    return dialogRef.afterClosed().subscribe((output: ContractPartyDetail | { remove: boolean }) => this._updateParty(index, output));
   }
 
   public addParty() {
@@ -222,16 +223,17 @@ export class ContractComponent implements OnInit {
       },
       disableClose: true
     });
-    return dialogRef.afterClosed().subscribe(async (output: any) => this._updateParty(index, output));
+    return dialogRef.afterClosed().subscribe((output: ContractPartyDetail | { remove: boolean }) => this._updateParty(index, output));
   }
 
-  public async _updateParty(index: number, output: any): Promise<Boolean> {
+  public async _updateParty(index: number, output: ContractPartyDetail | { remove: boolean }): Promise<boolean> {
     if (!output) return false;
     const writeableContract = { ... this.contract.doc }
 
-    if (output.remove === true) {
+    if ((output as { remove: boolean }).remove === true) {
       writeableContract.parties.splice(index, 1);
     } else {
+      output = output as ContractPartyDetail;
       // Hack because we actually need a multiselect form input
       if (output.childRoles && !Array.isArray(output.childRoles)) {
         output.childRoles = [output.childRoles];

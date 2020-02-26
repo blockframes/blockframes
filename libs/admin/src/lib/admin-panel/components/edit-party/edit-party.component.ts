@@ -5,6 +5,12 @@ import { PartyDetailsForm } from '@blockframes/contract/contract/form/contract.f
 import { staticModels } from '@blockframes/utils/static-model';
 import { ContractStatus } from '@blockframes/contract/contract/+state';
 
+interface PartyDialogData {
+  title: string, 
+  subtitle: string,
+  party: ContractPartyDetail
+}
+
 @Component({
   selector: 'admin-edit-party',
   templateUrl: './edit-party.component.html',
@@ -21,11 +27,7 @@ export class EditPartyComponent implements OnInit {
   constructor(
     public dialogRef: MatDialogRef<EditPartyComponent>,
     private snackBar: MatSnackBar,
-    @Inject(MAT_DIALOG_DATA) public data: { 
-      title: string, 
-      subtitle: string,
-      party: ContractPartyDetail
-    },
+    @Inject(MAT_DIALOG_DATA) public data: PartyDialogData,
   ) { }
 
   ngOnInit() {

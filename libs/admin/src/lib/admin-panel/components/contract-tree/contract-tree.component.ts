@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input, ChangeDetectorRef } from '@angular/core';
 import { Contract } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractService } from '@blockframes/contract/contract/+state';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'admin-contract-tree',
@@ -16,6 +17,7 @@ export class ContractTreeComponent implements OnInit {
   constructor(
     private contractService: ContractService,
     private cdRef: ChangeDetectorRef,
+    private snackBar: MatSnackBar,
   ) { }
 
   async ngOnInit() {
@@ -29,9 +31,8 @@ export class ContractTreeComponent implements OnInit {
    * @param contract 
    * @param mode 
    *   0 check both parents and childs
-   *   1 check only parents
-   *   -1 check only childs
-   *   99 build complete tree
+   *   1 check only parents (ascending mode)
+   *   -1 check only childs (descending mode)
    * @param level 
    */
   private async recursiveParentsAndChilds(contract: Contract, mode: 0 | 1 | -1 = 0, level: number = 0) {
@@ -45,17 +46,29 @@ export class ContractTreeComponent implements OnInit {
         childs: contract.childContractIds,
       };
 
+      // If 0 : we fetch parents & childs. If 1 (ascending mode), we check only parents
       if ([0, 1].includes(mode)) {
         for (const parentId of contract.parentContractIds) {
           const parentContract = await this.contractService.getValue(parentId);
-          await this.recursiveParentsAndChilds(parentContract, 1, level + 1);
+          if(parentContract) {
+            await this.recursiveParentsAndChilds(parentContract, 1, level + 1);
+          } else {
+            this.snackBar.open(`Parent contract ${parentId} not found.`, 'close', { duration: 2000 });
+          } 
+         
         };
       }
 
+      // If 0 : we fetch parents & childs. If -1 (descending mode), we check only childrens
       if ([0, -1].includes(mode)) {
         for (const childId of contract.childContractIds) {
           const childContract = await this.contractService.getValue(childId);
-          await this.recursiveParentsAndChilds(childContract, -1, level - 1);
+          if(childContract) {
+            await this.recursiveParentsAndChilds(childContract, -1, level - 1);
+          } else {
+            this.snackBar.open(`Child contract ${childId} not found.`, 'close', { duration: 2000 });
+          }
+          
         };
       }
     }
@@ -69,8 +82,14 @@ export class ContractTreeComponent implements OnInit {
     return `/c/o/marketplace/tunnel/contract/${contract.id}/${contract.type}`;
   }
 
+  /**
+   * Retreive contracts that are directly child of parentId
+   * If parentId not specified, we start from the root (highest) level contract
+   * @param parentId 
+   */
   public getItems(parentId?: string) {
-    const startLevel = Math.max.apply(Math, Object.keys(this.tree).map(contractId => this.tree[contractId].level));
-    return Object.keys(this.tree).map(k => this.tree[k]).filter(c => parentId ? c.parents.includes(parentId) : c.level === startLevel);
+    const contracts = Object.keys(this.tree).map(contractId => this.tree[contractId]);
+    const startLevel = Math.max(...contracts.map(c => c.level));
+    return contracts.filter(c => parentId ? c.parents.includes(parentId) : c.level === startLevel);
   }
 }

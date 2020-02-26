@@ -2,7 +2,10 @@
 <ng-container *ngIf="contract">
   <article id="contract-section" fxLayout="row" fxLayoutAlign="space-around start" >
     <article fxLayout="column" fxLayoutAlign="space-between start">
-      <button mat-flat-button color="accent" [routerLink]="getContractTunnelPath(contract.doc)"><mat-icon svgIcon="eye"></mat-icon><span>Tunnel view</span></button>
+      <button mat-flat-button color="accent" [routerLink]="getContractTunnelPath(contract.doc)">
+        <mat-icon svgIcon="eye"></mat-icon>
+        <span>Tunnel view</span>
+      </button>
       <h2>Edit Form : </h2>
       <ng-container *ngIf="contractForm">
         <form [formGroup]="contractForm">
