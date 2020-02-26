@@ -19,7 +19,7 @@ beforeEach(() => {
 });
 
 describe('User can navigate to the movie tunnel page 1 and 2', () => {
-  it.skip('Login into an existing account, navigate on titles list page, go to movie tunnel page 1, go on movie tunnel page 2', () => {
+  it('Login into an existing account, navigate on titles list page, go to movie tunnel page 1, go on movie tunnel page 2', () => {
     // Connexion
     const p1: WelcomeViewPage = new WelcomeViewPage();
     const p2: LoginViewPage = p1.clickCallToAction();
