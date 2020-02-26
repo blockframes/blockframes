@@ -1849,7 +1849,7 @@ export class ViewExtractedElementsComponent implements OnInit {
               licensee.party.orgId = licenseeParts[1].trim();
             }
             licensee.party.role = getCodeIfExists('LEGAL_ROLES', 'licensee');
-            
+
             if (licensee.party.orgId) {
               contract.doc.partyIds.push(licensee.party.orgId);
             }
@@ -2063,13 +2063,12 @@ export class ViewExtractedElementsComponent implements OnInit {
         // Global contract price 
         const contractPrice = createPrice();
         importErrors.contract.doc.titleIds.forEach(titleId => {
-          if(importErrors.contract.last.titles[titleId].price) {
-            if(importErrors.contract.last.titles[titleId].price.amount) {
-              contractPrice.amount += importErrors.contract.last.titles[titleId].price.amount;
-            }
-            if(importErrors.contract.last.titles[titleId].price.currency) {
-              contractPrice.currency = importErrors.contract.last.titles[titleId].price.currency;
-            }
+          const price = importErrors.contract.last.titles[titleId].price;
+          if (price && price.amount) {
+            contractPrice.amount += price.amount;
+          }
+          if (price && price.currency) {
+            contractPrice.currency = price.currency;
           }
         });
 
@@ -2189,11 +2188,12 @@ export class ViewExtractedElementsComponent implements OnInit {
     if (spreadSheetRow[SpreadSheetContractTitle.titlePrice + currentIndex]) {
       const priceParts = spreadSheetRow[SpreadSheetContractTitle.titlePrice + currentIndex].split(this.subSeparator);
 
-      if(priceParts.length >= 2) {
+      // Check if priceParts have at least two parts (amount and currency)
+      if (priceParts.length >= 2) {
         const amount = parseInt(priceParts[0], 10);
         const currency = getCodeIfExists('MOVIE_CURRENCIES', priceParts[1]);
         titleDetails.price.amount = amount;
-        if(currency) {
+        if (currency) {
           titleDetails.price.currency = currency;
         } else {
           importErrors.errors.push({
@@ -2237,8 +2237,8 @@ export class ViewExtractedElementsComponent implements OnInit {
     }
 
     if (spreadSheetRow[SpreadSheetContractTitle.expenseCurrency + currentIndex]) {
-      const currency = getCodeIfExists('MOVIE_CURRENCIES',spreadSheetRow[SpreadSheetContractTitle.expenseCurrency + currentIndex]);
-      if(currency) {
+      const currency = getCodeIfExists('MOVIE_CURRENCIES', spreadSheetRow[SpreadSheetContractTitle.expenseCurrency + currentIndex]);
+      if (currency) {
         recoupableExpense.price.currency = currency;
       } else {
         importErrors.errors.push({
