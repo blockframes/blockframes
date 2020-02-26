@@ -5,12 +5,13 @@ import {
   InvitationStore,
   Notification
 } from '@blockframes/notification';
-import { Organization } from '@blockframes/organization/+state/organization.model'
+import { Organization } from '@blockframes/organization/+state/organization.model';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Observable } from 'rxjs';
-import { map, startWith, switchMap } from 'rxjs/operators';import { FormControl } from '@angular/forms';
-;
+import { startWith, switchMap } from 'rxjs/operators';
+import { FormControl } from '@angular/forms';
+import { NotificationDocument } from '@blockframes/notification/types';
+import { DateGroup } from '@blockframes/utils/helpers';
 
 @Component({
   selector: 'notification-activity-feed',
@@ -20,37 +21,32 @@ import { map, startWith, switchMap } from 'rxjs/operators';import { FormControl 
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ActivityFeedComponent implements OnInit {
-
   public organization: Organization;
   public app: string;
 
-  public filter = new FormControl();
+  public titleFilters = ['movieSubmitted', 'movieAccepted'];
+  public dealFilters = ['newContract', 'contractInNegotiation'];
+
+  public filter = new FormControl('');
   public filter$ = this.filter.valueChanges.pipe(startWith(this.filter.value));
-  public notifications$: Observable<Notification[]>;
-  public allNotifications$ = this.notificationQuery.selectAll();
-  public allInvitations$ = this.invitationQuery.selectAll();
+  public notifications$: Observable<DateGroup<NotificationDocument[]>>;
+  public allNotifications$ = this.notificationQuery.groupNotificationsByDate();
 
   constructor(
     private notificationQuery: NotificationQuery,
-    private invitationQuery: InvitationQuery,
-    private organizationQuery: OrganizationQuery,
-    private routerQuery: RouterQuery
+    private organizationQuery: OrganizationQuery
   ) {}
 
   ngOnInit() {
     this.organization = this.organizationQuery.getActive();
-    this.app = this.routerQuery.getValue().state.root.data.app;
+
     this.notifications$ = this.filter$.pipe(
-      switchMap(filter =>
-        this.notificationQuery.selectAll({
-          filterBy: notification => (filter ? notification.type === filter : true)
-        })
-      )
+      switchMap(filter => this.notificationQuery.groupNotificationsByDate(filter))
     );
   }
 
   /** Dynamic filter of notifications for each tab. */
-  applyFilter(filter?: Notification['type']) {
+  applyFilter(filter?: string | Notification['type'][]) {
     this.filter.setValue(filter);
   }
 }
