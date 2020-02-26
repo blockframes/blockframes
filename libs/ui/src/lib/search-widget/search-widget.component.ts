@@ -32,7 +32,7 @@ export class SearchWidgetComponent implements AfterViewInit, OnDestroy {
   @Input() searchCtrl: FormControl;
   @Input() link = 'search';
   @Input() results: SearchResult[] = [];
-  @ViewChild(OverlayWidgetComponent, { static: false }) searchWidget: OverlayWidgetComponent;
+  @ViewChild(OverlayWidgetComponent) searchWidget: OverlayWidgetComponent;
 
   private sub: Subscription;
 

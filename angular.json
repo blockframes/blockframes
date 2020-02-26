@@ -64,6 +64,10 @@
                   "type": "initial",
                   "maximumWarning": "2mb",
                   "maximumError": "4.5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
                 }
               ],
               "serviceWorker": true
@@ -93,6 +97,10 @@
                   "type": "initial",
                   "maximumWarning": "2mb",
                   "maximumError": "4.5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
                 }
               ],
               "serviceWorker": true
@@ -122,6 +130,10 @@
                   "type": "initial",
                   "maximumWarning": "2mb",
                   "maximumError": "4.5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
                 }
               ],
               "serviceWorker": true
@@ -204,7 +216,7 @@
       "prefix": "ip",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@nrwl/angular:package",
           "options": {
             "tsConfig": "libs/ip/tsconfig.lib.json",
             "project": "libs/ip/ng-package.json"
@@ -234,7 +246,7 @@
       "prefix": "auth",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@nrwl/angular:package",
           "options": {
             "tsConfig": "libs/auth/tsconfig.lib.json",
             "project": "libs/auth/ng-package.json"
@@ -287,7 +299,7 @@
       "prefix": "wallet",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@nrwl/angular:package",
           "options": {
             "tsConfig": "libs/ethers/tsconfig.lib.json",
             "project": "libs/ethers/ng-package.json"
@@ -371,6 +383,10 @@
                   "type": "initial",
                   "maximumWarning": "2mb",
                   "maximumError": "5.5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
                 }
               ]
             },
@@ -399,6 +415,10 @@
                   "type": "initial",
                   "maximumWarning": "2mb",
                   "maximumError": "5.5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
                 }
               ]
             },
@@ -427,6 +447,10 @@
                   "type": "initial",
                   "maximumWarning": "2mb",
                   "maximumError": "5.5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
                 }
               ]
             }
@@ -508,7 +532,7 @@
       "prefix": "movie",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@nrwl/angular:package",
           "options": {
             "tsConfig": "libs/movie/tsconfig.lib.json",
             "project": "libs/movie/ng-package.json"
@@ -538,7 +562,7 @@
       "prefix": "org",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@nrwl/angular:package",
           "options": {
             "tsConfig": "libs/organization/tsconfig.lib.json",
             "project": "libs/organization/ng-package.json"
@@ -681,6 +705,10 @@
                   "type": "initial",
                   "maximumWarning": "2mb",
                   "maximumError": "6mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
                 }
               ],
               "serviceWorker": true
@@ -710,6 +738,10 @@
                   "type": "initial",
                   "maximumWarning": "2mb",
                   "maximumError": "6mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
                 }
               ],
               "serviceWorker": true
@@ -739,6 +771,10 @@
                   "type": "initial",
                   "maximumWarning": "2mb",
                   "maximumError": "6mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
                 }
               ],
               "serviceWorker": true
@@ -824,7 +860,7 @@
       "prefix": "material",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@nrwl/angular:package",
           "options": {
             "tsConfig": "libs/material/tsconfig.lib.json",
             "project": "libs/material/ng-package.json"
@@ -859,7 +895,7 @@
       "prefix": "utils",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@nrwl/angular:package",
           "options": {
             "tsConfig": "libs/utils/tsconfig.lib.json",
             "project": "libs/utils/ng-package.json"
@@ -1086,7 +1122,7 @@
       "prefix": "contract",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@nrwl/angular:package",
           "options": {
             "tsConfig": "libs/contract/tsconfig.lib.json",
             "project": "libs/contract/ng-package.json"
@@ -1116,7 +1152,7 @@
       "prefix": "financial-report",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@nrwl/angular:package",
           "options": {
             "tsConfig": "libs/financial-report/tsconfig.lib.json",
             "project": "libs/financial-report/ng-package.json"
@@ -1137,10 +1173,7 @@
               "libs/financial-report/tsconfig.lib.json",
               "libs/financial-report/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/financial-report/**"
-            ]
+            "exclude": ["**/node_modules/**", "!libs/financial-report/**"]
           }
         }
       }
@@ -1152,7 +1185,7 @@
       "prefix": "admin",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@nrwl/angular:package",
           "options": {
             "tsConfig": "libs/admin/tsconfig.lib.json",
             "project": "libs/admin/ng-package.json"
@@ -1169,14 +1202,8 @@
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "libs/admin/tsconfig.lib.json",
-              "libs/admin/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/admin/**"
-            ]
+            "tsConfig": ["libs/admin/tsconfig.lib.json", "libs/admin/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**", "!libs/admin/**"]
           }
         }
       }
@@ -1278,6 +1305,10 @@
                   "type": "initial",
                   "maximumWarning": "2mb",
                   "maximumError": "6mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
                 }
               ],
               "serviceWorker": false
@@ -1307,6 +1338,10 @@
                   "type": "initial",
                   "maximumWarning": "2mb",
                   "maximumError": "6mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
                 }
               ],
               "serviceWorker": false

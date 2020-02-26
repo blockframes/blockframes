@@ -10,7 +10,7 @@ import { SpreadsheetImportEvent } from '../import-spreadsheet/import-spreadsheet
 })
 export class ImportContainerComponent {
 
-  @ViewChild('viewExtractedElementsComponent', { static: false }) viewExtractedElementsComponent: ViewExtractedElementsComponent;
+  @ViewChild('viewExtractedElementsComponent') viewExtractedElementsComponent: ViewExtractedElementsComponent;
 
   public importedFiles = false;
   public start = true;

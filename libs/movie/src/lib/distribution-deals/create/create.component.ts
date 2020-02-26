@@ -99,8 +99,8 @@ export class DistributionDealCreateComponent implements OnInit, OnDestroy {
     map(({ languages }) => Object.keys(languages))
   );
 
-  @ViewChild('territoryInput', { static: false }) territoryInput: ElementRef<HTMLInputElement>;
-  @ViewChild('languageInput', { static: false }) languageInput: ElementRef<HTMLInputElement>;
+  @ViewChild('territoryInput') territoryInput: ElementRef<HTMLInputElement>;
+  @ViewChild('languageInput') languageInput: ElementRef<HTMLInputElement>;
 
   constructor(
     private query: MovieQuery,

@@ -28,7 +28,7 @@ export class DatepickerRangeComponent {
   /** The range chosen by the user */
   @Output() wantedRange = new EventEmitter<DateRange>();
 
-  @ViewChild('picker', { static: false }) picker: MatDatepicker<Date>;
+  @ViewChild('picker') picker: MatDatepicker<Date>;
 
   range: DateRange = {
     from: new Date(),

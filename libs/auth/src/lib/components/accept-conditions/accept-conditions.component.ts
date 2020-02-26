@@ -11,7 +11,7 @@ import { AcceptConditionsDirective } from './accept-conditions.directive';
 export class AcceptConditionsComponent {
   @HostBinding('attr.page-id') pageId = 'accept-condition';
   // Access the template given by the parent
-  @ContentChild(AcceptConditionsDirective, { static: false })
+  @ContentChild(AcceptConditionsDirective)
   acceptConditions: AcceptConditionsDirective;
 
   @Output() termsOfUseChecked = new EventEmitter<boolean>()
