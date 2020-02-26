@@ -9,10 +9,7 @@
       [matAutocomplete]="autoName" />
     <mat-icon color="primary" matSuffix>search</mat-icon>
   </mat-form-field>
-  <mat-autocomplete
-    #autoName="matAutocomplete"
-    [displayWith]="displayFn"
-    (optionSelected)="selected($event)">
+  <mat-autocomplete #autoName="matAutocomplete" [displayWith]="displayFn">
     <mat-option test-id="option" *ngFor="let organization of (searchResults$ | async)" [value]="organization">
       <span fxLayout="row" fxLayoutAlign="space-between center">
         <span>{{ organization.name }}</span>
