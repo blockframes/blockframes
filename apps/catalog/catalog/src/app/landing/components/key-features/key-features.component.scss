@@ -33,4 +33,13 @@ a {
   div {
     width: 100%;
   }
+  .feature-description {
+    width: 100%;
+  }
+}
+
+@include mobile {
+  .feature-description {
+    width: 100%;
+  }
 }

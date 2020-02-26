@@ -125,4 +125,4 @@ export const bigQueryAnalyticsTable = 'blockframes.analytics_193045559.events_';
 
 // Archipel Content OrgId
 // ======================
-export const centralOrgID = "theId";
+export const centralOrgID = "jnbHKBP5YLvRQGcyQ8In";

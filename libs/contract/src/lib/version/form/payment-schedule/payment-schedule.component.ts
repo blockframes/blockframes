@@ -51,11 +51,13 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
 
   ngOnInit() {
     /**
-     * We want to have two paymen schedules form groups from the beginning,
+     * We want to have three payment schedules form groups from the beginning,
      * so we can disable or enable only the inputs we want.
+     * At initialization we have one so we add two to get three.
      */
     if (this.paymentSchedule.controls.length <= 1) {
-      this.paymentSchedule.add()
+      this.paymentSchedule.add();
+      this.paymentSchedule.add();
     }
     this.periodSub = this.periodCtrl.valueChanges
       .pipe(
@@ -92,7 +94,6 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
           this.activateFirstDuration();
         } else if (value === 'periodic') {
           this.disableAll();
-
           this.toggleDurationPeriod('last');
           this.eventCtrl.enable();
           this.periodCtrl.enable();
@@ -209,12 +210,12 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
    * @param index of current iteration
    * @param isFirst if first element, dont show remove button
    */
-  public showRemoveButton(index: number, isFirst: boolean): boolean {
+  public showRemoveButton(index: number, isFirst: boolean, isLast: boolean): boolean {
     const length = this.paymentSchedule.controls.length;
-    if (isFirst) {
+    if (isFirst && isLast) {
       return false;
     }
-    return length < index + 2 ? false : true;
+    return length < index + 3 ? false : true;
   }
 
   /**
@@ -241,6 +242,7 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
   private activateFirstDuration() {
     this.paymentSchedule.at(0).get('date').get('floatingDuration').get('unit').enable();
     this.paymentSchedule.at(0).get('date').get('floatingDuration').get('duration').enable();
+    this.paymentSchedule.at(0).get('date').get('floatingStart').enable();
   }
 
   /**
