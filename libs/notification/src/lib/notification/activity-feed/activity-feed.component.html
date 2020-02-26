@@ -1,11 +1,42 @@
-<h1>Activity feed</h1>
-<mat-tab-group animationDuration="1000ms" selectedIndex="0">
-  <mat-tab [label]="notificationsLabel$ | async">
-    <mat-card>
-      <notification-list></notification-list>
-    </mat-card>
-  </mat-tab>
-  <mat-tab label="Titles"> </mat-tab>
-  <mat-tab *ngIf="app == 'catalog'" label="Deals"> </mat-tab>
-  <mat-tab label="Organization"> </mat-tab>
-</mat-tab-group>
+<ng-container *ngIf="(allNotifications$ | async); else noFeed">
+  <ng-container *ngIf="(notifications$ | async); else isLoading">
+    <h1>Activity Feed</h1>
+
+    <!-- Tabs Label-->
+    <header mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
+      <button mat-tab-link (click)="applyFilter('')" [active]="!(filter$ | async)">All</button>
+      <button mat-tab-link (click)="applyFilter(titleFilters)" [active]="(filter$ | async) === titleFilters">Titles</button>
+      <!-- TODO: Handle the dynamic App Tabs with ng-template, ng-content or @Input() => ISSUE#2086 -->
+      <ng-container [ngSwitch]="appName">
+        <button
+          mat-tab-link *ngSwitchCase="'catalog'" (click)="applyFilter(dealFilters)"
+          [active]="(filter$ | async) === dealFilters">
+          Offers and Deals
+        </button>
+        <button
+          mat-tab-link *ngSwitchCase="'delivery'" (click)="applyFilter(deliveryFilters)"
+          [active]="(filter$ | async) === deliveryFilters">
+          Delivery
+        </button>
+      </ng-container>
+      <button mat-tab-link (click)="applyFilter('Invitations')" [active]="(filter$ | async) === 'Invitations'">{{ organization.name }}</button>
+    </header>
+
+    <!-- Tabs Content-->
+    <ng-container *ngIf="(filter$ | async) === 'Invitations'; else notifications">
+      <!-- <invitation-list></invitation-list> -->
+    </ng-container>
+    <ng-template #notifications>
+      <notification-list [notificationsByDate]="(notifications$ | async)"></notification-list>
+    </ng-template>
+
+  </ng-container>
+
+  <ng-template #isLoading>
+    <mat-spinner></mat-spinner>
+  </ng-template>
+</ng-container>
+
+<ng-template #noFeed>
+  <!-- <notification-empty></notification-empty> -->
+</ng-template>
