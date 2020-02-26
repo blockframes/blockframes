@@ -8,6 +8,7 @@ import { ActivityFeedComponent } from './activity-feed.component';
 // Material
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatCardModule } from '@angular/material/card';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [ActivityFeedComponent],
@@ -16,6 +17,7 @@ import { MatCardModule } from '@angular/material/card';
     NotificationListModule,
     MatTabsModule,
     MatCardModule,
+    MatProgressSpinnerModule,
     RouterModule.forChild([{ path: '', component: ActivityFeedComponent }]),
   ]
 })
