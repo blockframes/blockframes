@@ -3,7 +3,7 @@
     <form-country [form]="control.get('country')"></form-country>
     <mat-form-field appearance="outline">
       <mat-label>Ratings</mat-label>
-      <input matInput [formControl]="control.get('value')" placeholder="Specify a rating" autocomplete="off"/>
+      <input test-id="rating" matInput [formControl]="control.get('value')" placeholder="Specify a rating" autocomplete="off"/>
     </mat-form-field>
     <!-- Add / Delete -->
     <button *ngIf="!last" mat-mini-fab color="warn" (click)="form.removeAt(i)" matTooltip="Remove a country" aria-label="Remove a country">
