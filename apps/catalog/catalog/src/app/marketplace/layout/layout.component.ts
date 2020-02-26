@@ -21,7 +21,7 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   public currentWishlist$: Observable<Wishlist>;
   public cartCount$ = this.marketplaceQuery.selectCount();
 
-  @ViewChild('sidenav', { static: false }) sidenav: MatSidenav;
+  @ViewChild('sidenav') sidenav: MatSidenav;
 
   constructor(
     private marketplaceQuery: MarketplaceQuery,

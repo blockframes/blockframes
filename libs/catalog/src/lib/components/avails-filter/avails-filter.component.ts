@@ -23,7 +23,7 @@ export class AvailsFilterComponent implements OnInit{
   public selectedMovieTerritories: string[] = [];
   public territoriesFilter$: Observable<string[]>;
 
-  @ViewChild('territoryInput', { static: false }) territoryInput: ElementRef<HTMLInputElement>;
+  @ViewChild('territoryInput') territoryInput: ElementRef<HTMLInputElement>;
 
   /* Flags for the Territories chip input */
   public visibleTerritory = true;

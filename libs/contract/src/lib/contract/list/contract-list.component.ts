@@ -57,8 +57,8 @@ export class ContractListComponent implements OnInit, AfterViewInit {
     this.dataSource.sort = this.sort;
   }
 
-  @ViewChild(MatSort, { static: false }) sort: MatSort;
-  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(private movieQuery: MovieQuery, private dealQuery: DistributionDealQuery) {}
 
