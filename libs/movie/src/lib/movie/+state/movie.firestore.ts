@@ -36,10 +36,13 @@ export enum WorkType {
   flow = 'Flow'
 }
 
-export enum StoreType {
-  library = 'Library',
-  line_up = 'Line-Up',
-}
+export const storeType = {
+  library: 'Library',
+  line_up: 'Line-Up',
+} as const;
+
+export type StoreType = keyof typeof storeType;
+export type StoreTypeValue = typeof storeType[StoreType];
 
 export enum PremiereType {
   'international' = 'International',

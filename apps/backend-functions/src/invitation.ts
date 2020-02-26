@@ -16,7 +16,6 @@ import {
   MovieDocument,
   createDocPermissions,
   NotificationType,
-  UserRole,
   App,
   PublicUser
 } from './data/types';

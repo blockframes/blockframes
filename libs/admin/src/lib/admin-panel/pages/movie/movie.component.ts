@@ -3,8 +3,8 @@ import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieService, Movie } from '@blockframes/movie';
 import { MovieAdminForm } from '../../forms/movie-admin.form';
-import { StoreType, StoreStatus } from '@blockframes/movie/movie/+state/movie.firestore';
 import { staticModels } from '@blockframes/utils/static-model';
+import { storeType, StoreStatus } from '@blockframes/movie/movie/+state/movie.firestore';
 
 
 @Component({
@@ -35,8 +35,8 @@ export class MovieComponent implements OnInit {
     this.movie = await this.movieService.getValue(this.movieId);
     this.movieForm = new MovieAdminForm(this.movie);
 
-    this.storeTypes = Object.keys(StoreType);
-    this.storeType = StoreType;
+    this.storeTypes = Object.keys(storeType);
+    this.storeType = storeType;
     this.storeStatuses = Object.keys(StoreStatus);
     this.storeStatus = StoreStatus;
     this.cdRef.markForCheck();
