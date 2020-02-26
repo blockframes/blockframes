@@ -12,15 +12,15 @@
             </mat-option>
           </mat-select>
         </mat-form-field>
-    
+
         <mat-form-field appearance="outline">
           <mat-label>Earnings</mat-label>
-          <input matInput type="number" [formControl]="control.get('value')">
+          <input test-id="earnings" matInput type="number" [formControl]="control.get('value')">
           <span *ngIf="units[i] === '$'" matPrefix>{{ units[i] }}&nbsp;</span>
           <span *ngIf="units[i] !== '$'" matSuffix>&nbsp;{{ units[i] }}</span>
         </mat-form-field>
       </article>
-    
+
       <!-- Remove -->
       <footer *ngIf="!last" fxLayout="column" fxLayoutAlign="center center">
         <button mat-mini-fab color="warn" (click)="form.removeAt(i)" aria-label="Remove a director form">
