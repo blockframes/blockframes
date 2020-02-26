@@ -8,6 +8,8 @@ export default class TunnelMainPage {
     return new TunnelMainPage();
   }
 
+  // Content Type
+
   public clickContentType() {
     cy.get('catalog-movie-tunnel-main movie-form-content-type mat-select[test-id=content-type]').click();
   }
@@ -66,5 +68,69 @@ export default class TunnelMainPage {
 
   public assertReferenceExists(reference: string) {
     cy.get('catalog-movie-tunnel-main movie-form-content-type input[test-id=reference]').should('have.value', reference);
+  }
+
+  // Festival
+
+  public fillFirstFestivalName(name: string) {
+    cy.get('catalog-movie-tunnel-main movie-form-festival-prizes input[test-id=name]').first().type(name);
+  }
+
+  public assertFirstFestivalNameExists(name: string) {
+    cy.get('catalog-movie-tunnel-main movie-form-festival-prizes input[test-id=name]').first().should('have.value', name);
+  }
+
+  public fillFirstFestivalAwardSelection(name: string) {
+    cy.get('catalog-movie-tunnel-main movie-form-festival-prizes input[test-id=award]').first().type(name);
+  }
+
+  public assertFirstFestivalAwardSelectionExists(name: string) {
+    cy.get('catalog-movie-tunnel-main movie-form-festival-prizes input[test-id=award]').first().should('have.value', name);
+  }
+
+  public fillFirstFestivalYear(year: string) {
+    cy.get('catalog-movie-tunnel-main movie-form-festival-prizes input[test-id=year]').first().type(year);
+  }
+
+  public assertFirstFestivalYearExists(year: string) {
+    cy.get('catalog-movie-tunnel-main movie-form-festival-prizes input[test-id=year]').first().should('have.value', year);
+  }
+
+  public selectFirstFestivalPremiere(name: string) {
+    cy.get('catalog-movie-tunnel-main movie-form-festival-prizes mat-button-toggle-group')
+      .first().get('mat-button-toggle').contains(name).click();
+  }
+
+  public assertFirstFestivalPremiereIsSelected(name: string) {
+    cy.get('catalog-movie-tunnel-main movie-form-festival-prizes mat-button-toggle-group')
+      .first().get('mat-button-toggle').contains(name).should('have.attr', 'aria-pressed', 'true');
+  }
+
+  public addFestival() {
+    cy.get('catalog-movie-tunnel-main movie-form-festival-prizes button[test-id=add]').click();
+  }
+
+  public fillLastFestivalName(name: string) {
+    cy.get('catalog-movie-tunnel-main movie-form-festival-prizes input[test-id=name]').last().type(name);
+  }
+
+  public assertLastFestivalNameExists(name: string) {
+    cy.get('catalog-movie-tunnel-main movie-form-festival-prizes input[test-id=name]').last().should('have.value', name);
+  }
+
+  public fillLastFestivalAwardSelection(name: string) {
+    cy.get('catalog-movie-tunnel-main movie-form-festival-prizes input[test-id=award]').last().type(name);
+  }
+
+  public assertLastFestivalAwardSelectionExists(name: string) {
+    cy.get('catalog-movie-tunnel-main movie-form-festival-prizes input[test-id=award]').last().should('have.value', name);
+  }
+
+  public fillLastFestivalYear(year: string) {
+    cy.get('catalog-movie-tunnel-main movie-form-festival-prizes input[test-id=year]').last().type(year);
+  }
+
+  public assertLastFestivalYearExists(year: string) {
+    cy.get('catalog-movie-tunnel-main movie-form-festival-prizes input[test-id=year]').last().should('have.value', year);
   }
 }

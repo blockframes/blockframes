@@ -48,5 +48,22 @@ describe('User can navigate to the movie tunnel page 2 and fill all the fieldsn 
     p4.assertOriginalTitleExists(CONTENT_TYPES[4]);
     p4.fillReference(CONTENT_TYPES[5]);
     p4.assertReferenceExists(CONTENT_TYPES[5]);
+
+    // Festival
+    p4.fillFirstFestivalName('Berlin Film Festival');
+    p4.assertFirstFestivalNameExists('Berlin Film Festival');
+    p4.fillFirstFestivalAwardSelection('Opening Film');
+    p4.assertFirstFestivalAwardSelectionExists('Opening Film');
+    p4.fillFirstFestivalYear('2007');
+    p4.assertFirstFestivalYearExists('2007');
+    p4.selectFirstFestivalPremiere('World');
+    p4.assertFirstFestivalPremiereIsSelected('World');
+    p4.addFestival();
+    p4.fillLastFestivalName('Zurich Film Festival');
+    p4.assertLastFestivalNameExists('Zurich Film Festival');
+    p4.fillLastFestivalAwardSelection('Nominee Best New Documentary Film');
+    p4.assertLastFestivalAwardSelectionExists('Nominee Best New Documentary Film');
+    p4.fillLastFestivalYear('2007');
+    p4.assertLastFestivalYearExists('2007');
   });
 });
