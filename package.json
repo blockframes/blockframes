@@ -89,7 +89,7 @@
     "@google-cloud/pubsub": "^1.1.2",
     "@google-cloud/storage": "^3.5.0",
     "@kolkov/ngx-metrika": "^0.5.2",
-    "@ngmodule/material-carousel": "^0.5.0",
+    "@ngmodule/material-carousel": "^0.6.0",
     "@ngrx/effects": "8.4.0",
     "@ngrx/router-store": "8.4.0",
     "@ngrx/store": "8.4.0",
@@ -129,7 +129,7 @@
     "punycode": "^2.1.1",
     "request": "^2.88.0",
     "rxjs": "~6.5.2",
-    "saturn-datepicker": "^8.0.1",
+    "saturn-datepicker": "^8.0.2",
     "tmp": "0.1.0",
     "xlsx": "^0.15.1",
     "zone.js": "^0.10.2"
