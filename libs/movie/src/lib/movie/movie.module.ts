@@ -7,7 +7,7 @@ import { firebase } from '@env';
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
 
 // Angular Fire
-import { AngularFirestoreModule, FirestoreSettingsToken } from '@angular/fire/firestore';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 
 // Material
@@ -94,8 +94,5 @@ import { MovieImdbSearchModule } from './components/movie-imdb-search/movie-imdb
     MovieImdbSearchModule,
     MoviePickerModule
   ],
-  providers: [
-    { provide: FirestoreSettingsToken, useValue: {} },// TODO: Remove when @angular/fire is updated
-  ]
 })
 export class MovieModule {}

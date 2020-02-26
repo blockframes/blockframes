@@ -11,7 +11,6 @@ export * from './lib/form/matchers';
 export * from './lib/pipes/translate-slug.module';
 export * from './lib/pipes/reverse.module';
 export * from './lib/intercom.module';
-export * from './lib/analytics/analytics.module';
 export { FireAnalytics } from './lib/analytics/app-analytics';
 export * from './lib/common-interfaces/terms';
 

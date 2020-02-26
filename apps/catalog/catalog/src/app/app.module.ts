@@ -1,5 +1,4 @@
 import { filter } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
 
 // Angular
 import { BrowserModule } from '@angular/platform-browser';
@@ -9,9 +8,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { HttpClientModule } from '@angular/common/http';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { Router, NavigationEnd, RouterModule } from '@angular/router';
-
-// Libraries
-import { AngularFireAnalyticsModule } from '@blockframes/utils/analytics/analytics.module';
 
 // Akita
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
@@ -27,6 +23,7 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFirePerformanceModule } from '@angular/fire/performance';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireStorageModule } from '@angular/fire/storage';
+import { AngularFireAnalyticsModule, ScreenTrackingService, UserTrackingService } from '@angular/fire/analytics';
 
 // Sentry
 import { SentryModule } from '@blockframes/utils/sentry.module';
@@ -93,15 +90,14 @@ import { ErrorLoggerModule } from '@blockframes/utils/error-logger.module';
       relativeLinkResolution: 'corrected'
     })
   ],
-  providers: [],
+  providers: [ScreenTrackingService, UserTrackingService],
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  private subscription: Subscription;
 
   constructor(private router: Router, private analytics: FireAnalytics) {
     const navEnds = this.router.events.pipe(filter(event => event instanceof NavigationEnd));
-    this.subscription = navEnds.subscribe((event: NavigationEnd) => {
+    navEnds.subscribe((event: NavigationEnd) => {
       try {
         this.analytics.event(AnalyticsEvents.pageView, {
           page_location: 'marketplace',
