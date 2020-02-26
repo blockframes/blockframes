@@ -1768,21 +1768,6 @@ export class ViewExtractedElementsComponent implements OnInit {
       });
     }
 
-    //////////////////
-    // OPTIONAL FIELDS
-    //////////////////
-
-    // TITLE PRICE VALIDATION
-    if (!contract.last.titles[importErrors.movieId] || !contract.last.titles[importErrors.movieId].price.amount) {
-      errors.push({
-        type: 'warning',
-        field: 'price',
-        name: 'Distribution deal price',
-        reason: `Optional field is missing for "${importErrors.movieTitle}"`,
-        hint: 'Edit corresponding sheet field.'
-      });
-    }
-
     return importErrors;
   }
 
