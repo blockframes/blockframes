@@ -1,7 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input, ChangeDetectorRef } from '@angular/core';
 import { Contract } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractService } from '@blockframes/contract/contract/+state';
-import { MatSnackBar, MatTreeNestedDataSource } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTreeNestedDataSource } from '@angular/material/tree';
 import { NestedTreeControl } from '@angular/cdk/tree';
 
 interface ContractNode {
