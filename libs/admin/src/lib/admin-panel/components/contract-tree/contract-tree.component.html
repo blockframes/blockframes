@@ -12,12 +12,12 @@
         </ng-template>
         <ng-container *ngIf="getItems(item.id).length > 0">
           <ul>
-            <ng-container *ngTemplateOutlet="recursiveList; context:{ $implicit: getItems(item.id) }"></ng-container>
+            <ng-container [ngTemplateOutlet]="recursiveList" [ngTemplateOutletContext]="{ $implicit: getItems(item.id) }"></ng-container>
           </ul>
         </ng-container>
       </li>
     </ng-template>
-    <ng-container *ngTemplateOutlet="recursiveList; context:{ $implicit: getItems() }"></ng-container>
+    <ng-container [ngTemplateOutlet]="recursiveList" [ngTemplateOutletContext]="{ $implicit: getItems() }"></ng-container>
   </ul>
 </ng-container>
 

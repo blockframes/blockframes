@@ -133,6 +133,7 @@ export class ContractComponent implements OnInit {
       this.contractStatus = ContractStatus;
       this.types = Object.keys(ContractType);
       this.contractType = ContractType;
+      this.titles = [];
 
       this.cdRef.markForCheck();
 
