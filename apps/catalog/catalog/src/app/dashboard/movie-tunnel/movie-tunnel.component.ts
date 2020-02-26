@@ -3,7 +3,8 @@ import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 // Blockframes
 import { MovieService, MovieQuery, createMovie } from '@blockframes/movie/movie/+state';
 import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
-import { MatSnackBar, MatDialog } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { TunnelStep, TunnelRoot, TunnelConfirmComponent } from '@blockframes/ui/tunnel';
 import { switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';

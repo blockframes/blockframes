@@ -3,7 +3,8 @@ import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
 import { Movie } from '@blockframes/movie/movie/+state/movie.model';
 import { MovieTitleFormComponent } from '@blockframes/movie/movie/components/movie-title-form/movie-title-form.component';
 import { Observable } from 'rxjs';
-import { MatDialog, MatSnackBar } from '@angular/material';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieService } from '@blockframes/movie';
 
 @Component({

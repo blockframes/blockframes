@@ -1,6 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { MatSnackBar, MatDialog } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatDialog } from '@angular/material/dialog';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { ContractWithLastVersion, PublicContract, createContractPartyDetail, Contract, ContractPartyDetail } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractAdminForm } from '../../forms/contract-admin.form';

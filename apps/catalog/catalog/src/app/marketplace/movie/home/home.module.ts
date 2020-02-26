@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
 //Material
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSnackBarModule } from '@angular/material';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 // Libraries
 import { FlexLayoutModule } from '@angular/flex-layout';

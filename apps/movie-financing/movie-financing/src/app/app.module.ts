@@ -60,7 +60,7 @@ import { FinancingExplorerCompareComponent } from './explorer/compare/compare.co
 import { SentryModule, UtilsModule } from '@blockframes/utils';
 import { AccountModule, ProfileModule } from '@blockframes/account';
 import { WalletModule, KeyManagerModule } from '@blockframes/ethers';
-import { MatRadioModule } from '@angular/material';
+import { MatRadioModule } from '@angular/material/radio';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { sentryDsn } from '@env';
 

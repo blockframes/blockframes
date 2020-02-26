@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@
 import { OrganizationService, Organization, OrganizationStatus } from '@blockframes/organization';
 import { ActivatedRoute } from '@angular/router';
 import { OrganizationAdminForm } from '../../forms/organization-admin.form';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 
 @Component({

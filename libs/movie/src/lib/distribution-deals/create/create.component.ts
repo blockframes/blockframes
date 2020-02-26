@@ -31,7 +31,7 @@ import {
 } from './availabilities.util';
 import { DistributionDealForm } from './create.form';
 import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { createDistributionDeal } from '../+state/distribution-deal.model';
 import { DistributionDealService } from '../+state';

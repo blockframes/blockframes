@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { MatSelectionListChange } from '@angular/material';
+import { MatSelectionListChange } from '@angular/material/list';
 
 export interface ActionPickerListItem<T> {
   title: string;

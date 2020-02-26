@@ -1,6 +1,7 @@
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
-import { MatTableDataSource, MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTableDataSource } from '@angular/material/table';
 import {
   Component,
   ChangeDetectionStrategy,

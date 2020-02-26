@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit, NgZone } from '@angular/core';
 import { AuthQuery } from '@blockframes/auth';
 import { InvitationService } from '@blockframes/notification/invitation/+state/invitation.service';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { InvitationFromUserToOrganization } from '@blockframes/invitation/types';
 import { Observable } from 'rxjs';
 

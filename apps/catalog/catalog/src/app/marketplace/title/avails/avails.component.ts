@@ -4,7 +4,7 @@ import { MovieQuery, Movie } from '@blockframes/movie/movie/+state';
 import { EnhancedISO3166Territory } from '@blockframes/utils/static-model/territories-ISO-3166';
 import { getNotLicensedTerritories, getAvailableTerritories, getRightsSoldTerritories } from './territories-filter';
 import { DistributionDealService, DistributionDeal, createDistributionDeal } from '@blockframes/movie/distribution-deals/+state';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MarketplaceStore, MarketplaceQuery } from '../../+state';
 import { getSlugByIsoA3, getIsoA3bySlug, Model } from '@blockframes/utils/static-model/staticModels';
 import { staticModels, TerritoriesLabel } from '@blockframes/utils/static-model';

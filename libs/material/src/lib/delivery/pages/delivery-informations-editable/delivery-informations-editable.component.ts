@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { Observable } from 'rxjs';
 import { tap, switchMap, startWith } from 'rxjs/operators';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { createInformationsFormGroup } from '../../forms/informations.form';
 import { Delivery } from '../../+state/delivery.model';
 import { DeliveryQuery } from '../../+state/delivery.query';

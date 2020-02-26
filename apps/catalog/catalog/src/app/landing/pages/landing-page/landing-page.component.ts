@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { FormGroup } from '@angular/forms';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { RequestDemoInformations, createDemoRequestInformations } from '@blockframes/catalog/demo-request.model';
 

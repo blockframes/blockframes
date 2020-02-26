@@ -4,7 +4,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { omdbApiKey } from "@env";
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { ImdbService, SearchRequest, SearchResult, ImdbMovie, SearchResults, yearValidators } from '@blockframes/utils';
-import { MatPaginator, MatTableDataSource, MatRadioChange } from '@angular/material';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatRadioChange } from '@angular/material/radio';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'movie-imdb-search',

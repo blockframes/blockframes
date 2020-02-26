@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { AuthService, AuthQuery } from '@blockframes/auth';
 import { ThemeService } from '@blockframes/ui/theme';
 import { OrganizationQuery } from '@blockframes/organization';
-import { MatSlideToggleChange } from '@angular/material';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'account-profile-widget',
