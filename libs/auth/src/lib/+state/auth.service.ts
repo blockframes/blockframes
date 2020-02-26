@@ -108,7 +108,7 @@ export class AuthService extends FireAuthService<AuthState> {
    */
   public async getUser(uid: string): Promise<User> {
     const user = await this.db.collection('users').doc(uid).get().toPromise();
-    return user.data()! as User;
+    return user.data() as User;
   }
 
   // TODO THIS IS A QUICK FIX OF MOVIE FINANCING RANK MADE FOR TORONTO, THINK OF A BETTER WAY AFTERWARD
