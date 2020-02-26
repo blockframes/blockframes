@@ -18,9 +18,11 @@ function getYesterday() {
 }
 
 function isSameDay(target: Date, baseDate: Date) {
-  return target.getDate() === baseDate.getDate() &&
+  return (
+    target.getDate() === baseDate.getDate() &&
     target.getMonth() === baseDate.getMonth() &&
     target.getFullYear() === baseDate.getFullYear()
+  );
 }
 const isToday = (target: Date) => isSameDay(target, new Date());
 const isYesterday = (target: Date) => isSameDay(target, getYesterday());
@@ -139,7 +141,8 @@ export class NotificationQuery extends QueryEntity<NotificationState, Notificati
         return {
           message: `${notification.user.name} ${notification.user.surname} has been added to ${notification.organization.name}.`,
           imgRef: notification.user.avatar,
-          placeholderUrl: 'Avatar_40.png'
+          placeholderUrl: 'Avatar_40.png',
+          url: `c/o/organization/${notification.organization.id}/view/members`
         };
       case NotificationType.memberRemovedFromOrg:
         return {
@@ -150,28 +153,32 @@ export class NotificationQuery extends QueryEntity<NotificationState, Notificati
       case NotificationType.newContract:
         return {
           message: `${notification.organization.name} submitted a contract.`,
-          placeholderUrl: 'Organization_250.png'
+          placeholderUrl: 'Organization_250.png',
+          url: `c/o/dashboard/deals/${notification.docId}`
         };
       case NotificationType.contractInNegotiation:
         return {
           message: `A new offer has been created.`,
-          placeholderUrl: 'WelcomeArchipelContent_500.png'
+          placeholderUrl: 'WelcomeArchipelContent_500.png',
+          url: `c/o/dashboard/deals/${notification.docId}`
         };
       case NotificationType.movieSubmitted:
         return {
           message: `A new movie has been submitted`,
-          placeholderUrl: this.getPoster(notification.docId)
+          placeholderUrl: this.getPoster(notification.docId),
+          url: `c/o/dashboard/titles/${notification.docId}`
         };
       case NotificationType.movieAccepted:
         return {
           message: `Your movie has been accepted by Archipel Content.`,
-          placeholderUrl: this.getPoster(notification.docId)
+          placeholderUrl: this.getPoster(notification.docId),
+          url: `c/o/dashboard/titles/${notification.docId}`
         };
     }
   }
 
   public getPoster(id: string): ImgRef {
-    const movie = this.movieQuery.getEntity(id)
+    const movie = this.movieQuery.getEntity(id);
     return !!movie && movie.promotionalElements.poster.length ? movie.promotionalElements.poster[0].media : createImgRef();
   }
 }

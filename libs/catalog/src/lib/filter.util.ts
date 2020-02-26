@@ -1,5 +1,5 @@
 import { Movie } from '@blockframes/movie/movie/+state/movie.model';
-import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
+import { DistributionDeal, getDealTerritories } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
 import { ExtractSlug } from '@blockframes/utils/static-model/staticModels';
 import { NumberRange, DateRange } from '@blockframes/utils/common-interfaces';
 import { LanguagesLabel } from '@blockframes/utils/static-model/types';
@@ -141,7 +141,8 @@ function hasStoreType(movie: Movie, storeTypes: StoreType[]) {
  */
 function archipelCanSells(filter: AvailsSearch, mandateDeal: DistributionDeal): boolean {
 
-  const hasTerritories = mandateHas(filter.territory, mandateDeal.territory)
+  const licensedTerritories = getDealTerritories(mandateDeal);
+  const hasTerritories = mandateHas(filter.territory, licensedTerritories)
   const hasMedias = mandateHas(filter.licenseType, mandateDeal.licenseType)
   const hasTerms =
     toDate(filter.terms.start).getTime() > toDate(mandateDeal.terms.start).getTime() &&
