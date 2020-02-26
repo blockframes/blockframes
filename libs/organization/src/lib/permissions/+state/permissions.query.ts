@@ -14,17 +14,17 @@ export class PermissionsQuery extends QueryEntity<PermissionsState, Permissions>
 
     /** Checks if the connected user is superAdmin of his organization. */
     public isSuperAdmin$: Observable<boolean> = this.selectActive(permissions =>
-      permissions.roles[this.auth.userId] === UserRole.superAdmin
+      permissions.roles[this.auth.userId] === 'superAdmin'
     );
 
     /** Checks if the connected user is admin of his organization. */
     public isAdmin$: Observable<boolean> = this.isSuperAdmin$.pipe(
-      map(isSuperAdmin => isSuperAdmin || this.getActive().roles[this.auth.userId] === UserRole.admin)
+      map(isSuperAdmin => isSuperAdmin || this.getActive().roles[this.auth.userId] === 'admin')
     );
 
     /** Checks if the connected user is either member of his organization. */
     public isOrgMember$: Observable<boolean> = this.isAdmin$.pipe(
-      map(isAdmin => isAdmin || this.getActive().roles[this.auth.userId] === UserRole.member)
+      map(isAdmin => isAdmin || this.getActive().roles[this.auth.userId] === 'member')
     );
 
   constructor(protected store: PermissionsStore, private auth: AuthQuery) {
@@ -33,17 +33,17 @@ export class PermissionsQuery extends QueryEntity<PermissionsState, Permissions>
 
   /** Returns the number of organization admins. */
   public get superAdminCount(): number {
-    return Object.values(this.getActive().roles).filter(value => value === UserRole.superAdmin).length;
+    return Object.values(this.getActive().roles).filter(value => value === 'superAdmin').length;
   }
 
   /** Checks if the user is admin of his organization. */
   public isUserAdmin(userId: string): boolean {
-    return this.getActive().roles[userId] === UserRole.admin;
+    return this.getActive().roles[userId] === 'admin';
   }
 
   /** Checks if the user is superAdmin of his organization. */
   public isUserSuperAdmin(userId: string): boolean {
-    return this.getActive().roles[userId] === UserRole.superAdmin;
+    return this.getActive().roles[userId] === 'superAdmin';
   }
 
   public hasAlreadyThisRole(userId: string, role: UserRole): boolean {
