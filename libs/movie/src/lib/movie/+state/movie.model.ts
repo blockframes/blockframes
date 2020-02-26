@@ -16,7 +16,7 @@ import {
   MovieLanguageSpecification,
   MovieLanguageTypes,
   StoreConfig,
-  StoreType,
+  storeType,
   MovieLanguageSpecificationContainer,
   MovieOfficialIds,
   MovieOriginalRelease,
@@ -302,7 +302,7 @@ export function populateMovieLanguageSpecification(
 export function createStoreConfig(params: Partial<StoreConfig> = {}): StoreConfig {
   return {
     status: StoreStatus.draft,
-    storeType: StoreType.line_up,
+    storeType: 'line_up',
     ...params
   };
 }

@@ -129,10 +129,7 @@ function hasStoreType(movie: Movie, storeTypes: StoreType[]) {
   if (!storeTypes.length) {
     return true;
   }
-  const storeTypeValues = storeTypes.map(type => StoreType[type]);
-  if (storeTypeValues.includes(movie.main.storeConfig.storeType)) {
-    return true;
-  }
+  return storeTypes.includes(movie.main.storeConfig.storeType);
 }
 
 /**
