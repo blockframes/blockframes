@@ -75,8 +75,7 @@
               </div>
             </article>
             <!-- MOVIE DISTRIBUTION DEAL LIST -->
-            <!-- TODO: Use flattened data + reusable table => ISSUE#1744 -->
-            <catalog-right-list [source]="movie.distributionDeals"></catalog-right-list>
+            <catalog-right-list [rights]="movie.distributionDeals"></catalog-right-list>
           </ng-template>
         </mat-expansion-panel>
       </ng-container>

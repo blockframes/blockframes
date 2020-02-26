@@ -66,7 +66,7 @@
         </ul>
       </mat-card-content>
     </mat-card>
-  
+
     <ng-container *ngIf="movies$ | async as movies">
       <!-- Distribution Deals -->
       <ng-container *ngIf="movies.length else noTitle">
@@ -80,7 +80,7 @@
             </movie-banner>
             <ng-container *ngIf="dealForms.get(movie.id) as deals else noDeal" >
               <ng-container *ngIf="deals.value.length else noDeal" >
-                <catalog-right-list [source]="deals.value"></catalog-right-list>
+                <catalog-right-list [deals]="deals.value"></catalog-right-list>
               </ng-container>
               <ng-template #noDeal >
                 <a mat-button [routerLink]="['..', movie.id]" color="warn">
@@ -101,6 +101,5 @@
       </ng-template>
     </ng-container>
   </ng-container>
-  
 
 </tunnel-page>
