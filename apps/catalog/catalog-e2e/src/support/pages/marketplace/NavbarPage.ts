@@ -3,7 +3,7 @@ import { LoginViewPage } from "../auth";
 
 export default abstract class NavbarPage {
   constructor() {
-    cy.get('[page-id=navbar]', { timeout: 10000 });
+    cy.get('catalog-layout', { timeout: 10000 });
   }
 
   public openProfileMenu(){
