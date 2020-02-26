@@ -2,13 +2,15 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import {
   NotificationQuery,
   InvitationQuery,
-  InvitationStore
+  InvitationStore,
+  Notification
 } from '@blockframes/notification';
 import { Organization } from '@blockframes/organization/+state/organization.model'
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';;
+import { map, startWith, switchMap } from 'rxjs/operators';import { FormControl } from '@angular/forms';
+;
 
 @Component({
   selector: 'notification-activity-feed',
@@ -18,14 +20,19 @@ import { map } from 'rxjs/operators';;
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ActivityFeedComponent implements OnInit {
-  public notificationsLabel$: Observable<string>;
-  public invitationsLabel$: Observable<string>;
 
   public organization: Organization;
   public app: string;
 
+  public filter = new FormControl();
+  public filter$ = this.filter.valueChanges.pipe(startWith(this.filter.value));
+  public notifications$: Observable<Notification[]>;
+  public allNotifications$ = this.notificationQuery.selectAll();
+  public allInvitations$ = this.invitationQuery.selectAll();
+
   constructor(
     private notificationQuery: NotificationQuery,
+    private invitationQuery: InvitationQuery,
     private organizationQuery: OrganizationQuery,
     private routerQuery: RouterQuery
   ) {}
@@ -33,8 +40,17 @@ export class ActivityFeedComponent implements OnInit {
   ngOnInit() {
     this.organization = this.organizationQuery.getActive();
     this.app = this.routerQuery.getValue().state.root.data.app;
-    this.notificationsLabel$ = this.notificationQuery
-      .selectCount()
-      .pipe(map(lenght => `All (${lenght})`));
+    this.notifications$ = this.filter$.pipe(
+      switchMap(filter =>
+        this.notificationQuery.selectAll({
+          filterBy: notification => (filter ? notification.type === filter : true)
+        })
+      )
+    );
+  }
+
+  /** Dynamic filter of notifications for each tab. */
+  applyFilter(filter?: Notification['type']) {
+    this.filter.setValue(filter);
   }
 }
