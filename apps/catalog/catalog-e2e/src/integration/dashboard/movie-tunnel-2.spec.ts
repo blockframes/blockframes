@@ -9,6 +9,8 @@ import { TunnelMainPage } from "../../support/pages/dashboard";
 // Select user: cytest@blockframes.com
 const LOGIN_CREDENTIALS: Partial<User> = USERS[0];
 
+const CONTENT_TYPES = ['TV Film', 'Library', 'Completed', 'Lagerfeld Confidential', 'Lagerfeld Confidentiel', 'Lagerfeld'];
+
 const MOVIE_ID = 'P5ErzmOtap9ju9X8rWvd'; // Empty movie
 
 beforeEach(() => {
@@ -32,10 +34,19 @@ describe('User can navigate to the movie tunnel page 2 and fill all the fieldsn 
 
     // Content Type
     p4.clickContentType();
-    p4.selectContentType('TV Film');
-    p4.assertContentTypeExists('TV Film');
+    p4.selectContentType(CONTENT_TYPES[0]);
+    p4.assertContentTypeExists(CONTENT_TYPES[0]);
     p4.clickFreshness();
-    p4.selectFreshness('Library');
-    p4.assertFreshnessExists('Library');
+    p4.selectFreshness(CONTENT_TYPES[1]);
+    p4.assertFreshnessExists(CONTENT_TYPES[1]);
+    p4.clickProductionStatus();
+    p4.selectProductionStatus(CONTENT_TYPES[2]);
+    p4.assertProductionStatusExists(CONTENT_TYPES[2]);
+    p4.fillInternationalTitle(CONTENT_TYPES[3]);
+    p4.assertInternationalTitleExists(CONTENT_TYPES[3]);
+    p4.fillOriginalTitle(CONTENT_TYPES[4]);
+    p4.assertOriginalTitleExists(CONTENT_TYPES[4]);
+    p4.fillReference(CONTENT_TYPES[5]);
+    p4.assertReferenceExists(CONTENT_TYPES[5]);
   });
 });
