@@ -29,10 +29,10 @@ import { SSF } from 'xlsx';
 import { MovieLanguageTypes, PremiereType, WorkType, StoreType, StoreStatus, UnitBox } from '@blockframes/movie/movie/+state/movie.firestore';
 import { createStakeholder } from '@blockframes/utils/common-interfaces/identity';
 import { DistributionDeal, createDistributionDeal, createHoldback } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
-import { createContractPartyDetail, createContractTitleDetail, Contract, initContractWithVersion, ContractWithLastVersion, getContractParties } from '@blockframes/contract/contract/+state/contract.model';
+import { createContractPartyDetail, createContractTitleDetail, Contract, initContractWithVersion, ContractWithLastVersion } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractStatus, ContractTitleDetail, ContractType } from '@blockframes/contract/contract/+state/contract.firestore';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state/distribution-deal.service';
-import { createExpense } from '@blockframes/utils/common-interfaces/price';
+import { createExpense, createPrice } from '@blockframes/utils/common-interfaces/price';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { createPaymentSchedule } from '@blockframes/utils/common-interfaces/schedule';
 import { createTerms, createRange } from '@blockframes/utils/common-interfaces';
@@ -126,7 +126,6 @@ enum SpreadSheetDistributionDeal {
   internationalTitle, // unused
   licensorName, // unused
   licenseeName, // unused
-  displayLicenseeName,
   rightsStart,
   rightsEnd,
   territories,
@@ -136,8 +135,6 @@ enum SpreadSheetDistributionDeal {
   subtitles,
   captions,
   exclusive,
-  priceAmount,
-  priceCurrency,
   catchUpStartDate,
   catchUpEndDate,
   multidiffusion,
@@ -147,6 +144,7 @@ enum SpreadSheetDistributionDeal {
 enum SpreadSheetContract {
   licensors,
   licensee,
+  displayLicenseeName,
   childRoles,
   contractId,
   contractType,
@@ -163,6 +161,7 @@ enum SpreadSheetContract {
 enum SpreadSheetContractTitle {
   titleCode, // ie: filmCode
   licensedRightIds, // ie: distributionDealIds
+  titlePrice,
   commission,
   expenseLabel,
   expenseValue,
@@ -1322,16 +1321,7 @@ export class ViewExtractedElementsComponent implements OnInit {
 
             /* LICENSEE */
 
-            // Retreive the licensee inside the contract to update his infos
-            const licensee = getContractParties(contract.doc, 'licensee').shift();
-            if (licensee === undefined) {
-              throw new Error(`No licensee found in contract : ${contract.doc.id ? contract.doc.id : 'unknown Id'}.`);
-            }
-
-            // SHOW NAME
-            if (spreadSheetRow[SpreadSheetDistributionDeal.displayLicenseeName]) {
-              licensee.party.showName = spreadSheetRow[SpreadSheetDistributionDeal.displayLicenseeName].toLowerCase() === 'yes' ? true : false;
-            }
+            // Nothing to do. Should be the same infos already filled in previously imported contract sheet
 
             /////////////////
             // TERMS STUFF
@@ -1489,17 +1479,6 @@ export class ViewExtractedElementsComponent implements OnInit {
             // EXCLUSIVE DEAL
             if (spreadSheetRow[SpreadSheetDistributionDeal.exclusive]) {
               distributionDeal.exclusive = spreadSheetRow[SpreadSheetDistributionDeal.exclusive].toLowerCase() === 'yes' ? true : false;
-            }
-
-            // PRICE
-            if (!isNaN(Number(spreadSheetRow[SpreadSheetDistributionDeal.priceAmount]))) {
-              // We increment global price for this title with the current deal price.
-              contract.last.titles[movie.id].price.amount += parseInt(spreadSheetRow[SpreadSheetDistributionDeal.priceAmount], 10);
-            }
-
-            // CURRENCY
-            if (spreadSheetRow[SpreadSheetDistributionDeal.priceCurrency]) {
-              contract.last.titles[movie.id].price.currency = spreadSheetRow[SpreadSheetDistributionDeal.priceCurrency];
             }
 
             // CATCH UP
@@ -1882,10 +1861,17 @@ export class ViewExtractedElementsComponent implements OnInit {
               licensee.party.orgId = licenseeParts[1].trim();
             }
             licensee.party.role = getCodeIfExists('LEGAL_ROLES', 'licensee');
-            contract.doc.parties.push(licensee);
+
             if (licensee.party.orgId) {
               contract.doc.partyIds.push(licensee.party.orgId);
             }
+
+            // SHOW NAME
+            if (spreadSheetRow[SpreadSheetContract.displayLicenseeName]) {
+              licensee.party.showName = spreadSheetRow[SpreadSheetContract.displayLicenseeName].toLowerCase() === 'yes' ? true : false;
+            }
+
+            contract.doc.parties.push(licensee);
           }
 
           // CHILD ROLES
@@ -2063,7 +2049,7 @@ export class ViewExtractedElementsComponent implements OnInit {
         while (spreadSheetRow[SpreadSheetContract.titleStuffIndexStart + titleIndex]) {
           const currentIndex = SpreadSheetContract.titleStuffIndexStart + titleIndex;
           titleIndex += titlesFieldsCount;
-          const titleDetails = await this.processTitleDetails(spreadSheetRow, currentIndex);
+          const titleDetails = await this.processTitleDetails(spreadSheetRow, currentIndex, importErrors);
 
           if (importErrors.newContract && contract.last.titles[titleDetails.titleId] !== undefined) {
             importErrors.errors.push({
@@ -2085,6 +2071,20 @@ export class ViewExtractedElementsComponent implements OnInit {
         ///////////////
         // VALIDATION
         ///////////////
+
+        // Global contract price 
+        const contractPrice = createPrice();
+        importErrors.contract.doc.titleIds.forEach(titleId => {
+          const price = importErrors.contract.last.titles[titleId].price;
+          if (price && price.amount) {
+            contractPrice.amount += price.amount;
+          }
+          if (price && price.currency) {
+            contractPrice.currency = price.currency;
+          }
+        });
+
+        importErrors.contract.last.price = contractPrice;
 
         const contractWithErrors = await this.validateMovieContract(importErrors);
 
@@ -2153,15 +2153,15 @@ export class ViewExtractedElementsComponent implements OnInit {
     //////////////////
 
     // CONTRACT PRICE VALIDATION
-    /*if (!contract.price.amount) {
+    if (!contract.last.price.amount) {
       errors.push({
         type: 'warning',
         field: 'price',
-        name: 'Distribution deal price',
+        name: 'Contract price',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'
       });
-    }*/
+    }
 
     // CONTRACT STATUS
     if (!contract.last.status) {
@@ -2177,12 +2177,14 @@ export class ViewExtractedElementsComponent implements OnInit {
     return importErrors;
   }
 
-  private async processTitleDetails(spreadSheetRow: any[], currentIndex: number): Promise<ContractTitleDetail> {
+  private async processTitleDetails(spreadSheetRow: any[], currentIndex: number, importErrors: ContractsImportState): Promise<ContractTitleDetail> {
     const titleDetails = createContractTitleDetail();
     titleDetails.price.recoupableExpenses = [];
 
+    let internalRef;
     if (spreadSheetRow[SpreadSheetContractTitle.titleCode + currentIndex]) {
-      const title = await this.movieService.getFromInternalRef(spreadSheetRow[SpreadSheetContractTitle.titleCode + currentIndex]);
+      internalRef = spreadSheetRow[SpreadSheetContractTitle.titleCode + currentIndex];
+      const title = await this.movieService.getFromInternalRef(internalRef);
       if (title === undefined) {
         throw new Error(`Movie ${spreadSheetRow[SpreadSheetContractTitle.titleCode + currentIndex]} is missing in database.`);
       }
@@ -2193,6 +2195,44 @@ export class ViewExtractedElementsComponent implements OnInit {
       titleDetails.distributionDealIds = spreadSheetRow[SpreadSheetContractTitle.licensedRightIds + currentIndex]
         .split(this.separator)
         .map(c => c.trim());
+    }
+
+    if (spreadSheetRow[SpreadSheetContractTitle.titlePrice + currentIndex]) {
+      const priceParts = spreadSheetRow[SpreadSheetContractTitle.titlePrice + currentIndex].split(this.subSeparator);
+
+      // Check if priceParts have at least two parts (amount and currency)
+      if (priceParts.length >= 2) {
+        const amount = parseInt(priceParts[0], 10);
+        const currency = getCodeIfExists('MOVIE_CURRENCIES', priceParts[1]);
+        titleDetails.price.amount = amount;
+        if (currency) {
+          titleDetails.price.currency = currency;
+        } else {
+          importErrors.errors.push({
+            type: 'warning',
+            field: 'title.price',
+            name: 'Title price currency',
+            reason: `Failed to parse currency : ${priceParts[1]} for ${internalRef}`,
+            hint: 'Edit corresponding sheet field.'
+          });
+        }
+      } else {
+        importErrors.errors.push({
+          type: 'warning',
+          field: 'title.price',
+          name: 'Title price',
+          reason: `Failed to parse title price ${spreadSheetRow[SpreadSheetContractTitle.titlePrice + currentIndex]} for ${internalRef}`,
+          hint: 'Edit corresponding sheet field.'
+        });
+      }
+    } else {
+      importErrors.errors.push({
+        type: 'warning',
+        field: 'title.price',
+        name: 'Title price',
+        reason: `Title price not found for ${internalRef}`,
+        hint: 'Edit corresponding sheet field.'
+      });
     }
 
     if (spreadSheetRow[SpreadSheetContractTitle.commission + currentIndex]) {
@@ -2209,8 +2249,18 @@ export class ViewExtractedElementsComponent implements OnInit {
     }
 
     if (spreadSheetRow[SpreadSheetContractTitle.expenseCurrency + currentIndex]) {
-      // @TODO(BRUCE) #1832 
-      recoupableExpense.price.currency = spreadSheetRow[SpreadSheetContractTitle.expenseCurrency + currentIndex].toUpperCase();
+      const currency = getCodeIfExists('MOVIE_CURRENCIES', spreadSheetRow[SpreadSheetContractTitle.expenseCurrency + currentIndex]);
+      if (currency) {
+        recoupableExpense.price.currency = currency;
+      } else {
+        importErrors.errors.push({
+          type: 'warning',
+          field: 'recoupableExpense.price.currency',
+          name: 'Expense currency',
+          reason: `Failed to parse expense currency : ${spreadSheetRow[SpreadSheetContractTitle.expenseCurrency + currentIndex]} for ${internalRef}`,
+          hint: 'Edit corresponding sheet field.'
+        });
+      }
     }
 
     titleDetails.price.recoupableExpenses.push(recoupableExpense);
