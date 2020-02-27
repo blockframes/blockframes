@@ -65,6 +65,26 @@ describe('User can navigate to the movie tunnel page 2 and fill all the fieldsn 
     p4.fillCountryDate('10/10/2007');
     p4.assertCountryDateExists('10/10/2007');
 
+    // Distributor
+    p4.fillFirstDistributorName('Caroline de Monaco');
+    p4.assertFirstDestributorNameExists('Caroline de Monaco');
+    p4.fillFirstDistributorCountry('pol');
+    p4.selectFirstDistributorCountry('Poland');
+    p4.assertFirstDistributorCountryExists('Poland');
+    p4.clickAddDistributor();
+    p4.fillLastDistributorName('Monica Bellucci');
+    p4.assertLastDestributorNameExists('Monica Bellucci');
+    p4.fillLastDistributorCountry('It');
+    p4.selectLastDistributorCountry('Italy');
+    p4.assertLastDistributorCountryExists('Italy');
+
+    // Original Language
+    p4.fillFirstOriginalLanguage('fr', 'French');
+    p4.assertFirstOriginalLanguageExists('French');
+    p4.addOriginalLanguage();
+    p4.fillLastOriginalLanguage('en', 'English');
+    p4.assertLastOriginalLanguageExists('English');
+
     // Festival
     p4.fillFirstFestivalName('Berlin Film Festival');
     p4.assertFirstFestivalNameExists('Berlin Film Festival');

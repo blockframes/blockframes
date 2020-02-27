@@ -123,6 +123,76 @@ export default class TunnelMainPage {
     cy.get('catalog-movie-tunnel-main movie-form-original-releases input[test-id=date]').should('have.value', date);
   }
 
+  // Domestic distributor
+
+  public fillFirstDistributorName(name: string) {
+    cy.get('catalog-movie-tunnel-main movie-form-stakeholders input[test-id=name]').first().type(name);
+  }
+
+  public assertFirstDestributorNameExists(name: string) {
+    cy.get('catalog-movie-tunnel-main movie-form-stakeholders input[test-id=name]').first().should('have.value', name);
+  }
+
+  public fillLastDistributorName(name: string) {
+    cy.get('catalog-movie-tunnel-main movie-form-stakeholders input[test-id=name]').last().type(name);
+  }
+
+  public assertLastDestributorNameExists(name: string) {
+    cy.get('catalog-movie-tunnel-main movie-form-stakeholders input[test-id=name]').last().should('have.value', name);
+  }
+
+  public fillFirstDistributorCountry(country: string) {
+    cy.get(`catalog-movie-tunnel-main movie-form-stakeholders [test-id=auto-complete] input`).first().type(country);
+  }
+
+  public selectFirstDistributorCountry(country: string) {
+    cy.get('mat-option').contains(country).click();
+  }
+
+  public assertFirstDistributorCountryExists(country: string) {
+    cy.get(`catalog-movie-tunnel-main movie-form-stakeholders [test-id=auto-complete] mat-chip`).first().contains(country);
+  }
+
+  public clickAddDistributor() {
+    cy.get(`catalog-movie-tunnel-main movie-form-stakeholders button[test-id=add]`).click();
+  }
+
+  public fillLastDistributorCountry(country: string) {
+    cy.get(`catalog-movie-tunnel-main movie-form-stakeholders [test-id=auto-complete] input`).last().type(country);
+  }
+
+  public selectLastDistributorCountry(country: string) {
+    cy.get('mat-option').contains(country).click();
+  }
+
+  public assertLastDistributorCountryExists(country: string) {
+    cy.get(`catalog-movie-tunnel-main movie-form-stakeholders [test-id=auto-complete] mat-chip`).last().contains(country);
+  }
+
+  // Original Language
+
+  public fillFirstOriginalLanguage(partialLanguage: string, language: string) {
+    cy.get('catalog-movie-tunnel-main movie-form-languages input').first().type(partialLanguage);
+    cy.get('mat-option').contains(language).click();
+  }
+
+  public assertFirstOriginalLanguageExists(language: string) {
+    cy.get('catalog-movie-tunnel-main movie-form-languages input').first().should('have.value', language);
+  }
+
+  public addOriginalLanguage() {
+    cy.get('catalog-movie-tunnel-main movie-form-languages button').click();
+  }
+
+  public fillLastOriginalLanguage(partialLanguage: string, language: string) {
+    cy.get('catalog-movie-tunnel-main movie-form-languages input').last().type(partialLanguage);
+    cy.get('mat-option').contains(language).click();
+  }
+
+  public assertLastOriginalLanguageExists(language: string) {
+    cy.get('catalog-movie-tunnel-main movie-form-languages input').last().should('have.value', language);
+  }
+
   // Festival
 
   public fillFirstFestivalName(name: string) {
