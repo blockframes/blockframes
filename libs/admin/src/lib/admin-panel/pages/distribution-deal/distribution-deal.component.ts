@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { DistributionDealService, DistributionDeal } from '@blockframes/movie/distribution-deals';
 import { DistributionDealStatus } from '@blockframes/movie/distribution-deals/+state/distribution-deal.firestore';
 import { DealAdminForm } from '../../forms/deal-admin.form';
@@ -30,11 +30,16 @@ export class DistributionDealComponent implements OnInit {
   async ngOnInit() {
     this.dealId = this.route.snapshot.paramMap.get('dealId');
     this.movieId = this.route.snapshot.paramMap.get('movieId');
-    this.deal = await this.distributionDealService.getValue(this.dealId, { params: { movieId: this.movieId } });
-    this.dealForm = new DealAdminForm(this.deal);
+    try {
+      this.deal = await this.distributionDealService.getValue(this.dealId, { params: { movieId: this.movieId } });
+      this.dealForm = new DealAdminForm(this.deal);
 
-    this.distributionDealStatus = DistributionDealStatus;
-    this.statuses = Object.keys(DistributionDealStatus);
+      this.distributionDealStatus = DistributionDealStatus;
+      this.statuses = Object.keys(DistributionDealStatus);
+
+    } catch (error) {
+      this.snackBar.open('There was an error while oppening deal', 'close', { duration: 5000 });
+    }
     this.cdRef.markForCheck();
   }
 
@@ -55,4 +60,7 @@ export class DistributionDealComponent implements OnInit {
     this.snackBar.open('Informations updated !', 'close', { duration: 5000 });
   }
 
+  public getMoviePath(movieId: string) {
+    return `/c/o/admin/panel/movie/${movieId}`;
+  }
 }

@@ -24,7 +24,7 @@ export class WalletAddKeyTunnelComponent implements OnInit {
   key: Key;
   encrypting$: Observable<boolean>;
   loadingProgress$: Observable<number>;
-  @ViewChild('downloadLink', { static: false }) downloadLink: ElementRef<HTMLAnchorElement>;
+  @ViewChild('downloadLink') downloadLink: ElementRef<HTMLAnchorElement>;
 
   constructor(
     private router: Router,

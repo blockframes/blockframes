@@ -120,7 +120,7 @@ export class MarketplaceSearchComponent implements OnInit {
   public matcher = new ControlErrorStateMatcher();
   public isMobile: boolean = this.breakpointObserver.isMatched('(max-width: 599px)');
 
-  @ViewChild('autoCompleteInput', { static: false, read: MatAutocompleteTrigger })
+  @ViewChild('autoCompleteInput', { read: MatAutocompleteTrigger })
   public autoComplete: MatAutocompleteTrigger;
 
   constructor(

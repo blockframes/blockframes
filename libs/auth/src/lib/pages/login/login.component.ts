@@ -14,8 +14,8 @@ import { SigninForm } from '../../forms/signin.form';
 })
 export class LoginComponent implements OnInit {
   @HostBinding('attr.page-id') pageId = 'login-view';
-  @ViewChild('signinSidenav', { static: false }) loginSidenav: MatSidenav;
-  @ViewChild('signupSidenav', { static: false }) signupSidenav: MatSidenav;
+  @ViewChild('signinSidenav') loginSidenav: MatSidenav;
+  @ViewChild('signupSidenav') signupSidenav: MatSidenav;
 
   public isSignin = true;
   private snackbarDuration = 2000;

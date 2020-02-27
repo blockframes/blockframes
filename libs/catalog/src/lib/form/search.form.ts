@@ -18,7 +18,7 @@ import { Validators, FormArray } from '@angular/forms';
 import { FormGroup, FormControl } from '@angular/forms';
 import { FormEntity, numberRangeValidator, Terms } from '@blockframes/utils';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
-import { MovieLanguageSpecification, StoreType } from '@blockframes/movie/movie/+state/movie.firestore';
+import { MovieLanguageSpecification, StoreType, storeType } from '@blockframes/movie/movie/+state/movie.firestore';
 import { createMovieLanguageSpecification } from '@blockframes/movie/movie/+state/movie.model';
 import { FormStaticArray, FormList, FormStaticValue } from '@blockframes/utils/form';
 import { NumberRange, DateRange } from '@blockframes/utils/common-interfaces';
@@ -238,17 +238,17 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
 
   }
 
-  checkStoreType(storeType: StoreType) {
+  checkStoreType(type: StoreType) {
     // check if media is already checked by the user
     if (!this.get('storeType').value.includes(storeType)) {
       this.get('storeType').setValue([...this.get('storeType').value, storeType]);
     } else if ( this.get('storeType').value.includes(storeType)) {
-        const storeTypes = this.get('storeType').value.filter(
-          (alreadyCheckedStoreType: StoreType) => alreadyCheckedStoreType !== storeType
+        const types = this.get('storeType').value.filter(
+          (alreadyCheckedStoreType: StoreType) => alreadyCheckedStoreType !== type
         );
-        this.get('storeType').setValue(storeTypes);
+        this.get('storeType').setValue(types);
     } else {
-      throw new Error(`Store Type ${StoreType[storeType]} doesn't exist`);
+      throw new Error(`Store Type ${storeType[type]} doesn't exist`);
     }
   }
 

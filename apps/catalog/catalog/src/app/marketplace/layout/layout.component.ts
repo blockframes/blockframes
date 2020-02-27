@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
 import { AuthService, AuthQuery } from '@blockframes/auth';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { MatSidenav } from '@angular/material';
+import { MatSidenav } from '@angular/material/sidenav';
 import { MarketplaceQuery } from '../+state';
 
 @Component({
@@ -21,7 +21,7 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   public currentWishlist$: Observable<Wishlist>;
   public cartCount$ = this.marketplaceQuery.selectCount();
 
-  @ViewChild('sidenav', { static: false }) sidenav: MatSidenav;
+  @ViewChild('sidenav') sidenav: MatSidenav;
 
   constructor(
     private marketplaceQuery: MarketplaceQuery,

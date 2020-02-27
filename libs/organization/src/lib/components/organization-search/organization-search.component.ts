@@ -12,7 +12,7 @@ import { Observable } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { OrganizationAlgoliaResult, OrganizationsIndex } from '@blockframes/utils';
 import { Index } from 'algoliasearch';
-import { MatAutocompleteSelectedEvent } from '@angular/material';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'organization-search',

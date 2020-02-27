@@ -31,7 +31,7 @@ import {
 } from './availabilities.util';
 import { DistributionDealForm } from './create.form';
 import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { createDistributionDeal } from '../+state/distribution-deal.model';
 import { DistributionDealService } from '../+state';
@@ -99,8 +99,8 @@ export class DistributionDealCreateComponent implements OnInit, OnDestroy {
     map(({ languages }) => Object.keys(languages))
   );
 
-  @ViewChild('territoryInput', { static: false }) territoryInput: ElementRef<HTMLInputElement>;
-  @ViewChild('languageInput', { static: false }) languageInput: ElementRef<HTMLInputElement>;
+  @ViewChild('territoryInput') territoryInput: ElementRef<HTMLInputElement>;
+  @ViewChild('languageInput') languageInput: ElementRef<HTMLInputElement>;
 
   constructor(
     private query: MovieQuery,

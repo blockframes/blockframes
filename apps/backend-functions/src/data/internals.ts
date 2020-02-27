@@ -5,7 +5,7 @@
  */
 import { db } from '../internals/firebase';
 import { OrganizationDocument, StakeholderDocument } from './types';
-import { PermissionsDocument, UserRole } from '@blockframes/permissions/types';
+import { PermissionsDocument } from '@blockframes/permissions/types';
 import { ContractDocument, ContractVersionDocument } from '@blockframes/contract/contract/+state/contract.firestore';
 
 export function getCollection<T>(path: string): Promise<T[]> {
@@ -84,8 +84,8 @@ export async function getAdminIds(organizationId: string): Promise<string[]> {
 
   const adminIds = Object.keys(permissions.roles).filter(userId => {
     return (
-      permissions.roles[userId] === UserRole.superAdmin ||
-      permissions.roles[userId] === UserRole.admin
+      permissions.roles[userId] === 'superAdmin' ||
+      permissions.roles[userId] === 'admin'
     );
   });
   return adminIds;

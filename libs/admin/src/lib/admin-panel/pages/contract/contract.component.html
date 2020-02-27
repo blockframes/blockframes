@@ -2,6 +2,10 @@
 <ng-container *ngIf="contract">
   <article id="contract-section" fxLayout="row" fxLayoutAlign="space-around start" >
     <article fxLayout="column" fxLayoutAlign="space-between start">
+      <button mat-flat-button color="accent" [routerLink]="getContractTunnelPath(contract.doc)">
+        <mat-icon svgIcon="eye"></mat-icon>
+        <span>Tunnel view</span>
+      </button>
       <h2>Edit Form : </h2>
       <ng-container *ngIf="contractForm">
         <form [formGroup]="contractForm">
@@ -16,7 +20,7 @@
             </mat-form-field>
           </div>
           <mat-card-actions align="end">
-            <button type="submit" mat-raised-button class="main-btn" (click)="updateContract()">Update contract</button>
+            <button type="submit" mat-flat-button color="primary" (click)="updateContract()">Update contract</button>
           </mat-card-actions>
         </form>
       </ng-container>
@@ -25,8 +29,11 @@
       <h2>Current version : {{ version }} </h2>
 
       <h3>Parties : </h3>
-      <div *ngFor="let partyDetails of contract.doc.parties">
-        <h4>Party : {{ partyDetails.party.displayName }} ( org: {{ partyDetails.party.orgId }} ) </h4>
+      <ng-container *ngFor="let partyDetails of contract.doc.parties; let i = index">
+        <section fxLayout="row" fxLayoutAlign="space-between start">
+          <h4>Party : {{ partyDetails.party.displayName }} ( org: {{ partyDetails.party.orgId }} ) </h4>
+          <button mat-icon-button color="accent" (click)="editParty(i)"><mat-icon>edit</mat-icon></button>
+        </section>
         <ul>
           <li><strong>Status : </strong>{{ partyDetails.status }}</li>
           <li><strong>Sign date : </strong>{{ partyDetails.signDate ? (partyDetails.signDate | date: 'short') : ' -- ' }}</li>
@@ -39,6 +46,12 @@
             </ng-container>
           </li>
         </ul>
+      </ng-container>
+      <div fxLayout="column" fxLayoutAlign="start end">
+        <button mat-flat-button color="primary" (click)="addParty()">
+          <span>Add a party</span>
+          <mat-icon svgIcon="add"></mat-icon>
+        </button>
       </div>
     </article>
     <article fxLayout="column" fxLayoutAlign="space-between start">
@@ -63,6 +76,8 @@
       <ng-template #nopubliccontract>
         <strong>No public contract found</strong>  
       </ng-template>
+      <h2>Contract tree : </h2>
+      <admin-contract-tree [contract]="contract.doc"></admin-contract-tree>
     </article>
   </article>
   <hr />
@@ -83,7 +98,7 @@
             </mat-form-field>
           </div>
           <mat-card-actions align="end">
-          <button type="submit" mat-raised-button class="main-btn" (click)="updateVersion()">Update to v-{{ version +1 }}</button>
+          <button type="submit" mat-flat-button color="primary" (click)="updateVersion()">Update to v-{{ version +1 }}</button>
           </mat-card-actions>
         </form>
       </ng-container>
@@ -149,5 +164,3 @@
     </article>
   </article>
 </ng-container>
-
-<!-- @todo #1832 afficher les invoices-->

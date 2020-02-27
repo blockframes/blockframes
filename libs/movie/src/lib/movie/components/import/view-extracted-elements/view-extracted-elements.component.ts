@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit } from '@angular/core';
-import { MatTableDataSource, MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTableDataSource } from '@angular/material/table';
 import {
   Movie,
   createMovieMain,
@@ -26,7 +27,7 @@ import { formatCredits } from '@blockframes/utils/spreadsheet/format';
 import { ImageUploader, cleanModel } from '@blockframes/utils';
 import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
 import { SSF } from 'xlsx';
-import { MovieLanguageTypes, PremiereType, WorkType, StoreType, StoreStatus, UnitBox } from '@blockframes/movie/movie/+state/movie.firestore';
+import { MovieLanguageTypes, PremiereType, WorkType, storeType, StoreStatus, UnitBox } from '@blockframes/movie/movie/+state/movie.firestore';
 import { createStakeholder } from '@blockframes/utils/common-interfaces/identity';
 import { DistributionDeal, createDistributionDeal, createHoldback } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
 import { createContractPartyDetail, createContractTitleDetail, Contract, initContractWithVersion, ContractWithLastVersion } from '@blockframes/contract/contract/+state/contract.model';
@@ -952,7 +953,7 @@ export class ViewExtractedElementsComponent implements OnInit {
 
           // STORE TYPE
           if (spreadSheetRow[SpreadSheetMovie.storeType]) {
-            if (Object.values(StoreType).map(t => t.toLowerCase()).includes(spreadSheetRow[SpreadSheetMovie.storeType].trim().toLowerCase())) {
+            if (Object.values(storeType).map(t => t.toLowerCase()).includes(spreadSheetRow[SpreadSheetMovie.storeType].trim().toLowerCase())) {
               movie.main.storeConfig.storeType = spreadSheetRow[SpreadSheetMovie.storeType].trim();
             } else {
               importErrors.errors.push({
@@ -964,12 +965,12 @@ export class ViewExtractedElementsComponent implements OnInit {
               });
             }
           } else {
-            movie.main.storeConfig.storeType = StoreType.line_up;
+            movie.main.storeConfig.storeType = 'line_up';
             importErrors.errors.push({
               type: 'warning',
               field: 'movie.main.storeConfig.storeType',
               name: 'Movie store type',
-              reason: `Store type not found, assumed "${StoreType.line_up}"`,
+              reason: `Store type not found, assumed "${storeType.line_up}"`,
               hint: 'Edit corresponding sheet field.'
             });
           }
@@ -1764,21 +1765,6 @@ export class ViewExtractedElementsComponent implements OnInit {
         field: 'exclusive',
         name: 'Exclusive deal',
         reason: 'Required field is missing',
-        hint: 'Edit corresponding sheet field.'
-      });
-    }
-
-    //////////////////
-    // OPTIONAL FIELDS
-    //////////////////
-
-    // TITLE PRICE VALIDATION
-    if (!contract.last.titles[importErrors.movieId] || !contract.last.titles[importErrors.movieId].price.amount) {
-      errors.push({
-        type: 'warning',
-        field: 'price',
-        name: 'Distribution deal price',
-        reason: `Optional field is missing for "${importErrors.movieTitle}"`,
         hint: 'Edit corresponding sheet field.'
       });
     }

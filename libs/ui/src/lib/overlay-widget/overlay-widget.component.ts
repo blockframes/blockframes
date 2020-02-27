@@ -52,7 +52,7 @@ const fade = trigger('fade', [
   animations: [fade]
 })
 export class OverlayWidgetComponent implements OnDestroy {
-  @ViewChild('ref', { static: false }) public ref: TemplateRef<any>;
+  @ViewChild('ref') public ref: TemplateRef<any>;
   private overlayRef: OverlayRef;
   private widgetPortal: TemplatePortal;
   private opened = false;

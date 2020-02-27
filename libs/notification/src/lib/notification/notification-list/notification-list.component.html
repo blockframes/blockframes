@@ -1,4 +1,4 @@
-<mat-list *ngFor="let byDate of notificationsByDate$ | async | keyvalue | reverse; let last = last">
+<mat-list *ngFor="let byDate of notificationsByDate | keyvalue | reverse; let last = last">
   <h3 mat-subheader>{{ byDate.key }}</h3>
   <ng-container *ngFor="let notification of byDate.value | reverse">
     <ng-container *ngIf="getInformation(notification) as information">

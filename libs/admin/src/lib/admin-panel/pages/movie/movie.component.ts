@@ -1,9 +1,10 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieService, Movie } from '@blockframes/movie';
 import { MovieAdminForm } from '../../forms/movie-admin.form';
-import { StoreType, StoreStatus } from '@blockframes/movie/movie/+state/movie.firestore';
+import { staticModels } from '@blockframes/utils/static-model';
+import { storeType, StoreStatus } from '@blockframes/movie/movie/+state/movie.firestore';
 
 
 @Component({
@@ -20,6 +21,7 @@ export class MovieComponent implements OnInit {
   public storeType: any;
   public storeStatuses: string[];
   public storeStatus: any;
+  public staticModels = staticModels;
 
   constructor(
     private movieService: MovieService,
@@ -33,8 +35,8 @@ export class MovieComponent implements OnInit {
     this.movie = await this.movieService.getValue(this.movieId);
     this.movieForm = new MovieAdminForm(this.movie);
 
-    this.storeTypes = Object.keys(StoreType);
-    this.storeType = StoreType;
+    this.storeTypes = Object.keys(storeType);
+    this.storeType = storeType;
     this.storeStatuses = Object.keys(StoreStatus);
     this.storeStatus = StoreStatus;
     this.cdRef.markForCheck();
@@ -48,6 +50,7 @@ export class MovieComponent implements OnInit {
 
     this.movie.main.storeConfig.status = this.movieForm.get('storeStatus').value;
     this.movie.main.storeConfig.storeType = this.movieForm.get('storeType').value;
+    this.movie.main.status = this.movieForm.get('productionStatus').value;
 
     await this.movieService.updateById(this.movieId, this.movie);
 
