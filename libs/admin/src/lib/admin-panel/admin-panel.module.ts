@@ -20,6 +20,7 @@ import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/imag
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { OrganizationAutocompleteModule } from '@blockframes/organization/components/organization-autocomplete/organization-autocomplete.module';
 import { ContractTreeModule } from './components/contract-tree/contract-tree.module';
+import { OrganizationAdminModule } from './pages/organization/organization.module';
 
 // Components
 import { OverviewComponent } from './pages/overview/overview.component';
@@ -71,6 +72,7 @@ export const panelRoutes: Routes = [
     OrganizationAutocompleteModule,
     ContractTreeModule,
     RouterModule.forChild(panelRoutes),
+    OrganizationAdminModule
   ],
   declarations: [
     OverviewComponent,
@@ -80,7 +82,6 @@ export const panelRoutes: Routes = [
     ContractsComponent,
     ContractComponent,
     OrganizationsComponent,
-    OrganizationComponent,
     MovieComponent,
     InvoicesComponent,
     InvoiceComponent,

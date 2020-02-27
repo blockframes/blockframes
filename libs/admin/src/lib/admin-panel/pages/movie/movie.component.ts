@@ -5,7 +5,9 @@ import { MovieService, Movie } from '@blockframes/movie';
 import { MovieAdminForm } from '../../forms/movie-admin.form';
 import { StoreType, StoreStatus } from '@blockframes/movie/movie/+state/movie.firestore';
 import { staticModels } from '@blockframes/utils/static-model';
-
+import { DistributionDealService } from '@blockframes/movie/distribution-deals';
+import { getValue } from '@blockframes/utils/helpers';
+import { termToPrettyDate } from '@blockframes/utils/common-interfaces/terms';
 
 @Component({
   selector: 'admin-movie',
@@ -22,9 +24,28 @@ export class MovieComponent implements OnInit {
   public storeStatuses: string[];
   public storeStatus: any;
   public staticModels = staticModels;
+  public rows: any[] = [];
+  public toPrettyDate = termToPrettyDate;
+  
+  public versionColumnsTable = {
+    'id': 'Id',
+    'status': 'Status',
+    'contractId': 'Contract Id',
+    'terms': 'Scope',
+    'dealLink': 'Edit'
+  };
+
+  public initialColumnsTable: string[] = [
+    'id',
+    'status',
+    'contractId',
+    'terms',
+    'dealLink',
+  ];
 
   constructor(
     private movieService: MovieService,
+    private distributionDealService: DistributionDealService,
     private route: ActivatedRoute,
     private cdRef: ChangeDetectorRef,
     private snackBar: MatSnackBar
@@ -39,6 +60,18 @@ export class MovieComponent implements OnInit {
     this.storeType = StoreType;
     this.storeStatuses = Object.keys(StoreStatus);
     this.storeStatus = StoreStatus;
+
+    const deals = await this.distributionDealService.getMovieDistributionDeals(this.movieId)
+    this.rows = deals.map(d => {
+      const row = { ...d } as any;
+      // Append new data for table display
+      row.dealLink = {
+        id: d.id,
+        movieId: this.movieId
+      }
+      return row;
+    });
+    
     this.cdRef.markForCheck();
   }
 
@@ -55,6 +88,29 @@ export class MovieComponent implements OnInit {
     await this.movieService.updateById(this.movieId, this.movie);
 
     this.snackBar.open('Informations updated !', 'close', { duration: 5000 });
+  }
+
+  public getMovieTunnelPath(movieId: string) {
+    return `/c/o/dashboard/tunnel/movie/${movieId}`;
+  }
+
+  public filterPredicateTable(data: any, filter) {
+    const columnsToFilter = [
+      'id',
+      'status',
+      'contractId',
+      'terms',
+    ];
+    const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
+    return dataStr.toLowerCase().indexOf(filter) !== -1;
+  }
+
+  public getDealPath(dealId: string, movieId: string) {
+    return `/c/o/admin/panel/deal/${dealId}/m/${movieId}`;
+  }
+
+  public getContractPath(contractId: string) {
+    return `/c/o/admin/panel/contract/${contractId}`;
   }
 
 }

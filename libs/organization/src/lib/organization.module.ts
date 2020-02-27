@@ -34,14 +34,13 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatTooltipModule } from '@angular/material';
+import { OrganizationDisplayModule } from './components/organization-display/organization-display.module';
 
 // Components
-import { OrganizationDisplayComponent } from './components/organization-display/organization-display.component';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 
 // Pages
 import { ActivateDaoComponent } from './pages/activate-dao/activate-dao.component';
-
 import { MemberGuard } from './member/guard/member.guard';
 import { ActiveDaoGuard } from './guard/active-dao.guard';
 
@@ -106,10 +105,10 @@ export const organizationRoutes: Routes = [
     MatProgressBarModule,
     MatTooltipModule,
     TableFilterModule,
+    OrganizationDisplayModule,
     RouterModule.forChild(organizationRoutes)
   ],
   declarations: [
-    OrganizationDisplayComponent,
     ActivateDaoComponent
   ]
 })

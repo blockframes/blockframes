@@ -56,8 +56,9 @@
     </article>
     <article fxLayout="column" fxLayoutAlign="space-between start">
       <h2>Contract Price : </h2>
-      <!-- @TODO #2090 clean this -->
-      <span>{{ contract.last.price.amount }} ( {{ contract.last.price.currency }} )</span>
+      <span i18n>
+        Overrall contract price : <b>{{ contract.last.price.amount | currency: getCurrencyCode(contract.last.price.currency) }}</b>
+      </span>
       <h2>Public contract : </h2>
 
       <i>
@@ -144,7 +145,7 @@
         showPaginator="true">
         <ng-template colRef="movie.promotionalElements.poster" let-posters>
           <ng-container *ngIf="posters[0].media as poster; else noposter">
-            <img class="poster" [imgRef]="poster">
+            <img class="poster" [imgRef]="poster" placeholderAsset="empty_poster.png">
           </ng-container>
           <ng-template #noposter>
             --
@@ -161,7 +162,7 @@
           </ul>
         </ng-template>
         <ng-template colRef="exploredeals" let-dealslink>
-          <a [routerLink]="dealslink"><mat-icon>edit</mat-icon></a>
+          <a [routerLink]="dealslink"><mat-icon svgIcon="eye"></mat-icon></a>
         </ng-template>
       </bf-table-filter>
     </article>

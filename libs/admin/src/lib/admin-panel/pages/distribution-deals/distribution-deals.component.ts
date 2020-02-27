@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { getValue } from '@blockframes/utils/helpers';
-import { DistributionDealService, DistributionDealWithMovieId, createDistributionDealWithMovieId, formatDistributionDeal } from '@blockframes/movie/distribution-deals';
+import { DistributionDealService, DistributionDealWithMovieId, createDistributionDealWithMovieId } from '@blockframes/movie/distribution-deals';
 import { termToPrettyDate } from '@blockframes/utils/common-interfaces/terms';
 import { ActivatedRoute } from '@angular/router';
 
@@ -46,9 +46,9 @@ export class DistributionDealsComponent implements OnInit {
       const deals = await this.distributionDealService.getMovieDistributionDeals(this.movieId);
       this.rows = deals.map(deal => {
         const d: DistributionDealWithMovieId = createDistributionDealWithMovieId({
-          deal: formatDistributionDeal(deal),
+          deal,
           movieId: this.movieId,
-        })
+        });
 
         // Append new data for table display
         const row = { ...d } as any;
@@ -60,7 +60,7 @@ export class DistributionDealsComponent implements OnInit {
       })
     } else {
       const deals = await this.distributionDealService.getAllDistributionDealsWithMovieId();
-      this.rows = await deals.map(d => {
+      this.rows = deals.map(d => {
         const row = { ...d } as any;
         // Append new data for table display
         row.dealLink = {
@@ -87,7 +87,7 @@ export class DistributionDealsComponent implements OnInit {
   }
 
   public getMoviePath(movieId: string) {
-    return `/c/o/dashboard/tunnel/movie/${movieId}/deals`;
+    return `/c/o/dashboard/tunnel/movie/${movieId}`;
   }
 
   public getDealPath(dealId: string, movieId: string) {

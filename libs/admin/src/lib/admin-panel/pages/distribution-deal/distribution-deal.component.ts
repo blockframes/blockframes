@@ -4,6 +4,8 @@ import { MatSnackBar } from '@angular/material';
 import { DistributionDealService, DistributionDeal } from '@blockframes/movie/distribution-deals';
 import { DistributionDealStatus } from '@blockframes/movie/distribution-deals/+state/distribution-deal.firestore';
 import { DealAdminForm } from '../../forms/deal-admin.form';
+import { Contract } from '@blockframes/contract/contract/+state/contract.model';
+import { ContractService } from '@blockframes/contract/contract/+state';
 
 
 @Component({
@@ -15,13 +17,15 @@ import { DealAdminForm } from '../../forms/deal-admin.form';
 export class DistributionDealComponent implements OnInit {
   public dealId = '';
   public movieId = '';
-  private deal: DistributionDeal;
+  public deal: DistributionDeal;
   public dealForm: DealAdminForm;
   public statuses: string[];
   public distributionDealStatus: any;
+  public contract: Contract;
 
   constructor(
     private distributionDealService: DistributionDealService,
+    private contractService: ContractService,
     private route: ActivatedRoute,
     private cdRef: ChangeDetectorRef,
     private snackBar: MatSnackBar
@@ -33,6 +37,10 @@ export class DistributionDealComponent implements OnInit {
     try {
       this.deal = await this.distributionDealService.getValue(this.dealId, { params: { movieId: this.movieId } });
       this.dealForm = new DealAdminForm(this.deal);
+
+      if(this.deal.contractId) {
+        this.contract = await this.contractService.getValue(this.deal.contractId);
+      }
 
       this.distributionDealStatus = DistributionDealStatus;
       this.statuses = Object.keys(DistributionDealStatus);
@@ -62,5 +70,17 @@ export class DistributionDealComponent implements OnInit {
 
   public getMoviePath(movieId: string) {
     return `/c/o/admin/panel/movie/${movieId}`;
+  }
+
+  public getMovieTunnelPath(movieId: string) {
+    return `/c/o/dashboard/tunnel/movie/${movieId}`;
+  }
+
+  public getContractTunnelPath(contract: Contract) {
+    return `/c/o/marketplace/tunnel/contract/${contract.id}/${contract.type}`;
+  }
+
+  public getContractPath(contractId: string) {
+    return `/c/o/admin/panel/contract/${contractId}`;
   }
 }
