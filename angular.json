@@ -173,7 +173,8 @@
           "options": {
             "jestConfig": "apps/main/main/jest.config.js",
             "tsConfig": "apps/main/main/tsconfig.spec.json",
-            "setupFile": "apps/main/main/src/test-setup.ts"
+            "setupFile": "apps/main/main/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       }
@@ -234,7 +235,8 @@
           "options": {
             "jestConfig": "libs/ip/jest.config.js",
             "tsConfig": "libs/ip/tsconfig.spec.json",
-            "setupFile": "libs/ip/src/test-setup.ts"
+            "setupFile": "libs/ip/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       }
@@ -264,7 +266,8 @@
           "options": {
             "jestConfig": "libs/auth/jest.config.js",
             "tsConfig": "libs/auth/tsconfig.spec.json",
-            "setupFile": "libs/auth/src/test-setup.ts"
+            "setupFile": "libs/auth/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       }
@@ -287,7 +290,8 @@
           "options": {
             "jestConfig": "libs/ui/jest.config.js",
             "tsConfig": "libs/ui/tsconfig.spec.json",
-            "setupFile": "libs/ui/src/test-setup.ts"
+            "setupFile": "libs/ui/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       }
@@ -317,7 +321,8 @@
           "options": {
             "jestConfig": "libs/ethers/jest.config.js",
             "tsConfig": "libs/ethers/tsconfig.spec.json",
-            "setupFile": "libs/ethers/src/test-setup.ts"
+            "setupFile": "libs/ethers/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       }
@@ -489,7 +494,8 @@
           "options": {
             "jestConfig": "apps/movie-financing/movie-financing/jest.config.js",
             "tsConfig": "apps/movie-financing/movie-financing/tsconfig.spec.json",
-            "setupFile": "apps/movie-financing/movie-financing/src/test-setup.ts"
+            "setupFile": "apps/movie-financing/movie-financing/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       }
@@ -550,7 +556,8 @@
           "options": {
             "jestConfig": "libs/movie/jest.config.js",
             "tsConfig": "libs/movie/tsconfig.spec.json",
-            "setupFile": "libs/movie/src/test-setup.ts"
+            "setupFile": "libs/movie/src/test-setup.ts",
+            "passWithNoTests": true
           }
         },
         "storybook": {
@@ -613,7 +620,8 @@
           "options": {
             "jestConfig": "libs/organization/jest.config.js",
             "tsConfig": "libs/organization/tsconfig.spec.json",
-            "setupFile": "libs/organization/src/test-setup.ts"
+            "setupFile": "libs/organization/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -634,7 +642,8 @@
           "options": {
             "jestConfig": "libs/account/jest.config.js",
             "tsConfig": "libs/account/tsconfig.spec.json",
-            "setupFile": "libs/account/src/test-setup.ts"
+            "setupFile": "libs/account/src/test-setup.ts",
+            "passWithNoTests": true
           }
         },
         "lint": {
@@ -658,7 +667,8 @@
           "options": {
             "jestConfig": "libs/notification/jest.config.js",
             "tsConfig": "libs/notification/tsconfig.spec.json",
-            "setupFile": "libs/notification/src/test-setup.ts"
+            "setupFile": "libs/notification/src/test-setup.ts",
+            "passWithNoTests": true
           }
         },
         "lint": {
@@ -847,7 +857,8 @@
           "options": {
             "jestConfig": "apps/delivery/delivery/jest.config.js",
             "tsConfig": "apps/delivery/delivery/tsconfig.spec.json",
-            "setupFile": "apps/delivery/delivery/src/test-setup.ts"
+            "setupFile": "apps/delivery/delivery/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       }
@@ -908,7 +919,8 @@
           "options": {
             "jestConfig": "libs/material/jest.config.js",
             "tsConfig": "libs/material/tsconfig.spec.json",
-            "setupFile": "libs/material/src/test-setup.ts"
+            "setupFile": "libs/material/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -943,7 +955,8 @@
           "options": {
             "jestConfig": "libs/utils/jest.config.js",
             "tsConfig": "libs/utils/tsconfig.spec.json",
-            "setupFile": "libs/utils/src/test-setup.ts"
+            "setupFile": "libs/utils/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -1041,7 +1054,8 @@
           "options": {
             "jestConfig": "apps/backend-functions/jest.config.js",
             "tsConfig": "apps/backend-functions/tsconfig.spec.json",
-            "setupFile": "apps/backend-functions/src/test-setup.ts"
+            "setupFile": "apps/backend-functions/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       }
@@ -1112,7 +1126,8 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "apps/backend-ops/jest.config.js",
-            "tsConfig": "apps/backend-ops/tsconfig.spec.json"
+            "tsConfig": "apps/backend-ops/tsconfig.spec.json",
+            "passWithNoTests": true
           }
         }
       }
@@ -1135,7 +1150,8 @@
           "options": {
             "jestConfig": "libs/catalog/jest.config.js",
             "tsConfig": "libs/catalog/tsconfig.spec.json",
-            "setupFile": "libs/catalog/src/test-setup.ts"
+            "setupFile": "libs/catalog/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -1163,7 +1179,8 @@
           "options": {
             "jestConfig": "libs/contract/jest.config.js",
             "tsConfig": "libs/contract/tsconfig.spec.json",
-            "setupFile": "libs/contract/src/test-setup.ts"
+            "setupFile": "libs/contract/src/test-setup.ts",
+            "passWithNoTests": true
           }
         },
         "lint": {
@@ -1193,7 +1210,8 @@
           "options": {
             "jestConfig": "libs/financial-report/jest.config.js",
             "tsConfig": "libs/financial-report/tsconfig.spec.json",
-            "setupFile": "libs/financial-report/src/test-setup.ts"
+            "setupFile": "libs/financial-report/src/test-setup.ts",
+            "passWithNoTests": true
           }
         },
         "lint": {
@@ -1226,7 +1244,8 @@
           "options": {
             "jestConfig": "libs/admin/jest.config.js",
             "tsConfig": "libs/admin/tsconfig.spec.json",
-            "setupFile": "libs/admin/src/test-setup.ts"
+            "setupFile": "libs/admin/src/test-setup.ts",
+            "passWithNoTests": true
           }
         },
         "lint": {
@@ -1410,7 +1429,8 @@
           "options": {
             "jestConfig": "apps/catalog/catalog/jest.config.js",
             "tsConfig": "apps/catalog/catalog/tsconfig.spec.json",
-            "setupFile": "apps/catalog/catalog/src/test-setup.ts"
+            "setupFile": "apps/catalog/catalog/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       }
