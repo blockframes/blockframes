@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store, StoreConfig } from '@datorama/akita';
 import { FireAuthState, initialAuthState } from 'akita-ng-fire';
-import { ImgRef } from '@blockframes/utils';
+import { ImgRef, createImgRef } from '@blockframes/utils';
 
 export const PLACEHOLDER_AVATAR = '/assets/logo/profil_avatar_250.svg';
 
@@ -25,8 +25,8 @@ export interface AuthState extends FireAuthState<User> {
 
 export function createUser(user: Partial<User> = {}) {
   return {
-    avatar: "",
-    ...user
+    ...user,
+    avatar: createImgRef(user.avatar),
   } as User;
 }
 

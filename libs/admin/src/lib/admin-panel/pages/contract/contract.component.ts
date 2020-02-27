@@ -264,4 +264,25 @@ export class ContractComponent implements OnInit {
   public getContractTunnelPath(contract: Contract) {
     return `/c/o/marketplace/tunnel/contract/${contract.id}/${contract.type}`;
   }
+
+  /**
+   * @dev this method uses titles.price to update global contract price
+   */
+  public async updatePrice() {
+    const update = {
+      ...this.contract.last,
+    }
+
+    update.price.amount = 0;
+    Object.keys(this.contract.last.titles).forEach(titleId => {
+      update.price.amount += this.contract.last.titles[titleId].price.amount;
+    });
+
+    const newVersionId = await this.contractVersionService.addContractVersion({ doc: this.contract.doc, last: update });
+    this.version = parseInt(newVersionId, 10);
+    this.contractVersions = await this.contractVersionService.getContractVersions(this.contractId);
+    this.cdRef.markForCheck();
+
+    this.snackBar.open('Contract global price updated !', 'close', { duration: 5000 });
+  }
 }

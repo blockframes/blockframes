@@ -15,6 +15,7 @@ export class UsersComponent implements OnInit {
     'name': 'Name',
     'surname': 'Surname',
     'org': 'Organization',
+    'position': 'Position',
     'email': 'Email',
     'edit': 'Edit',
   };
@@ -25,6 +26,7 @@ export class UsersComponent implements OnInit {
     'name',
     'surname',
     'org',
+    'position',
     'email',
     'edit',
   ];
@@ -60,6 +62,7 @@ export class UsersComponent implements OnInit {
       'name',
       'surname',
       'email',
+      'position',
       'org',
     ];
     const dataStr = columnsToFilter.map(c => getValue(data, c)).join();

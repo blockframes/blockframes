@@ -28,7 +28,47 @@
       </mat-card-content>
     </mat-card>
   </article>
-  <article fxLayout="column" fxLayoutAlign="space-between start">
-  la
+  <article *ngIf="userForm" fxLayout="column" fxLayoutAlign="space-between start">
+    <form [formGroup]="userForm" fxLayout="column">
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput type="text" placeholder="Email" formControlName="email" required />
+        <mat-error *ngIf="userForm.get('email').hasError('required')">
+          Email is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Organization</mat-label>
+        <input matInput type="text" placeholder="Organization id" formControlName="orgId" required />
+        <mat-error *ngIf="userForm.get('orgId').hasError('required')">
+          Organization is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Name</mat-label>
+        <input matInput type="text" placeholder="Name" formControlName="name" required />
+        <mat-error *ngIf="userForm.get('name').hasError('required')">
+          Name is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Surname</mat-label>
+        <input matInput type="text" placeholder="Surname" formControlName="surname" required />
+        <mat-error *ngIf="userForm.get('surname').hasError('required')">
+          Surname is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Phone number</mat-label>
+        <input matInput type="text" placeholder="Phone number" formControlName="phonenumber" />
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Position</mat-label>
+        <input matInput type="text" placeholder="Position" formControlName="position" />
+      </mat-form-field>
+      <mat-card-actions align="end">
+        <button type="submit" mat-flat-button color="primary" (click)="update()">Update</button>
+      </mat-card-actions>
+    </form>
   </article>
 </article>

@@ -9,27 +9,23 @@
   </article>
   <article *ngIf="orgForm" fxLayout="column" fxLayoutAlign="space-between start">
     <form [formGroup]="orgForm" fxLayout="column">
-      <div>
-        <mat-form-field appearance="outline">
-          <mat-label>Org Status</mat-label>
-          <mat-select formControlName="status" required>
-            <mat-option *ngFor="let status of statuses" [value]="organizationStatus[status]">
-              {{ organizationStatus[status] }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
-      </div>
+      <mat-form-field appearance="outline">
+        <mat-label>Org Status</mat-label>
+        <mat-select formControlName="status" required>
+          <mat-option *ngFor="let status of statuses" [value]="organizationStatus[status]">
+            {{ organizationStatus[status] }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
       <div>
         <h2>App Access</h2>
         <mat-checkbox formControlName="catalogDashboard">
           Catalog Dashboard
         </mat-checkbox>
       </div>
-      <div>
-        <mat-checkbox formControlName="catalogMarketplace">
-          Catalog Marketplace
-        </mat-checkbox>
-      </div>
+      <mat-checkbox formControlName="catalogMarketplace">
+        Catalog Marketplace
+      </mat-checkbox>
       <mat-card-actions align="end">
         <button type="submit" mat-flat-button color="primary" (click)="update()">Update</button>
       </mat-card-actions>

@@ -17,4 +17,7 @@
   <ng-template colRef="org" let-org>
     <a [routerLink]="org.link">{{ org.id }}</a>
   </ng-template>
+  <ng-template colRef="position" let-position>
+    {{ position ? position : '--' }}
+  </ng-template>
 </bf-table-filter>

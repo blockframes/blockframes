@@ -1,12 +1,19 @@
 <h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Movie > {{ movieId }} </h1>
-<article fxLayout="row" fxLayoutAlign="space-around start" >
+<article fxLayout="row" fxLayoutAlign="space-around start" *ngIf="movie">
   <article id="movie-section" fxLayout="column" fxLayoutAlign="space-between start">
-    <button mat-flat-button color="accent" [routerLink]="getMovieTunnelPath(movieId)">
-      <mat-icon svgIcon="eye"></mat-icon>
-      <span>Tunnel view</span>
-    </button>
+    <h2>
+      {{ movie.main.title.international }} ({{ movie.main.internalRef }})
+      <button mat-icon-button color="accent" [routerLink]="getMovieTunnelPath(movieId)">
+        <mat-icon svgIcon="eye"></mat-icon>
+      </button>
+    </h2>
+    <h4>({{ movie.main.title.original }})</h4>
     <ng-container *ngIf="movieForm">
       <form [formGroup]="movieForm" fxLayout="column">
+        <mat-form-field appearance="outline">
+          <mat-label>Internal ref</mat-label>
+          <input matInput type="text" placeholder="Internal ref" formControlName="internalRef" />
+        </mat-form-field>
         <mat-form-field appearance="outline">
           <mat-label>Movie Store Status</mat-label>
           <mat-select formControlName="storeStatus" required>

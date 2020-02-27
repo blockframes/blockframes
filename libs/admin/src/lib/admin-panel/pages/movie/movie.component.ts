@@ -17,7 +17,7 @@ import { storeType, StoreStatus } from '@blockframes/movie/movie/+state/movie.fi
 })
 export class MovieComponent implements OnInit {
   public movieId = '';
-  private movie: Movie;
+  public movie: Movie;
   public movieForm: MovieAdminForm;
   public storeTypes: string[];
   public storeType: any;
@@ -84,6 +84,7 @@ export class MovieComponent implements OnInit {
     this.movie.main.storeConfig.status = this.movieForm.get('storeStatus').value;
     this.movie.main.storeConfig.storeType = this.movieForm.get('storeType').value;
     this.movie.main.status = this.movieForm.get('productionStatus').value;
+    this.movie.main.internalRef = this.movieForm.get('internalRef').value;
 
     await this.movieService.updateById(this.movieId, this.movie);
 

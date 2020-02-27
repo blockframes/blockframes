@@ -127,6 +127,18 @@ export class AuthService extends FireAuthService<AuthState> {
   }
 
   /**
+   * @dev since this.update() does not behave like other services 
+   * (authService extends FireAuthService<AuthState> and others extends CollectionService<XxxState>)
+   * This method was created to easily update an user.
+   * @param uid 
+   * @param update 
+   */
+  public async updateById(uid: string, update: Partial<User>) {
+    // @TODO (#2090) update org.userIds & permission document if orgId is change for the user
+    await this.db.collection('users').doc(uid).update(update);
+  }
+
+  /**
    * Fetch all users
    * @dev If in the future, we need to keep an user list in the state other than members of an org, 
    * this will be the time to create a userService and to move this method in it.

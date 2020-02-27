@@ -57,12 +57,15 @@
     <article fxLayout="column" fxLayoutAlign="space-between start">
       <h2>Contract Price : </h2>
       <span i18n>
-        Overrall contract price : <b>{{ contract.last.price.amount | currency: getCurrencyCode(contract.last.price.currency) }}</b>
+        Overall contract price : <b>{{ contract.last.price.amount | currency: getCurrencyCode(contract.last.price.currency) }}</b>
+        <button mat-icon-button color="accent" (click)="updatePrice()">
+          <mat-icon svgIcon="update"></mat-icon>
+        </button>
       </span>
       <h2>Public contract : </h2>
 
       <i>
-        Public contract is created automaticaly with data of Contract document and it's latest version.
+        Public contract is created automatically with data of Contract document and it's latest version.
         Public contract will appear only if status is OK.
       </i>
       <h3>Content : </h3>
