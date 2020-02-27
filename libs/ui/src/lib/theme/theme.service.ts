@@ -8,15 +8,19 @@ export class ThemeService {
   _theme = new BehaviorSubject<string>('');
   theme$ = this._theme.asObservable();
 
-  constructor(@Inject(DOCUMENT) private document: Document) {}
+  constructor(@Inject(DOCUMENT) private document: Document) {
+    this.document.body.classList.add('mat-app-background', 'mat-typography');
+  }
 
   get theme() {
     return this._theme.getValue();
   }
 
   set theme(mode: string) {
-    this.setTheme(mode);
-    this.saveTheme(mode);
+    if (mode) {
+      this.setTheme(mode);
+      this.saveTheme(mode);
+    }
   }
 
   private saveTheme(mode: string) {
@@ -24,9 +28,9 @@ export class ThemeService {
   }
 
   private setTheme(mode: string) {
-    this.renderer.removeClass(this.document.body, 'dark-theme');
-    this.renderer.removeClass(this.document.body, 'light-theme');
-    this.renderer.addClass(this.document.body, `${mode}-theme`);
+    this.document.body.classList.remove('dark-theme');
+    this.document.body.classList.remove('light-theme');
+    this.document.body.classList.add(`${mode}-theme`);
     this._theme.next(mode);
   }
 
