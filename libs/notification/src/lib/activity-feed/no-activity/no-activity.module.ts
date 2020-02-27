@@ -3,16 +3,16 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
-import { NoActivityFeedComponent } from './no-activity-feed.component';
+import { NoActivityComponent } from './no-activity.component';
 
 
 @NgModule({
-  declarations: [NoActivityFeedComponent],
+  declarations: [NoActivityComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
     ImgAssetModule
   ],
-  exports: [NoActivityFeedComponent]
+  exports: [NoActivityComponent]
 })
-export class NoActivityFeedModule { }
+export class NoActivityModule { }

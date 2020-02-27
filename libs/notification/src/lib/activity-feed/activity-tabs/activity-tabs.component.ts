@@ -8,42 +8,32 @@ import {
 import { Organization } from '@blockframes/organization/+state/organization.model';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { Observable } from 'rxjs';
-import { startWith, switchMap, map, distinctUntilChanged } from 'rxjs/operators';
+import { startWith, switchMap } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 import { NotificationDocument } from '@blockframes/notification/types';
 import { DateGroup } from '@blockframes/utils/helpers';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 @Component({
-  selector: 'notification-activity-feed',
-  templateUrl: './activity-feed.component.html',
-  styleUrls: ['./activity-feed.component.scss'],
+  selector: 'notification-activity-tabs',
+  templateUrl: './activity-tabs.component.html',
+  styleUrls: ['./activity-tabs.component.scss'],
   providers: [InvitationQuery, InvitationStore],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ActivityFeedComponent implements OnInit {
+export class ActivityTabsComponent implements OnInit {
   public organization: Organization = this.organizationQuery.getActive();
-  public appName: string = this.routerQuery.getValue().state.root.data.app;
 
   // Filters (arrays of notification types)
   public titleFilters = ['movieSubmitted', 'movieAccepted'];
-  public dealFilters = ['newContract', 'contractInNegotiation'];
-  public deliveryFilters = ['newSignature', 'finalSignature'];
 
   public filter = new FormControl('');
   public filter$ = this.filter.valueChanges.pipe(startWith(this.filter.value));
   public notifications$: Observable<DateGroup<NotificationDocument[]>>;
-  public allNotifications$ = this.notificationQuery.groupNotificationsByDate();
-
-  public hasKey$ = this.allNotifications$.pipe(
-    map(notifications => !!Object.keys(notifications).length),
-    distinctUntilChanged()
-  );
 
   constructor(
     private notificationQuery: NotificationQuery,
-    private organizationQuery: OrganizationQuery,
-    private routerQuery: RouterQuery
+    private organizationQuery: OrganizationQuery
   ) {}
 
   ngOnInit() {
@@ -61,11 +51,6 @@ export class ActivityFeedComponent implements OnInit {
   getCount(filter?: Notification['type'][]): number {
     return this.notificationQuery.getCount(notification =>
       filter ? filter.includes(notification.type) : true
-    )
-  }
-
-  /** Returns the number of keys of an object. */
-  public keysLength(notifications: DateGroup<NotificationDocument[]>): number {
-    return Object.keys(notifications).length;
+    );
   }
 }
