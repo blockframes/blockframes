@@ -1,0 +1,7 @@
+
+<section>
+  <div matRipple class="icon" *ngFor="let icon of icons" (click)="copy(icon.name)">
+    <mat-icon [svgIcon]="icon.name"></mat-icon>
+    <caption class="mat-caption">{{ icon.name }}</caption>
+  </div>
+</section>

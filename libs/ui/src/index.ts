@@ -11,7 +11,7 @@ export * from './lib/actions-picker-list/actions-picker-list.module';
 export * from './lib/editable/editable.module';
 export * from './lib/editable-sidenav/editable-sidenav.module';
 export * from './lib/avatar-list/avatar-list.module';
-export * from './lib/icon-component';
+export * from './lib/icon-service';
 export * from './lib/movie-card/movie-card.module';
 export * from './lib/missing-control/missing-control.module';
 export * from './lib/static-select/static-select.module';

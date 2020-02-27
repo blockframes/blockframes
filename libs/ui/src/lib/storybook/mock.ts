@@ -1,4 +1,4 @@
-import { Movie } from "@blockframes/movie";
+import { Movie } from "@blockframes/movie/movie/+state/movie.model";
 
 const MOCKS = [
 {"docPath":"_META/_MAINTENANCE","content":{"endedAt":{"_seconds":1580740867,"_nanoseconds":833000000},"startedAt":null}},
