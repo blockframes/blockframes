@@ -1,6 +1,6 @@
 import { Component, HostListener } from '@angular/core';
 import { AuthQuery } from '@blockframes/auth';
-import { IconComponent } from '@blockframes/ui';
+import { IconService } from '@blockframes/ui';
 
 @Component({
 // tslint:disable-next-line: component-selector
@@ -10,7 +10,7 @@ import { IconComponent } from '@blockframes/ui';
 export class AppComponent {
   constructor(
     private query: AuthQuery,
-    private icons: IconComponent // even if not used in component, keep this to load icons
+    private icons: IconService // even if not used in component, keep this to load icons
   ) {
   }
 }

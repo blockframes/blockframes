@@ -1,18 +1,20 @@
 import { object } from '@storybook/addon-knobs';
-import { MOVIES } from '@blockframes/utils/mocks';
 import { MovieBannerModule } from './banner.module';
-import { ThemeWidgetModule } from '@blockframes/ui/theme/theme-widget/theme-widget.module';
+import { ToolkitModule, MOVIES } from '@blockframes/ui/storybook';
 
 export default {
   title: 'Movie Banner'
 };
 
 export const movieBanner = () => ({
-  moduleMetadata: { imports: [MovieBannerModule, ThemeWidgetModule] },
+  moduleMetadata: { imports: [MovieBannerModule, ToolkitModule] },
   name: 'Movie Banner',
   template: `
-    <theme-widget theme="dark"></theme-widget>
-    <movie-banner [movie]="movie"></movie-banner>`,
+    <storybook-toolkit>
+      <h1 title>Movie Banner</h1>
+      <movie-banner [movie]="movie"></movie-banner>
+    </storybook-toolkit>
+  `,
   props: {
     movie: object('movie', MOVIES[0]),
   }
