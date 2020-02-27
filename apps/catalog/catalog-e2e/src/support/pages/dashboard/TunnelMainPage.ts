@@ -70,6 +70,59 @@ export default class TunnelMainPage {
     cy.get('catalog-movie-tunnel-main movie-form-content-type input[test-id=reference]').should('have.value', reference);
   }
 
+  // Director
+
+  public fillDirectorFirstName(name: string) {
+    cy.get('catalog-movie-tunnel-main movie-form-directors input[test-id=first-name]').type(name);
+  }
+
+  public assertDirectorFirstNameExists(name: string) {
+    cy.get('catalog-movie-tunnel-main movie-form-directors input[test-id=first-name]').should('have.value', name);
+  }
+
+  public fillDirectorLastName(name: string) {
+    cy.get('catalog-movie-tunnel-main movie-form-directors input[test-id=last-name]').type(name);
+  }
+
+  public assertDirectorLastNameExists(name: string) {
+    cy.get('catalog-movie-tunnel-main movie-form-directors input[test-id=last-name]').should('have.value', name);
+  }
+
+  public fillDirectorFilmography(filmography: string) {
+    cy.get('catalog-movie-tunnel-main movie-form-directors textarea').type(filmography);
+  }
+
+  public assertDirectorFilmographyExists(filmography: string) {
+    cy.get('catalog-movie-tunnel-main movie-form-directors textarea').should('have.value', filmography);
+  }
+
+  // Country of origin
+  public selectCountry(partialCountry: string, country: string) {
+    cy.get('catalog-movie-tunnel-main movie-form-original-releases form-country input').type(partialCountry);
+    cy.get('mat-option').contains(country).click();
+  }
+
+  public assertCountryIsSelected(country: string) {
+    cy.get('catalog-movie-tunnel-main movie-form-original-releases form-country input').should('have.value', country);
+  }
+
+  public selectMedia(media: string) {
+    cy.get('catalog-movie-tunnel-main movie-form-original-releases mat-select[test-id=media]').click();
+    cy.get('mat-option').contains(media).click();
+  }
+
+  public assertMediaIsSelected(media: string) {
+    cy.get('catalog-movie-tunnel-main movie-form-original-releases mat-select[test-id=media]').contains(media);
+  }
+
+  public fillCountryDate(date: string) {
+    cy.get('catalog-movie-tunnel-main movie-form-original-releases input[test-id=date]').type(date);
+  }
+
+  public assertCountryDateExists(date: string) {
+    cy.get('catalog-movie-tunnel-main movie-form-original-releases input[test-id=date]').should('have.value', date);
+  }
+
   // Festival
 
   public fillFirstFestivalName(name: string) {

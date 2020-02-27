@@ -49,6 +49,22 @@ describe('User can navigate to the movie tunnel page 2 and fill all the fieldsn 
     p4.fillReference(CONTENT_TYPES[5]);
     p4.assertReferenceExists(CONTENT_TYPES[5]);
 
+    // Director
+    p4.fillDirectorFirstName('Rodolphe');
+    p4.assertDirectorFirstNameExists('Rodolphe');
+    p4.fillDirectorLastName('Marconi');
+    p4.assertDirectorLastNameExists('Marconi');
+    p4.fillDirectorFilmography('Ceci est mon corps (2001)');
+    p4.assertDirectorFilmographyExists('Ceci est mon corps (2001)');
+
+    // Country of origin
+    p4.selectCountry('Fr', 'France');
+    p4.assertCountryIsSelected('France');
+    p4.selectMedia('Boat');
+    p4.assertMediaIsSelected('Boat');
+    p4.fillCountryDate('10/10/2007');
+    p4.assertCountryDateExists('10/10/2007');
+
     // Festival
     p4.fillFirstFestivalName('Berlin Film Festival');
     p4.assertFirstFestivalNameExists('Berlin Film Festival');
