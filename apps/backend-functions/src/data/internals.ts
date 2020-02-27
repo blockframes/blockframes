@@ -5,7 +5,7 @@
  */
 import { db } from '../internals/firebase';
 import { OrganizationDocument, StakeholderDocument } from './types';
-import { PermissionsDocument, UserRole } from '@blockframes/permissions/types';
+import { PermissionsDocument } from '@blockframes/permissions/types';
 import { ContractDocument, ContractVersionDocument } from '@blockframes/contract/contract/+state/contract.firestore';
 
 export function getCollection<T>(path: string): Promise<T[]> {
