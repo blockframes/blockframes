@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, Input } from '@angular/core';
 import {
   NotificationQuery,
   InvitationQuery,
@@ -10,9 +10,13 @@ import { OrganizationQuery } from '@blockframes/organization/+state/organization
 import { Observable } from 'rxjs';
 import { startWith, switchMap } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
-import { NotificationDocument } from '@blockframes/notification/types';
+import { NotificationDocument, NotificationType } from '@blockframes/notification/types';
 import { DateGroup } from '@blockframes/utils/helpers';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
+
+export interface ActivityTab {
+  label: string;
+  filters: NotificationType[];
+}
 
 @Component({
   selector: 'notification-activity-tabs',
@@ -22,12 +26,14 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ActivityTabsComponent implements OnInit {
+  @Input() applicationTabs: ActivityTab[];
+
   public organization: Organization = this.organizationQuery.getActive();
 
   // Filters (arrays of notification types)
   public titleFilters = ['movieSubmitted', 'movieAccepted'];
 
-  public filter = new FormControl('');
+  public filter = new FormControl();
   public filter$ = this.filter.valueChanges.pipe(startWith(this.filter.value));
   public notifications$: Observable<DateGroup<NotificationDocument[]>>;
 

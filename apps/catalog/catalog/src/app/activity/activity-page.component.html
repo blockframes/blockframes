@@ -1,6 +1,6 @@
 <ng-container *ngIf="hasKey$ | async; else noFeed">
   <h1>Activity Feed</h1>
-  <notification-activity-tabs></notification-activity-tabs>
+  <notification-activity-tabs [applicationTabs]="applicationTabs"></notification-activity-tabs>
 </ng-container>
 
 <ng-template #noFeed>

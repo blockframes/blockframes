@@ -4,6 +4,15 @@
   <header mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
     <button mat-tab-link (click)="applyFilter('')" [active]="!(filter$ | async)">All ({{ getCount() }})</button>
     <button mat-tab-link (click)="applyFilter(titleFilters)" [active]="(filter$ | async) === titleFilters">Titles ({{ getCount(titleFilters) }})</button>
+    <ng-container *ngIf="applicationTabs.length">
+      <ng-container *ngFor="let tab of applicationTabs">
+        <button
+          mat-tab-link (click)="applyFilter(tab.filters)"
+          [active]="(filter$ | async) === tab.filters">
+          {{ tab.label }} ({{ getCount(tab.filters) }})
+        </button>
+      </ng-container>
+    </ng-container>
     <button mat-tab-link (click)="applyFilter('Invitations')" [active]="(filter$ | async) === 'Invitations'">{{ organization.name }}</button>
   </header>
 

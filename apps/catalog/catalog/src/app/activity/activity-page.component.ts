@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { NotificationQuery } from '@blockframes/notification';
 import { map, distinctUntilChanged } from 'rxjs/operators';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { ActivityTab } from '@blockframes/notification/activity-feed/activity-tabs/activity-tabs.component';
+import { NotificationType } from '@blockframes/notification/types';
 
 @Component({
   selector: 'catalog-activity-page',
@@ -11,12 +12,15 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 })
 export class ActivityPageComponent {
 
-  // Filters (arrays of notification types)
-  public dealFilters = ['newContract', 'contractInNegotiation'];
+  // App specific tabs
+  public applicationTabs: ActivityTab[] = [
+    {
+      label: 'Offers and Deals',
+      filters: [NotificationType.newContract, NotificationType.contractInNegotiation]
+    }
+  ]
 
-  public allNotifications$ = this.notificationQuery.groupNotificationsByDate();
-
-  public hasKey$ = this.allNotifications$.pipe(
+  public hasKey$ = this.notificationQuery.groupNotificationsByDate().pipe(
     map(notifications => !!Object.keys(notifications).length),
     distinctUntilChanged()
   );
