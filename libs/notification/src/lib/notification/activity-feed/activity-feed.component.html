@@ -1,22 +1,22 @@
-<ng-container *ngIf="keysLength(allNotifications$ | async); else noFeed">
+<ng-container *ngIf="hasKey$ | async; else noFeed">
   <ng-container *ngIf="(notifications$ | async); else isLoading">
     <h1>Activity Feed</h1>
 
     <!-- Tabs Label-->
     <header mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
-      <button mat-tab-link (click)="applyFilter('')" [active]="!(filter$ | async)">All ({{ getCount() | async }})</button>
-      <button mat-tab-link (click)="applyFilter(titleFilters)" [active]="(filter$ | async) === titleFilters">Titles ({{ getCount(titleFilters) | async }})</button>
+      <button mat-tab-link (click)="applyFilter('')" [active]="!(filter$ | async)">All ({{ getCount() }})</button>
+      <button mat-tab-link (click)="applyFilter(titleFilters)" [active]="(filter$ | async) === titleFilters">Titles ({{ getCount(titleFilters) }})</button>
       <!-- TODO: Handle the dynamic App Tabs with ng-template, ng-content or @Input() => ISSUE#2086 -->
       <ng-container [ngSwitch]="appName">
         <button
           mat-tab-link *ngSwitchCase="'catalog'" (click)="applyFilter(dealFilters)"
           [active]="(filter$ | async) === dealFilters">
-          Offers and Deals ({{ getCount(dealFilters) | async }})
+          Offers and Deals ({{ getCount(dealFilters) }})
         </button>
         <button
           mat-tab-link *ngSwitchCase="'delivery'" (click)="applyFilter(deliveryFilters)"
           [active]="(filter$ | async) === deliveryFilters">
-          Delivery ({{ getCount(deliveryFilters) | async }})
+          Delivery ({{ getCount(deliveryFilters) }})
         </button>
       </ng-container>
       <button mat-tab-link (click)="applyFilter('Invitations')" [active]="(filter$ | async) === 'Invitations'">{{ organization.name }}</button>
