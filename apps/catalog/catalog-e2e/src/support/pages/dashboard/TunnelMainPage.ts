@@ -193,6 +193,27 @@ export default class TunnelMainPage {
     cy.get('catalog-movie-tunnel-main movie-form-languages input').last().should('have.value', language);
   }
 
+  // Genre
+
+  public selectGenre(genre: string) {
+    cy.get('catalog-movie-tunnel-main movie-form-genre mat-select').click();
+    cy.get('catalog-movie-tunnel-main movie-form-genre mat-option').contains(genre).click();
+  }
+
+  public assertGenreExists(genre: string) {
+    cy.get('catalog-movie-tunnel-main movie-form-genre mat-select').contains(genre);
+  }
+
+  // Runtime
+
+  public fillRuntime(runtime: string) {
+    cy.get('catalog-movie-tunnel-main movie-form-total-runtime input').type(runtime);
+  }
+
+  public assertRuntimeExists(runtime: string) {
+    cy.get('catalog-movie-tunnel-main movie-form-total-runtime input').should('have.value', runtime);
+  }
+
   // Festival
 
   public fillFirstFestivalName(name: string) {
