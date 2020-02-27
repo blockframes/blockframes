@@ -28,7 +28,7 @@ const routes: Routes = [
       },
       {
         path: 'activity',   // List of notifications
-        loadChildren: () => import('./pages/activity-page/activity-page.module').then(m => m.ActivityPageModule)
+        loadChildren: () => import('../activity/activity-page.module').then(m => m.ActivityPageModule)
       },
       {
         path: 'import', // Import bulk of movies
