@@ -10,6 +10,22 @@ import { TunnelMainPage } from "../../support/pages/dashboard";
 const LOGIN_CREDENTIALS: Partial<User> = USERS[0];
 
 const CONTENT_TYPES = ['TV Film', 'Library', 'Completed', 'Lagerfeld Confidential', 'Lagerfeld Confidentiel', 'Lagerfeld'];
+const DIRECTORS = ['Rodolphe', 'Marconi', 'Ceci est mon corps (2001)'];
+const PARTIAL_COUNTRIES = ['Fr', 'pol', 'it'];
+const COUNTRIES = ['France', 'Poland', 'Italy'];
+const MEDIA = 'Boat';
+const DATE = '10/10/2007';
+const DISTRIBUTORS = ['Caroline de Monaco', 'Monica Bellucci'];
+const PARTIAL_LANGUAGES = ['fr', 'en'];
+const LANGUAGES = ['French', 'English'];
+const GENRE = 'Documentary';
+const RUNTIME = '87';
+const CAST_MEMBERS = ['Karl', 'Lagerfeld', 'Nicole', 'Kidman'];
+const ROLES = ['Executive Producer', 'Associate Producer'];
+const FESTIVALS = ['Berlin Film Festival', 'Zurich Film Festival'];
+const AWARDS = ['Opening Film', 'Nominee Best New Documentary Film'];
+const PREMIERE = 'World';
+const YEAR = '2007';
 
 const MOVIE_ID = 'P5ErzmOtap9ju9X8rWvd'; // Empty movie
 
@@ -50,81 +66,81 @@ describe('User can navigate to the movie tunnel page 2 and fill all the fieldsn 
     p4.assertReferenceExists(CONTENT_TYPES[5]);
 
     // Director
-    p4.fillDirectorFirstName('Rodolphe');
-    p4.assertDirectorFirstNameExists('Rodolphe');
-    p4.fillDirectorLastName('Marconi');
-    p4.assertDirectorLastNameExists('Marconi');
-    p4.fillDirectorFilmography('Ceci est mon corps (2001)');
-    p4.assertDirectorFilmographyExists('Ceci est mon corps (2001)');
+    p4.fillDirectorFirstName(DIRECTORS[0]);
+    p4.assertDirectorFirstNameExists(DIRECTORS[0]);
+    p4.fillDirectorLastName(DIRECTORS[1]);
+    p4.assertDirectorLastNameExists(DIRECTORS[1]);
+    p4.fillDirectorFilmography(DIRECTORS[2]);
+    p4.assertDirectorFilmographyExists(DIRECTORS[2]);
 
     // Country of origin
-    p4.selectCountry('Fr', 'France');
-    p4.assertCountryIsSelected('France');
-    p4.selectMedia('Boat');
-    p4.assertMediaIsSelected('Boat');
-    p4.fillCountryDate('10/10/2007');
-    p4.assertCountryDateExists('10/10/2007');
+    p4.selectCountry(PARTIAL_COUNTRIES[0], COUNTRIES[0]);
+    p4.assertCountryIsSelected(COUNTRIES[0]);
+    p4.selectMedia(MEDIA);
+    p4.assertMediaIsSelected(MEDIA);
+    p4.fillCountryDate(DATE);
+    p4.assertCountryDateExists(DATE);
 
     // Distributor
-    p4.fillFirstDistributorName('Caroline de Monaco');
-    p4.assertFirstDestributorNameExists('Caroline de Monaco');
-    p4.fillFirstDistributorCountry('pol');
-    p4.selectFirstDistributorCountry('Poland');
-    p4.assertFirstDistributorCountryExists('Poland');
+    p4.fillFirstDistributorName(DISTRIBUTORS[0]);
+    p4.assertFirstDestributorNameExists(DISTRIBUTORS[0]);
+    p4.fillFirstDistributorCountry(PARTIAL_COUNTRIES[1]);
+    p4.selectFirstDistributorCountry(COUNTRIES[1]);
+    p4.assertFirstDistributorCountryExists(COUNTRIES[1]);
     p4.clickAddDistributor();
-    p4.fillLastDistributorName('Monica Bellucci');
-    p4.assertLastDestributorNameExists('Monica Bellucci');
-    p4.fillLastDistributorCountry('It');
-    p4.selectLastDistributorCountry('Italy');
-    p4.assertLastDistributorCountryExists('Italy');
+    p4.fillLastDistributorName(DISTRIBUTORS[1]);
+    p4.assertLastDestributorNameExists(DISTRIBUTORS[1]);
+    p4.fillLastDistributorCountry(PARTIAL_COUNTRIES[2]);
+    p4.selectLastDistributorCountry(COUNTRIES[2]);
+    p4.assertLastDistributorCountryExists(COUNTRIES[2]);
 
     // Original Language
-    p4.fillFirstOriginalLanguage('fr', 'French');
-    p4.assertFirstOriginalLanguageExists('French');
+    p4.fillFirstOriginalLanguage(PARTIAL_LANGUAGES[0], LANGUAGES[0]);
+    p4.assertFirstOriginalLanguageExists(LANGUAGES[0]);
     p4.addOriginalLanguage();
-    p4.fillLastOriginalLanguage('en', 'English');
-    p4.assertLastOriginalLanguageExists('English');
+    p4.fillLastOriginalLanguage(PARTIAL_LANGUAGES[1], LANGUAGES[1]);
+    p4.assertLastOriginalLanguageExists(LANGUAGES[1]);
 
     // Genre
-    p4.selectGenre('Documentary');
-    p4.assertGenreExists('Documentary');
+    p4.selectGenre(GENRE);
+    p4.assertGenreExists(GENRE);
 
     // Runtime
-    p4.fillRuntime('87');
-    p4.assertRuntimeExists('87');
+    p4.fillRuntime(RUNTIME);
+    p4.assertRuntimeExists(RUNTIME);
 
     // Principal Cast Members
-    p4.fillFirstPrincipalCastCastFirstName('Karl');
-    p4.assertFirstPrincipalCastCastFirstNameExists('Karl');
-    p4.fillFirstPrincipalCastCastLastName('Lagerfeld');
-    p4.assertFirstPrincipalCastCastLastNameExists('Lagerfeld');
+    p4.fillFirstPrincipalCastCastFirstName(CAST_MEMBERS[0]);
+    p4.assertFirstPrincipalCastCastFirstNameExists(CAST_MEMBERS[0]);
+    p4.fillFirstPrincipalCastCastLastName(CAST_MEMBERS[1]);
+    p4.assertFirstPrincipalCastCastLastNameExists(CAST_MEMBERS[1]);
     p4.clickSelectFirstPrincipalCastCastRole();
-    p4.selectPrincipalCastCastRole('Executive Producer');
-    p4.assertFirstPrincipalCastCastRoleExists('Executive Producer');
+    p4.selectPrincipalCastCastRole(ROLES[0]);
+    p4.assertFirstPrincipalCastCastRoleExists(ROLES[0]);
     p4.clickAddPrincipalCastCast();
-    p4.fillLastPrincipalCastCastFirstName('Nicole');
-    p4.assertLastPrincipalCastCastFirstNameExists('Nicole');
-    p4.fillLastPrincipalCastCastLastName('Kidman');
-    p4.assertLastPrincipalCastCastLastNameExists('Kidman');
+    p4.fillLastPrincipalCastCastFirstName(CAST_MEMBERS[2]);
+    p4.assertLastPrincipalCastCastFirstNameExists(CAST_MEMBERS[2]);
+    p4.fillLastPrincipalCastCastLastName(CAST_MEMBERS[3]);
+    p4.assertLastPrincipalCastCastLastNameExists(CAST_MEMBERS[3]);
     p4.clickSelectLastPrincipalCastCastRole();
-    p4.selectPrincipalCastCastRole('Associate Producer');
-    p4.assertLastPrincipalCastCastRoleExists('Associate Producer');
+    p4.selectPrincipalCastCastRole(ROLES[1]);
+    p4.assertLastPrincipalCastCastRoleExists(ROLES[1]);
 
     // Festival
-    p4.fillFirstFestivalName('Berlin Film Festival');
-    p4.assertFirstFestivalNameExists('Berlin Film Festival');
-    p4.fillFirstFestivalAwardSelection('Opening Film');
-    p4.assertFirstFestivalAwardSelectionExists('Opening Film');
-    p4.fillFirstFestivalYear('2007');
-    p4.assertFirstFestivalYearExists('2007');
-    p4.selectFirstFestivalPremiere('World');
-    p4.assertFirstFestivalPremiereIsSelected('World');
+    p4.fillFirstFestivalName(FESTIVALS[0]);
+    p4.assertFirstFestivalNameExists(FESTIVALS[0]);
+    p4.fillFirstFestivalAwardSelection(AWARDS[0]);
+    p4.assertFirstFestivalAwardSelectionExists(AWARDS[0]);
+    p4.fillFirstFestivalYear(YEAR);
+    p4.assertFirstFestivalYearExists(YEAR);
+    p4.selectFirstFestivalPremiere(PREMIERE);
+    p4.assertFirstFestivalPremiereIsSelected(PREMIERE);
     p4.addFestival();
-    p4.fillLastFestivalName('Zurich Film Festival');
-    p4.assertLastFestivalNameExists('Zurich Film Festival');
-    p4.fillLastFestivalAwardSelection('Nominee Best New Documentary Film');
-    p4.assertLastFestivalAwardSelectionExists('Nominee Best New Documentary Film');
-    p4.fillLastFestivalYear('2007');
-    p4.assertLastFestivalYearExists('2007');
+    p4.fillLastFestivalName(FESTIVALS[1]);
+    p4.assertLastFestivalNameExists(FESTIVALS[1]);
+    p4.fillLastFestivalAwardSelection(AWARDS[1]);
+    p4.assertLastFestivalAwardSelectionExists(AWARDS[1]);
+    p4.fillLastFestivalYear(YEAR);
+    p4.assertLastFestivalYearExists(YEAR);
   });
 });
