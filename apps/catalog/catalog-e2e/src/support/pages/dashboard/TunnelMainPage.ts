@@ -197,11 +197,11 @@ export default class TunnelMainPage {
 
   public selectGenre(genre: string) {
     cy.get('catalog-movie-tunnel-main movie-form-genre mat-select').click();
-    cy.get('catalog-movie-tunnel-main movie-form-genre mat-option').contains(genre).click();
+    cy.get('mat-option').contains(genre).click();
   }
 
   public assertGenreExists(genre: string) {
-    cy.get('catalog-movie-tunnel-main movie-form-genre mat-select').contains(genre);
+    cy.get('catalog-movie-tunnel-main movie-form-genre mat-chip').contains(genre);
   }
 
   // Runtime
@@ -212,6 +212,64 @@ export default class TunnelMainPage {
 
   public assertRuntimeExists(runtime: string) {
     cy.get('catalog-movie-tunnel-main movie-form-total-runtime input').should('have.value', runtime);
+  }
+
+  // Principal Cast Members
+
+  public fillFirstPrincipalCastCastFirstName(name: string) {
+    cy.get(`catalog-movie-tunnel-main movie-form-sales-cast input[test-id=first-name]`).first().type(name);
+  }
+
+  public assertFirstPrincipalCastCastFirstNameExists(name: string) {
+    cy.get(`catalog-movie-tunnel-main movie-form-sales-cast input[test-id=first-name]`).first().should(`have.value`, name);
+  }
+
+  public fillFirstPrincipalCastCastLastName(name: string) {
+    cy.get(`catalog-movie-tunnel-main movie-form-sales-cast input[test-id=last-name]`).first().type(name);
+  }
+
+  public assertFirstPrincipalCastCastLastNameExists(name: string) {
+    cy.get(`catalog-movie-tunnel-main movie-form-sales-cast input[test-id=last-name]`).first().should(`have.value`, name);
+  }
+
+  public clickSelectFirstPrincipalCastCastRole() {
+    cy.get(`catalog-movie-tunnel-main movie-form-sales-cast mat-select`).first().click();
+  }
+
+  public selectPrincipalCastCastRole(role: string) {
+    cy.get('mat-option').contains(role).click();
+  }
+
+  public assertFirstPrincipalCastCastRoleExists(role: string) {
+    cy.get(`catalog-movie-tunnel-main movie-form-sales-cast mat-select`).first().contains(role);
+  }
+
+  public clickAddPrincipalCastCast() {
+    cy.get(`catalog-movie-tunnel-main movie-form-sales-cast button`).click();
+  }
+
+  public fillLastPrincipalCastCastFirstName(name: string) {
+    cy.get(`catalog-movie-tunnel-main movie-form-sales-cast input[test-id=first-name]`).last().type(name);
+  }
+
+  public assertLastPrincipalCastCastFirstNameExists(name: string) {
+    cy.get(`catalog-movie-tunnel-main movie-form-sales-cast input[test-id=first-name]`).last().should(`have.value`, name);
+  }
+
+  public fillLastPrincipalCastCastLastName(name: string) {
+    cy.get(`catalog-movie-tunnel-main movie-form-sales-cast input[test-id=last-name]`).last().type(name);
+  }
+
+  public assertLastPrincipalCastCastLastNameExists(name: string) {
+    cy.get(`catalog-movie-tunnel-main movie-form-sales-cast input[test-id=last-name]`).last().should(`have.value`, name);
+  }
+
+  public clickSelectLastPrincipalCastCastRole() {
+    cy.get(`catalog-movie-tunnel-main movie-form-sales-cast mat-select`).last().click();
+  }
+
+  public assertLastPrincipalCastCastRoleExists(role: string) {
+    cy.get(`catalog-movie-tunnel-main movie-form-sales-cast mat-select`).last().contains(role);
   }
 
   // Festival
