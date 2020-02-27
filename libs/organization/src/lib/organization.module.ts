@@ -33,8 +33,8 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MatTooltipModule } from '@angular/material';
 import { OrganizationDisplayModule } from './components/organization-display/organization-display.module';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 // Components
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';

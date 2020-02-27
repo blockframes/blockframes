@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { InvoiceService } from '@blockframes/contract/invoice/+state/invoice.service';
 import { Invoice } from '@blockframes/contract/invoice/+state/invoice.firestore';
 import { InvoiceAdminForm } from '../../forms/invoice-admin.form';

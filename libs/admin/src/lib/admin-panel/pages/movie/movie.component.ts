@@ -1,13 +1,13 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieService, Movie } from '@blockframes/movie';
 import { MovieAdminForm } from '../../forms/movie-admin.form';
-import { StoreType, StoreStatus } from '@blockframes/movie/movie/+state/movie.firestore';
 import { staticModels } from '@blockframes/utils/static-model';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals';
 import { getValue } from '@blockframes/utils/helpers';
 import { termToPrettyDate } from '@blockframes/utils/common-interfaces/terms';
+import { storeType, StoreStatus } from '@blockframes/movie/movie/+state/movie.firestore';
 
 @Component({
   selector: 'admin-movie',
@@ -56,8 +56,8 @@ export class MovieComponent implements OnInit {
     this.movie = await this.movieService.getValue(this.movieId);
     this.movieForm = new MovieAdminForm(this.movie);
 
-    this.storeTypes = Object.keys(StoreType);
-    this.storeType = StoreType;
+    this.storeTypes = Object.keys(storeType);
+    this.storeType = storeType;
     this.storeStatuses = Object.keys(StoreStatus);
     this.storeStatus = StoreStatus;
 

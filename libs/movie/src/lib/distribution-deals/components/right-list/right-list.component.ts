@@ -50,7 +50,7 @@ export class RightListComponent implements OnInit {
     'catchUp'
   ];
 
-  @ViewChild(MatSort, { static: false }) sort: MatSort;
+  @ViewChild(MatSort) sort: MatSort;
 
   ngOnInit() {
     this.columnFilter.patchValue(this.initialDealColumns);

@@ -26,14 +26,14 @@ import { RouterModule } from '@angular/router';
 import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
 
 // components
-import { MovieFormMainComponent } from './main/main.component';
-import { MovieFormPromotionalElementsComponent } from './promotional-elements/promotional-elements.component';
-import { MovieFormPromotionalDescriptionComponent } from './promotional-description/promotional-description.component';
-import { MovieFormStoryComponent } from './story/story.component';
-import { MovieFormRootComponent } from './root/root.component';
-import { MovieFormSalesAgentDealComponent } from './sales-agent-deal/sales-agent-deal.component';
-import { MovieFormSalesInfoComponent } from './sales-info/sales-info.component';
-import { PromotionalLinksComponent } from './promotional-elements/promotional-links/promotional-links.component';
+// import { MovieFormMainComponent } from './main/main.component';
+// import { MovieFormPromotionalElementsComponent } from './promotional-elements/promotional-elements.component';
+// import { MovieFormPromotionalDescriptionComponent } from './promotional-description/promotional-description.component';
+// import { MovieFormStoryComponent } from './story/story.component';
+// import { MovieFormRootComponent } from './root/root.component';
+// import { MovieFormSalesAgentDealComponent } from './sales-agent-deal/sales-agent-deal.component';
+// import { MovieFormSalesInfoComponent } from './sales-info/sales-info.component';
+// import { PromotionalLinksComponent } from './promotional-elements/promotional-links/promotional-links.component';
 
 // Forms Modules
 import { MovieFormFestivalPrizesModule } from './festival-prizes/festival-prizes.module';
@@ -78,17 +78,17 @@ import { MovieFormVersionInfoModule } from './version-info/version-info.module';
     MovieFormVersionInfoModule,
   ],
   declarations: [
-    MovieFormRootComponent,
-    MovieFormMainComponent,
-    MovieFormPromotionalElementsComponent,
-    MovieFormPromotionalDescriptionComponent,
-    MovieFormStoryComponent,
-    MovieFormSalesInfoComponent,
-    MovieFormSalesAgentDealComponent,
-    PromotionalLinksComponent,
+    // MovieFormRootComponent,
+    // MovieFormMainComponent,
+    // MovieFormPromotionalElementsComponent,
+    // MovieFormPromotionalDescriptionComponent,
+    // MovieFormStoryComponent,
+    // MovieFormSalesInfoComponent,
+    // MovieFormSalesAgentDealComponent,
+    // PromotionalLinksComponent,
   ],
   exports: [
-    MovieFormRootComponent
+    // MovieFormRootComponent
   ]
 })
 export class MovieFormModule {}

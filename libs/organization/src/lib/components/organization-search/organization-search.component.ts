@@ -7,12 +7,12 @@ import {
   Output
 } from '@angular/core';
 import { Organization } from '@blockframes/organization';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, switchMap, pluck } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { OrganizationAlgoliaResult, OrganizationsIndex } from '@blockframes/utils';
 import { Index } from 'algoliasearch';
-import { MatAutocompleteSelectedEvent } from '@angular/material';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'organization-search',
@@ -31,11 +31,8 @@ export class OrganizationSearchComponent implements OnInit {
     this.searchResults$ = this.organizationForm.valueChanges.pipe(
       debounceTime(200),
       distinctUntilChanged(),
-      switchMap(name => {
-        return new Promise<OrganizationAlgoliaResult[]>((res, rej) => {
-          this.organizationIndex.search(name, (err, result) => (err ? rej(err) : res(result.hits)));
-        });
-      })
+      switchMap(text => this.organizationIndex.search(text)),
+      pluck('hits')
     );
   }
 

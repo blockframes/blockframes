@@ -1,10 +1,10 @@
-import { filter, map, tap } from 'rxjs/operators';
+import { map, pluck } from 'rxjs/operators';
 // Blockframes
 import { ContractTunnelComponent } from '@blockframes/contract/contract/tunnel/contract-tunnel.component';
 import { ContractVersionForm } from '@blockframes/contract/version/form/version.form';
 import { Movie } from '@blockframes/movie/movie/+state/movie.model';
 import { FormStaticValue, FormList } from '@blockframes/utils/form';
-import { MoviesIndex, MovieAlgoliaResult } from '@blockframes/utils/algolia';
+import { MoviesIndex, } from '@blockframes/utils/algolia';
 
 // Angular
 import { FormControl } from '@angular/forms';
@@ -16,7 +16,6 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { Index } from 'algoliasearch';
-import { MovieService } from '@blockframes/movie';
 
 @Component({
   selector: '[form] contract-version-form-price',
@@ -44,7 +43,6 @@ export class PriceComponent implements OnInit {
 
   constructor(
     @Inject(MoviesIndex) private movieIndex: Index,
-    private movieService: MovieService,
     private tunnel: ContractTunnelComponent) { }
 
   ngOnInit() {
@@ -54,23 +52,8 @@ export class PriceComponent implements OnInit {
     this.movieSearchResults$ = this.movieCtrl.valueChanges.pipe(
       debounceTime(200),
       distinctUntilChanged(),
-      switchMap(searchText => {
-        if (typeof searchText === 'string') {
-          const results = new Promise<MovieAlgoliaResult[]>((res, rej) => {
-            this.movieIndex.search(searchText, (err, result) =>
-              err ? rej(err) : res(result.hits)
-            );
-          });
-          return this.transformAlgoliaMovies(results)
-        } else {
-          // TODO #1829
-          /**
-          * reset observable otherwise algolia search index 
-          * gets an object of strings and throw error
-          */
-          return new Observable<Movie[]>()
-        }
-      })
+      switchMap(text => this.movieIndex.search(text)),
+      pluck('hits')
     )
   }
 
@@ -134,17 +117,7 @@ export class PriceComponent implements OnInit {
    * @param event 
    */
   public addMovie(event: MatAutocompleteSelectedEvent) {
-    this.tunnel.addTitle(event.option.value.id, this._hasMandate)
+    this.tunnel.addTitle(event.option.value.objectID, this._hasMandate)
     this.movieCtrl.reset();
-  }
-
-  /**
-   * @description helper function to transform a algolia search result into a Movie interface
-   * @param movies movies to transform
-   */
-  private async transformAlgoliaMovies(movies: Promise<MovieAlgoliaResult[]>): Promise<Movie[]> {
-    const resovledMovies = await movies;
-    const movieIds = resovledMovies.map(movie => movie.objectID)
-    return this.movieService.getValue(movieIds);
   }
 }

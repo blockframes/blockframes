@@ -8,7 +8,7 @@ import {
 import { Organization } from '@blockframes/organization/+state/organization.model';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { Observable } from 'rxjs';
-import { startWith, switchMap } from 'rxjs/operators';
+import { startWith, switchMap, map, distinctUntilChanged } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 import { NotificationDocument } from '@blockframes/notification/types';
 import { DateGroup } from '@blockframes/utils/helpers';
@@ -35,6 +35,11 @@ export class ActivityFeedComponent implements OnInit {
   public notifications$: Observable<DateGroup<NotificationDocument[]>>;
   public allNotifications$ = this.notificationQuery.groupNotificationsByDate();
 
+  public hasKey$ = this.allNotifications$.pipe(
+    map(notifications => !!Object.keys(notifications).length),
+    distinctUntilChanged()
+  );
+
   constructor(
     private notificationQuery: NotificationQuery,
     private organizationQuery: OrganizationQuery,
@@ -50,5 +55,17 @@ export class ActivityFeedComponent implements OnInit {
   /** Dynamic filter of notifications for each tab */
   applyFilter(filter?: string | Notification['type'][]) {
     this.filter.setValue(filter);
+  }
+
+  /** Returns the number of notifications according to the filter */
+  getCount(filter?: Notification['type'][]): number {
+    return this.notificationQuery.getCount(notification =>
+      filter ? filter.includes(notification.type) : true
+    )
+  }
+
+  /** Returns the number of keys of an object. */
+  public keysLength(notifications: DateGroup<NotificationDocument[]>): number {
+    return Object.keys(notifications).length;
   }
 }

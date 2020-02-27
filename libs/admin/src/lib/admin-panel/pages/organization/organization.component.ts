@@ -2,13 +2,12 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@
 import { OrganizationService, Organization, OrganizationStatus } from '@blockframes/organization';
 import { ActivatedRoute } from '@angular/router';
 import { OrganizationAdminForm } from '../../forms/organization-admin.form';
-import { MatSnackBar } from '@angular/material';
 import { MovieService } from '@blockframes/movie';
 import { getValue } from '@blockframes/utils/helpers';
 import { MemberService } from '@blockframes/organization/member/+state/member.service';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
-  selector: 'admin-organization',
   templateUrl: './organization.component.html',
   styleUrls: ['./organization.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

@@ -14,7 +14,7 @@ export class MissingControlComponent implements OnInit {
   @Input() link: string;
   @Input() isLast = true;
 
-  @ContentChild(TemplateRef, { static: false }) child: TemplateRef<any>;
+  @ContentChild(TemplateRef) child: TemplateRef<any>;
 
   constructor(private cdr: ChangeDetectorRef) {}
 

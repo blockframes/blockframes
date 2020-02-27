@@ -6,7 +6,7 @@ import { CartService } from '@blockframes/organization/cart/+state/cart.service'
 import { map } from 'rxjs/operators';
 import { FireAnalytics } from '@blockframes/utils';
 import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: '[movieId] catalog-wishlist-button',

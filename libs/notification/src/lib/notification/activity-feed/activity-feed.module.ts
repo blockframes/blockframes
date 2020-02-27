@@ -2,6 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { NotificationListModule } from '@blockframes/notification/notification/notification-list/notification-list.module';
+import { NoActivityFeedModule } from '../no-activity-feed/no-activity-feed.module';
+
 // Component
 import { ActivityFeedComponent } from './activity-feed.component';
 
@@ -15,6 +17,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   imports: [
     CommonModule,
     NotificationListModule,
+    NoActivityFeedModule,
     MatTabsModule,
     MatCardModule,
     MatProgressSpinnerModule,

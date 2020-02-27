@@ -1,7 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatProgressSpinnerModule, MatIconModule, MatSnackBarModule, MatTreeModule, MatButtonModule } from '@angular/material';
 import { RouterModule } from '@angular/router';
+
+// Material
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatTreeModule } from '@angular/material/tree';
+import { MatButtonModule } from '@angular/material/button';
 
 // Components
 import { ContractTreeComponent } from './contract-tree.component';
@@ -9,6 +15,7 @@ import { ContractTreeComponent } from './contract-tree.component';
 @NgModule({
   imports: [
     CommonModule,
+    // Material
     MatProgressSpinnerModule,
     MatIconModule,
     MatSnackBarModule,

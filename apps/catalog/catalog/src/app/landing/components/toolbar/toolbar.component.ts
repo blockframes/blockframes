@@ -19,7 +19,7 @@ export class CatalogToolbarComponent {
 
   /** Change the toolbar class when page is scrolled. */
   @HostListener('window:scroll', ['$event'])
-  scrollHandler(event: Event) {
+  scrollHandler() {
     this.scroll.next(window.pageYOffset);
   }
 }

@@ -38,7 +38,7 @@ export class MemberService extends CollectionService<MemberState> {
   public removeMember(uid: string) {
     const superAdminNumber = this.permissionsQuery.superAdminCount;
     const role = this.permissionsQuery.getActive().roles[uid];
-    if (role === UserRole.superAdmin && superAdminNumber <= 1) {
+    if (role === 'superAdmin' && superAdminNumber <= 1) {
       throw new Error('You can\'t remove the last Super Admin.');
     }
 

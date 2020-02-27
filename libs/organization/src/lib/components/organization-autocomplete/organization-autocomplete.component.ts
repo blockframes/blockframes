@@ -1,5 +1,6 @@
+import { switchMap, pluck } from 'rxjs/operators';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { Index } from 'algoliasearch';
@@ -20,24 +21,12 @@ export class OrganizationAutocompleteComponent implements OnInit {
 
   constructor(@Inject(OrganizationsIndex) private organizationIndex: Index) { }
 
-  ngOnInit() {
+  async ngOnInit() {
     this.searchResults$ = this.control.valueChanges.pipe(
       debounceTime(200),
       distinctUntilChanged(),
-      switchMap(name => {
-        if (typeof name === 'string') {
-          return new Promise<OrganizationAlgoliaResult[]>((res, rej) => {
-            this.organizationIndex.search(name, (err, result) => (err ? rej(err) : res(result.hits)));
-          });
-        } else {
-          // TODO #1829
-          /**
-           * reset observable otherwise algolia search index 
-           * gets an object of strings and throw error
-           */
-          return new Observable<OrganizationAlgoliaResult[]>();
-        }
-      })
+      switchMap(text => this.organizationIndex.search(text)),
+      pluck('hits')
     );
   }
 
