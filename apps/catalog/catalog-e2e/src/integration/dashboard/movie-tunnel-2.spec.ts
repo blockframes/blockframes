@@ -85,6 +85,14 @@ describe('User can navigate to the movie tunnel page 2 and fill all the fieldsn 
     p4.fillLastOriginalLanguage('en', 'English');
     p4.assertLastOriginalLanguageExists('English');
 
+    // Genre
+    p4.selectGenre('Documentary');
+    p4.assertGenreExists('Documentary');
+
+    // Runtime
+    p4.fillRuntime('87');
+    p4.assertGenreExists('87');
+
     // Festival
     p4.fillFirstFestivalName('Berlin Film Festival');
     p4.assertFirstFestivalNameExists('Berlin Film Festival');
