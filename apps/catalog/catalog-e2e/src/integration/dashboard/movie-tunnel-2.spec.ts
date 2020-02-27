@@ -37,7 +37,7 @@ beforeEach(() => {
 });
 
 describe('User can navigate to the movie tunnel page 2 and fill all the fieldsn and navigate to page 3', () => {
-  it('Login into an existing account, navigate on main page, complete main fields, go on movie tunnel page 3', () => {
+  it.skip('Login into an existing account, navigate on main page, complete main fields, go on movie tunnel page 3', () => {
     // Connexion
     const p1: WelcomeViewPage = new WelcomeViewPage();
     const p2: LoginViewPage = p1.clickCallToAction();
