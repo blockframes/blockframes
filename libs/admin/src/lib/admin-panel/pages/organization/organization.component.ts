@@ -97,7 +97,7 @@ export class OrganizationComponent implements OnInit {
       // Edit link
       row.edit = {
         id: m.uid,
-        link: `/c/o/admin/panel/member/${m.uid}`,
+        link: `/c/o/admin/panel/user/${m.uid}`,
       }
       
       return row;

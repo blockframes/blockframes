@@ -92,6 +92,19 @@ export class AuthService extends FireAuthService<AuthState> {
   }
 
   /**
+   * Set/unset user as blockframesAdmin
+   * @param state
+   * @param uid 
+   */
+  public async setBlockframesAdmin(state: boolean = true, uid: string = this.query.userId): Promise<void> {
+    if (state) {
+      await this.db.collection('blockframesAdmin').doc(uid).set({});
+    } else {
+      await this.db.collection('blockframesAdmin').doc(uid).delete();
+    }
+  }
+
+  /**
    * Checks if an user exists
    * @dev If in the future, we need to keep an user list in the state other than members of an org, 
    * this will be the time to create a userService and to move this method in it.
@@ -111,6 +124,19 @@ export class AuthService extends FireAuthService<AuthState> {
   public async getUser(uid: string): Promise<User> {
     const user = await this.db.collection('users').doc(uid).get().toPromise();
     return user.data() as User;
+  }
+
+  /**
+   * Fetch all users
+   * @dev If in the future, we need to keep an user list in the state other than members of an org, 
+   * this will be the time to create a userService and to move this method in it.
+   */
+  public async getAllUsers(): Promise<User[]> {
+    const usersSnap = await this.db
+      .collection('users')
+      .get()
+      .toPromise();
+    return usersSnap.docs.map(c => c.data() as User);
   }
 
   // TODO THIS IS A QUICK FIX OF MOVIE FINANCING RANK MADE FOR TORONTO, THINK OF A BETTER WAY AFTERWARD

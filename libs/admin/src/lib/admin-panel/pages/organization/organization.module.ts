@@ -10,9 +10,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatSelectModule } from '@angular/material/select';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 // Components
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { OrganizationComponent } from './organization.component';
 
 // Modules

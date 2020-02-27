@@ -1,0 +1,34 @@
+<h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > User > {{ userId }} </h1>
+<article fxLayout="row" *ngIf="user" fxLayoutAlign="space-around start">
+  <article fxLayout="column" fxLayoutAlign="space-between start">
+    <mat-card  fxLayout="column" fxLayoutAlign="center">
+      <mat-card-content fxLayout="row" fxLayoutAlign="center center">
+        <img mat-card-avatar [imgRef]="user.avatar" placeholderAsset="empty_poster.png" alt="User avatar" />
+        <article class="information" fxLayout="column" fxLayoutAlign="start start">
+          <h4>{{ user.name }} {{ user.surname }}</h4>
+          <h3>Main infos</h3>
+          <ul>
+            <li><b class="bf-dark-text">Id</b> {{ user.uid }}</li>
+            <li><b class="bf-dark-text">Email</b> {{ user.email }}</li>
+            <li><b class="bf-dark-text">Position</b> {{ user.position }}</li>
+            <li><b class="bf-dark-text">Phone Number</b> {{ user.phoneNumber }}</li>
+          </ul>
+          <h3>Other informations</h3>
+          <ul>
+            <li><b class="bf-dark-text">Organization </b> <a [routerLink]="getOrgEditPath(user.orgId)">{{ user.orgId }}</a></li>
+            <li>
+              <b class="bf-dark-text">Blockframes admin</b>
+              <mat-icon [svgIcon]="isUserBlockframesAdmin  ? 'accept': 'cross'"></mat-icon>
+              <button mat-flat-button color="accent" (click)="setBlockframesAdmin()">
+                <span>{{ isUserBlockframesAdmin? 'Remove from admins' : 'Set admin' }}</span>
+              </button>
+            </li>
+          </ul>
+        </article>
+      </mat-card-content>
+    </mat-card>
+  </article>
+  <article fxLayout="column" fxLayoutAlign="space-between start">
+  la
+  </article>
+</article>

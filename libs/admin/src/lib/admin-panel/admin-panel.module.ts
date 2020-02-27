@@ -34,6 +34,8 @@ import { InvoiceComponent } from './pages/invoice/invoice.component';
 import { ContractComponent } from './pages/contract/contract.component';
 import { DistributionDealComponent } from './pages/distribution-deal/distribution-deal.component';
 import { EditPartyComponent } from './components/edit-party/edit-party.component';
+import { UsersComponent } from './pages/users/users.component';
+import { UserComponent } from './pages/user/user.component';
 
 export const panelRoutes: Routes = [
   { path: '', redirectTo: 'overview', pathMatch: 'full' },
@@ -50,6 +52,8 @@ export const panelRoutes: Routes = [
   { path: 'movie/:movieId', component: MovieComponent },
   { path: 'invoices', component: InvoicesComponent },
   { path: 'invoice/:invoiceId', component: InvoiceComponent },
+  { path: 'users', component: UsersComponent },
+  { path: 'user/:userId', component: UserComponent },
 ];
 @NgModule({
   imports: [
@@ -71,7 +75,7 @@ export const panelRoutes: Routes = [
     OrganizationAutocompleteModule,
     ContractTreeModule,
     RouterModule.forChild(panelRoutes),
-    OrganizationAdminModule
+    OrganizationAdminModule,
   ],
   declarations: [
     OverviewComponent,
@@ -85,6 +89,8 @@ export const panelRoutes: Routes = [
     InvoicesComponent,
     InvoiceComponent,
     EditPartyComponent,
+    UsersComponent,
+    UserComponent,
   ],
   exports: [
     RouterModule,
