@@ -15,7 +15,13 @@
           </ul>
           <h3>Other informations</h3>
           <ul>
-            <li><b class="bf-dark-text">Organization </b> <a [routerLink]="getOrgEditPath(user.orgId)">{{ user.orgId }}</a></li>
+            <li>
+              <b class="bf-dark-text">Organization </b>
+              <a [routerLink]="getOrgPath(user.orgId)">{{ user.orgId }}</a>
+              <button mat-icon-button color="accent" [routerLink]="getOrgEditPath(user.orgId)">
+                <mat-icon svgIcon="eye"></mat-icon>
+              </button>
+            </li>
             <li>
               <b class="bf-dark-text">Blockframes admin</b>
               <mat-icon [svgIcon]="isUserBlockframesAdmin  ? 'accept': 'cross'"></mat-icon>

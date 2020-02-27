@@ -63,4 +63,8 @@ export class UserComponent implements OnInit {
   public getOrgEditPath(orgId: string) {
     return `/c/o/organization/${orgId}/view/org`;
   }
+
+  public getOrgPath(orgId: string) {
+    return `/c/o/admin/panel/organization/${orgId}`;
+  }
 }
