@@ -1,0 +1,22 @@
+<ng-container *ngIf="(notifications$ | async); else isLoading">
+
+  <!-- Tabs Label-->
+  <header mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
+    <button mat-tab-link (click)="applyFilter('')" [active]="!(filter$ | async)">All ({{ getCount() }})</button>
+    <button mat-tab-link (click)="applyFilter(titleFilters)" [active]="(filter$ | async) === titleFilters">Titles ({{ getCount(titleFilters) }})</button>
+    <button mat-tab-link (click)="applyFilter('Invitations')" [active]="(filter$ | async) === 'Invitations'">{{ organization.name }}</button>
+  </header>
+
+  <!-- Tabs Content-->
+  <ng-container *ngIf="(filter$ | async) === 'Invitations'; else notifications">
+    <!-- <invitation-list></invitation-list> -->
+  </ng-container>
+  <ng-template #notifications>
+    <notification-list [notificationsByDate]="(notifications$ | async)"></notification-list>
+  </ng-template>
+
+</ng-container>
+
+<ng-template #isLoading>
+  <mat-spinner></mat-spinner>
+</ng-template>
