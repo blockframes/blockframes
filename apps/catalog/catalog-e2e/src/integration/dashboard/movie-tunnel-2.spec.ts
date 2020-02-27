@@ -4,7 +4,7 @@ import { WelcomeViewPage, LoginViewPage } from "../../support/pages/auth";
 import { HomePage } from "../../support/pages/marketplace";
 import { User } from "../../support/utils/type";
 import { USERS } from "../../support/utils/users";
-import { TunnelMainPage } from "../../support/pages/dashboard";
+import { TunnelMainPage, TunnelStorylinePage } from "../../support/pages/dashboard";
 
 // Select user: cytest@blockframes.com
 const LOGIN_CREDENTIALS: Partial<User> = USERS[0];
@@ -142,5 +142,8 @@ describe('User can navigate to the movie tunnel page 2 and fill all the fieldsn 
     p4.assertLastFestivalAwardSelectionExists(AWARDS[1]);
     p4.fillLastFestivalYear(YEAR);
     p4.assertLastFestivalYearExists(YEAR);
+
+    // Go to tunnel 3
+    const p5: TunnelStorylinePage = p4.clickNext();
   });
 });
