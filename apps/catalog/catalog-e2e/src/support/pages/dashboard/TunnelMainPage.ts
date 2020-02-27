@@ -1,3 +1,5 @@
+import TunnelStorylinePage from "./TunnelStorylinePage";
+
 export default class TunnelMainPage {
   constructor() {
     cy.get('catalog-movie-tunnel-main', { timeout: 5000 });
@@ -334,5 +336,10 @@ export default class TunnelMainPage {
 
   public assertLastFestivalYearExists(year: string) {
     cy.get('catalog-movie-tunnel-main movie-form-festival-prizes input[test-id=year]').last().should('have.value', year);
+  }
+
+  public clickNext() {
+    cy.get('[test-id=next]').click();
+    return new TunnelStorylinePage();
   }
 }
