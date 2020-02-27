@@ -91,7 +91,24 @@ describe('User can navigate to the movie tunnel page 2 and fill all the fieldsn 
 
     // Runtime
     p4.fillRuntime('87');
-    p4.assertGenreExists('87');
+    p4.assertRuntimeExists('87');
+
+    // Principal Cast Members
+    p4.fillFirstPrincipalCastCastFirstName('Karl');
+    p4.assertFirstPrincipalCastCastFirstNameExists('Karl');
+    p4.fillFirstPrincipalCastCastLastName('Lagerfeld');
+    p4.assertFirstPrincipalCastCastLastNameExists('Lagerfeld');
+    p4.clickSelectFirstPrincipalCastCastRole();
+    p4.selectPrincipalCastCastRole('Executive Producer');
+    p4.assertFirstPrincipalCastCastRoleExists('Executive Producer');
+    p4.clickAddPrincipalCastCast();
+    p4.fillLastPrincipalCastCastFirstName('Nicole');
+    p4.assertLastPrincipalCastCastFirstNameExists('Nicole');
+    p4.fillLastPrincipalCastCastLastName('Kidman');
+    p4.assertLastPrincipalCastCastLastNameExists('Kidman');
+    p4.clickSelectLastPrincipalCastCastRole();
+    p4.selectPrincipalCastCastRole('Associate Producer');
+    p4.assertLastPrincipalCastCastRoleExists('Associate Producer');
 
     // Festival
     p4.fillFirstFestivalName('Berlin Film Festival');
