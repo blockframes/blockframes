@@ -1,34 +1,90 @@
 <h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Organization > {{ orgId }} </h1>
-
-<ng-container *ngIf="orgForm">
-  <form [formGroup]="orgForm" fxLayout="column">
-    <div>
-      <mat-form-field appearance="outline">
-        <mat-label>Org Status</mat-label>
-        <mat-select formControlName="status" required>
-          <mat-option *ngFor="let status of statuses" [value]="organizationStatus[status]">
-            {{ organizationStatus[status] }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-    <div>
-      <h2>App Access</h2>
-      <mat-checkbox formControlName="catalogDashboard">
-        Catalog Dashboard
-      </mat-checkbox>
-    </div>
-    <div>
-      <mat-checkbox formControlName="catalogMarketplace">
-        Catalog Marketplace
-      </mat-checkbox>
-    </div>
-    <mat-card-actions align="end">
-      <button type="submit" mat-flat-button color="primary"  (click)="update()">Update</button>
-    </mat-card-actions>
-  </form>
-</ng-container>
-
-
-
-
+<article fxLayout="row" *ngIf="org" fxLayoutAlign="space-around start">
+  <article fxLayout="column" fxLayoutAlign="space-between start">
+    <button mat-flat-button color="accent" [routerLink]="getOrgEditPath(orgId)">
+      <mat-icon svgIcon="eye"></mat-icon>
+      <span>View organization</span>
+    </button>
+    <organization-display [organization]="org"></organization-display>
+  </article>
+  <article *ngIf="orgForm" fxLayout="column" fxLayoutAlign="space-between start">
+    <form [formGroup]="orgForm" fxLayout="column">
+      <div>
+        <mat-form-field appearance="outline">
+          <mat-label>Org Status</mat-label>
+          <mat-select formControlName="status" required>
+            <mat-option *ngFor="let status of statuses" [value]="organizationStatus[status]">
+              {{ organizationStatus[status] }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div>
+        <h2>App Access</h2>
+        <mat-checkbox formControlName="catalogDashboard">
+          Catalog Dashboard
+        </mat-checkbox>
+      </div>
+      <div>
+        <mat-checkbox formControlName="catalogMarketplace">
+          Catalog Marketplace
+        </mat-checkbox>
+      </div>
+      <mat-card-actions align="end">
+        <button type="submit" mat-flat-button color="primary" (click)="update()">Update</button>
+      </mat-card-actions>
+    </form>
+  </article>
+</article>
+<hr />
+<article  fxLayout="row" fxLayoutAlign="space-around start">
+  <article fxLayout="column" fxLayoutAlign="space-between start">
+    <h2>
+      <span>Members</span>
+      <a [routerLink]="getOrgMemberPath(orgId)">
+        <mat-icon svgIcon="eye"></mat-icon>
+      </a>
+    </h2>
+    <bf-table-filter 
+      [source]="members" 
+      [columns]="versionColumnsMembers" 
+      [initialColumns]="initialColumnsMembers" 
+      [filterPredicate]="filterPredicateMembers"
+      showFilter="true"
+      showLoader="true"
+      showPaginator="true">
+      <ng-template colRef="edit" let-edit>
+        <a [routerLink]="edit.link"><mat-icon>edit</mat-icon></a>
+      </ng-template>
+      <ng-template colRef="avatar" let-avatar>
+        <img class="poster" [imgRef]="avatar" placeholderAsset="empty_poster.png">
+      </ng-template>
+    </bf-table-filter>
+  </article>
+  <article fxLayout="column" fxLayoutAlign="space-between start">
+    <h2>Movies</h2>
+    <bf-table-filter 
+      [source]="movies" 
+      [columns]="versionColumnsMovies" 
+      [initialColumns]="initialColumnsMovies" 
+      [filterPredicate]="filterPredicateMovies"
+      showFilter="true"
+      showLoader="true"
+      showPaginator="true">
+      <ng-template colRef="promotionalElements.poster" let-posters>
+        <ng-container *ngIf="posters[0] && posters[0].media as poster; else noposter">
+          <img class="poster" [imgRef]="poster" placeholderAsset="empty_poster.png">
+        </ng-container>
+        <ng-template #noposter>
+          --
+        </ng-template>
+      </ng-template>
+      <ng-template colRef="id" let-id>
+        <a target="_blank" [routerLink]="getMoviePath(id)" routerLinkActive="active"> {{ id }}</a>
+      </ng-template>
+      <ng-template colRef="edit" let-edit>
+        <a [routerLink]="edit.link"><mat-icon>edit</mat-icon></a>
+      </ng-template>
+    </bf-table-filter>
+  </article>
+</article>
