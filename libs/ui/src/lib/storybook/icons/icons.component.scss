@@ -1,3 +1,18 @@
+header {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 40px;
+
+  .colors {
+    display: flex;
+    button {
+      margin: 0 10px;
+    }
+  }
+}
+
 section {
   display: flex;
   flex-direction: row;
