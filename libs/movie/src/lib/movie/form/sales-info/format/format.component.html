@@ -2,7 +2,7 @@
   <div fxLayout="column">
     <mat-form-field appearance="outline">
       <mat-label>Shooting Format</mat-label>
-      <mat-select formControlName="format">
+      <mat-select test-id="shooting" formControlName="format">
         <mat-option *ngFor="let format of staticFormats" [value]="format.slug">
           {{ format.label }}
         </mat-option>
@@ -10,7 +10,7 @@
     </mat-form-field>
     <mat-form-field appearance="outline">
       <mat-label>Color</mat-label>
-      <mat-select formControlName="color">
+      <mat-select test-id="color" formControlName="color">
         <mat-option *ngFor="let format of staticColor" [value]="format.slug">
           {{ format.label }}
         </mat-option>
@@ -20,7 +20,7 @@
   <div fxLayout="column">
     <mat-form-field appearance="outline">
       <mat-label>Format quality</mat-label>
-      <mat-select formControlName="formatQuality">
+      <mat-select test-id="quality" formControlName="formatQuality">
         <mat-option *ngFor="let format of staticFormatsQuality" [value]="format.slug">
           {{ format.label }}
         </mat-option>
@@ -28,7 +28,7 @@
     </mat-form-field>
     <mat-form-field appearance="outline">
       <mat-label>Sound quality</mat-label>
-      <mat-select formControlName="soundFormat">
+      <mat-select test-id="sound" formControlName="soundFormat">
         <mat-option *ngFor="let format of staticSoundFormats" [value]="format.slug">
           {{ format.label }}
         </mat-option>

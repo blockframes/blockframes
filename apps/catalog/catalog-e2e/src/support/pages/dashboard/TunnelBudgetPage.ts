@@ -1,4 +1,4 @@
-import TunnelVersionInfoPage from "./TunnelVersionInfoPage";
+import TunnelVersionInfoPage from "./TunnelTechnicalInfoPage";
 
 export default class TunnelBudgetPage {
   constructor() {

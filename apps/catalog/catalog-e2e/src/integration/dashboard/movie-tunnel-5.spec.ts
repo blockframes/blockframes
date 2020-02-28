@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import { TunnelBudgetPage, TunnelVersionInfoPage } from '../../support/pages/dashboard';
+import { TunnelBudgetPage, TunnelTechnicalInfoPage } from '../../support/pages/dashboard';
 import { HomePage } from '../../support/pages/marketplace';
 import { User } from '../../support/utils/type';
 import { USERS } from '../../support/utils/users';
@@ -79,6 +79,6 @@ describe('User can navigate to the movie tunnel page 5, complete the fields, and
     p4.assertFilmCriticExists(CRITIC);
 
     // GO to movie-tunnel-6
-    const p5: TunnelVersionInfoPage = p4.clickNext();
+    const p5: TunnelTechnicalInfoPage = p4.clickNext();
   });
 });
