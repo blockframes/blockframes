@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component, OnInit, NgZone } from '@angular/cor
 import { AuthQuery } from '@blockframes/auth';
 import { InvitationService } from '@blockframes/notification/invitation/+state/invitation.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { InvitationFromUserToOrganization } from '@blockframes/invitation/types';
 import { Observable } from 'rxjs';
+import { Invitation } from '@blockframes/notification/invitation/+state/invitation.model';
 
 @Component({
   selector: 'organization-feedback',
@@ -12,7 +12,7 @@ import { Observable } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationFeedbackComponent implements OnInit {
-  public invitations: InvitationFromUserToOrganization[];
+  public invitations: Invitation[];
   public orgName: Observable<string>;
   public isCanceled: boolean;
 
@@ -27,7 +27,7 @@ export class OrganizationFeedbackComponent implements OnInit {
     const uid = this.authQuery.userId;
     this.invitations = await this.service.getValue(ref => ref.where('user.uid', '==', uid)) as any;
   }
-  
+
   public removeInvitation() {
     try {
       this.service.remove(this.invitations[0].id)

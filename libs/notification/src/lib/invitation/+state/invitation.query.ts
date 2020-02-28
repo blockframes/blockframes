@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { QueryEntity } from '@datorama/akita';
 import { InvitationStore, InvitationState } from './invitation.store';
-import { InvitationType, Invitation } from './invitation.firestore';
+import { InvitationType } from './invitation.firestore';
 import { DateGroup } from '@blockframes/utils/helpers';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { formatDate } from '@angular/common';
+import { Invitation } from './invitation.model';
 
 @Injectable()
 export class InvitationQuery extends QueryEntity<InvitationState> {
@@ -16,8 +17,9 @@ export class InvitationQuery extends QueryEntity<InvitationState> {
   /** Group invitations by date in an object. */
   public groupInvitationsByDate(): Observable<DateGroup<Invitation[]>> {
     const filterBy = invitation =>
-            invitation.type === InvitationType.fromUserToOrganization ||
-            invitation.type === InvitationType.toWorkOnDocument;
+      // We don't want invitations from organization to user, since only org admins can see them.
+      invitation.type === InvitationType.fromUserToOrganization ||
+      invitation.type === InvitationType.toWorkOnDocument;
     return this.selectAll({filterBy}).pipe(
       map(invits => {
         return invits.reduce((acc, invitation) => {

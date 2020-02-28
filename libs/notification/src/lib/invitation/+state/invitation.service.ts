@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
 import { InvitationState } from './invitation.store';
 import { AuthQuery, AuthService } from '@blockframes/auth';
-import { createInvitationToDocument, createInvitationFromUserToOrganization, createInvitationFromOrganizationToUser } from './invitation.model';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { PublicOrganization } from '@blockframes/organization';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
-import { Invitation, InvitationStatus } from './invitation.firestore';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { InvitationStatus, InvitationType } from './invitation.firestore';
+import { createInvitation, Invitation } from './invitation.model';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'invitations' })
@@ -24,8 +22,8 @@ export class InvitationService extends CollectionService<InvitationState> {
   public async sendInvitationToOrg(organizationId: string) {
     const organization = await this.orgService.getValue(organizationId);
     const { uid, name, surname, email } = this.authQuery.user;
-    const invitation = createInvitationFromUserToOrganization({
-      id: this.db.createId(),
+    const invitation = createInvitation({
+      type: InvitationType.fromUserToOrganization,
       organization: {id: organization.id, name: organization.name},
       user: { uid, name, surname, email }
     });
@@ -43,8 +41,8 @@ export class InvitationService extends CollectionService<InvitationState> {
     const users = await Promise.all(userPromises);
 
     const invitations = users.map(user => {
-      return createInvitationFromOrganizationToUser({
-        id: this.db.createId(),
+      return createInvitation({
+        type: InvitationType.fromOrganizationToUser,
         organization: { id: organization.id, name: organization.name },
         user: { uid: user.uid, email: user.email }
       });
@@ -54,10 +52,10 @@ export class InvitationService extends CollectionService<InvitationState> {
   }
 
   /** Create an Invitation when an Organization is invited to work on a document. */
-  public sendDocumentInvitationToOrg({id, name}: PublicOrganization, docId: string) {
-    const invitation = createInvitationToDocument({
-      id: this.db.createId(),
-      organization: {id, name},
+  public sendDocumentInvitationToOrg({ id, name }: PublicOrganization, docId: string) {
+    const invitation = createInvitation({
+      type: InvitationType.toWorkOnDocument,
+      organization: { id, name },
       docId
     });
     return this.add(invitation);

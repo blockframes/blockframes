@@ -1,9 +1,9 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, Input } from '@angular/core';
-import { InvitationService, InvitationStore, InvitationQuery } from '../+state';
+import { InvitationService, InvitationStore, InvitationQuery, Invitation } from '../+state';
 import { Subscription } from 'rxjs';
 import { AuthQuery } from '@blockframes/auth';
 import { DateGroup } from '@blockframes/utils/helpers';
-import { Invitation, InvitationType, InvitationStatus, InvitationDocument } from '@blockframes/invitation/types';
+import { InvitationType, InvitationStatus } from '@blockframes/invitation/types';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({

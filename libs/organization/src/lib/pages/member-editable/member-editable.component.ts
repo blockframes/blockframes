@@ -2,10 +2,10 @@ import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, HostBinding } fr
 import { Observable, Subscription } from 'rxjs';
 import { OrganizationQuery } from '../../+state/organization.query';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { InvitationService, InvitationQuery, InvitationStore } from '@blockframes/notification';
+import { InvitationService, InvitationQuery, InvitationStore, Invitation } from '@blockframes/notification';
 import { PermissionsQuery, UserRole, PermissionsService } from '../../permissions/+state';
 import { Order } from '@datorama/akita';
-import { Invitation, InvitationType } from '@blockframes/invitation/types';
+import { InvitationType } from '@blockframes/invitation/types';
 import { OrganizationMember } from '../../member/+state/member.model';
 import { MemberService } from '../../member/+state/member.service';
 import { MemberQuery } from '../../member/+state/member.query';
