@@ -1,4 +1,4 @@
-<ng-container *ngIf="(notifications$ | async); else isLoading">
+<ng-container *ngIf="!(isLoading$ | async); else isLoading">
 
   <!-- Tabs Label-->
   <header mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
