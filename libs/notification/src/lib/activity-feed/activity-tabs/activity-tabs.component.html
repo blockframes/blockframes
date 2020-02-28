@@ -20,7 +20,7 @@
 
   <!-- Tabs Content-->
   <ng-container *ngIf="(filter$ | async) === 'Invitations'; else notifications">
-    <!-- <invitation-list></invitation-list> -->
+    <invitation-list></invitation-list>
   </ng-container>
   <ng-template #notifications>
     <notification-list [notificationsByDate]="(notifications$ | async)"></notification-list>

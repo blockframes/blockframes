@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { NotificationListModule } from '@blockframes/notification/notification/notification-list/notification-list.module';
+import { InvitationListModule } from '@blockframes/notification/invitation/invitation-list/invitation-list.module';
 
 // Component
 import { ActivityTabsComponent } from './activity-tabs.component';
@@ -15,6 +16,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   imports: [
     CommonModule,
     NotificationListModule,
+    InvitationListModule,
 
     // Material
     MatTabsModule,

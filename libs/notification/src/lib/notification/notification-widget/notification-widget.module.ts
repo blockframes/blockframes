@@ -5,7 +5,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Modules
 import { NotificationListModule } from '../notification-list/notification-list.module';
-import { InvitationModule } from '../../invitation/invitation.module';
+import { InvitationListModule } from '../../invitation/invitation-list/invitation-list.module';
 import { OverlayWidgetModule } from '@blockframes/ui/overlay-widget';
 
 // Components
@@ -27,7 +27,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     FlexLayoutModule,
 
     NotificationListModule,
-    InvitationModule,
+    InvitationListModule,
     OverlayWidgetModule,
 
     // Material

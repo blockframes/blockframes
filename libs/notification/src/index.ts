@@ -3,7 +3,6 @@ export * from './lib/invitation/+state/invitation.query';
 export * from './lib/invitation/+state/invitation.store';
 export * from './lib/invitation/+state/invitation.service';
 export * from './lib/invitation/+state/invitation.model';
-export * from './lib/invitation/invitation.module';
 export * from './lib/invitation/guard/no-organization-invitation.guard';
 
 // Notification exports

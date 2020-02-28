@@ -6,23 +6,17 @@ import { ReverseModule } from '@blockframes/utils/pipes/reverse.module';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 
 // Components
-import { InvitationListComponent } from './invitation-list/invitation-list.component';
-import { InvitationItemComponent } from './invitation-item/invitation-item.component';
+import { InvitationListComponent } from './invitation-list.component';
 
 // Material
-import { MatIconModule } from '@angular/material/icon';
-import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
-import { MatBadgeModule } from '@angular/material/badge';
 import { MatListModule } from '@angular/material/list';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
-  declarations: [
-    InvitationListComponent,
-    InvitationItemComponent
-  ],
+  declarations: [InvitationListComponent],
   imports: [
     CommonModule,
     RouterModule,
@@ -31,14 +25,12 @@ import { MatTooltipModule } from '@angular/material/tooltip';
     ImageReferenceModule,
 
     // Material
-    MatIconModule,
-    MatMenuModule,
     MatButtonModule,
     MatDividerModule,
-    MatBadgeModule,
     MatListModule,
     MatTooltipModule,
+    MatIconModule,
   ],
-  exports: [InvitationListComponent, InvitationItemComponent]
+  exports: [InvitationListComponent]
 })
-export class InvitationModule {}
+export class InvitationListModule {}
