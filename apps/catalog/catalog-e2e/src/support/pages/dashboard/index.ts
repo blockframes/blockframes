@@ -6,6 +6,8 @@ import TunnelDistributionRightPage from "./TunnelDistributionRightPage";
 import TunnelBudgetPage from "./TunnelBudgetPage";
 import TunnelVersionInfoPage from "./TunnelVersionInfoPage";
 import TunnelCreditsPage from "./TunnelCreditsPage";
+import TunnelValuationPage from "./TunnelValuationPage";
+import TunnelSummaryPage from "./TunnelSummaryPage";
 
 export {
   StartTunnelPage,
@@ -15,5 +17,7 @@ export {
   TunnelDistributionRightPage,
   TunnelBudgetPage,
   TunnelVersionInfoPage,
-  TunnelCreditsPage
+  TunnelCreditsPage,
+  TunnelValuationPage,
+  TunnelSummaryPage
 };
