@@ -1,10 +1,10 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
-import { InvitationQuery, InvitationService, InvitationStore } from '../+state';
-import { Observable, Subscription } from 'rxjs';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, Input } from '@angular/core';
+import { InvitationService, InvitationStore, InvitationQuery } from '../+state';
+import { Subscription } from 'rxjs';
 import { AuthQuery } from '@blockframes/auth';
 import { DateGroup } from '@blockframes/utils/helpers';
-import { Invitation } from '@blockframes/invitation/types';
-import { ThemeService } from '@blockframes/ui/theme';
+import { Invitation, InvitationType, InvitationStatus, InvitationDocument } from '@blockframes/invitation/types';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'invitation-list',
@@ -13,38 +13,57 @@ import { ThemeService } from '@blockframes/ui/theme';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InvitationListComponent implements OnInit, OnDestroy {
-  public invitationsByDate$: Observable<DateGroup<Invitation[]>>;
-  public theme: string;
+  @Input() invitationsByDate: DateGroup<Invitation[]>;
 
-  public today: Date = new Date();
-  public yesterday: Date = new Date();
-
-  private collectionSub: Subscription;
-  private themeSub: Subscription;
+  private sub: Subscription;
 
   constructor(
-    private query: InvitationQuery,
     private store: InvitationStore,
+    private query: InvitationQuery,
     private service: InvitationService,
-    private authQuery: AuthQuery,
-    private themeService: ThemeService
+    private snackbar: MatSnackBar,
+    private authQuery: AuthQuery
   ) {}
 
   ngOnInit() {
-    this.yesterday.setDate(this.today.getDate() - 1);
-
     const storeName = this.store.storeName;
     const queryFn = ref =>
       ref.where('organization.id', '==', this.authQuery.orgId).where('status', '==', 'pending');
     if (this.authQuery.orgId) {
-      this.collectionSub = this.service.syncCollection(queryFn, { storeName }).subscribe();
-      this.themeSub = this.themeService.theme$.subscribe(theme => this.theme = theme);
-      this.invitationsByDate$ = this.query.groupInvitationsByDate();
+      this.sub = this.service.syncCollection(queryFn, { storeName }).subscribe();
     }
   }
 
+  public getInformation(invitation: Invitation) {
+    return this.query.createInvitationInformation(invitation);
+  }
+
+  public acceptInvitation(invitation: Invitation) {
+    try {
+      this.service.acceptInvitation(invitation);
+      this.snackbar.open('You accepted the invitation!', 'close', { duration: 5000 });
+    } catch (error) {
+      this.snackbar.open(error.message, 'close', { duration: 5000 });
+    }
+  }
+
+  public declineInvitation(invitation: Invitation) {
+    try {
+      this.service.declineInvitation(invitation);
+      this.snackbar.open('You declined the invitation.', 'close', { duration: 5000 });
+    } catch (error) {
+      this.snackbar.open(error.message, 'close', { duration: 5000 });
+    }
+  }
+
+  public displayInvitationButtons(invitation: Invitation): boolean {
+    return (
+      invitation.type === InvitationType.fromUserToOrganization &&
+      invitation.status === InvitationStatus.pending
+    );
+  }
+
   ngOnDestroy() {
-    this.collectionSub.unsubscribe(); // TODO: Leads to an error and an empty page when no invitations on /c/organization/home => ISSUE#1337
-    this.themeSub.unsubscribe();
+    this.sub.unsubscribe(); // TODO: Leads to an error and an empty page when no invitations on /c/organization/home => ISSUE#1337
   }
 }

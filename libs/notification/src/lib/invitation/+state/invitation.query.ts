@@ -30,4 +30,23 @@ export class InvitationQuery extends QueryEntity<InvitationState> {
       })
     );
   }
+
+  public createInvitationInformation(invitation: Invitation) {
+    const placeholderUrl = 'Avatar_40.png';
+
+    switch (invitation.type) {
+      case InvitationType.fromUserToOrganization:
+        return {
+          message: `${invitation.user.name} ${invitation.user.surname} wants to join your organization`,
+          imgRef: invitation.user.avatar,
+          placeholderUrl
+        };
+      case InvitationType.fromOrganizationToUser:
+        return {
+          message: `Your organization sent an invitation to this user email: ${invitation.user.email}`,
+          imgRef: invitation.user.avatar,
+          placeholderUrl
+        };
+    }
+  }
 }

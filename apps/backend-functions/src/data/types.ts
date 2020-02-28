@@ -12,12 +12,9 @@ export {
 } from '@blockframes/organization/types';
 export {
   InvitationDocument,
-  InvitationOrUndefined,
   InvitationStatus,
-  InvitationType,
-  InvitationFromOrganizationToUser,
-  InvitationFromUserToOrganization,
-  InvitationToWorkOnDocument
+  InvitationOrUndefined,
+  InvitationType
 } from '@blockframes/invitation/types';
 export { MaterialDocument, MaterialStatus } from '@blockframes/material/material/types';
 export { StakeholderDocument } from '@blockframes/material/delivery/stakeholder/types';

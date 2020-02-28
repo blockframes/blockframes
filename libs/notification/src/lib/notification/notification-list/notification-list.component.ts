@@ -12,10 +12,6 @@ import { Router } from '@angular/router';
 })
 export class NotificationListComponent {
   @Input() notificationsByDate: DateGroup<Notification[]>;
-  public theme$: Observable<string>;
-
-  public today: Date = new Date();
-  public yesterday = new Date().setDate(this.today.getDate() - 1);
 
   constructor(
     private service: NotificationService,
