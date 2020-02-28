@@ -27,7 +27,7 @@ const defaultTabs: ActivityTab[] = [
     label: 'Titles',
     filters: [NotificationType.movieSubmitted, NotificationType.movieAccepted]
   }
-]
+];
 
 @Component({
   selector: 'notification-activity-tabs',
@@ -37,7 +37,7 @@ const defaultTabs: ActivityTab[] = [
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ActivityTabsComponent implements OnInit {
-  public tabs$ = new BehaviorSubject(defaultTabs)
+  public tabs$ = new BehaviorSubject(defaultTabs);
   @Input() customTabs: ActivityTab[];
 
   public organization: Organization = this.organizationQuery.getActive();
@@ -46,6 +46,7 @@ export class ActivityTabsComponent implements OnInit {
   public filter$ = this.filter.valueChanges.pipe(startWith('All'));
   public notifications$: Observable<DateGroup<NotificationDocument[]>>;
   public invitationCount = this.invitationQuery.getCount();
+  public isLoading$ = this.notificationQuery.selectLoading();
 
   constructor(
     private notificationQuery: NotificationQuery,
@@ -57,8 +58,7 @@ export class ActivityTabsComponent implements OnInit {
     this.notifications$ = this.filter$.pipe(
       switchMap(filter => this.notificationQuery.groupNotificationsByDate(filter))
     );
-
-    this.tabs$.next([ ...defaultTabs , ...this.customTabs ]);
+    this.tabs$.next([...defaultTabs, ...this.customTabs]);
   }
 
   /** Dynamic filter of notifications for each tab */
