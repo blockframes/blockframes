@@ -123,7 +123,7 @@
     "ngx-image-cropper": "^3.0.3",
     "ngx-mat-select-search": "^2.1.1",
     "node-gyp": "^4.0.0",
-    "npm": "^6.9.0",
+    "npm": "^6.13.4",
     "object-hash": "^2.0.0",
     "pdfmake": "^0.1.57",
     "punycode": "^2.1.1",
