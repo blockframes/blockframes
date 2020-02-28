@@ -1,25 +1,26 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { ImgAssetModule } from '@blockframes/ui/theme';
 import { ActivityTabsMobule } from '@blockframes/notification/activity-feed/activity-tabs/activity-tabs.module';
-import { NoActivityModule } from '@blockframes/notification/activity-feed/no-activity/no-activity.module';
 
 // Component
-import { ActivityPageComponent } from './activity-page.component';
-
+import { ActivityComponent } from './activity.component';
 
 @NgModule({
-  declarations: [ActivityPageComponent],
+  declarations: [ActivityComponent],
   imports: [
     CommonModule,
+    FlexLayoutModule,
+    ImgAssetModule,
     ActivityTabsMobule,
-    NoActivityModule,
     RouterModule.forChild([
       {
         path: '',
-        component: ActivityPageComponent
+        component: ActivityComponent
       }
     ])
   ]
 })
-export class ActivityPageModule {}
+export class ActivityModule {}

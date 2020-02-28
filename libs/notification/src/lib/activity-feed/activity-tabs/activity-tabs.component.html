@@ -2,18 +2,20 @@
 
   <!-- Tabs Label-->
   <header mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
-    <button mat-tab-link (click)="applyFilter('')" [active]="!(filter$ | async)">All ({{ getCount() }})</button>
-    <button mat-tab-link (click)="applyFilter(titleFilters)" [active]="(filter$ | async) === titleFilters">Titles ({{ getCount(titleFilters) }})</button>
-    <ng-container *ngIf="applicationTabs.length">
-      <ng-container *ngFor="let tab of applicationTabs">
+    <ng-container *ngIf="filter$ | async as filter">
+      <ng-container *ngFor="let tab of tabs$ | async">
         <button
           mat-tab-link (click)="applyFilter(tab.filters)"
-          [active]="(filter$ | async) === tab.filters">
+          [active]="filter === tab.filters">
           {{ tab.label }} ({{ getCount(tab.filters) }})
         </button>
       </ng-container>
+      <button
+        mat-tab-link (click)="applyFilter('Invitations')"
+        [active]="filter === 'Invitations'">
+        {{ organization.name }} ({{ invitationCount }})
+      </button>
     </ng-container>
-    <button mat-tab-link (click)="applyFilter('Invitations')" [active]="(filter$ | async) === 'Invitations'">{{ organization.name }}</button>
   </header>
 
   <!-- Tabs Content-->
