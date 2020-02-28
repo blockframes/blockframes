@@ -2,7 +2,7 @@ import TunnelStorylinePage from "./TunnelStorylinePage";
 
 export default class TunnelMainPage {
   constructor() {
-    cy.get('catalog-movie-tunnel-main', { timeout: 5000 });
+    cy.get('catalog-movie-tunnel-main', { timeout: 10000 });
   }
 
   public static navigateToPage(movieId: string) {
@@ -341,5 +341,11 @@ export default class TunnelMainPage {
   public clickNext() {
     cy.get('[test-id=next]').click();
     return new TunnelStorylinePage();
+  }
+
+  // Navigation
+  public navigateToTunnelPage(title: string, subTitle: string) {
+    cy.get('tunnel-nav mat-expansion-panel').contains(title).click();
+    cy.get('tunnel-nav a').contains(subTitle).click();
   }
 }
