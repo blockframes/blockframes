@@ -1,16 +1,16 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { NotificationQuery } from '@blockframes/notification';
-import { map, distinctUntilChanged } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { ActivityTab } from '@blockframes/notification/activity-feed/activity-tabs/activity-tabs.component';
 import { NotificationType } from '@blockframes/notification/types';
 
 @Component({
-  selector: 'catalog-activity-page',
-  templateUrl: './activity-page.component.html',
-  styleUrls: ['./activity-page.component.scss'],
+  selector: 'catalog-activity',
+  templateUrl: './activity.component.html',
+  styleUrls: ['./activity.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ActivityPageComponent {
+export class ActivityComponent {
 
   // App specific tabs
   public applicationTabs: ActivityTab[] = [
@@ -20,10 +20,7 @@ export class ActivityPageComponent {
     }
   ]
 
-  public hasKey$ = this.notificationQuery.groupNotificationsByDate().pipe(
-    map(notifications => !!Object.keys(notifications).length),
-    distinctUntilChanged()
-  );
+  public hasNotifications$ = this.notificationQuery.selectCount().pipe(map(count => !!count))
 
   constructor(private notificationQuery: NotificationQuery) {}
 }

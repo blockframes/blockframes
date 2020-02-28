@@ -7,7 +7,7 @@ import {
 } from '@blockframes/notification';
 import { Organization } from '@blockframes/organization/+state/organization.model';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { startWith, switchMap } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 import { NotificationDocument, NotificationType } from '@blockframes/notification/types';
@@ -15,8 +15,19 @@ import { DateGroup } from '@blockframes/utils/helpers';
 
 export interface ActivityTab {
   label: string;
-  filters: NotificationType[];
+  filters: string | NotificationType[];
 }
+
+const defaultTabs: ActivityTab[] = [
+  {
+    label: 'All',
+    filters: 'All'
+  },
+  {
+    label: 'Titles',
+    filters: [NotificationType.movieSubmitted, NotificationType.movieAccepted]
+  }
+]
 
 @Component({
   selector: 'notification-activity-tabs',
@@ -26,19 +37,19 @@ export interface ActivityTab {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ActivityTabsComponent implements OnInit {
-  @Input() applicationTabs: ActivityTab[];
+  public tabs$ = new BehaviorSubject(defaultTabs)
+  @Input() customTabs: ActivityTab[];
 
   public organization: Organization = this.organizationQuery.getActive();
 
-  // Filters (arrays of notification types)
-  public titleFilters = ['movieSubmitted', 'movieAccepted'];
-
   public filter = new FormControl();
-  public filter$ = this.filter.valueChanges.pipe(startWith(this.filter.value));
+  public filter$ = this.filter.valueChanges.pipe(startWith('All'));
   public notifications$: Observable<DateGroup<NotificationDocument[]>>;
+  public invitationCount = this.invitationQuery.getCount();
 
   constructor(
     private notificationQuery: NotificationQuery,
+    private invitationQuery: InvitationQuery,
     private organizationQuery: OrganizationQuery
   ) {}
 
@@ -46,6 +57,8 @@ export class ActivityTabsComponent implements OnInit {
     this.notifications$ = this.filter$.pipe(
       switchMap(filter => this.notificationQuery.groupNotificationsByDate(filter))
     );
+
+    this.tabs$.next([ ...defaultTabs , ...this.customTabs ]);
   }
 
   /** Dynamic filter of notifications for each tab */
@@ -56,7 +69,7 @@ export class ActivityTabsComponent implements OnInit {
   /** Returns the number of notifications according to the filter */
   getCount(filter?: Notification['type'][]): number {
     return this.notificationQuery.getCount(notification =>
-      filter ? filter.includes(notification.type) : true
+      filter && typeof filter !== 'string' ? filter.includes(notification.type) : true
     );
   }
 }
