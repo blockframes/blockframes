@@ -4,7 +4,7 @@ import TunnelMainPage from "./TunnelMainPage";
 import TunnelStorylinePage from "./TunnelStorylinePage";
 import TunnelDistributionRightPage from "./TunnelDistributionRightPage";
 import TunnelBudgetPage from "./TunnelBudgetPage";
-import TunnelVersionInfoPage from "./TunnelVersionInfoPage";
+import TunnelTechnicalInfoPage from "./TunnelTechnicalInfoPage";
 import TunnelCreditsPage from "./TunnelCreditsPage";
 import TunnelValuationPage from "./TunnelValuationPage";
 import TunnelSummaryPage from "./TunnelSummaryPage";
@@ -16,7 +16,7 @@ export {
   TunnelStorylinePage,
   TunnelDistributionRightPage,
   TunnelBudgetPage,
-  TunnelVersionInfoPage,
+  TunnelTechnicalInfoPage,
   TunnelCreditsPage,
   TunnelValuationPage,
   TunnelSummaryPage
