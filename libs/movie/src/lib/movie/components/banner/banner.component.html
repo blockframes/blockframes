@@ -3,7 +3,7 @@
   <figcaption>
     <h1 *ngIf="title.international">{{ title.international }}</h1>
     <h4 *ngIf="title.original">{{ title.original }}</h4>
-    <h3 *ngIf="direcotr">{{ director }}</h3>
+    <h3 *ngIf="director">{{ director }}</h3>
     <p *ngIf="countries.length">{{ countries | translateSlug: 'TERRITORIES' }} - {{ date }}</p>
   </figcaption>
 </figure>
