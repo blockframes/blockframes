@@ -2,9 +2,15 @@ import { Component, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { Router } from '@angular/router';
 import { MarketplaceQuery, MarketplaceStore } from '../../+state';
 import { MovieQuery } from '@blockframes/movie';
-import { ContractService, Contract, ContractTitleDetail, ContractType, createContractPartyDetail, createContractTitleDetail } from '@blockframes/contract/contract/+state';
+import {
+  ContractService,
+  Contract,
+  ContractType,
+  createContractPartyDetail,
+  createContractTitleDetail
+} from '@blockframes/contract/contract/+state';
 import { ContractVersion } from '@blockframes/contract/version/+state';
-import { CommissionBase, createParty } from '@blockframes/utils/common-interfaces';
+import { createParty } from '@blockframes/utils/common-interfaces';
 import { Observable } from 'rxjs';
 import { OrganizationQuery } from '@blockframes/organization';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals';
@@ -32,7 +38,7 @@ export class MarketplaceSelectionComponent {
     private movieQuery: MovieQuery,
     private orgQuery: OrganizationQuery,
     private router: Router,
-  ) {}
+  ) { }
 
   /** Select a movie for a specific movie Id */
   selectMovie(movieId: string) {
@@ -66,7 +72,7 @@ export class MarketplaceSelectionComponent {
     // Ideally we would do that in the ContractService, but blocked by Circular Dependancy
     for (const movieId of titleIds) {
       const { deals } = this.query.getEntity(movieId);
-      const dealDocs = deals.map(deal => ({ ...deal, contractId}));
+      const dealDocs = deals.map(deal => ({ ...deal, contractId }));
       const distributionDealIds = await this.dealService.add(dealDocs, { params: { movieId } });
       version.titles[movieId] = createContractTitleDetail({ distributionDealIds });
     }
