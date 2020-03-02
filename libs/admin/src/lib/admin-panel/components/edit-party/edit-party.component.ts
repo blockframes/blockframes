@@ -26,6 +26,7 @@ export class EditPartyComponent implements OnInit {
   public staticRoles = staticModels.LEGAL_ROLES;
   public staticSubRoles = staticModels.SUB_LICENSOR_ROLES;
   public algoliaOrg = algolia.indexNameOrganizations;
+  public resetInput = false;
 
   constructor(
     public dialogRef: MatDialogRef<EditPartyComponent>,
