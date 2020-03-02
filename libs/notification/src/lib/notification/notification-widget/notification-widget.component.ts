@@ -20,6 +20,7 @@ export class NotificationWidgetComponent implements OnInit {
   public notificationCount$: Observable<number>;
   public invitationCount$: Observable<number>;
   public notifications$ = this.notificationQuery.groupNotificationsByDate();
+  public invitations$ = this.invitationQuery.groupInvitationsByDate();
 
   constructor(
     private authQuery: AuthQuery,
