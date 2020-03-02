@@ -1,17 +1,14 @@
 /// <reference types="cypress" />
 
 import { TunnelDistributionRightPage, TunnelStorylinePage, TunnelMainPage } from '../../support/pages/dashboard';
-import { signInAndNavigateToMain } from '../../support/utils/utils';
+import { signInAndNavigateToMain, clearDataAndPrepareTest } from '../../support/utils/utils';
 
 // TEST
 const NAVIGATION = ['Title Information', 'Storyline Elements'];
 const KEYWORDS = ['Karl Lagerfeld', 'Fashion'];
 
 beforeEach(() => {
-  cy.clearCookies();
-  cy.clearLocalStorage();
-  cy.visit('/auth');
-  cy.viewport('ipad-2', 'landscape');
+  clearDataAndPrepareTest();
   signInAndNavigateToMain();
 });
 

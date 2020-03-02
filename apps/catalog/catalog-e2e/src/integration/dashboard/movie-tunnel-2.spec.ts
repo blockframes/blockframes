@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 
 import { TunnelMainPage, TunnelStorylinePage } from "../../support/pages/dashboard";
-import { signInAndNavigateToMain } from "../../support/utils/utils";
+import { signInAndNavigateToMain, clearDataAndPrepareTest } from "../../support/utils/utils";
 
 const CONTENT_TYPES = ['TV Film', 'Library', 'Completed', 'Lagerfeld Confidential', 'Lagerfeld Confidentiel', 'Lagerfeld'];
 const DIRECTORS = ['Rodolphe', 'Marconi', 'Ceci est mon corps (2001)'];
@@ -22,10 +22,7 @@ const PREMIERE = 'World';
 const YEAR = '2007';
 
 beforeEach(() => {
-  cy.clearCookies();
-  cy.clearLocalStorage();
-  cy.visit('/auth');
-  cy.viewport('ipad-2', 'landscape');
+  clearDataAndPrepareTest();
   signInAndNavigateToMain();
 });
 
