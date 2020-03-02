@@ -24,6 +24,7 @@ import { AngularFirePerformanceModule } from '@angular/fire/performance';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { AngularFireAnalyticsModule, ScreenTrackingService, UserTrackingService } from '@angular/fire/analytics';
+import 'firebase/storage';
 
 // Sentry
 import { SentryModule } from '@blockframes/utils/sentry.module';
