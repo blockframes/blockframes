@@ -38,7 +38,7 @@ export class MarketplaceSelectionComponent {
     private movieQuery: MovieQuery,
     private orgQuery: OrganizationQuery,
     private router: Router,
-  ) { }
+  ) {}
 
   /** Select a movie for a specific movie Id */
   selectMovie(movieId: string) {
