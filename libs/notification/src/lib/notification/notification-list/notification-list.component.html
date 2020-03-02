@@ -1,6 +1,6 @@
 <mat-list *ngFor="let byDate of notificationsByDate | keyvalue | reverse; let last = last">
   <h3 mat-subheader>{{ byDate.key }}</h3>
-    <ng-container *ngFor="let notification of byDate.value | reverse">
+    <ng-container *ngFor="let notification of byDate.value">
       <mat-list-item [matTooltip]="notification.message" (click)="goToPath(notification)" matTooltipPosition="left">
         <img
           matListAvatar

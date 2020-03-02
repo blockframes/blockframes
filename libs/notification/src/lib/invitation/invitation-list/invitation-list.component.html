@@ -1,25 +1,23 @@
 <mat-list *ngFor="let byDate of invitationsByDate | keyvalue | reverse; let last = last">
   <h3 mat-subheader>{{ byDate.key }}</h3>
-  <ng-container *ngFor="let invitation of byDate.value | reverse">
-    <ng-container *ngIf="getInformation(invitation) as information">
-      <mat-list-item [matTooltip]="information.message" matTooltipPosition="left">
-        <img
-          matListAvatar
-          [placeholderUrl]="information.placeholderUrl"
-          [imgRef]="information.imgRef"
-          alt="Invitation picture"/>
-        <p mat-line>{{ information.message }}</p>
-        <small mat-line class="mat-caption" mat-line>{{ invitation.date | date: 'shortTime' }}</small>
-        <article fxLayout="row" fxLayoutGap="10px" *ngIf="displayInvitationButtons(invitation)">
-          <a test-id="accept" mat-mini-fab color="primary" (click)="acceptInvitation(invitation)">
-            <mat-icon>done</mat-icon>
-          </a>
-          <a test-id="decline" mat-mini-fab color="warn" (click)="declineInvitation(invitation)">
-            <mat-icon>clear</mat-icon>
-          </a>
-        </article>
-      </mat-list-item>
-    </ng-container>
+  <ng-container *ngFor="let invitation of byDate.value">
+    <mat-list-item [matTooltip]="invitation.message" matTooltipPosition="left">
+      <img
+        matListAvatar
+        placeholderAsset="Avatar_40.png"
+        [imgRef]="invitation.imgRef"
+        alt="Invitation picture"/>
+      <p mat-line>{{ invitation.message }}</p>
+      <small mat-line class="mat-caption" mat-line>{{ invitation.date | date: 'shortTime' }}</small>
+      <article fxLayout="row" fxLayoutGap="10px" *ngIf="displayInvitationButtons(invitation)">
+        <a test-id="accept" mat-mini-fab color="primary" (click)="acceptInvitation(invitation)">
+          <mat-icon>done</mat-icon>
+        </a>
+        <a test-id="decline" mat-mini-fab color="warn" (click)="declineInvitation(invitation)">
+          <mat-icon>clear</mat-icon>
+        </a>
+      </article>
+    </mat-list-item>
   </ng-container>
   <mat-divider *ngIf="!last"></mat-divider>
 </mat-list>

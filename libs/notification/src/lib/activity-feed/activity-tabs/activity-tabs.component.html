@@ -13,14 +13,14 @@
       <button
         mat-tab-link (click)="applyFilter('Invitations')"
         [active]="filter === 'Invitations'">
-        {{ organization.name }} ({{ invitationCount }})
+        {{ organization.name }} ({{ invitationCount$ | async }})
       </button>
     </ng-container>
   </header>
 
   <!-- Tabs Content-->
   <ng-container *ngIf="(filter$ | async) === 'Invitations'; else notifications">
-    <invitation-list></invitation-list>
+    <invitation-list [invitationsByDate]="(invitations$ | async)"></invitation-list>
   </ng-container>
   <ng-template #notifications>
     <notification-list [notificationsByDate]="(notifications$ | async)"></notification-list>

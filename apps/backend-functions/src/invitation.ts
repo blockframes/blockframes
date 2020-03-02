@@ -104,7 +104,7 @@ async function mailOnInvitationAccept(userId: string, organizationId: string) {
 
 /** Updates the user, orgs, and permissions when the user accepts an invitation to an organization. */
 async function onInvitationToOrgAccept(invitation: InvitationDocument) {
-  const { user, organization } = getInvitationUserAndOrganization(invitation)
+  const { user, organization } = getUserAndOrganization(invitation)
   // TODO(issue#739): When a user is added to an org, clear other invitations
   await addUserToOrg(user.uid, organization.id);
   // TODO maybe send an email "you have accepted to join OrgNAme ! Congratz, you are now part of this org !"
@@ -113,7 +113,7 @@ async function onInvitationToOrgAccept(invitation: InvitationDocument) {
 
 /** Send a notification to admins of organization to notify them that the user declined their invitation. */
 async function onInvitationToOrgDecline(invitation: InvitationDocument) {
-  const { user, organization } = getInvitationUserAndOrganization(invitation);
+  const { user, organization } = getUserAndOrganization(invitation);
 
   const organizationDocument = await getDocument<OrganizationDocument>(`orgs/${organization.id}`);
   const adminIds = await getAdminIds(organizationDocument.id);
@@ -135,7 +135,7 @@ async function onInvitationToOrgDecline(invitation: InvitationDocument) {
 
 /** Sends an email when an organization invites a user to join. */
 async function onInvitationToOrgCreate(invitation: InvitationDocument) {
-  const { user } = getInvitationUserAndOrganization(invitation);
+  const { user } = getUserAndOrganization(invitation);
   const userMail = await getUserMail(user.uid);
 
   if (!userMail) {
@@ -153,7 +153,7 @@ async function onDocumentInvitationAccept(invitation: InvitationDocument): Promi
   // we need to get the new users on the documents with their own (and limited) permissions.
 
   // Create all the constants we need to work with
-  const { organization } = getInvitationUserAndOrganization(invitation);
+  const { organization } = getUserAndOrganization(invitation);
   const stakeholderId = organization.id;
   const docId = invitation.docId;
   const delivery = await getDocument<DeliveryDocument>(`deliveries/${docId}`);
@@ -260,7 +260,7 @@ async function onInvitationToOrgUpdate(
 
 /** Sends an email when an organization invites a user to join. */
 async function onInvitationFromUserToJoinOrgCreate(invitation: InvitationDocument) {
-  const { user, organization } = getInvitationUserAndOrganization(invitation);
+  const { user, organization } = getUserAndOrganization(invitation);
   const userData = await getUser(user.uid);
 
   if (!userData.email) {
@@ -297,7 +297,7 @@ async function onInvitationFromUserToJoinOrgCreate(invitation: InvitationDocumen
 /** Send a mail and update the user, org and permission when the user was accepted. */
 async function onInvitationFromUserToJoinOrgAccept(invitation: InvitationDocument) {
   // TODO(issue#739): When a user is added to an org, clear other invitations
-  const { user, organization } = getInvitationUserAndOrganization(invitation);
+  const { user, organization } = getUserAndOrganization(invitation);
   await addUserToOrg(user.uid, organization.id);
   await sendMailFromTemplate(userJoinedAnOrganization(user.email, organization.id));
   return mailOnInvitationAccept(user.uid, organization.id);
@@ -305,7 +305,7 @@ async function onInvitationFromUserToJoinOrgAccept(invitation: InvitationDocumen
 
 /** Send a notification to admins of organization to notify them that the request is declined. */
 async function onInvitationFromUserToJoinOrgDecline(invitation: InvitationDocument) {
-  const { user, organization } = getInvitationUserAndOrganization(invitation);
+  const { user, organization } = getUserAndOrganization(invitation);
   const organizationDocument = await getDocument<OrganizationDocument>(`orgs/${organization.id}`);
   const adminIds = await getAdminIds(organizationDocument.id);
 
@@ -421,7 +421,7 @@ export async function onInvitationWrite(
 }
 
 /** Return the user and the organization from an invitation, making sure these properties exists */
-function getInvitationUserAndOrganization(invitation: InvitationDocument): {user: PublicUser, organization: PublicOrganization} {
+function getUserAndOrganization(invitation: InvitationDocument): {user: PublicUser, organization: PublicOrganization} {
   const user = invitation.user as PublicUser;
   const organization = invitation.organization as PublicOrganization;
   return { user, organization };

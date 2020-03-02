@@ -1,7 +1,5 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, Input } from '@angular/core';
-import { InvitationService, InvitationStore, InvitationQuery, Invitation } from '../+state';
-import { Subscription } from 'rxjs';
-import { AuthQuery } from '@blockframes/auth';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { InvitationService, Invitation } from '../+state';
 import { DateGroup } from '@blockframes/utils/helpers';
 import { InvitationType, InvitationStatus } from '@blockframes/invitation/types';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -12,32 +10,13 @@ import { MatSnackBar } from '@angular/material/snack-bar';
   styleUrls: ['./invitation-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InvitationListComponent implements OnInit, OnDestroy {
+export class InvitationListComponent {
   @Input() invitationsByDate: DateGroup<Invitation[]>;
 
-  private sub: Subscription;
-
   constructor(
-    private store: InvitationStore,
-    private query: InvitationQuery,
     private service: InvitationService,
-    private snackbar: MatSnackBar,
-    private authQuery: AuthQuery
+    private snackbar: MatSnackBar
   ) {}
-
-  ngOnInit() {
-    const storeName = this.store.storeName;
-    const queryFn = ref =>
-      ref.where('organization.id', '==', this.authQuery.orgId).where('status', '==', 'pending');
-    if (this.authQuery.orgId) {
-      this.sub = this.service.syncCollection(queryFn, { storeName }).subscribe();
-    }
-  }
-
-  public getInformation(invitation: Invitation) {
-    return this.query.createInvitationInformation(invitation);
-  }
-
   public acceptInvitation(invitation: Invitation) {
     try {
       this.service.acceptInvitation(invitation);
@@ -63,7 +42,4 @@ export class InvitationListComponent implements OnInit, OnDestroy {
     );
   }
 
-  ngOnDestroy() {
-    this.sub.unsubscribe(); // TODO: Leads to an error and an empty page when no invitations on /c/organization/home => ISSUE#1337
-  }
 }

@@ -8,6 +8,22 @@ import { Observable } from 'rxjs';
 import { formatDate } from '@angular/common';
 import { Invitation } from './invitation.model';
 
+function getYesterday() {
+  const today = new Date();
+  const yesterday = today.setDate(today.getDate() - 1);
+  return new Date(yesterday);
+}
+
+function isSameDay(target: Date, baseDate: Date) {
+  return (
+    target.getDate() === baseDate.getDate() &&
+    target.getMonth() === baseDate.getMonth() &&
+    target.getFullYear() === baseDate.getFullYear()
+  );
+}
+const isToday = (target: Date) => isSameDay(target, new Date());
+const isYesterday = (target: Date) => isSameDay(target, getYesterday());
+
 @Injectable()
 export class InvitationQuery extends QueryEntity<InvitationState> {
   constructor(protected store: InvitationStore) {
@@ -21,12 +37,20 @@ export class InvitationQuery extends QueryEntity<InvitationState> {
       invitation.type === InvitationType.fromUserToOrganization ||
       invitation.type === InvitationType.toWorkOnDocument;
     return this.selectAll({filterBy}).pipe(
-      map(invits => {
-        return invits.reduce((acc, invitation) => {
+      map(invitations => {
+        return invitations.reduce((acc, invitation) => {
+          const date = invitation.date.toDate();
           // As Date cannot be used as an index type (key), we format the date into a string.
-          const key = formatDate(invitation.date.toDate(), 'MMM dd, yyyy', 'en-US');
-
-          acc[key] = [...(acc[key] || []), invitation];
+          const key = isToday(date) ? 'Today'
+            : isYesterday(date) ? 'Yesterday'
+            : formatDate(invitation.date.toDate(), 'MMM dd, yyyy', 'en-US');
+          const information = this.createInvitationInformation(invitation);
+          const notif = {
+            ...invitation,
+            ...information,
+            date: invitation.date.toDate()
+          };
+          acc[key] = [...(acc[key] || []), notif];
           return acc;
         }, {});
       })
@@ -34,20 +58,16 @@ export class InvitationQuery extends QueryEntity<InvitationState> {
   }
 
   public createInvitationInformation(invitation: Invitation) {
-    const placeholderUrl = 'Avatar_40.png';
-
     switch (invitation.type) {
       case InvitationType.fromUserToOrganization:
         return {
           message: `${invitation.user.name} ${invitation.user.surname} wants to join your organization`,
-          imgRef: invitation.user.avatar,
-          placeholderUrl
+          imgRef: invitation.user.avatar
         };
       case InvitationType.fromOrganizationToUser:
         return {
           message: `Your organization sent an invitation to this user email: ${invitation.user.email}`,
-          imgRef: invitation.user.avatar,
-          placeholderUrl
+          imgRef: invitation.user.avatar
         };
     }
   }
