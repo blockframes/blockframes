@@ -9,6 +9,7 @@ import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.mod
 // Angular Fire
 import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireStorageModule } from '@angular/fire/storage';
+import 'firebase/storage';
 
 // Material
 import { MatSnackBarModule } from '@angular/material/snack-bar';
