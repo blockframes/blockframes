@@ -1,5 +1,5 @@
+import { AlgoliaAutocompleteModule } from '@blockframes/utils/algolia-autocomplete/algolia-autocomplete.module';
 import { ContractFormPartyComponent } from './party.component';
-import { OrganizationAutocompleteModule } from '@blockframes/organization';
 
 // Angular
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -23,7 +23,7 @@ import { MatIconModule } from '@angular/material/icon';
     ReactiveFormsModule,
 
     // Components
-    OrganizationAutocompleteModule,
+    AlgoliaAutocompleteModule,
 
     // Material
     MatFormFieldModule,
@@ -35,4 +35,4 @@ import { MatIconModule } from '@angular/material/icon';
   ],
   exports: [ContractFormPartyComponent]
 })
-export class ContractFormPartyModule {}
+export class ContractFormPartyModule { }

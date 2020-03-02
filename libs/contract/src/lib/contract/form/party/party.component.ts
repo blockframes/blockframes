@@ -1,4 +1,4 @@
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { algolia } from '@env';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { staticModels } from '@blockframes/utils/static-model';
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
@@ -19,6 +19,10 @@ export class ContractFormPartyComponent {
   set hasRole(value: boolean) {
     this._hasRole = coerceBooleanProperty(value);
   }
+
+  public resetInput = false;
+
+  public algoliaOrg = algolia.indexNameOrganizations;
 
   public staticRoles = staticModels.LEGAL_ROLES.filter(role => {
     const wantedRoles = ['licensee', 'licensor'];
@@ -43,9 +47,7 @@ export class ContractFormPartyComponent {
     this.form.add();
   }
 
-  public patchOrgId(event: MatAutocompleteSelectedEvent | string, control: PartyDetailsForm) {
-    typeof event === 'string'
-      ? control.get('party').get('orgId').setValue(event)
-      : control.get('party').get('orgId').setValue(event.option.value.objectID);
+  public patchOrgId(event: string | string, control: PartyDetailsForm) {
+    control.get('party').get('orgId').setValue(event)
   }
 }
