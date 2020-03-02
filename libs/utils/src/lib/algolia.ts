@@ -5,7 +5,7 @@ import { Index } from 'algoliasearch';
 import { InjectionToken } from '@angular/core';
 
 // @ts-ignore
-const searchClient: SearchClient = algoliasearch(algolia.appId, algolia.searchKey);
+export const searchClient: SearchClient = algoliasearch(algolia.appId, algolia.searchKey);
 
 export const OrganizationsIndex = new InjectionToken<Index>(
   'Algolia index to search organizations',
