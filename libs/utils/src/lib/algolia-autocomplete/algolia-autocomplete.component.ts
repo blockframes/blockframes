@@ -42,7 +42,7 @@ export class AlgoliaAutocompleteComponent implements OnInit {
   /**
    * Set your own label if wanted
    */
-  @Input() label: string = 'Search...'
+  @Input() label = 'Search...'
 
   /**
    * Can set to false if control should display the value
@@ -105,6 +105,8 @@ export class AlgoliaAutocompleteComponent implements OnInit {
   public findObjectID(event: MatAutocompleteSelectedEvent) {
     this.control.setValue(this.resolveValue(event.option.value));
     this.emitObjectID.emit(event.option.value.objectID);
-    this.resetInput ? this.control.reset(null) : null;
+    if (this.resetInput) {
+      this.control.reset(null);
+    }
   }
 }
