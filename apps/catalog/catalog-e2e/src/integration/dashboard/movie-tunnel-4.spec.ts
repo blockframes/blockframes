@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 
 import { TunnelBudgetPage, TunnelCreditsPage, TunnelMainPage } from '../../support/pages/dashboard';
-import { signInAndNavigateToMain } from '../../support/utils/utils';
+import { signInAndNavigateToMain, clearDataAndPrepareTest } from '../../support/utils/utils';
 
 // TEST
 
@@ -20,10 +20,7 @@ const CREW_MEMBER = 'crew-member';
 const ROLES = ['Executive Producer', 'Line Producer', 'Associate Producer'];
 
 beforeEach(() => {
-  cy.clearCookies();
-  cy.clearLocalStorage();
-  cy.visit('/auth');
-  cy.viewport('ipad-2', 'landscape');
+  clearDataAndPrepareTest();
   signInAndNavigateToMain();
 });
 

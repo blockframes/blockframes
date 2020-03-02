@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import { signInAndNavigateToMain } from "../../support/utils/utils";
+import { signInAndNavigateToMain, clearDataAndPrepareTest } from "../../support/utils/utils";
 import { TunnelMainPage, TunnelChainOfTitlesPage } from "../../support/pages/dashboard";
 import TunnelFilesPage from "../../support/pages/dashboard/TunnelFilesPage";
 
@@ -13,10 +13,7 @@ const LINKS = [
 ];
 
 beforeEach(() => {
-  cy.clearCookies();
-  cy.clearLocalStorage();
-  cy.visit('/auth');
-  cy.viewport('ipad-2', 'landscape');
+  clearDataAndPrepareTest();
   signInAndNavigateToMain();
 });
 

@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 
 import { TunnelBudgetPage, TunnelTechnicalInfoPage, TunnelMainPage } from '../../support/pages/dashboard';
-import { signInAndNavigateToMain } from '../../support/utils/utils';
+import { signInAndNavigateToMain, clearDataAndPrepareTest } from '../../support/utils/utils';
 
 // TEST
 
@@ -19,10 +19,7 @@ const REVUE_LINK = 'https://www.nytimes.com/2007/10/24/movies/24lage.html';
 const CRITIC = '“Lagerfeld Confidential,” an intimate portrait of the designer who has ruled the House of Chanel for more than two decades.';
 
 beforeEach(() => {
-  cy.clearCookies();
-  cy.clearLocalStorage();
-  cy.visit('/auth');
-  cy.viewport('ipad-2', 'landscape');
+  clearDataAndPrepareTest();
   signInAndNavigateToMain();
 });
 

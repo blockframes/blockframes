@@ -1,17 +1,14 @@
 /// <reference types="cypress" />
 
 import { TunnelValuationPage, TunnelSummaryPage, TunnelMainPage } from "../../support/pages/dashboard";
-import { signInAndNavigateToMain } from "../../support/utils/utils";
+import { signInAndNavigateToMain, clearDataAndPrepareTest } from "../../support/utils/utils";
 
 const NAVIGATION = ['Legal Information', 'Marketplace Eval.'];
 
 const VALUATION = 'B';
 
 beforeEach(() => {
-  cy.clearCookies();
-  cy.clearLocalStorage();
-  cy.visit('/auth');
-  cy.viewport('ipad-2', 'landscape');
+  clearDataAndPrepareTest();
   signInAndNavigateToMain();
 });
 

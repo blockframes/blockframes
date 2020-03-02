@@ -1,7 +1,7 @@
 /// <reference types="cypress" />
 
 import { TunnelTechnicalInfoPage, TunnelMainPage } from "../../support/pages/dashboard";
-import { signInAndNavigateToMain } from "../../support/utils/utils";
+import { signInAndNavigateToMain, clearDataAndPrepareTest } from "../../support/utils/utils";
 
 const NAVIGATION = ['Media', 'Technical Info.'];
 
@@ -10,10 +10,7 @@ const PARTIAL_LANGUAGE = 'en';
 const LANGUAGE = 'English';
 
 beforeEach(() => {
-  cy.clearCookies();
-  cy.clearLocalStorage();
-  cy.visit('/auth');
-  cy.viewport('ipad-2', 'landscape');
+  clearDataAndPrepareTest();
   signInAndNavigateToMain();
 });
 
