@@ -1,0 +1,11 @@
+<mat-form-field appearance="outline">
+  <mat-label>{{ label }}</mat-label>
+  <input matInput autocapitalize="off" autocorrect="off" spellcheck="false" type="text" [formControl]="control"
+    [matAutocomplete]="auto" />
+</mat-form-field>
+<mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+  <mat-option *ngFor="let result of (algoliaSearchResults$ | async)" [value]="resolveValue(result)">
+    <ng-template [ngTemplateOutlet]="template" [ngTemplateOutletContext]="{ $implicit: result }">
+    </ng-template>
+  </mat-option>
+</mat-autocomplete>

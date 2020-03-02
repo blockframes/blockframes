@@ -14,16 +14,11 @@
     Add titles to your selection if needed and then offer a price. You may
     choose to put a price forthe entire package or one for each title.
   </span>
-  <mat-form-field appearance="outline">
-    <input matInput type="text" [formControl]="movieCtrl" autocomplete="off" [matAutocomplete]="auto"
-      placeholder="Search for a movie..." aria-label="Search for a movie">
-    <mat-icon svgIcon="magnifying_glasses" matPrefix></mat-icon>
-    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addMovie($event)">
-      <mat-option *ngFor="let index of movieSearchResults$ | async" [value]="index">
-        {{ index.movie.main.title.international }}
-      </mat-option>
-    </mat-autocomplete>
-  </mat-form-field>
+  <algolia-autocomplete [indexName]="algoliaMovieIndex" pathToValue="objectID" (emitSelect)="addMovie($event)">
+    <ng-template let-result>
+      <span>{{ result.movie.main.title.international }}</span>
+    </ng-template>
+  </algolia-autocomplete>
   <div *ngFor="let control of form.last().get('titles').controls | keyvalue; let i = index;"
     [formGroup]="priceForm(control.key)">
     <div fxLayout="row" fxLayoutAlign="space-between start">

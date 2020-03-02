@@ -1,6 +1,5 @@
-import { switchMap, pluck } from 'rxjs/operators';
+import { switchMap, pluck, debounceTime, distinctUntilChanged  } from 'rxjs/operators';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { debounceTime, distinctUntilChanged, tap } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import { Index } from 'algoliasearch';
