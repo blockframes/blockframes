@@ -15,7 +15,7 @@ import {
 import { debounceTime, distinctUntilChanged, switchMap, pluck } from 'rxjs/operators';
 
 @Component({
-  selector: '[indexName] algolia-autocomplete',
+  selector: '[indexName][pathToValue] algolia-autocomplete',
   templateUrl: 'algolia-autocomplete.component.html',
   styleUrls: ['algolia-autocomplete.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -52,7 +52,7 @@ export class AlgoliaAutocompleteComponent implements OnInit {
   /**
    * Output to get all data from algolia
    */
-  @Output() emitSelect = new EventEmitter();
+  @Output() emitObjectID = new EventEmitter();
 
   /**
    * Renders the template coming from the parten component
@@ -102,18 +102,9 @@ export class AlgoliaAutocompleteComponent implements OnInit {
    * just the data from the form control
    * @param event holding all the algolia data available
    */
-  public selected(event: MatAutocompleteSelectedEvent) {
-    if (event.option.value) {
-      this.emitSelect.emit(event.option.value);
-    } else {
-      /**
-       * If the user change to a value from that
-       * is not present in the autocompletion
-       * the developer might want to delete the 
-       * previous set value
-       */
-      this.emitSelect.emit('')
-    }
+  public findObjectID(event: MatAutocompleteSelectedEvent) {
+    this.control.setValue(this.resolveValue(event.option.value));
+    this.emitObjectID.emit(event.option.value.objectID);
     this.resetInput ? this.control.reset(null) : null;
   }
 }
