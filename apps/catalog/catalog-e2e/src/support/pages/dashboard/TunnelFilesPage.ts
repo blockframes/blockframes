@@ -2,7 +2,7 @@ import TunnelChainOfTitlesPage from "./TunnelChainOfTitlesPage";
 
 export default class TunnelFilesPage {
   constructor() {
-    cy.get('catalog-movie-tunnel-media-file', { timeout: 5000 });
+    cy.get('catalog-movie-tunnel-media-file');
   }
 
   // File Links
