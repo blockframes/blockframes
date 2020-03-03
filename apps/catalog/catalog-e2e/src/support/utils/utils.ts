@@ -43,3 +43,7 @@ export function uploadFile(p: string, type: string, testId: string): any {
 export function assertUploadStatus(content: string, testId: string) {
   return cy.get(`file-upload[test-id=${testId}] section h3`).contains(content);
 }
+
+let currentID = 0;
+export const randomID = (): string => (`${new Date().toISOString()}-${currentID++}`);
+export const createFakeScript = (title: string): any => cy.task('random:pdf', title);
