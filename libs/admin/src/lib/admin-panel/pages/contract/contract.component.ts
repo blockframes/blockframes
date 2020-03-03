@@ -27,10 +27,8 @@ export class ContractComponent implements OnInit {
   public contract: ContractWithLastVersion;
   public contractForm: ContractAdminForm;
   public contractVersionForm: ContractVersionAdminForm;
-  public statuses: string[];
-  public contractStatus: any;
-  public types: string[];
-  public contractType: any;
+  public contractStatus = ContractStatus;
+  public contractType = ContractType;
   public version: number;
   public publicContract$: Observable<PublicContract>;
   public toPrettyDate = termToPrettyDate;
@@ -130,10 +128,6 @@ export class ContractComponent implements OnInit {
       this.publicContract$ = this.contractService.listenOnPublicContract(this.contractId);
       this.contractVersions = await this.contractVersionService.getContractVersions(this.contractId);
 
-      this.statuses = Object.keys(ContractStatus);
-      this.contractStatus = ContractStatus;
-      this.types = Object.keys(ContractType);
-      this.contractType = ContractType;
       this.titles = [];
 
       this.cdRef.markForCheck();
@@ -147,17 +141,14 @@ export class ContractComponent implements OnInit {
           id,
           price: title.price,
           movie,
-          deals: title.distributionDealIds.map(d => {
-            const deal = { id: d, movie: id };
-            return deal;
-          }),
+          deals: title.distributionDealIds.map(d => ({ id: d, movie: id })),
           exploredeals: `/c/o/admin/panel/deals/${id}`,
         });
 
         this.titles = [...this.titles];
       })
     });
-    
+
   }
 
   /**
@@ -193,10 +184,11 @@ export class ContractComponent implements OnInit {
       status: this.contractVersionForm.get('status').value,
     }
 
+    // @TODO (#1887)
     const newVersionId = await this.contractVersionService.addContractVersion({ doc: this.contract.doc, last: update });
     this.version = parseInt(newVersionId, 10);
     this.contractVersions = await this.contractVersionService.getContractVersions(this.contractId);
-    this.cdRef.markForCheck();
+    this.cdRef.detectChanges();
 
     this.snackBar.open('Informations updated !', 'close', { duration: 5000 });
   }
@@ -263,5 +255,27 @@ export class ContractComponent implements OnInit {
 
   public getContractTunnelPath(contract: Contract) {
     return `/c/o/marketplace/tunnel/contract/${contract.id}/${contract.type}`;
+  }
+
+  /**
+   * @dev this method uses titles.price to update global contract price
+   */
+  public async updatePrice() {
+    const update = {
+      ...this.contract.last,
+    }
+
+    update.price.amount = 0;
+    for (const titleId in this.contract.last.titles) {
+      update.price.amount += this.contract.last.titles[titleId].price.amount;
+    }
+
+    // @TODO (#1887)
+    const newVersionId = await this.contractVersionService.addContractVersion({ doc: this.contract.doc, last: update });
+    this.version = parseInt(newVersionId, 10);
+    this.contractVersions = await this.contractVersionService.getContractVersions(this.contractId);
+    this.cdRef.detectChanges();
+
+    this.snackBar.open('Contract global price updated !', 'close', { duration: 5000 });
   }
 }

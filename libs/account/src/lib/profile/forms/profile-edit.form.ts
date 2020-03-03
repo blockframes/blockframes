@@ -1,12 +1,12 @@
 import { FormControl } from '@angular/forms';
-import { FormEntity } from '@blockframes/utils';
+import { FormEntity, ImgRef, createImgRef } from '@blockframes/utils';
 import { User } from '@blockframes/auth/+state/auth.store';
 export interface Profile {
   name: string;
   surname: string;
   phoneNumber: string;
   position: string;
-  avatar: string;
+  avatar: ImgRef;
   email: string;
 }
 
@@ -16,9 +16,9 @@ export function createProfile(params: Partial<User> = {}): Profile {
     surname: '',
     phoneNumber: '',
     position: '',
-    avatar: '',
     email: '',
-    ...params
+    ...params,
+    avatar: createImgRef(params.avatar),
   };
 }
 

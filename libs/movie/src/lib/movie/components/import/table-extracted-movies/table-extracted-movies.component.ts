@@ -231,7 +231,7 @@ export class TableExtractedMoviesComponent implements OnInit {
    * Specify the fields in which filter is possible.
    * Even for nested objects.
    */
-  filterPredicate(data: MovieImportState, filter) {
+  public filterPredicate(data: MovieImportState, filter: string) {
     const dataStr = data.movie.main.internalRef + data.movie.main.title.original + data.movie.main.productionYear;
     return dataStr.toLowerCase().indexOf(filter) !== -1;
   }

@@ -13,8 +13,8 @@
             <mat-form-field appearance="outline">
               <mat-label>Contract type</mat-label>
               <mat-select formControlName="type" required>
-                <mat-option *ngFor="let type of types" [value]="contractType[type]">
-                  {{ contractType[type] }}
+                <mat-option *ngFor="let type of contractType | keyvalue" [value]="type.key">
+                  {{ type.value }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -32,7 +32,7 @@
       <ng-container *ngFor="let partyDetails of contract.doc.parties; let i = index">
         <section fxLayout="row" fxLayoutAlign="space-between start">
           <h4>Party : {{ partyDetails.party.displayName }} ( org: {{ partyDetails.party.orgId }} ) </h4>
-          <button mat-icon-button color="accent" (click)="editParty(i)"><mat-icon>edit</mat-icon></button>
+          <button mat-icon-button color="accent" (click)="editParty(i)"><mat-icon svgIcon="pencil"></mat-icon></button>
         </section>
         <ul>
           <li><strong>Status : </strong>{{ partyDetails.status }}</li>
@@ -55,10 +55,17 @@
       </div>
     </article>
     <article fxLayout="column" fxLayoutAlign="space-between start">
+      <h2>Contract Price : </h2>
+      <div>
+        <span i18n>Overall contract price : <b>{{ contract.last.price.amount | currency: getCurrencyCode(contract.last.price.currency) }}</b></span>
+        <button mat-icon-button color="accent" (click)="updatePrice()">
+          <mat-icon svgIcon="update"></mat-icon>
+        </button>
+      </div>
       <h2>Public contract : </h2>
 
       <i>
-        Public contract is created automaticaly with data of Contract document and it's latest version.
+        Public contract is created automatically with data of Contract document and it's latest version.
         Public contract will appear only if status is OK.
       </i>
       <h3>Content : </h3>
@@ -91,8 +98,8 @@
             <mat-form-field appearance="outline">
               <mat-label>Version Status</mat-label>
               <mat-select formControlName="status" required>
-                <mat-option *ngFor="let status of statuses" [value]="contractStatus[status]">
-                  {{ contractStatus[status] }}
+                <mat-option *ngFor="let status of contractStatus | keyvalue" [value]="status.key">
+                  {{ status.value }}
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -141,7 +148,7 @@
         showPaginator="true">
         <ng-template colRef="movie.promotionalElements.poster" let-posters>
           <ng-container *ngIf="posters[0].media as poster; else noposter">
-            <img class="poster" [imgRef]="poster">
+            <img class="poster" [imgRef]="poster" placeholderAsset="empty_poster.png">
           </ng-container>
           <ng-template #noposter>
             --
@@ -158,7 +165,7 @@
           </ul>
         </ng-template>
         <ng-template colRef="exploredeals" let-dealslink>
-          <a [routerLink]="dealslink"><mat-icon>edit</mat-icon></a>
+          <a [routerLink]="dealslink"><mat-icon svgIcon="eye"></mat-icon></a>
         </ng-template>
       </bf-table-filter>
     </article>

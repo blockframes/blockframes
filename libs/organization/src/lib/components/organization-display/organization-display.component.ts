@@ -22,4 +22,8 @@ export class OrganizationDisplayComponent {
   get layout() {
     return this.opened ? 'column' : 'row';
   }
+
+  get org() {
+    return this.organizationInformations ? this.organizationInformations : this.organization;
+  }
 }

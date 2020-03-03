@@ -93,7 +93,7 @@ export class DistributionDealService extends CollectionService<DistributionDealS
    */
   public async getMovieDistributionDeals(movieId: string): Promise<DistributionDeal[]> {
     const distributionDeals = await this.getValue({ params: { movieId } });
-    return distributionDeals;
+    return distributionDeals.map(deal => formatDistributionDeal(deal)); 
   }
 
   /**

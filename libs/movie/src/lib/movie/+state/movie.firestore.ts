@@ -168,9 +168,11 @@ export interface BoxOffice {
 }
 
 export interface MovieBudget {
-  totalBudget: string, // WIP #1052 use Price Interface?
+  totalBudget: string, // @TODO (#1589) should be a Price 
   budgetCurrency?: MovieCurrenciesSlug,
-  detailledBudget?: any, // WIP #1052
+  detailledBudget?: any, // @TODO (#1589) detailedBudget is not used. Remove ?
+  //realBudget: Price,  @TODO (#1589) is not implemented. Usefull?
+  /** @see BUDGET_LIST for possible values */
   estimatedBudget?: NumberRange,
   boxOffice?: BoxOffice[],
 }

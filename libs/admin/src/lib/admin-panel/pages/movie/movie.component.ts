@@ -4,8 +4,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieService, Movie } from '@blockframes/movie';
 import { MovieAdminForm } from '../../forms/movie-admin.form';
 import { staticModels } from '@blockframes/utils/static-model';
-import { storeType, StoreStatus } from '@blockframes/movie/movie/+state/movie.firestore';
-
+import { DistributionDealService } from '@blockframes/movie/distribution-deals';
+import { getValue } from '@blockframes/utils/helpers';
+import { termToPrettyDate } from '@blockframes/utils/common-interfaces/terms';
+import { StoreStatus, storeType } from '@blockframes/movie/movie/+state/movie.firestore';
 
 @Component({
   selector: 'admin-movie',
@@ -15,16 +17,33 @@ import { storeType, StoreStatus } from '@blockframes/movie/movie/+state/movie.fi
 })
 export class MovieComponent implements OnInit {
   public movieId = '';
-  private movie: Movie;
+  public movie: Movie;
   public movieForm: MovieAdminForm;
-  public storeTypes: string[];
-  public storeType: any;
-  public storeStatuses: string[];
-  public storeStatus: any;
+  public storeType = storeType;
+  public storeStatus = StoreStatus;
   public staticModels = staticModels;
+  public rows: any[] = [];
+  public toPrettyDate = termToPrettyDate;
+
+  public versionColumnsTable = {
+    'id': 'Id',
+    'status': 'Status',
+    'contractId': 'Contract Id',
+    'terms': 'Scope',
+    'dealLink': 'Edit'
+  };
+
+  public initialColumnsTable: string[] = [
+    'id',
+    'status',
+    'contractId',
+    'terms',
+    'dealLink',
+  ];
 
   constructor(
     private movieService: MovieService,
+    private distributionDealService: DistributionDealService,
     private route: ActivatedRoute,
     private cdRef: ChangeDetectorRef,
     private snackBar: MatSnackBar
@@ -35,10 +54,9 @@ export class MovieComponent implements OnInit {
     this.movie = await this.movieService.getValue(this.movieId);
     this.movieForm = new MovieAdminForm(this.movie);
 
-    this.storeTypes = Object.keys(storeType);
-    this.storeType = storeType;
-    this.storeStatuses = Object.keys(StoreStatus);
-    this.storeStatus = StoreStatus;
+    const deals = await this.distributionDealService.getMovieDistributionDeals(this.movieId)
+    this.rows = deals.map(d => ({ ...d, dealLink: { id: d.id, movieId: this.movieId } }));
+
     this.cdRef.markForCheck();
   }
 
@@ -51,10 +69,34 @@ export class MovieComponent implements OnInit {
     this.movie.main.storeConfig.status = this.movieForm.get('storeStatus').value;
     this.movie.main.storeConfig.storeType = this.movieForm.get('storeType').value;
     this.movie.main.status = this.movieForm.get('productionStatus').value;
+    this.movie.main.internalRef = this.movieForm.get('internalRef').value;
 
     await this.movieService.updateById(this.movieId, this.movie);
 
     this.snackBar.open('Informations updated !', 'close', { duration: 5000 });
+  }
+
+  public getMovieTunnelPath(movieId: string) {
+    return `/c/o/dashboard/tunnel/movie/${movieId}`;
+  }
+
+  public filterPredicate(data: any, filter: string) {
+    const columnsToFilter = [
+      'id',
+      'status',
+      'contractId',
+      'terms',
+    ];
+    const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
+    return dataStr.toLowerCase().indexOf(filter) !== -1;
+  }
+
+  public getDealPath(dealId: string, movieId: string) {
+    return `/c/o/admin/panel/deal/${dealId}/m/${movieId}`;
+  }
+
+  public getContractPath(contractId: string) {
+    return `/c/o/admin/panel/contract/${contractId}`;
   }
 
 }

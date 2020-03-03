@@ -14,7 +14,7 @@ import { OrganizationQuery } from './organization.query';
 import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { APPS_DETAILS } from '@blockframes/utils';
-import { createPermissions, UserRole } from '../permissions/+state/permissions.model';
+import { createPermissions } from '../permissions/+state/permissions.model';
 import { firestore } from 'firebase/app';
 
 @Injectable({ providedIn: 'root' })

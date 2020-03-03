@@ -1,16 +1,26 @@
 <h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Distribution deal > {{ dealId }} </h1>
-<article id="deal-section" fxLayout="column" fxLayoutAlign="start start">
+<article *ngIf="deal" id="deal-section" fxLayout="column" fxLayoutAlign="start start">
   <h2>
-    <strong>movie Id : </strong>
+    <strong>Movie : </strong>
     <a [routerLink]="getMoviePath(movieId)">{{ movieId }}</a>
+    <a [routerLink]="getMovieTunnelPath(movieId)">
+      <mat-icon svgIcon="eye"></mat-icon>
+    </a>
+  </h2>
+  <h2 *ngIf="contract">
+    <strong>Contract : </strong>
+    <a [routerLink]="getContractPath(contract.id)">{{ contract.id }}</a>
+    <a [routerLink]="getContractTunnelPath(contract)">
+      <mat-icon svgIcon="eye"></mat-icon>
+    </a>
   </h2>
   <ng-container *ngIf="dealForm else spinner">
     <form [formGroup]="dealForm" fxLayout="column">
       <mat-form-field appearance="outline">
         <mat-label>Deal Status</mat-label>
         <mat-select formControlName="status" required>
-          <mat-option *ngFor="let status of statuses" [value]="distributionDealStatus[status]">
-            {{ distributionDealStatus[status] }}
+          <mat-option *ngFor="let status of distributionDealStatus | keyvalue" [value]="status.key">
+            {{ status.value }}
           </mat-option>
         </mat-select>
       </mat-form-field>

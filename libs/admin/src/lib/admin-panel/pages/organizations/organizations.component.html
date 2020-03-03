@@ -10,14 +10,14 @@
   showPaginator="true">
   <ng-template colRef="logo" let-logo>
     <ng-container *ngIf="logo; else nologo">
-      <img class="logo" [src]="logo">
+      <img class="logo" [imgRef]="logo"  placeholderAsset="empty_poster.png">
     </ng-container>
     <ng-template #nologo>
       --
     </ng-template>
   </ng-template>
   <ng-template colRef="edit" let-edit>
-    <a [routerLink]="edit.link"><mat-icon>edit</mat-icon></a>
+    <a [routerLink]="edit.link"><mat-icon svgIcon="pencil"></mat-icon></a>
   </ng-template>
   <ng-template colRef="appAccess" let-appAccess>
     <ul>

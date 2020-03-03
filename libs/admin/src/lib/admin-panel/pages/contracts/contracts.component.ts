@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { getValue } from '@blockframes/utils/helpers';
 import { termToPrettyDate } from '@blockframes/utils/common-interfaces/terms';
 import { ActivatedRoute } from '@angular/router';
@@ -8,7 +8,8 @@ import { ContractWithLastVersion, Contract } from '@blockframes/contract/contrac
 @Component({
   selector: 'admin-contracts',
   templateUrl: './contracts.component.html',
-  styleUrls: ['./contracts.component.scss']
+  styleUrls: ['./contracts.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContractsComponent implements OnInit {
   public versionColumns = {
@@ -71,7 +72,7 @@ export class ContractsComponent implements OnInit {
     this.cdRef.markForCheck();
   }
 
-  filterPredicate(data: any, filter) {
+  public filterPredicate(data: any, filter: string) {
     const columnsToFilter = [
       'doc.id',
       'doc.type',
