@@ -7,7 +7,7 @@ import { staticModels } from '@blockframes/utils/static-model';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals';
 import { getValue } from '@blockframes/utils/helpers';
 import { termToPrettyDate } from '@blockframes/utils/common-interfaces/terms';
-import { storeType, StoreStatus } from '@blockframes/movie/movie/+state/movie.firestore';
+import { StoreStatus, storeType } from '@blockframes/movie/movie/+state/movie.firestore';
 
 @Component({
   selector: 'admin-movie',
@@ -19,10 +19,8 @@ export class MovieComponent implements OnInit {
   public movieId = '';
   public movie: Movie;
   public movieForm: MovieAdminForm;
-  public storeTypes: string[];
-  public storeType: any;
-  public storeStatuses: string[];
-  public storeStatus: any;
+  public storeType = storeType;
+  public storeStatus = StoreStatus;
   public staticModels = staticModels;
   public rows: any[] = [];
   public toPrettyDate = termToPrettyDate;
@@ -55,11 +53,6 @@ export class MovieComponent implements OnInit {
     this.movieId = this.route.snapshot.paramMap.get('movieId');
     this.movie = await this.movieService.getValue(this.movieId);
     this.movieForm = new MovieAdminForm(this.movie);
-
-    this.storeTypes = Object.keys(storeType);
-    this.storeType = storeType;
-    this.storeStatuses = Object.keys(StoreStatus);
-    this.storeStatus = StoreStatus;
 
     const deals = await this.distributionDealService.getMovieDistributionDeals(this.movieId)
     this.rows = deals.map(d => {

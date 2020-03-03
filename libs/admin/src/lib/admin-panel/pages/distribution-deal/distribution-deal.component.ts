@@ -19,8 +19,7 @@ export class DistributionDealComponent implements OnInit {
   public movieId = '';
   public deal: DistributionDeal;
   public dealForm: DealAdminForm;
-  public statuses: string[];
-  public distributionDealStatus: any;
+  public distributionDealStatus = DistributionDealStatus;
   public contract: Contract;
 
   constructor(
@@ -42,8 +41,6 @@ export class DistributionDealComponent implements OnInit {
         this.contract = await this.contractService.getValue(this.deal.contractId);
       }
 
-      this.distributionDealStatus = DistributionDealStatus;
-      this.statuses = Object.keys(DistributionDealStatus);
 
     } catch (error) {
       this.snackBar.open('There was an error while oppening deal', 'close', { duration: 5000 });

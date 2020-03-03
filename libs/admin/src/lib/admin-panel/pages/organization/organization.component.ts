@@ -16,8 +16,7 @@ export class OrganizationComponent implements OnInit {
   public orgId = '';
   public org: Organization;
   public orgForm: OrganizationAdminForm;
-  public statuses: string[];
-  public organizationStatus: any;
+  public organizationStatus = OrganizationStatus;
   public movies: any[];
   public members: any[];
 
@@ -103,8 +102,6 @@ export class OrganizationComponent implements OnInit {
       return row;
     });
 
-    this.statuses = Object.keys(OrganizationStatus);
-    this.organizationStatus = OrganizationStatus;
     this.cdRef.markForCheck();
   }
 

@@ -17,8 +17,7 @@ export class InvoiceComponent implements OnInit {
   public invoiceId = '';
   private invoice: Invoice;
   public invoiceForm: InvoiceAdminForm;
-  public statuses: string[];
-  public paymentStatus: any;
+  public paymentStatus = PaymentStatus;
 
   constructor(
     private invoiceService: InvoiceService,
@@ -32,8 +31,6 @@ export class InvoiceComponent implements OnInit {
     this.invoice = await this.invoiceService.getValue(this.invoiceId);
     this.invoiceForm = new InvoiceAdminForm(this.invoice);
 
-    this.statuses = Object.keys(PaymentStatus);
-    this.paymentStatus = PaymentStatus;
     this.cdRef.markForCheck();
   }
 

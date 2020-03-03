@@ -17,16 +17,16 @@
         <mat-form-field appearance="outline">
           <mat-label>Movie Store Status</mat-label>
           <mat-select formControlName="storeStatus" required>
-            <mat-option *ngFor="let status of storeStatuses" [value]="storeStatus[status]">
-              {{ storeStatus[status] }}
+            <mat-option *ngFor="let status of storeStatus | keyvalue" [value]="status.key">
+              {{ status.value }}
             </mat-option>
           </mat-select>
         </mat-form-field>
         <mat-form-field appearance="outline">
           <mat-label>Movie Store Type</mat-label>
           <mat-select formControlName="storeType" required>
-            <mat-option *ngFor="let status of storeTypes" [value]="storeType[status]">
-              {{ storeType[status] }}
+            <mat-option *ngFor="let type of storeType | keyvalue" [value]="type.key">
+              {{ type.value }}
             </mat-option>
           </mat-select>
         </mat-form-field>
