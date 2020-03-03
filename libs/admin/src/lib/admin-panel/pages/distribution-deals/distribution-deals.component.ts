@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { getValue } from '@blockframes/utils/helpers';
 import { DistributionDealService, DistributionDealWithMovieId, createDistributionDealWithMovieId } from '@blockframes/movie/distribution-deals';
 import { termToPrettyDate } from '@blockframes/utils/common-interfaces/terms';
@@ -7,7 +7,8 @@ import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'admin-distribution-deals',
   templateUrl: './distribution-deals.component.html',
-  styleUrls: ['./distribution-deals.component.scss']
+  styleUrls: ['./distribution-deals.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DistributionDealsComponent implements OnInit {
   public versionColumns = {
@@ -74,7 +75,7 @@ export class DistributionDealsComponent implements OnInit {
     this.cdRef.markForCheck();
   }
 
-  filterPredicate(data: any, filter) {
+  public filterPredicate(data: any, filter: string) {
     const columnsToFilter = [
       'deal.id',
       'deal.publicId',

@@ -1,5 +1,5 @@
 <h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Organization > {{ orgId }} </h1>
-<article fxLayout="row" *ngIf="org" fxLayoutAlign="space-around start">
+<section fxLayout="row" *ngIf="org" fxLayoutAlign="space-around start">
   <article fxLayout="column" fxLayoutAlign="space-between start">
     <button mat-flat-button color="accent" [routerLink]="getOrgEditPath(orgId)">
       <mat-icon svgIcon="eye"></mat-icon>
@@ -17,12 +17,10 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
-      <div>
-        <h2>App Access</h2>
-        <mat-checkbox formControlName="catalogDashboard">
-          Catalog Dashboard
-        </mat-checkbox>
-      </div>
+      <h2>App Access</h2>
+      <mat-checkbox formControlName="catalogDashboard">
+        Catalog Dashboard
+      </mat-checkbox>
       <mat-checkbox formControlName="catalogMarketplace">
         Catalog Marketplace
       </mat-checkbox>
@@ -31,9 +29,9 @@
       </mat-card-actions>
     </form>
   </article>
-</article>
+</section>
 <hr />
-<article  fxLayout="row" fxLayoutAlign="space-around start">
+<section  fxLayout="row" fxLayoutAlign="space-around start">
   <article fxLayout="column" fxLayoutAlign="space-between start">
     <h2>
       <span>Members</span>
@@ -50,7 +48,7 @@
       showLoader="true"
       showPaginator="true">
       <ng-template colRef="edit" let-edit>
-        <a [routerLink]="edit.link"><mat-icon>edit</mat-icon></a>
+        <a [routerLink]="edit.link"><mat-icon svgIcon="pencil"></mat-icon></a>
       </ng-template>
       <ng-template colRef="avatar" let-avatar>
         <img class="poster" [imgRef]="avatar" placeholderAsset="empty_poster.png">
@@ -79,8 +77,8 @@
         <a target="_blank" [routerLink]="getMoviePath(id)" routerLinkActive="active"> {{ id }}</a>
       </ng-template>
       <ng-template colRef="edit" let-edit>
-        <a [routerLink]="edit.link"><mat-icon>edit</mat-icon></a>
+        <a [routerLink]="edit.link"><mat-icon svgIcon="pencil"></mat-icon></a>
       </ng-template>
     </bf-table-filter>
   </article>
-</article>
+</section>

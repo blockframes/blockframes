@@ -9,7 +9,7 @@ function createUserAdminControls(entity: Partial<User>) {
     orgId: new FormControl(user.orgId, [Validators.required]),
     name: new FormControl(user.name, [Validators.required]),
     surname: new FormControl(user.surname, [Validators.required]),
-    phonenumber: new FormControl(user.phoneNumber),
+    phoneNumber: new FormControl(user.phoneNumber),
     position: new FormControl(user.position),
   };
 }

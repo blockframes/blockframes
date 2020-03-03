@@ -8,6 +8,7 @@ import { MemberService } from '@blockframes/organization/member/+state/member.se
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
+  selector: 'admin-organization',
   templateUrl: './organization.component.html',
   styleUrls: ['./organization.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

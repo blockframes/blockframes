@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { MovieService } from '@blockframes/movie';
 import { getValue } from '@blockframes/utils/helpers';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals';
@@ -7,7 +7,8 @@ import { ContractService } from '@blockframes/contract/contract/+state/contract.
 @Component({
   selector: 'admin-movies',
   templateUrl: './movies.component.html',
-  styleUrls: ['./movies.component.scss']
+  styleUrls: ['./movies.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MoviesComponent implements OnInit {
   public versionColumns = {
@@ -80,7 +81,7 @@ export class MoviesComponent implements OnInit {
   }
 
 
-  filterPredicate(data: any, filter) {
+  public filterPredicate(data: any, filter: string) {
     const columnsToFilter = [
       'id',
       'main.internalRef',

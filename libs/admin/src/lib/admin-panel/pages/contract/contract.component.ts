@@ -187,6 +187,7 @@ export class ContractComponent implements OnInit {
       status: this.contractVersionForm.get('status').value,
     }
 
+    // @TODO (#1887)
     const newVersionId = await this.contractVersionService.addContractVersion({ doc: this.contract.doc, last: update });
     this.version = parseInt(newVersionId, 10);
     this.contractVersions = await this.contractVersionService.getContractVersions(this.contractId);
@@ -268,10 +269,11 @@ export class ContractComponent implements OnInit {
     }
 
     update.price.amount = 0;
-    Object.keys(this.contract.last.titles).forEach(titleId => {
+    for (const titleId in this.contract.last.titles) {
       update.price.amount += this.contract.last.titles[titleId].price.amount;
-    });
-
+    }
+    
+    // @TODO (#1887)
     const newVersionId = await this.contractVersionService.addContractVersion({ doc: this.contract.doc, last: update });
     this.version = parseInt(newVersionId, 10);
     this.contractVersions = await this.contractVersionService.getContractVersions(this.contractId);

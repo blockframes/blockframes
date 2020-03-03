@@ -1,12 +1,12 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { getValue } from '@blockframes/utils/helpers';
-import { OrganizationService } from '@blockframes/organization';
 import { AuthService } from '@blockframes/auth/+state/auth.service';
 
 @Component({
   selector: 'admin-users',
   templateUrl: './users.component.html',
-  styleUrls: ['./users.component.scss']
+  styleUrls: ['./users.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UsersComponent implements OnInit {
   public versionColumns = {
@@ -56,7 +56,7 @@ export class UsersComponent implements OnInit {
     this.cdRef.markForCheck();
   }
 
-  filterPredicate(data: any, filter) {
+  public filterPredicate(data: any, filter: string) {
     const columnsToFilter = [
       'id',
       'name',

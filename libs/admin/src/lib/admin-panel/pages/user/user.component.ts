@@ -5,6 +5,7 @@ import { UserAdminForm } from '../../forms/user-admin.form';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
+  selector: 'admin-user',
   templateUrl: './user.component.html',
   styleUrls: ['./user.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -23,11 +24,13 @@ export class UserComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    this.userId = this.route.snapshot.paramMap.get('userId');
-    this.user = await this.authService.getUser(this.userId);
-    this.userForm = new UserAdminForm(this.user);
-    this.isUserBlockframesAdmin = await this.authService.isBlockframesAdmin(this.userId);
-    this.cdRef.markForCheck();
+    this.route.params.subscribe(async params => {
+      this.userId = params.userId;
+      this.user = await this.authService.getUser(this.userId);
+      this.userForm = new UserAdminForm(this.user);
+      this.isUserBlockframesAdmin = await this.authService.isBlockframesAdmin(this.userId);
+      this.cdRef.markForCheck();
+    });
   }
 
   public async update() {
@@ -36,13 +39,15 @@ export class UserComponent implements OnInit {
       return;
     }
 
+    const { email, orgId, name, surname, phoneNumber, position } = this.userForm.value
+
     const update = {
-      email: this.userForm.get('email').value,
-      orgId: this.userForm.get('orgId').value,
-      name: this.userForm.get('name').value,
-      surname: this.userForm.get('surname').value,
-      phoneNumber: this.userForm.get('phonenumber').value,
-      position: this.userForm.get('position').value
+      email,
+      orgId,
+      name,
+      surname,
+      phoneNumber,
+      position
     };
 
     await this.authService.updateById(this.user.uid, update);

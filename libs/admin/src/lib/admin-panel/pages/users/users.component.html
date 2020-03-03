@@ -12,7 +12,7 @@
     <img class="avatar" [imgRef]="avatar" placeholderAsset="empty_poster.png">
   </ng-template>
   <ng-template colRef="edit" let-edit>
-    <a [routerLink]="edit.link"><mat-icon>edit</mat-icon></a>
+    <a [routerLink]="edit.link"><mat-icon svgIcon="pencil"></mat-icon></a>
   </ng-template>
   <ng-template colRef="org" let-org>
     <a [routerLink]="org.link">{{ org.id }}</a>

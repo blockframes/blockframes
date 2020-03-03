@@ -88,7 +88,7 @@ export class MovieComponent implements OnInit {
     return `/c/o/dashboard/tunnel/movie/${movieId}`;
   }
 
-  public filterPredicateTable(data: any, filter) {
+  public filterPredicate(data: any, filter: string) {
     const columnsToFilter = [
       'id',
       'status',

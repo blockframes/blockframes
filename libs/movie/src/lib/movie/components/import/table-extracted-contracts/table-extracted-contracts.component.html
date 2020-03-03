@@ -21,7 +21,7 @@
       (click)="updateSelectedContracts()">
       <ng-container *ngIf="processedContracts === 0 else updateinprogress">
         <span>Update</span>
-        <mat-icon>edit</mat-icon>
+        <mat-icon svgIcon="pencil"></mat-icon>
       </ng-container>
       <ng-template #updateinprogress>
         <span>Updating... {{ processedContracts }} / {{ selection.selected.length}} </span>

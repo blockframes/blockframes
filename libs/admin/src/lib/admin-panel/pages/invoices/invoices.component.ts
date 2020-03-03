@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { getValue } from '@blockframes/utils/helpers';
 import { InvoiceService } from '@blockframes/contract/invoice/+state/invoice.service';
 import { MovieCurrenciesSlug } from '@blockframes/utils/static-model';
@@ -7,7 +7,8 @@ import { getCodeBySlug } from '@blockframes/utils/static-model/staticModels';
 @Component({
   selector: 'admin-invoices',
   templateUrl: './invoices.component.html',
-  styleUrls: ['./invoices.component.scss']
+  styleUrls: ['./invoices.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InvoicesComponent implements OnInit {
   public versionColumns = {
@@ -63,7 +64,7 @@ export class InvoicesComponent implements OnInit {
   }
 
 
-  filterPredicate(data: any, filter) {
+  public filterPredicate(data: any, filter: string) {
     const columnsToFilter = [
       'id',
       'internalRef',

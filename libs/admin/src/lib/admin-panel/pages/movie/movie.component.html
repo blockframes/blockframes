@@ -1,5 +1,5 @@
 <h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Movie > {{ movieId }} </h1>
-<article fxLayout="row" fxLayoutAlign="space-around start" *ngIf="movie">
+<section fxLayout="row" fxLayoutAlign="space-around start" *ngIf="movie">
   <article id="movie-section" fxLayout="column" fxLayoutAlign="space-between start">
     <h2>
       {{ movie.main.title.international }} ({{ movie.main.internalRef }})
@@ -50,7 +50,7 @@
       [source]="rows" 
       [columns]="versionColumnsTable" 
       [initialColumns]="initialColumnsTable" 
-      [filterPredicate]="filterPredicateTable"
+      [filterPredicate]="filterPredicate"
       showFilter="true"
       showLoader="true"
       showPaginator="true">
@@ -61,11 +61,11 @@
         <strong>From : </strong>{{ toPrettyDate(terms,'start') }} <strong>To : </strong>{{ toPrettyDate(terms,'end') }}
       </ng-template>
       <ng-template colRef="dealLink" let-dealLink>
-        <a [routerLink]="getDealPath(dealLink.id, dealLink.movieId)"><mat-icon>edit</mat-icon></a>
+        <a [routerLink]="getDealPath(dealLink.id, dealLink.movieId)"><mat-icon svgIcon="pencil"></mat-icon></a>
       </ng-template>
     </bf-table-filter>
   </article>
-</article>
+</section>
 
 
 
