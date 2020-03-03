@@ -856,7 +856,7 @@ export class ViewExtractedElementsComponent implements OnInit {
 
             const territory = getCodeIfExists('TERRITORIES', boxOfficeParts[0].trim());
             if (territory) {
-              const unit = getKeyIfExists(unitBox, boxOfficeParts[1] as any);
+              const unit = getKeyIfExists(unitBox, boxOfficeParts[1] as UnitBoxValue);
               if (unit) {
                 movie.budget.boxOffice.push(createBoxOffice(
                   {
