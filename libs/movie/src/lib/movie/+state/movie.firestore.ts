@@ -24,17 +24,20 @@ import { LegalDocument } from "@blockframes/contract/contract/+state/contract.fi
 
 type Timestamp = firestore.Timestamp;
 
-export enum WorkType {
-  movie = 'Movie',
-  short = 'Short',
-  serie = 'Serie',
-  season = 'Season',
-  volume = 'Volume',
-  episode = 'Episode',
-  collection = 'Collection',
-  tv_film = 'TV Film',
-  flow = 'Flow'
-}
+export const workType = {
+  feature_film: 'Feature Film',
+  short: 'Short',
+  serie: 'Serie',
+  season: 'Season',
+  volume: 'Volume',
+  episode: 'Episode',
+  collection: 'Collection',
+  tv_film: 'TV Film',
+  flow: 'Flow'
+} as const;
+
+export type WorkType = keyof typeof workType;
+export type WorkTypeValue = typeof workType[WorkType];
 
 export const storeType = {
   library: 'Library',
