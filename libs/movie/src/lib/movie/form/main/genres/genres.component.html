@@ -3,7 +3,7 @@
   <ng-container *ngFor="let genre of values$ | async; let i = index">
     <mat-chip selectable removable color="default">
       {{ genre | translateSlug: 'GENRES'}}
-      <mat-icon matChipRemove (click)="remove(genre)">cancel</mat-icon>
+      <mat-icon matChipRemove svgIcon="close" (click)="remove(genre)"></mat-icon>
     </mat-chip>
   </ng-container>
 </mat-chip-list>
