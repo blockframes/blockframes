@@ -1,12 +1,8 @@
 /// <reference types="cypress" />
 
-import { signInAndNavigateToMain, clearDataAndPrepareTest } from "../../support/utils/utils";
+import { signInAndNavigateToMain, clearDataAndPrepareTest, createFakeScript, randomID } from "../../support/utils/utils";
 import { TunnelMainPage, TunnelChainOfTitlesPage } from "../../support/pages/dashboard";
 import TunnelFilesPage from "../../support/pages/dashboard/TunnelFilesPage";
-
-let currentID = 0;
-const randomID = (): string => (`${new Date().toISOString()}-${currentID++}`);
-const createFakeScript = (title: string): any => cy.task('random:pdf', title);
 
 const NAVIGATION = ['Media', 'Files & Links'];
 const LINKS = [
