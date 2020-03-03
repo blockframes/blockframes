@@ -72,7 +72,7 @@ type Code<T> = keyof T | T[keyof T];
 type Key<T, K extends Code<T>> = K extends keyof T ? K : keyof T;
 export function getKeyIfExists<T, K extends Code<T>>(base: T, code: K): Key<T, K> {
   // Sanitized input to properly compare with base data
-  const sanitizedCode = code.toString().trim().toLowerCase();
+  const sanitizedCode = (code as string).trim().toLowerCase();
   const candidate = Object.entries(base).find(([key, value]) => [key.toLowerCase(), value.toLowerCase()].includes(sanitizedCode));
   return candidate ? candidate.shift() as any : undefined;
 }
