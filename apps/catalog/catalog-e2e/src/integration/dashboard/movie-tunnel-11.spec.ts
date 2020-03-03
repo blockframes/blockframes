@@ -4,6 +4,10 @@ import { signInAndNavigateToMain, clearDataAndPrepareTest } from "../../support/
 import { TunnelMainPage, TunnelChainOfTitlesPage } from "../../support/pages/dashboard";
 import TunnelFilesPage from "../../support/pages/dashboard/TunnelFilesPage";
 
+let currentID = 0;
+const randomID = (): string => (`${new Date().toISOString()}-${currentID++}`);
+const createFakeScript = (title: string): any => cy.task('random:pdf', title);
+
 const NAVIGATION = ['Media', 'Files & Links'];
 const LINKS = [
   'https://www.promo_reel.com',
@@ -11,6 +15,7 @@ const LINKS = [
   'https://www.youtube.com/watch?v=n22yzBmr5sY',
   'https://www.teaser.com'
 ];
+const UPLOAD_STATUS = 'Success';
 
 beforeEach(() => {
   clearDataAndPrepareTest();
@@ -23,6 +28,16 @@ describe('User can navigate to the movie tunnel page 11, complete the fields, an
     p1.navigateToTunnelPage(NAVIGATION[0], NAVIGATION[1]);
     const p2 = new TunnelFilesPage();
 
+    // Upload files
+    createFakeScript(`${randomID()}`)
+    .then(path => p2.uploadPresentationDeck(path))
+    .then(() => p2.assertPresentationDeckHasUploadStatus((UPLOAD_STATUS)));
+
+    createFakeScript(`${randomID()}`)
+    .then(path => p2.uploadScenario(path))
+    .then(() => p2.assertScenarioHasUploadStatus((UPLOAD_STATUS)));
+
+    // File links
     p2.fillPromoReelLink(LINKS[0]);
     p2.assertPromoReelLinkExists(LINKS[0]);
     p2.fillScreenerLink(LINKS[1]);

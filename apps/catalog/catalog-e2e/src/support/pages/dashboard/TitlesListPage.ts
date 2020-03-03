@@ -2,7 +2,7 @@ import StartTunnelPage from "./StartTunnelPage";
 
 export default class TitlesListPage {
   constructor() {
-    cy.get('catalog-title-list');
+    cy.get('catalog-title-list', { timeout: 20000 });
   }
 
   public static navigateToPage() {
