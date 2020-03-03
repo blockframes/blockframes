@@ -88,7 +88,8 @@ import { ErrorLoggerModule } from '@blockframes/utils/error-logger.module';
       anchorScrolling: 'enabled',
       onSameUrlNavigation: 'reload',
       paramsInheritanceStrategy: 'always',
-      relativeLinkResolution: 'corrected'
+      relativeLinkResolution: 'corrected',
+      scrollPositionRestoration: 'enabled' 
     })
   ],
   providers: [ScreenTrackingService, UserTrackingService],
