@@ -1,9 +1,10 @@
 /// <reference types="cypress" />
 
-import { clearDataAndPrepareTest, signInAndNavigateToMain } from "../../support/utils/utils";
-import { TunnelMainPage, TunnelChainOfTitlesPage } from "../../support/pages/dashboard";
+import { clearDataAndPrepareTest, signInAndNavigateToMain, createFakeScript, randomID } from "../../support/utils/utils";
+import { TunnelMainPage, TunnelChainOfTitlesPage, TunnelValuationPage } from "../../support/pages/dashboard";
 
 const NAVIGATION = ['Legal Information', 'Chain of Titles'];
+const UPLOAD_STATUS = 'Success';
 
 beforeEach(() => {
   clearDataAndPrepareTest();
@@ -17,10 +18,10 @@ describe('User can navigate to the movie tunnel page 12, complete the fields, an
     const p2 = new TunnelChainOfTitlesPage();
 
     createFakeScript(`${randomID()}`)
-    .then(path => p2.uploadPresentationDeck(path))
-    .then(() => p2.assertPresentationDeckHasUploadStatus((UPLOAD_STATUS)));
+    .then(path => p2.uploadChainOfTitlesFile(path))
+    .then(() => p2.assertChainOfTitlesFileHasUploadStatus((UPLOAD_STATUS)));
 
-    // GO to movie-tunnel-12
-    //const p3: TunnelChainOfTitlesPage = p2.clickNext();
+    // GO to movie-tunnel-13
+    const p3: TunnelValuationPage = p2.clickNext();
   });
 });
