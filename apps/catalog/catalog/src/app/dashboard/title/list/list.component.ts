@@ -13,6 +13,7 @@ import { Contract } from '@blockframes/contract/contract/+state/contract.model';
 import { StoreStatus, MovieAnalytics } from '@blockframes/movie/movie/+state/movie.firestore';
 import { ContractQuery } from '@blockframes/contract/contract/+state/contract.query';
 import { getContractLastVersion } from '@blockframes/contract/version/+state';
+import { Router, ActivatedRoute } from '@angular/router';
 
 interface TitleView {
   id: string; // movieId
@@ -65,7 +66,9 @@ export class TitleListComponent implements OnInit {
   constructor(
     private query: MovieQuery,
     private contractQuery: ContractQuery,
-    private service: MovieService
+    private service: MovieService,
+    private router: Router,
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit() {
@@ -97,5 +100,14 @@ export class TitleListComponent implements OnInit {
   /** Dynamic filter of movies for each tab. */
   applyFilter(filter?: Movie['main']['storeConfig']['storeType']) {
     this.filter.setValue(filter);
+  }
+
+  /** Navigate to tunnel if status is draft, else go to page */
+  public goToTitle(title: TitleView) {
+    const basePath = `/c/o/dashboard`;
+    const path = (title.status === StoreStatus.draft)
+      ? `${basePath}/tunnel/movie/${title.id}`
+      : `${basePath}/titles/${title.id}`;
+    this.router.navigate([path], { relativeTo: this.route });
   }
 }
