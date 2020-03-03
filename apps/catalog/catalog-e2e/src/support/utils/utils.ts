@@ -27,3 +27,19 @@ export function signInAndNavigateToMain () {
   const p5: StartTunnelPage = p4.clickAdd();
   const p6: TunnelMainPage = p5.clickBegin();
 }
+
+export function uploadFile(p: string, type: string, testId: string): any {
+  return cy.readFile(p, 'base64')
+    .then((x) => Cypress.Blob.base64StringToBlob(x, type))
+    .then((content) => {
+      const testfile = new File([content], 'my-script.pdf', { type });
+      const dataTransfer = new DataTransfer();
+      dataTransfer.items.add(testfile);
+
+      return cy.get(`file-upload[test-id=${testId}] section`).trigger('drop', { dataTransfer });
+    });
+}
+
+export function assertUploadStatus(content: string, testId: string) {
+  return cy.get(`file-upload[test-id=${testId}] section h3`).contains(content);
+}
