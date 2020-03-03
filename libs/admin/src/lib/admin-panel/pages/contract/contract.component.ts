@@ -188,7 +188,7 @@ export class ContractComponent implements OnInit {
     const newVersionId = await this.contractVersionService.addContractVersion({ doc: this.contract.doc, last: update });
     this.version = parseInt(newVersionId, 10);
     this.contractVersions = await this.contractVersionService.getContractVersions(this.contractId);
-    this.cdRef.markForCheck();
+    this.cdRef.detectChanges();
 
     this.snackBar.open('Informations updated !', 'close', { duration: 5000 });
   }
@@ -274,7 +274,7 @@ export class ContractComponent implements OnInit {
     const newVersionId = await this.contractVersionService.addContractVersion({ doc: this.contract.doc, last: update });
     this.version = parseInt(newVersionId, 10);
     this.contractVersions = await this.contractVersionService.getContractVersions(this.contractId);
-    this.cdRef.markForCheck();
+    this.cdRef.detectChanges();
 
     this.snackBar.open('Contract global price updated !', 'close', { duration: 5000 });
   }
