@@ -1,49 +1,54 @@
 import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { getValue } from '@blockframes/utils/helpers';
-import { OrganizationService } from '@blockframes/organization';
+import { AuthService } from '@blockframes/auth/+state/auth.service';
 
 @Component({
-  selector: 'admin-organizations',
-  templateUrl: './organizations.component.html',
-  styleUrls: ['./organizations.component.scss'],
+  selector: 'admin-users',
+  templateUrl: './users.component.html',
+  styleUrls: ['./users.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class OrganizationsComponent implements OnInit {
+export class UsersComponent implements OnInit {
   public versionColumns = {
-    'id': 'Id',
-    'status': 'Status',
-    'logo': 'Logo',
+    'uid': 'Id',
+    'avatar': 'Avatar',
     'name': 'Name',
+    'surname': 'Surname',
+    'org': 'Organization',
+    'position': 'Position',
     'email': 'Email',
-    'appAccess': 'Authorizations',
     'edit': 'Edit',
   };
 
   public initialColumns: string[] = [
-    'id',
-    'logo',
+    'uid',
+    'avatar',
     'name',
-    'status',
+    'surname',
+    'org',
+    'position',
     'email',
-    'appAccess',
     'edit',
   ];
   public rows: any[] = [];
   constructor(
-    private organizationService: OrganizationService,
+    private authService: AuthService,
     private cdRef: ChangeDetectorRef,
   ) { }
 
   async ngOnInit() {
-    const orgs = await this.organizationService.getAllOrganizations();
-    this.rows = orgs.map(o => ({
-      ...o,
+    const users = await this.authService.getAllUsers();
+    this.rows = users.map(u => ({
+      ...u,
       edit: {
-        id: o.id,
-        link: `/c/o/admin/panel/organization/${o.id}`,
+        id: u.uid,
+        link: `/c/o/admin/panel/user/${u.uid}`,
+      },
+      org: {
+        id: u.orgId,
+        link: `/c/o/admin/panel/organization/${u.orgId}`,
       }
     }));
-
     this.cdRef.markForCheck();
   }
 
@@ -51,8 +56,10 @@ export class OrganizationsComponent implements OnInit {
     const columnsToFilter = [
       'id',
       'name',
-      'status',
+      'surname',
       'email',
+      'position',
+      'org',
     ];
     const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
     return dataStr.toLowerCase().indexOf(filter) !== -1;

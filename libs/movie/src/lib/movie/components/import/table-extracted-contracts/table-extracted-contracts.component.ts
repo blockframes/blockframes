@@ -179,7 +179,7 @@ export class TableExtractedContractsComponent implements OnInit {
    * Specify the fields in which filter is possible.
    * Even for nested objects.
    */
-  filterPredicate(data: ContractsImportState, filter) {
+  public filterPredicate(data: ContractsImportState, filter: string) {
     const dataStr = data.contract.doc.id + data.contract.last.id + data.contract.last.creationDate + data.contract.last.price.amount;
     return dataStr.toLowerCase().indexOf(filter) !== -1;
   }

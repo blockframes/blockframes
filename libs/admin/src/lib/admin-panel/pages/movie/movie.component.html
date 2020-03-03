@@ -1,43 +1,71 @@
 <h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Movie > {{ movieId }} </h1>
-
-<ng-container *ngIf="movieForm">
-  <form [formGroup]="movieForm" fxLayout="column">
-    <div>
-      <mat-form-field appearance="outline">
-        <mat-label>Movie Store Status</mat-label>
-        <mat-select formControlName="storeStatus" required>
-          <mat-option *ngFor="let status of storeStatuses" [value]="storeStatus[status]">
-            {{ storeStatus[status] }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-    <div>
-      <mat-form-field appearance="outline">
-        <mat-label>Movie Store Type</mat-label>
-        <mat-select formControlName="storeType" required>
-          <mat-option *ngFor="let status of storeTypes" [value]="storeType[status]">
-            {{ storeType[status] }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-    <div>
-      <mat-form-field appearance="outline">
-        <mat-label>Production Status</mat-label>
-        <mat-select formControlName="productionStatus" required>
-          <mat-option *ngFor="let status of staticModels.MOVIE_STATUS" [value]="status.slug">
-            {{ status.label }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-    <mat-card-actions align="end">
-      <button type="submit" mat-flat-button color="primary" (click)="update()">Update</button>
-    </mat-card-actions>
-  </form>
-</ng-container>
-
+<section fxLayout="row" fxLayoutAlign="space-around start" *ngIf="movie">
+  <article id="movie-section" fxLayout="column" fxLayoutAlign="space-between start">
+    <h2>
+      {{ movie.main.title.international }} ({{ movie.main.internalRef }})
+      <button mat-icon-button color="accent" [routerLink]="getMovieTunnelPath(movieId)">
+        <mat-icon svgIcon="eye"></mat-icon>
+      </button>
+    </h2>
+    <h4>({{ movie.main.title.original }})</h4>
+    <ng-container *ngIf="movieForm">
+      <form [formGroup]="movieForm" fxLayout="column">
+        <mat-form-field appearance="outline">
+          <mat-label>Internal ref</mat-label>
+          <input matInput type="text" placeholder="Internal ref" formControlName="internalRef" />
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Movie Store Status</mat-label>
+          <mat-select formControlName="storeStatus" required>
+            <mat-option *ngFor="let status of storeStatus | keyvalue" [value]="status.key">
+              {{ status.value }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Movie Store Type</mat-label>
+          <mat-select formControlName="storeType" required>
+            <mat-option *ngFor="let type of storeType | keyvalue" [value]="type.key">
+              {{ type.value }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+          <mat-label>Production Status</mat-label>
+          <mat-select formControlName="productionStatus" required>
+            <mat-option *ngFor="let status of staticModels.MOVIE_STATUS" [value]="status.slug">
+              {{ status.label }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-card-actions align="end">
+          <button type="submit" mat-flat-button color="primary" (click)="update()">Update</button>
+        </mat-card-actions>
+      </form>
+    </ng-container>
+  </article>
+  <article id="deals-section"  fxLayout="column" fxLayoutAlign="space-between start">
+    <h2>Deals :</h2>
+    <bf-table-filter class="deals-table"
+      [source]="rows" 
+      [columns]="versionColumnsTable" 
+      [initialColumns]="initialColumnsTable" 
+      [filterPredicate]="filterPredicate"
+      showFilter="true"
+      showLoader="true"
+      showPaginator="true">
+      <ng-template colRef="contractId" let-contractId>
+        <a [routerLink]="getContractPath(contractId)" routerLinkActive="active"> {{ contractId }}</a>
+      </ng-template>
+      <ng-template colRef="terms" let-terms>
+        <strong>From : </strong>{{ toPrettyDate(terms,'start') }} <strong>To : </strong>{{ toPrettyDate(terms,'end') }}
+      </ng-template>
+      <ng-template colRef="dealLink" let-dealLink>
+        <a [routerLink]="getDealPath(dealLink.id, dealLink.movieId)"><mat-icon svgIcon="pencil"></mat-icon></a>
+      </ng-template>
+    </bf-table-filter>
+  </article>
+</section>
 
 
 
