@@ -60,12 +60,15 @@ export enum UnitBox {
   entrances = '#Entrances',
 }
 
-export enum StoreStatus {
-  submitted = 'Submitted',
-  accepted = 'Accepted',
-  draft = 'Draft',
-  refused = 'Refused',
-}
+export const storeStatus = {
+  submitted: 'Submitted',
+  accepted : 'Accepted',
+  draft : 'Draft',
+  refused : 'Refused',
+} as const;
+
+export type StoreStatus = keyof typeof storeStatus;
+export type StoreStatusValue = typeof storeStatus[StoreStatus];
 
 export interface EventAnalytics {
   event_date: string,

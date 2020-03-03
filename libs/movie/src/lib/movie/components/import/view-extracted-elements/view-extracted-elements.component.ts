@@ -27,7 +27,7 @@ import { formatCredits } from '@blockframes/utils/spreadsheet/format';
 import { ImageUploader, cleanModel, getKeyIfExists } from '@blockframes/utils';
 import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
 import { SSF } from 'xlsx';
-import { MovieLanguageTypes, PremiereType, storeType, StoreStatus, UnitBox, workType } from '@blockframes/movie/movie/+state/movie.firestore';
+import { MovieLanguageTypes, PremiereType, storeType, UnitBox, workType, storeStatus } from '@blockframes/movie/movie/+state/movie.firestore';
 import { createStakeholder } from '@blockframes/utils/common-interfaces/identity';
 import { DistributionDeal, createDistributionDeal, createHoldback } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
 import { createContractPartyDetail, createContractTitleDetail, Contract, initContractWithVersion, ContractWithLastVersion } from '@blockframes/contract/contract/+state/contract.model';
@@ -982,7 +982,7 @@ export class ViewExtractedElementsComponent implements OnInit {
 
           // MOVIE STATUS
           if (spreadSheetRow[SpreadSheetMovie.movieStatus]) {
-            const key = getKeyIfExists(StoreStatus, spreadSheetRow[SpreadSheetMovie.movieStatus]);
+            const key = getKeyIfExists(storeStatus, spreadSheetRow[SpreadSheetMovie.movieStatus]);
             if (key) {
               movie.main.storeConfig.status = key;
             } else {
@@ -995,12 +995,12 @@ export class ViewExtractedElementsComponent implements OnInit {
               });
             }
           } else {
-            movie.main.storeConfig.status = StoreStatus.draft;
+            movie.main.storeConfig.status = 'draft';
             importErrors.errors.push({
               type: 'warning',
               field: 'movie.main.storeConfig.status',
               name: 'Movie store status',
-              reason: `Store status not found, assumed "${StoreStatus.draft}"`,
+              reason: `Store status not found, assumed "${storeStatus.draft}"`,
               hint: 'Edit corresponding sheet field.'
             });
           }

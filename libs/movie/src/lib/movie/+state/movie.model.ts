@@ -23,7 +23,6 @@ import {
   BoxOffice,
   UnitBox,
   MovieStakeholders,
-  StoreStatus,
   MovieAnalytics,
   MovieLegalDocuments,
   DocumentMeta
@@ -299,7 +298,7 @@ export function populateMovieLanguageSpecification(
 
 export function createStoreConfig(params: Partial<StoreConfig> = {}): StoreConfig {
   return {
-    status: StoreStatus.draft,
+    status: 'draft',
     storeType: 'line_up',
     ...params
   };
