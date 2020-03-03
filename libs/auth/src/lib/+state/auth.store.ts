@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store, StoreConfig } from '@datorama/akita';
 import { FireAuthState, initialAuthState } from 'akita-ng-fire';
-import { ImgRef, createImgRef } from '@blockframes/utils';
+import { createImgRef, ImgRef } from '@blockframes/utils/image-uploader';
 
 export const PLACEHOLDER_AVATAR = '/assets/logo/profil_avatar_250.svg';
 
