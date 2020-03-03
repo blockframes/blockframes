@@ -3,15 +3,9 @@
   <mat-form-field appearance="outline" class="full-width">
     <mat-label>Content Type</mat-label>
     <mat-select test-id="content-type" formControlName="workType">
-      <mat-option value="movie">Movie</mat-option>
-      <mat-option value="short">Short</mat-option>
-      <mat-option value="serie">Serie</mat-option>
-      <mat-option value="season">Season</mat-option>
-      <mat-option value="volume">Volume</mat-option>
-      <mat-option value="episode">Episode</mat-option>
-      <mat-option value="collection">Collection</mat-option>
-      <mat-option value="tv_film">TV Film</mat-option>
-      <mat-option value="flow">Flow</mat-option>
+      <mat-option *ngFor="let type of workType | keyvalue" [value]="type.key">
+        {{ type.value }}
+      </mat-option>
     </mat-select>
   </mat-form-field>
 
