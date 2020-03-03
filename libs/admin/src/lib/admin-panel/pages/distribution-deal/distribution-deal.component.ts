@@ -37,10 +37,9 @@ export class DistributionDealComponent implements OnInit {
       this.deal = await this.distributionDealService.getValue(this.dealId, { params: { movieId: this.movieId } });
       this.dealForm = new DealAdminForm(this.deal);
 
-      if(this.deal.contractId) {
+      if (this.deal.contractId) {
         this.contract = await this.contractService.getValue(this.deal.contractId);
       }
-
 
     } catch (error) {
       this.snackBar.open('There was an error while oppening deal', 'close', { duration: 5000 });

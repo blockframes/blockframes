@@ -78,30 +78,22 @@ export class OrganizationComponent implements OnInit {
 
     const moviePromises = this.org.movieIds.map(m => this.movieService.getValue(m));
     const movies = await Promise.all(moviePromises);
-    this.movies = movies.map(m => {
-      const row = {...m} as any;
-
-      // Edit link
-      row.edit = {
+    this.movies = movies.map(m => ({
+      ...m,
+      edit: {
         id: m.id,
         link: `/c/o/admin/panel/movie/${m.id}`,
       }
-
-      return row;
-    });
+    }));
 
     const members = await this.memberService.getMembers(this.orgId);
-    this.members = members.map(m => {
-      const row = {...m} as any;
-
-      // Edit link
-      row.edit = {
+    this.members = members.map(m => ({
+      ...m,
+      edit: {
         id: m.uid,
         link: `/c/o/admin/panel/user/${m.uid}`,
       }
-      
-      return row;
-    });
+    }));
 
     this.cdRef.markForCheck();
   }

@@ -38,21 +38,17 @@ export class UsersComponent implements OnInit {
 
   async ngOnInit() {
     const users = await this.authService.getAllUsers();
-    this.rows = users.map(o => {
-      const user = {...o} as any;
-
-      // Append new data for table display
-      user.edit = {
-        id: user.uid,
-        link: `/c/o/admin/panel/user/${user.uid}`,
+    this.rows = users.map(u => ({
+      ...u,
+      edit: {
+        id: u.uid,
+        link: `/c/o/admin/panel/user/${u.uid}`,
+      },
+      org: {
+        id: u.orgId,
+        link: `/c/o/admin/panel/organization/${u.orgId}`,
       }
-
-      user.org = {
-        id: user.orgId,
-        link: `/c/o/admin/panel/organization/${user.orgId}`,
-      }
-      return user;
-    });
+    }));
     this.cdRef.markForCheck();
   }
 
@@ -68,5 +64,5 @@ export class UsersComponent implements OnInit {
     const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
     return dataStr.toLowerCase().indexOf(filter) !== -1;
   }
-  
+
 }

@@ -24,7 +24,7 @@ export class MovieComponent implements OnInit {
   public staticModels = staticModels;
   public rows: any[] = [];
   public toPrettyDate = termToPrettyDate;
-  
+
   public versionColumnsTable = {
     'id': 'Id',
     'status': 'Status',
@@ -55,16 +55,8 @@ export class MovieComponent implements OnInit {
     this.movieForm = new MovieAdminForm(this.movie);
 
     const deals = await this.distributionDealService.getMovieDistributionDeals(this.movieId)
-    this.rows = deals.map(d => {
-      const row = { ...d } as any;
-      // Append new data for table display
-      row.dealLink = {
-        id: d.id,
-        movieId: this.movieId
-      }
-      return row;
-    });
-    
+    this.rows = deals.map(d => ({ ...d, dealLink: { id: d.id, movieId: this.movieId } }));
+
     this.cdRef.markForCheck();
   }
 

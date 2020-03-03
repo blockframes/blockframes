@@ -44,21 +44,17 @@ export class InvoicesComponent implements OnInit {
 
   async ngOnInit() {
     const invoices = await this.invoiceService.getAllInvoices();
-    this.rows =  invoices.map(i => {
-      const row = {...i} as any;
-      // Append new data for table display
-      row.edit = {
+    this.rows = invoices.map(i => ({
+      ...i,
+      edit: {
         id: i.id,
         link: `/c/o/admin/panel/invoice/${i.id}`,
-      }
-
-      row.contractLink = {
+      },
+      contractLink: {
         id: i.contractId,
         link: `/c/o/admin/panel/contract/${i.contractId}`,
       }
-
-      return row;
-    });
+    }));
 
     this.cdRef.markForCheck();
   }
@@ -92,7 +88,7 @@ export class InvoicesComponent implements OnInit {
   }
 
   public getOrgPath(orgId: string) {
-    return  `/c/o/admin/panel/organization/${orgId}`;
+    return `/c/o/admin/panel/organization/${orgId}`;
   }
- 
+
 }

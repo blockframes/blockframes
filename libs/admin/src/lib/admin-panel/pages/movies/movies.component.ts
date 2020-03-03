@@ -48,20 +48,20 @@ export class MoviesComponent implements OnInit {
     const movies = await this.movieService.getAllMovies();
 
     const promises = movies.map(async m => {
-      const row = {...m} as any;
+      const row = { ...m } as any;
 
       // Append new data for table display
 
       // We add distribution deals infos to the row
       const distributionDeals = await this.distributionDealService.getMovieDistributionDeals(m.id);
-      row.distributionDealsInfo =  { 
+      row.distributionDealsInfo = {
         link: `/c/o/admin/panel/deals/${m.id}`,
         count: distributionDeals.length
       };
 
       // We add contracts infos to the row
       const contract = await this.contractService.getMovieContracts(m.id);
-      row.contractsInfo =  { 
+      row.contractsInfo = {
         link: `/c/o/admin/panel/contracts/${m.id}`,
         count: contract.length
       };

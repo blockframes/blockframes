@@ -36,17 +36,14 @@ export class OrganizationsComponent implements OnInit {
 
   async ngOnInit() {
     const orgs = await this.organizationService.getAllOrganizations();
-    this.rows = orgs.map(o => {
-      const org = {...o} as any;
-
-      // Append new data for table display
-      org.edit = {
-        id: org.id,
-        link: `/c/o/admin/panel/organization/${org.id}`,
+    this.rows = orgs.map(o => ({
+      ...o,
+      edit: {
+        id: o.id,
+        link: `/c/o/admin/panel/organization/${o.id}`,
       }
+    }));
 
-      return org;
-    });
     this.cdRef.markForCheck();
   }
 
@@ -60,5 +57,5 @@ export class OrganizationsComponent implements OnInit {
     const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
     return dataStr.toLowerCase().indexOf(filter) !== -1;
   }
-  
+
 }
