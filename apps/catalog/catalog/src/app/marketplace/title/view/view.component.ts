@@ -9,7 +9,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 
 @Component({
   selector: 'catalog-movie-view',
@@ -50,6 +50,12 @@ export class MarketplaceMovieViewComponent implements OnInit {
           .some(({ movieIds }) => movieIds.includes(this.movieQuery.getActiveId()));
       })
     );
+    this.router.events.subscribe((evt) => {
+      if (!(evt instanceof NavigationEnd)) {
+          return;
+      }
+      window.scrollTo(0, 0)
+  });
   }
 
   private getMovie() {

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Renderer2, ChangeDetectorRef, NgZone } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Renderer2 } from '@angular/core';
 import { ThemeService } from '@blockframes/ui/theme';
 import { IconService } from '@blockframes/ui/icon-service';
 import { TunnelService } from '@blockframes/ui/tunnel';
