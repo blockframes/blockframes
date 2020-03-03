@@ -3,7 +3,7 @@
     <ng-container *ngFor="let control of form.controls; let i = index">
       <mat-chip *ngIf="control.value" [selectable]="selectable" [color]="color" [removable]="removable" (removed)="remove(i)">
         {{ getLabel(control.value) }}
-        <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+        <mat-icon matChipRemove svgIcon="close" *ngIf="removable"></mat-icon>
       </mat-chip>
     </ng-container>
     <input #inputEl [placeholder]="placeholder" [formControl]="ctrl" [matAutocomplete]="auto" [disabled]="disabled"

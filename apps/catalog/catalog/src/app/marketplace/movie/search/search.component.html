@@ -162,7 +162,7 @@
                         <span mat-line>
                           <mat-chip class="chip-language" color="default" removable (removed)="removeLanguage(language)">
                             <span>{{ language | translateSlug: 'LANGUAGES' }}</span>
-                            <mat-icon matChipRemove>cancel</mat-icon>
+                            <mat-icon matChipRemove svgIcon="close"></mat-icon>
                           </mat-chip>
                         </span>
                         <mat-checkbox color="primary" test-id="languages-checkbox-original" mat-line formControlName="original">
@@ -251,7 +251,7 @@
           <movie-card [movie]="movie" [link]="['/c/o/marketplace',  movie.id]" *ngIf="!listView">
             <ng-container movieInformation>
               <mat-card-subtitle>
-                <span *ngFor="let director of movie.main.directors; let isLast=last">{{ director.firstName }}
+                <span class="mat-caption" *ngFor="let director of movie.main.directors; let isLast=last">{{ director.firstName }}
                   {{ director.lastName }}{{isLast ? '' : ', '}}</span>
               </mat-card-subtitle>
             </ng-container>
