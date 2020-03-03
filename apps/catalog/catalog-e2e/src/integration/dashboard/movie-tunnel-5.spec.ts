@@ -1,15 +1,11 @@
 /// <reference types="cypress" />
 
-import { TunnelBudgetPage, TunnelVersionInfoPage } from '../../support/pages/dashboard';
-import { HomePage } from '../../support/pages/marketplace';
-import { User } from '../../support/utils/type';
-import { USERS } from '../../support/utils/users';
-import { LoginViewPage, WelcomeViewPage } from '../../support/pages/auth';
+import { TunnelBudgetPage, TunnelTechnicalInfoPage, TunnelMainPage } from '../../support/pages/dashboard';
+import { signInAndNavigateToMain, clearDataAndPrepareTest } from '../../support/utils/utils';
 
 // TEST
 
-// Select user: cytest@blockframes.com
-const LOGIN_CREDENTIALS: Partial<User> = USERS[0];
+const NAVIGATION = ['Title Information', 'Budget, Quotas, Critics'];
 
 const BUDGET_RANGE = 'Less than $1 million';
 const QUOTAS = ['EOF', 'European'];
@@ -22,63 +18,53 @@ const JOURNAL_NAME = 'NY Times';
 const REVUE_LINK = 'https://www.nytimes.com/2007/10/24/movies/24lage.html';
 const CRITIC = '“Lagerfeld Confidential,” an intimate portrait of the designer who has ruled the House of Chanel for more than two decades.';
 
-const MOVIE_ID = 'P5ErzmOtap9ju9X8rWvd'; // Empty movie
-
 beforeEach(() => {
-  cy.clearCookies();
-  cy.clearLocalStorage();
-  cy.visit('/auth');
-  cy.viewport('ipad-2', 'landscape');
+  clearDataAndPrepareTest();
+  signInAndNavigateToMain();
 });
 
 describe('User can navigate to the movie tunnel page 5, complete the fields, and navigate to page 6', () => {
-  it.skip('Login into an existing account, navigate on budget page, complete budget and quotas fields, go on movie tunnel page 6', () => {
-    // Connexion
-    const p1: WelcomeViewPage = new WelcomeViewPage();
-    const p2: LoginViewPage = p1.clickCallToAction();
-    p2.switchMode();
-    p2.fillSignin(LOGIN_CREDENTIALS);
-    const p3: HomePage = p2.clickSignIn();
-
-    // Navigate to movie-tunnel-5 and fill the fields
-    const p4: TunnelBudgetPage = TunnelBudgetPage.navigateToPage(MOVIE_ID);
+  it('Login into an existing account, navigate on budget page, complete budget and quotas fields, go on movie tunnel page 6', () => {
+    const p1 = new TunnelMainPage();
+    p1.navigateToTunnelPage(NAVIGATION[0], NAVIGATION[1]);
+    const p2 = new TunnelBudgetPage();
 
     // Budget Range
-    p4.selectBudgetRange(BUDGET_RANGE);
-    p4.assertBudgetRangeIsSelected(BUDGET_RANGE);
+    p2.selectBudgetRange(BUDGET_RANGE);
+    p2.assertBudgetRangeIsSelected(BUDGET_RANGE);
 
     // Box office
-    p4.fillBoxOfficeCountry(PARTIAL_COUNTRIES[0]);
-    p4.selectBoxOfficeCountry(COUNTRIES[0]);
-    p4.assertBoxOfficeCountryExists(COUNTRIES[0]);
-    p4.clickSelectMetric();
-    p4.selectMetric(METRIC);
-    p4.assertMetricExists(METRIC);
-    p4.fillBoxOfficeEarnings(EARNING);
-    p4.assertBoxOfficeEarningsExists(EARNING);
+    p2.fillBoxOfficeCountry(PARTIAL_COUNTRIES[0]);
+    p2.selectBoxOfficeCountry(COUNTRIES[0]);
+    p2.assertBoxOfficeCountryExists(COUNTRIES[0]);
+    p2.clickSelectMetric();
+    p2.selectMetric(METRIC);
+    p2.assertMetricExists(METRIC);
+    p2.fillBoxOfficeEarnings(EARNING);
+    p2.assertBoxOfficeEarningsExists(EARNING);
 
     // Qualifications
     QUOTAS.forEach(QUOTA => {
-      p4.selectQuota(QUOTA);
-      p4.assertQuotaIsSelected(QUOTA);
+      p2.selectQuota(QUOTA);
+      p2.assertQuotaIsSelected(QUOTA);
     });
 
     // Ratings
-    p4.fillRatingsCountry(PARTIAL_COUNTRIES[1]);
-    p4.selectRatingsCountry(COUNTRIES[1]);
-    p4.assertRatingsCountry(COUNTRIES[1]);
-    p4.fillRating(RATING);
-    p4.assertRatingExists(RATING);
+    p2.fillRatingsCountry(PARTIAL_COUNTRIES[1]);
+    p2.selectRatingsCountry(COUNTRIES[1]);
+    p2.assertRatingsCountry(COUNTRIES[1]);
+    p2.fillRating(RATING);
+    p2.assertRatingExists(RATING);
 
     // Film Reviews
-    p4.fillJournalName(JOURNAL_NAME);
-    p4.assertJournalNameExists(JOURNAL_NAME);
-    p4.fillRevueLink(REVUE_LINK);
-    p4.assertRevueLinkExists(REVUE_LINK);
-    p4.fillFilmCritic(CRITIC);
-    p4.assertFilmCriticExists(CRITIC);
+    p2.fillJournalName(JOURNAL_NAME);
+    p2.assertJournalNameExists(JOURNAL_NAME);
+    p2.fillRevueLink(REVUE_LINK);
+    p2.assertRevueLinkExists(REVUE_LINK);
+    p2.fillFilmCritic(CRITIC);
+    p2.assertFilmCriticExists(CRITIC);
 
     // GO to movie-tunnel-6
-    const p5: TunnelVersionInfoPage = p4.clickNext();
+    const p3: TunnelTechnicalInfoPage = p2.clickNext();
   });
 });

@@ -39,7 +39,7 @@ const routes: Routes = [{
     },
     {
       path: 'activity',   // List of notifications
-      loadChildren: () => import('@blockframes/notification/notification/activity-feed/activity-feed.module').then(m => m.ActivityFeedModule)
+      loadChildren: () => import('../activity/activity.module').then(m => m.ActivityModule)
     },
     {
       path: 'selection',

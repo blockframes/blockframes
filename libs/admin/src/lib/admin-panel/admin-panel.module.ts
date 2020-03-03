@@ -17,9 +17,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 // Modules
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
-import { OrganizationAutocompleteModule } from '@blockframes/organization/components/organization-autocomplete/organization-autocomplete.module';
 import { ContractTreeModule } from './components/contract-tree/contract-tree.module';
 import { OrganizationAdminModule } from './pages/organization/organization.module';
+import { AlgoliaAutocompleteModule } from '@blockframes/utils/algolia-autocomplete/algolia-autocomplete.module';
 
 // Components
 import { OverviewComponent } from './pages/overview/overview.component';
@@ -72,7 +72,7 @@ export const panelRoutes: Routes = [
     FlexLayoutModule,
     TableFilterModule,
     ImageReferenceModule,
-    OrganizationAutocompleteModule,
+    AlgoliaAutocompleteModule,
     ContractTreeModule,
     RouterModule.forChild(panelRoutes),
     OrganizationAdminModule,

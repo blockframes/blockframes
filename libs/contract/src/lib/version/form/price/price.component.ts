@@ -1,21 +1,17 @@
-import { map, pluck } from 'rxjs/operators';
 // Blockframes
+import { algolia } from '@env';
 import { ContractTunnelComponent } from '@blockframes/contract/contract/tunnel/contract-tunnel.component';
 import { ContractVersionForm } from '@blockframes/contract/version/form/version.form';
 import { Movie } from '@blockframes/movie/movie/+state/movie.model';
 import { FormStaticValue, FormList } from '@blockframes/utils/form';
-import { MoviesIndex, } from '@blockframes/utils/algolia';
 
 // Angular
-import { FormControl } from '@angular/forms';
-import { Component, Input, ChangeDetectionStrategy, OnInit, Inject } from '@angular/core';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { Component, Input, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
 // RxJs & Algolia & etc
 import { Observable, BehaviorSubject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
-import { Index } from 'algoliasearch';
+import { distinctUntilChanged, map } from 'rxjs/operators';
 
 @Component({
   selector: '[form] contract-version-form-price',
@@ -32,7 +28,7 @@ export class PriceComponent implements OnInit {
     this._hasMandate = coerceBooleanProperty(value);
   }
 
-  public movieCtrl = new FormControl();
+  public algoliaMovieIndex = algolia.indexNameMovies;
 
   public currencyCtrl: FormStaticValue<'MOVIE_CURRENCIES'>;
 
@@ -41,20 +37,12 @@ export class PriceComponent implements OnInit {
 
   public movies$: Observable<Movie[]>;
 
-  constructor(
-    @Inject(MoviesIndex) private movieIndex: Index,
-    private tunnel: ContractTunnelComponent) { }
+  constructor(private tunnel: ContractTunnelComponent) { }
 
   ngOnInit() {
     this.movies$ = this.tunnel.movies$.pipe(
       distinctUntilChanged((a, b) => a.length === b.length));
     this.currencyCtrl = this.form.last().get('price').get('currency');
-    this.movieSearchResults$ = this.movieCtrl.valueChanges.pipe(
-      debounceTime(200),
-      distinctUntilChanged(),
-      switchMap(text => this.movieIndex.search(text)),
-      pluck('hits')
-    )
   }
 
   /**
@@ -116,8 +104,7 @@ export class PriceComponent implements OnInit {
    * @description gets triggered when the user choosed a movie from the dropdown
    * @param event 
    */
-  public addMovie(event: MatAutocompleteSelectedEvent) {
-    this.tunnel.addTitle(event.option.value.objectID, this._hasMandate)
-    this.movieCtrl.reset();
+  public addMovie(id: string) {
+    this.tunnel.addTitle(id, this._hasMandate)
   }
 }

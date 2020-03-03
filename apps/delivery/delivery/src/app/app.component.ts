@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Renderer2 } from '@angular/core';
 import { ThemeService } from '@blockframes/ui/theme';
-import { IconComponent } from '@blockframes/ui';
+import { IconService } from '@blockframes/ui';
 
 @Component({
   selector: 'delivery-root',
@@ -11,7 +11,7 @@ export class AppComponent {
   constructor(
     renderer: Renderer2,
     theme: ThemeService,
-    icons: IconComponent,  // even if not used in component, keep this to load icons
+    icons: IconService,  // even if not used in component, keep this to load icons
   ) {
     theme.initTheme(renderer, 'light');
   }

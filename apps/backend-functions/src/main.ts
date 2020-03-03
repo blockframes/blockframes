@@ -1,6 +1,5 @@
 // import * as gcs from '@google-cloud/storage';
 import { hashToFirestore } from './generateHash';
-import { onIpHash } from './ipHash';
 import { onDeliveryUpdate } from './delivery';
 import { functions } from './internals/firebase';
 import {
@@ -36,9 +35,6 @@ import { onMovieUpdate, onMovieCreate, onMovieDelete } from './movie';
 import * as bigQuery from './bigQuery';
 import { onDocumentPermissionCreate } from './permissions';
 import { onContractWrite, onContractVersionWrite } from './contract';
-
-/** Trigger: when eth-events-server pushes contract events. */
-export const onIpHashEvent = functions.pubsub.topic('eth-events.ipHash').onPublish(onIpHash);
 
 /**
  * Trigger: when user uploads document to firestore.

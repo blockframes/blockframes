@@ -4,8 +4,12 @@ import TunnelMainPage from "./TunnelMainPage";
 import TunnelStorylinePage from "./TunnelStorylinePage";
 import TunnelDistributionRightPage from "./TunnelDistributionRightPage";
 import TunnelBudgetPage from "./TunnelBudgetPage";
-import TunnelVersionInfoPage from "./TunnelVersionInfoPage";
+import TunnelTechnicalInfoPage from "./TunnelTechnicalInfoPage";
 import TunnelCreditsPage from "./TunnelCreditsPage";
+import TunnelValuationPage from "./TunnelValuationPage";
+import TunnelSummaryPage from "./TunnelSummaryPage";
+import TunnelChainOfTitlesPage from "./TunnelChainOfTitlesPage";
+import TunnelFilesPage from "./TunnelFilesPage";
 
 export {
   StartTunnelPage,
@@ -14,6 +18,10 @@ export {
   TunnelStorylinePage,
   TunnelDistributionRightPage,
   TunnelBudgetPage,
-  TunnelVersionInfoPage,
-  TunnelCreditsPage
+  TunnelTechnicalInfoPage,
+  TunnelCreditsPage,
+  TunnelValuationPage,
+  TunnelSummaryPage,
+  TunnelChainOfTitlesPage,
+  TunnelFilesPage
 };

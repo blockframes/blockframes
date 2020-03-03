@@ -1,5 +1,4 @@
-import { Component, OnInit, Renderer2, Inject, ChangeDetectionStrategy } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { ThemeService } from '../theme.service';
 
 @Component({
@@ -9,8 +8,11 @@ import { ThemeService } from '../theme.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ThemeWidgetComponent {
-
+  
   theme$ = this.service.theme$;
+  @Input() set theme(mode: 'dark' | 'light') {
+    this.setTheme(mode);
+  }
 
   constructor(private service: ThemeService) { }
 

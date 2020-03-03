@@ -5,6 +5,7 @@ import { HomePage } from '../../support/pages/marketplace';
 import { User } from '../../support/utils/type';
 import { USERS } from '../../support/utils/users';
 import { LoginViewPage, WelcomeViewPage } from '../../support/pages/auth';
+import { clearDataAndPrepareTest } from '../../support/utils/utils';
 
 // TEST
 
@@ -12,10 +13,7 @@ import { LoginViewPage, WelcomeViewPage } from '../../support/pages/auth';
 const LOGIN_CREDENTIALS: Partial<User> = USERS[0];
 
 beforeEach(() => {
-  cy.clearCookies();
-  cy.clearLocalStorage();
-  cy.visit('/auth');
-  cy.viewport('ipad-2', 'landscape');
+  clearDataAndPrepareTest();
 });
 
 describe('User can navigate to the movie tunnel page 1 and 2', () => {

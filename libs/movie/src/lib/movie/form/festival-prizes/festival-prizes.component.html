@@ -4,17 +4,17 @@
       <!-- Name -->
       <mat-form-field appearance="outline">
         <mat-label>Name</mat-label>
-        <input matInput formControlName="name" placeholder="Festival name">
+        <input test-id="name" matInput formControlName="name" placeholder="Festival name">
       </mat-form-field>
       <!-- Prize -->
       <mat-form-field appearance="outline">
         <mat-label>Award Selection</mat-label>
-        <input matInput formControlName="prize" placeholder="Prize">
+        <input test-id="award" matInput formControlName="prize" placeholder="Prize">
       </mat-form-field>
       <!-- Year -->
       <mat-form-field appearance="outline">
         <mat-label>Year</mat-label>
-        <input matInput formControlName="year" placeholder="Festival year">
+        <input test-id="year" matInput formControlName="year" placeholder="Festival year">
       </mat-form-field>
     </div>
     <!-- Premiere -->
@@ -35,7 +35,7 @@
     </footer>
     <!-- Add-->
     <footer *ngIf="last" fxLayout="column" fxLayoutAlign="center center">
-      <button mat-mini-fab color="primary" (click)="prizes.add()" aria-label="Remove a director form">
+      <button test-id="add" mat-mini-fab color="primary" (click)="prizes.add()" aria-label="Remove a director form">
         <mat-icon>add</mat-icon>
       </button>
       <span class="mat-caption">Add another Festival</span>

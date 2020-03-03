@@ -13,6 +13,7 @@ export * from './lib/pipes/reverse.module';
 export * from './lib/intercom.module';
 export { FireAnalytics } from './lib/analytics/app-analytics';
 export * from './lib/common-interfaces/terms';
+export * from './lib/algolia-autocomplete/algolia-autocomplete.module';
 
 export { OrganizationAlgoliaResult } from './lib/algolia';
 export * from './lib/apps';

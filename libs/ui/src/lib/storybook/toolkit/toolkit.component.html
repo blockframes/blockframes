@@ -1,0 +1,11 @@
+<mat-toolbar>
+  <mat-toolbar-row>
+    <ng-content select="h1[title]"></ng-content>
+    <theme-widget theme="light"></theme-widget>
+    <button mat-button color="pimary" (click)="view = 'icons'">Icons</button>
+  </mat-toolbar-row>
+</mat-toolbar>
+<ng-container [ngSwitch]="view">
+  <ng-content *ngSwitchCase="'component'"></ng-content>
+  <storybook-icons *ngSwitchCase="'icons'"></storybook-icons>
+</ng-container>
