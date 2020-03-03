@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { Contract, getTotalPrice, ContractStatus } from '../../+state';
 import { getContractLastVersion } from '@blockframes/contract/version/+state';
 import { MovieQuery } from '@blockframes/movie';
@@ -73,7 +73,7 @@ export class ContractTableComponent{
   @Input() set contracts(contracts: Contract[]) {
     this.sources = contracts.map(contract => this.createContractListView(contract));
   }
-  
+
   constructor(
     private movieQuery: MovieQuery,
     private dealQuery: DistributionDealQuery,

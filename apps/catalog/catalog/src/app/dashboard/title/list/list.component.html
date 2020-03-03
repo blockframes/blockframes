@@ -18,7 +18,7 @@
     <bf-table-filter [source]="titles" [columns]="columns" [initialColumns]="initialColumns"
       showFilter
       showPaginator
-      [link]="'./'">
+      (rowClick)="goToTitle($event)">
       <ng-template colRef="title" let-title><b>{{ title }}</b></ng-template>
       <ng-template colRef="receipt" let-receipt> <b>{{ receipt | currency }}</b> </ng-template>
     </bf-table-filter>
