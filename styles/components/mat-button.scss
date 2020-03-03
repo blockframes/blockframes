@@ -10,34 +10,34 @@
 
   .mat-stroked-button, .mat-button {
     &.mat-primary {
-      svg g, svg polygon {
+      svg g, svg polygon, svg path {
         fill: mat-color($primary);
       }
     }
     &.mat-accent {
-      svg g, svg polygon {
+      svg g, svg polygon, svg path {
         fill: mat-color($accent);
       }
     }
     &.mat-warn {
-      svg g, svg polygon {
+      svg g, svg polygon, svg path {
         fill: mat-color($warn);
       }
     }
   }
   .mat-raised-button, .mat-flat-button, .mat-fab, .mat-mini-fab {
     &.mat-primary {
-      svg g, svg polygon {
+      svg g, svg polygon, svg path {
         fill: mat-color($primary, default-contrast);
       }
     }
     &.mat-accent {
-      svg g, svg polygon {
+      svg g, svg polygon, svg path {
         fill: mat-color($accent, default-contrast);
       }
     }
     &.mat-warn {
-      svg g, svg polygon {
+      svg g, svg polygon, svg path {
         fill: mat-color($warn, default-contrast);
       }
     }
