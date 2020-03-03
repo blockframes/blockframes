@@ -38,4 +38,32 @@ export default class TunnelContractPage {
   public assertLastRoleIsSelected(role: string) {
     cy.get('contract-details-sale contract-form-party mat-select').last().contains(role);
   }
+
+  // Terms distribution-form-terms
+
+  public selectEvent(event: string) {
+    cy.get('contract-details-sale distribution-form-terms mat-select[test-id=event]').click();
+    cy.get('mat-option').contains(event).click();
+  }
+
+  public assertEventIsSelected(event: string) {
+    cy.get('contract-details-sale distribution-form-terms mat-select[test-id=event]').contains(event);
+  }
+
+  public fillDuration(duration: string) {
+    cy.get('contract-details-sale distribution-form-terms input[test-id=duration]').type(duration);
+  }
+
+  public assertDurationExists(duration: string) {
+    cy.get('contract-details-sale distribution-form-terms input[test-id=duration]').should('have.value', duration);
+  }
+
+  public selectPeriod(period: string) {
+    cy.get('contract-details-sale distribution-form-terms mat-select[test-id=period]').click();
+    cy.get('mat-option').contains(period).click();
+  }
+
+  public assertPeriodIsSelected(period: string) {
+    cy.get('contract-details-sale distribution-form-terms mat-select[test-id=period]').contains(period);
+  }
 }

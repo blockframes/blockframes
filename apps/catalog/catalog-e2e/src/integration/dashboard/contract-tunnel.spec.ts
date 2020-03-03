@@ -12,6 +12,9 @@ const LOGIN_CREDENTIALS: Partial<User> = USERS[0];
 
 const PARTY_NAMES = ['George', 'Billy the kid'];
 const ROLES = ['Licensor', 'Licensee'];
+const EVENT = 'Contract Signature Date';
+const DURATION = '90';
+const PERIOD = 'Months';
 
 beforeEach(() => {
   clearDataAndPrepareTest();
@@ -40,5 +43,13 @@ describe('User can navigate to the movie tunnel page 1 and 2', () => {
     p5.assertLastPartyNameExists(PARTY_NAMES[1]);
     p5.selectLastRole(ROLES[1]);
     p5.assertLastRoleIsSelected(ROLES[1]);
+
+    // Terms
+    p5.selectEvent(EVENT);
+    p5.assertEventIsSelected(EVENT);
+    p5.fillDuration(DURATION);
+    p5.assertDurationExists(DURATION);
+    p5.selectPeriod(PERIOD);
+    p5.assertPeriodIsSelected(PERIOD);
   });
 });

@@ -23,18 +23,18 @@
             period</mat-slide-toggle>
         <mat-form-field appearance="outline">
             <mat-label>Event triggering holdback</mat-label>
-            <mat-select formControlName="floatingStart">
+            <mat-select test-id="event" formControlName="floatingStart">
                 <mat-option *ngFor="let event of events | keyvalue" [value]="event.key">{{ event.value }}</mat-option>
             </mat-select>
         </mat-form-field>
         <form formGroupName="floatingDuration" fxLayout="column">
             <mat-form-field appearance="outline">
                 <mat-label>Duration</mat-label>
-                <input type="text" matInput autocomplete="off" formControlName="duration">
+                <input test-id="duration" type="text" matInput autocomplete="off" formControlName="duration">
             </mat-form-field>
             <mat-form-field appearance="outline">
                 <mat-label>Period</mat-label>
-                <mat-select formControlName="unit">
+                <mat-select test-id="period" formControlName="unit">
                     <mat-option *ngFor="let duration of durations | keyvalue" [value]="duration.key">
                         {{ duration.value }}
                     </mat-option>
