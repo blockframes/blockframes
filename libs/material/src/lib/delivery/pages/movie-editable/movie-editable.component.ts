@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit, HostBinding } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Material } from '../../../material/+state';
@@ -16,6 +16,7 @@ import { MovieMaterialService } from '../../../material/+state/movie-material.se
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieEditableComponent implements OnInit {
+  @HostBinding('attr.page-id') pageId = 'movie-editable';
   public materials$: Observable<Material[]>;
   public movie$: Observable<Movie>;
   public opened = false;

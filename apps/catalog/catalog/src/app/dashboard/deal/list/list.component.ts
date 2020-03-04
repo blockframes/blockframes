@@ -1,3 +1,4 @@
+import { Intercom } from 'ng-intercom';
 import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { ContractQuery, ContractService, Contract, ContractStatus, ContractType, createContract, createVersionMandate } from '@blockframes/contract/contract/+state';
 import { getContractLastVersion } from '@blockframes/contract/version/+state/contract-version.model';
@@ -94,7 +95,8 @@ export class DealListComponent implements OnInit, OnDestroy {
     private movieService: MovieService,
     private dealService: DistributionDealService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private intercom: Intercom
   ) {}
 
   ngOnInit() {
@@ -130,5 +132,9 @@ export class DealListComponent implements OnInit, OnDestroy {
       const contractId = await this.service.create({ type: ContractType.mandate });
       this.router.navigate(['../tunnel/contract', contractId, 'mandate'], { relativeTo: this.route })
     }
+  }
+
+  public openIntercom(): void {
+    return this.intercom.show();
   }
 }
