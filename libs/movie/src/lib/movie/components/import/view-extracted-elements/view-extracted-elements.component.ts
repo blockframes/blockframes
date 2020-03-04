@@ -24,14 +24,20 @@ import {
 } from '../../../+state';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { formatCredits } from '@blockframes/utils/spreadsheet/format';
-import { ImageUploader, cleanModel } from '@blockframes/utils';
+import { ImageUploader, cleanModel, getKeyIfExists } from '@blockframes/utils';
 import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
 import { SSF } from 'xlsx';
-import { MovieLanguageTypes, PremiereType, WorkType, storeType, StoreStatus, UnitBox } from '@blockframes/movie/movie/+state/movie.firestore';
+import { PremiereType, storeType, workType, storeStatus, unitBox, movieLanguageTypes, MovieLanguageTypesValue, UnitBoxValue } from '@blockframes/movie/movie/+state/movie.firestore';
 import { createStakeholder } from '@blockframes/utils/common-interfaces/identity';
 import { DistributionDeal, createDistributionDeal, createHoldback } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
-import { createContractPartyDetail, createContractTitleDetail, Contract, initContractWithVersion, ContractWithLastVersion } from '@blockframes/contract/contract/+state/contract.model';
-import { ContractStatus, ContractTitleDetail, ContractType } from '@blockframes/contract/contract/+state/contract.firestore';
+import {
+  createContractPartyDetail,
+  createContractTitleDetail,
+  Contract,
+  initContractWithVersion,
+  ContractWithLastVersion
+} from '@blockframes/contract/contract/+state/contract.model';
+import { ContractStatus, ContractTitleDetail, contractType } from '@blockframes/contract/contract/+state/contract.firestore';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state/distribution-deal.service';
 import { createExpense, createPrice } from '@blockframes/utils/common-interfaces/price';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
@@ -234,8 +240,9 @@ export class ViewExtractedElementsComponent implements OnInit {
 
         // WORK TYPE
         if (spreadSheetRow[SpreadSheetMovie.workType]) {
-          if (Object.values(WorkType).map(t => t.toLowerCase()).includes(spreadSheetRow[SpreadSheetMovie.workType].trim().toLowerCase())) {
-            movie.main.workType = spreadSheetRow[SpreadSheetMovie.workType].trim().toLowerCase();
+          const key = getKeyIfExists(workType, spreadSheetRow[SpreadSheetMovie.workType]);
+          if (key) {
+            movie.main.workType = key;
           } else {
             importErrors.errors.push({
               type: 'warning',
@@ -625,7 +632,7 @@ export class ViewExtractedElementsComponent implements OnInit {
             const language = getCodeIfExists('LANGUAGES', g);
             if (language) {
               movie.main.originalLanguages.push(language);
-              populateMovieLanguageSpecification(movie.versionInfo.languages, language, MovieLanguageTypes.original, true);
+              populateMovieLanguageSpecification(movie.versionInfo.languages, language, 'original', true);
             } else {
               importErrors.errors.push({
                 type: 'warning',
@@ -648,9 +655,10 @@ export class ViewExtractedElementsComponent implements OnInit {
 
             const parseErrors = [];
             if (language) {
-              versionParts.map(v => v.trim()).forEach(v => {
-                if (Object.values(MovieLanguageTypes).map(t => t.toLowerCase()).includes(v.toLowerCase())) {
-                  populateMovieLanguageSpecification(movie.versionInfo.languages, language, v.toLowerCase() as MovieLanguageTypes, true);
+              versionParts.map(v => v.trim()).forEach((v : MovieLanguageTypesValue) => {
+                const key = getKeyIfExists(movieLanguageTypes, v);
+                if (key) {
+                  populateMovieLanguageSpecification(movie.versionInfo.languages, language, key, true);
                 } else {
                   parseErrors.push(v.toLowerCase());
                 }
@@ -820,10 +828,11 @@ export class ViewExtractedElementsComponent implements OnInit {
         if (spreadSheetRow[SpreadSheetMovie.worldwideBoxOffice]) {
           spreadSheetRow[SpreadSheetMovie.worldwideBoxOffice].split(this.separator).forEach((version: string) => {
             const boxOfficeParts = version.split(this.subSeparator);
-            if (Object.values(UnitBox).map(t => t.toLowerCase()).includes(boxOfficeParts[0].trim().toLowerCase())) {
+            const unit = getKeyIfExists(unitBox, boxOfficeParts[0] as UnitBoxValue);
+            if (unit) {
               movie.budget.boxOffice.push(createBoxOffice(
                 {
-                  unit: boxOfficeParts[0].trim() as UnitBox,
+                  unit,
                   value: boxOfficeParts[1] ? parseInt(boxOfficeParts[1], 10) : 0,
                   territory: getCodeIfExists('TERRITORIES', 'world')
                 }
@@ -833,7 +842,7 @@ export class ViewExtractedElementsComponent implements OnInit {
                 type: 'warning',
                 field: 'movie.budget.boxOffice',
                 name: 'WorldWide Box office',
-                reason: `Could not parse box office UnitBox : ${boxOfficeParts[0].trim()}`,
+                reason: `Could not parse worldwide box office UnitBox : ${boxOfficeParts[0].trim()}`,
                 hint: 'Edit corresponding sheet field.'
               });
             }
@@ -847,10 +856,11 @@ export class ViewExtractedElementsComponent implements OnInit {
 
             const territory = getCodeIfExists('TERRITORIES', boxOfficeParts[0].trim());
             if (territory) {
-              if (Object.values(UnitBox).map(t => t.toLowerCase()).includes(boxOfficeParts[1].trim().toLowerCase())) {
+              const unit = getKeyIfExists(unitBox, boxOfficeParts[1] as any);
+              if (unit) {
                 movie.budget.boxOffice.push(createBoxOffice(
                   {
-                    unit: boxOfficeParts[1].trim() as UnitBox,
+                    unit,
                     value: boxOfficeParts[2] ? parseInt(boxOfficeParts[2], 10) : 0,
                     territory: territory
                   }
@@ -860,7 +870,7 @@ export class ViewExtractedElementsComponent implements OnInit {
                   type: 'warning',
                   field: 'movie.budget.boxOffice',
                   name: 'Box office',
-                  reason: `Could not parse box office UnitBox : ${boxOfficeParts[1].trim()}`,
+                  reason: `Could not parse national box office UnitBox : ${boxOfficeParts[1].trim()}`,
                   hint: 'Edit corresponding sheet field.'
                 });
               }
@@ -953,11 +963,12 @@ export class ViewExtractedElementsComponent implements OnInit {
 
           // STORE TYPE
           if (spreadSheetRow[SpreadSheetMovie.storeType]) {
-            if (Object.values(storeType).map(t => t.toLowerCase()).includes(spreadSheetRow[SpreadSheetMovie.storeType].trim().toLowerCase())) {
-              movie.main.storeConfig.storeType = spreadSheetRow[SpreadSheetMovie.storeType].trim();
+            const key = getKeyIfExists(storeType, spreadSheetRow[SpreadSheetMovie.storeType]);
+            if (key) {
+              movie.main.storeConfig.storeType = key;
             } else {
               importErrors.errors.push({
-                type: 'warning',
+                type: 'error',
                 field: 'movie.main.storeConfig.storeType',
                 name: 'Movie store type',
                 reason: `Could not parse store type : ${spreadSheetRow[SpreadSheetMovie.storeType].trim().toLowerCase()}`,
@@ -977,11 +988,12 @@ export class ViewExtractedElementsComponent implements OnInit {
 
           // MOVIE STATUS
           if (spreadSheetRow[SpreadSheetMovie.movieStatus]) {
-            if (Object.values(StoreStatus).map(t => t.toLowerCase()).includes(spreadSheetRow[SpreadSheetMovie.movieStatus].trim().toLowerCase())) {
-              movie.main.storeConfig.status = spreadSheetRow[SpreadSheetMovie.movieStatus].trim();
+            const key = getKeyIfExists(storeStatus, spreadSheetRow[SpreadSheetMovie.movieStatus]);
+            if (key) {
+              movie.main.storeConfig.status = key;
             } else {
               importErrors.errors.push({
-                type: 'warning',
+                type: 'error',
                 field: 'movie.main.storeConfig.status',
                 name: 'Movie store status',
                 reason: `Could not parse store status : ${spreadSheetRow[SpreadSheetMovie.movieStatus].trim().toLowerCase()}`,
@@ -989,12 +1001,12 @@ export class ViewExtractedElementsComponent implements OnInit {
               });
             }
           } else {
-            movie.main.storeConfig.status = StoreStatus.draft;
+            movie.main.storeConfig.status = 'draft';
             importErrors.errors.push({
               type: 'warning',
               field: 'movie.main.storeConfig.status',
               name: 'Movie store status',
-              reason: `Store status not found, assumed "${StoreStatus.draft}"`,
+              reason: `Store status not found, assumed "${storeStatus.draft}"`,
               hint: 'Edit corresponding sheet field.'
             });
           }
@@ -1415,7 +1427,7 @@ export class ViewExtractedElementsComponent implements OnInit {
                   distributionDeal.assetLanguage = populateMovieLanguageSpecification(
                     distributionDeal.assetLanguage,
                     dubbing,
-                    MovieLanguageTypes.dubbed
+                    'dubbed'
                   );
                 } else {
                   importErrors.errors.push({
@@ -1438,7 +1450,7 @@ export class ViewExtractedElementsComponent implements OnInit {
                   distributionDeal.assetLanguage = populateMovieLanguageSpecification(
                     distributionDeal.assetLanguage,
                     subtitle,
-                    MovieLanguageTypes.subtitle
+                    'subtitle'
                   );
                 } else {
                   importErrors.errors.push({
@@ -1460,7 +1472,7 @@ export class ViewExtractedElementsComponent implements OnInit {
                   distributionDeal.assetLanguage = populateMovieLanguageSpecification(
                     distributionDeal.assetLanguage,
                     caption,
-                    MovieLanguageTypes.caption
+                    'caption'
                   );
                 } else {
                   importErrors.errors.push({
@@ -1895,11 +1907,12 @@ export class ViewExtractedElementsComponent implements OnInit {
 
           // CONTRACT TYPE
           if (spreadSheetRow[SpreadSheetContract.contractType]) {
-            if (Object.values(ContractType).map(t => t.toLowerCase()).includes(spreadSheetRow[SpreadSheetContract.contractType].trim().toLowerCase())) {
-              contract.doc.type = spreadSheetRow[SpreadSheetContract.contractType].trim().toLowerCase();
+            const key = getKeyIfExists(contractType, spreadSheetRow[SpreadSheetContract.contractType]);
+            if (key) {
+              contract.doc.type = key;
             } else {
               importErrors.errors.push({
-                type: 'warning',
+                type: 'error',
                 field: 'contract.type',
                 name: 'Contract Type',
                 reason: `Could not parse contract type : ${spreadSheetRow[SpreadSheetContract.contractType].trim().toLowerCase()}`,

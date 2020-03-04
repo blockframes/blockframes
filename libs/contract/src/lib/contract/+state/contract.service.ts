@@ -20,15 +20,12 @@ import { tap, switchMap } from 'rxjs/operators';
 import { ContractVersionService } from '../../version/+state/contract-version.service';
 import { cleanModel } from '@blockframes/utils';
 import { PermissionsService, OrganizationQuery } from '@blockframes/organization';
-import { ContractDocumentWithDates, ContractStatus, ContractType } from './contract.firestore';
+import { ContractDocumentWithDates, ContractStatus } from './contract.firestore';
 import { firestore } from 'firebase/app';
 import { MovieQuery } from '@blockframes/movie';
 import { createContractVersionFromFirestore } from '@blockframes/contract/version/+state/contract-version.model';
 import { ContractVersion } from '@blockframes/contract/version/+state';
 import { Observable } from 'rxjs';
-import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state';
-
-
 
 /** Get the active contract and put his lastVersion in it. */
 const contractQuery = (contractId: string): Query<ContractWithTimeStamp> => ({
@@ -41,7 +38,7 @@ const contractQuery = (contractId: string): Query<ContractWithTimeStamp> => ({
 /** Get all the contracts where the active movie appears. */
 const movieContractsQuery = (movieId: string): Query<ContractWithTimeStamp[]> => ({
   path: 'contracts',
-  queryFn: ref => ref.where('titleIds', 'array-contains', movieId).where('type', '==', ContractType.sale),
+  queryFn: ref => ref.where('titleIds', 'array-contains', movieId).where('type', '==', 'sale'),
   versions: contract => ({
     path: `contracts/${contract.id}/versions`
   })
@@ -87,7 +84,7 @@ export class ContractService extends CollectionService<ContractState> {
 
   /** Get the mandate contract of an organization */
   public async getMandate(orgId: string) {
-    const query = ref => ref.where('partyIds', 'array-contains', orgId).where('type', '==', ContractType.sale);
+    const query = ref => ref.where('partyIds', 'array-contains', orgId).where('type', '==', 'sale');
     const mandates = await this.getValue(query);
     return (mandates && mandates.length) ? mandates[0] : undefined;
   }
@@ -171,7 +168,7 @@ export class ContractService extends CollectionService<ContractState> {
     const org = this.orgQuery.getActive();
     // Initialize all values
     const _contract = createContract({ ...contract, partyIds: [org.id] });
-    const _version = contract.type === ContractType.mandate
+    const _version = contract.type === 'mandate'
       ? createVersionMandate({ id: '1', ...version })
       : createContractVersion({ id: '1', ...version });
     // Create contract + verions + _meta version

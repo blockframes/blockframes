@@ -12,7 +12,7 @@ import { tap, switchMap } from 'rxjs/operators';
  */
 const organizationContractsListQuery = (orgId: string): Query<ContractWithTimeStamp[]> => ({
   path: 'contracts',
-  queryFn: ref => ref.where('partyIds', 'array-contains', orgId).where('type', '==', ContractType.sale),
+  queryFn: ref => ref.where('partyIds', 'array-contains', orgId).where('type', '==', 'sale'),
   versions: contract => ({
     path: `contracts/${contract.id}/versions`
   })

@@ -1,5 +1,5 @@
 import { getCodeIfExists } from '@blockframes/utils/static-model/staticModels';
-import { createPrice, Price, CommissionBase } from '@blockframes/utils/common-interfaces/price';
+import { createPrice, CommissionBase } from '@blockframes/utils/common-interfaces/price';
 import {
   ContractDocumentWithDates,
   ContractStatus,
@@ -15,7 +15,12 @@ import {
 import { createParty } from '@blockframes/utils/common-interfaces/identity';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 import { createTerms } from '@blockframes/utils/common-interfaces/terms';
-import { ContractVersion, ContractVersionWithTimeStamp, createContractVersionFromFirestore, getContractLastVersion } from '../../version/+state/contract-version.model';
+import { 
+  ContractVersion,
+  ContractVersionWithTimeStamp,
+  createContractVersionFromFirestore,
+  getContractLastVersion
+} from '../../version/+state/contract-version.model';
 import { LegalRolesSlug } from '@blockframes/utils/static-model/types';
 import { toDate } from '@blockframes/utils/helpers';
 
@@ -45,7 +50,7 @@ export type ContractPartyDetailDocument = ContractPartyDetailDocumentWithDatesDo
 export function createContract(params: Partial<Contract> = {}): Contract {
   return {
     id: params.id || '',
-    type: ContractType.mandate,
+    type: 'mandate',
     parties: [],
     titleIds: [],
     partyIds: [],
@@ -77,11 +82,10 @@ export function createVersionMandate(params: Partial<ContractVersion> = {}) {
   return createContractVersion({ price: { commissionBase: CommissionBase.grossreceipts, amount: 0 }, ...params })
 }
 
-
 export function createPublicContract(params: Partial<PublicContract> = {}): PublicContract {
   return {
     id: params.id || '',
-    type: ContractType.mandate,
+    type: 'mandate',
     titleIds: [],
     ...params,
   };

@@ -105,7 +105,7 @@ export class TitleListComponent implements OnInit {
   /** Navigate to tunnel if status is draft, else go to page */
   public goToTitle(title: TitleView) {
     const basePath = `/c/o/dashboard`;
-    const path = (title.status === StoreStatus.draft)
+    const path = (title.status === 'draft')
       ? `${basePath}/tunnel/movie/${title.id}`
       : `${basePath}/titles/${title.id}`;
     this.router.navigate([path], { relativeTo: this.route });

@@ -113,8 +113,9 @@ export class DealListComponent implements OnInit, OnDestroy {
 
   /** Create a sale and redirect to tunnel */
   async createSale() {
-    const contractId = await this.service.create({ type: ContractType.sale });
-    this.router.navigate(['../tunnel/contract', contractId, 'sale'], { relativeTo: this.route })
+    const type = 'sale';
+    const contractId = await this.service.create({ type });
+    this.router.navigate(['../tunnel/contract', contractId, type], { relativeTo: this.route })
   }
 
   /**
@@ -122,13 +123,14 @@ export class DealListComponent implements OnInit, OnDestroy {
    * @note This method is not implemented yet because Mandate page doesn't exist yet
    */
   async createMandate() {
+    const type = 'mandate';
     const orgId = this.orgQuery.getActiveId();
     const mandate = await this.service.getMandate(orgId);
     if (mandate) {
       this.router.navigate([mandate.id], { relativeTo: this.route })
     } else {
-      const contractId = await this.service.create({ type: ContractType.mandate });
-      this.router.navigate(['../tunnel/contract', contractId, 'mandate'], { relativeTo: this.route })
+      const contractId = await this.service.create({ type });
+      this.router.navigate(['../tunnel/contract', contractId, type], { relativeTo: this.route })
     }
   }
 }

@@ -40,10 +40,13 @@ export enum ContractStatus {
 /** @dev Valid values of ContractStatus */
 export const ValidContractStatuses = ['waitingpayment', 'paid', 'accepted'];
 
-export enum ContractType {
-  mandate = 'mandate',
-  sale = 'sale'
-}
+export const contractType = {
+  mandate: 'Mandate',
+  sale: 'Sale'
+} as const;
+
+export type ContractType = keyof typeof contractType;
+export type ContractTypeValue = typeof contractType[ContractType];
 
 interface ContractTitleDetailRaw<D> {
   /**

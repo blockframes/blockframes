@@ -12,11 +12,9 @@ import {
   Prize,
   PromotionalElement,
   Title,
-  WorkType,
   MovieLanguageSpecification,
   MovieLanguageTypes,
   StoreConfig,
-  storeType,
   MovieLanguageSpecificationContainer,
   MovieOfficialIds,
   MovieOriginalRelease,
@@ -25,7 +23,6 @@ import {
   BoxOffice,
   UnitBox,
   MovieStakeholders,
-  StoreStatus,
   MovieAnalytics,
   MovieLegalDocuments,
   DocumentMeta
@@ -93,7 +90,7 @@ export function createMovieMain(params: Partial<MovieMain> = {}): MovieMain {
     },
     directors: [],
     genres: [],
-    workType: WorkType.movie,
+    workType: 'feature_film',
     originalLanguages: [],
     originCountries: [],
     status: null,
@@ -247,7 +244,7 @@ export function createMovieSalesAgentDeal(
 
 export function createBoxOffice(params: Partial<BoxOffice> = {}): BoxOffice {
   return {
-    unit: UnitBox.boxoffice_dollar,
+    unit: 'boxoffice_dollar',
     value: 0,
     territory: null,
     ...params,
@@ -301,7 +298,7 @@ export function populateMovieLanguageSpecification(
 
 export function createStoreConfig(params: Partial<StoreConfig> = {}): StoreConfig {
   return {
-    status: StoreStatus.draft,
+    status: 'draft',
     storeType: 'line_up',
     ...params
   };
