@@ -26,7 +26,6 @@ import { FeedbackMessageModule } from '@blockframes/ui';
 import { PasswordConfirmModule } from '@blockframes/ui/form';
 import { WelcomeViewComponent } from './pages/welcome-view/welcome-view.component';
 import { IdentityComponent } from './pages/identity/identity.component';
-import { IdentityFeedbackComponent } from './pages/identity-feedback/identity-feedback.component';
 import { EmailVerificationComponent } from './pages/email-verification/email-verification.component';
 import { PasswordResetComponent } from './pages/password-reset/password-reset.component';
 import { TermsConditionsModule } from './components/terms-conditions/terms-conditions.module';
@@ -47,7 +46,6 @@ export const AuthRoutes: Routes = [
     canDeactivate: [IdentityGuard],
     component: IdentityComponent
   },
-  { path: 'congratulation', component: IdentityFeedbackComponent },
   { path: 'email-verification', component: EmailVerificationComponent},
   { path: 'password-reset', component: PasswordResetComponent}
 ];
@@ -84,7 +82,6 @@ export const AuthRoutes: Routes = [
   declarations: [
     WelcomeViewComponent,
     IdentityComponent,
-    IdentityFeedbackComponent,
     EmailVerificationComponent,
     PasswordResetComponent
   ],

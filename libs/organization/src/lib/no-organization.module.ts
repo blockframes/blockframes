@@ -34,7 +34,6 @@ import { OrganizationFeedbackComponent } from './pages/organization-feedback/org
 import { OrganizationCreateFeedbackComponent } from './pages/organization-create-feedback/organization-create-feedback.component';
 import { OrganizationCreateComponent } from './pages/organization-create/organization-create.component';
 import { NoOrganizationGuard } from './guard/no-organization.guard';
-import { OrganizationLoadingComponent } from './pages/organization-loading/organization-loading.component';
 import { NoOrganizationInvitationGuard } from '@blockframes/notification';
 import { OrganizationAppAccessComponent } from './pages/organization-app-access/organization-app-access.component';
 
@@ -70,10 +69,6 @@ export const noOrganizationRoutes: Routes = [
   {
     path: 'app-access',
     component: OrganizationAppAccessComponent,
-  },
-  {
-    path: 'loading',
-    component: OrganizationLoadingComponent
   }
 ];
 
@@ -115,7 +110,6 @@ export const noOrganizationRoutes: Routes = [
     OrganizationFindComponent,
     OrganizationFeedbackComponent,
     OrganizationCreateComponent,
-    OrganizationLoadingComponent,
     OrganizationAppAccessComponent,
     OrganizationCreateFeedbackComponent
   ]

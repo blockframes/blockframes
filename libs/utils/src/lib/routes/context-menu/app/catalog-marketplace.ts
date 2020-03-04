@@ -1,5 +1,4 @@
 import { appsRoute } from '@blockframes/utils/routes';
-import { App } from '@blockframes/utils';
 import { ctxMenu } from '../helpers';
 
 // common
