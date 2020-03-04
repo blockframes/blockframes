@@ -52,7 +52,7 @@ async function removeUnexpectedUsers(expectedUsers: UserConfig[], auth: Auth): P
     pageToken = result.pageToken;
 
     // users - expected users => users that we don't want in the database.
-    const usersToRemove = differenceBy(users, expectedUsers, 'uid');
+    const usersToRemove = differenceBy(users, expectedUsers, 'uid', 'email');
 
     // Note: this is usually bad practice to await in a loop.
     // In this VERY SPECIFIC case we just want to remove the user
