@@ -58,7 +58,6 @@ export class ChipsAutocompleteComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.sub = this.form.valueChanges.subscribe(_ => this.cdr.markForCheck());
 
-    console.log(this.color);
     this.filteredItems = this.ctrl.valueChanges.pipe(
       startWith(''),
       map(value => (value ? this._filter(value) : this.items))
