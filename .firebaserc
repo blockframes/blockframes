@@ -44,6 +44,132 @@
           "blockframes-ci"
         ]
       }
+    },
+    "blockframes-test": {
+      "hosting": {
+        "current": [
+          "blockframes-test"
+        ]
+      }
+    },
+    "blockframes-staging": {
+      "hosting": {
+        "current": [
+          "blockframes-staging"
+        ]
+      }
+    },
+    "blockframes-laurent": {
+      "hosting": {
+        "current": [
+          "blockframes-laurent"
+        ]
+      }
+    },
+    "blockframes-francois": {
+      "hosting": {
+        "current": [
+          "blockframes-francois"
+        ]
+      }
+    },
+    "blockframes-bruce": {
+      "hosting": {
+        "current": [
+          "blockframes-bruce"
+        ]
+      }
+    },
+    "blockframes-hugo": {
+      "hosting": {
+        "current": [
+          "blockframes-hugo"
+        ]
+      }
+    },
+    "blockframes-yohann": {
+      "hosting": {
+        "current": [
+          "blockframes-yohann"
+        ]
+      }
+    },
+    "blockframes-vincent": {
+      "hosting": {
+        "current": [
+          "blockframes-vincent"
+        ]
+      }
+    },
+    "blockframes-pl-2": {
+      "hosting": {
+        "current": [
+          "blockframes-pl-2"
+        ]
+      }
+    },
+    "blockframes-demo-1": {
+      "hosting": {
+        "current": [
+          "blockframes-demo-1"
+        ]
+      }
+    },
+    "blockframes-demo-2": {
+      "hosting": {
+        "current": [
+          "blockframes-demo-2"
+        ]
+      }
+    },
+    "blockframes-demo-3": {
+      "hosting": {
+        "current": [
+          "blockframes-demo-3"
+        ]
+      }
+    },
+    "blockframes-demo-4": {
+      "hosting": {
+        "current": [
+          "blockframes-demo-4"
+        ]
+      }
+    },
+    "blockframes-demo-5": {
+      "hosting": {
+        "current": [
+          "blockframes-demo-5"
+        ]
+      }
+    },
+    "blockframes-max": {
+      "hosting": {
+        "current": [
+          "blockframes-max"
+        ]
+      }
+    },
+    "blockframes-victor": {
+      "hosting": {
+        "current": [
+          "blockframes-victor"
+        ]
+      }
+    },
+    "blockframes-clelia": {
+      "hosting": {
+        "current": [
+          "blockframes-clelia"
+        ]
+      }
+    },
+    "blockframes-dajung": {
+      "hosting": {
+        "current": [
+          "blockframes-dajung"
+        ]
+      }
     }
   }
 }
