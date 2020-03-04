@@ -1,5 +1,5 @@
 /** Gives information about an application */
-import { AppDetails } from '@blockframes/utils';
+import { AppDetails, toDate } from '@blockframes/utils';
 import {
   OrganizationDocumentWithDates,
   WishlistDocumentWithDates,
@@ -65,8 +65,8 @@ export function convertOrganizationWithTimestampsToOrganization(
 ): Organization {
   return {
     ...org,
-    created: (org.created instanceof Date) ? org.created : org.created.toDate(), // prevent error in case the guard is wrongly called twice in a row
-    updated: (org.updated instanceof Date) ? org.updated : org.updated.toDate(),
+    created: toDate(org.created), // prevent error in case the guard is wrongly called twice in a row
+    updated: toDate(org.updated),
     wishlist: convertWishlistDocumentToWishlistDocumentWithDate(org.wishlist)
   };
 }
