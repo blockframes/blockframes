@@ -66,4 +66,72 @@ export default class TunnelContractPage {
   public assertPeriodIsSelected(period: string) {
     cy.get('contract-details-sale distribution-form-terms mat-select[test-id=period]').contains(period);
   }
+
+  // Title Selection & Price
+
+  public selectCurrency(currency: string) {
+    cy.get('contract-details-sale contract-version-form-price mat-select').click();
+    cy.get('mat-option').contains(currency).click({ force: true });
+  }
+
+  public assertCurrencyIsSelected(currency: string) {
+    cy.get('contract-details-sale contract-version-form-price mat-select').contains(currency);
+  }
+
+  public fillPackagePrice(price: string) {
+    cy.get('contract-details-sale contract-version-form-price input[test-id=price]').clear().type(price);
+  }
+
+  public assertPackagePriceExists(price: string) {
+    cy.get('contract-details-sale contract-version-form-price input[test-id=price]').should('have.value', price);
+  }
+
+  // Payment Schedules
+
+  public selectPaymentsUponEvent() {
+    cy.get('contract-details-sale contract-version-form-schedule mat-radio-button').first().click();
+  }
+
+  public fillPercentagePaymentUponEvent(percentage: string) {
+    cy.get('contract-details-sale contract-version-form-schedule input[test-id=percentage]').type(percentage);
+  }
+
+  public assertPercentagePaymentUponEventExists(percentage: string) {
+    cy.get('contract-details-sale contract-version-form-schedule input[test-id=percentage]').should('have.value', percentage);
+  }
+
+  public selectTriggeringEvent(event: string) {
+    cy.get('contract-details-sale contract-version-form-schedule mat-select[test-id=triggering-event]').click();
+    cy.get('mat-option').contains(event).click();
+  }
+
+  public assertTriggeringEventIsSelected(event: string) {
+    cy.get('contract-details-sale contract-version-form-schedule mat-select[test-id=triggering-event]').contains(event);
+  }
+
+  public fillPaymentTermDuration(duration: string) {
+    cy.get('contract-details-sale contract-version-form-schedule input[test-id=duration]').type(duration);
+  }
+
+  public assertPaymentTermDurationExists(duration: string) {
+    cy.get('contract-details-sale contract-version-form-schedule input[test-id=duration]').should('have.value', duration);
+  }
+
+  public selectPaymentDurationPeriod(period: string) {
+    cy.get('contract-details-sale contract-version-form-schedule mat-select[test-id=period]').click();
+    cy.get('mat-option').contains(period).click();
+  }
+
+  public assertPaymentDurationPeriodIsSelected(period: string) {
+    cy.get('contract-details-sale contract-version-form-schedule mat-select[test-id=period]').contains(period);
+  }
+
+  public selectPaymentTermEvent(event: string) {
+    cy.get('contract-details-sale contract-version-form-schedule mat-select[test-id=every-event]').click();
+    cy.get('mat-option').contains(event).click();
+  }
+
+  public assertPaymentTermEventIsSelected(event: string) {
+    cy.get('contract-details-sale contract-version-form-schedule mat-select[test-id=every-event]').contains(event);
+  }
 }
