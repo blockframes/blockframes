@@ -125,7 +125,7 @@
           {{ creationDate | date: 'short' }}
         </ng-template>
         <ng-template colRef="scope" let-scope>
-          <strong>From : </strong>{{ toPrettyDate(scope,'start') }} <strong>To : </strong>{{ toPrettyDate(scope,'end') }}
+          <strong>From : </strong>{{ scope | termToPrettyDate: 'start'  }} <strong>To : </strong>{{ scope | termToPrettyDate: 'end' }}
         </ng-template>
         <ng-template colRef="price" let-price>
           {{ price.amount | currency: getCurrencyCode(price.currency) }}

@@ -3,7 +3,7 @@ import {
   HoldbackWithDates as Holdback,
   DistributionDealStatus
 } from './distribution-deal.firestore';
-import { createTerms, termToPrettyDate, formatTerms } from '@blockframes/utils/common-interfaces/terms';
+import { createTerms, formatTerms } from '@blockframes/utils/common-interfaces/terms';
 
 export { DistributionDealDocumentWithDates as DistributionDeal } from './distribution-deal.firestore';
 

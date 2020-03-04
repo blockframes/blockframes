@@ -28,6 +28,7 @@ import { MovieDisplayModule } from '../../display/display.module';
 import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
+import { TermToPrettyDateModule } from '@blockframes/utils/pipes/to-pretty-date.module';
 
 // Components
 import { ImportSpreadsheetComponent } from './import-spreadsheet/import-spreadsheet.component';
@@ -90,6 +91,7 @@ const routes: Routes = [
     CropperModule,
     ImageReferenceModule,
     ImgAssetModule,
+    TermToPrettyDateModule,
   ],
   entryComponents: [
     PreviewSheetComponent,

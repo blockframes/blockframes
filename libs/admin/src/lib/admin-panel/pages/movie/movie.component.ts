@@ -6,7 +6,6 @@ import { MovieAdminForm } from '../../forms/movie-admin.form';
 import { staticModels } from '@blockframes/utils/static-model';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals';
 import { getValue } from '@blockframes/utils/helpers';
-import { termToPrettyDate } from '@blockframes/utils/common-interfaces/terms';
 import { StoreStatus, storeType } from '@blockframes/movie/movie/+state/movie.firestore';
 
 @Component({
@@ -23,7 +22,6 @@ export class MovieComponent implements OnInit {
   public storeStatus = StoreStatus;
   public staticModels = staticModels;
   public rows: any[] = [];
-  public toPrettyDate = termToPrettyDate;
 
   public versionColumnsTable = {
     'id': 'Id',

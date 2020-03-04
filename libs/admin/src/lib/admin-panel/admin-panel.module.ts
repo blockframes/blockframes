@@ -20,6 +20,7 @@ import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filte
 import { ContractTreeModule } from './components/contract-tree/contract-tree.module';
 import { OrganizationAdminModule } from './pages/organization/organization.module';
 import { AlgoliaAutocompleteModule } from '@blockframes/utils/algolia-autocomplete/algolia-autocomplete.module';
+import { TermToPrettyDateModule } from '@blockframes/utils/pipes/to-pretty-date.module';
 
 // Components
 import { OverviewComponent } from './pages/overview/overview.component';
@@ -76,6 +77,7 @@ export const panelRoutes: Routes = [
     ContractTreeModule,
     RouterModule.forChild(panelRoutes),
     OrganizationAdminModule,
+    TermToPrettyDateModule,
   ],
   declarations: [
     OverviewComponent,

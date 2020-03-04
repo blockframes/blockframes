@@ -10,7 +10,6 @@ import { SpreadsheetImportError, DealsImportState } from '../view-extracted-elem
 import { ViewImportErrorsComponent } from '../view-import-errors/view-import-errors.component';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state/distribution-deal.service';
 import { cleanModel } from '@blockframes/utils/helpers';
-import { termToPrettyDate } from '@blockframes/utils/common-interfaces/terms';
 import { sortingDataAccessor } from '@blockframes/utils/table';
 
 const hasImportErrors = (importState: DealsImportState, type: string = 'error'): boolean => {
@@ -31,7 +30,6 @@ export class TableExtractedDealsComponent implements OnInit {
   private movies: any = {};
   public processedDeals = 0;
   public selection = new SelectionModel<DealsImportState>(true, []);
-  public toPrettyDate = termToPrettyDate;
   public displayedColumns: string[] = [
     'id',
     'select',

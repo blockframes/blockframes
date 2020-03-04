@@ -1,6 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { getValue } from '@blockframes/utils/helpers';
-import { termToPrettyDate } from '@blockframes/utils/common-interfaces/terms';
 import { ActivatedRoute } from '@angular/router';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { ContractWithLastVersion, Contract } from '@blockframes/contract/contract/+state/contract.model';
@@ -38,7 +37,6 @@ export class ContractsComponent implements OnInit {
     'edit',
   ];
   public rows: ContractWithLastVersion[] = [];
-  public toPrettyDate = termToPrettyDate;
   public movieId = '';
   constructor(
     private contractService: ContractService,
