@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import { signInAndNavigateToMain, clearDataAndPrepareTest } from "../../support/utils/utils";
+import { signInAndNavigateToMain, clearDataAndPrepareTest, createFakeScript, randomID } from "../../support/utils/utils";
 import { TunnelMainPage, TunnelChainOfTitlesPage } from "../../support/pages/dashboard";
 import TunnelFilesPage from "../../support/pages/dashboard/TunnelFilesPage";
 
@@ -23,6 +23,16 @@ describe('User can navigate to the movie tunnel page 11, complete the fields, an
     p1.navigateToTunnelPage(NAVIGATION[0], NAVIGATION[1]);
     const p2 = new TunnelFilesPage();
 
+    // Upload files
+    createFakeScript(`${randomID()}`)
+    .then(path => p2.uploadPresentationDeck(path))
+    .then(() => p2.assertPresentationDeckHasUploadSucceeded());
+
+    createFakeScript(`${randomID()}`)
+    .then(path => p2.uploadScenario(path))
+    .then(() => p2.assertScenarioHasUploadSucceeded());
+
+    // File links
     p2.fillPromoReelLink(LINKS[0]);
     p2.assertPromoReelLinkExists(LINKS[0]);
     p2.fillScreenerLink(LINKS[1]);

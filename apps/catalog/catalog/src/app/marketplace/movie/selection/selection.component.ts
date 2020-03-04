@@ -1,11 +1,10 @@
-import { Component, ChangeDetectionStrategy, HostBinding } from '@angular/core';
+import { Component, ChangeDetectionStrategy, HostBinding, Optional } from '@angular/core';
 import { Router } from '@angular/router';
 import { MarketplaceQuery, MarketplaceStore } from '../../+state';
 import { MovieQuery } from '@blockframes/movie';
 import {
   ContractService,
   Contract,
-  ContractType,
   createContractPartyDetail,
   createContractTitleDetail
 } from '@blockframes/contract/contract/+state';
@@ -15,6 +14,7 @@ import { Observable } from 'rxjs';
 import { OrganizationQuery } from '@blockframes/organization';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals';
 import { AngularFirestore } from '@angular/fire/firestore';
+import { Intercom } from 'ng-intercom';
 
 @Component({
   selector: 'catalog-selection',
@@ -38,7 +38,8 @@ export class MarketplaceSelectionComponent {
     private movieQuery: MovieQuery,
     private orgQuery: OrganizationQuery,
     private router: Router,
-  ) { }
+    @Optional() private intercom: Intercom
+  ) {}
 
   /** Select a movie for a specific movie Id */
   selectMovie(movieId: string) {
@@ -83,4 +84,7 @@ export class MarketplaceSelectionComponent {
     this.store.reset();
   }
 
+  openIntercom() {
+    this.intercom?.show();
+  }
 }

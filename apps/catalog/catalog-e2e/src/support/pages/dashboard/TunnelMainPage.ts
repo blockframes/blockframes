@@ -2,7 +2,7 @@ import TunnelStorylinePage from "./TunnelStorylinePage";
 
 export default class TunnelMainPage {
   constructor() {
-    cy.get('catalog-movie-tunnel-main');
+    cy.get('catalog-movie-tunnel-main', { timeout: 30000 });
   }
 
   public static navigateToPage(movieId: string) {

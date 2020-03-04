@@ -1,8 +1,29 @@
 import TunnelChainOfTitlesPage from "./TunnelChainOfTitlesPage";
+import { uploadFile, assertUploadStatus } from "../../utils/utils";
+
+const UPLOAD_STATUS = 'Success';
 
 export default class TunnelFilesPage {
   constructor() {
     cy.get('catalog-movie-tunnel-media-file');
+  }
+
+  // Files
+
+  public uploadPresentationDeck(p: string) {
+    uploadFile(p, 'application/pdf', 'presentation-deck');
+  }
+
+  public assertPresentationDeckHasUploadSucceeded() {
+    assertUploadStatus(UPLOAD_STATUS, 'presentation-deck');
+  }
+
+  public uploadScenario(p: string) {
+    uploadFile(p, 'application/pdf', 'scenario');
+  }
+
+  public assertScenarioHasUploadSucceeded() {
+    assertUploadStatus(UPLOAD_STATUS, 'scenario');
   }
 
   // File Links
