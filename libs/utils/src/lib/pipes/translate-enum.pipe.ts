@@ -2,7 +2,9 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { getKeyIfExists } from '../helpers';
 
 const registeredEnums = [
-  'unitBox'
+  'unitBox',
+  'storeType',
+  'workType',
 ];
 
 export type RegisteredEnums = keyof typeof registeredEnums;
@@ -18,11 +20,14 @@ export class TranslateEnumPipe implements PipeTransform {
       switch (type) {
         // KFH compatible import
         case 'unitBox':
+        case 'storeType':
+        case 'workType':
           output = await import('@blockframes/movie/movie/+state/movie.firestore').then(e => e[type]);
         default:
           break;
       }
-      if(output) {
+
+      if (output) {
         const key = getKeyIfExists(output, value);
         if (!!key) { return output[key] }
       }
