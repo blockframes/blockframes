@@ -66,17 +66,16 @@
   </article>
 
   <!-- NEGOCIATION HISTORY -->
-  <mat-card>
-    <h3>Negociation History</h3>
-    <mat-card-content>
-      <bf-table-filter
-        [source]="versions"
-        [columns]="versionColumns"
-        [initialColumns]="initialVersionColumns">
-        <ng-template colRef="status" let-status><span class="status">{{ status }}</span></ng-template>
-      </bf-table-filter>
-    </mat-card-content>
-  </mat-card>
+  <ng-container *ngIf="oldVersions$ | async as oldVersions">
+    <mat-card *ngIf="oldVersions.length">
+      <mat-card-header>
+        <mat-card-title>Negotiation History</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <contract-version-table [versions]="oldVersions"></contract-version-table>
+      </mat-card-content>
+    </mat-card>
+  </ng-container>
 
   <!-- DISTRIBUTION DEALS -->
   <ng-container *ngFor="let movie of movies$ | async">

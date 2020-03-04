@@ -1,0 +1,14 @@
+<bf-table-filter
+  [source]="versions"
+  [columns]="columns"
+  [initialColumns]="initialColumns">
+  <ng-template colRef="date" let-date>
+    {{ date | date: 'shortDate' }}
+  </ng-template>
+  <ng-template colRef="price" let-price>
+    {{ price.amount | currency: price.currency:'symbol':'1.0-0' }}
+  </ng-template>
+  <ng-template colRef="status" let-status>
+    <span>{{ status }}</span>
+  </ng-template>
+</bf-table-filter>
