@@ -18,45 +18,8 @@ import { MovieQuery } from '@blockframes/movie';
 import { OrganizationQuery, PLACEHOLDER_LOGO } from '@blockframes/organization';
 import { MovieCurrenciesSlug } from '@blockframes/utils/static-model/types';
 import { getCodeBySlug } from '@blockframes/utils/static-model/staticModels';
-import { CurrencyPipe } from '@angular/common';
 import { Price, Terms, termToPrettyDate } from '@blockframes/utils/common-interfaces';
 import { Intercom } from 'ng-intercom';
-
-// @todo(#1952) Implement logic as a reusable component in library "version"
-const versionColumns = {
-  date: 'Date',
-  offer: 'Offer Amount',
-  status: 'Status'
-};
-
-/** Flattened data of version to pass in bf-table-filer. */
-interface VersionView {
-  date: string;
-  offer: string;
-  status: string;
-}
-
-// @todo(#1951) transformation should be done in the contract.query & contract.utils
-/** Returns version price as a formated string. */
-function getVersionPrice(version: ContractVersion): string {
-  const currencyPipe = new CurrencyPipe('en-US');
-  const titles = Object.values(version.titles);
-  const amount = titles.reduce((sum, title) => sum += title.price.amount, 0);
-  const currency = getCodeBySlug('MOVIE_CURRENCIES', titles[titles.length - 1].price.currency);
-
-  return currencyPipe.transform(amount, currency, 'symbol');
-}
-
-/** Factory function to create VersionView. */
-function createVersionView(version: ContractVersion): VersionView {
-  if (version) {
-    return {
-      date: version.creationDate.toLocaleDateString(),
-      offer: getVersionPrice(version),
-      status: ContractStatus[version.status]
-    };
-  }
-}
 
 @Component({
   selector: 'catalog-deal-view',
@@ -75,9 +38,7 @@ export class DealViewComponent implements OnInit {
   public totalPrice: Price;
   public payments: { type: string, list: string[] } = { type: '', list: [] };
 
-  public versions: VersionView[];
-  public versionColumns = versionColumns;
-  public initialVersionColumns = ['date', 'offer', 'status'];
+  public oldVersions$ = this.query.oldVersionsView$;
 
   public placeholderUrl = PLACEHOLDER_LOGO;
 
@@ -97,10 +58,6 @@ export class DealViewComponent implements OnInit {
         this.subLicensors = getContractSubLicensors(contract);
         this.isSignatory = isContractSignatory(contract, this.organizationQuery.getActiveId());
 
-        // Get all contract versions except _meta.
-        const versions = contract.versions.filter(version => version.id !== '_meta');
-        // Create flattened version to be send in reusable table.
-        this.versions = versions.map(version => createVersionView(version));
         this.lastVersion = getContractLastVersion(contract);
         this.payments = displayPaymentSchedule(this.lastVersion);
 

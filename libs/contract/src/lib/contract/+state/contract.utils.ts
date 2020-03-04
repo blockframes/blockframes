@@ -1,6 +1,6 @@
 import { ContractVersion } from "@blockframes/contract/version/+state";
 import { TemporalityUnit, Terms } from "@blockframes/utils";
-import { ContractTitleDetail } from "./contract.firestore";
+import { ContractTitleDetail, ContractStatus } from "./contract.firestore";
 import { Price, createPrice } from "@blockframes/utils/common-interfaces";
 
 /**
@@ -28,13 +28,13 @@ export interface VersionView {
   titleIds: string[];
 }
 
-/** Create a flatten object to be easily display on the frontend */
-export function getVersonView(version: ContractVersion): VersionView {
+/** Create a flatten object to be easily displayed on the frontend */
+export function getVersionView(version: ContractVersion): VersionView {
   return {
     date: version.creationDate,
     titleIds: Object.keys(version.titles),
     price: getTotalPrice(version.titles),
-    status: version.status
+    status: ContractStatus[version.status]
   }
 }
 
