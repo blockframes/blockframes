@@ -47,12 +47,15 @@ export const storeType = {
 export type StoreType = keyof typeof storeType;
 export type StoreTypeValue = typeof storeType[StoreType];
 
-export enum PremiereType {
-  international = 'International',
-  world = 'World',
-  market = 'Market',
-  national = 'National',
-}
+export const premiereType = {
+  international: 'International',
+  world: 'World',
+  market: 'Market',
+  national: 'National',
+} as const;
+
+export type PremiereType = keyof typeof premiereType;
+export type PremiereTypeValue = typeof premiereType[PremiereType];
 
 export const unitBox = {
   boxoffice_dollar: 'Box office in $',

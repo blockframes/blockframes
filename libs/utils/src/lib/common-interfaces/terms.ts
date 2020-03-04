@@ -1,32 +1,44 @@
 import { toDate } from '../helpers';
 
-export enum PaymentEvent {
-  ContractSignatureDate = 'Contract Signature Date',
-  AcceptationAllMaterials = 'Acceptation of all delivery materials',
-  InvoiceEmittedDate = 'Invoice emission date',
-}
+export const paymentEvent = {
+  ContractSignatureDate: 'Contract Signature Date',
+  AcceptationAllMaterials: 'Acceptation of all delivery materials',
+  InvoiceEmittedDate: 'Invoice emission date',
+} as const;
 
-export enum MovieEvent {
-  WordlPremiere = 'World Premiere',
-  FirstTheatricalRelease = 'First theatrical release',
-  FirstTvBroadcast = 'First TV broadcast',
-}
+export type PaymentEvent = keyof typeof paymentEvent;
+export type PaymentEventValue = typeof paymentEvent[PaymentEvent];
 
-export enum TimeUnit {
-  days = 'Days',
-  weeks = 'Weeks',
-  months = 'Months',
-  years = 'Years',
-  calendarSemester = 'Calendar Semester',
-  calendarQuarter = 'Calendar Quarter'
-}
+export const movieEvent = {
+  WordlPremiere: 'World Premiere',
+  FirstTheatricalRelease: 'First theatrical release',
+  FirstTvBroadcast: 'First TV broadcast',
+} as const;
 
-export enum TemporalityUnit {
-  after = 'After',
-  before = 'Before',
-  for = 'For',
-  every = 'Every'
-}
+export type MovieEvent = keyof typeof movieEvent;
+export type MovieEventValue = typeof movieEvent[MovieEvent];
+
+export const timeUnit = {
+  days: 'Days',
+  weeks: 'Weeks',
+  months: 'Months',
+  years: 'Years',
+  calendarSemester: 'Calendar Semester',
+  calendarQuarter: 'Calendar Quarter'
+} as const;
+
+export type TimeUnit = keyof typeof timeUnit;
+export type TimeUnitValue = typeof timeUnit[TimeUnit];
+
+export const temporalityUnit = {
+  after: 'After',
+  before: 'Before',
+  for: 'For',
+  every: 'Every'
+} as const;
+
+export type TemporalityUnit = keyof typeof temporalityUnit;
+export type TemporalityUnitValue = typeof temporalityUnit[TemporalityUnit];
 
 export interface FloatingDuration {
   label?: string;
@@ -165,8 +177,8 @@ export function inDateRange(termsA: any, termsB: any): boolean {
   }
   return (
     (termsA.start.getTime() >= termsB.start.getTime() &&
-    termsA.start.getTime() <= termsB.end.getTime()) &&
+      termsA.start.getTime() <= termsB.end.getTime()) &&
     (termsA.end.getTime() >= termsB.start.getTime() &&
-    termsA.end.getTime() <= termsB.end.getTime())
+      termsA.end.getTime() <= termsB.end.getTime())
   )
 }

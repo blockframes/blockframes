@@ -15,7 +15,7 @@ import {
   DeliveryStakeholdersPage
 } from '../support/pages';
 import { User, DeliveryInformation } from '../support/utils/type';
-import { MATERIALS, UPDATED_MATERIALS, Statuses } from '../support/utils/data';
+import { MATERIALS, UPDATED_MATERIALS } from '../support/utils/data';
 
 //////////
 // DATA //
@@ -229,14 +229,14 @@ describe('User update some materials status', () => {
     const p4: DeliveryListPage = p3.clickOnMovieWithDeliveries(MOVIES_CYTEST[1]);
     const p5: DeliveryEditablePage = p4.clickFirstDelivery(ORGANIZATION_NAME);
     p5.selectAllMaterials();
-    p5.updateStatus(Statuses.AVAILABLE);
-    p5.assertMaterialStatusChanged(UPDATED_MATERIALS, Statuses.AVAILABLE);
+    p5.updateStatus('Available');
+    p5.assertMaterialStatusChanged(UPDATED_MATERIALS, 'Available');
     p5.selectMaterial(UPDATED_MATERIALS[0]);
-    p5.updateStatus(Statuses.PAID);
+    p5.updateStatus('Paid');
     p5.assertMaterialsArePaid([UPDATED_MATERIALS[0]]);
     p5.selectMaterial(UPDATED_MATERIALS[1]);
     p5.selectMaterial(UPDATED_MATERIALS[2]);
-    p5.updateStatus(Statuses.ORDERED);
+    p5.updateStatus('Ordered');
     p5.assertMaterialsAreOrdered([UPDATED_MATERIALS[1], UPDATED_MATERIALS[2]]);
   });
 });

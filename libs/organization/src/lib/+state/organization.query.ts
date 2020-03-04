@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { QueryEntity } from '@datorama/akita';
 import { OrganizationState, OrganizationStore } from './organization.store';
-import { OrganizationStatus, Organization } from './organization.model';
+import { Organization } from './organization.model';
 import { filter, map } from 'rxjs/operators';
 
 @Injectable({
@@ -21,6 +21,6 @@ export class OrganizationQuery extends QueryEntity<OrganizationState, Organizati
 
   public isAccepted$ = this.selectActive().pipe(
     filter(org => !!org),
-    map(org => org.status === OrganizationStatus.accepted)
+    map(org => org.status === 'accepted')
   );
 }

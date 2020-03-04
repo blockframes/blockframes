@@ -5,7 +5,7 @@ import { NotificationQuery } from '../+state';
 import { InvitationQuery, InvitationStore } from '../../invitation/+state';
 import { switchMap, map } from 'rxjs/operators';
 import { PermissionsQuery } from 'libs/organization/src/lib/permissions/+state/permissions.query';
-import { Invitation, InvitationStatus, InvitationType } from '@blockframes/invitation/types';
+import { Invitation } from '@blockframes/invitation/types';
 
 @Component({
   selector: 'overlay-notification-widget',
@@ -46,15 +46,15 @@ export class NotificationWidgetComponent implements OnInit {
 
   private adminInvitations(invitation: Invitation) {
     return (
-      invitation.status === InvitationStatus.pending &&
-      invitation.type !== InvitationType.fromOrganizationToUser
+      invitation.status === 'pending' &&
+      invitation.type !== 'fromOrganizationToUser'
     );
   }
 
   private memberInvitations(invitation: Invitation) {
     return (
-      invitation.status === InvitationStatus.pending &&
-      invitation.type === InvitationType.toWorkOnDocument
+      invitation.status === 'pending' &&
+      invitation.type === 'toWorkOnDocument'
     );
   }
 

@@ -4,7 +4,6 @@ import { AuthService, AuthQuery } from '../../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, ActivatedRoute } from '@angular/router';
 import { PasswordControl } from '@blockframes/utils/form/controls/password.control';
-import { InvitationStatus } from '@blockframes/notification/invitation/+state/invitation.model';
 import { AngularFirestore } from '@angular/fire/firestore';
 
 @Component({
@@ -52,8 +51,8 @@ export class IdentityComponent {
       // Don't use invitationService to avoid circulars dependencies between invitation, organization and auth service.
       const invitationsSnapshot = await this.db.firestore.collection('invitations').where('user.uid', '==', this.query.userId).get();
       const invitations = invitationsSnapshot.docs.map(doc => doc.data());
-      const pendingInvitation = invitations.find(invitation => invitation.status === InvitationStatus.pending);
-      await this.db.doc(`invitations/${pendingInvitation.id}`).update({ status: InvitationStatus.accepted });
+      const pendingInvitation = invitations.find(invitation => invitation.status === 'pending');
+      await this.db.doc(`invitations/${pendingInvitation.id}`).update({ status: 'accepted' });
 
       this.router.navigate(['/c'], { relativeTo: this.route });
     } catch (error) {

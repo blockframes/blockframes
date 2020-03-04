@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@
 import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DistributionDealService, DistributionDeal } from '@blockframes/movie/distribution-deals';
-import { DistributionDealStatus } from '@blockframes/movie/distribution-deals/+state/distribution-deal.firestore';
+import { distributionDealStatus } from '@blockframes/movie/distribution-deals/+state/distribution-deal.firestore';
 import { DealAdminForm } from '../../forms/deal-admin.form';
 import { Contract } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractService } from '@blockframes/contract/contract/+state';
@@ -19,7 +19,7 @@ export class DistributionDealComponent implements OnInit {
   public movieId = '';
   public deal: DistributionDeal;
   public dealForm: DealAdminForm;
-  public distributionDealStatus = DistributionDealStatus;
+  public distributionDealStatus = distributionDealStatus;
   public contract: Contract;
 
   constructor(

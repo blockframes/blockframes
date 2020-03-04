@@ -5,9 +5,7 @@ import { createInvitationToDocument, createInvitationFromUserToOrganization, cre
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { PublicOrganization } from '@blockframes/organization';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
-import { Invitation, InvitationStatus } from './invitation.firestore';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Invitation } from './invitation.firestore';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'invitations' })
@@ -65,11 +63,11 @@ export class InvitationService extends CollectionService<InvitationState> {
 
   /** Accept an Invitation and change its status to accepted. */
   public acceptInvitation(invitation: Invitation) {
-    return this.update({...invitation, status: InvitationStatus.accepted});
+    return this.update({...invitation, status: 'accepted'});
   }
 
   /** Decline an Invitation and change its status to declined. */
   public declineInvitation(invitation: Invitation) {
-    return this.update({...invitation, status: InvitationStatus.declined});
+    return this.update({...invitation, status: 'declined'});
   }
 }

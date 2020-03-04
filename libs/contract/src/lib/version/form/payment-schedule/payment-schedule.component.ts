@@ -13,7 +13,7 @@ import {
   ViewChildren,
   AfterViewInit,
 } from '@angular/core';
-import { MovieEvent, PaymentEvent, TimeUnit, TemporalityUnit } from '@blockframes/utils/common-interfaces/terms'
+import { paymentEvent, movieEvent, timeUnit } from '@blockframes/utils/common-interfaces/terms'
 import { FormList } from '@blockframes/utils/form/forms/list.form';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { PaymentScheduleRaw } from '@blockframes/utils/common-interfaces';
@@ -28,11 +28,11 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
   @Input() form: FormList<any, ContractVersionForm>;
 
   // concated enums
-  public triggerEvents = Object.assign({}, MovieEvent, PaymentEvent)
+  public triggerEvents = Object.assign({}, movieEvent, paymentEvent);
 
-  public paymentEvents = PaymentEvent;
+  public paymentEvents = paymentEvent;
 
-  public durations = TimeUnit;
+  public durations = timeUnit;
 
   public periodCtrl: FormControl = new FormControl(false);
 
@@ -138,7 +138,7 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
         tempValue.push(control.get('date').get('floatingDuration').get('temporality').value)
       }
     }
-    return tempValue.includes(TemporalityUnit.every);
+    return tempValue.includes('every');
   }
 
   /**paymentTerm
@@ -324,7 +324,7 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
     this.radioSub.unsubscribe();
     // If user checked radio button periodic, we want to update the form and set a default value
     if (this.radioCtrl.value === 'periodic') {
-      this.paymentSchedule.last().get('date').get('floatingDuration').get('temporality').setValue(TemporalityUnit.every)
+      this.paymentSchedule.last().get('date').get('floatingDuration').get('temporality').setValue('every')
     }
   }
 }

@@ -17,11 +17,7 @@ export {
   PLACEHOLDER_LOGO
 } from './organization.firestore';
 
-export const enum AppStatus {
-  none = 'none', // no request nor accept.
-  requested = 'requested',
-  accepted = 'accepted'
-}
+export type AppStatus = 'none' | 'requested' | 'accepted';
 
 /** An application details with the organization authorizations */
 export interface AppDetailsWithStatus extends AppDetails {

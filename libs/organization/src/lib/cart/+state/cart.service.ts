@@ -1,17 +1,16 @@
 import { Movie } from '@blockframes/movie/movie/+state/movie.model';
 import { Injectable } from '@angular/core';
-import { CatalogCart, createCart, CartStatus } from './cart.model';
+import { CatalogCart, createCart } from './cart.model';
 import { OrganizationQuery, OrganizationService, Wishlist } from '@blockframes/organization';
 import { CartState, CartStore } from './cart.store';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
-import { WishlistStatus } from '@blockframes/organization';
 import { AuthQuery } from '@blockframes/auth';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { MovieCurrenciesSlug } from '@blockframes/utils/static-model/types';
 
 const wishlistFactory = (movieId: string): Wishlist => {
   return {
-    status: WishlistStatus.pending,
+    status: 'pending',
     movieIds: [movieId]
   };
 };
@@ -58,7 +57,7 @@ export class CartService extends CollectionService<CartState> {
     const updatedCart: CatalogCart = {
       ...cart,
       price: { amount, currency },
-      status: CartStatus.submitted
+      status: 'submitted'
     };
     this.updateCart(updatedCart);
   }
@@ -119,8 +118,8 @@ export class CartService extends CollectionService<CartState> {
     await callDeploy({ email: user.email, userName: user.name, orgName: org.name, wishlist: wishlistTitles }).toPromise();
 
     const setSent = (wishlist: Wishlist) => {
-      return wishlist.status === WishlistStatus.pending
-        ? { ...wishlist, status: WishlistStatus.sent, sent: new Date() }
+      return wishlist.status === 'pending'
+        ? { ...wishlist, status: 'sent', sent: new Date() } as Wishlist
         : wishlist
     }
 

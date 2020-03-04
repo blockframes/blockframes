@@ -21,9 +21,9 @@ export class CatalogLearnMoreComponent {
   });
 
   public roles: RequestDemoRole[] = [
-    RequestDemoRole.buyer,
-    RequestDemoRole.seller,
-    RequestDemoRole.other
+    'buyer',
+    'seller',
+    'other'
   ];
 
 }

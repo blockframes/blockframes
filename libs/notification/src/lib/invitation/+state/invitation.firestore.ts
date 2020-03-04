@@ -20,7 +20,7 @@ export type InvitationOrUndefined = InvitationDocument | undefined;
 
 /** Specific Invitation send by an Organization to another Organization to work on a document. */
 export interface InvitationToWorkOnDocument extends Invitation {
-  type: InvitationType.toWorkOnDocument;
+  type: 'toWorkOnDocument';
   docId: string;
   organization: PublicOrganization;
   user?: PublicUser;
@@ -28,28 +28,20 @@ export interface InvitationToWorkOnDocument extends Invitation {
 
 /**  Specific Invitation send by an Organization to a User to join it. */
 export interface InvitationFromOrganizationToUser extends Invitation {
-  type: InvitationType.fromOrganizationToUser;
+  type: 'fromOrganizationToUser';
   user: PublicUser;
   organization: PublicOrganization;
 }
 
 /** Specific Invitation send by a User to join an Organization. */
 export interface InvitationFromUserToOrganization extends Invitation {
-  type: InvitationType.fromUserToOrganization;
+  type: 'fromUserToOrganization';
   user: PublicUser;
   organization: PublicOrganization;
 }
 
 /** Status of an Invitation. Set to pending by default, get erased if accepted, archived if declined. */
-export const enum InvitationStatus {
-  accepted = 'accepted',
-  declined = 'declined',
-  pending = 'pending'
-}
+export type InvitationStatus = 'accepted' | 'declined' | 'pending';
 
 /** Type of Invitation depending of its purpose. */
-export const enum InvitationType {
-  fromUserToOrganization = 'fromUserToOrganization',
-  fromOrganizationToUser = 'fromOrganizationToUser',
-  toWorkOnDocument = 'toWorkOnDocument'
-}
+export type InvitationType = 'fromUserToOrganization' | 'fromOrganizationToUser' | 'toWorkOnDocument';

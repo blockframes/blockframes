@@ -5,7 +5,6 @@ import {
   Organization,
   createOrganization,
   cleanOrganization,
-  AppStatus,
   convertOrganizationWithTimestampsToOrganization,
   OrganizationWithTimestamps
 } from './organization.model';
@@ -42,7 +41,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
       map((appRequest = {}) => {
         return APPS_DETAILS.map(app => ({
           ...app,
-          status: (appRequest[app.id] as AppStatus) || AppStatus.none
+          status: appRequest[app.id] || 'none'
         }))
       }),
       tap(appsDetails => this.store.update({ appsDetails }))

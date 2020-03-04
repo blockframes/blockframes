@@ -7,8 +7,6 @@ import {
   MovieDocument,
   StakeholderDocument,
   DeliveryDocument,
-  NotificationType,
-  App,
   PublicMovie,
   PublicOrganization
 } from './data/types';
@@ -63,8 +61,8 @@ async function stakeholdersCollectionEvent(
 
       const type =
         context.eventType === 'google.firestore.document.create'
-          ? NotificationType.inviteOrganization
-          : NotificationType.removeOrganization;
+          ? 'inviteOrganization'
+          : 'removeOrganization';
 
       const snapObject: SnapObject = {
         organization: { id: organization.id, name: organization.name } as PublicOrganization,
@@ -75,7 +73,7 @@ async function stakeholdersCollectionEvent(
 
       // Remove stakeholder id reference from delivery's stakeholderIds array.
       // Remove documentPermissions for this delivery.
-      if (type === NotificationType.removeOrganization) {
+      if (type === 'removeOrganization') {
         await db.doc(`deliveries/${delivery.id}`).update({
           stakeholderIds: delivery.stakeholderIds.filter((id: string) => id !== newStakeholder.orgId)
         });
@@ -121,7 +119,7 @@ function createNotifications(
         movie: snapObject.movie,
         type: snapObject.type,
         docId: snapObject.docId,
-        app: App.mediaDelivering
+        app: 'mediaDelivering'
       });
     });
 }

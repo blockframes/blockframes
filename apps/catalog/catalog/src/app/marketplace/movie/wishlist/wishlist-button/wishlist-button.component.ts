@@ -5,7 +5,6 @@ import { OrganizationQuery } from '@blockframes/organization';
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
 import { map } from 'rxjs/operators';
 import { FireAnalytics } from '@blockframes/utils';
-import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
@@ -43,7 +42,7 @@ export class WishlistButtonComponent implements OnInit {
     const movie = this.movieQuery.getEntity(this.movieId);
     const title = movie.main.title.international;
     this.cartService.updateWishlist(movie);
-    this.analytics.event(AnalyticsEvents.addedToWishlist, {
+    this.analytics.event('addedToWishlist', {
       movieId: movie.id,
       movieTitle: movie.main.title.original
     });
@@ -54,7 +53,7 @@ export class WishlistButtonComponent implements OnInit {
     const movie = this.movieQuery.getEntity(this.movieId);
     const title = movie.main.title.international;
     this.cartService.updateWishlist(movie);
-    this.analytics.event(AnalyticsEvents.removedFromWishlist, {
+    this.analytics.event('removedFromWishlist', {
       movieId: movie.id,
       movieTitle: movie.main.title.original
     });

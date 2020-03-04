@@ -1,4 +1,4 @@
-import { createPrice, PaymentStatus, formatPayment, formatPrice } from "@blockframes/utils/common-interfaces/price"
+import { createPrice, formatPayment, formatPrice } from "@blockframes/utils/common-interfaces/price"
 import { InvoiceTitleDetails, Invoice } from "./invoice.firestore"
 import { formatPaymentSchedule } from "@blockframes/utils/common-interfaces/schedule"
 import { createBankAccount } from "@blockframes/utils/common-interfaces/utility"
@@ -33,7 +33,7 @@ export function createInvoice(
     titles: [],
     buyerId: '',
     sellerId: '',
-    status: PaymentStatus.unknown,
+    status: 'unknown',
     contractId: '',
     legalDocumentId: '',
     reportIds: [],

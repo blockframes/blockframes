@@ -1,5 +1,5 @@
 import { db } from './internals/firebase';
-import { MaterialStatus, MaterialDocument, DeliveryDocument } from './data/types';
+import { MaterialDocument, DeliveryDocument } from './data/types';
 import { isTheSame } from './utils';
 
 /**
@@ -33,7 +33,7 @@ function copyMaterialToMovie(
 
     const updatedMaterial = {
       ...duplicateMaterial,
-      status: !!duplicateMaterial.status ? duplicateMaterial.status : MaterialStatus.pending
+      status: !!duplicateMaterial.status ? duplicateMaterial.status : 'pending'
     };
 
     return db

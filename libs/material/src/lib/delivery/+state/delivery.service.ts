@@ -8,11 +8,10 @@ import {
   deliveryStatuses
 } from './delivery.model';
 import { Movie, MovieQuery } from '@blockframes/movie';
-import { OrganizationQuery, createDocPermissions, PermissionsService } from '@blockframes/organization';
+import { OrganizationQuery, PermissionsService } from '@blockframes/organization';
 import { BFDoc } from '@blockframes/utils';
 import { MaterialQuery, createMaterial, isTheSame } from '../../material/+state';
 import {
-  DeliveryOption,
   DeliveryWizard,
   DeliveryWizardKind,
   DeliveryState,
@@ -227,8 +226,8 @@ export class DeliveryService extends CollectionService<DeliveryState> {
 
   /** Add a delivery using all the settings picked in the creation tunnel */
   public async addDeliveryFromWizard(wizard: DeliveryWizard, movieId: string, templateId: string) {
-    const mustBeSigned = wizard.options.includes(DeliveryOption.mustBeSigned);
-    const mustChargeMaterials = wizard.options.includes(DeliveryOption.mustChargeMaterials);
+    const mustBeSigned = wizard.options.includes('mustBeSigned');
+    const mustChargeMaterials = wizard.options.includes('mustChargeMaterials');
 
     const opts: AddDeliveryOptions = {
       movieId,

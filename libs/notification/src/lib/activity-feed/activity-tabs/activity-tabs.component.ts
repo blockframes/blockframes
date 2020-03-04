@@ -15,7 +15,7 @@ import { DateGroup } from '@blockframes/utils/helpers';
 
 export interface ActivityTab {
   label: string;
-  filters: string | NotificationType[];
+  filters: 'All' | NotificationType[];
 }
 
 const defaultTabs: ActivityTab[] = [
@@ -25,7 +25,7 @@ const defaultTabs: ActivityTab[] = [
   },
   {
     label: 'Titles',
-    filters: [NotificationType.movieSubmitted, NotificationType.movieAccepted]
+    filters: ['movieSubmitted', 'movieAccepted']
   }
 ];
 

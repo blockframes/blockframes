@@ -15,8 +15,6 @@ import {
   OrganizationDocument,
   MovieDocument,
   createDocPermissions,
-  NotificationType,
-  App,
   PublicUser
 } from './data/types';
 import { triggerNotifications, createNotification } from './notification';
@@ -129,8 +127,8 @@ async function onInvitationToOrgDecline(invitation: InvitationFromOrganizationTo
         name: user.name,
         surname: user.surname
       },
-      app: App.blockframes,
-      type: NotificationType.invitationFromOrganizationToUserDecline
+      app: 'blockframes',
+      type: 'invitationFromOrganizationToUserDecline'
     })
   );
 
@@ -236,8 +234,8 @@ async function onDocumentInvitationAccept(invitation: InvitationToWorkOnDocument
             userId,
             docId,
             movie: { id: movie.id, title: movie.main.title },
-            type: NotificationType.pathToDocument,
-            app: App.mediaDelivering
+            type: 'pathToDocument',
+            app: 'mediaDelivering'
           });
         })
       )
@@ -326,8 +324,8 @@ async function onInvitationFromUserToJoinOrgDecline(invitation: InvitationFromUs
         name: invitation.user.name,
         surname: invitation.user.surname
       },
-      app: App.blockframes,
-      type: NotificationType.invitationFromUserToJoinOrgDecline
+      app: 'blockframes',
+      type: 'invitationFromUserToJoinOrgDecline'
     })
   );
 

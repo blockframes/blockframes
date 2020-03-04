@@ -1,7 +1,6 @@
 import { functions, db } from './internals/firebase';
 import { MovieDocument, OrganizationDocument, PublicUser, StoreConfig } from './data/types';
 import { NotificationType } from '@blockframes/notification/types';
-import { App } from '@blockframes/utils/apps';
 import { triggerNotifications, createNotification } from './notification';
 import { flatten, isEqual } from 'lodash';
 import { getDocument, getOrganizationsOfMovie } from './data/internals';
@@ -15,7 +14,7 @@ function notifUser(userId: string, notificationType: NotificationType, movie: Mo
     userId,
     user: { name: user.name, surname: user.surname },
     type: notificationType,
-    app: App.blockframes,
+    app: 'blockframes',
     movie: {
       id: movie.id,
       title: {
@@ -52,7 +51,7 @@ export async function onMovieCreate(
 
   // Get the user document and create notifications.
   const user = await getDocument<PublicUser>(`users/${movie._meta!.createdBy}`);
-  const notifications = await createNotificationsForUsers(movie, NotificationType.movieTitleCreated, user);
+  const notifications = await createNotificationsForUsers(movie, 'movieTitleCreated', user);
 
   return db.runTransaction(async tx => {
 
@@ -114,7 +113,7 @@ export async function onMovieDelete(
     }
   });
 
-  const notifications = await createNotificationsForUsers(movie, NotificationType.movieDeleted, user);
+  const notifications = await createNotificationsForUsers(movie, 'movieDeleted', user);
 
   // Delete sub-collections
   await removeAllSubcollections(snap, batch);
@@ -144,9 +143,9 @@ export async function onMovieUpdate(
     const notifications = archipelContent.userIds.map(
       userId => createNotification({
         userId,
-        type: NotificationType.movieSubmitted,
+        type: 'movieSubmitted',
         docId: after.id,
-        app: App.biggerBoat
+        app: 'biggerBoat'
       })
     );
 
@@ -161,9 +160,9 @@ export async function onMovieUpdate(
     .map(userId => {
       return createNotification({
         userId,
-        type: NotificationType.movieAccepted,
+        type: 'movieAccepted',
         docId: after.id,
-        app: App.biggerBoat
+        app: 'biggerBoat'
       });
     });
 
@@ -173,7 +172,7 @@ export async function onMovieUpdate(
   if (hasTitleChanged) {
     const userSnapshot = await db.doc(`users/${after._meta!.updatedBy}`).get();
     const user = userSnapshot.data() as PublicUser;
-    const notifications = await createNotificationsForUsers(before, NotificationType.movieTitleUpdated, user);
+    const notifications = await createNotificationsForUsers(before, 'movieTitleUpdated', user);
 
     return triggerNotifications(notifications);
   }

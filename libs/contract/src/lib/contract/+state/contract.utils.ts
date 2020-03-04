@@ -1,6 +1,6 @@
 import { ContractVersion } from "@blockframes/contract/version/+state";
-import { TemporalityUnit, Terms } from "@blockframes/utils";
-import { ContractTitleDetail, ContractStatus } from "./contract.firestore";
+import { Terms } from "@blockframes/utils";
+import { ContractTitleDetail } from "./contract.firestore";
 import { Price, createPrice } from "@blockframes/utils/common-interfaces";
 
 /**
@@ -34,7 +34,7 @@ export function getVersionView(version: ContractVersion): VersionView {
     date: version.creationDate,
     titleIds: Object.keys(version.titles),
     price: getTotalPrice(version.titles),
-    status: ContractStatus[version.status]
+    status: version.status
   }
 }
 
@@ -67,7 +67,7 @@ export function displayPaymentSchedule(version: ContractVersion): { type: string
       return undefined;
     }
 
-    if (version.paymentSchedule[0].date.floatingDuration.temporality === TemporalityUnit.every) {
+    if (version.paymentSchedule[0].date.floatingDuration.temporality === 'every') {
       return {
         type: 'Periodic Payment',
         list: version.paymentSchedule.map(({ percentage, date }) => {

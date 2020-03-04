@@ -31,7 +31,7 @@ const columns = {
 
 type ColumnsKeys = keyof typeof columns;
 
-const baseColumns : ColumnsKeys[] = [
+const baseColumns: ColumnsKeys[] = [
   'territories',
   'creationDate',
   'moviesLength',
@@ -54,7 +54,7 @@ function getColumns(keys: ColumnsKeys[]): Partial<typeof columns> {
   styleUrls: ['./table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ContractTableComponent{
+export class ContractTableComponent {
 
   columns: Partial<typeof columns> = getColumns(baseColumns);
   initialColumns = baseColumns;
@@ -86,14 +86,14 @@ export class ContractTableComponent{
     const version = getContractLastVersion(contract);
     return {
       id: contract.id,
-      buyerName: contract.parties.find(({party}) => party.role === 'licensee').party.displayName,
+      buyerName: contract.parties.find(({ party }) => party.role === 'licensee').party.displayName,
       territories: this.dealQuery.getTerritoriesFromContract(version),
       creationDate: version.creationDate,
       moviesLength: contract.titleIds.length,
       titles: this.movieQuery.getAll().filter(m => contract.titleIds.includes(m.id)).map(m => m.main.title.international),
       price: getTotalPrice(version.titles),
       paid: version.status === 'paid' ? 'Yes' : 'No',
-      status: ContractStatus[version.status]
+      status: version.status
     }
   }
 
@@ -101,7 +101,7 @@ export class ContractTableComponent{
   public goToSale(contract: ContractView) {
     const basePath = `/c/o/${this.app}`;
     // @todo(#1887) Don't use getContractLastVersion function
-    const path = (contract.status === ContractStatus.draft)
+    const path = (contract.status === 'draft')
       ? `${basePath}/tunnel/contract/${contract.id}/sale`
       : `${basePath}/deals/${contract.id}`;
     this.router.navigate([path], { relativeTo: this.route });

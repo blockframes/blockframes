@@ -20,8 +20,8 @@
     <!-- Premiere -->
     <div fxLayout="column" fxLayoutAlign="start start">
       <mat-button-toggle-group multiple formControlName="premiere" aria-label="Premiere" name="premiere">
-        <ng-container *ngFor="let type of premiereTypes">
-          <mat-button-toggle [value]="type">{{ premiereType[type] }}</mat-button-toggle>
+        <ng-container *ngFor="let type of premiereType | keyvalue">
+          <mat-button-toggle [value]="type.key">{{ type.value }}</mat-button-toggle>
         </ng-container>
       </mat-button-toggle-group>
       <span class="mat-caption">Selection all premiere that apply</span>

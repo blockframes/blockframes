@@ -18,7 +18,6 @@ import { BreakpointObserver } from '@angular/cdk/layout';
 import { Movie } from '@blockframes/movie/movie/+state/movie.model';
 import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
-import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
 import {
   LANGUAGES_LABEL,
   LanguagesLabel,
@@ -293,7 +292,7 @@ export class MarketplaceSearchComponent implements OnInit {
     const languageSlug: LanguagesSlug = getCodeIfExists('LANGUAGES', language);
     if (LANGUAGES_LABEL.includes(language)) {
       this.filterForm.addLanguage(languageSlug);
-      this.analytics.event(AnalyticsEvents.addedLanguage, { language });
+      this.analytics.event('addedLanguage', { language });
     } else {
       throw new Error('Something went wrong. Please choose a language from the drop down menu.');
     }
@@ -306,7 +305,7 @@ export class MarketplaceSearchComponent implements OnInit {
      */
     const languageSlug: LanguagesSlug = getCodeIfExists('LANGUAGES', language);
     this.filterForm.removeLanguage(languageSlug);
-    this.analytics.event(AnalyticsEvents.removedLanguage, { language });
+    this.analytics.event('removedLanguage', { language });
   }
 
   public hasBudget(budget: NumberRange) {
@@ -330,10 +329,10 @@ export class MarketplaceSearchComponent implements OnInit {
       !this.filterForm.get('status').value.includes(productionStatusSlug)
     ) {
       this.filterForm.addStatus(productionStatusSlug);
-      this.analytics.event(AnalyticsEvents.addedMovieStatus, { status });
+      this.analytics.event('addedMovieStatus', { status });
     } else {
       this.filterForm.removeStatus(productionStatusSlug);
-      this.analytics.event(AnalyticsEvents.removedMovieStatus, { status });
+      this.analytics.event('removedMovieStatus', { status });
     }
   }
 
@@ -359,7 +358,7 @@ export class MarketplaceSearchComponent implements OnInit {
       'close',
       { duration: 2000 }
     );
-    this.analytics.event(AnalyticsEvents.addedToWishlist, {
+    this.analytics.event('addedToWishlist', {
       movieId: movie.id,
       movieTitle: movie.main.title.original
     });
@@ -372,7 +371,7 @@ export class MarketplaceSearchComponent implements OnInit {
       'close',
       { duration: 2000 }
     );
-    this.analytics.event(AnalyticsEvents.removedFromWishlist, {
+    this.analytics.event('removedFromWishlist', {
       movieId: movie.id,
       movieTitle: movie.main.title.original
     });
@@ -385,7 +384,7 @@ export class MarketplaceSearchComponent implements OnInit {
   public selectSearchType(type: string) {
     if (this.searchbarForm.value !== type) {
       this.searchbarTypeForm.setValue(type);
-      this.analytics.event(AnalyticsEvents.searchbarSearchType, { type });
+      this.analytics.event('searchbarSearchType', { type });
     } else {
       this.searchbarTypeForm.setValue('');
     }

@@ -5,7 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { InvitationService, InvitationQuery, InvitationStore } from '@blockframes/notification';
 import { PermissionsQuery, UserRole, PermissionsService } from '../../permissions/+state';
 import { Order } from '@datorama/akita';
-import { Invitation, InvitationType } from '@blockframes/invitation/types';
+import { Invitation } from '@blockframes/invitation/types';
 import { OrganizationMember } from '../../member/+state/member.model';
 import { MemberService } from '../../member/+state/member.service';
 import { MemberQuery } from '../../member/+state/member.query';
@@ -59,13 +59,13 @@ export class MemberEditableComponent implements OnInit, OnDestroy {
     this.invitationSubscription = this.invitationService.syncCollection(queryFn, { storeName }).subscribe();
 
     this.invitationsToJoinOrganization$ = this.invitationQuery.selectAll({
-      filterBy: invitation => invitation.type === InvitationType.fromUserToOrganization,
+      filterBy: invitation => invitation.type === 'fromUserToOrganization',
       sortBy: 'date',
       sortByOrder: Order.DESC
     });
 
     this.invitationsFromOrganization$ = this.invitationQuery.selectAll({
-      filterBy: invitation => invitation.type === InvitationType.fromOrganizationToUser,
+      filterBy: invitation => invitation.type === 'fromOrganizationToUser',
       sortBy: 'date',
       sortByOrder: Order.DESC
     });

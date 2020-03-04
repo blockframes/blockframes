@@ -8,10 +8,9 @@ import { FormControl } from '@angular/forms';
 import { ContractVersionPriceControl, ContractVersionForm } from '@blockframes/contract/version/form';
 import { MovieCurrenciesSlug } from '@blockframes/utils/static-model';
 import { displayPaymentSchedule, displayTerms } from '../../+state/contract.utils';
-import { ContractQuery, ContractStatus, ContractService } from '../../+state';
+import { ContractQuery } from '../../+state';
 import { ContractVersionService } from '@blockframes/contract/version/+state';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { DistributionDealStatus } from '@blockframes/movie/distribution-deals/+state/distribution-deal.firestore';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state';
 
 @Component({
@@ -96,12 +95,11 @@ export class SummaryMandateComponent implements OnInit {
     // Make sure everything is saved first and that deals have ids
     await this.tunnel.save();
     const write = this.db.firestore.batch();
-    this.service.update(`${lastIndex}`, { status: ContractStatus.submitted }, { params: { contractId }, write });
+    this.service.update(`${lastIndex}`, { status: 'submitted' }, { params: { contractId }, write });
     
     for (const movieId in this.dealForms.value) {
-      const undernegotiation = { status: DistributionDealStatus.undernegotiation };
       const dealIds = this.dealForms.get(movieId).value.map(deal => deal.id);
-      this.dealService.update(dealIds, undernegotiation, { params: { movieId }, write });
+      this.dealService.update(dealIds, { status: 'undernegotiation' }, { params: { movieId }, write });
     }
     return write.commit();
   }

@@ -4,8 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { InvoiceService } from '@blockframes/contract/invoice/+state/invoice.service';
 import { Invoice } from '@blockframes/contract/invoice/+state/invoice.firestore';
 import { InvoiceAdminForm } from '../../forms/invoice-admin.form';
-import { PaymentStatus } from '@blockframes/utils/common-interfaces/price';
-
+import { paymentStatus } from '@blockframes/utils/common-interfaces/price';
 
 @Component({
   selector: 'admin-invoice',
@@ -17,7 +16,7 @@ export class InvoiceComponent implements OnInit {
   public invoiceId = '';
   private invoice: Invoice;
   public invoiceForm: InvoiceAdminForm;
-  public paymentStatus = PaymentStatus;
+  public paymentStatus = paymentStatus;
 
   constructor(
     private invoiceService: InvoiceService,

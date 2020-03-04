@@ -6,14 +6,11 @@ import {
   MovieDocument,
   OrganizationDocument,
   DeliveryDocument,
-  MaterialDocument,
-  NotificationType,
-  App
+  MaterialDocument
 } from './data/types';
 
 export async function deleteFirestoreMovie(
-  snap: FirebaseFirestore.DocumentSnapshot,
-  context: functions.EventContext
+  snap: FirebaseFirestore.DocumentSnapshot
 ) {
   const movie = snap.data();
 
@@ -60,8 +57,7 @@ export async function deleteFirestoreMovie(
 }
 
 export async function deleteFirestoreDelivery(
-  snap: FirebaseFirestore.DocumentSnapshot,
-  context: functions.EventContext
+  snap: FirebaseFirestore.DocumentSnapshot
 ) {
   const delivery = snap.data();
 
@@ -105,8 +101,8 @@ export async function deleteFirestoreDelivery(
         userId,
         docId: delivery.id,
         movie: { id: movie.id, title: movie.main.title },
-        type: NotificationType.deleteDocument,
-        app: App.mediaDelivering
+        type: 'deleteDocument',
+        app: 'mediaDelivering'
       })
     }
     );

@@ -1,6 +1,6 @@
 import { functions, db } from './internals/firebase';
-import { ContractDocument, PublicContractDocument, App, NotificationType, OrganizationDocument, PublicOrganization } from './data/types';
-import { ValidContractStatuses, ContractStatus, ContractVersionDocument } from '@blockframes/contract/contract/+state/contract.firestore';
+import { ContractDocument, PublicContractDocument, OrganizationDocument, PublicOrganization } from './data/types';
+import { ValidContractStatuses, ContractVersionDocument } from '@blockframes/contract/contract/+state/contract.firestore';
 import { getOrganizationsOfContract, getDocument, versionExists } from './data/internals';
 import { triggerNotifications, createNotification } from './notification';
 import { centralOrgID } from './environments/environment';
@@ -100,8 +100,8 @@ export async function onContractVersionWrite(
   await transformContractToPublic(contract);
 
   const previousVersion = await getDocument<ContractVersionDocument>(`contracts/${contractId}/versions/${previousVersionId}`)
-  const contractInNegociation = (previousVersion.status === ContractStatus.submitted) && (after.status === ContractStatus.undernegotiation);
-  const contractSubmitted = (previousVersion.status === ContractStatus.draft) && (after.status === ContractStatus.submitted);
+  const contractInNegociation = (previousVersion.status === 'submitted') && (after.status === 'undernegotiation');
+  const contractSubmitted = (previousVersion.status === 'draft') && (after.status === 'submitted');
 
   if (contractSubmitted) { // Contract is submitted by organization to Archipel Content
 
@@ -112,9 +112,9 @@ export async function onContractVersionWrite(
       userId => createNotification({
         userId,
         organization: { id, name }, // TODO (#1999): Add the logo to display if orgs collection is not public to Archipel Content
-        type: NotificationType.newContract,
+        type: 'newContract',
         docId: contractId,
-        app: App.biggerBoat
+        app: 'biggerBoat'
       })
     );
 
@@ -131,9 +131,9 @@ export async function onContractVersionWrite(
     .map(userId => {
       return createNotification({
         userId,
-        type: NotificationType.contractInNegotiation,
+        type: 'contractInNegotiation',
         docId: contractId,
-        app: App.biggerBoat
+        app: 'biggerBoat'
       });
     });
 

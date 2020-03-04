@@ -9,12 +9,11 @@ import { functions, db } from './internals/firebase';
 import { deleteSearchableOrg, storeSearchableOrg } from './internals/algolia';
 import { sendMail, sendMailFromTemplate } from './internals/email';
 import { organizationCreated, organizationWasAccepted } from './assets/mail-templates';
-import { OrganizationDocument, OrganizationStatus, PublicUser, PermissionsDocument } from './data/types';
+import { OrganizationDocument, PublicUser, PermissionsDocument } from './data/types';
 import { RelayerConfig, relayerDeployOrganizationLogic, relayerRegisterENSLogic, isENSNameRegistered } from './relayer';
 import { mnemonic, relayer } from './environments/environment';
 import { emailToEnsDomain, precomputeAddress as precomputeEthAddress, getProvider } from '@blockframes/ethers/helpers';
 import { NotificationType } from '@blockframes/notification/types';
-import { App } from '@blockframes/utils/apps';
 import { triggerNotifications, createNotification } from './notification';
 
 /** Create a notification with user and org. */
@@ -30,7 +29,7 @@ function notifUser(userId: string, notificationType: NotificationType, org: Orga
       id: org.id,
       name: org.name
     },
-    app: App.blockframes
+    app: 'blockframes'
   });
 }
 
@@ -58,7 +57,7 @@ async function notifyOnOrgMemberChanges(before: OrganizationDocument, after: Org
     const userSnapshot = await db.doc(`users/${userAddedId}`).get();
     const userAdded = userSnapshot.data() as PublicUser;
 
-    const notifications = after.userIds.map(userId => notifUser(userId, NotificationType.memberAddedToOrg, after, userAdded));
+    const notifications = after.userIds.map(userId => notifUser(userId, 'memberAddedToOrg', after, userAdded));
     return triggerNotifications(notifications);
 
   // Member removed
@@ -69,7 +68,7 @@ async function notifyOnOrgMemberChanges(before: OrganizationDocument, after: Org
 
     await removeMemberPermissionsAndOrgId(userRemoved);
 
-    const notifications = after.userIds.map(userId => notifUser(userId, NotificationType.memberRemovedFromOrg, after, userRemoved));
+    const notifications = after.userIds.map(userId => notifUser(userId, 'memberRemovedFromOrg', after, userRemoved));
     return triggerNotifications(notifications);
   }
 }
@@ -119,7 +118,7 @@ export async function onOrganizationUpdate(
   await notifyOnOrgMemberChanges(before, after);
 
   // Deploy org's smart-contract
-  const becomeAccepted = before.status === OrganizationStatus.pending && after.status === OrganizationStatus.accepted;
+  const becomeAccepted = before.status === 'pending' && after.status === 'accepted';
   const blockchainBecomeEnabled = before.isBlockchainEnabled === false && after.isBlockchainEnabled === true;
 
   const { id, userIds } = before as OrganizationDocument;
@@ -132,8 +131,8 @@ export async function onOrganizationUpdate(
     const notification = createNotification({
       // At this moment, the organization was just created, so we are sure to have only one userId in the array
       userId: after.userIds[0],
-      type: NotificationType.organizationAcceptedByArchipelContent,
-      app: App.blockframes
+      type: 'organizationAcceptedByArchipelContent',
+      app: 'blockframes'
     });
     await triggerNotifications([notification]);
   }

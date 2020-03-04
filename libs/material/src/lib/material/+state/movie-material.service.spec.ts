@@ -6,7 +6,7 @@ import { AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestor
 import { MaterialStore } from './material.store';
 import { MovieMaterialService } from './movie-material.service';
 import { MovieQuery } from '@blockframes/movie';
-import { MaterialStatus, createMaterial } from './material.model';
+import { createMaterial } from './material.model';
 
 const initTestApp = initializeTestApp({
   projectId: 'my-test-project',
@@ -74,7 +74,7 @@ describe('MovieMaterialService unit test', () => {
       category: '',
       value: '',
       description: '',
-      status: MaterialStatus.pending,
+      status: pending,
       isOrdered: false,
       isPaid: false,
       deliveryIds: []
@@ -84,8 +84,8 @@ describe('MovieMaterialService unit test', () => {
 
   it('should update status of materials from a movie', () => {
     const spy = jest.spyOn(service, 'update').mockImplementation();
-    service.updateStatus(materialsMock, MaterialStatus.available);
-    expect(spy).toHaveBeenCalledWith(['6hjACiAe2dOZ8Vab1L3u', 'KfN4o33h4mK212ZnOO5m', 'dCe0XJLUChDMzJ6p4dZK'], { status: MaterialStatus.available });
+    service.updateStatus(materialsMock, 'available');
+    expect(spy).toHaveBeenCalledWith(['6hjACiAe2dOZ8Vab1L3u', 'KfN4o33h4mK212ZnOO5m', 'dCe0XJLUChDMzJ6p4dZK'], { status: 'available' });
     expect(spy).toHaveBeenCalledTimes(1);
   });
 

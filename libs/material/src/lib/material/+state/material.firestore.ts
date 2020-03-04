@@ -1,10 +1,6 @@
 import { CurrencySlug } from '@blockframes/material/delivery/types';
 
-export const enum MaterialStatus {
-  pending = 'pending',
-  available = 'available',
-  delivered = 'delivered'
-}
+export type MaterialStatus = 'pending' | 'available' | 'delivered';
 
 /** Generic interface of a material */
 export interface MaterialRaw {

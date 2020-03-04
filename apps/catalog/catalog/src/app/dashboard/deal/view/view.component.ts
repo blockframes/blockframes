@@ -7,7 +7,6 @@ import {
   getContractParties,
   isContractSignatory,
   getTotalPrice,
-  ContractStatus,
   getContractSubLicensors,
   displayPaymentSchedule
 } from '@blockframes/contract/contract/+state';
@@ -71,10 +70,6 @@ export class DealViewComponent implements OnInit {
   /** Opens intercom messenger panel. */
   public openIntercom(): void {
     return this.intercom.show();
-  }
-
-  public getStatusValue(status: ContractStatus){
-    return ContractStatus[status];
   }
 
   /** Accept the offer and sign with a timestamp. */
