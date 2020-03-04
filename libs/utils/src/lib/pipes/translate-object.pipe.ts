@@ -35,6 +35,7 @@ export class TranslateObjectPipe implements PipeTransform {
         case 'storeType':
         case 'workType':
           this.imports[type] = await import('@blockframes/movie/movie/+state/movie.firestore').then(e => e[type]);
+          break;
         default:
           break;
       }
