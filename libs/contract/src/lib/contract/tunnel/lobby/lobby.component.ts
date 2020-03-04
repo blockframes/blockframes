@@ -16,7 +16,7 @@ export class LobbyComponent {
     private route: ActivatedRoute,
   ) { }
 
-  async select(type: 'sale' | 'mandate') {
+  async select(type: ContractType) {
     const contractId = await this.service.create({ type });
     this.router.navigate([contractId, type], { relativeTo: this.route })
   }

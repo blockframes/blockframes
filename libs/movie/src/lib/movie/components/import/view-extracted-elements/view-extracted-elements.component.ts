@@ -27,7 +27,7 @@ import { formatCredits } from '@blockframes/utils/spreadsheet/format';
 import { ImageUploader, cleanModel, getKeyIfExists } from '@blockframes/utils';
 import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
 import { SSF } from 'xlsx';
-import { PremiereType, storeType, workType, storeStatus, unitBox, movieLanguageTypes } from '@blockframes/movie/movie/+state/movie.firestore';
+import { PremiereType, storeType, workType, storeStatus, unitBox, movieLanguageTypes, MovieLanguageTypesValue, UnitBoxValue } from '@blockframes/movie/movie/+state/movie.firestore';
 import { createStakeholder } from '@blockframes/utils/common-interfaces/identity';
 import { DistributionDeal, createDistributionDeal, createHoldback } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
 import {
@@ -655,8 +655,8 @@ export class ViewExtractedElementsComponent implements OnInit {
 
             const parseErrors = [];
             if (language) {
-              versionParts.map(v => v.trim()).forEach(v => {
-                const key = getKeyIfExists(movieLanguageTypes, v as any);
+              versionParts.map(v => v.trim()).forEach((v : MovieLanguageTypesValue) => {
+                const key = getKeyIfExists(movieLanguageTypes, v);
                 if (key) {
                   populateMovieLanguageSpecification(movie.versionInfo.languages, language, key, true);
                 } else {
@@ -828,7 +828,7 @@ export class ViewExtractedElementsComponent implements OnInit {
         if (spreadSheetRow[SpreadSheetMovie.worldwideBoxOffice]) {
           spreadSheetRow[SpreadSheetMovie.worldwideBoxOffice].split(this.separator).forEach((version: string) => {
             const boxOfficeParts = version.split(this.subSeparator);
-            const unit = getKeyIfExists(unitBox, boxOfficeParts[0] as any);
+            const unit = getKeyIfExists(unitBox, boxOfficeParts[0] as UnitBoxValue);
             if (unit) {
               movie.budget.boxOffice.push(createBoxOffice(
                 {

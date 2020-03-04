@@ -41,8 +41,8 @@ export enum ContractStatus {
 export const ValidContractStatuses = ['waitingpayment', 'paid', 'accepted'];
 
 export const contractType = {
-  mandate: 'mandate',
-  sale: 'sale'
+  mandate: 'Mandate',
+  sale: 'Sale'
 } as const;
 
 export type ContractType = keyof typeof contractType;

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Modules
-import { TranslateEnumModule } from '@blockframes/utils/pipes/translate-enum.module';
+import { TranslateObjectModule } from '@blockframes/utils/pipes/translate-object.module';
 
 // Components
 import { MovieSummaryMainComponent } from './main.component';
@@ -17,7 +17,7 @@ import { RouterModule } from '@angular/router';
     RouterModule,
     FlexLayoutModule,
     MissingControlModule,
-    TranslateEnumModule,
+    TranslateObjectModule,
   ],
   exports: [MovieSummaryMainComponent]
 })

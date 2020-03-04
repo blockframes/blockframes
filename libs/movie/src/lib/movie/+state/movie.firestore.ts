@@ -184,10 +184,10 @@ export interface MovieBudget {
 }
 
 export const movieLanguageTypes = {
-  original: 'original',
-  dubbed: 'dubbed',
-  subtitle: 'subtitle',
-  caption: 'caption',
+  original: 'Original',
+  dubbed: 'Dubbed',
+  subtitle: 'Subtitle',
+  caption: 'Caption',
 } as const;
 
 export type MovieLanguageTypes = keyof typeof movieLanguageTypes;

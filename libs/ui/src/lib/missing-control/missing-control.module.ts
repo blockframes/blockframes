@@ -4,7 +4,7 @@ import { MissingControlComponent } from './missing-control.component';
 import { MatButtonModule } from '@angular/material/button';
 import { RouterModule } from '@angular/router';
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
-import { TranslateEnumModule } from '@blockframes/utils/pipes/translate-enum.module';
+import { TranslateObjectModule } from '@blockframes/utils/pipes/translate-object.module';
 
 @NgModule({
   imports: [
@@ -12,7 +12,7 @@ import { TranslateEnumModule } from '@blockframes/utils/pipes/translate-enum.mod
     MatButtonModule,
     TranslateSlugModule,
     RouterModule,
-    TranslateEnumModule,
+    TranslateObjectModule,
   ],
   declarations: [MissingControlComponent],
   exports: [MissingControlComponent]
