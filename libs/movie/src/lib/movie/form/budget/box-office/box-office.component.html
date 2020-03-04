@@ -7,7 +7,7 @@
         <mat-form-field appearance="outline">
           <mat-label>Metrics</mat-label>
           <mat-select [formControl]="control.get('unit')">
-            <mat-option *ngFor="let unit of unitBox | keyvalue" [value]="unit.value">
+            <mat-option *ngFor="let unit of unitBox | keyvalue" [value]="unit.key">
               {{ unit.value }}
             </mat-option>
           </mat-select>

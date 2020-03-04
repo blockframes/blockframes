@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
 import { Observable } from 'rxjs';
-import { MovieAnalytics, StoreStatus } from '@blockframes/movie/movie/+state/movie.firestore';
+import { MovieAnalytics } from '@blockframes/movie/movie/+state/movie.firestore';
 import { MovieService } from '@blockframes/movie/movie/+state/movie.service';
 import { switchMap, map } from 'rxjs/operators';
 
@@ -20,7 +20,7 @@ export class HomeComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.movieAnalytics$ = this.movieQuery.selectAll({ filterBy: movie => movie.main.storeConfig.status === StoreStatus.accepted }).pipe(
+    this.movieAnalytics$ = this.movieQuery.selectAll({ filterBy: movie => movie.main.storeConfig.status === 'accepted' }).pipe(
       map(movies => movies.map(movie => movie.id)),
       switchMap(ids => this.movieService.getMovieAnalytics(ids)));
   }
