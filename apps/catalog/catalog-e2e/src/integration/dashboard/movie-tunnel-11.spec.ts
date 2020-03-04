@@ -11,7 +11,6 @@ const LINKS = [
   'https://www.youtube.com/watch?v=n22yzBmr5sY',
   'https://www.teaser.com'
 ];
-const UPLOAD_STATUS = 'Success';
 
 beforeEach(() => {
   clearDataAndPrepareTest();
@@ -27,11 +26,11 @@ describe('User can navigate to the movie tunnel page 11, complete the fields, an
     // Upload files
     createFakeScript(`${randomID()}`)
     .then(path => p2.uploadPresentationDeck(path))
-    .then(() => p2.assertPresentationDeckHasUploadStatus((UPLOAD_STATUS)));
+    .then(() => p2.assertPresentationDeckHasUploadSucceeded());
 
     createFakeScript(`${randomID()}`)
     .then(path => p2.uploadScenario(path))
-    .then(() => p2.assertScenarioHasUploadStatus((UPLOAD_STATUS)));
+    .then(() => p2.assertScenarioHasUploadSucceeded());
 
     // File links
     p2.fillPromoReelLink(LINKS[0]);
