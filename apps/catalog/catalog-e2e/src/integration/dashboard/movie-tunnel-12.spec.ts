@@ -4,7 +4,6 @@ import { clearDataAndPrepareTest, signInAndNavigateToMain, createFakeScript, ran
 import { TunnelMainPage, TunnelChainOfTitlesPage, TunnelValuationPage } from "../../support/pages/dashboard";
 
 const NAVIGATION = ['Legal Information', 'Chain of Titles'];
-const UPLOAD_STATUS = 'Success';
 
 beforeEach(() => {
   clearDataAndPrepareTest();
@@ -19,7 +18,7 @@ describe('User can navigate to the movie tunnel page 12, complete the fields, an
 
     createFakeScript(`${randomID()}`)
     .then(path => p2.uploadChainOfTitlesFile(path))
-    .then(() => p2.assertChainOfTitlesFileHasUploadStatus((UPLOAD_STATUS)));
+    .then(() => p2.assertChainOfTitlesFileHasUploadSucceeded());
 
     // GO to movie-tunnel-13
     const p3: TunnelValuationPage = p2.clickNext();

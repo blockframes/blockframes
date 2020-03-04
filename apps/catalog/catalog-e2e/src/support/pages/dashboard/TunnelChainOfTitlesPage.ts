@@ -1,6 +1,8 @@
 import { uploadFile, assertUploadStatus } from "../../utils/utils";
 import TunnelValuationPage from "./TunnelValuationPage";
 
+const UPLOAD_STATUS = 'Success';
+
 export default class TunnelChainOfTitlesPage {
   constructor() {
     cy.get('catalog-chain-of-titles');
@@ -10,8 +12,8 @@ export default class TunnelChainOfTitlesPage {
     uploadFile(p, 'application/pdf', 'chain-titles');
   }
 
-  public assertChainOfTitlesFileHasUploadStatus(content: string) {
-    assertUploadStatus(content, 'chain-titles');
+  public assertChainOfTitlesFileHasUploadSucceeded() {
+    assertUploadStatus(UPLOAD_STATUS, 'chain-titles');
   }
 
   public clickNext() {
