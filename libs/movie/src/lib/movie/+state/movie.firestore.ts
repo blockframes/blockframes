@@ -24,17 +24,20 @@ import { LegalDocument } from "@blockframes/contract/contract/+state/contract.fi
 
 type Timestamp = firestore.Timestamp;
 
-export enum WorkType {
-  movie = 'Movie',
-  short = 'Short',
-  serie = 'Serie',
-  season = 'Season',
-  volume = 'Volume',
-  episode = 'Episode',
-  collection = 'Collection',
-  tv_film = 'TV Film',
-  flow = 'Flow'
-}
+export const workType = {
+  feature_film: 'Feature Film',
+  short: 'Short',
+  serie: 'Serie',
+  season: 'Season',
+  volume: 'Volume',
+  episode: 'Episode',
+  collection: 'Collection',
+  tv_film: 'TV Film',
+  flow: 'Flow'
+} as const;
+
+export type WorkType = keyof typeof workType;
+export type WorkTypeValue = typeof workType[WorkType];
 
 export const storeType = {
   library: 'Library',
@@ -45,24 +48,30 @@ export type StoreType = keyof typeof storeType;
 export type StoreTypeValue = typeof storeType[StoreType];
 
 export enum PremiereType {
-  'international' = 'International',
-  'world' = 'World',
-  'market' = 'Market',
-  'national' = 'National',
+  international = 'International',
+  world = 'World',
+  market = 'Market',
+  national = 'National',
 }
 
-export enum UnitBox {
-  boxoffice_dollar = 'Box office in $',
-  boxoffice_euro = 'Box office in €',
-  entrances = '#Entrances',
-}
+export const unitBox = {
+  boxoffice_dollar: 'Box office in $',
+  boxoffice_euro: 'Box office in €',
+  entrances: '#Entrances',
+} as const;
 
-export enum StoreStatus {
-  submitted = 'Submitted',
-  accepted = 'Accepted',
-  draft = 'Draft',
-  refused = 'Refused',
-}
+export type UnitBox = keyof typeof unitBox;
+export type UnitBoxValue = typeof unitBox[UnitBox];
+
+export const storeStatus = {
+  submitted: 'Submitted',
+  accepted: 'Accepted',
+  draft: 'Draft',
+  refused: 'Refused',
+} as const;
+
+export type StoreStatus = keyof typeof storeStatus;
+export type StoreStatusValue = typeof storeStatus[StoreStatus];
 
 export interface EventAnalytics {
   event_date: string,
@@ -174,12 +183,15 @@ export interface MovieBudget {
   boxOffice?: BoxOffice[],
 }
 
-export enum MovieLanguageTypes {
-  original = 'original',
-  dubbed = 'dubbed',
-  subtitle = 'subtitle',
-  caption = 'caption',
-}
+export const movieLanguageTypes = {
+  original: 'Original',
+  dubbed: 'Dubbed',
+  subtitle: 'Subtitle',
+  caption: 'Caption',
+} as const;
+
+export type MovieLanguageTypes = keyof typeof movieLanguageTypes;
+export type MovieLanguageTypesValue = typeof movieLanguageTypes[MovieLanguageTypes];
 
 export interface MovieLanguageSpecification {
   original: boolean;

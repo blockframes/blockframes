@@ -9,7 +9,6 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { MovieImportState, SpreadsheetImportError } from '../view-extracted-elements/view-extracted-elements.component';
 import { ViewImportErrorsComponent } from '../view-import-errors/view-import-errors.component';
 import { sortingDataAccessor } from '@blockframes/utils/table';
-import { StoreStatus } from '@blockframes/movie/movie/+state/movie.firestore';
 
 const hasImportErrors = (importState: MovieImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -133,7 +132,7 @@ export class TableExtractedMoviesComponent implements OnInit {
    */
   private async submitToArchipelContent(importState: MovieImportState): Promise<boolean> {
     const data = this.rows.data;
-    importState.movie.main.storeConfig.status = StoreStatus.submitted;
+    importState.movie.main.storeConfig.status = 'submitted';
     await this.movieService.updateById(importState.movie.id, importState.movie);
     this.rows.data = data;
     return true;
@@ -142,8 +141,8 @@ export class TableExtractedMoviesComponent implements OnInit {
   public isTitleValidForSubmit(importState: MovieImportState): boolean {
     // Already valid or submitted
     if (
-      importState.movie.main.storeConfig.status === StoreStatus.submitted ||
-      importState.movie.main.storeConfig.status === StoreStatus.accepted) {
+      importState.movie.main.storeConfig.status === 'submitted' ||
+      importState.movie.main.storeConfig.status === 'accepted') {
       return false;
     }
 

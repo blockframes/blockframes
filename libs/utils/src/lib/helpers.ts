@@ -42,7 +42,7 @@ export function getValue(item: any, key: string) {
   return item;
 }
 
-/*
+/**
  * Takes a list of items and an asynchronous filtering function and
  * returns a promise of the filtered list.
  * @param items A list of item to filter with an asynchronous function
@@ -53,4 +53,26 @@ export async function asyncFilter<T>(items: T[], filterFunction: (item: T) => Pr
   const x = items.map(async item => (await filterFunction(item)) ? item : _null);
   const y = await Promise.all(x);
   return y.filter(w => w !== _null) as T[];
+}
+
+/**
+ * This function is used to check if a given value (code) belongs to a type (base).
+ * Return the key of the const if found, undefined otherwise
+ * Code example (string): 
+ *   'line_up' | 'Line-Up'
+ * Base example: 
+ *   export const storeType = {
+ *     library: 'Library',
+ *     line_up: 'Line-Up',
+ *   } as const;
+ * @param base
+ * @param code
+ */
+type Code<T> = keyof T | T[keyof T];
+type Key<T, K extends Code<T>> = K extends keyof T ? K : keyof T;
+export function getKeyIfExists<T, K extends Code<T>>(base: T, code: K): Key<T, K> {
+  // Sanitized input to properly compare with base data
+  const sanitizedCode = (code as string).trim().toLowerCase();
+  const candidate = Object.entries(base).find(([key, value]) => [key.toLowerCase(), value.toLowerCase()].includes(sanitizedCode));
+  return candidate ? candidate.shift() as any : undefined;
 }

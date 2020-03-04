@@ -1,5 +1,5 @@
 import { functions, db } from './internals/firebase';
-import { MovieDocument, OrganizationDocument, PublicUser, StoreConfig, StoreStatus } from './data/types';
+import { MovieDocument, OrganizationDocument, PublicUser, StoreConfig } from './data/types';
 import { NotificationType } from '@blockframes/notification/types';
 import { App } from '@blockframes/utils/apps';
 import { triggerNotifications, createNotification } from './notification';
@@ -184,15 +184,15 @@ export async function onMovieUpdate(
 /** Checks if the store status is going from draft to submitted. */
 function isSubmitted(beforeStore: StoreConfig | undefined, afterStore: StoreConfig | undefined) {
   return (
-    (beforeStore && beforeStore.status === StoreStatus.draft) &&
-    (afterStore && afterStore.status === StoreStatus.submitted)
+    (beforeStore && beforeStore.status === 'draft') &&
+    (afterStore && afterStore.status === 'submitted')
   )
 }
 
 /** Checks if the store status is going from submitted to accepted. */
 function isAccepted(beforeStore: StoreConfig | undefined, afterStore: StoreConfig | undefined) {
   return (
-    (beforeStore && beforeStore.status === StoreStatus.submitted) &&
-    (afterStore && afterStore.status === StoreStatus.accepted)
+    (beforeStore && beforeStore.status === 'submitted') &&
+    (afterStore && afterStore.status === 'accepted')
   )
 }
