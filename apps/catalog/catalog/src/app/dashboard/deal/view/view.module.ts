@@ -10,6 +10,7 @@ import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filte
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
 import { RightListModule } from '@blockframes/movie/distribution-deals/components/right-list/right-list.module';
+import { VersionTableModule } from '@blockframes/contract/version/components';
 
 // Guard
 import { MovieContractGuard } from '@blockframes/movie/movie/guards/movie-contract.guard';
@@ -33,6 +34,7 @@ import { MatChipsModule } from '@angular/material/chips';
     ImageReferenceModule,
     TranslateSlugModule,
     RightListModule,
+    VersionTableModule,
 
     // Material
     MatCardModule,

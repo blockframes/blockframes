@@ -20,17 +20,17 @@ export enum ContractStatus {
   waitingpayment = 'waiting for payment',
   rejected = 'rejected',
   aborted = 'aborted',
-  /** 
-   * @dev first status of a contract 
+  /**
+   * @dev first status of a contract
    * Starting from this status, the contract is visible by creator only
    */
   draft = 'draft',
-  /** 
-   * @dev once the user hit the submit button, the contract is waiting for approvment 
+  /**
+   * @dev once the user hit the submit button, the contract is waiting for approvment
    * Starting from this status, the contract is visible by creator (but not editable anymore) and by admins
    */
   submitted = 'submitted',
-  /** 
+  /**
    * @dev when an admin checked a "submitted" contract and all seems good.
    * Starting from this status, contract is visible for every parties
    */
