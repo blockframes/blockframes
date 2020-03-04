@@ -11,8 +11,8 @@ import { Contract } from './contract.model';
 export class ContractQuery extends QueryEntity<ContractState> {
 
   /** There is only one mandate per organization */
-  mandate$ = this.selectEntity((contract: Contract) => contract.type === ContractType.mandate);
-  sales$ = this.selectAll({ filterBy: contract => contract.type === ContractType.sale });
+  mandate$ = this.selectEntity((contract: Contract) => contract.type === 'mandate');
+  sales$ = this.selectAll({ filterBy: contract => contract.type === 'sale' });
 
   // @todo(#1887) 
   // don't look for the last version + move it to version query
@@ -45,7 +45,7 @@ export class ContractQuery extends QueryEntity<ContractState> {
   }
 
   getMandate() {
-    this.getEntity((contract: Contract) => contract.type === ContractType.mandate)
+    this.getEntity((contract: Contract) => contract.type === 'mandate')
   }
 
 }

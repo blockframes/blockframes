@@ -27,11 +27,17 @@ import { formatCredits } from '@blockframes/utils/spreadsheet/format';
 import { ImageUploader, cleanModel, getKeyIfExists } from '@blockframes/utils';
 import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
 import { SSF } from 'xlsx';
-import { MovieLanguageTypes, PremiereType, storeType, UnitBox, workType, storeStatus } from '@blockframes/movie/movie/+state/movie.firestore';
+import { PremiereType, storeType, workType, storeStatus, unitBox, movieLanguageTypes } from '@blockframes/movie/movie/+state/movie.firestore';
 import { createStakeholder } from '@blockframes/utils/common-interfaces/identity';
 import { DistributionDeal, createDistributionDeal, createHoldback } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
-import { createContractPartyDetail, createContractTitleDetail, Contract, initContractWithVersion, ContractWithLastVersion } from '@blockframes/contract/contract/+state/contract.model';
-import { ContractStatus, ContractTitleDetail, ContractType } from '@blockframes/contract/contract/+state/contract.firestore';
+import {
+  createContractPartyDetail,
+  createContractTitleDetail,
+  Contract,
+  initContractWithVersion,
+  ContractWithLastVersion
+} from '@blockframes/contract/contract/+state/contract.model';
+import { ContractStatus, ContractTitleDetail, contractType } from '@blockframes/contract/contract/+state/contract.firestore';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state/distribution-deal.service';
 import { createExpense, createPrice } from '@blockframes/utils/common-interfaces/price';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
@@ -626,7 +632,7 @@ export class ViewExtractedElementsComponent implements OnInit {
             const language = getCodeIfExists('LANGUAGES', g);
             if (language) {
               movie.main.originalLanguages.push(language);
-              populateMovieLanguageSpecification(movie.versionInfo.languages, language, MovieLanguageTypes.original, true);
+              populateMovieLanguageSpecification(movie.versionInfo.languages, language, 'original', true);
             } else {
               importErrors.errors.push({
                 type: 'warning',
@@ -650,7 +656,7 @@ export class ViewExtractedElementsComponent implements OnInit {
             const parseErrors = [];
             if (language) {
               versionParts.map(v => v.trim()).forEach(v => {
-                const key = getKeyIfExists(MovieLanguageTypes, v as any);
+                const key = getKeyIfExists(movieLanguageTypes, v as any);
                 if (key) {
                   populateMovieLanguageSpecification(movie.versionInfo.languages, language, key, true);
                 } else {
@@ -822,7 +828,7 @@ export class ViewExtractedElementsComponent implements OnInit {
         if (spreadSheetRow[SpreadSheetMovie.worldwideBoxOffice]) {
           spreadSheetRow[SpreadSheetMovie.worldwideBoxOffice].split(this.separator).forEach((version: string) => {
             const boxOfficeParts = version.split(this.subSeparator);
-            const unit = getKeyIfExists(UnitBox, boxOfficeParts[0] as any);
+            const unit = getKeyIfExists(unitBox, boxOfficeParts[0] as any);
             if (unit) {
               movie.budget.boxOffice.push(createBoxOffice(
                 {
@@ -850,7 +856,7 @@ export class ViewExtractedElementsComponent implements OnInit {
 
             const territory = getCodeIfExists('TERRITORIES', boxOfficeParts[0].trim());
             if (territory) {
-              const unit = getKeyIfExists(UnitBox, boxOfficeParts[1] as any);
+              const unit = getKeyIfExists(unitBox, boxOfficeParts[1] as any);
               if (unit) {
                 movie.budget.boxOffice.push(createBoxOffice(
                   {
@@ -1421,7 +1427,7 @@ export class ViewExtractedElementsComponent implements OnInit {
                   distributionDeal.assetLanguage = populateMovieLanguageSpecification(
                     distributionDeal.assetLanguage,
                     dubbing,
-                    MovieLanguageTypes.dubbed
+                    'dubbed'
                   );
                 } else {
                   importErrors.errors.push({
@@ -1444,7 +1450,7 @@ export class ViewExtractedElementsComponent implements OnInit {
                   distributionDeal.assetLanguage = populateMovieLanguageSpecification(
                     distributionDeal.assetLanguage,
                     subtitle,
-                    MovieLanguageTypes.subtitle
+                    'subtitle'
                   );
                 } else {
                   importErrors.errors.push({
@@ -1466,7 +1472,7 @@ export class ViewExtractedElementsComponent implements OnInit {
                   distributionDeal.assetLanguage = populateMovieLanguageSpecification(
                     distributionDeal.assetLanguage,
                     caption,
-                    MovieLanguageTypes.caption
+                    'caption'
                   );
                 } else {
                   importErrors.errors.push({
@@ -1901,7 +1907,7 @@ export class ViewExtractedElementsComponent implements OnInit {
 
           // CONTRACT TYPE
           if (spreadSheetRow[SpreadSheetContract.contractType]) {
-            const key = getKeyIfExists(ContractType, spreadSheetRow[SpreadSheetContract.contractType]);
+            const key = getKeyIfExists(contractType, spreadSheetRow[SpreadSheetContract.contractType]);
             if (key) {
               contract.doc.type = key;
             } else {

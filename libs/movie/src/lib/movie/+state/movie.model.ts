@@ -244,7 +244,7 @@ export function createMovieSalesAgentDeal(
 
 export function createBoxOffice(params: Partial<BoxOffice> = {}): BoxOffice {
   return {
-    unit: UnitBox.boxoffice_dollar,
+    unit: 'boxoffice_dollar',
     value: 0,
     territory: null,
     ...params,

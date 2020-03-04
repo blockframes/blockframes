@@ -16,11 +16,16 @@
   </ng-template>
   <!-- Display value if no projected content -->
   <ng-template #value>
-    <ng-container *ngIf="(scope && !!control.value) else withoutScope">
+    <ng-container *ngIf="(scope && !!control.value) else withType">
       {{ control.value | translateSlug: scope }}
     </ng-container>
-    <ng-template #withoutScope>
-      {{ control.value }}{{ isLast ? '' : ', ' }}
+    <ng-template #withType>
+      <ng-container *ngIf="(type && !!control.value) else withoutType">
+        {{ control.value | translateEnum: type | async}}
+      </ng-container>
+      <ng-template #withoutType>
+        {{ control.value }}{{ isLast ? '' : ', ' }}
+      </ng-template>
     </ng-template>
   </ng-template>
 </ng-template>

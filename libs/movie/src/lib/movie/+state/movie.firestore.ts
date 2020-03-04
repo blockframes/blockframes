@@ -48,23 +48,26 @@ export type StoreType = keyof typeof storeType;
 export type StoreTypeValue = typeof storeType[StoreType];
 
 export enum PremiereType {
-  'international' = 'International',
-  'world' = 'World',
-  'market' = 'Market',
-  'national' = 'National',
+  international = 'International',
+  world = 'World',
+  market = 'Market',
+  national = 'National',
 }
 
-export enum UnitBox {
-  boxoffice_dollar = 'Box office in $',
-  boxoffice_euro = 'Box office in €',
-  entrances = '#Entrances',
-}
+export const unitBox = {
+  boxoffice_dollar: 'Box office in $',
+  boxoffice_euro: 'Box office in €',
+  entrances: '#Entrances',
+} as const;
+
+export type UnitBox = keyof typeof unitBox;
+export type UnitBoxValue = typeof unitBox[UnitBox];
 
 export const storeStatus = {
   submitted: 'Submitted',
-  accepted : 'Accepted',
-  draft : 'Draft',
-  refused : 'Refused',
+  accepted: 'Accepted',
+  draft: 'Draft',
+  refused: 'Refused',
 } as const;
 
 export type StoreStatus = keyof typeof storeStatus;
@@ -180,12 +183,15 @@ export interface MovieBudget {
   boxOffice?: BoxOffice[],
 }
 
-export enum MovieLanguageTypes {
-  original = 'original',
-  dubbed = 'dubbed',
-  subtitle = 'subtitle',
-  caption = 'caption',
-}
+export const movieLanguageTypes = {
+  original: 'original',
+  dubbed: 'dubbed',
+  subtitle: 'subtitle',
+  caption: 'caption',
+} as const;
+
+export type MovieLanguageTypes = keyof typeof movieLanguageTypes;
+export type MovieLanguageTypesValue = typeof movieLanguageTypes[MovieLanguageTypes];
 
 export interface MovieLanguageSpecification {
   original: boolean;
