@@ -6,7 +6,7 @@
   $foreground: map-get($theme, foreground);
 
   $default-bg-chip: mat-color($background, unselected-chip);
-  $default-fg-chip: mat-color($foreground, text);
+  $default-fg-chip: mat-color($foreground, active);
 
   .mat-chip.mat-standard-chip {
     &.mat-default {
