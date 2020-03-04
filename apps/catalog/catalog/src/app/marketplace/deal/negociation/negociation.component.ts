@@ -1,15 +1,8 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ContractQuery, displayPaymentSchedule } from '@blockframes/contract/contract/+state';
 import { map } from 'rxjs/operators';
 import { Movie } from '@blockframes/movie';
 import { Intercom } from 'ng-intercom';
-
-// @todo(#1952) Implement this logic in a component
-const versionColumns = {
-  date: 'Date',
-  offer: 'Offer Amount',
-  status: 'Status'
-};
 
 @Component({
   selector: 'catalog-negociation',
@@ -23,10 +16,8 @@ export class NegociationComponent {
   versionView$ = this.query.activeVersionView$;
   titles$ = this.query.titles$;
   payment$ = this.query.activeVersion$.pipe(map(displayPaymentSchedule));
-  
+
   oldVersions$ = this.query.oldVersionsView$;
-  versionColumns = versionColumns;
-  initialVersionColumns = ['date', 'offer', 'status'];
 
   constructor(private query: ContractQuery, private intercom: Intercom) { }
 

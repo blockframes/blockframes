@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { QueryEntity } from '@datorama/akita';
 import { ContractStore, ContractState } from './contract.store';
-import { map, shareReplay, distinctUntilChanged, pluck, switchMap } from 'rxjs/operators';
-import { getVersonView } from './contract.utils';
+import { map, shareReplay, distinctUntilChanged, pluck, switchMap, filter } from 'rxjs/operators';
+import { getVersionView } from './contract.utils';
 import { MovieQuery } from '@blockframes/movie';
 import { ContractType } from './contract.firestore';
 import { Contract } from './contract.model';
@@ -14,7 +14,7 @@ export class ContractQuery extends QueryEntity<ContractState> {
   mandate$ = this.selectEntity((contract: Contract) => contract.type === 'mandate');
   sales$ = this.selectAll({ filterBy: contract => contract.type === 'sale' });
 
-  // @todo(#1887) 
+  // @todo(#1887)
   // don't look for the last version + move it to version query
   // Remove filter on _meta id
   public activeVersion$ = this.selectActive().pipe(
@@ -23,7 +23,7 @@ export class ContractQuery extends QueryEntity<ContractState> {
   );
 
   public activeVersionView$ = this.activeVersion$.pipe(
-    map(getVersonView),
+    map(getVersionView),
     shareReplay()
   );
 
@@ -35,9 +35,10 @@ export class ContractQuery extends QueryEntity<ContractState> {
   )
 
   public oldVersionsView$ = this.selectActive().pipe(
+    filter(versions => !!versions),
     map(contract => contract.versions.filter(version => version.id !== '_meta')),
     map(versions => versions.filter((_, i) => i !== versions.length - 1)),
-    map(versions => versions.map(getVersonView))
+    map(versions => versions.map(getVersionView))
   );
 
   constructor(protected store: ContractStore, private movieQuery: MovieQuery) {
