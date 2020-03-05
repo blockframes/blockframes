@@ -8,7 +8,7 @@ import { ContractAdminForm } from '../../forms/contract-admin.form';
 import { ContractVersionAdminForm } from '../../forms/contract-version-admin.form';
 import { contractStatus, contractType } from '@blockframes/contract/contract/+state/contract.firestore';
 import { ContractVersionService } from '@blockframes/contract/version/+state/contract-version.service';
-import { getValue, termToPrettyDate } from '@blockframes/utils';
+import { getValue } from '@blockframes/utils';
 import { ContractVersion } from '@blockframes/contract/version/+state';
 import { Observable } from 'rxjs/internal/Observable';
 import { MovieCurrenciesSlug } from '@blockframes/utils/static-model/types';
@@ -31,7 +31,6 @@ export class ContractComponent implements OnInit {
   public contractType = contractType;
   public version: number;
   public publicContract$: Observable<PublicContract>;
-  public toPrettyDate = termToPrettyDate;
 
   // Tables 
   public contractVersions: ContractVersion[] = [];

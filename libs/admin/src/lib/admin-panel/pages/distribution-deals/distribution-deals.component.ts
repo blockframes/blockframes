@@ -1,7 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { getValue } from '@blockframes/utils/helpers';
 import { DistributionDealService, DistributionDealWithMovieId, createDistributionDealWithMovieId } from '@blockframes/movie/distribution-deals';
-import { termToPrettyDate } from '@blockframes/utils/common-interfaces/terms';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -31,7 +30,6 @@ export class DistributionDealsComponent implements OnInit {
     'deal.exclusive'
   ];
   public rows: any[] = [];
-  public toPrettyDate = termToPrettyDate;
   public movieId = '';
   constructor(
     private distributionDealService: DistributionDealService,

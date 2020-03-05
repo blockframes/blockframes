@@ -144,7 +144,6 @@ export function createScheduledDateWithCounter(params: Partial<ScheduledDateWith
   };
 }
 
-// @todo (#2130) transform to pipe
 export function termToPrettyDate(term: Terms, type: 'start' | 'end' = 'start'): string {
   const noDate = 'no date';
   switch (type) {
