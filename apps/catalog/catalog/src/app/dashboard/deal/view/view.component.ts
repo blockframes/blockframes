@@ -18,7 +18,7 @@ import { MovieQuery } from '@blockframes/movie';
 import { OrganizationQuery, PLACEHOLDER_LOGO } from '@blockframes/organization';
 import { MovieCurrenciesSlug } from '@blockframes/utils/static-model/types';
 import { getCodeBySlug } from '@blockframes/utils/static-model/staticModels';
-import { Price, Terms, termToPrettyDate } from '@blockframes/utils/common-interfaces';
+import { Price } from '@blockframes/utils/common-interfaces';
 import { Intercom } from 'ng-intercom';
 
 @Component({
@@ -95,10 +95,5 @@ export class DealViewComponent implements OnInit {
   /** Check if the movie is in the store. */
   public showMovie(movieId: string): boolean {
     return this.movieQuery.hasEntity(movieId);
-  }
-
-  /** Format the payment terms for good looking display. */
-  public getPaymentTerms(terms: Terms) {
-    return termToPrettyDate(terms);
   }
 }
