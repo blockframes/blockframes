@@ -167,7 +167,7 @@
     "bundlesize": "^0.18.0",
     "codelyzer": "~5.1.2",
     "concurrently": "^5.0.0",
-    "cypress": "3.8.3",
+    "cypress": "^4.1.0",
     "dotenv": "8.2.0",
     "husky": "^3.0.5",
     "jest": "24.9.0",
