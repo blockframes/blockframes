@@ -5,7 +5,7 @@ import { WelcomeViewPage, LoginViewPage } from "../../support/pages/auth";
 import { User } from "../../support/utils/type";
 import { USERS } from "../../support/utils/users";
 import { HomePage } from "../../support/pages/marketplace";
-import { TunnelContractLobbyPage, TunnelContractPage } from "../../support/pages/dashboard";
+import { TunnelContractLobbyPage, TunnelContractPage, TunnelContractSummaryPage } from "../../support/pages/dashboard";
 
 // Select user: cytest@blockframes.com
 const LOGIN_CREDENTIALS: Partial<User> = USERS[0];
@@ -13,10 +13,14 @@ const LOGIN_CREDENTIALS: Partial<User> = USERS[0];
 const PARTY_NAMES = ['George', 'Billy the kid'];
 const ROLES = ['Licensor', 'Licensee'];
 const EVENT = 'Contract Signature Date';
+const EVENT_SUMMARY = 'ContractSignatureDate';
 const DURATION = '90';
 const PERIOD = 'Months';
+const PERIOD_SUMMARY = 'months';
 const CURRENCY = 'Euro';
+const CURRENCY_SUMMARY = 'EUR';
 const PACKAGE_PRICE = '1000000';
+const PACKAGE_PRICE_SUMMARY = '€1,000,000.00';
 const PERCENTAGE = '60';
 const TRIGGERING_EVENT = 'First theatrical release';
 
@@ -76,5 +80,17 @@ describe('User can navigate to the movie tunnel page 1 and 2', () => {
     p5.assertPaymentDurationPeriodIsSelected(PERIOD);
     p5.selectPaymentTermEvent(TRIGGERING_EVENT);
     p5.assertPaymentTermEventIsSelected(TRIGGERING_EVENT);
+
+    // Go to Contract Summary Page and check that the summary page has the information
+    const p6: TunnelContractSummaryPage = p5.clickNext();
+
+    // Party Name
+    p6.assertFirstPartyNameExists(PARTY_NAMES[0]);
+    p6.assertFirstPartyNameExists(PARTY_NAMES[1]);
+    // Terms For 90 months starting from ContractSignatureDate.
+    p6.assertTermsExist(EVENT_SUMMARY, DURATION, PERIOD_SUMMARY);
+    // Title Selection & Price
+    p6.assertCurrencyExists(CURRENCY_SUMMARY);
+    p6.assertPackagePriceExists(PACKAGE_PRICE_SUMMARY);
   });
 });

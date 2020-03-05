@@ -1,3 +1,5 @@
+import TunnelContractSummaryPage from "./TunnelContractSummaryPage";
+
 export default class TunnelContractPage {
   constructor() {
     cy.get('contract-details-sale');
@@ -78,6 +80,18 @@ export default class TunnelContractPage {
     cy.get('contract-details-sale contract-version-form-price mat-select').contains(currency);
   }
 
+  public fillSearchSelection(name: string) {
+    cy.get('contract-details-sale contract-version-form-price algolia-autocomplete input').type(name);
+  }
+
+  public selectSearchSelection(name: string) {
+    cy.get('mat-option').contains(name).click({ force: true });
+  }
+
+  public assertMovieIsSelected(name: string) {
+    cy.get('movie-banner').contains(name);
+  }
+
   public fillPackagePrice(price: string) {
     cy.get('contract-details-sale contract-version-form-price input[test-id=price]').clear().type(price);
   }
@@ -133,5 +147,10 @@ export default class TunnelContractPage {
 
   public assertPaymentTermEventIsSelected(event: string) {
     cy.get('contract-details-sale contract-version-form-schedule mat-select[test-id=every-event]').contains(event);
+  }
+
+  public clickNext() {
+    cy.get('[test-id=next]').click();
+    return new TunnelContractSummaryPage();
   }
 }

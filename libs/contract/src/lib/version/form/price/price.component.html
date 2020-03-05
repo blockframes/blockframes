@@ -14,7 +14,7 @@
     Add titles to your selection if needed and then offer a price. You may
     choose to put a price forthe entire package or one for each title.
   </span>
-  <algolia-autocomplete [indexName]="algoliaMovieIndex" pathToValue="objectID" (emitSelect)="addMovie($event)">
+  <algolia-autocomplete [indexName]="algoliaMovieIndex" pathToValue="objectID" (emitObjectID)="addMovie($event)">
     <ng-template let-result>
       <span>{{ result.movie.main.title.international }}</span>
     </ng-template>
@@ -62,7 +62,7 @@
   <ng-template #currency>
     <mat-form-field appearance="outline" class="currency">
       <mat-label>Package Price</mat-label>
-      <input matInput [formControl]="totalAmount" type="number">
+      <input test-id="price" matInput [formControl]="totalAmount" type="number">
       <mat-hint *ngIf="totalPrice$ | async">
         Your Package Price must be equal to the sum of each Title Price.
       </mat-hint>
