@@ -63,6 +63,9 @@
       <ng-template colRef="dealLink" let-dealLink>
         <a [routerLink]="getDealPath(dealLink.id, dealLink.movieId)"><mat-icon svgIcon="pencil"></mat-icon></a>
       </ng-template>
+      <ng-template colRef="status" let-status>
+        {{ status | toLabel: 'distributionDealStatus' | async }}
+      </ng-template> 
     </bf-table-filter>
   </article>
 </section>

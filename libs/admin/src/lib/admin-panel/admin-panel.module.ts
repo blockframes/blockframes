@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { FormFactoryModule } from 'ng-form-factory';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -21,7 +22,7 @@ import { ContractTreeModule } from './components/contract-tree/contract-tree.mod
 import { OrganizationAdminModule } from './pages/organization/organization.module';
 import { AlgoliaAutocompleteModule } from '@blockframes/utils/algolia-autocomplete/algolia-autocomplete.module';
 import { TermDateModule } from '@blockframes/utils/pipes/term-date.module';
-import { TranslateObjectModule } from '@blockframes/utils/pipes/translate-object.module';
+import { ToLabelModule } from '@blockframes/utils/pipes/to-label.module';
 
 // Components
 import { OverviewComponent } from './pages/overview/overview.component';
@@ -79,7 +80,7 @@ export const panelRoutes: Routes = [
     RouterModule.forChild(panelRoutes),
     OrganizationAdminModule,
     TermDateModule,
-    TranslateObjectModule,
+    ToLabelModule,
   ],
   declarations: [
     OverviewComponent,

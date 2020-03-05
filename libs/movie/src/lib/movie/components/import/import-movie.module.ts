@@ -28,6 +28,7 @@ import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
 import { TermDateModule } from '@blockframes/utils/pipes/term-date.module';
+import { ToLabelModule } from '@blockframes/utils/pipes/to-label.module';
 
 // Components
 import { ImportSpreadsheetComponent } from './import-spreadsheet/import-spreadsheet.component';
@@ -90,6 +91,7 @@ const routes: Routes = [
     ImageReferenceModule,
     ImgAssetModule,
     TermDateModule,
+    ToLabelModule,
   ],
   entryComponents: [
     PreviewSheetComponent,

@@ -4,14 +4,16 @@ import { getKeyIfExists } from '../helpers';
 const registeredObjects = [
   'unitBox',
   'storeType',
+  'storeStatus',
   'workType',
   'contractStatus',
+  'distributionDealStatus',
 ];
 
 @Pipe({
-  name: 'translateObject'
+  name: 'toLabel'
 })
-export class TranslateObjectPipe implements PipeTransform {
+export class ToLabelPipe implements PipeTransform {
   private imports = [];
   async transform(value: string, type: string): Promise<string> {
 
@@ -35,10 +37,14 @@ export class TranslateObjectPipe implements PipeTransform {
         case 'unitBox':
         case 'storeType':
         case 'workType':
+        case 'storeStatus':
           this.imports[type] = await import('@blockframes/movie/movie/+state/movie.firestore').then(e => e[type]);
           break;
         case 'contractStatus':
           this.imports[type] = await import('@blockframes/contract/contract/+state/contract.firestore').then(e => e[type]);
+          break;
+        case 'distributionDealStatus':
+          this.imports[type] = await import('@blockframes/movie/distribution-deals/+state/distribution-deal.firestore').then(e => e[type]);
           break;
         default:
           break;
