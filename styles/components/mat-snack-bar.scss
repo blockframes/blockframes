@@ -2,15 +2,6 @@
   $is-dark-theme: map-get($theme, is-dark);
   $primary: map-get($theme, primary);
 
-  .mat-snack-bar-container {
-    // Use the primary text on the dark theme, even though the lighter one uses
-    // a secondary, because the contrast on the light primary text is poor.
-    color: if($is-dark-theme, $dark-primary-text, $light-secondary-text);
-    background: if($is-dark-theme, map-get($mat-grey, 50), #323232);
-
-    @include _mat-theme-elevation(6, $theme);
-  }
-
   .mat-simple-snackbar-action {
     color: if($is-dark-theme, inherit, mat-color($primary, text));
   }
