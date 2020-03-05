@@ -1,0 +1,95 @@
+<section fxLayout="row" fxLayout="space-between stretch" fxLayoutGap="24px">
+  <mat-card fxFlex *ngIf="versionView$ | async as version">
+    <mat-card-header>
+      <mat-card-title i18n>
+        {{ licensees[0].displayName }} has made an offer for
+        {{ (titles$ | async).length }} title{ (titles$ | async).length, plural, =1 {} other {s} },
+        {{ moviesCount$| async }} of which are yours.
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content *ngIf="(versionView$ | async).price as price">
+      <ng-container *ngIf="(subLicensors$ | async).length > 1; else uniqueSubLicensor">
+        <span i18n>
+          Your share of the deal is <b>{{ price.amount | currency: price.currency }}</b>
+          for the {{ moviesCount$| async }} film{ moviesCount$| async, plural, =1 {} other {s} }:
+        </span>
+      </ng-container>
+      <ng-template #uniqueSubLicensor>
+        <span i18n>
+          The offer is <b>{{ price.amount | currency: price.currency }}</b>
+          for the {{ moviesCount$| async }} film{ moviesCount$| async, plural, =1 {} other {s} }:
+        </span>
+      </ng-template>
+      <ul>
+        <li *ngFor="let title of titles$ | async">{{ title.main.title.international }}</li>
+      </ul>
+    </mat-card-content>
+    <mat-card-actions fxLayout="row" fxLayoutAlign="end end">
+      <button mat-stroked-button color="primary" (click)="openIntercom()">
+        <mat-icon svgIcon="comment"></mat-icon>
+        <span>Connect with Archipel Team</span>
+      </button>
+    </mat-card-actions>
+  </mat-card>
+
+  <mat-card class="payment-schedule">
+    <mat-card-header>
+      <mat-card-title>Payment Schedule</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <mat-list *ngIf="payment$ | async as payments">
+        <mat-list-item *ngFor="let payment of payments.list">{{ payment }}</mat-list-item>
+      </mat-list>
+    </mat-card-content>
+  </mat-card>
+</section>
+
+<section *ngIf="oldVersions$ | async as oldVersions">
+  <mat-card *ngIf="oldVersions.length">
+    <mat-card-header>
+      <mat-card-title>Negotiation History</mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <contract-version-table [versions]="oldVersions"></contract-version-table>
+    </mat-card-content>
+  </mat-card>
+</section>
+
+
+<!-- DISTRIBUTION DEALS -->
+<section *ngIf="titles$ | async as titles">
+  <mat-card *ngIf="titles.length">
+    <mat-accordion multi="false">
+      <ng-container *ngFor="let movie of titles">
+        <mat-expansion-panel (opened)="panelOpenState = true" (closed)="panelOpenState = false">
+          <mat-expansion-panel-header>
+            <mat-panel-title fxLayout="row" fxLayoutAlign="space-between center">
+              <h3>{{ movie.main.title.international }}</h3>
+              <span *ngIf="(activeVersion$ | async).titles[movie.id].price as price">
+                {{ price.amount | currency : price.currency }}
+              </span>
+            </mat-panel-title>
+          </mat-expansion-panel-header>
+          <mat-divider></mat-divider>
+          <ng-template matExpansionPanelContent>
+            <article fxLayout="row" fxLayoutAlign="start start" class="movie-information">
+              <img [imgRef]="movie.promotionalElements.poster[0].media" placeholderAsset="empty_poster.png" alt="Movie poster"/>
+              <div>
+                <p>
+                  {{ getDirectors(movie) }}
+                </p>
+                <p class="mat-body-2">
+                  <span>{{ movie.main.originCountries | translateSlug: 'TERRITORIES'}}, </span>
+                  <span> {{ movie.main.productionYear }}</span>
+                </p>
+              </div>
+            </article>
+            <!-- MOVIE DISTRIBUTION DEAL LIST -->
+            <!-- TODO: Use flattened data + reusable table => ISSUE#1744 -->
+            <catalog-right-list [source]="movie.distributionDeals"></catalog-right-list>
+          </ng-template>
+        </mat-expansion-panel>
+      </ng-container>
+    </mat-accordion>
+  </mat-card>
+</section>
