@@ -27,7 +27,7 @@ import { UploadModule } from '@blockframes/ui/upload';
 import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
-import { TermToPrettyDateModule } from '@blockframes/utils/pipes/to-pretty-date.module';
+import { TermDateModule } from '@blockframes/utils/pipes/term-date.module';
 
 // Components
 import { ImportSpreadsheetComponent } from './import-spreadsheet/import-spreadsheet.component';
@@ -89,7 +89,7 @@ const routes: Routes = [
     CropperModule,
     ImageReferenceModule,
     ImgAssetModule,
-    TermToPrettyDateModule,
+    TermDateModule,
   ],
   entryComponents: [
     PreviewSheetComponent,
