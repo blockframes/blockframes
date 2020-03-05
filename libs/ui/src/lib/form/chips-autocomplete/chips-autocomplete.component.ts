@@ -36,7 +36,6 @@ export class ChipsAutocompleteComponent implements OnInit, OnDestroy {
   @Input() removable = true;
   @Input() disabled = false;
   @Input() placeholder = 'New Items';
-  @Input() color = 'default';
 
   // The form to connect to
   @Input() form: FormArray;

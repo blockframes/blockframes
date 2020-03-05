@@ -160,7 +160,7 @@
                     <ng-container *ngFor="let language of languages$ | async">
                       <mat-list-item [formGroupName]="language">
                         <span mat-line>
-                          <mat-chip class="chip-language" color="default" removable (removed)="removeLanguage(language)">
+                          <mat-chip class="chip-language" removable (removed)="removeLanguage(language)">
                             <span>{{ language | translateSlug: 'LANGUAGES' }}</span>
                             <mat-icon matChipRemove svgIcon="close"></mat-icon>
                           </mat-chip>

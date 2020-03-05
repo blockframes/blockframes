@@ -1,7 +1,7 @@
 <mat-form-field appearance="outline">
   <mat-chip-list #chipList>
     <ng-container *ngFor="let control of form.controls; let i = index">
-      <mat-chip *ngIf="control.value" [selectable]="selectable" [color]="color" [removable]="removable" (removed)="remove(i)">
+      <mat-chip *ngIf="control.value" [selectable]="selectable" [removable]="removable" (removed)="remove(i)">
         {{ getLabel(control.value) }}
         <mat-icon matChipRemove svgIcon="close" *ngIf="removable"></mat-icon>
       </mat-chip>

@@ -8,25 +8,29 @@
   $default-bg-chip: mat-color($background, unselected-chip);
   $default-fg-chip: mat-color($foreground, active);
 
-  .mat-chip.mat-standard-chip {
-    &.mat-default {
-      @include mat-chips-color($default-fg-chip, $default-bg-chip);
+  // Chip for the movie' status on the movie card
+  mat-chip[selected][disableRipple].mat-primary {
+    &.movie-chip {
+      background-color: rgba(0, 0, 0, 0.288);
+      color: #FFFFFF;
     }
+  }
 
-    &.mat-primary {
-      @include mat-chips-theme-color($primary);
-      &.movie-chip {
-        background-color: rgba(0, 0, 0, 0.288);
-        color: #FFFFFF;
+  // To color mat-chip when autocomplete is used, attribute 'selected' isn't enough
+  // So I create a new attribute to add to the chip to enable everyone to color the chip with autocomplete
+  mat-chip.mat-standard-chip {
+    &[bfChipAutocomplete] {
+      &[color="primary"] {
+        @include mat-chips-theme-color($primary);
       }
-    }
 
-    &.mat-warn {
-      @include mat-chips-theme-color($warn);
-    }
+      &[color="warn"] {
+        @include mat-chips-theme-color($warn);
+      }
 
-    &.mat-accent {
-      @include mat-chips-theme-color($accent);
+      &[color="accent"] {
+        @include mat-chips-theme-color($accent);
+      }
     }
   }
 }
