@@ -27,6 +27,9 @@
   <ng-template colRef="last.scope" let-terms>
     <strong>From : </strong>{{ terms | termDate: 'start' }} <strong>To : </strong>{{ terms | termDate: 'end' }}
   </ng-template>
+  <ng-template colRef="last.status" let-status>
+    {{ status | translateObject: 'contractStatus' | async }}
+  </ng-template>
   <ng-template colRef="doc.partyIds" let-partyIds>
     <ul *ngIf="partyIds.length else noParties">
       <li *ngFor="let partyId of partyIds">{{ partyId }}</li>

@@ -5,6 +5,7 @@ const registeredObjects = [
   'unitBox',
   'storeType',
   'workType',
+  'contractStatus',
 ];
 
 @Pipe({
