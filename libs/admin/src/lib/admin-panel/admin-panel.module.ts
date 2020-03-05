@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { Routes, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { FormFactoryModule } from 'ng-form-factory';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -23,6 +22,7 @@ import { OrganizationAdminModule } from './pages/organization/organization.modul
 import { AlgoliaAutocompleteModule } from '@blockframes/utils/algolia-autocomplete/algolia-autocomplete.module';
 import { TermDateModule } from '@blockframes/utils/pipes/term-date.module';
 import { ToLabelModule } from '@blockframes/utils/pipes/to-label.module';
+import { EditTitleModule } from './components/edit-title/edit-title.module';
 
 // Components
 import { OverviewComponent } from './pages/overview/overview.component';
@@ -77,6 +77,7 @@ export const panelRoutes: Routes = [
     ImageReferenceModule,
     AlgoliaAutocompleteModule,
     ContractTreeModule,
+    EditTitleModule,
     RouterModule.forChild(panelRoutes),
     OrganizationAdminModule,
     TermDateModule,

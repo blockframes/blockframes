@@ -137,8 +137,8 @@
     </article>
   </article>
   <hr />
-  <article  fxLayout="row" fxLayoutAlign="space-around start" >
-    <article  fxLayout="column" fxLayoutAlign="space-between start">
+  <article fxLayout="row" fxLayoutAlign="space-around start" >
+    <article fxLayout="column" fxLayoutAlign="space-between start">
       <h2>Titles :</h2>
 
       <bf-table-filter class="version-table"
@@ -177,6 +177,10 @@
           {{ storeType | toLabel: 'storeType' | async }}
         </ng-template>
       </bf-table-filter>
+      <button mat-flat-button color="primary" (click)="addTitle()">
+        <span>Add a title</span>
+        <mat-icon svgIcon="add"></mat-icon>
+      </button>
     </article>
   </article>
 </ng-container>

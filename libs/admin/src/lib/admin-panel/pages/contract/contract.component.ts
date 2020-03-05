@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
-import { ContractWithLastVersion, PublicContract, createContractPartyDetail, Contract, ContractPartyDetail } from '@blockframes/contract/contract/+state/contract.model';
+import { ContractWithLastVersion, PublicContract, createContractPartyDetail, Contract, ContractPartyDetail, createContractTitleDetail } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractAdminForm } from '../../forms/contract-admin.form';
 import { ContractVersionAdminForm } from '../../forms/contract-version-admin.form';
 import { contractStatus, contractType } from '@blockframes/contract/contract/+state/contract.firestore';
@@ -15,6 +15,7 @@ import { MovieCurrenciesSlug } from '@blockframes/utils/static-model/types';
 import { getCodeBySlug } from '@blockframes/utils/static-model/staticModels';
 import { MovieService } from '@blockframes/movie';
 import { EditPartyComponent } from '../../components/edit-party/edit-party.component';
+import { EditTitleComponent } from '../../components/edit-title/edit-title.component';
 
 @Component({
   selector: 'admin-contract',
@@ -202,7 +203,7 @@ export class ContractComponent implements OnInit {
       disableClose: true
     });
 
-    return dialogRef.afterClosed().subscribe((output: ContractPartyDetail | { remove: boolean }) => this._updateParty(index, output));
+    return dialogRef.afterClosed().subscribe((output: ContractPartyDetail | { remove: boolean }) => this.updateParty(index, output));
   }
 
   public addParty() {
@@ -216,10 +217,10 @@ export class ContractComponent implements OnInit {
       },
       disableClose: true
     });
-    return dialogRef.afterClosed().subscribe((output: ContractPartyDetail | { remove: boolean }) => this._updateParty(index, output));
+    return dialogRef.afterClosed().subscribe((output: ContractPartyDetail | { remove: boolean }) => this.updateParty(index, output));
   }
 
-  public async _updateParty(index: number, output: ContractPartyDetail | { remove: boolean }): Promise<boolean> {
+  private async updateParty(index: number, output: ContractPartyDetail | { remove: boolean }): Promise<boolean> {
     if (!output) return false;
     const writeableContract = { ... this.contract.doc }
 
@@ -241,6 +242,24 @@ export class ContractComponent implements OnInit {
     this.cdRef.markForCheck();
     this.snackBar.open('Informations updated !', 'close', { duration: 5000 });
     return true;
+  }
+
+  public addTitle() {
+    const titleDetail = createContractTitleDetail();
+    const index = this.contract.doc.parties.length;
+    const dialogRef = this.dialog.open(EditTitleComponent, {
+      data: {
+        title: 'Add a contract title.',
+        subtitle: 'If you leave now, your changes will not be saved.',
+        titleDetail
+      },
+      disableClose: true
+    });
+    return dialogRef.afterClosed().subscribe((output: ContractPartyDetail | { remove: boolean }) => this.updateTitle(index, output));
+  }
+
+  private async updateTitle(index: number, output: ContractPartyDetail | { remove: boolean }): Promise<boolean> {
+   return false;
   }
 
   /** Utils function to get currency code for currency pipe. */

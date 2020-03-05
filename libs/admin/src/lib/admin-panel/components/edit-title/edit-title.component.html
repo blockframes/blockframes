@@ -1,0 +1,14 @@
+<h1>{{ data.title }}</h1>
+<p>{{ data.subtitle }}</p>
+
+<form-factory [schema]="schema" [form]="form"></form-factory>
+
+<button class="save" mat-flat-button color="primary" (click)="save()">
+  Save & Exit
+</button>
+<button mat-flat-button color="warn" (click)="removeTitle()">
+  <mat-icon svgIcon="refuse"></mat-icon><span>Remove title</span>
+</button>
+<button class="cancel" mat-button color="warn" [mat-dialog-close]="false">
+  Close without saving
+</button>
