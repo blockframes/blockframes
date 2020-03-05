@@ -1,11 +1,14 @@
 <section fxLayout="row" fxLayout="space-between stretch" fxLayoutGap="24px">
   <mat-card fxFlex *ngIf="versionView$ | async as version">
     <mat-card-header>
-      <mat-card-title>You made an offer for {{ version.titleIds.length }} titles</mat-card-title>
+      <mat-card-title i18n>
+        You made an offer for {{ version.titleIds.length }} title{version.titleIds.length, plural, =1 {} other {s}}
+      </mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <p *ngIf="version.price as price">
-        Your offer is {{ price.amount | currency: price.currency }} for {{ version.titleIds.length }} titles:
+      <p i18n *ngIf="version.price as price">
+        Your offer is {{ price.amount | currency: price.currency }} for {{ version.titleIds.length }}
+        title{version.titleIds.length, plural, =1 {} other {s}}:
       </p>
       <ul>
         <li *ngFor="let title of titles$ | async">{{ title.main.title.international }}</li>
