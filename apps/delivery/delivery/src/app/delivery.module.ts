@@ -5,10 +5,10 @@ import { MovieOrganizationListGuard } from '@blockframes/movie/movie/guards/movi
 
 import { LayoutComponent } from './layout/layout.component';
 import { createRoutes } from '@blockframes/utils/routes';
-import { App } from '@blockframes/utils/apps';
+import { app } from '@blockframes/utils/apps';
 
 export const routes: Routes = createRoutes({
-  appName: App.mediaDelivering,
+  appName: app.mediaDelivering,
   landing: {
     path: '',
     redirectTo: 'c',
@@ -19,10 +19,10 @@ export const routes: Routes = createRoutes({
     component: LayoutComponent,
     children: [{
       path: '',
-      redirectTo: App.mediaDelivering,
+      redirectTo: app.mediaDelivering,
       pathMatch: 'full'
     }, {
-      path: App.mediaDelivering,
+      path: app.mediaDelivering,
       children: [{
         path: '',
         redirectTo: 'home',

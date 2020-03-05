@@ -4,7 +4,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieService } from '../../+state';
 import { Router } from '@angular/router';
 import { appsRoute } from '@blockframes/utils/routes';
-import { App } from '@blockframes/utils/apps';
+import { app } from '@blockframes/utils/apps';
 
 @Component({
   selector: 'movie-title-form',
@@ -31,7 +31,7 @@ export class MovieTitleFormComponent {
       this.snackBar.open('Movie created! Redirecting..', 'close', { duration: 3000 });
       const movie = await this.service.addMovie(movieName);
 
-      this.router.navigate([`${appsRoute}/${App.mediaDelivering}/home/${movie.id}/edit`]);
+      this.router.navigate([`${appsRoute}/${app.mediaDelivering}/home/${movie.id}/edit`]);
       // TODO: Find out why { relativeTo: this.route } is not working as intended => ISSUE #1332
       // this.router.navigate([`${movie.id}/edit`], { relativeTo: this.route })
       this.dialogRef.close();

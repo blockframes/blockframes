@@ -1,11 +1,11 @@
 import { appsRoute } from '@blockframes/utils/routes';
-import { App } from '@blockframes/utils';
+import { app } from '@blockframes/utils';
 import { ctxMenu } from '../helpers';
 
 // common
 import * as common from '../common/common';
 
-const baseRoute = `${appsRoute}/${App.mediaDelivering}`;
+const baseRoute = `${appsRoute}/${app.mediaDelivering}`;
 
 export const baseMenu = [
   {
