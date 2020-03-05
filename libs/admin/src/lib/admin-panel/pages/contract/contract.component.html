@@ -130,6 +130,9 @@
         <ng-template colRef="price" let-price>
           {{ price.amount | currency: getCurrencyCode(price.currency) }}
         </ng-template>
+        <ng-template colRef="status" let-contractStatus>
+          {{ contractStatus | toLabel: 'contractStatus' | async }}
+        </ng-template>
       </bf-table-filter>
     </article>
   </article>
@@ -166,6 +169,12 @@
         </ng-template>
         <ng-template colRef="exploredeals" let-dealslink>
           <a [routerLink]="dealslink"><mat-icon svgIcon="eye"></mat-icon></a>
+        </ng-template>
+        <ng-template colRef="movie.main.storeConfig.status" let-storeStatus>
+          {{ storeStatus | toLabel: 'storeStatus' | async }}
+        </ng-template>
+        <ng-template colRef="movie.main.storeConfig.storeType" let-storeType>
+          {{ storeType | toLabel: 'storeType' | async }}
         </ng-template>
       </bf-table-filter>
     </article>
