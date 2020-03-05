@@ -1,44 +1,12 @@
-import { Component, OnInit, ChangeDetectionStrategy, Inject, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ContractTitleDetail } from '@blockframes/contract/contract/+state';
-import { FormGroupSchema, createForms } from 'ng-form-factory';
-import { MatTextSchema } from '../../forms/text-form';
-
-interface Person {
-  firstName: string;
-  lastName: string;
-}
-
-const schema: FormGroupSchema<Person> = {
-  form: 'group',
-  load: 'entity',
-  controls: {
-    firstName: {
-      form: 'control',
-      label: 'First Name',
-      hint: 'Some hint',
-      load: 'text',
-    } as MatTextSchema,
-    lastName: {
-      form: 'control',
-      label: 'Last Name',
-      hint: 'Some hint',
-      load: 'text'
-    } as MatTextSchema
-  }
-};
-
-
-
-
-
-
-
-
+import { TitleDetailAdminForm } from '../../forms/title-detail-admin.form';
 
 interface TitleDialogData {
   title: string,
+  titleId?: string,
   subtitle: string,
   titleDetail: ContractTitleDetail,
 }
@@ -49,29 +17,33 @@ interface TitleDialogData {
   styleUrls: ['./edit-title.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EditTitleComponent  implements OnInit {
-  public form: any;
-  public schema;
+export class EditTitleComponent implements OnInit {
+  public form: TitleDetailAdminForm;
 
   constructor(
     public dialogRef: MatDialogRef<EditTitleComponent>,
     private snackBar: MatSnackBar,
-    @Inject(MAT_DIALOG_DATA) public data: TitleDialogData,
-    private cdRef: ChangeDetectorRef,
+    @Inject(MAT_DIALOG_DATA) public data: TitleDialogData
   ) {
-    this.schema = schema;
+
   }
 
   ngOnInit() {
-    this.form = createForms(schema, { firstName: '', lastName: '' });
-    this.cdRef.markForCheck();
+    this.form = new TitleDetailAdminForm(this.data.titleDetail);
   }
 
   save() {
     if (this.form.invalid) {
       this.snackBar.open('Invalid form', '', { duration: 2000 });
+      return false;
     }
-    this.dialogRef.close(this.form.value);
+
+    const { amount, currency, titleId } = this.form.value;
+    this.data.titleDetail.price.amount = parseInt(amount, 10);
+    this.data.titleDetail.price.currency = currency;
+    this.data.titleDetail.titleId = titleId;
+
+    this.dialogRef.close(this.data.titleDetail);
   }
 
   removeTitle() {

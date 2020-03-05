@@ -1,25 +1,31 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormFactoryModule } from 'ng-form-factory';
 
 // Modules
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatInputModule } from '@angular/material/input';
+import { StaticSelectModule } from '@blockframes/ui/static-select/static-select.module';
 
 // Components
 import { EditTitleComponent } from './edit-title.component';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   imports: [
     CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
     MatIconModule,
+    MatInputModule,
+    MatFormFieldModule,
     MatDialogModule,
     MatButtonModule,
-    FormFactoryModule.forRoot({
-      text: () => import('./../../forms/text-form').then(c => c.TextFormComponent),
-      entity: () => import('./../../entity').then(c => c.EntityComponent)
-    })
+    MatSelectModule,
+    StaticSelectModule
   ],
   declarations: [
     EditTitleComponent,

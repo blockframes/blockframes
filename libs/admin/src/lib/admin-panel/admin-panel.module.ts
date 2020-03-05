@@ -23,6 +23,7 @@ import { AlgoliaAutocompleteModule } from '@blockframes/utils/algolia-autocomple
 import { TermDateModule } from '@blockframes/utils/pipes/term-date.module';
 import { ToLabelModule } from '@blockframes/utils/pipes/to-label.module';
 import { EditTitleModule } from './components/edit-title/edit-title.module';
+import { TranslateSlugModule } from '@blockframes/utils';
 
 // Components
 import { OverviewComponent } from './pages/overview/overview.component';
@@ -82,6 +83,7 @@ export const panelRoutes: Routes = [
     OrganizationAdminModule,
     TermDateModule,
     ToLabelModule,
+    TranslateSlugModule,
   ],
   declarations: [
     OverviewComponent,

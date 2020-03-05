@@ -35,15 +35,20 @@
           <button mat-icon-button color="accent" (click)="editParty(i)"><mat-icon svgIcon="pencil"></mat-icon></button>
         </section>
         <ul>
-          <li><strong>Status : </strong>{{ partyDetails.status }}</li>
+          <li><strong>Status : </strong>{{ partyDetails.status | toLabel: 'contractStatus' | async  }}</li>
           <li><strong>Sign date : </strong>{{ partyDetails.signDate ? (partyDetails.signDate | date: 'short') : ' -- ' }}</li>
           <li><strong>Role : </strong>{{ partyDetails.party.role }}</li>
           <li><strong>Show name : </strong>{{ partyDetails.party.showName ? 'yes' : 'no' }}</li>
           <li>
             <span>Child roles : </span>
-            <ng-container *ngFor="let childRole of partyDetails.childRoles; let isLast = last">
-              {{ childRole }}{{isLast ? '' : ' - '}}
+            <ng-container *ngIf="partyDetails.childRoles.length else nochildrole">
+              <ng-container *ngFor="let childRole of partyDetails.childRoles; let isLast = last">
+                {{ childRole | translateSlug: 'SUB_LICENSOR_ROLES' }}{{isLast ? '' : ' - '}}
+              </ng-container>
             </ng-container>
+            <ng-template #nochildrole>
+              --
+            </ng-template>
           </li>
         </ul>
       </ng-container>
@@ -161,11 +166,14 @@
           {{ price.amount | currency: getCurrencyCode(price.currency) }}
         </ng-template>
         <ng-template colRef="deals" let-deals>
-          <ul>
+          <ul *ngIf="deals.length else nodeals">
             <li *ngFor="let deal of deals">
               <a target="_blank" [routerLink]="getDealPath(deal.id, deal.movie)" routerLinkActive="active"> {{ deal.id }}</a>
             </li>  
           </ul>
+          <ng-template #nodeals>
+            --
+          </ng-template>
         </ng-template>
         <ng-template colRef="exploredeals" let-dealslink>
           <a [routerLink]="dealslink"><mat-icon svgIcon="eye"></mat-icon></a>
@@ -176,6 +184,9 @@
         <ng-template colRef="movie.main.storeConfig.storeType" let-storeType>
           {{ storeType | toLabel: 'storeType' | async }}
         </ng-template>
+        <ng-template colRef="edit" let-edit>
+          <button mat-icon-button color="accent" (click)="editTitle(edit)"><mat-icon svgIcon="pencil"></mat-icon></button>
+        </ng-template>  
       </bf-table-filter>
       <button mat-flat-button color="primary" (click)="addTitle()">
         <span>Add a title</span>

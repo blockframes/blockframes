@@ -12,7 +12,7 @@
   <h5>YOUR SELECTION</h5>
   <span class="capation">
     Add titles to your selection if needed and then offer a price. You may
-    choose to put a price forthe entire package or one for each title.
+    choose to put a price for the entire package or one for each title.
   </span>
   <algolia-autocomplete [indexName]="algoliaMovieIndex" pathToValue="objectID" (emitSelect)="addMovie($event)">
     <ng-template let-result>
