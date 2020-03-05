@@ -12,6 +12,7 @@ import TunnelChainOfTitlesPage from "./TunnelChainOfTitlesPage";
 import TunnelFilesPage from "./TunnelFilesPage";
 import TunnelContractLobbyPage from "./TunnelContractLobby";
 import TunnelContractPage from "./TunnelContractPage";
+import TunnelContractSummaryPage from "./TunnelContractSummaryPage";
 
 export {
   StartTunnelPage,
@@ -27,5 +28,6 @@ export {
   TunnelChainOfTitlesPage,
   TunnelFilesPage,
   TunnelContractLobbyPage,
-  TunnelContractPage
+  TunnelContractPage,
+  TunnelContractSummaryPage
 };
