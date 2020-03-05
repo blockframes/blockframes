@@ -1,121 +1,27 @@
-<ng-container *ngIf="contract$ | async as contract">
+
+<ng-container *ngIf="versionView$ | async as version">
   <!-- TITLE & PRICE -->
-  <ng-container *ngIf="licensees[0].party as licensee">
-    <section fxLayout="row" fxLayoutAlign="space-between start">
-      <article fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="25px">
-        <!-- Switch to [imgRef]="getLicenseeLogo(licensees[0].part.orgId) when public orgs are here => ISSUE#1359"-->
+  <header fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="24px" >
+    <article fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="25px">
+      <!-- Switch to [imgRef]="getLicenseeLogo(licensees[0].party.orgId) when public orgs are here => ISSUE#1359"-->
+      <div class="logo-container">
         <img class="logo" [imgRef]="placeholderUrl" [placeholderUrl]="placeholderUrl" alt="Organization logo" />
-        <div>
-          <h1>{{ licensees[0].party.displayName }} - {{ (movies$ | async).length }} films</h1>
-          <span *ngIf="licensee.address">
-            {{ licensee.address.street }}, {{ licensee.address.city }}, {{ licensee.address.region }}
-            {{ licensee.address.zipCode }} {{ licensee.address.country }}
-          </span>
-        </div>
-      </article>
-      <section fxLayout="column" fxLayoutAlign="center end">
-        <span class="mat-caption"> {{ lastVersion.creationDate | date: 'short' }} </span>
-        <h2>{{ totalPrice.amount | currency: getCurrencyCode(totalPrice.currency) }}</h2>
-        <mat-chip-list>
-          <mat-chip>{{ lastVersion.status | toLabel: 'contractStatus' | async }}</mat-chip>
-        </mat-chip-list>
-      </section>
+      </div>
+      <div *ngIf="licensees[0] as licensee">
+        <h1>{{ licensee.displayName }} - {{ (moviesCount$ | async) }} film{ moviesCount$| async, plural, =1 {} other {s} }</h1>
+        <span *ngIf="licensee.address">
+          {{ licensee.address.street }}, {{ licensee.address.city }}, {{ licensee.address.region }}
+          {{ licensee.address.zipCode }} {{ licensee.address.country }}
+        </span>
+      </div>
+    </article>
+    <section fxLayout="column" fxLayoutAlign="center end" *ngIf="version.price as price">
+      <span class="mat-caption"> {{ version.date | date }} </span>
+      <h2>{{ price.amount | currency: price.currency }}</h2>
+      <mat-chip-list>
+        <mat-chip>{{ version.status | toLabel: 'contractStatus' | async }}</mat-chip>
+      </mat-chip-list>
     </section>
-  </ng-container>
-
-  <!-- CONTRACT SUMMARY -->
-  <article fxLayout="row" fxLayoutGap="25px">
-    <mat-card class="summary">
-      <h3 i18n>
-          {{ licensees[0].party.displayName }} has made an offer for
-          {{ contract.titleIds.length }} title{contract.titleIds.length, plural, =1 {} other {s}},
-          {{ (movies$ | async).length }} of which are yours.
-      </h3>
-      <mat-card-content>
-        <ng-container *ngIf="subLicensors.length > 1; else uniqueSubLicensor">
-          <span i18n>
-            Your share of the deal is <b>{{ totalPrice.amount | currency: getCurrencyCode(totalPrice.currency) }}</b>
-            for the {{ (movies$ | async).length }} film{(movies$ | async).length, plural, =1 {} other {s}}:
-          </span>
-        </ng-container>
-        <ng-template #uniqueSubLicensor>
-          <span i18n>
-            The offer is <b>{{ totalPrice.amount | currency: totalPrice.currency }}</b>
-            for the {{ (movies$ | async).length }} film{(movies$ | async).length, plural, =1 {} other {s}}:
-          </span>
-        </ng-template>
-        <mat-list >
-          <mat-list-item *ngFor="let movie of movies$ | async">
-            <b *ngIf="showMovie(movie.id)">{{ movie.main.title.international }}</b>
-          </mat-list-item>
-        </mat-list>
-      </mat-card-content>
-      <mat-card-actions fxLayout="row" fxLayoutAlign="space-between center">
-        <button mat-flat-button color="primary" (click)="openIntercom()">
-          <mat-icon svgIcon="comment"></mat-icon>
-          <span>Connect with the Archipel Team</span>
-        </button>
-      </mat-card-actions>
-    </mat-card>
-    <mat-card *ngIf="payments">
-      <h3>Proposed Payment Schedule</h3>
-      <li *ngFor="let payment of payments.list">
-        <strong>{{ payments.type }}</strong> {{ payment }}
-      </li>
-    </mat-card>
-  </article>
-
-  <!-- NEGOCIATION HISTORY -->
-  <ng-container *ngIf="oldVersions$ | async as oldVersions">
-    <mat-card *ngIf="oldVersions.length">
-      <mat-card-header>
-        <mat-card-title>Negotiation History</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <contract-version-table [versions]="oldVersions"></contract-version-table>
-      </mat-card-content>
-    </mat-card>
-  </ng-container>
-
-  <!-- DISTRIBUTION DEALS -->
-  <ng-container *ngFor="let movie of movies$ | async">
-    <mat-card *ngIf="showMovie(movie.id)">
-      <mat-accordion>
-        <mat-expansion-panel
-          (opened)="panelOpenState = true"
-          (closed)="panelOpenState = false">
-          <mat-expansion-panel-header>
-            <mat-panel-title fxLayout="row" fxLayoutAlign="space-between">
-              <h3>{{ movie.main.title.international }}</h3>
-              <span *ngIf="lastVersion.titles[movie.id].price as price">
-                {{ price.amount | currency : getCurrencyCode(price.currency) }}
-              </span>
-            </mat-panel-title>
-          </mat-expansion-panel-header>
-          <mat-divider></mat-divider>
-          <section fxLayout="row" fxLayoutAlign="start start" class="movie-information">
-            <img *ngIf="movie.promotionalElements.poster[0].media as poster" class="poster" [imgRef]="poster" alt="Movie poster" />
-            <article>
-              <div>
-                <span *ngFor="let director of movie.main.directors; let isLast = last">
-                  {{ director.firstName }} {{ director.lastName }}{{isLast ? '' : ', '}}
-                </span>
-              </div>
-              <div>
-                <span
-                  *ngFor="let country of movie.main.originCountries; let isLast = last"
-                  class="mat-body-2">
-                  {{ country | translateSlug: 'TERRITORIES'}}{{isLast ? ',' : ' / '}}
-                </span>
-                <span class="mat-body-2"> {{ movie.main.productionYear }}</span>
-              </div>
-            </article>
-          </section>
-          <!-- MOVIE DISTRIBUTION DEAL LIST -->
-          <!-- TODO: Use flattened data + reusable table => ISSUE#1744 -->
-          <catalog-right-list [source]="movie.distributionDeals"></catalog-right-list>
-        </mat-expansion-panel>
-      </mat-accordion>
-    </mat-card>
-  </ng-container>
+  </header>
 </ng-container>
+<router-outlet></router-outlet>

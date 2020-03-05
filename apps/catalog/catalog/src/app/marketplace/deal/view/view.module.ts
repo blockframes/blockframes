@@ -13,7 +13,7 @@ const routes = [{
   children: [{
     path: '',
     loadChildren: () => import('../negociation/negociation.module').then(m => m.NegociationModule)
-  } ]
+  }]
 }]
 
 @NgModule({

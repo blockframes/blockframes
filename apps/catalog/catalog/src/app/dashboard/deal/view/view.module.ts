@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { DealViewComponent } from './view.component';
+import { ViewComponent } from './view.component';
 
 // Module components
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
@@ -26,8 +26,24 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
 import { MatChipsModule } from '@angular/material/chips';
 
+const routes = [
+  {
+    path: '',
+    canActivate: [MovieContractGuard, CatalogContractGuard],
+    canDeactivate: [MovieContractGuard],
+    component: ViewComponent,
+    children: [
+      {
+        path: '',
+        loadChildren: () =>
+          import('../negociation/negociation.module').then(m => m.NegociationModule)
+      }
+    ]
+  }
+];
+
 @NgModule({
-  declarations: [DealViewComponent],
+  declarations: [ViewComponent],
   imports: [
     ReactiveFormsModule,
     FlexLayoutModule,
@@ -48,14 +64,7 @@ import { MatChipsModule } from '@angular/material/chips';
     MatChipsModule,
 
     CommonModule,
-    RouterModule.forChild([
-      {
-        path: '',
-        canActivate: [MovieContractGuard, CatalogContractGuard],
-        canDeactivate: [MovieContractGuard],
-        component: DealViewComponent
-      }
-    ])
+    RouterModule.forChild(routes)
   ]
 })
 export class DealViewModule {}
