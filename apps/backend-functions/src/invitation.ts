@@ -10,8 +10,6 @@ import {
   InvitationFromOrganizationToUser,
   InvitationFromUserToOrganization,
   InvitationToWorkOnDocument,
-  InvitationStatus,
-  InvitationType,
   OrganizationDocument,
   MovieDocument,
   createDocPermissions,
@@ -28,12 +26,12 @@ import {
 
 /** Checks if an invitation just got accepted. */
 function wasAccepted(before: InvitationDocument, after: InvitationDocument) {
-  return before.status === InvitationStatus.pending && after.status === InvitationStatus.accepted;
+  return before.status === 'pending' && after.status === 'accepted';
 }
 
 /** Checks if an invitation just got declined. */
 function wasDeclined(before: InvitationDocument, after: InvitationDocument) {
-  return before.status === InvitationStatus.pending && after.status === InvitationStatus.declined;
+  return before.status === 'pending' && after.status === 'declined';
 }
 
 /** Checks if an invitation just got created. */
@@ -412,11 +410,11 @@ export async function onInvitationWrite(
   try {
     // dispatch to the correct events depending on the invitation type.
     switch (invitation.type) {
-      case InvitationType.toWorkOnDocument:
+      case 'toWorkOnDocument':
         return onDocumentInvitationUpdate(invitationDocBefore, invitationDoc, invitation);
-      case InvitationType.fromOrganizationToUser:
+      case 'fromOrganizationToUser':
         return onInvitationToOrgUpdate(invitationDocBefore, invitationDoc, invitation);
-      case InvitationType.fromUserToOrganization:
+      case 'fromUserToOrganization':
         return onInvitationFromUserToJoinOrgUpdate(invitationDocBefore, invitationDoc, invitation);
       default:
         throw new Error(`Unhandled invitation: ${JSON.stringify(invitation)}`);

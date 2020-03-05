@@ -2,7 +2,6 @@ import { CallableContext } from "firebase-functions/lib/providers/https";
 import { BigQuery } from '@google-cloud/bigquery';
 import { EventAnalytics, PublicUser, OrganizationDocument, MovieAnalytics } from "./data/types";
 import { getDocument } from './data/internals';
-import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
 import { bigQueryAnalyticsTable } from "./environments/environment";
 import { isAfter, isBefore, parse, subDays } from 'date-fns';
 import { omit } from 'lodash';
@@ -43,9 +42,9 @@ async function executeQuery(query: any, movieIds: string[], daysPerRange: number
     useLegacySql: false,
     params: {
       movieIds,
-      pageView: AnalyticsEvents.pageView,
-      promoReelOpened: AnalyticsEvents.promoReelOpened,
-      addedToWishlist: AnalyticsEvents.addedToWishlist,
+      pageView: 'pageView',
+      promoReelOpened: 'promoReelOpened',
+      addedToWishlist: 'addedToWishlist',
       periodSum: daysPerRange * 2
     }
   };
@@ -98,9 +97,9 @@ export const requestMovieAnalytics = async (
         const movieRows = filterByMovieId(rows, movieId);
         return {
           movieId,
-          addedToWishlist: groupEventsPerDayRange(movieRows.filter(row => row.event_name === AnalyticsEvents.addedToWishlist), daysPerRange),
-          promoReelOpened: groupEventsPerDayRange(movieRows.filter(row => row.event_name === AnalyticsEvents.promoReelOpened), daysPerRange),
-          movieViews: groupEventsPerDayRange(movieRows.filter(row => row.event_name === AnalyticsEvents.pageView), daysPerRange)
+          addedToWishlist: groupEventsPerDayRange(movieRows.filter(row => row.event_name === 'addedToWishlist'), daysPerRange),
+          promoReelOpened: groupEventsPerDayRange(movieRows.filter(row => row.event_name === 'promoReelOpened'), daysPerRange),
+          movieViews: groupEventsPerDayRange(movieRows.filter(row => row.event_name === 'pageView'), daysPerRange)
         }
       })
     } else {
