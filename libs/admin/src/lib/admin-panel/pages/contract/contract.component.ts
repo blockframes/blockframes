@@ -6,7 +6,7 @@ import { ContractService } from '@blockframes/contract/contract/+state/contract.
 import { ContractWithLastVersion, PublicContract, createContractPartyDetail, Contract, ContractPartyDetail } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractAdminForm } from '../../forms/contract-admin.form';
 import { ContractVersionAdminForm } from '../../forms/contract-version-admin.form';
-import { ContractStatus, ContractType } from '@blockframes/contract/contract/+state/contract.firestore';
+import { ContractStatus, contractType } from '@blockframes/contract/contract/+state/contract.firestore';
 import { ContractVersionService } from '@blockframes/contract/version/+state/contract-version.service';
 import { getValue } from '@blockframes/utils';
 import { ContractVersion } from '@blockframes/contract/version/+state';
@@ -28,7 +28,7 @@ export class ContractComponent implements OnInit {
   public contractForm: ContractAdminForm;
   public contractVersionForm: ContractVersionAdminForm;
   public contractStatus = ContractStatus;
-  public contractType = ContractType;
+  public contractType = contractType;
   public version: number;
   public publicContract$: Observable<PublicContract>;
 

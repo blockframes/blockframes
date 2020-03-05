@@ -1,3 +1,4 @@
+import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
@@ -6,9 +7,9 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 
 import { TitleListComponent } from './list.component';
-import { NoTitleModule } from '../no-title/no-title.module';
 
 // Material
+import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
@@ -21,11 +22,12 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     ReactiveFormsModule,
     FlexLayoutModule,
     TableFilterModule,
-    NoTitleModule,
+    ImgAssetModule,
     // Material
     MatButtonModule,
     MatTabsModule,
     MatIconModule,
+    MatCardModule,
     MatProgressSpinnerModule,
     // Router
     RouterModule.forChild([{ path: '', component: TitleListComponent }])

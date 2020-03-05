@@ -5,7 +5,6 @@ import { MovieQuery } from '@blockframes/movie';
 import {
   ContractService,
   Contract,
-  ContractType,
   createContractPartyDetail,
   createContractTitleDetail
 } from '@blockframes/contract/contract/+state';
@@ -56,6 +55,7 @@ export class MarketplaceSelectionComponent {
     // @todo(#2041) need to define it here as we cannot use DistributionDealService in ContractService -> Circular Dependancy
     const contractId = this.db.createId();
     const org = this.orgQuery.getActive();
+    const type = 'sale';
 
     // Initialize parties
     const parties: Contract['parties'] = [
@@ -67,7 +67,7 @@ export class MarketplaceSelectionComponent {
     const titleIds = this.query.getValue().ids;
 
     // Create contract & Version
-    const contract: Partial<Contract> = { id: contractId, titleIds, parties, type: ContractType.sale };
+    const contract: Partial<Contract> = { id: contractId, titleIds, parties, type };
     const version: Partial<ContractVersion> = { titles: {} };
 
     // Create deals per titles
@@ -80,7 +80,7 @@ export class MarketplaceSelectionComponent {
     }
     await this.service.create(contract, version);
 
-    await this.router.navigate(['c/o/marketplace/tunnel/contract', contractId, 'sale']);
+    await this.router.navigate(['c/o/marketplace/tunnel/contract', contractId, type]);
     this.store.reset();
   }
 

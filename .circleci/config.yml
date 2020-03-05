@@ -172,8 +172,9 @@ jobs:
           message: '🚲 Deploying & testing e2e (https://blockframes-ci.web.app/)'
       - run: |
           npx firebase use ci &&
-          npx firebase deploy --force || true;
-          npx ng build backend-ops --configuration=$ENV
+          npx firebase deploy --only firestore,hosting:current &&
+          npx firebase deploy --only functions --force || true &&
+          npx ng build backend-ops --configuration=$ENV;
       - run:
           name: prepare the ci for testing
           command: npm run build:backend-ops && node dist/apps/backend-ops/main.js prepareForTesting

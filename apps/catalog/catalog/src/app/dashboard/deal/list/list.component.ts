@@ -1,3 +1,4 @@
+import { Intercom } from 'ng-intercom';
 import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { ContractQuery, ContractService, Contract, ContractStatus, ContractType, createContract, createVersionMandate } from '@blockframes/contract/contract/+state';
 import { getContractLastVersion } from '@blockframes/contract/version/+state/contract-version.model';
@@ -94,7 +95,8 @@ export class DealListComponent implements OnInit, OnDestroy {
     private movieService: MovieService,
     private dealService: DistributionDealService,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private intercom: Intercom
   ) {}
 
   ngOnInit() {
@@ -113,8 +115,9 @@ export class DealListComponent implements OnInit, OnDestroy {
 
   /** Create a sale and redirect to tunnel */
   async createSale() {
-    const contractId = await this.service.create({ type: ContractType.sale });
-    this.router.navigate(['../tunnel/contract', contractId, 'sale'], { relativeTo: this.route })
+    const type = 'sale';
+    const contractId = await this.service.create({ type });
+    this.router.navigate(['../tunnel/contract', contractId, type], { relativeTo: this.route })
   }
 
   /**
@@ -122,13 +125,18 @@ export class DealListComponent implements OnInit, OnDestroy {
    * @note This method is not implemented yet because Mandate page doesn't exist yet
    */
   async createMandate() {
+    const type = 'mandate';
     const orgId = this.orgQuery.getActiveId();
     const mandate = await this.service.getMandate(orgId);
     if (mandate) {
       this.router.navigate([mandate.id], { relativeTo: this.route })
     } else {
-      const contractId = await this.service.create({ type: ContractType.mandate });
-      this.router.navigate(['../tunnel/contract', contractId, 'mandate'], { relativeTo: this.route })
+      const contractId = await this.service.create({ type });
+      this.router.navigate(['../tunnel/contract', contractId, type], { relativeTo: this.route })
     }
+  }
+
+  public openIntercom(): void {
+    return this.intercom.show();
   }
 }

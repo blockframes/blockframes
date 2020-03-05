@@ -8,6 +8,7 @@ import * as v0007 from './0007';
 import * as v0008 from './0008';
 import * as v0009 from './0009';
 import * as v0010 from './0010';
+import * as v0011 from './0011';
 
 import { Firestore } from '../admin';
 
@@ -29,7 +30,8 @@ export const MIGRATIONS = {
   7: v0007,
   8: v0008,
   9: v0009,
-  10: v0010
+  10: v0010,
+  11: v0011
 };
 
 export const VERSIONS_NUMBERS = Object.keys(MIGRATIONS).map(s => parseInt(s, 10));

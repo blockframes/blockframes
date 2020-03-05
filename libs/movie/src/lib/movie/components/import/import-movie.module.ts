@@ -24,7 +24,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 // Libraries
 import { PasswordConfirmModule } from '@blockframes/ui/form';
 import { UploadModule } from '@blockframes/ui/upload';
-import { MovieDisplayModule } from '../../display/display.module';
 import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
@@ -87,7 +86,6 @@ const routes: Routes = [
     // Librairies
     UploadModule,
     PasswordConfirmModule,
-    MovieDisplayModule,
     CropperModule,
     ImageReferenceModule,
     ImgAssetModule,

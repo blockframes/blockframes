@@ -19,19 +19,19 @@ const routes: Routes = [{
     },
     {
       path: 'about',
-      loadChildren: () => import('./pages/about-page/about.module').then(m => m.AboutModule)
+      loadChildren: () => import('./landing/about/about.module').then(m => m.AboutModule)
     },
     {
       path: 'who-are-we',
-      loadChildren: () => import('./pages/team-page/team.module').then(m => m.TeamModule)
+      loadChildren: () => import('./landing/team/team.module').then(m => m.TeamModule)
     },
     {
       path: 'contact',
-      loadChildren: () => import('./pages/contact-page/contact.module').then(m => m.ContactModule)
+      loadChildren: () => import('./landing/contact/contact.module').then(m => m.ContactModule)
     },
     {
       path: 'terms',
-      loadChildren: () => import('./pages/privacy-page/privacy.module').then(m => m.PrivacyModule)
+      loadChildren: () => import('./landing/privacy/privacy.module').then(m => m.PrivacyModule)
     },
     {
       path: 'search',

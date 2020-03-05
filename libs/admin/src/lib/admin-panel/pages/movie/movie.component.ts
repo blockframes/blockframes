@@ -6,7 +6,7 @@ import { MovieAdminForm } from '../../forms/movie-admin.form';
 import { staticModels } from '@blockframes/utils/static-model';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals';
 import { getValue } from '@blockframes/utils/helpers';
-import { StoreStatus, storeType } from '@blockframes/movie/movie/+state/movie.firestore';
+import { storeType, storeStatus } from '@blockframes/movie/movie/+state/movie.firestore';
 
 @Component({
   selector: 'admin-movie',
@@ -19,7 +19,7 @@ export class MovieComponent implements OnInit {
   public movie: Movie;
   public movieForm: MovieAdminForm;
   public storeType = storeType;
-  public storeStatus = StoreStatus;
+  public storeStatus = storeStatus;
   public staticModels = staticModels;
   public rows: any[] = [];
 
