@@ -5,41 +5,56 @@ import { toDate } from "@blockframes/utils/helpers"
 
 type Timestamp = firestore.Timestamp;
 
-export enum PaymentType {
-  CB = 'Credit Card',
-  WireTransfert = 'Wire Transfert',
-  Cash = 'Cash',
-  BTC = 'Bitcoin',
-}
+export const paymentType = {
+  CB: 'Credit Card',
+  WireTransfert: 'Wire Transfert',
+  Cash: 'Cash',
+  BTC: 'Bitcoin',
+} as const;
 
-export const enum CommissionBase {
-  amount = 'Amount',
-  amountminusvat = 'Amount - VAT',
-  amountplusvat = 'Amount + VAT',
-  grossreceipts = 'Gross Receipts',
-  netreceipts = 'Net Receipts',
-}
+export type PaymentType = keyof typeof paymentType;
+export type PaymentTypeValue = typeof paymentType[PaymentType];
 
-export const enum ExpenseType {
-  market = 'Market expenses (price.commission)',
-  export = 'Export expenses (price.amount)'
-}
+export const commissionBase = {
+  amount: 'Amount',
+  amountminusvat: 'Amount - VAT',
+  amountplusvat: 'Amount + VAT',
+  grossreceipts: 'Gross Receipts',
+  netreceipts: 'Net Receipts',
+} as const;
 
-export const enum ExpenseSubType {
-  technical = 'Technical expenses',
-  delivery = 'Delivery expenses',
-  marketing = 'Marketing expenses',
-  translation = 'Translation expenses',
-}
+export type CommissionBase = keyof typeof commissionBase;
+export type CommissionBaseValue = typeof commissionBase[CommissionBase];
 
-export enum PaymentStatus {
-  unknown = 'unknown',
-  waitingpayment = 'waiting for payment',
-  due = 'Due',
-  paid = 'Paid',
-  partialpaid = 'Partially paid',
-  notdueyet = 'Not due yet',
-}
+export const expenseType = {
+  market: 'Market expenses (price.commission)',
+  export: 'Export expenses (price.amount)'
+} as const;
+
+export type ExpenseType = keyof typeof expenseType;
+export type ExpenseTypeValue = typeof expenseType[ExpenseType];
+
+export const expenseSubType = {
+  technical: 'Technical expenses',
+  delivery: 'Delivery expenses',
+  marketing: 'Marketing expenses',
+  translation: 'Translation expenses',
+} as const;
+
+export type ExpenseSubType = keyof typeof expenseSubType;
+export type ExpenseSubTypeValue = typeof expenseSubType[ExpenseSubType];
+
+export const paymentStatus = {
+  unknown: 'unknown',
+  waitingpayment: 'waiting for payment',
+  due: 'Due',
+  paid: 'Paid',
+  partialpaid: 'Partially paid',
+  notdueyet: 'Not due yet',
+} as const;
+
+export type PaymentStatus = keyof typeof paymentStatus;
+export type PaymentStatusValue = typeof paymentStatus[PaymentStatus];
 
 export interface PriceRaw<D> {
   amount: number;
@@ -149,9 +164,9 @@ export function formatPrice(price: Price): Price {
 export function createExpense(params: Partial<Expense> = {}): Expense {
   return {
     label: '',
-    type: ExpenseType.export,
-    subType: ExpenseSubType.delivery,
-    status: PaymentStatus.unknown,
+    type: 'export',
+    subType: 'delivery',
+    status: 'unknown',
     payments: [],
     ...params,
     price: createPrice(params.price),
@@ -175,7 +190,7 @@ export function createPayment(params: Partial<Payment> = {}): Payment {
   return {
     id: '',
     date: new Date(),
-    type: PaymentType.CB,
+    type: 'CB',
     price: createPrice(params ? params.price : undefined),
     ...params
   }

@@ -7,7 +7,6 @@ import { MovieQuery } from '@blockframes/movie';
 import { OrganizationQuery } from '@blockframes/organization';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
-import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 import { Router } from '@angular/router';
 
@@ -59,7 +58,7 @@ export class MarketplaceMovieViewComponent implements OnInit {
 
   public sendPromoReelAnalytic() {
     const movie = this.movieQuery.getActive();
-    this.analytics.event(AnalyticsEvents.promoReelOpened, {
+    this.analytics.event('promoReelOpened', {
       movieId: movie.id,
       movie: movie.main.title.original
     });
@@ -69,7 +68,7 @@ export class MarketplaceMovieViewComponent implements OnInit {
     const movie = this.movieQuery.getActive();
     const title = movie.main.title.international;
     this.cartService.updateWishlist(movie);
-    this.analytics.event(AnalyticsEvents.addedToWishlist, {
+    this.analytics.event('addedToWishlist', {
       movieId: movie.id,
       movieTitle: movie.main.title.original
     });
@@ -80,7 +79,7 @@ export class MarketplaceMovieViewComponent implements OnInit {
     const movie = this.movieQuery.getActive();
     const title = movie.main.title.international;
     this.cartService.updateWishlist(movie);
-    this.analytics.event(AnalyticsEvents.removedFromWishlist, {
+    this.analytics.event('removedFromWishlist', {
       movieId: movie.id,
       movieTitle: movie.main.title.original
     });

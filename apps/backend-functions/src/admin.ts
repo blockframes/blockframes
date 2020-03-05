@@ -6,7 +6,6 @@
 import express from 'express';
 import { db, DocumentReference, functions, getUserMail } from './internals/firebase';
 import { sendMail } from './internals/email';
-import { AppAccessStatus, OrganizationStatus } from './data/types';
 import {
   ADMIN_ACCEPT_ORG_PATH,
   ADMIN_ACCESS_TO_APP_PATH,
@@ -86,7 +85,7 @@ export const adminApp = express();
 
 /** Update an organization when it has been accepted by admins. */
 function acceptOrganization(organizationRef: DocumentReference): Promise<any> {
-  return organizationRef.update({ status: OrganizationStatus.accepted });
+  return organizationRef.update({ status: 'accepted' });
 }
 
 async function mailOrganizationAdminOnAccept(organizationId: string): Promise<any> {
@@ -129,7 +128,7 @@ adminApp.post(
 
 function allowAccessToApp(organizationId: string, appId: string): Promise<any> {
   const requestRef = db.collection('app-requests').doc(organizationId);
-  return requestRef.update({ [appId]: AppAccessStatus.accepted });
+  return requestRef.update({ [appId]: 'accepted' });
 }
 
 async function mailOrganizationAdminOnAccessToApp(

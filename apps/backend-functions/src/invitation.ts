@@ -10,13 +10,9 @@ import {
   InvitationFromOrganizationToUser,
   InvitationFromUserToOrganization,
   InvitationToWorkOnDocument,
-  InvitationStatus,
-  InvitationType,
   OrganizationDocument,
   MovieDocument,
   createDocPermissions,
-  NotificationType,
-  App,
   PublicUser
 } from './data/types';
 import { triggerNotifications, createNotification } from './notification';
@@ -30,12 +26,12 @@ import {
 
 /** Checks if an invitation just got accepted. */
 function wasAccepted(before: InvitationDocument, after: InvitationDocument) {
-  return before.status === InvitationStatus.pending && after.status === InvitationStatus.accepted;
+  return before.status === 'pending' && after.status === 'accepted';
 }
 
 /** Checks if an invitation just got declined. */
 function wasDeclined(before: InvitationDocument, after: InvitationDocument) {
-  return before.status === InvitationStatus.pending && after.status === InvitationStatus.declined;
+  return before.status === 'pending' && after.status === 'declined';
 }
 
 /** Checks if an invitation just got created. */
@@ -129,8 +125,8 @@ async function onInvitationToOrgDecline(invitation: InvitationFromOrganizationTo
         name: user.name,
         surname: user.surname
       },
-      app: App.blockframes,
-      type: NotificationType.invitationFromOrganizationToUserDecline
+      app: 'blockframes',
+      type: 'invitationFromOrganizationToUserDecline'
     })
   );
 
@@ -236,8 +232,8 @@ async function onDocumentInvitationAccept(invitation: InvitationToWorkOnDocument
             userId,
             docId,
             movie: { id: movie.id, title: movie.main.title },
-            type: NotificationType.pathToDocument,
-            app: App.mediaDelivering
+            type: 'pathToDocument',
+            app: 'mediaDelivering'
           });
         })
       )
@@ -326,8 +322,8 @@ async function onInvitationFromUserToJoinOrgDecline(invitation: InvitationFromUs
         name: invitation.user.name,
         surname: invitation.user.surname
       },
-      app: App.blockframes,
-      type: NotificationType.invitationFromUserToJoinOrgDecline
+      app: 'blockframes',
+      type: 'invitationFromUserToJoinOrgDecline'
     })
   );
 
@@ -414,11 +410,11 @@ export async function onInvitationWrite(
   try {
     // dispatch to the correct events depending on the invitation type.
     switch (invitation.type) {
-      case InvitationType.toWorkOnDocument:
+      case 'toWorkOnDocument':
         return onDocumentInvitationUpdate(invitationDocBefore, invitationDoc, invitation);
-      case InvitationType.fromOrganizationToUser:
+      case 'fromOrganizationToUser':
         return onInvitationToOrgUpdate(invitationDocBefore, invitationDoc, invitation);
-      case InvitationType.fromUserToOrganization:
+      case 'fromUserToOrganization':
         return onInvitationFromUserToJoinOrgUpdate(invitationDocBefore, invitationDoc, invitation);
       default:
         throw new Error(`Unhandled invitation: ${JSON.stringify(invitation)}`);

@@ -7,11 +7,7 @@ export type MaterialTemplate = MaterialTemplateDocument
 
 export type Material = MaterialDocument;
 
-export const materialStatuses: MaterialStatus[] = [
-  MaterialStatus.pending,
-  MaterialStatus.available,
-  MaterialStatus.delivered
-];
+export const materialStatuses: MaterialStatus[] = ['pending', 'available', 'delivered'];
 
 // TODO: Type safety => ISSUE#774
 export function createMaterial(material: Partial<Material>): Material {
@@ -20,7 +16,7 @@ export function createMaterial(material: Partial<Material>): Material {
     category: '',
     value: '',
     description: '',
-    status: material.status || MaterialStatus.pending,
+    status: material.status || 'pending',
     isOrdered: false,
     isPaid: false,
     deliveryIds: [],

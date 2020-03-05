@@ -3,7 +3,7 @@ import { DeliveryStatus, MGDeadlineRaw, DeliveryDocument, DeliveryDocumentWithDa
 import { Stakeholder } from '../stakeholder/+state/stakeholder.model';
 
 export { DeliveryStatus } from './delivery.firestore';
-export const Currencies = ( staticModels)['MOVIE_CURRENCIES'];
+export const Currencies = (staticModels)['MOVIE_CURRENCIES'];
 
 export type Step = StepDocumentWithDate;
 
@@ -18,22 +18,16 @@ export interface DeliveryWithTimestamps extends DeliveryDocument {
 }
 
 /** The MGDeadline interface typed with Date. */
-export interface MGDeadline extends MGDeadlineRaw<Date> {}
+export interface MGDeadline extends MGDeadlineRaw<Date> { }
 
-export const deliveryStatuses: DeliveryStatus[] = [
-  DeliveryStatus.negociation,
-  DeliveryStatus.pending,
-  DeliveryStatus.noa,
-  DeliveryStatus.nod,
-  DeliveryStatus.accepted
-];
+export const deliveryStatuses: DeliveryStatus[] = ['negociation', 'pending', 'noa', 'nod', 'accepted'];
 
 /** A factory function to create a delivery. */
 export function createDelivery(params: Partial<Delivery>) {
   return {
     validated: [],
     steps: [],
-    status: DeliveryStatus.negociation,
+    status: 'negociation',
     isPaid: false,
     _type: 'deliveries',
     mustChargeMaterials: params.mustChargeMaterials || false,

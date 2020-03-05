@@ -24,7 +24,7 @@
         <mat-form-field appearance="outline">
             <mat-label>Event triggering holdback</mat-label>
             <mat-select formControlName="floatingStart">
-                <mat-option *ngFor="let event of events" [value]="event">{{ eventEnum[event] }}</mat-option>
+                <mat-option *ngFor="let event of events | keyvalue" [value]="event.key">{{ event.value }}</mat-option>
             </mat-select>
         </mat-form-field>
         <form formGroupName="floatingDuration" fxLayout="column">
@@ -35,8 +35,8 @@
             <mat-form-field appearance="outline">
                 <mat-label>Period</mat-label>
                 <mat-select formControlName="unit">
-                    <mat-option *ngFor="let duration of durations" [value]="duration">
-                        {{ duration | titlecase }}
+                    <mat-option *ngFor="let duration of durations | keyvalue" [value]="duration.key">
+                        {{ duration.value }}
                     </mat-option>
                 </mat-select>
             </mat-form-field>

@@ -61,12 +61,6 @@ interface DocWithID {
 // ======================
 // Business & App Related
 
-export enum AppAccessStatus {
-  requested = 'requested',
-  pending = 'pending',
-  accepted = 'accepted'
-}
-
 /** Custom object used to build notifications. */
 export interface SnapObject {
   organization: PublicOrganization;

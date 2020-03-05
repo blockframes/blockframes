@@ -2,7 +2,6 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { NotificationQuery } from '@blockframes/notification';
 import { map } from 'rxjs/operators';
 import { ActivityTab } from '@blockframes/notification/activity-feed/activity-tabs/activity-tabs.component';
-import { NotificationType } from '@blockframes/notification/types';
 
 @Component({
   selector: 'catalog-activity',
@@ -16,7 +15,7 @@ export class ActivityComponent {
   public applicationTabs: ActivityTab[] = [
     {
       label: 'Offers and Deals',
-      filters: [NotificationType.newContract, NotificationType.contractInNegotiation]
+      filters: ['newContract', 'contractInNegotiation']
     }
   ]
 

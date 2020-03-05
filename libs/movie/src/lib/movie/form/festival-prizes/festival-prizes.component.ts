@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { MovieFestivalPrizesForm } from './festival-prizes.form';
-import { PremiereType } from '@blockframes/movie/movie/+state/movie.firestore';
+import { premiereType } from '@blockframes/movie/movie/+state/movie.firestore';
 
 
 @Component({
@@ -12,13 +12,9 @@ import { PremiereType } from '@blockframes/movie/movie/+state/movie.firestore';
 export class MovieFormFestivalPrizesComponent {
   
   @Input() form: MovieFestivalPrizesForm;
-  public premiereType = PremiereType;
+  public premiereType = premiereType;
 
   constructor() { }
-
-  get premiereTypes() {
-    return Object.keys(PremiereType);
-  }
 
   get prizes() {
     return this.form.get('prizes');

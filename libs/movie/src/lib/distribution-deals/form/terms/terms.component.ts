@@ -1,5 +1,5 @@
 import { Subscription } from 'rxjs';
-import { TimeUnit, PaymentEvent } from '@blockframes/utils/common-interfaces/terms';
+import { timeUnit, paymentEvent } from '@blockframes/utils/common-interfaces/terms';
 import { FormControl } from '@angular/forms';
 import { Component, Input, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { DistributionDealTermsForm } from './terms.form';
@@ -15,11 +15,9 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 export class DistributionDealTermsComponent implements OnInit, OnDestroy {
   @Input() form: DistributionDealTermsForm;
 
-  @Input() eventEnum = PaymentEvent;
+  public events = paymentEvent;
 
-  @Input() events = Object.keys(PaymentEvent);
-
-  public durations = Object.keys(TimeUnit);
+  public durations = timeUnit;
 
   public periodCtrl: FormControl = new FormControl(false);
 

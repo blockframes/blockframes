@@ -289,7 +289,7 @@ export class ContractService extends CollectionService<ContractState> {
     const updatedParty = createContractPartyDetail({
       ...contract.parties[index],
       signDate: new Date(),
-      status: ContractStatus.accepted
+      status: 'accepted'
     });
 
     // Replace the party at the index and update all the parties array.
@@ -313,7 +313,7 @@ export class ContractService extends CollectionService<ContractState> {
     const updatedParty = createContractPartyDetail({
       ...contract.parties[index],
       signDate: new Date(),
-      status: ContractStatus.rejected
+      status: 'rejected'
     });
 
     // Replace the party at the index and update all the parties array.

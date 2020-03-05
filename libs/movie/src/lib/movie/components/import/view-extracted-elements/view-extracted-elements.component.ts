@@ -27,7 +27,17 @@ import { formatCredits } from '@blockframes/utils/spreadsheet/format';
 import { ImageUploader, cleanModel, getKeyIfExists } from '@blockframes/utils';
 import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
 import { SSF } from 'xlsx';
-import { PremiereType, storeType, workType, storeStatus, unitBox, movieLanguageTypes, MovieLanguageTypesValue, UnitBoxValue } from '@blockframes/movie/movie/+state/movie.firestore';
+import { 
+  PremiereType,
+  storeType,
+  workType,
+  storeStatus,
+  unitBox,
+  movieLanguageTypes,
+  MovieLanguageTypesValue,
+  UnitBoxValue,
+  premiereType 
+} from '@blockframes/movie/movie/+state/movie.firestore';
 import { createStakeholder } from '@blockframes/utils/common-interfaces/identity';
 import { DistributionDeal, createDistributionDeal, createHoldback } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
 import {
@@ -37,13 +47,12 @@ import {
   initContractWithVersion,
   ContractWithLastVersion
 } from '@blockframes/contract/contract/+state/contract.model';
-import { ContractStatus, ContractTitleDetail, contractType } from '@blockframes/contract/contract/+state/contract.firestore';
+import { ContractTitleDetail, contractType, contractStatus } from '@blockframes/contract/contract/+state/contract.firestore';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state/distribution-deal.service';
 import { createExpense, createPrice } from '@blockframes/utils/common-interfaces/price';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { createPaymentSchedule } from '@blockframes/utils/common-interfaces/schedule';
 import { createTerms, createRange } from '@blockframes/utils/common-interfaces';
-import { DistributionDealStatus } from '@blockframes/movie/distribution-deals/+state/distribution-deal.firestore';
 import { Intercom } from 'ng-intercom';
 import { AuthService } from '@blockframes/auth';
 
@@ -596,10 +605,10 @@ export class ViewExtractedElementsComponent implements OnInit {
               if (prizeParts.length >= 4) {
                 switch (prizeParts[3].trim()) {
                   case 'International Premiere':
-                    prize.premiere = PremiereType.international;
+                    prize.premiere = 'international';
                     break;
                   default:
-                    prize.premiere = PremiereType[prizeParts[3].trim().toLowerCase()];
+                    prize.premiere = getKeyIfExists(premiereType, prizeParts[3] as PremiereType);
                     break;
                 }
 
@@ -856,7 +865,7 @@ export class ViewExtractedElementsComponent implements OnInit {
 
             const territory = getCodeIfExists('TERRITORIES', boxOfficeParts[0].trim());
             if (territory) {
-              const unit = getKeyIfExists(unitBox, boxOfficeParts[1] as any);
+              const unit = getKeyIfExists(unitBox, boxOfficeParts[1] as UnitBoxValue);
               if (unit) {
                 movie.budget.boxOffice.push(createBoxOffice(
                   {
@@ -1487,7 +1496,7 @@ export class ViewExtractedElementsComponent implements OnInit {
             }
 
             // STATUS
-            distributionDeal.status = DistributionDealStatus.draft;
+            distributionDeal.status = 'draft';
 
             // EXCLUSIVE DEAL
             if (spreadSheetRow[SpreadSheetDistributionDeal.exclusive]) {
@@ -1946,8 +1955,9 @@ export class ViewExtractedElementsComponent implements OnInit {
 
         // CONTRACT STATUS
         if (spreadSheetRow[SpreadSheetContract.status]) {
-          if (spreadSheetRow[SpreadSheetContract.status] in ContractStatus) {
-            contract.last.status = spreadSheetRow[SpreadSheetContract.status];
+          const key = getKeyIfExists(contractStatus, spreadSheetRow[SpreadSheetContract.status]);
+          if (key) {
+            contract.last.status = key;
           } else {
             importErrors.errors.push({
               type: 'warning',

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Wishlist, WishlistStatus } from '@blockframes/organization';
+import { Wishlist } from '@blockframes/organization';
 import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
 import { map } from 'rxjs/operators';
 
@@ -20,7 +20,7 @@ export class WishlistViewComponent implements OnInit {
 
   ngOnInit() {
     this.currentWishlist$ = this.catalogCartQuery.wishlistWithMovies$.pipe(
-      map(wishlist => wishlist.find(wish => wish.status === WishlistStatus.pending))
+      map(wishlist => wishlist.find(wish => wish.status === 'pending'))
     );
   }
 }

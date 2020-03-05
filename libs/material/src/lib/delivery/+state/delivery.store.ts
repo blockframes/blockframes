@@ -2,10 +2,7 @@ import { EntityStore, StoreConfig, EntityState, ActiveState } from '@datorama/ak
 import { Injectable } from '@angular/core';
 import { Delivery, createDeliveryFromFirestore, DeliveryWithTimestamps } from './delivery.model';
 
-export const enum DeliveryOption {
-  mustChargeMaterials = 'mustChargeMaterials',
-  mustBeSigned = 'mustBeSigned'
-}
+export type DeliveryOption = 'mustChargeMaterials' | 'mustBeSigned';
 
 export interface IDeliveryList {
   id: string;

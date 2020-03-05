@@ -4,7 +4,7 @@ import { initializeTestApp } from '@firebase/testing';
 import { AngularFireFunctionsModule } from '@angular/fire/functions';
 import { AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestore';
 import { MaterialStore } from './material.store';
-import { MaterialStatus, createMaterial } from './material.model';
+import { createMaterial } from './material.model';
 import { DeliveryMaterialService } from './delivery-material.service';
 import { DeliveryQuery } from '../../delivery/+state';
 
@@ -74,7 +74,7 @@ describe('DeliveryMaterialService unit test', () => {
       category: '',
       value: '',
       description: '',
-      status: MaterialStatus.pending,
+      status: 'pending',
       isOrdered: false,
       isPaid: false,
       deliveryIds: []
@@ -90,8 +90,8 @@ describe('DeliveryMaterialService unit test', () => {
 
   it('should update status of materials from a delivery', () => {
     const spy = jest.spyOn(service, 'update').mockImplementation();
-    service.updateDeliveryMaterialStatus(materialsMock, MaterialStatus.available, 'deliveryId');
-    expect(spy).toHaveBeenCalledWith(['6hjACiAe2dOZ8Vab1L3u', 'KfN4o33h4mK212ZnOO5m', 'dCe0XJLUChDMzJ6p4dZK'], { status: MaterialStatus.available });
+    service.updateDeliveryMaterialStatus(materialsMock, 'available', 'deliveryId');
+    expect(spy).toHaveBeenCalledWith(['6hjACiAe2dOZ8Vab1L3u', 'KfN4o33h4mK212ZnOO5m', 'dCe0XJLUChDMzJ6p4dZK'], { status: 'available' });
     expect(spy).toHaveBeenCalledTimes(1);
   });
 

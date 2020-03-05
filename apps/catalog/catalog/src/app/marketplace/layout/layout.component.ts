@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnInit, ViewChild, OnDestroy, AfterViewInit} from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
-import { Wishlist, WishlistStatus } from '@blockframes/organization';
+import { Wishlist } from '@blockframes/organization';
 import { map } from 'rxjs/operators';
 import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
 import { AuthService, AuthQuery } from '@blockframes/auth';
@@ -33,7 +33,7 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnInit() {
     this.currentWishlist$ = this.catalogCartQuery.wishlistWithMovies$.pipe(
-      map(wishlists => wishlists.find(wishlist => wishlist.status === WishlistStatus.pending))
+      map(wishlists => wishlists.find(wishlist => wishlist.status === 'pending'))
       );
     }
     

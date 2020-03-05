@@ -72,10 +72,4 @@ export const UPDATED_MATERIALS: Material[] = [
   }
 ];
 
-export const enum Statuses {
-  ORDERED = 'Ordered',
-  PAID = 'Paid',
-  PENDING = 'Pending',
-  AVAILABLE = 'Available',
-  DELIVERED = 'Delivered'
-}
+export type Statuses = 'Ordered' | 'Paid' | 'Pending' | 'Available' | 'Delivered';

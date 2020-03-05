@@ -1,5 +1,5 @@
 import { firestore } from 'firebase/app';
-import { InvitationType, InvitationStatus, InvitationFromUserToOrganization, InvitationFromOrganizationToUser, InvitationToWorkOnDocument } from './invitation.firestore';
+import { InvitationFromUserToOrganization, InvitationFromOrganizationToUser, InvitationToWorkOnDocument } from './invitation.firestore';
 import { PublicUser } from '@blockframes/auth/types';
 import { PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
 
@@ -32,8 +32,8 @@ export function createInvitationFromUserToOrganization(params: InvitationFromUse
   return {
     id: '',
     app: 'main',
-    type: InvitationType.fromUserToOrganization,
-    status: InvitationStatus.pending,
+    type: 'fromUserToOrganization',
+    status: 'pending',
     date: firestore.Timestamp.now(),
     ...params
   };
@@ -43,8 +43,8 @@ export function createInvitationFromUserToOrganization(params: InvitationFromUse
 export function createInvitationFromOrganizationToUser(params: InvitationFromOrganizationToUserOptions): InvitationFromOrganizationToUser {
   return {
     app: 'main',
-    type: InvitationType.fromOrganizationToUser,
-    status: InvitationStatus.pending,
+    type: 'fromOrganizationToUser',
+    status: 'pending',
     date: firestore.Timestamp.now(),
     ...params
   };
@@ -54,8 +54,8 @@ export function createInvitationFromOrganizationToUser(params: InvitationFromOrg
 export function createInvitationToDocument(params: InvitationToWorkOnDocumentOptions): InvitationToWorkOnDocument {
   return {
     app: 'media_delivering',
-    type: InvitationType.toWorkOnDocument,
-    status: InvitationStatus.pending,
+    type: 'toWorkOnDocument',
+    status: 'pending',
     date: firestore.Timestamp.now(),
     ...params
   };

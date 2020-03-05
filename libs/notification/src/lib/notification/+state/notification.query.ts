@@ -9,7 +9,6 @@ import { formatDate } from '@angular/common';
 import { MovieQuery } from '@blockframes/movie';
 import { NotificationType } from './notification.firestore';
 import { ImgRef, createImgRef } from '@blockframes/utils';
-import { PLACEHOLDER_LOGO } from '@blockframes/organization/+state/organization.model';
 
 function getYesterday() {
   const today = new Date();
@@ -59,118 +58,117 @@ export class NotificationQuery extends QueryEntity<NotificationState, Notificati
   }
 
   public createNotificationInformation(notification: Notification) {
-    const organizationPlaceholderLogo = PLACEHOLDER_LOGO;
 
     switch (notification.type) {
-      case NotificationType.inviteOrganization:
+      case 'inviteOrganization':
         return {
           message: `${notification.organization.name} has been invited to work on ${notification.movie.title.original}'s delivery.`,
           imgRef: this.getPoster(notification.movie.id),
           placeholderUrl: 'WelcomeDelivery_500.png'
         };
-      case NotificationType.removeOrganization:
+      case 'removeOrganization':
         return {
           message: `${notification.organization.name} has been removed from ${notification.movie.title.original}'s delivery.`,
           imgRef: this.getPoster(notification.movie.id),
           placeholderUrl: 'WelcomeDelivery_500.png'
         };
-      case NotificationType.newSignature:
+      case 'newSignature':
         return {
           message: `${notification.organization.name} has signed ${notification.movie.title.original}'s delivery.`,
           imgRef: this.getPoster(notification.movie.id),
           placeholderUrl: 'WelcomeDelivery_500.png'
         };
-      case NotificationType.finalSignature:
+      case 'finalSignature':
         return {
           message: `Every stakeholders have signed ${notification.movie.title.original}'s delivery.`,
           imgRef: this.getPoster(notification.movie.id),
           placeholderUrl: 'WelcomeDelivery_500.png'
         };
-      case NotificationType.createDocument:
+      case 'createDocument':
         return {
           message: `A new delivery has been created for ${notification.movie.title.original}.`,
           imgRef: this.getPoster(notification.movie.id),
           placeholderUrl: 'WelcomeDelivery_500.png'
         };
-      case NotificationType.deleteDocument:
+      case 'deleteDocument':
         return {
           message: `${notification.movie.title.original}'s delivery has been deleted.`,
           imgRef: this.getPoster(notification.movie.id),
           placeholderUrl: 'WelcomeDelivery_500.png'
         };
-      case NotificationType.pathToDocument:
+      case 'pathToDocument':
         return {
           message: 'You accepted the invitation. Now you can work on the document.',
           imgRef: this.getPoster(notification.movie.id),
           placeholderUrl: 'WelcomeDelivery_500.png'
         };
-      case NotificationType.organizationAcceptedByArchipelContent:
+      case 'organizationAcceptedByArchipelContent':
         return {
           message: 'Your organization has been accepted by Archipel Content !',
           placeholderUrl: 'WelcomeArchipelContent_500.png'
         };
-      case NotificationType.movieTitleUpdated:
+      case 'movieTitleUpdated':
         return {
           message: `${notification.user.name} ${notification.user.surname} edited ${notification.movie.title.international}.`,
           imgRef: this.getPoster(notification.movie.id),
           placeholderUrl: 'WelcomeDelivery_500.png'
         };
-      case NotificationType.movieTitleCreated:
+      case 'movieTitleCreated':
         return {
           message: `${notification.user.name} ${notification.user.surname} created ${notification.movie.title.international}.`,
           imgRef: this.getPoster(notification.movie.id),
           placeholderUrl: 'WelcomeDelivery_500.png'
         };
-      case NotificationType.movieDeleted:
+      case 'movieDeleted':
         return {
           message: `${notification.user.name} ${notification.user.surname} deleted ${notification.movie.title.international}.`,
           imgRef: this.getPoster(notification.movie.id),
           placeholderUrl: 'WelcomeDelivery_500.png'
         };
-      case NotificationType.invitationFromOrganizationToUserDecline:
+      case 'invitationFromOrganizationToUserDecline':
         return {
           message: `${notification.user.name} ${notification.user.surname} has declined your organization's invitation.`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'Avatar_40.png'
         };
-      case NotificationType.invitationFromUserToJoinOrgDecline:
+      case 'invitationFromUserToJoinOrgDecline':
         return {
           message: `Your organization has refused the request from ${notification.user.name} ${notification.user.surname}.`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'Avatar_40.png'
         };
-      case NotificationType.memberAddedToOrg:
+      case 'memberAddedToOrg':
         return {
           message: `${notification.user.name} ${notification.user.surname} has been added to ${notification.organization.name}.`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'Avatar_40.png',
           url: `c/o/organization/${notification.organization.id}/view/members`
         };
-      case NotificationType.memberRemovedFromOrg:
+      case 'memberRemovedFromOrg':
         return {
           message: `${notification.user.name} ${notification.user.surname} has been removed from ${notification.organization.name}.`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'Avatar_40.png'
         };
-      case NotificationType.newContract:
+      case 'newContract':
         return {
           message: `${notification.organization.name} submitted a contract.`,
           placeholderUrl: 'Organization_250.png',
           url: `c/o/dashboard/deals/${notification.docId}`
         };
-      case NotificationType.contractInNegotiation:
+      case 'contractInNegotiation':
         return {
           message: `A new offer has been created.`,
           placeholderUrl: 'WelcomeArchipelContent_500.png',
           url: `c/o/dashboard/deals/${notification.docId}`
         };
-      case NotificationType.movieSubmitted:
+      case 'movieSubmitted':
         return {
           message: `A new movie has been submitted`,
           placeholderUrl: this.getPoster(notification.docId),
           url: `c/o/dashboard/titles/${notification.docId}`
         };
-      case NotificationType.movieAccepted:
+      case 'movieAccepted':
         return {
           message: `Your movie has been accepted by Archipel Content.`,
           placeholderUrl: this.getPoster(notification.docId),

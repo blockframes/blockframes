@@ -3,6 +3,7 @@ import ConfirmModal from '../ConfirmModal';
 import SaveAsTemplateModal from './SaveAsTemplateModal';
 import { Material } from '../../utils/type';
 import { getCurrencySymbol } from '../../utils/functions';
+import { Statuses } from '../../utils/data';
 
 export default class DeliveryEditablePage extends NavbarPage {
   constructor() {
@@ -70,7 +71,7 @@ export default class DeliveryEditablePage extends NavbarPage {
       .click();
   }
 
-  public updateStatus(status: string) {
+  public updateStatus(status: Statuses) {
     this.openActionsMenu();
     this.selectAction(status);
   }
@@ -196,7 +197,7 @@ export default class DeliveryEditablePage extends NavbarPage {
     );
   }
 
-  public assertMaterialStatusChanged(materials: Material[], status: string) {
+  public assertMaterialStatusChanged(materials: Material[], status: Statuses) {
     materials.forEach(material =>
       cy
         .get('[page-id=delivery-material-list] tr')

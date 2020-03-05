@@ -8,11 +8,14 @@ export interface RequestDemoInformations {
   role: RequestDemoRole;
 }
 
-export const enum RequestDemoRole {
-  buyer = 'Buyer',
-  seller = 'Seller',
-  other = 'Other'
-}
+export const requestDemoRole = {
+  buyer: 'Buyer',
+  seller: 'Seller',
+  other: 'Other'
+} as const;
+
+export type RequestDemoRole = keyof typeof requestDemoRole;
+export type RequestDemoRoleValue = typeof requestDemoRole[RequestDemoRole];
 
 /** A factory function to create a demo request. */
 export function createDemoRequestInformations(

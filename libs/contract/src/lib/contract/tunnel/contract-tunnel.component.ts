@@ -14,7 +14,6 @@ import { ContractTitleDetailForm } from '@blockframes/contract/version/form';
 import { DistributionDealService, DistributionDeal, createDistributionDeal } from '@blockframes/movie/distribution-deals/+state';
 import { startWith, map, switchMap, shareReplay } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
-import { CommissionBase } from '@blockframes/utils/common-interfaces';
 
 const steps = [{
   title: 'Step 1',
@@ -123,8 +122,12 @@ export class ContractTunnelComponent implements OnInit {
 
   /** Add a title to this contract */
   addTitle(movieId: string, mandate?: boolean) {
-    const params = mandate ? { price: { commissionBase: CommissionBase.grossreceipts, amount: 0 } } : {};
-    this.contractForm.get('versions').last().get('titles').setControl(movieId, new ContractTitleDetailForm(params));
+    // @TODO (#1887) should not get last version
+    this.contractForm
+      .get('versions')
+      .last()
+      .get('titles')
+      .setControl(movieId, new ContractTitleDetailForm(mandate ? { price: { commissionBase: 'grossreceipts', amount: 0 } } : {}));
     this.dealForms.setControl(movieId, FormList.factory([], deal => new DistributionDealForm(deal)));
   }
 
@@ -155,7 +158,7 @@ export class ContractTunnelComponent implements OnInit {
   }
 
   /** Remove a deal from a title */
-  removeDeal(movieId: string, index: number) {  
+  removeDeal(movieId: string, index: number) {
     const deal = this.dealForms.get(movieId).at(index).value;
     if (deal.id) {
       this.removedDeals[movieId]

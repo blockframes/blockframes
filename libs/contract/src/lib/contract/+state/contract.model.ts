@@ -2,14 +2,12 @@ import { getCodeIfExists } from '@blockframes/utils/static-model/staticModels';
 import { createPrice, CommissionBase } from '@blockframes/utils/common-interfaces/price';
 import {
   ContractDocumentWithDates,
-  ContractStatus,
   ContractTitleDetail,
   ContractPartyDetailDocumentWithDates,
   ContractPartyDetailDocumentWithDatesDocument,
   LegalDocument,
   ContractLegalDocuments,
   ContractDocument,
-  ContractType,
   PublicContractDocumentWithDates
 } from './contract.firestore';
 import { createParty } from '@blockframes/utils/common-interfaces/identity';
@@ -66,7 +64,7 @@ export function createContractVersion(params: Partial<ContractVersion> = {}): Co
     titles: {},
     creationDate: new Date(),
     paymentSchedule: [],
-    status: ContractStatus.draft,
+    status: 'draft',
     ...params,
     paymentTerm: createTerms(params.paymentTerm),
     scope: createTerms(params.scope),
@@ -79,7 +77,7 @@ export function createContractVersion(params: Partial<ContractVersion> = {}): Co
  * @param params
  */
 export function createVersionMandate(params: Partial<ContractVersion> = {}) {
-  return createContractVersion({ price: { commissionBase: CommissionBase.grossreceipts, amount: 0 }, ...params })
+  return createContractVersion({ price: { commissionBase: 'grossreceipts', amount: 0 }, ...params })
 }
 
 export function createPublicContract(params: Partial<PublicContract> = {}): PublicContract {
@@ -106,7 +104,7 @@ export function createContractPartyDetail(
   params: Partial<ContractPartyDetail> = {}
 ): ContractPartyDetail {
   return {
-    status: ContractStatus.unknown,
+    status: 'unknown',
     childRoles: [],
     ...params,
     party: createParty(params.party),
@@ -287,6 +285,6 @@ export function isContractSignatory(contract: Contract, organizationId: string):
  * @param contracts
  */
 export function getValidatedContracts(contracts: Contract[]): Contract[] {
-  const validStatus = ContractStatus.paid || ContractStatus.waitingpayment || ContractStatus.accepted;
+  const validStatus = 'paid' || 'waitingpayment' || 'accepted';
   return contracts.filter(contract => getContractLastVersion(contract).status === validStatus)
 }

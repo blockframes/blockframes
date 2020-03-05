@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
   OrganizationService,
-  OrganizationStatus,
   OrganizationState,
   OrganizationQuery
 } from '../+state';
@@ -35,7 +34,7 @@ export class OrganizationGuard extends CollectionGuard<OrganizationState> {
               if (!org) {
                 return '/c/organization';
               }
-              if (org.status === OrganizationStatus.pending) {
+              if (org.status === 'pending') {
                 return '/c/organization/create-congratulations';
               }
             })

@@ -8,8 +8,6 @@ import {
   DeliveryDocument,
   MaterialDocument,
   StakeholderDocument,
-  App,
-  NotificationType
 } from './data/types';
 import { copyMaterialsToMovie } from './material';
 
@@ -70,10 +68,10 @@ export async function onDeliveryUpdate(
     const promises = [copyMaterialsToMovie(materialsDelivery, materialsMovie, delivery)];
 
     const snapObject: SnapObject = {
-      organization: {id: '', name: ''}, // leaving undefined will cause firebase to throw
+      organization: { id: '', name: '' }, // leaving undefined will cause firebase to throw
       movie: { id: movie.id, title: movie.main.title },
       docId: delivery.id,
-      type: NotificationType.finalSignature
+      type: 'finalSignature'
     };
 
     // When delivery is signed, we create notifications for each stakeholder
@@ -120,7 +118,7 @@ async function notifyOnNewSignee(
     organization: { id: newStakeholderOrg.id, name: newStakeholderOrg.name },
     movie: { id: movie.id, title: movie.main.title },
     docId: delivery.id,
-    type: NotificationType.newSignature
+    type: 'newSignature'
   };
 
   const notifications = createSignatureNotifications(organizationDocuments, snapObject);
@@ -143,7 +141,7 @@ function createSignatureNotifications(
         type: snapObject.type,
         docId: snapObject.docId,
         movie: snapObject.movie,
-        app: App.mediaDelivering
+        app: 'mediaDelivering'
       });
     });
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { OrganizationService, Organization, OrganizationStatus } from '@blockframes/organization';
+import { OrganizationService, Organization, organizationStatus } from '@blockframes/organization';
 import { ActivatedRoute } from '@angular/router';
 import { OrganizationAdminForm } from '../../forms/organization-admin.form';
 import { MovieService } from '@blockframes/movie';
@@ -17,7 +17,7 @@ export class OrganizationComponent implements OnInit {
   public orgId = '';
   public org: Organization;
   public orgForm: OrganizationAdminForm;
-  public organizationStatus = OrganizationStatus;
+  public organizationStatus = organizationStatus;
   public movies: any[];
   public members: any[];
 

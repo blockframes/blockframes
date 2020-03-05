@@ -37,8 +37,8 @@
     <mat-form-field appearance="outline">
       <mat-label>Status</mat-label>
       <mat-select formControlName="status">
-        <mat-option *ngFor="let status of statuses" [value]="status">
-          {{ contractStatus[status] }}
+        <mat-option *ngFor="let status of statuses | keyvalue" [value]="status.key">
+          {{ status.value }}
         </mat-option>
       </mat-select>
     </mat-form-field>

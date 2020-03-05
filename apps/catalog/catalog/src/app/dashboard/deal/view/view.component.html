@@ -17,7 +17,7 @@
         <span class="mat-caption"> {{ lastVersion.creationDate | date: 'short' }} </span>
         <h2>{{ totalPrice.amount | currency: getCurrencyCode(totalPrice.currency) }}</h2>
         <mat-chip-list>
-          <mat-chip>{{ getStatusValue(lastVersion.status) }}</mat-chip>
+          <mat-chip>{{ lastVersion.status | translateObject: 'contractStatus' | async }}</mat-chip>
         </mat-chip-list>
       </section>
     </section>

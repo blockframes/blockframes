@@ -21,6 +21,7 @@ import { ContractTreeModule } from './components/contract-tree/contract-tree.mod
 import { OrganizationAdminModule } from './pages/organization/organization.module';
 import { AlgoliaAutocompleteModule } from '@blockframes/utils/algolia-autocomplete/algolia-autocomplete.module';
 import { TermDateModule } from '@blockframes/utils/pipes/term-date.module';
+import { TranslateObjectModule } from '@blockframes/utils/pipes/translate-object.module';
 
 // Components
 import { OverviewComponent } from './pages/overview/overview.component';
@@ -78,6 +79,7 @@ export const panelRoutes: Routes = [
     RouterModule.forChild(panelRoutes),
     OrganizationAdminModule,
     TermDateModule,
+    TranslateObjectModule,
   ],
   declarations: [
     OverviewComponent,

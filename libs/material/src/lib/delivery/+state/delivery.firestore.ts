@@ -5,13 +5,16 @@ import { ScheduleRaw } from "@blockframes/utils/common-interfaces/schedule";
 export type Timestamp = firestore.Timestamp;
 export type CurrencySlug = ((typeof staticModels)['MOVIE_CURRENCIES'])[number]['slug'];
 
-export const enum DeliveryStatus {
-  negociation = 'Delivery in negotiation',
-  pending = 'Materials pending',
-  noa = 'Notice of Availability',
-  nod = 'Notice of Delivery',
-  accepted = 'Materials accepted'
-}
+export const deliveryStatus = {
+  negociation: 'Delivery in negotiation',
+  pending: 'Materials pending',
+  noa: 'Notice of Availability',
+  nod: 'Notice of Delivery',
+  accepted: 'Materials accepted'
+} as const;
+
+export type DeliveryStatus = keyof typeof deliveryStatus;
+export type DeliveryStatusValue = typeof deliveryStatus[DeliveryStatus];
 
 /** This is a Minimum Guarantee deadline, can be used to interact with the frontend (D = Date) or backend (D = Timestamp). */
 export interface MGDeadlineRaw<D> extends ScheduleRaw<D> {
@@ -22,7 +25,7 @@ export interface MGDeadlineRaw<D> extends ScheduleRaw<D> {
 interface StepRaw<D> {
   id: string;
   name: string;
-  date?: D | null;
+  date?: D | null;
 }
 
 /** A given delivery, can be used to interact with the frontend (D = Date) or backend (D = Timestamp). */
@@ -58,10 +61,10 @@ export interface DeliveryDocumentWithDates extends DeliveryRaw<Date> {
 }
 
 /** Document model of a Step */
-export interface StepDocument extends StepRaw<Timestamp> {}
+export interface StepDocument extends StepRaw<Timestamp> { }
 
 /** Document model of a Step with dates typed in Date. */
-export interface StepDocumentWithDate extends StepRaw<Date> {}
+export interface StepDocumentWithDate extends StepRaw<Date> { }
 
 /** Convert a StepDocument to a Step (that uses Date). */
 export function convertStepDocumentToStepDocumentWithDate(steps: StepDocument[]): StepDocumentWithDate[] {
@@ -73,7 +76,7 @@ export function convertStepDocumentToStepDocumentWithDate(steps: StepDocument[])
     if (!!step.date) {
       return { ...step, date: step.date.toDate() };
     } else {
-      return { ...step, date: null}
+      return { ...step, date: null }
     }
   });
 }

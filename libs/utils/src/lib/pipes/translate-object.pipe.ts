@@ -5,6 +5,7 @@ const registeredObjects = [
   'unitBox',
   'storeType',
   'workType',
+  'contractStatus',
 ];
 
 @Pipe({
@@ -35,6 +36,9 @@ export class TranslateObjectPipe implements PipeTransform {
         case 'storeType':
         case 'workType':
           this.imports[type] = await import('@blockframes/movie/movie/+state/movie.firestore').then(e => e[type]);
+          break;
+        case 'contractStatus':
+          this.imports[type] = await import('@blockframes/contract/contract/+state/contract.firestore').then(e => e[type]);
           break;
         default:
           break;

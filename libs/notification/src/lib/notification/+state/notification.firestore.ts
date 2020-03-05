@@ -5,28 +5,28 @@ import { App } from '@blockframes/utils/apps';
 import { PublicUser } from '@blockframes/auth/+state/auth.firestore';
 
 /** Type of Notification depending of its origin. */
-export const enum NotificationType {
-  newSignature = 'newSignature',
-  finalSignature = 'finalSignature',
-  createDocument = 'createDocument',
-  deleteDocument = 'deleteDocument',
-  updateDocument = 'updateDocument',
-  inviteOrganization = 'inviteOrganization',
-  removeOrganization = 'removeOrganization',
-  pathToDocument = 'pathToDocument',
-  organizationAcceptedByArchipelContent = 'organizationAcceptedByArchipelContent',
-  movieSubmitted = 'movieSubmitted',
-  movieAccepted = 'movieAccepted',
-  movieTitleUpdated = 'movieTitleUpdated',
-  movieTitleCreated = 'movieTitleCreated',
-  movieDeleted = 'movieDeleted',
-  invitationFromUserToJoinOrgDecline = 'invitationFromUserToJoinOrgDecline',
-  invitationFromOrganizationToUserDecline = 'invitationFromOrganizationToUserDecline',
-  memberAddedToOrg = 'memberAddedToOrg',
-  memberRemovedFromOrg = 'memberRemovedFromOrg',
-  newContract = 'newContract',
-  contractInNegotiation = 'contractInNegotiation',
-}
+export type NotificationType =
+  'newSignature' | 
+  'finalSignature' | 
+  'createDocument' | 
+  'deleteDocument' | 
+  'updateDocument' |
+  'inviteOrganization' | 
+  'removeOrganization' | 
+  'pathToDocument' | 
+  'organizationAcceptedByArchipelContent' | 
+  'movieSubmitted' |
+  'movieAccepted' | 
+  'movieTitleUpdated' | 
+  'movieTitleCreated' | 
+  'movieDeleted' | 
+  'invitationFromUserToJoinOrgDecline' |
+  'invitationFromOrganizationToUserDecline' | 
+  'memberAddedToOrg' | 
+  'memberRemovedFromOrg' | 
+  'newContract' | 
+  'contractInNegotiation'
+;
 
 /** Minimum required informations to create a Notification. */
 export interface NotificationOptions {

@@ -1,8 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  OrganizationService,
-  OrganizationStatus
-} from '../+state';
+import { OrganizationService } from '../+state';
 import { AuthQuery } from '@blockframes/auth';
 import { Router } from '@angular/router';
 
@@ -21,7 +18,7 @@ export class NoOrganizationGuard {
     }
     const org = await this.service.getValue(orgId);
 
-    if (org.status === OrganizationStatus.pending) {
+    if (org.status === 'pending') {
       return org.appAccess ? this.router.parseUrl('c/organization/create-congratulations') : this.router.parseUrl('c/organization/app-access');
     } else {
       return this.router.parseUrl('c/o');

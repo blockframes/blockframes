@@ -1,6 +1,6 @@
 import { Intercom } from 'ng-intercom';
 import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
-import { ContractQuery, ContractService, Contract, ContractStatus, ContractType, createContract, createVersionMandate } from '@blockframes/contract/contract/+state';
+import { ContractQuery, ContractService, Contract, ContractStatus } from '@blockframes/contract/contract/+state';
 import { getContractLastVersion } from '@blockframes/contract/version/+state/contract-version.model';
 import { map, switchMap } from 'rxjs/operators';
 import { MovieService } from '@blockframes/movie';
@@ -26,29 +26,29 @@ const contractTab: Tab[] = [
   {
     name: 'Draft',
     statuses: [
-      ContractStatus.draft,
-      ContractStatus.submitted,
+      'draft',
+      'submitted',
     ]
   },
   {
     name: 'Offers',
     statuses: [
-      ContractStatus.submitted,
-      ContractStatus.undernegotiation,
-      ContractStatus.waitingsignature
+      'submitted',
+      'undernegotiation',
+      'waitingsignature'
     ]
   },
   {
     name: 'Ongoing Deals',
     statuses: [
-      ContractStatus.accepted,
-      ContractStatus.waitingpayment,
-      ContractStatus.paid
+      'accepted',
+      'waitingpayment',
+      'paid'
     ]
   },
   {
     name: 'Aborted Offers',
-    statuses: [ContractStatus.rejected]
+    statuses: ['rejected']
   }
 ];
 

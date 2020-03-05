@@ -5,7 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ContractPartyDetail } from '@blockframes/contract/contract/+state/contract.model';
 import { PartyDetailsForm } from '@blockframes/contract/contract/form/contract.form';
 import { staticModels } from '@blockframes/utils/static-model';
-import { ContractStatus } from '@blockframes/contract/contract/+state';
+import { contractStatus } from '@blockframes/contract/contract/+state';
 
 interface PartyDialogData {
   title: string,
@@ -21,8 +21,7 @@ interface PartyDialogData {
 })
 export class EditPartyComponent implements OnInit {
   public form: PartyDetailsForm;
-  public statuses: string[] = [];
-  public contractStatus: any;
+  public statuses = contractStatus;
   public staticRoles = staticModels.LEGAL_ROLES;
   public staticSubRoles = staticModels.SUB_LICENSOR_ROLES;
   public algoliaOrg = algolia.indexNameOrganizations;
@@ -36,8 +35,6 @@ export class EditPartyComponent implements OnInit {
 
   ngOnInit() {
     this.form = new PartyDetailsForm(this.data.party);
-    this.statuses = Object.keys(ContractStatus);
-    this.contractStatus = ContractStatus;
   }
 
   public patchOrgId(event: string) {

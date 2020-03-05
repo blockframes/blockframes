@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { InvitationService } from '../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { InvitationDocument, InvitationType, InvitationStatus } from '../+state/invitation.firestore';
+import { InvitationDocument } from '../+state/invitation.firestore';
 
 @Component({
   selector: 'invitation-item',
@@ -14,17 +14,17 @@ export class InvitationItemComponent {
   @Input() inWidget: boolean;
   @Input() placeholderUrl: string;
 
-  constructor(private service: InvitationService, private snackBar: MatSnackBar) {}
+  constructor(private service: InvitationService, private snackBar: MatSnackBar) { }
 
   /** Creates a message based on the invitation.type. */
   public get message(): string {
     switch (this.invitation.type) {
-      case InvitationType.toWorkOnDocument:
+      case 'toWorkOnDocument':
         return 'You have been invited to work on a delivery.';
-      case InvitationType.fromUserToOrganization:
+      case 'fromUserToOrganization':
         // TODO #1140 Put message in an other file dedicated to that
         return `${this.invitation.user.name} ${this.invitation.user.surname} wants to join your organization`;
-      case InvitationType.fromOrganizationToUser:
+      case 'fromOrganizationToUser':
         return `Your organization sent an invitation to this user email: ${this.invitation.user.email}`;
     }
   }
@@ -49,8 +49,8 @@ export class InvitationItemComponent {
 
   public get displayInvitationButtons(): boolean {
     return (
-      this.invitation.type === InvitationType.fromUserToOrganization &&
-      this.invitation.status === InvitationStatus.pending
+      this.invitation.type === 'fromUserToOrganization' &&
+      this.invitation.status === 'pending'
     );
   }
 }

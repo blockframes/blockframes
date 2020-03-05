@@ -7,18 +7,24 @@ import { Location } from "@blockframes/utils/common-interfaces/utility";
 
 type Timestamp = firestore.Timestamp;
 
-export const enum SendType {
-  email = 'Email',
-  mail = 'Mail',
-  fax = 'Fax',
-  web = 'Web',
-}
+export const sendType = {
+  email: 'Email',
+  mail: 'Mail',
+  fax: 'Fax',
+  web: 'Web',
+} as const;
 
-export const enum ReportStatus {
-  waiting = 'Waiting',
-  sent = 'Sent',
-  errored = 'Errored',
-}
+export type SendType = keyof typeof sendType;
+export type SendTypeValue = typeof sendType[SendType];
+
+export const reportStatus = {
+  waiting: 'Waiting',
+  sent: 'Sent',
+  errored: 'Errored',
+} as const;
+
+export type ReportStatus = keyof typeof reportStatus;
+export type ReportStatusValue = typeof reportStatus[ReportStatus];
 
 export interface Taxes {
   CNCContribution: {

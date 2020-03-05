@@ -37,10 +37,11 @@ export interface OrganizationDocument extends OrganizationRaw<Timestamp> { }
 export interface OrganizationDocumentWithDates extends OrganizationRaw<Date> { }
 
 /** Status of an Organization, set to pending by default when an Organization is created. */
-export enum OrganizationStatus {
-  pending = 'pending',
-  accepted = 'accepted'
-}
+export const organizationStatus = {
+  pending: 'Pending',
+  accepted: 'Accepted'
+} as const;
+export type OrganizationStatus = keyof typeof organizationStatus;
 
 export interface AddressSet {
   main: Location;
@@ -59,10 +60,7 @@ export interface WishlistDocument extends WishlistRaw<Timestamp> { }
 
 export interface WishlistDocumentWithDates extends WishlistRaw<Date> { }
 
-export const enum WishlistStatus {
-  pending = 'pending',
-  sent = 'sent'
-}
+export type WishlistStatus = 'pending' | 'sent';
 
 /** Default placeholder logo used when an Organization is created. */
 export const PLACEHOLDER_LOGO = '/assets/logo/empty_organization.png';
@@ -96,7 +94,7 @@ export function createOrganizationRaw(
     fiscalNumber: '',
     activity: '',
     addresses: createAddressSet(),
-    status: OrganizationStatus.pending,
+    status: 'pending',
     userIds: [],
     movieIds: [],
     templateIds: [],

@@ -12,30 +12,33 @@ import { PaymentScheduleRaw } from "@blockframes/utils/common-interfaces/schedul
 
 type Timestamp = firestore.Timestamp;
 
-export enum ContractStatus {
-  accepted = 'accepted',
-  paid = 'paid',
-  unknown = 'unknown',
-  waitingsignature = 'waiting for signature',
-  waitingpayment = 'waiting for payment',
-  rejected = 'rejected',
-  aborted = 'aborted',
+export const contractStatus = {
+  accepted: 'Accepted',
+  paid: 'Paid',
+  unknown: 'Unknown',
+  waitingsignature: 'Waiting for signature',
+  waitingpayment: 'Waiting for payment',
+  rejected: 'Rejected',
+  aborted: 'Aborted',
   /**
    * @dev first status of a contract
    * Starting from this status, the contract is visible by creator only
    */
-  draft = 'draft',
+  draft: 'Draft',
   /**
    * @dev once the user hit the submit button, the contract is waiting for approvment
    * Starting from this status, the contract is visible by creator (but not editable anymore) and by admins
    */
-  submitted = 'submitted',
+  submitted: 'Submitted',
   /**
    * @dev when an admin checked a "submitted" contract and all seems good.
    * Starting from this status, contract is visible for every parties
    */
-  undernegotiation = 'under negotiation',
-}
+  undernegotiation: 'Under negotiation',
+} as const;
+
+export type ContractStatus = keyof typeof contractStatus;
+export type ContractStatusValue = typeof contractStatus[ContractStatus];
 
 /** @dev Valid values of ContractStatus */
 export const ValidContractStatuses = ['waitingpayment', 'paid', 'accepted'];

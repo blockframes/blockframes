@@ -5,7 +5,6 @@ import { Movie, MovieQuery } from '@blockframes/movie/movie/+state';
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
-import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
 import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 
@@ -85,7 +84,7 @@ export class MarketplaceHomeComponent implements OnInit {
     event.stopPropagation();
     this.cartService.updateWishlist(movie);
     this.snackbar.open(`${movie.main.title.international} has been added to your selection.`, 'close', { duration: 2000 });
-    this.analytics.event(AnalyticsEvents.addedToWishlist, {
+    this.analytics.event('addedToWishlist', {
       movieId: movie.id,
       movieTitle: movie.main.title.original,
     });
@@ -95,7 +94,7 @@ export class MarketplaceHomeComponent implements OnInit {
     event.stopPropagation();
     this.cartService.updateWishlist(movie);
     this.snackbar.open(`${movie.main.title.international} has been removed from your selection.`, 'close', { duration: 2000 });
-    this.analytics.event(AnalyticsEvents.removedFromWishlist, {
+    this.analytics.event('removedFromWishlist', {
       movieId: movie.id,
       movieTitle: movie.main.title.original,
     });

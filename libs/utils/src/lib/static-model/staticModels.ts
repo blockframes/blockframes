@@ -605,11 +605,7 @@ export interface CurrencyWithLabel {
 }
 
 /** Used in notifications/invitations to define which app is concerned. */
-export const enum App {
-  main = 'main',
-  delivery = 'delivery',
-  catalog = 'catalog'
-}
+export type App = 'main' | 'delivery' | 'catalog';
 
 /**
  * Check if data passed into array have at lease one item belonging to scope

@@ -1,6 +1,6 @@
 import { buildDeliveryPDF } from '../internals/pdf';
 import * as fs from 'fs';
-import { OrganizationStatus, MaterialStatus, createOrganizationDocument } from '../data/types';
+import { createOrganizationDocument, MaterialDocument } from '../data/types';
 
 const testData = {
   txID: {
@@ -23,7 +23,7 @@ const testData = {
       userIds: [],
       id: '',
       movieIds: [],
-      status: OrganizationStatus.accepted
+      status: 'accepted'
     }),
     id2: createOrganizationDocument({
       name: 'Tomme Hardy',
@@ -39,7 +39,7 @@ const testData = {
       userIds: [],
       id: '',
       movieIds: [],
-      status: OrganizationStatus.accepted
+      status: 'accepted'
     }),
     id3: createOrganizationDocument({
       name: 'Francis Munster',
@@ -55,7 +55,7 @@ const testData = {
       userIds: [],
       id: '',
       movieIds: [],
-      status: OrganizationStatus.accepted
+      status: 'accepted'
     })
   },
   steps: {
@@ -65,49 +65,49 @@ const testData = {
   materials: [
     {
       deliveryIds: [],
-      status: MaterialStatus.pending,
+      status: 'pending',
       value: 'My Second Material',
       category: 'Some Category',
       id: '0DL3qyDacTcsyIQUCU0R',
       description: 'My Second Material Description',
       stepId: 'i36vwU1eVdlNObEafOre'
-    },
+    } as MaterialDocument,
     {
       deliveryIds: [],
-      status: MaterialStatus.pending,
+      status: 'pending',
       value: 'My Third Material',
       category: 'Another Category',
       id: 'Ci3RPg5qLLNTo1e5n7L0',
       description: 'My Third Material Description',
       stepId: 'i36vwU1eVdlNObEafOre'
-    },
+    } as MaterialDocument,
     {
       deliveryIds: [],
-      status: MaterialStatus.available,
+      status: 'available',
       description: 'Yet Another Material With a Description',
       stepId: 'P8uVlb5CD0i6NU8fegAf',
       value: 'Yet Another Material',
       category: 'Another Category',
       id: 'OtTFuS6Lq3MdjfGicU8v'
-    },
+    } as MaterialDocument,
     {
       deliveryIds: [],
-      status: MaterialStatus.pending,
+      status: 'pending',
       description: 'My Material No Step Description',
       stepId: '',
       value: 'My Material No Step',
       category: 'Another Category',
       id: 'byVmOtNzxPNJZv8qs1OX'
-    },
+    } as MaterialDocument,
     {
       deliveryIds: [],
-      status: MaterialStatus.delivered,
+      status: 'delivered',
       description: 'My Material Description',
       stepId: 'i36vwU1eVdlNObEafOre',
       value: 'My Material',
       category: 'Some Category',
       id: 'jYpavkTXisbfGfQT873I'
-    }
+    } as MaterialDocument
   ]
 };
 

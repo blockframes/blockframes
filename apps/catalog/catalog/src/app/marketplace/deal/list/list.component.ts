@@ -22,22 +22,22 @@ const contractTabs: Tab[] = [
   {
     name: 'Offers',
     statuses: [
-      ContractStatus.submitted,
-      ContractStatus.undernegotiation,
-      ContractStatus.waitingsignature
+      'submitted',
+      'undernegotiation',
+      'waitingsignature'
     ]
   },
   {
     name: 'Ongoing Deals',
-    statuses: [ContractStatus.accepted, ContractStatus.waitingpayment]
+    statuses: ['accepted', 'waitingpayment']
   },
   {
     name: 'Past Deals',
-    statuses: [ContractStatus.paid]
+    statuses: ['paid']
   },
   {
     name: 'Aborted Offers',
-    statuses: [ContractStatus.rejected]
+    statuses: ['rejected']
   }
 ];
 
@@ -62,7 +62,7 @@ function createContractTabs(allContracts: Contract[]): ContractTab[] {
   return contractTabs.map(tab => {
     const contracts = filterByStatus(allContracts, tab.statuses);
     return { name: tab.name, contracts };
-  }) 
+  })
 }
 
 @Component({
@@ -75,7 +75,7 @@ export class DealListComponent implements OnInit, OnDestroy {
   private sub: Subscription;
   public tabs$ = this.query.sales$.pipe(map(createContractTabs));
 
-  constructor(private query: ContractQuery, private dealService: DistributionDealService) {}
+  constructor(private query: ContractQuery, private dealService: DistributionDealService) { }
 
   ngOnInit() {
     this.sub = this.query.sales$.pipe(
