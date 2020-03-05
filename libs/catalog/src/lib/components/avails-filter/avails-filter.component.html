@@ -39,7 +39,7 @@
     </mat-expansion-panel-header>
     <mat-form-field appearance="outline">
       <mat-chip-list #territoryChipList>
-        <mat-chip color="default" *ngFor="let territory of selectedMovieTerritories; let i = index" [selectable]="selectableTerritory"
+        <mat-chip *ngFor="let territory of selectedMovieTerritories; let i = index" [selectable]="selectableTerritory"
           [removable]="!availsForm.value.isActive" (removed)="removeTerritory(territory, i)">
           {{ territory }}
           <mat-icon matChipRemove *ngIf="!availsForm.value.isActive" svgIcon="close"></mat-icon>

@@ -1,7 +1,7 @@
 <!--  Genre -->
 <mat-chip-list aria-label="Genres selection">
   <ng-container *ngFor="let genre of values$ | async; let i = index">
-    <mat-chip selectable removable color="default">
+    <mat-chip selectable removable>
       {{ genre | translateSlug: 'GENRES'}}
       <mat-icon matChipRemove svgIcon="close" (click)="remove(genre)"></mat-icon>
     </mat-chip>
