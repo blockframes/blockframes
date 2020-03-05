@@ -122,6 +122,7 @@ export class ContractTunnelComponent implements OnInit {
 
   /** Add a title to this contract */
   addTitle(movieId: string, mandate?: boolean) {
+    // @TODO (#1887) should not get last version
     this.contractForm
       .get('versions')
       .last()

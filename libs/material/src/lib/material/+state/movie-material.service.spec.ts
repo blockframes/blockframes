@@ -74,7 +74,7 @@ describe('MovieMaterialService unit test', () => {
       category: '',
       value: '',
       description: '',
-      status: pending,
+      status: 'pending',
       isOrdered: false,
       isPaid: false,
       deliveryIds: []
