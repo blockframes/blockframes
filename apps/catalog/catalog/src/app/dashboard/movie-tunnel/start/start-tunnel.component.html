@@ -14,32 +14,40 @@
 
 <mat-sidenav-container>
   <mat-sidenav opened="true" position="start" mode="side">
-    <h5 class="mat-body-2"><b>Instructions</b></h5>
-    <p>
+    <h5>INSTRUCTIONS</h5>
+    <p class="mat-caption">
       You can fill it out in one go or over time. You may navigate between steps, but all sections must be completed
       before submitting to Archipel Content for validation. Your title will be published on the platform only once you
       have signed a contract with us.
     </p>
+
+    <h5>FILES YOU NEED</h5>
+    <p class="mat-caption">
+      Poster(s), banner image, still photos and the promo reel.
+      You will also need to provide the links to the screener and trailer .
+    </p>
   </mat-sidenav>
 
-  <mat-sidenav-content fxLayout="column" fxLayout.lt-md="column" fxLayoutGap="56px">
-    <section>
-      <h1>Add a Title</h1>
-      <h2>The 3-step process will take about a half-hour to complete.</h2>
+  <mat-sidenav-content fxLayout="column" fxLayoutAlign="space-between center" fxLayout.lt-md="column">
+    <section fxLayout="column" fxLayoutGap="56px">
+      <article>
+        <h1>Add a Title</h1>
+        <h2>The 3-step process will take about a half-hour to complete.</h2>
+      </article>
+      <article fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="30px">
+        <ng-container *ngFor="let content of cardContents">
+          <mat-card>
+            <article fxLayout="column" fxLayoutAlign="center">
+              <img class="card-image" [asset]="content.img"  alt="Archipel Content Logo">
+              <div>
+                <h3>{{ content.title }}</h3>
+              </div>
+            </article>
+          </mat-card>
+        </ng-container>
+      </article>
     </section>
-    <section fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="30px">
-      <ng-container *ngFor="let content of cardContents">
-        <mat-card>
-          <article fxLayout="column" fxLayoutAlign="center">
-            <img class="card-image" [asset]="content.img"  alt="Archipel Content Logo">
-            <div>
-              <h3>{{ content.title }}</h3>
-            </div>
-          </article>
-        </mat-card>
-      </ng-container>
-    </section>
-    <div fxLayout="row" fxLayoutAlign="center start">
+    <div fxLayout="row" fxLayoutAlign="center">
       <button test-id="begin" mat-flat-button color="accent" (click)="begin()">
         Begin
       </button>
