@@ -9,3 +9,8 @@ section {
 .full-width {
   width: 100%;
 }
+
+// Like mat-card before, we don't want a margin-bottom for every h4 in the tunnel
+.mat-typography h4 {
+  margin: 0;
+}
