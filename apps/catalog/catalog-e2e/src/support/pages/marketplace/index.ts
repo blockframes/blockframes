@@ -6,7 +6,6 @@ import DistributionPage from './DistributionPage';
 import SelectionPage from './SelectionPage';
 import FeedbackPage from './FeedbackPage';
 import WishlistPage from './WishlistPage';
-import OrganizationHomePage from './OrganizationHomePage';
 
 export {
   HomePage,
@@ -16,6 +15,5 @@ export {
   DistributionPage,
   SelectionPage,
   FeedbackPage,
-  WishlistPage,
-  OrganizationHomePage
+  WishlistPage
 };

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, ActivatedRoute } from '@angular/router';
 import { OrganizationService } from '../../+state';
@@ -12,7 +12,6 @@ import { OrganizationForm } from '../../forms/organization.form';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationCreateComponent {
-  @HostBinding('attr.page-id') pageId = 'organization-create';
 
   public form = new OrganizationForm();
   public loading$ = new BehaviorSubject<boolean>(false);
