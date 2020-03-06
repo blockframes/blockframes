@@ -1,14 +1,39 @@
 /// <reference types="cypress" />
 
-import { User } from '../../support/utils/type';
-import { WelcomeViewPage, LoginViewPage } from '../../support/pages/auth';
-import { OrganizationHomePage } from '../../support/pages/landing';
+import { USERS } from '../../support/utils/users';
+import {  LoginViewPage, WelcomeViewPage } from '../../support/pages/auth';
+import { Organization } from '../../support/utils/type';
+import { OrganizationHomePage, OrganizationCreatePage, OrganizationFindPage, OrganizationAppAccessPage, OrganizationCongratulationPage } from '../../support/pages/organization';
 
-const USER: Partial<User> = {
+// Temporary user for local test
+const USER = USERS[0];
+
+const ORGANIZATION: Organization = {
+  name: 'Cypress',
   email: `${Date.now()}@cypress.com`,
-  password: 'cypress',
-  name: 'cypress',
-  surname: 'cypress'
+  address: {
+    street: '42 test road',
+    zipCode: '69001',
+    city: 'Testville',
+    country: 'France',
+    phoneNumber: '+334 857 953'
+  },
+  activity: 'Testing',
+  fiscalNumber: '95 14 958 641 215 C',
+
+  bankAccount: {
+    address: {
+      street: '21 gold street',
+      zipCode: '69001',
+      city: 'Moneytown',
+      country: 'Germany',
+      phoneNumber: '+335 514 554'
+    },
+    IBAN: 'FR1420041010050500013M02606',
+    BIC: 'CCBPFRPPVER',
+    bankName: 'Cypress Bank',
+    holderName: 'Cypress'
+  }
 }
 
 const wrongEmailForm = 'wrongform*email!com';
@@ -27,23 +52,44 @@ beforeEach(() => {
   const p2: LoginViewPage = p1.clickCallToAction();
 })
 
-describe('User can create new account', () => {
-  it('Fill all the fields appropriately', () => {
-    const p1 = new LoginViewPage();
-    p1.fillSignup(USER);
-    p1.clickTermsAndCondition();
-    const p2: OrganizationHomePage = p1.clickSignupToOrgHome();
-    p2.assertMoveToOrgHomepage();
+describe('User can choose to create an organization', () => {
+  it.skip('Click on "Create your Organization"', () => {
+    const p1 = new OrganizationHomePage();
+    p1.clickCreateOrganization();
+    const p2: OrganizationCreatePage = p1.clickSubmitToCreate();
+    p2.assertMoveToOrgCreatePage();
   });
 });
 
-describe('Try with each fields except one', () => {
-  it('Fill all the fields except email', () => {
-    const p1 = new LoginViewPage();
-    p1.fillSignupExceptOne(USER, 'email');
-    p1.clickTermsAndCondition();
-    p1.clickSignup();
-    p1.assertStayInLoginview();
+describe('User can choose to find an organization', () => {
+  it.skip('Click on "Find your Organization"', () => {
+    const p1 = new OrganizationHomePage();
+    p1.clickFindOrganization();
+    const p2: OrganizationFindPage = p1.clickSubmitToFind();
+    p2.assertMoveToOrgFindPage();
+  });
+});
+
+describe('Create an organization with minimum field', () => {
+  it.skip('Fill only the company name field', () => {
+    const p1 = new OrganizationHomePage();
+    p1.clickCreateOrganization();
+    const p2: OrganizationCreatePage = p1.clickSubmitToCreate();
+    p2.fillCompanyName(ORGANIZATION.name);
+    const p3: OrganizationAppAccessPage = p2.clickCreate();
+    p3.chooseMarketplace();
+    const p4: OrganizationCongratulationPage = p3.clickSubmit();
+    p4.assertMoveToOrgCongratulationPage();
+  })
+})
+
+describe('Try with all fields except name', () => {
+  it('Fill all the fields except company name', () => {
+    const p1 = new OrganizationHomePage();
+    p1.clickCreateOrganization();
+    const p2: OrganizationCreatePage = p1.clickSubmitToCreate();
+    p2.fillEveryFields(ORGANIZATION, true);
+    p2.assertMoveToOrgCreatePage();
   });
 
   it('Fill all the fields except name', () => {
