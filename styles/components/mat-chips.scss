@@ -5,8 +5,9 @@
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
 
-  $default-bg-chip: mat-color($background, unselected-chip);
-  $default-fg-chip: mat-color($foreground, active);
+  mat-chip.mat-standard-chip.mat-primary {
+    color: mat-color($foreground, icon);
+  }
 
   // Chip for the movie' status on the movie card
   mat-chip[selected][disableRipple].mat-primary {
