@@ -25,6 +25,7 @@
       }
     }
   }
+
   .mat-raised-button, .mat-flat-button, .mat-fab, .mat-mini-fab {
     &.mat-primary {
       svg g, svg polygon, svg path {
@@ -47,7 +48,6 @@
     padding: 14px 32px;
   }
 
-
   .mat-stroked-button {
     border-radius: 26px;
     border-color: mat-color($foreground, text);
@@ -66,13 +66,16 @@
     border-radius: 26px;
   }
 
-
+  .mat-fab, .mat-mini-fab {
+    @include _mat-theme-overridable-elevation(0, $theme);
+    margin-bottom: 8px;
+  }
 }
 
 
 // TYPOGRAPHY
 @mixin mat-bf-button-typography($config) {
-  
+
   // need to wrap around something to win the battle against Material CSS priority
   body {
     // note: mat-icon-button is not here on purpose
@@ -81,5 +84,9 @@
       letter-spacing: mat-letter-spacing($config, button);
       line-height: mat-line-height($config, button);
     }
+  }
+
+  .mat-button-toggle-label-content {
+    font-size: mat-font-size($config, button);
   }
 }
