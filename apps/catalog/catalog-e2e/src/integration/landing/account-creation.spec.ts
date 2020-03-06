@@ -1,8 +1,8 @@
 /// <reference types="cypress" />
 
-import { OrganizationHomePage } from '../../support/pages/marketplace';
 import { User } from '../../support/utils/type';
 import { WelcomeViewPage, LoginViewPage } from '../../support/pages/auth';
+import { OrganizationHomePage } from '../../support/pages/landing';
 
 const USER: Partial<User> = {
   email: `${Date.now()}@cypress.com`,

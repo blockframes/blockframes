@@ -1,5 +1,6 @@
 import { User } from '../../utils/type';
-import { HomePage, OrganizationHomePage } from '../marketplace';
+import { HomePage } from '../marketplace';
+import { OrganizationHomePage } from '../landing';
 
 export default class LoginViewPage {
 
@@ -113,5 +114,10 @@ export default class LoginViewPage {
   public clickSignIn(){
     cy.get('[page-id=signin] button[type=submit]').click();
     return new HomePage();
+  }
+
+  public clickSigninToOrgHome() {
+    cy.get('[page-id=signin] button[type=submit]').click();
+    return new OrganizationHomePage();
   }
 }
