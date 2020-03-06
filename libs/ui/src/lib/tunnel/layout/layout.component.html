@@ -11,7 +11,7 @@
     <ng-content select="aside"></ng-content>
   </mat-sidenav>
 
-  <mat-sidenav-content>
+  <mat-sidenav-content tunnelSpecificities>
     <!-- Skip to next -->
     <ng-container *ngIf="next$ | async as next">
       <div fxLayout="row" fxLayoutAlign="end center">
