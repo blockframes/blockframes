@@ -1,3 +1,4 @@
+import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { AvailsSearchForm } from '@blockframes/catalog/form/search.form';
 import { MediasSlug, MEDIAS_SLUG, staticModels } from '@blockframes/utils/static-model';
@@ -15,12 +16,6 @@ export class AvailsFilterComponent {
 
   public movieMedias: MediasSlug[] = MEDIAS_SLUG;
 
-  /* Arrays for showing the selected entities in the UI */
-  public selectedMovieTerritories: string[] = [];
-  public territoriesFilter$: Observable<string[]>;
-
-  @ViewChild('territoryInput') territoryInput: ElementRef<HTMLInputElement>;
-
   public countries = staticModels['TERRITORIES'];
 
   /* Flags for the Territories chip input */
@@ -30,6 +25,8 @@ export class AvailsFilterComponent {
 
   private yearStart: number;
   private yearEnd: number;
+
+  constructor(private routerQuery: RouterQuery) {}
 
   get currentYear(): number {
     return new Date().getFullYear();
@@ -59,5 +56,9 @@ export class AvailsFilterComponent {
     const date = type === 'start' ? Date.parse(`${m}-1-${this.yearStart}`) : Date.parse(`${m}-1-${this.yearEnd}`)
     this.availsForm.get('terms').get(type).setValue(new Date(date));
     datepicker.close();
+  }
+
+  get showTerritoryFilter() {
+    return this.routerQuery.getValue().state.url.split('/').indexOf('avails') < 0
   }
 }
