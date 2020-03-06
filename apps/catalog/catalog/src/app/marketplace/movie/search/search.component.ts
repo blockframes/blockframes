@@ -392,7 +392,6 @@ export class MarketplaceSearchComponent implements OnInit {
   public applyAvailsFilter() {
     this.availsForm.get('isActive').setValue(true);
     this.availsForm.disable({ onlySelf: false });
-    this.territoryControl.disable();
     // TODO: use controls for territories and medias to make it disablable
   }
 
