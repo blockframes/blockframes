@@ -42,6 +42,6 @@ export interface NotificationOptions {
 /** Generic informations for a Notification. */
 export interface NotificationDocument extends NotificationOptions {
   id: string;
-  isRead: boolean
+  isRead: boolean;
   date: firestore.Timestamp;
 };
