@@ -14,14 +14,14 @@
 
 <mat-sidenav-container>
   <mat-sidenav opened="true" position="start" mode="side">
-    <h5>INSTRUCTIONS</h5>
+    <h5 class="uppercase">Instructions</h5>
     <p class="mat-caption">
       You can fill it out in one go or over time. You may navigate between steps, but all sections must be completed
       before submitting to Archipel Content for validation. Your title will be published on the platform only once you
       have signed a contract with us.
     </p>
 
-    <h5>FILES YOU NEED</h5>
+    <h5 class="uppercase">Files you need</h5>
     <p class="mat-caption">
       Poster(s), banner image, still photos and chain of titles.
       You will also need to provide the links to the promo reel, screener and trailer.
@@ -29,11 +29,11 @@
   </mat-sidenav>
 
   <mat-sidenav-content fxLayout="column" fxLayoutAlign="space-between center" fxLayout.lt-md="column">
-    <section fxLayout="column" fxLayoutGap="56px">
-      <article>
+    <section fxLayout="column">
+      <header>
         <h1>Add a Title</h1>
         <h2>The 3-step process will take about a half-hour to complete.</h2>
-      </article>
+      </header>
       <article fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="30px" fxLayout.lt-md="column">
         <ng-container *ngFor="let content of cardContents">
           <mat-card>
