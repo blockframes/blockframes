@@ -1,30 +1,30 @@
 import { PublicOrganization } from '@blockframes/organization/types';
 import { PublicMovie } from '@blockframes/movie/types';
-import { firestore } from 'firebase/app';
 import { App } from '@blockframes/utils/apps';
 import { PublicUser } from '@blockframes/auth/+state/auth.firestore';
+import { firestore } from 'firebase-admin';
 
 /** Type of Notification depending of its origin. */
 export type NotificationType =
-  'newSignature' | 
-  'finalSignature' | 
-  'createDocument' | 
-  'deleteDocument' | 
+  'newSignature' |
+  'finalSignature' |
+  'createDocument' |
+  'deleteDocument' |
   'updateDocument' |
-  'inviteOrganization' | 
-  'removeOrganization' | 
-  'pathToDocument' | 
-  'organizationAcceptedByArchipelContent' | 
+  'inviteOrganization' |
+  'removeOrganization' |
+  'pathToDocument' |
+  'organizationAcceptedByArchipelContent' |
   'movieSubmitted' |
-  'movieAccepted' | 
-  'movieTitleUpdated' | 
-  'movieTitleCreated' | 
-  'movieDeleted' | 
+  'movieAccepted' |
+  'movieTitleUpdated' |
+  'movieTitleCreated' |
+  'movieDeleted' |
   'invitationFromUserToJoinOrgDecline' |
-  'invitationFromOrganizationToUserDecline' | 
-  'memberAddedToOrg' | 
-  'memberRemovedFromOrg' | 
-  'newContract' | 
+  'invitationFromOrganizationToUserDecline' |
+  'memberAddedToOrg' |
+  'memberRemovedFromOrg' |
+  'newContract' |
   'contractInNegotiation'
 ;
 
@@ -42,6 +42,6 @@ export interface NotificationOptions {
 /** Generic informations for a Notification. */
 export interface NotificationDocument extends NotificationOptions {
   id: string;
-  isRead: boolean;
+  isRead: boolean
   date: firestore.Timestamp;
 };
