@@ -43,5 +43,5 @@ export interface NotificationOptions {
 export interface NotificationDocument extends NotificationOptions {
   id: string;
   isRead: boolean;
-  date: firestore.FieldValue;
+  date: firestore.Timestamp;
 };

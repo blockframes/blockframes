@@ -21,18 +21,18 @@ export default class OrganizationCreatePage {
       this.fillCompanyName(organization.name);
     }
     this.fillEmailAddress(organization.email);
-    this.fillAddress(organization.address);
+    this.fillAddress(organization.address, 'org');
     this.fillActivity(organization.activity);
     this.fillFiscalNumber(organization.fiscalNumber);
     this.fillBankInformation(organization.bankAccount);
   }
 
   /** Fills every fields of address */
-  public fillAddress(address: Location) {
-    this.fillStreet(address.street);
-    this.fillCity(address.city);
-    this.fillZipCode(address.zipCode);
-    this.fillCountry(address.country);
+  public fillAddress(address: Location, entity: 'org' | 'bank') {
+    this.fillStreet(address.street, entity);
+    this.fillCity(address.city, entity);
+    this.fillZipCode(address.zipCode, entity);
+    this.fillCountry(address.country, entity);
     if (!!address.phoneNumber) {
       this.fillPhoneNumber(address.phoneNumber);
     }
@@ -44,7 +44,7 @@ export default class OrganizationCreatePage {
     this.fillBIC(bankAccount.BIC);
     this.fillHolderName(bankAccount.holderName);
     this.fillBankName(bankAccount.bankName);
-    this.fillAddress(bankAccount.address);
+    this.fillAddress(bankAccount.address, 'bank');
   }
 
   public fillCompanyName(name: string) {
@@ -55,20 +55,28 @@ export default class OrganizationCreatePage {
     cy.get('organization-form input[type=email]').type(email);
   }
 
-  public fillStreet(street: string) {
-    cy.get('organization-form-address input[test-id=street]').type(street);
+  public fillStreet(street: string, entity: 'org' | 'bank') {
+    entity === 'org'
+      ? cy.get('organization-form-address input[test-id=street]').type(street)
+      : cy.get('organization-form input[test-id=bank-street]').type(street);
   }
 
-  public fillCity(city: string) {
-    cy.get('organization-form-address input[test-id=city]').type(city);
+  public fillCity(city: string, entity: 'org' | 'bank') {
+    entity === 'org'
+      ? cy.get('organization-form-address input[test-id=city]').type(city)
+      : cy.get('organization-form input[test-id=bank-city]').type(city);
   }
 
-  public fillZipCode(zipCode: string) {
-    cy.get('organization-form-address input[test-id=zipCode]').type(zipCode);
+  public fillZipCode(zipCode: string, entity: 'org' | 'bank') {
+    entity === 'org'
+      ? cy.get('organization-form-address input[test-id=zipCode]').type(zipCode)
+      : cy.get('organization-form input[test-id=bank-zipCode]').type(zipCode);
   }
 
-  public fillCountry(country: string) {
-    cy.get('organization-form-address form-country input[test-id=country]').click();
+  public fillCountry(country: string, entity: 'org' | 'bank') {
+    entity === 'org'
+      ? cy.get('organization-form-address form-country input[test-id=country]').click()
+      : cy.get('organization-form form-country[test-id=bank-form-country] input[test-id=country]').click();
     cy.get('mat-option').contains(country).click();
   }
 
@@ -93,15 +101,18 @@ export default class OrganizationCreatePage {
   }
 
   public fillHolderName(holderName: string) {
-    cy.get('organization-form input[test-id="holderName]').type(holderName);
+    cy.get('organization-form input[test-id=holderName]').type(holderName);
   }
 
   public fillBankName(bankName: string) {
     cy.get('organization-form input[test-id=bankName]').type(bankName);
   }
 
-  public clickCreate() {
+  /** If navigate is set to false, this doesn't return a new page. */
+  public clickCreate(navigate: boolean = true) {
     cy.get('organization-create button[test-id=create]').click({force: true});
-    return new OrganizationAppAccessPage();
+    if (navigate) {
+      return new OrganizationAppAccessPage();
+    }
   }
 }
