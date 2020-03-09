@@ -60,7 +60,9 @@
     </mat-card>
     <!-- Headquarters Address -->
     <mat-card>
-      <organization-form-address [form]="form.get('addresses').get('main')"></organization-form-address>
+      <mat-card-content>
+        <organization-form-address [form]="form.get('addresses').get('main')"></organization-form-address>
+      </mat-card-content>
     </mat-card>
     <!-- Bank Information -->
     <ng-container *ngFor="let control of bankAccounts.controls">
