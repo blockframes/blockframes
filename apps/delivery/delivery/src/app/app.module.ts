@@ -8,7 +8,7 @@ import { RouterModule } from '@angular/router';
 
 // Akita
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
-import { environment } from '../environments/environment';
+import { firebase, persistenceSettings } from '@env';
 
 // Components
 import { AppComponent } from './app.component';
@@ -102,8 +102,8 @@ import { sentryDsn } from '@env';
     sentryDsn ? SentryModule : [],
 
     // Firebase
-    AngularFireModule.initializeApp(environment.firebase),
-    AngularFirestoreModule.enablePersistence(environment.persistenceSettings),
+    AngularFireModule.initializeApp(firebase),
+    AngularFirestoreModule.enablePersistence(persistenceSettings),
     AngularFireFunctionsModule,
     AngularFirePerformanceModule,
     AngularFireAuthModule,
