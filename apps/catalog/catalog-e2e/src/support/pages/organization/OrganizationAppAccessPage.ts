@@ -15,6 +15,10 @@ export default class OrganizationAppAccessPage {
     cy.get('mat-radio-button[value=marketplace]').click();
   }
 
+  public chooseDashboard() {
+    cy.get('mat-radio-button[value=dashboard]').click();
+  }
+
   public clickSubmit() {
     cy.get('button[test-id=submit]').click();
     return new OrganizationCongratulationPage();
