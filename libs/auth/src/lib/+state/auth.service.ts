@@ -39,6 +39,16 @@ export class AuthService extends FireAuthService<AuthState> {
   }
 
   /**
+   * @description function that gets triggered when
+   * AuthService.signOut is called
+   */
+  public onSignout() {
+    localStorage.clear();
+    indexedDB.deleteDatabase('firebase-installations-database');
+    indexedDB.deleteDatabase('firebaseLocalStorageDb');
+  }
+
+  /**
    * Update the user password with a new one.
    * @param currentPassword current password of the user
    * @param newPassword new password set by the user
