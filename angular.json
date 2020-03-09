@@ -283,10 +283,6 @@
                 {
                   "replace": "env/env.ts",
                   "with": "env/env.prod.ts"
-                },
-                {
-                  "replace": "apps/delivery/delivery/src/environments/environment.ts",
-                  "with": "apps/delivery/delivery/src/environments/environment.prod.ts"
                 }
               ],
               "optimization": true,
@@ -316,10 +312,6 @@
                 {
                   "replace": "env/env.ts",
                   "with": "env/env.staging.ts"
-                },
-                {
-                  "replace": "apps/delivery/delivery/src/environments/environment.ts",
-                  "with": "apps/delivery/delivery/src/environments/environment.staging.ts"
                 }
               ],
               "optimization": true,
@@ -349,10 +341,6 @@
                 {
                   "replace": "env/env.ts",
                   "with": "env/env.ci.ts"
-                },
-                {
-                  "replace": "apps/delivery/delivery/src/environments/environment.ts",
-                  "with": "apps/delivery/delivery/src/environments/environment.ci.ts"
                 }
               ],
               "optimization": true,
@@ -569,7 +557,7 @@
                 },
                 {
                   "replace": "apps/backend-functions/src/environments/environment.ts",
-                  "with": "apps/backend-functions/src/environments/environment.staging.ts"
+                  "with": "apps/backend-functions/src/environments/environment.prod.ts"
                 }
               ]
             },
@@ -585,7 +573,7 @@
                 },
                 {
                   "replace": "apps/backend-functions/src/environments/environment.ts",
-                  "with": "apps/backend-functions/src/environments/environment.ci.ts"
+                  "with": "apps/backend-functions/src/environments/environment.prod.ts"
                 }
               ]
             }
@@ -828,10 +816,6 @@
                 {
                   "replace": "env/env.ts",
                   "with": "env/env.prod.ts"
-                },
-                {
-                  "replace": "apps/catalog/catalog/src/environments/environment.ts",
-                  "with": "apps/catalog/catalog/src/environments/environment.prod.ts"
                 }
               ],
               "optimization": true,
@@ -863,10 +847,6 @@
                 {
                   "replace": "env/env.ts",
                   "with": "env/env.ci.ts"
-                },
-                {
-                  "replace": "apps/catalog/catalog/src/environments/environment.ts",
-                  "with": "apps/catalog/catalog/src/environments/environment.ci.ts"
                 }
               ],
               "optimization": true,
@@ -896,10 +876,6 @@
                 {
                   "replace": "env/env.ts",
                   "with": "env/env.staging.ts"
-                },
-                {
-                  "replace": "apps/catalog/catalog/src/environments/environment.ts",
-                  "with": "apps/catalog/catalog/src/environments/environment.staging.ts"
                 }
               ],
               "optimization": true,
