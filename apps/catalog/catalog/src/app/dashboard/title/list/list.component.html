@@ -15,13 +15,15 @@
       <button mat-tab-link (click)="applyFilter('Line-Up')" [active]="(filter$ | async) === 'Line-Up'">Line-up</button>
     </header>
 
-    <bf-table-filter [source]="titles" [columns]="columns" [initialColumns]="initialColumns"
-      showFilter
-      showPaginator
-      (rowClick)="goToTitle($event)">
-      <ng-template colRef="title" let-title><b>{{ title }}</b></ng-template>
-      <ng-template colRef="receipt" let-receipt> <b>{{ receipt | currency }}</b> </ng-template>
-    </bf-table-filter>
+    <mat-card>
+      <bf-table-filter [source]="titles" [columns]="columns" [initialColumns]="initialColumns"
+        showFilter
+        showPaginator
+        (rowClick)="goToTitle($event)">
+        <ng-template colRef="title" let-title><b>{{ title }}</b></ng-template>
+        <ng-template colRef="receipt" let-receipt> <b>{{ receipt | currency }}</b> </ng-template>
+      </bf-table-filter>
+    </mat-card>
   </ng-container>
 
   <ng-template #isLoading>
@@ -38,7 +40,7 @@
       All titles are subject to validation and a contract with Archipel Content.
     </p>
     <article fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="center" fxLayoutGap="24px">
-      <mat-card fxLayout="column" fxLayoutalign="center center">
+      <mat-card class="no-title-card" fxLayout="column" fxLayoutalign="center center">
         <img asset="add_title.svg" alt="Add title image">
         <a routerLink="../tunnel/movie" mat-stroked-button color="primary">Add one title</a>
       </mat-card>
