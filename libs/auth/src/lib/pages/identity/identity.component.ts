@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { AuthService, AuthQuery } from '../../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -16,7 +16,7 @@ export class IdentityComponent {
   public form = new FormGroup({
     name: new FormControl(''),
     surname: new FormControl(''),
-    email: new FormControl({ value: this.query.user.email, disabled: true }),
+    email: new FormControl({ value: this.query.user.email, disabled: true }, Validators.email),
     generatedPassword: new FormControl(''),
     newPassword: new PasswordControl()
   });
