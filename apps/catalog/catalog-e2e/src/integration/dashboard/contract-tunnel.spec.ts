@@ -81,6 +81,23 @@ describe('User can navigate to the movie tunnel page 1 and 2', () => {
     p5.selectPaymentTermEvent(TRIGGERING_EVENT);
     p5.assertPaymentTermEventIsSelected(TRIGGERING_EVENT);
 
+    // Save, reload and verify the fields
+    p5.clickSave();
+    cy.reload();
+    p5.assertFirstPartyNameExists(PARTY_NAMES[0]);
+    p5.assertFirstRoleIsSelected(ROLES[0]);
+    p5.assertLastPartyNameExists(PARTY_NAMES[1]);
+    p5.assertLastRoleIsSelected(ROLES[1]);
+    p5.assertEventIsSelected(EVENT);
+    p5.assertDurationExists(DURATION);
+    p5.assertPeriodIsSelected(PERIOD);
+    p5.assertCurrencyIsSelected(CURRENCY);
+    p5.assertPackagePriceExists(PACKAGE_PRICE);
+    // TODO: percentage payment, triggering event
+    p5.assertPaymentTermDurationExists(DURATION);
+    p5.assertPaymentDurationPeriodIsSelected(PERIOD);
+    p5.assertPaymentTermEventIsSelected(TRIGGERING_EVENT);
+
     // Go to Contract Summary Page and check that the summary page has the information
     const p6: TunnelContractSummaryPage = p5.clickNext();
 

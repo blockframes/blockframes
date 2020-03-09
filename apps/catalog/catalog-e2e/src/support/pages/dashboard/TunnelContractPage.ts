@@ -149,6 +149,11 @@ export default class TunnelContractPage {
     cy.get('contract-details-sale contract-version-form-schedule mat-select[test-id=every-event]').contains(event);
   }
 
+  // Save
+  public clickSave() {
+    cy.get('[test-id=save]').click();
+  }
+
   public clickNext() {
     cy.get('[test-id=next]').click();
     return new TunnelContractSummaryPage();
