@@ -1,5 +1,5 @@
 @import '~@angular/material/theming';
-@import 'mixins';
+@import '~@angular/flex-layout/mq';
 
 mat-sidenav-container {
   height: 100%;
@@ -27,15 +27,8 @@ mat-sidenav {
   width: 800px;
 }
 
-// large
-@include large {
-  mat-sidenav {
-    width: 800px;
-  }
-}
-
-// medium
-@include medium {
+// Tablet and medium
+@include layout-bp(lt-lg) {
   mat-sidenav {
     width: 500px;
   }
@@ -46,20 +39,8 @@ mat-sidenav {
   }
 }
 
-// small
-@include tablet {
-  mat-sidenav {
-    width: 500px;
-  }
-  mat-sidenav-content {
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position-y: center;
-  }
-}
-
-// extra small
-@include mobile {
+// Mobile
+@include layout-bp(xs) {
   mat-sidenav {
     width: 100%;
   }

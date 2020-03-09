@@ -1,4 +1,4 @@
-@import 'mixins';
+@import '~@angular/flex-layout/mq';
 
 section {
   height: 100%;
@@ -21,27 +21,27 @@ mat-checkbox {
   margin-right: 5px;
 }
 
-@include large {
+@include layout-bp(lg) {
   form {
     height: 80%;
   }
 }
 
-@include medium {
+@include layout-bp(md) {
   section {
     margin-right: 100px;
     margin-left: 30px;
   }
 }
 
-@include tablet {
+@include layout-bp(sm) {
   section {
     margin-right: 50px;
     margin-left: 20px;
   }
 }
 
-@include mobile {
+@include layout-bp(xs) {
   form {
     height: 80%;
   }
