@@ -11,6 +11,6 @@ section {
 }
 
 // Like mat-card before, we don't want a margin-bottom for every h4 in the tunnel
-.mat-typography h4 {
+tunnel-page h4[title] {
   margin: 0;
 }
