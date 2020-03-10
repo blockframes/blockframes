@@ -53,9 +53,6 @@
     "backend-ops": {
       "tags": []
     },
-    "catalog-lib": {
-      "tags": ["catalog"]
-    },
     "notification": {
       "tags": ["notification"]
     },
