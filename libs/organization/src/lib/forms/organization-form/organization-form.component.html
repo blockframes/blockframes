@@ -75,7 +75,7 @@
     </mat-card>
     <!-- Bank Information -->
     <ng-container *ngFor="let control of bankAccounts.controls">
-      <mat-card>
+      <mat-card test-id="bank-information">
         <mat-card-header>
           <mat-card-title>Bank Information</mat-card-title>
         </mat-card-header>
@@ -103,7 +103,7 @@
           <mat-form-field appearance="outline">
             <mat-label>Street</mat-label>
             <input
-              test-id="bank-street"
+              test-id="street"
               matInput placeholder="Street"
               aria-label="street"
               [formControl]="control.get('address').get('street')"
@@ -113,7 +113,7 @@
             <mat-form-field appearance="outline">
               <mat-label>City</mat-label>
               <input
-                test-id="bank-city"
+                test-id="city"
                 matInput
                 placeholder="City"
                 aria-label="city"
@@ -123,14 +123,14 @@
             <mat-form-field appearance="outline">
               <mat-label>Zip code</mat-label>
               <input
-                test-id="bank-zipCode"
+                test-id="zipCode"
                 matInput placeholder="Zip code"
                 aria-label="zip code"
                 [formControl]="control.get('address').get('zipCode')"
               />
             </mat-form-field>
           </div>
-          <form-country test-id="bank-form-country" [form]="control.get('address').get('country')"></form-country>
+          <form-country [form]="control.get('address').get('country')"></form-country>
         </mat-card-content>
       </mat-card>
     </ng-container>
