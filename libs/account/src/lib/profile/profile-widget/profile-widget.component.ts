@@ -25,8 +25,6 @@ export class ProfileWidgetComponent {
 
   public async logout() {
     await this.service.signOut();
-    // TODO: issue#879, navigate with router
-    window.location.reload();
   }
 
   setTheme({ checked }: MatSlideToggleChange) {

@@ -1,5 +1,5 @@
 import { Component, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { RequestDemoRole } from '@blockframes/catalog/demo-request.model';
 
 @Component({
@@ -14,7 +14,7 @@ export class CatalogLearnMoreComponent {
   public form = new FormGroup({
     firstName: new FormControl(),
     lastName: new FormControl(),
-    email: new FormControl(),
+    email: new FormControl('', Validators.email),
     phoneNumber: new FormControl(),
     companyName: new FormControl(),
     role: new FormControl()

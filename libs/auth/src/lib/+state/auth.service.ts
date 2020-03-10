@@ -39,6 +39,24 @@ export class AuthService extends FireAuthService<AuthState> {
   }
 
   /**
+   * @description function that gets triggered when
+   * AuthService.signOut is called
+   */
+  async onSignout() {
+    localStorage.clear();
+    /**
+     * the databases function seems to be not typed
+     * in typescript node.
+     */
+    const dbKeys = await (window.indexedDB as any).databases();
+    for (const key of dbKeys) {
+      indexedDB.deleteDatabase(key.name);
+    }
+    // TODO: issue#879, navigate with router
+    window.location.reload();
+  }
+
+  /**
    * Update the user password with a new one.
    * @param currentPassword current password of the user
    * @param newPassword new password set by the user

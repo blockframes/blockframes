@@ -7,7 +7,7 @@ function createMemberFormGroup(member: Partial<OrganizationMember> = {}) {
     uid: new FormControl(member.uid),
     name: new FormControl(member.name),
     surname: new FormControl(member.surname),
-    email: new FormControl(member.email),
+    email: new FormControl(member.email, Validators.email),
     role: new FormControl(member.role),
     avatar: new FormControl(member.avatar)
   });
