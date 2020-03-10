@@ -49,7 +49,7 @@ export class AuthService extends FireAuthService<AuthState> {
      * in typescript node.
      */
     const dbKeys = await (window.indexedDB as any).databases();
-    for (let key of dbKeys) {
+    for (const key of dbKeys) {
       indexedDB.deleteDatabase(key.name);
     }
     // TODO: issue#879, navigate with router
