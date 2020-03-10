@@ -97,7 +97,7 @@ $mat-dark-bf-red: (
 
 // Background palette for dark themes.
 $bf-dark-background: (
-  app-bar:      #06081B,
+  app-bar:      #121424,
   status-bar:   black,
   background:   #010314,
   card:         #0D0F1F,
@@ -109,7 +109,7 @@ $bf-dark-background: (
   selected-button:    map_get($mat-grey, 900),
   selected-disabled-button: rgba(155, 177, 255, 0.12),
   disabled-button-toggle: rgba(155, 177, 255, 0.12),
-  unselected-chip:    map_get($mat-grey, 700),
+  unselected-chip:    #1f1f26,
   disabled-list-option: rgba(155, 177, 255, 0.12),
   // TODO remove this custom variable when last palette will be imported
   beware: #F6A92C,
@@ -158,7 +158,7 @@ $bf-dark-font: (
   h6: #878eac,
   mat-body-1: #878EAC,
   mat-body-2: #b1b8db,
-  mat-caption: #444960
+  mat-caption: #444960,
 );
 
 
