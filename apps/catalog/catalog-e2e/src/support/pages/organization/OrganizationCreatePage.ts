@@ -1,7 +1,9 @@
 import OrganizationAppAccessPage from "./OrganizationAppAccessPage";
 import { Location, Organization, BankAccount } from "../../utils/type";
 
-function form(entity: 'org' | 'bank') {
+type Entity = 'org' | 'bank';
+
+function form(entity: Entity) {
   if (entity === 'org') {
     return 'organization-form-address';
   }
@@ -35,7 +37,7 @@ export default class OrganizationCreatePage {
   }
 
   /** Fills every fields of address */
-  public fillAddress(address: Location, entity: 'org' | 'bank') {
+  public fillAddress(address: Location, entity: Entity) {
     this.fillStreet(address.street, entity);
     this.fillCity(address.city, entity);
     this.fillZipCode(address.zipCode, entity);
@@ -62,19 +64,19 @@ export default class OrganizationCreatePage {
     cy.get('organization-form input[type=email]').type(email);
   }
 
-  public fillStreet(street: string, entity: 'org' | 'bank') {
+  public fillStreet(street: string, entity: Entity) {
     cy.get(`${form(entity)} input[test-id=street]`).type(street);
   }
 
-  public fillCity(city: string, entity: 'org' | 'bank') {
+  public fillCity(city: string, entity: Entity) {
     cy.get(`${form(entity)} input[test-id=city]`).type(city);
   }
 
-  public fillZipCode(zipCode: string, entity: 'org' | 'bank') {
+  public fillZipCode(zipCode: string, entity: Entity) {
     cy.get(`${form(entity)} input[test-id=zipCode]`).type(zipCode);
   }
 
-  public fillCountry(country: string, entity: 'org' | 'bank') {
+  public fillCountry(country: string, entity: Entity) {
     cy.get(`${form(entity)} form-country input[test-id=country]`).click();
     cy.get('mat-option').contains(country).click();
   }
