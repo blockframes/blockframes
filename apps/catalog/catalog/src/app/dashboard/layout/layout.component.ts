@@ -1,7 +1,6 @@
 // Angular
 import { FormControl } from '@angular/forms';
 import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
-import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { SearchResult } from '@blockframes/ui/search-widget/search-widget.component';
 
 // Algolia
@@ -11,13 +10,12 @@ import { MoviesIndex, MovieAlgoliaResult } from '@blockframes/utils/algolia';
 // RxJs
 import { Observable } from 'rxjs';
 import {
-  map,
-  shareReplay,
   debounceTime,
   distinctUntilChanged,
   switchMap,
   startWith
 } from 'rxjs/operators';
+import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
 
 @Component({
   selector: 'catalog-layout',
@@ -27,16 +25,14 @@ import {
 })
 export class LayoutComponent {
   searchCtrl: FormControl = new FormControl('');
-  isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset).pipe(
-    map(result => result.matches),
-    shareReplay()
-  );
+
+  isHandset$ = this.breakpointsService.ltMd;
 
   /**MovieAlgoliaResult Algolia search results */
   public algoliaSearchResults$: Observable<SearchResult[]>;
 
   constructor(
-    private breakpointObserver: BreakpointObserver,
+    private breakpointsService: BreakpointsService,
     @Inject(MoviesIndex) private movieIndex: Index
   ) {
     this.algoliaSearchResults$ = this.searchCtrl.valueChanges.pipe(

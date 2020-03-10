@@ -1,10 +1,10 @@
-import { Component, OnInit, Input, ChangeDetectionStrategy, ViewEncapsulation, ChangeDetectorRef, OnDestroy } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy, ViewEncapsulation } from '@angular/core';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { fade } from '@blockframes/utils/animations/fade';
 import { TunnelStep } from '../tunnel.model';
 import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
-import { MediaMatcher } from '@angular/cdk/layout';
+import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
 
 /**
  * @description returns the next or previous page where the router should go to
@@ -33,16 +33,15 @@ function getPage(steps: TunnelStep[], url: string, arithmeticOperator: number): 
     '[@fade]': 'fade'
   }
 })
-export class TunnelLayoutComponent implements OnInit, OnDestroy {
+export class TunnelLayoutComponent implements OnInit {
 
   private navigation = new BehaviorSubject<TunnelStep[]>([]);
   private url$ = this.routerQuery.select(({ state }) => state.url);
-  private _mobileQueryListener: () => void;
   public steps$ = this.navigation.asObservable();
   public urlBynav$: Observable<[string, TunnelStep[]]>;
   public next$: Observable<string>;
   public previous$: Observable<string>;
-  public mobileQuery: MediaQueryList;
+  public isSmall$ = this.breakpointsService.ltMd;
 
   @Input() set steps(steps: TunnelStep[]) {
     this.navigation.next(steps || []);
@@ -53,8 +52,7 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
 
   constructor(
     private routerQuery: RouterQuery,
-    private changeDetectorRef: ChangeDetectorRef,
-    private media: MediaMatcher
+    private breakpointsService: BreakpointsService
   ) {}
 
   ngOnInit() {
@@ -62,17 +60,7 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
     this.urlBynav$ = combineLatest([this.url$, this.steps$]).pipe(shareReplay());
     this.next$ = this.urlBynav$.pipe(map(([ url, steps ]) => getPage(steps, url, 1)));
     this.previous$ = this.urlBynav$.pipe(map(([ url, steps ]) => getPage(steps, url, -1)));
-
-    // TODO: issue#1935 unify responsive
-    this.mobileQuery = this.media.matchMedia('(max-width: 959px)');
-    this._mobileQueryListener = () => this.changeDetectorRef.detectChanges();
-    this.mobileQuery.addEventListener('change', this._mobileQueryListener);
   }
-
-  ngOnDestroy(): void {
-    this.mobileQuery.removeEventListener('change', this._mobileQueryListener);
-  }
-
 }
 
 
