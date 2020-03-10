@@ -1,4 +1,4 @@
-@import "mixins";
+@import '~@angular/flex-layout/mq';
 
 :host {
   display: flex;
@@ -30,7 +30,7 @@ mat-sidenav-container {
     width: calc(50% - 20px);
   }
 
-  @include mobile {
+  @include layout-bp(xs) {
     mat-card {
       margin: 10px;
       text-align: center;
