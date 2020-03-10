@@ -33,9 +33,12 @@ import { OrganizationFindComponent } from './pages/organization-find/organizatio
 import { OrganizationFeedbackComponent } from './pages/organization-feedback/organization-feedback.component';
 import { OrganizationCreateFeedbackComponent } from './pages/organization-create-feedback/organization-create-feedback.component';
 import { OrganizationCreateComponent } from './pages/organization-create/organization-create.component';
-import { NoOrganizationGuard } from './guard/no-organization.guard';
-import { NoOrganizationInvitationGuard } from '@blockframes/notification';
 import { OrganizationAppAccessComponent } from './pages/organization-app-access/organization-app-access.component';
+
+// Guards
+import { NoOrganizationInvitationGuard } from '@blockframes/notification';
+import { NoOrganizationGuard } from './guard/no-organization.guard';
+import { PendingOrganizationGuard } from './guard/pending-organization.guard';
 
 export const noOrganizationRoutes: Routes = [
   {
@@ -59,6 +62,7 @@ export const noOrganizationRoutes: Routes = [
   },
   {
     path: 'create-congratulations',
+    canActivate: [PendingOrganizationGuard],
     component: OrganizationCreateFeedbackComponent
   },
   {
@@ -82,7 +86,7 @@ export const noOrganizationRoutes: Routes = [
     OrganizationFormModule,
     ImgAssetModule,
     ImageReferenceModule,
-    
+
     // Material
     MatFormFieldModule,
     MatListModule,
@@ -114,4 +118,4 @@ export const noOrganizationRoutes: Routes = [
     OrganizationCreateFeedbackComponent
   ]
 })
-export class NoOrganizationModule {}
+export class NoOrganizationModule { }
