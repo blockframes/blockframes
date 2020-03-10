@@ -20,14 +20,14 @@
 
   // Use to let active link in color in mat-nav-list, used with routerLinkActive
   .mat-nav-list a.active {
-    color: mat-color($primary, 200);
+    color: mat-color($primary, 500);
     &:focus {
       background: transparent;
     }
 
     // Mat icons inside active link should be colored too
     .mat-list-icon svg g {
-      fill: mat-color($primary, 200);
+      fill: mat-color($primary, 500);
     }
   }
 
