@@ -15,7 +15,7 @@ import { startWith, tap } from 'rxjs/operators';
 export class OrganizationEditableComponent implements OnInit {
   @HostBinding('attr.page-id') pageId = 'organization-editable';
   public opened = false;
-  public organizationProfileForm = new OrganizationForm(this.service);
+  public organizationProfileForm = new OrganizationForm();
   public organization$: Observable<Organization>;
   public isAdmin$: Observable<boolean>;
 

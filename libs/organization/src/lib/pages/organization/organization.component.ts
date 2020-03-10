@@ -21,7 +21,7 @@ export class OrganizationComponent implements OnInit {
 
   ngOnInit() {
     const organization = this.query.getActive();
-    this.organizationForm = new OrganizationForm(this.service, organization);
+    this.organizationForm = new OrganizationForm(organization);
 
   }
 
