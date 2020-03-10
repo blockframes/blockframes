@@ -1,4 +1,4 @@
-@import 'mixins';
+@import '~@angular/flex-layout/mq';
 
 mat-card {
   margin-top: 20px;
@@ -20,7 +20,7 @@ h1 {
   margin-top: 80px;
 }
 
-@include mobile {
+@include layout-bp(xs) {
   form {
     width: 80%;
     padding-left: 0;
@@ -34,7 +34,7 @@ h1 {
   }
 }
 
-@include tablet {
+@include layout-bp(sm) {
   form {
     width: 60%;
     padding-left: 0;

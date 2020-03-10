@@ -1,23 +1,23 @@
-@import 'mixins';
+@import '~@angular/flex-layout/mq';
 
 section {
   height: 100%;
   margin: 0 200px;
 }
 
-@include medium {
+@include layout-bp(md) {
   section {
     margin: 0 100px;
   }
 }
 
-@include tablet {
+@include layout-bp(sm) {
   section {
     margin: 0 50px;
   }
 }
 
-@include mobile {
+@include layout-bp(xs) {
   section {
     margin: 0 20px;
   }
