@@ -10,6 +10,9 @@ import TunnelValuationPage from "./TunnelValuationPage";
 import TunnelSummaryPage from "./TunnelSummaryPage";
 import TunnelChainOfTitlesPage from "./TunnelChainOfTitlesPage";
 import TunnelFilesPage from "./TunnelFilesPage";
+import TunnelContractLobbyPage from "./TunnelContractLobby";
+import TunnelContractPage from "./TunnelContractPage";
+import TunnelContractSummaryPage from "./TunnelContractSummaryPage";
 
 export {
   StartTunnelPage,
@@ -23,5 +26,8 @@ export {
   TunnelValuationPage,
   TunnelSummaryPage,
   TunnelChainOfTitlesPage,
-  TunnelFilesPage
+  TunnelFilesPage,
+  TunnelContractLobbyPage,
+  TunnelContractPage,
+  TunnelContractSummaryPage
 };
