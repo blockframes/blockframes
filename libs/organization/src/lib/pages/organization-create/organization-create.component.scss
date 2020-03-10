@@ -1,20 +1,8 @@
-@import 'mixins';
+@import '~@angular/flex-layout/mq';
 
 section {
   margin-top: 50px;
   padding: 0 170px;
-}
-
-@include tablet {
-  section {
-    padding: 0 100px
-  }
-}
-
-@include mobile {
-  section {
-    padding: 0px;
-  }
 }
 
 organization-form {
@@ -23,4 +11,16 @@ organization-form {
 
 button {
   margin-bottom: 50px;
+}
+
+@include layout-bp(sm) {
+  section {
+    padding: 0 100px
+  }
+}
+
+@include layout-bp(xs) {
+  section {
+    padding: 0px;
+  }
 }
