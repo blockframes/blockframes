@@ -1,4 +1,4 @@
-@import 'mixins';
+@import '~@angular/flex-layout/mq';
 
 mat-sidenav-container {
   min-height: calc(100vh - (var(--toolbarHeight) * 2) - 30px); // TODO #1212
@@ -45,7 +45,7 @@ mat-icon {
 }
 
 // medium
- @include medium {
+ @include layout-bp(md) {
   .mat-sidenav {
     padding: 25px 25px;
     height: calc(100% - var(--toolbarHeight));
@@ -65,7 +65,7 @@ mat-icon {
  }
 
 // small
-@include tablet {
+@include layout-bp(sm) {
   .mat-sidenav {
     width: 100%;
     padding: 100px 100px;
@@ -81,7 +81,7 @@ mat-icon {
 }
 
 // extra small
-@include mobile {
+@include layout-bp(xs) {
   .mat-sidenav {
     width: 100%;
     padding: 10px 10px;

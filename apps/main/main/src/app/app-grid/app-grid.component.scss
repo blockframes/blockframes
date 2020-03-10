@@ -1,4 +1,4 @@
-@import 'mixins';
+@import '~@angular/flex-layout/mq';
 
 img {
   width: 200px;
@@ -27,7 +27,7 @@ h3 {
   color: #4D5664;
 }
 
-@include medium {
+@include layout-bp(md) {
   img {
     width: 150px;
     height: 150px;
@@ -37,7 +37,7 @@ h3 {
   }
 }
 
-@include tablet {
+@include layout-bp(sm) {
   img {
     width: 100px;
     height: 100px;
@@ -47,7 +47,7 @@ h3 {
   }
 }
 
-@include mobile {
+@include layout-bp(xs) {
   img {
     width: 100px;
     height: 100px;

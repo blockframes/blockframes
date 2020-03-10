@@ -1,4 +1,4 @@
-@import 'mixins';
+@import '~@angular/flex-layout/mq';
 
 :host {
   width: 100%;
@@ -14,7 +14,7 @@ button {
 }
 
 // extra small
-@include mobile {
+@include layout-bp(xs) {
   mat-nav-list {
     width: 100%;
   }

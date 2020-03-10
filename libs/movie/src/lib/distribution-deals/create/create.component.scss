@@ -1,4 +1,4 @@
-@import 'mixins';
+@import '~@angular/flex-layout/mq';
 
 :host {
   display: flex;
@@ -58,23 +58,16 @@ header {
   flex-wrap: wrap;
 }
 
-@include mobile {
+@include layout-bp(lt-lg) {
+  .page-content {
+    margin-left: 50px;
+    margin-right: 50px;
+  }
+}
+
+@include layout-bp(xs) {
   .page-content {
     margin-left: 0;
     margin-right: 0;
-  }
-}
-
-@include tablet {
-  .page-content {
-    margin-left: 50px;
-    margin-right: 50px;
-  }
-}
-
-@include medium {
-  .page-content {
-    margin-left: 50px;
-    margin-right: 50px;
   }
 }

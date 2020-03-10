@@ -1,4 +1,4 @@
-@import 'mixins';
+@import '~@angular/flex-layout/mq';
 
 a {
   width: 80px;
@@ -27,7 +27,7 @@ a {
 }
 
 
-@include medium {
+@include layout-bp(md) {
   .context-menu {
 
     .mat-tab-link {

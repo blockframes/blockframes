@@ -1,4 +1,4 @@
-@import 'mixins';
+@import '~@angular/flex-layout/mq';
 
 :host {
   display: block;
@@ -36,7 +36,7 @@ h5 {
   width: 150px;
 }
 
-@include mobile {
+@include layout-bp(xs) {
   :host {
     margin: 30px 20px;
     mat-card {

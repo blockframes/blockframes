@@ -1,4 +1,4 @@
-@import 'mixins';
+@import '~@angular/flex-layout/mq';
 
 ul {
   padding: 0;
@@ -13,19 +13,7 @@ span {
   width: 50%;
 }
 
-@include medium {
-  .size-column {
-    width: 100%;
-  }
-}
-
-@include tablet {
-  .size-column {
-    width: 100%;
-  }
-}
-
-@include mobile {
+@include layout-bp(lt-lg) {
   .size-column {
     width: 100%;
   }

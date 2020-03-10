@@ -1,4 +1,4 @@
-@import 'mixins';
+@import '~@angular/flex-layout/mq';
 
 :host {
   display: block;
@@ -29,7 +29,7 @@ a {
   text-decoration: underline;
 }
 
-@include tablet {
+@include layout-bp(sm) {
   div {
     width: 100%;
   }
@@ -38,7 +38,7 @@ a {
   }
 }
 
-@include mobile {
+@include layout-bp(xs) {
   .feature-description {
     width: 100%;
   }

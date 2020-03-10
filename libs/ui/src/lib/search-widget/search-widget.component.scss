@@ -1,4 +1,4 @@
-@import 'mixins';
+@import '~@angular/flex-layout/mq';
 
 input {
   flex: 1;
@@ -17,25 +17,19 @@ footer a {
   width: 100%;
 }
 
-@include large {
+@include layout-bp(lg) {
   widget-card {
     width: 800px;
   }
 }
 
-@include medium {
+@include layout-bp(md) {
   widget-card {
     width: 500px;
   }
 }
 
-@include tablet {
-  widget-card {
-    width: 200px;
-  }
-}
-
-@include mobile {
+@include layout-bp(lt-md) {
   widget-card {
     width: 200px;
   }

@@ -9,6 +9,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 import { Router } from '@angular/router';
+import { getKeyIfExists } from '@blockframes/utils/helpers';
+import { workType } from '@blockframes/movie/movie/+state/movie.firestore';
 
 @Component({
   selector: 'catalog-movie-view',
@@ -87,9 +89,10 @@ export class MarketplaceMovieViewComponent implements OnInit {
   }
 
   public getTitle(movie: Movie) {
-    const { workType, totalRunTime, genres, originalLanguages } = movie.main;
+    const { totalRunTime, genres, originalLanguages } = movie.main;
+    const workTypeRegistered = movie.main.workType;
     return [
-      workType,
+      getKeyIfExists(workType, workTypeRegistered) ? workType[workTypeRegistered] : '',
       typeof totalRunTime === 'number' ? `${totalRunTime} min` : 'TBC',
       genres.map(genre => getLabelBySlug('GENRES', genre)).join(', '),
       originalLanguages.map(language => language).join(', ')

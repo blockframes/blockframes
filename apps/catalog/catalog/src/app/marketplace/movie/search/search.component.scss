@@ -1,4 +1,4 @@
-@import 'mixins';
+@import '~@angular/flex-layout/mq';
 
 .search {
   margin-top: 0;
@@ -114,7 +114,7 @@ section.filters {
 
 }
 
-@include mobile {
+@include layout-bp(xs) {
   h1 {
     text-align: center;
   }
@@ -136,7 +136,7 @@ section.filters {
   }
 }
 
-@include tablet {
+@include layout-bp(sm) {
   section aside {
     position: static;
     .filter {
@@ -145,7 +145,7 @@ section.filters {
   }
 }
 
-@include medium {
+@include layout-bp(md) {
   aside.filter {
     width: 50%;
   }
