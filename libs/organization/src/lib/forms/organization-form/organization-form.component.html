@@ -21,7 +21,6 @@
           />
           <mat-error *ngIf="form.get('email').hasError('email')">Email not valid</mat-error>
         </mat-form-field>
-        <organization-form-address [form]="form.get('addresses').get('main')"></organization-form-address>
       </mat-card-content>
     </mat-card>
     <!-- Company Logo -->
@@ -57,6 +56,12 @@
             formControlName="fiscalNumber"
           />
         </mat-form-field>
+      </mat-card-content>
+    </mat-card>
+    <!-- Headquarters Address -->
+    <mat-card>
+      <mat-card-content>
+        <organization-form-address [form]="form.get('addresses').get('main')"></organization-form-address>
       </mat-card-content>
     </mat-card>
     <!-- Bank Information -->

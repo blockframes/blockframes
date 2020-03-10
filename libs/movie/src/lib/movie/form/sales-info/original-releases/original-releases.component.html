@@ -14,8 +14,10 @@
       <mat-form-field appearance="outline">
         <mat-label>Release Date</mat-label>
         <input test-id="date" matInput formControlName="date" [matDatepicker]="datePicker" placeholder="MM/DD/YYYY">
-        <mat-datepicker-toggle matSuffix [for]="datePicker"></mat-datepicker-toggle>
-        <mat-datepicker #datePicker ></mat-datepicker>
+        <mat-datepicker-toggle matSuffix [for]="datePicker">
+          <mat-icon matDatepickerToggleIcon svgIcon="calendar"></mat-icon>
+        </mat-datepicker-toggle>
+        <mat-datepicker #datePicker></mat-datepicker>
       </mat-form-field>
     </form>
   </ng-container>
@@ -24,12 +26,12 @@
     <button mat-mini-fab color="warn" (click)="remove(i)" aria-label="Remove a director form">
       <mat-icon>delete</mat-icon>
     </button>
-    <span class="mat-caption">Delete country</span>
+    <span class="mat-caption">Delete Country</span>
   </footer>
   <footer *ngIf="last" fxLayout="column" fxLayoutAlign="center center">
     <button mat-mini-fab color="primary" (click)="add()" aria-label="Remove a director form">
       <mat-icon>add</mat-icon>
     </button>
-    <span class="mat-caption">Add another country</span>
+    <span class="mat-caption">Add Country</span>
   </footer>
 </article>

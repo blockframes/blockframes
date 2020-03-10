@@ -31,7 +31,7 @@ import { SentryModule } from '@blockframes/utils/sentry.module';
 import { sentryDsn } from '@env';
 
 // Yandex Metrika
-import { NgxMetrikaModule } from '@kolkov/ngx-metrika';
+import { YandexMetricaModule } from '@blockframes/utils/yandex-metrica/yandex-metrica.module'
 import { yandexId } from '@env';
 
 // Intercom
@@ -70,13 +70,7 @@ import { ErrorLoggerModule } from '@blockframes/utils/error-logger.module';
     AkitaNgRouterStoreModule,
 
     // Yandex Metrika
-    NgxMetrikaModule.forRoot({
-      id: yandexId,
-      clickmap: true,
-      trackLinks: true,
-      accurateTrackBounce: true,
-      webvisor: true
-    }),
+    YandexMetricaModule.forRoot(yandexId),
 
     // Router
     RouterModule.forRoot([{

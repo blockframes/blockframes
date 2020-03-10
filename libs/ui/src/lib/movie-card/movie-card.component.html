@@ -20,10 +20,10 @@
   <mat-card-content>
     <mat-card-title-group fxLayout="row" fxLayoutAlign="start">
       <ng-container *ngIf="!!movie.main.title.international; else originalTitle">
-        <mat-card-title>{{ movie.main.title.international }}</mat-card-title>
+        <h6>{{ movie.main.title.international }}</h6>
       </ng-container>
       <ng-template #originalTitle>
-        <mat-card-title>{{ movie.main.title.original }}</mat-card-title>
+        <h6>{{ movie.main.title.original }}</h6>
       </ng-template>
     </mat-card-title-group>
     <ng-content select="[movieInformation]"></ng-content>
