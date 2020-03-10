@@ -1,4 +1,4 @@
-@import "mixins";
+@import '~@angular/flex-layout/mq';
 
 mat-card-header {
   background-color: var(--primary);
@@ -14,7 +14,7 @@ widget-card {
   overflow-y: scroll;
 }
 
-@include mobile {
+@include layout-bp(xs) {
   widget-card {
     max-width: 375px;
   }
