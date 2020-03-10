@@ -1,4 +1,4 @@
-@import 'mixins';
+@import '~@angular/flex-layout/mq';
 
 section {
   text-align: center;
@@ -21,7 +21,7 @@ section {
   }
 }
 
-@include tablet {
+@include layout-bp(sm) {
   section {
     .mnemonic {
       padding: 0 100px;
@@ -32,7 +32,7 @@ section {
   }
 }
 
-@include mobile {
+@include layout-bp(xs) {
   section {
     .mnemonic {
       padding: 0 10px;

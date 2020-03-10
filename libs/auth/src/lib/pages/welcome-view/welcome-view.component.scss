@@ -1,4 +1,4 @@
-@import 'mixins';
+@import '~@angular/flex-layout/mq';
 
 section {
   height: 100%;
@@ -29,7 +29,7 @@ a {
 }
 
 // small
-@include tablet {
+@include layout-bp(sm) {
   .image {
     height: 300px;
     width: 300px;
@@ -37,7 +37,7 @@ a {
 }
 
 // extra small
-@include mobile {
+@include layout-bp(xs) {
   a {
     margin-top: 40px;
   }
