@@ -297,15 +297,15 @@ export class ContractComponent implements OnInit {
    * If output is a boolean (sent by EditTitleComponent) and is set to false : remove title
    * Else, output is a ContractTitleDetail object that is created or updated.
    */
-  private async updateTitle(output: ContractTitleDetail | { remove: boolean }, titleId?: string, ): Promise<boolean> {
+  private async updateTitle(output: ContractTitleDetail | { remove: boolean }, titleIdToRemove?: string, ): Promise<boolean> {
     if (!output) return false;
 
     // @TODO (#1887) last version will be accessible directly with the contract document
     const writeableVersion = { ...this.contract.last };
     const writeableContract = { ... this.contract.doc }
 
-    if ((output as { remove: boolean }).remove === true && titleId) {
-      delete writeableVersion.titles[titleId];
+    if ((output as { remove: boolean }).remove === true && titleIdToRemove) {
+      delete writeableVersion.titles[titleIdToRemove];
       // @TODO (#2090) should also update distribution deal ? contractId etc
     } else {
       output = output as ContractTitleDetail;
