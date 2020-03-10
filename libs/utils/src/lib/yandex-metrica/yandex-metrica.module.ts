@@ -1,7 +1,5 @@
-import { YandexMetricaService } from './yandex-metrica.service';
-import { NgModule, ModuleWithProviders, InjectionToken } from '@angular/core';
-
-export const YM_CONFIG = new InjectionToken('ngx-metrika Config');
+import { YandexMetricaService, YM_CONFIG } from './yandex-metrica.service';
+import { NgModule, ModuleWithProviders } from '@angular/core';
 
 @NgModule()
 export class YandexMetricaModule {
