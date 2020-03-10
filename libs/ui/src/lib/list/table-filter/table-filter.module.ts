@@ -4,6 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { OverlayWidgetModule } from '../../overlay-widget/overlay-widget.module';
 
 import { TableFilterComponent, ColRef } from './table-filter.component';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -17,7 +18,6 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { RouterModule } from '@angular/router';
 
-
 @NgModule({
   declarations: [TableFilterComponent, ColRef],
   exports: [TableFilterComponent, ColRef],
@@ -26,6 +26,7 @@ import { RouterModule } from '@angular/router';
     ReactiveFormsModule,
     OverlayWidgetModule,
     RouterModule,
+    FlexLayoutModule,
     // Material
     MatButtonModule,
     MatIconModule,
