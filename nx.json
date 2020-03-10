@@ -8,9 +8,6 @@
     "nx.json": "*"
   },
   "projects": {
-    "ip": {
-      "tags": ["ip"]
-    },
     "auth": {
       "tags": ["auth", "wallet"]
     },

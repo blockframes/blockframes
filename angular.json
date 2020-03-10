@@ -3,37 +3,6 @@
   "version": 1,
   "newProjectRoot": "",
   "projects": {
-    "ip": {
-      "root": "libs/ip",
-      "sourceRoot": "libs/ip/src",
-      "projectType": "library",
-      "prefix": "ip",
-      "architect": {
-        "build": {
-          "builder": "@nrwl/angular:package",
-          "options": {
-            "tsConfig": "libs/ip/tsconfig.lib.json",
-            "project": "libs/ip/ng-package.json"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": ["libs/ip/tsconfig.lib.json", "libs/ip/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/ip/jest.config.js",
-            "tsConfig": "libs/ip/tsconfig.spec.json",
-            "setupFile": "libs/ip/src/test-setup.ts",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
     "auth": {
       "root": "libs/auth",
       "sourceRoot": "libs/auth/src",
