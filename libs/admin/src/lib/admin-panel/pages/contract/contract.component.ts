@@ -16,6 +16,7 @@ import { getCodeBySlug } from '@blockframes/utils/static-model/staticModels';
 import { MovieService } from '@blockframes/movie';
 import { EditPartyComponent } from '../../components/edit-party/edit-party.component';
 import { EditTitleComponent } from '../../components/edit-title/edit-title.component';
+import { calculatePrice } from '@blockframes/contract/contract/+state/contract.utils';
 
 @Component({
   selector: 'admin-contract',
@@ -136,35 +137,38 @@ export class ContractComponent implements OnInit {
     });
   }
 
-  private loadTitles() {
+  private async loadTitles() {
     this.titles = [];
-    Object.keys(this.contract.last.titles).forEach(async id => {
+    const rows = Object.keys(this.contract.last.titles).map(async id => {
       const title = this.contract.last.titles[id];
       const movie = await this.movieService.getValue(id);
 
       // Append new data for table display
-      this.titles.push({
+      return {
         id,
         price: title.price,
         movie,
         deals: title.distributionDealIds ? title.distributionDealIds.map(d => ({ id: d, movie: id })) : [],
         exploredeals: `/c/o/admin/panel/deals/${id}`,
         edit: id,
-      });
-
-      this.titles = [...this.titles];
+      };
     })
+
+    this.titles = await Promise.all(rows);
   }
 
   private async reloadContractAndVersions(newVersionId: string, reloadTitles = false) {
     this.version = parseInt(newVersionId, 10);
-    this.contractVersions = await this.contractVersionService.getContractVersions(this.contractId);
-    this.contract = await this.contractService.getContractWithLastVersion(this.contractId);
 
-    if(reloadTitles){
-      this.loadTitles();
+    const p1 = this.contractVersionService.getContractVersions(this.contractId).then(contractVersion => this.contractVersions = contractVersion);
+    const p2 = this.contractService.getContractWithLastVersion(this.contractId).then(contract => this.contract = contract);
+
+    await Promise.all([p1, p2]);
+
+    if (reloadTitles) {
+      await this.loadTitles();
     }
-  
+
     this.cdRef.markForCheck();
   }
 
@@ -287,34 +291,40 @@ export class ContractComponent implements OnInit {
     return dialogRef.afterClosed().subscribe((output: ContractTitleDetail | { remove: boolean }) => this.updateTitle(output, titleId));
   }
 
+  /**
+   * @param output ContractTitleDetail | { remove: boolean }
+   * @param titleId string
+   * If output is a boolean (sent by EditTitleComponent) and is set to false : remove title
+   * Else, output is a ContractTitleDetail object that is created or updated.
+   */
   private async updateTitle(output: ContractTitleDetail | { remove: boolean }, titleId?: string, ): Promise<boolean> {
     if (!output) return false;
 
+    // @TODO (#1887) last version will be accessible directly with the contract document
     const writeableVersion = { ...this.contract.last };
     const writeableContract = { ... this.contract.doc }
 
     if ((output as { remove: boolean }).remove === true && titleId) {
       delete writeableVersion.titles[titleId];
-      // @todo TEST
-      // should also update distribution deal ? contractId etc
+      // @TODO (#2090) should also update distribution deal ? contractId etc
     } else {
       output = output as ContractTitleDetail;
       const titleId = output.titleId.trim();
       writeableVersion.titles[titleId] = output;
       const movie = await this.movieService.getValue(titleId);
-      if(!movie){
+      if (!movie) {
         this.snackBar.open(`Title "${titleId}" not found.`, 'close', { duration: 5000 });
         return false;
       }
     }
-    
+
     // A title have been updated, added or removed. Need to re-calculate contract price.
-    this.calculatePrice(writeableVersion);
+    calculatePrice(writeableVersion);
 
     // Udpate titleIds array
     writeableContract.titleIds = Object.keys(writeableVersion.titles);
 
-    // @TODO (#1887)
+    // @TODO (#1887) move thoses functions to a service
     // Update contract and create a new version
     await this.contractService.update(writeableContract);
     const newVersionId = await this.contractVersionService.addContractVersion({ doc: this.contract.doc, last: writeableVersion });
@@ -341,20 +351,12 @@ export class ContractComponent implements OnInit {
    * @dev this method uses titles.price to update global contract price
    */
   public async updatePrice() {
-    const update = this.calculatePrice({ ...this.contract.last });
+    const update = calculatePrice({ ...this.contract.last });
 
     // @TODO (#1887)
     const newVersionId = await this.contractVersionService.addContractVersion({ doc: this.contract.doc, last: update });
     await this.reloadContractAndVersions(newVersionId);
 
     this.snackBar.open('Contract global price updated !', 'close', { duration: 5000 });
-  }
-
-  private calculatePrice(version :ContractVersion) {
-    version.price.amount = 0;
-    for (const titleId in version.titles) {
-      version.price.amount += version.titles[titleId].price.amount;
-    }
-    return version;
   }
 }

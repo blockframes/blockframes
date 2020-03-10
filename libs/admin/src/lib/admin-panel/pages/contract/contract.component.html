@@ -42,9 +42,7 @@
           <li>
             <span>Child roles : </span>
             <ng-container *ngIf="partyDetails.childRoles.length else nochildrole">
-              <ng-container *ngFor="let childRole of partyDetails.childRoles; let isLast = last">
-                {{ childRole | translateSlug: 'SUB_LICENSOR_ROLES' }}{{isLast ? '' : ' - '}}
-              </ng-container>
+              {{ partyDetails.childRoles | translateSlug: 'SUB_LICENSOR_ROLES' }}
             </ng-container>
             <ng-template #nochildrole>
               --
