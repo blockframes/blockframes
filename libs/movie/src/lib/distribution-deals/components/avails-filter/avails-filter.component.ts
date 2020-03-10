@@ -1,12 +1,12 @@
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { AvailsSearchForm } from '@blockframes/catalog/form/search.form';
+import { AvailsSearchForm } from '../../form/search.form';
 import { MediasSlug, MEDIAS_SLUG, staticModels } from '@blockframes/utils/static-model';
 import { MatDatepicker } from '@angular/material/datepicker';
 import { NativeDateModule } from '@angular/material/core'
 
 @Component({
-  selector: 'catalog-avails-filter',
+  selector: 'distribution-avails-filter',
   templateUrl: './avails-filter.component.html',
   styleUrls: ['./avails-filter.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

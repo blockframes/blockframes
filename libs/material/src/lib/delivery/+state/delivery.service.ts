@@ -9,7 +9,6 @@ import {
 } from './delivery.model';
 import { Movie, MovieQuery } from '@blockframes/movie';
 import { OrganizationQuery, PermissionsService } from '@blockframes/organization';
-import { BFDoc } from '@blockframes/utils';
 import { MaterialQuery, createMaterial, isTheSame } from '../../material/+state';
 import {
   DeliveryWizard,
@@ -17,7 +16,7 @@ import {
   DeliveryState,
   DeliveryStore
 } from './delivery.store';
-import { AngularFirestoreDocument } from '@angular/fire/firestore';
+import { AngularFirestoreDocument, DocumentData } from '@angular/fire/firestore';
 import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
 import { CreateTx } from '@blockframes/ethers';
 import { TxFeedback } from '@blockframes/ethers/types';
@@ -30,6 +29,12 @@ import { TemplateMaterialService } from '../../material/+state/template-material
 import { TemplateQuery } from '../../template/+state/template.query';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { firestore } from 'firebase';
+
+
+export interface BFDoc extends DocumentData {
+  id: string;
+  _type: 'movies' | 'templates' | 'deliveries';
+}
 
 interface AddDeliveryOptions {
   templateId?: string;
