@@ -3,7 +3,7 @@ import { DistributionDeal, getDealTerritories } from '@blockframes/movie/distrib
 import { ExtractSlug } from '@blockframes/utils/static-model/staticModels';
 import { NumberRange, DateRange } from '@blockframes/utils/common-interfaces';
 import { LanguagesLabel } from '@blockframes/utils/static-model/types';
-import { CatalogSearch, AvailsSearch } from '@blockframes/catalog/form/search.form';
+import { CatalogSearch, AvailsSearch } from './search.form';
 import { getFilterMatchingDeals, getDealsInDateRange, getExclusiveDeals } from '@blockframes/movie/distribution-deals/create/availabilities.util';
 import { MovieLanguageSpecification, StoreType } from '@blockframes/movie/movie/+state/movie.firestore';
 import { toDate } from '@blockframes/utils/helpers';

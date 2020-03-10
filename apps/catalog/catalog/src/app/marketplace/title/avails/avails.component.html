@@ -5,7 +5,7 @@
     <mat-card>
       <mat-card-content>
         <mat-accordion multi="true">
-          <catalog-avails-filter [availsForm]="availsForm"></catalog-avails-filter>
+          <distribution-avails-filter [availsForm]="availsForm"></distribution-avails-filter>
           <article fxLayoutAlign="center center" class="filter-buttons">
             <ng-container *ngIf="!availsForm.get('isActive').value; else active">
               <button

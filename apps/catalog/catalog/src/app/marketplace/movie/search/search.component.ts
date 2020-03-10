@@ -36,7 +36,6 @@ import { MoviesIndex } from '@blockframes/utils/algolia';
 import { Observable, combineLatest, of, from } from 'rxjs';
 import { startWith, map, debounceTime, switchMap, tap, distinctUntilChanged, pluck } from 'rxjs/operators';
 // Others
-import { filterMovie, filterMovieWithAvails } from '@blockframes/catalog/filter.util';
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Index } from 'algoliasearch';
@@ -44,7 +43,8 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
 import { NumberRange } from '@blockframes/utils/common-interfaces/range';
 import { BUDGET_LIST } from '@blockframes/movie/movie/form/budget/budget.form';
-import { CatalogSearchForm, AvailsSearchForm } from '@blockframes/catalog/form/search.form';
+import { filterMovie, filterMovieWithAvails } from '@blockframes/movie/distribution-deals/form/filter.util';
+import { CatalogSearchForm, AvailsSearchForm } from '@blockframes/movie/distribution-deals/form/search.form';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state';
 import { asyncFilter } from '@blockframes/utils/helpers';
 import { staticModels } from '@blockframes/utils/static-model';

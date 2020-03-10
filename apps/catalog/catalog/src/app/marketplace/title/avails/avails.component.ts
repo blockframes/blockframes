@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { AvailsSearchForm } from '@blockframes/catalog';
+import { AvailsSearchForm } from '@blockframes/movie/distribution-deals/form/search.form';
 import { MovieQuery, Movie } from '@blockframes/movie/movie/+state';
 import { EnhancedISO3166Territory } from '@blockframes/utils/static-model/territories-ISO-3166';
 import { getNotLicensedTerritories, getAvailableTerritories, getRightsSoldTerritories } from './territories-filter';
