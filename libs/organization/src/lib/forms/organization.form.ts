@@ -1,6 +1,6 @@
 import { FormControl, Validators } from "@angular/forms";
-import { FormEntity, UniqueOrgName, FormList } from "@blockframes/utils";
-import { createOrganization, Organization, OrganizationService } from "../+state";
+import { FormEntity, FormList } from "@blockframes/utils";
+import { createOrganization, Organization } from "../+state";
 import { AddressSet, createAddressSet } from "@blockframes/organization/types";
 import { Location, createLocation, BankAccount, createBankAccount } from '@blockframes/utils/common-interfaces/utility';
 import { FormStaticValue } from '@blockframes/utils/form';
@@ -35,13 +35,10 @@ export class AddressForm extends FormEntity<LocationControl>{
   }
 }
 
-function createOrganizationFormControl(service: OrganizationService, params?: Organization) {
+function createOrganizationFormControl(params?: Organization) {
   const organization = createOrganization(params);
   return {
-    name: new FormControl(organization.name, {
-      validators: [Validators.required],
-      asyncValidators: [UniqueOrgName(service, name)],
-    }),
+    name: new FormControl(organization.name, Validators.required),
     addresses: new OrganizationAddressesForm(organization.addresses),
     email: new FormControl(organization.email, Validators.email),
     fiscalNumber: new FormControl(organization.fiscalNumber),
@@ -54,8 +51,8 @@ function createOrganizationFormControl(service: OrganizationService, params?: Or
 export type OrganizationFormControl = ReturnType<typeof createOrganizationFormControl>;
 
 export class OrganizationForm extends FormEntity<OrganizationFormControl> {
-  constructor(service: OrganizationService, organization?: Organization) {
-    super(createOrganizationFormControl(service, organization));
+  constructor(organization?: Organization) {
+    super(createOrganizationFormControl(organization));
   }
 
   get addresses() {

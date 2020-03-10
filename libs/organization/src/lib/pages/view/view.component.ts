@@ -26,7 +26,7 @@ export class OrganizationViewComponent implements OnInit {
   public organization$: Observable<Organization>;
   public previousPage: string;
   public navLinks = navLinks;
-  public organizationForm = new OrganizationForm(this.service);
+  public organizationForm = new OrganizationForm();
   public user$: Observable<User>;
 
   constructor(
