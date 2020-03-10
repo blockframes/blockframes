@@ -70,7 +70,7 @@ describe('Try with all fields except name', () => {
     p2.clickCreateOrganization();
     const p3: OrganizationCreatePage = p2.clickSubmitToCreate();
     // To exclude name from filling function, set second parameter to true
-    p3.fillEveryFields(ORGANIZATION, true);
+    p3.fillEveryFields(omit(ORGANIZATION, 'name'));
     // Since we expect an error, use false in parameter to not navigate to a new page
     p3.clickCreate(false);
     p3.assertMoveToOrgCreatePage();
@@ -84,7 +84,7 @@ describe('Create an organization with minimum field', () => {
     const p2: OrganizationHomePage = p1.clickSigninToOrgHome();
     p2.clickCreateOrganization();
     const p3: OrganizationCreatePage = p2.clickSubmitToCreate();
-    p3.fillCompanyName(ORGANIZATION.name);
+    p3.fillName(ORGANIZATION.name);
     const p4: OrganizationAppAccessPage = p3.clickCreate();
     p4.chooseMarketplace();
     const p5: OrganizationCongratulationPage = p4.clickSubmit();
