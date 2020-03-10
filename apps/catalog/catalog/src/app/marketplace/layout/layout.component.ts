@@ -3,7 +3,7 @@ import { Observable, Subscription } from 'rxjs';
 import { Wishlist } from '@blockframes/organization';
 import { map } from 'rxjs/operators';
 import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
-import { AuthService, AuthQuery } from '@blockframes/auth';
+import { AuthQuery } from '@blockframes/auth';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { MatSidenav } from '@angular/material/sidenav';
 import { MarketplaceQuery } from '../+state';
@@ -26,7 +26,6 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   constructor(
     private marketplaceQuery: MarketplaceQuery,
     private catalogCartQuery: CatalogCartQuery,
-    private authService: AuthService,
     private authQuery: AuthQuery,
     private routerQuery: RouterQuery
   ) {}
@@ -42,6 +41,6 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe();
+   if(this.sub) { this.sub.unsubscribe(); }
   }
 }
