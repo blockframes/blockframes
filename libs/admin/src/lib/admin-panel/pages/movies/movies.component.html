@@ -41,4 +41,10 @@
   <ng-template colRef="edit" let-edit>
     <a [routerLink]="edit.link"><mat-icon svgIcon="pencil"></mat-icon></a>
   </ng-template>
+  <ng-template colRef="main.storeConfig.status" let-storeStatus>
+    {{ storeStatus | toLabel: 'storeStatus' | async }}
+  </ng-template>
+  <ng-template colRef="main.storeConfig.storeType" let-storeType>
+    {{ storeType | toLabel: 'storeType' | async }}
+  </ng-template>
 </bf-table-filter>

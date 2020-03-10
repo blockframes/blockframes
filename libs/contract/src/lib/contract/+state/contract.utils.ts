@@ -4,6 +4,19 @@ import { ContractTitleDetail } from "./contract.firestore";
 import { Price, createPrice } from "@blockframes/utils/common-interfaces";
 
 /**
+ * This method simply sums the price of each titles of a contractVersion
+ * @param version 
+ */
+export function calculatePrice(version: ContractVersion) {
+  version.price.amount = 0;
+  for (const titleId in version.titles) {
+    version.price.amount += version.titles[titleId].price.amount;
+  }
+  return version;
+}
+
+
+/**
  * Combine prices of all distributionDeals to get the total price of the contract.
  *
  * @dev this is temporary solution, if there is different currencies in distributionDeals

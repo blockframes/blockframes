@@ -101,7 +101,7 @@
   <ng-container matColumnDef="contract.last.status">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
     <td mat-cell *matCellDef="let element"> 
-      {{ element.contract.last.status }}
+      {{ element.contract.last.status | toLabel: 'contractStatus' | async  }}
     </td>
   </ng-container>
 
