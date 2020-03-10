@@ -1,4 +1,4 @@
-@import 'mixins';
+@import '~@angular/flex-layout/mq';
 
 mat-card {
   height: 380px;
@@ -44,19 +44,19 @@ img {
   height: 250px;
 }
 
-@include medium {
+@include layout-bp(ms) {
   .mat-card-opened {
     height: 100%;
   }
 }
 
-@include mobile {
+@include layout-bp(xs) {
   mat-card {
     height: auto;
   }
 }
 
-@include tablet {
+@include layout-bp(sm) {
   mat-card {
     height: 100%;
   }

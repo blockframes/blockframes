@@ -1,4 +1,4 @@
-@import 'mixins';
+@import '~@angular/flex-layout/mq';
 
 section {
   margin: 50px 0;
@@ -31,13 +31,13 @@ section {
   display: none;
 }
 
-@include mobile {
+@include layout-bp(xs) {
   .cover {
     padding-top: 0;
   }
 }
 
-@include tablet {
+@include layout-bp(sm) {
   .cover {
     padding-top: 100px;
   }

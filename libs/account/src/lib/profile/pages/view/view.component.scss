@@ -1,19 +1,7 @@
-@import 'mixins';
+@import '~@angular/flex-layout/mq';
 
 header, section {
   padding: 0 176px;
-}
-
-@include tablet {
-  header, section {
-    padding: 0 100px
-  }
-}
-
-@include mobile {
-  header, section {
-    padding: 0px;
-  }
 }
 
 header {
@@ -34,4 +22,16 @@ img {
 
 footer {
   margin: 80px 0;
+}
+
+@include layout-bp(sm) {
+  header, section {
+    padding: 0 100px
+  }
+}
+
+@include layout-bp(xs) {
+  header, section {
+    padding: 0px;
+  }
 }
