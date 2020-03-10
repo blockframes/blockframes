@@ -11,7 +11,7 @@ import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/imag
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
 import { RightListModule } from '@blockframes/movie/distribution-deals/components/right-list/right-list.module';
 import { VersionTableModule } from '@blockframes/contract/version/components';
-import { TranslateObjectModule } from '@blockframes/utils/pipes';
+import { ToLabelModule } from '@blockframes/utils/pipes';
 
 // Guard
 import { MovieContractGuard } from '@blockframes/movie/movie/guards/movie-contract.guard';
@@ -36,7 +36,7 @@ import { MatChipsModule } from '@angular/material/chips';
     TranslateSlugModule,
     RightListModule,
     VersionTableModule,
-    TranslateObjectModule,
+    ToLabelModule,
 
     // Material
     MatCardModule,
