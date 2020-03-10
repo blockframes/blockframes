@@ -7,15 +7,15 @@ import { TunnelService } from '@blockframes/ui/tunnel';
 const cardContents = [
   {
     title: 'Title Information',
-    img: 'title_infos.svg'
+    img: 'title_infos.webp'
   },
   {
     title: 'Media',
-    img: 'media.svg'
+    img: 'media.webp'
   },
   {
     title: 'Legal Information',
-    img: 'legal_information.svg'
+    img: 'legal_informartion.webp'
   },
 ];
 
