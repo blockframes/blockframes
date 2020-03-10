@@ -13,7 +13,6 @@ import {
   HostBinding,
   Inject
 } from '@angular/core';
-import { BreakpointObserver } from '@angular/cdk/layout';
 // Blockframes
 import { Movie } from '@blockframes/movie/movie/+state/movie.model';
 import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
@@ -116,7 +115,6 @@ export class MarketplaceSearchComponent implements OnInit {
   public budgetList: NumberRange[] = BUDGET_LIST;
 
   public matcher = new ControlErrorStateMatcher();
-  public isMobile: boolean = this.breakpointObserver.isMatched('(max-width: 599px)');
 
   @ViewChild('autoCompleteInput', { read: MatAutocompleteTrigger })
   public autoComplete: MatAutocompleteTrigger;
@@ -129,7 +127,6 @@ export class MarketplaceSearchComponent implements OnInit {
     private snackbar: MatSnackBar,
     private movieQuery: MovieQuery,
     private dealService: DistributionDealService,
-    private breakpointObserver: BreakpointObserver,
     @Inject(MoviesIndex) private movieIndex: Index,
     private analytics: FireAnalytics
   ) { }
