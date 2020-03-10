@@ -148,14 +148,6 @@
         "libs/material/src/index.ts"
       ],
 
-      // CATALOG
-      "@blockframes/catalog": [
-        "libs/catalog/src/index.ts"
-      ],
-      "@blockframes/catalog/*": [
-        "libs/catalog/src/lib/*"
-      ],
-
       // CONTRACT
       "@blockframes/contract": [
         "libs/contract/src/index.ts"
