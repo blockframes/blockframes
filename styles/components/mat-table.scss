@@ -3,8 +3,6 @@
   $foreground: map-get($theme, foreground);
 
   .mat-table {
-    background-color: transparent;
-
     thead {
       background-color: mat-color($background, card);
     }
@@ -38,6 +36,4 @@
     border-top: none;
     border-radius: 0 0 10px 10px;
   }
-
-
 }

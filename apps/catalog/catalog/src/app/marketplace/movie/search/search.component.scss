@@ -4,7 +4,7 @@
   margin-top: 0;
   margin-bottom: 0;
   mat-label {
-    margin-left: 20px;;
+    margin-left: 20px;
   }
 }
 
@@ -23,10 +23,6 @@ h5 {
 .language-button {
   margin-top: 15px;
   margin-left: 16px;
-}
-
-mat-checkbox {
-  margin-top: 16px;
 }
 
 .chip-language {
@@ -64,6 +60,18 @@ section.filters {
     mat-card {
       max-height: calc(100vh - var(--toolbarHeight) - 40px);
       overflow: auto;
+    }
+
+    mat-checkbox {
+      margin-top: 16px;
+    }
+
+    h6 {
+      margin-bottom: 12px;
+    }
+
+    .checkbox-padding {
+      padding-left: 16px
     }
 
     .movie-list {

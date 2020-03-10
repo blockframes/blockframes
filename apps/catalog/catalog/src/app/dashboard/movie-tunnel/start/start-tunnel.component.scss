@@ -14,6 +14,14 @@ mat-sidenav-content {
   padding: 48px;
 }
 
+.uppercase {
+  text-transform: uppercase;
+}
+
+header {
+  margin-bottom: 56px;
+}
+
 mat-sidenav-container {
   flex: 1;
 
@@ -32,7 +40,6 @@ mat-sidenav-container {
   }
 
   .card-image {
-    border-radius: 50%;
     margin-bottom: 10px;
   }
 }
@@ -62,4 +69,12 @@ section, div {
 .item-right {
   flex: 0 1 auto;
   margin-left: auto;
+}
+
+h5 {
+  margin: 15px 0 0 0;
+}
+
+button {
+  margin: 10px 0 80px;
 }

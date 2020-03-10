@@ -14,6 +14,7 @@
           You only can choose the current year and above.
         </mat-error>
         <mat-datepicker-toggle test-id="datepicker-from" matSuffix [for]="pickerAvailableFrom">
+          <mat-icon matDatepickerToggleIcon svgIcon="calendar"></mat-icon>
         </mat-datepicker-toggle>
         <mat-datepicker #pickerAvailableFrom startView="multi-year"></mat-datepicker>
       </mat-form-field>
@@ -21,6 +22,7 @@
         <mat-label>End Date</mat-label>
         <input matInput formControlName="end" [matDatepicker]="pickerAvailableTo" placeholder="End Date" required/>
         <mat-datepicker-toggle test-id="datepicker-to" matSuffix [for]="pickerAvailableTo">
+          <mat-icon matDatepickerToggleIcon svgIcon="calendar"></mat-icon>
         </mat-datepicker-toggle>
         <mat-datepicker #pickerAvailableTo startView="multi-year" startAt="2020"></mat-datepicker>
       </mat-form-field>
@@ -40,7 +42,7 @@
         <mat-chip *ngFor="let territory of selectedMovieTerritories; let i = index" [selectable]="selectableTerritory"
           [removable]="!availsForm.value.isActive" (removed)="removeTerritory(territory, i)">
           {{ territory }}
-          <mat-icon matChipRemove *ngIf="!availsForm.value.isActive">cancel</mat-icon>
+          <mat-icon matChipRemove *ngIf="!availsForm.value.isActive" svgIcon="close"></mat-icon>
         </mat-chip>
         <input test-id="territories-panel-input" placeholder="Territory" #territoryInput
           [matAutocomplete]="territoryMatAutoComplete" [matChipInputFor]="territoryChipList" [formControl]="territoryControl" />
@@ -58,7 +60,7 @@
     <mat-expansion-panel-header>
       <span class="mat-body-1" test-id="mandate-medias-panel">Media</span>
     </mat-expansion-panel-header>
-    <div fxLayout="column" fxLayoutAlign="start space-between">
+    <div fxLayout="column" fxLayoutAlign="start space-between" class="checkbox-padding">
       <mat-checkbox *ngFor="let media of movieMedias" (change)="checkMedia(media)" color="primary" [disabled]="availsForm.value.isActive">
         {{  media | translateSlug: 'MEDIAS' }}
       </mat-checkbox>
