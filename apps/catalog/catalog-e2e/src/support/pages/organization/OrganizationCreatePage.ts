@@ -1,13 +1,17 @@
 import OrganizationAppAccessPage from "./OrganizationAppAccessPage";
 import { Location, Organization, BankAccount } from "../../utils/type";
 
-type Entity = 'org' | 'bank';
+type Entity = 'org' | 'bank' | 'lol';
 
-function form(entity: Entity) {
-  if (entity === 'org') {
-    return 'organization-form-address';
+function form(entity: Entity): string {
+  switch(entity) {
+    case 'org':
+      return 'organization-form-address';
+    case 'bank':
+      return '[test-id=bank-information]';
+    default:
+      throw Error(`Entity ${entity} not handled`);
   }
-  return '[test-id=bank-information]';
 }
 
 export default class OrganizationCreatePage {
