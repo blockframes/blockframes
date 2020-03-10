@@ -1,8 +1,7 @@
 import { Component, OnInit, Input, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { OriginalReleaseForm } from '../sales-info.form';
-import { MovieForm } from '../../movie.form';
 import { startWith } from 'rxjs/operators';
-import { default as staticModel, ExtractCode } from '@blockframes/utils/static-model/staticModels';
+import { default as staticModel } from '@blockframes/utils/static-model/staticModels';
 import { MovieMainControl } from '../../main/main.form';
 import { MovieSalesInfoControl } from '../sales-info.form'
 import { Subscription } from 'rxjs';

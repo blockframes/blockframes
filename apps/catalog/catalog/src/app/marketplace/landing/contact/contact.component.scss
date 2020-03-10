@@ -1,4 +1,4 @@
-@import 'mixins';
+@import '~@angular/flex-layout/mq';
 
 section {
   min-height: calc(100vh - (var(--toolbarHeight) * 2) - 30px); // TODO #1212
@@ -34,24 +34,17 @@ mat-card {
   }
 }
 
-@include mobile {
+@include layout-bp(lt-lg) {
+  mat-card {
+    width: 80%;
+    margin-top: 50px;
+  }
+}
+
+@include layout-bp(xs) {
   mat-card {
     width: 100%;
     margin-top: 30px;
     margin-bottom: 30px;
-  }
-}
-
-@include tablet {
-  mat-card {
-    width: 80%;
-    margin-top: 50px;
-  }
-}
-
-@include medium {
-  mat-card {
-    width: 80%;
-    margin-top: 50px;
   }
 }

@@ -1,4 +1,4 @@
-@import 'mixins';
+@import '~@angular/flex-layout/mq';
 
 .email {
   width: 60%;
@@ -15,7 +15,7 @@ mat-card-content {
   }
 }
 
-@include mobile {
+@include layout-bp(xs) {
   .email {
     width: 100%;
   }

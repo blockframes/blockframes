@@ -1,4 +1,4 @@
-@import 'mixins';
+@import '~@angular/flex-layout/mq';
 
 section {
   padding: 15px 0;
@@ -42,7 +42,14 @@ strong {
   font-weight: normal;
 }
 
-@include mobile {
+@include layout-bp(lt-lg) {
+  section aside {
+    position: static;
+    width: 100%;
+  }
+}
+
+@include layout-bp(xs) {
   section {
     padding: 10px 10px;
     aside {
@@ -52,19 +59,5 @@ strong {
         height: 100%;
       }
     }
-  }
-}
-
-@include tablet {
-  section aside {
-    position: static;
-    width: 100%;
-  }
-}
-
-@include medium {
-  aside {
-    position: static;
-    width: 100%;
   }
 }

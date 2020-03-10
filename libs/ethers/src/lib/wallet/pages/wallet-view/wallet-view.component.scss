@@ -1,4 +1,4 @@
-@import 'mixins';
+@import '~@angular/flex-layout/mq';
 
 :host {
   display: block;
@@ -13,7 +13,7 @@
   }
 }
 
-@include tablet {
+@include layout-bp(sm) {
   :host {
     padding: 10px 50px 0 50px;
     header {
@@ -27,7 +27,7 @@
   }
 }
 
-@include mobile {
+@include layout-bp(xs) {
   :host {
     padding: 10px 0 10px 10px;
     header {
