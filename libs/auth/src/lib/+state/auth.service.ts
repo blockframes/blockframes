@@ -42,10 +42,18 @@ export class AuthService extends FireAuthService<AuthState> {
    * @description function that gets triggered when
    * AuthService.signOut is called
    */
-  public onSignout() {
+  async onSignout() {
     localStorage.clear();
-    indexedDB.deleteDatabase('firebase-installations-database');
-    indexedDB.deleteDatabase('firebaseLocalStorageDb');
+    /**
+     * the databases function seems to be not typed
+     * in typescript node.
+     */
+    const dbKeys = await (window.indexedDB as any).databases();
+    for (let key of dbKeys) {
+      indexedDB.deleteDatabase(key.name);
+    }
+    // TODO: issue#879, navigate with router
+    window.location.reload();
   }
 
   /**
