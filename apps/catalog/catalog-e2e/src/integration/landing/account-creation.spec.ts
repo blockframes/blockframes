@@ -42,7 +42,7 @@ const ORGANIZATION: Organization = {
 
 // Before each test, go to login page
 beforeEach(() => {
-  clearDataAndPrepareTest()
+  clearDataAndPrepareTest('/');
   const p1: LandingPage = new LandingPage();
   p1.clickLogin();
 });
