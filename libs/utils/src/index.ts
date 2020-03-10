@@ -14,6 +14,7 @@ export * from './lib/common-interfaces/terms';
 export * from './lib/algolia-autocomplete/algolia-autocomplete.module';
 export * from './lib/yandex-metrica/yandex-metrica.module';
 export * from './lib/yandex-metrica/yandex-metrica.service';
+export * from './lib/breakpoint/breakpoints.service';
 
 export { OrganizationAlgoliaResult } from './lib/algolia';
 export * from './lib/apps';
