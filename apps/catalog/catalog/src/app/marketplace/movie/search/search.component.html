@@ -42,7 +42,7 @@
   <aside fxLayout="column" class="filter">
     <mat-card>
       <h6>Filters</h6>
-      <span class="mat-caption">On a specific filter, multiple choices are consider with  an "or" statement.</span>
+      <p class="mat-caption">On a specific filter, multiple choices are consider with  an "or" statement.</p>
       <mat-card-content>
         <mat-accordion multi="true">
           <ng-container [formGroup]="filterForm">
@@ -154,32 +154,34 @@
                   <mat-icon svgIcon="add"></mat-icon>
                 </button>
               </div>
-              <ng-container *ngIf="filterForm.get('languages').value">
-                <mat-list [formGroup]="filterForm.get('languages')" role="list">
-                  <ng-container *ngFor="let language of languages$ | async">
-                    <mat-list-item [formGroupName]="language">
-                      <span mat-line>
-                        <mat-chip class="chip-language" removable (removed)="removeLanguage(language)">
-                          <span>{{ language | translateSlug: 'LANGUAGES' }}</span>
-                          <mat-icon matChipRemove>cancel</mat-icon>
-                        </mat-chip>
-                      </span>
-                      <mat-checkbox color="primary" test-id="languages-checkbox-original" mat-line formControlName="original">
-                        Original
-                      </mat-checkbox>
-                      <mat-checkbox color="primary" test-id="languages-checkbox-dubbed" mat-line formControlName="dubbed">
-                        Dubbed
-                      </mat-checkbox>
-                      <mat-checkbox color="primary" test-id="languages-checkbox-subtitle" mat-line formControlName="subtitle">
-                        Subtitled
-                      </mat-checkbox>
-                      <mat-checkbox color="primary" test-id="languages-checkbox-subtitle" mat-line formControlName="caption">
-                        Closed-Captioned
-                      </mat-checkbox>
-                    </mat-list-item>
-                  </ng-container>
-                </mat-list>
-              </ng-container>
+              <div fxLayout="column" fxLayoutAlign="start start">
+                <ng-container *ngIf="filterForm.get('languages').value">
+                  <mat-list [formGroup]="filterForm.get('languages')" role="list">
+                    <ng-container *ngFor="let language of languages$ | async">
+                      <mat-list-item [formGroupName]="language">
+                        <span mat-line>
+                          <mat-chip class="chip-language" removable (removed)="removeLanguage(language)">
+                            <span>{{ language | translateSlug: 'LANGUAGES' }}</span>
+                            <mat-icon matChipRemove svgIcon="close"></mat-icon>
+                          </mat-chip>
+                        </span>
+                        <mat-checkbox color="primary" test-id="languages-checkbox-original" mat-line formControlName="original">
+                          Original
+                        </mat-checkbox>
+                        <mat-checkbox color="primary" test-id="languages-checkbox-dubbed" mat-line formControlName="dubbed">
+                          Dubbed
+                        </mat-checkbox>
+                        <mat-checkbox color="primary" test-id="languages-checkbox-subtitle" mat-line formControlName="subtitle">
+                          Subtitled
+                        </mat-checkbox>
+                        <mat-checkbox color="primary" test-id="languages-checkbox-subtitle" mat-line formControlName="caption">
+                          Closed-Captioned
+                        </mat-checkbox>
+                      </mat-list-item>
+                    </ng-container>
+                  </mat-list>
+                </ng-container>
+              </div>
             </form>
           </mat-expansion-panel>
 
@@ -188,7 +190,7 @@
             <mat-expansion-panel-header>
               <span class="mat-body-1">Production Status</span>
             </mat-expansion-panel-header>
-            <div fxLayout="column" fxLayoutAlign="start start">
+            <div fxLayout="column" fxLayoutAlign="start start" class="checkbox-padding">
               <mat-checkbox color="primary" (change)="hasStatus(status)" *ngFor="let status of movieProductionStatuses">
                 {{status}}
               </mat-checkbox>
@@ -200,7 +202,7 @@
             <mat-expansion-panel-header>
               <span class="mat-body-1">Budget</span>
             </mat-expansion-panel-header>
-            <div fxLayout="column" fxLayoutAlign="start start">
+            <div fxLayout="column" fxLayoutAlign="start start" class="checkbox-padding">
               <mat-checkbox (change)="hasBudget(budget)" color="primary" *ngFor="let budget of budgetList">
                 {{ budget.label }}
               </mat-checkbox>
@@ -249,7 +251,7 @@
           <movie-card [movie]="movie" [link]="['/c/o/marketplace',  movie.id]" *ngIf="!listView">
             <ng-container movieInformation>
               <mat-card-subtitle>
-                <span *ngFor="let director of movie.main.directors; let isLast=last">{{ director.firstName }}
+                <span class="mat-caption" *ngFor="let director of movie.main.directors; let isLast=last">{{ director.firstName }}
                   {{ director.lastName }}{{isLast ? '' : ', '}}</span>
               </mat-card-subtitle>
             </ng-container>

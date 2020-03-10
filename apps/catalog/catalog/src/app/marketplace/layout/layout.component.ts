@@ -44,10 +44,4 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnDestroy() {
     this.sub.unsubscribe();
   }
-
-  public async logout() {
-    await this.authService.signOut();
-    // TODO: issue#879, navigate with router
-    window.location.reload();
-  }
 }
