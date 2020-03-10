@@ -1,4 +1,4 @@
-@import 'mixins';
+@import '~@angular/flex-layout/mq';
 
 section {
   margin: 100px 200px;
@@ -9,19 +9,13 @@ mat-divider {
   margin: 0 20px;
 }
 
-@include medium {
+@include layout-bp(lt-lg) {
   section {
     margin: 50px;
   }
 }
 
-@include tablet {
-  section {
-    margin: 50px;
-  }
-}
-
-@include mobile {
+@include layout-bp(xs) {
   section {
     margin: 10px;
   }
