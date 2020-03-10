@@ -3,7 +3,6 @@
 // You'll find relevant spots by searching for the issue number.
 export const app = {
   mediaDelivering : 'delivery',
-  mediaFinanciers : 'movie-financing',
   storiesAndMore : 'stories-and-more',
   biggerBoat : 'catalog',
   blockframes: 'blockframes'
@@ -20,12 +19,6 @@ export interface AppDetails {
 }
 
 export const APPS_DETAILS: AppDetails[] = [
-  {
-    name: 'Media Financiers',
-    logo: '/assets/logo/mediaFinanciersLogo.png',
-    href: 'movie-financing/explorer',
-    id: app.mediaFinanciers
-  },
   {
     name: 'Stories and More',
     logo: '/assets/logo/storiesAndMoreLogo.png',

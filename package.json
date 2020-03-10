@@ -11,23 +11,21 @@
     "start": "npx ng serve --hmr --disable-host-check",
     "build:stats": "ng build --prod --stats-json",
     "build:delivery": "npx ng build delivery --base-href /delivery/ --configuration=\"${ENV:-dev}\"",
-    "build:movie-financing": "npx ng build movie-financing --base-href /movie-financing/ --configuration=\"${ENV:-dev}\"",
     "build:catalog": "npx ng build catalog --base-href /catalog/ --configuration=\"${ENV:-dev}\"",
     "build:backend-functions": "npx ng build backend-functions --configuration=\"${ENV:-dev}\"",
     "build:backend-ops": "npx ng build backend-ops --configuration=\"${ENV:-dev}\"",
     "build:root": "rm -rf ./dist/apps/assets",
-    "build:all": "npm run build:delivery && npm run build:movie-financing && npm run build:backend-functions && npm run build:backend-ops && npm run build:catalog && npm run build:root",
+    "build:all": "npm run build:delivery && npm run build:backend-functions && npm run build:backend-ops && npm run build:catalog && npm run build:root",
     "firebase:serve": "concurrently --kill-others \"npm run build:functions --watch\" \"firebase serve --only functions\"",
     "firebase:shell": "concurrently --kill-others \"npm run build:functions --watch\" \"firebase functions:shell\" --raw",
     "firebase:emulator": "firebase emulators:start --only firestore",
     "firebase:deploy": "firebase deploy",
     "test": "jest --maxWorkers=2",
     "lint": "npx ng lint",
-    "e2e": "npm run e2e:delivery && npm run e2e:catalog && npm run e2e:movie-financing",
+    "e2e": "npm run e2e:delivery && npm run e2e:catalog",
     "pree2e": "ng build backend-ops --configuration=\"${ENV}\" && node dist/apps/backend-ops/main.js",
     "e2e:delivery": "./node_modules/.bin/ng e2e delivery-e2e --configuration=\"${ENV}\" --headless",
     "e2e:catalog": "./node_modules/.bin/ng e2e catalog-e2e --configuration=\"${ENV}\" --headless",
-    "e2e:movie-financing": "./node_modules/.bin/ng e2e movie-financing-e2e --configuration=\"${ENV}\" --headless",
     "affected:apps": "./node_modules/.bin/nx affected:apps --base=origin/master",
     "affected:libs": "./node_modules/.bin/nx affected:libs --base=origin/master",
     "affected:build": "./node_modules/.bin/nx affected:build --base=origin/master",
@@ -193,11 +191,6 @@
   },
   "bundlesize": [
     {
-      "path": "./dist/apps/main**.js",
-      "maxSize": "4.5 MB",
-      "compression": "none"
-    },
-    {
       "path": "./dist/apps/delivery/main**.js",
       "maxSize": "6 MB",
       "compression": "none"
@@ -210,11 +203,6 @@
     {
       "path": "./dist/apps/backend-functions/main**.js",
       "maxSize": "0.9 MB",
-      "compression": "none"
-    },
-    {
-      "path": "./dist/apps/movie-financing/main**.js",
-      "maxSize": "5.5 MB",
       "compression": "none"
     }
   ]

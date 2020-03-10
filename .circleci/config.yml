@@ -108,7 +108,7 @@ jobs:
           name: Post sizes of apps to zapier
           command: |
             if [ "${CIRCLE_BRANCH}" = "production" ] || [ "${CIRCLE_BRANCH}" = "master" ]; then
-              curl -X POST "${ZAPPIER_WEBHOOK}" --header "Build-number:${CIRCLE_BUILD_NUM}" --header "Branch:${CIRCLE_BRANCH}" --header  "Date:`date "+%D"`" --header  Main-size:`cat ./dist/apps/main**.js | wc -c` --header  Delivery-size:`cat ./dist/apps/delivery/main**.js | wc -c` --header  Marketplace-size:`cat ./dist/apps/catalog/main**.js | wc -c` --header  Movie-financing-size:`cat ./dist/apps/movie-financing/main**.js | wc -c` --header  Functions-size:`cat ./dist/apps/backend-functions/main**.js | wc -c`;
+              curl -X POST "${ZAPPIER_WEBHOOK}" --header "Build-number:${CIRCLE_BUILD_NUM}" --header "Branch:${CIRCLE_BRANCH}" --header  "Date:`date "+%D"`" --header  Main-size:`cat ./dist/apps/main**.js | wc -c` --header  Delivery-size:`cat ./dist/apps/delivery/main**.js | wc -c` --header  Marketplace-size:`cat ./dist/apps/catalog/main**.js  | wc -c` --header  Functions-size:`cat ./dist/apps/backend-functions/main**.js | wc -c`;
             fi
   build-and-test-prs:
     executor: blockframes-ci
@@ -141,20 +141,17 @@ jobs:
             # Maintain this script to keep checking new apps.
             mkdir -p dist/apps/delivery \
                      dist/apps/catalog \
-                     dist/apps/backend-functions \
-                     dist/apps/movie-financing
-            touch ./dist/apps/main.dummy.js \
-                  ./dist/apps/delivery/main.dummy.js \
+                     dist/apps/backend-functions
+            touch ./dist/apps/delivery/main.dummy.js \
                   ./dist/apps/catalog/main.dummy.js \
                   ./dist/apps/backend-functions/main.dummy.js \
-                  ./dist/apps/movie-financing/main.dummy.js \
             npm run bundlesize
       - run:
           name: Post sizes of apps to zapier
           command: |
             if [ "${CIRCLE_BRANCH}" = "production" ] || [ "${CIRCLE_BRANCH}" = "master" ]; then
               npm run build:all;
-              curl -X POST "${ZAPPIER_WEBHOOK}" --header "Build-number:${CIRCLE_BUILD_NUM}" --header "Branch:${CIRCLE_BRANCH}" --header  "Date:`date "+%D"`" --header  Main-size:`cat ./dist/apps/main**.js | wc -c` --header  Delivery-size:`cat ./dist/apps/delivery/main**.js | wc -c` --header  Marketplace-size:`cat ./dist/apps/catalog/main**.js | wc -c` --header  Movie-financing-size:`cat ./dist/apps/movie-financing/main**.js | wc -c` --header  Functions-size:`cat ./dist/apps/backend-functions/main**.js | wc -c`;
+              curl -X POST "${ZAPPIER_WEBHOOK}" --header "Build-number:${CIRCLE_BUILD_NUM}" --header "Branch:${CIRCLE_BRANCH}" --header  "Date:`date "+%D"`" --header  Main-size:`cat ./dist/apps/main**.js | wc -c` --header  Delivery-size:`cat ./dist/apps/delivery/main**.js | wc -c` --header  Marketplace-size:`cat ./dist/apps/catalog/main**.js | wc -c` --header  Functions-size:`cat ./dist/apps/backend-functions/main**.js | wc -c`;
             fi
   test-e2e:
     executor: blockframes-ci
@@ -180,20 +177,12 @@ jobs:
           command: npm run build:backend-ops && node dist/apps/backend-ops/main.js prepareForTesting
           when: always
       - run:
-          name: main e2e tests
-          command: npm run e2e:main
-          when: always
-      - run:
           name: delivery e2e tests
           command: npm run e2e:delivery
           when: always
       - run:
           name: catalog e2e tests
           command: npm run e2e:catalog
-          when: always
-      - run:
-          name: movie-financing e2e tests
-          command: npm run e2e:movie-financing
           when: always
       - store_artifacts:
           name: Uploading screenshots
