@@ -1,4 +1,4 @@
-@import 'mixins';
+@import '~@angular/flex-layout/mq';
 
 section {
   padding: 0 180px;
@@ -7,19 +7,6 @@ section {
     margin-top: 40px;
   }
 }
-
-@include tablet {
-  section {
-    padding: 0 100px
-  }
-}
-
-@include mobile {
-  section {
-    padding: 10px;
-  }
-}
-
 
 .mat-option {
   height: 50px;
@@ -46,4 +33,16 @@ mat-card, mat-form-field {
 
 .join-org {
   margin-top: 60px;
+}
+
+@include layout-bp(sm) {
+  section {
+    padding: 0 100px
+  }
+}
+
+@include layout-bp(xs) {
+  section {
+    padding: 10px;
+  }
 }
