@@ -4,7 +4,7 @@
     <ng-container *ngFor="let value of values$ | async; let i = index">
       <mat-chip removable="true" (removed)="remove(i)">
         <span>{{ value }}</span>
-        <mat-icon matChipRemove>cancel</mat-icon>
+        <mat-icon matChipRemove svgIcon="close"></mat-icon>
       </mat-chip>
     </ng-container>
   </mat-chip-list>
@@ -14,5 +14,6 @@
   [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
   (matChipInputTokenEnd)="add($event)"
   />
-  <mat-hint>Separate keywords with commas</mat-hint>
+  <mat-hint>Separate keywords with commas
+  </mat-hint>
 </mat-form-field>
