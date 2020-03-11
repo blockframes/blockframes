@@ -6,6 +6,10 @@ section {
   text-align: center;
 }
 
+img {
+  width: 380px;
+}
+
 @include layout-bp(sm) {
   section {
     padding: 0 100px
