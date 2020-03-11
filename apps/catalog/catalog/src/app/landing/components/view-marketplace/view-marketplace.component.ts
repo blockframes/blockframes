@@ -13,12 +13,12 @@ import { map } from 'rxjs/operators';
 export class CatalogViewMarketplaceComponent {
   public cover = true;
   public url: SafeResourceUrl;
-  public isMobile$ = this.breakpointsService.xs;
-  public isTablet$ = this.breakpointsService.sm;
-  public videoWidth$ = combineLatest([this.isMobile$, this.isTablet$]).pipe(
+  public xs$ = this.breakpointsService.xs;
+  public sm$ = this.breakpointsService.sm;
+  public videoWidth$ = combineLatest([this.xs$, this.sm$]).pipe(
     map(([isMobile, isTablet]) => isMobile ? '340' : isTablet ? '600' : '1024')
   );
-  public videoHeight$ = combineLatest([this.isMobile$, this.isTablet$]).pipe(
+  public videoHeight$ = combineLatest([this.xs$, this.sm$]).pipe(
     map(([isMobile, isTablet]) => isMobile ? '300' : isTablet ? '400' : '560')
   );
 

@@ -1,6 +1,6 @@
 <mat-sidenav-container>
-  <mat-sidenav #sidenav id="dashboard-navbar" [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-    [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="(isHandset$ | async) === false">
+  <mat-sidenav #sidenav id="dashboard-navbar" [attr.role]="(ltMd$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(ltMd$ | async) ? 'over' : 'side'" [opened]="(ltMd$ | async) === false">
     <mat-toolbar>
       <a class="logo" routerLink=".">
         <img src="assets/logo/dark/archipel-content.svg" alt="Archipel Content Logo" />

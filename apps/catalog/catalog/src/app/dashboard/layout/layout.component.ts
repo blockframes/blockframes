@@ -26,7 +26,7 @@ import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.se
 export class LayoutComponent {
   searchCtrl: FormControl = new FormControl('');
 
-  isHandset$ = this.breakpointsService.ltMd;
+  ltMd$ = this.breakpointsService.ltMd;
 
   /**MovieAlgoliaResult Algolia search results */
   public algoliaSearchResults$: Observable<SearchResult[]>;

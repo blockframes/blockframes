@@ -41,7 +41,7 @@ export class TunnelLayoutComponent implements OnInit {
   public urlBynav$: Observable<[string, TunnelStep[]]>;
   public next$: Observable<string>;
   public previous$: Observable<string>;
-  public isSmall$ = this.breakpointsService.ltMd;
+  public ltMd$ = this.breakpointsService.ltMd;
 
   @Input() set steps(steps: TunnelStep[]) {
     this.navigation.next(steps || []);
