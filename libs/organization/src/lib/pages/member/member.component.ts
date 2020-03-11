@@ -11,13 +11,13 @@ import { MemberService } from '../../member/+state/member.service';
 import { MemberQuery } from '../../member/+state/member.query';
 
 @Component({
-  selector: 'member-editable',
-  templateUrl: './member-editable.component.html',
-  styleUrls: ['./member-editable.component.scss'],
+  selector: 'member-edit',
+  templateUrl: './member.component.html',
+  styleUrls: ['./member.component.scss'],
   providers: [InvitationQuery, InvitationStore],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MemberEditableComponent implements OnInit, OnDestroy {
+export class MemberComponent implements OnInit, OnDestroy {
   @HostBinding('attr.page-id') pageId = 'member-editable';
 
   public orgName: string = this.query.getActive().name;
