@@ -27,7 +27,9 @@
       <ng-container *ngIf="title.deals.length">
         <h3>Exploitation Rights</h3>
         <mat-card>
-          <catalog-right-list [source]="title.deals"></catalog-right-list>
+          <mat-card-content>
+            <catalog-right-list [source]="title.deals"></catalog-right-list>
+          </mat-card-content>
         </mat-card>
       </ng-container>
     </article>
