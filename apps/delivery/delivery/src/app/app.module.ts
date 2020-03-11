@@ -31,7 +31,6 @@ import { EmailVerifyModule } from '@blockframes/auth';
 // Widgets
 import { ProfileWidgetModule, ProfileMenuModule } from '@blockframes/account';
 import { NotificationWidgetModule } from '@blockframes/notification';
-import { ThemeWidgetModule } from '@blockframes/ui/theme';
 import { WalletWidgetModule } from '@blockframes/ethers';
 import { OrganizationWidgetModule } from '@blockframes/organization';
 
@@ -94,7 +93,6 @@ import { sentryDsn } from '@env';
 
     // Widget
     OrganizationWidgetModule,
-    ThemeWidgetModule,
     NotificationWidgetModule,
     WalletWidgetModule,
     ProfileWidgetModule,

@@ -9,19 +9,19 @@
     path, g, polygon {
       fill: mat-color($foreground, icon);
     }
-    &[color="primary"] {
+    &.mat-primary {
       color: mat-color($primary, 500);
       path, g, polygon {
         fill: mat-color($primary, 500);
       }
     }
-    &[color="accent"] {
+    &.mat-accent {
       color: mat-color($accent, 500);
       path, g, polygon {
         fill: mat-color($accent, 500);
       }
     }
-    &[color="warn"] {
+    &.mat-warn {
       color: mat-color($warn, 500);
       path, g, polygon {
         fill: mat-color($warn, 500);
