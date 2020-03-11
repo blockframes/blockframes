@@ -19,3 +19,9 @@ export interface Dates {
   from: string;
   to: string;
 }
+
+export interface Movie {
+  title: {
+    international: string
+  }
+}

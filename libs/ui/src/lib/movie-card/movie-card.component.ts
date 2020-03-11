@@ -8,7 +8,6 @@ import { Movie } from '@blockframes/movie/movie/+state/movie.model';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieCardComponent {
-  @HostBinding('attr.page-id') pageId = 'display-card';
   @Input() movie: Movie;
   @Input() link: string;
 
