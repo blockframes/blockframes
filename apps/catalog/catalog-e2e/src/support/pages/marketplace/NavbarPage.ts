@@ -1,4 +1,4 @@
-import { WishlistPage } from "./index";
+import { WishlistPage, SearchPage } from "./index";
 import { LoginViewPage } from "../auth";
 
 export default abstract class NavbarPage {
@@ -8,6 +8,15 @@ export default abstract class NavbarPage {
 
   public openProfileMenu(){
     cy.get('catalog-layout button[test-id=profile-avatar]').click();
+  }
+
+  public openSideNav(){
+    cy.get('catalog-layout button[test-id=menu]').click();
+  }
+
+  public clickLibrary(){
+    cy.get('catalog-layout a[test-id=library]').click();
+    return new SearchPage();
   }
 
   public clickWishlist() {

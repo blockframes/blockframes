@@ -12,12 +12,8 @@ export default class HomePage extends NavbarPage {
     return new SearchPage();
   }
 
-  public clickWishlistButton(movieName: string) {
-    cy.get('[page-id=catalog-marketplace-homepage] li').contains(movieName)
-      .parent().parent()
-      .within(() => {
-        cy.get('button').click();
-      });
+  public clickFirstWishlistButton() {
+    cy.get('catalog-home button[test-id=heart-icon]').first().click();
     cy.wait(500);
   }
 }

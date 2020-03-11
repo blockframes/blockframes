@@ -17,16 +17,3 @@ export const MOVIES: Partial<Movie>[] = [
     }
   }
 ];
-
-export const LOCALMOVIES: Partial<Movie>[] = [
-  {
-    title: {
-      international: 'Los Perros'
-    }
-  },
-  {
-    title: {
-      international: 'The Young Butler'
-    }
-  }
-];
