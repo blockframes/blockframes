@@ -32,6 +32,6 @@ export class OrganizationFormComponent {
     uniqueOnEthereum = !orgEthAddress ? true : false;
 
     uniqueOnFirestore = await this.service.orgNameExist(orgName).then(exist => !exist);
-    (uniqueOnEthereum && uniqueOnFirestore) ? null : this.form.get('name').setErrors({ notUnique: true });
+    (uniqueOnEthereum && uniqueOnFirestore) ? this.form.get('name').setErrors({ notUnique: false }) : this.form.get('name').setErrors({ notUnique: true });
   }
 }
