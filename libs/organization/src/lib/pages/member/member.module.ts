@@ -25,6 +25,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
+import { MatListModule } from '@angular/material/list';
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import { MatMenuModule } from '@angular/material/menu';
     MatFormFieldModule,
     MatInputModule,
     MatMenuModule,
+    MatListModule,
     RouterModule.forChild([{ path: '', component: MemberComponent }])
   ]
 })
