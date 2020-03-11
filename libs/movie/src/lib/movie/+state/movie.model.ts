@@ -388,6 +388,6 @@ export function getMovieTotalViews(analytics: MovieAnalytics[], movieId: string)
   const movieAnalytic = analytics.find(analytic => analytic.movieId === movieId);
   if (movieAnalytic) {
     const movieHits = movieAnalytic.movieViews.current.map(event => event.hits);
-    return movieHits.reduce((sum, val) => sum + val, 0).toString();
+    return movieHits.reduce((sum, val) => sum + val, 0);
   }
 }

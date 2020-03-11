@@ -16,7 +16,7 @@ export class HomeComponent implements OnInit,OnDestroy {
 
   constructor(
     private movieQuery: MovieQuery,
-    private movieService: MovieService,
+    private movieService: MovieService
   ) {}
 
   ngOnInit() {

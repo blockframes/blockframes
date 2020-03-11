@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { MovieAnalytics } from '@blockframes/movie/movie/+state/movie.firestore';
-import { ChartOptions, lineChartOptions } from './default-chart-options';
+import { lineChartOptions } from './default-chart-options';
 
 const chartInfo = [
   {
@@ -59,23 +59,27 @@ export class MovieAnalyticsChartComponent {
   public filteredEvent;
   public chartData: any[] = [];
 
-  @Input() set analyticsData(data: MovieAnalytics[]){
-    if (data && data.length) {
-      this.chartData = chartInfo.map(chart => {
-        const current = this.getXY(data, chart.eventName, 'current');
-        const past = this.getXY(data, chart.eventName, 'past');
-        const percentage = this.calculatePercentage(current.y, past.y);
-        return {
-          ...chart,
-          x: current.x.map(date => date.toLocaleDateString('en-US')), 
-          y: current.y, 
-          percentage
-        }
-      })
+  @Input() set analyticsData(data: MovieAnalytics[]) {
+    if (data) {
+      if (!data.length) {
+        this.chartData = chartInfo.map(chart => chart);
+      } else {
+        this.chartData = chartInfo.map(chart => {
+          const current = this.getXY(data, chart.eventName, 'current');
+          const past = this.getXY(data, chart.eventName, 'past');
+          const percentage = this.calculatePercentage(current.y, past.y);
+          return {
+            ...chart,
+            x: current.x.map(date => date.toLocaleDateString('en-US')),
+            y: current.y,
+            percentage
+          }
+        })
+      }
     }
   };
-  
-  constructor() {   
+
+  constructor() {
     this.lineChartOptions = lineChartOptions;
   }
 
@@ -97,23 +101,23 @@ export class MovieAnalyticsChartComponent {
   getLineChartSeries(eventName: MovieAnalyticsEventName, title: MovieAnalyticsTitle) {
     const hits = this.chartData.find(chart => chart.eventName === eventName).y
     return [{
-      name: title, 
+      name: title,
       data: hits
     }];
   }
 
   getLineChartXaxis(eventName: MovieAnalyticsEventName) {
     return {
-      categories: this.chartData.find(chart => chart.eventName === eventName).x, 
-      labels: {show: false},  
-      axisBorder: {show: false},  
+      categories: this.chartData.find(chart => chart.eventName === eventName).x,
+      labels: {show: false},
+      axisBorder: {show: false},
       axisTicks: {show: false}
     };
   }
 
   totalHitsOnCurrentMonth(eventName: MovieAnalyticsEventName) {
-    const total = this.chartData.find(chart => chart.eventName === eventName).y
-    return getSum(total);
+    const total = this.chartData.find(chart => chart.eventName === eventName).y;
+    return total ? getSum(total) : undefined;
   }
 
   calculatePercentage(currentHits: number[], pastHits: number[]): number {
