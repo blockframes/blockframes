@@ -19,6 +19,7 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   private sub: Subscription;
   public user$ = this.authQuery.select('profile');
   public currentWishlist$: Observable<Wishlist>;
+  public wishlistCount$: Observable<number>;
   public cartCount$ = this.marketplaceQuery.selectCount();
 
   @ViewChild('sidenav') sidenav: MatSidenav;
@@ -33,9 +34,12 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   ngOnInit() {
     this.currentWishlist$ = this.catalogCartQuery.wishlistWithMovies$.pipe(
       map(wishlists => wishlists.find(wishlist => wishlist.status === 'pending'))
-      );
-    }
-    
+    );
+    this.wishlistCount$ = this.currentWishlist$.pipe(
+      map(wishlist => wishlist.movieIds.length)
+    );
+  }
+
   ngAfterViewInit() {
     this.sub = this.routerQuery.select('navigationId').subscribe(_ => this.sidenav.close());
   }
