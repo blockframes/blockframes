@@ -6,7 +6,7 @@
     <mat-icon svgIcon="light_mode" [color]="theme === 'light' ? 'primary' : ''"></mat-icon>
     <mat-slide-toggle [checked]="theme === 'dark'" (change)="setTheme($event)"></mat-slide-toggle>
     <mat-icon svgIcon="dark_mode" [color]="theme === 'dark' ? 'primary' : ''"></mat-icon>
-    <button (click)="view = 'icons'">Icons</button>
+    <button (click)="view = 'icons'" class="mat-body-1">Icons List</button>
   </div>
 </mat-toolbar>
 <ng-container [ngSwitch]="view">
