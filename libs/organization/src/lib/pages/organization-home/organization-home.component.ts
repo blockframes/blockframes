@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 @Component({
@@ -8,6 +8,7 @@ import { FormControl } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationHomeComponent {
+  @HostBinding('attr.page-id') pageId = 'organization-home';
 
   public link = new FormControl();
 
