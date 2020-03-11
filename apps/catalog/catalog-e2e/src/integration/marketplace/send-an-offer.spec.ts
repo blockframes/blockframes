@@ -1,13 +1,15 @@
 /// <reference types="cypress" />
 
-import { HomePage, WishlistPage } from '../../support/pages/marketplace';
+import { HomePage, WishlistPage, SearchPage } from '../../support/pages/marketplace';
 import { User } from '../../support/utils/type';
 import { USERS } from '../../support/utils/users';
-import { MOVIENAMELIST } from '../../support/utils/movies';
+import { MOVIES } from '../../support/utils/movies';
 import { LoginViewPage, WelcomeViewPage } from '../../support/pages/auth';
 
-// Select user: cytest@blockframes.com
-const LOGIN_CREDENTIALS: Partial<User> = USERS[0];
+// Select user: wayne.massey@hart-caldwell.fake.cascade8.com
+const LOGIN_CREDENTIALS: Partial<User> = USERS[2];
+
+const MOVIENAMELIST: string[] = MOVIES.map(movie => movie.title.international);
 
 beforeEach(() => {
   cy.clearCookies();
@@ -30,23 +32,28 @@ describe('Test submit wishlist to sellers', () => {
     p4.assertNoCurrentWishlist();
 
     // Go to home page and add movies to the current wishlist
-    const p5: HomePage = p4.clickContextMenuHome();
-    p5.clickWishlistButton(MOVIENAMELIST[0]);
-    p5.clickWishlistButton(MOVIENAMELIST[1]);
+    p4.openSideNav()
+    const p5: SearchPage = p4.clickLibrary();
+
+    MOVIENAMELIST.forEach(movieName => {
+      p5.clickWishlistButton(movieName);
+    });
 
     // Go to wishlist and submit to sellers
     const p6: WishlistPage = p5.clickWishlist();
 
     // Verify current wishlist
-    p6.assertMovieInCurrentWishlist(MOVIENAMELIST[0]);
-    p6.assertMovieInCurrentWishlist(MOVIENAMELIST[1]);
+    MOVIENAMELIST.forEach(movieName => {
+      p6.assertMovieInCurrentWishlist(movieName);
+    });
 
     // Send the current wishlist
     p6.clickSendToSellers();
 
     // Verify sent wishlist
     p6.assertNoCurrentWishlist();
-    p6.assertMovieInSentWishlist(MOVIENAMELIST[0]);
-    p6.assertMovieInSentWishlist(MOVIENAMELIST[1]);
+    MOVIENAMELIST.forEach(movieName => {
+      p6.assertMovieInSentWishlist(movieName);
+    });
   });
 });
