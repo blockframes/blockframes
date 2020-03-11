@@ -6,34 +6,34 @@ export default class SearchPage extends NavbarPage {
 
   constructor() {
     super();
-    cy.get('[page-id=catalog-search]', { timeout: 10000 });
+    cy.get('catalog-movie-search');
   }
 
   public fillProductionYear(years: Dates) {
-    cy.get('[page-id=catalog-search] input[test-id=production-year-input-from]').type(years.from);
-    cy.get('[page-id=catalog-search] input[test-id=production-year-input-to]').type(years.to);
+    cy.get('catalog-movie-search input[test-id=production-year-input-from]').type(years.from);
+    cy.get('catalog-movie-search input[test-id=production-year-input-to]').type(years.to);
   }
 
   public selectGenres(genres: string[]) {
-    cy.get('[page-id=catalog-search] [test-id=genres-panel]').click();
-    genres.forEach(genre => cy.get('[page-id=catalog-search] mat-checkbox').contains(genre).click());
+    cy.get('catalog-movie-search [test-id=genres-panel]').click();
+    genres.forEach(genre => cy.get('catalog-movie-search mat-checkbox').contains(genre).click());
   }
 
   public selectLanguages(language: string) {
-    cy.get('[page-id=catalog-search] [test-id=languages-panel]').click();
-    cy.get('[page-id=catalog-search] input[test-id=languages-panel-input]').type(language);
+    cy.get('catalog-movie-search [test-id=languages-panel]').click();
+    cy.get('catalog-movie-search input[test-id=languages-panel-input]').type(language);
     cy.get('mat-option').contains(language).click();
-    cy.get('[page-id=catalog-search] mat-checkbox').contains('Original').click();
-    cy.get('[page-id=catalog-search] button[test-id=languages]').click();
+    cy.get('catalog-movie-search mat-checkbox').contains('Original').click();
+    cy.get('catalog-movie-search button[test-id=languages]').click();
   }
 
   public selectCertifications(certification: string) {
-    cy.get('[page-id=catalog-search] [test-id=certifications-panel]').click();
-    cy.get('[page-id=catalog-search] mat-checkbox').contains(certification).click();
+    cy.get('catalog-movie-search [test-id=certifications-panel]').click();
+    cy.get('catalog-movie-search mat-checkbox').contains(certification).click();
   }
 
   public selectAvailabilities(date: Availabilities) {
-    cy.get('[page-id=catalog-search] [test-id=availabilities-panel]').click();
+    cy.get('catalog-movie-search [test-id=availabilities-panel]').click();
     cy.get('[test-id=datepicker-from]').click();
     cy.get(`[aria-label=${date.yearFrom}]`).click();
     cy.get(`[aria-label="${date.monthFrom} ${date.yearFrom}"]`).click();
@@ -46,24 +46,23 @@ export default class SearchPage extends NavbarPage {
 
   // TODO: fixing mat-option referencing first input => ISSUE#950
   public selectTerritories(territory: string) {
-    cy.get('[page-id=catalog-search] [test-id=territories-panel]').click();
-    cy.get('[page-id=catalog-search] input[test-id=territories-panel-input]').type(territory);
+    cy.get('catalog-movie-search [test-id=territories-panel]').click();
+    cy.get('catalog-movie-search input[test-id=territories-panel-input]').type(territory);
     cy.get('mat-option').contains(territory).click();
   }
 
   public selectMandateMedias(medias: string[]) {
-    cy.get('[page-id=catalog-search] [test-id=mandate-medias-panel]').click();
-    medias.forEach(media => cy.get('[page-id=catalog-search] mat-checkbox').contains(media).click());
+    cy.get('catalog-movie-search [test-id=mandate-medias-panel]').click();
+    medias.forEach(media => cy.get('catalog-movie-search mat-checkbox').contains(media).click());
   }
 
   public selectMovie(movieName: string) {
-    cy.get('[page-id=display-card]', { timeout: 2000 }).contains('movie-card', movieName).find('a').click();
+    cy.get('movie-card', { timeout: 2000 }).contains('movie-card', movieName).find('a').click();
     return new ViewPage();
   }
 
   public clickWishlistButton(movieName: string) {
-    cy.get('[page-id=display-card]', { timeout: 2000 }).contains('movie-card', movieName).find('button').click();
-    cy.wait(2000);
+    cy.get('article').contains('movie-card', movieName).find('button[test-id=heart-button]').click();
   }
 }
 

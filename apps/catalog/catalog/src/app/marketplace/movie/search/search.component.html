@@ -258,12 +258,12 @@
             <ng-container movieCardAction>
               <div fxLayout="row" fxLayoutAlign="end">
                 <ng-container *ngIf="(toggle$(movie.id) | async); else alreadyAdded">
-                  <button mat-icon-button (click)="removeFromWishlist(movie)">
+                  <button test-id="heart-button" mat-icon-button (click)="removeFromWishlist(movie)">
                     <mat-icon svgIcon="heart_fill"></mat-icon>
                   </button>
                 </ng-container>
                 <ng-template #alreadyAdded>
-                  <button mat-icon-button (click)="addToWishlist(movie)">
+                  <button test-id="heart-button" mat-icon-button (click)="addToWishlist(movie)">
                     <mat-icon svgIcon="heart_outline"></mat-icon>
                   </button>
                 </ng-template>

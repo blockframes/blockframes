@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { RequestDemoInformations, createDemoRequestInformations } from '@blockframes/catalog/demo-request.model';
+import { RequestDemoInformations, createDemoRequestInformations } from '@blockframes/utils/request-demo';
 
 @Component({
   selector: 'catalog-landing-page',

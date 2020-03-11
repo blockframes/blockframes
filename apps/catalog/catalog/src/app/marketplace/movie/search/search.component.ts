@@ -57,7 +57,6 @@ import { StoreType } from '@blockframes/movie/movie/+state/movie.firestore';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MarketplaceSearchComponent implements OnInit {
-  @HostBinding('attr.page-id') pageId = 'catalog-search';
 
   /** Algolia search results */
   private algoliaSearchResults$: Observable<MovieAlgoliaResult[]>;

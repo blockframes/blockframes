@@ -3,49 +3,54 @@
 import { HomePage, SearchPage, ViewPage, WishlistPage } from '../../support/pages/marketplace';
 import { User } from '../../support/utils/type';
 import { USERS } from '../../support/utils/users';
-import { MOVIENAMELIST } from '../../support/utils/movies';
 import { LoginViewPage, WelcomeViewPage } from '../../support/pages/auth';
+import { LandingPage } from '../../support/pages/landing';
+import { MOVIES, LOCALMOVIES } from '../../support/utils/movies';
 
-// Select user: cytest.thejokers@blockframes.com
-const LOGIN_CREDENTIALS: Partial<User> = USERS[1];
+const LOGIN_CREDENTIALS: Partial<User> = {
+  email: 'testyo444@test.com',
+  password: 'testyo444@test.com'
+}
+
+const MOVIENAMELIST: string[] = LOCALMOVIES.map(movie => movie.title.international);
 
 beforeEach(() => {
   cy.clearCookies();
   cy.clearLocalStorage();
-  cy.visit('/auth');
+  cy.visit('/');
   cy.viewport('ipad-2', 'landscape');
+  const p1: LandingPage = new LandingPage();
+  p1.clickLogin();
 });
 
-describe('Test wishlist icon from line-up page', () => {
-  it.skip('Login into an existing account, add two movies on wishlist from line-up page, check the wishlist.', () => {
+describe('Test wishlist icon from library page', () => {
+  it('Login into an existing account, add two movies on wishlist from library page, check the wishlist.', () => {
     // Connexion
-    const p1: WelcomeViewPage = new WelcomeViewPage();
-    const p2: LoginViewPage = p1.clickCallToAction();
-    p2.switchMode();
-    p2.fillSignin(LOGIN_CREDENTIALS);
-    const p3: HomePage = p2.clickSignIn();
+    const p1: LoginViewPage = new LoginViewPage();
+    p1.fillSignin(LOGIN_CREDENTIALS);
+    const p2: HomePage = p1.clickSignIn();
 
     // Add two movies to the wishlist
-    const p4: SearchPage = p3.clickContextMenuLineUp();
+    const p3: SearchPage = p2.clickViewTheLibrary();
     MOVIENAMELIST.forEach(movieName => {
-      p4.clickWishlistButton(movieName);
+      p3.clickWishlistButton(movieName);
     });
 
     // Go to wishlist and verify movies are here
-    const p5: WishlistPage = p4.clickWishlist();
+    const p4: WishlistPage = p3.clickWishlist();
     MOVIENAMELIST.forEach(movieName => {
-      p5.assertMovieInCurrentWishlist(movieName);
+      p4.assertMovieInCurrentWishlist(movieName);
     });
-    p5.checkWishListCount(MOVIENAMELIST.length);
+    p4.checkWishListCount(MOVIENAMELIST.length);
 
     // Remove movies from the current wishlist
     MOVIENAMELIST.forEach(movieName => {
-      p5.removeMovieFromWishlist(movieName);
+      p4.removeMovieFromWishlist(movieName);
     });
 
     // Check that current wishlist is empty
-    p5.assertNoMovieInWishlist();
-    p5.checkWishListCount(0);
+    p4.assertNoMovieInWishlist();
+    p4.checkWishListCount(0);
   });
 });
 

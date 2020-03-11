@@ -1,6 +1,6 @@
 import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ChangeDetectionStrategy, Component, HostBinding, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Movie, MovieQuery } from '@blockframes/movie/movie/+state';
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -20,7 +20,6 @@ interface CarouselSection {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MarketplaceHomeComponent implements OnInit {
-  @HostBinding('attr.page-id') pageId = 'catalog-marketplace-homepage';
 
   /** Observable to fetch all movies from the store */
   public moviesBySections$: Observable<CarouselSection[]>;
