@@ -20,7 +20,7 @@
       </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <ng-template [ngIf]="link" [ngIfElse]="withoutLink">
       <tr mat-row *matRowDef="let row; columns: displayedColumns" [routerLink]="[link, row.id]"></tr>
     </ng-template>

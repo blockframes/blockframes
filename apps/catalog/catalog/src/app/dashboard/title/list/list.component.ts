@@ -42,7 +42,7 @@ function createTitleView(
   return {
     id: movie.id,
     title: movie.main.title.international,
-    view: getMovieTotalViews(analytics, movie.id),
+    view: getMovieTotalViews(analytics, movie.id)?.toString(),
     sales: ownContracts.length,
     receipt: getMovieReceipt(ownContracts, movie.id),
     status: movie.main.storeConfig.status
