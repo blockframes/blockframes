@@ -1,32 +1,34 @@
 import OrganizationCreatePage from "./OrganizationCreatePage";
 import OrganizationFindPage from "./OrganizationFindPage";
 
+const PATH = '/c/organization/home';
+
 export default class OrganizationHomePage {
   constructor() {
     cy.get('organization-home');
   }
 
   public assertMoveToOrgHomepage() {
-    cy.location().should((loc) => {
-      expect(loc.pathname).to.eq('/c/organization/home')
+    cy.location().should(loc => {
+      expect(loc.pathname).to.eq(PATH)
     })
   }
 
   public clickCreateOrganization() {
-    cy.get('[value=create]mat-radio-button').click();
+    cy.get('organization-home [value=create]mat-radio-button').click();
   }
 
   public clickFindOrganization() {
-    cy.get('[value=find]mat-radio-button').click();
+    cy.get('organization-home [value=find]mat-radio-button').click();
   }
 
   public clickSubmitToCreate() {
-    cy.get('[test-id=submit]').click();
+    cy.get('organization-home [test-id=submit]').click();
     return new OrganizationCreatePage();
   }
 
   public clickSubmitToFind() {
-    cy.get('[test-id=submit]').click();
+    cy.get('organization-home [test-id=submit]').click();
     return new OrganizationFindPage();
   }
 }

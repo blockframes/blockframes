@@ -1,6 +1,8 @@
 import OrganizationAppAccessPage from './OrganizationAppAccessPage';
 import { Location, Organization, BankAccount } from '../../utils/type';
 
+const PATH = '/c/organization/create';
+
 type Entity = 'org' | 'bank';
 
 function form(entity: Entity): string {
@@ -36,7 +38,7 @@ export default class OrganizationCreatePage {
 
   public assertMoveToOrgCreatePage() {
     cy.location().should(loc => {
-      expect(loc.pathname).to.eq('/c/organization/create');
+      expect(loc.pathname).to.eq(PATH);
     });
   }
 
