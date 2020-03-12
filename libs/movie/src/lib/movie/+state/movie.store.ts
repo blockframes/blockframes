@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { EntityStore, StoreConfig, EntityState, ActiveState } from '@datorama/akita';
 import { Movie, createMovie } from './movie.model';
+import { MovieAnalytics } from './movie.model';
 
 export interface MovieState extends EntityState<Movie, string>, ActiveState<string> {}
 
