@@ -4,9 +4,7 @@
   <header fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="24px" >
     <article fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="25px">
       <!-- Switch to [imgRef]="getLicenseeLogo(licensees[0].party.orgId) when public orgs are here => ISSUE#1359"-->
-      <div class="logo-container">
-        <img class="logo" [imgRef]="placeholderUrl" [placeholderUrl]="placeholderUrl" alt="Organization logo" />
-      </div>
+      <img class="logo" [imgRef]="placeholderUrl" [placeholderUrl]="placeholderUrl" alt="Organization logo" />
       <div *ngIf="licensees[0] as licensee">
         <h1>{{ licensee.displayName }} - {{ (moviesCount$ | async) }} film{ moviesCount$| async, plural, =1 {} other {s} }</h1>
         <span *ngIf="licensee.address">
