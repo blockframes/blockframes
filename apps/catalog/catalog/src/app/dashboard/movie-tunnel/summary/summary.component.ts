@@ -40,6 +40,8 @@ export class TunnelSummaryComponent {
         this.router.navigate(['../../../../titles', movieId, 'details'], { relativeTo: this.route })
       })
     } else {
+      // Log the invalid forms
+      console.error(this.findInvalidControlsRecursive(this.form))
       this.snackBar.open('Fill all mandatory fields before submitting', '', { duration: 2000 });
     }
   }
