@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { MovieAnalytics } from '@blockframes/movie/movie/+state/movie.firestore';
 import { lineChartOptions } from './default-chart-options';
+import { MovieQuery } from '../../+state';
 
 const chartInfo = [
   {
@@ -58,6 +59,7 @@ export class MovieAnalyticsChartComponent {
   public chartInfo = chartInfo;
   public filteredEvent;
   public chartData: any[] = [];
+  public isLoading$ = this.movieQuery.analytics.selectLoading();
 
   @Input() set analyticsData(data: MovieAnalytics[]) {
     if (data) {
@@ -79,7 +81,7 @@ export class MovieAnalyticsChartComponent {
     }
   };
 
-  constructor() {
+  constructor(private movieQuery: MovieQuery) {
     this.lineChartOptions = lineChartOptions;
   }
 

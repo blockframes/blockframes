@@ -384,7 +384,7 @@ export function getMovieReceipt(contracts: Contract[], movieId: string): number 
  * @param analytics
  * @param movieId
  */
-export function getMovieTotalViews(analytics: MovieAnalytics[], movieId: string): string {
+export function getMovieTotalViews(analytics: MovieAnalytics[], movieId: string): number {
   const movieAnalytic = analytics.find(analytic => analytic.movieId === movieId);
   if (movieAnalytic) {
     const movieHits = movieAnalytic.movieViews.current.map(event => event.hits);
