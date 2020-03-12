@@ -12,6 +12,7 @@ import { MovieService } from '@blockframes/movie/movie/+state/movie.service';
 })
 export class HomeComponent implements OnInit,OnDestroy {
   public movieAnalytics$: Observable<MovieAnalytics[]>;
+  public movies$ = this.movieQuery.selectAll();
   private sub: Subscription;
 
   constructor(
