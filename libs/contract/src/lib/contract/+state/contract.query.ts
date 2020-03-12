@@ -57,7 +57,7 @@ export class ContractQuery extends QueryEntity<ContractState> {
   }
 
   /** Returns the contract parties of a given role */
-  getParties(role: 'licensee' | 'licensor'): Party[] {
+  getActiveParties(role: 'licensee' | 'licensor'): Party[] {
     const parties = this.getActive().parties.filter(details => details.party.role === role);
     return parties.map(details => details.party);
   }

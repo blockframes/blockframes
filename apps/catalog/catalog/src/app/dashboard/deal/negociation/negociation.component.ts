@@ -17,7 +17,7 @@ export class NegociationComponent {
   titles$ = this.query.titles$;
   payment$ = this.query.activeVersion$.pipe(map(displayPaymentSchedule));
   moviesCount$ = this.movieQuery.selectCount();
-  licensees = this.query.getParties('licensee');
+  licensees = this.query.getActiveParties('licensee');
   subLicensors$ = this.query.subLicensors$;
 
   oldVersions$ = this.query.oldVersionsView$;

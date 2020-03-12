@@ -15,7 +15,7 @@ export class ViewComponent {
   public contract$ = this.query.selectActive();
   public version$ = this.query.activeVersion$;
   public versionView$ = this.query.activeVersionView$;
-  public licensees = this.query.getParties('licensee');
+  public licensees = this.query.getActiveParties('licensee');
 
   // Only get contract movies that appears in user organization
   public moviesCount$ = this.movieQuery.selectCount();
