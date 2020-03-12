@@ -10,6 +10,10 @@ import { ContractTableModule } from '@blockframes/contract/contract/components';
 // Material
 import { MatTabsModule } from '@angular/material/tabs';
 
+// Guards
+import { ContractsDealListGuard } from '@blockframes/movie/distribution-deals/guards/contracts-deal-list.guard';
+import { MovieListContractListGuard } from '@blockframes/movie/movie/guards/movie-contract.guard';
+
 
 @NgModule({
   declarations: [DealListComponent],
@@ -20,7 +24,14 @@ import { MatTabsModule } from '@angular/material/tabs';
 
     // Material
     MatTabsModule,
-    RouterModule.forChild([{ path: '', component: DealListComponent }])
+    RouterModule.forChild([
+      {
+        path: '',
+        canActivate: [ContractsDealListGuard, MovieListContractListGuard],
+        canDeactivate: [ContractsDealListGuard, MovieListContractListGuard],
+        component: DealListComponent
+      }
+    ])
   ]
 })
 export class DealListModule { }

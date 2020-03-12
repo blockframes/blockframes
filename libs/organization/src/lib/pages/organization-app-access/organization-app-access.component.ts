@@ -14,7 +14,7 @@ import { FormControl } from '@angular/forms';
 export class OrganizationAppAccessComponent implements OnInit, OnDestroy {
   private subscription: Subscription;
   public access = new FormControl();
-  
+
   constructor(
     private service: OrganizationService,
     private query: OrganizationQuery,
