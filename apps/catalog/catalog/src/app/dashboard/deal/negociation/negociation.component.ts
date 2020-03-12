@@ -24,10 +24,6 @@ export class NegociationComponent {
 
   constructor(private query: ContractQuery, private movieQuery: MovieQuery, private intercom: Intercom) { }
 
-  getDirectors(movie: Movie) {
-    return  movie.main.directors.map(d => `${d.firstName} ${d.lastName}`).join(', ');
-  }
-
   openIntercom() {
     this.intercom.show();
   }
