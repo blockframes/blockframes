@@ -1,3 +1,5 @@
+import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
+import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { MovieService, createMovie } from '@blockframes/movie';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -36,7 +38,9 @@ export class StartTunnelComponent implements OnInit {
     private tunnelService: TunnelService,
     private auth: AuthQuery,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private orgService: OrganizationService,
+    private orgQuery: OrganizationQuery
   ) { }
 
   ngOnInit() {
@@ -46,11 +50,14 @@ export class StartTunnelComponent implements OnInit {
   async begin() {
     this.loading = true;
     try {
-      const createdBy = this.auth.getValue().uid;
-      const movie = createMovie({ _meta: { createdBy } });
-      const movieId = await this.movieService.add(movie);
-      this.loading = false;
-      this.router.navigate([movieId], { relativeTo: this.route });
+      await this.movieService.runTransaction(async (write) => {
+        const createdBy = this.auth.getValue().uid;
+        const movie = createMovie({ _meta: { createdBy } });
+        const movieId = await this.movieService.add(movie, { write });
+        await this.orgService.update(this.orgQuery.getActiveId(), (org) => ({ movieIds: [...org.movieIds, movieId] }), { write })
+        this.loading = false;
+        this.router.navigate([movieId], { relativeTo: this.route });
+      })
     } catch (err) {
       this.loading = false;
       console.error(err);

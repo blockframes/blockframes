@@ -6,7 +6,7 @@ import { LayoutComponent } from './layout/layout.component';
 // Guards
 import { ActiveContractGuard } from '@blockframes/contract/contract/guards/active-contract.guard';
 import { OrganizationContractListGuard } from '@blockframes/contract/contract/guards/organization-contract-list.guard';
-import { MovieActiveGuard, MovieOrganizationListGuard } from '@blockframes/movie';
+import { MovieActiveGuard, MovieOrganizationListGuard, MovieTunnelGuard } from '@blockframes/movie';
 import { TunnelGuard } from '@blockframes/ui/tunnel';
 
 
@@ -91,7 +91,7 @@ const routes: Routes = [
         loadChildren: () => import('./movie-tunnel/start/start-tunnel.module').then(m => m.StartTunnelModule)
       }, {
         path: ':movieId',
-        canActivate: [MovieActiveGuard],
+        canActivate: [MovieActiveGuard, MovieTunnelGuard],
         canDeactivate: [MovieActiveGuard],
         loadChildren: () => import('./movie-tunnel/movie-tunnel.module').then(m => m.MovieTunnelModule),
         data: {
