@@ -5,6 +5,9 @@
 
 mat-sidenav-container {
   height: 100%;
+  #dashboard-navbar .mat-toolbar {
+    border-bottom: none;
+  }
 }
 
 .logo {

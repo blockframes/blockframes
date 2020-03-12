@@ -24,8 +24,10 @@
     background-color: rgba(mat-color($primary, 500), 0.05);
 
     // Mat icons inside active link should be colored too
-    .mat-list-icon path, .mat-list-icon g, .mat-list-icon polygon {
-      fill: mat-color($primary, 500);
+    .mat-list-icon {
+      path, g, polygon {
+        fill: mat-color($primary, 500);
+      }
     }
   }
 
