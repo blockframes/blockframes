@@ -13,6 +13,10 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 
+// Guards
+import { ContractsDealListGuard } from '@blockframes/movie/distribution-deals/guards/contracts-deal-list.guard';
+import { MovieListContractListGuard } from '@blockframes/movie/movie/guards/movie-contract.guard';
+
 @NgModule({
   declarations: [DealListComponent],
   imports: [
@@ -26,7 +30,14 @@ import { MatButtonModule } from '@angular/material/button';
     MatTabsModule,
     MatIconModule,
     MatButtonModule,
-    RouterModule.forChild([{ path: '', component: DealListComponent }])
+    RouterModule.forChild([
+      {
+        path: '',
+        canActivate: [ContractsDealListGuard, MovieListContractListGuard],
+        canDeactivate: [ContractsDealListGuard, MovieListContractListGuard],
+        component: DealListComponent
+      }
+    ])
   ]
 })
 export class DealListModule { }

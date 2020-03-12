@@ -9,10 +9,9 @@ import {
   DistributionDealWithMovieId,
   formatDistributionDeal
 } from './distribution-deal.model';
-import { createContractTitleDetail, ContractWithLastVersion, Contract } from '@blockframes/contract/contract/+state/contract.model';
+import { createContractTitleDetail, ContractWithLastVersion } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractVersionService } from '@blockframes/contract/version/+state/contract-version.service';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
-import { combineLatest } from 'rxjs';
 import { ContractVersion } from '@blockframes/contract/version/+state/contract-version.model';
 import { DistributionDealQuery } from './distribution-deal.query';
 import { Movie } from '@blockframes/movie/movie/+state';
@@ -31,13 +30,6 @@ export class DistributionDealService extends CollectionService<DistributionDealS
     store: DistributionDealStore
   ) {
     super(store);
-  }
-
-  /** Gets every distribution deals of contracts in the store. */
-  public syncContractsDeals(contracts: Contract[]) {
-    const queryContrat = (contract: Contract) => ref => ref.where('contractId', '==', contract.id);
-    const $ = contracts.map(c => this.syncCollectionGroup('distributionDeals', queryContrat(c)));
-    return combineLatest($);
   }
 
   /**
@@ -93,7 +85,7 @@ export class DistributionDealService extends CollectionService<DistributionDealS
    */
   public async getMovieDistributionDeals(movieId: string): Promise<DistributionDeal[]> {
     const distributionDeals = await this.getValue({ params: { movieId } });
-    return distributionDeals.map(deal => formatDistributionDeal(deal)); 
+    return distributionDeals.map(deal => formatDistributionDeal(deal));
   }
 
   /**

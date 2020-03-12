@@ -20,7 +20,7 @@ const movieListContractQuery = (contractId: string, movieIds: string[]): Query<M
 @CollectionGuardConfig({ awaitSync: true })
 export class MovieContractGuard extends CollectionGuard<MovieState> {
   constructor(
-    protected service: MovieService,
+    service: MovieService,
     private store: MovieStore,
     private contractQuery: ContractQuery,
     private organizationQuery: OrganizationQuery
@@ -31,7 +31,7 @@ export class MovieContractGuard extends CollectionGuard<MovieState> {
   /**
    * Sync on movies from contract.titleIds.
    * It means that this guard must always be used after the ActiveContractGuard.
-  */
+   */
   sync() {
     return this.contractQuery.selectActive().pipe(
       // Reset the store everytime the movieId changes.
@@ -39,8 +39,31 @@ export class MovieContractGuard extends CollectionGuard<MovieState> {
       switchMap(contract => {
         // Filter movieIds before the query to relieve it.
         const organizationMovieIds = this.organizationQuery.getActive().movieIds;
-        const movieIds = contract.titleIds.filter(titleId => organizationMovieIds.includes(titleId));
-        return movieIds.length ? awaitSyncQuery.call(this.service, movieListContractQuery(contract.id, movieIds)) : of([]);
+        const movieIds = contract.titleIds.filter(titleId =>
+          organizationMovieIds.includes(titleId)
+        );
+        return movieIds.length
+          ? awaitSyncQuery.call(this.service, movieListContractQuery(contract.id, movieIds))
+          : of([]);
+      })
+    );
+  }
+}
+
+@Injectable({ providedIn: 'root' })
+@CollectionGuardConfig({ awaitSync: true })
+export class MovieListContractListGuard extends CollectionGuard<MovieState> {
+  constructor(service: MovieService, private contractQuery: ContractQuery) {
+    super(service);
+  }
+
+  /** Sync all movies from contracts in the store */
+  sync() {
+    return this.contractQuery.selectAll().pipe(
+      switchMap(contracts => {
+        const rawTitleIds = new Set(contracts.map(c => c.titleIds));
+        const titleIds = Array.from(rawTitleIds).flat();
+        return this.service.syncManyDocs(titleIds);
       })
     );
   }

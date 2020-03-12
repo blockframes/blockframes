@@ -1,11 +1,5 @@
 import { Injectable } from '@angular/core';
-import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
-import {
-  CollectionConfig,
-  CollectionService,
-  WriteOptions,
-  syncQuery
-} from 'akita-ng-fire';
+import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
 import { switchMap, filter, tap, map } from 'rxjs/operators';
 import { createMovie, Movie, MovieAnalytics, SyncMovieAnalyticsOptions } from './movie.model';
 import { MovieState, MovieStore } from './movie.store';
@@ -16,7 +10,6 @@ import { firestore } from 'firebase/app';
 import { PermissionsService } from '@blockframes/organization/permissions/+state/permissions.service';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { Observable, combineLatest } from 'rxjs';
-import { Contract } from '@blockframes/contract/contract/+state/contract.model';
 import { MovieQuery } from './movie.query';
 
 // TODO#944 - refactor CRUD operations
@@ -24,7 +17,6 @@ import { MovieQuery } from './movie.query';
 @CollectionConfig({ path: 'movies' })
 export class MovieService extends CollectionService<MovieState> {
   constructor(
-    private organizationQuery: OrganizationQuery,
     private authQuery: AuthQuery,
     private authService: AuthService,
     private permissionsService: PermissionsService,
@@ -33,35 +25,6 @@ export class MovieService extends CollectionService<MovieState> {
     protected store: MovieStore,
   ) {
     super(store);
-  }
-
-  /** Gets every analytics for all movies and sync them. */
-  public syncAnalytics(options?: SyncMovieAnalyticsOptions) {
-    return combineLatest([
-      this.query.selectAll(options).pipe(map(movies => movies.map(m => m.id))),
-      this.query.analytics.select('ids')
-    ]).pipe(
-      filter(([movieIds, analyticsIds]) => movieIds.some(id => !analyticsIds.includes(id))),
-      switchMap(([movieIds]) => {
-        const f = this.functions.httpsCallable('getMovieAnalytics');
-        return f({ movieIds, daysPerRange: 28 });
-      }),
-      tap(analytics => this.store.analytics.upsertMany(analytics))
-    )
-  }
-
-  /** Gets every movieIds of the user active organization and sync them. */
-  public syncOrgMovies() {
-    return this.organizationQuery.selectActive().pipe(
-      switchMap(org => this.syncManyDocs(org.movieIds))
-    );
-  }
-
-  /** Sync all movies from a list of contracts */
-  public syncContractsMovie(contracts: Contract[]) {
-    const rawTitleIds = new Set(contracts.map(c => c.titleIds));
-    const titleIds = Array.from(rawTitleIds).flat();
-    return this.syncManyDocs(titleIds);
   }
 
   async onCreate(movie: Movie, { write }: WriteOptions) {
@@ -84,6 +47,21 @@ export class MovieService extends CollectionService<MovieState> {
     // We need to update the _meta field before remove to get the userId in the backend function: onMovieDeleteEvent
     await this.db.doc(`movies/${movieId}`).update({ '_meta.deletedBy': userId });
     return super.remove(movieId);
+  }
+
+  /** Gets every analytics for all movies and sync them. */
+  public syncAnalytics(options?: SyncMovieAnalyticsOptions) {
+    return combineLatest([
+      this.query.selectAll(options).pipe(map(movies => movies.map(m => m.id))),
+      this.query.analytics.select('ids')
+    ]).pipe(
+      filter(([movieIds, analyticsIds]) => movieIds.some(id => !analyticsIds.includes(id))),
+      switchMap(([movieIds]) => {
+        const f = this.functions.httpsCallable('getMovieAnalytics');
+        return f({ movieIds, daysPerRange: 28 });
+      }),
+      tap(analytics => this.store.analytics.upsertMany(analytics))
+    )
   }
 
   /** Add a partial or a full movie to the database. */
@@ -141,7 +119,6 @@ export class MovieService extends CollectionService<MovieState> {
     return f({ movieIds, daysPerRange: 28 });
   }
 
-
   /**
    * @dev ADMIN method
    * Fetch all movies for administration uses
@@ -150,9 +127,8 @@ export class MovieService extends CollectionService<MovieState> {
   public async getAllMovies(): Promise<Movie[]> {
     const movies = await this.db
       .collection('movies')
-      .get().toPromise()
+      .get().toPromise();
 
     return movies.docs.map(m => createMovie(m.data()));
   }
-
 }
