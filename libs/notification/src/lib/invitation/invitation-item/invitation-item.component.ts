@@ -12,7 +12,6 @@ import { InvitationDocument } from '../+state/invitation.firestore';
 export class InvitationItemComponent {
   @Input() invitation: InvitationDocument;
   @Input() inWidget: boolean;
-  @Input() placeholderUrl: string;
 
   constructor(private service: InvitationService, private snackBar: MatSnackBar) { }
 

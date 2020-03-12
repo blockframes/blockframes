@@ -17,6 +17,9 @@
     .widget-header[color="primary"] {
       color: mat-color($primary, default-contrast);
       background-color: mat-color($primary);
+      .mat-caption {
+        color: mat-color($primary, default-contrast);
+      }
     }
 
     .widget-footer {
