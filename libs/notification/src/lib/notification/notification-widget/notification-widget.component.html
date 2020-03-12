@@ -17,7 +17,7 @@
 <overlay-widget #notifications test-id="notification-list">
   <widget-card>
     <header widgetHeader color="primary" fxLayout="row" fxLayoutAlign="space-between center">
-      <span>Recent Activity</span>
+      <span class="mat-caption">Recent Activity</span>
     </header>
     <invitation-list></invitation-list>
     <notification-list [notificationsByDate]="(notifications$ | async)"></notification-list>

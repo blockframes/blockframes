@@ -35,13 +35,14 @@ const fade = trigger('fade', [
   `, `
     .widget-header {
       display: block;
-      border-radius: 4px 4px 0 0;
+      border-radius: 10px 10px 0 0;
       padding: 16px;
     }
   `, `
     .widget-footer {
       display: block;
-      border-radius: 0 0 4px 4px;
+      border-radius: 0 0 10px 10px;
+      margin-top: 16px;
     }
     .widget-footer .mat-button {
         padding: 16px;
@@ -56,7 +57,7 @@ export class OverlayWidgetComponent implements OnDestroy {
   private overlayRef: OverlayRef;
   private widgetPortal: TemplatePortal;
   private opened = false;
-  
+
   constructor(
     private overlay : Overlay,
     private viewContainerRef: ViewContainerRef,
