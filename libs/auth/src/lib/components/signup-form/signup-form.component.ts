@@ -1,10 +1,4 @@
-import {
-  Component,
-  Output,
-  EventEmitter,
-  ChangeDetectionStrategy,
-  HostBinding
-} from '@angular/core';
+import { Component, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { SignupForm } from '../../forms/signup.form';
 
 @Component({
@@ -14,7 +8,6 @@ import { SignupForm } from '../../forms/signup.form';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SignupFormComponent {
-  @HostBinding('attr.page-id') pageId = 'signup-form';
   @Output() opened = new EventEmitter();
   @Output() submited = new EventEmitter();
 
