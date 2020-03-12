@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, ViewChild, HostBinding, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewChild, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -13,7 +13,6 @@ import { SigninForm } from '../../forms/signin.form';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoginComponent implements OnInit {
-  @HostBinding('attr.page-id') pageId = 'login-view';
   @ViewChild('signinSidenav') loginSidenav: MatSidenav;
   @ViewChild('signupSidenav') signupSidenav: MatSidenav;
 
