@@ -1,4 +1,4 @@
-<article fxLayout="row" fxLayoutAlign="center center" class="padding-filter">
+<article fxLayout="row" fxLayoutAlign="center center">
   <mat-icon svgIcon="search_table" class="icon-filter"></mat-icon>
   <mat-form-field *ngIf="showFilter">
     <input matInput placeholder="Type to filter in the list below" (keyup)="applyFilter($event.target.value)"/>
