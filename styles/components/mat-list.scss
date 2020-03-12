@@ -42,8 +42,7 @@
   .mat-tab-label {
     opacity: 1;
     min-width: 10px;
-    padding: 0;
-    margin : 0 20px;
+    padding: 0 16px;
     &.mat-tab-label-active {
       color:  mat-color($primary, 500);
     }

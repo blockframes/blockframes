@@ -5,8 +5,7 @@
     <span class=mat-body-2>Today</span>
     <invitation-item
       *ngFor="let invitation of day.value"
-      [invitation]="invitation"
-      placeholderAsset="profil_user.webp">
+      [invitation]="invitation">
     </invitation-item>
   </ng-container>
   <ng-container *ngSwitchCase="(yesterday | date)">
@@ -14,8 +13,7 @@
     <span class="mat-body-2">Yesterday</span>
     <invitation-item
       *ngFor="let invitation of day.value"
-      [invitation]="invitation"
-      placeholderAsset="profil_user.webp">
+      [invitation]="invitation">
     </invitation-item>
   </ng-container>
   <ng-container *ngSwitchDefault>
@@ -23,8 +21,7 @@
     <span class="mat-body-2">{{ day.key }}</span>
     <invitation-item
       *ngFor="let invitation of day.value; let isLast = last"
-      [invitation]="invitation"
-      placeholderAsset="profil_user.webp">
+      [invitation]="invitation">
     </invitation-item>
   </ng-container>
 </ng-container>
