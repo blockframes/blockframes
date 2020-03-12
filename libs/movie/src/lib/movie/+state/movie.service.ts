@@ -19,15 +19,6 @@ import { Observable, combineLatest } from 'rxjs';
 import { Contract } from '@blockframes/contract/contract/+state/contract.model';
 import { MovieQuery } from './movie.query';
 
-/** Query all the movies with their distributionDeals */
-const movieListWithDealsQuery = () => ({
-  path: 'movies',
-  queryFn: ref => ref.where('main.storeConfig.status', '==', 'accepted'),
-  distributionDeals: (movie: Movie) => ({
-    path: `movies/${movie.id}/distributionDeals`
-  })
-});
-
 // TODO#944 - refactor CRUD operations
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies' })
@@ -64,10 +55,6 @@ export class MovieService extends CollectionService<MovieState> {
     return this.organizationQuery.selectActive().pipe(
       switchMap(org => this.syncManyDocs(org.movieIds))
     );
-  }
-
-  public syncMoviesWithDeals() {
-    return syncQuery.call(this, movieListWithDealsQuery());
   }
 
   /** Sync all movies from a list of contracts */
