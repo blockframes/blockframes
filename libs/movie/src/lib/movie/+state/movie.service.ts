@@ -6,7 +6,7 @@ import {
   WriteOptions,
   syncQuery
 } from 'akita-ng-fire';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, filter, tap, map } from 'rxjs/operators';
 import { createMovie, Movie, MovieAnalytics } from './movie.model';
 import { MovieState, MovieStore } from './movie.store';
 import { AuthQuery, AuthService } from '@blockframes/auth';
@@ -15,8 +15,9 @@ import { cleanModel } from '@blockframes/utils/helpers';
 import { firestore } from 'firebase/app';
 import { PermissionsService } from '@blockframes/organization/permissions/+state/permissions.service';
 import { AngularFireFunctions } from '@angular/fire/functions';
-import { Observable } from 'rxjs';
+import { Observable, combineLatest } from 'rxjs';
 import { Contract } from '@blockframes/contract/contract/+state/contract.model';
+import { MovieQuery } from './movie.query';
 
 /** Query all the movies with their distributionDeals */
 const movieListWithDealsQuery = () => ({
@@ -37,9 +38,42 @@ export class MovieService extends CollectionService<MovieState> {
     private authService: AuthService,
     private permissionsService: PermissionsService,
     private functions: AngularFireFunctions,
-    store: MovieStore
+    private query: MovieQuery,
+    protected store: MovieStore,
   ) {
     super(store);
+  }
+
+  /** Gets every analytics for all movies and sync them. */
+  public syncAnalytics() {
+    return combineLatest([
+      this.query.select('ids'),
+      this.query.analytics.select('ids')
+    ]).pipe(
+      filter(([movieIds, analyticsIds]) => movieIds.some(id => !analyticsIds.includes(id))),
+      switchMap(([movieIds]) => {
+        const f = this.functions.httpsCallable('getMovieAnalytics');
+        return f({ movieIds, daysPerRange: 28 });
+      }),
+      tap(analytics => this.store.analytics.upsertMany(analytics))
+    )
+  }
+
+  /** Gets every analytics for all movies with status accepted and sync them. */
+  public syncAnalyticsWithStatusAccepted() {
+    return combineLatest([
+      this.query.selectAll({ filterBy: movie => movie.main.storeConfig.status === 'accepted' }).pipe(
+        map(movies => movies.map(movie => movie.id))
+      ),
+      this.query.analytics.select('ids')
+    ]).pipe(
+      filter(([movieIds, analyticsIds]) => movieIds.some(id => !analyticsIds.includes(id))),
+      switchMap(([movieIds]) => {
+        const f = this.functions.httpsCallable('getMovieAnalytics');
+        return f({ movieIds, daysPerRange: 28 });
+      }),
+      tap(analytics => this.store.analytics.upsertMany(analytics))
+    )
   }
 
   /** Gets every movieIds of the user active organization and sync them. */
