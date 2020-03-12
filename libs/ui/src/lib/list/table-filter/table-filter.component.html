@@ -1,7 +1,7 @@
 <article fxLayout="row" fxLayoutAlign="center center" class="padding-filter">
-  <mat-icon svgIcon="search_table" class="icon-filter first-icon"></mat-icon>
+  <mat-icon svgIcon="search_table" class="icon-filter"></mat-icon>
   <mat-form-field *ngIf="showFilter">
-    <input class="bf-table-filter" matInput placeholder="Type to filter in the list below" (keyup)="applyFilter($event.target.value)"/>
+    <input matInput placeholder="Type to filter in the list below" (keyup)="applyFilter($event.target.value)"/>
     <!-- TODO issue#1819 -->
   </mat-form-field>
   <button mat-icon-button class="icon-filter" [widgetTarget]="filterColumnWidget">

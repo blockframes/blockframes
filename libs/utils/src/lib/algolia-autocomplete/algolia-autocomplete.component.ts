@@ -52,7 +52,7 @@ export class AlgoliaAutocompleteComponent implements OnInit {
   /**
    * Output to get all data from algolia
    */
-  @Output() emitSelect = new EventEmitter();
+  @Output() selectionChange = new EventEmitter();
 
   /**
    * Renders the template coming from the parten component
@@ -104,7 +104,7 @@ export class AlgoliaAutocompleteComponent implements OnInit {
    */
   public findObjectID(event: MatAutocompleteSelectedEvent) {
     this.control.setValue(this.resolveValue(event.option.value));
-    this.emitSelect.emit(event.option.value.objectID);
+    this.selectionChange.emit(event.option.value.objectID);
     if (this.resetInput) {
       this.control.reset(null);
     }

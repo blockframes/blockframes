@@ -13,7 +13,7 @@ table {
 
 .icon-filter {
   margin-top: 8px;
-  &.first-icon {
+  &:first-child {
     margin-right: 8px;
   }
 }
