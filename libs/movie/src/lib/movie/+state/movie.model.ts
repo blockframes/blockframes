@@ -380,8 +380,12 @@ export function getMovieReceipt(contracts: Contract[], movieId: string): number 
  * @param analytics
  * @param movieId
  */
-export function getMovieTotalViews(analytics: MovieAnalytics[], movieId: string): number {
+export function getMovieTotalViews(analytics: MovieAnalytics[], movieId: string): string {
   const movieAnalytic = analytics.find(analytic => analytic.movieId === movieId);
-  const movieHits = movieAnalytic.movieViews.current.map(event => event.hits);
-  return movieHits.reduce((sum, val) => sum + val, 0);
+  if (movieAnalytic) {
+    const movieHits = movieAnalytic.movieViews.current.map(event => event.hits);
+    return movieHits.reduce((sum, val) => sum + val, 0).toString();
+  } else {
+    return undefined;
+  }
 }
