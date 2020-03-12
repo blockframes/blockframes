@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import {
   Movie,
@@ -8,7 +8,7 @@ import {
   getMovieTotalViews
 } from '@blockframes/movie';
 import { startWith, switchMap, map, distinctUntilChanged } from 'rxjs/operators';
-import { Observable, combineLatest } from 'rxjs';
+import { Observable, combineLatest, Subscription } from 'rxjs';
 import { Contract } from '@blockframes/contract/contract/+state/contract.model';
 import { StoreStatus, MovieAnalytics } from '@blockframes/movie/movie/+state/movie.firestore';
 import { ContractQuery } from '@blockframes/contract/contract/+state/contract.query';
@@ -42,7 +42,7 @@ function createTitleView(
   return {
     id: movie.id,
     title: movie.main.title.international,
-    view: getMovieTotalViews(analytics, movie.id).toString(),
+    view: getMovieTotalViews(analytics, movie.id),
     sales: ownContracts.length,
     receipt: getMovieReceipt(ownContracts, movie.id),
     status: movie.main.storeConfig.status
@@ -55,13 +55,15 @@ function createTitleView(
   styleUrls: ['./list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TitleListComponent implements OnInit {
+export class TitleListComponent implements OnInit, OnDestroy {
   columns = columns;
   initialColumns = ['title', 'view', 'sales', 'receipt', 'status'];
   titles$: Observable<TitleView[]>;
   filter = new FormControl();
   filter$ = this.filter.valueChanges.pipe(startWith(this.filter.value));
   public allMovies$ = this.query.selectAll();
+
+  private sub: Subscription;
 
   constructor(
     private query: MovieQuery,
@@ -72,14 +74,8 @@ export class TitleListComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // Analytics from movies in the store
-    const moviesAnalytics$ = this.query.selectAll().pipe(
-      map(
-        movies => movies.map(movie => movie.id),
-        distinctUntilChanged((prev: string[], curr: string[]) => prev.length === curr.length)
-      ),
-      switchMap(movieIds => this.service.getMovieAnalytics(movieIds))
-    );
+    this.sub = this.service.syncAnalytics().subscribe();
+    const moviesAnalytics$ = this.query.analytics.selectAll();
 
     // Filtered movies
     const movies$ = this.filter$.pipe(
@@ -109,5 +105,9 @@ export class TitleListComponent implements OnInit {
       ? `${basePath}/tunnel/movie/${title.id}`
       : `${basePath}/titles/${title.id}`;
     this.router.navigate([path], { relativeTo: this.route });
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 }
