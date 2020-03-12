@@ -3,11 +3,6 @@
 
   mat-sidenav {
     width: 256px;
-
-    // // No border bottom for the toolbar in the dashboard sidenav
-    // &#dashboard-navbar .mat-toolbar {
-    //   border-bottom: none;
-    // }
   }
 
   mat-sidenav-content[tunnelSpecificities] {
