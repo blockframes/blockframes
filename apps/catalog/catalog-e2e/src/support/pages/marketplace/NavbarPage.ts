@@ -28,6 +28,14 @@ export default abstract class NavbarPage {
     cy.get('catalog-layout a[test-id=heart-icon]').should('contain', count);
   }
 
+  public assertNoWishListCount(count: number) {
+    cy.get('catalog-layout a[test-id=heart-icon]').should('not.contain', count || 0);
+  }
+
+  public assertWishListCountIsOne() {
+    cy.get('catalog-layout a[test-id=heart-icon]').should('contain', 1);
+  }
+
   public clickLogout() {
     this.openProfileMenu();
     cy.get('button[test-id=logout]').click();

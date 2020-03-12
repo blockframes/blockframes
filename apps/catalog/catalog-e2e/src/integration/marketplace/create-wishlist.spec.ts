@@ -48,7 +48,7 @@ describe('Test wishlist icon from library page', () => {
 
     // Check that current wishlist is empty
     p4.assertNoMovieInWishlist();
-    p4.checkWishListCount(0);
+    p4.assertNoWishListCount(MOVIENAMELIST.length);
   });
 });
 
@@ -82,7 +82,7 @@ describe('Test wishlist icon from movie view page', () => {
 
     // Check that current wishlist is empty
     p5.assertNoMovieInWishlist();
-    p5.checkWishListCount(0);
+    p5.assertNoWishListCount(MOVIENAMELIST.length);
   });
 
   describe('Test wishlist removal icon from everywhere', () => {
@@ -97,9 +97,9 @@ describe('Test wishlist icon from movie view page', () => {
 
       // Add and remove a movie with wishlist button from home page
       p2.clickFirstWishlistButton();
-      p2.checkWishListCount(1);
+      p2.assertWishListCountIsOne();
       p2.clickFirstWishlistButton();
-      p2.checkWishListCount(0);
+      p2.assertNoWishListCount(MOVIENAMELIST.length);
 
       // VIEW PAGE
 
@@ -120,7 +120,7 @@ describe('Test wishlist icon from movie view page', () => {
         p4.openSideNav();
         p4.clickLibrary();
       });
-      p3.checkWishListCount(0);
+      p3.assertNoWishListCount(MOVIENAMELIST.length);
 
       // LINE-UP PAGE
 
@@ -134,7 +134,7 @@ describe('Test wishlist icon from movie view page', () => {
       MOVIENAMELIST.forEach(movieName => {
         p3.clickWishlistButton(movieName);
       });
-      p3.checkWishListCount(0);
+      p3.assertNoWishListCount(MOVIENAMELIST.length);
     });
   });
 });
