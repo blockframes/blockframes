@@ -5,6 +5,7 @@ import { tap, switchMap } from 'rxjs/operators';
 import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
 
 /** Get all the contracts where the active movie appears. */
+// todo(#1887) remove versions in query
 const movieContractsQuery = (movieId: string): Query<ContractWithTimeStamp[]> => ({
   path: 'contracts',
   queryFn: ref => ref.where('titleIds', 'array-contains', movieId).where('type', '==', 'sale'),

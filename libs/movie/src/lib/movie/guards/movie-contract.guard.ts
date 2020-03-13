@@ -2,9 +2,10 @@ import { Injectable } from '@angular/core';
 import { CollectionGuard, CollectionGuardConfig, awaitSyncQuery, Query } from 'akita-ng-fire';
 import { MovieState, MovieService, MovieStore, Movie } from '../+state';
 import { ContractQuery } from '@blockframes/contract/contract/+state/contract.query';
+import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { tap, switchMap } from 'rxjs/operators';
-import { OrganizationQuery } from '@blockframes/organization';
 import { of } from 'rxjs';
+
 
 /** Query movies from the contract with distributions deals from the last version. */
 const movieListContractQuery = (contractId: string, movieIds: string[]): Query<Movie[]> => ({
@@ -53,7 +54,7 @@ export class MovieContractGuard extends CollectionGuard<MovieState> {
 @Injectable({ providedIn: 'root' })
 @CollectionGuardConfig({ awaitSync: true })
 export class MovieListContractListGuard extends CollectionGuard<MovieState> {
-  constructor(service: MovieService, private contractQuery: ContractQuery) {
+  constructor(service: MovieService, private contractQuery: ContractQuery, private store: MovieStore) {
     super(service);
   }
 
@@ -61,8 +62,10 @@ export class MovieListContractListGuard extends CollectionGuard<MovieState> {
   sync() {
     return this.contractQuery.selectAll().pipe(
       switchMap(contracts => {
+        // Get all titleIds from contract and remove duplicates
         const rawTitleIds = new Set(contracts.map(c => c.titleIds));
         const titleIds = Array.from(rawTitleIds).flat();
+        this.store.reset();
         return this.service.syncManyDocs(titleIds);
       })
     );
