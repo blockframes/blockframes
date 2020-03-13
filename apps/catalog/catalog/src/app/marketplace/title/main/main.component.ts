@@ -43,7 +43,7 @@ export class MarketplaceMovieMainComponent {
     const premiere = `${prize.premiere} Premiere`;
     return [festivalInfo, prize.prize , prize.premiere ? premiere : null].filter(value => !!value).join(' | ');
   }
-  
+
   // TODO#1658 Update LANGUAGES static model to be RFC-5646 compliant
   public getStakeholder(movie: Movie, role: string) {
     return movie.main.stakeholders[role].map(stakeholder => {
@@ -62,11 +62,12 @@ export class MarketplaceMovieMainComponent {
   }
 
   public hasBudget({ budget, salesInfo, movieReview}: Movie): boolean {
-    return !!(budget.estimatedBudget ||
-       budget.boxOffice.length > 0 ||
-       salesInfo.certifications.length > 0||
-       salesInfo.rating.length > 0||
-       movieReview.length > 0)
+    return !!(
+      budget.boxOffice.length ||
+      salesInfo.certifications.length ||
+      salesInfo.rating.length ||
+      movieReview.length
+    )
   }
 
   public budgetRange({ from, to }) {

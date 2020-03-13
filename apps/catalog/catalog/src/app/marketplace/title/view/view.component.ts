@@ -93,7 +93,7 @@ export class MarketplaceMovieViewComponent implements OnInit {
     const workTypeRegistered = movie.main.workType;
     return [
       getKeyIfExists(workType, workTypeRegistered) ? workType[workTypeRegistered] : '',
-      typeof totalRunTime === 'number' ? `${totalRunTime} min` : 'TBC',
+      typeof totalRunTime === 'number' ? `${totalRunTime} min` : '',
       genres.map(genre => getLabelBySlug('GENRES', genre)).join(', '),
       originalLanguages.map(language => language).join(', ')
     ].filter(value => !!value).join(' | ');
