@@ -4,6 +4,7 @@ import { DistributionDeal, getDealTerritories } from '@blockframes/movie/distrib
 import { MatSort } from '@angular/material/sort';
 import { MediasSlug } from '@blockframes/utils/static-model';
 import { formatDate } from '@angular/common';
+import { toDate } from '@blockframes/utils/helpers';
 
 const columns = {
   territory: 'Territory',
@@ -37,8 +38,8 @@ function createRightView(deal: DistributionDeal): RightView {
   if (deal) {
     return {
       territory: getDealTerritories(deal),
-      startDate: formatDate(deal.terms.start, 'MM/dd/yyyy', 'en-US'),
-      endDate: formatDate(deal.terms.end, 'MM/dd/yyyy', 'en-US'),
+      startDate: formatDate(toDate(deal.terms.start), 'MM/dd/yyyy', 'en-US'),
+      endDate: formatDate(toDate(deal.terms.end), 'MM/dd/yyyy', 'en-US'),
       rights: deal.licenseType,
       languages: '',
       holdback: '',

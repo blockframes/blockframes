@@ -13,6 +13,11 @@ import { PermissionsService } from '@blockframes/organization/permissions/+state
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'users' })
 export class MemberService extends CollectionService<MemberState> {
+
+  public userIds$ = this.organizationQuery.selectActive().pipe(
+    map(org => org.userIds)
+  );
+
   constructor(
     protected store: MemberStore,
     private authService: AuthService,
@@ -22,16 +27,6 @@ export class MemberService extends CollectionService<MemberState> {
     private organizationService: OrganizationService
     ) {
     super(store);
-  }
-
-  private userIds$ = this.organizationQuery.selectActive().pipe(
-    map(org => org.userIds)
-  );
-
-  public syncOrgMembers() {
-    return this.userIds$.pipe(
-      switchMap(userIds => this.syncManyDocs(userIds))
-    );
   }
 
   /** Remove a member from the organization. */
