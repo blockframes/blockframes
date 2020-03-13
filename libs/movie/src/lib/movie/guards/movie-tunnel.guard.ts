@@ -14,7 +14,8 @@ export class MovieTunnelGuard implements CanActivate {
         const movieId: string = this.routerQuery.getValue().state.root.params.movieId;
         const movie = await this.service.getValue(movieId)
         const org = await this.orgService.getValue(this.orgQuery.getActiveId())
-        return movie?.main.storeConfig.status !== 'submitted' && org.movieIds.includes(movieId) ?
-            true : this.router.navigateByUrl('c/o/dashboard/titles');
+        const isSubmitted = movie?.main.storeConfig.status === 'submitted';
+        const redirect = this.router.parseUrl(`c/o/dashboard/titles/${movieId}`);
+        return (!isSubmitted && org.movieIds.includes(movieId)) ? true : redirect;
     }
 }
