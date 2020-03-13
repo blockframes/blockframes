@@ -12,7 +12,6 @@ import { AngularFireFunctions } from '@angular/fire/functions';
 import { Observable, combineLatest } from 'rxjs';
 import { MovieQuery } from './movie.query';
 
-// TODO#944 - refactor CRUD operations
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies' })
 export class MovieService extends CollectionService<MovieState> {
