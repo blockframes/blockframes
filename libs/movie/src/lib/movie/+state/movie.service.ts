@@ -31,7 +31,7 @@ export class MovieService extends CollectionService<MovieState> {
     // When a movie is created, we also create a permissions document for it.
     // Since movie can be created on behalf of another user (An admin from admin panel for example)
     // We use createdBy attribute to fetch OrgId
-    const userId = movie._meta && movie._meta.createdBy ? movie._meta.createdBy : this.authQuery.userId;
+    const userId = movie._meta?.createdBy ? movie._meta.createdBy : this.authQuery.userId;
     const user = await this.authService.getUser(userId);
     return this.permissionsService.addDocumentPermissions(movie, write as firestore.WriteBatch, user.orgId);
   }
@@ -67,7 +67,7 @@ export class MovieService extends CollectionService<MovieState> {
   /** Add a partial or a full movie to the database. */
   public async addMovie(original: string, movie?: Movie): Promise<Movie> {
     const id = this.db.createId();
-    const userId = movie._meta && movie._meta.createdBy ? movie._meta.createdBy : this.authQuery.userId;
+    const userId = movie._meta?.createdBy ? movie._meta.createdBy : this.authQuery.userId;
 
     if (!movie) {
       // create empty movie
@@ -106,11 +106,9 @@ export class MovieService extends CollectionService<MovieState> {
    */
   // @TODO #1389 Use native akita-ng-fire functions
   public async getFromInternalRef(internalRef: string): Promise<Movie> {
-    const movieSnapShot = await this.db
-      .collection('movies', ref => ref.where('main.internalRef', '==', internalRef))
-      .get().toPromise();
+    const movies = await this.getValue(ref => ref.where('main.internalRef', '==', internalRef))
 
-    return movieSnapShot.docs.length ? createMovie(movieSnapShot.docs[0].data()) : undefined;
+    return movies.length ? createMovie(movies[0]) : undefined;
   }
 
   /** Call a firebase function to get analytics specify to an array of movieIds.*/
@@ -125,10 +123,8 @@ export class MovieService extends CollectionService<MovieState> {
    */
   // @TODO #1389 Use native akita-ng-fire functions
   public async getAllMovies(): Promise<Movie[]> {
-    const movies = await this.db
-      .collection('movies')
-      .get().toPromise();
+    const movies = await this.getValue()
 
-    return movies.docs.map(m => createMovie(m.data()));
+    return movies.map(movie => createMovie(movie));
   }
 }
