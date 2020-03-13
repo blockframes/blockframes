@@ -49,15 +49,16 @@ export class StartTunnelComponent implements OnInit {
 
   async begin() {
     this.loading = true;
+    let movieId;
+    const createdBy = this.auth.getValue().uid;
+    const movie = createMovie({ _meta: { createdBy } });
     try {
       await this.movieService.runTransaction(async (write) => {
-        const createdBy = this.auth.getValue().uid;
-        const movie = createMovie({ _meta: { createdBy } });
-        const movieId = await this.movieService.add(movie, { write });
+        movieId = await this.movieService.add(movie, { write });
         await this.orgService.update(this.orgQuery.getActiveId(), (org) => ({ movieIds: [...org.movieIds, movieId] }), { write })
-        this.loading = false;
-        this.router.navigate([movieId], { relativeTo: this.route });
       })
+      this.loading = false;
+      this.router.navigate([movieId], { relativeTo: this.route });
     } catch (err) {
       this.loading = false;
       console.error(err);
