@@ -1,5 +1,9 @@
-import { Directive, Input, HostListener, ElementRef } from '@angular/core';
+import { Directive, Input, HostListener, ElementRef, Renderer2, HostBinding, ComponentRef } from '@angular/core';
 import { OverlayWidgetComponent } from './overlay-widget.component';
+import { Subscription } from 'rxjs';
+import { FocusMonitor } from '@angular/cdk/a11y';
+import { OverlayRef, Overlay, OverlayPositionBuilder } from '@angular/cdk/overlay';
+import { ComponentPortal } from '@angular/cdk/portal';
 
 // OVERLAY TRIGGERED ON CLICK
 @Directive({ selector: "button[widgetTarget]" })
@@ -30,17 +34,56 @@ export class OverlayWidgetInputDirective {
 // OVERLAY TRIGGERED ON Hover
 @Directive({ selector: "[widgetTooltip]" })
 export class OverlayWidgetTooltipDirective {
+  // open = true;
+  private _passiveListeners = new Map<string, EventListenerOrEventListenerObject>();
+  private _touchstartTimeout: number;
+  private sub: Subscription
+  private overlayRef: OverlayRef;
 
   @Input() widgetTooltip: OverlayWidgetComponent;
   @HostListener('mouseenter') onMouseEnter() {
-    this.widgetTooltip.open(this.el);
+      this.widgetTooltip.open(this.el);
+    // const tooltipRef: ComponentRef<OverlayWidgetComponent>
+    // = this.overlayRef.attach(new ComponentPortal(OverlayWidgetComponent));
+    // tooltipRef.instance.open(this.el)
   }
-  // TODO##1958 update widgetTooltip to listen to mouseleave event
-  // @HostListener('mouseleave') onMouseLeave() {
-  //   setTimeout(() => {
-  //     this.widgetTooltip.close();
-  //   }, 1000)
+
+  @HostListener('mouseleave') onMouseLeave() {
+    this.widgetTooltip.close();
+    // setTimeout(() => {
+    //   this.widgetTooltip.close();
+    // }, 100000)
+    // this.overlayRef.detach();
+  }
+
+
+  // @HostBinding('style.pointer-events')
+  // pointerEvents:string = 'none';
+
+  constructor(private overlay: Overlay,
+    private overlayPositionBuilder: OverlayPositionBuilder,
+    private el: ElementRef, private focusMonitor: FocusMonitor) {}
+
+  // ngOnInit() {
+  //   // this.sub = this.focusMonitor.monitor(this.el).subscribe(origin => {
+  //   //   origin ? console.log('open') : console.log('close');
+  //   // })
+
+  //   const positionStrategy = this.overlayPositionBuilder
+  //   .flexibleConnectedTo(this.el)
+  //   .withPositions([{
+  //     originX: 'center',
+  //     originY: 'bottom',
+  //     overlayX: 'center',
+  //     overlayY: 'top',
+  //     offsetY: -20,
+  //   }]);
+
+  // this.overlayRef = this.overlay.create({ positionStrategy });
+
+  // }
+  // ngOnDestroy() {
+  //   this.sub.unsubscribe();
   // }
 
-  constructor(private el: ElementRef) {}
 }
