@@ -59,6 +59,10 @@ export interface Movie extends MovieDocumentWithDates {
   distributionDeals?: DistributionDeal[]
 }
 
+export interface SyncMovieAnalyticsOptions {
+  filterBy: (movie: Movie) => boolean
+}
+
 /** A factory function that creates Movie */
 export function createMovie(params: Partial<Movie> = {}): Movie {
   return {
@@ -385,7 +389,5 @@ export function getMovieTotalViews(analytics: MovieAnalytics[], movieId: string)
   if (movieAnalytic) {
     const movieHits = movieAnalytic.movieViews.current.map(event => event.hits);
     return movieHits.reduce((sum, val) => sum + val, 0).toString();
-  } else {
-    return undefined;
   }
 }

@@ -20,7 +20,7 @@ export class HomeComponent implements OnInit,OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.sub = this.movieService.syncAnalyticsWithStatusAccepted().subscribe();
+    this.sub = this.movieService.syncAnalytics({ filterBy: movie => movie.main.storeConfig.status === 'accepted' }).subscribe();
     this.movieAnalytics$ = this.movieQuery.analytics.selectAll();
   }
 
