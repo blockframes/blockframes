@@ -1,6 +1,6 @@
 import { Component, TemplateRef, ViewChild, Directive, ViewEncapsulation, ViewContainerRef, OnDestroy, ElementRef } from '@angular/core';
 import { trigger, state, style, transition, animate } from '@angular/animations';
-import { Overlay, OverlayRef } from '@angular/cdk/overlay';
+import { Overlay, OverlayRef, FlexibleConnectedPositionStrategy } from '@angular/cdk/overlay';
 import { TemplatePortal } from '@angular/cdk/portal';
 
 const fade = trigger('fade', [
@@ -24,6 +24,10 @@ const fade = trigger('fade', [
   </ng-template>
   `,
   styles: [`
+    .widget-panel {
+      pointer-events: none !important;
+    }
+  `,`
     .bf-widget:focus {
       outline: none;
     }
@@ -90,6 +94,7 @@ export class OverlayWidgetComponent implements OnDestroy {
         hasBackdrop: true,
         backdropClass: 'cdk-overlay-transparent-backdrop',
         positionStrategy,
+        panelClass: 'widget-panel',
       });
       this.widgetPortal = new TemplatePortal(this.ref, this.viewContainerRef);
       this.overlayRef.backdropClick().subscribe(() => this.close());
