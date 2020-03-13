@@ -119,7 +119,9 @@ export class MovieAnalyticsChartComponent {
 
   totalHitsOnCurrentMonth(eventName: MovieAnalyticsEventName) {
     const total = this.chartData.find(chart => chart.eventName === eventName).y;
-    return total ? getSum(total) : undefined;
+    if (total) {
+      return getSum(total);
+    }
   }
 
   calculatePercentage(currentHits: number[], pastHits: number[]): number {
