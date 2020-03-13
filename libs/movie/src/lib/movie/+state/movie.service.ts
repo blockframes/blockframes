@@ -7,7 +7,7 @@ import {
   syncQuery
 } from 'akita-ng-fire';
 import { switchMap, filter, tap, map } from 'rxjs/operators';
-import { createMovie, Movie, MovieAnalytics } from './movie.model';
+import { createMovie, Movie, MovieAnalytics, SyncMovieAnalyticsOptions } from './movie.model';
 import { MovieState, MovieStore } from './movie.store';
 import { AuthQuery, AuthService } from '@blockframes/auth';
 import { createImgRef } from '@blockframes/utils/image-uploader';
@@ -45,26 +45,9 @@ export class MovieService extends CollectionService<MovieState> {
   }
 
   /** Gets every analytics for all movies and sync them. */
-  public syncAnalytics() {
+  public syncAnalytics(options?: SyncMovieAnalyticsOptions) {
     return combineLatest([
-      this.query.select('ids'),
-      this.query.analytics.select('ids')
-    ]).pipe(
-      filter(([movieIds, analyticsIds]) => movieIds.some(id => !analyticsIds.includes(id))),
-      switchMap(([movieIds]) => {
-        const f = this.functions.httpsCallable('getMovieAnalytics');
-        return f({ movieIds, daysPerRange: 28 });
-      }),
-      tap(analytics => this.store.analytics.upsertMany(analytics))
-    )
-  }
-
-  /** Gets every analytics for all movies with status accepted and sync them. */
-  public syncAnalyticsWithStatusAccepted() {
-    return combineLatest([
-      this.query.selectAll({ filterBy: movie => movie.main.storeConfig.status === 'accepted' }).pipe(
-        map(movies => movies.map(movie => movie.id))
-      ),
+      this.query.selectAll(options).pipe(map(movies => movies.map(m => m.id))),
       this.query.analytics.select('ids')
     ]).pipe(
       filter(([movieIds, analyticsIds]) => movieIds.some(id => !analyticsIds.includes(id))),
