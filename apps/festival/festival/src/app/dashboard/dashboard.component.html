@@ -1,0 +1,36 @@
+<mat-sidenav-container>
+  <mat-sidenav #sidenav id="dashboard-navbar" [attr.role]="(ltMd$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(ltMd$ | async) ? 'over' : 'side'" [opened]="(ltMd$ | async) === false">
+    <mat-toolbar>
+      <a class="logo" routerLink=".">
+        <img src="assets/logo/dark/archipel-content.svg" alt="Archipel Content Logo" />
+      </a>
+    </mat-toolbar>
+    <mat-nav-list>
+      <a mat-list-item routerLink="home" routerLinkActive="active">
+        <mat-icon matListIcon svgIcon="dashboard"></mat-icon>
+        <span matLine><b>Dashboard</b></span>
+      </a>
+      <a mat-list-item routerLink="titles" routerLinkActive="active">
+        <mat-icon matListIcon svgIcon="video_library"></mat-icon>
+        <span matLine><b>My Titles</b></span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+
+
+  <mat-sidenav-content>
+    <!-- TOOLBAR -->
+    <mat-toolbar fxLayout="row" fxLayoutAlign="space-between center" id="catalog-toolbar">
+      <button mat-icon-button (click)="sidenav.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <div fxLayout="row" fxLayoutGap="24px">
+        <overlay-notification-widget></overlay-notification-widget>
+        <account-profile-widget></account-profile-widget>
+      </div>
+    </mat-toolbar>
+    <!-- CONTENT -->
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

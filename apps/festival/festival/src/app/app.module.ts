@@ -10,7 +10,7 @@ import { Router, NavigationEnd } from '@angular/router';
 
 // Akita
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
-import { production, firebase, persistenceSettings } from '@env';
+import { firebase, persistenceSettings } from '@env';
 
 // Components
 import { AppComponent } from './app.component';
