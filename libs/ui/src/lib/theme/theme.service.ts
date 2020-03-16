@@ -1,10 +1,9 @@
-import { Injectable, Inject, Renderer2 } from '@angular/core';
+import { Injectable, Inject } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
-  private renderer: Renderer2
   _theme = new BehaviorSubject<string>('');
   theme$ = this._theme.asObservable();
 
@@ -35,11 +34,8 @@ export class ThemeService {
   }
 
   /** Get the current value of the theme */
-  initTheme(renderer: Renderer2, mode: 'dark' | 'light') {
-    if (!this.renderer) {
-      this.renderer = renderer;
-      const theme = localStorage.getItem('theme') || mode;
-      this.setTheme(theme);
-    }
+  initTheme(mode: 'dark' | 'light') {
+    const theme = localStorage.getItem('theme') || mode;
+    this.setTheme(theme);
   }
 }
