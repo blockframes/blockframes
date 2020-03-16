@@ -130,7 +130,7 @@ function createMovieMainControls(main : Partial<MovieMain> = {}) {
     originCountries: FormList.factory(entity.originCountries, el => new FormStaticValue(el, 'TERRITORIES', [Validators.required])),
     originalLanguages: FormList.factory(entity.originalLanguages, el => new FormStaticValue(el, 'LANGUAGES')),
     status: new FormControl(entity.status),
-    totalRunTime: new FormControl(entity.totalRunTime),
+    totalRunTime: new FormControl(entity.totalRunTime, [Validators.min(0)] ),
     shortSynopsis: new FormControl(entity.shortSynopsis, [Validators.maxLength(500)] ),
     stakeholders: new StakeholderMapForm(entity.stakeholders),
     workType: new FormControl(entity.workType),
