@@ -1,15 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ActivityTab } from '@blockframes/notification/activity-feed/activity-tabs/activity-tabs.component';
+import { NotificationQuery } from '@blockframes/notification';
+import { map } from 'rxjs/operators';
+
+// App specific tabs
+const appTabs: ActivityTab[] = [{
+  label: 'Offers and Deals',
+  filters: ['newContract', 'contractInNegotiation']
+}]
 
 @Component({
-  selector: 'festival-notification',
+  selector: 'festival-marketplace-notification',
   templateUrl: './notification.component.html',
-  styleUrls: ['./notification.component.scss']
+  styleUrls: ['./notification.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NotificationComponent implements OnInit {
+export class NotificationComponent {
 
-  constructor() { }
+  public applicationTabs = appTabs;
+  public hasNotifications$ = this.notificationQuery.selectCount().pipe(map(count => !!count))
 
-  ngOnInit(): void {
-  }
-
+  constructor(private notificationQuery: NotificationQuery) {}
 }
