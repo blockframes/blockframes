@@ -61,6 +61,13 @@
     },
     "catalog-e2e": {
       "tags": []
+    },
+    "festival": {
+      "tags": ["festival"]
+    },
+    "festival-e2e": {
+      "tags": [],
+      "implicitDependencies": ["festival"]
     }
   }
 }
