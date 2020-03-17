@@ -6,7 +6,7 @@
 import { db } from '../internals/firebase';
 import { OrganizationDocument, StakeholderDocument } from './types';
 import { PermissionsDocument } from '@blockframes/permissions/types';
-import { ContractDocument, ContractVersionDocument } from '@blockframes/contract/contract/+state/contract.firestore';
+import { ContractDocument } from '@blockframes/contract/contract/+state/contract.firestore';
 
 export function getCollection<T>(path: string): Promise<T[]> {
   return db
@@ -49,6 +49,7 @@ export async function getOrganizationsOfDocument(
  * @returns the organizations that are in the contract
  */
 export async function getOrganizationsOfContract(contract: ContractDocument): Promise<OrganizationDocument[]> {
+  // @todo (#1887) partyIds contains userIds not orgIds.
   const promises = contract.partyIds.map(orgId => getDocument<OrganizationDocument>(`orgs/${orgId}`));
   return Promise.all(promises);
 }
@@ -91,7 +92,3 @@ export async function getAdminIds(organizationId: string): Promise<string[]> {
   return adminIds;
 }
 
-export function versionExists(contractId: string, versionId: string) {
-  const version = getDocument<ContractVersionDocument>(`contracts/${contractId}/versions/${versionId}`);
-  return !!version
-}

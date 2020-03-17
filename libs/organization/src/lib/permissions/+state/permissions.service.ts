@@ -69,6 +69,7 @@ export class PermissionsService extends CollectionService<PermissionsState> {
    */
   public addContractPermissions(contract: Contract) {
     this.db.firestore.runTransaction(async tx => {
+      // @todo (#1887) partyIds contains userIds not orgIds.
       contract.partyIds.forEach(partyId => {
         const contractPermissions = createDocPermissions({ id: contract.id });
         const contractPermissionsRef = this.db.doc(`permissions/${partyId}/documentPermissions/${contractPermissions.id}`).ref;

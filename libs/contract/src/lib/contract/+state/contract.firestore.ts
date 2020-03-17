@@ -125,7 +125,15 @@ interface ContractRaw<D> {
   /** @dev an informative signature date, given that the actual signatures are in parties */
   signDate?: D,
   parties: ContractPartyDetailRaw<D>[],
+  /** 
+   * @dev simply contains id of titles existing in lastVersion.
+   * For quering purpose
+   * @todo (#1887) titleIds is handled by backend trigger.
+  */
   titleIds: string[],
+  // @todo (#1887) currently, partyIds is used to store orgIds ..
+  // we need to change this or to rename this attribute
+  // @todo (#1887) titleIds is handled by backend trigger.
   partyIds: string[],
   documents: ContractLegalDocuments,
   /**

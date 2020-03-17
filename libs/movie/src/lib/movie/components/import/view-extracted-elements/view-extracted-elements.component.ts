@@ -1854,6 +1854,7 @@ export class ViewExtractedElementsComponent implements OnInit {
               licensor.party.role = getCodeIfExists('LEGAL_ROLES', 'licensor');
               contract.doc.parties.push(licensor);
               if (licensor.party.orgId) {
+                // @todo (#1887) partyIds contains userIds not orgIds.
                 contract.doc.partyIds.push(licensor.party.orgId);
               }
             });
@@ -1870,6 +1871,7 @@ export class ViewExtractedElementsComponent implements OnInit {
             licensee.party.role = getCodeIfExists('LEGAL_ROLES', 'licensee');
 
             if (licensee.party.orgId) {
+              // @todo (#1887) partyIds contains userIds not orgIds.
               contract.doc.partyIds.push(licensee.party.orgId);
             }
 

@@ -21,7 +21,6 @@ import {
   MovieRating,
   MovieDocumentWithDates,
   BoxOffice,
-  UnitBox,
   MovieStakeholders,
   MovieAnalytics,
   MovieLegalDocuments,

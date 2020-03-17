@@ -1,19 +1,24 @@
 import { functions, db, admin } from './internals/firebase';
 import { ContractDocument, PublicContractDocument, OrganizationDocument, PublicOrganization } from './data/types';
 import { ValidContractStatuses, ContractVersionDocument } from '@blockframes/contract/contract/+state/contract.firestore';
-import { getOrganizationsOfContract, getDocument, versionExists } from './data/internals';
+import { getOrganizationsOfContract, getDocument } from './data/internals';
 import { triggerNotifications, createNotification } from './notification';
 import { centralOrgID } from './environments/environment';
 import { isEqual } from 'lodash';
 
 
 async function getCurrentVersionId(tx: FirebaseFirestore.Transaction, contractId: string): Promise<string> {
-  return (await _getVersionCount(tx, contractId)).toString(); // @TODO (#1887) change type to number
+  return (await _getVersionCount(contractId, tx)).toString(); // @TODO (#1887) change type to number
 }
 
 async function getNextVersionId(tx: FirebaseFirestore.Transaction, contractId: string): Promise<string> {
-  const count = await _getVersionCount(tx, contractId);
+  const count = await _getVersionCount(contractId, tx);
   return (count + 1).toString(); // @TODO (#1887) change type to number
+}
+
+async function getPreviousVersionId(contractId: string): Promise<string> {
+  const count = await _getVersionCount(contractId);
+  return (count > 1 ? count - 1 : 1).toString(); // @TODO (#1887) change type to number
 }
 
 async function getCurrentCreationDate(tx: FirebaseFirestore.Transaction, contractId: string): Promise<firebase.firestore.Timestamp | undefined> {
@@ -25,16 +30,21 @@ async function getCurrentCreationDate(tx: FirebaseFirestore.Transaction, contrac
 
 /**
  * Get current version count.
- * @TODO (#1887) remove "_meta" filter once migration is ok
+ * @TODO (#1887) remove "_meta" filter once code migration is ok
  * @param versionSnap 
  */
-async function _getVersionCount(tx: FirebaseFirestore.Transaction, contractId: string) {
-  const versionSnap = await tx.get(db.collection(`contracts/${contractId}/versions`));
-  return versionSnap.docs.filter(d => d.id !== '_meta').length;
+async function _getVersionCount(contractId: string, tx?: FirebaseFirestore.Transaction) {
+  if (tx) {
+    const versionSnap = await tx.get(db.collection(`contracts/${contractId}/versions`));
+    return versionSnap.docs.filter(d => d.id !== '_meta').length;
+  } else {
+    const versionSnap = await db.collection(`contracts/${contractId}/versions`).get();
+    return versionSnap.docs.filter(d => d.id !== '_meta').length;
+  }
 }
 
 /**
- * To compare current and previous versions
+ * To compare current and previous versions against each other
  * @param contract
  */
 function _cleanVersion(contract: ContractDocument) {
@@ -44,45 +54,76 @@ function _cleanVersion(contract: ContractDocument) {
 }
 
 /**
- *
+ * @param tx
  * @param contract
- * @param deletedVersionId Used only when a version is removed from DB. We update public data with previous version.
  */
-async function transformContractToPublic(contract: ContractDocument, deletedVersionId?: string): Promise<void> {
-  return db.runTransaction(async tx => {
+async function updatePublicContract(tx: FirebaseFirestore.Transaction, contract: ContractDocument): Promise<void> {
+  /** @dev public contract document is created only if its status is OK */
+  if (contract.lastVersion && ValidContractStatuses.includes(contract.lastVersion.status)) {
     const publicContractSnap = await tx.get(db.doc(`publicContracts/${contract.id}`));
-
-    // Fetching the current version to compare it against deletedVersionId value
-    const versionSnap = await tx.get(db.doc(`contracts/${contract.id}/versions/_meta`));
-    // @TODO (#1887) using _meta to keep the id of the last version is too dangerous since triggers are not necessary in order.
-    const versionDoc = versionSnap.data();
-    let lastVersionDoc;
-    if (!!versionDoc) {
-      // If the current version is the one to skip/delete (deletedVersionId), we take the previous one to check its status
-      const versionToFetch = !deletedVersionId || parseInt(deletedVersionId, 10) !== parseInt(versionDoc.count, 10)
-        ? versionDoc.count
-        // @TODO (#1887) Counting and assuming ids are sequential and ordered is too dangerous.
-        // A solution should be to fetch all version ordered by id desc limit 1
-        : parseInt(deletedVersionId, 10) - 1;
-
-      const lastVersionSnap = await tx.get(db.doc(`contracts/${contract.id}/versions/${versionToFetch}`));
-      lastVersionDoc = lastVersionSnap.data();
-    }
-
-    /** @dev public contract document is created only if its status is OK */
-    if (lastVersionDoc && ValidContractStatuses.includes(lastVersionDoc.status)) {
-      const publicContract: PublicContractDocument = {
-        id: contract.id,
-        type: contract.type,
-        titleIds: contract.titleIds,
-      };
-      await tx.set(publicContractSnap.ref, publicContract)
-    } else {
-      /** @dev status is not OK, we delete public contract */
-      await tx.delete(db.doc(`publicContracts/${contract.id}`));
-    }
-  });
+    const publicContract: PublicContractDocument = {
+      id: contract.id,
+      type: contract.type,
+      titleIds: contract.titleIds,
+    };
+    tx.set(publicContractSnap.ref, publicContract)
+  } else {
+    /** @dev status is not OK, we delete public contract */
+    tx.delete(db.doc(`publicContracts/${contract.id}`));
+  }
 }
+
+/**
+ * Checks for a status change between previous and current and triggers notifications.
+ * @param current
+ * @param previous 
+ */
+async function checkAndTriggerNotifications(current: ContractDocument) {
+  const previousVersionId = await getPreviousVersionId(current.id);
+  const previousVersionSnap = await db.doc(`contracts/${current.id}/versions/${previousVersionId}`).get();
+  const previous = previousVersionSnap.data() as ContractVersionDocument;
+
+  if (!!previous) {
+    const contractInNegociation = (previous.status === 'submitted') && (current.lastVersion.status === 'undernegotiation');
+    const contractSubmitted = (previous.status === 'draft') && (current.lastVersion.status === 'submitted');
+
+    if (contractSubmitted) { // Contract is submitted by organization to Archipel Content
+      // @TODO (#1887) partyIds contains userIds not orgIds && crashes if partyIds is empty
+      // TODO (#1999): Find real creator 
+      const { id, name } = await getDocument<PublicOrganization>(`orgs/${current.partyIds[0]}`);
+      const archipelContent = await getDocument<OrganizationDocument>(`orgs/${centralOrgID}`);
+      const notifications = archipelContent.userIds.map(
+        userId => createNotification({
+          userId,
+          organization: { id, name }, // TODO (#1999): Add the logo to display if orgs collection is not public to Archipel Content
+          type: 'newContract',
+          docId: current.id,
+          app: 'biggerBoat'
+        })
+      );
+
+      await triggerNotifications(notifications);
+    }
+
+    if (contractInNegociation) { // Contract is validated by Archipel Content
+      const organizations = await getOrganizationsOfContract(current);
+      const notifications = organizations
+        .filter(organizationDocument => !!organizationDocument && !!organizationDocument.userIds)
+        .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
+        .map(userId => {
+          return createNotification({
+            userId,
+            type: 'contractInNegotiation',
+            docId: current.id,
+            app: 'biggerBoat'
+          });
+        });
+
+      await triggerNotifications(notifications);
+    }
+  }
+}
+
 
 /**
  * This trigger is in charge of keeping contract and contractVersion document always
@@ -90,16 +131,18 @@ async function transformContractToPublic(contract: ContractDocument, deletedVers
  * 
  * It handles some defined behaviors such as:
  *  - creationDate param
+ *  - versionId consistency
  *  - @TODO (#1887) add more
  * 
  * Concerning the database rules:
- *  - once created, only contract.lastVersion should be allowed for update, other contract fields are forbidden
- *  - once created, a contractVersion document should be read only (even for admins)
+ *  - once created, a contractVersion document should be read only and not removable (even for admins)
+ *  - once code migration complete, contratVersion should be writable by this function only (even for admins)
+ *  - once code migration complete, contract.lastVersion MUST be sent when performing write operations.
  *  - @TODO (#1887) add this requirements into an issue
  * @param change 
  */
 export async function onContractWrite(
-  change: functions.Change<FirebaseFirestore.DocumentSnapshot>
+  change: functions.Change<FirebaseFirestore.DocumentSnapshot>,
 ): Promise<any> {
   const before = change.before.data();
   const after = change.after.data();
@@ -110,8 +153,7 @@ export async function onContractWrite(
    * Note that this case should never occur since contract deletion (or write) is forbidden.
    */
   if (!after && !!before) {
-    // @TODO #1887 also remove subcollections
-    return db.doc(`publicContracts/${before.id}`).delete();
+    await db.doc(`publicContracts/${before.id}`).delete();
   }
 
   // We retreive current and previous contract documents
@@ -119,26 +161,29 @@ export async function onContractWrite(
   const previous = before as ContractDocument;
 
   if (!!current.lastVersion) {
-    return db.runTransaction(async tx => {
-      _cleanVersion(current);
-      if (!!previous) { // We have a previous version to compare against.
-        if (!previous.lastVersion) {
-          // Old way compatibility. If a new version is pushed but previous does not have lastVersion attribute,
-          // we fetch it.
-          const versionDoc = await getCurrentVersionId(tx, current.id);
-          if (versionDoc !== '0') {
-            const lastVersionSnap = await tx.get(db.doc(`contracts/${previous.id}/versions/${versionDoc}`));
-            previous.lastVersion = lastVersionSnap.data() as any;
-          }
-        }
-        if (!!previous.lastVersion) { _cleanVersion(previous) };
+    await db.runTransaction(async tx => {
+
+      const versionDoc = await getCurrentVersionId(tx, current.id);
+      if (versionDoc !== '0') {
+        const lastVersionSnap = await tx.get(db.doc(`contracts/${previous.id}/versions/${versionDoc}`));
+        previous.lastVersion = lastVersionSnap.data() as any;
       }
 
-      if (!previous || !isEqual(current.lastVersion, previous.lastVersion)) {
+      if (!!previous.lastVersion) {
+        if (previous.lastVersion.id && current.lastVersion.id && previous.lastVersion.id > current.lastVersion.id) {
+          throw new Error(`Version id "${current.lastVersion.id}" must be higher than previous one "${previous.lastVersion.id}".`);
+        }
+        _cleanVersion(previous)
+      };
+
+      _cleanVersion(current);
+      if (!previous || (!!previous.lastVersion && !isEqual(current.lastVersion, previous.lastVersion))) {
         current.lastVersion.id = await getNextVersionId(tx, current.id);
         // Creation date is handled here. No need to push it, it will be overrided here.
         current.lastVersion.creationDate = admin.firestore.Timestamp.now();
         const versionToHistorize = current.lastVersion as ContractVersionDocument;
+        // A new version have been saved, we check if public contract need to be updated
+        await updatePublicContract(tx, current);
         // We historize current version 
         tx.set(db.doc(`contracts/${current.id}/versions/${versionToHistorize.id}`), versionToHistorize);
         // We update _meta document for backward compatibility
@@ -146,95 +191,54 @@ export async function onContractWrite(
         // Update contract
         tx.set(change.after.ref, { lastVersion: current.lastVersion }, { merge: true });
       } else if (!!previous && !!previous.lastVersion && isEqual(current.lastVersion, previous.lastVersion)) {
-        // To prevent the case when the front try to push version Id or creationDate (which are only handled by this trigger).
+        // To prevent the case where the front tries to push version Id or creationDate (which are only handled by this trigger).
         current.lastVersion.id = await getCurrentVersionId(tx, current.id);
         current.lastVersion.creationDate = await getCurrentCreationDate(tx, current.id);
         tx.set(change.after.ref, { lastVersion: current.lastVersion }, { merge: true });
       }
       return current;
     });
+    // Contract version may have changed, we check if notifications need to be triggered
+    await checkAndTriggerNotifications(current);
+    return true;
   } else {
     // Contract have been pushed the old way (lastVersion is pushed separatly)
     // nothing to do, let onContractVersionWrite handle the case (temporarly)
+    // Also, rules should have prevent this case (@see method definition).
     return false;
   }
 }
 
-// @TODO #1887 remove this but keep public contract creation logic & notifications
+/**
+ * This is for the old way, when version was pushed separatly from contract
+ * This trigger handles this old way to keep database up to date
+ * @param change 
+ * @param context
+ * @TODO (#1887) remove this when code migration is ok to prevent useless writes
+ */
 export async function onContractVersionWrite(
   change: functions.Change<FirebaseFirestore.DocumentSnapshot>,
   context: functions.EventContext
 ): Promise<any> {
   const { contractId, versionId } = context.params;
+  const after = change.after.data();
 
-  if (!contractId) {
-    const msg = 'Found invalid contractVersion data on deletion.'
-    console.error(msg);
-    throw new Error(msg);
+  if (!after) {
+    // Should never occur
+    throw new Error(`Contract version "${versionId}" have been deleted.`);
   }
 
-  const before = change.before.data() as ContractVersionDocument;
-  const after = change.after.data() as ContractVersionDocument;
-  const contract = await getDocument<ContractDocument>(`contracts/${contractId}`);
-
-  // @TODO ICI if contract.lastVersion does not exists
-
-  if (!after && !!before) { // Deletion
-    console.log(`deleting ContractVersion : "${versionId}" for : ${contractId}`);
-    return transformContractToPublic(contract, versionId);
-  }
-
-  // Prepare data to create notifications
-  const previousVersionId = (parseInt(after.id, 10) - 1).toString(); // @TODO (#1887)
-
-  if (!versionExists(contractId, previousVersionId)) {
-    const msg = 'Contract does not have a previous version';
-    console.error(msg);
-    throw new Error(msg);
-  }
-
-  await transformContractToPublic(contract);
-
-  const previousVersion = await getDocument<ContractVersionDocument>(`contracts/${contractId}/versions/${previousVersionId}`)
-  const contractInNegociation = (previousVersion.status === 'submitted') && (after.status === 'undernegotiation');
-  const contractSubmitted = (previousVersion.status === 'draft') && (after.status === 'submitted');
-
-  if (contractSubmitted) { // Contract is submitted by organization to Archipel Content
-
-    const { id, name } = await getDocument<PublicOrganization>(`orgs/${contract.partyIds[0]}`); // TODO (#1999): Find real creator
-
-    const archipelContent = await getDocument<OrganizationDocument>(`orgs/${centralOrgID}`);
-    const notifications = archipelContent.userIds.map(
-      userId => createNotification({
-        userId,
-        organization: { id, name }, // TODO (#1999): Add the logo to display if orgs collection is not public to Archipel Content
-        type: 'newContract',
-        docId: contractId,
-        app: 'biggerBoat'
-      })
-    );
-
-    await triggerNotifications(notifications);
-  }
-
-  if (contractInNegociation) { // Contract is validated by Archipel Content
-
-    const organizations = await getOrganizationsOfContract(contract);
-
-    const notifications = organizations
-      .filter(organizationDocument => !!organizationDocument && !!organizationDocument.userIds)
-      .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
-      .map(userId => {
-        return createNotification({
-          userId,
-          type: 'contractInNegotiation',
-          docId: contractId,
-          app: 'biggerBoat'
-        });
-      });
-
-    await triggerNotifications(notifications);
-  }
-
-  return true;
+  return db.runTransaction(async tx => {
+    if (versionId === '_meta') {
+      // Force count so data is always OK even if user push a bad version count.
+      after.count = await getCurrentVersionId(tx, contractId);
+      tx.set(db.doc(`contracts/${contractId}/versions/_meta`), { count: parseInt(after.count, 10) }, { merge: true });
+    } else {
+      // We just update contract.lastVersion with this data,
+      // and let the onContractWrite function handle the job.
+      const contractSnap = await tx.get(db.doc(`contracts/${contractId}`));
+      tx.set(contractSnap.ref, { lastVersion: after }, { merge: true });
+    }
+    return true;
+  });
 }

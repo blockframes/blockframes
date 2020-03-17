@@ -53,6 +53,7 @@ export function createContract(params: Partial<Contract> = {}): Contract {
     titleIds: [],
     partyIds: [],
     documents: createContractLegalDocuments(params.documents),
+    lastVersion: createContractVersion(params.lastVersion),
     ...params
   };
 }
