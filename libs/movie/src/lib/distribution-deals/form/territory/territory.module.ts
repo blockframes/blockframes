@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
 import { DistributionDealTerritoryComponent } from './territory.component';
 
 // Modules
-import { ChipsAutocompleteModule } from '@blockframes/ui/form/chips-autocomplete/chips-autocomplete.module';
+import { ChipsAutocompleteModule } from '@blockframes/ui/static-autocomplete/chips/chips-autocomplete.module';
 
 @NgModule({
   imports: [CommonModule, FlexLayoutModule, ReactiveFormsModule, ChipsAutocompleteModule],

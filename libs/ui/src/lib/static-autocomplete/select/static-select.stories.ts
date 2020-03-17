@@ -1,5 +1,5 @@
 import { ToolkitModule } from '@blockframes/ui/storybook';
-import { StaticSelectModule } from '@blockframes/ui/static-select/static-select.module';
+import { StaticSelectModule } from './static-select.module';
 import { text } from '@storybook/addon-knobs';
 
 

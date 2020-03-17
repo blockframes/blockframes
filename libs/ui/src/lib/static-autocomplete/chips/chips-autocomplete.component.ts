@@ -17,7 +17,6 @@ import { MatChipInputEvent } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Observable, Subscription } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
-import { ISO3166TERRITORIES } from '@blockframes/utils/static-model/territories-ISO-3166';
 
 @Component({
   selector: '[form]chips-autocomplete',
