@@ -2,7 +2,6 @@
 import { Component, Input, ContentChild, TemplateRef, ChangeDetectionStrategy, OnInit } from '@angular/core';
 
 // Blockframes
-import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 import { FormStaticValue } from '@blockframes/utils/form';
 import { Scope, SlugAndLabel } from '@blockframes/utils/static-model/staticModels';
 import { staticModels } from '@blockframes/utils/static-model';
@@ -12,12 +11,12 @@ import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 
 @Component({
-  selector: '[scope][control]static-input',
-  templateUrl: './static-input.component.html',
-  styleUrls: ['./static-input.component.scss'],
+  selector: '[scope][control]input-autocomplete',
+  templateUrl: './input-autocomplete.component.html',
+  styleUrls: ['./input-autocomplete.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class StaticInputComponent implements OnInit {
+export class InputAutocompleteComponent implements OnInit {
   @Input() label?: string;
 
   @Input() mode: 'legacy' | 'standard' | 'fill' | 'outline' = 'outline'
