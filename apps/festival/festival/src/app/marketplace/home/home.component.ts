@@ -1,18 +1,18 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Movie, MovieQuery } from '@blockframes/movie/movie/+state';
+import { Movie, MovieQuery, MovieMain } from '@blockframes/movie/movie/+state';
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
 import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
-import { combineLatest, Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
 interface CarouselSection {
   title: string;
   subline: string;
-  movies: Partial<Movie>[];
+  movies$: Observable<Movie[]>;
 }
+
 
 @Component({
   selector: 'festival-marketplace-home',
@@ -24,6 +24,7 @@ export class HomeComponent implements OnInit {
 
   /** Observable to fetch all movies from the store */
   public moviesBySections$: Observable<CarouselSection[]>;
+  public sections: CarouselSection[];
 
   constructor(
     private movieQuery: MovieQuery,
@@ -31,41 +32,36 @@ export class HomeComponent implements OnInit {
     private snackbar: MatSnackBar,
     private analytics: FireAnalytics,
     private catalogCartQuery: CatalogCartQuery,
-  ) {
-  }
+  ) {}
 
   ngOnInit() {
-    const latest$ = this.movieQuery.selectAll({
-      filterBy: movies => movies.main.productionYear >= 2018
-    });
-    const postProduction$ = this.movieQuery.selectAll({
-      filterBy: movies => movies.main.status === 'post-production'
-    });
-    const completed$ = this.movieQuery.selectAll({
-      filterBy: movies => movies.main.status === 'finished'
-    });
-
-    this.moviesBySections$ = combineLatest([latest$, postProduction$, completed$]).pipe(
-      map(([latest, postProduction, completed]) => {
-        return [
-          {
-            title: 'New Films',
-            subline: 'Discover our latest releases',
-            movies: latest
-          },
-          {
-            title: 'Post-Production Films',
-            subline: 'Brand new projects with great potential',
-            movies: postProduction
-          },
-          {
-            title: 'Completed Films',
-            subline: 'Explore our selection of fresh or library titles',
-            movies: completed
-          }
-        ];
-      })
-    );
+    const selectMovies = (status: MovieMain['status']) => {
+      return this.movieQuery.selectAll({
+        filterBy: movies => movies.main.status === status
+      });
+    }
+    this.sections = [
+      {
+        title: 'Pre Production Films',
+        subline: 'Discover our latest releases',
+        movies$: selectMovies('financing')
+      },
+      {
+        title: 'In Production Films',
+        subline: 'Discover our latest releases',
+        movies$: selectMovies('shooting')
+      },
+      {
+        title: 'Post-Production Films',
+        subline: 'Brand new projects with great potential',
+        movies$: selectMovies('post-production')
+      },
+      {
+        title: 'Completed Films',
+        subline: 'Explore our selection of fresh or library titles',
+        movies$: selectMovies('finished')
+      }
+    ];
   }
 
   public layout(index: number) {
