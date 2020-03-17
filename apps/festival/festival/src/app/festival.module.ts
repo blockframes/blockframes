@@ -12,26 +12,26 @@ const routes: Routes = createRoutes({
     loadChildren: () => import('./landing/landing.module').then(m => m.LandingModule)
   },
   appsRoutes: [
-  //   {
-  //   path: '',
-  //   redirectTo: 'marketplace',
-  //   pathMatch: 'full'
-  // },
-  // {
-  //   path: 'marketplace',
-  //   canActivate: [MovieCollectionGuard /*, CatalogAppGuard*/],
-  //   canDeactivate: [MovieCollectionGuard],
-  //   loadChildren: () => import('./marketplace/marketplace.module').then(m => m.MarketplaceModule)
-  // },
-  // {
-  //   path: 'dashboard',
-  //   canActivate: [/*CatalogAppGuard*/],
-  //   loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule)
-  // },
-  // {
-  //   path: 'admin',
-  //   loadChildren: () => import('@blockframes/admin').then(m => m.AdminModule)
-  // }
+    {
+    path: '',
+    redirectTo: 'marketplace',
+    pathMatch: 'full'
+  },
+  {
+    path: 'marketplace',
+    canActivate: [MovieCollectionGuard /*, CatalogAppGuard*/],
+    canDeactivate: [MovieCollectionGuard],
+    loadChildren: () => import('./marketplace/marketplace.module').then(m => m.MarketplaceModule)
+  },
+  {
+    path: 'dashboard',
+    canActivate: [/*CatalogAppGuard*/],
+    loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule)
+  },
+  {
+    path: 'admin',
+    loadChildren: () => import('@blockframes/admin').then(m => m.AdminModule)
+  }
   ]
 });
 
