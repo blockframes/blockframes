@@ -29,8 +29,7 @@
       <button mat-icon-button (click)="sidenav.toggle()">
         <mat-icon>menu</mat-icon>
       </button>
-      <algolia-autocomplete [indexName]="movieIndex" pathToValue="objectID" mode="legacy"
-        (selectionChange)="navigate($event)">
+      <algolia-autocomplete [indexName]="movieIndex" pathToValue="objectID" mode="legacy">
         <!-- TODO #2225 -->
         <ng-template let-result>
           <a routerLink="result.objectID">{{ result.movie.main.title.international }}</a>
