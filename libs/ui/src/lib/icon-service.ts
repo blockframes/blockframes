@@ -182,6 +182,7 @@ export const icons = [
     name: 'media_financiers_fill',
     url: 'assets/icons/media_financiers_fill.svg'
   },
+  { name: 'menu', url: 'assets/icons/menu.svg' },
   { name: 'monetization', url: 'assets/icons/monetization.svg' },
   { name: 'more_vert', url: 'assets/icons/more_vert.svg' },
   {
