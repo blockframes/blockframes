@@ -1,7 +1,7 @@
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { StaticInputComponent } from './static-input.component';
+import { InputAutocompleteComponent } from './input-autocomplete.component';
 
 // Material
 import { MatInputModule } from '@angular/material/input';
@@ -16,7 +16,7 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
     MatInputModule,
     MatAutocompleteModule
   ],
-  declarations: [StaticInputComponent],
-  exports: [StaticInputComponent]
+  declarations: [InputAutocompleteComponent],
+  exports: [InputAutocompleteComponent]
 })
-export class StaticInputModule { }
+export class InputAutocompleteModule { }

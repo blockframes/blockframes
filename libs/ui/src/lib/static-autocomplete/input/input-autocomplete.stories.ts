@@ -1,19 +1,19 @@
 import { FormControl } from '@angular/forms';
-import { StaticInputModule } from './static-input.module';
+import { InputAutocompleteModule } from './input-autocomplete.module';
 import { ToolkitModule } from '@blockframes/ui/storybook';
 import { text } from '@storybook/addon-knobs';
 
 export default {
-  title: 'Static Input'
+  title: 'Input Autocomplete'
 };
 
 export const staticInput = () => ({
-  moduleMetadata: { imports: [StaticInputModule, ToolkitModule] },
-  name: 'Static Input',
+  moduleMetadata: { imports: [InputAutocompleteModule, ToolkitModule] },
+  name: 'Input Autocomplete',
   template: `
     <storybook-toolkit>
-      <h1 title>Static Input</h1>
-        <static-input [scope]="scope" [control]="control"></static-input>
+      <h1 title>Input Autocomplete</h1>
+        <input-autocomplete [scope]="scope" [control]="control"></input-autocomplete>
     </storybook-toolkit>
   `,
   props: {
