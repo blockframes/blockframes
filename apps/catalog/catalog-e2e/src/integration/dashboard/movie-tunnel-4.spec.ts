@@ -17,7 +17,7 @@ const PRODUCERS = ['Grégory', 'Bernard'];
 const PRODUCER = 'producer';
 const CREW_MEMBERS = ['Laure', 'Mercier', 'Sindika', 'Dokolo'];
 const CREW_MEMBER = 'crew-member';
-const ROLES = ['Executive Producer', 'Line Producer', 'Associate Producer'];
+const ROLES = ['Executive Producer', 'Score Composer', 'Costume Designer'];
 
 beforeEach(() => {
   clearDataAndPrepareTest();

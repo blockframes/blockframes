@@ -22,7 +22,7 @@ beforeEach(() => {
 });
 
 describe('Test wishlist icon from library page', () => {
-  it('Login into an existing account, add two movies on wishlist from library page, check the wishlist.', () => {
+  it.skip('Login into an existing account, add two movies on wishlist from library page, check the wishlist.', () => {
     // Connexion
     const p1: LoginViewPage = new LoginViewPage();
     p1.fillSignin(LOGIN_CREDENTIALS);
