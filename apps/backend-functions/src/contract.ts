@@ -4,6 +4,19 @@ import { ValidContractStatuses, ContractVersionDocument } from '@blockframes/con
 import { getOrganizationsOfContract, getDocument, versionExists } from './data/internals';
 import { triggerNotifications, createNotification } from './notification';
 import { centralOrgID } from './environments/environment';
+import { isEqual } from 'lodash';
+
+
+async function getCurrentVersionId(contractId: string): Promise<string> {
+  const versionSnap = await db.collection(`contracts/${contractId}/versions`).get();
+  return versionSnap.size.toString();
+}
+
+async function getNextVersionId(contractId: string): Promise<string> {
+  const versionSnap = await db.collection(`contracts/${contractId}/versions`).get();
+  return (versionSnap.size + 1).toString();
+}
+
 /**
  *
  * @param contract
@@ -45,28 +58,66 @@ async function transformContractToPublic(contract: ContractDocument, deletedVers
   });
 }
 
-export async function onContractWrite(
-  change: functions.Change<FirebaseFirestore.DocumentSnapshot>,
-): Promise<any> {
 
+export async function onContractWrite(
+  change: functions.Change<FirebaseFirestore.DocumentSnapshot>
+): Promise<any> {
   const before = change.before.data();
   const after = change.after.data();
 
-  if (!after && !!before) { // Deletion
+  /**
+   * There is no after but before exits
+   * so we are in deletion mode
+   * We need to remove publicContract document
+   */
+  if (!after && !!before) {
+    // @TODO #1887 also remove subcollections ?
     return db.doc(`publicContracts/${before.id}`).delete();
   }
 
-  const contract = after as ContractDocument;
+  // We retreive current and previous contract documents
+  const current = after as ContractDocument;
+  const previous = before as ContractDocument;
 
-  if (!contract) {
-    const msg = 'Found invalid contract data.'
-    console.error(msg);
-    throw new Error(msg);
+  const currentVersionId = current.lastVersion && current.lastVersion.id ? current.lastVersion.id : '1';
+  delete current.lastVersion.id;
+  let previousVersionId = '1';
+  if (previous && previous.lastVersion) {
+    previousVersionId = previous.lastVersion.id;
+    delete previous.lastVersion.id;
+  }//@TODO #1887 else => aller recup la version en sous collection (old way)
+
+  //@todo interdire l'update d'un contrat mais pas contract.lastVersion dans les rules?
+  // @todo gérer la création date
+
+  // todo ajouter un if !current.lastVersion (old way)
+
+  if (!previous || !isEqual(current.lastVersion, previous.lastVersion)) {
+    console.log('ici');
+    // We historize current version 
+    current.lastVersion.id = await getNextVersionId(current.id);
+    const versionToHistorize = current.lastVersion as ContractVersionDocument;
+    // @TODO #1887 transaction
+    db.doc(`contracts/${current.id}/versions/${versionToHistorize.id}`).set(versionToHistorize);
+    change.after.ref.set({ lastVersion: current.lastVersion }, { merge: true });
+  } else if (!!previous) {
+    console.log('la');
+    if (isEqual(current.lastVersion, previous.lastVersion)) {
+      console.log('lala');
+      // To prevent the case when the front try to push version Id (which is only handled by this trigger).
+      if (currentVersionId !== previousVersionId) {
+        console.log('lalala');
+        current.lastVersion.id = await getCurrentVersionId(current.id);
+        change.after.ref.set({ lastVersion: current.lastVersion }, { merge: true });
+      }
+    }
+
   }
 
-  return (contract);
+  return current;
 }
 
+// @TODO #1887 remove this but keep public contract creation logic & notifications
 export async function onContractVersionWrite(
   change: functions.Change<FirebaseFirestore.DocumentSnapshot>,
   context: functions.EventContext
@@ -82,6 +133,8 @@ export async function onContractVersionWrite(
   const before = change.before.data() as ContractVersionDocument;
   const after = change.after.data() as ContractVersionDocument;
   const contract = await getDocument<ContractDocument>(`contracts/${contractId}`);
+
+  // @TODO ICI if contract.lastVersion does not exists
 
   if (!after && !!before) { // Deletion
     console.log(`deleting ContractVersion : "${versionId}" for : ${contractId}`);
@@ -126,16 +179,16 @@ export async function onContractVersionWrite(
     const organizations = await getOrganizationsOfContract(contract);
 
     const notifications = organizations
-    .filter(organizationDocument => !!organizationDocument && !!organizationDocument.userIds)
-    .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
-    .map(userId => {
-      return createNotification({
-        userId,
-        type: 'contractInNegotiation',
-        docId: contractId,
-        app: 'biggerBoat'
+      .filter(organizationDocument => !!organizationDocument && !!organizationDocument.userIds)
+      .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
+      .map(userId => {
+        return createNotification({
+          userId,
+          type: 'contractInNegotiation',
+          docId: contractId,
+          app: 'biggerBoat'
+        });
       });
-    });
 
     await triggerNotifications(notifications);
   }
