@@ -1,3 +1,4 @@
+import { FormControl } from '@angular/forms';
 import { ToolkitModule } from '@blockframes/ui/storybook';
 import { StaticSelectModule } from './static-select.module';
 import { text } from '@storybook/addon-knobs';
@@ -13,11 +14,12 @@ export const staticSelect = () => ({
   template: `
   <storybook-toolkit>
     <h1 title>Static Select</h1>
-      <static-select [scope]="scope"></static-select>
+      <static-select [scope]="scope" [control]="control"></static-select>
   </storybook-toolkit>
 `,
   props: {
-    scope: text('scope', 'GENRES')
+    scope: text('scope', 'GENRES'),
+    control: new FormControl()
   }
 });
 

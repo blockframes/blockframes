@@ -1,6 +1,5 @@
 // Angular
-import { FormControl } from '@angular/forms';
-import { Component, Input, ContentChild, TemplateRef } from '@angular/core';
+import { Component, Input, ContentChild, TemplateRef, ChangeDetectionStrategy, OnInit } from '@angular/core';
 
 // Blockframes
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
@@ -13,11 +12,12 @@ import { Observable } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 
 @Component({
-  selector: '[scope]static-input',
+  selector: '[scope][control]static-input',
   templateUrl: './static-input.component.html',
-  styleUrls: ['./static-input.component.scss']
+  styleUrls: ['./static-input.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class StaticInputComponent {
+export class StaticInputComponent implements OnInit {
   @Input() label?: string;
 
   @Input() mode: 'legacy' | 'standard' | 'fill' | 'outline' = 'outline'
@@ -27,26 +27,32 @@ export class StaticInputComponent {
   @Input() set scope(value: string) {
     this._scope = staticModels[value];
   }
-  @Input() control: FormStaticValue<Scope> = new FormControl();
+  @Input() control: FormStaticValue<Scope>;
 
   filteredStates: Observable<SlugAndLabel[]>;
 
+  /**
+   * Since we input the scope we need to initalize the function after the input gets handled,
+   * otherwise _scope is undefined and this will throw an error
+   */
+  public displayFn: Function;
+
   @ContentChild(TemplateRef) template: TemplateRef<any>;
 
-  constructor() {
+  ngOnInit() {
     this.filteredStates = this.control.valueChanges
       .pipe(
         startWith(''),
         map(state => state ? this.filterStates(state) : this._scope.slice()),
       );
+    this.displayFn = (name: string) => {
+      const res = this._scope.find(entity => entity.slug === name)
+      return res ? res.label : '';
+    }
   }
 
   private filterStates(value: string) {
     const filterValue = value.toLowerCase();
     return this._scope.filter(state => state.slug.toLowerCase().indexOf(filterValue) === 0);
-  }
-
-  displayFn(name: string) {
-    return getLabelBySlug('GENRES', name)
   }
 }
