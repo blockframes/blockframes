@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 // Components
 import { PriceComponent } from './price.component';
 import { MovieBannerModule } from '@blockframes/movie/movie/components/banner';
-import { StaticSelectModule } from '@blockframes/ui/static-select/static-select.module';
+import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia-autocomplete/algolia-autocomplete.module';
 
 // Material
