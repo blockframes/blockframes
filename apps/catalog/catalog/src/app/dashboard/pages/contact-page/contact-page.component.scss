@@ -19,11 +19,19 @@ h3 {
 
 p {
   margin-top: 8px;
-  margin-bottom: 30px;
+  margin-bottom: 34px;
+  &.text-margin {
+    margin-top: 150px;
+  }
 }
 
 article {
   width: 50%;
+}
+
+mat-form-field {
+  margin-left: 24px;
+  margin-right: 24px;
 }
 
 @include layout-bp(lt-lg) {
@@ -39,17 +47,4 @@ article {
     margin-top: 30px;
     margin-bottom: 30px;
   }
-}
-mat-form-field {
-  margin-left: 24px;
-  margin-right: 24px;
-}
-
-textarea {
-  height: 220px;
-}
-
-button {
-  text-align: center;
-  margin: auto auto;
 }
