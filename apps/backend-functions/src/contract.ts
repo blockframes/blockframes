@@ -169,8 +169,9 @@ export async function onContractWrite(
         previous.lastVersion = lastVersionSnap.data() as any;
       }
 
-      if (!!previous.lastVersion) {
-        if (previous.lastVersion.id && current.lastVersion.id && previous.lastVersion.id > current.lastVersion.id) {
+      if (!!previous && !!previous.lastVersion) {
+        if (previous.lastVersion.id && current.lastVersion.id && parseInt(previous.lastVersion.id, 10) > parseInt(current.lastVersion.id, 10)) {
+          // @TODO (#1887) this action is forbidden, revert current change with previous.
           throw new Error(`Version id "${current.lastVersion.id}" must be higher than previous one "${previous.lastVersion.id}".`);
         }
         _cleanVersion(previous)
