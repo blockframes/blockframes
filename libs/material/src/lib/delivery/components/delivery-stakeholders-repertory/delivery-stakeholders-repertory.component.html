@@ -1,6 +1,10 @@
 <article>
   <header><h3>Organizations</h3></header>
-  <organization-search (picked)="added.emit($event)"></organization-search>
+  <algolia-autocomplete [indexName]="orgIndex" pathToValue="objectID" (selectionChange)="added.emit($event)">
+    <ng-template let-result>
+      <span>{{ result.name }}</span>
+    </ng-template>
+  </algolia-autocomplete>
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z0">
     <!-- Name Column -->
     <ng-container matColumnDef="name">

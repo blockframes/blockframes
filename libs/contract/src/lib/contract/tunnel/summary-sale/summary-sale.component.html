@@ -1,5 +1,5 @@
 <tunnel-page>
-  <h4 title>Summary & Submit</h4>
+  <h4 title>Summary & Submission</h4>
   <h1 subtitle>Contract Offer Summary</h1>
   <p description class="mat-body-1">
     Please verify that all the information you have entered is correct before submitting your contract offer.
@@ -80,7 +80,7 @@
             </movie-banner>
             <ng-container *ngIf="dealForms.get(movie.id) as deals else noDeal" >
               <ng-container *ngIf="deals.value.length else noDeal" >
-                <catalog-right-list [deals]="deals.value"></catalog-right-list>
+                <catalog-right-list [rights]="deals.value"></catalog-right-list>
               </ng-container>
               <ng-template #noDeal >
                 <a mat-button [routerLink]="['..', movie.id]" color="warn">

@@ -44,10 +44,10 @@ import {
   EditableModule,
   FeedbackMessageModule,
   EditableSidenavModule,
-  AvatarListModule
+  AvatarListModule,
+  AlgoliaAutocompleteModule
 } from '@blockframes/ui';
 import { PasswordConfirmModule } from '@blockframes/ui/form';
-import { OrganizationSearchModule } from '@blockframes/organization';
 import { MaterialModule } from '../material/material.module';
 import { DeliveryRoutingModule } from './delivery-routing-module';
 import { MoviePickerModule } from '@blockframes/movie';
@@ -119,12 +119,12 @@ import { MatStepperModule } from '@angular/material/stepper';
     ActionsPickerModule,
     ActionsPickerListModule,
     EditableModule,
-    OrganizationSearchModule,
     EditableSidenavModule,
     DeliveryRoutingModule,
     MoviePickerModule,
     FeedbackMessageModule,
     AvatarListModule,
+    AlgoliaAutocompleteModule,
 
     // Material
     MatExpansionModule,
