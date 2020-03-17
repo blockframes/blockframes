@@ -22,7 +22,7 @@
     </mat-card-content>
   </ng-container>
   <div fxLayout="row" fxLayoutAlign="center">
-    <button class="send" mat-flat-button color="accent" test-id="add" [disabled]="isSending" (click)="sendInvitations()">
+    <button class="send" mat-flat-button color="accent" test-id="add" [disabled]="isSending$ | async" (click)="sendInvitations()">
       <mat-icon svgIcon="send"></mat-icon>
       <ng-container *ngIf="form.controls.length === 1 else several">
         <span>Send invitation</span>

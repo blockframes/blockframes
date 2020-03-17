@@ -1,6 +1,6 @@
 import { EntityState, EntityStore, ActiveState, guid } from '@datorama/akita';
-import { Invitation } from './invitation.firestore';
 import { Injectable } from "@angular/core";
+import { Invitation } from './invitation.model';
 
 export interface InvitationState extends EntityState<Invitation>, ActiveState<string> {}
 
