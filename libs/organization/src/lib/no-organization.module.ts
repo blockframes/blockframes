@@ -5,7 +5,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Modules
-import { FeedbackMessageModule, ActionsListModule } from '@blockframes/ui';
+import { FeedbackMessageModule, ActionsListModule, AlgoliaAutocompleteModule } from '@blockframes/ui';
 import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
 import { OrganizationFormModule } from './forms/organization-form/organization-form.module';
 import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
@@ -86,6 +86,7 @@ export const noOrganizationRoutes: Routes = [
     OrganizationFormModule,
     ImgAssetModule,
     ImageReferenceModule,
+    AlgoliaAutocompleteModule,
 
     // Material
     MatFormFieldModule,

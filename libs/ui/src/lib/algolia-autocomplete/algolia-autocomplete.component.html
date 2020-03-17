@@ -1,4 +1,4 @@
-<mat-form-field appearance="outline">
+<mat-form-field [appearance]="mode">
   <mat-label>{{ label }}</mat-label>
   <input matInput autocapitalize="off" autocorrect="off" spellcheck="false" type="text" [formControl]="control"
     [matAutocomplete]="auto" />

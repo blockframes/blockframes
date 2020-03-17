@@ -5,6 +5,8 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
+import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia-autocomplete/algolia-autocomplete.module'
+
 // Widgets
 import { NotificationWidgetModule } from '@blockframes/notification';
 import { SearchWidgetModule } from '@blockframes/ui/search-widget';
@@ -44,6 +46,7 @@ const material = [
     NotificationWidgetModule,
     SearchWidgetModule,
     ProfileWidgetModule,
+    AlgoliaAutocompleteModule,
     ...material
   ],
   exports: [LayoutComponent]
