@@ -1,12 +1,13 @@
 <mat-form-field [appearance]="mode">
   <mat-label *ngIf="label">{{ label }}</mat-label>
-  <mat-select [formControl]="control">
-    <mat-option *ngFor="let scope of _scope" [value]="scope.slug">
+  <input matInput type="text" autocomplete="off" [formControl]="control" [matAutocomplete]="auto">
+  <mat-autocomplete #auto="matAutocomplete">
+    <mat-option *ngFor="let scope of filteredStates | async" [value]="scope.slug">
       <ng-template [ngTemplateOutlet]="template || label" [ngTemplateOutletContext]="{ $implicit: scope }">
       </ng-template>
       <ng-template #label>
         {{ scope.label }}
       </ng-template>
     </mat-option>
-  </mat-select>
+  </mat-autocomplete>
 </mat-form-field>
