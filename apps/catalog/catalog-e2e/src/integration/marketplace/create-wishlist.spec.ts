@@ -53,7 +53,7 @@ describe('Test wishlist icon from library page', () => {
 });
 
 describe('Test wishlist icon from movie view page', () => {
-  it('Login into an existing account, add two movies on wishlist from their view page, check the wishlist.', () => {
+  it.skip('Login into an existing account, add two movies on wishlist from their view page, check the wishlist.', () => {
     // Connexion
     const p1: LoginViewPage = new LoginViewPage();
     p1.fillSignin(LOGIN_CREDENTIALS);
@@ -86,7 +86,7 @@ describe('Test wishlist icon from movie view page', () => {
   });
 
   describe('Test wishlist removal icon from everywhere', () => {
-    it(`Login into an existing account, add and remove a movie from home page, add and remove
+    it.skip(`Login into an existing account, add and remove a movie from home page, add and remove
       two movies from their view page and add and remove two movies from line-up page.`, () => {
       // Connexion
       const p1: LoginViewPage = new LoginViewPage();
