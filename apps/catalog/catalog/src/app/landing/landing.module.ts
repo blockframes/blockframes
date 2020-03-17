@@ -5,6 +5,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { ImgAssetModule } from '@blockframes/ui/theme';
+import { TelInputModule } from '@blockframes/ui/tel-input/tel-input.module';
 
 // Pages
 import { CatalogLandingPageComponent } from './pages/landing-page/landing-page.component';
@@ -65,6 +66,7 @@ const routes = [{
     FlexLayoutModule,
     ReactiveFormsModule,
     ImgAssetModule,
+    TelInputModule,
 
     // Material
     MatSidenavModule,
