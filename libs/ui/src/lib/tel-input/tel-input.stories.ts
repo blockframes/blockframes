@@ -1,13 +1,14 @@
 import { FormControl } from '@angular/forms';
 import { TelInputModule } from './tel-input.module';
 import { ToolkitModule } from '@blockframes/ui/storybook';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 export default {
   title: 'Tel Input'
 };
 
 export const telInput = () => ({
-  moduleMetadata: { imports: [TelInputModule, ToolkitModule] },
+  moduleMetadata: { imports: [TelInputModule, MatFormFieldModule, ToolkitModule] },
   name: 'Tel Input',
   template: `
     <storybook-toolkit>
@@ -21,4 +22,3 @@ export const telInput = () => ({
     form: new FormControl()
   } 
 });
-
