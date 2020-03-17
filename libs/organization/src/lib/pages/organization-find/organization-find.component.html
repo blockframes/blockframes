@@ -2,26 +2,16 @@
   <h1>Find your Organization</h1>
   <mat-card fxLayout="column" fxLayoutAlign="center center">
     <img asset="find_organization.webp">
-    <mat-form-field appearance="outline">
-      <mat-label>Organization name</mat-label>
-      <input
-        aria-label="search"
-        type="text"
-        placeholder="Organization name"
-        matInput
-        [formControl]="orgControl"
-        [matAutocomplete]="auto"
-      />
-      <mat-icon matPrefix svgIcon="magnifying_glasses"></mat-icon>
-      <mat-autocomplete #auto="matAutocomplete">
-        <mat-option *ngFor="let org of searchResults$ | async" [value]="org.name" (click)="selectOrganization(org)">
-            <b>{{ org.name }}</b>
-        </mat-option>
-      </mat-autocomplete>
-    </mat-form-field>
+    <algolia-autocomplete [indexName]="orgIndex" pathToValue="name" label="Organization name" [resetInput]="false"
+      (selectionChange)="updateValue($event)">
+      <ng-template let-result>
+        <span>{{ result.name }}</span>
+      </ng-template>
+    </algolia-autocomplete>
   </mat-card>
-    <button test-id="join-org" class="join-org" (click)="requestToJoinOrganization()" mat-flat-button color="accent" [disabled]="!selected">Send a request</button>
-    <a routerLink="../create">
-      <button mat-button color="primary">Create an Organization</button>
-    </a>
+  <button test-id="join-org" class="join-org" (click)="requestToJoinOrganization()" mat-flat-button color="accent">
+    Send a request</button>
+  <a routerLink="../create">
+    <button mat-button color="primary">Create an Organization</button>
+  </a>
 </section>

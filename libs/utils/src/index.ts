@@ -18,6 +18,7 @@ export * from './lib/imdb/service';
 export * from './lib/image-uploader';
 export * from './lib/file-sanitizer';
 export * from './lib/akita-helper/sort-movie-by';
+export { searchClient } from './lib/algolia'
 // forms
 export * from './lib/form/forms/types';
 export * from './lib/form/forms/list.form';

@@ -1,6 +1,6 @@
+import { searchClient } from '@blockframes/utils/algolia';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { Observable } from 'rxjs';
-import { searchClient } from './../algolia';
 import { FormControl } from '@angular/forms';
 import {
   Component,
@@ -48,6 +48,11 @@ export class AlgoliaAutocompleteComponent implements OnInit {
    * Can set to false if control should display the value
    */
   @Input() resetInput = true;
+
+  /**
+   * Different behavior of the mat form field
+   */
+  @Input() mode: 'legacy' | 'standard' | 'fill' | 'outline' = 'outline'
 
   /**
    * Output to get all data from algolia
