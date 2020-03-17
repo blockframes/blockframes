@@ -6,7 +6,6 @@ import { LandingPage } from '../../support/pages/landing';
 import { Organization, User } from '../../support/utils/type';
 import { OrganizationHomePage, OrganizationCreatePage, OrganizationFindPage, OrganizationAppAccessPage, OrganizationCongratulationPage } from '../../support/pages/organization';
 import { clearDataAndPrepareTest } from '../../support/utils/utils';
-import { omit } from 'cypress/types/lodash';
 
 // Users without organization yet
 const USER: Partial<User> = USERS[49];
@@ -73,7 +72,9 @@ describe('Try with all fields except name', () => {
     p1.clickCreateOrganization();
     const p2: OrganizationCreatePage = p1.clickSubmitToCreate();
     // Fill all fields except name
-    p2.fillEveryFields(omit(ORGANIZATION, 'name'));
+    const ORG_WITHOUT_NAME = { ...ORGANIZATION };
+    delete ORG_WITHOUT_NAME.name;
+    p2.fillEveryFields(ORG_WITHOUT_NAME);
     // Since we expect an error, use false in parameter to not navigate to a new page
     p2.clickCreate(false);
     p2.assertMoveToOrgCreatePage();
