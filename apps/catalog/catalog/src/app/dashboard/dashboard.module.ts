@@ -11,7 +11,6 @@ import { TunnelGuard } from '@blockframes/ui/tunnel';
 import { ContractsDealListGuard } from '@blockframes/movie/distribution-deals/guards/contracts-deal-list.guard';
 import { MovieListContractListGuard } from '@blockframes/movie/movie/guards/movie-contract.guard';
 
-
 const routes: Routes = [
   {
     path: '',
@@ -76,6 +75,10 @@ const routes: Routes = [
       {
         path: 'who-are-we',
         loadChildren: () => import('./pages/team-page/team.module').then(m => m.TeamModule)
+      },
+      {
+        path: 'contact',
+        loadChildren: () => import('./pages/contact-page/contact.module').then(m => m.ContactModule)
       },
       {
         path: 'terms',

@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
+import { GoogleMapsModule } from '@angular/google-maps';
 
 // Pages
 import { ContactPageComponent } from './contact-page.component';
@@ -26,6 +27,7 @@ import { MatIconModule } from '@angular/material/icon';
     MatIconModule,
     MatButtonModule,
     MatInputModule,
+    GoogleMapsModule,
     RouterModule.forChild([
       {
         path: '',
