@@ -1,4 +1,4 @@
-import { functions, db } from './internals/firebase';
+import { functions, db, admin } from './internals/firebase';
 import { ContractDocument, PublicContractDocument, OrganizationDocument, PublicOrganization } from './data/types';
 import { ValidContractStatuses, ContractVersionDocument } from '@blockframes/contract/contract/+state/contract.firestore';
 import { getOrganizationsOfContract, getDocument, versionExists } from './data/internals';
@@ -7,14 +7,40 @@ import { centralOrgID } from './environments/environment';
 import { isEqual } from 'lodash';
 
 
-async function getCurrentVersionId(contractId: string): Promise<string> {
-  const versionSnap = await db.collection(`contracts/${contractId}/versions`).get();
-  return versionSnap.size.toString();
+async function getCurrentVersionId(tx: FirebaseFirestore.Transaction, contractId: string): Promise<string> {
+  return (await _getVersionCount(tx, contractId)).toString(); // @TODO (#1887) change type to number
 }
 
-async function getNextVersionId(contractId: string): Promise<string> {
-  const versionSnap = await db.collection(`contracts/${contractId}/versions`).get();
-  return (versionSnap.size + 1).toString();
+async function getNextVersionId(tx: FirebaseFirestore.Transaction, contractId: string): Promise<string> {
+  const count = await _getVersionCount(tx, contractId);
+  return (count + 1).toString(); // @TODO (#1887) change type to number
+}
+
+async function getCurrentCreationDate(tx: FirebaseFirestore.Transaction, contractId: string): Promise<firebase.firestore.Timestamp | undefined> {
+  const versionToFetch = await getCurrentVersionId(tx, contractId);
+  const lastVersionSnap = await tx.get(db.doc(`contracts/${contractId}/versions/${versionToFetch}`));
+  const doc = lastVersionSnap.data() as ContractVersionDocument;
+  return doc.creationDate;
+}
+
+/**
+ * Get current version count.
+ * @TODO (#1887) remove "_meta" filter once migration is ok
+ * @param versionSnap 
+ */
+async function _getVersionCount(tx: FirebaseFirestore.Transaction, contractId: string) {
+  const versionSnap = await tx.get(db.collection(`contracts/${contractId}/versions`));
+  return versionSnap.docs.filter(d => d.id !== '_meta').length;
+}
+
+/**
+ * To compare current and previous versions
+ * @param contract
+ */
+function _cleanVersion(contract: ContractDocument) {
+  delete contract.lastVersion.id;
+  delete contract.lastVersion.creationDate;
+  return contract;
 }
 
 /**
@@ -58,7 +84,20 @@ async function transformContractToPublic(contract: ContractDocument, deletedVers
   });
 }
 
-
+/**
+ * This trigger is in charge of keeping contract and contractVersion document always
+ * up to date.
+ * 
+ * It handles some defined behaviors such as:
+ *  - creationDate param
+ *  - @TODO (#1887) add more
+ * 
+ * Concerning the database rules:
+ *  - once created, only contract.lastVersion should be allowed for update, other contract fields are forbidden
+ *  - once created, a contractVersion document should be read only (even for admins)
+ *  - @TODO (#1887) add this requirements into an issue
+ * @param change 
+ */
 export async function onContractWrite(
   change: functions.Change<FirebaseFirestore.DocumentSnapshot>
 ): Promise<any> {
@@ -66,12 +105,12 @@ export async function onContractWrite(
   const after = change.after.data();
 
   /**
-   * There is no after but before exits
-   * so we are in deletion mode
-   * We need to remove publicContract document
+   * There is no after but before exits so we are in deletion mode
+   * We need to remove publicContract document.
+   * Note that this case should never occur since contract deletion (or write) is forbidden.
    */
   if (!after && !!before) {
-    // @TODO #1887 also remove subcollections ?
+    // @TODO #1887 also remove subcollections
     return db.doc(`publicContracts/${before.id}`).delete();
   }
 
@@ -79,42 +118,46 @@ export async function onContractWrite(
   const current = after as ContractDocument;
   const previous = before as ContractDocument;
 
-  const currentVersionId = current.lastVersion && current.lastVersion.id ? current.lastVersion.id : '1';
-  delete current.lastVersion.id;
-  let previousVersionId = '1';
-  if (previous && previous.lastVersion) {
-    previousVersionId = previous.lastVersion.id;
-    delete previous.lastVersion.id;
-  }//@TODO #1887 else => aller recup la version en sous collection (old way)
-
-  //@todo interdire l'update d'un contrat mais pas contract.lastVersion dans les rules?
-  // @todo gérer la création date
-
-  // todo ajouter un if !current.lastVersion (old way)
-
-  if (!previous || !isEqual(current.lastVersion, previous.lastVersion)) {
-    console.log('ici');
-    // We historize current version 
-    current.lastVersion.id = await getNextVersionId(current.id);
-    const versionToHistorize = current.lastVersion as ContractVersionDocument;
-    // @TODO #1887 transaction
-    db.doc(`contracts/${current.id}/versions/${versionToHistorize.id}`).set(versionToHistorize);
-    change.after.ref.set({ lastVersion: current.lastVersion }, { merge: true });
-  } else if (!!previous) {
-    console.log('la');
-    if (isEqual(current.lastVersion, previous.lastVersion)) {
-      console.log('lala');
-      // To prevent the case when the front try to push version Id (which is only handled by this trigger).
-      if (currentVersionId !== previousVersionId) {
-        console.log('lalala');
-        current.lastVersion.id = await getCurrentVersionId(current.id);
-        change.after.ref.set({ lastVersion: current.lastVersion }, { merge: true });
+  if (!!current.lastVersion) {
+    return db.runTransaction(async tx => {
+      _cleanVersion(current);
+      if (!!previous) { // We have a previous version to compare against.
+        if (!previous.lastVersion) {
+          // Old way compatibility. If a new version is pushed but previous does not have lastVersion attribute,
+          // we fetch it.
+          const versionDoc = await getCurrentVersionId(tx, current.id);
+          if (versionDoc !== '0') {
+            const lastVersionSnap = await tx.get(db.doc(`contracts/${previous.id}/versions/${versionDoc}`));
+            previous.lastVersion = lastVersionSnap.data() as any;
+          }
+        }
+        if (!!previous.lastVersion) { _cleanVersion(previous) };
       }
-    }
 
+      if (!previous || !isEqual(current.lastVersion, previous.lastVersion)) {
+        current.lastVersion.id = await getNextVersionId(tx, current.id);
+        // Creation date is handled here. No need to push it, it will be overrided here.
+        current.lastVersion.creationDate = admin.firestore.Timestamp.now();
+        const versionToHistorize = current.lastVersion as ContractVersionDocument;
+        // We historize current version 
+        tx.set(db.doc(`contracts/${current.id}/versions/${versionToHistorize.id}`), versionToHistorize);
+        // We update _meta document for backward compatibility
+        tx.set(db.doc(`contracts/${current.id}/versions/_meta`), { count: parseInt(versionToHistorize.id, 10) }, { merge: true });
+        // Update contract
+        tx.set(change.after.ref, { lastVersion: current.lastVersion }, { merge: true });
+      } else if (!!previous && !!previous.lastVersion && isEqual(current.lastVersion, previous.lastVersion)) {
+        // To prevent the case when the front try to push version Id or creationDate (which are only handled by this trigger).
+        current.lastVersion.id = await getCurrentVersionId(tx, current.id);
+        current.lastVersion.creationDate = await getCurrentCreationDate(tx, current.id);
+        tx.set(change.after.ref, { lastVersion: current.lastVersion }, { merge: true });
+      }
+      return current;
+    });
+  } else {
+    // Contract have been pushed the old way (lastVersion is pushed separatly)
+    // nothing to do, let onContractVersionWrite handle the case (temporarly)
+    return false;
   }
-
-  return current;
 }
 
 // @TODO #1887 remove this but keep public contract creation logic & notifications

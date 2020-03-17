@@ -85,7 +85,7 @@ interface ContractPartyDetailRaw<D> {
  * @dev Allows to handle multiple version of a contract
  */
 interface ContractVersionRaw<D> {
-  id: string,
+  id: string, // @todo #1887 this should not be editable. rename to version  && cast to INT ? 
   status: ContractStatus,
   scope: TermsRaw<D>,
   creationDate?: D,
@@ -127,7 +127,15 @@ interface ContractRaw<D> {
   parties: ContractPartyDetailRaw<D>[],
   titleIds: string[],
   partyIds: string[],
-  documents: ContractLegalDocuments
+  documents: ContractLegalDocuments,
+  /**
+   * @dev This params is handled by backend functions.
+   * This will always contains the last version of the subcollection contractVersion.
+   * If you edit something here, when saving data to DB, a function will 
+   * take previous lastVersion content and put it into contractVersion for history purposes.
+   * The new data will then replace the previous lastVersion.
+   */
+  lastVersion: ContractVersionRaw<D>
 }
 /**
  * @dev Public Contract document
