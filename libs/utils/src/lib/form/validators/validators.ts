@@ -10,13 +10,7 @@ import {
 } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { LANGUAGES_SLUG } from '../../static-model/types';
-import { network, baseEnsDomain } from '@env';
 import { getLabelBySlug, isInSlug, Scope } from '../../static-model/staticModels';
-import { getProvider, orgNameToEnsDomain } from '@blockframes/ethers/helpers';
-
-// TODO issue#1146
-import { AFM_DISABLE } from '@env';
-import { OrganizationService } from '@blockframes/organization';
 
 export const urlValidators = [Validators.pattern('^(http|https)://[^ "]+$')];
 
