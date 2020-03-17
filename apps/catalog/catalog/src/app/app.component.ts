@@ -11,12 +11,11 @@ import { TunnelService } from '@blockframes/ui/tunnel';
 })
 export class AppComponent {
   constructor(
-    renderer: Renderer2,
     theme: ThemeService,
     tunnelService: TunnelService, // Start listening on routes changes
     icons: IconService,  // even if not used in component, keep this to load icons
     ym: YandexMetricaService // Need to be instantiate
   ) {
-    theme.initTheme(renderer, 'light');
+    theme.initTheme('light');
   }
 }

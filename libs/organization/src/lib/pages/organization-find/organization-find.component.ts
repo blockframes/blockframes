@@ -5,7 +5,7 @@ import { debounceTime, distinctUntilChanged, switchMap, pluck } from 'rxjs/opera
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { InvitationService } from '@blockframes/notification';
-import { OrganizationAlgoliaResult, OrganizationsIndex } from '@blockframes/utils';
+import { OrganizationAlgoliaResult, OrganizationsIndex } from '@blockframes/utils/algolia';
 import { Index } from 'algoliasearch';
 import { OrganizationDocumentWithDates } from '@blockframes/organization/+state';
 
