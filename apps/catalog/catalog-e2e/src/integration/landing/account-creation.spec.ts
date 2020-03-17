@@ -56,7 +56,7 @@ beforeEach(() => {
 // FIND ORGANIZATION
 
 describe('User can choose to find an organization', () => {
-  it('Click on "Find your Organization"', () => {
+  it.skip('Click on "Find your Organization"', () => {
     const p1: OrganizationHomePage = navigateToOrganizationHome(USER);
     p1.clickFindOrganization();
     const p2: OrganizationFindPage = p1.clickSubmitToFind();
@@ -67,7 +67,7 @@ describe('User can choose to find an organization', () => {
 // CREATE ORGANIZATION
 
 describe('Try with all fields except name', () => {
-  it('Fill all the fields except company name', () => {
+  it.skip('Fill all the fields except company name', () => {
     const p1: OrganizationHomePage = navigateToOrganizationHome(USER);
     p1.clickCreateOrganization();
     const p2: OrganizationCreatePage = p1.clickSubmitToCreate();
@@ -82,7 +82,7 @@ describe('Try with all fields except name', () => {
 });
 
 describe('Create an organization with minimum field', () => {
-  it('Fill only the company name field', () => {
+  it.skip('Fill only the company name field', () => {
     const p1: OrganizationHomePage = navigateToOrganizationHome(USER);
     p1.clickCreateOrganization();
     const p2: OrganizationCreatePage = p1.clickSubmitToCreate();
@@ -95,7 +95,7 @@ describe('Create an organization with minimum field', () => {
 });
 
 describe('Create an organization with all fields', () => {
-  it('Fill all the fields', () => {
+  it.skip('Fill all the fields', () => {
     const p1: OrganizationHomePage = navigateToOrganizationHome(USER2);
     p1.clickCreateOrganization();
     const p2: OrganizationCreatePage = p1.clickSubmitToCreate();
