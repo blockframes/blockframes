@@ -164,24 +164,27 @@ export async function onContractWrite(
     await db.runTransaction(async tx => {
 
       const versionDoc = await getCurrentVersionId(tx, current.id);
-      if (versionDoc !== '0') {
-        const lastVersionSnap = await tx.get(db.doc(`contracts/${previous.id}/versions/${versionDoc}`));
-        previous.lastVersion = lastVersionSnap.data() as any;
-      }
-
-      if (!!previous && !!previous.lastVersion) {
-        if (previous.lastVersion.id && current.lastVersion.id && parseInt(previous.lastVersion.id, 10) > parseInt(current.lastVersion.id, 10)) {
-          // @TODO (#1887) this action is forbidden, revert current change with previous.
-          throw new Error(`Version id "${current.lastVersion.id}" must be higher than previous one "${previous.lastVersion.id}".`);
+      if (!!previous) {
+        if (versionDoc !== '0') {
+          const lastVersionSnap = await tx.get(db.doc(`contracts/${previous.id}/versions/${versionDoc}`));
+          previous.lastVersion = lastVersionSnap.data() as any;
         }
-        _cleanVersion(previous)
-      };
+
+        if (!!previous.lastVersion) {
+          if (previous.lastVersion.id && current.lastVersion.id && parseInt(previous.lastVersion.id, 10) > parseInt(current.lastVersion.id, 10)) {
+            // @TODO (#1887) this action is forbidden, revert current change with previous (from subcollection).
+            // @TODO (#1887) only console.log
+            throw new Error(`Version id "${current.lastVersion.id}" must be higher than previous one "${previous.lastVersion.id}".`);
+          }
+          _cleanVersion(previous)
+        };
+      }
 
       _cleanVersion(current);
       if (!previous || (!!previous.lastVersion && !isEqual(current.lastVersion, previous.lastVersion))) {
         current.lastVersion.id = await getNextVersionId(tx, current.id);
         // Creation date is handled here. No need to push it, it will be overrided here.
-        current.lastVersion.creationDate = admin.firestore.Timestamp.now();
+        current.lastVersion.creationDate = admin.firestore.Timestamp.now(); // @TODO (#1887) let the user push the value if defined
         const versionToHistorize = current.lastVersion as ContractVersionDocument;
         // A new version have been saved, we check if public contract need to be updated
         await updatePublicContract(tx, current);
