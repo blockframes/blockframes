@@ -12,7 +12,7 @@ export const staticSelect = () => ({
   name: 'Static Select',
   template: `
   <storybook-toolkit>
-    <h1 title>Static Input</h1>
+    <h1 title>Static Select</h1>
       <static-select [scope]="scope"></static-select>
   </storybook-toolkit>
 `,
