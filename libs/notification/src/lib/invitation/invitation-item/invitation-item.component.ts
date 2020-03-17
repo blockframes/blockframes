@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { InvitationService } from '../+state';
+import { InvitationService, Invitation } from '../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { InvitationDocument } from '../+state/invitation.firestore';
 
 @Component({
   selector: 'invitation-item',
@@ -10,7 +9,7 @@ import { InvitationDocument } from '../+state/invitation.firestore';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InvitationItemComponent {
-  @Input() invitation: InvitationDocument;
+  @Input() invitation: Invitation;
   @Input() inWidget: boolean;
 
   constructor(private service: InvitationService, private snackBar: MatSnackBar) { }
@@ -28,7 +27,7 @@ export class InvitationItemComponent {
     }
   }
 
-  public acceptInvitation(invitation: InvitationDocument) {
+  public acceptInvitation(invitation: Invitation) {
     try {
       this.service.acceptInvitation(invitation);
       this.snackBar.open('You accepted the invitation!', 'close', { duration: 5000 });
@@ -37,7 +36,7 @@ export class InvitationItemComponent {
     }
   }
 
-  public declineInvitation(invitation: InvitationDocument) {
+  public declineInvitation(invitation: Invitation) {
     try {
       this.service.declineInvitation(invitation);
       this.snackBar.open('You declined the invitation.', 'close', { duration: 5000 });

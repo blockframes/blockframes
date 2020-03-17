@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { InvitationState } from './invitation.store';
 import { AuthQuery, AuthService } from '@blockframes/auth';
-import { createInvitationToDocument, createInvitationFromUserToOrganization, createInvitationFromOrganizationToUser } from './invitation.model';
+import { createInvitationToDocument, createInvitationFromUserToOrganization, createInvitationFromOrganizationToUser, Invitation } from './invitation.model';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { PublicOrganization } from '@blockframes/organization';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
-import { Invitation } from './invitation.firestore';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'invitations' })
@@ -69,5 +68,17 @@ export class InvitationService extends CollectionService<InvitationState> {
   /** Decline an Invitation and change its status to declined. */
   public declineInvitation(invitation: Invitation) {
     return this.update({...invitation, status: 'declined'});
+  }
+
+  /** Return true if there is already a pending invitation for a list of users */
+  public async orgInvitationExists(userEmails: string[]): Promise<boolean> {
+    const invitations = await this.getValue();
+    const orgInvitations = invitations.filter(
+      invitation => invitation.type === 'fromOrganizationToUser'
+    );
+
+    return orgInvitations.some(
+      invitation => userEmails.includes(invitation.user.email) && invitation.status === 'pending'
+    )
   }
 }
