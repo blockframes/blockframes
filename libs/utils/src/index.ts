@@ -1,7 +1,5 @@
-export * from './lib/utils.module';
 export * from './lib/sentry.module';
 export * from './lib/abstract-state-guard';
-export * from './lib/algolia';
 export * from './lib/helpers';
 export * from './lib/form/controls/password.control';
 export * from './lib/form/validators/validators';
@@ -11,12 +9,10 @@ export * from './lib/pipes/reverse.module';
 export * from './lib/intercom.module';
 export { FireAnalytics } from './lib/analytics/app-analytics';
 export * from './lib/common-interfaces/terms';
-export * from './lib/algolia-autocomplete/algolia-autocomplete.module';
 export * from './lib/yandex-metrica/yandex-metrica.module';
 export * from './lib/yandex-metrica/yandex-metrica.service';
 export * from './lib/breakpoint/breakpoints.service';
 
-export { OrganizationAlgoliaResult } from './lib/algolia';
 export * from './lib/apps';
 export * from './lib/imdb/service';
 export * from './lib/image-uploader';

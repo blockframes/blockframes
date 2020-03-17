@@ -10,7 +10,7 @@ import { Organization } from '@blockframes/organization';
 import { debounceTime, distinctUntilChanged, switchMap, pluck } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { FormControl } from '@angular/forms';
-import { OrganizationAlgoliaResult, OrganizationsIndex } from '@blockframes/utils';
+import { OrganizationAlgoliaResult, OrganizationsIndex } from '@blockframes/utils/algolia';
 import { Index } from 'algoliasearch';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
