@@ -26,4 +26,7 @@ export class CatalogLearnMoreComponent {
     'other'
   ];
 
+  get phoneNumber(){
+    return this.form.get('phoneNumber');
+  }
 }

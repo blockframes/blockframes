@@ -1,0 +1,10 @@
+mat-select {
+    width: 33%;
+}
+
+// Turn off the spinners for type=number inputs
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+  -webkit-appearance: none; 
+  margin: 0; 
+}
