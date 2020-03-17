@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { Delivery, DeliveryQuery, DeliveryService } from '../../+state';
 import { StakeholderService } from '../../stakeholder/+state/stakeholder.service';
 import { Observable } from 'rxjs';
-import { OrganizationAlgoliaResult } from '@blockframes/utils';
+import { OrganizationAlgoliaResult } from '@blockframes/utils/algolia';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Stakeholder } from '../../stakeholder/+state/stakeholder.model';
 

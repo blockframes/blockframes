@@ -1,13 +1,12 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ThemeService } from '@blockframes/ui/theme';
 import { TunnelService } from '@blockframes/ui/tunnel';
-import { IconService } from '@blockframes/ui';
-import { YandexMetricaService } from '@blockframes/utils';
+import { IconService } from '@blockframes/ui/icon-service';
+import { YandexMetricaService } from '@blockframes/utils/yandex-metrica/yandex-metrica.service';
 
 @Component({
   selector: 'festival-root',
   template: '<router-outlet></router-outlet>',
-  styles: [],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AppComponent {
