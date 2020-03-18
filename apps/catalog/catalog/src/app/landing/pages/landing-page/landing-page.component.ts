@@ -2,8 +2,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { RequestDemoInformations, createDemoRequestInformations } from '@blockframes/catalog/demo-request.model';
+import { RequestDemoInformations, createDemoRequestInformations } from '@blockframes/utils/request-demo';
 
 @Component({
   selector: 'catalog-landing-page',
@@ -15,7 +14,6 @@ export class CatalogLandingPageComponent {
 
   constructor(
     private snackBar: MatSnackBar,
-    private routerQuery: RouterQuery,
     private functions: AngularFireFunctions
   ) {}
 

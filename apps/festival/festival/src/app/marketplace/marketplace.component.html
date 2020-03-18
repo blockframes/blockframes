@@ -1,0 +1,48 @@
+<mat-sidenav-container>
+  <mat-sidenav #sidenav id="dashboard-navbar">
+    <!-- SIDE NAVIGATION -->
+    <mat-nav-list>
+      <a mat-list-item routerLink="home" routerLinkActive="active">
+        <mat-icon mat-list-icon svgIcon="home"></mat-icon>
+        <span mat-line>Home</span>
+      </a>
+      <a test-id="library" mat-list-item routerLink="title" routerLinkActives="active">
+        <mat-icon mat-list-icon svgIcon="video_library"></mat-icon>
+        <span mat-line>Library</span>
+      </a>
+      <a mat-list-item routerLink="wishlist" routerLinkActive="active">
+        <mat-icon mat-list-icon  svgIcon="heart_fill"></mat-icon>
+        <span mat-line>Wishlist</span>
+      </a>
+   </mat-nav-list>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <!-- TOOLBAR -->
+    <mat-toolbar fxLayout="row" fxLayoutAlign="space-between center">
+      <div fxLayout="row" fxLayoutAlign="default center" fxLayoutGap="24px">
+        <button test-id="menu" mat-icon-button (click)="sidenav.toggle()">
+          <mat-icon svgIcon="menu"></mat-icon>
+        </button>
+        <a class="logo" routerLink=".">
+          <img asset="festival.svg" type="logo" alt="Archipel Content Logo" />
+        </a>
+      </div>
+      <div fxLayout="row" fxLayoutGap="24px">
+        <a test-id="heart-icon" mat-icon-button routerLink="wishlist">
+          <mat-icon
+            svgIcon="heart_fill" color="primary"
+            [matBadge]="wishlistCount$ | async" [matBadgeHidden]="!(wishlistCount$ | async)" matBadgeColor="accent" matBadgeSize="small">
+          </mat-icon>
+        </a>
+        <mat-divider vertical></mat-divider>
+        <overlay-notification-widget page="notifications"></overlay-notification-widget>
+        <account-profile-widget></account-profile-widget>
+      </div>
+    </mat-toolbar>
+
+    <!-- CONTENT -->
+    <router-outlet></router-outlet>
+
+  </mat-sidenav-content>
+</mat-sidenav-container>

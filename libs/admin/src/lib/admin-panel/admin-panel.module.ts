@@ -19,9 +19,11 @@ import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/imag
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { ContractTreeModule } from './components/contract-tree/contract-tree.module';
 import { OrganizationAdminModule } from './pages/organization/organization.module';
-import { AlgoliaAutocompleteModule } from '@blockframes/utils/algolia-autocomplete/algolia-autocomplete.module';
+import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia-autocomplete/algolia-autocomplete.module';
 import { TermDateModule } from '@blockframes/utils/pipes/term-date.module';
-import { TranslateObjectModule } from '@blockframes/utils/pipes/translate-object.module';
+import { ToLabelModule } from '@blockframes/utils/pipes/to-label.module';
+import { EditTitleModule } from './components/edit-title/edit-title.module';
+import { TranslateSlugModule } from '@blockframes/utils';
 
 // Components
 import { OverviewComponent } from './pages/overview/overview.component';
@@ -76,10 +78,12 @@ export const panelRoutes: Routes = [
     ImageReferenceModule,
     AlgoliaAutocompleteModule,
     ContractTreeModule,
+    EditTitleModule,
     RouterModule.forChild(panelRoutes),
     OrganizationAdminModule,
     TermDateModule,
-    TranslateObjectModule,
+    ToLabelModule,
+    TranslateSlugModule,
   ],
   declarations: [
     OverviewComponent,

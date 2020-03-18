@@ -1,13 +1,22 @@
 import { MovieService } from './../+state/movie.service';
 import { MovieState } from './../+state/movie.store';
 import { Injectable } from '@angular/core';
-import { CollectionGuard } from 'akita-ng-fire';
+import { CollectionGuard, syncQuery } from 'akita-ng-fire';
 import { MovieQuery } from '../+state/movie.query';
-import { StoreStatus } from '../+state/movie.firestore';
+import { Movie } from '../+state/movie.model';
+
+/** Query all the movies with their distributionDeals */
+const movieListWithDealsQuery = () => ({
+  path: 'movies',
+  queryFn: ref => ref.where('main.storeConfig.status', '==', 'accepted'),
+  distributionDeals: (movie: Movie) => ({
+    path: `movies/${movie.id}/distributionDeals`
+  })
+});
 
 @Injectable({ providedIn: 'root' })
 export class MovieCollectionGuard extends CollectionGuard<MovieState> {
-  constructor(protected service: MovieService, private query: MovieQuery) {
+  constructor(service: MovieService, private query: MovieQuery) {
     super(service);
   }
 
@@ -16,6 +25,6 @@ export class MovieCollectionGuard extends CollectionGuard<MovieState> {
   }
 
   sync() {
-    return this.service.syncMoviesWithDeals();
+    return syncQuery.call(this.service, movieListWithDealsQuery());
   }
 }

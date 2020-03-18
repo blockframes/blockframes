@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, Input, HostBinding } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { Movie } from '@blockframes/movie/movie/+state/movie.model';
 
 @Component({
@@ -8,7 +8,6 @@ import { Movie } from '@blockframes/movie/movie/+state/movie.model';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieCardComponent {
-  @HostBinding('attr.page-id') pageId = 'display-card';
   @Input() movie: Movie;
   @Input() link: string;
 

@@ -21,13 +21,13 @@
   // Use to let active link in color in mat-nav-list, used with routerLinkActive
   .mat-nav-list a.active {
     color: mat-color($primary, 500);
-    &:focus {
-      background: transparent;
-    }
+    background-color: rgba(mat-color($primary, 500), 0.05);
 
     // Mat icons inside active link should be colored too
-    .mat-list-icon svg g {
-      fill: mat-color($primary, 500);
+    .mat-list-icon {
+      path, g, polygon {
+        fill: mat-color($primary, 500);
+      }
     }
   }
 
@@ -38,11 +38,11 @@
   }
 
   // Color the tab that is active and set the size of the ink-bar to the text' size
-  nav[mat-tab-nav-bar] a[mat-tab-link] {
+  nav[mat-tab-nav-bar] a[mat-tab-link],
+  .mat-tab-label {
     opacity: 1;
     min-width: 10px;
-    padding: 0;
-    margin : 0 20px;
+    padding: 0 16px;
     &.mat-tab-label-active {
       color:  mat-color($primary, 500);
     }

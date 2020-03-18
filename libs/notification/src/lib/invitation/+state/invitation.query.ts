@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { QueryEntity } from '@datorama/akita';
 import { InvitationStore, InvitationState } from './invitation.store';
-import { Invitation } from './invitation.firestore';
 import { DateGroup } from '@blockframes/utils/helpers';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { formatDate } from '@angular/common';
+import { Invitation } from './invitation.model';
 
 @Injectable()
 export class InvitationQuery extends QueryEntity<InvitationState> {

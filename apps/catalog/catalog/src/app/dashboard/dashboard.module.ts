@@ -6,8 +6,10 @@ import { LayoutComponent } from './layout/layout.component';
 // Guards
 import { ActiveContractGuard } from '@blockframes/contract/contract/guards/active-contract.guard';
 import { OrganizationContractListGuard } from '@blockframes/contract/contract/guards/organization-contract-list.guard';
-import { MovieActiveGuard, MovieOrganizationListGuard } from '@blockframes/movie';
+import { MovieActiveGuard, MovieOrganizationListGuard, MovieTunnelGuard } from '@blockframes/movie';
 import { TunnelGuard } from '@blockframes/ui/tunnel';
+import { ContractsDealListGuard } from '@blockframes/movie/distribution-deals/guards/contracts-deal-list.guard';
+import { MovieListContractListGuard } from '@blockframes/movie/movie/guards/movie-contract.guard';
 
 
 const routes: Routes = [
@@ -57,8 +59,8 @@ const routes: Routes = [
         path: 'deals',
         children: [{
           path: '',
-          canActivate: [OrganizationContractListGuard],
-          canDeactivate: [OrganizationContractListGuard],
+          canActivate: [OrganizationContractListGuard, ContractsDealListGuard, MovieListContractListGuard],
+          canDeactivate: [OrganizationContractListGuard, ContractsDealListGuard, MovieListContractListGuard],
           loadChildren: () => import('./deal/list/list.module').then(m => m.DealListModule)
         }, {
           path: ':contractId', // One deal: different state of a deal (offer, counter-offer, payment),
@@ -91,7 +93,7 @@ const routes: Routes = [
         loadChildren: () => import('./movie-tunnel/start/start-tunnel.module').then(m => m.StartTunnelModule)
       }, {
         path: ':movieId',
-        canActivate: [MovieActiveGuard],
+        canActivate: [MovieActiveGuard, MovieTunnelGuard],
         canDeactivate: [MovieActiveGuard],
         loadChildren: () => import('./movie-tunnel/movie-tunnel.module').then(m => m.MovieTunnelModule),
         data: {

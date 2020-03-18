@@ -1,11 +1,13 @@
-<mat-form-field appearance="outline" *ngIf="showFilter" >
-  <mat-label>Filter</mat-label>
-  <input class="bf-table-filter" matInput placeholder="Type to filter in the list below" (keyup)="applyFilter($event.target.value)"/>
-  <!-- TODO issue#1819 -->
-  <button matSuffix mat-icon-button [widgetTarget]="filterColumnWidget">
-    <mat-icon>filter_list</mat-icon>
+<article fxLayout="row" fxLayoutAlign="center center">
+  <mat-icon svgIcon="search_table" class="icon-filter"></mat-icon>
+  <mat-form-field *ngIf="showFilter">
+    <input matInput placeholder="Type to filter in the list below" (keyup)="applyFilter($event.target.value)"/>
+    <!-- TODO issue#1819 -->
+  </mat-form-field>
+  <button mat-icon-button class="icon-filter" [widgetTarget]="filterColumnWidget">
+    <mat-icon svgIcon="filter_list"></mat-icon>
   </button>
-</mat-form-field>
+</article>
 
 <div class="container" *ngIf="displayedColumns$ | async as displayedColumns">
   <table mat-table [dataSource]="dataSource" matSort>
@@ -18,7 +20,7 @@
       </td>
     </ng-container>
 
-    <tr mat-header-row *matHeaderRowDef="displayedColumns; sticky: true"></tr>
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <ng-template [ngIf]="link" [ngIfElse]="withoutLink">
       <tr mat-row *matRowDef="let row; columns: displayedColumns" [routerLink]="[link, row.id]"></tr>
     </ng-template>

@@ -2,6 +2,7 @@
   display: flex;
   flex-direction: column;
 }
+
 .container {
   overflow: auto;
 }
@@ -10,8 +11,27 @@ table {
   width: 100%;
 }
 
+.icon-filter {
+  margin-top: 8px;
+  &:first-child {
+    margin-right: 8px;
+  }
+}
+
+article {
+  margin-bottom: 8px;
+}
+
+mat-form-field {
+  flex: 1;
+}
+
 td {
   cursor: pointer;
+}
+
+td.mat-cell {
+  padding: 0 5px;
 }
 
 .loader-container {
@@ -19,7 +39,7 @@ td {
   background-color: white;
 }
 
-mat-spinner { 
+mat-spinner {
   margin:auto;
 }
 
@@ -28,4 +48,4 @@ widget-card {
   max-height: 300px;
   max-width: 500px;
   overflow: auto;
-} 
+}

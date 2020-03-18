@@ -1,5 +1,5 @@
 <tunnel-page>
-  <h4 title>Summary & Submit</h4>
+  <h4 title>Summary & Submission</h4>
   <h1 subtitle>Contract Offer Summary</h1>
   <p description class="mat-body-1">
     Please verify that all the information you have entered is correct before submitting you contract offer.
@@ -59,7 +59,6 @@
               <strong>Recoupable expenses: </strong> {{ fee }}
             </li>
           </ng-container>
-          
 
           <!-- Payment schedules -->
           <ng-container *ngIf="payments">
@@ -71,7 +70,7 @@
         </ul>
       </mat-card-content>
     </mat-card>
-  
+
     <ng-container *ngIf="movies$ | async as movies">
       <!-- Distribution Deals -->
       <ng-container *ngIf="movies.length else noTitle">
@@ -85,7 +84,7 @@
             </movie-banner>
             <ng-container *ngIf="dealForms.get(movie.id) as deals; else noDeal" >
               <ng-container *ngIf="deals.value.length else noDeal" >
-                <catalog-right-list [source]="deals.value"></catalog-right-list>
+                <catalog-right-list [rights]="deals.value"></catalog-right-list>
               </ng-container>
             </ng-container>
             <ng-template #noDeal >

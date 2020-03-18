@@ -63,7 +63,7 @@ export interface WishlistDocumentWithDates extends WishlistRaw<Date> { }
 export type WishlistStatus = 'pending' | 'sent';
 
 /** Default placeholder logo used when an Organization is created. */
-export const PLACEHOLDER_LOGO = '/assets/logo/empty_organization.png';
+export const PLACEHOLDER_LOGO = '/assets/logo/empty_organization.webp';
 
 /** A public interface or Organization, without sensitive data. */
 export interface PublicOrganization {

@@ -1,5 +1,4 @@
 // import * as gcs from '@google-cloud/storage';
-import { hashToFirestore } from './generateHash';
 import { onDeliveryUpdate } from './delivery';
 import { functions } from './internals/firebase';
 import {
@@ -36,16 +35,6 @@ import * as bigQuery from './bigQuery';
 import { onDocumentPermissionCreate } from './permissions';
 import { onContractWrite, onContractVersionWrite } from './contract';
 
-/**
- * Trigger: when user uploads document to firestore.
- *
- * NOTE: we will need to refactor the function to dispatch
- * depending on the file path. Or use different storage buckets
- * (one per app maybe).
- */
-export const generateHash = functions.storage
-  .object()
-  .onFinalize(hashToFirestore);
 
 /**
  * Trigger: when user creates an account.

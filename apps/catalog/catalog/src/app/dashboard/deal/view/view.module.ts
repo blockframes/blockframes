@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { DealViewComponent } from './view.component';
+import { ViewComponent } from './view.component';
 
 // Module components
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
@@ -11,7 +11,7 @@ import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/imag
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
 import { RightListModule } from '@blockframes/movie/distribution-deals/components/right-list/right-list.module';
 import { VersionTableModule } from '@blockframes/contract/version/components';
-import { TranslateObjectModule } from '@blockframes/utils/pipes';
+import { ToLabelModule } from '@blockframes/utils/pipes';
 
 // Guard
 import { MovieContractGuard } from '@blockframes/movie/movie/guards/movie-contract.guard';
@@ -26,8 +26,24 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatListModule } from '@angular/material/list';
 import { MatChipsModule } from '@angular/material/chips';
 
+const routes = [
+  {
+    path: '',
+    canActivate: [MovieContractGuard, CatalogContractGuard],
+    canDeactivate: [MovieContractGuard],
+    component: ViewComponent,
+    children: [
+      {
+        path: '',
+        loadChildren: () =>
+          import('../negociation/negociation.module').then(m => m.NegociationModule)
+      }
+    ]
+  }
+];
+
 @NgModule({
-  declarations: [DealViewComponent],
+  declarations: [ViewComponent],
   imports: [
     ReactiveFormsModule,
     FlexLayoutModule,
@@ -36,7 +52,7 @@ import { MatChipsModule } from '@angular/material/chips';
     TranslateSlugModule,
     RightListModule,
     VersionTableModule,
-    TranslateObjectModule,
+    ToLabelModule,
 
     // Material
     MatCardModule,
@@ -48,14 +64,7 @@ import { MatChipsModule } from '@angular/material/chips';
     MatChipsModule,
 
     CommonModule,
-    RouterModule.forChild([
-      {
-        path: '',
-        canActivate: [MovieContractGuard, CatalogContractGuard],
-        canDeactivate: [MovieContractGuard],
-        component: DealViewComponent
-      }
-    ])
+    RouterModule.forChild(routes)
   ]
 })
 export class DealViewModule {}

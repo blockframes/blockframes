@@ -1,10 +1,55 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input, ViewChild } from '@angular/core';
-import { DistributionDeal, getDealTerritories, formatDistributionDeal } from '@blockframes/movie/distribution-deals/+state';
-import { MatTableDataSource } from '@angular/material/table';
-import { Observable } from 'rxjs';
-import { FormControl } from '@angular/forms';
+import { Component, ChangeDetectionStrategy, Input, ViewChild, OnInit } from '@angular/core';
+import { DistributionDeal, getDealTerritories } from '@blockframes/movie/distribution-deals/+state';
+
 import { MatSort } from '@angular/material/sort';
-import { startWith } from 'rxjs/operators';
+import { MediasSlug } from '@blockframes/utils/static-model';
+import { formatDate } from '@angular/common';
+import { toDate } from '@blockframes/utils/helpers';
+
+const columns = {
+  territory: 'Territory',
+  startDate: 'Start Date',
+  endDate: 'End Date',
+  rights: 'Rights',
+  languages: 'Languages',
+  holdback: 'Holdback',
+  firstBroadcastDate: '1st Broadcast Date',
+  exclusive: 'Exclusive',
+  multidiffusion: 'Multidiffusion',
+  catchUp: 'Catch Up'
+}
+
+/** Flattened data of version to pass in bf-table-filer. */
+interface RightView {
+  territory: string[];
+  startDate: string;
+  endDate: string;
+  rights: MediasSlug[];
+  languages: string;
+  holdback: string;
+  firstBroadcastDate: string;
+  exclusive: string;
+  multidiffusion: string;
+  catchUp: string;
+}
+
+/** Factory function to create RightView. */
+function createRightView(deal: DistributionDeal): RightView {
+  if (deal) {
+    return {
+      territory: getDealTerritories(deal),
+      startDate: formatDate(toDate(deal.terms.start), 'MM/dd/yyyy', 'en-US'),
+      endDate: formatDate(toDate(deal.terms.end), 'MM/dd/yyyy', 'en-US'),
+      rights: deal.licenseType,
+      languages: '',
+      holdback: '',
+      firstBroadcastDate: deal.multidiffusion.length ? formatDate(deal.multidiffusion[0].start, 'MM/dd/yyyy', 'en-US') : '',
+      exclusive: deal.exclusive ? 'Yes' : 'No',
+      multidiffusion: deal.multidiffusion.length ? deal.multidiffusion.length.toString() : '',
+      catchUp: deal.catchUp.start ? formatDate(deal.catchUp.start, 'MM/dd/yyyy', 'en-US') : ''
+    };
+  }
+}
 
 @Component({
   selector: 'catalog-right-list',
@@ -13,31 +58,11 @@ import { startWith } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RightListComponent implements OnInit {
-  @Input()
-  set source(deals: DistributionDeal[]) {
-    const formattedDeals = deals.map(deal => formatDistributionDeal(deal));
-    this.dataSource = new MatTableDataSource(formattedDeals);
-    this.dataSource.sort = this.sort;
-  }
+  @Input() rights: DistributionDeal[]
 
-  public dealColumns: Record<string, any> = {
-    territory: 'Territory',
-    startDate: 'Start Date',
-    endDate: 'End Date',
-    rights: 'Rights',
-    languages: 'Languages',
-    holdback: 'Holdback',
-    firstBroadcastDate: '1st Broadcast Date',
-    exclusive: 'Exclusive',
-    multidiffusion: 'Multidiffusion',
-    catchUp: 'Catch Up'
-  };
-
-  public displayedColumns$: Observable<string[]>;
-  public dataSource: MatTableDataSource<DistributionDeal>;
-  public columnFilter = new FormControl([]);
-
-  public initialDealColumns = [
+  public rightViews: RightView[];
+  public columns = columns;
+  public initialColumns = [
     'territory',
     'startDate',
     'endDate',
@@ -53,13 +78,6 @@ export class RightListComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
   ngOnInit() {
-    this.columnFilter.patchValue(this.initialDealColumns);
-    this.displayedColumns$ = this.columnFilter.valueChanges.pipe(
-      startWith(this.initialDealColumns)
-    );
-  }
-
-  public getDealTerritories(deal: DistributionDeal) {
-    return getDealTerritories(deal);
+    this.rightViews = this.rights.map(right => createRightView(right));
   }
 }

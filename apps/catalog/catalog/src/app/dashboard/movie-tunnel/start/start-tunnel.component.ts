@@ -1,3 +1,5 @@
+import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
+import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { MovieService, createMovie } from '@blockframes/movie';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -7,15 +9,15 @@ import { TunnelService } from '@blockframes/ui/tunnel';
 const cardContents = [
   {
     title: 'Title Information',
-    img: 'title_infos.svg'
+    img: 'title_infos.webp'
   },
   {
     title: 'Media',
-    img: 'media.svg'
+    img: 'media.webp'
   },
   {
     title: 'Legal Information',
-    img: 'legal_information.svg'
+    img: 'legal_informartion.webp'
   },
 ];
 
@@ -36,7 +38,9 @@ export class StartTunnelComponent implements OnInit {
     private tunnelService: TunnelService,
     private auth: AuthQuery,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private orgService: OrganizationService,
+    private orgQuery: OrganizationQuery
   ) { }
 
   ngOnInit() {
@@ -45,10 +49,14 @@ export class StartTunnelComponent implements OnInit {
 
   async begin() {
     this.loading = true;
+    let movieId;
+    const createdBy = this.auth.getValue().uid;
+    const movie = createMovie({ _meta: { createdBy } });
     try {
-      const createdBy = this.auth.getValue().uid;
-      const movie = createMovie({ _meta: { createdBy } });
-      const movieId = await this.movieService.add(movie);
+      await this.movieService.runTransaction(async (write) => {
+        movieId = await this.movieService.add(movie, { write });
+        await this.orgService.update(this.orgQuery.getActiveId(), (org) => ({ movieIds: [...org.movieIds, movieId] }), { write })
+      })
       this.loading = false;
       this.router.navigate([movieId], { relativeTo: this.route });
     } catch (err) {

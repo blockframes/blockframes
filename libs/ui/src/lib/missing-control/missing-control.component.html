@@ -21,7 +21,7 @@
     </ng-container>
     <ng-template #withType>
       <ng-container *ngIf="(type && !!control.value) else withoutType">
-        {{ control.value | translateObject: type | async}}
+        {{ control.value | toLabel: type | async }}
       </ng-container>
       <ng-template #withoutType>
         {{ control.value }}{{ isLast ? '' : ', ' }}

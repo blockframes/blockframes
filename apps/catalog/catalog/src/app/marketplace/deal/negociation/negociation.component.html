@@ -1,11 +1,14 @@
 <section fxLayout="row" fxLayout="space-between stretch" fxLayoutGap="24px">
   <mat-card fxFlex *ngIf="versionView$ | async as version">
     <mat-card-header>
-      <mat-card-title>You made an offer for {{ version.titleIds.length }} titles</mat-card-title>
+      <mat-card-title i18n>
+        You made an offer for {{ version.titleIds.length }} title{version.titleIds.length, plural, =1 {} other {s}}
+      </mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <p *ngIf="version.price as price">
-        Your offer is {{ price.amount | currency: price.currency }} for {{ version.titleIds.length }} titles:
+      <p i18n *ngIf="version.price as price">
+        Your offer is {{ price.amount | currency: price.currency }} for {{ version.titleIds.length }}
+        title{version.titleIds.length, plural, =1 {} other {s}}:
       </p>
       <ul>
         <li *ngFor="let title of titles$ | async">{{ title.main.title.international }}</li>
@@ -52,15 +55,17 @@
           <mat-expansion-panel-header>
             <mat-panel-title fxLayout="row" fxLayoutAlign="space-between center">
               <h3>{{ movie.main.title.international }}</h3>
-              <span *ngIf="(activeVersion$ | async).titles[movie.id].price as price">
-                {{ price.amount | currency : price.currency }}
-              </span>
+              <ng-container *ngIf="(activeVersion$ | async) as version">
+                <span *ngIf="version.titles[movie.id].price as price">
+                  {{ price.amount | currency : price.currency }}
+                </span>
+              </ng-container>
             </mat-panel-title>
           </mat-expansion-panel-header>
           <mat-divider></mat-divider>
           <ng-template matExpansionPanelContent>
             <article fxLayout="row" fxLayoutAlign="start start" class="movie-information">
-              <img [imgRef]="movie.promotionalElements.poster[0].media" placeholderAsset="empty_poster.png" alt="Movie poster" />
+              <img [imgRef]="movie.promotionalElements.poster[0].media" placeholderAsset="empty_poster.webp" alt="Movie poster" />
               <div>
                 <p>
                   {{ getDirectors(movie) }}
@@ -72,8 +77,7 @@
               </div>
             </article>
             <!-- MOVIE DISTRIBUTION DEAL LIST -->
-            <!-- TODO: Use flattened data + reusable table => ISSUE#1744 -->
-            <catalog-right-list [source]="movie.distributionDeals"></catalog-right-list>
+            <catalog-right-list [rights]="movie.distributionDeals"></catalog-right-list>
           </ng-template>
         </mat-expansion-panel>
       </ng-container>

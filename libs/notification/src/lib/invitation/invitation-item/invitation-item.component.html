@@ -1,17 +1,17 @@
-<section fxLayout="row" fxLayoutAlign="space-between center">
-  <div fxLayout="row">
-    <img [placeholderUrl]="placeholderUrl" [imgRef]="invitation.user.avatar" alt="Profile picture" />
-  <article fxLayout="column" fxLayoutAlign="start start">
-    <p>{{ message }}</p>
-    <small>{{ invitation.date.toDate() | date: inWidget ? 'medium' : 'shortTime' }}</small>
-  </article>
+<section fxLayout="row" fxLayoutAlign="start start">
+  <img placeholderAsset="profil_user.webp" [imgRef]="invitation.user.avatar" alt="Profile picture" />
+  <div fxLayout="column" fxLayoutGap="10px">
+    <article fxLayout="column" fxLayoutAlign="start start">
+      <p class="mat-body-1">{{ message }}</p>
+      <small class="mat-caption">{{ invitation.date.toDate() | date: inWidget ? 'medium' : 'shortTime' }}</small>
+    </article>
+    <article fxLayout="row" fxLayoutGap="16px" *ngIf="displayInvitationButtons">
+      <a test-id="accept" mat-mini-fab color="primary" (click)="acceptInvitation(invitation)">
+        <mat-icon svgIcon="check"></mat-icon>
+      </a>
+      <a test-id="decline" mat-mini-fab color="warn" (click)="declineInvitation(invitation)">
+        <mat-icon svgIcon="refuse"></mat-icon>
+      </a>
+    </article>
   </div>
-  <article fxLayout="row" fxLayoutGap="10px" *ngIf="displayInvitationButtons">
-    <a test-id="accept" mat-mini-fab color="primary" (click)="acceptInvitation(invitation)">
-      <mat-icon>done</mat-icon>
-    </a>
-    <a test-id="decline" mat-mini-fab color="warn" (click)="declineInvitation(invitation)">
-      <mat-icon>clear</mat-icon>
-    </a>
-  </article>
 </section>

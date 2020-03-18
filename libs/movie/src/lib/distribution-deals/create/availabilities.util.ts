@@ -1,7 +1,7 @@
 import { MovieSalesAgentDeal } from '../../movie/+state/movie.model';
 import { DistributionDeal, getDealTerritories } from '../+state/distribution-deal.model';
 import { DateRange } from '@blockframes/utils/common-interfaces/range';
-import { AvailsSearch } from '@blockframes/catalog/form/search.form';
+import { AvailsSearch } from '../form/search.form';
 import { toDate } from '@blockframes/utils/helpers';
 import { MediasSlug } from '@blockframes/utils/static-model';
 import { Terms } from '@blockframes/utils/common-interfaces/terms';

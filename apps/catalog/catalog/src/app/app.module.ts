@@ -11,7 +11,7 @@ import { Router, NavigationEnd, RouterModule } from '@angular/router';
 
 // Akita
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
-import { environment } from '../environments/environment';
+import { production, firebase, persistenceSettings } from '@env';
 
 // Components
 import { AppComponent } from './app.component';
@@ -50,14 +50,14 @@ import { ErrorLoggerModule } from '@blockframes/utils/error-logger.module';
     BrowserAnimationsModule,
     FlexLayoutModule,
     HttpClientModule,
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: production }),
 
     // Intercom
     intercomId ? IntercomAppModule : [],
 
     // Firebase
-    AngularFireModule.initializeApp(environment.firebase),
-    AngularFirestoreModule.enablePersistence(environment.persistenceSettings),
+    AngularFireModule.initializeApp(firebase),
+    AngularFirestoreModule.enablePersistence(persistenceSettings),
     AngularFireFunctionsModule,
     AngularFirePerformanceModule,
     AngularFireAuthModule,
@@ -81,7 +81,8 @@ import { ErrorLoggerModule } from '@blockframes/utils/error-logger.module';
       anchorScrolling: 'enabled',
       onSameUrlNavigation: 'reload',
       paramsInheritanceStrategy: 'always',
-      relativeLinkResolution: 'corrected'
+      relativeLinkResolution: 'corrected',
+      scrollPositionRestoration: 'enabled'
     })
   ],
   providers: [ScreenTrackingService, UserTrackingService],

@@ -18,7 +18,6 @@ import { CartService } from '@blockframes/organization/cart/+state/cart.service'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WishlistCurrentRepertoryComponent {
-  @HostBinding('attr.test-id') testId = 'currentWishlist';
 
   public columnsToDisplay = [
     'movie',

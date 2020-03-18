@@ -44,6 +44,7 @@ export class EditPartyComponent implements OnInit {
   save() {
     if (this.form.invalid) {
       this.snackBar.open('Invalid form', '', { duration: 2000 });
+      return false;
     }
     this.dialogRef.close(this.form.value);
   }

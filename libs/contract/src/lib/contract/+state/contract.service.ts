@@ -1,12 +1,11 @@
 import { Injectable } from '@angular/core';
 import { ContractStore, ContractState } from './contract.store';
-import { CollectionConfig, CollectionService, awaitSyncQuery, Query, WriteOptions } from 'akita-ng-fire';
+import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
 import {
   Contract,
   createContractPartyDetail,
   initContractWithVersion,
   ContractWithLastVersion,
-  ContractWithTimeStamp,
   getContractParties,
   createContractFromFirestore,
   cleanContract,
@@ -16,33 +15,14 @@ import {
   createVersionMandate
 } from './contract.model';
 import orderBy from 'lodash/orderBy';
-import { tap, switchMap } from 'rxjs/operators';
 import { ContractVersionService } from '../../version/+state/contract-version.service';
 import { cleanModel } from '@blockframes/utils';
 import { PermissionsService, OrganizationQuery } from '@blockframes/organization';
-import { ContractDocumentWithDates, ContractStatus } from './contract.firestore';
+import { ContractDocumentWithDates } from './contract.firestore';
 import { firestore } from 'firebase/app';
-import { MovieQuery } from '@blockframes/movie';
 import { createContractVersionFromFirestore } from '@blockframes/contract/version/+state/contract-version.model';
 import { ContractVersion } from '@blockframes/contract/version/+state';
 import { Observable } from 'rxjs';
-
-/** Get the active contract and put his lastVersion in it. */
-const contractQuery = (contractId: string): Query<ContractWithTimeStamp> => ({
-  path: `contracts/${contractId}`,
-  versions: contract => ({
-    path: `contracts/${contract.id}/versions`
-  })
-})
-
-/** Get all the contracts where the active movie appears. */
-const movieContractsQuery = (movieId: string): Query<ContractWithTimeStamp[]> => ({
-  path: 'contracts',
-  queryFn: ref => ref.where('titleIds', 'array-contains', movieId).where('type', '==', 'sale'),
-  versions: contract => ({
-    path: `contracts/${contract.id}/versions`
-  })
-});
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'contracts' })
@@ -50,45 +30,12 @@ export class ContractService extends CollectionService<ContractState> {
 
   constructor(
     private contractVersionService: ContractVersionService,
-    private movieQuery: MovieQuery,
     private permissionsService: PermissionsService,
     private orgQuery: OrganizationQuery,
     store: ContractStore
   ) {
     super(store);
   }
-
-  //////////
-  // SYNC //
-  //////////
-
-  /** Sync the store with every contracts of the active movie. */
-  public syncMovieContracts() {
-    return this.movieQuery.selectActiveId().pipe(
-      // Clear the store everytime the active movieId changes.
-      tap(_ => this.store.reset()),
-      switchMap(movieId => awaitSyncQuery.call(this, movieContractsQuery(movieId)))
-    );
-  }
-
-  /** Sync the store with the given contract. */
-  public syncContractQuery(contractId: string) {
-    // Reset the store to clean the active contract.
-    this.store.reset();
-    return awaitSyncQuery.call(this, contractQuery(contractId));
-  }
-
-  /////////
-  // GET //
-  /////////
-
-  /** Get the mandate contract of an organization */
-  public async getMandate(orgId: string) {
-    const query = ref => ref.where('partyIds', 'array-contains', orgId).where('type', '==', 'sale');
-    const mandates = await this.getValue(query);
-    return (mandates && mandates.length) ? mandates[0] : undefined;
-  }
-
 
   onCreate(contract: Contract, { write }: WriteOptions) {
     // When a contract is created, we also create a permissions document for each parties.
@@ -101,6 +48,13 @@ export class ContractService extends CollectionService<ContractState> {
   */
   formatToFirestore(contract: Contract): ContractDocumentWithDates {
     return cleanContract(contract);
+  }
+
+  /** Get the mandate contract of an organization */
+  public async getMandate(orgId: string) {
+    const query = ref => ref.where('partyIds', 'array-contains', orgId).where('type', '==', 'sale');
+    const mandates = await this.getValue(query);
+    return (mandates && mandates.length) ? mandates[0] : undefined;
   }
 
   /**

@@ -2,27 +2,26 @@
   [ngSwitch]="day.key"
   *ngFor="let day of (invitationsByDate$ | async | keyvalue | reverse)">
   <ng-container *ngSwitchCase="(today | date)">
-    <h4>Today</h4>
+    <span class=mat-body-2>Today</span>
     <invitation-item
       *ngFor="let invitation of day.value"
-      [invitation]="invitation"
-      placeholderAsset="Avatar_40.png">
+      [invitation]="invitation">
     </invitation-item>
   </ng-container>
   <ng-container *ngSwitchCase="(yesterday | date)">
-    <h4>Yesterday</h4>
+    <mat-divider></mat-divider>
+    <span class="mat-body-2">Yesterday</span>
     <invitation-item
       *ngFor="let invitation of day.value"
-      [invitation]="invitation"
-      placeholderAsset="Avatar_40.png">
+      [invitation]="invitation">
     </invitation-item>
   </ng-container>
   <ng-container *ngSwitchDefault>
-    <h4>{{ day.key }}</h4>
+    <mat-divider></mat-divider>
+    <span class="mat-body-2">{{ day.key }}</span>
     <invitation-item
       *ngFor="let invitation of day.value; let isLast = last"
-      [invitation]="invitation"
-      placeholderAsset="Avatar_40.png">
+      [invitation]="invitation">
     </invitation-item>
   </ng-container>
 </ng-container>

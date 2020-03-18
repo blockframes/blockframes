@@ -8,7 +8,7 @@ import { RouterModule } from '@angular/router';
 
 // Akita
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
-import { environment } from '../environments/environment';
+import { firebase, persistenceSettings } from '@env';
 
 // Components
 import { AppComponent } from './app.component';
@@ -31,7 +31,6 @@ import { EmailVerifyModule } from '@blockframes/auth';
 // Widgets
 import { ProfileWidgetModule, ProfileMenuModule } from '@blockframes/account';
 import { NotificationWidgetModule } from '@blockframes/notification';
-import { ThemeWidgetModule } from '@blockframes/ui/theme';
 import { WalletWidgetModule } from '@blockframes/ethers';
 import { OrganizationWidgetModule } from '@blockframes/organization';
 
@@ -94,7 +93,6 @@ import { sentryDsn } from '@env';
 
     // Widget
     OrganizationWidgetModule,
-    ThemeWidgetModule,
     NotificationWidgetModule,
     WalletWidgetModule,
     ProfileWidgetModule,
@@ -102,8 +100,8 @@ import { sentryDsn } from '@env';
     sentryDsn ? SentryModule : [],
 
     // Firebase
-    AngularFireModule.initializeApp(environment.firebase),
-    AngularFirestoreModule.enablePersistence(environment.persistenceSettings),
+    AngularFireModule.initializeApp(firebase),
+    AngularFirestoreModule.enablePersistence(persistenceSettings),
     AngularFireFunctionsModule,
     AngularFirePerformanceModule,
     AngularFireAuthModule,

@@ -34,20 +34,6 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     return orgs.length !== 0;
   }
 
-  /** Sync appsDetails of store with applications that are accessible to the current organization. */
-  syncAppsDetails() {
-    return this.query.selectActiveId().pipe(
-      switchMap(orgId => this.db.doc(`app-requests/${orgId}`).valueChanges()),
-      map((appRequest = {}) => {
-        return APPS_DETAILS.map(app => ({
-          ...app,
-          status: appRequest[app.id] || 'none'
-        }))
-      }),
-      tap(appsDetails => this.store.update({ appsDetails }))
-    );
-  }
-
   syncOrgActive() {
     return this.authQuery.user$.pipe(
       switchMap(user => this.syncActive({ id: user.orgId }))

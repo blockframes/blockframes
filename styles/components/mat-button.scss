@@ -70,6 +70,11 @@
     @include _mat-theme-overridable-elevation(0, $theme);
     margin-bottom: 8px;
   }
+
+  // Add a border around the avatar of the user in the toolbar
+  account-profile-widget button[mat-icon-button] img {
+    border: 1px solid mat-color($foreground, divider);
+  }
 }
 
 

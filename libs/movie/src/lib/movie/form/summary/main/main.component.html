@@ -3,7 +3,7 @@
     <strong>Content Type </strong>
     <missing-control [control]="main.get('workType')" [link]="link">
       <ng-template #content>
-        {{ main.get('workType').value | translateObject: 'workType' | async | titlecase }}
+        {{ main.get('workType').value | toLabel: 'workType' | async | titlecase }}
       </ng-template>
     </missing-control>
   </li>

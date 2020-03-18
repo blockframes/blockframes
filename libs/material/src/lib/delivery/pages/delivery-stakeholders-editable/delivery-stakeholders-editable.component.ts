@@ -1,8 +1,7 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { Delivery, DeliveryQuery, DeliveryService } from '../../+state';
+import { Delivery, DeliveryQuery } from '../../+state';
 import { StakeholderService } from '../../stakeholder/+state/stakeholder.service';
 import { Observable } from 'rxjs';
-import { OrganizationAlgoliaResult } from '@blockframes/utils';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Stakeholder } from '../../stakeholder/+state/stakeholder.model';
 
@@ -19,7 +18,6 @@ export class DeliveryStakeholdersEditableComponent implements OnInit {
 
   constructor(
     private stakeholderService: StakeholderService,
-    private deliveryService: DeliveryService,
     private query: DeliveryQuery,
     private snackBar: MatSnackBar
   ) {}
@@ -41,7 +39,7 @@ export class DeliveryStakeholdersEditableComponent implements OnInit {
     }
   }
 
-  public addStakeholder({ objectID }: OrganizationAlgoliaResult) {
+  public addStakeholder(objectID: string) {
     // TODO: handle promises correctly (update loading status, send back error report, etc). => ISSUE#612
     try {
       const delivery = this.query.getActive();

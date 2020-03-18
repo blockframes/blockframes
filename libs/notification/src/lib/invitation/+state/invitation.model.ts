@@ -5,6 +5,7 @@ import { PublicOrganization } from '@blockframes/organization/+state/organizatio
 
 export { InvitationStatus } from './invitation.firestore';
 
+export type Invitation = InvitationToWorkOnDocument | InvitationFromOrganizationToUser | InvitationFromUserToOrganization;
 
 /** Required options to create an Invitation from a User to join an Organization. */
 export interface InvitationFromUserToOrganizationOptions {

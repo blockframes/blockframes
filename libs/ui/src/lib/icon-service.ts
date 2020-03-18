@@ -74,6 +74,7 @@ export const icons = [
   { name: 'create_movie', url: 'assets/icons/create_movie.svg' },
   { name: 'cross', url: 'assets/icons/cross.svg' },
   { name: 'CNY', url: 'assets/icons/CNY.svg' },
+  { name: 'dark_mode', url: 'assets/icons/dark_mode.svg' },
   { name: 'dashboard', url: 'assets/icons/dashboard.svg' },
   { name: 'document', url: 'assets/icons/document.svg' },
   {
@@ -110,6 +111,7 @@ export const icons = [
   { name: 'ker', url: 'assets/icons/ker.svg' },
   { name: 'key', url: 'assets/icons/key.svg' },
   { name: 'last_page', url: 'assets/icons/last_page.svg' },
+  { name: 'light_mode', url: 'assets/icons/light_mode.svg' },
   { name: 'linkedin', url: 'assets/icons/linkedin.svg' },
   { name: 'list', url: 'assets/icons/list.svg' },
   {
@@ -180,6 +182,7 @@ export const icons = [
     name: 'media_financiers_fill',
     url: 'assets/icons/media_financiers_fill.svg'
   },
+  { name: 'menu', url: 'assets/icons/menu.svg' },
   { name: 'monetization', url: 'assets/icons/monetization.svg' },
   { name: 'more_vert', url: 'assets/icons/more_vert.svg' },
   {

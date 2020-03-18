@@ -26,12 +26,8 @@
           "destination": "/catalog/index.html"
         },
         {
-          "source": "/movie-financing{,/**}",
-          "destination": "/movie-financing/index.html"
-        },
-        {
           "source": "**",
-          "destination": "/index.html"
+          "destination": "/catalog/index.html"
         }
       ]
     }

@@ -1,6 +1,8 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
-import { MediaMatcher } from '@angular/cdk/layout';
+import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
+import { combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'catalog-view-marketplace',
@@ -8,34 +10,25 @@ import { MediaMatcher } from '@angular/cdk/layout';
   styleUrls: ['./view-marketplace.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CatalogViewMarketplaceComponent implements OnInit {
+export class CatalogViewMarketplaceComponent {
   public cover = true;
   public url: SafeResourceUrl;
-  public mobileQuery: MediaQueryList;
-  public tabletQuery: MediaQueryList;
+  public xs$ = this.breakpointsService.xs;
+  public sm$ = this.breakpointsService.sm;
+  public videoWidth$ = combineLatest([this.xs$, this.sm$]).pipe(
+    map(([isMobile, isTablet]) => isMobile ? '340' : isTablet ? '600' : '1024')
+  );
+  public videoHeight$ = combineLatest([this.xs$, this.sm$]).pipe(
+    map(([isMobile, isTablet]) => isMobile ? '300' : isTablet ? '400' : '560')
+  );
 
-  private _responsiveQueryListener: () => void;
-
-  constructor(public sanitizer: DomSanitizer, private changeDetectorRef: ChangeDetectorRef, private media: MediaMatcher) {}
-
-  ngOnInit() {
-    this.mobileQuery = this.media.matchMedia('(max-width: 599px)');
-    this.tabletQuery = this.media.matchMedia('(max-width: 959px)');
-    this._responsiveQueryListener = () => this.changeDetectorRef.detectChanges();
-    this.mobileQuery.addEventListener('change', this._responsiveQueryListener);
-    this.tabletQuery.addEventListener('change', this._responsiveQueryListener);
-  }
+  constructor(
+    public sanitizer: DomSanitizer,
+    private breakpointsService: BreakpointsService
+  ) {}
 
   play() {
     this.url = this.sanitizer.bypassSecurityTrustResourceUrl('https://player.vimeo.com/video/391939808?autoplay=1');
     this.cover = !this.cover;
-  }
-
-  get videoWidth() {
-    return this.mobileQuery.matches ? '340' : this.tabletQuery.matches ? '600' : '1024';
-  }
-
-  get videoHeight() {
-    return this.mobileQuery.matches ? '300' : this.tabletQuery.matches ? '400' : '560';
   }
 }

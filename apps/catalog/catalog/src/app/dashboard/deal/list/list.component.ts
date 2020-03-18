@@ -1,11 +1,8 @@
 import { Intercom } from 'ng-intercom';
-import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ContractQuery, ContractService, Contract, ContractStatus } from '@blockframes/contract/contract/+state';
 import { getContractLastVersion } from '@blockframes/contract/version/+state/contract-version.model';
-import { map, switchMap } from 'rxjs/operators';
-import { MovieService } from '@blockframes/movie';
-import { DistributionDealService } from '@blockframes/movie/distribution-deals';
-import { Subscription, combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { OrganizationQuery } from '@blockframes/organization';
 import { Router, ActivatedRoute } from '@angular/router';
 
@@ -74,7 +71,7 @@ function createContractTab(allContracts: Contract[]): ContractTab[] {
   return contractTab.map(tab => {
     const contracts = filterByStatus(allContracts, tab.statuses);
     return { name: tab.name, contracts };
-  }) 
+  })
 }
 
 
@@ -84,34 +81,17 @@ function createContractTab(allContracts: Contract[]): ContractTab[] {
   styleUrls: ['./list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DealListComponent implements OnInit, OnDestroy {
-  private sub: Subscription;
+export class DealListComponent {
   public tabs$ = this.query.sales$.pipe(map(createContractTab));
 
   constructor(
     private orgQuery: OrganizationQuery,
     private query: ContractQuery,
     private service: ContractService,
-    private movieService: MovieService,
-    private dealService: DistributionDealService,
     private router: Router,
     private route: ActivatedRoute,
     private intercom: Intercom
   ) {}
-
-  ngOnInit() {
-    // Subscribe on Movie & Deals
-    this.sub = this.query.sales$.pipe(
-      switchMap(contracts => combineLatest([
-        this.movieService.syncContractsMovie(contracts),
-        this.dealService.syncContractsDeals(contracts),
-      ]))
-    ).subscribe();
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
-  }
 
   /** Create a sale and redirect to tunnel */
   async createSale() {

@@ -7,10 +7,10 @@ import { USERS } from "./users";
 // Select user: cytest@blockframes.com
 const LOGIN_CREDENTIALS: Partial<User> = USERS[0];
 
-export function clearDataAndPrepareTest() {
+export function clearDataAndPrepareTest(path: string = '/auth') {
   cy.clearCookies();
   cy.clearLocalStorage();
-  cy.visit('/auth');
+  cy.visit(path);
   cy.viewport('ipad-2', 'landscape');
 }
 

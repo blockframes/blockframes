@@ -4,7 +4,7 @@
     <h2>Archipel Content</h2>
     <h1>The only marketplace offering package deals</h1>
     <p>for TV, VOD and ancillary rights</p>
-    <a mat-flat-button color="accent" test-id="discover" routerLink="/c/o/marketplace/search">View the Library</a>
+    <a mat-flat-button color="accent" test-id="library" routerLink="/c/o/marketplace/search">View the Library</a>
   </header>
 
   <section fxLayout="column" fxLayoutAlign="start center">
@@ -24,13 +24,13 @@
                 fxLayoutAlign="end start"
                 class="black-bg-opacity-30 overlay"
                 [routerLink]="['/c/o/marketplace', movie.id]">
-                <ng-container *ngIf="(toggle$(movie.id) | async); else alreadyAdded">
-                  <button mat-icon-button (click)="removeFromWishlist(movie, $event)">
+                <ng-container *ngIf="(toggle$(movie.id) | async); else notAdded">
+                  <button test-id="heart-icon" mat-icon-button (click)="removeFromWishlist(movie, $event)">
                     <mat-icon svgIcon="heart_fill" color="accent"></mat-icon>
                   </button>
                 </ng-container>
-                <ng-template #alreadyAdded>
-                  <button mat-icon-button (click)="addToWishlist(movie, $event)">
+                <ng-template #notAdded>
+                  <button test-id="heart-icon" mat-icon-button (click)="addToWishlist(movie, $event)">
                     <mat-icon svgIcon="heart_outline"></mat-icon>
                   </button>
                 </ng-template>

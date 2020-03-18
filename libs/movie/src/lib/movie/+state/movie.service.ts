@@ -1,13 +1,7 @@
 import { Injectable } from '@angular/core';
-import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
-import {
-  CollectionConfig,
-  CollectionService,
-  WriteOptions,
-  syncQuery
-} from 'akita-ng-fire';
-import { switchMap } from 'rxjs/operators';
-import { createMovie, Movie, MovieAnalytics } from './movie.model';
+import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
+import { switchMap, filter, tap, map } from 'rxjs/operators';
+import { createMovie, Movie, MovieAnalytics, SyncMovieAnalyticsOptions } from './movie.model';
 import { MovieState, MovieStore } from './movie.store';
 import { AuthQuery, AuthService } from '@blockframes/auth';
 import { createImgRef } from '@blockframes/utils/image-uploader';
@@ -15,56 +9,28 @@ import { cleanModel } from '@blockframes/utils/helpers';
 import { firestore } from 'firebase/app';
 import { PermissionsService } from '@blockframes/organization/permissions/+state/permissions.service';
 import { AngularFireFunctions } from '@angular/fire/functions';
-import { Observable } from 'rxjs';
-import { Contract } from '@blockframes/contract/contract/+state/contract.model';
+import { Observable, combineLatest } from 'rxjs';
+import { MovieQuery } from './movie.query';
 
-/** Query all the movies with their distributionDeals */
-const movieListWithDealsQuery = () => ({
-  path: 'movies',
-  queryFn: ref => ref.where('main.storeConfig.status', '==', 'accepted'),
-  distributionDeals: (movie: Movie) => ({
-    path: `movies/${movie.id}/distributionDeals`
-  })
-});
-
-// TODO#944 - refactor CRUD operations
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies' })
 export class MovieService extends CollectionService<MovieState> {
   constructor(
-    private organizationQuery: OrganizationQuery,
     private authQuery: AuthQuery,
     private authService: AuthService,
     private permissionsService: PermissionsService,
     private functions: AngularFireFunctions,
-    store: MovieStore
+    private query: MovieQuery,
+    protected store: MovieStore,
   ) {
     super(store);
-  }
-
-  /** Gets every movieIds of the user active organization and sync them. */
-  public syncOrgMovies() {
-    return this.organizationQuery.selectActive().pipe(
-      switchMap(org => this.syncManyDocs(org.movieIds))
-    );
-  }
-
-  public syncMoviesWithDeals() {
-    return syncQuery.call(this, movieListWithDealsQuery());
-  }
-
-  /** Sync all movies from a list of contracts */
-  public syncContractsMovie(contracts: Contract[]) {
-    const rawTitleIds = new Set(contracts.map(c => c.titleIds));
-    const titleIds = Array.from(rawTitleIds).flat();
-    return this.syncManyDocs(titleIds);
   }
 
   async onCreate(movie: Movie, { write }: WriteOptions) {
     // When a movie is created, we also create a permissions document for it.
     // Since movie can be created on behalf of another user (An admin from admin panel for example)
     // We use createdBy attribute to fetch OrgId
-    const userId = movie._meta && movie._meta.createdBy ? movie._meta.createdBy : this.authQuery.userId;
+    const userId = movie._meta?.createdBy ? movie._meta.createdBy : this.authQuery.userId;
     const user = await this.authService.getUser(userId);
     return this.permissionsService.addDocumentPermissions(movie, write as firestore.WriteBatch, user.orgId);
   }
@@ -82,10 +48,25 @@ export class MovieService extends CollectionService<MovieState> {
     return super.remove(movieId);
   }
 
+  /** Gets every analytics for all movies and sync them. */
+  public syncAnalytics(options?: SyncMovieAnalyticsOptions) {
+    return combineLatest([
+      this.query.selectAll(options).pipe(map(movies => movies.map(m => m.id))),
+      this.query.analytics.select('ids')
+    ]).pipe(
+      filter(([movieIds, analyticsIds]) => movieIds.some(id => !analyticsIds.includes(id))),
+      switchMap(([movieIds]) => {
+        const f = this.functions.httpsCallable('getMovieAnalytics');
+        return f({ movieIds, daysPerRange: 28 });
+      }),
+      tap(analytics => this.store.analytics.upsertMany(analytics))
+    )
+  }
+
   /** Add a partial or a full movie to the database. */
   public async addMovie(original: string, movie?: Movie): Promise<Movie> {
     const id = this.db.createId();
-    const userId = movie._meta && movie._meta.createdBy ? movie._meta.createdBy : this.authQuery.userId;
+    const userId = movie._meta?.createdBy ? movie._meta.createdBy : this.authQuery.userId;
 
     if (!movie) {
       // create empty movie
@@ -124,11 +105,9 @@ export class MovieService extends CollectionService<MovieState> {
    */
   // @TODO #1389 Use native akita-ng-fire functions
   public async getFromInternalRef(internalRef: string): Promise<Movie> {
-    const movieSnapShot = await this.db
-      .collection('movies', ref => ref.where('main.internalRef', '==', internalRef))
-      .get().toPromise();
+    const movies = await this.getValue(ref => ref.where('main.internalRef', '==', internalRef))
 
-    return movieSnapShot.docs.length ? createMovie(movieSnapShot.docs[0].data()) : undefined;
+    return movies.length ? createMovie(movies[0]) : undefined;
   }
 
   /** Call a firebase function to get analytics specify to an array of movieIds.*/
@@ -137,18 +116,14 @@ export class MovieService extends CollectionService<MovieState> {
     return f({ movieIds, daysPerRange: 28 });
   }
 
-
   /**
    * @dev ADMIN method
    * Fetch all movies for administration uses
    */
   // @TODO #1389 Use native akita-ng-fire functions
   public async getAllMovies(): Promise<Movie[]> {
-    const movies = await this.db
-      .collection('movies')
-      .get().toPromise()
+    const movies = await this.getValue()
 
-    return movies.docs.map(m => createMovie(m.data()));
+    return movies.map(movie => createMovie(movie));
   }
-
 }

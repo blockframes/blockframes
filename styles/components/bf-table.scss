@@ -1,12 +1,10 @@
 @mixin bf-table-theme($theme) {
   $background: map-get($theme, background);
 
-  .bf-table {
-    .bf-table-filter {
-      // Doesn't work. We need to find the right class
-      .mat-form-field-outline, input {
-        background-color: mat-color($background, background);
-      }
+  bf-table-filter {
+    mat-form-field .mat-form-field-wrapper {
+      padding-bottom: 0;
+      margin: 0;
     }
   }
 }

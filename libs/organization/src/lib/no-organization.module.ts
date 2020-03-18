@@ -5,7 +5,7 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Modules
-import { FeedbackMessageModule, ActionsListModule } from '@blockframes/ui';
+import { FeedbackMessageModule, ActionsListModule, AlgoliaAutocompleteModule } from '@blockframes/ui';
 import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
 import { OrganizationFormModule } from './forms/organization-form/organization-form.module';
 import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
@@ -33,9 +33,12 @@ import { OrganizationFindComponent } from './pages/organization-find/organizatio
 import { OrganizationFeedbackComponent } from './pages/organization-feedback/organization-feedback.component';
 import { OrganizationCreateFeedbackComponent } from './pages/organization-create-feedback/organization-create-feedback.component';
 import { OrganizationCreateComponent } from './pages/organization-create/organization-create.component';
-import { NoOrganizationGuard } from './guard/no-organization.guard';
-import { NoOrganizationInvitationGuard } from '@blockframes/notification';
 import { OrganizationAppAccessComponent } from './pages/organization-app-access/organization-app-access.component';
+
+// Guards
+import { NoOrganizationInvitationGuard } from '@blockframes/notification';
+import { NoOrganizationGuard } from './guard/no-organization.guard';
+import { PendingOrganizationGuard } from './guard/pending-organization.guard';
 
 export const noOrganizationRoutes: Routes = [
   {
@@ -59,6 +62,7 @@ export const noOrganizationRoutes: Routes = [
   },
   {
     path: 'create-congratulations',
+    canActivate: [PendingOrganizationGuard],
     component: OrganizationCreateFeedbackComponent
   },
   {
@@ -82,7 +86,8 @@ export const noOrganizationRoutes: Routes = [
     OrganizationFormModule,
     ImgAssetModule,
     ImageReferenceModule,
-    
+    AlgoliaAutocompleteModule,
+
     // Material
     MatFormFieldModule,
     MatListModule,
@@ -114,4 +119,4 @@ export const noOrganizationRoutes: Routes = [
     OrganizationCreateFeedbackComponent
   ]
 })
-export class NoOrganizationModule {}
+export class NoOrganizationModule { }

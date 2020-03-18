@@ -1,13 +1,8 @@
-import { Component, ChangeDetectionStrategy, OnInit, Inject } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap, pluck } from 'rxjs/operators';
+import { algolia } from '@env';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { InvitationService } from '@blockframes/notification';
-import { OrganizationAlgoliaResult, OrganizationsIndex } from '@blockframes/utils';
-import { Index } from 'algoliasearch';
-import { OrganizationDocumentWithDates } from '@blockframes/organization/+state';
 
 @Component({
   selector: 'organization-find',
@@ -16,37 +11,25 @@ import { OrganizationDocumentWithDates } from '@blockframes/organization/+state'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class OrganizationFindComponent implements OnInit {
-  public selected: OrganizationAlgoliaResult;
-  public searchResults$: Observable<OrganizationAlgoliaResult[]>;
-  public orgControl = new FormControl();
-  public organizationResult$: Observable<OrganizationDocumentWithDates[]>;
+export class OrganizationFindComponent {
+  private orgID: string;
+  public orgIndex = algolia.indexNameOrganizations;
 
   constructor(
-    @Inject(OrganizationsIndex) private organizationIndex: Index,
     private snackBar: MatSnackBar,
     private router: Router,
     private invitationService: InvitationService,
-  ) {}
+  ) { }
 
-  ngOnInit() {
-    this.searchResults$ = this.orgControl.valueChanges.pipe(
-      debounceTime(200),
-      distinctUntilChanged(),
-      switchMap(text => this.organizationIndex.search(text)),
-      pluck('hits')
-    )    
-  }
-
-  public selectOrganization(result: OrganizationAlgoliaResult) {
-    this.selected = result;
+  public updateValue(orgID: string) {
+    this.orgID = orgID
   }
 
   public async requestToJoinOrganization() {
-    if (this.selected) {
+    if (this.orgID) {
       try {
-        await this.invitationService.sendInvitationToOrg(this.selected.objectID);
-        this.snackBar.open('Request sent !', 'close', { duration: 2000});
+        await this.invitationService.sendInvitationToOrg(this.orgID);
+        this.snackBar.open('Request sent !', 'close', { duration: 2000 });
         return this.router.navigate(['c/organization/join-congratulations']);
       } catch (error) {
         this.snackBar.open(error.message, 'close', { duration: 2000 });

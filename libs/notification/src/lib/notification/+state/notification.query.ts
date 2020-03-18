@@ -129,26 +129,26 @@ export class NotificationQuery extends QueryEntity<NotificationState, Notificati
         return {
           message: `${notification.user.name} ${notification.user.surname} has declined your organization's invitation.`,
           imgRef: notification.user.avatar,
-          placeholderUrl: 'Avatar_40.png'
+          placeholderUrl: 'profil_user.webp'
         };
       case 'invitationFromUserToJoinOrgDecline':
         return {
           message: `Your organization has refused the request from ${notification.user.name} ${notification.user.surname}.`,
           imgRef: notification.user.avatar,
-          placeholderUrl: 'Avatar_40.png'
+          placeholderUrl: 'profil_user.webp'
         };
       case 'memberAddedToOrg':
         return {
           message: `${notification.user.name} ${notification.user.surname} has been added to ${notification.organization.name}.`,
           imgRef: notification.user.avatar,
-          placeholderUrl: 'Avatar_40.png',
+          placeholderUrl: 'profil_user.webp',
           url: `c/o/organization/${notification.organization.id}/view/members`
         };
       case 'memberRemovedFromOrg':
         return {
           message: `${notification.user.name} ${notification.user.surname} has been removed from ${notification.organization.name}.`,
           imgRef: notification.user.avatar,
-          placeholderUrl: 'Avatar_40.png'
+          placeholderUrl: 'profil_user.webp'
         };
       case 'newContract':
         return {

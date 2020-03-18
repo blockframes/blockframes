@@ -1,3 +1,4 @@
+import { algolia } from '@env';
 import { ChangeDetectionStrategy, Component, Input, Output, EventEmitter } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { OrganizationAlgoliaResult } from '@blockframes/utils/algolia';
@@ -10,6 +11,7 @@ import { Stakeholder } from '../../stakeholder/+state/stakeholder.model';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DeliveryStakeholdersRepertoryComponent {
+  public orgIndex = algolia.indexNameOrganizations;
   @Output() removed = new EventEmitter<Stakeholder>();
   @Output() added = new EventEmitter<OrganizationAlgoliaResult>();
 

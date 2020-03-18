@@ -36,6 +36,6 @@ export class ProfileMenuComponent implements OnInit{
   }
 
   public get placeholderUrl() {
-    return `/assets/images/${this.theme}/Avatar_40.png`;
+    return `/assets/images/${this.theme}/profil_user.webp`;
   }
 }

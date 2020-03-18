@@ -42,13 +42,12 @@
   <aside fxLayout="column" class="filter">
     <mat-card>
       <h6>Filters</h6>
-      <p class="mat-caption">On a specific filter, multiple choices are consider with  an "or" statement.</p>
+      <p class="mat-caption">For a specific filter, multiple choices will be applied with an "or" statement (not an "and" statement).</p>
       <mat-card-content>
         <mat-accordion multi="true">
           <ng-container [formGroup]="filterForm">
 
           <!-- Production Year -->
-          <!-- TODO #1146 -->
           <!-- <mat-expansion-panel expanded>
             <mat-expansion-panel-header>
               <mat-panel-title test-id="production-year-panel">
@@ -210,7 +209,6 @@
           </mat-expansion-panel>
 
           <!-- Certifications -->
-          <!-- TODO #1146 -->
           <!-- <mat-expansion-panel>
               <mat-expansion-panel-header>
                 <mat-panel-title test-id="certifications-panel">
@@ -225,7 +223,7 @@
               </span>
             </mat-expansion-panel> -->
           </ng-container>
-          <catalog-avails-filter [availsForm]="availsForm"></catalog-avails-filter>
+          <distribution-avails-filter [availsForm]="availsForm"></distribution-avails-filter>
           <article fxLayoutAlign="center center" class="filter-buttons">
             <ng-container *ngIf="!availsForm.get('isActive').value ; else active">
               <button mat-stroked-button color="primary" (click)="applyAvailsFilter()">
@@ -258,12 +256,12 @@
             <ng-container movieCardAction>
               <div fxLayout="row" fxLayoutAlign="end">
                 <ng-container *ngIf="(toggle$(movie.id) | async); else alreadyAdded">
-                  <button mat-icon-button (click)="removeFromWishlist(movie)">
+                  <button test-id="heart-button" mat-icon-button (click)="removeFromWishlist(movie)">
                     <mat-icon svgIcon="heart_fill"></mat-icon>
                   </button>
                 </ng-container>
                 <ng-template #alreadyAdded>
-                  <button mat-icon-button (click)="addToWishlist(movie)">
+                  <button test-id="heart-button" mat-icon-button (click)="addToWishlist(movie)">
                     <mat-icon svgIcon="heart_outline"></mat-icon>
                   </button>
                 </ng-template>

@@ -17,16 +17,21 @@
       </div>
       <h3>{{ totalHitsOnCurrentMonth(info.eventName) }}</h3>
       <mat-card-content>
-        <apx-chart
-          [series]="getLineChartSeries(info.eventName, info.title)"
-          [chart]="lineChartOptions.chart"
-          [xaxis]="getLineChartXaxis(info.eventName)"
-          [yaxis]="lineChartOptions.yaxis"
-          [dataLabels]="lineChartOptions.dataLabels"
-          [grid]="lineChartOptions.grid"
-          [stroke]="lineChartOptions.stroke"
-          [fill]="lineChartOptions.fill"
-        ></apx-chart>
+        <ng-container *ngIf="!(isLoading$ | async) else loading">
+          <apx-chart
+            [series]="getLineChartSeries(info.eventName, info.title)"
+            [chart]="lineChartOptions.chart"
+            [xaxis]="getLineChartXaxis(info.eventName)"
+            [yaxis]="lineChartOptions.yaxis"
+            [dataLabels]="lineChartOptions.dataLabels"
+            [grid]="lineChartOptions.grid"
+            [stroke]="lineChartOptions.stroke"
+            [fill]="lineChartOptions.fill"
+          ></apx-chart>
+        </ng-container>
+        <ng-template #loading>
+          <mat-spinner></mat-spinner>
+        </ng-template>
       </mat-card-content>
     </mat-card>
   </ng-container>

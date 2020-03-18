@@ -8,9 +8,6 @@
     "nx.json": "*"
   },
   "projects": {
-    "ip": {
-      "tags": ["ip"]
-    },
     "auth": {
       "tags": ["auth", "wallet"]
     },
@@ -32,12 +29,6 @@
     "ethers": {
       "tags": ["ethereum", "smart-contract"]
     },
-    "movie-financing": {
-      "tags": []
-    },
-    "movie-financing-e2e": {
-      "tags": []
-    },
     "movie": {
       "tags": ["movie"]
     },
@@ -53,12 +44,6 @@
     "delivery-e2e": {
       "tags": []
     },
-    "main": {
-      "tags": ["main"]
-    },
-    "main-e2e": {
-      "tags": []
-    },
     "backend-functions": {
       "tags": []
     },
@@ -68,9 +53,6 @@
     "backend-ops": {
       "tags": []
     },
-    "catalog-lib": {
-      "tags": ["catalog"]
-    },
     "notification": {
       "tags": ["notification"]
     },
@@ -79,6 +61,13 @@
     },
     "catalog-e2e": {
       "tags": []
+    },
+    "festival": {
+      "tags": ["festival"]
+    },
+    "festival-e2e": {
+      "tags": [],
+      "implicitDependencies": ["festival"]
     }
   }
 }

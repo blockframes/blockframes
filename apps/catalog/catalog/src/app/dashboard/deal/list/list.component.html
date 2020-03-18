@@ -4,8 +4,7 @@
     <header fxLayout="row" fxLayoutAlign="space-between start">
       <h1>Offers & Deals</h1>
       <div fxLayout="column" fxLayoutAlign="start end">
-        <button mat-flat-button color="primary" (click)="createSale()">
-          <span>Create a Deal</span>
+        <button mat-mini-fab color="primary" (click)="createSale()">
           <mat-icon svgIcon="add"></mat-icon>
         </button>
       </div>
@@ -33,12 +32,12 @@
       <p class="mat-body-1">
         For the moment, you haven’t received any offers.
       </p>
-      <img asset="no_titles.svg" alt="No title image">
+      <img asset="no_titles.webp" alt="No title image">
       <p>
         While waiting for incoming offers, we invite you to<br>
         consult <a class="mat-body-1" routerLink="../home">your Dashboard</a> to see the Marketplace Activity.
       </p>
       <p>If you haven’t added any title yet, please <a class="mat-body-1" routerLink="../tunnel/movie">click here</a>.</p>
-    </section>    
+    </section>
   </ng-template>
 </ng-container>
