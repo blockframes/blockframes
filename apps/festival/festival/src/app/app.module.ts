@@ -1,5 +1,3 @@
-import { filter } from 'rxjs/operators';
-
 // Angular
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
@@ -41,6 +39,8 @@ import { intercomId } from '@env';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { ErrorLoggerModule } from '@blockframes/utils/error-logger.module';
 import { FestivalModule } from './festival.module';
+
+import { filter } from 'rxjs/operators';
 
 @NgModule({
   declarations: [AppComponent],
