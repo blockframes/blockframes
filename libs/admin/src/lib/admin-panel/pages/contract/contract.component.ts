@@ -258,7 +258,6 @@ export class ContractComponent implements OnInit {
       writeableContract.parties[index] = output;
     }
 
-    // @todo (#1887) partyIds contains userIds not orgIds.
     writeableContract.partyIds = this.contract.doc.parties.filter(p => p.party.orgId).map(p => p.party.orgId);
 
     this.contract.doc = writeableContract;

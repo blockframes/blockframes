@@ -131,9 +131,11 @@ interface ContractRaw<D> {
    * @todo (#1887) titleIds is handled by backend trigger.
   */
   titleIds: string[],
-  // @todo (#1887) currently, partyIds is used to store orgIds ..
-  // we need to change this or to rename this attribute
-  // @todo (#1887) titleIds is handled by backend trigger.
+  /**
+   * @dev simply contains id of org/parties existing in lastVersion.
+   * For quering purpose
+   * @todo (#1887) partyIds is handled by backend trigger.
+   */
   partyIds: string[],
   documents: ContractLegalDocuments,
   /**

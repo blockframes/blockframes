@@ -218,7 +218,6 @@ export class ContractService extends CollectionService<ContractState> {
           partyDetails.party.role = childRole;
           contract.parties.push(partyDetails);
           if (partyDetails.party.orgId) {
-            // @todo (#1887) partyIds contains userIds not orgIds.
             contract.partyIds.push(partyDetails.party.orgId);
           }
         });

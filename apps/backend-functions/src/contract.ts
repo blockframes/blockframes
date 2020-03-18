@@ -79,7 +79,7 @@ async function checkAndTriggerNotifications(current: ContractDocument) {
     const contractSubmitted = (previous.status === 'draft') && (current.lastVersion.status === 'submitted');
 
     if (contractSubmitted) { // Contract is submitted by organization to Archipel Content
-      // @TODO (#1887) partyIds contains userIds not orgIds && crashes if partyIds is empty
+      // @TODO (#1887) crashes if partyIds is empty
       // TODO (#1999): Find real creator 
       const { id, name } = await getDocument<PublicOrganization>(`orgs/${current.partyIds[0]}`);
       const archipelContent = await getDocument<OrganizationDocument>(`orgs/${centralOrgID}`);
@@ -178,7 +178,7 @@ export async function onContractWrite(
       if (!lastVersion || !isEqual(current.lastVersion, lastVersion)) {
         current.lastVersion.id = await getNextVersionId(tx, current.id);
         // Creation date is handled here. If not sent by user, it is created here.
-        current.lastVersion.creationDate = currentCreationDate || admin.firestore.Timestamp.now();
+        current.lastVersion.creationDate = currentCreationDate !== undefined ? currentCreationDate : admin.firestore.Timestamp.now();
         const versionToHistorize = current.lastVersion as ContractVersionDocument;
         // A new version have been saved, we check if public contract need to be updated
         await updatePublicContract(tx, current);
