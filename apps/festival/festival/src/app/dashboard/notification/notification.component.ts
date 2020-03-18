@@ -18,7 +18,7 @@ const appTabs: ActivityTab[] = [{
 export class NotificationComponent {
 
   public applicationTabs = appTabs;
-  public hasNotifications$ = this.notificationQuery.selectCount().pipe(map(count => !!count))
+  public hasNotifications$ = this.notificationQuery.selectCount().pipe(map(count => !!count));
 
   constructor(private notificationQuery: NotificationQuery) {}
 }
