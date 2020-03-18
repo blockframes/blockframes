@@ -139,22 +139,24 @@ export class ContractComponent implements OnInit {
 
   private async loadTitles() {
     this.titles = [];
-    const rows = Object.keys(this.contract.last.titles).map(async id => {
-      const title = this.contract.last.titles[id];
-      const movie = await this.movieService.getValue(id);
+    if (this.contract.last.titles) {
+      const rows = Object.keys(this.contract.last.titles).map(async id => {
+        const title = this.contract.last.titles[id];
+        const movie = await this.movieService.getValue(id);
 
-      // Append new data for table display
-      return {
-        id,
-        price: title.price,
-        movie,
-        deals: title.distributionDealIds ? title.distributionDealIds.map(d => ({ id: d, movie: id })) : [],
-        exploredeals: `/c/o/admin/panel/deals/${id}`,
-        edit: id,
-      };
-    })
+        // Append new data for table display
+        return {
+          id,
+          price: title.price,
+          movie,
+          deals: title.distributionDealIds ? title.distributionDealIds.map(d => ({ id: d, movie: id })) : [],
+          exploredeals: `/c/o/admin/panel/deals/${id}`,
+          edit: id,
+        };
+      })
 
-    this.titles = await Promise.all(rows);
+      this.titles = await Promise.all(rows);
+    }
   }
 
   private async reloadContractAndVersions(newVersionId: string, reloadTitles = false) {

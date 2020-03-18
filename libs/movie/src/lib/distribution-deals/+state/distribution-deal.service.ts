@@ -50,6 +50,7 @@ export class DistributionDealService extends CollectionService<DistributionDealS
 
     // If a contract does not have an id, we update contract and link it to this distrubution deal
     // If there is already a contract id, this means it have been created before
+    // @TODO (#1887) check this process
     if (!contract.doc.id) {
       contract.doc.id = this.db.createId();
       // Populate distribution deal contract
