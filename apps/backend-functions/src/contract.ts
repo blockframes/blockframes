@@ -179,7 +179,7 @@ export async function onContractWrite(
       if (!lastVersion || !isEqual(current.lastVersion, lastVersion)) {
         current.lastVersion.id = await getNextVersionId(tx, current.id);
         // Creation date is handled here. If not sent by user, it is created here.
-        current.lastVersion.creationDate = currentCreationDate !== undefined ? currentCreationDate : firestore.Timestamp.now();
+        current.lastVersion.creationDate = currentCreationDate || firestore.Timestamp.now();
         const versionToHistorize = current.lastVersion as ContractVersionDocument;
         // A new version have been saved, we check if public contract need to be updated
         await updatePublicContract(tx, current);
