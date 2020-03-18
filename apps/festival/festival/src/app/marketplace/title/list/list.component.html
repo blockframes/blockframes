@@ -184,12 +184,15 @@
       <div fxLayout="row wrap" fxLayoutGap="20px" fxLayout.lt-md="column" fxLayoutAlign.lt-md="center center">
         <ng-container *ngFor="let movie of movies">
           <movie-card [movie]="movie" [link]="['/c/o/marketplace',  movie.id]" *ngIf="!listView">
+            <!-- Informations -->
             <ng-container movieInformation>
               <mat-card-subtitle>
-                <span class="mat-caption" *ngFor="let director of movie.main.directors; let isLast=last">{{ director.firstName }}
-                  {{ director.lastName }}{{isLast ? '' : ', '}}</span>
+                <span class="mat-caption">
+                  {{ movie.main.directors | displayName }}
+                </span>
               </mat-card-subtitle>
             </ng-container>
+            <!-- Action -->
             <ng-container movieCardAction>
               <div fxLayout="row" fxLayoutAlign="end">
                 <ng-container *ngIf="(toggle$(movie.id) | async); else alreadyAdded">

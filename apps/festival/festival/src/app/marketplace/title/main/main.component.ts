@@ -13,7 +13,8 @@ const promoLinks = ['promo_reel_link', 'scenario', 'screener_link', 'teaser_link
 export class MainComponent {
   public movie$ = this.movieQuery.selectActive();
   public loading$ = this.movieQuery.selectLoading();
-  promoLinks = promoLinks;
+  public promoLinks = promoLinks;
+
   constructor(private movieQuery: MovieQuery) { }
 
   public hasLink({ promotionalElements }: Movie): boolean {
@@ -23,18 +24,18 @@ export class MainComponent {
   public getLink(movie: Movie, link: ExtractCode<'PROMOTIONAL_ELEMENT_TYPES'>) {
     if(movie.promotionalElements[link].media.url) {
       const isDownload = link === 'scenario' || link === 'presentation_deck';
-      const isAccent = link === 'scenario' || link === 'promo_reel_link'
+      const isAccent = link === 'scenario' || link === 'promo_reel_link';
       return {
         url: movie.promotionalElements[link].media.url,
         icon: isDownload ? 'download' : 'play',
         label: isDownload ? `Download ${getLabelBySlug('PROMOTIONAL_ELEMENT_TYPES', link)}` : `Watch ${getLabelBySlug('PROMOTIONAL_ELEMENT_TYPES', link)}`,
         color: isAccent ? 'accent' : 'primary'
-      }
+      };
     }
   }
 
   public hasStory({ story, promotionalDescription }: Movie): boolean {
-    return !!(story.synopsis || promotionalDescription.keywords.length > 0 || promotionalDescription.keyAssets)
+    return !!(story.synopsis || promotionalDescription.keywords.length > 0 || promotionalDescription.keyAssets);
   }
 
   public getPrize(prize) {
@@ -55,9 +56,9 @@ export class MainComponent {
   public getSalesCast(movie: Movie, role: string) {
     return movie.salesCast[role].map(cast => {
       return (cast.role && !! cast.role.length)
-      ? `${cast.firstName} ${cast.lastName} (${cast.role})`
-      : `${cast.firstName} ${cast.lastName}`
-    })
+        ? `${cast.firstName} ${cast.lastName} (${cast.role})`
+        : `${cast.firstName} ${cast.lastName}`;
+    });
   }
 
   public hasBudget({ budget, salesInfo, movieReview}: Movie): boolean {
@@ -66,7 +67,7 @@ export class MainComponent {
       salesInfo.certifications.length ||
       salesInfo.rating.length ||
       movieReview.length
-    )
+    );
   }
 
   public budgetRange({ from, to }) {

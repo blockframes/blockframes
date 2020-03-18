@@ -16,7 +16,7 @@ export class DisplayNamePipe implements PipeTransform {
     } else {
       const firstName = capitalize(value.firstName);
       const lastName = capitalize(value.lastName);
-    return `${firstName} ${lastName}`;
+      return `${firstName} ${lastName}`;
     }
   }
 }
