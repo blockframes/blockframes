@@ -44,22 +44,13 @@ async function _getVersionCount(contractId: string, tx?: FirebaseFirestore.Trans
 }
 
 /**
- * To compare current and previous versions against each other
- * @param contract
- */
-function _cleanVersion(contract: ContractDocument) {
-  delete contract.lastVersion.id;
-  delete contract.lastVersion.creationDate;
-  return contract;
-}
-
-/**
+ * This method is in charge of creating public contract document.
+ * @dev public contract document is created only if its status is OK
  * @param tx
  * @param contract
  */
 async function updatePublicContract(tx: FirebaseFirestore.Transaction, contract: ContractDocument): Promise<void> {
-  /** @dev public contract document is created only if its status is OK */
-  if (contract.lastVersion && ValidContractStatuses.includes(contract.lastVersion.status)) {
+  if (!!contract.lastVersion && ValidContractStatuses.includes(contract.lastVersion.status)) {
     const publicContractSnap = await tx.get(db.doc(`publicContracts/${contract.id}`));
     const publicContract: PublicContractDocument = {
       id: contract.id,
@@ -156,35 +147,38 @@ export async function onContractWrite(
     await db.doc(`publicContracts/${before.id}`).delete();
   }
 
-  // We retreive current and previous contract documents
+  // We retreive current contract document
   const current = after as ContractDocument;
-  const previous = before as ContractDocument;
 
-  if (!!current.lastVersion) {
+  if (!!current.lastVersion && current.lastVersion.status !== 'draft') {
     await db.runTransaction(async tx => {
 
-      const versionDoc = await getCurrentVersionId(tx, current.id);
-      if (!!previous) {
-        if (versionDoc !== '0') {
-          const lastVersionSnap = await tx.get(db.doc(`contracts/${previous.id}/versions/${versionDoc}`));
-          previous.lastVersion = lastVersionSnap.data() as any;
-        }
-
-        if (!!previous.lastVersion) {
-          if (previous.lastVersion.id && current.lastVersion.id && parseInt(previous.lastVersion.id, 10) > parseInt(current.lastVersion.id, 10)) {
-            // @TODO (#1887) this action is forbidden, revert current change with previous (from subcollection).
-            // @TODO (#1887) only console.log
-            throw new Error(`Version id "${current.lastVersion.id}" must be higher than previous one "${previous.lastVersion.id}".`);
-          }
-          _cleanVersion(previous)
-        };
+      let lastVersion;
+      const lastVersionId = await getCurrentVersionId(tx, current.id);
+      if (lastVersionId !== '0') {
+        const lastVersionSnap = await tx.get(db.doc(`contracts/${current.id}/versions/${lastVersionId}`));
+        lastVersion = lastVersionSnap.data() as any;
       }
 
-      _cleanVersion(current);
-      if (!previous || (!!previous.lastVersion && !isEqual(current.lastVersion, previous.lastVersion))) {
+      if (!!lastVersion) {
+        if (lastVersion.id && current.lastVersion.id && parseInt(lastVersion.id, 10) > parseInt(current.lastVersion.id, 10)) {
+          console.log(`Version id "${current.lastVersion.id}" must be higher than previous one "${lastVersion.id}".`);
+          tx.set(change.after.ref, { lastVersion: lastVersion }, { merge: true });
+          return false;
+        }
+        // To compare current and previous versions against each other
+        delete lastVersion.id;
+        delete lastVersion.creationDate;
+      };
+
+      // To compare current and previous versions against each other
+      delete current.lastVersion.id;
+      const currentCreationDate = current.lastVersion.creationDate;
+      delete current.lastVersion.creationDate;
+      if (!lastVersion || !isEqual(current.lastVersion, lastVersion)) {
         current.lastVersion.id = await getNextVersionId(tx, current.id);
-        // Creation date is handled here. No need to push it, it will be overrided here.
-        current.lastVersion.creationDate = admin.firestore.Timestamp.now(); // @TODO (#1887) let the user push the value if defined
+        // Creation date is handled here. If not sent by user, it is created here.
+        current.lastVersion.creationDate = currentCreationDate || admin.firestore.Timestamp.now();
         const versionToHistorize = current.lastVersion as ContractVersionDocument;
         // A new version have been saved, we check if public contract need to be updated
         await updatePublicContract(tx, current);
@@ -194,16 +188,20 @@ export async function onContractWrite(
         tx.set(db.doc(`contracts/${current.id}/versions/_meta`), { count: parseInt(versionToHistorize.id, 10) }, { merge: true });
         // Update contract
         tx.set(change.after.ref, { lastVersion: current.lastVersion }, { merge: true });
-      } else if (!!previous && !!previous.lastVersion && isEqual(current.lastVersion, previous.lastVersion)) {
+      } else {
         // To prevent the case where the front tries to push version Id or creationDate (which are only handled by this trigger).
         current.lastVersion.id = await getCurrentVersionId(tx, current.id);
         current.lastVersion.creationDate = await getCurrentCreationDate(tx, current.id);
+        // A new version have been saved, we check if public contract need to be updated
+        // @TODO (#1887) remove next line once code migration is OK
+        await updatePublicContract(tx, current);
         tx.set(change.after.ref, { lastVersion: current.lastVersion }, { merge: true });
       }
       return current;
     });
     // Contract version may have changed, we check if notifications need to be triggered
-    await checkAndTriggerNotifications(current);
+    // @TODO (#1887) uncomment next line once code migration is OK
+    // await checkAndTriggerNotifications(current);
     return true;
   } else {
     // Contract have been pushed the old way (lastVersion is pushed separatly)
@@ -228,11 +226,11 @@ export async function onContractVersionWrite(
   const after = change.after.data();
 
   if (!after) {
-    // Should never occur
-    throw new Error(`Contract version "${versionId}" have been deleted.`);
+    console.log(`Contract version "${versionId}" have been deleted.`);
+    return;
   }
 
-  return db.runTransaction(async tx => {
+  await db.runTransaction(async tx => {
     if (versionId === '_meta') {
       // Force count so data is always OK even if user push a bad version count.
       after.count = await getCurrentVersionId(tx, contractId);
@@ -245,4 +243,11 @@ export async function onContractVersionWrite(
     }
     return true;
   });
+  if (versionId !== '_meta') {
+    const contractSnapshot = await db.doc(`contracts/${contractId}`).get();
+    const contractDoc = contractSnapshot.data() as ContractDocument;
+    // Contract version may have changed, we check if notifications need to be triggered
+    await checkAndTriggerNotifications(contractDoc);
+  }
+  return true;
 }

@@ -175,6 +175,7 @@ export function buildChainOfTitle() {
 export function cleanContract(contract: Contract) {
   const c = { ...contract };
   delete c.versions; // Remove local values
+  delete c.lastVersion // @TODO (#1887) remove this once code migration ok
   if (!c.signDate) {
     delete c.signDate;
   }
