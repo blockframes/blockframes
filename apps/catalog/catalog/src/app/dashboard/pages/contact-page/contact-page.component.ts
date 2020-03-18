@@ -1,5 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
+import { AngularFireFunctions } from "@angular/fire/functions/functions";
+import { AuthQuery } from "@blockframes/auth";
 
 @Component({
   selector: 'catalog-contact-page',
@@ -17,6 +19,8 @@ export class ContactPageComponent implements OnInit {
   public center: google.maps.LatLngLiteral;
   public markerLabel: {};
 
+  constructor(private functions: AngularFireFunctions, private query: AuthQuery) {};
+
   ngOnInit() {
     this.center = { lat: 48.8682044, lng: 2.3334083};
     this.markerLabel = {
@@ -24,6 +28,14 @@ export class ContactPageComponent implements OnInit {
       text: '59 Passage Choiseul',
     }
   }
-  public sendMessage() {
+
+  /**
+   * Function to send email to BF admin from an user
+   */
+  public sendMessage(subject: string, message: string) {
+    const user = this.query.user;
+    const callSendUserMail = this.functions.httpsCallable('sendUserContactMail');
+
+    return callSendUserMail({userName: user.name, userMail: user.email, subject: subject, message: message});
   }
 }

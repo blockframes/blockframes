@@ -61,6 +61,9 @@ export const sendResetPasswordEmail = functions.https
 export const sendWishlistEmails = functions.https
   .onCall(users.startWishlistEmailsFlow);
 
+  /** Trigger: REST call when an user contacts blockframes admin and send them an email. */
+export const sendUserContactMail = functions.https.onCall(logErrors(users.sendUserMail));
+
 /** Trigger: REST call to find a list of organizations by name. */
 export const findOrgByName = functions.https
   .onCall(logErrors(users.findOrgByName));
