@@ -37,44 +37,48 @@ export class DistributionDealService extends CollectionService<DistributionDealS
    * @param movieId
    * @param distributionDeal
    */
-  public async addDistributionDeal(movieId: string, distributionDeal: DistributionDeal, contract: ContractWithLastVersion): Promise<string> {
+  public async addDistributionDeal(movieId: string, distributionDeal: DistributionDeal, contract?: ContractWithLastVersion): Promise<string> {
     // Create an id from DistributionDeal content.
     // A same DistributionDeal document will always have the same hash to prevent multiple insertion of same deal
     if (!distributionDeal.id) {
       distributionDeal.id = objectHash(distributionDeal);
     }
 
-    // Cleaning before save
-    contract.doc = this.contractService.formatToFirestore(contract.doc);
-    contract.last = this.contractVersionService.formatToFirestore(contract.last);
+    if (contract) {
+      // Cleaning before save
+      contract.doc = this.contractService.formatToFirestore(contract.doc);
+      contract.last = this.contractVersionService.formatToFirestore(contract.last);
 
-    // If a contract does not have an id, we update contract and link it to this distrubution deal
-    // If there is already a contract id, this means it have been created before
-    // @TODO (#1887) check this process
-    if (!contract.doc.id) {
-      contract.doc.id = this.db.createId();
-      // Populate distribution deal contract
-      contract.last.titles[movieId] = createContractTitleDetail();
-      contract.last.titles[movieId].titleId = movieId;
-      contract.last.titles[movieId].distributionDealIds.push(distributionDeal.id);
-      if (!contract.doc.titleIds.includes(movieId)) {
-        contract.doc.titleIds.push(movieId);
+      // If a contract does not have an id, we update contract and link it to this distrubution deal
+      // If there is already a contract id, this means it have been created before
+      // @TODO (#1887) check this process
+      if (!contract.doc.id) {
+        contract.doc.id = this.db.createId();
+        // Populate distribution deal contract
+        contract.last.titles[movieId] = createContractTitleDetail();
+        contract.last.titles[movieId].titleId = movieId;
+        contract.last.titles[movieId].distributionDealIds.push(distributionDeal.id);
+        if (!contract.doc.titleIds.includes(movieId)) {
+          contract.doc.titleIds.push(movieId);
+        }
+
+        // @todo #1657 change this price calculus
+        contract.last.titles[movieId].price = contract.last.price;
+
+        const contractId = await this.contractService.addContractAndVersion(contract);
+
+        // Link distributiondeal with contract
+        distributionDeal.contractId = contractId;
+      } else {
+        // Link distributiondeal with contract
+        distributionDeal.contractId = contract.doc.id;
+        // Contract may have been updated along with the distribution deal, we update it
+        // @TODO (#1887) check this process
+        await this.contractService.add(contract.doc);
+        await this.contractVersionService.add(contract.last, { params: { contractId: contract.doc.id } });
       }
-
-      // @todo #1657 change this price calculus
-      contract.last.titles[movieId].price = contract.last.price;
-
-      const contractId = await this.contractService.addContractAndVersion(contract);
-
-      // Link distributiondeal with contract
-      distributionDeal.contractId = contractId;
-    } else {
-      // Link distributiondeal with contract
-      distributionDeal.contractId = contract.doc.id;
-      // Contract may have been updated along with the distribution deal, we update it
-      await this.contractService.add(contract.doc);
-      await this.contractVersionService.add(contract.last, { params: { contractId: contract.doc.id } });
     }
+    
     await this.add(distributionDeal, { params: { movieId } });
 
     return distributionDeal.id;

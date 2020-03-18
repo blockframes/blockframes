@@ -75,7 +75,6 @@ export interface DealsImportState {
   movieTitle: String;
   movieInternalRef?: string;
   movieId: string;
-  contract: ContractWithLastVersion;
 }
 
 export interface ContractsImportState {
@@ -1307,11 +1306,8 @@ export class ViewExtractedElementsComponent implements OnInit {
         const movie = await this.movieService.getFromInternalRef(spreadSheetRow[SpreadSheetDistributionDeal.internalRef]);
         const distributionDeal = createDistributionDeal();
 
-        let contract = initContractWithVersion();
-
         const importErrors = {
           distributionDeal,
-          contract,
           errors: [],
           movieInternalRef: spreadSheetRow[SpreadSheetDistributionDeal.internalRef],
           movieTitle: movie ? movie.main.title.original : undefined,
@@ -1320,18 +1316,27 @@ export class ViewExtractedElementsComponent implements OnInit {
 
         if (movie) {
 
+          if (spreadSheetRow[SpreadSheetDistributionDeal.distributionDealId]) {
+            distributionDeal.id = spreadSheetRow[SpreadSheetDistributionDeal.distributionDealId];
+          } else {
+            importErrors.errors.push({
+              type: 'error',
+              field: 'distributionright.id',
+              name: 'Id',
+              reason: 'Required field is missing',
+              hint: 'Edit corresponding sheet field.'
+            });
+          }
+
           /////////////////
           // CONTRACT STUFF
           /////////////////
 
           // Retreive the contract that will handle the deal
-          if (spreadSheetRow[SpreadSheetDistributionDeal.distributionDealId]) {
-            distributionDeal.id = spreadSheetRow[SpreadSheetDistributionDeal.distributionDealId];
-          }
-
-          contract = await this.contractService.getContractWithLastVersionFromDeal(movie.id, distributionDeal.id);
+          const contract = await this.contractService.getContractWithLastVersionFromDeal(movie.id, distributionDeal.id);
           if (contract) {
-            importErrors.contract = contract;
+
+            distributionDeal.contractId = contract.doc.id;
 
             /////////////////
             // LICENSE STUFF
@@ -1688,7 +1693,6 @@ export class ViewExtractedElementsComponent implements OnInit {
 
   private async validateMovieSale(importErrors: DealsImportState): Promise<DealsImportState> {
     const distributionDeal = importErrors.distributionDeal;
-    const contract = importErrors.contract;
     const errors = importErrors.errors;
 
     // No movie found
@@ -1699,19 +1703,6 @@ export class ViewExtractedElementsComponent implements OnInit {
     //////////////////
     // REQUIRED FIELDS
     //////////////////
-
-    //  CONTRACT VALIDATION
-    const isContractValid = await this.contractService.isContractValid(contract.doc);
-    if (!isContractValid) {
-      errors.push({
-        type: 'error',
-        field: 'contractId',
-        name: 'Contract ',
-        reason: 'Related contract not found',
-        hint: 'Edit corresponding sheet field.'
-      });
-    }
-
 
     // BEGINNING OF RIGHTS
     if (!distributionDeal.terms.start) {

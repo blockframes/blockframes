@@ -26,7 +26,7 @@ import { toDate } from '@blockframes/utils/helpers';
  * @dev this should not be saved to firestore,
  * used only in front
  */
-export interface ContractWithLastVersion {
+export interface ContractWithLastVersion { // @TODO (#1887) remove this
   doc: Contract,
   last: ContractVersion,
 }
