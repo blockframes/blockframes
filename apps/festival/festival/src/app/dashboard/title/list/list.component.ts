@@ -49,7 +49,7 @@ function createTitleView(
   };
 }
 @Component({
-  selector: 'festival-dashboard-list',
+  selector: 'festival-dashboard-title-list',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
