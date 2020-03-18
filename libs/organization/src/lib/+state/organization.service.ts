@@ -120,6 +120,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
 
   /** Returns the organization of a specific user. */
   public async getUserOrganization(userId: string) {
+    //@todo(#2220) use userService.getValue(userId) when created
     const userDoc = await this.db.doc(`users/${userId}`).get().toPromise();
     const { orgId } = userDoc.data() as User;
     if (!!orgId) {

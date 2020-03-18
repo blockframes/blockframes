@@ -27,16 +27,8 @@ export class UserRedirectionGuard implements CanActivate {
     if (!organization) {
       return this.router.parseUrl(`c/organization`);
     }
-
-    // If user organization have an access to one app or both, redirect him on an app
-    if (organization?.appAccess.catalogMarketplace) {
-      return this.router.parseUrl('c/o/marketplace');
+    else {
+      return this.router.parseUrl(`c/o`);
     }
-
-    if (organization?.appAccess.catalogDashboard) {
-      return this.router.parseUrl('c/o/dashboard')
-    }
-
-    return true;
   }
 }

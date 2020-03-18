@@ -2,8 +2,10 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { MovieCollectionGuard } from '@blockframes/movie/movie/guards/movie-collection.guard';
 import { createRoutes } from '@blockframes/utils/routes';
+
+// Guards
 import { CatalogAppGuard } from './guards/catalog-app.guard';
-import { UserRedirectionGuard } from './guards/user-redirection.guard';
+import { UserRedirectionGuard } from '@blockframes/auth/guard/user-redirection.guard';
 
 const routes: Routes = createRoutes({
   appName: 'catalog',
