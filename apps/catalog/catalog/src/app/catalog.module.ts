@@ -3,11 +3,13 @@ import { RouterModule, Routes } from '@angular/router';
 import { MovieCollectionGuard } from '@blockframes/movie/movie/guards/movie-collection.guard';
 import { createRoutes } from '@blockframes/utils/routes';
 import { CatalogAppGuard } from './guards/catalog-app.guard';
+import { UserRedirectionGuard } from './guards/user-redirection.guard';
 
 const routes: Routes = createRoutes({
   appName: 'catalog',
   landing: {
     path: '',
+    canActivate: [UserRedirectionGuard],
     loadChildren: () => import('./landing/landing.module').then(m => m.LandingModule)
   },
   appsRoutes: [{

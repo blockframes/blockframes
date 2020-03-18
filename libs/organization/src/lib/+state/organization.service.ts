@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { switchMap, map, tap } from 'rxjs/operators';
-import { AuthQuery } from '@blockframes/auth';
+import { switchMap } from 'rxjs/operators';
+import { AuthQuery, User } from '@blockframes/auth';
 import {
   Organization,
   createOrganization,
@@ -12,7 +12,6 @@ import { OrganizationStore, OrganizationState } from './organization.store';
 import { OrganizationQuery } from './organization.query';
 import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
 import { AngularFireFunctions } from '@angular/fire/functions';
-import { APPS_DETAILS } from '@blockframes/utils';
 import { createPermissions } from '../permissions/+state/permissions.model';
 import { firestore } from 'firebase/app';
 
@@ -117,6 +116,15 @@ export class OrganizationService extends CollectionService<OrganizationState> {
         return tx.update(docRef, { [appId]: 'requested' });
       }
     });
+  }
+
+  /** Returns the organization of a specific user. */
+  public async getUserOrganization(userId: string) {
+    const userDoc = await this.db.doc(`users/${userId}`).get().toPromise();
+    const { orgId } = userDoc.data() as User;
+    if (!!orgId) {
+      return this.getValue(orgId);
+    }
   }
 
   public async setBlockchainFeature(value: boolean) {
