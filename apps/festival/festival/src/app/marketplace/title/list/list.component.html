@@ -47,56 +47,7 @@
         <mat-accordion multi="true">
           <ng-container [formGroup]="filterForm">
 
-          <!-- Production Year -->
-          <!-- <mat-expansion-panel expanded>
-            <mat-expansion-panel-header>
-              <mat-panel-title test-id="production-year-panel">
-                Production Year
-              </mat-panel-title>
-            </mat-expansion-panel-header>
-            <div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="10px" formGroupName="productionYear">
-              <mat-form-field appearance="outline">
-                <mat-label>From</mat-label>
-                <input test-id="production-year-input-from" matInput type="number" formControlName="from"
-                  placeholder="From" autocomplete="off" [errorStateMatcher]="matcher" />
-                <mat-error *ngIf="filterForm.get('productionYear').get('from').hasError('pattern')">
-                  Please type in a valid year! Example: <i>{{ getCurrentYear }}</i>
-                </mat-error>
-                <mat-error *ngIf="filterForm.get('productionYear').get('from').hasError('max')">
-                  The year can't be above the current year, {{ getCurrentYear }}
-                </mat-error>
-              </mat-form-field>
-              <mat-form-field appearance="outline">
-                <mat-label>To</mat-label>
-                <input test-id="production-year-input-to" matInput type="number" formControlName="to" placeholder="To"
-                  autocomplete="off" [errorStateMatcher]="matcher" />
-                <mat-error *ngIf="filterForm.get('productionYear').get('to').hasError('pattern')">
-                  Please type in a valid year! Example: <i>{{ getCurrentYear }}</i>
-                </mat-error>
-              </mat-form-field>
-            </div>
-            <mat-error *ngIf="showFormGroupError('productionYear')">
-              The value <i>To</i> can't be smaller than the value <i>From</i>!
-            </mat-error>
-          </mat-expansion-panel> -->
-
           <mat-divider inset></mat-divider>
-          <h5>TITLE METADATA</h5>
-
-          <!-- Freshness (Store Type) -->
-          <mat-expansion-panel>
-            <mat-expansion-panel-header>
-              <span class="mat-body-1">Freshness</span>
-            </mat-expansion-panel-header>
-            <div fxLayout="row" fxLayoutAlign="space-around center">
-              <mat-checkbox (change)="checkStoreType('library')" color="primary" [disabled]="availsForm.value.isActive">
-                <span>Library</span>
-              </mat-checkbox>
-              <mat-checkbox (change)="checkStoreType('line_up')" color="primary" [disabled]="availsForm.value.isActive">
-                <span>Line-Up</span>
-              </mat-checkbox>
-            </div>
-          </mat-expansion-panel>
 
           <!-- Genres -->
           <mat-expansion-panel>
@@ -208,31 +159,17 @@
             </div>
           </mat-expansion-panel>
 
-          <!-- Certifications -->
-          <!-- <mat-expansion-panel>
-              <mat-expansion-panel-header>
-                <mat-panel-title test-id="certifications-panel">
-                  Certifications
-                </mat-panel-title>
-              </mat-expansion-panel-header>
-              <h6>You can choose multiple certifications</h6>
-              <span fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="10px">
-                <mat-checkbox *ngFor="let certification of movieCertifications"
-                  (change)="checkCertification(certification)">{{certification}}
-                </mat-checkbox>
-              </span>
-            </mat-expansion-panel> -->
           </ng-container>
-          <distribution-avails-filter [availsForm]="availsForm"></distribution-avails-filter>
+
           <article fxLayoutAlign="center center" class="filter-buttons">
             <ng-container *ngIf="!availsForm.get('isActive').value ; else active">
               <button mat-stroked-button color="primary" (click)="applyAvailsFilter()">
-                Apply Avails Filter
+                Apply Filter
               </button>
             </ng-container>
             <ng-template #active>
               <button mat-stroked-button color="accent" (click)="deactivateAvailsFilter()">
-                Deactivate Avails Filter
+                Deactivate Filter
               </button>
             </ng-template>
           </article>

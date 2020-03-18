@@ -1,0 +1,30 @@
+mat-card {
+  margin-top: 20px;
+  .mat-card-content {
+    padding-left: 20px;
+  }
+  a {
+    margin-bottom: 10px;
+  }
+}
+
+
+li {
+  margin-bottom: 4px;
+  strong {
+    opacity: 0.5;
+    font-weight: normal;
+  }
+  img {
+    max-height: 50px;
+  }
+}
+
+mat-card {
+  width: 100%;
+  word-break: break-all;
+}
+
+.synopsis {
+  word-break: keep-all;
+}

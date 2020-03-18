@@ -3,7 +3,6 @@ import { MovieCardModule } from "@blockframes/ui/movie-card/movie-card.module";
 import { MovieDisplayListModule } from '@blockframes/movie/movie/components/display-list/display-list.module';
 import { TranslateSlugModule } from "@blockframes/utils/pipes/translate-slug.module";
 import { MovieFormGenresModule } from "@blockframes/movie/movie/form/main/genres/genres.module";
-import { AvailsFilterModule } from '@blockframes/movie/distribution-deals/components/avails-filter/avails-filter.module';
 
 // Pages
 import { ListComponent } from './list.component';
@@ -46,7 +45,6 @@ import { ChipsAutocompleteModule } from "@blockframes/ui/static-autocomplete/chi
     MovieDisplayListModule,
     TranslateSlugModule,
     MovieFormGenresModule,
-    AvailsFilterModule,
     ChipsAutocompleteModule,
 
     // Material
