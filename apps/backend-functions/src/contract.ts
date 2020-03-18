@@ -240,6 +240,10 @@ export async function onContractVersionWrite(
       // and let the onContractWrite function handle the job.
       const contractSnap = await tx.get(db.doc(`contracts/${contractId}`));
       tx.set(contractSnap.ref, { lastVersion: after }, { merge: true });
+      if (!!after.status && after.status === 'draft') {
+        // To avoid polluting DB.
+        tx.delete(change.after.ref);
+      }
     }
     return true;
   });
