@@ -10,7 +10,9 @@ import {
   Output,
   EventEmitter,
   ContentChild,
-  TemplateRef
+  TemplateRef,
+  ViewChild,
+  ElementRef
 } from '@angular/core';
 import { debounceTime, distinctUntilChanged, switchMap, pluck } from 'rxjs/operators';
 
@@ -65,6 +67,12 @@ export class AlgoliaAutocompleteComponent implements OnInit {
   @Input() mode: 'legacy' | 'standard' | 'fill' | 'outline' = 'outline'
 
   /**
+   * Determines if we want to have a native control or a mat form field with
+   * matInput
+   */
+  @Input() inputMode: 'matNativeControl' | 'matInput' = 'matInput';
+
+  /**
    * Output to get all data from algolia
    */
   @Output() selectionChange = new EventEmitter();
@@ -92,11 +100,7 @@ export class AlgoliaAutocompleteComponent implements OnInit {
    */
   private indexSearch;
 
-  /**
- * Since we input the path we need to initalize the function after the input gets handled,
- * otherwise displayWithPath is undefined and this will throw an error
- */
-  public displayFn: Function;
+  @ViewChild('input') input: ElementRef<HTMLInputElement>
 
   ngOnInit() {
     this.indexSearch = this.config.searchClient.initIndex(this.config.indexName)
@@ -106,14 +110,6 @@ export class AlgoliaAutocompleteComponent implements OnInit {
       switchMap(text => this.indexSearch.search(text)),
       pluck('hits')
     );
-
-    this.displayFn = (value: object) => {
-      if (typeof value === 'object') {
-        return this.displayWithPath.split('.').reduce((prev, curr) => {
-          return prev ? prev[curr] : null
-        }, value || self)
-      }
-    }
   }
 
   /**
@@ -125,7 +121,7 @@ export class AlgoliaAutocompleteComponent implements OnInit {
     if (result) {
       return pathToResolve.split('.').reduce((prev, curr) => {
         return prev ? prev[curr] : null
-      }, result || self)
+      }, result)
     }
   }
 
@@ -139,6 +135,21 @@ export class AlgoliaAutocompleteComponent implements OnInit {
     this.selectionChange.emit(event.option.value.objectID);
     if (this.resetInput) {
       this.control.reset(null);
+    }
+    this.displayFn(event.option.value)
+  }
+
+  /**
+  * Since we input the path we need to initalize the function after the input gets handled,
+  * otherwise displayWithPath is undefined and this will throw an error
+  */
+  public displayFn(value: object) {
+    if (typeof value === 'object') {
+      const val = this.displayWithPath.split('.').reduce((prev, curr) => {
+        return prev ? prev[curr] : null
+      }, value)
+      console.log(val, this.control.value)
+      return val ? val : '';
     }
   }
 }

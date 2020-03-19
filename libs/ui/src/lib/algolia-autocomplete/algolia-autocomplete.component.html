@@ -1,9 +1,9 @@
 <mat-form-field [appearance]="mode">
   <mat-label>{{ label }}</mat-label>
-  <input matInput autocapitalize="off" autocorrect="off" spellcheck="false" type="text" [formControl]="control"
-    [matAutocomplete]="auto" />
+  <input autocapitalize="off" autocorrect="off" spellcheck="false" type="text" [formControl]="control"
+    [matAutocomplete]="auto" #input />
 </mat-form-field>
-<mat-autocomplete #auto="matAutocomplete" (optionSelected)="findObjectID($event)" [displayWith]="displayFn">
+<mat-autocomplete #auto="matAutocomplete" (optionSelected)="findObjectID($event)" [displayWith]="displayFn.bind(this)">
   <mat-option *ngFor="let result of (algoliaSearchResults$ | async)" [value]="result">
     <ng-template [ngTemplateOutlet]="template || default" [ngTemplateOutletContext]="{ $implicit: result }">
     </ng-template>
