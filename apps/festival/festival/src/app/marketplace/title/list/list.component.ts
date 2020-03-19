@@ -55,9 +55,6 @@ import { StoreType } from '@blockframes/movie/movie/+state/movie.firestore';
 })
 export class ListComponent implements OnInit {
 
-  /** Algolia search results */
-  private algoliaSearchResults$: Observable<MovieAlgoliaResult[]>;
-
   /* Observable of all movies */
   public movieSearchResults$: Observable<Movie[]>;
 
@@ -125,7 +122,7 @@ export class ListComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.algoliaSearchResults$ = this.searchbarForm.valueChanges.pipe(
+    const algoliaMovies$ = this.searchbarForm.valueChanges.pipe(
       debounceTime(200),
       distinctUntilChanged(),
       startWith(''),
@@ -135,7 +132,7 @@ export class ListComponent implements OnInit {
     );
 
     this.movieSearchResults$ = combineLatest([
-      this.algoliaSearchResults$,
+      algoliaMovies$,
       this.filterBy$,
       this.sortBy$
     ]).pipe(

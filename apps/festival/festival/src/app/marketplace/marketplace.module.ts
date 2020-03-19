@@ -53,6 +53,16 @@ const routes: Routes = [{
         canDeactivate: [MovieActiveGuard],
         loadChildren: () => import('./title/view/view.module').then(m => m.MovieViewModule)
       }]
+    },
+    {
+      path: 'organization',
+      children: [{
+        path: '',
+        loadChildren: () => import('./organization/list/list.module').then(m => m.OrganizationListModule),
+      }, {
+        path: ':orgId',
+        loadChildren: () => import('./organization/view/view.module').then(m => m.OrganizationViewModule)
+      }]
     }
   ]
 }];
