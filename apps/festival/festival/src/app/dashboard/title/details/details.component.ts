@@ -11,7 +11,7 @@ import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
 import { Subscription } from 'rxjs/internal/Subscription';
 
 @Component({
-  selector: 'catalog-title-details',
+  selector: 'festival-title-details',
   templateUrl: './details.component.html',
   styleUrls: ['./details.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
