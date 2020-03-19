@@ -1,5 +1,5 @@
 import { Routes, Route } from '@angular/router';
-import { AuthGuard } from '@blockframes/auth';
+import { AuthGuard, UserRedirectionGuard } from '@blockframes/auth';
 import { PermissionsGuard } from '@blockframes/organization/permissions/guard/permissions.guard';
 import { OrganizationGuard } from '@blockframes/organization/guard/organization.guard';
 import { NotificationsGuard } from '@blockframes/notification';
@@ -14,16 +14,16 @@ interface RouteOptions {
   landing?: Route,
 }
 
-const defaultLanding = {
-  path: '',
-  redirectTo: 'c',
-  pathMatch: 'full'
-}
-
-export function createRoutes({ appsRoutes, appName, landing = defaultLanding }: RouteOptions) {
+export function createRoutes({ appsRoutes, appName, landing }: RouteOptions) {
   // We need to put the spread operator in a local variable to make build works on prod
   const children = [
     ...appsRoutes,
+    landing = {
+      ...landing,
+      canActivate: landing.canActivate
+        ? [...landing.canActivate, UserRedirectionGuard]
+        : [UserRedirectionGuard]
+    },
     {
       path: 'organization',
       loadChildren: () => import('@blockframes/organization').then(m => m.OrganizationModule)

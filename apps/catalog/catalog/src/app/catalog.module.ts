@@ -5,13 +5,11 @@ import { createRoutes } from '@blockframes/utils/routes';
 
 // Guards
 import { CatalogAppGuard } from './guards/catalog-app.guard';
-import { UserRedirectionGuard } from '@blockframes/auth/guard/user-redirection.guard';
 
 const routes: Routes = createRoutes({
   appName: 'catalog',
   landing: {
     path: '',
-    canActivate: [UserRedirectionGuard],
     loadChildren: () => import('./landing/landing.module').then(m => m.LandingModule)
   },
   appsRoutes: [{
