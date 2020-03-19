@@ -2,6 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { AuthQuery } from "@blockframes/auth";
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'catalog-contact-page',
@@ -15,11 +16,14 @@ export class ContactPageComponent implements OnInit {
     subject: new FormControl('', Validators.required),
     message: new FormControl('', Validators.required)
   });
-
   public center: google.maps.LatLngLiteral;
   public markerLabel: {};
 
-  constructor(private functions: AngularFireFunctions, private query: AuthQuery) {};
+  constructor(
+    private functions: AngularFireFunctions,
+    private query: AuthQuery,
+    private snackBar: MatSnackBar
+    ) {};
 
   ngOnInit() {
     this.center = { lat: 48.8682044, lng: 2.3334083};
@@ -32,11 +36,14 @@ export class ContactPageComponent implements OnInit {
   /**
    * Function to send email to BF admin from an user
    */
-  public sendMessage(subject: string, message: string) {
-    // const subject = this.form.
+  public sendMessage() {
+    const userSubject = this.form.get('subject').value;
+    const userMessage = this.form.get('message').value;
     const user = this.query.user;
-    const callSendUserMail = this.functions.httpsCallable('sendUserContactMail');
 
-    return callSendUserMail({userName: user.name, userMail: user.email, subject: subject, message: message}).toPromise();
+    const callSendUserMail = this.functions.httpsCallable('sendUserContactMail');
+    this.snackBar.open('Your email has been sent !', 'close', { duration: 2000 });
+
+    return callSendUserMail({userName: user.name, userMail: user.email, subject: userSubject, message: userMessage}).toPromise();
   }
 }
