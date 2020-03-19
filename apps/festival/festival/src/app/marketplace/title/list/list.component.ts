@@ -31,7 +31,7 @@ import { ControlErrorStateMatcher } from '@blockframes/utils/form/validators/val
 import { MovieAlgoliaResult } from '@blockframes/utils/algolia';
 import { MoviesIndex } from '@blockframes/utils/algolia';
 // RxJs
-import { Observable, combineLatest, of, from } from 'rxjs';
+import { Observable, combineLatest } from 'rxjs';
 import { startWith, map, debounceTime, switchMap, tap, distinctUntilChanged, pluck } from 'rxjs/operators';
 // Others
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
@@ -41,10 +41,8 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
 import { NumberRange } from '@blockframes/utils/common-interfaces/range';
 import { BUDGET_LIST } from '@blockframes/movie/movie/form/budget/budget.form';
-import { filterMovie, filterMovieWithAvails } from '@blockframes/movie/distribution-deals/form/filter.util';
-import { CatalogSearchForm, AvailsSearchForm } from '@blockframes/movie/distribution-deals/form/search.form';
-import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state';
-import { asyncFilter } from '@blockframes/utils/helpers';
+import { filterMovie } from '@blockframes/movie/distribution-deals/form/filter.util';
+import { CatalogSearchForm } from '@blockframes/movie/distribution-deals/form/search.form';
 import { staticModels } from '@blockframes/utils/static-model';
 import { sortMovieBy } from '@blockframes/utils/akita-helper/sort-movie-by';
 import { StoreType } from '@blockframes/movie/movie/+state/movie.firestore';
@@ -65,7 +63,6 @@ export class ListComponent implements OnInit {
 
   /* Instance of the search form */
   public filterForm = new CatalogSearchForm();
-  public availsForm = new AvailsSearchForm();
 
   /* Variables for searchbar autocompletion */
   public allDirectors: string[] = [];
@@ -104,7 +101,6 @@ export class ListComponent implements OnInit {
   public searchbarTextControl: FormControl = new FormControl('');
 
   private filterBy$ = this.filterForm.valueChanges.pipe(startWith(this.filterForm.value));
-  private filterByAvails$ = this.availsForm.valueChanges.pipe(startWith(this.availsForm.value));
   private sortBy$ = this.sortByControl.valueChanges.pipe(startWith(this.sortByControl.value));
 
   /* Arrays for showing the selected countries in the UI */
@@ -124,7 +120,6 @@ export class ListComponent implements OnInit {
     private catalogCartQuery: CatalogCartQuery,
     private snackbar: MatSnackBar,
     private movieQuery: MovieQuery,
-    private dealService: DistributionDealService,
     @Inject(MoviesIndex) private movieIndex: Index,
     private analytics: FireAnalytics
   ) { }
@@ -142,38 +137,14 @@ export class ListComponent implements OnInit {
     this.movieSearchResults$ = combineLatest([
       this.algoliaSearchResults$,
       this.filterBy$,
-      this.filterByAvails$,
       this.sortBy$
     ]).pipe(
-      switchMap(([algoliaMovies, filterOptions, availsOptions, sortBy]) => {
+      switchMap(([algoliaMovies, filterOptions, sortBy]) => {
         const movieIds = algoliaMovies.map(index => index.objectID);
         return this.movieQuery.selectAll({
           sortBy: (a, b) => sortMovieBy(a, b, sortBy),
           filterBy: movie => filterMovie(movie, filterOptions) && movieIds.includes(movie.id)
-        }).pipe(
-          switchMap(movies => {
-
-            // If Avails filter button is clicked
-            if (!availsOptions.isActive) {
-              return of(movies)
-            }
-
-            return from(
-              asyncFilter(movies, async movie => {
-                // Filters the deals before sending them to the avails filter function
-                if (movie.distributionDeals && movie.distributionDeals.length) {
-                  const mandateDeals = await this.dealService.getMandateDeals(movie);
-                  const mandateDealIds = mandateDeals.map(deal => deal.id);
-                  const filteredDeals = movie.distributionDeals.filter(deal => !mandateDealIds.includes(deal.id));
-                  return filterMovieWithAvails(filteredDeals, availsOptions, mandateDeals);
-                }
-                // If movie has no deals, it means there is also no mandate deal,
-                // Archipel can't sells rights for this movie, so we don't display it.
-                return false;
-              })
-            )
-          })
-        );
+        })
       }),
     )
 
@@ -229,17 +200,9 @@ export class ListComponent implements OnInit {
         this.filterForm.get('productionYear').hasError('invalidRange')
       )
     )
-    const availsHasErrors = (
-      !this.availsForm.get('terms').get('start').hasError('min') &&
-      this.availsForm.get('terms').hasError('invalidRange')
-    )
 
     if (formGroupName === 'productionYear') {
-
       return filterHasErrors
-    } else {
-
-      return availsHasErrors;
     }
   }
 
@@ -382,18 +345,6 @@ export class ListComponent implements OnInit {
     } else {
       this.searchbarTypeForm.setValue('');
     }
-  }
-
-  public applyAvailsFilter() {
-    this.availsForm.get('isActive').setValue(true);
-    this.availsForm.disable({ onlySelf: false });
-    // TODO: use controls for territories and medias to make it disablable
-  }
-
-  public deactivateAvailsFilter() {
-    this.availsForm.get('isActive').setValue(false);
-    this.availsForm.enable();
-    this.availsForm.get('territory').enable();
   }
 
   /** Check storeType or uncheck it if it's already in the array. */
