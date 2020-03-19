@@ -1,7 +1,8 @@
 <ng-container *ngIf="org">
-  <header fxLayout="row" fxLayoutAlign="space-around start">
+  <header fxLayout="row" fxLayoutAlign="start center">
     <img [imgRef]="org.logo" placeholderAsset="Organization_250.png" alt="organization logo" />
-    <div class="org-info">
+    <article>
+      <h2>{{ org.activity }}</h2>
       <h1>{{ org.name }}</h1>
       <p class="mat-body-2">
         {{ org.addresses.main.street | titlecase }}
@@ -10,7 +11,8 @@
         <ng-container *ngIf="org.addresses.main.zipCode && org.addresses.main.city">, </ng-container>
         {{ org.addresses.main.city | titlecase }}
       </p>
-    </div>
+      <p></p>
+    </article>
   </header>
   <nav mat-tab-nav-bar>
     <a mat-tab-link

@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { TitlesComponent } from './titles.component';
 import { MovieCardModule } from '@blockframes/ui/movie-card/movie-card.module';
+import { MatRippleModule } from '@angular/material/core';
 
 
 
@@ -11,6 +12,7 @@ import { MovieCardModule } from '@blockframes/ui/movie-card/movie-card.module';
   imports: [
     CommonModule,
     MovieCardModule,
+    MatRippleModule,
     RouterModule.forChild([{ path: '', component: TitlesComponent }])
   ]
 })
