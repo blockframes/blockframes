@@ -40,10 +40,12 @@ export class ContactPageComponent implements OnInit {
     const userSubject = this.form.get('subject').value;
     const userMessage = this.form.get('message').value;
     const user = this.query.user;
+    const userDisplayName = `${user.name} ${user.surname}`;
 
     const callSendUserMail = this.functions.httpsCallable('sendUserContactMail');
     this.snackBar.open('Your email has been sent !', 'close', { duration: 2000 });
+    this.form.reset();
 
-    return callSendUserMail({userName: user.name, userMail: user.email, subject: userSubject, message: userMessage}).toPromise();
+    return callSendUserMail({userName: userDisplayName, userMail: user.email, subject: userSubject, message: userMessage}).toPromise();
   }
 }
