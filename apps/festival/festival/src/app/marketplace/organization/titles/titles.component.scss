@@ -3,7 +3,10 @@
   flex-wrap: wrap;
 }
 
-movie-card {
+a {
   margin: 16px;
   max-width: 300px;
+}
+movie-card {
+  width: 100%;
 }

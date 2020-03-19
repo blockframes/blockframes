@@ -6,8 +6,16 @@ header, section {
 
 header {
   height: 300px;
-  padding-top: 30px;
+  padding: 30px;
   background: linear-gradient(to bottom, var(--background-disabled-button), transparent);
+  img {
+    height: 170px;
+    width: 170px;
+    border-radius: 50%;
+  }
+  article {
+    max-width: 50%;
+  }
 }
 
 nav {
@@ -18,11 +26,6 @@ nav {
   margin-left: 25px;
 }
 
-img {
-  height: 170px;
-  width: 170px;
-  border-radius: 50%;
-}
 
 @include layout-bp(sm) {
   header, section {
