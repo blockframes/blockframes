@@ -8,8 +8,7 @@ export class UserRedirectionGuard implements CanActivate {
   constructor(
     protected service: OrganizationService,
     protected router: Router,
-    private afAuth: AngularFireAuth,
-    private organizationService: OrganizationService
+    private afAuth: AngularFireAuth
   ) { }
 
   async canActivate() {
@@ -21,14 +20,7 @@ export class UserRedirectionGuard implements CanActivate {
       return true;
     }
 
-    const organization = await this.organizationService.getUserOrganization(user.uid);
-
-    // If user is logged but has no organization, redirect him on the organization tunnel
-    if (!organization) {
-      return this.router.parseUrl(`c/organization`);
-    }
-    else {
-      return this.router.parseUrl(`c/o`);
-    }
+    // Else, navigate to 'c/o' where other guards will take care of redirection
+    return this.router.parseUrl(`c/o`);
   }
 }

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { switchMap } from 'rxjs/operators';
-import { AuthQuery, User } from '@blockframes/auth';
+import { AuthQuery } from '@blockframes/auth/+state';
 import {
   Organization,
   createOrganization,
@@ -116,16 +116,6 @@ export class OrganizationService extends CollectionService<OrganizationState> {
         return tx.update(docRef, { [appId]: 'requested' });
       }
     });
-  }
-
-  /** Returns the organization of a specific user. */
-  public async getUserOrganization(userId: string) {
-    //@todo(#2220) use userService.getValue(userId) when created
-    const userDoc = await this.db.doc(`users/${userId}`).get().toPromise();
-    const { orgId } = userDoc.data() as User;
-    if (!!orgId) {
-      return this.getValue(orgId);
-    }
   }
 
   public async setBlockchainFeature(value: boolean) {
