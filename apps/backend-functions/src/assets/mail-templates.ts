@@ -185,8 +185,8 @@ export function sendContactEmail(userName: string, userMail: string, subject: st
     to: 'cmandonnet@cascade8.com',
     subject: 'An user contacts Blockframes Admin',
     text: ` ${userName} (${userMail}) has sent an email.
-    Subject : ${subject}
-    Message :
+    Subject of the mail : ${subject}
+    Message from user :
     ${message}`
   }
 }
