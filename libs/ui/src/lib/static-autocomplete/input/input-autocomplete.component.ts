@@ -28,7 +28,7 @@ export class InputAutocompleteComponent implements OnInit {
   }
   @Input() control: FormStaticValue<Scope>;
 
-  filteredStates: Observable<SlugAndLabel[]>;
+  public filteredStates: Observable<SlugAndLabel[]>;
 
   /**
    * Since we input the scope we need to initalize the function after the input gets handled,
