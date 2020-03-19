@@ -1,12 +1,27 @@
-<mat-form-field [appearance]="mode">
-  <mat-label>{{ label }}</mat-label>
+<ng-container *ngIf="!native; else native">
+  <mat-form-field [appearance]="mode">
+    <mat-label>{{ label }}</mat-label>
+    <input autocapitalize="off" autocorrect="off" spellcheck="false" type="text" [formControl]="control"
+      [matAutocomplete]="auto" matInput />
+  </mat-form-field>
+  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="findObjectID($event)"
+    [displayWith]="displayFn.bind(this)">
+    <mat-option *ngFor="let result of (algoliaSearchResults$ | async)" [value]="result">
+      <ng-template [ngTemplateOutlet]="template || default" [ngTemplateOutletContext]="{ $implicit: result }">
+      </ng-template>
+      <ng-template #default> {{ result | json }}</ng-template>
+    </mat-option>
+  </mat-autocomplete>
+</ng-container>
+<ng-template #native>
   <input autocapitalize="off" autocorrect="off" spellcheck="false" type="text" [formControl]="control"
-    [matAutocomplete]="auto" #input />
-</mat-form-field>
-<mat-autocomplete #auto="matAutocomplete" (optionSelected)="findObjectID($event)" [displayWith]="displayFn.bind(this)">
-  <mat-option *ngFor="let result of (algoliaSearchResults$ | async)" [value]="result">
-    <ng-template [ngTemplateOutlet]="template || default" [ngTemplateOutletContext]="{ $implicit: result }">
-    </ng-template>
-    <ng-template #default> {{ result | json }}</ng-template>
-  </mat-option>
-</mat-autocomplete>
+    [matAutocomplete]="auto" matNativeControl/>
+  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="findObjectID($event)"
+    [displayWith]="displayFn.bind(this)">
+    <mat-option *ngFor="let result of (algoliaSearchResults$ | async)" [value]="result">
+      <ng-template [ngTemplateOutlet]="template || default" [ngTemplateOutletContext]="{ $implicit: result }">
+      </ng-template>
+      <ng-template #default> {{ result | json }}</ng-template>
+    </mat-option>
+  </mat-autocomplete>
+</ng-template>

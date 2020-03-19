@@ -1,6 +1,6 @@
-import { searchClient } from '@blockframes/utils/algolia';
+// Angular
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
-import { Observable } from 'rxjs';
 import { FormControl } from '@angular/forms';
 import {
   Component,
@@ -14,6 +14,11 @@ import {
   ViewChild,
   ElementRef
 } from '@angular/core';
+
+import { searchClient } from '@blockframes/utils/algolia';
+
+// RxJs
+import { Observable } from 'rxjs';
 import { debounceTime, distinctUntilChanged, switchMap, pluck } from 'rxjs/operators';
 
 @Component({
@@ -66,11 +71,16 @@ export class AlgoliaAutocompleteComponent implements OnInit {
    */
   @Input() mode: 'legacy' | 'standard' | 'fill' | 'outline' = 'outline'
 
+  private _native: boolean;
+
   /**
-   * Determines if we want to have a native control or a mat form field with
-   * matInput
+   * Sets the input to a native input control
    */
-  @Input() inputMode: 'matNativeControl' | 'matInput' = 'matInput';
+  @Input()
+  get native() { return this._native }
+  set native(value: any) {
+    this._native = coerceBooleanProperty(value);
+  };
 
   /**
    * Output to get all data from algolia
