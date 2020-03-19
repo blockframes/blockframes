@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
-import { AngularFireFunctions } from "@angular/fire/functions/functions";
+import { AngularFireFunctions } from "@angular/fire/functions";
 import { AuthQuery } from "@blockframes/auth";
 
 @Component({
@@ -33,9 +33,10 @@ export class ContactPageComponent implements OnInit {
    * Function to send email to BF admin from an user
    */
   public sendMessage(subject: string, message: string) {
+    // const subject = this.form.
     const user = this.query.user;
     const callSendUserMail = this.functions.httpsCallable('sendUserContactMail');
 
-    return callSendUserMail({userName: user.name, userMail: user.email, subject: subject, message: message});
+    return callSendUserMail({userName: user.name, userMail: user.email, subject: subject, message: message}).toPromise();
   }
 }

@@ -184,7 +184,7 @@ export const sendDemoRequest = async (
 export const sendUserMail = async (data: any, context?: CallableContext): Promise<any> => {
   const { userName, userMail, subject, message } = data;
 
-  if (!subject || ! message || userName || userMail) {
+  if (!subject || !message || !userName || !userMail) {
     throw new Error('Subject, message and user email and name are mandatory parameters for the "sendUserMail()" function');
   }
 
