@@ -10,7 +10,7 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { Subject } from 'rxjs';
 
 /** Data structure for holding telephone number. */
-export class TelephoneClass {
+class TelephoneClass {
   constructor(public nation: string, public phoneNumber: number) { }
 }
 
