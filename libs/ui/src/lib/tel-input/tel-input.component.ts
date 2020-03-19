@@ -27,7 +27,15 @@ class TelephoneClass {
   }
 })
 export class TelInputComponent implements ControlValueAccessor, MatFormFieldControl<TelephoneClass>, OnDestroy {
+  // Static variables
   static nextId = 0;
+  static ngAcceptInputType_disabled: boolean | string | null | undefined;
+  static ngAcceptInputType_required: boolean | string | null | undefined;
+
+  // Private properties
+  private _required = false;
+  private _placeholder: string;
+  private _disabled = false;
 
   parts: FormGroup;
   stateChanges = new Subject<void>();
@@ -36,15 +44,9 @@ export class TelInputComponent implements ControlValueAccessor, MatFormFieldCont
   controlType = 'example-tel-input';
   id = `tel-input-${TelInputComponent.nextId++}`;
   describedBy = '';
-  onChange = (_: any) => { };
-  onTouched = () => { };
 
-  get empty() {
-    const { value: { nation, phoneNumber } } = this.parts;
-    return !nation && !phoneNumber;
-  }
-
-  get shouldLabelFloat() { return this.focused || !this.empty; }
+  @Input()
+  form: FormControl;
 
   @Input()
   get placeholder(): string { return this._placeholder; }
@@ -52,7 +54,6 @@ export class TelInputComponent implements ControlValueAccessor, MatFormFieldCont
     this._placeholder = value;
     this.stateChanges.next();
   }
-  private _placeholder: string;
 
   @Input()
   get required(): boolean { return this._required; }
@@ -60,7 +61,6 @@ export class TelInputComponent implements ControlValueAccessor, MatFormFieldCont
     this._required = coerceBooleanProperty(value);
     this.stateChanges.next();
   }
-  private _required = false;
 
   @Input()
   get disabled(): boolean { return this._disabled; }
@@ -69,7 +69,6 @@ export class TelInputComponent implements ControlValueAccessor, MatFormFieldCont
     this._disabled ? this.parts.disable() : this.parts.enable();
     this.stateChanges.next();
   }
-  private _disabled = false;
 
   @Input()
   get value(): TelephoneClass | null {
@@ -85,8 +84,8 @@ export class TelInputComponent implements ControlValueAccessor, MatFormFieldCont
     this.stateChanges.next();
   }
 
-  @Input()
-  form: FormControl;
+  onChange = (_: any) => { };
+  onTouched = () => { };
 
   constructor(
     formBuilder: FormBuilder,
@@ -106,7 +105,7 @@ export class TelInputComponent implements ControlValueAccessor, MatFormFieldCont
       this.stateChanges.next();
     });
 
-    if (this.ngControl != null) {
+    if (this.ngControl !== null) {
       this.ngControl.valueAccessor = this;
     }
   }
@@ -116,13 +115,20 @@ export class TelInputComponent implements ControlValueAccessor, MatFormFieldCont
     this._focusMonitor.stopMonitoring(this._elementRef);
   }
 
+  get empty() {
+    const { value: { nation, phoneNumber } } = this.parts;
+    return !nation && !phoneNumber;
+  }
+
+  get shouldLabelFloat() { return this.focused || !this.empty; }
+
   setDescribedByIds(ids: string[]) {
     this.describedBy = ids.join(' ');
   }
 
   onContainerClick(event: MouseEvent) {
-    if ((event.target as Element).tagName.toLowerCase() != 'input') {
-      this._elementRef.nativeElement.querySelector('input')!.focus();
+    if ((event.target as Element).tagName.toLowerCase() !== 'input') {
+      this._elementRef.nativeElement.querySelector('input').focus();
     }
   }
 
@@ -145,7 +151,4 @@ export class TelInputComponent implements ControlValueAccessor, MatFormFieldCont
   _handleInput(): void {
     this.onChange(this.value);
   }
-
-  static ngAcceptInputType_disabled: boolean | string | null | undefined;
-  static ngAcceptInputType_required: boolean | string | null | undefined;
 }
