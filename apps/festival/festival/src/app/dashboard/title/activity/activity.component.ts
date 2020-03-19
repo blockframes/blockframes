@@ -11,7 +11,7 @@ import { map } from 'rxjs/operators';
 import { OrganizationQuery } from '@blockframes/organization';
 
 @Component({
-  selector: 'catalog-title-activity',
+  selector: 'festival-title-activity',
   templateUrl: './activity.component.html',
   styleUrls: ['./activity.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
