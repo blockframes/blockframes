@@ -36,6 +36,7 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ChipsAutocompleteModule } from "@blockframes/ui/static-autocomplete/chips/chips-autocomplete.module";
+import { AlgoliaAutocompleteModule } from "@blockframes/ui/algolia-autocomplete/algolia-autocomplete.module";
 
 @NgModule({
   declarations: [ListComponent],
@@ -48,7 +49,8 @@ import { ChipsAutocompleteModule } from "@blockframes/ui/static-autocomplete/chi
     MovieDisplayListModule,
     MovieFormGenresModule,
     ChipsAutocompleteModule,
-    
+    AlgoliaAutocompleteModule,
+
     // Pipe
     TranslateSlugModule,
     DisplayNameModule,
