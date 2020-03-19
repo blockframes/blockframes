@@ -15,7 +15,7 @@ import {
 import { debounceTime, distinctUntilChanged, switchMap, pluck } from 'rxjs/operators';
 
 @Component({
-  selector: '[indexName][pathToValue] algolia-autocomplete',
+  selector: '[indexName] algolia-autocomplete',
   templateUrl: 'algolia-autocomplete.component.html',
   styleUrls: ['algolia-autocomplete.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -24,15 +24,25 @@ export class AlgoliaAutocompleteComponent implements OnInit {
   /**
    * Should be fed with the algolia object
    * out of the env.ts
+   * @example algolia.indexNameMovies from your env.ts
    */
   @Input() set indexName(name: string) {
     this.config.indexName = name;
   }
 
   /**
-   * Tells the component which value to pick for the control
+   * Tells the component which value to pick for the control,
+   * @default objectID
+   * @example movie.main.title.original
    */
-  @Input() pathToValue: string;
+  @Input() pathToValue: string = 'objectID';
+
+  /**
+   * If the control should hold a different value then it is displaying it
+   * @example movie.main.title.international
+   * @default pathToValue variable
+   */
+  @Input() displayWithPath: string = this.pathToValue;
 
   /**
   * Optional input if you want to use your own form control
@@ -47,7 +57,7 @@ export class AlgoliaAutocompleteComponent implements OnInit {
   /**
    * Can set to false if control should display the value
    */
-  @Input() resetInput = true;
+  @Input() resetInput = false;
 
   /**
    * Different behavior of the mat form field
@@ -82,6 +92,12 @@ export class AlgoliaAutocompleteComponent implements OnInit {
    */
   private indexSearch;
 
+  /**
+ * Since we input the path we need to initalize the function after the input gets handled,
+ * otherwise displayWithPath is undefined and this will throw an error
+ */
+  public displayFn: Function;
+
   ngOnInit() {
     this.indexSearch = this.config.searchClient.initIndex(this.config.indexName)
     this.algoliaSearchResults$ = this.control.valueChanges.pipe(
@@ -90,16 +106,27 @@ export class AlgoliaAutocompleteComponent implements OnInit {
       switchMap(text => this.indexSearch.search(text)),
       pluck('hits')
     );
+
+    this.displayFn = (value: object) => {
+      if (typeof value === 'object') {
+        return this.displayWithPath.split('.').reduce((prev, curr) => {
+          return prev ? prev[curr] : null
+        }, value || self)
+      }
+    }
   }
 
   /**
    * @description helper function to dynamically access object value
    * @param result object from algolia
+   * @param pathToResolve defaults to input variable pathToValue
    */
-  public resolveValue(result: any) {
-    return this.pathToValue.split('.').reduce((prev, curr) => {
-      return prev ? prev[curr] : null
-    }, result || self)
+  private resolveValue(result: any, pathToResolve: string) {
+    if (result) {
+      return pathToResolve.split('.').reduce((prev, curr) => {
+        return prev ? prev[curr] : null
+      }, result || self)
+    }
   }
 
   /**
@@ -108,7 +135,7 @@ export class AlgoliaAutocompleteComponent implements OnInit {
    * @param event holding all the algolia data available
    */
   public findObjectID(event: MatAutocompleteSelectedEvent) {
-    this.control.setValue(this.resolveValue(event.option.value));
+    this.control.setValue(this.resolveValue(event.option.value, this.pathToValue));
     this.selectionChange.emit(event.option.value.objectID);
     if (this.resetInput) {
       this.control.reset(null);

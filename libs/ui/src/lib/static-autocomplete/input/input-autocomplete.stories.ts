@@ -7,7 +7,7 @@ export default {
   title: 'Input Autocomplete'
 };
 
-export const staticInput = () => ({
+export const inputAutocomplete = () => ({
   moduleMetadata: { imports: [InputAutocompleteModule, ToolkitModule] },
   name: 'Input Autocomplete',
   template: `
