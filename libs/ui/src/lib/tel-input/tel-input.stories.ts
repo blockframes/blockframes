@@ -14,7 +14,7 @@ export const telInput = () => ({
     <storybook-toolkit>
       <h1 title>Tel Input</h1>
         <mat-form-field appearance="outline">
-            <tel-input [form]="from"></tel-input>
+            <tel-input [form]="from" placeholder="Your Number"></tel-input>
         </mat-form-field>
     </storybook-toolkit>
   `,
