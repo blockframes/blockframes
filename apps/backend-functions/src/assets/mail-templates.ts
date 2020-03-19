@@ -182,7 +182,7 @@ export function sendDemoRequestMail(information: RequestDemoInformations) {
 
 export function sendContactEmail(userName: string, userMail: string, subject: string, message: string): EmailRequest {
   return {
-    to: 'cmandonnet@cascade8.com',
+    to: adminEmail,
     subject: 'An user contacts Blockframes Admin',
     text: ` ${userName} (${userMail}) has sent an email.
     Subject of the mail : ${subject}
