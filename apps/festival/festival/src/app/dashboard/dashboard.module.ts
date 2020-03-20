@@ -9,7 +9,7 @@ import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia-autocomplete/
 // Widgets
 import { NotificationWidgetModule } from '@blockframes/notification';
 import { SearchWidgetModule } from '@blockframes/ui/search-widget';
-import { ProfileWidgetModule } from '@blockframes/user/profile';
+import { UserWidgetModule } from '@blockframes/user/profile';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -80,7 +80,7 @@ const routes: Routes = [{
     ReactiveFormsModule,
     NotificationWidgetModule,
     SearchWidgetModule,
-    ProfileWidgetModule,
+    UserWidgetModule,
     AlgoliaAutocompleteModule,
     // Material
     MatButtonModule,

@@ -29,7 +29,7 @@ import { KeyManagerModule } from '@blockframes/ethers';
 import { EmailVerifyModule } from '@blockframes/auth';
 
 // Widgets
-import { ProfileWidgetModule, ProfileMenuModule } from '@blockframes/user/profile';
+import { UserWidgetModule } from '@blockframes/user';
 import { NotificationWidgetModule } from '@blockframes/notification';
 import { WalletWidgetModule } from '@blockframes/ethers';
 import { OrganizationWidgetModule } from '@blockframes/organization';
@@ -87,7 +87,6 @@ import { sentryDsn } from '@env';
 
     // Libraries
     ToolbarModule,
-    ProfileMenuModule,
     KeyManagerModule,
     EmailVerifyModule,
 
@@ -95,7 +94,7 @@ import { sentryDsn } from '@env';
     OrganizationWidgetModule,
     NotificationWidgetModule,
     WalletWidgetModule,
-    ProfileWidgetModule,
+    UserWidgetModule,
 
     sentryDsn ? SentryModule : [],
 

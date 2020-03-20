@@ -5,12 +5,12 @@ import { OrganizationQuery } from '@blockframes/organization';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
 @Component({
-  selector: 'account-profile-widget',
-  templateUrl: './profile-widget.component.html',
-  styleUrls: ['./profile-widget.component.scss'],
+  selector: 'account-user-widget',
+  templateUrl: './widget.component.html',
+  styleUrls: ['./widget.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ProfileWidgetComponent {
+export class UserWidgetComponent {
   user$ = this.query.user$;
   organization$ = this.organizationQuery.selectActive();
   theme$ = this.themeService.theme$;

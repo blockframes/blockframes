@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
-import { ProfileWidgetComponent } from './profile-widget.component';
+import { UserWidgetComponent } from './widget.component';
 
 import { OverlayWidgetModule } from '@blockframes/ui/overlay-widget';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
@@ -11,7 +11,7 @@ import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/imag
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatListModule } from '@angular/material/list';
-import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 const material = [
@@ -30,7 +30,7 @@ const material = [
     ImageReferenceModule,
     ...material
   ],
-  declarations: [ProfileWidgetComponent],
-  exports: [ProfileWidgetComponent]
+  declarations: [UserWidgetComponent],
+  exports: [UserWidgetComponent]
 })
-export class ProfileWidgetModule {}
+export class UserWidgetModule {}

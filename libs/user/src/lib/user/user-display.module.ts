@@ -16,7 +16,6 @@ import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
-import { ProfileDisplayComponent } from './components/profile-display/profile-display.component';
 import { EditableSidenavModule, UploadModule } from '@blockframes/ui';
 import { PasswordConfirmModule } from '@blockframes/ui/form';
 
@@ -46,8 +45,6 @@ export const profileRoutes: Routes = [
     UploadModule,
     RouterModule.forChild(profileRoutes),
   ],
-  declarations: [
-    ProfileDisplayComponent,
-  ],
+  declarations: [],
 })
-export class ProfileModule {}
+export class UserDisplayModule {}
