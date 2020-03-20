@@ -120,4 +120,10 @@ export default class TunnelCreditsPage {
     cy.get('[test-id=next]').click();
     return new TunnelBudgetPage();
   }
+
+  // Navigation
+  public navigateToTunnelPage(title: string, subTitle: string) {
+    cy.get('tunnel-nav mat-expansion-panel').contains(title).click();
+    cy.get('tunnel-nav a').contains(subTitle).click();
+  }
 }
