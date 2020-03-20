@@ -31,7 +31,7 @@ export function createRoutes({ appsRoutes, appName, landing }: RouteOptions) {
     },
     {
       path: 'account',
-      loadChildren: () => import('@blockframes/account').then(m => m.AccountModule)
+      loadChildren: () => import('@blockframes/user/account/account.module').then(m => m.AccountModule)
     },
   ];
   return [

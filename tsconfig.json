@@ -65,8 +65,6 @@
       "@blockframes/material/delivery/stakeholder/types": [
         "libs/material/src/lib/delivery/stakeholder/+state/stakeholder.firestore.ts"
       ],
-      "@blockframes/account": ["libs/account/src/index.ts"],
-      "@blockframes/account/*": ["libs/account/src/lib/*"],
       "@blockframes/material": ["libs/material/src/index.ts"],
       "@blockframes/template": ["libs/material/src/index.ts"],
       "@blockframes/contract": ["libs/contract/src/index.ts"],

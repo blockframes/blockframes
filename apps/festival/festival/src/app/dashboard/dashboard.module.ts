@@ -9,7 +9,7 @@ import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia-autocomplete/
 // Widgets
 import { NotificationWidgetModule } from '@blockframes/notification';
 import { SearchWidgetModule } from '@blockframes/ui/search-widget';
-import { ProfileWidgetModule } from '@blockframes/account/profile';
+import { ProfileWidgetModule } from '@blockframes/user/profile';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';

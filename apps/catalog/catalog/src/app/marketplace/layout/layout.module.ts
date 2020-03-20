@@ -14,7 +14,7 @@ import { ImgAssetModule } from '@blockframes/ui/theme';
 // Widgets
 import { SearchWidgetModule } from '@blockframes/ui/search-widget';
 import { NotificationWidgetModule } from '@blockframes/notification';
-import { ProfileWidgetModule } from '@blockframes/account';
+import { ProfileWidgetModule } from '@blockframes/user/profile';
 
 // Material
 import { MatToolbarModule } from '@angular/material/toolbar';
