@@ -8,15 +8,14 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ViewComponent } from './view.component';
 
 // Custom Modules
+import { MovieViewLayoutModule } from '@blockframes/movie/movie/layout/view/view.module';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
+
 // Material
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
-import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
-import { MatTabsModule } from '@angular/material/tabs';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatChipsModule } from '@angular/material/chips';
 
 const routes = [{
   path: '',
@@ -32,14 +31,12 @@ const routes = [{
   imports: [
     CommonModule,
     FlexLayoutModule,
+    MovieViewLayoutModule,
     ImageReferenceModule,
     // Material
-    MatCardModule,
-    MatDividerModule,
-    MatProgressSpinnerModule,
+    MatChipsModule,
     MatButtonModule,
     MatIconModule,
-    MatTabsModule,
     MatSnackBarModule,
     // Routes
     RouterModule.forChild(routes)

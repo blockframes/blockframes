@@ -1,53 +1,25 @@
-@import '~@angular/flex-layout/mq';
-
-header, section {
-  padding: 0 24px;
+:host {
+  display: block;
 }
 
-header {
-  height: 300px;
-  background: linear-gradient(to bottom, var(--background-disabled-button), transparent);
-  article {
-    padding: 53px 0px 17px 24px;
-    height: 168px;
-  }
-}
-
-.mat-card {
-  padding: 24px 16px;
-}
-
-.movie-poster {
-  width: 168px;
-  margin-right: 16px;
-  border-radius: 5px;
-}
-
-.movie-info {
-  h1, p {
-    margin: 0;
-  }
-}
-
-.heart-button {
-  width: 200px;
-  margin-top: 20px;
-}
-
-header h4 {
+h6 {
   text-transform: uppercase;
 }
 
-
-@include layout-bp(lt-md) {
-  header {
-    height: auto;
-    article {
-      height: auto;
-    }
+.organization {
+  display: flex;
+  align-items: center;
+  border-radius: 16px;
+  img {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
   }
-
-  .movie-info {
-    margin: 20px 0px;
+  span {
+    margin: 0 8px;
   }
+}
+
+.organization:hover {
+  background-color: var(--background-disabled-button);
 }

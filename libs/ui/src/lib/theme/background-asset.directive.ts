@@ -22,8 +22,10 @@ export class BackgroundAssetDirective implements OnInit, OnDestroy{
 
   ngOnInit() {
     this.sub = combineLatest([this.asset$, this.theme.theme$]).subscribe(([ asset, theme ]) => {
-      this.url = `url("assets/images/${theme}/${asset}")`;
-      this.cdr.markForCheck();
+      if (asset) {
+        this.url = `url("assets/images/${theme}/${asset}")`;
+        this.cdr.markForCheck();
+      }
     })
   }
 
