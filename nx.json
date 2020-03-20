@@ -32,9 +32,6 @@
     "organization": {
       "tags": []
     },
-    "account": {
-      "tags": []
-    },
     "delivery": {
       "tags": ["delivery", "template", "material"]
     },
