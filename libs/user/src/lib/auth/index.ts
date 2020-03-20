@@ -1,13 +1,13 @@
-export * from './lib/auth.module';
-export * from './lib/+state/auth.query';
-export * from './lib/+state/auth.service';
-export * from './lib/+state/auth.store';
+export * from './auth.module';
+export * from './+state/auth.query';
+export * from './+state/auth.service';
+export * from './+state/auth.store';
 
 // Guards
-export * from './lib/guard/auth.guard';
-export * from './lib/guard/user-redirection.guard';
+export * from './guard/auth.guard';
+export * from './guard/user-redirection.guard';
 
 // Component Module
-export * from './lib/components/email-verify/email-verify.module';
-export * from './lib/components/accept-conditions/accept-conditions.module';
-export * from './lib/components/terms-conditions/terms-conditions.module';
+export * from './components/email-verify/email-verify.module';
+export * from './components/accept-conditions/accept-conditions.module';
+export * from './components/terms-conditions/terms-conditions.module';
