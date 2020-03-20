@@ -12,7 +12,7 @@ export class MovieCardComponent {
   @Input() link: string;
 
   public get posterSrc() {
-    return this.movie.promotionalElements.poster[0].media || '/assets/images/default-movie-poster.png';
+    return this.movie.promotionalElements.poster[0]?.media;
   }
 
   public get firstFestivalPrizeLogo() {
