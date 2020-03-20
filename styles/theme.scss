@@ -53,7 +53,13 @@
   
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
   // Add css variables here when you need one
+  --primary: #{mat-color($primary, 500)};
+  --accent: #{mat-color($accent, 500)};
+  --warn: #{mat-color($warn, 500)};
   // Background
   --background-disabled-button: #{mat-color($background, disabled-button)};
   // Foreground
