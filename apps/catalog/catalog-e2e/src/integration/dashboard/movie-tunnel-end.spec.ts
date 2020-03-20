@@ -57,6 +57,7 @@ describe('User can navigate to the movie tunnel, complete required fields, and s
     const p6: TitlesListPage = p5.clickTitles();
 
     // Go on TitlesActivityPage
+    p6.clickLastPageTable();
     const p7: TitlesActivityPage = p6.clickMovieLigne(TITLES[0]);
     p7.assertTitleExists(TITLES[0]);
   });

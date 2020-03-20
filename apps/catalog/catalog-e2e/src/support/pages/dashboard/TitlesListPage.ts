@@ -20,4 +20,8 @@ export default class TitlesListPage {
     cy.get('catalog-title-list table tr').contains(title).click();
     return new TitlesActivityPage();
   }
+
+  public clickLastPageTable() {
+    cy.get('catalog-title-list mat-paginator button').last().click({ force: true });
+  }
 }
