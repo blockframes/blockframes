@@ -12,7 +12,7 @@ import { map } from 'rxjs/operators';
 })
 export class CatalogViewMarketplaceComponent {
   public cover = true;
-  public url: SafeResourceUrl;
+  public url: SafeResourceUrl = this.sanitizer.bypassSecurityTrustResourceUrl('');
   public xs$ = this.breakpointsService.xs;
   public sm$ = this.breakpointsService.sm;
   public videoWidth$ = combineLatest([this.xs$, this.sm$]).pipe(
