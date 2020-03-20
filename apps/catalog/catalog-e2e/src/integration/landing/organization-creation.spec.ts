@@ -1,18 +1,35 @@
 /// <reference types="cypress" />
 
-import { USERS } from '../../support/utils/users';
 import { LoginViewPage } from '../../support/pages/auth';
 import { LandingPage } from '../../support/pages/landing';
 import { Organization, User } from '../../support/utils/type';
-import { OrganizationHomePage, OrganizationCreatePage, OrganizationFindPage, OrganizationAppAccessPage, OrganizationCongratulationPage } from '../../support/pages/organization';
+import {
+  OrganizationHomePage,
+  OrganizationCreatePage,
+  OrganizationFindPage,
+  OrganizationAppAccessPage,
+  OrganizationCongratulationPage
+} from '../../support/pages/organization';
 import { clearDataAndPrepareTest } from '../../support/utils/utils';
 
-// Users without organization yet
-const USER: Partial<User> = USERS[49];
-const USER2: Partial<User> = USERS[51];
+// Create new users
+const USERS: Partial<User>[] = [
+  {
+    email: `organization-creation-test@cypress.com`,
+    password: 'blockframes',
+    name: `${Date.now()}-Cypress name`,
+    surname: `${Date.now()}-Cypress surname`
+  },
+  {
+    email: `organization-creation-test2@cypress.com`,
+    password: 'blockframes',
+    name: `${Date.now()}-Cypress name`,
+    surname: `${Date.now()}-Cypress surname`
+  }
+];
 
 const ORGANIZATION: Organization = {
-  name: 'Cypress',
+  name: `Org-${Date.now()}-Cypress`,
   email: `${Date.now()}@cypress.com`,
   address: {
     street: '42 test road',
@@ -36,12 +53,25 @@ const ORGANIZATION: Organization = {
     bankName: 'Cypress Bank',
     holderName: 'Cypress'
   }
+};
+
+const SECOND_ORGANIZATION_NAME = `SecondOrg-${Date.now()}-Cypress`;
+
+/** Create a new user and navigate to organization home */
+function createNewUserAndNavigate(user: Partial<User>) {
+  const p1 = new LandingPage();
+  const p2: LoginViewPage = p1.clickSignup();
+  p2.fillSignup(user);
+  p2.clickTermsAndCondition();
+  return p2.clickSignupToOrgHome();
 }
 
+/** Log in an existing user and navigate to organization home */
 function navigateToOrganizationHome(user: Partial<User>): OrganizationHomePage {
-  const p1 = new LoginViewPage();
-  p1.fillSignin(user);
-  return p1.clickSigninToOrgHome();
+  const p1: LandingPage = new LandingPage();
+  const p2: LoginViewPage = p1.clickLogin();
+  p2.fillSignin(user);
+  return p2.clickSigninToOrgHome();
 }
 
 // TEST
@@ -49,15 +79,13 @@ function navigateToOrganizationHome(user: Partial<User>): OrganizationHomePage {
 // Before each test, go to login page
 beforeEach(() => {
   clearDataAndPrepareTest('/');
-  const p1: LandingPage = new LandingPage();
-  p1.clickLogin();
 });
 
 // FIND ORGANIZATION
 
 describe('User can choose to find an organization', () => {
-  it.skip('Click on "Find your Organization"', () => {
-    const p1: OrganizationHomePage = navigateToOrganizationHome(USER);
+  it('Create a user, then click on "Find your Organization"', () => {
+    const p1: OrganizationHomePage = createNewUserAndNavigate(USERS[0]);
     p1.clickFindOrganization();
     const p2: OrganizationFindPage = p1.clickSubmitToFind();
     p2.assertMoveToOrgFindPage();
@@ -67,8 +95,8 @@ describe('User can choose to find an organization', () => {
 // CREATE ORGANIZATION
 
 describe('Try with all fields except name', () => {
-  it.skip('Fill all the fields except company name', () => {
-    const p1: OrganizationHomePage = navigateToOrganizationHome(USER);
+  it('Fill all the fields except company name', () => {
+    const p1: OrganizationHomePage = navigateToOrganizationHome(USERS[0]);
     p1.clickCreateOrganization();
     const p2: OrganizationCreatePage = p1.clickSubmitToCreate();
     // Fill all fields except name
@@ -82,8 +110,8 @@ describe('Try with all fields except name', () => {
 });
 
 describe('Create an organization with minimum field', () => {
-  it.skip('Fill only the company name field', () => {
-    const p1: OrganizationHomePage = navigateToOrganizationHome(USER);
+  it('Fill only the company name field', () => {
+    const p1: OrganizationHomePage = navigateToOrganizationHome(USERS[0]);
     p1.clickCreateOrganization();
     const p2: OrganizationCreatePage = p1.clickSubmitToCreate();
     p2.fillName(ORGANIZATION.name);
@@ -95,11 +123,11 @@ describe('Create an organization with minimum field', () => {
 });
 
 describe('Create an organization with all fields', () => {
-  it.skip('Fill all the fields', () => {
-    const p1: OrganizationHomePage = navigateToOrganizationHome(USER2);
+  it('Fill all the fields', () => {
+    const p1: OrganizationHomePage = createNewUserAndNavigate(USERS[1]);
     p1.clickCreateOrganization();
     const p2: OrganizationCreatePage = p1.clickSubmitToCreate();
-    p2.fillEveryFields(ORGANIZATION);
+    p2.fillName(SECOND_ORGANIZATION_NAME);
     const p3: OrganizationAppAccessPage = p2.clickCreate();
     p3.chooseDashboard();
     const p4: OrganizationCongratulationPage = p3.clickSubmit();
