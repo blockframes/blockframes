@@ -22,7 +22,7 @@ import { PasswordConfirmModule } from '@blockframes/ui/form';
 
 export const profileRoutes: Routes = [
   { path: '', redirectTo: 'view', pathMatch: 'full' },
-  { path: 'view', loadChildren: () => import('./pages/view/view.module').then(m => m.ProfileViewModule)},
+  { path: 'view', loadChildren: () => import('@blockframes/auth/pages/profile-view/profile-view.module').then(m => m.ProfileViewModule)},
 ];
 @NgModule({
   imports: [
