@@ -24,6 +24,7 @@
 @import './components/bf-font-color.scss';
 @import './components/missing-control.scss';
 @import './components/bf-world-map.scss';
+@import './components/mat-native-control.scss';
 
 @include mat-core($bf-typography);
 
@@ -49,7 +50,7 @@
   @include bf-color-font($theme);
   @include bf-missing-control-theme($theme);
   @include bf-world-map-theme($theme);
-
+  
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
   // Add css variables here when you need one
@@ -64,6 +65,7 @@
 @include mat-bf-list-typography($bf-typography);
 @include mat-bf-button-typography($bf-typography);
 @include mat-bf-toolbar-typography($bf-typography);
+@include mat-native-control($bf-typography);
 
 // LIGHT THEME
 

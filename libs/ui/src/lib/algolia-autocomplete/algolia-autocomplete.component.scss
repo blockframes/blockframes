@@ -1,3 +1,16 @@
-:host, mat-form-field {
-    width: 100%;
+:host,
+mat-form-field {
+  width: 100%;
+}
+
+.pointer {
+  cursor: pointer;
+}
+
+div {
+  width: 100%;
+
+  input {
+    width: inherit;
+  }
 }
