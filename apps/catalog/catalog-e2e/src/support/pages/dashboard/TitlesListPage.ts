@@ -1,4 +1,5 @@
 import StartTunnelPage from "./StartTunnelPage";
+import TitlesActivityPage from "./TitlesActivityPage";
 
 export default class TitlesListPage {
   constructor() {
@@ -13,5 +14,10 @@ export default class TitlesListPage {
   clickAdd() {
     cy.get('catalog-title-list [test-id=add-movie]', { timeout: 30000 }).click();
     return new StartTunnelPage();
+  }
+
+  public clickMovieLigne(title: string) {
+    cy.get('catalog-title-list table tr').contains(title).click();
+    return new TitlesActivityPage();
   }
 }
