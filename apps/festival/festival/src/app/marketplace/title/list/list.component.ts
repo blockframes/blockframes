@@ -10,7 +10,8 @@ import {
   ChangeDetectionStrategy,
   OnInit,
   ViewChild,
-  Inject
+  Inject,
+  OnDestroy
 } from '@angular/core';
 // Blockframes
 import { Movie } from '@blockframes/movie/movie/+state/movie.model';
@@ -31,7 +32,7 @@ import { ControlErrorStateMatcher } from '@blockframes/utils/form/validators/val
 import { MovieAlgoliaResult } from '@blockframes/utils/algolia';
 import { MoviesIndex } from '@blockframes/utils/algolia';
 // RxJs
-import { Observable, combineLatest } from 'rxjs';
+import { Observable, combineLatest, Subscription } from 'rxjs';
 import { startWith, map, debounceTime, switchMap, tap, distinctUntilChanged, pluck } from 'rxjs/operators';
 // Others
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
@@ -46,6 +47,7 @@ import { CatalogSearchForm } from '@blockframes/movie/distribution-deals/form/se
 import { staticModels } from '@blockframes/utils/static-model';
 import { sortMovieBy } from '@blockframes/utils/akita-helper/sort-movie-by';
 import { StoreType } from '@blockframes/movie/movie/+state/movie.firestore';
+import { MovieService } from '@blockframes/movie';
 
 @Component({
   selector: 'festival-marketplace-title-list',
@@ -53,7 +55,9 @@ import { StoreType } from '@blockframes/movie/movie/+state/movie.firestore';
   styleUrls: ['./list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ListComponent implements OnInit {
+export class ListComponent implements OnInit, OnDestroy {
+
+  private sub: Subscription;
 
   /* Observable of all movies */
   public movieSearchResults$: Observable<Movie[]>;
@@ -111,6 +115,7 @@ export class ListComponent implements OnInit {
   public autoComplete: MatAutocompleteTrigger;
 
   constructor(
+    private movieService: MovieService,
     private router: Router,
     private routerQuery: RouterQuery,
     private cartService: CartService,
@@ -122,6 +127,7 @@ export class ListComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.sub = this.movieService.syncCollection(ref => ref.limit(30)).subscribe();
     const algoliaMovies$ = this.searchbarForm.valueChanges.pipe(
       debounceTime(200),
       distinctUntilChanged(),
@@ -136,6 +142,7 @@ export class ListComponent implements OnInit {
       this.filterBy$,
       this.sortBy$
     ]).pipe(
+      tap(console.log),
       switchMap(([algoliaMovies, filterOptions, sortBy]) => {
         const movieIds = algoliaMovies.map(index => index.objectID);
         return this.movieQuery.selectAll({
@@ -156,6 +163,10 @@ export class ListComponent implements OnInit {
       tap(value => this.searchbarForm.get('text').setValue(value)),
       map(value => this._resultFilter(value))
     );
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
   public goToMovieDetails(id: string) {
