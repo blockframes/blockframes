@@ -35,7 +35,7 @@ export class AuthService extends FireAuthService<AuthState> {
   }
 
   public checkResetCode(actionCode: string) {
-    return this.fireAuth.verifyPasswordResetCode(actionCode);
+    return this.auth.verifyPasswordResetCode(actionCode);
   }
 
   /**
@@ -62,8 +62,9 @@ export class AuthService extends FireAuthService<AuthState> {
    */
   public async updatePassword(currentPassword: string, newPassword: string) {
     const userEmail = this.query.user.email;
+    const user = await this.user;
     await this.signin(userEmail, currentPassword);
-    return this.user.updatePassword(newPassword);
+    return user.updatePassword(newPassword);
   }
 
   /**
@@ -72,7 +73,7 @@ export class AuthService extends FireAuthService<AuthState> {
    * @param newPassword new password set by the owned of email
    */
   public handleResetPassword(actionCode: string, newPassword: string) {
-    this.fireAuth.confirmPasswordReset(actionCode, newPassword)
+    this.auth.confirmPasswordReset(actionCode, newPassword)
   }
 
   /** Create the user in users collection on firestore. */
