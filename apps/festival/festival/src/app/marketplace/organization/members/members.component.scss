@@ -1,9 +1,13 @@
 :host {
-  display: flex;
-  flex-wrap: wrap;
+  display: block;
+  padding: 16px 24px; 
+}
+
+h1 {
+  margin-bottom: 16px;
 }
 
 user-card {
-  margin: 16px;
+  margin: 24px;
   max-width: 300px;
 }

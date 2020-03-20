@@ -1,11 +1,14 @@
 :host {
-  display: flex;
-  flex-wrap: wrap;
+  display: block;
+  padding: 16px 24px; 
+}
+
+h1 {
+  margin-bottom: 16px;
 }
 
 a {
-  margin: 16px;
-  max-width: 300px;
+  width: 300px;
 }
 movie-card {
   width: 100%;

@@ -2,8 +2,9 @@
   <mat-card matRipple>
     <img mat-card-image [imgRef]="org.logo" placeholderAsset="Organization_250.png" alt="organization logo" />
     <mat-card-content class="org-info">
-      <h1>{{ org.name }}</h1>
-      <p class="mat-body-2">
+      <h4>{{ org.activity }}</h4>
+      <h2>{{ org.name }}</h2>
+      <p class="mat-caption">
         {{ org.addresses.main.street | titlecase }}
         <ng-container *ngIf="org.addresses.main.street && org.addresses.main.zipCode">, </ng-container>
         {{ org.addresses.main.zipCode | titlecase }}

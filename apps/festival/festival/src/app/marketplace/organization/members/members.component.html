@@ -1,3 +1,7 @@
-<ng-container *ngFor="let user of members$ | async">
-  <user-card [user]="user"></user-card>
-</ng-container>
+<h1>Contacts</h1>
+<h4>Team</h4>
+<section fxLayout="row wrap" fxLayoutGap="24px grid">
+  <ng-container *ngFor="let user of members$ | async">
+    <user-card [user]="user"></user-card>
+  </ng-container>
+</section>
