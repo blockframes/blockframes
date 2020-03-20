@@ -142,7 +142,6 @@ export class ListComponent implements OnInit, OnDestroy {
       this.filterBy$,
       this.sortBy$
     ]).pipe(
-      tap(console.log),
       switchMap(([algoliaMovies, filterOptions, sortBy]) => {
         const movieIds = algoliaMovies.map(index => index.objectID);
         return this.movieQuery.selectAll({
