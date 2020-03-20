@@ -2,13 +2,14 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { MembersComponent } from './members.component';
-
+import { UserCardModule } from '@blockframes/account/profile/components/card/card.module';
 
 
 @NgModule({
   declarations: [MembersComponent],
   imports: [
     CommonModule,
+    UserCardModule,
     RouterModule.forChild([{ path: '', component: MembersComponent }])
   ]
 })
