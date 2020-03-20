@@ -43,7 +43,7 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
    * @default objectID
    * @example movie.main.title.original
    */
-  @Input() pathToValue: string = 'objectID';
+  @Input() pathToValue = 'objectID';
 
   /**
    * If the control should hold a different value then it is displaying it
