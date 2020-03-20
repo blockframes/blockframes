@@ -5,7 +5,9 @@ import {
   Component,
   ChangeDetectionStrategy,
   OnInit,
-  Inject
+  ViewChild,
+  Inject,
+  OnDestroy
 } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 // Blockframes
@@ -22,17 +24,19 @@ import {
 import { getCodeIfExists } from '@blockframes/utils/static-model/staticModels';
 import { MovieAlgoliaResult } from '@blockframes/utils/algolia';
 import { MoviesIndex } from '@blockframes/utils/algolia';
+// RxJs
+import { Observable, combineLatest, Subscription } from 'rxjs';
+import { startWith, map, debounceTime, switchMap, tap, distinctUntilChanged, pluck } from 'rxjs/operators';
+// Others
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
 import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
 import { NumberRange } from '@blockframes/utils/common-interfaces/range';
 import { BUDGET_LIST } from '@blockframes/movie/movie/form/budget/budget.form';
 import { CatalogSearchForm } from '@blockframes/movie/distribution-deals/form/search.form';
 import { staticModels } from '@blockframes/utils/static-model';
-// RxJs
-import { Observable, combineLatest, BehaviorSubject } from 'rxjs';
-import { startWith, map, debounceTime, switchMap, distinctUntilChanged, pluck, filter, share } from 'rxjs/operators';
-// Others
-import { Index } from 'algoliasearch';
+import { sortMovieBy } from '@blockframes/utils/akita-helper/sort-movie-by';
+import { StoreType } from '@blockframes/movie/movie/+state/movie.firestore';
+import { MovieService } from '@blockframes/movie';
 
 @Component({
   selector: 'festival-marketplace-title-list',
@@ -40,7 +44,9 @@ import { Index } from 'algoliasearch';
   styleUrls: ['./list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ListComponent implements OnInit {
+export class ListComponent implements OnInit, OnDestroy {
+
+  private sub: Subscription;
 
   /** Observable of all movies */
   public movieSearchResults$: Observable<any>;
@@ -82,6 +88,7 @@ export class ListComponent implements OnInit {
   public selectedSellers$ = new BehaviorSubject<string[]>([]);
 
   constructor(
+    private movieService: MovieService,
     private router: Router,
     private cartService: CartService,
     private catalogCartQuery: CatalogCartQuery,
@@ -92,6 +99,8 @@ export class ListComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+
+    this.sub = this.movieService.syncCollection(ref => ref.limit(30)).subscribe();
 
     // UI RELATED OBSERVABLES
 
@@ -212,6 +221,15 @@ export class ListComponent implements OnInit {
         return '';
       }),
     );
+  }
+  
+  ngOnDestroy() {
+    this.sub.unsubscribe();
+  }
+
+  public goToMovieDetails(id: string) {
+    this.router.navigateByUrl(`c/o/marketplace/${id}`);
+  }
 
     /** Query algolia every time the search query or the filters changes */
     this.movieSearchResults$ = combineLatest([
