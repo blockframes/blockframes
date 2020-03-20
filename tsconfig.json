@@ -17,8 +17,8 @@
     "paths": {
       "@env": ["env/env.ts"],
       "@blockframes/ip": ["libs/ip/src/index.ts"],
-      "@blockframes/auth": ["libs/auth/src/index.ts"],
-      "@blockframes/auth/*": ["libs/auth/src/lib/*"],
+      "@blockframes/auth": ["libs/user/src/lib/auth/index.ts"],
+      "@blockframes/auth/*": ["libs/user/src/lib/auth/*"],
       "@blockframes/auth/types": ["libs/auth/src/lib/+state/auth.firestore.ts"],
       "@blockframes/ui": ["libs/ui/src/index.ts"],
       "@blockframes/ui/*": ["libs/ui/src/lib/*"],
@@ -79,7 +79,7 @@
       "@blockframes/apps/catalog/marketplace/*": ["apps/catalog/src/app/marketplace/*"],
       "@blockframes/apps/catalog/dashboard/*": ["apps/catalog/src/app/dashboard/*"],
       "@blockframes/apps/catalog/*": ["apps/catalog/catalog/src/app/*"],
-      "@blockframes/user": ["libs/user/src/index.ts"]
+      "@blockframes/user/*": ["libs/user/src/lib/user/*"]
     }
   },
   "angularCompilerOptions": {

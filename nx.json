@@ -8,9 +8,6 @@
     "nx.json": "*"
   },
   "projects": {
-    "auth": {
-      "tags": ["auth", "wallet"]
-    },
     "ui": {
       "tags": ["ui", "shared"]
     },
