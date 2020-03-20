@@ -12,14 +12,15 @@ import {
   ContentChild,
   TemplateRef,
   ViewChild,
-  ElementRef
+  ElementRef,
+  OnDestroy
 } from '@angular/core';
 
 import { searchClient } from '@blockframes/utils/algolia';
 
 // RxJs
-import { Observable } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap, pluck } from 'rxjs/operators';
+import { Observable, Subscription, BehaviorSubject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap, pluck, map } from 'rxjs/operators';
 
 @Component({
   selector: '[indexName] algolia-autocomplete',
@@ -27,7 +28,7 @@ import { debounceTime, distinctUntilChanged, switchMap, pluck } from 'rxjs/opera
   styleUrls: ['algolia-autocomplete.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class AlgoliaAutocompleteComponent implements OnInit {
+export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
   /**
    * Should be fed with the algolia object
    * out of the env.ts
@@ -57,9 +58,14 @@ export class AlgoliaAutocompleteComponent implements OnInit {
   @Input() control = new FormControl();
 
   /**
-   * Set your own label if wanted
+   * Set your own label
    */
   @Input() label = 'Search...'
+
+  /**
+   * Set your own placeholder
+   */
+  @Input() placeholder = 'Search...'
 
   /**
    * Can set to false if control should display the value
@@ -71,6 +77,8 @@ export class AlgoliaAutocompleteComponent implements OnInit {
    */
   @Input() mode: 'legacy' | 'standard' | 'fill' | 'outline' = 'outline'
 
+  private sub: Subscription;
+
   private _native: boolean;
 
   /**
@@ -81,6 +89,17 @@ export class AlgoliaAutocompleteComponent implements OnInit {
   set native(value: any) {
     this._native = coerceBooleanProperty(value);
   };
+
+  /**
+   * Holds information for showing which icons
+   */
+  private _icons: Array<'cross' | 'magnifying_glasses'> = [];
+
+  @Input()
+  get icons() { return this._icons }
+  set icons(values: Array<'cross' | 'magnifying_glasses'>) {
+    this._icons = values
+  }
 
   /**
    * Output to get all data from algolia
@@ -110,6 +129,11 @@ export class AlgoliaAutocompleteComponent implements OnInit {
    */
   private indexSearch;
 
+  /**
+   * Holds the last snapshot from algolia results
+   */
+  private lastValue$ = new BehaviorSubject(null);
+
   @ViewChild('input') input: ElementRef<HTMLInputElement>
 
   ngOnInit() {
@@ -120,6 +144,7 @@ export class AlgoliaAutocompleteComponent implements OnInit {
       switchMap(text => this.indexSearch.search(text)),
       pluck('hits')
     );
+    this.sub = this.algoliaSearchResults$.subscribe(data => this.lastValue$.next(data));
   }
 
   /**
@@ -127,7 +152,7 @@ export class AlgoliaAutocompleteComponent implements OnInit {
    * @param result object from algolia
    * @param pathToResolve defaults to input variable pathToValue
    */
-  private resolveValue(result: any, pathToResolve: string) {
+  public resolveValue(result: any, pathToResolve: string) {
     if (result) {
       return pathToResolve.split('.').reduce((prev, curr) => {
         return prev ? prev[curr] : null
@@ -141,25 +166,24 @@ export class AlgoliaAutocompleteComponent implements OnInit {
    * @param event holding all the algolia data available
    */
   public findObjectID(event: MatAutocompleteSelectedEvent) {
-    this.control.setValue(this.resolveValue(event.option.value, this.pathToValue));
     this.selectionChange.emit(event.option.value.objectID);
     if (this.resetInput) {
       this.control.reset(null);
     }
-    this.displayFn(event.option.value)
   }
 
   /**
   * Since we input the path we need to initalize the function after the input gets handled,
   * otherwise displayWithPath is undefined and this will throw an error
   */
-  public displayFn(value: object) {
-    if (typeof value === 'object') {
-      const val = this.displayWithPath.split('.').reduce((prev, curr) => {
-        return prev ? prev[curr] : null
-      }, value)
-      console.log(val, this.control.value)
-      return val ? val : '';
+  public displayFn() {
+    const value = this.lastValue$.getValue();
+    if (value) {
+      return this.resolveValue(value[0], this.displayWithPath)
     }
+  }
+
+  ngOnDestroy() {
+    if (this.sub) { this.sub.unsubscribe() }
   }
 }

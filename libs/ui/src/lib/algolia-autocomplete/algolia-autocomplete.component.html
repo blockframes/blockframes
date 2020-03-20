@@ -1,27 +1,35 @@
-<ng-container *ngIf="!native; else native">
+<ng-container *ngIf="!native; else nativeControl">
   <mat-form-field [appearance]="mode">
     <mat-label>{{ label }}</mat-label>
     <input autocapitalize="off" autocorrect="off" spellcheck="false" type="text" [formControl]="control"
-      [matAutocomplete]="auto" matInput />
+      [matAutocomplete]="auto" matInput [placeholder]="placeholder" />
+    <mat-icon matSuffix svgIcon="cross" *ngIf="icons.includes('cross')" (click)="control.reset()"></mat-icon>
+    <mat-icon matPrefix svgIcon="magnifying_glasses" *ngIf="icons.includes('magnifying_glasses')" class="pointer">
+    </mat-icon>
   </mat-form-field>
   <mat-autocomplete #auto="matAutocomplete" (optionSelected)="findObjectID($event)"
     [displayWith]="displayFn.bind(this)">
-    <mat-option *ngFor="let result of (algoliaSearchResults$ | async)" [value]="result">
+    <mat-option *ngFor="let result of (algoliaSearchResults$ | async)" [value]="resolveValue(result, pathToValue)">
       <ng-template [ngTemplateOutlet]="template || default" [ngTemplateOutletContext]="{ $implicit: result }">
       </ng-template>
       <ng-template #default> {{ result | json }}</ng-template>
     </mat-option>
   </mat-autocomplete>
 </ng-container>
-<ng-template #native>
-  <input autocapitalize="off" autocorrect="off" spellcheck="false" type="text" [formControl]="control"
-    [matAutocomplete]="auto" matNativeControl/>
-  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="findObjectID($event)"
-    [displayWith]="displayFn.bind(this)">
-    <mat-option *ngFor="let result of (algoliaSearchResults$ | async)" [value]="result">
-      <ng-template [ngTemplateOutlet]="template || default" [ngTemplateOutletContext]="{ $implicit: result }">
-      </ng-template>
-      <ng-template #default> {{ result | json }}</ng-template>
-    </mat-option>
-  </mat-autocomplete>
+<ng-template #nativeControl>
+  <div fxLayout="row">
+    <mat-icon matPrefix svgIcon="magnifying_glasses" *ngIf="icons.includes('magnifying_glasses')"></mat-icon>
+    <input autocapitalize="off" autocorrect="off" spellcheck="false" type="text" [formControl]="control"
+      [matAutocomplete]="auto" matNativeControl [placeholder]="placeholder" />
+    <mat-icon matSuffix svgIcon="cross" *ngIf="icons.includes('cross')" (click)="control.reset()" class="pointer">
+    </mat-icon>
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="findObjectID($event)"
+      [displayWith]="displayFn.bind(this)">
+      <mat-option *ngFor="let result of (algoliaSearchResults$ | async)" [value]="result">
+        <ng-template [ngTemplateOutlet]="template || default" [ngTemplateOutletContext]="{ $implicit: result }">
+        </ng-template>
+        <ng-template #default> {{ result | json }}</ng-template>
+      </mat-option>
+    </mat-autocomplete>
+  </div>
 </ng-template>
