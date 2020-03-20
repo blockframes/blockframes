@@ -1,28 +1,25 @@
-import { Component, OnInit, ChangeDetectionStrategy, HostBinding } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { Movie, MovieQuery } from '@blockframes/movie';
-import { workType } from '@blockframes/movie/movie/+state/movie.firestore';
-import { OrganizationQuery } from '@blockframes/organization';
+import { OrganizationQuery, OrganizationService, Organization } from '@blockframes/organization';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
-import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
-import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 
 @Component({
-  selector: 'festival-view',
+  selector: 'festival-movie-view',
   templateUrl: './view.component.html',
   styleUrls: ['./view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ViewComponent implements OnInit {
-  @HostBinding('attr.page-id') pageId = 'catalog-movie-view';
   public movie$: Observable<Movie>;
-  public loading$: Observable<boolean>;
+  public orgs$: Observable<Organization[]>;
   // Flag to indicate which icon and message to show
   public toggle$: Observable<boolean>;
+  public events = [ new Date(), new Date() ];
 
   navLinks = [{
     path: 'main',
@@ -32,6 +29,7 @@ export class ViewComponent implements OnInit {
   constructor(
     private movieQuery: MovieQuery,
     private cartService: CartService,
+    private orgService: OrganizationService,
     private orgQuery: OrganizationQuery,
     private snackbar: MatSnackBar,
     private analytics: FireAnalytics,
@@ -39,7 +37,10 @@ export class ViewComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.getMovie();
+    this.movie$ = this.movieQuery.selectActive();
+    this.orgs$ = this.movieQuery.selectActiveId().pipe(
+      switchMap(movieId => this.orgService.getValue(ref => ref.where('movieIds', 'array-contains', movieId)))
+    );
     this.toggle$ = this.orgQuery.selectActive().pipe(
       map(org => {
         return org.wishlist
@@ -47,19 +48,6 @@ export class ViewComponent implements OnInit {
           .some(({ movieIds }) => movieIds.includes(this.movieQuery.getActiveId()));
       })
     );
-  }
-
-  private getMovie() {
-    this.loading$ = this.movieQuery.selectLoading();
-    this.movie$ = this.movieQuery.selectActive();
-  }
-
-  public sendPromoReelAnalytic() {
-    const movie = this.movieQuery.getActive();
-    this.analytics.event('promoReelOpened', {
-      movieId: movie.id,
-      movie: movie.main.title.original
-    });
   }
 
   public addToWishlist() {
@@ -83,25 +71,4 @@ export class ViewComponent implements OnInit {
     });
     this.snackbar.open(`${title} has been removed from your selection.`, 'close', { duration: 2000 });
   }
-
-  public getTitle(movie: Movie) {
-    const { totalRunTime, genres, originalLanguages } = movie.main;
-    const workTypeRegistered = movie.main.workType;
-    return [
-      getKeyIfExists(workType, workTypeRegistered) ? workType[workTypeRegistered] : '',
-      typeof totalRunTime === 'number' ? `${totalRunTime} min` : '',
-      genres.map(genre => getLabelBySlug('GENRES', genre)).join(', '),
-      originalLanguages.map(language => language).join(', ')
-    ].filter(value => !!value).join(' | ');
-  }
-
-  public getDirectors(movie: Movie) {
-    return movie.main.directors.map(d => `${d.firstName}  ${d.lastName}`).join(', ');
-  }
-
-  // TODO#1658 Update LANGUAGES static model to be RFC-5646 compliant
-  public getOriginalCountries(movie: Movie) {
-    return `${movie.main.originCountries.map(country => getLabelBySlug('TERRITORIES', country)).join(', ')}, ${movie.main.productionYear}`;
-  }
-
 }

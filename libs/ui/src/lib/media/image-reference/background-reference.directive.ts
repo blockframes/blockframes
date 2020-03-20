@@ -5,22 +5,19 @@ import { map } from 'rxjs/operators';
 import { ThemeService } from '@blockframes/ui/theme';
 
 @Directive({
-  selector: 'img[imgRef]'
+  selector: '[backgroundRef]'
 })
-export class ImageReferenceDirective implements OnInit, OnDestroy {
+export class BackgroundReferenceDirective implements OnInit, OnDestroy {
   private sub: Subscription;
   private asset$ = new BehaviorSubject('');
-  private placeholder$ = new BehaviorSubject('');
   private ref$ = new BehaviorSubject('');
   private assetUrl$: Observable<string>;
-  placeholder: string;
-  url: string;
 
-  @HostBinding('src') src: string;
+  @HostBinding('style.backgroundImage') src: string;
 
   /** Set src attribute in img tag with the url stored in firestore.
    *  If path is wrong, src will be set with provided placeholder or empty string */
-  @Input() set imgRef(path: ImgRef) {
+  @Input() set backgroundRef(path: ImgRef) {
     if(!path){
       this.ref$.next('');
     } try {
@@ -29,10 +26,6 @@ export class ImageReferenceDirective implements OnInit, OnDestroy {
       this.ref$.next('')
     }
   }
-
-  @Input() set placeholderUrl(placeholder: string) {
-    this.placeholder$.next(placeholder);
-  };
 
   @Input() set placeholderAsset(asset: string) {
     this.asset$.next(asset);
@@ -45,15 +38,16 @@ export class ImageReferenceDirective implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.assetUrl$ = combineLatest([this.theme.theme$, this.asset$]).pipe(
-      map(([theme, asset]) => `assets/images/${theme}/${asset}`)
+      map(([theme, asset]) => asset ? `assets/images/${theme}/${asset}` : '')
     );
     this.sub = combineLatest([
       this.ref$,
-      this.placeholder$,
       this.assetUrl$
-    ]).subscribe(([ ref, placeholder, assetUrl ]) => {
-      this.src = ref || placeholder || assetUrl;
-      this.cdr.markForCheck();
+    ]).subscribe(([ ref, assetUrl ]) => {
+      if (ref || assetUrl) {
+        this.src = `url(${ref || assetUrl})`;
+        this.cdr.markForCheck();
+      }
     })
   }
 
