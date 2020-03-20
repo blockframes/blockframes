@@ -9,7 +9,7 @@ export const accountRoutes: Routes = [
   { path: '',
     children: [
       { path: '', redirectTo: 'profile', pathMatch: 'full' },
-      { path: 'profile', loadChildren: () => import('../profile/profile.module').then(m => m.ProfileModule) },
+      { path: 'profile', loadChildren: () => import('../user-display.module').then(m => m.UserDisplayModule) },
       {
         path: 'wallet',
         canActivate: [ActiveDaoGuard],

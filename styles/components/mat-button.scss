@@ -72,7 +72,7 @@
   }
 
   // Add a border around the avatar of the user in the toolbar
-  account-profile-widget button[mat-icon-button] img {
+  account-user-widget button[mat-icon-button] img {
     border: 1px solid mat-color($foreground, divider);
   }
 }

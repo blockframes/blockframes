@@ -16,7 +16,6 @@
     "baseUrl": ".",
     "paths": {
       "@env": ["env/env.ts"],
-      "@blockframes/ip": ["libs/ip/src/index.ts"],
       "@blockframes/auth": ["libs/user/src/lib/auth/index.ts"],
       "@blockframes/auth/*": ["libs/user/src/lib/auth/*"],
       "@blockframes/auth/types": ["libs/user/src/lib/auth/+state/auth.firestore.ts"],
@@ -73,11 +72,12 @@
       "@blockframes/financial-report/*": ["libs/financial-report/src/lib/*"],
       "@blockframes/admin": ["libs/admin/src/index.ts"],
       "@blockframes/admin/*": ["libs/admin/src/lib/*"],
+      "@blockframes/user": ["libs/user/src/lib/user/index.ts"],
+      "@blockframes/user/*": ["libs/user/src/lib/user/*"],
       "@blockframes/apps/delivery/*": ["apps/delivery/delivery/src/app/*"],
       "@blockframes/apps/catalog/marketplace/*": ["apps/catalog/src/app/marketplace/*"],
       "@blockframes/apps/catalog/dashboard/*": ["apps/catalog/src/app/dashboard/*"],
       "@blockframes/apps/catalog/*": ["apps/catalog/catalog/src/app/*"],
-      "@blockframes/user/*": ["libs/user/src/lib/user/*"]
     }
   },
   "angularCompilerOptions": {

@@ -83,28 +83,28 @@ export default class ProfileEditablePage extends NavbarPage {
   /////////////////////
 
   public clickEdit() {
-    cy.get('[page-id=profile-display] button[test-id="edit-profile"]').click();
+    cy.get('[page-id=user-display] button[test-id="edit-profile"]').click();
     cy.get('[page-id=profile-form]', {timeout: 2000});
   }
 
   public assertDisplayNameExists(value: string) {
-    cy.get(`[page-id=profile-display] mat-card`).find('h4').contains(value);
+    cy.get(`[page-id=user-display] mat-card`).find('h4').contains(value);
   }
 
   public assertDisplaySurnameExists(value: string) {
-    cy.get(`[page-id=profile-display] mat-card`).find('span').contains(value);
+    cy.get(`[page-id=user-display] mat-card`).find('span').contains(value);
   }
 
   public assertDisplayPhoneExists(value: string) {
-    cy.get(`[page-id=profile-display] mat-card`).find('span').contains(value);
+    cy.get(`[page-id=user-display] mat-card`).find('span').contains(value);
   }
 
   public assertDisplayPositionExists(value: string) {
-    cy.get(`[page-id=profile-display] mat-card`).find('span').contains(value);
+    cy.get(`[page-id=user-display] mat-card`).find('span').contains(value);
   }
 
   public editPassword() {
-    cy.get('[page-id=profile-display] button[test-id="change-password"]').click();
+    cy.get('[page-id=user-display] button[test-id="change-password"]').click();
     cy.get('[page-id=password-form]', {timeout: 2000});
   }
 }
