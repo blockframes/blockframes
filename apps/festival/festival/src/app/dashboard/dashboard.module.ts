@@ -4,6 +4,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
+import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia-autocomplete/algolia-autocomplete.module'
+
 // Widgets
 import { NotificationWidgetModule } from '@blockframes/notification';
 import { SearchWidgetModule } from '@blockframes/ui/search-widget';
@@ -79,6 +81,7 @@ const routes: Routes = [{
     NotificationWidgetModule,
     SearchWidgetModule,
     ProfileWidgetModule,
+    AlgoliaAutocompleteModule,
     // Material
     MatButtonModule,
     MatDividerModule,
