@@ -68,6 +68,9 @@
     "festival-e2e": {
       "tags": [],
       "implicitDependencies": ["festival"]
+    },
+    "user": {
+      "tags": ["user"]
     }
   }
 }
