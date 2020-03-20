@@ -1,5 +1,6 @@
 import { Routes, Route } from '@angular/router';
-import { AuthGuard, UserRedirectionGuard } from '@blockframes/auth';
+import { UserRedirectionGuard } from '@blockframes/auth/guard/user-redirection.guard';
+import { AuthGuard } from '@blockframes/auth/guard/auth.guard';
 import { PermissionsGuard } from '@blockframes/organization/permissions/guard/permissions.guard';
 import { OrganizationGuard } from '@blockframes/organization/guard/organization.guard';
 import { NotificationsGuard } from '@blockframes/notification';
