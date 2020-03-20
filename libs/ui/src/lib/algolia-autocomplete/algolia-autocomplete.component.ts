@@ -166,7 +166,8 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
    * @param event holding all the algolia data available
    */
   public findObjectID(event: MatAutocompleteSelectedEvent) {
-    this.selectionChange.emit(event.option.value.objectID);
+    const objectID = this.lastValue$.getValue()[0].objectID;
+    this.selectionChange.emit(objectID);
     if (this.resetInput) {
       this.control.reset(null);
     }
@@ -181,6 +182,7 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
     if (value) {
       return this.resolveValue(value[0], this.displayWithPath)
     }
+    return this.control.value;
   }
 
   ngOnDestroy() {

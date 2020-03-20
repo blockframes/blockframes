@@ -20,8 +20,6 @@ export class ContractFormPartyComponent {
     this._hasRole = coerceBooleanProperty(value);
   }
 
-  public resetInput = false;
-
   public algoliaOrg = algolia.indexNameOrganizations;
 
   public staticRoles = staticModels.LEGAL_ROLES.filter(role => {
