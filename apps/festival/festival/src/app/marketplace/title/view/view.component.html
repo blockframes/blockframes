@@ -1,48 +1,36 @@
-<ng-template *ngIf="loading$ | async">
-  <mat-spinner color="accent" #loading></mat-spinner>
-</ng-template>
-<ng-container *ngIf="(movie$ | async) as movie;" test-id="content">
-  <header fxLayout="row" fxLayoutAlign="center" fxLayout.lt-sm="column">
-    <article fxLayout="row" fxLayout.lt-sm="column" fxFlex>
-      <!-- TODO#1763 get poster by countries from promotionalElements -->
-      <div *ngIf="movie.promotionalElements.poster[0].media as poster">
-        <img class="movie-poster" [imgRef]="poster" [placeholderUrl]="'assets/images/movieposter-placeholder.png'" alt="movie poster"/>
-      </div>
-      <div class="movie-info">
-        <h4>{{ getTitle(movie) }}</h4>
-        <h1>{{ movie.main.title.international }}</h1>
-        <ng-container *ngIf="movie.main.title.international !== movie.main.title.original">
-          <h3>{{ movie.main.title.original }}</h3>
-        </ng-container>
-        <p class="mat-body-1">{{ getDirectors(movie) }}</p>
-        <p class="mat-body-2">{{ getOriginalCountries(movie) }}</p>
-      </div>
-    </article>
-    <article fxLayout="column" fxLayoutAlign="center">
-      <ng-container *ngIf="(toggle$ | async); else alreadyAdded">
-        <button class="heart-button" mat-button color="accent" (click)="removeFromWishlist()">
-          <mat-icon svgIcon="heart_fill" color="accent"></mat-icon>
-          <span>Remove from list</span>
-        </button>
-      </ng-container>
-      <ng-template #alreadyAdded>
-        <button class="heart-button" mat-button color="accent" (click)="addToWishlist()">
-          <mat-icon svgIcon="heart_outline" color="accent"></mat-icon>
-          <span>Add to Wishlist</span>
-        </button>
-      </ng-template>
-    </article>
-  </header>
-  <section>
-    <nav mat-tab-nav-bar>
-      <a mat-tab-link
-      *ngFor="let link of navLinks"
-      [routerLink]="link.path"
-      routerLinkActive #rla="routerLinkActive"
-      [active]="rla.isActive">
-     {{link.label}}
+<movie-view [movie]="movie$ | async" [navLinks]="navLinks">
+  <movie-banner-aside fxLayout="column" fxLayoutAlign="start end" fxLayoutGap="24px">
+    <h6>Showtime</h6>
+    <div class="events" fxLayout="column" fxLayoutGap="8px">
+      <mat-chip *ngFor="let event of events">{{ event | date: 'long' }}</mat-chip>
+    </div>
+    <button mat-button>
+      <span>Ask for an invitation</span>
+      <mat-icon svgIcon="calendar"></mat-icon>
+    </button>
+  </movie-banner-aside>
+  
+  <movie-banner-actions fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="16px">
+    <ng-container *ngFor="let org of orgs$ | async">
+      <a class="organization" [routerLink]="['../../organization', org.id]">
+        <img [imgRef]="org.logo" placeholderAsset="empty_organization.webp" alt="Seller image"/>
+        <span class="mat-body-1">{{ org.name }}</span>
       </a>
-    </nav>
-    <router-outlet></router-outlet>
-  </section>
-</ng-container>
+    </ng-container>
+    <button mat-flat-button color="primary">
+      <span>Get in Touch</span>
+      <mat-icon svgIcon="arrow_forward"></mat-icon>
+    </button>
+    <ng-container *ngIf="(toggle$ | async); else alreadyAdded">
+      <button mat-icon-button color="accent" (click)="removeFromWishlist()">
+        <mat-icon svgIcon="heart_fill"></mat-icon>
+      </button>
+    </ng-container>
+    <ng-template #alreadyAdded>
+      <button mat-icon-button color="accent" (click)="addToWishlist()">
+        <mat-icon svgIcon="heart_outline"></mat-icon>
+      </button>
+    </ng-template>
+  </movie-banner-actions>
+
+</movie-view>

@@ -1,16 +1,16 @@
-import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, Directive, ViewEncapsulation } from '@angular/core';
 import { Movie, Credit } from '../../+state';
 import { ImgRef } from '@blockframes/utils';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 import { workType as WorkType } from '../../+state/movie.firestore';
 
 const promotionalElements = [
-  { key: 'promo_reel_link', label: '', icon: '' },
-  { key: 'scenario', label: '', icon: '' },
-  { key: 'screener_link', label: '', icon: '' },
-  { key: 'teaser_link', label: 'Watch Pitch Teaser', icon: '' },
-  { key: 'presentation_deck', label: 'Download Presentation Deck', icon: '' },
-  { key: 'trailer_link', label: '', icon: '' },
+  { key: 'promo_reel_link', label: 'Watch Promo Reel Link', type: 'play' },
+  { key: 'teaser_link', label: 'Watch Pitch Teaser', type: 'play' },
+  { key: 'screener_link', label: 'Watch Screener', type: 'play' },
+  { key: 'trailer_link', label: 'Watch Trailer', type: 'play' },
+  { key: 'scenario', label: 'Downlaod Scenario', type: 'download' },
+  { key: 'presentation_deck', label: 'Download Presentation Deck', type: 'download' },
 ];
 
 interface MovieView {
@@ -20,16 +20,17 @@ interface MovieView {
   directors: Credit[];
   countries: string[];
   poster: ImgRef;
-  links: { key: string, label: string, icon: string, url: string }[];
+  banner: ImgRef,
+  links: { key: string, label: string, type: string, url: string }[];
 }
 
-function createMovieView(movie: Partial<Movie> = {}): MovieView {
+function createMovieView(movie: Partial<Movie>): MovieView {
   const { workType, totalRunTime, genres, originalLanguages, productionYear } = movie.main;
   const subtitle = [
     workType ? WorkType[workType] : '',
     totalRunTime ? `${totalRunTime} min` : '',
-    genres.map(genre => getLabelBySlug('GENRES', genre)),
-    originalLanguages.map(language => getLabelBySlug('LANGUAGES', language)),
+    genres.map(genre => getLabelBySlug('GENRES', genre)).join(', '),
+    originalLanguages.map(language => getLabelBySlug('LANGUAGES', language)).join(', '),
     productionYear
   ].filter(v => !!v).join(' | ');
 
@@ -44,6 +45,7 @@ function createMovieView(movie: Partial<Movie> = {}): MovieView {
     directors: movie.main.directors,
     countries: movie.main.originCountries,
     poster: movie.promotionalElements.poster[0]?.media,
+    banner: movie.promotionalElements.banner.media,
     links
   }
 }
@@ -52,19 +54,32 @@ function createMovieView(movie: Partial<Movie> = {}): MovieView {
   selector: '[movie] movie-view',
   templateUrl: './view.component.html',
   styleUrls: ['./view.component.scss'],
+  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ViewComponent implements OnInit {
+export class ViewComponent {
   view: MovieView;
-
-  @Input() set movie(movie: Movie) {
-    this.view = createMovieView(movie);
-  }
+  
   @Input() navLinks: { path: string, label: string }[];
-
-  constructor() { }
-
-  ngOnInit(): void {
+  @Input() set movie(movie: Movie) {
+    if (movie) {
+      this.view = createMovieView(movie);
+    }
   }
 
 }
+
+
+@Directive({
+  selector: 'movie-banner-actions, [movieBannerActions]',
+  host: { class: 'movie-banner-actions' }
+})
+// tslint:disable-next-line: directive-class-suffix
+export class MovieBannerActions {}
+
+@Directive({
+  selector: 'movie-banner-aside, [movieBannerAside]',
+  host: { class: 'movie-banner-aside' }
+})
+// tslint:disable-next-line: directive-class-suffix
+export class MovieBannerAside {}

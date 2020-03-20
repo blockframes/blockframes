@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-import { ViewComponent } from './view.component';
+import { ViewComponent, MovieBannerActions, MovieBannerAside } from './view.component';
 
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { DisplayNameModule, TranslateSlugModule } from '@blockframes/utils/pipes';
@@ -16,8 +16,8 @@ import { MatButtonModule } from '@angular/material/button';
 
 
 @NgModule({
-  declarations: [ViewComponent],
-  exports: [ViewComponent],
+  declarations: [ViewComponent, MovieBannerActions, MovieBannerAside],
+  exports: [ViewComponent, MovieBannerActions, MovieBannerAside],
   imports: [
     CommonModule,
     RouterModule,
@@ -31,4 +31,4 @@ import { MatButtonModule } from '@angular/material/button';
     MatButtonModule,
   ]
 })
-export class MovieViewModule { }
+export class MovieViewLayoutModule { }
