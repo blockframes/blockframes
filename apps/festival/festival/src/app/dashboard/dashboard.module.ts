@@ -53,7 +53,7 @@ const routes: Routes = [{
           .then(m => m.ImportMovieModule)
       },
       {
-        path: 'titles',
+        path: 'title',
         children: [{
           path: '',
           canActivate: [MovieOrganizationListGuard],
