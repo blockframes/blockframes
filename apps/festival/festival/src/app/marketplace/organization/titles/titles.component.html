@@ -1,5 +1,8 @@
-<ng-container *ngFor="let title of titles$ | async">
-  <a matRipple [routerLink]="['../../../title', title.id]">
-    <movie-card [movie]="title"></movie-card>
-  </a>
-</ng-container>
+<h1>Line-up</h1>
+<section fxLayout="row wrap" fxLayoutGap="24px grid">
+  <ng-container *ngFor="let title of titles$ | async">
+    <a matRipple [routerLink]="['../../../title', title.id]">
+      <movie-card [movie]="title"></movie-card>
+    </a>
+  </ng-container>
+</section>
