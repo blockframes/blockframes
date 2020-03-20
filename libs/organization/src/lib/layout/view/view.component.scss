@@ -5,8 +5,7 @@ header, section {
 }
 
 header {
-  height: 300px;
-  padding: 30px;
+  padding: 48px;
   background: linear-gradient(to bottom, var(--background-disabled-button), transparent);
   img {
     height: 170px;
@@ -15,6 +14,16 @@ header {
   }
   article {
     max-width: 50%;
+    margin-left: 24px;
+    h4 {
+      margin-bottom: 0;
+    }
+    h2 {
+      margin-bottom: 8px;
+    }
+    p {
+      margin-bottom: 24px;
+    }
   }
 }
 

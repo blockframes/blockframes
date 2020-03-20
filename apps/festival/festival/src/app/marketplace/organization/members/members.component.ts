@@ -14,7 +14,7 @@ import { map, switchMap } from 'rxjs/operators';
 export class MembersComponent implements OnInit, OnDestroy {
 
   private sub: Subscription;
-  public members$ = this.query.selectAll()
+  public members$ = this.query.selectAll();
 
   constructor(
     private parent: ViewComponent,
