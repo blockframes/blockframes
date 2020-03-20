@@ -2,7 +2,7 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { AuthQuery, AuthService, User } from '@blockframes/auth';
-import { createProfile } from '../forms/profile-edit.form';
+import { createProfile } from '@blockframes/auth/forms/profile-edit.form';
 import { ThemeService } from '@blockframes/ui/theme';
 
 @Component({

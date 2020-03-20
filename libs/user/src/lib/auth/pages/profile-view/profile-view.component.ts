@@ -1,18 +1,18 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Organization } from '@blockframes/organization/+state/organization.model';
 import { TunnelService } from '@blockframes/ui/tunnel';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '@blockframes/auth/+state/auth.service';
-import { ProfileForm } from '@blockframes/account/profile/forms/profile-edit.form';
+import { ProfileForm } from '@blockframes/auth/forms/profile-edit.form';
 import { EditPasswordForm } from '@blockframes/utils/form/controls/password.control';
 import { User } from '@blockframes/auth';
 @Component({
   selector: 'profile-view',
-  templateUrl: './view.component.html',
-  styleUrls: ['./view.component.scss'],
+  templateUrl: './profile-view.component.html',
+  styleUrls: ['./profile-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ProfileViewComponent implements OnInit {

@@ -1,7 +1,7 @@
 
 import { Component, ChangeDetectionStrategy, Output, EventEmitter, Input, HostBinding } from '@angular/core';
 import { Organization } from '@blockframes/organization';
-import { Profile } from '../../forms/profile-edit.form';
+import { Profile } from '@blockframes/auth/forms/profile-edit.form';
 
 @Component({
   selector: 'profile-display',
