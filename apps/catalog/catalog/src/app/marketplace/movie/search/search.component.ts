@@ -49,6 +49,7 @@ import { asyncFilter } from '@blockframes/utils/helpers';
 import { staticModels } from '@blockframes/utils/static-model';
 import { sortMovieBy } from '@blockframes/utils/akita-helper/sort-movie-by';
 import { StoreType } from '@blockframes/movie/movie/+state/movie.firestore';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'catalog-movie-search',
@@ -127,8 +128,11 @@ export class MarketplaceSearchComponent implements OnInit {
     private movieQuery: MovieQuery,
     private dealService: DistributionDealService,
     @Inject(MoviesIndex) private movieIndex: Index,
-    private analytics: FireAnalytics
-  ) { }
+    private analytics: FireAnalytics,
+    private title: Title
+  ) { 
+    this.title.setTitle('Library - Archipel Content')
+  }
 
   ngOnInit() {
     this.algoliaSearchResults$ = this.searchbarForm.valueChanges.pipe(

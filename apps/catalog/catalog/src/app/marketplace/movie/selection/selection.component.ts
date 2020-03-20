@@ -15,6 +15,7 @@ import { OrganizationQuery } from '@blockframes/organization';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Intercom } from 'ng-intercom';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'catalog-selection',
@@ -38,8 +39,13 @@ export class MarketplaceSelectionComponent {
     private movieQuery: MovieQuery,
     private orgQuery: OrganizationQuery,
     private router: Router,
-    @Optional() private intercom: Intercom
-  ) {}
+    @Optional() private intercom: Intercom,
+    private title: Title
+  ) {
+    this.query.getAll().length 
+      ? this.title.setTitle('My Selection - Archipel Content')
+      : this.title.setTitle('No selections yet - Archipel Content')
+  }
 
   /** Select a movie for a specific movie Id */
   selectMovie(movieId: string) {

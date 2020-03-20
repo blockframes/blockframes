@@ -1,3 +1,4 @@
+import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { map } from 'rxjs/operators';
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
 import { Movie } from '@blockframes/movie';
@@ -11,6 +12,7 @@ import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 import { Router } from '@angular/router';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { workType } from '@blockframes/movie/movie/+state/movie.firestore';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'catalog-movie-view',
@@ -28,7 +30,7 @@ export class MarketplaceMovieViewComponent implements OnInit {
   navLinks = [{
     path: 'main',
     label: 'Main Information'
-  },{
+  }, {
     path: 'avails',
     label: 'Avails'
   }];
@@ -39,8 +41,10 @@ export class MarketplaceMovieViewComponent implements OnInit {
     private orgQuery: OrganizationQuery,
     private snackbar: MatSnackBar,
     private analytics: FireAnalytics,
-    public router: Router
-  ) {}
+    public router: Router,
+    private title: Title,
+    private routerQuery: RouterQuery
+  ) { }
 
   ngOnInit() {
     this.getMovie();
@@ -51,11 +55,31 @@ export class MarketplaceMovieViewComponent implements OnInit {
           .some(({ movieIds }) => movieIds.includes(this.movieQuery.getActiveId()));
       })
     );
+    this.refreshTitle();
   }
 
   private getMovie() {
     this.loading$ = this.movieQuery.selectLoading();
     this.movie$ = this.movieQuery.selectActive();
+  }
+
+  /**
+   * We need to dinstinguish between page load and route change
+   * from mat tab component. The routerQuery returns the old value
+   * before mat tab changed the route, but this clashes with init
+   * page load where the route is correct.
+   * @param link optional param when the function is getting called from the template 
+   */
+  public refreshTitle(link?: string) {
+    if (link) {
+      link === 'main'
+        ? this.title.setTitle(`${this.movieQuery.getActive().main.title.international} - Main information - Archipel Content`)
+        : this.title.setTitle(`${this.movieQuery.getActive().main.title.international} - Avails - Archipel Content`)
+    } else {
+      this.routerQuery.getValue().state.url.split('/').includes('main')
+        ? this.title.setTitle(`${this.movieQuery.getActive().main.title.international} - Main information - Archipel Content`)
+        : this.title.setTitle(`${this.movieQuery.getActive().main.title.international} - Avails - Archipel Content`)
+    }
   }
 
   public sendPromoReelAnalytic() {

@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { AvailsSearchForm } from '@blockframes/movie/distribution-deals/form/search.form';
 import { MovieQuery, Movie } from '@blockframes/movie/movie/+state';
 import { EnhancedISO3166Territory } from '@blockframes/utils/static-model/territories-ISO-3166';
@@ -16,7 +16,7 @@ import { arrayAdd } from '@datorama/akita';
   styleUrls: ['./avails.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceMovieAvailsComponent implements OnInit {
+export class MarketplaceMovieAvailsComponent {
   public availsForm: AvailsSearchForm = new AvailsSearchForm();
   public movie: Movie = this.movieQuery.getActive();
   public territories = staticModels['TERRITORIES'];
@@ -38,9 +38,6 @@ export class MarketplaceMovieAvailsComponent implements OnInit {
     private marketplaceQuery: MarketplaceQuery,
     private snackBar: MatSnackBar
   ) {}
-
-  ngOnInit() {
-  }
 
   /** Whenever you click on a territory, add it to availsForm.territories. */
   public select(territory: EnhancedISO3166Territory) {
