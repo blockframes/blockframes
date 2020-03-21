@@ -10,7 +10,7 @@ import { ProfileForm } from '@blockframes/auth/forms/profile-edit.form';
 import { EditPasswordForm } from '@blockframes/utils/form/controls/password.control';
 import { User } from '@blockframes/auth';
 @Component({
-  selector: 'profile-view',
+  selector: 'auth-profile-view',
   templateUrl: './profile-view.component.html',
   styleUrls: ['./profile-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
