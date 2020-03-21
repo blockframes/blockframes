@@ -1,4 +1,11 @@
+:host {
+  display: block;
+  padding: 24px;
+}
+
 mat-card {
+  width: 100%;
+  word-break: break-all;
   margin-top: 20px;
   .mat-card-content {
     padding-left: 20px;
@@ -18,11 +25,6 @@ li {
   img {
     max-height: 50px;
   }
-}
-
-mat-card {
-  width: 100%;
-  word-break: break-all;
 }
 
 .synopsis {

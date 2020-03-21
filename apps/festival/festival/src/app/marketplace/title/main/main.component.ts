@@ -12,7 +12,6 @@ const promoLinks = ['promo_reel_link', 'scenario', 'screener_link', 'teaser_link
 })
 export class MainComponent {
   public movie$ = this.movieQuery.selectActive();
-  public loading$ = this.movieQuery.selectLoading();
   public promoLinks = promoLinks;
 
   constructor(private movieQuery: MovieQuery) { }
