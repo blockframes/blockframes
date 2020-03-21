@@ -10,7 +10,7 @@ import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia-autocomplete/
 // Widgets
 import { NotificationWidgetModule } from '@blockframes/notification';
 import { SearchWidgetModule } from '@blockframes/ui/search-widget';
-import { UserWidgetModule } from '@blockframes/user';
+import { UserWidgetModule } from '@blockframes/auth';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';

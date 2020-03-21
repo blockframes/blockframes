@@ -11,3 +11,4 @@ export * from './guard/user-redirection.guard';
 export * from './components/email-verify/email-verify.module';
 export * from './components/accept-conditions/accept-conditions.module';
 export * from './components/terms-conditions/terms-conditions.module';
+export * from './components/widget/widget.module';

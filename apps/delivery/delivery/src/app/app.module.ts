@@ -29,7 +29,7 @@ import { KeyManagerModule } from '@blockframes/ethers';
 import { EmailVerifyModule } from '@blockframes/auth';
 
 // Widgets
-import { UserWidgetModule } from '@blockframes/user';
+import { UserWidgetModule } from '@blockframes/auth';
 import { NotificationWidgetModule } from '@blockframes/notification';
 import { WalletWidgetModule } from '@blockframes/ethers';
 import { OrganizationWidgetModule } from '@blockframes/organization';
