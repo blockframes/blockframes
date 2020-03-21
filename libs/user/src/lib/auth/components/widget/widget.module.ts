@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
-import { UserWidgetComponent } from './widget.component';
+import { AuthWidgetComponent } from './widget.component';
 
 import { OverlayWidgetModule } from '@blockframes/ui/overlay-widget';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
@@ -30,7 +30,7 @@ const material = [
     ImageReferenceModule,
     ...material
   ],
-  declarations: [UserWidgetComponent],
-  exports: [UserWidgetComponent]
+  declarations: [AuthWidgetComponent],
+  exports: [AuthWidgetComponent]
 })
-export class UserWidgetModule {}
+export class AuthWidgetModule {}
