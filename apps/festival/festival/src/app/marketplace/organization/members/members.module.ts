@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MembersComponent } from './members.component';
-import { UserCardModule } from '@blockframes/account/profile/components/card/card.module';
+import { UserCardModule } from '@blockframes/user/components/card/card.module';
 
 
 @NgModule({
