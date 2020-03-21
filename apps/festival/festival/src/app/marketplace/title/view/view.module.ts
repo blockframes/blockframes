@@ -22,6 +22,10 @@ const routes = [{
   component: ViewComponent,
   children: [{
     path: '',
+    redirectTo: 'main',
+    pathMatch: 'full'
+  },{
+    path: 'main',
     loadChildren: () => import('../main/main.module').then(m => m.MovieMainModule)
   }]
 }];
