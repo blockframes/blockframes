@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { ProfileForm } from '@blockframes/auth/forms/profile-edit.form';
 @Component({
-  selector: '[form] profile-form',
+  selector: '[form] auth-form-profile',
   templateUrl: './profile.component.html',
   styleUrls: ['./profile.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
