@@ -4,17 +4,18 @@
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
   $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
   
 
   @include cal-theme(
     (
       bg-primary: mat-color($background, background),
       bg-secondary: mat-color($background, background),
-      weekend-color: mat-color($primary),
+      weekend-color: mat-color($accent),
       bg-active: mat-color($background, hover),
       border-color: mat-color($foreground, divider),
       gray: mat-color($background, unselected-chip),
-      today-bg: mat-color($background, unselected-chip),
+      today-bg: mat-color($background, hover),
       event-color-primary: mat-color($foreground, divider)  // Border on event
     )
   );
@@ -33,19 +34,12 @@
   .cal-week-view {
     // Header
     .cal-day-headers {
-      position: sticky;
-      top: -1px;
-      z-index: 2;
       background-color: mat-color($background, card);
     }
 
     ///////////
     // EVENT //
     ///////////
-    // animtation when change time
-    .cal-event-container {
-      transition: all 0.1s;
-    }
 
     // Resize handler
     .cal-day-column {    
