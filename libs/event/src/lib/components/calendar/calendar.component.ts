@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { EventQuery } from '@blockframes/event/+state/event.query';
+import { CalendarEvent } from 'angular-calendar';
 
 @Component({
   selector: 'event-calendar',
@@ -10,8 +10,8 @@ import { EventQuery } from '@blockframes/event/+state/event.query';
 export class CalendarComponent {
   @Input() view = 'week';
   @Input() viewDate = new Date();
-  events$ = this.query.selectAll();
+  @Input() events: CalendarEvent[];
   
-  constructor(private query: EventQuery) { }
+  constructor() { }
 
 }

@@ -1,7 +1,6 @@
 <mwl-calendar-week-view
   [viewDate]="viewDate"
   [events]="localEvents"
-  [tooltipTemplate]="matTooltipTemplate"
   [hourSegmentTemplate]="weekHourSegmentTemplate"
   [eventTemplate]="weekEvent.template"
   (eventTimesChanged)="updateEvent($event)"
@@ -29,10 +28,10 @@
   </div>
 </ng-template>
 
-<calendar-week-event #weekEvent></calendar-week-event>
+<cal-week-event #weekEvent></cal-week-event>
 
 
-<!-- Tooltip (Not used yet) -->
+<!-- Tooltip (Not used yet)
 <ng-template #matTooltipTemplate let-contents="contents" let-placement="placement" let-event="event">
   <div class="cal-tooltip" [ngClass]="'cal-tooltip-' + placement">
     <div class="mat-tooltip-card" *ngIf="!event.meta?.tmp">
@@ -47,3 +46,4 @@
     </div>
   </div>
 </ng-template>
+ -->

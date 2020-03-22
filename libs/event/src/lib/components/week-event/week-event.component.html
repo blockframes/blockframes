@@ -4,7 +4,7 @@
     <!-- Event created -->
     <ng-container [ngSwitch]="event | eventSize">
       <section @fadeOut *ngSwitchCase="'underCreation'" fxLayout="column" fxLayoutAlign="center center">
-        <mat-icon>event</mat-icon>
+        <mat-icon svgIcon="calendar"></mat-icon>
       </section>
       <section *ngSwitchCase="'small'">
         <h4 fxFlex>{{ event.title }}</h4>

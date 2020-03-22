@@ -48,6 +48,10 @@ const routes: Routes = [{
         loadChildren: () => import('./notification/notification.module').then(m => m.NotificationModule)
       },
       {
+        path: 'calendar',
+        loadChildren: () => import('./calendar/calendar.module').then(m => m.CalendarModule)
+      },
+      {
         path: 'import', // Import bulk of movies
         loadChildren: () => import('@blockframes/movie/movie/components/import/import-movie.module')
           .then(m => m.ImportMovieModule)
@@ -65,7 +69,7 @@ const routes: Routes = [{
           canDeactivate: [MovieActiveGuard],
           loadChildren: () => import('./title/view/view.module').then(m => m.TitleViewModule)
         }]
-      },
+      }
     ]
   }
 ];
