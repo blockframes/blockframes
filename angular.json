@@ -1166,6 +1166,35 @@
           "styleext": "scss"
         }
       }
+    },
+    "event": {
+      "projectType": "library",
+      "root": "libs/event",
+      "sourceRoot": "libs/event/src",
+      "prefix": "event",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["libs/event/tsconfig.lib.json", "libs/event/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**", "!libs/event/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/event/jest.config.js",
+            "tsConfig": "libs/event/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "libs/event/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
     }
   },
   "cli": {
