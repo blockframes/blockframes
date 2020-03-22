@@ -2,16 +2,16 @@
   <mat-toolbar fxLayout fxLayoutAlign="space-between center">
     <div fxLayout fxLayout="start center">
       <button type="submit" mat-button (click)="remove()">
-        <mat-icon>save</mat-icon>
+        <mat-icon svgIcon="floppy"></mat-icon>
         <span>Save</span>
       </button>
       <button type="button" mat-button (click)="remove()">
-        <mat-icon>delete</mat-icon>
+        <mat-icon svgIcon="trash"></mat-icon>
         <span>Delete</span>
       </button>
     </div>
     <button type="button" mat-icon-button (click)="cancel()">
-      <mat-icon>close</mat-icon>
+      <mat-icon svgIcon="cross"></mat-icon>
     </button>
   </mat-toolbar>
 

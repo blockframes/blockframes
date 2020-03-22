@@ -977,7 +977,10 @@
                 "output": "./assets"
               }
             ],
-            "styles": ["apps/festival/festival/src/styles.scss"],
+            "styles": [
+              "node_modules/angular-calendar/css/angular-calendar.css",
+              "apps/festival/festival/src/styles.scss"
+            ],
             "scripts": []
           },
           "configurations": {

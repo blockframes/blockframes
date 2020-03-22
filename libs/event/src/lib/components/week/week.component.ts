@@ -10,6 +10,7 @@ import { EventCreateComponent } from '../../form/create/create.component';
 
 import { fromEvent } from 'rxjs';
 import { map, finalize, takeUntil, distinctUntilChanged } from 'rxjs/operators';
+import { AuthQuery } from '@blockframes/auth';
 
 function floorToNearest(amount: number, precision: number) {
   return Math.floor(amount / precision) * precision;
@@ -37,6 +38,7 @@ export class CalendarWeekComponent {
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
+    private authQuery: AuthQuery,
     private service: EventService,
     private bottomSheet: MatBottomSheet,
     private cdr: ChangeDetectorRef,
@@ -48,7 +50,7 @@ export class CalendarWeekComponent {
     segmentElement: HTMLElement
   ) {
     const tmpEvent: CalendarEvent = {
-      id: this.localEvents.length + 1,
+      id: this.service['db'].createId(),
       title: 'New event',
       start: segment.date,
       end: addMinutes(segment.date, 30),
@@ -97,8 +99,9 @@ export class CalendarWeekComponent {
   }
 
   updateEvent(timeChange: CalendarEventTimesChangedEvent) {
-    // TODO check the userId before updating
-    const event = { id: timeChange.event.id, start: timeChange.newStart, end: timeChange.newEnd };
-    this.service.update(event);
+    if (this.authQuery.userId === timeChange.event['userId']) {
+      const event = { id: timeChange.event.id, start: timeChange.newStart, end: timeChange.newEnd };
+      this.service.update(event);
+    }
   }
 }
