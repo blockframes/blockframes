@@ -65,6 +65,9 @@
     },
     "user": {
       "tags": ["user"]
+    },
+    "event": {
+      "tags": ["event"]
     }
   }
 }
