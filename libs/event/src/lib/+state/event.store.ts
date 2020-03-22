@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
-import { Event } from './event.model';
+import { Event, createCalendarEvent } from './event.model';
 import { EntityState, EntityStore, StoreConfig, ActiveState } from '@datorama/akita';
+import { AuthQuery } from '@blockframes/auth/+state';
+import { isTimeStamp } from '@blockframes/utils';
 
 export interface EventState extends EntityState<Event>, ActiveState<string>  {}
 
@@ -8,9 +10,16 @@ export interface EventState extends EntityState<Event>, ActiveState<string>  {}
 @StoreConfig({ name: 'event' })
 export class EventStore extends EntityStore<EventState> {
 
-  constructor() {
+  constructor(private authQuery: AuthQuery) {
     super();
   }
 
+  akitaPreAddEntity(event) {
+    return createCalendarEvent(event, this.authQuery.userId);
+  }
+
+  akitaPreUpdateEntity = (prev, next) => {
+    return createCalendarEvent(next, this.authQuery.userId);
+  }
 }
 

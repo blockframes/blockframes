@@ -3,7 +3,6 @@ import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
 import { Observable, Subscription } from 'rxjs';
 import { MovieAnalytics } from '@blockframes/movie/movie/+state/movie.firestore';
 import { MovieService } from '@blockframes/movie/movie/+state/movie.service';
-import { Intercom } from 'ng-intercom';
 
 @Component({
   selector: 'festival-dashboard-home',
@@ -20,7 +19,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   constructor(
     private movieQuery: MovieQuery,
     private movieService: MovieService,
-    private intercom: Intercom
   ) {}
 
   ngOnInit() {
@@ -30,9 +28,5 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.sub.unsubscribe();
-  }
-
-  public openIntercom(): void {
-    return this.intercom.show();
   }
 }
