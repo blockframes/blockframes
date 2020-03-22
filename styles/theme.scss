@@ -2,6 +2,7 @@
 @import './themes/dark';
 @import './themes/light';
 @import '~saturn-datepicker/theming';
+@import "../node_modules/angular-calendar/css/angular-calendar.css";
 @import './typography.scss';
 
 // Components
@@ -24,6 +25,7 @@
 @import './components/bf-font-color.scss';
 @import './components/missing-control.scss';
 @import './components/bf-world-map.scss';
+@import './components/bf-calendar.scss';
 @import './components/mat-native-control.scss';
 
 @include mat-core($bf-typography);
@@ -50,6 +52,7 @@
   @include bf-color-font($theme);
   @include bf-missing-control-theme($theme);
   @include bf-world-map-theme($theme);
+  @include bf-calendar-theme($theme);
   
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
