@@ -8,7 +8,7 @@
 #     contains the service account credentials for the blockframes-ci project.
 #     use case is: we want to use the firebase admin SDK and trigger deploys.
 #     /!\ secret value.
-#
+# Un vieux Laurent.
 version: 2.1
 references:
   start_firestore_emulator: &start_firestore_emulator
