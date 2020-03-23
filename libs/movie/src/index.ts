@@ -29,9 +29,6 @@ export * from './lib/movie/form/promotional-description/keywords/keywords.module
 // Movie Components
 export { MovieCreateModule } from './lib/movie/components/movie-create/movie-create.module';
 
-// Movie Component Module
-export * from './lib/movie/components/movie-picker/movie-picker.module';
-
 // Movie Form Modules
 export * from './lib/movie/form/sales-info/format/format.module';
 export * from './lib/movie/form/version-info/version-info.module';

@@ -42,7 +42,6 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { HomeEmptyComponent } from './components/home-empty/home-empty.component';
 import { MovieFormModule } from './form/form.module';
 
-import { MoviePickerModule } from './components/movie-picker/movie-picker.module';
 import { MovieImdbSearchModule } from './components/movie-imdb-search/movie-imdb-search.module';
 
 @NgModule({
@@ -84,8 +83,7 @@ import { MovieImdbSearchModule } from './components/movie-imdb-search/movie-imdb
     PasswordConfirmModule,
     MovieFormModule,
     MovieCardModule,
-    MovieImdbSearchModule,
-    MoviePickerModule
+    MovieImdbSearchModule
   ],
 })
 export class MovieModule {}
