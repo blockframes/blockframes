@@ -12,8 +12,7 @@ export { ActionItem };
 
 /**
  * A list of action items,
- * Used to ask the user for an such as whether to create or find an organization,
- * or the kind of delivery they want to create.
+ * Used to ask the user for an such as whether to create or find an organization.
  */
 @NgModule({
   declarations: [ActionsListComponent],

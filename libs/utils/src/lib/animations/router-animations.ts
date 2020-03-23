@@ -3,7 +3,7 @@ import {transition, trigger, query, style, animate, group, animateChild, stagger
 
 export const slideAnimation =
 trigger('slideAnimation', [
-    transition('DeliveryEditablePage => *', [
+    transition('FirstPage => *', [
         query(':enter, :leave',
             style({ position: 'fixed', width: '100%' }),
             { optional: true }),
@@ -21,7 +21,7 @@ trigger('slideAnimation', [
         ])
     ]),
 
-    transition('DeliveryInformationsEditablePage => *', [
+    transition('FirstPage => *', [
         query(':enter, :leave',
             style({ position: 'fixed',  width: '100%' }),
             { optional: true }),
@@ -39,7 +39,7 @@ trigger('slideAnimation', [
         ])
     ]),
 
-    transition('DeliveryStakeholdersEditablePage => DeliveryEditablePage', [
+    transition('FirstPage => SecondPage', [
         query(':enter, :leave',
             style({ position: 'fixed', width: '100%' }),
             { optional: true }),
@@ -57,7 +57,7 @@ trigger('slideAnimation', [
         ])
     ]),
 
-    transition('DeliveryStakeholdersEditablePage => DeliveryInformationsEditablePage', [
+    transition('FirstPage => SecondPage', [
         query(':enter, :leave',
             style({ position: 'fixed', width: '100%' }),
             { optional: true }),

@@ -159,10 +159,10 @@ contract Organization {
         // Not defining this operation is the constructor will require to perform
         // an "init" tx by the admin for the contract to be usable by Blockframes
         // this would add friction for the user and only provide a small gain in flexibility
-        operations[1].name = 'Signing Delivery';
-        operations[1].quorum = 0;
-        operations[1].active = true;
-        operations[1].whitelistLength = 0;
+        // operations[1].name = 'Signing Delivery';
+        // operations[1].quorum = 0;
+        // operations[1].active = true;
+        // operations[1].whitelistLength = 0;
     }
 
     /// @dev in case someone want to lock ether in the organization's contract
