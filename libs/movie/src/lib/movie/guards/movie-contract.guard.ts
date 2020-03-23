@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { CollectionGuard, CollectionGuardConfig, awaitSyncQuery, Query } from 'akita-ng-fire';
 import { MovieState, MovieService, MovieStore, Movie } from '../+state';
 import { ContractQuery } from '@blockframes/contract/contract/+state/contract.query';
-import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
+import { OrganizationQuery } from '@blockframes/organization/organization/+state/organization.query';
 import { tap, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 

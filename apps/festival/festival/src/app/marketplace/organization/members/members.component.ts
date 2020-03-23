@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
-import { MemberService } from '@blockframes/organization/member/+state/member.service';
-import { MemberQuery } from '@blockframes/organization/member/+state/member.query';
+import { UserService } from '@blockframes/user/user/+state/user.service';
+import { UserQuery } from '@blockframes/user/user/+state/user.query';
 import { ViewComponent } from '../view/view.component';
 import { Subscription } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
@@ -18,8 +18,8 @@ export class MembersComponent implements OnInit, OnDestroy {
 
   constructor(
     private parent: ViewComponent,
-    private service: MemberService,
-    private query: MemberQuery
+    private service: UserService,
+    private query: UserQuery
   ) { }
 
   ngOnInit(): void {

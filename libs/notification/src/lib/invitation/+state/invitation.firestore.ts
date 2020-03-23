@@ -1,4 +1,4 @@
-import { PublicOrganization } from "@blockframes/organization/types";
+import { PublicOrganization } from "@blockframes/organization/organization/+state/organization.firestore";
 import { firestore } from 'firebase/app';
 import { PublicUser } from "@blockframes/auth/+state/auth.firestore";
 type Timestamp = firestore.Timestamp;
