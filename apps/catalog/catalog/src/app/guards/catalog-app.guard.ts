@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router, CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
-import { OrganizationService } from '@blockframes/organization/+state/organization.service';
-import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
+import { OrganizationService } from '@blockframes/organization/organization/+state/organization.service';
+import { OrganizationQuery } from '@blockframes/organization/organization/+state/organization.query';
 
 @Injectable({ providedIn: 'root' })
 export class CatalogAppGuard implements CanActivate {

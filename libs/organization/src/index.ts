@@ -5,14 +5,14 @@ export * from './lib/guard/organization.guard';
 export * from './lib/guard/active-dao.guard';
 
 // Organization Components Modules
-export * from './lib/components/organization-widget/organization-widget.module';
+export * from './lib/organization/components/organization-widget/organization-widget.module';
 
 // Organization State
-export * from './lib/+state/organization.model';
-export * from './lib/+state/organization.query';
-export * from './lib/+state/organization.service';
-export * from './lib/+state/organization.store';
-export * from './lib/+state/organization.firestore';
+export * from './lib/organization/+state/organization.model';
+export * from './lib/organization/+state/organization.query';
+export * from './lib/organization/+state/organization.service';
+export * from './lib/organization/+state/organization.store';
+export * from './lib/organization/+state/organization.firestore';
 
 // Permission Guard
 export * from './lib/permissions/guard/permissions.guard';

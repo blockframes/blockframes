@@ -39,7 +39,7 @@
       "@blockframes/organization": ["libs/organization/src/index.ts"],
       "@blockframes/organization/*": ["libs/organization/src/lib/*"],
       "@blockframes/organization/types": [
-        "libs/organization/src/lib/+state/organization.firestore.ts"
+        "libs/organization/src/lib/organization/+state/organization.firestore.ts"
       ],
       "@blockframes/permissions/types": [
         "libs/organization/src/lib/permissions/+state/permissions.firestore.ts"

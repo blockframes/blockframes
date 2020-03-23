@@ -3,7 +3,7 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
 import { CreateTx } from '@blockframes/ethers/create-tx';
-import { OrganizationMember } from '@blockframes/organization/member/+state/member.model';
+import { OrganizationMember } from '@blockframes/user/user/+state/user.model';
 import { DaoService, DaoQuery } from '../../+state';
 
 @Component({
