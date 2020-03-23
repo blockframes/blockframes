@@ -17,8 +17,6 @@ export class InvitationItemComponent {
   /** Creates a message based on the invitation.type. */
   public get message(): string {
     switch (this.invitation.type) {
-      case 'toWorkOnDocument':
-        return 'You have been invited to work on a delivery.';
       case 'fromUserToOrganization':
         // TODO #1140 Put message in an other file dedicated to that
         return `${this.invitation.user.name} ${this.invitation.user.surname} wants to join your organization`;

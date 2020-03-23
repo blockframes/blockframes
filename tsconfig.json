@@ -52,20 +52,6 @@
       ],
       "@blockframes/notification": ["libs/notification/src/index.ts"],
       "@blockframes/notification/*": ["libs/notification/src/lib/*"],
-      "@blockframes/material/material/types": [
-        "libs/material/src/lib/material/+state/material.firestore.ts"
-      ],
-      "@blockframes/material/delivery/types": [
-        "libs/material/src/lib/delivery/+state/delivery.firestore.ts"
-      ],
-      "@blockframes/material/template/types": [
-        "libs/material/src/lib/template/+state/template.firestore.ts"
-      ],
-      "@blockframes/material/delivery/stakeholder/types": [
-        "libs/material/src/lib/delivery/stakeholder/+state/stakeholder.firestore.ts"
-      ],
-      "@blockframes/material": ["libs/material/src/index.ts"],
-      "@blockframes/template": ["libs/material/src/index.ts"],
       "@blockframes/contract": ["libs/contract/src/index.ts"],
       "@blockframes/contract/*": ["libs/contract/src/lib/*"],
       "@blockframes/financial-report": ["libs/financial-report/src/index.ts"],
@@ -74,7 +60,6 @@
       "@blockframes/admin/*": ["libs/admin/src/lib/*"],
       "@blockframes/user": ["libs/user/src/lib/user/index.ts"],
       "@blockframes/user/*": ["libs/user/src/lib/user/*"],
-      "@blockframes/apps/delivery/*": ["apps/delivery/delivery/src/app/*"],
       "@blockframes/apps/catalog/marketplace/*": ["apps/catalog/src/app/marketplace/*"],
       "@blockframes/apps/catalog/dashboard/*": ["apps/catalog/src/app/dashboard/*"],
       "@blockframes/apps/catalog/*": ["apps/catalog/catalog/src/app/*"],

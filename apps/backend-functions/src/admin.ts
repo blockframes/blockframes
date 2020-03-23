@@ -28,7 +28,7 @@ import { deployMovieContract, setInitialRepartition } from '@blockframes/ethers/
 import { adminPassword } from './environments/environment';
 
 // TODO(#714): Synchronize data types with the frontend
-const APPS = ['delivery', 'stories-and-more', 'catalog'];
+const APPS = ['stories-and-more', 'catalog'];
 
 /**
  * Handles firestore update on request to application access,

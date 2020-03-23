@@ -7,7 +7,6 @@ import { firestore } from 'firebase/app';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { Contract } from '@blockframes/contract/contract/+state/contract.model';
 import { Movie } from '@blockframes/movie/movie/+state/movie.model';
-import { Delivery } from '@blockframes/material';
 
 @Injectable({
   providedIn: 'root'
@@ -46,13 +45,13 @@ export class PermissionsService extends CollectionService<PermissionsState> {
   }
 
   /**
-   * Takes a document (movie or delivery), create relative permissions
+   * Takes a document (movie or contract), create relative permissions
    * and add them to documentPermissions subcollection.
    * @param doc
    * @param write
    */
   public addDocumentPermissions(
-    doc: Movie | Delivery | Contract,
+    doc: Movie | Contract,
     write: firestore.WriteBatch,
     organizationId: string = this.organizationQuery.getActiveId()
   ) {

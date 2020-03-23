@@ -45,11 +45,6 @@ export interface RequestTokensParams {
   amount: number;
 }
 
-export interface SignDeliveryParams {
-  username: string;
-  deliveryId: string;
-  stakeholderId: string;
-}
 interface DeployParams {
   username: string;
   key: string;

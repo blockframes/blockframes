@@ -20,7 +20,6 @@ interface OrganizationRaw<D> {
   updated: D;
   userIds: string[];
   movieIds: string[];
-  templateIds: string[];
   status: OrganizationStatus;
   logo: ImgRef;
   fiscalNumber: string;
@@ -97,7 +96,6 @@ export function createOrganizationRaw(
     status: 'pending',
     userIds: [],
     movieIds: [],
-    templateIds: [],
     created: new Date(),
     updated: new Date(),
     logo: createImgRef(),

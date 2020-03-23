@@ -193,11 +193,7 @@ export class DaoService {
 
     // OPERATIONS -----------------------------
 
-    // retrieve hardcoded operation(s)
-    const signingDelivery = await this.getOperationFromContract('0x0000000000000000000000000000000000000000000000000000000000000001');
-    this.upsertOperation(signingDelivery);
-
-    // retrieve every other operation
+    // retrieve operation
     const operationsFilter = getFilterFromTopics(this.contract.address, [operationCreatedTopic]);
     const operationLogs = await this.provider.getLogs(operationsFilter);
     const operationIds = operationLogs.map(operationLog => operationLog.topics[1]);

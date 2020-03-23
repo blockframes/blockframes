@@ -177,7 +177,7 @@ export interface BoxOffice {
 }
 
 export interface MovieBudget {
-  totalBudget: string, // @TODO (#1589) should be a Price 
+  totalBudget: string, // @TODO (#1589) should be a Price
   budgetCurrency?: MovieCurrenciesSlug,
   detailledBudget?: any, // @TODO (#1589) detailedBudget is not used. Remove ?
   //realBudget: Price,  @TODO (#1589) is not implemented. Usefull?
@@ -283,7 +283,6 @@ interface MovieRaw<D> {
   _type: 'movies';
   _meta?: DocumentMeta;
   id: string;
-  deliveryIds: string[];
   documents: MovieLegalDocuments;
 
   // Sections

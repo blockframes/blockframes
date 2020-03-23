@@ -89,28 +89,6 @@ const models = {
       'label': 'Broadcaster coproducer'
     }
   ] as const,
-  'STAKEHOLDER_DELIVERY_AUTHORIZATIONS': [
-    {
-      'slug': 'canValidateDelivery',
-      'label': 'Can validate delivery'
-    },
-    {
-      'slug': 'canModifyDelivery',
-      'label': 'Can add, remove and edit materials'
-    },
-    {
-      'slug': 'canDeliverMaterial',
-      'label': 'Can deliver materials'
-    },
-    {
-      'slug': 'canAcceptMaterial',
-      'label': 'Can accept materials'
-    },
-    {
-      'slug': 'canRefuseMaterial',
-      'label': 'Can refuse materials'
-    }
-  ],
   'PRODUCER_ROLES': [
     {
       'slug': 'exectuive-producer',
@@ -603,9 +581,6 @@ export interface CurrencyWithLabel {
   slug: string;
   code: string;
 }
-
-/** Used in notifications/invitations to define which app is concerned. */
-export type App = 'main' | 'delivery' | 'catalog';
 
 /**
  * Check if data passed into array have at lease one item belonging to scope

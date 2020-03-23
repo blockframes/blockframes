@@ -4,7 +4,7 @@
  * This code deals directly with the low level parts of firebase,
  */
 import { db } from '../internals/firebase';
-import { OrganizationDocument, StakeholderDocument } from './types';
+import { OrganizationDocument } from './types';
 import { PermissionsDocument } from '@blockframes/permissions/types';
 import { ContractDocument, ContractVersionDocument } from '@blockframes/contract/contract/+state/contract.firestore';
 
@@ -20,27 +20,6 @@ export function getDocument<T>(path: string): Promise<T> {
     .doc(path)
     .get()
     .then(doc => doc.data() as T);
-}
-
-/**
- * Try to get all the organization in the stakeholders subcollection of `/{collection}/{documentId}`.
- *
- * Use with care: this function assumes the stakeholders collection exists and
- * it doesn't not deduplicate the orgs.
- *
- * @param documentId
- * @param collection
- * @returns the organization that are in the document's stakeholders.
- */
-export async function getOrganizationsOfDocument(
-  documentId: string,
-  collection: string
-): Promise<OrganizationDocument[]> {
-  const stakeholders = await getCollection<StakeholderDocument>(
-    `${collection}/${documentId}/stakeholders`
-  );
-  const promises = stakeholders.map(({ orgId }) => getDocument<OrganizationDocument>(`orgs/${orgId}`));
-  return Promise.all(promises);
 }
 
 /**
