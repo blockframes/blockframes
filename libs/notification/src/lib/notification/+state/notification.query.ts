@@ -60,70 +60,28 @@ export class NotificationQuery extends QueryEntity<NotificationState, Notificati
   public createNotificationInformation(notification: Notification) {
 
     switch (notification.type) {
-      case 'inviteOrganization':
-        return {
-          message: `${notification.organization.name} has been invited to work on ${notification.movie.title.original}'s delivery.`,
-          imgRef: this.getPoster(notification.movie.id),
-          placeholderUrl: 'WelcomeDelivery_500.png'
-        };
-      case 'removeOrganization':
-        return {
-          message: `${notification.organization.name} has been removed from ${notification.movie.title.original}'s delivery.`,
-          imgRef: this.getPoster(notification.movie.id),
-          placeholderUrl: 'WelcomeDelivery_500.png'
-        };
-      case 'newSignature':
-        return {
-          message: `${notification.organization.name} has signed ${notification.movie.title.original}'s delivery.`,
-          imgRef: this.getPoster(notification.movie.id),
-          placeholderUrl: 'WelcomeDelivery_500.png'
-        };
-      case 'finalSignature':
-        return {
-          message: `Every stakeholders have signed ${notification.movie.title.original}'s delivery.`,
-          imgRef: this.getPoster(notification.movie.id),
-          placeholderUrl: 'WelcomeDelivery_500.png'
-        };
-      case 'createDocument':
-        return {
-          message: `A new delivery has been created for ${notification.movie.title.original}.`,
-          imgRef: this.getPoster(notification.movie.id),
-          placeholderUrl: 'WelcomeDelivery_500.png'
-        };
-      case 'deleteDocument':
-        return {
-          message: `${notification.movie.title.original}'s delivery has been deleted.`,
-          imgRef: this.getPoster(notification.movie.id),
-          placeholderUrl: 'WelcomeDelivery_500.png'
-        };
-      case 'pathToDocument':
-        return {
-          message: 'You accepted the invitation. Now you can work on the document.',
-          imgRef: this.getPoster(notification.movie.id),
-          placeholderUrl: 'WelcomeDelivery_500.png'
-        };
       case 'organizationAcceptedByArchipelContent':
         return {
           message: 'Your organization has been accepted by Archipel Content !',
-          placeholderUrl: 'WelcomeArchipelContent_500.png'
+          placeholderUrl: 'WelcomeArchipelContent_500.png' // TODO: ISSUE#2262
         };
       case 'movieTitleUpdated':
         return {
           message: `${notification.user.name} ${notification.user.surname} edited ${notification.movie.title.international}.`,
           imgRef: this.getPoster(notification.movie.id),
-          placeholderUrl: 'WelcomeDelivery_500.png'
+          placeholderUrl: 'WelcomeDelivery_500.png' // TODO: Icon/Image is wrong here. Use correct illustration for notifications => ISSUE#2262
         };
       case 'movieTitleCreated':
         return {
           message: `${notification.user.name} ${notification.user.surname} created ${notification.movie.title.international}.`,
           imgRef: this.getPoster(notification.movie.id),
-          placeholderUrl: 'WelcomeDelivery_500.png'
+          placeholderUrl: 'WelcomeDelivery_500.png' // TODO: ISSUE#2262
         };
       case 'movieDeleted':
         return {
           message: `${notification.user.name} ${notification.user.surname} deleted ${notification.movie.title.international}.`,
           imgRef: this.getPoster(notification.movie.id),
-          placeholderUrl: 'WelcomeDelivery_500.png'
+          placeholderUrl: 'WelcomeDelivery_500.png' // TODO: ISSUE#2262
         };
       case 'invitationFromOrganizationToUserDecline':
         return {
@@ -153,13 +111,13 @@ export class NotificationQuery extends QueryEntity<NotificationState, Notificati
       case 'newContract':
         return {
           message: `${notification.organization.name} submitted a contract.`,
-          placeholderUrl: 'Organization_250.png',
+          placeholderUrl: 'Organization_250.png', // TODO: ISSUE#2262
           url: `c/o/dashboard/deals/${notification.docId}`
         };
       case 'contractInNegotiation':
         return {
           message: `A new offer has been created.`,
-          placeholderUrl: 'WelcomeArchipelContent_500.png',
+          placeholderUrl: 'WelcomeArchipelContent_500.png', // TODO: ISSUE#2262
           url: `c/o/dashboard/deals/${notification.docId}`
         };
       case 'movieSubmitted':

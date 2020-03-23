@@ -10,16 +10,8 @@
       "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
       "rewrites": [
         {
-          "source": "/delivery/contract.pdf",
-          "function": "generateDeliveryPDF"
-        },
-        {
           "source": "/admin{,/**}",
           "function": "admin"
-        },
-        {
-          "source": "/delivery{,/**}",
-          "destination": "/delivery/index.html"
         },
         {
           "source": "/catalog{,/**}",

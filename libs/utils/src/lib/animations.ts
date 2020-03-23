@@ -2,7 +2,7 @@ import { trigger, transition, style, query, animateChild, group, animate, keyfra
 
 export const slideInAnimation =
   trigger('slideInAnimation', [
-    transition('DeliveryAddChooseStarterPage => DeliveryAddTemplatePickerPage, DeliveryAddTemplatePickerPage => DeliveryAddSettingsPage', [
+    transition('FirstPage => SecondPage => ThirdPage...', [
       style({ position: 'relative' }),
       query(':enter, :leave', [
         style({
@@ -27,7 +27,7 @@ export const slideInAnimation =
       query(':enter', animateChild()),
     ]),
 
-    transition('DeliveryAddSettingsPage => DeliveryAddTemplatePickerPage, DeliveryAddTemplatePickerPage => DeliveryAddChooseStarterPage', [
+    transition('FirstPage => SecondPage => ThirdPage...', [
       style({ position: 'relative' }),
       query(':enter, :leave', [
         style({
@@ -52,7 +52,7 @@ export const slideInAnimation =
       query(':enter', animateChild()),
     ]),
 
-      transition('DeliveryAddFindMoviePage => DeliveryAddChooseStarterPage', [
+      transition('FirstPage => SecondPage => ThirdPage...', [
         style({ position: 'relative' }),
         query(':enter, :leave', [
           style({
@@ -102,7 +102,7 @@ export const slideInAnimation =
         query(':enter', animateChild()),
       ]),
 
-      transition('DeliveryAddChooseStarterPage => DeliveryAddFindMoviePage, DeliveryAddSettingsPage => DeliveryEditablePage', [
+      transition('FirstPage => SecondPage => ThirdPage...', [
         style({ position: 'relative' }),
         query(':enter, :leave', [
           style({

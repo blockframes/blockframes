@@ -136,14 +136,6 @@ export const icons = [
     url: 'assets/icons/logo_blockframes_fill.svg'
   },
   {
-    name: 'logo_media_delivery',
-    url: 'assets/icons/logo_media_delivery.svg'
-  },
-  {
-    name: 'logo_media_delivery_fill',
-    url: 'assets/icons/logo_media_delivery_fill.svg'
-  },
-  {
     name: 'logo_media_financiers',
     url: 'assets/icons/logo_media_financiers.svg'
   },
@@ -166,14 +158,6 @@ export const icons = [
   },
   { name: 'mail', url: 'assets/icons/mail.svg' },
   { name: 'map_marker', url: 'assets/icons/map_marker.svg' },
-  {
-    name: 'media_delivery',
-    url: 'assets/icons/media_delivery.svg'
-  },
-  {
-    name: 'media_delivery_fill',
-    url: 'assets/icons/media_delivery_fill.svg'
-  },
   {
     name: 'media_financiers',
     url: 'assets/icons/media_financiers.svg'

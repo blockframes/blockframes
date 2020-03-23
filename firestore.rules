@@ -143,42 +143,6 @@ service cloud.firestore {
       allow delete: if orgCan('canDelete', userOrgId(), movieId)
       	&& isOrgAdmin(userId(), userOrgId());
 
-        match /materials/{materialId} {
-          allow read: if userHasValidOrg();
-          allow create: if userHasValidOrg()
-            && documentIdChecked(movieId, 'movies');
-          allow update: if userHasValidOrg()
-          	&& documentIdChecked(movieId, 'movies')
-            && incomingData().id == existingData().id;
-          allow delete: if userHasValidOrg();
-        }
-    }
-
-    /// DELIVERIES RULES ///
-
-    match /deliveries/{deliveryId} {
-    	allow read: if isStakeholder(userOrgId());
-      allow create: if userHasValidOrg()
-      	&& documentIdChecked(deliveryId, 'deliveries')
-        && canCreateNewPermissions(userOrgId(), deliveryId);
-      allow update: if orgCan('canUpdate', userOrgId(), deliveryId);
-      allow delete: if orgCan('canDelete', userOrgId(), deliveryId);
-
-      match /materials/{materialId} {
-        allow read: if userHasValidOrg();
-      	allow create: if userHasValidOrg()
-      		&& documentIdChecked(deliveryId, 'deliveries')
-        	&& orgCan('canCreate', userOrgId(), deliveryId);
-      	allow update: if orgCan('canUpdate', userOrgId(), deliveryId)
-        	&& incomingData().id == existingData().id;
-        allow delete: if orgCan('canUpdate', userOrgId(), deliveryId);
-      }
-
-      match /stakeholders/{stakeholderId} {
-        allow read: if userHasValidOrg();
-        allow write: if orgCan('isAdmin', userOrgId(), deliveryId)
-        	|| isOwner(userOrgId(), deliveryId);
-      }
     }
 
     /// CONTRACTS RULES ///
@@ -205,16 +169,6 @@ service cloud.firestore {
     match /_META/_MAINTENANCE {
       allow read;
       allow write: if false;
-    }
-
-    /// TEMPLATES RULES ///
-
-    match /templates/{templateId} {
-    	allow read, write: if userHasValidOrg();
-
-      match /materials/{materialId} {
-        allow read, write: if userHasValidOrg();
-      }
     }
 
     /////////////////
@@ -275,11 +229,6 @@ service cloud.firestore {
 
     function isOwner(orgId, docId) {
     	return getDocumentPermissions(orgId, docId).ownerId == orgId;
-    }
-
-    // Check is the organization is stakeholder on a delivery.
-    function isStakeholder(orgId) {
-    	return orgId in resource.data.stakeholderIds;
     }
 
     function isParty(orgId) {

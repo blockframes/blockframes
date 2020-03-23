@@ -8,7 +8,6 @@ export * from './lib/feedback/feedback-message.module';
 export * from './lib/actions-list/actions-list.module';
 export * from './lib/actions-picker/actions-picker.module';
 export * from './lib/actions-picker-list/actions-picker-list.module';
-export * from './lib/editable/editable.module';
 export * from './lib/editable-sidenav/editable-sidenav.module';
 export * from './lib/avatar-list/avatar-list.module';
 export * from './lib/icon-service';

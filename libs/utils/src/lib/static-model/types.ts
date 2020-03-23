@@ -12,16 +12,6 @@ export const STAKEHOLDER_ROLES_SLUG = models['STAKEHOLDER_ROLES'].map(key => key
 export type StakeholderRolesLabel = typeof STAKEHOLDER_ROLES_LABEL[number];
 export type StakeholderRolesSlug = typeof STAKEHOLDER_ROLES_SLUG[number];
 
-export const STAKEHOLDER_DELIVERY_AUTHORIZATIONS_LABEL = models[
-  'STAKEHOLDER_DELIVERY_AUTHORIZATIONS'
-].map(key => key.label);
-export const STAKEHOLDER_DELIVERY_AUTHORIZATIONS_SLUG = models[
-  'STAKEHOLDER_DELIVERY_AUTHORIZATIONS'
-].map(key => key.slug);
-
-export type StakeholderDeliveryAuthorizationsLabel = typeof STAKEHOLDER_DELIVERY_AUTHORIZATIONS_LABEL[number];
-export type StakeholderDeliveryAuthorizationsSlug = typeof STAKEHOLDER_DELIVERY_AUTHORIZATIONS_SLUG[number];
-
 export const PRODUCER_ROLES_LABEL = models['PRODUCER_ROLES'].map(key => key.label);
 export const PRODUCER_ROLES_SLUG = models['PRODUCER_ROLES'].map(key => key.slug);
 

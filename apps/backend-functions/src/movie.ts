@@ -103,23 +103,13 @@ export async function onMovieDelete(
     }
   });
 
-  const deliveries = await db.collection(`deliveries`).get();
-  // TODO: .where(movie.deliveryIds, 'array-contains', 'id') doesn't seem to work. => ISSUE#908
-
-  deliveries.forEach(doc => {
-    if (movie.deliveryIds.includes(doc.data().id)) {
-      console.log(`delivery ${doc.id} deleted`);
-      batch.delete(doc.ref);
-    }
-  });
-
   const notifications = await createNotificationsForUsers(movie, 'movieDeleted', user);
 
   // Delete sub-collections
   await removeAllSubcollections(snap, batch);
 
   // Update algolia's index
-  await  deleteSearchableMovie(context.params.movieId);
+  await deleteSearchableMovie(context.params.movieId);
 
   console.log(`removed sub colletions of ${movie.id}`);
   await batch.commit();

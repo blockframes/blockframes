@@ -67,7 +67,6 @@ export interface SyncMovieAnalyticsOptions {
 export function createMovie(params: Partial<Movie> = {}): Movie {
   return {
     id: params.id,
-    deliveryIds: [],
     _type: 'movies',
     documents: createMovieLegalDocuments(params.documents),
     versionInfo: { languages: {} }, // TODO issue #1596
