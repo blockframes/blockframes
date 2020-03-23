@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ImgRef } from "@blockframes/utils/image-uploader";
 import { MovieTunnelComponent } from '../movie-tunnel.component';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'catalog-chain-of-titles',
@@ -11,7 +12,9 @@ import { MovieTunnelComponent } from '../movie-tunnel.component';
 export class ChainOfTitlesComponent {
   form = this.tunnel.form;
 
-  constructor(private tunnel: MovieTunnelComponent) { }
+  constructor(private tunnel: MovieTunnelComponent, private title: Title) {
+    this.title.setTitle('Chain of titles - Title information - Archipel Content')
+  }
 
   get chainOfTitles() {
     return this.form.get('documents').get('chainOfTitles');

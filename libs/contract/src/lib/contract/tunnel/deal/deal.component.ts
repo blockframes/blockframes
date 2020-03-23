@@ -5,6 +5,7 @@ import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ContractTunnelComponent } from '../contract-tunnel.component';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'contract-deal',
@@ -18,7 +19,10 @@ export class DealComponent implements OnInit {
 
   public showTVCriteria = new BehaviorSubject(true);
 
-  constructor(private tunnel: ContractTunnelComponent, private routerQuery: RouterQuery) { }
+  constructor(
+    private tunnel: ContractTunnelComponent,
+    private routerQuery: RouterQuery,
+    private title: Title) { }
 
   ngOnInit() {
     // only the movie with corresponding ID
@@ -26,7 +30,11 @@ export class DealComponent implements OnInit {
       this.tunnel.movies$,
       this.routerQuery.selectParams('titleId')
     ]).pipe(
-      map(([movies, titleId]) => movies.find(movie => movie.id === titleId)
+      map(([movies, titleId]) => {
+        const movie = movies.find(movie => movie.id === titleId)
+        this.title.setTitle(`${movie.main.title.international} - Exploitation Rights - Create a contract offer - Archipel Content`)
+        return movie
+      }
       ))
   }
 

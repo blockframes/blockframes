@@ -2,6 +2,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ContractQuery, Contract, ContractStatus } from '@blockframes/contract/contract/+state';
 import { getContractLastVersion } from '@blockframes/contract/version/+state/contract-version.model';
 import { map } from 'rxjs/operators';
+import { Title } from '@angular/platform-browser';
 
 interface Tab {
   name: string;
@@ -72,6 +73,33 @@ function createContractTabs(allContracts: Contract[]): ContractTab[] {
 export class DealListComponent {
   public tabs$ = this.query.sales$.pipe(map(createContractTabs));
 
-  constructor(private query: ContractQuery) { }
+  constructor(private query: ContractQuery, private title: Title) {
+    this.refreshTitle();
+  }
 
+  /**
+ * We need to dinstinguish between page load and route change
+ * from mat tab component.
+ * @param link optional param when the function is getting called from the template 
+ */
+  public refreshTitle(link?: string) {
+    if (link) {
+      switch (link) {
+        case 'All': this.title.setTitle('All offers and deals - Archipel Content');
+          break;
+        case 'Offers': this.title.setTitle('Offers and Deals - Archipel Content');
+          break;
+        case 'Ongoing Deals': this.title.setTitle('Ongoing deals - Archipel Content');
+          break;
+        case 'Past Deals': this.title.setTitle('Past deals - Archipel Content');
+          break;
+        case 'Aborted Offers': this.title.setTitle('Aborted offers - Archipel Content');
+          break;
+      }
+    } else {
+      Object.keys(this.query.getValue().entities).length
+        ? this.title.setTitle('All offers and deals - Archipel Content')
+        : this.title.setTitle('Offers and Deals - Archipel Content')
+    }
+  }
 }

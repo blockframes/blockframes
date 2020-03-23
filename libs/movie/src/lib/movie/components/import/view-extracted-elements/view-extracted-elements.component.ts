@@ -55,6 +55,7 @@ import { createPaymentSchedule } from '@blockframes/utils/common-interfaces/sche
 import { createTerms, createRange } from '@blockframes/utils/common-interfaces';
 import { Intercom } from 'ng-intercom';
 import { AuthService } from '@blockframes/auth';
+import { Title } from '@angular/platform-browser';
 
 export interface SpreadsheetImportError {
   field: string;
@@ -211,7 +212,10 @@ export class ViewExtractedElementsComponent implements OnInit {
     private cdRef: ChangeDetectorRef,
     private intercom: Intercom,
     private authService: AuthService,
-  ) { }
+    private title: Title
+  ) { 
+    this.title.setTitle('Submit your titles - Archipel Content')
+  }
 
   async ngOnInit() {
     this.isUserBlockframesAdmin = await this.authService.isBlockframesAdmin();

@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'catalog-end-tunnel',
@@ -7,4 +8,8 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
-export class EndTunnelComponent { }
+export class EndTunnelComponent {
+  constructor(private title: Title) {
+    this.title.setTitle('Successfully submitted - Archipel Content')
+  }
+ }

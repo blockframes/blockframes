@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { AuthQuery } from "@blockframes/auth";
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'catalog-contact-page',
@@ -22,11 +23,14 @@ export class ContactPageComponent implements OnInit {
   constructor(
     private functions: AngularFireFunctions,
     private query: AuthQuery,
-    private snackBar: MatSnackBar
-    ) {};
+    private snackBar: MatSnackBar,
+    private title: Title
+  ) {
+    this.title.setTitle('Contact us - Archipel Content')
+  }
 
   ngOnInit() {
-    this.center = { lat: 48.8682044, lng: 2.3334083};
+    this.center = { lat: 48.8682044, lng: 2.3334083 };
     this.markerLabel = {
       color: 'red',
       text: '59 Passage Choiseul',
@@ -46,6 +50,6 @@ export class ContactPageComponent implements OnInit {
     this.snackBar.open('Your email has been sent !', 'close', { duration: 2000 });
     this.form.reset();
 
-    return callSendUserMail({userName: userDisplayName, userMail: user.email, subject: userSubject, message: userMessage}).toPromise();
+    return callSendUserMail({ userName: userDisplayName, userMail: user.email, subject: userSubject, message: userMessage }).toPromise();
   }
 }

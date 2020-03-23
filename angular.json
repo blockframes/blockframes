@@ -518,7 +518,7 @@
       "projectType": "application",
       "schematics": {
         "@nrwl/angular:component": {
-          "style": "scss"
+          "style": "node_modules/angular-calendar/css/angular-calendar.css"
         }
       },
       "root": "apps/catalog/catalog",

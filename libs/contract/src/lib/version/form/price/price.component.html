@@ -14,7 +14,8 @@
     Add titles to your selection if needed and then offer a price. You may
     choose to put a price for the entire package or one for each title.
   </span>
-  <algolia-autocomplete [indexName]="algoliaMovieIndex" pathToValue="objectID" (emitObjectID)="addMovie($event)">
+  <algolia-autocomplete [indexName]="algoliaMovieIndex" displayWithPath="movie.main.title.international" 
+    (selectionChange)="addMovie($event)">
     <ng-template let-result>
       <span>{{ result.movie.main.title.international }}</span>
     </ng-template>

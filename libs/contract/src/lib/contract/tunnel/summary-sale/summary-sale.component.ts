@@ -12,6 +12,7 @@ import { ContractTunnelComponent, DealControls } from '../contract-tunnel.compon
 import { ContractQuery } from '../../+state';
 import { displayPaymentSchedule, displayTerms } from '../../+state/contract.utils';
 import { Observable } from 'rxjs';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'contract-tunnel-summary-sale',
@@ -36,8 +37,11 @@ export class SummarySaleComponent implements OnInit {
     private db: AngularFirestore,
     private service: ContractVersionService,
     private dealService: DistributionDealService,
-    private query: ContractQuery
-  ) { }
+    private query: ContractQuery,
+    private title: Title
+  ) { 
+    this.title.setTitle('Contract offer summary - Summary and Submit - Acripel Content')
+  }
 
   ngOnInit() {
     // Need to create it in the ngOnInit or it's not updated

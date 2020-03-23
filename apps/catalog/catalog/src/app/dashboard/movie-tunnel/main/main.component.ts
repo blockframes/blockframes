@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
 import { MovieTunnelComponent } from '../movie-tunnel.component';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'catalog-movie-tunnel-main',
@@ -11,7 +12,9 @@ import { MovieTunnelComponent } from '../movie-tunnel.component';
 export class TunnelMainComponent {
   form = this.tunnel.form;
 
-  constructor(private tunnel: MovieTunnelComponent) {}
+  constructor(private tunnel: MovieTunnelComponent, private title: Title) {
+    this.title.setTitle('Main information - Title information - Archipel Content')
+  }
 
   get main() {
     return this.form.get('main');

@@ -1,6 +1,7 @@
 import { Component, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ViewExtractedElementsComponent } from '../view-extracted-elements/view-extracted-elements.component';
 import { SpreadsheetImportEvent } from '../import-spreadsheet/import-spreadsheet.component';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'movie-import-container',
@@ -15,7 +16,9 @@ export class ImportContainerComponent {
   public importedFiles = false;
   public start = true;
 
-  constructor(private cdRef: ChangeDetectorRef) { }
+  constructor(private cdRef: ChangeDetectorRef, private title: Title) {
+    this.title.setTitle('Submit your titles - Archipel Content')
+   }
 
   async next(importEvent: SpreadsheetImportEvent) {
     this.start = false;
