@@ -64,7 +64,7 @@ export class OrganizationComponent implements OnInit {
   ];
   constructor(
     private organizationService: OrganizationService,
-    private UserService: UserService,
+    private userService: UserService,
     private movieService: MovieService,
     private route: ActivatedRoute,
     private cdRef: ChangeDetectorRef,
@@ -86,7 +86,7 @@ export class OrganizationComponent implements OnInit {
       }
     }));
 
-    const members = await this.UserService.getMembers(this.orgId);
+    const members = await this.userService.getMembers(this.orgId);
     this.members = members.map(m => ({
       ...m,
       edit: {
