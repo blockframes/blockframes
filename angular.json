@@ -699,6 +699,9 @@
             },
             "ci": {
               "devServerTarget": "catalog:serve"
+            },
+            "staging": {
+              "devServerTarget": "catalog:serve"
             }
           }
         },
