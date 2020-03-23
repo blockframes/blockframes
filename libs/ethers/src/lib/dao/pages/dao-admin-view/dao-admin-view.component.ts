@@ -40,7 +40,7 @@ export class DaoAdminViewComponent implements OnInit {
 
   constructor(
     private query: DaoQuery,
-    private UserQuery: UserQuery
+    private userQuery: UserQuery
   ) {}
 
   ngOnInit() {
@@ -84,7 +84,7 @@ export class DaoAdminViewComponent implements OnInit {
     );
 
 
-    this.members$ = this.UserQuery.membersWithRole$.pipe(
+    this.members$ = this.userQuery.membersWithRole$.pipe(
       tap(members => this.memberFormList.patchAllValue(members)),
       switchMap(members => this.memberFormList.valueChanges.pipe(startWith(members))),
     );

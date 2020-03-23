@@ -43,12 +43,12 @@ export class MemberComponent implements OnInit, OnDestroy {
     private invitationStore: InvitationStore,
     private permissionQuery: PermissionsQuery,
     private permissionService: PermissionsService,
-    private UserQuery: UserQuery,
-    private UserService: UserService
+    private userQuery: UserQuery,
+    private userService: UserService
   ) {}
 
   ngOnInit() {
-    this.members$ = this.UserQuery.membersWithRole$;
+    this.members$ = this.userQuery.membersWithRole$;
 
     this.isAdmin$ = this.permissionQuery.isAdmin$;
     this.isSuperAdmin$ = this.permissionQuery.isSuperAdmin$;
@@ -106,7 +106,7 @@ export class MemberComponent implements OnInit, OnDestroy {
 
   public removeMember(uid: string) {
     try {
-      this.UserService.removeMember(uid);
+      this.userService.removeMember(uid);
       this.snackBar.open('Member removed.', 'close', { duration: 2000 });
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });
