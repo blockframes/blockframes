@@ -14,10 +14,10 @@
       </mat-form-field>
       <!-- Add / Delete -->
       <button class="mat-elevation-z0 action" *ngIf="!first" mat-mini-fab color="warn" (click)="form.removeAt(i)" matTooltip="Remove a Member" aria-label="Remove a Member">
-        <mat-icon>delete</mat-icon>
+        <mat-icon svgIcon="trash"></mat-icon>
       </button>
       <button class="mat-elevation-z0 action" *ngIf="last" mat-mini-fab color="primary" (click)="form.add()" matTooltip="Add a Member" aria-label="Add a Member">
-        <mat-icon>add</mat-icon>
+        <mat-icon svgIcon="add"></mat-icon>
       </button>
     </mat-card-content>
   </ng-container>
