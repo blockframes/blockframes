@@ -35,7 +35,7 @@ references:
     filters:
       branches:
         only:
-          - release/*
+          - /release\/.*/
 
 commands:
   checkout_project:
@@ -282,7 +282,7 @@ workflows:
               ignore:
                 - ci
                 - develop
-                - release/*
+                - /release\/.*/
                 - master
                 - production
                 - staging
@@ -294,7 +294,7 @@ workflows:
                 - ci
                 - master
                 - production
-                - release/*
+                - /release\/.*/
                 - develop
                 - staging
       - test-e2e-ci:
