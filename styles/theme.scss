@@ -49,8 +49,6 @@
   @include bf-color-font($theme);
   @include bf-table-theme($theme);
   @include bf-missing-control-theme($theme);
-  // TODO the two following include can be separate if we have a style file for dashboard and a style file for marketplace
-  @include bf-world-map-theme($theme);
   @include bf-tunnel-theme($theme);
 
   $background: map-get($theme, background);
