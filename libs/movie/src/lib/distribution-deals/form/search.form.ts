@@ -42,6 +42,7 @@ export interface CatalogSearch {
     text: string;
     type: string;
   };
+  seller: string;
 }
 
 export interface AvailsSearch {
@@ -75,6 +76,7 @@ function createCatalogSearch(search: Partial<CatalogSearch> = {}): CatalogSearch
       text: '',
       type: ''
     },
+    seller: '',
     ...search
   }
 }
@@ -145,7 +147,8 @@ function createCatalogSearchControl(search: CatalogSearch) {
     searchbar: new FormGroup({
       text: new FormControl(''),
       type: new FormControl('')
-    })
+    }),
+    seller: new FormControl(search.seller),
   };
 }
 
@@ -250,6 +253,10 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
     } else {
       throw new Error(`Store Type ${storeType[type]} doesn't exist`);
     }
+  }
+
+  get seller() {
+    return this.get('seller');
   }
 
 }
