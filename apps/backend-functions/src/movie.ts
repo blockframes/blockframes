@@ -183,7 +183,7 @@ export async function onMovieUpdate(
   const creatorOrgSnapshot = await db.doc(`orgs/${creator!.orgId}`).get();
   const creatorOrg = creatorOrgSnapshot.data() as PublicOrganization;
 
-  return storeSearchableMovie(after, creatorOrg.id, creatorOrg.name);
+  return storeSearchableMovie(after, creatorOrg.name);
 }
 
 /** Checks if the store status is going from draft to submitted. */

@@ -210,10 +210,10 @@ export class ListComponent implements OnInit {
       // startWith([]),
       map(([genres, originCountries, languages, statuses, sellers]) => {
         return [
-          [...genres.map(genre => `movie.main.genres:${genre}`)], // same facet inside an array means OR for algolia
-          [...originCountries.map(country => `movie.main.originCountries:${country}`)],
+          [...genres.map(genre => `genres:${genre}`)], // same facet inside an array means OR for algolia
+          [...originCountries.map(country => `originCountries:${country}`)],
           // ...languages.map(language => `originalLanguages:${language}`),
-          [...statuses.map(status => `movie.main.status:${status}`)],
+          [...statuses.map(status => `status:${status}`)],
           ...sellers.map(seller => `orgName:${seller}`),
         ];
       }),
