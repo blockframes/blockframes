@@ -23,7 +23,18 @@ export async function upgradeAlgoliaMovies() {
 
   const promises = [];
   movies.forEach(movie => {
-    promises.push(storeSearchableMovie(movie.data(), process.env['ALGOLIA_API_KEY']));
+    const movieData = movie.data();
+    // const user = await db.collection('users').doc(movieData._meta.createdBy).get().then(snap => snap.data());
+    // const organization = await db.collection('orgs').doc(user.orgId).get().then(snap => snap.data());
+    // promises.push(storeSearchableMovie(movieData, organization.id, organization.name, process.env['ALGOLIA_API_KEY']));
+
+    const promise = db.collection('users').doc(movieData._meta.createdBy).get()
+      .then(snap => snap.data())
+      .then(user => db.collection('orgs').doc(user.orgId).get())
+      .then(snap => snap.data())
+      .then(organization => storeSearchableMovie(movieData, organization.id, organization.name, process.env['ALGOLIA_API_KEY']))
+    ;
+    promises.push(promise);
   });
   return Promise.all(promises);
 }
