@@ -30,7 +30,7 @@ import { NumberRange, DateRange, Terms } from '@blockframes/utils/common-interfa
 export interface CatalogSearch {
   productionYear: DateRange;
   genres: GenresSlug[];
-  status: MovieStatusLabel[];
+  productionStatus: MovieStatusLabel[];
   salesAgent: string[];
   languages: Partial<{ [language in LanguagesLabel]: MovieLanguageSpecification }>;
   certifications: CertificationsLabel[];
@@ -64,7 +64,7 @@ function createCatalogSearch(search: Partial<CatalogSearch> = {}): CatalogSearch
       to: null
     },
     genres: [],
-    status: [],
+    productionStatus: [],
     salesAgent: [],
     languages: {},
     certifications: [],
@@ -136,7 +136,7 @@ function createCatalogSearchControl(search: CatalogSearch) {
   return {
     productionYear: createTermsControl(search.productionYear),
     genres: new FormStaticArray(search.genres, 'GENRES', [Validators.required]),
-    status: new FormControl(search.status),
+    productionStatus: new FormControl(search.productionStatus),
     salesAgent: new FormControl(search.salesAgent),
     languages: new FormGroup(languageControl),
     certifications: new FormControl(search.certifications),
@@ -188,6 +188,10 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
     return this.get('originCountries');
   }
 
+  get productionStatus() {
+    return this.get('productionStatus');
+  }
+
   addLanguage(language: LanguagesSlug, value: Partial<MovieLanguageSpecification> = {}) {
     const movieLanguage = createMovieLanguageSpecification(value);
     this.get('languages').addControl(language, createLanguageControl(movieLanguage));
@@ -204,16 +208,16 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
         `Production status ${status} is not part of the defined status, here is the complete list currently available: ${MOVIE_STATUS_SLUG}`
       );
     } else {
-      this.get('status').setValue([...this.get('status').value, status]);
+      this.get('productionStatus').setValue([...this.get('productionStatus').value, status]);
     }
   }
 
   removeStatus(status: MovieStatusSlug) {
     if (MOVIE_STATUS_SLUG.includes(status)) {
-      const newControls = this.get('status').value.filter(
+      const newControls = this.get('productionStatus').value.filter(
         statusToRemove => statusToRemove !== status
       );
-      this.get('status').setValue(newControls);
+      this.get('productionStatus').setValue(newControls);
     } else {
       throw new Error(`The production status ${status} was not found!`);
     }

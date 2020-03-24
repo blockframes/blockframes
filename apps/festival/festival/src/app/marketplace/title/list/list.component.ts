@@ -125,6 +125,12 @@ export class ListComponent implements OnInit, OnDestroy {
   /* selected genres to filter*/
   public genresFilter$: Observable<string[]>;
 
+  /* selected origin country to filter */
+  public originCountryFilter$: Observable<string[]>;
+
+  /* selected status to filter */
+  public statusesFilter$: Observable<string[]>;
+
   /* selected seller orgs to filter */
   public selectedSellers$ = new BehaviorSubject<string[]>([]);
 
@@ -162,7 +168,17 @@ export class ListComponent implements OnInit, OnDestroy {
 
     this.genresFilter$ = this.filterForm.genres.valueChanges.pipe(
       startWith([]),
-      tap(a => console.log('genres :', a))
+      tap(a => console.log('genres :', a)) // TODO REMOVE LOG
+    );
+
+    this.originCountryFilter$ = this.filterForm.originCountries.valueChanges.pipe(
+      startWith([]),
+      tap(a => console.log('countries :', a)) // TODO REMOVE LOG
+    );
+
+    this.statusesFilter$ = this.filterForm.productionStatus.valueChanges.pipe(
+      startWith([]),
+      tap(a => console.log('status :', a)) // TODO REMOVE LOG
     );
 
     this.languagesFilter$ = this.languageControl.valueChanges.pipe(
@@ -170,7 +186,6 @@ export class ListComponent implements OnInit, OnDestroy {
       distinctUntilChanged(),
       debounceTime(300),
       map(value => this._languageFilter(value)),
-      // tap(l => console.log('languages :', l)) // TODO HERE UNDEFINED TWICE ! so this fuck the facetFilters$ !
     );
 
     // this.resultFilter$ = this.searchbarTextControl.valueChanges.pipe(
@@ -193,14 +208,18 @@ export class ListComponent implements OnInit, OnDestroy {
     /* Combining ui filters into algolia's facets */
     this.facetFilters$ = combineLatest([
       this.genresFilter$,
+      this.originCountryFilter$,
       this.languagesFilter$,
+      this.statusesFilter$,
       this.selectedSellers$
     ]).pipe(
       // startWith([]),
-      map(([genres, languages, sellers]) => {
+      map(([genres, originCountries, languages, statuses, sellers]) => {
         return [
           [...genres.map(genre => `movie.main.genres:${genre}`)], // same facet inside an array means OR for algolia
+          [...originCountries.map(country => `movie.main.originCountries:${country}`)],
           // ...languages.map(language => `originalLanguages:${language}`),
+          [...statuses.map(status => `movie.main.status:${status}`)],
           ...sellers.map(seller => `orgName:${seller}`),
         ];
       }),
@@ -377,7 +396,7 @@ export class ListComponent implements OnInit, OnDestroy {
     const productionStatusSlug = getCodeIfExists('MOVIE_STATUS', status);
     if (
       this.movieProductionStatuses.includes(status) &&
-      !this.filterForm.get('status').value.includes(productionStatusSlug)
+      !this.filterForm.productionStatus.value.includes(productionStatusSlug)
     ) {
       this.filterForm.addStatus(productionStatusSlug);
       this.analytics.event('addedMovieStatus', { status });
