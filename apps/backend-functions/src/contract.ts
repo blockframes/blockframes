@@ -5,7 +5,7 @@ import { getOrganizationsOfContract, getDocument } from './data/internals';
 import { triggerNotifications, createNotification } from './notification';
 import { centralOrgID } from './environments/environment';
 import { isEqual } from 'lodash';
-import { firestore } from 'firebase';
+import { firestore } from 'firebase-admin';
 
 async function getCurrentVersionId(tx: FirebaseFirestore.Transaction, contractId: string): Promise<string> {
   return (await _getVersionCount(contractId, tx)).toString(); // @TODO (#1887) change type to number
