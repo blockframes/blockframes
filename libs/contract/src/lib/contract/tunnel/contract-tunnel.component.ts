@@ -8,10 +8,10 @@ import { ContractForm } from '../form/contract.form';
 import { ContractQuery, ContractService, ContractType, createContract, createContractVersion } from '../+state';
 import { MatDialog } from '@angular/material/dialog';
 import { ContractVersionService } from '@blockframes/contract/version/+state';
-import { DistributionDealForm } from '@blockframes/movie/distribution-deals/form/distribution-deal.form';
+import { DistributionDealForm } from '@blockframes/distribution-deals/form/distribution-deal.form';
 import { FormEntity, FormList } from '@blockframes/utils';
 import { ContractTitleDetailForm } from '@blockframes/contract/version/form';
-import { DistributionDealService, DistributionDeal, createDistributionDeal } from '@blockframes/movie/distribution-deals/+state';
+import { DistributionDealService, DistributionDeal, createDistributionDeal } from '@blockframes/distribution-deals/+state';
 import { startWith, map, switchMap, shareReplay } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 

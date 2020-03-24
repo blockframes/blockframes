@@ -5,8 +5,8 @@ import {
   InvitationStore,
   Notification
 } from '@blockframes/notification';
-import { Organization } from '@blockframes/organization/+state/organization.model';
-import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
+import { Organization } from '@blockframes/organization/organization/+state/organization.model';
+import { OrganizationQuery } from '@blockframes/organization/organization/+state/organization.query';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { startWith, switchMap } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';

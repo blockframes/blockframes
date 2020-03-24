@@ -1,7 +1,7 @@
 // Components
 import { MovieCardModule } from "@blockframes/ui/movie-card/movie-card.module";
-import { MovieDisplayListModule } from '@blockframes/movie/movie/components/display-list/display-list.module';
-import { MovieFormGenresModule } from "@blockframes/movie/movie/form/main/genres/genres.module";
+import { MovieDisplayListModule } from '@blockframes/movie/components/display-list/display-list.module';
+import { MovieFormGenresModule } from "@blockframes/movie/form/main/genres/genres.module";
 
 // Pipes
 import { DisplayNameModule } from "@blockframes/utils/pipes/display-name.module";

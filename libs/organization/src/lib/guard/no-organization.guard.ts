@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { OrganizationService } from '../+state';
+import { OrganizationService } from '../organization/+state';
 import { AuthQuery } from '@blockframes/auth';
 import { Router } from '@angular/router';
 

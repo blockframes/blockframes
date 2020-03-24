@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
-import { OrganizationMember } from '@blockframes/organization/member/+state/member.model';
+import { OrganizationMember } from '@blockframes/user/+state/user.model';
 import { DaoOperation } from '../../+state';
 
 interface OperationMember extends OrganizationMember {

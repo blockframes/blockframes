@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { OrganizationAdminForm } from '../../forms/organization-admin.form';
 import { MovieService } from '@blockframes/movie';
 import { getValue } from '@blockframes/utils/helpers';
-import { MemberService } from '@blockframes/organization/member/+state/member.service';
+import { UserService } from '@blockframes/user/+state/user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
@@ -64,7 +64,7 @@ export class OrganizationComponent implements OnInit {
   ];
   constructor(
     private organizationService: OrganizationService,
-    private memberService: MemberService,
+    private userService: UserService,
     private movieService: MovieService,
     private route: ActivatedRoute,
     private cdRef: ChangeDetectorRef,
@@ -86,7 +86,7 @@ export class OrganizationComponent implements OnInit {
       }
     }));
 
-    const members = await this.memberService.getMembers(this.orgId);
+    const members = await this.userService.getMembers(this.orgId);
     this.members = members.map(m => ({
       ...m,
       edit: {

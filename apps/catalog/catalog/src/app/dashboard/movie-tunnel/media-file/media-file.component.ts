@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ImgRef } from "@blockframes/utils/image-uploader";
-import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
+import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { MovieTunnelComponent } from '../movie-tunnel.component';
 @Component({
   selector: 'catalog-movie-tunnel-media-file',

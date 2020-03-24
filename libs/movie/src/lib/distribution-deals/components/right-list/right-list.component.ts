@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input, ViewChild, OnInit } from '@angular/core';
-import { DistributionDeal, getDealTerritories } from '@blockframes/movie/distribution-deals/+state';
+import { DistributionDeal, getDealTerritories } from '@blockframes/distribution-deals/+state';
 
 import { MatSort } from '@angular/material/sort';
 import { MediasSlug } from '@blockframes/utils/static-model';

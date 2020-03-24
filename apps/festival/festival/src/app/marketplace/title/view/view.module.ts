@@ -8,7 +8,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ViewComponent } from './view.component';
 
 // Custom Modules
-import { MovieViewLayoutModule } from '@blockframes/movie/movie/layout/view/view.module';
+import { MovieViewLayoutModule } from '@blockframes/movie/layout/view/view.module';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 
 // Material

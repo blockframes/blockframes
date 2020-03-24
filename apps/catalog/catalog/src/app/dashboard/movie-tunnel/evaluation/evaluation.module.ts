@@ -4,8 +4,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
-import { MovieFormScoringModule } from '@blockframes/movie/movie/form/sales-info/scoring/scoring.module';
-import { MovieFormSalesInfoModule } from '@blockframes/movie/movie/form/sales-info/sales-info.module';
+import { MovieFormScoringModule } from '@blockframes/movie/form/sales-info/scoring/scoring.module';
+import { MovieFormSalesInfoModule } from '@blockframes/movie/form/sales-info/sales-info.module';
 import { EvaluationComponent } from './evaluation.component';
 
 

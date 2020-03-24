@@ -16,12 +16,12 @@ import {
 import { DaoQuery } from './dao.query';
 import { DaoStore } from './dao.store';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { MemberQuery } from '@blockframes/organization/member/+state/member.query';
+import { UserQuery } from '@blockframes/user/+state/user.query';
 import { DeploySteps, DaoOperation, DaoAction } from './dao.model';
 import { abi as ORGANIZATION_ABI } from '@blockframes/smart-contracts/Organization.json';
-import { OrganizationMember } from '@blockframes/organization/member/+state/member.model';
-import { PermissionsQuery } from '@blockframes/organization/permissions/+state';
-import { OrganizationQuery } from '@blockframes/organization/+state';
+import { OrganizationMember } from '@blockframes/user/+state/user.model';
+import { PermissionsQuery } from '@blockframes/permissions/+state';
+import { OrganizationQuery } from '@blockframes/organization/organization/+state';
 
 //--------------------------------------
 //        ETHEREUM ORGS TYPES
@@ -64,7 +64,7 @@ export class DaoService {
   constructor(
     private query: DaoQuery,
     private store: DaoStore,
-    private memberQuery: MemberQuery,
+    private userQuery: UserQuery,
     private orgQuery: OrganizationQuery,
     private db: AngularFirestore,
     private permissionsQuery: PermissionsQuery
@@ -277,7 +277,7 @@ export class DaoService {
 
     // re construct members list
     const promises: Promise<number>[] = [];
-    this.memberQuery.getAll()
+    this.userQuery.getAll()
       .filter(member => !this.permissionsQuery.isUserAdmin(member.uid))
       .forEach(member => {
         const ensDomain = emailToEnsDomain(member.email, baseEnsDomain);
@@ -379,7 +379,7 @@ export class DaoService {
 
     // re construct signer list
     const promises: Promise<number>[] = [];
-    this.memberQuery.getAll()
+    this.userQuery.getAll()
       .forEach(member => {
         const ensDomain = emailToEnsDomain(member.email, baseEnsDomain);
         const promise = precomputeEthAddress(ensDomain, this.provider, factoryContract)

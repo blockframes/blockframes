@@ -1,7 +1,7 @@
 import { FormControl } from '@angular/forms';
 import { FormEntity, ScheduledDateRaw } from '@blockframes/utils';
 import { PaymentSchedule } from '@blockframes/utils/common-interfaces';
-import { DistributionDealFloatingDurationForm } from '@blockframes/movie/distribution-deals/form/terms/terms.form';
+import { DistributionDealFloatingDurationForm } from '@blockframes/distribution-deals/form/terms/terms.form';
 
 function createContractVersionPaymentScheduleControls(paymentSchedule: Partial<PaymentSchedule>) {
     return {

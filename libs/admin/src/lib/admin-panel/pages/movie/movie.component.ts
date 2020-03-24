@@ -4,9 +4,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieService, Movie } from '@blockframes/movie';
 import { MovieAdminForm } from '../../forms/movie-admin.form';
 import { staticModels } from '@blockframes/utils/static-model';
-import { DistributionDealService } from '@blockframes/movie/distribution-deals';
+import { DistributionDealService } from '@blockframes/distribution-deals';
 import { getValue } from '@blockframes/utils/helpers';
-import { storeType, storeStatus } from '@blockframes/movie/movie/+state/movie.firestore';
+import { storeType, storeStatus } from '@blockframes/movie/+state/movie.firestore';
 
 @Component({
   selector: 'admin-movie',

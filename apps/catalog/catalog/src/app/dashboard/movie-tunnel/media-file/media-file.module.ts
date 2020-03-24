@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
-import { PromotionalLinksModule } from '@blockframes/movie/movie/form/promotional-elements/promotional-links/promotional-links.module';
+import { PromotionalLinksModule } from '@blockframes/movie/form/promotional-elements/promotional-links/promotional-links.module';
 import { UploadModule } from '@blockframes/ui/upload/upload.module';
 import { MediaFileComponent } from './media-file.component';
 // Material

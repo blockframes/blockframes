@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
+import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { MovieTunnelComponent } from '../movie-tunnel.component';
 
 @Component({
@@ -21,11 +21,11 @@ export class MediaImageComponent {
   get promotionalElements() {
     return this.form.get('promotionalElements')
   }
-  
+
   get banner() {
     return this.promotionalElements.get('banner');
   }
-  
+
   get poster() {
     return this.promotionalElements.get('poster');
   }

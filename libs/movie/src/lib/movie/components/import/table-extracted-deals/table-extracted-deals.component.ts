@@ -8,7 +8,7 @@ import { createMovie, MovieService } from '../../../+state';
 import { SelectionModel } from '@angular/cdk/collections';
 import { SpreadsheetImportError, DealsImportState } from '../view-extracted-elements/view-extracted-elements.component';
 import { ViewImportErrorsComponent } from '../view-import-errors/view-import-errors.component';
-import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state/distribution-deal.service';
+import { DistributionDealService } from '@blockframes/distribution-deals/+state/distribution-deal.service';
 import { cleanModel } from '@blockframes/utils/helpers';
 import { sortingDataAccessor } from '@blockframes/utils/table';
 
@@ -66,7 +66,7 @@ export class TableExtractedDealsComponent implements OnInit {
     } else {
       this.snackBar.open('Error while adding distribution deal', 'close', { duration: 3000 });
     }
-    
+
     return true;
   }
 
@@ -88,7 +88,7 @@ export class TableExtractedDealsComponent implements OnInit {
 
   /**
    * Adds a deal to database and prevents multi-insert by refreshing mat-table
-   * @param importState 
+   * @param importState
    */
   private async addDeal(importState: DealsImportState): Promise<boolean> {
     const data = this.rows.data;
@@ -105,7 +105,7 @@ export class TableExtractedDealsComponent implements OnInit {
         reason: 'Distribution deal already added',
         hint: 'Distribution deal already added'
       });
-  
+
       this.rows.data = data;
       return true;
     } catch (error) {

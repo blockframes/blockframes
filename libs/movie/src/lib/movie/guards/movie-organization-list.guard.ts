@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { CollectionGuard } from 'akita-ng-fire';
 import { MovieState, MovieService, MovieQuery, MovieStore } from '../+state';
 import { switchMap, tap } from 'rxjs/operators';
-import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
+import { OrganizationQuery } from '@blockframes/organization/organization/+state/organization.query';
 
 /** Sync all movie from the active organization */
 @Injectable({ providedIn: 'root' })

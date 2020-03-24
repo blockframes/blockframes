@@ -1,4 +1,4 @@
-import { storeType, workType } from '@blockframes/movie/movie/+state/movie.firestore';
+import { storeType, workType } from '@blockframes/movie/+state/movie.firestore';
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { default as staticModels } from '@blockframes/utils/static-model/staticModels';
 import { MovieMainForm } from '../main.form';
