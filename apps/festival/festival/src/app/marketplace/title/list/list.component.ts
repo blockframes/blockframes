@@ -78,7 +78,12 @@ export class ListComponent implements OnInit, OnDestroy {
   ]);
   public sortByControl: FormControl = new FormControl('Title');
 
-  public budgetList: NumberRange[] = BUDGET_LIST;
+  // UI
+  /* main search bar */
+  public searchbarTextControl: FormControl = new FormControl('');
+
+  /* select list of all available genres */
+  public availableGenres$: Observable<any>;
 
   /** main search bar */
   public searchbarTextControl: FormControl = new FormControl('');
@@ -232,7 +237,7 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   public goToMovieDetails(id: string) {
-    this.router.navigateByUrl(`c/o/marketplace/${id}`);
+    this.router.navigateByUrl(`c/o/marketplace/title/${id}`);
   }
 
     /** Query algolia every time the search query or the filters changes */
