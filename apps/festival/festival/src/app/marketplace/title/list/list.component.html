@@ -169,7 +169,7 @@
                 <ng-container *ngFor="let seller of selectedSellers$ | async; let i = index">
                   <mat-chip selectable removable>
                     {{ seller }}
-                    <mat-icon matChipRemove svgIcon="close" (click)="removeSeller(index)"></mat-icon>
+                    <mat-icon matChipRemove svgIcon="close" (click)="removeSeller(i)"></mat-icon>
                   </mat-chip>
                 </ng-container>
               </mat-chip-list>
