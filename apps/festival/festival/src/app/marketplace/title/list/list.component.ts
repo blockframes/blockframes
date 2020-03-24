@@ -99,22 +99,37 @@ export class ListComponent implements OnInit, OnDestroy {
     Validators.required
   ]);
   public sortByControl: FormControl = new FormControl('Title');
-  public searchbarTextControl: FormControl = new FormControl('');
-
-  // private filterBy$ = this.filterForm.valueChanges.pipe(startWith(this.filterForm.value));
-  // private sortBy$ = this.sortByControl.valueChanges.pipe(startWith(this.sortByControl.value));
-  private facetFilters$: Observable<string[]>;
 
   /* Arrays for showing the selected countries in the UI */
   public selectedMovieCountries: string[] = [];
-
   public budgetList: NumberRange[] = BUDGET_LIST;
-
-  // SELLER FILTER
-  public orgSearchResults$: Observable<any>;
-  public selectedSellers$ = new BehaviorSubject<string[]>([]);
-
   public matcher = new ControlErrorStateMatcher();
+
+  // private filterBy$ = this.filterForm.valueChanges.pipe(startWith(this.filterForm.value));
+  // private sortBy$ = this.sortByControl.valueChanges.pipe(startWith(this.sortByControl.value));
+
+  // TODO check for dead code above this line
+
+  // UI
+  /* main search bar */
+  public searchbarTextControl: FormControl = new FormControl('');
+
+  /* select list of all available genres */
+  public availableGenres$: Observable<any>;
+
+  /* seller org autocomplete search bar */
+  public orgSearchResults$: Observable<any>;
+
+  // ALGOLIA
+
+  /* Aggregation of all algolia filters */
+  private facetFilters$: Observable<string[]>;
+
+  /* selected genres to filter*/
+  public genresFilter$: Observable<any>;
+
+  /* selected seller orgs to filter */
+  public selectedSellers$ = new BehaviorSubject<string[]>([]);
 
   @ViewChild('autoCompleteInput', { read: MatAutocompleteTrigger })
   public autoComplete: MatAutocompleteTrigger;
@@ -147,6 +162,8 @@ export class ListComponent implements OnInit, OnDestroy {
     );
 
     // UI FILTERS
+
+    this.genresFilter$ = this.filterForm.genres.valueChanges.pipe();
 
     this.languagesFilter$ = this.languageControl.valueChanges.pipe(
       startWith(''),
@@ -223,10 +240,11 @@ export class ListComponent implements OnInit, OnDestroy {
     this.selectedSellers$.next(newSelectedSellers);
   }
 
-  public removeSeller(index: number) { // TODO INDEX IS UNDEFINED !!!!
-    console.log('will remove', index, 'to', this.selectedSellers$.getValue());
-    const newSelectedSellers = this.selectedSellers$.getValue().splice(index, 1);
-    console.log('removed seller !', newSelectedSellers);
+  public removeSeller(index: number) {
+    console.log('will remove', index, 'to', this.selectedSellers$.getValue()); // TODO REMOVE LOG
+    const newSelectedSellers = this.selectedSellers$.getValue();
+    newSelectedSellers.splice(index, 1);
+    console.log('removed seller !', newSelectedSellers); // TODO REMOVE LOG
     this.selectedSellers$.next(newSelectedSellers);
   }
 
@@ -235,7 +253,7 @@ export class ListComponent implements OnInit, OnDestroy {
   }
 
   public goToMovieDetails(id: string) {
-    this.router.navigateByUrl(`c/o/marketplace/${id}`);
+    this.router.navigateByUrl(`c/o/marketplace/title/${id}`);
   }
 
   public get getCurrentYear(): number {
