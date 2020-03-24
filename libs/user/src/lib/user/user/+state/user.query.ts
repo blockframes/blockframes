@@ -2,7 +2,7 @@ import { QueryEntity } from '@datorama/akita';
 import { Injectable } from '@angular/core';
 import { UserState, UserStore } from './user.store';
 import { Observable, combineLatest } from 'rxjs';
-import { PermissionsQuery } from '@blockframes/organization/permissions/+state/permissions.query';
+import { PermissionsQuery } from '@blockframes/permissions/+state/permissions.query';
 import { map } from 'rxjs/operators';
 import { OrganizationMember } from './user.model';
 
