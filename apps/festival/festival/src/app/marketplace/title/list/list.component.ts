@@ -247,6 +247,7 @@ export class ListComponent implements OnInit {
       switchMap(movieIds => this.movieQuery.selectAll({
         filterBy: movie => movieIds.includes(movie.id)
       })),
+      startWith(this.movieQuery.getAll({limitTo: 10})), // display the first 10 movies from the state (no useless queries) to prevent the user to see an empty page
       tap(result => console.log('firestore result :', result)),
     );
   }
