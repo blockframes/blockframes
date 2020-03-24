@@ -1,6 +1,6 @@
 import { FormControl } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
-import { Movie, MovieService } from '@blockframes/movie/movie/+state';
+import { Movie, MovieService } from '@blockframes/movie/+state';
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 

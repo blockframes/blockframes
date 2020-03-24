@@ -11,7 +11,7 @@ import { displayPaymentSchedule, displayTerms } from '../../+state/contract.util
 import { ContractQuery } from '../../+state';
 import { ContractVersionService } from '@blockframes/contract/version/+state';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state';
+import { DistributionDealService } from '@blockframes/distribution-deals/+state';
 
 @Component({
   selector: 'contract-tunnel-summary-mandate',
@@ -96,7 +96,7 @@ export class SummaryMandateComponent implements OnInit {
     await this.tunnel.save();
     const write = this.db.firestore.batch();
     this.service.update(`${lastIndex}`, { status: 'submitted' }, { params: { contractId }, write });
-    
+
     for (const movieId in this.dealForms.value) {
       const dealIds = this.dealForms.get(movieId).value.map(deal => deal.id);
       this.dealService.update(dealIds, { status: 'undernegotiation' }, { params: { movieId }, write });

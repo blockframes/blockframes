@@ -5,9 +5,9 @@ import { RouterModule } from '@angular/router';
 
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { CreditsComponent } from './credits.component';
-import { MovieFormProductionYearModule } from '@blockframes/movie/movie/form/main/production-year/production-year.module';
-import { MovieFormStakeholdersModule } from '@blockframes/movie/movie/form/main/stakeholders/stakeholders.module';
-import { MovieFormSalesCastModule } from '@blockframes/movie/movie/form/sales-cast/sales-cast.module';
+import { MovieFormProductionYearModule } from '@blockframes/movie/form/main/production-year/production-year.module';
+import { MovieFormStakeholdersModule } from '@blockframes/movie/form/main/stakeholders/stakeholders.module';
+import { MovieFormSalesCastModule } from '@blockframes/movie/form/sales-cast/sales-cast.module';
 
 // Material
 import { MatCardModule } from '@angular/material/card';

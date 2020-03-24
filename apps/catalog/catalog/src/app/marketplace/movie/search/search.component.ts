@@ -14,8 +14,8 @@ import {
   Inject
 } from '@angular/core';
 // Blockframes
-import { Movie } from '@blockframes/movie/movie/+state/movie.model';
-import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
+import { Movie } from '@blockframes/movie/+state/movie.model';
+import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import {
   LANGUAGES_LABEL,
@@ -41,14 +41,14 @@ import { Index } from 'algoliasearch';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
 import { NumberRange } from '@blockframes/utils/common-interfaces/range';
-import { BUDGET_LIST } from '@blockframes/movie/movie/form/budget/budget.form';
-import { filterMovie, filterMovieWithAvails } from '@blockframes/movie/distribution-deals/form/filter.util';
-import { CatalogSearchForm, AvailsSearchForm } from '@blockframes/movie/distribution-deals/form/search.form';
-import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state';
+import { BUDGET_LIST } from '@blockframes/movie/form/budget/budget.form';
+import { filterMovie, filterMovieWithAvails } from '@blockframes/distribution-deals/form/filter.util';
+import { CatalogSearchForm, AvailsSearchForm } from '@blockframes/distribution-deals/form/search.form';
+import { DistributionDealService } from '@blockframes/distribution-deals/+state';
 import { asyncFilter } from '@blockframes/utils/helpers';
 import { staticModels } from '@blockframes/utils/static-model';
 import { sortMovieBy } from '@blockframes/utils/akita-helper/sort-movie-by';
-import { StoreType } from '@blockframes/movie/movie/+state/movie.firestore';
+import { StoreType } from '@blockframes/movie/+state/movie.firestore';
 
 @Component({
   selector: 'catalog-movie-search',

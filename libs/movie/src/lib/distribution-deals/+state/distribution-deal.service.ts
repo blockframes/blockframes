@@ -14,7 +14,7 @@ import { ContractVersionService } from '@blockframes/contract/version/+state/con
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { ContractVersion } from '@blockframes/contract/version/+state/contract-version.model';
 import { DistributionDealQuery } from './distribution-deal.query';
-import { Movie } from '@blockframes/movie/movie/+state';
+import { Movie } from '@blockframes/movie/+state';
 import { AvailsSearch } from '../form/search.form';
 import { Model } from '@blockframes/utils/static-model/staticModels';
 import { getFilterMatchingDeals, getDealsInDateRange } from '../create/availabilities.util';

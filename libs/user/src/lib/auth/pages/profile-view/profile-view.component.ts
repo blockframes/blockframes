@@ -1,8 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
-import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
+import { OrganizationQuery } from '@blockframes/organization/organization/+state/organization.query';
 import { Observable } from 'rxjs';
-import { Organization } from '@blockframes/organization/+state/organization.model';
+import { Organization } from '@blockframes/organization/organization/+state/organization.model';
 import { TunnelService } from '@blockframes/ui/tunnel';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '@blockframes/auth/+state/auth.service';

@@ -1,8 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
-import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
+import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { Observable, Subscription } from 'rxjs';
-import { MovieAnalytics } from '@blockframes/movie/movie/+state/movie.firestore';
-import { MovieService } from '@blockframes/movie/movie/+state/movie.service';
+import { MovieAnalytics } from '@blockframes/movie/+state/movie.firestore';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 
 @Component({
   selector: 'catalog-home',

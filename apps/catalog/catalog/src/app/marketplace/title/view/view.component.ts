@@ -10,7 +10,7 @@ import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 import { Router } from '@angular/router';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
-import { workType } from '@blockframes/movie/movie/+state/movie.firestore';
+import { workType } from '@blockframes/movie/+state/movie.firestore';
 
 @Component({
   selector: 'catalog-movie-view',

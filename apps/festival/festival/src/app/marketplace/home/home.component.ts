@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Movie, MovieQuery, MovieMain, MovieService } from '@blockframes/movie/movie/+state';
+import { Movie, MovieQuery, MovieMain, MovieService } from '@blockframes/movie/+state';
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
 import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';

@@ -31,20 +31,20 @@ export class ToLabelPipe implements PipeTransform {
 
   private async manageImport(type: string) {
     // Was it already imported ?
-    if(!this.imports[type]) { 
+    if(!this.imports[type]) {
       switch (type) {
         // KFH compatible import
         case 'unitBox':
         case 'storeType':
         case 'workType':
         case 'storeStatus':
-          this.imports[type] = await import('@blockframes/movie/movie/+state/movie.firestore').then(e => e[type]);
+          this.imports[type] = await import('@blockframes/movie/+state/movie.firestore').then(e => e[type]);
           break;
         case 'contractStatus':
           this.imports[type] = await import('@blockframes/contract/contract/+state/contract.firestore').then(e => e[type]);
           break;
         case 'distributionDealStatus':
-          this.imports[type] = await import('@blockframes/movie/distribution-deals/+state/distribution-deal.firestore').then(e => e[type]);
+          this.imports[type] = await import('@blockframes/distribution-deals/+state/distribution-deal.firestore').then(e => e[type]);
           break;
         default:
           break;

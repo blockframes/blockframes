@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { EntityState, EntityStore, StoreConfig } from '@datorama/akita';
-import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state';
+import { DistributionDeal } from '@blockframes/distribution-deals/+state';
 import { Movie } from '@blockframes/movie';
 
 export interface TitleCart {

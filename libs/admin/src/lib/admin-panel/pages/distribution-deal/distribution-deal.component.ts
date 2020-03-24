@@ -1,8 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { DistributionDealService, DistributionDeal } from '@blockframes/movie/distribution-deals';
-import { distributionDealStatus } from '@blockframes/movie/distribution-deals/+state/distribution-deal.firestore';
+import { DistributionDealService, DistributionDeal } from '@blockframes/distribution-deals';
+import { distributionDealStatus } from '@blockframes/distribution-deals/+state/distribution-deal.firestore';
 import { DealAdminForm } from '../../forms/deal-admin.form';
 import { Contract } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractService } from '@blockframes/contract/contract/+state';

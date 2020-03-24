@@ -3,7 +3,7 @@ import {
   OrganizationService,
   OrganizationState,
   OrganizationQuery
-} from '../+state';
+} from '../organization/+state';
 import { Router } from '@angular/router';
 import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
 import { map, switchMap } from 'rxjs/operators';

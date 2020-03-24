@@ -1,5 +1,5 @@
 import { FormControl } from '@angular/forms';
-import { DistributionDealTermsForm } from '@blockframes/movie/distribution-deals/form/terms/terms.form';
+import { DistributionDealTermsForm } from '@blockframes/distribution-deals/form/terms/terms.form';
 import { createContractTitleDetail } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractTitleDetail } from '@blockframes/contract/contract/+state/contract.firestore';
 import { ContractVersion } from '@blockframes/contract/version/+state';

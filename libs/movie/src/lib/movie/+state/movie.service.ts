@@ -7,7 +7,7 @@ import { AuthQuery, AuthService } from '@blockframes/auth';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 import { cleanModel } from '@blockframes/utils/helpers';
 import { firestore } from 'firebase/app';
-import { PermissionsService } from '@blockframes/organization/permissions/+state/permissions.service';
+import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { Observable, combineLatest } from 'rxjs';
 import { MovieQuery } from './movie.query';

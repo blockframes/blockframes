@@ -1,5 +1,5 @@
-import { OrganizationService } from '@blockframes/organization/+state/organization.service';
-import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
+import { OrganizationService } from '@blockframes/organization/organization/+state/organization.service';
+import { OrganizationQuery } from '@blockframes/organization/organization/+state/organization.query';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { MovieService } from './../+state/movie.service';
 import { CanActivate, Router } from '@angular/router';

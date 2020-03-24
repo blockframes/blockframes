@@ -9,7 +9,7 @@ import {
   getMovieTotalViews
 } from '@blockframes/movie';
 import { Contract } from '@blockframes/contract/contract/+state/contract.model';
-import { StoreStatus, MovieAnalytics } from '@blockframes/movie/movie/+state/movie.firestore';
+import { StoreStatus, MovieAnalytics } from '@blockframes/movie/+state/movie.firestore';
 import { ContractQuery } from '@blockframes/contract/contract/+state/contract.query';
 import { getContractLastVersion } from '@blockframes/contract/version/+state';
 import { startWith, switchMap, map } from 'rxjs/operators';
@@ -91,7 +91,7 @@ export class ListComponent implements OnInit, OnDestroy {
       )
     );
   }
-  
+
   ngOnDestroy() {
     this.sub.unsubscribe();
   }
