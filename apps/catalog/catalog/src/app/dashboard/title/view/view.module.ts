@@ -13,8 +13,8 @@ import { MatSelectModule } from '@angular/material/select';
 
 // Guards
 import { MovieContractListGuard } from '@blockframes/contract/contract/guards/movie-contract-list.guard';
-import { MovieOrganizationListGuard } from '@blockframes/movie/movie/guards/movie-organization-list.guard';
-import { ContractsDealListGuard } from '@blockframes/movie/distribution-deals/guards/contracts-deal-list.guard';
+import { MovieOrganizationListGuard } from '@blockframes/movie/guards/movie-organization-list.guard';
+import { ContractsDealListGuard } from '@blockframes/distribution-deals/guards/contracts-deal-list.guard';
 import { OrganizationContractListGuard } from '@blockframes/contract/contract/guards/organization-contract-list.guard';
 
 const routes = [{

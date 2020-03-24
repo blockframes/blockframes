@@ -1,9 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { AvailsSearchForm } from '@blockframes/movie/distribution-deals/form/search.form';
+import { AvailsSearchForm } from '@blockframes/distribution-deals/form/search.form';
 import { MovieQuery, Movie } from '@blockframes/movie/movie/+state';
 import { EnhancedISO3166Territory } from '@blockframes/utils/static-model/territories-ISO-3166';
 import { getNotLicensedTerritories, getAvailableTerritories, getRightsSoldTerritories } from './territories-filter';
-import { DistributionDealService, DistributionDeal, createDistributionDeal } from '@blockframes/movie/distribution-deals/+state';
+import { DistributionDealService, DistributionDeal, createDistributionDeal } from '@blockframes/distribution-deals/+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MarketplaceStore, MarketplaceQuery } from '../../+state';
 import { getSlugByIsoA3, getIsoA3bySlug, Model } from '@blockframes/utils/static-model/staticModels';

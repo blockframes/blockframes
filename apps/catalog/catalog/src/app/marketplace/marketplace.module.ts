@@ -7,8 +7,8 @@ import { LayoutComponent } from './layout/layout.component';
 import { LayoutModule } from './layout/layout.module';
 import { TunnelGuard } from '@blockframes/ui/tunnel';
 import { ActiveContractGuard, OrganizationContractListGuard } from '@blockframes/contract';
-import { ContractsDealListGuard } from '@blockframes/movie/distribution-deals/guards/contracts-deal-list.guard';
-import { MovieListContractListGuard } from '@blockframes/movie/movie/guards/movie-contract.guard';
+import { ContractsDealListGuard } from '@blockframes/distribution-deals/guards/contracts-deal-list.guard';
+import { MovieListContractListGuard } from '@blockframes/movie/guards/movie-contract.guard';
 
 const routes: Routes = [{
   path: '',
@@ -90,7 +90,7 @@ const routes: Routes = [{
         {
           path: 'create',
           loadChildren: () =>
-            import('@blockframes/movie/distribution-deals/create/create.module').then(
+            import('@blockframes/distribution-deals/create/create.module').then(
               m => m.DistributionDealCreateModule
             )
         }

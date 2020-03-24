@@ -8,8 +8,8 @@ import { ActiveContractGuard } from '@blockframes/contract/contract/guards/activ
 import { OrganizationContractListGuard } from '@blockframes/contract/contract/guards/organization-contract-list.guard';
 import { MovieActiveGuard, MovieOrganizationListGuard, MovieTunnelGuard } from '@blockframes/movie';
 import { TunnelGuard } from '@blockframes/ui/tunnel';
-import { ContractsDealListGuard } from '@blockframes/movie/distribution-deals/guards/contracts-deal-list.guard';
-import { MovieListContractListGuard } from '@blockframes/movie/movie/guards/movie-contract.guard';
+import { ContractsDealListGuard } from '@blockframes/distribution-deals/guards/contracts-deal-list.guard';
+import { MovieListContractListGuard } from '@blockframes/movie/guards/movie-contract.guard';
 
 const routes: Routes = [
   {

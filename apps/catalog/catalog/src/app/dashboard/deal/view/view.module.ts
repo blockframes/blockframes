@@ -9,12 +9,12 @@ import { ViewComponent } from './view.component';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
-import { RightListModule } from '@blockframes/movie/distribution-deals/components/right-list/right-list.module';
+import { RightListModule } from '@blockframes/distribution-deals/components/right-list/right-list.module';
 import { VersionTableModule } from '@blockframes/contract/version/components';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 
 // Guard
-import { MovieContractGuard } from '@blockframes/movie/movie/guards/movie-contract.guard';
+import { MovieContractGuard } from '@blockframes/movie/guards/movie-contract.guard';
 import { CatalogContractGuard } from '@blockframes/apps/catalog/guards/catalog-contract.guard';
 
 // Material

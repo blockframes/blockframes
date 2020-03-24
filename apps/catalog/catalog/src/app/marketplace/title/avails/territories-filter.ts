@@ -1,7 +1,7 @@
-import { DistributionDeal, getDealTerritories } from '@blockframes/movie/distribution-deals/+state';
+import { DistributionDeal, getDealTerritories } from '@blockframes/distribution-deals/+state';
 import { TerritoriesSlug, staticModels } from '@blockframes/utils/static-model';
-import { AvailsSearch } from '@blockframes/movie/distribution-deals/form/search.form';
-import { getExclusiveDeals, getDealsInDateRange, getDealsWithMedias } from '@blockframes/movie/distribution-deals/create/availabilities.util';
+import { AvailsSearch } from '@blockframes/distribution-deals/form/search.form';
+import { getExclusiveDeals, getDealsInDateRange, getDealsWithMedias } from '@blockframes/distribution-deals/create/availabilities.util';
 import { Model } from '@blockframes/utils/static-model/staticModels';
 import { inDateRange } from '@blockframes/utils/common-interfaces/terms';
 

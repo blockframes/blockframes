@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { MovieService } from '@blockframes/movie';
 import { getValue } from '@blockframes/utils/helpers';
-import { DistributionDealService } from '@blockframes/movie/distribution-deals';
+import { DistributionDealService } from '@blockframes/distribution-deals';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 
 @Component({

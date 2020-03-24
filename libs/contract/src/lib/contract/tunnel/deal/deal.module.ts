@@ -1,12 +1,12 @@
 import { DealComponent } from './deal.component';
 
 // Blockframes
-import { DistributionDealBroadcastModule } from '@blockframes/movie/distribution-deals/form/broadcast/broadcast.module';
-import { DistributionDealHoldbacksModule } from '@blockframes/movie/distribution-deals/form/holdbacks/holdbacks.module';
-import { DistributionDealLanguagesModule } from '@blockframes/movie/distribution-deals/form/languages/languages.module';
-import { DistributionDealTermsModule } from '@blockframes/movie/distribution-deals/form/terms/terms.module';
-import { DistributionDealRightsModule } from '@blockframes/movie/distribution-deals/form/rights/rights.module';
-import { DistributionDealTerritoryModule } from '@blockframes/movie/distribution-deals/form/territory/territory.module';
+import { DistributionDealBroadcastModule } from '@blockframes/distribution-deals/form/broadcast/broadcast.module';
+import { DistributionDealHoldbacksModule } from '@blockframes/distribution-deals/form/holdbacks/holdbacks.module';
+import { DistributionDealLanguagesModule } from '@blockframes/distribution-deals/form/languages/languages.module';
+import { DistributionDealTermsModule } from '@blockframes/distribution-deals/form/terms/terms.module';
+import { DistributionDealRightsModule } from '@blockframes/distribution-deals/form/rights/rights.module';
+import { DistributionDealTerritoryModule } from '@blockframes/distribution-deals/form/territory/territory.module';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { MovieBannerModule } from '@blockframes/movie/movie/components/banner';
 
