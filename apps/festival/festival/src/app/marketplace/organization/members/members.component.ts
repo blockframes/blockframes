@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
-import { UserService } from '@blockframes/user/user/+state/user.service';
-import { UserQuery } from '@blockframes/user/user/+state/user.query';
+import { UserService } from '@blockframes/user/+state/user.service';
+import { UserQuery } from '@blockframes/user/+state/user.query';
 import { ViewComponent } from '../view/view.component';
 import { Subscription } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';

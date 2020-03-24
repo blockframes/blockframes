@@ -3,8 +3,8 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { FormGroup } from '@angular/forms';
 import { tap, switchMap, startWith, filter, map } from 'rxjs/operators';
 import { createMemberFormList } from '@blockframes/organization/organization/forms/member.form'
-import { OrganizationMember } from '@blockframes/user/user/+state/user.model';
-import { UserQuery } from '@blockframes/user/user/+state/user.query';
+import { OrganizationMember } from '@blockframes/user/+state/user.model';
+import { UserQuery } from '@blockframes/user/+state/user.query';
 import { DaoQuery, DaoOperation, DeploySteps } from '../../+state';
 import { createOperationFormList } from '../../forms/operations.form';
 

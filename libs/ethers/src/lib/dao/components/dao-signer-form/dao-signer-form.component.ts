@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
 import { ActionTx, TxFeedback } from '@blockframes/ethers/types';
 import { CreateTx } from '@blockframes/ethers/create-tx';
-import { OrganizationMember } from '@blockframes/user/user/+state/user.model';
+import { OrganizationMember } from '@blockframes/user/+state/user.model';
 import { PermissionsQuery } from '@blockframes/permissions/+state';
 import { DaoService, DaoQuery, DaoOperation } from '../../+state';
 

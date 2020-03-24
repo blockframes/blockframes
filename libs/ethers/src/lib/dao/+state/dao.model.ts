@@ -1,4 +1,4 @@
-import { OrganizationMember } from "@blockframes/user/user/+state/user.model";
+import { OrganizationMember } from "@blockframes/user/+state/user.model";
 
 
 export interface DaoOperation {
