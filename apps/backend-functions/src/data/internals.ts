@@ -28,7 +28,6 @@ export function getDocument<T>(path: string): Promise<T> {
  * @returns the organizations that are in the contract
  */
 export async function getOrganizationsOfContract(contract: ContractDocument): Promise<OrganizationDocument[]> {
-  // @todo (#1887) partyIds contains userIds not orgIds.
   const promises = contract.partyIds.map(orgId => getDocument<OrganizationDocument>(`orgs/${orgId}`));
   return Promise.all(promises);
 }

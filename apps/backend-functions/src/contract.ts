@@ -1,4 +1,4 @@
-import { functions, db } from './internals/firebase';
+import { functions, db, DocumentReference } from './internals/firebase';
 import { ContractDocument, PublicContractDocument, OrganizationDocument, PublicOrganization } from './data/types';
 import { ValidContractStatuses, ContractVersionDocument } from '@blockframes/contract/contract/+state/contract.firestore';
 import { getOrganizationsOfContract, getDocument } from './data/internals';
@@ -115,6 +115,37 @@ async function checkAndTriggerNotifications(current: ContractDocument) {
   }
 }
 
+/**
+ * This method is in charge of updating contract document on DB.
+ * It updates some of document attributes.
+ * @param tx 
+ * @param ref 
+ * @param current 
+ */
+function updateContract(tx: FirebaseFirestore.Transaction, ref: DocumentReference, current: ContractDocument) {
+
+  // We create an array of title ids for querying purposes
+  current.titleIds = [];
+  if(!!current.lastVersion.titles) {
+    current.titleIds = Object.keys(current.lastVersion.titles);
+  }
+  
+  // We create an array of party ids for querying purposes
+  current.partyIds = [];
+  if(!!current.parties){
+    current.parties.forEach(p => {
+      if (p.party.orgId) { // Only if orgId is defined on party
+        current.partyIds.push(p.party.orgId);
+      } 
+    })
+  }
+
+  tx.set(ref, { 
+    lastVersion: current.lastVersion,
+    titleIds: current.titleIds,
+    partyIds: current.partyIds,
+  }, { merge: true });
+}
 
 /**
  * This trigger is in charge of keeping contract and contractVersion document always
@@ -187,7 +218,7 @@ export async function onContractWrite(
         // We update _meta document for backward compatibility
         tx.set(db.doc(`contracts/${current.id}/versions/_meta`), { count: parseInt(versionToHistorize.id, 10) }, { merge: true });
         // Update contract
-        tx.set(change.after.ref, { lastVersion: current.lastVersion }, { merge: true });
+        updateContract(tx, change.after.ref, current);
       } else {
         // To prevent the case where the front tries to push version Id or creationDate (which are only handled by this trigger).
         current.lastVersion.id = await getCurrentVersionId(tx, current.id);
@@ -195,7 +226,7 @@ export async function onContractWrite(
         // A new version have been saved, we check if public contract need to be updated
         // @TODO (#1887) remove next line once code migration is OK
         await updatePublicContract(tx, current);
-        tx.set(change.after.ref, { lastVersion: current.lastVersion }, { merge: true });
+        updateContract(tx, change.after.ref, current);
       }
       return current;
     });

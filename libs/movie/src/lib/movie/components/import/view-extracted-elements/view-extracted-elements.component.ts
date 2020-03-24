@@ -1844,9 +1844,6 @@ export class ViewExtractedElementsComponent implements OnInit {
               }
               licensor.party.role = getCodeIfExists('LEGAL_ROLES', 'licensor');
               contract.doc.parties.push(licensor);
-              if (licensor.party.orgId) {
-                contract.doc.partyIds.push(licensor.party.orgId);
-              }
             });
           }
 
@@ -1859,10 +1856,6 @@ export class ViewExtractedElementsComponent implements OnInit {
               licensee.party.orgId = licenseeParts[1].trim();
             }
             licensee.party.role = getCodeIfExists('LEGAL_ROLES', 'licensee');
-
-            if (licensee.party.orgId) {
-              contract.doc.partyIds.push(licensee.party.orgId);
-            }
 
             // SHOW NAME
             if (spreadSheetRow[SpreadSheetContract.displayLicenseeName]) {
@@ -2061,9 +2054,6 @@ export class ViewExtractedElementsComponent implements OnInit {
             });
           } else {
             contract.last.titles[titleDetails.titleId] = titleDetails;
-            if (contract.doc.titleIds.indexOf(titleDetails.titleId) === -1) {
-              contract.doc.titleIds.push(titleDetails.titleId);
-            }
           }
         }
 

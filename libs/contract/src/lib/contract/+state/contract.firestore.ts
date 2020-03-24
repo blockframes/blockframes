@@ -111,7 +111,7 @@ interface ContractVersionRaw<D> {
 interface ContractRaw<D> {
   id: string,
   /**
-   * @dev to facilitate firebase queries:
+   * @dev To facilitate firebase queries:
    * Without ContratType :
    *   if we wanted to fetch "Archipel" contracts where partyIds array-contains 'orgId Archipel'
    *   and where the corresponding party role is "licensor", we could not do it in a single Firebase query because
@@ -122,19 +122,17 @@ interface ContractRaw<D> {
   type: ContractType,
   parentContractIds?: string[],
   childContractIds?: string[],
-  /** @dev an informative signature date, given that the actual signatures are in parties */
+  /** @dev An informative signature date, given that the actual signatures are in parties */
   signDate?: D,
   parties: ContractPartyDetailRaw<D>[],
   /** 
-   * @dev simply contains id of titles existing in lastVersion.
-   * For quering purpose
-   * @todo (#1887) titleIds is handled by backend trigger.
+   * @dev Simply contains id of titles existing in lastVersion for querying purposes.
+   * No need to edit it in front code, this will be overrided by backend functions.
   */
   titleIds: string[],
   /**
-   * @dev simply contains id of org/parties existing in lastVersion.
-   * For quering purpose
-   * @todo (#1887) partyIds is handled by backend trigger.
+   * @dev simply contains id of org/parties existing in "parties"  for querying purposes.
+   * No need to edit it in front code, this will be overrided by backend functions.
    */
   partyIds: string[],
   documents: ContractLegalDocuments,
