@@ -7,11 +7,11 @@ import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { BudgetComponent } from './budget.component';
 
 // Forms
-import { MovieFormEstimatedBudgetModule } from '@blockframes/movie/movie/form/budget/estimated-budget/estimated-budget.module';
-import { MovieFormBoxOfficeModule } from '@blockframes/movie/movie/form/budget/box-office/box-office.module';
-import { MovieFormCertificationsModule } from '@blockframes/movie/movie/form/sales-info/certifications/certifications.module';
-import { MovieFormRatingsModule } from '@blockframes/movie/movie/form/sales-info/ratings/ratings.module';
-import { MovieFormReviewModule } from '@blockframes/movie/movie/form/review/review.module';
+import { MovieFormEstimatedBudgetModule } from '@blockframes/movie/form/budget/estimated-budget/estimated-budget.module';
+import { MovieFormBoxOfficeModule } from '@blockframes/movie/form/budget/box-office/box-office.module';
+import { MovieFormCertificationsModule } from '@blockframes/movie/form/sales-info/certifications/certifications.module';
+import { MovieFormRatingsModule } from '@blockframes/movie/form/sales-info/ratings/ratings.module';
+import { MovieFormReviewModule } from '@blockframes/movie/form/review/review.module';
 
 // Material
 import { MatCardModule } from '@angular/material/card';

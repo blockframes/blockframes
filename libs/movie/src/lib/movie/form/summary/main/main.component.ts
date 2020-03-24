@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit } from '@angular/core';
-import { MovieMainForm, DirectorForm } from '@blockframes/movie/movie/form/main/main.form';
+import { MovieMainForm, DirectorForm } from '@blockframes/movie/form/main/main.form';
 
 @Component({
   selector: '[main] movie-summary-main',

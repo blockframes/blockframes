@@ -33,7 +33,7 @@ const routes: Routes = [
       },
       {
         path: 'import', // Import bulk of movies
-        loadChildren: () => import('@blockframes/movie/movie/components/import/import-movie.module')
+        loadChildren: () => import('@blockframes/movie/components/import/import-movie.module')
           .then(m => m.ImportMovieModule)
       },
       {

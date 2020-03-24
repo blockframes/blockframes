@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { CollectionGuard, CollectionGuardConfig, awaitSyncQuery, Query } from 'akita-ng-fire';
 import { ContractService, ContractState, ContractStore, ContractWithTimeStamp } from '../+state';
 import { tap, switchMap } from 'rxjs/operators';
-import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
+import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 
 /** Get all the contracts where the active movie appears. */
 // todo(#1887) remove versions in query

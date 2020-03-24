@@ -8,7 +8,7 @@ import { DistributionDealTermsModule } from '@blockframes/distribution-deals/for
 import { DistributionDealRightsModule } from '@blockframes/distribution-deals/form/rights/rights.module';
 import { DistributionDealTerritoryModule } from '@blockframes/distribution-deals/form/territory/territory.module';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
-import { MovieBannerModule } from '@blockframes/movie/movie/components/banner';
+import { MovieBannerModule } from '@blockframes/movie/components/banner';
 
 
 // Angular

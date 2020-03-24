@@ -11,8 +11,8 @@ import {
 } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 // Blockframes
-import { Movie } from '@blockframes/movie/movie/+state/movie.model';
-import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
+import { Movie } from '@blockframes/movie/+state/movie.model';
+import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import {
   LANGUAGES_LABEL,
@@ -31,12 +31,12 @@ import { startWith, map, debounceTime, switchMap, tap, distinctUntilChanged, plu
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
 import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
 import { NumberRange } from '@blockframes/utils/common-interfaces/range';
-import { BUDGET_LIST } from '@blockframes/movie/movie/form/budget/budget.form';
+import { BUDGET_LIST } from '@blockframes/movie/form/budget/budget.form';
 import { filterMovie } from '@blockframes/distribution-deals/form/filter.util';
 import { CatalogSearchForm } from '@blockframes/distribution-deals/form/search.form';
 import { staticModels } from '@blockframes/utils/static-model';
 import { sortMovieBy } from '@blockframes/utils/akita-helper/sort-movie-by';
-import { StoreType } from '@blockframes/movie/movie/+state/movie.firestore';
+import { StoreType } from '@blockframes/movie/+state/movie.firestore';
 import { MovieService } from '@blockframes/movie';
 
 @Component({
