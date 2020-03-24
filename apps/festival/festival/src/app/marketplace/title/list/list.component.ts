@@ -22,11 +22,12 @@ import {
   MOVIE_STATUS_LABEL,
 } from '@blockframes/utils/static-model/types';
 import { getCodeIfExists } from '@blockframes/utils/static-model/staticModels';
-import { MovieAlgoliaResult } from '@blockframes/utils/algolia';
+import { ControlErrorStateMatcher } from '@blockframes/utils/form/validators/validators';
+import { MovieAlgoliaResult, OrganizationsIndex, OrganizationAlgoliaResult } from '@blockframes/utils/algolia';
 import { MoviesIndex } from '@blockframes/utils/algolia';
 // RxJs
-import { Observable, combineLatest, Subscription } from 'rxjs';
-import { startWith, map, debounceTime, switchMap, tap, distinctUntilChanged, pluck } from 'rxjs/operators';
+import { Observable, combineLatest, BehaviorSubject } from 'rxjs';
+import { startWith, map, debounceTime, switchMap, tap, distinctUntilChanged, pluck, filter } from 'rxjs/operators';
 // Others
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
 import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
@@ -96,6 +97,7 @@ export class ListComponent implements OnInit, OnDestroy {
     private snackbar: MatSnackBar,
     private movieQuery: MovieQuery,
     @Inject(MoviesIndex) private movieIndex: Index,
+    @Inject(OrganizationsIndex) private orgsIndex: Index,
     private analytics: FireAnalytics
   ) { }
 
@@ -180,6 +182,7 @@ export class ListComponent implements OnInit, OnDestroy {
       debounceTime(200),
       distinctUntilChanged(),
     );
+  }
 
     /** Combining ui filters into algolia's facets parameter */
     const facetFilters$ = combineLatest([
@@ -288,9 +291,9 @@ export class ListComponent implements OnInit, OnDestroy {
    * @param value string which got typed in into an input field
    */
   private _languageFilter(value: string): string[] {
-    if (value) {
+    // if (value) {
       return LANGUAGES_LABEL.filter(language => language.toLowerCase().includes(value.toLowerCase()));
-    }
+    // }
   }
 
   public addLanguage(language: LanguagesLabel) {
