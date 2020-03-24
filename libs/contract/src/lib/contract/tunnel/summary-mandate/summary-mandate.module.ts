@@ -6,7 +6,7 @@ import { SummaryMandateComponent } from './summary-mandate.component';
 
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { MovieBannerModule } from '@blockframes/movie/movie/components/banner';
-import { RightListModule } from '@blockframes/movie/distribution-deals/components/right-list/right-list.module';
+import { RightListModule } from '@blockframes/distribution-deals/components/right-list/right-list.module';
 import { MissingControlModule } from '@blockframes/ui/missing-control/missing-control.module';
 
 // Material

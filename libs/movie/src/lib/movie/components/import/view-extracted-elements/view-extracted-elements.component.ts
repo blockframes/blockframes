@@ -27,7 +27,7 @@ import { formatCredits } from '@blockframes/utils/spreadsheet/format';
 import { ImageUploader, cleanModel, getKeyIfExists } from '@blockframes/utils';
 import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
 import { SSF } from 'xlsx';
-import { 
+import {
   PremiereType,
   storeType,
   workType,
@@ -36,10 +36,10 @@ import {
   movieLanguageTypes,
   MovieLanguageTypesValue,
   UnitBoxValue,
-  premiereType 
+  premiereType
 } from '@blockframes/movie/movie/+state/movie.firestore';
 import { createStakeholder } from '@blockframes/utils/common-interfaces/identity';
-import { DistributionDeal, createDistributionDeal, createHoldback } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
+import { DistributionDeal, createDistributionDeal, createHoldback } from '@blockframes/distribution-deals/+state/distribution-deal.model';
 import {
   createContractPartyDetail,
   createContractTitleDetail,
@@ -48,7 +48,7 @@ import {
   ContractWithLastVersion
 } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractTitleDetail, contractType, contractStatus } from '@blockframes/contract/contract/+state/contract.firestore';
-import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state/distribution-deal.service';
+import { DistributionDealService } from '@blockframes/distribution-deals/+state/distribution-deal.service';
 import { createExpense, createPrice } from '@blockframes/utils/common-interfaces/price';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { createPaymentSchedule } from '@blockframes/utils/common-interfaces/schedule';
@@ -2072,7 +2072,7 @@ export class ViewExtractedElementsComponent implements OnInit {
         // VALIDATION
         ///////////////
 
-        // Global contract price 
+        // Global contract price
         const contractPrice = createPrice();
         importErrors.contract.doc.titleIds.forEach(titleId => {
           const price = importErrors.contract.last.titles[titleId].price;

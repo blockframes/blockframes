@@ -7,7 +7,7 @@ import { FormEntity } from '@blockframes/utils';
 import { ContractVersionPriceControl } from '@blockframes/contract/version/form';
 import { MovieCurrenciesSlug } from '@blockframes/utils/static-model';
 import { ContractVersionService } from '@blockframes/contract/version/+state';
-import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state';
+import { DistributionDealService } from '@blockframes/distribution-deals/+state';
 import { ContractTunnelComponent, DealControls } from '../contract-tunnel.component';
 import { ContractQuery } from '../../+state';
 import { displayPaymentSchedule, displayTerms } from '../../+state/contract.utils';

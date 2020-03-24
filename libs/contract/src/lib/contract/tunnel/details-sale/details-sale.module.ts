@@ -5,7 +5,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 // Page
-import { DistributionDealTermsModule } from '@blockframes/movie/distribution-deals/form/terms/terms.module';
+import { DistributionDealTermsModule } from '@blockframes/distribution-deals/form/terms/terms.module';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { ContractFormPartyModule } from '../../form/party/party.module';
 import { ContractVersionPaymentScheduleModule } from '@blockframes/contract/version/form/payment-schedule/payment-schedule.module';

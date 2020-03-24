@@ -1,4 +1,4 @@
-import { DistributionDealForm } from '@blockframes/movie/distribution-deals/form/distribution-deal.form';
+import { DistributionDealForm } from '@blockframes/distribution-deals/form/distribution-deal.form';
 import { map } from 'rxjs/operators';
 import { Movie } from '@blockframes/movie/movie/+state';
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';

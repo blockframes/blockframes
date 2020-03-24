@@ -1,7 +1,7 @@
 import { tap, distinctUntilChanged, debounceTime } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { FormControl } from '@angular/forms';
-import { DistributionDealForm } from '@blockframes/movie/distribution-deals/form/distribution-deal.form';
+import { DistributionDealForm } from '@blockframes/distribution-deals/form/distribution-deal.form';
 import { Component, OnInit, ChangeDetectionStrategy, Input, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { DistributionDealTermsForm } from '../terms/terms.form';
 

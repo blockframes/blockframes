@@ -22,7 +22,7 @@ import { MovieLanguageSpecification, StoreType, storeType } from '@blockframes/m
 import { createMovieLanguageSpecification } from '@blockframes/movie/movie/+state/movie.model';
 import { FormStaticArray, FormList, FormStaticValue } from '@blockframes/utils/form';
 import { NumberRange, DateRange } from '@blockframes/utils/common-interfaces';
-import { DistributionDealTermsForm } from '@blockframes/movie/distribution-deals/form/terms/terms.form'
+import { DistributionDealTermsForm } from '@blockframes/distribution-deals/form/terms/terms.form'
 
 /////////////////////////
 // CatalogGenresFilter //

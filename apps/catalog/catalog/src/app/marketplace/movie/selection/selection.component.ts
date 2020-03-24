@@ -12,7 +12,7 @@ import { ContractVersion } from '@blockframes/contract/version/+state';
 import { createParty } from '@blockframes/utils/common-interfaces';
 import { Observable } from 'rxjs';
 import { OrganizationQuery } from '@blockframes/organization';
-import { DistributionDealService } from '@blockframes/movie/distribution-deals';
+import { DistributionDealService } from '@blockframes/distribution-deals';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Intercom } from 'ng-intercom';
 
