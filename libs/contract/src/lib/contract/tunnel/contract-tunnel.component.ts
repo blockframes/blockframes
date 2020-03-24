@@ -127,7 +127,7 @@ export class ContractTunnelComponent implements OnInit {
       .get('versions')
       .last()
       .get('titles')
-      .setControl(movieId, new ContractTitleDetailForm(mandate ? { price: { commissionBase: 'grossreceipts', amount: 0 } } : {}));
+      .setControl(movieId, new ContractTitleDetailForm(mandate ? { price: { amount: 0 } } : {}));
     this.dealForms.setControl(movieId, FormList.factory([], deal => new DistributionDealForm(deal)));
   }
 

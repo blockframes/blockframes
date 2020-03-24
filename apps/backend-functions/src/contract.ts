@@ -116,34 +116,69 @@ async function checkAndTriggerNotifications(current: ContractDocument) {
 }
 
 /**
+ * This method is in charge of updating contract version document on DB.
+ * It updates some of document attributes.
+ * @param tx 
+ * @param current 
+ */
+function updateVersion(tx: FirebaseFirestore.Transaction, current: ContractDocument) {
+  // When a contract of type "mandate" is created/updated
+  // tiltleDetails.price.commissionBase must be set to "grossreceipt".
+  if (current.type === 'mandate') {
+    Object.keys(current.lastVersion.titles).forEach(titleId => {
+      current.lastVersion.titles[titleId].price.commissionBase = 'grossreceipts';
+    });
+  }
+
+  // We historize current version 
+  tx.set(db.doc(`contracts/${current.id}/versions/${current.lastVersion.id}`), current.lastVersion);
+
+  // We update _meta document for backward compatibility
+  // @TODO (#1887) remove next line once code migration is OK
+  tx.set(db.doc(`contracts/${current.id}/versions/_meta`), { count: parseInt(current.lastVersion.id, 10) }, { merge: true });
+}
+
+/**
  * This method is in charge of updating contract document on DB.
  * It updates some of document attributes.
  * @param tx 
  * @param ref 
  * @param current 
  */
-function updateContract(tx: FirebaseFirestore.Transaction, ref: DocumentReference, current: ContractDocument) {
+function updateContract(tx: FirebaseFirestore.Transaction, ref: DocumentReference, current: ContractDocument, newVersion: boolean = false) {
 
   // We create an array of title ids for querying purposes
   current.titleIds = [];
-  if(!!current.lastVersion.titles) {
+  if (!!current.lastVersion.titles) {
     current.titleIds = Object.keys(current.lastVersion.titles);
   }
-  
+
   // We create an array of party ids for querying purposes
   current.partyIds = [];
-  if(!!current.parties){
+  if (!!current.parties) {
     current.parties.forEach(p => {
       if (p.party.orgId) { // Only if orgId is defined on party
         current.partyIds.push(p.party.orgId);
-      } 
+      }
     })
   }
 
-  tx.set(ref, { 
+  // If true, a new version is beeing created.
+  // We need to remove previous parties signDate and reset status
+  if (newVersion) {
+    delete current.signDate;
+    current.parties = current.parties.map(p => {
+      delete p.signDate;
+      p.status = 'unknown';
+      return p;
+    });
+  }
+
+  tx.set(ref, {
     lastVersion: current.lastVersion,
     titleIds: current.titleIds,
     partyIds: current.partyIds,
+    parties: current.parties,
   }, { merge: true });
 }
 
@@ -210,20 +245,17 @@ export async function onContractWrite(
         current.lastVersion.id = await getNextVersionId(tx, current.id);
         // Creation date is handled here. If not sent by user, it is created here.
         current.lastVersion.creationDate = currentCreationDate as any;
-        const versionToHistorize = current.lastVersion as ContractVersionDocument;
-        // A new version have been saved, we check if public contract need to be updated
+        // A new version have been saved, we check if public contract need to be updated.
         await updatePublicContract(tx, current);
-        // We historize current version 
-        tx.set(db.doc(`contracts/${current.id}/versions/${versionToHistorize.id}`), versionToHistorize);
-        // We update _meta document for backward compatibility
-        tx.set(db.doc(`contracts/${current.id}/versions/_meta`), { count: parseInt(versionToHistorize.id, 10) }, { merge: true });
-        // Update contract
-        updateContract(tx, change.after.ref, current);
+        // Push new version.
+        updateVersion(tx, current);
+        // Update contract.
+        updateContract(tx, change.after.ref, current, true);
       } else {
         // To prevent the case where the front tries to push version Id or creationDate (which are only handled by this trigger).
         current.lastVersion.id = await getCurrentVersionId(tx, current.id);
         current.lastVersion.creationDate = await getCurrentCreationDate(tx, current.id);
-        // A new version have been saved, we check if public contract need to be updated
+        // A new version have been saved, we check if public contract need to be updated.
         // @TODO (#1887) remove next line once code migration is OK
         await updatePublicContract(tx, current);
         updateContract(tx, change.after.ref, current);

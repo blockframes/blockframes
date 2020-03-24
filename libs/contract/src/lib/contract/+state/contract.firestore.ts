@@ -68,8 +68,18 @@ export interface ContractTitleDetailDocument extends ContractTitleDetailRaw<Time
 }
 
 interface ContractPartyDetailRaw<D> {
+  /**
+   * @dev This represents a company (at least) and can be linked to an orgId.
+   */
   party: Party,
+  /**
+   * @dev The signature date of the party for the last contract version
+   */
   signDate?: D,
+  /**
+   * @dev The status of the party for the last contract version.
+   * (ie: Accepted, Rejected)
+   */
   status: ContractStatus,
   /**
    * Legal role(s) of this party for child contracts.
