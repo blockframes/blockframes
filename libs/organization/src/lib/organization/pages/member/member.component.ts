@@ -5,9 +5,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { InvitationService, InvitationQuery, InvitationStore, Invitation } from '@blockframes/notification';
 import { PermissionsQuery, UserRole, PermissionsService } from '../../../permissions/+state';
 import { Order } from '@datorama/akita';
-import { OrganizationMember } from '@blockframes/user/user/+state/user.model';
-import { UserService } from '@blockframes/user/user/+state/user.service';
-import { UserQuery } from '@blockframes/user/user/+state/user.query';
+import { OrganizationMember } from '@blockframes/user/+state/user.model';
+import { UserService } from '@blockframes/user/+state/user.service';
+import { UserQuery } from '@blockframes/user/+state/user.query';
 
 @Component({
   selector: 'member-edit',

@@ -41,7 +41,7 @@ import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filte
 
 // Pages
 import { ActivateDaoComponent } from './organization/pages/activate-dao/activate-dao.component';
-import { UserGuard } from '@blockframes/user/user/guard/user.guard';
+import { UserGuard } from '@blockframes/user/guard/user.guard';
 import { ActiveDaoGuard } from './guard/active-dao.guard';
 
 export const organizationRoutes: Routes = [

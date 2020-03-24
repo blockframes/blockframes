@@ -1,6 +1,6 @@
 import { FormList } from "@blockframes/utils";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
-import { OrganizationMember } from "@blockframes/user/user/+state/user.model";
+import { OrganizationMember } from "@blockframes/user/+state/user.model";
 
 function createMemberFormGroup(member: Partial<OrganizationMember> = {}) {
   return new FormGroup({

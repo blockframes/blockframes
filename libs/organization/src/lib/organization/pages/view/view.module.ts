@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
-import { UserGuard } from '@blockframes/user/user/guard/user.guard';
+import { UserGuard } from '@blockframes/user/guard/user.guard';
 
 import { OrganizationViewComponent } from './view.component';
 

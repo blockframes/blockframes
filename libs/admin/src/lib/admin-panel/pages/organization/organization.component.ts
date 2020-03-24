@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { OrganizationAdminForm } from '../../forms/organization-admin.form';
 import { MovieService } from '@blockframes/movie';
 import { getValue } from '@blockframes/utils/helpers';
-import { UserService } from '@blockframes/user/user/+state/user.service';
+import { UserService } from '@blockframes/user/+state/user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({

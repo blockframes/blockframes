@@ -16,10 +16,10 @@ import {
 import { DaoQuery } from './dao.query';
 import { DaoStore } from './dao.store';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { UserQuery } from '@blockframes/user/user/+state/user.query';
+import { UserQuery } from '@blockframes/user/+state/user.query';
 import { DeploySteps, DaoOperation, DaoAction } from './dao.model';
 import { abi as ORGANIZATION_ABI } from '@blockframes/smart-contracts/Organization.json';
-import { OrganizationMember } from '@blockframes/user/user/+state/user.model';
+import { OrganizationMember } from '@blockframes/user/+state/user.model';
 import { PermissionsQuery } from '@blockframes/permissions/+state';
 import { OrganizationQuery } from '@blockframes/organization/organization/+state';
 
