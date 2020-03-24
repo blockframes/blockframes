@@ -34,6 +34,8 @@ const indexMoviesBuilder = (adminKey?: string) => {
 
 export function storeSearchableMovie(
   movie: FirebaseFirestore.DocumentData,
+  orgId: string,
+  orgName: string,
   adminKey?: string
 ): Promise<any> {
   if (!algolia.adminKey && !adminKey) {
@@ -55,7 +57,9 @@ export function storeSearchableMovie(
   ];
   return indexMoviesBuilder(adminKey).saveObject({
     objectID: movie.id,
-    movie: pick(movie, ALGOLIA_FIELDS)
+    movie: pick(movie, ALGOLIA_FIELDS),
+    orgId,
+    orgName
   });
 }
 
