@@ -29,11 +29,11 @@ import {
 } from '@blockframes/utils/static-model/types';
 import { getCodeIfExists } from '@blockframes/utils/static-model/staticModels';
 import { ControlErrorStateMatcher } from '@blockframes/utils/form/validators/validators';
-import { MovieAlgoliaResult } from '@blockframes/utils/algolia';
+import { MovieAlgoliaResult, OrganizationsIndex, OrganizationAlgoliaResult } from '@blockframes/utils/algolia';
 import { MoviesIndex } from '@blockframes/utils/algolia';
 // RxJs
-import { Observable, combineLatest, Subscription } from 'rxjs';
-import { startWith, map, debounceTime, switchMap, tap, distinctUntilChanged, pluck } from 'rxjs/operators';
+import { Observable, combineLatest, BehaviorSubject, Subscription } from 'rxjs';
+import { startWith, map, debounceTime, switchMap, tap, distinctUntilChanged, pluck, filter } from 'rxjs/operators';
 // Others
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -92,7 +92,7 @@ export class ListComponent implements OnInit, OnDestroy {
   /* Filter for autocompletion */
   public countries = staticModels['TERRITORIES'];
   public languagesFilter$: Observable<string[]>;
-  public resultFilter$: Observable<any[]>;
+  // public resultFilter$: Observable<any[]>;
 
   /* Individual form controls for filtering */
   public languageControl: FormControl = new FormControl('', [
@@ -101,13 +101,18 @@ export class ListComponent implements OnInit, OnDestroy {
   public sortByControl: FormControl = new FormControl('Title');
   public searchbarTextControl: FormControl = new FormControl('');
 
-  private filterBy$ = this.filterForm.valueChanges.pipe(startWith(this.filterForm.value));
-  private sortBy$ = this.sortByControl.valueChanges.pipe(startWith(this.sortByControl.value));
+  // private filterBy$ = this.filterForm.valueChanges.pipe(startWith(this.filterForm.value));
+  // private sortBy$ = this.sortByControl.valueChanges.pipe(startWith(this.sortByControl.value));
+  private facetFilters$: Observable<string[]>;
 
   /* Arrays for showing the selected countries in the UI */
   public selectedMovieCountries: string[] = [];
 
   public budgetList: NumberRange[] = BUDGET_LIST;
+
+  // SELLER FILTER
+  public orgSearchResults$: Observable<any>;
+  public selectedSellers$ = new BehaviorSubject<string[]>([]);
 
   public matcher = new ControlErrorStateMatcher();
 
@@ -123,45 +128,106 @@ export class ListComponent implements OnInit, OnDestroy {
     private snackbar: MatSnackBar,
     private movieQuery: MovieQuery,
     @Inject(MoviesIndex) private movieIndex: Index,
+    @Inject(OrganizationsIndex) private orgsIndex: Index,
     private analytics: FireAnalytics
   ) { }
 
   ngOnInit() {
     this.sub = this.movieService.syncCollection(ref => ref.limit(30)).subscribe();
-    const algoliaMovies$ = this.searchbarForm.valueChanges.pipe(
-      debounceTime(200),
-      distinctUntilChanged(),
-      startWith(''),
-      pluck('text'),
-      switchMap(text => this.movieIndex.search(text)),
-      pluck('hits'),
+
+    /* The text string typed by the user in the search bar */
+    const searchQuery$: Observable<string> = this.searchbarTextControl.valueChanges.pipe(
+      // debounceTime(200),
+      // distinctUntilChanged(),
+      // pluck('text'),
+      tap(t => console.log('searching movie', t)), // TODO REMOVE LOG
+      // switchMap(text => this.movieIndex.search(text)),
+      // pluck('hits'),
+      // tap(res => console.log('movie result :', res)) // TODO REMOVE LOG
     );
 
-    this.movieSearchResults$ = combineLatest([
-      algoliaMovies$,
-      this.filterBy$,
-      this.sortBy$
-    ]).pipe(
-      switchMap(([algoliaMovies, filterOptions, sortBy]) => {
-        const movieIds = algoliaMovies.map(index => index.objectID);
-        return this.movieQuery.selectAll({
-          sortBy: (a, b) => sortMovieBy(a, b, sortBy),
-          filterBy: movie => filterMovie(movie, filterOptions) && movieIds.includes(movie.id)
-        })
-      }),
-    )
+    // UI FILTERS
 
     this.languagesFilter$ = this.languageControl.valueChanges.pipe(
       startWith(''),
+      distinctUntilChanged(),
       debounceTime(300),
-      map(value => this._languageFilter(value))
+      map(value => this._languageFilter(value)),
+      tap(l => console.log('languages :', l)) // TODO HERE UNDEFINED TWICE ! so this fuck the facetFilters$ !
     );
 
-    this.resultFilter$ = this.searchbarTextControl.valueChanges.pipe(
-      startWith(''),
-      tap(value => this.searchbarForm.get('text').setValue(value)),
-      map(value => this._resultFilter(value))
+    // this.resultFilter$ = this.searchbarTextControl.valueChanges.pipe(
+    //   startWith(''),
+    //   tap(value => this.searchbarForm.get('text').setValue(value)),
+    //   map(value => this._resultFilter(value))
+    // );
+
+    this.orgSearchResults$ = this.filterForm.seller.valueChanges.pipe(
+      debounceTime(200),
+      distinctUntilChanged(),
+      filter(text => text !== undefined && text !== '' && text !== ' '),
+      tap(text => console.log('searching orgs :', text)), // TODO REMOVE LOG
+      switchMap(text => this.movieIndex.searchForFacetValues({facetName: 'orgName', facetQuery: text})),
+      pluck('facetHits'),
+      map(results => results.map(result => result.value)),
+      tap(names => console.log('orgs result :', names)), // TODO REMOVE LOG
     );
+
+    /* Combining ui filters into algolia's facets */
+    this.facetFilters$ = combineLatest([
+      this.languagesFilter$,
+      this.selectedSellers$
+    ]).pipe(
+      // startWith([]),
+      map(([languages, sellers]) => {
+        return [
+          // ...languages.map(language => `originalLanguages:${language}`),
+          ...sellers.map(seller => `orgName:${seller}`),
+        ];
+      }),
+      tap(facets => console.log('facets :', facets))
+    );
+
+    /* Query algolia every time the search query or the filters changes */
+    this.movieSearchResults$ = combineLatest([
+      searchQuery$,
+      this.facetFilters$,
+      // this.sortBy$
+    ]).pipe(
+      debounceTime(200),
+      distinctUntilChanged(),
+      tap(values => console.log(values)),
+      switchMap(([algoliaMovies , facetFilters]) => {
+        // const movieIds = algoliaMovies.map(index => index.objectID);
+        // return this.movieQuery.selectAll({
+        //   sortBy: (a, b) => sortMovieBy(a, b, sortBy),
+        //   filterBy: movie => filterMovie(movie, filterOptions) && movieIds.includes(movie.id)
+        // })
+        return this.movieIndex.search<MovieAlgoliaResult>({
+          query: algoliaMovies,
+          facetFilters
+        })
+      }),
+      pluck('hits'),
+      tap(result => console.log('algolia result :', result)),
+      map(result => result.map(movie => movie.objectID)),
+      switchMap(movieIds => this.movieQuery.selectAll({
+        filterBy: movie => movieIds.includes(movie.id)
+      })),
+      tap(result => console.log('firestore result :', result)),
+    );
+  }
+
+  public addSeller(seller: string) {
+    const newSelectedSellers = [seller, ...this.selectedSellers$.getValue()];
+    this.selectedSellers$.next(newSelectedSellers);
+  }
+
+  public removeSeller(index: number) { // TODO INDEX IS UNDEFINED !!!!
+    console.log('will remove', index, 'to', this.selectedSellers$.getValue());
+    const newSelectedSellers = this.selectedSellers$.getValue().splice(index, 1);
+    console.log('removed seller !', newSelectedSellers);
+    this.selectedSellers$.next(newSelectedSellers);
   }
 
   ngOnDestroy() {
@@ -222,9 +288,9 @@ export class ListComponent implements OnInit, OnDestroy {
    * @param value string which got typed in into an input field
    */
   private _languageFilter(value: string): string[] {
-    if (value) {
+    // if (value) {
       return LANGUAGES_LABEL.filter(language => language.toLowerCase().includes(value.toLowerCase()));
-    }
+    // }
   }
 
   /**
@@ -232,17 +298,17 @@ export class ListComponent implements OnInit, OnDestroy {
    * Also we need to distinguish on what type the user want to have his results
    * @param value string which got typed in into an input field
    */
-  private _resultFilter(value: string): string[] {
-    if (this.searchbarTypeForm.value === 'title') {
-      return this.allTitles.filter(title => title.toLowerCase().includes(value.toLowerCase()));
-    } else if (this.searchbarTypeForm.value === 'keywords') {
-      return this.allKeywords.filter(word => word.toLowerCase().includes(value.toLowerCase()));
-    } else if (this.searchbarTypeForm.value === 'director') {
-      return this.allDirectors.filter(director => {
-        return director.toLowerCase().includes(value.toLowerCase());
-      });
-    }
-  }
+  // private _resultFilter(value: string): string[] {
+  //   if (this.searchbarTypeForm.value === 'title') {
+  //     return this.allTitles.filter(title => title.toLowerCase().includes(value.toLowerCase()));
+  //   } else if (this.searchbarTypeForm.value === 'keywords') {
+  //     return this.allKeywords.filter(word => word.toLowerCase().includes(value.toLowerCase()));
+  //   } else if (this.searchbarTypeForm.value === 'director') {
+  //     return this.allDirectors.filter(director => {
+  //       return director.toLowerCase().includes(value.toLowerCase());
+  //     });
+  //   }
+  // }
 
   //////////////////
   // Form section //
