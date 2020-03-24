@@ -5,10 +5,10 @@ import { OrganizationQuery } from '@blockframes/organization/organization/+state
 import { map, switchMap } from 'rxjs/operators';
 import { OrganizationService } from '@blockframes/organization/organization/+state';
 import { AuthService } from '@blockframes/auth';
-import { PermissionsQuery } from '@blockframes/organization/permissions/+state/permissions.query';
-import { UserRole } from '@blockframes/organization/permissions/+state/permissions.model';
+import { PermissionsQuery } from '@blockframes/permissions/+state/permissions.query';
+import { UserRole } from '@blockframes/permissions/+state/permissions.model';
 import { OrganizationMember, createOrganizationMember } from './user.model';
-import { PermissionsService } from '@blockframes/organization/permissions/+state';
+import { PermissionsService } from '@blockframes/permissions/+state';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'users' })
