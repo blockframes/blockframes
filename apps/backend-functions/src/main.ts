@@ -1,5 +1,4 @@
 // import * as gcs from '@google-cloud/storage';
-import { onDeliveryUpdate } from './delivery';
 import { functions } from './internals/firebase';
 import {
   RelayerConfig,
@@ -8,15 +7,6 @@ import {
   relayerSendLogic,
 } from './relayer';
 import { mnemonic, relayer } from './environments/environment';
-import {
-  deleteFirestoreDelivery,
-  deleteFirestoreMaterial,
-  deleteFirestoreTemplate
-} from './delete';
-import {
-  onDeliveryStakeholderCreate,
-  onDeliveryStakeholderDelete
-} from './stakeholder';
 import * as users from './users';
 import {
   onDocumentCreate,
@@ -25,7 +15,6 @@ import {
   onDocumentWrite,
   onOrganizationDocumentUpdate
 } from './utils';
-import { onGenerateDeliveryPDFRequest } from './internals/pdf';
 import { logErrors } from './internals/sentry';
 import { onInvitationWrite } from './invitation';
 import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate } from './orgs';
@@ -61,6 +50,9 @@ export const sendResetPasswordEmail = functions.https
 export const sendWishlistEmails = functions.https
   .onCall(users.startWishlistEmailsFlow);
 
+  /** Trigger: REST call when an user contacts blockframes admin and send them an email. */
+export const sendUserContactMail = functions.https.onCall(logErrors(users.sendUserMail));
+
 /** Trigger: REST call to find a list of organizations by name. */
 export const findOrgByName = functions.https
   .onCall(logErrors(users.findOrgByName));
@@ -85,21 +77,6 @@ export const getMovieAnalytics = functions.https.onCall(logErrors(bigQuery.reque
  *    a cascade8 administrator accept their request.
  */
 export const admin = functions.https.onRequest(adminApp);
-
-/** Trigger: when signature (`orgId`) is added to or removed from `validated[]`. */
-export const onDeliveryUpdateEvent = onDocumentUpdate('deliveries/{deliveryID}', onDeliveryUpdate);
-
-/** Trigger: when a stakeholder is added to a delivery. */
-export const onDeliveryStakeholderCreateEvent = onDocumentCreate(
-  'deliveries/{deliveryID}/stakeholders/{stakeholerID}',
-  onDeliveryStakeholderCreate
-);
-
-/** Trigger: when a stakeholder is removed from a delivery. */
-export const onDeliveryStakeholderDeleteEvent = onDocumentDelete(
-  'deliveries/{deliveryID}/stakeholders/{stakeholerID}',
-  onDeliveryStakeholderDelete
-);
 
 /** Trigger: when an invitation is updated (e. g. when invitation.status change). */
 export const onInvitationUpdateEvent = onDocumentWrite(
@@ -194,14 +171,6 @@ export const onOrganizationDeleteEvent = onDocumentDelete(
 );
 
 //--------------------------------
-//        GENERATE PDF          //
-//--------------------------------
-
-/** Trigger: REST call to generate a delivery PDF. */
-export const generateDeliveryPDF = functions.https.onRequest(logErrors(onGenerateDeliveryPDFRequest));
-
-
-//--------------------------------
 //            RELAYER           //
 //--------------------------------
 const RELAYER_CONFIG: RelayerConfig = {
@@ -217,13 +186,3 @@ export const relayerRegister = functions.runWith({ timeoutSeconds: 540 }).https
 
 export const relayerSend = functions.https
   .onCall((data, context) => logErrors(relayerSendLogic(data, RELAYER_CONFIG)));
-
-//--------------------------------
-//   PROPER FIRESTORE DELETION  //
-//--------------------------------
-
-export const deleteDelivery = onDocumentDelete('deliveries/{deliveryId}', logErrors(deleteFirestoreDelivery));
-
-export const deleteMaterial = onDocumentDelete('deliveries/{deliveryId}/materials/{materialId}', logErrors(deleteFirestoreMaterial));
-
-export const deleteTemplate = onDocumentDelete('templates/{templateId}', logErrors(deleteFirestoreTemplate));

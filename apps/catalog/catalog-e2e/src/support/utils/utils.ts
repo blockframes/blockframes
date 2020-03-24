@@ -8,6 +8,8 @@ import { USERS } from "./users";
 const LOGIN_CREDENTIALS: Partial<User> = USERS[0];
 
 export function clearDataAndPrepareTest(path: string = '/auth') {
+  // Since Cypress doesn't provide method to clear indexedDB = > https://github.com/cypress-io/cypress/issues/1208
+  indexedDB.deleteDatabase('firebaseLocalStorageDb');
   cy.clearCookies();
   cy.clearLocalStorage();
   cy.visit(path);

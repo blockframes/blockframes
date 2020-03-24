@@ -1,0 +1,42 @@
+<ng-container *ngIf="view">
+  <header fxLayout="column" [class]="view.banner.url ? 'dark-theme' : ''">
+    <div class="banner-background" [backgroundRef]="view.banner"></div>
+    <section fxLayout="row" fxLayoutAlign="space-between start">
+      <!-- TODO#1763 get poster by countries from promotionalElements -->
+      <article class="description" fxLayout="row" fxLayoutGap="24px">
+        <img [imgRef]="view.poster" placeholderAsset="empty_poster.webp" alt="Movie poster"/>
+        <div fxLayout="column" fxLayoutGap="8px">
+          <h4>{{ view.directors | displayName }}</h4>
+          <h1>{{ view.title }}</h1>
+          <ng-container *ngIf="view.title !== view.originTitle">
+            <h3>{{ view.originTitle }}</h3>
+          </ng-container>
+          <p class="mat-body-1">{{ view.subtitle }}</p>
+          <p class="mat-body-2">{{ view.countries | translateSlug: 'TERRITORIES' }}</p>
+          <!-- movie-banner-actions -->
+          <ng-content select="movie-banner-actions"></ng-content>
+        </div>
+      </article>
+      <!-- movie-banner-actions -->
+      <ng-content select="movie-banner-aside"></ng-content>
+    </section>
+    <div class="links" fxLayout="row" fxLayoutGap="8px">
+      <ng-container *ngFor="let link of view.links">
+        <a mat-button [href]="link.url" color="primary">
+          <mat-icon [svgIcon]="link.type"></mat-icon>
+          <span>{{ link.label }}</span>
+        </a>
+      </ng-container>
+    </div>
+  </header>
+  <nav mat-tab-nav-bar>
+    <a mat-tab-link
+      *ngFor="let link of navLinks"
+      [routerLink]="link.path"
+      routerLinkActive #rla="routerLinkActive"
+      [active]="rla.isActive">
+    {{link.label}}
+    </a>
+  </nav>
+  <router-outlet></router-outlet>
+</ng-container>

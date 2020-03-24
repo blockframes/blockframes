@@ -3,37 +3,6 @@
   "version": 1,
   "newProjectRoot": "",
   "projects": {
-    "auth": {
-      "root": "libs/auth",
-      "sourceRoot": "libs/auth/src",
-      "projectType": "library",
-      "prefix": "auth",
-      "architect": {
-        "build": {
-          "builder": "@nrwl/angular:package",
-          "options": {
-            "tsConfig": "libs/auth/tsconfig.lib.json",
-            "project": "libs/auth/ng-package.json"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": ["libs/auth/tsconfig.lib.json", "libs/auth/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/auth/jest.config.js",
-            "tsConfig": "libs/auth/tsconfig.spec.json",
-            "setupFile": "libs/auth/src/test-setup.ts",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
     "ui": {
       "root": "libs/ui",
       "sourceRoot": "libs/ui/src",
@@ -219,31 +188,6 @@
         }
       }
     },
-    "account": {
-      "root": "libs/account",
-      "sourceRoot": "libs/account/src",
-      "projectType": "library",
-      "prefix": "blockframes",
-      "architect": {
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/account/jest.config.js",
-            "tsConfig": "libs/account/tsconfig.spec.json",
-            "setupFile": "libs/account/src/test-setup.ts",
-            "passWithNoTests": true
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": ["libs/account/tsconfig.lib.json", "libs/account/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
-          }
-        }
-      },
-      "schematics": {}
-    },
     "notification": {
       "root": "libs/notification",
       "sourceRoot": "libs/notification/src",
@@ -271,240 +215,6 @@
         }
       },
       "schematics": {}
-    },
-    "delivery": {
-      "root": "apps/delivery/delivery/",
-      "sourceRoot": "apps/delivery/delivery/src",
-      "projectType": "application",
-      "prefix": "delivery",
-      "schematics": {
-        "@schematics/angular:component": {
-          "styleext": "scss"
-        }
-      },
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:browser",
-          "options": {
-            "outputPath": "dist/apps/delivery",
-            "index": "apps/delivery/delivery/src/index.html",
-            "main": "apps/delivery/delivery/src/main.ts",
-            "polyfills": "apps/delivery/delivery/src/polyfills.ts",
-            "stylePreprocessorOptions": {
-              "includePaths": ["styles"]
-            },
-            "tsConfig": "apps/delivery/delivery/tsconfig.app.json",
-            "assets": [
-              "apps/delivery/delivery/src/favicon.ico",
-              "apps/delivery/delivery/src/assets",
-              {
-                "glob": "**/*",
-                "input": "./libs/ui/src/lib/assets",
-                "output": "./assets"
-              }
-            ],
-            "styles": ["apps/delivery/delivery/src/styles.scss"],
-            "scripts": []
-          },
-          "configurations": {
-            "dev": {},
-            "production": {
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.prod.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": true,
-              "extractCss": true,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "6mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb"
-                }
-              ],
-              "serviceWorker": true
-            },
-            "staging": {
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.staging.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": true,
-              "extractCss": true,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "6mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb"
-                }
-              ],
-              "serviceWorker": true
-            },
-            "ci": {
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.ci.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": true,
-              "extractCss": true,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "6mb"
-                },
-                {
-                  "type": "anyComponentStyle",
-                  "maximumWarning": "6kb"
-                }
-              ],
-              "serviceWorker": true
-            }
-          }
-        },
-        "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-            "browserTarget": "delivery:build"
-          },
-          "configurations": {
-            "dev": {},
-            "production": {
-              "browserTarget": "delivery:build:production"
-            },
-            "staging": {
-              "browserTarget": "delivery:build:production"
-            }
-          }
-        },
-        "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "browserTarget": "delivery:build"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "apps/delivery/delivery/tsconfig.app.json",
-              "apps/delivery/delivery/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "apps/delivery/delivery/jest.config.js",
-            "tsConfig": "apps/delivery/delivery/tsconfig.spec.json",
-            "setupFile": "apps/delivery/delivery/src/test-setup.ts",
-            "passWithNoTests": true
-          }
-        }
-      }
-    },
-    "delivery-e2e": {
-      "root": "apps/delivery/delivery-e2e",
-      "projectType": "application",
-      "prefix": "",
-      "architect": {
-        "e2e": {
-          "builder": "@nrwl/cypress:cypress",
-          "options": {
-            "cypressConfig": "apps/delivery/delivery-e2e/cypress.json",
-            "tsConfig": "apps/delivery/delivery-e2e/tsconfig.e2e.json",
-            "baseUrl": "http://localhost:4200"
-          },
-          "configurations": {
-            "dev": {},
-            "production": {
-              "devServerTarget": "delivery:serve:production"
-            },
-            "ci": {
-              "devServerTarget": "delivery:serve"
-            }
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": "apps/delivery/delivery-e2e/tsconfig.e2e.json",
-            "exclude": ["**/node_modules/**"]
-          }
-        }
-      }
-    },
-    "material": {
-      "root": "libs/material",
-      "sourceRoot": "libs/material/src",
-      "projectType": "library",
-      "prefix": "material",
-      "architect": {
-        "build": {
-          "builder": "@nrwl/angular:package",
-          "options": {
-            "tsConfig": "libs/material/tsconfig.lib.json",
-            "project": "libs/material/ng-package.json"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": ["libs/material/tsconfig.lib.json", "libs/material/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/material/jest.config.js",
-            "tsConfig": "libs/material/tsconfig.spec.json",
-            "setupFile": "libs/material/src/test-setup.ts",
-            "passWithNoTests": true
-          }
-        }
-      },
-      "schematics": {
-        "@nrwl/schematics:component": {
-          "styleext": "scss"
-        }
-      }
     },
     "utils": {
       "root": "libs/utils",
@@ -1033,7 +743,10 @@
                 "output": "./assets"
               }
             ],
-            "styles": ["apps/festival/festival/src/styles.scss"],
+            "styles": [
+              "node_modules/angular-calendar/css/angular-calendar.css",
+              "apps/festival/festival/src/styles.scss"
+            ],
             "scripts": []
           },
           "configurations": {
@@ -1173,11 +886,15 @@
           "options": {
             "cypressConfig": "apps/festival/festival-e2e/cypress.json",
             "tsConfig": "apps/festival/festival-e2e/tsconfig.e2e.json",
-            "devServerTarget": "festival:serve"
+            "baseUrl": "http://localhost:4200"
           },
           "configurations": {
+            "dev": {},
             "production": {
               "devServerTarget": "festival:serve:production"
+            },
+            "ci": {
+              "devServerTarget": "festival:serve"
             }
           }
         },
@@ -1187,6 +904,64 @@
             "tsConfig": ["apps/festival/festival-e2e/tsconfig.e2e.json"],
             "exclude": ["**/node_modules/**", "!apps/festival/festival-e2e/**"]
           }
+        }
+      }
+    },
+    "user": {
+      "projectType": "library",
+      "root": "libs/user",
+      "sourceRoot": "libs/user/src",
+      "prefix": "blockframes",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["libs/user/tsconfig.lib.json", "libs/user/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**", "!libs/user/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/user/jest.config.js",
+            "tsConfig": "libs/user/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "libs/user/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "event": {
+      "projectType": "library",
+      "root": "libs/event",
+      "sourceRoot": "libs/event/src",
+      "prefix": "event",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["libs/event/tsconfig.lib.json", "libs/event/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**", "!libs/event/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/event/jest.config.js",
+            "tsConfig": "libs/event/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "libs/event/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
         }
       }
     }
@@ -1210,5 +985,5 @@
       "framework": "express"
     }
   },
-  "defaultProject": "delivery"
+  "defaultProject": "catalog"
 }

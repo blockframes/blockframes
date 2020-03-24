@@ -22,8 +22,10 @@
 @import './components/bf-tunnel.scss';
 @import './components/bf-table.scss';
 @import './components/bf-font-color.scss';
-@import './components/missing-control.scss';
+@import './components/bf-missing-control.scss';
 @import './components/bf-world-map.scss';
+@import './components/bf-calendar.scss';
+@import './components/mat-native-control.scss';
 
 @include mat-core($bf-typography);
 
@@ -44,15 +46,20 @@
   @include mat-bf-snack-bar-theme($theme);
   @include bf-footer-theme($theme);
   @include bf-widget-theme($theme);
-  @include bf-tunnel-theme($theme);
-  @include bf-table-theme($theme);
   @include bf-color-font($theme);
+  @include bf-table-theme($theme);
   @include bf-missing-control-theme($theme);
-  @include bf-world-map-theme($theme);
+  @include bf-tunnel-theme($theme);
 
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
+  $primary: map-get($theme, primary);
+  $accent: map-get($theme, accent);
+  $warn: map-get($theme, warn);
   // Add css variables here when you need one
+  --primary: #{mat-color($primary, 500)};
+  --accent: #{mat-color($accent, 500)};
+  --warn: #{mat-color($warn, 500)};
   // Background
   --background-disabled-button: #{mat-color($background, disabled-button)};
   // Foreground
@@ -64,31 +71,4 @@
 @include mat-bf-list-typography($bf-typography);
 @include mat-bf-button-typography($bf-typography);
 @include mat-bf-toolbar-typography($bf-typography);
-
-// LIGHT THEME
-
-.light-theme {
-  @include angular-material-theme($bf-light-theme);
-  @include sat-datepicker-theme($bf-light-theme);
-  @include bf-material-theme($bf-light-theme);
-  // every components inside of dashboard-navbar should be always in the dark theme
-  #dashboard-navbar {
-    background-color: mat-color($bf-dark-background, app-bar);
-    @include angular-material-theme($bf-dark-theme);
-    @include bf-material-theme($bf-dark-theme);
-  }
-
-  // Not supported yet by browser. Here for future support
-  scrollbar-color: light;
-}
-
-// DARK THEME
-
-.dark-theme {
-  @include angular-material-theme($bf-dark-theme);
-  @include sat-datepicker-theme($bf-dark-theme);
-  @include bf-material-theme($bf-dark-theme);
-
-  // Not supported yet by browser. Here for future support
-  scrollbar-color: dark;
-}
+@include mat-native-control($bf-typography);

@@ -4,7 +4,7 @@
         <div fxLayout="row" fxLayoutAlign="center start" fxLayoutGap="20px">
             <!-- TODO #2102 -->
             <algolia-autocomplete [indexName]="algoliaOrg" [control]="displayNameControl(control)" pathToValue="name"
-                [resetInput]="resetInput" label="Party Name" (emitObjectID)="patchOrgId($event, control)">
+                label="Party Name" (selectionChange)="patchOrgId($event, control)" displayWithPath="name">
                 <ng-template let-org>{{ org.name }}</ng-template>
             </algolia-autocomplete>
             <mat-form-field appearance="outline">

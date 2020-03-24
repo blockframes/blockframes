@@ -12,13 +12,13 @@ const queryMovieAnalytics = `
     COUNT(*) as hits,
     event_date,
     value.string_value as movieId,
-    REGEXP_EXTRACT(value.string_value, '.*/marketplace/([^/]+)/view') as movieIdPage
+    REGEXP_EXTRACT(value.string_value, '.*/marketplace/([^/]+)/view/main') as movieIdPage
   FROM
     \`${bigQueryAnalyticsTable}*\`,
     UNNEST(event_params) AS params
   WHERE
     (
-      (event_name = @pageView AND key = 'page_path' AND REGEXP_EXTRACT(value.string_value, '.*/marketplace/([^/]+)/view') in UNNEST(@movieIds))
+      (event_name = @pageView AND key = 'page_path' AND REGEXP_EXTRACT(value.string_value, '.*/marketplace/([^/]+)/view/main') in UNNEST(@movieIds))
       OR
       (event_name = @promoReelOpened AND key = 'movieId' AND value.string_value in UNNEST(@movieIds))
       OR

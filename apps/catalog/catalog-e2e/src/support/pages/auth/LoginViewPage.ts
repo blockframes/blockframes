@@ -98,7 +98,7 @@ export default class LoginViewPage {
     cy.get('auth-signup-form button[type=submit]').click();
   }
 
-  public assertStayInLoginview() {
+  public assertStayInLoginView() {
     cy.location().should((loc) => {
       expect(loc.pathname).to.eq('/auth/connexion')
     })

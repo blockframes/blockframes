@@ -12,7 +12,7 @@ import { ImgAssetModule } from '@blockframes/ui/theme';
 // Widgets
 import { SearchWidgetModule } from '@blockframes/ui/search-widget';
 import { NotificationWidgetModule } from '@blockframes/notification';
-import { ProfileWidgetModule } from '@blockframes/account';
+import { AuthWidgetModule } from '@blockframes/auth';
 
 // Material
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -53,6 +53,16 @@ const routes: Routes = [{
         canDeactivate: [MovieActiveGuard],
         loadChildren: () => import('./title/view/view.module').then(m => m.MovieViewModule)
       }]
+    },
+    {
+      path: 'organization',
+      children: [{
+        path: '',
+        loadChildren: () => import('./organization/list/list.module').then(m => m.OrganizationListModule),
+      }, {
+        path: ':orgId',
+        loadChildren: () => import('./organization/view/view.module').then(m => m.OrganizationViewModule)
+      }]
     }
   ]
 }];
@@ -81,7 +91,7 @@ const routes: Routes = [{
     // Widgets
     NotificationWidgetModule,
     SearchWidgetModule,
-    ProfileWidgetModule,
+    AuthWidgetModule,
   ]
 })
 export class MarketplaceModule {}

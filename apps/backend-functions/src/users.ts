@@ -2,7 +2,7 @@ import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 import { generate as passwordGenerator } from 'generate-password';
 import { auth, db } from './internals/firebase';
-import { userInvite, userVerifyEmail, welcomeMessage, userResetPassword, sendWishlist, sendWishlistPending, sendDemoRequestMail } from './assets/mail-templates';
+import { userInvite, userVerifyEmail, welcomeMessage, userResetPassword, sendWishlist, sendWishlistPending, sendDemoRequestMail, sendContactEmail } from './assets/mail-templates';
 import { sendMailFromTemplate, sendMail } from './internals/email';
 import { RequestDemoInformations } from './data/types';
 
@@ -179,4 +179,14 @@ export const sendDemoRequest = async (
   await sendMail(sendDemoRequestMail(data))
 
   return data;
+}
+
+export const sendUserMail = async (data: any, context?: CallableContext): Promise<any> => {
+  const { userName, userMail, subject, message } = data;
+
+  if (!subject || !message || !userName || !userMail) {
+    throw new Error('Subject, message and user email and name are mandatory parameters for the "sendUserMail()" function');
+  }
+
+  await sendMail(sendContactEmail(userName, userMail, subject, message));
 }

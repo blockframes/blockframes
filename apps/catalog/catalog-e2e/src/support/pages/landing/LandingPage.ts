@@ -9,4 +9,9 @@ export default class LandingPage {
     cy.get('catalog-toolbar a[test-id=login]').click();
     return new LoginViewPage();
   }
+
+  public clickSignup() {
+    cy.get('catalog-toolbar a[test-id=signup]').click();
+    return new LoginViewPage();
+  }
 }

@@ -7,6 +7,11 @@
     background-color: mat-color($background, card);
     border: 1px solid mat-color($foreground, divider);
     padding: 24px 16px;
+    .mat-card-image:first-child {
+      margin-top: -24px; // Should be the same as padding-top from .mat-card
+      border-top-left-radius: 3px;
+      border-top-right-radius: 3px;
+    }
     .mat-card-title {
       font-size: 20px;
       color: mat-color($foreground, secondary-text);

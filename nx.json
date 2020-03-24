@@ -8,9 +8,6 @@
     "nx.json": "*"
   },
   "projects": {
-    "auth": {
-      "tags": ["auth", "wallet"]
-    },
     "ui": {
       "tags": ["ui", "shared"]
     },
@@ -35,19 +32,7 @@
     "organization": {
       "tags": []
     },
-    "account": {
-      "tags": []
-    },
-    "delivery": {
-      "tags": ["delivery", "template", "material"]
-    },
-    "delivery-e2e": {
-      "tags": []
-    },
     "backend-functions": {
-      "tags": []
-    },
-    "material": {
       "tags": []
     },
     "backend-ops": {
@@ -68,6 +53,12 @@
     "festival-e2e": {
       "tags": [],
       "implicitDependencies": ["festival"]
+    },
+    "user": {
+      "tags": ["user"]
+    },
+    "event": {
+      "tags": ["event"]
     }
   }
 }

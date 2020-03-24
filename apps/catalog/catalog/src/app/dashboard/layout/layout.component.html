@@ -19,6 +19,11 @@
         <mat-icon matListIcon svgIcon="wallet"></mat-icon>
         <span matLine><b>Offers and Deals</b></span>
       </a>
+      <mat-divider></mat-divider>
+      <a mat-list-item routerLink="contact" routerLinkActive="active">
+        <mat-icon matListIcon svgIcon="mail"></mat-icon>
+        <span matLine><b>Contact</b></span>
+      </a>
     </mat-nav-list>
   </mat-sidenav>
 
@@ -29,15 +34,14 @@
       <button mat-icon-button (click)="sidenav.toggle()">
         <mat-icon>menu</mat-icon>
       </button>
-      <algolia-autocomplete [indexName]="movieIndex" pathToValue="objectID" mode="legacy">
-        <!-- TODO #2225 -->
+      <algolia-autocomplete [indexName]="movieIndex" mode="standard" native [icons]="['cross', 'magnifying_glasses']">
         <ng-template let-result>
-          <a routerLink="result.objectID">{{ result.movie.main.title.international }}</a>
+          <a [routerLink]="['titles', result.objectID]">{{ result.movie.main.title.international }}</a>
         </ng-template>
       </algolia-autocomplete>
       <div fxLayout="row" fxLayoutGap="24px">
         <overlay-notification-widget></overlay-notification-widget>
-        <account-profile-widget></account-profile-widget>
+        <auth-widget></auth-widget>
       </div>
     </mat-toolbar>
     <!-- CONTENT -->

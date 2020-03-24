@@ -15,6 +15,10 @@
         <mat-icon matListIcon svgIcon="video_library"></mat-icon>
         <span matLine><b>My Titles</b></span>
       </a>
+      <a mat-list-item routerLink="calendar" routerLinkActive="active">
+        <mat-icon matListIcon svgIcon="calendar"></mat-icon>
+        <span matLine><b>My Schedule</b></span>
+      </a>
     </mat-nav-list>
   </mat-sidenav>
 
@@ -23,11 +27,16 @@
     <!-- TOOLBAR -->
     <mat-toolbar fxLayout="row" fxLayoutAlign="space-between center" id="catalog-toolbar">
       <button mat-icon-button (click)="sidenav.toggle()">
-        <mat-icon>menu</mat-icon>
+        <mat-icon svgIcon="menu"></mat-icon>
       </button>
+      <algolia-autocomplete [indexName]="movieIndex" mode="standard" native [icons]="['cross', 'magnifying_glasses']">
+        <ng-template let-result>
+          <a [routerLink]="['title', result.objectID]">{{ result.movie.main.title.international }}</a>
+        </ng-template>
+      </algolia-autocomplete>
       <div fxLayout="row" fxLayoutGap="24px">
         <overlay-notification-widget></overlay-notification-widget>
-        <account-profile-widget></account-profile-widget>
+        <auth-widget></auth-widget>
       </div>
     </mat-toolbar>
     <!-- CONTENT -->

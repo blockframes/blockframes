@@ -1,0 +1,13 @@
+:host {
+  display: flex;
+  
+}
+
+mat-card {
+  margin: 16px;
+  max-width: 300px;
+
+  h4 {
+    margin-bottom: 0;
+  }
+}

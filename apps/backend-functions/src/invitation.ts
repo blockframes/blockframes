@@ -4,15 +4,11 @@
 import { getDocument, getAdminIds } from './data/internals';
 import { db, functions, getUserMail, getUser } from './internals/firebase';
 import {
-  DeliveryDocument,
   InvitationDocument,
   InvitationOrUndefined,
   InvitationFromOrganizationToUser,
   InvitationFromUserToOrganization,
-  InvitationToWorkOnDocument,
   OrganizationDocument,
-  MovieDocument,
-  createDocPermissions,
   PublicUser
 } from './data/types';
 import { triggerNotifications, createNotification } from './notification';
@@ -148,100 +144,6 @@ async function onInvitationToOrgCreate({
 }
 
 /**
- * Updates permissions when an organization / user accepts a invitation to
- * work on a document (deliveries, movies, etc).
- */
-async function onDocumentInvitationAccept(invitation: InvitationToWorkOnDocument): Promise<any> {
-  // If the stakeholder accept the invitation, we create all permissions and notifications
-  // we need to get the new users on the documents with their own (and limited) permissions.
-
-  // Create all the constants we need to work with
-  const stakeholderId = invitation.organization.id;
-  const docId = invitation.docId;
-  const delivery = await getDocument<DeliveryDocument>(`deliveries/${docId}`);
-  const movie = await getDocument<MovieDocument>(`movies/${delivery.movieId}`);
-
-  const [
-    deliverySnap,
-    documentPermissionsSnap,
-    stakeholderSnap,
-    organizationSnap,
-    moviePermissionsSnap,
-    organization
-  ] = await Promise.all([
-    db.doc(`deliveries/${docId}`).get(),
-    db.doc(`permissions/${stakeholderId}/documentPermissions/${docId}`).get(),
-    db.doc(`deliveries/${docId}/stakeholders/${stakeholderId}`).get(),
-    db.doc(`orgs/${stakeholderId}`).get(),
-    db.doc(`permissions/${stakeholderId}/documentPermissions/${delivery.movieId}`).get(),
-    getDocument<OrganizationDocument>(`orgs/${stakeholderId}`)
-  ]);
-
-  const documentPermissions = createDocPermissions({
-    id: docId,
-    canDelete: false,
-    isAdmin: false
-  });
-  const moviePermissions = createDocPermissions({
-    id: delivery.movieId,
-    canDelete: false,
-    canUpdate: false,
-    isAdmin: false
-  });
-
-  return db.runTransaction(tx => {
-    const promises = [];
-
-    // TODO: Seems we never enter here, need to do fix it asap, as we got duplicated ids in organization.movieIds
-    // Push the delivery's movie into stakeholder Organization's movieIds so users have access to the new doc
-    // Only if organization doesn't already have access to this movie.
-    if (!organization.movieIds.includes(delivery.movieId)) {
-      promises.push(
-        tx.update(organizationSnap.ref, {
-          movieIds: [...organization.movieIds, delivery.movieId]
-        })
-      );
-    }
-
-    return Promise.all([
-      // Initialize organization permissions on a document owned by another organization.
-      tx.set(documentPermissionsSnap.ref, documentPermissions),
-
-      // Make the new stakeholder active on the delivery by switch isAccepted property from false to true.
-      tx.update(stakeholderSnap.ref, { isAccepted: true }),
-
-      // Push the delivery's movie into stakeholder Organization's movieIds so users have access to the new doc.
-      tx.update(organizationSnap.ref, {
-        movieIds: [...organization.movieIds, delivery.movieId]
-      }),
-
-      // Push the stakeholder's id into delivery stakeholdersIds array.
-      tx.update(deliverySnap.ref, {
-        stakeholderIds: [...delivery.stakeholderIds, stakeholderId]
-      }),
-
-      // Finally, also initialize reading rights on the movie for the invited organization.
-      tx.set(moviePermissionsSnap.ref, moviePermissions),
-
-      ...promises,
-
-      // Now that permissions are in the database, notify organization users with direct link to the document.
-      triggerNotifications(
-        organization.userIds.map(userId => {
-          return createNotification({
-            userId,
-            docId,
-            movie: { id: movie.id, title: movie.main.title },
-            type: 'pathToDocument',
-            app: 'mediaDelivering'
-          });
-        })
-      )
-    ]);
-  });
-}
-
-/**
  * Dispatch the invitation update call depending on whether the invitation
  * was 'created' or 'accepted'.
  */
@@ -350,24 +252,6 @@ async function onInvitationFromUserToJoinOrgUpdate(
 }
 
 /**
- * Dispatch the invitation update call when the invitation was 'accepted'.
- */
-async function onDocumentInvitationUpdate(
-  before: InvitationOrUndefined,
-  after: InvitationDocument,
-  invitation: InvitationToWorkOnDocument
-): Promise<any> {
-  if (!before) {
-    return;
-  }
-
-  if (wasAccepted(before, after)) {
-    return onDocumentInvitationAccept(invitation);
-  }
-  return;
-}
-
-/**
  * Handles firestore updates on an invitation object,
  *
  * Check the data, manage processed ids (to prevent duplicates events in functions),
@@ -410,8 +294,6 @@ export async function onInvitationWrite(
   try {
     // dispatch to the correct events depending on the invitation type.
     switch (invitation.type) {
-      case 'toWorkOnDocument':
-        return onDocumentInvitationUpdate(invitationDocBefore, invitationDoc, invitation);
       case 'fromOrganizationToUser':
         return onInvitationToOrgUpdate(invitationDocBefore, invitationDoc, invitation);
       case 'fromUserToOrganization':

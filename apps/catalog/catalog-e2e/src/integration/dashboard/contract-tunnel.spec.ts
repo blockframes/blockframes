@@ -10,7 +10,8 @@ import { TunnelContractLobbyPage, TunnelContractPage, TunnelContractSummaryPage 
 // Select user: cytest@blockframes.com
 const LOGIN_CREDENTIALS: Partial<User> = USERS[0];
 
-const PARTY_NAMES = ['George', 'Billy the kid'];
+const PARTIAL_PARTY_NAMES = ['m', 'ma'];
+const PARTY_NAMES = ['main', 'main'];
 const ROLES = ['Licensor', 'Licensee'];
 const EVENT = 'Contract Signature Date';
 const EVENT_SUMMARY = 'ContractSignatureDate';
@@ -42,12 +43,14 @@ describe('User can navigate to the movie tunnel page 1 and 2', () => {
     const p5: TunnelContractPage = p4.clickSale();
 
     // Party Name
-    p5.fillFirstPartyName(PARTY_NAMES[0]);
+    p5.fillFirstPartyName(PARTIAL_PARTY_NAMES[0]);
+    p5.selectFirstPartyName(PARTY_NAMES[0]);
     p5.assertFirstPartyNameExists(PARTY_NAMES[0]);
     p5.selectFirstRole(ROLES[0]);
     p5.assertFirstRoleIsSelected(ROLES[0]);
 
-    p5.fillLastPartyName(PARTY_NAMES[1]);
+    p5.fillLastPartyName(PARTIAL_PARTY_NAMES[1]);
+    p5.selectLastPartyName(PARTY_NAMES[1]);
     p5.assertLastPartyNameExists(PARTY_NAMES[1]);
     p5.selectLastRole(ROLES[1]);
     p5.assertLastRoleIsSelected(ROLES[1]);

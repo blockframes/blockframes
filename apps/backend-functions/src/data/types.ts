@@ -19,14 +19,6 @@ export {
   InvitationFromUserToOrganization,
   InvitationToWorkOnDocument
 } from '@blockframes/invitation/types';
-export { MaterialDocument, MaterialStatus } from '@blockframes/material/material/types';
-export { StakeholderDocument } from '@blockframes/material/delivery/stakeholder/types';
-export {
-  DeliveryDocument,
-  StepDocument,
-  StepDocumentWithDate,
-  convertStepDocumentToStepDocumentWithDate
-} from '@blockframes/material/delivery/types';
 export {
   PermissionsDocument,
   AppPermissionsDocument,

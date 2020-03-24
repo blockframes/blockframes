@@ -1,0 +1,23 @@
+<ng-template #template let-weekEvent="weekEvent">
+  <div [@fadeIn]="!event.meta?.tmp" class="cal-event" (click)="edit(event)" *ngIf="weekEvent.event as event">
+
+    <!-- Event created -->
+    <ng-container [ngSwitch]="event | eventSize">
+      <section @fadeOut *ngSwitchCase="'underCreation'" fxLayout="column" fxLayoutAlign="center center">
+        <mat-icon svgIcon="calendar"></mat-icon>
+      </section>
+      <section *ngSwitchCase="'small'">
+        <h4 fxFlex>{{ event.title }}</h4>
+      </section>
+      <section *ngSwitchCase="'large'" fxLayout="column">
+        <h4>{{ event.title }}</h4>
+        <p>
+          This is a long event, so I have space to add text or images !!
+        </p>
+        <ng-container *ngFor="let action of event.actions">
+          <button mat-button (click)="action.onClick($event)">{{ action.label }}</button>
+        </ng-container>
+      </section>
+    </ng-container>
+  </div>
+</ng-template>

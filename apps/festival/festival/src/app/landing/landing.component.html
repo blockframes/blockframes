@@ -1,3 +1,39 @@
-<h1>Welcome</h1>
-<a routerLink="c/o/marketplace">Marketplace</a>
-<a routerLink="c/o/dashboard">Dashboard</a>
+<mat-toolbar [ngClass]="toolbarColor$ | async" (scroll)="scrollHandler()" fxLayout="row" fxLayoutAlign="space-between center">
+  <nav fxLayout="row" fxLayoutAlign="space-between center">
+    <a routerLink="/" class="logo">
+      <img asset="LogoArchipelContentPrimary.svg" type="logo" alt="Archipel Content Logo"/>
+    </a>
+    <a fxHide.lt-md mat-stroked-button href="#demo" id="demo-link">Schedule a demo</a>
+  </nav>
+  <div fxLayout="row" fxLayoutAlign="space-around center" fxLayoutGap="16px">
+    <a test-id="login" mat-button routerLink="/auth/connexion" fragment="signin">Login</a>
+    <a mat-button routerLink="/auth/connexion" fragment="signup">Sign up</a>
+  </div>
+</mat-toolbar>
+
+<header
+  fxLayout="column"
+  fxLayoutAlign="center start"
+  fxLayoutAlign.xs="center center"
+  fxLayoutGap="20px">
+  <h4>Archipel Content</h4>
+  <p class="mat-display-2 offer">The only marketplace offering package deals</p>
+  <h2>for TV, VOD and ancillary rights</h2>
+  <a mat-flat-button color="accent" routerLink="/auth/connexion">
+    <span>Join now</span>
+    <mat-icon svgIcon="arrow_forward"></mat-icon>
+  </a>
+</header>
+
+
+<footer fxLayout="column" fxLayoutAlign="start center" fxLayout.lt-md="column" fxLayoutAlign.lt-md="center center">
+  <a routerLink="/">
+    <img asset="LogoAC_blue.svg" type="logo" class="ac-logo"/>
+  </a>
+  <h3>Proudly associated with the following partners</h3>
+  <span fxLayout="row wrap" fxLayoutAlign="space-evenly start" fxLayoutGap="30px">
+    <img asset="CNC_logo.png" type="logo"/>
+    <img asset="BPIfrance.png" type="logo"/>
+    <img asset="creativemediaeurope.png" type="logo"/>
+  </span>
+</footer>

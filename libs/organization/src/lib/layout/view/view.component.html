@@ -1,0 +1,31 @@
+<ng-container *ngIf="org">
+  <header fxLayout="row" fxLayoutAlign="start center">
+    <img [imgRef]="org.logo" placeholderAsset="Organization_250.png" alt="organization logo" />
+    <article fxLayout="column" fxLayoutAlign="start start">
+      <h4>{{ org.activity }}</h4>
+      <h1>{{ org.name }}</h1>
+      <h2>
+        {{ org.addresses.main.street | titlecase }}
+        <ng-container *ngIf="org.addresses.main.street && org.addresses.main.zipCode">, </ng-container>
+        {{ org.addresses.main.zipCode | titlecase }}
+        <ng-container *ngIf="org.addresses.main.zipCode && org.addresses.main.city">, </ng-container>
+        {{ org.addresses.main.city | titlecase }}
+      </h2>
+      <p>Description</p>
+      <button mat-flat-button color="primary">
+        <span>Get in touch</span>
+        <mat-icon svgIcon="arrow_forward"></mat-icon>
+      </button>
+    </article>
+  </header>
+  <nav mat-tab-nav-bar>
+    <a mat-tab-link
+        *ngFor="let link of navLinks"
+        [routerLink]="link.path"
+        routerLinkActive #rla="routerLinkActive"
+        [active]="rla.isActive">
+      {{link.label}}
+    </a>
+  </nav>
+  <router-outlet></router-outlet>
+</ng-container>

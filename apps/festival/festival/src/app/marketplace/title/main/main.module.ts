@@ -8,7 +8,6 @@ import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/imag
 import { MainComponent } from './main.component';
 
 // Material
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -23,7 +22,6 @@ import { MatChipsModule } from '@angular/material/chips';
     TranslateSlugModule,
     ImageReferenceModule,
     // Material
-    MatProgressSpinnerModule,
     MatCardModule,
     MatIconModule,
     MatButtonModule,

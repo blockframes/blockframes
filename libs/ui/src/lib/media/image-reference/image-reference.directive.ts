@@ -1,4 +1,4 @@
-import { Directive, Renderer2, ElementRef, Input, OnInit, HostBinding, ChangeDetectorRef, OnDestroy } from '@angular/core'
+import { Directive, Input, OnInit, HostBinding, ChangeDetectorRef, OnDestroy } from '@angular/core'
 import { ImgRef } from '@blockframes/utils/image-uploader';
 import { BehaviorSubject, Observable, combineLatest, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -22,20 +22,15 @@ export class ImageReferenceDirective implements OnInit, OnDestroy {
    *  If path is wrong, src will be set with provided placeholder or empty string */
   @Input() set imgRef(path: ImgRef) {
     if(!path){
-      // this.updateUrl();
       this.ref$.next('');
     } try {
-      // this.updateUrl(path.url);
       this.ref$.next(path.url);
     } catch (err) {
-      // this.updateUrl();
       this.ref$.next('')
     }
   }
 
   @Input() set placeholderUrl(placeholder: string) {
-    // this.placeholder = placeholder;
-    // this.updateSrc()
     this.placeholder$.next(placeholder);
   };
 
@@ -46,8 +41,6 @@ export class ImageReferenceDirective implements OnInit, OnDestroy {
   constructor(
     private theme: ThemeService,
     private cdr: ChangeDetectorRef,
-    // private _renderer: Renderer2,
-    // private _elementRef: ElementRef,
   ) {}
 
   ngOnInit() {
@@ -67,14 +60,4 @@ export class ImageReferenceDirective implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.sub.unsubscribe();
   }
-
-  // updateSrc() {
-  //   this._renderer.setProperty(this._elementRef.nativeElement, 'src', this.url || this.placeholder || '')
-  // }
-
-  // updateUrl(url?: string) {
-  //   this.url = url;
-  //   this.updateSrc();
-  // }
-
 }

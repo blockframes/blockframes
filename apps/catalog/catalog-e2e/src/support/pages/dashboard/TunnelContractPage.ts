@@ -7,8 +7,12 @@ export default class TunnelContractPage {
 
   // Party Name
 
-  public fillFirstPartyName(name: string) {
-    cy.get('contract-details-sale contract-form-party input').first().type(name);
+  public fillFirstPartyName(partialName: string) {
+    cy.get('contract-details-sale contract-form-party input').first().type(partialName);
+  }
+
+  public selectFirstPartyName(name: string) {
+    cy.get('mat-option').contains(name).first().click();
   }
 
   public assertFirstPartyNameExists(name: string) {
@@ -24,8 +28,12 @@ export default class TunnelContractPage {
     cy.get('contract-details-sale contract-form-party mat-select').first().contains(role);
   }
 
-  public fillLastPartyName(name: string) {
-    cy.get('contract-details-sale contract-form-party input').last().type(name);
+  public fillLastPartyName(partialName: string) {
+    cy.get('contract-details-sale contract-form-party input').last().type(partialName);
+  }
+
+  public selectLastPartyName(name: string) {
+    cy.get('mat-option').contains(name).last().click();
   }
 
   public assertLastPartyNameExists(name: string) {
@@ -152,6 +160,7 @@ export default class TunnelContractPage {
   // Save
   public clickSave() {
     cy.get('[test-id=save]').click();
+    cy.wait(1000);
   }
 
   public clickNext() {

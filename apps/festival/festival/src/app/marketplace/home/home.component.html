@@ -9,7 +9,7 @@
   <section fxLayout="column" fxLayoutAlign="start center">
     <ng-container *ngFor="let section of sections; let i = index">
       <!-- We want by every iteration of the keys array that the text switches side-->
-      <article [fxLayout]="layout(i)" fxLayout.lt-md="column" fxLayoutAlign="center start">
+      <article *ngIf="section.hasMovies$ | async" [fxLayout]="layout(i)" fxLayout.lt-md="column" fxLayoutAlign="center start">
         <aside fxLayout="column" [fxLayoutAlign]="alignment(i)" fxLayoutAlign.lt-md="center center" fxLayoutGap="20px">
           <h1>{{ section.title }}</h1>
           <p>{{ section.subline}} </p>
@@ -18,11 +18,11 @@
         <mat-carousel test-id="mat-carousel1" proportion="50" [hideArrows]="true" [hideIndicators]="true">
           <!-- We only want to use the first image in the promotinalElements.images array-->
             <mat-carousel-slide #matCarouselSlide *ngFor="let movie of section.movies$ | async" [image]="getBanner(movie)">
-              <div
+              <a
                 fxLayout="column"
                 fxLayoutAlign="end start"
                 class="black-bg-opacity-30 overlay"
-                [routerLink]="['title', movie.id]">
+                [routerLink]="['../title', movie.id]">
                 <ng-container *ngIf="(toggle$(movie.id) | async); else notAdded">
                   <button test-id="heart-icon" mat-icon-button (click)="removeFromWishlist(movie, $event)">
                     <mat-icon svgIcon="heart_fill" color="accent"></mat-icon>
@@ -45,7 +45,7 @@
                     {{ salesAgent.displayName }}{{isLast ? '' : ', '}}
                   </span>
                 </div>
-              </div>
+              </a>
             </mat-carousel-slide>
         </mat-carousel>
       </article>

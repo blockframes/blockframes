@@ -1,15 +1,16 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Movie, MovieQuery, MovieMain } from '@blockframes/movie/movie/+state';
+import { Movie, MovieQuery, MovieMain, MovieService } from '@blockframes/movie/movie/+state';
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
 import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 interface CarouselSection {
   title: string;
   subline: string;
+  hasMovies$: Observable<boolean>;
   movies$: Observable<Movie[]>;
 }
 
@@ -20,13 +21,14 @@ interface CarouselSection {
   styleUrls: ['./home.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HomeComponent implements OnInit {
-
+export class HomeComponent implements OnInit, OnDestroy {
+  private sub: Subscription;
   /** Observable to fetch all movies from the store */
   public moviesBySections$: Observable<CarouselSection[]>;
   public sections: CarouselSection[];
 
   constructor(
+    private movieService: MovieService,
     private movieQuery: MovieQuery,
     private cartService: CartService,
     private snackbar: MatSnackBar,
@@ -35,33 +37,45 @@ export class HomeComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.sub = this.movieService.syncCollection(ref => ref.limit(30)).subscribe();
     const selectMovies = (status: MovieMain['status']) => {
       return this.movieQuery.selectAll({
         filterBy: movies => movies.main.status === status
       });
     }
+    const hasMovies = (status: MovieMain['status']) => {
+      return this.movieQuery.hasMovies(movies => movies.main.status === status);
+    }
     this.sections = [
       {
         title: 'Pre Production Films',
         subline: 'Discover our latest releases',
+        hasMovies$: hasMovies('financing'),
         movies$: selectMovies('financing')
       },
       {
         title: 'In Production Films',
         subline: 'Discover our latest releases',
+        hasMovies$: hasMovies('shooting'),
         movies$: selectMovies('shooting')
       },
       {
         title: 'Post-Production Films',
         subline: 'Brand new projects with great potential',
+        hasMovies$: hasMovies('post-production'),
         movies$: selectMovies('post-production')
       },
       {
         title: 'Completed Films',
         subline: 'Explore our selection of fresh or library titles',
+        hasMovies$: hasMovies('finished'),
         movies$: selectMovies('finished')
       }
     ];
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 
   public layout(index: number) {

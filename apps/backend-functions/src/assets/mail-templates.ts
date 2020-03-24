@@ -179,3 +179,14 @@ export function sendDemoRequestMail(information: RequestDemoInformations) {
     Role: ${information.role}`
   }
 }
+
+export function sendContactEmail(userName: string, userMail: string, subject: string, message: string): EmailRequest {
+  return {
+    to: adminEmail,
+    subject: 'An user contacts Blockframes Admin',
+    text: ` ${userName} (${userMail}) has sent an email.
+    Subject of the mail : ${subject}
+    Message from user :
+    ${message}`
+  }
+}

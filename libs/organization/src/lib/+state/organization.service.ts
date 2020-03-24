@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { switchMap, map, tap } from 'rxjs/operators';
-import { AuthQuery } from '@blockframes/auth';
+import { switchMap } from 'rxjs/operators';
+import { AuthQuery } from '@blockframes/auth/+state';
 import {
   Organization,
   createOrganization,
@@ -12,7 +12,6 @@ import { OrganizationStore, OrganizationState } from './organization.store';
 import { OrganizationQuery } from './organization.query';
 import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
 import { AngularFireFunctions } from '@angular/fire/functions';
-import { APPS_DETAILS } from '@blockframes/utils';
 import { createPermissions } from '../permissions/+state/permissions.model';
 import { firestore } from 'firebase/app';
 

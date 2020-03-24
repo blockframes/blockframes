@@ -1,5 +1,5 @@
-import OrganizationCreatePage from "./OrganizationCreatePage";
-import OrganizationFindPage from "./OrganizationFindPage";
+import OrganizationCreatePage from './OrganizationCreatePage';
+import OrganizationFindPage from './OrganizationFindPage';
 
 const PATH = '/c/organization/home';
 
@@ -10,8 +10,8 @@ export default class OrganizationHomePage {
 
   public assertMoveToOrgHomepage() {
     cy.location().should(loc => {
-      expect(loc.pathname).to.eq(PATH)
-    })
+      expect(loc.pathname).to.eq(PATH);
+    });
   }
 
   public clickCreateOrganization() {
@@ -23,12 +23,12 @@ export default class OrganizationHomePage {
   }
 
   public clickSubmitToCreate() {
-    cy.get('organization-home [test-id=submit]').click();
+    cy.get('organization-home a[test-id=submit]').click();
     return new OrganizationCreatePage();
   }
 
   public clickSubmitToFind() {
-    cy.get('organization-home [test-id=submit]').click();
+    cy.get('organization-home a[test-id=submit]').click();
     return new OrganizationFindPage();
   }
 }
