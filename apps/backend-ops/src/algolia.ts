@@ -3,6 +3,7 @@ import {
   storeSearchableMovie,
   storeSearchableOrg
 } from '../../backend-functions/src/internals/algolia';
+import { MovieDocument } from 'apps/backend-functions/src/data/types';
 
 export async function upgradeAlgoliaOrgs() {
   const { db } = loadAdminServices();
@@ -23,7 +24,7 @@ export async function upgradeAlgoliaMovies() {
 
   const promises = [];
   movies.forEach(movie => {
-    const movieData = movie.data();
+    const movieData = movie.data() as MovieDocument;
     // const user = await db.collection('users').doc(movieData._meta.createdBy).get().then(snap => snap.data());
     // const organization = await db.collection('orgs').doc(user.orgId).get().then(snap => snap.data());
     // promises.push(storeSearchableMovie(movieData, organization.id, organization.name, process.env['ALGOLIA_API_KEY']));
@@ -32,7 +33,7 @@ export async function upgradeAlgoliaMovies() {
       .then(snap => snap.data())
       .then(user => db.collection('orgs').doc(user.orgId).get())
       .then(snap => snap.data())
-      .then(organization => storeSearchableMovie(movieData, organization.id, organization.name, process.env['ALGOLIA_API_KEY']))
+      .then(organization => storeSearchableMovie(movieData, organization.name, process.env['ALGOLIA_API_KEY']))
     ;
     promises.push(promise);
   });
