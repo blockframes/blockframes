@@ -60,7 +60,10 @@
     <article fxLayout="column" fxLayoutAlign="space-between start">
       <h2>Contract Price : </h2>
       <div>
-        <span i18n>Overall contract price : <b>{{ contract.last.price.amount | currency: getCurrencyCode(contract.last.price.currency) }}</b></span>
+        <span *ngIf="contract.last && contract.last.price else nocontractprice" i18n>Overall contract price : <b>{{ contract.last.price.amount | currency: getCurrencyCode(contract.last.price.currency) }}</b></span>
+        <ng-template #nocontractprice>
+          --
+        </ng-template>
         <button mat-icon-button color="accent" (click)="updatePrice()">
           <mat-icon svgIcon="update"></mat-icon>
         </button>
@@ -131,7 +134,12 @@
           <strong>From : </strong>{{ scope | termDate: 'start'  }} <strong>To : </strong>{{ scope | termDate: 'end' }}
         </ng-template>
         <ng-template colRef="price" let-price>
-          {{ price.amount | currency: getCurrencyCode(price.currency) }}
+          <ng-container *ngIf="price && price.currency else noversionprice">
+            {{ price.amount | currency: getCurrencyCode(price.currency) }}
+          </ng-container>
+          <ng-template #noversionprice>
+            --
+          </ng-template>
         </ng-template>
         <ng-template colRef="status" let-contractStatus>
           {{ contractStatus | toLabel: 'contractStatus' | async }}
@@ -161,7 +169,12 @@
           </ng-template>
         </ng-template>
         <ng-template colRef="price" let-price>
-          {{ price.amount | currency: getCurrencyCode(price.currency) }}
+          <ng-container *ngIf="price && price.currency else notitleprice">
+            {{ price.amount | currency: getCurrencyCode(price.currency) }}
+          </ng-container>
+          <ng-template #notitleprice>
+            --
+          </ng-template>
         </ng-template>
         <ng-template colRef="deals" let-deals>
           <ul *ngIf="deals.length else nodeals">
