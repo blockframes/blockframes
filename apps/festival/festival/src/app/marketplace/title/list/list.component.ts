@@ -114,19 +114,16 @@ export class ListComponent implements OnInit, OnDestroy {
   /* main search bar */
   public searchbarTextControl: FormControl = new FormControl('');
 
-  /* select list of all available genres */
-  public availableGenres$: Observable<any>;
-
   /* seller org autocomplete search bar */
   public orgSearchResults$: Observable<any>;
 
   // ALGOLIA
 
   /* Aggregation of all algolia filters */
-  private facetFilters$: Observable<string[]>;
+  private facetFilters$: Observable<(string | string[])[]>;
 
   /* selected genres to filter*/
-  public genresFilter$: Observable<any>;
+  public genresFilter$: Observable<string[]>;
 
   /* selected seller orgs to filter */
   public selectedSellers$ = new BehaviorSubject<string[]>([]);
@@ -151,26 +148,29 @@ export class ListComponent implements OnInit, OnDestroy {
     this.sub = this.movieService.syncCollection(ref => ref.limit(30)).subscribe();
 
     /* The text string typed by the user in the search bar */
-    const searchQuery$: Observable<string> = this.searchbarTextControl.valueChanges.pipe(
+    // const searchQuery$: Observable<string> = this.searchbarTextControl.valueChanges.pipe(
       // debounceTime(200),
       // distinctUntilChanged(),
       // pluck('text'),
-      tap(t => console.log('searching movie', t)), // TODO REMOVE LOG
+      // tap(t => console.log('searching movie', t)), // TODO REMOVE LOG
       // switchMap(text => this.movieIndex.search(text)),
       // pluck('hits'),
       // tap(res => console.log('movie result :', res)) // TODO REMOVE LOG
-    );
+    // );
 
     // UI FILTERS
 
-    this.genresFilter$ = this.filterForm.genres.valueChanges.pipe();
+    this.genresFilter$ = this.filterForm.genres.valueChanges.pipe(
+      startWith([]),
+      tap(a => console.log('genres :', a))
+    );
 
     this.languagesFilter$ = this.languageControl.valueChanges.pipe(
       startWith(''),
       distinctUntilChanged(),
       debounceTime(300),
       map(value => this._languageFilter(value)),
-      tap(l => console.log('languages :', l)) // TODO HERE UNDEFINED TWICE ! so this fuck the facetFilters$ !
+      // tap(l => console.log('languages :', l)) // TODO HERE UNDEFINED TWICE ! so this fuck the facetFilters$ !
     );
 
     // this.resultFilter$ = this.searchbarTextControl.valueChanges.pipe(
@@ -192,12 +192,14 @@ export class ListComponent implements OnInit, OnDestroy {
 
     /* Combining ui filters into algolia's facets */
     this.facetFilters$ = combineLatest([
+      this.genresFilter$,
       this.languagesFilter$,
       this.selectedSellers$
     ]).pipe(
       // startWith([]),
-      map(([languages, sellers]) => {
+      map(([genres, languages, sellers]) => {
         return [
+          [...genres.map(genre => `movie.main.genres:${genre}`)], // same facet inside an array means OR for algolia
           // ...languages.map(language => `originalLanguages:${language}`),
           ...sellers.map(seller => `orgName:${seller}`),
         ];
@@ -207,13 +209,14 @@ export class ListComponent implements OnInit, OnDestroy {
 
     /* Query algolia every time the search query or the filters changes */
     this.movieSearchResults$ = combineLatest([
-      searchQuery$,
+      this.searchbarTextControl.valueChanges,
       this.facetFilters$,
       // this.sortBy$
     ]).pipe(
       debounceTime(200),
-      distinctUntilChanged(),
-      tap(values => console.log(values)),
+      tap(values => console.log('query', values)),
+      // distinctUntilChanged(),
+
       switchMap(([algoliaMovies , facetFilters]) => {
         // const movieIds = algoliaMovies.map(index => index.objectID);
         // return this.movieQuery.selectAll({
