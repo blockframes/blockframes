@@ -73,7 +73,7 @@ export class ContractService extends CollectionService<ContractState> {
       contractWithVersion.doc = createContractFromFirestore(contract);
       const lastVersion = await this.contractVersionService.getContractLastVersion(contract.id);
       if (lastVersion) {
-        contractWithVersion.last = lastVersion;
+        contractWithVersion.last = lastVersion; // @TODO (#1887) remove this
       }
 
       return contractWithVersion;
