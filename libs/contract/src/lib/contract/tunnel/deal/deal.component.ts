@@ -1,6 +1,6 @@
 import { DistributionDealForm } from '@blockframes/distribution-deals/form/distribution-deal.form';
 import { map } from 'rxjs/operators';
-import { Movie } from '@blockframes/movie/movie/+state';
+import { Movie } from '@blockframes/movie/+state';
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ContractTunnelComponent } from '../contract-tunnel.component';

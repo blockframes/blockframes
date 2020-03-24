@@ -37,7 +37,7 @@ import {
   MovieLanguageTypesValue,
   UnitBoxValue,
   premiereType
-} from '@blockframes/movie/movie/+state/movie.firestore';
+} from '@blockframes/movie/+state/movie.firestore';
 import { createStakeholder } from '@blockframes/utils/common-interfaces/identity';
 import { DistributionDeal, createDistributionDeal, createHoldback } from '@blockframes/distribution-deals/+state/distribution-deal.model';
 import {

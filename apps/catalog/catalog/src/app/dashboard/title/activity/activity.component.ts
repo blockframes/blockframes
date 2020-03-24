@@ -1,8 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { MovieAnalytics } from '@blockframes/movie/movie/+state/movie.firestore';
-import { MovieService } from '@blockframes/movie/movie/+state/movie.service';
-import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
-import { getMovieReceipt } from '@blockframes/movie/movie/+state/movie.model';
+import { MovieAnalytics } from '@blockframes/movie/+state/movie.firestore';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { MovieQuery } from '@blockframes/movie/+state/movie.query';
+import { getMovieReceipt } from '@blockframes/movie/+state/movie.model';
 import { Observable } from 'rxjs';
 import { Contract } from '@blockframes/contract/contract/+state/contract.model';
 import { getContractLastVersion } from '@blockframes/contract/version/+state/contract-version.model';

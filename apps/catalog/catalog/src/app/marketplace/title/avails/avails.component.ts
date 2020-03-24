@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { AvailsSearchForm } from '@blockframes/distribution-deals/form/search.form';
-import { MovieQuery, Movie } from '@blockframes/movie/movie/+state';
+import { MovieQuery, Movie } from '@blockframes/movie/+state';
 import { EnhancedISO3166Territory } from '@blockframes/utils/static-model/territories-ISO-3166';
 import { getNotLicensedTerritories, getAvailableTerritories, getRightsSoldTerritories } from './territories-filter';
 import { DistributionDealService, DistributionDeal, createDistributionDeal } from '@blockframes/distribution-deals/+state';

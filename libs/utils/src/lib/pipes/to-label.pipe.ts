@@ -38,7 +38,7 @@ export class ToLabelPipe implements PipeTransform {
         case 'storeType':
         case 'workType':
         case 'storeStatus':
-          this.imports[type] = await import('@blockframes/movie/movie/+state/movie.firestore').then(e => e[type]);
+          this.imports[type] = await import('@blockframes/movie/+state/movie.firestore').then(e => e[type]);
           break;
         case 'contractStatus':
           this.imports[type] = await import('@blockframes/contract/contract/+state/contract.firestore').then(e => e[type]);

@@ -1,8 +1,8 @@
 // Angular
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 // Blockframes
-import { MovieService, MovieQuery, createMovie } from '@blockframes/movie/movie/+state';
-import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
+import { MovieService, MovieQuery, createMovie } from '@blockframes/movie/+state';
+import { MovieForm } from '@blockframes/movie/form/movie.form';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TunnelStep, TunnelRoot, TunnelConfirmComponent } from '@blockframes/ui/tunnel';

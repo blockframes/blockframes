@@ -1,5 +1,5 @@
-import { MovieFormFormatModule } from '@blockframes/movie/movie/form/sales-info/format/format.module';
-import { MovieFormVersionInfoModule } from '@blockframes/movie/movie/form/version-info/version-info.module';
+import { MovieFormFormatModule } from '@blockframes/movie/form/sales-info/format/format.module';
+import { MovieFormVersionInfoModule } from '@blockframes/movie/form/version-info/version-info.module';
 import { TunnelTechnicalInfoComponent } from './technical-info.component';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 

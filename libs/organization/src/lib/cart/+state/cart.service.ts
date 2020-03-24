@@ -1,4 +1,4 @@
-import { Movie } from '@blockframes/movie/movie/+state/movie.model';
+import { Movie } from '@blockframes/movie/+state/movie.model';
 import { Injectable } from '@angular/core';
 import { CatalogCart, createCart } from './cart.model';
 import { OrganizationQuery, OrganizationService, Wishlist } from '@blockframes/organization';

@@ -2,7 +2,7 @@
 import { algolia } from '@env';
 import { ContractTunnelComponent } from '@blockframes/contract/contract/tunnel/contract-tunnel.component';
 import { ContractVersionForm } from '@blockframes/contract/version/form/version.form';
-import { Movie } from '@blockframes/movie/movie/+state/movie.model';
+import { Movie } from '@blockframes/movie/+state/movie.model';
 import { FormStaticValue, FormList } from '@blockframes/utils/form';
 
 // Angular
@@ -75,7 +75,7 @@ export class PriceComponent implements OnInit {
 
   /**
    * @description gets the price form group back for the parameter
-   * @param movieId 
+   * @param movieId
    */
   public priceForm(movieId: string) {
     return this.form.last().get('titles').get(movieId).get('price');
@@ -102,7 +102,7 @@ export class PriceComponent implements OnInit {
 
   /**
    * @description gets triggered when the user choosed a movie from the dropdown
-   * @param event 
+   * @param event
    */
   public addMovie(id: string) {
     this.tunnel.addTitle(id, this._hasMandate)

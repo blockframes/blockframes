@@ -11,15 +11,15 @@ import { MatCardModule } from '@angular/material/card';
 import { MatDividerModule } from '@angular/material/divider';
 
 // Form modules
-import { MovieFormStakeholdersModule } from '@blockframes/movie/movie/form/main/stakeholders/stakeholders.module';
-import { MovieFormContentTypeModule } from '@blockframes/movie/movie/form/main/content-type/content-type.module';
-import { MovieFormDirectorsModule } from '@blockframes/movie/movie/form/main/directors/directors.module';
-import { MovieFormLanguagesModule } from '@blockframes/movie/movie/form/main/languages/languages.module';
-import { MovieFormGenresModule } from '@blockframes/movie/movie/form/main/genres/genres.module';
-import { MovieFormTotalRuntimeModule } from '@blockframes/movie/movie/form/main/total-runtime/total-runtime.module';
-import { MovieFormFestivalPrizesModule } from '@blockframes/movie/movie/form/festival-prizes/festival-prizes.module';
-import { MovieFormOriginalReleasesModule } from '@blockframes/movie/movie/form/sales-info/original-releases/original-releases.module';
-import { MovieFormSalesCastModule } from '@blockframes/movie/movie/form/sales-cast/sales-cast.module';
+import { MovieFormStakeholdersModule } from '@blockframes/movie/form/main/stakeholders/stakeholders.module';
+import { MovieFormContentTypeModule } from '@blockframes/movie/form/main/content-type/content-type.module';
+import { MovieFormDirectorsModule } from '@blockframes/movie/form/main/directors/directors.module';
+import { MovieFormLanguagesModule } from '@blockframes/movie/form/main/languages/languages.module';
+import { MovieFormGenresModule } from '@blockframes/movie/form/main/genres/genres.module';
+import { MovieFormTotalRuntimeModule } from '@blockframes/movie/form/main/total-runtime/total-runtime.module';
+import { MovieFormFestivalPrizesModule } from '@blockframes/movie/form/festival-prizes/festival-prizes.module';
+import { MovieFormOriginalReleasesModule } from '@blockframes/movie/form/sales-info/original-releases/original-releases.module';
+import { MovieFormSalesCastModule } from '@blockframes/movie/form/sales-cast/sales-cast.module';
 
 @NgModule({
   declarations: [TunnelMainComponent],

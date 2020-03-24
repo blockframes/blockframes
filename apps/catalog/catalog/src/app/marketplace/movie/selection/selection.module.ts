@@ -6,7 +6,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MarketplaceSelectionComponent } from './selection.component';
 import { WishlistButtonModule } from '../wishlist/wishlist-button/wishlist-button.module';
 
-import { MovieBannerModule } from '@blockframes/movie/movie/components/banner/banner.module';
+import { MovieBannerModule } from '@blockframes/movie/components/banner/banner.module';
 import { RightListModule } from '@blockframes/distribution-deals/components/right-list/right-list.module';
 
 // Material
