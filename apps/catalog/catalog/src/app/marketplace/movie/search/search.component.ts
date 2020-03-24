@@ -321,7 +321,7 @@ export class MarketplaceSearchComponent implements OnInit {
     const productionStatusSlug = getCodeIfExists('MOVIE_STATUS', status);
     if (
       this.movieProductionStatuses.includes(status) &&
-      !this.filterForm.get('status').value.includes(productionStatusSlug)
+      !this.filterForm.get('productionStatus').value.includes(productionStatusSlug)
     ) {
       this.filterForm.addStatus(productionStatusSlug);
       this.analytics.event('addedMovieStatus', { status });
