@@ -5,7 +5,7 @@ import { getOrganizationsOfContract, getDocument } from './data/internals';
 import { triggerNotifications, createNotification } from './notification';
 import { centralOrgID } from './environments/environment';
 import { isEqual } from 'lodash';
-import { firestore } from 'firebase-admin';
+import { firestore } from 'firebase';
 
 async function getCurrentVersionId(tx: FirebaseFirestore.Transaction, contractId: string): Promise<string> {
   return (await _getVersionCount(contractId, tx)).toString(); // @TODO (#1887) change type to number
@@ -173,12 +173,12 @@ export async function onContractWrite(
 
       // To compare current and previous versions against each other
       delete current.lastVersion.id;
-      const currentCreationDate = current.lastVersion.creationDate;
+      const currentCreationDate = current.lastVersion.creationDate ? current.lastVersion.creationDate : firestore.Timestamp.now();
       delete current.lastVersion.creationDate;
       if (!lastVersion || !isEqual(current.lastVersion, lastVersion)) {
         current.lastVersion.id = await getNextVersionId(tx, current.id);
         // Creation date is handled here. If not sent by user, it is created here.
-        current.lastVersion.creationDate = currentCreationDate || firestore.Timestamp.now(); // cette date n'est pas ok
+        current.lastVersion.creationDate = currentCreationDate as any;
         const versionToHistorize = current.lastVersion as ContractVersionDocument;
         // A new version have been saved, we check if public contract need to be updated
         await updatePublicContract(tx, current);
