@@ -1,9 +1,6 @@
-import {
-  EntityControl,
-  PasswordControl,
-  FormEntity
-} from '@blockframes/utils';
 import { FormControl, Validators } from '@angular/forms';
+import { EntityControl, FormEntity } from '@blockframes/utils/form/forms/entity.form';
+import { PasswordControl } from '@blockframes/utils/form/controls/password.control';
 
 interface SignUp {
   email: string

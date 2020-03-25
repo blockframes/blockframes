@@ -1,5 +1,5 @@
 import { MovieFestivalPrizes, createMovieFestivalPrizes, Prize, createPrize } from '../../+state';
-import { FormEntity, FormList } from '@blockframes/utils';
+import { FormEntity, FormList } from '@blockframes/utils/form/forms';
 import { FormControl } from '@angular/forms';
 
 function createPrizeFormControl(entity?: Partial<Prize>) {

@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { ContractForm } from '../../form/contract.form';
 import { Movie } from '@blockframes/movie';
-import { FormEntity } from '@blockframes/utils';
+import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { ContractVersionPriceControl } from '@blockframes/contract/version/form';
 import { MovieCurrenciesSlug } from '@blockframes/utils/static-model';
 import { ContractVersionService } from '@blockframes/contract/version/+state';

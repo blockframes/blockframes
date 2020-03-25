@@ -1,6 +1,8 @@
 import { FormControl } from '@angular/forms';
-import { FormEntity, ImgRef, createImgRef } from '@blockframes/utils';
 import { User } from '@blockframes/auth/+state/auth.store';
+import { createImgRef, ImgRef } from '@blockframes/utils/image-uploader';
+import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
+
 export interface Profile {
   name: string;
   surname: string;

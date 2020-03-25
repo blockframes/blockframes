@@ -2,10 +2,10 @@ import { Component, ChangeDetectionStrategy, OnInit, ViewChild, OnDestroy, After
 import { MatSidenav } from '@angular/material/sidenav';
 import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
 import { Wishlist } from '@blockframes/organization';
-import { AuthQuery } from '@blockframes/auth';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 
 @Component({
   selector: 'festival-marketplace',

@@ -1,6 +1,6 @@
 import { UserRole } from "@blockframes/permissions/types";
 import { User } from "@blockframes/auth/+state/auth.store";
-import { ImgRef, createImgRef } from "@blockframes/utils";
+import { ImgRef, createImgRef } from "@blockframes/utils/image-uploader";
 
 export interface OrganizationMemberRequest {
   email: string;

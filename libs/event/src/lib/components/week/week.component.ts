@@ -10,11 +10,13 @@ import { addDays, addMinutes, endOfWeek, startOfWeek } from 'date-fns';
 
 import { EventSmallDirective, EventLargeDirective } from '../event.directive';
 import { EventService } from '../../+state/event.service';
+import { createEvent } from '../../+state/event.model';
 import { EventCreateComponent } from '../../form/create/create.component';
 import { fromEvent } from 'rxjs';
 
-import { AuthQuery } from '@blockframes/auth';
+import { EventTypes } from '@blockframes/event/+state/event.firestore';
 import { map, finalize, takeUntil, distinctUntilChanged } from 'rxjs/operators';
+import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 
 function floorToNearest(amount: number, precision: number) {
   return Math.floor(amount / precision) * precision;
@@ -49,6 +51,7 @@ export class CalendarWeekComponent {
   baseEvents: CalendarEvent[];
   localEvents: CalendarEvent[];
   @Input() viewDate: Date = new Date();
+  @Input() eventType: EventTypes = 'standard';
   @Input()
   set events(events: CalendarEvent<any>[]) {
     this.baseEvents = events;
@@ -83,21 +86,21 @@ export class CalendarWeekComponent {
     if (!this.editable) {
       return;
     }
-    const tmpEvent: CalendarEvent = {
+    const lcoalEvent: CalendarEvent = createEvent({
       id: this.service['db'].createId(),
       title: 'New event',
       start: segment.date,
       end: addMinutes(segment.date, 30),
-      meta: { tmp: true } // Will be removed by the form
-    };
-    this.localEvents.push(tmpEvent);
+      type: 'local'
+    });
+    this.localEvents.push(lcoalEvent);
     const segmentPosition = segmentElement.getBoundingClientRect();
     const startOfView = startOfWeek(this.viewDate, { weekStartsOn: 0 });
     const endOfView = endOfWeek(this.viewDate, { weekStartsOn: 0 });
 
     fromEvent(this.document, 'mousemove')
       .pipe(
-        finalize(() => this.createEvent(tmpEvent)),
+        finalize(() => this.createEvent(lcoalEvent)),
         takeUntil(fromEvent(this.document, 'mouseup')),
         map((mouseMoveEvent: MouseEvent) => {
           const min = ceilToNearest(mouseMoveEvent.clientY - segmentPosition.top, 30);
@@ -109,10 +112,10 @@ export class CalendarWeekComponent {
       .subscribe(targetDate => {
         if (targetDate > startOfView && startOfView < endOfView) {
           if (targetDate > segment.date) {
-            tmpEvent.end = targetDate;
+            lcoalEvent.end = targetDate;
           } else {
-            tmpEvent.end = segment.date;
-            tmpEvent.start = targetDate;
+            lcoalEvent.end = segment.date;
+            lcoalEvent.start = targetDate;
           }
         }
         this.refresh(this.localEvents);
@@ -126,15 +129,18 @@ export class CalendarWeekComponent {
 
   private createEvent(data: CalendarEvent) {
     this.bottomSheet.open(EventCreateComponent, { data }).afterDismissed().subscribe(async event => {
-      event
-        ? this.service.add(event)
-        : this.refresh(this.baseEvents);
+      if (event) {
+        event.type = this.eventType;
+        this.service.add(event);
+      } else {
+        this.refresh(this.baseEvents);
+      }
     });
   }
 
   updateEvent(timeChange: CalendarEventTimesChangedEvent) {
     if (this.authQuery.userId === timeChange.event['userId']) {
-      const event = { id: timeChange.event.id, start: timeChange.newStart, end: timeChange.newEnd };
+      const event = { id: timeChange.event.id as string, start: timeChange.newStart, end: timeChange.newEnd };
       this.service.update(event);
     }
   }

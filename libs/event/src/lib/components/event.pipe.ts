@@ -1,5 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { CalendarEvent } from 'angular-calendar';
+import { Event } from '../+state/event.model';
 
 function minute(amount: number) {
   return 1000 * 60 * amount;
@@ -8,9 +9,9 @@ function minute(amount: number) {
 @Pipe({name: 'eventSize', pure: true})
 export class EventSizePipe implements PipeTransform {
 
-  transform(event: CalendarEvent): 'underCreation'|'small'|'large' {
-    if (event.meta?.tmp) {
-      return 'underCreation';
+  transform(event: Event): 'local'|'small'|'large' {
+    if (event.type === 'local') {
+      return 'local';
     }
     if (event.allDay) {
       return 'small';

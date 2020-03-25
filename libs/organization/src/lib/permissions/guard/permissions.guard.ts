@@ -3,7 +3,7 @@ import { PermissionsState, PermissionsService, PermissionsQuery } from '../+stat
 import { Router } from '@angular/router';
 import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
 import { map, switchMap } from 'rxjs/operators';
-import { AuthQuery } from '@blockframes/auth';
+import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })

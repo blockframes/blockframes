@@ -1,5 +1,5 @@
 import { MovieSalesAgentDeal, createMovieSalesAgentDeal } from '../../+state';
-import { FormEntity } from '@blockframes/utils';
+import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { DateRange, createRange } from '@blockframes/utils/common-interfaces/range';
 import { FormControl } from '@angular/forms';
 

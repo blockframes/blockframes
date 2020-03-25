@@ -15,6 +15,8 @@ export class EventService extends CollectionService<EventState> {
     const e = { ...event };
     delete e.draggable;
     delete e.resizable;
+    delete e.color;
+    delete e.cssClass;
     return e;
   }
 }

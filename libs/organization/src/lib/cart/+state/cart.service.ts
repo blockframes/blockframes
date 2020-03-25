@@ -4,7 +4,7 @@ import { CatalogCart, createCart } from './cart.model';
 import { OrganizationQuery, OrganizationService, Wishlist } from '@blockframes/organization';
 import { CartState, CartStore } from './cart.store';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
-import { AuthQuery } from '@blockframes/auth';
+import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { MovieCurrenciesSlug } from '@blockframes/utils/static-model/types';
 

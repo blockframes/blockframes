@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, OnInit, NgZone } from '@angular/core';
-import { AuthQuery } from '@blockframes/auth';
+import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { InvitationService } from '@blockframes/notification/invitation/+state/invitation.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { InvitationFromUserToOrganization } from '@blockframes/invitation/types';
@@ -27,7 +27,7 @@ export class OrganizationFeedbackComponent implements OnInit {
     const uid = this.authQuery.userId;
     this.invitations = await this.service.getValue(ref => ref.where('user.uid', '==', uid)) as any;
   }
-  
+
   public removeInvitation() {
     try {
       this.service.remove(this.invitations[0].id)

@@ -1,6 +1,6 @@
 import { createMovieLanguageSpecification } from '@blockframes/movie/+state/movie.model';
 import { MovieLanguageSpecification } from './../../+state/movie.firestore';
-import { FormEntity } from '@blockframes/utils';
+import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { FormControl } from '@angular/forms';
 import { LanguagesSlug } from '@blockframes/utils/static-model';
 

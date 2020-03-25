@@ -1,11 +1,12 @@
 import { Component, ChangeDetectionStrategy, OnInit, Input } from '@angular/core';
 import { Observable, combineLatest } from 'rxjs';
-import { AuthQuery, User } from '@blockframes/auth';
-import { NotificationQuery } from '../+state';
+import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { InvitationQuery, InvitationStore } from '../../invitation/+state';
 import { switchMap, map } from 'rxjs/operators';
 import { PermissionsQuery } from 'libs/organization/src/lib/permissions/+state/permissions.query';
 import { Invitation } from '@blockframes/invitation/types';
+import { User } from '@blockframes/auth/+state/auth.store';
+import { NotificationQuery } from '../+state/notification.query';
 
 @Component({
   selector: 'overlay-notification-widget',

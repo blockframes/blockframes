@@ -4,9 +4,7 @@ import { RouterModule } from '@angular/router';
 
 // Pages
 import { PrivacyComponent } from './privacy.component';
-
-// Material
-import { TermsConditionsModule } from '@blockframes/auth';
+import { TermsConditionsModule } from '@blockframes/auth/components/terms-conditions/terms-conditions.module';
 
 @NgModule({
   declarations: [PrivacyComponent],

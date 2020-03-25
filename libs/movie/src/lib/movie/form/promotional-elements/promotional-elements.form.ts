@@ -1,6 +1,8 @@
 import { MoviePromotionalElements, PromotionalElement, createMoviePromotionalElements, createPromotionalElement } from '../../+state';
-import { FormEntity, FormList, ImgRef, createImgRef } from '@blockframes/utils';
 import { FormControl } from '@angular/forms';
+import { ImgRef, createImgRef } from '@blockframes/utils/image-uploader';
+import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
+import { FormList } from '@blockframes/utils/form/forms/list.form';
 
 function createImgRefForm(reference?: Partial<ImgRef>) {
   const { url, ref, originalRef, originalFileName } = createImgRef(reference);

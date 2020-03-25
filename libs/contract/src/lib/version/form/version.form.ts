@@ -3,7 +3,7 @@ import { DistributionDealTermsForm } from '@blockframes/distribution-deals/form/
 import { createContractTitleDetail } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractTitleDetail } from '@blockframes/contract/contract/+state/contract.firestore';
 import { ContractVersion } from '@blockframes/contract/version/+state';
-import { FormEntity, FormList } from '@blockframes/utils';
+import { FormEntity, FormList } from '@blockframes/utils/form/forms';
 import { ContractVersionPriceForm } from './price/price.form';
 import { ContractVersionPaymentScheduleForm } from './payment-schedule/payment-schedule.form';
 

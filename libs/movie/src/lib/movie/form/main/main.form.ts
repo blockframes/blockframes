@@ -1,8 +1,10 @@
-import { FormEntity, FormList, yearValidators } from '@blockframes/utils';
 import { MovieMain, Credit, createMovieMain, Movie, MovieStakeholders, createMovieStakeholders, createTitle, createStoreConfig } from '../../+state';
 import { Validators, FormControl } from '@angular/forms';
 import { createCredit, Stakeholder, createStakeholder } from '@blockframes/utils/common-interfaces/identity';
-import { FormStaticValue, FormStaticArray } from '@blockframes/utils/form';
+import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
+import { FormStaticValue, FormStaticArray } from '@blockframes/utils/form/forms/static-value.form';
+import { FormList } from '@blockframes/utils/form/forms/list.form';
+import { yearValidators } from '@blockframes/utils/form/validators/validators';
 
 // CREDIT
 

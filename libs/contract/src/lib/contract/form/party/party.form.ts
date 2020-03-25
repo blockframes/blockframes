@@ -1,4 +1,4 @@
-import { FormEntity } from '@blockframes/utils';
+import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { FormControl, Validators } from '@angular/forms';
 import { Party, createParty } from '@blockframes/utils/common-interfaces/identity';
 

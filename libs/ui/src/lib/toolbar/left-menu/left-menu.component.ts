@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
-import { APPS_DETAILS, AppDetails } from '@blockframes/utils';
+import { AppDetails, APPS_DETAILS } from '@blockframes/utils/apps';
 
 @Component({
   selector: 'toolbar-left-menu',

@@ -1,8 +1,12 @@
-<cal-header></cal-header>
-<cal-week [events]="events$ | async" editable>
-  <ng-template calEventSmall let-event>
+<cal-header [(viewDate)]="viewDate"></cal-header>
+<cal-week [viewDate]="viewDate" [events]="events$ | async" editable>
 
+  <!-- Events -->
+  <ng-template calEventSmall let-event>
+    Small
   </ng-template>
+  
   <ng-template calEventLarge let-event>
+    Large
   </ng-template>
 </cal-week>

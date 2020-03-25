@@ -1,5 +1,5 @@
 import { MovieSalesInfo, createMovieSalesInfo, createMovieRating, createMovieOriginalRelease } from '../../+state';
-import { FormEntity, FormList } from '@blockframes/utils';
+import { FormEntity, FormList } from '@blockframes/utils/form/forms';
 import { FormControl } from '@angular/forms';
 import { MovieRating, MovieOriginalRelease } from '@blockframes/movie/+state/movie.firestore';
 import { FormStaticValue } from '@blockframes/utils/form';

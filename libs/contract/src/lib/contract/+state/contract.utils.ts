@@ -1,11 +1,10 @@
 import { ContractVersion } from "@blockframes/contract/version/+state";
-import { Terms } from "@blockframes/utils";
 import { ContractTitleDetail } from "./contract.firestore";
-import { Price, createPrice } from "@blockframes/utils/common-interfaces";
+import { Price, createPrice, Terms } from "@blockframes/utils/common-interfaces";
 
 /**
  * This method simply sums the price of each titles of a contractVersion
- * @param version 
+ * @param version
  */
 export function calculatePrice(version: ContractVersion) {
   version.price.amount = 0;

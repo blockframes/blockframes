@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
-import { NotificationState, NotificationService } from './+state';
-import { AuthQuery } from '@blockframes/auth';
+import { AuthQuery } from '@blockframes/auth/+state/auth.query';
+import { NotificationState } from './+state/notification.store';
+import { NotificationService } from './+state/notification.service';
 
 @Injectable({ providedIn: 'root' })
 @CollectionGuardConfig({ awaitSync: true })

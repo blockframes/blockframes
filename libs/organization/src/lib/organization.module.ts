@@ -5,14 +5,15 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Library
-import { EditableSidenavModule, AvatarListModule } from '@blockframes/ui';
-import { FeedbackMessageModule } from '@blockframes/ui';
-import { UploadModule } from '@blockframes/ui/upload';
-import { PasswordConfirmModule } from '@blockframes/ui/form';
+import { FeedbackMessageModule } from '@blockframes/ui/feedback/feedback-message.module';
+import { UploadModule } from '@blockframes/ui/upload/upload.module';
+import { PasswordConfirmModule } from '@blockframes/ui/form/password-confirm/password-confirm.module';
 import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { OrganizationFormModule } from './organization/forms/organization-form/organization-form.module';
 import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
+import { EditableSidenavModule } from '@blockframes/ui/editable-sidenav/editable-sidenav.module';
+import { AvatarListModule } from '@blockframes/ui/avatar-list/avatar-list.module';
 
 // Material
 import { MatAutocompleteModule } from '@angular/material/autocomplete';

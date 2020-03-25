@@ -3,7 +3,7 @@ import { ContractForm } from '../../form/contract.form';
 import { Movie } from '@blockframes/movie';
 import { ContractTunnelComponent, DealControls } from '../contract-tunnel.component';
 import { Observable } from 'rxjs';
-import { FormEntity } from '@blockframes/utils';
+import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { FormControl } from '@angular/forms';
 import { ContractVersionPriceControl, ContractVersionForm } from '@blockframes/contract/version/form';
 import { MovieCurrenciesSlug } from '@blockframes/utils/static-model';
