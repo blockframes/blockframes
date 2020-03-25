@@ -30,28 +30,6 @@ export class ContractVersionService extends CollectionService<ContractVersionSta
   }
 
   /**
-   * Add a new version of the contract.
-   * @param contractId
-   * @param contractWithLastVersion
-   */
-  public async addContractVersion(contractWithLastVersion: ContractWithLastVersion): Promise<string> {
-    await this.db.firestore.runTransaction(async tx => {
-      const contractId = contractWithLastVersion.doc.id;
-      // Get the _meta document from versions subcollection.
-      const _metaSnap = await tx.get(this.db.doc(`contracts/${contractId}/versions/_meta`).ref);
-      const _meta = createVersionMeta(_metaSnap.data());
-      // Increment count and then assign it to contractVersion id.
-      contractWithLastVersion.last.id = (++_meta.count).toString();
-      const versionRef = this.db.doc(`contracts/${contractId}/versions/${contractWithLastVersion.last.id}`).ref;
-
-      // Update/create _meta and add the version.
-      tx.set(_metaSnap.ref, _meta);
-      tx.set(versionRef, contractWithLastVersion.last);
-    });
-    return contractWithLastVersion.last.id;
-  }
-
-  /**
    * This convert the ContractVersion into a ContractVersionDocumentWithDates
    * to clean the unwanted properties in the database.
   */
@@ -80,6 +58,6 @@ export class ContractVersionService extends CollectionService<ContractVersionSta
       .collection(`contracts/${contractId}/versions`)
       .get()
       .toPromise();
-    return contractsSnap.docs.filter(v => v.id !== '_meta').map(c => createContractVersionFromFirestore(c.data()));
+    return contractsSnap.docs.filter(v => v.id !== '_meta').map(c => createContractVersionFromFirestore(c.data())); // @TODO (#1887) akita pre add?
   }
 }

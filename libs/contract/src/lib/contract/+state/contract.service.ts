@@ -141,8 +141,9 @@ export class ContractService extends CollectionService<ContractState> {
   public async addContractAndVersion(
     contract: ContractWithLastVersion
   ): Promise<string> {
+    // @TODO (#1887) temporary hack
+    contract.doc.lastVersion = contract.last;
     await this.add(contract.doc);
-    await this.contractVersionService.addContractVersion(contract);
     return contract.doc.id;
   }
 

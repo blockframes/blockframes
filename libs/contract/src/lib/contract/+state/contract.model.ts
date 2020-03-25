@@ -1,5 +1,5 @@
 import { getCodeIfExists } from '@blockframes/utils/static-model/staticModels';
-import { createPrice, CommissionBase } from '@blockframes/utils/common-interfaces/price';
+import { createPrice } from '@blockframes/utils/common-interfaces/price';
 import {
   ContractDocumentWithDates,
   ContractTitleDetail,
@@ -17,7 +17,8 @@ import {
   ContractVersion,
   ContractVersionWithTimeStamp,
   createContractVersionFromFirestore,
-  getContractLastVersion
+  getContractLastVersion,
+  cleanContractVersion
 } from '../../version/+state/contract-version.model';
 import { LegalRolesSlug } from '@blockframes/utils/static-model/types';
 import { toDate } from '@blockframes/utils/helpers';
@@ -175,10 +176,10 @@ export function buildChainOfTitle() {
 export function cleanContract(contract: Contract) {
   const c = { ...contract };
   delete c.versions; // Remove local values
-  delete c.lastVersion // @TODO (#1887) remove this once code migration ok
   if (!c.signDate) {
     delete c.signDate;
   }
+  c.lastVersion = cleanContractVersion(c.lastVersion);
   return c;
 }
 

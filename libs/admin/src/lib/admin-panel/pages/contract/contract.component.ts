@@ -159,13 +159,13 @@ export class ContractComponent implements OnInit {
     }
   }
 
-  private async reloadContractAndVersions(newVersionId: string, reloadTitles = false) {
-    this.version = parseInt(newVersionId, 10);
+  private async reloadContractAndVersions(reloadTitles = false) {
 
     const p1 = this.contractVersionService.getContractVersions(this.contractId).then(contractVersion => this.contractVersions = contractVersion);
     const p2 = this.contractService.getContractWithLastVersion(this.contractId).then(contract => this.contract = contract);
 
     await Promise.all([p1, p2]);
+    this.version = Math.max.apply(Math, this.contractVersions.map((o) =>  parseInt(o.id, 10)));
 
     if (reloadTitles) {
       await this.loadTitles();
@@ -208,10 +208,8 @@ export class ContractComponent implements OnInit {
     }
 
     // @TODO (#1887)
-    const newVersionId = await this.contractVersionService.addContractVersion({ doc: this.contract.doc, last: update });
-    this.version = parseInt(newVersionId, 10);
-    this.contractVersions = await this.contractVersionService.getContractVersions(this.contractId);
-    this.cdRef.detectChanges();
+    await this.contractService.addContractAndVersion({ doc: this.contract.doc, last: update });
+    this.reloadContractAndVersions();
 
     this.snackBar.open('Informations updated !', 'close', { duration: 5000 });
   }
@@ -328,9 +326,8 @@ export class ContractComponent implements OnInit {
 
     // @TODO (#1887) move thoses functions to a service
     // Update contract and create a new version
-    await this.contractService.update(writeableContract);
-    const newVersionId = await this.contractVersionService.addContractVersion({ doc: this.contract.doc, last: writeableVersion });
-    await this.reloadContractAndVersions(newVersionId, true);
+    await this.contractService.addContractAndVersion({ doc: writeableContract, last: writeableVersion });
+    await this.reloadContractAndVersions(true);
 
     this.snackBar.open('Informations updated !', 'close', { duration: 5000 });
     return true;
@@ -356,8 +353,8 @@ export class ContractComponent implements OnInit {
     const update = calculatePrice({ ...this.contract.last });
 
     // @TODO (#1887)
-    const newVersionId = await this.contractVersionService.addContractVersion({ doc: this.contract.doc, last: update });
-    await this.reloadContractAndVersions(newVersionId);
+    await this.contractService.addContractAndVersion({ doc: this.contract.doc, last: update });
+    await this.reloadContractAndVersions();
 
     this.snackBar.open('Contract global price updated !', 'close', { duration: 5000 });
   }
