@@ -58,10 +58,20 @@ const routes: Routes = [{
       path: 'organization',
       children: [{
         path: '',
-        loadChildren: () => import('./organization/list/list.module').then(m => m.OrganizationListModule),
+        loadChildren: () => import('./organization/list/list.module').then(m => m.OrganizationListModule)
       }, {
         path: ':orgId',
         loadChildren: () => import('./organization/view/view.module').then(m => m.OrganizationViewModule)
+      }]
+    },
+    {
+      path: 'event',
+      children: [{
+        path: '',
+        loadChildren: () => import('./event/list/list.module').then(m => m.EventListModule)
+      }, {
+        path: ':eventId',
+        loadChildren: () => import('./event/view/view.module').then(m => m.EventViewModule)
       }]
     }
   ]
