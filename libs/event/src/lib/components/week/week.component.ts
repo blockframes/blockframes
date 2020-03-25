@@ -1,6 +1,6 @@
 import { Component, Input, Inject, ChangeDetectorRef, ChangeDetectionStrategy, ContentChild } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { MatDialog } from '@angular/material/dialog';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
@@ -74,7 +74,6 @@ export class CalendarWeekComponent {
     @Inject(DOCUMENT) private document: Document,
     private authQuery: AuthQuery,
     private service: EventService,
-    private bottomSheet: MatBottomSheet,
     private dialog: MatDialog,
     private cdr: ChangeDetectorRef,
   ) {}
