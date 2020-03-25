@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { InvitationState } from './invitation.store';
+import { UserService } from '@blockframes/user';
 import { createInvitationToDocument, createInvitationFromUserToOrganization, createInvitationFromOrganizationToUser, Invitation } from './invitation.model';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { PublicOrganization } from '@blockframes/organization';
@@ -13,7 +14,8 @@ export class InvitationService extends CollectionService<InvitationState> {
   constructor(
     private authQuery: AuthQuery,
     private authService: AuthService,
-    private orgService: OrganizationService
+    private orgService: OrganizationService,
+    private userService: UserService,
     ) {
     super();
   }
@@ -36,7 +38,7 @@ export class InvitationService extends CollectionService<InvitationState> {
     const userPromises = userEmails.map(async userEmail => {
       // Get a user or create a ghost user when needed
       const invitationId = this.db.createId();
-      return this.authService.getOrCreateUserByMail(userEmail, organization.name, invitationId);
+      return this.userService.getOrCreateUserByMail(userEmail, organization.name, invitationId);
     });
     const users = await Promise.all(userPromises);
 
