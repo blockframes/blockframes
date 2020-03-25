@@ -217,9 +217,6 @@ export class ContractService extends CollectionService<ContractState> {
           const partyDetails = createContractPartyDetail({ party: parentPartyDetails.party });
           partyDetails.party.role = childRole;
           contract.parties.push(partyDetails);
-          if (partyDetails.party.orgId) {
-            contract.partyIds.push(partyDetails.party.orgId);
-          }
         });
       });
     });

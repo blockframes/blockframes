@@ -232,7 +232,6 @@ service cloud.firestore {
     }
 
     function isParty(orgId) {
-      // @todo (#1887) partyIds contains userIds not orgIds.
     	return orgId in resource.data.partyIds;
     }
 
