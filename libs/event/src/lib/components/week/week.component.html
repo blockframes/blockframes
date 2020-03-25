@@ -2,7 +2,7 @@
   [viewDate]="viewDate"
   [events]="localEvents"
   [hourSegmentTemplate]="weekHourSegmentTemplate"
-  [eventTemplate]="weekEvent.template"
+  [eventTemplate]="eventTemplate"
   (eventTimesChanged)="updateEvent($event)"
 ></mwl-calendar-week-view>
 
@@ -28,7 +28,28 @@
   </div>
 </ng-template>
 
-<cal-week-event #weekEvent></cal-week-event>
+
+<!-- Event Wrapper -->
+<ng-template #eventTemplate let-weekEvent="weekEvent">
+  <div [@fadeIn]="!event.meta?.tmp" class="cal-event" *ngIf="weekEvent.event as event">
+
+    <ng-container [ngSwitch]="event | eventSize">
+      <!-- Under Creatio -->
+      <section @fadeOut *ngSwitchCase="'underCreation'" fxLayout="column" fxLayoutAlign="center center">
+        <mat-icon svgIcon="calendar"></mat-icon>
+      </section>
+      <!-- Small -->
+      <ng-container *ngSwitchCase="'small'">
+        <ng-template [ngTemplateOutlet]="smallEvent?.template" [ngTemplateOutletContext]="{ $implicit: event }" ></ng-template>
+      </ng-container>
+      <!-- Large -->
+      <ng-container *ngSwitchCase="'large'">
+        <ng-template [ngTemplateOutlet]="largeEvent?.template" [ngTemplateOutletContext]="{ $implicit: event }" ></ng-template>
+      </ng-container>
+    </ng-container>
+  </div>
+</ng-template>
+
 
 
 <!-- Tooltip (Not used yet)
