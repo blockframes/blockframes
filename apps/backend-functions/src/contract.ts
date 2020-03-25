@@ -4,7 +4,7 @@ import { ValidContractStatuses, ContractVersionDocument } from '@blockframes/con
 import { getOrganizationsOfContract, getDocument } from './data/internals';
 import { triggerNotifications, createNotification } from './notification';
 import { centralOrgID } from './environments/environment';
-import { isEqual } from 'lodash';
+import { isEqual, uniqBy } from 'lodash';
 import { firestore } from 'firebase-admin';
 
 async function getCurrentVersionId(tx: FirebaseFirestore.Transaction, contractId: string): Promise<string> {
@@ -119,23 +119,23 @@ async function checkAndTriggerNotifications(current: ContractDocument) {
  * This method is in charge of updating contract version document on DB.
  * It updates some of document attributes.
  * @param tx 
- * @param current 
+ * @param contract 
  */
-function updateVersion(tx: FirebaseFirestore.Transaction, current: ContractDocument) {
+function updateVersion(tx: FirebaseFirestore.Transaction, contract: ContractDocument) {
   // When a contract of type "mandate" is created/updated
   // tiltleDetails.price.commissionBase must be set to "grossreceipt".
-  if (current.type === 'mandate') {
-    Object.keys(current.lastVersion.titles).forEach(titleId => {
-      current.lastVersion.titles[titleId].price.commissionBase = 'grossreceipts';
+  if (contract.type === 'mandate') {
+    Object.keys(contract.lastVersion.titles).forEach(titleId => {
+      contract.lastVersion.titles[titleId].price.commissionBase = 'grossreceipts';
     });
   }
 
   // We historize current version 
-  tx.set(db.doc(`contracts/${current.id}/versions/${current.lastVersion.id}`), current.lastVersion);
+  tx.set(db.doc(`contracts/${contract.id}/versions/${contract.lastVersion.id}`), contract.lastVersion);
 
   // We update _meta document for backward compatibility
   // @TODO (#1887) remove next line once code migration is OK
-  tx.set(db.doc(`contracts/${current.id}/versions/_meta`), { count: parseInt(current.lastVersion.id, 10) }, { merge: true });
+  tx.set(db.doc(`contracts/${contract.id}/versions/_meta`), { count: parseInt(contract.lastVersion.id, 10) }, { merge: true });
 }
 
 /**
@@ -145,7 +145,7 @@ function updateVersion(tx: FirebaseFirestore.Transaction, current: ContractDocum
  * @param ref 
  * @param contract 
  */
-function updateContract(tx: FirebaseFirestore.Transaction, ref: DocumentReference, contract: ContractDocument, newVersion: boolean = false) {
+async function updateContract(tx: FirebaseFirestore.Transaction, ref: DocumentReference, contract: ContractDocument, newVersion: boolean = false) {
 
   // We create an array of title ids for querying purposes
   contract.titleIds = [];
@@ -161,6 +161,45 @@ function updateContract(tx: FirebaseFirestore.Transaction, ref: DocumentReferenc
         contract.partyIds.push(p.party.orgId);
       }
     })
+  }
+
+  // Fetch the mandate contracts related to current contract titles.
+  // Thoses contracts will be the parents of the current one.
+  if (contract.type === 'sale') {
+    const promises = Object.keys(contract.lastVersion.titles).map(titleId => db.collection(`contracts/${contract.id}`)
+      .where('type', '==', 'mandate')
+      .where('titleIds', 'array-contains', titleId)
+      .get()
+    );
+
+    // Extract all fetched contracts
+    const snapshots = await Promise.all(promises);
+    const mandateContracts = uniqBy(snapshots.map(snap => snap.docs.map(d => d.data() as ContractDocument)).flat(), 'id');
+
+    // Set parent relations
+    contract.parentContractIds = mandateContracts.map(c => c.id);
+    mandateContracts.map(parent => {
+      // Set child relations
+      if (!parent.childContractIds) { parent.childContractIds = []; }
+      if (!parent.childContractIds.includes(contract.id)) {
+        parent.childContractIds.push(contract.id);
+        tx.set(db.doc(`contracts/${parent.id}`), { childContractIds: parent.childContractIds }, { merge: true });
+      }
+
+      // Check if a parent contract party should be a current contract party (as observer for example)
+      const parentPartiesWithChildRole = parent.parties.filter(p => p.childRoles && p.childRoles.length > 0);
+      parentPartiesWithChildRole.forEach(partyDetail => {
+        // For each child role on the parent contract, a new party is created on the current one.
+        partyDetail.childRoles?.forEach(r => {
+          const childParty = { ...partyDetail };
+          childParty.childRoles = [];
+          delete childParty.signDate;
+          childParty.status = 'unknown';
+          childParty.party.role = r;
+          contract.parties.push(childParty);
+        });
+      })
+    });
   }
 
   // If true, a new version is beeing created.
@@ -179,6 +218,7 @@ function updateContract(tx: FirebaseFirestore.Transaction, ref: DocumentReferenc
     titleIds: contract.titleIds,
     partyIds: contract.partyIds,
     parties: contract.parties,
+    parentContractIds: contract.parentContractIds,
   }, { merge: true });
 }
 
