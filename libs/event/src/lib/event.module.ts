@@ -41,7 +41,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     CalendarHeaderComponent,
     CalendarWeekComponent,
     EventSmallDirective,
-    EventLargeDirective
+    EventLargeDirective,
+    EventEditComponent
   ],
   imports: [
     CommonModule,

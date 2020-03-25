@@ -228,6 +228,7 @@ export const icons = [
   { name: 'translate', url: 'assets/icons/translate.svg' },
   { name: 'trash', url: 'assets/icons/trash.svg' },
   { name: 'twitter', url: 'assets/icons/twitter.svg' },
+  { name: 'unicorn', url: 'assets/icons/unicorn.svg' },
   { name: 'update', url: 'assets/icons/update.svg' },
   {
     name: 'validation_required',

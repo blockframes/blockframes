@@ -1,7 +1,7 @@
-import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { CalendarEvent } from 'angular-calendar';
+import { Component, ChangeDetectionStrategy, Input, Output, EventEmitter } from '@angular/core';
 import { EventForm } from '../event.form';
+import { EventService } from '../../+state/event.service';
+import { Event } from '../../+state/event.model';
 
 @Component({
   selector: 'event-edit',
@@ -10,25 +10,24 @@ import { EventForm } from '../event.form';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EventEditComponent {
-
+  
   form = new EventForm();
-
-  constructor(
-    @Inject(MAT_DIALOG_DATA) public event: CalendarEvent,
-    public dialogRef: MatDialogRef<EventEditComponent>,
-  ) {
-    this.form.patchValue(event);
+  @Output() close = new EventEmitter();
+  @Input() set event(event: Event) {
+    if (event) {
+      this.form = new EventForm(event);
+    }
   }
 
-  cancel() {
-    this.dialogRef.close();
+  constructor(private service: EventService) {}
+
+  async update() {
+    await this.service.update(this.form.value);
+    this.close.emit();
   }
 
-  save() {
-    this.dialogRef.close(this.form.value);
-  }
-
-  remove() {
-    console.log(this.event);
+  async remove() {
+    await this.service.remove(this.form.value.id);
+    this.close.emit();
   }
 }

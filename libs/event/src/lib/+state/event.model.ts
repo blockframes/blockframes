@@ -3,7 +3,13 @@ import { Meeting, EventBase, Screening, EventMeta } from './event.firestore';
 import { toDate } from '@blockframes/utils/helpers';
 
 // Event
-export type Event<Meta extends EventMeta = any> = EventBase<Date, Meta> & CalendarEvent<Meta>;
+export interface Event<Meta extends EventMeta = any> extends EventBase<Date, Meta>, CalendarEvent<Meta> {
+  id: string;
+  isOwner: boolean;
+  allDay: boolean;
+  end: Date;
+  meta: Meta;
+}
 export function createEvent<Meta extends EventMeta>(params: Partial<Event<Meta>> = {}): Event<Meta> {
   const meta: any =
     isMeeting(params) ? createMeeting(params.meta)
@@ -16,6 +22,7 @@ export function createEvent<Meta extends EventMeta>(params: Partial<Event<Meta>>
     ownerId: '',
     type: 'standard',
     allDay: false,
+    isOwner: false,
     ...params,
     start: toDate(params.start || new Date()),
     end: toDate(params.end || new Date()),
@@ -57,6 +64,7 @@ export function createCalendarEvent(event: Event, currentUserId: string): Event 
   const isOwner = event.ownerId === currentUserId;
   return {
     ...createEvent(event),
+    isOwner,
     draggable: isOwner,
     resizable: { beforeStart: isOwner, afterEnd: isOwner },
   }

@@ -1,5 +1,5 @@
 import { Component, Inject, ChangeDetectionStrategy } from '@angular/core';
-import { MatBottomSheetRef, MAT_BOTTOM_SHEET_DATA } from '@angular/material/bottom-sheet';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CalendarEvent } from 'angular-calendar';
 import { AuthQuery } from '@blockframes/auth/+state';
 import { EventForm } from '../event.form';
@@ -15,8 +15,8 @@ export class EventCreateComponent {
   form = new EventForm();
   
   constructor(
-    @Inject(MAT_BOTTOM_SHEET_DATA) public event: CalendarEvent,
-    private bottomSheetRef: MatBottomSheetRef<EventCreateComponent>,
+    @Inject(MAT_DIALOG_DATA) public event: CalendarEvent,
+    public dialogRef: MatDialogRef<EventCreateComponent>,
     private authQuery: AuthQuery
   ) {
     this.form.patchValue(event);
@@ -32,11 +32,11 @@ export class EventCreateComponent {
         afterEnd: true
       }
     };
-    this.bottomSheetRef.dismiss(event);
+    this.dialogRef.close(event);
   }
 
   cancel(event: MouseEvent): void {
-    this.bottomSheetRef.dismiss();
+    this.dialogRef.close();
     event.preventDefault();
   }
 }
