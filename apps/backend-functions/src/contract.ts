@@ -139,26 +139,26 @@ function updateVersion(tx: FirebaseFirestore.Transaction, current: ContractDocum
 }
 
 /**
- * This method is in charge of updating contract document on DB.
+ * This method is in charge of updating currrent contract document on DB.
  * It updates some of document attributes.
  * @param tx 
  * @param ref 
- * @param current 
+ * @param contract 
  */
-function updateContract(tx: FirebaseFirestore.Transaction, ref: DocumentReference, current: ContractDocument, newVersion: boolean = false) {
+function updateContract(tx: FirebaseFirestore.Transaction, ref: DocumentReference, contract: ContractDocument, newVersion: boolean = false) {
 
   // We create an array of title ids for querying purposes
-  current.titleIds = [];
-  if (!!current.lastVersion.titles) {
-    current.titleIds = Object.keys(current.lastVersion.titles);
+  contract.titleIds = [];
+  if (!!contract.lastVersion.titles) {
+    contract.titleIds = Object.keys(contract.lastVersion.titles);
   }
 
   // We create an array of party ids for querying purposes
-  current.partyIds = [];
-  if (!!current.parties) {
-    current.parties.forEach(p => {
+  contract.partyIds = [];
+  if (!!contract.parties) {
+    contract.parties.forEach(p => {
       if (p.party.orgId) { // Only if orgId is defined on party
-        current.partyIds.push(p.party.orgId);
+        contract.partyIds.push(p.party.orgId);
       }
     })
   }
@@ -166,8 +166,8 @@ function updateContract(tx: FirebaseFirestore.Transaction, ref: DocumentReferenc
   // If true, a new version is beeing created.
   // We need to remove previous parties signDate and reset status
   if (newVersion) {
-    delete current.signDate;
-    current.parties = current.parties.map(p => {
+    delete contract.signDate;
+    contract.parties = contract.parties.map(p => {
       delete p.signDate;
       p.status = 'unknown';
       return p;
@@ -175,10 +175,10 @@ function updateContract(tx: FirebaseFirestore.Transaction, ref: DocumentReferenc
   }
 
   tx.set(ref, {
-    lastVersion: current.lastVersion,
-    titleIds: current.titleIds,
-    partyIds: current.partyIds,
-    parties: current.parties,
+    lastVersion: contract.lastVersion,
+    titleIds: contract.titleIds,
+    partyIds: contract.partyIds,
+    parties: contract.parties,
   }, { merge: true });
 }
 
