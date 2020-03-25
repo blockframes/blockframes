@@ -78,7 +78,7 @@ export function createContractVersion(params: Partial<ContractVersion> = {}): Co
  * @param params
  */
 export function createVersionMandate(params: Partial<ContractVersion> = {}) {
-  return createContractVersion({ price: { commissionBase: 'grossreceipts', amount: 0 }, ...params })
+  return createContractVersion({ price: { amount: 0 }, ...params })
 }
 
 export function createPublicContract(params: Partial<PublicContract> = {}): PublicContract {
