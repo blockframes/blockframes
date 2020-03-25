@@ -192,6 +192,10 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
     return this.get('productionStatus');
   }
 
+  get budget() {
+    return this.get('estimatedBudget');
+  }
+
   addLanguage(language: LanguagesSlug, value: Partial<MovieLanguageSpecification> = {}) {
     const movieLanguage = createMovieLanguageSpecification(value);
     this.get('languages').addControl(language, createLanguageControl(movieLanguage));

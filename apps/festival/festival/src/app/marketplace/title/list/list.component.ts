@@ -114,6 +114,8 @@ export class ListComponent implements OnInit, OnDestroy {
   /* main search bar */
   public searchbarTextControl: FormControl = new FormControl('');
 
+  public resultFilter$: Observable<string>;
+
   /* seller org autocomplete search bar */
   public orgSearchResults$: Observable<any>;
 
@@ -130,6 +132,8 @@ export class ListComponent implements OnInit, OnDestroy {
 
   /* selected status to filter */
   public statusesFilter$: Observable<string[]>;
+
+  public budgetFilter$: Observable<string>;
 
   /* selected seller orgs to filter */
   public selectedSellers$ = new BehaviorSubject<string[]>([]);
@@ -188,8 +192,12 @@ export class ListComponent implements OnInit, OnDestroy {
       map(value => this._languageFilter(value)),
     );
 
-    // this.resultFilter$ = this.searchbarTextControl.valueChanges.pipe(
-    //   startWith(''),
+    this.resultFilter$ = this.searchbarTextControl.valueChanges; //.pipe(
+    // TODO correct bug
+    // TODO if we use startWith(''), we will query algolia at the beginning
+    // TODO if we don't use it, we can not apply filter before the user enter some
+    // TODO text because of the combineLatest of the movieSearchResults$
+      // startWith('*'),
     //   tap(value => this.searchbarForm.get('text').setValue(value)),
     //   map(value => this._resultFilter(value))
     // );
@@ -226,26 +234,44 @@ export class ListComponent implements OnInit, OnDestroy {
       tap(facets => console.log('facets :', facets))
     );
 
+    this.budgetFilter$ = this.filterForm.budget.valueChanges.pipe(
+      startWith([]),
+      map(budgets => {
+        const budgetsFrom = budgets.map(budget => `budget.from:${budget.from}`).join(' OR ');
+        const budgetsTo = budgets.map(budget => `budget.to:${budget.to}`).join(' OR ');
+
+        if ( budgets.length === 1) {
+          return `${budgetsFrom} AND ${budgetsTo}`;
+        } else if ( budgets.length > 1) {
+          return `(${budgetsFrom}) AND (${budgetsTo})`;
+        }
+        return '';
+      }),
+      tap(a => console.log('budgets :', a)),
+    );
+
     /* Query algolia every time the search query or the filters changes */
     this.movieSearchResults$ = combineLatest([
-      this.searchbarTextControl.valueChanges,
+      this.resultFilter$,
       this.facetFilters$,
+      this.budgetFilter$,
       // this.sortBy$
     ]).pipe(
       debounceTime(200),
       tap(values => console.log('query', values)),
       // distinctUntilChanged(),
 
-      switchMap(([algoliaMovies , facetFilters]) => {
+      switchMap(([textQuery , facetFilters, budgetFilter]) => {
         // const movieIds = algoliaMovies.map(index => index.objectID);
         // return this.movieQuery.selectAll({
         //   sortBy: (a, b) => sortMovieBy(a, b, sortBy),
         //   filterBy: movie => filterMovie(movie, filterOptions) && movieIds.includes(movie.id)
         // })
         return this.movieIndex.search<MovieAlgoliaResult>({
-          query: algoliaMovies,
-          facetFilters
-        })
+          query: textQuery,
+          facetFilters,
+          filters: budgetFilter,
+        });
       }),
       pluck('hits'),
       tap(result => console.log('algolia result :', result)),
