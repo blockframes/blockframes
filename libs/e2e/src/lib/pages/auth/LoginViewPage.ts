@@ -1,5 +1,4 @@
 import { User } from '../../utils/type';
-// import { HomePage } from '../marketplace';
 import { OrganizationHomePage } from '../organization';
 
 export default class LoginViewPage {

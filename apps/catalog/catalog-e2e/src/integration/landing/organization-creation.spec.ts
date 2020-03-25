@@ -1,16 +1,10 @@
 /// <reference types="cypress" />
 
-import { LoginViewPage } from '../../support/pages/auth';
 import { LandingPage } from '../../support/pages/landing';
-import { Organization, User } from '../../support/utils/type';
-import {
-  OrganizationHomePage,
-  OrganizationCreatePage,
-  OrganizationFindPage,
-  OrganizationAppAccessPage,
-  OrganizationCongratulationPage
-} from '../../support/pages/organization';
-import { clearDataAndPrepareTest } from '../../support/utils/utils';
+import { User, Organization } from '@blockframes/e2e/utils/type';
+import { LoginViewPage } from '@blockframes/e2e/pages/auth';
+import { OrganizationHomePage, OrganizationFindPage, OrganizationCreatePage, OrganizationAppAccessPage, OrganizationCongratulationPage } from '@blockframes/e2e/pages/organization';
+import { clearDataAndPrepareTest } from '@blockframes/e2e/utils/utils';
 
 // Create new users
 const USERS: Partial<User>[] = [

@@ -1,8 +1,8 @@
 /// <reference types="cypress" />
 
 import { HomePage, SearchPage, ViewPage, DistributionPage, SelectionPage, FeedbackPage } from '../../support/pages/marketplace';
-import { User, Availabilities } from "../../support/utils/type";
-import { WelcomeViewPage, LoginViewPage } from '../../support/pages/auth';
+import { User, Availabilities } from '@blockframes/e2e/utils/type';
+import { LoginViewPage, WelcomeViewPage } from '@blockframes/e2e/pages/auth';
 
 const LOGIN_CREDENTIALS: Partial<User> = {
   email: 'hello2@cascade8.com',

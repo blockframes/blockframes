@@ -1,7 +1,8 @@
 /// <reference types="cypress" />
 
-import { clearDataAndPrepareTest, signInAndNavigateToMain, createFakeScript, randomID } from "../../support/utils/utils";
+import { signInAndNavigateToMain } from "../../support/utils/utils";
 import { TunnelMainPage, TunnelChainOfTitlesPage, TunnelValuationPage } from "../../support/pages/dashboard";
+import { clearDataAndPrepareTest, createFakeScript, randomID } from "@blockframes/e2e/utils/utils";
 
 const NAVIGATION = ['Legal Information', 'Chain of Titles'];
 

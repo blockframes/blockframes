@@ -1,7 +1,8 @@
 /// <reference types="cypress" />
 
 import { TunnelMainPage, TunnelStorylinePage } from "../../support/pages/dashboard";
-import { signInAndNavigateToMain, clearDataAndPrepareTest } from "../../support/utils/utils";
+import { signInAndNavigateToMain } from "../../support/utils/utils";
+import { clearDataAndPrepareTest } from "@blockframes/e2e/utils/utils";
 
 const CONTENT_TYPES = ['TV Film', 'Library', 'Completed', 'Lagerfeld Confidential', 'Lagerfeld Confidentiel', 'Lagerfeld'];
 const DIRECTORS = ['Rodolphe', 'Marconi', 'Ceci est mon corps (2001)'];
