@@ -1,7 +1,7 @@
-<form [formGroup]="form" (submit)="save()">
+<form [formGroup]="form" (submit)="update()">
   <mat-toolbar fxLayout fxLayoutAlign="space-between center">
     <div fxLayout fxLayout="start center">
-      <button type="submit" mat-button (click)="remove()">
+      <button type="submit" mat-button>
         <mat-icon svgIcon="floppy"></mat-icon>
         <span>Save</span>
       </button>
@@ -10,7 +10,7 @@
         <span>Delete</span>
       </button>
     </div>
-    <button type="button" mat-icon-button (click)="cancel()">
+    <button type="button" mat-icon-button (click)="close.emit()">
       <mat-icon svgIcon="cross"></mat-icon>
     </button>
   </mat-toolbar>
@@ -35,4 +35,6 @@
       <input matInput formControlName="end" type="time" />
     </mat-form-field>
   </div>
+
+  <ng-content></ng-content>
 </form>
