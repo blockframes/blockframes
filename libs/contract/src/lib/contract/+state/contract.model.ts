@@ -13,7 +13,7 @@ import {
 import { createParty } from '@blockframes/utils/common-interfaces/identity';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 import { createTerms } from '@blockframes/utils/common-interfaces/terms';
-import { 
+import {
   ContractVersion,
   ContractVersionWithTimeStamp,
   createContractVersionFromFirestore,
@@ -179,7 +179,9 @@ export function cleanContract(contract: Contract) {
   if (!c.signDate) {
     delete c.signDate;
   }
-  c.lastVersion = cleanContractVersion(c.lastVersion);
+  if (!!c.lastVersion) {
+    c.lastVersion = cleanContractVersion(c.lastVersion);
+  }
   return c;
 }
 

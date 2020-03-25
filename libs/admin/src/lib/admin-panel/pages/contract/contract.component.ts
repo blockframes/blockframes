@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatDialog } from '@angular/material/dialog';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
-import { ContractWithLastVersion, PublicContract, createContractPartyDetail, Contract, ContractPartyDetail, createContractTitleDetail } from '@blockframes/contract/contract/+state/contract.model';
+import { PublicContract, createContractPartyDetail, Contract, ContractPartyDetail, createContractTitleDetail } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractAdminForm } from '../../forms/contract-admin.form';
 import { ContractVersionAdminForm } from '../../forms/contract-version-admin.form';
 import { contractStatus, contractType, ContractTitleDetail } from '@blockframes/contract/contract/+state/contract.firestore';
@@ -17,6 +17,7 @@ import { MovieService } from '@blockframes/movie';
 import { EditPartyComponent } from '../../components/edit-party/edit-party.component';
 import { EditTitleComponent } from '../../components/edit-title/edit-title.component';
 import { calculatePrice } from '@blockframes/contract/contract/+state/contract.utils';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'admin-contract',
@@ -26,7 +27,8 @@ import { calculatePrice } from '@blockframes/contract/contract/+state/contract.u
 })
 export class ContractComponent implements OnInit {
   public contractId = '';
-  public contract: ContractWithLastVersion;
+  private contract: Contract;
+  public contract$: Observable<Contract>;
   public contractForm: ContractAdminForm;
   public contractVersionForm: ContractVersionAdminForm;
   public contractStatus = contractStatus;
@@ -35,7 +37,7 @@ export class ContractComponent implements OnInit {
   public publicContract$: Observable<PublicContract>;
 
   // Tables 
-  public contractVersions: ContractVersion[] = [];
+  public contractVersions$: Observable<ContractVersion[]>;
   public titles: any = [];
   public distributionDeals = [];
 
@@ -124,54 +126,34 @@ export class ContractComponent implements OnInit {
   async ngOnInit() {
     this.route.params.subscribe(async params => {
       this.contractId = params.contractId;
-      this.contract = await this.contractService.getContractWithLastVersion(this.contractId);
-      this.contractForm = new ContractAdminForm(this.contract.doc);
-      this.contractVersionForm = new ContractVersionAdminForm(this.contract.last);
-      this.version = parseInt(this.contract.last.id, 10);
       this.publicContract$ = this.contractService.listenOnPublicContract(this.contractId);
-      this.contractVersions = await this.contractVersionService.getContractVersions(this.contractId);
 
-      this.loadTitles();
+      this.contract$ = this.contractService.listenOnContract(this.contractId).pipe(map(c => {
+        this.contract = c;
+        this.version = parseInt(this.contract.lastVersion.id, 10);
+        this.contractForm = new ContractAdminForm(this.contract);
+        this.contractVersionForm = new ContractVersionAdminForm(this.contract.lastVersion);
+        this.cdRef.markForCheck();
+        this.titles = [];
+        if(c.titleIds && c.lastVersion.titles){
+          c.titleIds.forEach(async titleId => {
+            const movie = await this.movieService.getValue(titleId);
+            this.titles.push({
+              titleId,
+              price: c.lastVersion.titles[titleId].price,
+              movie,
+              deals: c.lastVersion.titles[titleId].distributionDealIds ? c.lastVersion.titles[titleId].distributionDealIds.map(d => ({ id: d, movie: titleId })) : [],
+              exploredeals: `/c/o/admin/panel/deals/${titleId}`,
+              edit: titleId,
+            });
+            this.titles = [...this.titles];
+          });
+        }
+        return c;
+      }));
+      this.contractVersions$ = this.contractVersionService.listenOnContractVersions(this.contractId);
       this.cdRef.markForCheck();
-
     });
-  }
-
-  private async loadTitles() {
-    this.titles = [];
-    if (this.contract.last.titles) {
-      const rows = Object.keys(this.contract.last.titles).map(async id => {
-        const title = this.contract.last.titles[id];
-        const movie = await this.movieService.getValue(id);
-
-        // Append new data for table display
-        return {
-          id,
-          price: title.price,
-          movie,
-          deals: title.distributionDealIds ? title.distributionDealIds.map(d => ({ id: d, movie: id })) : [],
-          exploredeals: `/c/o/admin/panel/deals/${id}`,
-          edit: id,
-        };
-      })
-
-      this.titles = await Promise.all(rows);
-    }
-  }
-
-  private async reloadContractAndVersions(reloadTitles = false) {
-
-    const p1 = this.contractVersionService.getContractVersions(this.contractId).then(contractVersion => this.contractVersions = contractVersion);
-    const p2 = this.contractService.getContractWithLastVersion(this.contractId).then(contract => this.contract = contract);
-
-    await Promise.all([p1, p2]);
-    this.version = Math.max.apply(Math, this.contractVersions.map((o) =>  parseInt(o.id, 10)));
-
-    if (reloadTitles) {
-      await this.loadTitles();
-    }
-
-    this.cdRef.markForCheck();
   }
 
   /**
@@ -202,14 +184,13 @@ export class ContractComponent implements OnInit {
     }
 
     const update = {
-      ...this.contract.last,
+      ...this.contract.lastVersion,
       creationDate: new Date(),
       status: this.contractVersionForm.get('status').value,
     }
 
     // @TODO (#1887)
-    await this.contractService.addContractAndVersion({ doc: this.contract.doc, last: update });
-    this.reloadContractAndVersions();
+    await this.contractService.addContractAndVersion({ doc: this.contract, last: update });
 
     this.snackBar.open('Informations updated !', 'close', { duration: 5000 });
   }
@@ -219,7 +200,7 @@ export class ContractComponent implements OnInit {
       data: {
         title: 'Edit contract party.',
         subtitle: 'If you leave now, your changes will not be saved.',
-        party: this.contract.doc.parties[index]
+        party: this.contract.parties[index]
       },
       disableClose: true
     });
@@ -229,7 +210,7 @@ export class ContractComponent implements OnInit {
 
   public addParty() {
     const party = createContractPartyDetail();
-    const index = this.contract.doc.parties.length;
+    const index = this.contract.parties.length;
     const dialogRef = this.dialog.open(EditPartyComponent, {
       data: {
         title: 'Add a contract party.',
@@ -243,7 +224,7 @@ export class ContractComponent implements OnInit {
 
   private async updateParty(index: number, output: ContractPartyDetail | { remove: boolean }): Promise<boolean> {
     if (!output) return false;
-    const writeableContract = { ... this.contract.doc }
+    const writeableContract = { ... this.contract }
 
     if ((output as { remove: boolean }).remove === true) {
       writeableContract.parties.splice(index, 1);
@@ -256,10 +237,10 @@ export class ContractComponent implements OnInit {
       writeableContract.parties[index] = output;
     }
 
-    writeableContract.partyIds = this.contract.doc.parties.filter(p => p.party.orgId).map(p => p.party.orgId);
+    writeableContract.partyIds = this.contract.parties.filter(p => p.party.orgId).map(p => p.party.orgId);
 
-    this.contract.doc = writeableContract;
-    await this.contractService.update(this.contract.doc);
+    this.contract = writeableContract;
+    await this.contractService.update(this.contract);
     this.cdRef.markForCheck();
     this.snackBar.open('Informations updated !', 'close', { duration: 5000 });
     return true;
@@ -284,7 +265,7 @@ export class ContractComponent implements OnInit {
         title: 'Edit a contract title.',
         titleId,
         subtitle: 'If you leave now, your changes will not be saved.',
-        titleDetail: this.contract.last.titles[titleId]
+        titleDetail: this.contract.lastVersion.titles[titleId]
       },
       disableClose: true
     });
@@ -301,8 +282,8 @@ export class ContractComponent implements OnInit {
     if (!output) return false;
 
     // @TODO (#1887) last version will be accessible directly with the contract document
-    const writeableVersion = { ...this.contract.last };
-    const writeableContract = { ... this.contract.doc }
+    const writeableVersion = { ...this.contract.lastVersion };
+    const writeableContract = { ... this.contract }
 
     if ((output as { remove: boolean }).remove === true && titleIdToRemove) {
       delete writeableVersion.titles[titleIdToRemove];
@@ -327,7 +308,6 @@ export class ContractComponent implements OnInit {
     // @TODO (#1887) move thoses functions to a service
     // Update contract and create a new version
     await this.contractService.addContractAndVersion({ doc: writeableContract, last: writeableVersion });
-    await this.reloadContractAndVersions(true);
 
     this.snackBar.open('Informations updated !', 'close', { duration: 5000 });
     return true;
@@ -350,11 +330,10 @@ export class ContractComponent implements OnInit {
    * @dev this method uses titles.price to update global contract price
    */
   public async updatePrice() {
-    const update = calculatePrice({ ...this.contract.last });
+    const update = calculatePrice({ ...this.contract.lastVersion });
 
     // @TODO (#1887)
-    await this.contractService.addContractAndVersion({ doc: this.contract.doc, last: update });
-    await this.reloadContractAndVersions();
+    await this.contractService.addContractAndVersion({ doc: this.contract, last: update });
 
     this.snackBar.open('Contract global price updated !', 'close', { duration: 5000 });
   }

@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { CollectionService, CollectionConfig } from 'akita-ng-fire';
 import { ContractVersionState, ContractVersionStore } from './contract-version.store';
-import { VersionMeta, createVersionMeta, ContractVersion, createContractVersionFromFirestore, cleanContractVersion } from './contract-version.model';
+import { VersionMeta, ContractVersion, createContractVersionFromFirestore, cleanContractVersion } from './contract-version.model';
 import { ContractQuery } from '../../contract/+state/contract.query';
-import { ContractWithLastVersion } from '../../contract/+state/contract.model';
 import { ContractVersionDocumentWithDates } from '@blockframes/contract/contract/+state/contract.firestore';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'contracts/:contractId/versions' })
@@ -50,14 +51,14 @@ export class ContractVersionService extends CollectionService<ContractVersionSta
   }
 
   /**
-   * Returns contract versions.
-   * @param contractId
+   * Listen on all versions of a given contract
+   * @param contractId 
    */
-  public async getContractVersions(contractId: string): Promise<ContractVersion[]> {
-    const contractsSnap = await this.db
-      .collection(`contracts/${contractId}/versions`)
-      .get()
-      .toPromise();
-    return contractsSnap.docs.filter(v => v.id !== '_meta').map(c => createContractVersionFromFirestore(c.data())); // @TODO (#1887) akita pre add?
+  public listenOnContractVersions(contractId: string): Observable<ContractVersion[]> {
+    return this.db.collection(`contracts/${contractId}/versions`)
+      .valueChanges()
+      .pipe(
+        map((versions : ContractVersion[]) => versions.filter(v => v.id !== undefined ).map(v => createContractVersionFromFirestore(v)))
+      );
   }
 }

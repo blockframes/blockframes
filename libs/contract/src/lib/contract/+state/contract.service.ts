@@ -241,7 +241,11 @@ export class ContractService extends CollectionService<ContractState> {
     this.update({ ...contract, parties: [...updatedParties, updatedParty] })
   }
 
-  public listenOnPublicContract(contractId: string) : Observable<PublicContract>{
+  public listenOnContract(contractId: string): Observable<Contract> {
+    return this.collection.doc<Contract>(contractId).valueChanges();
+  }
+
+  public listenOnPublicContract(contractId: string): Observable<PublicContract> {
     return this.db.collection('publicContracts').doc<PublicContract>(contractId).valueChanges();
   }
 
