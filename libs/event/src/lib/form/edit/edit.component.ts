@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { CalendarEvent } from 'angular-calendar';
-import { FormGroup, FormControl } from '@angular/forms';
+import { EventForm } from '../event.form';
 
 @Component({
   selector: 'event-edit',
@@ -11,13 +11,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 })
 export class EventEditComponent {
 
-  form = new FormGroup({
-    id: new FormControl(),
-    title: new FormControl(),
-    start: new FormControl(),
-    end: new FormControl(),
-    allDay: new FormControl(false)
-  });
+  form = new EventForm();
 
   constructor(
     @Inject(MAT_DIALOG_DATA) public event: CalendarEvent,

@@ -13,7 +13,7 @@ import { EventSizePipe } from './components/event.pipe';
 // Forms
 import { EventCreateComponent } from './form/create/create.component';
 import { EventEditComponent } from './form/edit/edit.component';
-import { TimeDateValueAccessor } from './time-date';
+import { TimeDateValueAccessor } from './form/time-date.directive';
 
 // Material
 import { MatToolbarModule } from '@angular/material/toolbar';
