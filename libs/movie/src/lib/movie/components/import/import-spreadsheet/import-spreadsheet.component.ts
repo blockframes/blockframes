@@ -4,8 +4,8 @@ import { PreviewSheetComponent } from './../preview-sheet/preview-sheet.componen
 import { SheetTab, importSpreadsheet } from '@blockframes/utils/spreadsheet';
 import { FormControl } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { AuthService } from '@blockframes/auth';
 import { Intercom } from 'ng-intercom';
+import { AuthService } from '@blockframes/auth/+state/auth.service';
 
 export interface SpreadsheetImportEvent {
   sheet: SheetTab,

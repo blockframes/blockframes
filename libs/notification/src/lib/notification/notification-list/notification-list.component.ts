@@ -1,8 +1,10 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { NotificationQuery, Notification, NotificationService } from '../+state';
 import { Observable } from 'rxjs';
 import { DateGroup } from '@blockframes/utils/helpers';
 import { Router } from '@angular/router';
+import { Notification } from '../+state/notification.model';
+import { NotificationService } from '../+state/notification.service';
+import { NotificationQuery } from '../+state/notification.query';
 
 @Component({
   selector: 'notification-list',

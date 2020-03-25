@@ -5,11 +5,13 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Modules
-import { FeedbackMessageModule, ActionsListModule, AlgoliaAutocompleteModule } from '@blockframes/ui';
 import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
 import { OrganizationFormModule } from './organization/forms/organization-form/organization-form.module';
 import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
+import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia-autocomplete/algolia-autocomplete.module';
+import { ActionsListModule } from '@blockframes/ui/actions-list/actions-list.module';
+import { FeedbackMessageModule } from '@blockframes/ui/feedback/feedback-message.module';
 
 // Material
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -36,7 +38,7 @@ import { OrganizationCreateComponent } from './organization/pages/organization-c
 import { OrganizationAppAccessComponent } from './organization/pages/organization-app-access/organization-app-access.component';
 
 // Guards
-import { NoOrganizationInvitationGuard } from '@blockframes/notification';
+import { NoOrganizationInvitationGuard } from '@blockframes/notification/invitation/guard/no-organization-invitation.guard';
 import { NoOrganizationGuard } from './guard/no-organization.guard';
 import { PendingOrganizationGuard } from './guard/pending-organization.guard';
 

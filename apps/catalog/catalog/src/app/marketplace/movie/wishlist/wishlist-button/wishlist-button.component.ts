@@ -4,8 +4,8 @@ import { Observable } from 'rxjs';
 import { OrganizationQuery } from '@blockframes/organization';
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
 import { map } from 'rxjs/operators';
-import { FireAnalytics } from '@blockframes/utils';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 
 @Component({
   selector: '[movieId] catalog-wishlist-button',
@@ -37,7 +37,7 @@ export class WishlistButtonComponent implements OnInit {
     );
   }
 
-  
+
   public addToWishlist() {
     const movie = this.movieQuery.getEntity(this.movieId);
     const title = movie.main.title.international;

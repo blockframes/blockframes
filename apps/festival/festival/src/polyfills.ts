@@ -77,4 +77,3 @@ import '@angular/localize/init';
 * ETHERS
 */
 (window as any).global = window;
-

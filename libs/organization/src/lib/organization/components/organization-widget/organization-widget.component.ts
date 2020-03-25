@@ -1,8 +1,9 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { AuthQuery, User } from '@blockframes/auth';
+import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { Organization, OrganizationQuery } from '../../+state';
 import { Observable } from 'rxjs';
 import { AFM_DISABLE } from '@env';
+import { User } from '@blockframes/auth/+state/auth.store';
 
 @Component({
   selector: 'organization-widget',

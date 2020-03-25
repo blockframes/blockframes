@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
-import { User } from '@blockframes/auth';
+import { User } from '@blockframes/auth/+state/auth.store';
 
 @Component({
   selector: 'user-card',

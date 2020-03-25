@@ -16,13 +16,12 @@ import {
 } from '@blockframes/utils/static-model/types';
 import { Validators, FormArray } from '@angular/forms';
 import { FormGroup, FormControl } from '@angular/forms';
-import { FormEntity, numberRangeValidator, Terms } from '@blockframes/utils';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 import { MovieLanguageSpecification, StoreType, storeType } from '@blockframes/movie/+state/movie.firestore';
 import { createMovieLanguageSpecification } from '@blockframes/movie/+state/movie.model';
-import { FormStaticArray, FormList, FormStaticValue } from '@blockframes/utils/form';
-import { NumberRange, DateRange } from '@blockframes/utils/common-interfaces';
 import { DistributionDealTermsForm } from '@blockframes/distribution-deals/form/terms/terms.form'
+import { FormStaticArray, FormList, FormStaticValue, numberRangeValidator, FormEntity } from '@blockframes/utils/form';
+import { NumberRange, DateRange, Terms } from '@blockframes/utils/common-interfaces';
 
 /////////////////////////
 // CatalogGenresFilter //

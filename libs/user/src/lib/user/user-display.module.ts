@@ -16,8 +16,9 @@ import { MatListModule } from '@angular/material/list';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
-import { EditableSidenavModule, UploadModule } from '@blockframes/ui';
-import { PasswordConfirmModule } from '@blockframes/ui/form';
+import { PasswordConfirmModule } from '@blockframes/ui/form/password-confirm/password-confirm.module';
+import { UploadModule } from '@blockframes/ui/upload/upload.module';
+import { EditableSidenavModule } from '@blockframes/ui/editable-sidenav/editable-sidenav.module';
 
 export const profileRoutes: Routes = [
   { path: '', redirectTo: 'view', pathMatch: 'full' },

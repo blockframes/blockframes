@@ -1,10 +1,4 @@
 import { ChangeDetectionStrategy, Component, OnInit, Input } from '@angular/core';
-import {
-  NotificationQuery,
-  InvitationQuery,
-  InvitationStore,
-  Notification
-} from '@blockframes/notification';
 import { Organization } from '@blockframes/organization/organization/+state/organization.model';
 import { OrganizationQuery } from '@blockframes/organization/organization/+state/organization.query';
 import { Observable, BehaviorSubject } from 'rxjs';
@@ -12,6 +6,10 @@ import { startWith, switchMap } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 import { NotificationDocument, NotificationType } from '@blockframes/notification/types';
 import { DateGroup } from '@blockframes/utils/helpers';
+import { InvitationQuery } from '@blockframes/notification/invitation/+state/invitation.query';
+import { InvitationStore } from '@blockframes/notification/invitation/+state/invitation.store';
+import { NotificationQuery } from '@blockframes/notification/notification/+state/notification.query';
+import { Notification } from '@blockframes/notification/notification/+state/notification.model';
 
 export interface ActivityTab {
   label: string;

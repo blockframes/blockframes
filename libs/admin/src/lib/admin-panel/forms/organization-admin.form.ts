@@ -1,5 +1,5 @@
 import { FormControl } from '@angular/forms';
-import { FormEntity } from '@blockframes/utils';
+import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { Organization, createOrganization } from '@blockframes/organization';
 
 

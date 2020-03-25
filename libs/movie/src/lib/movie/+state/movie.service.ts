@@ -3,7 +3,6 @@ import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire
 import { switchMap, filter, tap, map } from 'rxjs/operators';
 import { createMovie, Movie, MovieAnalytics, SyncMovieAnalyticsOptions } from './movie.model';
 import { MovieState, MovieStore } from './movie.store';
-import { AuthQuery, AuthService } from '@blockframes/auth';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 import { cleanModel } from '@blockframes/utils/helpers';
 import { firestore } from 'firebase/app';
@@ -11,6 +10,8 @@ import { PermissionsService } from '@blockframes/permissions/+state/permissions.
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { Observable, combineLatest } from 'rxjs';
 import { MovieQuery } from './movie.query';
+import { AuthQuery } from '@blockframes/auth/+state/auth.query';
+import { AuthService } from '@blockframes/auth/+state/auth.service';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies' })

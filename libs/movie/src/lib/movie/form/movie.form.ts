@@ -1,4 +1,3 @@
-import { EntityControl, FormEntity, FormList, urlValidators } from '@blockframes/utils';
 import { FormArray, FormControl } from '@angular/forms';
 import { MovieMainForm } from './main/main.form';
 import { MoviePromotionalElementsForm } from './promotional-elements/promotional-elements.form';
@@ -12,11 +11,13 @@ import { MovieFestivalPrizesForm } from './festival-prizes/festival-prizes.form'
 import { MovieSalesAgentDealForm } from './sales-agent-deal/sales-agent-deal.form';
 import { MovieReviewForm } from './review/review.form';
 import { MovieBudgetForm } from './budget/budget.form';
-import { Injectable } from '@angular/core';
 import { LegalDocument } from '@blockframes/contract/contract/+state/contract.firestore';
 import { FormStaticValue } from '@blockframes/utils/form/forms/static-value.form';
 import { createLegalDocument } from '@blockframes/contract/contract/+state/contract.model';
 import { MovieLegalDocuments } from '../+state/movie.firestore';
+import { urlValidators } from '@blockframes/utils/form/validators/validators';
+import { FormEntity, EntityControl } from '@blockframes/utils/form/forms/entity.form';
+import { FormList } from '@blockframes/utils/form/forms/list.form';
 
 // LEGAL DOCUMENTS
 

@@ -1,8 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AuthService, User } from '@blockframes/auth';
 import { UserAdminForm } from '../../forms/user-admin.form';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { User } from '@blockframes/auth/+state/auth.store';
+import { AuthService } from '@blockframes/auth/+state/auth.service';
 
 @Component({
   selector: 'admin-user',

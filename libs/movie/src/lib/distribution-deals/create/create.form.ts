@@ -1,4 +1,3 @@
-import { FormEntity, numberRangeValidator, valueIsInModelValidator } from '@blockframes/utils';
 import { FormArray, FormGroup, FormControl, Validators } from '@angular/forms';
 import {
   TerritoriesSlug,
@@ -8,6 +7,8 @@ import {
 import { MovieMain, createMovieLanguageSpecification } from '../../movie/+state/movie.model';
 import { MovieLanguageSpecification } from '../../movie/+state/movie.firestore';
 import { DistributionDeal, createDistributionDeal } from '../+state/distribution-deal.model';
+import { valueIsInModelValidator, numberRangeValidator } from '@blockframes/utils/form/validators/validators';
+import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 
 /* ------------- */
 /* CREATE OBJECT */

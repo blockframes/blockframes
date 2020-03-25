@@ -1,8 +1,8 @@
 import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit } from '@angular/core';
 import { MovieBudgetForm } from '../../budget/budget.form';
 import { MovieSalesInfoForm } from '../../sales-info/sales-info.form';
-import { FormList } from '@blockframes/utils';
 import { MovieReview } from '@blockframes/movie/+state/movie.model';
+import { FormList } from '@blockframes/utils/form/forms/list.form';
 import { MovieReviewForm } from '../../review/review.form';
 
 @Component({

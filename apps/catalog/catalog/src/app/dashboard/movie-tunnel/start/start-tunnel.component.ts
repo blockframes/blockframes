@@ -3,8 +3,8 @@ import { OrganizationService } from '@blockframes/organization/organization/+sta
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { MovieService, createMovie } from '@blockframes/movie';
 import { Router, ActivatedRoute } from '@angular/router';
-import { AuthQuery } from '@blockframes/auth';
 import { TunnelService } from '@blockframes/ui/tunnel';
+import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 
 const cardContents = [
   {

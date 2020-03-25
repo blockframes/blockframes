@@ -1,39 +1,39 @@
 /**
  * This is a very simple client to query unofficial IMDB API: https://www.omdbapi.com/
- * 
+ *
  * There isn't an official API to imdb but
- * imdb DOES release all of their data in text files nightly, 
+ * imdb DOES release all of their data in text files nightly,
  * so unofficial sites have popped up providing RESTful APIs against that data
- * 
+ *
  * Based on the work of WORR:
  * NodeJS npm package: https://www.npmjs.com/package/imdb-api
  * Github: https://github.com/worr/node-imdb-api
- *  
+ *
  * To get a omdbapi key (1000 daily limit):
- * http://www.omdbapi.com/apikey.aspx 
- * 
- * 
+ * http://www.omdbapi.com/apikey.aspx
+ *
+ *
  * EXAMPLE USAGE:
- * 
- * import { ImdbService } from '@blockframes/utils';
- * 
+ *
+ * import { ImdbService } from '@blockframes/utils/imdb/services';
+ *
  * constructor(private imdbService: ImdbService) {}
- * 
+ *
  * const apiKey = '4d1be897';
  * this.imdbService.setApiKey(apiKey)
- * 
+ *
  * // Get movie by name
  * this.imdbService.get({name: 'Parasite'}).then(console.log).catch(console.log);
- * 
+ *
  * // Get movie by name and year
  * this.imdbService.get({name: 'The Toxic Avenger', year: 1984}).then(console.log).catch(console.log);
- * 
+ *
  * // Get movie by id
  * this.imdbService.get({id: 'tt0120338'}).then(console.log).catch(console.log);
- * 
+ *
  * // Search by title
  * this.imdbService.search({name: 'titanic' }).then(console.log).catch(console.log);
- * 
+ *
  *  // Search by title and year
  * this.imdbService.search({name: 'titanic', year: 1997}).then(console.log).catch(console.log);
 */

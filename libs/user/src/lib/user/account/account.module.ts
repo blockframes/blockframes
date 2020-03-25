@@ -1,20 +1,18 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ActiveDaoGuard } from '@blockframes/organization/guard/active-dao.guard';
-
-// TODO issue#1146
-import { AFM_DISABLE } from '@env';
+// import { ActiveDaoGuard } from '@blockframes/organization/guard/active-dao.guard';
 
 export const accountRoutes: Routes = [
   { path: '',
     children: [
       { path: '', redirectTo: 'profile', pathMatch: 'full' },
       { path: 'profile', loadChildren: () => import('../user-display.module').then(m => m.UserDisplayModule) },
-      {
-        path: 'wallet',
-        canActivate: [ActiveDaoGuard],
-        loadChildren: () => import('@blockframes/ethers').then(m => m.WalletModule)
-      }
+      // 25/03/20 We comment this path, since we don't use it anymore but it can be used later
+      // {
+      //   path: 'wallet',
+      //   canActivate: [ActiveDaoGuard],
+      //   loadChildren: () => import('@blockframes/ethers/wallet/wallet.module').then(m => m.WalletModule)
+      // }
     ]
   }
 ];
