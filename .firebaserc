@@ -70,7 +70,8 @@
       "hosting": {
         "current": [
           "blockframes-francois"
-        ]
+        ],
+        "festival": ["blockframes-francois"]
       }
     },
     "blockframes-bruce": {

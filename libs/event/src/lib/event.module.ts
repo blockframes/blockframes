@@ -6,10 +6,10 @@ import { CalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 
 // Components
-import { CalendarWeekEventComponent } from './components/week-event/week-event.component';
+import { CalendarHeaderComponent } from './components/header/header.component';
 import { CalendarWeekComponent } from './components/week/week.component';
-import { EventSizePipe } from './components/week-event/event-size.pipe';
-import { CalendarComponent } from './components/calendar/calendar.component';
+import { EventSmallDirective, EventLargeDirective } from './components/event.directive';
+import { EventSizePipe } from './components/event.pipe';
 // Forms
 import { EventCreateComponent } from './form/create/create.component';
 import { EventEditComponent } from './form/edit/edit.component';
@@ -30,13 +30,19 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
   declarations: [
     CalendarWeekComponent,
     EventSizePipe,
-    CalendarWeekEventComponent,
+    EventSmallDirective,
+    EventLargeDirective,
     EventCreateComponent,
     EventEditComponent,
     TimeDateValueAccessor,
-    CalendarComponent,
+    CalendarHeaderComponent,
   ],
-  exports: [CalendarComponent],
+  exports: [
+    CalendarHeaderComponent,
+    CalendarWeekComponent,
+    EventSmallDirective,
+    EventLargeDirective
+  ],
   imports: [
     CommonModule,
     ReactiveFormsModule,

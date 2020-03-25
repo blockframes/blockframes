@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { CalendarEvent } from 'angular-calendar';
 
-function min(amount: number) {
+function minute(amount: number) {
   return 1000 * 60 * amount;
 }
 
@@ -12,9 +12,12 @@ export class EventSizePipe implements PipeTransform {
     if (event.meta?.tmp) {
       return 'underCreation';
     }
+    if (event.allDay) {
+      return 'small';
+    }
     if (event.start && event.end) {
       const delta = event.end.getTime() - event.start.getTime();
-      return delta <= min(60) ? 'small' : 'large';
+      return delta <= minute(60) ? 'small' : 'large';
     }
   }
 }

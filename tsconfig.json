@@ -14,6 +14,7 @@
     "typeRoots": ["node_modules/@types"],
     "lib": ["es2017", "es2019", "dom"],
     "baseUrl": ".",
+    "strictBindCallApply": true,
     "paths": {
       "@env": ["env/env.ts"],
       "@blockframes/auth": ["libs/user/src/lib/auth/index.ts"],
