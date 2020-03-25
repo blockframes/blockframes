@@ -12,6 +12,7 @@ import { EventQuery } from '@blockframes/event/+state/event.query';
 export class EventListComponent implements OnInit, OnDestroy {
   private sub: Subscription;
   events$ = this.query.selectAll();
+  viewDate = new Date();
 
   constructor(
     private service: EventService,

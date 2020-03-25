@@ -1,9 +1,9 @@
 <mat-toolbar fxLayout fxLayoutAlign="space-between center">
-  <button mat-icon-button mwlCalendarPreviousView [view]="view" [viewDate]="viewDate" (viewDateChange)="viewDateChange.emit()">
+  <button mat-icon-button mwlCalendarPreviousView [view]="view" [viewDate]="viewDate" (viewDateChange)="viewDateChange.emit($event)">
     <mat-icon svgIcon="arrow_back"></mat-icon>
   </button>
   <h2>{{ viewDate | date: 'fullDate' }}</h2>
-  <button mat-icon-button mwlCalendarNextView [view]="view" [viewDate]="viewDate" (viewDateChange)="viewDateChange.emit()">
+  <button mat-icon-button mwlCalendarNextView [view]="view" [viewDate]="viewDate" (viewDateChange)="viewDateChange.emit($event)">
     <mat-icon svgIcon="arrow_forward"></mat-icon>
   </button>
 </mat-toolbar>

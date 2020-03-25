@@ -12,6 +12,7 @@ import { Subscription } from 'rxjs';
 export class CalendarComponent implements OnInit, OnDestroy {
   private sub: Subscription;
   events$ = this.query.selectAll();
+  viewDate = new Date();
 
   constructor(private service: EventService, private query: EventQuery) { }
 
