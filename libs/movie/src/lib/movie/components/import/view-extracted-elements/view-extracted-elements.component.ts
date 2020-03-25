@@ -163,8 +163,6 @@ enum SpreadSheetContract {
   childRoles,
   contractId,
   contractType,
-  parentContractIds,
-  childContractIds,
   status,
   creationDate,
   scopeStartDate,
@@ -1786,24 +1784,9 @@ export class ViewExtractedElementsComponent implements OnInit {
 
   public async formatContracts(sheetTab: SheetTab) {
     this.clearDataSources();
-
     const titlesFieldsCount = Object.keys(SpreadSheetContractTitle).length / 2; // To get enum length
-
-    // For contract validation, we need to process contracts that have no parents first
-    const sheetTabRowsWithNoParents: any[] = [];
-    const sheetTabRowsWithParents: any[] = [];
-
-    sheetTab.rows.forEach(spreadSheetRow => {
-      if (!spreadSheetRow[SpreadSheetContract.parentContractIds]) {
-        sheetTabRowsWithNoParents.push(spreadSheetRow);
-      } else {
-        sheetTabRowsWithParents.push(spreadSheetRow)
-      }
-    });
-
-    const orderedSheetTabRows: any[] = sheetTabRowsWithNoParents.concat(sheetTabRowsWithParents);
     const matSnackbarRef = this.snackBar.open('Loading... Please wait', 'close');
-    for (const spreadSheetRow of orderedSheetTabRows) {
+    for (const spreadSheetRow of sheetTab.rows) {
       // CONTRACT ID
       // Create/retreive the contract
       let contract = initContractWithVersion();
@@ -1815,9 +1798,6 @@ export class ViewExtractedElementsComponent implements OnInit {
           newContract = false;
         }
       }
-
-      contract.doc.parentContractIds = [];
-      contract.doc.childContractIds = [];
 
       if (spreadSheetRow[SpreadSheetContract.contractId]) {
         const importErrors = {
@@ -1919,20 +1899,6 @@ export class ViewExtractedElementsComponent implements OnInit {
               name: 'Contract Type',
               reason: 'Optional field is missing',
               hint: 'Edit corresponding sheet field.'
-            });
-          }
-
-          // PARENTS CONTRACTS
-          if (spreadSheetRow[SpreadSheetContract.parentContractIds]) {
-            spreadSheetRow[SpreadSheetContract.parentContractIds].split(this.separator).forEach((c: string) => {
-              contract.doc.parentContractIds.push(c.trim());
-            });
-          }
-
-          // CHILDS CONTRACTS
-          if (spreadSheetRow[SpreadSheetContract.childContractIds]) {
-            spreadSheetRow[SpreadSheetContract.childContractIds].split(this.separator).forEach((c: string) => {
-              contract.doc.childContractIds.push(c.trim());
             });
           }
         }
@@ -2077,19 +2043,6 @@ export class ViewExtractedElementsComponent implements OnInit {
         importErrors.contract.last.price = contractPrice;
 
         const contractWithErrors = await this.validateMovieContract(importErrors);
-
-        // Since contracts are not saved to DB yet, we need to manually pass them to isContractValid function
-        const parentContracts: Contract[] = [];
-        const otherContractsUploaded: Contract[] = this.contractsToUpdate.data.map(importState => importState.contract.doc)
-          .concat(this.contractsToCreate.data.map(importState => importState.contract.doc));
-        contract.doc.parentContractIds.forEach(parentId => {
-          const parentContract = otherContractsUploaded.find(o => o.id === parentId);
-          if (parentContract) {
-            parentContracts.push(parentContract);
-          }
-        });
-
-        contractWithErrors.contract.doc = await this.contractService.populatePartiesWithParentRoles(contractWithErrors.contract.doc, parentContracts);
 
         if (!contractWithErrors.newContract) {
           this.contractsToUpdate.data.push(contractWithErrors);

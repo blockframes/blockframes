@@ -193,38 +193,6 @@ export class ContractService extends CollectionService<ContractState> {
   }
 
   /**
-   * This function appends data to contracts by looking on its parents contracts
-   * @param contract
-   * @param parentContracts
-   */
-  public async populatePartiesWithParentRoles(contract: Contract, parentContracts: Contract[] = []): Promise<Contract> {
-
-    /**
-     * @dev If any parent contracts of this current contract have parties with childRoles defined,
-     * We take thoses parties of the parent contracts to put them as regular parties of the current contract.
-     */
-    if (parentContracts.length === 0) {
-      const promises = contract.parentContractIds.map(id => this.getValue(id));
-      if (promises.length) {
-        parentContracts = await Promise.all(promises);
-      }
-    }
-
-    parentContracts.forEach(parentContract => {
-      const partiesHavingRoleForChilds = parentContract.parties.filter(p => p.childRoles && p.childRoles.length);
-      partiesHavingRoleForChilds.forEach(parentPartyDetails => {
-        parentPartyDetails.childRoles.forEach(childRole => {
-          const partyDetails = createContractPartyDetail({ party: parentPartyDetails.party });
-          partyDetails.party.role = childRole;
-          contract.parties.push(partyDetails);
-        });
-      });
-    });
-
-    return contract;
-  }
-
-  /**
    * Accept an offer from a contract and sign it with a timestamp and a status set to accepted.
    * @param contract the active contract
    * @param organizationId the logged in user's organization

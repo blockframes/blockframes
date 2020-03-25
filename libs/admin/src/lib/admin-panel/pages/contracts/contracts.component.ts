@@ -16,8 +16,6 @@ export class ContractsComponent implements OnInit {
     'doc.type': 'Type',
     'last.id': 'Version',
     'last.status': 'Status',
-    'doc.parentContractIds': 'Parent Ids',
-    'doc.childContractIds': 'Child Ids',
     'last.scope': 'Scope',
     'doc.partyIds': 'Parties',
     'doc.titleIds': 'Titles',
@@ -29,8 +27,6 @@ export class ContractsComponent implements OnInit {
     'doc.type',
     'last.id',
     'last.status',
-    'doc.parentContractIds',
-    'doc.childContractIds',
     'last.scope',
     'doc.partyIds',
     'doc.titleIds',
@@ -76,8 +72,6 @@ export class ContractsComponent implements OnInit {
       'doc.type',
       'last.id',
       'last.status',
-      'doc.parentContractIds',
-      'doc.childContractIds'
     ];
     const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
     return dataStr.toLowerCase().indexOf(filter) !== -1;

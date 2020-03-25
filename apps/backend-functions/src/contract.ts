@@ -147,52 +147,102 @@ function updateVersion(tx: FirebaseFirestore.Transaction, contract: ContractDocu
  */
 async function updateContract(tx: FirebaseFirestore.Transaction, ref: DocumentReference, contract: ContractDocument, newVersion: boolean = false) {
 
-  // If true, a new version is beeing created.
-  if (newVersion) {
+  // @TODO (#1887) once code migration is OK, move this if statement into the "if (newVersion)" one.
+  if (contract.type === 'sale') {
     // Fetch the mandate contracts related to current contract titles.
     // Thoses contracts will be the parents of the current one.
-    if (contract.type === 'sale') {
-      const promises = Object.keys(contract.lastVersion.titles).map(titleId => db.collection(`contracts`)
-        .where('type', '==', 'mandate')
-        .where('titleIds', 'array-contains', titleId)
-        .get()
-      );
+    const promises = Object.keys(contract.lastVersion.titles).map(titleId => db.collection(`contracts`)
+      .where('type', '==', 'mandate')
+      .where('titleIds', 'array-contains', titleId)
+      .get()
+    );
 
-      // Extract all fetched contracts
-      const snapshots = await Promise.all(promises);
-      const mandateContracts = uniqBy(flatten(snapshots.map(snap => snap.docs.map(d => d.data() as ContractDocument))), 'id');
+    // Extract all fetched contracts
+    const snapshots = await Promise.all(promises);
+    const mandateContracts = uniqBy(flatten(snapshots.map(snap => snap.docs.map(d => d.data() as ContractDocument))), 'id');
+    // Set parent relations
+    contract.parentContractIds = mandateContracts.map(c => c.id);
+    mandateContracts.map(parent => {
+      // Set child relations
+      if (!parent.childContractIds) { parent.childContractIds = []; }
+      if (!parent.childContractIds.includes(contract.id)) {
+        parent.childContractIds.push(contract.id);
+        tx.set(db.doc(`contracts/${parent.id}`), { childContractIds: parent.childContractIds }, { merge: true });
+      }
+
+      // Check if a parent contract party should be a current contract party (as observer for example)
+      const parentPartiesWithChildRole = parent.parties.filter(p => p.childRoles && p.childRoles.length > 0);
+      parentPartiesWithChildRole.forEach(partyDetail => {
+        // For each child role on the parent contract, a new party is created on the current one.
+        partyDetail.childRoles?.forEach(r => {
+          const childParty = { ...partyDetail };
+          childParty.childRoles = [];
+          delete childParty.signDate;
+          childParty.status = 'unknown';
+          childParty.party.role = r;
+          // Only if not already present
+          if (!contract.parties.find(p => (
+            childParty.party.orgId && p.party.orgId === childParty.party.orgId) ||
+            childParty.party.displayName && p.party.displayName === childParty.party.displayName
+          )) {
+            contract.parties.push(childParty);
+          }
+        });
+      })
+    });
+  } else if (contract.type === 'mandate') {
+    // Fetch the sale contracts related to current contract titles.
+    // Thoses contracts will be the childs of the current one.
+    const promises = Object.keys(contract.lastVersion.titles).map(titleId => db.collection(`contracts`)
+      .where('type', '==', 'sale')
+      .where('titleIds', 'array-contains', titleId)
+      .get()
+    );
+
+    // Extract all fetched contracts
+    const snapshots = await Promise.all(promises);
+    const saleContracts = uniqBy(flatten(snapshots.map(snap => snap.docs.map(d => d.data() as ContractDocument))), 'id');
+    // Set child relations
+    contract.childContractIds = saleContracts.map(c => c.id);
+    const currentPartiesWithChildRole = contract.parties.filter(p => p.childRoles && p.childRoles.length > 0);
+    saleContracts.map(child => {
+      let update = false; // We update childs only if something changed
+
       // Set parent relations
-      contract.parentContractIds = mandateContracts.map(c => c.id);
-      mandateContracts.map(parent => {
-        // Set child relations
-        if (!parent.childContractIds) { parent.childContractIds = []; }
-        if (!parent.childContractIds.includes(contract.id)) {
-          parent.childContractIds.push(contract.id);
-          tx.set(db.doc(`contracts/${parent.id}`), { childContractIds: parent.childContractIds }, { merge: true });
-        }
+      if (!child.parentContractIds) { child.parentContractIds = []; }
+      if (!child.parentContractIds.includes(contract.id)) {
+        child.parentContractIds.push(contract.id);
+        update = true;
+      }
 
-        // Check if a parent contract party should be a current contract party (as observer for example)
-        const parentPartiesWithChildRole = parent.parties.filter(p => p.childRoles && p.childRoles.length > 0);
-        parentPartiesWithChildRole.forEach(partyDetail => {
-          // For each child role on the parent contract, a new party is created on the current one.
-          partyDetail.childRoles?.forEach(r => {
-            const childParty = { ...partyDetail };
-            childParty.childRoles = [];
-            delete childParty.signDate;
-            childParty.status = 'unknown';
-            childParty.party.role = r;
-            // Only if not already present
-            if(!contract.parties.find(p => (
-              childParty.party.orgId && p.party.orgId === childParty.party.orgId) ||
-              childParty.party.displayName && p.party.displayName === childParty.party.displayName 
-            )) {
-              contract.parties.push(childParty);
-            }
-          });
-        })
+      // Check if current mandate contract have parties with child role
+      currentPartiesWithChildRole.forEach(partyDetail => {
+        // For each child role on the current contract, a new party is created on the childs.
+        partyDetail.childRoles?.forEach(r => {
+          const childParty = { ...partyDetail };
+          childParty.childRoles = [];
+          delete childParty.signDate;
+          childParty.status = 'unknown';
+          childParty.party.role = r;
+          // Only if not already present
+          if (!child.parties.find(p => (
+            childParty.party.orgId && p.party.orgId === childParty.party.orgId) ||
+            childParty.party.displayName && p.party.displayName === childParty.party.displayName
+          )) {
+            child.parties.push(childParty);
+            update = true;
+          }
+        });
       });
-    }
 
+      if (update) {
+        tx.set(db.doc(`contracts/${child.id}`), { parentContractIds: child.parentContractIds, parties: child.parties }, { merge: true });
+      }
+    });
+  }
+
+  // If true, a new version is beeing created.
+  if (newVersion) {
     // We need to remove previous parties signDate and reset status
     delete contract.signDate;
     contract.parties = contract.parties.map(p => {
@@ -223,7 +273,8 @@ async function updateContract(tx: FirebaseFirestore.Transaction, ref: DocumentRe
     titleIds: contract.titleIds,
     partyIds: contract.partyIds,
     parties: contract.parties,
-    parentContractIds: contract.parentContractIds,
+    parentContractIds: contract.parentContractIds ? contract.parentContractIds : [],
+    childContractIds: contract.childContractIds ? contract.childContractIds : [],
   }, { merge: true });
 }
 
