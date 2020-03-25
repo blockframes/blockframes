@@ -1,9 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { User } from '@blockframes/auth/+state/auth.store';
 import { UserAdminForm } from '../../forms/user-admin.form';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { User } from '@blockframes/auth/+state/auth.store';
-import { AuthService } from '@blockframes/auth/+state/auth.service';
+import { UserService } from '@blockframes/user/+state/user.service';
 
 @Component({
   selector: 'admin-user',
@@ -18,7 +18,7 @@ export class UserComponent implements OnInit {
   public userForm: UserAdminForm;
 
   constructor(
-    private authService: AuthService,
+    private userService: UserService,
     private route: ActivatedRoute,
     private cdRef: ChangeDetectorRef,
     private snackBar: MatSnackBar,
@@ -27,9 +27,9 @@ export class UserComponent implements OnInit {
   async ngOnInit() {
     this.route.params.subscribe(async params => {
       this.userId = params.userId;
-      this.user = await this.authService.getUser(this.userId);
+      this.user = await this.userService.getUser(this.userId);
       this.userForm = new UserAdminForm(this.user);
-      this.isUserBlockframesAdmin = await this.authService.isBlockframesAdmin(this.userId);
+      this.isUserBlockframesAdmin = await this.userService.isBlockframesAdmin(this.userId);
       this.cdRef.markForCheck();
     });
   }
@@ -51,9 +51,9 @@ export class UserComponent implements OnInit {
       position
     };
 
-    await this.authService.updateById(this.user.uid, update);
+    await this.userService.updateById(this.user.uid, update);
 
-    this.user = await this.authService.getUser(this.userId);
+    this.user = await this.userService.getUser(this.userId);
     this.cdRef.markForCheck();
 
     this.snackBar.open('Informations updated !', 'close', { duration: 5000 });
@@ -62,7 +62,7 @@ export class UserComponent implements OnInit {
 
   public async setBlockframesAdmin() {
     this.isUserBlockframesAdmin = !this.isUserBlockframesAdmin;
-    await this.authService.setBlockframesAdmin(this.isUserBlockframesAdmin, this.userId);
+    await this.userService.setBlockframesAdmin(this.isUserBlockframesAdmin, this.userId);
     this.cdRef.markForCheck();
   }
 

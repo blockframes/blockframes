@@ -3,6 +3,7 @@ import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire
 import { switchMap, filter, tap, map } from 'rxjs/operators';
 import { createMovie, Movie, MovieAnalytics, SyncMovieAnalyticsOptions } from './movie.model';
 import { MovieState, MovieStore } from './movie.store';
+import { UserService } from '@blockframes/user';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 import { cleanModel } from '@blockframes/utils/helpers';
 import { firestore } from 'firebase/app';
@@ -11,14 +12,13 @@ import { AngularFireFunctions } from '@angular/fire/functions';
 import { Observable, combineLatest } from 'rxjs';
 import { MovieQuery } from './movie.query';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
-import { AuthService } from '@blockframes/auth/+state/auth.service';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies' })
 export class MovieService extends CollectionService<MovieState> {
   constructor(
     private authQuery: AuthQuery,
-    private authService: AuthService,
+    private userService: UserService,
     private permissionsService: PermissionsService,
     private functions: AngularFireFunctions,
     private query: MovieQuery,
@@ -32,7 +32,7 @@ export class MovieService extends CollectionService<MovieState> {
     // Since movie can be created on behalf of another user (An admin from admin panel for example)
     // We use createdBy attribute to fetch OrgId
     const userId = movie._meta?.createdBy ? movie._meta.createdBy : this.authQuery.userId;
-    const user = await this.authService.getUser(userId);
+    const user = await this.userService.getUser(userId);
     return this.permissionsService.addDocumentPermissions(movie, write as firestore.WriteBatch, user.orgId);
   }
 

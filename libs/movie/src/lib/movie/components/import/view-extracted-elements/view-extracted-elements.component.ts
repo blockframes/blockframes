@@ -53,12 +53,10 @@ import { ContractService } from '@blockframes/contract/contract/+state/contract.
 import { createPaymentSchedule } from '@blockframes/utils/common-interfaces/schedule';
 import { createTerms, createRange } from '@blockframes/utils/common-interfaces';
 import { Intercom } from 'ng-intercom';
-import { cleanModel, getKeyIfExists } from '@blockframes/utils/helpers';
 import { ImageUploader } from '@blockframes/utils/image-uploader';
 import { AuthService } from '@blockframes/auth/+state/auth.service';
 
 export interface SpreadsheetImportError {
-  field: string;
   name: string;
   reason: string;
   type: string;
@@ -211,10 +209,11 @@ export class ViewExtractedElementsComponent implements OnInit {
     private cdRef: ChangeDetectorRef,
     private intercom: Intercom,
     private authService: AuthService,
+    private userService: UserService
   ) { }
 
   async ngOnInit() {
-    this.isUserBlockframesAdmin = await this.authService.isBlockframesAdmin();
+    this.isUserBlockframesAdmin = await this.userService.isBlockframesAdmin();
     this.cdRef.markForCheck();
   }
 
@@ -1024,7 +1023,7 @@ export class ViewExtractedElementsComponent implements OnInit {
           if (spreadSheetRow[SpreadSheetMovie.userId]) {
             movie._meta = createDocumentMeta();
             const uid = spreadSheetRow[SpreadSheetMovie.userId].trim();
-            const userExists = await this.authService.userExists(uid);
+            const userExists = await this.userService.userExists(uid);
             if (userExists) {
               movie._meta.createdBy = uid;
             } else {
