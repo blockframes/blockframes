@@ -25,7 +25,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.sub = this.movieService.syncAnalytics({ filterBy: movie => movie.main.storeConfig.status === 'accepted' }).subscribe();
     this.movieAnalytics$ = this.movieQuery.analytics.selectAll();
-    Object.keys(this.movieQuery.getValue().entities).length
+    this.movieQuery.getCount()
       ? this.title.setTitle('Seller\'s Dashboard - Archipel Content')
       : this.title.setTitle('New title - Archipel Content')
   }

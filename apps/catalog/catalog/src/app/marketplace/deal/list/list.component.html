@@ -3,9 +3,9 @@
 <mat-tab-group>
   <mat-tab *ngFor="let tab of tabs$ | async">
     <ng-template mat-tab-label>
-      <div (click)="refreshTitle(tab.name)">
+      <span (click)="refreshTitle(tab.name)">
         {{ tab.name }} ({{ tab.contracts.length }})
-      </div>
+      </span>
     </ng-template>
     <ng-template matTabContent>
       <ng-container *ngIf="tab.contracts.length; else noContracts">
