@@ -18,7 +18,7 @@ export interface DateGroup<T> {
 }
 
 /** Checks if the date is a firestore Timestamp. */
-export function isTimeStamp(date: firestore.Timestamp | Date): date is firestore.Timestamp {
+export function isTimeStamp(date: firestore.Timestamp | Date | string): date is firestore.Timestamp {
   return date && date instanceof firestore.Timestamp
 }
 
@@ -30,7 +30,6 @@ export function toDate(date: firestore.Timestamp | Date): Date {
   if (typeof date === 'string' || typeof date === 'number') {
     return new Date(date);
   }
-
   return date;
 }
 

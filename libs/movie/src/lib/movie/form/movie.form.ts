@@ -12,11 +12,13 @@ import { MovieFestivalPrizesForm } from './festival-prizes/festival-prizes.form'
 import { MovieSalesAgentDealForm } from './sales-agent-deal/sales-agent-deal.form';
 import { MovieReviewForm } from './review/review.form';
 import { MovieBudgetForm } from './budget/budget.form';
-import { Injectable } from '@angular/core';
 import { LegalDocument } from '@blockframes/contract/contract/+state/contract.firestore';
 import { FormStaticValue } from '@blockframes/utils/form/forms/static-value.form';
 import { createLegalDocument } from '@blockframes/contract/contract/+state/contract.model';
 import { MovieLegalDocuments } from '../+state/movie.firestore';
+import { LanguagesSlug } from '@blockframes/utils/static-model';
+import { MovieLanguageSpecification } from './../+state/movie.firestore';
+import { createLanguageControl } from '@blockframes/movie/movie/form/version-info/version-info.form';
 
 // LEGAL DOCUMENTS
 
@@ -64,7 +66,10 @@ function createMovieControls(movie: Partial<Movie>) {
     salesCast: new MovieSalesCastForm(entity.salesCast),
     salesInfo: new MovieSalesInfoForm(entity.salesInfo),
     versionInfo: new FormEntity({
-      languages: new MovieVersionInfoForm(entity.versionInfo.languages)
+      languages: MovieVersionInfoForm.factory(entity.versionInfo.languages, (languages: { [language in LanguagesSlug]: MovieLanguageSpecification }) => {
+        const controls = createLanguageControl(languages)
+        return controls;
+      })
     }),
     festivalPrizes: new MovieFestivalPrizesForm(entity.festivalPrizes),
     salesAgentDeal: new MovieSalesAgentDealForm(entity.salesAgentDeal),

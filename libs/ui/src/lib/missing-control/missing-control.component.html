@@ -10,21 +10,19 @@
     </a>
   </ng-container>
   <!-- Display projected content if provided -->
-  <ng-template #content
-    [ngTemplateOutlet]="child || value"
-    [ngTemplateOutletContext]="{ $implicit: control.value }">
+  <ng-template #content [ngTemplateOutlet]="child || value" [ngTemplateOutletContext]="{ $implicit: control.value }">
   </ng-template>
   <!-- Display value if no projected content -->
   <ng-template #value>
     <ng-container *ngIf="(scope && !!control.value) else withType">
-      {{ control.value | translateSlug: scope }}
+      <span *ngIf="control.value">{{ control.value | translateSlug: scope }}</span>
     </ng-container>
     <ng-template #withType>
       <ng-container *ngIf="(type && !!control.value) else withoutType">
-        {{ control.value | toLabel: type | async }}
+        <span *ngIf="control.value">{{ control.value | toLabel: type | async }}</span>
       </ng-container>
       <ng-template #withoutType>
-        {{ control.value }}{{ isLast ? '' : ', ' }}
+        <span *ngIf="control.value">{{ control.value }}{{ isLast ? '' : ', ' }}</span>
       </ng-template>
     </ng-template>
   </ng-template>

@@ -1,7 +1,7 @@
 <ul>
   <ng-container *ngFor="let festivalPrize of festivalPrizes.prizes.controls">
     <li>
-      <strong>Festival </strong>
+      <strong>Festivals </strong>
       <ng-container *ngIf="festivalPrizeHasNoValue(festivalPrize) else display">
         <a [routerLink]="link" class="missing-control">
           Missing

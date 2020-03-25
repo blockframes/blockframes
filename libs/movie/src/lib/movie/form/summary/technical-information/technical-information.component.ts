@@ -1,4 +1,10 @@
-import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  Input,
+  ChangeDetectorRef,
+  OnInit
+} from '@angular/core';
 import { MovieSalesInfoForm } from '../../sales-info/sales-info.form';
 import { MovieVersionInfoForm } from '../../version-info/version-info.form';
 
@@ -13,7 +19,7 @@ export class MovieSummaryTechnicalInformationComponent implements OnInit {
   @Input() versionInfo: MovieVersionInfoForm;
   @Input() link: string;
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.salesInfo.valueChanges.subscribe(_ => this.cdr.markForCheck());

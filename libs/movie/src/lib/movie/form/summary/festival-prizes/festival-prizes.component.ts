@@ -15,6 +15,7 @@ export class MovieSummaryFestivalPrizesComponent implements OnInit {
 
   ngOnInit() {
     this.festivalPrizes.valueChanges.subscribe(_ => this.cdr.markForCheck());
+    console.log(this.festivalPrizes.prizes.controls[1].get('name'))
   }
 
   public festivalPrizeHasNoValue(festivalPrize: MoviePrizeForm) {

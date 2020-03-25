@@ -141,7 +141,7 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
     this.algoliaSearchResults$ = this.control.valueChanges.pipe(
       debounceTime(300),
       distinctUntilChanged(),
-      switchMap(text => this.indexSearch.search(text)),
+      switchMap(text => typeof text === 'string' ? this.indexSearch.search(text) : new Observable()),
       pluck('hits')
     );
     this.sub = this.algoliaSearchResults$.subscribe(data => this.lastValue$.next(data));
@@ -163,9 +163,8 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
   /**
    * @description this function can be listen on if we want more then
    * just the data from the form control
-   * @param event holding all the algolia data available
    */
-  public findObjectID(event: MatAutocompleteSelectedEvent) {
+  public findObjectID() {
     const objectID = this.lastValue$.getValue()[0].objectID;
     this.selectionChange.emit(objectID);
     if (this.resetInput) {

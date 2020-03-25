@@ -91,7 +91,7 @@ const models = {
   ] as const,
   'PRODUCER_ROLES': [
     {
-      'slug': 'exectuive-producer',
+      'slug': 'executive-producer',
       'label': 'Executive Producer'
     },
     {

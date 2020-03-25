@@ -21,7 +21,6 @@ import {
   MovieRating,
   MovieDocumentWithDates,
   BoxOffice,
-  UnitBox,
   MovieStakeholders,
   MovieAnalytics,
   MovieLegalDocuments,
@@ -69,9 +68,9 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     id: params.id,
     _type: 'movies',
     documents: createMovieLegalDocuments(params.documents),
-    versionInfo: { languages: {} }, // TODO issue #1596
     movieReview: [],
     ...params,
+    versionInfo: { languages: createLanguageKey(params.versionInfo?.languages ? params.versionInfo.languages : {}) },
     main: createMovieMain(params.main),
     story: createMovieStory(params.story),
     promotionalElements: createMoviePromotionalElements(params.promotionalElements),
@@ -82,6 +81,14 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     salesAgentDeal: createMovieSalesAgentDeal(params.salesAgentDeal),
     budget: createMovieBudget(params.budget),
   };
+}
+
+export function createLanguageKey(languages: Partial<{ [language in LanguagesSlug]: MovieLanguageSpecification }> = {}) {
+  let languageSpecifications = {}
+  for (const language in languages) {
+   languageSpecifications[language] = createMovieLanguageSpecification(languages[language])
+  }
+  return (languageSpecifications as Partial<{ [language in LanguagesSlug]: MovieLanguageSpecification }>)
 }
 
 /** A factory function that creates MovieMain */
