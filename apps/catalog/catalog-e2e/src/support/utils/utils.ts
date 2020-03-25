@@ -1,8 +1,9 @@
-import { WelcomeViewPage, LoginViewPage } from "../pages/auth";
-import { HomePage } from "../pages/marketplace";
-import { TitlesListPage, StartTunnelPage, TunnelMainPage } from "../pages/dashboard";
-import { User } from "./type";
-import { USERS } from "./users";
+import { WelcomeViewPage, LoginViewPage } from '../pages/auth';
+import { HomePage } from '../pages/marketplace';
+import { TitlesListPage, StartTunnelPage, TunnelMainPage } from '../pages/dashboard';
+import { User } from '@blockframes/e2e/utils/type';
+import { USERS } from '@blockframes/e2e/utils/users';
+import { signIn } from '@blockframes/e2e/utils/utils';
 
 // Select user: david.ewing@gillespie-lawrence.fake.cascade8.com
 const LOGIN_CREDENTIALS: Partial<User> = USERS[0];
@@ -16,13 +17,9 @@ export function clearDataAndPrepareTest(path: string = '/auth') {
   cy.viewport('ipad-2', 'landscape');
 }
 
-export function signInAndNavigateToMain () {
-  // Connexion
-  const p1: WelcomeViewPage = new WelcomeViewPage();
-  const p2: LoginViewPage = p1.clickCallToAction();
-  p2.switchMode();
-  p2.fillSignin(LOGIN_CREDENTIALS);
-  const p3: HomePage = p2.clickSignIn();
+export function signInAndNavigateToMain() {
+  signIn(LOGIN_CREDENTIALS);
+  const p3 = new HomePage();
 
   // Navigate to movie-tunnel-main
   const p4: TitlesListPage = TitlesListPage.navigateToPage();
@@ -31,9 +28,10 @@ export function signInAndNavigateToMain () {
 }
 
 export function uploadFile(p: string, type: string, testId: string): any {
-  return cy.readFile(p, 'base64')
-    .then((x) => Cypress.Blob.base64StringToBlob(x, type))
-    .then((content) => {
+  return cy
+    .readFile(p, 'base64')
+    .then(x => Cypress.Blob.base64StringToBlob(x, type))
+    .then(content => {
       const testfile = new File([content], 'my-script.pdf', { type });
       const dataTransfer = new DataTransfer();
       dataTransfer.items.add(testfile);
@@ -47,5 +45,5 @@ export function assertUploadStatus(content: string, testId: string) {
 }
 
 let currentID = 0;
-export const randomID = (): string => (`${new Date().toISOString()}-${currentID++}`);
+export const randomID = (): string => `${new Date().toISOString()}-${currentID++}`;
 export const createFakeScript = (title: string): any => cy.task('random:pdf', title);

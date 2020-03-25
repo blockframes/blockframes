@@ -969,6 +969,35 @@
           "styleext": "scss"
         }
       }
+    },
+    "e2e": {
+      "projectType": "library",
+      "root": "libs/e2e",
+      "sourceRoot": "libs/e2e/src",
+      "prefix": "blockframes",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["libs/e2e/tsconfig.lib.json", "libs/e2e/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**", "!libs/e2e/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/e2e/jest.config.js",
+            "tsConfig": "libs/e2e/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "libs/e2e/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
     }
   },
   "cli": {

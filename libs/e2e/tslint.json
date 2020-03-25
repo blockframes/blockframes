@@ -1,0 +1,7 @@
+{
+  "extends": "../../tslint.json",
+  "rules": {
+    "directive-selector": [true, "attribute", "blockframes", "camelCase"],
+    "component-selector": [true, "element", "blockframes", "kebab-case"]
+  }
+}
