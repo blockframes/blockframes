@@ -4,7 +4,7 @@ import { ValidContractStatuses, ContractVersionDocument } from '@blockframes/con
 import { getOrganizationsOfContract, getDocument } from './data/internals';
 import { triggerNotifications, createNotification } from './notification';
 import { centralOrgID } from './environments/environment';
-import { isEqual, uniqBy } from 'lodash';
+import { isEqual, uniqBy, flatten } from 'lodash';
 import { firestore } from 'firebase-admin';
 
 async function getCurrentVersionId(tx: FirebaseFirestore.Transaction, contractId: string): Promise<string> {
@@ -147,6 +147,61 @@ function updateVersion(tx: FirebaseFirestore.Transaction, contract: ContractDocu
  */
 async function updateContract(tx: FirebaseFirestore.Transaction, ref: DocumentReference, contract: ContractDocument, newVersion: boolean = false) {
 
+  // If true, a new version is beeing created.
+  if (newVersion) {
+    // Fetch the mandate contracts related to current contract titles.
+    // Thoses contracts will be the parents of the current one.
+    if (contract.type === 'sale') {
+      const promises = Object.keys(contract.lastVersion.titles).map(titleId => db.collection(`contracts`)
+        .where('type', '==', 'mandate')
+        .where('titleIds', 'array-contains', titleId)
+        .get()
+      );
+
+      // Extract all fetched contracts
+      const snapshots = await Promise.all(promises);
+      const mandateContracts = uniqBy(flatten(snapshots.map(snap => snap.docs.map(d => d.data() as ContractDocument))), 'id');
+      // Set parent relations
+      contract.parentContractIds = mandateContracts.map(c => c.id);
+      mandateContracts.map(parent => {
+        // Set child relations
+        if (!parent.childContractIds) { parent.childContractIds = []; }
+        if (!parent.childContractIds.includes(contract.id)) {
+          parent.childContractIds.push(contract.id);
+          tx.set(db.doc(`contracts/${parent.id}`), { childContractIds: parent.childContractIds }, { merge: true });
+        }
+
+        // Check if a parent contract party should be a current contract party (as observer for example)
+        const parentPartiesWithChildRole = parent.parties.filter(p => p.childRoles && p.childRoles.length > 0);
+        parentPartiesWithChildRole.forEach(partyDetail => {
+          // For each child role on the parent contract, a new party is created on the current one.
+          partyDetail.childRoles?.forEach(r => {
+            const childParty = { ...partyDetail };
+            childParty.childRoles = [];
+            delete childParty.signDate;
+            childParty.status = 'unknown';
+            childParty.party.role = r;
+            // Only if not already present
+            if(!contract.parties.find(p => (
+              childParty.party.orgId && p.party.orgId === childParty.party.orgId) ||
+              childParty.party.displayName && p.party.displayName === childParty.party.displayName 
+            )) {
+              contract.parties.push(childParty);
+            }
+          });
+        })
+      });
+    }
+
+    // We need to remove previous parties signDate and reset status
+    delete contract.signDate;
+    contract.parties = contract.parties.map(p => {
+      delete p.signDate;
+      p.status = 'unknown';
+      return p;
+    });
+  }
+
   // We create an array of title ids for querying purposes
   contract.titleIds = [];
   if (!!contract.lastVersion.titles) {
@@ -161,56 +216,6 @@ async function updateContract(tx: FirebaseFirestore.Transaction, ref: DocumentRe
         contract.partyIds.push(p.party.orgId);
       }
     })
-  }
-
-  // Fetch the mandate contracts related to current contract titles.
-  // Thoses contracts will be the parents of the current one.
-  if (contract.type === 'sale') {
-    const promises = Object.keys(contract.lastVersion.titles).map(titleId => db.collection(`contracts/${contract.id}`)
-      .where('type', '==', 'mandate')
-      .where('titleIds', 'array-contains', titleId)
-      .get()
-    );
-
-    // Extract all fetched contracts
-    const snapshots = await Promise.all(promises);
-    const mandateContracts = uniqBy(snapshots.map(snap => snap.docs.map(d => d.data() as ContractDocument)).flat(), 'id');
-
-    // Set parent relations
-    contract.parentContractIds = mandateContracts.map(c => c.id);
-    mandateContracts.map(parent => {
-      // Set child relations
-      if (!parent.childContractIds) { parent.childContractIds = []; }
-      if (!parent.childContractIds.includes(contract.id)) {
-        parent.childContractIds.push(contract.id);
-        tx.set(db.doc(`contracts/${parent.id}`), { childContractIds: parent.childContractIds }, { merge: true });
-      }
-
-      // Check if a parent contract party should be a current contract party (as observer for example)
-      const parentPartiesWithChildRole = parent.parties.filter(p => p.childRoles && p.childRoles.length > 0);
-      parentPartiesWithChildRole.forEach(partyDetail => {
-        // For each child role on the parent contract, a new party is created on the current one.
-        partyDetail.childRoles?.forEach(r => {
-          const childParty = { ...partyDetail };
-          childParty.childRoles = [];
-          delete childParty.signDate;
-          childParty.status = 'unknown';
-          childParty.party.role = r;
-          contract.parties.push(childParty);
-        });
-      })
-    });
-  }
-
-  // If true, a new version is beeing created.
-  // We need to remove previous parties signDate and reset status
-  if (newVersion) {
-    delete contract.signDate;
-    contract.parties = contract.parties.map(p => {
-      delete p.signDate;
-      p.status = 'unknown';
-      return p;
-    });
   }
 
   tx.set(ref, {
@@ -290,7 +295,7 @@ export async function onContractWrite(
         // Push new version.
         updateVersion(tx, current);
         // Update contract.
-        updateContract(tx, change.after.ref, current, true);
+        await updateContract(tx, change.after.ref, current, true);
       } else {
         // To prevent the case where the front tries to push version Id or creationDate (which are only handled by this trigger).
         current.lastVersion.id = await getCurrentVersionId(tx, current.id);
@@ -298,7 +303,7 @@ export async function onContractWrite(
         // A new version have been saved, we check if public contract need to be updated.
         // @TODO (#1887) remove next line once code migration is OK
         await updatePublicContract(tx, current);
-        updateContract(tx, change.after.ref, current);
+        await updateContract(tx, change.after.ref, current);
       }
       return current;
     });
