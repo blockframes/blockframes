@@ -26,7 +26,8 @@ describe('Test wishlist icon from library page', () => {
     // Connexion
     const p1: LoginViewPage = new LoginViewPage();
     p1.fillSignin(LOGIN_CREDENTIALS);
-    const p2: HomePage = p1.clickSignIn();
+    p1.clickSignIn();
+    const p2 = new HomePage();
 
     // Add two movies to the wishlist
     const p3: SearchPage = p2.clickViewTheLibrary();
@@ -57,7 +58,8 @@ describe('Test wishlist icon from movie view page', () => {
     // Connexion
     const p1: LoginViewPage = new LoginViewPage();
     p1.fillSignin(LOGIN_CREDENTIALS);
-    const p2: HomePage = p1.clickSignIn();
+    p1.clickSignIn();
+    const p2 = new HomePage();
 
     // Add two movies to the wishlist
     const p3: SearchPage = p2.clickViewTheLibrary();
@@ -91,7 +93,8 @@ describe('Test wishlist icon from movie view page', () => {
       // Connexion
       const p1: LoginViewPage = new LoginViewPage();
       p1.fillSignin(LOGIN_CREDENTIALS);
-      const p2: HomePage = p1.clickSignIn();
+      p1.clickSignIn();
+      const p2 = new HomePage();
 
       // HOME PAGE
 

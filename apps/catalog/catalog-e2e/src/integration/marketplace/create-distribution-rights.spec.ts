@@ -44,7 +44,8 @@ describe('test select movie from catalog', () => {
     const p1: WelcomeViewPage = new WelcomeViewPage();
     const p2: LoginViewPage = p1.clickCallToAction();
     p2.fillSignin(LOGIN_CREDENTIALS);
-    const p3: HomePage = p2.clickSignIn();
+    p2.clickSignIn();
+    const p3 = new HomePage();
     // Go to search page and apply filters
     const p4: SearchPage = p3.clickViewTheLibrary();
     p4.fillProductionYear(PRODUCTION_YEAR);
