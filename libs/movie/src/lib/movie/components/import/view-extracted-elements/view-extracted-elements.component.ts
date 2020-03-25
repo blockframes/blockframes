@@ -2030,7 +2030,7 @@ export class ViewExtractedElementsComponent implements OnInit {
 
         // Global contract price
         const contractPrice = createPrice();
-        importErrors.contract.doc.titleIds.forEach(titleId => {
+        Object.keys(importErrors.contract.last.titles).forEach(titleId => {
           const price = importErrors.contract.last.titles[titleId].price;
           if (price && price.amount) {
             contractPrice.amount += price.amount;

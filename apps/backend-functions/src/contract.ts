@@ -235,6 +235,7 @@ async function updateContract(tx: FirebaseFirestore.Transaction, ref: DocumentRe
         });
       });
 
+      // @TODO (#1887) prevent from beeing into private and childs at the same time (can arrive if contract type changes)
       if (update) {
         tx.set(db.doc(`contracts/${child.id}`), { parentContractIds: child.parentContractIds, parties: child.parties }, { merge: true });
       }
