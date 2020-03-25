@@ -1331,6 +1331,7 @@ export class ViewExtractedElementsComponent implements OnInit {
           /////////////////
 
           // Retreive the contract that will handle the deal
+          // @TODO (#1887) change this
           const contract = await this.contractService.getContractWithLastVersionFromDeal(movie.id, distributionDeal.id);
           if (contract) {
 
@@ -1792,6 +1793,7 @@ export class ViewExtractedElementsComponent implements OnInit {
       let contract = initContractWithVersion();
       let newContract = true;
       if (spreadSheetRow[SpreadSheetContract.contractId]) {
+        // @TODO (#1887) change this
         const existingContract = await this.contractService.getContractWithLastVersion(spreadSheetRow[SpreadSheetContract.contractId]);
         if (!!existingContract) {
           contract = existingContract;

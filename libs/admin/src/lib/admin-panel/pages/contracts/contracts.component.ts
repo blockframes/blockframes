@@ -51,6 +51,7 @@ export class ContractsComponent implements OnInit {
     }
 
     const promises = contracts.map(async contract => {
+      // @TODO (#1887) change this
       const contractWithLastVersion = await this.contractService.getContractWithLastVersion(contract.id);
       const row = { ...contractWithLastVersion } as any;
 
