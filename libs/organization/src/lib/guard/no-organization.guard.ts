@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { OrganizationService } from '../organization/+state';
-import { AuthQuery } from '@blockframes/auth';
+import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })

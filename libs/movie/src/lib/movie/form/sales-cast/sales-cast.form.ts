@@ -1,5 +1,5 @@
 import { MovieSalesCast, Credit, createMovieSalesCast } from '../../+state';
-import { FormEntity, FormList } from '@blockframes/utils';
+import { FormEntity, FormList } from '@blockframes/utils/form/forms';
 import { FormControl } from '@angular/forms';
 import { createCredit } from '@blockframes/utils/common-interfaces/identity';
 

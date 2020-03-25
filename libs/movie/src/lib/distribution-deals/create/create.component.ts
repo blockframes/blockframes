@@ -22,7 +22,6 @@ import {
   LanguagesLabel,
 } from '@blockframes/utils/static-model/types';
 import { DateRange } from '@blockframes/utils/common-interfaces/range';
-import { ControlErrorStateMatcher, languageValidator } from '@blockframes/utils';
 import {
   getDealsInDateRange,
   exclusiveDistributionDeals,
@@ -38,6 +37,7 @@ import { DistributionDealService } from '../+state';
 import { createContractPartyDetail, initContractWithVersion } from '@blockframes/contract/contract/+state/contract.model';
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
+import { ControlErrorStateMatcher, languageValidator } from '@blockframes/utils/form/validators/validators';
 
 enum ResearchSteps {
   START = 'Start',

@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, forwardRef, OnDestroy, OnInit } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { ConfirmPasswordForm, RepeatPasswordStateMatcher } from '@blockframes/utils';
+import { ConfirmPasswordForm } from '@blockframes/utils/form/controls/password.control';
+import { RepeatPasswordStateMatcher } from '@blockframes/utils/form/matchers';
 import { Subscription } from 'rxjs';
 import { distinctUntilChanged, tap } from 'rxjs/operators';
 

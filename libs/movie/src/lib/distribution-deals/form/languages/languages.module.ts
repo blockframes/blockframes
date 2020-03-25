@@ -1,5 +1,5 @@
 // Angular
-import { TranslateSlugModule } from '@blockframes/utils';
+import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';

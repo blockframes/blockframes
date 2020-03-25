@@ -29,9 +29,9 @@ import { MatMenuModule} from '@angular/material/menu';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 // Libraries
-import { UploadModule } from '@blockframes/ui/upload';
-import { PasswordConfirmModule } from '@blockframes/ui/form';
-import { MovieCardModule } from '@blockframes/ui';
+import { UploadModule } from '@blockframes/ui/upload/upload.module';
+import { PasswordConfirmModule } from '@blockframes/ui/form/password-confirm/password-confirm.module';
+import { MovieCardModule } from '@blockframes/ui/movie-card/movie-card.module';
 
 // Components
 import { AngularFireModule } from '@angular/fire';

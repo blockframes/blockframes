@@ -3,10 +3,10 @@ import { Observable, Subscription } from 'rxjs';
 import { Wishlist } from '@blockframes/organization';
 import { map } from 'rxjs/operators';
 import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
-import { AuthQuery } from '@blockframes/auth';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { MatSidenav } from '@angular/material/sidenav';
 import { MarketplaceQuery } from '../+state';
+import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 
 @Component({
   selector: 'catalog-layout',

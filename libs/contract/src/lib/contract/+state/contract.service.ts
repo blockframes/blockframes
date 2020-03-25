@@ -16,13 +16,13 @@ import {
 } from './contract.model';
 import orderBy from 'lodash/orderBy';
 import { ContractVersionService } from '../../version/+state/contract-version.service';
-import { cleanModel } from '@blockframes/utils';
 import { PermissionsService, OrganizationQuery } from '@blockframes/organization';
 import { ContractDocumentWithDates } from './contract.firestore';
 import { firestore } from 'firebase/app';
 import { createContractVersionFromFirestore } from '@blockframes/contract/version/+state/contract-version.model';
 import { ContractVersion } from '@blockframes/contract/version/+state';
 import { Observable } from 'rxjs';
+import { cleanModel } from '@blockframes/utils/helpers';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'contracts' })

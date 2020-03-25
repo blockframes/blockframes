@@ -3,7 +3,7 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { staticModels } from '@blockframes/utils/static-model';
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { PartyDetailsForm } from '../contract.form';
-import { FormList } from '@blockframes/utils';
+import { FormList } from '@blockframes/utils/form/forms/list.form';
 
 @Component({
   selector: '[form] contract-form-party',

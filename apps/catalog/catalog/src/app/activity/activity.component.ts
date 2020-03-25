@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { NotificationQuery } from '@blockframes/notification';
 import { map } from 'rxjs/operators';
 import { ActivityTab } from '@blockframes/notification/activity-feed/activity-tabs/activity-tabs.component';
+import { NotificationQuery } from '@blockframes/notification/notification/+state/notification.query';
 
 @Component({
   selector: 'catalog-activity',

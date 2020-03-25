@@ -22,8 +22,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatCardModule } from '@angular/material/card';
 
 // Component
-import { FeedbackMessageModule } from '@blockframes/ui';
-import { PasswordConfirmModule } from '@blockframes/ui/form';
+import { FeedbackMessageModule } from '@blockframes/ui/feedback/feedback-message.module';
+import { PasswordConfirmModule } from '@blockframes/ui/form/password-confirm/password-confirm.module';
 import { WelcomeViewComponent } from './pages/welcome-view/welcome-view.component';
 import { IdentityComponent } from './pages/identity/identity.component';
 import { EmailVerificationComponent } from './pages/email-verification/email-verification.component';

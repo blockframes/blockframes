@@ -24,7 +24,6 @@ import {
 } from '../../../+state';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { formatCredits } from '@blockframes/utils/spreadsheet/format';
-import { ImageUploader, cleanModel, getKeyIfExists } from '@blockframes/utils';
 import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
 import { SSF } from 'xlsx';
 import {
@@ -54,7 +53,9 @@ import { ContractService } from '@blockframes/contract/contract/+state/contract.
 import { createPaymentSchedule } from '@blockframes/utils/common-interfaces/schedule';
 import { createTerms, createRange } from '@blockframes/utils/common-interfaces';
 import { Intercom } from 'ng-intercom';
-import { AuthService } from '@blockframes/auth';
+import { cleanModel, getKeyIfExists } from '@blockframes/utils/helpers';
+import { ImageUploader } from '@blockframes/utils/image-uploader';
+import { AuthService } from '@blockframes/auth/+state/auth.service';
 
 export interface SpreadsheetImportError {
   field: string;

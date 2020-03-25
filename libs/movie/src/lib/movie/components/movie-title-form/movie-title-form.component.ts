@@ -3,7 +3,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieService } from '../../+state';
 import { Router } from '@angular/router';
-import { appsRoute } from '@blockframes/utils/routes';
+import { appsRoute } from '@blockframes/utils/routes/create-routes';
 import { app } from '@blockframes/utils/apps';
 
 @Component({

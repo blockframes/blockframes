@@ -2,7 +2,7 @@ import { algolia } from '@env';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { InvitationService } from '@blockframes/notification';
+import { InvitationService } from '@blockframes/notification/invitation/+state/invitation.service';
 
 @Component({
   selector: 'organization-find',

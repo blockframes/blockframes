@@ -14,9 +14,9 @@ import { createEvent } from '../../+state/event.model';
 import { EventCreateComponent } from '../../form/create/create.component';
 import { fromEvent } from 'rxjs';
 
-import { AuthQuery } from '@blockframes/auth';
-import { map, finalize, takeUntil, distinctUntilChanged } from 'rxjs/operators';
 import { EventTypes } from '@blockframes/event/+state/event.firestore';
+import { map, finalize, takeUntil, distinctUntilChanged } from 'rxjs/operators';
+import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 
 function floorToNearest(amount: number, precision: number) {
   return Math.floor(amount / precision) * precision;

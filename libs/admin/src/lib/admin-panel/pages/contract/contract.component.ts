@@ -8,7 +8,6 @@ import { ContractAdminForm } from '../../forms/contract-admin.form';
 import { ContractVersionAdminForm } from '../../forms/contract-version-admin.form';
 import { contractStatus, contractType, ContractTitleDetail } from '@blockframes/contract/contract/+state/contract.firestore';
 import { ContractVersionService } from '@blockframes/contract/version/+state/contract-version.service';
-import { getValue } from '@blockframes/utils';
 import { ContractVersion } from '@blockframes/contract/version/+state';
 import { Observable } from 'rxjs/internal/Observable';
 import { MovieCurrenciesSlug } from '@blockframes/utils/static-model/types';
@@ -17,6 +16,7 @@ import { MovieService } from '@blockframes/movie';
 import { EditPartyComponent } from '../../components/edit-party/edit-party.component';
 import { EditTitleComponent } from '../../components/edit-title/edit-title.component';
 import { calculatePrice } from '@blockframes/contract/contract/+state/contract.utils';
+import { getValue } from '@blockframes/utils/helpers';
 
 @Component({
   selector: 'admin-contract',
@@ -34,7 +34,7 @@ export class ContractComponent implements OnInit {
   public version: number;
   public publicContract$: Observable<PublicContract>;
 
-  // Tables 
+  // Tables
   public contractVersions: ContractVersion[] = [];
   public titles: any = [];
   public distributionDeals = [];

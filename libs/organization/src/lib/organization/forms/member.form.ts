@@ -1,4 +1,4 @@
-import { FormList } from "@blockframes/utils";
+import { FormList } from "@blockframes/utils/form/forms/list.form";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { OrganizationMember } from "@blockframes/user/+state/user.model";
 

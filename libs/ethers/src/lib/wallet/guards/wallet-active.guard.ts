@@ -3,8 +3,8 @@ import { WalletService } from "../+state";
 import { Router, UrlTree, CanActivate, CanDeactivate } from "@angular/router";
 import { Subscription } from 'rxjs';
 import { tap, filter } from 'rxjs/operators';
-import { AuthQuery } from '@blockframes/auth';
 import { Wallet } from '../../types';
+import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 
 @Injectable({ providedIn: 'root' })
 export class WalletActiveGuard implements CanActivate, CanDeactivate<Wallet> {

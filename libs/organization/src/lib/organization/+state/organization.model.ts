@@ -1,5 +1,4 @@
 /** Gives information about an application */
-import { AppDetails, toDate } from '@blockframes/utils';
 import {
   OrganizationDocumentWithDates,
   WishlistDocumentWithDates,
@@ -8,6 +7,8 @@ import {
   createOrganizationRaw
 } from './organization.firestore';
 import { Movie } from '@blockframes/movie';
+import { AppDetails } from '@blockframes/utils/apps';
+import { toDate } from '@blockframes/utils/helpers';
 
 export {
   OrganizationStatus,

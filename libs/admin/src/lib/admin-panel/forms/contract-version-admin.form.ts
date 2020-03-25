@@ -1,5 +1,5 @@
 import { FormControl } from '@angular/forms';
-import { FormEntity } from '@blockframes/utils';
+import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { createContractVersion } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractVersion } from '@blockframes/contract/version/+state/contract-version.model';
 

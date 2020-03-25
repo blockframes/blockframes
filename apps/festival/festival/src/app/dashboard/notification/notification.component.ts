@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ActivityTab } from '@blockframes/notification/activity-feed/activity-tabs/activity-tabs.component';
-import { NotificationQuery } from '@blockframes/notification';
 import { map } from 'rxjs/operators';
+import { NotificationQuery } from '@blockframes/notification/notification/+state/notification.query';
 
 // App specific tabs
 const appTabs: ActivityTab[] = [{
