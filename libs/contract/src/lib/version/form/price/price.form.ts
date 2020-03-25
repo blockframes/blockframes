@@ -1,7 +1,7 @@
 import { FormStaticValue } from '@blockframes/utils/form';
 import { FormControl, Validators } from '@angular/forms';
 import { Price, createPrice } from '@blockframes/utils/common-interfaces/price';
-import { FormEntity } from '@blockframes/utils';
+import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 
 function createContractVersionPriceControls(price: Partial<Price>) {
   const entity = createPrice(price)

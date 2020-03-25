@@ -17,14 +17,10 @@
     "strictBindCallApply": true,
     "paths": {
       "@env": ["env/env.ts"],
-      "@blockframes/auth": ["libs/user/src/lib/auth/index.ts"],
       "@blockframes/auth/*": ["libs/user/src/lib/auth/*"],
       "@blockframes/auth/types": ["libs/user/src/lib/auth/+state/auth.firestore.ts"],
-      "@blockframes/ui": ["libs/ui/src/index.ts"],
       "@blockframes/ui/*": ["libs/ui/src/lib/*"],
-      "@blockframes/utils": ["libs/utils/src/index.ts"],
       "@blockframes/utils/*": ["libs/utils/src/lib/*"],
-      "@blockframes/utils/spreadsheet": ["libs/utils/src/lib/spreadsheet/index.ts"],
       "@blockframes/movie": ["libs/movie/src/index.ts"],
       "@blockframes/movie/*": ["libs/movie/src/lib/movie/*"],
       "@blockframes/movie/import": [
@@ -52,7 +48,6 @@
       "@blockframes/notification/types": [
         "libs/notification/src/lib/notification/+state/notification.firestore.ts"
       ],
-      "@blockframes/notification": ["libs/notification/src/index.ts"],
       "@blockframes/notification/*": ["libs/notification/src/lib/*"],
       "@blockframes/contract": ["libs/contract/src/index.ts"],
       "@blockframes/contract/*": ["libs/contract/src/lib/*"],

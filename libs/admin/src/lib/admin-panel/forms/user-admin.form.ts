@@ -1,5 +1,5 @@
 import { FormControl, Validators } from '@angular/forms';
-import { FormEntity } from '@blockframes/utils';
+import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { User, createUser } from '@blockframes/auth/+state/auth.store';
 
 function createUserAdminControls(entity: Partial<User>) {

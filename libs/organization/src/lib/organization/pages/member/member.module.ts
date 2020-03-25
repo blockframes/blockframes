@@ -8,7 +8,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
-import { AvatarListModule } from '@blockframes/ui';
+import { AvatarListModule } from '@blockframes/ui/avatar-list/avatar-list.module';
 
 import { MemberComponent } from './member.component';
 import { MemberRepertoryComponent } from '@blockframes/organization/organization/components/member-repertory/member-repertory.component';

@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { OrganizationQuery } from '../../+state';
-import { InvitationService } from '@blockframes/notification';
+import { InvitationService } from '@blockframes/notification/invitation/+state/invitation.service';
 import { createAddMemberFormList } from '../../forms/member.form';
 import { BehaviorSubject } from 'rxjs';
 

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
 import { GenreComponent } from './genres.component';
-import { TranslateSlugModule } from '@blockframes/utils';
+import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
 
 // Material
 import { MatSelectModule } from '@angular/material/select';

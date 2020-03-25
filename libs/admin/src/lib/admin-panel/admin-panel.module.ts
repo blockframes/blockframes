@@ -23,7 +23,7 @@ import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia-autocomplete/
 import { TermDateModule } from '@blockframes/utils/pipes/term-date.module';
 import { ToLabelModule } from '@blockframes/utils/pipes/to-label.module';
 import { EditTitleModule } from './components/edit-title/edit-title.module';
-import { TranslateSlugModule } from '@blockframes/utils';
+import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
 
 // Components
 import { OverviewComponent } from './pages/overview/overview.component';

@@ -8,9 +8,9 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia-autocomplete/algolia-autocomplete.module'
 
 // Widgets
-import { NotificationWidgetModule } from '@blockframes/notification';
+import { NotificationWidgetModule } from '@blockframes/notification/notification/notification-widget/notification-widget.module';
 import { SearchWidgetModule } from '@blockframes/ui/search-widget';
-import { AuthWidgetModule } from '@blockframes/auth';
+import { AuthWidgetModule } from '@blockframes/auth/components/widget/widget.module';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';

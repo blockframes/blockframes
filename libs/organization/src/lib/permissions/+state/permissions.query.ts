@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { QueryEntity } from '@datorama/akita';
 import { PermissionsStore, PermissionsState } from './permissions.store';
 import { Permissions } from './permissions.model';
-import { AuthQuery } from '@blockframes/auth';
+import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { UserRole } from './permissions.firestore';

@@ -3,7 +3,7 @@ import { UserRedirectionGuard } from '@blockframes/auth/guard/user-redirection.g
 import { AuthGuard } from '@blockframes/auth/guard/auth.guard';
 import { PermissionsGuard } from '@blockframes/permissions/guard/permissions.guard';
 import { OrganizationGuard } from '@blockframes/organization/guard/organization.guard';
-import { NotificationsGuard } from '@blockframes/notification';
+import { NotificationsGuard } from '@blockframes/notification/notification/notifications.guard';
 import { MaintenanceGuard } from '@blockframes/ui/maintenance';
 
 interface RouteOptions {
@@ -27,7 +27,7 @@ export function createRoutes({ appsRoutes, appName, landing }: RouteOptions) {
     },
     {
       path: 'organization',
-      loadChildren: () => import('@blockframes/organization').then(m => m.OrganizationModule)
+      loadChildren: () => import('@blockframes/organization/organization.module').then(m => m.OrganizationModule)
     },
     {
       path: 'account',
@@ -38,7 +38,7 @@ export function createRoutes({ appsRoutes, appName, landing }: RouteOptions) {
     {
       path: 'maintenance',
       canActivate: [MaintenanceGuard],
-      loadChildren: () => import('@blockframes/ui/maintenance').then(m => m.MaintenanceModule)
+      loadChildren: () => import('@blockframes/ui/maintenance/maintenance.module').then(m => m.MaintenanceModule)
     },
     {
     path: '',
@@ -63,7 +63,7 @@ export function createRoutes({ appsRoutes, appName, landing }: RouteOptions) {
           {
             // The redirection route when user has no organization
             path: 'organization',
-            loadChildren: () => import('@blockframes/organization').then(m => m.NoOrganizationModule)
+            loadChildren: () => import('@blockframes/organization/no-organization.module').then(m => m.NoOrganizationModule)
           },
           {
             path: 'o',
@@ -75,11 +75,11 @@ export function createRoutes({ appsRoutes, appName, landing }: RouteOptions) {
       },
       {
         path: 'not-found',
-        loadChildren: () => import('@blockframes/ui').then(m => m.ErrorNotFoundModule)
+        loadChildren: () => import('@blockframes/ui/error/error-not-found.module').then(m => m.ErrorNotFoundModule)
       },
       {
         path: '**',
-        loadChildren: () => import('@blockframes/ui').then(m => m.ErrorNotFoundModule)
+        loadChildren: () => import('@blockframes/ui/error/error-not-found.module').then(m => m.ErrorNotFoundModule)
       }
     ]
   }]

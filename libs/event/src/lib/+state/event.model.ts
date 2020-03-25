@@ -1,11 +1,11 @@
 import { CalendarEvent } from 'angular-calendar';
-import { toDate } from '@blockframes/utils';
 import { Meeting, EventBase, Screening, EventMeta } from './event.firestore';
+import { toDate } from '@blockframes/utils/helpers';
 
 // Event
 export type Event<Meta extends EventMeta = any> = EventBase<Date, Meta> & CalendarEvent<Meta>;
 export function createEvent<Meta extends EventMeta>(params: Partial<Event<Meta>> = {}): Event<Meta> {
-  const meta: any = 
+  const meta: any =
     isMeeting(params) ? createMeeting(params.meta)
     : isScreening(params) ? createScreening(params.meta)
     : {};

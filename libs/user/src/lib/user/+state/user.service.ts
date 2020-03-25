@@ -1,14 +1,12 @@
 import { Injectable } from '@angular/core';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { UserState, UserStore } from './user.store';
-import { OrganizationQuery } from '@blockframes/organization/organization/+state/organization.query';
-import { map, switchMap } from 'rxjs/operators';
-import { OrganizationService } from '@blockframes/organization/organization/+state';
-import { AuthService } from '@blockframes/auth';
+import { OrganizationService, OrganizationQuery } from '@blockframes/organization/organization/+state';
 import { PermissionsQuery } from '@blockframes/permissions/+state/permissions.query';
-import { UserRole } from '@blockframes/permissions/+state/permissions.model';
-import { OrganizationMember, createOrganizationMember } from './user.model';
 import { PermissionsService } from '@blockframes/permissions/+state';
+import { map } from 'rxjs/operators';
+import { AuthService } from '@blockframes/auth/+state/auth.service';
+import { OrganizationMember, createOrganizationMember } from './user.model';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'users' })

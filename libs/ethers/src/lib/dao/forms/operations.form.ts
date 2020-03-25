@@ -1,6 +1,7 @@
-import { FormList, FormEntity } from "@blockframes/utils";
 import { DaoOperation, createOperation } from "../+state";
 import { FormControl } from "@angular/forms";
+import { FormList } from "@blockframes/utils/form/forms/list.form";
+import { FormEntity } from "@blockframes/utils/form/forms/entity.form";
 
 function createOperationControl(operation: Partial<DaoOperation> = {}) {
    const op = createOperation(operation.id, operation.name);

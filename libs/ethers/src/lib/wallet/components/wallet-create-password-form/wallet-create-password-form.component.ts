@@ -1,5 +1,5 @@
 import { Component, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
-import { PasswordControl } from '@blockframes/utils';
+import { PasswordControl } from '@blockframes/utils/form/controls/password.control';
 
 @Component({
   selector: 'wallet-create-password-form',

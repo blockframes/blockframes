@@ -1,8 +1,8 @@
 import { Component, Input, ChangeDetectionStrategy, Directive, ViewEncapsulation } from '@angular/core';
 import { Movie, Credit } from '../../+state';
-import { ImgRef } from '@blockframes/utils';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 import { workType as WorkType } from '../../+state/movie.firestore';
+import { ImgRef } from '@blockframes/utils/image-uploader';
 
 const promotionalElements = [
   { key: 'promo_reel_link', label: 'Watch Promo Reel Link', type: 'play' },
@@ -59,7 +59,7 @@ function createMovieView(movie: Partial<Movie>): MovieView {
 })
 export class ViewComponent {
   view: MovieView;
-  
+
   @Input() navLinks: { path: string, label: string }[];
   @Input() set movie(movie: Movie) {
     if (movie) {

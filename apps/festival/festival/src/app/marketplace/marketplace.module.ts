@@ -11,8 +11,8 @@ import { ImgAssetModule } from '@blockframes/ui/theme';
 
 // Widgets
 import { SearchWidgetModule } from '@blockframes/ui/search-widget';
-import { NotificationWidgetModule } from '@blockframes/notification';
-import { AuthWidgetModule } from '@blockframes/auth';
+import { NotificationWidgetModule } from '@blockframes/notification/notification/notification-widget/notification-widget.module';
+import { AuthWidgetModule } from '@blockframes/auth/components/widget/widget.module';
 
 // Material
 import { MatToolbarModule } from '@angular/material/toolbar';

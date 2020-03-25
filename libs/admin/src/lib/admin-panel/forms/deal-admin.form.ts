@@ -1,6 +1,6 @@
 import { FormControl, Validators } from '@angular/forms';
-import { FormEntity } from '@blockframes/utils';
 import { createDistributionDeal, DistributionDeal } from '@blockframes/distribution-deals';
+import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 
 
 function createDealAdminControls(entity: Partial<DistributionDeal>) {

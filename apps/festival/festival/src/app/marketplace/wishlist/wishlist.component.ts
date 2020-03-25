@@ -5,9 +5,9 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Movie } from '@blockframes/movie';
 import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
-import { FireAnalytics } from '@blockframes/utils';
 import { map, filter } from 'rxjs/operators';
 import { Observable } from 'rxjs';
+import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 
 
 @Component({

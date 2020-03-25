@@ -8,7 +8,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthService } from '@blockframes/auth/+state/auth.service';
 import { ProfileForm } from '@blockframes/auth/forms/profile-edit.form';
 import { EditPasswordForm } from '@blockframes/utils/form/controls/password.control';
-import { User } from '@blockframes/auth';
+import { User } from '@blockframes/auth/+state/auth.store';
+
 @Component({
   selector: 'auth-profile-view',
   templateUrl: './profile-view.component.html',

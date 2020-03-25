@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnInit } from "@angular/core";
 import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { AngularFireFunctions } from "@angular/fire/functions";
-import { AuthQuery } from "@blockframes/auth";
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AuthQuery } from "@blockframes/auth/+state/auth.query";
 
 @Component({
   selector: 'catalog-contact-page',

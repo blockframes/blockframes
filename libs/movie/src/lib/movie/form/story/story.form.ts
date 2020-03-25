@@ -1,5 +1,5 @@
 import { MovieStory, createMovieStory } from '../../+state';
-import { FormEntity } from '@blockframes/utils';
+import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { Validators, FormControl } from '@angular/forms';
 
 function createMovieStoryControls(story?: Partial<MovieStory>) {

@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { InvitationQuery, InvitationService, InvitationStore, Invitation } from '../+state';
 import { Observable, Subscription } from 'rxjs';
-import { AuthQuery } from '@blockframes/auth';
+import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { DateGroup } from '@blockframes/utils/helpers';
 import { ThemeService } from '@blockframes/ui/theme';
 
