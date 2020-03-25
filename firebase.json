@@ -5,6 +5,21 @@
       "public": "dist/storybook"
     },
     {
+      "target": "festival",
+      "public": "dist/apps/festival",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
+        {
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    },
+    {
       "target": "current",
       "public": "dist/apps/",
       "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],

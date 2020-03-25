@@ -725,7 +725,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/apps/festival/festival",
+            "outputPath": "dist/apps/festival",
             "index": "apps/festival/festival/src/index.html",
             "main": "apps/festival/festival/src/main.ts",
             "polyfills": "apps/festival/festival/src/polyfills.ts",
