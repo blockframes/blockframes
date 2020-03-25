@@ -35,6 +35,7 @@ export class UserService extends CollectionService<UserState> {
   //////////
   // USER //
   //////////
+  // TODO #1389 we can replace a lot of these functions by native Akita-ng-fire functions
 
     /** Call a firebase function to get or create a user.
    * @email find the user with this email. If email doesn't match with an existing user,
