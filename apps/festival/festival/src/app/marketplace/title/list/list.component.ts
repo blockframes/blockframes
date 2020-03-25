@@ -190,6 +190,21 @@ export class ListComponent implements OnInit, OnDestroy {
       distinctUntilChanged(),
       debounceTime(300),
       map(value => this._languageFilter(value)),
+      // tap(a => console.log(a))
+    );
+
+    const languagesFacet$ = this.filterForm.languages.valueChanges.pipe(
+      startWith({}),
+      map(languages => {
+        const keys = Object.keys(languages);
+        return {
+          original: keys.filter(lang => languages[lang].original),
+          dubbed: keys.filter(lang => languages[lang].dubbed),
+          subtitle: keys.filter(lang => languages[lang].subtitle),
+          caption: keys.filter(lang => languages[lang].caption),
+        }
+      }),
+      tap(a => console.log(a)),
     );
 
     this.resultFilter$ = this.searchbarTextControl.valueChanges; //.pipe(
@@ -217,16 +232,20 @@ export class ListComponent implements OnInit, OnDestroy {
     this.facetFilters$ = combineLatest([
       this.genresFilter$,
       this.originCountryFilter$,
-      this.languagesFilter$,
+      languagesFacet$,
       this.statusesFilter$,
       this.selectedSellers$
     ]).pipe(
-      // startWith([]),
       map(([genres, originCountries, languages, statuses, sellers]) => {
         return [
           [...genres.map(genre => `genres:${genre}`)], // same facet inside an array means OR for algolia
           [...originCountries.map(country => `originCountries:${country}`)],
-          // ...languages.map(language => `originalLanguages:${language}`),
+          [
+            ...languages.original.map(lang => `languages.original:${lang}`),
+            ...languages.dubbed.map(lang => `languages.dubbed:${lang}`),
+            ...languages.subtitle.map(lang => `languages.subtitle:${lang}`),
+            ...languages.caption.map(lang => `languages.caption:${lang}`),
+          ],
           [...statuses.map(status => `status:${status}`)],
           ...sellers.map(seller => `orgName:${seller}`),
         ];
@@ -355,9 +374,9 @@ export class ListComponent implements OnInit, OnDestroy {
    * @param value string which got typed in into an input field
    */
   private _languageFilter(value: string): string[] {
-    // if (value) {
+    if (value) {
       return LANGUAGES_LABEL.filter(language => language.toLowerCase().includes(value.toLowerCase()));
-    // }
+    }
   }
 
   /**
