@@ -20,26 +20,20 @@
   </article>
 </section>
 
+<!-- MAIN SEARCH BAR -->
 <section class="search">
-  <form [formGroup]="searchbarForm">
+  <form [formGroup]="filterForm.search">
     <mat-form-field appearance="outline">
       <mat-label>Search for titles, directors, keywords, ...</mat-label>
       <mat-icon matPrefix svgIcon="magnifying_glasses"></mat-icon>
       <input matInput type="text" [formControl]="searchbarTextControl">
-      <!-- autocomplete="off"
-      [matAutocomplete]="searchbar" #autoCompleteInput> -->
-      <!-- <mat-autocomplete #searchbar="matAutocomplete" (optionSelected)="addSearchbarValue($event)">
-        <mat-option *ngFor="let result of (resultFilter$ | async)" [value]="result">
-          {{ result }}
-        </mat-option>
-      </mat-autocomplete> -->
     </mat-form-field>
   </form>
 </section>
 
+<!-- FILTER SIDE CARD -->
 <section fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="50px" fxLayout.lt-md="column"
   fxLayoutAlign.lt-md="center center" class="filters">
-  <!-- Search -->
   <aside fxLayout="column" class="filter">
     <mat-card>
       <h6>Filters</h6>
@@ -58,6 +52,7 @@
               <movie-form-genre [form]="filterForm.genres"></movie-form-genre>
             </mat-expansion-panel>
 
+            <!-- Country-->
             <mat-expansion-panel>
               <mat-expansion-panel-header>
                 <span class="mat-body-1">Country of Origin</span>
@@ -81,7 +76,7 @@
                   <mat-form-field appearance="outline">
                     <mat-label>New language</mat-label>
                     <input test-id="languages-panel-input" matInput type="text" [matAutocomplete]="language"
-                      [formControl]="languageControl" placeholder="Add new language" [errorStateMatcher]="matcher" />
+                      [formControl]="languageControl" placeholder="Add new language"/>
                     <mat-error *ngIf="languageControl.hasError('languageNotSupported')">
                       Please enter a valid language or choose from the dropdown menu!
                     </mat-error>
@@ -108,7 +103,7 @@
                 <div fxLayout="column" fxLayoutAlign="start start">
                   <ng-container *ngIf="filterForm.get('languages').value">
                     <mat-list [formGroup]="filterForm.get('languages')" role="list">
-                      <ng-container *ngFor="let language of languages$ | async">
+                      <ng-container *ngFor="let language of selectedLanguages$ | async">
                         <mat-list-item [formGroupName]="language">
                           <span mat-line>
                             <mat-chip class="chip-language" removable (removed)="removeLanguage(language)">
@@ -196,7 +191,8 @@
       </div>
       <div fxLayout="row wrap" fxLayoutGap="20px" fxLayout.lt-md="column" fxLayoutAlign.lt-md="center center">
         <ng-container *ngFor="let movie of movies">
-          <movie-card [movie]="movie" [link]="['/c/o/marketplace',  movie.id]" *ngIf="!listView">
+          <movie-card [movie]="movie" [link]="['/c/o/marketplace/title',  movie.id]" *ngIf="!listView">
+
             <!-- Informations -->
             <ng-container movieInformation>
               <mat-card-subtitle>
@@ -205,6 +201,7 @@
                 </span>
               </mat-card-subtitle>
             </ng-container>
+
             <!-- Action -->
             <ng-container movieCardAction>
               <div fxLayout="row" fxLayoutAlign="end">
@@ -222,6 +219,7 @@
             </ng-container>
           </movie-card>
         </ng-container>
+
         <!-- We don't iterate over the movies here, cause this will be done by the mat tables -->
         <movie-display-list [movies]="movies" *ngIf="listView" (navigate)="goToMovieDetails($event)">
         </movie-display-list>
