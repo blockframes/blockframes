@@ -33,7 +33,7 @@ const indexMoviesBuilder = (adminKey?: string) => {
   return client.initIndex(INDEX_NAME_MOVIES);
 };
 
-export function setMovieConfiguration(adminKey?: string): Promise<any> {
+export function setMovieConfiguration(adminKey?: string) {
   if (!algolia.adminKey && !adminKey) {
     console.warn('No algolia id set, assuming dev config: skipping');
     return Promise.resolve(true);
