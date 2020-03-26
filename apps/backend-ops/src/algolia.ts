@@ -1,5 +1,6 @@
 import { loadAdminServices } from './admin';
 import {
+  setMovieConfiguration,
   storeSearchableMovie,
   storeSearchableOrg
 } from '../../backend-functions/src/internals/algolia';
@@ -19,6 +20,10 @@ export async function upgradeAlgoliaOrgs() {
 }
 
 export async function upgradeAlgoliaMovies() {
+
+  // ensure the index is correctly configured before inserting records
+  await setMovieConfiguration(process.env['ALGOLIA_API_KEY']);
+
   const { db } = loadAdminServices();
   const movies = await db.collection('movies').get();
 
