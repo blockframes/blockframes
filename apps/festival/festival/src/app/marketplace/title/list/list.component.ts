@@ -5,31 +5,32 @@ import {
   Component,
   ChangeDetectionStrategy,
   OnInit,
-  Inject
+  Inject,
+  OnDestroy
 } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 // Blockframes
-import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import {
   LANGUAGES_LABEL,
-  LanguagesLabel,
   LanguagesSlug,
   MovieStatusLabel,
   MOVIE_STATUS_LABEL,
+  LanguagesLabel,
 } from '@blockframes/utils/static-model/types';
 import { getCodeIfExists } from '@blockframes/utils/static-model/staticModels';
 import { MovieAlgoliaResult } from '@blockframes/utils/algolia';
 import { MoviesIndex } from '@blockframes/utils/algolia';
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
 import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
-import { NumberRange } from '@blockframes/utils/common-interfaces/range';
-import { BUDGET_LIST } from '@blockframes/movie/movie/form/budget/budget.form';
-import { CatalogSearchForm } from '@blockframes/movie/distribution-deals/form/search.form';
 import { staticModels } from '@blockframes/utils/static-model';
+import { BUDGET_LIST } from '@blockframes/movie/form/budget/budget.form';
+import { CatalogSearchForm } from '@blockframes/distribution-deals/form/search.form';
+import { MovieService, Movie } from '@blockframes/movie';
+import { NumberRange } from '@blockframes/utils/common-interfaces';
 // RxJs
-import { Observable, combineLatest, BehaviorSubject } from 'rxjs';
+import { Observable, combineLatest, BehaviorSubject, Subscription } from 'rxjs';
 import { startWith, map, debounceTime, switchMap, distinctUntilChanged, pluck, filter, share } from 'rxjs/operators';
 // Others
 import { Index } from 'algoliasearch';
@@ -72,15 +73,13 @@ export class ListComponent implements OnInit, OnDestroy {
   ]);
   public sortByControl: FormControl = new FormControl('Title');
 
+  public budgetList: NumberRange[] = BUDGET_LIST;
   // UI
   /* main search bar */
   public searchbarTextControl: FormControl = new FormControl('');
 
   /* select list of all available genres */
   public availableGenres$: Observable<any>;
-
-  /** main search bar */
-  public searchbarTextControl: FormControl = new FormControl('');
 
   /** seller org autocomplete search bar */
   public orgSearchResults$: Observable<any>;
@@ -180,7 +179,7 @@ export class ListComponent implements OnInit, OnDestroy {
       debounceTime(200),
       distinctUntilChanged(),
     );
-  }
+
 
     /** Combining ui filters into algolia's facets parameter */
     const facetFilters$ = combineLatest([
@@ -223,15 +222,7 @@ export class ListComponent implements OnInit, OnDestroy {
         return '';
       }),
     );
-  }
 
-  ngOnDestroy() {
-    this.sub.unsubscribe();
-  }
-
-  public goToMovieDetails(id: string) {
-    this.router.navigateByUrl(`c/o/marketplace/title/${id}`);
-  }
 
     /** Query algolia every time the search query or the filters changes */
     this.movieSearchResults$ = combineLatest([
@@ -271,6 +262,10 @@ export class ListComponent implements OnInit, OnDestroy {
     );
   }
 
+  ngOnDestroy() {
+    this.sub.unsubscribe();
+  }
+
   // Click on a movie in list (instead of grid)
   public goToMovieDetails(id: string) {
     this.router.navigateByUrl(`c/o/marketplace/title/${id}`);
@@ -289,9 +284,9 @@ export class ListComponent implements OnInit, OnDestroy {
    * @param value string which got typed in into an input field
    */
   private _languageFilter(value: string): string[] {
-    // if (value) {
+    if (value) {
       return LANGUAGES_LABEL.filter(language => language.toLowerCase().includes(value.toLowerCase()));
-    // }
+    }
   }
 
   public addLanguage(language: LanguagesLabel) {
