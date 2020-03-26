@@ -24,7 +24,8 @@ import {
   MovieStakeholders,
   MovieAnalytics,
   MovieLegalDocuments,
-  DocumentMeta
+  DocumentMeta,
+  LanguageRecord
 } from './movie.firestore';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 import { LanguagesSlug } from '@blockframes/utils/static-model';
@@ -83,10 +84,10 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
   };
 }
 
-export function createLanguageKey(languages: Partial<{ [language in LanguagesSlug]: MovieLanguageSpecification }> = {}) {
-  let languageSpecifications = {}
+export function createLanguageKey(languages: Partial<{ [language in LanguagesSlug]: MovieLanguageSpecification }> = {}): LanguageRecord {
+  const languageSpecifications = {}
   for (const language in languages) {
-   languageSpecifications[language] = createMovieLanguageSpecification(languages[language])
+    languageSpecifications[language] = createMovieLanguageSpecification(languages[language])
   }
   return (languageSpecifications as Partial<{ [language in LanguagesSlug]: MovieLanguageSpecification }>)
 }

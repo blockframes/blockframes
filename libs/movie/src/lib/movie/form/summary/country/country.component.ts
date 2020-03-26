@@ -19,12 +19,4 @@ export class MovieSummaryCountryComponent implements OnInit {
     this.salesInfo.valueChanges.subscribe(_ => this.cdr.markForCheck());
     this.main.valueChanges.subscribe(_ => this.cdr.markForCheck());
   }
-
-  public transformDate(date: string) {
-    if(date){
-      const newDate = new Date(date)
-      return `${newDate.getDay()}/${newDate.getMonth()}/${newDate.getFullYear()}`
-    }
-    return ''
-  }
 } 

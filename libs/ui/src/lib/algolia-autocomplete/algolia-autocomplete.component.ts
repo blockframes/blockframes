@@ -1,6 +1,5 @@
 // Angular
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { FormControl } from '@angular/forms';
 import {
   Component,
@@ -20,7 +19,7 @@ import { searchClient } from '@blockframes/utils/algolia';
 
 // RxJs
 import { Observable, Subscription, BehaviorSubject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap, pluck, map } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, switchMap, pluck, filter } from 'rxjs/operators';
 
 @Component({
   selector: '[indexName] algolia-autocomplete',
@@ -140,8 +139,9 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
     this.indexSearch = this.config.searchClient.initIndex(this.config.indexName)
     this.algoliaSearchResults$ = this.control.valueChanges.pipe(
       debounceTime(300),
+      filter(text => typeof text === 'string'),
       distinctUntilChanged(),
-      switchMap(text => typeof text === 'string' ? this.indexSearch.search(text) : new Observable()),
+      switchMap(text => this.indexSearch.search(text)),
       pluck('hits')
     );
     this.sub = this.algoliaSearchResults$.subscribe(data => this.lastValue$.next(data));

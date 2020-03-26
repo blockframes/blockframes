@@ -16,8 +16,6 @@ import { LegalDocument } from '@blockframes/contract/contract/+state/contract.fi
 import { FormStaticValue } from '@blockframes/utils/form/forms/static-value.form';
 import { createLegalDocument } from '@blockframes/contract/contract/+state/contract.model';
 import { MovieLegalDocuments } from '../+state/movie.firestore';
-import { LanguagesSlug } from '@blockframes/utils/static-model';
-import { MovieLanguageSpecification } from './../+state/movie.firestore';
 import { createLanguageControl } from '@blockframes/movie/movie/form/version-info/version-info.form';
 
 // LEGAL DOCUMENTS
@@ -66,10 +64,7 @@ function createMovieControls(movie: Partial<Movie>) {
     salesCast: new MovieSalesCastForm(entity.salesCast),
     salesInfo: new MovieSalesInfoForm(entity.salesInfo),
     versionInfo: new FormEntity({
-      languages: MovieVersionInfoForm.factory(entity.versionInfo.languages, (languages: { [language in LanguagesSlug]: MovieLanguageSpecification }) => {
-        const controls = createLanguageControl(languages)
-        return controls;
-      })
+      languages: MovieVersionInfoForm.factory(entity.versionInfo.languages, createLanguageControl)
     }),
     festivalPrizes: new MovieFestivalPrizesForm(entity.festivalPrizes),
     salesAgentDeal: new MovieSalesAgentDealForm(entity.salesAgentDeal),

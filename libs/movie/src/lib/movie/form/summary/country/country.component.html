@@ -35,7 +35,7 @@
           <ng-container *ngIf="release.get('country').value === country.value">
             <missing-control [control]="release.get('date')" [link]="link">
               <ng-template let-date *ngIf="release.get('date').value">
-                {{ transformDate(date) }}
+                {{ date | date: 'shortDate' }}
               </ng-template>
             </missing-control>
           </ng-container>
