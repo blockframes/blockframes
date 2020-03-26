@@ -33,6 +33,40 @@ const indexMoviesBuilder = (adminKey?: string) => {
   return client.initIndex(INDEX_NAME_MOVIES);
 };
 
+/** This function will configure the Movie index in order for the search ui pages to work correctly with algolia */
+export function setMovieConfiguration(adminKey?: string) {
+  if (!algolia.adminKey && !adminKey) {
+    console.warn('No algolia id set, assuming dev config: skipping');
+    return Promise.resolve(true);
+  }
+
+  return indexMoviesBuilder(adminKey).setSettings({
+    searchableAttributes: [
+      'title.international',
+      'title.original',
+      'directors',
+      'keywords'
+    ],
+    attributesForFaceting: [
+      // filters
+      'filterOnly(budget.from)',
+      'filterOnly(budget.to)',
+
+      // searchable facets
+      'searchable(orgName)',
+
+      // other facets
+      'genres',
+      'languages.original',
+      'languages.dubbed',
+      'languages.subtitle',
+      'languages.caption',
+      'originCountries',
+      'status',
+    ],
+  });
+}
+
 export function storeSearchableMovie(
   movie: MovieDocument,
   orgName: string,
