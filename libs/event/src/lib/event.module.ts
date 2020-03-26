@@ -19,7 +19,6 @@ import { TimeDateValueAccessor } from './form/time-date.directive';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { MatDialogModule } from '@angular/material/dialog'
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -41,7 +40,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     CalendarHeaderComponent,
     CalendarWeekComponent,
     EventSmallDirective,
-    EventLargeDirective
+    EventLargeDirective,
+    EventEditComponent
   ],
   imports: [
     CommonModule,
@@ -54,7 +54,6 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
-    MatBottomSheetModule,
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,

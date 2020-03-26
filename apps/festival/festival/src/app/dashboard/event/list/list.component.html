@@ -1,0 +1,51 @@
+<cal-header [(viewDate)]="viewDate"></cal-header>
+<cal-week [viewDate]="viewDate" [events]="events$ | async" editable>
+
+  <!-- Small Events -->
+  <ng-template calEventSmall let-event>
+    <section *ngIf="event.isOwner" class="clickable" (click)="edit(event)">
+      <h4>{{ event.title }}</h4>
+    </section>
+    <a *ngIf="!event.isOwner" class="mat-h4" [routerLink]="[event.id]">
+      {{ event.title }}
+    </a>
+  </ng-template>
+
+  <!-- Large event -->
+  <ng-template calEventLarge let-event>
+    <section fxLayout="column" fxLayoutAlign="space-between">
+      <header>
+        <h4>{{ event.title }}</h4>
+      </header>
+      <ng-container [ngSwitch]="event.type">
+        <ng-container *ngSwitchCase="'meeting'">
+          <!-- Meeting Specific here -->
+        </ng-container>
+        <ng-container *ngSwitchCase="'screening'">
+          <!-- Meeting Specific here -->
+        </ng-container>
+      </ng-container>
+  
+      <footer fxLayout fxLayoutAlign="end center">
+        <button *ngIf="event.isOwner" mat-icon-button color="warn" (click)="remove(event)">
+          <mat-icon svgIcon="trash"></mat-icon>
+        </button>
+        <button *ngIf="event.isOwner" mat-icon-button (click)="edit(event)">
+          <mat-icon svgIcon="pencil"></mat-icon>
+        </button>
+        <a mat-icon-button [routerLink]="event.id">
+          <mat-icon svgIcon="eye"></mat-icon>
+        </a>
+      </footer>
+    </section>
+  </ng-template>
+</cal-week>
+
+<!-- Edit form -->
+<ng-template #editTemplate let-event>
+  <event-edit #eventEdit [event]="event" (close)="editDialog.close()">
+    <form [formGroup]="eventEdit.form.get('meta')" >
+      {{ eventEdit.form.value | json }}
+    </form>
+  </event-edit>
+</ng-template>
