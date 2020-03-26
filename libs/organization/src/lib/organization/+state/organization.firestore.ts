@@ -10,25 +10,31 @@ interface AppAccess {
   catalogMarketplace: boolean;
 }
 
+interface Denomination {
+  full: string;
+  publicName?: string;
+}
+
 /** Document model of an Organization */
 interface OrganizationRaw<D> {
   id: string;
-  name: string;
+  activity: string;
   addresses: AddressSet;
-  email: string;
+  appAccess?: AppAccess;
+  bankAccounts: BankAccount[];
+  cart: CatalogCart[];
   created: D;
+  denomination: Denomination;
+  description: string;
+  email: string;
+  fiscalNumber: string;
+  isBlockchainEnabled: boolean;
+  logo: ImgRef;
+  movieIds: string[];
   updated: D;
   userIds: string[];
-  movieIds: string[];
   status: OrganizationStatus;
-  logo: ImgRef;
-  fiscalNumber: string;
-  activity: string;
   wishlist: WishlistRaw<D>[];
-  cart: CatalogCart[];
-  isBlockchainEnabled: boolean;
-  bankAccounts: BankAccount[];
-  appAccess?: AppAccess;
 }
 
 export interface OrganizationDocument extends OrganizationRaw<Timestamp> { }
@@ -67,7 +73,7 @@ export const PLACEHOLDER_LOGO = '/assets/logo/empty_organization.webp';
 /** A public interface or Organization, without sensitive data. */
 export interface PublicOrganization {
   id: string;
-  name: string;
+  denomination: Denomination;
 }
 
 /** A factory function that creates an OrganizationDocument. */
@@ -88,7 +94,8 @@ export function createOrganizationRaw(
 ): OrganizationRaw<Timestamp | Date> {
   return {
     id: !!params.id ? params.id : '',
-    name: '',
+    denomination: createDenomination(),
+    description: '',
     email: '',
     fiscalNumber: '',
     activity: '',
@@ -113,4 +120,13 @@ export function createAddressSet(params: Partial<AddressSet> = {}): AddressSet {
     main: createLocation(params.main),
     ...params
   };
+}
+
+/** A function that create a denomination object for Organization */
+export function createDenomination(params: Partial<Denomination> = {}): Denomination {
+  return {
+    full: '',
+    publicName: '',
+    ...params
+  }
 }

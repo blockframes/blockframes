@@ -24,7 +24,7 @@ export class InvitationService extends CollectionService<InvitationState> {
     const { uid, name, surname, email } = this.authQuery.user;
     const invitation = createInvitationFromUserToOrganization({
       id: this.db.createId(),
-      organization: {id: organization.id, name: organization.name},
+      organization: {id: organization.id, denomination: {full: organization.denomination.full}},
       user: { uid, name, surname, email }
     });
     return this.add(invitation);
@@ -36,14 +36,14 @@ export class InvitationService extends CollectionService<InvitationState> {
     const userPromises = userEmails.map(async userEmail => {
       // Get a user or create a ghost user when needed
       const invitationId = this.db.createId();
-      return this.authService.getOrCreateUserByMail(userEmail, organization.name, invitationId);
+      return this.authService.getOrCreateUserByMail(userEmail, organization.denomination.full, invitationId);
     });
     const users = await Promise.all(userPromises);
 
     const invitations = users.map(user => {
       return createInvitationFromOrganizationToUser({
         id: this.db.createId(),
-        organization: { id: organization.id, name: organization.name },
+        organization: { id: organization.id, denomination: {full: organization.denomination.full} },
         user: { uid: user.uid, email: user.email }
       });
     });
@@ -52,10 +52,10 @@ export class InvitationService extends CollectionService<InvitationState> {
   }
 
   /** Create an Invitation when an Organization is invited to work on a document. */
-  public sendDocumentInvitationToOrg({id, name}: PublicOrganization, docId: string) {
+  public sendDocumentInvitationToOrg({id, denomination}: PublicOrganization, docId: string) {
     const invitation = createInvitationToDocument({
       id: this.db.createId(),
-      organization: {id, name},
+      organization: {id, denomination},
       docId
     });
     return this.add(invitation);

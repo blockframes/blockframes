@@ -13,7 +13,7 @@
       <button
         mat-tab-link (click)="applyFilter('Invitations')"
         [active]="filter === 'Invitations'">
-        {{ organization.name }} ({{ invitationCount }})
+        {{ organization.denomination.full }} ({{ invitationCount }})
       </button>
     </ng-container>
   </header>

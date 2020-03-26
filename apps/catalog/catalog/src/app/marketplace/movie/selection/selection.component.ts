@@ -60,7 +60,7 @@ export class MarketplaceSelectionComponent {
     // Initialize parties
     const parties: Contract['parties'] = [
       createContractPartyDetail({
-        party: createParty({ role: 'licensee', orgId: org.id, displayName: org.name }),
+        party: createParty({ role: 'licensee', orgId: org.id, displayName: org.denomination.full }),
       }),
       createContractPartyDetail({ party: createParty({ role: 'licensor' }) })
     ];

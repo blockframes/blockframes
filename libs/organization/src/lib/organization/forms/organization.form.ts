@@ -38,7 +38,7 @@ export class AddressForm extends FormEntity<LocationControl>{
 function createOrganizationFormControl(params?: Organization) {
   const organization = createOrganization(params);
   return {
-    name: new FormControl(organization.name, Validators.required),
+    denomination: new OrganizationDenominationForm(organization.denomination),
     addresses: new OrganizationAddressesForm(organization.addresses),
     email: new FormControl(organization.email, Validators.email),
     fiscalNumber: new FormControl(organization.fiscalNumber),
@@ -86,5 +86,21 @@ export type OrganizationBankAccountFormControl = ReturnType<typeof createOrganiz
 export class OrganizationBankAccountForm extends FormEntity<OrganizationBankAccountFormControl> {
   constructor(account?: Partial<BankAccount>) {
     super(createOrganizationBankAccountFormControl(account));
+  }
+}
+
+// Denomination form
+function createDenominationFormControl(denomination) {
+  return {
+    full: new FormControl(denomination.full, Validators.required),
+    publicName: new FormControl(denomination.publicName)
+  }
+}
+
+export type OrganizationDenominationFormControl = ReturnType<typeof createDenominationFormControl>;
+
+export class OrganizationDenominationForm extends FormEntity<OrganizationDenominationFormControl> {
+  constructor(denomination) {
+    super(createDenominationFormControl(denomination));
   }
 }

@@ -27,7 +27,7 @@ function notifUser(userId: string, notificationType: NotificationType, org: Orga
     },
     organization: {
       id: org.id,
-      name: org.name
+      denomination: org.denomination
     },
     app: 'blockframes'
   });
@@ -104,13 +104,13 @@ export async function onOrganizationUpdate(
   const before = change.before.data() as OrganizationDocument;
   const after = change.after.data() as OrganizationDocument;
 
-  if (!before || !after || !after.name) {
+  if (!before || !after || !after.denomination) {
     console.error('Invalid org data, before:', before, 'after:', after);
     throw new Error('organization update function got invalid org data');
   }
 
   // Update algolia's index
-  if (before.name !== after.name) {
+  if (before.denomination !== after.denomination) {
     throw new Error('Organization name cannot be changed !'); // this will require to change the org ENS name, for now we throw to prevent silent bug
   }
 
@@ -138,7 +138,7 @@ export async function onOrganizationUpdate(
   }
 
   if (blockchainBecomeEnabled) {
-    const orgENS = emailToEnsDomain(before.name.replace(' ', '-'), RELAYER_CONFIG.baseEnsDomain);
+    const orgENS = emailToEnsDomain(before.denomination.full.replace(' ', '-'), RELAYER_CONFIG.baseEnsDomain);
 
     const isOrgRegistered = await isENSNameRegistered(orgENS, RELAYER_CONFIG);
 

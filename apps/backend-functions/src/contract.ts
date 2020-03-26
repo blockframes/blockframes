@@ -31,7 +31,7 @@ async function getCurrentCreationDate(tx: FirebaseFirestore.Transaction, contrac
 /**
  * Get current version count.
  * @TODO (#1887) remove "_meta" filter once code migration is ok
- * @param versionSnap 
+ * @param versionSnap
  */
 async function _getVersionCount(contractId: string, tx?: FirebaseFirestore.Transaction) {
   if (tx) {
@@ -67,7 +67,7 @@ async function updatePublicContract(tx: FirebaseFirestore.Transaction, contract:
 /**
  * Checks for a status change between previous and current and triggers notifications.
  * @param current
- * @param previous 
+ * @param previous
  */
 async function checkAndTriggerNotifications(current: ContractDocument) {
   const previousVersionId = await getPreviousVersionId(current.id);
@@ -80,13 +80,13 @@ async function checkAndTriggerNotifications(current: ContractDocument) {
 
     if (contractSubmitted) { // Contract is submitted by organization to Archipel Content
       // @TODO (#1887) crashes if partyIds is empty
-      // TODO (#1999): Find real creator 
-      const { id, name } = await getDocument<PublicOrganization>(`orgs/${current.partyIds[0]}`);
+      // TODO (#1999): Find real creator
+      const { id, denomination } = await getDocument<PublicOrganization>(`orgs/${current.partyIds[0]}`);
       const archipelContent = await getDocument<OrganizationDocument>(`orgs/${centralOrgID}`);
       const notifications = archipelContent.userIds.map(
         userId => createNotification({
           userId,
-          organization: { id, name }, // TODO (#1999): Add the logo to display if orgs collection is not public to Archipel Content
+          organization: { id, denomination }, // TODO (#1999): Add the logo to display if orgs collection is not public to Archipel Content
           type: 'newContract',
           docId: current.id,
           app: 'biggerBoat'
@@ -118,8 +118,8 @@ async function checkAndTriggerNotifications(current: ContractDocument) {
 /**
  * This method is in charge of updating contract version document on DB.
  * It updates some of document attributes.
- * @param tx 
- * @param current 
+ * @param tx
+ * @param current
  */
 function updateVersion(tx: FirebaseFirestore.Transaction, current: ContractDocument) {
   // When a contract of type "mandate" is created/updated
@@ -130,7 +130,7 @@ function updateVersion(tx: FirebaseFirestore.Transaction, current: ContractDocum
     });
   }
 
-  // We historize current version 
+  // We historize current version
   tx.set(db.doc(`contracts/${current.id}/versions/${current.lastVersion.id}`), current.lastVersion);
 
   // We update _meta document for backward compatibility
@@ -141,9 +141,9 @@ function updateVersion(tx: FirebaseFirestore.Transaction, current: ContractDocum
 /**
  * This method is in charge of updating currrent contract document on DB.
  * It updates some of document attributes.
- * @param tx 
- * @param ref 
- * @param contract 
+ * @param tx
+ * @param ref
+ * @param contract
  */
 function updateContract(tx: FirebaseFirestore.Transaction, ref: DocumentReference, contract: ContractDocument, newVersion: boolean = false) {
 
@@ -185,18 +185,18 @@ function updateContract(tx: FirebaseFirestore.Transaction, ref: DocumentReferenc
 /**
  * This trigger is in charge of keeping contract and contractVersion document always
  * up to date.
- * 
+ *
  * It handles some defined behaviors such as:
  *  - creationDate param
  *  - versionId consistency
  *  - @TODO (#1887) add more
- * 
+ *
  * Concerning the database rules:
  *  - once created, a contractVersion document should be read only and not removable (even for admins)
  *  - once code migration complete, contratVersion should be writable by this function only (even for admins)
  *  - once code migration complete, contract.lastVersion MUST be sent when performing write operations.
  *  - @TODO (#1887) add this requirements into an issue
- * @param change 
+ * @param change
  */
 export async function onContractWrite(
   change: functions.Change<FirebaseFirestore.DocumentSnapshot>,
@@ -277,7 +277,7 @@ export async function onContractWrite(
 /**
  * This is for the old way, when version was pushed separatly from contract
  * This trigger handles this old way to keep database up to date
- * @param change 
+ * @param change
  * @param context
  * @TODO (#1887) remove this when code migration is ok to prevent useless writes
  */
