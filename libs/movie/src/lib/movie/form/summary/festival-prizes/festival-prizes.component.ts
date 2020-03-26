@@ -18,6 +18,6 @@ export class MovieSummaryFestivalPrizesComponent implements OnInit {
   }
 
   public festivalPrizeHasNoValue(festivalPrize: MoviePrizeForm) {
-    return !festivalPrize.get('name').value || !festivalPrize.get('prize').value || !festivalPrize.get('year').value || !festivalPrize.get('premiere').value;
+    return !festivalPrize.get('name').value && !festivalPrize.get('prize').value && !festivalPrize.get('year').value && !festivalPrize.get('premiere').value;
   }
 }
