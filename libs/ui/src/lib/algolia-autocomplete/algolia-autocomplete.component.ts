@@ -177,6 +177,9 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
   * otherwise displayWithPath is undefined and this will throw an error
   */
   public displayFn() {
+    if (this.resetInput) {
+      return ''
+    }
     const value = this.lastValue$.getValue();
     if (value) {
       return this.resolveValue(value[0], this.displayWithPath)

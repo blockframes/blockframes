@@ -36,7 +36,7 @@
   <ng-container *ngFor="let rating of salesInfo.get('rating').controls">
     <li>
       <strong>Rating </strong>
-      <missing-control [control]="rating.get('country')" scope="TERRITORIES" [link]="link"></missing-control>
+      <missing-control [control]="rating.get('country')" scope="TERRITORIES" [link]="link" *ngIf="rating.get('country').value"></missing-control>
       <missing-control [control]="rating.get('value')" [link]="link"></missing-control>
     </li>
   </ng-container>

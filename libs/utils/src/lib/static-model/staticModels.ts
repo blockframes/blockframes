@@ -107,6 +107,7 @@ const models = {
       'label': 'Production Manager'
     },
   ] as const,
+  // TODO #2306
   'CAST_ROLES': [
     {
       'slug': 'lead-role',
