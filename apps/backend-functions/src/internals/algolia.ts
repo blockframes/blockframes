@@ -51,7 +51,9 @@ export function storeSearchableMovie(
       international: movie.main.title.international,
       original: movie.main.title.original,
     },
-    directors: movie.main.directors!.map((director) => `${director.firstName} ${director.lastName}`),
+    directors: !!movie.main.directors ?
+      movie.main.directors.map((director) => `${director.firstName} ${director.lastName}`) :
+      [],
     keywords: movie.promotionalDescription.keywords,
 
     // facets

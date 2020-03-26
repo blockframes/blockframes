@@ -216,7 +216,7 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
         `Production status ${status} is not part of the defined status, here is the complete list currently available: ${MOVIE_STATUS_SLUG}`
       );
     } else {
-      this.get('productionStatus').setValue([...this.get('productionStatus').value, status]);
+      this.productionStatus.setValue([...this.productionStatus.value, status]);
     }
   }
 
