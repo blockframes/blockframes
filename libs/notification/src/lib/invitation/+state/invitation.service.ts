@@ -13,7 +13,7 @@ export class InvitationService extends CollectionService<InvitationState> {
   constructor(
     private authQuery: AuthQuery,
     private authService: AuthService,
-    private orgService: OrganizationService
+    private orgService: OrganizationService,
     ) {
     super();
   }
