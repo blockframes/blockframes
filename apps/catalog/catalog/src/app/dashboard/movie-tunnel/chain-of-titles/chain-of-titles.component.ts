@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ImgRef } from "@blockframes/utils/image-uploader";
 import { MovieTunnelComponent } from '../movie-tunnel.component';
-import { Title } from '@angular/platform-browser';
+import { DynamicTitleService } from '@blockframes/utils';
 
 @Component({
   selector: 'catalog-chain-of-titles',
@@ -12,8 +12,8 @@ import { Title } from '@angular/platform-browser';
 export class ChainOfTitlesComponent {
   form = this.tunnel.form;
 
-  constructor(private tunnel: MovieTunnelComponent, private title: Title) {
-    this.title.setTitle('Chain of titles - Title information - Archipel Content')
+  constructor(private tunnel: MovieTunnelComponent, private dynTitle: DynamicTitleService) {
+    this.dynTitle.setPageTitle('Chain of titles', 'Title information')
   }
 
   get chainOfTitles() {

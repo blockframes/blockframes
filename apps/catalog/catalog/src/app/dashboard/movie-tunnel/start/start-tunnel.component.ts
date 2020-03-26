@@ -5,7 +5,7 @@ import { MovieService, createMovie } from '@blockframes/movie';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthQuery } from '@blockframes/auth';
 import { TunnelService } from '@blockframes/ui/tunnel';
-import { Title } from '@angular/platform-browser';
+import { DynamicTitleService } from '@blockframes/utils';
 
 const cardContents = [
   {
@@ -42,9 +42,9 @@ export class StartTunnelComponent implements OnInit {
     private route: ActivatedRoute,
     private orgService: OrganizationService,
     private orgQuery: OrganizationQuery,
-    private title: Title
+    private dynTitle: DynamicTitleService
   ) {
-    this.title.setTitle('Add a title - Archipel Content')
+    this.dynTitle.setPageTitle('Add a title')
   }
 
   ngOnInit() {

@@ -15,7 +15,7 @@ import { OrganizationQuery } from '@blockframes/organization';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Intercom } from 'ng-intercom';
-import { Title } from '@angular/platform-browser';
+import { DynamicTitleService } from '@blockframes/utils';
 
 @Component({
   selector: 'catalog-selection',
@@ -40,11 +40,11 @@ export class MarketplaceSelectionComponent {
     private orgQuery: OrganizationQuery,
     private router: Router,
     @Optional() private intercom: Intercom,
-    private title: Title
+    private dynTitle: DynamicTitleService
   ) {
-    this.query.getAll().length 
-      ? this.title.setTitle('My Selection - Archipel Content')
-      : this.title.setTitle('No selections yet - Archipel Content')
+    this.query.getCount() 
+      ? this.dynTitle.setPageTitle('My Selection')
+      : this.dynTitle.setPageTitle('No selections yet')
   }
 
   /** Select a movie for a specific movie Id */

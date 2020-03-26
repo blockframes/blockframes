@@ -3,7 +3,7 @@ import { FormControl } from '@angular/forms';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { ContractForm } from '../../form/contract.form';
 import { Movie } from '@blockframes/movie';
-import { FormEntity } from '@blockframes/utils';
+import { FormEntity, DynamicTitleService } from '@blockframes/utils';
 import { ContractVersionPriceControl } from '@blockframes/contract/version/form';
 import { MovieCurrenciesSlug } from '@blockframes/utils/static-model';
 import { ContractVersionService } from '@blockframes/contract/version/+state';
@@ -12,7 +12,6 @@ import { ContractTunnelComponent, DealControls } from '../contract-tunnel.compon
 import { ContractQuery } from '../../+state';
 import { displayPaymentSchedule, displayTerms } from '../../+state/contract.utils';
 import { Observable } from 'rxjs';
-import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'contract-tunnel-summary-sale',
@@ -38,9 +37,9 @@ export class SummarySaleComponent implements OnInit {
     private service: ContractVersionService,
     private dealService: DistributionDealService,
     private query: ContractQuery,
-    private title: Title
-  ) { 
-    this.title.setTitle('Contract offer summary - Summary and Submit - Acripel Content')
+    private dynTitle: DynamicTitleService
+  ) {
+    this.dynTitle.setPageTitle('Contract offer summary', 'Summary and Submit')
   }
 
   ngOnInit() {

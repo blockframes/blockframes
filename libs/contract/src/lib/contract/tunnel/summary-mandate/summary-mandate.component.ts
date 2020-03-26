@@ -3,7 +3,7 @@ import { ContractForm } from '../../form/contract.form';
 import { Movie } from '@blockframes/movie';
 import { ContractTunnelComponent, DealControls } from '../contract-tunnel.component';
 import { Observable } from 'rxjs';
-import { FormEntity } from '@blockframes/utils';
+import { FormEntity, DynamicTitleService } from '@blockframes/utils';
 import { FormControl } from '@angular/forms';
 import { ContractVersionPriceControl, ContractVersionForm } from '@blockframes/contract/version/form';
 import { MovieCurrenciesSlug } from '@blockframes/utils/static-model';
@@ -12,7 +12,6 @@ import { ContractQuery } from '../../+state';
 import { ContractVersionService } from '@blockframes/contract/version/+state';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state';
-import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'contract-tunnel-summary-mandate',
@@ -39,9 +38,9 @@ export class SummaryMandateComponent implements OnInit {
     private service: ContractVersionService,
     private dealService: DistributionDealService,
     private query: ContractQuery,
-    private title: Title
+    private dynTitle: DynamicTitleService
     ) { 
-      this.title.setTitle('Contract offer summary - Summary and Submit - Acripel Content')
+      this.dynTitle.setPageTitle('Contract offer summary', 'Summary and Submit')
     }
 
   ngOnInit() {

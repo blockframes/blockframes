@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { Title } from '@angular/platform-browser';
+import { DynamicTitleService } from '@blockframes/utils';
 
 @Component({
   selector: 'catalog-end-tunnel',
@@ -9,7 +9,7 @@ import { Title } from '@angular/platform-browser';
 })
 
 export class EndTunnelComponent {
-  constructor(private title: Title) {
-    this.title.setTitle('Successfully submitted - Archipel Content')
+  constructor(private dynTitle: DynamicTitleService) {
+    this.dynTitle.setPageTitle('Successfully submitted')
   }
- }
+}

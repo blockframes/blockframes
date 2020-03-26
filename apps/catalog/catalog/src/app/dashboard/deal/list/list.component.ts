@@ -5,7 +5,8 @@ import { getContractLastVersion } from '@blockframes/contract/version/+state/con
 import { map } from 'rxjs/operators';
 import { OrganizationQuery } from '@blockframes/organization';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Title } from '@angular/platform-browser';
+import { DynamicTitleService } from '@blockframes/utils';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 
 interface Tab {
   name: string;
@@ -92,35 +93,19 @@ export class DealListComponent {
     private router: Router,
     private route: ActivatedRoute,
     private intercom: Intercom,
-    private title: Title
+    private dynTitle: DynamicTitleService,
   ) {
-    this.refreshTitle();
+    this.query.getCount()
+      ? this.dynTitle.setPageTitle('All offers and deals')
+      : this.dynTitle.setPageTitle('Offers and Deals')
   }
 
-  /**
- * We need to dinstinguish between page load and route change
- * from mat tab component.
- * @param link optional param when the function is getting called from the template 
- */
-  public refreshTitle(link?: string) {
-    if (link) {
-      switch (link) {
-        case 'All': this.title.setTitle('All offers and deals - Archipel Content');
-          break;
-        case 'Offers': this.title.setTitle('Offers and Deals - Archipel Content');
-          break;
-        case 'Ongoing Deals': this.title.setTitle('Ongoing deals - Archipel Content');
-          break;
-        case 'Past Deals': this.title.setTitle('Past deals - Archipel Content');
-          break;
-        case 'Aborted Offers': this.title.setTitle('Aborted offers - Archipel Content');
-          break;
-      }
-    } else {
-      Object.keys(this.query.getValue().entities).length
-        ? this.title.setTitle('All offers and deals - Archipel Content')
-        : this.title.setTitle('Offers and Deals - Archipel Content')
-    }
+
+  public updateTitle(event: MatTabChangeEvent) {
+    const currentTabName = contractTab[event.index].name
+    currentTabName !== 'All'
+    ? this.dynTitle.setPageTitle(currentTabName)
+    : this.dynTitle.useDefault();
   }
 
   /** Create a sale and redirect to tunnel */

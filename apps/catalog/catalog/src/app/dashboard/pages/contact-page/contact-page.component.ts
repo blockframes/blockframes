@@ -3,7 +3,7 @@ import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { AuthQuery } from "@blockframes/auth";
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Title } from '@angular/platform-browser';
+import { DynamicTitleService } from '@blockframes/utils';
 
 @Component({
   selector: 'catalog-contact-page',
@@ -24,9 +24,9 @@ export class ContactPageComponent implements OnInit {
     private functions: AngularFireFunctions,
     private query: AuthQuery,
     private snackBar: MatSnackBar,
-    private title: Title
+    private dynTitle: DynamicTitleService
   ) {
-    this.title.setTitle('Contact us - Archipel Content')
+    this.dynTitle.setPageTitle('Contact us')
   }
 
   ngOnInit() {

@@ -8,7 +8,6 @@ import { Contract } from '@blockframes/contract/contract/+state/contract.model';
 import { getContractLastVersion } from '@blockframes/contract/version/+state/contract-version.model';
 import { ContractQuery } from '@blockframes/contract/contract/+state';
 import { map } from 'rxjs/operators';
-import { OrganizationQuery } from '@blockframes/organization';
 
 @Component({
   selector: 'catalog-title-activity',
@@ -26,7 +25,6 @@ export class TitleActivityComponent implements OnInit {
     private movieService: MovieService,
     private movieQuery: MovieQuery,
     private contractQuery: ContractQuery,
-    private orgQuery: OrganizationQuery
   ) {}
 
   ngOnInit() {

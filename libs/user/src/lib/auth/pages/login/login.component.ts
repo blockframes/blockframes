@@ -5,7 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSidenav } from '@angular/material/sidenav';
 import { SignupForm } from '../../forms/signup.form';
 import { SigninForm } from '../../forms/signin.form';
-import { Title } from '@angular/platform-browser';
+import { DynamicTitleService } from '@blockframes/utils';
 
 @Component({
   selector: 'auth-login-view',
@@ -25,14 +25,14 @@ export class LoginComponent implements OnInit {
     private router: Router,
     private snackBar: MatSnackBar,
     private route: ActivatedRoute,
-    private title: Title
+    private dynTitle: DynamicTitleService
   ) { }
 
   ngOnInit() {
     this.isSignin = !(this.route.snapshot.fragment === 'signin');
     this.isSignin
-      ? this.title.setTitle('Create an account - Archipel Content')
-      : this.title.setTitle('Login - Archipel Content')
+      ? this.dynTitle.setPageTitle('Create an account')
+      : this.dynTitle.setPageTitle('Login')
   }
 
   public async signin(signinForm: SigninForm) {
@@ -72,7 +72,7 @@ export class LoginComponent implements OnInit {
   public refreshState() {
     this.isSignin = !this.isSignin;
     this.isSignin
-      ? this.title.setTitle('Create an account - Archipel Content')
-      : this.title.setTitle('Login - Archipel Content')
+      ? this.dynTitle.setPageTitle('Create an account')
+      : this.dynTitle.setPageTitle('Login')
   }
 }

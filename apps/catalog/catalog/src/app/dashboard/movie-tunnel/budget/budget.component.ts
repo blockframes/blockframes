@@ -1,6 +1,6 @@
+import { DynamicTitleService } from '@blockframes/utils';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MovieTunnelComponent } from '../movie-tunnel.component';
-import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'catalog-movie-tunnel-budget',
@@ -11,8 +11,8 @@ import { Title } from '@angular/platform-browser';
 export class BudgetComponent {
   form = this.tunnel.form;
 
-  constructor(private tunnel: MovieTunnelComponent, private title: Title) {
-    this.title.setTitle('Budget, Quotas, Critics - Title information - Archipel Content')
+  constructor(private tunnel: MovieTunnelComponent, private dynTitle: DynamicTitleService) {
+    this.dynTitle.setPageTitle('Budget, Quotas, Critics', 'Title information')
   }
 
   get estimatedBudget() {

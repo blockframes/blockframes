@@ -50,6 +50,7 @@
   @include bf-table-theme($theme);
   @include bf-missing-control-theme($theme);
   @include bf-tunnel-theme($theme);
+  @include mat-native-control($bf-typography, $theme);
 
   $background: map-get($theme, background);
   $foreground: map-get($theme, foreground);
@@ -71,4 +72,3 @@
 @include mat-bf-list-typography($bf-typography);
 @include mat-bf-button-typography($bf-typography);
 @include mat-bf-toolbar-typography($bf-typography);
-@include mat-native-control($bf-typography);

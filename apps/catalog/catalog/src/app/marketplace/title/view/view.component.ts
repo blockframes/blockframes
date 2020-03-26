@@ -1,18 +1,19 @@
-import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
 import { Movie } from '@blockframes/movie';
-import { Component, OnInit, ChangeDetectionStrategy, HostBinding } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, HostBinding, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MovieQuery } from '@blockframes/movie';
 import { OrganizationQuery } from '@blockframes/organization';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
-import { Router } from '@angular/router';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { workType } from '@blockframes/movie/movie/+state/movie.firestore';
-import { Title } from '@angular/platform-browser';
+import { DynamicTitleService } from '@blockframes/utils';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 @Component({
   selector: 'catalog-movie-view',
@@ -20,12 +21,14 @@ import { Title } from '@angular/platform-browser';
   styleUrls: ['./view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceMovieViewComponent implements OnInit {
+export class MarketplaceMovieViewComponent implements OnInit, OnDestroy {
   @HostBinding('attr.page-id') pageId = 'catalog-movie-view';
   public movie$: Observable<Movie>;
   public loading$: Observable<boolean>;
   // Flag to indicate which icon and message to show
   public toggle$: Observable<boolean>;
+
+  private sub: Subscription;
 
   navLinks = [{
     path: 'main',
@@ -42,8 +45,8 @@ export class MarketplaceMovieViewComponent implements OnInit {
     private snackbar: MatSnackBar,
     private analytics: FireAnalytics,
     public router: Router,
-    private title: Title,
-    private routerQuery: RouterQuery
+    private routerQuery: RouterQuery,
+    private dynTitle: DynamicTitleService,
   ) { }
 
   ngOnInit() {
@@ -55,31 +58,16 @@ export class MarketplaceMovieViewComponent implements OnInit {
           .some(({ movieIds }) => movieIds.includes(this.movieQuery.getActiveId()));
       })
     );
-    this.refreshTitle();
+    this.sub = this.routerQuery.select('state').subscribe(data => {
+      data.url.includes('main')
+        ? this.dynTitle.setPageTitle(`${this.movieQuery.getActive().main.title.international}`, 'Main information')
+        : this.dynTitle.setPageTitle(`${this.movieQuery.getActive().main.title.international}`, 'Avails')
+    })
   }
 
   private getMovie() {
     this.loading$ = this.movieQuery.selectLoading();
     this.movie$ = this.movieQuery.selectActive();
-  }
-
-  /**
-   * We need to dinstinguish between page load and route change
-   * from mat tab component. The routerQuery returns the old value
-   * before mat tab changed the route, but this clashes with init
-   * page load where the route is correct.
-   * @param link optional param when the function is getting called from the template 
-   */
-  public refreshTitle(link?: string) {
-    if (link) {
-      link === 'main'
-        ? this.title.setTitle(`${this.movieQuery.getActive().main.title.international} - Main information - Archipel Content`)
-        : this.title.setTitle(`${this.movieQuery.getActive().main.title.international} - Avails - Archipel Content`)
-    } else {
-      this.routerQuery.getValue().state.url.split('/').includes('main')
-        ? this.title.setTitle(`${this.movieQuery.getActive().main.title.international} - Main information - Archipel Content`)
-        : this.title.setTitle(`${this.movieQuery.getActive().main.title.international} - Avails - Archipel Content`)
-    }
   }
 
   public sendPromoReelAnalytic() {
@@ -132,4 +120,9 @@ export class MarketplaceMovieViewComponent implements OnInit {
     return `${movie.main.originCountries.map(country => getLabelBySlug('TERRITORIES', country)).join(', ')}, ${movie.main.productionYear}`;
   }
 
+
+  ngOnDestroy() {
+    // prevents Error when user switches quick the tabs
+    if (this.sub) this.sub.unsubscribe();
+  }
 }

@@ -29,8 +29,7 @@
          *ngFor="let link of navLinks"
          [routerLink]="link.path"
          routerLinkActive #rla="routerLinkActive"
-         [active]="rla.isActive"
-         (click)="refreshTitle(link.path)">
+         [active]="rla.isActive">
         {{link.label}}
       </a>
     </nav>

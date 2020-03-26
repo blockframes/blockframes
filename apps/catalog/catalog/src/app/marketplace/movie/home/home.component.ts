@@ -7,7 +7,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
-import { Title } from '@angular/platform-browser';
+import { DynamicTitleService } from '@blockframes/utils';
 
 interface CarouselSection {
   title: string;
@@ -31,9 +31,9 @@ export class MarketplaceHomeComponent implements OnInit {
     private snackbar: MatSnackBar,
     private analytics: FireAnalytics,
     private catalogCartQuery: CatalogCartQuery,
-    private title: Title
+    private dynTitle: DynamicTitleService
   ) {
-    this.title.setTitle('Marketplace - Archipel Content')
+    this.dynTitle.setPageTitle('Marketplace')
   }
 
   ngOnInit() {

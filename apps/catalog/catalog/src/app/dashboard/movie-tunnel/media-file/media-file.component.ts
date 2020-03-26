@@ -2,7 +2,8 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ImgRef } from "@blockframes/utils/image-uploader";
 import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
 import { MovieTunnelComponent } from '../movie-tunnel.component';
-import { Title } from '@angular/platform-browser';
+import { DynamicTitleService } from '@blockframes/utils';
+
 @Component({
   selector: 'catalog-movie-tunnel-media-file',
   templateUrl: './media-file.component.html',
@@ -15,8 +16,8 @@ export class MediaFileComponent {
   constructor(
     private tunnel: MovieTunnelComponent,
     private movieQuery: MovieQuery,
-    private title: Title) {
-    this.title.setTitle('Files & links - Title information - Archipel Content')
+    private dynTitle: DynamicTitleService) {
+    this.dynTitle.setPageTitle('Files & links', 'Title information')
   }
 
   public movie = this.movieQuery.getActive();

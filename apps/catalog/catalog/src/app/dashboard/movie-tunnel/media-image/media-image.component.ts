@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
 import { MovieTunnelComponent } from '../movie-tunnel.component';
-import { Title } from '@angular/platform-browser';
+import { DynamicTitleService } from '@blockframes/utils';
 
 @Component({
   selector: 'catalog-tunnel-media-image',
@@ -13,10 +13,10 @@ export class MediaImageComponent {
   form = this.tunnel.form;
 
   constructor(
-    private tunnel: MovieTunnelComponent, 
-    private movieQuery: MovieQuery, 
-    private title: Title) {
-    this.title.setTitle('Promotional images - Title information - Archipel Content')
+    private tunnel: MovieTunnelComponent,
+    private movieQuery: MovieQuery,
+    private dynTitle: DynamicTitleService) {
+    this.dynTitle.setPageTitle('Promotional images', 'Title information')
   }
 
   public movie = this.movieQuery.getActive();

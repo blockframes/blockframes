@@ -49,7 +49,7 @@ import { asyncFilter } from '@blockframes/utils/helpers';
 import { staticModels } from '@blockframes/utils/static-model';
 import { sortMovieBy } from '@blockframes/utils/akita-helper/sort-movie-by';
 import { StoreType } from '@blockframes/movie/movie/+state/movie.firestore';
-import { Title } from '@angular/platform-browser';
+import { DynamicTitleService } from '@blockframes/utils';
 
 @Component({
   selector: 'catalog-movie-search',
@@ -129,9 +129,9 @@ export class MarketplaceSearchComponent implements OnInit {
     private dealService: DistributionDealService,
     @Inject(MoviesIndex) private movieIndex: Index,
     private analytics: FireAnalytics,
-    private title: Title
+    private dynTitle: DynamicTitleService
   ) { 
-    this.title.setTitle('Library - Archipel Content')
+    this.dynTitle.setPageTitle('Library')
   }
 
   ngOnInit() {

@@ -5,7 +5,7 @@ import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ContractTunnelComponent } from '../contract-tunnel.component';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { Title } from '@angular/platform-browser';
+import { DynamicTitleService } from '@blockframes/utils';
 
 @Component({
   selector: 'contract-deal',
@@ -22,7 +22,7 @@ export class DealComponent implements OnInit {
   constructor(
     private tunnel: ContractTunnelComponent,
     private routerQuery: RouterQuery,
-    private title: Title) { }
+    private dynTitle: DynamicTitleService) { }
 
   ngOnInit() {
     // only the movie with corresponding ID
@@ -32,7 +32,7 @@ export class DealComponent implements OnInit {
     ]).pipe(
       map(([movies, titleId]) => {
         const movie = movies.find(movie => movie.id === titleId)
-        this.title.setTitle(`${movie.main.title.international} - Exploitation Rights - Create a contract offer - Archipel Content`)
+        this.dynTitle.setPageTitle(`${movie.main.title.international}`, 'Exploitation Rights - Create a contract offer')
         return movie
       }
       ))

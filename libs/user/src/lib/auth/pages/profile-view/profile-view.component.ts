@@ -9,7 +9,7 @@ import { AuthService } from '@blockframes/auth/+state/auth.service';
 import { ProfileForm } from '@blockframes/auth/forms/profile-edit.form';
 import { EditPasswordForm } from '@blockframes/utils/form/controls/password.control';
 import { User } from '@blockframes/auth';
-import { Title } from '@angular/platform-browser';
+import { DynamicTitleService } from '@blockframes/utils';
 @Component({
   selector: 'auth-profile-view',
   templateUrl: './profile-view.component.html',
@@ -29,13 +29,13 @@ export class ProfileViewComponent implements OnInit {
     private tunnelService: TunnelService,
     private authService: AuthService,
     private snackBar: MatSnackBar,
-    private title: Title
+    private dynTitle: DynamicTitleService
   ) {
-    this.title.setTitle(`
+    this.dynTitle.setPageTitle(`
     ${this.authQuery.getValue().profile.surname}
-    ${this.authQuery.getValue().profile.name}
-    - ${this.organizationQuery.getActive().name}
-    - Blockframes`)
+    ${this.authQuery.getValue().profile.name}`,
+      `${this.organizationQuery.getActive().name}`,
+      { appName: { slug: 'catalog', label: 'Blockframes' }, showAppName: true })
   }
 
   ngOnInit() {

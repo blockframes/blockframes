@@ -24,7 +24,7 @@ import {
 } from '../../../+state';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { formatCredits } from '@blockframes/utils/spreadsheet/format';
-import { ImageUploader, cleanModel, getKeyIfExists } from '@blockframes/utils';
+import { ImageUploader, cleanModel, getKeyIfExists, DynamicTitleService } from '@blockframes/utils';
 import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
 import { SSF } from 'xlsx';
 import { 
@@ -55,7 +55,6 @@ import { createPaymentSchedule } from '@blockframes/utils/common-interfaces/sche
 import { createTerms, createRange } from '@blockframes/utils/common-interfaces';
 import { Intercom } from 'ng-intercom';
 import { AuthService } from '@blockframes/auth';
-import { Title } from '@angular/platform-browser';
 
 export interface SpreadsheetImportError {
   field: string;
@@ -212,9 +211,9 @@ export class ViewExtractedElementsComponent implements OnInit {
     private cdRef: ChangeDetectorRef,
     private intercom: Intercom,
     private authService: AuthService,
-    private title: Title
+    private dynTitle: DynamicTitleService
   ) { 
-    this.title.setTitle('Submit your titles - Archipel Content')
+    this.dynTitle.setPageTitle('Submit your titles')
   }
 
   async ngOnInit() {

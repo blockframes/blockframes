@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MovieTunnelComponent } from '../movie-tunnel.component';
-import { Title } from '@angular/platform-browser';
+import { DynamicTitleService } from '@blockframes/utils';
 
 @Component({
   selector: 'catalog-movie-tunnel-evaluation',
@@ -11,8 +11,8 @@ import { Title } from '@angular/platform-browser';
 export class EvaluationComponent {
   form = this.tunnel.form;
 
-  constructor(private tunnel: MovieTunnelComponent, private title: Title) {
-    this.title.setTitle('Marketplace Valuation - Title information - Archipel Content')
+  constructor(private tunnel: MovieTunnelComponent, private dynTitle: DynamicTitleService) {
+    this.dynTitle.setPageTitle('Marketplace Valuation', 'Title information')
   }
 
   get salesInfo() {

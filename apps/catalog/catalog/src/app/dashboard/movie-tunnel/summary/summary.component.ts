@@ -4,7 +4,7 @@ import { MovieService, MovieQuery } from '@blockframes/movie';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieTunnelComponent } from '../movie-tunnel.component';
 import { FormGroup, FormArray } from '@angular/forms';
-import { Title } from '@angular/platform-browser';
+import { DynamicTitleService } from '@blockframes/utils';
 
 @Component({
   selector: 'catalog-summary-tunnel',
@@ -21,8 +21,9 @@ export class TunnelSummaryComponent {
     private route: ActivatedRoute,
     private service: MovieService,
     private query: MovieQuery,
-    private snackBar: MatSnackBar, private title: Title) {
-    this.title.setTitle('Summary and Submit a new title - Archipel Content')
+    private snackBar: MatSnackBar,
+    private dynTitle: DynamicTitleService) {
+    this.dynTitle.setPageTitle('Summary and Submit a new title')
   }
   public getPath(segment: string) {
     const { movieId } = this.route.snapshot.params;

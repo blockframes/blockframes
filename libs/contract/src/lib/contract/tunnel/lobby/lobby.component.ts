@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ContractService, ContractType } from '../../+state';
 import { Router, ActivatedRoute } from '@angular/router';
-import { Title } from '@angular/platform-browser';
+import { DynamicTitleService } from '@blockframes/utils';
 
 @Component({
   selector: 'contract-tunnel-lobby',
@@ -15,9 +15,9 @@ export class LobbyComponent {
     private service: ContractService,
     private router: Router,
     private route: ActivatedRoute,
-    private title: Title
+    private dynTitle: DynamicTitleService
   ) { 
-    this.title.setTitle('Choose a contract type - Create an offer - Archipel Content')
+    this.dynTitle.setPageTitle('Choose a contract type', 'Create an offer')
   }
 
   async select(type: ContractType) {

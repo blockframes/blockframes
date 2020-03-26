@@ -1,9 +1,9 @@
+import { DynamicTitleService } from '@blockframes/utils';
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
 import { Observable, Subscription } from 'rxjs';
 import { MovieAnalytics } from '@blockframes/movie/movie/+state/movie.firestore';
 import { MovieService } from '@blockframes/movie/movie/+state/movie.service';
-import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'catalog-home',
@@ -19,15 +19,15 @@ export class HomeComponent implements OnInit, OnDestroy {
   constructor(
     private movieQuery: MovieQuery,
     private movieService: MovieService,
-    private title: Title
+    private dynTitle: DynamicTitleService
   ) { }
 
   ngOnInit() {
     this.sub = this.movieService.syncAnalytics({ filterBy: movie => movie.main.storeConfig.status === 'accepted' }).subscribe();
     this.movieAnalytics$ = this.movieQuery.analytics.selectAll();
     this.movieQuery.getCount()
-      ? this.title.setTitle('Seller\'s Dashboard - Archipel Content')
-      : this.title.setTitle('New title - Archipel Content')
+      ? this.dynTitle.setPageTitle('Seller\'s Dashboard')
+      : this.dynTitle.setPageTitle('New Title')
   }
 
   ngOnDestroy() {

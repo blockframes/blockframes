@@ -1,11 +1,9 @@
 <h1>Offers & Deals</h1>
 
-<mat-tab-group>
+<mat-tab-group  (selectedTabChange)="refreshTitle($event)">
   <mat-tab *ngFor="let tab of tabs$ | async">
     <ng-template mat-tab-label>
-      <span (click)="refreshTitle(tab.name)">
         {{ tab.name }} ({{ tab.contracts.length }})
-      </span>
     </ng-template>
     <ng-template matTabContent>
       <ng-container *ngIf="tab.contracts.length; else noContracts">

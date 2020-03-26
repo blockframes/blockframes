@@ -12,6 +12,7 @@ export * from './lib/common-interfaces/terms';
 export * from './lib/yandex-metrica/yandex-metrica.module';
 export * from './lib/yandex-metrica/yandex-metrica.service';
 export * from './lib/breakpoint/breakpoints.service';
+export * from './lib/dynamic-title/dynamic-title.service.ts.service';
 
 export * from './lib/apps';
 export * from './lib/imdb/service';
