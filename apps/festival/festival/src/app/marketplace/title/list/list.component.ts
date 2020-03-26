@@ -5,9 +5,7 @@ import {
   Component,
   ChangeDetectionStrategy,
   OnInit,
-  ViewChild,
-  Inject,
-  OnDestroy
+  Inject
 } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 // Blockframes
@@ -22,23 +20,19 @@ import {
   MOVIE_STATUS_LABEL,
 } from '@blockframes/utils/static-model/types';
 import { getCodeIfExists } from '@blockframes/utils/static-model/staticModels';
-import { ControlErrorStateMatcher } from '@blockframes/utils/form/validators/validators';
-import { MovieAlgoliaResult, OrganizationsIndex, OrganizationAlgoliaResult } from '@blockframes/utils/algolia';
+import { MovieAlgoliaResult } from '@blockframes/utils/algolia';
 import { MoviesIndex } from '@blockframes/utils/algolia';
-// RxJs
-import { Observable, combineLatest, BehaviorSubject } from 'rxjs';
-import { startWith, map, debounceTime, switchMap, tap, distinctUntilChanged, pluck, filter } from 'rxjs/operators';
-// Others
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
 import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
 import { NumberRange } from '@blockframes/utils/common-interfaces/range';
-import { BUDGET_LIST } from '@blockframes/movie/form/budget/budget.form';
-import { filterMovie } from '@blockframes/distribution-deals/form/filter.util';
-import { CatalogSearchForm } from '@blockframes/distribution-deals/form/search.form';
+import { BUDGET_LIST } from '@blockframes/movie/movie/form/budget/budget.form';
+import { CatalogSearchForm } from '@blockframes/movie/distribution-deals/form/search.form';
 import { staticModels } from '@blockframes/utils/static-model';
-import { sortMovieBy } from '@blockframes/utils/akita-helper/sort-movie-by';
-import { StoreType } from '@blockframes/movie/+state/movie.firestore';
-import { MovieService } from '@blockframes/movie';
+// RxJs
+import { Observable, combineLatest, BehaviorSubject } from 'rxjs';
+import { startWith, map, debounceTime, switchMap, distinctUntilChanged, pluck, filter, share } from 'rxjs/operators';
+// Others
+import { Index } from 'algoliasearch';
 
 @Component({
   selector: 'festival-marketplace-title-list',
@@ -102,7 +96,6 @@ export class ListComponent implements OnInit, OnDestroy {
     private snackbar: MatSnackBar,
     private movieQuery: MovieQuery,
     @Inject(MoviesIndex) private movieIndex: Index,
-    @Inject(OrganizationsIndex) private orgsIndex: Index,
     private analytics: FireAnalytics
   ) { }
 
