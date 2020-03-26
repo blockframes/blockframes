@@ -33,6 +33,7 @@ const indexMoviesBuilder = (adminKey?: string) => {
   return client.initIndex(INDEX_NAME_MOVIES);
 };
 
+/** This function will configure the Movie index in order for the search ui pages to work correctly with algolia */
 export function setMovieConfiguration(adminKey?: string) {
   if (!algolia.adminKey && !adminKey) {
     console.warn('No algolia id set, assuming dev config: skipping');
