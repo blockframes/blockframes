@@ -7,11 +7,26 @@
     {
       "target": "catalog",
       "public": "dist/apps/catalog/",
-      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "redirects": [
+        {
+          "source": "/catalog/:path*",
+          "destination": "/:path",
+          "type": 301
+        }
+      ],
       "rewrites": [
         {
           "source": "/admin{,/**}",
           "function": "admin"
+        },
+        {
+          "source": "/catalog/**",
+          "destination": "/index.html"
         },
         {
           "source": "**",

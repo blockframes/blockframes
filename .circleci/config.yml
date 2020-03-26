@@ -169,7 +169,7 @@ jobs:
           message: '🚲 Deploying & testing e2e (https://blockframes-ci.web.app/)'
       - run: |
           npx firebase use ci &&
-          npx firebase deploy --only firestore,hosting:current &&
+          npx firebase deploy --only firestore,hosting:catalog &&
           npx firebase deploy --only functions --force || true &&
           npx ng build backend-ops --configuration=$ENV;
       - run:
@@ -200,7 +200,7 @@ jobs:
           message: '🛵 🤠 Deploying release to staging.. (https://staging.blockframes.io/)'
       - run: |
           npx firebase use staging &&
-          npx firebase deploy --only firestore,hosting:current &&
+          npx firebase deploy --only firestore,hosting:catalog &&
           npx firebase deploy --only functions --force || true &&
           npx ng build backend-ops --configuration=$ENV;
       - run:
@@ -261,7 +261,7 @@ jobs:
             npx firebase use staging &&
             cp firestore.rules firestore.rules.regular &&
             cp firestore.maintenance.rules firestore.rules &&
-            npx firebase deploy --only firestore,hosting:current &&
+            npx firebase deploy --only firestore,hosting:catalog &&
             npx firebase deploy --only functions --force
       - run: node dist/apps/backend-ops/main.js upgrade
       - run:
