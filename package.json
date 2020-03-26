@@ -10,7 +10,7 @@
     "ng": "ng",
     "start": "npx ng serve --hmr --disable-host-check",
     "build:stats": "ng build --prod --stats-json",
-    "build:catalog": "npx ng build catalog --base-href /catalog/ --configuration=\"${ENV:-dev}\"",
+    "build:catalog": "npx ng build catalog --configuration=\"${ENV:-dev}\"",
     "build:festival": "npx ng build festival --base-href /festival/ --configuration=\"${ENV:-dev}\"",
     "build:backend-functions": "npx ng build backend-functions --configuration=\"${ENV:-dev}\"",
     "build:backend-ops": "npx ng build backend-ops --configuration=\"${ENV:-dev}\"",

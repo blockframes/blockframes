@@ -5,8 +5,8 @@
       "public": "dist/storybook"
     },
     {
-      "target": "current",
-      "public": "dist/apps/",
+      "target": "catalog",
+      "public": "dist/apps/catalog/",
       "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
       "rewrites": [
         {
@@ -14,12 +14,8 @@
           "function": "admin"
         },
         {
-          "source": "/catalog{,/**}",
-          "destination": "/catalog/index.html"
-        },
-        {
           "source": "**",
-          "destination": "/catalog/index.html"
+          "destination": "/index.html"
         }
       ]
     }
