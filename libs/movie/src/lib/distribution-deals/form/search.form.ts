@@ -177,6 +177,10 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
     super(control);
   }
 
+  get search() {
+    return this.get('searchbar').get('text');
+  }
+
   get genres() {
     return this.get('genres');
   }
