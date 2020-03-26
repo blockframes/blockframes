@@ -22,11 +22,15 @@ export function isTimeStamp(date: firestore.Timestamp | Date): date is firestore
   return date && date instanceof firestore.Timestamp
 }
 
-/** Takes a Date or a Timestamp and returns it as a Date. */
+/** Takes a Date, a string or a Timestamp and returns it as a Date. */
 export function toDate(date: firestore.Timestamp | Date): Date {
   if (isTimeStamp(date)) {
     return date.toDate();
   }
+  if (typeof date === 'string' || typeof date === 'number') {
+    return new Date(date);
+  }
+
   return date;
 }
 
@@ -58,9 +62,9 @@ export async function asyncFilter<T>(items: T[], filterFunction: (item: T) => Pr
 /**
  * This function is used to check if a given value (code) belongs to a type (base).
  * Return the key of the const if found, undefined otherwise
- * Code example (string): 
+ * Code example (string):
  *   'line_up' | 'Line-Up'
- * Base example: 
+ * Base example:
  *   export const storeType = {
  *     library: 'Library',
  *     line_up: 'Line-Up',
