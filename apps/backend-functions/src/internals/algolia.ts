@@ -43,25 +43,8 @@ export function storeSearchableMovie(
     return Promise.resolve(true);
   }
 
-  // TODO un-nest the data
-  // const ALGOLIA_FIELDS: string[] = [
-    // 'main.genres',
-    // 'main.title.international',
-    // 'main.title.original',
-    // 'main.directors', // TODO clean useless fields in this array
-    // 'main.originalLanguages',
-    // 'main.status',
-    // 'main.originCountries',
-    // 'promotionalDescription.keywords',
-    // 'salesAgentDeal.salesAgent.displayName',
-    // 'versionInfo.dubbings', // TODO implement correctly the languages
-    // 'versionInfo.subtitles', // TODO implement correctly the languages
-    // 'budget.estimatedBudget.from',
-    // 'budget.estimatedBudget.to'
-  // ];
   return indexMoviesBuilder(adminKey).saveObject({
     objectID: movie.id,
-    // movie: pick(movie, ALGOLIA_FIELDS),
 
     // searchable keys
     title: {
@@ -71,6 +54,7 @@ export function storeSearchableMovie(
     directors: movie.main.directors!.map((director) => `${director.firstName} ${director.lastName}`),
     keywords: movie.promotionalDescription.keywords,
 
+    // facets
     genres: movie.main.genres,
     originCountries: movie.main.originCountries,
     languages: {
@@ -85,8 +69,6 @@ export function storeSearchableMovie(
       to: movie.budget.estimatedBudget!.to,
     },
     orgName,
-
-    // orgId,
   });
 }
 
