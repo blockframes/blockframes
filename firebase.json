@@ -25,10 +25,6 @@
           "function": "admin"
         },
         {
-          "source": "/catalog/**",
-          "destination": "/index.html"
-        },
-        {
           "source": "**",
           "destination": "/index.html"
         }
