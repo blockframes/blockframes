@@ -1,5 +1,5 @@
 <cal-header [(viewDate)]="viewDate"></cal-header>
-<cal-week [viewDate]="viewDate" [events]="events$ | async" editable>
+<cal-week [viewDate]="viewDate" eventType="screening" [events]="events$ | async" editable>
 
   <!-- Small Events -->
   <ng-template calEventSmall let-event>
@@ -42,10 +42,15 @@
 </cal-week>
 
 <!-- Edit form -->
-<ng-template #editTemplate let-event>
-  <event-edit #eventEdit [event]="event" (close)="editDialog.close()">
-    <form [formGroup]="eventEdit.form.get('meta')" >
-      {{ eventEdit.form.value | json }}
-    </form>
-  </event-edit>
+<ng-template #editTemplate let-form>
+  <button mat-icon-button class="mat-dialog-close" mat-dialog-close>
+    <mat-icon svgIcon="cross"></mat-icon>
+  </button>
+  <h3>Edit</h3>
+  <event-form [form]="form"></event-form>
+  
+  <mat-dialog-actions fxLayout fxLayoutAlign="end center" fxLayoutGap="16px">
+    <a mat-button mat-dialog-close [routerLink]="[form.value.id, 'edit']">More Details</a>
+    <button mat-flat-button color="primary" [mat-dialog-close]="form.value">Save</button>
+  </mat-dialog-actions>
 </ng-template>

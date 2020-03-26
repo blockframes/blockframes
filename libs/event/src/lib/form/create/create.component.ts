@@ -1,7 +1,7 @@
 import { Component, Inject, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { CalendarEvent } from 'angular-calendar';
 import { AuthQuery } from '@blockframes/auth/+state';
+import { Event } from '../../+state/event.model';
 import { EventForm } from '../event.form';
 
 @Component({
@@ -12,31 +12,22 @@ import { EventForm } from '../event.form';
 })
 export class EventCreateComponent {
 
-  form = new EventForm();
+  form: EventForm;
   
   constructor(
-    @Inject(MAT_DIALOG_DATA) public event: CalendarEvent,
+    @Inject(MAT_DIALOG_DATA) event: Event,
     public dialogRef: MatDialogRef<EventCreateComponent>,
     private authQuery: AuthQuery
   ) {
-    this.form.patchValue(event);
+    this.form = new EventForm(event);
   }
 
-  create() {
-    const event = {
-      ...this.form.value,
-      userId: this.authQuery.userId,
-      draggable: true,
-      resizable: {
-        beforeStart: true, // this allows you to configure the sides the event is resizable from
-        afterEnd: true
-      }
-    };
-    this.dialogRef.close(event);
-  }
-
-  cancel(event: MouseEvent): void {
-    this.dialogRef.close();
-    event.preventDefault();
+  /**
+   * @param redirect If true should redirect to the event page
+   */
+  createAndRedirect(redirect: boolean) {
+    const userId = this.authQuery.userId;
+    const event = { ...this.form.value, userId };
+    this.dialogRef.close({ event, redirect });
   }
 }

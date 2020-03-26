@@ -17,6 +17,7 @@ import { fromEvent } from 'rxjs';
 import { map, finalize, takeUntil, distinctUntilChanged } from 'rxjs/operators';
 
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
+import { ActivatedRoute, Router } from '@angular/router';
 
 function floorToNearest(amount: number, precision: number) {
   return Math.floor(amount / precision) * precision;
@@ -75,6 +76,8 @@ export class CalendarWeekComponent {
     private authQuery: AuthQuery,
     private service: EventService,
     private dialog: MatDialog,
+    private router: Router,
+    private route: ActivatedRoute,
     private cdr: ChangeDetectorRef,
   ) {}
 
@@ -128,11 +131,16 @@ export class CalendarWeekComponent {
     this.cdr.markForCheck();
   }
 
+  /** Open a create dialog and redirect if needed */
   private createEvent(data: CalendarEvent) {
-    this.dialog.open(EventCreateComponent, { data }).afterClosed().subscribe(async event => {
+    this.dialog.open(EventCreateComponent, { data }).afterClosed()
+    .subscribe(async ({ event, redirect } = {}) => {
       if (event) {
         event.type = this.eventType;
         this.service.add(event);
+        if (redirect) {
+          this.router.navigate([event.id, 'edit'], { relativeTo: this.route });
+        }
       } else {
         this.refresh(this.baseEvents);
       }

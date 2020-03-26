@@ -1,4 +1,4 @@
-import { forwardRef, Directive, Renderer2, ElementRef } from '@angular/core';
+import { forwardRef, Directive, Renderer2, ElementRef, NgModule } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 export const TIME_VALUE_ACCESSOR: any = {
@@ -82,3 +82,10 @@ export class TimeDateValueAccessor implements ControlValueAccessor {
     this._renderer.setProperty(this._elementRef.nativeElement, 'disabled', isDisabled);
   }
 }
+
+
+@NgModule({
+  declarations: [TimeDateValueAccessor],
+  exports: [TimeDateValueAccessor],
+})
+export class TimeDateModule {}

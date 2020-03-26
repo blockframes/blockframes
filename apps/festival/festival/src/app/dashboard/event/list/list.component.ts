@@ -1,12 +1,11 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ViewChild, TemplateRef } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { EventService } from '@blockframes/event/+state/event.service';
 import { EventQuery } from '@blockframes/event/+state/event.query';
 import { Event } from '@blockframes/event/+state/event.model';
 import { EventForm } from '@blockframes/event/form/event.form';
-import { EventEditComponent } from '@blockframes/event/form/edit/edit.component';
-import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { filter } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
+import { filter, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'festival-event-list',
@@ -16,11 +15,11 @@ import { filter } from 'rxjs/operators';
 })
 export class EventListComponent implements OnInit, OnDestroy {
   private sub: Subscription;
-  editDialog: MatDialogRef<EventEditComponent>
+  editDialog: MatDialogRef<any>
   events$ = this.query.selectAll();
   viewDate = new Date();
 
-  @ViewChild('editTemplate', {read: TemplateRef}) editTemplate: TemplateRef<EventEditComponent>;
+  @ViewChild('editTemplate', {read: TemplateRef}) editTemplate: TemplateRef<any>;
   
   constructor(
     private service: EventService,
@@ -40,9 +39,10 @@ export class EventListComponent implements OnInit, OnDestroy {
    * Open a dialog to update the event
    * @param data The event to update
    */
-  edit(data: Event) {
-    this.editDialog = this.dialog.open(this.editTemplate, { data });
+  async edit(data: Event) {
+    this.editDialog = this.dialog.open(this.editTemplate, { data: new EventForm(data) });
     this.editDialog.afterClosed().pipe(
+      tap(console.log),
       filter(event => !!event)
     ).subscribe(async event => this.service.update(event));
   }
