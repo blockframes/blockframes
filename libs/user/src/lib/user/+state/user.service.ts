@@ -37,16 +37,7 @@ export class UserService extends CollectionService<UserState> {
   //////////
   // TODO #1389 we can replace a lot of these functions by native Akita-ng-fire functions
 
-    /** Call a firebase function to get or create a user.
-   * @email find the user with this email. If email doesn't match with an existing user,
-   * create a user with this email address.
-   */
-  public async getOrCreateUserByMail(email: string, orgName: string, invitationId?: string): Promise<User> {
-    const f = this.functions.httpsCallable('getOrCreateUserByMail');
-    return f({ email, orgName }).toPromise();
-  }
-
-    /**
+  /**
    * Check if uid is exists in blockframesAdmin collection.
    * If document exists, user is blockframeAdmin (like an ancient god).
    * @param uid
@@ -56,7 +47,7 @@ export class UserService extends CollectionService<UserState> {
     return snap.exists;
   }
 
-    /**
+  /**
    * Set/unset user as blockframesAdmin
    * @param state
    * @param uid
@@ -69,7 +60,7 @@ export class UserService extends CollectionService<UserState> {
     }
   }
 
-    /**
+  /**
    * Checks if an user exists
    * @dev If in the future, we need to keep an user list in the state other than members of an org,
    * this will be the time to create a userService and to move this method in it.
@@ -80,7 +71,7 @@ export class UserService extends CollectionService<UserState> {
     return snap.exists;
   }
 
-    /**
+  /**
    * Fetch an user based on his uid
    * @dev If in the future, we need to keep an user list in the state other than members of an org,
    * this will be the time to create a userService and to move this method in it.
@@ -91,7 +82,7 @@ export class UserService extends CollectionService<UserState> {
     return user.data() as User;
   }
 
-    /**
+  /**
    * @dev since this.update() does not behave like other services
    * (authService extends FireAuthService<AuthState> and others extends CollectionService<XxxState>)
    * This method was created to easily update an user.
@@ -103,7 +94,7 @@ export class UserService extends CollectionService<UserState> {
     await this.db.collection('users').doc(uid).update(update);
   }
 
-    /**
+  /**
    * Fetch all users
    * @dev If in the future, we need to keep an user list in the state other than members of an org,
    * this will be the time to create a userService and to move this method in it.
@@ -116,7 +107,7 @@ export class UserService extends CollectionService<UserState> {
     return usersSnap.docs.map(c => c.data() as User);
   }
 
-    // TODO THIS IS A QUICK FIX OF MOVIE FINANCING RANK MADE FOR TORONTO, THINK OF A BETTER WAY AFTERWARD
+  // TODO THIS IS A QUICK FIX OF MOVIE FINANCING RANK MADE FOR TORONTO, THINK OF A BETTER WAY AFTERWARD
   //---------------------------
   //   MOVIE FINANCING RANK
   //---------------------------
