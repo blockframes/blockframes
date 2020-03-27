@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieAdminForm } from '../../forms/movie-admin.form';
 import { staticModels } from '@blockframes/utils/static-model';
-import { DistributionDealService } from '@blockframes/distribution-deals';
+import { DistributionDealService } from '@blockframes/distribution-deals/+state/distribution-deal.service';
 import { getValue } from '@blockframes/utils/helpers';
 import { storeType, storeStatus } from '@blockframes/movie/+state/movie.firestore';
 import { Movie } from '@blockframes/movie/+state/movie.model';
