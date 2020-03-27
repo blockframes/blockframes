@@ -4,7 +4,6 @@ import { FocusMonitor } from '@angular/cdk/a11y';
 import { Subject } from 'rxjs';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { MatFormFieldControl } from '@angular/material/form-field';
-import { MatDatepicker } from '@angular/material/datepicker';
 
 function createDate({ day, time }: { day: Date, time: string }): Date {
   const [h, m] = time.split(':');
@@ -18,6 +17,12 @@ function getTime(date: Date): string {
   const m = ('0' + date.getMinutes()).slice(-2);
   return `${h}:${m}`
 }
+
+// List of hours to display ["00:00", "00:30", ...]
+const hours = (new Array(24)).fill('').map((_, i) => {
+  const h = i < 10 ? `0${i}` : i;
+  return [`${h}:00`, `${h}:30`];
+}).flat()
 
 @Component({
   selector: 'time-picker',
@@ -38,6 +43,7 @@ export class TimePickerComponent implements ControlValueAccessor, MatFormFieldCo
     time: new FormControl('00:00')
   });
 
+  hours = hours;
   stateChanges = new Subject<void>();
   focused = false;
   errorState = false;

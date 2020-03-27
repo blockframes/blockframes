@@ -7,7 +7,7 @@
     <button type="submit" mat-button>Save</button>
     <button type="button" mat-button (click)="remove()">Delete</button>
   </mat-toolbar>
-  <div fxLayout fxLayoutAlign="start center" fxLayoutGap="24px">
+  <section fxLayout fxLayoutAlign="start center" fxLayoutGap="24px">
     <mat-form-field appearance="outline">
       <mat-label>Start</mat-label>
       <time-picker formControlName="start"></time-picker>
@@ -19,7 +19,7 @@
       <mat-label>End</mat-label>
       <time-picker formControlName="end"></time-picker>
     </mat-form-field>
-  </div>
+  </section>
 </form>
 
 

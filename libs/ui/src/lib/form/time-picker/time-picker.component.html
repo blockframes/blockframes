@@ -1,6 +1,9 @@
 <div [formGroup]="form" class="container">
   <mat-datepicker-toggle [for]="picker"></mat-datepicker-toggle>
   <mat-datepicker #picker></mat-datepicker>
-  <input class="day" formControlName="day" size="3" aria-label="Day" [matDatepicker]="picker" (dateInput)="setDate()">
-  <input type="time" formControlName="time" formControlName="time" size="3" aria-label="Time" (input)="setDate()">
+  <input class="day" [matDatepicker]="picker" formControlName="day" size="2" aria-label="Day" (dateInput)="setDate()" (focus)="picker.open()">
+  <input type="time" [matAutocomplete]="timing" formControlName="time" size="2" formControlName="time"  aria-label="Time" (input)="setDate()">
 </div>
+<mat-autocomplete #timing="matAutocomplete" (optionSelected)="setDate()">
+  <mat-option *ngFor="let hour of hours" [value]="hour">{{ hour }}</mat-option>
+</mat-autocomplete>
