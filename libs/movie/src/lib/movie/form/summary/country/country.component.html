@@ -24,21 +24,31 @@
       <li>
         <strong>Release Media </strong>
         <ng-container *ngFor="let release of salesInfo.originalRelease.controls">
-          <ng-container *ngIf="release.get('country').value === country.value">
+          <ng-container *ngIf="release.get('country').value === country.value; else notMatchingCountry">
             <missing-control [control]="release.get('media')" scope="MEDIAS" [link]="link"></missing-control>
           </ng-container>
+          <ng-template #notMatchingCountry>
+            <a [routerLink]="link" class="missing-control">
+              Missing
+            </a>
+          </ng-template>
         </ng-container>
       </li>
       <li>
         <strong>Release Date </strong>
         <ng-container *ngFor="let release of salesInfo.originalRelease.controls">
-          <ng-container *ngIf="release.get('country').value === country.value">
+          <ng-container *ngIf="release.get('country').value === country.value; else notMatchingCountry">
             <missing-control [control]="release.get('date')" [link]="link">
               <ng-template let-date *ngIf="release.get('date').value">
                 {{ date | date: 'shortDate' }}
               </ng-template>
             </missing-control>
           </ng-container>
+          <ng-template #notMatchingCountry>
+            <a [routerLink]="link" class="missing-control">
+              Missing
+            </a>
+          </ng-template>
         </ng-container>
       </li>
     </ul>
