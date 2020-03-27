@@ -38,6 +38,7 @@ const routes: Routes = [{
     {
       path: 'search',
       loadChildren: () => import('./movie/search/search.module').then(m => m.MarketplaceSearchModule)
+      // loadChildren: () => import('@blockframes/movie/layout/list/list.module').then(m => m.MovieListModule)
     },
     {
       path: 'activity',   // List of notifications
