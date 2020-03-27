@@ -39,7 +39,7 @@ export async function upgradeAlgoliaMovies() {
         .then(organization => storeSearchableMovie(movieData, organization.name, process.env['ALGOLIA_API_KEY']))
       ;
       promises.push(promise);
-    } catch(error) {
+    } catch (error) {
       console.error(`\n\n\tFailed to insert a movie ${movie.id} : skipping\n\n`);
       console.error(error);
       promises.push(new Promise(res => res(true)));
