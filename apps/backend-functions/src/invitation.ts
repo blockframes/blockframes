@@ -180,7 +180,7 @@ async function onInvitationFromUserToJoinOrgCreate({
 
   // send invitation pending email to user
   await sendMailFromTemplate(
-    userJoinOrgPendingRequest(userData.email, organization.name, userData.name!)
+    userJoinOrgPendingRequest(userData.email, organization.denomination.full, userData.name!)
   );
 
   // send invitation received to every org admin
@@ -190,7 +190,7 @@ async function onInvitationFromUserToJoinOrgCreate({
         userRequestedToJoinYourOrg({
           adminEmail: admin.email,
           adminName: admin.name!,
-          organizationName: organization.name,
+          organizationName: organization.denomination.full,
           organizationId: organization.id,
           userFirstname: userData.name!,
           userLastname: userData.surname!

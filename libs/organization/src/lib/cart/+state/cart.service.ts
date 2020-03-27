@@ -115,7 +115,7 @@ export class CartService extends CollectionService<CartState> {
     const wishlistTitles = movies.map(movie => movie.main.title.original);
 
     const callDeploy = this.functions.httpsCallable('sendWishlistEmails');
-    await callDeploy({ email: user.email, userName: user.name, orgName: org.name, wishlist: wishlistTitles }).toPromise();
+    await callDeploy({ email: user.email, userName: user.name, orgName: org.denomination.full, wishlist: wishlistTitles }).toPromise();
 
     const setSent = (wishlist: Wishlist) => {
       return wishlist.status === 'pending'

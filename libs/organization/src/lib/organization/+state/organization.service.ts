@@ -29,7 +29,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   }
 
   public async orgNameExist(orgName: string) {
-    const orgs = await this.getValue(ref => ref.where('name', '==', orgName));
+    const orgs = await this.getValue(ref => ref.where('denomination.full', '==', orgName));
     return orgs.length !== 0;
   }
 
