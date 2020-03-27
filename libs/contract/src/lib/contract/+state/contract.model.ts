@@ -12,12 +12,12 @@ import {
 } from './contract.firestore';
 import { createParty } from '@blockframes/utils/common-interfaces/identity';
 import { createImgRef } from '@blockframes/utils/image-uploader';
-import { createTerms } from '@blockframes/utils/common-interfaces/terms';
 import {
   ContractVersion,
   ContractVersionWithTimeStamp,
   createContractVersionFromFirestore,
-  cleanContractVersion
+  cleanContractVersion,
+  createContractVersion
 } from '../../version/+state/contract-version.model';
 import { LegalRolesSlug } from '@blockframes/utils/static-model/types';
 import { toDate } from '@blockframes/utils/helpers';
@@ -45,31 +45,8 @@ export function createContract(params: Partial<Contract> = {}): Contract {
     partyIds: [],
     ...params,
     documents: createContractLegalDocuments(params.documents),
-    lastVersion: createContractVersion(params.lastVersion),
+    lastVersion: createContractVersion(params.lastVersion)
   };
-}
-
-// @todo(#1887) Move this fatory function into version.model
-export function createContractVersion(params: Partial<ContractVersion> = {}): ContractVersion {
-  return {
-    id: params.id || 1,
-    titles: {},
-    creationDate: new Date(),
-    paymentSchedule: [],
-    status: 'draft',
-    ...params,
-    paymentTerm: createTerms(params.paymentTerm),
-    scope: createTerms(params.scope),
-    price: createPrice(params.price)
-  };
-}
-
-/**
- * @description create a contract version specific to mandate
- * @param params
- */
-export function createVersionMandate(params: Partial<ContractVersion> = {}) {
-  return createContractVersion({ price: { amount: 0 }, ...params })
 }
 
 export function createPublicContract(params: Partial<PublicContract> = {}): PublicContract {

@@ -5,12 +5,10 @@ import { OrganizationQuery } from '@blockframes/organization';
 import { tap, switchMap } from 'rxjs/operators';
 
 /**
- * @todo(#1887) Don't import all versions
  * Get all the contracts where user organization is party.
  * Also check that there is no childContractIds to never fetch
  * contract between organization and Archipel Content.
  */
-// todo(#1887) CHECK IF remove versions in query is needed
 const organizationContractsListQuery = (orgId: string): Query<ContractWithTimeStamp[]> => ({
   path: 'contracts',
   queryFn: ref => ref.where('partyIds', 'array-contains', orgId).where('type', '==', 'sale'),

@@ -1,5 +1,7 @@
 import { ContractVersionDocumentWithDates, ContractVersionDocument } from "../../contract/+state/contract.firestore";
 import { toDate } from "@blockframes/utils/helpers";
+import { createTerms } from "@blockframes/utils/common-interfaces/terms";
+import { createPrice } from "@blockframes/utils/common-interfaces/price";
 
 export type ContractVersion = ContractVersionDocumentWithDates;
 
@@ -24,6 +26,20 @@ export function createContractVersionFromFirestore(contractVersion: any): Contra
   }
 
   return contractVersion as ContractVersion;
+}
+
+export function createContractVersion(params: Partial<ContractVersion> = {}): ContractVersion {
+  return {
+    id: params.id || 1,
+    titles: {},
+    creationDate: new Date(),
+    paymentSchedule: [],
+    status: 'draft',
+    ...params,
+    paymentTerm: createTerms(params.paymentTerm),
+    scope: createTerms(params.scope),
+    price: createPrice(params.price)
+  };
 }
 
 /** Cleans an organization of its optional parameters */

@@ -9,8 +9,6 @@ import {
   cleanContract,
   PublicContract,
   createContract,
-  createContractVersion,
-  createVersionMandate
 } from './contract.model';
 import { PermissionsService, OrganizationQuery } from '@blockframes/organization';
 import { ContractDocumentWithDates } from './contract.firestore';
@@ -39,20 +37,26 @@ export class ContractService extends CollectionService<ContractState> {
   /**
    * This convert the Contract into a ContractDocumentWithDates
    * to clean the unused properties in the database (lastVersion).
-  */
+   * @param contract 
+   */
   formatToFirestore(contract: Contract): ContractDocumentWithDates {
     return cleanContract(contract);
   }
 
-  /** Get the mandate contract of an organization */
+  /**
+   * Gets the mandate contract of an organization
+   * @param orgId 
+   */
   public async getMandate(orgId: string) {
-    const query = ref => ref.where('partyIds', 'array-contains', orgId).where('type', '==', 'sale');
-    const mandates = await this.getValue(query);
-    return (mandates && mandates.length) ? mandates[0] : undefined;
+    const query = ref => ref.where('partyIds', 'array-contains', orgId).where('type', '==', 'mandate');
+    const contracts = await this.getValue(query);
+
+    // Should only have one result
+    return (contracts && contracts.length) ? contracts.pop() : undefined;
   }
 
   /**
-   *
+   * Gets a contract from a movieId and a distributionDealId
    * @param movieId
    * @param distributionDealId
    */
@@ -66,28 +70,13 @@ export class ContractService extends CollectionService<ContractState> {
   }
 
   /**
-   * Create a new contract and a new version
-   * @note We need this method because `addContractAndVersion` only work on the import.
-   * @param _contract The contract to add
-   * @param _version Optional content for the first version
-   * @todo(#1887) check if method still usefull
-   * @todo(#2041) Use distribution deal service
+   * Creates a new contract
+   * @dev Contract differentiation between types (mandate, sale etc..) is made on the backend functions side.
+   * @see apps/backend-functions/src/contract.ts
+   * @param contract The contract to add
    */
-  public async create(_contract: Partial<Contract>, _version: Partial<ContractVersion> = {}) {
-    const write = this.db.firestore.batch();
-    const org = this.orgQuery.getActive();
-
-    // Initialize all values
-    const contract = createContract({ ..._contract, partyIds: [org.id] });
-    contract.lastVersion = _contract.type === 'mandate'
-      ? createVersionMandate({  ..._version })
-      : createContractVersion({  ..._version });
-
-    // Create contract
-    const contractId = await this.add(contract, { write });
-
-    await write.commit();
-    return contractId;
+  public async create(contract: Partial<Contract>): Promise<string> {
+    return await this.add(createContract({ ...contract,  }));
   }
 
   /**

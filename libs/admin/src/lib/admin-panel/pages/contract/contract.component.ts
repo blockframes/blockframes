@@ -183,7 +183,7 @@ export class ContractComponent implements OnInit {
 
     this.contract.lastVersion.creationDate = new Date();
     this.contract.lastVersion.status = this.contractVersionForm.get('status').value;
-    await this.contractService.add(this.contract); // @TODO (#1887) test update
+    await this.contractService.update(this.contract);
 
     this.snackBar.open('Informations updated !', 'close', { duration: 5000 });
   }
@@ -294,7 +294,7 @@ export class ContractComponent implements OnInit {
     calculatePrice(writeableContract.lastVersion);
 
     // Update contract
-    await this.contractService.add(writeableContract); // @TODO (#1887) should be update
+    await this.contractService.update(writeableContract);
 
     this.snackBar.open('Informations updated !', 'close', { duration: 5000 });
     return true;

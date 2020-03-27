@@ -5,7 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieService, Movie } from '@blockframes/movie';
 import { TunnelStep, TunnelConfirmComponent } from '@blockframes/ui/tunnel'
 import { ContractForm } from '../form/contract.form';
-import { ContractQuery, ContractService, ContractType, createContract, createContractVersion } from '../+state';
+import { ContractQuery, ContractService, ContractType, createContract } from '../+state';
 import { MatDialog } from '@angular/material/dialog';
 import { DistributionDealForm } from '@blockframes/distribution-deals/form/distribution-deal.form';
 import { FormEntity, FormList } from '@blockframes/utils/form/forms';
@@ -86,6 +86,7 @@ export class ContractTunnelComponent implements OnInit {
 
     // Set the initial deals
     contract.titleIds.forEach(async movieId => {
+      // @todo (#1887) get dealFromContractId from the service
       const deals = await this.dealService.getValue(ref => ref.where('contractId', '==', contract.id), { params: { movieId } });
       this.dealForms.setControl(movieId, FormList.factory(deals, deal => new DistributionDealForm(deal)));
     });
@@ -126,7 +127,11 @@ export class ContractTunnelComponent implements OnInit {
     this.dealForms.setControl(movieId, FormList.factory([], deal => new DistributionDealForm(deal)));
   }
 
-  /** Remove a title to this contract */
+  /**
+   * Removes a title from the contract form
+   * @param movieId 
+   * @param isExploitRight 
+   */
   removeTitle(movieId: string, isExploitRight?: boolean) {
     this.contractForm.get('lastVersion').get('titles').removeControl(movieId);
     const deals = this.dealForms.get(movieId).value;

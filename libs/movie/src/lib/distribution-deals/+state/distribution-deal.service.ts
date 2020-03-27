@@ -113,6 +113,7 @@ export class DistributionDealService extends CollectionService<DistributionDealS
   }
 
   /** Get the deals linked to the Archipel Contract (of type 'mandate') */
+  // @todo (#1887) check
   public async getMandateDeals(movie: Movie): Promise<DistributionDeal[]> {
     const contractsSnap = await this.db.collection(
       `publicContracts/`, ref => ref.where('type', '==', 'mandate').where('titleIds', 'array-contains', movie.id))

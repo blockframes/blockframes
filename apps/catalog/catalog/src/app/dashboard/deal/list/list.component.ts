@@ -86,7 +86,7 @@ export class DealListComponent {
   constructor(
     private orgQuery: OrganizationQuery,
     private query: ContractQuery,
-    private service: ContractService,
+    private contractService: ContractService,
     private router: Router,
     private route: ActivatedRoute,
     private intercom: Intercom
@@ -95,8 +95,7 @@ export class DealListComponent {
   /** Create a sale and redirect to tunnel */
   async createSale() {
     const type = 'sale';
-    // @todo (#1887) check
-    const contractId = await this.service.create({ type });
+    const contractId = await this.contractService.create({ type });
     this.router.navigate(['../tunnel/contract', contractId, type], { relativeTo: this.route })
   }
 
@@ -107,12 +106,11 @@ export class DealListComponent {
   async createMandate() {
     const type = 'mandate';
     const orgId = this.orgQuery.getActiveId();
-    const mandate = await this.service.getMandate(orgId);
+    const mandate = await this.contractService.getMandate(orgId);
     if (mandate) {
       this.router.navigate([mandate.id], { relativeTo: this.route })
     } else {
-      // @todo (#1887) check
-      const contractId = await this.service.create({ type });
+      const contractId = await this.contractService.create({ type });
       this.router.navigate(['../tunnel/contract', contractId, type], { relativeTo: this.route })
     }
   }

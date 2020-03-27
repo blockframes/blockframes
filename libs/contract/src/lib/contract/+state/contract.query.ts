@@ -46,10 +46,6 @@ export class ContractQuery extends QueryEntity<ContractState> {
     super(store);
   }
 
-  getMandate() {
-    this.getEntity((contract: Contract) => contract.type === 'mandate')
-  }
-
   /** Returns the contract parties of a given role */
   getActiveParties(role: 'licensee' | 'licensor'): Party[] {
     const parties = this.getActive().parties.filter(details => details.party.role === role);

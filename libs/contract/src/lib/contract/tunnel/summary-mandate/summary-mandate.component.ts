@@ -96,6 +96,7 @@ export class SummaryMandateComponent implements OnInit {
     contract.lastVersion.status = 'submitted';
     this.contractService.update(contract, { write });
 
+    // @todo (#1887) a backend function should handle this
     for (const movieId in this.dealForms.value) {
       const dealIds = this.dealForms.get(movieId).value.map(deal => deal.id);
       this.dealService.update(dealIds, { status: 'undernegotiation' }, { params: { movieId }, write });

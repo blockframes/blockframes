@@ -183,7 +183,7 @@ export class DistributionDealCreateComponent implements OnInit, OnDestroy {
     this.form.removeLanguage(language);
   }
 
-  // @ TODO (#1887) check this method
+  // @ TODO (#1887) check this method =>  async create() { in selection-compoment
   public async addDistributionDeal() {
     const distributionDeal = createDistributionDeal();
     // Create the contract that will handle the deal
@@ -200,8 +200,7 @@ export class DistributionDealCreateComponent implements OnInit, OnDestroy {
     licensor.party.role = 'licensor';
     contract.parties.push(licensor);
 
-    const isValid = await this.contractService.isContractValid(contract)
-
+    const isValid = await this.contractService.isContractValid(contract);
     if (!isValid) {
       this.snackBar.open(`Error while creating contract..`, 'close', { duration: 2000 });
     } else {
@@ -210,7 +209,6 @@ export class DistributionDealCreateComponent implements OnInit, OnDestroy {
       this.snackBar.open(`Distribution deal saved. Redirecting ...`, 'close', { duration: 2000 });
       this.router.navigateByUrl(`c/o/catalog/selection/overview`);
     }
-
   }
 
   //////////////////////

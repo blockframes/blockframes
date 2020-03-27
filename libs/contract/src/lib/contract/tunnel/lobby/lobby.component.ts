@@ -17,7 +17,6 @@ export class LobbyComponent {
   ) { }
 
   async select(type: ContractType) {
-    // @todo (#1887) check
     const contractId = await this.service.create({ type });
     this.router.navigate([contractId, type], { relativeTo: this.route })
   }
