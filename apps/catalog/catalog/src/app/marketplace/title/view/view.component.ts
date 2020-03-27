@@ -2,7 +2,6 @@ import { map } from 'rxjs/operators';
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
 import { Component, OnInit, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { Observable } from 'rxjs';
-import { OrganizationQuery } from '@blockframes/organization';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
@@ -11,6 +10,7 @@ import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { workType } from '@blockframes/movie/+state/movie.firestore';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
+import { OrganizationQuery } from '@blockframes/organization/organization/+state/organization.query';
 
 @Component({
   selector: 'catalog-movie-view',

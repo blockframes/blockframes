@@ -5,7 +5,7 @@ import { KeyManagerQuery, KeyManagerService } from "../../../key-manager/+state"
 import { Wallet as EthersWallet } from "@ethersproject/wallet";
 import { Router } from "@angular/router";
 import { Wallet, Key } from "../../../types";
-import { OrganizationQuery } from "@blockframes/organization";
+import { OrganizationQuery } from "@blockframes/organization/organization/+state/organization.query";
 
 enum steps {
   select,

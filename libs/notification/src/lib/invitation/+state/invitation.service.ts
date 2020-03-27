@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { InvitationState } from './invitation.store';
 import { createInvitationToDocument, createInvitationFromUserToOrganization, createInvitationFromOrganizationToUser, Invitation } from './invitation.model';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
-import { PublicOrganization } from '@blockframes/organization';
 import { OrganizationService } from '@blockframes/organization/organization/+state/organization.service';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { AuthService } from '@blockframes/auth/+state/auth.service';
+import { PublicOrganization } from '@blockframes/organization/organization/+state/organization.firestore';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'invitations' })

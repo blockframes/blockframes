@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { getValue } from '@blockframes/utils/helpers';
-import { OrganizationService } from '@blockframes/organization';
+import { OrganizationService } from '@blockframes/organization/organization/+state/organization.service';
 
 @Component({
   selector: 'admin-organizations',

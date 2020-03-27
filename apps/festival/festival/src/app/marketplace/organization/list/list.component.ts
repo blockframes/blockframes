@@ -1,5 +1,5 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { OrganizationQuery } from '@blockframes/organization';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { OrganizationQuery } from '@blockframes/organization/organization/+state/organization.query';
 
 @Component({
   selector: 'festival-marketplace-organization-list',
@@ -7,13 +7,10 @@ import { OrganizationQuery } from '@blockframes/organization';
   styleUrls: ['./list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ListComponent implements OnInit {
+export class ListComponent {
 
   organizations$ = this.query.selectAll();
-  
-  constructor(private query: OrganizationQuery) { }
 
-  ngOnInit(): void {
-  }
+  constructor(private query: OrganizationQuery) { }
 
 }

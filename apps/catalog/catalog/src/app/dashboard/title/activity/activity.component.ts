@@ -8,7 +8,7 @@ import { Contract } from '@blockframes/contract/contract/+state/contract.model';
 import { getContractLastVersion } from '@blockframes/contract/version/+state/contract-version.model';
 import { ContractQuery } from '@blockframes/contract/contract/+state';
 import { map } from 'rxjs/operators';
-import { OrganizationQuery } from '@blockframes/organization';
+import { OrganizationQuery } from '@blockframes/organization/organization/+state/organization.query';
 
 @Component({
   selector: 'catalog-title-activity',

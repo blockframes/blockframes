@@ -1,6 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
-import { OrganizationQuery, OrganizationService, Organization } from '@blockframes/organization';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
@@ -8,6 +7,9 @@ import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
+import { Organization } from '@blockframes/organization/organization/+state/organization.model';
+import { OrganizationService } from '@blockframes/organization/organization/+state/organization.service';
+import { OrganizationQuery } from '@blockframes/organization/organization/+state/organization.query';
 
 @Component({
   selector: 'festival-movie-view',

@@ -27,11 +27,9 @@
       ],
       "@blockframes/movie/types": ["libs/movie/src/lib/movie/+state/movie.firestore.ts"],
       "@blockframes/distribution-deals/*": ["libs/movie/src/lib/distribution-deals/*"],
-      "@blockframes/ethers": ["libs/ethers/src/index.ts"],
       "@blockframes/ethers/*": ["libs/ethers/src/lib/*"],
       "@blockframes/smart-contracts/*": ["smart-contracts/build/*"],
       "@blockframes/smart-contracts/quorum/*": ["smart-contracts/quorum/*"],
-      "@blockframes/organization": ["libs/organization/src/index.ts"],
       "@blockframes/organization/*": ["libs/organization/src/lib/*"],
       "@blockframes/organization/types": [
         "libs/organization/src/lib/organization/+state/organization.firestore.ts"
