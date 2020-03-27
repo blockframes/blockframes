@@ -25,7 +25,7 @@ import { PaymentScheduleRaw } from '@blockframes/utils/common-interfaces';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewInit {
-  @Input() form: FormList<any, ContractVersionForm>;
+  @Input() form: ContractVersionForm;
 
   // concated enums
   public triggerEvents = Object.assign({}, movieEvent, paymentEvent);
@@ -72,7 +72,7 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
       )
       .subscribe();
     // If we got data from the DB, convert it into date
-    this.form.at(0).get('paymentSchedule').controls.forEach(control => {
+    this.form.get('paymentSchedule').controls.forEach(control => {
       const start = control.get('date').get('start');
       start.setValue(toDate(start.value));
     })
@@ -117,15 +117,15 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   get paymentTermFloatingStart() {
-    return this.form.at(0).get('paymentTerm').get('floatingStart');
+    return this.form.get('paymentTerm').get('floatingStart');
   }
 
   get customPaymentSchedule() {
-    return this.form.at(0).get('customPaymentSchedule');
+    return this.form.get('customPaymentSchedule');
   }
 
   get paymentSchedule() {
-    return this.form.at(0).get('paymentSchedule');
+    return this.form.get('paymentSchedule');
   }
 
   /**
@@ -199,7 +199,7 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
     this.disableAll();
     this.activateFirstDuration()
     this.paymentSchedule.reset();
-    this.form.at(0).get('customPaymentSchedule').reset();
+    this.form.get('customPaymentSchedule').reset();
     if (fromResetButton) {
       this.radioCtrl.reset();
     }
@@ -290,7 +290,7 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
    * @param form 
    */
   private setRadioButton() {
-    if (this.form.at(0).get('customPaymentSchedule').value) {
+    if (this.form.get('customPaymentSchedule').value) {
       this.radioCtrl.setValue('other');
       return 'other';
     } else if (this.hasTemporallyValue) {

@@ -43,8 +43,8 @@ export class SummarySaleComponent implements OnInit {
     this.movies$ = this.tunnel.movies$;
     this.dealForms = this.tunnel.dealForms;
     this.form = this.tunnel.contractForm;
-    // @TODO #1887 why not add lastVersion to form ?
-    const lastVersion = this.form.get('historizedVersions').last();
+
+    const lastVersion = this.form.get('lastVersion');
 
     this.parties = {
       licensee: this.getParties('licensee'),

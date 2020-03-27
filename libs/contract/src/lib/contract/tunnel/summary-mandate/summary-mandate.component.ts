@@ -21,7 +21,7 @@ import { DistributionDealService } from '@blockframes/distribution-deals/+state'
 export class SummaryMandateComponent implements OnInit {
 
   public movies$: Observable<Movie[]>;
-  public version: ContractVersionForm;
+  public lastVersionForm: ContractVersionForm;
   public dealForms: FormEntity<DealControls>;
   public form: ContractForm;
   public parties: { licensee: FormControl[], licensor: { subRole: FormControl, displayName: FormControl }[] };
@@ -44,8 +44,8 @@ export class SummaryMandateComponent implements OnInit {
     this.movies$ = this.tunnel.movies$;
     this.dealForms = this.tunnel.dealForms;
     this.form = this.tunnel.contractForm;
-    // @TODO #1887 why not add lastVersion to form ?
-    this.version = this.form.get('historizedVersions').last();
+
+    this.lastVersionForm = this.form.get('lastVersion');
     // Parties
     this.parties = { licensee: [], licensor: [] };
     for (const party of this.form.get('parties').controls) {
@@ -59,12 +59,12 @@ export class SummaryMandateComponent implements OnInit {
       }
     }
 
-    this.terms = displayTerms(this.version.get('scope').value);
-    this.price = this.version.get('price').controls;
+    this.terms = displayTerms(this.lastVersionForm.get('scope').value);
+    this.price = this.lastVersionForm.get('price').controls;
     this.currency = this.price.currency.value;
 
     // Distribution fees
-    const { price, titles } = this.version.value;
+    const { price, titles } = this.lastVersionForm.value;
     for (const movieId in titles) {
       if (price.commission && titles[movieId].price.commissionBase) {
         // Common Distribution Fee
@@ -80,7 +80,7 @@ export class SummaryMandateComponent implements OnInit {
       }
     }
 
-    this.payments = displayPaymentSchedule(this.version.value);
+    this.payments = displayPaymentSchedule(this.lastVersionForm.value);
   }
 
   /**

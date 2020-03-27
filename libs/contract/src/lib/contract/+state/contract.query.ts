@@ -30,7 +30,7 @@ export class ContractQuery extends QueryEntity<ContractState> {
   /**
    * @dev Listens to all historized versions of the contract except the current version
    */
-  public oldVersionsView$ = this.selectActive().pipe(
+  public historizedVersionsView$ = this.selectActive().pipe(
     filter(contract => !!contract),
     map(contract => contract.historizedVersions.filter((_, i) => i !== contract.lastVersion.id)),
     map(versions => versions.map(getVersionView))

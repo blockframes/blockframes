@@ -20,7 +20,7 @@ export class NegociationComponent {
   licensees = this.query.getActiveParties('licensee');
   subLicensors$ = this.query.subLicensors$;
 
-  oldVersions$ = this.query.oldVersionsView$;
+  historizedVersionsView$ = this.query.historizedVersionsView$;
 
   constructor(private query: ContractQuery, private movieQuery: MovieQuery, private intercom: Intercom) { }
 

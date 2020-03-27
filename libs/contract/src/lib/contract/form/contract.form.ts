@@ -90,7 +90,7 @@ function createContractControls(contract: Partial<Contract> = {}) {
     parties: FormList.factory(entity.parties, partyDetails => new PartyDetailsForm(partyDetails)),
     documents: new LegalDocumentsForm(entity.documents),
     titleIds: FormList.factory(contract.titleIds),
-    historizedVersions: FormList.factory(entity.historizedVersions, version => new ContractVersionForm(version))
+    lastVersion: new ContractVersionForm(entity.lastVersion)
   };
 }
 

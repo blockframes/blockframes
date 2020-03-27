@@ -90,9 +90,8 @@ export class ContractTunnelComponent implements OnInit {
       this.dealForms.setControl(movieId, FormList.factory(deals, deal => new DistributionDealForm(deal)));
     });
 
-
     // Listen on the changes of the titles from the contract form
-    const titlesForm = this.contractForm.get('historizedVersions').last().get('titles');
+    const titlesForm = this.contractForm.get('lastVersion').get('titles');
     this.movies$ = titlesForm.valueChanges.pipe(
       startWith(titlesForm.value),
       map(titles => Object.keys(titles)),
@@ -120,10 +119,8 @@ export class ContractTunnelComponent implements OnInit {
 
   /** Add a title to this contract */
   addTitle(movieId: string, mandate?: boolean) {
-    // @TODO (#1887) should not get last version
     this.contractForm
-      .get('historizedVersions')
-      .last()
+      .get('lastVersion')
       .get('titles')
       .setControl(movieId, new ContractTitleDetailForm(mandate ? { price: { amount: 0 } } : {}));
     this.dealForms.setControl(movieId, FormList.factory([], deal => new DistributionDealForm(deal)));
@@ -131,7 +128,7 @@ export class ContractTunnelComponent implements OnInit {
 
   /** Remove a title to this contract */
   removeTitle(movieId: string, isExploitRight?: boolean) {
-    this.contractForm.get('historizedVersions').last().get('titles').removeControl(movieId);
+    this.contractForm.get('lastVersion').get('titles').removeControl(movieId);
     const deals = this.dealForms.get(movieId).value;
     // start from the end to remove to avoid shift effects
     for (let i = deals.length - 1; i >= 0; i--) {
@@ -180,7 +177,7 @@ export class ContractTunnelComponent implements OnInit {
         } else {
           const id = await this.dealService.add({ contractId, ...deal }, { params: { movieId }, write });
           this.dealForms.get(movieId).at(i).patchValue({ id });
-          this.contractForm.get('historizedVersions').last().get('titles').get(movieId).get('distributionDealIds').add(id);
+          this.contractForm.get('lastVersion').get('titles').get(movieId).get('distributionDealIds').add(id);
         }
       })
     }
@@ -197,12 +194,6 @@ export class ContractTunnelComponent implements OnInit {
       ...this.query.getActive(),
       ...this.contractForm.value
     });
-
-    // @todo (#1887) don't use last index (update contract form)
-    const lastIndex = contract.historizedVersions.length - 1;
-    const version = createContractVersion({ ...contract.historizedVersions[lastIndex] });
-    contract.lastVersion = version;
-
 
     // Update Contract
     this.contractService.update(contract, { write });

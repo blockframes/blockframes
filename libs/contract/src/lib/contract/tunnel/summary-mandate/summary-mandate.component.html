@@ -4,7 +4,6 @@
   <p description class="mat-body-1">
     Please verify that all the information you have entered is correct before submitting you contract offer.
   </p>
-
   <ng-container tunnel-form>
 
     <!-- Cntract Details -->
@@ -33,10 +32,10 @@
           <li *ngIf="terms">
             <strong>Terms: </strong> {{ terms }}
           </li>
-          <li *ngIf="version.get('renewalConditions').value as condition">
+          <li *ngIf="lastVersionForm.get('renewalConditions').value as condition">
             <strong>Renewal Conditions: </strong> {{ condition }}
           </li>
-          <li *ngIf="version.get('terminationConditions').value as condition">
+          <li *ngIf="lastVersionForm.get('terminationConditions').value as condition">
             <strong>Contract Termination Conditions: </strong> {{ condition }}
           </li>
 
@@ -53,7 +52,7 @@
           </li>
 
           <!-- Fees -->
-          <ng-container *ngIf="version.get('authorizedRecoupableExpenses').value as fee" >
+          <ng-container *ngIf="lastVersionForm.get('authorizedRecoupableExpenses').value as fee" >
             <h5>Fees</h5>
             <li>
               <strong>Recoupable expenses: </strong> {{ fee }}

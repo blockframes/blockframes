@@ -14,49 +14,47 @@
       </mat-card-content>
     </mat-card>
     <!-- Terms -->
-    <ng-container *ngFor="let control of historizedVersions.controls; let versionIndex = index">
-      <mat-card>
-        <mat-card-header>
-          <mat-card-title>
-            Terms
-          </mat-card-title>
-          <mat-card-subtitle>
-            You can either enter specific term dates or opt for a period triggered by an event
-          </mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-content>
-          <distribution-form-terms [form]="terms(versionIndex)"></distribution-form-terms>
-        </mat-card-content>
-      </mat-card>
-      <!-- Price -->
-      <mat-card>
-        <mat-card-header>
-          <mat-card-title>
-            Title Selection & Price
-          </mat-card-title>
-          <mat-card-subtitle>
-            You may choose to put a price for the entire package or one for each title.
-          </mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-content>
-          <contract-version-form-price [form]="historizedVersions"></contract-version-form-price>
-        </mat-card-content>
-      </mat-card>
-      <!-- Payment Schedules -->
-      <mat-card>
-        <mat-card-header>
-          <mat-card-title>
-            Payment Schedules
-          </mat-card-title>
-          <mat-card-subtitle>
-            Please choose the payment schedules most adapted to your needs.
-            Pay attention, percentage is always the percentage of total amount
-          </mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-content> <!-- @TODO #1887 a quel moment se fait le save de la version ? pkoi pas utilsier directement .lastVersion ?-->
-          <contract-version-form-schedule [form]="historizedVersions"></contract-version-form-schedule>
-        </mat-card-content>
-      </mat-card>
-    </ng-container>
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>
+          Terms
+        </mat-card-title>
+        <mat-card-subtitle>
+          You can either enter specific term dates or opt for a period triggered by an event
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <distribution-form-terms [form]="terms()"></distribution-form-terms>
+      </mat-card-content>
+    </mat-card>
+    <!-- Price -->
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>
+          Title Selection & Price
+        </mat-card-title>
+        <mat-card-subtitle>
+          You may choose to put a price for the entire package or one for each title.
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <contract-version-form-price [form]="lastVersion"></contract-version-form-price>
+      </mat-card-content>
+    </mat-card>
+    <!-- Payment Schedules -->
+    <mat-card>
+      <mat-card-header>
+        <mat-card-title>
+          Payment Schedules
+        </mat-card-title>
+        <mat-card-subtitle>
+          Please choose the payment schedules most adapted to your needs.
+          Pay attention, percentage is always the percentage of total amount
+        </mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content> <!-- @TODO #1887 a quel moment se fait le save de la version ? pkoi pas utilsier directement .lastVersion ?-->
+        <contract-version-form-schedule [form]="lastVersion"></contract-version-form-schedule>
+      </mat-card-content>
+    </mat-card>
   </ng-container>
 </tunnel-page>
