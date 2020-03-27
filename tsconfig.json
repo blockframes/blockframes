@@ -45,7 +45,6 @@
         "libs/notification/src/lib/notification/+state/notification.firestore.ts"
       ],
       "@blockframes/notification/*": ["libs/notification/src/lib/*"],
-      "@blockframes/contract": ["libs/contract/src/index.ts"],
       "@blockframes/contract/*": ["libs/contract/src/lib/*"],
       "@blockframes/financial-report": ["libs/financial-report/src/index.ts"],
       "@blockframes/financial-report/*": ["libs/financial-report/src/lib/*"],

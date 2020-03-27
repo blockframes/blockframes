@@ -1,8 +1,8 @@
 import { getContractLastVersion } from '@blockframes/contract/version/+state/contract-version.model';
 import { Router, ActivatedRouteSnapshot, CanActivate } from '@angular/router';
 import { Injectable } from '@angular/core';
-import { ContractQuery } from '@blockframes/contract';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { ContractQuery } from '@blockframes/contract/contract/+state/contract.query';
 
 @Injectable({ providedIn: 'root' })
 export class CatalogContractGuard implements CanActivate {
