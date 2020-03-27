@@ -81,12 +81,12 @@ async function checkAndTriggerNotifications(current: ContractDocument) {
     if (contractSubmitted) { // Contract is submitted by organization to Archipel Content
       // @TODO (#1887) crashes if partyIds is empty
       // TODO (#1999): Find real creator
-      const { id, denomination } = await getDocument<PublicOrganization>(`orgs/${current.partyIds[0]}`);
+      const { id, denomination, logo } = await getDocument<PublicOrganization>(`orgs/${current.partyIds[0]}`);
       const archipelContent = await getDocument<OrganizationDocument>(`orgs/${centralOrgID}`);
       const notifications = archipelContent.userIds.map(
         userId => createNotification({
           userId,
-          organization: { id, denomination }, // TODO (#1999): Add the logo to display if orgs collection is not public to Archipel Content
+          organization: { id, denomination, logo }, // TODO (#1999): Add the logo to display if orgs collection is not public to Archipel Content
           type: 'newContract',
           docId: current.id,
           app: 'biggerBoat'

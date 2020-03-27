@@ -24,7 +24,7 @@ export class InvitationService extends CollectionService<InvitationState> {
     const { uid, name, surname, email } = this.authQuery.user;
     const invitation = createInvitationFromUserToOrganization({
       id: this.db.createId(),
-      organization: {id: organization.id, denomination: {full: organization.denomination.full}},
+      organization: {id: organization.id, denomination: {full: organization.denomination.full}, logo: organization.logo},
       user: { uid, name, surname, email }
     });
     return this.add(invitation);
@@ -43,7 +43,7 @@ export class InvitationService extends CollectionService<InvitationState> {
     const invitations = users.map(user => {
       return createInvitationFromOrganizationToUser({
         id: this.db.createId(),
-        organization: { id: organization.id, denomination: {full: organization.denomination.full} },
+        organization: { id: organization.id, denomination: {full: organization.denomination.full}, logo: organization.logo },
         user: { uid: user.uid, email: user.email }
       });
     });
@@ -52,10 +52,10 @@ export class InvitationService extends CollectionService<InvitationState> {
   }
 
   /** Create an Invitation when an Organization is invited to work on a document. */
-  public sendDocumentInvitationToOrg({id, denomination}: PublicOrganization, docId: string) {
+  public sendDocumentInvitationToOrg({id, denomination, logo}: PublicOrganization, docId: string) {
     const invitation = createInvitationToDocument({
       id: this.db.createId(),
-      organization: {id, denomination},
+      organization: {id, denomination, logo},
       docId
     });
     return this.add(invitation);

@@ -61,6 +61,7 @@ export class MarketplaceSelectionComponent {
     const parties: Contract['parties'] = [
       createContractPartyDetail({
         party: createParty({ role: 'licensee', orgId: org.id, displayName: org.denomination.full }),
+        // TODO #2311 DisplayName has to be define in a guard !
       }),
       createContractPartyDetail({ party: createParty({ role: 'licensor' }) })
     ];

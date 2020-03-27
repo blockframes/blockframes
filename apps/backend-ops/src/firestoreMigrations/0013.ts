@@ -11,17 +11,19 @@ export async function upgrade(db: Firestore) {
     const organizationData = orgDocSnapshot.data();
     const { name } = organizationData;
 
-    delete organizationData.name;
+    if (organizationData.name) {
+      delete organizationData.name;
 
-    const newData = {
-      ...organizationData,
-      denomination: {
-        full: name,
-        public: name
-      },
-    };
+      const newData = {
+        ...organizationData,
+        denomination: {
+          full: name,
+          public: name
+        },
+      };
 
-    return orgDocSnapshot.ref.set(newData);
+      return orgDocSnapshot.ref.set(newData);
+    }
   });
 
   await Promise.all(newOrgData);

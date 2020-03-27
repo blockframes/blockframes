@@ -74,6 +74,7 @@ export const PLACEHOLDER_LOGO = '/assets/logo/empty_organization.webp';
 export interface PublicOrganization {
   id: string;
   denomination: Denomination;
+  logo: ImgRef;
 }
 
 /** A factory function that creates an OrganizationDocument. */
@@ -94,23 +95,23 @@ export function createOrganizationRaw(
 ): OrganizationRaw<Timestamp | Date> {
   return {
     id: !!params.id ? params.id : '',
-    denomination: createDenomination(),
+    activity: '',
+    bankAccounts: [],
+    cart: [],
+    created: new Date(),
     description: '',
     email: '',
     fiscalNumber: '',
-    activity: '',
-    addresses: createAddressSet(),
-    status: 'pending',
-    userIds: [],
-    movieIds: [],
-    created: new Date(),
-    updated: new Date(),
-    logo: createImgRef(),
-    wishlist: [],
-    cart: [],
     isBlockchainEnabled: false,
-    bankAccounts: [],
-    ...params
+    movieIds: [],
+    status: 'pending',
+    updated: new Date(),
+    userIds: [],
+    wishlist: [],
+    ...params,
+    addresses: createAddressSet(params.addresses),
+    denomination: createDenomination(params.denomination),
+    logo: createImgRef(params.logo),
   };
 }
 

@@ -27,7 +27,8 @@ function notifUser(userId: string, notificationType: NotificationType, org: Orga
     },
     organization: {
       id: org.id,
-      denomination: org.denomination
+      denomination: org.denomination,
+      logo: org.logo,
     },
     app: 'blockframes'
   });
@@ -104,13 +105,13 @@ export async function onOrganizationUpdate(
   const before = change.before.data() as OrganizationDocument;
   const after = change.after.data() as OrganizationDocument;
 
-  if (!before || !after || !after.denomination) {
+  if (!before || !after || !after.denomination.full) {
     console.error('Invalid org data, before:', before, 'after:', after);
     throw new Error('organization update function got invalid org data');
   }
 
   // Update algolia's index
-  if (before.denomination !== after.denomination) {
+  if (before.denomination.full !== after.denomination.full) {
     throw new Error('Organization name cannot be changed !'); // this will require to change the org ENS name, for now we throw to prevent silent bug
   }
 
