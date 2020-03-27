@@ -9,8 +9,15 @@ export type EntityControl<E = any> = {
 
 /** Generic FormGroup for Entity */
 export class FormEntity<C extends EntityControl<T>, T = any> extends FormGroup {
-  static factory<T, C extends EntityControl = any>(value: Partial<T>,
-    createControl?: (value?: Partial<T>) => C, validators?: Validator): FormEntity<C, T> {
+  value: T;
+  valueChanges: Observable<T>;
+  controls: C;
+
+  createControl?: (value?: Partial<T>) => C
+  static factory<E, Control extends EntityControl = any>(
+    value: Partial<T>,
+    createControl?: (value?: Partial<E>) => Control, validators?: Validator
+  ): FormEntity<Control, E> {
     const form = new FormEntity<C, T>({}, validators);
     if (createControl) {
       form['createControl'] = createControl.bind(form);
@@ -18,11 +25,9 @@ export class FormEntity<C extends EntityControl<T>, T = any> extends FormGroup {
     form.patchAllValue(value)
     return form;
   }
-  value: T;
-  valueChanges: Observable<T>;
-  controls: C;
 
-  createControl: (value?: Partial<T>) => C;
+
+
 
   get<K extends keyof C>(path: Extract<K, string>): C[K] {
     return super.get(path) as C[K];
