@@ -41,17 +41,6 @@ const steps: TunnelStep[] = [{
     label: 'Files & Links'
   }]
 }, {
-  title: 'Legal Information',
-  icon: 'certificate',
-  time: 5,
-  routes: [{
-    path: 'chain',
-    label: 'Chain of Titles'
-  }, {
-    path: 'evaluation',
-    label: 'Marketplace Eval.'
-  }]
-}, {
   title: 'Summary',
   icon: 'document',
   routes: [{
@@ -61,7 +50,7 @@ const steps: TunnelStep[] = [{
 }];
 
 @Component({
-  selector: 'catalog-movie-tunnel',
+  selector: 'festival-movie-tunnel',
   templateUrl: './movie-tunnel.component.html',
   styleUrls: ['./movie-tunnel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -81,7 +70,7 @@ export class MovieTunnelComponent implements TunnelRoot, OnInit {
   ) { }
 
   async ngOnInit() {
-    this.exitRoute = `../../../titles/${this.query.getActiveId()}`;
+    this.exitRoute = `../../../title/${this.query.getActiveId()}`;
   }
 
   // Should save movie

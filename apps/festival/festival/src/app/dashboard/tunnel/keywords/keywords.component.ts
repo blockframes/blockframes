@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MovieTunnelComponent } from '../movie-tunnel.component';
 
 @Component({
-  selector: 'catalog-tunnel-keywords',
+  selector: 'festival-tunnel-keywords',
   templateUrl: './keywords.component.html',
   styleUrls: ['./keywords.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -19,4 +19,4 @@ import { ReactiveFormsModule } from '@angular/forms';
     declarations: [KeywordsComponent],
     exports: [KeywordsComponent]
 })
-export class MovieFormKeywordsComponent { }
+export class MovieFormKeywordsModule { }

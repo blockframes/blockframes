@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 @Component({
-  selector: 'catalog-end-tunnel',
+  selector: 'festival-end-tunnel',
   templateUrl: './end.component.html',
   styleUrls: ['./end.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

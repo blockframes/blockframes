@@ -1,7 +1,7 @@
 import { OrganizationQuery } from '@blockframes/organization/organization/+state/organization.query';
 import { OrganizationService } from '@blockframes/organization/organization/+state/organization.service';
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { MovieService, createMovie } from '@blockframes/movie';
+import { MovieService, createMovie } from '@blockframes/movie/+state';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TunnelService } from '@blockframes/ui/tunnel';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
@@ -22,7 +22,7 @@ const cardContents = [
 ];
 
 @Component({
-  selector: 'catalog-start-tunnel',
+  selector: 'festival-start-tunnel',
   templateUrl: './start-tunnel.component.html',
   styleUrls: ['./start-tunnel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

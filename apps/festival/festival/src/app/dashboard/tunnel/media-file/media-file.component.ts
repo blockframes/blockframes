@@ -3,7 +3,7 @@ import { ImgRef } from "@blockframes/utils/image-uploader";
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { MovieTunnelComponent } from '../movie-tunnel.component';
 @Component({
-  selector: 'catalog-movie-tunnel-media-file',
+  selector: 'festival-movie-tunnel-media-file',
   templateUrl: './media-file.component.html',
   styleUrls: ['./media-file.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
