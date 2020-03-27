@@ -1,3 +1,4 @@
+import { DynamicTitleService } from '@blockframes/utils';
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
 import { Observable, Subscription } from 'rxjs';
@@ -10,19 +11,23 @@ import { MovieService } from '@blockframes/movie/movie/+state/movie.service';
   styleUrls: ['./home.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class HomeComponent implements OnInit,OnDestroy {
+export class HomeComponent implements OnInit, OnDestroy {
   public movieAnalytics$: Observable<MovieAnalytics[]>;
   public movies$ = this.movieQuery.selectAll();
   private sub: Subscription;
 
   constructor(
     private movieQuery: MovieQuery,
-    private movieService: MovieService
-  ) {}
+    private movieService: MovieService,
+    private dynTitle: DynamicTitleService
+  ) { }
 
   ngOnInit() {
     this.sub = this.movieService.syncAnalytics({ filterBy: movie => movie.main.storeConfig.status === 'accepted' }).subscribe();
     this.movieAnalytics$ = this.movieQuery.analytics.selectAll();
+    this.movieQuery.getCount()
+      ? this.dynTitle.setPageTitle('Seller\'s Dashboard')
+      : this.dynTitle.setPageTitle('New Title')
   }
 
   ngOnDestroy() {

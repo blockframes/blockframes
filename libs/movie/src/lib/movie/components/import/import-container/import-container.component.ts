@@ -1,6 +1,7 @@
 import { Component, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ViewExtractedElementsComponent } from '../view-extracted-elements/view-extracted-elements.component';
 import { SpreadsheetImportEvent } from '../import-spreadsheet/import-spreadsheet.component';
+import { DynamicTitleService } from '@blockframes/utils';
 
 @Component({
   selector: 'movie-import-container',
@@ -15,7 +16,9 @@ export class ImportContainerComponent {
   public importedFiles = false;
   public start = true;
 
-  constructor(private cdRef: ChangeDetectorRef) { }
+  constructor(private cdRef: ChangeDetectorRef, private dynTitle: DynamicTitleService) {
+    this.dynTitle.setPageTitle('Submit your titles')
+   }
 
   async next(importEvent: SpreadsheetImportEvent) {
     this.start = false;

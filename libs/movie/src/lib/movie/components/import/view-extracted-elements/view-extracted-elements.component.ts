@@ -24,7 +24,7 @@ import {
 } from '../../../+state';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
 import { formatCredits } from '@blockframes/utils/spreadsheet/format';
-import { ImageUploader, cleanModel, getKeyIfExists } from '@blockframes/utils';
+import { ImageUploader, cleanModel, getKeyIfExists, DynamicTitleService } from '@blockframes/utils';
 import { getCodeIfExists, ExtractCode } from '@blockframes/utils/static-model/staticModels';
 import { SSF } from 'xlsx';
 import { 
@@ -211,7 +211,10 @@ export class ViewExtractedElementsComponent implements OnInit {
     private cdRef: ChangeDetectorRef,
     private intercom: Intercom,
     private authService: AuthService,
-  ) { }
+    private dynTitle: DynamicTitleService
+  ) { 
+    this.dynTitle.setPageTitle('Submit your titles')
+  }
 
   async ngOnInit() {
     this.isUserBlockframesAdmin = await this.authService.isBlockframesAdmin();

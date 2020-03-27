@@ -3,7 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Wishlist } from '@blockframes/organization';
 import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
+import { DynamicTitleService } from '@blockframes/utils';
 
 @Component({
   selector: 'catalog-wishlist-view',
@@ -15,12 +16,16 @@ export class WishlistViewComponent implements OnInit {
   public currentWishlist$: Observable<Wishlist>;
 
   constructor(
-    private catalogCartQuery: CatalogCartQuery
-  ) {}
+    private catalogCartQuery: CatalogCartQuery,
+    private dynTitle: DynamicTitleService
+  ) { }
 
   ngOnInit() {
     this.currentWishlist$ = this.catalogCartQuery.wishlistWithMovies$.pipe(
-      map(wishlist => wishlist.find(wish => wish.status === 'pending'))
+      map(wishlist => wishlist.find(wish => wish.status === 'pending')),
+      tap(wishlist => wishlist.movies.length
+        ? this.dynTitle.setPageTitle('Wishlist')
+        : this.dynTitle.setPageTitle('No titles in wishlist'))
     );
   }
 }

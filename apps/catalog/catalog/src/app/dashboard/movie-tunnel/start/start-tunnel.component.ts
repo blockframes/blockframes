@@ -5,6 +5,7 @@ import { MovieService, createMovie } from '@blockframes/movie';
 import { Router, ActivatedRoute } from '@angular/router';
 import { AuthQuery } from '@blockframes/auth';
 import { TunnelService } from '@blockframes/ui/tunnel';
+import { DynamicTitleService } from '@blockframes/utils';
 
 const cardContents = [
   {
@@ -40,8 +41,11 @@ export class StartTunnelComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute,
     private orgService: OrganizationService,
-    private orgQuery: OrganizationQuery
-  ) { }
+    private orgQuery: OrganizationQuery,
+    private dynTitle: DynamicTitleService
+  ) {
+    this.dynTitle.setPageTitle('Add a title')
+  }
 
   ngOnInit() {
     this.routeBeforeTunnel = this.tunnelService.previousUrl || '../../';

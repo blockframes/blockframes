@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MovieTunnelComponent } from '../movie-tunnel.component';
+import { DynamicTitleService } from '@blockframes/utils';
 
 @Component({
   selector: 'catalog-movie-tunnel-credits',
@@ -10,7 +11,9 @@ import { MovieTunnelComponent } from '../movie-tunnel.component';
 export class CreditsComponent {
   form = this.tunnel.form;
 
-  constructor(private tunnel: MovieTunnelComponent) { }
+  constructor(private tunnel: MovieTunnelComponent, private dynTitle: DynamicTitleService) {
+    this.dynTitle.setPageTitle('Credits', 'Title information')
+  }
 
   get main() {
     return this.form.get('main');

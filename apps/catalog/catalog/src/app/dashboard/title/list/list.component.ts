@@ -13,7 +13,8 @@ import { Contract } from '@blockframes/contract/contract/+state/contract.model';
 import { StoreStatus, MovieAnalytics } from '@blockframes/movie/movie/+state/movie.firestore';
 import { ContractQuery } from '@blockframes/contract/contract/+state/contract.query';
 import { getContractLastVersion } from '@blockframes/contract/version/+state';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, NavigationEnd } from '@angular/router';
+import { DynamicTitleService } from '@blockframes/utils';
 
 interface TitleView {
   id: string; // movieId
@@ -70,8 +71,9 @@ export class TitleListComponent implements OnInit, OnDestroy {
     private contractQuery: ContractQuery,
     private service: MovieService,
     private router: Router,
-    private route: ActivatedRoute
-  ) {}
+    private route: ActivatedRoute,
+    private dynTitle: DynamicTitleService
+  ) { }
 
   ngOnInit() {
     this.sub = this.service.syncAnalytics().subscribe();
@@ -91,11 +93,22 @@ export class TitleListComponent implements OnInit, OnDestroy {
         movies.map(movie => createTitleView(movie, contracts, analytics))
       )
     );
+    this.query.getCount()
+      ? this.dynTitle.setPageTitle('My titles')
+      : this.dynTitle.setPageTitle('No titles')
   }
 
   /** Dynamic filter of movies for each tab. */
   applyFilter(filter?: Movie['main']['storeConfig']['storeType']) {
     this.filter.setValue(filter);
+    filter === 'library'
+      ? this.dynTitle.setPageTitle('Library titles')
+      : this.dynTitle.setPageTitle('Line-up titles')
+  }
+
+  public resetFilter() {
+    this.filter.reset();
+    this.dynTitle.useDefault();
   }
 
   /** Navigate to tunnel if status is draft, else go to page */
