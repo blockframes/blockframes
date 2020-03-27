@@ -1,10 +1,11 @@
 import { OrganizationQuery } from '@blockframes/organization/organization/+state/organization.query';
 import { OrganizationService } from '@blockframes/organization/organization/+state/organization.service';
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { MovieService, createMovie } from '@blockframes/movie';
 import { Router, ActivatedRoute } from '@angular/router';
-import { TunnelService } from '@blockframes/ui/tunnel';
+import { TunnelService } from '@blockframes/ui/tunnel/tunnel.service';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { createMovie } from '@blockframes/movie/+state/movie.model';
 
 const cardContents = [
   {

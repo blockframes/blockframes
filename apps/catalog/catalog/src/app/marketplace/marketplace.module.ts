@@ -2,13 +2,14 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { CatalogCartGuard } from '@blockframes/organization/cart/guards/catalog-cart-list.guard';
-import { MovieActiveGuard } from '@blockframes/movie';
+import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 import { LayoutComponent } from './layout/layout.component';
 import { LayoutModule } from './layout/layout.module';
 import { TunnelGuard } from '@blockframes/ui/tunnel';
-import { ActiveContractGuard, OrganizationContractListGuard } from '@blockframes/contract';
 import { ContractsDealListGuard } from '@blockframes/distribution-deals/guards/contracts-deal-list.guard';
 import { MovieListContractListGuard } from '@blockframes/movie/guards/movie-contract.guard';
+import { OrganizationContractListGuard } from '@blockframes/contract/contract/guards/organization-contract-list.guard';
+import { ActiveContractGuard } from '@blockframes/contract/contract/guards/active-contract.guard';
 
 const routes: Routes = [{
   path: '',

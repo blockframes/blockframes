@@ -3,7 +3,7 @@ import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire
 import { switchMap, filter, tap, map } from 'rxjs/operators';
 import { createMovie, Movie, MovieAnalytics, SyncMovieAnalyticsOptions } from './movie.model';
 import { MovieState, MovieStore } from './movie.store';
-import { UserService } from '@blockframes/user';
+import { UserService } from '@blockframes/user/+state/user.service';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 import { cleanModel } from '@blockframes/utils/helpers';
 import { firestore } from 'firebase/app';

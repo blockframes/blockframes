@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 
 // Routes
 import { RouterModule, Routes } from '@angular/router';
-import { MovieActiveGuard } from '@blockframes/movie';
+import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 import { MarketplaceComponent } from './marketplace.component';
 
 import { ImgAssetModule } from '@blockframes/ui/theme';

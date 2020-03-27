@@ -1,7 +1,8 @@
 import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { getValue } from '@blockframes/utils/helpers';
-import { DistributionDealService, DistributionDealWithMovieId, createDistributionDealWithMovieId } from '@blockframes/distribution-deals';
 import { ActivatedRoute } from '@angular/router';
+import { DistributionDealService } from '@blockframes/distribution-deals/+state/distribution-deal.service';
+import { DistributionDealWithMovieId, createDistributionDealWithMovieId } from '@blockframes/distribution-deals/+state/distribution-deal.model';
 
 @Component({
   selector: 'admin-distribution-deals',

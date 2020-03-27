@@ -1,11 +1,11 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
-import { MovieQuery } from '@blockframes/movie';
+import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { Observable } from 'rxjs';
-import { OrganizationQuery } from '@blockframes/organization';
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
 import { map } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
+import { OrganizationQuery } from '@blockframes/organization/organization/+state/organization.query';
 
 @Component({
   selector: '[movieId] catalog-wishlist-button',

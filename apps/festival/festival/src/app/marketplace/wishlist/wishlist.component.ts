@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Movie } from '@blockframes/movie';
+import { Movie } from '@blockframes/movie/+state/movie.model';
 import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
 import { map, filter } from 'rxjs/operators';

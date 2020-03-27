@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ContractForm } from '../../form/contract.form';
-import { Movie } from '@blockframes/movie';
+import { Movie } from '@blockframes/movie/+state/movie.model';
 import { ContractTunnelComponent, DealControls } from '../contract-tunnel.component';
 import { Observable } from 'rxjs';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';

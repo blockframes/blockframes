@@ -1,19 +1,15 @@
 import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import {
-  Movie,
-  MovieQuery,
-  MovieService,
-  getMovieReceipt,
-  getMovieTotalViews
-} from '@blockframes/movie';
-import { startWith, switchMap, map, distinctUntilChanged } from 'rxjs/operators';
+import { startWith, switchMap, map } from 'rxjs/operators';
 import { Observable, combineLatest, Subscription } from 'rxjs';
 import { Contract } from '@blockframes/contract/contract/+state/contract.model';
 import { StoreStatus, MovieAnalytics } from '@blockframes/movie/+state/movie.firestore';
 import { ContractQuery } from '@blockframes/contract/contract/+state/contract.query';
 import { getContractLastVersion } from '@blockframes/contract/version/+state';
 import { Router, ActivatedRoute } from '@angular/router';
+import { Movie, getMovieTotalViews, getMovieReceipt } from '@blockframes/movie/+state/movie.model';
+import { MovieQuery } from '@blockframes/movie/+state/movie.query';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 
 interface TitleView {
   id: string; // movieId

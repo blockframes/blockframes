@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { OrganizationService } from '@blockframes/organization';
 import { ActivatedRoute } from '@angular/router';
 import { pluck, switchMap } from 'rxjs/operators';
+import { OrganizationService } from '@blockframes/organization/organization/+state/organization.service';
 
 const navLinks = [{
   path: 'titles',

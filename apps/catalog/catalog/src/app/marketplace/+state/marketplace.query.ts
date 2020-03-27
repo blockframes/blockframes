@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { QueryEntity } from '@datorama/akita';
-import { MovieQuery, Movie } from '@blockframes/movie';
 import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { MarketplaceState, MarketplaceStore } from './marketplace.store';
+import { MovieQuery } from '@blockframes/movie/+state/movie.query';
+import { Movie } from '@blockframes/movie/+state/movie.model';
 
 @Injectable({ providedIn: 'root' })
 export class MarketplaceQuery extends QueryEntity<MarketplaceState> {

@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { MovieQuery, Movie } from '@blockframes/movie';
 import { ExtractCode, getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
+import { MovieQuery } from '@blockframes/movie/+state/movie.query';
+import { Movie } from '@blockframes/movie/+state/movie.model';
 
 const promoLinks = [
   'promo_reel_link', 'scenario', 'screener_link', 'teaser_link', 'presentation_deck', 'trailer_link'

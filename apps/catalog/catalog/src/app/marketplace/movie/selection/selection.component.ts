@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, HostBinding, Optional } from '@angular/core';
 import { Router } from '@angular/router';
 import { MarketplaceQuery, MarketplaceStore } from '../../+state';
-import { MovieQuery } from '@blockframes/movie';
+import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import {
   ContractService,
   Contract,
@@ -11,10 +11,10 @@ import {
 import { ContractVersion } from '@blockframes/contract/version/+state';
 import { createParty } from '@blockframes/utils/common-interfaces';
 import { Observable } from 'rxjs';
-import { OrganizationQuery } from '@blockframes/organization';
-import { DistributionDealService } from '@blockframes/distribution-deals';
+import { DistributionDealService } from '@blockframes/distribution-deals/+state/distribution-deal.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Intercom } from 'ng-intercom';
+import { OrganizationQuery } from '@blockframes/organization/organization/+state/organization.query';
 
 @Component({
   selector: 'catalog-selection',

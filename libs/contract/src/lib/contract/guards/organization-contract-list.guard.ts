@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { CollectionGuard, CollectionGuardConfig, awaitSyncQuery, Query } from 'akita-ng-fire';
-import { ContractService, ContractState, ContractStore, ContractWithTimeStamp, ContractType } from '../+state';
-import { OrganizationQuery } from '@blockframes/organization';
+import { ContractService, ContractState, ContractStore, ContractWithTimeStamp } from '../+state';
 import { tap, switchMap } from 'rxjs/operators';
+import { OrganizationQuery } from '@blockframes/organization/organization/+state/organization.query';
 
 /**
  * @todo(#1887) Don't import all versions

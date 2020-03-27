@@ -21,19 +21,15 @@
       "@blockframes/auth/types": ["libs/user/src/lib/auth/+state/auth.firestore.ts"],
       "@blockframes/ui/*": ["libs/ui/src/lib/*"],
       "@blockframes/utils/*": ["libs/utils/src/lib/*"],
-      "@blockframes/movie": ["libs/movie/src/index.ts"],
       "@blockframes/movie/*": ["libs/movie/src/lib/movie/*"],
       "@blockframes/movie/import": [
         "libs/movie/src/lib/movie/components/import/import-movie.module.ts"
       ],
       "@blockframes/movie/types": ["libs/movie/src/lib/movie/+state/movie.firestore.ts"],
-      "@blockframes/distribution-deals": ["libs/movie/src/lib/distribution-deals/index.ts"],
       "@blockframes/distribution-deals/*": ["libs/movie/src/lib/distribution-deals/*"],
-      "@blockframes/ethers": ["libs/ethers/src/index.ts"],
       "@blockframes/ethers/*": ["libs/ethers/src/lib/*"],
       "@blockframes/smart-contracts/*": ["smart-contracts/build/*"],
       "@blockframes/smart-contracts/quorum/*": ["smart-contracts/quorum/*"],
-      "@blockframes/organization": ["libs/organization/src/index.ts"],
       "@blockframes/organization/*": ["libs/organization/src/lib/*"],
       "@blockframes/organization/types": [
         "libs/organization/src/lib/organization/+state/organization.firestore.ts"
@@ -49,18 +45,13 @@
         "libs/notification/src/lib/notification/+state/notification.firestore.ts"
       ],
       "@blockframes/notification/*": ["libs/notification/src/lib/*"],
-      "@blockframes/contract": ["libs/contract/src/index.ts"],
       "@blockframes/contract/*": ["libs/contract/src/lib/*"],
-      "@blockframes/financial-report": ["libs/financial-report/src/index.ts"],
       "@blockframes/financial-report/*": ["libs/financial-report/src/lib/*"],
-      "@blockframes/admin": ["libs/admin/src/index.ts"],
       "@blockframes/admin/*": ["libs/admin/src/lib/*"],
-      "@blockframes/user": ["libs/user/src/lib/user/index.ts"],
       "@blockframes/user/*": ["libs/user/src/lib/user/*"],
       "@blockframes/apps/catalog/marketplace/*": ["apps/catalog/src/app/marketplace/*"],
       "@blockframes/apps/catalog/dashboard/*": ["apps/catalog/src/app/dashboard/*"],
       "@blockframes/apps/catalog/*": ["apps/catalog/catalog/src/app/*"],
-      "@blockframes/event": ["libs/event/src/index.ts"],
       "@blockframes/event/*": ["libs/event/src/lib/*"]
     }
   },
