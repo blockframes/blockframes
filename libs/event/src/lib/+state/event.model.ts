@@ -1,6 +1,7 @@
 import { CalendarEvent } from 'angular-calendar';
 import { Meeting, EventBase, Screening, EventMeta } from './event.firestore';
 import { toDate } from '@blockframes/utils/helpers';
+import { Movie } from '@blockframes/movie/+state';
 
 // Event
 export interface Event<Meta extends EventMeta = any> extends EventBase<Date, Meta>, CalendarEvent<Meta> {
@@ -50,11 +51,12 @@ export function createMeeting(meeting: Partial<Meeting>): Meeting {
 // Screening
 export interface ScreeningEvent extends Event<Screening> {
   type: 'screening';
+  titles: Movie[];
 }
 export const isScreening = (event: Partial<Event>): event is ScreeningEvent => event?.type === 'screening';
 export function createScreening(screening: Partial<Screening>): Screening {
   return {
-    movieId: ''
+    titleIds: []
   }
 }
 
