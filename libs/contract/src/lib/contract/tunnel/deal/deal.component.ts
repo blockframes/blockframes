@@ -1,5 +1,5 @@
 import { DistributionDealForm } from '@blockframes/movie/distribution-deals/form/distribution-deal.form';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { Movie } from '@blockframes/movie/movie/+state';
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
@@ -32,10 +32,11 @@ export class DealComponent implements OnInit {
     ]).pipe(
       map(([movies, titleId]) => {
         const movie = movies.find(movie => movie.id === titleId)
-        this.dynTitle.setPageTitle(`${movie.main.title.international}`, 'Exploitation Rights - Create a contract offer')
         return movie
-      }
-      ))
+      }),
+      tap(movie => {
+        this.dynTitle.setPageTitle(`${movie.main.title.international}`, 'Exploitation Rights - Create a contract offer')
+      }))
   }
 
   get dealForm() {

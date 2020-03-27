@@ -3,6 +3,7 @@ import { AngularFireFunctions } from '@angular/fire/functions';
 import { FormGroup } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { RequestDemoInformations, createDemoRequestInformations } from '@blockframes/utils/request-demo';
+import { DynamicTitleService } from '@blockframes/utils';
 
 @Component({
   selector: 'catalog-landing-page',
@@ -14,8 +15,11 @@ export class CatalogLandingPageComponent {
 
   constructor(
     private snackBar: MatSnackBar,
-    private functions: AngularFireFunctions
-  ) {}
+    private functions: AngularFireFunctions,
+    private dynTitle: DynamicTitleService
+  ) {
+    this.dynTitle.setPageTitle()
+  }
 
   /** Send a mail to the admin with user's informations. */
   private async sendDemoRequest(information: RequestDemoInformations) {

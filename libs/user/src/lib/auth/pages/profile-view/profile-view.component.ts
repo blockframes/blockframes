@@ -35,7 +35,7 @@ export class ProfileViewComponent implements OnInit {
     ${this.authQuery.getValue().profile.surname}
     ${this.authQuery.getValue().profile.name}`,
       `${this.organizationQuery.getActive().name}`,
-      { appName: { slug: 'catalog', label: 'Blockframes' }, showAppName: true })
+      { appName: { slug: 'blockframes', label: 'Blockframes' }, showAppName: true })
   }
 
   ngOnInit() {

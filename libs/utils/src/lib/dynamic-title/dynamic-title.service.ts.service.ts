@@ -4,6 +4,30 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 
+const pages = {
+  catalog: {
+    app: 'Archipel Content',
+    section: (section: string, showAppName: boolean, appName: string) => {
+      const suffix = showAppName ? `- ${appName}` : '';
+      return `${section} ${suffix}`;
+    },
+    entityWithSection: (section: string, titleName: string, showAppName: boolean, appName: string) => {
+      const suffix = showAppName ? `- ${appName}` : '';
+      return `${titleName} - ${section} ${suffix}`;
+    }
+  },
+  blockframes: {
+    app: 'Blockframes',
+    section: (section: string, showAppName: boolean, appName: string) => {
+      const suffix = showAppName ? `- ${appName}` : '';
+      return `${section} ${suffix}`;
+    },
+    entityWithSection: (section: string, titleName: string, showAppName: boolean, appName: string) => {
+      const suffix = showAppName ? `- ${appName}` : '';
+      return `${titleName} - ${section} ${suffix}`;
+    }
+  }
+}
 @Injectable({
   providedIn: 'root'
 })
@@ -18,33 +42,22 @@ export class DynamicTitleService implements OnDestroy {
    */
   private initTitle = '';
 
-  private pages: Record<string, any>;
+  private pages: Record<string, any> = pages;
 
   constructor(private title: Title, private routerQuery: RouterQuery) {
     this.sub = this.routerQuery.select('state').subscribe(data => {
       this.setAppName(data.root.data.app)
     })
-
-    // First, we need the app name
-    this.pages = {
-      catalog: {
-        app: this.app.label,
-        section: (section: string, showAppName: boolean, appName: string) => {
-          const suffix = showAppName ? `- ${appName}` : '';
-          return `${section} ${suffix}`;
-        },
-        entityWithSection: (section: string, titleName: string, showAppName: boolean, appName: string) => {
-          const suffix = showAppName ? `- ${appName}` : '';
-          return `${titleName} - ${section} ${suffix}`;
-        }
-      }
-    }
   }
 
   private setAppName(name: string) {
     switch (name) {
       case 'catalog':
-        this.app = { slug: 'catalog', label: 'Archipel Content' }
+        this.app = { slug: 'catalog', label: 'Archipel Content' };
+        break;
+      case 'blockframes':
+        this.app = { slug: 'blockframes', label: 'Blockframes' }
+        break;
     }
   }
 
