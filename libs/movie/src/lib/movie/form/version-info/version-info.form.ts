@@ -32,7 +32,7 @@ export class MovieVersionInfoForm extends FormEntity<any> {
   }
 }
 
-class VersionSpecificationForm extends FormEntity<any> {
+export class VersionSpecificationForm extends FormEntity<any> {
   constructor(versionSpecifictaion: MovieLanguageSpecification) {
     super({
       original: new FormControl(versionSpecifictaion.original),

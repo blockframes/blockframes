@@ -1,17 +1,29 @@
 <ul>
   <ng-container *ngFor="let festivalPrize of festivalPrizes.prizes.controls">
     <li>
-      <strong>Festival </strong>
+      <strong>Festivals </strong>
       <ng-container *ngIf="festivalPrizeHasNoValue(festivalPrize) else display">
         <a [routerLink]="link" class="missing-control">
           Missing
         </a>
       </ng-container>
       <ng-template #display>
-        <missing-control [control]="festivalPrize.get('name')" [link]="link"><ng-template #content>{{ festivalPrize.get('name').value }}, </ng-template></missing-control>
-        <missing-control [control]="festivalPrize.get('prize')" [link]="link"><ng-template #content>{{ festivalPrize.get('prize').value }}, </ng-template></missing-control>
-        <missing-control [control]="festivalPrize.get('year')" [link]="link"><ng-template #content>{{ festivalPrize.get('year').value }}, </ng-template></missing-control>
-        <missing-control [control]="festivalPrize.get('premiere')" [link]="link"></missing-control>
+        <missing-control [control]="festivalPrize.get('name')" [link]="link">
+          <ng-template #content>{{ festivalPrize.get('name').value }}, </ng-template>
+        </missing-control>
+        <missing-control [control]="festivalPrize.get('prize')" [link]="link">
+          <ng-template #content>{{ festivalPrize.get('prize').value }}, </ng-template>
+        </missing-control>
+        <missing-control [control]="festivalPrize.get('year')" [link]="link">
+          <ng-template #content>{{ festivalPrize.get('year').value }}, </ng-template>
+        </missing-control>
+        <missing-control [control]="festivalPrize.get('premiere')" [link]="link">
+          <ng-template let-premieres>
+            <ng-container *ngFor="let premiere of premieres">
+              {{premiere | titlecase}}
+            </ng-container>
+          </ng-template>
+        </missing-control>
       </ng-template>
     </li>
   </ng-container>

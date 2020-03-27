@@ -42,7 +42,7 @@ function createPromotionalElementRefControl(promotionalElement?: Partial<Promoti
     label: new FormControl(label),
     size: new FormControl(size),
     ratio: new FormControl(ratio),
-    media: new FormControl(media),
+    media: new FormEntity(createImgRefForm(media)),
     language: new FormControl(language),
     country: new FormControl(country),
   }
@@ -77,12 +77,6 @@ function createMoviePromotionalElementsControls(promotionalElements?: Partial<Mo
 
 export type MoviePromotionalElementsControl = ReturnType<typeof createMoviePromotionalElementsControls>
 
-type MoviePromotionalElementsListKey = ExtractFormListKeys<MoviePromotionalElementsControl>
-
-// Extract the keys that return a FormList
-type ExtractFormListKeys<C> = {
-  [K in keyof C]: C[K] extends FormList<infer I> ? K : never
-}[keyof C]
 
 export class MoviePromotionalElementsForm extends FormEntity<MoviePromotionalElementsControl>{
   constructor(promotionalElements?: MoviePromotionalElements) {

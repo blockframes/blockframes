@@ -27,11 +27,6 @@ export class CatalogHowItWorksComponent {
       title: 'A Human Salesforce',
       image: 'human_salesforce.webp',
       description: 'Make the most of your library thanks to the Archipel Content salesforce, who will editorialize the platform and push the right content to the right Buyers.'
-    },
-    {
-      title: 'Servicing Included',
-      image: 'servicing_included.webp',
-      description: 'Sit back and relax while the Archipel Content team takes care of delivering the material to Buyers (material price will be deducted from the package price after all sales commissions).'
     }
   ];
 
