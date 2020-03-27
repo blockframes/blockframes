@@ -6,7 +6,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { EventListComponent } from './list.component';
 
-import { EventModule } from '@blockframes/event';
+import { EventModule } from '@blockframes/event/event.module';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
