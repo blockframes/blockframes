@@ -8,6 +8,10 @@ import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia-autocomplete/
 
 // Guards
 import { EventActiveGuard } from '@blockframes/event/guard/event-active.guard';
+import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
+import { MovieTunnelGuard } from '@blockframes/movie/guards/movie-tunnel.guard';
+import { MovieOrganizationListGuard } from '@blockframes/movie/guards/movie-organization-list.guard';
+import { TunnelGuard } from '@blockframes/ui/tunnel';
 
 // Widgets
 import { NotificationWidgetModule } from '@blockframes/notification/notification/notification-widget/notification-widget.module';
@@ -27,9 +31,6 @@ import { MatCardModule } from '@angular/material/card';
 import { MatBadgeModule } from '@angular/material/badge';
 
 import { DashboardComponent } from './dashboard.component';
-import { MovieOrganizationListGuard } from '@blockframes/movie/guards/movie-organization-list.guard';
-import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
-
 
 
 const routes: Routes = [{
@@ -89,6 +90,24 @@ const routes: Routes = [{
         }]
       }
     ]
+  }, {
+    path: 'tunnel',
+    canActivate: [TunnelGuard],
+    children: [{
+      path: 'movie',
+      children: [{
+        path: '',
+        loadChildren: () => import('./tunnel/start/start-tunnel.module').then(m => m.StartTunnelModule)
+      }, {
+        path: ':movieId',
+        canActivate: [MovieActiveGuard, MovieTunnelGuard],
+        canDeactivate: [MovieActiveGuard],
+        loadChildren: () => import('./tunnel/movie-tunnel.module').then(m => m.MovieTunnelModule),
+        data: {
+          redirect: '/c/o/dashboard/tunnel/movie'
+        },
+      }]
+    }]
   }
 ];
 
