@@ -7,7 +7,6 @@ import { TunnelStep, TunnelConfirmComponent } from '@blockframes/ui/tunnel'
 import { ContractForm } from '../form/contract.form';
 import { ContractQuery, ContractService, ContractType, createContract, createContractVersion } from '../+state';
 import { MatDialog } from '@angular/material/dialog';
-import { ContractVersionService } from '@blockframes/contract/version/+state';
 import { DistributionDealForm } from '@blockframes/distribution-deals/form/distribution-deal.form';
 import { FormEntity, FormList } from '@blockframes/utils/form/forms';
 import { ContractTitleDetailForm } from '@blockframes/contract/version/form';
@@ -71,8 +70,7 @@ export class ContractTunnelComponent implements OnInit {
   constructor(
     private db: AngularFirestore,
     private snackBar: MatSnackBar,
-    private service: ContractService,
-    private versionService: ContractVersionService,
+    private contractService: ContractService,
     private query: ContractQuery,
     private movieService: MovieService,
     private dealService: DistributionDealService,
@@ -200,16 +198,14 @@ export class ContractTunnelComponent implements OnInit {
       ...this.contractForm.value
     });
 
-    // Upate Version
-    // @todo (#1887) don't use last index
+    // @todo (#1887) don't use last index (update contract form)
     const lastIndex = contract.historizedVersions.length - 1;
     const version = createContractVersion({ ...contract.historizedVersions[lastIndex] });
-    // @todo #1887 dont update version this way
-    this.versionService.update({ id: lastIndex.toString(), ...version }, { params: { contractId }, write })
-    delete contract.historizedVersions;
+    contract.lastVersion = version;
+
 
     // Update Contract
-    this.service.update(contract, { write });
+    this.contractService.update(contract, { write });
 
     // Return an observable<boolean> for the confirmExit
     await write.commit();

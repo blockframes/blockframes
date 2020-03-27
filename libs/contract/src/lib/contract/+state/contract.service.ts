@@ -12,7 +12,6 @@ import {
   createContractVersion,
   createVersionMandate
 } from './contract.model';
-import { ContractVersionService } from '../../version/+state/contract-version.service';
 import { PermissionsService, OrganizationQuery } from '@blockframes/organization';
 import { ContractDocumentWithDates } from './contract.firestore';
 import { firestore } from 'firebase/app';
@@ -25,7 +24,6 @@ import { cleanModel } from '@blockframes/utils/helpers';
 export class ContractService extends CollectionService<ContractState> {
 
   constructor(
-    private contractVersionService: ContractVersionService,
     private permissionsService: PermissionsService,
     private orgQuery: OrganizationQuery,
     store: ContractStore
@@ -70,23 +68,23 @@ export class ContractService extends CollectionService<ContractState> {
   /**
    * Create a new contract and a new version
    * @note We need this method because `addContractAndVersion` only work on the import.
-   * @param contract The contract to add
-   * @param version Optional content for the first version
-   * @todo(#1887) Don't create _meta & check if method still usefull
+   * @param _contract The contract to add
+   * @param _version Optional content for the first version
+   * @todo(#1887) check if method still usefull
    * @todo(#2041) Use distribution deal service
    */
-  public async create(contract: Partial<Contract>, version: Partial<ContractVersion> = {}) {
+  public async create(_contract: Partial<Contract>, _version: Partial<ContractVersion> = {}) {
     const write = this.db.firestore.batch();
     const org = this.orgQuery.getActive();
+
     // Initialize all values
-    const _contract = createContract({ ...contract, partyIds: [org.id] });
-    const _version = contract.type === 'mandate'
-      ? createVersionMandate({ id: 1, ...version }) // @todo (#1887) let user set id ?
-      : createContractVersion({ id: 1, ...version });
-    // Create contract + verions + _meta version
-    const contractId = await this.add(_contract, { write });
-    // @TODO (#1887) checl all usage of this service
-    this.contractVersionService.add(_version, { params: { contractId }, write });
+    const contract = createContract({ ..._contract, partyIds: [org.id] });
+    contract.lastVersion = _contract.type === 'mandate'
+      ? createVersionMandate({  ..._version })
+      : createContractVersion({  ..._version });
+
+    // Create contract
+    const contractId = await this.add(contract, { write });
 
     await write.commit();
     return contractId;

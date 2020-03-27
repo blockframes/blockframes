@@ -1,18 +1,12 @@
 import { ContractVersionDocumentWithDates, ContractVersionDocument } from "../../contract/+state/contract.firestore";
 import { toDate } from "@blockframes/utils/helpers";
-import { Contract } from "../../contract/+state/contract.model";
 
 export type ContractVersion = ContractVersionDocumentWithDates;
 
 export type ContractVersionWithTimeStamp = ContractVersionDocument;
 
-/** An interface for a single document to display versions subcollection count. */
-export interface VersionMeta extends ContractVersion {
-  count?: number;
-}
-
 /**
- *  Format version dates from Timestamps into Dates.
+ * Format version dates from Timestamps into Dates.
  * @param contractVersion
  */
 export function createContractVersionFromFirestore(contractVersion: any): ContractVersion {
@@ -30,15 +24,6 @@ export function createContractVersionFromFirestore(contractVersion: any): Contra
   }
 
   return contractVersion as ContractVersion;
-}
-
-/**
- * Returns the creation date of the contract.
- * @param contract
- */
-export function getContractInitialCreationDate(contract: Contract): Date {
-  const firstContract = contract.historizedVersions.find(version => version.id === 1);
-  return firstContract.creationDate;
 }
 
 /** Cleans an organization of its optional parameters */

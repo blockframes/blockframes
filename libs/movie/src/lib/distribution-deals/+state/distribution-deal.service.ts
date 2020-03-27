@@ -10,7 +10,6 @@ import {
   formatDistributionDeal
 } from './distribution-deal.model';
 import { createContractTitleDetail, Contract } from '@blockframes/contract/contract/+state/contract.model';
-import { ContractVersionService } from '@blockframes/contract/version/+state/contract-version.service';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { ContractVersion } from '@blockframes/contract/version/+state/contract-version.model';
 import { DistributionDealQuery } from './distribution-deal.query';
@@ -24,7 +23,6 @@ import { getFilterMatchingDeals, getDealsInDateRange } from '../create/availabil
 export class DistributionDealService extends CollectionService<DistributionDealState> {
   constructor(
     private contractService: ContractService,
-    private contractVersionService: ContractVersionService,
     private query: DistributionDealQuery,
     store: DistributionDealStore
   ) {
@@ -44,9 +42,6 @@ export class DistributionDealService extends CollectionService<DistributionDealS
     }
 
     if (contract) {
-      // Cleaning before save
-      contract = this.contractService.formatToFirestore(contract);
-      contract.lastVersion = this.contractVersionService.formatToFirestore(contract.lastVersion);
 
       // If a contract does not have an id, we update contract and link it to this distrubution deal
       // If there is already a contract id, this means it have been created before

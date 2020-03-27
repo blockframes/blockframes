@@ -8,8 +8,7 @@ import { FormControl } from '@angular/forms';
 import { ContractVersionPriceControl, ContractVersionForm } from '@blockframes/contract/version/form';
 import { MovieCurrenciesSlug } from '@blockframes/utils/static-model';
 import { displayPaymentSchedule, displayTerms } from '../../+state/contract.utils';
-import { ContractQuery } from '../../+state';
-import { ContractVersionService } from '@blockframes/contract/version/+state';
+import { ContractQuery, ContractService } from '../../+state';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { DistributionDealService } from '@blockframes/distribution-deals/+state';
 
@@ -25,7 +24,7 @@ export class SummaryMandateComponent implements OnInit {
   public version: ContractVersionForm;
   public dealForms: FormEntity<DealControls>;
   public form: ContractForm;
-  public parties: { licensee: FormControl[], licensor: { subRole: FormControl, displayName: FormControl}[] };
+  public parties: { licensee: FormControl[], licensor: { subRole: FormControl, displayName: FormControl }[] };
   public terms: string;
   public price: ContractVersionPriceControl;
   public deals: Record<string, string> = {}
@@ -35,7 +34,7 @@ export class SummaryMandateComponent implements OnInit {
   constructor(
     private tunnel: ContractTunnelComponent,
     private db: AngularFirestore,
-    private service: ContractVersionService,
+    private contractService: ContractService,
     private dealService: DistributionDealService,
     private query: ContractQuery
   ) { }
@@ -86,17 +85,16 @@ export class SummaryMandateComponent implements OnInit {
 
   /**
    * Submit a contract version to Archipel Content
-   * @todo(#1887) should update the version on the contract
-   * @note cannot put this function on the service or you hit cyrcular dependancies
+   * @TODO (#1887) should update the version on the contract + check issue desc
+   * @note cannot put this function on the service or you hit cyrcular dependancies @TODO (#1887) test
    */
   async submit() {
-    const lastIndex = this.form.get('historizedVersions').value.length - 1;
-    const contractId = this.query.getActiveId();
-
+    const contract = this.query.getActive();
     // Make sure everything is saved first and that deals have ids
     await this.tunnel.save();
     const write = this.db.firestore.batch();
-    this.service.update(`${lastIndex}`, { status: 'submitted' }, { params: { contractId }, write });
+    contract.lastVersion.status = 'submitted';
+    this.contractService.update(contract, { write });
 
     for (const movieId in this.dealForms.value) {
       const dealIds = this.dealForms.get(movieId).value.map(deal => deal.id);

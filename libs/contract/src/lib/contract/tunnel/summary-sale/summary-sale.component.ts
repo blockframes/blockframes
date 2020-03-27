@@ -6,10 +6,9 @@ import { Movie } from '@blockframes/movie';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { ContractVersionPriceControl } from '@blockframes/contract/version/form';
 import { MovieCurrenciesSlug } from '@blockframes/utils/static-model';
-import { ContractVersionService } from '@blockframes/contract/version/+state';
 import { DistributionDealService } from '@blockframes/distribution-deals/+state';
 import { ContractTunnelComponent, DealControls } from '../contract-tunnel.component';
-import { ContractQuery } from '../../+state';
+import { ContractQuery, ContractService } from '../../+state';
 import { displayPaymentSchedule, displayTerms } from '../../+state/contract.utils';
 import { Observable } from 'rxjs';
 
@@ -34,7 +33,7 @@ export class SummarySaleComponent implements OnInit {
   constructor(
     private tunnel: ContractTunnelComponent,
     private db: AngularFirestore,
-    private service: ContractVersionService,
+    private contractService: ContractService,
     private dealService: DistributionDealService,
     private query: ContractQuery
   ) { }
@@ -69,17 +68,17 @@ export class SummarySaleComponent implements OnInit {
 
   /**
    * Submit a contract version to Archipel Content
-   * @todo(#1887) should update the version on the contract
-   * @note cannot put this function on the service or you hit cyrcular dependancies
+   * @todo(#1887) should update the version on the contract + check issue desc
+   * @note cannot put this function on the service or you hit cyrcular dependancies @TODO (#1887) test
    */
   async submit() {
-    const lastIndex = this.form.get('historizedVersions').value.length - 1;
-    const contractId = this.query.getActiveId();
+    const contract = this.query.getActive();
 
     // Make sure everything is saved first and that deals have ids
     await this.tunnel.save();
     const write = this.db.firestore.batch();
-    this.service.update(`${lastIndex}`, { status: 'submitted' }, { params: { contractId }, write });
+    contract.lastVersion.status = 'submitted';
+    this.contractService.update(contract, { write });
 
     for (const movieId in this.dealForms.value) {
       const dealIds = this.dealForms.get(movieId).value.map(deal => deal.id);
