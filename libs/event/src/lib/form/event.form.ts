@@ -1,4 +1,4 @@
-import { FormEntity } from '@blockframes/utils/form';
+import { FormEntity, FormList } from '@blockframes/utils/form';
 import { Event, createEvent, isMeeting, createMeeting, createScreening, isScreening } from '../+state/event.model';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Meeting, Screening } from '../+state/event.firestore';
@@ -27,7 +27,7 @@ export class EventForm extends FormEntity<EventControl, Event> {
 }
 
 // Meta
-function createMetaControl(event: Event) {
+function createMetaControl(event: Event): MeetingForm | ScreeningForm | FormGroup {
   if (isMeeting(event)) {
     return new MeetingForm(event.meta)
   } else if (isScreening(event)) {
@@ -57,7 +57,7 @@ export class MeetingForm extends FormEntity<MeetingControl, Meeting> {
 export function createScreeningControl(params?: Partial<Screening>) {
   const screening = createScreening(params);
   return {
-    movieId: new FormControl(screening.movieId)
+    titleIds: new FormControl(screening.titleIds)
   }
 }
 

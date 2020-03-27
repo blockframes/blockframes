@@ -97,20 +97,20 @@ export class NotificationQuery extends QueryEntity<NotificationState, Notificati
         };
       case 'memberAddedToOrg':
         return {
-          message: `${notification.user.name} ${notification.user.surname} has been added to ${notification.organization.name}.`,
+          message: `${notification.user.name} ${notification.user.surname} has been added to ${notification.organization.denomination.full}.`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.webp',
           url: `c/o/organization/${notification.organization.id}/view/members`
         };
       case 'memberRemovedFromOrg':
         return {
-          message: `${notification.user.name} ${notification.user.surname} has been removed from ${notification.organization.name}.`,
+          message: `${notification.user.name} ${notification.user.surname} has been removed from ${notification.organization.denomination.full}.`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.webp'
         };
       case 'newContract':
         return {
-          message: `${notification.organization.name} submitted a contract.`,
+          message: `${notification.organization.denomination.full} submitted a contract.`,
           placeholderUrl: 'Organization_250.png', // TODO: ISSUE#2262
           url: `c/o/dashboard/deals/${notification.docId}`
         };

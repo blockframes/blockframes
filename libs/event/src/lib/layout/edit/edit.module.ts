@@ -1,32 +1,36 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { EventEditComponent } from './edit.component';
 
-import { EventListComponent } from './list.component';
-
-import { EventModule } from '@blockframes/event/event.module';
-import { MatDialogModule } from '@angular/material/dialog';
+// Material
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
+import { MatInputModule } from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+
+import { TimeDateModule } from '@blockframes/event/form/time-date.directive';
+
+
 
 @NgModule({
-  declarations: [EventListComponent],
+  declarations: [EventEditComponent],
+  exports: [EventEditComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
     ReactiveFormsModule,
-    EventModule,
+    TimeDateModule,
     // Material
-    MatDialogModule,
+    MatToolbarModule,
     MatButtonModule,
     MatIconModule,
     MatFormFieldModule,
-    MatSelectModule,
-    RouterModule.forChild([{ path: '', component: EventListComponent }])
+    MatInputModule,
+    MatDatepickerModule,
   ]
 })
-export class EventListModule { }
+export class EventEditModule { }

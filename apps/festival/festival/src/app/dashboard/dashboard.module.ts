@@ -6,6 +6,9 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia-autocomplete/algolia-autocomplete.module'
 
+// Guards
+import { EventActiveGuard } from '@blockframes/event/guard/event-active.guard';
+
 // Widgets
 import { NotificationWidgetModule } from '@blockframes/notification/notification/notification-widget/notification-widget.module';
 import { SearchWidgetModule } from '@blockframes/ui/search-widget';
@@ -74,7 +77,15 @@ const routes: Routes = [{
           loadChildren: () => import('./event/list/list.module').then(m => m.EventListModule)
         }, {
           path: ':eventId',
-          loadChildren: () => import('./event/view/view.module').then(m => m.EventViewModule)
+          canActivate: [EventActiveGuard],
+          canDeactivate: [EventActiveGuard],
+          children: [{
+            path: '',
+            loadChildren: () => import('./event/view/view.module').then(m => m.EventViewModule)
+          },{
+            path: 'edit',
+            loadChildren: () => import('./event/edit/edit.module').then(m => m.EventEditModule)
+          }]
         }]
       }
     ]

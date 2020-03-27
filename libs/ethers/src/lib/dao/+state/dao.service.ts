@@ -103,7 +103,7 @@ export class DaoService {
   private async _requireContract() {
     if(!this.contract) {
       this._requireProvider();
-      const orgName = this.orgQuery.getActive().name;
+      const orgName = this.orgQuery.getActive().denomination.full;
       const organizationENS = orgNameToEnsDomain(orgName, baseEnsDomain);
       let ethAddress = await this.getOrganizationEthAddress();
       await new Promise(resolve => {
@@ -149,7 +149,7 @@ export class DaoService {
   /** Retrieve the Ethereum address of the current org (using it's ENS name) */
   public async getOrganizationEthAddress() {
     this._requireProvider();
-    const orgName = this.orgQuery.getActive().name;
+    const orgName = this.orgQuery.getActive().denomination.full;
     const organizationENS = orgNameToEnsDomain(orgName, baseEnsDomain);
     return this.provider.resolveName(organizationENS);
   }

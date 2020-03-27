@@ -37,7 +37,7 @@ export class OrganizationCreateComponent {
 
     await this.service.addOrganization(this.form.value);
 
-    this.snackBar.open(`The organization ${this.form.get('name').value} has been created`, 'close', { duration: 2000 });
+    this.snackBar.open(`The organization ${this.form.get('denomination').get('full').value} has been created`, 'close', { duration: 2000 });
 
     this.router.navigate(['../app-access'], { relativeTo: this.route });
   }
