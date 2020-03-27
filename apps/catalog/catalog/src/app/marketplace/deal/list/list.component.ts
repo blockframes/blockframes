@@ -1,6 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ContractQuery, Contract, ContractStatus } from '@blockframes/contract/contract/+state';
-import { getContractLastVersion } from '@blockframes/contract/version/+state/contract-version.model';
 import { map } from 'rxjs/operators';
 
 interface Tab {
@@ -46,7 +45,7 @@ const contractTabs: Tab[] = [
  */
 function filterByStatus(contracts: Contract[], statuses?: ContractStatus[]) {
   if (statuses) {
-    const lastVersionStatus = (contract: Contract) => getContractLastVersion(contract).status;
+    const lastVersionStatus = (contract: Contract) => contract.lastVersion.status;
     return contracts.filter(contract => statuses.includes(lastVersionStatus(contract)));
   }
   return contracts;

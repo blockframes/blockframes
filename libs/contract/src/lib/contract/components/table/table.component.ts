@@ -1,6 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { Contract, getTotalPrice, ContractStatus } from '../../+state';
-import { getContractLastVersion } from '@blockframes/contract/version/+state';
 import { MovieQuery } from '@blockframes/movie';
 import { DistributionDealQuery } from '@blockframes/distribution-deals/+state';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -82,25 +81,22 @@ export class ContractTableComponent {
   ) { }
 
   private createContractListView(contract: Contract): ContractView {
-    // @todo(#1887) Don't use getContractLastVersion function
-    const version = getContractLastVersion(contract);
     return {
       id: contract.id,
       buyerName: contract.parties.find(({ party }) => party.role === 'licensee').party.displayName,
-      territories: this.dealQuery.getTerritoriesFromContract(version),
-      creationDate: version.creationDate,
+      territories: this.dealQuery.getTerritoriesFromContract(contract.lastVersion),
+      creationDate: contract.lastVersion.creationDate,
       moviesLength: contract.titleIds.length,
       titles: this.movieQuery.getAll().filter(m => contract.titleIds.includes(m.id)).map(m => m.main.title.international),
-      price: getTotalPrice(version.titles),
-      paid: version.status === 'paid' ? 'Yes' : 'No',
-      status: version.status
+      price: getTotalPrice(contract.lastVersion.titles),
+      paid: contract.lastVersion.status === 'paid' ? 'Yes' : 'No',
+      status: contract.lastVersion.status
     }
   }
 
   /** Navigate to tunnel if status is draft, else go to page */
   public goToSale(contract: ContractView) {
     const basePath = `/c/o/${this.app}`;
-    // @todo(#1887) Don't use getContractLastVersion function
     const path = (contract.status === 'draft')
       ? `${basePath}/tunnel/contract/${contract.id}/sale`
       : `${basePath}/deals/${contract.id}`;

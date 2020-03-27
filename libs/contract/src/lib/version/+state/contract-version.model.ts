@@ -11,13 +11,6 @@ export interface VersionMeta extends ContractVersion {
   count?: number;
 }
 
-export function createVersionMeta(params: Partial<VersionMeta>): VersionMeta {
-  return {
-    id: '_meta',
-    count: params && params.count ? params.count : 0,
-  } as VersionMeta;
-}
-
 /**
  *  Format version dates from Timestamps into Dates.
  * @param contractVersion
@@ -44,19 +37,8 @@ export function createContractVersionFromFirestore(contractVersion: any): Contra
  * @param contract
  */
 export function getContractInitialCreationDate(contract: Contract): Date {
-  const firstContract = contract.versions.find(version => version.id === '1');
+  const firstContract = contract.historizedVersions.find(version => version.id === 1);
   return firstContract.creationDate;
-}
-
-/**
- * Returns the last version of a contract.
- * @param contract
- * @todo(#1887) Don't use _meta count
- */
-export function getContractLastVersion(contract: Contract): ContractVersion {
-  const { count }: VersionMeta = contract.versions.find(v => v.id === '_meta');
-  const index = contract.versions.map(v => v.id).indexOf(count.toString());
-  return contract.versions[index];
 }
 
 /** Cleans an organization of its optional parameters */

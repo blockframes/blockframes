@@ -81,12 +81,13 @@ export class ContractService extends CollectionService<ContractState> {
     // Initialize all values
     const _contract = createContract({ ...contract, partyIds: [org.id] });
     const _version = contract.type === 'mandate'
-      ? createVersionMandate({ id: '1', ...version })
-      : createContractVersion({ id: '1', ...version });
+      ? createVersionMandate({ id: 1, ...version }) // @todo (#1887) let user set id ?
+      : createContractVersion({ id: 1, ...version });
     // Create contract + verions + _meta version
     const contractId = await this.add(_contract, { write });
+    // @TODO (#1887) checl all usage of this service
     this.contractVersionService.add(_version, { params: { contractId }, write });
-    this.contractVersionService.add({ id: '_meta', count: 1 }, { params: { contractId }, write });
+
     await write.commit();
     return contractId;
   }

@@ -44,7 +44,8 @@ export class SummarySaleComponent implements OnInit {
     this.movies$ = this.tunnel.movies$;
     this.dealForms = this.tunnel.dealForms;
     this.form = this.tunnel.contractForm;
-    const lastVersion = this.form.get('versions').last();
+    // @TODO #1887 why not add lastVersion to form ?
+    const lastVersion = this.form.get('historizedVersions').last();
 
     this.parties = {
       licensee: this.getParties('licensee'),
@@ -72,7 +73,7 @@ export class SummarySaleComponent implements OnInit {
    * @note cannot put this function on the service or you hit cyrcular dependancies
    */
   async submit() {
-    const lastIndex = this.form.get('versions').value.length - 1;
+    const lastIndex = this.form.get('historizedVersions').value.length - 1;
     const contractId = this.query.getActiveId();
 
     // Make sure everything is saved first and that deals have ids

@@ -17,20 +17,19 @@ import {
   ContractVersion,
   ContractVersionWithTimeStamp,
   createContractVersionFromFirestore,
-  getContractLastVersion,
   cleanContractVersion
 } from '../../version/+state/contract-version.model';
 import { LegalRolesSlug } from '@blockframes/utils/static-model/types';
 import { toDate } from '@blockframes/utils/helpers';
 
 export interface Contract extends ContractDocumentWithDates {
-  versions?: ContractVersion[];
+  historizedVersions?: ContractVersion[];
 };
 
 export type PublicContract = PublicContractDocumentWithDates;
 
 export interface ContractWithTimeStamp extends ContractDocument {
-  versions?: ContractVersionWithTimeStamp[];
+  historizedVersions?: ContractVersionWithTimeStamp[];
 };
 
 export type ContractPartyDetail = ContractPartyDetailDocumentWithDates;
@@ -53,7 +52,7 @@ export function createContract(params: Partial<Contract> = {}): Contract {
 // @todo(#1887) Move this fatory function into version.model
 export function createContractVersion(params: Partial<ContractVersion> = {}): ContractVersion {
   return {
-    id: params.id || '1',
+    id: params.id || 1,
     titles: {},
     creationDate: new Date(),
     paymentSchedule: [],
@@ -159,7 +158,7 @@ export function buildChainOfTitle() {
 /** Cleans an organization of its optional parameters */
 export function cleanContract(contract: Contract) {
   const c = { ...contract };
-  delete c.versions; // Remove local values
+  delete c.historizedVersions; // Remove akita values
   if (!c.signDate) {
     delete c.signDate;
   }
@@ -201,11 +200,6 @@ export function createContractFromFirestore(contract: any): Contract {
 
   if(contract.lastVersion){
     c.lastVersion = createContractVersionFromFirestore(contract.lastVersion);
-  }
-
-  // @todo(#1887) remove
-  if (contract.versions) {
-    c.versions = contract.versions.map(version => createContractVersionFromFirestore(version));
   }
 
   return c;
@@ -271,13 +265,11 @@ export function isContractSignatory(contract: Contract, organizationId: string):
   })
 }
 
-
-
 /**
  * Returns only the validated contracts.
  * @param contracts
  */
 export function getValidatedContracts(contracts: Contract[]): Contract[] {
   const validStatus = 'paid' || 'waitingpayment' || 'accepted';
-  return contracts.filter(contract => getContractLastVersion(contract).status === validStatus)
+  return contracts.filter(contract => contract.lastVersion.status === validStatus)
 }

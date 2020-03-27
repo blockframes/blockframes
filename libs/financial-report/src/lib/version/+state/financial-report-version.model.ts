@@ -5,10 +5,3 @@ import { FinancialReportVersion } from "../../financial-report/+state/financial-
 export interface VersionMeta extends FinancialReportVersion {
   count?: number;
 }
-
-export function createVersionMeta(params: Partial<VersionMeta>): VersionMeta {
-  return {
-    id: '_meta',
-    count: params && params.count ? params.count : 0,
-  } as VersionMeta;
-}

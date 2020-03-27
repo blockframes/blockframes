@@ -11,7 +11,6 @@ import {
 import { Contract } from '@blockframes/contract/contract/+state/contract.model';
 import { StoreStatus, MovieAnalytics } from '@blockframes/movie/+state/movie.firestore';
 import { ContractQuery } from '@blockframes/contract/contract/+state/contract.query';
-import { getContractLastVersion } from '@blockframes/contract/version/+state';
 import { startWith, switchMap, map } from 'rxjs/operators';
 import { Observable, combineLatest, Subscription } from 'rxjs';
 
@@ -38,7 +37,7 @@ function createTitleView(
   contracts: Contract[],
   analytics: MovieAnalytics[]
 ): TitleView {
-  const ownContracts = contracts.filter(c => getContractLastVersion(c).titles[movie.id]);
+  const ownContracts = contracts.filter(c => c.lastVersion.titles[movie.id]);
   return {
     id: movie.id,
     title: movie.main.title.international,

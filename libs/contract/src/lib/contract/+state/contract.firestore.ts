@@ -95,7 +95,7 @@ interface ContractPartyDetailRaw<D> {
  * @dev Allows to handle multiple version of a contract
  */
 interface ContractVersionRaw<D> {
-  id: string, // @todo #1887 this should not be editable. rename to version  && cast to INT ? 
+  id: number,
   status: ContractStatus,
   scope: TermsRaw<D>,
   creationDate?: D,

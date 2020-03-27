@@ -33,7 +33,6 @@ export class ContractComponent implements OnInit {
   public contractVersionForm: ContractVersionAdminForm;
   public contractStatus = contractStatus;
   public contractType = contractType;
-  public version: number;
   public publicContract$: Observable<PublicContract>;
 
   // Tables 
@@ -130,7 +129,6 @@ export class ContractComponent implements OnInit {
 
       this.contract$ = this.contractService.listenOnContract(this.contractId).pipe(map(c => {
         this.contract = c;
-        this.version = parseInt(this.contract.lastVersion.id, 10);
         this.contractForm = new ContractAdminForm(this.contract);
         this.contractVersionForm = new ContractVersionAdminForm(this.contract.lastVersion);
         this.cdRef.markForCheck();

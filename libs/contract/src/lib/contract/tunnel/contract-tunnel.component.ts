@@ -94,7 +94,7 @@ export class ContractTunnelComponent implements OnInit {
 
 
     // Listen on the changes of the titles from the contract form
-    const titlesForm = this.contractForm.get('versions').last().get('titles');
+    const titlesForm = this.contractForm.get('historizedVersions').last().get('titles');
     this.movies$ = titlesForm.valueChanges.pipe(
       startWith(titlesForm.value),
       map(titles => Object.keys(titles)),
@@ -124,7 +124,7 @@ export class ContractTunnelComponent implements OnInit {
   addTitle(movieId: string, mandate?: boolean) {
     // @TODO (#1887) should not get last version
     this.contractForm
-      .get('versions')
+      .get('historizedVersions')
       .last()
       .get('titles')
       .setControl(movieId, new ContractTitleDetailForm(mandate ? { price: { amount: 0 } } : {}));
@@ -133,7 +133,7 @@ export class ContractTunnelComponent implements OnInit {
 
   /** Remove a title to this contract */
   removeTitle(movieId: string, isExploitRight?: boolean) {
-    this.contractForm.get('versions').last().get('titles').removeControl(movieId);
+    this.contractForm.get('historizedVersions').last().get('titles').removeControl(movieId);
     const deals = this.dealForms.get(movieId).value;
     // start from the end to remove to avoid shift effects
     for (let i = deals.length - 1; i >= 0; i--) {
@@ -182,7 +182,7 @@ export class ContractTunnelComponent implements OnInit {
         } else {
           const id = await this.dealService.add({ contractId, ...deal }, { params: { movieId }, write });
           this.dealForms.get(movieId).at(i).patchValue({ id });
-          this.contractForm.get('versions').last().get('titles').get(movieId).get('distributionDealIds').add(id);
+          this.contractForm.get('historizedVersions').last().get('titles').get(movieId).get('distributionDealIds').add(id);
         }
       })
     }
@@ -202,13 +202,13 @@ export class ContractTunnelComponent implements OnInit {
 
     // Upate Version
     // @todo (#1887) don't use last index
-    const lastIndex = contract.versions.length - 1;
-    const version = createContractVersion({ ...contract.versions[lastIndex] });
+    const lastIndex = contract.historizedVersions.length - 1;
+    const version = createContractVersion({ ...contract.historizedVersions[lastIndex] });
+    // @todo #1887 dont update version this way
     this.versionService.update({ id: lastIndex.toString(), ...version }, { params: { contractId }, write })
-    delete contract.versions;
+    delete contract.historizedVersions;
 
     // Update Contract
-    contract.titleIds = Object.keys(version.titles || {});
     this.service.update(contract, { write });
 
     // Return an observable<boolean> for the confirmExit

@@ -5,10 +5,10 @@ import { ContractState, ContractStore, ContractWithTimeStamp, ContractService } 
 import { tap } from 'rxjs/operators';
 
 /** Get the active contract and put his lastVersion in it. */
-// todo(#1887) remove versions in query
 const contractQuery = (contractId: string): Query<ContractWithTimeStamp> => ({
   path: `contracts/${contractId}`,
-  versions: contract => ({
+  /** @dev This is used to fetch all archived versions along with contract (KFH) */
+  historizedVersions: contract => ({
     path: `contracts/${contract.id}/versions`
   })
 })

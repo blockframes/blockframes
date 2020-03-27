@@ -31,7 +31,6 @@ import { LanguagesSlug } from '@blockframes/utils/static-model';
 import { createRange } from '@blockframes/utils/common-interfaces/range';
 import { DistributionDeal } from '@blockframes/distribution-deals/+state/distribution-deal.model';
 import { Contract, getValidatedContracts } from '@blockframes/contract/contract/+state/contract.model';
-import { getContractLastVersion } from '@blockframes/contract/version/+state/contract-version.model';
 import { toDate } from '@blockframes/utils/helpers';
 
 // Export for other files
@@ -374,7 +373,7 @@ export function getMovieTitleList(movies: Movie[]): string[] {
  */
 export function getMovieReceipt(contracts: Contract[], movieId: string): number {
   const sales = getValidatedContracts(contracts);
-  return sales.reduce((sum, contract) => sum + getContractLastVersion(contract).titles[movieId].price.amount, 0);
+  return sales.reduce((sum, contract) => sum + contract.lastVersion.titles[movieId].price.amount, 0);
 }
 
 /**

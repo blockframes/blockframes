@@ -15,23 +15,23 @@ export class DetailsMandateComponent {
     return this.tunnel.contractForm.get('parties');
   }
 
-  get versions() {
-    return this.tunnel.contractForm.get('versions');
+  get historizedVersions() {
+    return this.tunnel.contractForm.get('historizedVersions');
   }
 
   public terms(index: number) {
-    return this.versions.at(index).get('scope');
+    return this.historizedVersions.at(index).get('scope');
   }
 
   public conditions(index: number) {
-    return this.versions.at(index).get('renewalConditions')
+    return this.historizedVersions.at(index).get('renewalConditions')
   }
 
   public terminations(index: number) {
-    return this.versions.at(index).get('terminationConditions');
+    return this.historizedVersions.at(index).get('terminationConditions');
   }
 
   public fees(index: number) {
-    return this.versions.at(index).get('authorizedRecoupableExpenses')
+    return this.historizedVersions.at(index).get('authorizedRecoupableExpenses')
   }
 }

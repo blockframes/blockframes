@@ -14,7 +14,7 @@
       </mat-card-content>
     </mat-card>
     <!-- Terms -->
-    <ng-container *ngFor="let control of versions.controls; let versionIndex = index">
+    <ng-container *ngFor="let control of historizedVersions.controls; let versionIndex = index">
       <mat-card>
         <mat-card-header>
           <mat-card-title>
@@ -39,7 +39,7 @@
           </mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
-          <contract-version-form-price [form]="versions"></contract-version-form-price>
+          <contract-version-form-price [form]="historizedVersions"></contract-version-form-price>
         </mat-card-content>
       </mat-card>
       <!-- Payment Schedules -->
@@ -53,8 +53,8 @@
             Pay attention, percentage is always the percentage of total amount
           </mat-card-subtitle>
         </mat-card-header>
-        <mat-card-content>
-          <contract-version-form-schedule [form]="versions"></contract-version-form-schedule>
+        <mat-card-content> <!-- @TODO #1887 a quel moment se fait le save de la version ? pkoi pas utilsier directement .lastVersion ?-->
+          <contract-version-form-schedule [form]="historizedVersions"></contract-version-form-schedule>
         </mat-card-content>
       </mat-card>
     </ng-container>

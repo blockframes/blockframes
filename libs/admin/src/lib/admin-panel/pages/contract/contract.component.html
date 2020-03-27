@@ -26,7 +26,7 @@
       </ng-container>
     </article>
     <article fxLayout="column" fxLayoutAlign="space-between start">
-      <h2>Current version : {{ version }} </h2>
+      <h2>Current version : {{ contract.lastVersion.id }} </h2>
 
       <h3>Parties : </h3>
       <ng-container *ngFor="let partyDetails of contract.parties; let i = index">
@@ -111,7 +111,7 @@
             </mat-form-field>
           </div>
           <mat-card-actions align="end">
-          <button type="submit" mat-flat-button color="primary" (click)="updateVersion()">Update to v-{{ version +1 }}</button>
+          <button type="submit" mat-flat-button color="primary" (click)="updateVersion()">Update to v-{{ contract.lastVersion.id +1 }}</button>
           </mat-card-actions>
         </form>
       </ng-container>
