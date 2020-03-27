@@ -1,6 +1,6 @@
 import { Component, Input, Inject, ChangeDetectorRef, ChangeDetectionStrategy, ContentChild } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
-import { MatBottomSheet } from '@angular/material/bottom-sheet';
+import { MatDialog } from '@angular/material/dialog';
 import { trigger, transition, style, animate } from '@angular/animations';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 
@@ -11,12 +11,13 @@ import { addDays, addMinutes, endOfWeek, startOfWeek } from 'date-fns';
 import { EventSmallDirective, EventLargeDirective } from '../event.directive';
 import { EventService } from '../../+state/event.service';
 import { createEvent } from '../../+state/event.model';
+import { EventTypes } from '../../+state/event.firestore';
 import { EventCreateComponent } from '../../form/create/create.component';
 import { fromEvent } from 'rxjs';
-
-import { EventTypes } from '@blockframes/event/+state/event.firestore';
 import { map, finalize, takeUntil, distinctUntilChanged } from 'rxjs/operators';
+
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
+import { ActivatedRoute, Router } from '@angular/router';
 
 function floorToNearest(amount: number, precision: number) {
   return Math.floor(amount / precision) * precision;
@@ -74,7 +75,9 @@ export class CalendarWeekComponent {
     @Inject(DOCUMENT) private document: Document,
     private authQuery: AuthQuery,
     private service: EventService,
-    private bottomSheet: MatBottomSheet,
+    private dialog: MatDialog,
+    private router: Router,
+    private route: ActivatedRoute,
     private cdr: ChangeDetectorRef,
   ) {}
 
@@ -88,6 +91,7 @@ export class CalendarWeekComponent {
     }
     const lcoalEvent: CalendarEvent = createEvent({
       id: this.service['db'].createId(),
+      ownerId: this.authQuery.userId,
       title: 'New event',
       start: segment.date,
       end: addMinutes(segment.date, 30),
@@ -127,16 +131,22 @@ export class CalendarWeekComponent {
     this.cdr.markForCheck();
   }
 
+  /** Open a create dialog and redirect if needed */
   private createEvent(data: CalendarEvent) {
-    this.bottomSheet.open(EventCreateComponent, { data }).afterDismissed().subscribe(async event => {
+    this.dialog.open(EventCreateComponent, { data }).afterClosed()
+    .subscribe(async ({ event, redirect } = {}) => {
       if (event) {
         event.type = this.eventType;
         this.service.add(event);
+        if (redirect) {
+          this.router.navigate([event.id, 'edit'], { relativeTo: this.route });
+        }
       } else {
         this.refresh(this.baseEvents);
       }
     });
   }
+
 
   updateEvent(timeChange: CalendarEventTimesChangedEvent) {
     if (this.authQuery.userId === timeChange.event['userId']) {
@@ -145,7 +155,4 @@ export class CalendarWeekComponent {
     }
   }
 
-  remove(id: string) {
-    this.service.remove(id);
-  }
 }

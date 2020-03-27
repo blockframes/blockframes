@@ -159,10 +159,10 @@ export function filterMovie(movie: Movie, filter: CatalogSearch): boolean {
     isProductionYearBetween(movie, filter.productionYear) &&
     hasGenres(movie, filter.genres) &&
     hasCertifications(movie, filter.certifications) &&
-    isProductionStatus(movie, filter.status) &&
+    isProductionStatus(movie, filter.productionStatus) &&
     hasCountry(movie, filter.originCountries) &&
     hasLanguage(movie, filter.languages) &&
-    isProductionStatus(movie, filter.status) &&
+    isProductionStatus(movie, filter.productionStatus) &&
     hasBudget(movie, filter.estimatedBudget) &&
     hasStoreType(movie, filter.storeType)
   );

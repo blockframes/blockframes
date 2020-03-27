@@ -30,7 +30,7 @@ import { NumberRange, DateRange, Terms } from '@blockframes/utils/common-interfa
 export interface CatalogSearch {
   productionYear: DateRange;
   genres: GenresSlug[];
-  status: MovieStatusLabel[];
+  productionStatus: MovieStatusLabel[];
   salesAgent: string[];
   languages: Partial<{ [language in LanguagesLabel]: MovieLanguageSpecification }>;
   certifications: CertificationsLabel[];
@@ -41,6 +41,7 @@ export interface CatalogSearch {
     text: string;
     type: string;
   };
+  seller: string;
 }
 
 export interface AvailsSearch {
@@ -63,7 +64,7 @@ function createCatalogSearch(search: Partial<CatalogSearch> = {}): CatalogSearch
       to: null
     },
     genres: [],
-    status: [],
+    productionStatus: [],
     salesAgent: [],
     languages: {},
     certifications: [],
@@ -74,6 +75,7 @@ function createCatalogSearch(search: Partial<CatalogSearch> = {}): CatalogSearch
       text: '',
       type: ''
     },
+    seller: '',
     ...search
   }
 }
@@ -134,7 +136,7 @@ function createCatalogSearchControl(search: CatalogSearch) {
   return {
     productionYear: createTermsControl(search.productionYear),
     genres: new FormStaticArray(search.genres, 'GENRES', [Validators.required]),
-    status: new FormControl(search.status),
+    productionStatus: new FormControl(search.productionStatus),
     salesAgent: new FormControl(search.salesAgent),
     languages: new FormGroup(languageControl),
     certifications: new FormControl(search.certifications),
@@ -144,7 +146,8 @@ function createCatalogSearchControl(search: CatalogSearch) {
     searchbar: new FormGroup({
       text: new FormControl(''),
       type: new FormControl('')
-    })
+    }),
+    seller: new FormControl(search.seller),
   };
 }
 
@@ -173,6 +176,10 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
     super(control);
   }
 
+  get search() {
+    return this.get('searchbar').get('text');
+  }
+
   get genres() {
     return this.get('genres');
   }
@@ -183,6 +190,14 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
 
   get originCountries() {
     return this.get('originCountries');
+  }
+
+  get productionStatus() {
+    return this.get('productionStatus');
+  }
+
+  get budget() {
+    return this.get('estimatedBudget');
   }
 
   addLanguage(language: LanguagesSlug, value: Partial<MovieLanguageSpecification> = {}) {
@@ -201,16 +216,16 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
         `Production status ${status} is not part of the defined status, here is the complete list currently available: ${MOVIE_STATUS_SLUG}`
       );
     } else {
-      this.get('status').setValue([...this.get('status').value, status]);
+      this.productionStatus.setValue([...this.productionStatus.value, status]);
     }
   }
 
   removeStatus(status: MovieStatusSlug) {
     if (MOVIE_STATUS_SLUG.includes(status)) {
-      const newControls = this.get('status').value.filter(
+      const newControls = this.get('productionStatus').value.filter(
         statusToRemove => statusToRemove !== status
       );
-      this.get('status').setValue(newControls);
+      this.get('productionStatus').setValue(newControls);
     } else {
       throw new Error(`The production status ${status} was not found!`);
     }
@@ -249,6 +264,10 @@ export class CatalogSearchForm extends FormEntity<CatalogSearchControl> {
     } else {
       throw new Error(`Store Type ${storeType[type]} doesn't exist`);
     }
+  }
+
+  get seller() {
+    return this.get('seller');
   }
 
 }

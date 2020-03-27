@@ -8,7 +8,7 @@
   // BUTTON WITH ICONS //
   ///////////////////////
 
-  .mat-stroked-button, .mat-button {
+  .mat-stroked-button, .mat-button, .mat-icon-button {
     &.mat-primary {
       svg g, svg polygon, svg path {
         fill: mat-color($primary);

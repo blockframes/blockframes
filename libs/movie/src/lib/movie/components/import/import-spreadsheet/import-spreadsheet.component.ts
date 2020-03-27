@@ -5,7 +5,7 @@ import { SheetTab, importSpreadsheet } from '@blockframes/utils/spreadsheet';
 import { FormControl } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Intercom } from 'ng-intercom';
-import { AuthService } from '@blockframes/auth/+state/auth.service';
+import { UserService } from '@blockframes/user';
 
 export interface SpreadsheetImportEvent {
   sheet: SheetTab,
@@ -28,7 +28,7 @@ export class ImportSpreadsheetComponent implements OnInit {
   constructor(
     private dialog: MatDialog,
     private http: HttpClient,
-    private authService: AuthService,
+    private userService: UserService,
     private cdRef: ChangeDetectorRef,
     private intercom: Intercom,
   ) {
@@ -36,7 +36,7 @@ export class ImportSpreadsheetComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.isUserBlockframesAdmin = await this.authService.isBlockframesAdmin();
+    this.isUserBlockframesAdmin = await this.userService.isBlockframesAdmin();
     this.cdRef.markForCheck();
   }
 

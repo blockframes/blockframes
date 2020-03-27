@@ -1,6 +1,6 @@
 import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { getValue } from '@blockframes/utils/helpers';
-import { AuthService } from '@blockframes/auth/+state/auth.service';
+import { UserService } from '@blockframes/user/+state/user.service';
 
 @Component({
   selector: 'admin-users',
@@ -32,12 +32,12 @@ export class UsersComponent implements OnInit {
   ];
   public rows: any[] = [];
   constructor(
-    private authService: AuthService,
+    private userService: UserService,
     private cdRef: ChangeDetectorRef,
   ) { }
 
   async ngOnInit() {
-    const users = await this.authService.getAllUsers();
+    const users = await this.userService.getAllUsers();
     this.rows = users.map(u => ({
       ...u,
       edit: {

@@ -1,9 +1,16 @@
 import { CalendarEvent } from 'angular-calendar';
 import { Meeting, EventBase, Screening, EventMeta } from './event.firestore';
 import { toDate } from '@blockframes/utils/helpers';
+import { Movie } from '@blockframes/movie/+state';
 
 // Event
-export type Event<Meta extends EventMeta = any> = EventBase<Date, Meta> & CalendarEvent<Meta>;
+export interface Event<Meta extends EventMeta = any> extends EventBase<Date, Meta>, CalendarEvent<Meta> {
+  id: string;
+  isOwner: boolean;
+  allDay: boolean;
+  end: Date;
+  meta: Meta;
+}
 export function createEvent<Meta extends EventMeta>(params: Partial<Event<Meta>> = {}): Event<Meta> {
   const meta: any =
     isMeeting(params) ? createMeeting(params.meta)
@@ -16,6 +23,7 @@ export function createEvent<Meta extends EventMeta>(params: Partial<Event<Meta>>
     ownerId: '',
     type: 'standard',
     allDay: false,
+    isOwner: false,
     ...params,
     start: toDate(params.start || new Date()),
     end: toDate(params.end || new Date()),
@@ -43,11 +51,12 @@ export function createMeeting(meeting: Partial<Meeting>): Meeting {
 // Screening
 export interface ScreeningEvent extends Event<Screening> {
   type: 'screening';
+  titles: Movie[];
 }
 export const isScreening = (event: Partial<Event>): event is ScreeningEvent => event?.type === 'screening';
 export function createScreening(screening: Partial<Screening>): Screening {
   return {
-    movieId: ''
+    titleIds: []
   }
 }
 
@@ -57,6 +66,7 @@ export function createCalendarEvent(event: Event, currentUserId: string): Event 
   const isOwner = event.ownerId === currentUserId;
   return {
     ...createEvent(event),
+    isOwner,
     draggable: isOwner,
     resizable: { beforeStart: isOwner, afterEnd: isOwner },
   }

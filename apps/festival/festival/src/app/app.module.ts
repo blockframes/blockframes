@@ -41,6 +41,7 @@ import { ErrorLoggerModule } from '@blockframes/utils/error-logger.module';
 import { FestivalModule } from './festival.module';
 
 import { filter } from 'rxjs/operators';
+import { MatNativeDateModule } from '@angular/material/core';
 
 @NgModule({
   declarations: [AppComponent],
@@ -50,6 +51,7 @@ import { filter } from 'rxjs/operators';
     BrowserAnimationsModule,
     FlexLayoutModule,
     HttpClientModule,
+    MatNativeDateModule,  // Required for Datepicker
 
     // Intercom
     intercomId ? IntercomAppModule : [],

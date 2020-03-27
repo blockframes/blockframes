@@ -1,5 +1,5 @@
 import { functions, db } from './internals/firebase';
-import { MovieDocument, OrganizationDocument, PublicUser, StoreConfig } from './data/types';
+import { MovieDocument, OrganizationDocument, PublicUser, StoreConfig, PublicOrganization } from './data/types';
 import { NotificationType } from '@blockframes/notification/types';
 import { triggerNotifications, createNotification } from './notification';
 import { flatten, isEqual } from 'lodash';
@@ -55,12 +55,12 @@ export async function onMovieCreate(
 
   return db.runTransaction(async tx => {
 
-    // Update algolia's index
-    await storeSearchableMovie(movie);
-
     // Get the organization document in the transaction for maximum freshness.
     const organizationSnap = await tx.get(db.doc(`orgs/${user.orgId}`));
     const organization = organizationSnap.data() as OrganizationDocument
+
+    // Update algolia's index
+    await storeSearchableMovie(movie, organization.id, organization.name);
 
     return Promise.all([
       // Update the organization's movieIds with the new movie id.
@@ -167,7 +167,13 @@ export async function onMovieUpdate(
     return triggerNotifications(notifications);
   }
 
-  return storeSearchableMovie(after);
+  // insert orgName & orgID to the algolia movie index (this is needed in order to filter on the frontend)
+  const creatorSnapshot = await db.doc(`users/${after._meta!.createdBy}`).get();
+  const creator = creatorSnapshot.data() as PublicUser;
+  const creatorOrgSnapshot = await db.doc(`orgs/${creator!.orgId}`).get();
+  const creatorOrg = creatorOrgSnapshot.data() as PublicOrganization;
+
+  return storeSearchableMovie(after, creatorOrg.name);
 }
 
 /** Checks if the store status is going from draft to submitted. */

@@ -6,6 +6,9 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia-autocomplete/algolia-autocomplete.module'
 
+// Guards
+import { EventActiveGuard } from '@blockframes/event/guard/event-active.guard';
+
 // Widgets
 import { NotificationWidgetModule } from '@blockframes/notification/notification/notification-widget/notification-widget.module';
 import { SearchWidgetModule } from '@blockframes/ui/search-widget';
@@ -48,10 +51,6 @@ const routes: Routes = [{
         loadChildren: () => import('./notification/notification.module').then(m => m.NotificationModule)
       },
       {
-        path: 'calendar',
-        loadChildren: () => import('./calendar/calendar.module').then(m => m.CalendarModule)
-      },
-      {
         path: 'import', // Import bulk of movies
         loadChildren: () => import('@blockframes/movie/components/import/import-movie.module')
           .then(m => m.ImportMovieModule)
@@ -68,6 +67,24 @@ const routes: Routes = [{
           canActivate: [MovieActiveGuard],
           canDeactivate: [MovieActiveGuard],
           loadChildren: () => import('./title/view/view.module').then(m => m.TitleViewModule)
+        }]
+      },
+      {
+        path: 'event',
+        children: [{
+          path: '',
+          loadChildren: () => import('./event/list/list.module').then(m => m.EventListModule)
+        }, {
+          path: ':eventId',
+          canActivate: [EventActiveGuard],
+          canDeactivate: [EventActiveGuard],
+          children: [{
+            path: '',
+            loadChildren: () => import('./event/view/view.module').then(m => m.EventViewModule)
+          },{
+            path: 'edit',
+            loadChildren: () => import('./event/edit/edit.module').then(m => m.EventEditModule)
+          }]
         }]
       }
     ]

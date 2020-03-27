@@ -12,14 +12,13 @@ import { EventSmallDirective, EventLargeDirective } from './components/event.dir
 import { EventSizePipe } from './components/event.pipe';
 // Forms
 import { EventCreateComponent } from './form/create/create.component';
-import { EventEditComponent } from './form/edit/edit.component';
-import { TimeDateValueAccessor } from './form/time-date.directive';
+import { EventFormComponent } from './form/base/base.component';
+import { TimeDateModule } from './form/time-date.directive';
 
 // Material
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { MatDialogModule } from '@angular/material/dialog'
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -32,21 +31,23 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     EventSizePipe,
     EventSmallDirective,
     EventLargeDirective,
-    EventCreateComponent,
-    EventEditComponent,
-    TimeDateValueAccessor,
     CalendarHeaderComponent,
+    // Form
+    EventCreateComponent,
+    EventFormComponent,
   ],
   exports: [
     CalendarHeaderComponent,
     CalendarWeekComponent,
     EventSmallDirective,
-    EventLargeDirective
+    EventLargeDirective,
+    EventFormComponent
   ],
   imports: [
     CommonModule,
     ReactiveFormsModule,
     FlexLayoutModule,
+    TimeDateModule,
     CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory
@@ -54,7 +55,6 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
-    MatBottomSheetModule,
     MatDialogModule,
     MatFormFieldModule,
     MatInputModule,
