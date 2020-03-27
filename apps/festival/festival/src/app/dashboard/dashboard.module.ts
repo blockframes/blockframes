@@ -24,7 +24,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatBadgeModule } from '@angular/material/badge';
 
 import { DashboardComponent } from './dashboard.component';
-import { MovieOrganizationListGuard, MovieActiveGuard } from '@blockframes/movie';
+import { MovieOrganizationListGuard } from '@blockframes/movie/guards/movie-organization-list.guard';
+import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 
 
 

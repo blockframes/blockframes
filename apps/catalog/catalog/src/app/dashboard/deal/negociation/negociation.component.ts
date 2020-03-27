@@ -1,8 +1,9 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { ContractQuery, displayPaymentSchedule } from '@blockframes/contract/contract/+state';
 import { map } from 'rxjs/operators';
-import { Movie, MovieQuery } from '@blockframes/movie';
 import { Intercom } from 'ng-intercom';
+import { MovieQuery } from '@blockframes/movie/+state/movie.query';
+import { displayPaymentSchedule } from '@blockframes/contract/contract/+state/contract.utils';
+import { ContractQuery } from '@blockframes/contract/contract/+state/contract.query';
 
 @Component({
   selector: 'catalog-negociation',

@@ -1,9 +1,10 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { MovieService, MovieQuery } from '@blockframes/movie';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieTunnelComponent } from '../movie-tunnel.component';
 import { FormGroup, FormArray } from '@angular/forms';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 
 @Component({
   selector: 'catalog-summary-tunnel',
@@ -50,7 +51,7 @@ export class TunnelSummaryComponent {
   public findInvalidControlsRecursive(formToInvestigate:FormGroup|FormArray):string[] {
     const invalidControls:string[] = [];
     const recursiveFunc = (form:FormGroup|FormArray) => {
-      Object.keys(form.controls).forEach(field => { 
+      Object.keys(form.controls).forEach(field => {
         const control = form.get(field);
         if (control.invalid) {
           invalidControls.push(field);
@@ -59,7 +60,7 @@ export class TunnelSummaryComponent {
           recursiveFunc(control);
         } else if (control instanceof FormArray) {
           recursiveFunc(control);
-        }        
+        }
       });
     }
     recursiveFunc(formToInvestigate);

@@ -1,7 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { MovieQuery, Movie } from '@blockframes/movie';
 import { Observable } from 'rxjs';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
+import { MovieQuery } from '@blockframes/movie/+state/movie.query';
+import { Movie } from '@blockframes/movie/+state/movie.model';
 
 @Component({
   selector: 'catalog-title-view',

@@ -8,8 +8,9 @@ import { Contract, getTotalPrice } from '../+state';
 import { MatPaginator } from '@angular/material/paginator';
 import { ContractVersion, getContractLastVersion } from '@blockframes/contract/version/+state';
 import { Price } from '@blockframes/utils/common-interfaces/price';
-import { MovieQuery, getMovieTitleList } from '@blockframes/movie';
 import { DistributionDealQuery } from '@blockframes/distribution-deals/+state';
+import { MovieQuery } from '@blockframes/movie/+state/movie.query';
+import { getMovieTitleList } from '@blockframes/movie/+state/movie.model';
 
 const columns = {
   buyerName: 'Buyer name',

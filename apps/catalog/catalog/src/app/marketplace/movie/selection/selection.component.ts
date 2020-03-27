@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, HostBinding, Optional } from '@angular/core';
 import { Router } from '@angular/router';
 import { MarketplaceQuery, MarketplaceStore } from '../../+state';
-import { MovieQuery } from '@blockframes/movie';
+import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import {
   ContractService,
   Contract,

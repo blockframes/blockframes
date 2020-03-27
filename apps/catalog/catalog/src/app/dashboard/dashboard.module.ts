@@ -6,10 +6,12 @@ import { LayoutComponent } from './layout/layout.component';
 // Guards
 import { ActiveContractGuard } from '@blockframes/contract/contract/guards/active-contract.guard';
 import { OrganizationContractListGuard } from '@blockframes/contract/contract/guards/organization-contract-list.guard';
-import { MovieActiveGuard, MovieOrganizationListGuard, MovieTunnelGuard } from '@blockframes/movie';
-import { TunnelGuard } from '@blockframes/ui/tunnel';
+import { TunnelGuard } from '@blockframes/ui/tunnel/tunnel.guard';
 import { ContractsDealListGuard } from '@blockframes/distribution-deals/guards/contracts-deal-list.guard';
 import { MovieListContractListGuard } from '@blockframes/movie/guards/movie-contract.guard';
+import { MovieOrganizationListGuard } from '@blockframes/movie/guards/movie-organization-list.guard';
+import { MovieTunnelGuard } from '@blockframes/movie/guards/movie-tunnel.guard';
+import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 
 const routes: Routes = [
   {

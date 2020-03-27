@@ -1,7 +1,7 @@
 import { Firestore } from '../admin';
 import { createStakeholder } from '@blockframes/utils/common-interfaces/identity';
 import { createImgRef } from '@blockframes/utils/image-uploader';
-import { createPromotionalElement } from '@blockframes/movie';
+import { createPromotionalElement } from '@blockframes/movie/+state/movie.model';
 
 /**
  * Update stakeholders in movie documents.

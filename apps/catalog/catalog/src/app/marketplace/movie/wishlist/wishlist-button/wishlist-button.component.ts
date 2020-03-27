@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
-import { MovieQuery } from '@blockframes/movie';
+import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { Observable } from 'rxjs';
 import { OrganizationQuery } from '@blockframes/organization';
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';

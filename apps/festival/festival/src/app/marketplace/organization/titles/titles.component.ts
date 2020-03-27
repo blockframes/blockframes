@@ -1,8 +1,9 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
-import { MovieService, MovieQuery } from '@blockframes/movie';
 import { switchMap, map } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { ViewComponent } from '../view/view.component';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 
 @Component({
   selector: 'festival-marketplace-organization-titles',

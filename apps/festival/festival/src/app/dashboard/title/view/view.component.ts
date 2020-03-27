@@ -1,7 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { MovieQuery, Movie } from '@blockframes/movie';
 import { Observable } from 'rxjs';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
+import { Movie } from '@blockframes/movie/+state/movie.model';
+import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 
 @Component({
   selector: 'festival-dashboard-title-view',

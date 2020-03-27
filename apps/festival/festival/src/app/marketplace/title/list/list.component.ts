@@ -35,7 +35,7 @@ import { Observable, combineLatest, BehaviorSubject, Subscription } from 'rxjs';
 import { startWith, map, debounceTime, switchMap, distinctUntilChanged, pluck, filter, share } from 'rxjs/operators';
 // Others
 import { Index } from 'algoliasearch';
-import { MovieService } from '@blockframes/movie';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 
 @Component({
   selector: 'festival-marketplace-title-list',

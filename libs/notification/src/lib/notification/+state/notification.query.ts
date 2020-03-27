@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { DateGroup } from '@blockframes/utils/helpers';
 import { formatDate } from '@angular/common';
-import { MovieQuery } from '@blockframes/movie';
+import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { NotificationType } from './notification.firestore';
 import { ImgRef, createImgRef } from '@blockframes/utils/image-uploader';
 

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { QueryEntity } from '@datorama/akita';
 import { CartStore, CartState } from './cart.store';
 import { CatalogCart } from './cart.model';
-import { MovieQuery } from '@blockframes/movie';
+import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { OrganizationQuery, Wishlist } from '@blockframes/organization';
 import { Observable, combineLatest } from 'rxjs';
 import { map, filter } from 'rxjs/operators';

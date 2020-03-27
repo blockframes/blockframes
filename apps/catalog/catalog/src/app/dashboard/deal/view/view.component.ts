@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ContractQuery } from '@blockframes/contract/contract/+state';
 import { PLACEHOLDER_LOGO } from '@blockframes/organization';
-import { MovieQuery } from '@blockframes/movie';
+import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 
 @Component({
   selector: 'dashboard-deal-view',
