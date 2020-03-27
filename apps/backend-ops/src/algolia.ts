@@ -30,13 +30,20 @@ export async function upgradeAlgoliaMovies() {
   const promises = [];
   movies.forEach(movie => {
     const movieData = movie.data() as MovieDocument;
-    const promise = db.collection('users').doc(movieData._meta.createdBy).get()
-      .then(snap => snap.data())
-      .then(user => db.collection('orgs').doc(user.orgId).get())
-      .then(snap => snap.data())
-      .then(organization => storeSearchableMovie(movieData, organization.name, process.env['ALGOLIA_API_KEY']))
-    ;
-    promises.push(promise);
+    try {
+
+      const promise = db.collection('users').doc(movieData._meta.createdBy).get()
+        .then(snap => snap.data())
+        .then(user => db.collection('orgs').doc(user.orgId).get())
+        .then(snap => snap.data())
+        .then(organization => storeSearchableMovie(movieData, organization.name, process.env['ALGOLIA_API_KEY']))
+      ;
+      promises.push(promise);
+    } catch(error) {
+      console.error(`\n\n\tFailed to insert a movie ${movie.id} : skipping\n\n`);
+      console.error(error);
+      promises.push(new Promise(res => res(true)));
+    }
   });
   return Promise.all(promises);
 }
