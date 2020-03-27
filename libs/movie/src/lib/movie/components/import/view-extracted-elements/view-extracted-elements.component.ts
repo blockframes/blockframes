@@ -42,9 +42,8 @@ import { DistributionDeal, createDistributionDeal, createHoldback } from '@block
 import {
   createContractPartyDetail,
   createContractTitleDetail,
-  Contract,
-  initContractWithVersion,
-  ContractWithLastVersion
+  createContract,
+  Contract
 } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractTitleDetail, contractType, contractStatus } from '@blockframes/contract/contract/+state/contract.firestore';
 import { DistributionDealService } from '@blockframes/distribution-deals/+state/distribution-deal.service';
@@ -81,7 +80,7 @@ export interface DealsImportState {
 export interface ContractsImportState {
   errors?: SpreadsheetImportError[];
   newContract: boolean;
-  contract: ContractWithLastVersion;
+  contract: Contract;
 }
 
 enum SpreadSheetMovie {
@@ -1332,11 +1331,10 @@ export class ViewExtractedElementsComponent implements OnInit {
           /////////////////
 
           // Retreive the contract that will handle the deal
-          // @TODO (#1887) change this
-          const contract = await this.contractService.getContractWithLastVersionFromDeal(movie.id, distributionDeal.id);
+          const contract = await this.contractService.getContractFromDeal(movie.id, distributionDeal.id);
           if (contract) {
 
-            distributionDeal.contractId = contract.doc.id;
+            distributionDeal.contractId = contract.id;
 
             /////////////////
             // LICENSE STUFF
@@ -1791,11 +1789,10 @@ export class ViewExtractedElementsComponent implements OnInit {
     for (const spreadSheetRow of sheetTab.rows) {
       // CONTRACT ID
       // Create/retreive the contract
-      let contract = initContractWithVersion();
+      let contract = createContract();
       let newContract = true;
       if (spreadSheetRow[SpreadSheetContract.contractId]) {
-        // @TODO (#1887) change this
-        const existingContract = await this.contractService.getContractWithLastVersion(spreadSheetRow[SpreadSheetContract.contractId]);
+        const existingContract = await this.contractService.getValue(spreadSheetRow[SpreadSheetContract.contractId] as string);
         if (!!existingContract) {
           contract = existingContract;
           newContract = false;
@@ -1826,7 +1823,7 @@ export class ViewExtractedElementsComponent implements OnInit {
                 licensor.party.orgId = licensorParts[1].trim();
               }
               licensor.party.role = getCodeIfExists('LEGAL_ROLES', 'licensor');
-              contract.doc.parties.push(licensor);
+              contract.parties.push(licensor);
             });
           }
 
@@ -1845,7 +1842,7 @@ export class ViewExtractedElementsComponent implements OnInit {
               licensee.party.showName = spreadSheetRow[SpreadSheetContract.displayLicenseeName].toLowerCase() === 'yes' ? true : false;
             }
 
-            contract.doc.parties.push(licensee);
+            contract.parties.push(licensee);
           }
 
           // CHILD ROLES
@@ -1853,7 +1850,7 @@ export class ViewExtractedElementsComponent implements OnInit {
             spreadSheetRow[SpreadSheetContract.childRoles].split(this.separator).forEach((r: string) => {
               const childRoleParts = r.split(this.subSeparator);
               const partyName = childRoleParts.shift().trim();
-              const party = contract.doc.parties.find(p => p.party.displayName === partyName && p.party.role === getCodeIfExists('LEGAL_ROLES', 'licensor'));
+              const party = contract.parties.find(p => p.party.displayName === partyName && p.party.role === getCodeIfExists('LEGAL_ROLES', 'licensor'));
               if (party) {
                 childRoleParts.forEach(childRole => {
                   const role = getCodeIfExists('SUB_LICENSOR_ROLES', childRole.trim() as ExtractCode<'SUB_LICENSOR_ROLES'>);
@@ -1885,7 +1882,7 @@ export class ViewExtractedElementsComponent implements OnInit {
           if (spreadSheetRow[SpreadSheetContract.contractType]) {
             const key = getKeyIfExists(contractType, spreadSheetRow[SpreadSheetContract.contractType]);
             if (key) {
-              contract.doc.type = key;
+              contract.type = key;
             } else {
               importErrors.errors.push({
                 type: 'error',
@@ -1910,11 +1907,11 @@ export class ViewExtractedElementsComponent implements OnInit {
         if (spreadSheetRow[SpreadSheetContract.status]) {
           const key = getKeyIfExists(contractStatus, spreadSheetRow[SpreadSheetContract.status]);
           if (key) {
-            contract.last.status = key;
+            contract.lastVersion.status = key;
           } else {
             importErrors.errors.push({
               type: 'warning',
-              field: 'contract.last.status ',
+              field: 'contract.lastVersion.status ',
               name: 'Contract Status',
               reason: `Contract status "${spreadSheetRow[SpreadSheetContract.status]}" could not be parsed.`,
               hint: 'Edit corresponding sheet field.'
@@ -1925,11 +1922,11 @@ export class ViewExtractedElementsComponent implements OnInit {
         // CONTRACT CREATION DATE
         if (spreadSheetRow[SpreadSheetContract.creationDate]) {
           const { y, m, d } = SSF.parse_date_code(spreadSheetRow[SpreadSheetContract.creationDate]);
-          contract.last.creationDate = new Date(`${y}-${m}-${d}`);
+          contract.lastVersion.creationDate = new Date(`${y}-${m}-${d}`);
         } else {
           importErrors.errors.push({
             type: 'warning',
-            field: 'contract.last.creationDate',
+            field: 'contract.lastVersion.creationDate',
             name: 'Creation date',
             reason: 'Contract creation date not found. Using current date',
             hint: 'Edit corresponding sheet field.'
@@ -1941,16 +1938,16 @@ export class ViewExtractedElementsComponent implements OnInit {
           const { y, m, d } = SSF.parse_date_code(spreadSheetRow[SpreadSheetContract.scopeStartDate]);
           const scopeStart = new Date(`${y}-${m}-${d}`);
           if (isNaN(scopeStart.getTime())) {
-            contract.last.scope.approxStart = spreadSheetRow[SpreadSheetContract.scopeStartDate];
+            contract.lastVersion.scope.approxStart = spreadSheetRow[SpreadSheetContract.scopeStartDate];
             importErrors.errors.push({
               type: 'warning',
-              field: 'contract.last.scope',
+              field: 'contract.lastVersion.scope',
               name: 'Contract scope start',
               reason: `Failed to parse contract scope start date : ${spreadSheetRow[SpreadSheetContract.scopeStartDate]}, moved data to approxStart`,
               hint: 'Edit corresponding sheet field.'
             });
           } else {
-            contract.last.scope.start = scopeStart;
+            contract.lastVersion.scope.start = scopeStart;
           }
         }
 
@@ -1959,16 +1956,16 @@ export class ViewExtractedElementsComponent implements OnInit {
           const { y, m, d } = SSF.parse_date_code(spreadSheetRow[SpreadSheetContract.scopeEndDate]);
           const scopeEnd = new Date(`${y}-${m}-${d}`);
           if (isNaN(scopeEnd.getTime())) {
-            contract.last.scope.approxEnd = spreadSheetRow[SpreadSheetContract.scopeEndDate];
+            contract.lastVersion.scope.approxEnd = spreadSheetRow[SpreadSheetContract.scopeEndDate];
             importErrors.errors.push({
               type: 'warning',
-              field: 'contract.last.scope',
+              field: 'contract.lastVersion.scope',
               name: 'Contract scope end',
               reason: `Failed to parse contract scope end date : ${spreadSheetRow[SpreadSheetContract.scopeEndDate]}, moved data to approxEnd`,
               hint: 'Edit corresponding sheet field.'
             });
           } else {
-            contract.last.scope.end = scopeEnd;
+            contract.lastVersion.scope.end = scopeEnd;
           }
         }
 
@@ -1984,11 +1981,11 @@ export class ViewExtractedElementsComponent implements OnInit {
               if (scheduleParts[2]) {
                 paymentSchedule.date.approxStart = scheduleParts[2].trim();
               }
-              contract.last.paymentSchedule.push(paymentSchedule);
+              contract.lastVersion.paymentSchedule.push(paymentSchedule);
             } else {
               importErrors.errors.push({
                 type: 'error',
-                field: 'contract.last.paymentSchedule',
+                field: 'contract.lastVersion.paymentSchedule',
                 name: 'Payment Schedule',
                 reason: 'Error while parsing data',
                 hint: 'Edit corresponding sheet field.'
@@ -1998,7 +1995,7 @@ export class ViewExtractedElementsComponent implements OnInit {
         } else {
           importErrors.errors.push({
             type: 'warning',
-            field: 'contract.last.paymentSchedule',
+            field: 'contract.lastVersion.paymentSchedule',
             name: 'Payment Schedule',
             reason: 'Missing data',
             hint: 'Edit corresponding sheet field.'
@@ -2013,7 +2010,7 @@ export class ViewExtractedElementsComponent implements OnInit {
           titleIndex += titlesFieldsCount;
           const titleDetails = await this.processTitleDetails(spreadSheetRow, currentIndex, importErrors);
 
-          if (importErrors.newContract && contract.last.titles[titleDetails.titleId] !== undefined) {
+          if (importErrors.newContract && contract.lastVersion.titles[titleDetails.titleId] !== undefined) {
             importErrors.errors.push({
               type: 'error',
               field: 'titleIds',
@@ -2022,7 +2019,7 @@ export class ViewExtractedElementsComponent implements OnInit {
               hint: 'Edit corresponding sheet field.'
             });
           } else {
-            contract.last.titles[titleDetails.titleId] = titleDetails;
+            contract.lastVersion.titles[titleDetails.titleId] = titleDetails;
           }
         }
 
@@ -2033,8 +2030,8 @@ export class ViewExtractedElementsComponent implements OnInit {
 
         // Global contract price
         const contractPrice = createPrice();
-        Object.keys(importErrors.contract.last.titles).forEach(titleId => {
-          const price = importErrors.contract.last.titles[titleId].price;
+        Object.keys(importErrors.contract.lastVersion.titles).forEach(titleId => {
+          const price = importErrors.contract.lastVersion.titles[titleId].price;
           if (price && price.amount) {
             contractPrice.amount += price.amount;
           }
@@ -2043,7 +2040,7 @@ export class ViewExtractedElementsComponent implements OnInit {
           }
         });
 
-        importErrors.contract.last.price = contractPrice;
+        importErrors.contract.lastVersion.price = contractPrice;
 
         const contractWithErrors = await this.validateMovieContract(importErrors);
 
@@ -2051,7 +2048,7 @@ export class ViewExtractedElementsComponent implements OnInit {
           this.contractsToUpdate.data.push(contractWithErrors);
           this.contractsToUpdate.data = [... this.contractsToUpdate.data];
         } else {
-          contractWithErrors.contract.doc.id = spreadSheetRow[SpreadSheetContract.contractId];
+          contractWithErrors.contract.id = spreadSheetRow[SpreadSheetContract.contractId];
           this.contractsToCreate.data.push(contractWithErrors);
           this.contractsToCreate.data = [... this.contractsToCreate.data];
         }
@@ -2072,7 +2069,7 @@ export class ViewExtractedElementsComponent implements OnInit {
     //////////////////
 
     //  CONTRACT VALIDATION
-    const isContractValid = await this.contractService.isContractValid(contract.doc);
+    const isContractValid = await this.contractService.isContractValid(contract);
     if (!isContractValid) {
       errors.push({
         type: 'error',
@@ -2084,10 +2081,10 @@ export class ViewExtractedElementsComponent implements OnInit {
     }
 
     // SCOPE
-    if (Object.entries(contract.last.scope).length === 0 && contract.last.scope.constructor === Object) {
+    if (Object.entries(contract.lastVersion.scope).length === 0 && contract.lastVersion.scope.constructor === Object) {
       importErrors.errors.push({
         type: 'error',
-        field: 'contract.last.scope',
+        field: 'contract.lastVersion.scope',
         name: 'Scope Start',
         reason: 'Contract scope not defined',
         hint: 'Edit corresponding sheet field.'
@@ -2099,7 +2096,7 @@ export class ViewExtractedElementsComponent implements OnInit {
     //////////////////
 
     // CONTRACT PRICE VALIDATION
-    if (!contract.last.price.amount) {
+    if (!contract.lastVersion.price.amount) {
       errors.push({
         type: 'warning',
         field: 'price',
@@ -2110,10 +2107,10 @@ export class ViewExtractedElementsComponent implements OnInit {
     }
 
     // CONTRACT STATUS
-    if (!contract.last.status) {
+    if (!contract.lastVersion.status) {
       errors.push({
         type: 'warning',
-        field: 'contract.last.status',
+        field: 'contract.lastVersion.status',
         name: 'Contract Status',
         reason: 'Optional field is missing',
         hint: 'Edit corresponding sheet field.'

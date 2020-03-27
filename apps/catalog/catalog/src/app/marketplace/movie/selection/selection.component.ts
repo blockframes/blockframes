@@ -78,6 +78,7 @@ export class MarketplaceSelectionComponent {
       const distributionDealIds = await this.dealService.add(dealDocs, { params: { movieId } });
       version.titles[movieId] = createContractTitleDetail({ distributionDealIds });
     }
+    // @todo (#1887) check
     await this.service.create(contract, version);
 
     await this.router.navigate(['c/o/marketplace/tunnel/contract', contractId, type]);

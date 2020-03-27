@@ -32,11 +32,11 @@ export class TableExtractedContractsComponent implements OnInit {
   public displayedColumns: string[] = [
     'id',
     'select',
-    'contract.doc.id',
-    'contract.doc.type',
-    'contract.last.status',
-    'contract.last.id',
-    'contract.doc.parties',
+    'contract.id',
+    'contract.type',
+    'contract.lastVersion.status',
+    'contract.lastVersion.id',
+    'contract.parties',
     'errors',
     'warnings',
     'actions',
@@ -106,7 +106,7 @@ export class TableExtractedContractsComponent implements OnInit {
    */
   private async addContract(importState: ContractsImportState): Promise<boolean> {
     const data = this.rows.data;
-    await this.contractService.addContractAndVersion(importState.contract)
+    await this.contractService.add(importState.contract)
     importState.errors.push({
       type: 'error',
       field: 'contract',
@@ -131,7 +131,7 @@ export class TableExtractedContractsComponent implements OnInit {
   ///////////////////
 
   displayErrors(importState: ContractsImportState) {
-    const data = { title: `Contract id ${importState.contract.doc.id} v-${importState.contract.last.id}`, errors: importState.errors };
+    const data = { title: `Contract id ${importState.contract.id} v-${importState.contract.lastVersion.id}`, errors: importState.errors };
     this.dialog.open(ViewImportErrorsComponent, { data, width: '50%' });
   }
 
@@ -179,7 +179,7 @@ export class TableExtractedContractsComponent implements OnInit {
    * Even for nested objects.
    */
   public filterPredicate(data: ContractsImportState, filter: string) {
-    const dataStr = data.contract.doc.id + data.contract.last.id + data.contract.last.creationDate + data.contract.last.price.amount;
+    const dataStr = data.contract.id + data.contract.lastVersion.id + data.contract.lastVersion.creationDate + data.contract.lastVersion.price.amount;
     return dataStr.toLowerCase().indexOf(filter) !== -1;
   }
 

@@ -23,15 +23,6 @@ import {
 import { LegalRolesSlug } from '@blockframes/utils/static-model/types';
 import { toDate } from '@blockframes/utils/helpers';
 
-/**
- * @dev this should not be saved to firestore,
- * used only in front
- */
-export interface ContractWithLastVersion { // @TODO (#1887) remove this
-  doc: Contract,
-  last: ContractVersion,
-}
-
 export interface Contract extends ContractDocumentWithDates {
   versions?: ContractVersion[];
 };
@@ -53,9 +44,9 @@ export function createContract(params: Partial<Contract> = {}): Contract {
     parties: [],
     titleIds: [],
     partyIds: [],
+    ...params,
     documents: createContractLegalDocuments(params.documents),
     lastVersion: createContractVersion(params.lastVersion),
-    ...params
   };
 }
 
@@ -110,13 +101,6 @@ export function createContractPartyDetail(
     childRoles: [],
     ...params,
     party: createParty(params.party),
-  };
-}
-
-export function initContractWithVersion(): ContractWithLastVersion {
-  return {
-    doc: createContract(),
-    last: createContractVersion()
   };
 }
 
@@ -215,7 +199,11 @@ export function createContractFromFirestore(contract: any): Contract {
       : []
   }
 
-  // @todo(#1887)
+  if(contract.lastVersion){
+    c.lastVersion = createContractVersionFromFirestore(contract.lastVersion);
+  }
+
+  // @todo(#1887) remove
   if (contract.versions) {
     c.versions = contract.versions.map(version => createContractVersionFromFirestore(version));
   }

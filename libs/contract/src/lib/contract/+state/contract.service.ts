@@ -4,8 +4,6 @@ import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire
 import {
   Contract,
   createContractPartyDetail,
-  initContractWithVersion,
-  ContractWithLastVersion,
   getContractParties,
   createContractFromFirestore,
   cleanContract,
@@ -14,12 +12,10 @@ import {
   createContractVersion,
   createVersionMandate
 } from './contract.model';
-import orderBy from 'lodash/orderBy';
 import { ContractVersionService } from '../../version/+state/contract-version.service';
 import { PermissionsService, OrganizationQuery } from '@blockframes/organization';
 import { ContractDocumentWithDates } from './contract.firestore';
 import { firestore } from 'firebase/app';
-import { createContractVersionFromFirestore } from '@blockframes/contract/version/+state/contract-version.model';
 import { ContractVersion } from '@blockframes/contract/version/+state';
 import { Observable } from 'rxjs';
 import { cleanModel } from '@blockframes/utils/helpers';
@@ -58,55 +54,17 @@ export class ContractService extends CollectionService<ContractState> {
   }
 
   /**
-   * @dev Fetch contract and last version. Using contract from store as an argument
-   * is always better as it send less queries to the database
-   *
-   * @param contractOrId argument can be either an string or a Contract
-   */
-  public async getContractWithLastVersion(contractOrId: Contract | string): Promise<ContractWithLastVersion> {
-    try {
-      const contractWithVersion = initContractWithVersion()
-      const contract = typeof contractOrId === 'string'
-        ? await this.getValue(contractOrId)
-        : contractOrId
-
-      contractWithVersion.doc = createContractFromFirestore(contract);
-      const lastVersion = await this.contractVersionService.getContractLastVersion(contract.id);
-      if (lastVersion) {
-        contractWithVersion.last = lastVersion; // @TODO (#1887) remove this
-      }
-
-      return contractWithVersion;
-    } catch (error) {
-      console.warn(`Contract ${typeof contractOrId === 'string' ? contractOrId : contractOrId.id} not found.`);
-    }
-  }
-
-  /**
    *
    * @param movieId
    * @param distributionDealId
    */
-  public async getContractWithLastVersionFromDeal(movieId: string, distributionDealId: string): Promise<ContractWithLastVersion> {
-    const contracts = await this.getValue(ref => ref.where('titleIds', 'array-contains', movieId));
-
-    if (contracts.length) {
-      const contractWithVersion = initContractWithVersion();
-
-      for (const contract of contracts) {
-
-        const contractVersions = await this.contractVersionService.getValue(ref =>
-          ref.where(`titles.${movieId}.distributionDealIds`, 'array-contains', distributionDealId),
-          { params: { contractId: contract.id } }
-        );
-        if (contractVersions.length) {
-          const sortedContractVersions = orderBy(contractVersions, 'id', 'desc');
-          contractWithVersion.doc = createContractFromFirestore(contract);
-          contractWithVersion.last = createContractVersionFromFirestore(sortedContractVersions[0]);
-          return contractWithVersion;
-        }
-      }
-    }
+  public async getContractFromDeal(movieId: string, distributionDealId: string): Promise<Contract> {
+    const contracts = await this.getValue(ref => 
+      ref.where(`lastVersion.titles.${movieId}.distributionDealIds`, 'array-contains', distributionDealId),
+    );
+    
+    // Can have only one result
+    return contracts.length ? contracts.pop(): undefined;
   }
 
   /**
@@ -114,7 +72,7 @@ export class ContractService extends CollectionService<ContractState> {
    * @note We need this method because `addContractAndVersion` only work on the import.
    * @param contract The contract to add
    * @param version Optional content for the first version
-   * @todo(#1887) Don't create _meta
+   * @todo(#1887) Don't create _meta & check if method still usefull
    * @todo(#2041) Use distribution deal service
    */
   public async create(contract: Partial<Contract>, version: Partial<ContractVersion> = {}) {
@@ -131,20 +89,6 @@ export class ContractService extends CollectionService<ContractState> {
     this.contractVersionService.add({ id: '_meta', count: 1 }, { params: { contractId }, write });
     await write.commit();
     return contractId;
-  }
-
-  /**
-   * Add/update a contract & create a new contract version
-   * @param contract
-   * @param version
-   */
-  public async addContractAndVersion(
-    contract: ContractWithLastVersion
-  ): Promise<string> {
-    // @TODO (#1887) temporary hack
-    contract.doc.lastVersion = contract.last;
-    await this.add(contract.doc);
-    return contract.doc.id;
   }
 
   /**

@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@
 import { getValue } from '@blockframes/utils/helpers';
 import { ActivatedRoute } from '@angular/router';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
-import { ContractWithLastVersion, Contract } from '@blockframes/contract/contract/+state/contract.model';
+import { Contract } from '@blockframes/contract/contract/+state/contract.model';
 
 @Component({
   selector: 'admin-contracts',
@@ -12,27 +12,27 @@ import { ContractWithLastVersion, Contract } from '@blockframes/contract/contrac
 })
 export class ContractsComponent implements OnInit {
   public versionColumns = {
-    'doc.id': 'Id',
-    'doc.type': 'Type',
-    'last.id': 'Version',
-    'last.status': 'Status',
-    'last.scope': 'Scope',
-    'doc.partyIds': 'Parties',
-    'doc.titleIds': 'Titles',
+    'id': 'Id',
+    'type': 'Type',
+    'lastVersion.id': 'Version',
+    'lastVersion.status': 'Status',
+    'lastVersion.scope': 'Scope',
+    'partyIds': 'Parties',
+    'titleIds': 'Titles',
     'edit': 'Edit',
   };
 
   public initialColumns: string[] = [
-    'doc.id',
-    'doc.type',
-    'last.id',
-    'last.status',
-    'last.scope',
-    'doc.partyIds',
-    'doc.titleIds',
+    'id',
+    'type',
+    'lastVersion.id',
+    'lastVersion.status',
+    'lastVersion.scope',
+    'partyIds',
+    'titleIds',
     'edit',
   ];
-  public rows: ContractWithLastVersion[] = [];
+  public rows: Contract[] = [];
   public movieId = '';
   constructor(
     private contractService: ContractService,
@@ -51,14 +51,11 @@ export class ContractsComponent implements OnInit {
     }
 
     const promises = contracts.map(async contract => {
-      // @TODO (#1887) change this
-      const contractWithLastVersion = await this.contractService.getContractWithLastVersion(contract.id);
-      const row = { ...contractWithLastVersion } as any;
-
+      const row = { ...contract } as any;
       // Append new data for table display
       row.edit = {
-        id: contractWithLastVersion.doc.id,
-        link: `/c/o/admin/panel/contract/${contractWithLastVersion.doc.id}`,
+        id: row.id,
+        link: `/c/o/admin/panel/contract/${row.id}`,
       }
       return row;
     });
@@ -69,10 +66,10 @@ export class ContractsComponent implements OnInit {
 
   public filterPredicate(data: any, filter: string) {
     const columnsToFilter = [
-      'doc.id',
-      'doc.type',
-      'last.id',
-      'last.status',
+      'id',
+      'type',
+      'lastVersion.id',
+      'lastVersion.status',
     ];
     const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
     return dataStr.toLowerCase().indexOf(filter) !== -1;

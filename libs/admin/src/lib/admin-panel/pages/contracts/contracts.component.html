@@ -8,16 +8,16 @@
   showFilter="true"
   showLoader="true"
   showPaginator="true">
-  <ng-template colRef="last.scope" let-terms>
+  <ng-template colRef="lastVersion.scope" let-terms>
     <strong>From : </strong>{{ terms | termDate: 'start' }} <strong>To : </strong>{{ terms | termDate: 'end' }}
   </ng-template>
-  <ng-template colRef="last.status" let-status>
+  <ng-template colRef="lastVersion.status" let-status>
     {{ status | toLabel: 'contractStatus' | async }}
   </ng-template>
-  <ng-template colRef="doc.type" let-type>
+  <ng-template colRef="type" let-type>
     {{ type | toLabel: 'contractType' | async }}
   </ng-template>
-  <ng-template colRef="doc.partyIds" let-partyIds>
+  <ng-template colRef="partyIds" let-partyIds>
     <ul *ngIf="partyIds.length else noParties">
       <li *ngFor="let partyId of partyIds">{{ partyId }}</li>
     </ul>
@@ -25,7 +25,7 @@
       --
     </ng-template>
   </ng-template>
-  <ng-template colRef="doc.titleIds" let-titleIds>
+  <ng-template colRef="titleIds" let-titleIds>
     <ul *ngIf="titleIds.length else noTitles">
       <li *ngFor="let titleId of titleIds">{{ titleId }}</li>
     </ul>

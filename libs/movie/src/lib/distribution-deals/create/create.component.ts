@@ -34,7 +34,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { OrganizationQuery } from '@blockframes/organization/organization/+state/organization.query';
 import { createDistributionDeal } from '../+state/distribution-deal.model';
 import { DistributionDealService } from '../+state';
-import { createContractPartyDetail, initContractWithVersion } from '@blockframes/contract/contract/+state/contract.model';
+import { createContractPartyDetail, createContract } from '@blockframes/contract/contract/+state/contract.model';
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { ControlErrorStateMatcher, languageValidator } from '@blockframes/utils/form/validators/validators';
@@ -183,23 +183,24 @@ export class DistributionDealCreateComponent implements OnInit, OnDestroy {
     this.form.removeLanguage(language);
   }
 
+  // @ TODO (#1887) check this method
   public async addDistributionDeal() {
     const distributionDeal = createDistributionDeal();
     // Create the contract that will handle the deal
-    const contract = initContractWithVersion();
+    const contract = createContract();
 
     const licensee = createContractPartyDetail();
     licensee.party.orgId = this.organizationQuery.getActiveId();
     licensee.party.role = 'licensee';
-    contract.doc.parties.push(licensee);
+    contract.parties.push(licensee);
 
     const licensor = createContractPartyDetail();
     licensor.party.orgId = this.movie.salesAgentDeal.salesAgent.orgId;
     licensor.party.displayName = this.movie.salesAgentDeal.salesAgent.displayName;
     licensor.party.role = 'licensor';
-    contract.doc.parties.push(licensor);
+    contract.parties.push(licensor);
 
-    const isValid = await this.contractService.isContractValid(contract.doc)
+    const isValid = await this.contractService.isContractValid(contract)
 
     if (!isValid) {
       this.snackBar.open(`Error while creating contract..`, 'close', { duration: 2000 });

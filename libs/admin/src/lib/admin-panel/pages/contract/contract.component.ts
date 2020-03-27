@@ -135,7 +135,7 @@ export class ContractComponent implements OnInit {
         this.contractVersionForm = new ContractVersionAdminForm(this.contract.lastVersion);
         this.cdRef.markForCheck();
         this.titles = [];
-        if(c.titleIds && c.lastVersion.titles){
+        if (c.titleIds && c.lastVersion.titles) {
           c.titleIds.forEach(async titleId => {
             const movie = await this.movieService.getValue(titleId);
             this.titles.push({
@@ -183,14 +183,9 @@ export class ContractComponent implements OnInit {
       return;
     }
 
-    const update = {
-      ...this.contract.lastVersion,
-      creationDate: new Date(),
-      status: this.contractVersionForm.get('status').value,
-    }
-
-    // @TODO (#1887)
-    await this.contractService.addContractAndVersion({ doc: this.contract, last: update });
+    this.contract.lastVersion.creationDate = new Date();
+    this.contract.lastVersion.status = this.contractVersionForm.get('status').value;
+    await this.contractService.add(this.contract); // @TODO (#1887) test update
 
     this.snackBar.open('Informations updated !', 'close', { duration: 5000 });
   }
@@ -281,17 +276,15 @@ export class ContractComponent implements OnInit {
   private async updateTitle(output: ContractTitleDetail | { remove: boolean }, titleIdToRemove?: string, ): Promise<boolean> {
     if (!output) return false;
 
-    // @TODO (#1887) last version will be accessible directly with the contract document
-    const writeableVersion = { ...this.contract.lastVersion };
-    const writeableContract = { ... this.contract }
+    const writeableContract = { ... this.contract };
 
     if ((output as { remove: boolean }).remove === true && titleIdToRemove) {
-      delete writeableVersion.titles[titleIdToRemove];
+      delete writeableContract.lastVersion.titles[titleIdToRemove];
       // @TODO (#2090) should also update distribution deal ? contractId etc
     } else {
       output = output as ContractTitleDetail;
       const titleId = output.titleId.trim();
-      writeableVersion.titles[titleId] = output;
+      writeableContract.lastVersion.titles[titleId] = output;
       const movie = await this.movieService.getValue(titleId);
       if (!movie) {
         this.snackBar.open(`Title "${titleId}" not found.`, 'close', { duration: 5000 });
@@ -300,14 +293,10 @@ export class ContractComponent implements OnInit {
     }
 
     // A title have been updated, added or removed. Need to re-calculate contract price.
-    calculatePrice(writeableVersion);
+    calculatePrice(writeableContract.lastVersion);
 
-    // Udpate titleIds array
-    writeableContract.titleIds = Object.keys(writeableVersion.titles);
-
-    // @TODO (#1887) move thoses functions to a service
-    // Update contract and create a new version
-    await this.contractService.addContractAndVersion({ doc: writeableContract, last: writeableVersion });
+    // Update contract
+    await this.contractService.add(writeableContract); // @TODO (#1887) should be update
 
     this.snackBar.open('Informations updated !', 'close', { duration: 5000 });
     return true;
@@ -330,11 +319,8 @@ export class ContractComponent implements OnInit {
    * @dev this method uses titles.price to update global contract price
    */
   public async updatePrice() {
-    const update = calculatePrice({ ...this.contract.lastVersion });
-
-    // @TODO (#1887)
-    await this.contractService.addContractAndVersion({ doc: this.contract, last: update });
-
+    calculatePrice(this.contract.lastVersion);
+    await this.contractService.add(this.contract);
     this.snackBar.open('Contract global price updated !', 'close', { duration: 5000 });
   }
 }

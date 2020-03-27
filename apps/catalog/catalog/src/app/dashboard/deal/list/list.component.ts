@@ -96,6 +96,7 @@ export class DealListComponent {
   /** Create a sale and redirect to tunnel */
   async createSale() {
     const type = 'sale';
+    // @todo (#1887) check
     const contractId = await this.service.create({ type });
     this.router.navigate(['../tunnel/contract', contractId, type], { relativeTo: this.route })
   }
@@ -111,6 +112,7 @@ export class DealListComponent {
     if (mandate) {
       this.router.navigate([mandate.id], { relativeTo: this.route })
     } else {
+      // @todo (#1887) check
       const contractId = await this.service.create({ type });
       this.router.navigate(['../tunnel/contract', contractId, type], { relativeTo: this.route })
     }
