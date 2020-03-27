@@ -77,35 +77,47 @@ export function storeSearchableMovie(
     return Promise.resolve(true);
   }
 
-  return indexMoviesBuilder(adminKey).saveObject({
-    objectID: movie.id,
+  try {
+    return indexMoviesBuilder(adminKey).saveObject({
+      objectID: movie.id,
 
-    // searchable keys
-    title: {
-      international: movie.main.title.international,
-      original: movie.main.title.original,
-    },
-    directors: !!movie.main.directors ?
-      movie.main.directors.map((director) => `${director.firstName} ${director.lastName}`) :
-      [],
-    keywords: movie.promotionalDescription.keywords,
+      // searchable keys
+      title: {
+        international: movie.main.title.international,
+        original: movie.main.title.original,
+      },
+      directors: !!movie.main.directors ?
+        movie.main.directors.map((director) => `${director.firstName} ${director.lastName}`) :
+        [],
+      keywords: movie.promotionalDescription.keywords,
 
-    // facets
-    genres: movie.main.genres,
-    originCountries: movie.main.originCountries,
-    languages: {
-      original: movie.main.originalLanguages,
-      dubbed: Object.keys(movie.versionInfo.languages).filter(lang => movie.versionInfo.languages[lang as LanguagesSlug]?.dubbed),
-      subtitle: Object.keys(movie.versionInfo.languages).filter(lang => movie.versionInfo.languages[lang as LanguagesSlug]?.subtitle),
-      caption: Object.keys(movie.versionInfo.languages).filter(lang => movie.versionInfo.languages[lang as LanguagesSlug]?.caption),
-    },
-    status: movie.main.status,
-    budget: {
-      from: movie.budget.estimatedBudget!.from,
-      to: movie.budget.estimatedBudget!.to,
-    },
-    orgName,
-  });
+      // facets
+      genres: !!movie.main.genres ? movie.main.genres : [],
+      originCountries: !!movie.main.originCountries ? movie.main.originCountries : [],
+      languages: {
+        original: !! movie.main.originalLanguages ? movie.main.originalLanguages: [],
+        dubbed: !! movie.versionInfo.languages ?
+          Object.keys(movie.versionInfo.languages).filter(lang => movie.versionInfo.languages[lang as LanguagesSlug]?.dubbed) :
+          [],
+        subtitle: !! movie.versionInfo.languages ?
+          Object.keys(movie.versionInfo.languages).filter(lang => movie.versionInfo.languages[lang as LanguagesSlug]?.subtitle) :
+          [],
+        caption: !! movie.versionInfo.languages ?
+          Object.keys(movie.versionInfo.languages).filter(lang => movie.versionInfo.languages[lang as LanguagesSlug]?.caption) :
+          [],
+      },
+      status: !! movie.main.status ? movie.main.status : '',
+      budget: {
+        from: (!! movie.budget.estimatedBudget && !! movie.budget.estimatedBudget.from) ? movie.budget.estimatedBudget.from : null,
+        to: (!! movie.budget.estimatedBudget && !! movie.budget.estimatedBudget.to) ? movie.budget.estimatedBudget.to : null,
+      },
+      orgName,
+    });
+  } catch (error) {
+    console.error(`\n\n\tFailed to format the movie ${movie.id} into an algolia record : skipping\n\n`);
+    console.error(error);
+    return new Promise(res => res(true));
+  }
 }
 
 export function deleteSearchableMovie(movieId: string): Promise<any> {
