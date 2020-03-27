@@ -30,7 +30,7 @@ const routes: Routes = createRoutes({
   },
   {
     path: 'admin',
-    loadChildren: () => import('@blockframes/admin').then(m => m.AdminModule)
+    loadChildren: () => import('@blockframes/admin/admin/admin.module').then(m => m.AdminModule)
   }
   ]
 });
