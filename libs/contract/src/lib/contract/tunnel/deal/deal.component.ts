@@ -31,8 +31,8 @@ export class DealComponent implements OnInit {
       this.routerQuery.selectParams('titleId')
     ]).pipe(
       map(([movies, titleId]) => {
-        const movie = movies.find(movie => movie.id === titleId)
-        return movie
+        const filteredMovie = movies.find(movie => movie.id === titleId)
+        return filteredMovie
       }),
       tap(movie => {
         this.dynTitle.setPageTitle(`${movie.main.title.international}`, 'Exploitation Rights - Create a contract offer')
