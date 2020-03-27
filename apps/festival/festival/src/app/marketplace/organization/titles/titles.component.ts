@@ -1,9 +1,8 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
-import { switchMap, map } from 'rxjs/operators';
+import { switchMap, map, tap } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { ViewComponent } from '../view/view.component';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { MovieQuery } from '@blockframes/movie/+state/movie.query';
+import { MovieService, MovieStore, MovieQuery } from '@blockframes/movie/+state';
 
 @Component({
   selector: 'festival-marketplace-organization-titles',
@@ -19,12 +18,14 @@ export class TitlesComponent implements OnInit, OnDestroy {
   constructor(
     private service: MovieService,
     private query: MovieQuery,
+    private store: MovieStore,
     private parent: ViewComponent
   ) { }
 
   ngOnInit(): void {
     this.sub = this.parent.org$.pipe(
       map(org => org.movieIds),
+      tap(_ => this.store.reset()),
       switchMap(movieIds => this.service.syncManyDocs(movieIds))
     ).subscribe();
   }

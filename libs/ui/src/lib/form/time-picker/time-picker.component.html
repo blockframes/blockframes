@@ -1,0 +1,6 @@
+<div [formGroup]="form" class="container">
+  <mat-datepicker-toggle [for]="picker"></mat-datepicker-toggle>
+  <mat-datepicker #picker></mat-datepicker>
+  <input class="day" formControlName="day" size="3" aria-label="Day" [matDatepicker]="picker" (dateInput)="setDate()">
+  <input type="time" formControlName="time" formControlName="time" size="3" aria-label="Time" (input)="setDate()">
+</div>
