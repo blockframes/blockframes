@@ -17,7 +17,6 @@ import { MovieSummaryBudgetModule } from '@blockframes/movie/form/summary/budget
 import { MovieSummaryTechnicalInformationModule } from '@blockframes/movie/form/summary/technical-information/technical-information.module';
 import { MovieSummaryImageModule } from '@blockframes/movie/form/summary/image/image.module';
 import { MovieSummaryFileModule } from '@blockframes/movie/form/summary/file/file.module';
-import { MovieSummaryEvaluationModule } from '@blockframes/movie/form/summary/evaluation/evaluation.module';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -43,7 +42,6 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MovieSummaryTechnicalInformationModule,
     MovieSummaryImageModule,
     MovieSummaryFileModule,
-    MovieSummaryEvaluationModule,
     // Materials
     MatCardModule,
     MatIconModule,

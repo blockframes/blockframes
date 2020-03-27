@@ -87,16 +87,6 @@
       </mat-card-content>
     </mat-card>
 
-    <!-- Evaluation card -->
-    <mat-card>
-      <mat-card-header fxLayout="row" fxLayoutAlign="start center">
-        <mat-card-title>Marketplace Evaluation</mat-card-title>
-        <a mat-icon-button [routerLink]="getPath('evaluation')"><mat-icon svgIcon="pencil"></mat-icon></a>
-      </mat-card-header>
-      <mat-card-content>
-        <movie-summary-evaluation [salesInfo]="form.salesInfo" [link]="getPath('evaluation')"></movie-summary-evaluation>
-      </mat-card-content>
-    </mat-card>
 
     <!-- Submit -->
     <button test-id="submit" mat-flat-button color="accent" class="submit" (click)="submit()">
