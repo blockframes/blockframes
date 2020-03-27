@@ -36,7 +36,7 @@ export async function upgradeAlgoliaMovies() {
         .then(snap => snap.data())
         .then(user => db.collection('orgs').doc(user.orgId).get())
         .then(snap => snap.data())
-        .then(organization => storeSearchableMovie(movieData, organization.name, process.env['ALGOLIA_API_KEY']))
+        .then(organization => storeSearchableMovie(movieData, organization.denomination.full, process.env['ALGOLIA_API_KEY']))
       ;
       promises.push(promise);
     } catch (error) {

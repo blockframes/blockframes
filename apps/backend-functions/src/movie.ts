@@ -60,9 +60,7 @@ export async function onMovieCreate(
     const organization = organizationSnap.data() as OrganizationDocument
 
     // Update algolia's index
-    if (organization.denomination?.full) {
-      await storeSearchableMovie(movie, organization.id, organization.denomination.full);
-    }
+    await storeSearchableMovie(movie, organization.id, organization.denomination.full);
 
     return Promise.all([
       // Update the organization's movieIds with the new movie id.
