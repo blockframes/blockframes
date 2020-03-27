@@ -15,10 +15,10 @@ export class FormEntity<C extends EntityControl<T>, T = any> extends FormGroup {
 
   createControl?: (value?: Partial<T>) => C
   static factory<E, Control extends EntityControl = any>(
-    value: Partial<T>,
+    value: Partial<E>,
     createControl?: (value?: Partial<E>) => Control, validators?: Validator
   ): FormEntity<Control, E> {
-    const form = new FormEntity<C, T>({}, validators);
+    const form = new FormEntity<Control, E>({}, validators);
     if (createControl) {
       form['createControl'] = createControl.bind(form);
     }
