@@ -48,7 +48,6 @@
       "@blockframes/contract/*": ["libs/contract/src/lib/*"],
       "@blockframes/financial-report/*": ["libs/financial-report/src/lib/*"],
       "@blockframes/admin/*": ["libs/admin/src/lib/*"],
-      "@blockframes/user": ["libs/user/src/lib/user/index.ts"],
       "@blockframes/user/*": ["libs/user/src/lib/user/*"],
       "@blockframes/apps/catalog/marketplace/*": ["apps/catalog/src/app/marketplace/*"],
       "@blockframes/apps/catalog/dashboard/*": ["apps/catalog/src/app/dashboard/*"],

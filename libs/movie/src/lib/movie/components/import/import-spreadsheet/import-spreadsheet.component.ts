@@ -5,7 +5,7 @@ import { SheetTab, importSpreadsheet } from '@blockframes/utils/spreadsheet';
 import { FormControl } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Intercom } from 'ng-intercom';
-import { UserService } from '@blockframes/user';
+import { UserService } from '@blockframes/user/+state/user.service';
 
 export interface SpreadsheetImportEvent {
   sheet: SheetTab,
