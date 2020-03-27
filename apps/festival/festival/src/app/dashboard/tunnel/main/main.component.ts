@@ -1,9 +1,8 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { MovieForm } from '@blockframes/movie/form/movie.form';
 import { MovieTunnelComponent } from '../movie-tunnel.component';
 
 @Component({
-  selector: 'catalog-movie-tunnel-main',
+  selector: 'festival-movie-tunnel-main',
   templateUrl: './main.component.html',
   styleUrls: ['./main.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

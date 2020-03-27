@@ -31,10 +31,10 @@ export class TunnelSummaryComponent {
   public async submit() {
     if (this.form.valid) {
       const movie = this.form.value;
-      movie.main.storeConfig.status = 'submitted';
+      movie.main.storeConfig.status = 'accepted'; // Specific to this application
       await this.service.update({...this.query.getActive(), ...movie});
       this.form.markAsPristine();
-      const ref = this.snackBar.open('Movie Submitted !!', '', { duration: 1000 });
+      const ref = this.snackBar.open('Movie Online !!', '', { duration: 1000 });
       ref.afterDismissed().subscribe(_ => {
         const movieId = this.query.getActiveId();
         this.router.navigate(['../../../../titles', movieId, 'details'], { relativeTo: this.route })
