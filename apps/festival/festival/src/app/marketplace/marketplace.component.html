@@ -52,7 +52,9 @@
     </app-nav>
 
     <!-- CONTENT -->
-    <router-outlet></router-outlet>
+    <main [@routeAnimation]="prepareRoute()">
+      <router-outlet></router-outlet>
+    </main>
 
   </mat-sidenav-content>
 </mat-sidenav-container>
