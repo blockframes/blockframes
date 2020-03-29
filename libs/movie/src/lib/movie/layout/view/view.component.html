@@ -1,3 +1,20 @@
+<page-nav targetId="nav">
+  <mat-toolbar>
+    <button mat-icon-button>
+      <mat-icon svgIcon="menu"></mat-icon>
+    </button>
+    <nav mat-tab-nav-bar>
+      <a mat-tab-link
+        *ngFor="let link of navLinks"
+        [routerLink]="link.path"
+        routerLinkActive #rla="routerLinkActive"
+        [active]="rla.isActive">
+      {{link.label}}
+      </a>
+    </nav>
+  </mat-toolbar>
+</page-nav>
+
 <ng-container *ngIf="view">
   <header fxLayout="column" [class]="view.banner.url ? 'dark-theme' : ''">
     <div class="banner-background" [backgroundRef]="view.banner"></div>
@@ -29,14 +46,15 @@
       </ng-container>
     </div>
   </header>
-  <nav mat-tab-nav-bar>
-    <a mat-tab-link
-      *ngFor="let link of navLinks"
-      [routerLink]="link.path"
-      routerLinkActive #rla="routerLinkActive"
-      [active]="rla.isActive">
-    {{link.label}}
-    </a>
-  </nav>
-  <router-outlet></router-outlet>
 </ng-container>
+
+<nav id="nav" mat-tab-nav-bar>
+  <a mat-tab-link
+    *ngFor="let link of navLinks"
+    [routerLink]="link.path"
+    routerLinkActive #rla="routerLinkActive"
+    [active]="rla.isActive">
+  {{link.label}}
+  </a>
+</nav>
+<router-outlet></router-outlet>

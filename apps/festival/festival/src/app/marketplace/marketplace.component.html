@@ -25,29 +25,31 @@
    </mat-nav-list>
   </mat-sidenav>
 
-  <mat-sidenav-content>
+  <mat-sidenav-content appNavContainer [appNav]="nav">
     <!-- TOOLBAR -->
-    <mat-toolbar fxLayout="row" fxLayoutAlign="space-between center">
-      <div fxLayout="row" fxLayoutAlign="default center" fxLayoutGap="24px">
-        <button test-id="menu" mat-icon-button (click)="sidenav.toggle()">
-          <mat-icon svgIcon="menu"></mat-icon>
-        </button>
-        <a class="logo" routerLink=".">
-          <img asset="festival.svg" type="logo" alt="Archipel Content Logo" />
-        </a>
-      </div>
-      <div fxLayout="row" fxLayoutGap="24px">
-        <a test-id="heart-icon" mat-icon-button routerLink="wishlist">
-          <mat-icon
-            svgIcon="heart_fill" color="primary"
-            [matBadge]="wishlistCount$ | async" [matBadgeHidden]="!(wishlistCount$ | async)" matBadgeColor="accent" matBadgeSize="small">
-          </mat-icon>
-        </a>
-        <mat-divider vertical></mat-divider>
-        <overlay-notification-widget page="notifications"></overlay-notification-widget>
-        <auth-widget></auth-widget>
-      </div>
-    </mat-toolbar>
+    <app-nav #nav>
+      <mat-toolbar fxLayout="row" fxLayoutAlign="space-between center">
+        <div fxLayout="row" fxLayoutAlign="default center" fxLayoutGap="24px">
+          <button test-id="menu" mat-icon-button (click)="sidenav.toggle()">
+            <mat-icon svgIcon="menu"></mat-icon>
+          </button>
+          <a class="logo" routerLink=".">
+            <img asset="festival.svg" type="logo" alt="Archipel Content Logo" />
+          </a>
+        </div>
+        <div fxLayout="row" fxLayoutGap="24px">
+          <a test-id="heart-icon" mat-icon-button routerLink="wishlist">
+            <mat-icon
+              svgIcon="heart_fill" color="primary"
+              [matBadge]="wishlistCount$ | async" [matBadgeHidden]="!(wishlistCount$ | async)" matBadgeColor="accent" matBadgeSize="small">
+            </mat-icon>
+          </a>
+          <mat-divider vertical></mat-divider>
+          <overlay-notification-widget page="notifications"></overlay-notification-widget>
+          <auth-widget></auth-widget>
+        </div>
+      </mat-toolbar>
+    </app-nav>
 
     <!-- CONTENT -->
     <router-outlet></router-outlet>

@@ -35,6 +35,9 @@
     // Header
     .cal-day-headers {
       background-color: mat-color($background, card);
+      z-index: 2;
+      position: sticky;
+      top: 0;
     }
 
     ///////////

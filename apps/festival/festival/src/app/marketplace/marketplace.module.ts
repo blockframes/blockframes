@@ -13,6 +13,7 @@ import { ImgAssetModule } from '@blockframes/ui/theme';
 import { SearchWidgetModule } from '@blockframes/ui/search-widget';
 import { NotificationWidgetModule } from '@blockframes/notification/notification/notification-widget/notification-widget.module';
 import { AuthWidgetModule } from '@blockframes/auth/components/widget/widget.module';
+import { AppNavModule } from '@blockframes/ui/app-nav';
 
 // Material
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -23,6 +24,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatMenuModule } from '@angular/material/menu';
+
 
 
 const routes: Routes = [{
@@ -97,6 +99,7 @@ const routes: Routes = [{
 
     // Libraries
     ImgAssetModule,
+    AppNavModule,
 
     // Widgets
     NotificationWidgetModule,
