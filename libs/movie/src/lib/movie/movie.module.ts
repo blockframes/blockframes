@@ -39,16 +39,11 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTabsModule } from '@angular/material/tabs';
-import { HomeEmptyComponent } from './components/home-empty/home-empty.component';
 import { MovieFormModule } from './form/form.module';
 
-import { MoviePickerModule } from './components/movie-picker/movie-picker.module';
 import { MovieImdbSearchModule } from './components/movie-imdb-search/movie-imdb-search.module';
 
 @NgModule({
-  declarations: [
-    HomeEmptyComponent
-  ],
   imports: [
     CommonModule,
     FlexLayoutModule,
@@ -84,8 +79,7 @@ import { MovieImdbSearchModule } from './components/movie-imdb-search/movie-imdb
     PasswordConfirmModule,
     MovieFormModule,
     MovieCardModule,
-    MovieImdbSearchModule,
-    MoviePickerModule
+    MovieImdbSearchModule
   ],
 })
 export class MovieModule {}
