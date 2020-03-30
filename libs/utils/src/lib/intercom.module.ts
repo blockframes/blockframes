@@ -9,7 +9,7 @@ function getIntercomOptions(user) {
     ?  {
           email: user.email,
           user_id: user.uid,
-          name: user.surname,
+          name: user.firstName,
           widget: {
             "activator": "#intercom"
           }

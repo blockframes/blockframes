@@ -5,8 +5,8 @@ import { OrganizationMember } from "@blockframes/user/+state/user.model";
 function createMemberFormGroup(member: Partial<OrganizationMember> = {}) {
   return new FormGroup({
     uid: new FormControl(member.uid),
-    name: new FormControl(member.name),
-    surname: new FormControl(member.surname),
+    firstName: new FormControl(member.firstName),
+    lastName: new FormControl(member.lastName),
     email: new FormControl(member.email, Validators.email),
     role: new FormControl(member.role),
     avatar: new FormControl(member.avatar)

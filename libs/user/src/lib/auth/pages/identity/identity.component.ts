@@ -43,8 +43,8 @@ export class IdentityComponent {
         this.form.get('newPassword').value
       );
       await this.service.update({
-        name: this.form.get('name').value,
-        surname: this.form.get('surname').value,
+        firstName: this.form.get('firstName').value,
+        lastName: this.form.get('lastName').value,
       });
 
       // Accept the invitation from the organization.
