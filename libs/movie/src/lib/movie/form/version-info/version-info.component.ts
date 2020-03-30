@@ -20,7 +20,8 @@ import { FormStaticValue } from '@blockframes/utils/form';
 import { FormList } from '@blockframes/utils/form/forms/list.form';
 
 // Form
-import { MovieVersionInfoForm } from './version-info.form';
+import { MovieVersionInfoForm, VersionSpecificationForm } from './version-info.form';
+import { createMovieLanguageSpecification } from '../../+state/movie.model';
 
 @Component({
   selector: '[form] [originalLanguages] movie-form-version-info',
@@ -40,7 +41,8 @@ export class MovieFormVersionInfoComponent implements OnInit, OnDestroy {
   newLanguage() {
     const language = this.languageForm.value;
     if (!this.form.controls[language]) {
-      this.form.addLanguage(language);
+      const spec = createMovieLanguageSpecification({ original: true });
+      this.form.setControl(language, new VersionSpecificationForm(spec));
       this.added$.next([ ...this.added$.getValue(), language ])
     }
     this.languageForm.reset();
@@ -63,7 +65,8 @@ export class MovieFormVersionInfoComponent implements OnInit, OnDestroy {
     this.sub = this.original$.subscribe(languages => {
       languages.forEach(language => {
         if (!this.form.get(language)) {
-          this.form.addLanguage(language, { original: true });
+          const spec = createMovieLanguageSpecification({ original: true });
+          this.form.setControl(language, new VersionSpecificationForm(spec));
         }
       });
     });
