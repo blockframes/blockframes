@@ -175,7 +175,7 @@ export const icons = [
   },
   { name: 'NZD', url: 'assets/icons/NZD.svg' },
   { name: 'open_to', url: 'assets/icons/open_to.svg' },
-  { name: 'pdf', url: 'assets/icons/pdf.svg' },
+  { name: 'pdf', url: 'assets/icons/pdf.webp' },
   { name: 'padlock', url: 'assets/icons/padlock.svg' },
   { name: 'paid', url: 'assets/icons/paid.svg' },
   { name: 'pencil', url: 'assets/icons/pencil.svg' },
