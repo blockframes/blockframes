@@ -72,13 +72,13 @@ executors:
     docker:
       - image: blockframes/ci:latest
     working_directory: ~/repo
-    resource_class: medium+
+    resource_class: large
 jobs:
   build-and-deploy-storybook:
     executor: blockframes-ci
     environment:
       - ENV: ci
-      - NODE_OPTIONS: '--max_old_space_size=5632'
+      - NODE_OPTIONS: '--max_old_space_size=7168'
       - GOOGLE_APPLICATION_CREDENTIALS: creds.json
     steps:
       - checkout_project
@@ -92,7 +92,7 @@ jobs:
     executor: blockframes-ci
     environment:
       - ENV: ci
-      - NODE_OPTIONS: '--max_old_space_size=5632'
+      - NODE_OPTIONS: '--max_old_space_size=7168'
       - GOOGLE_APPLICATION_CREDENTIALS: creds.json
     steps:
       - checkout_project
@@ -114,7 +114,7 @@ jobs:
     executor: blockframes-ci
     environment:
       - ENV: ci
-      - NODE_OPTIONS: '--max_old_space_size=5632'
+      - NODE_OPTIONS: '--max_old_space_size=7168'
       - GOOGLE_APPLICATION_CREDENTIALS: creds.json
     steps:
       - checkout_project
@@ -157,7 +157,7 @@ jobs:
     executor: blockframes-ci
     environment:
       - ENV: ci
-      - NODE_OPTIONS: '--max_old_space_size=5632'
+      - NODE_OPTIONS: '--max_old_space_size=7168'
       - GOOGLE_APPLICATION_CREDENTIALS: creds.json
     steps:
       - checkout_project
@@ -188,7 +188,7 @@ jobs:
     executor: blockframes-ci
     environment:
       - ENV: staging
-      - NODE_OPTIONS: '--max_old_space_size=5632'
+      - NODE_OPTIONS: '--max_old_space_size=7168'
       - GOOGLE_APPLICATION_CREDENTIALS: creds.json
     steps:
       - checkout_project
@@ -219,7 +219,7 @@ jobs:
     executor: blockframes-ci
     environment:
       - ENV: production
-      - NODE_OPTIONS: '--max_old_space_size=5632'
+      - NODE_OPTIONS: '--max_old_space_size=7168'
       - GOOGLE_APPLICATION_CREDENTIALS: creds.json
     steps:
       - checkout_project
@@ -247,7 +247,7 @@ jobs:
     executor: blockframes-ci
     environment:
       - ENV: staging
-      - NODE_OPTIONS: '--max_old_space_size=5632'
+      - NODE_OPTIONS: '--max_old_space_size=7168'
       - GOOGLE_APPLICATION_CREDENTIALS: creds.json
     steps:
       - checkout_project
