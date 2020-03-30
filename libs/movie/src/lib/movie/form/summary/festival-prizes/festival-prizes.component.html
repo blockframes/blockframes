@@ -19,8 +19,8 @@
         </missing-control>
         <missing-control [control]="festivalPrize.get('premiere')" [link]="link">
           <ng-template let-premieres>
-            <ng-container *ngFor="let premiere of premieres">
-              {{premiere | titlecase}}
+            <ng-container *ngFor="let premiere of premieres; let isLast=last">
+              {{premiere | titlecase}}{{isLast? '' : ', '}}
             </ng-container>
           </ng-template>
         </missing-control>
