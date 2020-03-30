@@ -32,7 +32,7 @@ export interface InvitationToWorkOnDocumentOptions {
 export function createInvitationFromUserToOrganization(params: InvitationFromUserToOrganizationOptions): InvitationFromUserToOrganization {
   return {
     id: '',
-    app: 'main',
+    app: 'blockframes',
     type: 'fromUserToOrganization',
     status: 'pending',
     date: firestore.Timestamp.now(),
@@ -43,7 +43,7 @@ export function createInvitationFromUserToOrganization(params: InvitationFromUse
 /** Factory function that create an Invitation of type fromOrganizationToUser. */
 export function createInvitationFromOrganizationToUser(params: InvitationFromOrganizationToUserOptions): InvitationFromOrganizationToUser {
   return {
-    app: 'main',
+    app: 'blockframes',
     type: 'fromOrganizationToUser',
     status: 'pending',
     date: firestore.Timestamp.now(),
@@ -54,7 +54,7 @@ export function createInvitationFromOrganizationToUser(params: InvitationFromOrg
 /** Factory function that create an Invitation of type toWorkOnDocument. */
 export function createInvitationToDocument(params: InvitationToWorkOnDocumentOptions): InvitationToWorkOnDocument {
   return {
-    app: 'media_delivering',
+    app: 'blockframes',
     type: 'toWorkOnDocument',
     status: 'pending',
     date: firestore.Timestamp.now(),
