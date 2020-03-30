@@ -8,5 +8,9 @@
   "videosFolder": "../../../dist/cypress/apps/catalog-e2e/videos",
   "screenshotsFolder": "../../../dist/cypress/apps/catalog-e2e/screenshots",
   "chromeWebSecurity": false,
-  "defaultCommandTimeout": 10000
+  "defaultCommandTimeout": 10000,
+  "reporter": "junit",
+  "reporterOptions": {
+    "mochaFile": "../../../dist/test-reports/catalog-[hash].xml"
+  }
 }
