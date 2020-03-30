@@ -13,6 +13,7 @@ import { ImgAssetModule } from '@blockframes/ui/theme';
 import { SearchWidgetModule } from '@blockframes/ui/search-widget';
 import { NotificationWidgetModule } from '@blockframes/notification/notification/notification-widget/notification-widget.module';
 import { AuthWidgetModule } from '@blockframes/auth/components/widget/widget.module';
+import { AppNavModule } from '@blockframes/ui/app-nav';
 
 // Material
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -25,6 +26,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 import { MatMenuModule } from '@angular/material/menu';
 
 
+
 const routes: Routes = [{
   path: '',
   component: MarketplaceComponent,
@@ -32,46 +34,55 @@ const routes: Routes = [{
     { path: '', redirectTo: 'home', pathMatch: 'full' },
     {
       path: 'home',
-      loadChildren: () => import('./home/home.module').then(m => m.HomeModule)
+      loadChildren: () => import('./home/home.module').then(m => m.HomeModule),
+      data: { animation: 'home' }
     },
     {
       path: 'notifications',
-      loadChildren: () => import('./notification/notification.module').then(m => m.NotificationModule)
+      loadChildren: () => import('./notification/notification.module').then(m => m.NotificationModule),
+      data: { animation: 'notifications' }
     },
     {
       path: 'wishlist',
-      loadChildren: () => import('./wishlist/wishlist.module').then(m => m.WishlistModule)
+      loadChildren: () => import('./wishlist/wishlist.module').then(m => m.WishlistModule),
+      data: { animation: 'wishlist' }
     },
     {
       path: 'title',
       children: [{
         path: '',
         loadChildren: () => import('./title/list/list.module').then(m => m.MovieListModule),
+        data: { animation: 'title-list' }
       }, {
         path: ':movieId',
         canActivate: [MovieActiveGuard],
         canDeactivate: [MovieActiveGuard],
-        loadChildren: () => import('./title/view/view.module').then(m => m.MovieViewModule)
+        loadChildren: () => import('./title/view/view.module').then(m => m.MovieViewModule),
+        data: { animation: 'title-view' }
       }]
     },
     {
       path: 'organization',
       children: [{
         path: '',
-        loadChildren: () => import('./organization/list/list.module').then(m => m.OrganizationListModule)
+        loadChildren: () => import('./organization/list/list.module').then(m => m.OrganizationListModule),
+        data: { animation: 'organization-list' }
       }, {
         path: ':orgId',
-        loadChildren: () => import('./organization/view/view.module').then(m => m.OrganizationViewModule)
+        loadChildren: () => import('./organization/view/view.module').then(m => m.OrganizationViewModule),
+        data: { animation: 'organization-view' }
       }]
     },
     {
       path: 'event',
       children: [{
         path: '',
-        loadChildren: () => import('./event/list/list.module').then(m => m.EventListModule)
+        loadChildren: () => import('./event/list/list.module').then(m => m.EventListModule),
+        data: { animation: 'event-list' }
       }, {
         path: ':eventId',
-        loadChildren: () => import('./event/view/view.module').then(m => m.EventViewModule)
+        loadChildren: () => import('./event/view/view.module').then(m => m.EventViewModule),
+        data: { animation: 'event-view' }
       }]
     }
   ]
@@ -97,6 +108,7 @@ const routes: Routes = [{
 
     // Libraries
     ImgAssetModule,
+    AppNavModule,
 
     // Widgets
     NotificationWidgetModule,

@@ -40,7 +40,7 @@ export class WishlistComponent implements OnInit {
   ngOnInit() {
     this.dataSource$ = this.catalogCartQuery.wishlistWithMovies$.pipe(
       map(wishlist => wishlist.find(wish => wish.status === 'pending')),
-      filter(wishlist => !!wishlist.movies?.length),
+      filter(wishlist => !!wishlist?.movies?.length),
       map(wishlist => new MatTableDataSource(wishlist.movies))
     );
   }

@@ -7,11 +7,13 @@ import { ViewComponent, MovieBannerActions, MovieBannerAside } from './view.comp
 
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { DisplayNameModule, TranslateSlugModule } from '@blockframes/utils/pipes';
+import { AppNavModule } from '@blockframes/ui/app-nav';
 
 // Material
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 
 
@@ -25,10 +27,12 @@ import { MatButtonModule } from '@angular/material/button';
     ImageReferenceModule,
     DisplayNameModule,
     TranslateSlugModule,
+    AppNavModule,
     // Material
     MatTabsModule,
     MatIconModule,
     MatButtonModule,
+    MatToolbarModule,
   ]
 })
 export class MovieViewLayoutModule { }

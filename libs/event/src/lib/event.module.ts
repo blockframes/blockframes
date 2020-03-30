@@ -14,6 +14,7 @@ import { EventSizePipe } from './components/event.pipe';
 import { EventCreateComponent } from './form/create/create.component';
 import { EventFormComponent } from './form/base/base.component';
 import { TimeDateModule } from './form/time-date.directive';
+import { TimePickerModule } from '@blockframes/ui/form/time-picker/time-picker.module';
 
 // Material
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -48,6 +49,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     ReactiveFormsModule,
     FlexLayoutModule,
     TimeDateModule,
+    TimePickerModule,
     CalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory

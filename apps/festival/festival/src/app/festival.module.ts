@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes, PreloadAllModules } from '@angular/router';
 import { MovieCollectionGuard } from '@blockframes/movie/guards/movie-collection.guard';
 import { createRoutes } from '@blockframes/utils/routes/create-routes';
 
@@ -43,7 +43,8 @@ const routes: Routes = createRoutes({
     anchorScrolling: 'enabled',
     onSameUrlNavigation: 'reload',
     paramsInheritanceStrategy: 'always',
-    relativeLinkResolution: 'corrected'
+    relativeLinkResolution: 'corrected',
+    preloadingStrategy: PreloadAllModules
   })],
 })
 export class FestivalModule {}

@@ -14,7 +14,7 @@
     <ng-container *ngFor="let org of orgs$ | async">
       <a class="organization" [routerLink]="['../../organization', org.id]">
         <img [imgRef]="org.logo" placeholderAsset="empty_organization.webp" alt="Seller image"/>
-        <span class="mat-body-1">{{ org.name }}</span>
+        <span class="mat-body-1">{{ org.denomination.full }}</span>
       </a>
     </ng-container>
     <button mat-flat-button color="primary">
