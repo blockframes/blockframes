@@ -46,11 +46,10 @@ export class ContractTreeComponent implements OnInit {
    * @param contract 
    * @param mode 
    *   0 check both parents and childs
-   *   1 check only parents (ascending mode)
    *   -1 check only childs (descending mode)
    * @param level 
    */
-  private async recursiveParentsAndChilds(contract: Contract, mode: 0 | 1 | -1 = 0, level: number = 0) {
+  private async recursiveParentsAndChilds(contract: Contract, mode: 0 | -1 = 0, level: number = 0) {
     const processed = this.tree[contract.id] ? true : false;
     if (!processed) {
       this.tree[contract.id] = {
@@ -61,12 +60,12 @@ export class ContractTreeComponent implements OnInit {
         childs: contract.childContractIds ? contract.childContractIds : [],
       };
 
-      // If 0 : we fetch parents & childs. If 1 (ascending mode), we check only parents
-      if ([0, 1].includes(mode)) {
+      // If 0 : we fetch parents & childs.
+      if (mode === 0) {
         const promises = this.tree[contract.id].parents.map(async (parentId: string) => {
           const parentContract = await this.contractService.getValue(parentId);
           if (parentContract) {
-            return this.recursiveParentsAndChilds(parentContract, 1, level + 1);
+            return this.recursiveParentsAndChilds(parentContract, 0, level + 1);
           } else {
             this.snackBar.open(`Parent contract ${parentId} not found.`, 'close', { duration: 2000 });
           }
