@@ -57,28 +57,28 @@ export class ContractTreeComponent implements OnInit {
         id: contract.id,
         contract,
         level,
-        parents: contract.parentContractIds,
-        childs: contract.childContractIds,
+        parents: contract.parentContractIds ? contract.parentContractIds : [],
+        childs: contract.childContractIds ? contract.childContractIds : [],
       };
 
       // If 0 : we fetch parents & childs. If 1 (ascending mode), we check only parents
       if ([0, 1].includes(mode)) {
-        const promises = contract.parentContractIds.map(async parentId => {
+        const promises = this.tree[contract.id].parents.map(async (parentId: string) => {
           const parentContract = await this.contractService.getValue(parentId);
-          if(parentContract) {
+          if (parentContract) {
             return this.recursiveParentsAndChilds(parentContract, 1, level + 1);
           } else {
             this.snackBar.open(`Parent contract ${parentId} not found.`, 'close', { duration: 2000 });
-          } 
+          }
         });
         await Promise.all(promises);
       }
 
       // If 0 : we fetch parents & childs. If -1 (descending mode), we check only childrens
       if ([0, -1].includes(mode)) {
-        const promises = contract.childContractIds.map(async childId => {
+        const promises = this.tree[contract.id].childs.map(async (childId: string) => {
           const childContract = await this.contractService.getValue(childId);
-          if(childContract) {
+          if (childContract) {
             return this.recursiveParentsAndChilds(childContract, -1, level - 1);
           } else {
             this.snackBar.open(`Child contract ${childId} not found.`, 'close', { duration: 2000 });

@@ -77,8 +77,7 @@ async function checkAndTriggerNotifications(current: ContractDocument) {
     const contractInNegotiation = (previous.status === 'submitted') && (current.lastVersion.status === 'undernegotiation');
     const contractSubmitted = (previous.status === 'draft') && (current.lastVersion.status === 'submitted');
 
-    if (contractSubmitted) { // Contract is submitted by organization to Archipel Content
-      // @TODO (#1887) crashes if partyIds is empty
+    if (contractSubmitted && current.partyIds.length > 0) { // Contract is submitted by organization to Archipel Content
       // TODO (#1999): Find real creator 
       const { id, name } = await getDocument<PublicOrganization>(`orgs/${current.partyIds[0]}`);
       const archipelContent = await getDocument<OrganizationDocument>(`orgs/${centralOrgID}`);
@@ -131,32 +130,51 @@ function updateVersion(tx: FirebaseFirestore.Transaction, contract: ContractDocu
 
   // We historize current version 
   tx.set(db.doc(`contracts/${contract.id}/versions/${contract.lastVersion.id}`), contract.lastVersion);
+}
 
-  // We update _meta document for backward compatibility
+async function getRelatedContract(tx: FirebaseFirestore.Transaction, contract: ContractDocument): Promise<ContractDocument[]> {
+  if (contract.type === 'sale') {
+    // Fetch the mandate contracts related to current contract titles.
+    // Thoses contracts will be the parents of the current one.
+    const promises = Object.keys(contract.lastVersion.titles).map(titleId => tx.get(db.collection(`contracts`)
+      .where('type', '==', 'mandate')
+      .where('titleIds', 'array-contains', titleId))
+    );
+
+    // Extract all fetched contracts
+    const snapshots = await Promise.all(promises);
+    return uniqBy(flatten(snapshots.map(snap => snap.docs.map(d => d.data() as ContractDocument))), 'id');
+  } else {
+    // Fetch the sale contracts related to current contract titles.
+    // Thoses contracts will be the childs of the current one.
+    const promises = Object.keys(contract.lastVersion.titles).map(titleId => tx.get(db.collection(`contracts`)
+      .where('type', '==', 'sale')
+      .where('titleIds', 'array-contains', titleId))
+    );
+
+    // Extract all fetched contracts
+    const snapshots = await Promise.all(promises);
+    return uniqBy(flatten(snapshots.map(snap => snap.docs.map(d => d.data() as ContractDocument))), 'id');
+  }
 }
 
 /**
- * This method is in charge of updating currrent contract document on DB.
+ * This method is in charge of updating current contract document on DB.
  * It updates some of document attributes.
  * @param tx 
  * @param ref 
  * @param contract 
+ * @param relatedContracts
  */
-async function updateContract(tx: FirebaseFirestore.Transaction, ref: DocumentReference, contract: ContractDocument, newVersion: boolean = false) {
-  // If true, a new version is beeing created.
-  if (newVersion) {
-    if (contract.type === 'sale') {
-      // Fetch the mandate contracts related to current contract titles.
-      // Thoses contracts will be the parents of the current one.
-      const promises = Object.keys(contract.lastVersion.titles).map(titleId => db.collection(`contracts`)
-        .where('type', '==', 'mandate')
-        .where('titleIds', 'array-contains', titleId)
-        .get()
-      );
+async function updateContract(tx: FirebaseFirestore.Transaction, ref: DocumentReference, contract: ContractDocument, relatedContracts?: ContractDocument[]) {
+  const contractUpdate = {
+    lastVersion: contract.lastVersion
+  } as any;
 
-      // Extract all fetched contracts
-      const snapshots = await Promise.all(promises);
-      const mandateContracts = uniqBy(flatten(snapshots.map(snap => snap.docs.map(d => d.data() as ContractDocument))), 'id');
+  // If true, a new version is beeing created.
+  if (relatedContracts && relatedContracts.length) {
+    if (contract.type === 'sale') {
+      const mandateContracts = relatedContracts;
       // Set parent relations
       contract.parentContractIds = mandateContracts.map(c => c.id);
       mandateContracts.map(parent => {
@@ -188,17 +206,7 @@ async function updateContract(tx: FirebaseFirestore.Transaction, ref: DocumentRe
         })
       });
     } else if (contract.type === 'mandate') {
-      // Fetch the sale contracts related to current contract titles.
-      // Thoses contracts will be the childs of the current one.
-      const promises = Object.keys(contract.lastVersion.titles).map(titleId => db.collection(`contracts`)
-        .where('type', '==', 'sale')
-        .where('titleIds', 'array-contains', titleId)
-        .get()
-      );
-
-      // Extract all fetched contracts
-      const snapshots = await Promise.all(promises);
-      const saleContracts = uniqBy(flatten(snapshots.map(snap => snap.docs.map(d => d.data() as ContractDocument))), 'id');
+      const saleContracts = relatedContracts;
       // Set child relations
       contract.childContractIds = saleContracts.map(c => c.id);
       const currentPartiesWithChildRole = contract.parties.filter(p => p.childRoles && p.childRoles.length > 0);
@@ -232,8 +240,6 @@ async function updateContract(tx: FirebaseFirestore.Transaction, ref: DocumentRe
           });
         });
 
-        // @TODO (#1887) prevent from beeing into private and childs at the same time (can arrive if contract type changes)
-
         if (update) {
           tx.set(db.doc(`contracts/${child.id}`), { parentContractIds: child.parentContractIds, parties: child.parties }, { merge: true });
         }
@@ -241,38 +247,41 @@ async function updateContract(tx: FirebaseFirestore.Transaction, ref: DocumentRe
     }
 
     // We need to remove previous parties signDate and reset status
-    delete contract.signDate;
-    contract.parties = contract.parties.map(p => {
+    contractUpdate.parties = contract.parties.map(p => {
       delete p.signDate;
       p.status = 'unknown';
       return p;
     });
+
+    if (contract.parentContractIds) {
+      contractUpdate.parentContractIds = contract.parentContractIds;
+    }
+
+    if (contract.childContractIds) {
+      // Cleaning to prevent infinite loops (can arrive if contract type changes)
+      contractUpdate.childContractIds = contractUpdate.parentContractIds ?
+        contractUpdate.childContractIds.filter((id: string) => !contractUpdate.parentContractIds.includes(id)) :
+        contractUpdate.childContractId;
+    }
   }
 
   // We create an array of title ids for querying purposes
-  contract.titleIds = [];
+  contractUpdate.titleIds = [];
   if (!!contract.lastVersion.titles) {
-    contract.titleIds = Object.keys(contract.lastVersion.titles);
+    contractUpdate.titleIds = Object.keys(contract.lastVersion.titles);
   }
 
   // We create an array of party ids for querying purposes
-  contract.partyIds = [];
+  contractUpdate.partyIds = [];
   if (!!contract.parties) {
     contract.parties.forEach(p => {
       if (p.party.orgId) { // Only if orgId is defined on party
-        contract.partyIds.push(p.party.orgId);
+        contractUpdate.partyIds.push(p.party.orgId);
       }
     })
   }
 
-  tx.set(ref, {
-    lastVersion: contract.lastVersion,
-    titleIds: contract.titleIds,
-    partyIds: contract.partyIds,
-    parties: contract.parties,
-    parentContractIds: contract.parentContractIds ? contract.parentContractIds : [],
-    childContractIds: contract.childContractIds ? contract.childContractIds : [],
-  }, { merge: true });
+  tx.set(ref, contractUpdate, { merge: true });
 }
 
 /**
@@ -280,15 +289,12 @@ async function updateContract(tx: FirebaseFirestore.Transaction, ref: DocumentRe
  * up to date.
  * 
  * It handles some defined behaviors such as:
- *  - creationDate param
- *  - versionId consistency
- *  - @TODO (#1887) add more
+ *  - CreationDate param
+ *  - VersionId consistency
+ *  - Autodiscover of parents and childs
+ *  - Auto configuration with contract type
+ *  - Public contract creation
  * 
- * Concerning the database rules:
- *  - once created, a contractVersion document should be read only and not removable (even for admins)
- *  - once code migration complete, contratVersion should be writable by this function only (even for admins)
- *  - once code migration complete, contract.lastVersion MUST be sent when performing write operations.
- *  - @TODO (#1887) add this requirements into an issue
  * @param change 
  */
 export async function onContractWrite(
@@ -338,12 +344,14 @@ export async function onContractWrite(
         current.lastVersion.id = await getNextVersionId(tx, current.id);
         // Creation date is handled here. If not sent by user, it is created here.
         current.lastVersion.creationDate = currentCreationDate as any;
+        // Fetch potential related contract (childs of parents)
+        const relatedContracts = await getRelatedContract(tx, current);
         // A new version have been saved, we check if public contract need to be updated.
         await updatePublicContract(tx, current);
         // Push new version.
         updateVersion(tx, current);
         // Update contract.
-        await updateContract(tx, change.after.ref, current, true);
+        await updateContract(tx, change.after.ref, current, relatedContracts);
       } else {
         // To prevent the case where the front tries to push version Id or creationDate (which are only handled by this trigger).
         current.lastVersion.id = await getCurrentVersionId(tx, current.id);
