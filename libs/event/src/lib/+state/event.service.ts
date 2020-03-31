@@ -5,10 +5,10 @@ import { Event, ScreeningEvent } from './event.model';
 import { QueryFn } from '@angular/fire/firestore/interfaces';
 import { Observable } from 'rxjs';
 
-const screeningsQuery = (queryFn: QueryFn): Query<ScreeningEvent> => ({
+const screeningsQuery = (queryFn?: QueryFn): Query<ScreeningEvent> => ({
   path: 'events',
   queryFn,
-  titles: (event: ScreeningEvent) => ({ path: `movies/${event.meta.titleId}`})
+  movie: (event: ScreeningEvent) => ({ path: `movies/${event.meta.titleId}`})
 });
 
 @Injectable({ providedIn: 'root' })
@@ -28,7 +28,7 @@ export class EventService extends CollectionService<EventState> {
     return e;
   }
 
-  syncScreenings(queryFn: QueryFn): Observable<ScreeningEvent[]> {
+  syncScreenings(queryFn?: QueryFn): Observable<ScreeningEvent[]> {
     return syncQuery.call(this, screeningsQuery(queryFn));
   }
 }

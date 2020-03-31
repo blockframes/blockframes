@@ -13,7 +13,7 @@ export class EventStore extends EntityStore<EventState> {
     super();
   }
 
-  akitaPreAddEntity(event) {
+  akitaPreAddEntity = (event) => {
     return createCalendarEvent(event, this.authQuery.userId);
   }
 

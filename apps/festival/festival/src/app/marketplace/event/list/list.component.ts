@@ -20,7 +20,7 @@ export class EventListComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.sub = this.service.syncCollection().subscribe();
+    this.sub = this.service.syncScreenings().subscribe();
   }
 
   ngOnDestroy() {

@@ -51,7 +51,7 @@ export function createMeeting(meeting: Partial<Meeting>): Meeting {
 // Screening
 export interface ScreeningEvent extends Event<Screening> {
   type: 'screening';
-  titles: Movie[];
+  movie: Movie;
 }
 export const isScreening = (event: Partial<Event>): event is ScreeningEvent => event?.type === 'screening';
 export function createScreening(screening: Partial<Screening>): Screening {

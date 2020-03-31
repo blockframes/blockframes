@@ -1,1 +1,8 @@
-<iframe [src]="url" ></iframe>
+<ng-container *ngIf="url else later">
+  <iframe [src]="url" ></iframe>
+</ng-container>
+<ng-template #later>
+  <section fxLayout="column" fxLayoutAlign="center center">
+    
+  </section>
+</ng-template>
