@@ -183,6 +183,7 @@ export class DistributionDealCreateComponent implements OnInit, OnDestroy {
     this.form.removeLanguage(language);
   }
 
+  //@TODO (#1887) tester 
   public async addDistributionDeal() {
     const distributionDeal = createDistributionDeal();
 

@@ -14,6 +14,7 @@ import { Observable, of } from 'rxjs';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { OrganizationQuery } from '@blockframes/organization/organization/+state';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 const steps = [{
   title: 'Step 1',
@@ -77,7 +78,8 @@ export class ContractTunnelComponent implements OnInit {
     private dealService: DistributionDealService,
     private dialog: MatDialog,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private db: AngularFirestore,
   ) { }
 
   async ngOnInit() {
@@ -195,6 +197,8 @@ export class ContractTunnelComponent implements OnInit {
         }
       })*/
 
+      // @TODO (#1887) check parties en double ou plus & remove licensor input (mais garder licensee pour pouvoir ovveride licensee ? ask vincent)
+
     }
 
     const contract = createContract({
@@ -205,8 +209,7 @@ export class ContractTunnelComponent implements OnInit {
     //@TODO (#2404) Problem: here this.contractForm.value.lastVersion[titleId].price.amount === 0
     await this.contractService.createContractAndDeal(orgId, titlesAndDeals,contract);
 
-    // Remove deals @todo (#1887) check ... (n'update pas le contract par exemple)
-    /*
+    // Remove deals
     const write = this.db.firestore.batch();
     for (const movieId in this.removedDeals) {
       for (const dealId of this.removedDeals[movieId]) {
@@ -214,18 +217,7 @@ export class ContractTunnelComponent implements OnInit {
       }
     }
     this.removedDeals = {};
-
-    const contract = createContract({
-      ...this.query.getActive(),
-      ...this.contractForm.value
-    });
-
-    // Update Contract
-    this.contractService.update(contract, { write });
     await write.commit();
-    */
-
-
 
     this.contractForm.markAsPristine();
     this.dealForms.markAsPristine();
