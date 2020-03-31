@@ -1,4 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
+import { coerceBooleanProperty } from '@angular/cdk/coercion'
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { Observable } from 'rxjs';
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
@@ -18,7 +19,15 @@ export class WishlistButtonComponent implements OnInit {
   toggle$: Observable<boolean>;
 
   @Input() movieId: string;
-  @Input() small = false;
+  
+  _small: boolean;
+  @Input()
+  get small() {
+    return this._small;
+  }
+  set small(isSmall: boolean) {
+    this._small = coerceBooleanProperty(isSmall);
+  }
 
   constructor(
     private movieQuery: MovieQuery,
