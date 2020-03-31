@@ -202,10 +202,8 @@ export class ContractTunnelComponent implements OnInit {
       ...this.contractForm.value
     });
 
-    console.log('ici',this.contractForm.value);
+    //@TODO (#2404) Problem: here this.contractForm.value.lastVersion[titleId].price.amount === 0
     await this.contractService.createContractAndDeal(orgId, titlesAndDeals,contract);
-
- 
 
     // Remove deals @todo (#1887) check ... (n'update pas le contract par exemple)
     /*
