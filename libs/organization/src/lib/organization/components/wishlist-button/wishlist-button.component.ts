@@ -8,7 +8,7 @@ import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { OrganizationQuery } from '@blockframes/organization/organization/+state/organization.query';
 
 @Component({
-  selector: '[movieId] catalog-wishlist-button',
+  selector: '[movieId] wishlist-button',
   templateUrl: './wishlist-button.component.html',
   styleUrls: ['./wishlist-button.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -18,6 +18,7 @@ export class WishlistButtonComponent implements OnInit {
   toggle$: Observable<boolean>;
 
   @Input() movieId: string;
+  @Input() small = false;
 
   constructor(
     private movieQuery: MovieQuery,
