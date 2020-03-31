@@ -10,10 +10,10 @@
       </div>
     </header>
 
-    <mat-tab-group>
+    <mat-tab-group (selectedTabChange)="updateTitle($event)">
       <mat-tab *ngFor="let tab of tabs$ | async">
         <ng-template mat-tab-label>
-          {{ tab.name }} ({{ tab.contracts.length }})
+            {{ tab.name }} ({{ tab.contracts.length }})
         </ng-template>
         <ng-template matTabContent>
           <ng-container *ngIf="tab.contracts.length; else noContracts">
@@ -37,7 +37,8 @@
         While waiting for incoming offers, we invite you to<br>
         consult <a class="mat-body-1" routerLink="../home">your Dashboard</a> to see the Marketplace Activity.
       </p>
-      <p>If you haven’t added any title yet, please <a class="mat-body-1" routerLink="../tunnel/movie">click here</a>.</p>
+      <p>If you haven’t added any title yet, please <a class="mat-body-1" routerLink="../tunnel/movie">click here</a>.
+      </p>
     </section>
   </ng-template>
 </ng-container>

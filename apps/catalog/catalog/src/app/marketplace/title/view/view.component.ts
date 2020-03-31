@@ -1,16 +1,19 @@
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
-import { Component, OnInit, ChangeDetectionStrategy, HostBinding } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, HostBinding, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
-import { Router } from '@angular/router';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { workType } from '@blockframes/movie/+state/movie.firestore';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { OrganizationQuery } from '@blockframes/organization/organization/+state/organization.query';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 @Component({
   selector: 'catalog-movie-view',
@@ -18,17 +21,19 @@ import { OrganizationQuery } from '@blockframes/organization/organization/+state
   styleUrls: ['./view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceMovieViewComponent implements OnInit {
+export class MarketplaceMovieViewComponent implements OnInit, OnDestroy {
   @HostBinding('attr.page-id') pageId = 'catalog-movie-view';
   public movie$: Observable<Movie>;
   public loading$: Observable<boolean>;
   // Flag to indicate which icon and message to show
   public toggle$: Observable<boolean>;
 
+  private sub: Subscription;
+
   navLinks = [{
     path: 'main',
     label: 'Main Information'
-  },{
+  }, {
     path: 'avails',
     label: 'Avails'
   }];
@@ -39,8 +44,10 @@ export class MarketplaceMovieViewComponent implements OnInit {
     private orgQuery: OrganizationQuery,
     private snackbar: MatSnackBar,
     private analytics: FireAnalytics,
-    public router: Router
-  ) {}
+    public router: Router,
+    private routerQuery: RouterQuery,
+    private dynTitle: DynamicTitleService,
+  ) { }
 
   ngOnInit() {
     this.getMovie();
@@ -51,6 +58,11 @@ export class MarketplaceMovieViewComponent implements OnInit {
           .some(({ movieIds }) => movieIds.includes(this.movieQuery.getActiveId()));
       })
     );
+    this.sub = this.routerQuery.select('state').subscribe(data => {
+      data.url.includes('main')
+        ? this.dynTitle.setPageTitle(`${this.movieQuery.getActive().main.title.international}`, 'Main information')
+        : this.dynTitle.setPageTitle(`${this.movieQuery.getActive().main.title.international}`, 'Avails')
+    })
   }
 
   private getMovie() {
@@ -108,4 +120,9 @@ export class MarketplaceMovieViewComponent implements OnInit {
     return `${movie.main.originCountries.map(country => getLabelBySlug('TERRITORIES', country)).join(', ')}, ${movie.main.productionYear}`;
   }
 
+
+  ngOnDestroy() {
+    // prevents Error when user switches quick the tabs
+    if (this.sub) this.sub.unsubscribe();
+  }
 }

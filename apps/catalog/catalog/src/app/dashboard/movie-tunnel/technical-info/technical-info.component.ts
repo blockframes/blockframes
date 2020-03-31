@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { MovieTunnelComponent } from '../movie-tunnel.component';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
     selector: 'catalog-tunnel-technical-info',
@@ -10,7 +11,9 @@ import { MovieTunnelComponent } from '../movie-tunnel.component';
 export class TunnelTechnicalInfoComponent {
     form = this.tunnel.form;
 
-    constructor(private tunnel: MovieTunnelComponent) { }
+    constructor(private tunnel: MovieTunnelComponent, private dynTitle: DynamicTitleService) {
+        this.dynTitle.setPageTitle('Technial information', 'Title information')
+    }
 
     get movieSalesInfo() {
         return this.form.get('salesInfo');

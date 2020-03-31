@@ -24,11 +24,11 @@ export class TitleDetailsComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private movieQuery: MovieQuery,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.subscription = this.movieQuery.selectActive().subscribe(movie => {
-      this.form.patchValue(movie);
+      this.form.patchAllValue(movie);
       this.cdr.markForCheck();
     });
   }

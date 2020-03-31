@@ -1,5 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ContractTunnelComponent } from '../contract-tunnel.component';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
   selector: 'contract-details-sale',
@@ -9,7 +10,9 @@ import { ContractTunnelComponent } from '../contract-tunnel.component';
 })
 export class DetailsSaleComponent {
 
-  constructor(private tunnel: ContractTunnelComponent) {}
+  constructor(private tunnel: ContractTunnelComponent, private dynTitle: DynamicTitleService) {
+    this.dynTitle.setPageTitle('Create a contract offer', 'Overview')
+  }
 
   get parties() {
     return this.tunnel.contractForm.get('parties')

@@ -1,10 +1,11 @@
 import { DistributionDealForm } from '@blockframes/distribution-deals/form/distribution-deal.form';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { Movie } from '@blockframes/movie/+state';
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ContractTunnelComponent } from '../contract-tunnel.component';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
   selector: 'contract-deal',
@@ -18,7 +19,10 @@ export class DealComponent implements OnInit {
 
   public showTVCriteria = new BehaviorSubject(true);
 
-  constructor(private tunnel: ContractTunnelComponent, private routerQuery: RouterQuery) { }
+  constructor(
+    private tunnel: ContractTunnelComponent,
+    private routerQuery: RouterQuery,
+    private dynTitle: DynamicTitleService) { }
 
   ngOnInit() {
     // only the movie with corresponding ID
@@ -26,8 +30,13 @@ export class DealComponent implements OnInit {
       this.tunnel.movies$,
       this.routerQuery.selectParams('titleId')
     ]).pipe(
-      map(([movies, titleId]) => movies.find(movie => movie.id === titleId)
-      ))
+      map(([movies, titleId]) => {
+        const filteredMovie = movies.find(movie => movie.id === titleId)
+        return filteredMovie
+      }),
+      tap(movie => {
+        this.dynTitle.setPageTitle(`${movie.main.title.international}`, 'Exploitation Rights - Create a contract offer')
+      }))
   }
 
   get dealForm() {

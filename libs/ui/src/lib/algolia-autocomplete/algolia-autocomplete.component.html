@@ -7,7 +7,7 @@
     <mat-icon matPrefix svgIcon="magnifying_glasses" *ngIf="icons.includes('magnifying_glasses')" class="pointer">
     </mat-icon>
   </mat-form-field>
-  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="findObjectID($event)"
+  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="findObjectID()"
     [displayWith]="displayFn.bind(this)">
     <mat-option *ngFor="let result of (algoliaSearchResults$ | async)" [value]="resolveValue(result, pathToValue)">
       <ng-template [ngTemplateOutlet]="template || default" [ngTemplateOutletContext]="{ $implicit: result }">
@@ -21,9 +21,9 @@
     <mat-icon matPrefix svgIcon="magnifying_glasses" *ngIf="icons.includes('magnifying_glasses')"></mat-icon>
     <input autocapitalize="off" autocorrect="off" spellcheck="false" type="text" [formControl]="control"
       [matAutocomplete]="auto" matNativeControl [placeholder]="placeholder" />
-    <mat-icon matSuffix svgIcon="cross" *ngIf="icons.includes('cross')" (click)="control.reset()" class="pointer">
+    <mat-icon matSuffix svgIcon="cross" *ngIf="icons.includes('cross') && control.value" (click)="control.reset()" class="pointer">
     </mat-icon>
-    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="findObjectID($event)"
+    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="findObjectID()"
       [displayWith]="displayFn.bind(this)">
       <mat-option *ngFor="let result of (algoliaSearchResults$ | async)" [value]="result">
         <ng-template [ngTemplateOutlet]="template || default" [ngTemplateOutletContext]="{ $implicit: result }">

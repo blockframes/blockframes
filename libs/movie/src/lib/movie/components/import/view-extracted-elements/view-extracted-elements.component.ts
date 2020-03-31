@@ -55,6 +55,7 @@ import { Intercom } from 'ng-intercom';
 import { cleanModel, getKeyIfExists } from '@blockframes/utils/helpers';
 import { ImageUploader } from '@blockframes/utils/image-uploader';
 import { UserService } from '@blockframes/user/+state/user.service';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 export interface SpreadsheetImportError {
   field: string;
@@ -207,8 +208,11 @@ export class ViewExtractedElementsComponent implements OnInit {
     private imageUploader: ImageUploader,
     private cdRef: ChangeDetectorRef,
     private intercom: Intercom,
-    private userService: UserService
-  ) { }
+    private userService: UserService,
+    private dynTitle: DynamicTitleService
+  ) {
+    this.dynTitle.setPageTitle('Submit your titles')
+  }
 
   async ngOnInit() {
     this.isUserBlockframesAdmin = await this.userService.isBlockframesAdmin();

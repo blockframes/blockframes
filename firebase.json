@@ -5,14 +5,25 @@
       "public": "dist/storybook"
     },
     {
-      "target": "festival",
-      "public": "dist/apps/festival",
+      "target": "catalog",
+      "public": "dist/apps/catalog/",
       "ignore": [
         "firebase.json",
         "**/.*",
         "**/node_modules/**"
       ],
+      "redirects": [
+        {
+          "source": "/catalog/:path*",
+          "destination": "/:path",
+          "type": 301
+        }
+      ],
       "rewrites": [
+        {
+          "source": "/admin{,/**}",
+          "function": "admin"
+        },
         {
           "source": "**",
           "destination": "/index.html"
@@ -20,21 +31,21 @@
       ]
     },
     {
-      "target": "current",
-      "public": "dist/apps/",
-      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+      "target": "festival",
+      "public": "dist/apps/festival/",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
       "rewrites": [
         {
           "source": "/admin{,/**}",
           "function": "admin"
         },
         {
-          "source": "/catalog{,/**}",
-          "destination": "/catalog/index.html"
-        },
-        {
           "source": "**",
-          "destination": "/catalog/index.html"
+          "destination": "/index.html"
         }
       ]
     }

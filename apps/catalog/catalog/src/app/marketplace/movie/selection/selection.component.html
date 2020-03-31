@@ -12,7 +12,7 @@
     <article *ngFor="let title of titles">
       <movie-banner [movie]="selectMovie(title.movieId) | async">
         <movie-banner-actions fxLayout="column" fxLayoutAlign="start end" fxLayoutGap="16px">
-          <catalog-wishlist-button [movieId]="title.movieId"></catalog-wishlist-button>
+          <wishlist-button [movieId]="title.movieId"></wishlist-button>
           <button mat-button color="warn" (click)="removeTitle(title.movieId)">
             <mat-icon svgIcon="trash"></mat-icon>
             <span>Remove Title</span>

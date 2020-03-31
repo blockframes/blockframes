@@ -4,6 +4,8 @@ import { ContractQuery, ContractService, Contract, ContractStatus } from '@block
 import { map } from 'rxjs/operators';
 import { OrganizationQuery } from '@blockframes/organization/organization/+state/organization.query';
 import { Router, ActivatedRoute } from '@angular/router';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 
 interface Tab {
   name: string;
@@ -89,8 +91,21 @@ export class DealListComponent {
     private contractService: ContractService,
     private router: Router,
     private route: ActivatedRoute,
-    private intercom: Intercom
-  ) {}
+    private intercom: Intercom,
+    private dynTitle: DynamicTitleService,
+  ) {
+    this.query.getCount()
+      ? this.dynTitle.setPageTitle('All offers and deals')
+      : this.dynTitle.setPageTitle('Offers and Deals')
+  }
+
+
+  public updateTitle(event: MatTabChangeEvent) {
+    const currentTabName = contractTab[event.index].name
+    currentTabName !== 'All'
+    ? this.dynTitle.setPageTitle(currentTabName)
+    : this.dynTitle.useDefault();
+  }
 
   /** Create a sale and redirect to tunnel */
   async createSale() {

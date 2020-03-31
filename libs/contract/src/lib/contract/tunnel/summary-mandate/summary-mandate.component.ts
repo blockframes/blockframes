@@ -4,6 +4,7 @@ import { Movie } from '@blockframes/movie/+state/movie.model';
 import { ContractTunnelComponent, DealControls } from '../contract-tunnel.component';
 import { Observable } from 'rxjs';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { FormControl } from '@angular/forms';
 import { ContractVersionPriceControl, ContractVersionForm } from '@blockframes/contract/version/form';
 import { MovieCurrenciesSlug } from '@blockframes/utils/static-model';
@@ -32,8 +33,11 @@ export class SummaryMandateComponent implements OnInit {
   constructor(
     private tunnel: ContractTunnelComponent,
     private contractService: ContractService,
-    private query: ContractQuery
-  ) { }
+    private query: ContractQuery,
+    private dynTitle: DynamicTitleService
+    ) {
+      this.dynTitle.setPageTitle('Contract offer summary', 'Summary and Submit')
+    }
 
   ngOnInit() {
     // Need to create it in the ngOnInit or it's not updated

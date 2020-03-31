@@ -31,11 +31,11 @@ references:
       branches:
         only:
           - ci
-  release_candidate_only: &release_candidate_only
+  release_only: &release_only
     filters:
       branches:
         only:
-          - release-candidate
+          - /release\/.*/
 
 commands:
   checkout_project:
@@ -72,13 +72,13 @@ executors:
     docker:
       - image: blockframes/ci:latest
     working_directory: ~/repo
-    resource_class: medium+
+    resource_class: large
 jobs:
   build-and-deploy-storybook:
     executor: blockframes-ci
     environment:
       - ENV: ci
-      - NODE_OPTIONS: '--max_old_space_size=4096'
+      - NODE_OPTIONS: '--max_old_space_size=7168'
       - GOOGLE_APPLICATION_CREDENTIALS: creds.json
     steps:
       - checkout_project
@@ -92,7 +92,7 @@ jobs:
     executor: blockframes-ci
     environment:
       - ENV: ci
-      - NODE_OPTIONS: '--max_old_space_size=4096'
+      - NODE_OPTIONS: '--max_old_space_size=7168'
       - GOOGLE_APPLICATION_CREDENTIALS: creds.json
     steps:
       - checkout_project
@@ -114,7 +114,7 @@ jobs:
     executor: blockframes-ci
     environment:
       - ENV: ci
-      - NODE_OPTIONS: '--max_old_space_size=4096'
+      - NODE_OPTIONS: '--max_old_space_size=7168'
       - GOOGLE_APPLICATION_CREDENTIALS: creds.json
     steps:
       - checkout_project
@@ -153,11 +153,11 @@ jobs:
               npm run build:all;
               curl -X POST "${ZAPPIER_WEBHOOK}" --header "Build-number:${CIRCLE_BUILD_NUM}" --header "Branch:${CIRCLE_BRANCH}" --header  "Date:`date "+%D"`" --header  Catalog-size:`cat ./dist/apps/catalog/main**.js | wc -c` --header  Festival-size:`cat ./dist/apps/festival/main**.js | wc -c` --header  Functions-size:`cat ./dist/apps/backend-functions/main**.js | wc -c`;
             fi
-  test-e2e:
+  test-e2e-ci:
     executor: blockframes-ci
     environment:
       - ENV: ci
-      - NODE_OPTIONS: '--max_old_space_size=4096'
+      - NODE_OPTIONS: '--max_old_space_size=7168'
       - GOOGLE_APPLICATION_CREDENTIALS: creds.json
     steps:
       - checkout_project
@@ -169,11 +169,45 @@ jobs:
           message: '🚲 Deploying & testing e2e (https://blockframes-ci.web.app/)'
       - run: |
           npx firebase use ci &&
-          npx firebase deploy --only firestore,hosting:current &&
+          npx firebase deploy --only firestore,hosting:catalog &&
           npx firebase deploy --only functions --force || true &&
           npx ng build backend-ops --configuration=$ENV;
       - run:
           name: prepare the ci for testing
+          command: npm run build:backend-ops && node dist/apps/backend-ops/main.js prepareForTesting
+          when: always
+      - run:
+          name: wait for maintenance mode to end (slightly more than 8 minutes)
+          command: sleep 500
+      - run:
+          name: catalog e2e tests
+          command: npm run e2e:catalog
+          when: always
+      - store_artifacts:
+          name: Uploading screenshots
+          path: ~/repo/dist/cypress/apps
+      - slack/status
+  test-e2e-release:
+    executor: blockframes-ci
+    environment:
+      - ENV: staging
+      - NODE_OPTIONS: '--max_old_space_size=7168'
+      - GOOGLE_APPLICATION_CREDENTIALS: creds.json
+    steps:
+      - checkout_project
+      - run: echo "${FIREBASE_STAGING_SERVICE_ACCOUNT}" > creds.json
+      - run: cp env/env.staging.ts env/env.ts # required for the typechecking & file rewrite to work
+      - run: npx cypress install
+      - run: npm run build:all
+      - slack/notify:
+          message: '🛵 🤠 Deploying release to staging.. (https://staging.blockframes.io/)'
+      - run: |
+          npx firebase use staging &&
+          npx firebase deploy --only firestore,hosting:catalog &&
+          npx firebase deploy --only functions --force || true &&
+          npx ng build backend-ops --configuration=$ENV;
+      - run:
+          name: prepare staging for testing
           command: npm run build:backend-ops && node dist/apps/backend-ops/main.js prepareForTesting
           when: always
       - run:
@@ -184,32 +218,11 @@ jobs:
           name: Uploading screenshots
           path: ~/repo/dist/cypress/apps
       - slack/status
-  deploy-to-release-candidate:
-    executor: blockframes-ci
-    environment:
-      - ENV: production
-      - NODE_OPTIONS: '--max_old_space_size=4096'
-      - GOOGLE_APPLICATION_CREDENTIALS: creds.json
-    steps:
-      - checkout_project
-      - run: echo "${FIREBASE_PRODUCTION_SERVICE_ACCOUNT}" > creds.json
-      - run: cp env/env.prod.ts env/env.ts # required for the typechecking & file rewrite to work
-      - run: npm run build:all
-      - slack/notify:
-          message: '🚂 Deploying to release candidate... (deploy ONLY the frontend part, https://blockframes-next.web.app/)'
-      - run:
-          command: |
-            # tedious inject the target so that we don't need to duplicate the json
-            cat firebase.json | jq '.hosting[0].target = "next"' > firebase.next.json
-            mv firebase.next.json firebase.json
-            npx firebase use prod &&
-            npx firebase deploy --only hosting:next
-      - slack/status
   deploy-to-prod:
     executor: blockframes-ci
     environment:
       - ENV: production
-      - NODE_OPTIONS: '--max_old_space_size=4096'
+      - NODE_OPTIONS: '--max_old_space_size=7168'
       - GOOGLE_APPLICATION_CREDENTIALS: creds.json
     steps:
       - checkout_project
@@ -237,7 +250,7 @@ jobs:
     executor: blockframes-ci
     environment:
       - ENV: staging
-      - NODE_OPTIONS: '--max_old_space_size=4096'
+      - NODE_OPTIONS: '--max_old_space_size=7168'
       - GOOGLE_APPLICATION_CREDENTIALS: creds.json
     steps:
       - checkout_project
@@ -251,7 +264,7 @@ jobs:
             npx firebase use staging &&
             cp firestore.rules firestore.rules.regular &&
             cp firestore.maintenance.rules firestore.rules &&
-            npx firebase deploy --except functions &&
+            npx firebase deploy --only firestore,hosting:catalog &&
             npx firebase deploy --only functions --force
       - run: node dist/apps/backend-ops/main.js upgrade
       - run:
@@ -271,6 +284,8 @@ workflows:
             branches:
               ignore:
                 - ci
+                - develop
+                - /release\/.*/
                 - master
                 - production
                 - staging
@@ -282,22 +297,26 @@ workflows:
                 - ci
                 - master
                 - production
+                - /release\/.*/
+                - develop
                 - staging
-      - test-e2e:
+      - test-e2e-ci:
           <<: *ci_only
+          requires:
+            - build-and-test-all
+      - test-e2e-release:
+          <<: *release_only
           requires:
             - build-and-test-all
       - build-and-deploy-storybook:
           filters:
             branches:
               only:
-                - master
+                - develop
       - deploy-to-prod:
           <<: *production_only
       - deploy-to-staging:
           <<: *staging_only
-      - deploy-to-release-candidate:
-          <<: *release_candidate_only
   nightly-e2e:
     triggers:
       - schedule:
@@ -305,9 +324,9 @@ workflows:
           filters:
             branches:
               only:
-                - master
+                - develop
     jobs:
       - build-and-test-all
-      - test-e2e:
+      - test-e2e-ci:
           requires:
             - build-and-test-all

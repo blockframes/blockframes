@@ -331,3 +331,5 @@ export interface MovieStakeholders {
   laboratory: Stakeholder[];
   financier: Stakeholder[];
 }
+
+export type LanguageRecord = Partial<{ [language in LanguagesSlug]: MovieLanguageSpecification }>;

@@ -1,6 +1,5 @@
 // Angular
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { FormControl } from '@angular/forms';
 import {
   Component,
@@ -20,7 +19,7 @@ import { searchClient } from '@blockframes/utils/algolia';
 
 // RxJs
 import { Observable, Subscription, BehaviorSubject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap, pluck, map } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, switchMap, pluck, filter } from 'rxjs/operators';
 
 @Component({
   selector: '[indexName] algolia-autocomplete',
@@ -140,6 +139,7 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
     this.indexSearch = this.config.searchClient.initIndex(this.config.indexName)
     this.algoliaSearchResults$ = this.control.valueChanges.pipe(
       debounceTime(300),
+      filter(text => typeof text === 'string'),
       distinctUntilChanged(),
       switchMap(text => this.indexSearch.search(text)),
       pluck('hits')
@@ -163,9 +163,8 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
   /**
    * @description this function can be listen on if we want more then
    * just the data from the form control
-   * @param event holding all the algolia data available
    */
-  public findObjectID(event: MatAutocompleteSelectedEvent) {
+  public findObjectID() {
     const objectID = this.lastValue$.getValue()[0].objectID;
     this.selectionChange.emit(objectID);
     if (this.resetInput) {
@@ -178,6 +177,9 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
   * otherwise displayWithPath is undefined and this will throw an error
   */
   public displayFn() {
+    if (this.resetInput) {
+      return ''
+    }
     const value = this.lastValue$.getValue();
     if (value) {
       return this.resolveValue(value[0], this.displayWithPath)
