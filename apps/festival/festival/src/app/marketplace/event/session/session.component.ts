@@ -13,7 +13,7 @@ export class SessionComponent implements OnInit {
   constructor(private sanitizer: DomSanitizer) { }
 
   ngOnInit(): void {
-    this.url = this.sanitizer.bypassSecurityTrustResourceUrl('https://vimeo.com/391939808/2ae438e38e');
+    this.url = this.sanitizer.bypassSecurityTrustResourceUrl('https://player.vimeo.com/video/391939808');
   }
 
 }
