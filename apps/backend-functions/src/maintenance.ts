@@ -4,8 +4,6 @@ import { EventContext } from 'firebase-functions';
 
 type Timestamp = admin.firestore.Timestamp;
 
-const EIGHT_MINUTES_IN_MS = 8 * 60 * 1000;
-
 interface IMaintenanceDoc {
   startedAt: Timestamp | null;
   endedAt: Timestamp | null;
@@ -41,33 +39,6 @@ async function getMaintenanceDoc(): Promise<IMaintenanceDoc | null> {
   }
 
   return doc.data() as IMaintenanceDoc;
-}
-
-export async function isInMaintenance() {
-  const doc = await getMaintenanceDoc();
-
-  if (!doc) {
-    return false;
-  }
-
-  const { startedAt, endedAt } = doc;
-
-  const now = admin.firestore.Timestamp.now();
-
-  if (endedAt) {
-    // Wait some time before allowing any operation on the db.
-    // this prevents triggering firebase events.
-    // NOTE: this is hack-ish but good enough for our needs! we'll revisit this later.
-    return endedAt.toMillis() + EIGHT_MINUTES_IN_MS > now.toMillis();
-  }
-
-  if (startedAt) {
-    return true;
-  }
-
-  throw new Error(
-    'Unexpected cases for maintenance check! please check the _META/_MAINTENANCE document.'
-  );
 }
 
 /**
