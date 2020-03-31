@@ -1,16 +1,16 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ContractQuery, displayPaymentSchedule } from '@blockframes/contract/contract/+state';
 import { map } from 'rxjs/operators';
-import { Movie, MovieQuery } from '@blockframes/movie';
+import { MovieQuery } from '@blockframes/movie';
 import { Intercom } from 'ng-intercom';
 
 @Component({
-  selector: 'catalog-negociation',
-  templateUrl: './negociation.component.html',
-  styleUrls: ['./negociation.component.scss'],
+  selector: 'catalog-negotiation',
+  templateUrl: './negotiation.component.html',
+  styleUrls: ['./negotiation.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NegociationComponent {
+export class NegotiationComponent {
 
   activeVersion$ = this.query.activeVersion$;
   versionView$ = this.query.activeVersionView$;

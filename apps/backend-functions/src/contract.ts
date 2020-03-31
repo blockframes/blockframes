@@ -74,7 +74,7 @@ async function checkAndTriggerNotifications(current: ContractDocument) {
   const previous = previousVersionSnap.data() as ContractVersionDocument;
 
   if (!!previous) {
-    const contractInNegociation = (previous.status === 'submitted') && (current.lastVersion.status === 'undernegotiation');
+    const contractInNegotiation = (previous.status === 'submitted') && (current.lastVersion.status === 'undernegotiation');
     const contractSubmitted = (previous.status === 'draft') && (current.lastVersion.status === 'submitted');
 
     if (contractSubmitted) { // Contract is submitted by organization to Archipel Content
@@ -95,7 +95,7 @@ async function checkAndTriggerNotifications(current: ContractDocument) {
       await triggerNotifications(notifications);
     }
 
-    if (contractInNegociation) { // Contract is validated by Archipel Content
+    if (contractInNegotiation) { // Contract is validated by Archipel Content
       const organizations = await getOrganizationsOfContract(current);
       const notifications = organizations
         .filter(organizationDocument => !!organizationDocument && !!organizationDocument.userIds)

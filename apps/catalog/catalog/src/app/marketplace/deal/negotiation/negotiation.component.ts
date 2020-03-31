@@ -5,12 +5,12 @@ import { Movie } from '@blockframes/movie';
 import { Intercom } from 'ng-intercom';
 
 @Component({
-  selector: 'catalog-negociation',
-  templateUrl: './negociation.component.html',
-  styleUrls: ['./negociation.component.scss'],
+  selector: 'catalog-negotiation',
+  templateUrl: './negotiation.component.html',
+  styleUrls: ['./negotiation.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NegociationComponent {
+export class NegotiationComponent {
 
   activeVersion$ = this.query.activeVersion$;
   versionView$ = this.query.activeVersionView$;
