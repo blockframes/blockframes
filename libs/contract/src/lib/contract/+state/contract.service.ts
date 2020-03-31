@@ -13,9 +13,9 @@ import {
 import { PermissionsService, OrganizationQuery } from '@blockframes/organization';
 import { ContractDocumentWithDates } from './contract.firestore';
 import { firestore } from 'firebase/app';
-import { ContractVersion } from '@blockframes/contract/version/+state';
 import { Observable } from 'rxjs';
 import { cleanModel } from '@blockframes/utils/helpers';
+import { map } from 'rxjs/internal/operators/map';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'contracts' })
@@ -61,12 +61,12 @@ export class ContractService extends CollectionService<ContractState> {
    * @param distributionDealId
    */
   public async getContractFromDeal(movieId: string, distributionDealId: string): Promise<Contract> {
-    const contracts = await this.getValue(ref => 
+    const contracts = await this.getValue(ref =>
       ref.where(`lastVersion.titles.${movieId}.distributionDealIds`, 'array-contains', distributionDealId),
     );
-    
+
     // Can have only one result
-    return contracts.length ? contracts.pop(): undefined;
+    return contracts.length ? contracts.pop() : undefined;
   }
 
   /**
@@ -76,7 +76,7 @@ export class ContractService extends CollectionService<ContractState> {
    * @param contract The contract to add
    */
   public async create(contract: Partial<Contract>): Promise<string> {
-    return await this.add(createContract({ ...contract,  }));
+    return await this.add(createContract({ ...contract, }));
   }
 
   /**
@@ -174,7 +174,9 @@ export class ContractService extends CollectionService<ContractState> {
   }
 
   public listenOnContract(contractId: string): Observable<Contract> {
-    return this.collection.doc<Contract>(contractId).valueChanges();
+    return this.collection.doc<Contract>(contractId).valueChanges().pipe(
+      map((contract: Contract) => createContractFromFirestore(contract))
+    );
   }
 
   public listenOnPublicContract(contractId: string): Observable<PublicContract> {

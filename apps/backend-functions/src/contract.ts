@@ -261,7 +261,7 @@ async function updateContract(tx: FirebaseFirestore.Transaction, ref: DocumentRe
       // Cleaning to prevent infinite loops (can arrive if contract type changes)
       contractUpdate.childContractIds = contractUpdate.parentContractIds ?
         contractUpdate.childContractIds.filter((id: string) => !contractUpdate.parentContractIds.includes(id)) :
-        contractUpdate.childContractId;
+        contractUpdate.childContractIds;
     }
   }
 
