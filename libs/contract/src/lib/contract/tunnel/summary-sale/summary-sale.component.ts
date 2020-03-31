@@ -65,30 +65,12 @@ export class SummarySaleComponent implements OnInit {
     return parties.map(p => p.get('party').get('displayName'));
   }
 
-
   /**
    * Submit a contract version to Archipel Content
-   * @dev 
-   *   Updates contract status to 'submitted'.
-   *   Also updates contract's distribution deals to status 'undernegotiation'
-   *   A new contract version will be created by backend functions.
-   * @see apps/backend-functions/src/contract.ts
-   * @note cannot put this function on the service or you hit cyrcular dependancies @TODO (#1887) test
    */
   async submit() {
     const contract = this.query.getActive();
-
-    // Make sure everything is saved first and that deals have ids
     await this.tunnel.save();
-    const write = this.db.firestore.batch();
-    contract.lastVersion.status = 'submitted';
-    this.contractService.update(contract, { write });
-
-     // @todo (#1887) a backend function should handle this
-    for (const movieId in this.dealForms.value) {
-      const dealIds = this.dealForms.get(movieId).value.map(deal => deal.id);
-      this.dealService.update(dealIds, { status: 'undernegotiation' }, { params: { movieId }, write });
-    }
-    return write.commit();
+    return this.contractService.submit(contract);
   }
 }

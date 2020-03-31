@@ -9,8 +9,6 @@ import { ContractVersionPriceControl, ContractVersionForm } from '@blockframes/c
 import { MovieCurrenciesSlug } from '@blockframes/utils/static-model';
 import { displayPaymentSchedule, displayTerms } from '../../+state/contract.utils';
 import { ContractQuery, ContractService } from '../../+state';
-import { AngularFirestore } from '@angular/fire/firestore';
-import { DistributionDealService } from '@blockframes/distribution-deals/+state';
 
 @Component({
   selector: 'contract-tunnel-summary-mandate',
@@ -33,9 +31,7 @@ export class SummaryMandateComponent implements OnInit {
 
   constructor(
     private tunnel: ContractTunnelComponent,
-    private db: AngularFirestore,
     private contractService: ContractService,
-    private dealService: DistributionDealService,
     private query: ContractQuery
   ) { }
 
@@ -85,22 +81,10 @@ export class SummaryMandateComponent implements OnInit {
 
   /**
    * Submit a contract version to Archipel Content
-   * @TODO (#1887) should update the version on the contract + check issue desc
-   * @note cannot put this function on the service or you hit cyrcular dependancies @TODO (#1887) test
    */
   async submit() {
     const contract = this.query.getActive();
-    // Make sure everything is saved first and that deals have ids
     await this.tunnel.save();
-    const write = this.db.firestore.batch();
-    contract.lastVersion.status = 'submitted';
-    this.contractService.update(contract, { write });
-
-    // @todo (#1887) a backend function should handle this
-    for (const movieId in this.dealForms.value) {
-      const dealIds = this.dealForms.get(movieId).value.map(deal => deal.id);
-      this.dealService.update(dealIds, { status: 'undernegotiation' }, { params: { movieId }, write });
-    }
-    return write.commit();
+    return this.contractService.submit(contract);
   }
 }

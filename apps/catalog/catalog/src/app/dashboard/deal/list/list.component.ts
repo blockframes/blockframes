@@ -106,7 +106,7 @@ export class DealListComponent {
   async createMandate() {
     const type = 'mandate';
     const orgId = this.orgQuery.getActiveId();
-    const mandate = await this.contractService.getMandate(orgId);
+    const mandate = await this.contractService.getMandateByOrgId(orgId);
     if (mandate) {
       this.router.navigate([mandate.id], { relativeTo: this.route })
     } else {

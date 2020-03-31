@@ -34,10 +34,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { OrganizationQuery } from '@blockframes/organization/organization/+state/organization.query';
 import { createDistributionDeal } from '../+state/distribution-deal.model';
 import { DistributionDealService } from '../+state';
-import { createContractPartyDetail, createContract } from '@blockframes/contract/contract/+state/contract.model';
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
-import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { ControlErrorStateMatcher, languageValidator } from '@blockframes/utils/form/validators/validators';
+import objectHash from 'object-hash';
+import { ContractService, TitlesAndDeals } from '@blockframes/contract/contract/+state/contract.service';
 
 enum ResearchSteps {
   START = 'Start',
@@ -183,29 +183,25 @@ export class DistributionDealCreateComponent implements OnInit, OnDestroy {
     this.form.removeLanguage(language);
   }
 
-  // @ TODO (#1887) check this method =>  async create() { in selection-compoment
   public async addDistributionDeal() {
     const distributionDeal = createDistributionDeal();
-    // Create the contract that will handle the deal
-    const contract = createContract();
 
-    const licensee = createContractPartyDetail();
-    licensee.party.orgId = this.organizationQuery.getActiveId();
-    licensee.party.role = 'licensee';
-    contract.parties.push(licensee);
+    // Create an id from DistributionDeal content.
+    // A same DistributionDeal document will always have the same hash to prevent multiple insertion of same deal
+    if (!distributionDeal.id) {
+      distributionDeal.id = objectHash(distributionDeal);
+    }
 
-    const licensor = createContractPartyDetail();
-    licensor.party.orgId = this.movie.salesAgentDeal.salesAgent.orgId;
-    licensor.party.displayName = this.movie.salesAgentDeal.salesAgent.displayName;
-    licensor.party.role = 'licensor';
-    contract.parties.push(licensor);
+    const titlesAndDeals = {} as TitlesAndDeals;
+    titlesAndDeals[this.movie.id] = [distributionDeal];
 
-    const isValid = await this.contractService.isContractValid(contract);
-    if (!isValid) {
+    const contractId = this.contractService.createContractAndDeal(this.organizationQuery.getActiveId(), titlesAndDeals);
+   
+    if (!contractId) {
       this.snackBar.open(`Error while creating contract..`, 'close', { duration: 2000 });
     } else {
-      const dealId = await this.distributionDealService.addDistributionDeal(this.movie.id, distributionDeal, contract);
-      await this.cartService.addDealToCart(dealId, 'default');
+      // Add deal to default cart
+      await this.cartService.addDealToCart(distributionDeal.id, 'default');
       this.snackBar.open(`Distribution deal saved. Redirecting ...`, 'close', { duration: 2000 });
       this.router.navigateByUrl(`c/o/catalog/selection/overview`);
     }

@@ -87,8 +87,7 @@ export class ContractTunnelComponent implements OnInit {
 
     // Set the initial deals
     contract.titleIds.forEach(async movieId => {
-      // @todo (#1887) get dealFromContractId from the service
-      const deals = await this.dealService.getValue(ref => ref.where('contractId', '==', contract.id), { params: { movieId } });
+      const deals = await this.dealService.getContractDistributionDeals(contract.id, movieId);
       this.dealForms.setControl(movieId, FormList.factory(deals, deal => new DistributionDealForm(deal)));
     });
 

@@ -97,7 +97,7 @@ export class TableExtractedDealsComponent implements OnInit {
         const existingMovie = await this.movieService.getFromInternalRef(importState.movieInternalRef);
         this.movies[importState.movieInternalRef] = createMovie(cleanModel(existingMovie));
       }
-      await this.distributionDealService.addDistributionDeal(this.movies[importState.movieInternalRef].id, importState.distributionDeal);
+      await this.distributionDealService.add(importState.distributionDeal, { params: { movieId : this.movies[importState.movieInternalRef].id } });
       importState.errors.push({
         type: 'error',
         field: 'distributionDeal',

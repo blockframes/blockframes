@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import objectHash from 'object-hash';
 import { CollectionService, CollectionConfig } from 'akita-ng-fire';
 import { DistributionDealState, DistributionDealStore } from './distribution-deal.store';
 import {
@@ -9,8 +8,6 @@ import {
   DistributionDealWithMovieId,
   formatDistributionDeal
 } from './distribution-deal.model';
-import { createContractTitleDetail, Contract } from '@blockframes/contract/contract/+state/contract.model';
-import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { ContractVersion } from '@blockframes/contract/version/+state/contract-version.model';
 import { DistributionDealQuery } from './distribution-deal.query';
 import { Movie } from '@blockframes/movie/+state';
@@ -22,55 +19,10 @@ import { getFilterMatchingDeals, getDealsInDateRange } from '../create/availabil
 @CollectionConfig({ path: 'movies/:movieId/distributionDeals' })
 export class DistributionDealService extends CollectionService<DistributionDealState> {
   constructor(
-    private contractService: ContractService,
     private query: DistributionDealQuery,
     store: DistributionDealStore
   ) {
     super(store);
-  }
-
-  /**
-   *
-   * @param movieId
-   * @param distributionDeal
-   */
-  public async addDistributionDeal(movieId: string, distributionDeal: DistributionDeal, contract?: Contract): Promise<string> {
-    // Create an id from DistributionDeal content.
-    // A same DistributionDeal document will always have the same hash to prevent multiple insertion of same deal
-    if (!distributionDeal.id) {
-      distributionDeal.id = objectHash(distributionDeal);
-    }
-
-    if (contract) {
-
-      // If a contract does not have an id, we update contract and link it to this distrubution deal
-      // If there is already a contract id, this means it have been created before
-      // @TODO (#1887) check this process & move logic to functions
-      if (!contract.id) {
-        contract.id = this.db.createId();
-        // Populate distribution deal contract
-        contract.lastVersion.titles[movieId] = createContractTitleDetail();
-        contract.lastVersion.titles[movieId].titleId = movieId;
-        contract.lastVersion.titles[movieId].distributionDealIds.push(distributionDeal.id);
-
-        // @todo #1657 change this price calculus
-        contract.lastVersion.titles[movieId].price = contract.lastVersion.price; // @TODO (#1887) use same method as in admin updatePric()
-
-        const contractId = await this.contractService.add(contract);
-
-        // Link distributiondeal with contract
-        distributionDeal.contractId = contractId;
-      } else {
-        // Link distributiondeal with contract
-        distributionDeal.contractId = contract.id;
-        // Contract may have been updated along with the distribution deal, we update it
-        await this.contractService.add(contract);
-      }
-    }
-    
-    await this.add(distributionDeal, { params: { movieId } });
-
-    return distributionDeal.id;
   }
 
   /**
@@ -79,6 +31,16 @@ export class DistributionDealService extends CollectionService<DistributionDealS
    */
   public async getMovieDistributionDeals(movieId: string): Promise<DistributionDeal[]> {
     const distributionDeals = await this.getValue({ params: { movieId } });
+    return distributionDeals.map(deal => formatDistributionDeal(deal));
+  }
+
+  /**
+   * Get distributionDeals from a specific contract.
+   * @param contractId
+   * @param movieId
+   */
+  public async getContractDistributionDeals(contractId: string, movieId: string): Promise<DistributionDeal[]> {
+    const distributionDeals = await this.getValue(ref => ref.where('contractId', '==', contractId), { params: { movieId } });
     return distributionDeals.map(deal => formatDistributionDeal(deal));
   }
 
@@ -112,8 +74,10 @@ export class DistributionDealService extends CollectionService<DistributionDealS
     return deals.map(deal => deal ? getDealTerritories(deal) : []).flat();
   }
 
-  /** Get the deals linked to the Archipel Contract (of type 'mandate') */
-  // @todo (#1887) check
+  /**
+   * Gets the deals linked to the Archipel Contract (of type 'mandate')
+   * @param movie 
+   */
   public async getMandateDeals(movie: Movie): Promise<DistributionDeal[]> {
     const contractsSnap = await this.db.collection(
       `publicContracts/`, ref => ref.where('type', '==', 'mandate').where('titleIds', 'array-contains', movie.id))

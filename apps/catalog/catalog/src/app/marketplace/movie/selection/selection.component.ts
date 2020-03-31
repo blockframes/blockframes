@@ -2,20 +2,10 @@ import { Component, ChangeDetectionStrategy, HostBinding, Optional } from '@angu
 import { Router } from '@angular/router';
 import { MarketplaceQuery, MarketplaceStore } from '../../+state';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
-import {
-  ContractService,
-  Contract,
-  createContractPartyDetail,
-  createContractTitleDetail,
-  createContract
-} from '@blockframes/contract/contract/+state';
-import { createParty } from '@blockframes/utils/common-interfaces';
+import { ContractService, TitlesAndDeals } from '@blockframes/contract/contract/+state';
 import { Observable } from 'rxjs';
-import { DistributionDealService } from '@blockframes/distribution-deals/+state/distribution-deal.service';
-import { AngularFirestore } from '@angular/fire/firestore';
 import { Intercom } from 'ng-intercom';
 import { OrganizationQuery } from '@blockframes/organization/organization/+state/organization.query';
-import { createDistributionDeal } from '@blockframes/distribution-deals/+state/distribution-deal.model';
 
 @Component({
   selector: 'catalog-selection',
@@ -32,15 +22,13 @@ export class MarketplaceSelectionComponent {
 
   constructor(
     public store: MarketplaceStore,
-    private db: AngularFirestore,
     private query: MarketplaceQuery,
     private contractService: ContractService,
-    private dealService: DistributionDealService,
     private movieQuery: MovieQuery,
     private orgQuery: OrganizationQuery,
     private router: Router,
     @Optional() private intercom: Intercom
-  ) {}
+  ) { }
 
   /** Select a movie for a specific movie Id */
   selectMovie(movieId: string) {
@@ -52,39 +40,17 @@ export class MarketplaceSelectionComponent {
   }
 
   /** 
-   * Creates a Contract, remove the current selection, move to tunnel
-   * // @todo (#1887) check public async addDistributionDeal() { & merge if possible
+   * Creates deals and contract and move to tunnel
    */
   async create() {
-    // @todo(#2041) need to define it here as we cannot use DistributionDealService in ContractService -> Circular Dependancy
-    const contractId = this.db.createId();
-    const org = this.orgQuery.getActive();
-    const type = 'sale';
-
-    // Initialize parties
-    const parties: Contract['parties'] = [
-      createContractPartyDetail({
-        party: createParty({ role: 'licensee', orgId: org.id, displayName: org.denomination.full }),
-        // TODO #2311 DisplayName has to be define in a guard !
-      }),
-      createContractPartyDetail({ party: createParty({ role: 'licensor' }) })
-    ];
-  
-    // Create contract
-    const contract: Partial<Contract> = createContract({ id: contractId, parties, type });
-
-    // Create deals per titles
-    // @TODO (#1887) Ideally we would do that in the ContractService, but blocked by Circular Dependancy
+    const orgId = this.orgQuery.getActiveId();
+    const titlesAndDeals = {} as TitlesAndDeals;
     for (const movieId of this.query.getValue().ids) {
       const { deals } = this.query.getEntity(movieId);
-      const dealDocs = deals.map(deal => createDistributionDeal({ ...deal, contractId }));
-      const distributionDealIds = await this.dealService.add(dealDocs, { params: { movieId } });
-      contract.lastVersion.titles[movieId] = createContractTitleDetail({ distributionDealIds });
+      titlesAndDeals[movieId] = deals;
     }
-
-    await this.contractService.add(contract);
-
-    await this.router.navigate(['c/o/marketplace/tunnel/contract', contractId, type]);
+    const contractId = await this.contractService.createContractAndDeal(orgId, titlesAndDeals);
+    await this.router.navigate(['c/o/marketplace/tunnel/contract', contractId, 'sale']);
     this.store.reset();
   }
 
