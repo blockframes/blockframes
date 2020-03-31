@@ -12,6 +12,14 @@ import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
 
 type CropStep = 'drop' | 'crop' | 'upload' | 'upload_complete' | 'show';
 
+const CROPPER_RATIOS = {
+  avatar: 1/1,
+  logo: 1/1,
+  banner: 16/9,
+  poster: 4/3,
+  still: 7/5
+}
+
 /** Convert base64 from ngx-image-cropper to blob for uploading in firebase */
 function b64toBlob(data: string) {
   const [metadata, content] = data.split(',');
@@ -70,7 +78,10 @@ export class CropperComponent implements ControlValueAccessor {
 
   // inputs
   @Input() set ratio(ratio: string) {
-    this.cropRatio = ratio;
+    if (!CROPPER_RATIOS.hasOwnProperty(ratio)) {
+      console.error(`"${ratio}" is not a valid ratio. Valid ratios are: ${Object.keys(CROPPER_RATIOS).join(', ')}`);
+    }
+    this.cropRatio = CROPPER_RATIOS[ratio];
     const el: HTMLElement = this._elementRef.nativeElement;
     this.parentWidth = el.clientWidth;
     this._renderer.setStyle(el, "height", `calc(40px+${this.parentWidth}px/${ratio})`)
