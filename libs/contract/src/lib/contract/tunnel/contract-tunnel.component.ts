@@ -1,10 +1,9 @@
 import { Router, ActivatedRoute } from '@angular/router';
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TunnelStep, TunnelConfirmComponent } from '@blockframes/ui/tunnel'
 import { ContractForm } from '../form/contract.form';
-import { ContractQuery, ContractService, ContractType, createContract } from '../+state';
+import { ContractQuery, ContractService, ContractType, createContract, TitlesAndDeals } from '../+state';
 import { MatDialog } from '@angular/material/dialog';
 import { DistributionDealForm } from '@blockframes/distribution-deals/form/distribution-deal.form';
 import { FormEntity, FormList } from '@blockframes/utils/form/forms';
@@ -14,6 +13,7 @@ import { startWith, map, switchMap, shareReplay } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { OrganizationQuery } from '@blockframes/organization/organization/+state';
 
 const steps = [{
   title: 'Step 1',
@@ -69,7 +69,7 @@ export class ContractTunnelComponent implements OnInit {
   public contractForm: ContractForm;
 
   constructor(
-    private db: AngularFirestore,
+    private orgQuery: OrganizationQuery,
     private snackBar: MatSnackBar,
     private contractService: ContractService,
     private query: ContractQuery,
@@ -86,7 +86,7 @@ export class ContractTunnelComponent implements OnInit {
     this.contractForm = new ContractForm(contract);
 
     // Set the initial deals
-    contract.titleIds.forEach(async movieId => {
+    Object.keys(contract.lastVersion.titles).forEach(async movieId => {
       const deals = await this.dealService.getContractDistributionDeals(contract.id, movieId);
       this.dealForms.setControl(movieId, FormList.factory(deals, deal => new DistributionDealForm(deal)));
     });
@@ -168,26 +168,48 @@ export class ContractTunnelComponent implements OnInit {
     this.dealForms.get(movieId).removeAt(index);
   }
 
-  /** Save Contract, Contract Version and deals */
+  /** 
+   * Save Contract, Contract Version and deals
+   * @dev At this point, deals may already exists 
+   * (ie: created when clicked on "create an offer" from selection page).
+   * but deals may have been edited, added or removed and the contract may
+   * have changed too in the contract tunnel form.
+   */
   public async save() {
-    const write = this.db.firestore.batch();
-    const contractId = this.query.getActiveId();
+    
+    const orgId = this.orgQuery.getActiveId();
+    const titlesAndDeals = {} as TitlesAndDeals;
 
-    // Upsert deals
     for (const movieId in this.dealForms.controls) {
       const deals = this.dealForms.get(movieId).value.map(deal => createDistributionDeal(deal));
+      titlesAndDeals[movieId] = deals;
+
+
+      /*
+      @TODO (#1887) quand un deal est créé il faut patcher le form avec l'id .. a tester
       deals.forEach(async (deal, i) => {
         if (deal.id) {
-          this.dealService.update(deal, { params: { movieId }, write });
-        } else {
           const id = await this.dealService.add({ contractId, ...deal }, { params: { movieId }, write });
           this.dealForms.get(movieId).at(i).patchValue({ id });
           this.contractForm.get('lastVersion').get('titles').get(movieId).get('distributionDealIds').add(id);
         }
-      })
+      })*/
+
     }
 
-    // Remove deals
+    const contract = createContract({
+      ...this.query.getActive(),
+      ...this.contractForm.value
+    });
+
+    console.log('ici',this.contractForm.value);
+    await this.contractService.createContractAndDeal(orgId, titlesAndDeals,contract);
+
+ 
+
+    // Remove deals @todo (#1887) check ... (n'update pas le contract par exemple)
+    /*
+    const write = this.db.firestore.batch();
     for (const movieId in this.removedDeals) {
       for (const dealId of this.removedDeals[movieId]) {
         this.dealService.remove(dealId, { params: { movieId }, write })
@@ -202,9 +224,11 @@ export class ContractTunnelComponent implements OnInit {
 
     // Update Contract
     this.contractService.update(contract, { write });
-
-    // Return an observable<boolean> for the confirmExit
     await write.commit();
+    */
+
+
+
     this.contractForm.markAsPristine();
     this.dealForms.markAsPristine();
     await this.snackBar.open('Saved', '', { duration: 500 }).afterDismissed().toPromise();

@@ -12,7 +12,7 @@ import {
   createContractTitleDetail,
 } from './contract.model';
 
-import { ContractDocumentWithDates, ContractType } from './contract.firestore';
+import { ContractDocumentWithDates } from './contract.firestore';
 import { firestore } from 'firebase/app';
 import { Observable } from 'rxjs';
 import { cleanModel } from '@blockframes/utils/helpers';
@@ -105,10 +105,12 @@ export class ContractService extends CollectionService<ContractState> {
    * @param titlesAndDeals 
    * @param type
    */
-  public async createContractAndDeal(licenseeId: string, titlesAndDeals: TitlesAndDeals, type: ContractType = 'sale'): Promise<string> {
+  public async createContractAndDeal(licenseeId: string, titlesAndDeals: TitlesAndDeals, contract: Contract = createContract({ type: 'sale' })): Promise<string> {
     const write = this.db.firestore.batch();
 
-    const contract = createContract({ id: this.db.createId(), type });
+    if (!contract.id) {
+      contract.id = this.db.createId();
+    }
 
     // Licensee is the current logged in org
     const licensee = createContractPartyDetail();
@@ -273,20 +275,21 @@ export class ContractService extends CollectionService<ContractState> {
 
   /**
    * Changes contract status to submitted. Also updates distribution deals state.
-   * @param contract 
+   * @param _contract 
    */
-  public async submit(contract: Contract) {
+  public async submit(_contract: Contract) {
     const write = this.db.firestore.batch();
-    contract.lastVersion.status = 'submitted';
+    const contract = { ..._contract };
+    contract.lastVersion = { ...contract.lastVersion, status: 'submitted' }; // For read-only purposes
     this.update(contract, { write });
 
-    for (const titleId in Object.keys(contract.lastVersion.titles)) {
+    Object.keys(contract.lastVersion.titles).forEach(titleId => {
       this.distributionDealService.update(
         contract.lastVersion.titles[titleId].distributionDealIds,
         { status: 'undernegotiation' },
         { params: { movieId: titleId }, write }
       );
-    }
+    });
     return write.commit();
   }
 
