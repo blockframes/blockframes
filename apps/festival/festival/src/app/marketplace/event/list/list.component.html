@@ -5,8 +5,13 @@
 <cal-week id="calendar" [viewDate]="viewDate" [events]="events$ | async">
     
     <!-- Events -->
-    <ng-template calEventSmall let-event>
-      Small
+  <ng-template calEventSmall let-event>
+    <div fxLayout fxLayoutAlign="space-between center">
+      <span>{{ event.title }}</span>
+      <a mat-icon-button routerLink="[event.id, 'session']">
+        <mat-icon svgIcon="eye"></mat-icon>
+      </a>
+    </div>
   </ng-template>
   
   <ng-template calEventLarge let-event>

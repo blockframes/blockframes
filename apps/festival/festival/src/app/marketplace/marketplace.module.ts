@@ -70,7 +70,7 @@ const routes: Routes = [{
       }, {
         path: ':orgId',
         loadChildren: () => import('./organization/view/view.module').then(m => m.OrganizationViewModule),
-        data: { animation: 'organization-view' }
+        data: { animation: 'organization-view' },
       }]
     },
     {
@@ -81,8 +81,15 @@ const routes: Routes = [{
         data: { animation: 'event-list' }
       }, {
         path: ':eventId',
-        loadChildren: () => import('./event/view/view.module').then(m => m.EventViewModule),
-        data: { animation: 'event-view' }
+        data: { animation: 'event-view' },
+        children: [{
+            path: '',
+            loadChildren: () => import('./event/view/view.module').then(m => m.EventViewModule),
+          }, {
+            path: 'session',
+            loadChildren: () => import('./event/session/session.module').then(m => m.SessionModule),
+          }
+        ]
       }]
     }
   ]
