@@ -1,0 +1,36 @@
+<title-list>
+
+  <!-- TODO FILTERS -->
+
+  <!-- TITLE CARD -->
+  <ng-template titleCard let-movie="title" let-addToWishList="add">
+
+    <!-- WRITE HERE WHAT YOU WANT TO INJECT-->
+    <movie-card [movie]="movie" [link]="['/c/o/marketplace/title',  movie.id]">
+      <!-- Informations -->
+      <ng-container movieInformation>
+        <mat-card-subtitle>
+          <span class="mat-caption">
+            {{ movie.main.directors | displayName }}
+          </span>
+        </mat-card-subtitle>
+      </ng-container>
+
+      <!-- Action -->
+      <ng-container movieCardAction>
+        <div fxLayout="row" fxLayoutAlign="end">
+          <wishlist-button [movieId]="movie.id" [small]="true"></wishlist-button>
+        </div>
+      </ng-container>
+    </movie-card>
+
+  </ng-template>
+
+  <!-- LIST ITEM CARD -->
+  <ng-template titleListItem let-movies="titles">
+
+    <!-- WRITE HERE WHAT YOU WANT TO INJECT-->
+    <movie-display-list [movies]="movies" (navigate)="goToMovieDetails($event)"></movie-display-list>
+
+  </ng-template>
+</title-list>
