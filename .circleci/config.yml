@@ -177,6 +177,9 @@ jobs:
           command: npm run build:backend-ops && node dist/apps/backend-ops/main.js prepareForTesting
           when: always
       - run:
+          name: wait for maintenance mode to end (slightly more than 8 minutes)
+          command: sleep 500
+      - run:
           name: catalog e2e tests
           command: npm run e2e:catalog
           when: always
