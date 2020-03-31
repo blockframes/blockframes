@@ -5,6 +5,7 @@ import { MovieTunnelComponent } from '../movie-tunnel.component';
 import { FormGroup, FormArray } from '@angular/forms';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
   selector: 'catalog-summary-tunnel',
@@ -22,8 +23,9 @@ export class TunnelSummaryComponent {
     private service: MovieService,
     private query: MovieQuery,
     private snackBar: MatSnackBar,
-  ) {}
-
+    private dynTitle: DynamicTitleService) {
+    this.dynTitle.setPageTitle('Summary and Submit a new title')
+  }
   public getPath(segment: string) {
     const { movieId } = this.route.snapshot.params;
     return `/c/o/dashboard/tunnel/movie/${movieId}/${segment}`;
@@ -33,7 +35,7 @@ export class TunnelSummaryComponent {
     if (this.form.valid) {
       const movie = this.form.value;
       movie.main.storeConfig.status = 'submitted';
-      await this.service.update({...this.query.getActive(), ...movie});
+      await this.service.update({ ...this.query.getActive(), ...movie });
       this.form.markAsPristine();
       const ref = this.snackBar.open('Movie Submitted !!', '', { duration: 1000 });
       ref.afterDismissed().subscribe(_ => {
@@ -48,9 +50,9 @@ export class TunnelSummaryComponent {
   }
 
   /* Utils function to get the list of invalid form. Not used yet, but could be useful later */
-  public findInvalidControlsRecursive(formToInvestigate:FormGroup|FormArray):string[] {
-    const invalidControls:string[] = [];
-    const recursiveFunc = (form:FormGroup|FormArray) => {
+  public findInvalidControlsRecursive(formToInvestigate: FormGroup | FormArray): string[] {
+    const invalidControls: string[] = [];
+    const recursiveFunc = (form: FormGroup | FormArray) => {
       Object.keys(form.controls).forEach(field => {
         const control = form.get(field);
         if (control.invalid) {

@@ -1,8 +1,11 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { Movie } from '@blockframes/movie/+state/movie.model';
+import { Subscription } from 'rxjs';
+import { Router, NavigationEnd } from '@angular/router';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
   selector: 'catalog-title-view',
@@ -10,10 +13,11 @@ import { Movie } from '@blockframes/movie/+state/movie.model';
   styleUrls: ['./view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TitleViewComponent implements OnInit {
+export class TitleViewComponent implements OnInit, OnDestroy {
   public movie$: Observable<Movie>;
   public loading$: Observable<boolean>;
   public getLabelBySlug = getLabelBySlug;
+  private sub: Subscription;
 
   navLinks = [
     {
@@ -26,7 +30,16 @@ export class TitleViewComponent implements OnInit {
     }
   ];
 
-  constructor(private movieQuery: MovieQuery) {}
+  constructor(private movieQuery: MovieQuery, private dynTitle: DynamicTitleService, private router: Router) {
+    const titleName = this.movieQuery.getActive().main.title.international || 'No title'
+    this.sub = this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        event.url.includes('details')
+          ? this.dynTitle.setPageTitle(`${titleName}`, 'Film Details')
+          : this.dynTitle.setPageTitle(`${titleName}`, 'Marketplace Activity')
+      }
+    })
+  }
 
   ngOnInit() {
     this.getMovie();
@@ -43,5 +56,9 @@ export class TitleViewComponent implements OnInit {
 
   public getDirectors(movie: Movie) {
     return movie.main.directors.map(d => `${d.firstName}  ${d.lastName}`).join(', ');
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 }

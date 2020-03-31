@@ -16,6 +16,7 @@ export function createImgRef(ref: Partial<ImgRef> | string = {}): ImgRef {
     url: '',
     ref: '',
     originalRef: '',
+    originalFileName: '',
     ..._ref
   };
 }

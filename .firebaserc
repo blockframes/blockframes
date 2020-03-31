@@ -27,7 +27,7 @@
         "next": [
           "blockframes-next"
         ],
-        "current": [
+        "catalog": [
           "blockframes"
         ],
         "maintenance": [
@@ -40,35 +40,35 @@
         "storybook": [
           "blockframes-storybook"
         ],
-        "current": [
+        "catalog": [
           "blockframes-ci"
         ]
       }
     },
     "blockframes-test": {
       "hosting": {
-        "current": [
+        "catalog": [
           "blockframes-test"
         ]
       }
     },
     "blockframes-staging": {
       "hosting": {
-        "current": [
+        "catalog": [
           "blockframes-staging"
         ]
       }
     },
     "blockframes-laurent": {
       "hosting": {
-        "current": [
+        "catalog": [
           "blockframes-laurent"
         ]
       }
     },
     "blockframes-francois": {
       "hosting": {
-        "current": [
+        "catalog": [
           "blockframes-francois"
         ],
         "festival": ["blockframes-francois"]
@@ -76,98 +76,98 @@
     },
     "blockframes-bruce": {
       "hosting": {
-        "current": [
+        "catalog": [
           "blockframes-bruce"
         ]
       }
     },
     "blockframes-hugo": {
       "hosting": {
-        "current": [
+        "catalog": [
           "blockframes-hugo"
         ]
       }
     },
     "blockframes-yohann": {
       "hosting": {
-        "current": [
+        "catalog": [
           "blockframes-yohann"
         ]
       }
     },
     "blockframes-vincent": {
       "hosting": {
-        "current": [
+        "catalog": [
           "blockframes-vincent"
         ]
       }
     },
     "blockframes-pl-2": {
       "hosting": {
-        "current": [
+        "catalog": [
           "blockframes-pl-2"
         ]
       }
     },
     "blockframes-demo-1": {
       "hosting": {
-        "current": [
+        "catalog": [
           "blockframes-demo-1"
         ]
       }
     },
     "blockframes-demo-2": {
       "hosting": {
-        "current": [
+        "catalog": [
           "blockframes-demo-2"
         ]
       }
     },
     "blockframes-demo-3": {
       "hosting": {
-        "current": [
+        "catalog": [
           "blockframes-demo-3"
         ]
       }
     },
     "blockframes-demo-4": {
       "hosting": {
-        "current": [
+        "catalog": [
           "blockframes-demo-4"
         ]
       }
     },
     "blockframes-demo-5": {
       "hosting": {
-        "current": [
+        "catalog": [
           "blockframes-demo-5"
         ]
       }
     },
     "blockframes-max": {
       "hosting": {
-        "current": [
+        "catalog": [
           "blockframes-max"
         ]
       }
     },
     "blockframes-victor": {
       "hosting": {
-        "current": [
+        "catalog": [
           "blockframes-victor"
         ]
       }
     },
     "blockframes-clelia": {
       "hosting": {
-        "current": [
+        "catalog": [
           "blockframes-clelia"
         ]
       }
     },
     "blockframes-dajung": {
       "hosting": {
-        "current": [
+        "catalog": [
           "blockframes-dajung"
         ]
       }

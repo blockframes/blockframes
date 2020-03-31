@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { MovieForm } from '@blockframes/movie/form/movie.form';
 import { MovieTunnelComponent } from '../movie-tunnel.component';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
   selector: 'catalog-movie-tunnel-main',
@@ -11,7 +11,9 @@ import { MovieTunnelComponent } from '../movie-tunnel.component';
 export class TunnelMainComponent {
   form = this.tunnel.form;
 
-  constructor(private tunnel: MovieTunnelComponent) {}
+  constructor(private tunnel: MovieTunnelComponent, private dynTitle: DynamicTitleService) {
+    this.dynTitle.setPageTitle('Main information', 'Title information')
+  }
 
   get main() {
     return this.form.get('main');

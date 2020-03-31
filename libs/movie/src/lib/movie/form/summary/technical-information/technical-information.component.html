@@ -1,16 +1,20 @@
-
 <ul>
   <li>
-    <strong>Shooting Format </strong><missing-control [control]="salesInfo.get('format')" scope="MOVIE_FORMAT" [link]="link"></missing-control>
+    <strong>Shooting Format </strong>
+    <missing-control [control]="salesInfo.get('format')" scope="MOVIE_FORMAT" [link]="link"></missing-control>
   </li>
   <li>
-    <strong>Format Quality </strong><missing-control [control]="salesInfo.get('formatQuality')" scope="MOVIE_FORMAT_QUALITY" [link]="link"></missing-control>
+    <strong>Format Quality </strong>
+    <missing-control [control]="salesInfo.get('formatQuality')" scope="MOVIE_FORMAT_QUALITY" [link]="link">
+    </missing-control>
   </li>
   <li>
-    <strong>Color </strong><missing-control [control]="salesInfo.get('color')" scope="COLORS" [link]="link"></missing-control>
+    <strong>Color </strong>
+    <missing-control [control]="salesInfo.get('color')" scope="COLORS" [link]="link"></missing-control>
   </li>
   <li>
-    <strong>Sound Format </strong><missing-control [control]="salesInfo.get('soundFormat')" scope="SOUND_FORMAT" [link]="link"></missing-control>
+    <strong>Sound Format </strong>
+    <missing-control [control]="salesInfo.get('soundFormat')" scope="SOUND_FORMAT" [link]="link"></missing-control>
   </li>
   <li>
     <strong>Versions </strong>
@@ -20,11 +24,11 @@
       </a>
     </ng-container>
     <ng-template #displayVersions>
-      <ng-container *ngFor="let version of versionInfo.controls | keyvalue; let isLast = last">
+      <ng-container *ngFor="let version of versionInfo.controls.languages.controls | keyvalue; let isLast = last">
         {{ version.key | translateSlug: 'LANGUAGES'}}:
-        <ng-container *ngFor="let info of version.value.controls | keyvalue; let isLast = last">
-          <ng-container *ngIf="info.value.value === true">
-            {{ info.key | translateSlug: 'VERSION_INFO' }}{{ isLast ? '' : ', ' }}
+        <ng-container *ngFor="let info of version.value.controls | keyvalue" let isLast=last>
+          <ng-container *ngIf="info.value.value">
+            {{ info.key | translateSlug: 'VERSION_INFO' }}
           </ng-container>
         </ng-container>
         {{ isLast ? '' : '| ' }}

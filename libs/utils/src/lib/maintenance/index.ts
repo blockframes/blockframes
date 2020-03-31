@@ -6,7 +6,7 @@ export interface IMaintenanceDoc {
 }
 
 /** Delay before considering the maintenance over */
-export const delay = 30 * 1000;  // 30sec in ms
+export const delay = 8 * 60 * 1000;  // 8 minutes in ms
 export const maintenancePath = '_META/_MAINTENANCE';
 
 export function isInMaintenance({ endedAt, startedAt }: IMaintenanceDoc): boolean {

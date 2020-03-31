@@ -1,3 +1,4 @@
+import { ENTER, COMMA } from '@angular/cdk/keycodes';
 import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit } from '@angular/core';
 import { MovieStoryForm } from '../../story/story.form';
 import { MoviePromotionalDescriptionForm } from '../../promotional-description/promotional-description.form';
@@ -9,6 +10,9 @@ import { MoviePromotionalDescriptionForm } from '../../promotional-description/p
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieSummaryStoryComponent implements OnInit {
+
+  public separatorKeysCodes = [ENTER, COMMA]
+
   @Input() story: MovieStoryForm;
   @Input() promotionalDescription: MoviePromotionalDescriptionForm;
   @Input() link: string;

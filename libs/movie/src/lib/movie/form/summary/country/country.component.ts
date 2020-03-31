@@ -13,10 +13,10 @@ export class MovieSummaryCountryComponent implements OnInit {
   @Input() main: MovieMainForm;
   @Input() link: string;
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  constructor(private cdr: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.salesInfo.valueChanges.subscribe(_ => this.cdr.markForCheck());
     this.main.valueChanges.subscribe(_ => this.cdr.markForCheck());
   }
-}
+} 

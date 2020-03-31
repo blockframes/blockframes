@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
   selector: 'catalog-end-tunnel',
@@ -7,4 +8,8 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
-export class EndTunnelComponent { }
+export class EndTunnelComponent {
+  constructor(private dynTitle: DynamicTitleService) {
+    this.dynTitle.setPageTitle('Successfully submitted')
+  }
+}

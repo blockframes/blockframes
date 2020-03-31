@@ -4,6 +4,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { ContractForm } from '../../form/contract.form';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { ContractVersionPriceControl } from '@blockframes/contract/version/form';
 import { MovieCurrenciesSlug } from '@blockframes/utils/static-model';
 import { ContractVersionService } from '@blockframes/contract/version/+state';
@@ -36,8 +37,11 @@ export class SummarySaleComponent implements OnInit {
     private db: AngularFirestore,
     private service: ContractVersionService,
     private dealService: DistributionDealService,
-    private query: ContractQuery
-  ) { }
+    private query: ContractQuery,
+    private dynTitle: DynamicTitleService
+  ) {
+    this.dynTitle.setPageTitle('Contract offer summary', 'Summary and Submit')
+  }
 
   ngOnInit() {
     // Need to create it in the ngOnInit or it's not updated

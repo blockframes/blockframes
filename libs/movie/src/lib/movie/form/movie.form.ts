@@ -18,6 +18,7 @@ import { MovieLegalDocuments } from '../+state/movie.firestore';
 import { urlValidators } from '@blockframes/utils/form/validators/validators';
 import { FormEntity, EntityControl } from '@blockframes/utils/form/forms/entity.form';
 import { FormList } from '@blockframes/utils/form/forms/list.form';
+import { createLanguageControl } from '@blockframes/movie/form/version-info/version-info.form';
 
 // LEGAL DOCUMENTS
 
@@ -65,7 +66,7 @@ function createMovieControls(movie: Partial<Movie>) {
     salesCast: new MovieSalesCastForm(entity.salesCast),
     salesInfo: new MovieSalesInfoForm(entity.salesInfo),
     versionInfo: new FormEntity({
-      languages: new MovieVersionInfoForm(entity.versionInfo.languages)
+      languages: MovieVersionInfoForm.factory(entity.versionInfo.languages, createLanguageControl)
     }),
     festivalPrizes: new MovieFestivalPrizesForm(entity.festivalPrizes),
     salesAgentDeal: new MovieSalesAgentDealForm(entity.salesAgentDeal),

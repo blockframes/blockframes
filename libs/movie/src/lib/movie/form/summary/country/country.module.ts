@@ -1,3 +1,4 @@
+import { RouterModule } from '@angular/router';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MovieSummaryCountryComponent } from './country.component';
@@ -9,6 +10,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
   imports: [
     CommonModule,
     FlexLayoutModule,
+    RouterModule,
     MissingControlModule
   ],
   exports: [MovieSummaryCountryComponent]
