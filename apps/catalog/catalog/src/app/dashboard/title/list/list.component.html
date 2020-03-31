@@ -10,9 +10,9 @@
     </div>
 
     <header mat-tab-nav-bar fxLayout="row" fxLayoutAlign="space-between end">
-      <button mat-tab-link (click)="filter.setValue()" [active]="!(filter$ | async)">All</button>
-      <button mat-tab-link (click)="applyFilter('Library')" [active]="(filter$ | async) === 'Library'">Library</button>
-      <button mat-tab-link (click)="applyFilter('Line-Up')" [active]="(filter$ | async) === 'Line-Up'">Line-up</button>
+      <button mat-tab-link (click)="resetFilter()" [active]="!(filter$ | async)">All</button>
+      <button mat-tab-link (click)="applyFilter('library')" [active]="(filter$ | async) === 'library'">Library</button>
+      <button mat-tab-link (click)="applyFilter('line-Up')" [active]="(filter$ | async) === 'line-Up'">Line-up</button>
     </header>
 
     <mat-card>

@@ -3,6 +3,7 @@ import { FormGroup, FormControl, Validators } from "@angular/forms";
 import { AngularFireFunctions } from "@angular/fire/functions";
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthQuery } from "@blockframes/auth/+state/auth.query";
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
   selector: 'catalog-contact-page',
@@ -22,11 +23,14 @@ export class ContactPageComponent implements OnInit {
   constructor(
     private functions: AngularFireFunctions,
     private query: AuthQuery,
-    private snackBar: MatSnackBar
-    ) {};
+    private snackBar: MatSnackBar,
+    private dynTitle: DynamicTitleService
+  ) {
+    this.dynTitle.setPageTitle('Contact us')
+  }
 
   ngOnInit() {
-    this.center = { lat: 48.8682044, lng: 2.3334083};
+    this.center = { lat: 48.8682044, lng: 2.3334083 };
     this.markerLabel = {
       color: 'red',
       text: '59 Passage Choiseul',
@@ -46,6 +50,6 @@ export class ContactPageComponent implements OnInit {
     this.snackBar.open('Your email has been sent !', 'close', { duration: 2000 });
     this.form.reset();
 
-    return callSendUserMail({userName: userDisplayName, userMail: user.email, subject: userSubject, message: userMessage}).toPromise();
+    return callSendUserMail({ userName: userDisplayName, userMail: user.email, subject: userSubject, message: userMessage }).toPromise();
   }
 }

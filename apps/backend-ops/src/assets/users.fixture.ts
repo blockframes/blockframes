@@ -9,13 +9,13 @@ export interface UserConfig {
 export const USERS: UserConfig[] = [
   {
     password: 'blockframes',
-    uid: '1DI4VrSsitRD29BGPowRPmRkVud2',
-    email: 'pamela.cooper@gillespie-lawrence.fake.cascade8.com'
+    uid: '1M9DUDBATqayXXaXMYThZGtE9up1',
+    email: 'david.ewing@gillespie-lawrence.fake.cascade8.com'
   },
   {
     password: 'blockframes',
-    uid: '1M9DUDBATqayXXaXMYThZGtE9up1',
-    email: 'david.ewing@gillespie-lawrence.fake.cascade8.com'
+    uid: '1DI4VrSsitRD29BGPowRPmRkVud2',
+    email: 'pamela.cooper@gillespie-lawrence.fake.cascade8.com'
   },
   {
     password: 'blockframes',

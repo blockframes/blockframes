@@ -3,7 +3,7 @@ import * as admin from 'firebase-admin';
 
 type Timestamp = admin.firestore.Timestamp;
 
-const THIRTY_SECONDS_IN_MS = 30 * 1000;
+const EIGHT_MINUTES_IN_MS = 8 * 60 * 1000;
 
 interface IMaintenanceDoc {
   startedAt: Timestamp | null;
@@ -43,7 +43,7 @@ export async function isInMaintenance() {
     // Wait 30s before allowing any operation on the db.
     // this prevents triggering firebase events.
     // NOTE: this is hack-ish but good enough for our needs! we'll revisit this later.
-    return endedAt.toMillis() + THIRTY_SECONDS_IN_MS > now.toMillis();
+    return endedAt.toMillis() + EIGHT_MINUTES_IN_MS > now.toMillis();
   }
 
   if (startedAt) {

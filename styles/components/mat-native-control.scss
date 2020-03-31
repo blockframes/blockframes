@@ -1,8 +1,10 @@
 @mixin mat-native-control($config) {
+
   .mat-input-element {
     border-color: transparent;
     outline: none;
     font-family: mat-font-family($config);
     font-size: mat-font-size($config, button);
+    background-color: inherit
   }
 }

@@ -25,10 +25,6 @@ export class MovieSummaryBudgetComponent implements OnInit {
     this.movieReview.valueChanges.subscribe(_ => this.cdr.markForCheck());
   }
 
-  public budgetRange({ from, to }) {
-    return (from && to) ? `$ ${from} - ${to}` : '';
-  }
-
   public reviewHasNoValue(review: MovieReviewForm) {
     return !review.get('criticName').value || !review.get('journalName').value || !review.get('criticQuote').value;
   }
