@@ -7,7 +7,6 @@ import { Observable } from 'rxjs';
 import { Contract } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractQuery } from '@blockframes/contract/contract/+state';
 import { map } from 'rxjs/operators';
-import { OrganizationQuery } from '@blockframes/organization';
 
 @Component({
   selector: 'festival-title-activity',
@@ -24,8 +23,7 @@ export class TitleActivityComponent implements OnInit {
   constructor(
     private movieService: MovieService,
     private movieQuery: MovieQuery,
-    private contractQuery: ContractQuery,
-    private orgQuery: OrganizationQuery
+    private contractQuery: ContractQuery
   ) {}
 
   ngOnInit() {

@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, HostBinding, Optional } from '@angular/core';
 import { Router } from '@angular/router';
 import { MarketplaceQuery, MarketplaceStore } from '../../+state';
-import { MovieQuery } from '@blockframes/movie';
+import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import {
   ContractService,
   Contract,
@@ -11,10 +11,11 @@ import {
 } from '@blockframes/contract/contract/+state';
 import { createParty } from '@blockframes/utils/common-interfaces';
 import { Observable } from 'rxjs';
-import { OrganizationQuery } from '@blockframes/organization';
-import { DistributionDealService, createDistributionDeal } from '@blockframes/distribution-deals';
+import { DistributionDealService } from '@blockframes/distribution-deals/+state/distribution-deal.service';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Intercom } from 'ng-intercom';
+import { OrganizationQuery } from '@blockframes/organization/organization/+state/organization.query';
+import { createDistributionDeal } from '@blockframes/distribution-deals/+state/distribution-deal.model';
 
 @Component({
   selector: 'catalog-selection',
@@ -63,7 +64,8 @@ export class MarketplaceSelectionComponent {
     // Initialize parties
     const parties: Contract['parties'] = [
       createContractPartyDetail({
-        party: createParty({ role: 'licensee', orgId: org.id, displayName: org.name }),
+        party: createParty({ role: 'licensee', orgId: org.id, displayName: org.denomination.full }),
+        // TODO #2311 DisplayName has to be define in a guard !
       }),
       createContractPartyDetail({ party: createParty({ role: 'licensor' }) })
     ];

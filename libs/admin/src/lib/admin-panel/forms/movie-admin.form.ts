@@ -1,6 +1,6 @@
 import { FormControl } from '@angular/forms';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
-import { Movie, createMovie } from '@blockframes/movie';
+import { Movie, createMovie } from '@blockframes/movie/+state/movie.model';
 
 
 function createMovieAdminControls(entity: Partial<Movie>) {

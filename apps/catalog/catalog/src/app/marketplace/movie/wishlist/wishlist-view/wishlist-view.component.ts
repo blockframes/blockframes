@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Wishlist } from '@blockframes/organization';
 import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
 import { map } from 'rxjs/operators';
+import { Wishlist } from '@blockframes/organization/organization/+state/organization.model';
 
 @Component({
   selector: 'catalog-wishlist-view',

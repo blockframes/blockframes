@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ViewChild, ElementRef } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { EventService } from '@blockframes/event/+state/event.service';
 import { EventQuery } from '@blockframes/event/+state/event.query';
@@ -16,7 +16,7 @@ export class EventListComponent implements OnInit, OnDestroy {
 
   constructor(
     private service: EventService,
-    private query: EventQuery
+    private query: EventQuery,
   ) { }
 
   ngOnInit(): void {

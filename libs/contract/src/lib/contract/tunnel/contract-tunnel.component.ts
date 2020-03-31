@@ -2,7 +2,6 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MovieService, Movie } from '@blockframes/movie';
 import { TunnelStep, TunnelConfirmComponent } from '@blockframes/ui/tunnel'
 import { ContractForm } from '../form/contract.form';
 import { ContractQuery, ContractService, ContractType, createContract } from '../+state';
@@ -13,6 +12,8 @@ import { ContractTitleDetailForm } from '@blockframes/contract/version/form';
 import { DistributionDealService, DistributionDeal, createDistributionDeal } from '@blockframes/distribution-deals/+state';
 import { startWith, map, switchMap, shareReplay } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
+import { Movie } from '@blockframes/movie/+state/movie.model';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 
 const steps = [{
   title: 'Step 1',

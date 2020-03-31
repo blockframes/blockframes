@@ -1,12 +1,14 @@
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { Injectable } from '@angular/core';
 import { CatalogCart, createCart } from './cart.model';
-import { OrganizationQuery, OrganizationService, Wishlist } from '@blockframes/organization';
 import { CartState, CartStore } from './cart.store';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { MovieCurrenciesSlug } from '@blockframes/utils/static-model/types';
+import { Wishlist } from '@blockframes/organization/organization/+state/organization.model';
+import { OrganizationQuery } from '@blockframes/organization/organization/+state/organization.query';
+import { OrganizationService } from '@blockframes/organization/organization/+state/organization.service';
 
 const wishlistFactory = (movieId: string): Wishlist => {
   return {
@@ -115,7 +117,7 @@ export class CartService extends CollectionService<CartState> {
     const wishlistTitles = movies.map(movie => movie.main.title.original);
 
     const callDeploy = this.functions.httpsCallable('sendWishlistEmails');
-    await callDeploy({ email: user.email, userName: user.name, orgName: org.name, wishlist: wishlistTitles }).toPromise();
+    await callDeploy({ email: user.email, userName: user.name, orgName: org.denomination.full, wishlist: wishlistTitles }).toPromise();
 
     const setSent = (wishlist: Wishlist) => {
       return wishlist.status === 'pending'

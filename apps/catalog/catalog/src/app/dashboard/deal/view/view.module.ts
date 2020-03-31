@@ -15,7 +15,7 @@ import { ToLabelModule } from '@blockframes/utils/pipes';
 
 // Guard
 import { MovieContractGuard } from '@blockframes/movie/guards/movie-contract.guard';
-import { CatalogContractGuard } from '@blockframes/apps/catalog/guards/catalog-contract.guard';
+import { CatalogContractGuard } from '../../../guards/catalog-contract.guard';
 
 // Material
 import { MatCardModule } from '@angular/material/card';

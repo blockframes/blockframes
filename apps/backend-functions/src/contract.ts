@@ -66,7 +66,7 @@ async function updatePublicContract(tx: FirebaseFirestore.Transaction, contract:
 /**
  * Checks for a status change between previous and current and triggers notifications.
  * @param current
- * @param previous 
+ * @param previous
  */
 async function checkAndTriggerNotifications(current: ContractDocument) {
   const previousVersionId = await getPreviousVersionId(current.id);
@@ -79,12 +79,12 @@ async function checkAndTriggerNotifications(current: ContractDocument) {
 
     if (contractSubmitted && current.partyIds.length > 0) { // Contract is submitted by organization to Archipel Content
       // TODO (#1999): Find real creator 
-      const { id, name } = await getDocument<PublicOrganization>(`orgs/${current.partyIds[0]}`);
+      const { id, denomination, logo } = await getDocument<PublicOrganization>(`orgs/${current.partyIds[0]}`);
       const archipelContent = await getDocument<OrganizationDocument>(`orgs/${centralOrgID}`);
       const notifications = archipelContent.userIds.map(
         userId => createNotification({
           userId,
-          organization: { id, name }, // TODO (#1999): Add the logo to display if orgs collection is not public to Archipel Content
+          organization: { id, denomination, logo }, // TODO (#1999): Add the logo to display if orgs collection is not public to Archipel Content
           type: 'newContract',
           docId: current.id,
           app: 'biggerBoat'
@@ -287,7 +287,7 @@ async function updateContract(tx: FirebaseFirestore.Transaction, ref: DocumentRe
 /**
  * This trigger is in charge of keeping contract and contractVersion document always
  * up to date.
- * 
+ *
  * It handles some defined behaviors such as:
  *  - CreationDate param
  *  - VersionId consistency

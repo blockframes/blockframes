@@ -1,20 +1,26 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { Router } from '@angular/router';
-import { Movie, MovieQuery } from '@blockframes/movie';
-import { OrganizationQuery, OrganizationService, Organization } from '@blockframes/organization';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
+import { Movie } from '@blockframes/movie/+state/movie.model';
+import { MovieQuery } from '@blockframes/movie/+state/movie.query';
+import { Organization } from '@blockframes/organization/organization/+state/organization.model';
+import { OrganizationService } from '@blockframes/organization/organization/+state/organization.service';
+import { OrganizationQuery } from '@blockframes/organization/organization/+state/organization.query';
+import { scaleIn } from '@blockframes/utils/animations/fade';
 
 @Component({
   selector: 'festival-movie-view',
   templateUrl: './view.component.html',
   styleUrls: ['./view.component.scss'],
+  animations: [scaleIn],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ViewComponent implements OnInit {
+  @HostBinding('@scaleIn') animPage;
   public movie$: Observable<Movie>;
   public orgs$: Observable<Organization[]>;
   // Flag to indicate which icon and message to show

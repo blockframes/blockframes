@@ -10,12 +10,13 @@ import {
   PublicContract,
   createContract,
 } from './contract.model';
-import { PermissionsService, OrganizationQuery } from '@blockframes/organization';
+
 import { ContractDocumentWithDates } from './contract.firestore';
 import { firestore } from 'firebase/app';
 import { Observable } from 'rxjs';
 import { cleanModel } from '@blockframes/utils/helpers';
 import { map } from 'rxjs/internal/operators/map';
+import { PermissionsService } from '@blockframes/organization/permissions/+state/permissions.service';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'contracts' })
@@ -23,7 +24,6 @@ export class ContractService extends CollectionService<ContractState> {
 
   constructor(
     private permissionsService: PermissionsService,
-    private orgQuery: OrganizationQuery,
     store: ContractStore
   ) {
     super(store);

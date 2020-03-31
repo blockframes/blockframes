@@ -1,13 +1,8 @@
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
-import {
-  Component,
-  ChangeDetectionStrategy,
-  Input,
-  HostBinding
-} from '@angular/core';
-import { Movie } from '@blockframes/movie';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Movie } from '@blockframes/movie/+state/movie.model';
 import { Router, ActivatedRoute } from '@angular/router';
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
 

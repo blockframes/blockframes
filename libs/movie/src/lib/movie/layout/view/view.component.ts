@@ -1,8 +1,10 @@
-import { Component, Input, ChangeDetectionStrategy, Directive, ViewEncapsulation } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, Directive, ViewEncapsulation, ViewChild, ElementRef } from '@angular/core';
 import { Movie, Credit } from '../../+state';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 import { workType as WorkType } from '../../+state/movie.firestore';
 import { ImgRef } from '@blockframes/utils/image-uploader';
+import { MatSidenavContent } from '@angular/material/sidenav';
+import { MatTabNav } from '@angular/material/tabs';
 
 const promotionalElements = [
   { key: 'promo_reel_link', label: 'Watch Promo Reel Link', type: 'play' },
@@ -66,7 +68,6 @@ export class ViewComponent {
       this.view = createMovieView(movie);
     }
   }
-
 }
 
 

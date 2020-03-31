@@ -21,7 +21,7 @@ export class OrganizationFormComponent {
 
   /** Check if the `name` field of an Organization create form already exists as an ENS domain */
   public async uniqueOrgName() {
-    const orgName = this.form.get('name').value
+    const orgName = this.form.get('denomination').get('full').value
 
     let uniqueOnEthereum = false;
     let uniqueOnFirestore = false;
@@ -32,6 +32,6 @@ export class OrganizationFormComponent {
     uniqueOnEthereum = !orgEthAddress ? true : false;
 
     uniqueOnFirestore = await this.service.orgNameExist(orgName).then(exist => !exist);
-    if (!(uniqueOnEthereum && uniqueOnFirestore)) this.form.get('name').setErrors({ notUnique: true });
+    if (!(uniqueOnEthereum && uniqueOnFirestore)) this.form.get('denomination').get('full').setErrors({ notUnique: true });
   }
 }

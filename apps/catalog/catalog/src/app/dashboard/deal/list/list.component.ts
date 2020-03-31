@@ -2,7 +2,7 @@ import { Intercom } from 'ng-intercom';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ContractQuery, ContractService, Contract, ContractStatus } from '@blockframes/contract/contract/+state';
 import { map } from 'rxjs/operators';
-import { OrganizationQuery } from '@blockframes/organization';
+import { OrganizationQuery } from '@blockframes/organization/organization/+state/organization.query';
 import { Router, ActivatedRoute } from '@angular/router';
 
 interface Tab {

@@ -22,7 +22,7 @@ import { OrganizationMember } from '@blockframes/user/+state/user.model';
 export class MemberComponent implements OnInit, OnDestroy {
   @HostBinding('attr.page-id') pageId = 'member-editable';
 
-  public orgName: string = this.query.getActive().name;
+  public orgName: string = this.query.getActive().denomination.full;
 
   /** Observable of all members of the organization */
   public members$: Observable<OrganizationMember[]>;

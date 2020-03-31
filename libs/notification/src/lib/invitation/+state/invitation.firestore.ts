@@ -1,12 +1,13 @@
 import { PublicOrganization } from "@blockframes/organization/organization/+state/organization.firestore";
 import { firestore } from 'firebase/app';
 import { PublicUser } from "@blockframes/auth/+state/auth.firestore";
+import { App } from "@blockframes/utils/apps";
 type Timestamp = firestore.Timestamp;
 
 /** Raw type for Invitation. */
 export interface Invitation {
   id: string;
-  app: string;
+  app: App;
   type: InvitationType;
   status: InvitationStatus;
   date: Timestamp;

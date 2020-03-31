@@ -6,7 +6,7 @@ import {
   OrganizationDocument,
   createOrganizationRaw
 } from './organization.firestore';
-import { Movie } from '@blockframes/movie';
+import { Movie } from '@blockframes/movie/+state/movie.model';
 import { AppDetails } from '@blockframes/utils/apps';
 import { toDate } from '@blockframes/utils/helpers';
 

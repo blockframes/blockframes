@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ContractQuery, displayPaymentSchedule } from '@blockframes/contract/contract/+state';
 import { map } from 'rxjs/operators';
-import { Movie } from '@blockframes/movie';
+import { Movie } from '@blockframes/movie/+state/movie.model';
 import { Intercom } from 'ng-intercom';
 
 @Component({

@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { Contract, getTotalPrice, ContractStatus } from '../../+state';
-import { MovieQuery } from '@blockframes/movie';
+import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { DistributionDealQuery } from '@blockframes/distribution-deals/+state';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Price } from '@blockframes/utils/common-interfaces';

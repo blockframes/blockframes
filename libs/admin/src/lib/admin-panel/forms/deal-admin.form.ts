@@ -1,5 +1,5 @@
 import { FormControl, Validators } from '@angular/forms';
-import { createDistributionDeal, DistributionDeal } from '@blockframes/distribution-deals';
+import { createDistributionDeal, DistributionDeal } from '@blockframes/distribution-deals/+state/distribution-deal.model';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 
 

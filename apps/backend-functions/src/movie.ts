@@ -60,7 +60,7 @@ export async function onMovieCreate(
     const organization = organizationSnap.data() as OrganizationDocument
 
     // Update algolia's index
-    await storeSearchableMovie(movie, organization.id, organization.name);
+    await storeSearchableMovie(movie, organization.id, organization.denomination.full);
 
     return Promise.all([
       // Update the organization's movieIds with the new movie id.
@@ -173,7 +173,9 @@ export async function onMovieUpdate(
   const creatorOrgSnapshot = await db.doc(`orgs/${creator!.orgId}`).get();
   const creatorOrg = creatorOrgSnapshot.data() as PublicOrganization;
 
-  return storeSearchableMovie(after, creatorOrg.name);
+  if (creatorOrg.denomination?.full) {
+    return storeSearchableMovie(after, creatorOrg.denomination.full);
+  }
 }
 
 /** Checks if the store status is going from draft to submitted. */

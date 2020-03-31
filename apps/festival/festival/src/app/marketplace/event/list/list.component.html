@@ -1,11 +1,14 @@
+<page-nav targetId="calendar">
+  <cal-header [(viewDate)]="viewDate"></cal-header>
+</page-nav>
 <cal-header [(viewDate)]="viewDate"></cal-header>
-<cal-week [viewDate]="viewDate" [events]="events$ | async">
-
-  <!-- Events -->
-  <ng-template calEventSmall let-event>
-    Small
+<cal-week id="calendar" [viewDate]="viewDate" [events]="events$ | async">
+    
+    <!-- Events -->
+    <ng-template calEventSmall let-event>
+      Small
   </ng-template>
-
+  
   <ng-template calEventLarge let-event>
     Large
   </ng-template>
