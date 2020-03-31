@@ -1,4 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
+import { coerceBooleanProperty } from '@angular/cdk/coercion'
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { Observable } from 'rxjs';
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
@@ -8,7 +9,7 @@ import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { OrganizationQuery } from '@blockframes/organization/organization/+state/organization.query';
 
 @Component({
-  selector: '[movieId] catalog-wishlist-button',
+  selector: '[movieId] wishlist-button',
   templateUrl: './wishlist-button.component.html',
   styleUrls: ['./wishlist-button.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -18,6 +19,15 @@ export class WishlistButtonComponent implements OnInit {
   toggle$: Observable<boolean>;
 
   @Input() movieId: string;
+  
+  _small: boolean;
+  @Input()
+  get small() {
+    return this._small;
+  }
+  set small(isSmall: boolean) {
+    this._small = coerceBooleanProperty(isSmall);
+  }
 
   constructor(
     private movieQuery: MovieQuery,

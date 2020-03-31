@@ -34,6 +34,7 @@ import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ChipsAutocompleteModule } from "@blockframes/ui/static-autocomplete/chips/chips-autocomplete.module";
+import { WishlistButtonModule } from "@blockframes/organization/organization/components/wishlist-button/wishlist-button.module";
 
 @NgModule({
   declarations: [MarketplaceSearchComponent],
@@ -48,6 +49,7 @@ import { ChipsAutocompleteModule } from "@blockframes/ui/static-autocomplete/chi
     MovieFormGenresModule,
     AvailsFilterModule,
     ChipsAutocompleteModule,
+    WishlistButtonModule,
 
     // Material
     MatIconModule,
