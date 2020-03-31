@@ -1,0 +1,11 @@
+<div class="slide-wrapper" [ngStyle]="slideWrapperStyle" #wrapper>
+  <ul class="slide-inner" #slideList>
+    <li *ngFor="let image of slides" class="slide-item">
+      <ng-container [ngTemplateOutlet]="image.templateRef"></ng-container>
+    </li>
+  </ul>
+  <ng-container *ngIf="!hideArrows">
+    <mat-icon mat-icon-button [svgIcon]="arrowBack"></mat-icon>
+    <mat-icon mat-icon-button [svgIcon]="arrowForward"></mat-icon>
+  </ng-container>
+</div>
