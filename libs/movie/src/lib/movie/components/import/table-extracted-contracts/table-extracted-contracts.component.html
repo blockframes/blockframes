@@ -135,7 +135,7 @@
     <td mat-cell *matCellDef="let element">
       <ng-container *ngIf="mode === 'update' else create">
         <button mat-flat-button color="accent" [disabled]="errorCount(element) > 0"
-        (click)="updateContract(element)">Update to v-{{ parseInt(element.contract.last.id) +1 }}<mat-icon>update</mat-icon></button>
+        (click)="updateContract(element)">Update to v-{{ parseInt(element.contract.last.id) +1 }}<mat-icon svgIcon="access_time"></mat-icon></button>
       </ng-container>
       <ng-template #create>
         <button mat-flat-button color="primary" [disabled]="errorCount(element) > 0"

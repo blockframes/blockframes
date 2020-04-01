@@ -53,7 +53,7 @@
         <input matInput formControlName="value" placeholder="Value">
       </mat-form-field>
       <button mat-icon-button color="primary" (click)="salesInfo.addRating()">
-        <mat-icon>add_circle</mat-icon>
+        <mat-icon svgIcon="add"></mat-icon>
       </button>
       <button mat-icon-button color="primary" (click)="salesInfo.removeRating(i)">
         <mat-icon svgIcon="trash"></mat-icon>
@@ -61,7 +61,7 @@
     </div>
   </div>
   <button mat-icon-button color="primary" (click)="salesInfo.addRating()">
-    <mat-icon>add_circle</mat-icon>
+    <mat-icon svgIcon="add"></mat-icon>
   </button>
   <!-- CERTIFICATIONS -->
   <h3> Certifications </h3>
@@ -108,7 +108,7 @@
         </mat-select>
       </mat-form-field>
       <button mat-icon-button color="primary" (click)="salesInfo.addOriginalRelease()">
-        <mat-icon>add_circle</mat-icon>
+        <mat-icon svgIcon="add"></mat-icon>
       </button>
       <button mat-icon-button color="primary" (click)="salesInfo.removeOriginalRelease(i)">
         <mat-icon svgIcon="trash"></mat-icon>
@@ -116,7 +116,7 @@
     </div>
   </div>
   <button mat-icon-button color="primary" (click)="salesInfo.addOriginalRelease()">
-    <mat-icon>add_circle</mat-icon>
+    <mat-icon svgIcon="add"></mat-icon>
   </button>
   <!-- Broadcaster coproducers -->
   <h3> TV / Platform coproducer(s), if any </h3>
@@ -129,7 +129,7 @@
       </mat-form-field>
       <button *ngIf="salesInfo.broadcasterCoproducers.controls.length < 3" mat-icon-button color="primary"
         (click)="salesInfo.addBroadcasterCoproducers()">
-        <mat-icon>add_circle</mat-icon>
+        <mat-icon svgIcon="add"></mat-icon>
       </button>
       <button mat-icon-button color="primary" (click)="salesInfo.removeBroadcasterCoproducers(i)">
         <mat-icon svgIcon="trash"></mat-icon>
@@ -138,7 +138,7 @@
   </div>
   <ng-container *ngIf="salesInfo.broadcasterCoproducers.controls.length === 0">
     <button mat-icon-button color="primary" (click)="salesInfo.addBroadcasterCoproducers()">
-      <mat-icon>add_circle</mat-icon>
+      <mat-icon svgIcon="add"></mat-icon>
     </button>
   </ng-container>
 </form>
