@@ -29,10 +29,10 @@
       </mat-form-field>
       <!-- Add / Delete -->
       <button *ngIf="!last" mat-mini-fab color="warn" (click)="customGenreForm.removeAt(i)" matTooltip="Remove a Custom Genre" aria-label="Remove a Custom Genre">
-        <mat-icon>delete</mat-icon>
+        <mat-icon svgIcon="trash"></mat-icon>
       </button>
       <button *ngIf="last" mat-mini-fab color="primary" (click)="customGenreForm.add()" matTooltip="Add a Custom Genre" aria-label="Add a Custom Genre">
-        <mat-icon>add</mat-icon>
+        <mat-icon svgIcon="add"></mat-icon>
       </button>
     </article>
   </ng-container>

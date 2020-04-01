@@ -6,7 +6,7 @@
       (click)="createSelectedContracts()">
       <ng-container *ngIf="processedContracts === 0 else createinprogress">
         <span>Create</span>
-        <mat-icon>create</mat-icon>
+        <mat-icon svgIcon="pencil"></mat-icon>
       </ng-container>
       <ng-template #createinprogress>
         <span>Creating... {{ processedContracts }} / {{ selection.selected.length}} </span>
@@ -139,7 +139,7 @@
       </ng-container>
       <ng-template #create>
         <button mat-flat-button color="primary" [disabled]="errorCount(element) > 0"
-          (click)="createContract(element)">Create<mat-icon>create</mat-icon>
+          (click)="createContract(element)">Create<mat-icon svgIcon="pencil"></mat-icon>
         </button>
       </ng-template>
     </td>
