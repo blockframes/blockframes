@@ -114,15 +114,21 @@ export class ContractService extends CollectionService<ContractState> {
 
     // Licensee is the current logged in org
     const licensee = createContractPartyDetail();
-    licensee.party.orgId = licenseeId;
-    licensee.party.role = 'licensee';
-    contract.parties.push(licensee);
+    const licensees = getContractParties(contract, 'licensee');
+    if (licensees.length === 0) {
+      licensee.party.orgId = licenseeId;
+      licensee.party.role = 'licensee';
+      contract.parties.push(licensee);
+    }
 
     // Licensor will always be centralOrgID
     const licensor = createContractPartyDetail();
-    licensor.party.orgId = centralOrgID
-    licensor.party.role = 'licensor';
-    contract.parties.push(licensor);
+    const licensors = getContractParties(contract, 'licensor');
+    if (licensors.length === 0) {
+      licensor.party.orgId = centralOrgID
+      licensor.party.role = 'licensor';
+      contract.parties.push(licensor);
+    }
 
     for (const titleId of Object.keys(titlesAndDeals)) {
       const deals = titlesAndDeals[titleId];
