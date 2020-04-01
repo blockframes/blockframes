@@ -40,6 +40,8 @@ import { ChipsAutocompleteModule } from "@blockframes/ui/static-autocomplete/chi
 import { AlgoliaAutocompleteModule } from "@blockframes/ui/algolia-autocomplete/algolia-autocomplete.module";
 import { TitleListLayoutModule } from "@blockframes/movie/layout/list/title-list.module"
 import { WishlistButtonModule } from "@blockframes/organization/organization/components/wishlist-button/wishlist-button.module";
+import { AvailsFilterModule } from '@blockframes/distribution-deals/components/avails-filter/avails-filter.module';
+import { MovieFilterModule } from '@blockframes/movie/components/movie-filter/movie-filter.module';
 
 @NgModule({
   declarations: [ListComponent],
@@ -55,6 +57,8 @@ import { WishlistButtonModule } from "@blockframes/organization/organization/com
     AlgoliaAutocompleteModule,
     TitleListLayoutModule,
     WishlistButtonModule,
+    AvailsFilterModule,
+    MovieFilterModule,
 
     // Pipe
     TranslateSlugModule,

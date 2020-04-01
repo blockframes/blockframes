@@ -8,7 +8,7 @@ import { Subscription, Observable } from 'rxjs';
 
 import { MovieService, MovieQuery } from '@blockframes/movie/+state';
 import { FormControl } from '@angular/forms';
-import { CatalogSearchForm } from '@blockframes/distribution-deals/form/search.form';
+import { CatalogSearchForm, AvailsSearchForm } from '@blockframes/distribution-deals/form/search.form';
 
 @Component({
   selector: 'festival-marketplace-title-list',
@@ -27,10 +27,7 @@ export class ListComponent implements OnInit, OnDestroy {
   public filterForm = new CatalogSearchForm();
   public searchbarTextControl: FormControl = new FormControl('');
 
-  navLinks = [{
-    path: 'main',
-    label: 'Main Information'
-  }];
+  public availsForm = new AvailsSearchForm();
 
   constructor(
     private movieQuery: MovieQuery,
