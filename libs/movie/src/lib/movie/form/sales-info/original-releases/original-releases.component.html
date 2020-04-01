@@ -24,13 +24,13 @@
 
   <footer *ngIf="!last" fxLayout="column" fxLayoutAlign="center center">
     <button mat-mini-fab color="warn" (click)="remove(i)" aria-label="Remove a director form">
-      <mat-icon>delete</mat-icon>
+      <mat-icon svgIcon="trash"></mat-icon>
     </button>
     <span class="mat-caption">Delete Country</span>
   </footer>
   <footer *ngIf="last" fxLayout="column" fxLayoutAlign="center center">
     <button mat-mini-fab color="primary" (click)="add()" aria-label="Remove a director form">
-      <mat-icon>add</mat-icon>
+      <mat-icon svgIcon="add"></mat-icon>
     </button>
     <span class="mat-caption">Add Country</span>
   </footer>

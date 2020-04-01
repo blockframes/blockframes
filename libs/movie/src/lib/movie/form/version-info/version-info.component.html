@@ -23,7 +23,7 @@
   <ng-container *ngFor="let language of added$ | async">
     <h5>
       <button mat-icon-button (click)="removeLanguage(language)">
-        <mat-icon>delete</mat-icon>
+        <mat-icon svgIcon="trash"></mat-icon>
       </button>
       {{ language | translateSlug: 'LANGUAGES' }}
     </h5>

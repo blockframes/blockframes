@@ -23,13 +23,13 @@
           <!-- Add / Delete -->
           <footer *ngIf="!last" fxLayout="column" fxLayoutAlign="center center">
             <button mat-mini-fab color="warn" (click)="chainOfTitles.removeAt(i)" aria-label="Remove a director form">
-              <mat-icon>delete</mat-icon>
+              <mat-icon svgIcon="trash"></mat-icon>
             </button>
             <span>Delete Document</span>
           </footer>
           <footer *ngIf="last" fxLayout="column" fxLayoutAlign="center center">
             <button mat-mini-fab color="primary" (click)="chainOfTitles.add()" aria-label="Remove a director form">
-              <mat-icon>add</mat-icon>
+              <mat-icon svgIcon="add"></mat-icon>
             </button>
             <span>Add Document</span>
           </footer>

@@ -32,7 +32,7 @@
     <!-- TOOLBAR -->
     <mat-toolbar fxLayout="row" fxLayoutAlign="space-between center" id="catalog-toolbar">
       <button mat-icon-button (click)="sidenav.toggle()">
-        <mat-icon>menu</mat-icon>
+        <mat-icon svgIcon="menu"></mat-icon>
       </button>
       <algolia-autocomplete [indexName]="movieIndex" native [icons]="['cross', 'magnifying_glasses']" [resetInput]="true">
         <ng-template let-result>

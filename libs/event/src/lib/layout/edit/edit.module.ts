@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { EventEditComponent } from './edit.component';
@@ -12,8 +13,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { TimePickerModule } from '@blockframes/ui/form/time-picker/time-picker.module';
 
-import { TimeDateModule } from '@blockframes/event/form/time-date.directive';
-
 
 
 @NgModule({
@@ -24,6 +23,7 @@ import { TimeDateModule } from '@blockframes/event/form/time-date.directive';
     FlexLayoutModule,
     ReactiveFormsModule,
     TimePickerModule,
+    RouterModule,
 
     // Material
     MatToolbarModule,

@@ -9,8 +9,8 @@ export interface Meeting {
   callUrl: string;
 }
 export interface Screening {
-  /** A screening session can have many titles */
-  titleIds: string[];
+  /** A screening session can have one title */
+  titleId: string;
 }
 export interface EventBase<D extends Timestamp | Date, Meta extends EventMeta = any> {
   id: string;

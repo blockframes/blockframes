@@ -47,16 +47,16 @@
         <input matInput formControlName="lastName" placeholder="Last Name">
       </mat-form-field>
       <button mat-icon-button color="primary" (click)="main.addDirector()">
-        <mat-icon>add_circle</mat-icon>
+        <mat-icon svgIcon="add"></mat-icon>
       </button>
       <button mat-icon-button color="primary" (click)="main.removeDirector(i)">
-        <mat-icon>delete_circle</mat-icon>
+        <mat-icon svgIcon="trash"></mat-icon>
       </button>
     </div>
   </div>
   <ng-container *ngIf="main.directors.controls.length === 0">
     <button mat-icon-button color="primary" (click)="main.addDirector()">
-      <mat-icon>add_circle</mat-icon>
+      <mat-icon svgIcon="add"></mat-icon>
     </button>
   </ng-container>
   <!-- POSTER -->
@@ -147,16 +147,16 @@
         <input matInput formControlName="displayName" placeholder="Company name">
       </mat-form-field>
       <button mat-icon-button color="primary" (click)="main.addStakeholder()">
-        <mat-icon>add_circle</mat-icon>
+        <mat-icon svgIcon="add"></mat-icon>
       </button>
       <button mat-icon-button color="primary" (click)="main.removeStakeholder(i)">
-        <mat-icon>delete_circle</mat-icon>
+        <mat-icon svgIcon="trash"></mat-icon>
       </button>
     </div>
   </div>
   <ng-container *ngIf="main.stakeholders.controls.length === 0">
     <button mat-icon-button color="primary" (click)="main.addStakeholder()">
-      <mat-icon>add_circle</mat-icon>
+      <mat-icon svgIcon="add"></mat-icon>
     </button>
   </ng-container>
   -->

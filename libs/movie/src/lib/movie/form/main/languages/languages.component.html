@@ -10,10 +10,10 @@
 
     <!-- Add / Delete -->
     <button *ngIf="!last" mat-mini-fab color="warn" (click)="form.removeAt(i)" matTooltip="Remove a Language" aria-label="Remove a Language">
-      <mat-icon>delete</mat-icon>
+      <mat-icon svgIcon="trash"></mat-icon>
     </button>
     <button *ngIf="last" mat-mini-fab color="primary" (click)="form.add()" matTooltip="Add a Language" aria-label="Add a Language">
-      <mat-icon>add</mat-icon>
+      <mat-icon svgIcon="add"></mat-icon>
     </button>
   </article>
 </ng-container>

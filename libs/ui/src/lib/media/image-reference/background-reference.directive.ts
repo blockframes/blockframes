@@ -18,6 +18,7 @@ export class BackgroundReferenceDirective implements OnInit, OnDestroy {
   /** Set src attribute in img tag with the url stored in firestore.
    *  If path is wrong, src will be set with provided placeholder or empty string */
   @Input() set backgroundRef(path: ImgRef) {
+    console.log({ path });
     if(!path){
       this.ref$.next('');
     } try {
@@ -44,6 +45,7 @@ export class BackgroundReferenceDirective implements OnInit, OnDestroy {
       this.ref$,
       this.assetUrl$
     ]).subscribe(([ ref, assetUrl ]) => {
+      console.log(ref, assetUrl);
       if (ref || assetUrl) {
         this.src = `url(${ref || assetUrl})`;
         this.cdr.markForCheck();
