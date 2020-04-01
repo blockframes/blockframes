@@ -12,9 +12,8 @@ import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
 
 type CropStep = 'drop' | 'crop' | 'upload' | 'upload_complete' | 'show';
 
-const CROPPER_RATIOS = {
-  avatar: 1/1,
-  logo: 1/1,
+const mediaRatio = {
+  square: 1/1,
   banner: 16/9,
   poster: 4/3,
   still: 7/5
@@ -78,10 +77,10 @@ export class CropperComponent implements ControlValueAccessor {
 
   // inputs
   @Input() set ratio(ratio: string) {
-    if (!CROPPER_RATIOS.hasOwnProperty(ratio)) {
-      console.error(`"${ratio}" is not a valid ratio. Valid ratios are: ${Object.keys(CROPPER_RATIOS).join(', ')}`);
+    if (!mediaRatio.hasOwnProperty(ratio)) {
+      console.error(`"${ratio}" is not a valid ratio. Valid ratios are: ${Object.keys(mediaRatio).join(', ')}`);
     }
-    this.cropRatio = CROPPER_RATIOS[ratio];
+    this.cropRatio = mediaRatio[ratio];
     const el: HTMLElement = this._elementRef.nativeElement;
     this.parentWidth = el.clientWidth;
     this._renderer.setStyle(el, "height", `calc(40px+${this.parentWidth}px/${ratio})`)
