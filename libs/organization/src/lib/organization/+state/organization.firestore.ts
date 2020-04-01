@@ -12,7 +12,7 @@ interface AppAccess {
 
 interface Denomination {
   full: string;
-  publicName?: string;
+  public?: string;
 }
 
 /** Document model of an Organization */
@@ -25,7 +25,7 @@ interface OrganizationRaw<D> {
   cart: CatalogCart[];
   created: D;
   denomination: Denomination;
-  description: string;
+  description?: string;
   email: string;
   fiscalNumber: string;
   isBlockchainEnabled: boolean;
@@ -127,7 +127,7 @@ export function createAddressSet(params: Partial<AddressSet> = {}): AddressSet {
 export function createDenomination(params: Partial<Denomination> = {}): Denomination {
   return {
     full: '',
-    publicName: '',
+    public: '',
     ...params
   }
 }

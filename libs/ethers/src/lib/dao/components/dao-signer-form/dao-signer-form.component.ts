@@ -51,7 +51,7 @@ export class DaoSignerFormComponent {
 
     const memberEthAddress = await this.service.getMemberEthAddress(this.member.email);
     const orgEthAddress = await this.service.getOrganizationEthAddress();
-    const memberName = this.member.name;
+    const memberName = this.member.firstName;
     const operationName = currentOperation.name;
 
     let tx: ActionTx;

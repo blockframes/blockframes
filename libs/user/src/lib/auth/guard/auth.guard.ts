@@ -7,7 +7,7 @@ import { of } from 'rxjs';
 
 // Verify if the user exists and has a name and surname.
 function hasIdentity(user: User) {
-  return !!user && !!user.name && !!user.surname;
+  return !!user && !!user.firstName && !!user.lastName;
 }
 
 @Injectable({
