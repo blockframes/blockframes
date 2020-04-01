@@ -5,11 +5,14 @@ import { OrganizationService } from '@blockframes/organization/organization/+sta
 import { scaleIn } from '@blockframes/utils/animations/fade';
 
 const navLinks = [{
-  path: 'titles',
+  path: 'title',
   label: 'Line-up'
 }, {
-  path: 'members',
+  path: 'member',
   label: 'Contacts'
+}, {
+  path: 'event',
+  label: 'Screenings'
 }];
 
 @Component({
