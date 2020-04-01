@@ -26,7 +26,7 @@
   </article>
   <article *ngSwitchCase="steps.import">
     <wallet-import-key-form (importKey)="setKey($event)" lockMnemonic></wallet-import-key-form>
-    <button mat-stroked-button color="primary" (click)="step = steps.export"><mat-icon>keyboard_backspace</mat-icon>Previous</button>
+    <button mat-stroked-button color="primary" (click)="step = steps.export"><mat-icon svgIcon="arrow_back"></mat-icon>Previous</button>
   </article>
   <article *ngSwitchCase="steps.end">
     <feedback-message

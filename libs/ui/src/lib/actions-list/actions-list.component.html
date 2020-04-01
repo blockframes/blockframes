@@ -10,7 +10,7 @@
         </span>
         <p>{{ item.description }}</p>
         <button *ngIf="item.button" mat-icon-button (click)="item.button.action()">
-          <mat-icon>{{ item.button.matIcon }}</mat-icon>
+          <mat-icon [svgIcon]="item.button.matIcon"></mat-icon>
         </button>
       </mat-list-item>
       <mat-divider *ngIf="!last"></mat-divider>

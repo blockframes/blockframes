@@ -87,7 +87,7 @@
                   </mat-error>
                   <button matSuffix mat-icon-button (click)="addLanguage(languageControl.value)"
                     [disabled]="!languageControl.valid">
-                    <mat-icon>search</mat-icon>
+                    <mat-icon svgIcon="magnifying_glasses"></mat-icon>
                   </button>
                   <mat-autocomplete #language="matAutocomplete" (optionSelected)="addLanguage(languageControl.value)">
                     <mat-option *ngFor="let language of languagesFilter | async" [value]="language">

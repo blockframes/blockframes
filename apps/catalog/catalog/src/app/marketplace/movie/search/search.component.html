@@ -3,10 +3,10 @@
   <article fxLayout="row" fxLayoutAlign="center center">
     <button class="grid" mat-icon-button (click)="listView = !listView">
       <ng-container *ngIf="!listView">
-        <mat-icon>list</mat-icon>
+        <mat-icon svgIcon="list_material"></mat-icon>
       </ng-container>
       <ng-container *ngIf="listView">
-        <mat-icon>grid_on</mat-icon>
+        <mat-icon svgIcon="grid"></mat-icon>
       </ng-container>
     </button>
     <mat-form-field class="sort">
@@ -135,7 +135,7 @@
                   </mat-error>
                   <button matSuffix mat-icon-button (click)="addLanguage(languageControl.value)"
                     [disabled]="!languageControl.valid">
-                    <mat-icon>search</mat-icon>
+                    <mat-icon svgIcon="magnifying_glasses"></mat-icon>
                   </button>
                   <mat-autocomplete #language="matAutocomplete">
                     <mat-option *ngFor="let language of languagesFilter$ | async" [value]="language">

@@ -21,7 +21,7 @@
         </mat-form-field>
         <ng-container *ngIf="showRemoveButton(i, isFirst, isLast); else add">
           <button mat-mini-fab (click)="removePayment(i)" color="warn" #eventButtons>
-            <mat-icon>delete</mat-icon>
+            <mat-icon svgIcon="trash"></mat-icon>
           </button>
         </ng-container>
         <ng-template #add>
@@ -137,7 +137,7 @@
 <div fxLayout="row" fxLayoutAlign="center start">
   <ng-container *ngIf="paymentSchedule.controls.length; else add">
     <button mat-fab (click)="resetVersionForm(true)" color="warn" matTooltip="Reset Payment Schedule">
-      <mat-icon>delete</mat-icon>
+      <mat-icon svgIcon="trash"></mat-icon>
     </button>
   </ng-container>
   <ng-template #add>
