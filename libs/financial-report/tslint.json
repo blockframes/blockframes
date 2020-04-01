@@ -1,17 +1,10 @@
 {
   "extends": "../../tslint.json",
   "rules": {
-    "directive-selector": [
-      true,
-      "attribute",
-      "financialReport",
-      "camelCase"
-    ],
-    "component-selector": [
-      true,
-      "element",
-      "financialReport",
-      "kebab-case"
-    ]
+    "directive-selector": [true, "attribute", "financialReport", "camelCase"],
+    "component-selector": [true, "element", "financialReport", "kebab-case"]
+  },
+  "linterOptions": {
+    "exclude": ["!**/*"]
   }
 }
