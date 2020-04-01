@@ -15,7 +15,7 @@ export class SentryErrorHandler implements ErrorHandler {
         scope.setUser({
           email: user.email,
           id: user.uid,
-          username: `${user.name} ${user.surname}`
+          username: `${user.firstName} ${user.lastName}`
         });
       });
     });

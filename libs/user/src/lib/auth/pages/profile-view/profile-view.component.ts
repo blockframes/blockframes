@@ -33,8 +33,8 @@ export class ProfileViewComponent implements OnInit {
     private dynTitle: DynamicTitleService
   ) {
     this.dynTitle.setPageTitle(`
-    ${this.authQuery.getValue().profile.surname}
-    ${this.authQuery.getValue().profile.name}`,
+    ${this.authQuery.getValue().profile.lastName}
+    ${this.authQuery.getValue().profile.firstName}`,
       `${this.organizationQuery.getActive().denomination.full}`,
       { appName: { slug: 'blockframes', label: 'Blockframes' }, showAppName: true })
   }

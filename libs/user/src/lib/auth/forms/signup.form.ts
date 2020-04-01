@@ -5,8 +5,8 @@ import { PasswordControl } from '@blockframes/utils/form/controls/password.contr
 interface SignUp {
   email: string
   password: string,
-  name: string,
-  surname: string,
+  firstName: string,
+  lastName: string,
   termsOfUseChecked: boolean
 }
 
@@ -14,8 +14,8 @@ function createSignup(params?: Partial<SignUp>): SignUp {
   return {
     email: '',
     password: '',
-    name: '',
-    surname: '',
+    firstName: '',
+    lastName: '',
     termsOfUseChecked: false,
     ...(params || {})
   } as SignUp
@@ -26,8 +26,8 @@ function createSignupControls(entity: Partial<SignUp>): EntityControl<SignUp> {
   return {
     email: new FormControl(signup.email, [Validators.required, Validators.email]),
     password: new PasswordControl(signup.password),
-    name: new FormControl(signup.name),
-    surname: new FormControl(signup.surname),
+    firstName: new FormControl(signup.firstName),
+    lastName: new FormControl(signup.lastName),
     termsOfUseChecked: new FormControl(signup.termsOfUseChecked)
   }
 }

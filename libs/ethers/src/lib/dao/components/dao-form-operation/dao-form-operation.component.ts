@@ -51,8 +51,8 @@ export class DaoFormOperationComponent {
     const operationName = this.control.get('name').value;
     const tx = CreateTx.addMember(orgEthAddress, operationId, memberEthAddress);
     const feedback = {
-      confirmation: `You are about to blacklist ${removedMember.name} for ${operationName}`,
-      success: `${removedMember.name} has been successfully blacklisted !`,
+      confirmation: `You are about to blacklist ${removedMember.firstName} for ${operationName}`,
+      success: `${removedMember.firstName} has been successfully blacklisted !`,
       redirectName: 'Back to Administration',
       redirectRoute: `/c/o/organization/`,
     }
@@ -73,8 +73,8 @@ export class DaoFormOperationComponent {
     const operationName = this.control.get('name').value;
     const tx = CreateTx.addMember(orgEthAddress, operationId, memberEthAddress);
     const feedback = {
-      confirmation: `You are about to whitelist ${addedMember.name} for ${operationName}`,
-      success: `${addedMember.name} has been successfully whitelisted !`,
+      confirmation: `You are about to whitelist ${addedMember.firstName} for ${operationName}`,
+      success: `${addedMember.firstName} has been successfully whitelisted !`,
       redirectName: 'Back to Administration',
       redirectRoute: `/c/o/organization`,
     }

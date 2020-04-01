@@ -12,7 +12,7 @@ import { centralOrgID } from './environments/environment';
 function notifUser(userId: string, notificationType: NotificationType, movie: MovieDocument, user: PublicUser) {
   return createNotification({
     userId,
-    user: { name: user.name, surname: user.surname },
+    user: { firstName: user.firstName, lastName: user.lastName },
     type: notificationType,
     app: 'blockframes',
     movie: {
