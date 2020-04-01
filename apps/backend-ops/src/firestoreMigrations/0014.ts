@@ -6,12 +6,13 @@ import { Firestore } from '../admin';
  */
 export async function upgrade(db: Firestore) {
   const users = await db.collection('users').get();
+  const batch = db.batch();
 
-  const newUserData = users.docs.map(async (userDocSnapshot: any): Promise<any> => {
-    const userData = userDocSnapshot.data();
+  users.docs.forEach(userDoc=> {
+    const userData = userDoc.data();
     const { name, surname } = userData;
 
-    if (userData.name && userData.surname) {
+    if (userData.name || userData.surname) {
       delete userData.name;
       delete userData.surname;
 
@@ -20,10 +21,10 @@ export async function upgrade(db: Firestore) {
         firstName: name,
         lastName: surname
       };
-      return userDocSnapshot.ref.set(newData);
+      return batch.set(userDoc.ref, newData);
     }
   });
 
-  await Promise.all(newUserData);
+  await batch.commit();
   console.log('Updating user collection done.');
 }
