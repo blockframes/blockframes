@@ -135,7 +135,7 @@ export function buildChainOfTitle() {
 /** Cleans an organization of its optional parameters */
 export function cleanContract(contract: Contract) {
   const c = { ...contract };
-  delete c.historizedVersions; // Remove akita values
+  delete c.versions; // Remove akita values
   if (!c.signDate) {
     delete c.signDate;
   }

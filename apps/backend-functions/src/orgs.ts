@@ -22,8 +22,8 @@ function notifUser(userId: string, notificationType: NotificationType, org: Orga
     userId,
     type: notificationType,
     user: {
-      name: user.name,
-      surname: user.surname
+      firstName: user.firstName,
+      lastName: user.lastName
     },
     organization: {
       id: org.id,
@@ -126,7 +126,7 @@ export async function onOrganizationUpdate(
   const admin = await db.collection('users').doc(userIds[0]).get().then(adminSnapShot => adminSnapShot.data()! as PublicUser); // TODO use laurent's code after the merge of PR #698
   if (becomeAccepted) {
     // send email to let the org admin know that the org has been accepted
-    await sendMailFromTemplate(organizationWasAccepted(admin.email, id, admin.name));
+    await sendMailFromTemplate(organizationWasAccepted(admin.email, id, admin.firstName));
 
     // Send a notification to the creator of the organization
     const notification = createNotification({

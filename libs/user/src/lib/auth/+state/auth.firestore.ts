@@ -5,7 +5,7 @@ export interface PublicUser {
   uid: string;
   email: string;
   avatar?: ImgRef;
-  name?: string;
-  surname?: string;
+  firstName?: string;
+  lastName?: string;
   orgId?: string;
 }

@@ -67,44 +67,44 @@ export class NotificationQuery extends QueryEntity<NotificationState, Notificati
         };
       case 'movieTitleUpdated':
         return {
-          message: `${notification.user.name} ${notification.user.surname} edited ${notification.movie.title.international}.`,
+          message: `${notification.user.firstName} ${notification.user.lastName} edited ${notification.movie.title.international}.`,
           imgRef: this.getPoster(notification.movie.id),
           placeholderUrl: 'WelcomeDelivery_500.png' // TODO: Icon/Image is wrong here. Use correct illustration for notifications => ISSUE#2262
         };
       case 'movieTitleCreated':
         return {
-          message: `${notification.user.name} ${notification.user.surname} created ${notification.movie.title.international}.`,
+          message: `${notification.user.firstName} ${notification.user.lastName} created ${notification.movie.title.international}.`,
           imgRef: this.getPoster(notification.movie.id),
           placeholderUrl: 'WelcomeDelivery_500.png' // TODO: ISSUE#2262
         };
       case 'movieDeleted':
         return {
-          message: `${notification.user.name} ${notification.user.surname} deleted ${notification.movie.title.international}.`,
+          message: `${notification.user.firstName} ${notification.user.lastName} deleted ${notification.movie.title.international}.`,
           imgRef: this.getPoster(notification.movie.id),
           placeholderUrl: 'WelcomeDelivery_500.png' // TODO: ISSUE#2262
         };
       case 'invitationFromOrganizationToUserDecline':
         return {
-          message: `${notification.user.name} ${notification.user.surname} has declined your organization's invitation.`,
+          message: `${notification.user.firstName} ${notification.user.lastName} has declined your organization's invitation.`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.webp'
         };
       case 'invitationFromUserToJoinOrgDecline':
         return {
-          message: `Your organization has refused the request from ${notification.user.name} ${notification.user.surname}.`,
+          message: `Your organization has refused the request from ${notification.user.firstName} ${notification.user.lastName}.`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.webp'
         };
       case 'memberAddedToOrg':
         return {
-          message: `${notification.user.name} ${notification.user.surname} has been added to ${notification.organization.denomination.full}.`,
+          message: `${notification.user.firstName} ${notification.user.lastName} has been added to ${notification.organization.denomination.full}.`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.webp',
           url: `c/o/organization/${notification.organization.id}/view/members`
         };
       case 'memberRemovedFromOrg':
         return {
-          message: `${notification.user.name} ${notification.user.surname} has been removed from ${notification.organization.denomination.full}.`,
+          message: `${notification.user.firstName} ${notification.user.lastName} has been removed from ${notification.organization.denomination.full}.`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.webp'
         };

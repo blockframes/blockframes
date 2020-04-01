@@ -34,13 +34,13 @@
   </mat-card>
 </section>
 
-<section *ngIf="historizedVersionsView$ | async as historizedVersions">
-  <mat-card *ngIf="historizedVersions.length">
+<section *ngIf="versionsView$ | async as versions">
+  <mat-card *ngIf="versions.length">
     <mat-card-header>
       <mat-card-title>Negotiation History</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <contract-version-table [versions]="historizedVersions"></contract-version-table>
+      <contract-version-table [versions]="versions"></contract-version-table>
     </mat-card-content>
   </mat-card>
 </section>

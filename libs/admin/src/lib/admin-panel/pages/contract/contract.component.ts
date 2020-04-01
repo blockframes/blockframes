@@ -122,7 +122,7 @@ export class ContractComponent implements OnInit {
   ) {
   }
 
-  async ngOnInit() {
+  ngOnInit() {
     this.route.params.subscribe(async params => {
       this.contractId = params.contractId;
       this.publicContract$ = this.contractService.listenOnPublicContract(this.contractId);

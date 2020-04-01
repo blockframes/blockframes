@@ -4,8 +4,8 @@ import { createImgRef, ImgRef } from '@blockframes/utils/image-uploader';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 
 export interface Profile {
-  name: string;
-  surname: string;
+  firstName: string;
+  lastName: string;
   phoneNumber: string;
   position: string;
   avatar: ImgRef;
@@ -14,8 +14,8 @@ export interface Profile {
 
 export function createProfile(params: Partial<User> = {}): Profile {
   return {
-    name: '',
-    surname: '',
+    firstName: '',
+    lastName: '',
     phoneNumber: '',
     position: '',
     email: '',
@@ -27,8 +27,8 @@ export function createProfile(params: Partial<User> = {}): Profile {
 function createProfileControls(entity: Partial<User>) {
   const profile = createProfile(entity);
   return {
-    name: new FormControl(profile.name),
-    surname: new FormControl(profile.surname),
+    firstName: new FormControl(profile.firstName),
+    lastName: new FormControl(profile.lastName),
     phoneNumber: new FormControl(profile.phoneNumber),
     position: new FormControl(profile.position),
     avatar: new FormControl(profile.avatar),

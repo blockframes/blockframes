@@ -13,7 +13,7 @@ const organizationContractsListQuery = (orgId: string): Query<ContractWithTimeSt
   path: 'contracts',
   queryFn: ref => ref.where('partyIds', 'array-contains', orgId).where('type', '==', 'sale'),
   /** @dev This is used to fetch all archived versions along with contract (KFH) */
-  historizedVersions: contract => ({
+  versions: contract => ({
     path: `contracts/${contract.id}/versions`
   })
 });

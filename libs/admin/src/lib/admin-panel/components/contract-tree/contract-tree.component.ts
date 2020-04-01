@@ -56,8 +56,8 @@ export class ContractTreeComponent implements OnInit {
         id: contract.id,
         contract,
         level,
-        parents: contract.parentContractIds ? contract.parentContractIds : [],
-        childs: contract.childContractIds ? contract.childContractIds : [],
+        parents: contract.parentContractIds || [],
+        childs: contract.childContractIds || [],
       };
 
       // If 0 : we fetch parents & childs.

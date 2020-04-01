@@ -35,7 +35,7 @@ export class ContractVersionService extends CollectionService<ContractVersionSta
     return this.db.collection(`contracts/${contractId}/versions`)
       .valueChanges()
       .pipe(
-        map((versions : ContractVersion[]) => versions.filter(v => v.id !== undefined ).map(v => createContractVersionFromFirestore(v)))
+        map((versions : ContractVersion[]) => versions.map(v => createContractVersionFromFirestore(v)))
       );
   }
 }
