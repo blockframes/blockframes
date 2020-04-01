@@ -8,11 +8,11 @@ const navLinks = [{
   path: 'title',
   label: 'Line-up'
 }, {
+  path: 'event',
+  label: 'Screenings Agenda'
+}, {
   path: 'member',
   label: 'Contacts'
-}, {
-  path: 'event',
-  label: 'Screenings'
 }];
 
 @Component({
