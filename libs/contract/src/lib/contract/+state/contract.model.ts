@@ -23,13 +23,13 @@ import { LegalRolesSlug } from '@blockframes/utils/static-model/types';
 import { toDate } from '@blockframes/utils/helpers';
 
 export interface Contract extends ContractDocumentWithDates {
-  historizedVersions?: ContractVersion[];
+  versions?: ContractVersion[];
 };
 
 export type PublicContract = PublicContractDocumentWithDates;
 
 export interface ContractWithTimeStamp extends ContractDocument {
-  historizedVersions?: ContractVersionWithTimeStamp[];
+  versions?: ContractVersionWithTimeStamp[];
 };
 
 export type ContractPartyDetail = ContractPartyDetailDocumentWithDates;
