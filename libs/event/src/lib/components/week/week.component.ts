@@ -149,7 +149,7 @@ export class CalendarWeekComponent {
 
 
   updateEvent(timeChange: CalendarEventTimesChangedEvent) {
-    if (this.authQuery.userId === timeChange.event['userId']) {
+    if (timeChange.event['isOwner']) {
       const event = { id: timeChange.event.id as string, start: timeChange.newStart, end: timeChange.newEnd };
       this.service.update(event);
     }
