@@ -87,13 +87,6 @@ const routes: Routes = [{
         {
           path: 'view',
           loadChildren: () => import('./title/view/view.module').then(m => m.MovieViewModule)
-        },
-        {
-          path: 'create',
-          loadChildren: () =>
-            import('@blockframes/distribution-deals/create/create.module').then(
-              m => m.DistributionDealCreateModule
-            )
         }
       ]
     }

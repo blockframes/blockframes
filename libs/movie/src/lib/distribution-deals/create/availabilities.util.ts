@@ -7,45 +7,6 @@ import { MediasSlug } from '@blockframes/utils/static-model';
 import { Terms } from '@blockframes/utils/common-interfaces/terms';
 
 /**
- * These function should be used in connection. For instance, we look for movie distribution deals in
- * a date range which get specified by the customer. Then we go on to put the array we got back
- * from the function and put that into the next function where we look for territories, for instance.
- * Like that we make sure that we only search in a relevant date range.
- * Because of that flow, all properties which can be specified by the customer are mandatory.
- * That is why we need to implement a good error handeling and show results and solution
- * in the UI.
- *
- * @dev workflow is described here : https://www.notion.so/cascade8/Avails-Search-ad38ce0bca424b6fa3036b0ab36164a0##
- */
-
-/**
- * @description Returns a boolean whether a distribution right can be bought or not
- * in the specified date range from the parameter `formDates`
- * @param dateRange The possible date range from the movie sales agent
- * @param formDates The specified date range from the customer
- */
-export function salesAgentHasDateRange(
-  dateRange: MovieSalesAgentDeal['rights'],
-  formDates: DateRange
-): boolean {
-  const from = new Date(dateRange.from);
-  const to = new Date(dateRange.to);
-
-  if (formDates.from.getTime() >= from.getTime() && formDates.to.getTime() <= to.getTime()) {
-    return true;
-  } else {
-    return false;
-  }
-}
-
-/**
- * @description Fetches you all the exclusive deals of a movie
- * @param distributionDeals The distribution deal property
- */
-export function exclusiveDistributionDeals(distributionDeals: DistributionDeal[]): DistributionDeal[] {
-  return distributionDeals.filter(deal => deal.exclusive === true);
-}
-/**
  * @description This function checks if there are intersections in the deals
  * from the current movie and the specified date range from the buyer
  * @param formDates The date range which got specified by the buyer
