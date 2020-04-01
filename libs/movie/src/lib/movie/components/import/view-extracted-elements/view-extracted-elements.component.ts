@@ -1815,8 +1815,6 @@ export class ViewExtractedElementsComponent implements OnInit {
           // LICENSORS
           /**
            * @dev We process this data only if this is for a new contract
-           * Changing parties or titles for a same contract is forbidden
-           * Only change into distribution deals is allowed and will lead to a new contractVersion
           */
           if (spreadSheetRow[SpreadSheetContract.licensors]) {
             spreadSheetRow[SpreadSheetContract.licensors].split(this.separator).forEach((licensorName: string) => {
@@ -2073,7 +2071,7 @@ export class ViewExtractedElementsComponent implements OnInit {
     //////////////////
 
     //  CONTRACT VALIDATION
-    const isContractValid = await this.contractService.isContractValid(contract);
+    const isContractValid = await this.contractService.validateAndConsolidateContract(contract);
     if (!isContractValid) {
       errors.push({
         type: 'error',

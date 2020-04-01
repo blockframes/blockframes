@@ -178,27 +178,13 @@ export class ContractTunnelComponent implements OnInit {
    * have changed too in the contract tunnel form.
    */
   public async save() {
-    
+
     const orgId = this.orgQuery.getActiveId();
     const titlesAndDeals = {} as TitlesAndDeals;
 
     for (const movieId in this.dealForms.controls) {
       const deals = this.dealForms.get(movieId).value.map(deal => createDistributionDeal(deal));
       titlesAndDeals[movieId] = deals;
-
-
-      /*
-      @TODO (#1887) quand un deal est créé il faut patcher le form avec l'id .. a tester
-      deals.forEach(async (deal, i) => {
-        if (deal.id) {
-          const id = await this.dealService.add({ contractId, ...deal }, { params: { movieId }, write });
-          this.dealForms.get(movieId).at(i).patchValue({ id });
-          this.contractForm.get('lastVersion').get('titles').get(movieId).get('distributionDealIds').add(id);
-        }
-      })*/
-
-      // @TODO (#1887) check parties en double ou plus & remove licensor input (mais garder licensee pour pouvoir ovveride licensee ? ask vincent)
-
     }
 
     const contract = createContract({
@@ -207,7 +193,7 @@ export class ContractTunnelComponent implements OnInit {
     });
 
     //@TODO (#2404) Problem: here this.contractForm.value.lastVersion[titleId].price.amount === 0
-    await this.contractService.createContractAndDeal(orgId, titlesAndDeals,contract);
+    await this.contractService.createContractAndDeal(orgId, titlesAndDeals, contract);
 
     // Remove deals
     const write = this.db.firestore.batch();

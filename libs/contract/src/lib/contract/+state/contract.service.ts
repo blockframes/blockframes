@@ -22,6 +22,7 @@ import { DistributionDeal, createDistributionDeal } from '@blockframes/distribut
 import { centralOrgID } from '@env';
 import objectHash from 'object-hash';
 import { DistributionDealService } from '@blockframes/distribution-deals/+state';
+import { OrganizationService } from '@blockframes/organization/organization/+state';
 
 export type TitlesAndDeals = Record<string, DistributionDeal[]>;
 
@@ -32,6 +33,7 @@ export class ContractService extends CollectionService<ContractState> {
   constructor(
     private permissionsService: PermissionsService,
     private distributionDealService: DistributionDealService,
+    private organizationService: OrganizationService,
     store: ContractStore
   ) {
     super(store);
@@ -113,18 +115,18 @@ export class ContractService extends CollectionService<ContractState> {
     }
 
     // Licensee is the current logged in org
-    const licensee = createContractPartyDetail();
     const licensees = getContractParties(contract, 'licensee');
     if (licensees.length === 0) {
+      const licensee = createContractPartyDetail();
       licensee.party.orgId = licenseeId;
       licensee.party.role = 'licensee';
       contract.parties.push(licensee);
     }
 
     // Licensor will always be centralOrgID
-    const licensor = createContractPartyDetail();
     const licensors = getContractParties(contract, 'licensor');
     if (licensors.length === 0) {
+      const licensor = createContractPartyDetail();
       licensor.party.orgId = centralOrgID
       licensor.party.role = 'licensor';
       contract.parties.push(licensor);
@@ -142,7 +144,7 @@ export class ContractService extends CollectionService<ContractState> {
     }
 
     // Add contract
-    const isValid = await this.isContractValid(contract);
+    const isValid = await this.validateAndConsolidateContract(contract);
     if (isValid) {
       const contractId = await this.add(contract, { write });
       // Save batch
@@ -154,10 +156,10 @@ export class ContractService extends CollectionService<ContractState> {
 
   /**
    * Various validation steps for validating a contract
-   * Currently (dec 2019), only validate that there is a licensee and a licensor
+   * Also add data to contract such as parties display names
    * @param contract
    */
-  public async isContractValid(contract: Contract): Promise<boolean> {
+  public async validateAndConsolidateContract(contract: Contract): Promise<boolean> {
 
     // First, contract must have at least a licensee and a licensor
 
@@ -192,8 +194,16 @@ export class ContractService extends CollectionService<ContractState> {
       }
     }
 
+    // Fetch displayName for parties that have orgId defined
+    for (let p of contract.parties) {
+      if (p.party.orgId) {
+        const org = await this.organizationService.getValue(p.party.orgId);
+        p.party.displayName = org.denomination.publicName ? org.denomination.publicName : org.denomination.full;
+      }
+    }
+
     // Other contract validation steps goes here
-    // TODO: Add more validations steps to the isContractValid function => ISSUE#1542
+    // TODO: Add more validations steps to the validateAndConsolidateContract function => ISSUE#1542
 
     return true;
   }

@@ -136,15 +136,17 @@ export class ContractComponent implements OnInit {
         if (c.titleIds && c.lastVersion.titles) {
           c.titleIds.forEach(async titleId => {
             const movie = await this.movieService.getValue(titleId);
-            this.titles.push({
-              titleId,
-              price: c.lastVersion.titles[titleId].price,
-              movie,
-              deals: c.lastVersion.titles[titleId].distributionDealIds ? c.lastVersion.titles[titleId].distributionDealIds.map(d => ({ id: d, movie: titleId })) : [],
-              exploredeals: `/c/o/admin/panel/deals/${titleId}`,
-              edit: titleId,
-            });
-            this.titles = [...this.titles];
+            if (c.lastVersion.titles[titleId]) {
+              this.titles.push({
+                titleId,
+                price: c.lastVersion.titles[titleId].price,
+                movie,
+                deals: c.lastVersion.titles[titleId].distributionDealIds ? c.lastVersion.titles[titleId].distributionDealIds.map(d => ({ id: d, movie: titleId })) : [],
+                exploredeals: `/c/o/admin/panel/deals/${titleId}`,
+                edit: titleId,
+              });
+              this.titles = [...this.titles];
+            }
           });
         }
         return c;
