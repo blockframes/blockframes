@@ -8,7 +8,7 @@ import { tap } from 'rxjs/operators';
 const contractQuery = (contractId: string): Query<ContractWithTimeStamp> => ({
   path: `contracts/${contractId}`,
   /** @dev This is used to fetch all archived versions along with contract (KFH) */
-  historizedVersions: contract => ({
+  versions: contract => ({
     path: `contracts/${contract.id}/versions`
   })
 })

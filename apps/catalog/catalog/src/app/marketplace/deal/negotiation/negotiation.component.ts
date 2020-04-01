@@ -17,7 +17,7 @@ export class NegotiationComponent {
   titles$ = this.query.titles$;
   payment$ = this.query.activeVersion$.pipe(map(displayPaymentSchedule));
 
-  historizedVersionsView$ = this.query.historizedVersionsView$;
+  versionsView$ = this.query.versionsView$;
 
   constructor(private query: ContractQuery, private intercom: Intercom) { }
 
