@@ -53,7 +53,7 @@
     "@angular/common": "~9.1.0",
     "@angular/compiler": "~9.1.0",
     "@angular/core": "~9.1.0",
-    "@angular/fire": "^6.0.0-rc.1",
+    "@angular/fire": "^6.0.0-rc.2",
     "@angular/flex-layout": "^9.0.0-beta.29",
     "@angular/forms": "~9.1.0",
     "@angular/google-maps": "^9.1.3",
