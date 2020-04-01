@@ -195,7 +195,7 @@ export class ContractService extends CollectionService<ContractState> {
     }
 
     // Fetch displayName for parties that have orgId defined
-    for (let p of contract.parties) {
+    for (const p of contract.parties) {
       if (p.party.orgId) {
         const org = await this.organizationService.getValue(p.party.orgId);
         p.party.displayName = org.denomination.publicName ? org.denomination.publicName : org.denomination.full;
