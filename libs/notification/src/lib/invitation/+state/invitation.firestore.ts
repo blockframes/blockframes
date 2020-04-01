@@ -11,6 +11,10 @@ export interface Invitation {
   type: InvitationType;
   status: InvitationStatus;
   date: Timestamp;
+  /** 
+   * @dev Can be a titleId or a eventId for example.
+   * If empty, the invitation is about Organization
+   */
   docId?: string;
   processedId?: string;
 }
@@ -22,9 +26,28 @@ export type InvitationOrUndefined = InvitationDocument | undefined;
 /** Specific Invitation send by an Organization to another Organization to work on a document. */
 export interface InvitationToWorkOnDocument extends Invitation {
   type: 'toWorkOnDocument';
+  /** @dev TitleId for example*/ 
   docId: string;
   organization: PublicOrganization;
   user?: PublicUser;
+}
+
+/** Specific Invitation send by an Organization to an User to attend an Event. */
+export interface InvitationToAttendAnEvent extends Invitation {
+  type: 'invitationToAttendAnEvent';
+  /** @dev EventId */ 
+  docId: string;
+  organization: PublicOrganization;
+  user: PublicUser;
+}
+
+/** Specific Invitation send by an User to attend an Event. */
+export interface RequestToAttendAnEvent extends Invitation {
+  type: 'requestToAttendAnEvent';
+  /** @dev EventId */ 
+  docId: string;
+  organization: PublicOrganization;
+  user: PublicUser;
 }
 
 /**  Specific Invitation send by an Organization to a User to join it. */
@@ -45,4 +68,4 @@ export interface InvitationFromUserToOrganization extends Invitation {
 export type InvitationStatus = 'accepted' | 'declined' | 'pending';
 
 /** Type of Invitation depending of its purpose. */
-export type InvitationType = 'fromUserToOrganization' | 'fromOrganizationToUser' | 'toWorkOnDocument';
+export type InvitationType = 'fromUserToOrganization' | 'fromOrganizationToUser' | 'toWorkOnDocument' | 'invitationToAttendAnEvent' | 'requestToAttendAnEvent';

@@ -1,11 +1,11 @@
 import { firestore } from 'firebase/app';
-import { InvitationFromUserToOrganization, InvitationFromOrganizationToUser, InvitationToWorkOnDocument } from './invitation.firestore';
+import { InvitationFromUserToOrganization, InvitationFromOrganizationToUser, InvitationToWorkOnDocument, InvitationToAttendAnEvent, RequestToAttendAnEvent } from './invitation.firestore';
 import { PublicUser } from '@blockframes/auth/types';
 import { PublicOrganization } from '@blockframes/organization/organization/+state/organization.firestore';
 
 export { InvitationStatus } from './invitation.firestore';
 
-export type Invitation = InvitationToWorkOnDocument | InvitationFromOrganizationToUser | InvitationFromUserToOrganization;
+export type Invitation = InvitationToWorkOnDocument | InvitationFromOrganizationToUser | InvitationFromUserToOrganization | InvitationToAttendAnEvent | RequestToAttendAnEvent;
 
 /** Required options to create an Invitation from a User to join an Organization. */
 export interface InvitationFromUserToOrganizationOptions {
