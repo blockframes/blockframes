@@ -12,8 +12,8 @@ export async function upgradeAlgoliaOrgs() {
 
   const promises = [];
   orgs.forEach(org => {
-    const { id, name } = org.data();
-    promises.push(storeSearchableOrg(id, name, process.env['ALGOLIA_API_KEY']));
+    const { id, denomination } = org.data();
+    promises.push(storeSearchableOrg(id, denomination.full, process.env['ALGOLIA_API_KEY']));
   });
 
   return Promise.all(promises);

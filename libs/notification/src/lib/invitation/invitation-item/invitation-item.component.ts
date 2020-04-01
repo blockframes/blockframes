@@ -19,7 +19,7 @@ export class InvitationItemComponent {
     switch (this.invitation.type) {
       case 'fromUserToOrganization':
         // TODO #1140 Put message in an other file dedicated to that
-        return `${this.invitation.user.name} ${this.invitation.user.surname} wants to join your organization`;
+        return `${this.invitation.user.firstName} ${this.invitation.user.lastName} wants to join your organization`;
       case 'fromOrganizationToUser':
         return `Your organization sent an invitation to this user email: ${this.invitation.user.email}`;
     }
