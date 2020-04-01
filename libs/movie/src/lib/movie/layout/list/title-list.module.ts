@@ -7,7 +7,7 @@ import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/imag
 import { DisplayNameModule, TranslateSlugModule } from '@blockframes/utils/pipes';
 import { AppNavModule } from '@blockframes/ui/app-nav';
 
-import { TitleListComponent, TitleCardDirective, TitleListItemDirective } from './title-list.component'
+import { TitleListComponent, TitleCardDirective, TitleListItemDirective, TitleSortDirective, TitleSearchDirective } from './title-list.component'
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -27,10 +27,24 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatListModule } from '@angular/material/list';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTabsModule } from '@angular/material/tabs';
 
 @NgModule({
-  declarations: [TitleListComponent, TitleCardDirective, TitleListItemDirective],
-  exports: [TitleListComponent, TitleCardDirective, TitleListItemDirective],
+  declarations: [
+    TitleListComponent,
+    TitleCardDirective,
+    TitleListItemDirective,
+    TitleSortDirective,
+    TitleSearchDirective,
+  ],
+  exports: [
+    TitleListComponent,
+    TitleCardDirective,
+    TitleListItemDirective,
+    TitleSortDirective,
+    TitleSearchDirective,
+  ],
   imports: [
     CommonModule,
     RouterModule,
@@ -58,6 +72,8 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
     MatDatepickerModule,
     MatOptionModule,
     MatSnackBarModule,
+    MatToolbarModule,
+    MatTabsModule,
   ]
 })
 export class TitleListLayoutModule { }

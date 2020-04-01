@@ -1,34 +1,46 @@
-<section fxLayout="row" fxLayoutAlign="space-between center">
-  <h1 class="mat-headline">Library</h1>
+<page-nav targetId="nav">
+  <mat-toolbar>
+    <button mat-icon-button>
+      <mat-icon svgIcon="menu"></mat-icon>
+    </button>
+    <nav mat-tab-nav-bar>
+      <h3>{{titleType}} List</h3>
+      <ng-template [ngTemplateOutlet]="titleSearchTemplate?.template"></ng-template>
+      <button *ngIf="canToggle" mat-icon-button (click)="listView = !listView">
+        <ng-container *ngIf="!listView">
+          <mat-icon matPrefix svgIcon="list"></mat-icon>
+        </ng-container>
+        <ng-container *ngIf="listView">
+          <mat-icon matPrefix svgIcon="grid"></mat-icon>
+        </ng-container>
+      </button>
+      <ng-template [ngTemplateOutlet]="titleSortTemplate?.template"></ng-template>
+    </nav>
+  </mat-toolbar>
+</page-nav>
+
+<section id="nav" fxLayout="row" fxLayoutAlign="space-between center">
+  <h1 class="mat-headline">{{titleType}} List</h1>
   <article fxLayout="row" fxLayoutAlign="center center">
-    <button class="grid" mat-icon-button (click)="listView = !listView">
+    <button *ngIf="canToggle" mat-icon-button (click)="listView = !listView">
       <ng-container *ngIf="!listView">
-        <mat-icon>list</mat-icon>
+        <mat-icon matPrefix svgIcon="list"></mat-icon>
       </ng-container>
       <ng-container *ngIf="listView">
-        <mat-icon>grid_on</mat-icon>
+        <mat-icon matPrefix svgIcon="grid"></mat-icon>
       </ng-container>
     </button>
-    <mat-form-field class="sort">
-      <mat-label>Sort by</mat-label>
-      <mat-select [formControl]="sortByControl">
-        <mat-option *ngFor="let option of sortOptions" [value]="option">
-          {{option}}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+
+    <ng-template [ngTemplateOutlet]="titleSortTemplate?.template"></ng-template>
+
   </article>
 </section>
 
 <!-- MAIN SEARCH BAR -->
 <section class="search">
-  <form [formGroup]="filterForm.search">
-    <mat-form-field appearance="outline">
-      <mat-label>Search for titles, directors, keywords, ...</mat-label>
-      <mat-icon matPrefix svgIcon="magnifying_glasses"></mat-icon>
-      <input matInput type="text" [formControl]="searchbarTextControl">
-    </mat-form-field>
-  </form>
+
+  <ng-template [ngTemplateOutlet]="titleSearchTemplate?.template"></ng-template>
+
 </section>
 
 <!-- FILTER SIDE CARD -->
@@ -36,58 +48,38 @@
   fxLayoutAlign.lt-md="center center" class="filters">
   <aside fxLayout="column" class="filter">
     <mat-card>
-      <h6>Filters</h6>
-      <p class="mat-caption">For a specific filter, multiple choices will be applied with an "or" statement (not an "and" statement).</p>
-      <mat-card-content>
-        <mat-accordion multi="true">
-          <!-- <ng-container [formGroup]="filterForm"> -->
-          <ng-container [formGroup]="filterForm">
-
-            <mat-divider inset></mat-divider>
-
-            <!-- TODO INSERT FILTERS -->
-
-          </ng-container>
-        </mat-accordion>
-      </mat-card-content>
+      <!-- TODO INSERT FILTERS -->
     </mat-card>
   </aside>
 
   <!-- List || card of result -->
   <article>
-    <ng-container *ngIf="(movieSearchResults$ | async) as movies">
+    <ng-container *ngIf="(titles$ | async) as titles">
       <div fxLayout="row" fxLayoutAlign="end start">
-        <h6>There are {{ movies.length }} movies available!</h6>
+        <h6>There are {{ titles.length }} {{titleType}}s available!</h6>
       </div>
-      <div fxLayout="row wrap" fxLayoutGap="20px" fxLayout.lt-md="column" fxLayoutAlign.lt-md="center center">
-        <ng-container *ngIf="!listView; else displayList">
-          <ng-container *ngFor="let movie of movies">
+      <div fxLayout="row wrap" fxLayoutGap="24px" fxLayout.lt-md="column" fxLayoutAlign.lt-md="center center">
+        <ng-container *ngFor="let title of titles">
+          <ng-container *ngIf="!listView; else displayList">
 
-            <!-- INSERT CARD -->
-            <ng-template
-              [ngTemplateOutlet]="titleCardTemplate?.template || defaultTitleCard"
-              [ngTemplateOutletContext]="{title: movie}"
-            ></ng-template>
-
+              <!-- INSERT CARD -->
+              <ng-template
+                [ngTemplateOutlet]="titleCardTemplate?.template"
+                [ngTemplateOutletContext]="{$implicit: title}"
+              ></ng-template>
 
           </ng-container>
+          <ng-template #displayList>
 
+            <!-- INSERT LIST ITEM -->
+            <ng-template
+              [ngTemplateOutlet]="titleListItemTemplate?.template"
+              [ngTemplateOutletContext]="{$implicit: title}"
+            ></ng-template>
+
+          </ng-template>
         </ng-container>
-        <ng-template #displayList>
-
-          <!-- TODO PASS FUNCTIONS -->
-          <!-- INSERT LIST ITEM -->
-          <ng-template
-            [ngTemplateOutlet]="titleListItemTemplate?.template || defaultListItemCard"
-            [ngTemplateOutletContext]="{titles: movies}"
-          ></ng-template>
-
-        </ng-template>
       </div>
     </ng-container>
   </article>
 </section>
-
-<!-- TODO CREATE DEFAULT -->
-<ng-template #defaultTitleCard><p>Default Card</p></ng-template>
-<ng-template #defaultListItemCard><p>Default List Item</p></ng-template>
