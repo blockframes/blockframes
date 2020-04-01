@@ -3,5 +3,8 @@
   "rules": {
     "directive-selector": [true, "attribute", "festival", "camelCase"],
     "component-selector": [true, "element", "festival", "kebab-case"]
+  },
+  "linterOptions": {
+    "exclude": ["!**/*"]
   }
 }
