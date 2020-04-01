@@ -105,6 +105,6 @@ export class PriceComponent implements OnInit {
    * @param event
    */
   public addMovie(id: string) {
-    this.tunnel.addTitle(id, this._hasMandate)
+    this.tunnel.addTitle(id, this._hasMandate);
   }
 }

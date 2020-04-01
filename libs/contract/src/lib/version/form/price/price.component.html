@@ -17,7 +17,7 @@
   <algolia-autocomplete [indexName]="algoliaMovieIndex" displayWithPath="movie.main.title.international" 
     (selectionChange)="addMovie($event)">
     <ng-template let-result>
-      <span>{{ result.movie.main.title.international }}</span>
+      <span>{{ result ? result.title.international : '--' }}</span>
     </ng-template>
   </algolia-autocomplete>
   <div *ngFor="let control of form.get('titles').controls | keyvalue; let i = index;"
