@@ -123,9 +123,9 @@ function updateVersion(tx: FirebaseFirestore.Transaction, contract: ContractDocu
   // When a contract of type "mandate" is created/updated
   // tiltleDetails.price.commissionBase must be set to "grossreceipt".
   if (contract.type === 'mandate') {
-    Object.keys(contract.lastVersion.titles).forEach(titleId => {
+    for (const titleId in contract.lastVersion.titles){
       contract.lastVersion.titles[titleId].price.commissionBase = 'grossreceipts';
-    });
+    }
   }
 
   // We historize current version 
