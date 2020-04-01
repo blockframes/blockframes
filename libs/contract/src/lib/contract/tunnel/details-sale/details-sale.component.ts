@@ -18,11 +18,11 @@ export class DetailsSaleComponent {
     return this.tunnel.contractForm.get('parties')
   }
 
-  get versions() {
-    return this.tunnel.contractForm.get('versions');
+  get lastVersion() {
+    return this.tunnel.contractForm.get('lastVersion');
   }
 
-  public terms(index: number) {
-    return this.versions.at(index).get('scope');
+  public terms() {
+    return this.lastVersion.get('scope');
   }
 }

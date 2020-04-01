@@ -2,24 +2,14 @@
   <mat-card fxFlex *ngIf="versionView$ | async as version">
     <mat-card-header>
       <mat-card-title i18n>
-        {{ licensees[0].displayName }} has made an offer for
-        {{ (titles$ | async).length }} title{ (titles$ | async).length, plural, =1 {} other {s} },
-        {{ moviesCount$| async }} of which are yours.
+        You made an offer for {{ version.titleIds.length }} title{version.titleIds.length, plural, =1 {} other {s}}
       </mat-card-title>
     </mat-card-header>
-    <mat-card-content *ngIf="(versionView$ | async).price as price">
-      <ng-container *ngIf="(subLicensors$ | async).length > 1; else uniqueSubLicensor">
-        <span i18n>
-          Your share of the deal is <b>{{ price.amount | currency: price.currency }}</b>
-          for the {{ moviesCount$| async }} film{ moviesCount$| async, plural, =1 {} other {s} }:
-        </span>
-      </ng-container>
-      <ng-template #uniqueSubLicensor>
-        <span i18n>
-          The offer is <b>{{ price.amount | currency: price.currency }}</b>
-          for the {{ moviesCount$| async }} film{ moviesCount$| async, plural, =1 {} other {s} }:
-        </span>
-      </ng-template>
+    <mat-card-content>
+      <p i18n *ngIf="version.price as price">
+        Your offer is {{ price.amount | currency: price.currency }} for {{ version.titleIds.length }}
+        title{version.titleIds.length, plural, =1 {} other {s}}:
+      </p>
       <ul>
         <li *ngFor="let title of titles$ | async">{{ title.main.title.international }}</li>
       </ul>
@@ -44,13 +34,13 @@
   </mat-card>
 </section>
 
-<section *ngIf="oldVersions$ | async as oldVersions">
-  <mat-card *ngIf="oldVersions.length">
+<section *ngIf="versionsView$ | async as versions">
+  <mat-card *ngIf="versions.length">
     <mat-card-header>
       <mat-card-title>Negotiation History</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <contract-version-table [versions]="oldVersions"></contract-version-table>
+      <contract-version-table [versions]="versions"></contract-version-table>
     </mat-card-content>
   </mat-card>
 </section>
@@ -75,10 +65,10 @@
           <mat-divider></mat-divider>
           <ng-template matExpansionPanelContent>
             <article fxLayout="row" fxLayoutAlign="start start" class="movie-information">
-              <img [imgRef]="movie.promotionalElements.poster[0].media" placeholderAsset="empty_poster.webp" alt="Movie poster"/>
+              <img [imgRef]="movie.promotionalElements.poster[0].media" placeholderAsset="empty_poster.webp" alt="Movie poster" />
               <div>
                 <p>
-                  {{ movie.main.directors | displayName }}
+                  {{ getDirectors(movie) }}
                 </p>
                 <p class="mat-body-2">
                   <span>{{ movie.main.originCountries | translateSlug: 'TERRITORIES'}}, </span>

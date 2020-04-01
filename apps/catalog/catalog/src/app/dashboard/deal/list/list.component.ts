@@ -1,7 +1,6 @@
 import { Intercom } from 'ng-intercom';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ContractQuery, ContractService, Contract, ContractStatus } from '@blockframes/contract/contract/+state';
-import { getContractLastVersion } from '@blockframes/contract/version/+state/contract-version.model';
 import { map } from 'rxjs/operators';
 import { OrganizationQuery } from '@blockframes/organization/organization/+state/organization.query';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -59,7 +58,7 @@ const contractTab: Tab[] = [
  */
 function filterByStatus(contracts: Contract[], statuses?: ContractStatus[]) {
   if (statuses) {
-    const lastVersionStatus = (contract: Contract) => getContractLastVersion(contract).status;
+    const lastVersionStatus = (contract: Contract) => contract.lastVersion.status;
     return contracts.filter(contract => statuses.includes(lastVersionStatus(contract)));
   }
   return contracts;
@@ -89,7 +88,7 @@ export class DealListComponent {
   constructor(
     private orgQuery: OrganizationQuery,
     private query: ContractQuery,
-    private service: ContractService,
+    private contractService: ContractService,
     private router: Router,
     private route: ActivatedRoute,
     private intercom: Intercom,
@@ -111,7 +110,7 @@ export class DealListComponent {
   /** Create a sale and redirect to tunnel */
   async createSale() {
     const type = 'sale';
-    const contractId = await this.service.create({ type });
+    const contractId = await this.contractService.create({ type });
     this.router.navigate(['../tunnel/contract', contractId, type], { relativeTo: this.route })
   }
 
@@ -122,11 +121,11 @@ export class DealListComponent {
   async createMandate() {
     const type = 'mandate';
     const orgId = this.orgQuery.getActiveId();
-    const mandate = await this.service.getMandate(orgId);
+    const mandate = await this.contractService.getMandate(orgId);
     if (mandate) {
       this.router.navigate([mandate.id], { relativeTo: this.route })
     } else {
-      const contractId = await this.service.create({ type });
+      const contractId = await this.contractService.create({ type });
       this.router.navigate(['../tunnel/contract', contractId, type], { relativeTo: this.route })
     }
   }

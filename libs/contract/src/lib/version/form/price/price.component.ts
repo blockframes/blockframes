@@ -3,7 +3,7 @@ import { algolia } from '@env';
 import { ContractTunnelComponent } from '@blockframes/contract/contract/tunnel/contract-tunnel.component';
 import { ContractVersionForm } from '@blockframes/contract/version/form/version.form';
 import { Movie } from '@blockframes/movie/+state/movie.model';
-import { FormStaticValue, FormList } from '@blockframes/utils/form';
+import { FormStaticValue } from '@blockframes/utils/form';
 
 // Angular
 import { Component, Input, ChangeDetectionStrategy, OnInit } from '@angular/core';
@@ -20,7 +20,7 @@ import { distinctUntilChanged, map } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PriceComponent implements OnInit {
-  @Input() form: FormList<any, ContractVersionForm>;
+  @Input() form: ContractVersionForm;
   public _hasMandate: boolean;
   @Input()
   get hasMandate() { return this._hasMandate; }
@@ -42,14 +42,14 @@ export class PriceComponent implements OnInit {
   ngOnInit() {
     this.movies$ = this.tunnel.movies$.pipe(
       distinctUntilChanged((a, b) => a.length === b.length));
-    this.currencyCtrl = this.form.last().get('price').get('currency');
+    this.currencyCtrl = this.form.get('price').get('currency');
   }
 
   /**
    * @description returns the movie ids which are currently active on the form
    */
   get activeMovieIds(): string[] {
-    return Object.keys(this.form.last().get('titles').controls)
+    return Object.keys(this.form.get('titles').controls)
   }
 
   /**
@@ -59,7 +59,7 @@ export class PriceComponent implements OnInit {
     let accumilatedPrice = 0;
     const state = new BehaviorSubject(false)
     for (const id of this.activeMovieIds) {
-      const version = this.form.last().value;
+      const version = this.form.value;
       accumilatedPrice += version.titles[id].price.amount;
     }
     accumilatedPrice > this.totalAmount.value ? state.next(true) : state.next(false)
@@ -70,7 +70,7 @@ export class PriceComponent implements OnInit {
    * @description gets the control for the total amount of the package
    */
   get totalAmount() {
-    return this.form.last().get('price').get('amount');
+    return this.form.get('price').get('amount');
   }
 
   /**
@@ -78,7 +78,7 @@ export class PriceComponent implements OnInit {
    * @param movieId
    */
   public priceForm(movieId: string) {
-    return this.form.last().get('titles').get(movieId).get('price');
+    return this.form.get('titles').get(movieId).get('price');
   }
 
   public selectMovie(movieId: string) {
@@ -89,7 +89,7 @@ export class PriceComponent implements OnInit {
    * @description gets the control for the commision amount of the package
    */
   get commissionFee() {
-    return this.form.last().get('price').get('commission');
+    return this.form.get('price').get('commission');
   }
 
   /**
@@ -105,6 +105,6 @@ export class PriceComponent implements OnInit {
    * @param event
    */
   public addMovie(id: string) {
-    this.tunnel.addTitle(id, this._hasMandate)
+    this.tunnel.addTitle(id, this._hasMandate);
   }
 }

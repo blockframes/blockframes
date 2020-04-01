@@ -22,7 +22,7 @@ import { adminApp, onRequestAccessToAppWrite } from './admin';
 import { onMovieUpdate, onMovieCreate, onMovieDelete } from './movie';
 import * as bigQuery from './bigQuery';
 import { onDocumentPermissionCreate } from './permissions';
-import { onContractWrite, onContractVersionWrite } from './contract';
+import { onContractWrite } from './contract';
 
 
 /**
@@ -129,14 +129,6 @@ export const onContractWriteEvent = onDocumentWrite(
   'contracts/{contractId}',
   onContractWrite
 );
-
-/**
- * Trigger: when a contractVersion is created/updated/deleted
- */
-export const onContractVersionWriteEvent = onDocumentWrite(
-  'contracts/{contractId}/versions/{versionId}',
-  onContractVersionWrite
-)
 
 //--------------------------------
 //       Apps Management        //

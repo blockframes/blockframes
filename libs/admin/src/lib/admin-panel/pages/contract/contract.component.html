@@ -1,8 +1,8 @@
 <h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Contract > {{ contractId }} </h1>
-<ng-container *ngIf="contract">
+<ng-container *ngIf="contract$ | async as contract">
   <article id="contract-section" fxLayout="row" fxLayoutAlign="space-around start" >
     <article fxLayout="column" fxLayoutAlign="space-between start">
-      <button mat-flat-button color="accent" [routerLink]="getContractTunnelPath(contract.doc)">
+      <button mat-flat-button color="accent" [routerLink]="getContractTunnelPath(contract)">
         <mat-icon svgIcon="eye"></mat-icon>
         <span>Tunnel view</span>
       </button>
@@ -26,10 +26,10 @@
       </ng-container>
     </article>
     <article fxLayout="column" fxLayoutAlign="space-between start">
-      <h2>Current version : {{ version }} </h2>
+      <h2>Current version : {{ contract.lastVersion.id }} </h2>
 
       <h3>Parties : </h3>
-      <ng-container *ngFor="let partyDetails of contract.doc.parties; let i = index">
+      <ng-container *ngFor="let partyDetails of contract.parties; let i = index">
         <section fxLayout="row" fxLayoutAlign="space-between start">
           <h4>Party : {{ partyDetails.party.displayName }} ( org: {{ partyDetails.party.orgId }} ) </h4>
           <button mat-icon-button color="accent" (click)="editParty(i)"><mat-icon svgIcon="pencil"></mat-icon></button>
@@ -60,7 +60,7 @@
     <article fxLayout="column" fxLayoutAlign="space-between start">
       <h2>Contract Price : </h2>
       <div>
-        <span *ngIf="contract.last && contract.last.price else nocontractprice" i18n>Overall contract price : <b>{{ contract.last.price.amount | currency: getCurrencyCode(contract.last.price.currency) }}</b></span>
+        <span *ngIf="contract.lastVersion && contract.lastVersion.price else nocontractprice" i18n>Overall contract price : <b>{{ contract.lastVersion.price.amount | currency: getCurrencyCode(contract.lastVersion.price.currency) }}</b></span>
         <ng-template #nocontractprice>
           --
         </ng-template>
@@ -90,7 +90,7 @@
         <strong>No public contract found</strong>  
       </ng-template>
       <h2>Contract tree : </h2>
-      <admin-contract-tree [contract]="contract.doc"></admin-contract-tree>
+      <admin-contract-tree [contract]="contract"></admin-contract-tree>
     </article>
   </article>
   <hr />
@@ -111,7 +111,7 @@
             </mat-form-field>
           </div>
           <mat-card-actions align="end">
-          <button type="submit" mat-flat-button color="primary" (click)="updateVersion()">Update to v-{{ version +1 }}</button>
+          <button type="submit" mat-flat-button color="primary" (click)="updateVersion()">Update to v-{{ contract.lastVersion.id +1 }}</button>
           </mat-card-actions>
         </form>
       </ng-container>
@@ -119,8 +119,8 @@
     <article  fxLayout="column" fxLayoutAlign="space-between start">
       <h2>Previous versions :</h2>
 
-      <bf-table-filter class="version-table"
-        [source]="contractVersions" 
+      <bf-table-filter *ngIf="contractVersions$ | async as contractversions" class="version-table"
+        [source]="contractversions" 
         [columns]="versionColumnsTableVersions" 
         [initialColumns]="initialColumnsTableVersions" 
         [filterPredicate]="filterPredicateTableVersions"

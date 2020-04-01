@@ -95,7 +95,7 @@ interface ContractPartyDetailRaw<D> {
  * @dev Allows to handle multiple version of a contract
  */
 interface ContractVersionRaw<D> {
-  id: string, // @todo #1887 this should not be editable. rename to version  && cast to INT ? 
+  id: number,
   status: ContractStatus,
   scope: TermsRaw<D>,
   creationDate?: D,
@@ -130,7 +130,9 @@ interface ContractRaw<D> {
    *   we can fetch contracts where partyIds array-contains 'orgId Archipel' and where ContractType = "mandate".
    */
   type: ContractType,
+  /** @dev This array is automatically populated by backend functions */
   parentContractIds?: string[],
+  /** @dev This array is automatically populated by backend functions */
   childContractIds?: string[],
   /** @dev An informative signature date, given that the actual signatures are in parties */
   signDate?: D,

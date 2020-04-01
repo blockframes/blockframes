@@ -6,7 +6,6 @@ import { MatSort } from '@angular/material/sort';
 import { startWith } from 'rxjs/operators';
 import { Contract, getTotalPrice } from '../+state';
 import { MatPaginator } from '@angular/material/paginator';
-import { ContractVersion, getContractLastVersion } from '@blockframes/contract/version/+state';
 import { Price } from '@blockframes/utils/common-interfaces/price';
 import { DistributionDealQuery } from '@blockframes/distribution-deals/+state';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
@@ -80,11 +79,6 @@ export class ContractListComponent implements OnInit, AfterViewInit {
     }
   }
 
-  /** Returns the last version of a given contract. */
-  public getLastVersion(contract: Contract): ContractVersion {
-    return getContractLastVersion(contract);
-  }
-
   /** Returns the conctract licensee name. */
   public getBuyerName(contract: Contract): string {
     const buyer = contract.parties.find(({party}) => party.role === 'licensee').party;
@@ -93,13 +87,12 @@ export class ContractListComponent implements OnInit, AfterViewInit {
 
   /** Returns the total price of the contract. */
   public getContractTotalPrice(contract: Contract): Price {
-    return getTotalPrice(this.getLastVersion(contract).titles);
+    return getTotalPrice(contract.lastVersion.titles);
   }
 
   /** Returns all the eligible territories of the contract. */
   public getContractTerritories(contract: Contract): string[] {
-    const lastVersion = this.getLastVersion(contract);
-    return this.dealQuery.getTerritoriesFromContract(lastVersion);
+    return this.dealQuery.getTerritoriesFromContract(contract.lastVersion);
   }
 
   /** Returns a list of movie's names of the contract. */

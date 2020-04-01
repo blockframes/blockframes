@@ -6,12 +6,12 @@ import { displayPaymentSchedule } from '@blockframes/contract/contract/+state/co
 import { ContractQuery } from '@blockframes/contract/contract/+state/contract.query';
 
 @Component({
-  selector: 'catalog-negociation',
-  templateUrl: './negociation.component.html',
-  styleUrls: ['./negociation.component.scss'],
+  selector: 'catalog-negotiation',
+  templateUrl: './negotiation.component.html',
+  styleUrls: ['./negotiation.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NegociationComponent {
+export class NegotiationComponent {
 
   activeVersion$ = this.query.activeVersion$;
   versionView$ = this.query.activeVersionView$;
@@ -21,7 +21,7 @@ export class NegociationComponent {
   licensees = this.query.getActiveParties('licensee');
   subLicensors$ = this.query.subLicensors$;
 
-  oldVersions$ = this.query.oldVersionsView$;
+  versionsView$ = this.query.versionsView$;
 
   constructor(private query: ContractQuery, private movieQuery: MovieQuery, private intercom: Intercom) { }
 
