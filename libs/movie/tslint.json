@@ -1,17 +1,10 @@
 {
   "extends": "../../tslint.json",
   "rules": {
-    "directive-selector": [
-      true,
-      "attribute",
-      ["movie", "distribution", "catalog"],
-      "camelCase"
-    ],
-    "component-selector": [
-      true,
-      "element",
-      ["movie", "distribution", "catalog"],
-      "kebab-case"
-    ]
+    "directive-selector": [true, "attribute", ["movie", "distribution", "catalog"], "camelCase"],
+    "component-selector": [true, "element", ["movie", "distribution", "catalog"], "kebab-case"]
+  },
+  "linterOptions": {
+    "exclude": ["!**/*"]
   }
 }
