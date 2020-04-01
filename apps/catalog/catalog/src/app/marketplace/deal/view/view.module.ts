@@ -12,7 +12,7 @@ const routes = [{
   component: ViewComponent,
   children: [{
     path: '',
-    loadChildren: () => import('../negociation/negociation.module').then(m => m.NegociationModule)
+    loadChildren: () => import('../negotiation/negotiation.module').then(m => m.NegotiationModule)
   }]
 }]
 

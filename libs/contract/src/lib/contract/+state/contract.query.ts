@@ -11,17 +11,9 @@ import { Party } from '@blockframes/utils/common-interfaces/identity';
 export class ContractQuery extends QueryEntity<ContractState> {
 
   /** There is only one mandate per organization */
-  mandate$ = this.selectEntity((contract: Contract) => contract.type === 'mandate');
-  sales$ = this.selectAll({ filterBy: contract => contract.type === 'sale' });
-
-  // @todo(#1887)
-  // don't look for the last version + move it to version query
-  // Remove filter on _meta id
-  public activeVersion$ = this.selectActive().pipe(
-    filter(contract => !!contract),
-    map(contract => contract.versions.filter(version => version.id !== '_meta')),
-    map(versions => versions[versions.length - 1])
-  );
+  public mandate$ = this.selectEntity((contract: Contract) => contract.type === 'mandate');
+  public sales$ = this.selectAll({ filterBy: contract => contract.type === 'sale' });
+  public activeVersion$ = this.selectActive(contract => contract.lastVersion);
 
   public activeVersionView$ = this.activeVersion$.pipe(
     map(getVersionView),
@@ -34,11 +26,13 @@ export class ContractQuery extends QueryEntity<ContractState> {
     distinctUntilChanged((prev, next) => prev.length === next.length),
     switchMap(titeIds => this.movieQuery.selectMany(titeIds))
   )
-
-  public oldVersionsView$ = this.selectActive().pipe(
+  
+  /**
+   * @dev Listens to all historized versions of the contract except the current version
+   */
+  public versionsView$ = this.selectActive().pipe(
     filter(contract => !!contract),
-    map(contract => contract.versions.filter(version => version.id !== '_meta')),
-    map(versions => versions.filter((_, i) => i !== versions.length - 1)),
+    map(contract => contract.versions.filter((_, i) => i !== contract.lastVersion.id)),
     map(versions => versions.map(getVersionView))
   );
 
@@ -50,10 +44,6 @@ export class ContractQuery extends QueryEntity<ContractState> {
 
   constructor(protected store: ContractStore, private movieQuery: MovieQuery) {
     super(store);
-  }
-
-  getMandate() {
-    this.getEntity((contract: Contract) => contract.type === 'mandate')
   }
 
   /** Returns the contract parties of a given role */

@@ -35,7 +35,9 @@ export class DealComponent implements OnInit {
         return filteredMovie
       }),
       tap(movie => {
-        this.dynTitle.setPageTitle(`${movie.main.title.international}`, 'Exploitation Rights - Create a contract offer')
+        if(movie){
+          this.dynTitle.setPageTitle(`${movie.main.title.international}`, 'Exploitation Rights - Create a contract offer')
+        }
       }))
   }
 

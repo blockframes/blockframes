@@ -1,5 +1,5 @@
 import { getCodeIfExists } from '@blockframes/utils/static-model/staticModels';
-import { createPrice, CommissionBase } from '@blockframes/utils/common-interfaces/price';
+import { createPrice } from '@blockframes/utils/common-interfaces/price';
 import {
   ContractDocumentWithDates,
   ContractTitleDetail,
@@ -12,24 +12,15 @@ import {
 } from './contract.firestore';
 import { createParty } from '@blockframes/utils/common-interfaces/identity';
 import { createImgRef } from '@blockframes/utils/image-uploader';
-import { createTerms } from '@blockframes/utils/common-interfaces/terms';
-import { 
+import {
   ContractVersion,
   ContractVersionWithTimeStamp,
   createContractVersionFromFirestore,
-  getContractLastVersion
+  cleanContractVersion,
+  createContractVersion
 } from '../../version/+state/contract-version.model';
 import { LegalRolesSlug } from '@blockframes/utils/static-model/types';
 import { toDate } from '@blockframes/utils/helpers';
-
-/**
- * @dev this should not be saved to firestore,
- * used only in front
- */
-export interface ContractWithLastVersion { // @TODO (#1887) remove this
-  doc: Contract,
-  last: ContractVersion,
-}
 
 export interface Contract extends ContractDocumentWithDates {
   versions?: ContractVersion[];
@@ -52,33 +43,10 @@ export function createContract(params: Partial<Contract> = {}): Contract {
     parties: [],
     titleIds: [],
     partyIds: [],
-    documents: createContractLegalDocuments(params.documents),
-    lastVersion: createContractVersion(params.lastVersion),
-    ...params
-  };
-}
-
-// @todo(#1887) Move this fatory function into version.model
-export function createContractVersion(params: Partial<ContractVersion> = {}): ContractVersion {
-  return {
-    id: params.id || '1',
-    titles: {},
-    creationDate: new Date(),
-    paymentSchedule: [],
-    status: 'draft',
     ...params,
-    paymentTerm: createTerms(params.paymentTerm),
-    scope: createTerms(params.scope),
-    price: createPrice(params.price)
+    documents: createContractLegalDocuments(params.documents),
+    lastVersion: createContractVersion(params.lastVersion)
   };
-}
-
-/**
- * @description create a contract version specific to mandate
- * @param params
- */
-export function createVersionMandate(params: Partial<ContractVersion> = {}) {
-  return createContractVersion({ price: { amount: 0 }, ...params })
 }
 
 export function createPublicContract(params: Partial<PublicContract> = {}): PublicContract {
@@ -109,13 +77,6 @@ export function createContractPartyDetail(
     childRoles: [],
     ...params,
     party: createParty(params.party),
-  };
-}
-
-export function initContractWithVersion(): ContractWithLastVersion {
-  return {
-    doc: createContract(),
-    last: createContractVersion()
   };
 }
 
@@ -174,10 +135,12 @@ export function buildChainOfTitle() {
 /** Cleans an organization of its optional parameters */
 export function cleanContract(contract: Contract) {
   const c = { ...contract };
-  delete c.versions; // Remove local values
-  delete c.lastVersion // @TODO (#1887) remove this once code migration ok
+  delete c.versions; // Remove akita values
   if (!c.signDate) {
     delete c.signDate;
+  }
+  if (!!c.lastVersion) {
+    c.lastVersion = cleanContractVersion(c.lastVersion);
   }
   return c;
 }
@@ -212,9 +175,8 @@ export function createContractFromFirestore(contract: any): Contract {
       : []
   }
 
-  // @todo(#1887)
-  if (contract.versions) {
-    c.versions = contract.versions.map(version => createContractVersionFromFirestore(version));
+  if(contract.lastVersion){
+    c.lastVersion = createContractVersionFromFirestore(contract.lastVersion);
   }
 
   return c;
@@ -280,13 +242,11 @@ export function isContractSignatory(contract: Contract, organizationId: string):
   })
 }
 
-
-
 /**
  * Returns only the validated contracts.
  * @param contracts
  */
 export function getValidatedContracts(contracts: Contract[]): Contract[] {
   const validStatus = 'paid' || 'waitingpayment' || 'accepted';
-  return contracts.filter(contract => getContractLastVersion(contract).status === validStatus)
+  return contracts.filter(contract => contract.lastVersion.status === validStatus)
 }

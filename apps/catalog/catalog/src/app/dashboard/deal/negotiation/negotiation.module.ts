@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { NegociationComponent } from './negociation.component';
+import { NegotiationComponent } from './negotiation.component';
 
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
@@ -18,7 +18,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatExpansionModule } from '@angular/material/expansion';
 
 @NgModule({
-  declarations: [NegociationComponent],
+  declarations: [NegotiationComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
@@ -35,8 +35,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
     MatListModule,
     MatExpansionModule,
     // Router
-    RouterModule.forChild([{ path: '', component: NegociationComponent }])
+    RouterModule.forChild([{ path: '', component: NegotiationComponent }])
   ],
-  exports: [NegociationComponent]
+  exports: [NegotiationComponent]
 })
-export class NegociationModule { }
+export class NegotiationModule { }

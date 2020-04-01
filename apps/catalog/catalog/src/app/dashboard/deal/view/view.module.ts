@@ -36,7 +36,7 @@ const routes = [
       {
         path: '',
         loadChildren: () =>
-          import('../negociation/negociation.module').then(m => m.NegociationModule)
+          import('../negotiation/negotiation.module').then(m => m.NegotiationModule)
       }
     ]
   }
