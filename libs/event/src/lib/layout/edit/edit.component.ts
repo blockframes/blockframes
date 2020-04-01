@@ -1,7 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { EventForm } from '../../form/event.form';
-import { Event } from '../../+state/event.model';
 import { EventService } from '@blockframes/event/+state/event.service';
 
 @Component({
@@ -12,11 +11,7 @@ import { EventService } from '@blockframes/event/+state/event.service';
 })
 export class EventEditComponent {
 
-  form = new EventForm();
-
-  @Input() set event(event: Event) {
-    this.form.patchAllValue(event);
-  }
+  @Input() form = new EventForm();
 
   constructor(
     private service: EventService,

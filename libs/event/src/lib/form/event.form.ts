@@ -1,4 +1,4 @@
-import { FormEntity, FormList } from '@blockframes/utils/form';
+import { FormEntity } from '@blockframes/utils/form';
 import { Event, createEvent, isMeeting, createMeeting, createScreening, isScreening } from '../+state/event.model';
 import { FormControl, FormGroup } from '@angular/forms';
 import { Meeting, Screening } from '../+state/event.firestore';
@@ -57,7 +57,7 @@ export class MeetingForm extends FormEntity<MeetingControl, Meeting> {
 export function createScreeningControl(params?: Partial<Screening>) {
   const screening = createScreening(params);
   return {
-    titleIds: new FormControl(screening.titleIds)
+    titleId: new FormControl(screening.titleId)
   }
 }
 

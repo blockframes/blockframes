@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
+import { ToLabelModule } from '@blockframes/utils/pipes/to-label.module';
 
 import { MainComponent } from './main.component';
 
@@ -20,6 +21,7 @@ import { MatChipsModule } from '@angular/material/chips';
     CommonModule,
     FlexLayoutModule,
     TranslateSlugModule,
+    ToLabelModule,
     ImageReferenceModule,
     // Material
     MatCardModule,

@@ -93,6 +93,7 @@
     .cal-event {
       background-color: mat-color($background, card);
       color: mat-color($foreground, text);
+      padding: 0;
     }
   }
 }
