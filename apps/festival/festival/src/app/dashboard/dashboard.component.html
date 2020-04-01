@@ -1,25 +1,37 @@
 <mat-sidenav-container>
   <mat-sidenav #sidenav id="dashboard-navbar" [attr.role]="(ltMd$ | async) ? 'dialog' : 'navigation'"
     [mode]="(ltMd$ | async) ? 'over' : 'side'" [opened]="(ltMd$ | async) === false">
-    <mat-toolbar>
-      <a class="logo" routerLink=".">
-        <img src="assets/logo/dark/festival.svg" alt="Archipel Content Logo" />
-      </a>
-    </mat-toolbar>
-    <mat-nav-list>
-      <a mat-list-item routerLink="home" routerLinkActive="active">
-        <mat-icon matListIcon svgIcon="dashboard"></mat-icon>
-        <span matLine><b>Dashboard</b></span>
-      </a>
-      <a mat-list-item routerLink="title" routerLinkActive="active">
-        <mat-icon matListIcon svgIcon="video_library"></mat-icon>
-        <span matLine><b>My Titles</b></span>
-      </a>
-      <a mat-list-item routerLink="event" routerLinkActive="active">
-        <mat-icon matListIcon svgIcon="calendar"></mat-icon>
-        <span matLine><b>My Schedule</b></span>
-      </a>
-    </mat-nav-list>
+    <aside fxLayout="column"> <!-- We need another layer because mat-sidenav is not a direct parent -->
+      <mat-toolbar>
+        <a class="logo" routerLink=".">
+          <img src="assets/logo/dark/festival.svg" alt="Archipel Content Logo" />
+        </a>
+      </mat-toolbar>
+      <mat-nav-list fxFlex>
+        <a mat-list-item routerLink="home" routerLinkActive="active">
+          <mat-icon matListIcon svgIcon="dashboard"></mat-icon>
+          <span matLine><b>Dashboard</b></span>
+        </a>
+        <a mat-list-item routerLink="title" routerLinkActive="active">
+          <mat-icon matListIcon svgIcon="video_library"></mat-icon>
+          <span matLine><b>My Titles</b></span>
+        </a>
+        <a mat-list-item routerLink="event" routerLinkActive="active">
+          <mat-icon matListIcon svgIcon="calendar"></mat-icon>
+          <span matLine><b>My Schedule</b></span>
+        </a>
+      </mat-nav-list>
+      <mat-nav-list *ngIf="org$ | async as org">
+        <mat-divider></mat-divider>
+        <a mat-list-item [routerLink]="['/c/o/organization', org.id]" routerLinkActive="active">
+          <img matListAvatar [imgRef]="org.logo" alt="Organization logo"/>
+          <span matLine>{{ org.denomination.full }}</span>
+          <span matLine>
+            <small class="mat-caption">{{ org.activity }}</small>
+          </span>
+        </a>
+      </mat-nav-list>
+    </aside>
   </mat-sidenav>
 
 
