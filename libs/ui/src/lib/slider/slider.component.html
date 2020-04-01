@@ -1,5 +1,5 @@
 <div class="slide-wrapper" [ngStyle]="slideWrapperStyle" #wrapper>
-  <ul class="slide-inner" #slideList>
+  <ul class="slide-list" #slideList>
     <li *ngFor="let image of slides" class="slide-item">
       <ng-container [ngTemplateOutlet]="image.templateRef"></ng-container>
     </li>

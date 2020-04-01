@@ -17,13 +17,10 @@ import {
   AfterViewInit,
   QueryList,
   ContentChildren,
-  ViewChildren,
   ElementRef,
-  ViewChild,
-  TemplateRef
+  ViewChild
 } from '@angular/core';
 import { AnimationBuilder } from '@angular/animations';
-
 
 @Component({
   selector: 'bf-slider',
@@ -33,7 +30,15 @@ import { AnimationBuilder } from '@angular/animations';
 })
 export class SliderComponent implements OnInit, OnDestroy, AfterViewInit, Slider {
 
+  //////////////////
+  // Public Vars //
+  ////////////////
+
   public theme: Slider['theme']
+
+  /////////////
+  // Inputs //
+  ///////////
 
   @Input() timing: Slider['timing'] = '250ms ease-in';
 
@@ -51,7 +56,6 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit, Slider
 
   @Input() arrowForward: Slider['arrowForward'] = 'arrow_forward'
 
-  private _swipe: Slider['swipe'];
   @Input()
   get swipe() {
     return this._swipe;
@@ -60,7 +64,6 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit, Slider
     this._swipe = value
   }
 
-  private _loop: Slider['loop']
   @Input()
   get loop() {
     return this._loop;
@@ -69,7 +72,6 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit, Slider
     this._loop = value
   }
 
-  private _autoplay: Slider['autoplay'];
   @Input()
   get autoplay() {
     return this._autoplay
@@ -78,9 +80,20 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit, Slider
     this._autoplay = coerceBooleanProperty(value)
   }
 
+  ///////////////////
+  // Private Vars //
+  /////////////////
+
+  private _swipe: Slider['swipe'];
+  private _autoplay: Slider['autoplay'];
+  private _loop: Slider['loop']
   private themeSub: Subscription;
 
-  @ContentChildren(SlideComponent, {descendants: true}) public slides: QueryList<SlideComponent>;
+  ///////////////////////
+  // Template Actions //
+  /////////////////////
+
+  @ContentChildren(SlideComponent, { descendants: true }) public slides: QueryList<SlideComponent>;
 
   @ViewChild('wrapper') private slideWrapper: ElementRef<HTMLDivElement>;
 
@@ -94,16 +107,10 @@ export class SliderComponent implements OnInit, OnDestroy, AfterViewInit, Slider
     })
   }
 
-
-  ngOnInit() {
-  }
+  ngOnInit() { }
 
   ngAfterViewInit() {
     console.log(this.slides)
-    /*     this.itemWidth = this.slidesList.first.getBoundingClientRect().width;
-        this.slideWrapperStyle = {
-          width: `${this.itemWidth}px`
-        } */
   }
 
   ngOnDestroy() {

@@ -1,12 +1,25 @@
-.carousel-wrapper {
+.slide-wrapper {
+    width: 100%;
+    position: relative;
     overflow: hidden;
+    outline: none;
+
+    &-list {
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+        display: flex;
+        position: relative;
+    }
 }
-.carousel {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    width: 6000px;
+
+@mixin centerX() {
+    left: 50%;
+    transform: translateX(-50%);
 }
-.carousel-inner {
-    display: flex;
+
+@mixin centerY() {
+    top: 50%;
+    transform: translateY(-50%);
 }

@@ -1,10 +1,8 @@
 <ng-template>
-  <div class="carousel-slide" [style.background-image]="image">
-    <div class="carousel-slide-content">
+  <div class="slide-img" [style.background-image]="image">
+    <div class="slide-overlay">
       <ng-content></ng-content>
     </div>
-    <div
-      *ngIf="!hideOverlay"
-    ></div>
+    <div *ngIf="!hideOverlay"></div>
   </div>
 </ng-template>

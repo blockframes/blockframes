@@ -1,0 +1,13 @@
+@mixin frame($z-index: auto) {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    z-index: $z-index;
+}
+
+.slide-img {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    @include frame();
+}
