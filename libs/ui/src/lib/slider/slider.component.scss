@@ -1,3 +1,13 @@
+@mixin centerX() {
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+@mixin centerY() {
+    top: 50%;
+    transform: translateY(-50%);
+}
+
 .slide-wrapper {
     width: 100%;
     position: relative;
@@ -7,19 +17,30 @@
     &-list {
         width: 100%;
         margin: 0;
-        padding: 0;
         list-style: none;
         display: flex;
         position: relative;
+        flex-shrink: 0;
+
+        &:hover {
+            cursor: grab;
+        }
     }
-}
 
-@mixin centerX() {
-    left: 50%;
-    transform: translateX(-50%);
-}
+    &-indicators {
+        display: flex;
+        position: absolute;
+        bottom: 15px;
+        z-index: 1;
+        @include centerX();
+        outline: none;
+    }
 
-@mixin centerY() {
-    top: 50%;
-    transform: translateY(-50%);
+    li {
+        height: 100%;
+    }
+
+    mat-icon {
+        margin: 7.5px;
+    }
 }

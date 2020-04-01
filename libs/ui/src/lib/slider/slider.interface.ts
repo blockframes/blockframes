@@ -12,11 +12,11 @@ export interface Slider {
     hideArrows: boolean;
     hideIndicators: boolean;
 
-    //Apperance
-    ratio: '1:1' | '6:5' | '5:4' | '4:3' | '2:1' | '16:9';
+    //Appearance
+    maxWidth: string;
+    ratio: '1:1' | '16:9' | '4:3' | '3:2' | '8:5';
     loop: boolean;
     slideDirection: 'ltr' | 'rtl',
-    theme: 'light' | 'dark';
     arrowBack: string;
     arrowForward: string;
 }

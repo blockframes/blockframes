@@ -1,7 +1,7 @@
 import { SliderComponent } from './slider.component';
 import { SliderModule } from './slider.module';
 import { ToolkitModule } from '@blockframes/ui/storybook';
-import { boolean, array } from '@storybook/addon-knobs';
+import { boolean, array, text } from '@storybook/addon-knobs';
 
 export default {
   title: 'Bf Slider'
@@ -26,6 +26,7 @@ export const bfSlider = () => ({
     autoplay: boolean('autoplay', true),
     loop: boolean('loop', true),
     images: array('images', ['https://via.placeholder.com/600/24f355', 'https://via.placeholder.com/600/24f354']),
-    swipe: boolean('swipe', true)
+    swipe: boolean('swipe', true),
+    ratio: text('ratio', '3:2')
   }
 });
