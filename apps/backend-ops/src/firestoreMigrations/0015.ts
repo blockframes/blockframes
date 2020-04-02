@@ -1,11 +1,11 @@
 import { Firestore } from '../admin';
 
-
 /**
- * Update user and organization in notifications collection
+ * Update user and organization in notifications and invitations collections
  */
-export async function updateNotifications(db: Firestore) {
+export async function upgrade(db: Firestore) {
   const notifications = await db.collection('notifications').get();
+  const invitations = await db.collection('invitations').get();
   const batch = db.batch();
 
   notifications.docs.forEach(doc => {
@@ -18,29 +18,18 @@ export async function updateNotifications(db: Firestore) {
     }
   });
 
-  await batch.commit();
-  console.log('Updating notifications collection done.');
-}
-
-/**
- * Update user and organization in invitations collection
- */
-export async function updateInvitations(db: Firestore) {
-  const notifications = await db.collection('invitations').get();
-  const batch = db.batch();
-
-  notifications.docs.forEach(doc => {
-    const notification = doc.data();
-    const { organization, user } = notification;
+  invitations.docs.forEach(doc => {
+    const invitation = doc.data();
+    const { organization, user } = invitation;
 
     if (organization || user) {
-      const newData = updateUserAndOrganization(notification);
+      const newData = updateUserAndOrganization(invitation);
       return batch.set(doc.ref, newData);
     }
   });
 
   await batch.commit();
-  console.log('Updating invitations collection done.');
+  console.log('Updating notifications and invitatins collections done.');
 }
 
 /**
@@ -51,6 +40,7 @@ function updateUserAndOrganization(document: any) {
   const { organization, user } = document;
 
   if (organization && user) {
+
     delete document.organization.name;
     delete document.user.name;
     delete document.user.surname;
@@ -58,16 +48,18 @@ function updateUserAndOrganization(document: any) {
     const newData = {
       ...document,
       organization: {
+        ...document.organization,
         denomination: {
-          full: document.organization.name,
-          public: document.organization.name
+          full: organization.name ? organization.name : 'main',
+          public: organization.name ? organization.name : 'main'
         }
       },
       user: {
-        firstName: document.user.name,
-        lastName: document.user.surname
+        firstName: user.name ? user.name : 'First Name',
+        lastName: user.surname ? user.lastName : 'Last Name'
       }
     };
+
     return newData;
   }
 
@@ -78,12 +70,14 @@ function updateUserAndOrganization(document: any) {
     const newData = {
       ...document,
       organization: {
+        ...document.organization,
         denomination: {
-          full: document.organization.name,
-          public: document.organization.name
+          full: organization.name ? organization.name : 'main',
+          public: organization.name ? organization.name : 'main'
         }
       }
     };
+
     return newData;
   }
 }
