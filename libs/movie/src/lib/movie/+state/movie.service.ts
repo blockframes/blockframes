@@ -104,7 +104,6 @@ export class MovieService extends CollectionService<MovieState> {
    * Fetch a movie from its internal reference (example : AAA1)
    * @param internalRef
    */
-  // @TODO #1389 Use native akita-ng-fire functions
   public async getFromInternalRef(internalRef: string): Promise<Movie> {
     const movies = await this.getValue(ref => ref.where('main.internalRef', '==', internalRef))
 
@@ -121,7 +120,6 @@ export class MovieService extends CollectionService<MovieState> {
    * @dev ADMIN method
    * Fetch all movies for administration uses
    */
-  // @TODO #1389 Use native akita-ng-fire functions
   public async getAllMovies(): Promise<Movie[]> {
     const movies = await this.getValue()
 

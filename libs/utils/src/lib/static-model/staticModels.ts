@@ -8,7 +8,7 @@ const models = {
     { 'slug': 'horror', 'label': 'Horror' },
     { 'slug': 'science-fiction', 'label': 'Science Fiction' },
     { 'slug': 'thriller', 'label': 'Thriller' },
-    { 'slug': 'coming-of-age', 'label': 'Coming of Age' },
+    { 'slug': 'coming-of-age', 'label': 'Young Adult' },
     { 'slug': 'fantasy', 'label': 'Fantasy' },
     { 'slug': 'romance', 'label': 'Romance' },
     { 'slug': 'western', 'label': 'Western' },
