@@ -58,6 +58,7 @@ export class TitleListComponent implements OnInit, OnDestroy {
   filter = new FormControl();
   filter$ = this.filter.valueChanges.pipe(startWith(this.filter.value));
   public allMovies$ = this.query.selectAll();
+  public allMoviesLoading$ = this.query.selectLoading();
 
   private sub: Subscription;
 
