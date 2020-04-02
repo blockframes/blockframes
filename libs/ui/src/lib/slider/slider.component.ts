@@ -11,7 +11,6 @@ import { Slider } from './slider.interface';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
   Component,
-  OnInit,
   Input,
   ChangeDetectionStrategy,
   OnDestroy,
@@ -42,7 +41,7 @@ enum Direction {
   styleUrls: ['./slider.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SliderComponent implements OnInit, OnDestroy, AfterContentInit, AfterViewInit, Slider {
+export class SliderComponent implements OnDestroy, AfterContentInit, AfterViewInit, Slider {
 
   //////////////////
   // Public Vars //
@@ -58,8 +57,6 @@ export class SliderComponent implements OnInit, OnDestroy, AfterContentInit, Aft
 
   @Input() timing: Slider['timing'] = '250ms ease-in';
 
-  @Input() interval: Slider['interval'] = 3;
-
   @Input() hideArrows: Slider['hideArrows'] = false;
 
   @Input() ratio: Slider['ratio'] = '16:9';
@@ -69,6 +66,12 @@ export class SliderComponent implements OnInit, OnDestroy, AfterContentInit, Aft
   @Input() arrowBack: Slider['arrowBack'] = 'arrow_back';
 
   @Input() arrowForward: Slider['arrowForward'] = 'arrow_forward'
+
+  // Milliseconds
+  @Input()
+  set interval(value: Slider['interval']) {
+    this.interval$.next(value)
+  };
 
   @Input()
   get slideDirection() { return this._slideDirection }
@@ -106,12 +109,14 @@ export class SliderComponent implements OnInit, OnDestroy, AfterContentInit, Aft
   }
   set autoplay(value) {
     this._autoplay = coerceBooleanProperty(value)
+    this.autoplay$.next(value);
   }
 
   ///////////////////
   // Private Vars //
   /////////////////
 
+  // Can swipe to next slide
   private _swipe: Slider['swipe'];
 
   private _autoplay: Slider['autoplay'];
@@ -120,10 +125,13 @@ export class SliderComponent implements OnInit, OnDestroy, AfterContentInit, Aft
   private _loop: Slider['loop'];
   private loop$ = new Subject<boolean>();
 
+  // Milliseconds that should pass until the next slide comes
   private interval$ = new BehaviorSubject<number>(5000);
 
+  // Holds the current index of the slide
   private slides$ = new BehaviorSubject<number>(null);
 
+  // Tracks the time for interval$
   private timer$: Observable<number>;
   private timerStop$ = new Subject<never>();
 
@@ -143,7 +151,7 @@ export class SliderComponent implements OnInit, OnDestroy, AfterContentInit, Aft
   // Template Actions //
   /////////////////////
 
-  @ContentChildren(SlideComponent, { descendants: true }) public slides: QueryList<SlideComponent>;
+  @ContentChildren(SlideComponent, { descendants: true }) slides: QueryList<SlideComponent>;
 
   @ViewChild('wrapper') private slideWrapper: ElementRef<HTMLDivElement>;
 
@@ -158,8 +166,6 @@ export class SliderComponent implements OnInit, OnDestroy, AfterContentInit, Aft
       this.theme = theme
     })
   }
-
-  ngOnInit() { }
 
   ngAfterViewInit() {
     this.calculateRatio();
@@ -206,11 +212,11 @@ export class SliderComponent implements OnInit, OnDestroy, AfterContentInit, Aft
   // Getters //
   ////////////
 
-  get getWidth(): number {
+  get getWidth() {
     return this.slideWrapper.nativeElement.clientWidth;
   }
 
-  get currentIndex(): number {
+  get currentIndex() {
     if (this.listKeyManager) {
       return this.listKeyManager.activeItemIndex;
     }
@@ -243,12 +249,11 @@ export class SliderComponent implements OnInit, OnDestroy, AfterContentInit, Aft
     this.startTimer(this._autoplay);
   }
 
-  @HostListener('mousewheel', ['$event'])
+  @HostListener('wheel', ['$event'])
   public onMouseWheel(event: MouseWheelEvent) {
     if (this.swipe) {
       event.preventDefault(); // prevent window to scroll
-      const delta = Math.sign(event.DOM_DELTA_LINE);
-
+      const delta = Math.sign(event.deltaY);
       if (delta < 0) {
         this.next();
       } else if (delta > 0) {
@@ -270,11 +275,11 @@ export class SliderComponent implements OnInit, OnDestroy, AfterContentInit, Aft
   // Private Functions //
   //////////////////////
 
-  private resetSlides(slides: number): void {
-    this.slides.reset(this.slides.toArray().slice(0, slides));
+  private resetSlides(index: number) {
+    this.slides.reset(this.slides.toArray().slice(0, index));
   }
 
-  private goto(direction: Direction, index?: number): void {
+  private goto(direction: Direction, index?: number) {
     if (!this.playing) {
       const rtl = this.slideDirection === 'rtl';
 
@@ -289,6 +294,8 @@ export class SliderComponent implements OnInit, OnDestroy, AfterContentInit, Aft
             : this.listKeyManager.setNextItemActive();
         case Direction.Index:
           return this.listKeyManager.setActiveItem(index);
+        default:
+          break;
       }
     }
   }
@@ -364,7 +371,7 @@ export class SliderComponent implements OnInit, OnDestroy, AfterContentInit, Aft
     }
   }
 
-  private playAnimation(): void {
+  private playAnimation() {
 
     const translation = this.getTranslation(this.getOffset());
 

@@ -1,5 +1,6 @@
+import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Slide } from './slide.interface';
-import { DomSanitizer, SafeStyle } from '@angular/platform-browser';
+import { DomSanitizer } from '@angular/platform-browser';
 import { Component, OnInit, Input, ViewChild, TemplateRef } from '@angular/core';
 import { ListKeyManagerOption } from '@angular/cdk/a11y';
 
@@ -12,13 +13,19 @@ export class SlideComponent implements OnInit, ListKeyManagerOption, Slide {
 
   @Input() image: Slide['image'];
 
-  @Input() overlayColor: Slide['overlayColor'];
+  @Input() overlayColor: Slide['overlayColor'] = '#00000040';
 
-  @Input() hideOverlay: Slide['hideOverlay'];
-  
-  @Input() public disabled = false; // implements ListKeyManagerOption
+  @Input()
+  get hideOverlay() { return this._hideOverlay }
+  set hideOverlay(value) {
+    this._hideOverlay = coerceBooleanProperty(value);
+  }
 
-  @ViewChild(TemplateRef) public templateRef: TemplateRef<any>;
+  @Input() disabled = false; // implements ListKeyManagerOption
+
+  private _hideOverlay: Slide['hideOverlay'];
+
+  @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
 
   constructor(private sanitizer: DomSanitizer) { }
 

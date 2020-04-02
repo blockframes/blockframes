@@ -1,14 +1,4 @@
-@mixin centerX() {
-    left: 50%;
-    transform: translateX(-50%);
-}
-
-@mixin centerY() {
-    top: 50%;
-    transform: translateY(-50%);
-}
-
-.slide-wrapper {
+.slide {
     width: 100%;
     position: relative;
     overflow: hidden;
@@ -17,14 +7,25 @@
     &-list {
         width: 100%;
         margin: 0;
+        padding: 0;
         list-style: none;
         display: flex;
         position: relative;
-        flex-shrink: 0;
+    }
 
-        &:hover {
-            cursor: grab;
-        }
+    &-item {
+        width: 100%;
+        height: 600px;
+        display: flex;
+        position: relative;
+        flex-shrink: 0;
+    }
+
+    & > button {
+        position: absolute;
+        z-index: 1;
+        top: 50%;
+        transform: translateY(-50%);
     }
 
     &-indicators {
@@ -32,15 +33,28 @@
         position: absolute;
         bottom: 15px;
         z-index: 1;
-        @include centerX();
+        left: 50%;
+        transform: translateX(-50%);
         outline: none;
     }
 
-    li {
-        height: 100%;
+    button {
+        margin: 0 20px;
+        width: 1rem;
+        height: 1rem;
     }
+}
 
-    mat-icon {
-        margin: 7.5px;
-    }
+.previous {
+    left: 30px;
+}
+
+.next {
+    right: 30px;
+}
+
+/// Margin needs to be overriden because in the global
+// style scss there is a default margin setted
+span {
+    margin: 0;
 }
