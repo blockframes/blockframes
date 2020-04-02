@@ -23,6 +23,6 @@
   <span *ngIf="!hideIndicators" class="slide-indicators" tabindex="-1"
     [style.flex-direction]="slideDirection === 'rtl' ? 'row-reverse' : 'row'">
     <button *ngFor="let slide of slides; let i = index" type="button" tabindex="-1" mat-mini-fab
-      [disabled]="i == currentIndex" (click)="slideTo(i)" (focus)="wrapper.focus()"></button>
+      [disabled]="i === currentIndex" (click)="slideTo(i)"></button>
   </span>
 </div>

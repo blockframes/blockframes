@@ -20,7 +20,8 @@ export const bfSlider = () => ({
     [swipe]="swipe"
     [ratio]="ratio"
     [interval]="interval"
-    [hideIndicators]="hideIndicators">
+    [hideIndicators]="hideIndicators"
+    [timing]="timing">
       <ng-container *ngFor="let image of images">
         <bf-slide 
         [image]="image" 
@@ -50,11 +51,11 @@ export const bfSlider = () => ({
     ]),
     swipe: boolean('swipe', true),
     ratio: text('ratio', ''),
-    interval: number('interval', 5000),
-    timing: text('timing', "350 ease-in"),
+    interval: number('interval', 1000),
+    timing: text('timing', "550ms ease-in"),
     hideArrows: boolean('hideArrows', false),
     hideIndicators: boolean('hideIndicators', false),
-    slideDirection: text('slideDirection', 'ltr'),
+    slideDirection: text('slideDirection', 'rtl'),
     hideOverlay: boolean('hideOverlay', false),
     overlayColor: text('overlayColor', '#00000080')
   }

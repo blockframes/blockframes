@@ -12,7 +12,6 @@ import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import {
   Component,
   Input,
-  ChangeDetectionStrategy,
   OnDestroy,
   AfterContentInit,
   QueryList,
@@ -39,7 +38,11 @@ enum Direction {
   selector: 'bf-slider',
   templateUrl: './slider.component.html',
   styleUrls: ['./slider.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  /**
+   *   Dont set the changeDetection to OnPush.
+   * Otherwise the button indicators won't update itself
+   * with the current index
+   */
 })
 export class SliderComponent implements OnDestroy, AfterContentInit, AfterViewInit, Slider {
 
@@ -55,13 +58,9 @@ export class SliderComponent implements OnDestroy, AfterContentInit, AfterViewIn
   // Inputs //
   ///////////
 
-  @Input() timing: Slider['timing'] = '250ms ease-in';
-
-  @Input() hideArrows: Slider['hideArrows'] = false;
+  @Input() timing: Slider['timing'] = '550ms ease-in';
 
   @Input() ratio: Slider['ratio'] = '16:9';
-
-  @Input() hideIndicators: Slider['hideIndicators'] = false;
 
   @Input() arrowBack: Slider['arrowBack'] = 'arrow_back';
 
@@ -72,6 +71,18 @@ export class SliderComponent implements OnDestroy, AfterContentInit, AfterViewIn
   set interval(value: Slider['interval']) {
     this.interval$.next(value)
   };
+
+  @Input()
+  get hideIndicators() { return this._hideIndicators; }
+  set hideIndicators(value) {
+    this._hideIndicators = coerceBooleanProperty(value);
+  }
+
+  @Input()
+  get hideArrows() { return this._hideArrows; }
+  set hideArrows(value) {
+    this._hideArrows = coerceBooleanProperty(value);
+  }
 
   @Input()
   get slideDirection() { return this._slideDirection }
@@ -87,26 +98,19 @@ export class SliderComponent implements OnDestroy, AfterContentInit, AfterViewIn
     this.maxWidth$.next();
   }
 
-  @Input()
-  get swipe() {
-    return this._swipe;
-  }
+  @Input() get swipe() { return this._swipe }
   set swipe(value) {
     this._swipe = value
   }
 
   @Input()
-  get loop() {
-    return this._loop;
-  }
+  get loop() { return this._loop; }
   set loop(value) {
     this._loop = value
   }
 
   @Input()
-  get autoplay() {
-    return this._autoplay
-  }
+  get autoplay() { return this._autoplay; }
   set autoplay(value) {
     this._autoplay = coerceBooleanProperty(value)
     this.autoplay$.next(value);
@@ -115,6 +119,10 @@ export class SliderComponent implements OnDestroy, AfterContentInit, AfterViewIn
   ///////////////////
   // Private Vars //
   /////////////////
+
+  private _hideIndicators: Slider['hideIndicators'] = false;
+
+  private _hideArrows: Slider['hideArrows'] = false;
 
   // Can swipe to next slide
   private _swipe: Slider['swipe'];
@@ -372,9 +380,7 @@ export class SliderComponent implements OnDestroy, AfterContentInit, AfterViewIn
   }
 
   private playAnimation() {
-
     const translation = this.getTranslation(this.getOffset());
-
     const factory = this.animationBuilder.build(
       animate(this.timing, style({ transform: translation }))
     );
