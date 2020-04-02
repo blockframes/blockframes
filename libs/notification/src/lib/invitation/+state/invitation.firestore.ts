@@ -30,7 +30,7 @@ export interface InvitationToWorkOnDocument extends Invitation {
   /** @dev TitleId for example*/
   docId: string;
   /**
-   *  @TODO (#244) should rename to better understand
+   *  @TODO (#2244) should rename to better understand
    * who is inviting and who is invited.
    */
   organization: PublicOrganization;
@@ -63,7 +63,7 @@ export interface InvitationToAnEvent extends Invitation {
 export interface InvitationFromOrganizationToUser extends Invitation {
   type: 'fromOrganizationToUser';
   /**
-   *  @TODO (#244) should rename to better understand
+   *  @TODO (#2244) should rename to better understand
    * who is inviting and who is invited.
    */
   user: PublicUser;
@@ -74,7 +74,7 @@ export interface InvitationFromOrganizationToUser extends Invitation {
 export interface InvitationFromUserToOrganization extends Invitation {
   type: 'fromUserToOrganization';
   /**
-   *  @TODO (#244) should rename to better understand
+   *  @TODO (#2244) should rename to better understand
    * who is inviting and who is invited.
    */
   user: PublicUser;

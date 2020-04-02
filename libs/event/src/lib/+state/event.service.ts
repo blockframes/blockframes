@@ -54,7 +54,7 @@ export class EventService extends CollectionService<EventState> {
   }
 
   /**
-   * Set event private url
+   * Get event private url
    * @param eventId 
    * @param userId 
    */
