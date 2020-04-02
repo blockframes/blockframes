@@ -14,8 +14,8 @@ import { AngularFirestore } from '@angular/fire/firestore';
 })
 export class IdentityComponent {
   public form = new FormGroup({
-    name: new FormControl(''),
-    surname: new FormControl(''),
+    firstName: new FormControl(''),
+    lastName: new FormControl(''),
     email: new FormControl({ value: this.query.user.email, disabled: true }, Validators.email),
     generatedPassword: new FormControl(''),
     newPassword: new PasswordControl()
