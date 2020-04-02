@@ -56,8 +56,8 @@ export class LoginComponent implements OnInit {
       return;
     }
     try {
-      const { email, password, name, surname } = signupForm.value;
-      await this.service.signup(email, password, { ctx: { name, surname } });
+      const { email, password, firstName, lastName } = signupForm.value;
+      await this.service.signup(email, password, { ctx: { firstName, lastName } });
       this.router.navigate(['c']);
     } catch (err) {
       console.error(err); // let the devs see what happened

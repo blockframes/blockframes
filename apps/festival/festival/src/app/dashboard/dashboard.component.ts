@@ -5,7 +5,7 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { SearchResult } from '@blockframes/ui/search-widget/search-widget.component';
 import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
-
+import { OrganizationQuery } from '@blockframes/organization/organization/+state';
 // RxJs
 import { Observable } from 'rxjs';
 
@@ -17,6 +17,7 @@ import { Observable } from 'rxjs';
 })
 export class DashboardComponent {
   searchCtrl: FormControl = new FormControl('');
+  org$ = this.orgQuery.selectActive();
 
   ltMd$ = this.breakpointsService.ltMd;
 
@@ -25,5 +26,8 @@ export class DashboardComponent {
   /**MovieAlgoliaResult Algolia search results */
   public algoliaSearchResults$: Observable<SearchResult[]>;
 
-  constructor(private breakpointsService: BreakpointsService) { }
+  constructor(
+    private breakpointsService: BreakpointsService,
+    private orgQuery: OrganizationQuery
+  ) { }
 }

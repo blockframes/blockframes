@@ -2,17 +2,17 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { MembersComponent } from './members.component';
+import { MemberComponent } from './member.component';
 import { UserCardModule } from '@blockframes/user/components/card/card.module';
 
 
 @NgModule({
-  declarations: [MembersComponent],
+  declarations: [MemberComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
     UserCardModule,
-    RouterModule.forChild([{ path: '', component: MembersComponent }])
+    RouterModule.forChild([{ path: '', component: MemberComponent }])
   ]
 })
-export class OrganizationMembersModule { }
+export class OrganizationMemberModule { }

@@ -6,13 +6,13 @@ import { MovieService, MovieStore, MovieQuery } from '@blockframes/movie/+state'
 import { scaleIn } from '@blockframes/utils/animations/fade';
 
 @Component({
-  selector: 'festival-marketplace-organization-titles',
-  templateUrl: './titles.component.html',
-  styleUrls: ['./titles.component.scss'],
+  selector: 'festival-marketplace-organization-title',
+  templateUrl: './title.component.html',
+  styleUrls: ['./title.component.scss'],
   animations: [scaleIn],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TitlesComponent implements OnInit, OnDestroy {
+export class TitleComponent implements OnInit, OnDestroy {
   @HostBinding('@scaleIn') private animePage;
   private sub: Subscription;
   public titles$ = this.query.selectAll();

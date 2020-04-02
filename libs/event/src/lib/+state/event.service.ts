@@ -26,10 +26,12 @@ export class EventService extends CollectionService<EventState> {
 
   formatToFirestore(event: Event) {
     const e = { ...event };
+    // Remove frontend values
     delete e.draggable;
     delete e.resizable;
     delete e.color;
     delete e.cssClass;
+    delete e.isOwner;
     return e;
   }
 

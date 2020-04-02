@@ -89,7 +89,7 @@ export class CalendarWeekComponent {
     if (!this.editable) {
       return;
     }
-    const lcoalEvent: CalendarEvent = createEvent({
+    const localEvent: CalendarEvent = createEvent({
       id: this.service['db'].createId(),
       ownerId: this.authQuery.userId,
       title: 'New event',
@@ -97,14 +97,14 @@ export class CalendarWeekComponent {
       end: addMinutes(segment.date, 30),
       type: 'local'
     });
-    this.localEvents.push(lcoalEvent);
+    this.localEvents.push(localEvent);
     const segmentPosition = segmentElement.getBoundingClientRect();
     const startOfView = startOfWeek(this.viewDate, { weekStartsOn: 0 });
     const endOfView = endOfWeek(this.viewDate, { weekStartsOn: 0 });
 
     fromEvent(this.document, 'mousemove')
       .pipe(
-        finalize(() => this.createEvent(lcoalEvent)),
+        finalize(() => this.createEvent(localEvent)),
         takeUntil(fromEvent(this.document, 'mouseup')),
         map((mouseMoveEvent: MouseEvent) => {
           const min = ceilToNearest(mouseMoveEvent.clientY - segmentPosition.top, 30);
@@ -116,10 +116,10 @@ export class CalendarWeekComponent {
       .subscribe(targetDate => {
         if (targetDate > startOfView && startOfView < endOfView) {
           if (targetDate > segment.date) {
-            lcoalEvent.end = targetDate;
+            localEvent.end = targetDate;
           } else {
-            lcoalEvent.end = segment.date;
-            lcoalEvent.start = targetDate;
+            localEvent.end = segment.date;
+            localEvent.start = targetDate;
           }
         }
         this.refresh(this.localEvents);
@@ -132,11 +132,11 @@ export class CalendarWeekComponent {
   }
 
   /** Open a create dialog and redirect if needed */
-  private createEvent(data: CalendarEvent) {
+  private createEvent(calEvent: CalendarEvent) {
+    const data = { ...calEvent, type: this.eventType };
     this.dialog.open(EventCreateComponent, { data }).afterClosed()
     .subscribe(async ({ event, redirect } = {}) => {
       if (event) {
-        event.type = this.eventType;
         this.service.add(event);
         if (redirect) {
           this.router.navigate([event.id, 'edit'], { relativeTo: this.route });
@@ -149,7 +149,7 @@ export class CalendarWeekComponent {
 
 
   updateEvent(timeChange: CalendarEventTimesChangedEvent) {
-    if (this.authQuery.userId === timeChange.event['userId']) {
+    if (timeChange.event['isOwner']) {
       const event = { id: timeChange.event.id as string, start: timeChange.newStart, end: timeChange.newEnd };
       this.service.update(event);
     }
