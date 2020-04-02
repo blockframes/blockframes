@@ -1,6 +1,7 @@
 import { Component, Inject, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AuthQuery } from '@blockframes/auth/+state';
+import { OrganizationQuery } from '@blockframes/organization/organization/+state';
 import { Event } from '../../+state/event.model';
 import { EventForm } from '../event.form';
 
@@ -17,7 +18,8 @@ export class EventCreateComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) event: Event,
     public dialogRef: MatDialogRef<EventCreateComponent>,
-    private authQuery: AuthQuery
+    private authQuery: AuthQuery,
+    private orgQuery: OrganizationQuery
   ) {
     this.form = new EventForm(event);
   }
@@ -26,8 +28,12 @@ export class EventCreateComponent {
    * @param redirect If true should redirect to the event page
    */
   createAndRedirect(redirect: boolean) {
-    const userId = this.authQuery.userId;
-    const event = { ...this.form.value, userId };
+    const event = this.form.value;
+    if (this.form.value.type === 'screening') {
+      event.ownerId = this.orgQuery.getActiveId();
+    } else {
+      event.ownerId = this.authQuery.userId;
+    }
     this.dialogRef.close({ event, redirect });
   }
 }

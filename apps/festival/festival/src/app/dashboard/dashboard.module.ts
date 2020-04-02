@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 
 import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia-autocomplete/algolia-autocomplete.module'
 
@@ -123,6 +124,7 @@ const routes: Routes = [{
     SearchWidgetModule,
     AuthWidgetModule,
     AlgoliaAutocompleteModule,
+    ImageReferenceModule,
     // Material
     MatButtonModule,
     MatDividerModule,
