@@ -6,7 +6,7 @@ import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.mod
 import { ChipsAutocompleteModule } from "@blockframes/ui/static-autocomplete/chips/chips-autocomplete.module";
 import { MovieFormGenresModule } from '@blockframes/movie/form/main/genres/genres.module';
 
-import { MovieFilterComponent } from './movie-filter.component';
+import { MovieFilterComponent, FilterDirective } from './movie-filter.component';
 
 // Material
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -23,7 +23,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 
 @NgModule({
-  declarations: [MovieFilterComponent],
+  declarations: [MovieFilterComponent, FilterDirective],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -47,6 +47,6 @@ import { MatListModule } from '@angular/material/list';
     MatOptionModule,
     MatListModule,
   ],
-  exports: [MovieFilterComponent]
+  exports: [MovieFilterComponent, FilterDirective]
 })
 export class MovieFilterModule {}
