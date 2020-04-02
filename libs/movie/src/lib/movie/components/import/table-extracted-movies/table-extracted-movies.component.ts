@@ -158,7 +158,7 @@ export class TableExtractedMoviesComponent implements OnInit {
   async updateSelectedMovies(): Promise<boolean> {
     try {
       const updates = this.selection.selected.filter(importState => importState.movie.id && !hasImportErrors(importState));
-      for (const importState of updates) { // @TODO #1389
+      for (const importState of updates) {
         this.processedTitles++;
         await this.movieService.updateById(importState.movie.id, importState.movie);
       }
