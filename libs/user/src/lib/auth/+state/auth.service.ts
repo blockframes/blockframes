@@ -77,12 +77,12 @@ export class AuthService extends FireAuthService<AuthState> {
   }
 
   /** Create the user in users collection on firestore. */
-  createProfile(user: Partial<User>, ctx: { name: string, surname: string }) {
+  createProfile(user: Partial<User>, ctx: { firstName: string, lastName: string }) {
     return {
       uid: user.uid,
       email: user.email,
-      name: ctx.name,
-      surname: ctx.surname
+      firstName: ctx.firstName,
+      lastName: ctx.lastName
     };
   }
 
