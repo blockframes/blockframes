@@ -22,7 +22,6 @@ interface OrganizationRaw<D> {
   addresses: AddressSet;
   appAccess?: AppAccess;
   bankAccounts: BankAccount[];
-  cart: CatalogCart[];
   created: D;
   denomination: Denomination;
   description?: string;
@@ -97,7 +96,6 @@ export function createOrganizationRaw(
     id: !!params.id ? params.id : '',
     activity: '',
     bankAccounts: [],
-    cart: [],
     created: new Date(),
     description: '',
     email: '',

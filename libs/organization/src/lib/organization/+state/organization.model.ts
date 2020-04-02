@@ -51,8 +51,13 @@ export function createOrganization(
   }
 }
 
-/** Cleans an organization of its optional parameters */
-export function cleanOrganization(organization: Organization) {
+/**
+ * Cleans an organization of its optional parameters
+ * that should not be saved to org.
+ * @param organization 
+ */
+export function cleanOrganization(organization: any) {
+  delete organization.cart;
   return organization;
 }
 
