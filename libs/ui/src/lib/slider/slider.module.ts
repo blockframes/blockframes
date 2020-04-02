@@ -1,4 +1,3 @@
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 // Angular
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -11,10 +10,13 @@ import { SlideComponent } from './slide/slide.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 
+// Modules
+import { BackgroundRefModule } from '@blockframes/utils/directives/background-ref.module';
 
 @NgModule({
    imports: [
       CommonModule,
+      BackgroundRefModule,
       MatButtonModule,
       MatIconModule
    ],

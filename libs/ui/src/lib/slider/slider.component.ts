@@ -13,6 +13,7 @@ import {
   Component,
   Input,
   OnDestroy,
+  ChangeDetectionStrategy,
   AfterContentInit,
   QueryList,
   ContentChildren,
@@ -22,7 +23,8 @@ import {
   Renderer2,
   Inject,
   PLATFORM_ID,
-  HostListener
+  HostListener,
+  ChangeDetectorRef
 } from '@angular/core';
 import { AnimationBuilder, animate, style } from '@angular/animations';
 import { ListKeyManager } from '@angular/cdk/a11y';
@@ -38,11 +40,7 @@ enum Direction {
   selector: 'bf-slider',
   templateUrl: './slider.component.html',
   styleUrls: ['./slider.component.scss'],
-  /**
-   *   Dont set the changeDetection to OnPush.
-   * Otherwise the button indicators won't update itself
-   * with the current index
-   */
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SliderComponent implements OnDestroy, AfterContentInit, AfterViewInit, Slider {
 
@@ -120,7 +118,7 @@ export class SliderComponent implements OnDestroy, AfterContentInit, AfterViewIn
   // Private Vars //
   /////////////////
 
-  private _hideIndicators: Slider['hideIndicators'] = false;
+  private _hideIndicators: Slider['hideIndicators'] = true;
 
   private _hideArrows: Slider['hideArrows'] = false;
 
@@ -169,7 +167,9 @@ export class SliderComponent implements OnDestroy, AfterContentInit, AfterViewIn
     private themeService: ThemeService,
     private animationBuilder: AnimationBuilder,
     private renderer: Renderer2,
-    @Inject(PLATFORM_ID) private platformId) {
+    @Inject(PLATFORM_ID) private platformId,
+    private cdr: ChangeDetectorRef
+    ) {
     this.themeService.theme$.pipe(takeUntil(this.destroy$)).subscribe(theme => {
       this.theme = theme
     })
@@ -347,6 +347,7 @@ export class SliderComponent implements OnDestroy, AfterContentInit, AfterViewIn
     ).subscribe(() => {
       this.listKeyManager.withWrap(true).setNextItemActive();
       this.listKeyManager.withWrap(this.loop);
+      this.cdr.markForCheck()
     });
   }
 

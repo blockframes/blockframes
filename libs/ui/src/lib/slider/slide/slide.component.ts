@@ -1,15 +1,15 @@
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Slide } from './slide.interface';
-import { DomSanitizer } from '@angular/platform-browser';
-import { Component, OnInit, Input, ViewChild, TemplateRef } from '@angular/core';
+import { Component, Input, ViewChild, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
 import { ListKeyManagerOption } from '@angular/cdk/a11y';
 
 @Component({
   selector: 'bf-slide',
   templateUrl: './slide.component.html',
-  styleUrls: ['./slide.component.scss']
+  styleUrls: ['./slide.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SlideComponent implements OnInit, ListKeyManagerOption, Slide {
+export class SlideComponent implements ListKeyManagerOption, Slide {
 
   @Input() image: Slide['image'];
 
@@ -21,17 +21,11 @@ export class SlideComponent implements OnInit, ListKeyManagerOption, Slide {
     this._hideOverlay = coerceBooleanProperty(value);
   }
 
-  @Input() disabled = false; // implements ListKeyManagerOption
+  // Implements ListKeyManagerOption otherwise it will throw an Error
+  @Input() disabled = false;
+
 
   private _hideOverlay: Slide['hideOverlay'];
 
   @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
-
-  constructor(private sanitizer: DomSanitizer) { }
-
-  ngOnInit() {
-    if (this.image) {
-      this.image = this.sanitizer.bypassSecurityTrustStyle(`url("${this.image}")`);
-    }
-  }
 }

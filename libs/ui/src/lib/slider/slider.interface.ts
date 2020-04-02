@@ -1,18 +1,18 @@
 export interface Slider {
-    // Anmiations
+    /** Anmiations */
     autoplay: boolean;
-    // When should a new slide appear
+    /** When should a new slide appear */
     interval: number;
-    // How long should it take for the animation
+    /** How long should it take for the animation */
     timing: string;
-    // Swipe to see new slides
+    /** Swipe to see new slides */
     swipe: boolean;
 
-    // Navigation
+    /** Navigation */
     hideArrows: boolean;
     hideIndicators: boolean;
 
-    //Appearance
+    /** Appearance */
     maxWidth: string;
     ratio: '1:1' | '16:9' | '4:3' | '3:2' | '8:5';
     loop: boolean;
