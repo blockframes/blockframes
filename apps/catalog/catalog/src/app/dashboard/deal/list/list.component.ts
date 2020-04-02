@@ -84,6 +84,7 @@ function createContractTab(allContracts: Contract[]): ContractTab[] {
 })
 export class DealListComponent {
   public tabs$ = this.query.sales$.pipe(map(createContractTab));
+  public salesLoading$ = this.query.selectLoading();
 
   constructor(
     private orgQuery: OrganizationQuery,
