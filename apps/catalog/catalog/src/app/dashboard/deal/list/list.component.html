@@ -12,7 +12,7 @@
       </header>
 
       <mat-tab-group (selectedTabChange)="updateTitle($event)">
-        <mat-tab *ngFor="let tab of tabs$ | async">
+        <mat-tab *ngFor="let tab of tabs">
           <ng-template mat-tab-label>
               {{ tab.name }} ({{ tab.contracts.length }})
           </ng-template>
