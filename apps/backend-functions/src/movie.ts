@@ -12,7 +12,7 @@ import { centralOrgID } from './environments/environment';
 function notifUser(userId: string, notificationType: NotificationType, movie: MovieDocument, user: PublicUser) {
   return createNotification({
     userId,
-    user: { name: user.name, surname: user.surname },
+    user: { firstName: user.firstName, lastName: user.lastName },
     type: notificationType,
     app: 'blockframes',
     movie: {
@@ -60,7 +60,7 @@ export async function onMovieCreate(
     const organization = organizationSnap.data() as OrganizationDocument
 
     // Update algolia's index
-    await storeSearchableMovie(movie, organization.id, organization.denomination.full);
+    await storeSearchableMovie(movie, organization.denomination.full);
 
     return Promise.all([
       // Update the organization's movieIds with the new movie id.

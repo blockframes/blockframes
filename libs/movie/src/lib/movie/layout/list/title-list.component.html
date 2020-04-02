@@ -1,0 +1,89 @@
+<page-nav targetId="nav">
+  <mat-toolbar>
+    <button mat-icon-button>
+      <mat-icon svgIcon="menu"></mat-icon>
+    </button>
+    <nav mat-tab-nav-bar>
+      <h3>{{titleType}} List</h3>
+      <ng-template [ngTemplateOutlet]="titleSearchTemplate"></ng-template>
+      <button *ngIf="canToggle" mat-icon-button (click)="listView = !listView">
+        <ng-container *ngIf="!listView">
+          <mat-icon matPrefix svgIcon="list"></mat-icon>
+        </ng-container>
+        <ng-container *ngIf="listView">
+          <mat-icon matPrefix svgIcon="grid"></mat-icon>
+        </ng-container>
+      </button>
+      <ng-template [ngTemplateOutlet]="titleSortTemplate"></ng-template>
+    </nav>
+  </mat-toolbar>
+</page-nav>
+
+<section id="nav" fxLayout="row" fxLayoutAlign="space-between center">
+  <h1 class="mat-headline">{{titleType}} List</h1>
+  <article fxLayout="row" fxLayoutAlign="center center">
+    <button *ngIf="canToggle" mat-icon-button (click)="listView = !listView">
+      <ng-container *ngIf="!listView">
+        <mat-icon matPrefix svgIcon="list"></mat-icon>
+      </ng-container>
+      <ng-container *ngIf="listView">
+        <mat-icon matPrefix svgIcon="grid"></mat-icon>
+      </ng-container>
+    </button>
+
+    <ng-template [ngTemplateOutlet]="titleSortTemplate"></ng-template>
+
+  </article>
+</section>
+
+<!-- MAIN SEARCH BAR -->
+<section class="search">
+
+  <ng-template [ngTemplateOutlet]="titleSearchTemplate"></ng-template>
+
+</section>
+
+<!-- FILTER SIDE CARD -->
+<section fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="50px" fxLayout.lt-md="column"
+  fxLayoutAlign.lt-md="center center" class="filters">
+  <aside fxLayout="column" class="filter">
+    <mat-card>
+      <!-- TODO INSERT FILTERS -->
+      <ng-content></ng-content>
+
+    </mat-card>
+  </aside>
+
+  <!-- List || card of result -->
+  <article>
+    <ng-container *ngIf="(titles$ | async) as titles">
+      <div fxLayout="row" fxLayoutAlign="end start">
+        <h6>There are {{ titles.length }} {{titleType}}s available!</h6>
+      </div>
+      <div fxLayout="row wrap" fxLayoutGap="24px" fxLayout.lt-md="column" fxLayoutAlign.lt-md="center center">
+        <ng-container *ngIf="!listView; else displayList">
+          <ng-container *ngFor="let title of titles">
+
+            <!-- INSERT CARD -->
+            <ng-template
+              [ngTemplateOutlet]="titleCardTemplate"
+              [ngTemplateOutletContext]="{$implicit: title}"
+            ></ng-template>
+
+          </ng-container>
+        </ng-container>
+        <ng-template #displayList>
+          <ng-container *ngFor="let title of titles">
+
+            <!-- INSERT LIST ITEM -->
+            <ng-template
+              [ngTemplateOutlet]="titleListItemTemplate"
+              [ngTemplateOutletContext]="{$implicit: title}"
+            ></ng-template>
+
+          </ng-container>
+        </ng-template>
+      </div>
+    </ng-container>
+  </article>
+</section>

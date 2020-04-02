@@ -8,8 +8,8 @@ import { clearDataAndPrepareTest } from '../../support/utils/utils';
 const USER: Partial<User> = {
   email: `${Date.now()}@cypress.com`,
   password: 'cypress',
-  name: 'cypress',
-  surname: 'cypress'
+  firstName: 'cypress',
+  lastName: 'cypress'
 }
 
 const WRONG_EMAIL_FORM = 'wrongform*email!com';
@@ -113,8 +113,8 @@ describe('Try password', () => {
     const p1 = new LoginViewPage();
     const newEmail =`shortPwd${Date.now()}@cypress.com`;
     p1.fillEmailInSignup(newEmail);
-    p1.fillNameInSignup(USER.name);
-    p1.fillSurnameInSignup(USER.surname);
+    p1.fillNameInSignup(USER.firstName);
+    p1.fillSurnameInSignup(USER.lastName);
     p1.fillPasswordInSignup(SHORT_PASSWORD);
     p1.fillPasswordConfirmInSignup(SHORT_PASSWORD);
     p1.clickTermsAndCondition();
@@ -125,8 +125,8 @@ describe('Try password', () => {
     const p1 = new LoginViewPage();
     const newEmail =`longPwd${Date.now()}@cypress.com`;
     p1.fillEmailInSignup(newEmail);
-    p1.fillNameInSignup(USER.name);
-    p1.fillSurnameInSignup(USER.surname);
+    p1.fillNameInSignup(USER.firstName);
+    p1.fillSurnameInSignup(USER.lastName);
     p1.fillPasswordInSignup(LONG_PASSWORD);
     p1.fillPasswordConfirmInSignup(LONG_PASSWORD);
     p1.clickTermsAndCondition();

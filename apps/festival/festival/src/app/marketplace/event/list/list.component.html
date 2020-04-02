@@ -5,11 +5,22 @@
 <cal-week id="calendar" [viewDate]="viewDate" [events]="events$ | async">
     
     <!-- Events -->
-    <ng-template calEventSmall let-event>
-      Small
+  <ng-template calEventSmall let-event>
+    <ng-container *ngIf="event.movie as movie">
+      <a [routerLink]="[movie.id, 'session']">
+        <span>{{ movie.main.title.international }}</span>
+      </a>
+    </ng-container>
   </ng-template>
   
   <ng-template calEventLarge let-event>
-    Large
+    <ng-container *ngIf="event.movie as movie">
+      <a class="screening-large" [routerLink]="[movie.id, 'session']" [backgroundRef]="movie.promotionalElements.poster[0].media">
+        <article>
+          <h6>{{ movie.main.title.international }}</h6>
+          <span>{{ movie.main.directors | displayName }}</span>
+        </article>
+      </a>
+    </ng-container>
   </ng-template>
 </cal-week>

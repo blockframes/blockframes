@@ -5,7 +5,6 @@ import { Observable, combineLatest, Subscription } from 'rxjs';
 import { Contract } from '@blockframes/contract/contract/+state/contract.model';
 import { StoreStatus, MovieAnalytics } from '@blockframes/movie/+state/movie.firestore';
 import { ContractQuery } from '@blockframes/contract/contract/+state/contract.query';
-import { getContractLastVersion } from '@blockframes/contract/version/+state';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Movie, getMovieTotalViews, getMovieReceipt } from '@blockframes/movie/+state/movie.model';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
@@ -35,7 +34,7 @@ function createTitleView(
   contracts: Contract[],
   analytics: MovieAnalytics[]
 ): TitleView {
-  const ownContracts = contracts.filter(c => getContractLastVersion(c).titles[movie.id]);
+  const ownContracts = contracts.filter(c => c.lastVersion.titles[movie.id]);
   return {
     id: movie.id,
     title: movie.main.title.international,
@@ -59,6 +58,7 @@ export class TitleListComponent implements OnInit, OnDestroy {
   filter = new FormControl();
   filter$ = this.filter.valueChanges.pipe(startWith(this.filter.value));
   public allMovies$ = this.query.selectAll();
+  public allMoviesLoading$ = this.query.selectLoading();
 
   private sub: Subscription;
 

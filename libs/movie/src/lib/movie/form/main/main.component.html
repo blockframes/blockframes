@@ -47,21 +47,21 @@
         <input matInput formControlName="lastName" placeholder="Last Name">
       </mat-form-field>
       <button mat-icon-button color="primary" (click)="main.addDirector()">
-        <mat-icon>add_circle</mat-icon>
+        <mat-icon svgIcon="add"></mat-icon>
       </button>
       <button mat-icon-button color="primary" (click)="main.removeDirector(i)">
-        <mat-icon>delete_circle</mat-icon>
+        <mat-icon svgIcon="trash"></mat-icon>
       </button>
     </div>
   </div>
   <ng-container *ngIf="main.directors.controls.length === 0">
     <button mat-icon-button color="primary" (click)="main.addDirector()">
-      <mat-icon>add_circle</mat-icon>
+      <mat-icon svgIcon="add"></mat-icon>
     </button>
   </ng-container>
   <!-- POSTER -->
   <!-- <h3> Poster </h3>
-  <drop-cropper [ratio]="2/3" storagePath="poster" formControlName="poster"></drop-cropper>
+  <drop-cropper ratio="poster" storagePath="poster" formControlName="poster"></drop-cropper>
   -->
   <!-- PRODUCTION -->
   <h3> Production </h3>
@@ -137,7 +137,7 @@
         Total Run Time is <strong>required</strong>
     </mat-error>
   </mat-form-field>
-  <!-- PRODUCTION COMPANIES 
+  <!-- PRODUCTION COMPANIES
   <h3> Production companies </h3>
   <div formArrayName="stakeholders"
     *ngFor="let stakeholder of main.stakeholders.controls; let i = index">
@@ -147,16 +147,16 @@
         <input matInput formControlName="displayName" placeholder="Company name">
       </mat-form-field>
       <button mat-icon-button color="primary" (click)="main.addStakeholder()">
-        <mat-icon>add_circle</mat-icon>
+        <mat-icon svgIcon="add"></mat-icon>
       </button>
       <button mat-icon-button color="primary" (click)="main.removeStakeholder(i)">
-        <mat-icon>delete_circle</mat-icon>
+        <mat-icon svgIcon="trash"></mat-icon>
       </button>
     </div>
   </div>
   <ng-container *ngIf="main.stakeholders.controls.length === 0">
     <button mat-icon-button color="primary" (click)="main.addStakeholder()">
-      <mat-icon>add_circle</mat-icon>
+      <mat-icon svgIcon="add"></mat-icon>
     </button>
   </ng-container>
   -->

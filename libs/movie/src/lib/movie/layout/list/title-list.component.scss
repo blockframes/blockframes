@@ -1,0 +1,47 @@
+@import '~@angular/flex-layout/mq';
+
+section {
+  padding: 20px 20px;
+}
+
+aside {
+  position: sticky;
+  top: calc(var(--toolbarHeight) + 20px);
+}
+
+@include layout-bp(xs) {
+  h1 {
+    text-align: center;
+  }
+  section {
+    padding: 10px 10px;
+    aside {
+      width: 100%;
+      position: static;
+      mat-card {
+        height: 100%;
+      }
+      .filter {
+        margin-top: 50px;
+      }
+    }
+    article mat-form-field-wrapper {
+      width: 80%;
+    }
+  }
+}
+
+@include layout-bp(sm) {
+  section aside {
+    position: static;
+    .filter {
+      margin-top: 50px;
+    }
+  }
+}
+
+@include layout-bp(md) {
+  aside.filter {
+    width: 50%;
+  }
+}

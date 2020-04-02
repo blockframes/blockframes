@@ -5,11 +5,11 @@
     class="header"
   >
     <button mat-icon-button (click)="prevYear()">
-      <mat-icon>keyboard_arrow_left</mat-icon>
+      <mat-icon svgIcon="arrow_back"></mat-icon>
     </button>
     <span>{{ currentDate | date:'yyyy' }}</span>
     <button mat-icon-button (click)="nextYear()">
-      <mat-icon>keyboard_arrow_right</mat-icon>
+      <mat-icon svgIcon="arrow_forward"></mat-icon>
     </button>
   </mat-grid-tile>
 

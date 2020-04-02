@@ -24,7 +24,7 @@
   </ng-template>
   <ng-template colRef="distributionDealsInfo" let-distributionDealsInfo>
     <ng-container *ngIf="distributionDealsInfo.count else noDeals">
-      <a [routerLink]="distributionDealsInfo.link" routerLinkActive="active"><mat-icon>launch</mat-icon></a> ({{ distributionDealsInfo.count }})
+      <a [routerLink]="distributionDealsInfo.link" routerLinkActive="active"><mat-icon svgIcon="launch"></mat-icon></a> ({{ distributionDealsInfo.count }})
     </ng-container>
     <ng-template #noDeals>
       --
@@ -32,7 +32,7 @@
   </ng-template>
   <ng-template colRef="contractsInfo" let-contractsInfo>
     <ng-container *ngIf="contractsInfo.count else noDeals">
-      <a [routerLink]="contractsInfo.link" routerLinkActive="active"><mat-icon>launch</mat-icon></a> ({{ contractsInfo.count }})
+      <a [routerLink]="contractsInfo.link" routerLinkActive="active"><mat-icon svgIcon="launch"></mat-icon></a> ({{ contractsInfo.count }})
     </ng-container>
     <ng-template #noDeals>
       --

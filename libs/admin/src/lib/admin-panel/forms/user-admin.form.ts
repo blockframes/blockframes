@@ -7,8 +7,8 @@ function createUserAdminControls(entity: Partial<User>) {
   return {
     email: new FormControl(user.email, [Validators.required, Validators.email]),
     orgId: new FormControl(user.orgId, [Validators.required]),
-    name: new FormControl(user.name, [Validators.required]),
-    surname: new FormControl(user.surname, [Validators.required]),
+    firstName: new FormControl(user.firstName, [Validators.required]),
+    lastName: new FormControl(user.lastName, [Validators.required]),
     phoneNumber: new FormControl(user.phoneNumber),
     position: new FormControl(user.position),
   };

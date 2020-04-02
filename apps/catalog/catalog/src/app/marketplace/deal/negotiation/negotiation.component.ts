@@ -5,19 +5,19 @@ import { Movie } from '@blockframes/movie/+state/movie.model';
 import { Intercom } from 'ng-intercom';
 
 @Component({
-  selector: 'catalog-negociation',
-  templateUrl: './negociation.component.html',
-  styleUrls: ['./negociation.component.scss'],
+  selector: 'catalog-negotiation',
+  templateUrl: './negotiation.component.html',
+  styleUrls: ['./negotiation.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NegociationComponent {
+export class NegotiationComponent {
 
   activeVersion$ = this.query.activeVersion$;
   versionView$ = this.query.activeVersionView$;
   titles$ = this.query.titles$;
   payment$ = this.query.activeVersion$.pipe(map(displayPaymentSchedule));
 
-  oldVersions$ = this.query.oldVersionsView$;
+  versionsView$ = this.query.versionsView$;
 
   constructor(private query: ContractQuery, private intercom: Intercom) { }
 

@@ -17,10 +17,10 @@
   <algolia-autocomplete [indexName]="algoliaMovieIndex" displayWithPath="movie.main.title.international" 
     (selectionChange)="addMovie($event)">
     <ng-template let-result>
-      <span>{{ result.movie.main.title.international }}</span>
+      <span>{{ result ? result.title.international : '--' }}</span>
     </ng-template>
   </algolia-autocomplete>
-  <div *ngFor="let control of form.last().get('titles').controls | keyvalue; let i = index;"
+  <div *ngFor="let control of form.get('titles').controls | keyvalue; let i = index;"
     [formGroup]="priceForm(control.key)">
     <div fxLayout="row" fxLayoutAlign="space-between start">
       <movie-banner [movie]="selectMovie(control.key) | async" *ngIf="selectMovie(control.key) | async">
@@ -41,7 +41,7 @@
           </mat-form-field>
         </ng-template>
         <button color="warn" (click)="removeTitle(control.key)" mat-mini-fab>
-          <mat-icon>delete</mat-icon>
+          <mat-icon svgIcon="trash"></mat-icon>
         </button>
       </div>
     </div>

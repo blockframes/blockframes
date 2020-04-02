@@ -14,8 +14,8 @@ import { AngularFirestore } from '@angular/fire/firestore';
 })
 export class IdentityComponent {
   public form = new FormGroup({
-    name: new FormControl(''),
-    surname: new FormControl(''),
+    firstName: new FormControl(''),
+    lastName: new FormControl(''),
     email: new FormControl({ value: this.query.user.email, disabled: true }, Validators.email),
     generatedPassword: new FormControl(''),
     newPassword: new PasswordControl()
@@ -43,8 +43,8 @@ export class IdentityComponent {
         this.form.get('newPassword').value
       );
       await this.service.update({
-        name: this.form.get('name').value,
-        surname: this.form.get('surname').value,
+        firstName: this.form.get('firstName').value,
+        lastName: this.form.get('lastName').value,
       });
 
       // Accept the invitation from the organization.

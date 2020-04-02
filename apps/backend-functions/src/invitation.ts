@@ -118,8 +118,8 @@ async function onInvitationToOrgDecline(invitation: InvitationFromOrganizationTo
     createNotification({
       userId,
       user: {
-        name: user.name,
-        surname: user.surname
+        firstName: user.firstName,
+        lastName: user.lastName
       },
       app: 'blockframes',
       type: 'invitationFromOrganizationToUserDecline'
@@ -180,7 +180,7 @@ async function onInvitationFromUserToJoinOrgCreate({
 
   // send invitation pending email to user
   await sendMailFromTemplate(
-    userJoinOrgPendingRequest(userData.email, organization.denomination.full, userData.name!)
+    userJoinOrgPendingRequest(userData.email, organization.denomination.full, userData.firstName!)
   );
 
   // send invitation received to every org admin
@@ -189,11 +189,11 @@ async function onInvitationFromUserToJoinOrgCreate({
       sendMailFromTemplate(
         userRequestedToJoinYourOrg({
           adminEmail: admin.email,
-          adminName: admin.name!,
+          adminName: admin.firstName!,
           organizationName: organization.denomination.full,
           organizationId: organization.id,
-          userFirstname: userData.name!,
-          userLastname: userData.surname!
+          userFirstname: userData.firstName!,
+          userLastname: userData.lastName!
         })
       )
     )
@@ -221,8 +221,8 @@ async function onInvitationFromUserToJoinOrgDecline(invitation: InvitationFromUs
     createNotification({
       userId,
       user: {
-        name: invitation.user.name,
-        surname: invitation.user.surname
+        firstName: invitation.user.firstName,
+        lastName: invitation.user.lastName
       },
       app: 'blockframes',
       type: 'invitationFromUserToJoinOrgDecline'

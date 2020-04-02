@@ -21,11 +21,11 @@ export class InvitationService extends CollectionService<InvitationState> {
   /** Create an Invitation when a user asks to join an Organization. */
   public async sendInvitationToOrg(organizationId: string) {
     const organization = await this.orgService.getValue(organizationId);
-    const { uid, name, surname, email } = this.authQuery.user;
+    const { uid, firstName, lastName, email } = this.authQuery.user;
     const invitation = createInvitationFromUserToOrganization({
       id: this.db.createId(),
       organization: {id: organization.id, denomination: {full: organization.denomination.full}, logo: organization.logo},
-      user: { uid, name, surname, email }
+      user: { uid, firstName, lastName, email }
     });
     return this.add(invitation);
   }

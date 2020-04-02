@@ -1,0 +1,76 @@
+<title-list [titles$]="movieSearchResults$">
+
+  <!-- SORT -->
+  <ng-template titleSort>
+
+    <mat-form-field class="sort">
+      <mat-label>Sort by</mat-label>
+      <mat-select [formControl]="sortByControl">
+        <mat-option *ngFor="let option of sortOptions" [value]="option">
+          {{option}}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+  </ng-template>
+
+
+  <!-- SEARCH BAR -->
+  <ng-template titleSearch>
+
+    <form [formGroup]="filterForm.search">
+      <mat-form-field appearance="outline">
+        <mat-label>Search for titles, directors, keywords, ...</mat-label>
+        <mat-icon matPrefix svgIcon="magnifying_glasses"></mat-icon>
+        <input matInput type="text" [formControl]="searchbarTextControl">
+      </mat-form-field>
+    </form>
+
+  </ng-template>
+
+
+  <!-- MOVIE FILTERS (inserted in ng-content) -->
+  <mat-card-content>
+    <h6>Filters</h6>
+    <p class="mat-caption">For a specific filter, multiple choices will be applied with an "or" statement (not an "and" statement).</p>
+    <mat-divider inset></mat-divider>
+    <movie-filter [form]="filterForm"></movie-filter>
+    <mat-divider inset></mat-divider>
+    <distribution-avails-filter [availsForm]="availsForm"></distribution-avails-filter>
+  </mat-card-content>
+
+
+  <!-- TITLE CARD -->
+  <ng-template titleCard let-title>
+
+    <movie-card [movie]="title" [link]="['/c/o/marketplace/title',  title.id]">
+      <!-- Informations -->
+      <ng-container movieInformation>
+        <mat-card-subtitle>
+          <span class="mat-caption">
+            {{ title.main.directors | displayName }}
+          </span>
+        </mat-card-subtitle>
+      </ng-container>
+
+      <!-- Action -->
+      <ng-container movieCardAction>
+        <div fxLayout="row" fxLayoutAlign="end">
+          <wishlist-button [movieId]="title.id" small></wishlist-button>
+        </div>
+      </ng-container>
+    </movie-card>
+
+  </ng-template>
+
+
+  <!-- LIST ITEM CARD -->
+  <ng-template titleListItem let-title>
+
+    <!-- WRITE HERE WHAT YOU WANT TO INJECT-->
+    <p>{{title.main.title.original}}</p>
+
+  </ng-template>
+
+
+</title-list>

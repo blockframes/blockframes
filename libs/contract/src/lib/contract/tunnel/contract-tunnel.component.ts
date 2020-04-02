@@ -1,12 +1,10 @@
 import { Router, ActivatedRoute } from '@angular/router';
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TunnelStep, TunnelConfirmComponent } from '@blockframes/ui/tunnel'
 import { ContractForm } from '../form/contract.form';
-import { ContractQuery, ContractService, ContractType, createContract, createContractVersion } from '../+state';
+import { ContractQuery, ContractService, ContractType, createContract, TitlesAndDeals } from '../+state';
 import { MatDialog } from '@angular/material/dialog';
-import { ContractVersionService } from '@blockframes/contract/version/+state';
 import { DistributionDealForm } from '@blockframes/distribution-deals/form/distribution-deal.form';
 import { FormEntity, FormList } from '@blockframes/utils/form/forms';
 import { ContractTitleDetailForm } from '@blockframes/contract/version/form';
@@ -15,6 +13,8 @@ import { startWith, map, switchMap, shareReplay } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { OrganizationQuery } from '@blockframes/organization/organization/+state';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 const steps = [{
   title: 'Step 1',
@@ -70,16 +70,16 @@ export class ContractTunnelComponent implements OnInit {
   public contractForm: ContractForm;
 
   constructor(
-    private db: AngularFirestore,
+    private orgQuery: OrganizationQuery,
     private snackBar: MatSnackBar,
-    private service: ContractService,
-    private versionService: ContractVersionService,
+    private contractService: ContractService,
     private query: ContractQuery,
     private movieService: MovieService,
     private dealService: DistributionDealService,
     private dialog: MatDialog,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private db: AngularFirestore,
   ) { }
 
   async ngOnInit() {
@@ -88,14 +88,13 @@ export class ContractTunnelComponent implements OnInit {
     this.contractForm = new ContractForm(contract);
 
     // Set the initial deals
-    contract.titleIds.forEach(async movieId => {
-      const deals = await this.dealService.getValue(ref => ref.where('contractId', '==', contract.id), { params: { movieId } });
+    Object.keys(contract.lastVersion.titles).forEach(async movieId => {
+      const deals = await this.dealService.getContractDistributionDeals(contract.id, movieId);
       this.dealForms.setControl(movieId, FormList.factory(deals, deal => new DistributionDealForm(deal)));
     });
 
-
     // Listen on the changes of the titles from the contract form
-    const titlesForm = this.contractForm.get('versions').last().get('titles');
+    const titlesForm = this.contractForm.get('lastVersion').get('titles');
     this.movies$ = titlesForm.valueChanges.pipe(
       startWith(titlesForm.value),
       map(titles => Object.keys(titles)),
@@ -123,18 +122,20 @@ export class ContractTunnelComponent implements OnInit {
 
   /** Add a title to this contract */
   addTitle(movieId: string, mandate?: boolean) {
-    // @TODO (#1887) should not get last version
     this.contractForm
-      .get('versions')
-      .last()
+      .get('lastVersion')
       .get('titles')
       .setControl(movieId, new ContractTitleDetailForm(mandate ? { price: { amount: 0 } } : {}));
     this.dealForms.setControl(movieId, FormList.factory([], deal => new DistributionDealForm(deal)));
   }
 
-  /** Remove a title to this contract */
+  /**
+   * Removes a title from the contract form
+   * @param movieId 
+   * @param isExploitRight 
+   */
   removeTitle(movieId: string, isExploitRight?: boolean) {
-    this.contractForm.get('versions').last().get('titles').removeControl(movieId);
+    this.contractForm.get('lastVersion').get('titles').removeControl(movieId);
     const deals = this.dealForms.get(movieId).value;
     // start from the end to remove to avoid shift effects
     for (let i = deals.length - 1; i >= 0; i--) {
@@ -169,51 +170,41 @@ export class ContractTunnelComponent implements OnInit {
     this.dealForms.get(movieId).removeAt(index);
   }
 
-  /** Save Contract, Contract Version and deals */
+  /** 
+   * Save Contract, Contract Version and deals
+   * @dev At this point, deals may already exists 
+   * (ie: created when clicked on "create an offer" from selection page).
+   * but deals may have been edited, added or removed and the contract may
+   * have changed too in the contract tunnel form.
+   */
   public async save() {
-    const write = this.db.firestore.batch();
-    const contractId = this.query.getActiveId();
 
-    // Upsert deals
+    const orgId = this.orgQuery.getActiveId();
+    const titlesAndDeals = {} as TitlesAndDeals;
+
     for (const movieId in this.dealForms.controls) {
       const deals = this.dealForms.get(movieId).value.map(deal => createDistributionDeal(deal));
-      deals.forEach(async (deal, i) => {
-        if (deal.id) {
-          this.dealService.update(deal, { params: { movieId }, write });
-        } else {
-          const id = await this.dealService.add({ contractId, ...deal }, { params: { movieId }, write });
-          this.dealForms.get(movieId).at(i).patchValue({ id });
-          this.contractForm.get('versions').last().get('titles').get(movieId).get('distributionDealIds').add(id);
-        }
-      })
+      titlesAndDeals[movieId] = deals;
     }
-
-    // Remove deals
-    for (const movieId in this.removedDeals) {
-      for (const dealId of this.removedDeals[movieId]) {
-        this.dealService.remove(dealId, { params: { movieId }, write })
-      }
-    }
-    this.removedDeals = {};
 
     const contract = createContract({
       ...this.query.getActive(),
       ...this.contractForm.value
     });
 
-    // Upate Version
-    // @todo (#1887) don't use last index
-    const lastIndex = contract.versions.length - 1;
-    const version = createContractVersion({ ...contract.versions[lastIndex] });
-    this.versionService.update({ id: lastIndex.toString(), ...version }, { params: { contractId }, write })
-    delete contract.versions;
+    //@TODO (#2404) Problem: here this.contractForm.value.lastVersion[titleId].price.amount === 0
+    await this.contractService.createContractAndDeal(orgId, titlesAndDeals, contract);
 
-    // Update Contract
-    contract.titleIds = Object.keys(version.titles || {});
-    this.service.update(contract, { write });
-
-    // Return an observable<boolean> for the confirmExit
+    // Remove deals
+    const write = this.db.firestore.batch();
+    for (const movieId in this.removedDeals) {
+      for (const dealId of this.removedDeals[movieId]) {
+        this.dealService.remove(dealId, { params: { movieId }, write })
+      }
+    }
+    this.removedDeals = {};
     await write.commit();
+
     this.contractForm.markAsPristine();
     this.dealForms.markAsPristine();
     await this.snackBar.open('Saved', '', { duration: 500 }).afterDismissed().toPromise();

@@ -6,7 +6,7 @@
       placeholder="Type to filter in the list below"
       (keyup)="applyFilter($event.target.value)">
     <button matSuffix mat-icon-button [widgetTarget]="filterColumnWidget">
-      <mat-icon>filter_list</mat-icon>
+      <mat-icon svgIcon="filter_list"></mat-icon>
     </button>
   </mat-form-field>
 
@@ -24,7 +24,7 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Creation Date</th>
       <td mat-cell *matCellDef="let contract">
         <article class="mat-body-2">
-          {{ getLastVersion(contract).creationDate | date: 'shortDate' }}
+          {{ contract.lastVersion.creationDate | date: 'shortDate' }}
         </article>
       </td>
     </ng-container>
@@ -89,7 +89,7 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Paid</th>
       <td mat-cell *matCellDef="let contract">
         <article class="mat-body-2">
-          {{ getLastVersion(contract).status == 'paid' ? 'Yes' : 'No' }}
+          {{ contract.lastVersion.status == 'paid' ? 'Yes' : 'No' }}
         </article>
       </td>
     </ng-container>
@@ -98,7 +98,7 @@
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Status</th>
       <td mat-cell *matCellDef="let contract">
         <span class="mat-body-2">
-          {{ getLastVersion(contract).status | titlecase }}
+          {{ contract.lastVersion.status | titlecase }}
         </span>
       </td>
     </ng-container>

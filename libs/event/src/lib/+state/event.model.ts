@@ -51,19 +51,20 @@ export function createMeeting(meeting: Partial<Meeting>): Meeting {
 // Screening
 export interface ScreeningEvent extends Event<Screening> {
   type: 'screening';
-  titles: Movie[];
+  movie: Movie;
 }
 export const isScreening = (event: Partial<Event>): event is ScreeningEvent => event?.type === 'screening';
 export function createScreening(screening: Partial<Screening>): Screening {
   return {
-    titleIds: []
+    titleId: '',
+    ...screening
   }
 }
 
 
 // Calendar Event
-export function createCalendarEvent(event: Event, currentUserId: string): Event {
-  const isOwner = event.ownerId === currentUserId;
+export function createCalendarEvent(event: Event, currentUserId: string, currentOrgId: string): Event {
+  const isOwner = event.ownerId === currentUserId || event.ownerId === currentOrgId;
   return {
     ...createEvent(event),
     isOwner,

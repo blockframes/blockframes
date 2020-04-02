@@ -10,14 +10,17 @@ const routes = [{
   component: ViewComponent,
   children: [{
     path: '',
-    redirectTo: 'titles',
+    redirectTo: 'title',
     pathMatch: 'full'
   }, {
-    path: 'titles',
-    loadChildren: () => import('../titles/titles.module').then(m => m.OrganizationTitlesModule)
+    path: 'title',
+    loadChildren: () => import('../title/title.module').then(m => m.OrganizationTitleModule)
   }, {
-    path: 'members',
-    loadChildren: () => import('../members/members.module').then(m => m.OrganizationMembersModule)
+    path: 'member',
+    loadChildren: () => import('../member/member.module').then(m => m.OrganizationMemberModule)
+  }, {
+    path: 'event',
+    loadChildren: () => import('../event/event.module').then(m => m.OrganisationEventModule)
   }]
 }]
 

@@ -17,14 +17,14 @@
   <!-- Remove -->
   <footer *ngIf="!last" fxLayout="column" fxLayoutAlign="center center">
     <button mat-mini-fab color="warn" (click)="form.removeAt(i)" aria-label="Remove a critic form">
-      <mat-icon>delete</mat-icon>
+      <mat-icon svgIcon="trash"></mat-icon>
     </button>
     <span class="mat-caption">Delete a critic</span>
   </footer>
   <!-- Add-->
   <footer *ngIf="last" fxLayout="column" fxLayoutAlign="center center">
     <button mat-mini-fab color="primary" (click)="form.add()" aria-label="Remove a critic form">
-      <mat-icon>add</mat-icon>
+      <mat-icon svgIcon="add"></mat-icon>
     </button>
     <span class="mat-caption">Add another critic</span>
   </footer>

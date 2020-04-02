@@ -5,15 +5,15 @@
   <mat-card-content>
     <mat-form-field appearance="outline">
       <mat-label>First name</mat-label>
-      <input matInput test-id="name-form" placeholder="First name" type="text" [formControl]="form.get('name')" required />
-      <mat-error *ngIf="form.get('name').hasError('required')">
+      <input matInput test-id="name-form" placeholder="First name" type="text" [formControl]="form.get('firstName')" required />
+      <mat-error *ngIf="form.get('firstName').hasError('required')">
         First name is <strong>required</strong>
       </mat-error>
     </mat-form-field>
     <mat-form-field appearance="outline">
       <mat-label>Last name</mat-label>
-      <input matInput test-id="surname-form" placeholder="Last name" type="text" [formControl]="form.get('surname')" required />
-      <mat-error *ngIf="form.get('surname').hasError('required')">
+      <input matInput test-id="surname-form" placeholder="Last name" type="text" [formControl]="form.get('lastName')" required />
+      <mat-error *ngIf="form.get('lastName').hasError('required')">
         Last name is <strong>required</strong>
       </mat-error>
     </mat-form-field>
@@ -37,7 +37,7 @@
     <mat-card-subtitle>Choose your avatar</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
-    <drop-cropper [ratio]="1" storagePath="avatar" [formControl]="form.get('avatar')">
+    <drop-cropper ratio="square" storagePath="avatar" [formControl]="form.get('avatar')">
       <h3 type>Profile Image</h3>
       <p class="mat-body-2" dimensions>Ratio : 1:1</p>
       <p class="mat-caption" format>Accepted Formats: .jpg, .png</p>

@@ -9,15 +9,15 @@ function updateStatus(status: string) {
 }
 
 function updateStoreType(type: string) {
-  if (type) {
-    if (type === 'Library') {
+  switch (type) {
+    case 'Library':
       return 'library';
-    }
-    if (type === 'Line-Up') {
+    case 'Line-Up':
       return 'line_up';
-    }
-  } else {
-    return 'line_up'; // Default value
+    case 'library' || 'line_up':
+      return type;
+    default:
+      return 'line_up';
   }
 }
 

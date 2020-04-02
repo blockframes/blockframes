@@ -9,10 +9,7 @@ import { FormControl } from '@angular/forms';
 import { ContractVersionPriceControl, ContractVersionForm } from '@blockframes/contract/version/form';
 import { MovieCurrenciesSlug } from '@blockframes/utils/static-model';
 import { displayPaymentSchedule, displayTerms } from '../../+state/contract.utils';
-import { ContractQuery } from '../../+state';
-import { ContractVersionService } from '@blockframes/contract/version/+state';
-import { AngularFirestore } from '@angular/fire/firestore';
-import { DistributionDealService } from '@blockframes/distribution-deals/+state';
+import { ContractQuery, ContractService } from '../../+state';
 
 @Component({
   selector: 'contract-tunnel-summary-mandate',
@@ -23,10 +20,10 @@ import { DistributionDealService } from '@blockframes/distribution-deals/+state'
 export class SummaryMandateComponent implements OnInit {
 
   public movies$: Observable<Movie[]>;
-  public version: ContractVersionForm;
+  public lastVersionForm: ContractVersionForm;
   public dealForms: FormEntity<DealControls>;
   public form: ContractForm;
-  public parties: { licensee: FormControl[], licensor: { subRole: FormControl, displayName: FormControl}[] };
+  public parties: { licensee: FormControl[], licensor: { subRole: FormControl, displayName: FormControl }[] };
   public terms: string;
   public price: ContractVersionPriceControl;
   public deals: Record<string, string> = {}
@@ -35,9 +32,7 @@ export class SummaryMandateComponent implements OnInit {
 
   constructor(
     private tunnel: ContractTunnelComponent,
-    private db: AngularFirestore,
-    private service: ContractVersionService,
-    private dealService: DistributionDealService,
+    private contractService: ContractService,
     private query: ContractQuery,
     private dynTitle: DynamicTitleService
     ) {
@@ -49,7 +44,8 @@ export class SummaryMandateComponent implements OnInit {
     this.movies$ = this.tunnel.movies$;
     this.dealForms = this.tunnel.dealForms;
     this.form = this.tunnel.contractForm;
-    this.version = this.form.get('versions').last();
+
+    this.lastVersionForm = this.form.get('lastVersion');
     // Parties
     this.parties = { licensee: [], licensor: [] };
     for (const party of this.form.get('parties').controls) {
@@ -63,12 +59,12 @@ export class SummaryMandateComponent implements OnInit {
       }
     }
 
-    this.terms = displayTerms(this.version.get('scope').value);
-    this.price = this.version.get('price').controls;
+    this.terms = displayTerms(this.lastVersionForm.get('scope').value);
+    this.price = this.lastVersionForm.get('price').controls;
     this.currency = this.price.currency.value;
 
     // Distribution fees
-    const { price, titles } = this.version.value;
+    const { price, titles } = this.lastVersionForm.value;
     for (const movieId in titles) {
       if (price.commission && titles[movieId].price.commissionBase) {
         // Common Distribution Fee
@@ -84,27 +80,15 @@ export class SummaryMandateComponent implements OnInit {
       }
     }
 
-    this.payments = displayPaymentSchedule(this.version.value);
+    this.payments = displayPaymentSchedule(this.lastVersionForm.value);
   }
 
   /**
    * Submit a contract version to Archipel Content
-   * @todo(#1887) should update the version on the contract
-   * @note cannot put this function on the service or you hit cyrcular dependancies
    */
   async submit() {
-    const lastIndex = this.form.get('versions').value.length - 1;
-    const contractId = this.query.getActiveId();
-
-    // Make sure everything is saved first and that deals have ids
+    const contract = this.query.getActive();
     await this.tunnel.save();
-    const write = this.db.firestore.batch();
-    this.service.update(`${lastIndex}`, { status: 'submitted' }, { params: { contractId }, write });
-
-    for (const movieId in this.dealForms.value) {
-      const dealIds = this.dealForms.get(movieId).value.map(deal => deal.id);
-      this.dealService.update(dealIds, { status: 'undernegotiation' }, { params: { movieId }, write });
-    }
-    return write.commit();
+    return this.contractService.submit(contract);
   }
 }

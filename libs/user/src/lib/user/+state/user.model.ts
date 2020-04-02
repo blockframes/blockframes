@@ -9,8 +9,8 @@ export interface OrganizationMemberRequest {
 
 export interface OrganizationMember extends OrganizationMemberRequest {
   uid: string;
-  name?: string;
-  surname?: string;
+  firstName?: string;
+  lastName?: string;
   avatar?: ImgRef;
   role?: UserRole;
 }
@@ -19,8 +19,8 @@ export interface OrganizationMember extends OrganizationMemberRequest {
 export function createOrganizationMember(user: Partial<User> = {}, role?: UserRole): OrganizationMember {
  return  {
     uid: user.uid,
-    name: user.name,
-    surname: user.surname,
+    firstName: user.firstName,
+    lastName: user.lastName,
     avatar: createImgRef(user.avatar),
     email: user.email,
     roles: [],

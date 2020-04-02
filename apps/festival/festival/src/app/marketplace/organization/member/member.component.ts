@@ -7,13 +7,13 @@ import { map, switchMap } from 'rxjs/operators';
 import { fade, fadeLsit } from '@blockframes/utils/animations/fade';
 
 @Component({
-  selector: 'festival-marketplace-organization-members',
-  templateUrl: './members.component.html',
-  styleUrls: ['./members.component.scss'],
+  selector: 'festival-marketplace-organization-member',
+  templateUrl: './member.component.html',
+  styleUrls: ['./member.component.scss'],
   animations: [fade, fadeLsit('user-card')],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MembersComponent implements OnInit, OnDestroy {
+export class MemberComponent implements OnInit, OnDestroy {
   @HostBinding('@fade') animation = true;
 
   private sub: Subscription;

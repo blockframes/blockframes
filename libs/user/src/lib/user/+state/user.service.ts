@@ -34,8 +34,9 @@ export class UserService extends CollectionService<UserState> {
 
   //////////
   // USER //
+  // @dev we can replace a lot of these functions by native Akita-ng-fire functions
+  // @see https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
   //////////
-  // TODO #1389 we can replace a lot of these functions by native Akita-ng-fire functions
 
   /**
    * Check if uid is exists in blockframesAdmin collection.

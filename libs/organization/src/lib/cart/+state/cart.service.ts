@@ -33,6 +33,8 @@ export class CartService extends CollectionService<CartState> {
 
   //////////////////
   /// CART STUFF
+  // @dev we can replace a lot of these functions by native Akita-ng-fire functions
+  // @see https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
   //////////////////
 
   /**
@@ -40,7 +42,6 @@ export class CartService extends CollectionService<CartState> {
    * @param dealId
    * @param name
    */
-  // @TODO #1389 Use native akita-ng-fire functions : https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
   public async addDealToCart(dealId: string, name: string): Promise<CatalogCart> {
     const cart = await this.getCart(name);
     cart.deals.push(dealId);
@@ -53,7 +54,6 @@ export class CartService extends CollectionService<CartState> {
    * @param currency
    * @param name
    */
-  // @TODO #1389 Use native akita-ng-fire functions : https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
   public async submitCart(amount: number, currency: MovieCurrenciesSlug, name: string = 'default') {
     const cart = await this.getCart(name);
     const updatedCart: CatalogCart = {
@@ -68,7 +68,6 @@ export class CartService extends CollectionService<CartState> {
    * Creates an empty cart
    * @param name
    */
-  // @TODO #1389 Use native akita-ng-fire functions : https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
   private async initCart(name: string = 'default'): Promise<CatalogCart> {
     const cart: CatalogCart = createCart({ name });
     await this.db.doc<CatalogCart>(`orgs/${this.organizationQuery.getActiveId()}/carts/${name}`).set(cart);
@@ -79,7 +78,6 @@ export class CartService extends CollectionService<CartState> {
    *
    * @param cart
    */
-  // @TODO #1389 Remove this function if doesn't do anything more than native akita-ng-fire
   private async updateCart(cart: CatalogCart): Promise<CatalogCart> {
     await this.db
       .doc<CatalogCart>(`orgs/${this.organizationQuery.getActiveId()}/carts/${cart.name}`)
@@ -91,7 +89,6 @@ export class CartService extends CollectionService<CartState> {
    * Returns cart for given name if exists or create new one
    * @param name
    */
-  // @TODO #1389 Use native akita-ng-fire functions : https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
   public async getCart(name: string = 'default'): Promise<CatalogCart> {
     const snap = await this.db.doc<CatalogCart>(`orgs/${this.organizationQuery.getActiveId()}/carts/${name}`).ref.get();
     const cart = snap.data() as CatalogCart;
@@ -104,20 +101,21 @@ export class CartService extends CollectionService<CartState> {
 
   //////////////////
   /// WISHLIST STUFF
+  // @dev we can replace a lot of these functions by native Akita-ng-fire functions
+  // @see https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
   //////////////////
 
   /**
    * Update the status of the wishlist to 'sent' and create new date at this moment.
    * @param movies
    */
-  // @TODO #1389 Use native akita-ng-fire functions : https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
   public async updateWishlistStatus(movies: Movie[]) {
     const user = this.authQuery.user;
     const org = this.organizationQuery.getActive();
     const wishlistTitles = movies.map(movie => movie.main.title.original);
 
     const callDeploy = this.functions.httpsCallable('sendWishlistEmails');
-    await callDeploy({ email: user.email, userName: user.name, orgName: org.denomination.full, wishlist: wishlistTitles }).toPromise();
+    await callDeploy({ email: user.email, userName: user.firstName, orgName: org.denomination.full, wishlist: wishlistTitles }).toPromise();
 
     const setSent = (wishlist: Wishlist) => {
       return wishlist.status === 'pending'
@@ -132,7 +130,6 @@ export class CartService extends CollectionService<CartState> {
    *
    * @param movieId
    */
-  // @TODO #1389 Use native akita-ng-fire functions : https://netbasal.gitbook.io/akita/angular/firebase-integration/collection-service
   public async removeMovieFromWishlist(movieId: string): Promise<boolean | Error> {
     const orgState = this.organizationQuery.getActive();
     try {

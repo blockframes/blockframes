@@ -46,39 +46,38 @@ export class ContractTreeComponent implements OnInit {
    * @param contract 
    * @param mode 
    *   0 check both parents and childs
-   *   1 check only parents (ascending mode)
    *   -1 check only childs (descending mode)
    * @param level 
    */
-  private async recursiveParentsAndChilds(contract: Contract, mode: 0 | 1 | -1 = 0, level: number = 0) {
+  private async recursiveParentsAndChilds(contract: Contract, mode: 0 | -1 = 0, level: number = 0) {
     const processed = this.tree[contract.id] ? true : false;
     if (!processed) {
       this.tree[contract.id] = {
         id: contract.id,
         contract,
         level,
-        parents: contract.parentContractIds,
-        childs: contract.childContractIds,
+        parents: contract.parentContractIds || [],
+        childs: contract.childContractIds || [],
       };
 
-      // If 0 : we fetch parents & childs. If 1 (ascending mode), we check only parents
-      if ([0, 1].includes(mode)) {
-        const promises = contract.parentContractIds.map(async parentId => {
+      // If 0 : we fetch parents & childs.
+      if (mode === 0) {
+        const promises = this.tree[contract.id].parents.map(async (parentId: string) => {
           const parentContract = await this.contractService.getValue(parentId);
-          if(parentContract) {
-            return this.recursiveParentsAndChilds(parentContract, 1, level + 1);
+          if (parentContract) {
+            return this.recursiveParentsAndChilds(parentContract, 0, level + 1);
           } else {
             this.snackBar.open(`Parent contract ${parentId} not found.`, 'close', { duration: 2000 });
-          } 
+          }
         });
         await Promise.all(promises);
       }
 
       // If 0 : we fetch parents & childs. If -1 (descending mode), we check only childrens
       if ([0, -1].includes(mode)) {
-        const promises = contract.childContractIds.map(async childId => {
+        const promises = this.tree[contract.id].childs.map(async (childId: string) => {
           const childContract = await this.contractService.getValue(childId);
-          if(childContract) {
+          if (childContract) {
             return this.recursiveParentsAndChilds(childContract, -1, level - 1);
           } else {
             this.snackBar.open(`Child contract ${childId} not found.`, 'close', { duration: 2000 });

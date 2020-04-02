@@ -1,3 +1,13 @@
-<event-edit [event]="event$ | async">
-
+<event-edit [form]="form">
+  <article [formGroup]="meta" fxLayout="column">
+    <h4>Screening</h4>
+    <mat-form-field appearance="outline">
+      <mat-label>Select the title to display</mat-label>
+      <mat-select formControlName="titleId">
+        <mat-option *ngFor="let title of titles$ | async" [value]="title.id">
+          {{ title.main.title.international }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </article>
 </event-edit>
