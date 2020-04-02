@@ -23,6 +23,21 @@ export interface EventBase<D extends Timestamp | Date, Meta extends EventMeta = 
   meta: Meta;
 }
 
+// @TODO (#2244) move this in the appropriate folder
+export interface DocIndex {
+  /** @dev doc author'id. Setted by a backend function */
+  authorOrgId: string;
+  /** @dev private custom config for a doc. Setted by an https callable function */
+  config?: PrivateConfig | EventPrivateConfig
+}
+
+export interface PrivateConfig {};
+
+export interface EventPrivateConfig extends PrivateConfig{
+  /** @dev private url to access screening */
+  url: string;
+}
+
 // firestore documents
 type EventDocument<Meta> = EventBase<Timestamp, Meta>;
 export type MeetingEventDocument = EventDocument<Meeting>;
