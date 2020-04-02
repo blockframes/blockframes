@@ -37,8 +37,6 @@ export interface InvitationToWorkOnDocument extends Invitation {
   user?: PublicUser;
 }
 
-
-
 /** 
  * Specific Invitation/Request to attend an Event.
  * @see #2244 When a invitation is created
