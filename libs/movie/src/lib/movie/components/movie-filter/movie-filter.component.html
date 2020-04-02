@@ -1,4 +1,4 @@
-<ng-container [formGroup]="filterForm">
+<ng-container [formGroup]="form">
   <h5>TITLE METADATA</h5>
   <mat-expansion-panel>
 
@@ -7,7 +7,7 @@
       <mat-expansion-panel-header>
         <span class="mat-body-1">Genres</span>
       </mat-expansion-panel-header>
-      <movie-form-genre [form]="filterForm.genres"></movie-form-genre>
+      <movie-form-genre [form]="form.genres"></movie-form-genre>
     </mat-expansion-panel>
 
     <!-- Country-->
@@ -16,7 +16,7 @@
         <span class="mat-body-1">Country of Origin</span>
       </mat-expansion-panel-header>
       <chips-autocomplete
-        [form]="filterForm.originCountries"
+        [form]="form.originCountries"
         placeholder="Country of Origin"
         [items]="countries"
         store="slug"
@@ -59,8 +59,8 @@
           </button>
         </div>
         <div fxLayout="column" fxLayoutAlign="start start">
-          <ng-container *ngIf="filterForm.get('languages').value">
-            <mat-list [formGroup]="filterForm.get('languages')" role="list">
+          <ng-container *ngIf="form.get('languages').value">
+            <mat-list [formGroup]="form.get('languages')" role="list">
               <ng-container *ngFor="let language of selectedLanguages$ | async">
                 <mat-list-item [formGroupName]="language">
                   <span mat-line>
@@ -130,7 +130,7 @@
       </mat-chip-list>
       <mat-form-field appearance="outline">
         <mat-label>Search for a specific seller</mat-label>
-        <input matInput type="text" [formControl]="filterForm.seller" [matAutocomplete]="sellerOrgs">
+        <input matInput type="text" [formControl]="form.seller" [matAutocomplete]="sellerOrgs">
       </mat-form-field>
       <mat-autocomplete #sellerOrgs>
         <mat-option *ngFor="let name of (orgSearchResults$ | async)" (click)="addSeller(name)">{{name}}</mat-option>

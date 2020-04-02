@@ -9,7 +9,7 @@ import { NumberRange } from '@blockframes/utils/common-interfaces';
 import { BUDGET_LIST } from '@blockframes/movie/form/budget/budget.form';
 
 @Component({
-  selector: '[filterForm] movie-filter',
+  selector: '[form] movie-filter',
   templateUrl: './movie-filter.component.html',
   styleUrls: ['./movie-filter.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -18,7 +18,7 @@ export class MovieFilterComponent {
 
   // TODO USE EXISTING REUSABLE COMPONENT OR EXTRACT THEM INSTEAD OF THIS GARBAGE BELOW
 
-  @Input() filterForm: CatalogSearchForm;
+  @Input() form: CatalogSearchForm;
 
   /** Filter for autocompletion */
   public countries = staticModels['TERRITORIES'];
@@ -54,7 +54,7 @@ export class MovieFilterComponent {
      */
     const languageSlug: LanguagesSlug = getCodeIfExists('LANGUAGES', language);
     if (LANGUAGES_LABEL.includes(language)) {
-      this.filterForm.addLanguage(languageSlug);
+      this.form.addLanguage(languageSlug);
       this.analytics.event('addedLanguage', { language });
     } else {
       throw new Error('Something went wrong. Please choose a language from the drop down menu.');
@@ -67,19 +67,19 @@ export class MovieFilterComponent {
      * because for our backend we need to store the slug.
      */
     const languageSlug: LanguagesSlug = getCodeIfExists('LANGUAGES', language);
-    this.filterForm.removeLanguage(languageSlug);
+    this.form.removeLanguage(languageSlug);
     this.analytics.event('removedLanguage', { language });
   }
 
   // BUDGET FIELD
 
   public hasBudget(budget: NumberRange) {
-    const value = this.filterForm.get('estimatedBudget').value;
+    const value = this.form.get('estimatedBudget').value;
     if (!value.includes(budget)) {
-      this.filterForm.get('estimatedBudget').setValue([...value, budget]);
+      this.form.get('estimatedBudget').setValue([...value, budget]);
     } else {
       const valueWithoutBudget = value.filter(v => v !== budget);
-      this.filterForm.get('estimatedBudget').setValue(valueWithoutBudget);
+      this.form.get('estimatedBudget').setValue(valueWithoutBudget);
     }
   }
 
@@ -92,12 +92,12 @@ export class MovieFilterComponent {
     const productionStatusSlug = getCodeIfExists('MOVIE_STATUS', status);
     if (
       this.movieProductionStatuses.includes(status) &&
-      !this.filterForm.productionStatus.value.includes(productionStatusSlug)
+      !this.form.productionStatus.value.includes(productionStatusSlug)
     ) {
-      this.filterForm.addStatus(productionStatusSlug);
+      this.form.addStatus(productionStatusSlug);
       this.analytics.event('addedMovieStatus', { status });
     } else {
-      this.filterForm.removeStatus(productionStatusSlug);
+      this.form.removeStatus(productionStatusSlug);
       this.analytics.event('removedMovieStatus', { status });
     }
   }

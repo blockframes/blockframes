@@ -5,7 +5,7 @@
     </button>
     <nav mat-tab-nav-bar>
       <h3>{{titleType}} List</h3>
-      <ng-template [ngTemplateOutlet]="titleSearchTemplate?.template"></ng-template>
+      <ng-template [ngTemplateOutlet]="titleSearchTemplate"></ng-template>
       <button *ngIf="canToggle" mat-icon-button (click)="listView = !listView">
         <ng-container *ngIf="!listView">
           <mat-icon matPrefix svgIcon="list"></mat-icon>
@@ -14,7 +14,7 @@
           <mat-icon matPrefix svgIcon="grid"></mat-icon>
         </ng-container>
       </button>
-      <ng-template [ngTemplateOutlet]="titleSortTemplate?.template"></ng-template>
+      <ng-template [ngTemplateOutlet]="titleSortTemplate"></ng-template>
     </nav>
   </mat-toolbar>
 </page-nav>
@@ -31,7 +31,7 @@
       </ng-container>
     </button>
 
-    <ng-template [ngTemplateOutlet]="titleSortTemplate?.template"></ng-template>
+    <ng-template [ngTemplateOutlet]="titleSortTemplate"></ng-template>
 
   </article>
 </section>
@@ -39,7 +39,7 @@
 <!-- MAIN SEARCH BAR -->
 <section class="search">
 
-  <ng-template [ngTemplateOutlet]="titleSearchTemplate?.template"></ng-template>
+  <ng-template [ngTemplateOutlet]="titleSearchTemplate"></ng-template>
 
 </section>
 
@@ -50,7 +50,7 @@
     <mat-card>
       <!-- TODO INSERT FILTERS -->
       <ng-content></ng-content>
-      
+
     </mat-card>
   </aside>
 
@@ -61,26 +61,28 @@
         <h6>There are {{ titles.length }} {{titleType}}s available!</h6>
       </div>
       <div fxLayout="row wrap" fxLayoutGap="24px" fxLayout.lt-md="column" fxLayoutAlign.lt-md="center center">
-        <ng-container *ngFor="let title of titles">
-          <ng-container *ngIf="!listView; else displayList">
+        <ng-container *ngIf="!listView; else displayList">
+          <ng-container *ngFor="let title of titles">
 
-              <!-- INSERT CARD -->
-              <ng-template
-                [ngTemplateOutlet]="titleCardTemplate?.template"
-                [ngTemplateOutletContext]="{$implicit: title}"
-              ></ng-template>
-
-          </ng-container>
-          <ng-template #displayList>
-
-            <!-- INSERT LIST ITEM -->
+            <!-- INSERT CARD -->
             <ng-template
-              [ngTemplateOutlet]="titleListItemTemplate?.template"
+              [ngTemplateOutlet]="titleCardTemplate"
               [ngTemplateOutletContext]="{$implicit: title}"
             ></ng-template>
 
-          </ng-template>
+          </ng-container>
         </ng-container>
+        <ng-template #displayList>
+          <ng-container *ngFor="let title of titles">
+
+            <!-- INSERT LIST ITEM -->
+            <ng-template
+              [ngTemplateOutlet]="titleListItemTemplate"
+              [ngTemplateOutletContext]="{$implicit: title}"
+            ></ng-template>
+
+          </ng-container>
+        </ng-template>
       </div>
     </ng-container>
   </article>

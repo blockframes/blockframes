@@ -5,21 +5,21 @@ import { Observable } from 'rxjs';
 
 @Directive({selector: '[titleSort]'})
 export class TitleSortDirective {
-  constructor(public template: TemplateRef<any>) {}
+  // constructor(public template: TemplateRef<any>) {}
 }
 
 @Directive({selector: '[titleSearch]'})
 export class TitleSearchDirective {
-  constructor(public template: TemplateRef<any>) {}
+  // constructor(public template: TemplateRef<any>) {}
 }
 
 @Directive({selector: '[titleCard]'})
 export class TitleCardDirective {
-  constructor(public template: TemplateRef<any>) {}
+  // constructor(public template: TemplateRef<any>) {}
 }
 @Directive({selector: '[titleListItem]'})
 export class TitleListItemDirective {
-  constructor(public template: TemplateRef<any>) {}
+  // constructor(public template: TemplateRef<any>) {}
 }
 
 @Component({
@@ -30,10 +30,10 @@ export class TitleListItemDirective {
 })
 export class TitleListComponent implements AfterContentInit {
 
-  @ContentChild(TitleSortDirective) titleSortTemplate: TitleSortDirective;
-  @ContentChild(TitleSearchDirective) titleSearchTemplate: TitleSearchDirective;
-  @ContentChild(TitleCardDirective) titleCardTemplate: TitleCardDirective;
-  @ContentChild(TitleListItemDirective) titleListItemTemplate: TitleListItemDirective;
+  @ContentChild(TitleSortDirective, { read: TemplateRef }) titleSortTemplate: TitleSortDirective;
+  @ContentChild(TitleSearchDirective, { read: TemplateRef }) titleSearchTemplate: TitleSearchDirective;
+  @ContentChild(TitleCardDirective, { read: TemplateRef }) titleCardTemplate: TitleCardDirective;
+  @ContentChild(TitleListItemDirective, { read: TemplateRef }) titleListItemTemplate: TitleListItemDirective;
 
   @Input() titles$: Observable<any>;
 
