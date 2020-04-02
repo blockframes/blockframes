@@ -4,23 +4,15 @@ import { Observable } from 'rxjs';
 
 
 @Directive({selector: '[titleSort]'})
-export class TitleSortDirective {
-  // constructor(public template: TemplateRef<any>) {}
-}
+export class TitleSortDirective {}
 
 @Directive({selector: '[titleSearch]'})
-export class TitleSearchDirective {
-  // constructor(public template: TemplateRef<any>) {}
-}
+export class TitleSearchDirective {}
 
 @Directive({selector: '[titleCard]'})
-export class TitleCardDirective {
-  // constructor(public template: TemplateRef<any>) {}
-}
+export class TitleCardDirective {}
 @Directive({selector: '[titleListItem]'})
-export class TitleListItemDirective {
-  // constructor(public template: TemplateRef<any>) {}
-}
+export class TitleListItemDirective {}
 
 @Component({
   selector: '[titles$] title-list',
