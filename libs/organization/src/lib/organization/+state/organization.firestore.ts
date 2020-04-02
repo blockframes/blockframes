@@ -37,6 +37,13 @@ interface OrganizationRaw<D> {
   wishlist: WishlistRaw<D>[];
 }
 
+export const activities = {
+  production: 'Producion',
+  sales: 'International Sales',
+  distribution: 'Distribution',
+  // FOR MY REVIEWER: DON'T LET ME MERGE BEFORE I FINISH THAT
+}
+
 export interface OrganizationDocument extends OrganizationRaw<Timestamp> { }
 
 export interface OrganizationDocumentWithDates extends OrganizationRaw<Date> { }
