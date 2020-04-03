@@ -13,6 +13,7 @@ import { staticModels } from '@blockframes/utils/static-model';
 import { LanguagesLabel, LanguagesSlug, LANGUAGES_LABEL, MovieStatusLabel, MOVIE_STATUS_LABEL } from '@blockframes/utils/static-model/types';
 import { getCodeIfExists } from '@blockframes/utils/static-model/staticModels';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
+import { FormList } from '@blockframes/utils/form';
 
 @Component({
   selector: 'festival-marketplace-title-list',
@@ -48,9 +49,7 @@ export class ListComponent implements OnInit, OnDestroy {
   // status
   public movieProductionStatuses: MovieStatusLabel[] = MOVIE_STATUS_LABEL;
 
-  // seller
-  public orgSearchResults$: Observable<any>;
-  public selectedSellers$ = new BehaviorSubject<string[]>([]);
+  public sellersForm = FormList.factory<string>([]);
 
   constructor(
     private movieService: MovieService,
@@ -107,16 +106,5 @@ export class ListComponent implements OnInit, OnDestroy {
       this.filterForm.removeStatus(productionStatusSlug);
       this.analytics.event('removedMovieStatus', { status });
     }
-  }
-
-  public addSeller(seller: string) {
-    const newSelectedSellers = [seller, ...this.selectedSellers$.getValue()];
-    this.selectedSellers$.next(newSelectedSellers);
-  }
-
-  public removeSeller(index: number) {
-    const newSelectedSellers = this.selectedSellers$.getValue();
-    newSelectedSellers.splice(index, 1);
-    this.selectedSellers$.next(newSelectedSellers);
   }
 }

@@ -1,0 +1,15 @@
+<mat-chip-list aria-label="Sellers selection">
+  <ng-container *ngFor="let seller of form.valueChanges | async; let i = index">
+    <mat-chip selectable removable>
+      <span>{{ seller }}</span>
+      <mat-icon matChipRemove svgIcon="cross" (click)="removeSeller(i)"></mat-icon>
+    </mat-chip>
+  </ng-container>
+</mat-chip-list>
+<mat-form-field appearance="outline">
+  <mat-label>Search for a specific seller</mat-label>
+  <input matInput type="text" [formControl]="orgSearch" [matAutocomplete]="sellerOrgs">
+</mat-form-field>
+<mat-autocomplete #sellerOrgs>
+  <mat-option *ngFor="let name of (orgSearchResults$ | async)" (click)="addSeller(name)">{{name}}</mat-option>
+</mat-autocomplete>
