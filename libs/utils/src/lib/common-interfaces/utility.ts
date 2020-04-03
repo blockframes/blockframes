@@ -17,6 +17,24 @@ export interface BankAccount {
   holderName: string;
 }
 
+export interface DocIndex {
+  /** @dev doc author'id. Setted by a backend function */
+  authorOrgId: string;
+  /** @dev private custom config for a doc. Setted by an https callable function */
+  config?: PrivateConfig
+}
+
+export interface PrivateConfig {
+  url?: string
+};
+
+// Private event config
+export function createPrivateConfig(config: Partial<PrivateConfig>): PrivateConfig {
+  return {
+    ... config,
+  }
+}
+
 /** A factory function that creates an Address/Location */
 export function createLocation(params: Partial<Location> = {}): Location {
   return {

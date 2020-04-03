@@ -69,6 +69,21 @@
     </bf-table-filter>
   </article>
 </section>
-
+<section fxLayout="row" fxLayoutAlign="start" *ngIf="movie">
+  <article id="private-section" fxLayout="column" fxLayoutAlign="start">
+    <h2>Movie private config :</h2>
+    <ng-container *ngIf="privateConfigForm">
+      <form [formGroup]="privateConfigForm" fxLayout="column">
+        <mat-form-field appearance="outline">
+          <mat-label>Screening URL</mat-label>
+          <input matInput type="text" placeholder="Screening URL" formControlName="url" />
+        </mat-form-field>
+        <mat-card-actions align="end">
+          <button type="submit" mat-flat-button color="primary" (click)="setMoviePrivateConfig()">Update</button>
+        </mat-card-actions>
+      </form>
+    </ng-container>
+  </article>
+</section>
 
 

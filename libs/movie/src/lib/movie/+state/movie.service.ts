@@ -12,6 +12,7 @@ import { AngularFireFunctions } from '@angular/fire/functions';
 import { Observable, combineLatest } from 'rxjs';
 import { MovieQuery } from './movie.query';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
+import { PrivateConfig } from '@blockframes/utils/common-interfaces/utility';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies' })
@@ -124,5 +125,23 @@ export class MovieService extends CollectionService<MovieState> {
     const movies = await this.getValue()
 
     return movies.map(movie => createMovie(movie));
+  }
+
+  /**
+   * @dev ADMIN method
+   * Https callable function to set privateConfig for a movie.
+   */
+  public async setMoviePrivateConfig(movieId: string, privateConfig: PrivateConfig): Promise<any> {
+    const f = this.functions.httpsCallable('setDocumentPrivateConfig');
+    return f({ docId: movieId, config: privateConfig }).toPromise();
+  }
+
+  /**
+   * @dev ADMIN method
+   * Https callable function to get privateConfig for a movie.
+   */
+  public async getMoviePrivateConfig(movieId: string): Promise<PrivateConfig | false> {
+    const f = this.functions.httpsCallable('getDocumentPrivateConfig');
+    return f({ docId: movieId }).toPromise();
   }
 }

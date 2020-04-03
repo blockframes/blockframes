@@ -1,4 +1,5 @@
 import { firestore } from 'firebase';
+import { PrivateConfig } from '@blockframes/utils/common-interfaces/utility';
 
 type Timestamp = firestore.Timestamp;
 
@@ -23,16 +24,6 @@ export interface EventBase<D extends Timestamp | Date, Meta extends EventMeta = 
   allDay: boolean,
   meta: Meta;
 }
-
-// @TODO (#2244) move this in the appropriate folder
-export interface DocIndex {
-  /** @dev doc author'id. Setted by a backend function */
-  authorOrgId: string;
-  /** @dev private custom config for a doc. Setted by an https callable function */
-  config?: PrivateConfig | EventPrivateConfig
-}
-
-export interface PrivateConfig {};
 
 export interface EventPrivateConfig extends PrivateConfig{
   /** @dev private url to access screening */
