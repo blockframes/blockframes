@@ -24,11 +24,14 @@ import {
   Inject,
   PLATFORM_ID,
   HostListener,
-  ChangeDetectorRef
+  ChangeDetectorRef,
+  ViewChildren
 } from '@angular/core';
 import { AnimationBuilder, animate, style } from '@angular/animations';
 import { ListKeyManager } from '@angular/cdk/a11y';
 import { isPlatformBrowser } from '@angular/common';
+
+import {coerceBoolean} from '@blockframes/utils/decorators/decorators';
 
 enum Direction {
   Left,
@@ -56,13 +59,15 @@ export class SliderComponent implements OnDestroy, AfterContentInit, AfterViewIn
   // Inputs //
   ///////////
 
-  @Input() timing: Slider['timing'] = '550ms ease-in';
+  @Input() timing: Slider['timing'] = '250ms ease-in';
 
   @Input() ratio: Slider['ratio'] = '16:9';
 
   @Input() arrowBack: Slider['arrowBack'] = 'arrow_back';
 
   @Input() arrowForward: Slider['arrowForward'] = 'arrow_forward'
+
+  @Input() maxHeight: string = '600px';
 
   // Milliseconds
   @Input()
@@ -114,6 +119,8 @@ export class SliderComponent implements OnDestroy, AfterContentInit, AfterViewIn
     this.autoplay$.next(value);
   }
 
+  @Input() @coerceBoolean test: boolean;
+
   ///////////////////
   // Private Vars //
   /////////////////
@@ -163,19 +170,23 @@ export class SliderComponent implements OnDestroy, AfterContentInit, AfterViewIn
 
   @ViewChild('slideList') private slideList: ElementRef<HTMLUListElement>;
 
+  @ViewChildren('slideItems') private slideItems: QueryList<any>;
+
   constructor(
     private themeService: ThemeService,
     private animationBuilder: AnimationBuilder,
     private renderer: Renderer2,
     @Inject(PLATFORM_ID) private platformId,
     private cdr: ChangeDetectorRef
-    ) {
+  ) {
     this.themeService.theme$.pipe(takeUntil(this.destroy$)).subscribe(theme => {
       this.theme = theme
     })
   }
 
   ngAfterViewInit() {
+    // TODO #2440
+    this.slideItems.forEach(el => el.nativeElement.style.height = this.maxHeight);
     this.calculateRatio();
     this.autoplay$.pipe(takeUntil(this.destroy$)).subscribe(value => {
       this.stopTimer();
@@ -362,22 +373,23 @@ export class SliderComponent implements OnDestroy, AfterContentInit, AfterViewIn
   }
 
   private calculateRatio() {
-    switch (this.ratio) {
-      case '16:9':
-        this.slideWrapper.nativeElement.style.paddingBottom = '56.25%';
-        break;
-      case '1:1':
-        this.slideWrapper.nativeElement.style.paddingBottom = '100%';
-        break;
-      case '3:2':
-        this.slideWrapper.nativeElement.style.paddingBottom = '66.66%';
-        break;
-      case '4:3':
-        this.slideWrapper.nativeElement.style.paddingBottom = '75%';
-        break;
-      case '8:5':
-        this.slideWrapper.nativeElement.style.paddingBottom = '62.5%';
-    }
+    // TODO #2440
+    /*     switch (this.ratio) {
+          case '16:9':
+            this.slideWrapper.nativeElement.style.paddingBottom = '56.25%';
+            break;
+          case '1:1':
+            this.slideWrapper.nativeElement.style.paddingBottom = '100%';
+            break;
+          case '3:2':
+            this.slideWrapper.nativeElement.style.paddingBottom = '66.66%';
+            break;
+          case '4:3':
+            this.slideWrapper.nativeElement.style.paddingBottom = '75%';
+            break;
+          case '8:5':
+            this.slideWrapper.nativeElement.style.paddingBottom = '62.5%';
+        } */
   }
 
   private playAnimation() {

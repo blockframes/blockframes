@@ -21,7 +21,8 @@ export const bfSlider = () => ({
     [ratio]="ratio"
     [interval]="interval"
     [hideIndicators]="hideIndicators"
-    [timing]="timing">
+    [timing]="timing"
+    test>
       <ng-container *ngFor="let image of images">
         <bf-slide 
         [image]="image" 
@@ -36,9 +37,10 @@ export const bfSlider = () => ({
     autoplay: boolean('autoplay', true),
     loop: boolean('loop', true),
     images: object('images', [
-      { url: 'https://www.calliaweb.co.uk/wp-content/uploads/2015/10/600x600.jpg' },
-      { url: 'https://www.calliaweb.co.uk/wp-content/uploads/2015/10/600x600.jpg' },
-      { url: 'https://www.calliaweb.co.uk/wp-content/uploads/2015/10/600x600.jpg' }]),
+      { url: 'https://via.placeholder.com/600/771796' },
+      { url: 'https://via.placeholder.com/600/771796' },
+      { url: 'https://via.placeholder.com/600/771796' }
+    ]),
     swipe: boolean('swipe', true),
     ratio: text('ratio', ''),
     interval: number('interval', 1000),
@@ -47,6 +49,6 @@ export const bfSlider = () => ({
     hideIndicators: boolean('hideIndicators', false),
     slideDirection: text('slideDirection', 'rtl'),
     hideOverlay: boolean('hideOverlay', false),
-    overlayColor: text('overlayColor', '#00000080')
+    overlayColor: text('overlayColor', '#00000080'),
   }
 });

@@ -1,4 +1,3 @@
-import { DomSanitizer } from '@angular/platform-browser';
 import { Directive, ElementRef, Input } from '@angular/core';
 import { ImgRef } from '@blockframes/utils/image-uploader';
 
@@ -8,7 +7,8 @@ import { ImgRef } from '@blockframes/utils/image-uploader';
 export class BackgroundRefDirective {
     @Input('backgroundRef')
     set ref(value: ImgRef) {
-        this.el.nativeElement.style.backgroundImage = this.sanitizer.bypassSecurityTrustStyle(`url("${value.url}")`);
+        // https://netbasal.com/angular-2-security-the-domsanitizer-service-2202c83bd90
+        this.el.nativeElement.style.backgroundImage = `url("${value.url}")`
     };
-    constructor(private el: ElementRef, private sanitizer: DomSanitizer) { }
+    constructor(private el: ElementRef) { }
 }

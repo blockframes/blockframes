@@ -10,7 +10,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 // Libraries
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { MatCarouselModule } from '@ngmodule/material-carousel';
+import { SliderModule } from '@blockframes/ui/slider/slider.module';
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
 
 // Pages
@@ -24,10 +24,10 @@ import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
     CropperModule,
     MatButtonModule,
     FlexLayoutModule,
-    MatCarouselModule,
+    SliderModule,
     TranslateSlugModule,
     MatIconModule,
-    MatSnackBarModule, 
+    MatSnackBarModule,
     RouterModule.forChild([
       {
         path: '',
@@ -36,4 +36,4 @@ import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
     ])
   ]
 })
-export class MarketplaceHomeModule {}
+export class MarketplaceHomeModule { }

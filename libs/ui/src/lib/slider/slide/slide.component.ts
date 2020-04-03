@@ -13,7 +13,7 @@ export class SlideComponent implements ListKeyManagerOption, Slide {
 
   @Input() image: Slide['image'];
 
-  @Input() overlayColor: Slide['overlayColor'] = '#00000040';
+  @Input() overlayColor: Slide['overlayColor'] = '#00000080';
 
   @Input()
   get hideOverlay() { return this._hideOverlay }
@@ -23,7 +23,6 @@ export class SlideComponent implements ListKeyManagerOption, Slide {
 
   // Implements ListKeyManagerOption otherwise it will throw an Error
   @Input() disabled = false;
-
 
   private _hideOverlay: Slide['hideOverlay'];
 

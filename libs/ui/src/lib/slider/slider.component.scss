@@ -15,7 +15,8 @@
 
     &-item {
         width: 100%;
-        height: 400px;
+        // TODO #2440
+        height: 600px;
         display: flex;
         position: relative;
         flex-shrink: 0;
@@ -24,8 +25,6 @@
     & > button {
         position: absolute;
         z-index: 1;
-        top: 50%;
-        transform: translateY(-50%);
     }
 
     &-indicators {
@@ -46,11 +45,13 @@
 }
 
 .previous {
-    left: 30px;
+    right: 60px;
+    bottom: 30px;
 }
 
 .next {
-    right: 30px;
+    right: 0px;
+    bottom: 30px;
 }
 
 /// Margin needs to be overriden because in the global
