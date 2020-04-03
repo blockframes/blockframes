@@ -1,0 +1,11 @@
+
+<mat-card-content>
+  <h6>Filters</h6>
+  <p class="mat-caption">For a specific filter, multiple choices will be applied with an "or" statement (not an "and" statement).</p>
+  <mat-divider inset></mat-divider>
+  <h5>TITLE METADATA</h5>
+  <mat-expansion-panel *ngFor="let filter of filters">
+    <mat-expansion-panel-header>{{filter.label}}</mat-expansion-panel-header>
+    <ng-template [ngTemplateOutlet]="filter?.template"></ng-template>
+  </mat-expansion-panel>
+</mat-card-content>
