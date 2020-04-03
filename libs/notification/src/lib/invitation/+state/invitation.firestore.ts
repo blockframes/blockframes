@@ -1,6 +1,6 @@
 import { PublicOrganization } from "@blockframes/organization/organization/+state/organization.firestore";
 import { firestore } from 'firebase/app';
-import { PublicUser } from "@blockframes/auth/+state/auth.firestore";
+import { PublicUser } from "@blockframes/user/+state/user.firestore";
 import { App } from "@blockframes/utils/apps";
 type Timestamp = firestore.Timestamp;
 
@@ -12,6 +12,11 @@ export interface Invitation {
   mode?: InvitationMode,
   status: InvitationStatus;
   date: Timestamp;
+  fromOrg?: PublicOrganization,
+  fromUser?: PublicUser,
+  toOrg?: PublicOrganization,
+  toUser?: PublicUser,
+  toEmail?: string,
   /** 
    * @dev Can be a titleId or a eventId for example.
    * If empty, the invitation is about Organization
@@ -21,21 +26,8 @@ export interface Invitation {
 }
 
 /** Specific types of Invitation, both used in firebase functions. */
-export type InvitationDocument = InvitationToWorkOnDocument | InvitationFromOrganizationToUser | InvitationFromUserToOrganization;
+export type InvitationDocument = InvitationFromOrganizationToUser | InvitationFromUserToOrganization;
 export type InvitationOrUndefined = InvitationDocument | undefined;
-
-/** Specific Invitation send by an Organization to another Organization to work on a document. */
-export interface InvitationToWorkOnDocument extends Invitation {
-  type: 'toWorkOnDocument';
-  /** @dev TitleId for example*/
-  docId: string;
-  /**
-   *  @TODO (#2244) should rename to better understand
-   * who is inviting and who is invited.
-   */
-  organization: PublicOrganization;
-  user?: PublicUser;
-}
 
 /** 
  * Specific Invitation/Request to attend an Event.
@@ -48,11 +40,6 @@ export interface InvitationToWorkOnDocument extends Invitation {
 export interface InvitationToAnEvent extends Invitation {
   mode: InvitationMode,
   type: 'event';
-  fromOrg?: PublicOrganization,
-  fromUser?: PublicUser,
-  toOrg?: PublicOrganization,
-  toUser?: PublicUser,
-  toEmail?: string,
   /** @dev EventId */
   docId: string;
 }
@@ -60,29 +47,23 @@ export interface InvitationToAnEvent extends Invitation {
 /**  Specific Invitation send by an Organization to a User to join it. */
 export interface InvitationFromOrganizationToUser extends Invitation {
   type: 'fromOrganizationToUser';
-  /**
-   *  @TODO (#2244) should rename to better understand
-   * who is inviting and who is invited.
-   */
-  user: PublicUser;
-  organization: PublicOrganization;
+  mode: 'invitation';
+  toUser: PublicUser;
+  fromOrg: PublicOrganization;
 }
 
 /** Specific Invitation send by a User to join an Organization. */
 export interface InvitationFromUserToOrganization extends Invitation {
   type: 'fromUserToOrganization';
-  /**
-   *  @TODO (#2244) should rename to better understand
-   * who is inviting and who is invited.
-   */
-  user: PublicUser;
-  organization: PublicOrganization;
+  mode: 'request'; // @TODO (#2244) update draw.io & check #2433
+  fromUser: PublicUser;
+  toOrg: PublicOrganization;
 }
 
 /** Status of an Invitation. Set to pending by default, get erased if accepted, archived if declined. */
 export type InvitationStatus = 'accepted' | 'declined' | 'pending';
 
 /** Type of Invitation depending of its purpose. */
-export type InvitationType = 'fromUserToOrganization' | 'fromOrganizationToUser' | 'toWorkOnDocument' | 'event' ;
+export type InvitationType = 'fromUserToOrganization' | 'fromOrganizationToUser' | 'event' ;
 
 export type InvitationMode = 'request' | 'invitation';

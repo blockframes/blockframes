@@ -15,7 +15,10 @@ export interface Screening {
 }
 export interface EventBase<D extends Timestamp | Date, Meta extends EventMeta = any> {
   id: string;
-  /** The id of the owner. Can be a user or an organisation */
+  /**
+   * @dev The id of the owner. Can be a user or an organisation
+   * @toto (#2244) we should be able to discriminate if it is UserId or OrgId
+   **/
   ownerId: string;
   type: EventTypes;
   title: string;

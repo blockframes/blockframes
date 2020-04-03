@@ -54,7 +54,7 @@ export const setEventUrl = async (data: { eventId: string }, context: CallableCo
   let allowed = false;
   if (admin.exists) {
     allowed = true;
-  } else if (event.ownerId === context.auth.uid) {
+  } else if (event.ownerId === context.auth.uid) { // @TODO (#2244) ownerId is  userId or OrgId ?
     allowed = true;
   }
   if (!allowed) { return false; }
@@ -77,9 +77,9 @@ export const setEventUrl = async (data: { eventId: string }, context: CallableCo
 export const getEventUrl = async (data: { eventId: string }, context: CallableContext) => {
   if (!context || !context.auth) { return false; }
   const admin = await db.doc(`blockframesAdmin/${context.auth.uid}`).get();
-  const snap = await db.doc(`docsIndex/${data.eventId}`).get();
-  if (!snap.exists) { return false; }
-  const event = snap.data();
+  const eventSnap = await db.doc(`events/${data.eventId}`).get();
+  if (!eventSnap.exists) { return false; }
+  const event = eventSnap.data();
   if (!event || !event.meta || !event.meta.titleId) { return false; }
 
   let allowed = false;
@@ -90,7 +90,7 @@ export const getEventUrl = async (data: { eventId: string }, context: CallableCo
     // const uid = context.auth.uid;
   }
   if (!allowed) { return false; }
-
+  const snap = await db.doc(`docsIndex/${data.eventId}`).get();
   const doc = snap.data();
   return doc ? (doc.config as PrivateConfig).url : false;
 };

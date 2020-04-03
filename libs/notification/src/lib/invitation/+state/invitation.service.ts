@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
 import { InvitationState } from './invitation.store';
-import { createInvitationToDocument, createInvitationFromUserToOrganization, createInvitationFromOrganizationToUser, Invitation } from './invitation.model';
+import { createInvitationFromUserToOrganization, createInvitationFromOrganizationToUser, Invitation } from './invitation.model';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { OrganizationService } from '@blockframes/organization/organization/+state/organization.service';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { AuthService } from '@blockframes/auth/+state/auth.service';
-import { PublicOrganization } from '@blockframes/organization/organization/+state/organization.firestore';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'invitations' })
@@ -14,7 +13,7 @@ export class InvitationService extends CollectionService<InvitationState> {
     private authQuery: AuthQuery,
     private authService: AuthService,
     private orgService: OrganizationService,
-    ) {
+  ) {
     super();
   }
 
@@ -24,8 +23,8 @@ export class InvitationService extends CollectionService<InvitationState> {
     const { uid, firstName, lastName, email } = this.authQuery.user;
     const invitation = createInvitationFromUserToOrganization({
       id: this.db.createId(),
-      organization: {id: organization.id, denomination: {full: organization.denomination.full}, logo: organization.logo},
-      user: { uid, firstName, lastName, email }
+      toOrg: { id: organization.id, denomination: { full: organization.denomination.full }, logo: organization.logo },
+      fromUser: { uid, firstName, lastName, email }
     });
     return this.add(invitation);
   }
@@ -43,32 +42,22 @@ export class InvitationService extends CollectionService<InvitationState> {
     const invitations = users.map(user => {
       return createInvitationFromOrganizationToUser({
         id: this.db.createId(),
-        organization: { id: organization.id, denomination: {full: organization.denomination.full}, logo: organization.logo },
-        user: { uid: user.uid, email: user.email }
+        fromOrg: { id: organization.id, denomination: { full: organization.denomination.full }, logo: organization.logo },
+        toUser: { uid: user.uid, email: user.email }
       });
     });
 
     return this.add(invitations);
   }
 
-  /** Create an Invitation when an Organization is invited to work on a document. */
-  public sendDocumentInvitationToOrg({id, denomination, logo}: PublicOrganization, docId: string) {
-    const invitation = createInvitationToDocument({
-      id: this.db.createId(),
-      organization: {id, denomination, logo},
-      docId
-    });
-    return this.add(invitation);
-  }
-
   /** Accept an Invitation and change its status to accepted. */
   public acceptInvitation(invitation: Invitation) {
-    return this.update({...invitation, status: 'accepted'});
+    return this.update({ ...invitation, status: 'accepted' });
   }
 
   /** Decline an Invitation and change its status to declined. */
   public declineInvitation(invitation: Invitation) {
-    return this.update({...invitation, status: 'declined'});
+    return this.update({ ...invitation, status: 'declined' });
   }
 
   /** Return true if there is already a pending invitation for a list of users */
@@ -79,7 +68,7 @@ export class InvitationService extends CollectionService<InvitationState> {
     );
 
     return orgInvitations.some(
-      invitation => userEmails.includes(invitation.user.email) && invitation.status === 'pending'
-    )
+      invitation => userEmails.includes(invitation.toUser.email) && invitation.status === 'pending'
+    );
   }
 }
