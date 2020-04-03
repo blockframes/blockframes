@@ -17,14 +17,14 @@ const USERS: Partial<User>[] = [
   {
     email: `organization-creation-test@cypress.com`,
     password: 'blockframes',
-    name: `${Date.now()}-Cypress name`,
-    surname: `${Date.now()}-Cypress surname`
+    firstName: `${Date.now()}-Cypress first name`,
+    lastName: `${Date.now()}-Cypress last name`
   },
   {
     email: `organization-creation-test2@cypress.com`,
     password: 'blockframes',
-    name: `${Date.now()}-Cypress name`,
-    surname: `${Date.now()}-Cypress surname`
+    firstName: `${Date.now()}-Cypress first name`,
+    lastName: `${Date.now()}-Cypress last name`
   }
 ];
 
