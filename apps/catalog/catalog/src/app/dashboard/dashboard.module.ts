@@ -44,10 +44,12 @@ const routes: Routes = [
       },
       {
         path: 'titles',
+        canActivate: [OrganizationContractListGuard],
+        canDeactivate: [OrganizationContractListGuard],
         children: [{
           path: '',
-          canActivate: [MovieOrganizationListGuard, OrganizationContractListGuard],
-          canDeactivate: [MovieOrganizationListGuard, OrganizationContractListGuard],
+          canActivate: [MovieOrganizationListGuard],
+          canDeactivate: [MovieOrganizationListGuard],
           loadChildren: () => import('./title/list/list.module').then(m => m.TitleListModule)
         }, {
           path: ':movieId',
