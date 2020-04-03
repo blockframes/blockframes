@@ -40,9 +40,7 @@ import { ChipsAutocompleteModule } from "@blockframes/ui/static-autocomplete/chi
 import { AlgoliaAutocompleteModule } from "@blockframes/ui/algolia-autocomplete/algolia-autocomplete.module";
 import { TitleListLayoutModule } from "@blockframes/movie/layout/list/title-list.module"
 import { WishlistButtonModule } from "@blockframes/organization/organization/components/wishlist-button/wishlist-button.module";
-import { AvailsFilterModule } from '@blockframes/distribution-deals/components/avails-filter/avails-filter.module';
 import { TitleFilterModule } from '@blockframes/movie/components/title-filter/title-filter.module';
-import { MovieFilterModule } from '@blockframes/movie/components/movie-filter/movie-filter.module';
 import { MovieFormEstimatedBudgetModule } from "@blockframes/movie/form/budget/estimated-budget/estimated-budget.module";
 
 @NgModule({
@@ -60,8 +58,6 @@ import { MovieFormEstimatedBudgetModule } from "@blockframes/movie/form/budget/e
     TitleListLayoutModule,
     WishlistButtonModule,
     TitleFilterModule,
-    AvailsFilterModule,
-    MovieFilterModule,
     MovieFormEstimatedBudgetModule,
 
     // Pipe

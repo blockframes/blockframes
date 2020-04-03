@@ -32,8 +32,6 @@
   <!-- FILTERS -->
   <title-filter>
 
-    <movie-filter>
-
       <ng-template filter label="Genres">
         <movie-form-genre [form]="filterForm.genres"></movie-form-genre>
       </ng-template>
@@ -125,7 +123,7 @@
         <mat-chip-list aria-label="Sellers selection">
           <ng-container *ngFor="let seller of selectedSellers$ | async; let i = index">
             <mat-chip selectable removable>
-              {{ seller }}
+              <span>{{ seller }}</span>
               <mat-icon matChipRemove svgIcon="close" (click)="removeSeller(i)"></mat-icon>
             </mat-chip>
           </ng-container>
@@ -138,12 +136,6 @@
           <mat-option *ngFor="let name of (orgSearchResults$ | async)" (click)="addSeller(name)">{{name}}</mat-option>
         </mat-autocomplete>
       </ng-template>
-
-    </movie-filter>
-
-    <mat-divider inset></mat-divider>
-
-    <distribution-avails-filter [availsForm]="availsForm"></distribution-avails-filter>
 
   </title-filter>
 
