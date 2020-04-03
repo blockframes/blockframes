@@ -227,10 +227,6 @@ service cloud.firestore {
       	|| (isOrgAdmin(userId, orgId));
     }
 
-    function isOwner(orgId, docId) {
-    	return getDocumentPermissions(orgId, docId).ownerId == orgId;
-    }
-
     function isParty(orgId) {
     	return orgId in resource.data.partyIds;
     }
