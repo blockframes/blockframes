@@ -1,43 +1,55 @@
 import { Firestore } from '../admin';
+import { promises } from 'dns';
+
 
 /**
- * Update last version in contract documents
+ * Update the distributionDeals subcollection (rename in distributionRights)
  */
 export async function upgrade(db: Firestore) {
-  const contracts = await db.collection('contracts').get();
+  const movies = await db.collection('movies').get();
   const batch = db.batch();
 
-  for (const contractDoc of contracts.docs) {
-    const contractData = contractDoc.data();
-    const contractVersions = await db.collection(`contracts/${contractData.id}/versions`).get();
+  const updates = movies.docs.map(async movie => {
+    const distributionDeals = await movie.ref.collection('distributionDeals').get();
 
-    let highestId = 0;
-    let lastVersion;
-    contractVersions.docs.forEach(versionDoc => {
-      const versionData = versionDoc.data();
-      if (versionData.count) { // _meta document is no more needed
-        batch.delete(versionDoc.ref);
-      } else {
-        // id is now an integer
-        const updatedVersion = { ...versionData, id: parseInt(versionData.id, 10) };
-        batch.set(versionDoc.ref, updatedVersion);
+    if (distributionDeals) {
+      // Create new sub collection named Distribution Rights
+      distributionDeals.forEach(right => {
+        movie.ref.collection('distributionRights').add({...right});
+        // const rightRef = movie.ref.collection('distributionRights').doc(right.id);
+        // const newRight = JSON.parse(JSON.stringify(right));
+        // batch.set(rightRef, newRight);
+      });
 
-        // calculate last version to put on contractDoc
-        if (updatedVersion.id > highestId) {
-          highestId = updatedVersion.id;
-          lastVersion = updatedVersion;
-        }
-      }
-    });
+      // And delete the old Distribution Deals
+      // ! That works !
+      // distributionDeals.forEach(deal => {
+      //   batch.delete(deal.ref);
+      // })
+    };
+  });
+  console.log('Creation of subcollection Distribution Rights and deletion of distribution deals ok');
 
-    // Set last version directly on contract document
-    if (!!lastVersion && !contractData.lastVersion) {
-      contractData.lastVersion = lastVersion;
-      batch.set(contractDoc.ref, contractData);
-    }
-
-  };
-
-  await batch.commit();
-  console.log('Updating contract collection done.');
+  await Promise.all(updates);
+  return batch.commit();
 }
+
+// Test
+
+// ! WTF is this newRights._serializer ???
+// const newRights = {...right};
+// batch.set(rightRef, {newRights} || {...right});
+// Error: Value for argument "data" is not a valid Firestore document. Couldn't serialize
+// object of type "Serializer" (found in field "newRights._serializer").
+// Firestore doesn't support JavaScript objects with custom prototypes (i.e. objects that were created via the "new" operator).
+
+// movie.ref.collection('distributionRights').add({...right});
+// Error: Value for argument "data" is not a valid Firestore document. Couldn't serialize object of type "Serializer" (found in field "_serializer").
+// Firestore doesn't support JavaScript objects with custom prototypes (i.e. objects that were created via the "new" operator).
+
+// batch.set(rightRef, right);
+// Error: Value for argument "data" is not a valid Firestore document. Couldn't serialize object of type "QueryDocumentSnapshot".
+// Firestore doesn't support JavaScript objects with custom prototypes (i.e. objects that were created via the "new" operator).
+
+// batch.set(rightRef, JSON.parse(JSON.stringify(right)));
+// fonctionne mais me donne un truc chelou en BDD
