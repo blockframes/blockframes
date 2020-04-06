@@ -41,9 +41,7 @@
           [form]="filterForm.originCountries"
           placeholder="Country of Origin"
           [items]="countries"
-          store="slug"
-          display="label">
-        </chips-autocomplete>
+        ></chips-autocomplete>
       </ng-template>
 
       <ng-template filter label="Language & Version">
@@ -108,11 +106,7 @@
       </ng-template>
 
       <ng-template filter label="Production Status">
-        <div fxLayout="column" fxLayoutAlign="start start" class="checkbox-padding">
-          <mat-checkbox color="primary" (change)="hasStatus(status)" *ngFor="let status of movieProductionStatuses">
-            {{status}}
-          </mat-checkbox>
-        </div>
+        <static-check-boxes [form]="filterForm.productionStatus" [items]="movieProductionStatuses"></static-check-boxes>
       </ng-template>
 
       <ng-template filter label="Budget">
