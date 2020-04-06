@@ -35,8 +35,8 @@ export default class LoginViewPage {
 
   public fillSignup(user: Partial<User>) {
     cy.get('auth-signup-form input[type="email"]').type(user.email);
-    cy.get('auth-signup-form input[test-id="name"]').type(user.name);
-    cy.get('auth-signup-form input[test-id="surname"]').type(user.surname);
+    cy.get('auth-signup-form input[test-id="name"]').type(user.firstName);
+    cy.get('auth-signup-form input[test-id="surname"]').type(user.lastName);
     cy.get('auth-signup-form input[test-id="password"]').type(user.password);
     cy.get('auth-signup-form input[test-id="password-confirm"]').type(user.password);
   }
@@ -48,36 +48,36 @@ export default class LoginViewPage {
     }
     switch (key) {
       case 'email' :
-          cy.get('auth-signup-form input[test-id="name"]').type(user.name);
-          cy.get('auth-signup-form input[test-id="surname"]').type(user.surname);
+          cy.get('auth-signup-form input[test-id="name"]').type(user.firstName);
+          cy.get('auth-signup-form input[test-id="surname"]').type(user.lastName);
           cy.get('auth-signup-form input[test-id="password"]').type(user.password);
           cy.get('auth-signup-form input[test-id="password-confirm"]').type(user.password);
         break;
       case 'name' :
           cy.get('auth-signup-form input[type="email"]').type(user.email);
-          cy.get('auth-signup-form input[test-id="surname"]').type(user.surname);
+          cy.get('auth-signup-form input[test-id="surname"]').type(user.lastName);
           cy.get('auth-signup-form input[test-id="password"]').type(user.password);
           cy.get('auth-signup-form input[test-id="password-confirm"]').type(user.password);
           user.email = originalEmail;
         break;
       case 'surname' :
           cy.get('auth-signup-form input[type="email"]').type(user.email);
-          cy.get('auth-signup-form input[test-id="name"]').type(user.name);
+          cy.get('auth-signup-form input[test-id="name"]').type(user.firstName);
           cy.get('auth-signup-form input[test-id="password"]').type(user.password);
           cy.get('auth-signup-form input[test-id="password-confirm"]').type(user.password);
           user.email = originalEmail;
         break;
       case 'password' :
           cy.get('auth-signup-form input[type="email"]').type(user.email);
-          cy.get('auth-signup-form input[test-id="name"]').type(user.name);
-          cy.get('auth-signup-form input[test-id="surname"]').type(user.surname);
+          cy.get('auth-signup-form input[test-id="name"]').type(user.firstName);
+          cy.get('auth-signup-form input[test-id="surname"]').type(user.lastName);
           cy.get('auth-signup-form input[test-id="password-confirm"]').type(user.password);
           user.email = originalEmail;
         break;
       case 'passwordConfirm' :
           cy.get('auth-signup-form input[type="email"]').type(user.email);
-          cy.get('auth-signup-form input[test-id="name"]').type(user.name);
-          cy.get('auth-signup-form input[test-id="surname"]').type(user.surname);
+          cy.get('auth-signup-form input[test-id="name"]').type(user.firstName);
+          cy.get('auth-signup-form input[test-id="surname"]').type(user.lastName);
           cy.get('auth-signup-form input[test-id="password"]').type(user.password);
           user.email = originalEmail;
         break
