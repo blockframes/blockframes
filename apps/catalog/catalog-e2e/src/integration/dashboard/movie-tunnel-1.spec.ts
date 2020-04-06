@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import { clearDataAndPrepareTest } from '@blockframes/e2e/utils/utils';
+import { clearDataAndPrepareTest } from '@blockframes/e2e/utils/functions';
 import { signInAndNavigateToMain } from '../../support/utils/utils';
 
 beforeEach(() => {

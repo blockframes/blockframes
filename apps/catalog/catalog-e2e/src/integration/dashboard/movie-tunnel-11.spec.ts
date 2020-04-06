@@ -3,7 +3,7 @@
 import { signInAndNavigateToMain } from "../../support/utils/utils";
 import { TunnelMainPage, TunnelChainOfTitlesPage } from "../../support/pages/dashboard";
 import TunnelFilesPage from "../../support/pages/dashboard/TunnelFilesPage";
-import { clearDataAndPrepareTest, createFakeScript, randomID } from "@blockframes/e2e/utils/utils";
+import { clearDataAndPrepareTest, createFakeScript, randomID } from "@blockframes/e2e/utils/functions";
 
 const NAVIGATION = ['Media', 'Files & Links'];
 const LINKS = [

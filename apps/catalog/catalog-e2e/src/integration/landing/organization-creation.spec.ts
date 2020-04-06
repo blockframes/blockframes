@@ -4,7 +4,7 @@ import { LandingPage } from '../../support/pages/landing';
 import { User, Organization } from '@blockframes/e2e/utils/type';
 import { LoginViewPage } from '@blockframes/e2e/pages/auth';
 import { OrganizationHomePage, OrganizationFindPage, OrganizationCreatePage, OrganizationAppAccessPage, OrganizationCongratulationPage } from '@blockframes/e2e/pages/organization';
-import { clearDataAndPrepareTest } from '@blockframes/e2e/utils/utils';
+import { clearDataAndPrepareTest } from '@blockframes/e2e/utils/functions';
 
 // Create new users
 const USERS: Partial<User>[] = [

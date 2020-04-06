@@ -4,7 +4,7 @@ import { HomePage } from "../../support/pages/marketplace";
 import { TunnelContractLobbyPage, TunnelContractPage, TunnelContractSummaryPage } from "../../support/pages/dashboard";
 import { User } from "@blockframes/e2e/utils/type";
 import { USERS } from "@blockframes/e2e/utils/users";
-import { clearDataAndPrepareTest } from "@blockframes/e2e/utils/utils";
+import { clearDataAndPrepareTest } from "@blockframes/e2e/utils/functions";
 import { WelcomeViewPage, LoginViewPage } from "@blockframes/e2e/pages/auth";
 
 // Select user: david.ewing@gillespie-lawrence.fake.cascade8.com

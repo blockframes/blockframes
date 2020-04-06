@@ -2,7 +2,7 @@
 
 import { TunnelValuationPage, TunnelSummaryPage, TunnelMainPage } from "../../support/pages/dashboard";
 import { signInAndNavigateToMain } from "../../support/utils/utils";
-import { clearDataAndPrepareTest } from "@blockframes/e2e/utils/utils";
+import { clearDataAndPrepareTest } from "@blockframes/e2e/utils/functions";
 
 const NAVIGATION = ['Legal Information', 'Marketplace Eval.'];
 

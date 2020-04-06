@@ -1,5 +1,5 @@
 import TunnelChainOfTitlesPage from "./TunnelChainOfTitlesPage";
-import { uploadFile, assertUploadStatus } from "@blockframes/e2e/utils/utils";
+import { uploadFile, assertUploadStatus } from "@blockframes/e2e/utils/functions";
 
 const UPLOAD_STATUS = 'Success';
 

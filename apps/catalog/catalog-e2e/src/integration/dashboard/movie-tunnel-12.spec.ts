@@ -2,7 +2,7 @@
 
 import { signInAndNavigateToMain } from "../../support/utils/utils";
 import { TunnelMainPage, TunnelChainOfTitlesPage, TunnelValuationPage } from "../../support/pages/dashboard";
-import { clearDataAndPrepareTest, createFakeScript, randomID } from "@blockframes/e2e/utils/utils";
+import { clearDataAndPrepareTest, createFakeScript, randomID } from "@blockframes/e2e/utils/functions";
 
 const NAVIGATION = ['Legal Information', 'Chain of Titles'];
 

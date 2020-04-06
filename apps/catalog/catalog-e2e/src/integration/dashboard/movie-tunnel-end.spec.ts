@@ -2,7 +2,7 @@
 
 import { signInAndNavigateToMain } from "../../support/utils/utils";
 import { TunnelMainPage, TunnelStorylinePage, TunnelCreditsPage, TunnelSummaryPage, TitlesDetailsPage, TitlesListPage, TitlesActivityPage } from "../../support/pages/dashboard";
-import { clearDataAndPrepareTest } from "@blockframes/e2e/utils/utils";
+import { clearDataAndPrepareTest } from "@blockframes/e2e/utils/functions";
 
 const NAVIGATION = ['Summary', 'Summary & Sumbit'];
 const PRODUCTION_STATUS = 'Completed';
