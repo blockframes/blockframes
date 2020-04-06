@@ -10,8 +10,7 @@
       [form]="control.get('countries')"
       placeholder="Country"
       [items]="countries"
-      store="slug"
-      display="label"></chips-autocomplete>
+    ></chips-autocomplete>
 
     <!-- Add / Delete -->
     <button *ngIf="!last" mat-mini-fab color="warn" (click)="form.removeAt(i)" matTooltip="Remove a Stakeholder" aria-label="Remove a Stakeholder">

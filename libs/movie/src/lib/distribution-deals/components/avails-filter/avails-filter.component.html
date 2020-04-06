@@ -43,9 +43,12 @@
     <mat-expansion-panel-header>
       <span class="mat-body-1" test-id="territories-panel">Territory</span>
     </mat-expansion-panel-header>
-    <chips-autocomplete [form]="territories" [items]="countries" store="slug" display="label" placeholder="Territories"
-      [disabled]="isFormDisabled">
-    </chips-autocomplete>
+    <chips-autocomplete
+      [form]="territories"
+      [items]="countries"
+      placeholder="Territories"
+      [disabled]="isFormDisabled"
+    ></chips-autocomplete>
   </mat-expansion-panel>
 
   <!-- Media -->

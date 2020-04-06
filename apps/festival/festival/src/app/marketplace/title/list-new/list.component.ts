@@ -4,15 +4,16 @@ import {
   OnInit,
   OnDestroy,
 } from '@angular/core';
-import { Subscription, Observable, BehaviorSubject } from 'rxjs';
+import { Subscription, Observable } from 'rxjs';
 
 import { MovieService, MovieQuery } from '@blockframes/movie/+state';
 import { FormControl, Validators } from '@angular/forms';
 import { CatalogSearchForm, AvailsSearchForm } from '@blockframes/distribution-deals/form/search.form';
 import { staticModels } from '@blockframes/utils/static-model';
-import { LanguagesLabel, LanguagesSlug, LANGUAGES_LABEL, MovieStatusLabel, MOVIE_STATUS_LABEL } from '@blockframes/utils/static-model/types';
+import { LanguagesLabel, LanguagesSlug, LANGUAGES_LABEL } from '@blockframes/utils/static-model/types';
 import { getCodeIfExists } from '@blockframes/utils/static-model/staticModels';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
+import { FormList } from '@blockframes/utils/form';
 
 @Component({
   selector: 'festival-marketplace-title-list',
@@ -46,11 +47,9 @@ export class ListComponent implements OnInit, OnDestroy {
   public selectedLanguages$: Observable<string[]>;
 
   // status
-  public movieProductionStatuses: MovieStatusLabel[] = MOVIE_STATUS_LABEL;
+  public movieProductionStatuses = staticModels['MOVIE_STATUS'];
 
-  // seller
-  public orgSearchResults$: Observable<any>;
-  public selectedSellers$ = new BehaviorSubject<string[]>([]);
+  public sellersForm = FormList.factory<string>([]);
 
   constructor(
     private movieService: MovieService,
@@ -90,33 +89,5 @@ export class ListComponent implements OnInit, OnDestroy {
     const languageSlug: LanguagesSlug = getCodeIfExists('LANGUAGES', language);
     this.filterForm.removeLanguage(languageSlug);
     this.analytics.event('removedLanguage', { language });
-  }
-
-  public hasStatus(status: MovieStatusLabel) {
-
-    // We want to exchange the label for the slug,
-    // because for our backend we need to store the slug.
-    const productionStatusSlug = getCodeIfExists('MOVIE_STATUS', status);
-    if (
-      this.movieProductionStatuses.includes(status) &&
-      !this.filterForm.productionStatus.value.includes(productionStatusSlug)
-    ) {
-      this.filterForm.addStatus(productionStatusSlug);
-      this.analytics.event('addedMovieStatus', { status });
-    } else {
-      this.filterForm.removeStatus(productionStatusSlug);
-      this.analytics.event('removedMovieStatus', { status });
-    }
-  }
-
-  public addSeller(seller: string) {
-    const newSelectedSellers = [seller, ...this.selectedSellers$.getValue()];
-    this.selectedSellers$.next(newSelectedSellers);
-  }
-
-  public removeSeller(index: number) {
-    const newSelectedSellers = this.selectedSellers$.getValue();
-    newSelectedSellers.splice(index, 1);
-    this.selectedSellers$.next(newSelectedSellers);
   }
 }
