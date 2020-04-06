@@ -27,7 +27,7 @@ export class AuthGuard extends CollectionGuard<AuthState> {
     return this.afAuth.authState.pipe(
       switchMap(userAuth => {
         if (!userAuth) {
-          return of('');
+          return this.router.navigate(['/']);
         };
         return this.service.sync().pipe(
           map(_ => this.query.user),
