@@ -52,7 +52,8 @@
       "@blockframes/apps/catalog/marketplace/*": ["apps/catalog/src/app/marketplace/*"],
       "@blockframes/apps/catalog/dashboard/*": ["apps/catalog/src/app/dashboard/*"],
       "@blockframes/apps/catalog/*": ["apps/catalog/catalog/src/app/*"],
-      "@blockframes/event/*": ["libs/event/src/lib/*"]
+      "@blockframes/event/*": ["libs/event/src/lib/*"],
+      "@blockframes/e2e/*": ["libs/e2e/src/lib/*"]
     }
   },
   "angularCompilerOptions": {

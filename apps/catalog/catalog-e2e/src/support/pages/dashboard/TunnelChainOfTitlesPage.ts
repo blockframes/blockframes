@@ -1,5 +1,5 @@
-import { uploadFile, assertUploadStatus } from "../../utils/utils";
 import TunnelValuationPage from "./TunnelValuationPage";
+import { uploadFile, assertUploadStatus } from "@blockframes/e2e/utils/functions";
 
 const UPLOAD_STATUS = 'Success';
 

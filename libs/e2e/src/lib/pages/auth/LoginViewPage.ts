@@ -1,5 +1,4 @@
 import { User } from '../../utils/type';
-import { HomePage } from '../marketplace';
 import { OrganizationHomePage } from '../organization';
 
 export default class LoginViewPage {
@@ -18,12 +17,12 @@ export default class LoginViewPage {
     cy.get('auth-signup-form input[type="email"]').type(email);
   }
 
-  public fillNameInSignup(firstName: string) {
-    cy.get('auth-signup-form input[test-id="name"]').type(firstName);
+  public fillNameInSignup(name: string) {
+    cy.get('auth-signup-form input[test-id="name"]').type(name);
   }
 
-  public fillSurnameInSignup(lastName: string) {
-    cy.get('auth-signup-form input[test-id="surname"]').type(lastName);
+  public fillSurnameInSignup(surname: string) {
+    cy.get('auth-signup-form input[test-id="surname"]').type(surname);
   }
 
   public fillPasswordInSignup(password: string) {
@@ -111,9 +110,9 @@ export default class LoginViewPage {
     cy.get('auth-signin-form input[type="password"]').type(user.password);
   }
 
-  public clickSignIn(){
+  /** Connection returns to the home page of the application in which you are. You have to create it. */
+  public clickSignIn() {
     cy.get('auth-signin-form button[type=submit]').click();
-    return new HomePage();
   }
 
   public clickSigninToOrgHome() {
