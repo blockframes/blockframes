@@ -43,6 +43,7 @@ import { WishlistButtonModule } from "@blockframes/organization/organization/com
 import { TitleFilterModule } from '@blockframes/movie/components/title-filter/title-filter.module';
 import { MovieFormEstimatedBudgetModule } from "@blockframes/movie/form/budget/estimated-budget/estimated-budget.module";
 import { SellerFilterModule } from '@blockframes/movie/form/filters/seller/seller-filter.module';
+import { StaticCheckBoxesModule } from '@blockframes/ui/static-autocomplete/check-boxes/check-boxes.module';
 
 @NgModule({
   declarations: [ListComponent],
@@ -61,6 +62,7 @@ import { SellerFilterModule } from '@blockframes/movie/form/filters/seller/selle
     TitleFilterModule,
     MovieFormEstimatedBudgetModule,
     SellerFilterModule,
+    StaticCheckBoxesModule,
 
     // Pipe
     TranslateSlugModule,
