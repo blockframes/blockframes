@@ -17,6 +17,9 @@ import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.mod
 import { MarketplaceHomeComponent } from './home.component';
 import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
 
+// Pipes
+import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.module';
+
 @NgModule({
   declarations: [MarketplaceHomeComponent],
   imports: [
@@ -26,6 +29,7 @@ import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
     FlexLayoutModule,
     SliderModule,
     TranslateSlugModule,
+    DisplayNameModule,
     MatIconModule,
     MatSnackBarModule,
     RouterModule.forChild([

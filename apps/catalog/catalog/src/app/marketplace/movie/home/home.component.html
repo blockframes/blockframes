@@ -34,7 +34,7 @@
                 <h3 mat-button color="primary">{{ movie.main.title.international }}</h3>
                 <div>
                   <span class="mat-body-2" *ngFor="let director of movie.main.directors; let isLast=last">
-                    {{ director.firstName }} {{ director.lastName }}{{isLast ? '' : ', '}}
+                    {{ movie.main.directors | displayName }}{{isLast ? '' : ', '}}
                   </span>
                 </div>
                 <span class="mat-caption">{{ getMainInfo(movie) }}</span>
