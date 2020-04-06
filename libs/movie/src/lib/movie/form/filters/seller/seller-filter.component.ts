@@ -28,18 +28,10 @@ export class SellerFilterComponent implements OnInit {
     this.orgSearchResults$ = this.orgSearch.valueChanges.pipe(
       debounceTime(200),
       distinctUntilChanged(),
-      filter(text => text !== undefined && text !== '' && text !== ' '),
+      filter((text: string) => !!text.trim()),
       switchMap(text => this.movieIndex.searchForFacetValues({facetName: 'orgName', facetQuery: text})),
       pluck('facetHits'),
       map(results => results.map(result => result.value)),
     );
-  }
-
-  public addSeller(seller: string) {
-    this.form.add(seller);
-  }
-
-  public removeSeller(index: number) {
-    this.form.removeAt(index);
   }
 }
