@@ -4,7 +4,7 @@ import { TitlesListPage, StartTunnelPage, TunnelMainPage } from "../pages/dashbo
 import { User } from "./type";
 import { USERS } from "./users";
 
-// Select user: cytest@blockframes.com
+// Select user: david.ewing@gillespie-lawrence.fake.cascade8.com
 const LOGIN_CREDENTIALS: Partial<User> = USERS[0];
 
 export function clearDataAndPrepareTest(path: string = '/auth') {

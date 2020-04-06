@@ -9,7 +9,7 @@ import { clearDataAndPrepareTest } from '../../support/utils/utils';
 
 // TEST
 
-// Select user: cytest@blockframes.com
+// Select user: david.ewing@gillespie-lawrence.fake.cascade8.com
 const LOGIN_CREDENTIALS: Partial<User> = USERS[0];
 
 beforeEach(() => {
