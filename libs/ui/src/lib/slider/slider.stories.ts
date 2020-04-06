@@ -21,8 +21,7 @@ export const bfSlider = () => ({
     [ratio]="ratio"
     [interval]="interval"
     [hideIndicators]="hideIndicators"
-    [timing]="timing"
-    test>
+    [timing]="timing">
       <ng-container *ngFor="let image of images">
         <bf-slide 
         [image]="image" 

@@ -31,7 +31,7 @@ import { AnimationBuilder, animate, style } from '@angular/animations';
 import { ListKeyManager } from '@angular/cdk/a11y';
 import { isPlatformBrowser } from '@angular/common';
 
-import {coerceBoolean} from '@blockframes/utils/decorators/decorators';
+import { boolean } from '@blockframes/utils/decorators/decorators';
 
 enum Direction {
   Left,
@@ -75,17 +75,9 @@ export class SliderComponent implements OnDestroy, AfterContentInit, AfterViewIn
     this.interval$.next(value)
   };
 
-  @Input()
-  get hideIndicators() { return this._hideIndicators; }
-  set hideIndicators(value) {
-    this._hideIndicators = coerceBooleanProperty(value);
-  }
+  @Input() @boolean hideIndicators: Slider['hideIndicators'] = false;
 
-  @Input()
-  get hideArrows() { return this._hideArrows; }
-  set hideArrows(value) {
-    this._hideArrows = coerceBooleanProperty(value);
-  }
+  @Input() @boolean hideArrows: Slider['hideArrows'] = false;
 
   @Input()
   get slideDirection() { return this._slideDirection }
@@ -101,39 +93,22 @@ export class SliderComponent implements OnDestroy, AfterContentInit, AfterViewIn
     this.maxWidth$.next();
   }
 
-  @Input() get swipe() { return this._swipe }
-  set swipe(value) {
-    this._swipe = value
-  }
+  @Input() @boolean swipe: Slider['swipe'] = false;
 
   @Input()
   get loop() { return this._loop; }
   set loop(value) {
-    this._loop = value
+    this._loop = coerceBooleanProperty(value)
+    this.loop$.next(this._loop);
   }
 
-  @Input()
-  get autoplay() { return this._autoplay; }
-  set autoplay(value) {
-    this._autoplay = coerceBooleanProperty(value)
-    this.autoplay$.next(value);
-  }
-
-  @Input() @coerceBoolean test: boolean;
+  // TODO #2455
+  @Input() @boolean autoplay = false;
 
   ///////////////////
   // Private Vars //
   /////////////////
 
-  private _hideIndicators: Slider['hideIndicators'] = true;
-
-  private _hideArrows: Slider['hideArrows'] = false;
-
-  // Can swipe to next slide
-  private _swipe: Slider['swipe'];
-
-  private _autoplay: Slider['autoplay'];
-  private autoplay$ = new Subject<boolean>();
 
   private _loop: Slider['loop'];
   private loop$ = new Subject<boolean>();
@@ -188,15 +163,11 @@ export class SliderComponent implements OnDestroy, AfterContentInit, AfterViewIn
     // TODO #2440
     this.slideItems.forEach(el => el.nativeElement.style.height = this.maxHeight);
     this.calculateRatio();
-    this.autoplay$.pipe(takeUntil(this.destroy$)).subscribe(value => {
-      this.stopTimer();
-      this.startTimer(value);
-    });
 
     this.interval$.pipe(takeUntil(this.destroy$)).subscribe(value => {
       this.stopTimer();
       this.resetTimer(value);
-      this.startTimer(this._autoplay);
+      this.startTimer(this.autoplay);
     });
 
     this.maxWidth$.pipe(takeUntil(this.destroy$)).
@@ -265,7 +236,7 @@ export class SliderComponent implements OnDestroy, AfterContentInit, AfterViewIn
 
   @HostListener('mouseleave')
   public onMouseLeave() {
-    this.startTimer(this._autoplay);
+    this.startTimer(this.autoplay);
   }
 
   @HostListener('wheel', ['$event'])
