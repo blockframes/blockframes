@@ -35,7 +35,7 @@ export class ThemeService {
 
   /** Get the current value of the theme */
   initTheme(mode: 'dark' | 'light') {
-    const theme = localStorage.getItem('theme') || mode;
+    const theme = (typeof window !== 'undefined') ? localStorage.getItem('theme') || mode : mode;
     this.setTheme(theme);
   }
 }

@@ -260,8 +260,14 @@ export type IconSvg = typeof icons[number]['name'];
 @Injectable({ providedIn: 'root' })
 export class IconService {
   constructor(private matIconRegistry: MatIconRegistry, private domSanitizer: DomSanitizer) {
-    icons.forEach(({ name, url }) => {
-      this.matIconRegistry.addSvgIcon(name, this.domSanitizer.bypassSecurityTrustResourceUrl(url));
-    });
+    if (typeof window === 'undefined') {
+      icons.forEach(({ name }) => {
+        this.matIconRegistry.addSvgIconLiteral(name, this.domSanitizer.bypassSecurityTrustHtml('<svg></svg>'));
+      })
+    } else {
+      icons.forEach(({ name, url }) => {
+        this.matIconRegistry.addSvgIcon(name, this.domSanitizer.bypassSecurityTrustResourceUrl(url));
+      });
+    }
   }
 }
