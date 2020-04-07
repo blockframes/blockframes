@@ -15,9 +15,11 @@ export class LandingComponent {
     distinctUntilChanged(),
     map(isTop => isTop ? 'transparent-toolbar' : '')
   );
-
+  
+  // According to this article, it's fine with Angular Universal
+  // source: https://technoapple.com/blog/post/scroll-event-at-angular-universal
   /** Change the toolbar class when page is scrolled. */
-  @HostListener('window:scroll', ['$event'])
+  @HostListener('window:scroll', [])
   scrollHandler() {
     this.scroll.next(window.pageYOffset);
   }

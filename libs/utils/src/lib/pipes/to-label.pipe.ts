@@ -9,14 +9,17 @@ const registeredObjects = [
   'contractStatus',
   'distributionDealStatus',
   'contractType',
-];
+  'orgActivity'
+] as const;
+
+type Label = typeof registeredObjects[number];
 
 @Pipe({
   name: 'toLabel'
 })
 export class ToLabelPipe implements PipeTransform {
   private imports = [];
-  async transform(value: string, type: string): Promise<string> {
+  async transform(value: string, type: Label): Promise<string> {
 
     if (registeredObjects.includes(type)) {
       const object = await this.manageImport(type);
@@ -47,6 +50,9 @@ export class ToLabelPipe implements PipeTransform {
           break;
         case 'distributionDealStatus':
           this.imports[type] = await import('@blockframes/distribution-deals/+state/distribution-deal.firestore').then(e => e[type]);
+          break;
+        case 'orgActivity':
+          this.imports[type] = await import('@blockframes/organization/organization/+state/organization.firestore').then(e => e[type]);
           break;
         default:
           break;

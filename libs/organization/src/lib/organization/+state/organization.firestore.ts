@@ -18,7 +18,7 @@ interface Denomination {
 /** Document model of an Organization */
 interface OrganizationRaw<D> {
   id: string;
-  activity: string;
+  activity: OrgActivity;
   addresses: AddressSet;
   appAccess?: AppAccess;
   bankAccounts: BankAccount[];
@@ -36,6 +36,24 @@ interface OrganizationRaw<D> {
   status: OrganizationStatus;
   wishlist: WishlistRaw<D>[];
 }
+
+export const activities = {
+  production: 'Production',
+  intlSales: 'International Sales',
+  distribution: 'Distribution',
+  tvBroadcast: 'Television Broadcast',
+  vodPlatform: 'VOD Platform',
+  theatricalExhibition: 'Theatrical Exhibition' ,
+  buyersRep: 'Buyer\'s Rep',
+  filmFestival: 'Film Festival',
+  filmFund: 'Film Fund',
+  filmLibrary: 'Film Library',
+  filmCommission: 'Film Commission',
+  financialInstitution: 'Financial Institution',
+  press: 'Press',
+} as const;
+
+type OrgActivity = keyof typeof activities | '';
 
 export interface OrganizationDocument extends OrganizationRaw<Timestamp> { }
 

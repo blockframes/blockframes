@@ -11,6 +11,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
+import { MatSelectModule } from '@angular/material/select';
 
 // Components
 import { OrganizationFormComponent } from './organization-form.component';
@@ -28,6 +29,7 @@ import { OrganizationFormComponent } from './organization-form.component';
     MatDividerModule,
     MatInputModule,
     MatCardModule,
+    MatSelectModule
   ],
   declarations: [
     OrganizationFormComponent,
