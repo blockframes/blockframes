@@ -55,8 +55,6 @@ export const activities = {
 
 type OrgActivity = keyof typeof activities | '';
 
-// Theatrical Exhibition, Distribution, Buyers’ Rep, Film Festival, Film Fund, Film Library, Film Commission, Financial Institution, Press
-
 export interface OrganizationDocument extends OrganizationRaw<Timestamp> { }
 
 export interface OrganizationDocumentWithDates extends OrganizationRaw<Date> { }

@@ -57,7 +57,6 @@ export class DynamicTitleService implements OnDestroy {
 
   constructor(private title: Title, private routerQuery: RouterQuery) {
     this.sub = this.routerQuery.select('state').subscribe(data => {
-      console.log('data', data);
       this.setAppName(data.root.data.app)
     })
   }
