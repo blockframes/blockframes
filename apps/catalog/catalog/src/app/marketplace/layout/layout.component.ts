@@ -36,7 +36,7 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
       map(wishlists => wishlists.find(wishlist => wishlist.status === 'pending'))
     );
     this.wishlistCount$ = this.currentWishlist$.pipe(
-      map(wishlist => wishlist.movieIds.length)
+      map(wishlist => wishlist ? wishlist.movieIds.length : 0)
     );
   }
 
