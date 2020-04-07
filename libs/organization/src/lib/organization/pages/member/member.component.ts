@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, HostBinding } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { OrganizationQuery } from '../../+state/organization.query';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -20,7 +20,6 @@ import { OrganizationMember } from '@blockframes/user/+state/user.model';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MemberComponent implements OnInit, OnDestroy {
-  @HostBinding('attr.page-id') pageId = 'member-editable';
 
   public orgName: string = this.query.getActive().denomination.full;
 

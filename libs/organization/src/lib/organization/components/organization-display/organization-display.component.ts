@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Output, Input, HostBinding } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Output, Input } from '@angular/core';
 import { Organization } from '../../+state';
 import { OrganizationForm } from '../../forms/organization.form';
 import { PLACEHOLDER_LOGO } from '../../+state/organization.model'
@@ -10,7 +10,6 @@ import { PLACEHOLDER_LOGO } from '../../+state/organization.model'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationDisplayComponent {
-  @HostBinding('attr.page-id') pageId = 'organization-display';
   public placeholderUrl = PLACEHOLDER_LOGO;
 
   @Output() editing = new EventEmitter<void>();

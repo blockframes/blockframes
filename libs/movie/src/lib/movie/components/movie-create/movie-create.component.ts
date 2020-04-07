@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, HostBinding, Output, EventEmitter } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'movie-create',
@@ -7,7 +7,6 @@ import { Component, ChangeDetectionStrategy, HostBinding, Output, EventEmitter }
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieCreateComponent {
-  @HostBinding('attr.page-id') pageId = 'movie-create';
   @Output() addMovie = new EventEmitter<void>()
 
   constructor() { }
