@@ -51,8 +51,7 @@ const routes: Routes = [{
       path: 'title',
       children: [{
         path: '',
-        // loadChildren: () => import('./title/list/list.module').then(m => m.MovieListModule),
-        loadChildren: () => import('./title/list-new/list.module').then(m => m.MovieListModule),
+        loadChildren: () => import('./title/list/list.module').then(m => m.MovieListModule),
         data: { animation: 'title-list' }
       }, {
         path: ':movieId',
@@ -61,6 +60,11 @@ const routes: Routes = [{
         loadChildren: () => import('./title/view/view.module').then(m => m.MovieViewModule),
         data: { animation: 'title-view' }
       }]
+    },
+    {
+      path: 'new-title',
+      loadChildren: () => import('./title/list-new/list.module').then(m => m.MovieListModule),
+      data: { animation: 'title-list' }
     },
     {
       path: 'organization',
