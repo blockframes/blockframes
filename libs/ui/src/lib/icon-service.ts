@@ -261,6 +261,8 @@ export type IconSvg = typeof icons[number]['name'];
 @Injectable({ providedIn: 'root' })
 export class IconService {
   constructor(private matIconRegistry: MatIconRegistry, private domSanitizer: DomSanitizer) {
+    // Angular Material currently needs a workaround for server side rendering.
+    // See https://github.com/angular/components/issues/9728
     if (isPlatformBrowser(PLATFORM_ID)) {
       icons.forEach(({ name, url }) => {
         this.matIconRegistry.addSvgIcon(name, this.domSanitizer.bypassSecurityTrustResourceUrl(url));
