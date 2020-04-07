@@ -9,7 +9,7 @@ export interface Invitation {
   id: string;
   app: App;
   type: InvitationType;
-  mode?: InvitationMode,
+  mode: InvitationMode,
   status: InvitationStatus;
   date: Timestamp;
   fromOrg?: PublicOrganization,
@@ -55,7 +55,7 @@ export interface InvitationFromOrganizationToUser extends Invitation {
 /** Specific Invitation send by a User to join an Organization. */
 export interface InvitationFromUserToOrganization extends Invitation {
   type: 'fromUserToOrganization';
-  mode: 'request'; // @TODO (#2244) update draw.io & check #2433
+  mode: 'request';
   fromUser: PublicUser;
   toOrg: PublicOrganization;
 }
