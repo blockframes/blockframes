@@ -53,7 +53,7 @@ export const activities = {
   press: 'Press',
 } as const;
 
-type OrgActivity = keyof typeof activities;
+type OrgActivity = keyof typeof activities | '';
 
 // Theatrical Exhibition, Distribution, Buyers’ Rep, Film Festival, Film Fund, Film Library, Film Commission, Financial Institution, Press
 
@@ -115,7 +115,7 @@ export function createOrganizationRaw(
 ): OrganizationRaw<Timestamp | Date> {
   return {
     id: !!params.id ? params.id : '',
-    activity: null,
+    activity: '',
     bankAccounts: [],
     cart: [],
     created: new Date(),
