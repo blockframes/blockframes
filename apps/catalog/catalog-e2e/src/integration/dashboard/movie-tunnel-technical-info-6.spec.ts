@@ -15,8 +15,8 @@ beforeEach(() => {
   signInAndNavigateToMain();
 });
 
-describe('User can navigate to the movie tunnel page 6, complete the fields, and navigate to page 7', () => {
-  it('Login into an existing account, navigate on technical info page, complete fields, go on movie tunnel page 7', () => {
+describe('User can navigate to the movie tunnel technical info page, complete the fields, and navigate to promotional images page', () => {
+  it('Login into an existing account, navigate on technical info page, complete fields, go on movie tunnel promotional images page', () => {
     const p1 = new TunnelMainPage();
     p1.navigateToTunnelPage(NAVIGATION[0], NAVIGATION[1]);
     const p2 = new TunnelTechnicalInfoPage();

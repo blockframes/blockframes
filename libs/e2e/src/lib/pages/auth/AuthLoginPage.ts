@@ -1,7 +1,7 @@
 import { User } from '../../utils/type';
 import { OrganizationHomePage } from '../organization';
 
-export default class LoginViewPage {
+export default class AuthLoginPage {
 
   constructor() {
     cy.get('auth-login-view');

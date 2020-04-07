@@ -27,8 +27,8 @@ beforeEach(() => {
   signInAndNavigateToMain();
 });
 
-describe('User can navigate to the movie tunnel page 2 and fill all the fieldsn and navigate to page 3', () => {
-  it('Login into an existing account, navigate on main page, complete main fields, go on movie tunnel page 3', () => {
+describe('User can navigate to the movie tunnel main page and fill all the fields and navigate to storyline page', () => {
+  it('Login into an existing account, navigate on main page, complete main fields, go on movie tunnel storyline page', () => {
     const p1 = new TunnelMainPage();
 
     // Content Type
@@ -126,7 +126,7 @@ describe('User can navigate to the movie tunnel page 2 and fill all the fieldsn 
     p1.fillLastFestivalYear(YEAR);
     p1.assertLastFestivalYearExists(YEAR);
 
-    // Go to tunnel 3
+    // Go to tunnel storyline page
     const p2: TunnelStorylinePage = p1.clickNext();
   });
 });

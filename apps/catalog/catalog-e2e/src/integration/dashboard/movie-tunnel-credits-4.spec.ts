@@ -25,8 +25,8 @@ beforeEach(() => {
   signInAndNavigateToMain();
 });
 
-describe('User can navigate to the movie tunnel page 5, complete the fields, and navigate to page 6', () => {
-  it('Login into an existing account, navigate on budget page, complete budget and quotas fields, go on movie tunnel page 6', () => {
+describe('User can navigate to the movie tunnel credits page, complete the fields, and navigate to budget page', () => {
+  it('Login into an existing account, navigate on budget page, complete budget and quotas fields, go on movie tunnel budget page', () => {
     const p1 = new TunnelMainPage();
     p1.navigateToTunnelPage(NAVIGATION[0], NAVIGATION[1]);
     const p2 = new TunnelCreditsPage();
@@ -87,7 +87,7 @@ describe('User can navigate to the movie tunnel page 5, complete the fields, and
     p2.selectSalesCastRole(ROLES[2]);
     p2.assertLastSalesCastRoleExists(CREW_MEMBER, ROLES[2]);
 
-    // Go on movie-tunnel-5
+    // Go on movie tunnel budget page
     const p3: TunnelBudgetPage = p2.clickNext();
   });
 });

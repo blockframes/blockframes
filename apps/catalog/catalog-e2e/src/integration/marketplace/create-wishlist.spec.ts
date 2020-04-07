@@ -5,7 +5,7 @@ import { LandingPage } from '../../support/pages/landing';
 import { User } from '@blockframes/e2e/utils/type';
 import { USERS } from '@blockframes/e2e/utils/users';
 import { MOVIES } from '@blockframes/e2e/utils/movies';
-import { LoginViewPage } from '@blockframes/e2e/pages/auth';
+import { AuthLoginPage } from '@blockframes/e2e/pages/auth';
 
 // Select user: wayne.massey@hart-caldwell.fake.cascade8.com
 const LOGIN_CREDENTIALS: Partial<User> = USERS[2];
@@ -24,7 +24,7 @@ beforeEach(() => {
 describe('Test wishlist icon from library page', () => {
   it.skip('Login into an existing account, add two movies on wishlist from library page, check the wishlist.', () => {
     // Connexion
-    const p1: LoginViewPage = new LoginViewPage();
+    const p1: AuthLoginPage = new AuthLoginPage();
     p1.fillSignin(LOGIN_CREDENTIALS);
     p1.clickSignIn();
     const p2 = new HomePage();
@@ -56,7 +56,7 @@ describe('Test wishlist icon from library page', () => {
 describe('Test wishlist icon from movie view page', () => {
   it.skip('Login into an existing account, add two movies on wishlist from their view page, check the wishlist.', () => {
     // Connexion
-    const p1: LoginViewPage = new LoginViewPage();
+    const p1: AuthLoginPage = new AuthLoginPage();
     p1.fillSignin(LOGIN_CREDENTIALS);
     p1.clickSignIn();
     const p2 = new HomePage();
@@ -91,7 +91,7 @@ describe('Test wishlist icon from movie view page', () => {
     it.skip(`Login into an existing account, add and remove a movie from home page, add and remove
       two movies from their view page and add and remove two movies from line-up page.`, () => {
       // Connexion
-      const p1: LoginViewPage = new LoginViewPage();
+      const p1: AuthLoginPage = new AuthLoginPage();
       p1.fillSignin(LOGIN_CREDENTIALS);
       p1.clickSignIn();
       const p2 = new HomePage();

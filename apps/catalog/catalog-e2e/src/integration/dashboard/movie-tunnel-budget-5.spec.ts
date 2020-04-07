@@ -24,8 +24,8 @@ beforeEach(() => {
   signInAndNavigateToMain();
 });
 
-describe('User can navigate to the movie tunnel page 5, complete the fields, and navigate to page 6', () => {
-  it('Login into an existing account, navigate on budget page, complete budget and quotas fields, go on movie tunnel page 6', () => {
+describe('User can navigate to the movie tunnel budget page, complete the fields, and navigate to technical info page', () => {
+  it('Login into an existing account, navigate on budget page, complete budget and quotas fields, go on movie tunnel technical info page', () => {
     const p1 = new TunnelMainPage();
     p1.navigateToTunnelPage(NAVIGATION[0], NAVIGATION[1]);
     const p2 = new TunnelBudgetPage();
@@ -65,7 +65,7 @@ describe('User can navigate to the movie tunnel page 5, complete the fields, and
     p2.fillFilmCritic(CRITIC);
     p2.assertFilmCriticExists(CRITIC);
 
-    // GO to movie-tunnel-6
+    // GO to movie tunnel technical info page
     const p3: TunnelTechnicalInfoPage = p2.clickNext();
   });
 });

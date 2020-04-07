@@ -1,5 +1,5 @@
 import { WishlistPage, SearchPage } from "./index";
-import { LoginViewPage } from "@blockframes/e2e/pages/auth";
+import { AuthLoginPage } from "@blockframes/e2e/pages/auth";
 
 export default abstract class NavbarPage {
   constructor() {
@@ -39,6 +39,6 @@ export default abstract class NavbarPage {
   public clickLogout() {
     this.openProfileMenu();
     cy.get('button[test-id=logout]').click();
-    return new LoginViewPage();
+    return new AuthLoginPage();
   }
 }
