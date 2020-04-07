@@ -1,14 +1,15 @@
-import { Component, Input, forwardRef, Renderer2, ElementRef } from '@angular/core';
+import { Component, Input, forwardRef, Renderer2, ElementRef, OnDestroy } from '@angular/core';
 import { ImageCroppedEvent } from 'ngx-image-cropper';
 import { DropZoneDirective } from '../drop-zone.directive'
 import { finalize, catchError } from 'rxjs/operators';
-import { Observable, BehaviorSubject, of, combineLatest } from 'rxjs';
+import { Observable, BehaviorSubject, of, Subscription } from 'rxjs';
 import { zoom, zoomDelay, check, finalZoom } from '@blockframes/utils/animations/cropper-animations';
 import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/storage';
 /*import { HttpClient } from '@angular/common/http';*/
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ImgRef, createImgRef } from '@blockframes/utils/image-uploader';
 import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
+import { storage as firebaseStorage } from 'firebase';
 
 type CropStep = 'drop' | 'crop' | 'upload' | 'upload_complete' | 'show';
 
@@ -61,11 +62,12 @@ function isFile(imgRef: ImgRef): boolean {
     multi: true
   }]
 })
-export class CropperComponent implements ControlValueAccessor {
+export class CropperComponent implements ControlValueAccessor, OnDestroy {
   private ref: AngularFireStorageReference;
   private folder: string;
-  private originalFileName: string;
+  private fileName: string;
   private step: BehaviorSubject<CropStep> = new BehaviorSubject('drop');
+  private sub = new Subscription;
   step$ = this.step.asObservable();
   file: File;
   croppedImage: string;
@@ -102,7 +104,6 @@ export class CropperComponent implements ControlValueAccessor {
   //  Triggered when the parent form field is initialized or updated (parent -> component)
   writeValue(path: ImgRef): void {
     if (isFile(path)) {
-      const part = path.ref.split('/');
       this.folder = this.storagePath;
       this.ref = this.storage.ref(path.ref);
       this.url$ = this.ref.getDownloadURL().pipe(
@@ -153,9 +154,8 @@ export class CropperComponent implements ControlValueAccessor {
         throw new Error('No image cropped yet');
       }
       this.nextStep('upload');
-      const fileName = sanitizeFileName(this.file.name);
-      this.originalFileName = this.file.name;
-      this.ref = this.storage.ref(`${this.folder}/${fileName}`);
+      this.fileName = sanitizeFileName(this.file.name);
+      this.ref = this.storage.ref(`${this.folder}/${this.fileName}`);
       const blob = b64toBlob(this.croppedImage);
 
       this.percentage$ = this.ref.put(blob).percentageChanges().pipe(
@@ -168,18 +168,20 @@ export class CropperComponent implements ControlValueAccessor {
     }
   }
 
-  goToShow() {
-    this.url$ = this.ref.getDownloadURL();
-    // Observable completed once both requests are completed
-    combineLatest([this.url$, this.ref.getMetadata()])
-      .subscribe(([url, meta]) => {
-        this.uploaded(createImgRef({
-          url,
-          ref: meta.fullPath,
-          originalFileName: this.originalFileName,
-        }));
-        this.nextStep('show');
-      })
+  async goToShow() {
+    // TODO#2451: switch back to angularFire storage ref when bug on getMetadata() is fixed.
+    const ref = firebaseStorage().ref(`${this.folder}/${this.fileName}`);
+    const metadata = await ref.getMetadata();
+    this.url$ = this.ref.getDownloadURL().pipe(
+      catchError(err => of(''))
+    )
+
+    this.sub = this.url$.subscribe(url => this.uploaded(createImgRef({
+      url,
+      ref: metadata.fullPath,
+      originalFileName: this.file.name
+    })));
+    this.nextStep('show');
   }
 
   // TODO#1149: fix resize - get original picture
@@ -205,6 +207,10 @@ export class CropperComponent implements ControlValueAccessor {
   nextStep(name: CropStep) {
     this.prev = this.step.getValue();
     this.step.next(name);
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 }
 
