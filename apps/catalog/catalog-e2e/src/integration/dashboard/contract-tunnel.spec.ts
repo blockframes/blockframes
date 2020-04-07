@@ -5,7 +5,7 @@ import { TunnelContractLobbyPage, TunnelContractPage, TunnelContractSummaryPage 
 import { User } from "@blockframes/e2e/utils/type";
 import { USERS } from "@blockframes/e2e/utils/users";
 import { clearDataAndPrepareTest } from "@blockframes/e2e/utils/functions";
-import { WelcomeViewPage, LoginViewPage } from "@blockframes/e2e/pages/auth";
+import { AuthWelcomePage, AuthLoginPage } from "@blockframes/e2e/pages/auth";
 
 // Select user: david.ewing@gillespie-lawrence.fake.cascade8.com
 const LOGIN_CREDENTIALS: Partial<User> = USERS[0];
@@ -29,8 +29,8 @@ beforeEach(() => {
 describe('User can navigate to the movie tunnel page 1 and 2', () => {
   it('Login into an existing account, navigate on titles list page, go to movie tunnel page 1, go on movie tunnel page 2', () => {
     // Connexion
-    const p1: WelcomeViewPage = new WelcomeViewPage();
-    const p2: LoginViewPage = p1.clickCallToAction();
+    const p1: AuthWelcomePage = new AuthWelcomePage();
+    const p2: AuthLoginPage = p1.clickCallToAction();
     p2.switchMode();
     p2.fillSignin(LOGIN_CREDENTIALS);
     p2.clickSignIn();

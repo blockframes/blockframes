@@ -18,8 +18,8 @@ beforeEach(() => {
   signInAndNavigateToMain();
 });
 
-describe('User can navigate to the movie tunnel page 11, complete the fields, and navigate to page 12', () => {
-  it('Login into an existing account, navigate on files and links page, complete the fields, go on movie tunnel page 12', () => {
+describe('User can navigate to the movie tunnel files page, complete the fields, and navigate to chain of titles page', () => {
+  it('Login into an existing account, navigate on files and links page, complete the fields, go on movie tunnel chain of titles page', () => {
     const p1 = new TunnelMainPage();
     p1.navigateToTunnelPage(NAVIGATION[0], NAVIGATION[1]);
     const p2 = new TunnelFilesPage();
@@ -43,7 +43,7 @@ describe('User can navigate to the movie tunnel page 11, complete the fields, an
     p2.fillPitchTeaserLink(LINKS[3]);
     p2.assertPitchTeaserLinkExists(LINKS[3]);
 
-    // GO to movie-tunnel-12
+    // GO to tunnel chain of titles page
     const p3: TunnelChainOfTitlesPage = p2.clickNext();
   });
 });

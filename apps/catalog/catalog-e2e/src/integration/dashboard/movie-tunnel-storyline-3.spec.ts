@@ -1,6 +1,6 @@
 /// <reference types="cypress" />
 
-import { TunnelDistributionRightPage, TunnelStorylinePage, TunnelMainPage } from '../../support/pages/dashboard';
+import { TunnelStorylinePage, TunnelMainPage, TunnelCreditsPage } from '../../support/pages/dashboard';
 import { signInAndNavigateToMain } from '../../support/utils/utils';
 import { clearDataAndPrepareTest } from '@blockframes/e2e/utils/functions';
 
@@ -13,8 +13,8 @@ beforeEach(() => {
   signInAndNavigateToMain();
 });
 
-describe('User can navigate to the movie tunnel page 3, complete the field, and navigate to page 4', () => {
-  it('Login into an existing account, navigate on keywords page, complete the field keywords, go on movie tunnel page 4', () => {
+describe('User can navigate to the movie tunnel storyline page, complete the field, and navigate to credits page', () => {
+  it('Login into an existing account, navigate on storyline page, complete the field keywords, go on movie tunnel credits page', () => {
     const p1 = new TunnelMainPage();
     p1.navigateToTunnelPage(NAVIGATION[0], NAVIGATION[1]);
     const p2 = new TunnelStorylinePage();
@@ -34,7 +34,7 @@ describe('User can navigate to the movie tunnel page 3, complete the field, and 
       p2.assertMatChipExists(KEYWORD);
     });
 
-    // Go to movie-tunnel-4
-    const p3: TunnelDistributionRightPage = p2.clickNext();
+    // Go to movie tunnel credits page
+    const p3: TunnelCreditsPage = p2.clickNext();
   });
 });

@@ -2,7 +2,7 @@
 
 import { HomePage, SearchPage, ViewPage, DistributionPage, SelectionPage, FeedbackPage } from '../../support/pages/marketplace';
 import { User, Availabilities } from '@blockframes/e2e/utils/type';
-import { LoginViewPage, WelcomeViewPage } from '@blockframes/e2e/pages/auth';
+import { AuthLoginPage, AuthWelcomePage } from '@blockframes/e2e/pages/auth';
 
 const LOGIN_CREDENTIALS: Partial<User> = {
   email: 'hello2@cascade8.com',
@@ -41,8 +41,8 @@ beforeEach(() => {
 describe('test select movie from catalog', () => {
   it.skip('login into an existing account, go to movie catalog, search movie, create distribution rights, add distribution rights', () => {
     // Connexion
-    const p1: WelcomeViewPage = new WelcomeViewPage();
-    const p2: LoginViewPage = p1.clickCallToAction();
+    const p1: AuthWelcomePage = new AuthWelcomePage();
+    const p2: AuthLoginPage = p1.clickCallToAction();
     p2.fillSignin(LOGIN_CREDENTIALS);
     p2.clickSignIn();
     const p3 = new HomePage();
