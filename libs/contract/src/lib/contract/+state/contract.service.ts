@@ -18,9 +18,9 @@ import { Observable } from 'rxjs';
 import { cleanModel } from '@blockframes/utils/helpers';
 import { map } from 'rxjs/internal/operators/map';
 import { PermissionsService } from '@blockframes/organization/permissions/+state/permissions.service';
-import { DistributionDeal, createDistributionDeal } from '@blockframes/distribution-deals/+state/distribution-deal.model';
+import { DistributionDeal, createDistributionDeal } from 'libs/movie/src/lib/distribution-rights/+state/distribution-deal.model';
 import { centralOrgID } from '@env';
-import { DistributionDealService } from '@blockframes/distribution-deals/+state';
+import { DistributionDealService } from 'libs/movie/src/lib/distribution-rights/+state';
 import { OrganizationService } from '@blockframes/organization/organization/+state';
 import { CollectionReference } from '@angular/fire/firestore/interfaces';
 
@@ -47,7 +47,7 @@ export class ContractService extends CollectionService<ContractState> {
   /**
    * This convert the Contract into a ContractDocumentWithDates
    * to clean the unused properties in the database (lastVersion).
-   * @param contract 
+   * @param contract
    */
   formatToFirestore(contract: Contract): ContractDocumentWithDates {
     return cleanContract(contract);
@@ -55,7 +55,7 @@ export class ContractService extends CollectionService<ContractState> {
 
   /**
    * Gets the mandate contract of an organization
-   * @param orgId 
+   * @param orgId
    */
   public async getMandate(orgId: string): Promise<Contract> {
     const query = (ref: CollectionReference) => ref.where('partyIds', 'array-contains', orgId)
@@ -93,8 +93,8 @@ export class ContractService extends CollectionService<ContractState> {
 
   /**
    * Use this method to push deals and init the related contract
-   * @param licenseeId 
-   * @param titlesAndDeals 
+   * @param licenseeId
+   * @param titlesAndDeals
    * @param type
    */
   public async createContractAndDeal(licenseeId: string, titlesAndDeals: TitlesAndDeals, contract: Contract = createContract({ type: 'sale' })): Promise<string> {
@@ -276,7 +276,7 @@ export class ContractService extends CollectionService<ContractState> {
 
   /**
    * Changes contract status to submitted. Also updates distribution deals state.
-   * @param _contract 
+   * @param _contract
    */
   public async submit(_contract: Contract) {
     const write = this.db.firestore.batch();

@@ -1,10 +1,10 @@
 import { Movie } from '@blockframes/movie/+state/movie.model';
-import { DistributionDeal, getDealTerritories } from '@blockframes/distribution-deals/+state/distribution-deal.model';
+import { DistributionDeal, getDealTerritories } from 'libs/movie/src/lib/distribution-rights/+state/distribution-deal.model';
 import { ExtractSlug } from '@blockframes/utils/static-model/staticModels';
 import { NumberRange, DateRange } from '@blockframes/utils/common-interfaces';
 import { LanguagesLabel } from '@blockframes/utils/static-model/types';
 import { CatalogSearch, AvailsSearch } from './search.form';
-import { getFilterMatchingDeals, getDealsInDateRange, getExclusiveDeals } from '@blockframes/distribution-deals/create/availabilities.util';
+import { getFilterMatchingDeals, getDealsInDateRange, getExclusiveDeals } from 'libs/movie/src/lib/distribution-rights/create/availabilities.util';
 import { MovieLanguageSpecification, StoreType } from '@blockframes/movie/+state/movie.firestore';
 import { toDate } from '@blockframes/utils/helpers';
 

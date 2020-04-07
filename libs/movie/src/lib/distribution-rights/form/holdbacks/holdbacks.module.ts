@@ -1,4 +1,4 @@
-import { DistributionDealTermsModule } from '@blockframes/distribution-deals/form/terms/terms.module';
+import { DistributionDealTermsModule } from 'libs/movie/src/lib/distribution-rights/form/terms/terms.module';
 import { DistributionDealHoldbacksComponent } from './holdbacks.component';
 
 // Angular

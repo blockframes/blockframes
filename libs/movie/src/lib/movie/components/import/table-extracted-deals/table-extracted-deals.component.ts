@@ -8,7 +8,7 @@ import { createMovie, MovieService } from '../../../+state';
 import { SelectionModel } from '@angular/cdk/collections';
 import { SpreadsheetImportError, DealsImportState } from '../view-extracted-elements/view-extracted-elements.component';
 import { ViewImportErrorsComponent } from '../view-import-errors/view-import-errors.component';
-import { DistributionDealService } from '@blockframes/distribution-deals/+state/distribution-deal.service';
+import { DistributionDealService } from 'libs/movie/src/lib/distribution-rights/+state/distribution-deal.service';
 import { cleanModel } from '@blockframes/utils/helpers';
 import { sortingDataAccessor } from '@blockframes/utils/table';
 
