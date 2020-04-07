@@ -1,11 +1,11 @@
 /// <reference types="cypress" />
 
 import { HomePage, SearchPage, ViewPage, WishlistPage } from '../../support/pages/marketplace';
-import { User } from '../../support/utils/type';
-import { USERS } from '../../support/utils/users';
-import { LoginViewPage } from '../../support/pages/auth';
 import { LandingPage } from '../../support/pages/landing';
-import { MOVIES } from '../../support/utils/movies';
+import { User } from '@blockframes/e2e/utils/type';
+import { USERS } from '@blockframes/e2e/utils/users';
+import { MOVIES } from '@blockframes/e2e/utils/movies';
+import { LoginViewPage } from '@blockframes/e2e/pages/auth';
 
 // Select user: wayne.massey@hart-caldwell.fake.cascade8.com
 const LOGIN_CREDENTIALS: Partial<User> = USERS[2];
@@ -26,7 +26,8 @@ describe('Test wishlist icon from library page', () => {
     // Connexion
     const p1: LoginViewPage = new LoginViewPage();
     p1.fillSignin(LOGIN_CREDENTIALS);
-    const p2: HomePage = p1.clickSignIn();
+    p1.clickSignIn();
+    const p2 = new HomePage();
 
     // Add two movies to the wishlist
     const p3: SearchPage = p2.clickViewTheLibrary();
@@ -57,7 +58,8 @@ describe('Test wishlist icon from movie view page', () => {
     // Connexion
     const p1: LoginViewPage = new LoginViewPage();
     p1.fillSignin(LOGIN_CREDENTIALS);
-    const p2: HomePage = p1.clickSignIn();
+    p1.clickSignIn();
+    const p2 = new HomePage();
 
     // Add two movies to the wishlist
     const p3: SearchPage = p2.clickViewTheLibrary();
@@ -91,7 +93,8 @@ describe('Test wishlist icon from movie view page', () => {
       // Connexion
       const p1: LoginViewPage = new LoginViewPage();
       p1.fillSignin(LOGIN_CREDENTIALS);
-      const p2: HomePage = p1.clickSignIn();
+      p1.clickSignIn();
+      const p2 = new HomePage();
 
       // HOME PAGE
 

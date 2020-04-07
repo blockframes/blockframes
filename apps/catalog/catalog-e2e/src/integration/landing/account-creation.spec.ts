@@ -1,9 +1,9 @@
 /// <reference types="cypress" />
 
-import { User } from '../../support/utils/type';
-import { WelcomeViewPage, LoginViewPage } from '../../support/pages/auth';
-import { OrganizationHomePage } from '../../support/pages/organization';
-import { clearDataAndPrepareTest } from '../../support/utils/utils';
+import { User } from "@blockframes/e2e/utils/type";
+import { clearDataAndPrepareTest } from "@blockframes/e2e/utils/functions";
+import { WelcomeViewPage, LoginViewPage } from "@blockframes/e2e/pages/auth";
+import { OrganizationHomePage } from "@blockframes/e2e/pages/organization";
 
 const USER: Partial<User> = {
   email: `${Date.now()}@cypress.com`,

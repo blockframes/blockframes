@@ -86,7 +86,7 @@
           <!-- Freshness (Store Type) -->
           <mat-expansion-panel>
             <mat-expansion-panel-header>
-              <span class="mat-body-1">Freshness</span>
+              <span class="mat-body-1">Library / Line-up</span>
             </mat-expansion-panel-header>
             <div fxLayout="row" fxLayoutAlign="space-around center">
               <mat-checkbox (change)="checkStoreType('library')" color="primary" [disabled]="availsForm.value.isActive">
@@ -114,9 +114,7 @@
               [form]="filterForm.originCountries"
               placeholder="Country of Origin"
               [items]="countries"
-              store="slug"
-              display="label">
-            </chips-autocomplete>
+            ></chips-autocomplete>
           </mat-expansion-panel>
 
           <!-- Languages -->

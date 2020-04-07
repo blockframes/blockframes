@@ -1,6 +1,6 @@
 import ViewPage from "./ViewPage";
-import { Dates, Availabilities } from "../../utils/type";
 import NavbarPage from "./NavbarPage";
+import { Dates, Availabilities } from "@blockframes/e2e/utils/type";
 
 export default class SearchPage extends NavbarPage {
 

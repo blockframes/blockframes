@@ -5,7 +5,6 @@ import {
   Component,
   ChangeDetectionStrategy,
   OnInit,
-  ViewChild,
   Inject,
   OnDestroy
 } from '@angular/core';

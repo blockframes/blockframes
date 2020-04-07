@@ -1,18 +1,15 @@
 /// <reference types="cypress" />
 
-import { clearDataAndPrepareTest } from "../../support/utils/utils";
-import { WelcomeViewPage, LoginViewPage } from "../../support/pages/auth";
-import { User } from "../../support/utils/type";
-import { USERS } from "../../support/utils/users";
 import { HomePage } from "../../support/pages/marketplace";
 import { TunnelContractLobbyPage, TunnelContractPage, TunnelContractSummaryPage } from "../../support/pages/dashboard";
+import { User } from "@blockframes/e2e/utils/type";
+import { USERS } from "@blockframes/e2e/utils/users";
+import { clearDataAndPrepareTest } from "@blockframes/e2e/utils/functions";
+import { WelcomeViewPage, LoginViewPage } from "@blockframes/e2e/pages/auth";
 
-// Select user: cytest@blockframes.com
+// Select user: david.ewing@gillespie-lawrence.fake.cascade8.com
 const LOGIN_CREDENTIALS: Partial<User> = USERS[0];
 
-const PARTIAL_PARTY_NAMES = ['m', 'ma'];
-const PARTY_NAMES = ['main', 'main'];
-const ROLES = ['Licensor', 'Licensee'];
 const EVENT = 'Contract Signature Date';
 const EVENT_SUMMARY = 'ContractSignatureDate';
 const DURATION = '90';
@@ -36,24 +33,12 @@ describe('User can navigate to the movie tunnel page 1 and 2', () => {
     const p2: LoginViewPage = p1.clickCallToAction();
     p2.switchMode();
     p2.fillSignin(LOGIN_CREDENTIALS);
-    const p3: HomePage = p2.clickSignIn();
+    p2.clickSignIn();
+    const p3 = new HomePage();
 
     // Navigate to tunnel-contract
     const p4: TunnelContractLobbyPage = TunnelContractLobbyPage.navigateToPage();
     const p5: TunnelContractPage = p4.clickSale();
-
-    // Party Name
-    p5.fillFirstPartyName(PARTIAL_PARTY_NAMES[0]);
-    p5.selectFirstPartyName(PARTY_NAMES[0]);
-    p5.assertFirstPartyNameExists(PARTY_NAMES[0]);
-    p5.selectFirstRole(ROLES[0]);
-    p5.assertFirstRoleIsSelected(ROLES[0]);
-
-    p5.fillLastPartyName(PARTIAL_PARTY_NAMES[1]);
-    p5.selectLastPartyName(PARTY_NAMES[1]);
-    p5.assertLastPartyNameExists(PARTY_NAMES[1]);
-    p5.selectLastRole(ROLES[1]);
-    p5.assertLastRoleIsSelected(ROLES[1]);
 
     // Terms
     p5.selectEvent(EVENT);
@@ -87,10 +72,6 @@ describe('User can navigate to the movie tunnel page 1 and 2', () => {
     // Save, reload and verify the fields
     p5.clickSave();
     cy.reload();
-    p5.assertFirstPartyNameExists(PARTY_NAMES[0]);
-    p5.assertFirstRoleIsSelected(ROLES[0]);
-    p5.assertLastPartyNameExists(PARTY_NAMES[1]);
-    p5.assertLastRoleIsSelected(ROLES[1]);
     p5.assertEventIsSelected(EVENT);
     p5.assertDurationExists(DURATION);
     p5.assertPeriodIsSelected(PERIOD);
@@ -104,9 +85,6 @@ describe('User can navigate to the movie tunnel page 1 and 2', () => {
     // Go to Contract Summary Page and check that the summary page has the information
     const p6: TunnelContractSummaryPage = p5.clickNext();
 
-    // Party Name
-    p6.assertFirstPartyNameExists(PARTY_NAMES[0]);
-    p6.assertFirstPartyNameExists(PARTY_NAMES[1]);
     // Terms For 90 months starting from ContractSignatureDate.
     p6.assertTermsExist(EVENT_SUMMARY, DURATION, PERIOD_SUMMARY);
     // Title Selection & Price

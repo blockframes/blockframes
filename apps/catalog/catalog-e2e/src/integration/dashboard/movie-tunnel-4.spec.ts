@@ -1,7 +1,8 @@
 /// <reference types="cypress" />
 
 import { TunnelBudgetPage, TunnelCreditsPage, TunnelMainPage } from '../../support/pages/dashboard';
-import { signInAndNavigateToMain, clearDataAndPrepareTest } from '../../support/utils/utils';
+import { signInAndNavigateToMain } from '../../support/utils/utils';
+import { clearDataAndPrepareTest } from '@blockframes/e2e/utils/functions';
 
 // TEST
 
