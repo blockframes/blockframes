@@ -11,8 +11,8 @@ beforeEach(() => {
   signInAndNavigateToMain();
 });
 
-describe('User can navigate to the movie tunnel page 12, complete the fields, and navigate to page 13', () => {
-  it('Login into an existing account, navigate on chain of titles page, complete the fields, go on movie tunnel page 13', () => {
+describe('User can navigate to the movie tunnel chain of titles page, complete the fields, and navigate to valuation page', () => {
+  it('Login into an existing account, navigate on chain of titles page, complete the fields, go on movie tunnel valuation page', () => {
     const p1 = new TunnelMainPage();
     p1.navigateToTunnelPage(NAVIGATION[0], NAVIGATION[1]);
     const p2 = new TunnelChainOfTitlesPage();
@@ -21,7 +21,7 @@ describe('User can navigate to the movie tunnel page 12, complete the fields, an
     .then(path => p2.uploadChainOfTitlesFile(path))
     .then(() => p2.assertChainOfTitlesFileHasUploadSucceeded());
 
-    // GO to movie-tunnel-13
+    // GO to movie tunnel valuation page
     const p3: TunnelValuationPage = p2.clickNext();
   });
 });

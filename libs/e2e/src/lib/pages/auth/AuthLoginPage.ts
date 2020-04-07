@@ -1,7 +1,7 @@
 import { User } from '../../utils/type';
 import { OrganizationHomePage } from '../organization';
 
-export default class LoginViewPage {
+export default class AuthLoginPage {
 
   constructor() {
     cy.get('auth-login-view');
@@ -85,7 +85,7 @@ export default class LoginViewPage {
   }
 
   public clickTermsAndCondition() {
-    cy.get('[page-id=accept-condition] [test-id="checkbox"] input').check({ force: true });
+    cy.get('auth-accept-conditions [test-id="checkbox"] input').check({ force: true });
   }
 
   public clickSignupToOrgHome() {

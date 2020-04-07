@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, HostBinding, Optional } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
 import { Router } from '@angular/router';
 import { MarketplaceQuery, MarketplaceStore } from '../../+state';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
@@ -15,7 +15,6 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MarketplaceSelectionComponent {
-  @HostBinding('attr.page-id') pageId = 'catalog-selection';
 
   count$ = this.query.selectCount();
   titles$ = this.query.selectAll();
@@ -45,7 +44,7 @@ export class MarketplaceSelectionComponent {
     this.store.remove(movieId);
   }
 
-  /** 
+  /**
    * Creates deals and contract and move to tunnel
    */
   async create() {
