@@ -1,20 +1,20 @@
-// Distribution Deals guards
-export * from './guards/active-movie-distribution-deals.guard';
-export * from './guards/contracts-deal-list.guard';
+// Distribution Rights guards
+export * from './guards/active-movie-distribution-rights.guard';
+export * from './guards/contracts-right-list.guard';
 
-// Distribution Deals state
+// Distribution Rights state
 
 export * from './+state/distribution-right.query';
 export * from './+state/distribution-right.service';
 export * from './+state/distribution-right.store';
 export * from './+state/distribution-right.model';
 
-// Distribution Deals Form
-export * from './form/distribution-deal.form';
+// Distribution Rights Form
+export * from './form/distribution-right.form';
 export * from './form/holdbacks/holdbacks.form';
 export * from './form/terms/terms.form';
 
-// Distribution Deals Form Modules
+// Distribution Rights Form Modules
 export * from './form/rights/rights.module';
 export * from './form/territory/territory.module';
 export * from './form/terms/terms.module';

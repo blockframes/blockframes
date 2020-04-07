@@ -1,9 +1,9 @@
 import { tap, distinctUntilChanged, debounceTime } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 import { FormControl } from '@angular/forms';
-import { DistributionDealForm } from '@blockframes/distribution-rights/form/distribution-deal.form';
+import { DistributionRightForm } from '../distribution-right.form';
 import { Component, OnInit, ChangeDetectionStrategy, Input, OnDestroy, ChangeDetectorRef } from '@angular/core';
-import { DistributionDealTermsForm } from '../terms/terms.form';
+import { DistributionRightTermsForm } from '../terms/terms.form';
 
 @Component({
   selector: '[form] distribution-form-broadcast',
@@ -11,8 +11,8 @@ import { DistributionDealTermsForm } from '../terms/terms.form';
   styleUrls: ['./broadcast.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DistributionDealBroadcastComponent implements OnInit, OnDestroy {
-  @Input() form: DistributionDealForm;
+export class DistributionRightBroadcastComponent implements OnInit, OnDestroy {
+  @Input() form: DistributionRightForm;
 
   public diffusionCtrl = new FormControl();
 
@@ -27,7 +27,7 @@ export class DistributionDealBroadcastComponent implements OnInit, OnDestroy {
       tap(value => {
         let index = 0
         // Reset controls by every state change
-        this.diffusion.controls = [new DistributionDealTermsForm()];
+        this.diffusion.controls = [new DistributionRightTermsForm()];
         while (index < value -1) {
           this.diffusion.add();
           index++;

@@ -5,14 +5,14 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 // Components
-import { DistributionDealTerritoryComponent } from './territory.component';
+import { DistributionRightTerritoryComponent } from './territory.component';
 
 // Modules
 import { ChipsAutocompleteModule } from '@blockframes/ui/static-autocomplete/chips/chips-autocomplete.module';
 
 @NgModule({
   imports: [CommonModule, FlexLayoutModule, ReactiveFormsModule, ChipsAutocompleteModule],
-  declarations: [DistributionDealTerritoryComponent],
-  exports: [DistributionDealTerritoryComponent]
+  declarations: [DistributionRightTerritoryComponent],
+  exports: [DistributionRightTerritoryComponent]
 })
-export class DistributionDealTerritoryModule {}
+export class DistributionRightTerritoryModule {}

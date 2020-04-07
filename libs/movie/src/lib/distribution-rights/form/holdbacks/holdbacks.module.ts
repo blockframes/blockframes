@@ -1,5 +1,5 @@
-import { DistributionDealTermsModule } from '@blockframes/distribution-rights/form/terms/terms.module';
-import { DistributionDealHoldbacksComponent } from './holdbacks.component';
+import { DistributionRightTermsModule } from '../terms/terms.module';
+import { DistributionRightHoldbacksComponent } from './holdbacks.component';
 
 // Angular
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -17,12 +17,12 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
     FlexLayoutModule,
 
     // Modules
-    DistributionDealTermsModule,
+    DistributionRightTermsModule,
 
     // Material
     MatButtonToggleModule
   ],
-  declarations: [DistributionDealHoldbacksComponent],
-  exports: [DistributionDealHoldbacksComponent]
+  declarations: [DistributionRightHoldbacksComponent],
+  exports: [DistributionRightHoldbacksComponent]
 })
-export class DistributionDealHoldbacksModule { }
+export class DistributionRightHoldbacksModule { }

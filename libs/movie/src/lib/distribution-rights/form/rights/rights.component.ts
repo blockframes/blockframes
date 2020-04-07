@@ -1,6 +1,6 @@
 // Blockframes
 import { staticModels, MediasSlug } from '@blockframes/utils/static-model';
-import { DistributionDealForm } from '@blockframes/distribution-rights/form/distribution-deal.form';
+import { DistributionRightForm } from '../distribution-right.form';
 
 // Angular
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
@@ -11,8 +11,8 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
   styleUrls: ['./rights.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DistributionDealRightsComponent {
-  @Input() form: DistributionDealForm;
+export class DistributionRightRightsComponent {
+  @Input() form: DistributionRightForm;
 
   public staticMedias = staticModels['MEDIAS'].filter(media => {
     const wantedMedias = ['Pay TV', 'Free TV', 'S-VOD', 'A-VOD', 'Planes', 'Trains', 'Hotels'];

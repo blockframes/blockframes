@@ -1,4 +1,4 @@
-import { DistributionDealTermsComponent } from './terms.component';
+import { DistributionRightTermsComponent } from './terms.component';
 
 // Angular
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -31,7 +31,7 @@ import { MatSelectModule } from '@angular/material/select';
     MatOptionModule,
     MatDividerModule
   ],
-  declarations: [DistributionDealTermsComponent],
-  exports: [DistributionDealTermsComponent]
+  declarations: [DistributionRightTermsComponent],
+  exports: [DistributionRightTermsComponent]
 })
-export class DistributionDealTermsModule {}
+export class DistributionRightTermsModule {}

@@ -1,16 +1,11 @@
-import { Component, AfterViewInit, ViewChild, ElementRef, ChangeDetectionStrategy, ChangeDetectorRef, NgZone, Input } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, Input } from '@angular/core';
 import { Movie } from '@blockframes/movie/+state';
-import { geoJSON, GeoJSON, Layer } from 'leaflet';
-import { getTerritorySlugFromGeoJson, getTerritoryLabelFromGeoJson } from '@blockframes/utils/static-model/territories-ISO-3166';
-import { ISO3166TERRITORIES } from '@blockframes/utils/static-model/territories-ISO-3166';
+import { getTerritorySlugFromGeoJson } from '@blockframes/utils/static-model/territories-ISO-3166';
 import { BehaviorSubject } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-const territories = ISO3166TERRITORIES.map(t => t['iso_a3']);
-
 @Component({
-  selector: 'distribution-deals-selection-map',
+  selector: 'distribution-rights-selection-map',
   templateUrl: './selection-map.component.html',
   styleUrls: ['./selection-map.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -38,5 +33,4 @@ export class SelectionMapComponent {
   public trackByTag(tag) {
     return tag;
   }
-
 }

@@ -2,7 +2,7 @@ import { Subscription } from 'rxjs';
 import { timeUnit, paymentEvent } from '@blockframes/utils/common-interfaces/terms';
 import { FormControl } from '@angular/forms';
 import { Component, Input, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
-import { DistributionDealTermsForm } from './terms.form';
+import { DistributionRightTermsForm } from './terms.form';
 import { tap, startWith } from 'rxjs/operators';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
@@ -12,8 +12,8 @@ import { MatSlideToggleChange } from '@angular/material/slide-toggle';
   styleUrls: ['./terms.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DistributionDealTermsComponent implements OnInit, OnDestroy {
-  @Input() form: DistributionDealTermsForm;
+export class DistributionRightTermsComponent implements OnInit, OnDestroy {
+  @Input() form: DistributionRightTermsForm;
 
   public events = paymentEvent;
 

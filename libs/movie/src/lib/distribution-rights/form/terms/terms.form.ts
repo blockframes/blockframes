@@ -8,13 +8,13 @@ function createTermsControl(terms: Partial<Terms>) {
     start: new FormControl(terms.start),
     end: new FormControl(terms.end),
     floatingStart: new FormControl(terms.floatingStart),
-    floatingDuration: new DistributionDealFloatingDurationForm(terms.floatingDuration)
+    floatingDuration: new DistributionRightFloatingDurationForm(terms.floatingDuration)
   };
 }
 
-export type DistributionDealTermsControl = ReturnType<typeof createTermsControl>;
+export type DistributionRightTermsControl = ReturnType<typeof createTermsControl>;
 
-export class DistributionDealTermsForm extends FormEntity<DistributionDealTermsControl, Terms> {
+export class DistributionRightTermsForm extends FormEntity<DistributionRightTermsControl, Terms> {
   constructor(terms: Partial<Terms> = {}) {
     super(createTermsControl(terms));
   }
@@ -29,10 +29,10 @@ function createFloatingDuration(floating: Partial<FloatingDuration>) {
   };
 }
 
-type DistributionDealFloatingDurationControl = ReturnType<typeof createFloatingDuration>;
+type DistributionRightFloatingDurationControl = ReturnType<typeof createFloatingDuration>;
 
-export class DistributionDealFloatingDurationForm extends FormEntity<
-  DistributionDealFloatingDurationControl,
+export class DistributionRightFloatingDurationForm extends FormEntity<
+  DistributionRightFloatingDurationControl,
   FloatingDuration
 > {
   constructor(floatingDuration: Partial<FloatingDuration> = {}) {

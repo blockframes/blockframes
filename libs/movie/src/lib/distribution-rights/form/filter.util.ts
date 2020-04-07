@@ -1,10 +1,10 @@
 import { Movie } from '@blockframes/movie/+state/movie.model';
-import { DistributionDeal, getDealTerritories } from '@blockframes/distribution-rights/+state/distribution-deal.model';
+import { DistributionRight, getRightTerritories } from '../+state/distribution-right.model';
 import { ExtractSlug } from '@blockframes/utils/static-model/staticModels';
 import { NumberRange, DateRange } from '@blockframes/utils/common-interfaces';
 import { LanguagesLabel } from '@blockframes/utils/static-model/types';
 import { CatalogSearch, AvailsSearch } from './search.form';
-import { getFilterMatchingDeals, getDealsInDateRange, getExclusiveDeals } from '@blockframes/distribution-rights/create/availabilities.util';
+import { getFilterMatchingRights, getRightsInDateRange, getExclusiveRights } from '../create/availabilities.util';
 import { MovieLanguageSpecification, StoreType } from '@blockframes/movie/+state/movie.firestore';
 import { toDate } from '@blockframes/utils/helpers';
 
@@ -133,24 +133,24 @@ function hasStoreType(movie: Movie, storeTypes: StoreType[]) {
 }
 
 /**
- * Looks for the deal matching the mandate and checks if Archipel can sells
+ * Looks for the right matching the mandate and checks if Archipel can sells
  * rights according to the filter options set by the buyer.
  */
-function archipelCanSells(filter: AvailsSearch, mandateDeal: DistributionDeal): boolean {
+function archipelCanSells(filter: AvailsSearch, mandateRight: DistributionRight): boolean {
 
-  const licensedTerritories = getDealTerritories(mandateDeal);
+  const licensedTerritories = getRightTerritories(mandateRight);
   const hasTerritories = mandateHas(filter.territory, licensedTerritories)
-  const hasMedias = mandateHas(filter.licenseType, mandateDeal.licenseType)
+  const hasMedias = mandateHas(filter.licenseType, mandateRight.licenseType)
   const hasTerms =
-    toDate(filter.terms.start).getTime() > toDate(mandateDeal.terms.start).getTime() &&
-    toDate(filter.terms.end).getTime() < toDate(mandateDeal.terms.end).getTime()
+    toDate(filter.terms.start).getTime() > toDate(mandateRight.terms.start).getTime() &&
+    toDate(filter.terms.end).getTime() < toDate(mandateRight.terms.end).getTime()
 
   return hasTerritories && hasMedias && hasTerms;
 }
 
-/** Checks if every items of the list from filters are in the list from the deal. */
-function mandateHas(listFromFilter: string[], listFromDeal: string[]) {
-  return listFromFilter.every(item => listFromDeal.includes(item));
+/** Checks if every items of the list from filters are in the list from the right. */
+function mandateHas(listFromFilter: string[], listFromRight: string[]) {
+  return listFromFilter.every(item => listFromRight.includes(item));
 }
 
 // TODO #1306 - remove when algolia is ready
@@ -169,24 +169,24 @@ export function filterMovie(movie: Movie, filter: CatalogSearch): boolean {
 }
 
 /**
- * Returns a boolean weither a deal is matching with our search or not.
- * @param deals All the deals from the movies in the filterForm
+ * Returns a boolean weither a right is matching with our search or not.
+ * @param rights All the rights from the movies in the filterForm
  * @param filter The filter options defined by the buyer
- * @param mandateDeal The deal between Archipel and the seller
+ * @param mandateRight The right between Archipel and the seller
  */
-export function filterMovieWithAvails(deals: DistributionDeal[], filter: AvailsSearch, mandateDeals: DistributionDeal[]) {
+export function filterMovieWithAvails(rights: DistributionRight[], filter: AvailsSearch, mandateRights: DistributionRight[]) {
   if (!filter.terms || !(filter.terms.start && filter.terms.end)) {
     return true;
   }
 
   // If Archipel Content is not allowed to sells rights from this movie on the mandate, don't show the movie
-  if (mandateDeals.map(mandateDeal => archipelCanSells(filter, mandateDeal)).every(canSell => canSell === false )) {
+  if (mandateRights.map(mandateRight => archipelCanSells(filter, mandateRight)).every(canSell => canSell === false )) {
     return false;
   }
 
-  const matchingExclusivityDeals = getExclusiveDeals(deals, filter.exclusive);
-  const matchingRangeDeals = getDealsInDateRange(filter.terms, matchingExclusivityDeals);
-  const matchingDeals = getFilterMatchingDeals(filter, matchingRangeDeals);
+  const matchingExclusivityRights = getExclusiveRights(rights, filter.exclusive);
+  const matchingRangeRights = getRightsInDateRange(filter.terms, matchingExclusivityRights);
+  const matchingRights = getFilterMatchingRights(filter, matchingRangeRights);
 
-  return matchingDeals.length ? false : true;
+  return matchingRights.length ? false : true;
 }

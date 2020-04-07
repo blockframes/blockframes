@@ -1,49 +1,47 @@
-import { MovieSalesAgentDeal } from '../../movie/+state/movie.model';
-import { DistributionRight, getDealTerritories } from '../+state/distribution-right.model';
-import { DateRange } from '@blockframes/utils/common-interfaces/range';
+import { DistributionRight, getRightTerritories } from '../+state/distribution-right.model';
 import { AvailsSearch } from '../form/search.form';
 import { toDate } from '@blockframes/utils/helpers';
 import { MediasSlug } from '@blockframes/utils/static-model';
 import { Terms } from '@blockframes/utils/common-interfaces/terms';
 
 /**
- * @description This function checks if there are intersections in the deals
+ * @description This function checks if there are intersections in the rights
  * from the current movie and the specified date range from the buyer
  * @param formDates The date range which got specified by the buyer
- * @param DistributionRights Array of the movie distribution deals.
- * Note don't put the exclusive deals array in here
+ * @param DistributionRights Array of the movie distribution rights.
+ * Note don't put the exclusive rights array in here
  */
-export function getDealsInDateRange(formDates: Terms, DistributionRights: DistributionRight[]): DistributionRight[] {
+export function getRightsInDateRange(formDates: Terms, DistributionRights: DistributionRight[]): DistributionRight[] {
   if (!DistributionRights) {
     return [];
   }
 
-  const intersectedDateRangeDeals: DistributionRight[] = [];
+  const intersectedDateRangeRights: DistributionRight[] = [];
 
-  for (const deal of DistributionRights) {
-    const dealFrom: Date = toDate(deal.terms.start);
-    const dealTo: Date = toDate(deal.terms.end);
+  for (const right of DistributionRights) {
+    const rightFrom: Date = toDate(right.terms.start);
+    const rightTo: Date = toDate(right.terms.end);
 
     /**
-     * If the form date 'from' is between a deal from and to, it means that there
-     * are already deals made, but it is still possible to buy a distribution right
+     * If the form date 'from' is between a right from and to, it means that there
+     * are already rights made, but it is still possible to buy a distribution right
      * at this point.
      */
     if (
-      formDates.start.getTime() >= dealFrom.getTime() &&
-      formDates.start.getTime() <= dealTo.getTime()
+      formDates.start.getTime() >= rightFrom.getTime() &&
+      formDates.start.getTime() <= rightTo.getTime()
     ) {
-      intersectedDateRangeDeals.push(deal);
+      intersectedDateRangeRights.push(right);
     }
     /**
      * If 'to' date is older than sales agent 'to' date
      * and 'to' date is younger than sales agent 'from' date, it is in range
      */
     if (
-      formDates.end.getTime() <= dealTo.getTime() &&
-      formDates.end.getTime() >= dealFrom.getTime()
+      formDates.end.getTime() <= rightTo.getTime() &&
+      formDates.end.getTime() >= rightFrom.getTime()
     ) {
-      intersectedDateRangeDeals.push(deal);
+      intersectedDateRangeRights.push(right);
     }
 
     /**
@@ -51,41 +49,41 @@ export function getDealsInDateRange(formDates: Terms, DistributionRights: Distri
      * 'to' date if younger than sales agent 'to' date , it is in range
      */
     if (
-      formDates.start.getTime() <= dealFrom.getTime() &&
-      formDates.end.getTime() >= dealTo.getTime()
+      formDates.start.getTime() <= rightFrom.getTime() &&
+      formDates.end.getTime() >= rightTo.getTime()
     ) {
-      intersectedDateRangeDeals.push(deal);
+      intersectedDateRangeRights.push(right);
     }
   }
-  return intersectedDateRangeDeals;
+  return intersectedDateRangeRights;
 }
 
 /**
  * @description We want to check if user search and salesAgentMedias have medias and territories in common
  * @param filter The filter options defined by the buyer
- * @param deals The array of deals from a movie in the previously specified date range
+ * @param rights The array of rights from a movie in the previously specified date range
  */
-export function getFilterMatchingDeals(
+export function getFilterMatchingRights(
   filter: AvailsSearch,
-  deals: DistributionRight[]
+  rights: DistributionRight[]
 ): DistributionRight[] {
 
   const { territory, licenseType } = filter
 
   /**
    * We have to look on the already exisitng
-   * deals in the movie and check if there is any overlapping medias
+   * rights in the movie and check if there is any overlapping medias
    */
-  const dealsWithTerritoriesAndMediasInCommon: DistributionRight[] = [];
-  for (const deal of deals) {
+  const rightsWithTerritoriesAndMediasInCommon: DistributionRight[] = [];
+  for (const right of rights) {
 
-    // Filter deal territories
-    const dealTerritories = getDealTerritories(deal);
+    // Filter right territories
+    const rightTerritories = getRightTerritories(right);
 
     let mediasInCommon = false;
     mediaLoop : for (const filterMedia of licenseType) {
-      for (const dealMedia of deal.licenseType) {
-        if (dealMedia === filterMedia) {
+      for (const rightMedia of right.licenseType) {
+        if (rightMedia === filterMedia) {
           mediasInCommon = true;
           break mediaLoop;
         }
@@ -94,8 +92,8 @@ export function getFilterMatchingDeals(
 
     let territoriesInCommon = false;
     territoryLoop : for (const filterTerritory of territory) {
-      for (const dealTerritory of dealTerritories) {
-        if (dealTerritory === filterTerritory) {
+      for (const rightTerritory of rightTerritories) {
+        if (rightTerritory === filterTerritory) {
           territoriesInCommon = true;
           break territoryLoop;
         }
@@ -105,27 +103,27 @@ export function getFilterMatchingDeals(
     if (
       mediasInCommon &&
       territoriesInCommon &&
-      !dealsWithTerritoriesAndMediasInCommon.includes(deal)
+      !rightsWithTerritoriesAndMediasInCommon.includes(right)
     ) {
-      dealsWithTerritoriesAndMediasInCommon.push(deal);
+      rightsWithTerritoriesAndMediasInCommon.push(right);
     }
   }
-  return dealsWithTerritoriesAndMediasInCommon;
+  return rightsWithTerritoriesAndMediasInCommon;
 }
 
 /**
- * @description We want to check if user search and deals have medias in common
+ * @description We want to check if user search and rights have medias in common
  * @param medias The medias from the filter defined by the buyer
- * @param deals The array of deals from a movie in the previously specified date range
+ * @param rights The array of rights from a movie in the previously specified date range
  */
-export function getDealsWithMedias(medias: MediasSlug[], deals: DistributionRight[]): DistributionRight[] {
-  const dealsWithMediasInCommon: DistributionRight[] = [];
+export function getRightsWithMedias(medias: MediasSlug[], rights: DistributionRight[]): DistributionRight[] {
+  const rightsWithMediasInCommon: DistributionRight[] = [];
 
-  for (const deal of deals) {
+  for (const right of rights) {
 
     let mediasInCommon = false;
     mediaLoop : for (const media of medias) {
-      for (const licenseType of deal.licenseType) {
+      for (const licenseType of right.licenseType) {
         if (licenseType === media) {
           mediasInCommon = true;
           break mediaLoop;
@@ -133,24 +131,24 @@ export function getDealsWithMedias(medias: MediasSlug[], deals: DistributionRigh
       }
     }
     if (mediasInCommon) {
-      dealsWithMediasInCommon.push(deal);
+      rightsWithMediasInCommon.push(right);
     }
   }
 
-  return dealsWithMediasInCommon;
+  return rightsWithMediasInCommon;
 
   }
 
 /**
- * Returns deals with same exclusivity value as the one passed as an argument.
+ * Returns rights with same exclusivity value as the one passed as an argument.
  * @param exclusive
- * @param deals
+ * @param rights
  */
-export function getExclusiveDeals(deals: DistributionRight[], exclusive: boolean): DistributionRight[] {
+export function getExclusiveRights(rights: DistributionRight[], exclusive: boolean): DistributionRight[] {
   if (exclusive === true) {
-    return deals
+    return rights
   }
   if (exclusive === false) {
-    return deals.filter(deal => deal.exclusive === true);
+    return rights.filter(right => right.exclusive === true);
   }
 }

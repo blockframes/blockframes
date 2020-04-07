@@ -1,6 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input, ViewChild, OnInit } from '@angular/core';
-import { DistributionDeal, getDealTerritories } from '../../+state';
-
+import { DistributionRight, getRightTerritories } from '../../+state';
 import { MatSort } from '@angular/material/sort';
 import { MediasSlug } from '@blockframes/utils/static-model';
 import { formatDate } from '@angular/common';
@@ -34,19 +33,19 @@ interface RightView {
 }
 
 /** Factory function to create RightView. */
-function createRightView(deal: DistributionDeal): RightView {
-  if (deal) {
+function createRightView(right: DistributionRight): RightView {
+  if (right) {
     return {
-      territory: getDealTerritories(deal),
-      startDate: formatDate(toDate(deal.terms.start), 'MM/dd/yyyy', 'en-US'),
-      endDate: formatDate(toDate(deal.terms.end), 'MM/dd/yyyy', 'en-US'),
-      rights: deal.licenseType,
+      territory: getRightTerritories(right),
+      startDate: formatDate(toDate(right.terms.start), 'MM/dd/yyyy', 'en-US'),
+      endDate: formatDate(toDate(right.terms.end), 'MM/dd/yyyy', 'en-US'),
+      rights: right.licenseType,
       languages: '',
       holdback: '',
-      firstBroadcastDate: deal.multidiffusion.length ? formatDate(deal.multidiffusion[0].start, 'MM/dd/yyyy', 'en-US') : '',
-      exclusive: deal.exclusive ? 'Yes' : 'No',
-      multidiffusion: deal.multidiffusion.length ? deal.multidiffusion.length.toString() : '',
-      catchUp: deal.catchUp.start ? formatDate(deal.catchUp.start, 'MM/dd/yyyy', 'en-US') : ''
+      firstBroadcastDate: right.multidiffusion.length ? formatDate(right.multidiffusion[0].start, 'MM/dd/yyyy', 'en-US') : '',
+      exclusive: right.exclusive ? 'Yes' : 'No',
+      multidiffusion: right.multidiffusion.length ? right.multidiffusion.length.toString() : '',
+      catchUp: right.catchUp.start ? formatDate(right.catchUp.start, 'MM/dd/yyyy', 'en-US') : ''
     };
   }
 }
@@ -58,7 +57,7 @@ function createRightView(deal: DistributionDeal): RightView {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class RightListComponent implements OnInit {
-  @Input() rights: DistributionDeal[]
+  @Input() rights: DistributionRight[]
 
   public rightViews: RightView[];
   public columns = columns;

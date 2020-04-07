@@ -1,5 +1,5 @@
 // Component
-import { DistributionDealRightsComponent } from './rights.component';
+import { DistributionRightRightsComponent } from './rights.component';
 
 // Angular
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -21,7 +21,7 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
     MatSlideToggleModule,
     MatButtonToggleModule
   ],
-  declarations: [DistributionDealRightsComponent],
-  exports: [DistributionDealRightsComponent]
+  declarations: [DistributionRightRightsComponent],
+  exports: [DistributionRightRightsComponent]
 })
-export class DistributionDealRightsModule {}
+export class DistributionRightRightsModule {}

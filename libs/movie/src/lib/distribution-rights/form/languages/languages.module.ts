@@ -6,7 +6,7 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 // Custom
-import { DistributionDealLanguagesComponent } from './languages.component';
+import { DistributionRightLanguagesComponent } from './languages.component';
 import { FormLanguageModule } from '@blockframes/ui/form/language/language.module';
 
 // Material
@@ -33,7 +33,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MatIconModule,
     MatTooltipModule
   ],
-  declarations: [DistributionDealLanguagesComponent],
-  exports: [DistributionDealLanguagesComponent]
+  declarations: [DistributionRightLanguagesComponent],
+  exports: [DistributionRightLanguagesComponent]
 })
-export class DistributionDealLanguagesModule {}
+export class DistributionRightLanguagesModule {}

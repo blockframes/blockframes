@@ -1,6 +1,6 @@
 import { staticModels } from '@blockframes/utils/static-model';
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import { DistributionDealHoldbacksForm } from './holdbacks.form';
+import { DistributionRightHoldbacksForm } from './holdbacks.form';
 
 @Component({
   selector: '[form] distribution-form-holdbacks',
@@ -8,8 +8,8 @@ import { DistributionDealHoldbacksForm } from './holdbacks.form';
   styleUrls: ['./holdbacks.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DistributionDealHoldbacksComponent {
-  @Input() form: DistributionDealHoldbacksForm;
+export class DistributionRightHoldbacksComponent {
+  @Input() form: DistributionRightHoldbacksForm;
 
   public staticMedias = staticModels['MEDIAS'].filter(media => {
     const wantedMedias = ['Pay TV', 'Free TV', 'S-VOD', 'A-VOD', 'Planes', 'Trains', 'Hotels'];

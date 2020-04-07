@@ -1,18 +1,18 @@
 import { FormControl } from '@angular/forms';
 import { HoldbackWithDates as Holdback } from '../../+state/distribution-right.firestore';
-import { DistributionDealTermsForm } from '../terms/terms.form';
+import { DistributionRightTermsForm } from '../terms/terms.form';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 
 function createholdbacksControl(holdback: Partial<Holdback>) {
     return {
         media: new FormControl(holdback.media),
-        terms: new DistributionDealTermsForm(holdback.terms)
+        terms: new DistributionRightTermsForm(holdback.terms)
     }
   }
 
-  type DistributionDealHoldbacksControl = ReturnType<typeof createholdbacksControl>;
+  type DistributionRightHoldbacksControl = ReturnType<typeof createholdbacksControl>;
 
-  export class DistributionDealHoldbacksForm extends FormEntity<DistributionDealHoldbacksControl>{
+  export class DistributionRightHoldbacksForm extends FormEntity<DistributionRightHoldbacksControl>{
     constructor(holdback: Partial<Holdback> = {}){
         super(createholdbacksControl(holdback))
     }

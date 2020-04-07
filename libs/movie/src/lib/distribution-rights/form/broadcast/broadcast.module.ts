@@ -2,7 +2,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DistributionDealBroadcastComponent } from './broadcast.component';
+import { DistributionRightBroadcastComponent } from './broadcast.component';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -28,7 +28,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatNativeDateModule,
     MatIconModule
   ],
-  declarations: [DistributionDealBroadcastComponent],
-  exports: [DistributionDealBroadcastComponent]
+  declarations: [DistributionRightBroadcastComponent],
+  exports: [DistributionRightBroadcastComponent]
 })
-export class DistributionDealBroadcastModule { }
+export class DistributionRightBroadcastModule { }

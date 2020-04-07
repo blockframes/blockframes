@@ -19,7 +19,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 import { MovieLanguageSpecification, StoreType, storeType } from '@blockframes/movie/+state/movie.firestore';
 import { createMovieLanguageSpecification } from '@blockframes/movie/+state/movie.model';
-import { DistributionDealTermsForm } from '@blockframes/distribution-rights/form/terms/terms.form'
+import { DistributionRightTermsForm } from '../form/terms/terms.form';
 import { FormStaticArray, FormList, FormStaticValue, numberRangeValidator, FormEntity } from '@blockframes/utils/form';
 import { NumberRange, DateRange, Terms } from '@blockframes/utils/common-interfaces';
 
@@ -153,7 +153,7 @@ function createCatalogSearchControl(search: CatalogSearch) {
 
 function createAvailsSearchControl(search: AvailsSearch) {
   return {
-    terms: new DistributionDealTermsForm(search.terms),
+    terms: new DistributionRightTermsForm(search.terms),
     licenseType: new FormControl(search.licenseType),
     territory: new FormArray(search.territory.map(territory => new FormControl(territory))),
     territoryExcluded: new FormArray(search.territoryExcluded.map(territory => new FormControl(territory))),

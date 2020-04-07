@@ -26,4 +26,4 @@ import { MatIconModule } from '@angular/material/icon';
     MatIconModule
   ]
 })
-export class DistributionDealSelectionMapModule { }
+export class DistributionRightSelectionMapModule { }

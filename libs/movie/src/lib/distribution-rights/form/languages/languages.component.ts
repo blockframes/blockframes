@@ -10,7 +10,7 @@ import { LanguagesSlug } from '@blockframes/utils/static-model';
   styleUrls: ['./languages.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DistributionDealLanguagesComponent implements OnInit {
+export class DistributionRightLanguagesComponent implements OnInit {
   @Input() form: MovieVersionInfoForm;
 
   public languageCtrl = new FormStaticValue(null, 'LANGUAGES');
