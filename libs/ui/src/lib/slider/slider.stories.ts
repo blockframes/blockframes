@@ -33,7 +33,7 @@ export const bfSlider = () => ({
 </storybook-toolkit>
   `,
   props: {
-    autoplay: boolean('autoplay', true),
+    autoplay: boolean('autoplay', false),
     loop: boolean('loop', true),
     images: object('images', [
       { url: 'https://via.placeholder.com/600/771796' },

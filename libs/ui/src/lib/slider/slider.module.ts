@@ -9,6 +9,7 @@ import { SlideComponent } from './slide/slide.component';
 // Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatRippleModule } from '@angular/material/core';
 
 // Modules
 import { BackgroundRefModule } from '@blockframes/utils/directives/background-ref.module';
@@ -18,7 +19,8 @@ import { BackgroundRefModule } from '@blockframes/utils/directives/background-re
       CommonModule,
       BackgroundRefModule,
       MatButtonModule,
-      MatIconModule
+      MatIconModule,
+      MatRippleModule
    ],
    declarations: [
       SliderComponent,

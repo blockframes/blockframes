@@ -1,4 +1,3 @@
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { Slide } from './slide.interface';
 import { Component, Input, ViewChild, TemplateRef, ChangeDetectionStrategy } from '@angular/core';
 import { ListKeyManagerOption } from '@angular/cdk/a11y';

@@ -31,7 +31,9 @@ import { AnimationBuilder, animate, style } from '@angular/animations';
 import { ListKeyManager } from '@angular/cdk/a11y';
 import { isPlatformBrowser } from '@angular/common';
 
+// Utils
 import { boolean } from '@blockframes/utils/decorators/decorators';
+import { Easing } from '@blockframes/utils/animations/animation-easing';
 
 enum Direction {
   Left,
@@ -59,7 +61,7 @@ export class SliderComponent implements OnDestroy, AfterContentInit, AfterViewIn
   // Inputs //
   ///////////
 
-  @Input() timing: Slider['timing'] = '250ms ease-in';
+  @Input() timing: Slider['timing'] = `250ms ${Easing.easeInCirc}`;
 
   @Input() ratio: Slider['ratio'] = '16:9';
 

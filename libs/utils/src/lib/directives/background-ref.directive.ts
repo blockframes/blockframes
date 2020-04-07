@@ -8,7 +8,7 @@ export class BackgroundRefDirective {
     @Input('backgroundRef')
     set ref(value: ImgRef) {
         // https://netbasal.com/angular-2-security-the-domsanitizer-service-2202c83bd90
-        this.el.nativeElement.style.backgroundImage = `url("${value.url}")`
+        this.el.nativeElement.style.backgroundColor = `url(${value.url})`;
     };
     constructor(private el: ElementRef) { }
 }

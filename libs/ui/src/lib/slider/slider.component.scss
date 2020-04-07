@@ -22,9 +22,12 @@
         flex-shrink: 0;
     }
 
-    & > button {
+    mat-icon {
         position: absolute;
         z-index: 1;
+        outline: none;
+        cursor: pointer;
+        border-radius: 50%;
     }
 
     &-indicators {
