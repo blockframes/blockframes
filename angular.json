@@ -900,6 +900,28 @@
               ],
               "sourceMap": false,
               "optimization": true
+            },
+            "ci": {
+              "outputHashing": "media",
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/env.ci.ts"
+                }
+              ],
+              "sourceMap": false,
+              "optimization": true
+            },
+            "staging": {
+              "outputHashing": "media",
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/env.staging.ts"
+                }
+              ],
+              "sourceMap": false,
+              "optimization": true
             }
           }
         }
