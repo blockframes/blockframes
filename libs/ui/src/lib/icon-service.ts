@@ -1,6 +1,7 @@
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Injectable } from '@angular/core';
+import { Injectable, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 
 export const icons = [
   { name: 'accept', url: 'assets/icons/accept.svg' },
@@ -260,14 +261,14 @@ export type IconSvg = typeof icons[number]['name'];
 @Injectable({ providedIn: 'root' })
 export class IconService {
   constructor(private matIconRegistry: MatIconRegistry, private domSanitizer: DomSanitizer) {
-    if (typeof window === 'undefined') {
-      icons.forEach(({ name }) => {
-        this.matIconRegistry.addSvgIconLiteral(name, this.domSanitizer.bypassSecurityTrustHtml('<svg></svg>'));
-      })
-    } else {
+    if (isPlatformBrowser(PLATFORM_ID)) {
       icons.forEach(({ name, url }) => {
         this.matIconRegistry.addSvgIcon(name, this.domSanitizer.bypassSecurityTrustResourceUrl(url));
       });
+    } else {
+      icons.forEach(({ name }) => {
+        this.matIconRegistry.addSvgIconLiteral(name, this.domSanitizer.bypassSecurityTrustHtml('<svg></svg>'));
+      })
     }
   }
 }
