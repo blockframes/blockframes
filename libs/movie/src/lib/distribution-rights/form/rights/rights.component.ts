@@ -1,6 +1,6 @@
 // Blockframes
 import { staticModels, MediasSlug } from '@blockframes/utils/static-model';
-import { DistributionDealForm } from 'libs/movie/src/lib/distribution-rights/form/distribution-deal.form';
+import { DistributionDealForm } from '@blockframes/distribution-rights/form/distribution-deal.form';
 
 // Angular
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';

@@ -1,5 +1,5 @@
 import { MovieSalesAgentDeal } from '../../movie/+state/movie.model';
-import { DistributionDeal, getDealTerritories } from '../+state/distribution-deal.model';
+import { DistributionRight, getDealTerritories } from '../+state/distribution-right.model';
 import { DateRange } from '@blockframes/utils/common-interfaces/range';
 import { AvailsSearch } from '../form/search.form';
 import { toDate } from '@blockframes/utils/helpers';
@@ -10,17 +10,17 @@ import { Terms } from '@blockframes/utils/common-interfaces/terms';
  * @description This function checks if there are intersections in the deals
  * from the current movie and the specified date range from the buyer
  * @param formDates The date range which got specified by the buyer
- * @param distributionDeals Array of the movie distribution deals.
+ * @param DistributionRights Array of the movie distribution deals.
  * Note don't put the exclusive deals array in here
  */
-export function getDealsInDateRange(formDates: Terms, distributionDeals: DistributionDeal[]): DistributionDeal[] {
-  if (!distributionDeals) {
+export function getDealsInDateRange(formDates: Terms, DistributionRights: DistributionRight[]): DistributionRight[] {
+  if (!DistributionRights) {
     return [];
   }
 
-  const intersectedDateRangeDeals: DistributionDeal[] = [];
+  const intersectedDateRangeDeals: DistributionRight[] = [];
 
-  for (const deal of distributionDeals) {
+  for (const deal of DistributionRights) {
     const dealFrom: Date = toDate(deal.terms.start);
     const dealTo: Date = toDate(deal.terms.end);
 
@@ -67,8 +67,8 @@ export function getDealsInDateRange(formDates: Terms, distributionDeals: Distrib
  */
 export function getFilterMatchingDeals(
   filter: AvailsSearch,
-  deals: DistributionDeal[]
-): DistributionDeal[] {
+  deals: DistributionRight[]
+): DistributionRight[] {
 
   const { territory, licenseType } = filter
 
@@ -76,7 +76,7 @@ export function getFilterMatchingDeals(
    * We have to look on the already exisitng
    * deals in the movie and check if there is any overlapping medias
    */
-  const dealsWithTerritoriesAndMediasInCommon: DistributionDeal[] = [];
+  const dealsWithTerritoriesAndMediasInCommon: DistributionRight[] = [];
   for (const deal of deals) {
 
     // Filter deal territories
@@ -118,8 +118,8 @@ export function getFilterMatchingDeals(
  * @param medias The medias from the filter defined by the buyer
  * @param deals The array of deals from a movie in the previously specified date range
  */
-export function getDealsWithMedias(medias: MediasSlug[], deals: DistributionDeal[]): DistributionDeal[] {
-  const dealsWithMediasInCommon: DistributionDeal[] = [];
+export function getDealsWithMedias(medias: MediasSlug[], deals: DistributionRight[]): DistributionRight[] {
+  const dealsWithMediasInCommon: DistributionRight[] = [];
 
   for (const deal of deals) {
 
@@ -146,7 +146,7 @@ export function getDealsWithMedias(medias: MediasSlug[], deals: DistributionDeal
  * @param exclusive
  * @param deals
  */
-export function getExclusiveDeals(deals: DistributionDeal[], exclusive: boolean): DistributionDeal[] {
+export function getExclusiveDeals(deals: DistributionRight[], exclusive: boolean): DistributionRight[] {
   if (exclusive === true) {
     return deals
   }

@@ -18,9 +18,9 @@ import { Observable } from 'rxjs';
 import { cleanModel } from '@blockframes/utils/helpers';
 import { map } from 'rxjs/internal/operators/map';
 import { PermissionsService } from '@blockframes/organization/permissions/+state/permissions.service';
-import { DistributionDeal, createDistributionDeal } from 'libs/movie/src/lib/distribution-rights/+state/distribution-deal.model';
+import { DistributionDeal, createDistributionDeal } from '@blockframes/distribution-rights/+state/distribution-deal.model';
 import { centralOrgID } from '@env';
-import { DistributionDealService } from 'libs/movie/src/lib/distribution-rights/+state';
+import { DistributionDealService } from '@blockframes/distribution-rights/+state';
 import { OrganizationService } from '@blockframes/organization/organization/+state';
 import { CollectionReference } from '@angular/fire/firestore/interfaces';
 

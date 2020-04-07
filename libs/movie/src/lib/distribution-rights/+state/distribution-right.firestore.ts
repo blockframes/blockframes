@@ -21,38 +21,38 @@ export interface HoldbackRaw<D> {
   media: MediasSlug;
 }
 
-export const distributionDealStatus = {
+export const distributionRightStatus = {
   /**
-   * @dev first status of a deal
-   * Starting from this status, the deal is visible by creator only
+   * @dev first status of a right
+   * Starting from this status, the right is visible by creator only
    */
   draft: 'Draft',
 
   /**
-   * @dev first status of a deal
-   * Starting from this status, the deal is visible by creator only
+   * @dev first status of a right
+   * Starting from this status, the right is visible by creator only
    */
   cart: 'In cart',
 
   /**
-   * @dev the deal have been sold
+   * @dev the right have been sold
    */
   sold: 'Sold',
 
   /**
-   * @dev in this status, a contract should exists regarding this distribution deal.
+   * @dev in this status, a contract should exists regarding this distribution right.
    * When Contract status changes, this could chance too
    */
   undernegotiation: 'Under negotiation',
 } as const;
 
-export type DistributionDealStatus = keyof typeof distributionDealStatus;
-export type DistributionDealStatusValue = typeof distributionDealStatus[DistributionDealStatus];
+export type DistributionRightStatus = keyof typeof distributionRightStatus;
+export type DistributionRightStatusValue = typeof distributionRightStatus[DistributionRightStatus];
 
 export interface HoldbackWithDates extends HoldbackRaw<Date> { }
 
-// Distribution deal raw interface, formerly called MovieSaleRaw
-interface DistributionDealRaw<D> {
+// Distribution right raw interface, formerly called MovieSaleRaw
+interface DistributionRightRaw<D> {
   id: string,
   publicId?: string,
   licenseType: MediasSlug[];
@@ -67,10 +67,10 @@ interface DistributionDealRaw<D> {
   multidiffusion?: TermsRaw<D>[];
   holdbacks?: HoldbackRaw<D>[];
   catchUp?: TermsRaw<D>;
-  status: DistributionDealStatus,
+  status: DistributionRightStatus,
 }
 
-export interface DistributionDealDocumentWithDates extends DistributionDealRaw<Date> { }
+export interface DistributionRightDocumentWithDates extends DistributionRightRaw<Date> { }
 
-export interface DistributionDealDocument extends DistributionDealRaw<Timestamp> { }
+export interface DistributionRightDocument extends DistributionRightRaw<Timestamp> { }
 

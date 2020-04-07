@@ -6,7 +6,7 @@ import {
 } from '@blockframes/utils/static-model/types';
 import { MovieMain, createMovieLanguageSpecification } from '../../movie/+state/movie.model';
 import { MovieLanguageSpecification } from '../../movie/+state/movie.firestore';
-import { DistributionDeal, createDistributionDeal } from '../+state/distribution-deal.model';
+import { DistributionRight, createDistributionRight } from '../+state/distribution-right.model';
 import { valueIsInModelValidator, numberRangeValidator } from '@blockframes/utils/form/validators/validators';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 
@@ -25,43 +25,43 @@ export function createLanguageControl(
   };
 }
 
-function createDistributionDealControls(deal: Partial<DistributionDeal> = {}) {
+function createDistributionRightControls(right: Partial<DistributionRight> = {}) {
   // Create controls for the languages
-  const languageControl = Object.keys(deal.assetLanguage).reduce( // @TODO better to mutate it to avoid double loop
+  const languageControl = Object.keys(right.assetLanguage).reduce( // @TODO better to mutate it to avoid double loop
     (acc, key) => ({
       ...acc,
       // Key is the name of the language, english, french etc.
-      [key]: createLanguageControl(deal.assetLanguage[key])
+      [key]: createLanguageControl(right.assetLanguage[key])
     }),
     {} // Initial value. No controls at the beginning
   );
   return {
-    medias: new FormArray(deal.licenseType.map(media => new FormControl(media)), [
+    medias: new FormArray(right.licenseType.map(media => new FormControl(media)), [
       Validators.required,
       valueIsInModelValidator('MEDIAS')
     ]),
     languages: new FormGroup(languageControl, Validators.required),
     duration: new FormGroup(
       {
-        from: new FormControl(deal.terms.start, [Validators.required]),
-        to: new FormControl(deal.terms.end, [Validators.required])
+        from: new FormControl(right.terms.start, [Validators.required]),
+        to: new FormControl(right.terms.end, [Validators.required])
       },
       [Validators.required, numberRangeValidator('from', 'to')]
     ),
-    territories: new FormArray(deal.territory.map(territory => new FormControl(territory)), [
+    territories: new FormArray(right.territory.map(territory => new FormControl(territory)), [
       Validators.required,
       valueIsInModelValidator('TERRITORIES')
     ]),
-    exclusive: new FormControl(deal.exclusive)
+    exclusive: new FormControl(right.exclusive)
   };
 }
 
-export type DistributionDealControls = ReturnType<typeof createDistributionDealControls>;
+export type DistributionRightControls = ReturnType<typeof createDistributionRightControls>;
 
-export class DistributionDealForm extends FormEntity<DistributionDealControls> {
-  constructor(distributionDeal: Partial<DistributionDeal> = {}) {
-    const deal = createDistributionDeal(distributionDeal);
-    const controls = createDistributionDealControls(deal);
+export class DistributionRightForm extends FormEntity<DistributionRightControls> {
+  constructor(distributionRight: Partial<DistributionRight> = {}) {
+    const right = createDistributionRight(distributionRight);
+    const controls = createDistributionRightControls(right);
     super(controls);
   }
 

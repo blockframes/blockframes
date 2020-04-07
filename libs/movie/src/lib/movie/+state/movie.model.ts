@@ -30,7 +30,7 @@ import {
 import { createImgRef } from '@blockframes/utils/image-uploader';
 import { LanguagesSlug } from '@blockframes/utils/static-model';
 import { createRange } from '@blockframes/utils/common-interfaces/range';
-import { DistributionDeal } from 'libs/movie/src/lib/distribution-rights/+state/distribution-deal.model';
+import { DistributionDeal } from '@blockframes/distribution-rights/+state/distribution-deal.model';
 import { Contract, getValidatedContracts } from '@blockframes/contract/contract/+state/contract.model';
 import { toDate } from '@blockframes/utils/helpers';
 

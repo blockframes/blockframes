@@ -1,17 +1,17 @@
 import { Injectable } from '@angular/core';
 import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
-import { DistributionDealState, DistributionDealStore } from '../+state/distribution-deal.store';
-import { DistributionDealService } from '../+state/distribution-deal.service';
+import { DistributionRightState, DistributionRightStore } from '../+state/distribution-right.store';
+import { DistributionRightService } from '../+state/distribution-right.service';
 
 @Injectable({ providedIn: 'root' })
 @CollectionGuardConfig({ awaitSync: true })
-export class ActiveMovieDistributionDealsGuard extends CollectionGuard<DistributionDealState> {
-  constructor(service: DistributionDealService, private store: DistributionDealStore) {
+export class ActiveMovieDistributionRightsGuard extends CollectionGuard<DistributionRightState> {
+  constructor(service: DistributionRightService, private store: DistributionRightStore) {
     super(service);
   }
 
   /**
-   * Sync on the active movie distribution deals subcollection.
+   * Sync on the active movie distribution rights subcollection.
    * Must always be used after the ActiveMovieGuard has been called.
    */
   sync() {

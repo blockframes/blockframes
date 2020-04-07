@@ -1,8 +1,8 @@
 import { FormList } from '@blockframes/utils/form/forms/list.form';
 import { FormControl } from '@angular/forms';
-import { createDistributionDeal } from 'libs/movie/src/lib/distribution-rights/+state/distribution-deal.model';
+import { createDistributionDeal } from '@blockframes/distribution-rights/+state/distribution-deal.model';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
-import { DistributionDeal } from 'libs/movie/src/lib/distribution-rights/+state/distribution-deal.model';
+import { DistributionDeal } from '@blockframes/distribution-rights/+state/distribution-deal.model';
 import { DistributionDealTermsForm } from './terms/terms.form';
 import { DistributionDealHoldbacksForm } from './holdbacks/holdbacks.form';
 import { MovieVersionInfoForm } from '@blockframes/movie/form/version-info/version-info.form';

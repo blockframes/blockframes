@@ -38,7 +38,7 @@ import {
   premiereType
 } from '@blockframes/movie/+state/movie.firestore';
 import { createStakeholder } from '@blockframes/utils/common-interfaces/identity';
-import { DistributionDeal, createDistributionDeal, createHoldback } from 'libs/movie/src/lib/distribution-rights/+state/distribution-deal.model';
+import { DistributionDeal, createDistributionDeal, createHoldback } from '@blockframes/distribution-rights/+state/distribution-deal.model';
 import {
   createContractPartyDetail,
   createContractTitleDetail,
@@ -46,7 +46,7 @@ import {
   Contract
 } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractTitleDetail, contractType, contractStatus } from '@blockframes/contract/contract/+state/contract.firestore';
-import { DistributionDealService } from 'libs/movie/src/lib/distribution-rights/+state/distribution-deal.service';
+import { DistributionDealService } from '@blockframes/distribution-rights/+state/distribution-deal.service';
 import { createExpense, createPrice } from '@blockframes/utils/common-interfaces/price';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { createPaymentSchedule } from '@blockframes/utils/common-interfaces/schedule';

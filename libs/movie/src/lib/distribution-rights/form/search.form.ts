@@ -19,7 +19,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 import { MovieLanguageSpecification, StoreType, storeType } from '@blockframes/movie/+state/movie.firestore';
 import { createMovieLanguageSpecification } from '@blockframes/movie/+state/movie.model';
-import { DistributionDealTermsForm } from 'libs/movie/src/lib/distribution-rights/form/terms/terms.form'
+import { DistributionDealTermsForm } from '@blockframes/distribution-rights/form/terms/terms.form'
 import { FormStaticArray, FormList, FormStaticValue, numberRangeValidator, FormEntity } from '@blockframes/utils/form';
 import { NumberRange, DateRange, Terms } from '@blockframes/utils/common-interfaces';
 

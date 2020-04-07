@@ -4,10 +4,10 @@ export * from './guards/contracts-deal-list.guard';
 
 // Distribution Deals state
 
-export * from './+state/distribution-deal.query';
-export * from './+state/distribution-deal.service';
-export * from './+state/distribution-deal.store';
-export * from './+state/distribution-deal.model';
+export * from './+state/distribution-right.query';
+export * from './+state/distribution-right.service';
+export * from './+state/distribution-right.store';
+export * from './+state/distribution-right.model';
 
 // Distribution Deals Form
 export * from './form/distribution-deal.form';
