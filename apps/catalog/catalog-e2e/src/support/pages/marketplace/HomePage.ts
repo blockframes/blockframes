@@ -14,6 +14,6 @@ export default class HomePage extends NavbarPage {
 
   public clickFirstWishlistButton() {
     cy.get('catalog-home button[test-id=heart-icon]').first().click();
-    cy.wait(500);
+    cy.wait(2000);
   }
 }
