@@ -18,7 +18,7 @@ interface Denomination {
 /** Document model of an Organization */
 interface OrganizationRaw<D> {
   id: string;
-  activity: string;
+  activity: OrgActivity;
   addresses: AddressSet;
   appAccess?: AppAccess;
   bankAccounts: BankAccount[];
@@ -38,11 +38,24 @@ interface OrganizationRaw<D> {
 }
 
 export const activities = {
-  production: 'Producion',
-  sales: 'International Sales',
+  production: 'Production',
+  intlSales: 'International Sales',
   distribution: 'Distribution',
-  // FOR MY REVIEWER: DON'T LET ME MERGE BEFORE I FINISH THAT
-}
+  tvBroadcast: 'Television Broadcast',
+  vodPlatform: 'VOD Platform',
+  theatricalExhibition: 'Theatrical Exhibition' ,
+  buyersRep: 'Buyer\'s Rep',
+  filmFestival: 'Film Festival',
+  filmFund: 'Film Fund',
+  filmLibrary: 'Film Library',
+  filmCommission: 'Film Commission',
+  financialInstitution: 'Financial Institution',
+  press: 'Press',
+} as const;
+
+type OrgActivity = keyof typeof activities;
+
+// Theatrical Exhibition, Distribution, Buyers’ Rep, Film Festival, Film Fund, Film Library, Film Commission, Financial Institution, Press
 
 export interface OrganizationDocument extends OrganizationRaw<Timestamp> { }
 
@@ -102,7 +115,7 @@ export function createOrganizationRaw(
 ): OrganizationRaw<Timestamp | Date> {
   return {
     id: !!params.id ? params.id : '',
-    activity: '',
+    activity: null,
     bankAccounts: [],
     cart: [],
     created: new Date(),

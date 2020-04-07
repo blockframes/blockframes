@@ -2,7 +2,7 @@
   <mat-card>
     <img mat-card-image [imgRef]="org.logo" placeholderAsset="Organization_250.png" alt="organization logo" />
     <mat-card-content class="org-info">
-      <h4>{{ org.activity }}</h4>
+      <h4>{{ org.activity | toLabel: 'orgActivity' }}</h4>
       <h2>{{ org.denomination.full }}</h2>
       <p class="mat-caption">
         {{ org.addresses.main.street | titlecase }}

@@ -16,7 +16,7 @@
       <div fxLayout fxLayoutAlign="end" fxLayoutGap="16px">
         <div fxLayout="column" fxLayoutAlign="space-around end">
           <span>{{ org.denomination.full }}</span>
-          <span class="mat-caption">{{ org.activity }}</span>
+          <span class="mat-caption">{{ org.activity | toLabel: 'orgActivity' }}</span>
         </div>
         <img [imgRef]="org.logo" placeholderAsset="Organization_250.png" alt="organization logo" />
       </div>
@@ -29,7 +29,7 @@
     </a>
     <img [imgRef]="org.logo" placeholderAsset="Organization_250.png" alt="organization logo" />
     <article fxLayout="column" fxLayoutAlign="start start">
-      <h4>{{ org.activity }}</h4>
+      <h4>{{ org.activity | toLabel: 'orgActivity' }}</h4>
       <h1>{{ org.denomination.full }}</h1>
       <h2>
         {{ org.addresses.main.street | titlecase }}

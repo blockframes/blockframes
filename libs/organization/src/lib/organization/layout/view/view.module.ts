@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { AppNavModule } from '@blockframes/ui/app-nav';
+import { ToLabelModule } from '@blockframes/utils/pipes';
 import { ViewComponent } from './view.component';
 
 // Material
@@ -23,6 +24,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     FlexLayoutModule,
     ImageReferenceModule,
     AppNavModule,
+    ToLabelModule,
     // Material
     MatTabsModule,
     MatButtonModule,

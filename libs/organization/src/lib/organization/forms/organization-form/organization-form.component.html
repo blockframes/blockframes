@@ -51,13 +51,11 @@
       <mat-card-content fxLayout="column">
         <mat-form-field appearance="outline">
           <mat-label>Activity description</mat-label>
-          <input
-            test-id="activity"
-            matInput
-            placeholder="Activity description"
-            aria-label="activity description"
-            formControlName="activity"
-          />
+          <mat-select test-id="activity" formControlName="activity" aria-label="activity description">
+            <mat-option *ngFor="let activity of activities | keyvalue" [value]="activity.key">
+              {{ activity.value }}
+            </mat-option>
+          </mat-select>
         </mat-form-field>
         <mat-form-field appearance="outline">
           <mat-label>Fiscal number</mat-label>
