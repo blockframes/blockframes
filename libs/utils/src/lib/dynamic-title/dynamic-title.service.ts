@@ -26,6 +26,17 @@ const pages = {
       const suffix = showAppName ? `- ${appName}` : '';
       return `${titleName} - ${section} ${suffix}`;
     }
+  },
+  festival: {
+    app: 'Festival',
+    section: (section: string, showAppName: boolean, appName: string) => {
+      const suffix = showAppName ? `- ${appName}` : '';
+      return `${section} ${suffix}`;
+    },
+    entityWithSection: (section: string, titleName: string, showAppName: boolean, appName: string) => {
+      const suffix = showAppName ? `- ${appName}` : '';
+      return `${titleName} - ${section} ${suffix}`;
+    }
   }
 }
 @Injectable({
@@ -46,6 +57,7 @@ export class DynamicTitleService implements OnDestroy {
 
   constructor(private title: Title, private routerQuery: RouterQuery) {
     this.sub = this.routerQuery.select('state').subscribe(data => {
+      console.log('data', data);
       this.setAppName(data.root.data.app)
     })
   }
@@ -57,6 +69,9 @@ export class DynamicTitleService implements OnDestroy {
         break;
       case 'blockframes':
         this.app = { slug: 'blockframes', label: 'Blockframes' }
+        break;
+      case 'festival':
+        this.app = { slug: 'festival', label: 'Festival' }
         break;
     }
   }
