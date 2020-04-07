@@ -5,9 +5,9 @@
   [columns]="versionColumns" 
   [initialColumns]="initialColumns" 
   [filterPredicate]="filterPredicate"
-  showFilter="true"
-  showLoader="true"
-  showPaginator="true">
+  showFilter
+  showLoader
+  showPaginator>
   <ng-template colRef="collected" let-collected>
     {{ collected.amount | currency: getCurrencyCode(collected.currency) }}
   </ng-template>

@@ -53,10 +53,8 @@ export class NotificationWidgetComponent implements OnInit {
   }
 
   private memberInvitations(invitation: Invitation) {
-    return (
-      invitation.status === 'pending' &&
-      invitation.type === 'toWorkOnDocument'
-    );
+    return invitation.status === 'pending' &&
+    invitation.type !== 'fromUserToOrganization'
   }
 
   public get totalCount$() {

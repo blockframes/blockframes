@@ -1,6 +1,7 @@
 import { UserRole } from "@blockframes/permissions/types";
 import { User } from "@blockframes/auth/+state/auth.store";
 import { ImgRef, createImgRef } from "@blockframes/utils/image-uploader";
+import { PublicUser } from "./user.firestore";
 
 export interface OrganizationMemberRequest {
   email: string;
@@ -26,4 +27,12 @@ export function createOrganizationMember(user: Partial<User> = {}, role?: UserRo
     roles: [],
     role,
   };
+}
+
+export function createPublicUser(publicUser: Partial<User> = {}) : PublicUser{
+  return {
+    uid: '',
+    email: '',
+    ...publicUser,
+  }
 }

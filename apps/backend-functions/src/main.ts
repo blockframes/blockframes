@@ -23,7 +23,7 @@ import { onMovieUpdate, onMovieCreate, onMovieDelete } from './movie';
 import * as bigQuery from './bigQuery';
 import { onDocumentPermissionCreate } from './permissions';
 import { onContractWrite } from './contract';
-
+import * as privateConfig from './privateConfig';
 
 /**
  * Trigger: when user creates an account.
@@ -129,6 +129,16 @@ export const onContractWriteEvent = onDocumentWrite(
   'contracts/{contractId}',
   onContractWrite
 );
+
+//---------------------------------
+//  Private documents Management //
+//---------------------------------
+
+export const setDocumentPrivateConfig = functions.https.onCall(logErrors(privateConfig.setDocumentPrivateConfig));
+export const getDocumentPrivateConfig = functions.https.onCall(logErrors(privateConfig.getDocumentPrivateConfig));
+// @TODO (#2460)  Waiting for a decision on screening flow before uncomment
+//export const setEventUrl = functions.https.onCall(logErrors(privateConfig.setEventUrl));
+//export const getEventUrl = functions.https.onCall(logErrors(privateConfig.getEventUrl));
 
 //--------------------------------
 //       Apps Management        //

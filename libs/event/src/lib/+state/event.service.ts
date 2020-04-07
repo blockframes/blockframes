@@ -4,18 +4,22 @@ import { EventState, EventStore } from './event.store';
 import { Event, ScreeningEvent } from './event.model';
 import { QueryFn } from '@angular/fire/firestore/interfaces';
 import { Observable } from 'rxjs';
+import { AngularFireFunctions } from '@angular/fire/functions';
 
 const screeningsQuery = (queryFn?: QueryFn): Query<ScreeningEvent> => ({
   path: 'events',
   queryFn,
-  movie: (event: ScreeningEvent) => ({ path: `movies/${event.meta.titleId}`})
+  movie: (event: ScreeningEvent) => ({ path: `movies/${event.meta.titleId}` })
 });
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'events' })
 export class EventService extends CollectionService<EventState> {
 
-  constructor(store: EventStore) {
+  constructor(
+    store: EventStore,
+    private functions: AngularFireFunctions
+  ) {
     super(store);
   }
 
@@ -33,4 +37,26 @@ export class EventService extends CollectionService<EventState> {
   syncScreenings(queryFn?: QueryFn): Observable<ScreeningEvent[]> {
     return syncQuery.call(this, screeningsQuery(queryFn));
   }
+
+  /**
+   * Set event private url
+   * The url will be fetched from Movie private config associated to eventId
+   * @param eventId 
+   */
+  // @TODO (#2460)  Waiting for a decision on screening flow before uncomment
+  /*public setEventUrl(eventId: string): Promise<any> {
+    const f = this.functions.httpsCallable('setEventUrl');
+    return f({ eventId }).toPromise();
+  }*/
+
+  /**
+   * Get event private url
+   * @param eventId 
+   */
+  // @TODO (#2460)  Waiting for a decision on screening flow before uncomment
+  /*public getEventUrl(eventId: string): Promise<string> {
+    const f = this.functions.httpsCallable('getEventUrl');
+    return f({ eventId }).toPromise();
+  }*/
+
 }

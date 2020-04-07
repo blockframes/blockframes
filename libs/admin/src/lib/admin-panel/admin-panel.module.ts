@@ -40,6 +40,8 @@ import { DistributionDealComponent } from './pages/distribution-deal/distributio
 import { EditPartyComponent } from './components/edit-party/edit-party.component';
 import { UsersComponent } from './pages/users/users.component';
 import { UserComponent } from './pages/user/user.component';
+import { EventsComponent } from './pages/events/events.component';
+import { EventComponent } from './pages/event/event.component';
 
 export const panelRoutes: Routes = [
   { path: '', redirectTo: 'overview', pathMatch: 'full' },
@@ -58,6 +60,8 @@ export const panelRoutes: Routes = [
   { path: 'invoice/:invoiceId', component: InvoiceComponent },
   { path: 'users', component: UsersComponent },
   { path: 'user/:userId', component: UserComponent },
+  { path: 'events', component: EventsComponent },
+  { path: 'event/:eventId', component: EventComponent },
 ];
 @NgModule({
   imports: [
@@ -99,6 +103,8 @@ export const panelRoutes: Routes = [
     EditPartyComponent,
     UsersComponent,
     UserComponent,
+    EventsComponent,
+    EventComponent,
   ],
   exports: [
     RouterModule,

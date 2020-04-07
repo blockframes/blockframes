@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, OnInit, ViewChild, OnDestroy, AfterViewInit} from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
@@ -29,14 +29,14 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
     private catalogCartQuery: CatalogCartQuery,
     private authQuery: AuthQuery,
     private routerQuery: RouterQuery
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.currentWishlist$ = this.catalogCartQuery.wishlistWithMovies$.pipe(
       map(wishlists => wishlists.find(wishlist => wishlist.status === 'pending'))
     );
     this.wishlistCount$ = this.currentWishlist$.pipe(
-      map(wishlist => wishlist.movieIds.length)
+      map(wishlist => wishlist?.movieIds?.length || 0)
     );
   }
 
@@ -45,6 +45,6 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
-   if(this.sub) { this.sub.unsubscribe(); }
+    if (this.sub) { this.sub.unsubscribe(); }
   }
 }

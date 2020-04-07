@@ -5,9 +5,9 @@
   [columns]="versionColumns" 
   [initialColumns]="initialColumns" 
   [filterPredicate]="filterPredicate"
-  showFilter="true"
-  showLoader="true"
-  showPaginator="true">
+  showFilter
+  showLoader
+  showPaginator>
   <ng-template colRef="lastVersion.scope" let-terms>
     <strong>From : </strong>{{ terms | termDate: 'start' }} <strong>To : </strong>{{ terms | termDate: 'end' }}
   </ng-template>

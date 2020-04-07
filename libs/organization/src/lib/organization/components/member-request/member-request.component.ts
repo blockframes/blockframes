@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { InvitationFromUserToOrganization } from '@blockframes/invitation/types';
-import { PublicUser } from '@blockframes/auth/+state/auth.firestore';
+import { PublicUser } from '@blockframes/user/+state/user.firestore';
 
 @Component({
   selector: 'member-request',
@@ -18,7 +18,7 @@ export class MemberRequestComponent {
 
   @Input() set invitations(invitations: InvitationFromUserToOrganization[]) {
     this.memberInvitations = invitations;
-    this.users = invitations.map(invitation => invitation.user);
+    this.users = invitations.map(invitation => invitation.fromUser);
   }
 
   public invitationColumns = {
@@ -34,6 +34,6 @@ export class MemberRequestComponent {
   }
 
   public findInvitation(uid: string) {
-    return this.memberInvitations.find(invitation => invitation.user.uid === uid);
+    return this.memberInvitations.find(invitation => invitation.fromUser.uid === uid);
   }
 }

@@ -1,0 +1,41 @@
+<h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Event > {{ eventId }} </h1>
+<ng-container *ngIf="event$ | async as event">
+  <h2>
+    {{ event.title }}
+    <button mat-icon-button color="accent" [routerLink]="getCalendarPath()">
+      <mat-icon svgIcon="eye"></mat-icon>
+    </button>
+  </h2>
+  <h3 *ngIf="eventOwner">Owner : {{ eventOwner }}</h3>
+  <ul>
+    <li><strong>Type :</strong> {{ event.type }}</li>
+    <li><strong>From :</strong> {{ event.start.toDate() | date: 'medium'}}</li>
+    <li><strong>To :</strong> {{ event.end.toDate() | date: 'medium'}}</li>
+  </ul>
+
+  <ng-container *ngIf="movie else spinner">
+    <h2>
+      Event for : {{ movie.main.title.international }} ({{ movie.main.internalRef }})
+      <button mat-icon-button color="accent" [routerLink]="getMovieTunnelPath(movie.id)">
+        <mat-icon svgIcon="eye"></mat-icon>
+      </button>
+      <button mat-icon-button color="accent" [routerLink]="getMovieAdminPath(movie.id)">
+        <mat-icon svgIcon="pencil"></mat-icon>
+      </button>
+    </h2>
+    <div *ngIf="eventScreeningUrl">
+      Event screening link : <a href="{{ eventScreeningUrl.url }}" target="_blank" >{{ eventScreeningUrl }}</a>
+    </div>
+    <div *ngIf="moviePrivateConfig">
+      <div>
+        Movie screening link : <a href="{{ moviePrivateConfig.url }}" target="_blank" >{{ moviePrivateConfig.url }}</a>
+      </div>
+      <button mat-flat-button color="accent" (click)="setEventUrl()">
+        <span>Set event URL from movie</span>
+      </button>
+    </div>
+  </ng-container>
+  <ng-template #spinner>
+    <mat-spinner diameter="30"></mat-spinner>
+  </ng-template>
+</ng-container>
