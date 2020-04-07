@@ -19,6 +19,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 const steps = [{
   title: 'Step 1',
   icon: 'document',
+  open: true,
   routes: [{
     path: 'details',
     label: 'Contract Details'
