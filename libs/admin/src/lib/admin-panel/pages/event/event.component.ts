@@ -86,14 +86,13 @@ export class EventComponent implements OnInit {
   }
 
   public async setEventOwner() {
-    const user = await this.userService.getUser(this.event.ownerId);
-    if(!!user){
-      this.eventOwner= `User ${user.firstName} ${user.lastName} ( ${user.uid} )`;
-    } else { // should be an OrgId
+    if (this.event.type === 'screening') { // should be an OrgId if type is screening
       const org = await this.orgService.getValue(this.event.ownerId);
-      this.eventOwner= `Organization ${org.denomination.full} ( ${org.id} )`;
+      this.eventOwner = `Organization ${org.denomination.full} ( ${org.id} )`;
+    } else {
+      const user = await this.userService.getUser(this.event.ownerId);
+      this.eventOwner = `User ${user.firstName} ${user.lastName} ( ${user.uid} )`;
     }
-    this.cdRef.markForCheck();
   }
 
 }

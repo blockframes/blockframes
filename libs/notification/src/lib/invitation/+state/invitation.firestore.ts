@@ -12,8 +12,10 @@ export interface Invitation {
   mode: InvitationMode,
   status: InvitationStatus;
   date: Timestamp;
+  /** @dev An invitation is created by an user or an org (fromOrg or fromUser) */
   fromOrg?: PublicOrganization,
   fromUser?: PublicUser,
+  /** @dev An invitation is for an user, an org or an email*/
   toOrg?: PublicOrganization,
   toUser?: PublicUser,
   toEmail?: string,
@@ -31,8 +33,7 @@ export type InvitationOrUndefined = InvitationDocument | undefined;
 
 /** 
  * Specific Invitation/Request to attend an Event.
- * @see #2244 When a invitation is created
- * A backend function will check if:
+ * @TODO #2461 When a invitation is created, a backend function will check if:
  * If we have an user or an org we can create a notification.
  * If we have an email, the function will send an email.
  * If user created an account, we will then be able to replace email by user

@@ -34,7 +34,7 @@ export class EventsComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    const events = await this.eventService.getAllEvents();
+    const events = await this.eventService.getValue(); // All events
     const promises = events.map(async event => {
       const row = { ...event } as any;
       // Append new data for table display

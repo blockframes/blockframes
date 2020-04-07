@@ -2,7 +2,6 @@ import { CalendarEvent } from 'angular-calendar';
 import { Meeting, EventBase, Screening, EventMeta, EventPrivateConfig } from './event.firestore';
 import { toDate } from '@blockframes/utils/helpers';
 import { Movie } from '@blockframes/movie/+state';
-import { createPrivateConfig } from '@blockframes/utils/common-interfaces/utility';
 
 // Event
 export interface Event<Meta extends EventMeta = any> extends EventBase<Date, Meta>, CalendarEvent<Meta> {
@@ -76,7 +75,6 @@ export function createCalendarEvent(event: Event, currentUserId: string, current
 // Private event config
 export function createPrivateEventConfig(event: Partial<EventPrivateConfig>): EventPrivateConfig {
   return {
-    ...createPrivateConfig(event),
     url: '',
     ... event,
   }

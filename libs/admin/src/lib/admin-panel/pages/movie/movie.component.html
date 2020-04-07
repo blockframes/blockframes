@@ -51,9 +51,9 @@
       [columns]="versionColumnsTable" 
       [initialColumns]="initialColumnsTable" 
       [filterPredicate]="filterPredicate"
-      showFilter="true"
-      showLoader="true"
-      showPaginator="true">
+      showFilter
+      showLoader
+      showPaginator>
       <ng-template colRef="contractId" let-contractId>
         <a [routerLink]="getContractPath(contractId)" routerLinkActive="active"> {{ contractId }}</a>
       </ng-template>

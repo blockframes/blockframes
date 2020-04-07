@@ -124,9 +124,9 @@
         [columns]="versionColumnsTableVersions" 
         [initialColumns]="initialColumnsTableVersions" 
         [filterPredicate]="filterPredicateTableVersions"
-        showFilter="true"
-        showLoader="true"
-        showPaginator="true">
+        showFilter
+        showLoader
+        showPaginator>
         <ng-template colRef="creationDate" let-creationDate>
           {{ creationDate | date: 'short' }}
         </ng-template>
@@ -157,9 +157,9 @@
         [columns]="versionColumnsTableTitles" 
         [initialColumns]="initialColumnsTableTitles" 
         [filterPredicate]="filterPredicateTableTitles"
-        showFilter="true"
-        showLoader="true"
-        showPaginator="true">
+        showFilter
+        showLoader
+        showPaginator>
         <ng-template colRef="movie.promotionalElements.poster" let-posters>
           <ng-container *ngIf="posters[0].media as poster; else noposter">
             <img class="poster" [imgRef]="poster" placeholderAsset="empty_poster.webp">

@@ -8,11 +8,12 @@ import { PrivateConfig } from "@blockframes/utils/common-interfaces/utility";
  * Can only be called by blockframes admin
  * @param data 
  * @param context 
+ * @TODO (#2460) How to handle permission for none admin users ?
  */
 export const setDocumentPrivateConfig = async (data: { docId: string, config: PrivateConfig }, context: CallableContext) => {
-  if (!context || !context.auth) { return false; }
+  if (!context || !context.auth) { throw new Error('Permission denied'); }
   const admin = await db.doc(`blockframesAdmin/${context.auth.uid}`).get();
-  if (!admin.exists) { return false; }
+  if (!admin.exists) { throw new Error('Permission denied'); }
 
   return await db.doc(`docsIndex/${data.docId}`).set({ config: data.config }, { merge: true });
 };
@@ -23,25 +24,30 @@ export const setDocumentPrivateConfig = async (data: { docId: string, config: Pr
  * @param data 
  * @param context 
  */
-export const getDocumentPrivateConfig = async (data: { docId: string }, context: CallableContext) => {
-  if (!context || !context.auth) { return false; }
+export const getDocumentPrivateConfig = async (data: { docId: string, keys: string[] }, context: CallableContext) => {
+  if (!context || !context.auth) { throw new Error('Permission denied'); }
   const admin = await db.doc(`blockframesAdmin/${context.auth.uid}`).get();
-  if (!admin.exists) { return false; }
+  if (!admin.exists) { throw new Error('Permission denied'); }
 
   const snap = await db.doc(`docsIndex/${data.docId}`).get();
   if (!snap.exists) { return false; }
 
   const doc = snap.data();
+  if (!doc) { return false; }
 
-  return doc ? doc.config as PrivateConfig : false;
+  const config = doc.config as PrivateConfig;
+  if (data.keys.length) {
+    // @TODO return only the keys from data.keys
+  }
+  return config;
 };
 
 /**
  * Specific httpsCallable function to set event URL
  * Can only be called by blockframes admin or eventOwnerId
- * @param data 
- * @param context 
- * @TODO (#2244) we can remove this if getEventUrl directly fetch private Config from movie
+ * @param data
+ * @param context
+ * @TODO We can remove this if getEventUrl directly fetch private Config from movie
  * associated to event
  */
 // @TODO (#2460) Waiting for a decision on screening flow before uncomment
@@ -55,7 +61,7 @@ export const getDocumentPrivateConfig = async (data: { docId: string }, context:
   let allowed = false;
   if (admin.exists) {
     allowed = true;
-  } else if (event.ownerId === context.auth.uid) { // @TODO (#2244) ownerId is  userId or OrgId ?
+  } else if (event.ownerId === context.auth.uid) {
     allowed = true;
   }
   if (!allowed) { return false; }
@@ -72,8 +78,8 @@ export const getDocumentPrivateConfig = async (data: { docId: string }, context:
 /**
  * Specific httpsCallable function to get event URL
  * Can only be called by blockframes admin or user allowed to attend event
- * @param data 
- * @param context 
+ * @param data
+ * @param context
  */
 // @TODO (#2460) Waiting for a decision on screening flow before uncomment
 /*export const getEventUrl = async (data: { eventId: string }, context: CallableContext) => {
@@ -88,7 +94,7 @@ export const getDocumentPrivateConfig = async (data: { docId: string }, context:
   if (admin.exists) {
     allowed = true;
   } else {
-    // @TODO (#2244) check if uid is invited to data.eventId && if scope dates is ok
+    // @TODO check if uid is invited to data.eventId && if scope dates is ok
     // const uid = context.auth.uid;
   }
   if (!allowed) { return false; }

@@ -139,9 +139,11 @@ export class MovieService extends CollectionService<MovieState> {
   /**
    * @dev ADMIN method
    * Https callable function to get privateConfig for a movie.
+   * @param movieId 
+   * @param keys the keys to retreive
    */
-  public async getMoviePrivateConfig(movieId: string): Promise<PrivateConfig | false> {
+  public async getMoviePrivateConfig(movieId: string, keys: string[] = []): Promise<PrivateConfig | false> {
     const f = this.functions.httpsCallable('getDocumentPrivateConfig');
-    return f({ docId: movieId }).toPromise();
+    return f({ docId: movieId, keys }).toPromise();
   }
 }

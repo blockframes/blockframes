@@ -59,15 +59,4 @@ export class EventService extends CollectionService<EventState> {
     return f({ eventId }).toPromise();
   }*/
 
-  /**
-   * @dev ADMIN method
-   * Get all contracts.
-   */
-  public async getAllEvents(): Promise<Event[]> {
-    const contractsSnap = await this.db
-      .collection('events')
-      .get()
-      .toPromise();
-    return contractsSnap.docs.map(c => c.data() as Event );
-  }
 }

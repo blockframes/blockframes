@@ -294,6 +294,7 @@ export async function onInvitationWrite(
         return onInvitationToOrgUpdate(invitationDocBefore, invitationDoc, invitation);
       case 'fromUserToOrganization':
         return onInvitationFromUserToJoinOrgUpdate(invitationDocBefore, invitationDoc, invitation);
+      // @TODO (#2461) case 'event'
       default:
         throw new Error(`Unhandled invitation: ${JSON.stringify(invitation)}`);
     }

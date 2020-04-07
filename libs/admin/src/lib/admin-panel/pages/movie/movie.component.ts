@@ -58,8 +58,8 @@ export class MovieComponent implements OnInit {
     this.movieForm = new MovieAdminForm(this.movie);
 
     const privateConfig = await this.movieService.getMoviePrivateConfig(this.movieId);
-    this.privateConfigForm = new PrivateConfigForm(privateConfig !== false ? privateConfig : {});
-  
+    this.privateConfigForm = new PrivateConfigForm(privateConfig || {});
+
     const deals = await this.distributionDealService.getMovieDistributionDeals(this.movieId)
     this.rows = deals.map(d => ({ ...d, dealLink: { id: d.id, movieId: this.movieId } }));
 
@@ -87,7 +87,7 @@ export class MovieComponent implements OnInit {
       this.snackBar.open('Information not valid', 'close', { duration: 5000 });
       return;
     }
-    const eventConfig = createPrivateEventConfig({ url : this.privateConfigForm.get('url').value });
+    const eventConfig = createPrivateEventConfig({ url: this.privateConfigForm.get('url').value });
     await this.movieService.setMoviePrivateConfig(this.movieId, eventConfig);
     this.snackBar.open('Information updated!', 'close', { duration: 5000 });
   }

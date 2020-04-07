@@ -5,9 +5,9 @@
   [columns]="versionColumns" 
   [initialColumns]="initialColumns" 
   [filterPredicate]="filterPredicate"
-  showFilter="true"
-  showLoader="true"
-  showPaginator="true">
+  showFilter
+  showLoader
+  showPaginator>
   <ng-template colRef="logo" let-logo>
     <ng-container *ngIf="logo; else nologo">
       <img class="logo" [imgRef]="logo"  placeholderAsset="empty_poster.webp">
