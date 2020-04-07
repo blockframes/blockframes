@@ -75,8 +75,8 @@
     <ng-container *ngIf="privateConfigForm">
       <form [formGroup]="privateConfigForm" fxLayout="column">
         <mat-form-field appearance="outline">
-          <mat-label>Screening URL</mat-label>
-          <input matInput type="text" placeholder="Screening URL" formControlName="url" />
+          <mat-label>Something private</mat-label>
+          <input matInput type="text" placeholder="Something private" formControlName="url" />
         </mat-form-field>
         <mat-card-actions align="end">
           <button type="submit" mat-flat-button color="primary" (click)="setMoviePrivateConfig()">Update</button>

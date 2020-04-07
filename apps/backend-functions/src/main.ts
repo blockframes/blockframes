@@ -136,8 +136,9 @@ export const onContractWriteEvent = onDocumentWrite(
 
 export const setDocumentPrivateConfig = functions.https.onCall(logErrors(privateConfig.setDocumentPrivateConfig));
 export const getDocumentPrivateConfig = functions.https.onCall(logErrors(privateConfig.getDocumentPrivateConfig));
-export const setEventUrl = functions.https.onCall(logErrors(privateConfig.setEventUrl));
-export const getEventUrl = functions.https.onCall(logErrors(privateConfig.getEventUrl));
+// @TODO (#2460)  Waiting for a decision on screening flow before uncomment
+//export const setEventUrl = functions.https.onCall(logErrors(privateConfig.setEventUrl));
+//export const getEventUrl = functions.https.onCall(logErrors(privateConfig.getEventUrl));
 
 //--------------------------------
 //       Apps Management        //

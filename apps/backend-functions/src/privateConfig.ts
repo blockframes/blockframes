@@ -44,7 +44,8 @@ export const getDocumentPrivateConfig = async (data: { docId: string }, context:
  * @TODO (#2244) we can remove this if getEventUrl directly fetch private Config from movie
  * associated to event
  */
-export const setEventUrl = async (data: { eventId: string }, context: CallableContext) => {
+// @TODO (#2460) Waiting for a decision on screening flow before uncomment
+/*export const setEventUrl = async (data: { eventId: string }, context: CallableContext) => {
   if (!context || !context.auth) { return false; }
   const admin = await db.doc(`blockframesAdmin/${context.auth.uid}`).get();
   const snap = await db.doc(`events/${data.eventId}`).get();
@@ -66,7 +67,7 @@ export const setEventUrl = async (data: { eventId: string }, context: CallableCo
 
   const config = { url: movieDocsIndex.config.url }
   return await db.doc(`docsIndex/${data.eventId}`).set({ config }, { merge: true });
-};
+};*/
 
 /**
  * Specific httpsCallable function to get event URL
@@ -74,7 +75,8 @@ export const setEventUrl = async (data: { eventId: string }, context: CallableCo
  * @param data 
  * @param context 
  */
-export const getEventUrl = async (data: { eventId: string }, context: CallableContext) => {
+// @TODO (#2460) Waiting for a decision on screening flow before uncomment
+/*export const getEventUrl = async (data: { eventId: string }, context: CallableContext) => {
   if (!context || !context.auth) { return false; }
   const admin = await db.doc(`blockframesAdmin/${context.auth.uid}`).get();
   const eventSnap = await db.doc(`events/${data.eventId}`).get();
@@ -93,4 +95,4 @@ export const getEventUrl = async (data: { eventId: string }, context: CallableCo
   const snap = await db.doc(`docsIndex/${data.eventId}`).get();
   const doc = snap.data();
   return doc ? (doc.config as PrivateConfig).url : false;
-};
+};*/

@@ -43,19 +43,21 @@ export class EventService extends CollectionService<EventState> {
    * The url will be fetched from Movie private config associated to eventId
    * @param eventId 
    */
-  public setEventUrl(eventId: string): Promise<any> {
+  // @TODO (#2460)  Waiting for a decision on screening flow before uncomment
+  /*public setEventUrl(eventId: string): Promise<any> {
     const f = this.functions.httpsCallable('setEventUrl');
     return f({ eventId }).toPromise();
-  }
+  }*/
 
   /**
    * Get event private url
    * @param eventId 
    */
-  public getEventUrl(eventId: string): Promise<string> {
+  // @TODO (#2460)  Waiting for a decision on screening flow before uncomment
+  /*public getEventUrl(eventId: string): Promise<string> {
     const f = this.functions.httpsCallable('getEventUrl');
     return f({ eventId }).toPromise();
-  }
+  }*/
 
   /**
    * @dev ADMIN method

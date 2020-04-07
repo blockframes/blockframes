@@ -55,21 +55,23 @@ export class EventComponent implements OnInit {
               }
               this.cdRef.markForCheck();
             });
-          this.eventService.getEventUrl(this.eventId).then(url => {
+          // @TODO (#2460)  Waiting for a decision on screening flow before uncomment
+          /*this.eventService.getEventUrl(this.eventId).then(url => {
             this.eventScreeningUrl = url;
             this.cdRef.markForCheck();
-          })
+          })*/
         }
         return e;
       }));
     });
   }
 
-  public async setEventUrl() {
+  // @TODO (#2460)  Waiting for a decision on screening flow before uncomment
+  /*public async setEventUrl() {
     await this.eventService.setEventUrl(this.eventId);
     const eventUrl = await this.eventService.getEventUrl(this.eventId);
     this.snackBar.open(`Information updated: ${eventUrl}`, 'close', { duration: 5000 });
-  }
+  }*/
 
   public getMovieTunnelPath(movieId: string) {
     return `/c/o/dashboard/tunnel/movie/${movieId}`;
