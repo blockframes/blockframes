@@ -2,7 +2,7 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { CartService } from '@blockframes/organization/cart/+state/cart.service';
-import { Component, OnInit, ChangeDetectionStrategy, HostBinding, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
@@ -22,7 +22,6 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MarketplaceMovieViewComponent implements OnInit, OnDestroy {
-  @HostBinding('attr.page-id') pageId = 'catalog-movie-view';
   public movie$: Observable<Movie>;
   public loading$: Observable<boolean>;
   // Flag to indicate which icon and message to show
