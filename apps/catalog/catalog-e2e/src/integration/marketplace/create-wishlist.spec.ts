@@ -87,7 +87,6 @@ describe('Test wishlist icon from movie view page', () => {
       // Add and remove a movie with wishlist button from home page
       cy.wait(2000);
       p2.clickFirstWishlistButton();
-      cy.wait(2000);
       p2.assertWishListCountIsOne();
       p2.clickFirstWishlistButton();
       p2.assertNoWishListCount(MOVIENAMELIST.length);
