@@ -7,13 +7,12 @@ import {
 import { Subscription, Observable } from 'rxjs';
 
 import { MovieService, MovieQuery } from '@blockframes/movie/+state';
-import { FormControl, Validators, FormArray } from '@angular/forms';
+import { algolia } from '@env';
+import { FormControl, FormGroup, FormArray } from '@angular/forms';
 import { CatalogSearchForm, AvailsSearchForm } from '@blockframes/distribution-deals/form/search.form';
 import { staticModels } from '@blockframes/utils/static-model';
-import { LanguagesLabel, LanguagesSlug, LANGUAGES_LABEL } from '@blockframes/utils/static-model/types';
-import { getCodeIfExists } from '@blockframes/utils/static-model/staticModels';
-import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
-import { algolia } from '@env';
+
+import { FormList } from '@blockframes/utils/form';
 
 @Component({
   selector: 'festival-marketplace-title-list',
@@ -34,29 +33,30 @@ export class ListComponent implements OnInit, OnDestroy {
 
   public availsForm = new AvailsSearchForm();
 
-  // TODO try to use or create reusable component for every filter bellow
+  // TODO use or create/refactor a single form instead of multiple form like right now
 
   // country
   public countries = staticModels['TERRITORIES'];
 
-  // languages
-  public languageControl: FormControl = new FormControl('', [
-    Validators.required
-  ]);
-  public languagesFilter$: Observable<string[]>;
-  public selectedLanguages$: Observable<string[]>;
+  // TODO use FormList after #2489 has been fixed
+  public languageForm = new FormGroup({
+    original: new FormArray([]),
+    dubbed: new FormArray([]),
+    subtitle: new FormArray([]),
+    caption: new FormArray([]),
+  });
 
   // status
   public movieProductionStatuses = staticModels['MOVIE_STATUS'];
 
   public movieIndex = algolia.indexNameMovies;
+
   // TODO use FormList after #2489 has been fixed
   public sellersForm = new FormArray([]);
 
   constructor(
     private movieService: MovieService,
     private movieQuery: MovieQuery,
-    private analytics: FireAnalytics,
   ) { }
 
   ngOnInit() {
@@ -67,29 +67,5 @@ export class ListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.sub.unsubscribe();
-  }
-
-  public addLanguage(language: LanguagesLabel) {
-    /**
-     * We want to exchange the label for the slug,
-     * because for our backend we need to store the slug.
-     */
-    const languageSlug: LanguagesSlug = getCodeIfExists('LANGUAGES', language);
-    if (LANGUAGES_LABEL.includes(language)) {
-      this.filterForm.addLanguage(languageSlug);
-      this.analytics.event('addedLanguage', { language });
-    } else {
-      throw new Error('Something went wrong. Please choose a language from the drop down menu.');
-    }
-  }
-
-  public removeLanguage(language: LanguagesLabel) {
-    /**
-     * We want to exchange the label for the slug,
-     * because for our backend we need to store the slug.
-     */
-    const languageSlug: LanguagesSlug = getCodeIfExists('LANGUAGES', language);
-    this.filterForm.removeLanguage(languageSlug);
-    this.analytics.event('removedLanguage', { language });
   }
 }
