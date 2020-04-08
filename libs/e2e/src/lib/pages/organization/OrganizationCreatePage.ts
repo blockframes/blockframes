@@ -89,7 +89,8 @@ export default class OrganizationCreatePage {
   }
 
   public fillActivity(activity: string) {
-    cy.get('organization-form input[test-id=activity]').type(activity);
+    cy.get('organization-form mat-select[test-id=activity]').click().type(activity);
+    cy.get('mat-option').contains(activity).click();
   }
 
   public fillFiscalNumber(fiscalNumber: string) {
