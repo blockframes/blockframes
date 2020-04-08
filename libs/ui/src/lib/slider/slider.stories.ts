@@ -47,7 +47,7 @@ export const bfSlider = () => ({
     hideArrows: boolean('hideArrows', false),
     hideIndicators: boolean('hideIndicators', false),
     slideDirection: text('slideDirection', 'rtl'),
-    hideOverlay: boolean('hideOverlay', false),
+    hideOverlay: boolean('hideOverlay', true),
     overlayColor: text('overlayColor', '#00000080'),
   }
 });

@@ -6,7 +6,8 @@ import { boolean } from '@blockframes/utils/decorators/decorators';
 @Component({
   selector: 'bf-slide',
   templateUrl: './slide.component.html',
-  styleUrls: ['./slide.component.scss']
+  styleUrls: ['./slide.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SlideComponent implements ListKeyManagerOption, Slide {
 
