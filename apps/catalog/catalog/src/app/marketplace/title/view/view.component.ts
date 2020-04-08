@@ -85,7 +85,7 @@ export class MarketplaceMovieViewComponent implements OnInit, OnDestroy {
       movieId: movie.id,
       movieTitle: movie.main.title.original
     });
-    this.snackbar.open(`${title} has been added to your selection.`, 'close', { duration: 2000 });
+    this.snackbar.open(`Title ${title} has been added.`, 'close', { duration: 2000 });
   }
 
   public removeFromWishlist() {
@@ -96,7 +96,7 @@ export class MarketplaceMovieViewComponent implements OnInit, OnDestroy {
       movieId: movie.id,
       movieTitle: movie.main.title.original
     });
-    this.snackbar.open(`${title} has been removed from your selection.`, 'close', { duration: 2000 });
+    this.snackbar.open(`Title ${title} has been removed.`, 'close', { duration: 2000 });
   }
 
   public getTitle(movie: Movie) {
