@@ -20,5 +20,9 @@
                 "component/slider/archipel_content/movie-slider"
             ]
         }
-    ]
+    ],
+    "github": {
+        "repository": "blockframes/blockframes",
+        "branch": "develop"
+    }
 }
