@@ -77,12 +77,12 @@ function createContractTab(allContracts: Contract[]): ContractTab[] {
 
 
 @Component({
-  selector: 'catalog-deal-list',
+  selector: 'catalog-right-list',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DealListComponent {
+export class RightListComponent {
   public tabs$ = this.query.sales$.pipe(map(createContractTab));
   public salesLoading$ = this.query.selectLoading();
 

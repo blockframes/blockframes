@@ -1,7 +1,7 @@
 <ng-container *ngIf="!(salesLoading$ | async)">
   <ng-container *ngIf="(tabs$ | async) as tabs">
     <!-- Check if we have contracts in the tab "All" -->
-    <ng-container *ngIf="tabs[0].contracts.length else noDeal">
+    <ng-container *ngIf="tabs[0].contracts.length else noRight">
       <header fxLayout="row" fxLayoutAlign="space-between start">
         <h1>Offers & Deals</h1>
         <div fxLayout="column" fxLayoutAlign="start end">
@@ -27,7 +27,7 @@
         </mat-tab>
       </mat-tab-group>
     </ng-container>
-    <ng-template #noDeal>
+    <ng-template #noRight>
       <section fxLayout="column" fxLayoutAlign="center center">
         <h1>You have no ongoing offers or deals yet.</h1>
         <p class="mat-body-1">

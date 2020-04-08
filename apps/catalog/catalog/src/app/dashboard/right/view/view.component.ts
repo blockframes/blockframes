@@ -4,7 +4,7 @@ import { PLACEHOLDER_LOGO } from '@blockframes/organization/organization/+state/
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 
 @Component({
-  selector: 'dashboard-deal-view',
+  selector: 'dashboard-right-view',
   templateUrl: './view.component.html',
   styleUrls: ['./view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

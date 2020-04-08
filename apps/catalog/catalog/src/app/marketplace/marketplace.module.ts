@@ -70,12 +70,12 @@ const routes: Routes = [{
         path: '',
         canActivate: [OrganizationContractListGuard, ContractsRightListGuard, MovieListContractListGuard],
         canDeactivate: [OrganizationContractListGuard, ContractsRightListGuard, MovieListContractListGuard],
-        loadChildren: () => import('./deal/list/list.module').then(m => m.DealListModule),
+        loadChildren: () => import('./right/list/list.module').then(m => m.RightListModule),
       },{
         path: ':contractId',
         canActivate: [ActiveContractGuard],
         canDeactivate: [ActiveContractGuard],
-        loadChildren: () => import('./deal/view/view.module').then(m => m.DealViewModule)
+        loadChildren: () => import('./right/view/view.module').then(m => m.RightViewModule)
       }]
     },
     {

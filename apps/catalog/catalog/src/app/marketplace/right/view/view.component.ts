@@ -1,9 +1,8 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ContractQuery } from '@blockframes/contract/contract/+state';
-import { map } from 'rxjs/operators';
 
 @Component({
-  selector: 'marketplace-deal-view',
+  selector: 'marketplace-right-view',
   templateUrl: './view.component.html',
   styleUrls: ['./view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush

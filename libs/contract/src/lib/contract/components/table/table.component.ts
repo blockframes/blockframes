@@ -99,7 +99,7 @@ export class ContractTableComponent {
     const basePath = `/c/o/${this.app}`;
     const path = (contract.status === 'draft')
       ? `${basePath}/tunnel/contract/${contract.id}/sale`
-      : `${basePath}/rights/${contract.id}`;
+      : `${basePath}/deals/${contract.id}`;
     this.router.navigate([path], { relativeTo: this.route });
   }
 }

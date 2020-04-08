@@ -19,7 +19,7 @@ export class MoviesComponent implements OnInit {
     'main.productionYear': 'Production year',
     'main.storeConfig.status': 'Status',
     'main.storeConfig.storeType': 'Store type',
-    'distributionDealsInfo': 'Distribution deals',
+    'distributionRightsInfo': 'Distribution rights',
     'contractsInfo': 'Contracts',
     'edit': 'Edit',
   };
@@ -32,7 +32,7 @@ export class MoviesComponent implements OnInit {
     'main.productionYear',
     'main.storeConfig.status',
     'main.storeConfig.storeType',
-    'distributionDealsInfo',
+    'distributionRightsInfo',
     'contractsInfo',
     'edit',
   ];

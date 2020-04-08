@@ -176,18 +176,18 @@
             --
           </ng-template>
         </ng-template>
-        <ng-template colRef="deals" let-deals>
-          <ul *ngIf="deals.length else nodeals">
-            <li *ngFor="let deal of deals">
-              <a target="_blank" [routerLink]="getRightPath(deal.id, deal.movie)" routerLinkActive="active"> {{ deal.id }}</a>
+        <ng-template colRef="rights" let-rights>
+          <ul *ngIf="rights.length else norights">
+            <li *ngFor="let right of rights">
+              <a target="_blank" [routerLink]="getRightPath(right.id, right.movie)" routerLinkActive="active"> {{ right.id }}</a>
             </li>
           </ul>
-          <ng-template #nodeals>
+          <ng-template #norights>
             --
           </ng-template>
         </ng-template>
-        <ng-template colRef="exploredeals" let-dealslink>
-          <a [routerLink]="dealslink"><mat-icon svgIcon="eye"></mat-icon></a>
+        <ng-template colRef="explorerights" let-rightslink>
+          <a [routerLink]="rightslink"><mat-icon svgIcon="eye"></mat-icon></a>
         </ng-template>
         <ng-template colRef="movie.main.storeConfig.status" let-storeStatus>
           {{ storeStatus | toLabel: 'storeStatus' | async }}

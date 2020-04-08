@@ -67,4 +67,4 @@ const routes = [
     RouterModule.forChild(routes)
   ]
 })
-export class DealViewModule {}
+export class RightViewModule {}

@@ -64,12 +64,12 @@ const routes: Routes = [
           path: '',
           canActivate: [OrganizationContractListGuard, ContractsRightListGuard, MovieListContractListGuard],
           canDeactivate: [OrganizationContractListGuard, ContractsRightListGuard, MovieListContractListGuard],
-          loadChildren: () => import('./deal/list/list.module').then(m => m.DealListModule)
+          loadChildren: () => import('./right/list/list.module').then(m => m.RightListModule)
         }, {
-          path: ':contractId', // One deal: different state of a deal (offer, counter-offer, payment),
+          path: ':contractId', // One right: different state of a right (offer, counter-offer, payment),
           canActivate: [ActiveContractGuard],
           canDeactivate: [ActiveContractGuard],
-          loadChildren: () => import('./deal/view/view.module').then(m => m.DealViewModule)
+          loadChildren: () => import('./right/view/view.module').then(m => m.RightViewModule)
         }]
       },
       {

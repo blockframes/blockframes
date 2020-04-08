@@ -46,7 +46,7 @@
 </section>
 
 
-<!-- DISTRIBUTION DEALS -->
+<!-- DISTRIBUTION RIGHTS -->
 <section *ngIf="titles$ | async as titles">
   <mat-card *ngIf="titles.length">
     <mat-accordion multi="false">
@@ -76,8 +76,8 @@
                 </p>
               </div>
             </article>
-            <!-- MOVIE DISTRIBUTION DEAL LIST -->
-            <catalog-right-list [rights]="movie.distributionDeals"></catalog-right-list>
+            <!-- MOVIE DISTRIBUTION RIGHT LIST -->
+            <catalog-right-list [rights]="movie.distributionRights"></catalog-right-list>
           </ng-template>
         </mat-expansion-panel>
       </ng-container>
