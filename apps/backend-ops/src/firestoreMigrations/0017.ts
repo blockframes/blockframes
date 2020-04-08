@@ -1,38 +1,40 @@
 import { Firestore } from '../admin';
 
 /**
- * Create missing movies documentPermissions.
+ * Update the distributionDeals subcollection (rename in distributionRights)
  */
 export async function upgrade(db: Firestore) {
-  const organizations = await db.collection('orgs').get();
+  const movies = await db.collection('movies').get();
+  const batch = db.batch();
 
-  // Iterate on each organization
-  organizations.forEach(async orgSnap => {
-    const org = orgSnap.data();
-    const permissionDocuments = await db.collection(`permissions/${org.id}/documentPermissions`).get();
-    const permissionDocumentsIds = [];
+  const updates = movies.docs.map(async movie => {
+    const distributionDeals = await movie.ref.collection('distributionDeals').get();
 
-    permissionDocuments.forEach(docSnap => permissionDocumentsIds.push(docSnap.data().id))
-    org.movieIds.forEach(movieId => {
-      if (!permissionDocumentsIds.includes(movieId)) {
-        const moviePermissions = createDocumentPermissions(movieId, org.id);
-        db.doc(`permissions/${org.id}/documentPermissions/${movieId}`).set(moviePermissions);
-      }
-    })
-  })
+    if (distributionDeals) {
+      // Create new sub collection named Distribution Rights
+      distributionDeals.forEach(right => {
+        const rightRef = movie.ref.collection('distributionRights').doc(right.id);
+        const newRight = JSON.parse(JSON.stringify(right.data()));
+        batch.set(rightRef, newRight);
 
-  console.log('Updating permissionDocuments done.');
-}
+        // Update terms because of the timestamp type in firestore
+        const endTermData = right.data().terms.end;
+        const startTermData = right.data().terms.start;
+        const newTerms = {
+          end: new Date((endTermData._seconds + endTermData._nanoseconds) * 1000),
+          start: new Date((startTermData._seconds + startTermData._nanoseconds) * 1000),
+        };
+        batch.update(rightRef, {terms: newTerms});
+      });
 
-// Create a permission document with all permissions set to true and ownership.
-function createDocumentPermissions(docId: string, orgId: string) {
-  return {
-    canCreate: true,
-    canDelete: true,
-    canRead: true,
-    canUpdate: true,
-    id: docId,
-    isAdmin: true,
-    ownerId: orgId
-  }
+      // And delete the old Distribution Deals
+      distributionDeals.forEach(deal => {
+        batch.delete(deal.ref);
+      })
+    };
+  });
+  console.log('Creation of subcollection Distribution Rights and deletion of distribution deals ok');
+
+  await Promise.all(updates);
+  return batch.commit();
 }
