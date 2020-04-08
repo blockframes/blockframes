@@ -1,10 +1,6 @@
-import { Component, ChangeDetectionStrategy, Input, OnInit, Inject } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { FormList } from '@blockframes/utils/form';
-import { debounceTime, distinctUntilChanged, filter, switchMap, pluck, map } from 'rxjs/operators';
-import { MoviesIndex } from '@blockframes/utils/algolia';
-import { Index } from 'algoliasearch';
-import { FormControl } from '@angular/forms';
+import { algolia } from '@env';
 
 @Component({
   selector: '[form] title-filter-seller',
@@ -12,26 +8,9 @@ import { FormControl } from '@angular/forms';
   styleUrls: ['./seller-filter.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SellerFilterComponent implements OnInit {
+export class SellerFilterComponent {
 
   @Input() form: FormList<string>;
 
-  public orgSearch = new FormControl('');
-  public orgSearchResults$: Observable<any>;
-
-  constructor(
-    @Inject(MoviesIndex) private movieIndex: Index,
-  ) {}
-
-  ngOnInit() {
-    /** fill the seller autocomplete with orgs queried from algolia */
-    this.orgSearchResults$ = this.orgSearch.valueChanges.pipe(
-      debounceTime(200),
-      distinctUntilChanged(),
-      filter((text: string) => !!text.trim()),
-      switchMap(text => this.movieIndex.searchForFacetValues({facetName: 'orgName', facetQuery: text})),
-      pluck('facetHits'),
-      map(results => results.map(result => result.value)),
-    );
-  }
+  public movieIndex = algolia.indexNameMovies;
 }

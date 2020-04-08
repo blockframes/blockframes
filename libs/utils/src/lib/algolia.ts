@@ -1,11 +1,10 @@
 import { Movie } from '@blockframes/movie/+state';
 import { algolia } from '@env';
-import algoliasearch from 'algoliasearch/lite';
-import { Index } from 'algoliasearch';
+import algoliasearch, { Index } from 'algoliasearch';
 import { InjectionToken } from '@angular/core';
 
 // @ts-ignore
-export const searchClient: SearchClient = algoliasearch(algolia.appId, algolia.searchKey);
+export const searchClient = algoliasearch(algolia.appId, algolia.searchKey);
 
 export const OrganizationsIndex = new InjectionToken<Index>(
   'Algolia index to search organizations',

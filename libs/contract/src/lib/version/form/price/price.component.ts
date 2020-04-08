@@ -101,7 +101,7 @@ export class PriceComponent implements OnInit {
   }
 
   /**
-   * @description gets triggered when the user choosed a movie from the dropdown
+   * @description gets triggered when the user chose a movie from the dropdown
    * @param event
    */
   public addMovie(id: string) {

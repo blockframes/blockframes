@@ -15,11 +15,14 @@ import {
   OnDestroy
 } from '@angular/core';
 
+import { Index } from 'algoliasearch';
 import { searchClient } from '@blockframes/utils/algolia';
 
 // RxJs
 import { Observable, Subscription, BehaviorSubject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap, pluck, filter } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, switchMap, filter, tap, map } from 'rxjs/operators';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+
 
 @Component({
   selector: '[indexName] algolia-autocomplete',
@@ -28,19 +31,27 @@ import { debounceTime, distinctUntilChanged, switchMap, pluck, filter } from 'rx
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
-  /**
-   * Should be fed with the algolia object
-   * out of the env.ts
-   * @example algolia.indexNameMovies from your env.ts
-   */
-  @Input() set indexName(name: string) {
-    this.config.indexName = name;
-  }
+
+  // INPUT ----------------------------
 
   /**
-   * Tells the component which value to pick for the control,
-   * @default objectID
-   * @example movie.main.title.original
+   * Should be fed with the algolia index name out of the `env.ts`
+   * @example [indexName]="algolia.indexNameMovies" // 'pl_movies' from the env.ts
+   */
+  @Input() indexName: string;
+
+  // OPTIONAL INPUT -------------------
+
+  /**
+   * The name of the facet to search on, default value is `''` and means that the search is not perform on facets.
+   */
+  @Input() facetName = '';
+
+  /**
+   * Tells the component which value to pick in the **algolia result object**,
+   * i.e. the object stored in the algolia index which can be different form the firestore data model
+   * @default 'objectID'
+   * @example [pathToValue]="movie.title.original"
    */
   @Input() pathToValue = 'objectID';
 
@@ -51,132 +62,127 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
    */
   @Input() displayWithPath: string = this.pathToValue;
 
-  /**
-  * Optional input if you want to use your own form control
-  */
+  /** Optional input if you want to use your own form control */
   @Input() control = new FormControl();
 
-  /**
-   * Set your own label
-   */
+  /** Set your own labe */
   @Input() label = 'Search...'
 
-  /**
-   * Set your own placeholder
-   */
+  /** Set your own placeholder */
   @Input() placeholder = 'Search...'
 
-  /**
-   * Can set to false if control should display the value
-   */
-  @Input() resetInput = false;
+  /** Can set to false if control should display the value */
+  private _resetInput: boolean;
+  @Input()
+  get resetInput() { return this._resetInput; }
+  set resetInput(value: any) {
+    this._resetInput = coerceBooleanProperty(value);
+  }
 
-  /**
-   * Different behavior of the mat form field
-   */
+  /** Different behavior of the mat form field */
   @Input() mode: 'legacy' | 'standard' | 'fill' | 'outline' = 'outline'
 
-  private sub: Subscription;
-
+  /** Sets the input to a native input control */
   private _native: boolean;
-
-  /**
-   * Sets the input to a native input control
-   */
   @Input()
-  get native() { return this._native }
+  get native() { return this._native; }
   set native(value: any) {
     this._native = coerceBooleanProperty(value);
   };
 
-  /**
-   * Holds information for showing which icons
-   */
+  /** Holds information for showing which icons */
   private _icons: Array<'cross' | 'magnifying_glasses'> = [];
-
   @Input()
   get icons() { return this._icons }
   set icons(values: Array<'cross' | 'magnifying_glasses'>) {
     this._icons = values
   }
 
-  /**
-   * Output to get all data from algolia
-   */
+  // OUTPUT ---------------------------
+
+  /** Output to get all data from algolia */
   @Output() selectionChange = new EventEmitter();
 
-  /**
-   * Renders the template coming from the parten component
-   */
-  @ContentChild(TemplateRef) template: TemplateRef<any>;
+  // PRIVATE --------------------------
 
-  /**
-   * Holds the results of algolia
-   */
+  private sub: Subscription;
+
+  /** Holds the results of algolia */
   public algoliaSearchResults$: Observable<any>;
 
-  /**
-   * Config to search upon algolia
-   */
-  private config = {
-    indexName: '',
-    searchClient
-  }
+  /** The initialized client for algolia */
+  private indexSearch: Index;
 
-  /**
-   * The initialized client for algolia
-   */
-  private indexSearch;
-
-  /**
-   * Holds the last snapshot from algolia results
-   */
+  /** Holds the last snapshot from algolia results */
   private lastValue$ = new BehaviorSubject(null);
 
-  @ViewChild('input') input: ElementRef<HTMLInputElement>
+  /** Renders the template coming from the parent component */
+  @ContentChild(TemplateRef) template: TemplateRef<any>;
+
+  @ViewChild('input') input: ElementRef<HTMLInputElement>;
 
   ngOnInit() {
-    this.indexSearch = this.config.searchClient.initIndex(this.config.indexName)
+
+    if (!!this.facetName.trim()) {
+      this.pathToValue = 'value'; // for facet the result object only contain a 'value' key
+      this.displayWithPath = this.pathToValue;
+    }
+
+    // initialize Algolia
+    this.indexSearch = searchClient.initIndex(this.indexName);
+
     this.algoliaSearchResults$ = this.control.valueChanges.pipe(
       debounceTime(300),
-      filter(text => typeof text === 'string'),
+      filter(text => typeof text === 'string' && !!text.trim()),
       distinctUntilChanged(),
-      switchMap(text => this.indexSearch.search(text)),
-      pluck('hits')
+      switchMap(text => {
+        if (!this.facetName.trim()) {
+          return this.indexSearch.search(text);
+        } else {
+          return this.indexSearch.searchForFacetValues({facetName: this.facetName, facetQuery: text});
+        }
+      }),
+      map((result: any) => {
+        if (!this.facetName.trim()) {
+          return result.hits;
+        } else {
+          return result.facetHits;
+        }
+      }),
+      tap(data => this.lastValue$.next(data)),
     );
-    this.sub = this.algoliaSearchResults$.subscribe(data => this.lastValue$.next(data));
   }
 
   /**
-   * @description helper function to dynamically access object value
-   * @param result object from algolia
-   * @param pathToResolve defaults to input variable pathToValue
+   * Helper function to dynamically access object value pointed by the `path` param, like the rxjs pluck function
+   * @param object usually the result object from Algolia
+   * @param path string representing the path to the value, usually `this.pathToValue` or `this.displayWithPath`
+   * @example
+   * const object = { main: { nested: { name: 'Joe' } } };
+   * const path = 'main.nested.name';
+   * this.resolve(result); // 'Joe'
    */
-  public resolveValue(result: any, pathToResolve: string) {
-    if (result) {
-      return pathToResolve.split('.').reduce((prev, curr) => {
+  public resolveValue(object: any, path: string) {
+    if (object) {
+      return path.split('.').reduce((prev, curr) => {
         return prev ? prev[curr] : null
-      }, result)
+      }, object)
     }
   }
 
-  /**
-   * @description this function can be listen on if we want more then
-   * just the data from the form control
-   */
-  public findObjectID() {
-    const objectID = this.lastValue$.getValue()[0].objectID;
-    this.selectionChange.emit(objectID);
+  public selected(event: MatAutocompleteSelectedEvent) {
+    const result = this.resolveValue(event.option.value, this.pathToValue);
+    this.selectionChange.emit(result);
     if (this.resetInput) {
-      this.control.reset(null);
+      this.control.reset();
     }
   }
 
   /**
-  * Since we input the path we need to initalize the function after the input gets handled,
+  * Since we input the path we need to initialize the function after the input gets handled,
   * otherwise displayWithPath is undefined and this will throw an error
   */
-  public displayFn() {
+  public displayFn = () => {
     if (this.resetInput) {
       return ''
     }

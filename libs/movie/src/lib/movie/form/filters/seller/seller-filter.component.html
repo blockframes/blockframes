@@ -6,10 +6,16 @@
     </mat-chip>
   </ng-container>
 </mat-chip-list>
-<mat-form-field appearance="outline">
-  <mat-label>Search for a specific seller</mat-label>
-  <input matInput type="text" [formControl]="orgSearch" [matAutocomplete]="sellerOrgs">
-</mat-form-field>
-<mat-autocomplete #sellerOrgs>
-  <mat-option *ngFor="let name of (orgSearchResults$ | async)" (click)="form.add(name)">{{name}}</mat-option>
-</mat-autocomplete>
+
+<algolia-autocomplete
+  [indexName]="movieIndex"
+  facetName="orgName"
+  (selectionChange)="form.add($event)"
+  label="Search for a specific seller"
+  placeholder="Organization name"
+  resetInput
+>
+  <ng-template let-result>
+    <span>{{result.value}}</span>
+  </ng-template>
+</algolia-autocomplete>

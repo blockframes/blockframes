@@ -34,9 +34,9 @@
       <button mat-icon-button (click)="sidenav.toggle()">
         <mat-icon svgIcon="menu"></mat-icon>
       </button>
-      <algolia-autocomplete [indexName]="movieIndex" native [icons]="['cross', 'magnifying_glasses']" [resetInput]="true">
+      <algolia-autocomplete [indexName]="movieIndex" native [icons]="['cross', 'magnifying_glasses']" resetInput displayWithPath="title.international">
         <ng-template let-result>
-          <a [routerLink]="['titles', result.objectID]">{{ result.movie.main.title.international }}</a>
+          <a [routerLink]="['titles', result.objectID]">{{ result.title.international }}</a>
         </ng-template>
       </algolia-autocomplete>
       <div fxLayout="row" fxLayoutGap="24px">

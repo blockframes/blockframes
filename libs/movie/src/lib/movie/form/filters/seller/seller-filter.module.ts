@@ -7,6 +7,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatIconModule } from '@angular/material/icon';
+import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia-autocomplete/algolia-autocomplete.module';
 
 // Material
 
@@ -20,6 +21,7 @@ import { MatIconModule } from '@angular/material/icon';
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    AlgoliaAutocompleteModule,
 
     // Material
     MatFormFieldModule,
