@@ -102,11 +102,6 @@ export class MarketplaceHomeComponent implements OnInit {
     });
   }
 
-  public getBanner(movie: Movie): string {
-    const movieElement = movie.promotionalElements.banner;
-    return movieElement && movieElement.media && movieElement.media.url;
-  }
-
   // TODO 1880 country short code
   public getMainInfo(movie: Movie) {
     const { originCountries, totalRunTime, genres } = movie.main;

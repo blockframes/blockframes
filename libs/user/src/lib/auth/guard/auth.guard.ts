@@ -23,7 +23,7 @@ export class AuthGuard extends CollectionGuard<AuthState> {
     super(service);
   }
 
-  sync() {
+/*   sync() {
     return this.afAuth.authState.pipe(
       switchMap(userAuth => {
         if (!userAuth) {
@@ -35,5 +35,5 @@ export class AuthGuard extends CollectionGuard<AuthState> {
         );
       })
     );
-  }
+  } */
 }

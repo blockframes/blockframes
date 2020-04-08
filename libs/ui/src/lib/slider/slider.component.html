@@ -3,20 +3,17 @@
   <!-- Slides -->
   <ul class="slider-list" #slideList role="listbox"
     [style.flex-direction]="slideDirection === 'rtl' ? 'row-reverse' : 'row'">
-    <li *ngFor="let image of slides" role="option" class="slider-item">
+    <li *ngFor="let image of slides" role="option" class="slider-item" #slideItems>
       <ng-template [ngTemplateOutlet]="image.templateRef"></ng-template>
     </li>
   </ul>
 
   <!-- Arrows -->
   <ng-container *ngIf="!hideArrows">
-    <button mat-icon-button (click)="previous()" *ngIf="loop || currentIndex !== 0" tabindex="-1" class="previous">
-      <mat-icon [svgIcon]="arrowBack"></mat-icon>
-    </button>
-    <button mat-icon-button (click)="next()" *ngIf="loop || currentIndex !== slides.length - 1" tabindex="-1"
-      class="next">
-      <mat-icon [svgIcon]="arrowForward"></mat-icon>
-    </button>
+    <mat-icon [svgIcon]="arrowBack" mat-ripple (click)="previous()" *ngIf="loop || currentIndex !== 0"
+      tabindex="-1" class="previous"></mat-icon>
+      <mat-icon [svgIcon]="arrowForward" mat-ripple (click)="next()"
+        *ngIf="loop || currentIndex !== slides.length - 1" tabindex="-1" class="next"></mat-icon>
   </ng-container>
 
   <!-- Indicator -->
