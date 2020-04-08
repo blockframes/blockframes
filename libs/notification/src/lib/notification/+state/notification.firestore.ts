@@ -26,7 +26,7 @@ export type NotificationType =
   'newContract' |
   'contractInNegotiation' |
 
-  // Events related notifications 
+  // Events related notifications
   'eventIsAboutToStart' |
   'invitationToAttendEventAccepted' |
   'invitationToAttendEventDeclined'
@@ -34,14 +34,14 @@ export type NotificationType =
 
 /** Minimum required informations to create a Notification. */
 export interface NotificationOptions {
-  /** @dev Recipient of the notification */ 
+  /** @dev Recipient of the notification */
   toUserId: string;
-  /** @dev Possible subjects of the notification */ 
+  /** @dev Possible subjects of the notification */
   user?: Partial<PublicUser>;
   docId?: string;
   movie?: PublicMovie;
   organization?: PublicOrganization;
-  /** @dev Type of the notification */ 
+  /** @dev Type of the notification */
   type: NotificationType;
 }
 
