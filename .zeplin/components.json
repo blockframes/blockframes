@@ -6,26 +6,18 @@
                 "useFullSnippet": true,
                 "useFullDescription": true
             }
-        },
-        {
-            "name": "@zeplin/cli-connect-storybook-plugin",
-            "config": {
-                "url": "http://localhost:4400",
-                "startScript": "npm run storybook:ui"
-            }
         }
     ],
-    "projects": [
-        "5ca741b3ed21e79faa266664"
-    ],
+    "projects": [],
     "styleguides": [
-        "5e0f7156cf562c1cb478f0f5"
+        "5e0f7156cf562c1cb478f0f5",
+        "5e05fbe68925c3177b82ebd1"
     ],
     "components": [
         {
             "path": "libs/ui/src/lib/slider/slider.component.ts",
             "zeplinNames": [
-                "component / slider / archipel_content / movie-slider"
+                "component/slider/archipel_content/movie-slider"
             ]
         }
     ]
