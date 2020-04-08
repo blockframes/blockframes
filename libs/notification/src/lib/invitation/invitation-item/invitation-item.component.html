@@ -1,5 +1,6 @@
 <section fxLayout="row" fxLayoutAlign="start start">
-  <img placeholderAsset="profil_user.webp" [imgRef]="invitation.user.avatar" alt="Profile picture" />
+  <img *ngIf="invitation.fromUser" placeholderAsset="profil_user.webp" [imgRef]="invitation.fromUser.avatar" alt="Profile picture" />
+  <img *ngIf="invitation.toUser" placeholderAsset="profil_user.webp" [imgRef]="invitation.toUser.avatar" alt="Profile picture" />
   <div fxLayout="column" fxLayoutGap="10px">
     <article fxLayout="column" fxLayoutAlign="start start">
       <p class="mat-body-1">{{ message }}</p>

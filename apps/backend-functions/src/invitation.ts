@@ -97,19 +97,19 @@ async function mailOnInvitationAccept(userId: string, organizationId: string) {
 }
 
 /** Updates the user, orgs, and permissions when the user accepts an invitation to an organization. */
-async function onInvitationToOrgAccept({ user, organization }: InvitationFromOrganizationToUser) {
+async function onInvitationToOrgAccept({ toUser, fromOrg }: InvitationFromOrganizationToUser) {
   // TODO(issue#739): When a user is added to an org, clear other invitations
-  await addUserToOrg(user.uid, organization.id);
+  await addUserToOrg(toUser.uid, fromOrg.id);
   // TODO maybe send an email "you have accepted to join OrgNAme ! Congratz, you are now part of this org !"
-  return mailOnInvitationAccept(user.uid, organization.id);
+  return mailOnInvitationAccept(toUser.uid, fromOrg.id);
 }
 
 /** Send a notification to admins of organization to notify them that the user declined their invitation. */
 async function onInvitationToOrgDecline(invitation: InvitationFromOrganizationToUser) {
-  const orgSnapshot = await db.doc(`orgs/${invitation.organization.id}`).get();
+  const orgSnapshot = await db.doc(`orgs/${invitation.fromOrg.id}`).get();
   const org = orgSnapshot.data() as OrganizationDocument;
 
-  const userSnapshot = await db.doc(`users/${invitation.user.uid}`).get();
+  const userSnapshot = await db.doc(`users/${invitation.toUser.uid}`).get();
   const user = userSnapshot.data() as PublicUser;
 
   const adminIds = await getAdminIds(org.id);
@@ -130,15 +130,11 @@ async function onInvitationToOrgDecline(invitation: InvitationFromOrganizationTo
 }
 
 /** Sends an email when an organization invites a user to join. */
-async function onInvitationToOrgCreate({
-  user,
-  organization,
-  id
-}: InvitationFromOrganizationToUser) {
-  const userMail = await getUserMail(user.uid);
+async function onInvitationToOrgCreate({ toUser }: InvitationFromOrganizationToUser) {
+  const userMail = await getUserMail(toUser.uid);
 
   if (!userMail) {
-    console.error('No user email provided for userId:', user.uid);
+    console.error('No user email provided for userId:', toUser.uid);
     return;
   }
 }
@@ -164,23 +160,23 @@ async function onInvitationToOrgUpdate(
 
 /** Sends an email when an organization invites a user to join. */
 async function onInvitationFromUserToJoinOrgCreate({
-  organization,
-  user
+  toOrg,
+  fromUser
 }: InvitationFromUserToOrganization) {
-  const userData = await getUser(user.uid);
+  const userData = await getUser(fromUser.uid);
 
   if (!userData.email) {
-    throw new Error(`no email for userId: ${user.uid}`);
+    throw new Error(`no email for userId: ${fromUser.uid}`);
   }
 
-  const adminIds = await getAdminIds(organization.id);
+  const adminIds = await getAdminIds(toOrg.id);
 
   const admins = await Promise.all(adminIds.map(getUser));
   // const validSuperAdminMails = superAdminsMails.filter(adminEmail => !!adminEmail);
 
   // send invitation pending email to user
   await sendMailFromTemplate(
-    userJoinOrgPendingRequest(userData.email, organization.denomination.full, userData.firstName!)
+    userJoinOrgPendingRequest(userData.email, toOrg.denomination.full, userData.firstName!)
   );
 
   // send invitation received to every org admin
@@ -190,8 +186,8 @@ async function onInvitationFromUserToJoinOrgCreate({
         userRequestedToJoinYourOrg({
           adminEmail: admin.email,
           adminName: admin.firstName!,
-          organizationName: organization.denomination.full,
-          organizationId: organization.id,
+          organizationName: toOrg.denomination.full,
+          organizationId: toOrg.id,
           userFirstname: userData.firstName!,
           userLastname: userData.lastName!
         })
@@ -202,18 +198,18 @@ async function onInvitationFromUserToJoinOrgCreate({
 
 /** Send a mail and update the user, org and permission when the user was accepted. */
 async function onInvitationFromUserToJoinOrgAccept({
-  organization,
-  user
+  toOrg,
+  fromUser
 }: InvitationFromUserToOrganization) {
   // TODO(issue#739): When a user is added to an org, clear other invitations
-  await addUserToOrg(user.uid, organization.id);
-  await sendMailFromTemplate(userJoinedAnOrganization(user.email, organization.id));
-  return mailOnInvitationAccept(user.uid, organization.id);
+  await addUserToOrg(fromUser.uid, toOrg.id);
+  await sendMailFromTemplate(userJoinedAnOrganization(fromUser.email, toOrg.id));
+  return mailOnInvitationAccept(fromUser.uid, toOrg.id);
 }
 
 /** Send a notification to admins of organization to notify them that the request is declined. */
 async function onInvitationFromUserToJoinOrgDecline(invitation: InvitationFromUserToOrganization) {
-  const orgSnapshot = await db.doc(`orgs/${invitation.organization.id}`).get();
+  const orgSnapshot = await db.doc(`orgs/${invitation.toOrg.id}`).get();
   const org = orgSnapshot.data() as OrganizationDocument;
   const adminIds = await getAdminIds(org.id);
 
@@ -221,8 +217,8 @@ async function onInvitationFromUserToJoinOrgDecline(invitation: InvitationFromUs
     createNotification({
       userId,
       user: {
-        firstName: invitation.user.firstName,
-        lastName: invitation.user.lastName
+        firstName: invitation.fromUser.firstName,
+        lastName: invitation.fromUser.lastName
       },
       app: 'blockframes',
       type: 'invitationFromUserToJoinOrgDecline'
@@ -298,6 +294,7 @@ export async function onInvitationWrite(
         return onInvitationToOrgUpdate(invitationDocBefore, invitationDoc, invitation);
       case 'fromUserToOrganization':
         return onInvitationFromUserToJoinOrgUpdate(invitationDocBefore, invitationDoc, invitation);
+      // @TODO (#2461) case 'event'
       default:
         throw new Error(`Unhandled invitation: ${JSON.stringify(invitation)}`);
     }

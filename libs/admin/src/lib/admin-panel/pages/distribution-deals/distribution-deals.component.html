@@ -5,9 +5,9 @@
   [columns]="versionColumns" 
   [initialColumns]="initialColumns" 
   [filterPredicate]="filterPredicate"
-  showFilter="true"
-  showLoader="true"
-  showPaginator="true">
+  showFilter
+  showLoader
+  showPaginator>
   <ng-template colRef="dealLink" let-dealLink>
     <a target="_blank" [routerLink]="getDealPath(dealLink.id, dealLink.movieId)" routerLinkActive="active">{{ dealLink.id }}</a>
   </ng-template>

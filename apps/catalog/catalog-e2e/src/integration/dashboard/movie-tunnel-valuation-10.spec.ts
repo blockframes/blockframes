@@ -13,8 +13,8 @@ beforeEach(() => {
   signInAndNavigateToMain();
 });
 
-describe('User can navigate to the movie tunnel page 13, complete the field, and navigate to page 14', () => {
-  it('Login into an existing account, navigate on valuation page, complete the field, go on movie tunnel page 14', () => {
+describe('User can navigate to the movie tunnel valuation page, complete the field, and navigate to summary page', () => {
+  it('Login into an existing account, navigate on valuation page, complete the field, go on movie tunnel summary page', () => {
     const p1 = new TunnelMainPage();
     p1.navigateToTunnelPage(NAVIGATION[0], NAVIGATION[1]);
     const p2 = new TunnelValuationPage();
@@ -22,7 +22,7 @@ describe('User can navigate to the movie tunnel page 13, complete the field, and
     p2.selectValuation(VALUATION);
     p2.assertValuationIsSelected(VALUATION);
 
-    // GO to movie-tunnel-13
+    // GO to movie tunnel summary page
     const p3: TunnelSummaryPage = p2.clickNext();
   });
 });

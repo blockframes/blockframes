@@ -1,4 +1,5 @@
 import { firestore } from 'firebase';
+import { PrivateConfig } from '@blockframes/utils/common-interfaces/utility';
 
 type Timestamp = firestore.Timestamp;
 
@@ -14,7 +15,7 @@ export interface Screening {
 }
 export interface EventBase<D extends Timestamp | Date, Meta extends EventMeta = any> {
   id: string;
-  /** The id of the owner. Can be a user or an organisation */
+  /** @dev The id of the owner. Can be a user or an organisation given the event.type **/
   ownerId: string;
   type: EventTypes;
   title: string;
@@ -22,6 +23,11 @@ export interface EventBase<D extends Timestamp | Date, Meta extends EventMeta = 
   end: D;
   allDay: boolean,
   meta: Meta;
+}
+
+export interface EventPrivateConfig extends PrivateConfig{
+  /** @dev private url to access screening */
+  url: string;
 }
 
 // firestore documents

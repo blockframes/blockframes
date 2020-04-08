@@ -2,7 +2,7 @@
 
 import { LandingPage } from '../../support/pages/landing';
 import { User, Organization } from '@blockframes/e2e/utils/type';
-import { LoginViewPage } from '@blockframes/e2e/pages/auth';
+import { AuthLoginPage } from '@blockframes/e2e/pages/auth';
 import { OrganizationHomePage, OrganizationFindPage, OrganizationCreatePage, OrganizationAppAccessPage, OrganizationCongratulationPage } from '@blockframes/e2e/pages/organization';
 import { clearDataAndPrepareTest } from '@blockframes/e2e/utils/functions';
 
@@ -54,7 +54,7 @@ const SECOND_ORGANIZATION_NAME = `SecondOrg-${Date.now()}-Cypress`;
 /** Create a new user and navigate to organization home */
 function createNewUserAndNavigate(user: Partial<User>) {
   const p1 = new LandingPage();
-  const p2: LoginViewPage = p1.clickSignup();
+  const p2: AuthLoginPage = p1.clickSignup();
   p2.fillSignup(user);
   p2.clickTermsAndCondition();
   return p2.clickSignupToOrgHome();
@@ -63,7 +63,7 @@ function createNewUserAndNavigate(user: Partial<User>) {
 /** Log in an existing user and navigate to organization home */
 function navigateToOrganizationHome(user: Partial<User>): OrganizationHomePage {
   const p1: LandingPage = new LandingPage();
-  const p2: LoginViewPage = p1.clickLogin();
+  const p2: AuthLoginPage = p1.clickLogin();
   p2.fillSignin(user);
   return p2.clickSigninToOrgHome();
 }

@@ -1,5 +1,5 @@
 import { CalendarEvent } from 'angular-calendar';
-import { Meeting, EventBase, Screening, EventMeta } from './event.firestore';
+import { Meeting, EventBase, Screening, EventMeta, EventPrivateConfig } from './event.firestore';
 import { toDate } from '@blockframes/utils/helpers';
 import { Movie } from '@blockframes/movie/+state';
 
@@ -61,7 +61,6 @@ export function createScreening(screening: Partial<Screening>): Screening {
   }
 }
 
-
 // Calendar Event
 export function createCalendarEvent(event: Event, currentUserId: string, currentOrgId: string): Event {
   const isOwner = event.ownerId === currentUserId || event.ownerId === currentOrgId;
@@ -70,5 +69,13 @@ export function createCalendarEvent(event: Event, currentUserId: string, current
     isOwner,
     draggable: isOwner,
     resizable: { beforeStart: isOwner, afterEnd: isOwner },
+  }
+}
+
+// Private event config
+export function createPrivateEventConfig(event: Partial<EventPrivateConfig>): EventPrivateConfig {
+  return {
+    url: '',
+    ... event,
   }
 }

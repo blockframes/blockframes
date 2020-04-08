@@ -8,6 +8,9 @@ import { getValue } from '@blockframes/utils/helpers';
 import { storeType, storeStatus } from '@blockframes/movie/+state/movie.firestore';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { EventService } from '@blockframes/event/+state/event.service';
+import { createPrivateEventConfig } from '@blockframes/event/+state/event.model';
+import { PrivateConfigForm } from '../../forms/private-config.form';
 
 @Component({
   selector: 'admin-movie',
@@ -19,6 +22,7 @@ export class MovieComponent implements OnInit {
   public movieId = '';
   public movie: Movie;
   public movieForm: MovieAdminForm;
+  public privateConfigForm: PrivateConfigForm;
   public storeType = storeType;
   public storeStatus = storeStatus;
   public staticModels = staticModels;
@@ -53,6 +57,9 @@ export class MovieComponent implements OnInit {
     this.movie = await this.movieService.getValue(this.movieId);
     this.movieForm = new MovieAdminForm(this.movie);
 
+    const privateConfig = await this.movieService.getMoviePrivateConfig(this.movieId);
+    this.privateConfigForm = new PrivateConfigForm(privateConfig || {});
+
     const deals = await this.distributionDealService.getMovieDistributionDeals(this.movieId)
     this.rows = deals.map(d => ({ ...d, dealLink: { id: d.id, movieId: this.movieId } }));
 
@@ -73,6 +80,16 @@ export class MovieComponent implements OnInit {
     await this.movieService.updateById(this.movieId, this.movie);
 
     this.snackBar.open('Informations updated !', 'close', { duration: 5000 });
+  }
+
+  public async setMoviePrivateConfig() {
+    if (this.privateConfigForm.invalid) {
+      this.snackBar.open('Information not valid', 'close', { duration: 5000 });
+      return;
+    }
+    const eventConfig = createPrivateEventConfig({ url: this.privateConfigForm.get('url').value });
+    await this.movieService.setMoviePrivateConfig(this.movieId, eventConfig);
+    this.snackBar.open('Information updated!', 'close', { duration: 5000 });
   }
 
   public getMovieTunnelPath(movieId: string) {

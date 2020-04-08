@@ -4,11 +4,14 @@ import {
   WishlistDocumentWithDates,
   WishlistDocument,
   OrganizationDocument,
-  createOrganizationRaw
+  createOrganizationRaw,
+  PublicOrganization,
+  createDenomination
 } from './organization.firestore';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { AppDetails } from '@blockframes/utils/apps';
 import { toDate } from '@blockframes/utils/helpers';
+import { createImgRef } from '@blockframes/utils/image-uploader';
 
 export {
   OrganizationStatus,
@@ -48,6 +51,15 @@ export function createOrganization(
     // Here, "created" & "updated" fields are Date objects
     created: new Date(),
     updated: new Date(),
+  }
+}
+
+export function createPublicOrganization(params: Partial<PublicOrganization>) : PublicOrganization{
+  return {
+    id: '',
+    ...params,
+    denomination: createDenomination(params.denomination),
+    logo: createImgRef(params.logo),
   }
 }
 

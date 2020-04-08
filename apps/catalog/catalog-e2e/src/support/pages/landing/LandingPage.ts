@@ -1,4 +1,4 @@
-import { LoginViewPage } from "@blockframes/e2e/pages/auth";
+import { AuthLoginPage } from "@blockframes/e2e/pages/auth";
 
 export default class LandingPage {
   constructor() {
@@ -7,11 +7,11 @@ export default class LandingPage {
 
   public clickLogin() {
     cy.get('catalog-toolbar a[test-id=login]').click();
-    return new LoginViewPage();
+    return new AuthLoginPage();
   }
 
   public clickSignup() {
     cy.get('catalog-toolbar a[test-id=signup]').click();
-    return new LoginViewPage();
+    return new AuthLoginPage();
   }
 }
