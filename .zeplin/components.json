@@ -1,0 +1,32 @@
+{
+    "plugins": [
+        {
+            "name": "@zeplin/cli-connect-angular-plugin",
+            "config": {
+                "useFullSnippet": true,
+                "useFullDescription": true
+            }
+        },
+        {
+            "name": "@zeplin/cli-connect-storybook-plugin",
+            "config": {
+                "url": "http://localhost:4400",
+                "startScript": "npm run storybook:ui"
+            }
+        }
+    ],
+    "projects": [
+        "5ca741b3ed21e79faa266664"
+    ],
+    "styleguides": [
+        "5e0f7156cf562c1cb478f0f5"
+    ],
+    "components": [
+        {
+            "path": "libs/ui/src/lib/slider/slider.component.ts",
+            "zeplinNames": [
+                "component / slider / archipel_content / movie-slider"
+            ]
+        }
+    ]
+}
