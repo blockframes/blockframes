@@ -69,7 +69,7 @@ export class SliderComponent implements OnDestroy, AfterContentInit, AfterViewIn
 
   @Input() arrowForward: Slider['arrowForward'] = 'arrow_forward'
 
-  @Input() maxHeight: string = '600px';
+  @Input() maxHeight = '600px';
 
   // Milliseconds
   @Input()
