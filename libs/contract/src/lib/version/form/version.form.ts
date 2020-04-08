@@ -1,5 +1,5 @@
 import { FormControl } from '@angular/forms';
-import { DistributionDealTermsForm } from '@blockframes/distribution-deals/form/terms/terms.form';
+import { DistributionRightTermsForm } from '@blockframes/distribution-rights/form/terms/terms.form';
 import { createContractTitleDetail } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractTitleDetail } from '@blockframes/contract/contract/+state/contract.firestore';
 import { ContractVersion } from '@blockframes/contract/version/+state';
@@ -12,12 +12,12 @@ function createContractVersionControls(version: Partial<ContractVersion>) {
     id: new FormControl(version.id),  // Require or FormList can remove empty Form
     price: new ContractVersionPriceForm(version.price),
     titles: new ContractVersionTitlesForm(version.titles),
-    scope: new DistributionDealTermsForm(version.scope),
+    scope: new DistributionRightTermsForm(version.scope),
     paymentSchedule: FormList.factory(version.paymentSchedule, payment => {
       return new ContractVersionPaymentScheduleForm(payment)
     }),
     customPaymentSchedule: new FormControl(version.customPaymentSchedule),
-    paymentTerm: new DistributionDealTermsForm(version.paymentTerm),
+    paymentTerm: new DistributionRightTermsForm(version.paymentTerm),
     renewalConditions: new FormControl(version.renewalConditions),
     terminationConditions: new FormControl(version.terminationConditions),
     authorizedRecoupableExpenses: new FormControl(version.authorizedRecoupableExpenses),
@@ -57,7 +57,7 @@ export class ContractVersionTitlesForm extends FormEntity<ContractTitlesControl,
 function createContractTitleDetailControl(detail?: Partial<ContractTitleDetail>) {
   const entity = createContractTitleDetail(detail);
   return {
-    distributionDealIds: FormList.factory(entity.distributionDealIds),
+    distributionRightIds: FormList.factory(entity.distributionRightIds),
     price: new ContractVersionPriceForm(entity.price)
   };
 }

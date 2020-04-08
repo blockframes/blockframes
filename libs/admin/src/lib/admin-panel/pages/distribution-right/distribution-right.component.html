@@ -1,5 +1,5 @@
-<h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Distribution deal > {{ dealId }} </h1>
-<article *ngIf="deal" id="deal-section" fxLayout="column" fxLayoutAlign="start start">
+<h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Distribution right > {{ rightId }} </h1>
+<article *ngIf="right" id="right-section" fxLayout="column" fxLayoutAlign="start start">
   <h2>
     <strong>Movie : </strong>
     <a [routerLink]="getMoviePath(movieId)">{{ movieId }}</a>
@@ -14,12 +14,12 @@
       <mat-icon svgIcon="eye"></mat-icon>
     </a>
   </h2>
-  <ng-container *ngIf="dealForm else spinner">
-    <form [formGroup]="dealForm" fxLayout="column">
+  <ng-container *ngIf="rightForm else spinner">
+    <form [formGroup]="rightForm" fxLayout="column">
       <mat-form-field appearance="outline">
-        <mat-label>Deal Status</mat-label>
+        <mat-label>right Status</mat-label>
         <mat-select formControlName="status" required>
-          <mat-option *ngFor="let status of distributionDealStatus | keyvalue" [value]="status.key">
+          <mat-option *ngFor="let status of distributionRightStatus | keyvalue" [value]="status.key">
             {{ status.value }}
           </mat-option>
         </mat-select>
@@ -27,7 +27,7 @@
       <mat-form-field appearance="outline">
         <mat-label>Contract Id</mat-label>
         <input matInput type="text" placeholder="Contract Id" formControlName="contractId" required />
-        <mat-error *ngIf="dealForm.get('contractId').hasError('required')">
+        <mat-error *ngIf="rightForm.get('contractId').hasError('required')">
           Contract Id is <strong>required</strong>
         </mat-error>
       </mat-form-field>

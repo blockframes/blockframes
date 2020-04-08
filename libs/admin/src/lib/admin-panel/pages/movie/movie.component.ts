@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieAdminForm } from '../../forms/movie-admin.form';
 import { staticModels } from '@blockframes/utils/static-model';
-import { DistributionDealService } from '@blockframes/distribution-deals/+state/distribution-deal.service';
+import { DistributionRightService } from '@blockframes/distribution-rights/+state/distribution-right.service';
 import { getValue } from '@blockframes/utils/helpers';
 import { storeType, storeStatus } from '@blockframes/movie/+state/movie.firestore';
 import { Movie } from '@blockframes/movie/+state/movie.model';
@@ -33,7 +33,7 @@ export class MovieComponent implements OnInit {
     'status': 'Status',
     'contractId': 'Contract Id',
     'terms': 'Scope',
-    'dealLink': 'Edit'
+    'rightLink': 'Edit'
   };
 
   public initialColumnsTable: string[] = [
@@ -41,12 +41,12 @@ export class MovieComponent implements OnInit {
     'status',
     'contractId',
     'terms',
-    'dealLink',
+    'rightLink',
   ];
 
   constructor(
     private movieService: MovieService,
-    private distributionDealService: DistributionDealService,
+    private distributionRightService: DistributionRightService,
     private route: ActivatedRoute,
     private cdRef: ChangeDetectorRef,
     private snackBar: MatSnackBar
@@ -60,8 +60,8 @@ export class MovieComponent implements OnInit {
     const privateConfig = await this.movieService.getMoviePrivateConfig(this.movieId);
     this.privateConfigForm = new PrivateConfigForm(privateConfig || {});
 
-    const deals = await this.distributionDealService.getMovieDistributionDeals(this.movieId)
-    this.rows = deals.map(d => ({ ...d, dealLink: { id: d.id, movieId: this.movieId } }));
+    const rights = await this.distributionRightService.getMovieDistributionRights(this.movieId)
+    this.rows = rights.map(d => ({ ...d, rightLink: { id: d.id, movieId: this.movieId } }));
 
     this.cdRef.markForCheck();
   }
@@ -107,8 +107,8 @@ export class MovieComponent implements OnInit {
     return dataStr.toLowerCase().indexOf(filter) !== -1;
   }
 
-  public getDealPath(dealId: string, movieId: string) {
-    return `/c/o/admin/panel/deal/${dealId}/m/${movieId}`;
+  public getRightPath(rightId: string, movieId: string) {
+    return `/c/o/admin/panel/right/${rightId}/m/${movieId}`;
   }
 
   public getContractPath(contractId: string) {

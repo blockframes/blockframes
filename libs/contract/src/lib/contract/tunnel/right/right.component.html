@@ -9,23 +9,23 @@
       </button>
     </div>
     <h2>Exploitation Rights</h2>
-    <!-- All Deals -->
+    <!-- All Rights -->
     <!-- We need an if statement here otherwise error will shown that controls = undefined -->
-    <ng-container *ngIf="dealForm">
-      <ng-container *ngFor="let dealControl of dealForm.controls; let dealIndex = index;">
-        <ng-template [ngTemplateOutlet]="deal" [ngTemplateOutletContext]="{control: dealControl, index: dealIndex }">
+    <ng-container *ngIf="rightForm">
+      <ng-container *ngFor="let rightControl of rightForm.controls; let rightIndex = index;">
+        <ng-template [ngTemplateOutlet]="right" [ngTemplateOutletContext]="{control: rightControl, index: rightIndex }">
         </ng-template>
       </ng-container>
     </ng-container>
-    <button mat-flat-button color="primary" (click)="addDeal()">
+    <button mat-flat-button color="primary" (click)="addRight()">
       <mat-icon svgIcon="world"></mat-icon>
       <span>Add Exploitation Rights</span>
     </button>
   </ng-container>
 </tunnel-page>
 ​
-<!-- TEMPLATE DEAL -->
-<ng-template #deal let-control="control" let-index="index">
+<!-- TEMPLATE RIGHT -->
+<ng-template #right let-control="control" let-index="index">
   <mat-accordion>
     <mat-expansion-panel>
       <mat-expansion-panel-header>
@@ -35,7 +35,7 @@
       </mat-expansion-panel-header>
       <ng-template matExpansionPanelContent>
         <!-- Territories -->
-        <h3>Territories to this deal</h3>
+        <h3>Territories to this right</h3>
         <distribution-form-territory [form]="control"></distribution-form-territory>
         <mat-divider></mat-divider>
         <!-- Media rights -->
@@ -50,7 +50,7 @@
         <mat-divider></mat-divider>
         <!-- Holdbacks -->
         <h3>Holdback{holdbacks(control).controls.length, plural, =1 {} other {s}}</h3>
-        <span class="caption">Please specify the holdbacks related to this deal, if any.</span>
+        <span class="caption">Please specify the holdbacks related to this right, if any.</span>
         <h6>Holdback Rights</h6>
         <div fxLayout="column" fxLayoutAlign="start center" fxLayoutGap="20px">
           <ng-container *ngFor="let holdback of holdbacks(control).controls; let holdbackIndex = index">
@@ -99,7 +99,7 @@
     </mat-expansion-panel>
   </mat-accordion>
   <div fxLayout="row" fxLayoutAlign="center start">
-    <button mat-stroked-button color="warn" color="warn" (click)="removeDeal(index)">
+    <button mat-stroked-button color="warn" color="warn" (click)="removeRight(index)">
       <mat-icon svgIcon="trash"></mat-icon>
       <span>Delete Exploitation Rights</span>
     </button>

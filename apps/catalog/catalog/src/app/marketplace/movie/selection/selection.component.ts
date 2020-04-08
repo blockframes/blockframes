@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
 import { Router } from '@angular/router';
 import { MarketplaceQuery, MarketplaceStore } from '../../+state';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
-import { ContractService, TitlesAndDeals } from '@blockframes/contract/contract/+state';
+import { ContractService, TitlesAndRights } from '@blockframes/contract/contract/+state';
 import { Observable } from 'rxjs';
 import { Intercom } from 'ng-intercom';
 import { OrganizationQuery } from '@blockframes/organization/organization/+state/organization.query';
@@ -45,16 +45,16 @@ export class MarketplaceSelectionComponent {
   }
 
   /**
-   * Creates deals and contract and move to tunnel
+   * Creates rights and contract and move to tunnel
    */
   async create() {
     const orgId = this.orgQuery.getActiveId();
-    const titlesAndDeals = {} as TitlesAndDeals;
+    const titlesAndRights = {} as TitlesAndRights;
     for (const movieId of this.query.getValue().ids) {
-      const { deals } = this.query.getEntity(movieId);
-      titlesAndDeals[movieId] = deals;
+      const { rights } = this.query.getEntity(movieId);
+      titlesAndRights[movieId] = rights;
     }
-    const contractId = await this.contractService.createContractAndDeal(orgId, titlesAndDeals);
+    const contractId = await this.contractService.createContractAndRight(orgId, titlesAndRights);
     await this.router.navigate(['c/o/marketplace/tunnel/contract', contractId, 'sale']);
     this.store.reset();
   }

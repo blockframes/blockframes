@@ -2,13 +2,13 @@
 
 <p>For selection ({{this.selection.selected.length}} items selected) :
   <button mat-stroked-button color="primary" [disabled]="this.selection.selected.length === 0"
-    (click)="createSelectedDeals()">
-    <ng-container *ngIf="processedDeals === 0 else createinprogress">
+    (click)="createSelectedRights()">
+    <ng-container *ngIf="processedRights === 0 else createinprogress">
       <span>Create</span>
       <mat-icon svgIcon="pencil"></mat-icon>
     </ng-container>
     <ng-template #createinprogress>
-      <span>Creating... {{ processedDeals }} / {{ selection.selected.length}}</span>
+      <span>Creating... {{ processedRights }} / {{ selection.selected.length}}</span>
       <mat-spinner [diameter]="20" [strokeWidth]="2" class="upload-spinner"></mat-spinner>
     </ng-template>
   </button>
@@ -50,24 +50,24 @@
     <td mat-cell *matCellDef="let element"> {{ element.movieInternalRef || '--' }} </td>
   </ng-container>
 
-  <ng-container matColumnDef="distributionDeal.id">
-    <th mat-header-cell *matHeaderCellDef mat-sort-header> Deal Id </th>
-    <td mat-cell *matCellDef="let element"> {{ element.distributionDeal.id || '--' }} </td>
+  <ng-container matColumnDef="distributionRight.id">
+    <th mat-header-cell *matHeaderCellDef mat-sort-header> Right Id </th>
+    <td mat-cell *matCellDef="let element"> {{ element.distributionRight.id || '--' }} </td>
   </ng-container>
 
-  <ng-container matColumnDef="distributionDeal.terms.start">
+  <ng-container matColumnDef="distributionRight.terms.start">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Start </th>
-    <td mat-cell *matCellDef="let element"> {{ element.distributionDeal.terms | termDate: 'start' }} </td>
+    <td mat-cell *matCellDef="let element"> {{ element.distributionRight.terms | termDate: 'start' }} </td>
   </ng-container>
 
-  <ng-container matColumnDef="distributionDeal.terms.end">
+  <ng-container matColumnDef="distributionRight.terms.end">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> End </th>
-    <td mat-cell *matCellDef="let element"> {{ element.distributionDeal.terms | termDate: 'end' }} </td>
+    <td mat-cell *matCellDef="let element"> {{ element.distributionRight.terms | termDate: 'end' }} </td>
   </ng-container>
 
-  <ng-container matColumnDef="distributionDeal.exclusive">
+  <ng-container matColumnDef="distributionRight.exclusive">
     <th mat-header-cell *matHeaderCellDef mat-sort-header> Exclusivity </th>
-    <td mat-cell *matCellDef="let element"> {{ element.distributionDeal.exclusive}} </td>
+    <td mat-cell *matCellDef="let element"> {{ element.distributionRight.exclusive}} </td>
   </ng-container>
 
   <ng-container matColumnDef="errors">
@@ -91,7 +91,7 @@
   <ng-container matColumnDef="actions">
     <th mat-header-cell *matHeaderCellDef> Actions </th>
     <td mat-cell *matCellDef="let element; let i = index">
-      <button mat-flat-button color="primary" [disabled]="errorCount(element) > 0" (click)="createDeal(element)">Add
+      <button mat-flat-button color="primary" [disabled]="errorCount(element) > 0" (click)="createRight(element)">Add
         <mat-icon svgIcon="pencil"></mat-icon>
       </button>
     </td>

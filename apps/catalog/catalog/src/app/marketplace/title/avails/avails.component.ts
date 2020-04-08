@@ -1,9 +1,9 @@
-import { AvailsSearchForm } from '@blockframes/distribution-deals/form/search.form';
+import { AvailsSearchForm } from '@blockframes/distribution-rights/form/search.form';
 import { MovieQuery, Movie } from '@blockframes/movie/+state';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { EnhancedISO3166Territory } from '@blockframes/utils/static-model/territories-ISO-3166';
 import { getNotLicensedTerritories, getAvailableTerritories, getRightsSoldTerritories } from './territories-filter';
-import { DistributionDealService, DistributionDeal, createDistributionDeal } from '@blockframes/distribution-deals/+state';
+import { DistributionRightService, DistributionRight, createDistributionRight } from '@blockframes/distribution-rights/+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MarketplaceStore, MarketplaceQuery } from '../../+state';
 import { getSlugByIsoA3, getIsoA3bySlug, Model } from '@blockframes/utils/static-model/staticModels';
@@ -33,7 +33,7 @@ export class MarketplaceMovieAvailsComponent {
 
   constructor(
     private movieQuery: MovieQuery,
-    private dealService: DistributionDealService,
+    private rightService: DistributionRightService,
     private marketplaceStore: MarketplaceStore,
     private marketplaceQuery: MarketplaceQuery,
     private snackBar: MatSnackBar
@@ -64,19 +64,19 @@ export class MarketplaceMovieAvailsComponent {
 
       this.availsForm.get('isActive').setValue(true);
 
-      if (!this.movie.distributionDeals) {
+      if (!this.movie.distributionRights) {
         throw new Error('Archipel Content got no mandate on this movie');
       }
 
-      const mandateDeals = await this.dealService.getMandateDeals(this.movie);
-      const mandateDealIds = mandateDeals.map(deal => deal.id);
-      const filteredDeals = this.movie.distributionDeals.filter(
-        deal => !mandateDealIds.includes(deal.id)
+      const mandateRights = await this.rightService.getMandateRights(this.movie);
+      const mandateRightIds = mandateRights.map(right => right.id);
+      const filteredRights = this.movie.distributionRights.filter(
+        right => !mandateRightIds.includes(right.id)
       );
 
-      this.notLicensedTerritories = getNotLicensedTerritories(this.availsForm.value, mandateDeals)
-      this.availableTerritories = getAvailableTerritories(this.availsForm.value, mandateDeals, filteredDeals);
-      this.rightsSoldTerritories = getRightsSoldTerritories(this.availsForm.value, mandateDeals, filteredDeals);
+      this.notLicensedTerritories = getNotLicensedTerritories(this.availsForm.value, mandateRights)
+      this.availableTerritories = getAvailableTerritories(this.availsForm.value, mandateRights, filteredRights);
+      this.rightsSoldTerritories = getRightsSoldTerritories(this.availsForm.value, mandateRights, filteredRights);
 
       this.availsForm.disable();
     } catch (error) {
@@ -91,21 +91,21 @@ export class MarketplaceMovieAvailsComponent {
     this.availsForm.enable();
   }
 
-  /** Add a distribution deal to the user selection for the active movie. */
-  public addDeal() {
+  /** Add a distribution right to the user selection for the active movie. */
+  public addRight() {
     try {
       // Verify the form values and throw errors if some are missing/incorrect.
-      this.dealService.verifyDeal(this.availsForm.getRawValue(), this.availableTerritories)
+      this.rightService.verifyRight(this.availsForm.getRawValue(), this.availableTerritories)
 
-      // Then check if the deal in preparation doesn't match an already existing deal.
-      const dealsInStore = this.marketplaceQuery.getTitleDeals(this.movie.id);
-      if (this.dealService.dealExist(this.availsForm.getRawValue(), dealsInStore)) {
+      // Then check if the right in preparation doesn't match an already existing right.
+      const rightsInStore = this.marketplaceQuery.getTitleRights(this.movie.id);
+      if (this.rightService.rightExist(this.availsForm.getRawValue(), rightsInStore)) {
         throw new Error('You already got an Exploitation Right for this availability');
       }
 
-      // Create a distribution deal from the avails form values.
+      // Create a distribution right from the avails form values.
       const { terms, licenseType, territory, territoryExcluded, exclusive } = this.availsForm.getRawValue()
-      const distributionDeal: DistributionDeal = createDistributionDeal(
+      const distributionRight: DistributionRight = createDistributionRight(
         { terms, licenseType, territory, territoryExcluded, exclusive }
       );
 
@@ -114,9 +114,9 @@ export class MarketplaceMovieAvailsComponent {
         this.marketplaceStore.addTitle(this.movie.id);
       }
 
-      // Update the title with the new deal.
+      // Update the title with the new right.
       this.marketplaceStore.update(this.movie.id, title => ({
-        deals: arrayAdd(title.deals, distributionDeal)
+        rights: arrayAdd(title.rights, distributionRight)
       }));
 
       this.snackBar.open('Exploitation Rights added to your Selection', 'close', {

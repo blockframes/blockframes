@@ -7,7 +7,7 @@ import { startWith } from 'rxjs/operators';
 import { Contract, getTotalPrice } from '../+state';
 import { MatPaginator } from '@angular/material/paginator';
 import { Price } from '@blockframes/utils/common-interfaces/price';
-import { DistributionDealQuery } from '@blockframes/distribution-deals/+state';
+import { DistributionRightQuery } from '@blockframes/distribution-rights/+state';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { getMovieTitleList } from '@blockframes/movie/+state/movie.model';
 
@@ -60,7 +60,7 @@ export class ContractListComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(private movieQuery: MovieQuery, private dealQuery: DistributionDealQuery) {}
+  constructor(private movieQuery: MovieQuery, private rightQuery: DistributionRightQuery) {}
 
   ngOnInit() {
     this.columnFilter.patchValue(this.initialColumns);
@@ -92,7 +92,7 @@ export class ContractListComponent implements OnInit, AfterViewInit {
 
   /** Returns all the eligible territories of the contract. */
   public getContractTerritories(contract: Contract): string[] {
-    return this.dealQuery.getTerritoriesFromContract(contract.lastVersion);
+    return this.rightQuery.getTerritoriesFromContract(contract.lastVersion);
   }
 
   /** Returns a list of movie's names of the contract. */

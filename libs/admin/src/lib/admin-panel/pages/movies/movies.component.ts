@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { getValue } from '@blockframes/utils/helpers';
-import { DistributionDealService } from '@blockframes/distribution-deals/+state/distribution-deal.service';
+import { DistributionRightService } from '@blockframes/distribution-rights/+state/distribution-right.service';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 
 @Component({
@@ -39,7 +39,7 @@ export class MoviesComponent implements OnInit {
   public rows: any[] = [];
   constructor(
     private movieService: MovieService,
-    private distributionDealService: DistributionDealService,
+    private distributionRightService: DistributionRightService,
     private contractService: ContractService,
     private cdRef: ChangeDetectorRef,
   ) { }
@@ -52,11 +52,11 @@ export class MoviesComponent implements OnInit {
 
       // Append new data for table display
 
-      // We add distribution deals infos to the row
-      const distributionDeals = await this.distributionDealService.getMovieDistributionDeals(m.id);
-      row.distributionDealsInfo = {
-        link: `/c/o/admin/panel/deals/${m.id}`,
-        count: distributionDeals.length
+      // We add distribution rights infos to the row
+      const distributionRights = await this.distributionRightService.getMovieDistributionRights(m.id);
+      row.distributionRightsInfo = {
+        link: `/c/o/admin/panel/rights/${m.id}`,
+        count: distributionRights.length
       };
 
       // We add contracts infos to the row

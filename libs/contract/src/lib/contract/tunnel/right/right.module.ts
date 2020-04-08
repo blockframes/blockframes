@@ -1,12 +1,12 @@
-import { DealComponent } from './deal.component';
+import { RightComponent } from './right.component';
 
 // Blockframes
-import { DistributionDealBroadcastModule } from '@blockframes/distribution-deals/form/broadcast/broadcast.module';
-import { DistributionDealHoldbacksModule } from '@blockframes/distribution-deals/form/holdbacks/holdbacks.module';
-import { DistributionDealLanguagesModule } from '@blockframes/distribution-deals/form/languages/languages.module';
-import { DistributionDealTermsModule } from '@blockframes/distribution-deals/form/terms/terms.module';
-import { DistributionDealRightsModule } from '@blockframes/distribution-deals/form/rights/rights.module';
-import { DistributionDealTerritoryModule } from '@blockframes/distribution-deals/form/territory/territory.module';
+import { DistributionRightBroadcastModule } from '@blockframes/distribution-rights/form/broadcast/broadcast.module';
+import { DistributionRightHoldbacksModule } from '@blockframes/distribution-rights/form/holdbacks/holdbacks.module';
+import { DistributionRightLanguagesModule } from '@blockframes/distribution-rights/form/languages/languages.module';
+import { DistributionRightTermsModule } from '@blockframes/distribution-rights/form/terms/terms.module';
+import { DistributionRightRightsModule } from '@blockframes/distribution-rights/form/rights/rights.module';
+import { DistributionRightTerritoryModule } from '@blockframes/distribution-rights/form/territory/territory.module';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { MovieBannerModule } from '@blockframes/movie/components/banner';
 
@@ -29,19 +29,19 @@ import { MatIconModule } from '@angular/material/icon';
 @NgModule({
   imports: [
     CommonModule,
-    RouterModule.forChild([{ path: '', component: DealComponent }]),
+    RouterModule.forChild([{ path: '', component: RightComponent }]),
     FlexLayoutModule,
     ReactiveFormsModule,
 
     // Component Modules
     TunnelPageModule,
-    DistributionDealTerritoryModule,
-    DistributionDealRightsModule,
-    DistributionDealTermsModule,
-    DistributionDealLanguagesModule,
-    DistributionDealHoldbacksModule,
+    DistributionRightTerritoryModule,
+    DistributionRightRightsModule,
+    DistributionRightTermsModule,
+    DistributionRightLanguagesModule,
+    DistributionRightHoldbacksModule,
     MovieBannerModule,
-    DistributionDealBroadcastModule,
+    DistributionRightBroadcastModule,
 
     // Material
     MatExpansionModule,
@@ -51,6 +51,6 @@ import { MatIconModule } from '@angular/material/icon';
     MatIconModule,
     MatTooltipModule,
   ],
-  declarations: [DealComponent]
+  declarations: [RightComponent]
 })
-export class DealModule { }
+export class RightModule { }

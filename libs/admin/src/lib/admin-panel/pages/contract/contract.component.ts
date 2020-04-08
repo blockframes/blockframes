@@ -35,10 +35,10 @@ export class ContractComponent implements OnInit {
   public contractType = contractType;
   public publicContract$: Observable<PublicContract>;
 
-  // Tables 
+  // Tables
   public contractVersions$: Observable<ContractVersion[]>;
   public titles: any = [];
-  public distributionDeals = [];
+  public distributionRights = [];
 
   // Table VERSION
   public versionColumnsTableVersions = {
@@ -141,7 +141,7 @@ export class ContractComponent implements OnInit {
                 titleId,
                 price: c.lastVersion.titles[titleId].price,
                 movie,
-                deals: c.lastVersion.titles[titleId].distributionDealIds ? c.lastVersion.titles[titleId].distributionDealIds.map(d => ({ id: d, movie: titleId })) : [],
+                deals: c.lastVersion.titles[titleId].distributionRightIds ? c.lastVersion.titles[titleId].distributionRightIds.map(d => ({ id: d, movie: titleId })) : [],
                 exploredeals: `/c/o/admin/panel/deals/${titleId}`,
                 edit: titleId,
               });
@@ -280,7 +280,7 @@ export class ContractComponent implements OnInit {
 
     if ((output as { remove: boolean }).remove === true && titleIdToRemove) {
       delete writeableContract.lastVersion.titles[titleIdToRemove];
-      // @TODO (#2090) should also update distribution deal ? contractId etc
+      // @TODO (#2090) should also update distribution right ? contractId etc
     } else {
       output = output as ContractTitleDetail;
       const titleId = output.titleId.trim();
@@ -307,8 +307,8 @@ export class ContractComponent implements OnInit {
     return getCodeBySlug('MOVIE_CURRENCIES', currency);
   }
 
-  public getDealPath(dealId: string, movieId: string) {
-    return `/c/o/admin/panel/deal/${dealId}/m/${movieId}`;
+  public getRightPath(rightId: string, movieId: string) {
+    return `/c/o/admin/panel/right/${rightId}/m/${movieId}`;
   }
 
   public getContractTunnelPath(contract: Contract) {

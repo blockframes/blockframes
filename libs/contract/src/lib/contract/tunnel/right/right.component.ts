@@ -1,4 +1,4 @@
-import { DistributionDealForm } from '@blockframes/distribution-deals/form/distribution-deal.form';
+import { DistributionRightForm } from '@blockframes/distribution-rights/form/distribution-right.form';
 import { map, tap } from 'rxjs/operators';
 import { Movie } from '@blockframes/movie/+state';
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
@@ -8,12 +8,12 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
-  selector: 'contract-deal',
-  templateUrl: 'deal.component.html',
-  styleUrls: ['deal.component.scss'],
+  selector: 'contract-right',
+  templateUrl: 'right.component.html',
+  styleUrls: ['right.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class DealComponent implements OnInit {
+export class RightComponent implements OnInit {
 
   public movie$: Observable<Movie>;
 
@@ -41,8 +41,8 @@ export class DealComponent implements OnInit {
       }))
   }
 
-  get dealForm() {
-    return this.tunnel.dealForms.controls[this.titleId];
+  get rightForm() {
+    return this.tunnel.rightForms.controls[this.titleId];
   }
 
   get titleId(): string {
@@ -50,31 +50,31 @@ export class DealComponent implements OnInit {
     return titleId;
   }
 
-  public terms(control: DistributionDealForm) {
+  public terms(control: DistributionRightForm) {
     return control.get('terms');
   }
 
-  public catchUp(control: DistributionDealForm) {
+  public catchUp(control: DistributionRightForm) {
     return control.get('catchUp');
   }
 
-  public download(control: DistributionDealForm) {
+  public download(control: DistributionRightForm) {
     return control.get('download');
   }
 
-  public holdbacks(control: DistributionDealForm) {
+  public holdbacks(control: DistributionRightForm) {
     return control.get('holdbacks');
   }
 
-  public assetLanguages(control: DistributionDealForm) {
+  public assetLanguages(control: DistributionRightForm) {
     return control.get('assetLanguage');
   }
 
-  public addHoldback(control: DistributionDealForm) {
+  public addHoldback(control: DistributionRightForm) {
     control.get('holdbacks').add();
   }
 
-  public removeTVCriteria(control: DistributionDealForm) {
+  public removeTVCriteria(control: DistributionRightForm) {
     control.get('catchUp').reset();
     control.get('multidiffusion').reset();
     control.get('download').reset();
@@ -82,16 +82,16 @@ export class DealComponent implements OnInit {
     this.showTVCriteria.next(false);
   }
 
-  public removeHoldback(control: DistributionDealForm, holdbackIndex: number) {
+  public removeHoldback(control: DistributionRightForm, holdbackIndex: number) {
     control.get('holdbacks').removeAt(holdbackIndex);
   }
 
-  public addDeal() {
-    this.tunnel.addDeal(this.titleId);
+  public addRight() {
+    this.tunnel.addRight(this.titleId);
   }
 
-  public removeDeal(index: number) {
-    this.tunnel.removeDeal(this.titleId, index)
+  public removeRight(index: number) {
+    this.tunnel.removeRight(this.titleId, index)
   }
 
   public removeTitle() {

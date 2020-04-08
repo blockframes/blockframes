@@ -18,13 +18,13 @@ import { Observable } from 'rxjs';
 import { cleanModel } from '@blockframes/utils/helpers';
 import { map } from 'rxjs/internal/operators/map';
 import { PermissionsService } from '@blockframes/organization/permissions/+state/permissions.service';
-import { DistributionDeal, createDistributionDeal } from '@blockframes/distribution-rights/+state/distribution-deal.model';
+import { DistributionRight, createDistributionRight } from '@blockframes/distribution-rights/+state/distribution-right.model';
 import { centralOrgID } from '@env';
-import { DistributionDealService } from '@blockframes/distribution-rights/+state';
+import { DistributionRightService } from '@blockframes/distribution-rights/+state';
 import { OrganizationService } from '@blockframes/organization/organization/+state';
 import { CollectionReference } from '@angular/fire/firestore/interfaces';
 
-export type TitlesAndDeals = Record<string, DistributionDeal[]>;
+export type TitlesAndRights = Record<string, DistributionRight[]>;
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'contracts' })
@@ -32,7 +32,7 @@ export class ContractService extends CollectionService<ContractState> {
 
   constructor(
     private permissionsService: PermissionsService,
-    private distributionDealService: DistributionDealService,
+    private distributionRightService: DistributionRightService,
     private organizationService: OrganizationService,
     store: ContractStore
   ) {
@@ -68,13 +68,13 @@ export class ContractService extends CollectionService<ContractState> {
   }
 
   /**
-   * Gets a contract from a movieId and a distributionDealId
+   * Gets a contract from a movieId and a distributionRightId
    * @param movieId
-   * @param distributionDealId
+   * @param distributionRightId
    */
-  public async getContractFromDeal(movieId: string, distributionDealId: string): Promise<Contract> {
+  public async getContractFromRight(movieId: string, distributionRightId: string): Promise<Contract> {
     const contracts = await this.getValue(ref =>
-      ref.where(`lastVersion.titles.${movieId}.distributionDealIds`, 'array-contains', distributionDealId),
+      ref.where(`lastVersion.titles.${movieId}.distributionRightIds`, 'array-contains', distributionRightId),
     );
 
     // Can have only one result
@@ -92,12 +92,12 @@ export class ContractService extends CollectionService<ContractState> {
   }
 
   /**
-   * Use this method to push deals and init the related contract
+   * Use this method to push rights and init the related contract
    * @param licenseeId
-   * @param titlesAndDeals
+   * @param titlesAndRights
    * @param type
    */
-  public async createContractAndDeal(licenseeId: string, titlesAndDeals: TitlesAndDeals, contract: Contract = createContract({ type: 'sale' })): Promise<string> {
+  public async createContractAndRight(licenseeId: string, titlesAndRights: TitlesAndRights, contract: Contract = createContract({ type: 'sale' })): Promise<string> {
     if (!contract.id) {
       contract.id = this.db.createId();
     }
@@ -124,11 +124,11 @@ export class ContractService extends CollectionService<ContractState> {
     const isValid = await this.validateAndConsolidateContract(contract);
     if (isValid) {
       const write = this.db.firestore.batch();
-      for (const titleId of Object.keys(titlesAndDeals)) {
-        const deals = titlesAndDeals[titleId];
-        const dealDocs = deals.map(d => createDistributionDeal({ ...d, contractId: contract.id }));
-        const distributionDealIds = await this.distributionDealService.add(dealDocs, { params: { movieId: titleId }, write });
-        contract.lastVersion.titles[titleId] = createContractTitleDetail({ distributionDealIds, titleId: titleId });
+      for (const titleId of Object.keys(titlesAndRights)) {
+        const rights = titlesAndRights[titleId];
+        const rightDocs = rights.map(d => createDistributionRight({ ...d, contractId: contract.id }));
+        const distributionRightIds = await this.distributionRightService.add(rightDocs, { params: { movieId: titleId }, write });
+        contract.lastVersion.titles[titleId] = createContractTitleDetail({ distributionRightIds, titleId: titleId });
       }
 
       const contractId = await this.add(contract, { write });
@@ -275,7 +275,7 @@ export class ContractService extends CollectionService<ContractState> {
   }
 
   /**
-   * Changes contract status to submitted. Also updates distribution deals state.
+   * Changes contract status to submitted. Also updates distribution rights state.
    * @param _contract
    */
   public async submit(_contract: Contract) {
@@ -285,8 +285,8 @@ export class ContractService extends CollectionService<ContractState> {
     this.update(contract, { write });
 
     for (const titleId in contract.lastVersion.titles){
-      this.distributionDealService.update(
-        contract.lastVersion.titles[titleId].distributionDealIds,
+      this.distributionRightService.update(
+        contract.lastVersion.titles[titleId].distributionRightIds,
         { status: 'undernegotiation' },
         { params: { movieId: titleId }, write }
       );

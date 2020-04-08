@@ -87,7 +87,7 @@
         </ul>
       </ng-container>
       <ng-template #nopubliccontract>
-        <strong>No public contract found</strong>  
+        <strong>No public contract found</strong>
       </ng-template>
       <h2>Contract tree : </h2>
       <admin-contract-tree [contract]="contract"></admin-contract-tree>
@@ -120,9 +120,9 @@
       <h2>Previous versions :</h2>
 
       <bf-table-filter *ngIf="contractVersions$ | async as contractversions" class="version-table"
-        [source]="contractversions" 
-        [columns]="versionColumnsTableVersions" 
-        [initialColumns]="initialColumnsTableVersions" 
+        [source]="contractversions"
+        [columns]="versionColumnsTableVersions"
+        [initialColumns]="initialColumnsTableVersions"
         [filterPredicate]="filterPredicateTableVersions"
         showFilter
         showLoader
@@ -153,9 +153,9 @@
       <h2>Titles :</h2>
 
       <bf-table-filter class="version-table"
-        [source]="titles" 
-        [columns]="versionColumnsTableTitles" 
-        [initialColumns]="initialColumnsTableTitles" 
+        [source]="titles"
+        [columns]="versionColumnsTableTitles"
+        [initialColumns]="initialColumnsTableTitles"
         [filterPredicate]="filterPredicateTableTitles"
         showFilter
         showLoader
@@ -179,8 +179,8 @@
         <ng-template colRef="deals" let-deals>
           <ul *ngIf="deals.length else nodeals">
             <li *ngFor="let deal of deals">
-              <a target="_blank" [routerLink]="getDealPath(deal.id, deal.movie)" routerLinkActive="active"> {{ deal.id }}</a>
-            </li>  
+              <a target="_blank" [routerLink]="getRightPath(deal.id, deal.movie)" routerLinkActive="active"> {{ deal.id }}</a>
+            </li>
           </ul>
           <ng-template #nodeals>
             --
@@ -197,7 +197,7 @@
         </ng-template>
         <ng-template colRef="edit" let-edit>
           <button mat-icon-button color="accent" (click)="editTitle(edit)"><mat-icon svgIcon="pencil"></mat-icon></button>
-        </ng-template>  
+        </ng-template>
       </bf-table-filter>
       <button mat-flat-button color="primary" (click)="addTitle()">
         <span>Add a title</span>

@@ -38,7 +38,7 @@ import {
   premiereType
 } from '@blockframes/movie/+state/movie.firestore';
 import { createStakeholder } from '@blockframes/utils/common-interfaces/identity';
-import { DistributionDeal, createDistributionDeal, createHoldback } from '@blockframes/distribution-rights/+state/distribution-deal.model';
+import { DistributionRight, createDistributionRight, createHoldback } from '@blockframes/distribution-rights/+state/distribution-right.model';
 import {
   createContractPartyDetail,
   createContractTitleDetail,
@@ -46,7 +46,7 @@ import {
   Contract
 } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractTitleDetail, contractType, contractStatus } from '@blockframes/contract/contract/+state/contract.firestore';
-import { DistributionDealService } from '@blockframes/distribution-rights/+state/distribution-deal.service';
+import { DistributionRightService } from '@blockframes/distribution-rights/+state/distribution-right.service';
 import { createExpense, createPrice } from '@blockframes/utils/common-interfaces/price';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { createPaymentSchedule } from '@blockframes/utils/common-interfaces/schedule';
@@ -70,8 +70,8 @@ export interface MovieImportState {
   errors?: SpreadsheetImportError[];
 }
 
-export interface DealsImportState {
-  distributionDeal: DistributionDeal;
+export interface RightsImportState {
+  distributionRight: DistributionRight;
   errors?: SpreadsheetImportError[];
   movieTitle: String;
   movieInternalRef?: string;
@@ -136,9 +136,9 @@ enum SpreadSheetMovie {
   userId,
 }
 
-enum SpreadSheetDistributionDeal {
+enum SpreadSheetDistributionRight {
   internalRef,
-  distributionDealId,
+  distributionRightId,
   internationalTitle, // unused
   licensorName, // unused
   licenseeName, // unused
@@ -174,7 +174,7 @@ enum SpreadSheetContract {
 
 enum SpreadSheetContractTitle {
   titleCode, // ie: filmCode
-  licensedRightIds, // ie: distributionDealIds
+  licensedRightIds, // ie: distributionRightIds
   titlePrice,
   commission,
   expenseLabel,
@@ -192,7 +192,7 @@ export class ViewExtractedElementsComponent implements OnInit {
 
   public moviesToCreate = new MatTableDataSource<MovieImportState>();
   public moviesToUpdate = new MatTableDataSource<MovieImportState>();
-  public deals = new MatTableDataSource<DealsImportState>();
+  public rights = new MatTableDataSource<RightsImportState>();
   public contractsToUpdate = new MatTableDataSource<ContractsImportState>();
   public contractsToCreate = new MatTableDataSource<ContractsImportState>();
   private separator = ';';
@@ -203,7 +203,7 @@ export class ViewExtractedElementsComponent implements OnInit {
   constructor(
     private snackBar: MatSnackBar,
     private movieService: MovieService,
-    private distributionDealService: DistributionDealService,
+    private distributionRightService: DistributionRightService,
     private contractService: ContractService,
     private imageUploader: ImageUploader,
     private cdRef: ChangeDetectorRef,
@@ -1300,26 +1300,26 @@ export class ViewExtractedElementsComponent implements OnInit {
   }
 
 
-  public async formatDistributionDeals(sheetTab: SheetTab) {
+  public async formatDistributionRights(sheetTab: SheetTab) {
     this.clearDataSources();
     sheetTab.rows.forEach(async spreadSheetRow => {
 
-      if (spreadSheetRow[SpreadSheetDistributionDeal.internalRef]) {
-        const movie = await this.movieService.getFromInternalRef(spreadSheetRow[SpreadSheetDistributionDeal.internalRef]);
-        const distributionDeal = createDistributionDeal();
+      if (spreadSheetRow[SpreadSheetDistributionRight.internalRef]) {
+        const movie = await this.movieService.getFromInternalRef(spreadSheetRow[SpreadSheetDistributionRight.internalRef]);
+        const distributionRight = createDistributionRight();
 
         const importErrors = {
-          distributionDeal,
+          distributionRight,
           errors: [],
-          movieInternalRef: spreadSheetRow[SpreadSheetDistributionDeal.internalRef],
+          movieInternalRef: spreadSheetRow[SpreadSheetDistributionRight.internalRef],
           movieTitle: movie ? movie.main.title.original : undefined,
           movieId: movie ? movie.id : undefined
-        } as DealsImportState;
+        } as RightsImportState;
 
         if (movie) {
 
-          if (spreadSheetRow[SpreadSheetDistributionDeal.distributionDealId]) {
-            distributionDeal.id = spreadSheetRow[SpreadSheetDistributionDeal.distributionDealId];
+          if (spreadSheetRow[SpreadSheetDistributionRight.distributionRightId]) {
+            distributionRight.id = spreadSheetRow[SpreadSheetDistributionRight.distributionRightId];
           } else {
             importErrors.errors.push({
               type: 'error',
@@ -1334,11 +1334,11 @@ export class ViewExtractedElementsComponent implements OnInit {
           // CONTRACT STUFF
           /////////////////
 
-          // Retreive the contract that will handle the deal
-          const contract = await this.contractService.getContractFromDeal(movie.id, distributionDeal.id);
+          // Retreive the contract that will handle the rights
+          const contract = await this.contractService.getContractFromRight(movie.id, distributionRight.id);
           if (contract) {
 
-            distributionDeal.contractId = contract.id;
+            distributionRight.contractId = contract.id;
 
             /////////////////
             // LICENSE STUFF
@@ -1357,34 +1357,34 @@ export class ViewExtractedElementsComponent implements OnInit {
             /////////////////
 
             // BEGINNING OF RIGHTS
-            if (spreadSheetRow[SpreadSheetDistributionDeal.rightsStart]) {
-              const { y, m, d } = SSF.parse_date_code(spreadSheetRow[SpreadSheetDistributionDeal.rightsStart]);
+            if (spreadSheetRow[SpreadSheetDistributionRight.rightsStart]) {
+              const { y, m, d } = SSF.parse_date_code(spreadSheetRow[SpreadSheetDistributionRight.rightsStart]);
               const dateStart = new Date(`${y}-${m}-${d}`);
               if (isNaN(dateStart.getTime())) { // ie invalid date
-                distributionDeal.terms.approxStart = spreadSheetRow[SpreadSheetDistributionDeal.rightsStart];
+                distributionRight.terms.approxStart = spreadSheetRow[SpreadSheetDistributionRight.rightsStart];
               } else {
-                distributionDeal.terms.start = dateStart
+                distributionRight.terms.start = dateStart
               }
             }
 
             // END OF RIGHTS
-            if (spreadSheetRow[SpreadSheetDistributionDeal.rightsEnd]) {
-              const { y, m, d } = SSF.parse_date_code(spreadSheetRow[SpreadSheetDistributionDeal.rightsEnd]);
+            if (spreadSheetRow[SpreadSheetDistributionRight.rightsEnd]) {
+              const { y, m, d } = SSF.parse_date_code(spreadSheetRow[SpreadSheetDistributionRight.rightsEnd]);
               const dateEnd = new Date(`${y}-${m}-${d}`);
               if (isNaN(dateEnd.getTime())) { // ie invalid date
-                distributionDeal.terms.approxEnd = spreadSheetRow[SpreadSheetDistributionDeal.rightsEnd];
+                distributionRight.terms.approxEnd = spreadSheetRow[SpreadSheetDistributionRight.rightsEnd];
               } else {
-                distributionDeal.terms.end = dateEnd
+                distributionRight.terms.end = dateEnd
               }
             }
 
             // TERRITORIES (Mandate Territories)
-            if (spreadSheetRow[SpreadSheetDistributionDeal.territories]) {
-              distributionDeal.territory = [];
-              spreadSheetRow[SpreadSheetDistributionDeal.territories].split(this.separator).forEach((c: ExtractCode<'TERRITORIES'>) => {
+            if (spreadSheetRow[SpreadSheetDistributionRight.territories]) {
+              distributionRight.territory = [];
+              spreadSheetRow[SpreadSheetDistributionRight.territories].split(this.separator).forEach((c: ExtractCode<'TERRITORIES'>) => {
                 const territory = getCodeIfExists('TERRITORIES', c);
                 if (territory) {
-                  distributionDeal.territory.push(territory);
+                  distributionRight.territory.push(territory);
                 } else {
                   importErrors.errors.push({
                     type: 'error',
@@ -1398,12 +1398,12 @@ export class ViewExtractedElementsComponent implements OnInit {
             }
 
             // TERRITORIES EXCLUDED
-            if (spreadSheetRow[SpreadSheetDistributionDeal.territoriesExcluded]) {
-              distributionDeal.territoryExcluded = [];
-              spreadSheetRow[SpreadSheetDistributionDeal.territoriesExcluded].split(this.separator).forEach((c: ExtractCode<'TERRITORIES'>) => {
+            if (spreadSheetRow[SpreadSheetDistributionRight.territoriesExcluded]) {
+              distributionRight.territoryExcluded = [];
+              spreadSheetRow[SpreadSheetDistributionRight.territoriesExcluded].split(this.separator).forEach((c: ExtractCode<'TERRITORIES'>) => {
                 const territory = getCodeIfExists('TERRITORIES', c);
                 if (territory) {
-                  distributionDeal.territoryExcluded.push(territory);
+                  distributionRight.territoryExcluded.push(territory);
                 } else {
                   importErrors.errors.push({
                     type: 'error',
@@ -1417,12 +1417,12 @@ export class ViewExtractedElementsComponent implements OnInit {
             }
 
             // MEDIAS (Mandate Medias)
-            if (spreadSheetRow[SpreadSheetDistributionDeal.licenseType]) {
-              distributionDeal.licenseType = [];
-              spreadSheetRow[SpreadSheetDistributionDeal.licenseType].split(this.separator).forEach((c: ExtractCode<'MEDIAS'>) => {
+            if (spreadSheetRow[SpreadSheetDistributionRight.licenseType]) {
+              distributionRight.licenseType = [];
+              spreadSheetRow[SpreadSheetDistributionRight.licenseType].split(this.separator).forEach((c: ExtractCode<'MEDIAS'>) => {
                 const media = getCodeIfExists('MEDIAS', c);
                 if (media) {
-                  distributionDeal.licenseType.push(media);
+                  distributionRight.licenseType.push(media);
                 } else {
                   importErrors.errors.push({
                     type: 'warning',
@@ -1436,12 +1436,12 @@ export class ViewExtractedElementsComponent implements OnInit {
             }
 
             // DUBS (Authorized language(s))
-            if (spreadSheetRow[SpreadSheetDistributionDeal.dubbings]) {
-              spreadSheetRow[SpreadSheetDistributionDeal.dubbings].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
+            if (spreadSheetRow[SpreadSheetDistributionRight.dubbings]) {
+              spreadSheetRow[SpreadSheetDistributionRight.dubbings].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
                 const dubbing = getCodeIfExists('LANGUAGES', g);
                 if (dubbing) {
-                  distributionDeal.assetLanguage = populateMovieLanguageSpecification(
-                    distributionDeal.assetLanguage,
+                  distributionRight.assetLanguage = populateMovieLanguageSpecification(
+                    distributionRight.assetLanguage,
                     dubbing,
                     'dubbed'
                   );
@@ -1459,12 +1459,12 @@ export class ViewExtractedElementsComponent implements OnInit {
             }
 
             // SUBTILES (Available subtitle(s))
-            if (spreadSheetRow[SpreadSheetDistributionDeal.subtitles]) {
-              spreadSheetRow[SpreadSheetDistributionDeal.subtitles].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
+            if (spreadSheetRow[SpreadSheetDistributionRight.subtitles]) {
+              spreadSheetRow[SpreadSheetDistributionRight.subtitles].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
                 const subtitle = getCodeIfExists('LANGUAGES', g);
                 if (!!subtitle) {
-                  distributionDeal.assetLanguage = populateMovieLanguageSpecification(
-                    distributionDeal.assetLanguage,
+                  distributionRight.assetLanguage = populateMovieLanguageSpecification(
+                    distributionRight.assetLanguage,
                     subtitle,
                     'subtitle'
                   );
@@ -1481,12 +1481,12 @@ export class ViewExtractedElementsComponent implements OnInit {
             }
 
             // CAPTIONS (Available subtitle(s))
-            if (spreadSheetRow[SpreadSheetDistributionDeal.captions]) {
-              spreadSheetRow[SpreadSheetDistributionDeal.captions].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
+            if (spreadSheetRow[SpreadSheetDistributionRight.captions]) {
+              spreadSheetRow[SpreadSheetDistributionRight.captions].split(this.separator).forEach((g: ExtractCode<'LANGUAGES'>) => {
                 const caption = getCodeIfExists('LANGUAGES', g);
                 if (!!caption) {
-                  distributionDeal.assetLanguage = populateMovieLanguageSpecification(
-                    distributionDeal.assetLanguage,
+                  distributionRight.assetLanguage = populateMovieLanguageSpecification(
+                    distributionRight.assetLanguage,
                     caption,
                     'caption'
                   );
@@ -1503,57 +1503,57 @@ export class ViewExtractedElementsComponent implements OnInit {
             }
 
             // STATUS
-            distributionDeal.status = 'draft';
+            distributionRight.status = 'draft';
 
-            // EXCLUSIVE DEAL
-            if (spreadSheetRow[SpreadSheetDistributionDeal.exclusive]) {
-              distributionDeal.exclusive = spreadSheetRow[SpreadSheetDistributionDeal.exclusive].toLowerCase() === 'yes' ? true : false;
+            // EXCLUSIVE RIGHT
+            if (spreadSheetRow[SpreadSheetDistributionRight.exclusive]) {
+              distributionRight.exclusive = spreadSheetRow[SpreadSheetDistributionRight.exclusive].toLowerCase() === 'yes' ? true : false;
             }
 
             // CATCH UP
-            if (spreadSheetRow[SpreadSheetDistributionDeal.catchUpStartDate] || spreadSheetRow[SpreadSheetDistributionDeal.catchUpEndDate]) {
-              distributionDeal.catchUp = createTerms();
+            if (spreadSheetRow[SpreadSheetDistributionRight.catchUpStartDate] || spreadSheetRow[SpreadSheetDistributionRight.catchUpEndDate]) {
+              distributionRight.catchUp = createTerms();
 
               // CATCH UP START
-              if (spreadSheetRow[SpreadSheetDistributionDeal.catchUpStartDate]) {
-                const { y, m, d } = SSF.parse_date_code(spreadSheetRow[SpreadSheetDistributionDeal.catchUpStartDate]);
+              if (spreadSheetRow[SpreadSheetDistributionRight.catchUpStartDate]) {
+                const { y, m, d } = SSF.parse_date_code(spreadSheetRow[SpreadSheetDistributionRight.catchUpStartDate]);
                 const catchUpStartDate = new Date(`${y}-${m}-${d}`);
                 if (isNaN(catchUpStartDate.getTime())) {
-                  distributionDeal.catchUp.approxStart = spreadSheetRow[SpreadSheetDistributionDeal.catchUpStartDate];
+                  distributionRight.catchUp.approxStart = spreadSheetRow[SpreadSheetDistributionRight.catchUpStartDate];
                   importErrors.errors.push({
                     type: 'warning',
-                    field: 'distributionDeal.catchUp.start',
+                    field: 'distributionRight.catchUp.start',
                     name: 'CatchUp start',
-                    reason: `Failed to parse CatchUp start date : ${spreadSheetRow[SpreadSheetDistributionDeal.catchUpStartDate]}, moved data to approxStart`,
+                    reason: `Failed to parse CatchUp start date : ${spreadSheetRow[SpreadSheetDistributionRight.catchUpStartDate]}, moved data to approxStart`,
                     hint: 'Edit corresponding sheet field.'
                   });
                 } else {
-                  distributionDeal.catchUp.start = catchUpStartDate;
+                  distributionRight.catchUp.start = catchUpStartDate;
                 }
               }
 
               // CATCH UP END
-              if (spreadSheetRow[SpreadSheetDistributionDeal.catchUpEndDate]) {
-                const { y, m, d } = SSF.parse_date_code(spreadSheetRow[SpreadSheetDistributionDeal.catchUpEndDate]);
-                const catchUpEndDate = distributionDeal.catchUp.end = new Date(`${y}-${m}-${d}`);
+              if (spreadSheetRow[SpreadSheetDistributionRight.catchUpEndDate]) {
+                const { y, m, d } = SSF.parse_date_code(spreadSheetRow[SpreadSheetDistributionRight.catchUpEndDate]);
+                const catchUpEndDate = distributionRight.catchUp.end = new Date(`${y}-${m}-${d}`);
                 if (isNaN(catchUpEndDate.getTime())) {
-                  distributionDeal.catchUp.approxEnd = spreadSheetRow[SpreadSheetDistributionDeal.catchUpEndDate];
+                  distributionRight.catchUp.approxEnd = spreadSheetRow[SpreadSheetDistributionRight.catchUpEndDate];
                   importErrors.errors.push({
                     type: 'warning',
-                    field: 'distributionDeal.catchUp.end',
+                    field: 'distributionRight.catchUp.end',
                     name: 'CatchUp end',
-                    reason: `Failed to parse CatchUp end date : ${spreadSheetRow[SpreadSheetDistributionDeal.catchUpEndDate]}, moved data to approxEnd`,
+                    reason: `Failed to parse CatchUp end date : ${spreadSheetRow[SpreadSheetDistributionRight.catchUpEndDate]}, moved data to approxEnd`,
                     hint: 'Edit corresponding sheet field.'
                   });
                 } else {
-                  distributionDeal.catchUp.end = catchUpEndDate;
+                  distributionRight.catchUp.end = catchUpEndDate;
                 }
               }
             }
 
             // MULTIDIFFUSION
-            if (spreadSheetRow[SpreadSheetDistributionDeal.multidiffusion]) {
-              const multiDiffDates = spreadSheetRow[SpreadSheetDistributionDeal.multidiffusion].split(this.separator)
+            if (spreadSheetRow[SpreadSheetDistributionRight.multidiffusion]) {
+              const multiDiffDates = spreadSheetRow[SpreadSheetDistributionRight.multidiffusion].split(this.separator)
               multiDiffDates.forEach(date => {
                 const dateParts = date.trim().match(this.deepDatesRegex);
                 let diffusionDate;
@@ -1576,13 +1576,13 @@ export class ViewExtractedElementsComponent implements OnInit {
                   diffusion.start = diffusionDate;
                 }
 
-                distributionDeal.multidiffusion.push(diffusion);
+                distributionRight.multidiffusion.push(diffusion);
               });
             }
 
             // HOLDBACKS
-            if (spreadSheetRow[SpreadSheetDistributionDeal.holdbacks]) {
-              const holdbacks = spreadSheetRow[SpreadSheetDistributionDeal.holdbacks].split(this.separator)
+            if (spreadSheetRow[SpreadSheetDistributionRight.holdbacks]) {
+              const holdbacks = spreadSheetRow[SpreadSheetDistributionRight.holdbacks].split(this.separator)
               holdbacks.forEach(h => {
                 const holdbackParts = h.split(this.subSeparator);
                 const media = getCodeIfExists('MEDIAS', holdbackParts[0] as ExtractCode<'MEDIAS'>);
@@ -1647,21 +1647,21 @@ export class ViewExtractedElementsComponent implements OnInit {
                     holdBack.terms.end = holdBackEnd;
                   }
 
-                  distributionDeal.holdbacks.push(holdBack)
+                  distributionRight.holdbacks.push(holdBack)
                 }
 
               });
             }
 
             // Checks if sale already exists
-            const existingDeal = await this.distributionDealService.getValue(distributionDeal.id)
-            if (existingDeal) {
+            const existingRight = await this.distributionRightService.getValue(distributionRight.id)
+            if (existingRight) {
               importErrors.errors.push({
                 type: 'error',
-                field: 'distributionDeal',
-                name: 'Distribution deal',
-                reason: 'Distribution deal already added',
-                hint: 'Distribution deal already added'
+                field: 'distributionRight',
+                name: 'Distribution right',
+                reason: 'Distribution right already added',
+                hint: 'Distribution right already added'
               });
             }
           } else {
@@ -1669,7 +1669,7 @@ export class ViewExtractedElementsComponent implements OnInit {
               type: 'error',
               field: 'contract',
               name: 'Contract',
-              reason: `No contract found matching movieId: ${movie.id} and dealId: ${distributionDeal.id}`,
+              reason: `No contract found matching movieId: ${movie.id} and rightId: ${distributionRight.id}`,
               hint: 'Try importing it first or check if data is correct.'
             });
           }
@@ -1678,14 +1678,14 @@ export class ViewExtractedElementsComponent implements OnInit {
             type: 'error',
             field: 'internalRef',
             name: 'Movie',
-            reason: `Movie ${spreadSheetRow[SpreadSheetDistributionDeal.internalRef]} not found`,
+            reason: `Movie ${spreadSheetRow[SpreadSheetDistributionRight.internalRef]} not found`,
             hint: 'Try importing it first or check if data is correct.'
           });
         }
 
         const saleWithErrors = await this.validateMovieSale(importErrors);
-        this.deals.data.push(saleWithErrors);
-        this.deals.data = [... this.deals.data];
+        this.rights.data.push(saleWithErrors);
+        this.rights.data = [... this.rights.data];
 
         this.cdRef.markForCheck();
       }
@@ -1693,8 +1693,8 @@ export class ViewExtractedElementsComponent implements OnInit {
     });
   }
 
-  private async validateMovieSale(importErrors: DealsImportState): Promise<DealsImportState> {
-    const distributionDeal = importErrors.distributionDeal;
+  private async validateMovieSale(importErrors: RightsImportState): Promise<RightsImportState> {
+    const distributionRight = importErrors.distributionRight;
     const errors = importErrors.errors;
 
     // No movie found
@@ -1707,7 +1707,7 @@ export class ViewExtractedElementsComponent implements OnInit {
     //////////////////
 
     // BEGINNING OF RIGHTS
-    if (!distributionDeal.terms.start) {
+    if (!distributionRight.terms.start) {
       errors.push({
         type: 'error',
         field: 'rights.from',
@@ -1718,7 +1718,7 @@ export class ViewExtractedElementsComponent implements OnInit {
     }
 
     // END OF RIGHTS
-    if (!distributionDeal.terms.end) {
+    if (!distributionRight.terms.end) {
       errors.push({
         type: 'error',
         field: 'rights.to',
@@ -1729,7 +1729,7 @@ export class ViewExtractedElementsComponent implements OnInit {
     }
 
     // TERRITORIES
-    if (!distributionDeal.territory) {
+    if (!distributionRight.territory) {
       errors.push({
         type: 'error',
         field: 'territory',
@@ -1740,7 +1740,7 @@ export class ViewExtractedElementsComponent implements OnInit {
     }
 
     // TERRITORIES EXCLUDED
-    if (!distributionDeal.territoryExcluded) {
+    if (!distributionRight.territoryExcluded) {
       errors.push({
         type: 'warning',
         field: 'territoryExcluded',
@@ -1751,7 +1751,7 @@ export class ViewExtractedElementsComponent implements OnInit {
     }
 
     // LICENSE TYPE
-    if (!distributionDeal.licenseType) {
+    if (!distributionRight.licenseType) {
       errors.push({
         type: 'error',
         field: 'medias',
@@ -1762,7 +1762,7 @@ export class ViewExtractedElementsComponent implements OnInit {
     }
 
     // DUBBINGS
-    if (!Object.keys(distributionDeal.assetLanguage).length) {
+    if (!Object.keys(distributionRight.assetLanguage).length) {
       errors.push({
         type: 'error',
         field: 'dubbings',
@@ -1773,11 +1773,11 @@ export class ViewExtractedElementsComponent implements OnInit {
     }
 
     // EXCLUSIVE
-    if (distributionDeal.exclusive === undefined) {
+    if (distributionRight.exclusive === undefined) {
       errors.push({
         type: 'error',
         field: 'exclusive',
-        name: 'Exclusive deal',
+        name: 'Exclusive right',
         reason: 'Required field is missing',
         hint: 'Edit corresponding sheet field.'
       });
@@ -2137,7 +2137,7 @@ export class ViewExtractedElementsComponent implements OnInit {
     }
 
     if (spreadSheetRow[SpreadSheetContractTitle.licensedRightIds + currentIndex]) {
-      titleDetails.distributionDealIds = spreadSheetRow[SpreadSheetContractTitle.licensedRightIds + currentIndex]
+      titleDetails.distributionRightIds = spreadSheetRow[SpreadSheetContractTitle.licensedRightIds + currentIndex]
         .split(this.separator)
         .map(c => c.trim());
     }
@@ -2220,6 +2220,6 @@ export class ViewExtractedElementsComponent implements OnInit {
   private clearDataSources() {
     this.moviesToCreate.data = [];
     this.moviesToUpdate.data = [];
-    this.deals.data = [];
+    this.rights.data = [];
   }
 }

@@ -7,12 +7,12 @@ import { tap, switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
 
 
-/** Query movies from the contract with distributions deals from the last version. */
+/** Query movies from the contract with distributions rights from the last version. */
 const movieListContractQuery = (contractId: string, movieIds: string[]): Query<Movie[]> => ({
   path: 'movies',
   queryFn: ref => ref.where('id', 'in', movieIds),
-  distributionDeals: (movie: Movie) => ({
-    path: `movies/${movie.id}/distributionDeals`,
+  distributionRights: (movie: Movie) => ({
+    path: `movies/${movie.id}/distributionRights`,
     queryFn: ref => ref.where('contractId', '==', contractId)
   })
 });
