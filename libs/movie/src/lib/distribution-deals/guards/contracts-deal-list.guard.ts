@@ -6,6 +6,7 @@ import { ContractQuery } from '@blockframes/contract/contract/+state/contract.qu
 import { switchMap } from 'rxjs/operators';
 import { Contract } from '@blockframes/contract/contract/+state/contract.model';
 import { combineLatest } from 'rxjs/internal/observable/combineLatest';
+import { of } from 'rxjs';
 
 /** Sync every Distribution Deal of ALL the contracts in the store */
 @Injectable({ providedIn: 'root' })
@@ -19,12 +20,14 @@ export class ContractsDealListGuard extends CollectionGuard<DistributionDealStat
   sync() {
     return this.contractQuery.selectAll().pipe(
       switchMap(contracts => {
-        const queryContrat = (contract: Contract) => ref =>
-          ref.where('contractId', '==', contract.id);
-        const $ = contracts.map(c =>
-          this.service.syncCollectionGroup('distributionDeals', queryContrat(c))
-        );
-        return combineLatest($);
+        if (contracts.length) {
+          const queryContrat = (contract: Contract) => ref => ref.where('contractId', '==', contract.id);
+          const $ = contracts.map(c =>
+            this.service.syncCollectionGroup('distributionDeals', queryContrat(c))
+          );
+          return combineLatest($);
+        }
+        return of(true)
       })
     );
   }
