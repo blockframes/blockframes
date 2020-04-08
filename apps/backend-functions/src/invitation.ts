@@ -19,6 +19,7 @@ import {
   userRequestedToJoinYourOrg,
   userJoinOrgPendingRequest
 } from './assets/mail-templates';
+import { InvitationToAnEvent } from '@blockframes/invitation/types';
 
 /** Checks if an invitation just got accepted. */
 function wasAccepted(before: InvitationDocument, after: InvitationDocument) {
@@ -247,6 +248,98 @@ async function onInvitationFromUserToJoinOrgUpdate(
   return;
 }
 
+
+/**
+ * Handles notifications and emails when an invitation to an event is created.
+ */
+async function onInvitationToAnEventCreate({
+  toUser,
+  toEmail,
+  toOrg,
+  fromUser,
+  fromOrg,
+  mode
+}: InvitationToAnEvent) {
+
+  if (!!toEmail) {
+    // @TODO #2461 send email from template
+
+    /*
+    if (!!fromUser) {
+      
+    } else if (!!fromOrg) {
+      
+    } else {
+      throw new Error('Did not found invitation sender');
+    }
+    */
+
+    //return sendMailFromTemplate();
+  } else if (!!toUser) {
+    // @TODO #2461 also send an email in addition to in-app notifications
+
+    const notification = createNotification({
+      userId: toUser.uid,
+      app: 'blockframes',
+      type: mode === 'invitation' ? 'invitationToAnEvent' : 'requestToAttendAnEvent'
+    });
+
+    if (!!fromUser) {
+      notification.user = fromUser;
+    } else if (!!fromOrg) {
+      notification.organization = fromOrg;
+    } else {
+      throw new Error('Did not found invitation sender');
+    }
+
+    return triggerNotifications([notification])
+  } else if (!!toOrg) {
+    /* @see #2461 attendee is only a user or an email for now*/
+    throw new Error('Cannot invite an org to an event for now. Not implemented.');
+  }
+}
+
+/**
+ * Handles notifications and emails when an invitation to an event is accepted.
+ */
+async function onInvitationToAnEventAccepted({
+  toUser,
+  toEmail,
+  toOrg,
+}: InvitationToAnEvent) {
+  // @TODO #2461 
+}
+
+/**
+ * Handles notifications and emails when an invitation to an event is rejected.
+ */
+async function onInvitationToAnEventRejected({
+  toUser,
+  toEmail,
+  toOrg,
+}: InvitationToAnEvent) {
+  // @TODO #2461 
+}
+
+/**
+ * Dispatch the invitation update call depending on whether the invitation
+ * was 'created', 'accepted' or 'rejected'.
+ */
+async function onInvitationToAnEventUpdate(
+  before: InvitationOrUndefined,
+  after: InvitationDocument,
+  invitation: InvitationToAnEvent
+): Promise<any> {
+  if (wasCreated(before, after)) {
+    return onInvitationToAnEventCreate(invitation);
+  } else if (wasAccepted(before!, after)) {
+    return onInvitationToAnEventAccepted(invitation);
+  } else if (wasDeclined(before!, after)) {
+    return onInvitationToAnEventRejected(invitation);
+  }
+  return;
+}
+
 /**
  * Handles firestore updates on an invitation object,
  *
@@ -267,14 +360,12 @@ export async function onInvitationWrite(
   const invitationDocBefore = before.data() as InvitationOrUndefined;
   const invitationDoc = after.data() as InvitationOrUndefined;
 
-  if (!invitationDoc) {
-    // Doc was deleted, ignoring...
-    return;
-  }
+  // Doc was deleted, ignoring...
+  if (!invitationDoc) { return; }
 
   // Prevent duplicate events with the processedId workflow
   const invitation: InvitationDocument = await getDocument<InvitationDocument>(
-    `invitations/${invitationDoc.id}`
+    `invitations/${after.id}`
   );
   const processedId = invitation.processedId;
 
@@ -283,10 +374,6 @@ export async function onInvitationWrite(
     return;
   }
 
-  // TODO(issue#699): redesign the processed id flow to prevent infinite loop due to
-  //   the update event being triggered on every processedId change (use another table?)
-  // await db.doc(`invitations/${invitation.id}`).update({ processedId: context.eventId });
-
   try {
     // dispatch to the correct events depending on the invitation type.
     switch (invitation.type) {
@@ -294,7 +381,18 @@ export async function onInvitationWrite(
         return onInvitationToOrgUpdate(invitationDocBefore, invitationDoc, invitation);
       case 'fromUserToOrganization':
         return onInvitationFromUserToJoinOrgUpdate(invitationDocBefore, invitationDoc, invitation);
-      // @TODO (#2461) case 'event'
+      case 'event':
+        /**
+         * @dev In this case, an invitation to an event can be: 
+         * a request from an user who wants to attend an event.
+         * an invitation to an user that can be interested to attend an event.
+         * Invitation to an user can have to forms:
+         *   toUser => we can directly create a notification
+         *   toEmail => we need to send and email to invite the person to create an account on the platform.
+         *              On user create, we should then check if he already have invitations where toEmail == user.email 
+         *              and replace email to corresponding publicUser
+         */
+        return onInvitationToAnEventUpdate(invitationDocBefore, invitationDoc, invitation);
       default:
         throw new Error(`Unhandled invitation: ${JSON.stringify(invitation)}`);
     }

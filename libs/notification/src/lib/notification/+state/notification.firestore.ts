@@ -25,7 +25,9 @@ export type NotificationType =
   'memberAddedToOrg' |
   'memberRemovedFromOrg' |
   'newContract' |
-  'contractInNegotiation'
+  'contractInNegotiation' |
+  'invitationToAnEvent' |
+  'requestToAttendAnEvent'
 ;
 
 /** Minimum required informations to create a Notification. */

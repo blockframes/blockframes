@@ -28,15 +28,16 @@ export interface Invitation {
 }
 
 /** Specific types of Invitation, both used in firebase functions. */
-export type InvitationDocument = InvitationFromOrganizationToUser | InvitationFromUserToOrganization;
+export type InvitationDocument = InvitationFromOrganizationToUser | InvitationFromUserToOrganization | InvitationToAnEvent;
 export type InvitationOrUndefined = InvitationDocument | undefined;
 
 /** 
  * Specific Invitation/Request to attend an Event.
- * @TODO #2461 When a invitation is created, a backend function will check if:
+ * When a invitation is created, a backend function will check if:
  * If we have an user or an org we can create a notification.
  * If we have an email, the function will send an email.
- * If user created an account, we will then be able to replace email by user
+ * If user that received an email invitation and 
+ * created an account, we will then be able to replace email by the coresponding new user.
  * */
 export interface InvitationToAnEvent extends Invitation {
   mode: InvitationMode,
