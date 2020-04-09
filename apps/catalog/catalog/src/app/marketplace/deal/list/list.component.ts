@@ -72,6 +72,7 @@ function createContractTabs(allContracts: Contract[]): ContractTab[] {
 })
 export class DealListComponent {
   public tabs$ = this.query.sales$.pipe(map(createContractTabs));
+  public salesLoading$ = this.query.selectLoading();
 
   constructor(private query: ContractQuery, private dynTitle: DynamicTitleService) {
     this.query.getCount()
@@ -82,7 +83,7 @@ export class DealListComponent {
   /**
  * We need to dinstinguish between page load and route change
  * from mat tab component.
- * @param link optional param when the function is getting called from the template 
+ * @param link optional param when the function is getting called from the template
  */
   public refreshTitle(event: MatTabChangeEvent) {
     contractTabs[event.index].name !== 'All'
