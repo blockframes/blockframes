@@ -61,6 +61,7 @@ export class TitleListComponent implements OnInit, OnDestroy {
   public allMoviesLoading$ = this.query.selectLoading();
 
   private sub: Subscription;
+  private titleSub: Subscription;
 
   constructor(
     private query: MovieQuery,
@@ -89,9 +90,9 @@ export class TitleListComponent implements OnInit, OnDestroy {
         movies.map(movie => createTitleView(movie, contracts, analytics))
       )
     );
-    this.query.getCount()
-      ? this.dynTitle.setPageTitle('My titles')
-      : this.dynTitle.setPageTitle('No titles')
+    this.titleSub = this.query.selectCount().subscribe(count => {
+      count ? this.dynTitle.setPageTitle('My titles') : this.dynTitle.setPageTitle('No titles')
+    })
   }
 
   /** Dynamic filter of movies for each tab. */
@@ -118,5 +119,6 @@ export class TitleListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.sub.unsubscribe();
+    this.titleSub.unsubscribe();
   }
 }

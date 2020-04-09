@@ -5,7 +5,7 @@ export default class ViewPage extends NavbarPage {
 
   constructor() {
     super();
-    cy.get('[page-id=catalog-movie-view]');
+    cy.get('catalog-movie-view', { timeout: 20000 });
   }
 
   public clickDistributionDeals() {

@@ -9,16 +9,19 @@ import { SlideComponent } from './slide/slide.component';
 // Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatRippleModule } from '@angular/material/core';
 
 // Modules
-import { BackgroundRefModule } from '@blockframes/utils/directives/background-ref.module';
+import { ImageReferenceModule } from '../media';
+
 
 @NgModule({
    imports: [
       CommonModule,
-      BackgroundRefModule,
+      ImageReferenceModule,
       MatButtonModule,
-      MatIconModule
+      MatIconModule,
+      MatRippleModule
    ],
    declarations: [
       SliderComponent,

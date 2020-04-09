@@ -85,7 +85,7 @@ export class MarketplaceHomeComponent implements OnInit {
   public addToWishlist(movie: Movie, event: Event) {
     event.stopPropagation();
     this.cartService.updateWishlist(movie);
-    this.snackbar.open(`${movie.main.title.international} has been added to your selection.`, 'close', { duration: 2000 });
+    this.snackbar.open(`Title ${movie.main.title.international} has been added.`, 'close', { duration: 2000 });
     this.analytics.event('addedToWishlist', {
       movieId: movie.id,
       movieTitle: movie.main.title.original,
@@ -95,16 +95,11 @@ export class MarketplaceHomeComponent implements OnInit {
   public removeFromWishlist(movie: Movie, event: Event) {
     event.stopPropagation();
     this.cartService.updateWishlist(movie);
-    this.snackbar.open(`${movie.main.title.international} has been removed from your selection.`, 'close', { duration: 2000 });
+    this.snackbar.open(`Title ${movie.main.title.international} has been removed.`, 'close', { duration: 2000 });
     this.analytics.event('removedFromWishlist', {
       movieId: movie.id,
       movieTitle: movie.main.title.original,
     });
-  }
-
-  public getBanner(movie: Movie): string {
-    const movieElement = movie.promotionalElements.banner;
-    return movieElement && movieElement.media && movieElement.media.url;
   }
 
   // TODO 1880 country short code

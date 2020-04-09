@@ -1,5 +1,5 @@
-import { Injectable, Inject } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
@@ -35,7 +35,7 @@ export class ThemeService {
 
   /** Get the current value of the theme */
   initTheme(mode: 'dark' | 'light') {
-    const theme = localStorage.getItem('theme') || mode;
+    const theme = isPlatformBrowser(PLATFORM_ID) ? localStorage.getItem('theme') || mode : mode;
     this.setTheme(theme);
   }
 }

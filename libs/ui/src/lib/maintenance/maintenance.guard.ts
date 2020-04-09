@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Injectable, PLATFORM_ID } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, Router, RouterStateSnapshot } from '@angular/router';
 import { MaintenanceService } from './maintenance.service';
 import { map, tap } from 'rxjs/operators';
@@ -9,6 +10,10 @@ export class MaintenanceGuard implements CanActivate {
   constructor(private service: MaintenanceService, private router: Router) {}
 
   canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
+    if (!isPlatformBrowser(PLATFORM_ID)) {
+        return true;
+    }
+
     if (state.url === '/maintenance') {
       return this.service.isInMaintenance$.pipe(
         map(isInMaintenance => isInMaintenance ? true : this.router.parseUrl('/'))

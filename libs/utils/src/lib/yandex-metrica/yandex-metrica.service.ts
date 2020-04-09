@@ -1,5 +1,5 @@
-import { DOCUMENT } from '@angular/common';
-import { Injectable, Inject, InjectionToken } from '@angular/core';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { Injectable, Inject, InjectionToken, PLATFORM_ID } from '@angular/core';
 
 export const YM_CONFIG = new InjectionToken('ngx-metrika Config');
 
@@ -10,6 +10,10 @@ export class YandexMetricaService {
   }
 
   private insertMetrika(config: number) {
+    if (!isPlatformBrowser(PLATFORM_ID)) {
+        return;
+    }
+
     // Get the first head element
     const head = this.document.getElementsByTagName('head')[0];
     // Create a script tag

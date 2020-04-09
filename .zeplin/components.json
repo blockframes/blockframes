@@ -1,0 +1,28 @@
+{
+    "plugins": [
+        {
+            "name": "@zeplin/cli-connect-angular-plugin",
+            "config": {
+                "useFullSnippet": true,
+                "useFullDescription": true
+            }
+        }
+    ],
+    "projects": [],
+    "styleguides": [
+        "5e0f7156cf562c1cb478f0f5",
+        "5e05fbe68925c3177b82ebd1"
+    ],
+    "components": [
+        {
+            "path": "libs/ui/src/lib/slider/slider.component.ts",
+            "zeplinNames": [
+                "component/slider/archipel_content/movie-slider"
+            ]
+        }
+    ],
+    "github": {
+        "repository": "blockframes/blockframes",
+        "branch": "develop"
+    }
+}
