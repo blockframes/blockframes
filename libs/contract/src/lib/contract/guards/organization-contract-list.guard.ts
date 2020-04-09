@@ -20,7 +20,7 @@ const organizationContractsListQuery = (orgId: string): Query<ContractWithTimeSt
 
 /** Sync all contract of the active organization */
 @Injectable({ providedIn: 'root' })
-@CollectionGuardConfig({ awaitSync: true })
+@CollectionGuardConfig({ awaitSync: false })
 export class OrganizationContractListGuard extends CollectionGuard<ContractState> {
   constructor(
     protected service: ContractService,
