@@ -45,7 +45,8 @@
     "pwm": "pwmetrics --config",
     "bundlesize": "bundlesize",
     "postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points",
-    "storybook:ui": "npx ng run ui:storybook"
+    "storybook:ui": "npx ng run ui:storybook",
+    "prerender:festival": "npx ng build festival --prod && npx ng run festival:server --configuration production && npx angular-prerender --browser-target festival:build --server-target festival:server"
   },
   "private": true,
   "dependencies": {
@@ -62,6 +63,7 @@
     "@angular/material": "^9.1.0",
     "@angular/platform-browser": "~9.1.0",
     "@angular/platform-browser-dynamic": "~9.1.0",
+    "@angular/platform-server": "~9.1.0",
     "@angular/pwa": "^0.900.3",
     "@angular/router": "~9.1.0",
     "@angular/service-worker": "~9.1.0",
@@ -161,6 +163,7 @@
     "@types/pdfmake": "^0.1.7",
     "@types/tmp": "0.1.0",
     "akita-schematics": "^2.0.0",
+    "angular-prerender": "^5.4.0",
     "babel-loader": "8.0.6",
     "bundlesize": "^0.18.0",
     "codelyzer": "~5.1.2",

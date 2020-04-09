@@ -47,7 +47,7 @@ import { MatNativeDateModule } from '@angular/material/core';
   declarations: [AppComponent],
   imports: [
     // Angular
-    BrowserModule,
+    BrowserModule.withServerTransition({ appId: 'festival-app' }),
     BrowserAnimationsModule,
     FlexLayoutModule,
     HttpClientModule,
