@@ -52,7 +52,7 @@ service cloud.firestore {
     }
 
     /// INVITATIONS RULES ///
-    
+
     // Functions
     // Send the invitation
     function isHost() {
@@ -69,7 +69,7 @@ service cloud.firestore {
     match /invitations/{invitationId} {
     	allow read: if isHost() || isGuest();
 
-      allow create: 
+      allow create:
         // Event
         if incomingData().type == 'event'
         // Invitation to org
@@ -79,7 +79,7 @@ service cloud.firestore {
 
       // Update is used to change status only. Allowed to recepients only
       // @TODO (#2500) should be handled by a backend function to prevent ugly rules
-    	allow update: if 
+    	allow update: if
         // Event
         (
           incomingData().type == 'event' && isGuest()
@@ -203,7 +203,7 @@ service cloud.firestore {
       allow read: if true;
 	    match /{document=**} {
         allow read, write: if true;
-      }    
+      }
 		}
 
     /// META ///

@@ -38,8 +38,10 @@ export interface NotificationOptions {
   toUserId: string;
   /** @dev Possible subjects of the notification */
   user?: Partial<PublicUser>;
+  /** @dev Subject the notification */
   docId?: string;
   movie?: PublicMovie;
+  /** @dev Subject the notification */
   organization?: PublicOrganization;
   /** @dev Type of the notification */
   type: NotificationType;
