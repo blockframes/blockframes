@@ -730,7 +730,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/apps/festival",
+            "outputPath": "dist/apps/festival/browser",
             "index": "apps/festival/festival/src/index.html",
             "main": "apps/festival/festival/src/main.ts",
             "polyfills": "apps/festival/festival/src/polyfills.ts",
@@ -877,6 +877,52 @@
             "tsConfig": "apps/festival/festival/tsconfig.spec.json",
             "passWithNoTests": true,
             "setupFile": "apps/festival/festival/src/test-setup.ts"
+          }
+        },
+        "server": {
+          "builder": "@angular-devkit/build-angular:server",
+          "options": {
+            "outputPath": "dist/apps/festival/server",
+            "main": "apps/festival/festival/src/main.server.ts",
+            "tsConfig": "apps/festival/festival/tsconfig.server.json",
+            "externalDependencies": [
+              "@firebase/firestore"
+            ]
+          },
+          "configurations": {
+            "production": {
+              "outputHashing": "media",
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/env.prod.ts"
+                }
+              ],
+              "sourceMap": false,
+              "optimization": true
+            },
+            "ci": {
+              "outputHashing": "media",
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/env.ci.ts"
+                }
+              ],
+              "sourceMap": false,
+              "optimization": true
+            },
+            "staging": {
+              "outputHashing": "media",
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/env.staging.ts"
+                }
+              ],
+              "sourceMap": false,
+              "optimization": true
+            }
           }
         }
       }
