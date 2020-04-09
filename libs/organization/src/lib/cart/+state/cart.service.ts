@@ -38,13 +38,13 @@ export class CartService extends CollectionService<CartState> {
   //////////////////
 
   /**
-   * Adds a deal to cart identified by "name" (default cart name is : "default")
-   * @param dealId
+   * Adds a right to cart identified by "name" (default cart name is : "default")
+   * @param rightId
    * @param name
    */
-  public async addDealToCart(dealId: string, name: string): Promise<CatalogCart> {
+  public async addRightToCart(rightId: string, name: string): Promise<CatalogCart> {
     const cart = await this.getCart(name);
-    cart.deals.push(dealId);
+    cart.rights.push(rightId);
     return this.updateCart(cart);
   }
 

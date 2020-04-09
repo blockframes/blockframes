@@ -7,7 +7,7 @@ export interface CartState extends EntityState<CatalogCart> {
   name: string;
   price: Price;
   status: CartStatus;
-  deals: string[];
+  rights: string[];
 }
 
 @Injectable({ providedIn: 'root' })
