@@ -69,6 +69,3 @@ export type InvitationStatus = 'accepted' | 'declined' | 'pending';
 export type InvitationType = 'fromUserToOrganization' | 'fromOrganizationToUser' | 'event' ;
 
 export type InvitationMode = 'request' | 'invitation';
-
-// The invitation types for wich an action is needed
-export const InvitationsWithAction : InvitationType[] = ['fromUserToOrganization', 'event'];

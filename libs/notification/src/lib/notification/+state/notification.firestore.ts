@@ -26,19 +26,28 @@ export type NotificationType =
   'memberRemovedFromOrg' |
   'newContract' |
   'contractInNegotiation' |
-  'invitationToAnEvent' |
-  'requestToAttendAnEvent'
+
+  // Events related notifications 
+  'eventIsAboutToStart' |
+  'invitationToAttendEventAccepted' |
+  'invitationToAttendEventDeclined'
 ;
 
 /** Minimum required informations to create a Notification. */
 export interface NotificationOptions {
-  userId: string;
+  /** @dev Recipient of the notification */ 
+  userId?: string; // @TODO (#2461) rename to forUserId
+  toEmail ?: string;  // @TODO (#2461) update draw.io
+  /** @dev Subject the notification */ 
   user?: Partial<PublicUser>;
+  /** @dev Subject the notification */ 
   docId?: string;
   type: NotificationType;
+  /** @dev Subject the notification */ 
   movie?: PublicMovie;
+  /** @dev Subject the notification */ 
   organization?: PublicOrganization;
-  app: App;
+  app: App; // @TODO (#2461) What is the purpose of this? check.
 }
 
 /** Generic informations for a Notification. */

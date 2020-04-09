@@ -24,6 +24,7 @@ import * as bigQuery from './bigQuery';
 import { onDocumentPermissionCreate } from './permissions';
 import { onContractWrite } from './contract';
 import * as privateConfig from './privateConfig';
+import { createNotificationsForEventsToStart } from './internals/invitations/events';
 
 /**
  * Trigger: when user creates an account.
@@ -78,17 +79,37 @@ export const getMovieAnalytics = functions.https.onCall(logErrors(bigQuery.reque
  */
 export const admin = functions.https.onRequest(adminApp);
 
-/** Trigger: when an invitation is updated (e. g. when invitation.status change). */
-export const onInvitationUpdateEvent = onDocumentWrite(
-  'invitations/{invitationID}',
-  onInvitationWrite
-);
+//--------------------------------
+//   Permissions  Management    //
+//--------------------------------
 
 /** Trigger: when a permission document is created. */
 export const onDocumentPermissionCreateEvent = onDocumentCreate(
   'permissions/{orgID}/documentPermissions/{docId}',
   onDocumentPermissionCreate
 );
+
+//--------------------------------
+//    Invitations Management    //
+//--------------------------------
+
+/** Trigger: when an invitation is updated (e. g. when invitation.status change). */
+export const onInvitationUpdateEvent = onDocumentWrite(
+  'invitations/{invitationID}',
+  onInvitationWrite
+);
+
+//--------------------------------
+//   Notifications Management   //
+//--------------------------------
+
+/**
+ * Creates notifications when an event is about to start
+ */
+export const scheduledNotifications = functions.pubsub.schedule('0 4 * * *')
+.onRun(async _ => { // every day at 4 AM
+  await createNotificationsForEventsToStart();
+})
 
 //--------------------------------
 //       Movies Management      //

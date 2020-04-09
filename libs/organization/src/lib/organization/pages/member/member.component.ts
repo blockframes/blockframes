@@ -56,9 +56,11 @@ export class MemberComponent implements OnInit, OnDestroy {
     this.isSuperAdmin$ = this.permissionQuery.isSuperAdmin$;
 
     const storeName = this.invitationStore.storeName;
+    /** @dev We fetch all invitations where current org is the subject. */ 
     const queryFn = ref => ref.where('organization.id', '==', this.query.getActiveId()).where('status', '==', 'pending');
     this.invitationSubscription = this.invitationService.syncCollection(queryFn, { storeName }).subscribe();
 
+    /** @dev Then we filter them by type. */ 
     this.invitationsToJoinOrganization$ = this.invitationQuery.selectAll({
       filterBy: invitation => invitation.type === 'fromUserToOrganization',
       sortBy: 'date',

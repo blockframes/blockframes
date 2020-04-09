@@ -4,6 +4,7 @@ import { Observable, Subscription, combineLatest } from 'rxjs';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { DateGroup } from '@blockframes/utils/helpers';
 import { ThemeService } from '@blockframes/ui/theme';
+import { PermissionsQuery } from '@blockframes/organization/permissions/+state/permissions.query';
 
 @Component({
   selector: 'invitation-list',
@@ -26,7 +27,8 @@ export class InvitationListComponent implements OnInit, OnDestroy {
     private store: InvitationStore,
     private service: InvitationService,
     private authQuery: AuthQuery,
-    private themeService: ThemeService
+    private themeService: ThemeService,
+    private permissionQuery: PermissionsQuery,
   ) { }
 
   ngOnInit() {
@@ -34,16 +36,24 @@ export class InvitationListComponent implements OnInit, OnDestroy {
 
     const storeName = this.store.storeName;
     if (this.authQuery.orgId) {
-      // We need to sync notifications that are for the orgId of the current user or for the current user directly
+      /** 
+       * @dev We display all invitations whether user or org is invited or invinting
+       * Only invitation where user or org is invited will have buttons to accept or decline 
+      */
+      const syncs = [];
       const queryFn1 = ref => ref.where('toUser.uid', '==', this.authQuery.userId).where('status', '==', 'pending');
-      const queryFn2 = ref => ref.where('toOrg.id', '==', this.authQuery.orgId).where('status', '==', 'pending');
-      const queryFn3 = ref => ref.where('fromOrg.id', '==', this.authQuery.orgId).where('status', '==', 'pending');
+      const queryFn2 = ref => ref.where('fromUser.uid', '==', this.authQuery.userId).where('status', '==', 'pending');
+      syncs.push(this.service.syncCollection(queryFn1, { storeName }));
+      syncs.push(this.service.syncCollection(queryFn2, { storeName }));
 
-      this.collectionSub = combineLatest([
-        this.service.syncCollection(queryFn1, { storeName }),
-        this.service.syncCollection(queryFn2, { storeName }),
-        this.service.syncCollection(queryFn3, { storeName }),
-      ]).subscribe()
+      if(this.permissionQuery.isUserAdmin || this.permissionQuery.isUserAdmin ){
+        const queryFn3 = ref => ref.where('toOrg.id', '==', this.authQuery.orgId).where('status', '==', 'pending');
+        const queryFn4 = ref => ref.where('fromOrg.id', '==', this.authQuery.orgId).where('status', '==', 'pending');
+        syncs.push(this.service.syncCollection(queryFn3, { storeName }));
+        syncs.push(this.service.syncCollection(queryFn4, { storeName }));
+      }
+
+      this.collectionSub = combineLatest(syncs).subscribe()
 
       this.themeSub = this.themeService.theme$.subscribe(theme => this.theme = theme);
       this.invitationsByDate$ = this.query.groupInvitationsByDate();

@@ -58,7 +58,7 @@ export class NotificationQuery extends QueryEntity<NotificationState, Notificati
   }
 
   public createNotificationInformation(notification: Notification) {
-
+    let subject;
     switch (notification.type) {
       case 'organizationAcceptedByArchipelContent':
         return {
@@ -132,9 +132,30 @@ export class NotificationQuery extends QueryEntity<NotificationState, Notificati
           placeholderUrl: this.getPoster(notification.docId),
           url: `c/o/dashboard/titles/${notification.docId}`
         };
-      case 'invitationToAnEvent':
+      case 'eventIsAboutToStart':
         return {
           message: `Your event "${notification.docId}" is about to start !`,
+          url: `c/o/marketplace/event/${notification.docId}`
+        };
+      case 'invitationToAttendEventAccepted':
+
+        if (notification.organization) {
+          subject = notification.organization.denomination.public ? notification.organization.denomination.public : notification.organization.denomination.full;
+        } else if (notification.user) {
+          subject = `${notification.user.lastName} ${notification.user.firstName}`;
+        }
+        return {
+          message: `${subject} have accepted your invitaion.`,
+          url: `c/o/marketplace/event/${notification.docId}`
+        };
+      case 'invitationToAttendEventAccepted':
+        if (notification.organization) {
+          subject = notification.organization.denomination.public ? notification.organization.denomination.public : notification.organization.denomination.full;
+        } else if (notification.user) {
+          subject = `${notification.user.lastName} ${notification.user.firstName}`;
+        }
+        return {
+          message: `${subject} have declined your invitaion.`,
           url: `c/o/marketplace/event/${notification.docId}`
         };
       default:

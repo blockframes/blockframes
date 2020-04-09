@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { InvitationService, Invitation } from '../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { InvitationsWithAction } from '@blockframes/invitation/types';
+import { AuthQuery } from '@blockframes/auth/+state';
 
 @Component({
   selector: 'invitation-item',
@@ -13,7 +13,11 @@ export class InvitationItemComponent {
   @Input() invitation: Invitation;
   @Input() inWidget: boolean;
 
-  constructor(private service: InvitationService, private snackBar: MatSnackBar) { }
+  constructor(
+    private service: InvitationService,
+    private snackBar: MatSnackBar,
+    private authQuery: AuthQuery,
+  ) { }
 
   /** Creates a message based on the invitation.type. */
   public get message(): string {
@@ -24,7 +28,7 @@ export class InvitationItemComponent {
       case 'fromOrganizationToUser':
         return `Your organization sent an invitation to this user email: ${this.invitation.toUser.email}`;
       case 'event':
-        return `You have been invited to an event !`;
+        return this.isInvitationForMe() ? `You have been invited to an event !` : `Your invitation have been sent!`;
     }
   }
 
@@ -57,8 +61,12 @@ export class InvitationItemComponent {
 
   public get displayInvitationButtons(): boolean {
     return (
-      InvitationsWithAction.includes(this.invitation.type) &&
-      this.invitation.status === 'pending'
+      this.isInvitationForMe() && this.invitation.status === 'pending'
     );
+  }
+
+  private isInvitationForMe() : Boolean {
+    return (this.invitation.toOrg && this.invitation.toOrg.id === this.authQuery.orgId) ||
+    (this.invitation.toUser && this.invitation.toUser.uid === this.authQuery.userId);
   }
 }

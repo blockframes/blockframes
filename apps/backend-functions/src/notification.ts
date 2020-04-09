@@ -20,6 +20,7 @@ export function createNotification(notification: NotificationOptions): Notificat
     id: db.collection('notifications').doc().id,
     isRead: false,
     date: firestore.Timestamp.now(),
+    app: 'blockframes', // @todo #2461 needed ?
     ...notification
   };
 }

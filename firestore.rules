@@ -37,8 +37,8 @@ service cloud.firestore {
     	// We can read user data from the same organization as us until we got public users collection.
     	allow update: if isSignedIn()
       	&& userId() == incomingData().uid
-        && incomingData().uid == existingData().uid
-        && incomingData().email == existingData().email;
+        && isNotUpdatingField('uid')
+        && isNotUpdatingField('email')
     	allow create: if userId() == incomingData().uid;
       allow delete: if userId() == existingData().uid;
     }
@@ -46,38 +46,51 @@ service cloud.firestore {
     /// NOTIFICATIONS RULES ///
 
     match /notifications/{notificationId} {
-    	allow read, update: if userId() == existingData().userId
-      	|| currentUser().orgId == existingData().organization.id;
+    	allow read, update: if userId() == existingData().userId // @TODO (#2461) Update here if renamming field userId
     	allow create, delete: if false;
     }
 
     /// INVITATIONS RULES ///
 
     match /invitations/{invitationId} {
-    	allow read: if userId() == existingData().user.uid
-      	|| userOrgId() == existingData().organization.id;
+    	allow read: if userId() == existingData().fromUser.uid  
+        || userId() == existingData().toUser.uid 
+      	|| userOrgId() == existingData().fromOrg.id
+        || userOrgId() == existingData().toOrg.id;
 
-      allow create: if userId() == incomingData().user.uid
-      	|| userOrgId() == incomingData().organization.id
-        || orgCan('isAdmin', userOrgId(), incomingData().docId);
+      allow create: if userId() == incomingData().fromUser.uid 
+       || userOrgId() == incomingData().fromOrg.id
+       || orgCan('isAdmin', userOrgId(), incomingData().docId);
 
-
+      // Update is used to change status only. Allowed to recepients only
+      // @TODO (#2500) should be handled by a backend function to prevent ugly rules
     	allow update: if (
         (
-          (incomingData().user.uid == existingData().user.uid)
-          && (incomingData().organization.id == existingData().organization.id)
+          isNotUpdatingField('id')
+          && isNotUpdatingField('app')
+          && isNotUpdatingField('type')
+          && isNotUpdatingField('mode')
+          && isNotUpdatingField('status')
+          && isNotUpdatingField('date')
+          && isNotUpdatingField('fromOrg')
+          && isNotUpdatingField('fromUser')
+          && isNotUpdatingField('toOrg')
+          && isNotUpdatingField('toUser')
+          && isNotUpdatingField('toEmail')
+          && isNotUpdatingField('docId')
+          && isNotUpdatingField('processedId')
         )
         &&
         (
-          (userId() == existingData().user.uid)
-          || (userOrgId() == incomingData().organization.id)
+          (userId() == existingData().toUser.uid)
+          || (userOrgId() == incomingData().toOrg.id)
           || (orgCan('isAdmin', userOrgId(), incomingData().docId))
         )
       );
 
       allow delete: if (
-        isOrgAdmin(userId(), existingData().organization.id)
-        || userId() == existingData().user.uid
+        isOrgAdmin(userId(), existingData().fromOrg.id)
+        || userId() == existingData().fromUser.uid
       );
     }
 
@@ -88,8 +101,8 @@ service cloud.firestore {
       	&& incomingData().status == 'pending'
         && documentIdChecked(orgId, 'orgs');
       allow update: if isSignedIn()
-      	&& incomingData().status == existingData().status
-        && incomingData().id == existingData().id
+      	&& isNotUpdatingField('status')
+        && isNotUpdatingField('id')
         && documentIdChecked(orgId, 'orgs');
       allow delete: if isSuperAdmin(userId(), orgId);
       allow read: if isSignedIn();
@@ -267,6 +280,11 @@ service cloud.firestore {
       return (getDocumentPermissions(orgId, docId).ownerId == orgId)
         || (getDocumentPermissions(orgId, docId).admin == true)
         || (getDocumentPermissions(orgId, docId)[action] == true);
+    }
+
+    // We check that the field is not sent or if field sent is equal to actual
+    function isNotUpdatingField(fieldName) {
+			return !incomingData().keys().hasAll([fieldName]) || (existingData.keys().hasAll([fieldName]) && incomingData()[fieldName] == existingData[fieldName]);
     }
   }
 }
