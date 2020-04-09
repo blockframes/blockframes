@@ -21,8 +21,8 @@ export class OrganizationFindComponent {
     private invitationService: InvitationService,
   ) { }
 
-  public updateValue(orgID: string) {
-    this.orgID = orgID
+  public updateValue(result: any) {
+    this.orgID = result.objectID;
   }
 
   public async requestToJoinOrganization() {

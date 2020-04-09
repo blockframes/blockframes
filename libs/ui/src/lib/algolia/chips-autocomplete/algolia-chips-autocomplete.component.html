@@ -8,14 +8,15 @@
 </mat-chip-list>
 
 <algolia-autocomplete
-  [indexName]="movieIndex"
-  facetName="orgName"
-  (selectionChange)="form.add($event)"
-  label="Search for a specific seller"
-  placeholder="Organization name"
-  resetInput
+  [indexName]="indexName"
+  [keyToDisplay]="keyToDisplay"
+  [facetName]="facetName"
+  [label]="label"
+  [placeholder]="placeholder"
+  [resetInput]="resetInput"
+  (selectionChange)="add($event)"
 >
   <ng-template let-result>
-    <span>{{result.value}}</span>
+    <span>{{resolveValue(result, keyToDisplay)}}</span>
   </ng-template>
 </algolia-autocomplete>

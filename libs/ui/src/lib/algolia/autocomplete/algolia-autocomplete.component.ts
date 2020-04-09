@@ -1,5 +1,4 @@
 // Angular
-import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { FormControl } from '@angular/forms';
 import {
   Component,
@@ -20,12 +19,12 @@ import { searchClient } from '@blockframes/utils/algolia';
 
 // RxJs
 import { Observable, Subscription, BehaviorSubject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap, filter, tap, map } from 'rxjs/operators';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { debounceTime, distinctUntilChanged, switchMap, filter, tap } from 'rxjs/operators';
+import { boolean } from '@blockframes/utils/decorators/decorators';
 
 
 @Component({
-  selector: '[indexName] algolia-autocomplete',
+  selector: '[indexName] [keyToDisplay] algolia-autocomplete',
   templateUrl: 'algolia-autocomplete.component.html',
   styleUrls: ['algolia-autocomplete.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -40,27 +39,22 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
    */
   @Input() indexName: string;
 
+  /**
+   * The path of the key to display : i.e. What part of the result should be displayed by the input ?
+   * @note The value pointed by `keyToDisplay` will also be put in the FormControl of the input field.
+   * @note Keep in mind that the result object will be an Algolia record, it can be different form the firestore data model.
+   * @note In case of a **facet** search, the `keyToDisplay` is not useful anymore and it's value will be overwritten.
+   * @example [keyToDisplay]="title.international"
+   */
+  @Input() keyToDisplay: string;
+
   // OPTIONAL INPUT -------------------
 
   /**
-   * The name of the facet to search on, default value is `''` and means that the search is not perform on facets.
+   * The name of the facet to search on.
+   * @note .**search is not perform on facets by default** *(enter a value to start searching on facets)*
    */
   @Input() facetName = '';
-
-  /**
-   * Tells the component which value to pick in the **algolia result object**,
-   * i.e. the object stored in the algolia index which can be different form the firestore data model
-   * @default 'objectID'
-   * @example [pathToValue]="movie.title.original"
-   */
-  @Input() pathToValue = 'objectID';
-
-  /**
-   * If the control should hold a different value then it is displaying it
-   * @example movie.main.title.international
-   * @default pathToValue variable
-   */
-  @Input() displayWithPath: string = this.pathToValue;
 
   /** Optional input if you want to use your own form control */
   @Input() control = new FormControl();
@@ -72,35 +66,29 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
   @Input() placeholder = 'Search...'
 
   /** Can set to false if control should display the value */
-  private _resetInput: boolean;
-  @Input()
-  get resetInput() { return this._resetInput; }
-  set resetInput(value: any) {
-    this._resetInput = coerceBooleanProperty(value);
-  }
+  @Input() @boolean resetInput = false;
 
   /** Different behavior of the mat form field */
   @Input() mode: 'legacy' | 'standard' | 'fill' | 'outline' = 'outline'
 
-  /** Sets the input to a native input control */
-  private _native: boolean;
-  @Input()
-  get native() { return this._native; }
-  set native(value: any) {
-    this._native = coerceBooleanProperty(value);
-  };
+  /** Wether to use a material input or a native html input */
+  @Input() @boolean native = false;
 
-  /** Holds information for showing which icons */
-  private _icons: Array<'cross' | 'magnifying_glasses'> = [];
-  @Input()
-  get icons() { return this._icons }
-  set icons(values: Array<'cross' | 'magnifying_glasses'>) {
-    this._icons = values
-  }
+  /** Wether or not to display a prefix icon in the input */
+  @Input() @boolean icon = false;
+
+  /**
+   * The icon to display in the input prefix
+   * @default 'magnifying_glasses'
+   */
+  @Input() svgIcon = 'magnifying_glasses';
+
+  /** Wether or not to display a cross button to clear the input */
+  @Input() @boolean clearable = false;
 
   // OUTPUT ---------------------------
 
-  /** Output to get all data from algolia */
+  /** Output emitted on every select, it return the whole record object */
   @Output() selectionChange = new EventEmitter();
 
   // PRIVATE --------------------------
@@ -123,32 +111,24 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
+    // In case of facet search we know the result object will store the matched facets in the `value` field
     if (!!this.facetName.trim()) {
-      this.pathToValue = 'value'; // for facet the result object only contain a 'value' key
-      this.displayWithPath = this.pathToValue;
+      this.keyToDisplay = 'value';
     }
 
     // initialize Algolia
     this.indexSearch = searchClient.initIndex(this.indexName);
 
+    // create search functions
+    const regularSearch = (text: string) => this.indexSearch.search(text).then(result => result.hits);
+    const facetSearch = (text: string) => this.indexSearch.searchForFacetValues({facetName: this.facetName, facetQuery: text}).then(result => result.facetHits);
+
+    // perform search
     this.algoliaSearchResults$ = this.control.valueChanges.pipe(
       debounceTime(300),
       filter(text => typeof text === 'string' && !!text.trim()),
       distinctUntilChanged(),
-      switchMap(text => {
-        if (!this.facetName.trim()) {
-          return this.indexSearch.search(text);
-        } else {
-          return this.indexSearch.searchForFacetValues({facetName: this.facetName, facetQuery: text});
-        }
-      }),
-      map((result: any) => {
-        if (!this.facetName.trim()) {
-          return result.hits;
-        } else {
-          return result.facetHits;
-        }
-      }),
+      switchMap(text => (!!this.facetName.trim()) ? facetSearch(text) : regularSearch(text)),
       tap(data => this.lastValue$.next(data)),
     );
   }
@@ -170,8 +150,7 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
     }
   }
 
-  public selected(event: MatAutocompleteSelectedEvent) {
-    const result = this.resolveValue(event.option.value, this.pathToValue);
+  public selected(result: any) {
     this.selectionChange.emit(result);
     if (this.resetInput) {
       this.control.reset();
@@ -179,16 +158,16 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
   }
 
   /**
-  * Since we input the path we need to initialize the function after the input gets handled,
-  * otherwise displayWithPath is undefined and this will throw an error
-  */
-  public displayFn = () => {
+   * This function is used internally by the MatAutocomplete to decide
+   * what to display in the input field when an option has been selected
+   */
+  public displayFn() {
     if (this.resetInput) {
       return ''
     }
     const value = this.lastValue$.getValue();
     if (value) {
-      return this.resolveValue(value[0], this.displayWithPath)
+      return this.resolveValue(value[0], this.keyToDisplay);
     }
     return this.control.value;
   }

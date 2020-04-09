@@ -2,7 +2,7 @@
   <h1>Find your Organization</h1>
   <mat-card fxLayout="column" fxLayoutAlign="center center">
     <img asset="find_organization.webp">
-    <algolia-autocomplete [indexName]="orgIndex" pathToValue="name" label="Organization name"
+    <algolia-autocomplete [indexName]="orgIndex" keyToDisplay="name" label="Organization name"
      (selectionChange)="updateValue($event)">
       <ng-template let-result>
         <span>{{ result.name }}</span>

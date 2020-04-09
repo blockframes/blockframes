@@ -7,13 +7,13 @@ import {
 import { Subscription, Observable } from 'rxjs';
 
 import { MovieService, MovieQuery } from '@blockframes/movie/+state';
-import { FormControl, Validators } from '@angular/forms';
+import { FormControl, Validators, FormArray } from '@angular/forms';
 import { CatalogSearchForm, AvailsSearchForm } from '@blockframes/distribution-deals/form/search.form';
 import { staticModels } from '@blockframes/utils/static-model';
 import { LanguagesLabel, LanguagesSlug, LANGUAGES_LABEL } from '@blockframes/utils/static-model/types';
 import { getCodeIfExists } from '@blockframes/utils/static-model/staticModels';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
-import { FormList } from '@blockframes/utils/form';
+import { algolia } from '@env';
 
 @Component({
   selector: 'festival-marketplace-title-list',
@@ -49,7 +49,9 @@ export class ListComponent implements OnInit, OnDestroy {
   // status
   public movieProductionStatuses = staticModels['MOVIE_STATUS'];
 
-  public sellersForm = FormList.factory<string>([]);
+  public movieIndex = algolia.indexNameMovies;
+  // TODO use FormList after #2489 has been fixed
+  public sellersForm = new FormArray([]);
 
   constructor(
     private movieService: MovieService,
