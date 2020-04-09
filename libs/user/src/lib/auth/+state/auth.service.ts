@@ -52,7 +52,6 @@ export class AuthService extends FireAuthService<AuthState> {
     for (const key of dbKeys) {
       indexedDB.deleteDatabase(key.name);
     }
-    window.location.reload();
   }
 
   /**

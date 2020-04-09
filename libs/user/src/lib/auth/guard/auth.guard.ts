@@ -15,25 +15,21 @@ function hasIdentity(user: User) {
 })
 @CollectionGuardConfig({ awaitSync: true })
 export class AuthGuard extends CollectionGuard<AuthState> {
-  constructor(
-    service: AuthService,
-    private query: AuthQuery,
-    private afAuth: AngularFireAuth
-  ) {
+  constructor(service: AuthService, private query: AuthQuery, private afAuth: AngularFireAuth) {
     super(service);
   }
 
-/*   sync() {
+  sync() {
     return this.afAuth.authState.pipe(
       switchMap(userAuth => {
         if (!userAuth) {
-          return of('');
-        };
+          return this.router.navigate(['/']);
+        }
         return this.service.sync().pipe(
           map(_ => this.query.user),
-          map(user => hasIdentity(user) ? true : 'auth/identity')
+          map(user => (hasIdentity(user) ? true : 'auth/identity'))
         );
       })
     );
-  } */
+  }
 }
