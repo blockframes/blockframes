@@ -25,6 +25,9 @@ export class OrganizationGuard extends CollectionGuard<OrganizationState> {
   sync() {
     return this.authQuery.user$.pipe(
       switchMap(user => {
+        if (!user) {
+          return of('/');
+        }
         if (!user.orgId) {
           return of('/c/organization');
         } else {
