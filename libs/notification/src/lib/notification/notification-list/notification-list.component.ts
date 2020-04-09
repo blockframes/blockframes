@@ -1,5 +1,4 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { Observable } from 'rxjs';
 import { DateGroup } from '@blockframes/utils/helpers';
 import { Router } from '@angular/router';
 import { Notification } from '../+state/notification.model';
@@ -14,7 +13,6 @@ import { NotificationQuery } from '../+state/notification.query';
 })
 export class NotificationListComponent {
   @Input() notificationsByDate: DateGroup<Notification[]>;
-  public theme$: Observable<string>;
 
   public today: Date = new Date();
   public yesterday = new Date().setDate(this.today.getDate() - 1);

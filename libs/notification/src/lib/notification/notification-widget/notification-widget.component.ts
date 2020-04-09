@@ -27,7 +27,7 @@ export class NotificationWidgetComponent implements OnInit {
     private notificationQuery: NotificationQuery,
     private invitationQuery: InvitationQuery,
     private permissionQuery: PermissionsQuery
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.user$ = this.authQuery.user$;
@@ -45,16 +45,36 @@ export class NotificationWidgetComponent implements OnInit {
     }
   }
 
-  private adminInvitations(invitation: Invitation) {
+  /**
+   * Returns true if notification should be displayed
+   * for an admin.
+   *   fromUserToOrganization : An user requested to join an org.
+   *   event: Even org admin can attend to an event (no discrimination!)
+   * 
+   * @param invitation 
+   */
+  private adminInvitations(invitation: Invitation) : boolean {
+    const invitationTypes = ['fromUserToOrganization', 'event'];
     return (
       invitation.status === 'pending' &&
-      invitation.type !== 'fromOrganizationToUser'
+      invitationTypes.includes(invitation.type)
     );
   }
 
-  private memberInvitations(invitation: Invitation) {
-    return invitation.status === 'pending' &&
-    invitation.type !== 'fromUserToOrganization'
+  /**
+   * Returns true if notification should be displayed
+   * for an regular user.
+   *   fromOrganizationToUser : An org invited current user to join in.
+   *   event: Someone invited current user to an event
+   * 
+   * @param invitation 
+   */
+  private memberInvitations(invitation: Invitation) : boolean {
+    const invitationTypes = ['fromOrganizationToUser', 'event'];
+    return (
+      invitation.status === 'pending' &&
+      invitationTypes.includes(invitation.type)
+    )
   }
 
   public get totalCount$() {

@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
 import { InvitationQuery, InvitationService, InvitationStore, Invitation } from '../+state';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscription, combineLatest } from 'rxjs';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { DateGroup } from '@blockframes/utils/helpers';
 import { ThemeService } from '@blockframes/ui/theme';
@@ -27,16 +27,24 @@ export class InvitationListComponent implements OnInit, OnDestroy {
     private service: InvitationService,
     private authQuery: AuthQuery,
     private themeService: ThemeService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.yesterday.setDate(this.today.getDate() - 1);
 
     const storeName = this.store.storeName;
-    const queryFn = ref =>
-      ref.where('organization.id', '==', this.authQuery.orgId).where('status', '==', 'pending');
     if (this.authQuery.orgId) {
-      this.collectionSub = this.service.syncCollection(queryFn, { storeName }).subscribe();
+      // We need to sync notifications that are for the orgId of the current user or for the current user directly
+      const queryFn1 = ref => ref.where('toUser.uid', '==', this.authQuery.userId).where('status', '==', 'pending');
+      const queryFn2 = ref => ref.where('toOrg.id', '==', this.authQuery.orgId).where('status', '==', 'pending');
+      const queryFn3 = ref => ref.where('fromOrg.id', '==', this.authQuery.orgId).where('status', '==', 'pending');
+
+      this.collectionSub = combineLatest([
+        this.service.syncCollection(queryFn1, { storeName }),
+        this.service.syncCollection(queryFn2, { storeName }),
+        this.service.syncCollection(queryFn3, { storeName }),
+      ]).subscribe()
+
       this.themeSub = this.themeService.theme$.subscribe(theme => this.theme = theme);
       this.invitationsByDate$ = this.query.groupInvitationsByDate();
     }

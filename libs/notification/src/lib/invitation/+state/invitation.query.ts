@@ -15,8 +15,7 @@ export class InvitationQuery extends QueryEntity<InvitationState> {
 
   /** Group invitations by date in an object. */
   public groupInvitationsByDate(): Observable<DateGroup<Invitation[]>> {
-    const filterBy = (invitation: Invitation) => invitation.type === 'fromUserToOrganization';
-    return this.selectAll({ filterBy }).pipe(
+    return this.selectAll( ).pipe(
       map(invits => {
         return invits.reduce((acc, invitation) => {
           // As Date cannot be used as an index type (key), we format the date into a string.

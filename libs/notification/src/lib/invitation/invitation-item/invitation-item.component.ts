@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { InvitationService, Invitation } from '../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { InvitationsWithAction } from '@blockframes/invitation/types';
 
 @Component({
   selector: 'invitation-item',
@@ -22,6 +23,17 @@ export class InvitationItemComponent {
         return `${this.invitation.fromUser.firstName} ${this.invitation.fromUser.lastName} wants to join your organization`;
       case 'fromOrganizationToUser':
         return `Your organization sent an invitation to this user email: ${this.invitation.toUser.email}`;
+      case 'event':
+        return `You have been invited to an event !`;
+    }
+  }
+
+  public get invitationLink(): string | boolean {
+    switch (this.invitation.type) {
+      case 'event':
+        return `/c/o/marketplace/event/${this.invitation.docId}`;
+      default:
+        return false;
     }
   }
 
@@ -45,7 +57,7 @@ export class InvitationItemComponent {
 
   public get displayInvitationButtons(): boolean {
     return (
-      this.invitation.type === 'fromUserToOrganization' &&
+      InvitationsWithAction.includes(this.invitation.type) &&
       this.invitation.status === 'pending'
     );
   }

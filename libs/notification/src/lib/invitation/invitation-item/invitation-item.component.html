@@ -4,6 +4,10 @@
   <div fxLayout="column" fxLayoutGap="10px">
     <article fxLayout="column" fxLayoutAlign="start start">
       <p class="mat-body-1">{{ message }}</p>
+      <a *ngIf="invitationLink" mat-button color="primary" [routerLink]="invitationLink">
+        <span>View event details</span>
+        <mat-icon svgIcon="arrow_forward"></mat-icon>
+      </a>
       <small class="mat-caption">{{ invitation.date.toDate() | date: inWidget ? 'medium' : 'shortTime' }}</small>
     </article>
     <article fxLayout="row" fxLayoutGap="16px" *ngIf="displayInvitationButtons">

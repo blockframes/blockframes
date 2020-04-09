@@ -43,7 +43,7 @@ export class NotificationQuery extends QueryEntity<NotificationState, Notificati
           // As Date cannot be used as an index type (key), we format the date into a string.
           const key = isToday(date) ? 'Today'
             : isYesterday(date) ? 'Yesterday'
-            : formatDate(notification.date.toDate(), 'MMM dd, yyyy', 'en-US');
+              : formatDate(notification.date.toDate(), 'MMM dd, yyyy', 'en-US');
           const information = this.createNotificationInformation(notification);
           const notif = {
             ...notification,
@@ -131,6 +131,15 @@ export class NotificationQuery extends QueryEntity<NotificationState, Notificati
           message: `Your movie has been accepted by Archipel Content.`,
           placeholderUrl: this.getPoster(notification.docId),
           url: `c/o/dashboard/titles/${notification.docId}`
+        };
+      case 'invitationToAnEvent':
+        return {
+          message: `Your event "${notification.docId}" is about to start !`,
+          url: `c/o/marketplace/event/${notification.docId}`
+        };
+      default:
+        return {
+          message: `Error while displaying notification.`
         };
     }
   }
