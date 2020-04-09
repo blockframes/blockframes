@@ -21,6 +21,9 @@ export class PermissionsGuard extends CollectionGuard<PermissionsState> {
   sync() {
     return this.authQuery.user$.pipe(
       switchMap(user => {
+        if (!user) {
+          return of('/');
+        }
         if (!user.orgId) {
           return of('c/organization');
         } else {
