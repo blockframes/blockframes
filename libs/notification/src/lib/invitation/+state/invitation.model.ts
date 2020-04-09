@@ -23,6 +23,20 @@ export interface InvitationFromOrganizationToUserOptions {
   toUser: PublicUser;
 }
 
+/** Create an invitation for an event */
+export function createEventInvitation(params: Partial<InvitationToAnEvent> = {}): InvitationToAnEvent {
+  return {
+    id: '',
+    mode: 'invitation',
+    status: 'pending',
+    type: 'event',
+    docId: '',
+    date: firestore.Timestamp.now(),
+    app: 'blockframes',
+    ...params
+  };
+}
+
 /** Factory function that create an Invitation of type fromUserToOrganization. */
 export function createInvitationFromUserToOrganization(params: InvitationFromUserToOrganizationOptions): InvitationFromUserToOrganization {
   return {

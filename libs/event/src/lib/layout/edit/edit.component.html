@@ -35,10 +35,26 @@
     <article class="invitations" fxLayout="column"  fxFlex="35">
       <h4>Invitations</h4>
       <mat-form-field appearance="outline">
-        <input matInput placheolder="Invite someone"/>
+        <input matInput placheolder="Invite someone" [formControl]="invitationForm"/>
         <mat-icon matSuffix svg="profile"></mat-icon>
       </mat-form-field>
       <!-- Here the list of invited persons -->
+      <mat-list>
+        <mat-list-item *ngFor="let invitation of invitations">
+          <ng-container *ngIf="invitation.toUser as user; else noUser">
+            <div matListAvatar class="avatar-status">
+              <img [imgRef]="user.avatar" placeholderAsset="profil_user.webp"/>
+              <mat-icon [svgIcon]="invitation.status | statusIcon" [color]="invitation.status | statusColor"></mat-icon>
+            </div>
+            <span matLine>{{ user | displayName }}</span>
+            <span matLine>{{ user.email }}</span>
+          </ng-container>
+          <ng-template #noUser>
+            <img matListAvatar placeholderAsset="profil_user.webp"/>
+            <span matLine>{{ invitation.toEmail }}</span>
+          </ng-template>
+        </mat-list-item>
+      </mat-list>
     </article>
   </section>
 </form>

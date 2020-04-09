@@ -59,6 +59,7 @@ export const icons = [
     name: 'checkbox_outline',
     url: 'assets/icons/checkbox_outline.svg'
   },
+  { name: 'check_circle', url: 'assets/icons/check_circle.svg' },
   {
     name: 'chevron_bottom',
     url: 'assets/icons/chevron_bottom.svg'
