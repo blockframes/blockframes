@@ -349,11 +349,10 @@ export class MarketplaceSearchComponent implements OnInit {
   public toggle$(movieId: string) {
     return this.catalogCartQuery.isAddedToWishlist(movieId);
   }
-
   public addToWishlist(movie: Movie) {
     this.cartService.updateWishlist(movie);
     this.snackbar.open(
-      `${movie.main.title.international} has been added to your selection.`,
+      `Title ${movie.main.title.international} has been added.`,
       'close',
       { duration: 2000 }
     );
@@ -366,7 +365,7 @@ export class MarketplaceSearchComponent implements OnInit {
   public removeFromWishlist(movie: Movie) {
     this.cartService.updateWishlist(movie);
     this.snackbar.open(
-      `${movie.main.title.international} has been removed from your selection.`,
+      `Title ${movie.main.title.international} has been removed.`,
       'close',
       { duration: 2000 }
     );
