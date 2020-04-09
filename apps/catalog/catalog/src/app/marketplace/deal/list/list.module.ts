@@ -11,6 +11,7 @@ import { ContractTableModule } from '@blockframes/contract/contract/components';
 
 // Material
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatButtonModule } from '@angular/material/button';
 
 
 @NgModule({
@@ -24,6 +25,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 
     // Material
     MatTabsModule,
+    MatButtonModule,
     RouterModule.forChild([{ path: '', component: DealListComponent }])
   ]
 })
