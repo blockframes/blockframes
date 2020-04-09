@@ -32,7 +32,7 @@ const ORGANIZATION: Organization = {
     country: 'France',
     phoneNumber: '+334 857 953'
   },
-  activity: 'Testing',
+  activity: 'Distribution',
   fiscalNumber: '95 14 958 641 215 C',
 
   bankAccount: {
