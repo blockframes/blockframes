@@ -8,7 +8,7 @@ import { InvitationService }  from '@blockframes/invitation/+state/invitation.se
 import { createEventInvitation }  from '@blockframes/invitation/+state/invitation.model';
 import { FormControl } from '@angular/forms';
 import { createPublicUser } from '@blockframes/user/+state/user.model';
-import { createPublicOrganization } from '@blockframes/organization/organization/+state/organization.model';
+import { getPublicOrg } from '@blockframes/organization/organization/+state/organization.model';
 import { OrganizationQuery } from '@blockframes/organization/organization/+state';
 import { AuthQuery } from '@blockframes/auth/+state';
 import { PublicUser } from '@blockframes/user/types';
@@ -22,7 +22,7 @@ import { PublicUser } from '@blockframes/user/types';
 export class EventEditComponent {
 
   @Input() form = new EventForm();
-  @Input() invitations: InvitationToAnEvent[];
+  @Input() invitations: InvitationToAnEvent[] = [];
   invitationForm = new FormControl();
 
   constructor(
@@ -49,16 +49,18 @@ export class EventEditComponent {
 
   /** Send an invitation to a list of persons, either email or existing user  */
   invite() {
-    const event = this.form.value;
-    const guests: (string | PublicUser)[] = this.invitationForm.value;
-    const invitations = guests.map(guest => {
-      const invite: Partial<InvitationToAnEvent> = { docId: event.id, mode: 'invitation' };
-      if (typeof guest === 'string') invite.toEmail = guest;
-      if (typeof guest === 'object') invite.toUser = createPublicUser(guest);
-      if (event.type === 'screening') invite.fromOrg = createPublicOrganization(this.orgQuery.getActive());
-      if (event.type === 'meeting') invite.fromUser = createPublicUser(this.authQuery.user);
-      return createEventInvitation(invite);
-    });
-    this.invitationService.add(invitations);
+    if (this.invitationForm.dirty && this.invitationForm.valid) {
+      const event = this.form.value;
+      const guests: (string | PublicUser)[] = [this.invitationForm.value];
+      const invitations = guests.map(guest => {
+        const invite: Partial<InvitationToAnEvent> = { docId: event.id, mode: 'invitation' };
+        if (typeof guest === 'string') invite.toEmail = guest;
+        if (typeof guest === 'object') invite.toUser = createPublicUser(guest);
+        if (event.type === 'screening') invite.fromOrg = getPublicOrg(this.orgQuery.getActive());
+        if (event.type === 'meeting') invite.fromUser = createPublicUser(this.authQuery.user);
+        return createEventInvitation(invite);
+      });
+      this.invitationService.add(invitations);
+    }
   }
 }

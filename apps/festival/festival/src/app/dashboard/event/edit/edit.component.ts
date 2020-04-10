@@ -4,9 +4,10 @@ import { EventEditComponent } from '@blockframes/event/layout/edit/edit.componen
 import { EventQuery } from '@blockframes/event/+state/event.query';
 import { Movie, MovieService } from '@blockframes/movie/+state';
 import { OrganizationQuery } from '@blockframes/organization/organization/+state';
-import { Observable, Subscription } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
-import { Invitation, InvitationService } from '@blockframes/invitation/+state';
+import { Observable, Subscription, of } from 'rxjs';
+import { switchMap, startWith } from 'rxjs/operators';
+import { Invitation } from '@blockframes/invitation/+state';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 @Component({
   selector: 'festival-event-edit',
@@ -26,16 +27,17 @@ export class EditComponent implements OnInit, OnDestroy {
   constructor(
     private query: EventQuery,
     private movieService: MovieService,
-    private invitationService: InvitationService,
-    private orgQuery: OrganizationQuery
+    private orgQuery: OrganizationQuery,
+    private db: AngularFirestore
   ) { }
 
   ngOnInit(): void {
+    this.invitations$ = this.query.selectActiveId().pipe(
+      switchMap(id => this.db.collection<Invitation>('invitations', ref => ref.where('docId', '==', id).limit(10)).valueChanges()),
+      startWith([])
+    );
     this.titles$ = this.orgQuery.selectActive().pipe(
       switchMap(org => this.movieService.getValue(org.movieIds))
-    );
-    this.invitations$ = this.query.selectActiveId().pipe(
-      switchMap(eventId => this.invitationService.getValue(ref => ref.where('docId', '==', eventId).limit(10))),
     );
     this.sub = this.query.selectActive().subscribe(event => this.form.reset(event));
   }
