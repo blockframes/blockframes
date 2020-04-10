@@ -11,6 +11,7 @@ import { MatListModule } from '@angular/material/list';
 import { TranslateSlugModule } from '@blockframes/utils/pipes';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatButtonModule } from '@angular/material/button';
+import { InputAutocompleteModule } from '@blockframes/ui/static-autocomplete/input/input-autocomplete.module';
 
 // Material
 
@@ -24,6 +25,7 @@ import { MatButtonModule } from '@angular/material/button';
   imports: [
     CommonModule,
     ReactiveFormsModule,
+    InputAutocompleteModule,
 
     TranslateSlugModule,
 

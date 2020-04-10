@@ -1,23 +1,13 @@
 
 <!-- LANGUAGE AUTO COMPLETE -->
 <div fxLayout="row" fxLayoutAlign="start start">
-  <mat-form-field appearance="outline">
-    <mat-label>New language</mat-label>
-    <input test-id="languages-panel-input" matInput type="text" [matAutocomplete]="language"
-      [formControl]="languageControl" placeholder="Add new language"/>
-    <mat-error *ngIf="languageControl.hasError('languageNotSupported')">
-      Please enter a valid language or choose from the dropdown menu!
-    </mat-error>
-    <button matSuffix mat-icon-button (click)="addLanguage(languageControl.value)"
-      [disabled]="!languageControl.valid">
-      <mat-icon svgIcon="magnifying_glasses"></mat-icon>
-    </button>
-    <mat-autocomplete #language="matAutocomplete">
-      <mat-option *ngFor="let language of languagesAutocomplete$ | async" [value]="language">
-        {{language}}
-      </mat-option>
-    </mat-autocomplete>
-  </mat-form-field>
+
+  <input-autocomplete
+    label="New language"
+    scope="LANGUAGES"
+    [control]="languageControl"
+  ></input-autocomplete>
+
   <button
     test-id="languages"
     class="language-button"
