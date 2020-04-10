@@ -34,7 +34,7 @@ export class InvitationListComponent implements OnInit, OnDestroy {
 
     const storeName = this.store.storeName;
     const queryFn = ref =>
-      ref.where('organization.id', '==', this.authQuery.orgId).where('status', '==', 'pending');
+      ref.where('fromOrg.id', '==', this.authQuery.orgId).where('status', '==', 'pending');
     if (this.authQuery.orgId) {
       this.collectionSub = this.service.syncCollection(queryFn, { storeName }).subscribe();
       this.themeSub = this.themeService.theme$.subscribe(theme => this.theme = theme);
