@@ -44,10 +44,10 @@ export class EventService extends CollectionService<EventState> {
    * @param eventId 
    */
   // @TODO (#2460)  Waiting for a decision on screening flow before uncomment
-  /*public setEventUrl(eventId: string): Promise<any> {
+  public setEventUrl(eventId: string): Promise<any> {
     const f = this.functions.httpsCallable('setEventUrl');
     return f({ eventId }).toPromise();
-  }*/
+  }
 
   /**
    * Get event private url
