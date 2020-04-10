@@ -24,7 +24,7 @@ import { boolean } from '@blockframes/utils/decorators/decorators';
 
 
 @Component({
-  selector: '[indexName] [keyToDisplay] algolia-autocomplete',
+  selector: '[index] [keyToDisplay] algolia-autocomplete',
   templateUrl: 'algolia-autocomplete.component.html',
   styleUrls: ['algolia-autocomplete.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -35,9 +35,9 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
 
   /**
    * Should be fed with the algolia index name out of the `env.ts`
-   * @example [indexName]="algolia.indexNameMovies" // 'pl_movies' from the env.ts
+   * @example [index]="algolia.indexNameMovies" // 'pl_movies' from the env.ts
    */
-  @Input() indexName: string;
+  @Input() index: string;
 
   /**
    * The path of the key to display : i.e. What part of the result should be displayed by the input ?
@@ -53,8 +53,9 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
   /**
    * The name of the facet to search on.
    * @note .**search is not perform on facets by default** *(enter a value to start searching on facets)*
+   * @example facet="orgName"
    */
-  @Input() facetName = '';
+  @Input() facet = '';
 
   /** Optional input if you want to use your own form control */
   @Input() control = new FormControl();
@@ -74,14 +75,8 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
   /** Wether to use a material input or a native html input */
   @Input() @boolean native = false;
 
-  /** Wether or not to display a prefix icon in the input */
-  @Input() @boolean icon = false;
-
-  /**
-   * The icon to display in the input prefix
-   * @default 'magnifying_glasses'
-   */
-  @Input() svgIcon = 'magnifying_glasses';
+  /** The icon to display in the input prefix */
+  @Input() prefixIcon: string;
 
   /** Wether or not to display a cross button to clear the input */
   @Input() @boolean clearable = false;
@@ -112,23 +107,23 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
   ngOnInit() {
 
     // In case of facet search we know the result object will store the matched facets in the `value` field
-    if (!!this.facetName.trim()) {
+    if (!!this.facet.trim()) {
       this.keyToDisplay = 'value';
     }
 
     // initialize Algolia
-    this.indexSearch = searchClient.initIndex(this.indexName);
+    this.indexSearch = searchClient.initIndex(this.index);
 
     // create search functions
     const regularSearch = (text: string) => this.indexSearch.search(text).then(result => result.hits);
-    const facetSearch = (text: string) => this.indexSearch.searchForFacetValues({facetName: this.facetName, facetQuery: text}).then(result => result.facetHits);
+    const facetSearch = (text: string) => this.indexSearch.searchForFacetValues({facetName: this.facet, facetQuery: text}).then(result => result.facetHits);
 
     // perform search
     this.algoliaSearchResults$ = this.control.valueChanges.pipe(
       debounceTime(300),
       filter(text => typeof text === 'string' && !!text.trim()),
       distinctUntilChanged(),
-      switchMap(text => (!!this.facetName.trim()) ? facetSearch(text) : regularSearch(text)),
+      switchMap(text => (!!this.facet.trim()) ? facetSearch(text) : regularSearch(text)),
       tap(data => this.lastValue$.next(data)),
     );
   }

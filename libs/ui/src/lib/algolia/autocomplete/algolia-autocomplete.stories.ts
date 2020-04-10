@@ -12,7 +12,7 @@ export const algoliaAutocomplete = () => ({
   template: `
     <storybook-toolkit>
       <h1 title>Algolia Autocomplete</h1>
-       <algolia-autocomplete [indexName]="indexName" keyToDisplay="title.original" icon clearable>
+       <algolia-autocomplete [index]="indexName" keyToDisplay="title.original" prefixIcon="magnifying_glasses" clearable>
         <ng-template let-result>
           {{ result.title.international }}
         </ng-template>

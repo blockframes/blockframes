@@ -34,7 +34,7 @@
       <button mat-icon-button (click)="sidenav.toggle()">
         <mat-icon svgIcon="menu"></mat-icon>
       </button>
-      <algolia-autocomplete icon native clearable resetInput [indexName]="movieIndex" keyToDisplay="title.international">
+      <algolia-autocomplete native clearable resetInput [index]="movieIndex" keyToDisplay="title.international" prefixIcon="magnifying_glasses">
         <ng-template let-result>
           <a [routerLink]="['titles', result.objectID]">{{ result.title.international }}</a>
         </ng-template>
