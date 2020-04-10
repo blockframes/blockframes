@@ -52,33 +52,52 @@ service cloud.firestore {
     }
 
     /// INVITATIONS RULES ///
+    
+    // Functions
+    // Send the invitation
+    function isHost() {
+      return userOrgId() == existingData().fromOrg.id
+        || userId() == existingData().fromUser.uid;
+    }
+    // Receive the invitation
+    function isGuest() {
+      return userId() == existingData().toUser.uid
+        || currentUser().email == existingData().toEmail;
+    }
 
+    // Rules
     match /invitations/{invitationId} {
-    	allow read: if userId() == existingData().user.uid
-      	|| userOrgId() == existingData().organization.id;
+    	allow read: if isHost() || isGuest();
 
-      allow create: if userId() == incomingData().user.uid
-      	|| userOrgId() == incomingData().organization.id
+      allow create: 
+        // Event
+        if incomingData().type == 'event'
+        // Invitation to org
+        || userId() == incomingData().fromUser.uid
+      	|| userOrgId() == incomingData().fromOrg.id
         || orgCan('isAdmin', userOrgId(), incomingData().docId);
 
 
-    	allow update: if (
+    	allow update: if 
+        // Event
+        (incomingData().type == 'event' && isGuest())
+        ||
         (
-          (incomingData().user.uid == existingData().user.uid)
-          && (incomingData().organization.id == existingData().organization.id)
+          (incomingData().toUser.uid == existingData().toUser.uid)
+          && (incomingData().fromOrg.id == existingData().fromOrg.id)
         )
         &&
         (
-          (userId() == existingData().user.uid)
-          || (userOrgId() == incomingData().organization.id)
+          (userId() == existingData().toUser.uid)
+          || (userOrgId() == incomingData().fromOrg.id)
           || (orgCan('isAdmin', userOrgId(), incomingData().docId))
-        )
-      );
+        );
 
-      allow delete: if (
-        isOrgAdmin(userId(), existingData().organization.id)
-        || userId() == existingData().user.uid
-      );
+      allow delete: if
+        // Event
+        (incomingData().type == 'event' && isHost())
+        ||
+        (isOrgAdmin(userId(), existingData().fromOrg.id) || userId() == existingData().toUser.uid);
     }
 
     /// ORGANIZATION RULES ///
@@ -170,6 +189,15 @@ service cloud.firestore {
       allow read: if true; // @TODO #1388 Only if licensee.orgId == currentUser.orgId || if licensor.orgId == currentUser.orgId
     }
 
+    /// EVENTS RULES ///
+    match /events/{eventId} {
+    	allow write: if true; // @TODO #1388 Only if contract.status  === 'unknown' ?
+      allow read: if true; // @TODO #1388 Only if licensee.orgId == currentUser.orgId || if licensor.orgId == currentUser.orgId
+	    match /{document=**} {
+        allow read, write: if true;
+      }    
+		}
+
     /// META ///
     match /_META/_MAINTENANCE {
       allow read;
@@ -258,15 +286,13 @@ service cloud.firestore {
     	return get(/databases/$(database)/documents/permissions/$(orgId)).data;
     }
 
-    function documentPermissionsExist(orgId, docId) {
-    	return exists(/databases/$(database)/documents/permissions/$(orgId)/documentPermissions/$(docId));
-    }
-
 		// Parameter "action" can either be "canCreate", "canRead", "canUpdate" or "canDelete"
     function orgCan(action, orgId, docId) {
       return (getDocumentPermissions(orgId, docId).ownerId == orgId)
         || (getDocumentPermissions(orgId, docId).admin == true)
         || (getDocumentPermissions(orgId, docId)[action] == true);
     }
+
+
   }
 }
