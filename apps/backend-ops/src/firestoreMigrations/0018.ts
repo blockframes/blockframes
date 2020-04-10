@@ -49,52 +49,53 @@ export async function rightInContract(db: Firestore) {
 
   const newContractData = contracts.docs.map(async (contractDocSnapshot: any): Promise<any> => {
     const contractData = contractDocSnapshot.data();
+    const { lastVersion } = contractData;
 
-    const newTitles = Object.keys(contractData.lastVersion.titles).forEach(titleId => {
-      delete contractData.lastVersion.titles[titleId].distributionDealIds;
+    if (lastVersion?.titles) {
 
-      return { test: 'blabla'};
-    });
+      const newTitles = Object.keys(contractData.lastVersion.titles).map(titleId => {
+        const distributionDealIds = contractData.lastVersion.titles[titleId].distributionDealIds;
+        delete contractData.lastVersion.titles[titleId].distributionDealIds;
 
-    const newData = {
-      ...contractData,
-      lastVersion: {
-        ...contractData.lastVersion,
-        newTitles
+        return contractData.lastVersion.titles[titleId] = {
+          ...contractData.lastVersion.titles[titleId],
+          distributionRightIds : distributionDealIds
+        };
+      })
+
+      const newData = {
+        ...contractData,
+        lastVersion: {
+          ...contractData.lastVersion,
+          titles: newTitles
+        }
       }
+      return contractDocSnapshot.ref.set(newData);
     }
 
-    return contractDocSnapshot.ref.set(newData);
   })
-
-  // for (const contractDoc of contracts.docs) {
-  //   const contractData = contractDoc.data();
-  //   const { lastVersion } = contractData;
-
-  //   if (lastVersion) {
-
-  //     const distributionRightIds = Object.keys(contractData.lastVersion.titles).forEach(titleId => {
-
-  //       const distributionDealIds = contractData.lastVersion.titles[titleId].distributionDealIds;
-  //       delete contractData.lastVersion.titles[titleId].distributionDealIds;
-
-  //     });
-
-  //     const newData = {
-  //       ...contractData,
-  //       lastVersion : {
-  //         ...contractData.lastVersion,
-  //         titles : distributionRightIds,
-  //       }
-  //     }
-  //   }
-  // };
   await Promise.all(newContractData);
   console.log('Updating contract collection done.');
 }
 
+/**
+ * Update the distributionDeals in contractVersion subcollection (rename in distributionRights)
+ */
+export async function rightInContractVersion(db: Firestore) {
+  const contracts = await db.collection('contracts').get();
+  const batch = db.batch();
+
+  const updates = contracts.docs.map(async contract => {
+    const versionDoc = await contract.ref.collection('version').get();
+
+    if (versionDoc) {}
+  });
+
+  console.log('Updating contract version subcollection done.');
+}
 
 export async function upgrade(db: Firestore) {
   await distributionRightRenaming(db);
   await rightInContract(db);
+  await rightInContractVersion(db);
 }
