@@ -45,7 +45,13 @@
             </mat-icon>
           </a>
           <mat-divider vertical></mat-divider>
-          <overlay-notification-widget page="notifications"></overlay-notification-widget>
+          <a mat-icon-button routerLink="invitations">
+            <mat-icon svgIcon="send"></mat-icon>
+          </a>
+          <a mat-icon-button routerLink="notifications">
+            <mat-icon svgIcon="bell"></mat-icon>
+          </a>
+          <!-- <overlay-notification-widget page="notifications"></overlay-notification-widget> -->
           <auth-widget></auth-widget>
         </div>
       </mat-toolbar>
