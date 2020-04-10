@@ -28,7 +28,10 @@ import { MatIconModule } from '@angular/material/icon';
     MatCardModule,
     MatButtonModule,
     MatIconModule,
-    RouterModule.forChild([{ path: '', component: SummaryMandateComponent }])
+    RouterModule.forChild([
+      { path: '', component: SummaryMandateComponent },
+      { path: 'success', loadChildren: () => import('../success/success.module').then(m => m.SuccessModule) }
+    ])
   ]
 })
 export class SummaryMandateModule { }

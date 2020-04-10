@@ -10,6 +10,7 @@ import { ContractTunnelComponent, RightControls } from '../contract-tunnel.compo
 import { ContractQuery, ContractService } from '../../+state';
 import { displayPaymentSchedule, displayTerms } from '../../+state/contract.utils';
 import { Observable } from 'rxjs';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'contract-tunnel-summary-sale',
@@ -33,7 +34,9 @@ export class SummarySaleComponent implements OnInit {
     private tunnel: ContractTunnelComponent,
     private contractService: ContractService,
     private query: ContractQuery,
-    private dynTitle: DynamicTitleService
+    private dynTitle: DynamicTitleService,
+    private router: Router,
+    private route: ActivatedRoute
   ) {
     this.dynTitle.setPageTitle('Contract offer summary', 'Summary and Submit')
   }
@@ -71,6 +74,7 @@ export class SummarySaleComponent implements OnInit {
   async submit() {
     const contract = this.query.getActive();
     await this.tunnel.save();
-    return this.contractService.submit(contract);
+    await this.contractService.submit(contract);
+    this.router.navigate(['success'], {relativeTo: this.route})
   }
 }

@@ -105,9 +105,6 @@ export const panelRoutes: Routes = [
     UserComponent,
     EventsComponent,
     EventComponent,
-  ],
-  exports: [
-    RouterModule,
   ]
 })
 export class AdminPanelModule { }
