@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
 import { PriceComponent } from './price.component';
 import { MovieBannerModule } from '@blockframes/movie/components/banner';
 import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
-import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia-autocomplete/algolia-autocomplete.module';
+import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module';
 
 // Material
 import { MatDividerModule } from '@angular/material/divider';

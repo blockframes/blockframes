@@ -114,7 +114,15 @@
       </ng-template>
 
       <ng-template filter label="Seller">
-        <title-filter-seller [form]="sellersForm"></title-filter-seller>
+        <algolia-chips-autocomplete
+          [index]="movieIndex"
+          keyToDisplay="value"
+          facet="orgName"
+          [form]="sellersForm"
+          label="Search for a specific Seller"
+          placeholder="Organization name"
+          resetInput
+        ></algolia-chips-autocomplete>
       </ng-template>
 
   </title-filter>

@@ -5,7 +5,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 
-import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia-autocomplete/algolia-autocomplete.module'
+import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module'
 
 // Guards
 import { EventActiveGuard } from '@blockframes/event/guard/event-active.guard';

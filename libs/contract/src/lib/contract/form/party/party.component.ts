@@ -45,7 +45,7 @@ export class ContractFormPartyComponent {
     this.form.add();
   }
 
-  public patchOrgId(event: string | string, control: PartyDetailsForm) {
-    control.get('party').get('orgId').setValue(event)
+  public patchOrgId(event: any, control: PartyDetailsForm) {
+    control.get('party').get('orgId').setValue(event.objectID)
   }
 }

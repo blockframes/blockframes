@@ -37,8 +37,8 @@ export class EditPartyComponent implements OnInit {
     this.form = new PartyDetailsForm(this.data.party);
   }
 
-  public patchOrgId(event: string) {
-    this.form.get('party').get('orgId').setValue(event)
+  public patchOrgId(result: any) {
+    this.form.get('party').get('orgId').setValue(result.objectID);
   }
 
   save() {
