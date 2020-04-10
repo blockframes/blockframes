@@ -1,6 +1,6 @@
 import { MatIconRegistry } from '@angular/material/icon';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Injectable, PLATFORM_ID } from '@angular/core';
+import { Injectable, PLATFORM_ID, Inject } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 
 export const icons = [
@@ -261,10 +261,16 @@ export type IconSvg = typeof icons[number]['name'];
  */
 @Injectable({ providedIn: 'root' })
 export class IconService {
-  constructor(private matIconRegistry: MatIconRegistry, private domSanitizer: DomSanitizer) {
+  constructor(
+    private matIconRegistry: MatIconRegistry,
+    private domSanitizer: DomSanitizer,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {}
+
+  init() {
     // Angular Material currently needs a workaround for server side rendering.
     // See https://github.com/angular/components/issues/9728
-    if (isPlatformBrowser(PLATFORM_ID)) {
+    if (isPlatformBrowser(this.platformId)) {
       icons.forEach(({ name, url }) => {
         this.matIconRegistry.addSvgIcon(name, this.domSanitizer.bypassSecurityTrustResourceUrl(url));
       });

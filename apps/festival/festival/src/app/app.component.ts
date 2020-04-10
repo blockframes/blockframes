@@ -18,5 +18,6 @@ export class AppComponent {
     ym: YandexMetricaService // Need to be instantiate
   ) {
     theme.initTheme('dark');
+    icons.init()
   }
 }

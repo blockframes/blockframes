@@ -1,5 +1,5 @@
 import { YandexMetricaService } from '@blockframes/utils/yandex-metrica/yandex-metrica.service';
-import { ChangeDetectionStrategy, Component, Renderer2 } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ThemeService } from '@blockframes/ui/theme';
 import { IconService } from '@blockframes/ui/icon-service';
 import { TunnelService } from '@blockframes/ui/tunnel';
@@ -17,5 +17,6 @@ export class AppComponent {
     ym: YandexMetricaService // Need to be instantiate
   ) {
     theme.initTheme('light');
+    icons.init()
   }
 }
