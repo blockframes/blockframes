@@ -1,12 +1,13 @@
 import { Component, ChangeDetectionStrategy, OnInit, ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, filter } from 'rxjs/operators';
 import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { MatSidenav } from '@angular/material/sidenav';
+import { MatSidenav, MatSidenavContent } from '@angular/material/sidenav';
 import { MarketplaceQuery } from '../+state';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { Wishlist } from '@blockframes/organization/organization/+state/organization.model';
+import { Router, NavigationEnd } from '@angular/router';
 
 @Component({
   selector: 'catalog-layout',
@@ -17,18 +18,21 @@ import { Wishlist } from '@blockframes/organization/organization/+state/organiza
 
 export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   private sub: Subscription;
+  private routerSub: Subscription;
   public user$ = this.authQuery.select('profile');
   public currentWishlist$: Observable<Wishlist>;
   public wishlistCount$: Observable<number>;
   public cartCount$ = this.marketplaceQuery.selectCount();
 
   @ViewChild('sidenav') sidenav: MatSidenav;
+  @ViewChild('content') sidenavContent: MatSidenavContent;
 
   constructor(
     private marketplaceQuery: MarketplaceQuery,
     private catalogCartQuery: CatalogCartQuery,
     private authQuery: AuthQuery,
-    private routerQuery: RouterQuery
+    private routerQuery: RouterQuery,
+    private router: Router
   ) { }
 
   ngOnInit() {
@@ -42,9 +46,17 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     this.sub = this.routerQuery.select('navigationId').subscribe(_ => this.sidenav.close());
+    // https://github.com/angular/components/issues/4280
+    // TODO #2502
+    this.routerSub = this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        this.sidenavContent.scrollTo({top: 0});
+      })
   }
 
   ngOnDestroy() {
     if (this.sub) { this.sub.unsubscribe(); }
+    if (this.routerSub) { this.routerSub.unsubscribe(); }
   }
 }
