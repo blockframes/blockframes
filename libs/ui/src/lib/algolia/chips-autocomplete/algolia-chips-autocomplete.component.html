@@ -8,11 +8,13 @@
 </mat-chip-list>
 
 <algolia-autocomplete
-  [index]="indexName"
+  [index]="index"
   [keyToDisplay]="keyToDisplay"
-  [facet]="facetName"
+  [facet]="facet"
   [label]="label"
   [placeholder]="placeholder"
+  [prefixIcon]="prefixIcon"
+  [clearable]="clearable"
   [resetInput]="resetInput"
   (selectionChange)="add($event)"
 >

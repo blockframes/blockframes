@@ -3,7 +3,7 @@ import { FormArray, FormControl } from '@angular/forms';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 
 @Component({
-  selector: '[indexName] [keyToDisplay] [form] algolia-chips-autocomplete',
+  selector: '[index] [keyToDisplay] [form] algolia-chips-autocomplete',
   templateUrl: './algolia-chips-autocomplete.component.html',
   styleUrls: ['./algolia-chips-autocomplete.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -14,9 +14,9 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit {
 
   /**
    * Should be fed with the algolia index name out of the `env.ts`
-   * @example [indexName]="algolia.indexNameMovies" // 'pl_movies' from the env.ts
+   * @example [index]="algolia.indexNameMovies" // 'pl_movies' from the env.ts
    */
-  @Input() indexName: string;
+  @Input() index: string;
 
   /**
    * The path of the key to display : i.e. What part of the result should be displayed by the input ?
@@ -31,7 +31,7 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit {
    * The name of the facet to search on.
    * @note .**search is not perform on facets by default** *(enter a value to start searching on facets)*
    */
-  @Input() facetName = '';
+  @Input() facet = '';
 
   // TODO use FormList after #2489 has been fixed
   @Input() form: FormArray;
@@ -55,18 +55,15 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit {
   /** Wether or not to display a prefix icon in the input */
   @Input() @boolean icon = false;
 
-  /**
-   * The icon to display in the input prefix
-   * @default 'magnifying_glasses'
-   */
-  @Input() svgIcon = 'magnifying_glasses';
+  /** The icon to display in the input prefix */
+  @Input() prefixIcon: string;
 
   /** Wether or not to display a cross button to clear the input */
   @Input() @boolean clearable = false;
 
   ngOnInit() {
     // In case of facet search we know the result object will store the matched facets in the `value` field
-    if (!!this.facetName.trim()) {
+    if (!!this.facet.trim()) {
       this.keyToDisplay = 'value';
     }
   }
