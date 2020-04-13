@@ -1,6 +1,6 @@
 <ng-container *ngIf="steps$ | async as steps">
   <mat-accordion *ngIf="steps.length">
-    <mat-expansion-panel *ngFor="let panel of steps" [expanded]="panel.open">
+    <mat-expansion-panel *ngFor="let panel of steps">
       <mat-expansion-panel-header>
         <mat-panel-title>
           <mat-icon [svgIcon]="panel.icon" bf-color="primary"></mat-icon>
