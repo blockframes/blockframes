@@ -1,4 +1,5 @@
 import { Firestore } from '../admin';
+import { version } from 'punycode';
 
 /**
  * Update the distributionDeals subcollection (rename in distributionRights)
@@ -49,27 +50,24 @@ export async function rightInContract(db: Firestore) {
 
   const newContractData = contracts.docs.map(async (contractDocSnapshot: any): Promise<any> => {
     const contractData = contractDocSnapshot.data();
+    const newData = { ...contractData };
+
     const { lastVersion } = contractData;
 
     if (lastVersion?.titles) {
 
-      const newTitles = Object.keys(contractData.lastVersion.titles).map(titleId => {
-        const distributionDealIds = contractData.lastVersion.titles[titleId].distributionDealIds;
-        delete contractData.lastVersion.titles[titleId].distributionDealIds;
+      Object.keys(contractData.lastVersion.titles).forEach(titleId => {
+        if (contractData.lastVersion.titles[titleId].distributionDealIds) {
 
-        return contractData.lastVersion.titles[titleId] = {
-          ...contractData.lastVersion.titles[titleId],
-          distributionRightIds : distributionDealIds
-        };
-      })
+          const distributionDealIds = contractData.lastVersion.titles[titleId].distributionDealIds;
+          delete contractData.lastVersion.titles[titleId].distributionDealIds;
 
-      const newData = {
-        ...contractData,
-        lastVersion: {
-          ...contractData.lastVersion,
-          titles: newTitles
+          contractData.lastVersion.titles[titleId] = {
+            ...contractData.lastVersion.titles[titleId],
+            distributionRightIds : distributionDealIds
+          };
         }
-      }
+      })
       return contractDocSnapshot.ref.set(newData);
     }
 
@@ -82,16 +80,35 @@ export async function rightInContract(db: Firestore) {
  * Update the distributionDeals in contractVersion subcollection (rename in distributionRights)
  */
 export async function rightInContractVersion(db: Firestore) {
-  const contracts = await db.collection('contracts').get();
-  const batch = db.batch();
+  const versions = await db.collectionGroup('versions').get();
 
-  const updates = contracts.docs.map(async contract => {
-    const versionDoc = await contract.ref.collection('version').get();
+  const updates = versions.docs.map(async (versionDocSnapshot: any): Promise<any> => {
+    const versionData = versionDocSnapshot.data();
+    const newData = { ...versionData };
 
-    if (versionDoc) {}
+    if (versionData.titles) {
+
+      Object.keys(versionData.titles).forEach(titleId => {
+        if (versionData.titles[titleId].distributionDealIds) {
+
+          const distributionDealIds = versionData.titles[titleId].distributionDealIds;
+
+          delete versionData.titles[titleId].distributionDealIds;
+
+          versionData.titles[titleId] = {
+            ...versionData.titles[titleId],
+            distributionRightIds : distributionDealIds
+          }
+        }
+      });
+
+      return versionDocSnapshot.ref.set(newData);
+
+    }
   });
 
   console.log('Updating contract version subcollection done.');
+  await Promise.all(updates);
 }
 
 export async function upgrade(db: Firestore) {
