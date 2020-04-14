@@ -4,7 +4,7 @@ import { OrganizationQuery } from '@blockframes/organization/organization/+state
 import { Observable, BehaviorSubject } from 'rxjs';
 import { startWith, switchMap } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
-import { NotificationDocument, NotificationType } from '@blockframes/notification/types';
+import { NotificationType } from '@blockframes/notification/types';
 import { DateGroup } from '@blockframes/utils/helpers';
 import { InvitationQuery } from '@blockframes/notification/invitation/+state/invitation.query';
 import { InvitationStore } from '@blockframes/notification/invitation/+state/invitation.store';
@@ -42,7 +42,7 @@ export class ActivityTabsComponent implements OnInit {
 
   public filter = new FormControl();
   public filter$ = this.filter.valueChanges.pipe(startWith('All'));
-  public notifications$: Observable<DateGroup<NotificationDocument[]>>;
+  public notifications$: Observable<DateGroup<Notification[]>>;
   public invitationCount = this.invitationQuery.getCount();
   public isLoading$ = this.notificationQuery.selectLoading();
 

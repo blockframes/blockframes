@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { QueryEntity } from '@datorama/akita';
+import { QueryEntity, QueryConfig, Order } from '@datorama/akita';
 import { InvitationStore, InvitationState } from './invitation.store';
 import { DateGroup } from '@blockframes/utils/helpers';
 import { map } from 'rxjs/operators';
@@ -7,7 +7,8 @@ import { Observable } from 'rxjs';
 import { formatDate } from '@angular/common';
 import { Invitation } from './invitation.model';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
+@QueryConfig({ sortBy: 'date', sortByOrder: Order.DESC })
 export class InvitationQuery extends QueryEntity<InvitationState> {
   constructor(protected store: InvitationStore) {
     super(store);

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { InvitationState } from './invitation.store';
+import { InvitationState, InvitationStore } from './invitation.store';
 import { createInvitationFromUserToOrganization, createInvitationFromOrganizationToUser, Invitation } from './invitation.model';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { OrganizationService } from '@blockframes/organization/organization/+state/organization.service';
@@ -10,11 +10,12 @@ import { AuthService } from '@blockframes/auth/+state/auth.service';
 @CollectionConfig({ path: 'invitations' })
 export class InvitationService extends CollectionService<InvitationState> {
   constructor(
+    store: InvitationStore,
     private authQuery: AuthQuery,
     private authService: AuthService,
     private orgService: OrganizationService,
   ) {
-    super();
+    super(store);
   }
 
   /** Create an Invitation when a user asks to join an Organization. */

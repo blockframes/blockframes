@@ -43,6 +43,11 @@ const routes: Routes = [{
       data: { animation: 'notifications' }
     },
     {
+      path: 'invitations',
+      loadChildren: () => import('./invitation/invitation.module').then(m => m.InvitationModule),
+      data: { animation: 'invitations' }
+    },
+    {
       path: 'wishlist',
       loadChildren: () => import('./wishlist/wishlist.module').then(m => m.WishlistModule),
       data: { animation: 'wishlist' }
