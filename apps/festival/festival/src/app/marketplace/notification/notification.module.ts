@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ImgAssetModule } from '@blockframes/ui/theme';
 import { NotificationComponent } from './notification.component';
-import { NotificationListModule } from '@blockframes/notification/notification/components/list/list.module';
+import { NotificationListModule } from '@blockframes/notification/components/list/list.module';
 
 @NgModule({
   declarations: [NotificationComponent],

@@ -38,7 +38,7 @@ import { OrganizationCreateComponent } from './pages/organization-create/organiz
 import { OrganizationAppAccessComponent } from './pages/organization-app-access/organization-app-access.component';
 
 // Guards
-import { NoOrganizationInvitationGuard } from '@blockframes/notification/invitation/guard/no-organization-invitation.guard';
+import { NoOrganizationInvitationGuard } from '@blockframes/invitation/guard/no-organization-invitation.guard';
 import { NoOrganizationGuard } from './guard/no-organization.guard';
 import { PendingOrganizationGuard } from './guard/pending-organization.guard';
 

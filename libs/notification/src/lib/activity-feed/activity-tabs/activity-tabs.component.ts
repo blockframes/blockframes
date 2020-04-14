@@ -6,10 +6,10 @@ import { startWith, switchMap } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 import { NotificationType } from '@blockframes/notification/types';
 import { DateGroup } from '@blockframes/utils/helpers';
-import { InvitationQuery } from '@blockframes/notification/invitation/+state/invitation.query';
-import { InvitationStore } from '@blockframes/notification/invitation/+state/invitation.store';
-import { NotificationQuery } from '@blockframes/notification/notification/+state/notification.query';
-import { Notification } from '@blockframes/notification/notification/+state/notification.model';
+import { InvitationQuery } from '@blockframes/invitation/+state/invitation.query';
+import { InvitationStore } from '@blockframes/invitation/+state/invitation.store';
+import { NotificationQuery } from '@blockframes/notification/+state/notification.query';
+import { Notification } from '@blockframes/notification/+state/notification.model';
 
 export interface ActivityTab {
   label: string;

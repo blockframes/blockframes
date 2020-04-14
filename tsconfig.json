@@ -48,7 +48,9 @@
       "@blockframes/notification/types": [
         "libs/notification/src/lib/notification/+state/notification.firestore.ts"
       ],
-      "@blockframes/notification/*": ["libs/notification/src/lib/*"],
+      "@blockframes/notification/*": ["libs/notification/src/lib/notification/*"],
+      /** Find a better way to import this part of the notification lib **/
+      "@blockframes/notification/activity-feed/*": ["libs/notification/src/lib/activity-feed/*"],
       "@blockframes/contract/*": ["libs/contract/src/lib/*"],
       "@blockframes/financial-report/*": ["libs/financial-report/src/lib/*"],
       "@blockframes/admin/*": ["libs/admin/src/lib/*"],
