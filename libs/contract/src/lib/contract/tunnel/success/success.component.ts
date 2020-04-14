@@ -1,10 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
     selector: 'catalog-success',
     templateUrl: 'success.component.html',
-    styleUrls: ['success.component.scss']
+    styleUrls: ['success.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SuccessComponent {
     constructor(private dynTitle: DynamicTitleService) {
