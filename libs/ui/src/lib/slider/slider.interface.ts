@@ -14,6 +14,7 @@ export interface Slider {
 
     /** Appearance */
     maxWidth: string;
+    maxHeight: string;
     ratio: '1:1' | '16:9' | '4:3' | '3:2' | '8:5';
     loop: boolean;
     slideDirection: 'ltr' | 'rtl',

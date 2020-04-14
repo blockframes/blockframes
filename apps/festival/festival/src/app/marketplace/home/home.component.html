@@ -15,39 +15,36 @@
           <p>{{ section.subline}} </p>
           <a mat-flat-button test-id="seeMore1" color="accent" routerLink="../title">See more</a>
         </aside>
-        <mat-carousel test-id="mat-carousel1" proportion="50" [hideArrows]="true" [hideIndicators]="true">
-          <!-- We only want to use the first image in the promotinalElements.images array-->
-            <mat-carousel-slide #matCarouselSlide *ngFor="let movie of section.movies$ | async" [image]="getBanner(movie)">
-              <a
-                fxLayout="column"
-                fxLayoutAlign="end start"
-                class="black-bg-opacity-30 overlay"
-                [routerLink]="['../title', movie.id]">
-                <ng-container *ngIf="(toggle$(movie.id) | async); else notAdded">
-                  <button test-id="heart-icon" mat-icon-button (click)="removeFromWishlist(movie, $event)">
-                    <mat-icon svgIcon="heart_fill" color="accent"></mat-icon>
-                  </button>
-                </ng-container>
-                <ng-template #notAdded>
-                  <button test-id="heart-icon" mat-icon-button (click)="addToWishlist(movie, $event)">
-                    <mat-icon svgIcon="heart_outline"></mat-icon>
-                  </button>
-                </ng-template>
-                <div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="5px" class="informations">
-                  <h3 mat-button color="primary">{{ movie.main.title.international }}</h3>
-                  <div>
-                    <span class="mat-body-2" *ngFor="let director of movie.main.directors; let isLast=last">
-                      {{ director.firstName }} {{ director.lastName }}{{isLast ? '' : ', '}}
-                    </span>
-                  </div>
-                  <span class="mat-caption">{{ getMainInfo(movie) }}</span>
-                  <span class="mat-caption" *ngFor="let salesAgent of movie.main.stakeholders.salesAgent; let isLast=last">
-                    {{ salesAgent.displayName }}{{isLast ? '' : ', '}}
+        <bf-slider test-id="mat-carousel1" hideArrows hideIndicators loop autoplay maxHeight="300px" maxWidth="750px">
+          <bf-slide *ngFor="let movie of section.movies$ | async" [image]="movie.promotionalElements.banner.media" overlayColor="#00000050">
+            <div fxLayout="column" fxLayoutAlign="end start" [routerLink]="['/c/o/marketplace', movie.id]"
+              class=informations-wrapper>
+              <ng-container *ngIf="(toggle$(movie.id) | async); else notAdded">
+                <button test-id="heart-icon" mat-icon-button (click)="removeFromWishlist(movie, $event)">
+                  <mat-icon svgIcon="heart_fill" color="accent"></mat-icon>
+                </button>
+              </ng-container>
+              <ng-template #notAdded>
+                <button test-id="heart-icon" mat-icon-button (click)="addToWishlist(movie, $event)">
+                  <mat-icon svgIcon="heart_outline"></mat-icon>
+                </button>
+              </ng-template>
+              <div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="5px" class="informations">
+                <h3 mat-button color="primary">{{ movie.main.title.international }}</h3>
+                <div>
+                  <span class="mat-body-2" *ngFor="let director of movie.main.directors; let isLast=last">
+                    {{ movie.main.directors | displayName }}{{isLast ? '' : ', '}}
                   </span>
                 </div>
-              </a>
-            </mat-carousel-slide>
-        </mat-carousel>
+                <span class="mat-caption">{{ getMainInfo(movie) }}</span>
+                <span class="mat-caption"
+                  *ngFor="let salesAgent of movie.main.stakeholders.salesAgent; let isLast=last">
+                  {{ salesAgent.displayName }}{{isLast ? '' : ', '}}
+                </span>
+              </div>
+            </div>
+          </bf-slide>
+        </bf-slider>
       </article>
     </ng-container>
   </section>
