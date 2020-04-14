@@ -1,18 +1,16 @@
 
 <!-- LANGUAGE AUTO COMPLETE -->
-<div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="16px">
+<div fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="16px" class="select-language">
 
   <input-autocomplete
-    fxFlex="grow"
+    fxFlex
     label="New language"
     scope="LANGUAGES"
     [control]="languageControl"
   ></input-autocomplete>
 
   <button
-    fxFlex="auto"
     test-id="languages"
-    class="language-button"
     mat-mini-fab
     [disabled]="!languageControl.valid"
     color="primary"

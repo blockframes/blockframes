@@ -11,17 +11,25 @@ title-filter {
 }
 
 movie-card {
-  max-width: 250px;
+  max-width: 25%;
   padding: 0 0 24px 0;
 }
 
-@include layout-bp(xs) {}
+@include layout-bp(xs) {
+  movie-card {
+    max-width: 65%;
+  }
+}
 
-@include layout-bp(sm) {}
+@include layout-bp(sm) {
+  movie-card {
+    max-width: 45%;
+  }
+}
 
 @include layout-bp(md) {
   movie-card {
-    max-width: 200px;
+    max-width: 35%;
     padding: 0 0 16px 0;
   }
 }

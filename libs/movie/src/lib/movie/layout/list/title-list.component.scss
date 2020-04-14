@@ -3,13 +3,9 @@
 page-nav {
   nav {
     border: none;
-    width: 90vw;
-    align-items: center;
-    h3 {
-      text-transform: capitalize;
-    }
-    span {
-      padding: 20px 0 0 0;
+    width: 100%;
+    div {
+      padding: 24px 0 0 0;
     }
   }
 }
@@ -31,33 +27,7 @@ aside {
   }
 }
 
-@include layout-bp(xs) {
-  page-nav {
-    nav {
-      width: 80vw;
-      h3 {
-        display: none;
-      }
-    }
-  }
-  aside {
-    position: static;
-    mat-card {
-      width: 100%;
-      max-height: fit-content;
-    }
-  }
-}
-
-@include layout-bp(sm) {
-  page-nav {
-    nav {
-      width: 80vw;
-      h3 {
-        display: none;
-      }
-    }
-  }
+@include layout-bp(lt-md) {
   aside {
     position: static;
     mat-card {
@@ -68,11 +38,6 @@ aside {
 }
 
 @include layout-bp(md) {
-  page-nav {
-    nav {
-      width: 85vw;
-    }
-  }
   aside {
     mat-card {
       width: 350px;

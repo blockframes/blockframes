@@ -4,11 +4,10 @@
       <mat-icon svgIcon="menu"></mat-icon>
     </button>
     <nav fxLayout="row" fxLayoutGap.gt-sm="10px">
-      <h3 fxFlex>{{titleType}} List</h3>
-      <span fxFlex="1 1 100%">
+      <div fxFlex>
         <ng-template [ngTemplateOutlet]="titleSearchTemplate"></ng-template>
-      </span>
-      <span fxFlex fxLayout="row" fxLayoutAlign="start center">
+      </div>
+      <div fxLayout="row" fxLayoutAlign="start center">
         <button *ngIf="canToggle" mat-icon-button (click)="listView = !listView">
           <ng-container *ngIf="!listView">
             <mat-icon matPrefix svgIcon="list"></mat-icon>
@@ -18,7 +17,7 @@
           </ng-container>
         </button>
         <ng-template [ngTemplateOutlet]="titleSortTemplate"></ng-template>
-      </span>
+      </div>
     </nav>
   </mat-toolbar>
 </page-nav>
