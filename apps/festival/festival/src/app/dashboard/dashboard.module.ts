@@ -54,6 +54,10 @@ const routes: Routes = [{
         loadChildren: () => import('./notification/notification.module').then(m => m.NotificationModule)
       },
       {
+        path: 'invitation',
+        loadChildren: () => import('./invitation/invitation.module').then(m => m.InvitationModule)
+      },
+      {
         path: 'import', // Import bulk of movies
         loadChildren: () => import('@blockframes/movie/components/import/import-movie.module')
           .then(m => m.ImportMovieModule)
