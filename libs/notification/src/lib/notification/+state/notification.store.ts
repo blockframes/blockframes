@@ -19,6 +19,9 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
   }
 
   akitaPreAddEntity(notification: Notification): Notification {
+    const displayName = `${notification.user.firstName} ${notification.user.lastName}`;
+    const orgName = notification.organization?.denomination.full;
+    const movieTitle = notification.movie?.title.international;
     switch (notification.type) {
       case 'organizationAcceptedByArchipelContent':
         return {
@@ -30,7 +33,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           ...notification,
           date: toDate(notification.date),
-          message: `${notification.user.firstName} ${notification.user.lastName} edited ${notification.movie.title.international}.`,
+          message: `${displayName} edited ${movieTitle}.`,
           imgRef: this.getPoster(notification.movie.id),
           placeholderUrl: 'WelcomeDelivery_500.png' // TODO: Icon/Image is wrong here. Use correct illustration for notifications => ISSUE#2262
         };
@@ -38,7 +41,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           ...notification,
           date: toDate(notification.date),
-          message: `${notification.user.firstName} ${notification.user.lastName} created ${notification.movie.title.international}.`,
+          message: `${displayName} created ${movieTitle}.`,
           imgRef: this.getPoster(notification.movie.id),
           placeholderUrl: 'WelcomeDelivery_500.png' // TODO: ISSUE#2262
         };
@@ -46,7 +49,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           ...notification,
           date: toDate(notification.date),
-          message: `${notification.user.firstName} ${notification.user.lastName} deleted ${notification.movie.title.international}.`,
+          message: `${displayName} deleted ${movieTitle}.`,
           imgRef: this.getPoster(notification.movie.id),
           placeholderUrl: 'WelcomeDelivery_500.png' // TODO: ISSUE#2262
         };
@@ -54,7 +57,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           ...notification,
           date: toDate(notification.date),
-          message: `${notification.user.firstName} ${notification.user.lastName} has declined your organization's invitation.`,
+          message: `${displayName} has declined your organization's invitation.`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.webp'
         };
@@ -62,7 +65,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           ...notification,
           date: toDate(notification.date),
-          message: `Your organization has refused the request from ${notification.user.firstName} ${notification.user.lastName}.`,
+          message: `Your organization has refused the request from ${displayName}.`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.webp'
         };
@@ -70,7 +73,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           ...notification,
           date: toDate(notification.date),
-          message: `${notification.user.firstName} ${notification.user.lastName} has been added to ${notification.organization.denomination.full}.`,
+          message: `${displayName} has been added to ${orgName}.`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.webp',
           url: `c/o/organization/${notification.organization.id}/view/members`
@@ -78,7 +81,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
       case 'memberRemovedFromOrg':
         return {
           ...notification,
-          message: `${notification.user.firstName} ${notification.user.lastName} has been removed from ${notification.organization.denomination.full}.`,
+          message: `${displayName} has been removed from ${orgName}.`,
           imgRef: notification.user.avatar,
           placeholderUrl: 'profil_user.webp'
         };
@@ -86,7 +89,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           ...notification,
           date: toDate(notification.date),
-          message: `${notification.organization.denomination.full} submitted a contract.`,
+          message: `${orgName} submitted a contract.`,
           placeholderUrl: 'Organization_250.png', // TODO: ISSUE#2262
           url: `c/o/dashboard/deals/${notification.docId}`
         };

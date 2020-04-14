@@ -1,4 +1,5 @@
-<a mat-list-item [routerLink]="[notification.url]">
+<!-- Mark notification as read before moving out -->
+<a mat-list-item (click)="markAsRead(notification)" [routerLink]="[notification.url]">
   <img matListAvatar placeholderAsset="empty_organization.webp" [imgRef]="notification.imgRef" alt="Notification picture"/>
   <p matLine class="mat-body-1">{{ notification.message }}</p>
   <span matLine>

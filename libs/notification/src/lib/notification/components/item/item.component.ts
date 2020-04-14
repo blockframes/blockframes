@@ -10,9 +10,12 @@ import { Notification, NotificationService } from '../../+state';
 export class ItemComponent implements OnInit {
 
   @Input() notification: Notification;
-  constructor(private serivce: NotificationService,) { }
+  constructor(private service: NotificationService) { }
 
   ngOnInit(): void {
   }
 
+  public markAsRead(notification: Notification) {
+    this.service.readNotification(notification);
+  }
 }

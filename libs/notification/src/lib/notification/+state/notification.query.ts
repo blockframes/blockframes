@@ -9,6 +9,7 @@ import { formatDate } from '@angular/common';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { NotificationType } from './notification.firestore';
 import { ImgRef, createImgRef } from '@blockframes/utils/image-uploader';
+import { toDate } from 'date-fns';
 
 function getYesterday() {
   const today = new Date();
@@ -34,29 +35,29 @@ export class NotificationQuery extends QueryEntity<NotificationState, Notificati
   }
 
   /** Group notifications by date in an object. */
-  // public groupNotificationsByDate(filter?: string | NotificationType[]): Observable<DateGroup<Notification[]>> {
-  //   return this.selectAll({
-  //     filterBy: notification => (filter && typeof filter !== 'string' ? filter.includes(notification.type) : true)
-  //   }).pipe(
-  //     map(notifications => {
-  //       return notifications.reduce((acc, notification) => {
-  //         const date = notification.date.toDate();
-  //         // As Date cannot be used as an index type (key), we format the date into a string.
-  //         const key = isToday(date) ? 'Today'
-  //           : isYesterday(date) ? 'Yesterday'
-  //           : formatDate(notification.date.toDate(), 'MMM dd, yyyy', 'en-US');
-  //         const information = this.createNotificationInformation(notification);
-  //         const notif = {
-  //           ...notification,
-  //           ...information,
-  //           date: notification.date.toDate()
-  //         };
-  //         acc[key] = [...(acc[key] || []), notif];
-  //         return acc;
-  //       }, {});
-  //     })
-  //   );
-  // }
+  public groupNotificationsByDate(filter?: string | NotificationType[]): Observable<DateGroup<Notification[]>> {
+    return this.selectAll({
+      filterBy: notification => (filter && typeof filter !== 'string' ? filter.includes(notification.type) : true)
+    }).pipe(
+      map(notifications => {
+        return notifications.reduce((acc, notification) => {
+          const date = toDate(notification.date);
+          // As Date cannot be used as an index type (key), we format the date into a string.
+          const key = isToday(date) ? 'Today'
+            : isYesterday(date) ? 'Yesterday'
+            : formatDate(toDate(notification.date), 'MMM dd, yyyy', 'en-US');
+          const information = this.createNotificationInformation(notification);
+          const notif = {
+            ...notification,
+            ...information,
+            date: toDate(notification.date)
+          };
+          acc[key] = [...(acc[key] || []), notif];
+          return acc;
+        }, {});
+      })
+    );
+  }
 
   /** @deprecated With akitaPreAddEntity it should already be setup */
   public createNotificationInformation(notification: Notification) {
