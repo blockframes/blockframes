@@ -1,5 +1,4 @@
 import { Firestore } from '../admin';
-import { version } from 'punycode';
 
 /**
  * Update the distributionDeals subcollection (rename in distributionRights)
@@ -103,7 +102,6 @@ export async function rightInContractVersion(db: Firestore) {
       });
 
       return versionDocSnapshot.ref.set(newData);
-
     }
   });
 
