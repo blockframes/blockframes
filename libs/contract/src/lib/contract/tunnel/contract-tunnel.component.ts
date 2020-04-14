@@ -192,7 +192,7 @@ export class ContractTunnelComponent implements OnInit {
       ...this.contractForm.value
     });
 
-    await this.contractService.createContractAndDeal(orgId, titlesAndDeals, contract);
+    await this.contractService.createContractAndRight(orgId, titlesAndRights, contract);
 
     // Remove rights
     const write = this.db.firestore.batch();
