@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {
   OrganizationService,
   OrganizationQuery
-} from '../organization/+state';
+} from '../+state';
 import { Router } from '@angular/router';
 
 @Injectable({ providedIn: 'root' })

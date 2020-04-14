@@ -7,7 +7,7 @@ import { MovieService, Movie } from '@blockframes/movie/+state';
 import { map } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { UserService } from '@blockframes/user/+state/user.service';
-import { OrganizationService } from '@blockframes/organization/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 
 @Component({
   selector: 'admin-event',

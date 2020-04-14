@@ -40,7 +40,7 @@ import { ChipsAutocompleteModule } from "@blockframes/ui/static-autocomplete/chi
 import { AlgoliaAutocompleteModule } from "@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module";
 import { AlgoliaChipsAutocompleteModule } from "@blockframes/ui/algolia/chips-autocomplete/algolia-chips-autocomplete.module";
 import { TitleListLayoutModule } from "@blockframes/movie/layout/list/title-list.module"
-import { WishlistButtonModule } from "@blockframes/organization/organization/components/wishlist-button/wishlist-button.module";
+import { WishlistButtonModule } from "@blockframes/organization/components/wishlist-button/wishlist-button.module";
 import { TitleFilterModule } from '@blockframes/movie/components/title-filter/title-filter.module';
 import { MovieFormEstimatedBudgetModule } from "@blockframes/movie/form/budget/estimated-budget/estimated-budget.module";
 import { LanguageFilterModule } from '@blockframes/movie/form/filters/languages/language-filter.module';

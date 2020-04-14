@@ -2,8 +2,8 @@ import { firestore } from 'firebase/app';
 import { InvitationFromUserToOrganization, InvitationFromOrganizationToUser, InvitationToAnEvent } from './invitation.firestore';
 import { PublicUser } from '@blockframes/user/+state/user.firestore';
 import { createPublicUser } from '@blockframes/user/+state/user.model';
-import { PublicOrganization } from '@blockframes/organization/organization/+state/organization.firestore';
-import { createPublicOrganization } from '@blockframes/organization/organization/+state/organization.model';
+import { PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
+import { createPublicOrganization } from '@blockframes/organization/+state/organization.model';
 
 export { InvitationStatus } from './invitation.firestore';
 

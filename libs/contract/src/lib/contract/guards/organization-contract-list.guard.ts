@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { CollectionGuard, CollectionGuardConfig, awaitSyncQuery, Query } from 'akita-ng-fire';
 import { ContractService, ContractState, ContractStore, ContractWithTimeStamp } from '../+state';
 import { tap, switchMap } from 'rxjs/operators';
-import { OrganizationQuery } from '@blockframes/organization/organization/+state/organization.query';
+import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 
 /**
  * Get all the contracts where user organization is party.

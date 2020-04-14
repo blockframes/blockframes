@@ -1,10 +1,10 @@
 import { Subscription } from 'rxjs';
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
-import { Organization } from '@blockframes/organization/organization/+state/organization.model';
-import { OrganizationQuery } from '@blockframes/organization/organization/+state/organization.query';
+import { Organization } from '@blockframes/organization/+state/organization.model';
+import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { TunnelService } from '@blockframes/ui/tunnel/tunnel.service';
-import { OrganizationForm } from '@blockframes/organization/organization/forms/organization.form';
+import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
 import { User } from '@blockframes/auth/+state/auth.store';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { RouterQuery } from '@datorama/akita-ng-router-store';

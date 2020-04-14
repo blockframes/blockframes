@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { InvitationState, InvitationStore } from './invitation.store';
 import { createInvitationFromUserToOrganization, createInvitationFromOrganizationToUser, Invitation } from './invitation.model';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
-import { OrganizationService } from '@blockframes/organization/organization/+state/organization.service';
+import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { AuthService } from '@blockframes/auth/+state/auth.service';
 import { InvitationDocument } from './invitation.firestore';

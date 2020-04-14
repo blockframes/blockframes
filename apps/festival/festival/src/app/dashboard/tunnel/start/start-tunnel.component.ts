@@ -1,5 +1,5 @@
-import { OrganizationQuery } from '@blockframes/organization/organization/+state/organization.query';
-import { OrganizationService } from '@blockframes/organization/organization/+state/organization.service';
+import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
+import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { MovieService, createMovie } from '@blockframes/movie/+state';
 import { Router, ActivatedRoute } from '@angular/router';

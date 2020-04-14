@@ -1,7 +1,7 @@
 import { Component, Inject, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AuthQuery } from '@blockframes/auth/+state';
-import { OrganizationQuery } from '@blockframes/organization/organization/+state';
+import { OrganizationQuery } from '@blockframes/organization/+state';
 import { Event } from '../../+state/event.model';
 import { EventForm } from '../event.form';
 
@@ -14,7 +14,7 @@ import { EventForm } from '../event.form';
 export class EventCreateComponent {
 
   form: EventForm;
-  
+
   constructor(
     @Inject(MAT_DIALOG_DATA) event: Event,
     public dialogRef: MatDialogRef<EventCreateComponent>,

@@ -2,7 +2,7 @@ import { Intercom } from 'ng-intercom';
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ContractQuery, ContractService, Contract, ContractStatus } from '@blockframes/contract/contract/+state';
 import { map } from 'rxjs/operators';
-import { OrganizationQuery } from '@blockframes/organization/organization/+state/organization.query';
+import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { Router, ActivatedRoute } from '@angular/router';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MatTabChangeEvent } from '@angular/material/tabs';

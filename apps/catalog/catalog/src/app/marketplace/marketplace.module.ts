@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { CatalogCartGuard } from '@blockframes/organization/cart/guards/catalog-cart-list.guard';
+import { CatalogCartGuard } from '@blockframes/cart/guards/catalog-cart-list.guard';
 import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 import { LayoutComponent } from './layout/layout.component';
 import { LayoutModule } from './layout/layout.module';

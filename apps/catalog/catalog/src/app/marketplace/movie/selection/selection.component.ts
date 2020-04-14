@@ -5,7 +5,7 @@ import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { ContractService, TitlesAndRights } from '@blockframes/contract/contract/+state';
 import { Observable } from 'rxjs';
 import { Intercom } from 'ng-intercom';
-import { OrganizationQuery } from '@blockframes/organization/organization/+state/organization.query';
+import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
