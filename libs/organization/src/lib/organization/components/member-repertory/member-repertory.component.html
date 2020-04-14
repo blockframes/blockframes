@@ -5,11 +5,11 @@
     [columns]="memberColumns"
     [initialColumns]="initialColumns"
     showPaginator >
-    <ng-template colRef="name" let-name>
-      <b>{{ name }}</b>
+    <ng-template colRef="firstName" let-firstName>
+      <b>{{ firstName }}</b>
     </ng-template>
-    <ng-template colRef="surname" let-surname>
-      <b>{{ surname }}</b>
+    <ng-template colRef="lastName" let-lastName>
+      <b>{{ lastName }}</b>
     </ng-template>
     <ng-template colRef="role" let-role>
       {{ displayRole(role) }}

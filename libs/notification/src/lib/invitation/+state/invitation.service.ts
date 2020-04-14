@@ -63,7 +63,8 @@ export class InvitationService extends CollectionService<InvitationState> {
 
   /** Return true if there is already a pending invitation for a list of users */
   public async orgInvitationExists(userEmails: string[]): Promise<boolean> {
-    const invitations = await this.getValue();
+    const orgId = this.authQuery.orgId;
+    const invitations = await this.getValue(ref => ref.where('fromOrg.id', '==', orgId));
     const orgInvitations = invitations.filter(
       invitation => invitation.type === 'fromOrganizationToUser'
     );
