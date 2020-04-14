@@ -20,8 +20,8 @@ export class MemberRepertoryComponent {
   @Output() updatedToMember = new EventEmitter<string>();
 
   public memberColumns = {
-    name: 'Name',
-    surname: 'Lastname',
+    firstName: 'First Name',
+    lastName: 'Last Name',
     email: 'Email Address',
     position: 'Position',
     role: 'Permissions'
@@ -29,8 +29,8 @@ export class MemberRepertoryComponent {
 
   get initialColumns() {
     return this.isSuperAdmin
-    ? [ 'name', 'surname', 'email', 'position', 'role', 'uid' ]
-    : [ 'name', 'surname', 'email', 'position', 'role' ]
+    ? [ 'firstName', 'lastName', 'email', 'position', 'role', 'uid' ]
+    : [ 'firstName', 'lastName', 'email', 'position', 'role' ]
   }
 
   public displayRole(role: UserRole) {
