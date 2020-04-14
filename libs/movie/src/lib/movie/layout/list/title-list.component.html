@@ -3,24 +3,28 @@
     <button mat-icon-button>
       <mat-icon svgIcon="menu"></mat-icon>
     </button>
-    <nav mat-tab-nav-bar>
-      <h3>{{titleType}} List</h3>
-      <ng-template [ngTemplateOutlet]="titleSearchTemplate"></ng-template>
-      <button *ngIf="canToggle" mat-icon-button (click)="listView = !listView">
-        <ng-container *ngIf="!listView">
-          <mat-icon matPrefix svgIcon="list"></mat-icon>
-        </ng-container>
-        <ng-container *ngIf="listView">
-          <mat-icon matPrefix svgIcon="grid"></mat-icon>
-        </ng-container>
-      </button>
-      <ng-template [ngTemplateOutlet]="titleSortTemplate"></ng-template>
+    <nav fxLayout="row" fxLayoutGap.gt-sm="10px">
+      <h3 fxFlex>{{titleType}} List</h3>
+      <span fxFlex="1 1 100%">
+        <ng-template [ngTemplateOutlet]="titleSearchTemplate"></ng-template>
+      </span>
+      <span fxFlex>
+        <button *ngIf="canToggle" mat-icon-button (click)="listView = !listView">
+          <ng-container *ngIf="!listView">
+            <mat-icon matPrefix svgIcon="list"></mat-icon>
+          </ng-container>
+          <ng-container *ngIf="listView">
+            <mat-icon matPrefix svgIcon="grid"></mat-icon>
+          </ng-container>
+        </button>
+        <ng-template [ngTemplateOutlet]="titleSortTemplate"></ng-template>
+      </span>
     </nav>
   </mat-toolbar>
 </page-nav>
 
 <section id="nav" fxLayout="row" fxLayoutAlign="space-between center">
-  <h1 class="mat-headline">{{titleType}} List</h1>
+  <h1 class="mat-headline">{{titleType}} list</h1>
   <article fxLayout="row" fxLayoutAlign="center center">
     <button *ngIf="canToggle" mat-icon-button (click)="listView = !listView">
       <ng-container *ngIf="!listView">

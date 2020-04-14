@@ -7,7 +7,13 @@ import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/imag
 import { DisplayNameModule, TranslateSlugModule } from '@blockframes/utils/pipes';
 import { AppNavModule } from '@blockframes/ui/app-nav';
 
-import { TitleListComponent, TitleCardDirective, TitleListItemDirective, TitleSortDirective, TitleSearchDirective } from './title-list.component'
+import {
+  TitleListComponent,
+  TitleCardDirective,
+  TitleListItemDirective,
+  TitleSortDirective,
+  TitleSearchDirective,
+} from './title-list.component'
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
