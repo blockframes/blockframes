@@ -72,8 +72,12 @@ export class SummarySaleComponent implements OnInit {
    * Submit a contract version to Archipel Content
    */
   async submit() {
-    await this.tunnel.save();
-    await this.contractService.submit(this.tunnel.contractForm.value);
+    try {
+      await this.tunnel.save();
+      await this.contractService.submit(this.tunnel.contractForm.value);
+    } catch (error) {
+      console.error(error)
+    }
     this.router.navigate(['success'], {relativeTo: this.route})
   }
 }
