@@ -4,6 +4,7 @@ import { AuthGuard } from '@blockframes/auth/guard/auth.guard';
 import { PermissionsGuard } from '@blockframes/permissions/guard/permissions.guard';
 import { OrganizationGuard } from '@blockframes/organization/guard/organization.guard';
 import { NotificationsGuard } from '@blockframes/notification/notification/notifications.guard';
+import { InvitationGuard } from '@blockframes/invitation/guard/invitations.guard';
 import { MaintenanceGuard } from '@blockframes/ui/maintenance';
 
 interface RouteOptions {
@@ -67,8 +68,8 @@ export function createRoutes({ appsRoutes, appName, landing }: RouteOptions) {
           },
           {
             path: 'o',
-            canActivate: [NotificationsGuard, PermissionsGuard, OrganizationGuard],
-            canDeactivate: [NotificationsGuard, PermissionsGuard, OrganizationGuard],
+            canActivate: [NotificationsGuard, InvitationGuard, PermissionsGuard, OrganizationGuard],
+            canDeactivate: [NotificationsGuard, InvitationGuard, PermissionsGuard, OrganizationGuard],
             children
           }
         ]

@@ -5,7 +5,7 @@ import { NotificationState } from './+state/notification.store';
 import { NotificationService } from './+state/notification.service';
 
 @Injectable({ providedIn: 'root' })
-@CollectionGuardConfig({ awaitSync: true })
+@CollectionGuardConfig({ awaitSync: false })
 export class NotificationsGuard extends CollectionGuard<NotificationState> {
   constructor(service: NotificationService, private authQuery: AuthQuery) {
     super(service);
