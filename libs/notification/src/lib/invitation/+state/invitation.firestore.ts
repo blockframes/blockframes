@@ -11,7 +11,7 @@ export interface Invitation {
   type: InvitationType;
   mode: InvitationMode,
   status: InvitationStatus;
-  date: Timestamp;
+  date: Timestamp | Date;
   /** @dev An invitation is created by an user or an org (fromOrg or fromUser) */
   fromOrg?: PublicOrganization,
   fromUser?: PublicUser,
