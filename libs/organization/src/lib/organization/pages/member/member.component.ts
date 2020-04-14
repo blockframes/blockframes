@@ -5,22 +5,18 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { PermissionsQuery, UserRole, PermissionsService } from '../../../permissions/+state';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { UserQuery } from '@blockframes/user/+state/user.query';
-import { Order } from '@datorama/akita';
-import { InvitationQuery } from '@blockframes/notification/invitation/+state/invitation.query';
-import { InvitationStore } from '@blockframes/notification/invitation/+state/invitation.store';
 import { InvitationService } from '@blockframes/notification/invitation/+state/invitation.service';
 import { Invitation } from '@blockframes/notification/invitation/+state/invitation.model';
 import { OrganizationMember } from '@blockframes/user/+state/user.model';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 @Component({
   selector: 'member-edit',
   templateUrl: './member.component.html',
   styleUrls: ['./member.component.scss'],
-  providers: [InvitationQuery, InvitationStore],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MemberComponent implements OnInit, OnDestroy {
-
   public orgName: string = this.query.getActive().denomination.full;
 
   /** Observable of all members of the organization */
@@ -41,12 +37,11 @@ export class MemberComponent implements OnInit, OnDestroy {
     private query: OrganizationQuery,
     private snackBar: MatSnackBar,
     private invitationService: InvitationService,
-    private invitationQuery: InvitationQuery,
-    private invitationStore: InvitationStore,
     private permissionQuery: PermissionsQuery,
     private permissionService: PermissionsService,
     private userQuery: UserQuery,
-    private userService: UserService
+    private userService: UserService,
+    private db: AngularFirestore
   ) {}
 
   ngOnInit() {
@@ -55,23 +50,13 @@ export class MemberComponent implements OnInit, OnDestroy {
     this.isAdmin$ = this.permissionQuery.isAdmin$;
     this.isSuperAdmin$ = this.permissionQuery.isSuperAdmin$;
 
-    const storeName = this.invitationStore.storeName;
-    /** @dev We fetch all invitations where current org is the subject. */ 
-    const queryFn = ref => ref.where('organization.id', '==', this.query.getActiveId()).where('status', '==', 'pending');
-    this.invitationSubscription = this.invitationService.syncCollection(queryFn, { storeName }).subscribe();
+    this.invitationsFromOrganization$ = this.db
+      .collection('invitations', ref => ref.where('fromOrg.id', '==', this.query.getActiveId()).where('status', '==', 'pending'))
+      .valueChanges() as Observable<Invitation[]>;
 
-    /** @dev Then we filter them by type. */ 
-    this.invitationsToJoinOrganization$ = this.invitationQuery.selectAll({
-      filterBy: invitation => invitation.type === 'fromUserToOrganization',
-      sortBy: 'date',
-      sortByOrder: Order.DESC
-    });
-
-    this.invitationsFromOrganization$ = this.invitationQuery.selectAll({
-      filterBy: invitation => invitation.type === 'fromOrganizationToUser',
-      sortBy: 'date',
-      sortByOrder: Order.DESC
-    });
+    this.invitationsToJoinOrganization$ = this.db
+      .collection('invitations', ref => ref.where('toOrg.id', '==', this.query.getActiveId()).where('status', '==', 'pending'))
+      .valueChanges() as Observable<Invitation[]>;
   }
 
   public acceptInvitation(invitation: Invitation) {
@@ -83,7 +68,7 @@ export class MemberComponent implements OnInit, OnDestroy {
   }
 
   /** Ensures that there is always at least one super Admin in the organization. */
-  public hasLastSuperAdmin(uid:string, role: UserRole) {
+  public hasLastSuperAdmin(uid: string, role: UserRole) {
     if (role !== 'superAdmin' && this.permissionQuery.isUserSuperAdmin(uid)) {
       const superAdminNumber = this.permissionQuery.superAdminCount;
       return superAdminNumber > 1 ? true : false;
