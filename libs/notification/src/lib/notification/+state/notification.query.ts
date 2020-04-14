@@ -45,7 +45,7 @@ export class NotificationQuery extends QueryEntity<NotificationState, Notificati
           // As Date cannot be used as an index type (key), we format the date into a string.
           const key = isToday(date) ? 'Today'
             : isYesterday(date) ? 'Yesterday'
-              : formatDate(notification.date.toDate(), 'MMM dd, yyyy', 'en-US');
+              : formatDate(notification.date, 'MM M dd, yyyy', 'en-US');
           const information = this.createNotificationInformation(notification);
           const notif = {
             ...notification,
