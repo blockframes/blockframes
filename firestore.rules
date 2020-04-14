@@ -51,20 +51,40 @@ service cloud.firestore {
     }
 
     /// INVITATIONS RULES ///
+    
+    // Functions
+    // Send the invitation
+    function isHost() {
+      return userOrgId() == existingData().fromOrg.id
+        || userId() == existingData().fromUser.uid;
+    }
+    // Receive the invitation
+    function isGuest() {
+      return userId() == existingData().toUser.uid
+        || currentUser().email == existingData().toEmail;
+    }
 
+    // Rules
     match /invitations/{invitationId} {
-    	allow read: if userId() == existingData().fromUser.uid  
-        || userId() == existingData().toUser.uid 
-      	|| userOrgId() == existingData().fromOrg.id
-        || userOrgId() == existingData().toOrg.id;
+    	allow read: if isHost() || isGuest();
 
-      allow create: if userId() == incomingData().fromUser.uid 
-       || userOrgId() == incomingData().fromOrg.id
-       || orgCan('isAdmin', userOrgId(), incomingData().docId);
+      allow create: 
+        // Event
+        if incomingData().type == 'event'
+        // Invitation to org
+        || userId() == incomingData().fromUser.uid
+      	|| userOrgId() == incomingData().fromOrg.id
+        || orgCan('isAdmin', userOrgId(), incomingData().docId);
 
       // Update is used to change status only. Allowed to recepients only
       // @TODO (#2500) should be handled by a backend function to prevent ugly rules
-    	allow update: if (
+    	allow update: if 
+        // Event
+        (
+          incomingData().type == 'event' && isGuest()
+          || (orgCan('isAdmin', userOrgId(), incomingData().docId))
+        )
+        &&
         (
           isNotUpdatingField('id')
           && isNotUpdatingField('app')
@@ -79,19 +99,13 @@ service cloud.firestore {
           && isNotUpdatingField('toEmail')
           && isNotUpdatingField('docId')
           && isNotUpdatingField('processedId')
-        )
-        &&
-        (
-          (userId() == existingData().toUser.uid)
-          || (userOrgId() == incomingData().toOrg.id)
-          || (orgCan('isAdmin', userOrgId(), incomingData().docId))
-        )
-      );
+        );
 
-      allow delete: if (
-        isOrgAdmin(userId(), existingData().fromOrg.id)
-        || userId() == existingData().fromUser.uid
-      );
+      allow delete: if
+        // Event
+        (incomingData().type == 'event' && isHost())
+        ||
+        (isOrgAdmin(userId(), existingData().fromOrg.id) || userId() == existingData().toUser.uid);
     }
 
     /// ORGANIZATION RULES ///
@@ -177,11 +191,20 @@ service cloud.firestore {
       allow write: if false;
     }
 
-    /// DISTRIBUTION DEALS RULES ///
-    match /{path=**}/distributionDeals/{dealId} {
+    /// DISTRIBUTION RIGHTS RULES ///
+    match /{path=**}/distributionRights/{rightId} {
     	allow write: if true; // @TODO #1388 Only if contract.status  === 'unknown' ?
       allow read: if true; // @TODO #1388 Only if licensee.orgId == currentUser.orgId || if licensor.orgId == currentUser.orgId
     }
+
+    /// EVENTS RULES ///
+    match /events/{eventId} {
+    	allow write: if true; // @TODO #1388 Only if contract.status  === 'unknown' ?
+      allow read: if true; // @TODO #1388 Only if licensee.orgId == currentUser.orgId || if licensor.orgId == currentUser.orgId
+	    match /{document=**} {
+        allow read, write: if true;
+      }    
+		}
 
     /// META ///
     match /_META/_MAINTENANCE {
@@ -269,10 +292,6 @@ service cloud.firestore {
 
     function getOrgPermissions(orgId) {
     	return get(/databases/$(database)/documents/permissions/$(orgId)).data;
-    }
-
-    function documentPermissionsExist(orgId, docId) {
-    	return exists(/databases/$(database)/documents/permissions/$(orgId)/documentPermissions/$(docId));
     }
 
 		// Parameter "action" can either be "canCreate", "canRead", "canUpdate" or "canDelete"

@@ -31,7 +31,7 @@ export class InputAutocompleteComponent implements OnInit {
   public filteredStates: Observable<SlugAndLabel[]>;
 
   /**
-   * Since we input the scope we need to initalize the function after the input gets handled,
+   * Since we input the scope we need to initialize the function after the input gets handled,
    * otherwise _scope is undefined and this will throw an error
    */
   public displayFn: Function;

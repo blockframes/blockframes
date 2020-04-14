@@ -9,7 +9,7 @@ import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
 import { OrganizationFormModule } from './organization/forms/organization-form/organization-form.module';
 import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
-import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia-autocomplete/algolia-autocomplete.module';
+import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module';
 import { ActionsListModule } from '@blockframes/ui/actions-list/actions-list.module';
 import { FeedbackMessageModule } from '@blockframes/ui/feedback/feedback-message.module';
 

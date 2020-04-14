@@ -27,7 +27,7 @@ import { CartService } from '@blockframes/organization/cart/+state/cart.service'
 import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
 import { NumberRange } from '@blockframes/utils/common-interfaces/range';
 import { BUDGET_LIST } from '@blockframes/movie/form/budget/budget.form';
-import { CatalogSearchForm } from '@blockframes/distribution-deals/form/search.form';
+import { CatalogSearchForm } from '@blockframes/distribution-rights/form/search.form';
 import { staticModels } from '@blockframes/utils/static-model';
 // RxJs
 import { Observable, combineLatest, BehaviorSubject, Subscription } from 'rxjs';

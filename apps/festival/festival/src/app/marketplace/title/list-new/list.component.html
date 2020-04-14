@@ -45,64 +45,7 @@
       </ng-template>
 
       <ng-template filter label="Language & Version">
-        <form [formGroup]="filterForm.languages" fxLayout="column">
-          <div fxLayout="row" fxLayoutAlign="start start">
-            <mat-form-field appearance="outline">
-              <mat-label>New language</mat-label>
-              <input test-id="languages-panel-input" matInput type="text" [matAutocomplete]="language"
-                [formControl]="languageControl" placeholder="Add new language"/>
-              <mat-error *ngIf="languageControl.hasError('languageNotSupported')">
-                Please enter a valid language or choose from the dropdown menu!
-              </mat-error>
-              <button matSuffix mat-icon-button (click)="addLanguage(languageControl.value)"
-                [disabled]="!languageControl.valid">
-                <mat-icon svgIcon="magnifying_glasses"></mat-icon>
-              </button>
-              <mat-autocomplete #language="matAutocomplete">
-                <mat-option *ngFor="let language of languagesFilter$ | async" [value]="language">
-                  {{language}}
-                </mat-option>
-              </mat-autocomplete>
-            </mat-form-field>
-            <button
-              test-id="languages"
-              class="language-button"
-              mat-mini-fab
-              [disabled]="!languageControl.valid"
-              color="primary"
-              (click)="addLanguage(languageControl.value); languageControl.reset()">
-              <mat-icon svgIcon="add"></mat-icon>
-            </button>
-          </div>
-          <div fxLayout="column" fxLayoutAlign="start start">
-            <ng-container *ngIf="filterForm.get('languages').value">
-              <mat-list [formGroup]="filterForm.get('languages')" role="list">
-                <ng-container *ngFor="let language of selectedLanguages$ | async">
-                  <mat-list-item [formGroupName]="language">
-                    <span mat-line>
-                      <mat-chip class="chip-language" removable (removed)="removeLanguage(language)">
-                        <span>{{ language | translateSlug: 'LANGUAGES' }}</span>
-                        <mat-icon matChipRemove svgIcon="close"></mat-icon>
-                      </mat-chip>
-                    </span>
-                    <mat-checkbox color="primary" test-id="languages-checkbox-original" mat-line formControlName="original">
-                      Original
-                    </mat-checkbox>
-                    <mat-checkbox color="primary" test-id="languages-checkbox-dubbed" mat-line formControlName="dubbed">
-                      Dubbed
-                    </mat-checkbox>
-                    <mat-checkbox color="primary" test-id="languages-checkbox-subtitle" mat-line formControlName="subtitle">
-                      Subtitled
-                    </mat-checkbox>
-                    <mat-checkbox color="primary" test-id="languages-checkbox-subtitle" mat-line formControlName="caption">
-                      Closed-Captioned
-                    </mat-checkbox>
-                  </mat-list-item>
-                </ng-container>
-              </mat-list>
-            </ng-container>
-          </div>
-        </form>
+        <title-language-filter [languagesFilterForm]="languageForm"></title-language-filter>
       </ng-template>
 
       <ng-template filter label="Production Status">
@@ -114,7 +57,15 @@
       </ng-template>
 
       <ng-template filter label="Seller">
-        <title-filter-seller [form]="sellersForm"></title-filter-seller>
+        <algolia-chips-autocomplete
+          [index]="movieIndex"
+          keyToDisplay="value"
+          facet="orgName"
+          [form]="sellersForm"
+          label="Search for a specific Seller"
+          placeholder="Organization name"
+          resetInput
+        ></algolia-chips-autocomplete>
       </ng-template>
 
   </title-filter>

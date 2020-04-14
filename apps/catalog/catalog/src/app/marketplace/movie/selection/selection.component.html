@@ -24,11 +24,11 @@
         </movie-banner-actions>
       </movie-banner>
 
-      <ng-container *ngIf="title.deals.length">
+      <ng-container *ngIf="title.rights.length">
         <h3>Exploitation Rights</h3>
         <mat-card>
           <mat-card-content>
-            <catalog-right-list [rights]="title.deals"></catalog-right-list>
+            <catalog-right-list [rights]="title.rights"></catalog-right-list>
           </mat-card-content>
         </mat-card>
       </ng-container>

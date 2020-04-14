@@ -1,0 +1,24 @@
+<mat-chip-list aria-label="Sellers selection">
+  <ng-container *ngFor="let seller of form.valueChanges | async; let i = index">
+    <mat-chip selectable removable>
+      <span>{{ seller }}</span>
+      <mat-icon matChipRemove svgIcon="cross" (click)="form.removeAt(i)"></mat-icon>
+    </mat-chip>
+  </ng-container>
+</mat-chip-list>
+
+<algolia-autocomplete
+  [index]="index"
+  [keyToDisplay]="keyToDisplay"
+  [facet]="facet"
+  [label]="label"
+  [placeholder]="placeholder"
+  [prefixIcon]="prefixIcon"
+  [clearable]="clearable"
+  [resetInput]="resetInput"
+  (selectionChange)="add($event)"
+>
+  <ng-template let-result>
+    <span>{{resolveValue(result, keyToDisplay)}}</span>
+  </ng-template>
+</algolia-autocomplete>

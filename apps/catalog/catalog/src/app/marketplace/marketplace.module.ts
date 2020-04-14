@@ -6,7 +6,7 @@ import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 import { LayoutComponent } from './layout/layout.component';
 import { LayoutModule } from './layout/layout.module';
 import { TunnelGuard } from '@blockframes/ui/tunnel';
-import { ContractsDealListGuard } from '@blockframes/distribution-deals/guards/contracts-deal-list.guard';
+import { ContractsRightListGuard } from '@blockframes/distribution-rights/guards/contracts-right-list.guard';
 import { MovieListContractListGuard } from '@blockframes/movie/guards/movie-contract.guard';
 import { OrganizationContractListGuard } from '@blockframes/contract/contract/guards/organization-contract-list.guard';
 import { ActiveContractGuard } from '@blockframes/contract/contract/guards/active-contract.guard';
@@ -68,14 +68,14 @@ const routes: Routes = [{
       path: 'deals',
       children: [{
         path: '',
-        canActivate: [OrganizationContractListGuard, ContractsDealListGuard, MovieListContractListGuard],
-        canDeactivate: [OrganizationContractListGuard, ContractsDealListGuard, MovieListContractListGuard],
-        loadChildren: () => import('./deal/list/list.module').then(m => m.DealListModule),
+        canActivate: [OrganizationContractListGuard, ContractsRightListGuard, MovieListContractListGuard],
+        canDeactivate: [OrganizationContractListGuard, ContractsRightListGuard, MovieListContractListGuard],
+        loadChildren: () => import('./right/list/list.module').then(m => m.RightListModule),
       },{
         path: ':contractId',
         canActivate: [ActiveContractGuard],
         canDeactivate: [ActiveContractGuard],
-        loadChildren: () => import('./deal/view/view.module').then(m => m.DealViewModule)
+        loadChildren: () => import('./right/view/view.module').then(m => m.RightViewModule)
       }]
     },
     {

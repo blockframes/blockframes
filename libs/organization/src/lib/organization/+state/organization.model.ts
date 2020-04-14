@@ -54,6 +54,15 @@ export function createOrganization(
   }
 }
 
+/** Conert an organization object into a public organization */
+export function getPublicOrg(org: Partial<Organization>): PublicOrganization {
+  return {
+    id: org.id,
+    denomination: createDenomination(org.denomination),
+    logo: createImgRef(org.logo)
+  }
+}
+
 export function createPublicOrganization(params: Partial<PublicOrganization>) : PublicOrganization{
   return {
     id: '',

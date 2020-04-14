@@ -93,7 +93,7 @@ export class OrganizationBankAccountForm extends FormEntity<OrganizationBankAcco
 function createDenominationFormControl(denomination) {
   return {
     full: new FormControl(denomination.full, Validators.required),
-    publicName: new FormControl(denomination.publicName)
+    public: new FormControl(denomination.public)
   }
 }
 

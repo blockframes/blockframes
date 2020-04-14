@@ -1,4 +1,4 @@
-<event-edit [form]="form">
+<event-edit [form]="form" [invitations]="invitations$ | async">
   <article [formGroup]="meta" fxLayout="column">
     <h4>Screening</h4>
     <mat-form-field appearance="outline">

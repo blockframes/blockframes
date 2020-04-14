@@ -1,9 +1,13 @@
 // Angular
 import { FormControl } from '@angular/forms';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, AfterViewInit, OnDestroy, ViewChild } from '@angular/core';
+import { MatSidenavContent } from '@angular/material/sidenav';
+import { Router, NavigationEnd } from '@angular/router';
 
 import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
 import { algolia } from '@env';
+import { Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 @Component({
   selector: 'catalog-layout',
@@ -11,13 +15,30 @@ import { algolia } from '@env';
   styleUrls: ['./layout.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LayoutComponent {
+export class LayoutComponent implements AfterViewInit, OnDestroy {
   searchCtrl: FormControl = new FormControl('');
 
   ltMd$ = this.breakpointsService.ltMd;
-
+  
   public movieIndex = algolia.indexNameMovies
+  
+  private routerSub: Subscription
 
-  constructor(
-    private breakpointsService: BreakpointsService) { }
+  @ViewChild('content') sidenavContent: MatSidenavContent;
+
+  constructor(private breakpointsService: BreakpointsService, private router: Router) { }
+
+    ngAfterViewInit() {
+    // https://github.com/angular/components/issues/4280
+    // TODO #2502
+    this.routerSub = this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        this.sidenavContent.scrollTo({top: 0});
+      })
+    }
+
+    ngOnDestroy() {
+      if(this.routerSub) { this.routerSub.unsubscribe(); }
+    }
 }

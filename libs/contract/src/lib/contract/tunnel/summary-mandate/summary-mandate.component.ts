@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ContractForm } from '../../form/contract.form';
 import { Movie } from '@blockframes/movie/+state/movie.model';
-import { ContractTunnelComponent, DealControls } from '../contract-tunnel.component';
+import { ContractTunnelComponent, RightControls } from '../contract-tunnel.component';
 import { Observable } from 'rxjs';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
@@ -21,12 +21,12 @@ export class SummaryMandateComponent implements OnInit {
 
   public movies$: Observable<Movie[]>;
   public lastVersionForm: ContractVersionForm;
-  public dealForms: FormEntity<DealControls>;
+  public rightForms: FormEntity<RightControls>;
   public form: ContractForm;
   public parties: { licensee: FormControl[], licensor: { subRole: FormControl, displayName: FormControl }[] };
   public terms: string;
   public price: ContractVersionPriceControl;
-  public deals: Record<string, string> = {}
+  public rights: Record<string, string> = {}
   public currency: MovieCurrenciesSlug;
   public payments: { type: string, list: string[] };
 
@@ -42,7 +42,7 @@ export class SummaryMandateComponent implements OnInit {
   ngOnInit() {
     // Need to create it in the ngOnInit or it's not updated
     this.movies$ = this.tunnel.movies$;
-    this.dealForms = this.tunnel.dealForms;
+    this.rightForms = this.tunnel.rightForms;
     this.form = this.tunnel.contractForm;
 
     this.lastVersionForm = this.form.get('lastVersion');
@@ -70,11 +70,11 @@ export class SummaryMandateComponent implements OnInit {
         // Common Distribution Fee
         const { commission } = price;
         const { commissionBase } = titles[movieId].price;
-        this.deals[movieId] = `${commission} Distribution fee on ${commissionBase}.`;
+        this.rights[movieId] = `${commission} Distribution fee on ${commissionBase}.`;
       } else if (titles[movieId].price.commission && titles[movieId].price.commissionBase) {
         // Title Distribution Fee
         const { commission, commissionBase } = titles[movieId].price;
-        this.deals[movieId] = `${commission} Distribution fee on ${commissionBase}.`;
+        this.rights[movieId] = `${commission} Distribution fee on ${commissionBase}.`;
       } else {
         return undefined;
       }

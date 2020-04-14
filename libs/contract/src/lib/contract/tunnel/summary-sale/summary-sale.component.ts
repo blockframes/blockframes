@@ -6,7 +6,7 @@ import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { ContractVersionPriceControl } from '@blockframes/contract/version/form';
 import { MovieCurrenciesSlug } from '@blockframes/utils/static-model';
-import { ContractTunnelComponent, DealControls } from '../contract-tunnel.component';
+import { ContractTunnelComponent, RightControls } from '../contract-tunnel.component';
 import { ContractQuery, ContractService } from '../../+state';
 import { displayPaymentSchedule, displayTerms } from '../../+state/contract.utils';
 import { Observable } from 'rxjs';
@@ -20,7 +20,7 @@ import { Observable } from 'rxjs';
 export class SummarySaleComponent implements OnInit {
 
   public movies$: Observable<Movie[]>;
-  public dealForms: FormEntity<DealControls>;
+  public rightForms: FormEntity<RightControls>;
   public form: ContractForm;
   public parties: { licensee: FormControl[], licensor: FormControl[] };
   public terms: string;
@@ -41,7 +41,7 @@ export class SummarySaleComponent implements OnInit {
   ngOnInit() {
     // Need to create it in the ngOnInit or it's not updated
     this.movies$ = this.tunnel.movies$;
-    this.dealForms = this.tunnel.dealForms;
+    this.rightForms = this.tunnel.rightForms;
     this.form = this.tunnel.contractForm;
 
     const lastVersion = this.form.get('lastVersion');

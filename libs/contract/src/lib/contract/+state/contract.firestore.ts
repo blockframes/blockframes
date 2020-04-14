@@ -58,7 +58,7 @@ interface ContractTitleDetailRaw<D> {
    */
   titleId: string,
   price: PriceRaw<D>,
-  distributionDealIds: string[];
+  distributionRightIds: string[];
 }
 
 export interface ContractTitleDetail extends ContractTitleDetailRaw<Date> {
@@ -137,7 +137,7 @@ interface ContractRaw<D> {
   /** @dev An informative signature date, given that the actual signatures are in parties */
   signDate?: D,
   parties: ContractPartyDetailRaw<D>[],
-  /** 
+  /**
    * @dev Simply contains id of titles existing in lastVersion for querying purposes.
    * No need to edit it in front code, this will be overrided by backend functions.
   */
@@ -151,7 +151,7 @@ interface ContractRaw<D> {
   /**
    * @dev This params is handled by backend functions.
    * This will always contains the last version of the subcollection contractVersion.
-   * If you edit something here, when saving data to DB, a function will 
+   * If you edit something here, when saving data to DB, a function will
    * take previous lastVersion content and put it into contractVersion for history purposes.
    * The new data will then replace the previous lastVersion.
    */

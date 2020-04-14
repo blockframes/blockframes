@@ -4,8 +4,8 @@
       <mat-icon svgIcon="arrow_back"></mat-icon>
     </a>
     <div fxLayout fxLayoutAlign="end center">
-      <button type="submit" mat-button>Save</button>
-      <button type="button" mat-button (click)="remove()">Delete</button>
+      <button type="submit" mat-stroked-button color="primary">Save</button>
+      <button type="button" mat-button color="warn" (click)="remove()">Delete</button>
     </div>
   </mat-toolbar>
   <section fxLayout fxLayoutAlign="space-between start" fxLayoutGap="24px">
@@ -16,14 +16,14 @@
         <input matInput formControlName="title" placeholder="Event title" />
       </mat-form-field>
       <div fxLayout fxLayoutAlign="start center" fxLayoutGap="24px">
-        <mat-form-field appearance="outline">
+        <mat-form-field fxFlex appearance="outline">
           <mat-label>Start</mat-label>
           <time-picker formControlName="start"></time-picker>
         </mat-form-field>
     
         <span>to</span>
     
-        <mat-form-field  appearance="outline">
+        <mat-form-field fxFlex appearance="outline">
           <mat-label>End</mat-label>
           <time-picker formControlName="end"></time-picker>
         </mat-form-field>
@@ -35,10 +35,38 @@
     <article class="invitations" fxLayout="column"  fxFlex="35">
       <h4>Invitations</h4>
       <mat-form-field appearance="outline">
-        <input matInput placheolder="Invite someone"/>
-        <mat-icon matSuffix svg="profile"></mat-icon>
+        <mat-label>Invitations</mat-label>
+        <input matInput placheolder="Invite someone" [formControl]="invitationForm" (keyup.enter)="invite()"/>
+        <mat-hint>
+          You can add as many email addresses as you want, separated with a ";"
+        </mat-hint>
+        <button mat-icon-button matSuffix (click)="invite()">
+          <mat-icon svgIcon="send"></mat-icon>
+        </button>
       </mat-form-field>
+      <mat-list>
+        <mat-list-item>
+          <mat-icon matListIcon svgIcon="group"></mat-icon>
+          <span matLine>{{ invitations.length }} guests</span>
+        </mat-list-item>
+      </mat-list>
       <!-- Here the list of invited persons -->
+      <mat-list>
+        <mat-list-item *ngFor="let invitation of invitations">
+          <ng-container *ngIf="invitation.toUser as user; else noUser">
+            <div matListAvatar class="avatar-status">
+              <img [imgRef]="user.avatar" placeholderAsset="profil_user.webp"/>
+              <mat-icon [svgIcon]="invitation.status | statusIcon" [color]="invitation.status | statusColor"></mat-icon>
+            </div>
+            <span matLine>{{ user | displayName }}</span>
+            <span matLine>{{ user.email }}</span>
+          </ng-container>
+          <ng-template #noUser>
+            <img matListAvatar placeholderAsset="profil_user.webp"/>
+            <span matLine>{{ invitation.toEmail }}</span>
+          </ng-template>
+        </mat-list-item>
+      </mat-list>
     </article>
   </section>
 </form>

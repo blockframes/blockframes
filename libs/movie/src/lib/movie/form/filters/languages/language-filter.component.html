@@ -1,0 +1,50 @@
+
+<!-- LANGUAGE AUTO COMPLETE -->
+<div fxLayout="row" fxLayoutAlign="start start">
+
+  <input-autocomplete
+    label="New language"
+    scope="LANGUAGES"
+    [control]="languageControl"
+  ></input-autocomplete>
+
+  <button
+    test-id="languages"
+    class="language-button"
+    mat-mini-fab
+    [disabled]="!languageControl.valid"
+    color="primary"
+    (click)="addLanguage(languageControl.value); languageControl.reset()">
+    <mat-icon svgIcon="add"></mat-icon>
+  </button>
+</div>
+
+<!-- LANGUAGE LIST -->
+<div fxLayout="column" fxLayoutAlign="start start">
+  <ng-container *ngIf="selectedLanguages.value">
+    <mat-list [formGroup]="selectedLanguages" role="list">
+      <ng-container *ngFor="let language of (selectedLanguages.valueChanges | async); let i = index">
+        <mat-list-item>
+          <span mat-line>
+            <mat-chip class="chip-language" removable (removed)="selectedLanguages.removeAt(i)">
+              <span>{{ language | translateSlug: 'LANGUAGES' }}</span>
+              <mat-icon matChipRemove svgIcon="close"></mat-icon>
+            </mat-chip>
+          </span>
+          <mat-checkbox color="primary" test-id="languages-checkbox-original" mat-line (change)="languageFilterChange($event, language, 'original')">
+            Original
+          </mat-checkbox>
+          <mat-checkbox color="primary" test-id="languages-checkbox-dubbed" mat-line (change)="languageFilterChange($event, language, 'dubbed')">
+            Dubbed
+          </mat-checkbox>
+          <mat-checkbox color="primary" test-id="languages-checkbox-subtitle" mat-line  (change)="languageFilterChange($event, language, 'subtitle')">
+            Subtitled
+          </mat-checkbox>
+          <mat-checkbox color="primary" test-id="languages-checkbox-subtitle" mat-line  (change)="languageFilterChange($event, language, 'caption')">
+            Closed-Captioned
+          </mat-checkbox>
+        </mat-list-item>
+      </ng-container>
+    </mat-list>
+  </ng-container>
+</div>

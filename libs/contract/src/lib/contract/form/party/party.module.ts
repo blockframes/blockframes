@@ -1,4 +1,4 @@
-import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia-autocomplete/algolia-autocomplete.module';
+import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module';
 import { ContractFormPartyComponent } from './party.component';
 
 // Angular

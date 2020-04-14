@@ -24,10 +24,10 @@ export class MarketplaceQuery extends QueryEntity<MarketplaceState> {
     );
   }
 
-  /** Get the deals from a specific title in the cart */
-  getTitleDeals(titleId: string) {
+  /** Get the rights from a specific title in the cart */
+  getTitleRights(titleId: string) {
     const titleCart = this.getEntity(titleId)
-    return (!!titleCart) ? titleCart.deals : [];
+    return (!!titleCart) ? titleCart.rights : [];
   }
 
 }

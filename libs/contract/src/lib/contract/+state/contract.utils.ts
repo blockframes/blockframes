@@ -16,9 +16,9 @@ export function calculatePrice(version: ContractVersion) {
 
 
 /**
- * Combine prices of all distributionDeals to get the total price of the contract.
+ * Combine prices of all distributionRights to get the total price of the contract.
  *
- * @dev this is temporary solution, if there is different currencies in distributionDeals
+ * @dev this is temporary solution, if there is different currencies in distributionRights
  * the result will be wrong.
  */
 export function getTotalPrice(titles: Record<string, ContractTitleDetail>): Price {
@@ -31,7 +31,7 @@ export function getTotalPrice(titles: Record<string, ContractTitleDetail>): Pric
   return result;
 }
 
-// @todo(#1951) Merge this with content in dashboard/deal/view
+// @todo(#1951) Merge this with content in dashboard/right/view
 
 export interface VersionView {
   date: Date;
