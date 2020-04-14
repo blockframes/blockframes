@@ -56,7 +56,7 @@ export class MemberComponent implements OnInit, OnDestroy {
     this.isSuperAdmin$ = this.permissionQuery.isSuperAdmin$;
 
     const storeName = this.invitationStore.storeName;
-    const queryFn = ref => ref.where('organization.id', '==', this.query.getActiveId()).where('status', '==', 'pending');
+    const queryFn = ref => ref.where('fromOrg.id', '==', this.query.getActiveId()).where('status', '==', 'pending');
     this.invitationSubscription = this.invitationService.syncCollection(queryFn, { storeName }).subscribe();
 
     this.invitationsToJoinOrganization$ = this.invitationQuery.selectAll({
