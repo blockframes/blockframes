@@ -32,24 +32,24 @@ aside {
 }
 
 @include layout-bp(xs) {
-  section {
-    background-color: red !important;
-  }
-
   page-nav {
     nav {
       width: 80vw;
       h3 {
         display: none;
       }
+    }
+  }
+  aside {
+    position: static;
+    mat-card {
+      width: 100%;
+      max-height: fit-content;
     }
   }
 }
 
 @include layout-bp(sm) {
-  section {
-    background-color: blue !important;
-  }
   page-nav {
     nav {
       width: 80vw;
@@ -58,15 +58,24 @@ aside {
       }
     }
   }
+  aside {
+    position: static;
+    mat-card {
+      width: 100%;
+      max-height: fit-content;
+    }
+  }
 }
 
 @include layout-bp(md) {
-  section {
-    background-color: green !important;
-  }
   page-nav {
     nav {
       width: 85vw;
+    }
+  }
+  aside {
+    mat-card {
+      width: 350px;
     }
   }
 }

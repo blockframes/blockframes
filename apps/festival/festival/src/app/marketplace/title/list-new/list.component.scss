@@ -1,9 +1,27 @@
+@import '~@angular/flex-layout/mq';
 
 mat-form-field {
   width: 100%;
 }
 
+title-filter {
+  static-check-boxes {
+    padding: 0 16px;
+  }
+}
+
 movie-card {
   max-width: 250px;
   padding: 0 0 24px 0;
+}
+
+@include layout-bp(xs) {}
+
+@include layout-bp(sm) {}
+
+@include layout-bp(md) {
+  movie-card {
+    max-width: 200px;
+    padding: 0 0 16px 0;
+  }
 }

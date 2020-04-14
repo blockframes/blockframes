@@ -2,7 +2,7 @@
   <ng-container *ngFor="let seller of form.valueChanges | async; let i = index">
     <mat-chip selectable removable>
       <span>{{ seller }}</span>
-      <mat-icon matChipRemove svgIcon="cross" (click)="form.removeAt(i)"></mat-icon>
+      <mat-icon matChipRemove svgIcon="close" (click)="form.removeAt(i)"></mat-icon>
     </mat-chip>
   </ng-container>
 </mat-chip-list>

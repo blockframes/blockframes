@@ -8,7 +8,7 @@
       <span fxFlex="1 1 100%">
         <ng-template [ngTemplateOutlet]="titleSearchTemplate"></ng-template>
       </span>
-      <span fxFlex>
+      <span fxFlex fxLayout="row" fxLayoutAlign="start center">
         <button *ngIf="canToggle" mat-icon-button (click)="listView = !listView">
           <ng-container *ngIf="!listView">
             <mat-icon matPrefix svgIcon="list"></mat-icon>
@@ -64,7 +64,7 @@
       <div fxLayout="row" fxLayoutAlign="end start">
         <h6>There are {{ titles.length }} {{titleType}}s available!</h6>
       </div>
-      <div fxLayout="row wrap" fxLayoutGap="24px" fxLayout.lt-md="column" fxLayoutAlign.lt-md="center center">
+      <div fxLayout="row wrap" fxLayoutGap="24px" fxLayoutGap.lt-lg="16px" fxLayout.lt-sm="column" fxLayoutAlign.lt-md="center center">
         <ng-container *ngIf="!listView; else displayList">
           <ng-container *ngFor="let title of titles">
 
