@@ -47,8 +47,8 @@
           </li>
           <li *ngFor="let movie of movies$ | async">
             <strong>{{ movie.main.title.international }}</strong>
-            <span *ngIf="deals[movie.id]">{{ deals[movie.id] }}</span>
-            <a mat-button color="warn" routerLink="../details" *ngIf="!deals[movie.id]">Mandatory</a>
+            <span *ngIf="rights[movie.id]">{{ rights[movie.id] }}</span>
+            <a mat-button color="warn" routerLink="../details" *ngIf="!rights[movie.id]">Mandatory</a>
           </li>
 
           <!-- Fees -->
@@ -71,7 +71,7 @@
     </mat-card>
 
     <ng-container *ngIf="movies$ | async as movies">
-      <!-- Distribution Deals -->
+      <!-- Distribution rights -->
       <ng-container *ngIf="movies.length else noTitle">
         <h2>Exploitation Rights</h2>
         <ng-container *ngFor="let movie of movies$ | async">
@@ -81,12 +81,12 @@
                 <a mat-stroked-button color="primary" [routerLink]="['..', movie.id]">Edit</a>
               </movie-banner-actions>
             </movie-banner>
-            <ng-container *ngIf="dealForms.get(movie.id) as deals; else noDeal" >
-              <ng-container *ngIf="deals.value.length else noDeal" >
-                <catalog-right-list [rights]="deals.value"></catalog-right-list>
+            <ng-container *ngIf="rightForms.get(movie.id) as rights; else noright" >
+              <ng-container *ngIf="rights.value.length else noright" >
+                <catalog-right-list [rights]="rights.value"></catalog-right-list>
               </ng-container>
             </ng-container>
-            <ng-template #noDeal >
+            <ng-template #noright >
               <a mat-button [routerLink]="['..', movie.id]" color="warn">
                 Add rights on this title.
               </a>
@@ -98,7 +98,7 @@
           <mat-icon svgIcon="arrow_forward"></mat-icon>
         </button>
       </ng-container>
-      <!-- If no deal -->
+      <!-- If no right -->
       <ng-template #noTitle >
         <a mat-button color="warn" routerLink="../details">Add a Title to your contract</a>
       </ng-template>

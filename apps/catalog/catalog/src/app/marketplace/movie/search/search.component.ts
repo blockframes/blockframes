@@ -10,7 +10,6 @@ import {
   ChangeDetectionStrategy,
   OnInit,
   ViewChild,
-  HostBinding,
   Inject
 } from '@angular/core';
 // Blockframes
@@ -42,9 +41,9 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
 import { NumberRange } from '@blockframes/utils/common-interfaces/range';
 import { BUDGET_LIST } from '@blockframes/movie/form/budget/budget.form';
-import { filterMovie, filterMovieWithAvails } from '@blockframes/distribution-deals/form/filter.util';
-import { CatalogSearchForm, AvailsSearchForm } from '@blockframes/distribution-deals/form/search.form';
-import { DistributionDealService } from '@blockframes/distribution-deals/+state';
+import { filterMovie, filterMovieWithAvails } from '@blockframes/distribution-rights/form/filter.util';
+import { CatalogSearchForm, AvailsSearchForm } from '@blockframes/distribution-rights/form/search.form';
+import { DistributionRightService } from '@blockframes/distribution-rights/+state';
 import { asyncFilter } from '@blockframes/utils/helpers';
 import { staticModels } from '@blockframes/utils/static-model';
 import { sortMovieBy } from '@blockframes/utils/akita-helper/sort-movie-by';
@@ -126,7 +125,7 @@ export class MarketplaceSearchComponent implements OnInit {
     private catalogCartQuery: CatalogCartQuery,
     private snackbar: MatSnackBar,
     private movieQuery: MovieQuery,
-    private dealService: DistributionDealService,
+    private rightService: DistributionRightService,
     @Inject(MoviesIndex) private movieIndex: Index,
     private analytics: FireAnalytics,
     private dynTitle: DynamicTitleService
@@ -165,14 +164,14 @@ export class MarketplaceSearchComponent implements OnInit {
 
             return from(
               asyncFilter(movies, async movie => {
-                // Filters the deals before sending them to the avails filter function
-                if (movie.distributionDeals && movie.distributionDeals.length) {
-                  const mandateDeals = await this.dealService.getMandateDeals(movie);
-                  const mandateDealIds = mandateDeals.map(deal => deal.id);
-                  const filteredDeals = movie.distributionDeals.filter(deal => !mandateDealIds.includes(deal.id));
-                  return filterMovieWithAvails(filteredDeals, availsOptions, mandateDeals);
+                // Filters the rights before sending them to the avails filter function
+                if (movie.distributionRights && movie.distributionRights.length) {
+                  const mandateRights = await this.rightService.getMandateRights(movie);
+                  const mandateRightIds = mandateRights.map(right => right.id);
+                  const filteredRights = movie.distributionRights.filter(right => !mandateRightIds.includes(right.id));
+                  return filterMovieWithAvails(filteredRights, availsOptions, mandateRights);
                 }
-                // If movie has no deals, it means there is also no mandate deal,
+                // If movie has no rights, it means there is also no mandate right,
                 // Archipel can't sells rights for this movie, so we don't display it.
                 return false;
               })

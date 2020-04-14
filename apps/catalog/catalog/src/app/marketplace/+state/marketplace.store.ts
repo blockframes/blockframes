@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { EntityState, EntityStore, StoreConfig } from '@datorama/akita';
-import { DistributionDeal } from '@blockframes/distribution-deals/+state';
+import { DistributionRight } from '@blockframes/distribution-rights/+state';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 
 export interface TitleCart {
   movieId: string;
   movie?: Movie;
-  deals: DistributionDeal[];
+  rights: DistributionRight[];
 }
 
 export interface MarketplaceState extends EntityState<TitleCart> {
@@ -30,6 +30,6 @@ export class MarketplaceStore extends EntityStore<MarketplaceState> {
 
   /** Set an empty title cart. */
   addTitle(movieId: string) {
-    this.add({movieId, deals: []})
+    this.add({movieId, rights: []})
   }
 }

@@ -4,7 +4,7 @@
     <p>Please create your titles first then review it and if you feel it's complete submit it to Archipel Content.</p>
     <a [routerLink]="['./']" (click)="openIntercom()">Need help ?</a>
   </section>
-  <ng-container *ngIf="moviesToUpdate.data.length || moviesToCreate.data.length || deals.data.length || contractsToUpdate.data.length || contractsToCreate.data.length else isLoading">
+  <ng-container *ngIf="moviesToUpdate.data.length || moviesToCreate.data.length || rights.data.length || contractsToUpdate.data.length || contractsToCreate.data.length else isLoading">
     <section class="result-tables">
       <ng-container *ngIf="moviesToCreate.data.length">
         <h3>Titles to Create</h3>
@@ -14,9 +14,9 @@
         <h3>Titles to Update & Submit</h3>
         <movie-table-extracted-movies [rows]="moviesToUpdate" mode="update"></movie-table-extracted-movies>
       </ng-container>
-      <ng-container *ngIf="deals.data.length">
+      <ng-container *ngIf="rights.data.length">
         <h3>Distribution deals</h3>
-        <movie-table-extracted-deals [rows]="deals"></movie-table-extracted-deals>
+        <movie-table-extracted-rights [rows]="rights"></movie-table-extracted-rights>
       </ng-container>
       <ng-container *ngIf="contractsToUpdate.data.length">
         <h3>Contracts to Update</h3>

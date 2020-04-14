@@ -5,12 +5,12 @@ import { CollectionGuard, syncQuery } from 'akita-ng-fire';
 import { MovieQuery } from '../+state/movie.query';
 import { Movie } from '../+state/movie.model';
 
-/** Query all the movies with their distributionDeals */
-const movieListWithDealsQuery = () => ({
+/** Query all the movies with their distributionRights */
+const movieListWithRightsQuery = () => ({
   path: 'movies',
   queryFn: ref => ref.where('main.storeConfig.status', '==', 'accepted'),
-  distributionDeals: (movie: Movie) => ({
-    path: `movies/${movie.id}/distributionDeals`
+  distributionRights: (movie: Movie) => ({
+    path: `movies/${movie.id}/distributionRights`
   })
 });
 
@@ -25,6 +25,6 @@ export class MovieCollectionGuard extends CollectionGuard<MovieState> {
   }
 
   sync() {
-    return syncQuery.call(this.service, movieListWithDealsQuery());
+    return syncQuery.call(this.service, movieListWithRightsQuery());
   }
 }

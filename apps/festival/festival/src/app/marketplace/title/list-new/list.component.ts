@@ -9,7 +9,7 @@ import { Subscription, Observable } from 'rxjs';
 import { MovieService, MovieQuery } from '@blockframes/movie/+state';
 import { algolia } from '@env';
 import { FormControl, FormGroup, FormArray } from '@angular/forms';
-import { CatalogSearchForm, AvailsSearchForm } from '@blockframes/distribution-deals/form/search.form';
+import { CatalogSearchForm, AvailsSearchForm } from '@blockframes/distribution-rights/form/search.form';
 import { staticModels } from '@blockframes/utils/static-model';
 
 import { FormList } from '@blockframes/utils/form';

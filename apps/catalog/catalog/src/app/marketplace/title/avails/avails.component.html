@@ -101,14 +101,14 @@
       store="slug" display="label">
     </region-chips-autocomplete>
 
-    <!-- View of deal in preparation -->
+    <!-- View of right in preparation -->
     </mat-card-content>
     <mat-card [formGroup]="availsForm">
       <mat-card-content>
-        <ng-container *ngIf="!availsForm.territory.value.length && !availsForm.get('isActive').value; else displayDeal">
+        <ng-container *ngIf="!availsForm.territory.value.length && !availsForm.get('isActive').value; else displayRight">
           <span class="mat-body-1">Please select a country to check if exploitation rights are available</span>
         </ng-container>
-        <ng-template #displayDeal>
+        <ng-template #displayRight>
           <span class="mat-subheading-2">
             {{ availsForm.territory.value | slice:0:4 | translateSlug: 'TERRITORIES' }}
           </span>
@@ -146,7 +146,7 @@
       <mat-divider></mat-divider>
 
       <mat-card-footer fxLayoutAlign="center center">
-        <a mat-button color="primary" class="mat-body-2" (click)="addDeal()">
+        <a mat-button color="primary" class="mat-body-2" (click)="addRight()">
           <span>Add to Selection</span>
           <mat-icon svgIcon="arrow_forward"></mat-icon>
         </a>

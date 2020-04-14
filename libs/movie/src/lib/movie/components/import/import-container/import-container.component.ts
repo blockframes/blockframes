@@ -28,8 +28,8 @@ export class ImportContainerComponent {
       case 'movies':
         this.viewExtractedElementsComponent.formatMovies(importEvent.sheet);
         break;
-      case 'deals':
-        this.viewExtractedElementsComponent.formatDistributionDeals(importEvent.sheet);
+      case 'rights':
+        this.viewExtractedElementsComponent.formatDistributionRights(importEvent.sheet);
         break;
       case 'contracts':
         await this.viewExtractedElementsComponent.formatContracts(importEvent.sheet);

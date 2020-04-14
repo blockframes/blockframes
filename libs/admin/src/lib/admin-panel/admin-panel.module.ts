@@ -28,7 +28,7 @@ import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.mod
 // Components
 import { OverviewComponent } from './pages/overview/overview.component';
 import { MoviesComponent } from './pages/movies/movies.component';
-import { DistributionDealsComponent } from './pages/distribution-deals/distribution-deals.component';
+import { DistributionRightsComponent } from './pages/distribution-rights/distribution-rights.component';
 import { ContractsComponent } from './pages/contracts/contracts.component';
 import { OrganizationsComponent } from './pages/organizations/organizations.component';
 import { OrganizationComponent } from './pages/organization/organization.component';
@@ -36,7 +36,7 @@ import { MovieComponent } from './pages/movie/movie.component';
 import { InvoicesComponent } from './pages/invoices/invoices.component';
 import { InvoiceComponent } from './pages/invoice/invoice.component';
 import { ContractComponent } from './pages/contract/contract.component';
-import { DistributionDealComponent } from './pages/distribution-deal/distribution-deal.component';
+import { DistributionRightComponent } from './pages/distribution-right/distribution-right.component';
 import { EditPartyComponent } from './components/edit-party/edit-party.component';
 import { UsersComponent } from './pages/users/users.component';
 import { UserComponent } from './pages/user/user.component';
@@ -47,9 +47,9 @@ export const panelRoutes: Routes = [
   { path: '', redirectTo: 'overview', pathMatch: 'full' },
   { path: 'overview', component: OverviewComponent },
   { path: 'movies', component: MoviesComponent },
-  { path: 'deals', component: DistributionDealsComponent },
-  { path: 'deals/:movieId', component: DistributionDealsComponent },
-  { path: 'deal/:dealId/m/:movieId', component: DistributionDealComponent },
+  { path: 'rights', component: DistributionRightComponent },
+  { path: 'rights/:movieId', component: DistributionRightsComponent },
+  { path: 'right/:rightId/m/:movieId', component: DistributionRightComponent },
   { path: 'contracts', component: ContractsComponent },
   { path: 'contracts/:movieId', component: ContractsComponent },
   { path: 'contract/:contractId', component: ContractComponent },
@@ -92,8 +92,8 @@ export const panelRoutes: Routes = [
   declarations: [
     OverviewComponent,
     MoviesComponent,
-    DistributionDealsComponent,
-    DistributionDealComponent,
+    DistributionRightsComponent,
+    DistributionRightComponent,
     ContractsComponent,
     ContractComponent,
     OrganizationsComponent,

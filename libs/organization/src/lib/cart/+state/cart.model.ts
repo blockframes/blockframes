@@ -13,7 +13,7 @@ export type CartStatusValue = typeof cartStatus[CartStatus];
 export interface CatalogCart {
   name: string;
   status: CartStatus;
-  deals: string[];
+  rights: string[];
   price: Price;
 }
 
@@ -24,7 +24,7 @@ export function createCart(cart: Partial<CatalogCart> = {}): CatalogCart {
   return {
     name: 'default',
     status: 'pending',
-    deals: [],
+    rights: [],
     ...cart,
     price: createPrice(cart.price),
   }

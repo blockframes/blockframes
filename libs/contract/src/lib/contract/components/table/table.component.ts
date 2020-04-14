@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { Contract, getTotalPrice, ContractStatus } from '../../+state';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
-import { DistributionDealQuery } from '@blockframes/distribution-deals/+state';
+import { DistributionRightQuery } from '@blockframes/distribution-rights/+state';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Price } from '@blockframes/utils/common-interfaces';
 
@@ -75,7 +75,7 @@ export class ContractTableComponent {
 
   constructor(
     private movieQuery: MovieQuery,
-    private dealQuery: DistributionDealQuery,
+    private rightQuery: DistributionRightQuery,
     private router: Router,
     private route: ActivatedRoute
   ) { }
@@ -84,7 +84,7 @@ export class ContractTableComponent {
     return {
       id: contract.id,
       buyerName: contract.parties.find(({ party }) => party.role === 'licensee').party.displayName,
-      territories: this.dealQuery.getTerritoriesFromContract(contract.lastVersion),
+      territories: this.rightQuery.getTerritoriesFromContract(contract.lastVersion),
       creationDate: contract.lastVersion.creationDate,
       moviesLength: contract.titleIds.length,
       titles: this.movieQuery.getAll().filter(m => contract.titleIds.includes(m.id)).map(m => m.main.title.international),

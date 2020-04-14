@@ -63,7 +63,7 @@ export function createContractTitleDetail(
 ): ContractTitleDetail {
   return {
     titleId: '',
-    distributionDealIds: [],
+    distributionRightIds: [],
     ...params,
     price: createPrice(params.price)
   };

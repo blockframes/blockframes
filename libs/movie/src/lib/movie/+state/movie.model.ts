@@ -30,7 +30,7 @@ import {
 import { createImgRef } from '@blockframes/utils/image-uploader';
 import { LanguagesSlug } from '@blockframes/utils/static-model';
 import { createRange } from '@blockframes/utils/common-interfaces/range';
-import { DistributionDeal } from '@blockframes/distribution-deals/+state/distribution-deal.model';
+import { DistributionRight } from '@blockframes/distribution-rights/+state/distribution-right.model';
 import { Contract, getValidatedContracts } from '@blockframes/contract/contract/+state/contract.model';
 import { toDate } from '@blockframes/utils/helpers';
 
@@ -55,7 +55,7 @@ export {
 } from './movie.firestore';
 
 export interface Movie extends MovieDocumentWithDates {
-  distributionDeals?: DistributionDeal[]
+  distributionRights?: DistributionRight[]
 }
 
 export interface SyncMovieAnalyticsOptions {

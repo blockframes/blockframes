@@ -7,7 +7,7 @@ const registeredObjects = [
   'storeStatus',
   'workType',
   'contractStatus',
-  'distributionDealStatus',
+  'distributionRightStatus',
   'contractType',
   'orgActivity'
 ] as const;
@@ -48,8 +48,8 @@ export class ToLabelPipe implements PipeTransform {
         case 'contractType':
           this.imports[type] = await import('@blockframes/contract/contract/+state/contract.firestore').then(e => e[type]);
           break;
-        case 'distributionDealStatus':
-          this.imports[type] = await import('@blockframes/distribution-deals/+state/distribution-deal.firestore').then(e => e[type]);
+        case 'distributionRightStatus':
+          this.imports[type] = await import('libs/movie/src/lib/distribution-rights/+state/distribution-right.firestore').then(e => e[type]);
           break;
         case 'orgActivity':
           this.imports[type] = await import('@blockframes/organization/organization/+state/organization.firestore').then(e => e[type]);

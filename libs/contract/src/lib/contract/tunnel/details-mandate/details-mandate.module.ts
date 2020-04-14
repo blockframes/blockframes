@@ -7,7 +7,7 @@ import { CommonModule } from '@angular/common';
 import { DetailsMandateComponent } from './details-mandate.component';
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
 import { ContractFormPartyModule } from '../../form/party/party.module';
-import { DistributionDealTermsModule } from '@blockframes/distribution-deals/form/terms/terms.module';
+import { DistributionRightTermsModule } from '@blockframes/distribution-rights/form/terms/terms.module';
 import { MatInputModule } from '@angular/material/input';
 import { TextFieldModule } from '@angular/cdk/text-field';
 import { ContractVersionFormPriceModule } from '@blockframes/contract/version/form/price/price.module';
@@ -25,7 +25,7 @@ import { ContractVersionPaymentScheduleModule } from '@blockframes/contract/vers
     // Components
     TunnelPageModule,
     ContractFormPartyModule,
-    DistributionDealTermsModule,
+    DistributionRightTermsModule,
     ContractVersionFormPriceModule,
     ContractVersionPaymentScheduleModule,
 
