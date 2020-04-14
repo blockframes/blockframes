@@ -17,7 +17,7 @@ import { InvitationService, InvitationQuery } from '@blockframes/invitation/+sta
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MarketplaceComponent implements OnInit, AfterViewInit, OnDestroy {
-  private sub: Subscription;
+  private subs: Subscription[] = [];
   public user$ = this.authQuery.select('profile');
   public currentWishlist$: Observable<Wishlist>;
   public wishlistCount$: Observable<number>;
@@ -34,13 +34,14 @@ export class MarketplaceComponent implements OnInit, AfterViewInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    // DON'T LET ME MERGE : unsubscribe
-    this.authQuery.user$.pipe(
+    const invitSub = this.authQuery.user$.pipe(
       switchMap(user => combineLatest([
         this.invitationService.syncCollection(ref => ref.where('toUser', '==', user.uid)),
-        this.invitationService.syncCollection(ref => ref.where('toEmail', '==', user.email))
+        this.invitationService.syncCollection(ref => ref.where('toEmail', '==', user.email)),
       ]))
     ).subscribe();
+    this.subs.push(invitSub);
+
     this.currentWishlist$ = this.catalogCartQuery.wishlistWithMovies$.pipe(
       map(wishlists => wishlists.find(wishlist => wishlist.status === 'pending'))
     );
@@ -50,11 +51,13 @@ export class MarketplaceComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    this.sub = this.routerQuery.select('navigationId').subscribe(_ => this.sidenav.close());
+    this.subs.push(this.routerQuery.select('navigationId').subscribe(_ => this.sidenav.close()));
   }
 
   ngOnDestroy() {
-   if(this.sub) { this.sub.unsubscribe(); }
+    for (const sub of this.subs) {
+      sub.unsubscribe();
+    }
   }
 
   prepareRoute() {
