@@ -2,6 +2,7 @@ import { Directive, Input, HostBinding, ChangeDetectorRef, OnInit, OnDestroy } f
 import { Subscription, BehaviorSubject, combineLatest } from 'rxjs';
 import { ThemeService } from '../theme/theme.service';
 
+// @todo(#2528) merge this into ImageReferenceDirective
 @Directive({
   selector: 'img[asset]'
 })
