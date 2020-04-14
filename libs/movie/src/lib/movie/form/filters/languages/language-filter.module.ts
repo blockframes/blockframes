@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
 import { LanguageFilterComponent } from './language-filter.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -26,6 +27,7 @@ import { InputAutocompleteModule } from '@blockframes/ui/static-autocomplete/inp
     CommonModule,
     ReactiveFormsModule,
     InputAutocompleteModule,
+    FlexLayoutModule,
 
     TranslateSlugModule,
 

@@ -1,11 +1,9 @@
 <page-nav targetId="nav">
-  <mat-toolbar>
-    <button mat-icon-button>
-      <mat-icon svgIcon="menu"></mat-icon>
-    </button>
-    <nav mat-tab-nav-bar>
-      <h3>{{titleType}} List</h3>
+  <mat-toolbar fxLayout="row" fxLayoutAlign="start center" fxLayoutGap.gt-sm="10px">
+    <div fxFlex>
       <ng-template [ngTemplateOutlet]="titleSearchTemplate"></ng-template>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="start center" class="sort">
       <button *ngIf="canToggle" mat-icon-button (click)="listView = !listView">
         <ng-container *ngIf="!listView">
           <mat-icon matPrefix svgIcon="list"></mat-icon>
@@ -15,12 +13,12 @@
         </ng-container>
       </button>
       <ng-template [ngTemplateOutlet]="titleSortTemplate"></ng-template>
-    </nav>
+    </div>
   </mat-toolbar>
 </page-nav>
 
 <section id="nav" fxLayout="row" fxLayoutAlign="space-between center">
-  <h1 class="mat-headline">{{titleType}} List</h1>
+  <h1 class="mat-headline">{{titleType}} list</h1>
   <article fxLayout="row" fxLayoutAlign="center center">
     <button *ngIf="canToggle" mat-icon-button (click)="listView = !listView">
       <ng-container *ngIf="!listView">
@@ -60,7 +58,7 @@
       <div fxLayout="row" fxLayoutAlign="end start">
         <h6>There are {{ titles.length }} {{titleType}}s available!</h6>
       </div>
-      <div fxLayout="row wrap" fxLayoutGap="24px" fxLayout.lt-md="column" fxLayoutAlign.lt-md="center center">
+      <div fxLayout="row wrap" fxLayoutGap="24px" fxLayoutGap.lt-lg="16px" fxLayout.lt-sm="column" fxLayoutAlign.lt-md="center center">
         <ng-container *ngIf="!listView; else displayList">
           <ng-container *ngFor="let title of titles">
 
