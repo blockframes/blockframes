@@ -1,12 +1,9 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { DashboardLayoutModule } from '@blockframes/ui/layout/dashboard/dashboard.module';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
-
-import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module'
-
 // Guards
 import { EventActiveGuard } from '@blockframes/event/guard/event-active.guard';
 import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
@@ -14,24 +11,13 @@ import { MovieTunnelGuard } from '@blockframes/movie/guards/movie-tunnel.guard';
 import { MovieOrganizationListGuard } from '@blockframes/movie/guards/movie-organization-list.guard';
 import { TunnelGuard } from '@blockframes/ui/tunnel';
 
-// Widgets
-import { NotificationWidgetModule } from '@blockframes/notification/notification-widget/notification-widget.module';
-import { SearchWidgetModule } from '@blockframes/ui/search-widget';
-import { AuthWidgetModule } from '@blockframes/auth/components/widget/widget.module';
-
 // Material
-import { MatButtonModule } from '@angular/material/button';
-import { MatDividerModule } from '@angular/material/divider';
-import { MatChipsModule } from '@angular/material/chips';
-import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatCardModule } from '@angular/material/card';
-import { MatBadgeModule } from '@angular/material/badge';
 
 import { DashboardComponent } from './dashboard.component';
+import { MatDividerModule } from '@angular/material/divider';
 
 
 const routes: Routes = [{
@@ -117,29 +103,20 @@ const routes: Routes = [{
 ];
 
 
+
+
 @NgModule({
   declarations: [DashboardComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
-    RouterModule,
-    ReactiveFormsModule,
-    NotificationWidgetModule,
-    SearchWidgetModule,
-    AuthWidgetModule,
-    AlgoliaAutocompleteModule,
+    DashboardLayoutModule,
     ImageReferenceModule,
     // Material
-    MatButtonModule,
     MatDividerModule,
-    MatChipsModule,
-    MatInputModule,
     MatListModule,
     MatIconModule,
-    MatSidenavModule,
     MatToolbarModule,
-    MatCardModule,
-    MatBadgeModule,
     RouterModule.forChild(routes)
   ]
 })

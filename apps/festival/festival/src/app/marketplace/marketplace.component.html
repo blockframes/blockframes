@@ -1,78 +1,24 @@
-<mat-sidenav-container>
-  <mat-sidenav #sidenav id="dashboard-navbar">
-    <!-- SIDE NAVIGATION -->
-    <mat-nav-list>
-      <a mat-list-item routerLink="home" routerLinkActive="active">
-        <mat-icon mat-list-icon svgIcon="home"></mat-icon>
-        <span mat-line>Home</span>
-      </a>
-      <a test-id="library" mat-list-item routerLink="title" routerLinkActives="active">
-        <mat-icon mat-list-icon svgIcon="video_library"></mat-icon>
-        <span mat-line>All Titles</span>
-      </a>
-      <a test-id="sellers" mat-list-item routerLink="organization" routerLinkActives="active">
-        <mat-icon mat-list-icon svgIcon="sellers"></mat-icon>
-        <span mat-line>Sales Agents</span>
-      </a>
-      <a mat-list-item routerLink="wishlist" routerLinkActive="active">
-        <mat-icon mat-list-icon  svgIcon="heart_fill"></mat-icon>
-        <span mat-line>Wishlist</span>
-      </a>
-      <a mat-list-item routerLink="event" routerLinkActive="active">
-        <mat-icon mat-list-icon  svgIcon="screening"></mat-icon>
-        <span mat-line>My Screenings</span>
-      </a>
-   </mat-nav-list>
-  </mat-sidenav>
-
-  <mat-sidenav-content appNavContainer [appNav]="nav">
-    <!-- TOOLBAR -->
-    <app-nav #nav>
-      <mat-toolbar fxLayout="row" fxLayoutAlign="space-between center">
-        <div fxLayout="row" fxLayoutAlign="default center" fxLayoutGap="24px">
-          <button test-id="menu" mat-icon-button (click)="sidenav.toggle()">
-            <mat-icon svgIcon="menu"></mat-icon>
-          </button>
-          <a class="logo" routerLink=".">
-            <img asset="festival.svg" type="logo" alt="Archipel Content Logo" />
-          </a>
-        </div>
-        <div fxLayout="row" fxLayoutGap="24px">
-          <a test-id="heart-icon" mat-icon-button routerLink="wishlist">
-            <mat-icon
-              svgIcon="heart_fill" color="primary"
-              [matBadge]="wishlistCount$ | async" [matBadgeHidden]="!(wishlistCount$ | async)" matBadgeColor="accent" matBadgeSize="small">
-            </mat-icon>
-          </a>
-          <mat-divider vertical></mat-divider>
-          <!-- Invitations -->
-          <a mat-icon-button routerLink="invitations">
-            <ng-container *ngIf="invitationCount$ | async as count; else noInvitation">
-              <mat-icon svgIcon="send" [matBadge]="count" matBadgeColor="accent" matBadgeSize="small"></mat-icon>
-            </ng-container>
-            <ng-template #noInvitation>
-              <mat-icon svgIcon="send"></mat-icon>
-            </ng-template>
-          </a>
-          <!-- Notifications -->
-          <a mat-icon-button routerLink="notifications">
-            <ng-container *ngIf="notificationCount$ | async as count; else noNotification">
-              <mat-icon svgIcon="bell" [matBadge]="count" matBadgeColor="accent" matBadgeSize="small"></mat-icon>
-            </ng-container>
-            <ng-template #noNotification>
-              <mat-icon svgIcon="bell"></mat-icon>
-            </ng-template>
-          </a>
-          <!-- <overlay-notification-widget page="notifications"></overlay-notification-widget> -->
-          <auth-widget></auth-widget>
-        </div>
-      </mat-toolbar>
-    </app-nav>
-
-    <!-- CONTENT -->
-    <main [@routeAnimation]="prepareRoute()">
-      <router-outlet></router-outlet>
-    </main>
-
-  </mat-sidenav-content>
-</mat-sidenav-container>
+<layout-marketplace>
+  <mat-nav-list>
+    <a mat-list-item routerLink="home" routerLinkActive="active">
+      <mat-icon mat-list-icon svgIcon="home"></mat-icon>
+      <span mat-line>Home</span>
+    </a>
+    <a test-id="library" mat-list-item routerLink="title" routerLinkActives="active">
+      <mat-icon mat-list-icon svgIcon="video_library"></mat-icon>
+      <span mat-line>All Titles</span>
+    </a>
+    <a test-id="sellers" mat-list-item routerLink="organization" routerLinkActives="active">
+      <mat-icon mat-list-icon svgIcon="sellers"></mat-icon>
+      <span mat-line>Sales Agents</span>
+    </a>
+    <a mat-list-item routerLink="wishlist" routerLinkActive="active">
+      <mat-icon mat-list-icon  svgIcon="heart_fill"></mat-icon>
+      <span mat-line>Wishlist</span>
+    </a>
+    <a mat-list-item routerLink="event" routerLinkActive="active">
+      <mat-icon mat-list-icon  svgIcon="screening"></mat-icon>
+      <span mat-line>My Screenings</span>
+    </a>
+  </mat-nav-list>
+</layout-marketplace>

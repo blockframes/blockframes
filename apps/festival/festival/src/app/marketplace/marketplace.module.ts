@@ -7,6 +7,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 import { MarketplaceComponent } from './marketplace.component';
 
+import { MarketplaceLayoutModule } from '@blockframes/ui/layout/marketplace/marketplace.module';
+
 import { ImgAssetModule } from '@blockframes/ui/theme';
 
 // Widgets
@@ -113,24 +115,26 @@ const routes: Routes = [{
     CommonModule,
     FlexLayoutModule,
 
+    MarketplaceLayoutModule,
+
     // Material
-    MatToolbarModule,
+    // MatToolbarModule,
     MatListModule,
-    MatSidenavModule,
+    // MatSidenavModule,
     MatIconModule,
-    MatButtonModule,
-    MatDividerModule,
-    MatBadgeModule,
-    MatMenuModule,
+    // MatButtonModule,
+    // MatDividerModule,
+    // MatBadgeModule,
+    // MatMenuModule,
 
-    // Libraries
-    ImgAssetModule,
-    AppNavModule,
+    // // Libraries
+    // ImgAssetModule,
+    // AppNavModule,
 
-    // Widgets
-    NotificationWidgetModule,
-    SearchWidgetModule,
-    AuthWidgetModule,
+    // // Widgets
+    // NotificationWidgetModule,
+    // SearchWidgetModule,
+    // AuthWidgetModule,
   ]
 })
 export class MarketplaceModule {}
