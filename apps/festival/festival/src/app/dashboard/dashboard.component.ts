@@ -9,7 +9,7 @@ import { OrganizationQuery } from '@blockframes/organization/+state';
 // RxJs
 import { Observable } from 'rxjs';
 import { InvitationQuery } from '@blockframes/invitation/+state';
-import { NotificationQuery } from '@blockframes/notification/notification/+state';
+import { NotificationQuery } from '@blockframes/notification/+state/notification.query';
 
 @Component({
   selector: 'festival-dashboard',

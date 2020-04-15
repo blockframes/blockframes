@@ -8,7 +8,7 @@ import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { Wishlist } from '@blockframes/organization/+state/organization.model';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { InvitationQuery } from '@blockframes/invitation/+state';
-import { NotificationQuery } from '@blockframes/notification/notification/+state';
+import { NotificationQuery } from '@blockframes/notification/+state/notification.query';
 
 @Component({
   selector: 'festival-marketplace',
