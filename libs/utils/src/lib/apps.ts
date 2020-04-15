@@ -10,5 +10,4 @@
   name: string;
   logo: string;
   href: string;
-  id: App;
 }*/
