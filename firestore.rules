@@ -47,6 +47,7 @@ service cloud.firestore {
 
     match /notifications/{notificationId} {
     	allow read, update: if userId() == existingData().userId // @TODO (#2461) Update here if renamming field userId
+        || currentUser().orgId == existingData().organization.id;
     	allow create, delete: if false;
     }
 
