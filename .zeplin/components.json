@@ -19,6 +19,13 @@
             "zeplinNames": [
                 "component/slider/archipel_content/movie-slider"
             ]
+        },
+        {
+          "path": "libs/movie/src/lib/movie/components/card/card.component.ts",
+          "zeplinNames": [
+            "component/card/archipel_content/movie-card-large",
+            "component/card/archipel_content/movie-card-large-hover"
+          ]
         }
     ],
     "github": {

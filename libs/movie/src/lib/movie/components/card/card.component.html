@@ -1,16 +1,27 @@
-<ng-container [ngSwitch]="size">
-  <figure *ngSwitchCase="'large'">
-    <img [imgRef]="image" placeholderAsset="empty_poster.webp" alt="Movie Illustration" />
-    <figcaption>
-      <h3 *ngIf="title.international">{{ title.international }}</h3>
-      <p class="mat-caption" *ngIf="title.original">{{ title.original }}</p>
-      <p class="mat-body-1" *ngIf="directors">{{ directors | displayName }}</p>
-      <p class="mat-body-2" *ngIf="genres.length">{{ genres | translateSlug: 'GENRES' }} | {{ date }} | {{ duration }}'</p>
-    </figcaption>
-  </figure>
+<!-- <ng-container [ngSwitch]="size">
+  <section *ngSwitchCase="'large'" class="large-card overlay">
+    <figure>
+      <wishlist-button [movieId]="id" small></wishlist-button>
+      <img [imgRef]="image" placeholderAsset="empty_poster.webp" alt="Movie Illustration" />
+      <figcaption>
+        <h6 *ngIf="title.international">{{ title.international }}</h6>
+        <p class="mat-caption" *ngIf="directors">{{ directors | displayName }}</p>
+        <p class="mat-caption" *ngIf="genres.length">{{ genres | translateSlug: 'GENRES' }} | {{ date }} | {{ duration }}'</p>
+      </figcaption>
+    </figure>
+  </section>
   <figure *ngSwitchCase="'medium'">
   </figure>
   <figure *ngSwitchCase="'small'">
   </figure>
-</ng-container>
+</ng-container> -->
 
+<figure>
+  <wishlist-button [movieId]="id" small></wishlist-button>
+  <img src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">
+  <figcaption [class]="size">
+    <h6 *ngIf="title.international">{{ title.international }}</h6>
+    <p class="mat-caption" *ngIf="directors">{{ directors | displayName }}</p>
+    <p class="mat-caption" *ngIf="genres.length">{{ genres | translateSlug: 'GENRES' }} | {{ date }} | {{ duration }}'</p>
+  </figcaption>
+</figure>
