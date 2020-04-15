@@ -4,13 +4,13 @@ import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Component, Input, ViewChild, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { createMovie, MovieService } from '../../../+state';
 import { SelectionModel } from '@angular/cdk/collections';
-import { SpreadsheetImportError, RightsImportState } from '../view-extracted-elements/view-extracted-elements.component';
 import { ViewImportErrorsComponent } from '../view-import-errors/view-import-errors.component';
 import { DistributionRightService } from '@blockframes/distribution-rights/+state/distribution-right.service';
 import { cleanModel } from '@blockframes/utils/helpers';
 import { sortingDataAccessor } from '@blockframes/utils/table';
+import { RightsImportState, SpreadsheetImportError } from '../../import-utils';
+import { MovieService, createMovie } from '@blockframes/movie/+state';
 
 const hasImportErrors = (importState: RightsImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -18,8 +18,8 @@ const hasImportErrors = (importState: RightsImportState, type: string = 'error')
 
 @Component({
   selector: 'movie-table-extracted-rights',
-  templateUrl: './table-extracted-rights.component.html',
-  styleUrls: ['./table-extracted-rights.component.scss'],
+  templateUrl: './rights.component.html',
+  styleUrls: ['./rights.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableExtractedRightsComponent implements OnInit {

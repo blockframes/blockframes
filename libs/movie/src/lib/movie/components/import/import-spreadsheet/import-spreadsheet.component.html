@@ -53,9 +53,6 @@
         <button mat-flat-button color="warn" (click)="removeFile()">
           <mat-icon svgIcon="trash"></mat-icon>
         </button>
-        <button mat-flat-button color="primary" (click)="previewFile()" *ngIf="isUserBlockframesAdmin">
-          <mat-icon svgIcon="launch"></mat-icon>
-        </button>
       </ng-container>
       <button mat-flat-button color="primary" (click)="next()" [disabled]="sheets.length === 0">Start import
         <mat-icon svgIcon="arrow_downward"></mat-icon></button>

@@ -5,10 +5,11 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Component, Input, ViewChild, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { SelectionModel } from '@angular/cdk/collections';
-import { SpreadsheetImportError, ContractsImportState } from '../view-extracted-elements/view-extracted-elements.component';
+
 import { ViewImportErrorsComponent } from '../view-import-errors/view-import-errors.component';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { sortingDataAccessor } from '@blockframes/utils/table';
+import { ContractsImportState, SpreadsheetImportError } from '../../import-utils';
 
 const hasImportErrors = (importState: ContractsImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -16,8 +17,8 @@ const hasImportErrors = (importState: ContractsImportState, type: string = 'erro
 
 @Component({
   selector: 'movie-table-extracted-contracts',
-  templateUrl: './table-extracted-contracts.component.html',
-  styleUrls: ['./table-extracted-contracts.component.scss'],
+  templateUrl: './contracts.component.html',
+  styleUrls: ['./contracts.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableExtractedContractsComponent implements OnInit {
