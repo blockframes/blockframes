@@ -192,7 +192,6 @@ export class ContractTunnelComponent implements OnInit {
       ...this.contractForm.value
     });
 
-    //@TODO (#2404) Problem: here this.contractForm.value.lastVersion[titleId].price.amount === 0
     await this.contractService.createContractAndRight(orgId, titlesAndRights, contract);
 
     // Remove rights
