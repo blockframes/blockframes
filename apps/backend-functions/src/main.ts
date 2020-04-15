@@ -24,7 +24,7 @@ import * as bigQuery from './bigQuery';
 import { onDocumentPermissionCreate } from './permissions';
 import { onContractWrite } from './contract';
 import * as privateConfig from './privateConfig';
-import { createNotificationsForEventsToStart } from './internals/invitations/events';
+import { createNotificationsForEventsToStart, onInvitationToAnEventCreate } from './internals/invitations/events';
 
 /**
  * Trigger: when user creates an account.
@@ -98,6 +98,8 @@ export const onInvitationUpdateEvent = onDocumentWrite(
   'invitations/{invitationID}',
   onInvitationWrite
 );
+
+export const userInvitedToEvent = functions.https.onCall(logErrors(onInvitationToAnEventCreate));
 
 //--------------------------------
 //   Notifications Management   //

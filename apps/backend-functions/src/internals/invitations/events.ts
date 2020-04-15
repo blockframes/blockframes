@@ -8,7 +8,7 @@ import { getAdminIds } from "../../data/internals";
 /**
  * Handles notifications and emails when an invitation to an event is created.
  */
-async function onInvitationToAnEventCreate({
+export async function onInvitationToAnEventCreate({
   toUser,
   toOrg,
   fromUser,
