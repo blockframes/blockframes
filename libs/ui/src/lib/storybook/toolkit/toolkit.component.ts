@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { IconService } from '../../icon-service';
 import { ThemeService } from '@blockframes/ui/theme';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
@@ -16,7 +16,7 @@ export class ToolkitComponent {
   view: Views = 'component';
   theme$ = this.themeService.theme$;
 
-  constructor(icons: IconService, private themeService: ThemeService, private cdr: ChangeDetectorRef) {
+  constructor(public icons: IconService, private themeService: ThemeService, private cdr: ChangeDetectorRef) {
     this.themeService.theme = 'light';
     icons.init();
   }

@@ -1,18 +1,18 @@
 {
     "plugins": [
         {
-          "name": "@zeplin/cli-connect-angular-plugin",
-          "config": {
-              "useFullSnippet": true,
-              "useFullDescription": true
-          }
+            "name": "@zeplin/cli-connect-angular-plugin",
+            "config": {
+                "useFullSnippet": true,
+                "useFullDescription": true
+            }
         },
         {
-          "name": "@zeplin/cli-connect-storybook-plugin",
-          "config": {
-              "url": "http://localhost:4400",
-              "command": "npx ng run movie:storybook"
-          }
+            "name": "@zeplin/cli-connect-storybook-plugin",
+            "config": {
+                "url": "http://localhost:4400",
+                "command": "npx ng run movie:storybook"
+            }
         }
     ],
     "projects": [],
@@ -28,14 +28,20 @@
             ]
         },
         {
-          "path": "libs/movie/src/lib/movie/components/card/card.component.ts",
-          "zeplinNames": [
-            "component/card/archipel_content/movie-card-large",
-            "component/card/archipel_content/movie-card-large-hover"
-          ],
-          "storybook": {
-            "kind": "Card"
-        }
+            "path": "libs/movie/src/lib/movie/components/card/card.component.ts",
+            "zeplinNames": [
+                "component/card/archipel_content/movie-card-large",
+                "component/card/archipel_content/movie-card-large-hover"
+            ],
+            "storybook": {
+                "kind": "Card"
+            }
+        },
+        {
+            "path": "libs/movie/src/lib/movie/components/header/header.component.ts",
+            "zeplinNames": [
+                "component/banner/archipel_content/header-movie"
+            ]
         }
     ],
     "github": {

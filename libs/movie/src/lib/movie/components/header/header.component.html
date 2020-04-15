@@ -1,0 +1,44 @@
+<header fxLayout="column" fxLayoutAlign="start start" *ngIf="tailoredMovie" #header>
+    <!-- Breadcrumbs and Poster -->
+    <div fxLayout="row" fxLayoutGap="20px">
+        <img [backgroundRef]="tailoredMovie.poster">
+        <!-- Descriptions -->
+        <div fxLfex fxLayout="column">
+            <h4>{{ tailoredMovie.directors | displayName }}</h4>
+            <h1 class="mat-display-2">{{ tailoredMovie.title.international }}</h1>
+            <h2>{{ tailoredMovie.title.original }}</h2>
+            <h4 class="mat-body">
+                <span *ngIf="tailoredMovie.workType">
+                    {{ tailoredMovie.workType + ' |'}}
+                </span>
+                <span *ngIf="tailoredMovie.runtime">
+                    {{ tailoredMovie.runtime + ' |' }}
+                </span>
+                <span [matTooltip]="getValueForTooltip('genres')" *ngIf="tailoredMovie.genres.length">
+                    <!-- Display only the first value, rest goes into the tooltip -->
+                    {{ tailoredMovie.genres[0] + ' |' }}
+                </span>
+                <span [matTooltip]="getValueForTooltip('originalLanguages')"
+                    *ngIf="tailoredMovie.originalLanguages.length">
+                    <!-- Display only the first value, rest goes into the tooltip -->
+                    {{ tailoredMovie.originalLanguages[0] + ' |' }}
+                </span>
+                <span [matTooltip]="getValueForTooltip('countries').iso_a2" *ngIf="tailoredMovie.countries.length">
+                    <!-- Display only the first value, rest goes into the tooltip -->
+                    {{ tailoredMovie.countries[0].iso_a2 + ' |' }}
+                </span>
+                <span *ngIf="tailoredMovie.productionYear">
+                    {{ tailoredMovie.productionYear + ' |' }}
+                </span>
+                <span *ngIf="tailoredMovie.productionStatus">
+                    {{ tailoredMovie.productionStatus }}
+                </span>
+            </h4>
+            <ng-content cta1></ng-content>
+            <ng-content cta2></ng-content>
+            <div fxLayout="row">
+                <ng-content cta3></ng-content>
+            </div>
+        </div>
+    </div>
+</header>

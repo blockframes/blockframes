@@ -315,7 +315,7 @@ export function getTerritorySlugFromGeoJson(code: string, system: 'iso_a3' | 'is
  * @param code
  * @param system
  */
-export function getTerritoryLabelFromGeoJson(code: string, system: 'iso_a3' | 'iso_a3' = 'iso_a3'): TerritoriesSlug {
+export function getTerritoryLabelFromGeoJson(code: string, system: 'iso_a3' | 'iso_a3' = 'iso_a3'): TerritoriesLabel {
   const territory = getTerritoryFromGeoJson(code, system);
   if (!territory) {
     throw new Error(`Failed to territory: ${code}.`);
