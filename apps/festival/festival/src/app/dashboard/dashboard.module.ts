@@ -50,11 +50,11 @@ const routes: Routes = [{
         loadChildren: () => import('./home/home.module').then(m => m.HomeModule)
       },
       {
-        path: 'notification',
+        path: 'notifications',
         loadChildren: () => import('./notification/notification.module').then(m => m.NotificationModule)
       },
       {
-        path: 'invitation',
+        path: 'invitations',
         loadChildren: () => import('./invitation/invitation.module').then(m => m.InvitationModule)
       },
       {
