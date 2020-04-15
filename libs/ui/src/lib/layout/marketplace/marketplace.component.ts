@@ -5,7 +5,7 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Observable, Subscription } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
-import { Wishlist } from '@blockframes/organization/organization/+state/organization.model';
+import { Wishlist } from '@blockframes/organization/+state/organization.model';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { InvitationQuery } from '@blockframes/invitation/+state';
 import { NotificationQuery } from '@blockframes/notification/notification/+state';
