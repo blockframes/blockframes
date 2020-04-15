@@ -5,7 +5,7 @@ import { FormControl } from '@angular/forms';
 import { SearchResult } from '@blockframes/ui/search-widget/search-widget.component';
 import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
 import { InvitationQuery } from '@blockframes/invitation/+state';
-import { NotificationQuery } from '@blockframes/notification/notification/+state';
+import { NotificationQuery } from '@blockframes/notification/+state';
 import { MatSidenavContent } from '@angular/material/sidenav';
 import { algolia } from '@env';
 import { Observable, Subscription } from 'rxjs';

@@ -10,7 +10,7 @@ import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/
 import { DashboardComponent } from './dashboard.component';
 
 // Widgets
-import { NotificationWidgetModule } from '@blockframes/notification/notification/notification-widget/notification-widget.module';
+import { NotificationWidgetModule } from '@blockframes/notification/notification-widget/notification-widget.module';
 import { SearchWidgetModule } from '@blockframes/ui/search-widget';
 import { AuthWidgetModule } from '@blockframes/auth/components/widget/widget.module';
 
