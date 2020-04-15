@@ -82,12 +82,11 @@ async function checkAndTriggerNotifications(current: ContractDocument) {
       const { id, denomination, logo } = await getDocument<PublicOrganization>(`orgs/${current.partyIds[0]}`);
       const archipelContent = await getDocument<OrganizationDocument>(`orgs/${centralOrgID}`);
       const notifications = archipelContent.userIds.map(
-        userId => createNotification({
-          userId,
+        toUserId => createNotification({
+          toUserId,
           organization: { id, denomination, logo }, // TODO (#1999): Add the logo to display if orgs collection is not public to Archipel Content
           type: 'newContract',
-          docId: current.id,
-          app: 'biggerBoat'
+          docId: current.id
         })
       );
 
@@ -99,12 +98,11 @@ async function checkAndTriggerNotifications(current: ContractDocument) {
       const notifications = organizations
         .filter(organizationDocument => !!organizationDocument && !!organizationDocument.userIds)
         .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
-        .map(userId => {
+        .map(toUserId => {
           return createNotification({
-            userId,
+            toUserId,
             type: 'contractInNegotiation',
-            docId: current.id,
-            app: 'biggerBoat'
+            docId: current.id
           });
         });
 

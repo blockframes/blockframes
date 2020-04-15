@@ -111,14 +111,13 @@ async function onInvitationToOrgDecline(invitation: InvitationFromOrganizationTo
 
   const adminIds = await getAdminIds(org.id);
 
-  const notifications = adminIds.map(userId =>
+  const notifications = adminIds.map(toUserId =>
     createNotification({
-      userId,
+      toUserId,
       user: {
         firstName: user.firstName,
         lastName: user.lastName
       },
-      app: 'blockframes',
       type: 'invitationFromOrganizationToUserDecline'
     })
   );
@@ -181,14 +180,13 @@ async function onInvitationFromUserToJoinOrgDecline(invitation: InvitationFromUs
   const org = orgSnapshot.data() as OrganizationDocument;
   const adminIds = await getAdminIds(org.id);
 
-  const notifications = adminIds.map(userId =>
+  const notifications = adminIds.map(toUserId =>
     createNotification({
-      userId,
+      toUserId,
       user: {
         firstName: invitation.fromUser.firstName,
         lastName: invitation.fromUser.lastName
       },
-      app: 'blockframes',
       type: 'invitationFromUserToJoinOrgDecline'
     })
   );

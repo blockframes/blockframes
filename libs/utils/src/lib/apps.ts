@@ -15,12 +15,4 @@ export interface AppDetails {
   href: string;
   id: AppValue;
 }
-
-export const APPS_DETAILS: AppDetails[] = [
-  {
-    name: 'Archipel Content',
-    logo: '/assets/logo/biggerBoatMarketplaceLogo.png',
-    href: 'catalog',
-    id: app.biggerBoat
-  }
-];
+// @todo #2461 remove

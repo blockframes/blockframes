@@ -78,9 +78,8 @@ async function onInvitationToAnEventAccepted({
 
   if (!!fromUser) {
     const notification = createNotification({
-      userId: fromUser.uid,
+      toUserId: fromUser.uid,
       docId,
-      app: 'blockframes', // @todo (#2461) remove if not needed
       type: 'invitationToAttendEventAccepted'
     });
 
@@ -96,11 +95,10 @@ async function onInvitationToAnEventAccepted({
     const orgSnapshot = await db.doc(`orgs/${fromOrg.id}`).get();
     const org = orgSnapshot.data() as OrganizationDocument;
     const adminIds = await getAdminIds(org.id);
-    adminIds.forEach(userId => {
+    adminIds.forEach(toUserId => {
       const notification = createNotification({
-        userId,
+        toUserId,
         docId,
-        app: 'blockframes', // @todo (#2461) remove if not needed
         type: 'invitationToAttendEventAccepted'
       });
 
@@ -135,9 +133,8 @@ async function onInvitationToAnEventRejected({
 
   if (!!fromUser) {
     const notification = createNotification({
-      userId: fromUser.uid,
+      toUserId: fromUser.uid,
       docId,
-      app: 'blockframes', // @todo (#2461) remove if not needed
       type: 'invitationToAttendEventDeclined'
     });
 
@@ -153,11 +150,10 @@ async function onInvitationToAnEventRejected({
     const orgSnapshot = await db.doc(`orgs/${fromOrg.id}`).get();
     const org = orgSnapshot.data() as OrganizationDocument;
     const adminIds = await getAdminIds(org.id);
-    adminIds.forEach(userId => {
+    adminIds.forEach(toUserId => {
       const notification = createNotification({
-        userId,
+        toUserId,
         docId,
-        app: 'blockframes', // @todo (#2461) remove if not needed
         type: 'invitationToAttendEventDeclined'
       });
 
@@ -205,8 +201,7 @@ export async function createNotificationsForEventsToStart() {
 
   // => fair un cron pour le jour J avec mail de rappel (et docID doit etre celui de l'event pas de l'invit)
   /*const notification = createNotification({
-    userId: toUser.uid,
-    app: 'blockframes',
+    toUserId: toUser.uid,
     docId,
     type: 'eventIsAboutToStart''
   });*/

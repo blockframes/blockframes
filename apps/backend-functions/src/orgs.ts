@@ -17,9 +17,9 @@ import { NotificationType } from '@blockframes/notification/types';
 import { triggerNotifications, createNotification } from './notification';
 
 /** Create a notification with user and org. */
-function notifUser(userId: string, notificationType: NotificationType, org: OrganizationDocument, user: PublicUser) {
+function notifUser(toUserId: string, notificationType: NotificationType, org: OrganizationDocument, user: PublicUser) {
   return createNotification({
-    userId,
+    toUserId,
     type: notificationType,
     user: {
       firstName: user.firstName,
@@ -29,8 +29,7 @@ function notifUser(userId: string, notificationType: NotificationType, org: Orga
       id: org.id,
       denomination: org.denomination,
       logo: org.logo,
-    },
-    app: 'blockframes'
+    }
   });
 }
 
@@ -131,9 +130,8 @@ export async function onOrganizationUpdate(
     // Send a notification to the creator of the organization
     const notification = createNotification({
       // At this moment, the organization was just created, so we are sure to have only one userId in the array
-      userId: after.userIds[0],
-      type: 'organizationAcceptedByArchipelContent',
-      app: 'blockframes'
+      toUserId: after.userIds[0],
+      type: 'organizationAcceptedByArchipelContent'
     });
     await triggerNotifications([notification]);
   }

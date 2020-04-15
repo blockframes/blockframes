@@ -7,7 +7,7 @@ type Timestamp = firestore.Timestamp;
 /** Raw type for Invitation. */
 export interface Invitation {
   id: string;
-  app: App;
+  app: App; // @TODO (#2461) What is the purpose of this? check.
   type: InvitationType;
   mode: InvitationMode,
   status: InvitationStatus;

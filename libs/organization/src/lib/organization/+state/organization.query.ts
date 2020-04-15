@@ -17,9 +17,9 @@ export class OrganizationQuery extends QueryEntity<OrganizationState, Organizati
    * of application that are accessible to the current
    * organization.
    */
-  public appsDetails$ = this.select(state => state.appsDetails);
+  public appsDetails$ = this.select(state => state.appsDetails); // // @todo #2461 remove
 
-  public isAccepted$ = this.selectActive().pipe(
+  public isAccepted$ = this.selectActive().pipe( //// @todo #2461 remove
     filter(org => !!org),
     map(org => org.status === 'accepted')
   );

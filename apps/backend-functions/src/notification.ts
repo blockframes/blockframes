@@ -17,10 +17,10 @@ export function triggerNotifications(notifications: NotificationDocument[]): Pro
 /** Create a Notification with required and generic informations. */
 export function createNotification(notification: NotificationOptions): NotificationDocument {
   return {
+    toUserId: '',
     id: db.collection('notifications').doc().id,
     isRead: false,
     date: firestore.Timestamp.now(),
-    app: 'blockframes', // @todo #2461 needed ?
     ...notification
   };
 }

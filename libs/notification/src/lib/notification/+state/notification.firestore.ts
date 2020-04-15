@@ -36,18 +36,14 @@ export type NotificationType =
 /** Minimum required informations to create a Notification. */
 export interface NotificationOptions {
   /** @dev Recipient of the notification */ 
-  userId?: string; // @TODO (#2461) rename to forUserId
-  toEmail ?: string;  // @TODO (#2461) update draw.io
-  /** @dev Subject the notification */ 
+  toUserId: string; // @TODO (#2461) rename to toUserId
+  /** @dev Possible subjects of the notification */ 
   user?: Partial<PublicUser>;
-  /** @dev Subject the notification */ 
   docId?: string;
-  type: NotificationType;
-  /** @dev Subject the notification */ 
   movie?: PublicMovie;
-  /** @dev Subject the notification */ 
   organization?: PublicOrganization;
-  app: App; // @TODO (#2461) What is the purpose of this? check.
+  /** @dev Type of the notification */ 
+  type: NotificationType;
 }
 
 /** Generic informations for a Notification. */

@@ -9,12 +9,11 @@ import { storeSearchableMovie, deleteSearchableMovie } from './internals/algolia
 import { centralOrgID } from './environments/environment';
 
 /** Create a notification with user and movie. */
-function notifUser(userId: string, notificationType: NotificationType, movie: MovieDocument, user: PublicUser) {
+function notifUser(toUserId: string, notificationType: NotificationType, movie: MovieDocument, user: PublicUser) {
   return createNotification({
-    userId,
+    toUserId,
     user: { firstName: user.firstName, lastName: user.lastName },
     type: notificationType,
-    app: 'blockframes',
     movie: {
       id: movie.id,
       title: {
@@ -131,11 +130,10 @@ export async function onMovieUpdate(
   if (isMovieSubmitted) { // When movie is submitted to Archipel Content
     const archipelContent = await getDocument<OrganizationDocument>(`orgs/${centralOrgID}`);
     const notifications = archipelContent.userIds.map(
-      userId => createNotification({
-        userId,
+      toUserId => createNotification({
+        toUserId,
         type: 'movieSubmitted',
-        docId: after.id,
-        app: 'biggerBoat'
+        docId: after.id
       })
     );
 
@@ -147,12 +145,11 @@ export async function onMovieUpdate(
     const notifications = organizations
     .filter(organizationDocument => !!organizationDocument && !!organizationDocument.userIds)
     .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
-    .map(userId => {
+    .map(toUserId => {
       return createNotification({
-        userId,
+        toUserId,
         type: 'movieAccepted',
-        docId: after.id,
-        app: 'biggerBoat'
+        docId: after.id
       });
     });
 
