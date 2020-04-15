@@ -99,6 +99,8 @@ export const onInvitationUpdateEvent = onDocumentWrite(
   onInvitationWrite
 );
 
+export const userInvitedToEvent = functions.https.onCall(logErrors(onInvitationToAnEventCreate));
+
 //--------------------------------
 //   Notifications Management   //
 //--------------------------------
