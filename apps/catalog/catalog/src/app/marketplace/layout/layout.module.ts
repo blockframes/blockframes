@@ -13,7 +13,7 @@ import { ImgAssetModule } from '@blockframes/ui/theme';
 
 // Widgets
 import { SearchWidgetModule } from '@blockframes/ui/search-widget';
-import { NotificationWidgetModule } from '@blockframes/notification/notification/notification-widget/notification-widget.module';
+import { NotificationWidgetModule } from '@blockframes/notification/notification-widget/notification-widget.module';
 import { AuthWidgetModule } from '@blockframes/auth/components/widget/widget.module';
 
 // Material

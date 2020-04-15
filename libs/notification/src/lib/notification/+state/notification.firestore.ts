@@ -1,4 +1,4 @@
-import { PublicOrganization } from '@blockframes/organization/organization/+state/organization.firestore';
+import { PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
 import { PublicMovie } from '@blockframes/movie/types';
 import { App } from '@blockframes/utils/apps';
 import { PublicUser } from '@blockframes/user/+state/user.firestore';

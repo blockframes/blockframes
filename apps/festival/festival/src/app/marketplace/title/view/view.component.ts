@@ -1,15 +1,15 @@
 import { Component, OnInit, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { Router } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { CartService } from '@blockframes/organization/cart/+state/cart.service';
+import { CartService } from '@blockframes/cart/+state/cart.service';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
-import { Organization } from '@blockframes/organization/organization/+state/organization.model';
-import { OrganizationService } from '@blockframes/organization/organization/+state/organization.service';
-import { OrganizationQuery } from '@blockframes/organization/organization/+state/organization.query';
+import { Organization } from '@blockframes/organization/+state/organization.model';
+import { OrganizationService } from '@blockframes/organization/+state/organization.service';
+import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { scaleIn } from '@blockframes/utils/animations/fade';
 
 @Component({

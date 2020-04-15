@@ -2,9 +2,11 @@ import { Injectable } from '@angular/core';
 import { InvitationState, InvitationStore } from './invitation.store';
 import { createInvitationFromUserToOrganization, createInvitationFromOrganizationToUser, Invitation } from './invitation.model';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
-import { OrganizationService } from '@blockframes/organization/organization/+state/organization.service';
+import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { AuthService } from '@blockframes/auth/+state/auth.service';
+import { InvitationDocument } from './invitation.firestore';
+import { toDate } from '@blockframes/utils/helpers';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'invitations' })
@@ -16,6 +18,13 @@ export class InvitationService extends CollectionService<InvitationState> {
     private orgService: OrganizationService,
   ) {
     super(store);
+  }
+
+  formatFromFirestore(invitation: InvitationDocument): Invitation {
+    return {
+      ...invitation,
+      date: toDate(invitation.date)
+    }
   }
 
   /** Create an Invitation when a user asks to join an Organization. */

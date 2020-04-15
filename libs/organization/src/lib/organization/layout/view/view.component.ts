@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectionStrategy, Input, HostBinding } from '@angular/core';
-import { Organization } from '@blockframes/organization/organization/+state';
+import { Organization } from '@blockframes/organization/+state';
 import { fade } from '@blockframes/utils/animations/fade';
 
 @Component({
@@ -14,6 +14,6 @@ export class ViewComponent {
   @Input() navLinks;
   @Input() org: Organization;
 
-  constructor() { } 
+  constructor() { }
 
 }

@@ -7,7 +7,7 @@ import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
-@CollectionGuardConfig({ awaitSync: true })
+@CollectionGuardConfig({ awaitSync: false })
 export class PermissionsGuard extends CollectionGuard<PermissionsState> {
   constructor(
     protected service: PermissionsService,

@@ -1,4 +1,4 @@
-import { PublicOrganization } from "@blockframes/organization/organization/+state/organization.firestore";
+import { PublicOrganization } from "@blockframes/organization/+state/organization.firestore";
 import { firestore } from 'firebase/app';
 import { PublicUser } from "@blockframes/user/+state/user.firestore";
 import { App } from "@blockframes/utils/apps";
@@ -11,7 +11,7 @@ export interface Invitation {
   type: InvitationType;
   mode: InvitationMode,
   status: InvitationStatus;
-  date: Timestamp;
+  date: Timestamp | Date;
   /** @dev An invitation is created by an user or an org (fromOrg or fromUser) */
   fromOrg?: PublicOrganization,
   fromUser?: PublicUser,
@@ -19,7 +19,7 @@ export interface Invitation {
   toOrg?: PublicOrganization,
   toUser?: PublicUser,
   toEmail?: string,
-  /** 
+  /**
    * @dev Can be a titleId or a eventId for example.
    * If empty, the invitation is about Organization
    */
@@ -31,7 +31,7 @@ export interface Invitation {
 export type InvitationDocument = InvitationFromOrganizationToUser | InvitationFromUserToOrganization | InvitationToAnEvent;
 export type InvitationOrUndefined = InvitationDocument | undefined;
 
-/** 
+/**
  * Specific Invitation/Request to attend an Event.
  * When a invitation is created, a backend function will check if:
  * If we have an user or an org we can create a notification.

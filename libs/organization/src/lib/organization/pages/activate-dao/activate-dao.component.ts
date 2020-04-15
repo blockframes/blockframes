@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { PermissionsQuery } from '@blockframes/permissions/+state';
-import { OrganizationService, OrganizationQuery } from '@blockframes/organization/organization/+state';
+import { OrganizationService, OrganizationQuery } from '@blockframes/organization/+state';
 import { Router, ActivatedRoute  } from '@angular/router';
 
 @Component({

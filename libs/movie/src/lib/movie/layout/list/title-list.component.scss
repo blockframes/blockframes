@@ -1,47 +1,44 @@
 @import '~@angular/flex-layout/mq';
 
+page-nav {
+  mat-toolbar {
+    .sort {
+      padding-right: 16px;
+    }
+  }
+}
+
 section {
   padding: 20px 20px;
+  h1 {
+    text-transform: capitalize;
+  }
 }
 
 aside {
   position: sticky;
   top: calc(var(--toolbarHeight) + 20px);
-}
-
-@include layout-bp(xs) {
-  h1 {
-    text-align: center;
-  }
-  section {
-    padding: 10px 10px;
-    aside {
-      width: 100%;
-      position: static;
-      mat-card {
-        height: 100%;
-      }
-      .filter {
-        margin-top: 50px;
-      }
-    }
-    article mat-form-field-wrapper {
-      width: 80%;
-    }
+  mat-card {
+    width: 450px;
+    max-height: calc(100vh - var(--toolbarHeight) - 40px);
+    overflow: auto;
   }
 }
 
-@include layout-bp(sm) {
-  section aside {
+@include layout-bp(lt-md) {
+  aside {
     position: static;
-    .filter {
-      margin-top: 50px;
+    mat-card {
+      width: 100%;
+      max-height: fit-content;
     }
   }
 }
 
 @include layout-bp(md) {
-  aside.filter {
-    width: 50%;
+  aside {
+    mat-card {
+      width: 350px;
+    }
   }
 }

@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { pluck, switchMap } from 'rxjs/operators';
-import { OrganizationService } from '@blockframes/organization/organization/+state/organization.service';
+import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { scaleIn } from '@blockframes/utils/animations/fade';
 
 const navLinks = [{

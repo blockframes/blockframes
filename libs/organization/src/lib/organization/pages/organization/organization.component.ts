@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { OrganizationForm } from '@blockframes/organization/organization/forms/organization.form';
-import { OrganizationQuery } from '@blockframes/organization/organization/+state/organization.query';
-import { OrganizationService } from '@blockframes/organization/organization/+state/organization.service';
+import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
+import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
+import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({

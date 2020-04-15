@@ -5,9 +5,11 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { SearchResult } from '@blockframes/ui/search-widget/search-widget.component';
 import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
-import { OrganizationQuery } from '@blockframes/organization/organization/+state';
+import { OrganizationQuery } from '@blockframes/organization/+state';
 // RxJs
 import { Observable } from 'rxjs';
+import { InvitationQuery } from '@blockframes/invitation/+state';
+import { NotificationQuery } from '@blockframes/notification/+state/notification.query';
 
 @Component({
   selector: 'festival-dashboard',
@@ -16,10 +18,12 @@ import { Observable } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardComponent {
-  searchCtrl: FormControl = new FormControl('');
-  org$ = this.orgQuery.selectActive();
+  public invitationCount$ = this.invitationQuery.selectCount(invitation => invitation.status === 'pending');
+  public notificationCount$ = this.notificationQuery.selectCount();
+  public searchCtrl: FormControl = new FormControl('');
+  public org$ = this.orgQuery.selectActive();
 
-  ltMd$ = this.breakpointsService.ltMd;
+  public ltMd$ = this.breakpointsService.ltMd;
 
   public movieIndex = algolia.indexNameMovies;
 
@@ -28,6 +32,8 @@ export class DashboardComponent {
 
   constructor(
     private breakpointsService: BreakpointsService,
-    private orgQuery: OrganizationQuery
+    private orgQuery: OrganizationQuery,
+    private invitationQuery: InvitationQuery,
+    private notificationQuery: NotificationQuery,
   ) { }
 }

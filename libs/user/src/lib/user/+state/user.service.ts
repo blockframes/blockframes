@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { UserState, UserStore } from './user.store';
-import { OrganizationQuery } from '@blockframes/organization/organization/+state/organization.query';
+import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { map } from 'rxjs/operators';
-import { OrganizationService } from '@blockframes/organization/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { PermissionsQuery } from '@blockframes/permissions/+state/permissions.query';
 import { OrganizationMember, createOrganizationMember } from './user.model';
 import { PermissionsService } from '@blockframes/permissions/+state';

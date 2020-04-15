@@ -37,7 +37,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ChipsAutocompleteModule } from "@blockframes/ui/static-autocomplete/chips/chips-autocomplete.module";
 import { AlgoliaAutocompleteModule } from "@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module";
-import { WishlistButtonModule } from "@blockframes/organization/organization/components/wishlist-button/wishlist-button.module";
+import { WishlistButtonModule } from "@blockframes/organization/components/wishlist-button/wishlist-button.module";
 
 @NgModule({
   declarations: [ListComponent],

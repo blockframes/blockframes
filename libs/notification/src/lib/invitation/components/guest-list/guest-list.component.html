@@ -1,0 +1,12 @@
+<mat-list>
+  <ng-container *ngFor="let invitation of invitations">
+    <ng-template
+      [ngTemplateOutlet]="itemTemplate || default"
+      [ngTemplateOutletContext]="{ $implicit: invitation }"
+    ></ng-template>
+  </ng-container>
+</mat-list>
+
+<ng-template #default let-invitation>
+  <invitation-guest-item [invitation]="invitation"></invitation-guest-item>
+</ng-template>

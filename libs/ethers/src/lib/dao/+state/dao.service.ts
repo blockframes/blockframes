@@ -21,7 +21,7 @@ import { DeploySteps, DaoOperation, DaoAction } from './dao.model';
 import { abi as ORGANIZATION_ABI } from '@blockframes/smart-contracts/Organization.json';
 import { OrganizationMember } from '@blockframes/user/+state/user.model';
 import { PermissionsQuery } from '@blockframes/permissions/+state';
-import { OrganizationQuery } from '@blockframes/organization/organization/+state';
+import { OrganizationQuery } from '@blockframes/organization/+state';
 
 //--------------------------------------
 //        ETHEREUM ORGS TYPES

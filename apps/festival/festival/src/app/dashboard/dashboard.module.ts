@@ -15,7 +15,7 @@ import { MovieOrganizationListGuard } from '@blockframes/movie/guards/movie-orga
 import { TunnelGuard } from '@blockframes/ui/tunnel';
 
 // Widgets
-import { NotificationWidgetModule } from '@blockframes/notification/notification/notification-widget/notification-widget.module';
+import { NotificationWidgetModule } from '@blockframes/notification/notification-widget/notification-widget.module';
 import { SearchWidgetModule } from '@blockframes/ui/search-widget';
 import { AuthWidgetModule } from '@blockframes/auth/components/widget/widget.module';
 
@@ -50,8 +50,12 @@ const routes: Routes = [{
         loadChildren: () => import('./home/home.module').then(m => m.HomeModule)
       },
       {
-        path: 'notification',
+        path: 'notifications',
         loadChildren: () => import('./notification/notification.module').then(m => m.NotificationModule)
+      },
+      {
+        path: 'invitations',
+        loadChildren: () => import('./invitation/invitation.module').then(m => m.InvitationModule)
       },
       {
         path: 'import', // Import bulk of movies

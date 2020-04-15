@@ -1,13 +1,14 @@
 import { Component, ChangeDetectionStrategy, OnInit, ViewChild, OnDestroy, AfterViewInit} from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
-import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
+import { CatalogCartQuery } from '@blockframes/cart/+state/cart.query';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { Observable, Subscription, combineLatest } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { Observable, Subscription } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
-import { Wishlist } from '@blockframes/organization/organization/+state/organization.model';
+import { Wishlist } from '@blockframes/organization/+state/organization.model';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
-import { InvitationService, InvitationQuery } from '@blockframes/invitation/+state';
+import { InvitationQuery } from '@blockframes/invitation/+state';
+import { NotificationQuery } from '@blockframes/notification/+state/notification.query';
 
 @Component({
   selector: 'festival-marketplace',
@@ -17,31 +18,24 @@ import { InvitationService, InvitationQuery } from '@blockframes/invitation/+sta
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MarketplaceComponent implements OnInit, AfterViewInit, OnDestroy {
-  private subs: Subscription[] = [];
+  private sub: Subscription;
   public user$ = this.authQuery.select('profile');
   public currentWishlist$: Observable<Wishlist>;
   public wishlistCount$: Observable<number>;
-  public invitationCount$ = this.invitationQuery.selectCount();
+  public invitationCount$ = this.invitationQuery.selectCount(invitation => invitation.status === 'pending');
+  public notificationCount$ = this.notificationQuery.selectCount();
 
   @ViewChild('sidenav') sidenav: MatSidenav;
 
   constructor(
     private catalogCartQuery: CatalogCartQuery,
-    private invitationService: InvitationService,
     private invitationQuery: InvitationQuery,
+    private notificationQuery: NotificationQuery,
     private authQuery: AuthQuery,
     private routerQuery: RouterQuery,
   ) {}
 
   ngOnInit() {
-    const invitSub = this.authQuery.user$.pipe(
-      switchMap(user => combineLatest([
-        this.invitationService.syncCollection(ref => ref.where('toUser', '==', user.uid)),
-        this.invitationService.syncCollection(ref => ref.where('toEmail', '==', user.email)),
-      ]))
-    ).subscribe();
-    this.subs.push(invitSub);
-
     this.currentWishlist$ = this.catalogCartQuery.wishlistWithMovies$.pipe(
       map(wishlists => wishlists.find(wishlist => wishlist.status === 'pending'))
     );
@@ -51,12 +45,12 @@ export class MarketplaceComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    this.subs.push(this.routerQuery.select('navigationId').subscribe(_ => this.sidenav.close()));
+    this.sub = this.routerQuery.select('navigationId').subscribe(_ => this.sidenav.close());
   }
 
   ngOnDestroy() {
-    for (const sub of this.subs) {
-      sub.unsubscribe();
+    if (this.sub) {
+      this.sub.unsubscribe();
     }
   }
 

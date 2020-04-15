@@ -1,8 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Movie, MovieQuery, MovieMain, MovieService } from '@blockframes/movie/+state';
-import { CartService } from '@blockframes/organization/cart/+state/cart.service';
-import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
+import { CartService } from '@blockframes/cart/+state/cart.service';
+import { CatalogCartQuery } from '@blockframes/cart/+state/cart.query';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 import { Observable, Subscription } from 'rxjs';

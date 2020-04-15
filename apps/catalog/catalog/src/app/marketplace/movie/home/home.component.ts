@@ -2,10 +2,10 @@ import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Movie, MovieQuery } from '@blockframes/movie/+state';
-import { CartService } from '@blockframes/organization/cart/+state/cart.service';
+import { CartService } from '@blockframes/cart/+state/cart.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
-import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
+import { CatalogCartQuery } from '@blockframes/cart/+state/cart.query';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 

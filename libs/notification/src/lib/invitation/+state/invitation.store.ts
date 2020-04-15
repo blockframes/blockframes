@@ -10,17 +10,4 @@ export class InvitationStore extends EntityStore<InvitationState> {
   constructor() {
     super();
   }
-
-  akitaPreAddEntity(invitation: Invitation): any {
-    return {
-      ...invitation,
-      date: invitation.date.toDate()
-    }
-  }
-  akitaPreUpdateEntity(prev, next) {
-    return {
-      ...next,
-      date: next.date.toDate()
-    }
-  }
 }

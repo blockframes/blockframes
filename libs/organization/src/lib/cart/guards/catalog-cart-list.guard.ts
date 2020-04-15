@@ -3,7 +3,7 @@ import { CartService } from '../+state/cart.service';
 import { Injectable } from '@angular/core';
 import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
 import { switchMap } from 'rxjs/internal/operators/switchMap';
-import { OrganizationQuery } from '@blockframes/organization/organization/+state/organization.query';
+import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 
 @Injectable({ providedIn: 'root' })
 @CollectionGuardConfig({ awaitSync: true })

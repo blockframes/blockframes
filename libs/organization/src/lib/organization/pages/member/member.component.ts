@@ -5,8 +5,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { PermissionsQuery, UserRole, PermissionsService } from '../../../permissions/+state';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { UserQuery } from '@blockframes/user/+state/user.query';
-import { InvitationService } from '@blockframes/notification/invitation/+state/invitation.service';
-import { Invitation } from '@blockframes/notification/invitation/+state/invitation.model';
+import { InvitationService } from '@blockframes/invitation/+state/invitation.service';
+import { Invitation } from '@blockframes/invitation/+state/invitation.model';
 import { OrganizationMember } from '@blockframes/user/+state/user.model';
 import { AngularFirestore } from '@angular/fire/firestore';
 
@@ -16,7 +16,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
   styleUrls: ['./member.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MemberComponent implements OnInit, OnDestroy {
+export class MemberComponent implements OnInit {
   public orgName: string = this.query.getActive().denomination.full;
 
   /** Observable of all members of the organization */
@@ -30,8 +30,6 @@ export class MemberComponent implements OnInit, OnDestroy {
 
   public isAdmin$: Observable<boolean>;
   public isSuperAdmin$: Observable<boolean>;
-
-  private invitationSubscription: Subscription;
 
   constructor(
     private query: OrganizationQuery,
@@ -100,9 +98,5 @@ export class MemberComponent implements OnInit, OnDestroy {
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });
     }
-  }
-
-  ngOnDestroy() {
-    this.invitationSubscription.unsubscribe();
   }
 }

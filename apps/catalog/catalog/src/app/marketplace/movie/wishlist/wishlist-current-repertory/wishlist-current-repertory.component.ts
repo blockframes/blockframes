@@ -4,7 +4,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { Router, ActivatedRoute } from '@angular/router';
-import { CartService } from '@blockframes/organization/cart/+state/cart.service';
+import { CartService } from '@blockframes/cart/+state/cart.service';
 
 @Component({
   selector: 'catalog-wishlist-current-repertory',

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Event, createCalendarEvent } from './event.model';
 import { EntityState, EntityStore, StoreConfig, ActiveState } from '@datorama/akita';
 import { AuthQuery } from '@blockframes/auth/+state';
-import { OrganizationQuery } from '@blockframes/organization/organization/+state';
+import { OrganizationQuery } from '@blockframes/organization/+state';
 
 export interface EventState extends EntityState<Event>, ActiveState<string>  {}
 

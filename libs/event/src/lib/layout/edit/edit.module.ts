@@ -6,7 +6,9 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { EventEditComponent } from './edit.component';
 import { ImageReferenceModule } from '@blockframes/ui/media'
 import { DisplayNameModule } from '@blockframes/utils/pipes';
+import { TimePickerModule } from '@blockframes/ui/form/time-picker/time-picker.module';
 import { StatusModule } from '@blockframes/invitation/pipes/status.pipe';
+import { GuestListModule } from '@blockframes/invitation/components/guest-list/guest-list.module';
 
 // Material
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -15,7 +17,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
-import { TimePickerModule } from '@blockframes/ui/form/time-picker/time-picker.module';
 
 
 
@@ -31,6 +32,7 @@ import { TimePickerModule } from '@blockframes/ui/form/time-picker/time-picker.m
     ImageReferenceModule,
     DisplayNameModule,
     StatusModule,
+    GuestListModule,
 
     // Material
     MatToolbarModule,

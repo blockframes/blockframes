@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Inject } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 @Component({
@@ -7,14 +7,10 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
   styleUrls: ['./confirm.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TunnelConfirmComponent implements OnInit {
+export class TunnelConfirmComponent {
 
   constructor(
     public dialogRef: MatDialogRef<TunnelConfirmComponent>,
     @Inject(MAT_DIALOG_DATA) public data: { title: string, subtitle: string },
   ) { }
-
-  ngOnInit() {
-  }
-
 }
