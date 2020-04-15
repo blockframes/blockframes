@@ -10,7 +10,7 @@ import { UploadModule } from '@blockframes/ui/upload/upload.module';
 import { PasswordConfirmModule } from '@blockframes/ui/form/password-confirm/password-confirm.module';
 import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
-import { OrganizationFormModule } from './organization/forms/organization-form/organization-form.module';
+import { OrganizationFormModule } from './forms/organization-form/organization-form.module';
 import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
 import { EditableSidenavModule } from '@blockframes/ui/editable-sidenav/editable-sidenav.module';
 import { AvatarListModule } from '@blockframes/ui/avatar-list/avatar-list.module';
@@ -34,14 +34,14 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { OrganizationDisplayModule } from './organization/components/organization-display/organization-display.module';
+import { OrganizationDisplayModule } from './components/organization-display/organization-display.module';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 // Components
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 
 // Pages
-import { ActivateDaoComponent } from './organization/pages/activate-dao/activate-dao.component';
+import { ActivateDaoComponent } from './pages/activate-dao/activate-dao.component';
 import { UserGuard } from '@blockframes/user/guard/user.guard';
 import { ActiveDaoGuard } from './guard/active-dao.guard';
 
@@ -50,7 +50,7 @@ export const organizationRoutes: Routes = [
     path: ':orgId',
     children: [
       { path: '', redirectTo: 'view', pathMatch: 'full' },
-      { path: 'view', loadChildren: () => import('./organization/pages/view/view.module').then(m => m.OrganizationViewModule)},
+      { path: 'view', loadChildren: () => import('./pages/view/view.module').then(m => m.OrganizationViewModule)},
       {
         path: 'activate',
         canActivate: [UserGuard],

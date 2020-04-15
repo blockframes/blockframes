@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { FormGroup } from '@angular/forms';
 import { tap, switchMap, startWith, filter, map } from 'rxjs/operators';
-import { createMemberFormList } from '@blockframes/organization/organization/forms/member.form'
+import { createMemberFormList } from '@blockframes/organization/forms/member.form'
 import { OrganizationMember } from '@blockframes/user/+state/user.model';
 import { UserQuery } from '@blockframes/user/+state/user.query';
 import { DaoQuery, DaoOperation, DeploySteps } from '../../+state';

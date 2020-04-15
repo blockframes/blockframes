@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
-import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
-import { Wishlist } from '@blockframes/organization/organization/+state/organization.model';
+import { CatalogCartQuery } from '@blockframes/cart/+state/cart.query';
+import { Wishlist } from '@blockframes/organization/+state/organization.model';
 import { map, tap } from 'rxjs/operators';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 

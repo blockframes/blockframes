@@ -34,11 +34,11 @@ import { MoviesIndex } from '@blockframes/utils/algolia';
 import { Observable, combineLatest, of, from } from 'rxjs';
 import { startWith, map, debounceTime, switchMap, tap, distinctUntilChanged, pluck } from 'rxjs/operators';
 // Others
-import { CartService } from '@blockframes/organization/cart/+state/cart.service';
+import { CartService } from '@blockframes/cart/+state/cart.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Index } from 'algoliasearch';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
+import { CatalogCartQuery } from '@blockframes/cart/+state/cart.query';
 import { NumberRange } from '@blockframes/utils/common-interfaces/range';
 import { BUDGET_LIST } from '@blockframes/movie/form/budget/budget.form';
 import { filterMovie, filterMovieWithAvails } from '@blockframes/distribution-rights/form/filter.util';

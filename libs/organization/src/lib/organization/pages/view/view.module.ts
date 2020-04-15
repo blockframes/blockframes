@@ -23,13 +23,13 @@ const routes = [{
     },
     {
       path: 'org',
-      loadChildren: () => import('@blockframes/organization/organization/pages/organization/organization.module').then(m => m.OrganizationModule)
+      loadChildren: () => import('@blockframes/organization/pages/organization/organization.module').then(m => m.OrganizationModule)
     },
     {
       path: 'members',
       canActivate: [UserGuard],
       canDeactivate: [UserGuard],
-      loadChildren: () => import('@blockframes/organization/organization/pages/member/member.module').then(m => m.MemberModule)
+      loadChildren: () => import('@blockframes/organization/pages/member/member.module').then(m => m.MemberModule)
     },
   ]
 }]

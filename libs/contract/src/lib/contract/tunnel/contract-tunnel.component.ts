@@ -13,7 +13,7 @@ import { startWith, map, switchMap, shareReplay } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { OrganizationQuery } from '@blockframes/organization/organization/+state';
+import { OrganizationQuery } from '@blockframes/organization/+state';
 import { AngularFirestore } from '@angular/fire/firestore';
 
 const steps = [{

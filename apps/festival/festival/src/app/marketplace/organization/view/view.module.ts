@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ViewComponent } from './view.component';
 
-import { OrganizationViewModule as OrganizationLayoutModule } from '@blockframes/organization/organization/layout/view/view.module';
+import { OrganizationViewModule as OrganizationLayoutModule } from '@blockframes/organization/layout/view/view.module';
 
 const routes = [{
   path: '',

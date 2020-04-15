@@ -1,12 +1,12 @@
 import { Component, ChangeDetectionStrategy, OnInit, ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
-import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
+import { CatalogCartQuery } from '@blockframes/cart/+state/cart.query';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { MatSidenav, MatSidenavContent } from '@angular/material/sidenav';
 import { MarketplaceQuery } from '../+state';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
-import { Wishlist } from '@blockframes/organization/organization/+state/organization.model';
+import { Wishlist } from '@blockframes/organization/+state/organization.model';
 import { Router, NavigationEnd } from '@angular/router';
 
 @Component({

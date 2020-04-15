@@ -6,7 +6,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Modules
 import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
-import { OrganizationFormModule } from './organization/forms/organization-form/organization-form.module';
+import { OrganizationFormModule } from './forms/organization-form/organization-form.module';
 import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module';
@@ -30,15 +30,15 @@ import { MatRadioModule } from '@angular/material/radio';
 import { MatRippleModule } from '@angular/material/core';
 
 // Components
-import { OrganizationHomeComponent } from './organization/pages/organization-home/organization-home.component';
-import { OrganizationFindComponent } from './organization/pages/organization-find/organization-find.component';
-import { OrganizationFeedbackComponent } from './organization/pages/organization-feedback/organization-feedback.component';
-import { OrganizationCreateFeedbackComponent } from './organization/pages/organization-create-feedback/organization-create-feedback.component';
-import { OrganizationCreateComponent } from './organization/pages/organization-create/organization-create.component';
-import { OrganizationAppAccessComponent } from './organization/pages/organization-app-access/organization-app-access.component';
+import { OrganizationHomeComponent } from './pages/organization-home/organization-home.component';
+import { OrganizationFindComponent } from './pages/organization-find/organization-find.component';
+import { OrganizationFeedbackComponent } from './pages/organization-feedback/organization-feedback.component';
+import { OrganizationCreateFeedbackComponent } from './pages/organization-create-feedback/organization-create-feedback.component';
+import { OrganizationCreateComponent } from './pages/organization-create/organization-create.component';
+import { OrganizationAppAccessComponent } from './pages/organization-app-access/organization-app-access.component';
 
 // Guards
-import { NoOrganizationInvitationGuard } from '@blockframes/notification/invitation/guard/no-organization-invitation.guard';
+import { NoOrganizationInvitationGuard } from '@blockframes/invitation/guard/no-organization-invitation.guard';
 import { NoOrganizationGuard } from './guard/no-organization.guard';
 import { PendingOrganizationGuard } from './guard/pending-organization.guard';
 

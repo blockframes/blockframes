@@ -5,9 +5,9 @@ import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { getValue } from '@blockframes/utils/helpers';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Organization } from '@blockframes/organization/organization/+state/organization.model';
-import { organizationStatus } from '@blockframes/organization/organization/+state/organization.firestore';
-import { OrganizationService } from '@blockframes/organization/organization/+state/organization.service';
+import { Organization } from '@blockframes/organization/+state/organization.model';
+import { organizationStatus } from '@blockframes/organization/+state/organization.firestore';
+import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 
 @Component({
   selector: 'admin-organization',

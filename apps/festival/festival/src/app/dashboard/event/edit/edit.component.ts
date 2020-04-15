@@ -4,7 +4,7 @@ import { EventEditComponent } from '@blockframes/event/layout/edit/edit.componen
 import { EventQuery } from '@blockframes/event/+state/event.query';
 import { Movie, MovieService } from '@blockframes/movie/+state';
 import { InvitationService } from '@blockframes/invitation/+state';
-import { OrganizationQuery } from '@blockframes/organization/organization/+state';
+import { OrganizationQuery } from '@blockframes/organization/+state';
 import { Observable, Subscription } from 'rxjs';
 import { switchMap, startWith } from 'rxjs/operators';
 import { Invitation } from '@blockframes/invitation/+state';

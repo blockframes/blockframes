@@ -6,9 +6,9 @@ import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { MovieCurrenciesSlug } from '@blockframes/utils/static-model/types';
-import { Wishlist } from '@blockframes/organization/organization/+state/organization.model';
-import { OrganizationQuery } from '@blockframes/organization/organization/+state/organization.query';
-import { OrganizationService } from '@blockframes/organization/organization/+state/organization.service';
+import { Wishlist } from '@blockframes/organization/+state/organization.model';
+import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
+import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 
 const wishlistFactory = (movieId: string): Wishlist => {
   return {

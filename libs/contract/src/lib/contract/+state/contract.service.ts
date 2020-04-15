@@ -17,11 +17,11 @@ import { firestore } from 'firebase/app';
 import { Observable } from 'rxjs';
 import { cleanModel } from '@blockframes/utils/helpers';
 import { map } from 'rxjs/internal/operators/map';
-import { PermissionsService } from '@blockframes/organization/permissions/+state/permissions.service';
+import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
 import { DistributionRight, createDistributionRight } from '@blockframes/distribution-rights/+state/distribution-right.model';
 import { centralOrgID } from '@env';
 import { DistributionRightService } from '@blockframes/distribution-rights/+state';
-import { OrganizationService } from '@blockframes/organization/organization/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
 import { CollectionReference } from '@angular/fire/firestore/interfaces';
 
 export type TitlesAndRights = Record<string, DistributionRight[]>;

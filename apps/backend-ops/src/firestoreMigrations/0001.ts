@@ -5,7 +5,7 @@ import {
   Transaction
 } from '../admin';
 import { pickBy, identity } from 'lodash';
-import { PLACEHOLDER_LOGO } from '@blockframes/organization/organization/+state/organization.firestore';
+import { PLACEHOLDER_LOGO } from '@blockframes/organization/+state/organization.firestore';
 
 export const withoutUndefined = x => pickBy(x, value => value !== undefined);
 

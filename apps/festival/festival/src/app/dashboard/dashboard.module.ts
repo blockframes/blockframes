@@ -15,7 +15,7 @@ import { MovieOrganizationListGuard } from '@blockframes/movie/guards/movie-orga
 import { TunnelGuard } from '@blockframes/ui/tunnel';
 
 // Widgets
-import { NotificationWidgetModule } from '@blockframes/notification/notification/notification-widget/notification-widget.module';
+import { NotificationWidgetModule } from '@blockframes/notification/notification-widget/notification-widget.module';
 import { SearchWidgetModule } from '@blockframes/ui/search-widget';
 import { AuthWidgetModule } from '@blockframes/auth/components/widget/widget.module';
 

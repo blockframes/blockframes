@@ -1,7 +1,7 @@
 import { FormControl, Validators } from "@angular/forms";
 import { FormEntity, FormList } from "@blockframes/utils/form";
 import { createOrganization, Organization } from "../+state";
-import { AddressSet, createAddressSet } from "@blockframes/organization/organization/+state/organization.firestore";
+import { AddressSet, createAddressSet } from "@blockframes/organization/+state/organization.firestore";
 import { Location, createLocation, BankAccount, createBankAccount } from '@blockframes/utils/common-interfaces/utility';
 import { FormStaticValue } from '@blockframes/utils/form';
 

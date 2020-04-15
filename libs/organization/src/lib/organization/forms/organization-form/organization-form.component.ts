@@ -2,7 +2,7 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { network, baseEnsDomain } from '@env';
 import { getProvider, orgNameToEnsDomain } from '@blockframes/ethers/helpers';
 import { OrganizationService } from './../../+state/organization.service';
-import { OrganizationForm } from '@blockframes/organization/organization/forms/organization.form';
+import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
 import { activities } from '../../+state/organization.firestore';
 
 @Component({

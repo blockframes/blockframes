@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ContractQuery } from '@blockframes/contract/contract/+state';
-import { PLACEHOLDER_LOGO } from '@blockframes/organization/organization/+state/organization.model';
+import { PLACEHOLDER_LOGO } from '@blockframes/organization/+state/organization.model';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 
 @Component({

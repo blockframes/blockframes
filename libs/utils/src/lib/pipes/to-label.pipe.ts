@@ -52,7 +52,7 @@ export class ToLabelPipe implements PipeTransform {
           this.imports[type] = await import('libs/movie/src/lib/distribution-rights/+state/distribution-right.firestore').then(e => e[type]);
           break;
         case 'orgActivity':
-          this.imports[type] = await import('@blockframes/organization/organization/+state/organization.firestore').then(e => e[type]);
+          this.imports[type] = await import('@blockframes/organization/+state/organization.firestore').then(e => e[type]);
           break;
         default:
           break;

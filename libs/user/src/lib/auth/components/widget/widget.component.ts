@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { AuthService, AuthQuery } from '../../+state';
 import { ThemeService } from '@blockframes/ui/theme';
-import { OrganizationQuery } from '@blockframes/organization/organization/+state/organization.query';
+import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
 @Component({

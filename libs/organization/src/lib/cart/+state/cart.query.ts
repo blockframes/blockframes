@@ -5,8 +5,8 @@ import { CatalogCart } from './cart.model';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { Observable, combineLatest } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
-import { OrganizationQuery } from '@blockframes/organization/organization/+state/organization.query';
-import { Wishlist } from '@blockframes/organization/organization/+state/organization.model';
+import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
+import { Wishlist } from '@blockframes/organization/+state/organization.model';
 
 @Injectable({ providedIn: 'root' })
 export class CatalogCartQuery extends QueryEntity<CartState, CatalogCart> {

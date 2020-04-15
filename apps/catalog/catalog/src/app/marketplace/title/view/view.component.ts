@@ -1,7 +1,7 @@
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { CartService } from '@blockframes/organization/cart/+state/cart.service';
+import { CartService } from '@blockframes/cart/+state/cart.service';
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -11,7 +11,7 @@ import { getKeyIfExists } from '@blockframes/utils/helpers';
 import { workType } from '@blockframes/movie/+state/movie.firestore';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
-import { OrganizationQuery } from '@blockframes/organization/organization/+state/organization.query';
+import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 

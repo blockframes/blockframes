@@ -5,8 +5,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { PermissionsQuery, UserRole, PermissionsService } from '../../../permissions/+state';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { UserQuery } from '@blockframes/user/+state/user.query';
-import { InvitationService } from '@blockframes/notification/invitation/+state/invitation.service';
-import { Invitation } from '@blockframes/notification/invitation/+state/invitation.model';
+import { InvitationService } from '@blockframes/invitation/+state/invitation.service';
+import { Invitation } from '@blockframes/invitation/+state/invitation.model';
 import { OrganizationMember } from '@blockframes/user/+state/user.model';
 import { AngularFirestore } from '@angular/fire/firestore';
 

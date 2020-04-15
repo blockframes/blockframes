@@ -30,7 +30,8 @@
       "@blockframes/ethers/*": ["libs/ethers/src/lib/*"],
       "@blockframes/smart-contracts/*": ["smart-contracts/build/*"],
       "@blockframes/smart-contracts/quorum/*": ["smart-contracts/quorum/*"],
-      "@blockframes/organization/*": ["libs/organization/src/lib/*"],
+      "@blockframes/cart/*": ["libs/organization/src/lib/cart/*"],
+      "@blockframes/organization/*": ["libs/organization/src/lib/organization/*"],
       "@blockframes/organization/types": [
         "libs/organization/src/lib/organization/+state/organization.firestore.ts"
       ],
@@ -47,7 +48,9 @@
       "@blockframes/notification/types": [
         "libs/notification/src/lib/notification/+state/notification.firestore.ts"
       ],
-      "@blockframes/notification/*": ["libs/notification/src/lib/*"],
+      "@blockframes/notification/*": ["libs/notification/src/lib/notification/*"],
+      /** Find a better way to import this part of the notification lib **/
+      "@blockframes/notification/activity-feed/*": ["libs/notification/src/lib/activity-feed/*"],
       "@blockframes/contract/*": ["libs/contract/src/lib/*"],
       "@blockframes/financial-report/*": ["libs/financial-report/src/lib/*"],
       "@blockframes/admin/*": ["libs/admin/src/lib/*"],
