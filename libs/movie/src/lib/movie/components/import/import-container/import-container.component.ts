@@ -1,7 +1,11 @@
-import { Component, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { ViewExtractedElementsComponent } from '../view-extracted-elements/view-extracted-elements.component';
+import { Component, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef, OnInit } from '@angular/core';
 import { SpreadsheetImportEvent } from '../import-spreadsheet/import-spreadsheet.component';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { UserService } from '@blockframes/user/+state/user.service';
+import { ViewExtractedMoviesComponent } from '../view-extracted-elements/movies/view-extracted-movies.component';
+import { ViewExtractedContractsComponent } from '../view-extracted-elements/contract/view-extracted-contracts.component';
+import { ViewExtractedRightsComponent } from '../view-extracted-elements/rights/view-extracted-rights.component';
 
 @Component({
   selector: 'movie-import-container',
@@ -9,38 +13,63 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
   styleUrls: ['./import-container.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ImportContainerComponent {
+export class ImportContainerComponent implements OnInit {
 
-  @ViewChild('viewExtractedElementsComponent') viewExtractedElementsComponent: ViewExtractedElementsComponent;
+  @ViewChild('viewExtractedMoviesComponent') viewExtractedMoviesComponent: ViewExtractedMoviesComponent;
+  @ViewChild('viewExtractedContractsComponent') viewExtractedContractsComponent: ViewExtractedContractsComponent;
+  @ViewChild('viewExtractedRightsComponent') viewExtractedRightsComponent: ViewExtractedRightsComponent;
 
   public importedFiles = false;
-  public start = true;
+  public fileType: string;
+  public isUserBlockframesAdmin = false;
 
-  constructor(private cdRef: ChangeDetectorRef, private dynTitle: DynamicTitleService) {
+  constructor(
+    private routerQuery: RouterQuery,
+    private cdRef: ChangeDetectorRef,
+    private dynTitle: DynamicTitleService,
+    private userService: UserService,
+  ) {
     this.dynTitle.setPageTitle('Submit your titles')
-   }
+  }
+
+  async ngOnInit() {
+    this.isUserBlockframesAdmin = await this.userService.isBlockframesAdmin();
+    this.cdRef.markForCheck();
+  }
 
   async next(importEvent: SpreadsheetImportEvent) {
-    this.start = false;
+    this.fileType = importEvent.fileType;
     this.cdRef.detectChanges();
 
-    switch (importEvent.fileType) {
-      case 'movies':
-        this.viewExtractedElementsComponent.formatMovies(importEvent.sheet);
-        break;
-      case 'rights':
-        this.viewExtractedElementsComponent.formatDistributionRights(importEvent.sheet);
-        break;
-      case 'contracts':
-        await this.viewExtractedElementsComponent.formatContracts(importEvent.sheet);
-        break;
-      default:
-        break;
+    if (this.isUserBlockframesAdmin) {
+      switch (importEvent.fileType) {
+        default:
+        case 'movies':
+          await this.viewExtractedMoviesComponent.formatMovies(importEvent.sheet);
+          break;
+        case 'rights':
+          await this.viewExtractedRightsComponent.formatDistributionRights(importEvent.sheet);
+          break;
+        case 'contracts':
+          await this.viewExtractedContractsComponent.formatContracts(importEvent.sheet);
+          break;
+      }
+    } else {
+      const appName = this.routerQuery.getValue().state.root.data.app;
+      switch (appName) {
+        default:
+        case 'catalog':
+          await this.viewExtractedMoviesComponent.formatMovies(importEvent.sheet);
+          break;
+        case 'festival':
+          // @TODO #2521 handle reserved territories
+          await this.viewExtractedMoviesComponent.formatMovies(importEvent.sheet);
+      }
     }
   }
 
   back() {
-    this.start = true;
+    this.fileType = undefined;
     this.cdRef.markForCheck();
   }
 

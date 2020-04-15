@@ -1,7 +1,9 @@
-<movie-import-spreadsheet *ngIf="start" (importEvent)="next($event)"></movie-import-spreadsheet>
-<movie-view-extracted-elements *ngIf="!start" #viewExtractedElementsComponent></movie-view-extracted-elements>
+<movie-import-spreadsheet *ngIf="!fileType" (importEvent)="next($event)"></movie-import-spreadsheet>
+<movie-view-extracted-movies *ngIf="fileType === 'movies'" #viewExtractedMoviesComponent></movie-view-extracted-movies>
+<movie-view-extracted-contracts *ngIf="fileType === 'contracts'" #viewExtractedContractsComponent></movie-view-extracted-contracts>
+<movie-view-extracted-rights *ngIf="fileType === 'rights'" #viewExtractedRightsComponent></movie-view-extracted-rights>
 <section fxLayout="row" fxLayoutAlign="center center">
-  <button *ngIf="!start" mat-stroked-button color="warn" (click)="back()">
+  <button *ngIf="fileType" mat-stroked-button color="warn" (click)="back()">
     <mat-icon svgIcon="refuse"></mat-icon><span>Cancel</span>
   </button>
 </section>
