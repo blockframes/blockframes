@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, OnInit, ViewChild, OnDestroy, AfterViewInit} from '@angular/core';
 import { MatSidenav, MatSidenavContent } from '@angular/material/sidenav';
-import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
+import { CatalogCartQuery } from '@blockframes/cart/+state/cart.query';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Observable, Subscription } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
@@ -54,7 +54,7 @@ export class MarketplaceComponent implements OnInit, AfterViewInit, OnDestroy {
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
       // TODO #2502: https://github.com/angular/components/issues/4280
-      this.sidenavContent.scrollTo({ top: 0});
+      this.sidenavContent.scrollTo({ top: 0 });
       this.sidenav.close();
     })
   }

@@ -6,7 +6,7 @@ import { SearchResult } from '@blockframes/ui/search-widget/search-widget.compon
 import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.service';
 import { InvitationQuery } from '@blockframes/invitation/+state';
 import { NotificationQuery } from '@blockframes/notification/+state';
-import { MatSidenavContent } from '@angular/material/sidenav';
+import { MatSidenavContent, MatSidenav } from '@angular/material/sidenav';
 import { algolia } from '@env';
 import { Observable, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -30,6 +30,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
   /**MovieAlgoliaResult Algolia search results */
   public algoliaSearchResults$: Observable<SearchResult[]>;
 
+  @ViewChild(MatSidenav) sidenav: MatSidenav;
   @ViewChild(MatSidenavContent) sidenavContent: MatSidenavContent;
 
 

@@ -28,7 +28,7 @@ export function createRoutes({ appsRoutes, appName, landing }: RouteOptions) {
     },
     {
       path: 'organization',
-      loadChildren: () => import('@blockframes/organization.module').then(m => m.OrganizationModule)
+      loadChildren: () => import('@blockframes/organization/organization.module').then(m => m.OrganizationModule)
     },
     {
       path: 'account',

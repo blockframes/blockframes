@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { DashboardLayoutModule } from '@blockframes/ui/layout/dashboard/dashboard.module';
-
+import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 // Guards
 import { EventActiveGuard } from '@blockframes/event/guard/event-active.guard';
 import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
@@ -17,6 +17,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
 import { DashboardComponent } from './dashboard.component';
+import { MatDividerModule } from '@angular/material/divider';
 
 
 const routes: Routes = [{
@@ -110,7 +111,9 @@ const routes: Routes = [{
     CommonModule,
     FlexLayoutModule,
     DashboardLayoutModule,
+    ImageReferenceModule,
     // Material
+    MatDividerModule,
     MatListModule,
     MatIconModule,
     MatToolbarModule,
