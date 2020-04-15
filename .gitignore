@@ -48,6 +48,8 @@ firestore-debug.log
 # ENV
 env/env.ts
 env/env.hugo.ts
+# To remove when Angular fix the bug
+env/__ngcc_entry_points__.json
 
 # Secrets
 secrets.sh
