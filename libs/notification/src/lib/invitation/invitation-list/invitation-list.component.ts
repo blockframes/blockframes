@@ -4,7 +4,7 @@ import { Observable, Subscription, combineLatest } from 'rxjs';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { DateGroup } from '@blockframes/utils/helpers';
 import { ThemeService } from '@blockframes/ui/theme';
-import { PermissionsQuery } from '@blockframes/organization/permissions/+state/permissions.query';
+import { PermissionsQuery } from '@blockframes/permissions/+state/permissions.query';
 
 @Component({
   selector: 'invitation-list',
