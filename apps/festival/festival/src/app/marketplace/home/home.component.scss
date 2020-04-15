@@ -11,10 +11,6 @@ header {
   text-align: center;
   border: none;
 
-  h2, h1, .mat-body-1 {
-    color: white;
-  }
-
   h3 {
     margin: 0;
   }
@@ -42,7 +38,7 @@ article {
     }
   }
 
-  mat-carousel {
+  bf-slider {
     flex: 1;
     margin: 10px;
     color: white;
@@ -55,11 +51,17 @@ article {
       height: 100%;
     }
 
-    .informations {
-      width: 100%;
-      padding: 10px 30px;
-      h3, .mat-body-2, .mat-caption {
-        color: white;
+    .informations-wrapper {
+      height: 100%;
+
+      .informations {
+        width: 100%;
+        padding: 10px 30px;
+        h3,
+        .mat-body-2,
+        .mat-caption {
+          color: white;
+        }
       }
     }
 
@@ -89,7 +91,7 @@ article {
       text-align: center;
     }
 
-    mat-carousel {
+    bf-slider {
       width: 100%;
       margin: 0;
       margin-top: 10px;
@@ -118,7 +120,7 @@ article {
       }
     }
 
-    mat-carousel {
+    bf-slider {
       width: 100%;
       margin: 0;
       margin-top: 10px;

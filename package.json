@@ -85,7 +85,6 @@
     "@google-cloud/bigquery": "^4.6.1",
     "@google-cloud/pubsub": "^1.1.2",
     "@google-cloud/storage": "^4.3.1",
-    "@ngmodule/material-carousel": "^0.6.0",
     "@ngrx/effects": "9.0.0",
     "@ngrx/router-store": "9.0.0",
     "@ngrx/store": "9.0.0",

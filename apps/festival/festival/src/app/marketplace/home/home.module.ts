@@ -10,12 +10,15 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 // Libraries
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { MatCarouselModule } from '@ngmodule/material-carousel';
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
 import { CropperModule } from '@blockframes/ui/media/cropper/cropper.module';
+import { SliderModule } from '@blockframes/ui/slider/slider.module';
 
 // Pages
 import { HomeComponent } from './home.component';
+
+// Pipes
+import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.module';
 
 @NgModule({
   declarations: [HomeComponent],
@@ -24,7 +27,8 @@ import { HomeComponent } from './home.component';
     CropperModule,
     MatButtonModule,
     FlexLayoutModule,
-    MatCarouselModule,
+    SliderModule,
+    DisplayNameModule,
     TranslateSlugModule,
     MatIconModule,
     MatSnackBarModule, 

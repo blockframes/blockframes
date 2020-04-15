@@ -10,6 +10,7 @@ import { ContractVersionPriceControl, ContractVersionForm } from '@blockframes/c
 import { MovieCurrenciesSlug } from '@blockframes/utils/static-model';
 import { displayPaymentSchedule, displayTerms } from '../../+state/contract.utils';
 import { ContractQuery, ContractService } from '../../+state';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'contract-tunnel-summary-mandate',
@@ -34,10 +35,12 @@ export class SummaryMandateComponent implements OnInit {
     private tunnel: ContractTunnelComponent,
     private contractService: ContractService,
     private query: ContractQuery,
-    private dynTitle: DynamicTitleService
-    ) {
-      this.dynTitle.setPageTitle('Contract offer summary', 'Summary and Submit')
-    }
+    private dynTitle: DynamicTitleService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {
+    this.dynTitle.setPageTitle('Contract offer summary', 'Summary and Submit')
+  }
 
   ngOnInit() {
     // Need to create it in the ngOnInit or it's not updated
@@ -87,8 +90,12 @@ export class SummaryMandateComponent implements OnInit {
    * Submit a contract version to Archipel Content
    */
   async submit() {
-    const contract = this.query.getActive();
-    await this.tunnel.save();
-    return this.contractService.submit(contract);
+    try {
+      await this.tunnel.save();
+      await this.contractService.submit(this.form.value);
+    } catch (error) {
+      console.error(error)
+    }
+    this.router.navigate(['success'], { relativeTo: this.route })
   }
 }

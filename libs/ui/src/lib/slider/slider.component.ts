@@ -69,8 +69,6 @@ export class SliderComponent implements OnDestroy, AfterContentInit, AfterViewIn
 
   @Input() arrowForward: Slider['arrowForward'] = 'arrow_forward'
 
-  @Input() maxHeight = '600px';
-
   // Milliseconds
   @Input()
   set interval(value: Slider['interval']) {
@@ -90,9 +88,16 @@ export class SliderComponent implements OnDestroy, AfterContentInit, AfterViewIn
 
   @Input()
   get maxWidth() { return this._maxWidth }
-  set maxWidth(value: string) {
+  set maxWidth(value: Slider['maxWidth']) {
     this._maxWidth = value;
     this.maxWidth$.next();
+  }
+
+  @Input() 
+  get maxHeight() { return this._maxHeight }
+  set maxHeight(value: Slider['maxHeight']) {
+    this._maxHeight = value;
+    this.maxHeight$.next();
   }
 
   @Input() @boolean swipe: Slider['swipe'] = false;
@@ -111,7 +116,6 @@ export class SliderComponent implements OnDestroy, AfterContentInit, AfterViewIn
   // Private Vars //
   /////////////////
 
-
   private _loop: Slider['loop'];
   private loop$ = new Subject<boolean>();
 
@@ -127,6 +131,9 @@ export class SliderComponent implements OnDestroy, AfterContentInit, AfterViewIn
 
   private _maxWidth = 'auto';
   private maxWidth$ = new Subject<never>();
+
+  private _maxHeight = 'auto';
+  private maxHeight$ = new Subject<never>();
 
   private _slideDirection: Slider['slideDirection'] = 'ltr';
   private slideDirection$ = new Subject<Slider['slideDirection']>();
@@ -162,8 +169,6 @@ export class SliderComponent implements OnDestroy, AfterContentInit, AfterViewIn
   }
 
   ngAfterViewInit() {
-    // TODO #2440
-    this.slideItems.forEach(el => el.nativeElement.style.height = this.maxHeight);
     this.calculateRatio();
 
     this.interval$.pipe(takeUntil(this.destroy$)).subscribe(value => {
@@ -172,8 +177,12 @@ export class SliderComponent implements OnDestroy, AfterContentInit, AfterViewIn
       this.startTimer(this.autoplay);
     });
 
-    this.maxWidth$.pipe(takeUntil(this.destroy$)).
-      subscribe(() => this.slideTo(0));
+    this.maxWidth$.pipe(takeUntil(this.destroy$))
+      .subscribe(() => this.slideTo(0));
+
+    // TODO #2440
+    this.maxHeight$.pipe(takeUntil(this.destroy$))
+      .subscribe(() => this.slideTo(0))
 
     this.loop$.pipe(takeUntil(this.destroy$)).
       subscribe(value => this.listKeyManager.withWrap(value));
