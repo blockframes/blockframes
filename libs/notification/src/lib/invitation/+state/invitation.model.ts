@@ -32,7 +32,6 @@ export function createEventInvitation(params: Partial<InvitationToAnEvent> = {})
     type: 'event',
     docId: '',
     date: firestore.Timestamp.now(),
-    app: 'blockframes',
     ...params
   };
 }
@@ -42,7 +41,6 @@ export function createInvitationFromUserToOrganization(params: InvitationFromUse
   return {
     id: '',
     mode:'request',
-    app: 'blockframes',
     type: 'fromUserToOrganization',
     status: 'pending',
     date: firestore.Timestamp.now(),
@@ -55,7 +53,6 @@ export function createInvitationFromUserToOrganization(params: InvitationFromUse
 /** Factory function that create an Invitation of type fromOrganizationToUser. */
 export function createInvitationFromOrganizationToUser(params: InvitationFromOrganizationToUserOptions): InvitationFromOrganizationToUser {
   return {
-    app: 'blockframes',
     mode:'invitation',
     type: 'fromOrganizationToUser',
     status: 'pending',
