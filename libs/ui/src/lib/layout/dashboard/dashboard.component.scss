@@ -1,0 +1,21 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+mat-sidenav {
+  aside {
+    height: 100%;
+  }
+}
+
+mat-sidenav-container {
+  height: 100%;
+}
+
+
+mat-sidenav-content mat-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+}
