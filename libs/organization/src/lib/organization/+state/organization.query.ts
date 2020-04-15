@@ -18,5 +18,4 @@ export class OrganizationQuery extends QueryEntity<OrganizationState, Organizati
    * organization.
    */
   //public appsDetails$ = this.select(state => state.appsDetails);
-
 }
