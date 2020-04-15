@@ -1,0 +1,47 @@
+<mat-sidenav-container>
+  <mat-sidenav #sidenav id="dashboard-navbar" [attr.role]="(ltMd$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(ltMd$ | async) ? 'over' : 'side'" [opened]="(ltMd$ | async) === false">
+    <aside fxLayout="column"> <!-- We need another layer because mat-sidenav is not a direct parent -->
+      <ng-content></ng-content>
+    </aside>
+  </mat-sidenav>
+
+
+  <mat-sidenav-content>
+    <!-- TOOLBAR -->
+    <mat-toolbar fxLayout="row" fxLayoutAlign="space-between center" id="catalog-toolbar">
+      <button mat-icon-button (click)="sidenav.toggle()">
+        <mat-icon svgIcon="menu"></mat-icon>
+      </button>
+      <algolia-autocomplete [index]="movieIndex" mode="standard" resetInput native prefixIcon="magnifying_glasses" clearable keyToDisplay="title.international">
+        <ng-template let-result>
+          <a [routerLink]="['title', result.objectID]">{{ result.title.international }}</a>
+        </ng-template>
+      </algolia-autocomplete>
+      <div fxLayout="row" fxLayoutGap="24px">
+        <mat-divider vertical></mat-divider>
+        <!-- Invitations -->
+        <a mat-icon-button routerLink="invitations">
+          <ng-container *ngIf="invitationCount$ | async as count; else noInvitation">
+            <mat-icon svgIcon="send" [matBadge]="count" matBadgeColor="accent" matBadgeSize="small"></mat-icon>
+          </ng-container>
+          <ng-template #noInvitation>
+            <mat-icon svgIcon="send"></mat-icon>
+          </ng-template>
+        </a>
+        <!-- Notifications -->
+        <a mat-icon-button routerLink="notifications">
+          <ng-container *ngIf="notificationCount$ | async as count; else noNotification">
+            <mat-icon svgIcon="bell" [matBadge]="count" matBadgeColor="accent" matBadgeSize="small"></mat-icon>
+          </ng-container>
+          <ng-template #noNotification>
+            <mat-icon svgIcon="bell"></mat-icon>
+          </ng-template>
+        </a>
+        <auth-widget></auth-widget>
+      </div>
+    </mat-toolbar>
+    <!-- CONTENT -->
+    <router-outlet></router-outlet>
+  </mat-sidenav-content>
+</mat-sidenav-container>

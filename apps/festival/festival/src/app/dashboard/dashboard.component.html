@@ -1,75 +1,31 @@
-<mat-sidenav-container>
-  <mat-sidenav #sidenav id="dashboard-navbar" [attr.role]="(ltMd$ | async) ? 'dialog' : 'navigation'"
-    [mode]="(ltMd$ | async) ? 'over' : 'side'" [opened]="(ltMd$ | async) === false">
-    <aside fxLayout="column"> <!-- We need another layer because mat-sidenav is not a direct parent -->
-      <mat-toolbar>
-        <a class="logo" routerLink=".">
-          <img src="assets/logo/dark/festival.svg" alt="Archipel Content Logo" />
-        </a>
-      </mat-toolbar>
-      <mat-nav-list fxFlex>
-        <a mat-list-item routerLink="home" routerLinkActive="active">
-          <mat-icon matListIcon svgIcon="dashboard"></mat-icon>
-          <span matLine><b>Dashboard</b></span>
-        </a>
-        <a mat-list-item routerLink="title" routerLinkActive="active">
-          <mat-icon matListIcon svgIcon="video_library"></mat-icon>
-          <span matLine><b>My Titles</b></span>
-        </a>
-        <a mat-list-item routerLink="event" routerLinkActive="active">
-          <mat-icon matListIcon svgIcon="calendar"></mat-icon>
-          <span matLine><b>My Schedule</b></span>
-        </a>
-      </mat-nav-list>
-      <mat-nav-list *ngIf="org$ | async as org">
-        <mat-divider></mat-divider>
-        <a mat-list-item [routerLink]="['/c/o/organization', org.id]" routerLinkActive="active">
-          <img matListAvatar [imgRef]="org.logo" alt="Organization logo"/>
-          <span matLine>{{ org.denomination.full }}</span>
-          <span matLine>
-            <small class="mat-caption">{{ org.activity }}</small>
-          </span>
-        </a>
-      </mat-nav-list>
-    </aside>
-  </mat-sidenav>
-
-
-  <mat-sidenav-content>
-    <!-- TOOLBAR -->
-    <mat-toolbar fxLayout="row" fxLayoutAlign="space-between center" id="catalog-toolbar">
-      <button mat-icon-button (click)="sidenav.toggle()">
-        <mat-icon svgIcon="menu"></mat-icon>
-      </button>
-      <algolia-autocomplete [index]="movieIndex" mode="standard" resetInput native prefixIcon="magnifying_glasses" clearable keyToDisplay="title.international">
-        <ng-template let-result>
-          <a [routerLink]="['title', result.objectID]">{{ result.title.international }}</a>
-        </ng-template>
-      </algolia-autocomplete>
-      <div fxLayout="row" fxLayoutGap="24px">
-        <mat-divider vertical></mat-divider>
-        <!-- Invitations -->
-        <a mat-icon-button routerLink="invitations">
-          <ng-container *ngIf="invitationCount$ | async as count; else noInvitation">
-            <mat-icon svgIcon="send" [matBadge]="count" matBadgeColor="accent" matBadgeSize="small"></mat-icon>
-          </ng-container>
-          <ng-template #noInvitation>
-            <mat-icon svgIcon="send"></mat-icon>
-          </ng-template>
-        </a>
-        <!-- Notifications -->
-        <a mat-icon-button routerLink="notifications">
-          <ng-container *ngIf="notificationCount$ | async as count; else noNotification">
-            <mat-icon svgIcon="bell" [matBadge]="count" matBadgeColor="accent" matBadgeSize="small"></mat-icon>
-          </ng-container>
-          <ng-template #noNotification>
-            <mat-icon svgIcon="bell"></mat-icon>
-          </ng-template>
-        </a>
-        <auth-widget></auth-widget>
-      </div>
-    </mat-toolbar>
-    <!-- CONTENT -->
-    <router-outlet></router-outlet>
-  </mat-sidenav-content>
-</mat-sidenav-container>
+<layout-dashboard>
+  <mat-toolbar>
+    <a class="logo" routerLink=".">
+      <img src="assets/logo/dark/festival.svg" alt="Archipel Content Logo" />
+    </a>
+  </mat-toolbar>
+  <mat-nav-list fxFlex>
+    <a mat-list-item routerLink="home" routerLinkActive="active">
+      <mat-icon matListIcon svgIcon="dashboard"></mat-icon>
+      <span matLine><b>Dashboard</b></span>
+    </a>
+    <a mat-list-item routerLink="title" routerLinkActive="active">
+      <mat-icon matListIcon svgIcon="video_library"></mat-icon>
+      <span matLine><b>My Titles</b></span>
+    </a>
+    <a mat-list-item routerLink="event" routerLinkActive="active">
+      <mat-icon matListIcon svgIcon="calendar"></mat-icon>
+      <span matLine><b>My Schedule</b></span>
+    </a>
+  </mat-nav-list>
+  <mat-nav-list *ngIf="org$ | async as org">
+    <mat-divider></mat-divider>
+    <a mat-list-item [routerLink]="['/c/o/organization', org.id]" routerLinkActive="active">
+      <img matListAvatar [imgRef]="org.logo" alt="Organization logo"/>
+      <span matLine>{{ org.denomination.full }}</span>
+      <span matLine>
+        <small class="mat-caption">{{ org.activity }}</small>
+      </span>
+    </a>
+  </mat-nav-list>
+</layout-dashboard>
