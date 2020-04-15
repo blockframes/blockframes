@@ -7,8 +7,8 @@
         <mat-icon svgIcon="import"></mat-icon><span>Download our template to import in bulk</span>
       </button>
       <ng-container *ngIf="isUserBlockframesAdmin">
-        <button mat-stroked-button color="primary" (click)="downloadTemplate('deals')">
-          <mat-icon svgIcon="import"></mat-icon><span>Download our excel deals template</span>
+        <button mat-stroked-button color="primary" (click)="downloadTemplate('rights')">
+          <mat-icon svgIcon="import"></mat-icon><span>Download our excel distribution rights template</span>
         </button>
         <button mat-stroked-button color="primary" (click)="downloadTemplate('contracts')">
           <mat-icon svgIcon="import"></mat-icon><span>Download our excel contracts template</span>
@@ -22,7 +22,7 @@
       <mat-label>Select import type</mat-label>
       <mat-select [formControl]="fileType">
         <mat-option value="movies">Movies</mat-option>
-        <mat-option value="deals">Deals</mat-option>
+        <mat-option value="rights">Distribution Rights</mat-option>
         <mat-option value="contracts">Contracts</mat-option>
       </mat-select>
     </mat-form-field>
@@ -52,9 +52,6 @@
       <ng-container *ngIf="sheets.length">
         <button mat-flat-button color="warn" (click)="removeFile()">
           <mat-icon svgIcon="trash"></mat-icon>
-        </button>
-        <button mat-flat-button color="primary" (click)="previewFile()" *ngIf="isUserBlockframesAdmin">
-          <mat-icon svgIcon="launch"></mat-icon>
         </button>
       </ng-container>
       <button mat-flat-button color="primary" (click)="next()" [disabled]="sheets.length === 0">Start import

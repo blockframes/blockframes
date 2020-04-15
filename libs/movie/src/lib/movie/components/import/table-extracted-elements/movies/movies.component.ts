@@ -4,11 +4,13 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Component, Input, ViewChild, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { MovieService } from '../../../+state';
+
 import { SelectionModel } from '@angular/cdk/collections';
-import { MovieImportState, SpreadsheetImportError } from '../view-extracted-elements/view-extracted-elements.component';
+
 import { ViewImportErrorsComponent } from '../view-import-errors/view-import-errors.component';
 import { sortingDataAccessor } from '@blockframes/utils/table';
+import { MovieImportState, SpreadsheetImportError } from '../../import-utils';
+import { MovieService } from '@blockframes/movie/+state';
 
 const hasImportErrors = (importState: MovieImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -16,8 +18,8 @@ const hasImportErrors = (importState: MovieImportState, type: string = 'error'):
 
 @Component({
   selector: 'movie-table-extracted-movies',
-  templateUrl: './table-extracted-movies.component.html',
-  styleUrls: ['./table-extracted-movies.component.scss'],
+  templateUrl: './movies.component.html',
+  styleUrls: ['./movies.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class TableExtractedMoviesComponent implements OnInit {
