@@ -18,7 +18,7 @@ import {
 import { logErrors } from './internals/sentry';
 import { onInvitationWrite } from './invitation';
 import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate } from './orgs';
-import { adminApp, onRequestAccessToAppWrite } from './admin';
+import { adminApp } from './admin';
 import { onMovieUpdate, onMovieCreate, onMovieDelete } from './movie';
 import * as bigQuery from './bigQuery';
 import { onDocumentPermissionCreate } from './permissions';
@@ -165,11 +165,14 @@ export const getDocumentPrivateConfig = functions.https.onCall(logErrors(private
 //       Apps Management        //
 //--------------------------------
 
-/** Trigger: when an organization requests access to apps. */
-export const onAccessToApp = onDocumentWrite(
+/**
+ * Trigger: when an organization requests access to apps.
+ * @TODO (#2539) This method is currently unused but we keep it to future uses.
+ */
+/*export const onAccessToApp = onDocumentWrite(
   'app-requests/{orgId}',
   onRequestAccessToAppWrite
-);
+);*/
 
 //--------------------------------
 //       Orgs Management        //

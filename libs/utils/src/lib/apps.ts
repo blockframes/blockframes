@@ -1,18 +1,14 @@
-// TODO(#714): Synchronize data types with the frontend
-// Do not change these values without upgrading the backend too!
-// You'll find relevant spots by searching for the issue number.
-export const app = {
-  biggerBoat : 'catalog',
-  blockframes: 'blockframes'
-} as const;
+/**
+ * Synchronize data types with the frontend
+ * @TODO (#2539) This is currently unused but we keep it to future uses.
+ * You'll find relevant spots by searching for the issue number.
+ */
+//export type App = 'catalog' | 'festival';
 
-export type App = keyof typeof app;
-export type AppValue = typeof app[App];
-
-export interface AppDetails {
+/** @TODO (#2539) This is currently unused but we keep it to future uses. */
+/*export interface AppDetails {
   name: string;
   logo: string;
   href: string;
-  id: AppValue;
-}
-// @todo #2461 remove
+  id: App;
+}*/

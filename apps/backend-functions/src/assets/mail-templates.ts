@@ -122,14 +122,21 @@ const organizationCreatedTemplate = (orgId: string) =>
   A new organization was created on the blockframes project,
 
   Visit ${appUrl}${ADMIN_ACCEPT_ORG_PATH}/${orgId} to enable it.
-  `;
+  `; // @TODO (#2539) => redirect to admin panel
 
-const organizationRequestAccessToAppTemplate = (orgId: string, appId: string) =>
+/**
+ * @TODO (#2539)
+ * This method is currently unused but we keep it to future uses.
+ * @param orgId 
+ * @param appId 
+ */
+/*const organizationRequestAccessToAppTemplate = (orgId: string, appId: string) =>
   `
   An organization requested access to an app,
 
   Visit ${appUrl}${ADMIN_ACCESS_TO_APP_PATH}/${orgId}/${appId} to enable it.
-  `;
+  `; // @TODO (#2539) => redirect to admin panel
+*/
 
 const wishlistSent = (userName: string, orgName: string, wishlist: string[]) =>
   `
@@ -146,14 +153,19 @@ export function organizationCreated(orgId: string): EmailRequest {
   };
 }
 
-/** Generates a transactional email request to let cascade8 admin know that a new org is waiting for app access. */
-export function organizationRequestedAccessToApp(orgId: string, appId: string): EmailRequest {
+/**
+ * Generates a transactional email request to let cascade8 admin know that a new org is waiting for app access.
+ * @TODO (#2539)
+ * This method is currently unused but we keep it to future uses.
+ * It sends and email to admin to accept or reject the request
+ */
+/*export function organizationRequestedAccessToApp(orgId: string, appId: string): EmailRequest {
   return {
     to: adminEmail,
     subject: 'An organization requested access to an app',
     text: organizationRequestAccessToAppTemplate(orgId, appId)
   };
-}
+}*/
 
 export function sendWishlist(userName: string, orgName: string, wishlist: string[]): EmailRequest {
   return {

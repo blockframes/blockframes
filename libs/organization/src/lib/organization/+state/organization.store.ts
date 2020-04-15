@@ -9,19 +9,20 @@ import {
 import {
   Organization,
   convertOrganizationWithTimestampsToOrganization,
-  AppDetailsWithStatus,
   OrganizationWithTimestamps,
 } from './organization.model';
 
 
 export interface OrganizationState extends EntityState<Organization>, ActiveState<string> {
-  appsDetails: AppDetailsWithStatus[];
+  /** @TODO (#2539) This is currently unused but we keep it to future uses. */
+  //appsDetails: AppDetailsWithStatus[]; 
 }
 
 // TODO #687: Create a proper interface for creating a organization
 const initialState: OrganizationState = {
   active: null,
-  appsDetails: null
+  /** @TODO (#2539) This is currently unused but we keep it to future uses. */
+  //appsDetails: null
 };
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'organization' })

@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, OnInit, OnDestroy } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router, ActivatedRoute } from '@angular/router';
 import { OrganizationService, OrganizationQuery } from '../../+state';
 import { Subscription } from 'rxjs';
@@ -18,7 +17,6 @@ export class OrganizationAppAccessComponent implements OnInit, OnDestroy {
   constructor(
     private service: OrganizationService,
     private query: OrganizationQuery,
-    private snackBar: MatSnackBar,
     private router: Router,
     private route: ActivatedRoute,
   ) { }

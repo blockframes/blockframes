@@ -36,7 +36,7 @@ export type NotificationType =
 /** Minimum required informations to create a Notification. */
 export interface NotificationOptions {
   /** @dev Recipient of the notification */ 
-  toUserId: string; // @TODO (#2461) rename to toUserId
+  toUserId: string;
   /** @dev Possible subjects of the notification */ 
   user?: Partial<PublicUser>;
   docId?: string;

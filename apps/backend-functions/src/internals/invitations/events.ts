@@ -22,11 +22,10 @@ async function onInvitationToAnEventCreate({
   let recipient: string;
   if (!!toEmail) {
     recipient = toEmail
-    //return sendMailFromTemplate();
   } else if (!!toUser) {
     recipient = toUser.email;
   } else if (!!toOrg) {
-    /** @see #2461 attendee is only an user or an email for now */
+    /** Attendee is only an user or an email for now */
     throw new Error('Cannot invite an org to an event for now. Not implemented.');
   } else {
     throw new Error('Who is this invitation for ?');

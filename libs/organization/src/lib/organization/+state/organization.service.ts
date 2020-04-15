@@ -103,8 +103,15 @@ export class OrganizationService extends CollectionService<OrganizationState> {
       .update({ activeMembers: updatedActiveMembers });
   }*/
 
-  /** Lets an organization request access to an application */
-  public requestAccessToApp(orgId: string, appId: string): Promise<any> {
+  /**
+   * Lets an organization request access to an application
+   * @TODO (#2539)
+   * This method is currently unused but we keep it to future uses.
+   * It creates an "app-requests" document that will be accepted or not by admins.
+   * If accepted, should create or update `applications` attribute on org's permission document.
+   * @dev update draw.io with "app-requests" model and organization model to store this information
+   */
+  /*public requestAccessToApp(orgId: string, appId: string): Promise<any> {
     const docRef = this.db.collection('app-requests').doc(orgId).ref;
 
     return this.db.firestore.runTransaction(async tx => {
@@ -116,7 +123,8 @@ export class OrganizationService extends CollectionService<OrganizationState> {
         return tx.update(docRef, { [appId]: 'requested' });
       }
     });
-  }
+  }*/
+
 
   public async setBlockchainFeature(value: boolean) {
     const orgId = this.query.getActiveId();

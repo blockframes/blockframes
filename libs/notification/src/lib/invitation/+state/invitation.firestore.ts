@@ -1,13 +1,12 @@
 import { PublicOrganization } from "@blockframes/organization/+state/organization.firestore";
 import { firestore } from 'firebase/app';
 import { PublicUser } from "@blockframes/user/+state/user.firestore";
-import { App } from "@blockframes/utils/apps";
+
 type Timestamp = firestore.Timestamp;
 
 /** Raw type for Invitation. */
 export interface Invitation {
   id: string;
-  app: App; // @TODO (#2461) What is the purpose of this? check.
   type: InvitationType;
   mode: InvitationMode,
   status: InvitationStatus;
