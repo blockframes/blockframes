@@ -5,7 +5,8 @@ import { EventQuery } from '@blockframes/event/+state/event.query';
 import { Event } from '@blockframes/event/+state/event.model';
 import { EventForm } from '@blockframes/event/form/event.form';
 import { Subscription } from 'rxjs';
-import { filter, tap } from 'rxjs/operators';
+import { filter, tap, switchMap } from 'rxjs/operators';
+import { OrganizationQuery } from '@blockframes/organization/+state';
 
 @Component({
   selector: 'festival-event-list',
@@ -25,10 +26,13 @@ export class EventListComponent implements OnInit, OnDestroy {
     private service: EventService,
     private query: EventQuery,
     private dialog: MatDialog,
+    private orgQuery: OrganizationQuery,
   ) { }
 
   ngOnInit(): void {
-    this.sub = this.service.syncCollection().subscribe();
+    this.sub = this.orgQuery.selectActiveId().pipe(
+      switchMap(orgId => this.service.syncScreenings(ref => ref.where('ownerId', '==', orgId)))
+    ).subscribe();
   }
 
   ngOnDestroy() {

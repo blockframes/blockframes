@@ -12,11 +12,13 @@ import { getPublicOrg } from '@blockframes/organization/+state/organization.mode
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { AuthQuery } from '@blockframes/auth/+state';
 import { PublicUser } from '@blockframes/user/types';
+import { scaleIn } from '@blockframes/utils/animations/fade';
 
 @Component({
   selector: 'event-edit',
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.scss'],
+  animations: [scaleIn],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EventEditComponent {
@@ -39,7 +41,10 @@ export class EventEditComponent {
   }
 
   save() {
-    this.service.update(this.form.value);
+    if (this.form.valid && this.form.dirty) {
+      this.service.update(this.form.value);
+      this.form.markAsPristine();
+    }
   }
 
   async remove() {

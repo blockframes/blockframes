@@ -9,7 +9,7 @@ import { AngularFireFunctions } from '@angular/fire/functions';
 const screeningsQuery = (queryFn?: QueryFn): Query<ScreeningEvent> => ({
   path: 'events',
   queryFn,
-  movie: (event: ScreeningEvent) => ({ path: `movies/${event.meta.titleId}` })
+  movie: (event: ScreeningEvent) => ({ path: event.meta.titleId ? `movies/${event.meta.titleId}` : null })
 });
 
 @Injectable({ providedIn: 'root' })

@@ -3,45 +3,29 @@
 
   <!-- Small Events -->
   <ng-template calEventSmall let-event>
-    <section *ngIf="event.isOwner" class="clickable" (click)="edit(event)">
-      <h4>{{ event.title }}</h4>
-    </section>
-    <a *ngIf="!event.isOwner" class="mat-h4" [routerLink]="[event.id]">
-      {{ event.title }}
-    </a>
+    <ng-container *ngIf="event.movie as movie">
+      <a class="small" [routerLink]="[event.id, 'edit']" [backgroundRef]="movie.promotionalElements.banner.media">
+        <article>
+          <span>{{ movie.main.title.international }}</span>
+        </article>
+      </a>
+    </ng-container>
   </ng-template>
-
-  <!-- Large event -->
-  <ng-template calEventLarge let-event>
-    <section fxLayout="column" fxLayoutAlign="space-between">
-      <header>
-        <h4>{{ event.title }}</h4>
-      </header>
-      <ng-container [ngSwitch]="event.type">
-        <ng-container *ngSwitchCase="'meeting'">
-          <!-- Meeting Specific here -->
-        </ng-container>
-        <ng-container *ngSwitchCase="'screening'">
-          <!-- Meeting Specific here -->
-        </ng-container>
-      </ng-container>
   
-      <footer fxLayout fxLayoutAlign="end center">
-        <button *ngIf="event.isOwner" mat-icon-button color="warn" (click)="remove(event)">
-          <mat-icon svgIcon="trash"></mat-icon>
-        </button>
-        <button *ngIf="event.isOwner" mat-icon-button (click)="edit(event)">
-          <mat-icon svgIcon="pencil"></mat-icon>
-        </button>
-        <a mat-icon-button [routerLink]="event.id">
-          <mat-icon svgIcon="eye"></mat-icon>
-        </a>
-      </footer>
-    </section>
+  <!-- Large Events -->
+  <ng-template calEventLarge let-event>
+    <ng-container *ngIf="event.movie as movie">
+      <a  class="large" [routerLink]="[event.id, 'edit']" [backgroundRef]="movie.promotionalElements.poster[0].media">
+        <article>
+          <h6>{{ movie.main.title.international }}</h6>
+        </article>
+      </a>
+    </ng-container>
   </ng-template>
 </cal-week>
 
-<!-- Edit form -->
+<!-- Let's keep it for now and see if it's missing -->
+<!-- Edit form
 <ng-template #editTemplate let-form>
   <button mat-icon-button class="mat-dialog-close" mat-dialog-close>
     <mat-icon svgIcon="cross"></mat-icon>
@@ -54,3 +38,4 @@
     <button mat-flat-button color="primary" [mat-dialog-close]="form.value">Save</button>
   </mat-dialog-actions>
 </ng-template>
+ -->
