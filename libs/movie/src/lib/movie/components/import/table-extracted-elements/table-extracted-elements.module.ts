@@ -60,9 +60,6 @@ import { RouterModule } from '@angular/router';
     TermDateModule,
     ToLabelModule,
   ],
-  entryComponents: [
-
-  ],
   exports: [
     TableExtractedMoviesComponent,
     TableExtractedRightsComponent,
