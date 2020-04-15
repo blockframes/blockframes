@@ -26,11 +26,12 @@ export class StaticCheckBoxesComponent {
   @Output() added = new EventEmitter<string>();
   @Output() removed = new EventEmitter<number>();
 
-  public handleChange(change: MatCheckboxChange, index: number) {
-    if (change.checked) {
-      this.form.add(change.source.value);
-      this.added.emit(change.source.value);
+  public handleChange({checked, source}: MatCheckboxChange) {
+    if (checked) {
+      this.form.add(source.value);
+      this.added.emit(source.value);
     } else {
+      const index = this.form.controls.findIndex(control => control.value === source.value);
       this.form.removeAt(index);
       this.removed.emit(index);
     }

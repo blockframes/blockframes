@@ -18,22 +18,26 @@
   <!-- SEARCH BAR -->
   <ng-template titleSearch>
 
-    <form [formGroup]="filterForm.search">
+    <form [formGroup]="filterForm">
       <mat-form-field appearance="outline">
         <mat-label>Search for titles, directors, keywords, ...</mat-label>
         <mat-icon matPrefix svgIcon="magnifying_glasses"></mat-icon>
-        <input matInput type="text" [formControl]="searchbarTextControl">
+        <input matInput type="text" formControlName="query">
       </mat-form-field>
     </form>
 
   </ng-template>
 
 
-  <!-- FILTERS -->
+  <!-- FILTERS (ng-content) -->
   <title-filter>
 
       <ng-template filter label="Genres">
-        <movie-form-genre [form]="filterForm.genres"></movie-form-genre>
+        <chips-autocomplete
+          [form]="filterForm.genres"
+          placeholder="Genres"
+          [items]="genres"
+        ></chips-autocomplete>
       </ng-template>
 
       <ng-template filter label="Country of Origin">
@@ -45,7 +49,7 @@
       </ng-template>
 
       <ng-template filter label="Language & Version">
-        <title-language-filter [languagesFilterForm]="languageForm"></title-language-filter>
+        <title-language-filter [languagesFilterForm]="filterForm.languages"></title-language-filter>
       </ng-template>
 
       <ng-template filter label="Production Status">
@@ -53,7 +57,8 @@
       </ng-template>
 
       <ng-template filter label="Budget">
-        <movie-form-estimated-budget [form]="filterForm.budget"></movie-form-estimated-budget>
+        <!-- <movie-form-estimated-budget [form]="filterForm.budget"></movie-form-estimated-budget> -->
+        <title-estimated-budget-filter fxLayout="column" [form]="filterForm.budget"></title-estimated-budget-filter>
       </ng-template>
 
       <ng-template filter label="Seller">
@@ -61,7 +66,7 @@
           [index]="movieIndex"
           keyToDisplay="value"
           facet="orgName"
-          [form]="sellersForm"
+          [form]="filterForm.sellers"
           label="Search for a specific Seller"
           placeholder="Organization name"
           resetInput
@@ -99,6 +104,7 @@
   <ng-template titleListItem let-title>
 
     <!-- WRITE HERE WHAT YOU WANT TO INJECT-->
+    <!-- TODO use the real movie list item if it exists-->
     <p>{{title.main.title.original}}</p>
 
   </ng-template>

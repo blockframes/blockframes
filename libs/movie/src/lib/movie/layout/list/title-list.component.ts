@@ -29,7 +29,7 @@ export class TitleListComponent implements AfterContentInit {
 
   @Input() titles$: Observable<any>;
 
-  @Input() titleType = 'movie'; // only for display purpose
+  @Input() titleType = 'title'; // only for display purpose
 
   public listView = false;
   public canToggle = false;

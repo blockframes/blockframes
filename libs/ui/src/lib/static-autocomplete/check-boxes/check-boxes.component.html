@@ -1,5 +1,5 @@
 <mat-checkbox
-  *ngFor="let item of items; let i = index"
-  (change)="handleChange($event, i)"
+  *ngFor="let item of items"
+  (change)="handleChange($event)"
   [value]="item.slug"
 >{{item.label}}</mat-checkbox>
