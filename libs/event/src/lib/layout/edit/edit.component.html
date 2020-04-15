@@ -51,22 +51,7 @@
         </mat-list-item>
       </mat-list>
       <!-- Here the list of invited persons -->
-      <mat-list>
-        <mat-list-item *ngFor="let invitation of invitations">
-          <ng-container *ngIf="invitation.toUser as user; else noUser">
-            <div matListAvatar class="avatar-status">
-              <img [imgRef]="user.avatar" placeholderAsset="profil_user.webp"/>
-              <mat-icon [svgIcon]="invitation.status | statusIcon" [color]="invitation.status | statusColor"></mat-icon>
-            </div>
-            <span matLine>{{ user | displayName }}</span>
-            <span matLine>{{ user.email }}</span>
-          </ng-container>
-          <ng-template #noUser>
-            <img matListAvatar placeholderAsset="profil_user.webp"/>
-            <span matLine>{{ invitation.toEmail }}</span>
-          </ng-template>
-        </mat-list-item>
-      </mat-list>
+      <invitation-guest-list [invitations]="invitations"></invitation-guest-list>
     </article>
   </section>
 </form>

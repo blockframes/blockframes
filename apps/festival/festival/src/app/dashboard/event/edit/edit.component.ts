@@ -3,11 +3,11 @@ import { EventForm } from '@blockframes/event/form/event.form';
 import { EventEditComponent } from '@blockframes/event/layout/edit/edit.component';
 import { EventQuery } from '@blockframes/event/+state/event.query';
 import { Movie, MovieService } from '@blockframes/movie/+state';
+import { InvitationService } from '@blockframes/invitation/+state';
 import { OrganizationQuery } from '@blockframes/organization/organization/+state';
-import { Observable, Subscription, of } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { switchMap, startWith } from 'rxjs/operators';
 import { Invitation } from '@blockframes/invitation/+state';
-import { AngularFirestore } from '@angular/fire/firestore';
 
 @Component({
   selector: 'festival-event-edit',
@@ -27,13 +27,13 @@ export class EditComponent implements OnInit, OnDestroy {
   constructor(
     private query: EventQuery,
     private movieService: MovieService,
+    private invitationService: InvitationService,
     private orgQuery: OrganizationQuery,
-    private db: AngularFirestore
   ) { }
 
   ngOnInit(): void {
     this.invitations$ = this.query.selectActiveId().pipe(
-      switchMap(id => this.db.collection<Invitation>('invitations', ref => ref.where('docId', '==', id).limit(10)).valueChanges()),
+      switchMap(id => this.invitationService.valueChanges(ref => ref.where('docId', '==', id).limit(10))),
       startWith([])
     );
     this.titles$ = this.orgQuery.selectActive().pipe(

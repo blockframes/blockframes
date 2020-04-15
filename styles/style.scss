@@ -91,21 +91,47 @@ main {
 .dark-theme {
   /* width */
   ::-webkit-scrollbar {
-    width: 14px;
+    width: 5px;
   }
-
   /* Track */
   ::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    width: 5px;
+    background: rgba(#f1f1f1, 0.1);
   }
 
   /* Handle */
   ::-webkit-scrollbar-thumb {
-    background: #888;
+    border: 3px solid transparent;
+    border-radius: 9px;
+    background: rgba(#f1f1f1, 0.5);
   }
 
   /* Handle on hover */
   ::-webkit-scrollbar-thumb:hover {
-    background: #555;
+    background: rgba(#f1f1f1, 0.8);
+  }
+}
+
+.light-theme {
+  /* width */
+  ::-webkit-scrollbar {
+    width: 5px;
+  }
+  /* Track */
+  ::-webkit-scrollbar-track {
+    width: 5px;
+    background: rgba(#050505, 0.1);
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    border: 3px solid transparent;
+    border-radius: 9px;
+    background: rgba(#050505, 0.5);
+  }
+
+  /* Handle on hover */
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(#050505, 0.8);
   }
 }

@@ -18,6 +18,11 @@ export const timeFrames: TimeFrame[] = [
   { type: 'days', from: 5, to: 6 },
   { type: 'days', from: 6, to: 7 },
   { type: 'weeks', from: 1, to: 2, label: 'Last Week' },
+  { type: 'weeks', from: 2, to: 3 },
+  { type: 'weeks', from: 3, to: 4 },
+  { type: 'months', from: 1, to: 2, label: 'Last Month' },
+  { type: 'months', from: 2, to: 3 },
+  { type: 'months', from: 3, to: 4 },
 ];
 
 @Pipe({ name: 'filterByDate', pure: true })

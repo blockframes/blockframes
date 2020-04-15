@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable, combineLatest, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ThemeService } from '@blockframes/ui/theme';
 
+// @todo(#2528) merge ImageAssetDirective here
 @Directive({
   selector: 'img[imgRef]'
 })

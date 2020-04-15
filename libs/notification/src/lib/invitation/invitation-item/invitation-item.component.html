@@ -4,7 +4,7 @@
   <div fxLayout="column" fxLayoutGap="10px">
     <article fxLayout="column" fxLayoutAlign="start start">
       <p class="mat-body-1">{{ message }}</p>
-      <small class="mat-caption">{{ invitation.date.toDate() | date: inWidget ? 'medium' : 'shortTime' }}</small>
+      <small class="mat-caption">{{ invitation.date | date: inWidget ? 'medium' : 'shortTime' }}</small>
     </article>
     <article fxLayout="row" fxLayoutGap="16px" *ngIf="displayInvitationButtons">
       <a test-id="accept" mat-mini-fab color="primary" (click)="acceptInvitation(invitation)">
