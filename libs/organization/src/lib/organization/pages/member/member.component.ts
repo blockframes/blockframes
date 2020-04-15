@@ -16,7 +16,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
   styleUrls: ['./member.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MemberComponent implements OnInit, OnDestroy {
+export class MemberComponent implements OnInit {
   public orgName: string = this.query.getActive().denomination.full;
 
   /** Observable of all members of the organization */
@@ -30,8 +30,6 @@ export class MemberComponent implements OnInit, OnDestroy {
 
   public isAdmin$: Observable<boolean>;
   public isSuperAdmin$: Observable<boolean>;
-
-  private invitationSubscription: Subscription;
 
   constructor(
     private query: OrganizationQuery,
@@ -100,9 +98,5 @@ export class MemberComponent implements OnInit, OnDestroy {
     } catch (error) {
       this.snackBar.open(error.message, 'close', { duration: 2000 });
     }
-  }
-
-  ngOnDestroy() {
-    this.invitationSubscription.unsubscribe();
   }
 }
