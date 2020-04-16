@@ -4,7 +4,7 @@ import { ContractForm } from '../../form/contract.form';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
-import { ContractVersionPriceControl } from '@blockframes/contract/version/form';
+import { PriceControl } from '@blockframes/contract/version/form';
 import { MovieCurrenciesSlug } from '@blockframes/utils/static-model';
 import { ContractTunnelComponent, RightControls } from '../contract-tunnel.component';
 import { ContractQuery, ContractService } from '../../+state';
@@ -25,7 +25,7 @@ export class SummarySaleComponent implements OnInit {
   public form: ContractForm;
   public parties: { licensee: FormControl[], licensor: FormControl[] };
   public terms: string;
-  public price: ContractVersionPriceControl;
+  public price: PriceControl;
   public moviePrices: Record<string, FormControl> = {}
   public currency: MovieCurrenciesSlug;
   public payments: { type: string, list: string[] } = { type: '', list: [] };

@@ -60,7 +60,7 @@ function createMovieControls(movie: Partial<Movie>) {
   return {
     main: new MovieMainForm(entity.main),
     promotionalElements: new MoviePromotionalElementsForm(entity.promotionalElements),
-    promotionalDescription: new MoviePromotionalDescriptionForm(entity.promotionalDescription), // @TODO #1589 check
+    promotionalDescription: new MoviePromotionalDescriptionForm(entity.promotionalDescription),
     story: new MovieStoryForm(entity.story),
     salesCast: new MovieSalesCastForm(entity.salesCast),
     salesInfo: new MovieSalesInfoForm(entity.salesInfo),

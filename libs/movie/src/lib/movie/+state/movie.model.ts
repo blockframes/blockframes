@@ -32,6 +32,7 @@ import { createRange } from '@blockframes/utils/common-interfaces/range';
 import { DistributionRight } from '@blockframes/distribution-rights/+state/distribution-right.model';
 import { Contract, getValidatedContracts } from '@blockframes/contract/contract/+state/contract.model';
 import { toDate } from '@blockframes/utils/helpers';
+import { createPrice } from '@blockframes/utils/common-interfaces';
 
 // Export for other files
 export { Credit, SalesAgent } from '@blockframes/utils/common-interfaces/identity';
@@ -245,9 +246,9 @@ export function createBoxOffice(params: Partial<BoxOffice> = {}): BoxOffice {
 
 export function createMovieBudget(params: Partial<MovieBudget> = {}): MovieBudget {
   return {
-    totalBudget: '',
     boxOffice: [],
     ...params,
+    totalBudget: createPrice(params.totalBudget),
     estimatedBudget: createRange<number>(params.estimatedBudget),
   };
 }

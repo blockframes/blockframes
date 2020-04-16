@@ -12,8 +12,7 @@ import {
   SoundFormatSlug,
   FormatQualitySlug,
   FormatSlug,
-  GenresSlug,
-  MovieCurrenciesSlug
+  GenresSlug
 } from "@blockframes/utils/static-model";
 import { NumberRange } from "@blockframes/utils/common-interfaces/range";
 import { Producer, Crew, Cast, Stakeholder, Credit } from "@blockframes/utils/common-interfaces/identity";
@@ -21,6 +20,7 @@ import { firestore } from "firebase/app";
 import { ImgRef } from "@blockframes/utils/image-uploader";
 import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
 import { LegalDocument } from "@blockframes/contract/contract/+state/contract.firestore";
+import { Price } from "@blockframes/utils/common-interfaces";
 
 type Timestamp = firestore.Timestamp;
 
@@ -166,12 +166,16 @@ export interface BoxOffice {
 }
 
 export interface MovieBudget {
-  totalBudget: string, // @TODO (#1589) should be a Price
-  budgetCurrency?: MovieCurrenciesSlug,
-  detailledBudget?: any, // @TODO (#1589) detailedBudget is not used. Remove ?
-  //realBudget: Price,  @TODO (#1589) is not implemented. Usefull?
-  /** @see BUDGET_LIST for possible values */
+  /** 
+   * @dev If the budget is fixed, we use totalBudget
+   */
+  totalBudget?: Price,
+  /** 
+   * @dev If budget is not fixed, we can put an estimate with estimatedBudget.
+   * @see BUDGET_LIST for possible values
+   * */
   estimatedBudget?: NumberRange,
+  /** @dev More information needed. What is this about ? */
   boxOffice?: BoxOffice[],
 }
 

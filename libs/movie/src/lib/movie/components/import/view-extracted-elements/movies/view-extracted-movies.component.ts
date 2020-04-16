@@ -35,7 +35,7 @@ import {
   premiereType
 } from '@blockframes/movie/+state/movie.firestore';
 import { createStakeholder } from '@blockframes/utils/common-interfaces/identity';
-import { createRange } from '@blockframes/utils/common-interfaces';
+import { createRange, createPrice } from '@blockframes/utils/common-interfaces';
 import { Intercom } from 'ng-intercom';
 import { cleanModel, getKeyIfExists } from '@blockframes/utils/helpers';
 import { ImageUploader } from '@blockframes/utils/image-uploader';
@@ -732,17 +732,19 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
             switch (currency) {
               case '$':
-                movie.budget.budgetCurrency = 'USD';
+                movie.budget.totalBudget.currency = 'USD';
                 break;
               case '€':
               default:
-                movie.budget.budgetCurrency = 'EUR';
+                movie.budget.totalBudget.currency = 'EUR';
                 break;
             }
 
             movie.budget.estimatedBudget = createRange({ from: from * 1000000, to: to * 1000000, label: spreadSheetRow[SpreadSheetMovie.budget] });
           } else {
-            movie.budget.totalBudget = spreadSheetRow[SpreadSheetMovie.budget];
+            movie.budget.totalBudget = createPrice({
+              amount: parseInt(spreadSheetRow[SpreadSheetMovie.budget], 10)
+            });
           }
         }
 
