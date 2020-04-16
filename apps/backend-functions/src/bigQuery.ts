@@ -1,6 +1,6 @@
 import { CallableContext } from "firebase-functions/lib/providers/https";
 import { BigQuery } from '@google-cloud/bigquery';
-import { EventAnalytics, PublicUser, OrganizationDocument, MovieAnalytics } from "./data/types";
+import { MovieEventAnalytics, PublicUser, OrganizationDocument, MovieAnalytics, EventsAnalytics, EventAnalytics } from "./data/types";
 import { getDocument } from './data/internals';
 import { bigQueryAnalyticsTable } from "./environments/environment";
 import { isAfter, isBefore, parse, subDays } from 'date-fns';
@@ -88,19 +88,23 @@ async function executeQueryMovieAnalytics(query: any, movieIds: string[], daysPe
 }
 
 /** Sorts events into two periods. */
-const groupEventsPerDayRange = (events: EventAnalytics[], daysPerRange: number) => {
+const groupEventsPerDayRange = (events: MovieEventAnalytics[], daysPerRange: number) => {
   const now = new Date();
   const startCurrentRange = subDays(now, daysPerRange);
-  const parseDate = (event: EventAnalytics)  => parse(event.event_date, 'yyyyMMdd', new Date());
+  const parseDate = (event: MovieEventAnalytics)  => parse(event.event_date, 'yyyyMMdd', new Date());
   return {
     current: events.filter(event => isAfter(parseDate(event), startCurrentRange)),
     past: events.filter(event => isBefore(parseDate(event), startCurrentRange))
   };
 };
 
-/** Sorts analytic events by movieId. */
-const filterByMovieId = (events: EventAnalytics[], movieId: string) => {
+/** Sorts movie analytic events by movieId. */
+const filterByMovieId = (events: MovieEventAnalytics[], movieId: string) => {
   return events.filter(event => event.movieId === movieId);
+};
+
+const findByUserId = (users: PublicUser[], userId: string) => {
+  return users.find(user => user.uid === userId);
 };
 
 /** Merge the movieIdPage field from bigquery with the movieId field when relevant. */
@@ -109,11 +113,20 @@ const mergeMovieIdPageInMovieId = (rows: any[]) => {
   return rows.map(row => omit({ ...row, movieId: row.movieIdPage || row.movieId }, 'movieIdPage'));
 };
 
+const createEventAnalytics = (result: any, user: PublicUser | undefined): EventAnalytics => {
+  return {
+    ...result,
+    email: user?.email,
+    firstName: user?.firstName,
+    lastName: user?.lastName
+  }
+};
+
 /** Call bigQuery with an array of eventId to tet their analytics. */
 export const requestEventAnalytics = async (
   data: { eventIds: string[] },
   context: CallableContext
-): Promise<any> => {
+): Promise<EventsAnalytics[]> => {
   const eventIds = data.eventIds;
   if (!eventIds) {
     return [];
@@ -134,21 +147,18 @@ export const requestEventAnalytics = async (
     const eventsUsers = await Promise.all(eventsUsersPromise);
     const eventsUsersNotInOrg = eventsUsers.filter(u => !org.userIds.includes(u.uid));
     const userIdsNotInOrg = eventsUsersNotInOrg.map(u => u.uid);
+    // Clean rows without users of the same org
     rows = rows.filter(row => userIdsNotInOrg.includes(row.userId));
 
     return eventIds.map(eventId => {
       const rowsEvents = rows.filter(row => row.eventId === eventId);
       const resultRows = rowsEvents.map(result => {
-        return {
-          ...result,
-          email: eventsUsersNotInOrg.find(u => result.userId === u.uid)?.email,
-          firstName: eventsUsersNotInOrg.find(u => result.userId === u.uid)?.firstName,
-          lastName: eventsUsersNotInOrg.find(u => result.userId === u.uid)?.lastName
-        }
+        const eventUser = findByUserId(eventsUsersNotInOrg, result.userId);
+        return createEventAnalytics(result, eventUser);
       });
       return {
         eventId,
-        users: resultRows
+        eventUsers: resultRows
       };
     });
   } else {
