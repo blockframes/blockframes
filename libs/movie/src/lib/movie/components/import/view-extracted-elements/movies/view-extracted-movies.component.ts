@@ -732,11 +732,11 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
             switch (currency) {
               case '$':
-                movie.budget.totalBudget.currency = 'USD';
+                movie.budget.totalBudget.currency = getCodeIfExists('MOVIE_CURRENCIES', 'USD'); 
                 break;
               case '€':
               default:
-                movie.budget.totalBudget.currency = 'EUR';
+                movie.budget.totalBudget.currency = getCodeIfExists('MOVIE_CURRENCIES', 'EUR');
                 break;
             }
 
