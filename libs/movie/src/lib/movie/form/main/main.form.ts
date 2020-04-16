@@ -124,7 +124,6 @@ function createMovieMainControls(main : Partial<MovieMain> = {}) {
   const entity = createMovieMain(main);
   return {
     internalRef: new FormControl(entity.internalRef),
-    isan: new FormControl(entity.isan),
     title: new TitleForm(entity.title),
     directors: FormList.factory(entity.directors, el => new DirectorForm(el)),
     productionYear: new FormControl(entity.productionYear, [Validators.required, yearValidators]),

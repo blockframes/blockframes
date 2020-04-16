@@ -217,7 +217,6 @@ export interface MovieOfficialIds {
 
 export interface MovieMain {
   internalRef?: string,
-  isan?: string,
   title: Title,
   directors?: Credit[],
   officialIds?: MovieOfficialIds,
