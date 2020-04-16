@@ -40,7 +40,7 @@
         {
             "path": "libs/movie/src/lib/movie/components/header/header.component.ts",
             "zeplinNames": [
-                "component/banner/archipel_content/header-movie"
+                "component/banner/archipel_content/header-movie-page"
             ]
         }
     ],

@@ -4,12 +4,15 @@ import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Material
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 
 // Component
-import { HeaderComponent } from './header.component';
+import {
+  HeaderComponent,
+  MovieHeaderPreferences,
+  MovieHeaderButton,
+  MovieHeaderActions
+} from './header.component';
 
 // Blockframes
 import { DisplayNameModule } from '@blockframes/utils/pipes';
@@ -18,7 +21,12 @@ import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/imag
 
 
 @NgModule({
-  declarations: [HeaderComponent],
+  declarations: [
+    HeaderComponent,
+    MovieHeaderPreferences,
+    MovieHeaderButton,
+    MovieHeaderActions
+  ],
   imports: [
     CommonModule,
     FlexLayoutModule,
@@ -26,10 +34,13 @@ import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/imag
     ImageReferenceModule,
 
     // Material
-    MatButtonModule,
-    MatIconModule,
     MatTooltipModule
   ],
-  exports: [HeaderComponent]
+  exports: [
+    HeaderComponent,
+    MovieHeaderPreferences,
+    MovieHeaderButton,
+    MovieHeaderActions
+  ]
 })
 export class MovieHeaderModule { }

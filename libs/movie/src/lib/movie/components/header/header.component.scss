@@ -1,7 +1,20 @@
-img {
-    max-height: 300px;
+.poster {
+    width: 33%;
+    background-size: cover;
 }
 
-header {
-    padding-left: 24px;
+.inner-header {
+    padding: 50px 0 50px 24px;
+}
+div {
+    width: 100%;
+}
+
+h1,
+h2,
+h4,
+span {
+    // Color is different from typography
+    // if high contrast theme is ready, remove it
+    color: white !important;
 }

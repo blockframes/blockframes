@@ -12,7 +12,17 @@ export const movieHeader = () => ({
   template: `
     <storybook-toolkit>
       <h1 title>Movie Header</h1>
-      <movie-header [movie]="movie"></movie-header>
+      <movie-header [movie]="movie">
+        <movie-header-preferences>
+          <h3>Hello</h3>
+        </movie-header-preferences>
+        <movie-header-button>
+        <button>Cool button</button>
+        </movie-header-button>
+        <movie-header-actions>
+        <h3>World</h3>
+      </movie-header-actions>
+      </movie-header>
     </storybook-toolkit>
   `,
   props: {
