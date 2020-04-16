@@ -3,24 +3,30 @@
 
   <!-- Small Events -->
   <ng-template calEventSmall let-event>
-    <ng-container *ngIf="event.movie as movie">
-      <a class="small" [routerLink]="[event.id, 'edit']" [backgroundRef]="movie.promotionalElements.banner.media">
-        <article>
-          <span>{{ movie.main.title.international }}</span>
-        </article>
-      </a>
-    </ng-container>
+    <a class="small" [routerLink]="[event.id, 'edit']">
+      <ng-container *ngIf="event.movie as movie">
+        <div class="background" [backgroundRef]="movie.promotionalElements.banner.media">
+          <div class="overlay">
+            <span>{{ movie.main.title.international }}</span>
+          </div>
+        </div>
+      </ng-container>
+      <span *ngIf="!event.movie">{{ event.title }}</span>
+    </a>
   </ng-template>
-  
+
   <!-- Large Events -->
   <ng-template calEventLarge let-event>
-    <ng-container *ngIf="event.movie as movie">
-      <a  class="large" [routerLink]="[event.id, 'edit']" [backgroundRef]="movie.promotionalElements.poster[0].media">
-        <article>
-          <h6>{{ movie.main.title.international }}</h6>
-        </article>
-      </a>
-    </ng-container>
+    <a class="large" [routerLink]="[event.id, 'edit']">
+      <ng-container *ngIf="event.movie as movie">
+        <div class="background" [backgroundRef]="movie.promotionalElements.poster[0].media">
+          <div class="overlay">
+            <span>{{ movie.main.title.international }}</span>
+          </div>
+        </div>
+      </ng-container>
+      <span *ngIf="!event.movie">{{ event.title }}</span>
+    </a>
   </ng-template>
 </cal-week>
 

@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ViewChild, TemplateRef } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { EventService } from '@blockframes/event/+state/event.service';
-import { EventQuery } from '@blockframes/event/+state/event.query';
+import { EventQuery, EventStore, EventService } from '@blockframes/event/+state';
 import { Event } from '@blockframes/event/+state/event.model';
 import { EventForm } from '@blockframes/event/form/event.form';
 import { Subscription } from 'rxjs';
@@ -25,12 +24,14 @@ export class EventListComponent implements OnInit, OnDestroy {
   constructor(
     private service: EventService,
     private query: EventQuery,
+    private store: EventStore,
     private dialog: MatDialog,
     private orgQuery: OrganizationQuery,
   ) { }
 
   ngOnInit(): void {
     this.sub = this.orgQuery.selectActiveId().pipe(
+      tap(_ => this.store.reset()),
       switchMap(orgId => this.service.syncScreenings(ref => ref.where('ownerId', '==', orgId)))
     ).subscribe();
   }

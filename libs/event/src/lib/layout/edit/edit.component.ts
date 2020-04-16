@@ -1,7 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { EventForm } from '../../form/event.form';
-import { Event } from '../../+state/event.model';
 import { EventService } from '../../+state/event.service';
 import { InvitationToAnEvent }  from '@blockframes/invitation/+state/invitation.firestore.ts';
 import { InvitationService }  from '@blockframes/invitation/+state/invitation.service';
@@ -19,7 +18,7 @@ import { scaleIn } from '@blockframes/utils/animations/fade';
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.scss'],
   animations: [scaleIn],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.Default  // required for changes on "pristine" for the save button
 })
 export class EventEditComponent {
 
@@ -35,7 +34,7 @@ export class EventEditComponent {
     private router: Router,
     private route: ActivatedRoute
   ) { }
-
+  
   get meta() {
     return this.form.get('meta');
   }

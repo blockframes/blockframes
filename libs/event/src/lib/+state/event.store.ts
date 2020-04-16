@@ -14,12 +14,12 @@ export class EventStore extends EntityStore<EventState> {
     super();
   }
 
-  akitaPreAddEntity = (event) => {
-    return createCalendarEvent(event, this.authQuery.userId, this.orgQuery.getActiveId());
-  }
+  // akitaPreAddEntity = (event) => {
+  //   return createCalendarEvent(event, this.authQuery.userId, this.orgQuery.getActiveId());
+  // }
 
-  akitaPreUpdateEntity = (prev, next) => {
-    return createCalendarEvent(next, this.authQuery.userId, this.orgQuery.getActiveId());
-  }
+  // akitaPreUpdateEntity = (prev, next) => {
+  //   return createCalendarEvent(next, this.authQuery.userId, this.orgQuery.getActiveId());
+  // }
 }
 
