@@ -42,6 +42,7 @@ import { ImageUploader } from '@blockframes/utils/image-uploader';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MovieImportState } from '../../import-utils';
+import { createDistributionRight } from '@blockframes/distribution-rights/+state';
 
 enum SpreadSheetMovie {
   internationalTitle,
@@ -84,6 +85,11 @@ enum SpreadSheetMovie {
   promoReelLink,
   trailerLink,
   pitchTeaserLink,
+
+  //////////////////
+  // FESTIVAL FIELDS
+  //////////////////
+  reservedTerritories,
 
   //////////////////
   // ADMIN FIELDS
@@ -572,7 +578,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
             const parseErrors = [];
             if (language) {
-              versionParts.map(v => v.trim()).forEach((v : MovieLanguageTypesValue) => {
+              versionParts.map(v => v.trim()).forEach((v: MovieLanguageTypesValue) => {
                 const key = getKeyIfExists(movieLanguageTypes, v);
                 if (key) {
                   populateMovieLanguageSpecification(movie.versionInfo.languages, language, key, true);
@@ -855,6 +861,34 @@ export class ViewExtractedMoviesComponent implements OnInit {
             reason: 'Optional field is missing',
             hint: 'Edit corresponding sheet field.'
           });
+        }
+
+        //////////////////
+        // FESTIVAL FIELDS
+        //////////////////
+        if (spreadSheetRow[SpreadSheetMovie.reservedTerritories]) {
+          // Here we need to create 'lite' version of distribution deals with only the reserved territories.
+          // This feature is used on festival app.
+
+          const distributionRight = createDistributionRight();
+          distributionRight.territory = [];
+          spreadSheetRow[SpreadSheetMovie.reservedTerritories].split(this.separator).forEach((c: ExtractCode<'TERRITORIES'>) => {
+            const territory = getCodeIfExists('TERRITORIES', c);
+            if (territory) {
+              distributionRight.territory.push(territory);
+            } else {
+              importErrors.errors.push({
+                type: 'error',
+                field: 'territories',
+                name: 'Territories sold',
+                reason: `${c} not found in territories list`,
+                hint: 'Edit corresponding sheet field.'
+              });
+            }
+          });
+
+          // We keep it for save in the next component
+          importErrors.distributionRights = [distributionRight];
         }
 
         //////////////////

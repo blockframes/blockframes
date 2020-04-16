@@ -95,7 +95,7 @@ export class ContractService extends CollectionService<ContractState> {
    * Use this method to push rights and init the related contract
    * @param licenseeId
    * @param titlesAndRights
-   * @param type
+   * @param contract
    */
   public async createContractAndRight(licenseeId: string, titlesAndRights: TitlesAndRights, contract: Contract = createContract({ type: 'sale' })): Promise<string> {
     if (!contract.id) {
