@@ -14,5 +14,7 @@ export function sortMovieBy(a: Movie, b: Movie, sortIdentifier: string) {
         return 1;
       }
       return 0;
+    default:
+      return 0;
   }
 }
