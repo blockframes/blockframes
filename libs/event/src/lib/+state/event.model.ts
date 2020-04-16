@@ -62,8 +62,7 @@ export function createScreening(screening: Partial<Screening>): Screening {
 }
 
 // Calendar Event
-export function createCalendarEvent<M>(event: Partial<EventBase<any, M>>, currentUserId: string, currentOrgId: string): Event<M> {
-  const isOwner = event.ownerId === currentUserId || event.ownerId === currentOrgId;
+export function createCalendarEvent<M>(event: Partial<EventBase<any, M>>, isOwner: boolean): Event<M> {
   return {
     ...createEvent(event),
     isOwner,

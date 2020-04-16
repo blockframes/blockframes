@@ -3,7 +3,7 @@
 
   <!-- Small Events -->
   <ng-template calEventSmall let-event>
-    <a class="small" [routerLink]="[event.id, 'edit']">
+    <a class="small" [routerLink]="event | eventLink">
       <ng-container *ngIf="event.movie as movie">
         <div class="background" [backgroundRef]="movie.promotionalElements.banner.media">
           <div class="overlay">
@@ -17,7 +17,7 @@
 
   <!-- Large Events -->
   <ng-template calEventLarge let-event>
-    <a class="large" [routerLink]="[event.id, 'edit']">
+    <a class="large" [routerLink]="event | eventLink">
       <ng-container *ngIf="event.movie as movie">
         <div class="background" [backgroundRef]="movie.promotionalElements.poster[0].media">
           <div class="overlay">

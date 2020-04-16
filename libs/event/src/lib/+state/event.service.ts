@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CollectionConfig, CollectionService, syncQuery, Query, WriteOptions } from 'akita-ng-fire';
 import { EventState, EventStore } from './event.store';
-import { EventDocument } from './event.firestore';
+import { EventDocument, EventBase } from './event.firestore';
 import { Event, ScreeningEvent, createCalendarEvent } from './event.model';
 import { QueryFn } from '@angular/fire/firestore/interfaces';
 import { Observable } from 'rxjs';
@@ -31,6 +31,11 @@ export class EventService extends CollectionService<EventState> {
     super(store);
   }
 
+  /** Verify if the current user / organisation is ownr of an event */
+  isOwner(event: EventBase<any, any>) {
+    return event.ownerId === this.authQuery.userId || event.ownerId === this.orgQuery.getActiveId();
+  }
+
   /** Remove all invitations & notifications linked to this event */
   async onDelete(id: string, { write }: WriteOptions) {
     const invitations = await this.invitationService.getValue(ref => ref.where('docId', '==', id));
@@ -49,7 +54,7 @@ export class EventService extends CollectionService<EventState> {
   }
 
   formatFromFirestore<T>(event: EventDocument<T>): Event<T> {
-    return createCalendarEvent(event, this.authQuery.userId, this.orgQuery.getActiveId());
+    return createCalendarEvent(event, this.isOwner(event));
   }
 
   syncScreenings(queryFn?: QueryFn): Observable<ScreeningEvent[]> {
