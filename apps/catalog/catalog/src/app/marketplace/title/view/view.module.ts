@@ -8,13 +8,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { MarketplaceMovieViewComponent } from './view.component';
 
 // Custom Modules
-import { MovieDisplayAvailabilitiesModule } from '@blockframes/movie/components/display-availabilities/display-availabilities.module';
-import { MovieDisplayPrincipalInformationsModule } from '@blockframes/movie/components/display-principal-informations/display-principal-informations.module';
-import { MovieDisplayPrizesModule } from '@blockframes/movie/components/display-prizes/display-prizes.module';
-import { MovieDisplayAssetsModule } from '@blockframes/movie/components/display-assets/display-assets.module';
-import { MovieDisplayKeywordsModule } from '@blockframes/movie/components/display-keywords/display-keywords.module';
-import { MovieDisplayFilmInfoCardModule } from '@blockframes/movie/components/display-film-info-card/display-film-info-card.module';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
+
 // Material
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatCardModule } from '@angular/material/card';
@@ -50,12 +45,6 @@ const routes = [{
     CommonModule,
     FlexLayoutModule,
     // Custom Modules
-    MovieDisplayAvailabilitiesModule,
-    MovieDisplayPrincipalInformationsModule,
-    MovieDisplayPrizesModule,
-    MovieDisplayAssetsModule,
-    MovieDisplayKeywordsModule,
-    MovieDisplayFilmInfoCardModule,
     ImageReferenceModule,
     // Material
     MatCardModule,
