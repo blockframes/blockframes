@@ -133,7 +133,7 @@ export class MovieService extends CollectionService<MovieState> {
    */
   public async setMoviePrivateConfig(movieId: string, privateConfig: PrivateConfig): Promise<any> {
     const f = this.functions.httpsCallable('setDocumentPrivateConfig');
-    return f({ docId: movieId, config: privateConfig }).toPromise();
+    return f({ docId: movieId, config: privateConfig }).toPromise().catch(_ => false);
   }
 
   /**
@@ -144,6 +144,6 @@ export class MovieService extends CollectionService<MovieState> {
    */
   public async getMoviePrivateConfig(movieId: string, keys: string[] = []): Promise<PrivateConfig | false> {
     const f = this.functions.httpsCallable('getDocumentPrivateConfig');
-    return f({ docId: movieId, keys }).toPromise();
+    return f({ docId: movieId, keys }).toPromise().catch(_ => false);
   }
 }
