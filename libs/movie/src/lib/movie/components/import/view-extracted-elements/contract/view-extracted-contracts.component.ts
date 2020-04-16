@@ -12,9 +12,9 @@ import { ContractService } from '@blockframes/contract/contract/+state/contract.
 import { createPaymentSchedule } from '@blockframes/utils/common-interfaces/schedule';
 import { Intercom } from 'ng-intercom';
 import { getKeyIfExists } from '@blockframes/utils/helpers';
-import { UserService } from '@blockframes/user/+state/user.service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { ContractsImportState } from '../../import-utils';
+import { AuthQuery } from '@blockframes/auth/+state';
 
 
 enum SpreadSheetContract {
@@ -63,14 +63,14 @@ export class ViewExtractedContractsComponent implements OnInit {
     private contractService: ContractService,
     private cdRef: ChangeDetectorRef,
     private intercom: Intercom,
-    private userService: UserService,
+    private authQuery: AuthQuery,
     private dynTitle: DynamicTitleService
   ) {
     this.dynTitle.setPageTitle('Submit your titles')
   }
 
-  async ngOnInit() {
-    this.isUserBlockframesAdmin = await this.userService.isBlockframesAdmin();
+  ngOnInit() {
+    this.isUserBlockframesAdmin = this.authQuery.isBlockframesAdmin;
     this.cdRef.markForCheck();
   }
 
