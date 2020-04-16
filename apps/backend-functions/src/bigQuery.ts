@@ -135,16 +135,24 @@ export const requestEventAnalytics = async (
   const user = await getDocument<PublicUser>(`users/${uid}`);
   const org = await getDocument<OrganizationDocument>(`orgs/${user.orgId}`);
 
-  // Do security
+  // Todo security
+  // const screeningEventsPromises = eventIds.map(eventId => {
+  //   return getDocument<ScreeningEventDocument>(`events/${eventId}`)
+  // });
+  // const screeningEvents = await Promise.all(screeningEventsPromises);
+  // const screeningEventsMovieIds = screeningEvents.map(e => e.meta.titleId);
+  // if (!screeningEventsMovieIds.every(eventMovieId => org.movieIds.includes(eventMovieId))) {
+  //   throw new Error(`Insufficient permission to get events analytics.`)
+  // }
 
   // Request BigQuery
   let [rows] = await executeQueryEventAnalytics(queryEventAnalytics, eventIds);
   if (rows !== undefined && rows.length >= 0) {
     // Get all users to eliminate those who are part of the same org
-    const eventsUsersPromise = rows.map(row => {
+    const eventsUsersPromises = rows.map(row => {
       return getDocument<PublicUser>(`users/${row.userId}`);
     });
-    const eventsUsers = await Promise.all(eventsUsersPromise);
+    const eventsUsers = await Promise.all(eventsUsersPromises);
     const eventsUsersNotInOrg = eventsUsers.filter(u => !org.userIds.includes(u.uid));
     const userIdsNotInOrg = eventsUsersNotInOrg.map(u => u.uid);
     // Clean rows without users of the same org
