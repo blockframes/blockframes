@@ -8,7 +8,7 @@ export default {
 
 export const movieHeader = () => ({
   moduleMetadata: { imports: [MovieHeaderModule, ToolkitModule] },
-  name: 'Movie Header',
+  name: 'Header',
   template: `
     <storybook-toolkit>
       <h1 title>Movie Header</h1>
@@ -16,9 +16,9 @@ export const movieHeader = () => ({
         <movie-header-preferences>
           <h3>Hello</h3>
         </movie-header-preferences>
-        <movie-header-button>
+        <movie-header-cta>
         <button>Cool button</button>
-        </movie-header-button>
+        </movie-header-cta>
         <movie-header-actions>
         <h3>World</h3>
       </movie-header-actions>
@@ -29,5 +29,3 @@ export const movieHeader = () => ({
     movie: object('movie', MOVIES[0]),
   }
 });
-
-

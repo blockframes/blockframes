@@ -11,6 +11,13 @@
             "name": "@zeplin/cli-connect-storybook-plugin",
             "config": {
                 "url": "http://localhost:4400",
+                "command": "npx ng run ui:storybook"
+            }
+        },
+        {
+            "name": "@zeplin/cli-connect-storybook-plugin",
+            "config": {
+                "url": "http://localhost:4400",
                 "command": "npx ng run movie:storybook"
             }
         }
@@ -25,7 +32,10 @@
             "path": "libs/ui/src/lib/slider/slider.component.ts",
             "zeplinNames": [
                 "component/slider/archipel_content/movie-slider"
-            ]
+            ],
+            "storybook": {
+                "kind": "Slider"
+            }
         },
         {
             "path": "libs/movie/src/lib/movie/components/card/card.component.ts",
@@ -41,7 +51,10 @@
             "path": "libs/movie/src/lib/movie/components/header/header.component.ts",
             "zeplinNames": [
                 "component/banner/archipel_content/header-movie-page"
-            ]
+            ],
+            "storybook": {
+                "kind": "Header"
+            }
         }
     ],
     "github": {

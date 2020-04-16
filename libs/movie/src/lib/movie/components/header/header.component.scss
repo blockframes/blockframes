@@ -1,20 +1,39 @@
+@import '~@angular/flex-layout/mq';
+@import 'images';
+
 .poster {
-    width: 33%;
-    background-size: cover;
+    @include poster(md);
+    background-size: contain;
+    background-repeat: no-repeat;
 }
 
 .inner-header {
-    padding: 50px 0 50px 24px;
+    padding: 50px 24px;
 }
-div {
+
+.overlay {
     width: 100%;
+    background: linear-gradient(to right, black, transparent);
 }
 
 h1,
-h2,
-h4,
-span {
-    // Color is different from typography
-    // if high contrast theme is ready, remove it
+h2 {
+    // TODO #2548
     color: white !important;
+}
+
+@include layout-bp(xs) {
+    .poster {
+        @include poster(xs);
+    }
+
+    .inner-header {
+        padding: 0;
+    }
+}
+
+@include layout-bp(sm) {
+    .poster {
+       @include poster(sm)
+    }
 }

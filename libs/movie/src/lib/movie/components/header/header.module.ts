@@ -3,20 +3,18 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
-// Material
-import { MatTooltipModule } from '@angular/material/tooltip';
-
 // Component
 import {
   HeaderComponent,
   MovieHeaderPreferences,
-  MovieHeaderButton,
+  MovieHeaderCTA,
   MovieHeaderActions
 } from './header.component';
 
 // Blockframes
 import { DisplayNameModule } from '@blockframes/utils/pipes';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
+import { MovieTitleFeaturesModule } from '../title-features/title-features.module';
 
 
 
@@ -24,7 +22,7 @@ import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/imag
   declarations: [
     HeaderComponent,
     MovieHeaderPreferences,
-    MovieHeaderButton,
+    MovieHeaderCTA,
     MovieHeaderActions
   ],
   imports: [
@@ -32,14 +30,12 @@ import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/imag
     FlexLayoutModule,
     DisplayNameModule,
     ImageReferenceModule,
-
-    // Material
-    MatTooltipModule
+    MovieTitleFeaturesModule
   ],
   exports: [
     HeaderComponent,
     MovieHeaderPreferences,
-    MovieHeaderButton,
+    MovieHeaderCTA,
     MovieHeaderActions
   ]
 })

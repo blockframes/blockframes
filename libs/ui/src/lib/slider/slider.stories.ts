@@ -9,7 +9,7 @@ export default {
 
 export const bfSlider = () => ({
   moduleMetadata: { imports: [SliderModule, ToolkitModule] },
-  name: 'Bf Slider',
+  name: 'Slider',
   component: SliderComponent,
   template: `
   <storybook-toolkit>

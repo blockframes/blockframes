@@ -16,7 +16,7 @@ export class ToolkitComponent {
   view: Views = 'component';
   theme$ = this.themeService.theme$;
 
-  constructor(public icons: IconService, private themeService: ThemeService, private cdr: ChangeDetectorRef) {
+  constructor(icons: IconService, private themeService: ThemeService, private cdr: ChangeDetectorRef) {
     this.themeService.theme = 'light';
     icons.init();
   }
