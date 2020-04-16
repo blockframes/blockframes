@@ -8,8 +8,7 @@ import {
 import { Subscription, Observable } from 'rxjs';
 import { MovieService, MovieQuery } from '@blockframes/movie/+state';
 import { FormControl } from '@angular/forms';
-import { staticModels } from '@blockframes/utils/static-model';
-import { MovieSearchForm } from '@blockframes/movie/form/search.form';
+import { MovieSearch, MovieSearchForm } from '@blockframes/movie/form/search.form';
 import { map, distinctUntilChanged, debounceTime, filter, switchMap, pluck, startWith } from 'rxjs/operators';
 import { MoviesIndex } from '@blockframes/utils/algolia';
 import { Index } from 'algoliasearch';
@@ -29,9 +28,6 @@ export class ListComponent implements OnInit, OnDestroy {
 
   public sortByControl: FormControl = new FormControl('Title');
   public sortOptions: string[] = ['All films', 'Title', 'Director' /* 'Production Year' #1146 */];
-  public genres = staticModels['GENRES'];
-  public countries = staticModels['TERRITORIES'];
-  public movieProductionStatuses = staticModels['MOVIE_STATUS'];
 
   public filterForm = new MovieSearchForm();
 
@@ -46,10 +42,36 @@ export class ListComponent implements OnInit, OnDestroy {
 
     this.movieSearchResults$ = this.filterForm.valueChanges.pipe(
       debounceTime(300),
-      filter(search => !MovieSearchForm.isEmpty(search)),
-      distinctUntilChanged((a, b) => MovieSearchForm.equals(a, b)),
-      map(() => this.filterForm.toAlgoliaQuery()),
-      switchMap(query => this.movieIndex.search(query)),
+      filter(search => !this.isEmpty(search)),
+      distinctUntilChanged(),
+      switchMap(search => {
+
+        let budgetFilter = ''
+        const budgetsFrom = search.budget.map(budget => `budget.from:${budget.from}`).join(' OR ');
+        const budgetsTo = search.budget.map(budget => `budget.to:${budget.to}`).join(' OR ');
+        if ( search.budget.length === 1) {
+          budgetFilter = `${budgetsFrom} AND ${budgetsTo}`;
+        } else if ( search.budget.length > 1) {
+          budgetFilter =  `(${budgetsFrom}) AND (${budgetsTo})`;
+        }
+
+        return this.movieIndex.search({
+          query: search.query,
+          facetFilters: [
+            [...search.genres.map(genre => `genres:${genre}`)], // same facet inside an array means OR for algolia
+            [...search.originCountries.map(country => `originCountries:${country}`)],
+            [
+              ...search.languages.original.map(lang => `languages.original:${lang}`),
+              ...search.languages.dubbed.map(lang => `languages.dubbed:${lang}`),
+              ...search.languages.subtitle.map(lang => `languages.subtitle:${lang}`),
+              ...search.languages.caption.map(lang => `languages.caption:${lang}`),
+            ],
+            [...search.productionStatus.map(status => `status:${status}`)],
+            [...search.sellers.map(seller => `orgName:${seller}`)],
+          ],
+          filters: budgetFilter,
+        });
+      }),
       pluck('hits'),
       map(result => result.map(movie => movie.objectID)),
 
@@ -61,11 +83,26 @@ export class ListComponent implements OnInit, OnDestroy {
 
       // display the first 10 movies from the state (no useless queries)
       // prevent the user to see an empty page at the beginning
-      startWith(this.movieQuery.getAll({limitTo: 10})),
+      startWith(this.movieQuery.getAll()),
     );
   }
 
   ngOnDestroy() {
     this.sub.unsubscribe();
+  }
+
+  private isEmpty(search: MovieSearch) {
+    return (
+      search.query === '' &&
+      search.genres.length === 0 &&
+      search.originCountries.length === 0 &&
+      search.languages.original.length === 0 &&
+      search.languages.dubbed.length === 0 &&
+      search.languages.subtitle.length === 0 &&
+      search.languages.caption.length === 0 &&
+      search.productionStatus.length === 0 &&
+      search.budget.length === 0 &&
+      search.sellers.length === 0
+    );
   }
 }

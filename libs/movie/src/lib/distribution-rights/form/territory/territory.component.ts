@@ -3,7 +3,6 @@ import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
 // Others
 import { DistributionRightForm } from '../distribution-right.form';
-import { default as staticModels } from '@blockframes/utils/static-model/staticModels';
 
 @Component({
   selector: '[form] distribution-form-territory',
@@ -14,7 +13,6 @@ import { default as staticModels } from '@blockframes/utils/static-model/staticM
 export class DistributionRightTerritoryComponent {
   @Input() form: DistributionRightForm;
 
-  public territories = staticModels['TERRITORIES'];
 
   get territory() {
     return this.form.get('territory');

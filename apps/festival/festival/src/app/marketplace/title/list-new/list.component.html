@@ -33,19 +33,11 @@
   <title-filter>
 
       <ng-template filter label="Genres">
-        <chips-autocomplete
-          [form]="filterForm.genres"
-          placeholder="Genres"
-          [items]="genres"
-        ></chips-autocomplete>
+        <chips-autocomplete [form]="filterForm.genres" model="GENRES"></chips-autocomplete>
       </ng-template>
 
       <ng-template filter label="Country of Origin">
-        <chips-autocomplete
-          [form]="filterForm.originCountries"
-          placeholder="Country of Origin"
-          [items]="countries"
-        ></chips-autocomplete>
+        <chips-autocomplete [form]="filterForm.originCountries" placeholder="Country of Origin" model="TERRITORIES"></chips-autocomplete>
       </ng-template>
 
       <ng-template filter label="Language & Version">
@@ -53,7 +45,7 @@
       </ng-template>
 
       <ng-template filter label="Production Status">
-        <static-check-boxes fxLayout="column" [form]="filterForm.productionStatus" [items]="movieProductionStatuses"></static-check-boxes>
+        <static-check-boxes fxLayout="column" [form]="filterForm.productionStatus" model="MOVIE_STATUS"></static-check-boxes>
       </ng-template>
 
       <ng-template filter label="Budget">
