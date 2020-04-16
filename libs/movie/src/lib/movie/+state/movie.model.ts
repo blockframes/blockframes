@@ -5,7 +5,6 @@ import {
   MoviePromotionalDescription,
   MoviePromotionalElements,
   MovieReview,
-  MovieSalesAgentDealDocumentWithDates as MovieSalesAgentDeal,
   MovieSalesCast,
   MovieSalesInfoDocumentWithDates as MovieSalesInfo,
   MovieStory,
@@ -49,7 +48,6 @@ export {
   MovieStakeholders,
   Prize,
   MovieSalesInfoDocumentWithDates as MovieSalesInfo,
-  MovieSalesAgentDealDocumentWithDates as MovieSalesAgentDeal,
   MovieAnalytics,
   MovieReview
 } from './movie.firestore';
@@ -78,7 +76,6 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     salesCast: createMovieSalesCast(params.salesCast),
     salesInfo: createMovieSalesInfo(params.salesInfo),
     festivalPrizes: createMovieFestivalPrizes(params.festivalPrizes),
-    salesAgentDeal: createMovieSalesAgentDeal(params.salesAgentDeal),
     budget: createMovieBudget(params.budget),
   };
 }
@@ -234,21 +231,6 @@ export function createTitle(title: Partial<Title> = {}): Title {
     original: '',
     international: '',
     ...title
-  };
-}
-
-export function createMovieSalesAgentDeal(
-  params: Partial<MovieSalesAgentDeal> = {}
-): MovieSalesAgentDeal {
-  return {
-    rights: {
-      from: null,
-      to: null
-    },
-    territories: [],
-    medias: [],
-    reservedTerritories: [],
-    ...params
   };
 }
 

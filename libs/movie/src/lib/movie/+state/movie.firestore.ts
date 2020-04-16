@@ -15,8 +15,8 @@ import {
   GenresSlug,
   MovieCurrenciesSlug
 } from "@blockframes/utils/static-model";
-import { RawRange, NumberRange } from "@blockframes/utils/common-interfaces/range";
-import { SalesAgent, Producer, Crew, Cast, Stakeholder, Credit } from "@blockframes/utils/common-interfaces/identity";
+import { NumberRange } from "@blockframes/utils/common-interfaces/range";
+import { Producer, Crew, Cast, Stakeholder, Credit } from "@blockframes/utils/common-interfaces/identity";
 import { firestore } from "firebase/app";
 import { ImgRef } from "@blockframes/utils/image-uploader";
 import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
@@ -102,17 +102,6 @@ export interface MovieAnalytics {
 export interface StoreConfig {
   status: StoreStatus,
   storeType: StoreType,
-}
-
-interface MovieSalesAgentDealRaw<D> {
-  rights: RawRange<D>;
-  territories: TerritoriesSlug[],
-  medias: MediasSlug[],
-  salesAgent?: SalesAgent,
-  reservedTerritories?: TerritoriesSlug[],
-}
-
-export interface MovieSalesAgentDealDocumentWithDates extends MovieSalesAgentDealRaw<Date> {
 }
 
 export interface MoviePromotionalDescription {
@@ -294,7 +283,6 @@ interface MovieRaw<D> {
   salesInfo: MovieSalesInfoRaw<D>;
   versionInfo: MovieVersionInfo;
   festivalPrizes: MovieFestivalPrizes;
-  salesAgentDeal: MovieSalesAgentDealRaw<D>;
   budget: MovieBudget;
   movieReview: MovieReview[];
 }

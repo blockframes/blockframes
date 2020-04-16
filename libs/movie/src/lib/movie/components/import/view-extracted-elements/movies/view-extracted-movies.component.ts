@@ -7,7 +7,6 @@ import {
   createMovieSalesCast,
   createMovieSalesInfo,
   createMovieFestivalPrizes,
-  createMovieSalesAgentDeal,
   createPromotionalElement,
   createMovieBudget,
   createMoviePromotionalElements,
@@ -142,7 +141,6 @@ export class ViewExtractedMoviesComponent implements OnInit {
           salesInfo: createMovieSalesInfo(),
           versionInfo: { languages: {} }, // TODO issue #1596
           festivalPrizes: createMovieFestivalPrizes(),
-          salesAgentDeal: createMovieSalesAgentDeal(),
           budget: createMovieBudget(),
           story: createMovieStory(),
           ...existingMovie ? cleanModel(existingMovie) : undefined
