@@ -132,8 +132,8 @@ export class TableExtractedMoviesComponent implements OnInit {
 
     if (importState.distributionRights) {
       const orgId = this.orgQuery.getActiveId();
-      const titlesAndRights = {} as TitlesAndRights;
-      titlesAndRights[importState.movie.id] = importState.distributionRights;
+      const movieId = importState.movie.id;
+      const titlesAndRights = { [movieId]: importState.distributionRights };
       await this.contractService.createContractAndRight(orgId, titlesAndRights);
     }
 
