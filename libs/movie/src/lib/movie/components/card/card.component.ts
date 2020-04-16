@@ -1,6 +1,5 @@
-import { Component, Input, ChangeDetectionStrategy, HostListener } from '@angular/core';
-import { Movie, Credit } from '../../+state/movie.model';
-import { Title } from '../../+state/movie.firestore';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Movie, MovieMain } from '../../+state/movie.model';
 import { ImgRef } from '@blockframes/utils/image-uploader';
 
 @Component({
@@ -10,39 +9,17 @@ import { ImgRef } from '@blockframes/utils/image-uploader';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CardComponent {
-
   public id: string;
   public image: ImgRef;
-  public title: Title;
-  public directors: Credit[];
-  public genres: string[];
-  public date: number;
-  public duration: string | number;
-  public hovering = false;
+  public main: MovieMain;
 
   @Input() size: 'small' | 'medium' | 'large';
   @Input() set movie(movie: Movie) {
     if (movie) {
       this.id = movie.id
       this.image = movie.promotionalElements.poster[0] && movie.promotionalElements.poster[0].media;
-      this.title = movie.main.title;
-      this.directors = movie.main.directors;
-      this.genres = movie.main.genres;
-      this.date = movie.main.productionYear;
-      this.duration = movie.main.totalRunTime;
+      this.main = movie.main
     }
-  }
-
-  @HostListener('mouseenter')
-  public onMouseEnter() {
-    this.hovering = true;
-    console.log(this.hovering)
-  }
-
-  @HostListener('mouseleave')
-  public onMouseLeave() {
-    this.hovering = false;
-    console.log(this.hovering)
   }
 }
 
