@@ -7,7 +7,6 @@ import {
   createMovieSalesCast,
   createMovieSalesInfo,
   createMovieFestivalPrizes,
-  createMovieSalesAgentDeal,
   createPromotionalElement,
   createMovieBudget,
   createMoviePromotionalElements,
@@ -36,7 +35,7 @@ import {
   premiereType
 } from '@blockframes/movie/+state/movie.firestore';
 import { createStakeholder } from '@blockframes/utils/common-interfaces/identity';
-import { createRange } from '@blockframes/utils/common-interfaces';
+import { createRange, createPrice } from '@blockframes/utils/common-interfaces';
 import { Intercom } from 'ng-intercom';
 import { cleanModel, getKeyIfExists } from '@blockframes/utils/helpers';
 import { ImageUploader } from '@blockframes/utils/image-uploader';
@@ -148,7 +147,6 @@ export class ViewExtractedMoviesComponent implements OnInit {
           salesInfo: createMovieSalesInfo(),
           versionInfo: { languages: {} }, // TODO issue #1596
           festivalPrizes: createMovieFestivalPrizes(),
-          salesAgentDeal: createMovieSalesAgentDeal(),
           budget: createMovieBudget(),
           story: createMovieStory(),
           ...existingMovie ? cleanModel(existingMovie) : undefined
@@ -734,17 +732,19 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
             switch (currency) {
               case '$':
-                movie.budget.budgetCurrency = 'USD';
+                movie.budget.totalBudget.currency = getCodeIfExists('MOVIE_CURRENCIES', 'USD'); 
                 break;
               case '€':
               default:
-                movie.budget.budgetCurrency = 'EUR';
+                movie.budget.totalBudget.currency = getCodeIfExists('MOVIE_CURRENCIES', 'EUR');
                 break;
             }
 
             movie.budget.estimatedBudget = createRange({ from: from * 1000000, to: to * 1000000, label: spreadSheetRow[SpreadSheetMovie.budget] });
           } else {
-            movie.budget.totalBudget = spreadSheetRow[SpreadSheetMovie.budget];
+            movie.budget.totalBudget = createPrice({
+              amount: parseInt(spreadSheetRow[SpreadSheetMovie.budget], 10)
+            });
           }
         }
 
