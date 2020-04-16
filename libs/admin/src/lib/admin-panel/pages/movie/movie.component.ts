@@ -8,9 +8,9 @@ import { getValue } from '@blockframes/utils/helpers';
 import { storeType, storeStatus } from '@blockframes/movie/+state/movie.firestore';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { EventService } from '@blockframes/event/+state/event.service';
 import { createPrivateEventConfig } from '@blockframes/event/+state/event.model';
 import { PrivateConfigForm } from '../../forms/private-config.form';
+import { PrivateConfig } from '@blockframes/utils/common-interfaces';
 
 @Component({
   selector: 'admin-movie',
@@ -57,7 +57,8 @@ export class MovieComponent implements OnInit {
     this.movie = await this.movieService.getValue(this.movieId);
     this.movieForm = new MovieAdminForm(this.movie);
 
-    const privateConfig = await this.movieService.getMoviePrivateConfig(this.movieId);
+    const privateConfig: false | PrivateConfig = await this.movieService.getMoviePrivateConfig(this.movieId)
+      .then(c => c).catch(_ => false);
     this.privateConfigForm = new PrivateConfigForm(privateConfig || {});
 
     const rights = await this.distributionRightService.getMovieDistributionRights(this.movieId)
@@ -88,8 +89,14 @@ export class MovieComponent implements OnInit {
       return;
     }
     const eventConfig = createPrivateEventConfig({ url: this.privateConfigForm.get('url').value });
-    await this.movieService.setMoviePrivateConfig(this.movieId, eventConfig);
-    this.snackBar.open('Information updated!', 'close', { duration: 5000 });
+    const callOutput = await this.movieService.setMoviePrivateConfig(this.movieId, eventConfig)
+      .then(_ => true).catch(_ => false);
+    if (callOutput) {
+      this.snackBar.open('Information updated!', 'close', { duration: 5000 });
+    } else {
+      this.snackBar.open('Error while updating private config.', 'close', { duration: 5000 });
+    }
+
   }
 
   public getMovieTunnelPath(movieId: string) {

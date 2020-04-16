@@ -12,6 +12,7 @@ export interface SpreadsheetImportError {
 
 export interface MovieImportState {
   movie: Movie;
+  distributionRights?: DistributionRight[];
   errors?: SpreadsheetImportError[];
 }
 

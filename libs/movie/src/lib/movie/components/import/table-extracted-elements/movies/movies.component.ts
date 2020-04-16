@@ -11,6 +11,8 @@ import { ViewImportErrorsComponent } from '../view-import-errors/view-import-err
 import { sortingDataAccessor } from '@blockframes/utils/table';
 import { MovieImportState, SpreadsheetImportError } from '../../import-utils';
 import { MovieService } from '@blockframes/movie/+state';
+import { OrganizationQuery } from '@blockframes/organization/+state';
+import { ContractService, TitlesAndRights } from '@blockframes/contract/contract/+state/contract.service';
 
 const hasImportErrors = (importState: MovieImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -49,6 +51,8 @@ export class TableExtractedMoviesComponent implements OnInit {
     private snackBar: MatSnackBar,
     private dialog: MatDialog,
     private movieService: MovieService,
+    private contractService: ContractService,
+    private orgQuery: OrganizationQuery
   ) { }
 
   ngOnInit() {
@@ -125,6 +129,14 @@ export class TableExtractedMoviesComponent implements OnInit {
       hint: 'Movie already saved'
     });
     this.rows.data = data;
+
+    if (importState.distributionRights) {
+      const orgId = this.orgQuery.getActiveId();
+      const movieId = importState.movie.id;
+      const titlesAndRights = { [movieId]: importState.distributionRights };
+      await this.contractService.createContractAndRight(orgId, titlesAndRights);
+    }
+
     return true;
   }
 
