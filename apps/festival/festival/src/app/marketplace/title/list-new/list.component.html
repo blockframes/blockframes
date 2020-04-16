@@ -63,7 +63,7 @@
 
       <ng-template filter label="Seller">
         <algolia-chips-autocomplete
-          [index]="movieIndex"
+          [index]="movieIndex.indexName"
           keyToDisplay="value"
           facet="orgName"
           [form]="filterForm.sellers"
