@@ -45,7 +45,7 @@ const steps: TunnelStep[] = [{
   icon: 'document',
   routes: [{
     path: 'summary',
-    label: 'Summary & Sumbit'
+    label: 'Summary & Submission'
   }]
 }];
 
