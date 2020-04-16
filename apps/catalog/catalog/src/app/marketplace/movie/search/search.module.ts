@@ -1,9 +1,9 @@
 // Components
+import { MovieCardModule } from "@blockframes/ui/movie-card/movie-card.module";
 import { MovieDisplayListModule } from '@blockframes/movie/components/display-list/display-list.module';
 import { TranslateSlugModule } from "@blockframes/utils/pipes/translate-slug.module";
 import { MovieFormGenresModule } from "@blockframes/movie/form/main/genres/genres.module";
 import { AvailsFilterModule } from '@blockframes/distribution-rights/components/avails-filter/avails-filter.module';
-import { MovieCardModule } from '@blockframes/movie/components/card/card.module';
 
 // Pages
 import { MarketplaceSearchComponent } from './search.component';
@@ -43,13 +43,13 @@ import { WishlistButtonModule } from "@blockframes/organization/components/wishl
     FlexLayoutModule,
     ReactiveFormsModule,
     HttpClientModule,
+    MovieCardModule,
     MovieDisplayListModule,
     TranslateSlugModule,
     MovieFormGenresModule,
     AvailsFilterModule,
     ChipsAutocompleteModule,
     WishlistButtonModule,
-    MovieCardModule,
 
     // Material
     MatIconModule,

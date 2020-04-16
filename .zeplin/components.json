@@ -1,11 +1,18 @@
 {
     "plugins": [
         {
-            "name": "@zeplin/cli-connect-angular-plugin",
-            "config": {
-                "useFullSnippet": true,
-                "useFullDescription": true
-            }
+          "name": "@zeplin/cli-connect-angular-plugin",
+          "config": {
+              "useFullSnippet": true,
+              "useFullDescription": true
+          }
+        },
+        {
+          "name": "@zeplin/cli-connect-storybook-plugin",
+          "config": {
+              "url": "http://localhost:4400",
+              "command": "npx ng run movie:storybook"
+          }
         }
     ],
     "projects": [],
@@ -25,7 +32,10 @@
           "zeplinNames": [
             "component/card/archipel_content/movie-card-large",
             "component/card/archipel_content/movie-card-large-hover"
-          ]
+          ],
+          "storybook": {
+            "kind": "Card"
+        }
         }
     ],
     "github": {

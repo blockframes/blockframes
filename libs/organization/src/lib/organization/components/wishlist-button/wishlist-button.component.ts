@@ -49,7 +49,6 @@ export class WishlistButtonComponent implements OnInit {
 
 
   public addToWishlist() {
-    event.stopPropagation();
     const movie = this.movieQuery.getEntity(this.movieId);
     const title = movie.main.title.international;
     this.cartService.updateWishlist(movie);
@@ -61,7 +60,6 @@ export class WishlistButtonComponent implements OnInit {
   }
 
   public removeFromWishlist() {
-    event.stopPropagation();
     const movie = this.movieQuery.getEntity(this.movieId);
     const title = movie.main.title.international;
     this.cartService.updateWishlist(movie);

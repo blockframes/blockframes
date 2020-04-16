@@ -7,10 +7,12 @@ import { getLabelBySlug } from '../static-model/staticModels';
 })
 export class FeaturePipe implements PipeTransform {
   transform(value: MovieMain): string {
-    const genres = value.genres.map(genre =>
-      getLabelBySlug('GENRES', genre.trim().toLocaleLowerCase())).join(', ');
+    const firstGenre = getLabelBySlug('GENRES', value.genres[0].trim().toLocaleLowerCase());
+    const displayedGenre = value.genres.length > 1
+      ? `${firstGenre} ...`
+      : firstGenre;
     const productionYear = value.productionYear;
     const totalRunTime = typeof value.totalRunTime === 'string' ? value.totalRunTime : `${value.totalRunTime}'`;
-    return `${genres} | ${productionYear} | ${totalRunTime}`
+    return `${displayedGenre} | ${productionYear} | ${totalRunTime}`
   }
 }
