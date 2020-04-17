@@ -1,5 +1,7 @@
 import { EventService } from './event.service';
 import { EventStore } from './event.store';
+import { AuthQuery } from '@blockframes/auth/+state';
+import { OrganizationQuery } from '@blockframes/organization/+state';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { of } from 'rxjs';
@@ -10,7 +12,7 @@ describe('Event Service', () => {
   let spectator: SpectatorService<EventService>;
   const createService = createServiceFactory({
     service: EventService,
-    providers: [EventStore, mockProvider(AngularFireFunctions, {
+    providers: [EventStore, AuthQuery, OrganizationQuery,  mockProvider(AngularFireFunctions, {
       httpsCallable: jest.fn(() => () => of(true))
     })],
     mocks: [AngularFirestore]
@@ -35,7 +37,7 @@ describe('Event Service', () => {
     expect(event.title).toBe('fake');
   })
   test('setEventUrl', async () => {
-    const functions = spectator.get(AngularFireFunctions);
+    const functions = spectator.inject(AngularFireFunctions);
     const result = await spectator.service.setEventUrl('id');
     expect(functions.httpsCallable).toHaveBeenCalledWith('setEventUrl');
     expect(result).toBeTruthy();
