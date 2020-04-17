@@ -28,7 +28,6 @@ import { CatalogCartQuery } from '@blockframes/cart/+state/cart.query';
 import { NumberRange } from '@blockframes/utils/common-interfaces/range';
 import { BUDGET_LIST } from '@blockframes/movie/form/budget/budget.form';
 import { CatalogSearchForm } from '@blockframes/distribution-rights/form/search.form';
-import { staticModels } from '@blockframes/utils/static-model';
 // RxJs
 import { Observable, combineLatest, BehaviorSubject, Subscription } from 'rxjs';
 import { startWith, map, debounceTime, switchMap, distinctUntilChanged, pluck, filter, share } from 'rxjs/operators';
@@ -65,7 +64,6 @@ export class ListComponent implements OnInit, OnDestroy {
   public movieProductionStatuses: MovieStatusLabel[] = MOVIE_STATUS_LABEL;
 
   /** Filter for autocompletion */
-  public countries = staticModels['TERRITORIES'];
   public languagesFilter$: Observable<string[]>;
 
   /** Individual form controls for filtering */

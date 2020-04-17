@@ -1,6 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core';
-import { FormArray, FormControl } from '@angular/forms';
 import { boolean } from '@blockframes/utils/decorators/decorators';
+import { FormList } from '@blockframes/utils/form';
 
 @Component({
   selector: '[index] [keyToDisplay] [form] algolia-chips-autocomplete',
@@ -33,9 +33,7 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit {
    */
   @Input() facet = '';
 
-  // TODO use FormList after #2489 has been fixed
-  @Input() form: FormArray;
-
+  @Input() form: FormList<string>;
 
   /** Set your own labe */
   @Input() label = 'Search...'
@@ -71,7 +69,7 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit {
   add(result: any) {
     const value = this.resolveValue(result, this.keyToDisplay);
     if (!!value) {
-      this.form.push(new FormControl(value));
+      this.form.add(value);
     } else {
       throw new Error(`${this.keyToDisplay} was not found in ${JSON.stringify(result)}`);
     }
