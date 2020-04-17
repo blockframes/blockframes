@@ -10,10 +10,9 @@ export class FireAnalytics {
 
   public event(name: AnalyticsEvents, params: Record<string, any>) {
 
-    if (this.authQuery.user && this.authQuery.orgId && (
-      this.authQuery.orgId === centralOrgID ||
-      this.authQuery.isBlockframesAdmin
-    )) {
+    const { user, orgId, isBlockframesAdmin } = this.authQuery;
+    const isOperator = isBlockframesAdmin || orgId === centralOrgID;
+    if (user && orgId && isOperator) {
       /**
        * @dev We do not want to log centralOrg operators nor blockframes 
        * admins actions on the platform.
