@@ -28,4 +28,8 @@ export class AuthQuery extends Query<AuthState> {
   get requestedRoute() {
     return this.getValue().requestedRoute;
   }
+
+  get isBlockframesAdmin() {
+    return this.getValue().roles?.blockframesAdmin || false;
+  }
 }

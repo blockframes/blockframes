@@ -3,6 +3,8 @@ import { AuthStore, User, AuthState } from './auth.store';
 import { AuthQuery } from './auth.query';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { FireAuthService, CollectionConfig } from 'akita-ng-fire';
+import { User as FireBaseUser } from 'firebase';
+import { map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'users', idKey: 'uid' })
@@ -13,6 +15,16 @@ export class AuthService extends FireAuthService<AuthState> {
     private functions: AngularFireFunctions
   ) {
     super(store);
+  }
+
+  /**
+   * @dev This populates the RoleState part of the AuthState.
+   * Used to check if logged in user is blockframesAdmin or not.
+   */
+  selectRoles(user: FireBaseUser) {
+    return this.db.collection('blockframesAdmin').doc(user.uid).valueChanges().pipe(
+      map(doc => ({ blockframesAdmin: doc !== undefined ? true : false }))
+    );
   }
 
   //////////
