@@ -5,6 +5,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Material
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { MatDividerModule } from '@angular/material/divider';
 
 // Component
 import { MovieTitleFeaturesComponent } from './title-features.component';
@@ -15,7 +16,8 @@ import { MovieTitleFeaturesComponent } from './title-features.component';
         FlexLayoutModule,
 
         // Material
-        MatTooltipModule
+        MatTooltipModule,
+        MatDividerModule
     ],
     declarations: [MovieTitleFeaturesComponent],
     exports: [MovieTitleFeaturesComponent]

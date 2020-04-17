@@ -34,7 +34,10 @@
                 "component/slider/archipel_content/movie-slider"
             ],
             "storybook": {
-                "kind": "Slider"
+                "kind": "Slider",
+                "storybook": [
+                    "Slider"
+                ]
             }
         },
         {
@@ -44,7 +47,10 @@
                 "component/card/archipel_content/movie-card-large-hover"
             ],
             "storybook": {
-                "kind": "Card"
+                "kind": "Movie Card",
+                "storybook": [
+                    "Movie Card"
+                ]
             }
         },
         {
@@ -53,7 +59,10 @@
                 "component/banner/archipel_content/header-movie-page"
             ],
             "storybook": {
-                "kind": "Header"
+                "kind": "Movie Title Features",
+                "storybook": [
+                    "Movie Title Features"
+                ]
             }
         }
     ],

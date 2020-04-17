@@ -1,7 +1,6 @@
-<h4 class="mat-body" *ngIf="features.length" fxLayout="row wrap">
+<h4 class="mat-body" *ngIf="features.length" fxLayout="row">
     <span *ngFor="let feature of features; let isLast = last" 
         [matTooltip]="feature.tooltip">
-        <!-- Use name code here, otherwise a evil formatter can destroy the layout -->
-        {{ feature.view }}{{ isLast ? '' : '&nbsp;|&nbsp;'}}
+        {{ feature.view }}<mat-divider *ngIf="!isLast" vertical></mat-divider>
     </span>
 </h4>

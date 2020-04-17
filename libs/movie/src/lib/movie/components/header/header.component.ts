@@ -10,22 +10,15 @@ import {
 // Blockframes
 import { Movie, Credit } from '@blockframes/movie/+state';
 import { Title, PromotionalElement, } from '@blockframes/movie/+state/movie.firestore';
-import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
-import { getISO3166TerritoryFromSlug } from '@blockframes/utils/static-model/territories-ISO-3166';
 
 interface MovieHeaderView {
   directors: Credit[],
   title: Title,
   banner: PromotionalElement,
-  poster: PromotionalElement[],
-  titleFeatures: Array<string[] | string>
+  poster: PromotionalElement
 }
 
 function createMovieView(movie: Movie): MovieHeaderView {
-  const convertedGenres = movie.main.genres.map(genre => getLabelBySlug('GENRES', genre))
-  const convertedOriginalLanguages = movie.main.originalLanguages.map(language => getLabelBySlug('LANGUAGES', language))
-  const convertedOriginCountries = movie.main.originCountries.map(country => getISO3166TerritoryFromSlug(country)).map(country => country.iso_a2);
-  const statusLabel = getLabelBySlug('MOVIE_STATUS', movie.main.status)
   return {
     directors: movie.main.directors,
     title: {
@@ -33,15 +26,7 @@ function createMovieView(movie: Movie): MovieHeaderView {
       international: movie.main.title.international
     },
     banner: movie.promotionalElements.banner,
-    poster: movie.promotionalElements.poster,
-    titleFeatures: [
-      // It matters in which order we input the value in this array
-      movie.main.workType,
-      convertedGenres,
-      convertedOriginalLanguages,
-      convertedOriginCountries,
-      statusLabel
-    ]
+    poster: movie.promotionalElements.poster[0]
   }
 }
 
@@ -55,14 +40,15 @@ export class HeaderComponent {
 
   public movieView: MovieHeaderView;
 
+  public titleFeatures: Movie;
+
   @HostBinding('style.backgroundImage') background: string;
-  @HostBinding('style.backgroundSize') size: string;
   @Input()
   set movie(movie: Movie) {
     if (movie) {
+      this.titleFeatures = movie;
       this.movieView = createMovieView(movie);
-      this.background = `url(${this.movieView.banner.media.url})`;
-      this.size = 'cover';
+      this.background = `url(${this.movieView.banner.media.url})`
     }
   }
 }

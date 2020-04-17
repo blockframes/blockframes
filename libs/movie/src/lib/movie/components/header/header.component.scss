@@ -1,13 +1,17 @@
 @import '~@angular/flex-layout/mq';
 @import 'images';
 
+:host {
+    background-size: contain;
+}
+
 .poster {
-    @include poster(md);
+    @include poster('large');
     background-size: contain;
     background-repeat: no-repeat;
 }
 
-.inner-header {
+header {
     padding: 50px 24px;
 }
 
@@ -24,7 +28,7 @@ h2 {
 
 @include layout-bp(xs) {
     .poster {
-        @include poster(xs);
+        @include poster('small');
     }
 
     .inner-header {
@@ -34,6 +38,6 @@ h2 {
 
 @include layout-bp(sm) {
     .poster {
-       @include poster(sm)
+       @include poster('medium')
     }
 }

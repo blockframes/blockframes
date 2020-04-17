@@ -1,22 +1,17 @@
-<header fxLayout="column" fxLayoutAlign="start start" *ngIf="movieView">
-    <div class="overlay">
-        <!-- Breadcrumbs and Poster -->
-        <div fxLayout="row" fxLayoutGap="20px" class="inner-header">
-            <!-- ATM we use the first image, but we will use geo localisation to determine which one to use -->
-            <div [backgroundRef]="movieView.poster[0].media" placeholderAsset="empty_poster.webp" class="poster">
-            </div>
-            <!-- Descriptions -->
-            <div fxLayout="column">
-                <h4>{{ movieView.directors | displayName }}</h4>
-                <h1 class="mat-display-2">{{ movieView.title.international }}</h1>
-                <h2>{{ movieView.title.original }}</h2>
-                <movie-title-features [titleFeatures]="movieView.titleFeatures"></movie-title-features>
-                <ng-content select="movie-header-preferences"></ng-content>
-                <ng-content select="movie-header-cta"></ng-content>
-                <div fxLayout="row">
-                    <ng-content select="movie-header-actions"></ng-content>
-                </div>
-            </div>
+<header class="overlay" fxLayout="row" fxLayoutGap="20px" *ngIf="movieView">
+    <!-- Breadcrumbs and Poster -->
+    <!-- ATM we use the first image, but we will use geo localisation to determine which one to use -->
+    <img [imgRef]="movieView.poster.media" placeholderAsset="empty_poster.webp" class="poster">
+    <!-- Descriptions -->
+    <div fxLayout="column">
+        <h4>{{ movieView.directors | displayName }}</h4>
+        <h1 class="mat-display-2">{{ movieView.title.international }}</h1>
+        <h2>{{ movieView.title.original }}</h2>
+        <movie-title-features [movie]="titleFeatures"></movie-title-features>
+        <ng-content select="movie-header-preferences"></ng-content>
+        <ng-content select="movie-header-cta"></ng-content>
+        <div fxLayout="row">
+            <ng-content select="movie-header-actions"></ng-content>
         </div>
     </div>
 </header>
