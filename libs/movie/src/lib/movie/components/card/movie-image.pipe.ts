@@ -1,6 +1,7 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { Movie } from '@blockframes/movie/+state/movie.model';
-import { ImgRef } from '../image-uploader';
+import { ImgRef } from '@blockframes/utils/image-uploader';
+import { CommonModule } from '@angular/common';
 
 @Pipe({
   name: 'movieImage',
@@ -16,3 +17,10 @@ export class MovieImagePipe implements PipeTransform {
     }
   }
 }
+
+@NgModule({
+  imports: [CommonModule],
+  declarations: [MovieImagePipe],
+  exports: [MovieImagePipe],
+})
+export class MovieImageModule {}

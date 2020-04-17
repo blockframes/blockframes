@@ -1,12 +1,12 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { Movie } from '@blockframes/movie/+state/movie.model';
-import { getLabelBySlug } from '../static-model/staticModels';
+import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 
 @Pipe({
-  name: 'feature',
+  name: 'movieFeature',
   pure: true
 })
-export class FeaturePipe implements PipeTransform {
+export class MovieFeaturePipe implements PipeTransform {
   transform(value: Movie): string {
     const { workType, totalRunTime, genres, originalLanguages, productionYear } = value.main;
     return [

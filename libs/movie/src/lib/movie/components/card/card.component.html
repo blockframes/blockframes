@@ -1,12 +1,12 @@
 <figure (mouseenter)="hasOverlay = true" (mouseleave)="hasOverlay = false">
-  <img [imgRef]="image" placeholderAsset="empty_poster.webp" alt="Movie Illustration" />
+  <img [imgRef]="movie | movieImage: size" placeholderAsset="empty_poster.webp" alt="Movie Illustration" />
   <div fxLayout="column" fxLayoutAlign="center center" class="overlay" *ngIf="hasOverlay" @scaleIn>
-    <wishlist-button [movieId]="id" small></wishlist-button>
-    <a mat-button @scaleIn color="primary" [routerLink]="['../', id]"> View More </a>
+    <wishlist-button [movieId]="movie.id" small></wishlist-button>
+    <a mat-button @scaleIn color="primary" [routerLink]="link"> View More </a>
   </div>
 </figure>
-<article *ngIf="movie.main" [class]="size">
+<article [class]="size">
   <h6>{{ movie.main.title.international }}</h6>
   <p class="mat-caption">{{ movie.main.directors | displayName }}</p>
-  <p class="mat-caption">{{ movie.main | feature }}</p>
+  <p class="mat-caption">{{ movie | movieFeature }}</p>
 </article>
