@@ -77,7 +77,7 @@ async function mailOnInvitationAccept(userId: string, organizationId: string) {
     .filter(mail => !!mail)
     .map(adminEmail => sendMailFromTemplate(userJoinedYourOrganization(adminEmail!, userEmail!)));
 
-  return Promise.all([...adminEmailPromises]);
+  return Promise.all(adminEmailPromises);
 }
 
 
@@ -90,7 +90,7 @@ async function onInvitationToOrgCreate({ toUser }: InvitationFromOrganizationToU
     return;
   }
 
-  // @TODO (#xxxx) Not implemented
+  // @TODO (#2539) Not implemented
 }
 
 /** Updates the user, orgs, and permissions when the user accepts an invitation to an organization. */
@@ -211,7 +211,6 @@ export async function onInvitationToOrgUpdate(
   } else if (wasDeclined(before!, after)) {
     return onInvitationToOrgDecline(invitation);
   }
-  return;
 }
 
 

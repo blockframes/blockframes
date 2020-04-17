@@ -141,7 +141,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
     }
   }
 
-  private notificationSubject(notification) {
+  private notificationSubject(notification: Notification): string {
     let subject = 'Unknown subject';
     if (notification.organization) {
       subject = notification.organization.denomination.public ? notification.organization.denomination.public : notification.organization.denomination.full;

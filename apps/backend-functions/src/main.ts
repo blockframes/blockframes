@@ -51,7 +51,7 @@ export const sendResetPasswordEmail = functions.https
 export const sendWishlistEmails = functions.https
   .onCall(users.startWishlistEmailsFlow);
 
-  /** Trigger: REST call when an user contacts blockframes admin and send them an email. */
+/** Trigger: REST call when an user contacts blockframes admin and send them an email. */
 export const sendUserContactMail = functions.https.onCall(logErrors(users.sendUserMail));
 
 /** Trigger: REST call to find a list of organizations by name. */
@@ -106,10 +106,8 @@ export const onInvitationUpdateEvent = onDocumentWrite(
 /**
  * Creates notifications when an event is about to start
  */
-export const scheduledNotifications = functions.pubsub.schedule('0 4 * * *')
-.onRun(async _ => { // every day at 4 AM
-  await createNotificationsForEventsToStart();
-})
+export const scheduledNotifications = functions.pubsub.schedule('0 4 * * *')// every day at 4 AM
+  .onRun(_ => createNotificationsForEventsToStart());
 
 //--------------------------------
 //       Movies Management      //

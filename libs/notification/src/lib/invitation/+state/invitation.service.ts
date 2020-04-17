@@ -83,4 +83,8 @@ export class InvitationService extends CollectionService<InvitationState> {
       invitation => userEmails.includes(invitation.toUser.email) && invitation.status === 'pending'
     );
   }
+
+  public isInvitationForMe(invitation: Invitation) : Boolean {
+    return invitation.toOrg?.id === this.authQuery.orgId || invitation.toUser?.uid === this.authQuery.userId
+  }
 }

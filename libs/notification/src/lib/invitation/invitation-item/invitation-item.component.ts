@@ -28,7 +28,7 @@ export class InvitationItemComponent {
       case 'fromOrganizationToUser':
         return `Your organization sent an invitation to this user email: ${this.invitation.toUser.email}`;
       case 'event':
-        return this.isInvitationForMe() ? `You have been invited to an event !` : `Your invitation have been sent!`;
+        return this.service.isInvitationForMe(this.invitation) ? `You have been invited to an event !` : `Your invitation have been sent!`;
     }
   }
 
@@ -60,13 +60,7 @@ export class InvitationItemComponent {
   }
 
   public get displayInvitationButtons(): boolean {
-    return (
-      this.isInvitationForMe() && this.invitation.status === 'pending'
-    );
+    return this.service.isInvitationForMe(this.invitation) && this.invitation.status === 'pending';
   }
 
-  private isInvitationForMe() : Boolean {
-    return (this.invitation.toOrg && this.invitation.toOrg.id === this.authQuery.orgId) ||
-    (this.invitation.toUser && this.invitation.toUser.uid === this.authQuery.userId);
-  }
 }

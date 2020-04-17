@@ -185,7 +185,6 @@ export async function onInvitationToAnEventUpdate(
   } else if (wasDeclined(before!, after)) {
     return onInvitationToAnEventRejected(invitation);
   }
-  return;
 }
 
 export async function createNotificationsForEventsToStart() {
