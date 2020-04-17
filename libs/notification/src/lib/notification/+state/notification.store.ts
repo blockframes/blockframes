@@ -125,13 +125,13 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
       case 'invitationToAttendEventAccepted':
         return {
           date: toDate(notification.date),
-          message: `${this.notificationSubject(notification)} have accepted your invitaion.`,
+          message: `${this.notificationSubject(notification)} have accepted your ${notification.type}.`,
           url: `c/o/marketplace/event/${notification.docId}`
         };
       case 'invitationToAttendEventDeclined':
         return {
           date: toDate(notification.date),
-          message: `${this.notificationSubject(notification)} have declined your invitaion.`,
+          message: `${this.notificationSubject(notification)} have declined your ${notification.type}.`,
           url: `c/o/marketplace/event/${notification.docId}`
         };
       default:
