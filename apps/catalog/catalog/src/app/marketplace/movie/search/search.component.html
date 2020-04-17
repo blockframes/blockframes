@@ -244,19 +244,7 @@
     <ng-container *ngIf="(movieSearchResults$ | async) as movies">
       <div fxLayout="row wrap" fxLayoutGap="20px" fxLayout.lt-md="column" fxLayoutAlign.lt-md="center center">
         <ng-container *ngFor="let movie of movies">
-          <movie-card [movie]="movie" [link]="['/c/o/marketplace',  movie.id]" *ngIf="!listView">
-            <ng-container movieInformation>
-              <mat-card-subtitle>
-                <span class="mat-caption" *ngFor="let director of movie.main.directors; let isLast=last">{{ director.firstName }}
-                  {{ director.lastName }}{{isLast ? '' : ', '}}</span>
-              </mat-card-subtitle>
-            </ng-container>
-            <ng-container movieCardAction>
-              <div fxLayout="row" fxLayoutAlign="end">
-                <wishlist-button [movieId]="movie.id" small></wishlist-button>
-              </div>
-            </ng-container>
-          </movie-card>
+          <movie-card [movie]="movie" [link]="['../', movie.id]" size="poster" *ngIf="!listView"></movie-card>
         </ng-container>
         <!-- We don't iterate over the movies here, cause this will be done by the mat tables -->
         <movie-display-list [movies]="movies" *ngIf="listView" (navigate)="goToMovieDetails($event)">
