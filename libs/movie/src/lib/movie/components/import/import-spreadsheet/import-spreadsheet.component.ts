@@ -3,8 +3,8 @@ import { SheetTab, importSpreadsheet } from '@blockframes/utils/spreadsheet';
 import { FormControl } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Intercom } from 'ng-intercom';
-import { UserService } from '@blockframes/user/+state/user.service';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { AuthQuery } from '@blockframes/auth/+state';
 
 export interface SpreadsheetImportEvent {
   sheet: SheetTab,
@@ -26,7 +26,7 @@ export class ImportSpreadsheetComponent implements OnInit {
 
   constructor(
     private http: HttpClient,
-    private userService: UserService,
+    private authQuery: AuthQuery,
     private cdRef: ChangeDetectorRef,
     private intercom: Intercom,
     private routerQuery: RouterQuery, 
@@ -34,8 +34,8 @@ export class ImportSpreadsheetComponent implements OnInit {
     this.fileType.setValue('movies');
   }
 
-  async ngOnInit() {
-    this.isUserBlockframesAdmin = await this.userService.isBlockframesAdmin();
+  ngOnInit() {
+    this.isUserBlockframesAdmin = this.authQuery.isBlockframesAdmin;
     this.cdRef.markForCheck();
   }
 

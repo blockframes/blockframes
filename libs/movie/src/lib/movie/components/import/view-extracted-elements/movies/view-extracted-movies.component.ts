@@ -39,10 +39,11 @@ import { createRange, createPrice } from '@blockframes/utils/common-interfaces';
 import { Intercom } from 'ng-intercom';
 import { cleanModel, getKeyIfExists } from '@blockframes/utils/helpers';
 import { ImageUploader } from '@blockframes/utils/image-uploader';
-import { UserService } from '@blockframes/user/+state/user.service';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { MovieImportState } from '../../import-utils';
 import { createDistributionRight } from '@blockframes/distribution-rights/+state';
+import { AuthQuery } from '@blockframes/auth/+state/auth.query';
+import { UserService } from '@blockframes/user/+state/user.service';
 
 enum SpreadSheetMovie {
   internationalTitle,
@@ -122,14 +123,15 @@ export class ViewExtractedMoviesComponent implements OnInit {
     private imageUploader: ImageUploader,
     private cdRef: ChangeDetectorRef,
     private intercom: Intercom,
+    private authQuery: AuthQuery,
     private userService: UserService,
     private dynTitle: DynamicTitleService
   ) {
     this.dynTitle.setPageTitle('Submit your titles')
   }
 
-  async ngOnInit() {
-    this.isUserBlockframesAdmin = await this.userService.isBlockframesAdmin();
+  ngOnInit() {
+    this.isUserBlockframesAdmin = this.authQuery.isBlockframesAdmin;
     this.cdRef.markForCheck();
   }
 

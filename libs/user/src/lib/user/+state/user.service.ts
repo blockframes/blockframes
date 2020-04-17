@@ -7,7 +7,6 @@ import { OrganizationService } from '@blockframes/organization/+state';
 import { PermissionsQuery } from '@blockframes/permissions/+state/permissions.query';
 import { OrganizationMember, createOrganizationMember } from './user.model';
 import { PermissionsService } from '@blockframes/permissions/+state';
-import { AngularFireFunctions } from '@angular/fire/functions';
 import { User, AuthQuery, AuthStore } from '@blockframes/auth/+state';
 
 
@@ -27,8 +26,7 @@ export class UserService extends CollectionService<UserState> {
     private permissionsQuery: PermissionsQuery,
     private permissionsService: PermissionsService,
     private organizationService: OrganizationService,
-    private functions: AngularFireFunctions,
-    ) {
+  ) {
     super(store);
   }
 
@@ -43,7 +41,7 @@ export class UserService extends CollectionService<UserState> {
    * If document exists, user is blockframeAdmin (like an ancient god).
    * @param uid
    */
-  public async isBlockframesAdmin(uid: string = this.authQuery.userId): Promise<boolean> {
+  public async isBlockframesAdmin(uid: string): Promise<boolean> {
     const snap = await this.db.collection('blockframesAdmin').doc(uid).get().toPromise();
     return snap.exists;
   }
@@ -133,7 +131,7 @@ export class UserService extends CollectionService<UserState> {
     return this.organizationService.update(org.id, { userIds });
   }
 
-  public async getMembers(orgId: string) : Promise<OrganizationMember[]> {
+  public async getMembers(orgId: string): Promise<OrganizationMember[]> {
     const org = await this.organizationService.getValue(orgId);
     const promises = org.userIds.map(uid => this.getUser(uid));
     const users = await Promise.all(promises);
