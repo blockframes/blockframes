@@ -274,6 +274,35 @@ jobs:
             npx firebase deploy --only firestore:rules
           when: always
       - slack/status
+  deploy-to-demo1:
+    executor: blockframes-ci
+    environment:
+      - ENV: staging
+      - NODE_OPTIONS: '--max_old_space_size=7168'
+      - GOOGLE_APPLICATION_CREDENTIALS: creds.json
+    steps:
+      - checkout_project
+      - run: echo "${FIREBASE_STAGING_SERVICE_ACCOUNT}" > creds.json
+      - run: cp env/demo/env.demo1.ts env/env.ts # required for the typechecking & file rewrite to work
+      - run: cp env/demo/env.demo1.ts env/env.staging.ts # prevent rewrites
+      - run: npm run build:all
+      - slack/notify:
+          message: 'Deploying to demo1...'
+      - run:
+          command: |
+            npx firebase use demo1 &&
+            cp firestore.rules firestore.rules.regular &&
+            cp firestore.maintenance.rules firestore.rules &&
+            npx firebase deploy --except functions --except hosting:storybook &&
+            npx firebase deploy --only functions --force
+      - run: node dist/apps/backend-ops/main.js upgrade
+      - run:
+          command: |
+            cp firestore.rules.regular firestore.rules &&
+            npx firebase use demo1 &&
+            npx firebase deploy --only firestore:rules
+          when: always
+      - slack/status
 workflows:
   version: 2.1
   build-and-test:
@@ -313,6 +342,11 @@ workflows:
             branches:
               only:
                 - develop
+      - deploy-to-demo1:
+          filters:
+            branches:
+              only:
+                - demo1
       - deploy-to-prod:
           <<: *production_only
       - deploy-to-staging:
