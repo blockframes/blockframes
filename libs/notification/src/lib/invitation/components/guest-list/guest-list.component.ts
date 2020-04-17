@@ -5,8 +5,7 @@ import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { startWith, debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 
 function filterGuest(invitation: Invitation, search: string) {
-  return invitation.toEmail?.includes(search)
-    || invitation.toUser?.email.toLowerCase().includes(search)
+  return invitation.toUser?.email.toLowerCase().includes(search)
     || invitation.toUser?.firstName.toLowerCase().includes(search)
     || invitation.toUser?.lastName.toLowerCase().includes(search)
     || invitation.toOrg?.denomination.full.toLowerCase().includes(search)
