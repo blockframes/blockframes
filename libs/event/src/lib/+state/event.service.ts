@@ -1,15 +1,20 @@
 import { Injectable } from '@angular/core';
-import { CollectionConfig, CollectionService, syncQuery, Query } from 'akita-ng-fire';
+import { CollectionConfig, CollectionService, syncQuery, Query, WriteOptions } from 'akita-ng-fire';
 import { EventState, EventStore } from './event.store';
-import { Event, ScreeningEvent } from './event.model';
+import { EventDocument, EventBase } from './event.firestore';
+import { Event, ScreeningEvent, createCalendarEvent } from './event.model';
 import { QueryFn } from '@angular/fire/firestore/interfaces';
 import { Observable } from 'rxjs';
 import { AngularFireFunctions } from '@angular/fire/functions';
+import { InvitationService } from '@blockframes/invitation/+state';
+import { OrganizationQuery } from '@blockframes/organization/+state';
+import { AuthQuery } from '@blockframes/auth/+state';
+
 
 const screeningsQuery = (queryFn?: QueryFn): Query<ScreeningEvent> => ({
   path: 'events',
   queryFn,
-  movie: (event: ScreeningEvent) => ({ path: `movies/${event.meta.titleId}` })
+  movie: ({ meta }: ScreeningEvent) =>  meta.titleId ? { path: `movies/${meta.titleId}` } : undefined
 });
 
 @Injectable({ providedIn: 'root' })
@@ -18,9 +23,23 @@ export class EventService extends CollectionService<EventState> {
 
   constructor(
     store: EventStore,
-    private functions: AngularFireFunctions
+    private functions: AngularFireFunctions,
+    private invitationService: InvitationService,
+    private authQuery: AuthQuery,
+    private orgQuery: OrganizationQuery,
   ) {
     super(store);
+  }
+
+  /** Verify if the current user / organisation is ownr of an event */
+  isOwner(event: EventBase<any, any>) {
+    return event.ownerId === this.authQuery.userId || event.ownerId === this.orgQuery.getActiveId();
+  }
+
+  /** Remove all invitations & notifications linked to this event */
+  async onDelete(id: string, { write }: WriteOptions) {
+    const invitations = await this.invitationService.getValue(ref => ref.where('docId', '==', id));
+    await this.invitationService.remove(invitations.map(e => e.id), { write });
   }
 
   formatToFirestore(event: Event) {
@@ -32,6 +51,10 @@ export class EventService extends CollectionService<EventState> {
     delete e.cssClass;
     delete e.isOwner;
     return e;
+  }
+
+  formatFromFirestore<T>(event: EventDocument<T>): Event<T> {
+    return createCalendarEvent(event, this.isOwner(event));
   }
 
   syncScreenings(queryFn?: QueryFn): Observable<ScreeningEvent[]> {

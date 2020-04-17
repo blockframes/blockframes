@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EventViewComponent } from './view.component';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 
 
@@ -8,7 +9,8 @@ import { EventViewComponent } from './view.component';
   declarations: [EventViewComponent],
   exports: [EventViewComponent],
   imports: [
-    CommonModule
+    CommonModule,
+    FlexLayoutModule,
   ]
 })
 export class EventViewModule { }

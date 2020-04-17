@@ -3,45 +3,35 @@
 
   <!-- Small Events -->
   <ng-template calEventSmall let-event>
-    <section *ngIf="event.isOwner" class="clickable" (click)="edit(event)">
-      <h4>{{ event.title }}</h4>
-    </section>
-    <a *ngIf="!event.isOwner" class="mat-h4" [routerLink]="[event.id]">
-      {{ event.title }}
+    <a class="small" [routerLink]="event | eventLink">
+      <ng-container *ngIf="event.movie as movie">
+        <div class="background" [backgroundRef]="movie.promotionalElements.banner.media">
+          <div class="overlay">
+            <span>{{ movie.main.title.international }}</span>
+          </div>
+        </div>
+      </ng-container>
+      <span *ngIf="!event.movie">{{ event.title }}</span>
     </a>
   </ng-template>
 
-  <!-- Large event -->
+  <!-- Large Events -->
   <ng-template calEventLarge let-event>
-    <section fxLayout="column" fxLayoutAlign="space-between">
-      <header>
-        <h4>{{ event.title }}</h4>
-      </header>
-      <ng-container [ngSwitch]="event.type">
-        <ng-container *ngSwitchCase="'meeting'">
-          <!-- Meeting Specific here -->
-        </ng-container>
-        <ng-container *ngSwitchCase="'screening'">
-          <!-- Meeting Specific here -->
-        </ng-container>
+    <a class="large" [routerLink]="event | eventLink">
+      <ng-container *ngIf="event.movie as movie">
+        <div class="background" [backgroundRef]="movie.promotionalElements.poster[0].media">
+          <div class="overlay">
+            <span>{{ movie.main.title.international }}</span>
+          </div>
+        </div>
       </ng-container>
-  
-      <footer fxLayout fxLayoutAlign="end center">
-        <button *ngIf="event.isOwner" mat-icon-button color="warn" (click)="remove(event)">
-          <mat-icon svgIcon="trash"></mat-icon>
-        </button>
-        <button *ngIf="event.isOwner" mat-icon-button (click)="edit(event)">
-          <mat-icon svgIcon="pencil"></mat-icon>
-        </button>
-        <a mat-icon-button [routerLink]="event.id">
-          <mat-icon svgIcon="eye"></mat-icon>
-        </a>
-      </footer>
-    </section>
+      <span *ngIf="!event.movie">{{ event.title }}</span>
+    </a>
   </ng-template>
 </cal-week>
 
-<!-- Edit form -->
+<!-- Let's keep it for now and see if it's missing -->
+<!-- Edit form
 <ng-template #editTemplate let-form>
   <button mat-icon-button class="mat-dialog-close" mat-dialog-close>
     <mat-icon svgIcon="cross"></mat-icon>
@@ -54,3 +44,4 @@
     <button mat-flat-button color="primary" [mat-dialog-close]="form.value">Save</button>
   </mat-dialog-actions>
 </ng-template>
+ -->

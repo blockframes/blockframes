@@ -9,24 +9,9 @@ import { MarketplaceComponent } from './marketplace.component';
 
 import { MarketplaceLayoutModule } from '@blockframes/ui/layout/marketplace/marketplace.module';
 
-import { ImgAssetModule } from '@blockframes/ui/theme';
-
-// Widgets
-import { SearchWidgetModule } from '@blockframes/ui/search-widget';
-import { NotificationWidgetModule } from '@blockframes/notification/notification-widget/notification-widget.module';
-import { AuthWidgetModule } from '@blockframes/auth/components/widget/widget.module';
-import { AppNavModule } from '@blockframes/ui/app-nav';
-
 // Material
-import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
-import { MatButtonModule } from '@angular/material/button';
-import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatBadgeModule } from '@angular/material/badge';
-import { MatMenuModule } from '@angular/material/menu';
-
 
 
 const routes: Routes = [{
@@ -114,27 +99,11 @@ const routes: Routes = [{
     // Angular
     CommonModule,
     FlexLayoutModule,
-
     MarketplaceLayoutModule,
 
     // Material
-    // MatToolbarModule,
     MatListModule,
-    // MatSidenavModule,
     MatIconModule,
-    // MatButtonModule,
-    // MatDividerModule,
-    // MatBadgeModule,
-    // MatMenuModule,
-
-    // // Libraries
-    // ImgAssetModule,
-    // AppNavModule,
-
-    // // Widgets
-    // NotificationWidgetModule,
-    // SearchWidgetModule,
-    // AuthWidgetModule,
   ]
 })
 export class MarketplaceModule {}

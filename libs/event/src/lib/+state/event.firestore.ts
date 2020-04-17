@@ -31,6 +31,6 @@ export interface EventPrivateConfig extends PrivateConfig{
 }
 
 // firestore documents
-type EventDocument<Meta> = EventBase<Timestamp, Meta>;
+export type EventDocument<Meta> = EventBase<Timestamp, Meta>;
 export type MeetingEventDocument = EventDocument<Meeting>;
 export type ScreeningEventDocument = EventDocument<Screening>;
