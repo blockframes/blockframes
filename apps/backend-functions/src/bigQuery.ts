@@ -1,6 +1,6 @@
 import { CallableContext } from "firebase-functions/lib/providers/https";
 import { BigQuery } from '@google-cloud/bigquery';
-import { MovieEventAnalytics, PublicUser, OrganizationDocument, MovieAnalytics, EventsAnalytics, EventAnalytics } from "./data/types";
+import { MovieEventAnalytics, PublicUser, OrganizationDocument, MovieAnalytics, EventsAnalytics, EventAnalytics, ScreeningEventDocument } from "./data/types";
 import { getDocument } from './data/internals';
 import { bigQueryAnalyticsTable } from "./environments/environment";
 import { isAfter, isBefore, parse, subDays } from 'date-fns';
@@ -44,7 +44,7 @@ FROM
   \`${bigQueryAnalyticsTable}*\`,
   UNNEST(event_params) AS params
 WHERE
-    (event_name = @pageView AND key = 'page_path' AND REGEXP_EXTRACT(value.string_value, '.*/marketplace/event/([^/]+)/session') in UNNEST(@eventIds)
+    (event_name = @pageView AND key = 'page_path' AND REGEXP_EXTRACT(value.string_value, '.*/marketplace/event/([^/]+)/session') in UNNEST(@eventIds))
 
 GROUP BY
   event_name, event_date, eventId, eventIdPage, userId
@@ -135,15 +135,15 @@ export const requestEventAnalytics = async (
   const user = await getDocument<PublicUser>(`users/${uid}`);
   const org = await getDocument<OrganizationDocument>(`orgs/${user.orgId}`);
 
-  // Todo security
-  // const screeningEventsPromises = eventIds.map(eventId => {
-  //   return getDocument<ScreeningEventDocument>(`events/${eventId}`)
-  // });
-  // const screeningEvents = await Promise.all(screeningEventsPromises);
-  // const screeningEventsMovieIds = screeningEvents.map(e => e.meta.titleId);
-  // if (!screeningEventsMovieIds.every(eventMovieId => org.movieIds.includes(eventMovieId))) {
-  //   throw new Error(`Insufficient permission to get events analytics.`)
-  // }
+  // Security: only events with the same ownerId that orgId of user
+  const screeningEventsPromises = eventIds.map(eventId => {
+    return getDocument<ScreeningEventDocument>(`events/${eventId}`)
+  });
+  const screeningEvents = await Promise.all(screeningEventsPromises);
+  const screeningEventsOwnerIds = screeningEvents.map(e => e.ownerId);
+  if (!screeningEventsOwnerIds.every(ownerId => org.id === ownerId)) {
+    throw new Error(`Insufficient permission to get events analytics.`)
+  }
 
   // Request BigQuery
   let [rows] = await executeQueryEventAnalytics(queryEventAnalytics, eventIds);

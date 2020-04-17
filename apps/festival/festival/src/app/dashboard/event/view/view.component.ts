@@ -15,7 +15,6 @@ export class EventViewComponent implements OnInit {
   event$ = this.query.selectActive();
   invitations$: Observable<Invitation[]>;
 
-
   constructor(
     private query: EventQuery,
     private invitationService: InvitationService,
