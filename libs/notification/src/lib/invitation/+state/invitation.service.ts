@@ -44,8 +44,7 @@ export class InvitationService extends CollectionService<InvitationState> {
     const organization = await this.orgService.getValue(organizationId);
     const userPromises = userEmails.map(async userEmail => {
       // Get a user or create a ghost user when needed
-      const invitationId = this.db.createId();
-      return this.authService.getOrCreateUserByMail(userEmail, organization.denomination.full, invitationId);
+      return this.authService.getOrCreateUserByMail(userEmail, organization.denomination.full);
     });
     const users = await Promise.all(userPromises);
 
@@ -62,11 +61,13 @@ export class InvitationService extends CollectionService<InvitationState> {
 
   /** Accept an Invitation and change its status to accepted. */
   public acceptInvitation(invitation: Invitation) {
+    // @TODO (#2500) should be handled by a backend function to prevent ugly rules
     return this.update({ ...invitation, status: 'accepted' });
   }
 
   /** Decline an Invitation and change its status to declined. */
   public declineInvitation(invitation: Invitation) {
+    // @TODO (#2500) should be handled by a backend function to prevent ugly rules
     return this.update({ ...invitation, status: 'declined' });
   }
 
@@ -81,5 +82,9 @@ export class InvitationService extends CollectionService<InvitationState> {
     return orgInvitations.some(
       invitation => userEmails.includes(invitation.toUser.email) && invitation.status === 'pending'
     );
+  }
+
+  public isInvitationForMe(invitation: Invitation) : Boolean {
+    return invitation.toOrg?.id === this.authQuery.orgId || invitation.toUser?.uid === this.authQuery.userId
   }
 }

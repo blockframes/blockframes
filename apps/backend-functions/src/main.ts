@@ -18,12 +18,13 @@ import {
 import { logErrors } from './internals/sentry';
 import { onInvitationWrite } from './invitation';
 import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate } from './orgs';
-import { adminApp, onRequestAccessToAppWrite } from './admin';
+import { adminApp } from './admin';
 import { onMovieUpdate, onMovieCreate, onMovieDelete } from './movie';
 import * as bigQuery from './bigQuery';
 import { onDocumentPermissionCreate } from './permissions';
 import { onContractWrite } from './contract';
 import * as privateConfig from './privateConfig';
+import { createNotificationsForEventsToStart } from './internals/invitations/events';
 
 /**
  * Trigger: when user creates an account.
@@ -50,7 +51,7 @@ export const sendResetPasswordEmail = functions.https
 export const sendWishlistEmails = functions.https
   .onCall(users.startWishlistEmailsFlow);
 
-  /** Trigger: REST call when an user contacts blockframes admin and send them an email. */
+/** Trigger: REST call when an user contacts blockframes admin and send them an email. */
 export const sendUserContactMail = functions.https.onCall(logErrors(users.sendUserMail));
 
 /** Trigger: REST call to find a list of organizations by name. */
@@ -78,17 +79,35 @@ export const getMovieAnalytics = functions.https.onCall(logErrors(bigQuery.reque
  */
 export const admin = functions.https.onRequest(adminApp);
 
-/** Trigger: when an invitation is updated (e. g. when invitation.status change). */
-export const onInvitationUpdateEvent = onDocumentWrite(
-  'invitations/{invitationID}',
-  onInvitationWrite
-);
+//--------------------------------
+//   Permissions  Management    //
+//--------------------------------
 
 /** Trigger: when a permission document is created. */
 export const onDocumentPermissionCreateEvent = onDocumentCreate(
   'permissions/{orgID}/documentPermissions/{docId}',
   onDocumentPermissionCreate
 );
+
+//--------------------------------
+//    Invitations Management    //
+//--------------------------------
+
+/** Trigger: when an invitation is updated (e. g. when invitation.status change). */
+export const onInvitationUpdateEvent = onDocumentWrite(
+  'invitations/{invitationID}',
+  onInvitationWrite
+);
+
+//--------------------------------
+//   Notifications Management   //
+//--------------------------------
+
+/**
+ * Creates notifications when an event is about to start
+ */
+export const scheduledNotifications = functions.pubsub.schedule('0 4 * * *')// every day at 4 AM
+  .onRun(_ => createNotificationsForEventsToStart());
 
 //--------------------------------
 //       Movies Management      //
@@ -144,11 +163,14 @@ export const getDocumentPrivateConfig = functions.https.onCall(logErrors(private
 //       Apps Management        //
 //--------------------------------
 
-/** Trigger: when an organization requests access to apps. */
-export const onAccessToApp = onDocumentWrite(
+/**
+ * Trigger: when an organization requests access to apps.
+ * @TODO (#2539) This method is currently unused but we keep it to future uses.
+ */
+/*export const onAccessToApp = onDocumentWrite(
   'app-requests/{orgId}',
   onRequestAccessToAppWrite
-);
+);*/
 
 //--------------------------------
 //       Orgs Management        //

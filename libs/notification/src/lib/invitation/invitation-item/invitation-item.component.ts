@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { InvitationService, Invitation } from '../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AuthQuery } from '@blockframes/auth/+state';
 
 @Component({
   selector: 'invitation-item',
@@ -12,7 +13,11 @@ export class InvitationItemComponent {
   @Input() invitation: Invitation;
   @Input() inWidget: boolean;
 
-  constructor(private service: InvitationService, private snackBar: MatSnackBar) { }
+  constructor(
+    private service: InvitationService,
+    private snackBar: MatSnackBar,
+    private authQuery: AuthQuery,
+  ) { }
 
   /** Creates a message based on the invitation.type. */
   public get message(): string {
@@ -22,6 +27,17 @@ export class InvitationItemComponent {
         return `${this.invitation.fromUser.firstName} ${this.invitation.fromUser.lastName} wants to join your organization`;
       case 'fromOrganizationToUser':
         return `Your organization sent an invitation to this user email: ${this.invitation.toUser.email}`;
+      case 'event':
+        return this.service.isInvitationForMe(this.invitation) ? `You have been invited to an event !` : `Your invitation have been sent!`;
+    }
+  }
+
+  public get invitationLink(): string | boolean {
+    switch (this.invitation.type) {
+      case 'event':
+        return `/c/o/marketplace/event/${this.invitation.docId}`;
+      default:
+        return false;
     }
   }
 
@@ -44,9 +60,7 @@ export class InvitationItemComponent {
   }
 
   public get displayInvitationButtons(): boolean {
-    return (
-      this.invitation.type === 'fromUserToOrganization' &&
-      this.invitation.status === 'pending'
-    );
+    return this.service.isInvitationForMe(this.invitation) && this.invitation.status === 'pending';
   }
+
 }

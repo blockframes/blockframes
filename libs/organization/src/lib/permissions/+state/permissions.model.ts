@@ -1,15 +1,18 @@
-import { PermissionsDocument, AppPermissionsDocument, UserPermissionsDocument, DocPermissionsDocument } from "./permissions.firestore";
+import { DocPermissionsDocument, PermissionsDocument } from "./permissions.firestore";
 
-export { createPermissions, UserRole, createAppPermissions } from '../../permissions/+state/permissions.firestore';
+export { createPermissions, UserRole } from '../../permissions/+state/permissions.firestore';
 
 export interface Permissions extends PermissionsDocument {
-  appPermissions?: AppPermissions[];
-  userPermissions?: UserPermissions[];
+  /** @TODO (#2539) This is currently unused but we keep it to future uses. */
+  //appPermissions?: AppPermissions[];
+  //userPermissions?: UserPermissions[];
   docPermissions?: DocPermissions[];
 }
 
-export type AppPermissions = AppPermissionsDocument;
+/** @TODO (#2539) This is currently unused but we keep it to future uses. */
+// export type AppPermissions = AppPermissionsDocument;
 
-export type UserPermissions = UserPermissionsDocument;
+/** @TODO (#2539) This is currently unused but we keep it to future uses. */
+//export type UserPermissions = UserPermissionsDocument;
 
 export type DocPermissions = DocPermissionsDocument;

@@ -17,8 +17,8 @@ export class InvitationGuard extends CollectionGuard<InvitationState> {
   sync() {
     return this.authQuery.user$.pipe(
       switchMap(user => combineLatest([
-        this.service.syncCollection(ref => ref.where('toUser', '==', user.uid)),
-        this.service.syncCollection(ref => ref.where('toEmail', '==', user.email)),
+        this.service.syncCollection(ref => ref.where('toUser.uid', '==', user.uid)),
+        this.service.syncCollection(ref => ref.where('toUser.email', '==', user.email)),
       ]))
     );
   }

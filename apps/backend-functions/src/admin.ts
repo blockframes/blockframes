@@ -4,14 +4,13 @@
  *
  */
 import express from 'express';
-import { db, DocumentReference, functions, getUserMail } from './internals/firebase';
+import { db, DocumentReference, getUserMail } from './internals/firebase';
 import { sendMail } from './internals/email';
 import {
   ADMIN_ACCEPT_ORG_PATH,
   ADMIN_ACCESS_TO_APP_PATH,
   ADMIN_DATA_PATH,
   organizationCanAccessApp,
-  organizationRequestedAccessToApp,
 } from './assets/mail-templates';
 import {
   acceptNewOrgPage,
@@ -27,13 +26,16 @@ import * as backup from './backup';
 import { deployMovieContract, setInitialRepartition } from '@blockframes/ethers/quorum/quorum';
 import { adminPassword } from './environments/environment';
 
-// TODO(#714): Synchronize data types with the frontend
-const APPS = ['stories-and-more', 'catalog'];
+// TODO(#2539): Synchronize data types with the frontend
+//const APPS = ['festival', 'catalog'];
 
 /**
- * Handles firestore update on request to application access,
+ * Handles firestore update on request to application access
+ * @TODO (#2539)
+ * This method is currently unused but we keep it to future uses.
+ * It sends and email to admin to accept or reject the request
  */
-export async function onRequestAccessToAppWrite(
+/*export async function onRequestAccessToAppWrite(
   change: functions.Change<FirebaseFirestore.DocumentSnapshot>,
   context: functions.EventContext
 ) {
@@ -53,7 +55,7 @@ export async function onRequestAccessToAppWrite(
   return Promise.all(
     requestedApps.map(appId => sendMail(organizationRequestedAccessToApp(orgId, appId)))
   );
-}
+}*/
 
 /**
  * Decorates another function, this will check that the password is valid

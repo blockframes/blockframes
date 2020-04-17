@@ -45,11 +45,9 @@ export class NotificationQuery extends QueryEntity<NotificationState, Notificati
           // As Date cannot be used as an index type (key), we format the date into a string.
           const key = isToday(date) ? 'Today'
             : isYesterday(date) ? 'Yesterday'
-            : formatDate(toDate(notification.date), 'MMM dd, yyyy', 'en-US');
-          const information = this.createNotificationInformation(notification);
+              : formatDate(notification.date, 'MM M dd, yyyy', 'en-US');
           const notif = {
             ...notification,
-            ...information,
             date: toDate(notification.date)
           };
           acc[key] = [...(acc[key] || []), notif];
@@ -57,85 +55,6 @@ export class NotificationQuery extends QueryEntity<NotificationState, Notificati
         }, {});
       })
     );
-  }
-
-  /** @deprecated With akitaPreAddEntity it should already be setup */
-  public createNotificationInformation(notification: Notification) {
-
-    switch (notification.type) {
-      case 'organizationAcceptedByArchipelContent':
-        return {
-          message: 'Your organization has been accepted by Archipel Content !',
-          placeholderUrl: 'WelcomeArchipelContent_500.png' // TODO: ISSUE#2262
-        };
-      case 'movieTitleUpdated':
-        return {
-          message: `${notification.user.firstName} ${notification.user.lastName} edited ${notification.movie.title.international}.`,
-          imgRef: this.getPoster(notification.movie.id),
-          placeholderUrl: 'WelcomeDelivery_500.png' // TODO: Icon/Image is wrong here. Use correct illustration for notifications => ISSUE#2262
-        };
-      case 'movieTitleCreated':
-        return {
-          message: `${notification.user.firstName} ${notification.user.lastName} created ${notification.movie.title.international}.`,
-          imgRef: this.getPoster(notification.movie.id),
-          placeholderUrl: 'WelcomeDelivery_500.png' // TODO: ISSUE#2262
-        };
-      case 'movieDeleted':
-        return {
-          message: `${notification.user.firstName} ${notification.user.lastName} deleted ${notification.movie.title.international}.`,
-          imgRef: this.getPoster(notification.movie.id),
-          placeholderUrl: 'WelcomeDelivery_500.png' // TODO: ISSUE#2262
-        };
-      case 'invitationFromOrganizationToUserDecline':
-        return {
-          message: `${notification.user.firstName} ${notification.user.lastName} has declined your organization's invitation.`,
-          imgRef: notification.user.avatar,
-          placeholderUrl: 'profil_user.webp'
-        };
-      case 'invitationFromUserToJoinOrgDecline':
-        return {
-          message: `Your organization has refused the request from ${notification.user.firstName} ${notification.user.lastName}.`,
-          imgRef: notification.user.avatar,
-          placeholderUrl: 'profil_user.webp'
-        };
-      case 'memberAddedToOrg':
-        return {
-          message: `${notification.user.firstName} ${notification.user.lastName} has been added to ${notification.organization.denomination.full}.`,
-          imgRef: notification.user.avatar,
-          placeholderUrl: 'profil_user.webp',
-          url: `c/o/organization/${notification.organization.id}/view/members`
-        };
-      case 'memberRemovedFromOrg':
-        return {
-          message: `${notification.user.firstName} ${notification.user.lastName} has been removed from ${notification.organization.denomination.full}.`,
-          imgRef: notification.user.avatar,
-          placeholderUrl: 'profil_user.webp'
-        };
-      case 'newContract':
-        return {
-          message: `${notification.organization.denomination.full} submitted a contract.`,
-          placeholderUrl: 'Organization_250.png', // TODO: ISSUE#2262
-          url: `c/o/dashboard/deals/${notification.docId}`
-        };
-      case 'contractInNegotiation':
-        return {
-          message: `A new offer has been created.`,
-          placeholderUrl: 'WelcomeArchipelContent_500.png', // TODO: ISSUE#2262
-          url: `c/o/dashboard/deals/${notification.docId}`
-        };
-      case 'movieSubmitted':
-        return {
-          message: `A new movie has been submitted`,
-          placeholderUrl: this.getPoster(notification.docId),
-          url: `c/o/dashboard/titles/${notification.docId}`
-        };
-      case 'movieAccepted':
-        return {
-          message: `Your movie has been accepted by Archipel Content.`,
-          placeholderUrl: this.getPoster(notification.docId),
-          url: `c/o/dashboard/titles/${notification.docId}`
-        };
-    }
   }
 
   public getPoster(id: string): ImgRef {

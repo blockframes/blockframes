@@ -9,7 +9,6 @@ import {
   createDenomination
 } from './organization.firestore';
 import { Movie } from '@blockframes/movie/+state/movie.model';
-import { AppDetails } from '@blockframes/utils/apps';
 import { toDate } from '@blockframes/utils/helpers';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 
@@ -23,10 +22,13 @@ export {
 
 export type AppStatus = 'none' | 'requested' | 'accepted';
 
-/** An application details with the organization authorizations */
-export interface AppDetailsWithStatus extends AppDetails {
+/** 
+ * An application details with the organization authorizations
+ * @TODO (#2539) This is currently unused but we keep it to future uses.
+ * */
+/*export interface AppDetailsWithStatus extends AppDetails {
   status: AppStatus;
-}
+}*/
 
 export type OrganizationWithTimestamps = OrganizationDocument;
 

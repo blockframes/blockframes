@@ -37,8 +37,8 @@ service cloud.firestore {
     	// We can read user data from the same organization as us until we got public users collection.
     	allow update: if isSignedIn()
       	&& userId() == incomingData().uid
-        && incomingData().uid == existingData().uid
-        && incomingData().email == existingData().email;
+        && isNotUpdatingField('uid')
+        && isNotUpdatingField('email')
     	allow create: if userId() == incomingData().uid;
       allow delete: if userId() == existingData().uid;
     }
@@ -46,8 +46,8 @@ service cloud.firestore {
     /// NOTIFICATIONS RULES ///
 
     match /notifications/{notificationId} {
-    	allow read, update: if userId() == existingData().userId
-      	|| currentUser().orgId == existingData().organization.id;
+    	allow read, update: if userId() == existingData().toUserId
+        || currentUser().orgId == existingData().organization.id;
     	allow create, delete: if false;
     }
 
@@ -62,7 +62,7 @@ service cloud.firestore {
     // Receive the invitation
     function isGuest() {
       return userId() == existingData().toUser.uid
-        || currentUser().email == existingData().toEmail;
+        || userOrgId() == existingData().toOrg.id;
     }
 
     // Rules
@@ -77,20 +77,28 @@ service cloud.firestore {
       	|| userOrgId() == incomingData().fromOrg.id
         || orgCan('isAdmin', userOrgId(), incomingData().docId);
 
-
+      // Update is used to change status only. Allowed to recepients only
+      // @TODO (#2500) should be handled by a backend function to prevent ugly rules
     	allow update: if 
         // Event
-        (incomingData().type == 'event' && isGuest())
-        ||
         (
-          (incomingData().toUser.uid == existingData().toUser.uid)
-          && (incomingData().fromOrg.id == existingData().fromOrg.id)
+          incomingData().type == 'event' && isGuest()
+          || (orgCan('isAdmin', userOrgId(), incomingData().docId))
         )
         &&
         (
-          (userId() == existingData().toUser.uid)
-          || (userOrgId() == incomingData().fromOrg.id)
-          || (orgCan('isAdmin', userOrgId(), incomingData().docId))
+          isNotUpdatingField('id')
+          && isNotUpdatingField('app')
+          && isNotUpdatingField('type')
+          && isNotUpdatingField('mode')
+          && isNotUpdatingField('status')
+          && isNotUpdatingField('date')
+          && isNotUpdatingField('fromOrg')
+          && isNotUpdatingField('fromUser')
+          && isNotUpdatingField('toOrg')
+          && isNotUpdatingField('toUser')
+          && isNotUpdatingField('docId')
+          && isNotUpdatingField('processedId')
         );
 
       allow delete: if
@@ -107,8 +115,8 @@ service cloud.firestore {
       	&& incomingData().status == 'pending'
         && documentIdChecked(orgId, 'orgs');
       allow update: if isSignedIn()
-      	&& incomingData().status == existingData().status
-        && incomingData().id == existingData().id
+      	&& isNotUpdatingField('status')
+        && isNotUpdatingField('id')
         && documentIdChecked(orgId, 'orgs');
       allow delete: if isSuperAdmin(userId(), orgId);
       allow read: if isSignedIn();
@@ -293,6 +301,9 @@ service cloud.firestore {
         || (getDocumentPermissions(orgId, docId)[action] == true);
     }
 
-
+    // We check that the field is not sent or if field sent is equal to actual
+    function isNotUpdatingField(fieldName) {
+			return !incomingData().keys().hasAll([fieldName]) || (existingData.keys().hasAll([fieldName]) && incomingData()[fieldName] == existingData[fieldName]);
+    }
   }
 }

@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { QueryEntity } from '@datorama/akita';
 import { OrganizationState, OrganizationStore } from './organization.store';
 import { Organization } from './organization.model';
-import { filter, map } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -13,14 +12,11 @@ export class OrganizationQuery extends QueryEntity<OrganizationState, Organizati
   }
 
   /**
+   * @TODO (#2539) This is currently unused but we keep it to future uses.
    * An Observable that describe the list
    * of application that are accessible to the current
    * organization.
    */
-  public appsDetails$ = this.select(state => state.appsDetails);
-
-  public isAccepted$ = this.selectActive().pipe(
-    filter(org => !!org),
-    map(org => org.status === 'accepted')
-  );
+  //public appsDetails$ = this.select(state => state.appsDetails);
+  
 }

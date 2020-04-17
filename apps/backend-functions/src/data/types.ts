@@ -20,10 +20,7 @@ export {
 } from '@blockframes/invitation/types';
 export {
   PermissionsDocument,
-  AppPermissionsDocument,
-  UserPermissionsDocument,
   DocPermissionsDocument,
-  createAppPermissions,
   createDocPermissions,
   UserRole
 } from '@blockframes/permissions/types';
@@ -31,7 +28,6 @@ export { PublicUser } from '@blockframes/user/types';
 export { RequestDemoInformations } from '@blockframes/utils/request-demo';
 export { MovieAnalytics, EventAnalytics, StoreStatus, StoreConfig } from '@blockframes/movie/+state/movie.firestore';
 export { NotificationOptions, NotificationType, NotificationDocument } from '@blockframes/notification/types';
-export { App } from '@blockframes/utils/apps';
 
 /**
  * Types used by the firebase backend.
