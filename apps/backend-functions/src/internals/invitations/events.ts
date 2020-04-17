@@ -10,7 +10,6 @@ import { getAdminIds } from "../../data/internals";
  */
 async function onInvitationToAnEventCreate({
   toUser,
-  toEmail,
   toOrg,
   fromUser,
   fromOrg,
@@ -20,9 +19,7 @@ async function onInvitationToAnEventCreate({
   const eventId = docId;
 
   let recipient: string;
-  if (!!toEmail) {
-    recipient = toEmail
-  } else if (!!toUser) {
+  if (!!toUser) {
     recipient = toUser.email;
   } else if (!!toOrg) {
     /** Attendee is only an user or an email for now */
@@ -192,13 +189,12 @@ export async function onInvitationToAnEventUpdate(
 }
 
 export async function createNotificationsForEventsToStart() {
-  // @TODO (#2461)
+  // @TODO (#2555)
 
   // 1 Fetch events that are about to start
   // 2 Fetch attendees (invitations accepted)
   // 3 Create notifications
 
-  // => fair un cron pour le jour J avec mail de rappel (et docID doit etre celui de l'event pas de l'invit)
   /*const notification = createNotification({
     toUserId: toUser.uid,
     docId,

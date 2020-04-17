@@ -62,7 +62,7 @@ service cloud.firestore {
     // Receive the invitation
     function isGuest() {
       return userId() == existingData().toUser.uid
-        || currentUser().email == existingData().toEmail;
+        || userOrgId() == existingData().toOrg.id;
     }
 
     // Rules
@@ -97,7 +97,6 @@ service cloud.firestore {
           && isNotUpdatingField('fromUser')
           && isNotUpdatingField('toOrg')
           && isNotUpdatingField('toUser')
-          && isNotUpdatingField('toEmail')
           && isNotUpdatingField('docId')
           && isNotUpdatingField('processedId')
         );

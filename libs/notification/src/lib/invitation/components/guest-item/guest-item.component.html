@@ -17,7 +17,7 @@
       <img asset="profil_user.webp" />
       <mat-icon [svgIcon]="invitation.status | statusIcon" [color]="invitation.status | statusColor"></mat-icon>
     </div>
-    <span matLine>{{ invitation.toEmail }}</span>
+    <span matLine>{{ invitation.toUser.email }}</span>
     <span matLine>
       <small class="mat-caption">{{ invitation.date | date: 'short' }}</small>
     </span>

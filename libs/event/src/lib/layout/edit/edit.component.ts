@@ -47,14 +47,13 @@ export class EventEditComponent {
     this.router.navigate(['../..'], { relativeTo: this.route })
   }
 
-  /** Send an invitation to a list of persons, either email or existing user  */
+  /** Send an invitation to a list of persons, either to existing user or by creating user  */
   invite() {
     if (this.invitationForm.dirty && this.invitationForm.valid) {
       const event = this.form.value;
       const guests: (string | PublicUser)[] = [this.invitationForm.value];
       const invitations = guests.map(guest => {
         const invite: Partial<InvitationToAnEvent> = { docId: event.id, mode: 'invitation' };
-        if (typeof guest === 'string') invite.toEmail = guest;
         if (typeof guest === 'object') invite.toUser = createPublicUser(guest);
         if (event.type === 'screening') invite.fromOrg = getPublicOrg(this.orgQuery.getActive());
         if (event.type === 'meeting') invite.fromUser = createPublicUser(this.authQuery.user);

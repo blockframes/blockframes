@@ -3,19 +3,17 @@
   <span class="mat-body-2">{{ byDate.key }}</span>
   <mat-list>
     <ng-container *ngFor="let notification of byDate.value | reverse">
-      <ng-container *ngIf="getInformation(notification) as information">
-        <mat-list-item [matTooltip]="information.message" (click)="goToPath(notification)" matTooltipPosition="left">
-          <img
-            matListAvatar
-            placeholderAsset="empty_organization.webp"
-            [imgRef]="information.imgRef"
-            alt="Notification picture"/>
-            <article fxLayout="column">
-              <p class="mat-body-1">{{ notification.message }}</p>
-              <small class="mat-caption">{{ notification.date | date: 'shortTime' }}</small>
-            </article>
-        </mat-list-item>
-      </ng-container>
+      <mat-list-item [matTooltip]="notification.message" (click)="goToPath(notification)" matTooltipPosition="left">
+        <img
+          matListAvatar
+          placeholderAsset="empty_organization.webp"
+          [imgRef]="notification.imgRef"
+          alt="Notification picture"/>
+          <article fxLayout="column">
+            <p class="mat-body-1">{{ notification.message }}</p>
+            <small class="mat-caption">{{ notification.date | date: 'shortTime' }}</small>
+          </article>
+      </mat-list-item>
     </ng-container>
     </mat-list>
   <mat-divider *ngIf="!last"></mat-divider>

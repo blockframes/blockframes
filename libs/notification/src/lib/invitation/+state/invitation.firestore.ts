@@ -14,10 +14,9 @@ export interface Invitation {
   /** @dev An invitation is created by an user or an org (fromOrg or fromUser) */
   fromOrg?: PublicOrganization,
   fromUser?: PublicUser,
-  /** @dev An invitation is for an user, an org or an email*/
+  /** @dev An invitation is for an user or an org */
   toOrg?: PublicOrganization,
   toUser?: PublicUser,
-  toEmail?: string,
   /**
    * @dev Can be a titleId or a eventId for example.
    * If empty, the invitation is about Organization

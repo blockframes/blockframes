@@ -52,11 +52,6 @@ export async function onInvitationWrite(
          * @dev In this case, an invitation to an event can be: 
          * a request from an user who wants to attend an event.
          * an invitation to an user that can be interested to attend an event.
-         * Invitation to an user can have to forms:
-         *   toUser => we can directly create a notification
-         *   toEmail => we need to send and email to invite the person to create an account on the platform.
-         *              @TODO #2461 On user create, we should then check if he already have invitations where toEmail == user.email 
-         *              and replace email to corresponding publicUser
          */
         return onInvitationToAnEventUpdate(invitationDocBefore, invitationDoc, invitation);
       default:
