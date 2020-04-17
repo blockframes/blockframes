@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { Event } from '../../+state/event.model';
 
 @Component({
   selector: 'event-view',
@@ -6,6 +7,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./view.component.scss']
 })
 export class EventViewComponent implements OnInit {
+
+  @Input() event: Event;
 
   constructor() { }
 

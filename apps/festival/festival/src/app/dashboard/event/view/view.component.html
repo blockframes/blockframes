@@ -1,1 +1,13 @@
-<p>view works!</p>
+<ng-container *ngIf="event$ | async as event; else loading">
+  <header>
+    <h1>{{ event.title }}</h1>
+    <p>From {{ event.start | date: 'short' }} to {{ event.start | date: 'short' }}</p>
+  </header>
+  <section>
+    <invitation-guest-list [invitations]="invitations$ | async"></invitation-guest-list>
+  </section>
+</ng-container>
+
+<ng-template #loading>
+  ...just a sec
+</ng-template>
