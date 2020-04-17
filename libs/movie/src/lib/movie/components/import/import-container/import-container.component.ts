@@ -2,10 +2,10 @@ import { Component, ViewChild, ChangeDetectionStrategy, ChangeDetectorRef, OnIni
 import { SpreadsheetImportEvent } from '../import-spreadsheet/import-spreadsheet.component';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { UserService } from '@blockframes/user/+state/user.service';
 import { ViewExtractedMoviesComponent } from '../view-extracted-elements/movies/view-extracted-movies.component';
 import { ViewExtractedContractsComponent } from '../view-extracted-elements/contract/view-extracted-contracts.component';
 import { ViewExtractedRightsComponent } from '../view-extracted-elements/rights/view-extracted-rights.component';
+import { AuthQuery } from '@blockframes/auth/+state';
 
 @Component({
   selector: 'movie-import-container',
@@ -27,13 +27,13 @@ export class ImportContainerComponent implements OnInit {
     private routerQuery: RouterQuery,
     private cdRef: ChangeDetectorRef,
     private dynTitle: DynamicTitleService,
-    private userService: UserService,
+    private authQuery: AuthQuery,
   ) {
     this.dynTitle.setPageTitle('Submit your titles')
   }
 
-  async ngOnInit() {
-    this.isUserBlockframesAdmin = await this.userService.isBlockframesAdmin();
+  ngOnInit() {
+    this.isUserBlockframesAdmin = this.authQuery.isBlockframesAdmin;
     this.cdRef.markForCheck();
   }
 

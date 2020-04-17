@@ -4,13 +4,13 @@ import { createContractTitleDetail } from '@blockframes/contract/contract/+state
 import { ContractTitleDetail } from '@blockframes/contract/contract/+state/contract.firestore';
 import { ContractVersion } from '@blockframes/contract/version/+state';
 import { FormEntity, FormList } from '@blockframes/utils/form/forms';
-import { ContractVersionPriceForm } from './price/price.form';
+import { PriceForm } from './price/price.form';
 import { ContractVersionPaymentScheduleForm } from './payment-schedule/payment-schedule.form';
 
 function createContractVersionControls(version: Partial<ContractVersion>) {
   return {
     id: new FormControl(version.id),  // Require or FormList can remove empty Form
-    price: new ContractVersionPriceForm(version.price),
+    price: new PriceForm(version.price),
     titles: new ContractVersionTitlesForm(version.titles),
     scope: new DistributionRightTermsForm(version.scope),
     paymentSchedule: FormList.factory(version.paymentSchedule, payment => {
@@ -58,7 +58,7 @@ function createContractTitleDetailControl(detail?: Partial<ContractTitleDetail>)
   const entity = createContractTitleDetail(detail);
   return {
     distributionRightIds: FormList.factory(entity.distributionRightIds),
-    price: new ContractVersionPriceForm(entity.price)
+    price: new PriceForm(entity.price)
   };
 }
 

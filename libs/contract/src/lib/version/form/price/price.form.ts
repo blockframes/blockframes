@@ -3,7 +3,7 @@ import { FormControl, Validators } from '@angular/forms';
 import { Price, createPrice } from '@blockframes/utils/common-interfaces/price';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 
-function createContractVersionPriceControls(price: Partial<Price>) {
+function createPriceControls(price: Partial<Price>) {
   const entity = createPrice(price)
   return {
     amount: new FormControl(entity.amount, [Validators.required, Validators.min(1)]),
@@ -14,10 +14,10 @@ function createContractVersionPriceControls(price: Partial<Price>) {
   }
 }
 
-export type ContractVersionPriceControl = ReturnType<typeof createContractVersionPriceControls>;
+export type PriceControl = ReturnType<typeof createPriceControls>;
 
-export class ContractVersionPriceForm extends FormEntity<ContractVersionPriceControl, Price> {
+export class PriceForm extends FormEntity<PriceControl, Price> {
   constructor(price: Partial<Price> = {}) {
-    super(createContractVersionPriceControls(price));
+    super(createPriceControls(price));
   }
 }

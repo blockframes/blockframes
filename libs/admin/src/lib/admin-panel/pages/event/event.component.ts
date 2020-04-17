@@ -49,11 +49,10 @@ export class EventComponent implements OnInit {
               return t;
             })
             .then(movie => this.movieService.getMoviePrivateConfig(movie.id))
-            .then(config => {
-              if (config !== false) {
-                this.moviePrivateConfig = config;
-              }
-              this.cdRef.markForCheck();
+            .then(config => this.moviePrivateConfig = config)
+            .then(_ => this.cdRef.markForCheck())
+            .catch(_ => {
+              this.snackBar.open('Error while loading movie private config', 'close', { duration: 5000 });
             });
           // @TODO (#2460)  Waiting for a decision on screening flow before uncomment
           /*this.eventService.getEventUrl(this.eventId).then(url => {

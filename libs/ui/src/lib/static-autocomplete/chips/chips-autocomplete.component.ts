@@ -16,21 +16,26 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Observable, Subscription } from 'rxjs';
 import { startWith, map } from 'rxjs/operators';
 import { FormList } from '@blockframes/utils/form';
+import { staticModels } from '@blockframes/utils/static-model';
 
 @Component({
-  selector: '[form]chips-autocomplete',
+  selector: '[form][model]chips-autocomplete',
   templateUrl: './chips-autocomplete.component.html',
   styleUrls: ['./chips-autocomplete.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ChipsAutocompleteComponent implements OnInit {
 
-  /** List of items displayed in the autocomplete */
-  @Input() items: SlugAndLabel[];
+  /**
+   * The static model to display
+   * @example
+   * <chips-autocomplete model="TERRITORIES" ...
+   */
+  @Input() model: string;
   @Input() selectable = true;
   @Input() removable = true;
   @Input() disabled = false;
-  @Input() placeholder = 'New Items';
+  @Input() placeholder = '';
 
   // The parent form to connect to
   @Input() form: FormList<string>;
@@ -44,10 +49,18 @@ export class ChipsAutocompleteComponent implements OnInit {
   public separatorKeysCodes: number[] = [ENTER, COMMA];
   public filteredItems: Observable<any[]>;
 
+  private items: SlugAndLabel[];
+
   @ViewChild('inputEl', { static: true }) inputEl: ElementRef<HTMLInputElement>;
   @ViewChild('auto', { static: true }) matAutocomplete: MatAutocomplete;
 
   ngOnInit() {
+    this.items = staticModels[this.model];
+
+    if (this.placeholder === '') {
+      this.placeholder = `${this.model[0].toUpperCase()}${this.model.slice(1).toLowerCase()}`;
+    }
+
     this.filteredItems = this.ctrl.valueChanges.pipe(
       startWith(''),
       map(value => (value ? this._filter(value) : this.items))

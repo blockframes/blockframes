@@ -194,14 +194,14 @@ service cloud.firestore {
 
     /// DISTRIBUTION RIGHTS RULES ///
     match /{path=**}/distributionRights/{rightId} {
-    	allow write: if true; // @TODO #1388 Only if contract.status  === 'unknown' ?
-      allow read: if true; // @TODO #1388 Only if licensee.orgId == currentUser.orgId || if licensor.orgId == currentUser.orgId
+    	allow write: if true; // @TODO #2542 Only if contract.status  === 'unknown' ?
+      allow read: if true; // @TODO #2542 Only if licensee.orgId == currentUser.orgId || if licensor.orgId == currentUser.orgId
     }
 
     /// EVENTS RULES ///
     match /events/{eventId} {
-    	allow write: if true; // @TODO #1388 Only if contract.status  === 'unknown' ?
-      allow read: if true; // @TODO #1388 Only if licensee.orgId == currentUser.orgId || if licensor.orgId == currentUser.orgId
+    	allow write: if true;
+      allow read: if true;
 	    match /{document=**} {
         allow read, write: if true;
       }    

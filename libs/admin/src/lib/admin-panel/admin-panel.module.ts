@@ -47,7 +47,7 @@ export const panelRoutes: Routes = [
   { path: '', redirectTo: 'overview', pathMatch: 'full' },
   { path: 'overview', component: OverviewComponent },
   { path: 'movies', component: MoviesComponent },
-  { path: 'rights', component: DistributionRightComponent },
+  { path: 'rights', component: DistributionRightsComponent },
   { path: 'rights/:movieId', component: DistributionRightsComponent },
   { path: 'right/:rightId/m/:movieId', component: DistributionRightComponent },
   { path: 'contracts', component: ContractsComponent },

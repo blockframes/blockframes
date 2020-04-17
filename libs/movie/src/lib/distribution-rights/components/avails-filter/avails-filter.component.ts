@@ -1,7 +1,7 @@
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { AvailsSearchForm } from '../../form/search.form';
-import { MediasSlug, MEDIAS_SLUG, staticModels } from '@blockframes/utils/static-model';
+import { MediasSlug, MEDIAS_SLUG } from '@blockframes/utils/static-model';
 import { MatDatepicker } from '@angular/material/datepicker';
 import { NativeDateModule } from '@angular/material/core'
 
@@ -15,8 +15,6 @@ export class AvailsFilterComponent {
   @Input() availsForm: AvailsSearchForm;
 
   public movieMedias: MediasSlug[] = MEDIAS_SLUG;
-
-  public countries = staticModels['TERRITORIES'];
 
   /* Flags for the Territories chip input */
   public visibleTerritory = true;

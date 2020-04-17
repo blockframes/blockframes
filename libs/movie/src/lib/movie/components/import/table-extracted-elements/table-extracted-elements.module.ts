@@ -27,6 +27,7 @@ import { TableExtractedRightsComponent } from './rights/rights.component';
 import { TableExtractedMoviesComponent } from './movies/movies.component';
 import { ViewImportErrorsComponent } from './view-import-errors/view-import-errors.component';
 import { RouterModule } from '@angular/router';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 @NgModule({
@@ -54,6 +55,7 @@ import { RouterModule } from '@angular/router';
     MatDialogModule,
     MatCheckboxModule,
     MatExpansionModule,
+    MatProgressSpinnerModule,
 
     // Librairies
     ImageReferenceModule,

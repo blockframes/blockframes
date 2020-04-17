@@ -8,7 +8,6 @@ import { Movie, createMovie, createMovieLegalDocuments } from '../+state';
 import { MovieSalesInfoForm } from './sales-info/sales-info.form';
 import { MovieVersionInfoForm } from './version-info/version-info.form';
 import { MovieFestivalPrizesForm } from './festival-prizes/festival-prizes.form';
-import { MovieSalesAgentDealForm } from './sales-agent-deal/sales-agent-deal.form';
 import { MovieReviewForm } from './review/review.form';
 import { MovieBudgetForm } from './budget/budget.form';
 import { LegalDocument } from '@blockframes/contract/contract/+state/contract.firestore';
@@ -69,7 +68,6 @@ function createMovieControls(movie: Partial<Movie>) {
       languages: MovieVersionInfoForm.factory(entity.versionInfo.languages, createLanguageControl)
     }),
     festivalPrizes: new MovieFestivalPrizesForm(entity.festivalPrizes),
-    salesAgentDeal: new MovieSalesAgentDealForm(entity.salesAgentDeal),
     budget: new MovieBudgetForm(entity.budget),
     movieReview: FormList.factory(entity.movieReview, review => new MovieReviewForm(review)),
     documents: new MovieLegalDocumentsForm(entity.documents),

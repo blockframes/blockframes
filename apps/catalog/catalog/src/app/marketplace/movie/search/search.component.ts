@@ -45,7 +45,6 @@ import { filterMovie, filterMovieWithAvails } from '@blockframes/distribution-ri
 import { CatalogSearchForm, AvailsSearchForm } from '@blockframes/distribution-rights/form/search.form';
 import { DistributionRightService } from '@blockframes/distribution-rights/+state';
 import { asyncFilter } from '@blockframes/utils/helpers';
-import { staticModels } from '@blockframes/utils/static-model';
 import { sortMovieBy } from '@blockframes/utils/akita-helper/sort-movie-by';
 import { StoreType } from '@blockframes/movie/+state/movie.firestore';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
@@ -93,7 +92,6 @@ export class MarketplaceSearchComponent implements OnInit {
   public movieCertifications: CertificationsLabel[] = CERTIFICATIONS_LABEL;
 
   /* Filter for autocompletion */
-  public countries = staticModels['TERRITORIES'];
   public languagesFilter$: Observable<string[]>;
   public resultFilter$: Observable<any[]>;
 
