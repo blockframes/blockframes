@@ -9,7 +9,7 @@ export default {
 
 export const movieCard = () => ({
   moduleMetadata: { imports: [MovieCardModule, ToolkitModule] },
-  name: 'Card',
+  name: 'Movie Card',
   component: CardComponent,
   template: `
     <storybook-toolkit>

@@ -1,5 +1,5 @@
-import { Component, Input, ChangeDetectionStrategy, HostListener } from '@angular/core';
-import { Movie, MovieMain } from '../../+state/movie.model';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Movie } from '../../+state/movie.model';
 import { ImgRef } from '@blockframes/utils/image-uploader';
 import { scaleIn } from '@blockframes/utils/animations/fade';
 
@@ -13,15 +13,13 @@ import { scaleIn } from '@blockframes/utils/animations/fade';
 export class CardComponent {
   public id: string;
   public image: ImgRef;
-  public main: MovieMain;
   public hasOverlay = false;
 
-  @Input() size: 'small' | 'medium' | 'large';
+  @Input() size: 'banner' | 'poster' | 'square';
   @Input() set movie(movie: Movie) {
     if (movie) {
       this.id = movie.id
       this.image = movie.promotionalElements.poster[0] && movie.promotionalElements.poster[0].media;
-      this.main = movie.main
     }
   }
 
