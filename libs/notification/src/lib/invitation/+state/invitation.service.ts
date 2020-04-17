@@ -44,8 +44,7 @@ export class InvitationService extends CollectionService<InvitationState> {
     const organization = await this.orgService.getValue(organizationId);
     const userPromises = userEmails.map(async userEmail => {
       // Get a user or create a ghost user when needed
-      const invitationId = this.db.createId();
-      return this.authService.getOrCreateUserByMail(userEmail, organization.denomination.full, invitationId);
+      return this.authService.getOrCreateUserByMail(userEmail, organization.denomination.full);
     });
     const users = await Promise.all(userPromises);
 

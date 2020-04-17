@@ -5,7 +5,7 @@ import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { ImgRef, createImgRef } from '@blockframes/utils/image-uploader';
 import { toDate } from '@blockframes/utils/helpers';
 
-export interface NotificationState extends EntityState<Notification>, ActiveState<string> {}
+export interface NotificationState extends EntityState<Notification>, ActiveState<string> { }
 
 const initialState = {
   active: null
@@ -19,7 +19,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
   }
 
   akitaPreAddEntity(notification: Notification): Notification {
-    const displayName = `${notification.user.firstName} ${notification.user.lastName}`;
+    const displayName = notification.user ? `${notification.user.firstName} ${notification.user.lastName}` : 'Someone';
     const orgName = notification.organization?.denomination.full;
     const movieTitle = notification.movie?.title.international;
     switch (notification.type) {

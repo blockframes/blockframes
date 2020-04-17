@@ -34,7 +34,7 @@ function notifUser(toUserId: string, notificationType: NotificationType, org: Or
 }
 
 /** Remove the user's orgId and user's role in permissions. */
-async function removeMemberPermissionsAndOrgId(user :PublicUser) {
+async function removeMemberPermissionsAndOrgId(user: PublicUser) {
   return db.runTransaction(async tx => {
     const userDoc = db.doc(`users/${user.uid}`);
     const permissionsDoc = db.doc(`permissions/${user.orgId}`);
@@ -60,7 +60,7 @@ async function notifyOnOrgMemberChanges(before: OrganizationDocument, after: Org
     const notifications = after.userIds.map(userId => notifUser(userId, 'memberAddedToOrg', after, userAdded));
     return triggerNotifications(notifications);
 
-  // Member removed
+    // Member removed
   } else if (before.userIds.length > after.userIds.length) {
     const userRemovedId = difference(before.userIds, after.userIds)[0];
     const userSnapshot = await db.doc(`users/${userRemovedId}`).get();
@@ -80,7 +80,7 @@ export function onOrganizationCreate(
   const org = snap.data();
   const orgID = context.params.orgID;
 
-  if (!org || !org.name) {
+  if (!org || !org.denomination || !org.denomination.full) {
     console.error('Invalid org data:', org);
     throw new Error('organization update function got invalid org data');
   }
@@ -89,7 +89,7 @@ export function onOrganizationCreate(
     // Send a mail to c8 admin to accept the organization
     sendMail(organizationCreated(org.id)),
     // Update algolia's index
-    storeSearchableOrg(orgID, org.name)
+    storeSearchableOrg(orgID, org.denomination.full)
   ]);
 }
 
@@ -148,10 +148,10 @@ export async function onOrganizationUpdate(
     const adminEns = emailToEnsDomain(admin.email, RELAYER_CONFIG.baseEnsDomain);
     const provider = getProvider(RELAYER_CONFIG.network);
     const adminEthAddress = await precomputeEthAddress(adminEns, provider, RELAYER_CONFIG.factoryContract);
-    const orgEthAddress =  await relayerDeployOrganizationLogic(adminEthAddress, RELAYER_CONFIG);
+    const orgEthAddress = await relayerDeployOrganizationLogic(adminEthAddress, RELAYER_CONFIG);
 
     console.log(`org ${orgENS} deployed @ ${orgEthAddress}!`);
-    const res = await relayerRegisterENSLogic({name: orgENS, ethAddress: orgEthAddress}, RELAYER_CONFIG);
+    const res = await relayerRegisterENSLogic({ name: orgENS, ethAddress: orgEthAddress }, RELAYER_CONFIG);
     console.log('Org deployed and registered!', orgEthAddress, res['link'].transactionHash);
   }
 
