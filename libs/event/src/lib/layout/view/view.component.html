@@ -1,6 +1,31 @@
-<header>
-  
-</header>
-<section>
-  
-</section>
+<ng-container *ngIf="event$ | async as event">
+  <header [backgroundAsset]="">
+    <div fxLayout="column" fxLayoutAlign="space-around center" fxLayoutGap="8px">
+      <h1>{{ event.title }}</h1>
+      <p>{{ event | eventRange }}</p>
+    </div>
+    <ng-container *ngIf="event.isPrivate; else isPublic">
+      <h6>Private {{ event.type }}</h6>
+      <div fxLayout>
+        <button mat-button (click)="accept()">
+          <mat-icon svgIcon="check_circle"></mat-icon>
+          <span>Accept Invitation</span>
+        </button>
+        <button mat-button (click)="refuse()">
+          <mat-icon svgIcon="close"></mat-icon>
+          <span>Refuse Invitation</span>
+        </button>
+      </div>
+    </ng-container>
+    <ng-template #isPublic>
+      <h6>Public {{ event.type }}</h6>
+      <button mat-button (click)="addToCalendar()">
+        <mat-icon svgIcon="calendar"></mat-icon>
+        <span>Add to my calendar</span>
+      </button>
+    </ng-template>
+  </header>
+  <section>
+
+  </section>
+</ng-container>
