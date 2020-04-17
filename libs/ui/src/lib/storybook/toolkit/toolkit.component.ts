@@ -18,6 +18,7 @@ export class ToolkitComponent {
 
   constructor(icons: IconService, private themeService: ThemeService, private cdr: ChangeDetectorRef) {
     this.themeService.theme = 'light';
+    icons.init();
   }
 
   setTheme({ checked }: MatSlideToggleChange) {

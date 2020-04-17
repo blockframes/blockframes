@@ -64,6 +64,7 @@
   --warn: #{mat-color($warn, 500)};
   // Background
   --background-disabled-button: #{mat-color($background, disabled-button)};
+  --background: #{mat-color($background, background, 0.5)};
   // Foreground
   --foreground-divider: #{mat-color($foreground, divider)};
 }
