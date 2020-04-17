@@ -32,7 +32,9 @@ const queryMovieAnalytics = `
   ORDER BY
     event_name, event_date
 `
-
+/** Query to get analytics of the number of views for the festival app event sessions pages
+ * for an array of eventId
+ */
 const queryEventAnalytics = `
 SELECT
   event_name as event_name,
@@ -44,7 +46,11 @@ FROM
   \`${bigQueryAnalyticsTable}*\`,
   UNNEST(event_params) AS params
 WHERE
-    (event_name = @pageView AND key = 'page_path' AND REGEXP_EXTRACT(value.string_value, '.*/marketplace/event/([^/]+)/session') in UNNEST(@eventIds))
+    (
+      event_name = @pageView
+      AND key = 'page_path'
+      AND REGEXP_EXTRACT(value.string_value, '.*/marketplace/event/([^/]+)/session') in UNNEST(@eventIds)
+    )
 
 GROUP BY
   event_name, event_date, eventId, eventIdPage, userId
