@@ -25,6 +25,7 @@ import { onDocumentPermissionCreate } from './permissions';
 import { onContractWrite } from './contract';
 import * as privateConfig from './privateConfig';
 import { createNotificationsForEventsToStart } from './internals/invitations/events';
+import { onFileUploadEvent } from './internals/resize-images';
 
 /**
  * Trigger: when user creates an account.
@@ -210,3 +211,6 @@ export const relayerRegister = functions.runWith({ timeoutSeconds: 540 }).https
 
 export const relayerSend = functions.https
   .onCall((data, context) => logErrors(relayerSendLogic(data, RELAYER_CONFIG)));
+
+
+export const onFileUpload = functions.storage.object().onChange((event : any) => onFileUploadEvent(event))
