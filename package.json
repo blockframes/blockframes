@@ -96,7 +96,7 @@
     "@sentry/node": "^5.5.0",
     "@types/date-fns": "^2.6.0",
     "@types/sendgrid": "^4.3.0",
-    "akita-ng-fire": "^2.0.0-rc.4",
+    "akita-ng-fire": "^2.0.0-rc.5",
     "algoliasearch": "^3.33.0",
     "angular-calendar": "^0.28.5",
     "apexcharts": "^3.15.3",

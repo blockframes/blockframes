@@ -4,7 +4,7 @@ import { signInAndNavigateToMain } from "../../support/utils/utils";
 import { TunnelMainPage, TunnelStorylinePage, TunnelCreditsPage, TunnelSummaryPage, TitlesDetailsPage, TitlesListPage, TitlesActivityPage } from "../../support/pages/dashboard";
 import { clearDataAndPrepareTest } from "@blockframes/e2e/utils/functions";
 
-const NAVIGATION = ['Summary', 'Summary & Sumbit'];
+const NAVIGATION = ['Summary', 'Summary & Submission'];
 const PRODUCTION_STATUS = 'Completed';
 const TITLES = ['Lagerfeld Confidential', 'Lagerfeld Confidentiel'];
 const DIRECTORS = ['Rodolphe', 'Marconi'];

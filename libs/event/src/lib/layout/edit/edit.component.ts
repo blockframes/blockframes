@@ -1,7 +1,6 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { EventForm } from '../../form/event.form';
-import { Event } from '../../+state/event.model';
 import { EventService } from '../../+state/event.service';
 import { InvitationToAnEvent }  from '@blockframes/invitation/+state/invitation.firestore.ts';
 import { InvitationService }  from '@blockframes/invitation/+state/invitation.service';
@@ -12,12 +11,14 @@ import { getPublicOrg } from '@blockframes/organization/+state/organization.mode
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { AuthQuery } from '@blockframes/auth/+state';
 import { PublicUser } from '@blockframes/user/types';
+import { scaleIn } from '@blockframes/utils/animations/fade';
 
 @Component({
   selector: 'event-edit',
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  animations: [scaleIn],
+  changeDetection: ChangeDetectionStrategy.Default  // required for changes on "pristine" for the save button
 })
 export class EventEditComponent {
 
@@ -33,13 +34,16 @@ export class EventEditComponent {
     private router: Router,
     private route: ActivatedRoute
   ) { }
-
+  
   get meta() {
     return this.form.get('meta');
   }
 
   save() {
-    this.service.update(this.form.value);
+    if (this.form.valid && this.form.dirty) {
+      this.service.update(this.form.value);
+      this.form.markAsPristine();
+    }
   }
 
   async remove() {

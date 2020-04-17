@@ -1,4 +1,4 @@
-import { Component, Input, Optional, Self, ElementRef, OnDestroy, ContentChild } from '@angular/core';
+import { Component, Input, Optional, Self, ElementRef, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, NgControl, ControlValueAccessor } from '@angular/forms';
 import { FocusMonitor } from '@angular/cdk/a11y';
 import { Subject } from 'rxjs';

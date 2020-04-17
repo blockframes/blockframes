@@ -1,11 +1,18 @@
-<mat-list>
-  <ng-container *ngFor="let invitation of invitations">
-    <ng-template
-      [ngTemplateOutlet]="itemTemplate || default"
-      [ngTemplateOutletContext]="{ $implicit: invitation }"
-    ></ng-template>
-  </ng-container>
-</mat-list>
+<mat-form-field>
+  <mat-label>Search for a guest</mat-label>
+  <mat-icon matPrefix svgIcon="search_table"></mat-icon>
+  <input matInput [formControl]="searchControl" placeholder="Search for a guest"/>
+</mat-form-field>
+<cdk-virtual-scroll-viewport [itemSize]="72">
+  <mat-list>
+    <ng-container *cdkVirtualFor="let invitation of search$ | async; trackBy: trackBy">
+      <ng-template
+        [ngTemplateOutlet]="itemTemplate || default"
+        [ngTemplateOutletContext]="{ $implicit: invitation }"
+      ></ng-template>
+    </ng-container>
+  </mat-list>
+</cdk-virtual-scroll-viewport>
 
 <ng-template #default let-invitation>
   <invitation-guest-item [invitation]="invitation"></invitation-guest-item>

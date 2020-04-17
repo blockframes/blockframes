@@ -1,5 +1,4 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { CalendarEvent } from 'angular-calendar';
 import { Event } from '../+state/event.model';
 
 function minute(amount: number) {
@@ -18,7 +17,7 @@ export class EventSizePipe implements PipeTransform {
     }
     if (event.start && event.end) {
       const delta = event.end.getTime() - event.start.getTime();
-      return delta <= minute(60) ? 'small' : 'large';
+      return delta <= minute(90) ? 'small' : 'large';
     }
   }
 }

@@ -161,7 +161,6 @@ export class CartService extends CollectionService<CartState> {
       .wishlist.filter(wishlist => wishlist.status === 'pending');
 
     if (!orgState.wishlist || orgState.wishlist.length <= 0) {
-      console.log({ wishlist: [wishlistFactory(movie.id)] });
       this.organizationService.update({ ...orgState, wishlist: [wishlistFactory(movie.id)] });
       // If the organization has sent wishlist but no pending
     } else if (pendingWishlist.length === 0) {

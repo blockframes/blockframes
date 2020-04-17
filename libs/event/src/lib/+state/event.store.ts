@@ -13,13 +13,5 @@ export class EventStore extends EntityStore<EventState> {
   constructor(private authQuery: AuthQuery, private orgQuery: OrganizationQuery) {
     super();
   }
-
-  akitaPreAddEntity = (event) => {
-    return createCalendarEvent(event, this.authQuery.userId, this.orgQuery.getActiveId());
-  }
-
-  akitaPreUpdateEntity = (prev, next) => {
-    return createCalendarEvent(next, this.authQuery.userId, this.orgQuery.getActiveId());
-  }
 }
 

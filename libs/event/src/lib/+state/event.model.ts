@@ -11,7 +11,7 @@ export interface Event<Meta extends EventMeta = any> extends EventBase<Date, Met
   end: Date;
   meta: Meta;
 }
-export function createEvent<Meta extends EventMeta>(params: Partial<Event<Meta>> = {}): Event<Meta> {
+export function createEvent<Meta extends EventMeta>(params: Partial<EventBase<any, Meta>> = {}): Event<Meta> {
   const meta: any =
     isMeeting(params) ? createMeeting(params.meta)
     : isScreening(params) ? createScreening(params.meta)
@@ -62,8 +62,7 @@ export function createScreening(screening: Partial<Screening>): Screening {
 }
 
 // Calendar Event
-export function createCalendarEvent(event: Event, currentUserId: string, currentOrgId: string): Event {
-  const isOwner = event.ownerId === currentUserId || event.ownerId === currentOrgId;
+export function createCalendarEvent<M>(event: Partial<EventBase<any, M>>, isOwner: boolean): Event<M> {
   return {
     ...createEvent(event),
     isOwner,
