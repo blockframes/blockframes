@@ -523,7 +523,7 @@
           "style": "scss"
         }
       },
-      "root": "",
+      "root": "apps/catalog/catalog",
       "sourceRoot": "apps/catalog/catalog/src",
       "prefix": "catalog",
       "architect": {
