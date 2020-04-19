@@ -6,12 +6,12 @@
     </div>
     <ng-container *ngIf="event.isPrivate; else isPublic">
       <h6>Private {{ event.type }}</h6>
-      <div fxLayout>
-        <button mat-button (click)="accept()">
+      <div *ngIf="invitation$ | async as invitation" fxLayout>
+        <button mat-button (click)="accept(invitation)">
           <mat-icon svgIcon="check_circle"></mat-icon>
           <span>Accept Invitation</span>
         </button>
-        <button mat-button (click)="refuse()">
+        <button mat-button (click)="refuse(invitation)">
           <mat-icon svgIcon="close"></mat-icon>
           <span>Refuse Invitation</span>
         </button>
