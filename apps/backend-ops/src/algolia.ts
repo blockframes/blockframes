@@ -43,8 +43,7 @@ export async function upgradeAlgoliaMovies() {
     ],
     attributesForFaceting: [
       // filters
-      'filterOnly(budget.from)',
-      'filterOnly(budget.to)',
+      'filterOnly(budget)',
 
       // searchable facets
       'searchable(orgName)',
@@ -57,6 +56,7 @@ export async function upgradeAlgoliaMovies() {
       'languages.caption',
       'originCountries',
       'status',
+      'storeType',
     ],
   };
   await setIndexConfiguration(algolia.indexNameMovies, config, process.env['ALGOLIA_API_KEY']);

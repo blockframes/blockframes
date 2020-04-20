@@ -41,12 +41,8 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
 
     this.movieSearchResults$ = this.filterForm.valueChanges.pipe(
       debounceTime(300),
-      tap(a => console.log('value changes', a)),
       filter(() => !this.filterForm.isEmpty()),
-      tap(() => console.log('not empty !')),
       distinctUntilChanged(),
-      tap(() => console.log('value is different !')),
-      tap(a => console.log(a)),
       switchMap(() => this.filterForm.search()),
       pluck('hits'),
       map(result => result.map(movie => movie.objectID)),
