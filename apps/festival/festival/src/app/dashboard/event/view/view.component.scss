@@ -1,3 +1,5 @@
+@import '~@angular/flex-layout/mq';
+
 :host {
   display: block;
   padding: 24px;
@@ -25,4 +27,10 @@ bf-table-filter {
 
 .analytics {
   margin-bottom: 300px;
+}
+
+@include layout-bp(xs) {
+  mat-card {
+    width: 300px;
+  }
 }
