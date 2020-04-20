@@ -113,7 +113,7 @@ export function userRequestedToJoinYourOrg(request: RequestToJoinOrganization): 
   return { to: request.adminEmail, templateId: templateIds.joinYourOrg, data };
 }
 
-/** Generates a transactional email request for user invited to an organization. */
+/** Generates an email request for user invited to an organization. */
 export function userInvitedToEvent(email: string, eventId: string): EmailTemplateRequest {
   const data = {};
   return { to: email, templateId: templateIds.userInvitedToEvent, data };
@@ -133,8 +133,8 @@ const organizationCreatedTemplate = (orgId: string) =>
 /**
  * @TODO (#2539)
  * This method is currently unused but we keep it to future uses.
- * @param orgId 
- * @param appId 
+ * @param orgId
+ * @param appId
  */
 /*const organizationRequestAccessToAppTemplate = (orgId: string, appId: string) =>
   `

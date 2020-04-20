@@ -4,6 +4,8 @@ import { NotificationDocument, OrganizationDocument } from "../../data/types";
 import { createNotification, triggerNotifications } from "../../notification";
 import { db } from "../firebase";
 import { getAdminIds } from "../../data/internals";
+import { userInvitedToEvent } from '../../assets/mail-templates';
+import { sendMailFromTemplate } from '../email';
 
 /**
  * Handles notifications and emails when an invitation to an event is created.
@@ -21,6 +23,7 @@ export async function onInvitationToAnEventCreate({
   let recipient: string;
   if (!!toUser) {
     recipient = toUser.email;
+    await sendMailFromTemplate(userInvitedToEvent(recipient, eventId));
   } else if (!!toOrg) {
     /** Attendee is only an user or an email for now */
     throw new Error('Cannot invite an org to an event for now. Not implemented.');
