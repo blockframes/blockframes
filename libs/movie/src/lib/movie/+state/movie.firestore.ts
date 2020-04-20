@@ -76,7 +76,7 @@ export const storeStatus = {
 export type StoreStatus = keyof typeof storeStatus;
 export type StoreStatusValue = typeof storeStatus[StoreStatus];
 
-export interface EventAnalytics {
+export interface MovieEventAnalytics {
   event_date: string,
   event_name: AnalyticsEvents,
   hits: number,
@@ -86,16 +86,16 @@ export interface EventAnalytics {
 export interface MovieAnalytics {
   movieId: string,
   addedToWishlist: {
-    current: EventAnalytics[],
-    past: EventAnalytics[]
+    current: MovieEventAnalytics[],
+    past: MovieEventAnalytics[]
   },
   movieViews: {
-    current: EventAnalytics[],
-    past: EventAnalytics[]
+    current: MovieEventAnalytics[],
+    past: MovieEventAnalytics[]
   },
   promoReelOpened: {
-    current: EventAnalytics[],
-    past: EventAnalytics[]
+    current: MovieEventAnalytics[],
+    past: MovieEventAnalytics[]
   }
 }
 
