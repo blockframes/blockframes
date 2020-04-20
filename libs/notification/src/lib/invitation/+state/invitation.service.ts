@@ -7,6 +7,8 @@ import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { AuthService } from '@blockframes/auth/+state/auth.service';
 import { InvitationDocument } from './invitation.firestore';
 import { toDate } from '@blockframes/utils/helpers';
+import { AngularFireFunctions } from '@angular/fire/functions';
+
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'invitations' })
@@ -16,6 +18,7 @@ export class InvitationService extends CollectionService<InvitationState> {
     private authQuery: AuthQuery,
     private authService: AuthService,
     private orgService: OrganizationService,
+    private functions: AngularFireFunctions
   ) {
     super(store);
   }
@@ -86,5 +89,10 @@ export class InvitationService extends CollectionService<InvitationState> {
 
   public isInvitationForMe(invitation: Invitation) : Boolean {
     return invitation.toOrg?.id === this.authQuery.orgId || invitation.toUser?.uid === this.authQuery.userId
+  }
+
+  public sendEmailInvitation(email: string) {
+    const mail = this.functions.httpsCallable('userInvitedToEvent');
+    return mail(email);
   }
 }

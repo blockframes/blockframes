@@ -4,7 +4,7 @@ import { NotificationDocument, OrganizationDocument } from "../../data/types";
 import { createNotification, triggerNotifications } from "../../notification";
 import { db } from "../firebase";
 import { getAdminIds } from "../../data/internals";
-import { userInvitedToEvent } from '../../assets/mail-templates';
+import { welcomeMessage } from '../../templates/mail';
 import { sendMailFromTemplate } from '../email';
 
 /**
@@ -19,11 +19,15 @@ export async function onInvitationToAnEventCreate({
   docId
 }: InvitationToAnEvent) {
   const eventId = docId;
+  console.log('event.ts fonction onInvitationToAnEventCreate');
 
   let recipient: string;
   if (!!toUser) {
     recipient = toUser.email;
-    await sendMailFromTemplate(userInvitedToEvent(recipient, eventId));
+    console.log('events.ts : avant l envoi de l email');
+    // await sendMailFromTemplate(userInvitedToEvent(recipient, eventId));
+    await sendMailFromTemplate(welcomeMessage(recipient));
+    console.log('event.ts : email envoyé');
   } else if (!!toOrg) {
     /** Attendee is only an user or an email for now */
     throw new Error('Cannot invite an org to an event for now. Not implemented.');
@@ -181,7 +185,9 @@ export async function onInvitationToAnEventUpdate(
   after: InvitationDocument,
   invitation: InvitationToAnEvent
 ): Promise<any> {
+  console.log('event.ts fonction on invitationToAnEventUpdate avant if')
   if (wasCreated(before, after)) {
+    console.log('events.ts fonction on invitationToAnEventUpdate dans if');
     return onInvitationToAnEventCreate(invitation);
   } else if (wasAccepted(before!, after)) {
     return onInvitationToAnEventAccepted(invitation);
