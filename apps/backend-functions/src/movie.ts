@@ -5,8 +5,8 @@ import { triggerNotifications, createNotification } from './notification';
 import { flatten, isEqual } from 'lodash';
 import { getDocument, getOrganizationsOfMovie } from './data/internals';
 import { removeAllSubcollections } from './utils';
-import { storeSearchableMovie, deleteSearchableMovie } from './internals/algolia';
-import { centralOrgID } from './environments/environment';
+import { storeSearchableMovie, deleteObject } from './internals/algolia';
+import { centralOrgID, algolia } from './environments/environment';
 
 /** Create a notification with user and movie. */
 function notifUser(toUserId: string, notificationType: NotificationType, movie: MovieDocument, user: PublicUser) {
@@ -108,7 +108,7 @@ export async function onMovieDelete(
   await removeAllSubcollections(snap, batch);
 
   // Update algolia's index
-  await deleteSearchableMovie(context.params.movieId);
+  await deleteObject(algolia.indexNameMovies, context.params.movieId);
 
   console.log(`removed sub colletions of ${movie.id}`);
   await batch.commit();

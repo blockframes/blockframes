@@ -1,13 +1,42 @@
-import algoliasearch from 'algoliasearch';
+import algoliasearch, { IndexSettings } from 'algoliasearch';
 import { algolia } from '../environments/environment';
-import { MovieDocument } from '../data/types';
+import { MovieDocument, PublicUser } from '../data/types';
 import { LanguagesSlug } from '@blockframes/utils/static-model';
 
-const indexOrganizationsBuilder = (adminKey?: string) => {
+const indexBuilder = (indexName: string, adminKey?: string) => {
   const client = algoliasearch(algolia.appId, adminKey || algolia.adminKey);
-  const INDEX_NAME_ORGANIZATIONS = algolia.indexNameOrganizations;
-  return client.initIndex(INDEX_NAME_ORGANIZATIONS);
+  return client.initIndex(indexName);
 };
+
+export function deleteObject(indexName: string, objectId: string): Promise<any> {
+  if (!algolia.adminKey) {
+    console.warn('No algolia id set, assuming dev config: skipping');
+    return Promise.resolve(true);
+  }
+
+  return indexBuilder(indexName).deleteObject(objectId);
+}
+
+export function clearIndex(indexName: string, adminKey?: string) {
+  if (!algolia.adminKey && !adminKey) {
+    console.warn('No algolia id set, assuming dev config: skipping');
+    return Promise.resolve(true);
+  }
+
+  return indexBuilder(indexName, adminKey).clearIndex()
+}
+
+export function setIndexConfiguration(indexName: string, config: IndexSettings, adminKey?: string) {
+  if (!algolia.adminKey && !adminKey) {
+    console.warn('No algolia id set, assuming dev config: skipping');
+    return Promise.resolve(true);
+  }
+
+  return indexBuilder(indexName, adminKey).setSettings(config);
+}
+// ------------------------------------
+//           ORGANIZATIONS
+// ------------------------------------
 
 export function storeSearchableOrg(orgId: string, name: string, adminKey?: string): Promise<any> {
   if (!algolia.adminKey && !adminKey) {
@@ -15,57 +44,12 @@ export function storeSearchableOrg(orgId: string, name: string, adminKey?: strin
     return Promise.resolve(true);
   }
 
-  return indexOrganizationsBuilder(adminKey).saveObject({ objectID: orgId, name });
+  return indexBuilder(algolia.indexNameOrganizations, adminKey).saveObject({ objectID: orgId, name });
 }
 
-export function deleteSearchableOrg(orgId: string): Promise<any> {
-  if (!algolia.adminKey) {
-    console.warn('No algolia id set, assuming dev config: skipping');
-    return Promise.resolve(true);
-  }
-
-  return indexOrganizationsBuilder().deleteObject(orgId);
-}
-
-const indexMoviesBuilder = (adminKey?: string) => {
-  const client = algoliasearch(algolia.appId, adminKey || algolia.adminKey);
-  const INDEX_NAME_MOVIES = algolia.indexNameMovies;
-  return client.initIndex(INDEX_NAME_MOVIES);
-};
-
-/** This function will configure the Movie index in order for the search ui pages to work correctly with algolia */
-export function setMovieConfiguration(adminKey?: string) {
-  if (!algolia.adminKey && !adminKey) {
-    console.warn('No algolia id set, assuming dev config: skipping');
-    return Promise.resolve(true);
-  }
-
-  return indexMoviesBuilder(adminKey).setSettings({
-    searchableAttributes: [
-      'title.international',
-      'title.original',
-      'directors',
-      'keywords'
-    ],
-    attributesForFaceting: [
-      // filters
-      'filterOnly(budget.from)',
-      'filterOnly(budget.to)',
-
-      // searchable facets
-      'searchable(orgName)',
-
-      // other facets
-      'genres',
-      'languages.original',
-      'languages.dubbed',
-      'languages.subtitle',
-      'languages.caption',
-      'originCountries',
-      'status',
-    ],
-  });
-}
+// ------------------------------------
+//               MOVIES
+// ------------------------------------
 
 export function storeSearchableMovie(
   movie: MovieDocument,
@@ -78,7 +62,7 @@ export function storeSearchableMovie(
   }
 
   try {
-    return indexMoviesBuilder(adminKey).saveObject({
+    return indexBuilder(algolia.indexNameMovies, adminKey).saveObject({
       objectID: movie.id,
 
       // searchable keys
@@ -120,11 +104,27 @@ export function storeSearchableMovie(
   }
 }
 
-export function deleteSearchableMovie(movieId: string): Promise<any> {
-  if (!algolia.adminKey) {
+// ------------------------------------
+//                USERS
+// ------------------------------------
+
+export function storeSearchableUser(user: PublicUser, adminKey?: string): Promise<any> {
+  if (!algolia.adminKey && !adminKey) {
     console.warn('No algolia id set, assuming dev config: skipping');
     return Promise.resolve(true);
   }
 
-  return indexMoviesBuilder().deleteObject(movieId);
+  try {
+    return indexBuilder(algolia.indexNameUsers, adminKey).saveObject({
+      objectID: user.uid,
+      email: user.email,
+      firstName: user.firstName || '',
+      lastName: user.lastName || '',
+      avatar: user.avatar || '',
+    });
+  } catch (error) {
+    console.error(`\n\n\tFailed to format the movie ${user.uid} into an algolia record : skipping\n\n`);
+    console.error(error);
+    return new Promise(res => res(true));
+  }
 }

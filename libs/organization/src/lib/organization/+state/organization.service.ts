@@ -81,12 +81,6 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     return this.add(newOrganization);
   }
 
-  /** Returns a list of organizations whose part of name match with @param prefix */
-  public async getOrganizationsByName(prefix: string): Promise<Organization[]> {
-    const call = this.functions.httpsCallable('findOrgByName');
-    return call({ prefix }).toPromise().then(matchingOrganizations => matchingOrganizations.data);
-  }
-
   // TODO(#679): somehow the updateActiveMembers array don't filter correctly
   // the id out of the activeMembersArray.
   /* public async deleteActiveSigner(member: OrganizationMember) {

@@ -37,7 +37,8 @@ export const algolia = {
   appId: '8E9YO1I9HB',
   searchKey: '4a2990a293c0ee0bfde9ebd66270a47f',
   indexNameOrganizations: 'staging_orgs',
-  indexNameMovies: 'staging_movies'
+  indexNameMovies: 'staging_movies',
+  indexNameUsers: 'staging_users',
 };
 
 // Ethereum
