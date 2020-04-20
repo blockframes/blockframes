@@ -54,10 +54,10 @@ const prepare = [
 export const routeAnimation = trigger('routeAnimation', [
     transition('* => home', [
         ...prepare,
-        query(':enter', [ style({ transform: 'translateY(100vh)', opacity: 1 }) ]),
+        query(':enter', [ style({ transform: 'translateY(100vh)', opacity: 1 }) ], { optional: true }),
         group([
             query(':leave', [ animate('200ms ease-out', style({ opacity: 0 })) ], { optional: true }),
-            query(':enter', [ animate(`600ms ${Easing.easeOutExpo}`, style({ transform: 'translateY(0)', opacity: 1 })) ])
+            query(':enter', [ animate(`600ms ${Easing.easeOutExpo}`, style({ transform: 'translateY(0)', opacity: 1 })) ], { optional: true })
         ]),
     ]),
     // List <=> List
