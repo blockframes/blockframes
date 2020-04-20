@@ -35,9 +35,10 @@ export const onUserCreate = functions.auth
   .user()
   .onCreate(logErrors(users.onUserCreate));
 
-/** Trigger: REST call to find a list of users by email. */
-export const findUserByMail = functions.https
-  .onCall(logErrors(users.findUserByMail));
+export const onUserUpdate = onDocumentUpdate(
+  '/users/{userID}',
+  users.onUserUpdate
+);
 
 /** Trigger: REST call to send a verify email to a user. */
 export const sendVerifyEmail = functions.https
@@ -53,10 +54,6 @@ export const sendWishlistEmails = functions.https
 
 /** Trigger: REST call when an user contacts blockframes admin and send them an email. */
 export const sendUserContactMail = functions.https.onCall(logErrors(users.sendUserMail));
-
-/** Trigger: REST call to find a list of organizations by name. */
-export const findOrgByName = functions.https
-  .onCall(logErrors(users.findOrgByName));
 
 /** Trigger: REST call to get or create a user. */
 export const getOrCreateUserByMail = functions.https.onCall(logErrors(users.getOrCreateUserByMail));

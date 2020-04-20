@@ -4,7 +4,8 @@ import { generate as passwordGenerator } from 'generate-password';
 import { auth, db } from './internals/firebase';
 import { userInvite, userVerifyEmail, welcomeMessage, userResetPassword, sendWishlist, sendWishlistPending, sendDemoRequestMail, sendContactEmail } from './templates/mail';
 import { sendMailFromTemplate, sendMail } from './internals/email';
-import { RequestDemoInformations } from './data/types';
+import { RequestDemoInformations, PublicUser } from './data/types';
+import { storeSearchableUser } from './internals/algolia';
 
 type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
@@ -12,11 +13,6 @@ type CallableContext = functions.https.CallableContext;
 interface UserProposal {
   uid: string;
   email: string;
-}
-
-interface OrgProposal {
-  id: string;
-  name: string;
 }
 
 export const startVerifyEmailFlow = async (data: any, context?: CallableContext) => {
@@ -63,7 +59,7 @@ export const onUserCreate = async (user: UserRecord) => {
   const userDocRef = db.collection('users').doc(user.uid);
 
   // transaction to UPSERT the user doc
-  return db.runTransaction(async tx => {
+  await db.runTransaction(async tx => {
     const userDoc = await tx.get(userDocRef);
 
     if (userDoc.exists) {
@@ -76,68 +72,22 @@ export const onUserCreate = async (user: UserRecord) => {
       tx.set(userDocRef, { email, uid });
     }
   });
+
+  // update Algolia index
+  const userSnap = await userDocRef.get();
+  const userData = userSnap.data() as PublicUser;
+  return storeSearchableUser(userData);
 };
 
-export const findUserByMail = async (data: any, context: CallableContext): Promise<UserProposal[]> => {
-  const prefix: string = decodeURIComponent(data.prefix);
+export async function onUserUpdate(
+  change: functions.Change<FirebaseFirestore.DocumentSnapshot>,
+  context: functions.EventContext
+): Promise<any> {
+  const after = change.after.data() as PublicUser;
 
-  // Leave if the prefix is too short (do not search every users in the universe).
-  if (prefix.length < 2) {
-    return [];
-  }
-
-  // String magic to figure out a prefixEnd
-  // Say prefix is 'aaa'. We want to search all strings between 'aaa' (prefix) and 'aab' (prefixEnd)
-  // this will match: 'aaa', 'aaaa', 'aaahello', 'aaazerty', etc.
-  const incLast: string = String.fromCharCode(prefix.slice(-1).charCodeAt(0) + 1);
-  const prefixEnd: string = prefix.slice(0, -1) + incLast;
-
-  return db
-    .collection('users')
-    .where('email', '>=', prefix)
-    .where('email', '<', prefixEnd)
-    .get()
-    .then(query => {
-      // leave if there are too many results.
-      if (query.size > 10) {
-        return [];
-      }
-
-      return query.docs.map(doc => ({ uid: doc.id, email: doc.data().email }));
-    });
-};
-
-export const findOrgByName = async (data: any, context: CallableContext): Promise<OrgProposal[]> => {
-  const prefix: string = decodeURIComponent(data.prefix);
-
-  // Leave if the prefix is too short (do not search every users in the universe).
-  if (prefix.length < 2) {
-    return [];
-  }
-
-  // String magic to figure out a prefixEnd
-  // Say prefix is 'aaa'. We want to search all strings between 'aaa' (prefix) and 'aab' (prefixEnd)
-  // this will match: 'aaa', 'aaaa', 'aaahello', 'aaazerty', etc.
-  const incLast: string = String.fromCharCode(prefix.slice(-1).charCodeAt(0) + 1);
-  const prefixEnd: string = prefix.slice(0, -1) + incLast;
-
-  return db
-    .collection('orgs')
-    .where('name', '>=', prefix)
-    .where('name', '<', prefixEnd)
-    .get()
-    .then(matchingOrgs => {
-      // leave if there are too many results.
-      if (matchingOrgs.size > 10) {
-        return [];
-      }
-
-      return matchingOrgs.docs.map(matchingOrg => ({
-        id: matchingOrg.id,
-        name: matchingOrg.data().name
-      }));
-    });
-};
+  // update Algolia index
+  return storeSearchableUser(after);
+}
 
 const generatePassword = () =>
   passwordGenerator({

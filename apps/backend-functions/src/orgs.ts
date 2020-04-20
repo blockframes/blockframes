@@ -6,12 +6,12 @@ import { difference } from 'lodash';
  * Right now this is solely used to update our algolia index (full-text search on org names).
  */
 import { functions, db } from './internals/firebase';
-import { deleteSearchableOrg, storeSearchableOrg } from './internals/algolia';
+import { deleteObject, storeSearchableOrg } from './internals/algolia';
 import { sendMail, sendMailFromTemplate } from './internals/email';
 import { organizationCreated, organizationWasAccepted } from './templates/mail';
 import { OrganizationDocument, PublicUser, PermissionsDocument } from './data/types';
 import { RelayerConfig, relayerDeployOrganizationLogic, relayerRegisterENSLogic, isENSNameRegistered } from './relayer';
-import { mnemonic, relayer } from './environments/environment';
+import { mnemonic, relayer, algolia } from './environments/environment';
 import { emailToEnsDomain, precomputeAddress as precomputeEthAddress, getProvider } from '@blockframes/ethers/helpers';
 import { NotificationType } from '@blockframes/notification/types';
 import { triggerNotifications, createNotification } from './notification';
@@ -155,6 +155,9 @@ export async function onOrganizationUpdate(
     console.log('Org deployed and registered!', orgEthAddress, res['link'].transactionHash);
   }
 
+  // Update algolia's index
+  await storeSearchableOrg(after.id, after.denomination.full)
+
   return Promise.resolve(true); // no-op by default
 }
 
@@ -163,5 +166,5 @@ export function onOrganizationDelete(
   context: functions.EventContext
 ): Promise<any> {
   // Update algolia's index
-  return deleteSearchableOrg(context.params.orgID);
+  return deleteObject(algolia.indexNameOrganizations, context.params.orgID);
 }

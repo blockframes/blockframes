@@ -1,12 +1,21 @@
 import { loadAdminServices } from './admin';
 import {
-  setMovieConfiguration,
+  clearIndex,
+  setIndexConfiguration,
   storeSearchableMovie,
-  storeSearchableOrg
+  storeSearchableOrg,
+  storeSearchableUser,
 } from '../../backend-functions/src/internals/algolia';
-import { MovieDocument } from 'apps/backend-functions/src/data/types';
+import { MovieDocument, PublicUser } from 'apps/backend-functions/src/data/types';
+import { algolia } from '@env';
 
 export async function upgradeAlgoliaOrgs() {
+
+  // reset config, clear index and fill it up from the db (which is the only source of truth)
+  const config = {};
+  await setIndexConfiguration(algolia.indexNameOrganizations, config, process.env['ALGOLIA_API_KEY']);
+  await clearIndex(algolia.indexNameOrganizations, process.env['ALGOLIA_API_KEY']);
+
   const { db } = loadAdminServices();
   const orgs = await db.collection('orgs').get();
 
@@ -16,13 +25,40 @@ export async function upgradeAlgoliaOrgs() {
     promises.push(storeSearchableOrg(id, denomination.full, process.env['ALGOLIA_API_KEY']));
   });
 
-  return Promise.all(promises);
+  await Promise.all(promises);
+  console.log('Algolia Orgs index updated with success !');
 }
 
 export async function upgradeAlgoliaMovies() {
 
-  // ensure the index is correctly configured before inserting records
-  await setMovieConfiguration(process.env['ALGOLIA_API_KEY']);
+  // reset config, clear index and fill it up from the db (which is the only source of truth)
+  const config = {
+    searchableAttributes: [
+      'title.international',
+      'title.original',
+      'directors',
+      'keywords'
+    ],
+    attributesForFaceting: [
+      // filters
+      'filterOnly(budget.from)',
+      'filterOnly(budget.to)',
+
+      // searchable facets
+      'searchable(orgName)',
+
+      // other facets
+      'genres',
+      'languages.original',
+      'languages.dubbed',
+      'languages.subtitle',
+      'languages.caption',
+      'originCountries',
+      'status',
+    ],
+  };
+  await setIndexConfiguration(algolia.indexNameMovies, config, process.env['ALGOLIA_API_KEY']);
+  await clearIndex(algolia.indexNameMovies, process.env['ALGOLIA_API_KEY']);
 
   const { db } = loadAdminServices();
   const movies = await db.collection('movies').get();
@@ -45,5 +81,38 @@ export async function upgradeAlgoliaMovies() {
       promises.push(new Promise(res => res(true)));
     }
   });
-  return Promise.all(promises);
+  await Promise.all(promises);
+  console.log('Algolia Movies index updated with success !');
+}
+
+export async function upgradeAlgoliaUsers() {
+
+  // reset config, clear index and fill it up from the db (which is the only source of truth)
+  const config = {
+    searchableAttributes: [
+      'email',
+      'firstName',
+      'lastName',
+    ],
+  };
+  await setIndexConfiguration(algolia.indexNameUsers, config, process.env['ALGOLIA_API_KEY']);
+  await clearIndex(algolia.indexNameUsers, process.env['ALGOLIA_API_KEY']);
+
+  const { db } = loadAdminServices();
+  const users = await db.collection('users').get();
+
+  const promises = [];
+  users.forEach(user => {
+    const userData = user.data() as PublicUser;
+    try {
+
+      promises.push(storeSearchableUser(userData, process.env['ALGOLIA_API_KEY']));
+    } catch (error) {
+      console.error(`\n\n\tFailed to insert a movie ${user.id} : skipping\n\n`);
+      console.error(error);
+      promises.push(new Promise(res => res(true)));
+    }
+  });
+  await Promise.all(promises);
+  console.log('Algolia Users index updated with success !');
 }
