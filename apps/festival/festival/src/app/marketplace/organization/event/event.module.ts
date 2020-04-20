@@ -5,7 +5,6 @@ import { EventComponent } from './event.component';
 
 import { EventModule } from '@blockframes/event/event.module';
 import { RouterModule } from '@angular/router';
-import { AppNavModule } from '@blockframes/ui/app-nav';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.module'
 
@@ -19,7 +18,6 @@ import { MatIconModule } from '@angular/material/icon';
     CommonModule,
     FlexLayoutModule,
     EventModule,
-    AppNavModule,
     ImageReferenceModule,
     DisplayNameModule,
     // Material

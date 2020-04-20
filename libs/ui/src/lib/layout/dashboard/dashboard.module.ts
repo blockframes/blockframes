@@ -9,6 +9,8 @@ import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/
 
 import { DashboardComponent } from './dashboard.component';
 
+import { AppBarModule } from '../../app-bar';
+
 // Widgets
 import { NotificationWidgetModule } from '@blockframes/notification/notification-widget/notification-widget.module';
 import { SearchWidgetModule } from '@blockframes/ui/search-widget';
@@ -38,6 +40,7 @@ import { MatBadgeModule } from '@angular/material/badge';
     AuthWidgetModule,
     AlgoliaAutocompleteModule,
     ImageReferenceModule,
+    AppBarModule,
     // Material
     MatButtonModule,
     MatDividerModule,

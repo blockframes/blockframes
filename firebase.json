@@ -32,7 +32,7 @@
     },
     {
       "target": "festival",
-      "public": "dist/apps/festival/",
+      "public": "dist/apps/festival/browser",
       "ignore": [
         "firebase.json",
         "**/.*",

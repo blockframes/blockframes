@@ -1,12 +1,17 @@
 <mat-sidenav-container>
-  <mat-sidenav id="dashboard-navbar">
+  <mat-sidenav id="dashboard-navbar" mode="over">
+    <mat-toolbar> <!-- We need a toolbar in this component for the app-bar to looks like a toolbar -->
+      <a class="logo" routerLink=".">
+        <img asset="festival.svg" type="logo" alt="Archipel Content Logo" />
+      </a>  
+    </mat-toolbar>
     <ng-content></ng-content>
   </mat-sidenav>
 
-  <mat-sidenav-content appNavContainer [appNav]="nav">
+  <mat-sidenav-content [appContainer]="app">
     <!-- TOOLBAR -->
-    <app-nav #nav>
-      <mat-toolbar fxLayout="row" fxLayoutAlign="space-between center">
+    <app-bar #app>
+      <header fxLayout fxLayoutAlign="space-between center">
         <div fxLayout="row" fxLayoutAlign="default center" fxLayoutGap="24px">
           <button test-id="menu" mat-icon-button (click)="sidenav.toggle()">
             <mat-icon svgIcon="menu"></mat-icon>
@@ -44,8 +49,8 @@
           <!-- <overlay-notification-widget page="notifications"></overlay-notification-widget> -->
           <auth-widget></auth-widget>
         </div>
-      </mat-toolbar>
-    </app-nav>
+      </header>
+    </app-bar>
 
     <!-- CONTENT -->
     <main [@routeAnimation]="prepareRoute()">

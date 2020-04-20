@@ -1,6 +1,7 @@
 @import '~@angular/flex-layout/mq';
 
-page-nav {
+header {
+  width: 100%;
   mat-toolbar {
     .sort {
       padding-right: 16px;

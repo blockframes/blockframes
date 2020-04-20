@@ -5,7 +5,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { DisplayNameModule, TranslateSlugModule } from '@blockframes/utils/pipes';
-import { AppNavModule } from '@blockframes/ui/app-nav';
+import { AppBarModule } from '@blockframes/ui/app-bar';
 
 import {
   TitleListComponent,
@@ -59,7 +59,7 @@ import { MatTabsModule } from '@angular/material/tabs';
     ImageReferenceModule,
     DisplayNameModule,
     TranslateSlugModule,
-    AppNavModule,
+    AppBarModule,
 
     // Material
     MatIconModule,

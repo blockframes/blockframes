@@ -1,5 +1,5 @@
-<page-nav targetId="nav">
-  <mat-toolbar>
+<ng-template pageBar targetId="nav">
+  <header fxLayout>
     <button mat-icon-button>
       <mat-icon svgIcon="menu"></mat-icon>
     </button>
@@ -12,8 +12,8 @@
       {{link.label}}
       </a>
     </nav>
-  </mat-toolbar>
-</page-nav>
+  </header>
+</ng-template>
 
 <ng-container *ngIf="view">
   <header fxLayout="column" [class]="view.banner.url ? 'dark-theme' : ''">

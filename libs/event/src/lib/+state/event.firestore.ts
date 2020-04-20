@@ -18,6 +18,7 @@ export interface EventBase<D extends Timestamp | Date, Meta extends EventMeta = 
   id: string;
   /** @dev The id of the owner. Can be a user or an organisation given the event.type **/
   ownerId: string;
+  isPrivate: boolean;
   type: EventTypes;
   title: string;
   start: D;

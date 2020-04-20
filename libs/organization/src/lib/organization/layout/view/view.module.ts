@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
-import { AppNavModule } from '@blockframes/ui/app-nav';
+import { AppBarModule } from '@blockframes/ui/app-bar';
 import { ToLabelModule } from '@blockframes/utils/pipes';
 import { ViewComponent } from './view.component';
 
@@ -23,7 +23,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     RouterModule,
     FlexLayoutModule,
     ImageReferenceModule,
-    AppNavModule,
+    AppBarModule,
     ToLabelModule,
     // Material
     MatTabsModule,

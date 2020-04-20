@@ -1,14 +1,16 @@
-<mat-toolbar fxLayout fxLayoutAlign="space-between center">
-  <a mat-icon-button routerLink="../..">
-    <mat-icon svgIcon="arrow_back"></mat-icon>
-  </a>
-  <div fxLayout fxLayoutAlign="end center">
-    <ng-container *ngIf="form.dirty">
-      <button @scaleIn type="submit" mat-stroked-button color="primary" (click)="save()">Save</button>
-    </ng-container>
-    <button type="button" mat-button color="warn" (click)="remove()">Delete</button>
-  </div>
-</mat-toolbar>
+<ng-template pageBar>
+  <header fxLayout fxLayoutAlign="space-between center">
+    <a mat-icon-button routerLink="../..">
+      <mat-icon svgIcon="arrow_back"></mat-icon>
+    </a>
+    <div fxLayout fxLayoutAlign="end center">
+      <ng-container *ngIf="form.dirty">
+        <button @scaleIn type="submit" mat-stroked-button color="primary" (click)="save()">Save</button>
+      </ng-container>
+      <button type="button" mat-button color="warn" (click)="remove()">Delete</button>
+    </div>
+  </header>
+</ng-template>
 
 <form [formGroup]="form">
   <section fxLayout fxLayoutAlign="space-between start" fxLayoutGap="24px">

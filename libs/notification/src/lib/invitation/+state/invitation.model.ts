@@ -32,7 +32,10 @@ export function createEventInvitation(params: Partial<InvitationToAnEvent> = {})
     type: 'event',
     docId: '',
     date: firestore.Timestamp.now(),
-    ...params
+    ...params,
+    toUser: createPublicUser(params.toUser),
+    fromUser: params.fromUser ? createPublicUser(params.fromUser) : undefined,
+    fromOrg: params.fromOrg ? createPublicOrganization(params.fromOrg) : undefined,
   };
 }
 

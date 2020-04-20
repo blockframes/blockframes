@@ -1,6 +1,6 @@
 <ng-container *ngIf="org">
-  <page-nav targetId="nav">
-    <mat-toolbar fxLayout fxLayoutAlign="space-between center">
+  <ng-template pageBar targetId="nav">
+    <div class="app-bar" fxLayout fxLayoutAlign="space-between center">
       <button mat-icon-button>
         <mat-icon svgIcon="menu"></mat-icon>
       </button>
@@ -20,8 +20,8 @@
         </div>
         <img [imgRef]="org.logo" placeholderAsset="Organization_250.png" alt="organization logo" />
       </div>
-    </mat-toolbar>
-  </page-nav>
+    </div>
+  </ng-template>
 
   <header fxLayout="row" fxLayoutAlign="start start" @fade>
     <a mat-icon-button routerLink="..">
