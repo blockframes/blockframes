@@ -1,6 +1,6 @@
 import { CallableContext } from "firebase-functions/lib/providers/https";
 import { BigQuery } from '@google-cloud/bigquery';
-import { EventAnalytics, PublicUser, OrganizationDocument, MovieAnalytics } from "./data/types";
+import { MovieEventAnalytics, PublicUser, OrganizationDocument, MovieAnalytics, EventsAnalytics, EventAnalytics, ScreeningEventDocument } from "./data/types";
 import { getDocument } from './data/internals';
 import { bigQueryAnalyticsTable } from "./environments/environment";
 import { isAfter, isBefore, parse, subDays } from 'date-fns';
@@ -32,8 +32,49 @@ const queryMovieAnalytics = `
   ORDER BY
     event_name, event_date
 `
+/** Query to get analytics of the number of views for the festival app event sessions pages
+ * for an array of eventId
+ */
+const queryEventAnalytics = `
+SELECT
+  event_name as event_name,
+  COUNT(*) as hits,
+  value.string_value as eventIdPage,
+  user_id as userId,
+  REGEXP_EXTRACT(value.string_value, '.*/marketplace/event/([^/]+)/session') as eventId
+FROM
+  \`${bigQueryAnalyticsTable}*\`,
+  UNNEST(event_params) AS params
+WHERE
+    (
+      event_name = @pageView
+      AND key = 'page_path'
+      AND REGEXP_EXTRACT(value.string_value, '.*/marketplace/event/([^/]+)/session') in UNNEST(@eventIds)
+    )
 
-async function executeQuery(query: any, movieIds: string[], daysPerRange: number) {
+GROUP BY
+  event_name, event_date, eventId, eventIdPage, userId
+ORDER BY
+  event_name, event_date
+`
+
+async function executeQueryEventAnalytics(query: any, eventIds: string[]) {
+  const bigqueryClient = new BigQuery();
+
+  const options = {
+    query,
+    timeoutMs: 100000,
+    useLegacySql: false,
+    params: {
+      eventIds,
+      pageView: 'pageView'
+    }
+  };
+
+  return bigqueryClient.query(options);
+}
+
+async function executeQueryMovieAnalytics(query: any, movieIds: string[], daysPerRange: number) {
   const bigqueryClient = new BigQuery();
 
   const options = {
@@ -53,19 +94,23 @@ async function executeQuery(query: any, movieIds: string[], daysPerRange: number
 }
 
 /** Sorts events into two periods. */
-const groupEventsPerDayRange = (events: EventAnalytics[], daysPerRange: number) => {
+const groupEventsPerDayRange = (events: MovieEventAnalytics[], daysPerRange: number) => {
   const now = new Date();
   const startCurrentRange = subDays(now, daysPerRange);
-  const parseDate = (event: EventAnalytics)  => parse(event.event_date, 'yyyyMMdd', new Date());
+  const parseDate = (event: MovieEventAnalytics)  => parse(event.event_date, 'yyyyMMdd', new Date());
   return {
     current: events.filter(event => isAfter(parseDate(event), startCurrentRange)),
     past: events.filter(event => isBefore(parseDate(event), startCurrentRange))
   };
 };
 
-/** Sorts analytic events by movieId. */
-const filterByMovieId = (events: EventAnalytics[], movieId: string) => {
+/** Sorts movie analytic events by movieId. */
+const filterByMovieId = (events: MovieEventAnalytics[], movieId: string) => {
   return events.filter(event => event.movieId === movieId);
+};
+
+const findByUserId = (users: PublicUser[], userId: string) => {
+  return users.find(user => user.uid === userId);
 };
 
 /** Merge the movieIdPage field from bigquery with the movieId field when relevant. */
@@ -74,7 +119,68 @@ const mergeMovieIdPageInMovieId = (rows: any[]) => {
   return rows.map(row => omit({ ...row, movieId: row.movieIdPage || row.movieId }, 'movieIdPage'));
 };
 
-/** Call bigQuery with a movieId to get its analytics. */
+const createEventAnalytics = (result: any, user: PublicUser | undefined): EventAnalytics => {
+  return {
+    ...result,
+    email: user?.email,
+    firstName: user?.firstName,
+    lastName: user?.lastName
+  }
+};
+
+/** Call bigQuery with an array of eventId to tet their analytics. */
+export const requestEventAnalytics = async (
+  data: { eventIds: string[] },
+  context: CallableContext
+): Promise<EventsAnalytics[]> => {
+  const eventIds = data.eventIds;
+  if (!eventIds) {
+    return [];
+  }
+  const uid = context.auth!.uid;
+  const user = await getDocument<PublicUser>(`users/${uid}`);
+  const org = await getDocument<OrganizationDocument>(`orgs/${user.orgId}`);
+
+  // Security: only events with the same ownerId that orgId of user
+  const screeningEventsPromises = eventIds.map(eventId => {
+    return getDocument<ScreeningEventDocument>(`events/${eventId}`)
+  });
+  const screeningEvents = await Promise.all(screeningEventsPromises);
+  const screeningEventsOwnerIds = screeningEvents.map(e => e.ownerId);
+  if (!screeningEventsOwnerIds.every(ownerId => org.id === ownerId)) {
+    throw new Error(`Insufficient permission to get events analytics.`)
+  }
+
+  // Request BigQuery
+  let [rows] = await executeQueryEventAnalytics(queryEventAnalytics, eventIds);
+  if (rows !== undefined && rows.length >= 0) {
+    // Get all users to eliminate those who are part of the same org
+    const eventsUsersPromises = rows.map(row => {
+      return getDocument<PublicUser>(`users/${row.userId}`);
+    });
+    const eventsUsers = await Promise.all(eventsUsersPromises);
+    const eventsUsersNotInOrg = eventsUsers.filter(u => !org.userIds.includes(u.uid));
+    const userIdsNotInOrg = eventsUsersNotInOrg.map(u => u.uid);
+    // Clean rows without users of the same org
+    rows = rows.filter(row => userIdsNotInOrg.includes(row.userId));
+
+    return eventIds.map(eventId => {
+      const rowsEvents = rows.filter(row => row.eventId === eventId);
+      const resultRows = rowsEvents.map(result => {
+        const eventUser = findByUserId(eventsUsersNotInOrg, result.userId);
+        return createEventAnalytics(result, eventUser);
+      });
+      return {
+        eventId,
+        eventUsers: resultRows
+      };
+    });
+  } else {
+    throw new Error('Unexepected error.');
+  }
+};
+
+/** Call bigQuery with an array of movieId to get their analytics. */
 export const requestMovieAnalytics = async (
   data: { movieIds: string[], daysPerRange: number },
   context: CallableContext
@@ -90,7 +196,7 @@ export const requestMovieAnalytics = async (
   // Security: only owner of the movie can load the data
   if (movieIds.every(movieId => org.movieIds.includes(movieId))) {
     // Request bigQuery
-    let [rows] = await executeQuery(queryMovieAnalytics, movieIds, daysPerRange);
+    let [rows] = await executeQueryMovieAnalytics(queryMovieAnalytics, movieIds, daysPerRange);
     if (rows !== undefined && rows.length >= 0) {
       rows = mergeMovieIdPageInMovieId(rows);
       return movieIds.map(movieId => {

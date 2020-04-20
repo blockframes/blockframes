@@ -26,8 +26,9 @@ export {
 } from '@blockframes/permissions/types';
 export { PublicUser } from '@blockframes/user/types';
 export { RequestDemoInformations } from '@blockframes/utils/request-demo';
-export { MovieAnalytics, EventAnalytics, StoreStatus, StoreConfig } from '@blockframes/movie/+state/movie.firestore';
+export { MovieAnalytics, MovieEventAnalytics, StoreStatus, StoreConfig } from '@blockframes/movie/+state/movie.firestore';
 export { NotificationOptions, NotificationType, NotificationDocument } from '@blockframes/notification/types';
+export { EventsAnalytics, EventAnalytics, ScreeningEventDocument } from '@blockframes/event/+state/event.firestore';
 
 /**
  * Types used by the firebase backend.

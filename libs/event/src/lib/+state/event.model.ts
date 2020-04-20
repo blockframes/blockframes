@@ -2,6 +2,7 @@ import { CalendarEvent } from 'angular-calendar';
 import { Meeting, EventBase, Screening, EventMeta, EventPrivateConfig } from './event.firestore';
 import { toDate } from '@blockframes/utils/helpers';
 import { Movie } from '@blockframes/movie/+state';
+export { EventsAnalytics } from './event.firestore';
 
 // Event
 export interface Event<Meta extends EventMeta = any> extends EventBase<Date, Meta>, CalendarEvent<Meta> {

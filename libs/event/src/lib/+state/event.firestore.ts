@@ -1,5 +1,6 @@
 import { firestore } from 'firebase';
 import { PrivateConfig } from '@blockframes/utils/common-interfaces/utility';
+import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
 
 type Timestamp = firestore.Timestamp;
 
@@ -35,3 +36,20 @@ export interface EventPrivateConfig extends PrivateConfig{
 export type EventDocument<Meta> = EventBase<Timestamp, Meta>;
 export type MeetingEventDocument = EventDocument<Meeting>;
 export type ScreeningEventDocument = EventDocument<Screening>;
+
+
+export interface EventAnalytics {
+  event_name: AnalyticsEvents,
+  hits: number,
+  eventIdPage: string,
+  userId: string,
+  eventId: string,
+  email: string,
+  firstName: string,
+  lastName: string
+}
+
+export interface EventsAnalytics {
+  eventId: string,
+  eventUsers: EventAnalytics[]
+}

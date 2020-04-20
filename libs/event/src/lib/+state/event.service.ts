@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { CollectionConfig, CollectionService, syncQuery, Query, WriteOptions } from 'akita-ng-fire';
 import { EventState, EventStore } from './event.store';
 import { EventDocument, EventBase } from './event.firestore';
-import { Event, ScreeningEvent, createCalendarEvent } from './event.model';
+import { Event, ScreeningEvent, createCalendarEvent, EventsAnalytics } from './event.model';
 import { QueryFn } from '@angular/fire/firestore/interfaces';
 import { Observable } from 'rxjs';
 import { AngularFireFunctions } from '@angular/fire/functions';
@@ -64,7 +64,7 @@ export class EventService extends CollectionService<EventState> {
   /**
    * Set event private url
    * The url will be fetched from Movie private config associated to eventId
-   * @param eventId 
+   * @param eventId
    */
   // @TODO (#2460)  Waiting for a decision on screening flow before uncomment
   public setEventUrl(eventId: string): Promise<any> {
@@ -72,9 +72,15 @@ export class EventService extends CollectionService<EventState> {
     return f({ eventId }).toPromise();
   }
 
+  /** Call a firebase function to get analytics specify to an array of eventIds.*/
+  public getEventAnalytics(eventIds: string[]): Observable<EventsAnalytics[]> {
+    const f = this.functions.httpsCallable('getEventAnalytics');
+    return f({ eventIds });
+  }
+
   /**
    * Get event private url
-   * @param eventId 
+   * @param eventId
    */
   // @TODO (#2460)  Waiting for a decision on screening flow before uncomment
   /*public getEventUrl(eventId: string): Promise<string> {

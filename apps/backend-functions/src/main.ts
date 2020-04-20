@@ -64,8 +64,11 @@ export const getOrCreateUserByMail = functions.https.onCall(logErrors(users.getO
 /** Trigger: REST call to send a mail to an admin for demo request. */
 export const sendDemoRequest = functions.https.onCall(logErrors(users.sendDemoRequest));
 
-/** Trigger: REST call bigQuery with a movieId to get its analytics. */
+/** Trigger: REST call bigQuery with an array of movieIds to get their analytics. */
 export const getMovieAnalytics = functions.https.onCall(logErrors(bigQuery.requestMovieAnalytics));
+
+/** Trigger: REST call bigQuery with an array of eventIds to get their analytics. */
+export const getEventAnalytics = functions.https.onCall(logErrors(bigQuery.requestEventAnalytics));
 
 /**
  * Trigger: REST call to the /admin app
