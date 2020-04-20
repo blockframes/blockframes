@@ -1,5 +1,5 @@
-<page-nav targetId="nav">
-  <mat-toolbar fxLayout="row" fxLayoutAlign="start center" fxLayoutGap.gt-sm="10px">
+<ng-template pageBar targetId="nav">
+  <header fxLayout="row" fxLayoutAlign="start center" fxLayoutGap.gt-sm="10px">
     <div fxFlex>
       <ng-template [ngTemplateOutlet]="titleSearchTemplate"></ng-template>
     </div>
@@ -14,8 +14,8 @@
       </button>
       <ng-template [ngTemplateOutlet]="titleSortTemplate"></ng-template>
     </div>
-  </mat-toolbar>
-</page-nav>
+  </header>
+</ng-template>
 
 <section id="nav" fxLayout="row" fxLayoutAlign="space-between center">
   <h1 class="mat-headline">{{titleType}} list</h1>
