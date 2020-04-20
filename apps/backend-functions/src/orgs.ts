@@ -8,7 +8,7 @@ import { difference } from 'lodash';
 import { functions, db } from './internals/firebase';
 import { deleteSearchableOrg, storeSearchableOrg } from './internals/algolia';
 import { sendMail, sendMailFromTemplate } from './internals/email';
-import { organizationCreated, organizationWasAccepted } from './assets/mail-templates';
+import { organizationCreated, organizationWasAccepted } from './templates/mail';
 import { OrganizationDocument, PublicUser, PermissionsDocument } from './data/types';
 import { RelayerConfig, relayerDeployOrganizationLogic, relayerRegisterENSLogic, isENSNameRegistered } from './relayer';
 import { mnemonic, relayer } from './environments/environment';
