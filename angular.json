@@ -265,7 +265,7 @@
             "outputPath": "dist/apps/backend-functions",
             "main": "apps/backend-functions/src/main.ts",
             "tsConfig": "apps/backend-functions/tsconfig.app.json",
-            "assets": ["apps/backend-functions/src/assets"],
+            "assets": [],
             "buildLibsFromSource": true
           },
           "configurations": {
@@ -360,7 +360,7 @@
             "outputPath": "dist/apps/backend-ops",
             "main": "apps/backend-ops/src/main.ts",
             "tsConfig": "apps/backend-ops/tsconfig.app.json",
-            "assets": ["apps/backend-ops/src/assets"],
+            "assets": [],
             "buildLibsFromSource": true
           },
           "configurations": {

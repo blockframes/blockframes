@@ -11,7 +11,7 @@ import {
   ADMIN_ACCESS_TO_APP_PATH,
   ADMIN_DATA_PATH,
   organizationCanAccessApp,
-} from './assets/mail-templates';
+} from './templates/mail';
 import {
   acceptNewOrgPage,
   acceptNewOrgPageComplete,
@@ -20,7 +20,7 @@ import {
   dataBackupPage,
   dataRestorePage,
   dataQuorumCreatePage,
-} from './assets/admin-templates';
+} from './templates/admin';
 import { getAdminIds } from './data/internals';
 import * as backup from './backup';
 import { deployMovieContract, setInitialRepartition } from '@blockframes/ethers/quorum/quorum';

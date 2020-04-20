@@ -15,7 +15,7 @@ import {
   userJoinedYourOrganization,
   userRequestedToJoinYourOrg,
   userJoinOrgPendingRequest
-} from './../../assets/mail-templates';
+} from '../../templates/mail';
 import { getAdminIds } from '../../data/internals';
 import { wasAccepted, wasDeclined, wasCreated } from './utils';
 
