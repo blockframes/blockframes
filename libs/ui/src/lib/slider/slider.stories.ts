@@ -4,12 +4,12 @@ import { ToolkitModule } from '@blockframes/ui/storybook';
 import { boolean, text, number, object } from '@storybook/addon-knobs';
 
 export default {
-  title: 'Bf Slider'
+  title: 'Slider'
 };
 
 export const bfSlider = () => ({
   moduleMetadata: { imports: [SliderModule, ToolkitModule] },
-  name: 'Bf Slider',
+  name: 'Slider',
   component: SliderComponent,
   template: `
   <storybook-toolkit>

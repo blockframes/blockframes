@@ -1,0 +1,8 @@
+<h4 *ngIf="features.length" fxLayout fxLayoutGap="8px">
+    <ng-container *ngFor="let feature of features; let isLast = last">
+        <span [matTooltip]="feature.tooltip">
+            {{ feature.view }}
+        </span>
+        <mat-divider *ngIf="!isLast" vertical></mat-divider>
+    </ng-container>
+</h4>
