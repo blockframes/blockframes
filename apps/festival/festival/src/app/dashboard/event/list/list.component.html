@@ -1,4 +1,7 @@
-<cal-header [(viewDate)]="viewDate"></cal-header>
+<ng-template pageBar>
+  <cal-header [(viewDate)]="viewDate"></cal-header>
+</ng-template>
+
 <cal-week [viewDate]="viewDate" eventType="screening" [events]="events$ | async" editable>
 
   <!-- Small Events -->

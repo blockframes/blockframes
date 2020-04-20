@@ -11,7 +11,7 @@ import { ImgAssetModule } from '@blockframes/ui/theme';
 import { SearchWidgetModule } from '@blockframes/ui/search-widget';
 import { NotificationWidgetModule } from '@blockframes/notification/notification-widget/notification-widget.module';
 import { AuthWidgetModule } from '@blockframes/auth/components/widget/widget.module';
-import { AppNavModule } from '@blockframes/ui/app-nav';
+import { AppBarModule } from '@blockframes/ui/app-bar';
 
 // Material
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -46,7 +46,7 @@ import { MatMenuModule } from '@angular/material/menu';
 
     // Libraries
     ImgAssetModule,
-    AppNavModule,
+    AppBarModule,
 
     // Widgets
     NotificationWidgetModule,

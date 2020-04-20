@@ -6,7 +6,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ImageReferenceModule } from '@blockframes/ui/media';
 import { DisplayNameModule } from '@blockframes/utils/pipes';
 import { EventLinkModule } from '@blockframes/event/pipes/event-link.pipe';
-
+import { AppBarModule } from '@blockframes/ui/app-bar';
 import { EventListComponent } from './list.component';
 
 import { EventModule } from '@blockframes/event/event.module';
@@ -26,6 +26,7 @@ import { MatSelectModule } from '@angular/material/select';
     ImageReferenceModule,
     DisplayNameModule,
     EventLinkModule,
+    AppBarModule,
     // Material
     MatDialogModule,
     MatButtonModule,

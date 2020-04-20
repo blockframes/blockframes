@@ -9,6 +9,7 @@ import { DisplayNameModule } from '@blockframes/utils/pipes';
 import { TimePickerModule } from '@blockframes/ui/form/time-picker/time-picker.module';
 import { StatusModule } from '@blockframes/invitation/pipes/status.pipe';
 import { GuestListModule } from '@blockframes/invitation/components/guest-list/guest-list.module';
+import { AppBarModule } from '@blockframes/ui/app-bar';
 
 // Material
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -33,6 +34,7 @@ import { MatListModule } from '@angular/material/list';
     DisplayNameModule,
     StatusModule,
     GuestListModule,
+    AppBarModule,
 
     // Material
     MatToolbarModule,

@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/
 import { Subscription } from 'rxjs';
 import { EventService } from '@blockframes/event/+state/event.service';
 import { EventQuery } from '@blockframes/event/+state/event.query';
+import { MarketplaceComponent } from '@blockframes/ui/layout/marketplace/marketplace.component';
 
 @Component({
   selector: 'festival-event-list',
@@ -15,6 +16,7 @@ export class EventListComponent implements OnInit, OnDestroy {
   viewDate = new Date();
 
   constructor(
+    private marketplace: MarketplaceComponent,
     private service: EventService,
     private query: EventQuery,
   ) { }
@@ -25,5 +27,9 @@ export class EventListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.sub.unsubscribe();
+  }
+
+  toggleMenu() {
+    this.marketplace.sidenav.toggle();
   }
 }

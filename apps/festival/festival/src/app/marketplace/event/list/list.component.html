@@ -1,8 +1,11 @@
-<page-nav targetId="calendar">
+<ng-template pageBar>
+  <button mat-icon-button (click)="toggleMenu()">
+    <mat-icon svgIcon="menu"></mat-icon>
+  </button>
   <cal-header [(viewDate)]="viewDate"></cal-header>
-</page-nav>
-<cal-header [(viewDate)]="viewDate"></cal-header>
-<cal-week id="calendar" [viewDate]="viewDate" [events]="events$ | async">
+</ng-template>
+
+<cal-week [viewDate]="viewDate" [events]="events$ | async">
     
   <!-- Small Events -->
   <ng-template calEventSmall let-event>

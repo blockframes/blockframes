@@ -14,8 +14,18 @@ mat-sidenav-container {
 }
 
 
-mat-sidenav-content mat-toolbar {
-  position: sticky;
-  top: 0;
-  z-index: 2;
+mat-sidenav-content {
+  overflow: hidden;
+  app-bar {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    header {
+      width: 100%;
+    }
+  }
+  main {
+    height: 100%;
+    overflow: auto;
+  }
 }
