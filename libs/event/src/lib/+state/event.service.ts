@@ -9,6 +9,9 @@ import { AngularFireFunctions } from '@angular/fire/functions';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { AuthQuery } from '@blockframes/auth/+state';
+import { combineLatest } from 'rxjs';
+import { EventQuery } from './event.query';
+import { map, filter, switchMap, tap } from 'rxjs/operators';
 
 
 const screeningsQuery = (queryFn?: QueryFn): Query<ScreeningEvent> => ({
@@ -22,13 +25,32 @@ const screeningsQuery = (queryFn?: QueryFn): Query<ScreeningEvent> => ({
 export class EventService extends CollectionService<EventState> {
 
   constructor(
-    store: EventStore,
+    protected store: EventStore,
     private functions: AngularFireFunctions,
     private invitationService: InvitationService,
+    private query: EventQuery,
     private authQuery: AuthQuery,
     private orgQuery: OrganizationQuery,
   ) {
     super(store);
+  }
+
+  /** Gets analytics for one event and sync them. */
+  public syncEventAnalytics() {
+    return combineLatest([
+      this.query.selectActiveId(),
+      this.query.analytics.select('ids')
+    ]).pipe(
+      filter(([eventId, analyticsIds]) => !analyticsIds.includes(eventId)),
+      switchMap(([eventId]) => {
+        this.store.analytics.setActive(eventId);
+        const f = this.functions.httpsCallable('getEventAnalytics');
+        return f({ eventIds: [eventId] });
+      }),
+      tap(analytics => {
+        this.store.analytics.upsertMany(analytics);
+      })
+    )
   }
 
   /** Verify if the current user / organisation is ownr of an event */

@@ -4,6 +4,11 @@ import { EventViewComponent } from './view.component';
 import { RouterModule } from '@angular/router';
 import { GuestListModule } from '@blockframes/invitation/components/guest-list/guest-list.module';
 import { EventRangeModule } from '@blockframes/event/pipes/event-range.pipe';
+import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
+import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
 
 
 @NgModule({
@@ -12,6 +17,11 @@ import { EventRangeModule } from '@blockframes/event/pipes/event-range.pipe';
     CommonModule,
     EventRangeModule,
     GuestListModule,
+    TableFilterModule,
+    ImgAssetModule,
+    FlexLayoutModule,
+    MatCardModule,
+    MatIconModule,
     RouterModule.forChild([{ path: '', component: EventViewComponent }])
   ]
 })

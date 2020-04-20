@@ -9,6 +9,7 @@ export interface EventState extends EntityState<Event>, ActiveState<string>  {}
 @Injectable({ providedIn: 'root' })
 @StoreConfig({ name: 'event' })
 export class EventStore extends EntityStore<EventState> {
+  analytics = new EntityStore<EventState>(null, { name: 'eventAnalytics', idKey: 'eventId' });
 
   constructor(private authQuery: AuthQuery, private orgQuery: OrganizationQuery) {
     super();
