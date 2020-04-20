@@ -54,11 +54,6 @@ const routes: Routes = [{
       }]
     },
     {
-      path: 'new-title',
-      loadChildren: () => import('./title/list-new/list.module').then(m => m.MovieListModule),
-      data: { animation: 'title-list' }
-    },
-    {
       path: 'organization',
       children: [{
         path: '',

@@ -495,6 +495,10 @@ const models = {
     { 'slug': 'dubbed', 'label': 'Dubbed' },
     { 'slug': 'subtitle', 'label': 'Subtitled' },
     { 'slug': 'caption', 'label': 'Closed-Captions' }
+  ],
+  'STORE_TYPE': [
+    { 'slug': 'line_up', 'label': 'Line-up'},
+    { 'slug': 'library', 'label': 'Library'},
   ]
 };
 

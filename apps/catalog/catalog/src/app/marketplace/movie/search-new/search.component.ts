@@ -1,26 +1,28 @@
+// Angular
+import { FormControl } from '@angular/forms';
 import {
   Component,
   ChangeDetectionStrategy,
   OnInit,
-  OnDestroy,
+  OnDestroy
 } from '@angular/core';
-import { Subscription, Observable } from 'rxjs';
-import { MovieService, MovieQuery } from '@blockframes/movie/+state';
-import { FormControl } from '@angular/forms';
-import { MovieSearchForm } from '@blockframes/movie/form/search.form';
-import { map, distinctUntilChanged, debounceTime, filter, switchMap, pluck, startWith } from 'rxjs/operators';
+// Blockframes
+import { MovieQuery } from '@blockframes/movie/+state/movie.query';
+// RxJs
+import { Observable, Subscription } from 'rxjs';
+import { startWith, map, debounceTime, switchMap, distinctUntilChanged, pluck, filter, tap } from 'rxjs/operators';
+// Others
 import { sortMovieBy } from '@blockframes/utils/akita-helper/sort-movie-by';
-import { algolia } from '@env';
-
+import { MovieService } from '@blockframes/movie/+state';
+import { MovieSearchForm } from '@blockframes/movie/form/search.form';
 
 @Component({
-  selector: 'festival-marketplace-title-list',
-  templateUrl: './list.component.html',
-  styleUrls: ['./list.component.scss'],
+  selector: 'catalog-movie-search',
+  templateUrl: './search.component.html',
+  styleUrls: ['./search.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ListComponent implements OnInit, OnDestroy {
-
+export class MarketplaceSearchComponent implements OnInit, OnDestroy {
   private sub: Subscription;
   public movieSearchResults$: Observable<any>;
 
@@ -28,8 +30,6 @@ export class ListComponent implements OnInit, OnDestroy {
   public sortOptions: string[] = ['All films', 'Title', 'Director' /* 'Production Year' #1146 */];
 
   public filterForm = new MovieSearchForm();
-
-  public movieIndexName = algolia.indexNameMovies;
 
   constructor(
     private movieService: MovieService,
@@ -41,8 +41,12 @@ export class ListComponent implements OnInit, OnDestroy {
 
     this.movieSearchResults$ = this.filterForm.valueChanges.pipe(
       debounceTime(300),
+      tap(a => console.log('value changes', a)),
       filter(() => !this.filterForm.isEmpty()),
+      tap(() => console.log('not empty !')),
       distinctUntilChanged(),
+      tap(() => console.log('value is different !')),
+      tap(a => console.log(a)),
       switchMap(() => this.filterForm.search()),
       pluck('hits'),
       map(result => result.map(movie => movie.objectID)),

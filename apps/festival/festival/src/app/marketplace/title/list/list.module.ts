@@ -1,7 +1,6 @@
 // Components
 import { MovieCardModule } from "@blockframes/ui/movie-card/movie-card.module";
 import { MovieDisplayListModule } from '@blockframes/movie/components/display-list/display-list.module';
-import { MovieFormGenresModule } from "@blockframes/movie/form/main/genres/genres.module";
 
 // Pipes
 import { DisplayNameModule } from "@blockframes/utils/pipes/display-name.module";
@@ -35,9 +34,17 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+
 import { ChipsAutocompleteModule } from "@blockframes/ui/static-autocomplete/chips/chips-autocomplete.module";
 import { AlgoliaAutocompleteModule } from "@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module";
+import { AlgoliaChipsAutocompleteModule } from "@blockframes/ui/algolia/chips-autocomplete/algolia-chips-autocomplete.module";
+import { TitleListLayoutModule } from "@blockframes/movie/layout/list/title-list.module"
 import { WishlistButtonModule } from "@blockframes/organization/components/wishlist-button/wishlist-button.module";
+import { TitleFilterModule } from '@blockframes/movie/components/title-filter/title-filter.module';
+import { MovieFormEstimatedBudgetModule } from "@blockframes/movie/form/budget/estimated-budget/estimated-budget.module";
+import { LanguageFilterModule } from '@blockframes/movie/form/filters/languages/language-filter.module';
+import { EstimatedBudgetFilterModule } from '@blockframes/movie/form/filters/estimated-budget/estimated-budget.module';
+import { StaticCheckBoxesModule } from '@blockframes/ui/static-autocomplete/check-boxes/check-boxes.module';
 
 @NgModule({
   declarations: [ListComponent],
@@ -48,10 +55,16 @@ import { WishlistButtonModule } from "@blockframes/organization/components/wishl
     HttpClientModule,
     MovieCardModule,
     MovieDisplayListModule,
-    MovieFormGenresModule,
     ChipsAutocompleteModule,
     AlgoliaAutocompleteModule,
+    AlgoliaChipsAutocompleteModule,
+    TitleListLayoutModule,
     WishlistButtonModule,
+    TitleFilterModule,
+    MovieFormEstimatedBudgetModule,
+    LanguageFilterModule,
+    EstimatedBudgetFilterModule,
+    StaticCheckBoxesModule,
 
     // Pipe
     TranslateSlugModule,

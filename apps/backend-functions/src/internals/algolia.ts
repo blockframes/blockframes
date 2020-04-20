@@ -91,11 +91,9 @@ export function storeSearchableMovie(
           [],
       },
       status: !! movie.main.status ? movie.main.status : '',
-      budget: {
-        from: (!! movie.budget.estimatedBudget && !! movie.budget.estimatedBudget.from) ? movie.budget.estimatedBudget.from : null,
-        to: (!! movie.budget.estimatedBudget && !! movie.budget.estimatedBudget.to) ? movie.budget.estimatedBudget.to : null,
-      },
+      budget: movie.budget.totalBudget ||  movie.budget.estimatedBudget?.from || 0,
       orgName,
+      storeType: movie.main.storeConfig?.storeType || '',
     });
   } catch (error) {
     console.error(`\n\n\tFailed to format the movie ${movie.id} into an algolia record : skipping\n\n`);

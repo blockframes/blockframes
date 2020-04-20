@@ -34,6 +34,10 @@
 
     <ng-template filter label="TITLE METADATA" section></ng-template>
 
+    <ng-template filter label="Library / Line-up">
+      <static-check-boxes fxLayout="row" fxLayoutAlign="space-between" [form]="filterForm.storeType" model="STORE_TYPE"></static-check-boxes>
+    </ng-template>
+
     <ng-template filter label="Genres">
       <chips-autocomplete [form]="filterForm.genres" model="GENRES"></chips-autocomplete>
     </ng-template>
@@ -54,16 +58,33 @@
       <title-estimated-budget-filter fxLayout="column" [form]="filterForm.minBudget"></title-estimated-budget-filter>
     </ng-template>
 
-    <ng-template filter label="Seller">
-      <algolia-chips-autocomplete
-        [index]="movieIndexName"
-        keyToDisplay="value"
-        facet="orgName"
-        [form]="filterForm.sellers"
-        label="Search for a specific Seller"
-        placeholder="Organization name"
-        resetInput
-      ></algolia-chips-autocomplete>
+    <ng-template filter label="AVAILS" section>
+      <p class="mat-caption">You need to fill in Terms, Territory and Media before applying the Avails filter</p>
+    </ng-template>
+
+    <!-- TODO -->
+    <ng-template filter label="Term">
+      <p>TODO</p>
+    </ng-template>
+
+    <!-- TODO -->
+    <ng-template filter label="Territory">
+      <p>TODO</p>
+    </ng-template>
+
+    <!-- TODO -->
+    <ng-template filter label="Media">
+      <p>TODO</p>
+    </ng-template>
+
+    <!-- TODO -->
+    <ng-template filter label="Exclusivity">
+      <p>TODO</p>
+    </ng-template>
+
+    <!-- TODO -->
+    <ng-template filter label="" section>
+      <button mat-stroked-button color="primary">Apply Avails Filter</button>
     </ng-template>
 
   </title-filter>

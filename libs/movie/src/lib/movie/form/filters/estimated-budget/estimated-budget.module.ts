@@ -9,7 +9,7 @@ import { EstimatedBudgetFilterComponent } from './estimated-budget.component';
 // Material
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatSliderModule } from '@angular/material/slider';
 
 
 @NgModule({
@@ -23,7 +23,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     // Material
     MatFormFieldModule,
     MatInputModule,
-    MatCheckboxModule,
+    MatSliderModule,
   ],
 })
 export class EstimatedBudgetFilterModule { }

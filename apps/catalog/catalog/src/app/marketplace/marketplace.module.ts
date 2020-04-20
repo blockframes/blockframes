@@ -41,6 +41,10 @@ const routes: Routes = [{
       loadChildren: () => import('./movie/search/search.module').then(m => m.MarketplaceSearchModule)
     },
     {
+      path: 'search-new',
+      loadChildren: () => import('./movie/search-new/search.module').then(m => m.MarketplaceSearchModule)
+    },
+    {
       path: 'activity',   // List of notifications
       loadChildren: () => import('../activity/activity.module').then(m => m.ActivityModule)
     },

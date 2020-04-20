@@ -1,5 +1,3 @@
-<ng-container *ngFor="let budget of budgetList">
-  <mat-checkbox [value]="budget.label" >
-    {{budget.label}}
-  </mat-checkbox>
-</ng-container>
+
+<span>{{displayValue}}</span>
+<mat-slider min="0" max="20000000" step="100000" [formControl]="form" (input)="displayValue = $event.value"></mat-slider>

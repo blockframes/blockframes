@@ -6,8 +6,6 @@ import { MovieDisplayListModule } from '@blockframes/movie/components/display-li
 import { DisplayNameModule } from "@blockframes/utils/pipes/display-name.module";
 import { TranslateSlugModule } from "@blockframes/utils/pipes/translate-slug.module";
 
-// Pages
-import { ListComponent } from './list.component';
 
 // Material
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -45,9 +43,10 @@ import { MovieFormEstimatedBudgetModule } from "@blockframes/movie/form/budget/e
 import { LanguageFilterModule } from '@blockframes/movie/form/filters/languages/language-filter.module';
 import { EstimatedBudgetFilterModule } from '@blockframes/movie/form/filters/estimated-budget/estimated-budget.module';
 import { StaticCheckBoxesModule } from '@blockframes/ui/static-autocomplete/check-boxes/check-boxes.module';
+import { MarketplaceSearchComponent } from "./search.component";
 
 @NgModule({
-  declarations: [ListComponent],
+  declarations: [MarketplaceSearchComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
@@ -87,7 +86,7 @@ import { StaticCheckBoxesModule } from '@blockframes/ui/static-autocomplete/chec
     MatDatepickerModule,
     MatOptionModule,
     MatSnackBarModule,
-    RouterModule.forChild([{ path: '', component: ListComponent }])
+    RouterModule.forChild([{ path: '', component: MarketplaceSearchComponent }])
   ]
 })
-export class MovieListModule { }
+export class MarketplaceSearchModule { }
