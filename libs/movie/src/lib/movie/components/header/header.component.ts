@@ -9,17 +9,9 @@ import {
 } from '@angular/core';
 
 // Blockframes
-import { Movie, Credit } from '@blockframes/movie/+state';
-import { Title, PromotionalElement, } from '@blockframes/movie/+state/movie.firestore';
+import { Movie } from '@blockframes/movie/+state';
 
-interface MovieHeaderView {
-  directors: Credit[],
-  title: Title,
-  banner: PromotionalElement,
-  poster: PromotionalElement
-}
-
-function createMovieView(movie: Movie): MovieHeaderView {
+function createMovieView(movie: Movie) {
   return {
     directors: movie.main.directors,
     title: {
@@ -30,6 +22,8 @@ function createMovieView(movie: Movie): MovieHeaderView {
     poster: movie.promotionalElements.poster[0]
   }
 }
+
+type MovieHeaderView = ReturnType<typeof createMovieView>
 
 @Component({
   selector: '[movie] movie-header',
