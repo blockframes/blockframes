@@ -4,15 +4,18 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 // Blockframes
 import { Movie } from '@blockframes/movie/+state';
 
-function createMovieSliderView(movie: Movie) {
-    return {
-        director: movie.main.directors,
-        titles: {
-            international: movie.main.title.international,
-            original: movie.main.title.original
-        },
-        logline: movie.story.logline
-    }
+function createMovieSliderView(movies: Movie[]) {
+    return movies.map(movie => {
+        return {
+            director: movie.main.directors,
+            titles: {
+                international: movie.main.title.international,
+                original: movie.main.title.original
+            },
+            logline: movie.story.logline,
+            banner: movie.promotionalElements.banner.media
+        }
+    })
 }
 
 type MovieSliderView = ReturnType<typeof createMovieSliderView>;
@@ -24,8 +27,10 @@ type MovieSliderView = ReturnType<typeof createMovieSliderView>;
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieSliderComponent {
-    movieView: MovieSliderView;
-    @Input() set movie(value: Movie) {
-        this.movieView = createMovieSliderView(value)
+    movies: Movie[]
+    movieViews: MovieSliderView[];
+    @Input() set movie(movies: Movie[]) {
+        this.movieViews = createMovieSliderView(movies) as any[]
+        this.movies = movies;
     }
 }

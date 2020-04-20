@@ -16,6 +16,6 @@ export const movieSlider = () => ({
     </storybook-toolkit>
   `,
   props: {
-    movie: object('movie', MOVIES[0]),
+    movie: object('movie', MOVIES),
   }
 });

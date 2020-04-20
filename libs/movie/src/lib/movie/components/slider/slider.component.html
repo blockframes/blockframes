@@ -1,3 +1,10 @@
 <bf-slider>
-    <bf-slide overlayColor="linear-gradient(to right, black, transparent)"></bf-slide>
+    <bf-slide *ngFor="let view of movieViews" overlayColor="linear-gradient(to right, black, transparent)">
+        <div fxLayout="column" fxLayoutAlign="space-between start">
+            <h4>{{ view.directors | displayName }}</h4>
+            <h1 class="mat-display-2">{{ view.titles.international }}</h1>
+            <h2>{{ view.titles.original }}</h2>
+         <!--    <movie-title-features [movie]="movies"></movie-title-features> -->
+        </div>
+    </bf-slide>
 </bf-slider>

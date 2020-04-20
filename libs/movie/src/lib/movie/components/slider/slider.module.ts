@@ -7,6 +7,7 @@ import { MovieSliderComponent } from './slider.components';
 
 // Blockframes
 import { SliderModule } from '@blockframes/ui/slider/slider.module';
+import { DisplayNameModule } from '@blockframes/utils/pipes';
 
 @NgModule({
     imports: [
@@ -15,6 +16,7 @@ import { SliderModule } from '@blockframes/ui/slider/slider.module';
 
         // Blockframes
         SliderModule,
+        DisplayNameModule
         
     ],
     declarations: [MovieSliderComponent],
