@@ -34,6 +34,18 @@
 
     <ng-template filter label="TITLE METADATA" section></ng-template>
 
+    <ng-template filter label="Sales Agents">
+      <algolia-chips-autocomplete
+        [index]="movieIndexName"
+        keyToDisplay="value"
+        facet="orgName"
+        [form]="filterForm.sellers"
+        label="Search for a specific Seller"
+        placeholder="Organization name"
+        resetInput
+      ></algolia-chips-autocomplete>
+    </ng-template>
+
     <ng-template filter label="Genres">
       <chips-autocomplete [form]="filterForm.genres" model="GENRES"></chips-autocomplete>
     </ng-template>
@@ -52,18 +64,6 @@
 
     <ng-template filter label="Minimal Budget">
       <title-estimated-budget-filter fxLayout="column" [form]="filterForm.minBudget"></title-estimated-budget-filter>
-    </ng-template>
-
-    <ng-template filter label="Seller">
-      <algolia-chips-autocomplete
-        [index]="movieIndexName"
-        keyToDisplay="value"
-        facet="orgName"
-        [form]="filterForm.sellers"
-        label="Search for a specific Seller"
-        placeholder="Organization name"
-        resetInput
-      ></algolia-chips-autocomplete>
     </ng-template>
 
   </title-filter>
