@@ -10,13 +10,27 @@
 <h2>Statistics</h2>
 <ng-container *ngIf="analytics$ | async as analytics; else loading">
   <ng-container *ngIf="analytics.eventUsers.length else noAnalytics">
-    <h3>Attendees</h3>
-    <bf-table-filter showFilter showPaginator [initialColumns]="initialColumns" [columns]="columns" [source]="analytics.eventUsers">
-    </bf-table-filter>
+    <section class="analytics">
+      <mat-card>
+        <span fxLayout="row" fxLayoutAlign="start center">
+          <mat-icon svgIcon="group"></mat-icon>
+          <span class="mat-body-2">Number of attendees</span>
+        </span>
+        <h2>{{ analytics.eventUsers.length }}</h2>
+      </mat-card>
+      <h3>Attendees</h3>
+      <bf-table-filter
+        showFilter
+        showPaginator
+        [initialColumns]="initialColumns"
+        [columns]="columns"
+        [source]="analytics.eventUsers">
+      </bf-table-filter>
+    </section>
   </ng-container>
   <ng-template #noAnalytics>
     <article fxLayout="column" fxLayoutAlign="center center">
-      <img asset="wait.webp" alt="waiting image"/>
+      <img asset="wait.webp" alt="waiting"/>
       <p class="mat-body-2">You will find statistics on your screening here once it's over.</p>
     </article>
   </ng-template>

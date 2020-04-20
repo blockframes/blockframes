@@ -36,7 +36,6 @@ export class EventViewComponent implements OnInit, OnDestroy {
     this.invitations$ = this.query.selectActiveId().pipe(
       switchMap(eventId => this.invitationService.valueChanges(ref => ref.where('docId', '==', eventId)))
     );
-    this.analytics$.subscribe(x => console.log(x))
   }
 
   ngOnDestroy() {
