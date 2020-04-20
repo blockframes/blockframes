@@ -4,7 +4,7 @@
   "license": "MIT",
   "main": "./main.js",
   "engines": {
-    "node": "10"
+    "node": "8"
   },
   "scripts": {
     "ng": "ng",
