@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Components
-import { MovieSliderComponent } from './slider.components';
+import { MovieSliderComponent } from './slider.component';
 
 // Blockframes
 import { SliderModule } from '@blockframes/ui/slider/slider.module';

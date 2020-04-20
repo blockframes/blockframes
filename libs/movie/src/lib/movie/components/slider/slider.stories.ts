@@ -12,10 +12,10 @@ export const movieSlider = () => ({
   template: `
     <storybook-toolkit>
       <h1 title>Movie Slider</h1>
-      <movie-slider [movie]="movie"></movie-slider>
+      <movie-slider [movies]="movies"></movie-slider>
     </storybook-toolkit>
   `,
   props: {
-    movie: object('movie', MOVIES),
+    movies: object('movies', MOVIES),
   }
 });

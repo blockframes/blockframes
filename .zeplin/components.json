@@ -29,7 +29,7 @@
     ],
     "components": [
         {
-            "path": "libs/movie/src/lib/movie/components/slider/slider.components.ts",
+            "path": "libs/movie/src/lib/movie/components/slider/slider.component.ts",
             "zeplinNames": [
                 "component/slider/archipel_content/movie-slider"
             ],
