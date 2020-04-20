@@ -36,13 +36,13 @@ export class HeaderComponent {
 
   public movieView: MovieHeaderView;
 
-  public titleFeatures: Movie;
+  public movie: Movie;
 
   @HostBinding('style.backgroundImage') background: string;
-  @Input()
-  set movie(movie: Movie) {
+  @Input('movie')
+  set movieInput(movie: Movie) {
     if (movie) {
-      this.titleFeatures = movie;
+      this.movie = movie;
       this.movieView = createMovieView(movie);
       this.background = `url(${this.movieView.banner.media.url})`
     }
