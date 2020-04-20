@@ -7,7 +7,7 @@ import { Movie } from '@blockframes/movie/+state';
 function createMovieSliderView(movies: Movie[]) {
     return movies.map(movie => {
         return {
-            director: movie.main.directors,
+            directors: movie.main.directors,
             titles: {
                 international: movie.main.title.international,
                 original: movie.main.title.original
