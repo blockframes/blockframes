@@ -1,16 +1,12 @@
 @mixin poster($breakpoint) {
   @if $breakpoint == 'small' {
     width: 120px;
-    height: 160px;
   } @else if $breakpoint == 'medium' {
     width: 240px;
-    height: 320px;
   } @else if $breakpoint == 'large' {
     width: 480px;
-    height: 640px;
   } @else if $breakpoint == 'xl' {
     width: 960px;
-    height: 1280px;
   }
 }
 

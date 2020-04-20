@@ -4,7 +4,8 @@ import {
   Input,
   ChangeDetectionStrategy,
   Directive,
-  HostBinding
+  HostBinding,
+  ViewEncapsulation
 } from '@angular/core';
 
 // Blockframes
@@ -34,6 +35,7 @@ function createMovieView(movie: Movie): MovieHeaderView {
   selector: '[movie] movie-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
+  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HeaderComponent {
