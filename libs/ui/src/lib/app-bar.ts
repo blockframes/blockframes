@@ -1,0 +1,138 @@
+import { Directive, Component, TemplateRef, Input, ViewContainerRef, OnDestroy, AfterViewInit, NgModule, HostBinding, NgZone, Inject, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { PortalModule, TemplatePortal } from '@angular/cdk/portal';
+import { CommonModule, DOCUMENT } from '@angular/common';
+import { trigger, style, transition, animate, query } from '@angular/animations';
+import { Easing } from '@blockframes/utils/animations/animation-easing';
+import { Observable } from 'rxjs';
+
+@Component({
+  selector: 'app-bar',
+  template: `
+    <ng-container *ngIf="isApp; else app">
+      <ng-content></ng-content>
+    </ng-container>
+    <ng-template #app>
+      <ng-template [cdkPortalOutlet]="pageView"></ng-template>
+    </ng-template>
+  `,
+  host: {
+    class: 'mat-toolbar mat-toolbar-single-row'
+  },
+  animations: [
+    trigger('isApp', [
+      transition('true => false', [
+        style({ position: 'relative', overflow: 'hidden' }),
+        query(':leave', style({ position: 'absolute', left: 0, padding: '0 16px'  }), { optional: true }),  // padding 16px to match mat-toolbar inner margin
+        query(':enter', style({ opacity: 0, transform: 'translateY(80px) scale(0.95)' })),
+        query(':leave', animate(`300ms ${Easing.easeInCirc}`, style({ opacity: 0, transform: 'translateY(-80px) scale(0.95)' })), { optional: true }),
+        query(':enter', animate(`300ms ${Easing.easeOutCirc}`, style({ opacity: 1, transform: 'translateY(0)' })))
+      ]),
+      transition('false => true', [
+        style({ position: 'relative', overflow: 'hidden' }),
+        query(':leave', style({ position: 'absolute', left: 0, padding: '0 16px' }), { optional: true }),  // padding 16px to match mat-toolbar inner margin
+        query(':enter', style({ opacity: 0, transform: 'translateY(-80px) scale(0.95)' })),
+        query(':leave', animate(`300ms ${Easing.easeInCirc}`, style({ opacity: 0, transform: 'translateY(80px) scale(0.95)' })), { optional: true }),
+        query(':enter', animate(`300ms ${Easing.easeOutCirc}`, style({ opacity: 1, transform: 'translateY(0)' })))
+      ])
+    ])
+  ]
+})
+export class AppBarComponent {
+  private _isApp = true;
+  public pageView: TemplatePortal<any>;
+
+  @HostBinding('@isApp')
+  set isApp(isApp: boolean) {
+    this._isApp = isApp;
+    this.cdr.markForCheck();
+  }
+  get isApp() {
+    return this._isApp;
+  }
+
+  constructor(
+    private containerRef: ViewContainerRef,
+    private cdr: ChangeDetectorRef,
+  ) {}
+
+  attach(pageTemplate: TemplateRef<any>) {
+    this.pageView = new TemplatePortal(pageTemplate, this.containerRef);
+  }
+
+  detach() {
+    this.isApp = true;
+    if (this.pageView) {
+      this.pageView.detach();
+    }
+  }
+}
+
+
+@Directive({ selector: '[appContainer] '})
+export class AppContainerDirective {
+  container: HTMLElement;
+  @Input('appContainer') appBar: AppBarComponent;
+  constructor(ref: ElementRef) {
+    this.container = ref.nativeElement;
+  }
+}
+
+
+@Directive({ selector: '[pageBar]' })
+export class PageBarDirective implements AfterViewInit, OnDestroy {
+  private observer: IntersectionObserver;
+  public isVisible$: Observable<boolean>;
+  @Input() targetId: string;
+  constructor(
+    @Inject(DOCUMENT) private document: Document,
+    private appContainer: AppContainerDirective,
+    private template: TemplateRef<any>,
+    private zone: NgZone,
+  ) {}
+
+  ngAfterViewInit() {
+    this.appContainer.appBar.attach(this.template)
+    if (this.targetId) {
+      this.zone.runOutsideAngular(() => {
+        const height = 80;
+        const options = {
+          root: this.appContainer.container,
+          rootMargin: `-${height}px 0px 0px 0px`,
+          threshold: 0
+        }
+        this.observer = new IntersectionObserver(([entry]) => {
+          const isLeavingTop = !entry.isIntersecting && entry.boundingClientRect.top <= height;
+          const isEnteringTop = !this.appContainer.appBar.isApp && entry.isIntersecting;
+          if (isLeavingTop) {
+            this.zone.run(() => this.appContainer.appBar.isApp = false);
+          } else if (isEnteringTop) {
+            this.zone.run(() => this.appContainer.appBar.isApp = true);
+          }
+        }, options);
+        this.observer.observe(this.targetEl);
+      })
+    } else {
+      this.appContainer.appBar.isApp = false;
+    }
+
+  }
+
+  ngOnDestroy() {
+    this.appContainer.appBar.detach();
+    if (this.targetId && this.observer) {
+      this.observer.unobserve(this.targetEl);
+    }
+  }
+
+  // Use getElementById because target is sybling & cannot cast input into an ElementRef
+  get targetEl() {
+    return this.document.getElementById(this.targetId);
+  }
+}
+
+@NgModule({
+  imports: [CommonModule, PortalModule],
+  declarations: [AppBarComponent, AppContainerDirective, PageBarDirective],
+  exports: [AppBarComponent, AppContainerDirective, PageBarDirective],
+})
+export class AppBarModule {}
