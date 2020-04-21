@@ -10,7 +10,7 @@
     "component-selector": [
       true,
       "element",
-      ["movie", "distribution", "catalog", "title"],
+      ["movie", "distribution", "catalog", "title", "filter"],
       "kebab-case"
     ]
   }

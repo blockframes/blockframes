@@ -2,12 +2,12 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 @Component({
-  selector: '[form] title-estimated-budget-filter',
-  templateUrl: './estimated-budget.component.html',
-  styleUrls: ['./estimated-budget.component.scss'],
+  selector: '[form] filter-budget',
+  templateUrl: './budget.component.html',
+  styleUrls: ['./budget.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EstimatedBudgetFilterComponent {
+export class BudgetFilterComponent {
 
   @Input() form: FormControl; // FormControl of number
 

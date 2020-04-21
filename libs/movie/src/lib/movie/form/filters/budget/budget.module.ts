@@ -4,7 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Components
-import { EstimatedBudgetFilterComponent } from './estimated-budget.component';
+import { BudgetFilterComponent } from './budget.component';
 
 // Material
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -13,8 +13,8 @@ import { MatSliderModule } from '@angular/material/slider';
 
 
 @NgModule({
-  declarations: [EstimatedBudgetFilterComponent],
-  exports: [EstimatedBudgetFilterComponent],
+  declarations: [BudgetFilterComponent],
+  exports: [BudgetFilterComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -26,4 +26,4 @@ import { MatSliderModule } from '@angular/material/slider';
     MatSliderModule,
   ],
 })
-export class EstimatedBudgetFilterModule { }
+export class BudgetFilterModule { }

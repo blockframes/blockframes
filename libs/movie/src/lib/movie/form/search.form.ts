@@ -11,16 +11,18 @@ export interface AlgoliaSearch {
   query: string;
 }
 
+export interface LanguagesSearch {
+  original: LanguagesSlug[];
+  dubbed: LanguagesSlug[];
+  subtitle: LanguagesSlug[];
+  caption: LanguagesSlug[];
+}
+
 export interface MovieSearch extends AlgoliaSearch {
   storeType: StoreTypeSlug[];
   genres: GenresSlug[];
   originCountries: TerritoriesSlug[];
-  languages: {
-    original: LanguagesSlug[],
-    dubbed: LanguagesSlug[],
-    subtitle: LanguagesSlug[],
-    caption: LanguagesSlug[],
-  };
+  languages: LanguagesSearch;
   productionStatus: MovieStatusSlug[];
   minBudget: number;
   sellers: string[];
@@ -45,19 +47,23 @@ function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearch {
   };
 }
 
+function createLanguageVersionControl(languages: LanguagesSearch) {
+  return {
+    original: FormList.factory<ExtractSlug<'LANGUAGES'>>(languages.original),
+    dubbed: FormList.factory<ExtractSlug<'LANGUAGES'>>(languages.dubbed),
+    subtitle: FormList.factory<ExtractSlug<'LANGUAGES'>>(languages.subtitle),
+    caption: FormList.factory<ExtractSlug<'LANGUAGES'>>(languages.caption),
+  }
+}
+export type LanguageVersionControl = ReturnType<typeof createLanguageVersionControl>;
+
 function createMovieSearchControl(search: MovieSearch) {
   return {
     query: new FormControl(search.query),
     storeType: FormList.factory<ExtractSlug<'STORE_TYPE'>>(search.storeType),
     genres: FormList.factory<ExtractSlug<'GENRES'>>(search.genres),
     originCountries: FormList.factory<ExtractSlug<'TERRITORIES'>>(search.originCountries),
-    languages: new FormGroup({
-      original: new FormList<ExtractSlug<'LANGUAGES'>>(search.languages.original),
-      dubbed: new FormList<ExtractSlug<'LANGUAGES'>>(search.languages.dubbed),
-      subtitle: new FormList<ExtractSlug<'LANGUAGES'>>(search.languages.subtitle),
-      caption: new FormList<ExtractSlug<'LANGUAGES'>>(search.languages.caption),
-
-    }),
+    languages: new FormEntity<LanguageVersionControl>(createLanguageVersionControl(search.languages)),
     productionStatus: FormList.factory<ExtractSlug<'MOVIE_STATUS'>>(search.productionStatus),
     minBudget: new FormControl(search.minBudget),
     sellers: FormList.factory<string>(search.sellers),
@@ -108,17 +114,17 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
     return this.movieIndex.search({
       query: this.query.value,
       facetFilters: [
-        [...this.genres.value.map(genre => `genres:${genre}`)], // same facet inside an array means OR for algolia
-        [...this.originCountries.value.map(country => `originCountries:${country}`)],
+        this.genres.value.map(genre => `genres:${genre}`), // same facet inside an array means OR for algolia
+        this.originCountries.value.map(country => `originCountries:${country}`),
         [
-          ...(this.languages.get('original') as FormList<ExtractSlug<'LANGUAGES'>>).controls.map(lang => `languages.original:${lang.value}`),
-          ...(this.languages.get('dubbed') as FormList<ExtractSlug<'LANGUAGES'>>).controls.map(lang => `languages.dubbed:${lang.value}`),
-          ...(this.languages.get('subtitle') as FormList<ExtractSlug<'LANGUAGES'>>).controls.map(lang => `languages.subtitle:${lang.value}`),
-          ...(this.languages.get('caption') as FormList<ExtractSlug<'LANGUAGES'>>).controls.map(lang => `languages.caption:${lang.value}`),
+          ...this.languages.get('original').controls.map(lang => `languages.original:${lang.value}`),
+          ...this.languages.get('dubbed').controls.map(lang => `languages.dubbed:${lang.value}`),
+          ...this.languages.get('subtitle').controls.map(lang => `languages.subtitle:${lang.value}`),
+          ...this.languages.get('caption').controls.map(lang => `languages.caption:${lang.value}`),
         ],
-        [...this.productionStatus.value.map(status => `status:${status}`)],
-        [...this.sellers.value.map(seller => `orgName:${seller}`)],
-        [...this.storeType.value.map(type => `storeType:${type}`)],
+        this.productionStatus.value.map(status => `status:${status}`),
+        this.sellers.value.map(seller => `orgName:${seller}`),
+        this.storeType.value.map(type => `storeType:${type}`),
       ],
       filters: `budget >= ${this.minBudget.value}`,
     });

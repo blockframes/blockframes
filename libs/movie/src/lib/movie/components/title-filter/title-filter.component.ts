@@ -12,7 +12,7 @@ import { boolean } from '@blockframes/utils/decorators/decorators';
 @Directive({selector: '[filter]'})
 export class FilterDirective {
   @Input() label = 'filter name';
-  @Input() @boolean section = false;
+  @Input() @boolean section: boolean;
   constructor(public template: TemplateRef<any>) {}
 }
 

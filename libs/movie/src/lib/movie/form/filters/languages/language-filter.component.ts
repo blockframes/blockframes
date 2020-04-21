@@ -1,9 +1,9 @@
 import { Component, ChangeDetectionStrategy, Input, OnInit, OnDestroy } from '@angular/core';
-import { FormGroup } from '@angular/forms';
-import { FormList } from '@blockframes/utils/form';
+import { FormList, FormEntity } from '@blockframes/utils/form';
 import { ExtractSlug } from '@blockframes/utils/static-model/staticModels';
 import { Subscription, combineLatest } from 'rxjs';
 import { startWith } from 'rxjs/operators';
+import { LanguageVersionControl } from '@blockframes/movie/form/search.form';
 
 @Component({
   selector: '[languagesFilterForm] title-language-filter',
@@ -13,7 +13,7 @@ import { startWith } from 'rxjs/operators';
 })
 export class LanguageFilterComponent implements OnInit, OnDestroy {
 
-  @Input() languagesFilterForm: FormGroup; // FormGroup of FormArray
+  @Input() languagesFilterForm: FormEntity<LanguageVersionControl>; // FormGroup of FormArray
 
   /** list of selected language (chips), they can later be added in *'original'*, *'subtitle'*, etc... */
   public selectedLanguages = FormList.factory<ExtractSlug<'LANGUAGES'>>([]);
@@ -24,20 +24,18 @@ export class LanguageFilterComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.sub = combineLatest([this.selectedLanguages.valueChanges, this.versions.valueChanges])
-    .pipe(startWith([]))
+    .pipe(startWith([[], []] as [ExtractSlug<'LANGUAGES'>[], ExtractSlug<'VERSION_INFO'>[]]))
     .subscribe(
       ([languages, versions]) => {
-        if (!versions || versions.length === 0) {
-          (this.languagesFilterForm.get('original') as FormList<ExtractSlug<'LANGUAGES'>>).clear();
-          (this.languagesFilterForm.get('dubbed') as FormList<ExtractSlug<'LANGUAGES'>>).clear();
-          (this.languagesFilterForm.get('subtitle') as FormList<ExtractSlug<'LANGUAGES'>>).clear();
-          (this.languagesFilterForm.get('caption') as FormList<ExtractSlug<'LANGUAGES'>>).clear();
+        if (versions.length === 0) {
+          for(const version in this.languagesFilterForm.controls) {
+            this.languagesFilterForm.controls[version].clear()
+          }
         } else {
-          versions.forEach(version => {
-            // TODO I should have used patchAllValue instead of clear/add but the patchValue wasn't working as intended (see #2563)
-            (this.languagesFilterForm.get(version) as FormList<ExtractSlug<'LANGUAGES'>>).clear();
-            languages.map(lang => (this.languagesFilterForm.get(version) as FormList<ExtractSlug<'LANGUAGES'>>).add(lang));
-          });
+          for(const version of versions) {
+            this.languagesFilterForm.get(version).clear();
+            languages.map(lang => this.languagesFilterForm.get(version).add(lang));
+          }
         }
       }
     );

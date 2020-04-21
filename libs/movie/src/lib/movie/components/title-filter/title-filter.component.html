@@ -11,7 +11,7 @@
     <ng-template #isFilter>
       <mat-expansion-panel>
         <mat-expansion-panel-header>{{filter.label}}</mat-expansion-panel-header>
-        <ng-template [ngTemplateOutlet]="filter?.template"></ng-template>
+        <ng-template matExpansionPanelContent [ngTemplateOutlet]="filter?.template"></ng-template>
       </mat-expansion-panel>
     </ng-template>
   </ng-container>
