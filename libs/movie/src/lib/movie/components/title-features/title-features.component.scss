@@ -2,6 +2,11 @@ span,
 h4 {
     // TODO #2548
     color: white !important;
+
+    // Remove custom margin
+    span {
+        margin: 0px !important;
+    }
 }
 
 mat-divider {

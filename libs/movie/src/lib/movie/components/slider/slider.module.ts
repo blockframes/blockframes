@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
 // Components
-import { MovieSliderComponent } from './slider.component';
+import { MovieSliderComponent, MovieSliderActions, MovieSliderCTA } from './slider.component';
 
 // Blockframes
 import { SliderModule } from '@blockframes/ui/slider/slider.module';
 import { DisplayNameModule } from '@blockframes/utils/pipes';
+import { MovieTitleFeaturesModule } from '../title-features/title-features.module';
 
 @NgModule({
     imports: [
@@ -16,10 +17,11 @@ import { DisplayNameModule } from '@blockframes/utils/pipes';
 
         // Blockframes
         SliderModule,
+        MovieTitleFeaturesModule,
         DisplayNameModule
-        
+
     ],
-    declarations: [MovieSliderComponent],
-    exports: [MovieSliderComponent]
+    declarations: [MovieSliderComponent, MovieSliderActions, MovieSliderCTA],
+    exports: [MovieSliderComponent, MovieSliderActions, MovieSliderCTA]
 })
-export class MovieSliderModule {}
+export class MovieSliderModule { }

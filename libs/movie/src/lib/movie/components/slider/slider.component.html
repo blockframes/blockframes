@@ -1,11 +1,15 @@
-
 <bf-slider autoplay loop hideIndicators>
-    <bf-slide *ngFor="let view of movieViews" overlayColor="linear-gradient(to right, black, transparent)">
-        <div fxLayout="column" fxLayoutAlign="space-between start">
+    <bf-slide *ngFor="let view of movieViews; let i = index" overlayColor="linear-gradient(to right, black, transparent)">
+        <div fxLayout="column" fxLayoutAlign="start start">
             <h4 *ngIf="view.directors">{{ view.directors | displayName }}</h4>
             <h1 class="mat-display-2" *ngIf="view.titles.international">{{ view.titles.international }}</h1>
             <h2 *ngIf="view.titles.original">{{ view.titles.original }}</h2>
-         <!--    <movie-title-features [movie]="movies"></movie-title-features> -->
+            <movie-title-features [movie]="titles[i]"></movie-title-features>
+            <ng-content select="movie-slider-cta"></ng-content>
+            <p class="mat-body" *ngIf="view.logline">
+                {{ view.logline }}
+            </p>
+            <ng-content select="movie-slider-actions"></ng-content>
         </div>
     </bf-slide>
 </bf-slider>
