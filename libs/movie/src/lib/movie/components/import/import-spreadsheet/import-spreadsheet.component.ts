@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, ChangeDetectionStrategy, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, Output, EventEmitter, ChangeDetectionStrategy, OnInit, ChangeDetectorRef, Optional } from '@angular/core';
 import { SheetTab, importSpreadsheet } from '@blockframes/utils/spreadsheet';
 import { FormControl } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
@@ -25,10 +25,10 @@ export class ImportSpreadsheetComponent implements OnInit {
   public isUserBlockframesAdmin = false;
 
   constructor(
+    @Optional() private intercom: Intercom,
     private http: HttpClient,
     private authQuery: AuthQuery,
     private cdRef: ChangeDetectorRef,
-    private intercom: Intercom,
     private routerQuery: RouterQuery, 
   ) {
     this.fileType.setValue('movies');

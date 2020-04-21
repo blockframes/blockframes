@@ -1,5 +1,5 @@
 import { Intercom } from 'ng-intercom';
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
 import { ContractQuery, ContractService, Contract, ContractStatus } from '@blockframes/contract/contract/+state';
 import { map } from 'rxjs/operators';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
@@ -87,12 +87,12 @@ export class RightListComponent {
   public salesLoading$ = this.query.selectLoading();
 
   constructor(
+    @Optional() private intercom: Intercom,
     private orgQuery: OrganizationQuery,
     private query: ContractQuery,
     private contractService: ContractService,
     private router: Router,
     private route: ActivatedRoute,
-    private intercom: Intercom,
     private dynTitle: DynamicTitleService,
   ) {
     this.query.getCount()

@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, Optional } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { MovieService } from '@blockframes/movie/+state';
@@ -58,11 +58,11 @@ export class ViewExtractedContractsComponent implements OnInit {
   public isUserBlockframesAdmin = false;
 
   constructor(
+    @Optional() private intercom: Intercom,
     private snackBar: MatSnackBar,
     private movieService: MovieService,
     private contractService: ContractService,
     private cdRef: ChangeDetectorRef,
-    private intercom: Intercom,
     private authQuery: AuthQuery,
     private dynTitle: DynamicTitleService
   ) {

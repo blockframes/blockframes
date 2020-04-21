@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
 import { map } from 'rxjs/operators';
 import { Intercom } from 'ng-intercom';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
@@ -23,7 +23,11 @@ export class NegotiationComponent {
 
   versionsView$ = this.query.versionsView$;
 
-  constructor(private query: ContractQuery, private movieQuery: MovieQuery, private intercom: Intercom) { }
+  constructor(
+    @Optional() private intercom: Intercom,
+    private query: ContractQuery,
+    private movieQuery: MovieQuery,
+  ) { }
 
   openIntercom() {
     this.intercom.show();
