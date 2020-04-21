@@ -5,7 +5,7 @@
  */
 import { appUrl } from '@env';
 import { syncUsers } from './users';
-import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs } from './algolia';
+import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
 import { migrate } from './migrations';
 import { restore } from './admin';
 
@@ -25,6 +25,7 @@ export async function prepareForTesting() {
   console.info('Preparing Algolia...');
   await upgradeAlgoliaOrgs();
   await upgradeAlgoliaMovies();
+  await upgradeAlgoliaUsers();
   console.info('Algolia ready for testing!');
 
   process.exit(0);

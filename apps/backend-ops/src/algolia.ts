@@ -9,6 +9,8 @@ import {
 import { MovieDocument, PublicUser } from 'apps/backend-functions/src/data/types';
 import { algolia } from '@env';
 
+// TODO MIGRATE TO ALGOLIA v4 #2554
+
 export async function upgradeAlgoliaOrgs() {
 
   // reset config, clear index and fill it up from the db (which is the only source of truth)
@@ -41,8 +43,7 @@ export async function upgradeAlgoliaMovies() {
     ],
     attributesForFaceting: [
       // filters
-      'filterOnly(budget.from)',
-      'filterOnly(budget.to)',
+      'filterOnly(budget)',
 
       // searchable facets
       'searchable(orgName)',
@@ -55,6 +56,7 @@ export async function upgradeAlgoliaMovies() {
       'languages.caption',
       'originCountries',
       'status',
+      'storeType',
     ],
   };
   await setIndexConfiguration(algolia.indexNameMovies, config, process.env['ALGOLIA_API_KEY']);
