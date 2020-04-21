@@ -1,152 +1,35 @@
 @import '~@angular/flex-layout/mq';
 
-.search {
-  margin-top: 0;
-  margin-bottom: 0;
-  mat-label {
-    margin-left: 20px;
-  }
-}
-
-.grid {
-  margin-bottom: 10px;
-}
-
-.sort {
-  margin-left: 20px;
-}
-
-h5 {
-  margin-top: 20px;
-}
-
-.language-button {
-  margin-top: 15px;
-  margin-left: 16px;
-}
-
-.chip-language {
-  margin-bottom: 16px;
-}
-
 mat-form-field {
   width: 100%;
 }
 
-mat-divider {
-  width: 100%;
-}
-
-.mat-chip.active {
-  background-color: var(--primary);
-}
-
-form {
-  width: 100%;
-}
-
-section {
-  padding: 20px 20px;
-}
-
-section.filters {
-  padding: 20px 20px;
-  min-height: calc(100vh - (var(--toolbarHeight) * 2) - 30px); // TODO #1212
-
-  aside {
-    position: sticky;
-    top: calc(var(--toolbarHeight) + 20px);
-
-    mat-card {
-      max-height: calc(100vh - var(--toolbarHeight) - 40px);
-      overflow: auto;
-    }
-
-    mat-checkbox {
-      margin-top: 16px;
-    }
-
-    h6 {
-      margin-bottom: 12px;
-    }
-
-    .checkbox-padding {
-      padding-left: 16px
-    }
-
-    .movie-list {
-      width: 100%;
-    }
-
-    .filter {
-      width: 500px;
-    }
-
-    .filter-checkboxes {
-      height: 270px;
-      flex-wrap: wrap;
-    }
-
-    .filter-checkboxes-status {
-      height: 50px;
-      flex-wrap: wrap;
-    }
+title-filter {
+  static-check-boxes, filter-budget {
+    padding: 0 16px;
   }
+}
 
-  article {
-    width: 100%;
-    mat-divider {
-      width: 65%;
-    }
-
-    movie-card {
-      height: auto;
-      width: 250px;
-      margin: 15px;
-    }
-
-    movie-display-list {
-      width: 100%;
-      cursor: pointer;
-    }
-
-  }
-
+movie-card {
+  max-width: 25%;
+  padding-bottom: 24px;
 }
 
 @include layout-bp(xs) {
-  h1 {
-    text-align: center;
-  }
-  section {
-    padding: 10px 10px;
-    aside {
-      width: 100%;
-      position: static;
-      mat-card {
-        height: 100%;
-      }
-      .filter {
-        margin-top: 50px;
-      }
-    }
-    article mat-form-field-wrapper {
-      width: 80%;
-    }
+  movie-card {
+    max-width: 65%;
   }
 }
 
 @include layout-bp(sm) {
-  section aside {
-    position: static;
-    .filter {
-      margin-top: 50px;
-    }
+  movie-card {
+    max-width: 45%;
   }
 }
 
 @include layout-bp(md) {
-  aside.filter {
-    width: 50%;
+  movie-card {
+    max-width: 35%;
+    padding-bottom: 16px;
   }
 }

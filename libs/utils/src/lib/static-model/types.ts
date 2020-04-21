@@ -143,3 +143,10 @@ export const SOUND_FORMAT_SLUG = models['SOUND_FORMAT'].map(key => key.slug);
 
 export type SoundFormatLabel = typeof SOUND_FORMAT_LABEL[number];
 export type SoundFormatSlug = typeof SOUND_FORMAT_SLUG[number];
+
+
+export const STORE_TYPE_LABEL = models['STORE_TYPE'].map(key => key.label);
+export const STORE_TYPE_SLUG = models['STORE_TYPE'].map(key => key.slug);
+
+export type StoreTypeLabel = typeof STORE_TYPE_LABEL[number];
+export type StoreTypeSlug = typeof STORE_TYPE_SLUG[number];

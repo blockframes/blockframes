@@ -1,14 +1,8 @@
-<section fxLayout="row" fxLayoutAlign="space-between center">
-  <h1 class="mat-headline">Library</h1>
-  <article fxLayout="row" fxLayoutAlign="center center">
-    <button class="grid" mat-icon-button (click)="listView = !listView">
-      <ng-container *ngIf="!listView">
-        <mat-icon svgIcon="list_material"></mat-icon>
-      </ng-container>
-      <ng-container *ngIf="listView">
-        <mat-icon svgIcon="grid"></mat-icon>
-      </ng-container>
-    </button>
+<title-list [titles$]="movieSearchResults$">
+
+  <!-- SORT -->
+  <ng-template titleSort>
+
     <mat-form-field class="sort">
       <mat-label>Sort by</mat-label>
       <mat-select [formControl]="sortByControl">
@@ -17,204 +11,97 @@
         </mat-option>
       </mat-select>
     </mat-form-field>
-  </article>
-</section>
 
-<!-- MAIN SEARCH BAR -->
-<section class="search">
-  <form [formGroup]="filterForm.search">
-    <mat-form-field appearance="outline">
-      <mat-label>Search for titles, directors, keywords, ...</mat-label>
-      <mat-icon matPrefix svgIcon="magnifying_glasses"></mat-icon>
-      <input matInput type="text" [formControl]="searchbarTextControl">
-    </mat-form-field>
-  </form>
-</section>
+  </ng-template>
 
-<!-- FILTER SIDE CARD -->
-<section fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="50px" fxLayout.lt-md="column"
-  fxLayoutAlign.lt-md="center center" class="filters">
-  <aside fxLayout="column" class="filter">
-    <mat-card>
-      <h6>Filters</h6>
-      <p class="mat-caption">For a specific filter, multiple choices will be applied with an "or" statement (not an "and" statement).</p>
-      <mat-card-content>
-        <mat-accordion multi="true">
-          <ng-container [formGroup]="filterForm">
 
-            <mat-divider inset></mat-divider>
+  <!-- SEARCH BAR -->
+  <ng-template titleSearch>
 
-            <!-- Genres -->
-            <mat-expansion-panel>
-              <mat-expansion-panel-header>
-                <span class="mat-body-1">Genres</span>
-              </mat-expansion-panel-header>
-              <movie-form-genre [form]="filterForm.genres"></movie-form-genre>
-            </mat-expansion-panel>
+    <form [formGroup]="filterForm">
+      <mat-form-field appearance="outline">
+        <mat-label>Search for titles, directors, keywords, ...</mat-label>
+        <mat-icon matPrefix svgIcon="magnifying_glasses"></mat-icon>
+        <input matInput type="text" formControlName="query">
+      </mat-form-field>
+    </form>
 
-            <!-- Country-->
-            <mat-expansion-panel>
-              <mat-expansion-panel-header>
-                <span class="mat-body-1">Country of Origin</span>
-              </mat-expansion-panel-header>
-              <chips-autocomplete
-                [form]="filterForm.originCountries"
-                placeholder="Country of Origin"
-                model="TERRITORIES"
-              ></chips-autocomplete>
-            </mat-expansion-panel>
+  </ng-template>
 
-            <!-- Languages -->
-            <mat-expansion-panel>
-              <mat-expansion-panel-header>
-                <span class="mat-body-1">Language & Version</span>
-              </mat-expansion-panel-header>
-              <form formGroupName="languages" fxLayout="column">
-                <div fxLayout="row" fxLayoutAlign="start start">
-                  <mat-form-field appearance="outline">
-                    <mat-label>New language</mat-label>
-                    <input test-id="languages-panel-input" matInput type="text" [matAutocomplete]="language"
-                      [formControl]="languageControl" placeholder="Add new language"/>
-                    <mat-error *ngIf="languageControl.hasError('languageNotSupported')">
-                      Please enter a valid language or choose from the dropdown menu!
-                    </mat-error>
-                    <button matSuffix mat-icon-button (click)="addLanguage(languageControl.value)"
-                      [disabled]="!languageControl.valid">
-                      <mat-icon svgIcon="magnifying_glasses"></mat-icon>
-                    </button>
-                    <mat-autocomplete #language="matAutocomplete">
-                      <mat-option *ngFor="let language of languagesFilter$ | async" [value]="language">
-                        {{language}}
-                      </mat-option>
-                    </mat-autocomplete>
-                  </mat-form-field>
-                  <button
-                    test-id="languages"
-                    class="language-button"
-                    mat-mini-fab
-                    [disabled]="!languageControl.valid"
-                    color="primary"
-                    (click)="addLanguage(languageControl.value); languageControl.reset()">
-                    <mat-icon svgIcon="add"></mat-icon>
-                  </button>
-                </div>
-                <div fxLayout="column" fxLayoutAlign="start start">
-                  <ng-container *ngIf="filterForm.get('languages').value">
-                    <mat-list [formGroup]="filterForm.get('languages')" role="list">
-                      <ng-container *ngFor="let language of selectedLanguages$ | async">
-                        <mat-list-item [formGroupName]="language">
-                          <span mat-line>
-                            <mat-chip class="chip-language" removable (removed)="removeLanguage(language)">
-                              <span>{{ language | translateSlug: 'LANGUAGES' }}</span>
-                              <mat-icon matChipRemove svgIcon="close"></mat-icon>
-                            </mat-chip>
-                          </span>
-                          <mat-checkbox color="primary" test-id="languages-checkbox-original" mat-line formControlName="original">
-                            Original
-                          </mat-checkbox>
-                          <mat-checkbox color="primary" test-id="languages-checkbox-dubbed" mat-line formControlName="dubbed">
-                            Dubbed
-                          </mat-checkbox>
-                          <mat-checkbox color="primary" test-id="languages-checkbox-subtitle" mat-line formControlName="subtitle">
-                            Subtitled
-                          </mat-checkbox>
-                          <mat-checkbox color="primary" test-id="languages-checkbox-subtitle" mat-line formControlName="caption">
-                            Closed-Captioned
-                          </mat-checkbox>
-                        </mat-list-item>
-                      </ng-container>
-                    </mat-list>
-                  </ng-container>
-                </div>
-              </form>
-            </mat-expansion-panel>
 
-            <!-- Production Statuses -->
-            <mat-expansion-panel>
-              <mat-expansion-panel-header>
-                <span class="mat-body-1">Production Status</span>
-              </mat-expansion-panel-header>
-              <div fxLayout="column" fxLayoutAlign="start start" class="checkbox-padding">
-                <mat-checkbox color="primary" (change)="hasStatus(status)" *ngFor="let status of movieProductionStatuses">
-                  {{status}}
-                </mat-checkbox>
-              </div>
-            </mat-expansion-panel>
+  <!-- FILTERS (ng-content) -->
+  <title-filter>
 
-            <!-- Budget -->
-            <mat-expansion-panel>
-              <mat-expansion-panel-header>
-                <span class="mat-body-1">Budget</span>
-              </mat-expansion-panel-header>
-              <div fxLayout="column" fxLayoutAlign="start start" class="checkbox-padding">
-                <mat-checkbox (change)="hasBudget(budget)" color="primary" *ngFor="let budget of budgetList">
-                  {{ budget.label }}
-                </mat-checkbox>
-              </div>
-            </mat-expansion-panel>
+    <!-- TODO issue#2576 -->
+    <ng-template filter label="TITLE METADATA" section></ng-template>
 
-            <!-- SPECIFIC TO FESTIVAL APPLICATION -->
+    <ng-template filter label="Sales Agents">
+      <algolia-chips-autocomplete
+        [index]="movieIndexName"
+        keyToDisplay="value"
+        facet="orgName"
+        [form]="filterForm.sellers"
+        label="Search for a specific Seller"
+        placeholder="Organization name"
+        resetInput
+      ></algolia-chips-autocomplete>
+    </ng-template>
 
-            <!-- Sellers -->
-            <mat-expansion-panel>
-              <mat-expansion-panel-header>
-                <span class="mat-body-1">Seller</span>
-              </mat-expansion-panel-header>
-              <mat-chip-list aria-label="Sellers selection">
-                <ng-container *ngFor="let seller of selectedSellers$ | async; let i = index">
-                  <mat-chip selectable removable>
-                    {{ seller }}
-                    <mat-icon matChipRemove svgIcon="close" (click)="removeSeller(i)"></mat-icon>
-                  </mat-chip>
-                </ng-container>
-              </mat-chip-list>
-              <mat-form-field appearance="outline">
-                <mat-label>Search for a specific seller</mat-label>
-                <input matInput type="text" [formControl]="filterForm.seller" [matAutocomplete]="sellerOrgs">
-              </mat-form-field>
-              <mat-autocomplete #sellerOrgs>
-                <mat-option *ngFor="let name of (orgSearchResults$ | async)" (click)="addSeller(name)">{{name}}</mat-option>
-              </mat-autocomplete>
-            </mat-expansion-panel>
+    <ng-template filter label="Genres">
+      <chips-autocomplete [form]="filterForm.genres" model="GENRES"></chips-autocomplete>
+    </ng-template>
 
-          </ng-container>
-        </mat-accordion>
-      </mat-card-content>
-    </mat-card>
-  </aside>
+    <ng-template filter label="Country of Origin">
+      <chips-autocomplete [form]="filterForm.originCountries" placeholder="Country of Origin" model="TERRITORIES"></chips-autocomplete>
+    </ng-template>
 
-  <!-- List || card of result -->
-  <article>
-    <ng-container *ngIf="(movieSearchResults$ | async) as movies">
-      <div fxLayout="row" fxLayoutAlign="end start">
-        <h6>There are {{ movies.length }} movies available!</h6>
-      </div>
-      <div fxLayout="row wrap" fxLayoutGap="20px" fxLayout.lt-md="column" fxLayoutAlign.lt-md="center center">
-        <ng-container *ngFor="let movie of movies">
-          <movie-card [movie]="movie" [link]="['/c/o/marketplace/title',  movie.id]" *ngIf="!listView">
+    <ng-template filter label="Language & Version">
+      <title-language-filter [languagesFilterForm]="filterForm.languages"></title-language-filter>
+    </ng-template>
 
-            <!-- Informations -->
-            <ng-container movieInformation>
-              <mat-card-subtitle>
-                <span class="mat-caption">
-                  {{ movie.main.directors | displayName }}
-                </span>
-              </mat-card-subtitle>
-            </ng-container>
+    <ng-template filter label="Production Status">
+      <static-check-boxes fxLayout="column" [form]="filterForm.productionStatus" model="MOVIE_STATUS"></static-check-boxes>
+    </ng-template>
 
-            <!-- Action -->
-            <ng-container movieCardAction>
-              <div fxLayout="row" fxLayoutAlign="end">
-                <wishlist-button [movieId]="movie.id" small></wishlist-button>
-              </div>
-            </ng-container>
-          </movie-card>
-        </ng-container>
+    <ng-template filter label="Minimal Budget">
+      <filter-budget fxLayout="column" [form]="filterForm.minBudget"></filter-budget>
+    </ng-template>
 
-        <!-- We don't iterate over the movies here, cause this will be done by the mat tables -->
-        <movie-display-list [movies]="movies" *ngIf="listView" (navigate)="goToMovieDetails($event)">
-        </movie-display-list>
-      </div>
-    </ng-container>
-  </article>
-</section>
+  </title-filter>
+
+
+  <!-- TITLE CARD -->
+  <ng-template titleCard let-title>
+
+    <movie-card [movie]="title" [link]="['/c/o/marketplace/title',  title.id]">
+      <!-- Information -->
+      <ng-container movieInformation>
+        <mat-card-subtitle>
+          <span class="mat-caption">
+            {{ title.main.directors | displayName }}
+          </span>
+        </mat-card-subtitle>
+      </ng-container>
+
+      <!-- Action -->
+      <ng-container movieCardAction>
+        <div fxLayout="row" fxLayoutAlign="end">
+          <wishlist-button [movieId]="title.id" small></wishlist-button>
+        </div>
+      </ng-container>
+    </movie-card>
+
+  </ng-template>
+
+
+  <!-- LIST ITEM CARD -->
+  <ng-template titleListItem let-title>
+
+    <!-- WRITE HERE WHAT YOU WANT TO INJECT-->
+    <!-- TODO use the real movie list item if it exists-->
+    <p>{{title.main.title.original}}</p>
+
+  </ng-template>
+
+
+</title-list>

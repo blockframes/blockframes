@@ -1,5 +1,6 @@
 import { IsoTerritoriesToSlugAndLabel } from "./territories-ISO-3166";
 
+// TODO issue#2582
 const models = {
   'GENRES': [
     { 'slug': 'comedy', 'label': 'Comedy' },
@@ -495,6 +496,10 @@ const models = {
     { 'slug': 'dubbed', 'label': 'Dubbed' },
     { 'slug': 'subtitle', 'label': 'Subtitled' },
     { 'slug': 'caption', 'label': 'Closed-Captions' }
+  ] as const,
+  'STORE_TYPE': [
+    { 'slug': 'line_up', 'label': 'Line-up'},
+    { 'slug': 'library', 'label': 'Library'},
   ]
 };
 

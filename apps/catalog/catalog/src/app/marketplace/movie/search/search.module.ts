@@ -1,12 +1,11 @@
 // Components
-import { MovieCardModule } from "@blockframes/movie/components/card/card.module";
+import { MovieCardModule } from "@blockframes/ui/movie-card/movie-card.module";
 import { MovieDisplayListModule } from '@blockframes/movie/components/display-list/display-list.module';
-import { TranslateSlugModule } from "@blockframes/utils/pipes/translate-slug.module";
-import { MovieFormGenresModule } from "@blockframes/movie/form/main/genres/genres.module";
-import { AvailsFilterModule } from '@blockframes/distribution-rights/components/avails-filter/avails-filter.module';
 
-// Pages
-import { MarketplaceSearchComponent } from './search.component';
+// Pipes
+import { DisplayNameModule } from "@blockframes/utils/pipes/display-name.module";
+import { TranslateSlugModule } from "@blockframes/utils/pipes/translate-slug.module";
+
 
 // Material
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -33,8 +32,18 @@ import { NgModule } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
+
 import { ChipsAutocompleteModule } from "@blockframes/ui/static-autocomplete/chips/chips-autocomplete.module";
+import { AlgoliaAutocompleteModule } from "@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module";
+import { AlgoliaChipsAutocompleteModule } from "@blockframes/ui/algolia/chips-autocomplete/algolia-chips-autocomplete.module";
+import { TitleListLayoutModule } from "@blockframes/movie/layout/list/title-list.module"
 import { WishlistButtonModule } from "@blockframes/organization/components/wishlist-button/wishlist-button.module";
+import { TitleFilterModule } from '@blockframes/movie/components/title-filter/title-filter.module';
+import { MovieFormEstimatedBudgetModule } from "@blockframes/movie/form/budget/estimated-budget/estimated-budget.module";
+import { LanguageFilterModule } from '@blockframes/movie/form/filters/languages/language-filter.module';
+import { BudgetFilterModule } from '@blockframes/movie/form/filters/budget/budget.module';
+import { StaticCheckBoxesModule } from '@blockframes/ui/static-autocomplete/check-boxes/check-boxes.module';
+import { MarketplaceSearchComponent } from "./search.component";
 
 @NgModule({
   declarations: [MarketplaceSearchComponent],
@@ -45,11 +54,20 @@ import { WishlistButtonModule } from "@blockframes/organization/components/wishl
     HttpClientModule,
     MovieCardModule,
     MovieDisplayListModule,
-    TranslateSlugModule,
-    MovieFormGenresModule,
-    AvailsFilterModule,
     ChipsAutocompleteModule,
+    AlgoliaAutocompleteModule,
+    AlgoliaChipsAutocompleteModule,
+    TitleListLayoutModule,
     WishlistButtonModule,
+    TitleFilterModule,
+    MovieFormEstimatedBudgetModule,
+    LanguageFilterModule,
+    BudgetFilterModule,
+    StaticCheckBoxesModule,
+
+    // Pipe
+    TranslateSlugModule,
+    DisplayNameModule,
 
     // Material
     MatIconModule,
@@ -68,12 +86,7 @@ import { WishlistButtonModule } from "@blockframes/organization/components/wishl
     MatDatepickerModule,
     MatOptionModule,
     MatSnackBarModule,
-    RouterModule.forChild([
-      {
-        path: '',
-        component: MarketplaceSearchComponent
-      }
-    ])
+    RouterModule.forChild([{ path: '', component: MarketplaceSearchComponent }])
   ]
 })
-export class MarketplaceSearchModule {}
+export class MarketplaceSearchModule { }
