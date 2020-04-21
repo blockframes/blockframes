@@ -116,6 +116,8 @@
         ],
         "festival": [
           "festival-demo1-blockframes"
+        ],
+        "storybook": [
         ]
       }
     },
