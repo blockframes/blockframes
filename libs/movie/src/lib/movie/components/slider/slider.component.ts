@@ -2,9 +2,18 @@
 import { Component, ChangeDetectionStrategy, Input, Directive } from '@angular/core';
 
 // Blockframes
-import { Movie } from '@blockframes/movie/+state';
+import { Movie, Credit } from '@blockframes/movie/+state';
+import { Title } from '@blockframes/movie/+state/movie.firestore';
+import { ImgRef } from '@blockframes/utils/image-uploader';
 
-function createMovieSliderView(movies: Movie[]) {
+interface MovieSliderView {
+    directors: string | Credit[],
+    titles: Title,
+    logline: string,
+    banner: ImgRef | string
+}
+
+function createMovieSliderView(movies: Movie[]): MovieSliderView[] {
     return movies.map(movie => {
         return {
             directors: movie.main?.directors || '',
@@ -18,8 +27,6 @@ function createMovieSliderView(movies: Movie[]) {
     })
 }
 
-type MovieSliderView = ReturnType<typeof createMovieSliderView>;
-
 @Component({
     selector: '[movies] movie-slider',
     templateUrl: './slider.component.html',
@@ -28,7 +35,7 @@ type MovieSliderView = ReturnType<typeof createMovieSliderView>;
 })
 export class MovieSliderComponent {
     titles: Movie[]
-    movieViews: MovieSliderView;
+    movieViews: MovieSliderView[];
     @Input() set movies(movies: Movie[]) {
         this.movieViews = createMovieSliderView(movies);
         this.titles = movies;
