@@ -22,6 +22,8 @@ import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
 import { LegalDocument } from "@blockframes/contract/contract/+state/contract.firestore";
 import { Price } from "@blockframes/utils/common-interfaces";
 
+// TODO issue#2582
+
 type Timestamp = firestore.Timestamp;
 
 export const workType = {
@@ -166,11 +168,11 @@ export interface BoxOffice {
 }
 
 export interface MovieBudget {
-  /** 
+  /**
    * @dev If the budget is fixed, we use totalBudget
    */
   totalBudget?: Price,
-  /** 
+  /**
    * @dev If budget is not fixed, we can put an estimate with estimatedBudget.
    * @see BUDGET_LIST for possible values
    * */
