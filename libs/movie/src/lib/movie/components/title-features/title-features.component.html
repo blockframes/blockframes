@@ -1,4 +1,4 @@
-<h4 *ngIf="features.length" fxLayout fxLayoutGap="8px">
+<h4 *ngIf="features.length" fxLayout>
     <ng-container *ngFor="let feature of features; let isLast = last">
         <span [matTooltip]="feature.tooltip">
             {{ feature.view }}
