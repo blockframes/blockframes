@@ -14,7 +14,7 @@
     "build:festival": "npx ng build festival --base-href /festival/ --configuration=\"${ENV:-dev}\"",
     "build:backend-functions": "npx ng build backend-functions --configuration=\"${ENV:-dev}\"",
     "build:backend-ops": "npx ng build backend-ops --configuration=\"${ENV:-dev}\"",
-    "build:all": "npm run build:backend-functions && npm run build:backend-ops && npm run build:catalog",
+    "build:all": "npm run build:backend-functions && npm run build:backend-ops && npm run build:catalog && npm run build:festival",
     "firebase:serve": "concurrently --kill-others \"npm run build:functions --watch\" \"firebase serve --only functions\"",
     "firebase:shell": "concurrently --kill-others \"npm run build:functions --watch\" \"firebase functions:shell\" --raw",
     "firebase:emulator": "firebase emulators:start --only firestore",
