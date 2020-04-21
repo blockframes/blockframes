@@ -12,7 +12,8 @@ import { sortingDataAccessor } from '@blockframes/utils/table';
 import { MovieImportState, SpreadsheetImportError } from '../../import-utils';
 import { MovieService } from '@blockframes/movie/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
-import { ContractService, TitlesAndRights } from '@blockframes/contract/contract/+state/contract.service';
+import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
+import { createContract, createContractPartyDetail } from '@blockframes/contract/contract/+state/contract.model';
 
 const hasImportErrors = (importState: MovieImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -134,7 +135,27 @@ export class TableExtractedMoviesComponent implements OnInit {
       const orgId = this.orgQuery.getActiveId();
       const movieId = importState.movie.id;
       const titlesAndRights = { [movieId]: importState.distributionRights };
-      await this.contractService.createContractAndRight(orgId, titlesAndRights);
+
+      // Initializes a new 'mandate' contract
+      const mandateContract = createContract({ type: 'mandate' });
+
+      // Set movie producing company as licensor
+      const licensor = createContractPartyDetail();
+      licensor.party.role = 'licensor';
+      licensor.party.displayName = `${importState.movie.main.internalRef}'s producer`;
+
+      // Lets try to add more info about licensor with movie producing company
+      if (importState.movie.main?.stakeholders?.executiveProducer.length) {
+        const firstProducer = importState.movie.main?.stakeholders?.executiveProducer.pop();
+        if (firstProducer.orgId) {
+          licensor.party.orgId = firstProducer.orgId;
+        } else if (firstProducer.displayName) {
+          licensor.party.displayName = firstProducer.displayName;
+        }
+      }
+      mandateContract.parties.push(licensor);
+
+      await this.contractService.createContractAndRight(orgId, titlesAndRights, mandateContract);
     }
 
     return true;

@@ -90,7 +90,8 @@ enum SpreadSheetMovie {
   //////////////////
   // FESTIVAL FIELDS
   //////////////////
-  reservedTerritories,
+  territories,
+  territoriesExcluded,
 
   //////////////////
   // ADMIN FIELDS
@@ -734,7 +735,7 @@ export class ViewExtractedMoviesComponent implements OnInit {
 
             switch (currency) {
               case '$':
-                movie.budget.totalBudget.currency = getCodeIfExists('MOVIE_CURRENCIES', 'USD'); 
+                movie.budget.totalBudget.currency = getCodeIfExists('MOVIE_CURRENCIES', 'USD');
                 break;
               case '€':
               default:
@@ -870,26 +871,48 @@ export class ViewExtractedMoviesComponent implements OnInit {
         //////////////////
         // FESTIVAL FIELDS
         //////////////////
-        if (spreadSheetRow[SpreadSheetMovie.reservedTerritories]) {
+        if (spreadSheetRow[SpreadSheetMovie.territories] || spreadSheetRow[SpreadSheetMovie.territoriesExcluded]) {
           // Here we need to create 'lite' version of distribution deals with only the reserved territories.
           // This feature is used on festival app.
 
           const distributionRight = createDistributionRight();
-          distributionRight.territory = [];
-          spreadSheetRow[SpreadSheetMovie.reservedTerritories].split(this.separator).forEach((c: ExtractCode<'TERRITORIES'>) => {
-            const territory = getCodeIfExists('TERRITORIES', c);
-            if (territory) {
-              distributionRight.territory.push(territory);
-            } else {
-              importErrors.errors.push({
-                type: 'error',
-                field: 'territories',
-                name: 'Territories sold',
-                reason: `${c} not found in territories list`,
-                hint: 'Edit corresponding sheet field.'
-              });
-            }
-          });
+          // TERRITORIES
+          if (spreadSheetRow[SpreadSheetMovie.territories]) {
+            distributionRight.territory = [];
+            spreadSheetRow[SpreadSheetMovie.territories].split(this.separator).forEach((c: ExtractCode<'TERRITORIES'>) => {
+              const territory = getCodeIfExists('TERRITORIES', c);
+              if (territory) {
+                distributionRight.territory.push(territory);
+              } else {
+                importErrors.errors.push({
+                  type: 'error',
+                  field: 'territories',
+                  name: 'Territories sold',
+                  reason: `${c} not found in territories list`,
+                  hint: 'Edit corresponding sheet field.'
+                });
+              }
+            });
+          }
+
+          // TERRITORIES EXCLUDED
+          if (spreadSheetRow[SpreadSheetMovie.territoriesExcluded]) {
+            distributionRight.territoryExcluded = [];
+            spreadSheetRow[SpreadSheetMovie.territoriesExcluded].split(this.separator).forEach((c: ExtractCode<'TERRITORIES'>) => {
+              const territory = getCodeIfExists('TERRITORIES', c);
+              if (territory) {
+                distributionRight.territoryExcluded.push(territory);
+              } else {
+                importErrors.errors.push({
+                  type: 'error',
+                  field: 'territories excluded',
+                  name: 'Territories excluded',
+                  reason: `${c} not found in territories list`,
+                  hint: 'Edit corresponding sheet field.'
+                });
+              }
+            });
+          }
 
           // We keep it for save in the next component
           importErrors.distributionRights = [distributionRight];
