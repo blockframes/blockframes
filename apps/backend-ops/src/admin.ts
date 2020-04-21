@@ -58,6 +58,8 @@ export async function restore(appURL: string) {
     request.post({ url, form }, (error, response) => {
       if (error) {
         reject(error);
+      } else if (response.statusCode < 200 || response.statusCode > 299) {
+        reject(`invalid status code on restore: ${response.statusCode}. Check your firebase functions logs (admin function)`)
       } else {
         resolve(response);
       }
