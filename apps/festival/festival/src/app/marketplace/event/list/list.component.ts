@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { EventService } from '@blockframes/event/+state/event.service';
 import { EventQuery } from '@blockframes/event/+state/event.query';
@@ -19,6 +19,7 @@ export class EventListComponent implements OnInit, OnDestroy {
     private marketplace: MarketplaceComponent,
     private service: EventService,
     private query: EventQuery,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -27,6 +28,11 @@ export class EventListComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.sub.unsubscribe();
+  }
+
+  updateViewDate(date: Date) {
+    this.viewDate = date;
+    this.cdr.markForCheck();
   }
 
   toggleMenu() {
