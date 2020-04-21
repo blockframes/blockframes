@@ -293,7 +293,7 @@ jobs:
             npx firebase use demo1 &&
             cp firestore.rules firestore.rules.regular &&
             cp firestore.maintenance.rules firestore.rules &&
-            npx firebase deploy --except hosting:storybook
+            npx firebase deploy --only hosting:catalog,hosting:festival,functions,storage,firestore
       - run: node dist/apps/backend-ops/main.js upgrade
       - run:
           command: |
