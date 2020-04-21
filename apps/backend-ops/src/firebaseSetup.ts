@@ -43,6 +43,7 @@ export async function upgrade() {
   console.info('Preparing Algolia...');
   await upgradeAlgoliaOrgs();
   await upgradeAlgoliaMovies();
+  await upgradeAlgoliaUsers();
   console.info('Algolia ready for testing!');
 
   process.exit(0);
