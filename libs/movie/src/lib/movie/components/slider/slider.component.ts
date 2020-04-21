@@ -7,13 +7,13 @@ import { Movie } from '@blockframes/movie/+state';
 function createMovieSliderView(movies: Movie[]) {
     return movies.map(movie => {
         return {
-            directors: movie.main.directors ,
+            directors: movie.main?.directors || '',
             titles: {
-                international: movie.main.title.international,
-                original: movie.main.title.original
+                international: movie.main?.title.international || '',
+                original: movie.main?.title.original || ''
             },
-            logline: movie.story.logline,
-            banner: movie.promotionalElements.banner.media
+            logline: movie.story?.logline,
+            banner: movie.promotionalElements?.banner.media
         }
     })
 }
@@ -31,7 +31,6 @@ export class MovieSliderComponent {
     movieViews: MovieSliderView[];
     @Input() set movies(movies: Movie[]) {
         this.movieViews = createMovieSliderView(movies) as any[];
-        console.log(this.movieViews)
         this.titles = movies;
     }
 }

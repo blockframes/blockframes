@@ -1,4 +1,5 @@
-<bf-slider autoplay loop>
+
+<bf-slider autoplay loop hideIndicators>
     <bf-slide *ngFor="let view of movieViews" overlayColor="linear-gradient(to right, black, transparent)">
         <div fxLayout="column" fxLayoutAlign="space-between start">
             <h4 *ngIf="view.directors">{{ view.directors | displayName }}</h4>

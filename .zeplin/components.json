@@ -34,9 +34,9 @@
                 "component/slider/archipel_content/movie-slider"
             ],
             "storybook": {
-                "kind": "Slider",
+                "kind": "Movie Slider",
                 "storybook": [
-                    "Slider"
+                    "Movie Slider"
                 ]
             }
         },
