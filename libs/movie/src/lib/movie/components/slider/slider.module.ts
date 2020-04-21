@@ -9,6 +9,7 @@ import { MovieSliderComponent, MovieSliderActions, MovieSliderCTA } from './slid
 import { SliderModule } from '@blockframes/ui/slider/slider.module';
 import { DisplayNameModule } from '@blockframes/utils/pipes';
 import { MovieTitleFeaturesModule } from '../title-features/title-features.module';
+import { MaxLengthModule } from '@blockframes/utils/pipes/max-length.module';
 
 @NgModule({
     imports: [
@@ -18,8 +19,8 @@ import { MovieTitleFeaturesModule } from '../title-features/title-features.modul
         // Blockframes
         SliderModule,
         MovieTitleFeaturesModule,
-        DisplayNameModule
-
+        DisplayNameModule,
+        MaxLengthModule
     ],
     declarations: [MovieSliderComponent, MovieSliderActions, MovieSliderCTA],
     exports: [MovieSliderComponent, MovieSliderActions, MovieSliderCTA]

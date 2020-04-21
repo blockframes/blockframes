@@ -6,18 +6,13 @@ import { Movie } from '@blockframes/movie/+state';
 
 function createMovieSliderView(movies: Movie[]) {
     return movies.map(movie => {
-        // UX decided to cut the logline to 335 characters
-        const shortedLogline = movie.story?.logline.length > 335
-            ? movie.story?.logline.substr(0, 332).concat('...')
-            : movie.story?.logline
-        console.log(shortedLogline)
         return {
             directors: movie.main?.directors || '',
             titles: {
                 international: movie.main?.title.international || '',
                 original: movie.main?.title.original || ''
             },
-            logline: shortedLogline || '',
+            logline: movie.story?.logline || '',
             banner: movie.promotionalElements?.banner.media || ''
         }
     })
@@ -33,9 +28,9 @@ type MovieSliderView = ReturnType<typeof createMovieSliderView>;
 })
 export class MovieSliderComponent {
     titles: Movie[]
-    movieViews: MovieSliderView[];
+    movieViews: MovieSliderView;
     @Input() set movies(movies: Movie[]) {
-        this.movieViews = createMovieSliderView(movies) as any[];
+        this.movieViews = createMovieSliderView(movies);
         this.titles = movies;
     }
 }
