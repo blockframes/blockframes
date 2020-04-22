@@ -1,4 +1,3 @@
-// import * as gcs from '@google-cloud/storage';
 import { functions } from './internals/firebase';
 import {
   RelayerConfig,
@@ -212,5 +211,9 @@ export const relayerRegister = functions.runWith({ timeoutSeconds: 540 }).https
 export const relayerSend = functions.https
   .onCall((data, context) => logErrors(relayerSendLogic(data, RELAYER_CONFIG)));
 
+//--------------------------------
+//         File upload          //
+//--------------------------------
 
-export const onFileUpload = functions.storage.object().onChange((event : any) => onFileUploadEvent(event))
+/** Trigger: on every file uploaded to the storage. Immediatly exit function if contentType is not an image. */
+export const onFileUpload = functions.storage.object().onFinalize(data => onFileUploadEvent(data))
