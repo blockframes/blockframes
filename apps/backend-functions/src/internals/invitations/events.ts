@@ -4,13 +4,13 @@ import { NotificationDocument, OrganizationDocument } from "../../data/types";
 import { createNotification, triggerNotifications } from "../../notification";
 import { db } from "../firebase";
 import { getAdminIds } from "../../data/internals";
-import { userInvitedToEvent } from '../../templates/mail';
+import { userInvitedToEvent, invitationToScreeningFromOrg, userRequestToEvent } from '../../templates/mail';
 import { sendMailFromTemplate } from '../email';
 
 /**
  * Handles notifications and emails when an invitation to an event is created.
  */
-export async function onInvitationToAnEventCreate({
+async function onInvitationToAnEventCreate({
   toUser,
   toOrg,
   fromUser,
@@ -23,7 +23,6 @@ export async function onInvitationToAnEventCreate({
   let recipient: string;
   if (!!toUser) {
     recipient = toUser.email;
-    await sendMailFromTemplate(userInvitedToEvent(recipient, eventId));
   } else if (!!toOrg) {
     /** Attendee is only an user or an email for now */
     throw new Error('Cannot invite an org to an event for now. Not implemented.');
@@ -39,7 +38,7 @@ export async function onInvitationToAnEventCreate({
      */
     const senderEmail = fromOrg.denomination.public;
     console.log(`Sending invitation email for a screening event (${eventId}) from ${senderEmail} to : ${recipient}`);
-    // @TODO (#2461) send invitation email for a screening event
+    await sendMailFromTemplate(invitationToScreeningFromOrg(recipient, fromOrg.denomination.full, eventId));
 
   } else if (!!fromUser) {
     /**
@@ -50,11 +49,11 @@ export async function onInvitationToAnEventCreate({
     switch (mode) {
       case 'invitation':
         console.log(`Sending invitation email for a meeeting event (${eventId}) from ${senderEmail} to : ${recipient}`);
-        // @TODO (#2461) send invitation to a meeting email template
+        await sendMailFromTemplate(userInvitedToEvent(recipient, senderEmail, eventId));
         break;
       case 'request':
         console.log(`Sending request email to attend an event (${eventId}) from ${senderEmail} to : ${recipient}`);
-        // @TODO (#2461) send (invitation or screening) request email template
+        await sendMailFromTemplate(userRequestToEvent(senderEmail, recipient, eventId));
         break;
     }
   } else {
@@ -181,9 +180,7 @@ export async function onInvitationToAnEventUpdate(
   after: InvitationDocument,
   invitation: InvitationToAnEvent
 ): Promise<any> {
-  console.log('event.ts fonction on invitationToAnEventUpdate avant if')
   if (wasCreated(before, after)) {
-    console.log('events.ts fonction on invitationToAnEventUpdate dans if');
     return onInvitationToAnEventCreate(invitation);
   } else if (wasAccepted(before!, after)) {
     return onInvitationToAnEventAccepted(invitation);

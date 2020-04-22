@@ -113,11 +113,36 @@ export function userRequestedToJoinYourOrg(request: RequestToJoinOrganization): 
   return { to: request.adminEmail, templateId: templateIds.joinYourOrg, data };
 }
 
-/** Generates an email request for user invited to an organization. */
-export function userInvitedToEvent(email: string, eventId: string): EmailTemplateRequest {
-  const data = {};
+/** Generates an email for user invited to an meeting event. */
+export function userInvitedToEvent(email: string, senderEmail: string, eventId: string): EmailTemplateRequest {
+  const data = {
+    userEmail: email,
+    senderEmail: senderEmail,
+    eventId: eventId
+  };
   return { to: email, templateId: templateIds.userInvitedToEvent, data };
 }
+
+/** Generates an email for user invited by an organization to a screening. */
+export function invitationToScreeningFromOrg(email: string, orgDenomination: string, eventId: string): EmailTemplateRequest {
+  const data = {
+    orgDenomination: orgDenomination,
+    eventId: eventId
+  };
+  return { to: email, templateId: templateIds.userInvitedToEvent, data };
+}
+
+/** Generates an email for user requesting to attend an event. */
+export function userRequestToEvent(fromUser: string, toUser: string, eventId: string): EmailTemplateRequest {
+  const data = {
+    emailUserRequest: fromUser,
+    userEmail: toUser,
+    eventId: eventId
+  };
+  return { to: toUser, templateId: templateIds.userInvitedToEvent, data };
+}
+
+
 
 // ------------------------- //
 //      CASCADE8 ADMIN       //

@@ -5,7 +5,6 @@ import { onInvitationToOrgUpdate, onInvitationFromUserToJoinOrgUpdate } from './
 import { onInvitationToAnEventUpdate } from './internals/invitations/events';
 
 
-
 /**
  * Handles firestore updates on an invitation object,
  *
