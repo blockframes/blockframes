@@ -1,0 +1,17 @@
+h1,
+h2,
+h4,
+p {
+    // TODO #2548
+    color: white !important;
+}
+
+.overlay {
+    padding: 80px 100px;
+}
+
+@media only screen and (max-width: 1000px) {
+    .overlay {
+        padding: 0;
+    }
+}

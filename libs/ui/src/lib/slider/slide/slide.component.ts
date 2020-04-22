@@ -13,12 +13,24 @@ export class SlideComponent implements ListKeyManagerOption, Slide {
 
   @Input() image: Slide['image'];
 
-  @Input() overlayColor: Slide['overlayColor'] = '#00000080';
+  @Input()
+  get overlayColor(): Slide['overlayColor'] { return this._overlayColor }
+  set overlayColor(value: string) {
+    this._overlayColor = this._overlayPreset[value]
+  }
 
   @Input() @boolean hideOverlay: Slide['hideOverlay'] = false;
-  
+
   // Implements ListKeyManagerOption otherwise it will throw an Error
   @Input() disabled = false;
 
   @ViewChild(TemplateRef) templateRef: TemplateRef<any>;
+
+  private _overlayColor: Slide['overlayColor'];
+
+  private _overlayPreset = {
+    gradient: "linear-gradient(to right, black, transparent)",
+    heavy: '#00000080',
+    medium: '#00000050'
+  }
 }
