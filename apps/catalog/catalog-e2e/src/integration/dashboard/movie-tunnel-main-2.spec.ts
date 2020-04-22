@@ -28,7 +28,7 @@ beforeEach(() => {
 });
 
 describe('User can navigate to the movie tunnel main page and fill all the fields and navigate to storyline page', () => {
-  it('Login into an existing account, navigate on main page, complete main fields, go on movie tunnel storyline page', () => {
+  it.skip('Login into an existing account, navigate on main page, complete main fields, go on movie tunnel storyline page', () => {
     const p1 = new TunnelMainPage();
 
     // Content Type
