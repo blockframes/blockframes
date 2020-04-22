@@ -1,4 +1,11 @@
 rules_version = '2';
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+///                                               DATABASE RULES                                        ///
+///                              This document describes the database rules                             ///
+///  Documentation @see https://www.notion.so/cascade8/Database-rules-80024b4805b74e1a98ac154f4afeaad7  ///
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 service cloud.firestore {
   match /databases/{database}/documents {
 
@@ -6,8 +13,10 @@ service cloud.firestore {
     // Blockframes Administrators //
     ////////////////////////////////
 
-    // blockframe admins can access ALL the db.
-    // this overwrites every other rules.
+    /// RULES ///
+
+    // blockframes admins can access ALL the db.
+    // this overwrides every other rules.
     match /{document=**} {
       allow read, write: if isBlockframesAdmin(userId());
     }
@@ -17,74 +26,127 @@ service cloud.firestore {
       allow write: if false;
     }
 
+    /// FUNCTIONS ///
+
     function isBlockframesAdmin(userId) {
       return exists(/databases/$(database)/documents/blockframesAdmin/$(userId));
     }
 
-    ///////////////////
-    /// COLLECTIONS ///
-    ///////////////////
 
-    // Note: Add a verification of each document ID => {id: ID_SHOULD_BE_EQUAL_TO_PATH}
-    // Add schemas validators for document update/create => ISSUE#650
+    ////////////////////////////////
+    // Commons Collections        //
+    ////////////////////////////////
 
-    /// USERS RULES ///
-    // TODO: Create a "public users" collection to get non sensitive user data => ISSUE#1359
+
+    match /docsIndex/{docId} {
+      // index of every doc created with a permission doc associated
+      // essential for isBrandNewDocument.
+      allow read, write: if false;
+    }
+
+    match /_META/_MAINTENANCE {
+      allow read if true;
+      allow write: if false;
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////
+    ///                                 COLLECTIONS                               ///
+    ///             rules defined at the collections or document level            ///
+    /////////////////////////////////////////////////////////////////////////////////
+
+
+    ////////////////////////////////
+    // USER RULES                 //
+    ////////////////////////////////
+
+    /// RULES ///
 
     match /users/{userId} {
-    	allow read: if userId() == existingData().uid
-      	|| (isSignedIn() && isOrgMember(userId, userOrgId()));
-    	// We can read user data from the same organization as us until we got public users collection.
-    	allow update: if isSignedIn()
-      	&& userId() == incomingData().uid
-        && isNotUpdatingField('uid')
-        && isNotUpdatingField('email')
-    	allow create: if userId() == incomingData().uid;
+      // TODO (#1359): We can read user data from the same organization as us until we got public users collection.
+    	allow read: if userId() == existingData().uid	|| (isSignedIn() && isOrgMember(userId, userOrgId()));
+    	allow update: if isOnlyUpdatingAllowedUserFields();
+    	allow create: if userId() == incomingData().uid
+        && isRequestFieldValueEqualTo('uid', userId);
       allow delete: if userId() == existingData().uid;
     }
 
-    /// NOTIFICATIONS RULES ///
+    // TODO (#1359): publicUser rules goes here.
+
+    /// FUNCTIONS ///
+
+    function isOnlyUpdatingAllowedUserFields() {
+      // Only "firstName" and "lastName" can be updated.
+      return isSignedIn()
+      	&& userId() == incomingData().uid
+        && isNotUpdatingField('uid')
+        && isNotUpdatingField('email')
+        && isNotUpdatingField('orgId')
+    }
+
+    ////////////////////////////////
+    // NOTIFICATIONS RULES        //
+    ////////////////////////////////
+
+    /// RULES ///
 
     match /notifications/{notificationId} {
-    	allow read, update: if userId() == existingData().toUserId
-        || currentUser().orgId == existingData().organization.id;
+    	allow read: if userId() == existingData().toUserId;
+    	allow update: if isOnlyMarkingNofitifcationAsRead();
     	allow create, delete: if false;
     }
 
-    /// INVITATIONS RULES ///
+    /// FUNCTIONS ///
+
+    function isOnlyMarkingNofitifcationAsRead() { // @TODO ok #650 ?
+      // Only "isRead" can be updated.
+      return userId() == existingData().toUserId
+        && isNotUpdatingField('id')
+        && isNotUpdatingField('date')
+        && isNotUpdatingField('toUserId')
+        && isNotUpdatingField('type')
+        // Notifcations subjects
+        && isNotUpdatingField('docId')
+        && isNotUpdatingField('user')
+        && isNotUpdatingField('organization')
+        && isNotUpdatingField('movies');
+    }
+
+    ////////////////////////////////
+    // INVITATIONS RULES          //
+    ////////////////////////////////
+
+    /// RULES ///
     
-    // Functions
-    // Send the invitation
-    function isHost() {
-      return userOrgId() == existingData().fromOrg.id
+    match /invitations/{invitationId} {
+    	allow read: if isInvitationSender() || isInvitationRecepient();
+      allow create: if isInvitationSender()
+        && isRequestFieldValueEqualTo('status', 'pending')
+        && (
+          !incomingData().keys().hasAll(['docId']) // no docId
+          || orgCan('isAdmin', userOrgId(), incomingData().docId) // user org is admin of docId
+        )
+        && isRequestFieldValueEqualTo('id', invitationId);
+    	allow update: if isOnlyChangingInvitationStatus();
+      allow delete: if isInvitationSender();
+    }
+
+    /// FUNCTIONS ///
+
+    function isInvitationSender() {
+      return isOrgAdmin(userId(), existingData().fromOrg.id)
         || userId() == existingData().fromUser.uid;
     }
-    // Receive the invitation
-    function isGuest() {
-      return userId() == existingData().toUser.uid
-        || userOrgId() == existingData().toOrg.id;
+
+    function isInvitationRecepient() {
+      return isOrgAdmin(userId(), existingData().toOrg.id)
+        || userId() == existingData().toUser.uid;
     }
 
-    // Rules
-    match /invitations/{invitationId} {
-    	allow read: if isHost() || isGuest();
-
-      allow create: 
-        // Event
-        if incomingData().type == 'event'
-        // Invitation to org
-        || userId() == incomingData().fromUser.uid
-      	|| userOrgId() == incomingData().fromOrg.id
-        || orgCan('isAdmin', userOrgId(), incomingData().docId);
-
+    function isOnlyChangingInvitationStatus() { // @TODO ok #650 ?
       // Update is used to change status only. Allowed to recepients only
       // @TODO (#2500) should be handled by a backend function to prevent ugly rules
-    	allow update: if 
-        // Event
-        (
-          incomingData().type == 'event' && isGuest()
-          || (orgCan('isAdmin', userOrgId(), incomingData().docId))
-        )
+      // Only "status" can be updated.
+      return isInvitationRecepient()
         &&
         (
           isNotUpdatingField('id')
@@ -100,84 +162,108 @@ service cloud.firestore {
           && isNotUpdatingField('docId')
           && isNotUpdatingField('processedId')
         );
-
-      allow delete: if
-        // Event
-        (incomingData().type == 'event' && isHost())
-        ||
-        (isOrgAdmin(userId(), existingData().fromOrg.id) || userId() == existingData().toUser.uid);
     }
 
-    /// ORGANIZATION RULES ///
 
+    ////////////////////////////////
+    // ORGANIZATION RULES         //
+    ////////////////////////////////
+
+    /// RULES ///
+  
     match /orgs/{orgId} {
+      allow read: if isSignedIn();
     	allow create: if isSignedIn()
-      	&& incomingData().status == 'pending'
-        && documentIdChecked(orgId, 'orgs');
+        && isRequestFieldValueEqualTo('status', 'pending')
+        && isRequestFieldValueEqualTo('id', orgId)
       allow update: if isSignedIn()
       	&& isNotUpdatingField('status')
-        && isNotUpdatingField('id')
-        && documentIdChecked(orgId, 'orgs');
+        && isNotUpdatingField('created')
+        && isNotUpdatingField('appAccess') // @TODO #2585 if method works for objects
+        && isNotUpdatingField('id');
       allow delete: if isSuperAdmin(userId(), orgId);
-      allow read: if isSignedIn();
-
-      match /{subCollection}/{documents=**} {
-        allow read, write;
-      }
     }
 
-    /// PERMISSIONS RULES ///
-    match /docsIndex/{docId} {
-      // index of every doc create with a permission doc associated:
-      // essential for isBrandNewDocument.
-      allow read, write: if false;
-    }
+    ////////////////////////////////
+    // PERMISSIONS RULES          //
+    ////////////////////////////////
+
+    /// RULES ///
 
     match /permissions/{orgId} {
     	allow read: if isOrgMember(userId(), orgId);
-      allow create: if (isOrgAdmin(userId(), orgId)
-      	  && incomingData().id == orgId
-          && documentIdChecked(orgId, 'permissions')
-        ) || isCreatingOrganization(orgId);
+      allow create: if isRequestFieldValueEqualTo('id', orgId)
+        && ( isOrgAdmin(userId(), orgId) || isCreatingOrganization(orgId));
 			allow update: if isOrgAdmin(userId(), orgId)
-      	&& incomingData().id == orgId
-        && documentIdChecked(orgId, 'permissions')
-        && incomingData().id == existingData().id;
+      	&& isNotUpdatingField('id');
 
       match /documentPermissions/{docId} {
         allow read: if isOrgMember(userId(), orgId);
         allow create: if isOrgMember(userId(), orgId)
-          && incomingData().id == docId
+          && isRequestFieldValueEqualTo('id', docId)
           && isBrandNewDocument(docId);
         allow update: if isOrgAdmin(userId(), orgId)
-          && incomingData().id == docId
-          && incomingData().id == existingData().id;
+          && isNotUpdatingField('id');
       }
     }
 
-    /// MOVIES RULES ///
+    /// FUNCTIONS ///
+
+    function isBrandNewDocument(docId) {
+      // checks that no corresponding doc exists in the index (you have to get invited to create perm for a document that ALREADY exists)
+      return !exists(/databases/$(database)/documents/docsIndex/$(docId));
+    }
+
+    ////////////////////////////////
+    // MOVIES RULES               //
+    ////////////////////////////////
+
+    /// RULES ///
 
     match /movies/{movieId} {
-    	// We allow all movie read as Archipel Content is a catalog of public movies.
+    	// @TODO (#2049) We allow all movie read as Archipel Content is a catalog of public movies.
       allow read: if userHasValidOrg();
       allow create: if userHasValidOrg()
-      	&& documentIdChecked(movieId, 'movies')
+        && isRequestFieldValueEqualTo('main.storeConfig.status', 'draft') // @TODO #2585 if method works for deep path
+      	&& isRequestFieldValueEqualTo('id', movieId)
         && canCreateNewPermissions(userOrgId(), movieId);
       allow update: if isOrgAdmin(userId(), userOrgId())
-        && documentIdChecked(movieId, 'movies')
-        && incomingData().id == existingData().id
+        && isNotUpdatingField('id')
+        && isNotUpdatingField('_meta')
+        && isNotUpdatingField('_type')
+        && isNotUpdatingField('movie.main.storeConfig.status') // @TODO #2585 if method works for deep path
         && orgCan('canUpdate', userOrgId(), movieId);
       allow delete: if orgCan('canDelete', userOrgId(), movieId)
       	&& isOrgAdmin(userId(), userOrgId());
 
+      match /distributionRights/{rightId} {
+        // @TODO (#2606 #2049) We allow all distributionRights reads as we need it to search avails
+        allow read: if userHasValidOrg();
+        allow create: if isRequestFieldValueEqualTo('id', rightId)
+          && isRequestFieldValueEqualTo('status', 'draft')
+        allow update: isNotUpdatingField('id')
+          && isNotUpdatingField('status')
+          && isNotUpdatingField('contractId');
+        allow delete: if orgCan('canDelete', userOrgId(), movieId)
+          && isOrgAdmin(userId(), userOrgId());
+      }
     }
 
-    /// CONTRACTS RULES ///
+    ////////////////////////////////
+    // CONTRACTS RULES            //
+    ////////////////////////////////
+
+    /// RULES ///
 
     match /contracts/{contractId} {
     	allow read: if isParty(userOrgId()) || orgCan('canRead', userOrgId(), contractId);
-      allow create: if canCreateNewPermissions(userOrgId(), contractId); // this depends on the fact that you can create a permission document in your own org.
-      allow update: if orgCan('canUpdate', userOrgId(), contractId);
+      allow create: if canCreateNewPermissions(userOrgId(), contractId)
+        && isRequestFieldValueEqualTo('lastVersion.status', 'draft') // @TODO #2585 if method works for deep path
+        && isRequestFieldValueEqualTo('id', contractId);
+      allow update: if orgCan('canUpdate', userOrgId(), contractId)
+        && isNotUpdatingField('id')
+        && isNotUpdatingField('type')
+        && isNotUpdatingField('lastVersion.status'); // @TODO #2585 if method works for deep path
       allow delete: if orgCan('canDelete', userOrgId(), contractId);
 
       match /versions/{versionId} {
@@ -191,30 +277,33 @@ service cloud.firestore {
       allow write: if false;
     }
 
-    /// DISTRIBUTION RIGHTS RULES ///
-    match /{path=**}/distributionRights/{rightId} {
-    	allow write: if true; // @TODO #2542 Only if contract.status  === 'unknown' ?
-      allow read: if true; // @TODO #2542 Only if licensee.orgId == currentUser.orgId || if licensor.orgId == currentUser.orgId
-    }
+    ////////////////////////////////
+    // EVENTS RULES               //
+    ////////////////////////////////
 
     /// EVENTS RULES ///
     match /events/{eventId} {
-    	allow write: if true;
-      allow read: if true;
-	    match /{document=**} {
-        allow read, write: if true;
-      }    
+    	allow read: if userHasValidOrg() 
+        && (
+          !existingData().isPrivate 
+          || existingData().ownerId == userId()
+          || ( existingData().ownerId == userOrgId() && isOrgAdmin(userId(), userOrgId()) )
+        );
+      allow create: if userHasValidOrg() 
+        && isRequestFieldValueEqualTo('id', eventId)
+        && ( isRequestFieldValueEqualTo('ownerId', userId() || isRequestFieldValueEqualTo('ownerId', userOrgId() );
+      allow update: if userHasValidOrg() 
+        && isNotUpdatingField('id')
+        && ( isRequestFieldValueEqualTo('ownerId', userId() || isRequestFieldValueEqualTo('ownerId', userOrgId() );
+      allow delete: if userHasValidOrg() 
+        && ( existingData().ownerId == userId() || ( existingData().ownerId == userOrgId() && isOrgAdmin(userId(), userOrgId()) ) );
 		}
 
-    /// META ///
-    match /_META/_MAINTENANCE {
-      allow read;
-      allow write: if false;
-    }
 
-    /////////////////
-    /// FUNCTIONS ///
-    /////////////////
+    /////////////////////////////////////////////////////////////////////////////////
+    ///                                  FUNCTIONS                                ///
+    ///                  set of functions to help building rules                  ///
+    /////////////////////////////////////////////////////////////////////////////////
 
     // Check the requested data.
     function existingData() {
@@ -248,10 +337,6 @@ service cloud.firestore {
     	return get(/databases/$(database)/documents/orgs/$(userOrgId())).data.status == "accepted";
     }
 
-    // Check if the param ID is equal to the data ID.
-    function documentIdChecked(docId, collection) {
-    	return docId == getAfter(/databases/$(database)/documents/$(collection)/$(docId)).data.id;
-    }
 
   	function isSuperAdmin(userId, orgId) {
     	return getOrgPermissions(orgId).roles[userId] == "superAdmin";
@@ -274,11 +359,6 @@ service cloud.firestore {
 
     function getDocumentPermissions(orgId, docId) {
     	return get(/databases/$(database)/documents/permissions/$(orgId)/documentPermissions/$(docId)).data;
-    }
-
-    function isBrandNewDocument(docId) {
-      // check that no corresponding doc exists in the index (you have to get invited to create perm for a document that ALREADY exists)
-      return !exists(/databases/$(database)/documents/docsIndex/$(docId));
     }
 
     function canCreateNewPermissions(orgId, docId) {
@@ -305,5 +385,11 @@ service cloud.firestore {
     function isNotUpdatingField(fieldName) {
 			return !incomingData().keys().hasAll([fieldName]) || (existingData.keys().hasAll([fieldName]) && incomingData()[fieldName] == existingData[fieldName]);
     }
+
+    // Incoming field must be setted with a value equal to "value"
+    function isRequestFieldValueEqualTo(fieldName, value) {
+    	return incomingData()[fieldName] == value;
+    }
+
   }
 }

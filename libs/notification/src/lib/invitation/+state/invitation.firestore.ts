@@ -19,7 +19,7 @@ export interface Invitation {
   toUser?: PublicUser,
   /**
    * @dev Can be a titleId or a eventId for example.
-   * If empty, the invitation is about Organization
+   * If empty, the invitation is about Organization and we use directly fromOrg.id
    */
   docId?: string;
   processedId?: string;
