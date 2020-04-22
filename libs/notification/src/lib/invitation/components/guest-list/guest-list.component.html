@@ -3,6 +3,7 @@
   <mat-icon matPrefix svgIcon="search_table"></mat-icon>
   <input matInput [formControl]="searchControl" placeholder="Search for a guest"/>
 </mat-form-field>
+
 <cdk-virtual-scroll-viewport [itemSize]="72">
   <mat-list>
     <ng-container *cdkVirtualFor="let invitation of search$ | async; trackBy: trackBy">

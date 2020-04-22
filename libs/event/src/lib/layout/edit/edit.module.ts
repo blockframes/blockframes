@@ -10,6 +10,7 @@ import { TimePickerModule } from '@blockframes/ui/form/time-picker/time-picker.m
 import { StatusModule } from '@blockframes/invitation/pipes/status.pipe';
 import { GuestListModule } from '@blockframes/invitation/components/guest-list/guest-list.module';
 import { AppBarModule } from '@blockframes/ui/app-bar';
+import { AlgoliaChipsAutocompleteModule } from '@blockframes/ui/algolia/chips-autocomplete/algolia-chips-autocomplete.module';
 
 // Material
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -35,6 +36,7 @@ import { MatListModule } from '@angular/material/list';
     StatusModule,
     GuestListModule,
     AppBarModule,
+    AlgoliaChipsAutocompleteModule,
 
     // Material
     MatToolbarModule,

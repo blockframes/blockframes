@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ChangeDetectorRef, OnInit, Optional } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { populateMovieLanguageSpecification, MovieService, } from '@blockframes/movie/+state';
 import { SheetTab } from '@blockframes/utils/spreadsheet';
@@ -50,11 +50,11 @@ export class ViewExtractedRightsComponent implements OnInit {
   public isUserBlockframesAdmin = false;
 
   constructor(
+    @Optional() private intercom: Intercom,
     private movieService: MovieService,
     private distributionRightService: DistributionRightService,
     private contractService: ContractService,
     private cdRef: ChangeDetectorRef,
-    private intercom: Intercom,
     private authQuery: AuthQuery,
     private dynTitle: DynamicTitleService
   ) {

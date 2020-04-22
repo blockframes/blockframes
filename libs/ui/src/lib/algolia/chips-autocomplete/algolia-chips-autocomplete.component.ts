@@ -1,6 +1,9 @@
-import { Component, ChangeDetectionStrategy, Input, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input, OnInit, TemplateRef, ContentChild } from '@angular/core';
 import { boolean } from '@blockframes/utils/decorators/decorators';
 import { FormList } from '@blockframes/utils/form';
+import { algolia } from '@env';
+
+export type AlgoliaIndex = 'indexNameOrganizations' | 'indexNameUsers' | 'indexNameMovies';
 
 @Component({
   selector: '[index] [keyToDisplay] [form] algolia-chips-autocomplete',
@@ -9,6 +12,7 @@ import { FormList } from '@blockframes/utils/form';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AlgoliaChipsAutocompleteComponent implements OnInit {
+  indexName: string;
 
   // INPUT ----------------------------
 
@@ -16,7 +20,9 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit {
    * Should be fed with the algolia index name out of the `env.ts`
    * @example [index]="algolia.indexNameMovies" // 'pl_movies' from the env.ts
    */
-  @Input() index: string;
+  @Input() set index(index: AlgoliaIndex) {
+    this.indexName = algolia[index];
+  }
 
   /**
    * The path of the key to display : i.e. What part of the result should be displayed by the input ?
@@ -58,6 +64,8 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit {
 
   /** Wether or not to display a cross button to clear the input */
   @Input() @boolean clearable = false;
+
+  @ContentChild(TemplateRef) template: TemplateRef<any>;
 
   ngOnInit() {
     // In case of facet search we know the result object will store the matched facets in the `value` field
