@@ -154,7 +154,7 @@ export class CropperComponent implements ControlValueAccessor, OnDestroy {
         throw new Error('No image cropped yet');
       }
       this.nextStep('upload');
-      this.fileName = sanitizeFileName(this.file.name);
+      this.fileName = sanitizeFileName(this.file.name).replace(/(\.[\w\d_-]+)$/i, '.webp');
       this.ref = this.storage.ref(`${this.folder}/${this.fileName}`);
       const blob = b64toBlob(this.croppedImage);
 
