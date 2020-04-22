@@ -114,10 +114,10 @@ export function userRequestedToJoinYourOrg(request: RequestToJoinOrganization): 
 }
 
 /** Generates an email request for user invited to an organization. */
-// export function userInvitedToEvent(email: string, eventId: string): EmailTemplateRequest {
-//   const data = {};
-//   return { to: email, templateId: templateIds.userInvitedToEvent, data };
-// }
+export function userInvitedToEvent(email: string, eventId: string): EmailTemplateRequest {
+  const data = {};
+  return { to: email, templateId: templateIds.userInvitedToEvent, data };
+}
 
 // ------------------------- //
 //      CASCADE8 ADMIN       //
