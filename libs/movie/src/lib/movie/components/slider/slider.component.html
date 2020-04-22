@@ -1,4 +1,4 @@
-<bf-slider loop hideIndicators>
+<bf-slider loop hideIndicators class="dark-contrast-theme">
     <bf-slide *ngFor="let view of movieViews; let i = index" overlayColor="gradient">
         <div fxLayout="column" class="overlay">
             <h4 *ngIf="view.directors">{{ view.directors | displayName }}</h4>
