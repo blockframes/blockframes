@@ -1,31 +1,41 @@
-<mat-chip-list aria-label="Sellers selection">
-  <ng-container *ngFor="let control of form.controls; let i = index">
-    <mat-chip *ngIf="control.value" selectable removable>
-      <span>{{ control.value }}</span>
-      <mat-icon matChipRemove svgIcon="close" (click)="form.removeAt(i)"></mat-icon>
-    </mat-chip>
-  </ng-container>
-</mat-chip-list>
+<mat-form-field [appearance]="mode">
+  <mat-label>{{ label }}</mat-label>
 
-<algolia-autocomplete
-  [index]="indexName"
-  [keyToDisplay]="keyToDisplay"
-  [facet]="facet"
-  [label]="label"
-  [placeholder]="placeholder"
-  [prefixIcon]="prefixIcon"
-  [clearable]="clearable"
-  [resetInput]="resetInput"
-  (selectionChange)="add($event)"
->
-  <ng-template let-result>
-    <ng-template 
-      [ngTemplateOutlet]="template || default"
-      [ngTemplateOutletContext]="{ $implicit: result }">
-    </ng-template>
-  </ng-template>
-</algolia-autocomplete>
+  <mat-chip-list #chipList>
+    <ng-container *ngFor="let control of form.controls; let i = index">
+      <mat-chip *ngIf="control.value" selectable removable>
+        <span>{{ control.value | valueByPath: displayWithPath }}</span>
+        <mat-icon matChipRemove svgIcon="close" (click)="form.removeAt(i)"></mat-icon>
+      </mat-chip>
+    </ng-container>
+    <input #input
+      matInput
+      type="text"
+      [formControl]="searchCtrl"
+      [matAutocomplete]="auto"
+      [matChipInputFor]="chipList"
+      [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+      (matChipInputTokenEnd)="add($event.value)"
+      [placeholder]="placeholder"
+      autocapitalize="off"
+      autocorrect="off"
+      spellcheck="false"
+    />
+  </mat-chip-list>
+
+</mat-form-field>
+
+<mat-autocomplete #auto="matAutocomplete" (optionSelected)="add($event.option.value)">
+  <ng-container *ngFor="let result of algoliaSearchResults$ | async">
+    <mat-option [value]="result">
+      <ng-template
+        [ngTemplateOutlet]="template || default"
+        [ngTemplateOutletContext]="{ $implicit: result }">
+      </ng-template>
+    </mat-option>
+  </ng-container>
+</mat-autocomplete>
 
 <ng-template #default let-result>
-  <span>{{resolveValue(result, keyToDisplay)}}</span>
+  <span>{{ result | valueByPath: displayWithPath }}</span>
 </ng-template>

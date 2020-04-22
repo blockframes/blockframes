@@ -6,12 +6,23 @@ import { InvitationToAnEvent }  from '@blockframes/invitation/+state/invitation.
 import { InvitationService }  from '@blockframes/invitation/+state/invitation.service';
 import { createEventInvitation }  from '@blockframes/invitation/+state/invitation.model';
 import { createPublicUser } from '@blockframes/user/+state/user.model';
+import { PublicUser } from '@blockframes/user/+state/user.firestore';
 import { getPublicOrg } from '@blockframes/organization/+state/organization.model';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { AuthQuery } from '@blockframes/auth/+state';
-import { PublicUser } from '@blockframes/user/types';
 import { scaleIn } from '@blockframes/utils/animations/fade';
-import { FormList } from '@blockframes/utils/form';
+import { createAlgoliaUserForm, AlgoliaUser } from '@blockframes/utils/algolia';
+import { createImgRef } from '@blockframes/utils/image-uploader';
+
+function algoliaToPublicUser(user: AlgoliaUser): PublicUser {
+  return {
+    uid: user.objectID,
+    email: user.email,
+    firstName: user.firstName,
+    lastName: user.lastName,
+    avatar: createImgRef(user.avatar),
+  }
+}
 
 @Component({
   selector: 'event-edit',
@@ -24,7 +35,7 @@ export class EventEditComponent {
 
   @Input() form = new EventForm();
   @Input() invitations: InvitationToAnEvent[] = [];
-  invitationForm = FormList.factory([]);
+  invitationForm = createAlgoliaUserForm();
 
   constructor(
     private service: EventService,
@@ -55,11 +66,13 @@ export class EventEditComponent {
   invite() {
     if (this.invitationForm.dirty && this.invitationForm.valid) {
       const event = this.form.value;
-      const guests: string[] = this.invitationForm.value;
+      const guests = this.invitationForm.value;
       const invitations = guests.map(guest => {
         const invite: Partial<InvitationToAnEvent> = { docId: event.id, mode: 'invitation' };
-        if (typeof guest === 'object') invite.toUser = createPublicUser(guest);
-        if (event.type === 'screening') invite.fromOrg = getPublicOrg(this.orgQuery.getActive());
+        const org = this.orgQuery.getActive();
+        // transform algolia user to public user
+        invite.toUser = algoliaToPublicUser(guest);
+        if (event.type === 'screening') invite.fromOrg = getPublicOrg(org);
         if (event.type === 'meeting') invite.fromUser = createPublicUser(this.authQuery.user);
         return createEventInvitation(invite);
       });

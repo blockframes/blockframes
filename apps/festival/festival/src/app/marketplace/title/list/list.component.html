@@ -37,13 +37,12 @@
 
     <ng-template filter label="Sales Agents">
       <algolia-chips-autocomplete
-        index="indexNameMovies"
-        keyToDisplay="value"
+        index="movie"
+        displayWithPath="value"
         facet="orgName"
         [form]="filterForm.sellers"
         label="Search for a specific Seller"
         placeholder="Organization name"
-        resetInput
       ></algolia-chips-autocomplete>
     </ng-template>
 
