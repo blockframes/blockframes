@@ -6,7 +6,7 @@
   </mat-sidenav>
 
 
-  <mat-sidenav-content [appContainer]="app">
+  <mat-sidenav-content fxLayout="column" [appContainer]="app">
     <!-- TOOLBAR -->
     <app-bar #app>
       <header fxLayout fxLayoutAlign="space-between center">
@@ -43,7 +43,7 @@
       </header>
     </app-bar>
     <!-- CONTENT -->
-    <main>
+    <main fxFlex>
       <router-outlet></router-outlet>
     </main>
   </mat-sidenav-content>

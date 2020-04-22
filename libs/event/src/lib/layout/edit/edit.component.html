@@ -41,12 +41,11 @@
       <h4>Invitations</h4>
       
       <algolia-chips-autocomplete
-        index="indexNameUsers"
-        keyToDisplay="email"
+        index="user"
+        displayWithPath="email"
         [form]="invitationForm"
         label="Search for a guest"
         placeholder="Enter guest email"
-        resetInput
       >
         <ng-template let-user>
           <div class="profile-item" fxLayout fxLayoutAlign="strt center" fxLayoutGap="8px">
