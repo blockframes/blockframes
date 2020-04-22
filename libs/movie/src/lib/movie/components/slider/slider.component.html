@@ -1,4 +1,4 @@
-<bf-slider loop hideIndicators>
+<bf-slider loop hideIndicators class="dark-contrast-theme">
     <bf-slide *ngFor="let view of movieViews; let i = index" overlayColor="gradient">
         <div fxLayout="column" class="overlay">
             <h4 *ngIf="view.directors">{{ view.directors | displayName }}</h4>
@@ -6,7 +6,7 @@
             <h2 *ngIf="view.titles.original">{{ view.titles.original }}</h2>
             <movie-title-features [movie]="titles[i]"></movie-title-features>
             <ng-content select="movie-slider-cta"></ng-content>
-            <p *ngIf="view.logline">
+            <p *ngIf="view.logline" class="mat-body">
                 {{ view.logline | maxLength: 332}}
             </p>
             <ng-content select="movie-slider-actions"></ng-content>
