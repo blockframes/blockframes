@@ -2,8 +2,14 @@ import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/
 import { EventQuery } from '@blockframes/event/+state/event.query';
 import { InvitationService, Invitation } from '@blockframes/invitation/+state';
 import { EventService } from '@blockframes/event/+state/event.service';
-import { Observable, Subscription, of } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
+
+const columns = {
+  firstName: 'First Name',
+  lastName: 'Last Name',
+  email: 'Email Address'
+};
 
 @Component({
   selector: 'festival-event-view',
@@ -18,12 +24,8 @@ export class EventViewComponent implements OnInit, OnDestroy {
   analytics$ = this.query.analytics.selectActive();
   sub: Subscription;
 
-  public columns = {
-    firstName: 'First Name',
-    lastName: 'Last Name',
-    email: 'Email Address'
-  };
-  public initialColumns = Object.keys(this.columns);
+  public columns = columns;
+  public initialColumns = Object.keys(columns);
 
   constructor(
     private service: EventService,

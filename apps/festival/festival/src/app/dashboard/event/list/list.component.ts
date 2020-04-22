@@ -1,11 +1,11 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ViewChild, TemplateRef, ChangeDetectorRef } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { EventQuery, EventStore, EventService } from '@blockframes/event/+state';
 import { Event } from '@blockframes/event/+state/event.model';
 import { EventForm } from '@blockframes/event/form/event.form';
+import { OrganizationQuery } from '@blockframes/organization/+state';
 import { Subscription } from 'rxjs';
 import { filter, tap, switchMap } from 'rxjs/operators';
-import { OrganizationQuery } from '@blockframes/organization/+state';
 
 @Component({
   selector: 'festival-event-list',
@@ -19,7 +19,7 @@ export class EventListComponent implements OnInit, OnDestroy {
   events$ = this.query.selectAll();
   viewDate = new Date();
 
-  @ViewChild('editTemplate', {read: TemplateRef}) editTemplate: TemplateRef<any>;
+  @ViewChild('editTemplate', { read: TemplateRef }) editTemplate: TemplateRef<any>;
   
   constructor(
     private service: EventService,
@@ -27,6 +27,7 @@ export class EventListComponent implements OnInit, OnDestroy {
     private store: EventStore,
     private dialog: MatDialog,
     private orgQuery: OrganizationQuery,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -40,6 +41,11 @@ export class EventListComponent implements OnInit, OnDestroy {
     this.sub.unsubscribe();
   }
 
+  updateViewDate(date: Date) {
+    this.viewDate = date;
+    this.cdr.markForCheck();
+  }
+
   /**
    * Open a dialog to update the event
    * @param data The event to update
@@ -47,7 +53,6 @@ export class EventListComponent implements OnInit, OnDestroy {
   async edit(data: Event) {
     this.editDialog = this.dialog.open(this.editTemplate, { data: new EventForm(data) });
     this.editDialog.afterClosed().pipe(
-      tap(console.log),
       filter(event => !!event)
     ).subscribe(async event => this.service.update(event));
   }

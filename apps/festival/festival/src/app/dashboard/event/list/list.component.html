@@ -1,5 +1,5 @@
 <ng-template pageBar>
-  <cal-header [(viewDate)]="viewDate"></cal-header>
+  <cal-header [viewDate]="viewDate" (viewDateChange)="updateViewDate($event)"></cal-header>
 </ng-template>
 
 <cal-week [viewDate]="viewDate" eventType="screening" [events]="events$ | async" editable>

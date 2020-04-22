@@ -3,6 +3,7 @@ import { Invitation, InvitationStatus } from '@blockframes/invitation/+state';
 import { FormControl } from '@angular/forms';
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { startWith, debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
+import { algolia } from '@env';
 
 function filterGuest(invitation: Invitation, search: string) {
   return invitation.toUser?.email.toLowerCase().includes(search)
@@ -26,6 +27,7 @@ const points: Record<InvitationStatus, number> = {
 })
 export class GuestListComponent implements OnInit {
   private _invitations = new BehaviorSubject<Invitation[]>([]);
+  userIndex = algolia.indexNameUsers;
   searchControl = new FormControl();
   search$: Observable<Invitation[]>;
   @ContentChild(TemplateRef) itemTemplate: TemplateRef<any>;
