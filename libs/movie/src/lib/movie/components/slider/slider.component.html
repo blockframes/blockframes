@@ -1,6 +1,6 @@
-<bf-slider autoplay loop hideIndicators>
+<bf-slider loop hideIndicators>
     <bf-slide *ngFor="let view of movieViews; let i = index" overlayColor="gradient">
-        <div fxLayout="column" fxLayoutAlign="start start">
+        <div fxLayout="column" class="overlay">
             <h4 *ngIf="view.directors">{{ view.directors | displayName }}</h4>
             <h1 class="mat-display-2" *ngIf="view.titles.international">{{ view.titles.international }}</h1>
             <h2 *ngIf="view.titles.original">{{ view.titles.original }}</h2>
