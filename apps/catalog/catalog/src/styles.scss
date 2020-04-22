@@ -29,3 +29,13 @@
   // Not supported yet by browser. Here for future support
   scrollbar-color: dark;
 }
+
+.dark-contrast-theme {
+  @include angular-material-theme($bf-dark-contrast-theme);
+  @include bf-material-theme($bf-dark-contrast-theme);
+  @include bf-world-map-theme($bf-dark-contrast-theme);
+  @include sat-datepicker-theme($bf-dark-contrast-theme);
+
+  // Not supported yet by browser. Here for future support
+  scrollbar-color: dark;
+}
