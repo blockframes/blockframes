@@ -17,7 +17,7 @@ beforeEach(() => {
 });
 
 describe('Test wishlist icon from library page', () => {
-  it('Login into an existing account, add two movies on wishlist from library page, check the wishlist.', () => {
+  it.skip('Login into an existing account, add two movies on wishlist from library page, check the wishlist.', () => {
     const p2 = new HomePage();
 
     // Add two movies to the wishlist
@@ -48,7 +48,7 @@ describe('Test wishlist icon from library page', () => {
 });
 
 describe('Test wishlist icon from movie view page', () => {
-  it('Login into an existing account, add two movies on wishlist from their view page, check the wishlist.', () => {
+  it.skip('Login into an existing account, add two movies on wishlist from their view page, check the wishlist.', () => {
     const p2 = new HomePage();
 
     // Add movies to the wishlist
@@ -78,7 +78,7 @@ describe('Test wishlist icon from movie view page', () => {
   });
 
   describe('Test wishlist removal icon from everywhere', () => {
-    it(`Login into an existing account, add and remove a movie from home page, add and remove
+    it.skip(`Login into an existing account, add and remove a movie from home page, add and remove
     two movies from their view page and add and remove two movies from line-up page.`, () => {
       const p2 = new HomePage();
 
