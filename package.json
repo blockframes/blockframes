@@ -4,17 +4,17 @@
   "license": "MIT",
   "main": "./main.js",
   "engines": {
-    "node": "8"
+    "node": "10"
   },
   "scripts": {
     "ng": "ng",
     "start": "npx ng serve --hmr --disable-host-check",
     "build:stats": "ng build --prod --stats-json",
     "build:catalog": "npx ng build catalog --configuration=\"${ENV:-dev}\"",
-    "build:festival": "npx ng build festival --base-href /festival/ --configuration=\"${ENV:-dev}\"",
+    "build:festival": "npx ng build festival --configuration=\"${ENV:-dev}\"",
     "build:backend-functions": "npx ng build backend-functions --configuration=\"${ENV:-dev}\"",
     "build:backend-ops": "npx ng build backend-ops --configuration=\"${ENV:-dev}\"",
-    "build:all": "npm run build:backend-functions && npm run build:backend-ops && npm run build:catalog",
+    "build:all": "npm run build:backend-functions && npm run build:backend-ops && npm run build:catalog && npm run build:festival",
     "firebase:serve": "concurrently --kill-others \"npm run build:functions --watch\" \"firebase serve --only functions\"",
     "firebase:shell": "concurrently --kill-others \"npm run build:functions --watch\" \"firebase functions:shell\" --raw",
     "firebase:emulator": "firebase emulators:start --only firestore",
@@ -96,6 +96,7 @@
     "@sentry/node": "^5.5.0",
     "@types/date-fns": "^2.6.0",
     "@types/sendgrid": "^4.3.0",
+    "@types/sharp": "^0.24.0",
     "akita-ng-fire": "^2.0.0-rc.5",
     "algoliasearch": "^3.33.0",
     "angular-calendar": "^0.28.5",
@@ -107,6 +108,7 @@
     "firebase": "^7.14.1",
     "firebase-admin": "8.10.0",
     "firebase-functions": "^3.6.0",
+    "fs-extra": "^8.1.0",
     "generate-password": "^1.4.2",
     "handlebars": "^4.5.3",
     "leaflet": "^1.6.0",
@@ -123,6 +125,7 @@
     "request": "^2.88.0",
     "rxjs": "~6.5.4",
     "saturn-datepicker": "^8.0.2",
+    "sharp": "^0.25.2",
     "tmp": "0.1.0",
     "xlsx": "^0.15.1",
     "zone.js": "^0.10.2"

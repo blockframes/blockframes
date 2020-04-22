@@ -2,48 +2,43 @@
 @import "images";
 
 movie-header {
-    background-size: cover;
+  background-size: cover;
+  display: block;
 
-    header {
-        padding: 50px 24px;
+  header {
+    padding: 50px 24px;
 
-        .poster {
-            @include poster("large");
-        }
+    .poster {
+      @include poster("large");
     }
+  }
 
-    .overlay {
-        width: 100%;
-        background: linear-gradient(to right, black, transparent);
-    }
+  .overlay {
+    width: 100%;
+    background: linear-gradient(to right, black, transparent);
+  }
 
-    h1,
-    h2 {
-        // TODO #2548
-        color: white !important;
-    }
-
-    .movie-header-actions {
-        display: flex;
-    }
+  .movie-header-actions {
+    display: flex;
+  }
 }
 
 @include layout-bp(xs) {
-    movie-header {
-        header {
-            .poster {
-                @include poster("small");
-            }
-        }
+  movie-header {
+    header {
+      .poster {
+        @include poster("small");
+      }
     }
+  }
 }
 
 @include layout-bp(sm) {
-    movie-header {
-        header {
-            .poster {
-                @include poster("medium");
-            }
-        }
+  movie-header {
+    header {
+      .poster {
+        @include poster("medium");
+      }
     }
+  }
 }

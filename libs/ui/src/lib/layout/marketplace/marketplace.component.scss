@@ -14,26 +14,8 @@ mat-sidenav-container {
   }
 }
 
-// mat-sidenav-content {
-//   app-bar {
-//     position: sticky;
-//     top: 0;
-//     z-index: 2;
-  
-//     .logo {
-//       height: 48px;
-//       img {
-//         height: 100%;
-//       }
-//     }
-//   }
-//   main {
-//     height: 100%;
-//     overflow: auto;
-//   }
-// }
-
 mat-sidenav-content {
+  height: 100%;
   overflow: hidden;
 
   header {

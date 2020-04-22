@@ -105,7 +105,6 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
   @ViewChild('input') input: ElementRef<HTMLInputElement>;
 
   ngOnInit() {
-
     // In case of facet search we know the result object will store the matched facets in the `value` field
     if (!!this.facet.trim()) {
       this.keyToDisplay = 'value';

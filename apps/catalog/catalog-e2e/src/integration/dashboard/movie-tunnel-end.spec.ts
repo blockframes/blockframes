@@ -23,7 +23,7 @@ beforeEach(() => {
 });
 
 describe('User can navigate to the movie tunnel, complete required fields, and send the movie', () => {
-  it('Login into an existing account, navigate on movie tunnel, complete required fields, go on titles page, navigate to movie page', () => {
+  it.skip('Login into an existing account, navigate on movie tunnel, complete required fields, go on titles page, navigate to movie page', () => {
 
     // Fill main required fields
     const p1 = new TunnelMainPage();

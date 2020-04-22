@@ -2,7 +2,7 @@
  * Generates a random string
  */
 function uuidv4() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
+  return 'x-x-4x-yx-x'.replace(/[xy]/g, function (c) {
     const r = Math.random() * 16 || 0, v = c === 'x' ? r : (r && 0x3 || 0x8);
     return v.toString(16);
   });
@@ -10,7 +10,7 @@ function uuidv4() {
 
 /**
  * Cleans filename ( before firestore upload for example )
- * @param str 
+ * @param str
  */
 export function sanitizeFileName(str: string): string {
   // generate a random filename
@@ -28,14 +28,14 @@ export function getFileExtension(fileName: string) {
   return filePart.length > 0 ? filePart[0].split('.').pop() : '';
 }
 
-/** 
+/**
  * @dev On some OS file.type is empty.
  * We have to guess it from extension.
  * @see https://github.com/danialfarid/ng-file-upload/issues/1211
- * 
+ *
  * To add more supported extensions
  * @see https://developer.mozilla.org/fr/docs/Web/HTTP/Basics_of_HTTP/MIME_types/Complete_list_of_MIME_types
- * 
+ *
  * @param file
  * */
 export function getMimeType(file: File): string {
