@@ -6,7 +6,7 @@
             <h2 *ngIf="view.titles.original">{{ view.titles.original }}</h2>
             <movie-title-features [movie]="titles[i]"></movie-title-features>
             <ng-content select="movie-slider-cta"></ng-content>
-            <p *ngIf="view.logline" class="mat-body">
+            <p *ngIf="view.logline">
                 {{ view.logline | maxLength: 332}}
             </p>
             <ng-content select="movie-slider-actions"></ng-content>
