@@ -2,6 +2,7 @@ import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { Movie } from '@blockframes/movie/+state';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 import { getISO3166TerritoryFromSlug } from '@blockframes/utils/static-model/territories-ISO-3166';
+import { workType } from '@blockframes/movie/+state/movie.firestore';
 
 interface TitleFeature {
     view: string,
@@ -14,7 +15,7 @@ function createTitleFeatureView(movie: Movie): TitleFeature[] {
     const convertedOriginCountries = movie.main?.originCountries.map(country => getISO3166TerritoryFromSlug(country)).map(country => country.iso_a2);
     const statusLabel = getLabelBySlug('MOVIE_STATUS', movie.main?.status);
     const features = [
-        movie.main?.workType,
+        workType[movie.main?.workType],
         convertedGenres,
         convertedOriginalLanguages,
         convertedOriginCountries,
@@ -23,7 +24,7 @@ function createTitleFeatureView(movie: Movie): TitleFeature[] {
     return features.map(feature => {
         /* If array, show the first value and the tooltip gets the string version of it */
         if (Array.isArray(feature)) {
-            return { view: feature[0], tooltip: feature.join(', ') }
+            return { view: feature[0], tooltip: feature.length > 1 ? feature.join(', ') : '' }
         }
         return { view: feature, tooltip: '' }
     })

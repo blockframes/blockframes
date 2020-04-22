@@ -47,7 +47,7 @@ export class WishlistComponent implements OnInit {
 
 
   public async redirectToMovie(movieId: string) {
-    this.router.navigate([`../../${movieId}/view`], { relativeTo: this.route });
+    this.router.navigate([`../title/${movieId}`], { relativeTo: this.route });
   }
 
   public remove(movie: Movie, event: Event) {

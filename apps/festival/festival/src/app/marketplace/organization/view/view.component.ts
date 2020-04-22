@@ -7,12 +7,12 @@ import { scaleIn } from '@blockframes/utils/animations/fade';
 const navLinks = [{
   path: 'title',
   label: 'Line-up'
+},  {
+  path: 'member',
+  label: 'Contact'
 }, {
   path: 'event',
-  label: 'Screenings Agenda'
-}, {
-  path: 'member',
-  label: 'Contacts'
+  label: 'Screening Schedule'
 }];
 
 @Component({

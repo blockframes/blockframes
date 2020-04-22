@@ -17,7 +17,7 @@
         </aside>
         <bf-slider test-id="mat-carousel1" hideArrows hideIndicators loop autoplay maxHeight="300px" maxWidth="750px">
           <bf-slide *ngFor="let movie of section.movies$ | async" [image]="movie.promotionalElements.banner.media" overlayColor="medium">
-            <div fxLayout="column" fxLayoutAlign="end start" [routerLink]="['/c/o/marketplace', movie.id]"
+            <div fxLayout="column" fxLayoutAlign="end start" [routerLink]="['/c/o/marketplace/title', movie.id]"
               class=informations-wrapper>
               <ng-container *ngIf="(toggle$(movie.id) | async); else notAdded">
                 <button test-id="heart-icon" mat-icon-button (click)="removeFromWishlist(movie, $event)">
