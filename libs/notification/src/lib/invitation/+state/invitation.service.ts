@@ -8,7 +8,6 @@ import { AuthService } from '@blockframes/auth/+state/auth.service';
 import { InvitationDocument } from './invitation.firestore';
 import { toDate } from '@blockframes/utils/helpers';
 
-
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'invitations' })
 export class InvitationService extends CollectionService<InvitationState> {

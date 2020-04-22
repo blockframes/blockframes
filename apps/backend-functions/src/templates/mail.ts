@@ -114,13 +114,13 @@ export function userRequestedToJoinYourOrg(request: RequestToJoinOrganization): 
 }
 
 /** Generates an email for user invited to an meeting event. */
-export function userInvitedToEvent(email: string, senderEmail: string, eventId: string): EmailTemplateRequest {
+export function invitationToMeetingFromUser(email: string, senderEmail: string, eventId: string): EmailTemplateRequest {
   const data = {
     userEmail: email,
     senderEmail: senderEmail,
     eventId: eventId
   };
-  return { to: email, templateId: templateIds.userInvitedToEvent, data };
+  return { to: email, templateId: templateIds.invitationToMeetingFromUser, data };
 }
 
 /** Generates an email for user invited by an organization to a screening. */
@@ -129,17 +129,17 @@ export function invitationToScreeningFromOrg(email: string, orgDenomination: str
     orgDenomination: orgDenomination,
     eventId: eventId
   };
-  return { to: email, templateId: templateIds.userInvitedToEvent, data };
+  return { to: email, templateId: templateIds.invitationToMeetingFromUser, data };
 }
 
 /** Generates an email for user requesting to attend an event. */
-export function userRequestToEvent(fromUser: string, toUser: string, eventId: string): EmailTemplateRequest {
+export function requestToAttendEventFromUser(fromUser: string, toUser: string, eventId: string): EmailTemplateRequest {
   const data = {
     emailUserRequest: fromUser,
     userEmail: toUser,
     eventId: eventId
   };
-  return { to: toUser, templateId: templateIds.userInvitedToEvent, data };
+  return { to: toUser, templateId: templateIds.invitationToMeetingFromUser, data };
 }
 
 

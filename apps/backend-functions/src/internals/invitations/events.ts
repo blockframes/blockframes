@@ -4,7 +4,7 @@ import { NotificationDocument, OrganizationDocument } from "../../data/types";
 import { createNotification, triggerNotifications } from "../../notification";
 import { db } from "../firebase";
 import { getAdminIds } from "../../data/internals";
-import { userInvitedToEvent, invitationToScreeningFromOrg, userRequestToEvent } from '../../templates/mail';
+import { invitationToMeetingFromUser, invitationToScreeningFromOrg, requestToAttendEventFromUser } from '../../templates/mail';
 import { sendMailFromTemplate } from '../email';
 
 /**
@@ -49,11 +49,11 @@ async function onInvitationToAnEventCreate({
     switch (mode) {
       case 'invitation':
         console.log(`Sending invitation email for a meeeting event (${eventId}) from ${senderEmail} to : ${recipient}`);
-        await sendMailFromTemplate(userInvitedToEvent(recipient, senderEmail, eventId));
+        await sendMailFromTemplate(invitationToMeetingFromUser(recipient, senderEmail, eventId));
         break;
       case 'request':
         console.log(`Sending request email to attend an event (${eventId}) from ${senderEmail} to : ${recipient}`);
-        await sendMailFromTemplate(userRequestToEvent(senderEmail, recipient, eventId));
+        await sendMailFromTemplate(requestToAttendEventFromUser(senderEmail, recipient, eventId));
         break;
     }
   } else {

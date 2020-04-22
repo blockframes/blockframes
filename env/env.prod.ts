@@ -88,9 +88,9 @@ export const templateIds = {
   userHasJoined: 'd-f84d8c5a70884316870ca4ef657e368f',
   userRequestAccepted: 'd-d32b25a504874a708de6bfc50a1acba7',
   wishlistPending: 'd-e0cd8970d19346eea499a81f67f1a557',
-  userInvitedToEvent: 'd-b40ccbd91c2f4d6599be56ab1f8e6631',
+  invitationToMeetingFromUser: 'd-b40ccbd91c2f4d6599be56ab1f8e6631',
   invitationToScreeningFromOrg: 'd-1a7cc9ca846c4ae1b4e8cf8a76455cc5',
-  userRequestToEvent: 'd-07f5e3cc6796455097b6082c22568d9e'
+  requestToAttendEventFromUser: 'd-07f5e3cc6796455097b6082c22568d9e'
 }
 
 // Yandex Metrika Id
