@@ -8,7 +8,7 @@
 </mat-chip-list>
 
 <algolia-autocomplete
-  [index]="index"
+  [index]="indexName"
   [keyToDisplay]="keyToDisplay"
   [facet]="facet"
   [label]="label"
@@ -19,6 +19,13 @@
   (selectionChange)="add($event)"
 >
   <ng-template let-result>
-    <span>{{resolveValue(result, keyToDisplay)}}</span>
+    <ng-template 
+      [ngTemplateOutlet]="template || default"
+      [ngTemplateOutletContext]="{ $implicit: result }">
+    </ng-template>
   </ng-template>
 </algolia-autocomplete>
+
+<ng-template #default let-result>
+  <span>{{resolveValue(result, keyToDisplay)}}</span>
+</ng-template>

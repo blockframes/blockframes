@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
 import { Intercom } from 'ng-intercom';
 
 @Component({
@@ -8,7 +8,7 @@ import { Intercom } from 'ng-intercom';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class NoMovieComponent {
-  constructor(private intercom: Intercom) {}
+  constructor(@Optional() private intercom: Intercom) {}
 
   public openIntercom(): void {
     return this.intercom.show();

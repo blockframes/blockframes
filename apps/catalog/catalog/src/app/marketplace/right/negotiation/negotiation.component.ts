@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Optional } from '@angular/core';
 import { ContractQuery, displayPaymentSchedule } from '@blockframes/contract/contract/+state';
 import { map } from 'rxjs/operators';
 import { Movie } from '@blockframes/movie/+state/movie.model';
@@ -19,7 +19,10 @@ export class NegotiationComponent {
 
   versionsView$ = this.query.versionsView$;
 
-  constructor(private query: ContractQuery, private intercom: Intercom) { }
+  constructor(
+    @Optional() private intercom: Intercom,
+    private query: ContractQuery,
+  ) { }
 
   getDirectors(movie: Movie) {
     return  movie.main.directors.map(d => `${d.firstName} ${d.lastName}`).join(', ');
