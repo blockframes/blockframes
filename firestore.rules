@@ -172,7 +172,7 @@ service cloud.firestore {
   
     match /orgs/{orgId} {
       // Only org member can read because we use Algolia for search 
-      // @TODO #2585 to confirm
+      // @TODO #2585 if an user need to read something from another org, he must use publicOrg (not yet implemented (2020-04-23)).
       allow read: if isOrgMember(userId(), orgId);
     	allow create: if isSignedIn()
         && isRequestFieldValueEqualTo(['status'], 'pending')
@@ -242,7 +242,7 @@ service cloud.firestore {
         && isNotUpdatingField(['_type'])
         && (isNotUpdatingField(['main', 'storeConfig','status']) || incomingData().main.storeConfig.status in ['submitted', 'draft'])
         && isNotUpdatingField(['main', 'storeConfig','storeType'])
-        // @TODO (#2585) add new rules for appAccess
+        // @TODO (#2618) add new rules for appAccess
         && orgCan('canUpdate', userOrgId(), movieId);
       allow delete: if orgCan('canDelete', userOrgId(), movieId)
       	&& isOrgAdmin(userId(), userOrgId());
