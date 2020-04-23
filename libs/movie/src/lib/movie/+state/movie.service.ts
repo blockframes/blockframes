@@ -36,22 +36,20 @@ export class MovieService extends CollectionService<MovieState> {
 
   // formatFromFirestore
 
-  async create(): Promise<string> {
+  async create(movieImported?: Movie): Promise<string> {
     const createdBy = this.authQuery.getValue().uid;
     const appName = this.routerQuery.getValue().state.root.data.app;
     const movie = createMovie({
       _meta: { createdBy },
-      main: {
-        title: { original: '' },
-        storeConfig: {
-          ...createStoreConfig(),
-          appAccess: createAppAccessWithApp(appName)
-        }
-      }
+      ...movieImported
     });
+    movie.main.storeConfig = {
+      ...createStoreConfig(),
+      appAccess: createAppAccessWithApp(appName)
+    };
     let movieId: string;
     await this.runTransaction(async (write) => {
-      movieId = await this.add(movie, { write });
+      movieId = await this.add(cleanModel(movie), { write });
       await this.orgService.update(this.orgQuery.getActiveId(), (org) => ({ movieIds: [...org.movieIds, movieId] }), { write });
     });
     return movieId;
@@ -92,28 +90,6 @@ export class MovieService extends CollectionService<MovieState> {
       }),
       tap(analytics => this.store.analytics.upsertMany(analytics))
     )
-  }
-
-  /** Add a partial or a full movie to the database. */
-  public async addMovie(original: string, movie?: Movie): Promise<Movie> {
-    const id = this.db.createId();
-    const userId = movie._meta?.createdBy ? movie._meta.createdBy : this.authQuery.userId;
-    const appName = this.routerQuery.getValue().state.root.data.app;
-    console.log(appName)
-
-    if (!movie) {
-
-      // create empty movie
-      movie = createMovie({ id, main: { title: { original }}, _meta: { createdBy: userId } });
-    } else {
-      // we set an id for this new movie
-      movie = createMovie({ ...movie, id, _meta: { createdBy: userId } });
-    }
-
-    // Add movie document to the database
-    await this.add(cleanModel(movie));
-
-    return movie;
   }
 
   public updateById(id: string, movie: any): Promise<void> {
