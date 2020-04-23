@@ -31,10 +31,13 @@ export function createOrganizationMember(user: Partial<User> = {}, role?: UserRo
   };
 }
 
-export function createPublicUser(publicUser: Partial<User> = {}) : PublicUser{
+export function createPublicUser(user: Partial<User> = {}) : PublicUser{
   return {
-    uid: '',
-    email: '',
-    ...publicUser,
+    uid: user.uid,
+    email: user.email,
+    avatar: createImgRef(user.avatar),
+    firstName: user.firstName,
+    lastName: user.lastName,
+    orgId: user.orgId
   }
 }
