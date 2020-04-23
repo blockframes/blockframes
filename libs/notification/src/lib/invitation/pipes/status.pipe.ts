@@ -1,12 +1,9 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
-import { InvitationStatus } from '../+state';
+import { InvitationStatus, Invitation } from '../+state';
 import { CommonModule } from '@angular/common';
 
 /** Return the right icon name depending on the status */
-@Pipe({
-  name: 'statusIcon',
-  pure: true
-})
+@Pipe({ name: 'statusIcon', pure: true })
 export class StatusIconPipe implements PipeTransform {
 
   transform(status: InvitationStatus): 'check_circle' | 'cross' | 'access_time' {
@@ -17,10 +14,8 @@ export class StatusIconPipe implements PipeTransform {
     }
   }
 }
-@Pipe({
-  name: 'statusColor',
-  pure: true
-})
+
+@Pipe({ name: 'statusColor', pure: true })
 export class StatusColorPipe implements PipeTransform {
 
   transform(status: InvitationStatus): 'primary' | 'warn' | '' {
@@ -32,10 +27,18 @@ export class StatusColorPipe implements PipeTransform {
   }
 }
 
+@Pipe({ name: 'statusLength', pure: true })
+export class StatusLengthPipe implements PipeTransform {
+
+  transform(list: Invitation[], status: InvitationStatus): number {
+    return (list || []).filter(invitation => invitation.status === status).length;
+  }
+}
+
 
 @NgModule({
   imports: [CommonModule],
-  declarations: [StatusIconPipe, StatusColorPipe],
-  exports: [StatusIconPipe, StatusColorPipe],
+  declarations: [StatusIconPipe, StatusColorPipe, StatusLengthPipe],
+  exports: [StatusIconPipe, StatusColorPipe, StatusLengthPipe],
 })
 export class StatusModule {}

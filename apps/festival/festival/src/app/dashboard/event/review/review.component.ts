@@ -12,12 +12,12 @@ const columns = {
 };
 
 @Component({
-  selector: 'festival-event-view',
-  templateUrl: './view.component.html',
-  styleUrls: ['./view.component.scss'],
+  selector: 'festival-event-review',
+  templateUrl: './review.component.html',
+  styleUrls: ['./review.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EventViewComponent implements OnInit, OnDestroy {
+export class EventReviewComponent implements OnInit, OnDestroy {
 
   event$ = this.query.selectActive();
   invitations$: Observable<Invitation[]>;
@@ -35,9 +35,7 @@ export class EventViewComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.sub = this.service.syncEventAnalytics().subscribe();
-    this.invitations$ = this.query.selectActiveId().pipe(
-      switchMap(eventId => this.invitationService.valueChanges(ref => ref.where('docId', '==', eventId)))
-    );
+
   }
 
   ngOnDestroy() {

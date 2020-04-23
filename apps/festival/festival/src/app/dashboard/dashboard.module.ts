@@ -73,7 +73,7 @@ const routes: Routes = [{
           canDeactivate: [EventActiveGuard],
           children: [{
             path: '',
-            loadChildren: () => import('./event/view/view.module').then(m => m.EventViewModule)
+            loadChildren: () => import('./event/review/review.module').then(m => m.EventReviewModule)
           },{
             path: 'edit',
             loadChildren: () => import('./event/edit/edit.module').then(m => m.EventEditModule)

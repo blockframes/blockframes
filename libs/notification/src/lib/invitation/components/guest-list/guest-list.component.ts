@@ -31,11 +31,15 @@ export class GuestListComponent implements OnInit {
   searchControl = new FormControl();
   search$: Observable<Invitation[]>;
   @ContentChild(TemplateRef) itemTemplate: TemplateRef<any>;
-  @Input() set invitations(invitations: Invitation[]) {
+  @Input()
+  set invitations(invitations: Invitation[]) {
     if (Array.isArray(invitations)) {
       const sorted = invitations.sort((a, b) => points[a.status] - points[b.status]);
       this._invitations.next(sorted);
     }
+  }
+  get invitations(): Invitation[] {
+    return this._invitations.getValue();
   }
 
   ngOnInit() {
@@ -47,6 +51,10 @@ export class GuestListComponent implements OnInit {
     this.search$ = combineLatest([this._invitations, search$]).pipe(
       map(([invitations, search]) => invitations.filter(guest => filterGuest(guest, search.trim())))
     );
+  }
+
+  copy(invitations: Invitation[]) {
+    return invitations.join(', ');
   }
 
   trackBy(invitation: Invitation) {
