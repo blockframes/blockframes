@@ -5,7 +5,8 @@ import { auth, db } from './internals/firebase';
 import { userInvite, userVerifyEmail, welcomeMessage, userResetPassword, sendWishlist, sendWishlistPending, sendDemoRequestMail, sendContactEmail } from './templates/mail';
 import { sendMailFromTemplate, sendMail } from './internals/email';
 import { RequestDemoInformations, PublicUser } from './data/types';
-import { storeSearchableUser } from './internals/algolia';
+import { storeSearchableUser, deleteObject } from './internals/algolia';
+import { algolia } from './environments/environment';
 
 type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
@@ -87,6 +88,15 @@ export async function onUserUpdate(
 
   // update Algolia index
   return storeSearchableUser(after);
+}
+
+export async function onUserDelete(
+  userSnapshot: FirebaseFirestore.DocumentSnapshot<PublicUser>,
+  context: functions.EventContext
+): Promise<any> {
+
+  // update Algolia index
+  return deleteObject(algolia.indexNameUsers, userSnapshot.id);
 }
 
 const generatePassword = () =>
