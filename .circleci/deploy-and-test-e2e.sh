@@ -8,6 +8,7 @@ set -o nounset
 export ENV=ci
 export NODE_OPTIONS="--max_old_space_size=7168"
 export GOOGLE_APPLICATION_CREDENTIALS="creds.json"
+export TERM=xterm-256color
 
 echo "export ADMIN_PASSWORD=\"${CI_ADMIN_PASSWORD}\"" >> $BASH_ENV
 echo "${FIREBASE_CI_SERVICE_ACCOUNT}" > creds.json
