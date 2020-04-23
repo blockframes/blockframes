@@ -74,6 +74,7 @@ export const icons = [
   { name: 'clear_all', url: 'assets/icons/clear_all.svg' },
   { name: 'close', url: 'assets/icons/close.svg' },
   { name: 'comment', url: 'assets/icons/comment.svg' },
+  { name: 'copy', url: 'assets/icons/copy.svg' },
   { name: 'create_movie', url: 'assets/icons/create_movie.svg' },
   { name: 'cross', url: 'assets/icons/cross.svg' },
   { name: 'CNY', url: 'assets/icons/CNY.svg' },

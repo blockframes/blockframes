@@ -7,22 +7,9 @@ import { InvitationService }  from '@blockframes/invitation/+state/invitation.se
 import { createEventInvitation }  from '@blockframes/invitation/+state/invitation.model';
 import { createPublicUser } from '@blockframes/user/+state/user.model';
 import { PublicUser } from '@blockframes/user/+state/user.firestore';
-import { getPublicOrg } from '@blockframes/organization/+state/organization.model';
-import { OrganizationQuery } from '@blockframes/organization/+state';
-import { AuthQuery } from '@blockframes/auth/+state';
 import { scaleIn } from '@blockframes/utils/animations/fade';
 import { createAlgoliaUserForm, AlgoliaUser } from '@blockframes/utils/algolia';
 import { createImgRef } from '@blockframes/utils/image-uploader';
-
-function algoliaToPublicUser(user: AlgoliaUser): PublicUser {
-  return {
-    uid: user.objectID,
-    email: user.email,
-    firstName: user.firstName,
-    lastName: user.lastName,
-    avatar: createImgRef(user.avatar),
-  }
-}
 
 @Component({
   selector: 'event-edit',
@@ -40,8 +27,6 @@ export class EventEditComponent {
   constructor(
     private service: EventService,
     private invitationService: InvitationService,
-    private orgQuery: OrganizationQuery,
-    private authQuery: AuthQuery,
     private router: Router,
     private route: ActivatedRoute
   ) { }
@@ -63,20 +48,10 @@ export class EventEditComponent {
   }
 
   /** Send an invitation to a list of persons, either to existing user or by creating user  */
-  invite() {
-    if (this.invitationForm.dirty && this.invitationForm.valid) {
-      const event = this.form.value;
-      const guests = this.invitationForm.value;
-      const invitations = guests.map(guest => {
-        const invite: Partial<InvitationToAnEvent> = { docId: event.id, mode: 'invitation' };
-        const org = this.orgQuery.getActive();
-        // transform algolia user to public user
-        invite.toUser = algoliaToPublicUser(guest);
-        if (event.type === 'screening') invite.fromOrg = getPublicOrg(org);
-        if (event.type === 'meeting') invite.fromUser = createPublicUser(this.authQuery.user);
-        return createEventInvitation(invite);
-      });
-      this.invitationService.add(invitations);
-    }
+  async invite() {
+    const event = this.form.value;
+    const emails = this.invitationForm.value.map(guest => guest.email);
+    await this.invitationService.invitUsers(event.id, emails, 'event');
+    this.invitationForm.setValue(null);
   }
 }

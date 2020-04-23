@@ -32,6 +32,14 @@ export class InvitationService extends CollectionService<InvitationState> {
     }
   }
 
+  formatToFirestore(invitation: Invitation) {
+    for (const key in invitation) {
+      if (typeof invitation[key] === 'undefined') delete invitation[key];
+    }
+    console.log(invitation);
+    return invitation;
+  }
+
   /** Create an Invitation when a user asks to join an Organization. */
   public async sendInvitationToOrg(organizationId: string) {
     const organization = await this.orgService.getValue(organizationId);
@@ -107,7 +115,7 @@ export class InvitationService extends CollectionService<InvitationState> {
     }
   }
 
-  /** Request a user to invite you to a doc  */
+  /** Request a user to invite you to a doc */
   async requestUser(docId: string, userId: string, type: 'fromUserToOrganization') {
     const [ senderKey, sender ] = this.getSender('request', type);
     const base = { docId, mode: 'request', type, [senderKey]: sender } as Partial<Invitation>;
@@ -116,7 +124,7 @@ export class InvitationService extends CollectionService<InvitationState> {
     this.add(invitation);
   }
 
-  /** Request an organization to invite you to a doc  */
+  /** Request an organization to invite you to a doc */
   async requestOrg(docId: string, orgIds: string, type: 'event' | 'fromOrganizationToUser') {
     const [ senderKey, sender ] = this.getSender('request', type);
     const base = { docId, mode: 'request', type, [senderKey]: sender } as Partial<Invitation>;
@@ -127,10 +135,10 @@ export class InvitationService extends CollectionService<InvitationState> {
 
   /** Invite one or many user to a doc */
   async invitUsers(docId: string, emails: string[], type: 'event' | 'fromOrganizationToUser') {
-    const [ senderKey, sender ] = this.getSender('request', type);
+    const [ senderKey, sender ] = this.getSender('invitation', type);
     const base = { docId, mode: 'invitation', type, [senderKey]: sender } as Partial<Invitation>;
+    const orgName = this.orgQuery.getActive().denomination.full;
     const promises = emails.map(async email => {
-      const orgName = this.orgQuery.getActive().denomination.full;
       const toUser = await this.authService.getOrCreateUserByMail(email, orgName);
       return createInvitation({ ...base, toUser })
     });

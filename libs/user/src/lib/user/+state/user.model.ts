@@ -36,8 +36,8 @@ export function createPublicUser(user: Partial<User> = {}) : PublicUser{
     uid: user.uid,
     email: user.email,
     avatar: createImgRef(user.avatar),
-    firstName: user.firstName,
-    lastName: user.lastName,
-    orgId: user.orgId
+    firstName: user.firstName || '',
+    lastName: user.lastName || '',
+    orgId: user.orgId || ''
   }
 }

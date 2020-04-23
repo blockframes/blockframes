@@ -23,8 +23,9 @@ export interface InvitationFromOrganizationToUserOptions {
   toUser: PublicUser;
 }
 
+/** Create an Invitation */
 export function createInvitation(params: Partial<Invitation> = {}): Invitation {
-  return {
+  const invitation = {
     id: '',
     mode: null,
     type: null,
@@ -32,11 +33,20 @@ export function createInvitation(params: Partial<Invitation> = {}): Invitation {
     status: 'pending',
     date: firestore.Timestamp.now(),
     ...params,
-    toUser: params.toUser ? createPublicUser(params.toUser) : undefined,
-    toOrg: params.toOrg ? createPublicOrganization(params.toOrg) : undefined,
-    fromUser: params.fromUser ? createPublicUser(params.fromUser) : undefined,
-    fromOrg: params.fromOrg ? createPublicOrganization(params.fromOrg) : undefined,
   };
+  if (params.fromOrg) {
+    invitation.fromOrg = createPublicOrganization(params.fromOrg);
+  }
+  if (params.fromUser) {
+    invitation.fromUser = createPublicUser(params.fromUser);
+  }
+  if (params.toOrg) {
+    invitation.toOrg = createPublicOrganization(params.toOrg);
+  }
+  if (params.toUser) {
+    invitation.toUser = createPublicUser(params.toUser);
+  }
+  return invitation as Invitation;
 }
 
 /** Create an invitation for an event */
