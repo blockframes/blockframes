@@ -101,9 +101,15 @@ export interface MovieAnalytics {
   }
 }
 
+interface AppAccess {
+  catalog: boolean,
+  festival: boolean
+}
+
 export interface StoreConfig {
   status: StoreStatus,
   storeType: StoreType,
+  appAccess: AppAccess
 }
 
 export interface MoviePromotionalDescription {
