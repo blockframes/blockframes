@@ -6,8 +6,6 @@ import { sanitizeFileName } from "./file-sanitizer";
 export interface ImgRef {
   url: string;
   ref: string;
-  originalRef: string;
-  originalFileName?: string;
 }
 
 export function createImgRef(ref: Partial<ImgRef> | string = {}): ImgRef {
@@ -15,8 +13,6 @@ export function createImgRef(ref: Partial<ImgRef> | string = {}): ImgRef {
   return {
     url: '',
     ref: '',
-    originalRef: '',
-    originalFileName: '',
     ..._ref
   };
 }
@@ -40,7 +36,7 @@ export class ImageUploader {
       const snapshot = await this.afStorage.upload(`${afPath}/${sanitizeFileName(imageUrl)}`, data);
       const url = await snapshot.ref.getDownloadURL();
       const meta = await snapshot.ref.getMetadata();
-      return createImgRef({ url, ref: meta.fullPath, originalFileName: imageUrl });
+      return createImgRef({ url, ref: meta.fullPath });
     } catch (error) {
       return;
     }

@@ -178,8 +178,7 @@ export class CropperComponent implements ControlValueAccessor, OnDestroy {
 
     this.sub = this.url$.subscribe(url => this.uploaded(createImgRef({
       url,
-      ref: metadata.fullPath,
-      originalFileName: this.file.name
+      ref: metadata.fullPath
     })));
     this.nextStep('show');
   }

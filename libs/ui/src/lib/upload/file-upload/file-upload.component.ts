@@ -105,7 +105,7 @@ export class FileUploadComponent {
       if (this.return === 'string') {
         this.storeUploaded.emit(this.downloadURL);
       } else {
-        this.storeUploaded.emit(createImgRef({ url: this.downloadURL, originalFileName: file.name }));
+        this.storeUploaded.emit(createImgRef({ url: this.downloadURL }));
       }
     }
 

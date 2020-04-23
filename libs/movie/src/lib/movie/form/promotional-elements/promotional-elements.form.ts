@@ -5,12 +5,10 @@ import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { FormList } from '@blockframes/utils/form/forms/list.form';
 
 function createImgRefForm(reference?: Partial<ImgRef>) {
-  const { url, ref, originalRef, originalFileName } = createImgRef(reference);
+  const { url, ref } = createImgRef(reference);
   return {
     url: new FormControl(url),
-    ref: new FormControl(ref),
-    originalRef: new FormControl(originalRef),
-    originalFileName: new FormControl(originalFileName),
+    ref: new FormControl(ref)
   }
 }
 
