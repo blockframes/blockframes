@@ -24,6 +24,7 @@
     "e2e": "npm run e2e:catalog && npm run e2e:festival",
     "pree2e": "ng build backend-ops --configuration=\"${ENV}\" && node dist/apps/backend-ops/main.js",
     "e2e:catalog": "./node_modules/.bin/ng e2e catalog-e2e --configuration=\"${ENV}\" --headless",
+    "e2e:festival": "./node_modules/.bin/ng e2e festival-e2e --configuration=\"${ENV}\" --headless",
     "affected:apps": "./node_modules/.bin/nx affected:apps --base=origin/master",
     "affected:libs": "./node_modules/.bin/nx affected:libs --base=origin/master",
     "affected:build": "./node_modules/.bin/nx affected:build --base=origin/master",
