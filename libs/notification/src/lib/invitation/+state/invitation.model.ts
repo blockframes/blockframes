@@ -23,6 +23,22 @@ export interface InvitationFromOrganizationToUserOptions {
   toUser: PublicUser;
 }
 
+export function createInvitation(params: Partial<Invitation> = {}): Invitation {
+  return {
+    id: '',
+    mode: null,
+    type: null,
+    docId: '',
+    status: 'pending',
+    date: firestore.Timestamp.now(),
+    ...params,
+    toUser: params.toUser ? createPublicUser(params.toUser) : undefined,
+    toOrg: params.toOrg ? createPublicOrganization(params.toOrg) : undefined,
+    fromUser: params.fromUser ? createPublicUser(params.fromUser) : undefined,
+    fromOrg: params.fromOrg ? createPublicOrganization(params.fromOrg) : undefined,
+  };
+}
+
 /** Create an invitation for an event */
 export function createEventInvitation(params: Partial<InvitationToAnEvent> = {}): InvitationToAnEvent {
   return {
@@ -56,6 +72,7 @@ export function createInvitationFromUserToOrganization(params: InvitationFromUse
 /** Factory function that create an Invitation of type fromOrganizationToUser. */
 export function createInvitationFromOrganizationToUser(params: InvitationFromOrganizationToUserOptions): InvitationFromOrganizationToUser {
   return {
+    id: '',
     mode:'invitation',
     type: 'fromOrganizationToUser',
     status: 'pending',

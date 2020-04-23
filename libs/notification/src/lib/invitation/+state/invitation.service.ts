@@ -1,12 +1,15 @@
 import { Injectable } from '@angular/core';
 import { InvitationState, InvitationStore } from './invitation.store';
-import { createInvitationFromUserToOrganization, createInvitationFromOrganizationToUser, Invitation } from './invitation.model';
+import { createInvitationFromUserToOrganization, createInvitationFromOrganizationToUser, Invitation, createInvitation } from './invitation.model';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
-import { OrganizationService } from '@blockframes/organization/+state/organization.service';
-import { AuthQuery } from '@blockframes/auth/+state/auth.query';
-import { AuthService } from '@blockframes/auth/+state/auth.service';
-import { InvitationDocument } from './invitation.firestore';
+import { OrganizationService, OrganizationQuery, Organization } from '@blockframes/organization/+state';
+import { AuthQuery, AuthService } from '@blockframes/auth/+state';
+import { UserService, PublicUser } from '@blockframes/user/+state';
+import { InvitationDocument, InvitationType, InvitationMode } from './invitation.firestore';
 import { toDate } from '@blockframes/utils/helpers';
+
+type SenderKey = 'fromUser' | 'toUser' | 'fromOrg' | 'toOrg';
+type Sender = Organization | PublicUser;
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'invitations' })
@@ -15,7 +18,9 @@ export class InvitationService extends CollectionService<InvitationState> {
     store: InvitationStore,
     private authQuery: AuthQuery,
     private authService: AuthService,
+    private userService: UserService,
     private orgService: OrganizationService,
+    private orgQuery: OrganizationQuery,
   ) {
     super(store);
   }
@@ -39,23 +44,26 @@ export class InvitationService extends CollectionService<InvitationState> {
     return this.add(invitation);
   }
 
-  /** Create invitations when an Organization asks users to join it. */
-  public async sendInvitationsToUsers(userEmails: string[], organizationId: string) {
-    const organization = await this.orgService.getValue(organizationId);
+  /** 
+   * Create invitations when an Organization asks users to join it.
+   * @param userEmails A list of email to invite
+   * @param organizationId The organization sender. In not provided, take the current one.
+   */
+  public async sendInvitationsToUsers(userEmails: string[], organizationId?: string) {
+    const organization = !!organizationId
+      ? await this.orgService.getValue(organizationId)
+      : this.orgQuery.getActive();
+    
     const userPromises = userEmails.map(async userEmail => {
       // Get a user or create a ghost user when needed
-      return this.authService.getOrCreateUserByMail(userEmail, organization.denomination.full);
-    });
-    const users = await Promise.all(userPromises);
-
-    const invitations = users.map(user => {
+      const user = await this.authService.getOrCreateUserByMail(userEmail, organization.denomination.full);
       return createInvitationFromOrganizationToUser({
         id: this.db.createId(),
         fromOrg: { id: organization.id, denomination: { full: organization.denomination.full }, logo: organization.logo },
         toUser: { uid: user.uid, email: user.email }
       });
     });
-
+    const invitations = await Promise.all(userPromises);
     return this.add(invitations);
   }
 
@@ -86,5 +94,47 @@ export class InvitationService extends CollectionService<InvitationState> {
 
   public isInvitationForMe(invitation: Invitation) : Boolean {
     return invitation.toOrg?.id === this.authQuery.orgId || invitation.toUser?.uid === this.authQuery.userId
+  }
+
+  /** Get the key (fromUser, toUser, fromOrg, toOrg) and sender for an invitation */
+  getSender(mode: InvitationMode, type: InvitationType): [SenderKey, Sender] {
+    if (type === 'event' || type === 'fromOrganizationToUser') {
+      const org =  this.orgQuery.getActive();
+      return mode === 'invitation' ? [ 'fromOrg', org ] : [ 'toOrg', org ];
+    } else if (type === 'fromUserToOrganization') {
+      const user = this.authQuery.user;
+      return mode === 'invitation' ? [ 'fromUser', user ] : [ 'toUser', user ]
+    }
+  }
+
+  /** Request a user to invite you to a doc  */
+  async requestUser(docId: string, userId: string, type: 'fromUserToOrganization') {
+    const [ senderKey, sender ] = this.getSender('request', type);
+    const base = { docId, mode: 'request', type, [senderKey]: sender } as Partial<Invitation>;
+    const toUser = await this.userService.getValue(userId);
+    const invitation = createInvitation({ ...base, toUser });
+    this.add(invitation);
+  }
+
+  /** Request an organization to invite you to a doc  */
+  async requestOrg(docId: string, orgIds: string, type: 'event' | 'fromOrganizationToUser') {
+    const [ senderKey, sender ] = this.getSender('request', type);
+    const base = { docId, mode: 'request', type, [senderKey]: sender } as Partial<Invitation>;
+    const toOrg = await this.orgService.getValue(orgIds);
+    const invitation = createInvitation({ ...base, toOrg });
+    this.add(invitation);
+  }
+
+  /** Invite one or many user to a doc */
+  async invitUsers(docId: string, emails: string[], type: 'event' | 'fromOrganizationToUser') {
+    const [ senderKey, sender ] = this.getSender('request', type);
+    const base = { docId, mode: 'invitation', type, [senderKey]: sender } as Partial<Invitation>;
+    const promises = emails.map(async email => {
+      const orgName = this.orgQuery.getActive().denomination.full;
+      const toUser = await this.authService.getOrCreateUserByMail(email, orgName);
+      return createInvitation({ ...base, toUser })
+    });
+    const invitations = await Promise.all(promises);
+    this.add(invitations);
   }
 }

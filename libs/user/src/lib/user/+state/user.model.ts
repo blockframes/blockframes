@@ -3,6 +3,8 @@ import { User } from "@blockframes/auth/+state/auth.store";
 import { ImgRef, createImgRef } from "@blockframes/utils/image-uploader";
 import { PublicUser } from "./user.firestore";
 
+export * from './user.firestore';
+
 export interface OrganizationMemberRequest {
   email: string;
   roles: string[];
