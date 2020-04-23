@@ -1,5 +1,5 @@
 // Angular
-import { Component, ChangeDetectionStrategy, ViewChild, AfterViewInit, OnDestroy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { SearchResult } from '@blockframes/ui/search-widget/search-widget.component';
@@ -10,7 +10,6 @@ import { MatSidenavContent, MatSidenav } from '@angular/material/sidenav';
 import { algolia } from '@env';
 import { Observable, Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
-import { boolean } from '@blockframes/utils/decorators/decorators';
 
 @Component({
   selector: 'layout-dashboard',
@@ -19,7 +18,6 @@ import { boolean } from '@blockframes/utils/decorators/decorators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class DashboardComponent implements AfterViewInit, OnDestroy {
-  @Input() @boolean hideSearchbar: boolean;
   private sub: Subscription;
   public invitationCount$ = this.invitationQuery.selectCount(invitation => invitation.status === 'pending');
   public notificationCount$ = this.notificationQuery.selectCount();

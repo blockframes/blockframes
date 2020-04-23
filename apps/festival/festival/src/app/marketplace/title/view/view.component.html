@@ -15,13 +15,13 @@
         <ng-container *ngIf="(toggle$ | async); else alreadyAdded">
           <button mat-icon-button color="accent" (click)="removeFromWishlist()">
             <mat-icon svgIcon="heart_fill"></mat-icon>
-            <span>Add to Wishlistt</span>
+            <span>Added to Wishlistt</span>
           </button>
         </ng-container>
         <ng-template #alreadyAdded>
           <button mat-icon-button color="accent" (click)="addToWishlist()">
             <mat-icon svgIcon="heart_outline"></mat-icon>
-            <span>Added to Wishlistt</span>
+            <span>Add to Wishlistt</span>
           </button>
         </ng-template>
       </movie-header-cta>
