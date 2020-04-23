@@ -4,9 +4,9 @@
 <ng-container *ngIf="(movie$ | async) as movie;" test-id="content">
   <section fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="20px">
     <!-- PROMO LINKS -->
-    <mat-card *ngIf="hasLink(movie)" fxLayout="column" fxLayoutAlign="start start" fxFlex="30">
+    <mat-card *ngIf="hasLink(movie)" fxLayout="column" fxFlex="30">
       <ng-container *ngFor="let promoLink of promoLinks">
-        <a *ngIf="getLink(movie, promoLink) as link" mat-stroked-button [color]="link.color" [href]="link.url" target="_blank">
+        <a *ngIf="getLink(movie, promoLink) as link" mat-flat-button [color]="link.color" [href]="link.url" target="_blank">
           <mat-icon [svgIcon]="link.icon" [color]="link.color"></mat-icon><span>{{ link.label }}</span></a>
       </ng-container>
     </mat-card>
