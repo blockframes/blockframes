@@ -1,28 +1,28 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { EventViewComponent } from './view.component';
 import { RouterModule } from '@angular/router';
-import { GuestListModule } from '@blockframes/invitation/components/guest-list/guest-list.module';
-import { EventRangeModule } from '@blockframes/event/pipes/event-range.pipe';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { EventReviewComponent } from './review.component';
+
 import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { LayoutEventReviewModule } from '@blockframes/event/layout/review/review.module';
+
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 
 
 @NgModule({
-  declarations: [EventViewComponent],
+  declarations: [EventReviewComponent],
   imports: [
     CommonModule,
-    EventRangeModule,
-    GuestListModule,
+    LayoutEventReviewModule,
     TableFilterModule,
     ImgAssetModule,
     FlexLayoutModule,
     MatCardModule,
     MatIconModule,
-    RouterModule.forChild([{ path: '', component: EventViewComponent }])
+    RouterModule.forChild([{ path: '', component: EventReviewComponent }])
   ]
 })
-export class EventViewModule { }
+export class EventReviewModule { }
