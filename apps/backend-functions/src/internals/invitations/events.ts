@@ -4,6 +4,8 @@ import { NotificationDocument, OrganizationDocument } from "../../data/types";
 import { createNotification, triggerNotifications } from "../../notification";
 import { db } from "../firebase";
 import { getAdminIds } from "../../data/internals";
+import { invitationToMeetingFromUser, invitationToScreeningFromOrg, requestToAttendEventFromUser } from '../../templates/mail';
+import { sendMailFromTemplate } from '../email';
 
 /**
  * Handles notifications and emails when an invitation to an event is created.
@@ -36,7 +38,7 @@ async function onInvitationToAnEventCreate({
      */
     const senderEmail = fromOrg.denomination.public;
     console.log(`Sending invitation email for a screening event (${eventId}) from ${senderEmail} to : ${recipient}`);
-    // @TODO (#2461) send invitation email for a screening event
+    await sendMailFromTemplate(invitationToScreeningFromOrg(recipient, fromOrg.denomination.full, eventId));
 
   } else if (!!fromUser) {
     /**
@@ -47,11 +49,11 @@ async function onInvitationToAnEventCreate({
     switch (mode) {
       case 'invitation':
         console.log(`Sending invitation email for a meeeting event (${eventId}) from ${senderEmail} to : ${recipient}`);
-        // @TODO (#2461) send invitation to a meeting email template
+        await sendMailFromTemplate(invitationToMeetingFromUser(recipient, senderEmail, eventId));
         break;
       case 'request':
         console.log(`Sending request email to attend an event (${eventId}) from ${senderEmail} to : ${recipient}`);
-        // @TODO (#2461) send (invitation or screening) request email template
+        await sendMailFromTemplate(requestToAttendEventFromUser(senderEmail, recipient, eventId));
         break;
     }
   } else {

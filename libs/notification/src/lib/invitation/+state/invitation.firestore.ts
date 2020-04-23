@@ -34,7 +34,7 @@ export type InvitationOrUndefined = InvitationDocument | undefined;
  * When a invitation is created, a backend function will check if:
  * If we have an user or an org we can create a notification.
  * If we have an email, the function will send an email.
- * If user that received an email invitation and 
+ * If user that received an email invitation and
  * created an account, we will then be able to replace email by the coresponding new user.
  * */
 export interface InvitationToAnEvent extends Invitation {

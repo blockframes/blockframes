@@ -1,4 +1,3 @@
-
 import { getDocument } from './data/internals';
 import { db, functions } from './internals/firebase';
 import { InvitationDocument, InvitationOrUndefined } from './data/types';
@@ -49,7 +48,7 @@ export async function onInvitationWrite(
         return onInvitationFromUserToJoinOrgUpdate(invitationDocBefore, invitationDoc, invitation);
       case 'event':
         /**
-         * @dev In this case, an invitation to an event can be: 
+         * @dev In this case, an invitation to an event can be:
          * a request from an user who wants to attend an event.
          * an invitation to an user that can be interested to attend an event.
          */

@@ -113,6 +113,37 @@ export function userRequestedToJoinYourOrg(request: RequestToJoinOrganization): 
   return { to: request.adminEmail, templateId: templateIds.joinYourOrg, data };
 }
 
+/** Generates an email for user invited to an meeting event. */
+export function invitationToMeetingFromUser(email: string, senderEmail: string, eventId: string): EmailTemplateRequest {
+  const data = {
+    userEmail: email,
+    senderEmail: senderEmail,
+    eventId: eventId
+  };
+  return { to: email, templateId: templateIds.invitationToMeetingFromUser, data };
+}
+
+/** Generates an email for user invited by an organization to a screening. */
+export function invitationToScreeningFromOrg(email: string, orgDenomination: string, eventId: string): EmailTemplateRequest {
+  const data = {
+    orgDenomination: orgDenomination,
+    eventId: eventId
+  };
+  return { to: email, templateId: templateIds.invitationToMeetingFromUser, data };
+}
+
+/** Generates an email for user requesting to attend an event. */
+export function requestToAttendEventFromUser(fromUser: string, toUser: string, eventId: string): EmailTemplateRequest {
+  const data = {
+    emailUserRequest: fromUser,
+    userEmail: toUser,
+    eventId: eventId
+  };
+  return { to: toUser, templateId: templateIds.invitationToMeetingFromUser, data };
+}
+
+
+
 // ------------------------- //
 //      CASCADE8 ADMIN       //
 // ------------------------- //
@@ -127,8 +158,8 @@ const organizationCreatedTemplate = (orgId: string) =>
 /**
  * @TODO (#2539)
  * This method is currently unused but we keep it to future uses.
- * @param orgId 
- * @param appId 
+ * @param orgId
+ * @param appId
  */
 /*const organizationRequestAccessToAppTemplate = (orgId: string, appId: string) =>
   `

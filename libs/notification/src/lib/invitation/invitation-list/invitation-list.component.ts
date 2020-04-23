@@ -36,9 +36,9 @@ export class InvitationListComponent implements OnInit, OnDestroy {
 
     const storeName = this.store.storeName;
     if (this.authQuery.orgId) {
-      /** 
+      /**
        * @dev We display all invitations whether user or org is invited or invinting
-       * Only invitation where user or org is invited will have buttons to accept or decline 
+       * Only invitation where user or org is invited will have buttons to accept or decline
       */
       const syncs = [];
       const queryFn1 = ref => ref.where('toUser.uid', '==', this.authQuery.userId).where('status', '==', 'pending');
