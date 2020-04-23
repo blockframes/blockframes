@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
 import { switchMap, filter, tap, map } from 'rxjs/operators';
-import { createMovie, Movie, MovieAnalytics, SyncMovieAnalyticsOptions } from './movie.model';
+import { createMovie, Movie, MovieAnalytics, SyncMovieAnalyticsOptions, createAppAccessWithApp, createStoreConfig } from './movie.model';
 import { MovieState, MovieStore } from './movie.store';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { createImgRef } from '@blockframes/utils/image-uploader';
@@ -13,6 +13,9 @@ import { Observable, combineLatest } from 'rxjs';
 import { MovieQuery } from './movie.query';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { PrivateConfig } from '@blockframes/utils/common-interfaces/utility';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { OrganizationService } from '@blockframes/organization/+state/organization.service';
+import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies' })
@@ -21,11 +24,37 @@ export class MovieService extends CollectionService<MovieState> {
     private authQuery: AuthQuery,
     private userService: UserService,
     private permissionsService: PermissionsService,
+    private orgService: OrganizationService,
+    private orgQuery: OrganizationQuery,
+    private routerQuery: RouterQuery,
     private functions: AngularFireFunctions,
     private query: MovieQuery,
     protected store: MovieStore,
   ) {
     super(store);
+  }
+
+  // formatFromFirestore
+
+  async create(): Promise<string> {
+    const createdBy = this.authQuery.getValue().uid;
+    const appName = this.routerQuery.getValue().state.root.data.app;
+    const movie = createMovie({
+      _meta: { createdBy },
+      main: {
+        title: { original: '' },
+        storeConfig: {
+          ...createStoreConfig(),
+          appAccess: createAppAccessWithApp(appName)
+        }
+      }
+    });
+    let movieId: string;
+    await this.runTransaction(async (write) => {
+      movieId = await this.add(movie, { write });
+      await this.orgService.update(this.orgQuery.getActiveId(), (org) => ({ movieIds: [...org.movieIds, movieId] }), { write });
+    });
+    return movieId;
   }
 
   async onCreate(movie: Movie, { write }: WriteOptions) {
@@ -69,10 +98,13 @@ export class MovieService extends CollectionService<MovieState> {
   public async addMovie(original: string, movie?: Movie): Promise<Movie> {
     const id = this.db.createId();
     const userId = movie._meta?.createdBy ? movie._meta.createdBy : this.authQuery.userId;
+    const appName = this.routerQuery.getValue().state.root.data.app;
+    console.log(appName)
 
     if (!movie) {
+
       // create empty movie
-      movie = createMovie({ id, main: { title: { original } }, _meta: { createdBy: userId } });
+      movie = createMovie({ id, main: { title: { original }}, _meta: { createdBy: userId } });
     } else {
       // we set an id for this new movie
       movie = createMovie({ ...movie, id, _meta: { createdBy: userId } });
@@ -139,7 +171,7 @@ export class MovieService extends CollectionService<MovieState> {
   /**
    * @dev ADMIN method
    * Https callable function to get privateConfig for a movie.
-   * @param movieId 
+   * @param movieId
    * @param keys the keys to retreive
    */
   public async getMoviePrivateConfig(movieId: string, keys: string[] = []): Promise<PrivateConfig> {

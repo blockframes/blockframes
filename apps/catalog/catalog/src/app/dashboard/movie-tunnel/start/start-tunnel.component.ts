@@ -1,11 +1,7 @@
-import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
-import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TunnelService } from '@blockframes/ui/tunnel/tunnel.service';
-import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
-import { createMovie } from '@blockframes/movie/+state/movie.model';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 const cardContents = [
@@ -38,11 +34,8 @@ export class StartTunnelComponent implements OnInit {
   constructor(
     private movieService: MovieService,
     private tunnelService: TunnelService,
-    private auth: AuthQuery,
     private router: Router,
     private route: ActivatedRoute,
-    private orgService: OrganizationService,
-    private orgQuery: OrganizationQuery,
     private dynTitle: DynamicTitleService
   ) {
     this.dynTitle.setPageTitle('Add a title')
@@ -54,14 +47,8 @@ export class StartTunnelComponent implements OnInit {
 
   async begin() {
     this.loading = true;
-    let movieId;
-    const createdBy = this.auth.getValue().uid;
-    const movie = createMovie({ _meta: { createdBy } });
     try {
-      await this.movieService.runTransaction(async (write) => {
-        movieId = await this.movieService.add(movie, { write });
-        await this.orgService.update(this.orgQuery.getActiveId(), (org) => ({ movieIds: [...org.movieIds, movieId] }), { write })
-      })
+      const movieId = await this.movieService.create();
       this.loading = false;
       this.router.navigate([movieId], { relativeTo: this.route });
     } catch (err) {
