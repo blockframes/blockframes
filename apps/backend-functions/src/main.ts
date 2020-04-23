@@ -40,6 +40,11 @@ export const onUserUpdate = onDocumentUpdate(
   users.onUserUpdate
 );
 
+export const onUserDelete = onDocumentDelete(
+  '/users/{userID}',
+  users.onUserDelete
+);
+
 /** Trigger: REST call to send a verify email to a user. */
 export const sendVerifyEmail = functions.https
   .onCall(users.startVerifyEmailFlow);
