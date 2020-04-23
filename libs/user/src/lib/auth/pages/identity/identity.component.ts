@@ -49,7 +49,8 @@ export class IdentityComponent {
 
       // Accept the invitation from the organization.
       // Don't use invitationService to avoid circulars dependencies between invitation, organization and auth service.
-      const invitationsSnapshot = await this.db.firestore.collection('invitations').where('user.uid', '==', this.query.userId).get();
+      // @TODO (#2585) check circulars & toUser /fromUser org ..
+      const invitationsSnapshot = await this.db.firestore.collection('invitations').where('toUser.uid', '==', this.query.userId).get();
       const invitations = invitationsSnapshot.docs.map(doc => doc.data());
       const pendingInvitation = invitations.find(invitation => invitation.status === 'pending');
       await this.db.doc(`invitations/${pendingInvitation.id}`).update({ status: 'accepted' });
