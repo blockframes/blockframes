@@ -45,7 +45,7 @@ service cloud.firestore {
     }
 
     match /_META/_MAINTENANCE {
-      allow read if true;
+      allow read: if true;
       allow write: if false;
     }
 
@@ -97,7 +97,7 @@ service cloud.firestore {
 
     /// FUNCTIONS ///
 
-    function isOnlyMarkingNofitifcationAsRead() { // @TODO ok #650 ?
+    function isOnlyMarkingNofitifcationAsRead() {
       // Only "isRead" can be updated.
       return userId() == existingData().toUserId
         && isNotUpdatingField('id')
@@ -142,7 +142,7 @@ service cloud.firestore {
         || userId() == existingData().toUser.uid;
     }
 
-    function isOnlyChangingInvitationStatus() { // @TODO ok #650 ?
+    function isOnlyChangingInvitationStatus() {
       // Update is used to change status only. Allowed to recepients only
       // @TODO (#2500) should be handled by a backend function to prevent ugly rules
       // Only "status" can be updated.
@@ -241,7 +241,7 @@ service cloud.firestore {
         allow read: if userHasValidOrg();
         allow create: if isRequestFieldValueEqualTo('id', rightId)
           && isRequestFieldValueEqualTo('status', 'draft')
-        allow update: isNotUpdatingField('id')
+        allow update: if isNotUpdatingField('id')
           && isNotUpdatingField('status')
           && isNotUpdatingField('contractId');
         allow delete: if orgCan('canDelete', userOrgId(), movieId)
@@ -291,11 +291,11 @@ service cloud.firestore {
         );
       allow create: if userHasValidOrg() 
         && isRequestFieldValueEqualTo('id', eventId)
-        && ( isRequestFieldValueEqualTo('ownerId', userId() || isRequestFieldValueEqualTo('ownerId', userOrgId() );
+        && ( isRequestFieldValueEqualTo('ownerId', userId()) || isRequestFieldValueEqualTo('ownerId', userOrgId()) );
       allow update: if userHasValidOrg() 
         && isNotUpdatingField('id')
-        && ( isRequestFieldValueEqualTo('ownerId', userId() || isRequestFieldValueEqualTo('ownerId', userOrgId() );
-      allow delete: if userHasValidOrg() 
+        && ( isRequestFieldValueEqualTo('ownerId', userId()) || isRequestFieldValueEqualTo('ownerId', userOrgId()) );
+      allow delete: if userHasValidOrg()
         && ( existingData().ownerId == userId() || ( existingData().ownerId == userOrgId() && isOrgAdmin(userId(), userOrgId()) ) );
 		}
 
@@ -383,7 +383,7 @@ service cloud.firestore {
 
     // We check that the field is not sent or if field sent is equal to actual
     function isNotUpdatingField(fieldName) {
-			return !incomingData().keys().hasAll([fieldName]) || (existingData.keys().hasAll([fieldName]) && incomingData()[fieldName] == existingData[fieldName]);
+			return !incomingData().keys().hasAll([fieldName]) || (existingData().keys().hasAll([fieldName]) && incomingData()[fieldName] == existingData()[fieldName]);
     }
 
     // Incoming field must be setted with a value equal to "value"
