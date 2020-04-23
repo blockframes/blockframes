@@ -13,7 +13,8 @@
         <button mat-icon-button (click)="sidenav.toggle()">
           <mat-icon svgIcon="menu"></mat-icon>
         </button>
-        <algolia-autocomplete [index]="movieIndex" mode="standard" resetInput native prefixIcon="magnifying_glasses" clearable keyToDisplay="title.international">
+        <algolia-autocomplete [index]="movieIndex" mode="standard" resetInput native prefixIcon="magnifying_glasses" clearable keyToDisplay="title.international"
+          *ngIf="!hideSearchbar">
           <ng-template let-result>
             <a [routerLink]="['title', result.objectID]">{{ result.title.international }}</a>
           </ng-template>
