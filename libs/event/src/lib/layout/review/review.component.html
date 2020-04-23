@@ -1,0 +1,14 @@
+<h2>Details</h2>
+<mat-card>
+  <h5>Event Title</h5>
+  <p>{{ event.title }}</p>
+  <h5>Is Private</h5>
+  <p>{{ event.isPrivate ? 'Yes' : 'No' }}</p>
+  <h5>Date & Time</h5>
+  <p>{{ event | eventRange }}</p>
+</mat-card>
+
+<h2>Invitations</h2>
+<mat-card>
+  <invitation-guest-list [invitations]="invitations$ | async"></invitation-guest-list>
+</mat-card>

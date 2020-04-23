@@ -19,6 +19,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
+import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDividerModule } from '@angular/material/divider';
 
 
 
@@ -39,12 +42,15 @@ import { MatListModule } from '@angular/material/list';
     AlgoliaChipsAutocompleteModule,
 
     // Material
+    MatDividerModule,
+    MatCardModule,
     MatToolbarModule,
     MatButtonModule,
     MatIconModule,
     MatFormFieldModule,
     MatInputModule,
     MatListModule,
+    MatCheckboxModule,
   ]
 })
 export class EventEditModule { }

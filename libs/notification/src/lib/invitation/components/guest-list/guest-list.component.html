@@ -1,4 +1,21 @@
-<mat-form-field>
+<mat-list>
+  <mat-list-item>
+    <mat-icon matListIcon svgIcon="group"></mat-icon>
+    <span matLine>{{ invitations.length }} guests</span>
+    <span matLine>
+      <small class="mat-caption">
+        {{ invitations | statusLength: 'accepted' }} yes,
+        {{ invitations | statusLength: 'declined' }} no,
+        {{ invitations | statusLength: 'pending' }} unanswered
+      </small>
+    </span>
+    <button mat-icon-button [cdkCopyToClipboard]="copy(invitations)">
+      <mat-icon svgIcon="copy"></mat-icon>
+    </button>
+  </mat-list-item>
+</mat-list>
+
+<mat-form-field *ngIf="invitations.length">
   <mat-label>Search for a guest</mat-label>
   <mat-icon matPrefix svgIcon="search_table"></mat-icon>
   <input matInput [formControl]="searchControl" placeholder="Search for a guest"/>
