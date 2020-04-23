@@ -125,13 +125,13 @@ jobs:
           # the following command only build affected apps.
           name: build affected apps
           command: |
-            AFFECTED=`npx nx affected:apps --plain --base=origin/master`;
+            AFFECTED=`npx nx affected:apps --plain --base=origin/develop`;
             echo "Building: ${AFFECTED}"
             for app in ${AFFECTED}; do
               echo "building ${app}";
               npm run build:${app};
             done;
-      - run: npm run affected:lint --base=origin/master
+      - run: npm run affected:lint --base=origin/develop
       - run: npm run test
       - run:
           name: Check size of apps being build
