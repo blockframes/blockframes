@@ -38,6 +38,7 @@ async function updateMovieStoreConfig(db: Firestore) {
         main: {
           ...movieData.main,
           storeConfig: {
+            ...storeConfig,
             status: updateStatus(storeConfig.status),
             storeType: updateStoreType(storeConfig.storeType)
           }
