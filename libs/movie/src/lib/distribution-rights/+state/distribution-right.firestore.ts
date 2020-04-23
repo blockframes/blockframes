@@ -41,7 +41,7 @@ export const distributionRightStatus = {
 
   /**
    * @dev in this status, a contract should exists regarding this distribution right.
-   * When Contract status changes, this could chance too
+   * When Contract status changes, this could change too
    */
   undernegotiation: 'Under negotiation',
 } as const;

@@ -153,7 +153,6 @@ service cloud.firestore {
           && isNotUpdatingField(['app'])
           && isNotUpdatingField(['type'])
           && isNotUpdatingField(['mode'])
-          && isNotUpdatingField(['status'])
           && isNotUpdatingField(['date'])
           && isNotUpdatingField(['fromOrg'])
           && isNotUpdatingField(['fromUser'])
@@ -172,17 +171,26 @@ service cloud.firestore {
     /// RULES ///
   
     match /orgs/{orgId} {
-      allow read: if isSignedIn();
+      // Only org member can read because we use Algolia for search 
+      // @TODO #2585 to confirm
+      allow read: if isOrgMember(userId(), orgId);
     	allow create: if isSignedIn()
         && isRequestFieldValueEqualTo(['status'], 'pending')
         && isRequestFieldValueEqualToOrNotSetted(['id'], orgId)
-      allow update: if isSignedIn()
+      allow update: if isOrgAdmin(userId(), orgId)
       	&& isNotUpdatingField(['status'])
         && isNotUpdatingField(['created'])
         && isNotUpdatingField(['appAccess','catalogDashboard'])
         && isNotUpdatingField(['appAccess','catalogMarketplace'])
         && isNotUpdatingId('id', orgId);
       allow delete: if isSuperAdmin(userId(), orgId);
+
+      match /carts/{cartId} {
+        allow read: if isOrgMember(userId(), orgId);
+        allow create: if isOrgMember(userId(), orgId);
+        allow update: if isOrgMember(userId(), orgId);
+        allow delete: if isOrgAdmin(userId(), userOrgId());
+      }
     }
 
     ////////////////////////////////
@@ -232,7 +240,9 @@ service cloud.firestore {
         && isNotUpdatingId('id', movieId)
         && isNotUpdatingField(['_meta'])
         && isNotUpdatingField(['_type'])
-        && isNotUpdatingField(['main', 'storeConfig','status'])
+        && (isNotUpdatingField(['main', 'storeConfig','status']) || incomingData().main.storeConfig.status in ['submitted', 'draft'])
+        && isNotUpdatingField(['main', 'storeConfig','storeType'])
+        // @TODO (#2585) add new rules for appAccess
         && orgCan('canUpdate', userOrgId(), movieId);
       allow delete: if orgCan('canDelete', userOrgId(), movieId)
       	&& isOrgAdmin(userId(), userOrgId());
@@ -243,7 +253,7 @@ service cloud.firestore {
         allow create: if isRequestFieldValueEqualToOrNotSetted(['id'], rightId)
           && isRequestFieldValueEqualTo(['status'], 'draft')
         allow update: if isNotUpdatingId('id', rightId)
-          && isNotUpdatingField(['status'])
+          && (isNotUpdatingField(['status']) || incomingData().status in ['draft', 'cart', 'undernegotiation'])
           && isNotUpdatingField(['contractId']);
         allow delete: if orgCan('canDelete', userOrgId(), movieId)
           && isOrgAdmin(userId(), userOrgId());
@@ -264,7 +274,7 @@ service cloud.firestore {
       allow update: if orgCan('canUpdate', userOrgId(), contractId)
         && isNotUpdatingId('id', contractId)
         && isNotUpdatingField(['type'])
-        && isNotUpdatingField(['lastVersion', 'status']);
+        && (isNotUpdatingField(['lastVersion', 'status']) || incomingData().lastVersion.status in ['submitted', 'draft', 'aborted']);
       allow delete: if orgCan('canDelete', userOrgId(), contractId);
 
       match /versions/{versionId} {
