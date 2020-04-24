@@ -29,7 +29,8 @@ export class FormCountryComponent implements OnInit {
   // @dev displayFn "this" is the MatAutocomplete, not the component
   displayFn(key: string) {
     if (key) {
-      return staticModel.TERRITORIES.find(({ slug }) => slug === key).label;
+      const value = staticModel.TERRITORIES.find(({ label }) => label === key);
+      return typeof value === 'undefined' ? '' : value.label;
     }
   }
 

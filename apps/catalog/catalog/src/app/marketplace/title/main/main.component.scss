@@ -1,3 +1,5 @@
+@import "~@angular/flex-layout/mq";
+
 mat-card {
   margin-top: 20px;
   .mat-card-content {
@@ -7,7 +9,6 @@ mat-card {
     margin-bottom: 10px;
   }
 }
-
 
 li {
   margin-bottom: 4px;
@@ -22,9 +23,23 @@ li {
 
 mat-card {
   width: 100%;
-  word-break: break-all;
+  min-width: 300px;
 }
 
 .synopsis {
   word-break: keep-all;
+}
+
+@include layout-bp(lt-sm) {
+  section {
+    flex-wrap: wrap;
+    // We need to overwrite the element style from @angula/flexlayout
+    place-content: center !important;
+    mat-card {
+      max-width: none !important;
+    }
+    article {
+      max-width: none !important;
+    }
+  }
 }
