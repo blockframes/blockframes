@@ -25,6 +25,7 @@ import { onContractWrite } from './contract';
 import * as privateConfig from './privateConfig';
 import { createNotificationsForEventsToStart } from './internals/invitations/events';
 import { onFileUploadEvent } from './internals/resize-images';
+import { getPrivateVideoUrl } from './player';
 
 /**
  * Trigger: when user creates an account.
@@ -71,6 +72,12 @@ export const getMovieAnalytics = functions.https.onCall(logErrors(bigQuery.reque
 
 /** Trigger: REST call bigQuery with an array of eventIds to get their analytics. */
 export const getEventAnalytics = functions.https.onCall(logErrors(bigQuery.requestEventAnalytics));
+
+//--------------------------------
+//      Player  Management      //
+//--------------------------------
+
+export const privateVideo  = functions.https.onCall(logErrors(getPrivateVideoUrl));
 
 /**
  * Trigger: REST call to the /admin app

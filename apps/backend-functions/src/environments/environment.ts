@@ -31,3 +31,5 @@ export const algolia = {
 
 export const adminEmail = mockConfigIfNeeded('admin', 'email');
 export const adminPassword = mockConfigIfNeeded('admin', 'password');
+
+export const jwplayerSecret = mockConfigIfNeeded('jwplayer', 'secret');

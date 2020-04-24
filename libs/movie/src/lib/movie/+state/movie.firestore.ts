@@ -290,6 +290,9 @@ interface MovieRaw<D> {
   festivalPrizes: MovieFestivalPrizes;
   budget: MovieBudget;
   movieReview: MovieReview[];
+
+  // TODO discuss of what is the better way to store the JWPlayer id
+  hostedVideo?: string;
 }
 
 export interface MovieLegalDocuments {
