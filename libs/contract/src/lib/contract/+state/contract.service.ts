@@ -41,7 +41,7 @@ export class ContractService extends CollectionService<ContractState> {
 
   onCreate(contract: Contract, { write }: WriteOptions) {
     // When a contract is created, we also create a permissions document for each parties.
-    return this.permissionsService.addDocumentPermissions(contract, write as firestore.WriteBatch)
+    return this.permissionsService.addDocumentPermissions(contract.id, write as firestore.Transaction)
   }
 
   /**
