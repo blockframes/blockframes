@@ -42,10 +42,10 @@ function b64toBlob(data: string) {
 
 /** Check if the path is a file path */
 function isFile(imgRef: ImgRef): boolean {
-  if (!imgRef || !imgRef.ref) {
+  if (!imgRef || !imgRef.refs) {
     return false;
   }
-  const part = imgRef.ref.split('.');
+  const part = imgRef.refs.original.split('.');
   const last = part.pop();
   return part.length >= 1 && !last.includes('/');
 }
@@ -105,7 +105,7 @@ export class CropperComponent implements ControlValueAccessor, OnDestroy {
   writeValue(path: ImgRef): void {
     if (isFile(path)) {
       this.folder = this.storagePath;
-      this.ref = this.storage.ref(path.ref);
+      this.ref = this.storage.ref(path.refs.original);
       this.url$ = this.ref.getDownloadURL().pipe(
         catchError(err => {
           this.nextStep('drop');
@@ -177,8 +177,12 @@ export class CropperComponent implements ControlValueAccessor, OnDestroy {
     )
 
     this.sub = this.url$.subscribe(url => this.uploaded(createImgRef({
-      url,
-      ref: metadata.fullPath
+      urls: {
+        original: url,
+      },
+      refs: {
+        original: metadata.ref
+      }
     })));
     this.nextStep('show');
   }

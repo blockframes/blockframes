@@ -26,7 +26,7 @@ function createLegalDocumentControl(legalDocument?: Partial<LegalDocument>) {
   return {
     id: new FormControl(id),
     label: new FormControl(label),
-    media: new FormControl(media.url, urlValidators),
+    media: new FormControl(media.urls.original, urlValidators),
     language: new FormStaticValue(language, 'LANGUAGES'),
     country: new FormStaticValue(country, 'TERRITORIES')
   };
