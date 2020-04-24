@@ -1,6 +1,7 @@
 <!-- TODO(#838): Use HostBinding instead of root div -->
 <div test-id="content">
-  <header fxLayout="column" fxLayoutAlign="center start" fxLayoutAlign.xs="center center" fxLayoutGap="20px">
+  <header fxLayout="column" fxLayoutAlign="center start" fxLayoutAlign.xs="center center" fxLayoutGap="20px"
+    class="dark-contrast-theme">
     <h1>Your online film market</h1>
     <p>brought to you by Archipel Content</p>
     <a mat-flat-button color="accent" test-id="library" routerLink="../title">Search for films</a>
@@ -9,14 +10,16 @@
   <section fxLayout="column" fxLayoutAlign="start center">
     <ng-container *ngFor="let section of sections; let i = index">
       <!-- We want by every iteration of the keys array that the text switches side-->
-      <article *ngIf="section.hasMovies$ | async" [fxLayout]="layout(i)" fxLayout.lt-md="column" fxLayoutAlign="center start">
+      <article *ngIf="section.hasMovies$ | async" [fxLayout]="layout(i)" fxLayout.lt-md="column"
+        fxLayoutAlign="center start">
         <aside fxLayout="column" [fxLayoutAlign]="alignment(i)" fxLayoutAlign.lt-md="center center" fxLayoutGap="20px">
           <h1>{{ section.title }}</h1>
           <p>{{ section.subline}} </p>
           <a mat-flat-button test-id="seeMore1" color="accent" routerLink="../title">See more</a>
         </aside>
         <bf-slider test-id="mat-carousel1" hideArrows hideIndicators loop autoplay maxHeight="300px" maxWidth="750px">
-          <bf-slide *ngFor="let movie of section.movies$ | async" [image]="movie.promotionalElements.banner.media" overlayColor="medium">
+          <bf-slide *ngFor="let movie of section.movies$ | async" [image]="movie.promotionalElements.banner.media"
+            overlayColor="medium">
             <div fxLayout="column" fxLayoutAlign="end start" [routerLink]="['/c/o/marketplace/title', movie.id]"
               class=informations-wrapper>
               <ng-container *ngIf="(toggle$(movie.id) | async); else notAdded">
@@ -32,8 +35,8 @@
               <div fxLayout="column" fxLayoutAlign="center start" fxLayoutGap="5px" class="informations">
                 <h3 mat-button color="primary">{{ movie.main.title.international }}</h3>
                 <div>
-                  <span class="mat-body-2" *ngFor="let director of movie.main.directors; let isLast=last">
-                    {{ movie.main.directors | displayName }}{{isLast ? '' : ', '}}
+                  <span class="mat-body-2" *ngFor="let director of movie.main.directors; let i = index let isLast=last">
+                    {{ movie.main.directors[i] | displayName }}{{isLast ? '' : ', '}}
                   </span>
                 </div>
                 <span class="mat-caption">{{ getMainInfo(movie) }}</span>

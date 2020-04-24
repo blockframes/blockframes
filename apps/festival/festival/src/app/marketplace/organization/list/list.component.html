@@ -1,4 +1,4 @@
-<a [routerLink]="org.id" *ngFor="let org of organizations$ | async">
+<a [routerLink]="org.id" *ngFor="let org of organizations | async">
   <mat-card>
     <img mat-card-image [imgRef]="org.logo" placeholderAsset="Organization_250.png" alt="organization logo" />
     <mat-card-content class="org-info">

@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, HostBinding } from '@angular/core';
-import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
+import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { scaleOut, scaleOutList } from '@blockframes/utils/animations/fade';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'festival-marketplace-organization-list',
@@ -12,8 +13,11 @@ import { scaleOut, scaleOutList } from '@blockframes/utils/animations/fade';
 export class ListComponent {
   @HostBinding('@scaleOut') animation = true;
   // @HostBinding('@scaleOutList') animList = true;
-  organizations$ = this.query.selectAll();
+  organizations;
 
-  constructor(private query: OrganizationQuery) { }
+  constructor(private service: OrganizationService) {
+    // TODO #2570
+    this.organizations = this.service.getValue(ref => ref.where('activity', '==', 'intlSales'));
+  }
 
 }
