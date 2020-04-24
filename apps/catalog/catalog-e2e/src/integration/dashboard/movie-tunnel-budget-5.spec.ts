@@ -25,7 +25,7 @@ beforeEach(() => {
 });
 
 describe('User can navigate to the movie tunnel budget page, complete the fields, and navigate to technical info page', () => {
-  it.skip('Login into an existing account, navigate on budget page, complete budget and quotas fields, go on movie tunnel technical info page', () => {
+  it('Login into an existing account, navigate on budget page, complete budget and quotas fields, go on movie tunnel technical info page', () => {
     const p1 = new TunnelMainPage();
     p1.navigateToTunnelPage(NAVIGATION[0], NAVIGATION[1]);
     const p2 = new TunnelBudgetPage();
