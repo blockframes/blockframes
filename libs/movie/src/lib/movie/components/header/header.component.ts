@@ -44,7 +44,7 @@ export class HeaderComponent {
     if (movie) {
       this.movie = movie;
       this.movieView = createMovieView(movie);
-      this.background = `url(${this.movieView.banner.media.url})`
+      this.background = `url(${this.movieView.banner.media.urls.original})`
     }
   }
 }

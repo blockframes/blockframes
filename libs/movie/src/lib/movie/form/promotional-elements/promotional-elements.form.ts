@@ -1,20 +1,8 @@
 import { MoviePromotionalElements, PromotionalElement, createMoviePromotionalElements, createPromotionalElement } from '../../+state';
-import { FormControl, FormGroup } from '@angular/forms';
-import { ImgRef, createImgRef } from '@blockframes/utils/image-uploader';
+import { FormControl } from '@angular/forms';
+import { createImgRefForm } from '@blockframes/utils/image-uploader';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { FormList } from '@blockframes/utils/form/forms/list.form';
-
-function createImgRefForm(reference?: Partial<ImgRef>) {
-  const { urls, refs } = createImgRef(reference);
-  return {
-    urls: new FormGroup({
-      original: new FormControl(urls.original)
-    }),
-    refs: new FormGroup({
-      original: new FormControl(refs.original)
-    }),
-  }
-}
 
 // Promotional Element LINK
 

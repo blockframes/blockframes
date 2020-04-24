@@ -2,23 +2,20 @@ import { AngularFireStorage } from "@angular/fire/storage";
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { sanitizeFileName } from "./file-sanitizer";
+import { FormGroup, FormControl } from "@angular/forms";
 
 export interface ImgRef {
   urls: {
     original: string,
     xs?: string,
-    sm?: string,
     md?: string,
-    lg?: string,
-    xl?: string
+    lg?: string
   };
   refs: {
     original: string,
     xs?: string,
-    sm?: string,
     md?: string,
-    lg?: string,
-    xl?: string
+    lg?: string
   };
 }
 
@@ -28,21 +25,35 @@ export function createImgRef(ref: Partial<ImgRef> | string = {}): ImgRef {
     urls: {
       original: '',
       xs: '',
-      sm: '',
       md: '',
-      lg: '',
-      xl: ''
+      lg: ''
     },
     refs: {
       original: '',
       xs: '',
-      sm: '',
       md: '',
-      lg: '',
-      xl: ''
+      lg: ''
     },
     ..._ref
   };
+}
+
+export function createImgRefForm(reference?: Partial<ImgRef>) {
+  const { urls, refs } = createImgRef(reference);
+  return {
+    urls: new FormGroup({
+      original: new FormControl(urls.original),
+      xs: new FormControl(urls.xs),
+      md: new FormControl(urls.md),
+      lg: new FormControl(urls.lg)
+    }),
+    refs: new FormGroup({
+      original: new FormControl(refs.original),
+      xs: new FormControl(refs.xs),
+      md: new FormControl(refs.md),
+      lg: new FormControl(refs.lg)
+    }),
+  }
 }
 
 @Injectable({ providedIn: 'root' })

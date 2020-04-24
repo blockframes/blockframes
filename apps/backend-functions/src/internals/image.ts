@@ -61,17 +61,20 @@ async function resize(data: functions.storage.ObjectMetadata) {
   let sizes: number[];
 
   // TODO#2603 Set resized images width depending of their directory
-  switch (directory) {
-    case 'avatar' || 'logo':
-      sizes = [50, 100, 300];
-      break;
-    case 'poster':
-      sizes = [100, 200];
-      break;
-    default:
-      console.warn('No bucket directory, exiting function');
-      return false;
+  if (directory === 'avatar' || directory === 'logo') {
+    sizes = [50, 100, 300];
+  } else if (directory.endsWith('poster')) {
+    sizes = [200, 400, 600];
+  } else if (directory.endsWith('banner')) {
+    sizes = [300, 600, 1200];
+  } else if (directory.endsWith('still')) {
+    sizes = [50, 100, 200];
+  } else {
+    console.warn('No bucket directory, exiting function');
+    return false;
   }
+
+
 
   // Iterate on each item of sizes array to generate all wanted resized images
   const uploadPromises = sizes.map(async size => {

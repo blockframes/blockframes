@@ -14,10 +14,10 @@ import { LegalDocument } from '@blockframes/contract/contract/+state/contract.fi
 import { FormStaticValue } from '@blockframes/utils/form/forms/static-value.form';
 import { createLegalDocument } from '@blockframes/contract/contract/+state/contract.model';
 import { MovieLegalDocuments } from '../+state/movie.firestore';
-import { urlValidators } from '@blockframes/utils/form/validators/validators';
 import { FormEntity, EntityControl } from '@blockframes/utils/form/forms/entity.form';
 import { FormList } from '@blockframes/utils/form/forms/list.form';
 import { createLanguageControl } from '@blockframes/movie/form/version-info/version-info.form';
+import { createImgRefForm } from '@blockframes/utils/image-uploader';
 
 // LEGAL DOCUMENTS
 
@@ -26,7 +26,7 @@ function createLegalDocumentControl(legalDocument?: Partial<LegalDocument>) {
   return {
     id: new FormControl(id),
     label: new FormControl(label),
-    media: new FormControl(media.urls.original, urlValidators),
+    media: new FormEntity(createImgRefForm(media)),
     language: new FormStaticValue(language, 'LANGUAGES'),
     country: new FormStaticValue(country, 'TERRITORIES')
   };
