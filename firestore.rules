@@ -303,7 +303,7 @@ service cloud.firestore {
 
     // We check that the field is not sent or if field sent is equal to actual
     function isNotUpdatingField(fieldName) {
-			return !incomingData().keys().hasAll([fieldName]) || (existingData.keys().hasAll([fieldName]) && incomingData()[fieldName] == existingData[fieldName]);
+			return !incomingData().keys().hasAll([fieldName]) || (existingData().keys().hasAll([fieldName]) && incomingData()[fieldName] == existingData()[fieldName]);
     }
   }
 }
