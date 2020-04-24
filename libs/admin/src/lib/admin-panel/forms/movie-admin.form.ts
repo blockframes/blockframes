@@ -20,3 +20,20 @@ export class MovieAdminForm extends FormEntity<MovieAdminControl> {
     super(createMovieAdminControls(data));
   }
 }
+
+// STORE CONFIG APP ACCESS
+function createAppAccessMovie(entity: Partial<Movie>) {
+  const movie = createMovie(entity);
+  return {
+    catalog: new FormControl(movie.main.storeConfig.appAccess.catalog),
+    festival: new FormControl(movie.main.storeConfig.appAccess.festival),
+  };
+}
+
+type MovieAppAccessAdmin = ReturnType<typeof createAppAccessMovie>;
+
+export class MovieAppAccessAdminForm extends FormEntity<MovieAppAccessAdmin> {
+  constructor(data?: Movie) {
+    super(createAppAccessMovie(data));
+  }
+}
