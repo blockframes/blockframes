@@ -112,6 +112,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
   search() {
 
     return this.movieIndex.search({
+      hitsPerPage: 50,
       query: this.query.value,
       facetFilters: [
         this.genres.value.map(genre => `genres:${genre}`), // same facet inside an array means OR for algolia
