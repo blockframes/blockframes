@@ -42,6 +42,9 @@
         ],
         "catalog": [
           "blockframes-ci"
+        ],
+        "festival": [
+          "blockframes-ci-festival"
         ]
       }
     },
