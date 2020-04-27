@@ -23,7 +23,7 @@ const routes = [{
   children: [
     {
       path: '',
-      redirectTo: 'activity',
+      redirectTo: 'details',
       pathMatch: 'full'
     },
     {

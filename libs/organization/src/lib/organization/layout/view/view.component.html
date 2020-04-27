@@ -39,10 +39,10 @@
         {{ org.addresses.main.city | titlecase }}
       </h2>
       <p>Description</p>
-      <button mat-flat-button color="primary">
-        <span>Get in touch</span>
+      <a mat-stroked-button color="primary" [href]="'mailto:' + org.email">
+        <span>Contact Sales Agent</span>
         <mat-icon svgIcon="arrow_forward"></mat-icon>
-      </button>
+      </a>
     </article>
   </header>
   <nav id="nav" mat-tab-nav-bar @fade>

@@ -5,7 +5,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { TitleDetailsComponent } from './details.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { MatIconModule } from '@angular/material/icon';
+// TODO #2570
+/* import { MatIconModule } from '@angular/material/icon'; */
 import { MovieSummaryMainModule } from '@blockframes/movie/form/summary/main/main.module';
 import { MovieSummaryFestivalPrizesModule } from '@blockframes/movie/form/summary/festival-prizes/festival-prizes.module';
 import { MovieSummarySalesCastModule } from '@blockframes/movie/form/summary/sales-cast/sales-cast.module';
@@ -27,7 +28,8 @@ import { MovieSummaryFileModule } from '@blockframes/movie/form/summary/file/fil
     CommonModule,
     FlexLayoutModule,
     MatCardModule,
-    MatIconModule,
+    // TODO #2570
+/*     MatIconModule, */
     MatButtonModule,
     // Summary components
     MovieSummaryMainModule,
