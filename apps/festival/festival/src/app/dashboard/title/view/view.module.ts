@@ -1,9 +1,15 @@
+// Angular
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
+
+// Blockframes
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
+import { RuntimeModule } from '@blockframes/utils/pipes/runtime.module';
+
+// Components
 import { TitleViewComponent } from './view.component';
 
 // Material
@@ -44,8 +50,10 @@ const routes = [{
   imports: [
     CommonModule,
     FlexLayoutModule,
+    // Blockframes
     ImageReferenceModule,
     TranslateSlugModule,
+    RuntimeModule,
     // Material
     MatTabsModule,
     MatProgressSpinnerModule,
@@ -54,4 +62,4 @@ const routes = [{
     RouterModule.forChild(routes)
   ]
 })
-export class TitleViewModule {}
+export class TitleViewModule { }
