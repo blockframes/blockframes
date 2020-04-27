@@ -32,6 +32,8 @@ export class MarketplaceSearchComponent implements OnInit {
   constructor(private movieQuery: MovieQuery, private dynTitle: DynamicTitleService) { }
 
   ngOnInit() {
+       // Immplcity we only want accepted movies
+    this.filterForm.storeConfig.add('accepted');
     this.dynTitle.setPageTitle('Titles')
     this.movieSearchResults$ = this.filterForm.valueChanges.pipe(
       debounceTime(300),

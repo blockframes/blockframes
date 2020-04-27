@@ -38,7 +38,8 @@ export class ListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.sub = this.movieService.syncCollection(ref => ref.limit(30)).subscribe();
-
+    // Immplcity we only want accepted movies
+    this.filterForm.storeConfig.add('accepted');
     this.movieSearchResults$ = this.filterForm.valueChanges.pipe(
       debounceTime(300),
       filter(() => !this.filterForm.isEmpty()),
