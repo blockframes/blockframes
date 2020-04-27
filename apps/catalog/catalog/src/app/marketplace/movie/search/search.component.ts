@@ -9,7 +9,7 @@ import {
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 // RxJs
 import { Observable } from 'rxjs';
-import { startWith, map, debounceTime, switchMap, distinctUntilChanged, pluck, tap } from 'rxjs/operators';
+import { startWith, map, debounceTime, switchMap, distinctUntilChanged, pluck } from 'rxjs/operators';
 // Others
 import { sortMovieBy } from '@blockframes/utils/akita-helper/sort-movie-by';
 import { MovieSearchForm } from '@blockframes/movie/form/search.form';
