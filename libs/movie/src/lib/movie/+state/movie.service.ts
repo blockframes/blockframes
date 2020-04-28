@@ -34,7 +34,7 @@ export class MovieService extends CollectionService<MovieState> {
   }
 
   async create(movieImported?: Movie): Promise<string> {
-    const createdBy = this.authQuery.getValue().uid;
+    const createdBy = this.authQuery.userId;
     const appName = this.routerQuery.getValue().state.root.data.app;
     const movie = createMovie({
       _meta: { createdBy },
