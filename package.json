@@ -4,7 +4,7 @@
   "license": "MIT",
   "main": "./main.js",
   "engines": {
-    "node": "10"
+    "node": "8"
   },
   "scripts": {
     "ng": "ng",
@@ -53,7 +53,7 @@
   "private": true,
   "dependencies": {
     "@angular/animations": "~9.1.0",
-    "@angular/cdk": "^9.1.0",
+    "@angular/cdk": "^9.2.1",
     "@angular/common": "~9.1.0",
     "@angular/compiler": "~9.1.0",
     "@angular/core": "~9.1.0",

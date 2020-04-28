@@ -3,6 +3,8 @@ import { User } from "@blockframes/auth/+state/auth.store";
 import { ImgRef, createImgRef } from "@blockframes/utils/image-uploader";
 import { PublicUser } from "./user.firestore";
 
+export * from './user.firestore';
+
 export interface OrganizationMemberRequest {
   email: string;
   roles: string[];
@@ -29,10 +31,13 @@ export function createOrganizationMember(user: Partial<User> = {}, role?: UserRo
   };
 }
 
-export function createPublicUser(publicUser: Partial<User> = {}) : PublicUser{
+export function createPublicUser(user: Partial<User> = {}) : PublicUser{
   return {
-    uid: '',
-    email: '',
-    ...publicUser,
+    uid: user.uid,
+    email: user.email,
+    avatar: createImgRef(user.avatar),
+    firstName: user.firstName || '',
+    lastName: user.lastName || '',
+    orgId: user.orgId || ''
   }
 }
