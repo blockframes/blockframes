@@ -6,7 +6,6 @@ import { CollectionService, CollectionConfig } from 'akita-ng-fire';
 import { firestore } from 'firebase/app';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { Contract } from '@blockframes/contract/contract/+state/contract.model';
-import { Movie } from '@blockframes/movie/+state/movie.model';
 
 @Injectable({
   providedIn: 'root'

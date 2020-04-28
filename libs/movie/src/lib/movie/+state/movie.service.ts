@@ -3,7 +3,6 @@ import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire
 import { switchMap, filter, tap, map } from 'rxjs/operators';
 import { createMovie, Movie, MovieAnalytics, SyncMovieAnalyticsOptions, createAppAccessWithApp, createStoreConfig } from './movie.model';
 import { MovieState, MovieStore } from './movie.store';
-import { UserService } from '@blockframes/user/+state/user.service';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 import { cleanModel } from '@blockframes/utils/helpers';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
@@ -14,19 +13,18 @@ import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { PrivateConfig } from '@blockframes/utils/common-interfaces/utility';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
-import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
+import { UserService } from '@blockframes/user/+state/user.service';
+import { firestore } from 'firebase/app';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies' })
 export class MovieService extends CollectionService<MovieState> {
 
-
   constructor(
     private authQuery: AuthQuery,
-    private userService: UserService,
     private permissionsService: PermissionsService,
+    private userService: UserService,
     private orgService: OrganizationService,
-    private orgQuery: OrganizationQuery,
     private routerQuery: RouterQuery,
     private functions: AngularFireFunctions,
     private query: MovieQuery,
@@ -48,17 +46,20 @@ export class MovieService extends CollectionService<MovieState> {
     };
     let movieId: string;
     await this.runTransaction(async (tx) => {
-
-      // Add movie and update the organization to add the movie ID to the org
       movieId = await this.add(cleanModel(movie), { write: tx });
-      await this.orgService.update(this.orgQuery.getActiveId(), (org) => ({ movieIds: [...org.movieIds, movieId] }), { write: tx });
-
-      // When a movie is created, we also create a permissions document for it.
-      // Since movie can be created on behalf of another user (An admin from admin panel for example)
-      // We use createdBy attribute to fetch OrgId
-      this.permissionsService.addDocumentPermissions(movieId, tx, this.orgQuery.getActiveId());
     });
     return movieId;
+  }
+
+  async onCreate(movie: Movie, { write }: WriteOptions) {
+    // When a movie is created, we also create a permissions document for it.
+    // Since movie can be created on behalf of another user (An admin from admin panel for example)
+    // We use createdBy attribute to fetch OrgId
+    const userId = movie._meta?.createdBy ? movie._meta.createdBy : this.authQuery.userId;
+    const user = await this.userService.getUser(userId);
+
+    // Organization is updated in the backend-function to add the movie ID to the org
+    return this.permissionsService.addDocumentPermissions(movie.id, write as firestore.Transaction, user.orgId);
   }
 
   onUpdate(movie: Movie, { write }: WriteOptions) {

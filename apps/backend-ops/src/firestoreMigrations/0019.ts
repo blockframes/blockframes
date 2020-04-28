@@ -1,5 +1,21 @@
 import { Firestore } from '../admin';
 
+const updateStoreConfig = (oldStoreConfig) => {
+  if (oldStoreConfig) {
+    if (!oldStoreConfig.appAccess) {
+      return {
+        ...oldStoreConfig,
+        appAccess: {
+          catalog: true,
+          festival: false
+        }
+      };
+    } else {
+      return oldStoreConfig;
+    }
+  }
+};
+
 /**
  * Add appAccess with catalog and festival booleans in storeConfig in movie documents.
  */
@@ -9,22 +25,6 @@ export async function upgrade(db: Firestore) {
   const newMovieData = movies.docs.map(
     async (movieDocSnapshot: any): Promise<any> => {
       const movieData = movieDocSnapshot.data();
-
-      const updateStoreConfig = (oldStoreConfig) => {
-        if (oldStoreConfig) {
-          if (!oldStoreConfig.appAccess) {
-            return {
-              ...oldStoreConfig,
-              appAccess: {
-                catalog: true,
-                festival: false
-              }
-            };
-          } else {
-            return oldStoreConfig;
-          }
-        }
-      };
 
       const storeConfig = updateStoreConfig(movieData.main.storeConfig);
 
