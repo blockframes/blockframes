@@ -33,7 +33,7 @@ export class MemberRequestComponent {
     : [ 'firstName', 'lastName', 'email' ]
   }
 
-  public findInvitation(uid: string) {
-    return this.memberInvitations.find(invitation => (invitation.fromUser.uid === uid && invitation.type === 'fromUserToOrganization'));
+  public findRequest(uid: string) {
+    return this.memberInvitations.find(invitation => (invitation.fromUser.uid === uid && invitation.type === 'joinOrganization' && invitation.mode === 'request'));
   }
 }
