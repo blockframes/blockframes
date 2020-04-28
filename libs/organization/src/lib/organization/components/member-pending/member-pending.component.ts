@@ -1,5 +1,6 @@
 import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
-import { InvitationFromOrganizationToUser } from '@blockframes/invitation/types';
+import { InvitationFromOrganizationToUser } from '@blockframes/invitation/+state/invitation.model';
+
 @Component({
   selector: 'member-pending',
   templateUrl: './member-pending.component.html',

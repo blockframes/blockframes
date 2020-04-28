@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
-import { InvitationFromUserToOrganization } from '@blockframes/invitation/types';
 import { PublicUser } from '@blockframes/user/+state/user.firestore';
+import { InvitationFromUserToOrganization } from '@blockframes/invitation/+state/invitation.model';
 
 @Component({
   selector: 'member-request',

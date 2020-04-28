@@ -1,5 +1,4 @@
-import { firestore } from 'firebase/app';
-import { InvitationFromUserToOrganization, InvitationFromOrganizationToUser, InvitationToAnEvent } from './invitation.firestore';
+import { InvitationFromUserToOrganizationRaw, InvitationFromOrganizationToUserRaw, InvitationToAnEventRaw } from './invitation.firestore';
 import { PublicUser } from '@blockframes/user/+state/user.firestore';
 import { createPublicUser } from '@blockframes/user/+state/user.model';
 import { PublicOrganization } from '@blockframes/organization/+state/organization.firestore';
@@ -7,7 +6,13 @@ import { createPublicOrganization } from '@blockframes/organization/+state/organ
 
 export { InvitationStatus } from './invitation.firestore';
 
-export type Invitation = InvitationFromOrganizationToUser | InvitationFromUserToOrganization | InvitationToAnEvent;
+export type Invitation = InvitationFromOrganizationToUserRaw<Date> | InvitationFromUserToOrganizationRaw<Date> | InvitationToAnEventRaw<Date>;
+
+export type InvitationToAnEvent =  InvitationToAnEventRaw<Date>;
+
+export type InvitationFromUserToOrganization =  InvitationFromUserToOrganizationRaw<Date>;
+
+export type InvitationFromOrganizationToUser =  InvitationFromOrganizationToUserRaw<Date>;
 
 /** Required options to create an Invitation from a User to join an Organization. */
 export interface InvitationFromUserToOrganizationOptions {
@@ -31,7 +36,7 @@ export function createEventInvitation(params: Partial<InvitationToAnEvent> = {})
     status: 'pending',
     type: 'event',
     docId: '',
-    date: firestore.Timestamp.now(),
+    date: new Date(),
     ...params,
     toUser: createPublicUser(params.toUser),
     fromUser: params.fromUser ? createPublicUser(params.fromUser) : undefined,
@@ -46,7 +51,7 @@ export function createInvitationFromUserToOrganization(params: InvitationFromUse
     mode:'request',
     type: 'fromUserToOrganization',
     status: 'pending',
-    date: firestore.Timestamp.now(),
+    date: new Date(),
     ...params,
     toOrg: createPublicOrganization(params.toOrg),
     fromUser: createPublicUser(params.fromUser),
@@ -59,7 +64,7 @@ export function createInvitationFromOrganizationToUser(params: InvitationFromOrg
     mode:'invitation',
     type: 'fromOrganizationToUser',
     status: 'pending',
-    date: firestore.Timestamp.now(),
+    date: new Date(),
     ...params,
     toUser: createPublicUser(params.toUser),
     fromOrg: createPublicOrganization(params.fromOrg),

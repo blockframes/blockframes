@@ -47,14 +47,13 @@ export class MemberComponent implements OnInit {
 
     this.isAdmin$ = this.permissionQuery.isAdmin$;
     this.isSuperAdmin$ = this.permissionQuery.isSuperAdmin$;
+    const id = this.query.getActiveId();
 
-    this.invitationsFromOrganization$ = this.db
-      .collection('invitations', ref => ref.where('fromOrg.id', '==', this.query.getActiveId()).where('status', '==', 'pending').where('fromOrg.id', '==', this.query.getActiveId()).where('type', '==', 'fromOrganizationToUser'))
-      .valueChanges() as Observable<Invitation[]>;
+    const queryFn1 = ref => ref.where('fromOrg.id', '==', id).where('status', '==', 'pending').where('type', '==', 'fromOrganizationToUser');
+    const queryFn2 = ref => ref.where('toOrg.id', '==', id).where('status', '==', 'pending').where('type', '==', 'fromUserToOrganization');
 
-    this.invitationsToJoinOrganization$ = this.db
-      .collection('invitations', ref => ref.where('toOrg.id', '==', this.query.getActiveId()).where('status', '==', 'pending').where('type', '==', 'fromUserToOrganization'))
-      .valueChanges() as Observable<Invitation[]>;
+    this.invitationsFromOrganization$ = this.invitationService.valueChanges(queryFn1);
+    this.invitationsToJoinOrganization$ = this.invitationService.valueChanges(queryFn2);
   }
 
   public acceptInvitation(invitation: Invitation) {

@@ -1,10 +1,9 @@
 import { Component, ChangeDetectionStrategy, OnInit, Input } from '@angular/core';
 import { Observable, combineLatest } from 'rxjs';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
-import { InvitationQuery, InvitationStore } from '../../invitation/+state';
+import { InvitationQuery, InvitationStore, Invitation } from '../../invitation/+state';
 import { switchMap, map } from 'rxjs/operators';
 import { PermissionsQuery } from 'libs/organization/src/lib/permissions/+state/permissions.query';
-import { Invitation } from '@blockframes/invitation/types';
 import { User } from '@blockframes/auth/+state/auth.store';
 import { NotificationQuery } from '../+state/notification.query';
 

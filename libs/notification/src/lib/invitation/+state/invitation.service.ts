@@ -7,6 +7,7 @@ import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { AuthService } from '@blockframes/auth/+state/auth.service';
 import { InvitationDocument } from './invitation.firestore';
 import { toDate } from '@blockframes/utils/helpers';
+import { getInvitationMessage, cleanInvitation } from '../invitation-utils';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'invitations' })
@@ -20,11 +21,19 @@ export class InvitationService extends CollectionService<InvitationState> {
     super(store);
   }
 
-  formatFromFirestore(invitation: InvitationDocument): Invitation {
-    return {
-      ...invitation,
-      date: toDate(invitation.date)
+  formatFromFirestore(_invitation: InvitationDocument): Invitation {
+    const invitation ={
+      ..._invitation,
+      date: toDate(_invitation.date)
     }
+
+    const isForMe = this.isInvitationForMe(invitation);
+    invitation.message = getInvitationMessage(invitation, isForMe);
+    return invitation;
+  }
+
+  formatToFirestore(invitation: Invitation): Invitation {
+    return cleanInvitation(invitation);
   }
 
   /** Create an Invitation when a user asks to join an Organization. */
@@ -84,7 +93,7 @@ export class InvitationService extends CollectionService<InvitationState> {
     );
   }
 
-  public isInvitationForMe(invitation: Invitation) : Boolean {
+  public isInvitationForMe(invitation: Invitation) : boolean {
     return invitation.toOrg?.id === this.authQuery.orgId || invitation.toUser?.uid === this.authQuery.userId
   }
 }

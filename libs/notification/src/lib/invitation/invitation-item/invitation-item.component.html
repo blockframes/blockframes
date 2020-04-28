@@ -5,7 +5,7 @@
   <img *ngIf="invitation.toOrg" placeholderAsset="Organization_250.png" [imgRef]="invitation.toOrg.logo" alt="Organization logo" />
   <div fxLayout="column" fxLayoutGap="10px">
     <article fxLayout="column" fxLayoutAlign="start start">
-      <p class="mat-body-1">{{ message }}</p>
+      <p class="mat-body-1">{{ invitation.message }}</p>
       <small class="mat-caption">{{ invitation.date | date: inWidget ? 'medium' : 'shortTime' }}</small>
     </article>
     <article fxLayout="row" fxLayoutGap="16px" *ngIf="displayInvitationButtons">

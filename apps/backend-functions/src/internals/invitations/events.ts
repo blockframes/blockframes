@@ -1,4 +1,4 @@
-import { InvitationToAnEvent, InvitationOrUndefined, InvitationDocument } from "@blockframes/invitation/types";
+import { InvitationToAnEventDocument, InvitationOrUndefined, InvitationDocument } from "@blockframes/invitation/types";
 import { wasCreated, wasAccepted, wasDeclined } from "./utils";
 import { NotificationDocument, OrganizationDocument } from "../../data/types";
 import { createNotification, triggerNotifications } from "../../notification";
@@ -18,56 +18,55 @@ async function onInvitationToAnEventCreate({
   fromOrg,
   mode,
   docId
-}: InvitationToAnEvent) {
+}: InvitationToAnEventDocument) {
   const eventId = docId;
 
-  // fetch event
+  // Fetch event
   const eventSnapshot = await db.doc(`events/${eventId}`).get();
   const event = eventSnapshot.data();
 
   if (mode === 'request' && event?.isPrivate === false) {
     // This will then trigger "onInvitationToAnEventAccepted" and send in-app notification to 'fromUser' 
-    await db.doc(`invitations/${id}`).set({ status: 'accepted' }, { merge: true });
+    return await db.doc(`invitations/${id}`).set({ status: 'accepted' }, { merge: true });
+  }
+
+  // Retreive notification recipient 
+  let recipient: string;
+  if (!!toUser) {
+    recipient = toUser.email;
+  } else if (!!toOrg) {
+    /** Attendee is only an user or an email for now */
+    throw new Error('Cannot invite an org to an event for now. Not implemented.');
   } else {
-    let recipient: string;
-    if (!!toUser) {
-      recipient = toUser.email;
-    } else if (!!toOrg) {
-      /** Attendee is only an user or an email for now */
-      throw new Error('Cannot invite an org to an event for now. Not implemented.');
-    } else {
-      throw new Error('Who is this invitation for ?');
-    }
+    throw new Error('Who is this invitation for ?');
+  }
 
-    if (!!fromOrg) {
-      /**
-       * @dev For now, org can only make invitation to a screeening
-       * No need to create a notification because fromOrg and user recipient
-       * will already get the invitation displayed on front end.
-       */
-      const senderEmail = fromOrg.denomination.public;
-      console.log(`Sending invitation email for a screening event (${eventId}) from ${senderEmail} to : ${recipient}`);
-      await sendMailFromTemplate(invitationToScreeningFromOrg(recipient, fromOrg.denomination.full, eventId));
+  if (!!fromOrg) {
+    /**
+     * @dev For now, org can only make invitation to a screeening
+     * No need to create a notification because fromOrg and user recipient
+     * will already get the invitation displayed on front end.
+     */
+    const senderEmail = fromOrg.denomination.public;
+    console.log(`Sending invitation email for a screening event (${eventId}) from ${senderEmail} to : ${recipient}`);
+    return await sendMailFromTemplate(invitationToScreeningFromOrg(recipient, fromOrg.denomination.full, eventId));
 
-    } else if (!!fromUser) {
-      /**
-       * @dev No need to create a notification because fromOrg and user recipient
-       * will already get the invitation displayed on front end.
-       */
-      const senderEmail = fromUser.email;
-      switch (mode) {
-        case 'invitation':
-          console.log(`Sending invitation email for a meeeting event (${eventId}) from ${senderEmail} to : ${recipient}`);
-          await sendMailFromTemplate(invitationToMeetingFromUser(recipient, senderEmail, eventId));
-          break;
-        case 'request':
-          console.log(`Sending request email to attend an event (${eventId}) from ${senderEmail} to : ${recipient}`);
-          await sendMailFromTemplate(requestToAttendEventFromUser(senderEmail, recipient, eventId));
-          break;
-      }
-    } else {
-      throw new Error('Did not found invitation sender');
+  } else if (!!fromUser) {
+    /**
+     * @dev No need to create a notification because fromOrg and user recipient
+     * will already get the invitation displayed on front end.
+     */
+    const senderEmail = fromUser.email;
+    switch (mode) {
+      case 'invitation':
+        console.log(`Sending invitation email for a meeeting event (${eventId}) from ${senderEmail} to : ${recipient}`);
+        return await sendMailFromTemplate(invitationToMeetingFromUser(recipient, senderEmail, eventId));
+      case 'request':
+        console.log(`Sending request email to attend an event (${eventId}) from ${senderEmail} to : ${recipient}`);
+        return await sendMailFromTemplate(requestToAttendEventFromUser(senderEmail, recipient, eventId));
     }
+  } else {
+    throw new Error('Did not found invitation sender');
   }
 }
 
@@ -80,7 +79,7 @@ async function onInvitationToAnEventAccepted({
   toUser,
   toOrg,
   docId,
-}: InvitationToAnEvent) {
+}: InvitationToAnEventDocument) {
 
   const notifications: NotificationDocument[] = [];
 
@@ -135,7 +134,7 @@ async function onInvitationToAnEventRejected({
   toUser,
   toOrg,
   docId,
-}: InvitationToAnEvent) {
+}: InvitationToAnEventDocument) {
 
   const notifications: NotificationDocument[] = [];
 
@@ -188,7 +187,7 @@ async function onInvitationToAnEventRejected({
 export async function onInvitationToAnEventUpdate(
   before: InvitationOrUndefined,
   after: InvitationDocument,
-  invitation: InvitationToAnEvent
+  invitation: InvitationToAnEventDocument
 ): Promise<any> {
   if (wasCreated(before, after)) {
     return onInvitationToAnEventCreate(invitation);
