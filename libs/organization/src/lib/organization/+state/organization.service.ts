@@ -11,7 +11,6 @@ import {
 import { OrganizationStore, OrganizationState } from './organization.store';
 import { OrganizationQuery } from './organization.query';
 import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
-import { AngularFireFunctions } from '@angular/fire/functions';
 import { createPermissions } from '../../permissions/+state/permissions.model';
 import { firestore } from 'firebase/app';
 
@@ -21,9 +20,8 @@ export class OrganizationService extends CollectionService<OrganizationState> {
 
   constructor(
     private query: OrganizationQuery,
-    store: OrganizationStore,
-    private authQuery: AuthQuery,
-    private functions: AngularFireFunctions
+    public store: OrganizationStore,
+    private authQuery: AuthQuery
   ) {
     super(store);
   }

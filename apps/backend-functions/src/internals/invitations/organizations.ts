@@ -3,8 +3,8 @@ import { db, getUserMail, getUser } from './../firebase';
 import {
   InvitationDocument,
   InvitationOrUndefined,
-  InvitationFromOrganizationToUser,
-  InvitationFromUserToOrganization,
+  InvitationFromOrganizationToUserDocument,
+  InvitationFromUserToOrganizationDocument,
   OrganizationDocument,
   PublicUser
 } from './../../data/types';
@@ -16,7 +16,7 @@ import {
   userRequestedToJoinYourOrg,
   userJoinOrgPendingRequest
 } from '../../templates/mail';
-import { getAdminIds } from '../../data/internals';
+import { getAdminIds, getDocument } from '../../data/internals';
 import { wasAccepted, wasDeclined, wasCreated } from './utils';
 
 async function addUserToOrg(userId: string, organizationId: string) {
@@ -82,7 +82,7 @@ async function mailOnInvitationAccept(userId: string, organizationId: string) {
 
 
 /** Sends an email when an organization invites an user to join. */
-async function onInvitationToOrgCreate({ toUser }: InvitationFromOrganizationToUser) {
+async function onInvitationToOrgCreate({ toUser }: InvitationFromOrganizationToUserDocument) {
   const userMail = await getUserMail(toUser.uid);
 
   if (!userMail) {
@@ -94,7 +94,7 @@ async function onInvitationToOrgCreate({ toUser }: InvitationFromOrganizationToU
 }
 
 /** Updates the user, orgs, and permissions when the user accepts an invitation to an organization. */
-async function onInvitationToOrgAccept({ toUser, fromOrg }: InvitationFromOrganizationToUser) {
+async function onInvitationToOrgAccept({ toUser, fromOrg }: InvitationFromOrganizationToUserDocument) {
   // TODO(issue#739): When a user is added to an org, clear other invitations
   await addUserToOrg(toUser.uid, fromOrg.id);
   // TODO maybe send an email "you have accepted to join OrgNAme ! Congratz, you are now part of this org !"
@@ -102,13 +102,9 @@ async function onInvitationToOrgAccept({ toUser, fromOrg }: InvitationFromOrgani
 }
 
 /** Send a notification to admins of organization to notify them that the user declined their invitation. */
-async function onInvitationToOrgDecline(invitation: InvitationFromOrganizationToUser) {
-  const orgSnapshot = await db.doc(`orgs/${invitation.fromOrg.id}`).get();
-  const org = orgSnapshot.data() as OrganizationDocument;
-
-  const userSnapshot = await db.doc(`users/${invitation.toUser.uid}`).get();
-  const user = userSnapshot.data() as PublicUser;
-
+async function onInvitationToOrgDecline(invitation: InvitationFromOrganizationToUserDocument) {
+  const org = await getDocument<OrganizationDocument>(`orgs/${invitation.fromOrg.id}`);
+  const user = await getDocument<PublicUser>(`users/${invitation.toUser.uid}`);
   const adminIds = await getAdminIds(org.id);
 
   const notifications = adminIds.map(toUserId =>
@@ -129,7 +125,7 @@ async function onInvitationToOrgDecline(invitation: InvitationFromOrganizationTo
 async function onInvitationFromUserToJoinOrgCreate({
   toOrg,
   fromUser
-}: InvitationFromUserToOrganization) {
+}: InvitationFromUserToOrganizationDocument) {
   const userData = await getUser(fromUser.uid);
 
   if (!userData.email) {
@@ -167,7 +163,7 @@ async function onInvitationFromUserToJoinOrgCreate({
 async function onInvitationFromUserToJoinOrgAccept({
   toOrg,
   fromUser
-}: InvitationFromUserToOrganization) {
+}: InvitationFromUserToOrganizationDocument) {
   // TODO(issue#739): When a user is added to an org, clear other invitations
   await addUserToOrg(fromUser.uid, toOrg.id);
   await sendMailFromTemplate(userJoinedAnOrganization(fromUser.email, toOrg.id));
@@ -175,9 +171,8 @@ async function onInvitationFromUserToJoinOrgAccept({
 }
 
 /** Send a notification to admins of organization to notify them that the request is declined. */
-async function onInvitationFromUserToJoinOrgDecline(invitation: InvitationFromUserToOrganization) {
-  const orgSnapshot = await db.doc(`orgs/${invitation.toOrg.id}`).get();
-  const org = orgSnapshot.data() as OrganizationDocument;
+async function onInvitationFromUserToJoinOrgDecline(invitation: InvitationFromUserToOrganizationDocument) {
+  const org = await getDocument<OrganizationDocument>(`orgs/${invitation.toOrg.id}`);
   const adminIds = await getAdminIds(org.id);
 
   const notifications = adminIds.map(toUserId =>
@@ -202,7 +197,7 @@ async function onInvitationFromUserToJoinOrgDecline(invitation: InvitationFromUs
 export async function onInvitationToOrgUpdate(
   before: InvitationOrUndefined,
   after: InvitationDocument,
-  invitation: InvitationFromOrganizationToUser
+  invitation: InvitationFromOrganizationToUserDocument
 ): Promise<any> {
   if (wasCreated(before, after)) {
     return onInvitationToOrgCreate(invitation);
@@ -221,7 +216,7 @@ export async function onInvitationToOrgUpdate(
 export async function onInvitationFromUserToJoinOrgUpdate(
   before: InvitationOrUndefined,
   after: InvitationDocument,
-  invitation: InvitationFromUserToOrganization
+  invitation: InvitationFromUserToOrganizationDocument
 ): Promise<any> {
   if (wasCreated(before, after)) {
     return onInvitationFromUserToJoinOrgCreate(invitation);

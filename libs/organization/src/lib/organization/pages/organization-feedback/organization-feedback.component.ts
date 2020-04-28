@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { InvitationService } from '@blockframes/invitation/+state/invitation.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { InvitationFromUserToOrganization } from '@blockframes/invitation/types';
+import { InvitationFromUserToOrganization } from '@blockframes/invitation/+state/invitation.model';
 import { Observable } from 'rxjs';
 
 @Component({
