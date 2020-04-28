@@ -42,21 +42,26 @@
 
     <h3>Invitations</h3>
     <mat-card class="invitations" fxLayout="column"  fxFlex="35">
-
-      <algolia-chips-autocomplete
-        index="user"
-        displayWithPath="email"
-        [form]="invitationForm"
-        label="Search for a guest"
-        placeholder="Enter guest email"
-      >
-        <ng-template let-user>
-          <div class="profile-item" fxLayout fxLayoutAlign="strt center" fxLayoutGap="8px">
-            <img [imgRef]="user.avatar.media" placeholderAsset="profil_user.webp" alt="Profile" />
-            <span>{{ user | displayName }}</span>
-          </div>
-        </ng-template>
-      </algolia-chips-autocomplete>
+      <div fxLayout fxLayout="space-between center" fxLayoutGap="16px">
+        <algolia-chips-autocomplete fxFlex
+          index="user"
+          displayWithPath="email"
+          [form]="invitationForm"
+          label="Search for a guest"
+          placeholder="Enter guest email"
+        >
+          <ng-template let-user>
+            <div class="profile-item" fxLayout fxLayoutAlign="strt center" fxLayoutGap="8px">
+              <img [imgRef]="user.avatar.media" placeholderAsset="profil_user.webp" alt="Profile" />
+              <span *ngIf="user.firstName">{{ user | displayName }}</span>
+              <span *ngIf="!user.firstName">{{ user.email }}</span>
+            </div>
+          </ng-template>
+        </algolia-chips-autocomplete>
+        <button mat-icon-button (click)="invite()">
+          <mat-icon svgIcon="send"></mat-icon>
+        </button>
+      </div>
 
       <!-- Here the list of invited persons -->
       <invitation-guest-list [invitations]="invitations"></invitation-guest-list>

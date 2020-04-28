@@ -1,25 +1,13 @@
-<ng-container *ngIf="invitation.toUser as user; else noUser">
+<ng-container *ngIf="invitation.toUser as user">
   <mat-list-item>
     <div matListAvatar class="avatar-status">
       <img [imgRef]="user.avatar" placeholderAsset="profil_user.webp" />
       <mat-icon [svgIcon]="invitation.status | statusIcon" [color]="invitation.status | statusColor"></mat-icon>
     </div>
-    <span matLine>{{ user | displayName }}</span>
+    <span *ngIf="user.firstName" matLine>{{ user | displayName }}</span>
+    <span *ngIf="!user.firstName" matLine>{{ user.email }}</span>
     <span matLine>
       <small class="mat-caption">{{ invitation.date | date: 'short' }}</small>
     </span>
   </mat-list-item>
 </ng-container>
-
-<ng-template #noUser>
-  <mat-list-item>
-    <div matListAvatar class="avatar-status">
-      <img asset="profil_user.webp" />
-      <mat-icon [svgIcon]="invitation.status | statusIcon" [color]="invitation.status | statusColor"></mat-icon>
-    </div>
-    <span matLine>{{ invitation.toUser.email }}</span>
-    <span matLine>
-      <small class="mat-caption">{{ invitation.date | date: 'short' }}</small>
-    </span>
-  </mat-list-item>
-</ng-template>

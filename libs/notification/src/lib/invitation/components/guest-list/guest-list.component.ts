@@ -30,10 +30,13 @@ export class GuestListComponent implements OnInit {
   userIndex = algolia.indexNameUsers;
   searchControl = new FormControl();
   search$: Observable<Invitation[]>;
+
   @ContentChild(TemplateRef) itemTemplate: TemplateRef<any>;
+
   @Input()
   set invitations(invitations: Invitation[]) {
     if (Array.isArray(invitations)) {
+      console.log('Guest List', invitations);
       const sorted = invitations.sort((a, b) => points[a.status] - points[b.status]);
       this._invitations.next(sorted);
     }
@@ -54,7 +57,7 @@ export class GuestListComponent implements OnInit {
   }
 
   copy(invitations: Invitation[]) {
-    return invitations.join(', ');
+    return invitations.map(i => i.toUser.email).join('\n');
   }
 
   trackBy(invitation: Invitation) {

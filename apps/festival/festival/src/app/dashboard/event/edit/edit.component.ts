@@ -3,11 +3,10 @@ import { EventForm } from '@blockframes/event/form/event.form';
 import { EventEditComponent } from '@blockframes/event/layout/edit/edit.component';
 import { EventQuery } from '@blockframes/event/+state/event.query';
 import { Movie, MovieService } from '@blockframes/movie/+state';
-import { InvitationService } from '@blockframes/invitation/+state';
+import { InvitationService, Invitation } from '@blockframes/invitation/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
-import { Observable, Subscription } from 'rxjs';
-import { switchMap, startWith } from 'rxjs/operators';
-import { Invitation } from '@blockframes/invitation/+state';
+import { Observable, Subscription, of } from 'rxjs';
+import { switchMap, startWith, tap, map } from 'rxjs/operators';
 
 @Component({
   selector: 'festival-event-edit',
@@ -33,7 +32,7 @@ export class EditComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.invitations$ = this.query.selectActiveId().pipe(
-      switchMap(id => this.invitationService.valueChanges(ref => ref.where('docId', '==', id).limit(10))),
+      switchMap(id => this.invitationService.valueChanges(ref => ref.where('docId', '==', id))),
       startWith([])
     );
     this.titles$ = this.orgQuery.selectActive().pipe(

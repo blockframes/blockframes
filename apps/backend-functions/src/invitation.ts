@@ -40,13 +40,13 @@ export async function onInvitationWrite(
   }
 
   try {
-    // dispatch to the correct events depending on the invitation type.
+    // dispatch to the correct events depending on the invitation type & mode.
     switch (invitation.type) {
-      case 'fromOrganizationToUser':
-        return onInvitationToOrgUpdate(invitationDocBefore, invitationDoc, invitation);
-      case 'fromUserToOrganization':
-        return onInvitationFromUserToJoinOrgUpdate(invitationDocBefore, invitationDoc, invitation);
-      case 'event':
+      case 'joinOrganization':
+        return invitation.mode === 'invitation'
+          ? onInvitationToOrgUpdate(invitationDocBefore, invitationDoc, invitation)
+          : onInvitationFromUserToJoinOrgUpdate(invitationDocBefore, invitationDoc, invitation);
+      case 'attendEvent':
         /**
          * @dev In this case, an invitation to an event can be:
          * a request from an user who wants to attend an event.

@@ -19,7 +19,7 @@ export class InvitationItemComponent {
 
   public get invitationLink(): string | boolean {
     switch (this.invitation.type) {
-      case 'event':
+      case 'attendEvent':
         return `/c/o/marketplace/event/${this.invitation.docId}`;
       default:
         return false;

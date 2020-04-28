@@ -84,8 +84,10 @@ export class AlgoliaChipsAutocompleteComponent implements OnInit {
   }
 
   add(value: any) {
-    this.form.add(value);
-    this.input.nativeElement.value = '';
-    this.searchCtrl.setValue(null);
+    if (!!value) {
+      this.form.add(value);
+      this.input.nativeElement.value = '';
+      this.searchCtrl.setValue(null);
+    }
   }
 }

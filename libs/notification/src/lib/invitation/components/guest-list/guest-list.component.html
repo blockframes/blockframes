@@ -21,7 +21,7 @@
   <input matInput [formControl]="searchControl" placeholder="Search for a guest"/>
 </mat-form-field>
 
-<cdk-virtual-scroll-viewport [itemSize]="72">
+<cdk-virtual-scroll-viewport [itemSize]="72" *ngIf="invitations.length">
   <mat-list>
     <ng-container *cdkVirtualFor="let invitation of search$ | async; trackBy: trackBy">
       <ng-template

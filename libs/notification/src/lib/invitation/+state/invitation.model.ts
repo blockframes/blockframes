@@ -28,13 +28,39 @@ export interface InvitationFromOrganizationToUserOptions {
   toUser: PublicUser;
 }
 
+/** Create an Invitation */
+export function createInvitation(params: Partial<Invitation> = {}): Invitation {
+  const invitation = {
+    id: '',
+    mode: null,
+    type: null,
+    docId: '',
+    status: 'pending',
+    date: firestore.Timestamp.now(),
+    ...params,
+  };
+  if (params.fromOrg) {
+    invitation.fromOrg = createPublicOrganization(params.fromOrg);
+  }
+  if (params.fromUser) {
+    invitation.fromUser = createPublicUser(params.fromUser);
+  }
+  if (params.toOrg) {
+    invitation.toOrg = createPublicOrganization(params.toOrg);
+  }
+  if (params.toUser) {
+    invitation.toUser = createPublicUser(params.toUser);
+  }
+  return invitation as Invitation;
+}
+
 /** Create an invitation for an event */
 export function createEventInvitation(params: Partial<InvitationToAnEvent> = {}): InvitationToAnEvent {
   return {
     id: '',
     mode: 'invitation',
     status: 'pending',
-    type: 'event',
+    type: 'attendEvent',
     docId: '',
     date: new Date(),
     ...params,
@@ -44,12 +70,12 @@ export function createEventInvitation(params: Partial<InvitationToAnEvent> = {})
   };
 }
 
-/** Factory function that create an Invitation of type fromUserToOrganization. */
+/** Factory function that create an Invitation of type joinOrganization. */
 export function createInvitationFromUserToOrganization(params: InvitationFromUserToOrganizationOptions): InvitationFromUserToOrganization {
   return {
     id: '',
     mode:'request',
-    type: 'fromUserToOrganization',
+    type: 'joinOrganization',
     status: 'pending',
     date: new Date(),
     ...params,
@@ -58,11 +84,12 @@ export function createInvitationFromUserToOrganization(params: InvitationFromUse
   };
 }
 
-/** Factory function that create an Invitation of type fromOrganizationToUser. */
+/** Factory function that create an Invitation of type joinOrganization. */
 export function createInvitationFromOrganizationToUser(params: InvitationFromOrganizationToUserOptions): InvitationFromOrganizationToUser {
   return {
+    id: '',
     mode:'invitation',
-    type: 'fromOrganizationToUser',
+    type: 'joinOrganization',
     status: 'pending',
     date: new Date(),
     ...params,
