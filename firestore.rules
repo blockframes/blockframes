@@ -172,7 +172,7 @@ service cloud.firestore {
   
     match /orgs/{orgId} {
       // Only org member can read because we use Algolia for search 
-      // @TODO #2585 if an user need to read something from another org, he must use publicOrg (not yet implemented (2020-04-23)).
+      // @TODO #2650 if an user need to read something from another org, he must use publicOrg (not yet implemented (2020-04-23)).
       allow read: if isOrgMember(userId(), orgId);
     	allow create: if isSignedIn()
         && isRequestFieldValueEqualTo(['status'], 'pending')
