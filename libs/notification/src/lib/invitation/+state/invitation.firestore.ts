@@ -5,7 +5,7 @@ import { PublicUser } from "@blockframes/user/+state/user.firestore";
 type Timestamp = firestore.Timestamp;
 
 /** Raw type for Invitation. */
-export interface InvitationRaw<D> {
+export interface InvitationBase<D> {
   id: string;
   type: InvitationType;
   mode: InvitationMode,
@@ -41,7 +41,7 @@ export type InvitationOrUndefined = InvitationDocument | undefined;
  * If user that received an email invitation and
  * created an account, we will then be able to replace email by the coresponding new user.
  * */
-export interface InvitationToAnEventRaw<D> extends InvitationRaw<D> {
+export interface InvitationToAnEventRaw<D> extends InvitationBase<D> {
   mode: InvitationMode,
   type: 'attendEvent';
   /** @dev EventId */
@@ -49,7 +49,7 @@ export interface InvitationToAnEventRaw<D> extends InvitationRaw<D> {
 }
 
 /**  Specific Invitation send by an Organization to a User to join it. */
-export interface InvitationFromOrganizationToUserRaw<D> extends InvitationRaw<D> {
+export interface InvitationFromOrganizationToUserRaw<D> extends InvitationBase<D> {
   type: 'joinOrganization';
   mode: 'invitation';
   toUser: PublicUser;
@@ -57,7 +57,7 @@ export interface InvitationFromOrganizationToUserRaw<D> extends InvitationRaw<D>
 }
 
 /** Specific Invitation send by a User to join an Organization. */
-export interface InvitationFromUserToOrganizationRaw<D> extends InvitationRaw<D> {
+export interface InvitationFromUserToOrganizationRaw<D> extends InvitationBase<D> {
   type: 'joinOrganization';
   mode: 'request';
   fromUser: PublicUser;
