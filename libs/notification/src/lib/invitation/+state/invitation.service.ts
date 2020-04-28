@@ -36,7 +36,6 @@ export class InvitationService extends CollectionService<InvitationState> {
     for (const key in invitation) {
       if (typeof invitation[key] === 'undefined') delete invitation[key];
     }
-    console.log(invitation);
     return invitation;
   }
 
