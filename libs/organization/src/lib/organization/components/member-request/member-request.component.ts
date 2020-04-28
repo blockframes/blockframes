@@ -22,18 +22,18 @@ export class MemberRequestComponent {
   }
 
   public invitationColumns = {
-    name: 'Name',
-    surname: 'Lastname',
+    firstName: 'FirstName',
+    lastName: 'Lastname',
     email: 'Email Address'
   };
 
   get initialColumns() {
     return this.isAdmin
-    ? [ 'name', 'surname', 'email', 'uid' ]
-    : [ 'name', 'surname', 'email' ]
+    ? [ 'firstName', 'lastName', 'email', 'uid' ]
+    : [ 'firstName', 'lastName', 'email' ]
   }
 
   public findInvitation(uid: string) {
-    return this.memberInvitations.find(invitation => invitation.fromUser.uid === uid);
+    return this.memberInvitations.find(invitation => (invitation.fromUser.uid === uid && invitation.type === 'fromUserToOrganization'));
   }
 }

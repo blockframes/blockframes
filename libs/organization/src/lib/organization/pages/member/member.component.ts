@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Observable } from 'rxjs';
 import { OrganizationQuery } from '../../+state/organization.query';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PermissionsQuery, UserRole, PermissionsService } from '../../../permissions/+state';
@@ -49,11 +49,11 @@ export class MemberComponent implements OnInit {
     this.isSuperAdmin$ = this.permissionQuery.isSuperAdmin$;
 
     this.invitationsFromOrganization$ = this.db
-      .collection('invitations', ref => ref.where('fromOrg.id', '==', this.query.getActiveId()).where('status', '==', 'pending'))
+      .collection('invitations', ref => ref.where('fromOrg.id', '==', this.query.getActiveId()).where('status', '==', 'pending').where('fromOrg.id', '==', this.query.getActiveId()).where('type', '==', 'fromOrganizationToUser'))
       .valueChanges() as Observable<Invitation[]>;
 
     this.invitationsToJoinOrganization$ = this.db
-      .collection('invitations', ref => ref.where('toOrg.id', '==', this.query.getActiveId()).where('status', '==', 'pending'))
+      .collection('invitations', ref => ref.where('toOrg.id', '==', this.query.getActiveId()).where('status', '==', 'pending').where('type', '==', 'fromUserToOrganization'))
       .valueChanges() as Observable<Invitation[]>;
   }
 

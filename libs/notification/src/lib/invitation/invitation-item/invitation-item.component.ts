@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { InvitationService, Invitation } from '../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AuthQuery } from '@blockframes/auth/+state';
 
 @Component({
   selector: 'invitation-item',
@@ -16,7 +15,6 @@ export class InvitationItemComponent {
   constructor(
     private service: InvitationService,
     private snackBar: MatSnackBar,
-    private authQuery: AuthQuery,
   ) { }
 
   /** Creates a message based on the invitation.type. */
@@ -28,7 +26,25 @@ export class InvitationItemComponent {
       case 'fromOrganizationToUser':
         return `Your organization sent an invitation to this user email: ${this.invitation.toUser.email}`;
       case 'event':
-        return this.service.isInvitationForMe(this.invitation) ? `You have been invited to an event !` : `Your invitation have been sent!`;
+        return this.getMessageToDisplay();
+    }
+  }
+
+  private getMessageToDisplay() {
+    if (this.service.isInvitationForMe(this.invitation)) {
+      if(this.invitation.mode === 'request'){
+        let from;
+        if(this.invitation.fromOrg){
+          from = this.invitation.fromOrg.denomination.public ? this.invitation.fromOrg.denomination.public : this.invitation.fromOrg.denomination.full;
+        } else if(this.invitation.fromUser){
+          from = this.invitation.fromUser.firstName && this.invitation.fromUser.lastName ? `${this.invitation.fromUser.firstName} ${this.invitation.fromUser.lastName}` : this.invitation.fromUser.email;
+        }
+        return `${from} requested to attend your event !`;
+      } else {
+        return 'You have been invited to an event !';
+      }
+    } else {
+      return `Your ${this.invitation.mode} have been sent!`;
     }
   }
 
