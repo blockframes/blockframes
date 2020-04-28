@@ -4,7 +4,7 @@ import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { InvitationQuery, InvitationStore } from '../../invitation/+state';
 import { switchMap, map } from 'rxjs/operators';
 import { PermissionsQuery } from 'libs/organization/src/lib/permissions/+state/permissions.query';
-import { Invitation } from '@blockframes/invitation/types';
+import { Invitation, InvitationType } from '@blockframes/invitation/types';
 import { User } from '@blockframes/auth/+state/auth.store';
 import { NotificationQuery } from '../+state/notification.query';
 
@@ -48,13 +48,13 @@ export class NotificationWidgetComponent implements OnInit {
   /**
    * Returns true if notification should be displayed
    * for an admin.
-   *   fromUserToOrganization : An user requested to join an org.
-   *   event: Even org admin can attend to an event (no discrimination!)
+   *   joinOrganization : An user requested to join an org.
+   *   attendEvent: Even org admin can attend to an event (no discrimination!)
    * 
    * @param invitation 
    */
   private adminInvitations(invitation: Invitation) : boolean {
-    const invitationTypes = ['fromUserToOrganization', 'event'];
+    const invitationTypes: InvitationType[] = ['joinOrganization', 'attendEvent'];
     return (
       invitation.status === 'pending' &&
       invitationTypes.includes(invitation.type)
@@ -64,13 +64,13 @@ export class NotificationWidgetComponent implements OnInit {
   /**
    * Returns true if notification should be displayed
    * for an regular user.
-   *   fromOrganizationToUser : An org invited current user to join in.
-   *   event: Someone invited current user to an event
+   *   joinOrganization : An org invited current user to join in.
+   *   attendEvent: Someone invited current user to an event
    * 
    * @param invitation 
    */
   private memberInvitations(invitation: Invitation) : boolean {
-    const invitationTypes = ['fromOrganizationToUser', 'event'];
+    const invitationTypes: InvitationType[] = ['joinOrganization', 'attendEvent'];
     return (
       invitation.status === 'pending' &&
       invitationTypes.includes(invitation.type)

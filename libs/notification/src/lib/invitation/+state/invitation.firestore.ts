@@ -39,14 +39,14 @@ export type InvitationOrUndefined = InvitationDocument | undefined;
  * */
 export interface InvitationToAnEvent extends Invitation {
   mode: InvitationMode,
-  type: 'event';
+  type: 'attendEvent';
   /** @dev EventId */
   docId: string;
 }
 
 /**  Specific Invitation send by an Organization to a User to join it. */
 export interface InvitationFromOrganizationToUser extends Invitation {
-  type: 'fromOrganizationToUser';
+  type: 'joinOrganization';
   mode: 'invitation';
   toUser: PublicUser;
   fromOrg: PublicOrganization;
@@ -54,7 +54,7 @@ export interface InvitationFromOrganizationToUser extends Invitation {
 
 /** Specific Invitation send by a User to join an Organization. */
 export interface InvitationFromUserToOrganization extends Invitation {
-  type: 'fromUserToOrganization';
+  type: 'joinOrganization';
   mode: 'request';
   fromUser: PublicUser;
   toOrg: PublicOrganization;
@@ -64,6 +64,6 @@ export interface InvitationFromUserToOrganization extends Invitation {
 export type InvitationStatus = 'accepted' | 'declined' | 'pending';
 
 /** Type of Invitation depending of its purpose. */
-export type InvitationType = 'fromUserToOrganization' | 'fromOrganizationToUser' | 'event' ;
+export type InvitationType = 'attendEvent' | 'joinOrganization';
 
 export type InvitationMode = 'request' | 'invitation';

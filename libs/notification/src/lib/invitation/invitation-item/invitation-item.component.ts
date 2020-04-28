@@ -21,20 +21,23 @@ export class InvitationItemComponent {
 
   /** Creates a message based on the invitation.type. */
   public get message(): string {
-    switch (this.invitation.type) {
-      case 'fromUserToOrganization':
-        // TODO #1140 Put message in an other file dedicated to that
-        return `${this.invitation.fromUser.firstName} ${this.invitation.fromUser.lastName} wants to join your organization`;
-      case 'fromOrganizationToUser':
-        return `Your organization sent an invitation to this user email: ${this.invitation.toUser.email}`;
-      case 'event':
-        return this.service.isInvitationForMe(this.invitation) ? `You have been invited to an event !` : `Your invitation have been sent!`;
+    const { type, mode } = this.invitation;
+    // TODO #1140 Put message in an other file dedicated to that
+    switch (type) {
+      case 'joinOrganization':
+        return mode === 'invitation'
+          ? `Your organization sent an invitation to this user email: ${this.invitation.toUser.email}`
+          : `${this.invitation.fromUser.firstName} ${this.invitation.fromUser.lastName} wants to join your organization`;
+      case 'attendEvent':
+        return mode === 'invitation'
+          ? `You have been invited to an event !`
+          : `Your invitation have been sent!`;
     }
   }
 
   public get invitationLink(): string | boolean {
     switch (this.invitation.type) {
-      case 'event':
+      case 'attendEvent':
         return `/c/o/marketplace/event/${this.invitation.docId}`;
       default:
         return false;

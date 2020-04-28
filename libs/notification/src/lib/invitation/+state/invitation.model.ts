@@ -55,7 +55,7 @@ export function createEventInvitation(params: Partial<InvitationToAnEvent> = {})
     id: '',
     mode: 'invitation',
     status: 'pending',
-    type: 'event',
+    type: 'attendEvent',
     docId: '',
     date: firestore.Timestamp.now(),
     ...params,
@@ -65,12 +65,12 @@ export function createEventInvitation(params: Partial<InvitationToAnEvent> = {})
   };
 }
 
-/** Factory function that create an Invitation of type fromUserToOrganization. */
+/** Factory function that create an Invitation of type joinOrganization. */
 export function createInvitationFromUserToOrganization(params: InvitationFromUserToOrganizationOptions): InvitationFromUserToOrganization {
   return {
     id: '',
     mode:'request',
-    type: 'fromUserToOrganization',
+    type: 'joinOrganization',
     status: 'pending',
     date: firestore.Timestamp.now(),
     ...params,
@@ -79,12 +79,12 @@ export function createInvitationFromUserToOrganization(params: InvitationFromUse
   };
 }
 
-/** Factory function that create an Invitation of type fromOrganizationToUser. */
+/** Factory function that create an Invitation of type joinOrganization. */
 export function createInvitationFromOrganizationToUser(params: InvitationFromOrganizationToUserOptions): InvitationFromOrganizationToUser {
   return {
     id: '',
     mode:'invitation',
-    type: 'fromOrganizationToUser',
+    type: 'joinOrganization',
     status: 'pending',
     date: firestore.Timestamp.now(),
     ...params,

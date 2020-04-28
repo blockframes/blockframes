@@ -51,7 +51,7 @@ export class EventEditComponent {
   async invite() {
     const event = this.form.value;
     const emails = this.invitationForm.value.map(guest => guest.email);
-    await this.invitationService.invitUsers(event.id, emails, 'event');
-    this.invitationForm.setValue(null);
+    await this.invitationService.invite('user', emails).from('org').to('attendEvent', event.id);
+    this.invitationForm.clear();
   }
 }

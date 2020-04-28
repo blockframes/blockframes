@@ -26,11 +26,11 @@ export class MemberAddComponent {
     this._isSending.next(true);
     try {
       if (this.form.invalid) throw new Error('Please enter valid email(s) address(es)');
-      const userEmails = this.form.value;
-      const invitationsExist = await this.invitationService.orgInvitationExists(userEmails);
+      const emails = this.form.value;
+      const invitationsExist = await this.invitationService.orgInvitationExists(emails);
       if (invitationsExist) throw new Error('You already send an invitation to one or more of these users');
-      const organizationId = this.organizationQuery.getActiveId();
-      await this.invitationService.sendInvitationsToUsers(userEmails, organizationId);
+      const orgId = this.organizationQuery.getActiveId();
+      await this.invitationService.invite('user', emails).from('org').to('joinOrganization', orgId);
       this.snackBar.open('Your invitation was sent', 'close', { duration: 2000 });
       this.form.reset();
     } catch (error) {
