@@ -8,8 +8,8 @@ import {
 // Blockframes
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 // RxJs
-import { Observable } from 'rxjs';
-import { startWith, map, debounceTime, switchMap, distinctUntilChanged, pluck, tap } from 'rxjs/operators';
+import { Observable, combineLatest } from 'rxjs';
+import { startWith, map, debounceTime, switchMap, distinctUntilChanged, pluck } from 'rxjs/operators';
 // Others
 import { sortMovieBy } from '@blockframes/utils/akita-helper/sort-movie-by';
 import { MovieSearchForm } from '@blockframes/movie/form/search.form';
@@ -32,23 +32,22 @@ export class MarketplaceSearchComponent implements OnInit {
   constructor(private movieQuery: MovieQuery, private dynTitle: DynamicTitleService) { }
 
   ngOnInit() {
-       // Immplcity we only want accepted movies
+    // Immplcity we only want accepted movies
     this.filterForm.storeConfig.add('accepted');
     this.dynTitle.setPageTitle('Titles');
-    this.movieSearchResults$ = this.filterForm.valueChanges.pipe(
+    this.movieSearchResults$ = combineLatest([this.filterForm.valueChanges, this.sortByControl.valueChanges])
+    .pipe(
       debounceTime(300),
       distinctUntilChanged(),
-      switchMap(() => this.filterForm.search()),
+      switchMap(observables => observables[0] = this.filterForm.search()),
       pluck('hits'),
-      map(result => result.map(movie => movie.objectID)),
-
-      // join retrieved movieIds from algolia with the movies from the state
+      map(results => results.map(movie => movie.objectID)),
       switchMap(movieIds => {
         // If empty get all the movies from akita
         if (!this.filterForm.isEmpty()) {
           return this.movieQuery.selectAll({
             filterBy: movie => movieIds.includes(movie.id),
-            sortBy: (a, b) => sortMovieBy(a, b, this.sortByControl.value),
+            sortBy: (a, b) => sortMovieBy(a, b, this.sortByControl.value)
           })
         } else {
           return this.movieQuery.selectAll({

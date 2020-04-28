@@ -75,6 +75,7 @@ export class RightListComponent {
   public salesLoading$ = this.query.selectLoading();
 
   constructor(private query: ContractQuery, private dynTitle: DynamicTitleService) {
+    console.log(this.query.getValue())
     this.query.getCount()
       ? this.dynTitle.setPageTitle('All offers and deals')
       : this.dynTitle.setPageTitle('No offers and deals')
