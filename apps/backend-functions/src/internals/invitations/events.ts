@@ -3,9 +3,10 @@ import { wasCreated, wasAccepted, wasDeclined } from "./utils";
 import { NotificationDocument, OrganizationDocument } from "../../data/types";
 import { createNotification, triggerNotifications } from "../../notification";
 import { db } from "../firebase";
-import { getAdminIds } from "../../data/internals";
+import { getAdminIds, getDocument } from "../../data/internals";
 import { invitationToMeetingFromUser, invitationToScreeningFromOrg, requestToAttendEventFromUser } from '../../templates/mail';
 import { sendMailFromTemplate } from '../email';
+import { EventDocument, EventMeta } from "@blockframes/event/+state/event.firestore";
 
 /**
  * Handles notifications and emails when an invitation to an event is created.
@@ -22,8 +23,7 @@ async function onInvitationToAnEventCreate({
   const eventId = docId;
 
   // Fetch event
-  const eventSnapshot = await db.doc(`events/${eventId}`).get();
-  const event = eventSnapshot.data();
+  const event = await getDocument<EventDocument<EventMeta>>(`events/${eventId}`);
 
   if (mode === 'request' && event?.isPrivate === false) {
     // This will then trigger "onInvitationToAnEventAccepted" and send in-app notification to 'fromUser' 
@@ -99,8 +99,7 @@ async function onInvitationToAnEventAccepted({
     }
     notifications.push(notification);
   } else if (!!fromOrg) {
-    const orgSnapshot = await db.doc(`orgs/${fromOrg.id}`).get();
-    const org = orgSnapshot.data() as OrganizationDocument;
+    const org = await getDocument<OrganizationDocument>(`orgs/${fromOrg.id}`);
     const adminIds = await getAdminIds(org.id);
     adminIds.forEach(toUserId => {
       const notification = createNotification({
@@ -154,8 +153,7 @@ async function onInvitationToAnEventRejected({
     }
     notifications.push(notification);
   } else if (!!fromOrg) {
-    const orgSnapshot = await db.doc(`orgs/${fromOrg.id}`).get();
-    const org = orgSnapshot.data() as OrganizationDocument;
+    const org = await getDocument<OrganizationDocument>(`orgs/${fromOrg.id}`);
     const adminIds = await getAdminIds(org.id);
     adminIds.forEach(toUserId => {
       const notification = createNotification({

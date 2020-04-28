@@ -16,7 +16,7 @@ import {
   userRequestedToJoinYourOrg,
   userJoinOrgPendingRequest
 } from '../../templates/mail';
-import { getAdminIds } from '../../data/internals';
+import { getAdminIds, getDocument } from '../../data/internals';
 import { wasAccepted, wasDeclined, wasCreated } from './utils';
 
 async function addUserToOrg(userId: string, organizationId: string) {
@@ -103,12 +103,8 @@ async function onInvitationToOrgAccept({ toUser, fromOrg }: InvitationFromOrgani
 
 /** Send a notification to admins of organization to notify them that the user declined their invitation. */
 async function onInvitationToOrgDecline(invitation: InvitationFromOrganizationToUserDocument) {
-  const orgSnapshot = await db.doc(`orgs/${invitation.fromOrg.id}`).get();
-  const org = orgSnapshot.data() as OrganizationDocument;
-
-  const userSnapshot = await db.doc(`users/${invitation.toUser.uid}`).get();
-  const user = userSnapshot.data() as PublicUser;
-
+  const org = await getDocument<OrganizationDocument>(`orgs/${invitation.fromOrg.id}`);
+  const user = await getDocument<PublicUser>(`users/${invitation.toUser.uid}`);
   const adminIds = await getAdminIds(org.id);
 
   const notifications = adminIds.map(toUserId =>
@@ -176,8 +172,7 @@ async function onInvitationFromUserToJoinOrgAccept({
 
 /** Send a notification to admins of organization to notify them that the request is declined. */
 async function onInvitationFromUserToJoinOrgDecline(invitation: InvitationFromUserToOrganizationDocument) {
-  const orgSnapshot = await db.doc(`orgs/${invitation.toOrg.id}`).get();
-  const org = orgSnapshot.data() as OrganizationDocument;
+  const org = await getDocument<OrganizationDocument>(`orgs/${invitation.toOrg.id}`);
   const adminIds = await getAdminIds(org.id);
 
   const notifications = adminIds.map(toUserId =>
