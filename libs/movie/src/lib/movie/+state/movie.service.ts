@@ -58,6 +58,8 @@ export class MovieService extends CollectionService<MovieState> {
     const userId = movie._meta?.createdBy ? movie._meta.createdBy : this.authQuery.userId;
     const user = await this.userService.getUser(userId);
 
+    // We need to update the organisation here, because of the route navigation in the movie tunnel.
+    // If we do it in the backend functions, the org isn't updated fast enough to allow a good navigation in the movie tunnel
     await this.orgService.update(user.orgId, (org) => ({ movieIds: [...org.movieIds, movie.id] }), { write })
     return this.permissionsService.addDocumentPermissions(movie.id, write as firestore.Transaction, user.orgId);
   }
