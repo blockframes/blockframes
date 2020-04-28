@@ -180,6 +180,7 @@ service cloud.firestore {
       allow update: if isOrgAdmin(userId(), orgId)
       	&& isNotUpdatingField(['status'])
         && isNotUpdatingField(['created'])
+        // @TODO (#2539 update)
         && ( isNotUpdatingField(['appAccess','catalogDashboard']) || (isCreatingField(['appAccess','catalogDashboard']) && existingData().status == 'pending') )
         && ( isNotUpdatingField(['appAccess','catalogMarketplace']) || (isCreatingField(['appAccess','catalogMarketplace']) && existingData().status == 'pending') )
         && isNotUpdatingId('id', orgId);
