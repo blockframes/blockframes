@@ -2,14 +2,10 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { EventForm } from '../../form/event.form';
 import { EventService } from '../../+state/event.service';
-import { InvitationToAnEvent }  from '@blockframes/invitation/+state/invitation.firestore.ts';
 import { InvitationService }  from '@blockframes/invitation/+state/invitation.service';
-import { createEventInvitation }  from '@blockframes/invitation/+state/invitation.model';
-import { createPublicUser } from '@blockframes/user/+state/user.model';
-import { PublicUser } from '@blockframes/user/+state/user.firestore';
+import { InvitationToAnEvent }  from '@blockframes/invitation/+state/invitation.model';
 import { scaleIn } from '@blockframes/utils/animations/fade';
-import { createAlgoliaUserForm, AlgoliaUser } from '@blockframes/utils/algolia';
-import { createImgRef } from '@blockframes/utils/image-uploader';
+import { createAlgoliaUserForm } from '@blockframes/utils/algolia';
 
 @Component({
   selector: 'event-edit',

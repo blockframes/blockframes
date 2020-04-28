@@ -1,5 +1,5 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Observable } from 'rxjs';
 import { OrganizationQuery } from '../../+state/organization.query';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { PermissionsQuery, UserRole, PermissionsService } from '../../../permissions/+state';
@@ -47,14 +47,13 @@ export class MemberComponent implements OnInit {
 
     this.isAdmin$ = this.permissionQuery.isAdmin$;
     this.isSuperAdmin$ = this.permissionQuery.isSuperAdmin$;
+    const id = this.query.getActiveId();
 
-    this.invitationsFromOrganization$ = this.db
-      .collection('invitations', ref => ref.where('fromOrg.id', '==', this.query.getActiveId()).where('status', '==', 'pending'))
-      .valueChanges() as Observable<Invitation[]>;
+    const queryFn1 = ref => ref.where('fromOrg.id', '==', id).where('status', '==', 'pending').where('type', '==', 'joinOrganization');
+    const queryFn2 = ref => ref.where('toOrg.id', '==', id).where('status', '==', 'pending').where('type', '==', 'joinOrganization');
 
-    this.invitationsToJoinOrganization$ = this.db
-      .collection('invitations', ref => ref.where('toOrg.id', '==', this.query.getActiveId()).where('status', '==', 'pending'))
-      .valueChanges() as Observable<Invitation[]>;
+    this.invitationsFromOrganization$ = this.invitationService.valueChanges(queryFn1);
+    this.invitationsToJoinOrganization$ = this.invitationService.valueChanges(queryFn2);
   }
 
   public acceptInvitation(invitation: Invitation) {

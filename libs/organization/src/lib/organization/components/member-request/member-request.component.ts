@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
-import { InvitationFromUserToOrganization } from '@blockframes/invitation/types';
 import { PublicUser } from '@blockframes/user/+state/user.firestore';
+import { InvitationFromUserToOrganization } from '@blockframes/invitation/+state/invitation.model';
 
 @Component({
   selector: 'member-request',
@@ -22,18 +22,18 @@ export class MemberRequestComponent {
   }
 
   public invitationColumns = {
-    name: 'Name',
-    surname: 'Lastname',
+    firstName: 'FirstName',
+    lastName: 'Lastname',
     email: 'Email Address'
   };
 
   get initialColumns() {
     return this.isAdmin
-    ? [ 'name', 'surname', 'email', 'uid' ]
-    : [ 'name', 'surname', 'email' ]
+    ? [ 'firstName', 'lastName', 'email', 'uid' ]
+    : [ 'firstName', 'lastName', 'email' ]
   }
 
-  public findInvitation(uid: string) {
-    return this.memberInvitations.find(invitation => invitation.fromUser.uid === uid);
+  public findRequest(uid: string) {
+    return this.memberInvitations.find(invitation => (invitation.fromUser.uid === uid && invitation.type === 'joinOrganization' && invitation.mode === 'request'));
   }
 }

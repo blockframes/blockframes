@@ -80,7 +80,7 @@ service cloud.firestore {
       	&& userId() == incomingData().uid
         && isNotUpdatingId('uid', userId)
         && isNotUpdatingField(['email'])
-        && isNotUpdatingField(['orgId'])
+        && ( isNotUpdatingField(['orgId']) || isCreatingField('orgId'))
     }
 
     ////////////////////////////////
@@ -423,6 +423,12 @@ service cloud.firestore {
     	return (!incomingData()[fieldArray[0]][fieldArray[1]].keys().hasAll([fieldArray[2]]))
        || (!incomingData()[fieldArray[0]].keys().hasAll([fieldArray[1]])) 
        || !incomingData().keys().hasAll([fieldArray[0]]);
+    }
+
+    // The field is sent and not already existing
+    function isCreatingField(fieldName) {
+    	return request.resource.data.keys().hasAll([fieldName]) &&
+      (resource == null || !resource.data.keys().hasAll([fieldName]));
     }
 
   }

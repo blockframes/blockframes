@@ -52,7 +52,7 @@ export async function onInvitationWrite(
          * a request from an user who wants to attend an event.
          * an invitation to an user that can be interested to attend an event.
          */
-        return onInvitationToAnEventUpdate(invitationDocBefore, invitationDoc, invitation);
+        return onInvitationToAnEventUpdate(invitationDocBefore, invitationDoc, { ...invitation, id: before.id });
       default:
         throw new Error(`Unhandled invitation: ${JSON.stringify(invitation)}`);
     }

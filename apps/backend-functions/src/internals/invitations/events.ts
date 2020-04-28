@@ -1,25 +1,36 @@
-import { InvitationToAnEvent, InvitationOrUndefined, InvitationDocument } from "@blockframes/invitation/types";
+import { InvitationToAnEventDocument, InvitationOrUndefined, InvitationDocument } from "@blockframes/invitation/types";
 import { wasCreated, wasAccepted, wasDeclined } from "./utils";
 import { NotificationDocument, OrganizationDocument } from "../../data/types";
 import { createNotification, triggerNotifications } from "../../notification";
 import { db } from "../firebase";
-import { getAdminIds } from "../../data/internals";
+import { getAdminIds, getDocument } from "../../data/internals";
 import { invitationToMeetingFromUser, invitationToScreeningFromOrg, requestToAttendEventFromUser } from '../../templates/mail';
 import { sendMailFromTemplate } from '../email';
+import { EventDocument, EventMeta } from "@blockframes/event/+state/event.firestore";
 
 /**
  * Handles notifications and emails when an invitation to an event is created.
  */
 async function onInvitationToAnEventCreate({
+  id,
   toUser,
   toOrg,
   fromUser,
   fromOrg,
   mode,
   docId
-}: InvitationToAnEvent) {
+}: InvitationToAnEventDocument) {
   const eventId = docId;
 
+  // Fetch event
+  const event = await getDocument<EventDocument<EventMeta>>(`events/${eventId}`);
+
+  if (mode === 'request' && event?.isPrivate === false) {
+    // This will then trigger "onInvitationToAnEventAccepted" and send in-app notification to 'fromUser' 
+    return await db.doc(`invitations/${id}`).set({ status: 'accepted' }, { merge: true });
+  }
+
+  // Retreive notification recipient 
   let recipient: string;
   if (!!toUser) {
     recipient = toUser.email;
@@ -38,7 +49,7 @@ async function onInvitationToAnEventCreate({
      */
     const senderEmail = fromOrg.denomination.public;
     console.log(`Sending invitation email for a screening event (${eventId}) from ${senderEmail} to : ${recipient}`);
-    await sendMailFromTemplate(invitationToScreeningFromOrg(recipient, fromOrg.denomination.full, eventId));
+    return await sendMailFromTemplate(invitationToScreeningFromOrg(recipient, fromOrg.denomination.full, eventId));
 
   } else if (!!fromUser) {
     /**
@@ -49,12 +60,10 @@ async function onInvitationToAnEventCreate({
     switch (mode) {
       case 'invitation':
         console.log(`Sending invitation email for a meeeting event (${eventId}) from ${senderEmail} to : ${recipient}`);
-        await sendMailFromTemplate(invitationToMeetingFromUser(recipient, senderEmail, eventId));
-        break;
+        return await sendMailFromTemplate(invitationToMeetingFromUser(recipient, senderEmail, eventId));
       case 'request':
         console.log(`Sending request email to attend an event (${eventId}) from ${senderEmail} to : ${recipient}`);
-        await sendMailFromTemplate(requestToAttendEventFromUser(senderEmail, recipient, eventId));
-        break;
+        return await sendMailFromTemplate(requestToAttendEventFromUser(senderEmail, recipient, eventId));
     }
   } else {
     throw new Error('Did not found invitation sender');
@@ -70,7 +79,7 @@ async function onInvitationToAnEventAccepted({
   toUser,
   toOrg,
   docId,
-}: InvitationToAnEvent) {
+}: InvitationToAnEventDocument) {
 
   const notifications: NotificationDocument[] = [];
 
@@ -90,8 +99,7 @@ async function onInvitationToAnEventAccepted({
     }
     notifications.push(notification);
   } else if (!!fromOrg) {
-    const orgSnapshot = await db.doc(`orgs/${fromOrg.id}`).get();
-    const org = orgSnapshot.data() as OrganizationDocument;
+    const org = await getDocument<OrganizationDocument>(`orgs/${fromOrg.id}`);
     const adminIds = await getAdminIds(org.id);
     adminIds.forEach(toUserId => {
       const notification = createNotification({
@@ -125,7 +133,7 @@ async function onInvitationToAnEventRejected({
   toUser,
   toOrg,
   docId,
-}: InvitationToAnEvent) {
+}: InvitationToAnEventDocument) {
 
   const notifications: NotificationDocument[] = [];
 
@@ -145,8 +153,7 @@ async function onInvitationToAnEventRejected({
     }
     notifications.push(notification);
   } else if (!!fromOrg) {
-    const orgSnapshot = await db.doc(`orgs/${fromOrg.id}`).get();
-    const org = orgSnapshot.data() as OrganizationDocument;
+    const org = await getDocument<OrganizationDocument>(`orgs/${fromOrg.id}`);
     const adminIds = await getAdminIds(org.id);
     adminIds.forEach(toUserId => {
       const notification = createNotification({
@@ -178,7 +185,7 @@ async function onInvitationToAnEventRejected({
 export async function onInvitationToAnEventUpdate(
   before: InvitationOrUndefined,
   after: InvitationDocument,
-  invitation: InvitationToAnEvent
+  invitation: InvitationToAnEventDocument
 ): Promise<any> {
   if (wasCreated(before, after)) {
     return onInvitationToAnEventCreate(invitation);
