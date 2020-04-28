@@ -6,14 +6,29 @@ import { MovieDocument } from './data/types';
 import { jwplayerSecret } from './environments/environment';
 import { createHash } from 'crypto';
 
-interface Params {
+// TODO issue#2643
+// No typing
+// const JWPlayerApi = require('jwplatform');
+
+interface ReadVideoParams {
   eventId: string;
 }
 
+// TODO issue#2643
+// interface UploadVideoParams {
+//   fileName: string;
+//   movieId: string;
+// }
+
+interface ErrorResultResponse {
+  error: string;
+  result: any;
+}
+
 export const getPrivateVideoUrl = async (
-  data: Params,
+  data: ReadVideoParams,
   context: CallableContext
-): Promise<any> => {
+): Promise<ErrorResultResponse> => {
 
 
   if (!data.eventId) {
@@ -100,3 +115,55 @@ export const getPrivateVideoUrl = async (
     result: signedUrl
   };
 }
+
+
+// TODO this function is used to upload a video from Firebase storage to JWPlayer
+// TODO The code should work fine but it throw a Google Cloud Billing related error
+// TODO We are waiting for the Google support
+// TODO With Vincent we decided to postpone this function as it can be done by hand at the beginning
+// TODO see issue#2643
+
+// export const uploadToJWPlayer = async (
+//   data: UploadVideoParams,
+//   context: CallableContext
+// ): Promise<ErrorResultResponse> => {
+
+//   if (!data.fileName) {
+//     throw new Error(`No 'fileName' params, this parameter is mandatory !`);
+//   }
+
+  // if (!data.movieId) {
+  //   throw new Error(`No 'movieId' params, this parameter is mandatory !`);
+  // }
+
+  // if (!context.auth) {
+  //   throw new Error(`Unauthorized call !`);
+  // }
+
+  // TODO perform further check to see if user is authorized to upload a video for a given movie
+
+  // const storage = admin.storage();
+  // const videoFile = await storage.bucket('uploads').file(data.fileName);
+
+  // const [exists] =  await videoFile.exists(); // this line throw an unexpected Error
+
+  // if (!exists) {
+    // return {
+      // error: 'UNKOWN_FILE',
+      // result: `There is no file stored with the name ${data.fileName}`
+    // }
+  // }
+
+  // const expires = new Date().getTime() + 7200000; // now + 2 hours
+
+  // const [videoUrl] = await videoFile.getSignedUrl({action: 'read', expires});
+  // console.log('*** signed url', videoUrl);
+
+  // const jw = new JWPlayerApi({apiKey: jwplayerKey, apiSecret: jwplayerSecret});
+  // const result = await jw.videos.create({download_url: qsdzqdq});
+
+  // return {
+  //   error: '',
+  //   result: 'OK'
+  // }
+// }

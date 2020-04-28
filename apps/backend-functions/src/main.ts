@@ -79,6 +79,9 @@ export const getEventAnalytics = functions.https.onCall(logErrors(bigQuery.reque
 
 export const privateVideo  = functions.https.onCall(logErrors(getPrivateVideoUrl));
 
+// TODO issue#2643
+// export const uploadVideo  = functions.https.onCall(logErrors(uploadToJWPlayer));
+
 /**
  * Trigger: REST call to the /admin app
  *

@@ -12,6 +12,7 @@ import { MarketplaceLayoutModule } from '@blockframes/ui/layout/marketplace/mark
 // Material
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
+import { EventActiveGuard } from '@blockframes/event/guard/event-active.guard';
 
 
 const routes: Routes = [{
@@ -73,13 +74,15 @@ const routes: Routes = [{
         data: { animation: 'event-list' }
       }, {
         path: ':eventId',
+        canActivate: [EventActiveGuard],
+        canDeactivate: [EventActiveGuard],
         data: { animation: 'event-view' },
         children: [{
             path: '',
             loadChildren: () => import('./event/view/view.module').then(m => m.EventViewModule),
           }, {
             path: 'session',
-            loadChildren: () => import('./event/session/session.module').then(m => m.SessionModule),
+            loadChildren: () => import('@blockframes/event/layout/player/player.module').then(m => m.EventPlayerModule),
           }
         ]
       }]

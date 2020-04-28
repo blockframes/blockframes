@@ -30,6 +30,7 @@ fi
 echo "deploying the functions configuration"
 firebase functions:config:set sendgrid.api_key="${SENDGRID_API_KEY}" \
                               relayer.mnemonic="${ETHEREUM_MNEMONIC}" \
+                              jwplayer.key="${JWPLAYER_KEY}" \
                               jwplayer.secret="${JWPLAYER_SECRET}" \
                               algolia.api_key="${ALGOLIA_API_KEY}" \
                               admin.password="${ADMIN_PASSWORD}" \
