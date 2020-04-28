@@ -25,16 +25,17 @@ async function onInvitationToAnEventCreate({
     return;
   }
   const eventId = docId;
+  const eventTitle = await db.collection('event').doc(eventId).get().then(eventSnapShot => eventSnapShot.data()!.title);
 
   // Fetch event
   const event = await getDocument<EventDocument<EventMeta>>(`events/${eventId}`);
 
   if (mode === 'request' && event?.isPrivate === false) {
-    // This will then trigger "onInvitationToAnEventAccepted" and send in-app notification to 'fromUser' 
+    // This will then trigger "onInvitationToAnEventAccepted" and send in-app notification to 'fromUser'
     return await db.doc(`invitations/${id}`).set({ status: 'accepted' }, { merge: true });
   }
 
-  // Retreive notification recipient 
+  // Retreive notification recipient
   let recipient: string;
   if (!!toUser) {
     recipient = toUser.email;
@@ -53,7 +54,7 @@ async function onInvitationToAnEventCreate({
      */
     const senderEmail = fromOrg.denomination.public;
     console.log(`Sending invitation email for a screening event (${eventId}) from ${senderEmail} to : ${recipient}`);
-    return await sendMailFromTemplate(invitationToScreeningFromOrg(recipient, fromOrg.denomination.full, eventId));
+    return await sendMailFromTemplate(invitationToScreeningFromOrg(toUser, fromOrg.denomination.full, eventTitle));
 
   } else if (!!fromUser) {
     /**
@@ -61,14 +62,15 @@ async function onInvitationToAnEventCreate({
      * will already get the invitation displayed on front end.
      */
     const senderEmail = fromUser.email;
+    const fromUserOrgName = await db.collection('orgs').doc(fromUser.orgId!).get().then(orgSnapShot => orgSnapShot.data()!.denomination.full);
     switch (mode) {
       case 'invitation':
         console.log(`Sending invitation email for a meeeting event (${eventId}) from ${senderEmail} to : ${recipient}`);
-        return await sendMailFromTemplate(invitationToMeetingFromUser(recipient, senderEmail, eventId));
+        return await sendMailFromTemplate(invitationToMeetingFromUser(toUser.firstName!, fromUser, fromUserOrgName, eventTitle));
       case 'request':
       default:
         console.log(`Sending request email to attend an event (${eventId}) from ${senderEmail} to : ${recipient}`);
-        return await sendMailFromTemplate(requestToAttendEventFromUser(senderEmail, recipient, eventId));
+        return await sendMailFromTemplate(requestToAttendEventFromUser(fromUser.firstName!, fromUserOrgName, toUser, eventTitle));
     }
   } else {
     throw new Error('Did not found invitation sender');

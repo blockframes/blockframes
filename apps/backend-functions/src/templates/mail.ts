@@ -5,6 +5,7 @@ import { adminEmail, appUrl } from '../environments/environment';
 import { EmailRequest, EmailTemplateRequest } from '../internals/email';
 import { templateIds } from '@env';
 import { RequestToJoinOrganization, RequestDemoInformations } from '../data/types';
+import { PublicUser } from '@blockframes/user/+state/user.firestore';
 
 const ORG_HOME = '/c/o/organization/';
 const USER_ORG_INVITATION = '/c/organization/home';
@@ -114,32 +115,38 @@ export function userRequestedToJoinYourOrg(request: RequestToJoinOrganization): 
 }
 
 /** Generates an email for user invited to an meeting event. */
-export function invitationToMeetingFromUser(email: string, senderEmail: string, eventId: string): EmailTemplateRequest {
+export function invitationToMeetingFromUser(toUserFirstName: string, fromUser: PublicUser, fromUserOrgName: string, eventName: string): EmailTemplateRequest {
   const data = {
-    userEmail: email,
-    senderEmail: senderEmail,
-    eventId: eventId
+    userFirstName: toUserFirstName,
+    fromUserFirstName: fromUser.firstName,
+    orgName: fromUserOrgName,
+    eventName: eventName,
+    // pageURL: `${appUrl}/${link}`
   };
-  return { to: email, templateId: templateIds.invitationToMeetingFromUser, data };
+  return { to: fromUser.email, templateId: templateIds.invitationToMeetingFromUser, data };
 }
 
 /** Generates an email for user invited by an organization to a screening. */
-export function invitationToScreeningFromOrg(email: string, orgDenomination: string, eventId: string): EmailTemplateRequest {
+export function invitationToScreeningFromOrg(toUser: PublicUser, orgDenomination: string, eventId: string): EmailTemplateRequest {
   const data = {
-    orgDenomination: orgDenomination,
-    eventId: eventId
+    userFirstName: toUser.firstName,
+    orgName: orgDenomination,
+    eventName: eventId,
+    // pageURL: `${appUrl}/${link}`
   };
-  return { to: email, templateId: templateIds.invitationToMeetingFromUser, data };
+  return { to: toUser.email, templateId: templateIds.invitationToMeetingFromUser, data };
 }
 
 /** Generates an email for user requesting to attend an event. */
-export function requestToAttendEventFromUser(fromUser: string, toUser: string, eventId: string): EmailTemplateRequest {
+export function requestToAttendEventFromUser(fromUserFirstname: string, fromUserOrgName: string, toUser: PublicUser, eventTitle: string): EmailTemplateRequest {
   const data = {
-    emailUserRequest: fromUser,
-    userEmail: toUser,
-    eventId: eventId
+    adminFirstName: toUser.firstName,
+    userFirstName: fromUserFirstname,
+    orgName: fromUserOrgName,
+    eventName: eventTitle,
+    // pageURL: `${appUrl}/${link}`
   };
-  return { to: toUser, templateId: templateIds.invitationToMeetingFromUser, data };
+  return { to: toUser.email, templateId: templateIds.invitationToMeetingFromUser, data };
 }
 
 
