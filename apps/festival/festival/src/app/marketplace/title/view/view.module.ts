@@ -10,6 +10,7 @@ import { ViewComponent } from './view.component';
 // Custom Modules
 import { MovieViewLayoutModule } from '@blockframes/movie/layout/view/view.module';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
+import { MovieHeaderModule } from '@blockframes/movie/components/header/header.module';
 
 // Material
 import { MatIconModule } from '@angular/material/icon';
@@ -24,7 +25,7 @@ const routes = [{
     path: '',
     redirectTo: 'main',
     pathMatch: 'full'
-  },{
+  }, {
     path: 'main',
     loadChildren: () => import('../main/main.module').then(m => m.MovieMainModule)
   }]
@@ -37,6 +38,7 @@ const routes = [{
     FlexLayoutModule,
     MovieViewLayoutModule,
     ImageReferenceModule,
+    MovieHeaderModule,
     // Material
     MatChipsModule,
     MatButtonModule,

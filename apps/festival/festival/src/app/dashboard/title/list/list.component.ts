@@ -1,45 +1,43 @@
 import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
-import { Contract } from '@blockframes/contract/contract/+state/contract.model';
 import { StoreStatus, MovieAnalytics } from '@blockframes/movie/+state/movie.firestore';
-import { ContractQuery } from '@blockframes/contract/contract/+state/contract.query';
-import { startWith, switchMap, map } from 'rxjs/operators';
+import { startWith, map } from 'rxjs/operators';
 import { Observable, combineLatest, Subscription } from 'rxjs';
-import { Movie, getMovieTotalViews, getMovieReceipt } from '@blockframes/movie/+state/movie.model';
+import { Movie, getMovieTotalViews, Credit } from '@blockframes/movie/+state/movie.model';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { getCodeIfExists } from '@blockframes/utils/static-model/staticModels';
 
 interface TitleView {
   id: string; // movieId
   title: string;
   view: string;
-  sales: number;
-  receipt: number;
+  director: Credit[];
+  productionStatus: string;
   status: StoreStatus;
 }
 
 const columns = {
   title: 'Title',
   view: '# View',
-  sales: 'Sales',
-  receipt: 'Total Gross Receipts',
+  director: 'Director(s)',
+  productionStatus: 'Production Status',
   status: 'Status'
 };
 
 /** Factory function to flatten movie data. */
 function createTitleView(
   movie: Movie,
-  contracts: Contract[],
   analytics: MovieAnalytics[]
 ): TitleView {
-  const ownContracts = contracts.filter(c => c.lastVersion.titles[movie.id]);
+  const statusLabel = movie.main?.status ? getCodeIfExists('MOVIE_STATUS', movie.main?.status) : '';
   return {
     id: movie.id,
     title: movie.main.title.international,
     view: getMovieTotalViews(analytics, movie.id)?.toString(),
-    sales: ownContracts.length,
-    receipt: getMovieReceipt(ownContracts, movie.id),
+    director: movie.main.directors,
+    productionStatus: statusLabel,
     status: movie.main.storeConfig.status
   };
 }
@@ -51,7 +49,7 @@ function createTitleView(
 })
 export class ListComponent implements OnInit, OnDestroy {
   columns = columns;
-  initialColumns = ['title', 'view', 'sales', 'receipt', 'status'];
+  initialColumns = ['title', 'view', 'director', 'productionStatus', 'status'];
   titles$: Observable<TitleView[]>;
   filter = new FormControl();
   filter$ = this.filter.valueChanges.pipe(startWith(this.filter.value));
@@ -61,49 +59,29 @@ export class ListComponent implements OnInit, OnDestroy {
 
   constructor(
     private query: MovieQuery,
-    private contractQuery: ContractQuery,
     private service: MovieService,
     private router: Router,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.sub = this.service.syncAnalytics().subscribe();
-    const moviesAnalytics$ = this.query.analytics.selectAll();
 
-    // Filtered movies
-    const movies$ = this.filter$.pipe(
-      switchMap(filter =>
-        this.query.selectAll({
-          filterBy: movie => (filter ? movie.main.storeConfig.storeType === filter : true)
-        })
-      )
-    );
     // Transform movies into a TitleView
-    this.titles$ = combineLatest([movies$, this.contractQuery.selectAll(), moviesAnalytics$]).pipe(
-      map(([movies, contracts, analytics]) =>
-        movies.map(movie => createTitleView(movie, contracts, analytics))
+    this.titles$ = combineLatest([this.query.selectAll(), this.query.analytics.selectAll()]).pipe(
+      map(([movies, analytics]) =>
+        movies.map(movie => createTitleView(movie, analytics))
       )
     );
+  }
+
+  /** Navigate to tunnel if status is draft, else go to page */
+  public goToTitle(title: TitleView) {
+    const path = `/c/o/dashboard/title/${title.id}`;
+    this.router.navigate([path], { relativeTo: this.route });
   }
 
   ngOnDestroy() {
     this.sub.unsubscribe();
   }
-
-  /** Dynamic filter of movies for each tab. */
-  applyFilter(filter?: Movie['main']['storeConfig']['storeType']) {
-    this.filter.setValue(filter);
-  }
-
-  /** Navigate to tunnel if status is draft, else go to page */
-  public goToTitle(title: TitleView) {
-    const basePath = `/c/o/dashboard`;
-    const path = (title.status === 'draft')
-      ? `${basePath}/tunnel/movie/${title.id}`
-      : `${basePath}/titles/${title.id}`;
-    this.router.navigate([path], { relativeTo: this.route });
-  }
-
-
 }

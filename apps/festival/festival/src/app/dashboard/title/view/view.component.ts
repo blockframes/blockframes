@@ -17,10 +17,6 @@ export class TitleViewComponent implements OnInit {
 
   navLinks = [
     {
-      path: 'activity',
-      label: 'Marketplace Activity'
-    },
-    {
       path: 'details',
       label: 'Film Details'
     }

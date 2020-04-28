@@ -15,7 +15,7 @@
         </button>
         <algolia-autocomplete [index]="movieIndex" mode="standard" resetInput native prefixIcon="magnifying_glasses" clearable keyToDisplay="title.international">
           <ng-template let-result>
-            <a [routerLink]="['title', result.objectID]">{{ result.title.international }}</a>
+            <a [routerLink]="['title', result.objectID]" class="algolia-result">{{ result.title.international }}</a>
           </ng-template>
         </algolia-autocomplete>
         <div fxLayout="row" fxLayoutGap="24px">

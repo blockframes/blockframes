@@ -56,7 +56,7 @@ export class WishlistButtonComponent implements OnInit {
       movieId: movie.id,
       movieTitle: movie.main.title.original
     });
-    this.snackbar.open(`${title} has been added to your selection.`, 'close', { duration: 2000 });
+    this.snackbar.open(`${title} has been added to your wishlist.`, 'close', { duration: 2000 });
   }
 
   public removeFromWishlist() {

@@ -63,7 +63,6 @@ export class MarketplaceMovieAvailsComponent {
       }
 
       this.availsForm.get('isActive').setValue(true);
-
       if (!this.movie.distributionRights) {
         throw new Error('Archipel Content got no mandate on this movie');
       }

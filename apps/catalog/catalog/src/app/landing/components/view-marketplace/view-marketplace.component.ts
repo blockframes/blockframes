@@ -28,7 +28,7 @@ export class CatalogViewMarketplaceComponent {
   ) {}
 
   play() {
-    this.url = this.sanitizer.bypassSecurityTrustResourceUrl('https://player.vimeo.com/video/391939808?autoplay=1');
+    this.url = this.sanitizer.bypassSecurityTrustResourceUrl('https://player.vimeo.com/video/410957544?autoplay=1');
     this.cover = !this.cover;
   }
 }

@@ -22,7 +22,7 @@ export class AuthQuery extends Query<AuthState> {
   }
 
   get orgId() {
-    return this.user.orgId;
+    return this.user?.orgId;
   }
 
   get requestedRoute() {

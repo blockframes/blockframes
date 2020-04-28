@@ -3,18 +3,17 @@ import { FormControl } from '@angular/forms';
 import {
   Component,
   ChangeDetectionStrategy,
-  OnInit,
-  OnDestroy
+  OnInit
 } from '@angular/core';
 // Blockframes
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 // RxJs
-import { Observable, Subscription } from 'rxjs';
-import { startWith, map, debounceTime, switchMap, distinctUntilChanged, pluck, filter } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { startWith, map, debounceTime, switchMap, distinctUntilChanged, pluck } from 'rxjs/operators';
 // Others
 import { sortMovieBy } from '@blockframes/utils/akita-helper/sort-movie-by';
-import { MovieService } from '@blockframes/movie/+state';
 import { MovieSearchForm } from '@blockframes/movie/form/search.form';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
   selector: 'catalog-movie-search',
@@ -22,8 +21,7 @@ import { MovieSearchForm } from '@blockframes/movie/form/search.form';
   styleUrls: ['./search.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MarketplaceSearchComponent implements OnInit, OnDestroy {
-  private sub: Subscription;
+export class MarketplaceSearchComponent implements OnInit {
   public movieSearchResults$: Observable<any>;
 
   public sortByControl: FormControl = new FormControl('Title');
@@ -31,35 +29,34 @@ export class MarketplaceSearchComponent implements OnInit, OnDestroy {
 
   public filterForm = new MovieSearchForm();
 
-  constructor(
-    private movieService: MovieService,
-    private movieQuery: MovieQuery,
-  ) { }
+  constructor(private movieQuery: MovieQuery, private dynTitle: DynamicTitleService) { }
 
   ngOnInit() {
-    this.sub = this.movieService.syncCollection(ref => ref.limit(30)).subscribe();
-
+       // Immplcity we only want accepted movies
+    this.filterForm.storeConfig.add('accepted');
+    this.dynTitle.setPageTitle('Titles')
     this.movieSearchResults$ = this.filterForm.valueChanges.pipe(
       debounceTime(300),
-      filter(() => !this.filterForm.isEmpty()),
       distinctUntilChanged(),
       switchMap(() => this.filterForm.search()),
       pluck('hits'),
       map(result => result.map(movie => movie.objectID)),
 
       // join retrieved movieIds from algolia with the movies from the state
-      switchMap(movieIds => this.movieQuery.selectAll({
-        filterBy: movie => movieIds.includes(movie.id),
-        sortBy: (a, b) => sortMovieBy(a, b, this.sortByControl.value),
-      })),
-
-      // display the first 10 movies from the state (no useless queries)
-      // prevent the user to see an empty page at the beginning
-      startWith(this.movieQuery.getAll()),
-    );
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
+      switchMap(movieIds => {
+        // If empty get all the movies from akita
+        if (!this.filterForm.isEmpty()) {
+          return this.movieQuery.selectAll({
+            filterBy: movie => movieIds.includes(movie.id),
+            sortBy: (a, b) => sortMovieBy(a, b, this.sortByControl.value),
+          })
+        } else {
+          return this.movieQuery.selectAll({
+            sortBy: (a, b) => sortMovieBy(a, b, this.sortByControl.value)
+          });
+        }
+      }),
+      startWith(this.movieQuery.getAll())
+    )
   }
 }

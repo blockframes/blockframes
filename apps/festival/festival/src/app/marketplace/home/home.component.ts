@@ -34,7 +34,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     private snackbar: MatSnackBar,
     private analytics: FireAnalytics,
     private catalogCartQuery: CatalogCartQuery,
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.sub = this.movieService.syncCollection(ref => ref.limit(30)).subscribe();
@@ -48,16 +48,12 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
     this.sections = [
       {
-        title: 'Pre Production Films',
+        title: 'New Films',
         subline: 'Discover our latest releases',
-        hasMovies$: hasMovies('financing'),
-        movies$: selectMovies('financing')
-      },
-      {
-        title: 'In Production Films',
-        subline: 'Discover our latest releases',
-        hasMovies$: hasMovies('shooting'),
-        movies$: selectMovies('shooting')
+        hasMovies$: this.movieQuery.hasMovies(movies => movies.main.productionYear >= 2018),
+        movies$: this.movieQuery.selectAll({
+          filterBy: movies => movies.main. productionYear >= 2018
+        })
       },
       {
         title: 'Post-Production Films',

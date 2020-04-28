@@ -56,6 +56,7 @@ export async function upgradeAlgoliaMovies() {
       'languages.caption',
       'originCountries',
       'status',
+      'storeConfig',
       'storeType',
     ],
   };

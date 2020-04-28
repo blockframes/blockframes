@@ -1,12 +1,17 @@
+// Angular
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 
+// Component
 import { ListComponent } from './list.component';
+
+// Blocfkrames
+import { TableFilterModule } from '@blockframes/ui/list/table-filter/table-filter.module';
 import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
+import { ToLabelModule } from '@blockframes/utils/pipes/to-label.module';
 
 // Material
 import { MatCardModule } from '@angular/material/card';
@@ -23,6 +28,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     FlexLayoutModule,
     TableFilterModule,
     ImgAssetModule,
+    ToLabelModule,
     // Material
     MatButtonModule,
     MatTabsModule,

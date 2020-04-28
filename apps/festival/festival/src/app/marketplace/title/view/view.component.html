@@ -1,36 +1,30 @@
-<movie-view [movie]="movie$ | async" [navLinks]="navLinks">
-  <movie-banner-aside fxLayout="column" fxLayoutAlign="start end" fxLayoutGap="24px">
-    <h6>Showtime</h6>
-    <div class="events" fxLayout="column" fxLayoutGap="8px">
-      <mat-chip *ngFor="let event of events">{{ event | date: 'long' }}</mat-chip>
-    </div>
-    <button mat-button>
-      <span>Ask for an invitation</span>
-      <mat-icon svgIcon="calendar"></mat-icon>
-    </button>
-  </movie-banner-aside>
-  
-  <movie-banner-actions fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="16px">
-    <ng-container *ngFor="let org of orgs$ | async">
-      <a class="organization" [routerLink]="['../../organization', org.id]">
-        <img [imgRef]="org.logo" placeholderAsset="empty_organization.webp" alt="Seller image"/>
-        <span class="mat-body-1">{{ org.denomination.full }}</span>
-      </a>
-    </ng-container>
-    <button mat-flat-button color="primary">
-      <span>Get in Touch</span>
-      <mat-icon svgIcon="arrow_forward"></mat-icon>
-    </button>
-    <ng-container *ngIf="(toggle$ | async); else alreadyAdded">
-      <button mat-icon-button color="accent" (click)="removeFromWishlist()">
-        <mat-icon svgIcon="heart_fill"></mat-icon>
-      </button>
-    </ng-container>
-    <ng-template #alreadyAdded>
-      <button mat-icon-button color="accent" (click)="addToWishlist()">
-        <mat-icon svgIcon="heart_outline"></mat-icon>
-      </button>
-    </ng-template>
-  </movie-banner-actions>
-
-</movie-view>
+<ng-container *ngIf="movie$ | async as movie">
+  <movie-view [navLinks]="navLinks">
+    <movie-header [movie]="movie">
+      <movie-header-cta fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="16px">
+        <ng-container *ngFor="let org of orgs$ | async">
+          <a class="organization" [routerLink]="['../../organization', org.id]">
+            <img [imgRef]="org.logo" placeholderAsset="empty_organization.webp" alt="Seller image" />
+            <span class="mat-body-1">{{ org.denomination.full }}</span>
+          </a>
+          <a mat-stroked-button color="primary" [href]="'mailto:' + org.email">
+            <span>Contact Sales Agent</span>
+            <mat-icon svgIcon="arrow_forward"></mat-icon>
+          </a>
+        </ng-container>
+        <ng-container *ngIf="(toggle$ | async); else alreadyAdded">
+          <button mat-icon-button color="accent" (click)="removeFromWishlist()">
+            <mat-icon svgIcon="heart_fill"></mat-icon>
+            <span>Added to Wishlistt</span>
+          </button>
+        </ng-container>
+        <ng-template #alreadyAdded>
+          <button mat-icon-button color="accent" (click)="addToWishlist()">
+            <mat-icon svgIcon="heart_outline"></mat-icon>
+            <span>Add to Wishlistt</span>
+          </button>
+        </ng-template>
+      </movie-header-cta>
+    </movie-header>
+  </movie-view>
+</ng-container>
