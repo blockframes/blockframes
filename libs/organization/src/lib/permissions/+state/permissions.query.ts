@@ -37,8 +37,8 @@ export class PermissionsQuery extends QueryEntity<PermissionsState, Permissions>
   }
 
   /** Checks if the user is admin of his organization. */
-  public isUserAdmin(userId: string): boolean {
-    return this.getActive().roles[userId] === 'admin';
+  public isUserAdmin(userId: string = this.auth.userId): boolean {
+    return this.getActive().roles[userId] === 'admin' || this.isUserSuperAdmin(userId);
   }
 
   /** Checks if the user is superAdmin of his organization. */

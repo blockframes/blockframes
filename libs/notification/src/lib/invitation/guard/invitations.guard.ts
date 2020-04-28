@@ -4,7 +4,6 @@ import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { InvitationState } from '../+state/invitation.store';
 import { InvitationService } from '../+state/invitation.service';
 import { switchMap } from 'rxjs/operators';
-import { combineLatest } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 @CollectionGuardConfig({ awaitSync: false })
@@ -16,10 +15,7 @@ export class InvitationGuard extends CollectionGuard<InvitationState> {
   /** This sync on invitations where userId is the same as the connected user id */
   sync() {
     return this.authQuery.user$.pipe(
-      switchMap(user => combineLatest([
-        this.service.syncCollection(ref => ref.where('toUser.uid', '==', user.uid)),
-        this.service.syncCollection(ref => ref.where('toUser.email', '==', user.email)),
-      ]))
+      switchMap(user => this.service.syncCollection(ref => ref.where('toUser.uid', '==', user.uid)))
     );
   }
 }

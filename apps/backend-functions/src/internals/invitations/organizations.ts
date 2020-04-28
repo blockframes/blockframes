@@ -90,7 +90,7 @@ async function onInvitationToOrgCreate({ toUser }: InvitationFromOrganizationToU
     return;
   }
 
-  // @TODO (#2539) Not implemented
+  // @TODO (#2539) Not implemented @see userInviteToOrg template
 }
 
 /** Updates the user, orgs, and permissions when the user accepts an invitation to an organization. */

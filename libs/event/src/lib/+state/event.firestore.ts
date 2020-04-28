@@ -7,13 +7,16 @@ type Timestamp = firestore.Timestamp;
 // Event types
 export type EventTypes = 'standard' | 'meeting' | 'screening' | 'local';
 export type EventMeta = Meeting | Screening | {};
+
 export interface Meeting {
   callUrl: string;
 }
+
 export interface Screening {
   /** A screening session can have one title */
   titleId: string;
 }
+
 export interface EventBase<D extends Timestamp | Date, Meta extends EventMeta = any> {
   id: string;
   /** @dev The id of the owner. Can be a user or an organisation given the event.type **/

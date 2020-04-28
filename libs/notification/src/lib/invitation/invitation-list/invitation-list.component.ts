@@ -46,7 +46,7 @@ export class InvitationListComponent implements OnInit, OnDestroy {
       syncs.push(this.service.syncCollection(queryFn1, { storeName }));
       syncs.push(this.service.syncCollection(queryFn2, { storeName }));
 
-      if(this.permissionQuery.isUserAdmin || this.permissionQuery.isUserAdmin ){
+      if(this.permissionQuery.isUserAdmin()){
         const queryFn3 = ref => ref.where('toOrg.id', '==', this.authQuery.orgId).where('status', '==', 'pending');
         const queryFn4 = ref => ref.where('fromOrg.id', '==', this.authQuery.orgId).where('status', '==', 'pending');
         syncs.push(this.service.syncCollection(queryFn3, { storeName }));
