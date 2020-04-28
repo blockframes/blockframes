@@ -25,7 +25,7 @@ import { onContractWrite } from './contract';
 import * as privateConfig from './privateConfig';
 import { createNotificationsForEventsToStart } from './internals/invitations/events';
 import { onFileUploadEvent } from './internals/resize-images';
-import { getPrivateVideoUrl } from './player';
+import { getPrivateVideoUrl, uploadToJWPlayer } from './player';
 
 /**
  * Trigger: when user creates an account.
@@ -79,8 +79,7 @@ export const getEventAnalytics = functions.https.onCall(logErrors(bigQuery.reque
 
 export const privateVideo  = functions.https.onCall(logErrors(getPrivateVideoUrl));
 
-// TODO issue#2643
-// export const uploadVideo  = functions.https.onCall(logErrors(uploadToJWPlayer));
+export const uploadVideo  = functions.https.onCall(logErrors(uploadToJWPlayer));
 
 /**
  * Trigger: REST call to the /admin app

@@ -1,24 +1,23 @@
 import { CallableContext } from 'firebase-functions/lib/providers/https';
-import { db } from './internals/firebase';
+import { db, admin } from './internals/firebase';
 import { EventDocument, EventMeta } from '@blockframes/event/+state/event.firestore';
 import { isUserInvitedToScreening } from './internals/invitations/events';
 import { MovieDocument } from './data/types';
-import { jwplayerSecret } from './environments/environment';
+import { jwplayerSecret, jwplayerKey } from './environments/environment';
 import { createHash } from 'crypto';
+import { firestore } from 'firebase'
 
-// TODO issue#2643
 // No typing
-// const JWPlayerApi = require('jwplatform');
+const JWPlayerApi = require('jwplatform');
 
 interface ReadVideoParams {
   eventId: string;
 }
 
-// TODO issue#2643
-// interface UploadVideoParams {
-//   fileName: string;
-//   movieId: string;
-// }
+interface UploadVideoParams {
+  fileName: string;
+  movieId: string;
+}
 
 interface ErrorResultResponse {
   error: string;
@@ -48,7 +47,7 @@ export const getPrivateVideoUrl = async (
     };
   }
 
-  const event = eventSnapshot.data()! as EventDocument<EventMeta>;
+  const event = eventSnapshot.data() as EventDocument<EventMeta>;
 
   if (event.type !== 'screening') {
     return {
@@ -57,17 +56,16 @@ export const getPrivateVideoUrl = async (
     };
   }
 
-  const now = new Date();
-  const end = event.end.toDate(); // we will need it bellow
+  const now = firestore.Timestamp.now();
 
-  if (now < event.start.toDate()) {
+  if (now.seconds < event.start.seconds) {
     return {
       error: 'TOO_EARLY',
       result: `The event ${data.eventId} hasn't started yet`
     };
   }
 
-  if (now > end) {
+  if (now.seconds > event.end.seconds) {
     return {
       error: 'TOO_LATE',
       result: `The event ${data.eventId} is finished`
@@ -103,12 +101,15 @@ export const getPrivateVideoUrl = async (
     };
   }
 
-  const toSign = `videos/${movie.hostedVideo}.mp4:${end.getTime()}:${jwplayerSecret}`;
+  // TODO right now we are creating a link that expires at the end of the event
+  // TODO we should discuss with François and Vincent of the best strategy for the expiring time of links
+
+  const toSign = `videos/${movie.hostedVideo}.mp4:${event.end.seconds}:${jwplayerSecret}`;
   const md5 = createHash('md5');
 
   const signature = md5.update(toSign).digest('hex');
 
-  const signedUrl = `http://cdn.jwplayer.com/videos/${movie.hostedVideo}.mp4?exp=${end.getTime()}&sig=${signature}`;
+  const signedUrl = `http://cdn.jwplayer.com/videos/${movie.hostedVideo}.mp4?exp=${event.end.seconds}&sig=${signature}`;
 
   return {
     error: '',
@@ -116,54 +117,67 @@ export const getPrivateVideoUrl = async (
   };
 }
 
+export const uploadToJWPlayer = async (
+  data: UploadVideoParams,
+  context: CallableContext
+): Promise<ErrorResultResponse> => {
 
-// TODO this function is used to upload a video from Firebase storage to JWPlayer
-// TODO The code should work fine but it throw a Google Cloud Billing related error
-// TODO We are waiting for the Google support
-// TODO With Vincent we decided to postpone this function as it can be done by hand at the beginning
-// TODO see issue#2643
+  if (!data.fileName) {
+    throw new Error(`No 'fileName' params, this parameter is mandatory !`);
+  }
 
-// export const uploadToJWPlayer = async (
-//   data: UploadVideoParams,
-//   context: CallableContext
-// ): Promise<ErrorResultResponse> => {
+  if (!data.movieId) {
+    throw new Error(`No 'movieId' params, this parameter is mandatory !`);
+  }
 
-//   if (!data.fileName) {
-//     throw new Error(`No 'fileName' params, this parameter is mandatory !`);
-//   }
+  const movieRef = db.collection('movies').doc(data.movieId);
+  const movieSnap = await movieRef.get();
 
-  // if (!data.movieId) {
-  //   throw new Error(`No 'movieId' params, this parameter is mandatory !`);
-  // }
+  if (!movieSnap.exists){
+    return {
+      error: 'UNKOWN_MOVIE',
+      result: `There is no movie with id ${data.movieId}`
+    }
+  }
 
-  // if (!context.auth) {
-  //   throw new Error(`Unauthorized call !`);
-  // }
+  if (!context.auth) {
+    throw new Error(`Unauthorized call !`);
+  }
 
   // TODO perform further check to see if user is authorized to upload a video for a given movie
 
-  // const storage = admin.storage();
-  // const videoFile = await storage.bucket('uploads').file(data.fileName);
+  const storage = admin.storage();
+  const videoFile = await storage.bucket().file(`uploads/${data.fileName}`);
+  const [exists] =  await videoFile.exists(); // this line throw an unexpected Error
 
-  // const [exists] =  await videoFile.exists(); // this line throw an unexpected Error
+  if (!exists) {
+    return {
+      error: 'UNKOWN_FILE',
+      result: `There is no file stored with the name ${data.fileName}`
+    }
+  }
 
-  // if (!exists) {
-    // return {
-      // error: 'UNKOWN_FILE',
-      // result: `There is no file stored with the name ${data.fileName}`
-    // }
-  // }
+  // it's better to use Date here instead of firestore.Timestamp since
+  // this value will be fed back to 'new Date()' inside the Google system
+  // using firestore.Timestamp was causing error about the date being in the past
+  const expires = new Date().getTime() + 7200000; // now + 2 hours
 
-  // const expires = new Date().getTime() + 7200000; // now + 2 hours
+  const [videoUrl] = await videoFile.getSignedUrl({action: 'read', expires});
 
-  // const [videoUrl] = await videoFile.getSignedUrl({action: 'read', expires});
-  // console.log('*** signed url', videoUrl);
+  const jw = new JWPlayerApi({apiKey: jwplayerKey, apiSecret: jwplayerSecret});
+  const result = await jw.videos.create({download_url: videoUrl});
 
-  // const jw = new JWPlayerApi({apiKey: jwplayerKey, apiSecret: jwplayerSecret});
-  // const result = await jw.videos.create({download_url: qsdzqdq});
+  if (result.status === 'error' || !result.video || !result.video.key) {
+    return {
+      error: 'JWPLAYER-ERROR',
+      result: result
+    }
+  }
 
-  // return {
-  //   error: '',
-  //   result: 'OK'
-  // }
-// }
+  await movieRef.update({hostedVideo: result.video.key});
+
+  return {
+    error: '',
+    result: 'OK'
+  }
+}

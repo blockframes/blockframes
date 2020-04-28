@@ -78,8 +78,8 @@ const routes: Routes = [{
             path: 'edit',
             loadChildren: () => import('./event/edit/edit.module').then(m => m.EventEditModule)
           }, {
-            path: 'player',
-            loadChildren: () => import('@blockframes/event/layout/player/player.module').then(m => m.EventPlayerModule)
+            path: 'screening',
+            loadChildren: () => import('@blockframes/event/components/player/player.module').then(m => m.EventPlayerModule)
           }]
         }]
       }
