@@ -36,7 +36,7 @@ export function createInvitation(params: Partial<Invitation> = {}): Invitation {
     type: null,
     docId: '',
     status: 'pending',
-    date: firestore.Timestamp.now(),
+    date: new Date(),
     ...params,
   };
   if (params.fromOrg) {

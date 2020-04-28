@@ -49,8 +49,8 @@ export class MemberComponent implements OnInit {
     this.isSuperAdmin$ = this.permissionQuery.isSuperAdmin$;
     const id = this.query.getActiveId();
 
-    const queryFn1 = ref => ref.where('fromOrg.id', '==', id).where('status', '==', 'pending').where('type', '==', 'fromOrganizationToUser');
-    const queryFn2 = ref => ref.where('toOrg.id', '==', id).where('status', '==', 'pending').where('type', '==', 'fromUserToOrganization');
+    const queryFn1 = ref => ref.where('fromOrg.id', '==', id).where('status', '==', 'pending').where('type', '==', 'joinOrganization');
+    const queryFn2 = ref => ref.where('toOrg.id', '==', id).where('status', '==', 'pending').where('type', '==', 'joinOrganization');
 
     this.invitationsFromOrganization$ = this.invitationService.valueChanges(queryFn1);
     this.invitationsToJoinOrganization$ = this.invitationService.valueChanges(queryFn2);

@@ -41,13 +41,6 @@ export class InvitationService extends CollectionService<InvitationState> {
     return cleanInvitation(invitation);
   }
 
-  formatToFirestore(invitation: Invitation) {
-    for (const key in invitation) {
-      if (typeof invitation[key] === 'undefined') delete invitation[key];
-    }
-    return invitation;
-  }
-
   /** Create an Invitation when a user asks to join an Organization. */
   public async sendInvitationToOrg(organizationId: string) {
     const organization = await this.orgService.getValue(organizationId);

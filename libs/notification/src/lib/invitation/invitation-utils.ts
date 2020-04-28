@@ -7,12 +7,13 @@ import { Invitation } from "./+state/invitation.model";
  */
 export function getInvitationMessage(invitation: Invitation, isForMe: boolean) {
   switch (invitation.type) {
-    case 'fromUserToOrganization':
-      // TODO #1140 Put message in an other file dedicated to that
-      return `${invitation.fromUser.firstName} ${invitation.fromUser.lastName} wants to join your organization`;
-    case 'fromOrganizationToUser':
-      return `Your organization sent an invitation to this user email: ${invitation.toUser.email}`;
-    case 'event':
+    case 'joinOrganization':
+      if (invitation.mode === 'request') {
+        return `${invitation.fromUser.firstName} ${invitation.fromUser.lastName} wants to join your organization`;
+      } else {
+        return `Your organization sent an invitation to this user email: ${invitation.toUser.email}`;
+      }
+    case 'attendEvent':
       if (isForMe) {
         if (invitation.mode === 'request') {
           let from;
@@ -35,8 +36,11 @@ export function getInvitationMessage(invitation: Invitation, isForMe: boolean) {
  * Cleans an invitation of its optional parameters
  * @param invitation 
  */
-export function cleanInvitation(invitation: Invitation) : Invitation {
+export function cleanInvitation(invitation: Invitation): Invitation {
   const i = { ...invitation };
   delete i.message; // Remove akita values
+  for (const key in i) {
+    if (typeof i[key] === 'undefined') delete i[key];
+  }
   return i;
 }
