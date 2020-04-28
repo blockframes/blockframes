@@ -41,10 +41,9 @@ export class NotificationQuery extends QueryEntity<NotificationState, Notificati
     }).pipe(
       map(notifications => {
         return notifications.reduce((acc, notification) => {
-          const date = toDate(notification.date);
           // As Date cannot be used as an index type (key), we format the date into a string.
-          const key = isToday(date) ? 'Today'
-            : isYesterday(date) ? 'Yesterday'
+          const key = isToday(notification.date) ? 'Today'
+            : isYesterday(notification.date) ? 'Yesterday'
               : formatDate(notification.date, 'MM M dd, yyyy', 'en-US');
           const notif = {
             ...notification,
