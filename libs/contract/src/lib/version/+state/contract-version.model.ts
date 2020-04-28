@@ -22,7 +22,7 @@ export function createContractVersionFromFirestore(contractVersion: any): Contra
   }
 
   if (contractVersion.creationDate) {
-    contractVersion.creationDate = toDate(contractVersion.creationDate);
+    contractVersion.creationDate = toDate(contractVersion.creationDate['seconds']);
   }
 
   return contractVersion as ContractVersion;

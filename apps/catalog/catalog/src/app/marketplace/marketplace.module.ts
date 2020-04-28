@@ -1,15 +1,18 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { CatalogCartGuard } from '@blockframes/cart/guards/catalog-cart-list.guard';
-import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 import { LayoutComponent } from './layout/layout.component';
 import { LayoutModule } from './layout/layout.module';
+
+// Guards
+import { CatalogCartGuard } from '@blockframes/cart/guards/catalog-cart-list.guard';
 import { TunnelGuard } from '@blockframes/ui/tunnel';
 import { ContractsRightListGuard } from '@blockframes/distribution-rights/guards/contracts-right-list.guard';
+import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 import { MovieListContractListGuard } from '@blockframes/movie/guards/movie-contract.guard';
 import { OrganizationContractListGuard } from '@blockframes/contract/contract/guards/organization-contract-list.guard';
 import { ActiveContractGuard } from '@blockframes/contract/contract/guards/active-contract.guard';
+import { MovieCollectionGuard } from '@blockframes/movie/guards/movie-collection.guard';
 
 const routes: Routes = [{
   path: '',
@@ -38,6 +41,12 @@ const routes: Routes = [{
     },
     {
       path: 'search',
+      /**
+       *  If we are coming from different routes inside marketpalce
+       * and they set one movie active, we need to reset that to get all of them back
+       */
+      canActivate: [MovieCollectionGuard],
+      canDeactivate: [MovieCollectionGuard],
       loadChildren: () => import('./movie/search/search.module').then(m => m.MarketplaceSearchModule)
     },
     {
@@ -71,7 +80,7 @@ const routes: Routes = [{
         canActivate: [OrganizationContractListGuard, ContractsRightListGuard, MovieListContractListGuard],
         canDeactivate: [OrganizationContractListGuard, ContractsRightListGuard, MovieListContractListGuard],
         loadChildren: () => import('./right/list/list.module').then(m => m.RightListModule),
-      },{
+      }, {
         path: ':contractId',
         canActivate: [ActiveContractGuard],
         canDeactivate: [ActiveContractGuard],
@@ -108,4 +117,4 @@ const routes: Routes = [{
 @NgModule({
   imports: [LayoutModule, RouterModule.forChild(routes)]
 })
-export class MarketplaceModule {}
+export class MarketplaceModule { }

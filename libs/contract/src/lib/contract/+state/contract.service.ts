@@ -15,7 +15,7 @@ import {
 import { ContractDocumentWithDates } from './contract.firestore';
 import { firestore } from 'firebase/app';
 import { Observable } from 'rxjs';
-import { cleanModel } from '@blockframes/utils/helpers';
+import { cleanModel, toDate } from '@blockframes/utils/helpers';
 import { map } from 'rxjs/internal/operators/map';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
 import { DistributionRight, createDistributionRight } from '@blockframes/distribution-rights/+state/distribution-right.model';
@@ -51,6 +51,13 @@ export class ContractService extends CollectionService<ContractState> {
    */
   formatToFirestore(contract: Contract): ContractDocumentWithDates {
     return cleanContract(contract);
+  }
+
+  formatFromFirestore(contract: Contract) {
+    contract.versions.forEach(version => {
+      version.creationDate = toDate(version.creationDate['seconds']);
+    })
+    return contract
   }
 
   /**
@@ -284,7 +291,7 @@ export class ContractService extends CollectionService<ContractState> {
     contract.lastVersion = { ...contract.lastVersion, status: 'submitted' }; // For read-only purposes
     this.update(contract, { write });
 
-    for (const titleId in contract.lastVersion.titles){
+    for (const titleId in contract.lastVersion.titles) {
       this.distributionRightService.update(
         contract.lastVersion.titles[titleId].distributionRightIds,
         { status: 'undernegotiation' },
