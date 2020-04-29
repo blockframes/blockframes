@@ -17,6 +17,7 @@ export class ContractsRightListGuard extends CollectionGuard<DistributionRightSt
   }
 
   /** Gets every distribution rights of contracts in the store. */
+  // TODO #2651
   sync() {
     return this.contractQuery.selectAll().pipe(
       switchMap(contracts => {
