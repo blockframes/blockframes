@@ -102,7 +102,7 @@ async function updateMovies(
   });
 }
 
-const update = (obj, fieldName) => {
+function update(obj, fieldName) {
   if (Array.isArray(obj)) {
     return obj.map(x => {
       const field = x[fieldName];
@@ -120,10 +120,6 @@ const update = (obj, fieldName) => {
   }
 }
 
-const updateAvatar = x => update(x, 'avatar')
-const updateLogo = x => update(x, 'logo')
-const updateMedia = x => update(x, 'media')
-
 /**
  * Create an ImgRef object
  * @param ref
@@ -135,3 +131,7 @@ function createNewImgRef(ref, url) {
     urls: { original: url || '' }
   };
 }
+
+const updateAvatar = x => update(x, 'avatar')
+const updateLogo = x => update(x, 'logo')
+const updateMedia = x => update(x, 'media')

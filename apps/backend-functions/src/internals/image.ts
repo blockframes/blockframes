@@ -50,6 +50,7 @@ async function resize(data: functions.storage.ObjectMetadata) {
     return false;
   }
   const directory = dirname(filePath);
+  console.log('DIRECTORY NAME = ', directory)
   const workingDir = join(tmpdir(), 'tmpFiles');
   const tmpFilePath = join(workingDir, 'source.webp');
 
@@ -58,17 +59,21 @@ async function resize(data: functions.storage.ObjectMetadata) {
   await bucket.file(filePath).download({ destination: tmpFilePath });
 
   // Define the sizes (here width) depending of the image format (defined by the directory)
-  let sizes: number[];
+  let sizes: {
+    xs: number,
+    md: number,
+    lg: number
+  }
 
   // TODO#2603 Set resized images width depending of their directory
   if (directory === 'avatar' || directory === 'logo') {
-    sizes = [50, 100, 300];
+    sizes = { xs: 50, md: 100, lg: 300 };
   } else if (directory.endsWith('poster')) {
-    sizes = [200, 400, 600];
+    sizes = { xs: 200, md: 400, lg: 600 };
   } else if (directory.endsWith('banner')) {
-    sizes = [300, 600, 1200];
+    sizes = { xs: 300, md: 600, lg: 1200 };
   } else if (directory.endsWith('still')) {
-    sizes = [50, 100, 200];
+    sizes = { xs: 50, md: 100, lg: 200 };
   } else {
     console.warn('No bucket directory, exiting function');
     return false;
@@ -77,7 +82,7 @@ async function resize(data: functions.storage.ObjectMetadata) {
 
 
   // Iterate on each item of sizes array to generate all wanted resized images
-  const uploadPromises = sizes.map(async size => {
+  const uploadPromises = Object.entries(sizes).map(async ([key, size]) => {
     // Define a new name with prefix 'bf@' to recognize already resized images in the future
     const resizedImgName = `bf@${fileName!.replace(/(\.[\w\d_-]+)$/i, '')}_${size.toString()}.webp`;
     const resizedImgPath = join(workingDir, resizedImgName);
@@ -87,7 +92,7 @@ async function resize(data: functions.storage.ObjectMetadata) {
 
     // Then upload the resized image on the bucket
     return bucket.upload(resizedImgPath, {
-      destination: join(directory, resizedImgName)
+      destination: join(directory, key, resizedImgName)
     })
   })
 

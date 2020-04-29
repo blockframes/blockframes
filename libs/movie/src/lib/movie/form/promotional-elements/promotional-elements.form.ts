@@ -1,8 +1,8 @@
 import { MoviePromotionalElements, PromotionalElement, createMoviePromotionalElements, createPromotionalElement } from '../../+state';
 import { FormControl } from '@angular/forms';
-import { createImgRefForm } from '@blockframes/utils/image-uploader';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { FormList } from '@blockframes/utils/form/forms/list.form';
+import { ImgRefForm } from '@blockframes/ui/media/image-reference/image-reference.form'
 
 // Promotional Element LINK
 
@@ -12,7 +12,7 @@ function createPromotionalElementLinkControl(promotionalElement?: Partial<Promot
     label: new FormControl(label),
     size: new FormControl(size),
     ratio: new FormControl(ratio),
-    media: new FormEntity(createImgRefForm(media)),
+    media: new ImgRefForm(media),
     language: new FormControl(language),
     country: new FormControl(country),
   }
@@ -34,7 +34,7 @@ function createPromotionalElementRefControl(promotionalElement?: Partial<Promoti
     label: new FormControl(label),
     size: new FormControl(size),
     ratio: new FormControl(ratio),
-    media: new FormEntity(createImgRefForm(media)),
+    media: new ImgRefForm(media),
     language: new FormControl(language),
     country: new FormControl(country),
   }

@@ -44,6 +44,7 @@ export class HeaderComponent {
     if (movie) {
       this.movie = movie;
       this.movieView = createMovieView(movie);
+      //TODO#2655: implement image-set directive to handle image size here
       this.background = `url(${this.movieView.banner.media.urls.original})`
     }
   }

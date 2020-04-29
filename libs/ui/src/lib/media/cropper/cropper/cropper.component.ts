@@ -188,7 +188,7 @@ export class CropperComponent implements ControlValueAccessor, OnDestroy {
       }
       this.nextStep('upload');
       this.fileName = sanitizeFileName(this.file.name).replace(/(\.[\w\d_-]+)$/i, '.webp');
-      this.ref = this.storage.ref(`${this.folder}/${this.fileName}`);
+      this.ref = this.storage.ref(`${this.folder}/original/${this.fileName}`);
       const blob = b64toBlob(this.croppedImage);
 
       this.percentage$ = this.ref.put(blob).percentageChanges().pipe(

@@ -51,7 +51,7 @@
     </div>
   </article>
   <article class="show" *ngSwitchCase="'show'" @finalZoom>
-    <ng-container *ngIf="urls">
+    <ng-container>
       <div class="show">
         <img class="croppedImage" [src]="urls.original$ | async" />
       </div>

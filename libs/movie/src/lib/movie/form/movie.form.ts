@@ -17,7 +17,7 @@ import { MovieLegalDocuments } from '../+state/movie.firestore';
 import { FormEntity, EntityControl } from '@blockframes/utils/form/forms/entity.form';
 import { FormList } from '@blockframes/utils/form/forms/list.form';
 import { createLanguageControl } from '@blockframes/movie/form/version-info/version-info.form';
-import { createImgRefForm } from '@blockframes/utils/image-uploader';
+import { ImgRefForm } from '@blockframes/ui/media/image-reference/image-reference.form';
 
 // LEGAL DOCUMENTS
 
@@ -26,7 +26,7 @@ function createLegalDocumentControl(legalDocument?: Partial<LegalDocument>) {
   return {
     id: new FormControl(id),
     label: new FormControl(label),
-    media: new FormEntity(createImgRefForm(media)),
+    media: new ImgRefForm(media),
     language: new FormStaticValue(language, 'LANGUAGES'),
     country: new FormStaticValue(country, 'TERRITORIES')
   };
