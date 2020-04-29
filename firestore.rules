@@ -243,7 +243,8 @@ service cloud.firestore {
         && isNotUpdatingField(['_type'])
         && (isNotUpdatingField(['main', 'storeConfig','status']) || incomingData().main.storeConfig.status in ['submitted', 'draft'])
         && isNotUpdatingField(['main', 'storeConfig','storeType'])
-        // @TODO (#2618) add new rules for appAccess
+        && isNotUpdatingField(['main', 'storeConfig','appAccess', 'catalog'])
+        && isNotUpdatingField(['main', 'storeConfig','appAccess', 'festival'])
         && orgCan('canUpdate', userOrgId(), movieId);
       allow delete: if orgCan('canDelete', userOrgId(), movieId)
       	&& isOrgAdmin(userId(), userOrgId());
