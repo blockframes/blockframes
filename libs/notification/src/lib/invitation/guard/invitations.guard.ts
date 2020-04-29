@@ -4,6 +4,7 @@ import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { InvitationState } from '../+state/invitation.store';
 import { InvitationService } from '../+state/invitation.service';
 import { switchMap } from 'rxjs/operators';
+import { of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 @CollectionGuardConfig({ awaitSync: false })
@@ -15,7 +16,11 @@ export class InvitationGuard extends CollectionGuard<InvitationState> {
   /** This sync on invitations where userId is the same as the connected user id */
   sync() {
     return this.authQuery.user$.pipe(
-      switchMap(user => this.service.syncCollection(ref => ref.where('toUser.uid', '==', user.uid)))
+      // If we logout we will need to make sure user exist, otherwise we get an error
+      switchMap(user => user?.uid
+        ? this.service.syncCollection(ref => ref.where('toUser.uid', '==', user.uid))
+        : of(true)
+      )
     );
   }
 }
