@@ -6,7 +6,6 @@ import { CollectionService, CollectionConfig } from 'akita-ng-fire';
 import { firestore } from 'firebase/app';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { Contract } from '@blockframes/contract/contract/+state/contract.model';
-import { Movie } from '@blockframes/movie/+state/movie.model';
 
 @Injectable({
   providedIn: 'root'
@@ -51,11 +50,11 @@ export class PermissionsService extends CollectionService<PermissionsState> {
    * @param write
    */
   public addDocumentPermissions(
-    doc: Movie | Contract,
-    write: firestore.WriteBatch,
+    docId: string,
+    write: firestore.Transaction,
     organizationId: string = this.organizationQuery.getActiveId()
   ) {
-    const documentPermissions = createDocPermissions({ id: doc.id, ownerId: organizationId });
+    const documentPermissions = createDocPermissions({ id: docId, ownerId: organizationId });
     const documentPermissionsRef = this.db.doc(`permissions/${organizationId}/documentPermissions/${documentPermissions.id}`).ref;
     write.set(documentPermissionsRef, documentPermissions);
   }

@@ -755,6 +755,7 @@
             "scripts": []
           },
           "configurations": {
+            "dev": {},
             "production": {
               "fileReplacements": [
                 {
