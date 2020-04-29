@@ -219,3 +219,27 @@ export async function createNotificationsForEventsToStart() {
 
   //return triggerNotifications([notification])
 }
+
+export async function isUserInvitedToScreening(userId: string, movieId: string) {
+
+  const acceptedInvitations = db.collection('invitations')
+    .where('docId', '==', movieId)
+    .where('toUser.uid', '==', userId)
+    .where('status', '==', 'accepted')
+    .where('mode', '==', 'invitation');
+
+  const acceptedRequests = db.collection('invitations')
+    .where('docId', '==', movieId)
+    .where('fromUser.uid', '==', userId)
+    .where('status', '==', 'accepted')
+    .where('mode', '==', 'request');
+
+  const [ invitations, requests ] = await Promise.all([
+    acceptedInvitations.get(),
+    acceptedRequests.get()
+  ]);
+
+  if (invitations.size === 0 && requests.size === 0) return false;
+
+  return true;
+}
