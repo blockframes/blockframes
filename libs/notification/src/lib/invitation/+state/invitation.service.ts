@@ -1,16 +1,13 @@
 import { Injectable } from '@angular/core';
 import { InvitationState, InvitationStore } from './invitation.store';
-import { createInvitationFromUserToOrganization, createInvitationFromOrganizationToUser, Invitation, createInvitation } from './invitation.model';
+import { Invitation, createInvitation } from './invitation.model';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
-import { OrganizationService, OrganizationQuery, Organization } from '@blockframes/organization/+state';
+import { OrganizationService, OrganizationQuery } from '@blockframes/organization/+state';
 import { AuthQuery, AuthService } from '@blockframes/auth/+state';
-import { UserService, PublicUser } from '@blockframes/user/+state';
-import { InvitationDocument, InvitationType, InvitationMode } from './invitation.firestore';
+import { UserService } from '@blockframes/user/+state';
+import { InvitationDocument } from './invitation.firestore';
 import { toDate } from '@blockframes/utils/helpers';
 import { getInvitationMessage, cleanInvitation } from '../invitation-utils';
-
-type SenderKey = 'fromUser' | 'toUser' | 'fromOrg' | 'toOrg';
-type Sender = Organization | PublicUser;
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'invitations' })
@@ -27,7 +24,7 @@ export class InvitationService extends CollectionService<InvitationState> {
   }
 
   formatFromFirestore(_invitation: InvitationDocument): Invitation {
-    const invitation ={
+    const invitation = {
       ..._invitation,
       date: toDate(_invitation.date)
     }
@@ -41,17 +38,6 @@ export class InvitationService extends CollectionService<InvitationState> {
     return cleanInvitation(invitation);
   }
 
-  /** Create an Invitation when a user asks to join an Organization. */
-  public async sendInvitationToOrg(organizationId: string) {
-    const organization = await this.orgService.getValue(organizationId);
-    const { uid, firstName, lastName, email } = this.authQuery.user;
-    const invitation = createInvitationFromUserToOrganization({
-      id: this.db.createId(),
-      toOrg: { id: organization.id, denomination: { full: organization.denomination.full }, logo: organization.logo },
-      fromUser: { uid, firstName, lastName, email }
-    });
-    return this.add(invitation);
-  }
 
 
 
@@ -80,7 +66,7 @@ export class InvitationService extends CollectionService<InvitationState> {
     );
   }
 
-  public isInvitationForMe(invitation: Invitation) : boolean {
+  public isInvitationForMe(invitation: Invitation): boolean {
     return invitation.toOrg?.id === this.authQuery.orgId || invitation.toUser?.uid === this.authQuery.userId
   }
 

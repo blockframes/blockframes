@@ -12,7 +12,7 @@ import { InvitationService } from '@blockframes/invitation/+state/invitation.ser
 })
 
 export class OrganizationFindComponent {
-  private orgID: string;
+  private orgId: string;
   public orgIndex = algolia.indexNameOrganizations;
 
   constructor(
@@ -22,13 +22,13 @@ export class OrganizationFindComponent {
   ) { }
 
   public updateValue(result: any) {
-    this.orgID = result.objectID;
+    this.orgId = result.objectID;
   }
 
   public async requestToJoinOrganization() {
-    if (this.orgID) {
+    if (this.orgId) {
       try {
-        await this.invitationService.sendInvitationToOrg(this.orgID);
+        await this.invitationService.request('org', this.orgId).from('user').to('joinOrganization', this.orgId);
         this.snackBar.open('Request sent !', 'close', { duration: 2000 });
         return this.router.navigate(['c/organization/join-congratulations']);
       } catch (error) {
