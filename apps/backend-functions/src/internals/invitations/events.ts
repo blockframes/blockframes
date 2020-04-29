@@ -20,6 +20,10 @@ async function onInvitationToAnEventCreate({
   mode,
   docId
 }: InvitationDocument) {
+  if(!docId){
+    console.log('docId is not defined');
+    return;
+  }
   const eventId = docId;
 
   // Fetch event
