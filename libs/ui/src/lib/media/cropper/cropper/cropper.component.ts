@@ -43,10 +43,10 @@ function b64toBlob(data: string) {
 
 /** Check if the path is a file path */
 function isFile(imgRef: ImgRef): boolean {
-  if (!imgRef || !imgRef.refs) {
+  if (!imgRef || !imgRef.ref) {
     return false;
   }
-  const part = imgRef.refs.original.split('.');
+  const part = imgRef.ref.split('.');
   const last = part.pop();
   return part.length >= 1 && !last.includes('/');
 }
@@ -64,12 +64,7 @@ function isFile(imgRef: ImgRef): boolean {
   }]
 })
 export class CropperComponent implements ControlValueAccessor, OnDestroy {
-  private refs: {
-    original: AngularFireStorageReference,
-    xs: AngularFireStorageReference,
-    md: AngularFireStorageReference,
-    lg: AngularFireStorageReference
-  }
+  private ref: AngularFireStorageReference;
   private folder: string;
   private fileName: string;
   private step: BehaviorSubject<CropStep> = new BehaviorSubject('drop');
@@ -123,15 +118,10 @@ export class CropperComponent implements ControlValueAccessor, OnDestroy {
     if (isFile(path)) {
       this.folder = this.storagePath;
 
-      this.refs = {
-        original: this.storage.ref(path.refs.original),
-        xs: null,
-        md: null,
-        lg: null
-      }
+      this.ref = this.storage.ref(path.ref)
 
       this.urls = {
-        original$: this.refs.original.getDownloadURL().pipe(
+        original$: this.ref.getDownloadURL().pipe(
           catchError(err => {
             this.nextStep('drop');
             return of('');
@@ -198,15 +188,10 @@ export class CropperComponent implements ControlValueAccessor, OnDestroy {
       }
       this.nextStep('upload');
       this.fileName = sanitizeFileName(this.file.name).replace(/(\.[\w\d_-]+)$/i, '.webp');
-      this.refs = {
-        original: this.storage.ref(`${this.folder}/${this.fileName}`),
-        xs: null,
-        md: null,
-        lg: null
-      }
+      this.ref = this.storage.ref(`${this.folder}/${this.fileName}`);
       const blob = b64toBlob(this.croppedImage);
 
-      this.percentage$ = this.refs.original.put(blob).percentageChanges().pipe(
+      this.percentage$ = this.ref.put(blob).percentageChanges().pipe(
         finalize(() => {
           this.nextStep('upload_complete')
         })
@@ -223,13 +208,6 @@ export class CropperComponent implements ControlValueAccessor, OnDestroy {
     await interval(4000);
     this.resizing = false;
 
-    this.refs = {
-      ...this.refs,
-      xs: this.storage.ref(this.resizedImgPath(this.sizes.xs)),
-      md: this.storage.ref(this.resizedImgPath(this.sizes.md)),
-      lg: this.storage.ref(this.resizedImgPath(this.sizes.lg))
-    }
-
     const firebaseRefs = {
       original: firebaseStorage().ref(`${this.folder}/${this.fileName}`),
       xs: firebaseStorage().ref(this.resizedImgPath(this.sizes.xs)),
@@ -237,18 +215,13 @@ export class CropperComponent implements ControlValueAccessor, OnDestroy {
       lg: firebaseStorage().ref(this.resizedImgPath(this.sizes.lg)),
     }
 
-    const metadatas = {
-      original: await firebaseRefs.original.getMetadata(),
-      xs: await firebaseRefs.xs.getMetadata(),
-      md: await firebaseRefs.md.getMetadata(),
-      lg: await firebaseRefs.lg.getMetadata(),
-    }
+    const metadata = await firebaseRefs.original.getMetadata();
 
     this.urls = {
-      original$: this.getDownloadUrl(this.refs.original),
-      xs$: this.getDownloadUrl(this.refs.xs),
-      md$: this.getDownloadUrl(this.refs.md),
-      lg$: this.getDownloadUrl(this.refs.lg),
+      original$: this.getDownloadUrl(this.ref),
+      xs$: this.getDownloadUrl(this.storage.ref(this.resizedImgPath(this.sizes.xs))),
+      md$: this.getDownloadUrl(this.storage.ref(this.resizedImgPath(this.sizes.md))),
+      lg$: this.getDownloadUrl(this.storage.ref(this.resizedImgPath(this.sizes.lg))),
     }
 
     this.sub = combineLatest(([
@@ -259,12 +232,7 @@ export class CropperComponent implements ControlValueAccessor, OnDestroy {
     ])).pipe(
       map(([original, xs, md, lg]) => this.uploaded(createImgRef({
         urls: { original, xs, md, lg},
-        refs: {
-          original: metadatas.original.fullPath,
-          xs: metadatas.xs.fullPath,
-          md: metadatas.md.fullPath,
-          lg: metadatas.lg.fullPath,
-        }
+        ref: metadata.fullPath
       })))
     ).subscribe();
 
@@ -285,7 +253,7 @@ export class CropperComponent implements ControlValueAccessor, OnDestroy {
   */
 
   delete() {
-    this.refs.original.delete().subscribe(() => {
+    this.ref.delete().subscribe(() => {
       this.deleted()
       this.nextStep('drop');
     });

@@ -131,7 +131,7 @@ const updateMedia = x => update(x, 'media')
  */
 function createNewImgRef(ref, url) {
   return {
-    refs: { original: ref || '' },
+    ref: ref || '',
     urls: { original: url || '' }
   };
 }

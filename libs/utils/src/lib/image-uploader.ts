@@ -5,13 +5,8 @@ import { sanitizeFileName } from "./file-sanitizer";
 import { FormGroup, FormControl } from "@angular/forms";
 
 export interface ImgRef {
+  ref: string;
   urls: {
-    original: string,
-    xs?: string,
-    md?: string,
-    lg?: string
-  };
-  refs: {
     original: string,
     xs?: string,
     md?: string,
@@ -20,15 +15,10 @@ export interface ImgRef {
 }
 
 export function createImgRef(ref: Partial<ImgRef> | string = {}): ImgRef {
-  const _ref = typeof ref === 'string' ? { url: ref, originalFileName: ref } : ref;
+  const _ref = typeof ref === 'string' ? { urls: { original : ref } } : ref;
   return {
+    ref: '',
     urls: {
-      original: '',
-      xs: '',
-      md: '',
-      lg: ''
-    },
-    refs: {
       original: '',
       xs: '',
       md: '',
@@ -39,7 +29,7 @@ export function createImgRef(ref: Partial<ImgRef> | string = {}): ImgRef {
 }
 
 export function createImgRefForm(reference?: Partial<ImgRef>) {
-  const { urls, refs } = createImgRef(reference);
+  const { ref, urls } = createImgRef(reference);
   return {
     urls: new FormGroup({
       original: new FormControl(urls.original),
@@ -47,12 +37,7 @@ export function createImgRefForm(reference?: Partial<ImgRef>) {
       md: new FormControl(urls.md),
       lg: new FormControl(urls.lg)
     }),
-    refs: new FormGroup({
-      original: new FormControl(refs.original),
-      xs: new FormControl(refs.xs),
-      md: new FormControl(refs.md),
-      lg: new FormControl(refs.lg)
-    }),
+    ref: new FormControl(ref)
   }
 }
 
@@ -75,7 +60,7 @@ export class ImageUploader {
       const snapshot = await this.afStorage.upload(`${afPath}/${sanitizeFileName(imageUrl)}`, data);
       const url = await snapshot.ref.getDownloadURL();
       const meta = await snapshot.ref.getMetadata();
-      return createImgRef({ urls: { original: url }, refs: { original: meta.fullPath} });
+      return createImgRef({ urls: { original: url }, ref: meta.fullPath });
     } catch (error) {
       return;
     }
