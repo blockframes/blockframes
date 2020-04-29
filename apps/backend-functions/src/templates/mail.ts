@@ -115,36 +115,36 @@ export function userRequestedToJoinYourOrg(request: RequestToJoinOrganization): 
 }
 
 /** Generates an email for user invited to an meeting event. */
-export function invitationToMeetingFromUser(toUserFirstName: string, fromUser: PublicUser, fromUserOrgName: string, eventName: string): EmailTemplateRequest {
+export function invitationToMeetingFromUser(toUserFirstName: string, fromUser: PublicUser, fromUserOrgName: string, eventName: string, link: string): EmailTemplateRequest {
   const data = {
     userFirstName: toUserFirstName,
     fromUserFirstName: fromUser.firstName,
     orgName: fromUserOrgName,
     eventName: eventName,
-    // pageURL: `${appUrl}/${link}`
+    pageURL: `${appUrl}/${link}`
   };
   return { to: fromUser.email, templateId: templateIds.invitationToMeetingFromUser, data };
 }
 
 /** Generates an email for user invited by an organization to a screening. */
-export function invitationToScreeningFromOrg(toUser: PublicUser, orgDenomination: string, eventId: string): EmailTemplateRequest {
+export function invitationToScreeningFromOrg(toUser: PublicUser, orgDenomination: string, eventId: string, link: string): EmailTemplateRequest {
   const data = {
     userFirstName: toUser.firstName,
     orgName: orgDenomination,
     eventName: eventId,
-    // pageURL: `${appUrl}/${link}`
+    pageURL: `${appUrl}/${link}`
   };
   return { to: toUser.email, templateId: templateIds.invitationToMeetingFromUser, data };
 }
 
 /** Generates an email for user requesting to attend an event. */
-export function requestToAttendEventFromUser(fromUserFirstname: string, fromUserOrgName: string, toUser: PublicUser, eventTitle: string): EmailTemplateRequest {
+export function requestToAttendEventFromUser(fromUserFirstname: string, fromUserOrgName: string, toUser: PublicUser, eventTitle: string, link: string): EmailTemplateRequest {
   const data = {
     adminFirstName: toUser.firstName,
     userFirstName: fromUserFirstname,
     orgName: fromUserOrgName,
     eventName: eventTitle,
-    // pageURL: `${appUrl}/${link}`
+    pageURL: `${appUrl}/${link}`
   };
   return { to: toUser.email, templateId: templateIds.invitationToMeetingFromUser, data };
 }
