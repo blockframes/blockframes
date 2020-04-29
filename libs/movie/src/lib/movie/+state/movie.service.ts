@@ -58,7 +58,7 @@ export class MovieService extends CollectionService<MovieState> {
     const userId = movie._meta?.createdBy ? movie._meta.createdBy : this.authQuery.userId;
     const user = await this.userService.getUser(userId);
 
-    // Organization is updated in the backend-function to add the movie ID to the org
+    await this.orgService.update(user.orgId, (org) => ({ movieIds: [...org.movieIds, movie.id] }), { write })
     return this.permissionsService.addDocumentPermissions(movie.id, write as firestore.Transaction, user.orgId);
   }
 

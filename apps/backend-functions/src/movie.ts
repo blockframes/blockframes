@@ -61,8 +61,6 @@ export async function onMovieCreate(
     await storeSearchableMovie(movie, organization.denomination.full);
 
     return Promise.all([
-      // Update the organization's movieIds with the new movie id.
-      tx.update(organizationSnap.ref, { movieIds: [...organization.movieIds, movie.id] }),
       // Send notifications about this new movie to each organization member.
       triggerNotifications(notifications)
     ]);
