@@ -20,9 +20,9 @@ export class MediaImageComponent {
   }
 
   public movie = this.movieQuery.getActive();
-  public bannerPath = `movie/${this.movie.id}/banner`;
-  public posterPath = `movie/${this.movie.id}/poster`;
-  public stillPath = `movie/${this.movie.id}/still`;
+  public bannerPath = `movies/${this.movie.id}/promotionalElements.banner`;
+  public posterPath = `movies/${this.movie.id}/poster`;
+  public stillPath = `movies/${this.movie.id}/still`;
 
   get promotionalElements() {
     return this.form.get('promotionalElements')

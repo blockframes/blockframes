@@ -5,12 +5,10 @@ import { finalize, catchError, map } from 'rxjs/operators';
 import { Observable, BehaviorSubject, of, Subscription, combineLatest } from 'rxjs';
 import { zoom, zoomDelay, check, finalZoom } from '@blockframes/utils/animations/cropper-animations';
 import { AngularFireStorage, AngularFireStorageReference } from '@angular/fire/storage';
-/*import { HttpClient } from '@angular/common/http';*/
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { ImgRef, createImgRef } from '@blockframes/utils/image-uploader';
 import { sanitizeFileName } from '@blockframes/utils/file-sanitizer';
-import { storage as firebaseStorage } from 'firebase';
-import { interval } from '@blockframes/utils/helpers';
+import { delay } from '@blockframes/utils/helpers';
 
 type CropStep = 'drop' | 'crop' | 'upload' | 'upload_complete' | 'show';
 
@@ -69,23 +67,13 @@ export class CropperComponent implements ControlValueAccessor, OnDestroy {
   private fileName: string;
   private step: BehaviorSubject<CropStep> = new BehaviorSubject('drop');
   private sub = new Subscription;
-  private sizes: {
-    xs: number,
-    md: number,
-    lg: number
-  };
   step$ = this.step.asObservable();
   file: File;
   croppedImage: string;
   cropRatio: string;
   parentWidth: number;
   prev: CropStep;
-  urls: {
-    original$: Observable<string | null>,
-    xs$: Observable<string | null>,
-    md$: Observable<string | null>,
-    lg$: Observable<string | null>
-  };
+  previewUrl: Observable<string | null>;
   percentage$: Observable<number>;
   resizing = false;
 
@@ -115,40 +103,20 @@ export class CropperComponent implements ControlValueAccessor, OnDestroy {
 
   //  Triggered when the parent form field is initialized or updated (parent -> component)
   writeValue(path: ImgRef): void {
-    if (isFile(path)) {
+    if (isFile(path) && !this.previewUrl) {
       this.folder = this.storagePath;
-
-      this.ref = this.storage.ref(path.ref)
-
-      this.urls = {
-        original$: this.ref.getDownloadURL().pipe(
-          catchError(err => {
-            this.nextStep('drop');
-            return of('');
-          })
-        ),
-        xs$: null,
-        md$: null,
-        lg$: null
-      }
+      this.ref = this.storage.ref(path.ref);
+      this.previewUrl = this.ref.getDownloadURL().pipe(
+        catchError(err => {
+          this.nextStep('drop');
+          return of('');
+        })
+      )
 
       this.nextStep('show');
     } else {
       this.folder = this.storagePath;
       this.nextStep('drop');
-    }
-
-    // Define the different sizes of the images depending on their folder name
-    if (this.folder === 'avatar' || this.folder === 'logo') {
-      this.sizes = { xs: 50, md: 100, lg: 300 };
-    } else if (this.folder.endsWith('poster')) {
-      this.sizes = { xs: 200, md: 400, lg: 600 };
-    } else if (this.folder.endsWith('banner')) {
-      this.sizes = { xs: 300, md: 600, lg: 1200 };
-    } else if (this.folder.endsWith('still')) {
-      this.sizes = { xs: 50, md: 100, lg: 200 };
-    } else {
-      throw new Error('Folder is invalid');
     }
   }
 
@@ -197,45 +165,12 @@ export class CropperComponent implements ControlValueAccessor, OnDestroy {
         })
       );
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
   }
 
   async goToShow() {
-    // TODO#2451: switch back to angularFire storage ref when bug on getMetadata() is fixed.
-    this.resizing = true;
-    // Since we got no simple solution to wait backend for resizing images, we need to wait.
-    await interval(4000);
-    this.resizing = false;
-
-    const firebaseRefs = {
-      original: firebaseStorage().ref(`${this.folder}/${this.fileName}`),
-      xs: firebaseStorage().ref(this.resizedImgPath(this.sizes.xs)),
-      md: firebaseStorage().ref(this.resizedImgPath(this.sizes.md)),
-      lg: firebaseStorage().ref(this.resizedImgPath(this.sizes.lg)),
-    }
-
-    const metadata = await firebaseRefs.original.getMetadata();
-
-    this.urls = {
-      original$: this.getDownloadUrl(this.ref),
-      xs$: this.getDownloadUrl(this.storage.ref(this.resizedImgPath(this.sizes.xs))),
-      md$: this.getDownloadUrl(this.storage.ref(this.resizedImgPath(this.sizes.md))),
-      lg$: this.getDownloadUrl(this.storage.ref(this.resizedImgPath(this.sizes.lg))),
-    }
-
-    this.sub = combineLatest(([
-      this.urls.original$,
-      this.urls.xs$,
-      this.urls.md$,
-      this.urls.lg$
-    ])).pipe(
-      map(([original, xs, md, lg]) => this.uploaded(createImgRef({
-        urls: { original, xs, md, lg},
-        ref: metadata.fullPath
-      })))
-    ).subscribe();
-
+    this.previewUrl = this.getDownloadUrl(this.ref);
     this.nextStep('show');
   }
 
@@ -264,11 +199,6 @@ export class CropperComponent implements ControlValueAccessor, OnDestroy {
     this.step.next(name);
   }
 
-  /** Returns the path of a resized image */
-  private resizedImgPath(size: number): string {
-    return `${this.folder}/bf@${this.fileName.replace(/(\.[\w\d_-]+)$/i, `_${size}.webp`)}`
-  }
-
   /** Returns an observable of the download url of an image based on its reference */
   private getDownloadUrl(ref: AngularFireStorageReference): Observable<string> {
     return ref.getDownloadURL().pipe(
@@ -280,4 +210,3 @@ export class CropperComponent implements ControlValueAccessor, OnDestroy {
     this.sub.unsubscribe();
   }
 }
-

@@ -119,7 +119,7 @@ export function getAppLocation(route: string) {
 /** Basic function to create a delay in a function when called
  * @param ms milleseconds to wait for
  */
-export async function interval(ms: number) {
+export async function delay(ms: number) {
   return new Promise(resolve => {
     setTimeout(resolve, ms);
   });
