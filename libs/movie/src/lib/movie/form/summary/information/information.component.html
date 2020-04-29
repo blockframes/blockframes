@@ -20,7 +20,7 @@
   <li>
     <strong>Running Time </strong>
     <missing-control [control]="main.get('totalRunTime')" [link]="link">
-      <ng-template #content>{{ main.get('totalRunTime').value | runtime }}</ng-template>
+      <ng-template #content>{{ main.get('totalRunTime').value | duration: 'ms' }}</ng-template>
     </missing-control>
   </li>
 </ul>

@@ -14,7 +14,7 @@
           <ng-container *ngIf="movie.main.workType && movie.main.status">|</ng-container>
           {{ movie.main.status | translateSlug: 'MOVIE_STATUS' }}
           <ng-container *ngIf="movie.main.status && movie.main.totalRunTime">|</ng-container>
-          {{ movie.main.totalRunTime | runtime }}
+          {{ movie.main.totalRunTime | duration: 'ms' }}
         </h4>
         <h1>{{ movie.main.title.international }}</h1>
         <h6>{{ getDirectors(movie) }}</h6>

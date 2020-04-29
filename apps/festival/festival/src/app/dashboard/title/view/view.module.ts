@@ -7,7 +7,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 // Blockframes
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
-import { RuntimeModule } from '@blockframes/utils/pipes/runtime.module';
+import { DurationModule } from '@blockframes/utils/pipes/duration.pipe';
 
 // Components
 import { TitleViewComponent } from './view.component';
@@ -53,7 +53,7 @@ const routes = [{
     // Blockframes
     ImageReferenceModule,
     TranslateSlugModule,
-    RuntimeModule,
+    DurationModule,
     // Material
     MatTabsModule,
     MatProgressSpinnerModule,
