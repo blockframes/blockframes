@@ -1,15 +1,17 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { EventPlayerComponent } from './player.component';
-import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [EventPlayerComponent],
+  exports: [EventPlayerComponent],
   imports: [
     CommonModule,
     FlexLayoutModule,
-    RouterModule.forChild([{ path: '', component: EventPlayerComponent }])
+
+    MatProgressSpinnerModule,
   ]
 })
 export class EventPlayerModule { }

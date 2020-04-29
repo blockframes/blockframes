@@ -1,0 +1,23 @@
+<ng-container *ngIf="(event$ | async) as event; else loading">
+
+  <ng-container [ngSwitch]="event | eventTime">
+
+    <ng-container *ngSwitchCase="'early'">EARLY</ng-container>
+    <ng-container *ngSwitchCase="'late'">LATE</ng-container>
+
+    <ng-container *ngSwitchCase="'onTime'">
+      <ng-container [ngSwitch]="event.type">
+        <ng-container *ngSwitchCase="'screening'">
+          <event-player></event-player>
+        </ng-container>
+        <ng-container *ngSwitchCase="'meeting'">Meeting</ng-container>
+      </ng-container>
+
+    </ng-container>
+
+  </ng-container>
+
+</ng-container>
+<ng-template #loading>
+  <mat-spinner></mat-spinner>
+</ng-template>

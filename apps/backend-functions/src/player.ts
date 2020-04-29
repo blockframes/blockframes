@@ -6,6 +6,7 @@ import { MovieDocument } from './data/types';
 import { jwplayerSecret, jwplayerKey } from './environments/environment';
 import { createHash } from 'crypto';
 import { firestore } from 'firebase'
+import { getDocument } from './data/internals';
 
 // No typing
 const JWPlayerApi = require('jwplatform');
@@ -38,16 +39,14 @@ export const getPrivateVideoUrl = async (
     throw new Error(`Unauthorized call !`);
   }
 
-  const eventSnapshot = await db.collection('events').doc(data.eventId).get();
+  const event = await getDocument<EventDocument<EventMeta>>(`events/${data.eventId}`);
 
-  if (!eventSnapshot.exists) {
+  if (!event) {
     return {
       error: 'UNKNOWN_EVENT',
       result: `There is no event with the ID ${data.eventId}`
     };
   }
-
-  const event = eventSnapshot.data() as EventDocument<EventMeta>;
 
   if (event.type !== 'screening') {
     return {
@@ -76,16 +75,14 @@ export const getPrivateVideoUrl = async (
     throw new Error(`Event ${data.eventId} is a screening but doesn't have a 'titleId' !`);
   }
 
-  const movieSnapshot = await db.collection('movies').doc(event.meta.titleId).get();
+  const movie = await getDocument<MovieDocument>(`movies/${event.meta.titleId}`);
 
-  if (!movieSnapshot.exists) {
+  if (!movie) {
     return {
       error: 'UNKNOWN_MOVIE',
       result: `The event ${data.eventId} is about an unknown movie`
     };
   }
-
-  const movie = movieSnapshot.data() as MovieDocument;
 
   if (!movie.hostedVideo) {
     return {
@@ -103,6 +100,7 @@ export const getPrivateVideoUrl = async (
 
   // TODO right now we are creating a link that expires at the end of the event
   // TODO we should discuss with François and Vincent of the best strategy for the expiring time of links
+  // TODO issue#2653
 
   const toSign = `videos/${movie.hostedVideo}.mp4:${event.end.seconds}:${jwplayerSecret}`;
   const md5 = createHash('md5');
@@ -130,6 +128,7 @@ export const uploadToJWPlayer = async (
     throw new Error(`No 'movieId' params, this parameter is mandatory !`);
   }
 
+  // here we need the ref (instead of getDocument) because we will update the movie bellow
   const movieRef = db.collection('movies').doc(data.movieId);
   const movieSnap = await movieRef.get();
 
@@ -145,10 +144,11 @@ export const uploadToJWPlayer = async (
   }
 
   // TODO perform further check to see if user is authorized to upload a video for a given movie
+  // TODO issue#2653
 
   const storage = admin.storage();
   const videoFile = await storage.bucket().file(`uploads/${data.fileName}`);
-  const [exists] =  await videoFile.exists(); // this line throw an unexpected Error
+  const [exists] =  await videoFile.exists();
 
   if (!exists) {
     return {
