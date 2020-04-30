@@ -4,13 +4,13 @@ import { UserQuery } from '@blockframes/user/+state/user.query';
 import { ViewComponent } from '../view/view.component';
 import { Subscription } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
-import { fade, fadeLsit } from '@blockframes/utils/animations/fade';
+import { fade, fadeList } from '@blockframes/utils/animations/fade';
 
 @Component({
   selector: 'festival-marketplace-organization-member',
   templateUrl: './member.component.html',
   styleUrls: ['./member.component.scss'],
-  animations: [fade, fadeLsit('user-card')],
+  animations: [fade, fadeList('user-card')],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MemberComponent implements OnInit, OnDestroy {

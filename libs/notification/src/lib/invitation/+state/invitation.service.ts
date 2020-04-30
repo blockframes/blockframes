@@ -102,7 +102,7 @@ export class InvitationService extends CollectionService<InvitationState> {
     return {
       from: (from: 'user' | 'org') => ({
         to: async (type: 'attendEvent' | 'joinOrganization', docId: string) => {
-          const base = { mode: 'request', type, docId } as Partial<Invitation>
+          const base = { mode: 'invitation', type, docId } as Partial<Invitation>
           if (from === 'user') {
             base['fromUser'] = this.authQuery.user;
           } else if (from === 'org') {
