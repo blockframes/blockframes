@@ -1,5 +1,8 @@
 import { FormArray, FormControl, FormGroup } from '@angular/forms';
 
+// DISCLAIMER
+// THIS IS A DRAFT, PLEASE DO NOT USE OR EDIT
+
 export class FormFieldList extends FormGroup {
 
   constructor(private defaultTemplate) {
