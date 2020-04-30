@@ -116,11 +116,11 @@ export class TableExtractedMoviesComponent implements OnInit {
 
   /**
    * Adds a movie to database and prevents multi-insert by refreshing mat-table
-   * @param importState 
+   * @param importState
    */
   private async addMovie(importState: MovieImportState): Promise<boolean> {
     const data = this.rows.data;
-    const { id } = await this.movieService.addMovie(importState.movie.main.title.original, importState.movie);
+    const id = await this.movieService.create(importState.movie);
     importState.movie.id = id;
     importState.errors.push({
       type: 'error',
@@ -163,7 +163,7 @@ export class TableExtractedMoviesComponent implements OnInit {
 
   /**
    * Change title status from 'Draft' to 'Submitted to Archipel Content'
-   * @param importState 
+   * @param importState
    */
   private async submitToArchipelContent(importState: MovieImportState): Promise<boolean> {
     const data = this.rows.data;

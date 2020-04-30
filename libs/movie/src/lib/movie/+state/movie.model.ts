@@ -293,7 +293,12 @@ export function createStoreConfig(params: Partial<StoreConfig> = {}): StoreConfi
   return {
     status: 'draft',
     storeType: 'line_up',
-    ...params
+    ...params,
+    appAccess: {
+      catalog: false,
+      festival: false,
+      ...params.appAccess
+    }
   };
 }
 
@@ -378,5 +383,25 @@ export function getMovieTotalViews(analytics: MovieAnalytics[], movieId: string)
   if (movieAnalytic) {
     const movieHits = movieAnalytic.movieViews.current.map(event => event.hits);
     return movieHits.reduce((sum, val) => sum + val, 0);
+  }
+}
+
+export function createAppAccessWithApp(appName: string) {
+  switch (appName) {
+    case 'catalog':
+      return {
+        catalog: true,
+        festival: false
+      }
+    case 'festival':
+      return {
+        catalog: false,
+        festival: true
+      }
+    default:
+      return {
+        catalog: false,
+        festival: false
+      }
   }
 }
