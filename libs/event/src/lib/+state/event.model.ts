@@ -2,6 +2,7 @@ import { CalendarEvent } from 'angular-calendar';
 import { Meeting, EventBase, Screening, EventMeta, EventPrivateConfig } from './event.firestore';
 import { toDate } from '@blockframes/utils/helpers';
 import { Movie } from '@blockframes/movie/+state';
+import { Organization } from '@blockframes/organization/+state';
 export { EventsAnalytics } from './event.firestore';
 
 // Event
@@ -54,6 +55,7 @@ export function createMeeting(meeting: Partial<Meeting>): Meeting {
 export interface ScreeningEvent extends Event<Screening> {
   type: 'screening';
   movie: Movie;
+  org: Organization;
 }
 export const isScreening = (event: Partial<Event>): event is ScreeningEvent => event?.type === 'screening';
 export function createScreening(screening: Partial<Screening>): Screening {

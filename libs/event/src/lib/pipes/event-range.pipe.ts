@@ -9,9 +9,9 @@ export class EventRangePipe implements PipeTransform {
     if (isSameDay(start, end)) {
       const day = formatDate(start, 'EEEE, MMMM d, y', 'en');
       const from = formatDate(start, 'h:mm a', 'en');
-      const to = formatDate(start, 'h:mm a', 'en');
-      const gmt = formatDate(start, 'zzzz', 'en');
-      return `${day}, from ${from} to ${to} ${gmt}`;
+      const to = formatDate(end, 'h:mm a', 'en');
+      const gmt = formatDate(start, 'O', 'en');
+      return `${day} \n${from} - ${to} (${gmt})`; // Use <pre>{{ | eventRange }}</pre> to take advantage of \n
     }
     if (isSameMonth(start, end)) {
       return `${start.getDate()} - ${formatDate(end, 'd MMMM, y','en')}`;

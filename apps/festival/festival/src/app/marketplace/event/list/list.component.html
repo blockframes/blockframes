@@ -1,30 +1,11 @@
-<ng-template pageBar>
-  <button mat-icon-button (click)="toggleMenu()">
-    <mat-icon svgIcon="menu"></mat-icon>
-  </button>
-  <cal-header [viewDate]="viewDate" (viewDateChange)="updateViewDate($event)"></cal-header>
-</ng-template>
+<header @slideDown class="dark-contrast-theme">
+  <h1 class="mat-display2">Screening List</h1>
+</header>
 
-<cal-week [viewDate]="viewDate" [events]="events$ | async">
-    
-  <!-- Small Events -->
-  <ng-template calEventSmall let-event>
-    <ng-container *ngIf="event.movie as movie">
-      <a [routerLink]="[movie.id, 'session']" [backgroundRef]="movie.promotionalElements.banner.media">
-        <span>{{ movie.main.title.international }}</span>
-      </a>
-    </ng-container>
-  </ng-template>
-  
-  <!-- Large Events -->
-  <ng-template calEventLarge let-event>
-    <ng-container *ngIf="event.movie as movie">
-      <a class="screening-large" [routerLink]="[movie.id, 'session']" [backgroundRef]="movie.promotionalElements.poster[0].media">
-        <article>
-          <h6>{{ movie.main.title.international }}</h6>
-          <span>{{ movie.main.directors | displayName }}</span>
-        </article>
-      </a>
-    </ng-container>
-  </ng-template>
-</cal-week>
+<ng-container *ngIf="events$ | async as events">
+  <event-list [events]="events">
+    <ng-template let-event>
+      <event-screening-item [event]="event"></event-screening-item>
+    </ng-template>
+  </event-list>
+</ng-container>

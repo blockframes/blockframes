@@ -1,41 +1,23 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { EventService } from '@blockframes/event/+state/event.service';
-import { EventQuery } from '@blockframes/event/+state/event.query';
-import { MarketplaceComponent } from '@blockframes/ui/layout/marketplace/marketplace.component';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Event, EventService } from '@blockframes/event/+state';
+import { Observable } from 'rxjs';
+import { slideDown } from '@blockframes/utils/animations/fade';
 
 @Component({
   selector: 'festival-event-list',
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss'],
+  animations: [slideDown],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EventListComponent implements OnInit, OnDestroy {
-  private sub: Subscription;
-  events$ = this.query.selectAll();
-  viewDate = new Date();
+export class ListComponent implements OnInit {
+  events$: Observable<Event[]>;
 
-  constructor(
-    private marketplace: MarketplaceComponent,
-    private service: EventService,
-    private query: EventQuery,
-    private cdr: ChangeDetectorRef
-  ) { }
+  constructor(private service: EventService) { }
 
   ngOnInit(): void {
-    this.sub = this.service.syncScreenings().subscribe();
+    // ref => ref.where('meta.titleId', 'array-contains', '')
+    this.events$ = this.service.screeningChanges();
   }
 
-  ngOnDestroy() {
-    this.sub.unsubscribe();
-  }
-
-  updateViewDate(date: Date) {
-    this.viewDate = date;
-    this.cdr.markForCheck();
-  }
-
-  toggleMenu() {
-    this.marketplace.sidenav.toggle();
-  }
 }

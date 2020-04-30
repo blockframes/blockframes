@@ -35,6 +35,9 @@ export class FilterByDatePipe implements PipeTransform {
    * @param key The key where to find the date value
    */
   transform(value: any[], timeFrame: TimeFrame, key: string = 'date') {
+    if (!Array.isArray(value)) {
+      return value;
+    }
     const { from, to, type } = timeFrame;
     const now = Date.now();
     const fromDate = sub({ [type]: from }, now);

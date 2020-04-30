@@ -1,0 +1,34 @@
+<img [imgRef]="poster" placeholderAsset="empty_poster.webp" alt="Movie poster of the screening"/>
+<article fxLayout="column" fxLayoutAlign="space-between start">
+  <div fxLayout="column" fxLayoutAlign="start start">
+    <h3>{{ screening.title }}</h3>
+    <h5>{{ screening.isPrivate ? 'Private' : 'Public' }} Screening </h5>
+    <pre class="mat-body1">{{ screening | eventRange }}</pre>
+    <org-chip [org]="screening.org"></org-chip>
+  </div>
+  <footer>
+    <!-- Has an invitation -->
+    <ng-container *ngIf="invitation">
+      <button mat-button>
+        <mat-icon svgIcon=""></mat-icon>
+        <span>Accept Invitation</span>
+      </button>
+    </ng-container>
+
+    <!-- Private -->
+    <ng-container *ngIf="!invitation && screening.isPrivate">
+      <button mat-button>
+        <mat-icon svgIcon="calendar"></mat-icon>
+        <span>Ask for Invitation</span>
+      </button>
+    </ng-container>
+
+    <!-- Public -->
+    <ng-container *ngIf="!invitation && !screening.isPrivate">
+      <button mat-button>
+        <mat-icon svgIcon="calendar"></mat-icon>
+        <span>Add to my calendar</span>
+      </button>
+    </ng-container>
+  </footer>
+</article>
