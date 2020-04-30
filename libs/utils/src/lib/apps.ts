@@ -20,7 +20,10 @@ export type MovieAppAccess = Record<App, boolean>;
 }*/
 
 export function getCurrentApp(routerQuery: RouterQuery): App {
-  return routerQuery.getValue().state.root.data?.app as App;
+  if(routerQuery.getValue().state.root.data?.app){
+    return routerQuery.getValue().state.root.data?.app;
+  }
+  throw new Error('Could not get current app name');
 }
 
 export function createOrgAppAccess(_appAccess: Partial<OrgAppAccess> = {}): OrgAppAccess {

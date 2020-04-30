@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { OrganizationService, OrganizationQuery } from '../../+state';
 import { Subscription } from 'rxjs';
 import { FormControl } from '@angular/forms';
-import { getCurrentApp } from '@blockframes/utils/apps';
+import { getCurrentApp, createOrgAppAccess } from '@blockframes/utils/apps';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 @Component({
@@ -31,39 +31,16 @@ export class OrganizationAppAccessComponent implements OnInit, OnDestroy {
   async submit() {
 
     const appName = getCurrentApp(this.routerQuery);
-    const orgId = this.query.getActiveId();
+    const orgAppAccess = createOrgAppAccess({
+      [appName]: {
+        marketplace: this.access.value === 'marketplace',
+        dashboard: this.access.value === 'dashboard'
+      }
+    });
 
-    switch (appName) {
-      case 'catalog':
-      default:
-        await this.service.update(orgId, {
-          appAccess: {
-            catalog: {
-              marketplace: this.access.value === 'marketplace',
-              dashboard: this.access.value === 'dashboard'
-            },
-            festival: {
-              marketplace: false,
-              dashboard: false
-            },
-          }
-        });
-        break;
-      case 'festival':
-        await this.service.update(orgId, {
-          appAccess: {
-            catalog: {
-              marketplace: false,
-              dashboard: false
-            },
-            festival: {
-              marketplace: this.access.value === 'marketplace',
-              dashboard: this.access.value === 'dashboard'
-            },
-          }
-        });
-        break;
-    }
+    await this.service.update(this.query.getActiveId(), {
+      appAccess: orgAppAccess
+    });
 
     this.router.navigate(['../create-congratulations'], { relativeTo: this.route });
   }
