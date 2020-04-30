@@ -1,7 +1,9 @@
 /**
  * Apps definition
  */
-export type App = 'catalog' | 'festival';
+
+export const app = ['catalog', 'festival'] as const;
+export type App = typeof app[number];
 
 /** @TODO (#2539) This is currently unused but we keep it to future uses. */
 /*export interface AppDetails {

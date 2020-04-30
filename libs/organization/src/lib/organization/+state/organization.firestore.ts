@@ -7,7 +7,8 @@ import { App } from '@blockframes/utils/apps';
 
 type Timestamp = firestore.Timestamp;
 
-type AppAccess = Record<App, { marketplace: boolean, dashboard: boolean }>;
+export type InnerAppAccess = { marketplace: boolean, dashboard: boolean };
+export type AppAccess = Record<App, InnerAppAccess>;
 
 interface Denomination {
   full: string;
