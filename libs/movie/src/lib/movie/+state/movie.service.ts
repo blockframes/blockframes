@@ -1,31 +1,54 @@
 import { Injectable } from '@angular/core';
 import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
 import { switchMap, filter, tap, map } from 'rxjs/operators';
-import { createMovie, Movie, MovieAnalytics, SyncMovieAnalyticsOptions } from './movie.model';
+import { createMovie, Movie, MovieAnalytics, SyncMovieAnalyticsOptions, createAppAccessWithApp, createStoreConfig } from './movie.model';
 import { MovieState, MovieStore } from './movie.store';
-import { UserService } from '@blockframes/user/+state/user.service';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 import { cleanModel } from '@blockframes/utils/helpers';
-import { firestore } from 'firebase/app';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { Observable, combineLatest } from 'rxjs';
 import { MovieQuery } from './movie.query';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { PrivateConfig } from '@blockframes/utils/common-interfaces/utility';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { OrganizationService } from '@blockframes/organization/+state/organization.service';
+import { UserService } from '@blockframes/user/+state/user.service';
+import { firestore } from 'firebase/app';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies' })
 export class MovieService extends CollectionService<MovieState> {
+
   constructor(
     private authQuery: AuthQuery,
-    private userService: UserService,
     private permissionsService: PermissionsService,
+    private userService: UserService,
+    private orgService: OrganizationService,
+    private routerQuery: RouterQuery,
     private functions: AngularFireFunctions,
     private query: MovieQuery,
     protected store: MovieStore,
   ) {
     super(store);
+  }
+
+  async create(movieImported?: Movie): Promise<string> {
+    const createdBy = this.authQuery.userId;
+    const appName = this.routerQuery.getValue().state.root.data.app;
+    const movie = createMovie({
+      _meta: { createdBy },
+      ...movieImported
+    });
+    movie.main.storeConfig = {
+      ...createStoreConfig(),
+      appAccess: createAppAccessWithApp(appName)
+    };
+    let movieId: string;
+    await this.runTransaction(async (tx) => {
+      movieId = await this.add(cleanModel(movie), { write: tx });
+    });
+    return movieId;
   }
 
   async onCreate(movie: Movie, { write }: WriteOptions) {
@@ -34,7 +57,11 @@ export class MovieService extends CollectionService<MovieState> {
     // We use createdBy attribute to fetch OrgId
     const userId = movie._meta?.createdBy ? movie._meta.createdBy : this.authQuery.userId;
     const user = await this.userService.getUser(userId);
-    return this.permissionsService.addDocumentPermissions(movie, write as firestore.WriteBatch, user.orgId);
+
+    // We need to update the organisation here, because of the route navigation in the movie tunnel.
+    // If we do it in the backend functions, the org isn't updated fast enough to allow a good navigation in the movie tunnel
+    await this.orgService.update(user.orgId, (org) => ({ movieIds: [...org.movieIds, movie.id] }), { write })
+    return this.permissionsService.addDocumentPermissions(movie.id, write as firestore.Transaction, user.orgId);
   }
 
   onUpdate(movie: Movie, { write }: WriteOptions) {
@@ -63,25 +90,6 @@ export class MovieService extends CollectionService<MovieState> {
       }),
       tap(analytics => this.store.analytics.upsertMany(analytics))
     )
-  }
-
-  /** Add a partial or a full movie to the database. */
-  public async addMovie(original: string, movie?: Movie): Promise<Movie> {
-    const id = this.db.createId();
-    const userId = movie._meta?.createdBy ? movie._meta.createdBy : this.authQuery.userId;
-
-    if (!movie) {
-      // create empty movie
-      movie = createMovie({ id, main: { title: { original } }, _meta: { createdBy: userId } });
-    } else {
-      // we set an id for this new movie
-      movie = createMovie({ ...movie, id, _meta: { createdBy: userId } });
-    }
-
-    // Add movie document to the database
-    await this.add(cleanModel(movie));
-
-    return movie;
   }
 
   public updateById(id: string, movie: any): Promise<void> {
@@ -139,7 +147,7 @@ export class MovieService extends CollectionService<MovieState> {
   /**
    * @dev ADMIN method
    * Https callable function to get privateConfig for a movie.
-   * @param movieId 
+   * @param movieId
    * @param keys the keys to retreive
    */
   public async getMoviePrivateConfig(movieId: string, keys: string[] = []): Promise<PrivateConfig> {

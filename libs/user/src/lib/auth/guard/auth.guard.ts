@@ -3,7 +3,6 @@ import { AuthQuery, User, AuthService, AuthState } from '../+state';
 import { map, switchMap } from 'rxjs/operators';
 import { CollectionGuard, CollectionGuardConfig } from 'akita-ng-fire';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { of } from 'rxjs';
 
 // Verify if the user exists and has a name and surname.
 function hasIdentity(user: User) {

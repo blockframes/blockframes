@@ -80,7 +80,7 @@ service cloud.firestore {
       	&& userId() == incomingData().uid
         && isNotUpdatingId('uid', userId)
         && isNotUpdatingField(['email'])
-        && isNotUpdatingField(['orgId'])
+        && ( isNotUpdatingField(['orgId']) || isCreatingField('orgId'))
     }
 
     ////////////////////////////////
@@ -180,6 +180,7 @@ service cloud.firestore {
       allow update: if isOrgAdmin(userId(), orgId)
       	&& isNotUpdatingField(['status'])
         && isNotUpdatingField(['created'])
+        // @TODO #2539
         && isNotUpdatingField(['appAccess','catalogDashboard'])
         && isNotUpdatingField(['appAccess','catalogMarketplace'])
         && isNotUpdatingId('id', orgId);
@@ -242,7 +243,8 @@ service cloud.firestore {
         && isNotUpdatingField(['_type'])
         && (isNotUpdatingField(['main', 'storeConfig','status']) || incomingData().main.storeConfig.status in ['submitted', 'draft'])
         && isNotUpdatingField(['main', 'storeConfig','storeType'])
-        // @TODO (#2618) add new rules for appAccess
+        && isNotUpdatingField(['main', 'storeConfig','appAccess', 'catalog'])
+        && isNotUpdatingField(['main', 'storeConfig','appAccess', 'festival'])
         && orgCan('canUpdate', userOrgId(), movieId);
       allow delete: if orgCan('canDelete', userOrgId(), movieId)
       	&& isOrgAdmin(userId(), userOrgId());
@@ -421,6 +423,12 @@ service cloud.firestore {
     	return (!incomingData()[fieldArray[0]][fieldArray[1]].keys().hasAll([fieldArray[2]]))
        || (!incomingData()[fieldArray[0]].keys().hasAll([fieldArray[1]])) 
        || !incomingData().keys().hasAll([fieldArray[0]]);
+    }
+
+    // The field is sent and not already existing
+    function isCreatingField(fieldName) {
+    	return request.resource.data.keys().hasAll([fieldName]) &&
+      (resource == null || !resource.data.keys().hasAll([fieldName]));
     }
 
   }

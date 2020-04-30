@@ -38,8 +38,7 @@ async function createNotificationsForUsers(movie: MovieDocument, notificationTyp
 
 /** Function triggered when a document is added into movies collection. */
 export async function onMovieCreate(
-  snap: FirebaseFirestore.DocumentSnapshot,
-  context: functions.EventContext
+  snap: FirebaseFirestore.DocumentSnapshot
 ) {
   const movie = snap.data() as MovieDocument;
 
@@ -62,8 +61,6 @@ export async function onMovieCreate(
     await storeSearchableMovie(movie, organization.denomination.full);
 
     return Promise.all([
-      // Update the organization's movieIds with the new movie id.
-      tx.update(organizationSnap.ref, { movieIds: [...organization.movieIds, movie.id] }),
       // Send notifications about this new movie to each organization member.
       triggerNotifications(notifications)
     ]);
@@ -117,8 +114,7 @@ export async function onMovieDelete(
 }
 
 export async function onMovieUpdate(
-  change: functions.Change<FirebaseFirestore.DocumentSnapshot>,
-  context: functions.EventContext
+  change: functions.Change<FirebaseFirestore.DocumentSnapshot>
 ): Promise<any> {
   const before = change.before.data() as MovieDocument;
   const after = change.after.data() as MovieDocument;

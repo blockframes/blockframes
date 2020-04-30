@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { Invitation, InvitationService } from '../../+state';
 
 @Component({
@@ -7,13 +7,11 @@ import { Invitation, InvitationService } from '../../+state';
   styleUrls: ['./item.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ItemComponent implements OnInit {
+export class ItemComponent {
 
   @Input() invitation: Invitation;
   constructor(private serivce: InvitationService,) { }
 
-  ngOnInit(): void {
-  }
   accept(id: string) {
     this.serivce.update(id, { status: 'accepted' });
   }

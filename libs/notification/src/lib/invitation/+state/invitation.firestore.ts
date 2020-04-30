@@ -5,12 +5,12 @@ import { PublicUser } from "@blockframes/user/+state/user.firestore";
 type Timestamp = firestore.Timestamp;
 
 /** Raw type for Invitation. */
-export interface Invitation {
+export interface InvitationRaw<D> {
   id: string;
   type: InvitationType;
   mode: InvitationMode,
   status: InvitationStatus;
-  date: Timestamp | Date;
+  date: D;
   /** @dev An invitation is created by an user or an org (fromOrg or fromUser) */
   fromOrg?: PublicOrganization,
   fromUser?: PublicUser,
@@ -23,10 +23,14 @@ export interface Invitation {
    */
   docId?: string;
   processedId?: string;
+  message?: string;
 }
 
 /** Specific types of Invitation, both used in firebase functions. */
-export type InvitationDocument = InvitationFromOrganizationToUser | InvitationFromUserToOrganization | InvitationToAnEvent;
+export type InvitationFromOrganizationToUserDocument = InvitationFromOrganizationToUserRaw<Timestamp>;
+export type InvitationFromUserToOrganizationDocument = InvitationFromUserToOrganizationRaw<Timestamp>;
+export type InvitationToAnEventDocument = InvitationToAnEventRaw<Timestamp>;
+export type InvitationDocument = InvitationFromOrganizationToUserDocument |InvitationFromUserToOrganizationDocument | InvitationToAnEventDocument;
 export type InvitationOrUndefined = InvitationDocument | undefined;
 
 /**
@@ -37,7 +41,7 @@ export type InvitationOrUndefined = InvitationDocument | undefined;
  * If user that received an email invitation and
  * created an account, we will then be able to replace email by the coresponding new user.
  * */
-export interface InvitationToAnEvent extends Invitation {
+export interface InvitationToAnEventRaw<D> extends InvitationRaw<D> {
   mode: InvitationMode,
   type: 'attendEvent';
   /** @dev EventId */
@@ -45,7 +49,7 @@ export interface InvitationToAnEvent extends Invitation {
 }
 
 /**  Specific Invitation send by an Organization to a User to join it. */
-export interface InvitationFromOrganizationToUser extends Invitation {
+export interface InvitationFromOrganizationToUserRaw<D> extends InvitationRaw<D> {
   type: 'joinOrganization';
   mode: 'invitation';
   toUser: PublicUser;
@@ -53,7 +57,7 @@ export interface InvitationFromOrganizationToUser extends Invitation {
 }
 
 /** Specific Invitation send by a User to join an Organization. */
-export interface InvitationFromUserToOrganization extends Invitation {
+export interface InvitationFromUserToOrganizationRaw<D> extends InvitationRaw<D> {
   type: 'joinOrganization';
   mode: 'request';
   fromUser: PublicUser;

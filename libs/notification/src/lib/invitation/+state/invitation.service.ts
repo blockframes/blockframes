@@ -7,6 +7,10 @@ import { AuthQuery, AuthService } from '@blockframes/auth/+state';
 import { UserService, PublicUser } from '@blockframes/user/+state';
 import { InvitationDocument, InvitationType, InvitationMode } from './invitation.firestore';
 import { toDate } from '@blockframes/utils/helpers';
+import { getInvitationMessage, cleanInvitation } from '../invitation-utils';
+
+type SenderKey = 'fromUser' | 'toUser' | 'fromOrg' | 'toOrg';
+type Sender = Organization | PublicUser;
 
 type SenderKey = 'fromUser' | 'toUser' | 'fromOrg' | 'toOrg';
 type Sender = Organization | PublicUser;
@@ -25,11 +29,19 @@ export class InvitationService extends CollectionService<InvitationState> {
     super(store);
   }
 
-  formatFromFirestore(invitation: InvitationDocument): Invitation {
-    return {
-      ...invitation,
-      date: toDate(invitation.date)
+  formatFromFirestore(_invitation: InvitationDocument): Invitation {
+    const invitation ={
+      ..._invitation,
+      date: toDate(_invitation.date)
     }
+
+    const isForMe = this.isInvitationForMe(invitation);
+    invitation.message = getInvitationMessage(invitation, isForMe);
+    return invitation;
+  }
+
+  formatToFirestore(invitation: Invitation): Invitation {
+    return cleanInvitation(invitation);
   }
 
   formatToFirestore(invitation: Invitation) {
@@ -78,7 +90,7 @@ export class InvitationService extends CollectionService<InvitationState> {
     );
   }
 
-  public isInvitationForMe(invitation: Invitation) : Boolean {
+  public isInvitationForMe(invitation: Invitation) : boolean {
     return invitation.toOrg?.id === this.authQuery.orgId || invitation.toUser?.uid === this.authQuery.userId
   }
 
