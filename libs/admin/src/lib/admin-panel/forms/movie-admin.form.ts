@@ -1,7 +1,7 @@
 import { FormControl } from '@angular/forms';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { Movie, createMovie } from '@blockframes/movie/+state/movie.model';
-
+import { app } from '@blockframes/utils/apps';
 
 function createMovieAdminControls(entity: Partial<Movie>) {
   const movie = createMovie(entity);
@@ -24,10 +24,11 @@ export class MovieAdminForm extends FormEntity<MovieAdminControl> {
 // STORE CONFIG APP ACCESS
 function createAppAccessMovieControls(entity: Partial<Movie>) {
   const movie = createMovie(entity);
-  return {
-    catalog: new FormControl(movie.main.storeConfig.appAccess.catalog),
-    festival: new FormControl(movie.main.storeConfig.appAccess.festival),
-  };
+  let appAccess = {} as any;
+  for(const a of app){
+    appAccess[a] = new FormControl(movie.main.storeConfig.appAccess[a])
+  }
+  return appAccess;
 }
 
 type MovieAppAccessAdminControl = ReturnType<typeof createAppAccessMovieControls>;

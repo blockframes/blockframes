@@ -20,26 +20,23 @@ export type MovieAppAccess = Record<App, boolean>;
 }*/
 
 export function getCurrentApp(routerQuery: RouterQuery): App {
-  if(routerQuery.getValue().state.root.data?.app){
-    return routerQuery.getValue().state.root.data?.app;
-  }
-  throw new Error('Could not get current app name');
+  return routerQuery.getValue().state?.root.data.app;
 }
 
 export function createOrgAppAccess(_appAccess: Partial<OrgAppAccess> = {}): OrgAppAccess {
-  let appAccess = {};
+  const appAccess = {} as OrgAppAccess;
   for (const a of app) {
     appAccess[a] = createInnerAppAccess(_appAccess[a] ? _appAccess[a] : {});
   }
-  return appAccess as OrgAppAccess
+  return appAccess;
 }
 
 export function createMovieAppAccess(_appAccess: Partial<MovieAppAccess> = {}): MovieAppAccess {
-  let appAccess = {};
+  const appAccess = {} as MovieAppAccess;
   for (const a of app) {
-    appAccess[a] = _appAccess[a] ? _appAccess[a] : false;
+    appAccess[a] = _appAccess[a] === true;
   }
-  return appAccess as MovieAppAccess
+  return appAccess;
 }
 
 export function createInnerAppAccess(innerAppAccess: Partial<InnerAppAccess> = {}): InnerAppAccess {
