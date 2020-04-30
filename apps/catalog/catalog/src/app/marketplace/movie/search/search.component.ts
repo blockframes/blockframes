@@ -37,10 +37,10 @@ export class MarketplaceSearchComponent implements OnInit {
   ngOnInit() {
     // Implicitly we only want accepted movies
     this.filterForm.storeConfig.add('accepted');
-    // On festival, we want only movie available for catalog
+    // On catalog, we want only movie available for catalog
     this.filterForm.appAccess.add('catalog');
     this.dynTitle.setPageTitle('Titles')
-    this.movies$ = this.filterForm.valueChanges.pipe(
+    const movies$ = this.filterForm.valueChanges.pipe(
       debounceTime(300),
       distinctUntilChanged(),
       startWith(this.filterForm.value),
