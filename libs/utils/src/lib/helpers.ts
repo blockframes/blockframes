@@ -27,10 +27,7 @@ export function toDate(date: firestore.Timestamp | Date): Date {
   if (isTimeStamp(date)) {
     return date.toDate();
   }
-  if (typeof date === 'number') {
-    return new Date(date * 1000)
-  }
-  if (typeof date === 'string') {
+  if (typeof date === 'string' || typeof date === 'number') {
     return new Date(date);
   }
   return date;

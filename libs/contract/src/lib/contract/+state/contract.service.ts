@@ -53,13 +53,6 @@ export class ContractService extends CollectionService<ContractState> {
     return cleanContract(contract);
   }
 
-  formatFromFirestore(contract: Contract) {
-    for(const version of contract.versions) {
-      version.creationDate = toDate(version.creationDate['seconds'])
-    }
-    return contract
-  }
-
   /**
    * Gets the mandate contract of an organization
    * @param orgId
