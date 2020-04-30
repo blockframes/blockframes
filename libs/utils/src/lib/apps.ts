@@ -2,6 +2,8 @@
  * Apps definition
  */
 
+import { RouterQuery } from "@datorama/akita-ng-router-store";
+
 export const app = ['catalog', 'festival'] as const;
 export type App = typeof app[number];
 
@@ -17,7 +19,7 @@ export type MovieAppAccess = Record<App, boolean>;
   id: App;
 }*/
 
-export function getCurrentApp(routerQuery): App {
+export function getCurrentApp(routerQuery: RouterQuery): App {
   return routerQuery.getValue().state.root.data.app as App;
 }
 
