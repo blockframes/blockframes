@@ -1,7 +1,7 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MovieAdminForm } from '../../forms/movie-admin.form';
+import { MovieAdminForm, MovieAppAccessAdminForm } from '../../forms/movie-admin.form';
 import { staticModels } from '@blockframes/utils/static-model';
 import { DistributionRightService } from '@blockframes/distribution-rights/+state/distribution-right.service';
 import { getValue } from '@blockframes/utils/helpers';
@@ -22,6 +22,7 @@ export class MovieComponent implements OnInit {
   public movieId = '';
   public movie: Movie;
   public movieForm: MovieAdminForm;
+  public movieAppAccessForm: MovieAppAccessAdminForm;
   public privateConfigForm: PrivateConfigForm;
   public storeType = storeType;
   public storeStatus = storeStatus;
@@ -56,6 +57,7 @@ export class MovieComponent implements OnInit {
     this.movieId = this.route.snapshot.paramMap.get('movieId');
     this.movie = await this.movieService.getValue(this.movieId);
     this.movieForm = new MovieAdminForm(this.movie);
+    this.movieAppAccessForm = new MovieAppAccessAdminForm(this.movie);
 
     const privateConfig: false | PrivateConfig = await this.movieService.getMoviePrivateConfig(this.movieId)
       .then(c => c).catch(_ => false);
@@ -77,6 +79,19 @@ export class MovieComponent implements OnInit {
     this.movie.main.storeConfig.storeType = this.movieForm.get('storeType').value;
     this.movie.main.status = this.movieForm.get('productionStatus').value;
     this.movie.main.internalRef = this.movieForm.get('internalRef').value;
+
+    await this.movieService.updateById(this.movieId, this.movie);
+
+    this.snackBar.open('Informations updated !', 'close', { duration: 5000 });
+  }
+
+  public async updateAppAccess() {
+    if (this.movieAppAccessForm.invalid) {
+      this.snackBar.open('Information not valid', 'close', { duration: 5000});
+    }
+
+    this.movie.main.storeConfig.appAccess.catalog = this.movieAppAccessForm.get('catalog').value;
+    this.movie.main.storeConfig.appAccess.festival = this.movieAppAccessForm.get('festival').value;
 
     await this.movieService.updateById(this.movieId, this.movie);
 
