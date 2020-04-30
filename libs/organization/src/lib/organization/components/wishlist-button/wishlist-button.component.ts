@@ -1,10 +1,15 @@
-import { Component, OnInit, ChangeDetectionStrategy, Input } from '@angular/core';
+// Angular
+import { Component, OnInit, ChangeDetectionStrategy, Input, EventEmitter, Output } from '@angular/core';
 import { coerceBooleanProperty } from '@angular/cdk/coercion'
-import { MovieQuery } from '@blockframes/movie/+state/movie.query';
-import { Observable } from 'rxjs';
-import { CartService } from '@blockframes/cart/+state/cart.service';
-import { map } from 'rxjs/operators';
 import { MatSnackBar } from '@angular/material/snack-bar';
+
+// RxJs
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+// Blockframes
+import { CartService } from '@blockframes/cart/+state/cart.service';
+import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 
@@ -28,6 +33,9 @@ export class WishlistButtonComponent implements OnInit {
   set small(isSmall: boolean) {
     this._small = coerceBooleanProperty(isSmall);
   }
+
+  @Output() removed = new EventEmitter<string>()
+  @Output() added = new EventEmitter<string>()
 
   constructor(
     private movieQuery: MovieQuery,
@@ -57,6 +65,7 @@ export class WishlistButtonComponent implements OnInit {
       movieTitle: movie.main.title.original
     });
     this.snackbar.open(`${title} has been added to your wishlist.`, 'close', { duration: 2000 });
+    this.added.emit(this.movieId)
   }
 
   public removeFromWishlist() {
@@ -68,6 +77,7 @@ export class WishlistButtonComponent implements OnInit {
       movieTitle: movie.main.title.original
     });
     this.snackbar.open(`${title} has been removed from your selection.`, 'close', { duration: 2000 });
+    this.removed.emit(this.movieId)
   }
 
 }

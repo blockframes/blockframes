@@ -48,6 +48,11 @@
     padding: 14px 32px;
   }
 
+  // Center close button
+  .mat-simple-snackbar .mat-button {
+    padding: 0 20px;
+ }
+
   .mat-stroked-button {
     border-radius: 26px;
     border-color: mat-color($foreground, text);

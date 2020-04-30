@@ -42,9 +42,7 @@
       <ng-container matColumnDef="totalRunTime">
         <th mat-header-cell *matHeaderCellDef>Running time</th>
         <td mat-cell *matCellDef="let element">
-          <ng-container *ngIf="element.main.totalRunTime; else noLength">{{ element.main.totalRunTime }} min
-          </ng-container>
-          <ng-template #noLength>TBC</ng-template>
+          <span>{{ element.main.totalRunTime | duration: 'ms' }}</span>
         </td>
       </ng-container>
 
@@ -65,7 +63,7 @@
   </article>
   <ng-template #noWishlist>
     <article fxLayout="column" fxLayoutAlign="center center">
-      <p>Your wishlist is empty.</p>
+      <h1>Your wishlist is empty.</h1>
       <img asset="no_wishlist.webp" alt="No whislist image">
     </article>
   </ng-template>

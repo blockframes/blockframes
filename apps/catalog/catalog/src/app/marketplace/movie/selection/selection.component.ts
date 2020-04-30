@@ -43,7 +43,6 @@ export class MarketplaceSelectionComponent {
   removeTitle(movieId: string) {
     this.store.remove(movieId);
   }
-
   /**
    * Creates rights and contract and move to tunnel
    */
