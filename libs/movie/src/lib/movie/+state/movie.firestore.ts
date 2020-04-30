@@ -21,6 +21,7 @@ import { ImgRef } from "@blockframes/utils/image-uploader";
 import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
 import { LegalDocument } from "@blockframes/contract/contract/+state/contract.firestore";
 import { Price } from "@blockframes/utils/common-interfaces";
+import { MovieAppAccess } from "@blockframes/utils/apps";
 
 // TODO issue#2582
 
@@ -101,15 +102,11 @@ export interface MovieAnalytics {
   }
 }
 
-interface AppAccess {
-  catalog: boolean,
-  festival: boolean
-}
 
 export interface StoreConfig {
   status: StoreStatus,
   storeType: StoreType,
-  appAccess: AppAccess
+  appAccess: MovieAppAccess
 }
 
 export interface MoviePromotionalDescription {

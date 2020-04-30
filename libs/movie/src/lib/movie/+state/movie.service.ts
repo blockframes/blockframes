@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
 import { switchMap, filter, tap, map } from 'rxjs/operators';
-import { createMovie, Movie, MovieAnalytics, SyncMovieAnalyticsOptions, createAppAccessWithApp, createStoreConfig } from './movie.model';
+import { createMovie, Movie, MovieAnalytics, SyncMovieAnalyticsOptions, createStoreConfig } from './movie.model';
 import { MovieState, MovieStore } from './movie.store';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 import { cleanModel } from '@blockframes/utils/helpers';
@@ -15,6 +15,7 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { firestore } from 'firebase/app';
+import { createMovieAppAccess } from '@blockframes/utils/apps';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies' })
@@ -42,7 +43,7 @@ export class MovieService extends CollectionService<MovieState> {
     });
     movie.main.storeConfig = {
       ...createStoreConfig(),
-      appAccess: createAppAccessWithApp(appName)
+      appAccess: createMovieAppAccess({[appName]: true})
     };
     let movieId: string;
     await this.runTransaction(async (tx) => {

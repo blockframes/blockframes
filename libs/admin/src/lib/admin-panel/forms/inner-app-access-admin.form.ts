@@ -1,7 +1,6 @@
 import { FormControl } from '@angular/forms';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
-import { createInnerAppAccess } from '@blockframes/organization/+state/organization.model';
-import { InnerAppAccess } from '@blockframes/organization/+state';
+import { InnerAppAccess, createInnerAppAccess } from '@blockframes/utils/apps';
 
 function createInnerAppAccessAdminControls(entity: Partial<InnerAppAccess>) {
   const innerAppAccess = createInnerAppAccess(entity);

@@ -2,13 +2,10 @@ import { firestore } from 'firebase/app';
 import { CatalogCart } from '@blockframes/cart/+state/cart.model';
 import { Location, BankAccount, createLocation } from '@blockframes/utils/common-interfaces/utility';
 import { ImgRef, createImgRef } from '@blockframes/utils/image-uploader';
-import { App } from '@blockframes/utils/apps';
+import { OrgAppAccess, createOrgAppAccess } from '@blockframes/utils/apps';
 
 
 type Timestamp = firestore.Timestamp;
-
-export type InnerAppAccess = { marketplace: boolean, dashboard: boolean };
-export type AppAccess = Record<App, InnerAppAccess>;
 
 interface Denomination {
   full: string;
@@ -20,7 +17,7 @@ interface OrganizationRaw<D> {
   id: string;
   activity: OrgActivity;
   addresses: AddressSet;
-  appAccess?: AppAccess;
+  appAccess: OrgAppAccess;
   bankAccounts: BankAccount[];
   cart: CatalogCart[];
   created: D;
@@ -130,6 +127,7 @@ export function createOrganizationRaw(
     addresses: createAddressSet(params.addresses),
     denomination: createDenomination(params.denomination),
     logo: createImgRef(params.logo),
+    appAccess: createOrgAppAccess(params.appAccess),
   };
 }
 
