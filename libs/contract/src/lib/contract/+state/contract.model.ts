@@ -175,10 +175,11 @@ export function createContractFromFirestore(contract: any): Contract {
       : []
   }
 
-  if(contract.lastVersion){
+  if (contract.lastVersion) {
     c.lastVersion = createContractVersionFromFirestore(contract.lastVersion);
   }
-  if(contract.versions) {
+
+  if (contract.versions) {
     contract.versions = contract.versions.map(version => createContractVersionFromFirestore(version))
   }
 

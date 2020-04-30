@@ -15,7 +15,7 @@ import {
 import { ContractDocumentWithDates } from './contract.firestore';
 import { firestore } from 'firebase/app';
 import { Observable } from 'rxjs';
-import { cleanModel, toDate } from '@blockframes/utils/helpers';
+import { cleanModel } from '@blockframes/utils/helpers';
 import { map } from 'rxjs/internal/operators/map';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
 import { DistributionRight, createDistributionRight } from '@blockframes/distribution-rights/+state/distribution-right.model';
