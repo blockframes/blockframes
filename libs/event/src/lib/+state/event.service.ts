@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CollectionConfig, CollectionService, syncQuery, Query, WriteOptions } from 'akita-ng-fire';
+import { CollectionConfig, CollectionService, syncQuery, Query, WriteOptions, queryChanges } from 'akita-ng-fire';
 import { EventState, EventStore } from './event.store';
 import { EventDocument, EventBase } from './event.firestore';
 import { Event, ScreeningEvent, createCalendarEvent, EventsAnalytics } from './event.model';
@@ -11,13 +11,16 @@ import { OrganizationQuery } from '@blockframes/organization/+state';
 import { AuthQuery } from '@blockframes/auth/+state';
 import { combineLatest } from 'rxjs';
 import { EventQuery } from './event.query';
-import { map, filter, switchMap, tap } from 'rxjs/operators';
+import { filter, switchMap, tap } from 'rxjs/operators';
 
 
-const screeningsQuery = (queryFn?: QueryFn): Query<ScreeningEvent> => ({
+const screeningsQuery = (queryFn: QueryFn = (ref) => ref): Query<ScreeningEvent> => ({
   path: 'events',
-  queryFn,
-  movie: ({ meta }: ScreeningEvent) =>  meta.titleId ? { path: `movies/${meta.titleId}` } : undefined
+  queryFn: ref => queryFn(ref).where('type', '==', 'screening'),
+  movie: ({ meta }: ScreeningEvent) =>  {
+    return meta.titleId ? { path: `movies/${meta.titleId}` } : undefined
+  },
+  org: ({ ownerId }: ScreeningEvent) => ({ path: `orgs/${ownerId}` }),
 });
 
 @Injectable({ providedIn: 'root' })
@@ -79,6 +82,12 @@ export class EventService extends CollectionService<EventState> {
     return createCalendarEvent(event, this.isOwner(event));
   }
 
+  /** Listen on changes of screening without updating the store */
+  screeningChanges(queryFn?: QueryFn):  Observable<ScreeningEvent[]> {
+    return queryChanges.call(this, screeningsQuery(queryFn));
+  }
+
+  /** Listen on changes of screening by updating the store */
   syncScreenings(queryFn?: QueryFn): Observable<ScreeningEvent[]> {
     return syncQuery.call(this, screeningsQuery(queryFn));
   }
@@ -99,15 +108,4 @@ export class EventService extends CollectionService<EventState> {
     const f = this.functions.httpsCallable('getEventAnalytics');
     return f({ eventIds });
   }
-
-  /**
-   * Get event private url
-   * @param eventId
-   */
-  // @TODO (#2460)  Waiting for a decision on screening flow before uncomment
-  /*public getEventUrl(eventId: string): Promise<string> {
-    const f = this.functions.httpsCallable('getEventUrl');
-    return f({ eventId }).toPromise();
-  }*/
-
 }

@@ -1,0 +1,18 @@
+<ul fxLayout="column" fxLayoutGap="16px">
+  <ng-container *ngFor="let timeFrame of timeFrames">
+    <!-- For a time frame -->
+    <ng-container *ngIf="(events | filterByDate: timeFrame : 'start') as eventList">
+
+      <h2 *ngIf="eventList.length">
+        {{ timeFrame | labelByDate }}
+      </h2>
+
+      <ng-container *ngFor="let event of eventList; let isLast = last">
+        <li>
+          <ng-template [ngTemplateOutlet]="itemTemplate" [ngTemplateOutletContext]="{ $implicit: event }"></ng-template>
+        </li>
+        <mat-divider></mat-divider>
+      </ng-container>
+    </ng-container>
+  </ng-container>
+</ul>

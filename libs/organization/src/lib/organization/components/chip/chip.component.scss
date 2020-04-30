@@ -1,0 +1,25 @@
+:host {
+  display: block;
+  height: 40px;
+}
+
+a {
+  height: 100%;
+  border-radius: 20px;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.2s;
+}
+
+a:hover {
+  background-color: var(--background-hover);
+}
+
+img {
+  height: 100%;
+  border-radius: 50%;
+}
+
+span {
+  padding: 0 8px;
+}

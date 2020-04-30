@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, TemplateRef, ContentChild, Input } from '@angular/core';
 import { Invitation } from '../../+state';
 
-import { timeFrames } from '@blockframes/utils/pipes/filter-by-date.pipe';
+import { descTimeFrames } from '@blockframes/utils/pipes/filter-by-date.pipe';
 
 @Component({
   selector: 'invitation-list',
@@ -14,6 +14,6 @@ export class ListComponent {
   @Input() invitations: Invitation[];
   @ContentChild(TemplateRef) itemTemplate: TemplateRef<any>;
   
-  timeFrames = timeFrames;
+  timeFrames = descTimeFrames;
 
 }
