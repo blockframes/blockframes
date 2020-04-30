@@ -1,6 +1,6 @@
 import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { PublicUser } from '@blockframes/user/+state/user.firestore';
-import { InvitationFromUserToOrganization } from '@blockframes/invitation/+state/invitation.model';
+import { Invitation } from '@blockframes/invitation/+state/invitation.model';
 
 @Component({
   selector: 'member-request',
@@ -10,13 +10,13 @@ import { InvitationFromUserToOrganization } from '@blockframes/invitation/+state
 })
 
 export class MemberRequestComponent {
-  @Output() accepted = new EventEmitter<InvitationFromUserToOrganization>();
-  @Output() declined = new EventEmitter<InvitationFromUserToOrganization>();
+  @Output() accepted = new EventEmitter<Invitation>();
+  @Output() declined = new EventEmitter<Invitation>();
   @Input() isAdmin: boolean;
   public users: PublicUser[];
-  public memberInvitations: InvitationFromUserToOrganization[];
+  public memberInvitations: Invitation[];
 
-  @Input() set invitations(invitations: InvitationFromUserToOrganization[]) {
+  @Input() set invitations(invitations: Invitation[]) {
     this.memberInvitations = invitations;
     this.users = invitations.map(invitation => invitation.fromUser);
   }
@@ -29,8 +29,8 @@ export class MemberRequestComponent {
 
   get initialColumns() {
     return this.isAdmin
-    ? [ 'firstName', 'lastName', 'email', 'uid' ]
-    : [ 'firstName', 'lastName', 'email' ]
+      ? ['firstName', 'lastName', 'email', 'uid']
+      : ['firstName', 'lastName', 'email']
   }
 
   public findRequest(uid: string) {

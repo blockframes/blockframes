@@ -1,4 +1,4 @@
-import { InvitationToAnEventDocument, InvitationOrUndefined, InvitationDocument } from "@blockframes/invitation/types";
+import { InvitationOrUndefined, InvitationDocument } from "@blockframes/invitation/types";
 import { wasCreated, wasAccepted, wasDeclined } from "./utils";
 import { NotificationDocument, OrganizationDocument } from "../../data/types";
 import { createNotification, triggerNotifications } from "../../notification";
@@ -19,7 +19,11 @@ async function onInvitationToAnEventCreate({
   fromOrg,
   mode,
   docId
-}: InvitationToAnEventDocument) {
+}: InvitationDocument) {
+  if(!docId){
+    console.log('docId is not defined');
+    return;
+  }
   const eventId = docId;
 
   // Fetch event
@@ -62,6 +66,7 @@ async function onInvitationToAnEventCreate({
         console.log(`Sending invitation email for a meeeting event (${eventId}) from ${senderEmail} to : ${recipient}`);
         return await sendMailFromTemplate(invitationToMeetingFromUser(recipient, senderEmail, eventId));
       case 'request':
+      default:
         console.log(`Sending request email to attend an event (${eventId}) from ${senderEmail} to : ${recipient}`);
         return await sendMailFromTemplate(requestToAttendEventFromUser(senderEmail, recipient, eventId));
     }
@@ -79,7 +84,7 @@ async function onInvitationToAnEventAccepted({
   toUser,
   toOrg,
   docId,
-}: InvitationToAnEventDocument) {
+}: InvitationDocument) {
 
   const notifications: NotificationDocument[] = [];
 
@@ -133,7 +138,7 @@ async function onInvitationToAnEventRejected({
   toUser,
   toOrg,
   docId,
-}: InvitationToAnEventDocument) {
+}: InvitationDocument) {
 
   const notifications: NotificationDocument[] = [];
 
@@ -185,7 +190,7 @@ async function onInvitationToAnEventRejected({
 export async function onInvitationToAnEventUpdate(
   before: InvitationOrUndefined,
   after: InvitationDocument,
-  invitation: InvitationToAnEventDocument
+  invitation: InvitationDocument
 ): Promise<any> {
   if (wasCreated(before, after)) {
     return onInvitationToAnEventCreate(invitation);

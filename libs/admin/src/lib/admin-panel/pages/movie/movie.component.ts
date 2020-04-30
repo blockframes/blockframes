@@ -11,6 +11,7 @@ import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { createPrivateEventConfig } from '@blockframes/event/+state/event.model';
 import { PrivateConfigForm } from '../../forms/private-config.form';
 import { PrivateConfig } from '@blockframes/utils/common-interfaces';
+import { app } from '@blockframes/utils/apps';
 
 @Component({
   selector: 'admin-movie',
@@ -28,6 +29,7 @@ export class MovieComponent implements OnInit {
   public storeStatus = storeStatus;
   public staticModels = staticModels;
   public rows: any[] = [];
+  public app = app;
 
   public versionColumnsTable = {
     'id': 'Id',
@@ -90,8 +92,7 @@ export class MovieComponent implements OnInit {
       this.snackBar.open('Information not valid', 'close', { duration: 5000});
     }
 
-    this.movie.main.storeConfig.appAccess.catalog = this.movieAppAccessForm.get('catalog').value;
-    this.movie.main.storeConfig.appAccess.festival = this.movieAppAccessForm.get('festival').value;
+    this.movie.main.storeConfig.appAccess = this.movieAppAccessForm.value;
 
     await this.movieService.updateById(this.movieId, this.movie);
 

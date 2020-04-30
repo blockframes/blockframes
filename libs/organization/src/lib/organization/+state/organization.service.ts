@@ -27,8 +27,10 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   }
 
   public async orgNameExist(orgName: string) {
-    const orgs = await this.getValue(ref => ref.where('denomination.full', '==', orgName));
-    return orgs.length !== 0;
+    // @TODO #2650 use publicOrg since we can not let anyone retreive the whole organization component
+    /*const orgs = await this.getValue(ref => ref.where('denomination.full', '==', orgName));
+    return orgs.length !== 0;*/
+    return false;
   }
 
   syncOrgActive() {

@@ -22,7 +22,7 @@ service cloud.firestore {
     }
 
     match /blockframesAdmin/{userId} {
-      allow read: if userId() == userId;
+      allow read: if ( userId() == userId || (isSignedIn() && isOrgMember(userId(), orgIdOf(userId))) );
       allow write: if false;
     }
 
@@ -63,7 +63,7 @@ service cloud.firestore {
 
     match /users/{userId} {
       // TODO (#1359): We can read user data from the same organization as us until we got public users collection.
-    	allow read: if userId() == existingData().uid	|| (isSignedIn() && isOrgMember(userId, userOrgId()));
+    	allow read: if userId() == existingData().uid	|| (isSignedIn() && isOrgMember(userId(), orgIdOf(userId)));
     	allow update: if isOnlyUpdatingAllowedUserFields(userId);
     	allow create: if userId() == incomingData().uid
         && isRequestFieldValueEqualTo(['uid'], userId);
@@ -80,7 +80,7 @@ service cloud.firestore {
       	&& userId() == incomingData().uid
         && isNotUpdatingId('uid', userId)
         && isNotUpdatingField(['email'])
-        && ( isNotUpdatingField(['orgId']) || isCreatingField('orgId'))
+        && ( isNotUpdatingField(['orgId']) || isCreatingField(['orgId']))
     }
 
     ////////////////////////////////
@@ -150,16 +150,12 @@ service cloud.firestore {
         &&
         (
           isNotUpdatingId('id', invitationId)
-          && isNotUpdatingField(['app'])
-          && isNotUpdatingField(['type'])
           && isNotUpdatingField(['mode'])
-          && isNotUpdatingField(['date'])
-          && isNotUpdatingField(['fromOrg'])
-          && isNotUpdatingField(['fromUser'])
-          && isNotUpdatingField(['toOrg'])
-          && isNotUpdatingField(['toUser'])
+          && isNotUpdatingField(['fromOrg', 'id'])
+          && isNotUpdatingField(['fromUser', 'uid'])
+          && isNotUpdatingField(['toOrg', 'id'])
+          && isNotUpdatingField(['toUser', 'uid'])
           && isNotUpdatingField(['docId'])
-          && isNotUpdatingField(['processedId'])
         );
     }
 
@@ -172,18 +168,12 @@ service cloud.firestore {
   
     match /orgs/{orgId} {
       // Only org member can read because we use Algolia for search 
-      // @TODO #2585 if an user need to read something from another org, he must use publicOrg (not yet implemented (2020-04-23)).
+      // @TODO #2650 if an user need to read something from another org, he must use publicOrg (not yet implemented (2020-04-23)).
       allow read: if isOrgMember(userId(), orgId);
     	allow create: if isSignedIn()
         && isRequestFieldValueEqualTo(['status'], 'pending')
         && isRequestFieldValueEqualToOrNotSetted(['id'], orgId)
-      allow update: if isOrgAdmin(userId(), orgId)
-      	&& isNotUpdatingField(['status'])
-        && isNotUpdatingField(['created'])
-        // @TODO #2539
-        && isNotUpdatingField(['appAccess','catalogDashboard'])
-        && isNotUpdatingField(['appAccess','catalogMarketplace'])
-        && isNotUpdatingId('id', orgId);
+      allow update: if isAllowedToUpdateOrg(orgId);
       allow delete: if isSuperAdmin(userId(), orgId);
 
       match /carts/{cartId} {
@@ -192,6 +182,23 @@ service cloud.firestore {
         allow update: if isOrgMember(userId(), orgId);
         allow delete: if isOrgAdmin(userId(), userOrgId());
       }
+    }
+
+    /// FUNCTIONS ///
+
+    function isAllowedToUpdateOrg(orgId) {
+      return isOrgAdmin(userId(), orgId)
+      	&& isNotUpdatingField(['status'])
+        && isNotUpdatingField(['created'])
+        && ( isNotUpdatingField(['appAccess']) || ( existingData().status == 'pending'
+          && (
+            isCreatingField(['appAccess','catalog', 'dashboard'])
+            || isCreatingField(['appAccess','catalog', 'marketplace'])
+            || isCreatingField(['appAccess','festival', 'dashboard'])
+            || isCreatingField(['appAccess','festival', 'marketplace'])
+          )
+        ))
+        && isNotUpdatingId('id', orgId);
     }
 
     ////////////////////////////////
@@ -239,7 +246,7 @@ service cloud.firestore {
         && canCreateNewPermissions(userOrgId(), movieId);
       allow update: if isOrgAdmin(userId(), userOrgId())
         && isNotUpdatingId('id', movieId)
-        && isNotUpdatingField(['_meta'])
+        && isNotUpdatingField(['_meta', '_createdBy'])
         && isNotUpdatingField(['_type'])
         && (isNotUpdatingField(['main', 'storeConfig','status']) || incomingData().main.storeConfig.status in ['submitted', 'draft'])
         && isNotUpdatingField(['main', 'storeConfig','storeType'])
@@ -269,7 +276,7 @@ service cloud.firestore {
     /// RULES ///
 
     match /contracts/{contractId} {
-    	allow read: if isParty(userOrgId()) || orgCan('canRead', userOrgId(), contractId);
+    	allow read: if isParty(userOrgId(), contractId) || orgCan('canRead', userOrgId(), contractId);
       allow create: if canCreateNewPermissions(userOrgId(), contractId)
         && isRequestFieldValueEqualTo(['lastVersion', 'status'], 'draft')
         && isRequestFieldValueEqualToOrNotSetted(['id'], contractId);
@@ -280,7 +287,7 @@ service cloud.firestore {
       allow delete: if orgCan('canDelete', userOrgId(), contractId);
 
       match /versions/{versionId} {
-        allow read: if isParty(userOrgId()) || orgCan('canRead', userOrgId(), contractId);
+        allow read: if isParty(userOrgId(), contractId) || orgCan('canRead', userOrgId(), contractId);
         allow write: if false;
       }
     }
@@ -345,6 +352,10 @@ service cloud.firestore {
     	return get(/databases/$(database)/documents/users/$(userId())).data.orgId;
   	}
 
+    function orgIdOf(userId) {
+    	return get(/databases/$(database)/documents/users/$(userId)).data.orgId;
+  	}
+
     // Check if the user belongs to an organization.
     function userHasValidOrg() {
     	return get(/databases/$(database)/documents/orgs/$(userOrgId())).data.status == "accepted";
@@ -366,8 +377,8 @@ service cloud.firestore {
       	|| (isOrgAdmin(userId, orgId));
     }
 
-    function isParty(orgId) {
-    	return orgId in resource.data.partyIds;
+    function isParty(orgId, contractId) {
+    	return orgId in get(/databases/$(database)/documents/contracts/$(contractId)).data.partyIds;
     }
 
     function getDocumentPermissions(orgId, docId) {
@@ -426,9 +437,10 @@ service cloud.firestore {
     }
 
     // The field is sent and not already existing
-    function isCreatingField(fieldName) {
-    	return request.resource.data.keys().hasAll([fieldName]) &&
-      (resource == null || !resource.data.keys().hasAll([fieldName]));
+    function isCreatingField(fieldArray) {
+      return ( incomingData()[fieldArray[0]][fieldArray[1]].keys().hasAll([fieldArray[2]]) && (resource == null || !existingData()[fieldArray[0]][fieldArray[1]].keys().hasAll([fieldArray[2]])) )
+        || ( incomingData()[fieldArray[0]].keys().hasAll([fieldArray[1]]) && (resource == null || !existingData()[fieldArray[0]].keys().hasAll([fieldArray[1]])) )
+        || ( incomingData().keys().hasAll([fieldArray[0]]) && (resource == null || !existingData().keys().hasAll([fieldArray[0]])) );
     }
 
   }

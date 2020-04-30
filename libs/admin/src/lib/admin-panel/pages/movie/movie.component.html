@@ -52,16 +52,9 @@
     <mat-card>
       <h2>Application Access</h2>
       <form [formGroup]="movieAppAccessForm" fxLayout="column">
-        <mat-form-field appearance="outline">
-          <mat-label>Catalog App</mat-label>
-          <mat-select formControlName="catalog" required>
-            <mat-option [value]="true">Yes</mat-option>
-            <mat-option [value]="false">No</mat-option>
-          </mat-select>
-        </mat-form-field>
-        <mat-form-field appearance="outline">
-          <mat-label>Festival App</mat-label>
-          <mat-select formControlName="festival" required>
+        <mat-form-field *ngFor="let a of app" appearance="outline">
+          <mat-label>{{ a | titlecase }} App</mat-label>
+          <mat-select [formControlName]="a" required>
             <mat-option [value]="true">Yes</mat-option>
             <mat-option [value]="false">No</mat-option>
           </mat-select>

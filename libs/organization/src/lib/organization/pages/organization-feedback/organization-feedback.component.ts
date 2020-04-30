@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { InvitationService } from '@blockframes/invitation/+state/invitation.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { InvitationFromUserToOrganization } from '@blockframes/invitation/+state/invitation.model';
+import { Invitation } from '@blockframes/invitation/+state/invitation.model';
 import { Observable } from 'rxjs';
 
 @Component({
@@ -12,7 +12,7 @@ import { Observable } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationFeedbackComponent implements OnInit {
-  public invitations: InvitationFromUserToOrganization[];
+  public invitations: Invitation[];
   public orgName: Observable<string>;
   public isCanceled: boolean;
 

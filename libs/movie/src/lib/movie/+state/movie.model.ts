@@ -33,6 +33,7 @@ import { DistributionRight } from '@blockframes/distribution-rights/+state/distr
 import { Contract, getValidatedContracts } from '@blockframes/contract/contract/+state/contract.model';
 import { toDate } from '@blockframes/utils/helpers';
 import { createPrice } from '@blockframes/utils/common-interfaces';
+import { createMovieAppAccess } from '@blockframes/utils/apps';
 
 // Export for other files
 export { Credit, SalesAgent } from '@blockframes/utils/common-interfaces/identity';
@@ -294,11 +295,7 @@ export function createStoreConfig(params: Partial<StoreConfig> = {}): StoreConfi
     status: 'draft',
     storeType: 'line_up',
     ...params,
-    appAccess: {
-      catalog: false,
-      festival: false,
-      ...params.appAccess
-    }
+    appAccess: createMovieAppAccess(params.appAccess)
   };
 }
 
@@ -383,25 +380,5 @@ export function getMovieTotalViews(analytics: MovieAnalytics[], movieId: string)
   if (movieAnalytic) {
     const movieHits = movieAnalytic.movieViews.current.map(event => event.hits);
     return movieHits.reduce((sum, val) => sum + val, 0);
-  }
-}
-
-export function createAppAccessWithApp(appName: string) {
-  switch (appName) {
-    case 'catalog':
-      return {
-        catalog: true,
-        festival: false
-      }
-    case 'festival':
-      return {
-        catalog: false,
-        festival: true
-      }
-    default:
-      return {
-        catalog: false,
-        festival: false
-      }
   }
 }

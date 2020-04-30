@@ -15,8 +15,6 @@ export {
   InvitationOrUndefined,
   InvitationStatus,
   InvitationType,
-  InvitationFromOrganizationToUserDocument,
-  InvitationFromUserToOrganizationDocument,
 } from '@blockframes/invitation/types';
 export {
   PermissionsDocument,

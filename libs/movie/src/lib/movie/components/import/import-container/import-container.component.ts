@@ -6,6 +6,7 @@ import { ViewExtractedMoviesComponent } from '../view-extracted-elements/movies/
 import { ViewExtractedContractsComponent } from '../view-extracted-elements/contract/view-extracted-contracts.component';
 import { ViewExtractedRightsComponent } from '../view-extracted-elements/rights/view-extracted-rights.component';
 import { AuthQuery } from '@blockframes/auth/+state';
+import { getCurrentApp } from '@blockframes/utils/apps';
 
 @Component({
   selector: 'movie-import-container',
@@ -55,7 +56,7 @@ export class ImportContainerComponent implements OnInit {
           break;
       }
     } else {
-      const appName = this.routerQuery.getValue().state.root.data.app;
+      const appName = getCurrentApp(this.routerQuery);
       switch (appName) {
         default:
         case 'catalog':

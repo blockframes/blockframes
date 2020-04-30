@@ -36,7 +36,6 @@ export class GuestListComponent implements OnInit {
   @Input()
   set invitations(invitations: Invitation[]) {
     if (Array.isArray(invitations)) {
-      console.log('Guest List', invitations);
       const sorted = invitations.sort((a, b) => points[a.status] - points[b.status]);
       this._invitations.next(sorted);
     }
