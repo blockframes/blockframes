@@ -42,7 +42,7 @@ export function createContractVersion(params: Partial<ContractVersion> = {}): Co
   };
 }
 
-/** Cleans an organization of its optional parameters */
+/** Cleans an contract version of its optional parameters */
 export function cleanContractVersion(version: ContractVersion) {
   const v = { ...version };
   // Remove local values in any
