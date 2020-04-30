@@ -40,13 +40,13 @@ export class UserComponent implements OnInit {
       return;
     }
 
-    const { email, orgId, name, surname, phoneNumber, position } = this.userForm.value
+    const { email, orgId, firstName, lastName, phoneNumber, position } = this.userForm.value
 
     const update = {
       email,
       orgId,
-      name,
-      surname,
+      firstName,
+      lastName,
       phoneNumber,
       position
     };

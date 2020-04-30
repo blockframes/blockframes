@@ -51,17 +51,17 @@
         </mat-error>
       </mat-form-field>
       <mat-form-field appearance="outline">
-        <mat-label>Name</mat-label>
-        <input matInput type="text" placeholder="Name" formControlName="name" required />
-        <mat-error *ngIf="userForm.get('name').hasError('required')">
-          Name is <strong>required</strong>
+        <mat-label>FirstName</mat-label>
+        <input matInput type="text" placeholder="FirstName" formControlName="firstName" required />
+        <mat-error *ngIf="userForm.get('firstName').hasError('required')">
+          FirstName is <strong>required</strong>
         </mat-error>
       </mat-form-field>
       <mat-form-field appearance="outline">
-        <mat-label>Surname</mat-label>
-        <input matInput type="text" placeholder="Surname" formControlName="surname" required />
-        <mat-error *ngIf="userForm.get('surname').hasError('required')">
-          Surname is <strong>required</strong>
+        <mat-label>LastName</mat-label>
+        <input matInput type="text" placeholder="LastName" formControlName="lastName" required />
+        <mat-error *ngIf="userForm.get('lastName').hasError('required')">
+          LastName is <strong>required</strong>
         </mat-error>
       </mat-form-field>
       <mat-form-field appearance="outline">
