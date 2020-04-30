@@ -13,7 +13,7 @@ export class OrganizationsComponent implements OnInit {
     'id': 'Id',
     'status': 'Status',
     'logo': 'Logo',
-    'name': 'Name',
+    'denomination': 'Name',
     'email': 'Email',
     'appAccess': 'Authorizations',
     'edit': 'Edit',
@@ -22,7 +22,7 @@ export class OrganizationsComponent implements OnInit {
   public initialColumns: string[] = [
     'id',
     'logo',
-    'name',
+    'denomination',
     'status',
     'email',
     'appAccess',
@@ -50,7 +50,8 @@ export class OrganizationsComponent implements OnInit {
   public filterPredicate(data: any, filter: string) {
     const columnsToFilter = [
       'id',
-      'name',
+      'denomination.full',
+      'denomination.public',
       'status',
       'email',
     ];
