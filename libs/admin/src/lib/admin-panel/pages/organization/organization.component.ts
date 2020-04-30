@@ -82,7 +82,7 @@ export class OrganizationComponent implements OnInit {
 
     const moviePromises = this.org.movieIds.map(m => this.movieService.getValue(m));
     const movies = await Promise.all(moviePromises);
-    this.movies = movies.map(m => ({
+    this.movies = movies.filter(m => !!m).map(m => ({
       ...m,
       edit: {
         id: m.id,
