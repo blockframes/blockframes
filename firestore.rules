@@ -150,16 +150,12 @@ service cloud.firestore {
         &&
         (
           isNotUpdatingId('id', invitationId)
-          && isNotUpdatingField(['app'])
-          && isNotUpdatingField(['type'])
           && isNotUpdatingField(['mode'])
-          && isNotUpdatingField(['date'])
-          && isNotUpdatingField(['fromOrg'])
-          && isNotUpdatingField(['fromUser'])
-          && isNotUpdatingField(['toOrg'])
-          && isNotUpdatingField(['toUser'])
+          && isNotUpdatingField(['fromOrg', 'id'])
+          && isNotUpdatingField(['fromUser', 'uid'])
+          && isNotUpdatingField(['toOrg', 'id'])
+          && isNotUpdatingField(['toUser', 'uid'])
           && isNotUpdatingField(['docId'])
-          && isNotUpdatingField(['processedId'])
         );
     }
 
