@@ -246,7 +246,7 @@ service cloud.firestore {
         && canCreateNewPermissions(userOrgId(), movieId);
       allow update: if isOrgAdmin(userId(), userOrgId())
         && isNotUpdatingId('id', movieId)
-        && isNotUpdatingField(['_meta'])
+        && isNotUpdatingField(['_meta', '_createdBy'])
         && isNotUpdatingField(['_type'])
         && (isNotUpdatingField(['main', 'storeConfig','status']) || incomingData().main.storeConfig.status in ['submitted', 'draft'])
         && isNotUpdatingField(['main', 'storeConfig','storeType'])
