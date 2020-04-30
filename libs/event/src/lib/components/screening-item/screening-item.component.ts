@@ -1,14 +1,15 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { ScreeningEvent } from '../../+state';
-import { InvitationQuery, Invitation } from '@blockframes/invitation/+state';
+import { InvitationQuery, Invitation, InvitationService } from '@blockframes/invitation/+state';
 import { ImgRef } from '@blockframes/utils/image-uploader';
 
 @Component({
   selector: 'event-screening-item',
   templateUrl: './screening-item.component.html',
-  styleUrls: ['./screening-item.component.scss']
+  styleUrls: ['./screening-item.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class ScreeningItemComponent implements OnInit {
+export class ScreeningItemComponent {
   public poster: ImgRef;
   public screening: ScreeningEvent;
   public invitation: Invitation;
@@ -19,9 +20,17 @@ export class ScreeningItemComponent implements OnInit {
     this.invitation = this.invitationQuery.getAll().find(e => e.docId === screening.id);
   }
 
-  constructor(private invitationQuery: InvitationQuery) { }
+  constructor(
+    private invitationService: InvitationService,
+    private invitationQuery: InvitationQuery
+  ) { }
 
-  ngOnInit(): void {
+  accept(invitation: Invitation) {
+    this.invitationService.acceptInvitation(invitation);
   }
 
+  decline(invitation: Invitation) {
+    this.invitationService.declineInvitation(invitation);
+
+  }
 }
