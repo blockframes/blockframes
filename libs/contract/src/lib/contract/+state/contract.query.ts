@@ -16,10 +16,7 @@ export class ContractQuery extends QueryEntity<ContractState> {
   public activeVersion$ = this.selectActive(contract => contract.lastVersion);
 
   public activeVersionView$ = this.activeVersion$.pipe(
-    /*
-    * If user goes back, this will call the getVersionView
-    * with an undefined value, and this throws an error 
-     */
+    /* f user goes back, this will call the getVersionView with an undefined value, and this throws an error */
     filter(value => !!value),
     map(getVersionView),
     shareReplay()

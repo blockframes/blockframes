@@ -54,9 +54,9 @@ export class ContractService extends CollectionService<ContractState> {
   }
 
   formatFromFirestore(contract: Contract) {
-    contract.versions.forEach(version => {
-      version.creationDate = toDate(version.creationDate['seconds']);
-    })
+    for(const version of contract.versions) {
+      version.creationDate = toDate(version.creationDate['seconds'])
+    }
     return contract
   }
 

@@ -12,7 +12,6 @@ import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 import { MovieListContractListGuard } from '@blockframes/movie/guards/movie-contract.guard';
 import { OrganizationContractListGuard } from '@blockframes/contract/contract/guards/organization-contract-list.guard';
 import { ActiveContractGuard } from '@blockframes/contract/contract/guards/active-contract.guard';
-import { MovieCollectionGuard } from '@blockframes/movie/guards/movie-collection.guard';
 
 const routes: Routes = [{
   path: '',
@@ -41,12 +40,6 @@ const routes: Routes = [{
     },
     {
       path: 'search',
-      /**
-       *  If we are coming from different routes inside marketpalce
-       * and they set one movie active, we need to reset that to get all of them back
-       */
-      canActivate: [MovieCollectionGuard],
-      canDeactivate: [MovieCollectionGuard],
       loadChildren: () => import('./movie/search/search.module').then(m => m.MarketplaceSearchModule)
     },
     {
