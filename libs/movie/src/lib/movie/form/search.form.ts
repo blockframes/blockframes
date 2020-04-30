@@ -5,7 +5,7 @@ import { FormControl } from '@angular/forms';
 import { FormEntity, FormList } from '@blockframes/utils/form';
 import { algolia } from '@env';
 import algoliasearch, { Index } from 'algoliasearch';
-import { StoreStatus } from '../+state/movie.firestore';
+import { StoreStatus, AppAccess } from '../+state/movie.firestore';
 
 // TODO extract that (along with other potential common features) into an algolia file
 export interface AlgoliaSearch {
@@ -20,6 +20,7 @@ export interface LanguagesSearch {
 }
 
 export interface MovieSearch extends AlgoliaSearch {
+  appAccess: (keyof AppAccess)[],
   storeType: StoreTypeSlug[];
   storeConfig: StoreStatus[]
   genres: GenresSlug[];
@@ -32,6 +33,7 @@ export interface MovieSearch extends AlgoliaSearch {
 
 function createMovieSearch(search: Partial<MovieSearch> = {}): MovieSearch {
   return {
+    appAccess: [],
     query: '',
     storeType: [],
     storeConfig: [],
@@ -62,6 +64,7 @@ export type LanguageVersionControl = ReturnType<typeof createLanguageVersionCont
 
 function createMovieSearchControl(search: MovieSearch) {
   return {
+    appAccess: FormList.factory<string>(search.appAccess),
     query: new FormControl(search.query),
     storeType: FormList.factory<ExtractSlug<'STORE_TYPE'>>(search.storeType),
     storeConfig: FormList.factory<StoreStatus>(search.storeConfig),
@@ -97,6 +100,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
   get minBudget() { return this.get('minBudget'); }
   get sellers() { return this.get('sellers'); }
   get storeConfig() { return this.get('storeConfig'); }
+  get appAccess() { return this.get('appAccess')};
 
   isEmpty() {
     return (
@@ -111,7 +115,8 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
       this.productionStatus.value.length === 0 &&
       this.minBudget.value === 0 &&
       this.sellers.value.length === 0 &&
-      this.storeType.value.length === 0
+      this.storeType.value.length === 0 &&
+      this.appAccess.value.length === 0
     );
   }
 
@@ -132,7 +137,8 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
         this.productionStatus.value.map(status => `status:${status}`),
         this.sellers.value.map(seller => `orgName:${seller}`),
         this.storeType.value.map(type => `storeType:${type}`),
-        this.storeConfig.value.map(config => `storeConfig:${config}`)
+        this.storeConfig.value.map(config => `storeConfig:${config}`),
+        this.appAccess.value.map(access => `appAccess:${access}`)
       ],
       filters: `budget >= ${this.minBudget.value}`,
     });

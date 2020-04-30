@@ -2,6 +2,7 @@ import algoliasearch, { IndexSettings } from 'algoliasearch';
 import { algolia } from '../environments/environment';
 import { MovieDocument, PublicUser } from '../data/types';
 import { LanguagesSlug } from '@blockframes/utils/static-model';
+import { AppAccess } from '@blockframes/movie/+state/movie.firestore';
 
 const indexBuilder = (indexName: string, adminKey?: string) => {
   const client = algoliasearch(algolia.appId, adminKey || algolia.adminKey);
@@ -95,6 +96,9 @@ export function storeSearchableMovie(
       budget: movie.budget.totalBudget?.amount || movie.budget.estimatedBudget?.from || 0,
       orgName,
       storeType: movie.main.storeConfig?.storeType || '',
+      appAccess: !! movie.main.storeConfig!.appAccess ?
+        Object.keys(movie.main.storeConfig!.appAccess).filter(app => movie.main.storeConfig?.appAccess[app as (keyof AppAccess)]) :
+        [],
     });
   } catch (error) {
     console.error(`\n\n\tFailed to format the movie ${movie.id} into an algolia record : skipping\n\n`);
