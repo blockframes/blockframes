@@ -1,19 +1,14 @@
 import { Injectable } from '@angular/core';
 import { InvitationState, InvitationStore } from './invitation.store';
-import { createInvitationFromUserToOrganization, createInvitationFromOrganizationToUser, Invitation, createInvitation } from './invitation.model';
+import { createInvitationFromUserToOrganization, Invitation, createInvitation } from './invitation.model';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { OrganizationService, OrganizationQuery, Organization } from '@blockframes/organization/+state';
 import { AuthQuery, AuthService } from '@blockframes/auth/+state';
 import { UserService, PublicUser } from '@blockframes/user/+state';
-import { InvitationDocument, InvitationType, InvitationMode } from './invitation.firestore';
+import { InvitationDocument } from './invitation.firestore';
 import { toDate } from '@blockframes/utils/helpers';
 import { getInvitationMessage, cleanInvitation } from '../invitation-utils';
 
-type SenderKey = 'fromUser' | 'toUser' | 'fromOrg' | 'toOrg';
-type Sender = Organization | PublicUser;
-
-type SenderKey = 'fromUser' | 'toUser' | 'fromOrg' | 'toOrg';
-type Sender = Organization | PublicUser;
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'invitations' })
@@ -42,13 +37,6 @@ export class InvitationService extends CollectionService<InvitationState> {
 
   formatToFirestore(invitation: Invitation): Invitation {
     return cleanInvitation(invitation);
-  }
-
-  formatToFirestore(invitation: Invitation) {
-    for (const key in invitation) {
-      if (typeof invitation[key] === 'undefined') delete invitation[key];
-    }
-    return invitation;
   }
 
   /** Create an Invitation when a user asks to join an Organization. */

@@ -16,7 +16,6 @@ export class ListComponent implements OnInit {
   constructor(private service: EventService) { }
 
   ngOnInit(): void {
-    // ref => ref.where('meta.titleId', 'array-contains', '')
     this.events$ = this.service.screeningChanges();
   }
 

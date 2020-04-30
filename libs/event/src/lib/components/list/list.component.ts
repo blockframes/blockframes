@@ -1,5 +1,5 @@
 import { Component, OnInit, Input, TemplateRef, ContentChild, ChangeDetectionStrategy, HostBinding } from '@angular/core';
-import { timeFrames } from '@blockframes/utils/pipes/filter-by-date.pipe';
+import { ascTimeFrames } from '@blockframes/utils/pipes/filter-by-date.pipe';
 import { slideUpList } from '@blockframes/utils/animations/fade';
 
 @Component({
@@ -11,7 +11,7 @@ import { slideUpList } from '@blockframes/utils/animations/fade';
 })
 export class ListComponent implements OnInit {
   @HostBinding('@slideUpList') animation = true;
-  timeFrames = timeFrames;
+  timeFrames = ascTimeFrames;
 
   @Input() events: Event[];
   @ContentChild(TemplateRef) itemTemplate: TemplateRef<any>;

@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform, NgModule } from '@angular/core';
 import { formatDate } from '@angular/common';
-import { sub } from 'date-fns/fp'
+import { sub, add, startOfDay } from 'date-fns/fp'
 
 export interface TimeFrame {
   label?: string;
@@ -9,18 +9,34 @@ export interface TimeFrame {
   to?: number;
 }
 
-export const timeFrames: TimeFrame[] = [
+export const descTimeFrames: TimeFrame[] = [
   { type: 'days', from: 0, to: 1, label: 'Today' },
-  { type: 'days', from: 1, to: 2, label: 'Yesterday' },
+  { type: 'days', from: -1, to: 0, label: 'Yesterday' },
+  { type: 'days', from: -2, to: -1 },
+  { type: 'days', from: -3, to: -2 },
+  { type: 'days', from: -4, to: -3 },
+  { type: 'days', from: -5, to: -4 },
+  { type: 'days', from: -6, to: -5 },
+  { type: 'weeks', from: -2, to: -1, label: 'Last Week' },
+  { type: 'weeks', from: -3, to: -2 },
+  { type: 'weeks', from: -4, to: -3 },
+  { type: 'months', from: -2, to: -1, label: 'Last Month' },
+  { type: 'months', from: -3, to: -2 },
+  { type: 'months', from: -4, to: -3 },
+];
+
+export const ascTimeFrames: TimeFrame[] = [
+  { type: 'days', from: 0, to: 1, label: 'Today' },
+  { type: 'days', from: 1, to: 2, label: 'Tomorrow' },
   { type: 'days', from: 2, to: 3 },
   { type: 'days', from: 3, to: 4 },
   { type: 'days', from: 4, to: 5 },
   { type: 'days', from: 5, to: 6 },
   { type: 'days', from: 6, to: 7 },
-  { type: 'weeks', from: 1, to: 2, label: 'Last Week' },
+  { type: 'weeks', from: 1, to: 2, label: 'Next Week' },
   { type: 'weeks', from: 2, to: 3 },
   { type: 'weeks', from: 3, to: 4 },
-  { type: 'months', from: 1, to: 2, label: 'Last Month' },
+  { type: 'months', from: 1, to: 2, label: 'Next Month' },
   { type: 'months', from: 2, to: 3 },
   { type: 'months', from: 3, to: 4 },
 ];
@@ -39,10 +55,11 @@ export class FilterByDatePipe implements PipeTransform {
       return value;
     }
     const { from, to, type } = timeFrame;
-    const now = Date.now();
-    const fromDate = sub({ [type]: from }, now);
-    const toDate = sub({ [type]: to }, now);
-    return value.filter(v => v[key] <= fromDate && v[key] > toDate);
+    const now = startOfDay(Date.now());
+    const fromDate = add({ [type]: from }, now);
+    const toDate = add({ [type]: to }, now);
+    console.log(timeFrame.label, fromDate, toDate);
+    return value.filter(v => v[key] >= fromDate && v[key] < toDate);
   }
 }
 
@@ -53,7 +70,8 @@ export class LabelByDatePipe implements PipeTransform {
     if (label) {
       return label;
     }
-    const fromDate = sub({ [type]: from }, Date.now());
+    const now = startOfDay(Date.now());
+    const fromDate = add({ [type]: from }, now);
     switch (type) {
       case 'days': return formatDate(fromDate, 'EEEE', 'en');
       case 'weeks': return formatDate(fromDate, 'MMMM d', 'en');
