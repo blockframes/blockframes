@@ -1,9 +1,11 @@
-import { Directive, Component, TemplateRef, Input, ViewContainerRef, OnDestroy, AfterViewInit, NgModule, HostBinding, NgZone, Inject, ElementRef, ChangeDetectorRef } from '@angular/core';
+import { Directive, Component, TemplateRef, Input, ViewContainerRef, OnDestroy, AfterViewInit, NgModule, HostBinding, NgZone, Inject, ElementRef, ChangeDetectorRef, EventEmitter, Output } from '@angular/core';
 import { PortalModule, TemplatePortal } from '@angular/cdk/portal';
 import { CommonModule, DOCUMENT } from '@angular/common';
 import { trigger, style, transition, animate, query } from '@angular/animations';
 import { Easing } from '@blockframes/utils/animations/animation-easing';
 import { Observable } from 'rxjs';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-bar',
@@ -72,6 +74,7 @@ export class AppBarComponent {
 export class AppContainerDirective {
   container: HTMLElement;
   @Input('appContainer') appBar: AppBarComponent;
+  @Output() toggle = new EventEmitter();
   constructor(ref: ElementRef) {
     this.container = ref.nativeElement;
   }
@@ -130,9 +133,24 @@ export class PageBarDirective implements AfterViewInit, OnDestroy {
   }
 }
 
+@Component({
+  selector: 'app-menu',
+  template: `
+    <button mat-icon-button (click)="toggle()">
+      <mat-icon svgIcon="menu"></mat-icon>
+    </button>
+  `
+})
+export class AppMenuComponent {
+  constructor(private appContainer: AppContainerDirective) {}
+  toggle() {
+    this.appContainer.toggle.emit();
+  }
+}
+
 @NgModule({
-  imports: [CommonModule, PortalModule],
-  declarations: [AppBarComponent, AppContainerDirective, PageBarDirective],
-  exports: [AppBarComponent, AppContainerDirective, PageBarDirective],
+  imports: [CommonModule, PortalModule, MatButtonModule, MatIconModule],
+  declarations: [AppBarComponent, AppContainerDirective, PageBarDirective, AppMenuComponent],
+  exports: [AppBarComponent, AppContainerDirective, PageBarDirective, AppMenuComponent],
 })
 export class AppBarModule {}
