@@ -54,14 +54,14 @@ export function getVersionView(version: ContractVersion): VersionView {
 /** Format the Payment schedule to be displayed  */
 export function displayPaymentSchedule(version: ContractVersion): { type: string, list: string[] } {
     // Payment Schedule
-    if (version.customPaymentSchedule) {
+    if (version?.customPaymentSchedule) {
       return {
         type: 'Custom Payment Schedule',
         list: [version.customPaymentSchedule]
       };
     }
     // Verify if payment schedule is incomplete
-    if (!version.paymentSchedule.length) {
+    if (!version?.paymentSchedule.length) {
       return undefined;
     }
     const isIncomplete = version.paymentSchedule.some(({ percentage, date }) => {

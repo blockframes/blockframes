@@ -38,6 +38,6 @@
 
   <!-- status -->
   <ng-template colRef="status" let-status>
-    {{ status }}
+    {{ status | toLabel: 'storeStatus' | async }}
   </ng-template>
 </bf-table-filter>

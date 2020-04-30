@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CollectionGuard, CollectionGuardConfig, awaitSyncQuery, Query } from 'akita-ng-fire';
 import { ContractService, ContractState, ContractStore, ContractWithTimeStamp } from '../+state';
-import { tap, switchMap } from 'rxjs/operators';
+import { tap, switchMap, distinctUntilChanged } from 'rxjs/operators';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 
 /**
@@ -36,6 +36,7 @@ export class OrganizationContractListGuard extends CollectionGuard<ContractState
   sync() {
     return this.organizationQuery.selectActiveId().pipe(
       // Clear the store everytime the active orgId changes.
+      distinctUntilChanged(),
       tap(_ => this.store.reset()),
       switchMap(orgId => awaitSyncQuery.call(this.service, organizationContractsListQuery(orgId)))
     );

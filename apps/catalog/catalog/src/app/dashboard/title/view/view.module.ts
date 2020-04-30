@@ -1,9 +1,15 @@
+// Angular
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
+
+// Blockframes
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
+import { DurationModule } from '@blockframes/utils/pipes/duration.pipe';
+
+// Components
 import { TitleViewComponent } from './view.component';
 
 // Material
@@ -38,6 +44,7 @@ const routes = [{
     FlexLayoutModule,
     ImageReferenceModule,
     TranslateSlugModule,
+    DurationModule,
     // Material
     MatTabsModule,
     MatProgressSpinnerModule,

@@ -16,6 +16,8 @@ export class ContractQuery extends QueryEntity<ContractState> {
   public activeVersion$ = this.selectActive(contract => contract.lastVersion);
 
   public activeVersionView$ = this.activeVersion$.pipe(
+    /* f user goes back, this will call the getVersionView with an undefined value, and this throws an error */
+    filter(value => !!value),
     map(getVersionView),
     shareReplay()
   );
@@ -26,13 +28,14 @@ export class ContractQuery extends QueryEntity<ContractState> {
     distinctUntilChanged((prev, next) => prev.length === next.length),
     switchMap(titeIds => this.movieQuery.selectMany(titeIds))
   )
-  
+
   /**
    * @dev Listens to all historized versions of the contract except the current version
    */
   public versionsView$ = this.selectActive().pipe(
     filter(contract => !!contract),
     map(contract => contract.versions.filter((_, i) => i !== contract.lastVersion.id)),
+    filter(versions => !!versions),
     map(versions => versions.map(getVersionView))
   );
 
