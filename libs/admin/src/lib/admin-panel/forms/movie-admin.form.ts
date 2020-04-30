@@ -22,7 +22,7 @@ export class MovieAdminForm extends FormEntity<MovieAdminControl> {
 }
 
 // STORE CONFIG APP ACCESS
-function createAppAccessMovie(entity: Partial<Movie>) {
+function createAppAccessMovieControls(entity: Partial<Movie>) {
   const movie = createMovie(entity);
   return {
     catalog: new FormControl(movie.main.storeConfig.appAccess.catalog),
@@ -30,10 +30,10 @@ function createAppAccessMovie(entity: Partial<Movie>) {
   };
 }
 
-type MovieAppAccessAdmin = ReturnType<typeof createAppAccessMovie>;
+type MovieAppAccessAdminControl = ReturnType<typeof createAppAccessMovieControls>;
 
-export class MovieAppAccessAdminForm extends FormEntity<MovieAppAccessAdmin> {
+export class MovieAppAccessAdminForm extends FormEntity<MovieAppAccessAdminControl> {
   constructor(data?: Movie) {
-    super(createAppAccessMovie(data));
+    super(createAppAccessMovieControls(data));
   }
 }
