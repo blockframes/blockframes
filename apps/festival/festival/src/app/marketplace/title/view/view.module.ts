@@ -11,7 +11,7 @@ import { ViewComponent } from './view.component';
 import { MovieViewLayoutModule } from '@blockframes/movie/layout/view/view.module';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { MovieHeaderModule } from '@blockframes/movie/components/header/header.module';
-
+import { OrgChipModule } from '@blockframes/organization/components/chip/chip.module';
 // Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -39,6 +39,7 @@ const routes = [{
     MovieViewLayoutModule,
     ImageReferenceModule,
     MovieHeaderModule,
+    OrgChipModule,
     // Material
     MatChipsModule,
     MatButtonModule,

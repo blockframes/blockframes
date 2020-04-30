@@ -58,7 +58,6 @@ export class FilterByDatePipe implements PipeTransform {
     const now = startOfDay(Date.now());
     const fromDate = add({ [type]: from }, now);
     const toDate = add({ [type]: to }, now);
-    console.log(timeFrame.label, fromDate, toDate);
     return value.filter(v => v[key] >= fromDate && v[key] < toDate);
   }
 }
