@@ -22,7 +22,7 @@ service cloud.firestore {
     }
 
     match /blockframesAdmin/{userId} {
-      allow read: if userId() == userId;
+      allow read: if ( userId() == userId || (isSignedIn() && isOrgMember(userId(), orgIdOf(userId))) );
       allow write: if false;
     }
 
@@ -63,7 +63,7 @@ service cloud.firestore {
 
     match /users/{userId} {
       // TODO (#1359): We can read user data from the same organization as us until we got public users collection.
-    	allow read: if userId() == existingData().uid	|| (isSignedIn() && isOrgMember(userId, userOrgId()));
+    	allow read: if userId() == existingData().uid	|| (isSignedIn() && isOrgMember(userId(), orgIdOf(userId)));
     	allow update: if isOnlyUpdatingAllowedUserFields(userId);
     	allow create: if userId() == incomingData().uid
         && isRequestFieldValueEqualTo(['uid'], userId);
@@ -276,7 +276,7 @@ service cloud.firestore {
     /// RULES ///
 
     match /contracts/{contractId} {
-    	allow read: if isParty(userOrgId()) || orgCan('canRead', userOrgId(), contractId);
+    	allow read: if isParty(userOrgId(), contractId) || orgCan('canRead', userOrgId(), contractId);
       allow create: if canCreateNewPermissions(userOrgId(), contractId)
         && isRequestFieldValueEqualTo(['lastVersion', 'status'], 'draft')
         && isRequestFieldValueEqualToOrNotSetted(['id'], contractId);
@@ -287,7 +287,7 @@ service cloud.firestore {
       allow delete: if orgCan('canDelete', userOrgId(), contractId);
 
       match /versions/{versionId} {
-        allow read: if isParty(userOrgId()) || orgCan('canRead', userOrgId(), contractId);
+        allow read: if isParty(userOrgId(), contractId) || orgCan('canRead', userOrgId(), contractId);
         allow write: if false;
       }
     }
@@ -352,6 +352,10 @@ service cloud.firestore {
     	return get(/databases/$(database)/documents/users/$(userId())).data.orgId;
   	}
 
+    function orgIdOf(userId) {
+    	return get(/databases/$(database)/documents/users/$(userId)).data.orgId;
+  	}
+
     // Check if the user belongs to an organization.
     function userHasValidOrg() {
     	return get(/databases/$(database)/documents/orgs/$(userOrgId())).data.status == "accepted";
@@ -373,8 +377,8 @@ service cloud.firestore {
       	|| (isOrgAdmin(userId, orgId));
     }
 
-    function isParty(orgId) {
-    	return orgId in resource.data.partyIds;
+    function isParty(orgId, contractId) {
+    	return orgId in get(/databases/$(database)/documents/contracts/$(contractId)).data.partyIds;
     }
 
     function getDocumentPermissions(orgId, docId) {
