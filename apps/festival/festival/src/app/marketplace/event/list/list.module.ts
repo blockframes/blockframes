@@ -1,32 +1,17 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FlexLayoutModule } from '@angular/flex-layout';
-import { EventListComponent } from './list.component';
-
-import { EventModule } from '@blockframes/event/event.module';
+import { ListComponent } from './list.component';
 import { RouterModule } from '@angular/router';
-import { AppBarModule } from '@blockframes/ui/app-bar';
-import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
-import { DisplayNameModule } from '@blockframes/utils/pipes/display-name.module'
-
-// Material
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
+import { EventListModule } from '@blockframes/event/components/list/list.module';
+import { ScreeningItemModule } from '@blockframes/event/components/screening-item/screening-item.module';
 
 @NgModule({
-  declarations: [EventListComponent],
+  declarations: [ListComponent],
   imports: [
     CommonModule,
-    FlexLayoutModule,
-    EventModule,
-    AppBarModule,
-    ImageReferenceModule,
-    DisplayNameModule,
-    // Material
-    MatIconModule,
-    MatButtonModule,
-    // Router
-    RouterModule.forChild([{ path: '', component: EventListComponent }])
+    EventListModule,
+    ScreeningItemModule,
+    RouterModule.forChild([{ path: '', component: ListComponent }])
   ]
 })
-export class EventListModule { }
+export class ListModule { }

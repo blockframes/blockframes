@@ -48,7 +48,7 @@ export const scaleOutList = scaleList('scaleOutList', 1.1);
 const slide = (name: string, distance: string) => trigger(name, [
   transition(':enter', [
     style({ opacity: '0', transform: `translateY(${distance})` }),
-    animate(`2s ${Easing.easeOutcubic}`, style({opacity: '1', transform: 'translateY(0)'})
+    animate(`0.2s ${Easing.easeOutcubic}`, style({opacity: '1', transform: 'translateY(0)'})
  )]),
   transition(':leave', [
     style({opacity: '1', transform: 'translateY(0)'}),
@@ -56,9 +56,9 @@ const slide = (name: string, distance: string) => trigger(name, [
  )])
 ]);
 /** Animation used for view-like pages */
-export const slideDown = slide('slideDown', '20px');
+export const slideDown = slide('slideDown', '-20px');
 /** Animation used for view-like pages */
-export const slideUp = slide('slideUp', '-20px');
+export const slideUp = slide('slideUp', '20px');
 
 const slideList = (name: string, distance: string) => (selector: string) => trigger(name, [
   transition(':enter', [
@@ -76,9 +76,9 @@ const slideList = (name: string, distance: string) => (selector: string) => trig
 ]);
 
 /** Animation used for view-like pages */
-export const slideDownList = slideList('slideDownList', '20px');
+export const slideDownList = slideList('slideDownList', '-20px');
 /** Animation used for view-like pages */
-export const slideUpList = slideList('slideUpList', '-20px');
+export const slideUpList = slideList('slideUpList', '20px');
 
 
 
@@ -95,7 +95,7 @@ export const fade = trigger('fade', [
  )])
 ]);
 
-export const fadeLsit = (selector: string) => trigger('fadeList', [
+export const fadeList = (selector: string) => trigger('fadeList', [
   transition(':enter', [
     query(selector, [
       style({  opacity: 0, transform: 'scale(0.95)' }),

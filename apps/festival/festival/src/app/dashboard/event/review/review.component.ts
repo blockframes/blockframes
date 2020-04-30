@@ -3,7 +3,7 @@ import { EventQuery } from '@blockframes/event/+state/event.query';
 import { InvitationService, Invitation } from '@blockframes/invitation/+state';
 import { EventService } from '@blockframes/event/+state/event.service';
 import { Observable, Subscription } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { switchMap, map, filter } from 'rxjs/operators';
 
 const columns = {
   firstName: 'First Name',
@@ -19,10 +19,13 @@ const columns = {
 })
 export class EventReviewComponent implements OnInit, OnDestroy {
 
+  private sub: Subscription;
   event$ = this.query.selectActive();
   invitations$: Observable<Invitation[]>;
-  analytics$ = this.query.analytics.selectActive();
-  sub: Subscription;
+  analytics$ = this.query.analytics.selectActive().pipe(
+    filter(analytics => !!analytics),
+    map(analytics => analytics.eventUsers)
+  );
 
   public columns = columns;
   public initialColumns = Object.keys(columns);

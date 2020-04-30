@@ -1,0 +1,22 @@
+:host {
+  display: flex;
+  flex-direction: row;
+}
+
+img {
+  height: 300px;
+  margin-right: 24px;
+}
+
+article {
+  flex: 1;
+}
+
+h5 {
+  text-transform: uppercase;
+  margin-bottom: 0;
+}
+
+pre {
+  margin-top: 0;
+}

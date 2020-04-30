@@ -70,7 +70,11 @@ const routes: Routes = [{
       path: 'event',
       children: [{
         path: '',
-        loadChildren: () => import('./event/list/list.module').then(m => m.EventListModule),
+        loadChildren: () => import('./event/list/list.module').then(m => m.ListModule),
+        data: { animation: 'event-list' }
+      }, {
+        path: 'calendar',
+        loadChildren: () => import('./event/calendar/calendar.module').then(m => m.EventCalendarModule),
         data: { animation: 'event-list' }
       }, {
         path: ':eventId',
