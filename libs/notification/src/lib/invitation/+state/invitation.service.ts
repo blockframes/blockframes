@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { InvitationState, InvitationStore } from './invitation.store';
 import { createInvitationFromUserToOrganization, Invitation, createInvitation } from './invitation.model';
 import { CollectionConfig, CollectionService } from 'akita-ng-fire';
-import { OrganizationService, OrganizationQuery, Organization } from '@blockframes/organization/+state';
+import { OrganizationService, OrganizationQuery } from '@blockframes/organization/+state';
 import { AuthQuery, AuthService } from '@blockframes/auth/+state';
-import { UserService, PublicUser } from '@blockframes/user/+state';
+import { UserService } from '@blockframes/user/+state';
 import { InvitationDocument } from './invitation.firestore';
 import { toDate } from '@blockframes/utils/helpers';
 import { getInvitationMessage, cleanInvitation } from '../invitation-utils';
@@ -117,7 +117,7 @@ export class InvitationService extends CollectionService<InvitationState> {
     return {
       from: (from: 'user' | 'org') => ({
         to: async (type: 'attendEvent' | 'joinOrganization', docId: string) => {
-          const base = { mode: 'request', type, docId } as Partial<Invitation>
+          const base = { mode: 'invitation', type, docId } as Partial<Invitation>
           if (from === 'user') {
             base['fromUser'] = this.authQuery.user;
           } else if (from === 'org') {
