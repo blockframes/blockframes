@@ -92,7 +92,7 @@ export function storeSearchableMovie(
       },
       status: !! movie.main.status ? movie.main.status : '',
       storeConfig: movie.main.storeConfig?.status || '',
-      budget: movie.budget.totalBudget ||  movie.budget.estimatedBudget?.from || 0,
+      budget: movie.budget.totalBudget?.amount || movie.budget.estimatedBudget?.from || 0,
       orgName,
       storeType: movie.main.storeConfig?.storeType || '',
     });

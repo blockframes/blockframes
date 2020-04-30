@@ -5,11 +5,14 @@ import {
   ChangeDetectionStrategy,
   OnInit
 } from '@angular/core';
+
 // Blockframes
-import { MovieQuery } from '@blockframes/movie/+state/movie.query';
+import { MovieService } from '@blockframes/movie/+state';
+
 // RxJs
-import { Observable } from 'rxjs';
-import { startWith, map, debounceTime, switchMap, distinctUntilChanged, pluck } from 'rxjs/operators';
+import { Observable, combineLatest, of } from 'rxjs';
+import { map, debounceTime, switchMap, distinctUntilChanged, pluck, filter, startWith, tap } from 'rxjs/operators';
+
 // Others
 import { sortMovieBy } from '@blockframes/utils/akita-helper/sort-movie-by';
 import { MovieSearchForm } from '@blockframes/movie/form/search.form';
@@ -29,34 +32,28 @@ export class MarketplaceSearchComponent implements OnInit {
 
   public filterForm = new MovieSearchForm();
 
-  constructor(private movieQuery: MovieQuery, private dynTitle: DynamicTitleService) { }
+  constructor(private movieService: MovieService, private dynTitle: DynamicTitleService) { }
 
   ngOnInit() {
-       // Immplcity we only want accepted movies
+    // We only want accepted movies
     this.filterForm.storeConfig.add('accepted');
-    this.dynTitle.setPageTitle('Titles')
-    this.movieSearchResults$ = this.filterForm.valueChanges.pipe(
+    this.dynTitle.setPageTitle('Titles');
+    const movies$ = this.filterForm.valueChanges.pipe(
       debounceTime(300),
       distinctUntilChanged(),
-      switchMap(() => this.filterForm.search()),
+      startWith(this.filterForm.value),
+      switchMap(_ => this.filterForm.search()),
       pluck('hits'),
-      map(result => result.map(movie => movie.objectID)),
-
-      // join retrieved movieIds from algolia with the movies from the state
-      switchMap(movieIds => {
-        // If empty get all the movies from akita
-        if (!this.filterForm.isEmpty()) {
-          return this.movieQuery.selectAll({
-            filterBy: movie => movieIds.includes(movie.id),
-            sortBy: (a, b) => sortMovieBy(a, b, this.sortByControl.value),
-          })
-        } else {
-          return this.movieQuery.selectAll({
-            sortBy: (a, b) => sortMovieBy(a, b, this.sortByControl.value)
-          });
-        }
-      }),
-      startWith(this.movieQuery.getAll())
+      map(results => results.map(movie => movie.objectID)),
+      /* We want to return an empty array if the user type something we cant find a match for */
+      switchMap(movieIds => movieIds.length ? this.movieService.valueChanges(movieIds) : of([]))
+    );
+    const sortBy$ = this.sortByControl.valueChanges.pipe(
+      startWith(this.sortByControl.value)
+    );
+    this.movieSearchResults$ = combineLatest([movies$, sortBy$]).pipe(
+      map(([movies, sortBy]) => movies.sort((a, b) => sortMovieBy(a, b, this.sortByControl.value))
+      )
     )
   }
 }
