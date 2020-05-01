@@ -10,10 +10,12 @@ import { ScreeningEvent, MeetingEvent } from '../../+state';
 })
 export class CardComponent {
   @Input() event: ScreeningEvent | MeetingEvent;
-  
-  @Input()
+  @Input() size: 'small' | 'large';
+
   @HostBinding('class')
-  size: 'small' | 'large';
+  get class() {
+    return `event-card ${this.event.type} ${this.size}`;
+  }
 
 }
 
