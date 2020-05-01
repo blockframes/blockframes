@@ -1,13 +1,18 @@
 <event-edit [form]="form" [invitations]="invitations$ | async">
   <article [formGroup]="meta" fxLayout="column">
-    <h4>Screening</h4>
-    <mat-form-field appearance="outline">
-      <mat-label>Select the title to display</mat-label>
-      <mat-select formControlName="titleId">
-        <mat-option *ngFor="let title of titles$ | async" [value]="title.id">
-          {{ title.main.title.international }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+    <ng-container [ngSwitch]="form.value.type">
+      <!-- Screening -->
+      <ng-container *ngSwitchCase="'screening'">
+        <h4>Screening</h4>
+        <mat-form-field appearance="outline">
+          <mat-label>Select the title to display</mat-label>
+          <mat-select formControlName="titleId">
+            <mat-option *ngFor="let title of titles$ | async" [value]="title.id">
+              {{ title.main.title.international }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </ng-container>
+    </ng-container>
   </article>
 </event-edit>

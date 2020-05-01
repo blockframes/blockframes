@@ -3,6 +3,7 @@ import { Meeting, EventBase, Screening, EventMeta, EventPrivateConfig } from './
 import { toDate } from '@blockframes/utils/helpers';
 import { Movie } from '@blockframes/movie/+state';
 import { Organization } from '@blockframes/organization/+state';
+import { User } from '@blockframes/auth/+state';
 export { EventsAnalytics } from './event.firestore';
 
 // Event
@@ -43,6 +44,7 @@ export const isLocal = (event: Partial<Event>): event is MeetingEvent => event?.
 // Meeting
 export interface MeetingEvent extends Event<Meeting> {
   type: 'meeting';
+  org: Organization;
 }
 export const isMeeting = (event: Partial<Event>): event is MeetingEvent => event?.type === 'meeting';
 export function createMeeting(meeting: Partial<Meeting>): Meeting {
