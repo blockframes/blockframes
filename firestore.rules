@@ -66,7 +66,7 @@ service cloud.firestore {
     	allow read: if userId() == existingData().uid	|| (isSignedIn() && isOrgMember(orgIdOf(userId())));
     	allow update: if isOnlyUpdatingAllowedUserFields();
     	allow create: if userId() == incomingData().uid
-        && isRequestFieldValueEqualTo(['uid'], existingData().uid);
+        && isRequestFieldValueEqualTo(['uid'], userId);
       allow delete: if userId() == existingData().uid;
     }
 
@@ -119,13 +119,13 @@ service cloud.firestore {
     
     match /invitations/{invitationId} {
     	allow read: if isInvitationSender() || isInvitationRecepient();
-      allow create: if isInvitationSender()
+      allow create: if isInvitationCreator()
         && isRequestFieldValueEqualTo(['status'], 'pending')
         && (
           !incomingData().keys().hasAll(['docId']) // no docId
           || orgCan('isAdmin', userOrgId(), incomingData().docId) // user org is admin of docId
         )
-        && isRequestFieldValueEqualToOrNotSetted(['id'], existingData().id);
+        && isRequestFieldValueEqualToOrNotSetted(['id'], invitationId);
     	allow update: if isOnlyChangingInvitationStatus();
       allow delete: if isInvitationSender();
     }
@@ -135,6 +135,11 @@ service cloud.firestore {
     function isInvitationSender() {
       return isOrgAdmin(existingData().fromOrg.id)
         || userId() == existingData().fromUser.uid;
+    }
+
+    function isInvitationCreator() {
+      return isOrgAdmin(incomingData().fromOrg.id)
+        || userId() == incomingData().fromUser.uid;
     }
 
     function isInvitationRecepient() {
@@ -172,7 +177,7 @@ service cloud.firestore {
       allow read: if isOrgMember(existingData().id);
     	allow create: if isSignedIn()
         && isRequestFieldValueEqualTo(['status'], 'pending')
-        && isRequestFieldValueEqualToOrNotSetted(['id'], existingData().id)
+        && isRequestFieldValueEqualToOrNotSetted(['id'], orgId)
       allow update: if isAllowedToUpdateOrg();
       allow delete: if isSuperAdmin(existingData().id);
 
@@ -190,14 +195,7 @@ service cloud.firestore {
       return isOrgAdmin(existingData().id)
       	&& isNotUpdatingField(['status'])
         && isNotUpdatingField(['created'])
-        && ( isNotUpdatingField(['appAccess']) || ( existingData().status == 'pending'
-          && (
-            isCreatingField(['appAccess','catalog', 'dashboard'])
-            || isCreatingField(['appAccess','catalog', 'marketplace'])
-            || isCreatingField(['appAccess','festival', 'dashboard'])
-            || isCreatingField(['appAccess','festival', 'marketplace'])
-          )
-        ))
+        && ( isNotUpdatingField(['appAccess']) || existingData().status == 'pending' )
         && isNotUpdatingId('id', existingData().id);
     }
 
@@ -209,15 +207,15 @@ service cloud.firestore {
 
     match /permissions/{orgId} {
     	allow read: if isOrgMember(existingData().id);
-      allow create: if isRequestFieldValueEqualToOrNotSetted(['id'], existingData().id)
-        && ( isOrgAdmin(existingData().id) || isCreatingOrganization(existingData().id));
+      allow create: if isRequestFieldValueEqualToOrNotSetted(['id'], orgId)
+        && ( isOrgAdmin(orgId) || isCreatingOrganization(orgId));
 			allow update: if isOrgAdmin(existingData().id)
       	&& isNotUpdatingId('id', existingData().id);
 
       match /documentPermissions/{docId} {
         allow read: if isOrgMember(orgId);
         allow create: if isOrgMember(orgId)
-          && isRequestFieldValueEqualToOrNotSetted(['id'], existingData().id)
+          && isRequestFieldValueEqualToOrNotSetted(['id'], docId)
           && isBrandNewDocument();
         allow update: if isOrgAdmin(orgId)
           && isNotUpdatingId('id', existingData().id);
@@ -242,8 +240,8 @@ service cloud.firestore {
       allow read: if userHasValidOrg();
       allow create: if userHasValidOrg()
         && isRequestFieldValueEqualTo(['main', 'storeConfig', 'status'], 'draft')
-      	&& isRequestFieldValueEqualToOrNotSetted(['id'], existingData().id)
-        && canCreateNewPermissions(userOrgId(), existingData().id);
+      	&& isRequestFieldValueEqualToOrNotSetted(['id'], movieId)
+        && canCreateNewPermissions(userOrgId(), movieId);
       allow update: if isOrgAdmin(userOrgId())
         && isNotUpdatingId('id', existingData().id)
         && isNotUpdatingField(['_meta', '_createdBy'])
@@ -259,7 +257,7 @@ service cloud.firestore {
       match /distributionRights/{rightId} {
         // @TODO (#2606 #2049) We allow all distributionRights reads as we need it to search avails
         allow read: if userHasValidOrg();
-        allow create: if isRequestFieldValueEqualToOrNotSetted(['id'], existingData().id)
+        allow create: if isRequestFieldValueEqualToOrNotSetted(['id'], rightId)
           && isRequestFieldValueEqualTo(['status'], 'draft')
         allow update: if isNotUpdatingId('id', existingData().id)
           && (isNotUpdatingField(['status']) || incomingData().status in ['draft', 'cart', 'undernegotiation'])
@@ -277,9 +275,9 @@ service cloud.firestore {
 
     match /contracts/{contractId} {
     	allow read: if isParty() || orgCan('canRead', userOrgId(), existingData().id);
-      allow create: if canCreateNewPermissions(userOrgId(), existingData().id)
+      allow create: if canCreateNewPermissions(userOrgId(), contractId)
         && isRequestFieldValueEqualTo(['lastVersion', 'status'], 'draft')
-        && isRequestFieldValueEqualToOrNotSetted(['id'], existingData().id);
+        && isRequestFieldValueEqualToOrNotSetted(['id'], contractId);
       allow update: if orgCan('canUpdate', userOrgId(), existingData().id)
         && isNotUpdatingId('id', existingData().id)
         && isNotUpdatingField(['type'])
@@ -303,14 +301,9 @@ service cloud.firestore {
 
     /// EVENTS RULES ///
     match /events/{eventId} {
-    	allow read: if userHasValidOrg() 
-        && (
-          !existingData().isPrivate 
-          || existingData().ownerId == userId()
-          || ( existingData().ownerId == userOrgId() && isOrgAdmin(userOrgId()) )
-        );
+    	allow read: if userHasValidOrg();
       allow create: if userHasValidOrg() 
-        && isRequestFieldValueEqualToOrNotSetted(['id'], existingData().id)
+        && isRequestFieldValueEqualToOrNotSetted(['id'], eventId)
         && ( isRequestFieldValueEqualTo(['ownerId'], userId()) || isRequestFieldValueEqualTo(['ownerId'], userOrgId()) );
       allow update: if userHasValidOrg() 
         && isNotUpdatingId('id', existingData().id)
@@ -449,6 +442,5 @@ service cloud.firestore {
   }
 }
 
-//tester rules pr public events
-//et récuperer la liste des mes invités
+//tester récuperer la liste des mes invités
 //et récuparer la liste des events (public/privés) ou je suis invité
