@@ -3,7 +3,7 @@
   <div fxLayout="column" fxLayoutAlign="start start">
     <h3>{{ screening.title }}</h3>
     <h5>{{ screening.isPrivate ? 'Private' : 'Public' }} Screening </h5>
-    <pre class="mat-body1">{{ screening | eventRange }}</pre>
+    <pre class="mat-body-1">{{ screening | eventRange }}</pre>
     <org-chip [org]="screening.org"></org-chip>
   </div>
   <footer fxLayout>

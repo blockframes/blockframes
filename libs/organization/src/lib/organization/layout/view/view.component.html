@@ -1,9 +1,7 @@
 <ng-container *ngIf="org">
   <ng-template pageBar targetId="nav">
     <div class="app-bar" fxLayout fxLayoutAlign="space-between center">
-      <button mat-icon-button>
-        <mat-icon svgIcon="menu"></mat-icon>
-      </button>
+      <app-menu></app-menu>
       <nav id="nav" mat-tab-nav-bar @fade>
         <a mat-tab-link
           *ngFor="let link of navLinks"

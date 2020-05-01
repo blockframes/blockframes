@@ -1,15 +1,22 @@
-@import "~@angular/flex-layout/mq";
-@import "images";
-
 movie-header {
-    display: block;
-    background-size: cover;
+  display: block;
+  background-size: cover;
 
   header {
     padding: 50px 24px;
 
     .poster {
-      @include poster("large");
+      height: 450px;
+    }
+    
+    .movie-details {
+      h4 {
+        text-transform: uppercase;
+        margin: 0;
+      }
+      h2 {
+        margin-bottom: 8px;
+      }
     }
   }
 
@@ -20,25 +27,5 @@ movie-header {
 
   .movie-header-actions {
     display: flex;
-  }
-}
-
-@include layout-bp(xs) {
-  movie-header {
-    header {
-      .poster {
-        @include poster("small");
-      }
-    }
-  }
-}
-
-@include layout-bp(sm) {
-  movie-header {
-    header {
-      .poster {
-        @include poster("medium");
-      }
-    }
   }
 }

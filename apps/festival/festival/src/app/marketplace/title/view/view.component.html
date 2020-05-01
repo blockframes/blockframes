@@ -3,15 +3,14 @@
     <movie-header [movie]="movie">
       <movie-header-cta fxLayout="column" fxLayoutAlign="start start" fxLayoutGap="16px">
         <ng-container *ngFor="let org of orgs$ | async">
-          <a class="organization" [routerLink]="['../../organization', org.id]">
-            <img [imgRef]="org.logo" placeholderAsset="empty_organization.webp" alt="Seller image" />
-            <span class="mat-body-1">{{ org.denomination.full }}</span>
-          </a>
+          <org-chip [org]="org"></org-chip>
           <a mat-stroked-button color="primary" [href]="'mailto:' + org.email">
             <span>Contact Sales Agent</span>
             <mat-icon svgIcon="arrow_forward"></mat-icon>
           </a>
         </ng-container>
+      </movie-header-cta>
+      <movie-header-actions>
         <ng-container *ngIf="(toggle$ | async); else alreadyAdded">
           <button mat-icon-button color="accent" (click)="removeFromWishlist()">
             <mat-icon svgIcon="heart_fill"></mat-icon>
@@ -24,7 +23,7 @@
             <span>Add to Wishlistt</span>
           </button>
         </ng-template>
-      </movie-header-cta>
+      </movie-header-actions>
     </movie-header>
   </movie-view>
 </ng-container>

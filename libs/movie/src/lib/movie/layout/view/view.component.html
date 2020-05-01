@@ -1,17 +1,11 @@
 <ng-template pageBar targetId="nav">
-  <header fxLayout>
-    <button mat-icon-button>
-      <mat-icon svgIcon="menu"></mat-icon>
-    </button>
-    <nav mat-tab-nav-bar>
-      <a mat-tab-link
-        *ngFor="let link of navLinks"
-        [routerLink]="link.path"
-        routerLinkActive #rla="routerLinkActive"
-        [active]="rla.isActive">
-      {{link.label}}
+  <header fxLayout fxLayoutAlign="start center">
+    <app-menu></app-menu>
+    <ng-container *ngFor="let link of navLinks">
+      <a mat-button [color]="rla.isActive ? 'primary' : ''" [routerLink]="link.path" routerLinkActive #rla="routerLinkActive">
+        {{link.label}}
       </a>
-    </nav>
+    </ng-container>
   </header>
 </ng-template>
 

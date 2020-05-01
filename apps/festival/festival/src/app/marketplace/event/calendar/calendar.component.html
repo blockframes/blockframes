@@ -1,7 +1,5 @@
 <ng-template pageBar>
-  <button mat-icon-button (click)="toggleMenu()">
-    <mat-icon svgIcon="menu"></mat-icon>
-  </button>
+  <app-menu></app-menu>
   <cal-header [viewDate]="viewDate" (viewDateChange)="updateViewDate($event)"></cal-header>
 </ng-template>
 

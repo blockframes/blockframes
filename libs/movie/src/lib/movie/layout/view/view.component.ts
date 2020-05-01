@@ -4,7 +4,6 @@ import { Component, Input, ChangeDetectionStrategy, Directive, ViewEncapsulation
   selector: 'movie-view',
   templateUrl: './view.component.html',
   styleUrls: ['./view.component.scss'],
-  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ViewComponent {
