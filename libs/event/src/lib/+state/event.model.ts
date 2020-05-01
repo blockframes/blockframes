@@ -20,7 +20,6 @@ export function createEvent<Meta extends EventMeta>(params: Partial<EventBase<an
     : {};
 
   return {
-    _meta: { createdBy: '' },
     id: '',
     title: '',
     ownerId: '',

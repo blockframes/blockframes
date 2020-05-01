@@ -1,7 +1,6 @@
 import { Component, Inject, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { OrganizationQuery } from '@blockframes/organization/+state';
-import { AuthQuery } from '@blockframes/auth/+state';
 import { Event } from '../../+state/event.model';
 import { EventForm } from '../event.form';
 
@@ -18,7 +17,6 @@ export class EventCreateComponent {
   constructor(
     @Inject(MAT_DIALOG_DATA) data: {event: Event, types: string[] },
     public dialogRef: MatDialogRef<EventCreateComponent>,
-    private authQuery: AuthQuery,
     private orgQuery: OrganizationQuery
   ) {
     this.form = new EventForm(data.event);
@@ -31,7 +29,6 @@ export class EventCreateComponent {
   createAndRedirect(redirect: boolean) {
     const event = this.form.value;
     event.ownerId = this.orgQuery.getActiveId();
-    event._meta = { createdBy: this.authQuery.userId };
     this.dialogRef.close({ event, redirect });
   }
 }
