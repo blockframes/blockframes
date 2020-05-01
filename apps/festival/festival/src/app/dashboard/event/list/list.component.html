@@ -1,50 +1,31 @@
 <ng-template pageBar>
-  <cal-header [viewDate]="viewDate" (viewDateChange)="updateViewDate($event)"></cal-header>
+  <header fxLayout fxLayoutAlign="space-between center" fxLayoutGap="16px">
+    <app-menu></app-menu>
+    <cal-header fxFlex [viewDate]="viewDate" (viewDateChange)="updateViewDate($event)"></cal-header>
+    <mat-form-field *ngIf="filter">
+      <mat-select [formControl]="filter">
+        <mat-option [value]="types">All</mat-option>
+        <ng-container *ngFor="let type of types">
+          <mat-option [value]="[type]">{{ type | titlecase }}</mat-option>
+        </ng-container>
+      </mat-select>
+    </mat-form-field>
+  </header>
 </ng-template>
 
-<cal-week [viewDate]="viewDate" eventType="screening" [events]="events$ | async" editable>
+<cal-week [viewDate]="viewDate" [eventTypes]="types" [events]="events$ | async" editable>
 
   <!-- Small Events -->
   <ng-template calEventSmall let-event>
-    <a class="small" [routerLink]="event | eventLink">
-      <ng-container *ngIf="event.movie as movie">
-        <div class="background" [backgroundRef]="movie.promotionalElements.banner.media">
-          <div class="overlay">
-            <span>{{ movie.main.title.international }}</span>
-          </div>
-        </div>
-      </ng-container>
-      <span *ngIf="!event.movie">{{ event.title }}</span>
+    <a [ngSwitch]="event.type" [routerLink]="event | eventLink">
+      <event-card [event]="event" size="small"></event-card>
     </a>
   </ng-template>
 
   <!-- Large Events -->
   <ng-template calEventLarge let-event>
-    <a class="large" [routerLink]="event | eventLink">
-      <ng-container *ngIf="event.movie as movie">
-        <div class="background" [backgroundRef]="movie.promotionalElements.poster[0].media">
-          <div class="overlay">
-            <span>{{ movie.main.title.international }}</span>
-          </div>
-        </div>
-      </ng-container>
-      <span *ngIf="!event.movie">{{ event.title }}</span>
+    <a [ngSwitch]="event.type" [routerLink]="event | eventLink">
+      <event-card [event]="event" size="large"></event-card>
     </a>
   </ng-template>
 </cal-week>
-
-<!-- Let's keep it for now and see if it's missing -->
-<!-- Edit form
-<ng-template #editTemplate let-form>
-  <button mat-icon-button class="mat-dialog-close" mat-dialog-close>
-    <mat-icon svgIcon="cross"></mat-icon>
-  </button>
-  <h3>Edit</h3>
-  <event-form [form]="form"></event-form>
-  
-  <mat-dialog-actions fxLayout fxLayoutAlign="end center" fxLayoutGap="16px">
-    <a mat-button mat-dialog-close [routerLink]="[form.value.id, 'edit']">More Details</a>
-    <button mat-flat-button color="primary" [mat-dialog-close]="form.value">Save</button>
-  </mat-dialog-actions>
-</ng-template>
- -->

@@ -1,8 +1,9 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { Subscription } from 'rxjs';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Observable } from 'rxjs';
 import { EventService } from '@blockframes/event/+state/event.service';
-import { EventQuery } from '@blockframes/event/+state/event.query';
-import { MarketplaceComponent } from '@blockframes/ui/layout/marketplace/marketplace.component';
+import { Event } from '@blockframes/event/+state';
+import { InvitationQuery } from '@blockframes/invitation/+state';
+import { map, switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'festival-event-calendar',
@@ -10,32 +11,29 @@ import { MarketplaceComponent } from '@blockframes/ui/layout/marketplace/marketp
   styleUrls: ['./calendar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EventCalendarComponent implements OnInit, OnDestroy {
-  private sub: Subscription;
-  events$ = this.query.selectAll();
+export class EventCalendarComponent implements OnInit {
+  events$: Observable<Event[]>;
   viewDate = new Date();
 
   constructor(
-    private marketplace: MarketplaceComponent,
     private service: EventService,
-    private query: EventQuery,
+    private invitationQuery: InvitationQuery,
     private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
-    this.sub = this.service.syncScreenings().subscribe();
+    this.events$ = this.invitationQuery.selectAll({
+      filterBy: ({ type, status }) => type === 'attendEvent' && status === 'accepted'
+    }).pipe(
+      map(invitations => invitations.map(i => i.docId)),
+      switchMap(eventIds => this.service.valueChanges(eventIds))
+    );
   }
 
-  ngOnDestroy() {
-    this.sub.unsubscribe();
-  }
 
   updateViewDate(date: Date) {
     this.viewDate = date;
     this.cdr.markForCheck();
   }
 
-  toggleMenu() {
-    this.marketplace.sidenav.toggle();
-  }
 }

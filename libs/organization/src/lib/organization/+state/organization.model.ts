@@ -3,13 +3,11 @@ import {
   OrganizationDocumentWithDates,
   WishlistDocumentWithDates,
   WishlistDocument,
-  OrganizationDocument,
-  createOrganizationRaw,
+  createOrganizationBase,
   PublicOrganization,
   createDenomination,
 } from './organization.firestore';
 import { Movie } from '@blockframes/movie/+state/movie.model';
-import { toDate } from '@blockframes/utils/helpers';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 
 export {
@@ -45,7 +43,7 @@ export interface OrganizationForm {
 export function createOrganization(
   params: Partial<Organization> = {}
 ): Organization {
-  const org = createOrganizationRaw(params) as Organization;
+  const org = createOrganizationBase(params) as Organization;
 
   return {
     ...org,
@@ -66,7 +64,7 @@ export function createPublicOrganization(org: Partial<Organization>): PublicOrga
 }
 
 /** Convert a WishlistDocument to a WishlistDocumentWithDates (that uses Date). */
-export function convertWishlistDocumentToWishlistDocumentWithDate(
+export function formatWishlistFromFirestore(
   wishlist: WishlistDocument[]
 ): WishlistDocumentWithDates[] {
   if (!wishlist) {

@@ -1,7 +1,7 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { ScreeningEvent } from '../../+state';
 import { InvitationQuery, Invitation, InvitationService } from '@blockframes/invitation/+state';
 import { ImgRef } from '@blockframes/utils/image-uploader';
+import { ScreeningEvent } from '../../+state';
 
 @Component({
   selector: 'event-screening-item',
@@ -31,6 +31,11 @@ export class ScreeningItemComponent {
 
   decline(invitation: Invitation) {
     this.invitationService.declineInvitation(invitation);
+  }
 
+  /** Request the owner to accept invitation (automatically accepted if event is public) */
+  request(screening: ScreeningEvent) {
+    const { ownerId, id } = screening;
+    this.invitationService.request('org', ownerId).from('user').to('attendEvent', id);
   }
 }

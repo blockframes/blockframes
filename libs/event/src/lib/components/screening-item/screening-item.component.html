@@ -8,39 +8,23 @@
   </div>
   <footer fxLayout>
     <!-- Has pending invitation -->
-    <ng-container *ngIf="invitation" [ngSwitch]="invitation.status">
-      <ng-container *ngSwitchCase="'pending'">
-        <button mat-button (click)="accept(invitation)">
-          <mat-icon svgIcon="check_circle"></mat-icon>
-          <span>Accept Invitation</span>
-        </button>
-        <button mat-button (click)="decline(invitation)">
-          <mat-icon svgIcon="close"></mat-icon>
-          <span>Decline Invitation</span>
-        </button>
-      </ng-container>
-      <ng-container *ngSwitchCase="'accepted'">
-        <span>Accepted</span>
-      </ng-container>
-      <ng-container *ngSwitchCase="'declined'">
-        <span>Declined</span>
-      </ng-container>
-    </ng-container>
-
-    <!-- Private -->
-    <ng-container *ngIf="!invitation && screening.isPrivate">
-      <button mat-button>
-        <mat-icon svgIcon="calendar"></mat-icon>
-        <span>Ask for Invitation</span>
+    <ng-container *ngIf="invitation; else noInvitation">
+      <button mat-button [color]="invitation.status === 'accepted' ? 'primary' : ''" (click)="accept(invitation)">
+        <mat-icon svgIcon="check_circle"></mat-icon>
+        <span>Accept Invitation</span>
+      </button>
+      <button mat-button [color]="invitation.status === 'accepted' ? 'primary' : ''" (click)="decline(invitation)">
+        <mat-icon svgIcon="close"></mat-icon>
+        <span>Decline Invitation</span>
       </button>
     </ng-container>
 
-    <!-- Public -->
-    <ng-container *ngIf="!invitation && !screening.isPrivate">
-      <button mat-button>
+    <ng-template #noInvitation>
+      <button mat-button (click)="request(screening)">
         <mat-icon svgIcon="calendar"></mat-icon>
-        <span>Add to my calendar</span>
+        <span *ngIf="screening.isPrivate">Ask for Invitation</span>
+        <span *ngIf="!screening.isPrivate">Add to my calendar</span>
       </button>
-    </ng-container>
+    </ng-template>
   </footer>
 </article>

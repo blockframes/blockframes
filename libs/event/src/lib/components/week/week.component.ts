@@ -16,8 +16,8 @@ import { EventCreateComponent } from '../../form/create/create.component';
 import { fromEvent } from 'rxjs';
 import { map, finalize, takeUntil, distinctUntilChanged } from 'rxjs/operators';
 
-import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { ActivatedRoute, Router } from '@angular/router';
+import { OrganizationQuery } from '@blockframes/organization/+state';
 
 function floorToNearest(amount: number, precision: number) {
   return Math.floor(amount / precision) * precision;
@@ -52,11 +52,11 @@ export class CalendarWeekComponent {
   baseEvents: CalendarEvent[];
   localEvents: CalendarEvent[];
   @Input() viewDate: Date = new Date();
-  @Input() eventType: EventTypes = 'standard';
+  @Input() eventTypes: EventTypes[] = ['screening', 'meeting'];
   @Input()
   set events(events: CalendarEvent<any>[]) {
-    this.baseEvents = events;
-    this.refresh(events);
+    this.baseEvents = events || [];
+    this.refresh(events || []);
   }
 
   @Input()
@@ -73,7 +73,7 @@ export class CalendarWeekComponent {
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
-    private authQuery: AuthQuery,
+    private orgQuery: OrganizationQuery,
     private service: EventService,
     private dialog: MatDialog,
     private router: Router,
@@ -91,7 +91,7 @@ export class CalendarWeekComponent {
     }
     const localEvent: CalendarEvent = createEvent({
       id: this.service['db'].createId(),
-      ownerId: this.authQuery.userId,
+      ownerId: this.orgQuery.getActiveId(),
       title: 'New event',
       start: segment.date,
       end: addMinutes(segment.date, 30),
@@ -133,7 +133,7 @@ export class CalendarWeekComponent {
 
   /** Open a create dialog and redirect if needed */
   private createEvent(calEvent: CalendarEvent) {
-    const data = { ...calEvent, type: this.eventType };
+    const data = { event: { ...calEvent, type: this.eventTypes[0] }, types: this.eventTypes };
     this.dialog.open(EventCreateComponent, { data, width: '650px' }).afterClosed()
     .subscribe(async ({ event, redirect } = {}) => {
       if (event) {

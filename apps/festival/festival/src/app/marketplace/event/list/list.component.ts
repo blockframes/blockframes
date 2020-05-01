@@ -16,7 +16,7 @@ export class ListComponent implements OnInit {
   constructor(private service: EventService) { }
 
   ngOnInit(): void {
-    this.events$ = this.service.screeningChanges();
+    this.events$ = this.service.queryByType(['screening']);
   }
 
 }

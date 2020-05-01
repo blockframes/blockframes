@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { CollectionConfig, CollectionService, syncQuery, Query, WriteOptions, queryChanges } from 'akita-ng-fire';
+import { CollectionConfig, CollectionService, Query, WriteOptions, queryChanges } from 'akita-ng-fire';
 import { EventState, EventStore } from './event.store';
-import { EventDocument, EventBase } from './event.firestore';
-import { Event, ScreeningEvent, createCalendarEvent, EventsAnalytics } from './event.model';
+import { EventDocument, EventBase, EventTypes } from './event.firestore';
+import { Event, ScreeningEvent, createCalendarEvent, EventsAnalytics, MeetingEvent } from './event.model';
 import { QueryFn } from '@angular/fire/firestore/interfaces';
 import { Observable } from 'rxjs';
 import { AngularFireFunctions } from '@angular/fire/functions';
@@ -11,8 +11,24 @@ import { OrganizationQuery } from '@blockframes/organization/+state';
 import { AuthQuery } from '@blockframes/auth/+state';
 import { combineLatest } from 'rxjs';
 import { EventQuery } from './event.query';
-import { filter, switchMap, tap } from 'rxjs/operators';
+import { filter, switchMap, tap, map } from 'rxjs/operators';
 
+/** Hold all the different queries for an event */
+const eventQueries = {
+  screening: (queryFn: QueryFn = (ref) => ref): Query<ScreeningEvent> => ({
+    path: 'events',
+    queryFn: ref => queryFn(ref).where('type', '==', 'screening'),
+    movie: ({ meta }: ScreeningEvent) =>  {
+      return meta.titleId ? { path: `movies/${meta.titleId}` } : undefined
+    },
+    org: ({ ownerId }: ScreeningEvent) => ({ path: `orgs/${ownerId}` }),
+  }),
+  meeting: (queryFn: QueryFn = (ref) => ref): Query<MeetingEvent> => ({
+    path: 'events',
+    queryFn: ref => queryFn(ref).where('type', '==', 'meeting'),
+    org: ({ ownerId }: MeetingEvent) => ({ path: `orgs/${ownerId}` }),
+  })
+}
 
 const screeningsQuery = (queryFn: QueryFn = (ref) => ref): Query<ScreeningEvent> => ({
   path: 'events',
@@ -22,6 +38,7 @@ const screeningsQuery = (queryFn: QueryFn = (ref) => ref): Query<ScreeningEvent>
   },
   org: ({ ownerId }: ScreeningEvent) => ({ path: `orgs/${ownerId}` }),
 });
+
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'events' })
@@ -82,14 +99,13 @@ export class EventService extends CollectionService<EventState> {
     return createCalendarEvent(event, this.isOwner(event));
   }
 
-  /** Listen on changes of screening without updating the store */
-  screeningChanges(queryFn?: QueryFn):  Observable<ScreeningEvent[]> {
-    return queryChanges.call(this, screeningsQuery(queryFn));
-  }
-
-  /** Listen on changes of screening by updating the store */
-  syncScreenings(queryFn?: QueryFn): Observable<ScreeningEvent[]> {
-    return syncQuery.call(this, screeningsQuery(queryFn));
+  /** Query events based on types */
+  queryByType(types: EventTypes[], queryFn?: QueryFn): Observable<Event[]> {
+    const queries = types.map(type => eventQueries[type](queryFn));
+    const queries$ = queries.map(query => queryChanges.call(this, query))
+    return combineLatest(queries$).pipe(
+      map((results) => results.flat())
+    );
   }
 
   /**

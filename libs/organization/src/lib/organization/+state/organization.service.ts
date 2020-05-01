@@ -5,7 +5,7 @@ import {
   Organization,
   createOrganization,
   OrganizationDocument,
-  convertWishlistDocumentToWishlistDocumentWithDate
+  formatWishlistFromFirestore
 } from './organization.model';
 import { OrganizationStore, OrganizationState } from './organization.store';
 import { OrganizationQuery } from './organization.query';
@@ -55,7 +55,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
       ...org,
       created: toDate(org.created), // prevent error in case the guard is wrongly called twice in a row
       updated: toDate(org.updated),
-      wishlist: convertWishlistDocumentToWishlistDocumentWithDate(org.wishlist)
+      wishlist: formatWishlistFromFirestore(org.wishlist)
     };
   }
 
