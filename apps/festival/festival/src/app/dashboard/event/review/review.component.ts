@@ -1,9 +1,10 @@
 import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
-import { EventQuery } from '@blockframes/event/+state/event.query';
-import { InvitationService, Invitation } from '@blockframes/invitation/+state';
+import { EventQuery, Event } from '@blockframes/event/+state';
+import { Invitation } from '@blockframes/invitation/+state';
 import { EventService } from '@blockframes/event/+state/event.service';
 import { Observable, Subscription } from 'rxjs';
-import { switchMap, map, filter } from 'rxjs/operators';
+import { switchMap, map, filter, pluck } from 'rxjs/operators';
+import { ActivatedRoute } from '@angular/router';
 
 const columns = {
   firstName: 'First Name',
@@ -20,7 +21,7 @@ const columns = {
 export class EventReviewComponent implements OnInit, OnDestroy {
 
   private sub: Subscription;
-  event$ = this.query.selectActive();
+  event$: Observable<Event>;
   invitations$: Observable<Invitation[]>;
   analytics$ = this.query.analytics.selectActive().pipe(
     filter(analytics => !!analytics),
@@ -33,12 +34,15 @@ export class EventReviewComponent implements OnInit, OnDestroy {
   constructor(
     private service: EventService,
     private query: EventQuery,
-    private invitationService: InvitationService,
+    private route: ActivatedRoute,
   ) { }
 
   ngOnInit() {
     this.sub = this.service.syncEventAnalytics().subscribe();
-
+    this.event$ = this.route.params.pipe(
+      pluck('eventId'),
+      switchMap((eventId: string) => this.service.valueChanges(eventId))
+    );
   }
 
   ngOnDestroy() {

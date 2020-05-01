@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { InvitationService } from '@blockframes/invitation/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
+import { PermissionsService } from '@blockframes/permissions/+state';
 import { AuthQuery } from '@blockframes/auth/+state';
 import { combineLatest } from 'rxjs';
 import { EventQuery } from './event.query';
@@ -15,6 +16,7 @@ import { filter, switchMap, tap, map } from 'rxjs/operators';
 
 /** Hold all the different queries for an event */
 const eventQueries = {
+  // Screening
   screening: (queryFn: QueryFn = (ref) => ref): Query<ScreeningEvent> => ({
     path: 'events',
     queryFn: ref => queryFn(ref).where('type', '==', 'screening'),
@@ -23,21 +25,14 @@ const eventQueries = {
     },
     org: ({ ownerId }: ScreeningEvent) => ({ path: `orgs/${ownerId}` }),
   }),
+
+  // Meeting
   meeting: (queryFn: QueryFn = (ref) => ref): Query<MeetingEvent> => ({
     path: 'events',
     queryFn: ref => queryFn(ref).where('type', '==', 'meeting'),
     org: ({ ownerId }: MeetingEvent) => ({ path: `orgs/${ownerId}` }),
   })
 }
-
-const screeningsQuery = (queryFn: QueryFn = (ref) => ref): Query<ScreeningEvent> => ({
-  path: 'events',
-  queryFn: ref => queryFn(ref).where('type', '==', 'screening'),
-  movie: ({ meta }: ScreeningEvent) =>  {
-    return meta.titleId ? { path: `movies/${meta.titleId}` } : undefined
-  },
-  org: ({ ownerId }: ScreeningEvent) => ({ path: `orgs/${ownerId}` }),
-});
 
 
 @Injectable({ providedIn: 'root' })
@@ -47,6 +42,7 @@ export class EventService extends CollectionService<EventState> {
   constructor(
     protected store: EventStore,
     private functions: AngularFireFunctions,
+    private permissionsService: PermissionsService,
     private invitationService: InvitationService,
     private query: EventQuery,
     private authQuery: AuthQuery,
@@ -76,6 +72,11 @@ export class EventService extends CollectionService<EventState> {
   /** Verify if the current user / organisation is ownr of an event */
   isOwner(event: EventBase<any, any>) {
     return event.ownerId === this.authQuery.userId || event.ownerId === this.orgQuery.getActiveId();
+  }
+
+  /** Create the permission */
+  async onCreate(event: Event, { write }: WriteOptions) {
+    return this.permissionsService.addDocumentPermissions(event.id, write);
   }
 
   /** Remove all invitations & notifications linked to this event */

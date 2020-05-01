@@ -3,7 +3,6 @@ import { Meeting, EventBase, Screening, EventMeta, EventPrivateConfig } from './
 import { toDate } from '@blockframes/utils/helpers';
 import { Movie } from '@blockframes/movie/+state';
 import { Organization } from '@blockframes/organization/+state';
-import { User } from '@blockframes/auth/+state';
 export { EventsAnalytics } from './event.firestore';
 
 // Event

@@ -14,7 +14,7 @@
 
 <form [formGroup]="form">
   <section fxLayout="column" fxLayoutGap="24px">
-    <h3>Details</h3>
+    <h2>Details</h2>
     <mat-card class="details" fxLayout="column" fxFlex="65">
       <mat-form-field appearance="outline">
         <mat-label>Event Title</mat-label>
@@ -36,11 +36,13 @@
       <mat-checkbox formControlName="isPrivate">Private</mat-checkbox>
       <mat-checkbox formControlName="allDay">All day</mat-checkbox>
 
-      <!-- Meta content -->
-      <ng-content></ng-content>
     </mat-card>
+    
+    <!-- Meta content -->
+    <ng-content></ng-content>
 
-    <h3>Invitations</h3>
+
+    <h2>Invitations</h2>
     <mat-card class="invitations" fxLayout="column"  fxFlex="35">
       <div fxLayout fxLayout="space-between center" fxLayoutGap="16px">
         <algolia-chips-autocomplete fxFlex
