@@ -1,11 +1,11 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ViewChild, TemplateRef, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ViewChild, TemplateRef, ChangeDetectorRef } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { EventQuery, EventStore, EventService } from '@blockframes/event/+state';
+import { EventService } from '@blockframes/event/+state';
 import { Event } from '@blockframes/event/+state/event.model';
 import { EventForm } from '@blockframes/event/form/event.form';
 import { OrganizationQuery } from '@blockframes/organization/+state';
-import { Subscription, Observable, combineLatest } from 'rxjs';
-import { filter, tap, switchMap, map, startWith } from 'rxjs/operators';
+import { Observable, combineLatest } from 'rxjs';
+import { filter, switchMap, startWith } from 'rxjs/operators';
 import { FormControl } from '@angular/forms';
 
 @Component({

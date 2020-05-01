@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CollectionConfig, CollectionService, syncQuery, Query, WriteOptions, queryChanges } from 'akita-ng-fire';
+import { CollectionConfig, CollectionService, Query, WriteOptions, queryChanges } from 'akita-ng-fire';
 import { EventState, EventStore } from './event.store';
 import { EventDocument, EventBase, EventTypes } from './event.firestore';
 import { Event, ScreeningEvent, createCalendarEvent, EventsAnalytics, MeetingEvent } from './event.model';
