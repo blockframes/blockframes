@@ -30,7 +30,6 @@ export type AppStatus = 'none' | 'requested' | 'accepted';
   status: AppStatus;
 }*/
 
-export type OrganizationWithTimestamps = OrganizationDocument;
 
 export type Organization = OrganizationDocumentWithDates;
 
@@ -64,23 +63,6 @@ export function createPublicOrganization(org: Partial<Organization>): PublicOrga
     denomination: createDenomination(org.denomination),
     logo: createImgRef(org.logo)
   }
-}
-
-/** Cleans an organization of its optional parameters */
-export function cleanOrganization(organization: Organization) {
-  return organization;
-}
-
-/** Convert an OrganizationWithTimestamps to an Organization (that uses Date). */
-export function convertOrganizationWithTimestampsToOrganization(
-  org: OrganizationWithTimestamps
-): Organization {
-  return {
-    ...org,
-    created: toDate(org.created), // prevent error in case the guard is wrongly called twice in a row
-    updated: toDate(org.updated),
-    wishlist: convertWishlistDocumentToWishlistDocumentWithDate(org.wishlist)
-  };
 }
 
 /** Convert a WishlistDocument to a WishlistDocumentWithDates (that uses Date). */
