@@ -46,3 +46,14 @@ export function createInnerAppAccess(innerAppAccess: Partial<InnerAppAccess> = {
     ...innerAppAccess
   }
 }
+
+// @TODO 2539 move improve
+export function setAppName(slug: App) {
+  switch (slug) {
+    case 'catalog':
+    default:
+      return { slug, label: 'Archipel Content' };
+    case 'festival':
+      return  { slug, label: 'Festival' }
+  }
+}

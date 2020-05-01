@@ -3,6 +3,7 @@ import { Subscription } from 'rxjs';
 import { Injectable, OnDestroy } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { setAppName } from '../apps';
 
 const pages = {
   catalog: {
@@ -57,23 +58,10 @@ export class DynamicTitleService implements OnDestroy {
 
   constructor(private title: Title, private routerQuery: RouterQuery) {
     this.sub = this.routerQuery.select('state').subscribe(data => {
-      this.setAppName(data.root.data.app)
+      this.app = setAppName(data.root.data.app);
     })
   }
 
-  private setAppName(name: string) {
-    switch (name) {
-      case 'catalog':
-        this.app = { slug: 'catalog', label: 'Archipel Content' };
-        break;
-      case 'blockframes':
-        this.app = { slug: 'blockframes', label: 'Blockframes' }
-        break;
-      case 'festival':
-        this.app = { slug: 'festival', label: 'Festival' }
-        break;
-    }
-  }
 
   /**
    * @description
