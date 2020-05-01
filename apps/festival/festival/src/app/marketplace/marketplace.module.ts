@@ -6,13 +6,15 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 import { MarketplaceComponent } from './marketplace.component';
+import { EventActiveGuard } from '@blockframes/event/guard/event-active.guard';
 
 import { MarketplaceLayoutModule } from '@blockframes/ui/layout/marketplace/marketplace.module';
+import { ImgAssetModule } from '@blockframes/ui/theme';
 
 // Material
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
-import { EventActiveGuard } from '@blockframes/event/guard/event-active.guard';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 
 const routes: Routes = [{
@@ -75,7 +77,6 @@ const routes: Routes = [{
       }, {
         path: 'calendar',
         loadChildren: () => import('./event/calendar/calendar.module').then(m => m.EventCalendarModule),
-        data: { animation: 'event-list' }
       }, {
         path: ':eventId',
         canActivate: [EventActiveGuard],
@@ -102,10 +103,13 @@ const routes: Routes = [{
     CommonModule,
     FlexLayoutModule,
     MarketplaceLayoutModule,
+  
+    ImgAssetModule,
 
     // Material
     MatListModule,
     MatIconModule,
+    MatToolbarModule,
   ]
 })
 export class MarketplaceModule {}
