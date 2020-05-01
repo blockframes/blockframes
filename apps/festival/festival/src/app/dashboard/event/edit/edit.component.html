@@ -1,18 +1,20 @@
-<event-edit [form]="form" [invitations]="invitations$ | async">
-  <article [formGroup]="meta" fxLayout="column">
-    <ng-container [ngSwitch]="form.value.type">
+<ng-container *ngIf="!(loading$ | async)">
+  <event-edit @slideUpList [form]="form" [invitations]="invitations$ | async">
+    <ng-container [ngSwitch]="type">
       <!-- Screening -->
       <ng-container *ngSwitchCase="'screening'">
-        <h4>Screening</h4>
-        <mat-form-field appearance="outline">
-          <mat-label>Select the title to display</mat-label>
-          <mat-select formControlName="titleId">
-            <mat-option *ngFor="let title of titles$ | async" [value]="title.id">
-              {{ title.main.title.international }}
-            </mat-option>
-          </mat-select>
-        </mat-form-field>
+        <h2>Screening</h2>
+        <mat-card [formGroup]="meta" fxLayout="column">
+          <mat-form-field appearance="outline">
+            <mat-label>Select the title to display</mat-label>
+            <mat-select formControlName="titleId">
+              <mat-option *ngFor="let title of titles$ | async" [value]="title.id">
+                {{ title.main.title.international }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+        </mat-card>
       </ng-container>
     </ng-container>
-  </article>
-</event-edit>
+  </event-edit>
+</ng-container>

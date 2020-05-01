@@ -37,7 +37,7 @@ export class FormEntity<C extends EntityControl<T>, T = any> extends FormGroup {
 
   /**
    * Use to apply patchAllValue to FormList and FormEntity
-   * @note this method is specific from FormList and is not part and Angular FormArray interface
+   * @note this method is specific from FormList and is not part and Angular FormGroup interface
    */
   patchAllValue(
     value: Partial<T>,

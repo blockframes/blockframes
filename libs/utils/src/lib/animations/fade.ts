@@ -1,4 +1,4 @@
-import {transition, trigger, style, animate, query, stagger, animateChild } from '@angular/animations';
+import {transition, trigger, style, animate, query, stagger } from '@angular/animations';
 import { Easing } from './animation-easing';
 
 ///////////
@@ -64,13 +64,13 @@ const slideList = (name: string, distance: string) => (selector: string) => trig
   transition(':enter', [
     query(selector, [
       style({  opacity: 0, transform: `translateY(${distance})` }),
-      stagger(-30, [animate(`0.2s ${Easing.easeOutcubic}`, style({opacity: 1, transform: 'translateY(0)'}))])
+      stagger(30, [animate(`0.2s ${Easing.easeOutcubic}`, style({opacity: 1, transform: 'translateY(0)'}))])
     ], { optional: true }),
   ]),
   transition(':leave', [
     query(selector, [
       style({ opacity: 1, transform: 'translateY(0)'}),
-      stagger(30, [animate(`0.2s ${Easing.easeIncubic}`, style({opacity: 1, transform: `translateY(${distance})`}))])
+      stagger(-30, [animate(`0.2s ${Easing.easeIncubic}`, style({opacity: 1, transform: `translateY(${distance})`}))])
     ], { optional: true }),
   ])
 ]);
