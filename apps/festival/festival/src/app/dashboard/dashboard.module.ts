@@ -5,7 +5,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { DashboardLayoutModule } from '@blockframes/ui/layout/dashboard/dashboard.module';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 // Guards
-import { EventActiveGuard } from '@blockframes/event/guard/event-active.guard';
 import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 import { MovieTunnelGuard } from '@blockframes/movie/guards/movie-tunnel.guard';
 import { MovieOrganizationListGuard } from '@blockframes/movie/guards/movie-organization-list.guard';
@@ -70,8 +69,6 @@ const routes: Routes = [{
           loadChildren: () => import('./event/list/list.module').then(m => m.EventListModule)
         }, {
           path: ':eventId',
-          canActivate: [EventActiveGuard],
-          canDeactivate: [EventActiveGuard],
           children: [{
             path: '',
             loadChildren: () => import('./event/review/review.module').then(m => m.EventReviewModule)
