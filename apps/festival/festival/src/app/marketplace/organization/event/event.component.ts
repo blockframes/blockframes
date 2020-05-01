@@ -1,8 +1,8 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { EventService } from '@blockframes/event/+state/event.service';
-import { EventQuery } from '@blockframes/event/+state/event.query';
 import { ViewComponent } from '../view/view.component';
-import { Subscription } from 'rxjs';
+import { Event } from '@blockframes/event/+state';
+import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 @Component({
@@ -11,24 +11,18 @@ import { switchMap } from 'rxjs/operators';
   styleUrls: ['./event.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EventComponent implements OnInit, OnDestroy {
-  private sub: Subscription;
-  events$ = this.query.selectAll();
+export class EventComponent implements OnInit {
+  events$: Observable<Event[]>;
   viewDate = new Date();
 
   constructor(
     private service: EventService,
-    private query: EventQuery,
     private parent: ViewComponent
   ) { }
 
   ngOnInit(): void {
-    this.sub = this.parent.org$.pipe(
-      switchMap(org => this.service.syncScreenings(ref => ref.where('ownerId', '==', org.id)))
-    ).subscribe();
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
+    this.events$ = this.parent.org$.pipe(
+      switchMap(org => this.service.queryByType(['screening'], ref => ref.where('ownerId', '==', org.id)))
+    );
   }
 }

@@ -100,17 +100,12 @@ export class EventService extends CollectionService<EventState> {
   }
 
   /** Query events based on types */
-  queryByType(types: EventTypes[], queryFn?: QueryFn) {
+  queryByType(types: EventTypes[], queryFn?: QueryFn): Observable<Event[]> {
     const queries = types.map(type => eventQueries[type](queryFn));
     const queries$ = queries.map(query => queryChanges.call(this, query))
     return combineLatest(queries$).pipe(
       map((results) => results.flat())
     );
-  }
-
-  /** Listen on changes of screening by updating the store */
-  syncScreenings(queryFn?: QueryFn): Observable<ScreeningEvent[]> {
-    return syncQuery.call(this, screeningsQuery(queryFn));
   }
 
   /**
