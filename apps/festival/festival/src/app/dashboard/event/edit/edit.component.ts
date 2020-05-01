@@ -5,8 +5,8 @@ import { EventQuery } from '@blockframes/event/+state/event.query';
 import { Movie, MovieService } from '@blockframes/movie/+state';
 import { InvitationService, Invitation } from '@blockframes/invitation/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
-import { Observable, Subscription, of } from 'rxjs';
-import { switchMap, startWith, tap, map } from 'rxjs/operators';
+import { Observable, Subscription } from 'rxjs';
+import { switchMap, startWith } from 'rxjs/operators';
 
 @Component({
   selector: 'festival-event-edit',

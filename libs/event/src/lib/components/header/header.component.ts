@@ -1,5 +1,4 @@
 import { Component, Input, ChangeDetectionStrategy, Output, EventEmitter } from '@angular/core';
-import { FormControl } from '@angular/forms';
 
 type CalendarView = 'month' | 'week' | 'day';
 

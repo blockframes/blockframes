@@ -1,8 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy, ViewChild, TemplateRef, ChangeDetectorRef } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { EventService } from '@blockframes/event/+state';
-import { Event } from '@blockframes/event/+state/event.model';
+import { Event, EventService } from '@blockframes/event/+state';
 import { EventForm } from '@blockframes/event/form/event.form';
+import { EventTypes } from '@blockframes/event/+state/event.firestore';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { Observable, combineLatest } from 'rxjs';
 import { filter, switchMap, startWith } from 'rxjs/operators';
@@ -15,7 +15,7 @@ import { FormControl } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EventListComponent implements OnInit {
-  types = ['screening', 'meeting'];
+  types: EventTypes[] = ['screening', 'meeting'];
   filter = new FormControl(this.types);
   editDialog: MatDialogRef<any>
   events$: Observable<Event[]>;

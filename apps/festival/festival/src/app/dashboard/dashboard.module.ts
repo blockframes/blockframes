@@ -18,6 +18,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 
 import { DashboardComponent } from './dashboard.component';
 import { MatDividerModule } from '@angular/material/divider';
+import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
 
 
 const routes: Routes = [{
@@ -115,6 +116,7 @@ const routes: Routes = [{
     FlexLayoutModule,
     DashboardLayoutModule,
     ImageReferenceModule,
+    OrgNameModule,
     // Material
     MatDividerModule,
     MatListModule,

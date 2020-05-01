@@ -4,6 +4,12 @@ import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
 
 type Timestamp = firestore.Timestamp;
 
+export interface DocumentMeta {
+  createdBy: string;
+  updatedBy?: string,
+  deletedBy?: string
+}
+
 // Event types
 export type EventTypes = 'standard' | 'meeting' | 'screening' | 'local';
 export type EventMeta = Meeting | Screening | {};
@@ -18,6 +24,7 @@ export interface Screening {
 }
 
 export interface EventBase<D extends Timestamp | Date, Meta extends EventMeta = any> {
+  _meta: DocumentMeta;
   id: string;
   /** @dev The id of the owner. Can be a user or an organization given the event.type **/
   ownerId: string;
