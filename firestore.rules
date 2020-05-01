@@ -276,7 +276,7 @@ service cloud.firestore {
     /// RULES ///
 
     match /contracts/{contractId} {
-    	allow read: if isParty(userOrgId(), contractId) || orgCan('canRead', userOrgId(), contractId);
+    	allow read: if isParty() || orgCan('canRead', userOrgId(), contractId);
       allow create: if canCreateNewPermissions(userOrgId(), contractId)
         && isRequestFieldValueEqualTo(['lastVersion', 'status'], 'draft')
         && isRequestFieldValueEqualToOrNotSetted(['id'], contractId);
@@ -287,7 +287,7 @@ service cloud.firestore {
       allow delete: if orgCan('canDelete', userOrgId(), contractId);
 
       match /versions/{versionId} {
-        allow read: if isParty(userOrgId(), contractId) || orgCan('canRead', userOrgId(), contractId);
+        allow read: if isContractParty(contractId) || orgCan('canRead', userOrgId(), contractId);
         allow write: if false;
       }
     }
@@ -377,8 +377,12 @@ service cloud.firestore {
       	|| (isOrgAdmin(userId, orgId));
     }
 
-    function isParty(orgId, contractId) {
-    	return orgId in get(/databases/$(database)/documents/contracts/$(contractId)).data.partyIds;
+    function isParty() {
+    	return userOrgId() in existingData().partyIds;
+    }
+
+    function isContractParty(contractId) {
+    	return userOrgId() in get(/databases/$(database)/documents/contracts/$(contractId)).data.partyIds;
     }
 
     function getDocumentPermissions(orgId, docId) {
