@@ -64,6 +64,10 @@ export class MemberComponent implements OnInit {
     this.invitationService.declineInvitation(invitation);
   }
 
+  public deleteInvitation(invitation: Invitation){
+    this.invitationService.remove(invitation.id);
+  }
+
   /** Ensures that there is always at least one super Admin in the organization. */
   public hasLastSuperAdmin(uid: string, role: UserRole) {
     if (role !== 'superAdmin' && this.permissionQuery.isUserSuperAdmin(uid)) {

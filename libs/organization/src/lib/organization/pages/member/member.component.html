@@ -17,7 +17,7 @@
 <ng-container *ngIf="(invitationsFromOrganization$ | async) as invitationsMember">
   <member-pending *ngIf="invitationsMember.length > 0"
     [invitations]="invitationsMember"
-    (declined)="declineInvitation($event)"
+    (declined)="deleteInvitation($event)"
     [isAdmin]="isAdmin$ | async">
   </member-pending>
 </ng-container>

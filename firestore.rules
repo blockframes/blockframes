@@ -404,7 +404,8 @@ service cloud.firestore {
     function orgCan(action, orgId, docId) {
       return (getDocumentPermissions(orgId, docId).ownerId == orgId)
         || (getDocumentPermissions(orgId, docId).admin == true)
-        || (getDocumentPermissions(orgId, docId)[action] == true);
+        || (getDocumentPermissions(orgId, docId)[action] == true)
+        || (isOrgAdmin(orgId) && orgId == docId);
     }
 
     // We check that the field is not sent or if field sent is equal to actual
