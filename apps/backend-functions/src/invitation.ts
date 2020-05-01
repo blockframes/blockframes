@@ -74,27 +74,29 @@ export async function onInvitationWrite(
     needUpdate = true;
   }
 
-  if (needUpdate) {
-    // We stop here, since we are gooing to enter into this trigger again
-    return await db.doc(`invitations/${invitationDoc.id}`).set(invitationDoc);
-  }
-
   try {
     // dispatch to the correct events depending on the invitation type & mode.
     switch (invitationDoc.type) {
       case 'joinOrganization':
-        return invitationDoc.mode === 'invitation'
-          ? onInvitationToOrgUpdate(invitationDocBefore, invitationDoc, invitationDoc)
-          : onInvitationFromUserToJoinOrgUpdate(invitationDocBefore, invitationDoc, invitationDoc);
+        invitationDoc.mode === 'invitation'
+          ? await onInvitationToOrgUpdate(invitationDocBefore, invitationDoc, invitationDoc)
+          : await onInvitationFromUserToJoinOrgUpdate(invitationDocBefore, invitationDoc, invitationDoc);
+        break;
       case 'attendEvent':
         /**
          * @dev In this case, an invitation to an event can be:
          * a request from an user who wants to attend an event.
          * an invitation to an user that can be interested to attend an event.
          */
-        return onInvitationToAnEventUpdate(invitationDocBefore, invitationDoc, { ...invitationDoc, id: before.id });
+        await onInvitationToAnEventUpdate(invitationDocBefore, invitationDoc, { ...invitationDoc, id: before.id });
+        break;
       default:
-        throw new Error(`Unhandled invitation: ${JSON.stringify(invitationDoc)}`);
+        console.log(`Unhandled invitation: ${JSON.stringify(invitationDoc)}`);
+        break;
+    }
+
+    if (needUpdate) {
+      await db.doc(`invitations/${invitationDoc.id}`).set(invitationDoc);
     }
   } catch (e) {
     console.error('Invitation management thrown: ', e);
