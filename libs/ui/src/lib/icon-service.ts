@@ -163,6 +163,8 @@ export const icons = [
   },
   { name: 'mail', url: 'assets/icons/mail.svg' },
   { name: 'map_marker', url: 'assets/icons/map_marker.svg' },
+  { name: 'matching', url: 'assets/icons/matching.svg' },
+  { name: 'medal', url: 'assets/icons/medal.svg' },
   {
     name: 'media_financiers',
     url: 'assets/icons/media_financiers.svg'
@@ -234,6 +236,7 @@ export const icons = [
   { name: 'thumb_down', url: 'assets/icons/thumb_down.svg' },
   { name: 'translate', url: 'assets/icons/translate.svg' },
   { name: 'trash', url: 'assets/icons/trash.svg' },
+  { name: 'trophy', url: 'assets/icons/trophy.svg' },
   { name: 'twitter', url: 'assets/icons/twitter.svg' },
   { name: 'unicorn', url: 'assets/icons/unicorn.svg' },
   { name: 'update', url: 'assets/icons/update.svg' },
