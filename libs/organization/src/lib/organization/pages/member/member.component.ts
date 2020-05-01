@@ -38,7 +38,7 @@ export class MemberComponent implements OnInit {
     private permissionService: PermissionsService,
     private userQuery: UserQuery,
     private userService: UserService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.members$ = this.userQuery.membersWithRole$;
@@ -47,11 +47,13 @@ export class MemberComponent implements OnInit {
     this.isSuperAdmin$ = this.permissionQuery.isSuperAdmin$;
     const id = this.query.getActiveId();
 
-    const queryFn1 = ref => ref.where('fromOrg.id', '==', id).where('status', '==', 'pending').where('type', '==', 'joinOrganization');
-    const queryFn2 = ref => ref.where('toOrg.id', '==', id).where('status', '==', 'pending').where('type', '==', 'joinOrganization');
+    if (this.permissionQuery.isUserAdmin()) {
+      const queryFn1 = ref => ref.where('fromOrg.id', '==', id).where('status', '==', 'pending').where('type', '==', 'joinOrganization');
+      const queryFn2 = ref => ref.where('toOrg.id', '==', id).where('status', '==', 'pending').where('type', '==', 'joinOrganization');
 
-    this.invitationsFromOrganization$ = this.invitationService.valueChanges(queryFn1);
-    this.invitationsToJoinOrganization$ = this.invitationService.valueChanges(queryFn2);
+      this.invitationsFromOrganization$ = this.invitationService.valueChanges(queryFn1);
+      this.invitationsToJoinOrganization$ = this.invitationService.valueChanges(queryFn2);
+    }
   }
 
   public acceptInvitation(invitation: Invitation) {
@@ -60,6 +62,10 @@ export class MemberComponent implements OnInit {
 
   public declineInvitation(invitation: Invitation) {
     this.invitationService.declineInvitation(invitation);
+  }
+
+  public deleteInvitation(invitation: Invitation){
+    this.invitationService.remove(invitation.id);
   }
 
   /** Ensures that there is always at least one super Admin in the organization. */

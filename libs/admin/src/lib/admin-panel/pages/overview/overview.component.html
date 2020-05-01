@@ -57,5 +57,10 @@
         </a>
       </li>
     </ul>
+
+    <div *ngIf="token">
+      Token for the REST API: <textarea rows="10" cols="100">{{ token }}</textarea>
+    </div>
   </article>
+
 </section>
