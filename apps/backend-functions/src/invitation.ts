@@ -1,29 +1,8 @@
-import { getDocument } from './data/internals';
-import { db, functions } from './internals/firebase';
+import { getDocument, createPublicOrganizationDocument, createPublicUserDocument } from './data/internals';
+import { db, functions, getUser } from './internals/firebase';
 import { InvitationOrUndefined, OrganizationDocument } from './data/types';
 import { onInvitationToOrgUpdate, onInvitationFromUserToJoinOrgUpdate } from './internals/invitations/organizations';
 import { onInvitationToAnEventUpdate } from './internals/invitations/events';
-import { createDenomination } from '@blockframes/organization/+state/organization.firestore';
-import { createImgRef } from '@blockframes/utils/image-uploader';
-
-function createPublicOrganizationDocument(org: OrganizationDocument) {
-  return {
-    id: org.id || '',
-    denomination: createDenomination(org.denomination),
-    logo: createImgRef(org.logo)
-  }
-}
-
-function createPublicUserDocument(user: any = {}) {
-  return {
-    uid: user.uid,
-    email: user.email,
-    avatar: createImgRef(user.avatar),
-    firstName: user.firstName || '',
-    lastName: user.lastName || '',
-    orgId: user.orgId || ''
-  }
-}
 
 /**
  * Handles firestore updates on an invitation object,
@@ -63,13 +42,13 @@ export async function onInvitationWrite(
   }
 
   if (invitationDoc.fromUser?.uid && !invitationDoc.fromUser.email) {
-    const user = await getDocument(`users/${invitationDoc.fromUser?.uid}`);
+    const user = await getUser(invitationDoc.fromUser?.uid);
     invitationDoc.fromUser = createPublicUserDocument(user);
     needUpdate = true;
   }
 
   if (invitationDoc.toUser?.uid && !invitationDoc.toUser.email) {
-    const user = await getDocument(`users/${invitationDoc.toUser?.uid}`);
+    const user = await getUser(invitationDoc.toUser?.uid);
     invitationDoc.toUser = createPublicUserDocument(user);
     needUpdate = true;
   }

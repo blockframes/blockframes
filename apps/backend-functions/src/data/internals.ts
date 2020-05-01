@@ -7,6 +7,8 @@ import { db } from '../internals/firebase';
 import { OrganizationDocument } from './types';
 import { PermissionsDocument } from '@blockframes/permissions/types';
 import { ContractDocument } from '@blockframes/contract/contract/+state/contract.firestore';
+import { createImgRef } from '@blockframes/utils/image-uploader';
+import { createDenomination } from '@blockframes/organization/+state/organization.firestore';
 
 export function getCollection<T>(path: string): Promise<T[]> {
   return db
@@ -20,6 +22,25 @@ export function getDocument<T>(path: string): Promise<T> {
     .doc(path)
     .get()
     .then(doc => doc.data() as T);
+}
+
+export function createPublicOrganizationDocument(org: OrganizationDocument) {
+  return {
+    id: org.id || '',
+    denomination: createDenomination(org.denomination),
+    logo: createImgRef(org.logo)
+  }
+}
+
+export function createPublicUserDocument(user: any = {}) {
+  return {
+    uid: user.uid,
+    email: user.email,
+    avatar: createImgRef(user.avatar),
+    firstName: user.firstName || '',
+    lastName: user.lastName || '',
+    orgId: user.orgId || ''
+  }
 }
 
 /**
