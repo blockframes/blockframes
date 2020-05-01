@@ -1,11 +1,9 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Event } from '../../+state/event.model';
-import { InvitationService, Invitation, createEventInvitation } from '@blockframes/invitation/+state';
+import { InvitationService, Invitation } from '@blockframes/invitation/+state';
 import { AuthQuery } from '@blockframes/auth/+state';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { switchMap, map } from 'rxjs/operators';
-import { OrganizationService } from '@blockframes/organization/+state';
-import { UserService } from '@blockframes/user/+state/user.service';
 
 @Component({
   selector: 'event-view',
@@ -28,8 +26,6 @@ export class EventViewComponent implements OnInit {
   constructor(
     private invitationService: InvitationService,
     private authQuery: AuthQuery,
-    private orgService: OrganizationService,
-    private userService: UserService,
   ) { }
 
   ngOnInit(): void {
@@ -42,20 +38,13 @@ export class EventViewComponent implements OnInit {
       map(invitations => invitations?.length ? invitations[0] : undefined)
     )
   }
-
-  /** Create an auto-accepted invitation for this event */
-  async addToCalendar() {
-    if (!this.event.isPrivate) {
-      const fromOrg = this.event.type === 'screening'
-        ? await this.orgService.getValue(this.event.ownerId)
-        : undefined;
-      const fromUser = this.event.type === 'meeting'
-        ? await this.userService.getValue(this.event.ownerId)
-        : undefined;
-      const toUser = this.authQuery.user;
-      const invitation = createEventInvitation({ docId: this.event.id, status: 'accepted', fromOrg, fromUser, toUser })
-      this.invitationService.add(invitation);
-    }
+  
+  /**
+   * Creates a request to attend event.
+   * If event is public (event.isPrivate === false), it will be automatically setted to 'accepted'
+   */
+  addToCalendar() {
+    this.invitationService.request(this.event.type === 'meeting' ? 'user' : 'org', this.event.ownerId).from('user').to('attendEvent', this.event.id);
   }
 
   accept(invitation: Invitation) {

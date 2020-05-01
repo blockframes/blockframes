@@ -17,13 +17,20 @@
           </mat-option>
         </mat-select>
       </mat-form-field>
-      <h2>App Access</h2>
-      <mat-checkbox formControlName="catalogDashboard">
-        Catalog Dashboard
-      </mat-checkbox>
-      <mat-checkbox formControlName="catalogMarketplace">
-        Catalog Marketplace
-      </mat-checkbox>
+      <h2>Application Access</h2>
+
+      <div *ngFor="let a of app">
+        <div [formGroup]="orgForm.appAccess.get(a)">
+          <strong>{{ a | titlecase }}</strong>
+          <mat-checkbox formControlName="dashboard">
+            Dashboard
+          </mat-checkbox>
+          <mat-checkbox formControlName="marketplace">
+            Marketplace
+          </mat-checkbox>
+        </div>
+      </div>
+
       <mat-card-actions align="end">
         <button type="submit" mat-flat-button color="primary" (click)="update()">Update</button>
       </mat-card-actions>

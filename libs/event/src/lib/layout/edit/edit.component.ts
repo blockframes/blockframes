@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { EventForm } from '../../form/event.form';
 import { EventService } from '../../+state/event.service';
 import { InvitationService }  from '@blockframes/invitation/+state/invitation.service';
-import { InvitationToAnEvent }  from '@blockframes/invitation/+state/invitation.model';
+import { Invitation }  from '@blockframes/invitation/+state/invitation.model';
 import { scaleIn } from '@blockframes/utils/animations/fade';
 import { createAlgoliaUserForm } from '@blockframes/utils/algolia';
 
@@ -17,7 +17,7 @@ import { createAlgoliaUserForm } from '@blockframes/utils/algolia';
 export class EventEditComponent {
 
   @Input() form = new EventForm();
-  @Input() invitations: InvitationToAnEvent[] = [];
+  @Input() invitations: Invitation[] = [];
   invitationForm = createAlgoliaUserForm();
 
   constructor(

@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { Intercom } from 'ng-intercom';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { AuthQuery } from '@blockframes/auth/+state';
+import { getCurrentApp } from '@blockframes/utils/apps';
 
 export interface SpreadsheetImportEvent {
   sheet: SheetTab,
@@ -80,7 +81,7 @@ export class ImportSpreadsheetComponent implements OnInit {
   }
 
   getTemplateName(templateType: string){
-    const appName = this.routerQuery.getValue().state.root.data.app;
+    const appName = getCurrentApp(this.routerQuery);
     if(this.isUserBlockframesAdmin){
       return `import-${templateType}-template-admin.xlsx`;
     } else {

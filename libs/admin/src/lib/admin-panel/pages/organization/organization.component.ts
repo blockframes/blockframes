@@ -8,6 +8,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Organization } from '@blockframes/organization/+state/organization.model';
 import { organizationStatus } from '@blockframes/organization/+state/organization.firestore';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
+import { app } from '@blockframes/utils/apps';
 
 @Component({
   selector: 'admin-organization',
@@ -21,6 +22,7 @@ export class OrganizationComponent implements OnInit {
   public orgForm: OrganizationAdminForm;
   public organizationStatus = organizationStatus;
   public movies: any[];
+  public app = app;
   public members: any[];
 
   public versionColumnsMovies = {
@@ -49,8 +51,8 @@ export class OrganizationComponent implements OnInit {
     'uid': 'Id',
     'avatar': 'Avatar',
     'email': 'Email',
-    'name': 'Name',
-    'surname': 'Surname',
+    'firstName': 'FirstName',
+    'lastName': 'LastName',
     'role': 'Org role',
     'edit': 'Edit',
   };
@@ -59,8 +61,8 @@ export class OrganizationComponent implements OnInit {
     'uid',
     'avatar',
     'email',
-    'name',
-    'surname',
+    'firstName',
+    'lastName',
     'role',
     'edit',
   ];
@@ -80,7 +82,7 @@ export class OrganizationComponent implements OnInit {
 
     const moviePromises = this.org.movieIds.map(m => this.movieService.getValue(m));
     const movies = await Promise.all(moviePromises);
-    this.movies = movies.map(m => ({
+    this.movies = movies.filter(m => !!m).map(m => ({
       ...m,
       edit: {
         id: m.id,
@@ -108,10 +110,7 @@ export class OrganizationComponent implements OnInit {
 
     const update = {
       status: this.orgForm.get('status').value,
-      appAccess: {
-        catalogDashboard: this.orgForm.get('catalogDashboard').value,
-        catalogMarketplace: this.orgForm.get('catalogMarketplace').value,
-      }
+      appAccess: this.orgForm.appAccess.value,
     }
 
     await this.organizationService.update(this.orgId, update);
@@ -136,8 +135,8 @@ export class OrganizationComponent implements OnInit {
     const columnsToFilter = [
       'uid',
       'email',
-      'name',
-      'surname',
+      'firstName',
+      'lastName',
       'role'
     ];
     const dataStr = columnsToFilter.map(c => getValue(data, c)).join();

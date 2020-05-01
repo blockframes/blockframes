@@ -8,7 +8,6 @@ import { UserQuery } from '@blockframes/user/+state/user.query';
 import { InvitationService } from '@blockframes/invitation/+state/invitation.service';
 import { Invitation } from '@blockframes/invitation/+state/invitation.model';
 import { OrganizationMember } from '@blockframes/user/+state/user.model';
-import { AngularFirestore } from '@angular/fire/firestore';
 
 @Component({
   selector: 'member-edit',
@@ -38,8 +37,7 @@ export class MemberComponent implements OnInit {
     private permissionQuery: PermissionsQuery,
     private permissionService: PermissionsService,
     private userQuery: UserQuery,
-    private userService: UserService,
-    private db: AngularFirestore
+    private userService: UserService
   ) {}
 
   ngOnInit() {

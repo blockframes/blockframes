@@ -12,8 +12,8 @@ export class UsersComponent implements OnInit {
   public versionColumns = {
     'uid': 'Id',
     'avatar': 'Avatar',
-    'name': 'Name',
-    'surname': 'Surname',
+    'firstName': 'FirstName',
+    'lastName': 'LastName',
     'org': 'Organization',
     'position': 'Position',
     'email': 'Email',
@@ -23,8 +23,8 @@ export class UsersComponent implements OnInit {
   public initialColumns: string[] = [
     'uid',
     'avatar',
-    'name',
-    'surname',
+    'firstName',
+    'lastName',
     'org',
     'position',
     'email',
@@ -55,8 +55,8 @@ export class UsersComponent implements OnInit {
   public filterPredicate(data: any, filter: string) {
     const columnsToFilter = [
       'id',
-      'name',
-      'surname',
+      'firstName',
+      'lastName',
       'email',
       'position',
       'org',
