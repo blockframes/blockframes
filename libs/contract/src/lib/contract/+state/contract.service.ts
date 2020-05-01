@@ -12,7 +12,7 @@ import {
   createContractTitleDetail,
 } from './contract.model';
 
-import { ContractDocumentWithDates } from './contract.firestore';
+import { ContractDocumentWithDates, ContractDocument } from './contract.firestore';
 import { firestore } from 'firebase/app';
 import { Observable } from 'rxjs';
 import { cleanModel } from '@blockframes/utils/helpers';
@@ -45,12 +45,21 @@ export class ContractService extends CollectionService<ContractState> {
   }
 
   /**
-   * This convert the Contract into a ContractDocumentWithDates
+   * This converts the Contract into a ContractDocumentWithDates
    * to clean the unused properties in the database (lastVersion).
    * @param contract
    */
   formatToFirestore(contract: Contract): ContractDocumentWithDates {
     return cleanContract(contract);
+  }
+
+  /** 
+   * This converts the ContractDocument into a Contract
+   * @param contract
+   * @dev If this method is implemented, remove akitaPreAddEntity and akitaPreUpdateEntity on store
+   */
+  formatFromFirestore(contract: ContractDocument): Contract {
+    return createContractFromFirestore(contract)
   }
 
   /**
@@ -249,18 +258,6 @@ export class ContractService extends CollectionService<ContractState> {
 
   public listenOnPublicContract(contractId: string): Observable<PublicContract> {
     return this.db.collection('publicContracts').doc<PublicContract>(contractId).valueChanges();
-  }
-
-  /**
-   * @dev ADMIN method
-   * Get all contracts.
-   */
-  public async getAllContracts(): Promise<Contract[]> {
-    const contractsSnap = await this.db
-      .collection('contracts')
-      .get()
-      .toPromise();
-    return contractsSnap.docs.map(c => createContractFromFirestore(c.data()));
   }
 
   /**

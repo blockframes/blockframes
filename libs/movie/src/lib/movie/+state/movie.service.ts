@@ -15,7 +15,7 @@ import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { UserService } from '@blockframes/user/+state/user.service';
 import { firestore } from 'firebase/app';
-import { createMovieAppAccess } from '@blockframes/utils/apps';
+import { createMovieAppAccess, getCurrentApp } from '@blockframes/utils/apps';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'movies' })
@@ -34,22 +34,21 @@ export class MovieService extends CollectionService<MovieState> {
     super(store);
   }
 
-  async create(movieImported?: Movie): Promise<string> {
+  async create(movieImported?: Movie): Promise<Movie> {
     const createdBy = this.authQuery.userId;
-    const appName = this.routerQuery.getValue().state.root.data.app;
+    const appName = getCurrentApp(this.routerQuery);
     const movie = createMovie({
       _meta: { createdBy },
       ...movieImported
     });
     movie.main.storeConfig = {
       ...createStoreConfig(),
-      appAccess: createMovieAppAccess({[appName]: true})
+      appAccess: createMovieAppAccess({ [appName]: true })
     };
-    let movieId: string;
     await this.runTransaction(async (tx) => {
-      movieId = await this.add(cleanModel(movie), { write: tx });
+      movie.id = await this.add(cleanModel(movie), { write: tx });
     });
-    return movieId;
+    return movie;
   }
 
   async onCreate(movie: Movie, { write }: WriteOptions) {

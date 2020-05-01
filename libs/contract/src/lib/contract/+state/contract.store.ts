@@ -12,10 +12,5 @@ export class ContractStore extends EntityStore<ContractState> {
     super();
   }
 
-  /** Convert all firestore timestamps into dates before populating the store. */
-  akitaPreAddEntity(contract: ContractWithTimeStamp): Contract {
-    return createContractFromFirestore(contract)
-  }
-
 }
 

@@ -3,13 +3,11 @@ import {
   OrganizationDocumentWithDates,
   WishlistDocumentWithDates,
   WishlistDocument,
-  OrganizationDocument,
-  createOrganizationRaw,
+  createOrganizationBase,
   PublicOrganization,
   createDenomination,
 } from './organization.firestore';
 import { Movie } from '@blockframes/movie/+state/movie.model';
-import { toDate } from '@blockframes/utils/helpers';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 
 export {
@@ -30,7 +28,6 @@ export type AppStatus = 'none' | 'requested' | 'accepted';
   status: AppStatus;
 }*/
 
-export type OrganizationWithTimestamps = OrganizationDocument;
 
 export type Organization = OrganizationDocumentWithDates;
 
@@ -46,7 +43,7 @@ export interface OrganizationForm {
 export function createOrganization(
   params: Partial<Organization> = {}
 ): Organization {
-  const org = createOrganizationRaw(params) as Organization;
+  const org = createOrganizationBase(params) as Organization;
 
   return {
     ...org,
@@ -66,25 +63,8 @@ export function createPublicOrganization(org: Partial<Organization>): PublicOrga
   }
 }
 
-/** Cleans an organization of its optional parameters */
-export function cleanOrganization(organization: Organization) {
-  return organization;
-}
-
-/** Convert an OrganizationWithTimestamps to an Organization (that uses Date). */
-export function convertOrganizationWithTimestampsToOrganization(
-  org: OrganizationWithTimestamps
-): Organization {
-  return {
-    ...org,
-    created: toDate(org.created), // prevent error in case the guard is wrongly called twice in a row
-    updated: toDate(org.updated),
-    wishlist: convertWishlistDocumentToWishlistDocumentWithDate(org.wishlist)
-  };
-}
-
 /** Convert a WishlistDocument to a WishlistDocumentWithDates (that uses Date). */
-export function convertWishlistDocumentToWishlistDocumentWithDate(
+export function formatWishlistFromFirestore(
   wishlist: WishlistDocument[]
 ): WishlistDocumentWithDates[] {
   if (!wishlist) {

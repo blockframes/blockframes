@@ -48,9 +48,9 @@ export class StartTunnelComponent implements OnInit {
   async begin() {
     this.loading = true;
     try {
-      const movieId = await this.movieService.create();
+      const { id } = await this.movieService.create();
       this.loading = false;
-      this.router.navigate([movieId], { relativeTo: this.route });
+      this.router.navigate([id], { relativeTo: this.route });
     } catch (err) {
       this.loading = false;
       console.error(err);

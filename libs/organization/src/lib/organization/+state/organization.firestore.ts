@@ -13,7 +13,7 @@ interface Denomination {
 }
 
 /** Document model of an Organization */
-interface OrganizationRaw<D> {
+interface OrganizationBase<D> {
   id: string;
   activity: OrgActivity;
   addresses: AddressSet;
@@ -31,7 +31,7 @@ interface OrganizationRaw<D> {
   updated: D;
   userIds: string[];
   status: OrganizationStatus;
-  wishlist: WishlistRaw<D>[];
+  wishlist: WishlistBase<D>[];
 }
 
 export const activities = {
@@ -52,9 +52,9 @@ export const activities = {
 
 type OrgActivity = keyof typeof activities | '';
 
-export interface OrganizationDocument extends OrganizationRaw<Timestamp> { }
+export interface OrganizationDocument extends OrganizationBase<Timestamp> { }
 
-export interface OrganizationDocumentWithDates extends OrganizationRaw<Date> { }
+export interface OrganizationDocumentWithDates extends OrganizationBase<Date> { }
 
 /** Status of an Organization, set to pending by default when an Organization is created. */
 export const organizationStatus = {
@@ -70,15 +70,15 @@ export interface AddressSet {
   // Other can be added here
 }
 
-export interface WishlistRaw<D> {
+export interface WishlistBase<D> {
   status: WishlistStatus;
   movieIds: string[];
   sent?: D;
   name?: string;
 }
-export interface WishlistDocument extends WishlistRaw<Timestamp> { }
+export interface WishlistDocument extends WishlistBase<Timestamp> { }
 
-export interface WishlistDocumentWithDates extends WishlistRaw<Date> { }
+export interface WishlistDocumentWithDates extends WishlistBase<Date> { }
 
 export type WishlistStatus = 'pending' | 'sent';
 
@@ -96,7 +96,7 @@ export interface PublicOrganization {
 export function createOrganizationDocument(
   params: Partial<OrganizationDocument> = {}
 ): OrganizationDocument {
-  const org = createOrganizationRaw(params);
+  const org = createOrganizationBase(params);
   return {
     ...org,
     created: firestore.Timestamp.now(),
@@ -105,9 +105,9 @@ export function createOrganizationDocument(
 }
 
 /** A factory function that creates an OrganizationDocument. */
-export function createOrganizationRaw(
-  params: Partial<OrganizationRaw<Timestamp | Date>> = {}
-): OrganizationRaw<Timestamp | Date> {
+export function createOrganizationBase(
+  params: Partial<OrganizationBase<Timestamp | Date>> = {}
+): OrganizationBase<Timestamp | Date> {
   return {
     id: !!params.id ? params.id : '',
     activity: '',

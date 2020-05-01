@@ -47,7 +47,7 @@ export class ContractsComponent implements OnInit {
     if (this.movieId) {
       contracts = await this.contractService.getMovieContracts(this.movieId);
     } else {
-      contracts = await this.contractService.getAllContracts();
+      contracts = await this.contractService.getValue();
     }
 
     const promises = contracts.map(async contract => {

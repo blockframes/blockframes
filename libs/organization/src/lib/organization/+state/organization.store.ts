@@ -6,11 +6,7 @@ import {
   EntityState,
 } from '@datorama/akita';
 
-import {
-  Organization,
-  convertOrganizationWithTimestampsToOrganization,
-  OrganizationWithTimestamps,
-} from './organization.model';
+import { Organization } from './organization.model';
 
 
 export interface OrganizationState extends EntityState<Organization>, ActiveState<string> {
@@ -29,13 +25,5 @@ const initialState: OrganizationState = {
 export class OrganizationStore extends EntityStore<OrganizationState, Organization> {
   constructor() {
     super(initialState);
-  }
-
-  akitaPreAddEntity(organization: OrganizationWithTimestamps): Organization {
-    return convertOrganizationWithTimestampsToOrganization(organization);
-  }
-
-  akitaPreUpdateEntity(currentOrg: Organization, nextOrg: OrganizationWithTimestamps) {
-    return convertOrganizationWithTimestampsToOrganization(nextOrg);
   }
 }

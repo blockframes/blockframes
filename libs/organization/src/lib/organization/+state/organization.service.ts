@@ -4,15 +4,15 @@ import { AuthQuery } from '@blockframes/auth/+state';
 import {
   Organization,
   createOrganization,
-  cleanOrganization,
-  convertOrganizationWithTimestampsToOrganization,
-  OrganizationWithTimestamps
+  OrganizationDocument,
+  formatWishlistFromFirestore
 } from './organization.model';
 import { OrganizationStore, OrganizationState } from './organization.store';
 import { OrganizationQuery } from './organization.query';
 import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
 import { createPermissions } from '../../permissions/+state/permissions.model';
 import { firestore } from 'firebase/app';
+import { toDate } from '@blockframes/utils/helpers';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'orgs' })
@@ -45,8 +45,18 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     return this.db.doc(`users/${uid}`).update({ orgId: null });
   }
 
-  formatToFirestore(org: Organization): any {
-    return cleanOrganization(org);
+  /** 
+   * This converts the OrganizationDocument into an Organization
+   * @param org
+   * @dev If this method is implemented, remove akitaPreAddEntity and akitaPreUpdateEntity on store
+   */
+  formatFromFirestore(org: OrganizationDocument): Organization {
+    return {
+      ...org,
+      created: toDate(org.created), // prevent error in case the guard is wrongly called twice in a row
+      updated: toDate(org.updated),
+      wishlist: formatWishlistFromFirestore(org.wishlist)
+    };
   }
 
   /**
@@ -125,15 +135,4 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     return this.update(orgId, { isBlockchainEnabled: value });
   }
 
-  /**
-   * @dev ADMIN method
-   * Fetch all organizations for administration uses
-   */
-  public async getAllOrganizations(): Promise<Organization[]> {
-    const orgs = await this.db
-      .collection('orgs')
-      .get().toPromise()
-
-    return orgs.docs.map(m => convertOrganizationWithTimestampsToOrganization(m.data() as OrganizationWithTimestamps)); // @todo #1832 rename ?
-  }
 }

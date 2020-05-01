@@ -35,7 +35,7 @@ export class OrganizationsComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    const orgs = await this.organizationService.getAllOrganizations();
+    const orgs = await this.organizationService.getValue();
     this.rows = orgs.map(o => ({
       ...o,
       edit: {
