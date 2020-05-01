@@ -121,9 +121,10 @@ service cloud.firestore {
     	allow read: if isInvitationSender() || isInvitationRecepient();
       allow create: if isInvitationCreator()
         && isRequestFieldValueEqualTo(['status'], 'pending')
-        && (
-          !incomingData().keys().hasAll(['docId']) // no docId
-          || orgCan('isAdmin', userOrgId(), incomingData().docId) // user org is admin of docId
+        && ( incomingData().mode == 'request' || (
+            !incomingData().keys().hasAll(['docId']) // no docId
+            || orgCan('isAdmin', userOrgId(), incomingData().docId) // user org is admin of docId
+          )
         )
         && isRequestFieldValueEqualToOrNotSetted(['id'], invitationId);
     	allow update: if isOnlyChangingInvitationStatus();

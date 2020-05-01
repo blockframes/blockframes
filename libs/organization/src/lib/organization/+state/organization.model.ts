@@ -53,7 +53,6 @@ export function createOrganization(
   }
 }
 
-
 /** Convert an organization object into a public organization */
 export function createPublicOrganization(org: Partial<Organization>): PublicOrganization {
   return {

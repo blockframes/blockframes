@@ -31,7 +31,6 @@ export interface InvitationBase<D> {
    * If empty, the invitation is about Organization and we use directly fromOrg.id
    */
   docId?: string;
-  processedId?: string;
   message?: string;
 }
 
