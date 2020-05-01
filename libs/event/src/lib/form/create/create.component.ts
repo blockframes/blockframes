@@ -1,6 +1,5 @@
 import { Component, Inject, ChangeDetectionStrategy } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AuthQuery } from '@blockframes/auth/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { Event } from '../../+state/event.model';
 import { EventForm } from '../event.form';
@@ -12,16 +11,16 @@ import { EventForm } from '../event.form';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EventCreateComponent {
-
+  types: string[];
   form: EventForm;
 
   constructor(
-    @Inject(MAT_DIALOG_DATA) event: Event,
+    @Inject(MAT_DIALOG_DATA) data: {event: Event, types: string[] },
     public dialogRef: MatDialogRef<EventCreateComponent>,
-    private authQuery: AuthQuery,
     private orgQuery: OrganizationQuery
   ) {
-    this.form = new EventForm(event);
+    this.form = new EventForm(data.event);
+    this.types = data.types;
   }
 
   /**
@@ -29,11 +28,7 @@ export class EventCreateComponent {
    */
   createAndRedirect(redirect: boolean) {
     const event = this.form.value;
-    if (this.form.value.type === 'screening') {
-      event.ownerId = this.orgQuery.getActiveId();
-    } else {
-      event.ownerId = this.authQuery.userId;
-    }
+    event.ownerId = this.orgQuery.getActiveId();
     this.dialogRef.close({ event, redirect });
   }
 }

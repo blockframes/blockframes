@@ -1,11 +1,12 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ViewChild, TemplateRef, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ViewChild, TemplateRef, ChangeDetectorRef } from '@angular/core';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
-import { EventQuery, EventStore, EventService } from '@blockframes/event/+state';
+import { EventService } from '@blockframes/event/+state';
 import { Event } from '@blockframes/event/+state/event.model';
 import { EventForm } from '@blockframes/event/form/event.form';
 import { OrganizationQuery } from '@blockframes/organization/+state';
-import { Subscription } from 'rxjs';
-import { filter, tap, switchMap } from 'rxjs/operators';
+import { Observable, combineLatest } from 'rxjs';
+import { filter, switchMap, startWith } from 'rxjs/operators';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'festival-event-list',
@@ -13,32 +14,29 @@ import { filter, tap, switchMap } from 'rxjs/operators';
   styleUrls: ['./list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EventListComponent implements OnInit, OnDestroy {
-  private sub: Subscription;
+export class EventListComponent implements OnInit {
+  types = ['screening', 'meeting'];
+  filter = new FormControl(this.types);
   editDialog: MatDialogRef<any>
-  events$ = this.query.selectAll();
+  events$: Observable<Event[]>;
   viewDate = new Date();
 
   @ViewChild('editTemplate', { read: TemplateRef }) editTemplate: TemplateRef<any>;
   
   constructor(
     private service: EventService,
-    private query: EventQuery,
-    private store: EventStore,
     private dialog: MatDialog,
     private orgQuery: OrganizationQuery,
     private cdr: ChangeDetectorRef
   ) { }
 
-  ngOnInit(): void {
-    this.sub = this.orgQuery.selectActiveId().pipe(
-      tap(_ => this.store.reset()),
-      switchMap(orgId => this.service.syncScreenings(ref => ref.where('ownerId', '==', orgId)))
-    ).subscribe();
-  }
-
-  ngOnDestroy() {
-    this.sub.unsubscribe();
+  ngOnInit() {
+    this.events$ = combineLatest([
+      this.orgQuery.selectActiveId(),
+      this.filter.valueChanges.pipe(startWith(this.filter.value))
+    ]).pipe(
+      switchMap(([orgId, types]) => this.service.queryByType(types, ref => ref.where('ownerId', '==', orgId))),
+    );
   }
 
   updateViewDate(date: Date) {

@@ -10,6 +10,8 @@ import { AppBarModule } from '@blockframes/ui/app-bar';
 import { EventListComponent } from './list.component';
 
 import { EventModule } from '@blockframes/event/event.module';
+import { EventCardModule } from '@blockframes/event/components/card/card.module';
+
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -26,6 +28,7 @@ import { MatSelectModule } from '@angular/material/select';
     ImageReferenceModule,
     DisplayNameModule,
     EventLinkModule,
+    EventCardModule,
     AppBarModule,
     // Material
     MatDialogModule,

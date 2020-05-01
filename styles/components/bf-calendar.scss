@@ -93,7 +93,21 @@
     .cal-event {
       background-color: mat-color($background, card);
       color: mat-color($foreground, text);
+      border-width: 0;
       padding: 0;
+
+      .event-card {
+        border-radius: 4px;
+        border: solid 1px mat-color($foreground, divider);
+
+        &.meeting {
+          border-color: mat-color($primary);
+          color: mat-color($primary);
+        }
+        &.screening {
+          border-width: 0;
+        }
+      }
     }
   }
 }

@@ -12,7 +12,6 @@ import { EventSmallDirective, EventLargeDirective } from './components/event.dir
 import { EventSizePipe } from './components/event.pipe';
 // Forms
 import { EventCreateComponent } from './form/create/create.component';
-import { EventFormComponent } from './form/base/base.component';
 import { TimeDateModule } from './form/time-date.directive';
 import { TimePickerModule } from '@blockframes/ui/form/time-picker/time-picker.module';
 
@@ -24,7 +23,7 @@ import { MatDialogModule } from '@angular/material/dialog'
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -35,14 +34,12 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     CalendarHeaderComponent,
     // Form
     EventCreateComponent,
-    EventFormComponent,
   ],
   exports: [
     CalendarHeaderComponent,
     CalendarWeekComponent,
     EventSmallDirective,
     EventLargeDirective,
-    EventFormComponent
   ],
   imports: [
     CommonModule,
@@ -61,6 +58,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MatFormFieldModule,
     MatInputModule,
     MatCheckboxModule,
+    MatSelectModule,
   ]
 })
 export class EventModule {}
