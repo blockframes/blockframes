@@ -96,7 +96,7 @@ export function storeSearchableMovie(
       budget: movie.budget.totalBudget?.amount || movie.budget.estimatedBudget?.from || 0,
       orgName,
       storeType: movie.main.storeConfig?.storeType || '',
-      appAccess: !! movie.main.storeConfig!.appAccess ?
+      appAccess: !!movie.main.storeConfig!.appAccess ?
         Object.keys(movie.main.storeConfig!.appAccess).filter(app => movie.main.storeConfig?.appAccess[app as (keyof MovieAppAccess)]) :
         [],
     });
