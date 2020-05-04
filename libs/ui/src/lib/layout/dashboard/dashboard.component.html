@@ -41,8 +41,10 @@
       </header>
     </app-bar>
     <!-- CONTENT -->
-    <main fxFlex>
-      <router-outlet></router-outlet>
-    </main>
+    <cdk-virtual-scroll-viewport itemSize="1">
+      <main fxFlex>
+        <router-outlet></router-outlet>
+      </main>
+    </cdk-virtual-scroll-viewport>
   </mat-sidenav-content>
 </mat-sidenav-container>

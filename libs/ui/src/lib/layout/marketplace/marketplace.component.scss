@@ -7,8 +7,6 @@ mat-sidenav-container {
   height: 100%;
 }
 
-
-
 mat-sidenav-content {
   height: 100%;
   overflow: hidden;
@@ -20,4 +18,8 @@ mat-sidenav-content {
     height: 100%;
     overflow: auto;
   }
+}
+
+cdk-virtual-scroll-viewport {
+  height: 100vh;
 }

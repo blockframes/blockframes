@@ -3,8 +3,9 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
+import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module'
 
 import { DashboardComponent } from './dashboard.component';
@@ -41,6 +42,7 @@ import { MatBadgeModule } from '@angular/material/badge';
     AlgoliaAutocompleteModule,
     ImageReferenceModule,
     AppBarModule,
+    ScrollingModule,
     // Material
     MatButtonModule,
     MatDividerModule,

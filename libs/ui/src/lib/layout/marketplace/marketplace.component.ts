@@ -1,15 +1,22 @@
-import { Component, ChangeDetectionStrategy, OnInit, ViewChild, OnDestroy, AfterViewInit} from '@angular/core';
+// Angular
+import { Component, ChangeDetectionStrategy, OnInit, ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
 import { MatSidenav, MatSidenavContent } from '@angular/material/sidenav';
+import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { CatalogCartQuery } from '@blockframes/cart/+state/cart.query';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
+
+// RxJs
 import { Observable, Subscription } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
+
+// Blockframes
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { Wishlist } from '@blockframes/organization/+state/organization.model';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { InvitationQuery } from '@blockframes/invitation/+state';
 import { NotificationQuery } from '@blockframes/notification/+state';
-import { Router, NavigationEnd } from '@angular/router';
+
+import { RouterQuery } from '@datorama/akita-ng-router-store';
 
 @Component({
   selector: 'layout-marketplace',
@@ -29,6 +36,7 @@ export class MarketplaceComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @ViewChild(MatSidenav) sidenav: MatSidenav;
   @ViewChild(MatSidenavContent) sidenavContent: MatSidenavContent;
+  @ViewChild(CdkVirtualScrollViewport) scrollViewPort: CdkVirtualScrollViewport;
 
   constructor(
     private catalogCartQuery: CatalogCartQuery,
@@ -37,7 +45,7 @@ export class MarketplaceComponent implements OnInit, AfterViewInit, OnDestroy {
     private authQuery: AuthQuery,
     private routerQuery: RouterQuery,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.currentWishlist$ = this.catalogCartQuery.wishlistWithMovies$.pipe(
@@ -53,7 +61,7 @@ export class MarketplaceComponent implements OnInit, AfterViewInit, OnDestroy {
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
       // TODO #2502: https://github.com/angular/components/issues/4280
-      this.sidenavContent.scrollTo({ top: 0 });
+      this.scrollViewPort.scrollTo({ top: 0 })
       this.sidenav.close();
     })
   }
