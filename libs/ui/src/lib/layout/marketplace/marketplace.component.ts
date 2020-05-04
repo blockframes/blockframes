@@ -1,7 +1,7 @@
 // Angular
 import { Component, ChangeDetectionStrategy, OnInit, ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
-import { MatSidenav, MatSidenavContent } from '@angular/material/sidenav';
+import { MatSidenav } from '@angular/material/sidenav';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { CatalogCartQuery } from '@blockframes/cart/+state/cart.query';
 
@@ -35,7 +35,6 @@ export class MarketplaceComponent implements OnInit, AfterViewInit, OnDestroy {
   public notificationCount$ = this.notificationQuery.selectCount();
 
   @ViewChild(MatSidenav) sidenav: MatSidenav;
-  @ViewChild(MatSidenavContent) sidenavContent: MatSidenavContent;
   @ViewChild(CdkVirtualScrollViewport) scrollViewPort: CdkVirtualScrollViewport;
 
   constructor(

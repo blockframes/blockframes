@@ -3,7 +3,7 @@ import { Component, ChangeDetectionStrategy, ViewChild, AfterViewInit, OnDestroy
 import { Router, NavigationEnd } from '@angular/router';
 import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { FormControl } from '@angular/forms';
-import { MatSidenavContent, MatSidenav } from '@angular/material/sidenav';
+import { MatSidenav } from '@angular/material/sidenav';
 
 // Blockframes
 import { SearchResult } from '@blockframes/ui/search-widget/search-widget.component';
@@ -37,7 +37,6 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
   public algoliaSearchResults$: Observable<SearchResult[]>;
 
   @ViewChild(MatSidenav) sidenav: MatSidenav;
-  @ViewChild(MatSidenavContent) sidenavContent: MatSidenavContent;
   @ViewChild(CdkVirtualScrollViewport) scrollViewport: CdkVirtualScrollViewport;
 
   constructor(
