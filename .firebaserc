@@ -32,6 +32,9 @@
         ],
         "maintenance": [
           "blockframes-maintenance"
+        ],
+        "festival": [
+          "blockframes-festival"
         ]
       }
     },
