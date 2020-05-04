@@ -10,12 +10,12 @@
     </div>
 
     <mat-card>
-      <bf-table-filter [source]="titles" [columns]="columns" [initialColumns]="initialColumns"
-        showFilter
-        showPaginator
+      <bf-table-filter [source]="titles" [columns]="columns" [initialColumns]="initialColumns" showFilter showPaginator
         (rowClick)="goToTitle($event)">
+        <ng-template colRef="director" let-director>{{ director | displayName }}</ng-template>
         <ng-template colRef="title" let-title><b>{{ title }}</b></ng-template>
         <ng-template colRef="receipt" let-receipt> <b>{{ receipt | currency }}</b> </ng-template>
+        <ng-template colRef="productionStatus" let-prod>{{ prod | titlecase }}</ng-template>
         <ng-template colRef="status" let-status>{{ status | toLabel: 'storeStatus' | async  }}</ng-template>
       </bf-table-filter>
     </mat-card>
@@ -39,7 +39,7 @@
         <img asset="add_title.webp" alt="Add title image">
         <a routerLink="../tunnel/movie" mat-stroked-button color="primary">Add one title</a>
       </mat-card>
-      <mat-card class="no-title-card" fxLayout="column" >
+      <mat-card class="no-title-card" fxLayout="column">
         <img asset="upload_files.webp" alt="Upload files image">
         <a routerLink="../import" mat-stroked-button color="primary">Import your titles in bulk</a>
       </mat-card>

@@ -1,17 +1,31 @@
 // Angular
-import { Component, OnInit, ChangeDetectionStrategy, Input, EventEmitter, Output } from '@angular/core';
-import { coerceBooleanProperty } from '@angular/cdk/coercion'
+import { Component, OnInit, ChangeDetectionStrategy, Input, Directive, EventEmitter, Output } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
-// RxJs
+// Rxjs
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 // Blockframes
-import { CartService } from '@blockframes/cart/+state/cart.service';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
+import { CartService } from '@blockframes/cart/+state/cart.service';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
+import { boolean } from '@blockframes/utils/decorators/decorators';
+
+@Directive({
+  selector: 'wishlist-add-text [wishlistAddText]',
+  host: { class: 'wishlist-add-text' }
+})
+// tslint:disable-next-line: directive-class-suffix
+export class WishlistAddText { }
+
+@Directive({
+  selector: 'wishlist-remove-text [wishlistRemoveText]',
+  host: { class: 'wishlist-remove-text' }
+})
+// tslint:disable-next-line: directive-class-suffix
+export class WishlistRemoveText { }
 
 @Component({
   selector: '[movieId] wishlist-button',
@@ -25,14 +39,7 @@ export class WishlistButtonComponent implements OnInit {
 
   @Input() movieId: string;
 
-  _small: boolean;
-  @Input()
-  get small() {
-    return this._small;
-  }
-  set small(isSmall: boolean) {
-    this._small = coerceBooleanProperty(isSmall);
-  }
+  @Input() @boolean small: boolean;
 
   @Output() removed = new EventEmitter<string>()
   @Output() added = new EventEmitter<string>()
