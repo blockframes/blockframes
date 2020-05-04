@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { WishlistButtonComponent } from './wishlist-button.component';
+import { WishlistButtonComponent, WishlistRemoveText, WishlistAddText } from './wishlist-button.component';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -8,8 +8,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 
 @NgModule({
-  declarations: [WishlistButtonComponent],
-  exports: [WishlistButtonComponent],
+  declarations: [WishlistButtonComponent, WishlistRemoveText, WishlistAddText],
+  exports: [WishlistButtonComponent, WishlistRemoveText, WishlistAddText],
   imports: [
     CommonModule,
     MatButtonModule,
