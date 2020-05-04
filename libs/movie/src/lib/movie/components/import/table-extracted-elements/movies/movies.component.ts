@@ -41,8 +41,6 @@ export class TableExtractedMoviesComponent implements OnInit {
     'movie.main.title.original',
     'movie.promotionalElements.poster',
     'movie.main.productionYear',
-    'movie.main.storeConfig.status',
-    'movie.main.storeConfig.storeType',
     'errors',
     'warnings',
     'actions',
