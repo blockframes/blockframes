@@ -57,7 +57,7 @@
       "@blockframes/apps/catalog/*": ["apps/catalog/catalog/src/app/*"],
       "@blockframes/event/*": ["libs/event/src/lib/*"],
       "@blockframes/e2e/*": ["libs/e2e/src/lib/*"],
-      "@blockframes/landing": ["libs/landing/src/index.ts"]
+      "@blockframes/landing/*": ["libs/landing/src/lib/*"]
     }
   },
   "angularCompilerOptions": {
