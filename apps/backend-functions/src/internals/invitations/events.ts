@@ -24,11 +24,12 @@ async function onInvitationToAnEventCreate({
     console.log('docId is not defined');
     return;
   }
-  const eventId = docId;
-  const eventTitle = await db.collection('event').doc(eventId).get().then(eventSnapShot => eventSnapShot.data()!.title);
 
-  // Fetch event
-  const event = await getDocument<EventDocument<EventMeta>>(`events/${eventId}`);
+  // Fetch event and verify if it exists
+  const event = await getDocument<EventDocument<EventMeta>>(`events/${docId}`);
+  if (!event) {
+    throw new Error(`Event ${docId} doesn't exist !`);
+  }
 
   if (mode === 'request' && event?.isPrivate === false) {
     // This will then trigger "onInvitationToAnEventAccepted" and send in-app notification to 'fromUser'
@@ -37,6 +38,7 @@ async function onInvitationToAnEventCreate({
 
   // Retreive notification recipient
   let recipient: string;
+  let link : string;
   if (!!toUser) {
     recipient = toUser.email;
   } else if (!!toOrg) {
@@ -54,14 +56,15 @@ async function onInvitationToAnEventCreate({
      */
     const senderEmail = fromOrg.denomination.public;
     const org = await getDocument<OrganizationDocument>(`orgs/${toUser.orgId}`);
-    let link : string;
     if (org.appAccess?.catalog.marketplace || org.appAccess?.festival.marketplace) {
       link = '/marketplace/invitations';
     } else if (org.appAccess?.catalog.dashboard || org.appAccess?.festival.dashboard) {
       link = '/dashboard/invitations';
+    } else {
+      link = "";
     }
-    console.log(`Sending invitation email for a screening event (${eventId}) from ${senderEmail} to : ${recipient}`);
-    return await sendMailFromTemplate(invitationToScreeningFromOrg(toUser, fromOrg.denomination.full, eventTitle, link));
+    console.log(`Sending invitation email for a screening event (${docId}) from ${senderEmail} to : ${recipient}`);
+    return await sendMailFromTemplate(invitationToScreeningFromOrg(toUser, fromOrg.denomination.full, event.title, link));
 
   } else if (!!fromUser) {
     /**
@@ -70,20 +73,21 @@ async function onInvitationToAnEventCreate({
      */
     const senderEmail = fromUser.email;
     const org = await getDocument<OrganizationDocument>(`orgs/${fromUser.orgId}`);
-    let link : string;
     if (org.appAccess?.catalog.marketplace || org.appAccess?.festival.marketplace) {
       link = '/marketplace/invitations';
     } else if (org.appAccess?.catalog.dashboard || org.appAccess?.festival.dashboard) {
       link = '/dashboard/invitations';
+    } else {
+      link = "";
     }
     switch (mode) {
       case 'invitation':
-        console.log(`Sending invitation email for a meeeting event (${eventId}) from ${senderEmail} to : ${recipient}`);
-        return await sendMailFromTemplate(invitationToMeetingFromUser(toUser.firstName!, fromUser, org.denomination.full, eventTitle, link));
+        console.log(`Sending invitation email for a meeeting event (${docId}) from ${senderEmail} to : ${recipient}`);
+        return await sendMailFromTemplate(invitationToMeetingFromUser(toUser.firstName!, fromUser, org.denomination.full, event.title, link));
       case 'request':
       default:
-        console.log(`Sending request email to attend an event (${eventId}) from ${senderEmail} to : ${recipient}`);
-        return await sendMailFromTemplate(requestToAttendEventFromUser(fromUser.firstName!, org.denomination.full, toUser, eventTitle, link));
+        console.log(`Sending request email to attend an event (${docId}) from ${senderEmail} to : ${recipient}`);
+        return await sendMailFromTemplate(requestToAttendEventFromUser(fromUser.firstName!, org.denomination.full, toUser, event.title, link));
     }
   } else {
     throw new Error('Did not found invitation sender');
