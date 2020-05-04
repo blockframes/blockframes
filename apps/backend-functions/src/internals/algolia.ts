@@ -2,7 +2,7 @@ import algoliasearch, { IndexSettings } from 'algoliasearch';
 import { algolia } from '../environments/environment';
 import { MovieDocument, PublicUser } from '../data/types';
 import { LanguagesSlug } from '@blockframes/utils/static-model';
-import { AppAccess } from '@blockframes/movie/+state/movie.firestore';
+import { MovieAppAccess } from "@blockframes/utils/apps";
 
 const indexBuilder = (indexName: string, adminKey?: string) => {
   const client = algoliasearch(algolia.appId, adminKey || algolia.adminKey);
@@ -97,7 +97,7 @@ export function storeSearchableMovie(
       orgName,
       storeType: movie.main.storeConfig?.storeType || '',
       appAccess: !! movie.main.storeConfig!.appAccess ?
-        Object.keys(movie.main.storeConfig!.appAccess).filter(app => movie.main.storeConfig?.appAccess[app as (keyof AppAccess)]) :
+        Object.keys(movie.main.storeConfig!.appAccess).filter(app => movie.main.storeConfig?.appAccess[app as (keyof MovieAppAccess)]) :
         [],
     });
   } catch (error) {

@@ -15,9 +15,9 @@ export class CatalogAppGuard implements CanActivate {
     const isMarketplace = state.url.split('/').includes('marketplace');
     const org = this.query.getActive();
     if (isMarketplace) {
-      return org.appAccess.catalog.marketplace ? true : this.router.parseUrl('c/o/dashboard');
+      return org.appAccess.catalog.marketplace ? true : this.router.parseUrl('c/o/marketplace');
     } else {
-      return org.appAccess.catalog.dashboard ? true : this.router.parseUrl('c/o/marketplace');
+      return org.appAccess.catalog.dashboard ? true : this.router.parseUrl('c/o/dashboard');
     }
   }
 }

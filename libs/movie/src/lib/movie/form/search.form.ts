@@ -5,7 +5,8 @@ import { FormControl } from '@angular/forms';
 import { FormEntity, FormList } from '@blockframes/utils/form';
 import { algolia } from '@env';
 import algoliasearch, { Index } from 'algoliasearch';
-import { StoreStatus, AppAccess } from '../+state/movie.firestore';
+import { StoreStatus } from '../+state/movie.firestore';
+import { MovieAppAccess } from "@blockframes/utils/apps";
 
 // TODO extract that (along with other potential common features) into an algolia file
 export interface AlgoliaSearch {
@@ -20,7 +21,7 @@ export interface LanguagesSearch {
 }
 
 export interface MovieSearch extends AlgoliaSearch {
-  appAccess: (keyof AppAccess)[],
+  appAccess: (keyof MovieAppAccess)[],
   storeType: StoreTypeSlug[];
   storeConfig: StoreStatus[]
   genres: GenresSlug[];

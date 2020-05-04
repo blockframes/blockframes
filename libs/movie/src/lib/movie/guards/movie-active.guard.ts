@@ -2,12 +2,12 @@ import { Injectable } from "@angular/core";
 import { CollectionGuard, CollectionGuardConfig } from "akita-ng-fire";
 import { MovieState } from "../+state/movie.store";
 import { MovieService } from "../+state/movie.service";
-import { AppAccess } from '../+state/movie.firestore';
 import { ActivatedRouteSnapshot } from "@angular/router";
 import { map } from "rxjs/operators";
 import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { MovieAppAccess } from "@blockframes/utils/apps";
 
-function haveAppAccess(appName: string, appAccess: AppAccess): boolean {
+function haveAppAccess(appName: string, appAccess: MovieAppAccess): boolean {
   return appAccess[appName];
 }
 

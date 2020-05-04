@@ -81,7 +81,7 @@ export class TitleListComponent implements OnInit, OnDestroy {
     const movies$ = this.filter$.pipe(
       switchMap(filter =>
         this.query.selectAll({
-          filterBy: movie => (filter ? movie.main.storeConfig.storeType === filter : true)
+          filterBy: movie => (filter ? movie.main.storeConfig.storeType === filter : true && movie.main.storeConfig.appAccess.catalog === true)
         })
       )
     );

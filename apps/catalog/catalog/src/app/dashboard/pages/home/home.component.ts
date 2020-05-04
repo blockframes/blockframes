@@ -13,7 +13,7 @@ import { MovieService } from '@blockframes/movie/+state/movie.service';
 })
 export class HomeComponent implements OnInit, OnDestroy {
   public movieAnalytics$: Observable<MovieAnalytics[]>;
-  public movies$ = this.movieQuery.selectAll({ filterBy: movie => movie.main.storeConfig.status === 'accepted' });
+  public movies$ = this.movieQuery.selectAll({ filterBy: movie => movie.main.storeConfig.status === 'accepted' && movie.main.storeConfig.appAccess.catalog === true });
   public moviesLoading$ = this.movieQuery.selectLoading();
   private sub: Subscription;
 
