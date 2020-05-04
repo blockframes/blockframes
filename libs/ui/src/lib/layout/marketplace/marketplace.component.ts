@@ -19,7 +19,6 @@ import { Router, NavigationEnd } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MarketplaceComponent implements OnInit, AfterViewInit, OnDestroy {
-  private sub: Subscription;
   private routerSub: Subscription;
 
   public user$ = this.authQuery.select('profile');
@@ -60,7 +59,6 @@ export class MarketplaceComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    if (this.sub) { this.sub.unsubscribe(); }
     if (this.routerSub) { this.routerSub.unsubscribe(); }
   }
 

@@ -38,9 +38,11 @@
     </app-bar>
 
     <!-- CONTENT -->
+  <cdk-virtual-scroll-viewport itemSize="500">
     <main fxFlex [@routeAnimation]="prepareRoute()">
       <router-outlet></router-outlet>
     </main>
+  </cdk-virtual-scroll-viewport>
 
   </mat-sidenav-content>
 </mat-sidenav-container>
