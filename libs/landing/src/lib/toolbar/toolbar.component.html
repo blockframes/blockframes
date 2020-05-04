@@ -1,0 +1,12 @@
+<mat-toolbar [ngClass]="toolbarColor$ | async" (scroll)="scrollHandler()" fxLayout="row" fxLayoutAlign="space-between center">
+  <nav fxLayout="row" fxLayoutAlign="space-between center">
+    <a routerLink="/" class="logo">
+      <img asset="LogoArchipelContentPrimary.svg" type="logo" alt="Archipel Content Logo"/>
+    </a>
+    <a fxHide.lt-md mat-stroked-button href="#demo" id="demo-link">Schedule a demo</a>
+  </nav>
+  <div fxLayout="row" fxLayoutAlign="space-around center" fxLayoutGap="16px">
+    <a test-id="login" mat-button routerLink="/auth/connexion" fragment="signin">Login</a>
+    <a test-id="signup" mat-button routerLink="/auth/connexion" fragment="signup">Sign up</a>
+  </div>
+</mat-toolbar>

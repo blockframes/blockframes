@@ -1,0 +1,45 @@
+<span class="mat-display-1">How it works?</span>
+<mat-tab-group animationDuration="1000ms" selectedIndex="0">
+  <mat-tab label="Seller">
+    <article class="perspective-box" fxLayout="row" fxLayoutGap="70px" fxLayoutAlign="space-between start" fxLayout.lt-lg="column">
+      <img class="perspective-image" fxHide.xs src="/assets/images/seller_perspective.jpg" alt="seller image"/>
+      <h3>Maximize sales on library titles and access new buyers.</h3>
+    </article>
+    <h5>Features</h5>
+    <article fxLayout="row wrap" fxLayoutAlign="space-between" fxLayout.lt-md="column">
+      <mat-card *ngFor="let feature of sellerFeatures">
+        <img class="feature-image" [asset]="feature.image" alt="seller feature image">
+        <div>
+          <h3>{{ feature.title }}</h3>
+          <p class="mat-caption">{{ feature.description }}</p>
+        </div>
+      </mat-card>
+    </article>
+  </mat-tab>
+  <mat-tab label="Buyer">
+    <article class="perspective-box" fxLayout="row" fxLayoutGap="70px" fxLayoutAlign="space-between start" fxLayout.lt-lg="column">
+      <img class="perspective-image" fxHide.xs src="/assets/images/buyer_perspective.jpg" alt="buyer image"/>
+      <div>
+        <h3>Buy quality content from a multitude of rights holders in one single package.</h3>
+        <p class="mat-body-1">Access one massive library, search for avails easily and buy content in larger volumes through one single deal offer and negotiation.</p>
+      </div>
+    </article>
+    <h5>Features</h5>
+    <article fxLayout="row wrap" fxLayoutAlign="space-between" fxLayout.lt-md="column">
+      <mat-card *ngFor="let feature of buyerFeatures">
+        <img class="feature-image" [asset]="feature.image" alt="buyer feature image">
+        <div>
+          <h3>{{ feature.title }}</h3>
+          <p class="mat-caption">{{ feature.description }}</p>
+        </div>
+      </mat-card>
+    </article>
+  </mat-tab>
+</mat-tab-group>
+<section fxLayout="column" fxLayoutAlign="start center" class="join-section">
+  <p class="mat-display-2 interested">Interested? Join now!</p>
+  <a mat-flat-button color="accent" routerLink="/auth/connexion">
+    <span>Sign up</span>
+    <mat-icon svgIcon="arrow_forward"></mat-icon>
+  </a>
+</section>
