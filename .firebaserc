@@ -59,6 +59,9 @@
       "hosting": {
         "catalog": [
           "blockframes-staging"
+        ],
+        "festival": [
+          "staging-blockframes-festival"
         ]
       }
     },
