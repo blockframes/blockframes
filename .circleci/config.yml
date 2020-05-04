@@ -170,7 +170,10 @@ jobs:
       - do-exclusively/do-exclusively:
           token: $CIRCLE_TOKEN
           command: ./.circleci/deploy-and-test-e2e.sh
-      - run: ./.circleci/submit-stability.sh dist/test-reports
+      - run:
+          name: send stability data
+          command: ./.circleci/submit-stability.sh dist/test-reports
+          when: always
       - store_artifacts:
           name: Uploading screenshots
           path: ~/repo/dist/cypress/apps
