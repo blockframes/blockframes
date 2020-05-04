@@ -1,7 +1,7 @@
 // Angular
 import { Component, ChangeDetectionStrategy, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
-import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
+import { CdkScrollable } from '@angular/cdk/scrolling';
 import { FormControl } from '@angular/forms';
 import { MatSidenav } from '@angular/material/sidenav';
 
@@ -37,7 +37,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
   public algoliaSearchResults$: Observable<SearchResult[]>;
 
   @ViewChild(MatSidenav) sidenav: MatSidenav;
-  @ViewChild(CdkVirtualScrollViewport) scrollViewport: CdkVirtualScrollViewport;
+  @ViewChild(CdkScrollable) cdkScrollable: CdkScrollable;
 
   constructor(
     private breakpointsService: BreakpointsService,
@@ -50,7 +50,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
     // https://github.com/angular/components/issues/4280
     this.sub = this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
-    ).subscribe(() => this.scrollViewport.scrollTo({ top: 0}))
+    ).subscribe(() => this.cdkScrollable.scrollTo({ top: 0}))
   }
 
   ngOnDestroy() {

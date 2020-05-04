@@ -2,7 +2,6 @@
 import { Component, ChangeDetectionStrategy, OnInit, ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { MatSidenav } from '@angular/material/sidenav';
-import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 import { CatalogCartQuery } from '@blockframes/cart/+state/cart.query';
 
 // RxJs
@@ -17,6 +16,7 @@ import { InvitationQuery } from '@blockframes/invitation/+state';
 import { NotificationQuery } from '@blockframes/notification/+state';
 
 import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { CdkScrollable } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'layout-marketplace',
@@ -35,7 +35,7 @@ export class MarketplaceComponent implements OnInit, AfterViewInit, OnDestroy {
   public notificationCount$ = this.notificationQuery.selectCount();
 
   @ViewChild(MatSidenav) sidenav: MatSidenav;
-  @ViewChild(CdkVirtualScrollViewport) scrollViewPort: CdkVirtualScrollViewport;
+  @ViewChild(CdkScrollable) cdkScrollable: CdkScrollable
 
   constructor(
     private catalogCartQuery: CatalogCartQuery,
@@ -57,10 +57,10 @@ export class MarketplaceComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     this.routerSub = this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
+     filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
       // https://github.com/angular/components/issues/4280
-      this.scrollViewPort.scrollTo({ top: 0 })
+      this.cdkScrollable.scrollTo({top: 0})
       this.sidenav.close();
     })
   }

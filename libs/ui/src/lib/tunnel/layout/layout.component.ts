@@ -70,9 +70,7 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
     // https://github.com/angular/components/issues/4280
     this.sub = this.router.events.pipe(
       filter(event => event instanceof NavigationEnd))
-      .subscribe(() => {
-        this.sidenavContent.scrollTo({ top: 0 });
-      })
+      .subscribe(() => this.sidenavContent.scrollTo({ top: 0 }))
   }
 
   ngOnDestroy() {
