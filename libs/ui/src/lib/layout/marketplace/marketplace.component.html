@@ -6,42 +6,35 @@
   <mat-sidenav-content fxLayout="column" [appContainer]="app" (toggle)="sidenav.toggle()">
     <!-- TOOLBAR -->
     <app-bar #app>
-      <header fxLayout fxLayoutAlign="space-between center">
+      <header fxLayout fxLayoutAlign="space-between center" fxLayoutGap="24px">
         <button test-id="menu" mat-icon-button (click)="sidenav.toggle()">
           <mat-icon svgIcon="menu"></mat-icon>
         </button>
-
-        <header fxLayout fxLayoutAlign="space-between center" fxLayoutGap="24px">
-          <div fxLayout="row" fxLayoutAlign="default center" fxLayoutGap="24px">
-            <button test-id="menu" mat-icon-button (click)="sidenav.toggle()">
-              <mat-icon svgIcon="menu"></mat-icon>
-            </button>
-            <ng-content select="header"></ng-content>
-          </div>
-          <div fxLayout="row" fxLayoutGap="24px">
-            <mat-divider vertical></mat-divider>
-            <!-- Invitations -->
-            <a mat-icon-button routerLink="invitations">
-              <ng-container *ngIf="invitationCount$ | async as count; else noInvitation">
-                <mat-icon svgIcon="send" [matBadge]="count" matBadgeColor="accent" matBadgeSize="small"></mat-icon>
-              </ng-container>
-              <ng-template #noInvitation>
-                <mat-icon svgIcon="send"></mat-icon>
-              </ng-template>
-            </a>
-            <!-- Notifications -->
-            <a mat-icon-button routerLink="notifications">
-              <ng-container *ngIf="notificationCount$ | async as count; else noNotification">
-                <mat-icon svgIcon="bell" [matBadge]="count" matBadgeColor="accent" matBadgeSize="small"></mat-icon>
-              </ng-container>
-              <ng-template #noNotification>
-                <mat-icon svgIcon="bell"></mat-icon>
-              </ng-template>
-            </a>
-            <!-- <overlay-notification-widget page="notifications"></overlay-notification-widget> -->
-            <auth-widget></auth-widget>
-          </div>
-        </header>
+        <ng-content select="header"></ng-content>
+        <div fxLayout="row" fxLayoutGap="24px">
+          <mat-divider vertical></mat-divider>
+          <!-- Invitations -->
+          <a mat-icon-button routerLink="invitations">
+            <ng-container *ngIf="invitationCount$ | async as count; else noInvitation">
+              <mat-icon svgIcon="send" [matBadge]="count" matBadgeColor="accent" matBadgeSize="small"></mat-icon>
+            </ng-container>
+            <ng-template #noInvitation>
+              <mat-icon svgIcon="send"></mat-icon>
+            </ng-template>
+          </a>
+          <!-- Notifications -->
+          <a mat-icon-button routerLink="notifications">
+            <ng-container *ngIf="notificationCount$ | async as count; else noNotification">
+              <mat-icon svgIcon="bell" [matBadge]="count" matBadgeColor="accent" matBadgeSize="small"></mat-icon>
+            </ng-container>
+            <ng-template #noNotification>
+              <mat-icon svgIcon="bell"></mat-icon>
+            </ng-template>
+          </a>
+          <!-- <overlay-notification-widget page="notifications"></overlay-notification-widget> -->
+          <auth-widget></auth-widget>
+        </div>
+      </header>
     </app-bar>
 
     <!-- CONTENT -->
