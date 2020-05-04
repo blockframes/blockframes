@@ -47,7 +47,6 @@ export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   ngAfterViewInit() {
     this.sub = this.routerQuery.select('navigationId').subscribe(_ => this.sidenav.close());
     // https://github.com/angular/components/issues/4280
-    // TODO #2502
     this.routerSub = this.router.events.pipe(
       filter(event => event instanceof NavigationEnd))
       .subscribe(() => {

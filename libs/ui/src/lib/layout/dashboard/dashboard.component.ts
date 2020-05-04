@@ -48,7 +48,7 @@ export class DashboardComponent implements AfterViewInit, OnDestroy {
   ) { }
 
   ngAfterViewInit() {
-    // TODO #2502: https://github.com/angular/components/issues/4280
+    // https://github.com/angular/components/issues/4280
     this.sub = this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe(() => this.scrollViewport.scrollTo({ top: 0}))

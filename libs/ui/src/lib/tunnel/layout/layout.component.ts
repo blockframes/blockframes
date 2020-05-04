@@ -68,7 +68,6 @@ export class TunnelLayoutComponent implements OnInit, OnDestroy {
     this.next$ = this.urlBynav$.pipe(map(([url, steps]) => getPage(steps, url, 1)));
     this.previous$ = this.urlBynav$.pipe(map(([url, steps]) => getPage(steps, url, -1)));
     // https://github.com/angular/components/issues/4280
-    // TODO #2502
     this.sub = this.router.events.pipe(
       filter(event => event instanceof NavigationEnd))
       .subscribe(() => {
