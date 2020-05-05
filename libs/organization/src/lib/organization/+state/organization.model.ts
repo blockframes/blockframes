@@ -20,15 +20,6 @@ export {
 
 export type AppStatus = 'none' | 'requested' | 'accepted';
 
-/** 
- * An application details with the organization authorizations
- * @TODO (#2539) This is currently unused but we keep it to future uses.
- * */
-/*export interface AppDetailsWithStatus extends AppDetails {
-  status: AppStatus;
-}*/
-
-
 export type Organization = OrganizationDocumentWithDates;
 
 export interface Wishlist extends WishlistDocumentWithDates {

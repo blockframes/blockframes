@@ -7,6 +7,7 @@ import { jwplayerSecret, jwplayerKey } from './environments/environment';
 import { createHash } from 'crypto';
 import { firestore } from 'firebase'
 import { getDocument } from './data/internals';
+import { ErrorResultResponse } from './utils';
 
 // No typing
 const JWPlayerApi = require('jwplatform');
@@ -18,11 +19,6 @@ interface ReadVideoParams {
 interface UploadVideoParams {
   fileName: string;
   movieId: string;
-}
-
-interface ErrorResultResponse {
-  error: string;
-  result: any;
 }
 
 export const getPrivateVideoUrl = async (
