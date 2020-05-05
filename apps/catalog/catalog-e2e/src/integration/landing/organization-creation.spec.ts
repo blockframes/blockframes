@@ -94,9 +94,10 @@ describe('Try with all fields except name', () => {
     p1.clickCreateOrganization();
     const p2: OrganizationCreatePage = p1.clickSubmitToCreate();
     // Fill all fields except name
-    const ORG_WITHOUT_NAME = { ...ORGANIZATION };
-    delete ORG_WITHOUT_NAME.name;
-    p2.fillEveryFields(ORG_WITHOUT_NAME);
+    const ORG_WITHOUT_NAME_AND_BANK_ACOUNT = { ...ORGANIZATION };
+    delete ORG_WITHOUT_NAME_AND_BANK_ACOUNT.name;
+    delete ORG_WITHOUT_NAME_AND_BANK_ACOUNT.bankAccount;
+    p2.fillEveryFields(ORG_WITHOUT_NAME_AND_BANK_ACOUNT);
     // Since we expect an error, use false in parameter to not navigate to a new page
     p2.clickCreate(false);
     p2.assertMoveToOrgCreatePage();
