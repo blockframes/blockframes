@@ -9,6 +9,7 @@ import { EventEditModule as LayoutEventEditModule } from '@blockframes/event/lay
 // Material
 import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 
 @NgModule({
@@ -21,6 +22,7 @@ import { MatCardModule } from '@angular/material/card';
     // Material
     MatCardModule,
     MatFormFieldModule,
+    MatInputModule,
     MatSelectModule,
     RouterModule.forChild([{ path: '', component: EditComponent }])
   ]
