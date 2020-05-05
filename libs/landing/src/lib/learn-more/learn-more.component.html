@@ -9,7 +9,7 @@
       Please fill out the form and we will get back to you to choose the best time.
     </p>
   </article>
-  <form fxLayout="column" [formGroup]="form" (ngSubmit)="sendRequest.emit(form)">
+  <form fxLayout="column" [formGroup]="form" (ngSubmit)="sendRequest(form)">
     <article fxLayout="row" fxLayoutAlign="space-between center" fxLayout.lt-md="column">
       <mat-form-field appearance="outline">
         <mat-label>First name</mat-label>
