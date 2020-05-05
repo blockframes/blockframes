@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy, HostListener } from '@angular/core';
+import { Component, ChangeDetectionStrategy, HostListener, Input } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 
@@ -10,6 +10,7 @@ import { distinctUntilChanged, map } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LandingToolbarComponent {
+  @Input() imgAsset = 'LogoArchipelContentPrimary.svg';
   private scroll = new BehaviorSubject<number>(0);
   public toolbarColor$ = this.scroll.asObservable().pipe(
     map(position => position === 0),

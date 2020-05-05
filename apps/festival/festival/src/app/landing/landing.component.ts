@@ -16,6 +16,11 @@ export class LandingComponent {
     map(isTop => isTop ? 'transparent-toolbar' : '')
   );
 
+  public headerContent = {
+    title: 'Welcome to Archipel Market',
+    description: 'The endless film market',
+  };
+
   public tabNames = ['Sales Agents', 'Buyers'];
 
   public tabTitle = [

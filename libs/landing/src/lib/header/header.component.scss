@@ -1,14 +1,14 @@
 @import '~@angular/flex-layout/mq';
 
-:host {
-  display: block;
-  padding-top: calc(var(--toolbarHeight) * 2);
-  padding-bottom: 50px;
-  padding-left: 20%;
-  padding-right: 20%;
-  background-image: url('/assets/images/banner_header.png');
-  background-size: cover;
-}
+// :host {
+//   display: block;
+//   padding-top: calc(var(--toolbarHeight) * 2);
+//   padding-bottom: 50px;
+//   padding-left: 20%;
+//   padding-right: 20%;
+//   background-image: url('/assets/images/banner_header.png');
+//   background-size: cover;
+// }
 
 h2, .mat-display-2 {
   color: white;

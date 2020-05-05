@@ -1,5 +1,15 @@
 @import '~@angular/flex-layout/mq';
 
+landing-header {
+  display: block;
+  padding-top: calc(var(--toolbarHeight) * 2);
+  padding-bottom: 50px;
+  padding-left: 20%;
+  padding-right: 20%;
+  background-image: url('/assets/images/ACMbannerlanding.png');
+  background-size: cover;
+}
+
 mat-toolbar {
   position: fixed;
   top: 0;
@@ -25,17 +35,6 @@ mat-toolbar {
   letter-spacing: 0.5px;
   line-height: 24px;
   font-weight: 600;
-}
-
-
-header {
-  display: block;
-  padding-top: calc(var(--toolbarHeight) * 2);
-  padding-bottom: 50px;
-  padding-left: 20%;
-  padding-right: 20%;
-  background-image: url('/assets/images/ACMbannerlanding.png');
-  background-size: cover;
 }
 
 h2, .mat-display-2 {
