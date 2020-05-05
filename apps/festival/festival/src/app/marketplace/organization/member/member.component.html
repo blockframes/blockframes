@@ -4,7 +4,11 @@
   <h2>Company Information</h2>
   <article>
     <h5>Address</h5>
-    <p>{{ org.addresses.main }}</p>
+    <p>{{ org | orgAddress }}</p>
+  </article>
+  <article>
+    <h5>Phone Number</h5>
+    <p>{{ org.addresses.main.phoneNumber }}</p>
   </article>
   <article>
     <h5>Email Address</h5>
