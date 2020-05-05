@@ -39,7 +39,6 @@ export function createInnerAppAccess(innerAppAccess: Partial<InnerAppAccess> = {
   }
 }
 
-// @TODO 2539 move improve
 export function setAppName(slug: App) {
   switch (slug) {
     case 'catalog':
