@@ -15,7 +15,66 @@ export class LandingComponent {
     distinctUntilChanged(),
     map(isTop => isTop ? 'transparent-toolbar' : '')
   );
-  
+
+  public tabNames = ['Sales Agents', 'Buyers'];
+
+  public tabTitle = [
+    {
+      title: 'For Sales Agents.',
+      description: 'Showcase your line-up, get in touch with Buyers and manage meetings and screenings.'
+    },
+    {
+      title: 'For Buyers.',
+      description: 'Explore a large library of films, get in touch with sales agents, plan meetings and watch screenings.'
+    }
+  ]
+
+  public sellerFeatures = [
+    {
+      title: 'Showcase your company & film details',
+      image: 'bulk_import.webp',
+      description: 'Import your metadata and promotional elements easily and have your company and films showcased on the marketplace.'
+    },
+    {
+      title: 'Manage your schedule',
+      image: 'deal_management.webp',
+      description: 'Plan online meetings and book live screenings sessions on your calendar. Set privacy parameters and invite buyers to your events.'
+    },
+    {
+      title: 'Match with buyers',
+      image: 'sales_statistics.webp',
+      description: 'Contact and get contacted by buyers, get requests to your screenings, and get notified when buyers show interest in your films.'
+    },
+    {
+      title: 'Track your films\' activity',
+      image: 'human_salesforce.webp',
+      description: 'Track your films’ activity on the platform, and get screening reports with detailed stats after each screening.'
+    }
+  ];
+
+  public buyerFeatures = [
+    {
+      title: 'Find the newest gems',
+      image: 'library_content.webp',
+      description: 'Explore a large library of films and find the content you\'re looking for in just a few clicks thanks to search and filter functions.'
+    },
+    {
+      title: 'Match with sales agents',
+      image: 'efficient_content_browsing.webp',
+      description: 'Access their company information and contact details, get in touch with them. Explore their line ups and screening schedules and ask for invitations to their screenings.'
+    },
+    {
+      title: 'Access detailed movies pages',
+      image: 'package_deal.webp',
+      description: 'Access each film\'s metadata, promotional elements and screening information.'
+    },
+    {
+      title: 'Plan meetings and watch screenings',
+      image: 'deal_management.webp',
+      description: 'Plan online meetings with sales agents and watch film screenings at specific hours, just like in real live markets.'
+    }
+  ]
+
   // According to this article, it's fine with Angular Universal
   // source: https://technoapple.com/blog/post/scroll-event-at-angular-universal
   /** Change the toolbar class when page is scrolled. */

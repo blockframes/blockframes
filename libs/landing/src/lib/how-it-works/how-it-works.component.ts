@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 
 @Component({
   selector: 'landing-how-it-works',
@@ -7,7 +7,19 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LandingHowItWorksComponent {
-  public sellerFeatures = [
+  @Input() tabNames = ['Seller', 'Buyer'];
+  @Input() tabTitle = [
+    {
+      title: 'Maximize sales on library titles and access new buyers.',
+      description: ''
+    },
+    {
+      title: 'Buy quality content from a multitude of rights holders in one single package.',
+      description: 'Access one massive library, search for avails easily and buy content in larger volumes through one single deal offer and negotiation.'
+    }
+  ]
+
+  @Input() sellerFeatures = [
     {
       title: 'Bulk Import',
       image: 'bulk_import.webp',
@@ -30,7 +42,7 @@ export class LandingHowItWorksComponent {
     }
   ];
 
-  public buyerFeatures = [
+  @Input() buyerFeatures = [
     {
       title: 'Access to line-up and library content ',
       image: 'library_content.webp',

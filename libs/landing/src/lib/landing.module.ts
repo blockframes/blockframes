@@ -9,6 +9,7 @@ import { LandingToolbarComponent } from './toolbar/toolbar.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ImgAssetModule } from '@blockframes/ui/theme';
 import { TelInputModule } from '@blockframes/ui/tel-input/tel-input.module';
+import { RouterModule } from '@angular/router';
 
 // Material
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -52,7 +53,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     MatDividerModule,
     MatButtonModule,
     MatSnackBarModule,
-    MatListModule
+    MatListModule,
+    RouterModule
   ],
   exports: [
     LandingFooterComponent,

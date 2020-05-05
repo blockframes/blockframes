@@ -1,9 +1,14 @@
 <span class="mat-display-1">How it works?</span>
 <mat-tab-group animationDuration="1000ms" selectedIndex="0">
-  <mat-tab label="Seller">
+  <mat-tab [label]="tabNames[0]">
     <article class="perspective-box" fxLayout="row" fxLayoutGap="70px" fxLayoutAlign="space-between start" fxLayout.lt-lg="column">
       <img class="perspective-image" fxHide.xs src="/assets/images/seller_perspective.jpg" alt="seller image"/>
-      <h3>Maximize sales on library titles and access new buyers.</h3>
+      <div>
+        <h3>{{ tabTitle[0].title }}</h3>
+        <ng-container *ngIf="tabTitle[0].description as description">
+          <p class="mat-body-1">{{ description }}</p>
+        </ng-container>
+      </div>
     </article>
     <h5>Features</h5>
     <article fxLayout="row wrap" fxLayoutAlign="space-between" fxLayout.lt-md="column">
@@ -11,17 +16,19 @@
         <img class="feature-image" [asset]="feature.image" alt="seller feature image">
         <div>
           <h3>{{ feature.title }}</h3>
-          <p class="mat-caption">{{ feature.description }}</p>
+          <p class="mat-body-1">{{ feature.description }}</p>
         </div>
       </mat-card>
     </article>
   </mat-tab>
-  <mat-tab label="Buyer">
+  <mat-tab [label]="tabNames[1]">
     <article class="perspective-box" fxLayout="row" fxLayoutGap="70px" fxLayoutAlign="space-between start" fxLayout.lt-lg="column">
       <img class="perspective-image" fxHide.xs src="/assets/images/buyer_perspective.jpg" alt="buyer image"/>
       <div>
-        <h3>Buy quality content from a multitude of rights holders in one single package.</h3>
-        <p class="mat-body-1">Access one massive library, search for avails easily and buy content in larger volumes through one single deal offer and negotiation.</p>
+        <h3>{{ tabTitle[1].title }}</h3>
+        <ng-container *ngIf="tabTitle[1].description as description">
+          <p class="mat-body-1">{{ description }}</p>
+        </ng-container>
       </div>
     </article>
     <h5>Features</h5>
