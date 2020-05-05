@@ -10,7 +10,7 @@ const routes: Routes = createRoutes({
   appName: 'catalog',
   landing: {
     path: '',
-    loadChildren: () => import('./landing/landing.module').then(m => m.LandingModule)
+    loadChildren: () => import('./landing/landing.module').then(m => m.CatalogLandingModule)
   },
   appsRoutes: [{
     path: '',

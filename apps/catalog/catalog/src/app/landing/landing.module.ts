@@ -6,6 +6,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { ImgAssetModule } from '@blockframes/ui/theme';
 import { TelInputModule } from '@blockframes/ui/tel-input/tel-input.module';
+import { LandingModule } from '@blockframes/landing/landing.module';
 
 // Pages
 import { CatalogLandingPageComponent } from './pages/landing-page/landing-page.component';
@@ -67,6 +68,7 @@ const routes = [{
     ReactiveFormsModule,
     ImgAssetModule,
     TelInputModule,
+    LandingModule,
 
     // Material
     MatSidenavModule,
@@ -85,4 +87,4 @@ const routes = [{
     RouterModule.forChild([{ path: '', component: CatalogLandingPageComponent }])
   ]
 })
-export class LandingModule {}
+export class CatalogLandingModule {}

@@ -4,7 +4,7 @@ import { distinctUntilChanged, map } from 'rxjs/operators';
 
 
 @Component({
-  selector: 'landing-toolbar',
+  selector: '[imgAsset] landing-toolbar',
   templateUrl: './toolbar.component.html',
   styleUrls: ['./toolbar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
