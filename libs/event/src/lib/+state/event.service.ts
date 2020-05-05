@@ -109,17 +109,6 @@ export class EventService extends CollectionService<EventState> {
     );
   }
 
-  /**
-   * Set event private url
-   * The url will be fetched from Movie private config associated to eventId
-   * @param eventId
-   */
-  // @TODO (#2460)  Waiting for a decision on screening flow before uncomment
-  public setEventUrl(eventId: string): Promise<any> {
-    const f = this.functions.httpsCallable('setEventUrl');
-    return f({ eventId }).toPromise();
-  }
-
   /** Call a firebase function to get analytics specify to an array of eventIds.*/
   public getEventAnalytics(eventIds: string[]): Observable<EventsAnalytics[]> {
     const f = this.functions.httpsCallable('getEventAnalytics');
