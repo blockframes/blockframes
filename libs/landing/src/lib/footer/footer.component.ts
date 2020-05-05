@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 @Component({
   selector: 'landing-footer',
   templateUrl: './footer.component.html',
@@ -6,6 +6,5 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LandingFooterComponent {
-  constructor() { }
-
+  @Input() archipelLogo = 'LogoAC.svg';
 }
