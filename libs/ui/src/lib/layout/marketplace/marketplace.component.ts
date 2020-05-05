@@ -1,15 +1,22 @@
-import { Component, ChangeDetectionStrategy, OnInit, ViewChild, OnDestroy, AfterViewInit} from '@angular/core';
-import { MatSidenav, MatSidenavContent } from '@angular/material/sidenav';
+// Angular
+import { Component, ChangeDetectionStrategy, OnInit, ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
+import { Router, NavigationEnd } from '@angular/router';
+import { MatSidenav } from '@angular/material/sidenav';
 import { CatalogCartQuery } from '@blockframes/cart/+state/cart.query';
-import { RouterQuery } from '@datorama/akita-ng-router-store';
+
+// RxJs
 import { Observable, Subscription } from 'rxjs';
 import { map, filter } from 'rxjs/operators';
+
+// Blockframes
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { Wishlist } from '@blockframes/organization/+state/organization.model';
 import { routeAnimation } from '@blockframes/utils/animations/router-animations';
 import { InvitationQuery } from '@blockframes/invitation/+state';
 import { NotificationQuery } from '@blockframes/notification/+state';
-import { Router, NavigationEnd } from '@angular/router';
+
+import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { CdkScrollable } from '@angular/cdk/overlay';
 
 @Component({
   selector: 'layout-marketplace',
@@ -19,7 +26,6 @@ import { Router, NavigationEnd } from '@angular/router';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MarketplaceComponent implements OnInit, AfterViewInit, OnDestroy {
-  private sub: Subscription;
   private routerSub: Subscription;
 
   public user$ = this.authQuery.select('profile');
@@ -29,7 +35,7 @@ export class MarketplaceComponent implements OnInit, AfterViewInit, OnDestroy {
   public notificationCount$ = this.notificationQuery.selectCount();
 
   @ViewChild(MatSidenav) sidenav: MatSidenav;
-  @ViewChild(MatSidenavContent) sidenavContent: MatSidenavContent;
+  @ViewChild(CdkScrollable) cdkScrollable: CdkScrollable
 
   constructor(
     private catalogCartQuery: CatalogCartQuery,
@@ -38,7 +44,7 @@ export class MarketplaceComponent implements OnInit, AfterViewInit, OnDestroy {
     private authQuery: AuthQuery,
     private routerQuery: RouterQuery,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.currentWishlist$ = this.catalogCartQuery.wishlistWithMovies$.pipe(
@@ -51,16 +57,15 @@ export class MarketplaceComponent implements OnInit, AfterViewInit, OnDestroy {
 
   ngAfterViewInit() {
     this.routerSub = this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd)
+     filter(event => event instanceof NavigationEnd)
     ).subscribe(() => {
-      // TODO #2502: https://github.com/angular/components/issues/4280
-      this.sidenavContent.scrollTo({ top: 0 });
+      // https://github.com/angular/components/issues/4280
+      this.cdkScrollable.scrollTo({top: 0})
       this.sidenav.close();
     })
   }
 
   ngOnDestroy() {
-    if (this.sub) { this.sub.unsubscribe(); }
     if (this.routerSub) { this.routerSub.unsubscribe(); }
   }
 
