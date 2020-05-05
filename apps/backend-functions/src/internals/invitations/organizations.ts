@@ -81,7 +81,7 @@ async function mailOnInvitationAccept(userId: string, organizationId: string) {
 
 /** Sends an email when an organization invites an user to join. */
 async function onInvitationToOrgCreate({ toUser }: InvitationDocument) {
-  if(!toUser){
+  if (!toUser) {
     console.error('No user provided');
     return;
   }
@@ -92,12 +92,12 @@ async function onInvitationToOrgCreate({ toUser }: InvitationDocument) {
     return;
   }
 
-  // @TODO (#2539) Not implemented @see userInviteToOrg template
+  // @TODO (#2685) Not implemented @see userInviteToOrg template
 }
 
 /** Updates the user, orgs, and permissions when the user accepts an invitation to an organization. */
 async function onInvitationToOrgAccept({ toUser, fromOrg }: InvitationDocument) {
-  if(!toUser || !fromOrg){
+  if (!toUser || !fromOrg) {
     console.error('No user or org provided');
     return;
   }
@@ -110,7 +110,7 @@ async function onInvitationToOrgAccept({ toUser, fromOrg }: InvitationDocument) 
 
 /** Send a notification to admins of organization to notify them that the user declined their invitation. */
 async function onInvitationToOrgDecline(invitation: InvitationDocument) {
-  if(!invitation.toUser || !invitation.fromOrg){
+  if (!invitation.toUser || !invitation.fromOrg) {
     console.error('No user or org provided');
     return;
   }
@@ -137,7 +137,7 @@ async function onInvitationFromUserToJoinOrgCreate({
   toOrg,
   fromUser
 }: InvitationDocument) {
-  if(!fromUser || !toOrg){
+  if (!fromUser || !toOrg) {
     console.error('No user or org provided');
     return;
   }
@@ -150,7 +150,7 @@ async function onInvitationFromUserToJoinOrgCreate({
 
   const adminIds = await getAdminIds(toOrg.id);
 
-  const admins = await Promise.all(adminIds.map(getUser));
+  const admins = await Promise.all(adminIds.map(u => getUser(u)));
   // const validSuperAdminMails = superAdminsMails.filter(adminEmail => !!adminEmail);
 
   // send invitation pending email to user
@@ -180,11 +180,10 @@ async function onInvitationFromUserToJoinOrgAccept({
   toOrg,
   fromUser
 }: InvitationDocument) {
-  if(!fromUser || !toOrg){
+  if (!fromUser || !toOrg) {
     console.error('No user or org provided');
     return;
   }
-  
   // TODO(issue#739): When a user is added to an org, clear other invitations
   await addUserToOrg(fromUser.uid, toOrg.id);
   await sendMailFromTemplate(userJoinedAnOrganization(fromUser.email, toOrg.id));
@@ -193,7 +192,7 @@ async function onInvitationFromUserToJoinOrgAccept({
 
 /** Send a notification to admins of organization to notify them that the request is declined. */
 async function onInvitationFromUserToJoinOrgDecline(invitation: InvitationDocument) {
-  if(!invitation.fromUser || !invitation.toOrg){
+  if (!invitation.fromUser || !invitation.toOrg) {
     console.error('No user or org provided');
     return;
   }
