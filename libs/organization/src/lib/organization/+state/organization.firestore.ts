@@ -18,7 +18,7 @@ interface OrganizationBase<D> {
   activity: OrgActivity;
   addresses: AddressSet;
   appAccess: OrgAppAccess;
-  bankAccounts: BankAccount[];
+  bankAccounts?: BankAccount[]; // @TODO (#2692)
   cart: CatalogCart[];
   created: D;
   denomination: Denomination;
