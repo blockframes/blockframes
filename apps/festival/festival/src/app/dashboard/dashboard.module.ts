@@ -55,7 +55,8 @@ const routes: Routes = [{
           path: ':movieId',
           canActivate: [MovieActiveGuard],
           canDeactivate: [MovieActiveGuard],
-          loadChildren: () => import('./title/view/view.module').then(m => m.TitleViewModule)
+          loadChildren: () => import('./title/view/view.module').then(m => m.TitleViewModule),
+          data: { redirect: '/c/o/dashboard/title' }
         }]
       },
       {

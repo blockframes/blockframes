@@ -7,7 +7,7 @@ import { map } from "rxjs/operators";
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { MovieAppAccess } from "@blockframes/utils/apps";
 
-function haveAppAccess(appName: string, appAccess: MovieAppAccess): boolean {
+function hasAppAccess(appName: string, appAccess: MovieAppAccess): boolean {
   return appAccess[appName];
 }
 
@@ -25,7 +25,12 @@ export class MovieActiveGuard extends CollectionGuard<MovieState> {
       map(movie => {
         if (!!movie) {
           const appName = this.routerQuery.getValue().state.root.data.app;
-          return haveAppAccess(appName, movie.main.storeConfig.appAccess);
+          const hasAccess = hasAppAccess(appName, movie.main.storeConfig.appAccess);
+          if (hasAccess === true) {
+            return true;
+          } else {
+            return this.redirect || next.data.redirect;
+          }
         } else {
           return this.redirect || next.data.redirect;
         }
