@@ -18,7 +18,7 @@ zip test-results.zip ./*.xml
 
 # https://circleci.com/docs/2.0/env-vars/#built-in-environment-variables
 
-curl -X POST -F file=./test-results.zip "${DASHBOARD_API_URL}" \
+curl -X POST -F file=@./test-results.zip "${DASHBOARD_API_URL}" \
   --header "Branch:${CIRCLE_BRANCH}" \
   --header "BuildID:${CIRCLE_BUILD_NUM}" \
   --header "BuildURL:${CIRCLE_BUILD_URL}" \
