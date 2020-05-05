@@ -16,7 +16,7 @@ import {
 } from './utils';
 import { logErrors } from './internals/sentry';
 import { onInvitationWrite } from './invitation';
-import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate } from './orgs';
+import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate, accessToAppChanged } from './orgs';
 import { adminApp } from './admin';
 import { onMovieUpdate, onMovieCreate, onMovieDelete } from './movie';
 import * as bigQuery from './bigQuery';
@@ -84,12 +84,8 @@ export const uploadVideo  = functions.https.onCall(logErrors(uploadToJWPlayer));
 /**
  * Trigger: REST call to the /admin app
  *
- * - Let admin accept organizations:
- *    When organizations are created they are in status "pending",
- *    cascade8 admins will accept the organization with this function.
- * - Let admin give an organization access to applications:
- *    Organization cannot access applications until they requested it and
- *    a cascade8 administrator accept their request.
+ *  - Backups / Restore the database
+ *  - Quorum Deploy & setup a movie smart-contract
  */
 export const admin = functions.https.onRequest(adminApp);
 
@@ -175,13 +171,9 @@ export const getDocumentPrivateConfig = functions.https.onCall(logErrors(private
 //--------------------------------
 
 /**
- * Trigger: when an organization requests access to apps.
- * @TODO (#2539) This method is currently unused but we keep it to future uses.
+ * Trigger: when a blockframes admin changed an org app access and wants to notify admins.
  */
-/*export const onAccessToApp = onDocumentWrite(
-  'app-requests/{orgId}',
-  onRequestAccessToAppWrite
-);*/
+export const onAccessToAppChanged = functions.https.onCall(accessToAppChanged);
 
 //--------------------------------
 //       Orgs Management        //

@@ -59,3 +59,8 @@ export async function removeAllSubcollections(
   }
   return batch;
 }
+
+export interface ErrorResultResponse {
+  error: string;
+  result: any;
+}
