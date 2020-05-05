@@ -111,7 +111,7 @@ export class InvitationService extends CollectionService<InvitationState> {
           const promises = recipients.map(async recipient => {
             let invitation: Partial<Invitation>;
             if (who === 'user') {
-              invitation = await this.authService.getOrCreateUserByMail(recipient, orgName).then(toUser => ({ ...base, toUser: createPublicUser(toUser) }));
+              invitation = await this.authService.getOrCreateUserByMail(recipient, orgName).then(toUser => ({ ...base, toUser: createPublicUser({ uid: toUser.uid }) }));
             } else if (who === 'org') {
               invitation = { ...base, toOrg: createPublicOrganization({ id: recipient }) };
             }
