@@ -32,22 +32,22 @@ export class LandingComponent {
   public sellerFeatures = [
     {
       title: 'Showcase your company & film details',
-      image: 'bulk_import.webp',
+      image: 'filmpage.webp',
       description: 'Import your metadata and promotional elements easily and have your company and films showcased on the marketplace.'
     },
     {
       title: 'Manage your schedule',
-      image: 'deal_management.webp',
+      image: 'calendar.webp',
       description: 'Plan online meetings and book live screenings sessions on your calendar. Set privacy parameters and invite buyers to your events.'
     },
     {
       title: 'Match with buyers',
-      image: 'sales_statistics.webp',
+      image: 'matching.webp',
       description: 'Contact and get contacted by buyers, get requests to your screenings, and get notified when buyers show interest in your films.'
     },
     {
       title: 'Track your films\' activity',
-      image: 'human_salesforce.webp',
+      image: 'sales_statistics.webp',
       description: 'Track your films’ activity on the platform, and get screening reports with detailed stats after each screening.'
     }
   ];
@@ -55,22 +55,22 @@ export class LandingComponent {
   public buyerFeatures = [
     {
       title: 'Find the newest gems',
-      image: 'library_content.webp',
+      image: 'gems.webp',
       description: 'Explore a large library of films and find the content you\'re looking for in just a few clicks thanks to search and filter functions.'
     },
     {
       title: 'Match with sales agents',
-      image: 'efficient_content_browsing.webp',
+      image: 'matching.webp',
       description: 'Access their company information and contact details, get in touch with them. Explore their line ups and screening schedules and ask for invitations to their screenings.'
     },
     {
       title: 'Access detailed movies pages',
-      image: 'package_deal.webp',
+      image: 'filmpage.webp',
       description: 'Access each film\'s metadata, promotional elements and screening information.'
     },
     {
       title: 'Plan meetings and watch screenings',
-      image: 'deal_management.webp',
+      image: 'calendar.webp',
       description: 'Plan online meetings with sales agents and watch film screenings at specific hours, just like in real live markets.'
     }
   ]

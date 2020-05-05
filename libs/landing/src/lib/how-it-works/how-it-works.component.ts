@@ -8,6 +8,7 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 })
 export class LandingHowItWorksComponent {
   @Input() tabNames = ['Seller', 'Buyer'];
+
   @Input() tabTitle = [
     {
       title: 'Maximize sales on library titles and access new buyers.',
