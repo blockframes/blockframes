@@ -23,17 +23,6 @@
         <mat-icon svgIcon="pencil"></mat-icon>
       </button>
     </h2>
-    <div *ngIf="eventScreeningUrl">
-      Event screening link : <a href="{{ eventScreeningUrl.url }}" target="_blank" >{{ eventScreeningUrl }}</a>
-    </div>
-    <div *ngIf="moviePrivateConfig">
-      <div>
-        Movie screening link : <a href="{{ moviePrivateConfig.url }}" target="_blank" >{{ moviePrivateConfig.url }}</a>
-      </div>
-      <button mat-flat-button color="accent" (click)="setEventUrl()">
-        <span>Set event URL from movie</span>
-      </button>
-    </div>
   </ng-container>
   <ng-template #spinner>
     <mat-spinner diameter="30"></mat-spinner>

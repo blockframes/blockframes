@@ -39,13 +39,5 @@ describe('Event Service', () => {
     expect(event.color).toBeUndefined();
     expect(event.title).toBe('fake');
   })
-
-  // Skip test because cannot solve injection dependancy issue with AngularFirestore
-  test.skip('setEventUrl', async () => {
-    const functions = spectator.inject(AngularFireFunctions);
-    const result = await spectator.service.setEventUrl('id');
-    expect(functions.httpsCallable).toHaveBeenCalledWith('setEventUrl');
-    expect(result).toBeTruthy();
-  })
 })
 
