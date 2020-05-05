@@ -4,58 +4,17 @@
  *
  */
 import express from 'express';
-import { db, DocumentReference, getUserMail } from './internals/firebase';
-import { sendMail } from './internals/email';
+import { db } from './internals/firebase';
+import { ADMIN_DATA_PATH } from './templates/mail';
 import {
-  ADMIN_ACCEPT_ORG_PATH,
-  ADMIN_ACCESS_TO_APP_PATH,
-  ADMIN_DATA_PATH,
-  organizationCanAccessApp,
-} from './templates/mail';
-import {
-  acceptNewOrgPage,
-  acceptNewOrgPageComplete,
-  allowAccessToAppPage,
-  allowAccessToAppPageComplete,
   dataBackupPage,
   dataRestorePage,
   dataQuorumCreatePage,
 } from './templates/admin';
-import { getAdminIds } from './data/internals';
 import * as backup from './backup';
 import { deployMovieContract, setInitialRepartition } from '@blockframes/ethers/quorum/quorum';
 import { adminPassword } from './environments/environment';
 
-// TODO(#2539): Synchronize data types with the frontend
-//const APPS = ['festival', 'catalog'];
-
-/**
- * Handles firestore update on request to application access
- * @TODO (#2539)
- * This method is currently unused but we keep it to future uses.
- * It sends and email to admin to accept or reject the request
- */
-/*export async function onRequestAccessToAppWrite(
-  change: functions.Change<FirebaseFirestore.DocumentSnapshot>,
-  context: functions.EventContext
-) {
-  const { orgId } = context.params;
-
-  const before = change.before.data();
-  const after = change.after.data();
-
-  if (!after) {
-    return;
-  }
-
-  const requestedApps = APPS.filter(appId => {
-    return after && after[appId] === 'requested' && (!before || before[appId] !== 'requested');
-  });
-
-  return Promise.all(
-    requestedApps.map(appId => sendMail(organizationRequestedAccessToApp(orgId, appId)))
-  );
-}*/
 
 /**
  * Decorates another function, this will check that the password is valid
@@ -82,92 +41,6 @@ function checkPasswordOnPost(f: any) {
 // this let us deal easily with get / post, url params, etc.
 export const adminApp = express();
 
-// Organization Administration: Accept new orgs
-// ============================================
-
-/** Update an organization when it has been accepted by admins. */
-function acceptOrganization(organizationRef: DocumentReference): Promise<any> {
-  return organizationRef.update({ status: 'accepted' });
-}
-
-async function mailOrganizationAdminOnAccept(organizationId: string): Promise<any> {
-  const admins = await getAdminIds(organizationId);
-
-  return Promise.all(
-    admins.map(async userId => {
-      const email = await getUserMail(userId);
-      if (!email) {
-        return;
-      }
-    })
-  );
-}
-
-// When an admin access the page, they'll see the "accept org" form.
-adminApp.get(
-  `${ADMIN_ACCEPT_ORG_PATH}/:organizationId`,
-  async (req: express.Request, res: express.Response) => {
-    const { organizationId } = req.params;
-    res.send(acceptNewOrgPage(organizationId));
-  }
-);
-
-// When an admin submit the "accept org" form, it'll update the organization, send mails, etc.
-adminApp.post(
-  `${ADMIN_ACCEPT_ORG_PATH}/:organizationId`,
-  checkPasswordOnPost(async (req: express.Request, res: express.Response) => {
-    const { organizationId } = req.params;
-    const organizationRef = db.collection('orgs').doc(organizationId);
-
-    await acceptOrganization(organizationRef);
-    await mailOrganizationAdminOnAccept(organizationId);
-    return res.send(acceptNewOrgPageComplete(organizationId));
-  })
-);
-
-// Organization Administration: allow apps for orgs
-// ================================================
-
-function allowAccessToApp(organizationId: string, appId: string): Promise<any> {
-  const requestRef = db.collection('app-requests').doc(organizationId);
-  return requestRef.update({ [appId]: 'accepted' });
-}
-
-async function mailOrganizationAdminOnAccessToApp(
-  organizationId: string,
-  appId: string
-): Promise<any> {
-  const admins = await getAdminIds(organizationId);
-
-  return Promise.all(
-    admins.map(async userId => {
-      const email = await getUserMail(userId);
-      if (!email) {
-        return;
-      }
-      return sendMail(organizationCanAccessApp(email, appId));
-    })
-  );
-}
-
-adminApp.get(
-  `${ADMIN_ACCESS_TO_APP_PATH}/:orgId/:appId`,
-  async (req: express.Request, res: express.Response) => {
-    const { orgId, appId } = req.params;
-    return res.send(allowAccessToAppPage(orgId, appId));
-  }
-);
-
-adminApp.post(
-  `${ADMIN_ACCESS_TO_APP_PATH}/:orgId/:appId`,
-  checkPasswordOnPost(async (req: express.Request, res: express.Response) => {
-    const { orgId, appId } = req.params;
-
-    await allowAccessToApp(orgId, appId);
-    await mailOrganizationAdminOnAccessToApp(orgId, appId);
-    return res.send(allowAccessToAppPageComplete(orgId, appId));
-  })
-);
 
 // Backups / Restore the database
 // ==============================
@@ -282,7 +155,7 @@ adminApp.post(`${ADMIN_DATA_PATH}/quorum/create/:movieId`, async (req: express.R
     ${repartitionStatus}
     `);
 
-  } catch(error) {
+  } catch (error) {
     console.log('** !! SOMETHING HAS FAILED DURING DEPLOY !! **'); // logging to firebase functions console
 
     return res.send({

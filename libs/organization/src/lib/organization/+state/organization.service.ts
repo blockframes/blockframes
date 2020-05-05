@@ -13,6 +13,7 @@ import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire
 import { createPermissions } from '../../permissions/+state/permissions.model';
 import { firestore } from 'firebase/app';
 import { toDate } from '@blockframes/utils/helpers';
+import { AngularFireFunctions } from '@angular/fire/functions';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'orgs' })
@@ -21,7 +22,8 @@ export class OrganizationService extends CollectionService<OrganizationState> {
   constructor(
     private query: OrganizationQuery,
     public store: OrganizationStore,
-    private authQuery: AuthQuery
+    private authQuery: AuthQuery,
+    private functions: AngularFireFunctions,
   ) {
     super(store);
   }
@@ -107,32 +109,13 @@ export class OrganizationService extends CollectionService<OrganizationState> {
       .update({ activeMembers: updatedActiveMembers });
   }*/
 
-  /**
-   * Lets an organization request access to an application
-   * @TODO (#2539)
-   * This method is currently unused but we keep it to future uses.
-   * It creates an "app-requests" document that will be accepted or not by admins.
-   * If accepted, should create or update `applications` attribute on org's permission document.
-   * @dev update draw.io with "app-requests" model and organization model to store this information
-   */
-  /*public requestAccessToApp(orgId: string, appId: string): Promise<any> {
-    const docRef = this.db.collection('app-requests').doc(orgId).ref;
-
-    return this.db.firestore.runTransaction(async tx => {
-      const doc = await tx.get(docRef);
-
-      if (!doc.exists) {
-        return tx.set(docRef, { [appId]: 'requested' });
-      } else {
-        return tx.update(docRef, { [appId]: 'requested' });
-      }
-    });
-  }*/
-
-
   public async setBlockchainFeature(value: boolean) {
     const orgId = this.query.getActiveId();
     return this.update(orgId, { isBlockchainEnabled: value });
   }
 
+  public async notifyAppAccessChange(orgId: string){
+    const callOnAccessToAppChanged = this.functions.httpsCallable('onAccessToAppChanged');
+    return callOnAccessToAppChanged(orgId).toPromise();
+  }
 }

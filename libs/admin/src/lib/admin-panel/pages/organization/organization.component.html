@@ -31,6 +31,10 @@
         </div>
       </div>
 
+      <mat-checkbox [formControl]="notifyCheckbox">
+        Notify admin(s) of app access changes ?
+      </mat-checkbox>
+
       <mat-card-actions align="end">
         <button type="submit" mat-flat-button color="primary" (click)="update()">Update</button>
       </mat-card-actions>

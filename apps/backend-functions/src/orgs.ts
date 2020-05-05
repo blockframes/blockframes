@@ -5,16 +5,19 @@ import { difference } from 'lodash';
  *
  * Right now this is solely used to update our algolia index (full-text search on org names).
  */
-import { functions, db } from './internals/firebase';
+import { functions, db, getUser } from './internals/firebase';
 import { deleteObject, storeSearchableOrg } from './internals/algolia';
 import { sendMail, sendMailFromTemplate } from './internals/email';
-import { organizationCreated, organizationWasAccepted } from './templates/mail';
+import { organizationCreated, organizationWasAccepted, organizationRequestedAccessToApp, organizationCanAccessApp } from './templates/mail';
 import { OrganizationDocument, PublicUser, PermissionsDocument } from './data/types';
 import { RelayerConfig, relayerDeployOrganizationLogic, relayerRegisterENSLogic, isENSNameRegistered } from './relayer';
 import { mnemonic, relayer, algolia } from './environments/environment';
 import { emailToEnsDomain, precomputeAddress as precomputeEthAddress, getProvider } from '@blockframes/ethers/helpers';
 import { NotificationType } from '@blockframes/notification/types';
 import { triggerNotifications, createNotification } from './notification';
+import { app } from '@blockframes/utils/apps';
+import { getAdminIds } from './data/internals';
+import { ErrorResultResponse } from './utils';
 
 /** Create a notification with user and org. */
 function notifUser(toUserId: string, notificationType: NotificationType, org: OrganizationDocument, user: PublicUser) {
@@ -73,6 +76,25 @@ async function notifyOnOrgMemberChanges(before: OrganizationDocument, after: Org
   }
 }
 
+/** Checks if new org admin updated app access (possible only when org.status === 'pending' for a standard user ) */
+function hasOrgAppAccessChanged(before: OrganizationDocument, after: OrganizationDocument): boolean {
+  if (!!after.appAccess && before.status === 'pending' && after.status === 'pending') {
+    for (const a of app) {
+      if (after.appAccess[a].dashboard === true && (!before.appAccess[a] || before.appAccess[a].dashboard === false)) { return true; }
+      if (after.appAccess[a].marketplace === true && (!before.appAccess[a] || before.appAccess[a].marketplace === false)) { return true; }
+    }
+  }
+  return false;
+}
+
+/** Sends a mail to admin to inform that an org is waiting approval */
+async function sendMailIfOrgAppAccessChanged(before: OrganizationDocument, after: OrganizationDocument) {
+  if (hasOrgAppAccessChanged(before, after)) {
+    // Send a mail to c8 admin to accept the organization given it's choosen app access
+    await sendMail(organizationRequestedAccessToApp(after.id))
+  }
+}
+
 export function onOrganizationCreate(
   snap: FirebaseFirestore.DocumentSnapshot,
   context: functions.EventContext
@@ -86,7 +108,7 @@ export function onOrganizationCreate(
   }
 
   return Promise.all([
-    // Send a mail to c8 admin to accept the organization
+    // Send a mail to c8 admin to inform about the created organization
     sendMail(organizationCreated(org.id)),
     // Update algolia's index
     storeSearchableOrg(orgID, org.denomination.full)
@@ -116,6 +138,9 @@ export async function onOrganizationUpdate(
 
   // Send notifications when a member is added or removed
   await notifyOnOrgMemberChanges(before, after);
+
+  // check if appAccess have changed
+  await sendMailIfOrgAppAccessChanged(before, after);
 
   // Deploy org's smart-contract
   const becomeAccepted = before.status === 'pending' && after.status === 'accepted';
@@ -167,4 +192,18 @@ export function onOrganizationDelete(
 ): Promise<any> {
   // Update algolia's index
   return deleteObject(algolia.indexNameOrganizations, context.params.orgID);
+}
+
+export const accessToAppChanged = async (
+  orgId: string
+): Promise<ErrorResultResponse> => {
+
+  const adminIds = await getAdminIds(orgId);
+  const admins = await Promise.all(adminIds.map(id => getUser(id)));
+  await Promise.all(admins.map(admin => sendMail(organizationCanAccessApp(admin.email))));
+
+  return {
+    error: '',
+    result: 'OK'
+  };
 }
