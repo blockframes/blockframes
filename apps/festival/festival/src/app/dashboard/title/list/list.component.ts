@@ -67,7 +67,7 @@ export class ListComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
-    // Sync with anaytics
+    // Sync with anaytics: It's ok to give ALL movieIds they'll just be set to 0
     this.sub = this.orgQuery.selectActive().pipe(
       switchMap(org => this.service.syncWithAnalytics(org.movieIds)),
     ).subscribe();
