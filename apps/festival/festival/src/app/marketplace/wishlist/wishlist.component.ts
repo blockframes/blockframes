@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -14,6 +14,7 @@ import { Subscription } from 'rxjs';
   selector: 'festival-wishlist',
   templateUrl: './wishlist.component.html',
   styleUrls: ['./wishlist.component.scss'],
+  // The table needs to be updated when user deletes a movie
   changeDetection: ChangeDetectionStrategy.Default
 })
 export class WishlistComponent implements OnInit, OnDestroy {
@@ -37,16 +38,19 @@ export class WishlistComponent implements OnInit, OnDestroy {
     private service: CartService,
     private snackbar: MatSnackBar,
     private analytics: FireAnalytics,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit() {
     this.sub = this.catalogCartQuery.wishlistWithMovies$.pipe(
       map(wishlist => wishlist.find(wish => wish.status === 'pending')),
       tap(wishlist => this.hasWishlist = !!wishlist.movieIds.length),
-      filter(wishlist => !!wishlist?.movies?.length),
-      tap(wishlist => this.dataSource = new MatTableDataSource(wishlist.movies)),
-    ).subscribe();
+      filter(wishlist => !!wishlist?.movies?.length)
+    ).subscribe(wishlist => {
+      this.dataSource = new MatTableDataSource(wishlist.movies)
+      this.cdr.markForCheck();
+    });
   }
 
   public async redirectToMovie(movieId: string) {
