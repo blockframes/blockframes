@@ -30,7 +30,6 @@ export class LayoutComponent implements AfterViewInit, OnDestroy {
 
     ngAfterViewInit() {
     // https://github.com/angular/components/issues/4280
-    // TODO #2502
     this.routerSub = this.router.events.pipe(
       filter(event => event instanceof NavigationEnd))
       .subscribe(() => {

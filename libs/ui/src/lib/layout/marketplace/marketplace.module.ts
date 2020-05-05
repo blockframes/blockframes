@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { NgModule } from '@angular/core';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 import { RouterModule } from '@angular/router';
 
 import { MarketplaceComponent } from './marketplace.component';
@@ -33,6 +34,7 @@ import { MatMenuModule } from '@angular/material/menu';
     CommonModule,
     RouterModule,
     FlexLayoutModule,
+    ScrollingModule,
 
     // Material
     MatToolbarModule,
