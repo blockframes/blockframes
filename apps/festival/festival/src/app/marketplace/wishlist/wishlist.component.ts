@@ -1,24 +1,25 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Movie } from '@blockframes/movie/+state/movie.model';
 import { CatalogCartQuery } from '@blockframes/cart/+state/cart.query';
 import { CartService } from '@blockframes/cart/+state/cart.service';
-import { map, filter } from 'rxjs/operators';
-import { Observable } from 'rxjs';
+import { map, filter, tap } from 'rxjs/operators';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
+import { Subscription } from 'rxjs';
 
 
 @Component({
   selector: 'festival-wishlist',
   templateUrl: './wishlist.component.html',
   styleUrls: ['./wishlist.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.Default
 })
-export class WishlistComponent implements OnInit {
+export class WishlistComponent implements OnInit, OnDestroy {
 
-  public dataSource$: Observable<MatTableDataSource<Movie>>;
+  public dataSource: MatTableDataSource<Movie>;
+  public hasWishlist: boolean;
   public columnsToDisplay = [
     'movie',
     'director',
@@ -28,6 +29,8 @@ export class WishlistComponent implements OnInit {
     'delete'
   ];
 
+  private sub: Subscription
+
   constructor(
     private catalogCartQuery: CatalogCartQuery,
     private router: Router,
@@ -35,16 +38,16 @@ export class WishlistComponent implements OnInit {
     private snackbar: MatSnackBar,
     private analytics: FireAnalytics,
     private route: ActivatedRoute
-  ) {}
+  ) { }
 
   ngOnInit() {
-    this.dataSource$ = this.catalogCartQuery.wishlistWithMovies$.pipe(
+    this.sub = this.catalogCartQuery.wishlistWithMovies$.pipe(
       map(wishlist => wishlist.find(wish => wish.status === 'pending')),
+      tap(wishlist => this.hasWishlist = !!wishlist.movieIds.length),
       filter(wishlist => !!wishlist?.movies?.length),
-      map(wishlist => new MatTableDataSource(wishlist.movies))
-    );
+      tap(wishlist => this.dataSource = new MatTableDataSource(wishlist.movies)),
+    ).subscribe();
   }
-
 
   public async redirectToMovie(movieId: string) {
     this.router.navigate([`../title/${movieId}`], { relativeTo: this.route });
@@ -62,5 +65,9 @@ export class WishlistComponent implements OnInit {
       movieId: movie.id,
       movieTitle: movie.main.title.original
     });
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
   }
 }

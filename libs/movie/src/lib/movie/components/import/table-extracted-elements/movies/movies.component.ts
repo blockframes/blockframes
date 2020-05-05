@@ -14,6 +14,8 @@ import { MovieService } from '@blockframes/movie/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { createContract, createContractPartyDetail } from '@blockframes/contract/contract/+state/contract.model';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { getCurrentApp } from '@blockframes/utils/apps';
 
 const hasImportErrors = (importState: MovieImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -51,7 +53,8 @@ export class TableExtractedMoviesComponent implements OnInit {
     private dialog: MatDialog,
     private movieService: MovieService,
     private contractService: ContractService,
-    private orgQuery: OrganizationQuery
+    private orgQuery: OrganizationQuery,
+    private routerQuery: RouterQuery
   ) { }
 
   ngOnInit() {
@@ -60,6 +63,11 @@ export class TableExtractedMoviesComponent implements OnInit {
     this.rows.filterPredicate = this.filterPredicate;
     this.rows.sortingDataAccessor = sortingDataAccessor;
     this.rows.sort = this.sort;
+  }
+
+  buttonText() {
+    const appName = getCurrentApp(this.routerQuery);
+    return appName === 'festival' ? 'Publish to Marketplace' : 'Publish';
   }
 
   async createMovie(importState: MovieImportState): Promise<boolean> {
