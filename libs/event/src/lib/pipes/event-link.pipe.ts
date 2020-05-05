@@ -5,14 +5,18 @@ import { EventService } from '../+state';
 @Pipe({ name: 'eventLink', pure: false })
 export class EventLinkPipe implements PipeTransform {
   constructor(private service: EventService) {}
-  transform(event: Event): string[] {
+  transform(event: Event, prefix: string = ''): string[] {
     if (this.service.isOwner(event)) {
-      return event.end.getTime() < Date.now() ? [event.id] : [event.id, 'edit'];
+      if (event.end.getTime() < Date.now()) {
+        return [prefix, event.id];
+      } else {
+        return [prefix, event.id, 'edit'];
+      }
     } else {
       if (event.start.getTime() < Date.now() || event.end.getTime() > Date.now()) {
-        return [event.id];
+        return [prefix, event.id];
       } else {
-        return [event.id, 'session'];
+        return [prefix, event.id, 'session'];
       }
     }
   }
