@@ -1,8 +1,8 @@
 import { Component, OnInit, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
-import { MovieQuery } from '@blockframes/movie/+state/movie.query';
-import { Observable, Subscription } from 'rxjs';
 import { MovieAnalytics } from '@blockframes/movie/+state/movie.firestore';
-import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { MovieService, MovieQuery } from '@blockframes/movie/+state';
+import { map, switchMap, shareReplay } from 'rxjs/operators';
+import { Observable, Subscription } from 'rxjs';
 
 @Component({
   selector: 'festival-dashboard-home',
@@ -12,9 +12,9 @@ import { MovieService } from '@blockframes/movie/+state/movie.service';
 })
 export class HomeComponent implements OnInit, OnDestroy {
 
-  public movieAnalytics$: Observable<MovieAnalytics[]>;
-  public hasMovies$ = this.movieQuery.hasMovies();
   private sub: Subscription;
+  public movieAnalytics$: Observable<MovieAnalytics[]>;
+  public hasMovies$ : Observable<boolean>;
 
   constructor(
     private movieQuery: MovieQuery,
@@ -22,8 +22,19 @@ export class HomeComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.sub = this.movieService.syncAnalytics({ filterBy: movie => movie.main.storeConfig.status === 'accepted' }).subscribe();
     this.movieAnalytics$ = this.movieQuery.analytics.selectAll();
+    const titles$ = this.movieService.valueChanges(ref => ref.where('main.storeConfig.status', '==', 'accepted')).pipe(
+      shareReplay(1)
+    );
+
+    this.hasMovies$ = titles$.pipe(
+      map(titles => !!titles.length)
+    );
+
+    this.sub = titles$.pipe(
+      map(movies => movies.map(m => m.id)),
+      switchMap(movieIds => this.movieService.syncWithAnalytics(movieIds))
+    ).subscribe();
   }
 
   ngOnDestroy() {

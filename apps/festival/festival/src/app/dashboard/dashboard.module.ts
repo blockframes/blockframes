@@ -7,7 +7,6 @@ import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/imag
 // Guards
 import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 import { MovieTunnelGuard } from '@blockframes/movie/guards/movie-tunnel.guard';
-import { MovieOrganizationListGuard } from '@blockframes/movie/guards/movie-organization-list.guard';
 import { TunnelGuard } from '@blockframes/ui/tunnel';
 
 // Material
@@ -32,8 +31,6 @@ const routes: Routes = [{
       },
       {
         path: 'home',   // Home (dashboard if film, welcome if not)
-        canActivate: [MovieOrganizationListGuard],
-        canDeactivate: [MovieOrganizationListGuard],
         loadChildren: () => import('./home/home.module').then(m => m.HomeModule)
       },
       {
@@ -53,8 +50,6 @@ const routes: Routes = [{
         path: 'title',
         children: [{
           path: '',
-          canActivate: [MovieOrganizationListGuard],
-          canDeactivate: [MovieOrganizationListGuard],
           loadChildren: () => import('./title/list/list.module').then(m => m.TitleListModule)
         }, {
           path: ':movieId',
