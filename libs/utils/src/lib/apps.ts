@@ -7,17 +7,17 @@ import { RouterQuery } from "@datorama/akita-ng-router-store";
 export const app = ['catalog', 'festival'] as const;
 export type App = typeof app[number];
 
-export interface InnerAppAccess { marketplace: boolean, dashboard: boolean };
-export type OrgAppAccess = Record<App, InnerAppAccess>;
-export type MovieAppAccess = Record<App, boolean>;
+export const module = ['dashboard', 'marketplace'] as const;
+export type Module = typeof module[number];
 
-/** @TODO (#2539) This is currently unused but we keep it to future uses. */
-/*export interface AppDetails {
-  name: string;
-  logo: string;
-  href: string;
-  id: App;
-}*/
+const appName = {
+  catalog: 'Archipel Content',
+  festival: 'Festival'
+};
+
+export type ModuleAccess = Record<Module, boolean>;
+export type OrgAppAccess = Record<App, ModuleAccess>;
+export type MovieAppAccess = Record<App, boolean>;
 
 export function getCurrentApp(routerQuery: RouterQuery): App {
   return routerQuery.getValue().state?.root.data.app;
@@ -26,7 +26,7 @@ export function getCurrentApp(routerQuery: RouterQuery): App {
 export function createOrgAppAccess(_appAccess: Partial<OrgAppAccess> = {}): OrgAppAccess {
   const appAccess = {} as OrgAppAccess;
   for (const a of app) {
-    appAccess[a] = createInnerAppAccess(_appAccess[a] ? _appAccess[a] : {});
+    appAccess[a] = createModuleAccess(_appAccess[a] ? _appAccess[a] : {});
   }
   return appAccess;
 }
@@ -39,10 +39,14 @@ export function createMovieAppAccess(_appAccess: Partial<MovieAppAccess> = {}): 
   return appAccess;
 }
 
-export function createInnerAppAccess(innerAppAccess: Partial<InnerAppAccess> = {}): InnerAppAccess {
+export function createModuleAccess(moduleAccess: Partial<ModuleAccess> = {}): ModuleAccess {
   return {
     dashboard: false,
     marketplace: false,
-    ...innerAppAccess
+    ...moduleAccess
   }
+}
+
+export function getAppName(slug: App) {
+  return { slug, label: appName[slug] };
 }
