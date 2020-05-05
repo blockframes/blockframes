@@ -41,15 +41,23 @@ async function resize(data: functions.storage.ObjectMetadata) {
   // Get all the needed informations from the data (bucket, path, file name and directory)
   const bucket = admin.storage().bucket(data.bucket);
   const filePath = data.name;
-  const fileName = filePath?.split('/').pop();
-  const id = filePath?.split('/')[1];
-  const collection = filePath?.split('/')[0];
 
-  // If file has already been resized or is not an image (e. g. : trailer), exit the function
-  if (fileName?.includes('bf@') || !filePath) {
-    console.log('File already resized, exiting function');
-    return false;
+  if (filePath === undefined) {
+    throw new Error('undefined data.name!')
   }
+
+  const filePathElements = filePath.split('/')
+
+  if (filePathElements.length !== 5) {
+    throw new Error('unhandled filePath:' + filePath)
+  }
+
+  const [collection, id, fieldToUpdate, uploadedSize, fileName] = filePathElements
+
+  if (uploadedSize !== 'original') {
+    console.info('skipping upload that is not "original": ' + uploadedSize)
+  }
+
   const directory = dirname(filePath);
   const workingDir = join(tmpdir(), 'tmpFiles');
   const tmpFilePath = join(workingDir, 'source.webp');
@@ -65,23 +73,16 @@ async function resize(data: functions.storage.ObjectMetadata) {
     lg: number;
   };
 
-  let fieldToUpdate: string;
-
   if (directory.includes('avatar')) {
     sizes = { xs: 50, md: 100, lg: 300 };
-    fieldToUpdate = 'avatar';
   } else if (directory.includes('logo')) {
     sizes = { xs: 50, md: 100, lg: 300 };
-    fieldToUpdate = 'logo';
   } else if (directory.includes('poster')) {
     sizes = { xs: 200, md: 400, lg: 600 };
-    fieldToUpdate = 'promotionalElements.poster[0].media';
   } else if (directory.includes('banner')) {
     sizes = { xs: 300, md: 600, lg: 1200 };
-    fieldToUpdate = 'promotionalElements.banner.media';
   } else if (directory.includes('still')) {
     sizes = { xs: 50, md: 100, lg: 200 };
-    fieldToUpdate = 'media';
   } else {
     console.warn('No bucket directory, exiting function');
     return false;
@@ -89,8 +90,7 @@ async function resize(data: functions.storage.ObjectMetadata) {
 
   // Iterate on each item of sizes array to generate all wanted resized images
   const uploadPromises = Object.entries(sizes).map(async ([key, size]) => {
-    // Define a new name with prefix 'bf@' to recognize already resized images in the future
-    const resizedImgName = `bf@$${fileName}`;
+    const resizedImgName = fileName;
     const resizedImgPath = join(workingDir, `${key}${resizedImgName}`);
     const destination = join(directory.replace('original', key), resizedImgName);
 
