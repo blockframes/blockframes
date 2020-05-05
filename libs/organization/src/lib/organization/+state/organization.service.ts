@@ -114,7 +114,7 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     return this.update(orgId, { isBlockchainEnabled: value });
   }
 
-  public async notifyAppAccessChange(orgId: string){
+  public notifyAppAccessChange(orgId: string){
     const callOnAccessToAppChanged = this.functions.httpsCallable('onAccessToAppChanged');
     return callOnAccessToAppChanged(orgId).toPromise();
   }

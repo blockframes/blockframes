@@ -15,7 +15,7 @@ import { mnemonic, relayer, algolia } from './environments/environment';
 import { emailToEnsDomain, precomputeAddress as precomputeEthAddress, getProvider } from '@blockframes/ethers/helpers';
 import { NotificationType } from '@blockframes/notification/types';
 import { triggerNotifications, createNotification } from './notification';
-import { app } from '@blockframes/utils/apps';
+import { app, Module } from '@blockframes/utils/apps';
 import { getAdminIds } from './data/internals';
 import { ErrorResultResponse } from './utils';
 
@@ -80,8 +80,10 @@ async function notifyOnOrgMemberChanges(before: OrganizationDocument, after: Org
 function hasOrgAppAccessChanged(before: OrganizationDocument, after: OrganizationDocument): boolean {
   if (!!after.appAccess && before.status === 'pending' && after.status === 'pending') {
     for (const a of app) {
-      if (after.appAccess[a].dashboard === true && (!before.appAccess[a] || before.appAccess[a].dashboard === false)) { return true; }
-      if (after.appAccess[a].marketplace === true && (!before.appAccess[a] || before.appAccess[a].marketplace === false)) { return true; }
+      const accessChanged = (module: Module) => {
+        return after.appAccess[a][module] === true && (!before.appAccess[a] || before.appAccess[a][module]  === false);
+      }
+      return accessChanged('dashboard') || accessChanged('marketplace');
     }
   }
   return false;
