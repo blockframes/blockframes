@@ -12,7 +12,7 @@ export type Module = typeof module[number];
 
 const appName = {
   catalog: 'Archipel Content',
-  festival: ''
+  festival: 'Festival'
 };
 
 export type ModuleAccess = Record<Module, boolean>;
