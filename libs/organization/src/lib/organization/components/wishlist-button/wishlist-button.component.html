@@ -19,11 +19,17 @@
   <ng-container *ngIf="(toggle$ | async); else alreadyAddedSmall">
     <button test-id="heart-button" mat-icon-button (click)="removeFromWishlist()">
       <mat-icon svgIcon="heart_fill"></mat-icon>
+      <span>
+        <ng-content select="wishlist-remove-text"></ng-content>
+      </span>
     </button>
   </ng-container>
   <ng-template #alreadyAddedSmall>
     <button test-id="heart-button" mat-icon-button (click)="addToWishlist()">
       <mat-icon svgIcon="heart_outline"></mat-icon>
+      <span>
+        <ng-content select="wishlist-add-text"></ng-content>
+      </span>
     </button>
   </ng-template>
 
