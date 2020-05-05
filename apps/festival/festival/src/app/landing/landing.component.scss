@@ -10,7 +10,8 @@ landing-header {
   background-size: cover;
 }
 
-mat-toolbar {
+landing-toolbar {
+  width: 100%;
   position: fixed;
   top: 0;
   z-index: 2;

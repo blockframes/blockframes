@@ -1,7 +1,3 @@
-main {
-  width: 100%;
-}
-
 landing-header {
   display: block;
   padding-top: calc(var(--toolbarHeight) * 2);
@@ -20,7 +16,7 @@ landing-header {
   }
 }
 
-catalog-toolbar {
+landing-toolbar {
   width: 100%;
   position: fixed;
   top: 0;
