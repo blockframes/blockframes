@@ -65,7 +65,7 @@ export class TableExtractedMoviesComponent implements OnInit {
     this.rows.sort = this.sort;
   }
 
-  buttonText() {
+  renderButtonText() {
     const appName = getCurrentApp(this.routerQuery);
     return appName === 'festival' ? 'Publish to Marketplace' : 'Publish';
   }
@@ -126,6 +126,14 @@ export class TableExtractedMoviesComponent implements OnInit {
    */
   private async addMovie(importState: MovieImportState): Promise<boolean> {
     const data = this.rows.data;
+    const appName = getCurrentApp(this.routerQuery)
+    if(appName === 'festival') {
+      importState.movie.main.storeConfig.appAccess[appName] = true;
+      importState.movie.main.storeConfig.appAccess.catalog = false;
+    } else {
+      importState.movie.main.storeConfig.appAccess[appName] = true;
+      importState.movie.main.storeConfig.appAccess.festival = false;
+    }
     importState.movie = await this.movieService.create(importState.movie);
     importState.errors.push({
       type: 'error',

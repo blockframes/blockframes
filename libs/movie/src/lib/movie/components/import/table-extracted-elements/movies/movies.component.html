@@ -31,7 +31,7 @@
       (click)="submitSelectedMovies()">
       <ng-container *ngIf="submittedTitles === 0 else submitinprogress">
         <mat-icon svgIcon="archipel_content"></mat-icon>
-        <span>{{ buttonText() }}</span>
+        <span>{{ renderButtonText() }}</span>
       </ng-container>
       <ng-template #submitinprogress>
         <span>Submitting... {{ submittedTitles }} / {{ selection.selected.length}}</span>
