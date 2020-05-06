@@ -18,7 +18,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { HomeComponent } from './home.component';
 
 // Modules
-import { MovieCardModule } from '@blockframes/ui/movie-card/movie-card.module';
 import { MovieAnalyticsChartModule } from '@blockframes/movie/components/movie-analytics-chart/movie-analytics-chart.module';
 import { NoMovieModule } from '../no-movie/no-movie.module';
 
@@ -27,7 +26,6 @@ import { NoMovieModule } from '../no-movie/no-movie.module';
   imports: [
     CommonModule,
     FlexLayoutModule,
-    MovieCardModule,
     MovieAnalyticsChartModule,
     NoMovieModule,
     // Material
