@@ -1,13 +1,16 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
+import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MeetingComponent } from './meeting.component';
 
-import { EventModule } from '@blockframes/event/event.module';
-import { EventCardModule } from '@blockframes/event/components/card/card.module';
-import { EventLinkModule } from '@blockframes/event/pipes/event-link.pipe';
-import { AppBarModule } from '@blockframes/ui/app-bar';
+import { TimePickerModule } from '@blockframes/ui/form/time-picker/time-picker.module';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 
 @NgModule({
@@ -15,10 +18,13 @@ import { AppBarModule } from '@blockframes/ui/app-bar';
   imports: [
     CommonModule,
     FlexLayoutModule,
-    EventModule,
-    EventCardModule,
-    EventLinkModule,
-    AppBarModule,
+    ReactiveFormsModule,
+    TimePickerModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatCheckboxModule,
+    MatIconModule,
+    MatButtonModule,
     // Router
     RouterModule.forChild([{ path: '', component: MeetingComponent }])
   ]
