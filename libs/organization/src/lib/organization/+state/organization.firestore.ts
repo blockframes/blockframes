@@ -34,7 +34,7 @@ interface OrganizationBase<D> {
   wishlist: WishlistBase<D>[];
 }
 
-export const activities = {
+export const orgActivity = {
   production: 'Production',
   intlSales: 'International Sales',
   distribution: 'Distribution',
@@ -50,7 +50,7 @@ export const activities = {
   press: 'Press',
 } as const;
 
-type OrgActivity = keyof typeof activities | '';
+type OrgActivity = keyof typeof orgActivity | '';
 
 export interface OrganizationDocument extends OrganizationBase<Timestamp> { }
 

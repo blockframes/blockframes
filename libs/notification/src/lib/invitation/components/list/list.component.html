@@ -3,9 +3,9 @@
     <!-- For a time frame -->
     <ng-container *ngIf="(invitations | filterByDate: timeFrame) as invitationList">
       
-      <h3 matSubheader *ngIf="invitationList.length">
+      <h2 *ngIf="invitationList.length">
         {{ timeFrame | labelByDate }}
-      </h3>
+      </h2>
   
       <!-- Display all invitations -->
       <ng-container *ngFor="let invitation of invitationList">

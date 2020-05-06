@@ -6,11 +6,11 @@
     <h5>Address</h5>
     <p>{{ org | orgAddress }}</p>
   </article>
-  <article>
+  <article *ngIf="org.addresses.main.phoneNumber">
     <h5>Phone Number</h5>
     <p>{{ org.addresses.main.phoneNumber }}</p>
   </article>
-  <article>
+  <article *ngIf="org.email">
     <h5>Email Address</h5>
     <p>{{ org.email }}</p>
   </article>
