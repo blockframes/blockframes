@@ -7,6 +7,7 @@ import { sendMailFromTemplate, sendMail } from './internals/email';
 import { RequestDemoInformations, PublicUser } from './data/types';
 import { storeSearchableUser, deleteObject } from './internals/algolia';
 import { algolia } from './environments/environment';
+import { upsertWatermark } from './internals/watermark';
 
 type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
@@ -77,17 +78,43 @@ export const onUserCreate = async (user: UserRecord) => {
   // update Algolia index
   const userSnap = await userDocRef.get();
   const userData = userSnap.data() as PublicUser;
-  return storeSearchableUser(userData);
+
+  const promises: Promise<any>[] = [];
+  promises.push(storeSearchableUser(userData));
+  promises.push(upsertWatermark(userData));
+
+  return Promise.all(promises);
 };
 
 export async function onUserUpdate(
   change: functions.Change<FirebaseFirestore.DocumentSnapshot>,
   context: functions.EventContext
 ): Promise<any> {
+  const before = change.before.data() as PublicUser;
   const after = change.after.data() as PublicUser;
 
-  // update Algolia index
-  return storeSearchableUser(after);
+  const promises: Promise<any>[] = [];
+
+  // if name, email or avatar has changed : update algolia record
+  if (
+    before.firstName !== after.firstName ||
+    before.lastName !== after.lastName ||
+    before.email !== after.email ||
+    before.avatar?.url !== after.avatar?.url
+  ) {
+    promises.push(storeSearchableUser(after));
+  }
+
+  // if name or email has changed : update watermark
+  if (
+    before.firstName !== after.firstName ||
+    before.lastName !== after.lastName ||
+    before.email !== after.email
+  ) {
+    promises.push(upsertWatermark(after));
+  }
+
+  return Promise.all(promises);
 }
 
 export async function onUserDelete(

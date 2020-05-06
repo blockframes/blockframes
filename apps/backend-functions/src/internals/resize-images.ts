@@ -18,6 +18,11 @@ export async function onFileUploadEvent(data: functions.storage.ObjectMetadata) 
     return false;
   }
 
+  if (data.contentType === 'image/svg+xml') {
+    console.log('File is an SVG image, exiting function');
+    return false;
+  }
+
   try {
     // Resize the image
     await resize(data);
@@ -82,6 +87,6 @@ async function resize(data: functions.storage.ObjectMetadata) {
 
   await Promise.all(uploadPromises);
 
-  // Delete the temporary working directory after sucessfully uploading the resized images with fs.remove
+  // Delete the temporary working directory after successfully uploading the resized images with fs.remove
   return remove(workingDir);
 }
