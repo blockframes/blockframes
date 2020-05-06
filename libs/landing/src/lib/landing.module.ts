@@ -1,20 +1,15 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { ReactiveFormsModule } from '@angular/forms';
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { LandingFooterComponent } from './footer/footer.component';
+import { LandingHeaderComponent } from './header/header.component';
+import { LandingHowItWorksComponent } from './how-it-works/how-it-works.component';
+import { LandingLearnMoreComponent } from './learn-more/learn-more.component';
+import { LandingToolbarComponent } from './toolbar/toolbar.component';
 
+import { FlexLayoutModule } from '@angular/flex-layout';
 import { ImgAssetModule } from '@blockframes/ui/theme';
 import { TelInputModule } from '@blockframes/ui/tel-input/tel-input.module';
-import { LandingModule } from '@blockframes/landing/landing.module';
-
-// Pages
-import { CatalogLandingPageComponent } from './pages/landing-page/landing-page.component';
-
-// Components
-import { CatalogKeyFeaturesComponent } from './components/key-features/key-features.component';
-import { CatalogViewMarketplaceComponent } from './components/view-marketplace/view-marketplace.component';
-import { CatalogLeftMenuComponent } from './components/left-menu/left-menu.component';
+import { RouterModule } from '@angular/router';
 
 // Material
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -29,28 +24,15 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatListModule } from '@angular/material/list';
-
-const routes = [{
-  path: '',
-  component: CatalogLandingPageComponent,
-  children: [{
-    path: '',
-    // loadChildren: () => import('./home/home.module').then(m => m.HomeModule)
-  }, {
-    path: 'about',
-    // loadChildren: () => import()
-  }, {
-    path: 'faq',
-    // loadChildren: () => import()
-  }]
-}];
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
-    CatalogLandingPageComponent,
-    CatalogKeyFeaturesComponent,
-    CatalogViewMarketplaceComponent,
-    CatalogLeftMenuComponent
+    LandingFooterComponent,
+    LandingHeaderComponent,
+    LandingHowItWorksComponent,
+    LandingLearnMoreComponent,
+    LandingToolbarComponent
   ],
   imports: [
     CommonModule,
@@ -58,7 +40,6 @@ const routes = [{
     ReactiveFormsModule,
     ImgAssetModule,
     TelInputModule,
-    LandingModule,
 
     // Material
     MatSidenavModule,
@@ -73,8 +54,14 @@ const routes = [{
     MatButtonModule,
     MatSnackBarModule,
     MatListModule,
-
-    RouterModule.forChild([{ path: '', component: CatalogLandingPageComponent }])
+    RouterModule
+  ],
+  exports: [
+    LandingFooterComponent,
+    LandingHeaderComponent,
+    LandingHowItWorksComponent,
+    LandingLearnMoreComponent,
+    LandingToolbarComponent
   ]
 })
-export class CatalogLandingModule {}
+export class LandingModule {}

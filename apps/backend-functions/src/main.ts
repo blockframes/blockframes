@@ -218,5 +218,5 @@ export const relayerSend = functions.https
 //         File upload          //
 //--------------------------------
 
-/** Trigger: on every file uploaded to the storage. Immediatly exit function if contentType is not an image. */
+/** Trigger: on every file uploaded to the storage. Immediately exit function if contentType is not an image. */
 export const onFileUpload = functions.storage.object().onFinalize(data => onFileUploadEvent(data))

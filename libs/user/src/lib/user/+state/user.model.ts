@@ -15,6 +15,7 @@ export interface OrganizationMember extends OrganizationMemberRequest {
   firstName?: string;
   lastName?: string;
   avatar?: ImgRef;
+  watermark?: ImgRef;
   role?: UserRole;
 }
 
@@ -25,6 +26,7 @@ export function createOrganizationMember(user: Partial<User> = {}, role?: UserRo
     firstName: user.firstName,
     lastName: user.lastName,
     avatar: createImgRef(user.avatar),
+    watermark: createImgRef(user.watermark),
     email: user.email,
     roles: [],
     role,
@@ -36,6 +38,7 @@ export function createPublicUser(user: Partial<User> = {}) : PublicUser{
     uid: user.uid,
     email: user.email || '',
     avatar: createImgRef(user.avatar),
+    watermark: createImgRef(user.watermark),
     firstName: user.firstName || '',
     lastName: user.lastName || '',
     orgId: user.orgId || ''

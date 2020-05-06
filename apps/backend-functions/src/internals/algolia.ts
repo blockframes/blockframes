@@ -119,7 +119,7 @@ export function storeSearchableUser(user: PublicUser, adminKey?: string): Promis
       email: user.email,
       firstName: user.firstName || '',
       lastName: user.lastName || '',
-      avatar: user.avatar || '',
+      avatar: user.avatar?.url || '',
     });
   } catch (error) {
     console.error(`\n\n\tFailed to format the movie ${user.uid} into an algolia record : skipping\n\n`);
