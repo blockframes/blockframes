@@ -75,7 +75,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
     const titles$ = this.orgQuery.selectActive().pipe(
       switchMap(org => this.service.valueChanges(org.movieIds)),
-      map(movies => movies.filter(movie => movie.main.storeConfig.appAccess.festival === true))
+      map(movies => movies.filter(movie => movie.main.storeConfig.appAccess.festival))
     );
     const analytics$ = this.query.analytics.selectAll().pipe(startWith([]));
 
