@@ -43,19 +43,19 @@ async function resize(data: functions.storage.ObjectMetadata) {
   const filePath = data.name;
 
   if (filePath === undefined) {
-    throw new Error('undefined data.name!')
+    throw new Error('undefined data.name!');
   }
 
   const filePathElements = filePath.split('/')
 
   if (filePathElements.length !== 5) {
-    throw new Error('unhandled filePath:' + filePath)
+    throw new Error('unhandled filePath:' + filePath);
   }
 
-  const [collection, id, fieldToUpdate, uploadedSize, fileName] = filePathElements
+  const [collection, id, fieldToUpdate, uploadedSize, fileName] = filePathElements;
 
   if (uploadedSize !== 'original') {
-    console.info('skipping upload that is not "original": ' + uploadedSize)
+    console.info('skipping upload that is not "original": ' + uploadedSize);
   }
 
   const directory = dirname(filePath);

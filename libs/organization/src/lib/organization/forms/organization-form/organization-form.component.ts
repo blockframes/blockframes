@@ -3,7 +3,8 @@ import { network, baseEnsDomain } from '@env';
 import { getProvider, orgNameToEnsDomain } from '@blockframes/ethers/helpers';
 import { OrganizationService } from './../../+state/organization.service';
 import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
-import { orgActivity } from '../../+state/organization.firestore';
+import { activities } from '../../+state/organization.firestore';
+import { OrganizationQuery } from '@blockframes/organization/+state';
 
 @Component({
   selector: 'organization-form',
@@ -12,10 +13,12 @@ import { orgActivity } from '../../+state/organization.firestore';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationFormComponent {
-  activities = orgActivity;
+  activities = activities;
+
+  public storagePath = `orgs/${this.query.getActiveId()}/logo`;
   @Input() form: OrganizationForm;
 
-  constructor(private service: OrganizationService) { }
+  constructor(private service: OrganizationService, private query: OrganizationQuery) { }
 
   get bankAccounts() {
     return this.form.get('bankAccounts');
