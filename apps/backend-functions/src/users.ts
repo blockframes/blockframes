@@ -79,11 +79,10 @@ export const onUserCreate = async (user: UserRecord) => {
   const userSnap = await userDocRef.get();
   const userData = userSnap.data() as PublicUser;
 
-  const promises: Promise<any>[] = [];
-  promises.push(storeSearchableUser(userData));
-  promises.push(upsertWatermark(userData));
-
-  return Promise.all(promises);
+  return Promise.all([
+    storeSearchableUser(userData),
+    upsertWatermark(userData),
+  ]);
 };
 
 export async function onUserUpdate(

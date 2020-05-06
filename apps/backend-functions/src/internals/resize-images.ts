@@ -18,6 +18,9 @@ export async function onFileUploadEvent(data: functions.storage.ObjectMetadata) 
     return false;
   }
 
+  // we don't want to resize a vector image because:
+  // 1) vector are resizable at will by design
+  // 2) it will crash the resize program
   if (data.contentType === 'image/svg+xml') {
     console.log('File is an SVG image, exiting function');
     return false;
