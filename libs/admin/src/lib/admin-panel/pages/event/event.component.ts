@@ -20,8 +20,6 @@ export class EventComponent implements OnInit {
   public event$: Observable<Event>;
   private event: Event;
   public movie: Movie;
-  public moviePrivateConfig: any;
-  public eventScreeningUrl: string;
   public eventOwner: string;
 
   constructor(
@@ -48,29 +46,15 @@ export class EventComponent implements OnInit {
               this.movie = t;
               return t;
             })
-            .then(movie => this.movieService.getMoviePrivateConfig(movie.id))
-            .then(config => this.moviePrivateConfig = config)
             .then(_ => this.cdRef.markForCheck())
             .catch(_ => {
               this.snackBar.open('Error while loading movie private config', 'close', { duration: 5000 });
             });
-          // @TODO (#2460)  Waiting for a decision on screening flow before uncomment
-          /*this.eventService.getEventUrl(this.eventId).then(url => {
-            this.eventScreeningUrl = url;
-            this.cdRef.markForCheck();
-          })*/
         }
         return e;
       }));
     });
   }
-
-  // @TODO (#2460)  Waiting for a decision on screening flow before uncomment
-  /*public async setEventUrl() {
-    await this.eventService.setEventUrl(this.eventId);
-    const eventUrl = await this.eventService.getEventUrl(this.eventId);
-    this.snackBar.open(`Information updated: ${eventUrl}`, 'close', { duration: 5000 });
-  }*/
 
   public getMovieTunnelPath(movieId: string) {
     return `/c/o/dashboard/tunnel/movie/${movieId}`;

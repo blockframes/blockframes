@@ -10,15 +10,6 @@
   </mat-form-field>
 
   <div fxLayout="row" fxLayoutAlign="space-between center" fxLayoutGap="24px">
-    <!-- FRESHNESS -->
-    <mat-form-field appearance="outline">
-      <mat-label>Freshness</mat-label>
-      <mat-select test-id="freshness" [formControl]="storeType">
-        <mat-option *ngFor="let type of freshness | keyvalue" [value]="type.key">
-          {{ type.value }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
 
     <!-- PRODUCTION STATUS -->
     <mat-form-field appearance="outline">

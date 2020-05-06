@@ -9,6 +9,7 @@ import { Organization } from '@blockframes/organization/+state/organization.mode
 import { organizationStatus } from '@blockframes/organization/+state/organization.firestore';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { app } from '@blockframes/utils/apps';
+import { FormControl } from '@angular/forms';
 
 @Component({
   selector: 'admin-organization',
@@ -24,6 +25,7 @@ export class OrganizationComponent implements OnInit {
   public movies: any[];
   public app = app;
   public members: any[];
+  public notifyCheckbox = new FormControl(false);
 
   public versionColumnsMovies = {
     'id': 'Id',
@@ -114,7 +116,10 @@ export class OrganizationComponent implements OnInit {
     }
 
     await this.organizationService.update(this.orgId, update);
-
+    if(this.notifyCheckbox.value){
+      this.organizationService.notifyAppAccessChange(this.orgId);
+    }
+    
     this.snackBar.open('Informations updated !', 'close', { duration: 5000 });
   }
 

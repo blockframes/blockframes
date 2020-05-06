@@ -1,14 +1,14 @@
 import { FormControl, FormGroup } from '@angular/forms';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { Organization, createOrganization } from '@blockframes/organization/+state/organization.model';
-import { InnerAppAdminForm } from './inner-app-access-admin.form';
+import { ModuleAccessAdminForm } from './module-access-admin.form';
 import { app } from '@blockframes/utils/apps';
 
 function createOrgAdminControls(entity: Partial<Organization>) {
   const org = createOrganization(entity);
   const appAccess = new FormGroup({});
   for(const a of app){
-    appAccess.addControl(a, new InnerAppAdminForm(org.appAccess[a]))
+    appAccess.addControl(a, new ModuleAccessAdminForm(org.appAccess[a]))
   }
   return {
     appAccess,

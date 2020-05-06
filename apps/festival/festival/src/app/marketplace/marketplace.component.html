@@ -3,7 +3,7 @@
     <!-- We need to implement a mat-toolbar in the page for the app-bar to have the toolbar design -->
     <mat-toolbar>
       <a class="logo" routerLink=".">
-        <img asset="festival.svg" type="logo" alt="Archipel Content Logo" />
+        <img asset="archipel_market.png" alt="Archipel Content Logo" />
       </a>
     </mat-toolbar>
     <mat-nav-list>
@@ -32,26 +32,10 @@
 
   <header fxFlex fxLayout fxLayoutAlign="space-between center" class="marketplace-header">
     <a class="logo" routerLink=".">
-      <img asset="festival.svg" type="logo" alt="Archipel Content Logo" />
+      <img asset="archipel_market.png" alt="Archipel Content Logo" />
     </a>
     <a test-id="heart-icon" mat-icon-button routerLink="event/calendar">
       <mat-icon svgIcon="calendar" color="primary"></mat-icon>
-    </a>
-    <a test-id="library" mat-list-item routerLink="title" routerLinkActives="active">
-      <mat-icon mat-list-icon svgIcon="video_library"></mat-icon>
-      <span mat-line>Films</span>
-    </a>
-    <a test-id="sellers" mat-list-item routerLink="organization" routerLinkActives="active">
-      <mat-icon mat-list-icon svgIcon="sellers"></mat-icon>
-      <span mat-line>Sales Agents</span>
-    </a>
-    <a mat-list-item routerLink="wishlist" routerLinkActive="active">
-      <mat-icon mat-list-icon svgIcon="heart_fill"></mat-icon>
-      <span mat-line>My Wishlist</span>
-    </a>
-    <a mat-list-item routerLink="event" routerLinkActive="active">
-      <mat-icon mat-list-icon svgIcon="screening"></mat-icon>
-      <span mat-line>Screening List</span>
     </a>
   </header>
 
