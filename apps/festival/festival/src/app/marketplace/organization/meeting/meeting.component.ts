@@ -1,9 +1,9 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { EventService } from '@blockframes/event/+state/event.service';
-import { Event } from '@blockframes/event/+state';
-import { switchMap } from 'rxjs/operators';
-import { Observable } from 'rxjs';
-import { ViewComponent } from '../view/view.component';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { EventForm } from '@blockframes/event/form/event.form';
+import { EventService } from '@blockframes/event/+state';
+import { InvitationService } from '@blockframes/invitation/+state';
+import { AuthQuery } from '@blockframes/auth/+state';
 
 @Component({
   selector: 'festival-meeting',
@@ -11,26 +11,22 @@ import { ViewComponent } from '../view/view.component';
   styleUrls: ['./meeting.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class MeetingComponent implements OnInit {
-  events$: Observable<Event[]>;
-  viewDate = new Date();
+export class MeetingComponent {
+  form = new EventForm({ type: 'meeting', ownerId: this.autQuery.userId })
 
   constructor(
-    private parent: ViewComponent,
+    private route: ActivatedRoute,
+    private autQuery: AuthQuery,
     private service: EventService,
-    private cdr: ChangeDetectorRef
-  ) { }
+    private invitationService: InvitationService
+  ) {}
 
-  ngOnInit(): void {
-    this.events$ = this.parent.org$.pipe(
-      switchMap(org => this.service.queryByType(['meeting'], ref => ref.where('ownerId', '==', org.id)))
-    )
+  async requestMeeting() {
+    const event = this.form.value;
+    const orgId = this.route.snapshot.paramMap.get('orgId');
+    const write = this.service.batch();
+    const eventId = await this.service.add(event, { write });
+    this.invitationService.request('org', orgId).from('user').to('attendEvent', eventId, write);
   }
-
-
-  updateViewDate(date: Date) {
-    this.viewDate = date;
-    this.cdr.markForCheck();
-  }
-
+  
 }
