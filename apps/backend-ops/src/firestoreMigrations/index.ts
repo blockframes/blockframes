@@ -17,7 +17,7 @@ import * as v0016 from './0016';
 import * as v0017 from './0017';
 import * as v0018 from './0018';
 import * as v0019 from './0019';
-import * as v0021 from './0021';
+import * as v0022 from './0022';
 
 import { Firestore } from '../admin';
 
@@ -49,7 +49,7 @@ export const MIGRATIONS = {
   17: v0017,
   18: v0018,
   19: v0019,
-  21: v0021,
+  22: v0022,
 };
 
 export const VERSIONS_NUMBERS = Object.keys(MIGRATIONS).map(s => parseInt(s, 10));
