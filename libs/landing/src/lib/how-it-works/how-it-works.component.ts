@@ -3,7 +3,8 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 interface Display {
   title: string,
   description: string,
-  image?: string
+  imgSrc?: string,
+  imgAsset?: string
 }
 
 @Component({

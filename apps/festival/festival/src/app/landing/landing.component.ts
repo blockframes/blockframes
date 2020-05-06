@@ -26,12 +26,12 @@ export class LandingComponent {
   public tabTitle = [
     {
       title: 'For Sales Agents.',
-      image: '/assets/images/lp_dashboard_market_sales_agents.webp',
+      imgSrc: '/assets/images/lp_dashboard_market_sales_agents.webp',
       description: 'Showcase your line-up, get in touch with Buyers and manage meetings and screenings.'
     },
     {
       title: 'For Buyers.',
-      image: '/assets/images/lp_archipel_market_buyers.webp',
+      imgSrc: '/assets/images/lp_archipel_market_buyers.webp',
       description: 'Explore a large library of films, get in touch with sales agents, plan meetings and watch screenings.'
     }
   ]
@@ -39,22 +39,22 @@ export class LandingComponent {
   public sellerFeatures = [
     {
       title: 'Showcase your company & film details',
-      image: 'filmpage.webp',
+      imgAsset: 'filmpage.webp',
       description: 'Import your metadata and promotional elements easily and have your company and films showcased on the marketplace.'
     },
     {
       title: 'Manage your schedule',
-      image: 'calendar.webp',
+      imgAsset: 'calendar.webp',
       description: 'Plan online meetings and book live screenings sessions on your calendar. Set privacy parameters and invite buyers to your events.'
     },
     {
       title: 'Match with buyers',
-      image: 'matching.webp',
+      imgAsset: 'matching.webp',
       description: 'Contact and get contacted by buyers, get requests to your screenings, and get notified when buyers show interest in your films.'
     },
     {
       title: 'Track your films\' activity',
-      image: 'sales_statistics.webp',
+      imgAsset: 'sales_statistics.webp',
       description: 'Track your films’ activity on the platform, and get screening reports with detailed stats after each screening.'
     }
   ];
@@ -62,22 +62,22 @@ export class LandingComponent {
   public buyerFeatures = [
     {
       title: 'Find the newest gems',
-      image: 'gems.webp',
+      imgAsset: 'gems.webp',
       description: 'Explore a large library of films and find the content you\'re looking for in just a few clicks thanks to search and filter functions.'
     },
     {
       title: 'Match with sales agents',
-      image: 'matching.webp',
+      imgAsset: 'matching.webp',
       description: 'Access their company information and contact details, get in touch with them. Explore their line ups and screening schedules and ask for invitations to their screenings.'
     },
     {
       title: 'Access detailed movies pages',
-      image: 'filmpage.webp',
+      imgAsset: 'filmpage.webp',
       description: 'Access each film\'s metadata, promotional elements and screening information.'
     },
     {
       title: 'Plan meetings and watch screenings',
-      image: 'calendar.webp',
+      imgAsset: 'calendar.webp',
       description: 'Plan online meetings with sales agents and watch film screenings at specific hours, just like in real live markets.'
     }
   ]

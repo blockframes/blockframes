@@ -13,53 +13,9 @@ landing-toolbar {
   border: none;
 }
 
-.logo {
-  height: 48px;
-  margin-right: 96px;
-
-  img {
-    height: 100%;
-  }
+.plain-toolbar {
+  transition-duration: 1000ms;
 }
-
-#demo-link {
-  letter-spacing: 0.5px;
-  line-height: 24px;
-  font-weight: 600;
-}
-
-h2, .mat-display-2 {
-  color: white;
-}
-
-h4 {
-  text-transform: uppercase;
-  color: white;
-}
-
-a {
-  margin: 70px 0;
-}
-
-
-
-footer {
-  margin: 50px 0;
-  text-align: center;
-  width: 100%;
-  .ac-logo {
-    width: 130px;
-    height: 50px;
-    margin-bottom: 30px;
-  }
-
-  img {
-    height: 40px;
-    margin-top: 50px;
-  }
-}
-
-
 
 @include layout-bp(xs) {
   .offer {

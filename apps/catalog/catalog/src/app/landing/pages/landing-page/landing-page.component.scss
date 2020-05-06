@@ -1,13 +1,4 @@
-landing-header {
-  h2, .mat-display-2 {
-    color: white;
-  }
-
-  h4 {
-    text-transform: uppercase;
-    color: white;
-  }
-}
+@import '~@angular/flex-layout/mq';
 
 landing-toolbar {
   width: 100%;
@@ -23,4 +14,10 @@ landing-toolbar {
 
 .plain-toolbar {
   transition-duration: 1000ms;
+}
+
+@include layout-bp(xs) {
+  .offer {
+    font-size: 30px;
+  }
 }

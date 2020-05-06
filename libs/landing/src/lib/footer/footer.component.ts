@@ -6,5 +6,5 @@ import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LandingFooterComponent {
-  @Input() archipelLogo = 'LogoAC.svg';
+  @Input() logo = 'LogoAC.svg';
 }
