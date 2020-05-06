@@ -35,11 +35,13 @@
         <ng-container *ngIf="org.addresses.main.zipCode && org.addresses.main.city">, </ng-container>
         {{ org.addresses.main.city | titlecase }}
       </h2>
-      <p>Description</p>
-      <a mat-stroked-button color="primary" [href]="'mailto:' + org.email">
-        <span>Get in touch</span>
-        <mat-icon svgIcon="arrow_forward"></mat-icon>
-      </a>
+      <p>{{ org.description }}</p>
+      <ng-container *ngIf="org.email">
+        <a mat-stroked-button color="primary" [href]="'mailto:' + org.email">
+          <span>Get in touch</span>
+          <mat-icon svgIcon="arrow_forward"></mat-icon>
+        </a>
+      </ng-container>
     </article>
   </header>
   <nav id="nav" mat-tab-nav-bar @fade>
