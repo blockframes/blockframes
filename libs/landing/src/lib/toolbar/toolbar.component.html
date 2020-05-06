@@ -3,7 +3,7 @@
     <a routerLink="/" class="logo">
       <img [asset]="imgAsset" type="logo" alt="Archipel"/>
     </a>
-    <a fxHide.lt-md mat-stroked-button color="primary" href="#demo" id="demo-link">Schedule a demo</a>
+    <a fxHide.lt-md mat-stroked-button [color]="color" href="#demo" id="demo-link">Schedule a demo</a>
   </nav>
   <div fxLayout="row" fxLayoutAlign="space-around center" fxLayoutGap="16px">
     <a test-id="login" mat-button routerLink="/auth/connexion" fragment="signin">Login</a>

@@ -11,6 +11,7 @@ import { distinctUntilChanged, map } from 'rxjs/operators';
 })
 export class LandingToolbarComponent {
   @Input() imgAsset = 'LogoArchipelContentPrimary.svg';
+  @Input() color = 'default';
   private scroll = new BehaviorSubject<number>(0);
   public toolbarColor$ = this.scroll.asObservable().pipe(
     map(position => position === 0),
