@@ -190,16 +190,27 @@ jobs:
           message: '🛵 🤠 Deploying release to staging.. (https://staging.blockframes.io/)'
       - run: |
           npx firebase use staging &&
-          npx firebase deploy --only firestore,hosting:catalog &&
-          npx firebase deploy --only functions --force || true &&
-          npx ng build backend-ops --configuration=$ENV;
+          cp firestore.rules firestore.rules.regular &&
+          cp firestore.maintenance.rules firestore.rules &&
+          npx firebase deploy --only hosting:catalog,hosting:festival,storage,firestore &&
+          npx firebase deploy --only functions --force
       - run:
           name: prepare staging for testing
-          command: npm run build:backend-ops && node dist/apps/backend-ops/main.js prepareForTesting
+          command: node dist/apps/backend-ops/main.js prepareForTesting
+          when: always
+      - run:
+          command: |
+            cp firestore.rules.regular firestore.rules &&
+            npx firebase use staging &&
+            npx firebase deploy --only firestore:rules
           when: always
       - run:
           name: catalog e2e tests
           command: npm run e2e:catalog
+          when: always
+      - run:
+          name: festival e2e tests
+          command: npm run e2e:festival
           when: always
       - store_artifacts:
           name: Uploading screenshots
