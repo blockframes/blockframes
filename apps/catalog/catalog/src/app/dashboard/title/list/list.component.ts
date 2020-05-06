@@ -73,6 +73,7 @@ export class TitleListComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    // @todo(#2684) use syncWithAnalytics instead
     this.sub = this.service.syncAnalytics().subscribe();
     const moviesAnalytics$ = this.query.analytics.selectAll();
 

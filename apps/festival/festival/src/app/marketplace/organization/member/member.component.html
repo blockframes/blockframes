@@ -1,7 +1,26 @@
 <h1>Contacts</h1>
-<h4>Team</h4>
-<section fxLayout="row wrap" fxLayoutGap="24px grid">
-  <ng-container *ngFor="let user of members$ | async">
-    <user-card [user]="user"></user-card>
-  </ng-container>
+
+<section *ngIf="org$ | async as org">
+  <h2>Company Information</h2>
+  <article>
+    <h5>Address</h5>
+    <p>{{ org | orgAddress }}</p>
+  </article>
+  <article>
+    <h5>Phone Number</h5>
+    <p>{{ org.addresses.main.phoneNumber }}</p>
+  </article>
+  <article>
+    <h5>Email Address</h5>
+    <p>{{ org.email }}</p>
+  </article>
+</section>
+
+<section>
+  <h2>Team</h2>
+  <article fxLayout="row wrap" fxLayoutGap="24px grid">
+    <ng-container *ngFor="let user of members$ | async">
+      <user-card [user]="user"></user-card>
+    </ng-container>
+  </article>
 </section>

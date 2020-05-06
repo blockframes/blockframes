@@ -17,6 +17,7 @@ export class MemberComponent implements OnInit, OnDestroy {
   @HostBinding('@fade') animation = true;
 
   private sub: Subscription;
+  public org$ = this.parent.org$;
   public members$ = this.query.selectAll();
 
 
@@ -27,7 +28,7 @@ export class MemberComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.sub = this.parent.org$.pipe(
+    this.sub = this.org$.pipe(
       map(org => org.userIds),
       switchMap(userIds => this.service.syncManyDocs(userIds))
     ).subscribe();

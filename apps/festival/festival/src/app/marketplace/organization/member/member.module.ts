@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MemberComponent } from './member.component';
 import { UserCardModule } from '@blockframes/user/components/card/card.module';
-
+import { OrgAddressModule } from '@blockframes/organization/pipes/org-address.pipe';
 
 @NgModule({
   declarations: [MemberComponent],
@@ -12,6 +12,7 @@ import { UserCardModule } from '@blockframes/user/components/card/card.module';
     CommonModule,
     FlexLayoutModule,
     UserCardModule,
+    OrgAddressModule,
     RouterModule.forChild([{ path: '', component: MemberComponent }])
   ]
 })

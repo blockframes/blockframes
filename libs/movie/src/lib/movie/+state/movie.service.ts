@@ -7,7 +7,7 @@ import { createImgRef } from '@blockframes/utils/image-uploader';
 import { cleanModel } from '@blockframes/utils/helpers';
 import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
 import { AngularFireFunctions } from '@angular/fire/functions';
-import { Observable, combineLatest } from 'rxjs';
+import { Observable, combineLatest, of } from 'rxjs';
 import { MovieQuery } from './movie.query';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { PrivateConfig } from '@blockframes/utils/common-interfaces/utility';
@@ -78,6 +78,7 @@ export class MovieService extends CollectionService<MovieState> {
   }
 
   /** Gets every analytics for all movies and sync them. */
+  // @todo(#2684) use syncWithAnalytics instead
   public syncAnalytics(options?: SyncMovieAnalyticsOptions) {
     return combineLatest([
       this.query.selectAll(options).pipe(map(movies => movies.map(m => m.id))),
@@ -90,6 +91,18 @@ export class MovieService extends CollectionService<MovieState> {
       }),
       tap(analytics => this.store.analytics.upsertMany(analytics))
     )
+  }
+
+  /** Gets every analytics for all movies and sync them. */
+  public syncWithAnalytics(movieIds: string[], options?: SyncMovieAnalyticsOptions) {
+    return this.query.analytics.select('ids').pipe(
+      filter(analyticsIds => movieIds.some(id => !analyticsIds.includes(id))),
+      switchMap(_ => {
+        const f = this.functions.httpsCallable('getMovieAnalytics');
+        return f({ movieIds, daysPerRange: 28 });
+      }),
+      tap(analytics => this.store.analytics.upsertMany(analytics))
+    );
   }
 
   public updateById(id: string, movie: any): Promise<void> {

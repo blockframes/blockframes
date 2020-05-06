@@ -16,10 +16,10 @@
           <!-- Invitations -->
           <a mat-icon-button routerLink="invitations">
             <ng-container *ngIf="invitationCount$ | async as count; else noInvitation">
-              <mat-icon svgIcon="send" [matBadge]="count" matBadgeColor="accent" matBadgeSize="small"></mat-icon>
+              <mat-icon svgIcon="add_member" [matBadge]="count" matBadgeColor="accent" matBadgeSize="small"></mat-icon>
             </ng-container>
             <ng-template #noInvitation>
-              <mat-icon svgIcon="send"></mat-icon>
+              <mat-icon svgIcon="add_member"></mat-icon>
             </ng-template>
           </a>
           <!-- Notifications -->
