@@ -26,7 +26,7 @@ export class MeetingComponent {
     const orgId = this.route.snapshot.paramMap.get('orgId');
     const write = this.service.batch();
     const eventId = await this.service.add(event, { write });
-    this.invitationService.request('org', orgId).from('user').to('attendEvent', eventId, write);
+    this.invitationService.invite('org', orgId).from('user').to('attendEvent', eventId, write);
   }
   
 }
