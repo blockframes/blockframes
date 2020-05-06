@@ -1,16 +1,15 @@
 <ng-container *ngIf="org">
+  <!-- Page Bar -->
   <ng-template pageBar targetId="nav">
-    <div class="app-bar" fxLayout fxLayoutAlign="space-between center">
+    <div class="page-bar" fxLayout fxLayoutAlign="space-between center" fxLayoutGap="16px">
       <app-menu></app-menu>
-      <nav id="nav" mat-tab-nav-bar @fade>
-        <a mat-tab-link
-          *ngFor="let link of navLinks"
-          [routerLink]="link.path"
-          routerLinkActive #rla="routerLinkActive"
-          [active]="rla.isActive">
-          {{link.label}}
-        </a>
-      </nav>
+      <div fxFlex fxLayout fxLayoutAlign="start center">
+        <ng-container *ngFor="let link of navLinks">
+          <a mat-button [color]="rla.isActive ? 'primary' : ''" [routerLink]="link.path" routerLinkActive #rla="routerLinkActive">
+            {{link.label}}
+          </a>
+        </ng-container>
+      </div>
       <div fxLayout fxLayoutAlign="end" fxLayoutGap="16px">
         <div fxLayout="column" fxLayoutAlign="space-around end">
           <span>{{ org.denomination.full }}</span>
