@@ -16,6 +16,11 @@
     </mat-form-field>
   </div>
 
+  <mat-form-field appearance="outline" formGroupName="meta">
+    <mat-label>Link to a video call</mat-label>
+    <input matInput placeholder="Paste your link here (zoom, meet, ...)" formControlName="callUrl" />
+  </mat-form-field>
+
   <mat-checkbox formControlName="allDay">All day</mat-checkbox>
   <mat-checkbox formControlName="isPrivate">Private</mat-checkbox>
 
