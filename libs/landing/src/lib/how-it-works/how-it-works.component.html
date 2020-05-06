@@ -2,7 +2,7 @@
 <mat-tab-group animationDuration="1000ms" selectedIndex="0">
   <mat-tab [label]="tabNames[0]">
     <article class="perspective-box" fxLayout="row" fxLayoutGap="70px" fxLayoutAlign="space-between start" fxLayout.lt-lg="column">
-      <img class="perspective-image" fxHide.xs src="/assets/images/seller_perspective.jpg" alt="seller image"/>
+      <img class="perspective-image" fxHide.xs [src]="tabTitle[0].image" alt="seller image"/>
       <div>
         <h3>{{ tabTitle[0].title }}</h3>
         <ng-container *ngIf="tabTitle[0].description as description">
@@ -23,7 +23,7 @@
   </mat-tab>
   <mat-tab [label]="tabNames[1]">
     <article class="perspective-box" fxLayout="row" fxLayoutGap="70px" fxLayoutAlign="space-between start" fxLayout.lt-lg="column">
-      <img class="perspective-image" fxHide.xs src="/assets/images/buyer_perspective.jpg" alt="buyer image"/>
+      <img class="perspective-image" fxHide.xs [src]="tabTitle[1].image" alt="buyer image"/>
       <div>
         <h3>{{ tabTitle[1].title }}</h3>
         <ng-container *ngIf="tabTitle[1].description as description">
