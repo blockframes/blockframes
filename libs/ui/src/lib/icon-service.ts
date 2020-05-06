@@ -11,6 +11,7 @@ export const icons = [
   },
   { name: 'access_time', url: 'assets/icons/access_time.svg' },
   { name: 'add', url: 'assets/icons/add.svg' },
+  { name: 'add_member', url: 'assets/icons/add_member.svg' },
   { name: 'applications', url: 'assets/apps/applications.svg' },
   {
     name: 'archipel_content',

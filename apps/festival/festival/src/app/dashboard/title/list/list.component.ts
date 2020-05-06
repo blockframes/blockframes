@@ -2,12 +2,13 @@ import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormControl } from '@angular/forms';
 import { StoreStatus, MovieAnalytics } from '@blockframes/movie/+state/movie.firestore';
-import { startWith, map } from 'rxjs/operators';
+import { startWith, map, switchMap } from 'rxjs/operators';
 import { Observable, combineLatest, Subscription } from 'rxjs';
 import { Movie, getMovieTotalViews, Credit } from '@blockframes/movie/+state/movie.model';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { getCodeIfExists } from '@blockframes/utils/static-model/staticModels';
+import { OrganizationQuery } from '@blockframes/organization/+state';
 
 interface TitleView {
   id: string; // movieId
@@ -53,25 +54,32 @@ export class ListComponent implements OnInit, OnDestroy {
   titles$: Observable<TitleView[]>;
   filter = new FormControl();
   filter$ = this.filter.valueChanges.pipe(startWith(this.filter.value));
-  public hasMovies$ = this.query.hasMovies();
+  public hasMovies$ = this.orgQuery.hasMovies$;
 
   private sub: Subscription;
 
   constructor(
     private query: MovieQuery,
     private service: MovieService,
+    private orgQuery: OrganizationQuery,
     private router: Router,
     private route: ActivatedRoute
   ) { }
 
   ngOnInit() {
-    this.sub = this.service.syncAnalytics().subscribe();
+    // Sync with anaytics: It's ok to give ALL movieIds they'll just be set to 0
+    this.sub = this.orgQuery.selectActive().pipe(
+      switchMap(org => this.service.syncWithAnalytics(org.movieIds)),
+    ).subscribe();
+
+    const titles$ = this.orgQuery.selectActive().pipe(
+      switchMap(org => this.service.valueChanges(org.movieIds)),
+    );
+    const analytics$ = this.query.analytics.selectAll().pipe(startWith([]));
 
     // Transform movies into a TitleView
-    this.titles$ = combineLatest([this.query.selectAll(), this.query.analytics.selectAll()]).pipe(
-      map(([movies, analytics]) =>
-        movies.map(movie => createTitleView(movie, analytics))
-      )
+    this.titles$ = combineLatest([ titles$, analytics$ ]).pipe(
+      map(([movies, analytics]) => movies.map(movie => createTitleView(movie, analytics)))
     );
   }
 
