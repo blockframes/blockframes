@@ -3,7 +3,6 @@ import { ActivatedRoute } from '@angular/router';
 import { OrganizationAdminForm } from '../../forms/organization-admin.form';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { getValue } from '@blockframes/utils/helpers';
-import { UserService } from '@blockframes/user/+state/user.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Organization } from '@blockframes/organization/+state/organization.model';
 import { organizationStatus } from '@blockframes/organization/+state/organization.firestore';
@@ -70,7 +69,6 @@ export class OrganizationComponent implements OnInit {
   ];
   constructor(
     private organizationService: OrganizationService,
-    private userService: UserService,
     private movieService: MovieService,
     private route: ActivatedRoute,
     private cdRef: ChangeDetectorRef,
@@ -92,7 +90,7 @@ export class OrganizationComponent implements OnInit {
       }
     }));
 
-    const members = await this.userService.getMembers(this.orgId);
+    const members = await this.organizationService.getMembers(this.orgId);
     this.members = members.map(m => ({
       ...m,
       edit: {

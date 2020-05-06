@@ -76,7 +76,8 @@
       </mat-card-content>
     </mat-card>
     <!-- Bank Information -->
-    <ng-container *ngFor="let control of bankAccounts.controls">
+    <!-- @TODO (#2692)
+      <ng-container *ngFor="let control of bankAccounts.controls">
       <mat-card test-id="bank-information">
         <mat-card-header>
           <mat-card-title>Bank Information</mat-card-title>
@@ -135,6 +136,6 @@
           <form-country [form]="control.get('address').get('country')"></form-country>
         </mat-card-content>
       </mat-card>
-    </ng-container>
+    </ng-container> -->
   </form>
 </article>

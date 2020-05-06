@@ -11,9 +11,10 @@ import { OrganizationStore, OrganizationState } from './organization.store';
 import { OrganizationQuery } from './organization.query';
 import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
 import { createPermissions } from '../../permissions/+state/permissions.model';
-import { firestore } from 'firebase/app';
 import { toDate } from '@blockframes/utils/helpers';
 import { AngularFireFunctions } from '@angular/fire/functions';
+import { UserService, OrganizationMember, createOrganizationMember } from '@blockframes/user/+state';
+import { PermissionsService, PermissionsQuery } from '@blockframes/permissions/+state';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'orgs' })
@@ -24,15 +25,17 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     public store: OrganizationStore,
     private authQuery: AuthQuery,
     private functions: AngularFireFunctions,
+    private userService: UserService,
+    private permissionsQuery: PermissionsQuery,
+    private permissionsService: PermissionsService,
   ) {
     super(store);
   }
 
   public async orgNameExist(orgName: string) {
-    // @TODO #2650 use publicOrg since we can not let anyone retreive the whole organization component
-    /*const orgs = await this.getValue(ref => ref.where('denomination.full', '==', orgName));
-    return orgs.length !== 0;*/
-    return false;
+    // @TODO #2650 #2692 use publicOrg since we can not let anyone retreive the whole organization component
+    const orgs = await this.getValue(ref => ref.where('denomination.full', '==', orgName));
+    return orgs.length !== 0;
   }
 
   syncOrgActive() {
@@ -72,14 +75,11 @@ export class OrganizationService extends CollectionService<OrganizationState> {
       id: orgId,
       roles: { [user.uid]: 'superAdmin' }
     });
-    const permissionsDoc = this.db.doc(`permissions/${orgId}`);
-    const userDoc = this.db.doc(`users/${user.uid}`);
-
-    // Set the new organization in permissions collection.
-    (write as firestore.WriteBatch).set(permissionsDoc.ref, permissions);
 
     // Update user with orgId.
-    return write.update(userDoc.ref, { orgId });
+    const userDoc = this.db.doc(`users/${user.uid}`);
+    write.update(userDoc.ref, { orgId });
+    return this.permissionsService.add({ id: orgId, ...permissions }, { write });
   }
 
   /** Add a new organization */
@@ -114,8 +114,33 @@ export class OrganizationService extends CollectionService<OrganizationState> {
     return this.update(orgId, { isBlockchainEnabled: value });
   }
 
-  public notifyAppAccessChange(orgId: string){
+  public notifyAppAccessChange(orgId: string) {
     const callOnAccessToAppChanged = this.functions.httpsCallable('onAccessToAppChanged');
     return callOnAccessToAppChanged(orgId).toPromise();
+  }
+
+  ////////////
+  // MEMBER //
+  ////////////
+
+  /** Remove a member from the organization. */
+  public removeMember(uid: string) {
+    const superAdminNumber = this.permissionsQuery.superAdminCount;
+    const role = this.permissionsQuery.getActive().roles[uid];
+    if (role === 'superAdmin' && superAdminNumber <= 1) {
+      throw new Error('You can\'t remove the last Super Admin.');
+    }
+
+    const org = this.query.getActive();
+    const userIds = org.userIds.filter(userId => userId !== uid);
+    return this.update(org.id, { userIds });
+  }
+
+  public async getMembers(orgId: string): Promise<OrganizationMember[]> {
+    const org = await this.getValue(orgId);
+    const promises = org.userIds.map(uid => this.userService.getUser(uid));
+    const users = await Promise.all(promises);
+    const role = await this.permissionsService.getValue(orgId);
+    return users.map(u => createOrganizationMember(u, role.roles[u.uid] ? role.roles[u.uid] : undefined));
   }
 }
