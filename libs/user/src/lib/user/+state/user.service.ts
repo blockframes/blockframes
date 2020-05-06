@@ -3,10 +3,6 @@ import { CollectionConfig, CollectionService } from 'akita-ng-fire';
 import { UserState, UserStore } from './user.store';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { map } from 'rxjs/operators';
-import { OrganizationService } from '@blockframes/organization/+state';
-import { PermissionsQuery } from '@blockframes/permissions/+state/permissions.query';
-import { OrganizationMember, createOrganizationMember } from './user.model';
-import { PermissionsService } from '@blockframes/permissions/+state';
 import { User, AuthQuery, AuthStore } from '@blockframes/auth/+state';
 
 
@@ -23,9 +19,6 @@ export class UserService extends CollectionService<UserState> {
     private authStore: AuthStore,
     private authQuery: AuthQuery,
     private organizationQuery: OrganizationQuery,
-    private permissionsQuery: PermissionsQuery,
-    private permissionsService: PermissionsService,
-    private organizationService: OrganizationService,
   ) {
     super(store);
   }
@@ -112,30 +105,5 @@ export class UserService extends CollectionService<UserState> {
   //---------------------------
   public changeRank(rank: string) {
     this.authStore.updateProfile({ financing: { rank } });
-  }
-
-  ////////////
-  // MEMBER //
-  ////////////
-
-  /** Remove a member from the organization. */
-  public removeMember(uid: string) {
-    const superAdminNumber = this.permissionsQuery.superAdminCount;
-    const role = this.permissionsQuery.getActive().roles[uid];
-    if (role === 'superAdmin' && superAdminNumber <= 1) {
-      throw new Error('You can\'t remove the last Super Admin.');
-    }
-
-    const org = this.organizationQuery.getActive();
-    const userIds = org.userIds.filter(userId => userId !== uid);
-    return this.organizationService.update(org.id, { userIds });
-  }
-
-  public async getMembers(orgId: string): Promise<OrganizationMember[]> {
-    const org = await this.organizationService.getValue(orgId);
-    const promises = org.userIds.map(uid => this.getUser(uid));
-    const users = await Promise.all(promises);
-    const role = await this.permissionsService.getValue(orgId);
-    return users.map(u => createOrganizationMember(u, role.roles[u.uid] ? role.roles[u.uid] : undefined));
   }
 }
