@@ -18,7 +18,10 @@ wishlist-button {
 
 .overlay {
   position: absolute;
-  top: 0; right: 0; bottom: 0; left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
   background-color: var(--background);
   z-index: 1;
 }
@@ -29,15 +32,10 @@ img {
 
 article {
   width: 100%;
-  padding: 16px;
 }
 
-article.large {
-  position: absolute;
-  bottom: 0;
-  background-image: linear-gradient(to top, rgba(black, 0.5), transparent);
-
-  h6, p {
-    color: white;
-  }
+h6,
+p {
+  // different then in the typography
+  margin: 0 !important;
 }
