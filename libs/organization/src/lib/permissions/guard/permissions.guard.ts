@@ -20,7 +20,11 @@ export class PermissionsGuard extends CollectionGuard<PermissionsState> {
 
   sync() {
     return this.authQuery.user$.pipe(
-      switchMap(user => {
+      // @TODO(#2710) This async is needed to prevent permission denied
+      // in the case where user.orgId exists but not the permissions document.
+      // This seems to be caused by the creation/update order when we do
+      // orgService.add()
+      switchMap(async user => {
         if (!user) {
           return of('/');
         }
