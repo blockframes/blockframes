@@ -22,7 +22,8 @@ export default class OrganizationAppAccessPage {
   }
 
   public clickSubmit() {
-    cy.get('organization-app-access button[test-id=submit]').click();
+    cy.wait(4000);
+    cy.get('organization-app-access button[test-id=submit]').click({ force: true });
     return new OrganizationCongratulationPage();
   }
 }

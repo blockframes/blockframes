@@ -6,12 +6,12 @@ export default class LandingPage {
   }
 
   public clickLogin() {
-    cy.get('catalog-toolbar a[test-id=login]').click();
+    cy.get('landing-toolbar a[test-id=login]').click();
     return new AuthLoginPage();
   }
 
   public clickSignup() {
-    cy.get('catalog-toolbar a[test-id=signup]').click();
+    cy.get('landing-toolbar a[test-id=signup]').click();
     return new AuthLoginPage();
   }
 }
