@@ -3,12 +3,16 @@
     
   <!-- Small Events -->
   <ng-template calEventSmall let-event>
-    <event-card [event]="event" size="small"></event-card>
+    <div class="card" fxLayout="column" fxLayoutAlign="center center">
+      <h5>unavailable</h5>
+    </div>
   </ng-template>
 
   <!-- Large Events -->
   <ng-template calEventLarge let-event>
-    <event-card [event]="event" size="large"></event-card>
+    <div class="card" fxLayout="column" fxLayoutAlign="center center">
+      <h5>unavailable</h5>
+    </div>
   </ng-template>
 
 </cal-week>
