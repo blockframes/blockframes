@@ -1,16 +1,10 @@
 <mat-card>
   <img mat-card-image [imgRef]="org.logo" placeholderAsset="Organization_250.png" alt="organization logo" />
   <mat-card-header>
-    <mat-card-title>{{ org.denomination.full }}</mat-card-title>
+    <mat-card-title>{{ org | orgName }}</mat-card-title>
     <mat-card-subtitle>{{ org.activity | toLabel: 'orgActivity' | async }}</mat-card-subtitle>
   </mat-card-header>
   <mat-card-content class="org-info">
-    <p class="mat-caption">
-      {{ org.addresses.main.street | titlecase }}
-      <ng-container *ngIf="org.addresses.main.street && org.addresses.main.zipCode">, </ng-container>
-      {{ org.addresses.main.zipCode | titlecase }}
-      <ng-container *ngIf="org.addresses.main.zipCode && org.addresses.main.city">, </ng-container>
-      {{ org.addresses.main.city | titlecase }}
-    </p>
+    <p class="mat-caption">{{ org | orgAddress }}</p>
   </mat-card-content>
 </mat-card>

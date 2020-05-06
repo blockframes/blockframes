@@ -14,7 +14,7 @@ import { OrganizationQuery } from '@blockframes/organization/+state';
 })
 export class MeetingComponent {
   // @todo(#2711) switch ownerId to userId
-  form = new EventForm({ type: 'meeting', ownerId: this.orgQuery.getActiveId() })
+  public form = new EventForm({ type: 'meeting', ownerId: this.orgQuery.getActiveId() });
 
   constructor(
     private route: ActivatedRoute,
