@@ -1,15 +1,17 @@
-import { Component, ChangeDetectionStrategy, HostListener } from '@angular/core';
+import { Component, ChangeDetectionStrategy, HostListener, Input } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 
 
 @Component({
-  selector: 'catalog-toolbar',
+  selector: '[imgAsset] landing-toolbar',
   templateUrl: './toolbar.component.html',
   styleUrls: ['./toolbar.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class CatalogToolbarComponent {
+export class LandingToolbarComponent {
+  @Input() imgAsset = 'LogoArchipelContentPrimary.svg';
+  @Input() color = 'default';
   private scroll = new BehaviorSubject<number>(0);
   public toolbarColor$ = this.scroll.asObservable().pipe(
     map(position => position === 0),

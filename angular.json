@@ -886,9 +886,7 @@
             "outputPath": "dist/apps/festival/server",
             "main": "apps/festival/festival/src/main.server.ts",
             "tsConfig": "apps/festival/festival/tsconfig.server.json",
-            "externalDependencies": [
-              "@firebase/firestore"
-            ]
+            "externalDependencies": ["@firebase/firestore"]
           },
           "configurations": {
             "production": {
@@ -1043,6 +1041,35 @@
       "schematics": {
         "@nrwl/angular:component": {
           "styleext": "scss"
+        }
+      }
+    },
+    "landing": {
+      "projectType": "library",
+      "root": "libs/landing",
+      "sourceRoot": "libs/landing/src",
+      "prefix": "blockframes",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["libs/landing/tsconfig.lib.json", "libs/landing/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**", "!libs/landing/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/landing/jest.config.js",
+            "tsConfig": "libs/landing/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "libs/landing/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
         }
       }
     }

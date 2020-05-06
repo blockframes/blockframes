@@ -62,6 +62,9 @@
     },
     "e2e": {
       "tags": []
+    },
+    "landing": {
+      "tags": []
     }
   },
   "tasksRunnerOptions": {

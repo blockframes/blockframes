@@ -5,6 +5,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { ImgAssetModule } from '@blockframes/ui/theme';
 import { LandingComponent } from './landing.component';
+import { LandingModule } from '@blockframes/landing/landing.module';
 
 // Material
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -19,6 +20,7 @@ import { MatButtonModule } from '@angular/material/button';
     CommonModule,
     FlexLayoutModule,
     ImgAssetModule,
+    LandingModule,
     // Material
     MatToolbarModule,
     MatButtonModule,
@@ -26,4 +28,4 @@ import { MatButtonModule } from '@angular/material/button';
     RouterModule.forChild([{ path: '', component: LandingComponent }])
   ]
 })
-export class LandingModule { }
+export class FestivalLandingModule { }

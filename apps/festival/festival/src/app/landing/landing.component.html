@@ -1,28 +1,14 @@
-  <mat-toolbar [ngClass]="toolbarColor$ | async" fxLayout="row" fxLayoutAlign="space-between center">
-    <nav fxLayout="row" fxLayoutAlign="space-between center">
-      <a routerLink="/" class="logo">
-        <img src="/assets/logo/logo_archipel_market_outline.svg" type="logo" alt="Archipel Market"/>
-      </a>
-      <a fxHide.lt-md mat-stroked-button color="primary" href="#demo" id="demo-link">Schedule a demo</a>
-    </nav>
-    <div fxLayout="row" fxLayoutAlign="space-around center" fxLayoutGap="16px">
-      <a test-id="login" mat-button routerLink="/auth/connexion" fragment="signin">Login</a>
-      <a mat-button routerLink="/auth/connexion" fragment="signup">Sign up</a>
-    </div>
-  </mat-toolbar>
-
-  <header
-    fxLayout="column"
-    fxLayoutAlign="center start"
-    fxLayoutAlign.xs="center center"
-    fxLayoutGap="20px">
-    <h4>Welcome to Archipel Market</h4>
-    <p class="mat-display-2 offer">
-      The endless
-      <br/>film market
-    </p>
-    <a mat-flat-button color="accent" routerLink="/auth/connexion">
-      <span>Join now</span>
-      <mat-icon svgIcon="arrow_forward"></mat-icon>
-    </a>
-  </header>
+<landing-toolbar color="primary" imgAsset="logo_archipel_market_outline.svg"></landing-toolbar>
+<landing-header class="dark-contrast-theme">
+  <h4>Welcome to Archipel Market</h4>
+  <p class="mat-display-2 offer">The endless<br />film market</p>
+</landing-header>
+<landing-how-it-works
+  [tabNames]="tabNames"
+  [tabTitle]="tabTitle"
+  [sellerFeatures]="sellerFeatures"
+  [buyerFeatures]="buyerFeatures"
+>
+</landing-how-it-works>
+<landing-learn-more id="demo"></landing-learn-more>
+<landing-footer logo="lp_logo_archipel_market_outline.webp"></landing-footer>
