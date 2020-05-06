@@ -83,8 +83,6 @@ export class ListComponent implements OnInit, OnDestroy {
     this.titles$ = combineLatest([ titles$, analytics$ ]).pipe(
       map(([movies, analytics]) => movies.map(movie => createTitleView(movie, analytics)))
     );
-
-    this.titles$.subscribe(x => console.log(x))
   }
 
   /** Navigate to tunnel if status is draft, else go to page */

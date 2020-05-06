@@ -45,6 +45,8 @@ function createTitleView(
   };
 }
 
+const isAcceptedInApp = (movie: Movie) => movie.main.storeConfig.appAccess.catalog === true;
+
 @Component({
   selector: 'catalog-title-list',
   templateUrl: './list.component.html',
@@ -81,7 +83,7 @@ export class TitleListComponent implements OnInit, OnDestroy {
     const movies$ = this.filter$.pipe(
       switchMap(filter =>
         this.query.selectAll({
-          filterBy: movie => (filter ? movie.main.storeConfig.storeType === filter : true && movie.main.storeConfig.appAccess.catalog === true)
+          filterBy: movie => (filter ? movie.main.storeConfig.storeType === filter : true && isAcceptedInApp(movie))
         })
       )
     );
