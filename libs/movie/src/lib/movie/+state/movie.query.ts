@@ -5,9 +5,7 @@ import { Movie } from './movie.model';
 import { MovieAnalytics } from './movie.model';
 import { distinctUntilChanged, map } from 'rxjs/operators';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class MovieQuery extends QueryEntity<MovieState, Movie> {
   movieFormChanges$ = this.select(state => state.akitaForm as Movie);
   analytics = new QueryEntity<MovieState, MovieAnalytics>(this.store.analytics);
@@ -16,6 +14,7 @@ export class MovieQuery extends QueryEntity<MovieState, Movie> {
     super(store);
   }
 
+  /** @deprecated Use orgQuery.hasMovies$ instead */
   hasMovies(predicate?: Parameters<QueryEntity<MovieState, Movie>['selectCount']>[0]) {
     return this.selectCount(predicate).pipe(
       map(count => !!count),

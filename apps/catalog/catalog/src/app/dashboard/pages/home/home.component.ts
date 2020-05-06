@@ -24,6 +24,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit() {
+    // @todo(#2684) use syncWithAnalytics instead
     this.sub = this.movieService.syncAnalytics({ filterBy: movie => movie.main.storeConfig.status === 'accepted' }).subscribe();
     this.movieAnalytics$ = this.movieQuery.analytics.selectAll();
     this.movieQuery.getCount()
