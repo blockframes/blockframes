@@ -118,7 +118,6 @@ export class InvitationService extends CollectionService<InvitationState> {
             return createInvitation(invitation);
           });
           const invitations = await Promise.all(promises);
-          console.log('invitations', invitations)
           await this.add(invitations, { write });
         }
       })
