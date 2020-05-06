@@ -17,6 +17,7 @@ export interface User {
   position: string;
   orgId: string;
   avatar: ImgRef;
+  watermark: ImgRef;
 }
 
 export interface Roles {
@@ -31,6 +32,7 @@ export function createUser(user: Partial<User> = {}) {
   return {
     ...user,
     avatar: createImgRef(user.avatar),
+    watermark: createImgRef(user.watermark),
   } as User;
 }
 

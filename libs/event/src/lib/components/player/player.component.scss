@@ -1,0 +1,20 @@
+
+/**
+ * This is used to override JWPlayer watermark style.
+ * We use it to be sure that the watermark is always centered
+ * so it cannot be cropped out.
+ */
+event-player {
+  #player {
+    div {
+      div.jw-logo.jw-logo-top-right.jw-reset {
+        /* We need to use `!important` because jwplayer style is inline */
+        width: 100% !important;
+        height: 100% !important;
+        margin: 0 !important;
+        background-position: 90% 0%;
+        background-size: 50%;
+      }
+    }
+  }
+}

@@ -1,7 +1,8 @@
-import { Component, ChangeDetectionStrategy, AfterViewInit, Inject } from '@angular/core';
+import { Component, ChangeDetectionStrategy, AfterViewInit, Inject, ViewEncapsulation } from '@angular/core';
 import { EventQuery } from '../../+state/event.query';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { DOCUMENT } from '@angular/common';
+import { AuthQuery } from '@blockframes/auth/+state';
 
 declare const jwplayer: any;
 
@@ -9,6 +10,7 @@ declare const jwplayer: any;
   selector: 'event-player',
   templateUrl: './player.component.html',
   styleUrls: ['./player.component.scss'],
+  encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EventPlayerComponent implements AfterViewInit {
@@ -18,6 +20,7 @@ export class EventPlayerComponent implements AfterViewInit {
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private eventQuery: EventQuery,
+    private authQuery: AuthQuery,
     private functions: AngularFireFunctions,
   ) {}
 
@@ -41,7 +44,7 @@ export class EventPlayerComponent implements AfterViewInit {
     });
   }
 
-  async initPlayer() {
+  async initPlayer(watermarkUrl: string) {
     const { id } = this.eventQuery.getActive();
 
     const callDeploy = this.functions.httpsCallable('privateVideo');
@@ -51,12 +54,18 @@ export class EventPlayerComponent implements AfterViewInit {
       console.log('ERROR');
     } else {
       this.player = jwplayer('player');
-      this.player.setup({file: result});
+      this.player.setup({
+        file: result,
+        logo: {
+          file: watermarkUrl,
+        }
+      });
     }
   }
 
   async ngAfterViewInit() {
+    const watermarkUrl = this.authQuery.user.watermark.url;
     await this.loadScript();
-    this.initPlayer();
+    this.initPlayer(watermarkUrl);
   }
 }
