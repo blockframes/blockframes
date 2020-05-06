@@ -1,6 +1,4 @@
-<event-review [event]="event$ | async">
-  
-</event-review>
+<event-review [event]="event$ | async"></event-review>
 
 <ng-container *ngIf="analytics$ | async as analytics; else noAnalytics">
   <h2>Statistics</h2>

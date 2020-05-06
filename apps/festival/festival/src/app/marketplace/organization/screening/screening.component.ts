@@ -6,18 +6,17 @@ import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
 @Component({
-  selector: 'festival-marketplace-organization-event',
-  templateUrl: './event.component.html',
-  styleUrls: ['./event.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'festival-screening',
+  templateUrl: './screening.component.html',
+  styleUrls: ['./screening.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EventComponent implements OnInit {
+export class ScreeningComponent implements OnInit {
   events$: Observable<Event[]>;
-  viewDate = new Date();
 
   constructor(
+    private parent: ViewComponent,
     private service: EventService,
-    private parent: ViewComponent
   ) { }
 
   ngOnInit(): void {
@@ -25,4 +24,5 @@ export class EventComponent implements OnInit {
       switchMap(org => this.service.queryByType(['screening'], ref => ref.where('ownerId', '==', org.id)))
     );
   }
+
 }

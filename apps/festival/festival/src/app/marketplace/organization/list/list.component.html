@@ -1,16 +1,3 @@
-<a [routerLink]="org.id" *ngFor="let org of organizations | async">
-  <mat-card>
-    <img mat-card-image [imgRef]="org.logo" placeholderAsset="Organization_250.png" alt="organization logo" />
-    <mat-card-content class="org-info">
-      <h4>{{ org.activity | toLabel: 'orgActivity' | async }}</h4>
-      <h2>{{ org.denomination.full }}</h2>
-      <p class="mat-caption">
-        {{ org.addresses.main.street | titlecase }}
-        <ng-container *ngIf="org.addresses.main.street && org.addresses.main.zipCode">, </ng-container>
-        {{ org.addresses.main.zipCode | titlecase }}
-        <ng-container *ngIf="org.addresses.main.zipCode && org.addresses.main.city">, </ng-container>
-        {{ org.addresses.main.city | titlecase }}
-      </p>
-    </mat-card-content>
-  </mat-card>
+<a [routerLink]="org.id" *ngFor="let org of orgs$ | async">
+  <org-card [org]="org"></org-card>
 </a>

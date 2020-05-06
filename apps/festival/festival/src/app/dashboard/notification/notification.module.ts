@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ImgAssetModule } from '@blockframes/ui/theme';
-import { ActivityTabsMobule } from '@blockframes/notification/activity-feed/activity-tabs/activity-tabs.module';
+import { NotificationListModule } from '@blockframes/notification/components/list/list.module';
 import { NotificationComponent } from './notification.component';
 
 @NgModule({
@@ -12,7 +12,7 @@ import { NotificationComponent } from './notification.component';
     CommonModule,
     FlexLayoutModule,
     ImgAssetModule,
-    ActivityTabsMobule,
+    NotificationListModule,
     RouterModule.forChild([{ path: '', component: NotificationComponent }])
   ]
 })

@@ -11,8 +11,11 @@ const navLinks = [{
   path: 'member',
   label: 'Contact'
 }, {
-  path: 'event',
+  path: 'screening',
   label: 'Screening Schedule'
+}, {
+  path: 'meeting',
+  label: 'Ask for a Meeting'
 }];
 
 @Component({
