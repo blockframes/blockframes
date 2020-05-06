@@ -1,6 +1,7 @@
 @import '~@angular/flex-layout/mq';
 
-mat-toolbar {
+landing-toolbar {
+  width: 100%;
   position: fixed;
   top: 0;
   z-index: 2;
@@ -12,64 +13,9 @@ mat-toolbar {
   border: none;
 }
 
-.logo {
-  height: 48px;
-  margin-right: 96px;
-
-  img {
-    height: 100%;
-  }
+.plain-toolbar {
+  transition-duration: 1000ms;
 }
-
-#demo-link {
-  letter-spacing: 0.5px;
-  line-height: 24px;
-  font-weight: 600;
-}
-
-
-header {
-  display: block;
-  padding-top: calc(var(--toolbarHeight) * 2);
-  padding-bottom: 50px;
-  padding-left: 20%;
-  padding-right: 20%;
-  background-image: url('/assets/images/ACMbannerlanding.png');
-  background-size: cover;
-}
-
-h2, .mat-display-2 {
-  color: white;
-}
-
-h4 {
-  text-transform: uppercase;
-  color: white;
-}
-
-a {
-  margin: 70px 0;
-}
-
-
-
-footer {
-  margin: 50px 0;
-  text-align: center;
-  width: 100%;
-  .ac-logo {
-    width: 130px;
-    height: 50px;
-    margin-bottom: 30px;
-  }
-
-  img {
-    height: 40px;
-    margin-top: 50px;
-  }
-}
-
-
 
 @include layout-bp(xs) {
   .offer {

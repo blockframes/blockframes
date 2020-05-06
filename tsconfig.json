@@ -39,9 +39,7 @@
       "@blockframes/permissions/types": [
         "libs/organization/src/lib/permissions/+state/permissions.firestore.ts"
       ],
-      "@blockframes/invitation/*": [
-        "libs/notification/src/lib/invitation/*"
-      ],
+      "@blockframes/invitation/*": ["libs/notification/src/lib/invitation/*"],
       "@blockframes/invitation/types": [
         "libs/notification/src/lib/invitation/+state/invitation.firestore.ts"
       ],
@@ -49,7 +47,6 @@
         "libs/notification/src/lib/notification/+state/notification.firestore.ts"
       ],
       "@blockframes/notification/*": ["libs/notification/src/lib/notification/*"],
-      /** Find a better way to import this part of the notification lib **/
       "@blockframes/notification/activity-feed/*": ["libs/notification/src/lib/activity-feed/*"],
       "@blockframes/contract/*": ["libs/contract/src/lib/*"],
       "@blockframes/financial-report/*": ["libs/financial-report/src/lib/*"],
@@ -59,7 +56,8 @@
       "@blockframes/apps/catalog/dashboard/*": ["apps/catalog/src/app/dashboard/*"],
       "@blockframes/apps/catalog/*": ["apps/catalog/catalog/src/app/*"],
       "@blockframes/event/*": ["libs/event/src/lib/*"],
-      "@blockframes/e2e/*": ["libs/e2e/src/lib/*"]
+      "@blockframes/e2e/*": ["libs/e2e/src/lib/*"],
+      "@blockframes/landing/*": ["libs/landing/src/lib/*"]
     }
   },
   "angularCompilerOptions": {
