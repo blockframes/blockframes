@@ -167,7 +167,6 @@ export class TimePickerComponent implements ControlValueAccessor, MatFormFieldCo
   }
 
   setDate() {
-    console.log(this.form.value);
     const value = createDate(this.form.value);
     this.onChange(value)
   }

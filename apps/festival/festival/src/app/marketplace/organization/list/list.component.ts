@@ -17,7 +17,7 @@ export class ListComponent {
 
   constructor(private service: OrganizationService) {
     // TODO #2570
-    this.organizations = this.service.getValue(ref => ref.where('activity', '==', 'intlSales'));
+    this.organizations = this.service.getValue(ref => ref.where('appAccess.festival.dashboard', '==', 'true'));
   }
 
 }
