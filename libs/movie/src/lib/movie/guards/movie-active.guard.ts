@@ -26,7 +26,7 @@ export class MovieActiveGuard extends CollectionGuard<MovieState> {
         if (!!movie) {
           const appName = this.routerQuery.getValue().state.root.data.app;
           const hasAccess = hasAppAccess(appName, movie.main.storeConfig.appAccess);
-          if (hasAccess === true) {
+          if (hasAccess) {
             return true;
           } else {
             return this.redirect || next.data.redirect;

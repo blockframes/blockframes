@@ -5,6 +5,8 @@ import { Observable, Subscription } from 'rxjs';
 import { MovieAnalytics } from '@blockframes/movie/+state/movie.firestore';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 
+const isAcceptedInApp = movie => movie.main.storeConfig.status === 'accepted' && movie.main.storeConfig.appAccess.catalog === true;
+
 @Component({
   selector: 'catalog-home',
   templateUrl: './home.component.html',
@@ -13,7 +15,7 @@ import { MovieService } from '@blockframes/movie/+state/movie.service';
 })
 export class HomeComponent implements OnInit, OnDestroy {
   public movieAnalytics$: Observable<MovieAnalytics[]>;
-  public movies$ = this.movieQuery.selectAll({ filterBy: movie => movie.main.storeConfig.status === 'accepted' && movie.main.storeConfig.appAccess.catalog === true });
+  public movies$ = this.movieQuery.selectAll({ filterBy: isAcceptedInApp });
   public moviesLoading$ = this.movieQuery.selectLoading();
   private sub: Subscription;
 
