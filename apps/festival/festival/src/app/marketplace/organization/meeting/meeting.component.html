@@ -1,0 +1,14 @@
+<cal-header [viewDate]="viewDate" (viewDateChange)="updateViewDate($event)"></cal-header>
+<cal-week [viewDate]="viewDate" [events]="events$ | async">
+    
+  <!-- Small Events -->
+  <ng-template calEventSmall let-event>
+    <event-card [event]="event" size="small"></event-card>
+  </ng-template>
+
+  <!-- Large Events -->
+  <ng-template calEventLarge let-event>
+    <event-card [event]="event" size="large"></event-card>
+  </ng-template>
+
+</cal-week>
