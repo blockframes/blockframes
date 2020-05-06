@@ -32,6 +32,9 @@
         ],
         "maintenance": [
           "blockframes-maintenance"
+        ],
+        "festival": [
+          "blockframes-festival"
         ]
       }
     },
@@ -59,6 +62,9 @@
       "hosting": {
         "catalog": [
           "blockframes-staging"
+        ],
+        "festival": [
+          "staging-blockframes-festival"
         ]
       }
     },
