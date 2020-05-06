@@ -1,0 +1,7 @@
+<ng-container *ngIf="events$ | async as events">
+  <event-list [events]="events">
+    <ng-template let-event>
+      <event-screening-item [event]="event"></event-screening-item>
+    </ng-template>
+  </event-list>
+</ng-container>

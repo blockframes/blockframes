@@ -19,8 +19,11 @@ const routes = [{
     path: 'member',
     loadChildren: () => import('../member/member.module').then(m => m.OrganizationMemberModule)
   }, {
-    path: 'event',
-    loadChildren: () => import('../event/event.module').then(m => m.OrganisationEventModule)
+    path: 'screening',
+    loadChildren: () => import('../screening/screening.module').then(m => m.ScreeningModule)
+  }, {
+    path: 'meeting',
+    loadChildren: () => import('../meeting/meeting.module').then(m => m.MeetingModule)
   }]
 }]
 
