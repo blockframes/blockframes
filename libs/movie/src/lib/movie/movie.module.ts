@@ -25,13 +25,13 @@ import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatMenuModule} from '@angular/material/menu';
+import { MatMenuModule } from '@angular/material/menu';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 // Libraries
 import { UploadModule } from '@blockframes/ui/upload/upload.module';
 import { PasswordConfirmModule } from '@blockframes/ui/form/password-confirm/password-confirm.module';
-import { MovieCardModule } from '@blockframes/ui/movie-card/movie-card.module';
+import { MovieCardModule } from '@blockframes/movie/components/card/card.module';
 
 // Components
 import { AngularFireModule } from '@angular/fire';
@@ -82,4 +82,4 @@ import { MovieImdbSearchModule } from './components/movie-imdb-search/movie-imdb
     MovieImdbSearchModule
   ],
 })
-export class MovieModule {}
+export class MovieModule { }
