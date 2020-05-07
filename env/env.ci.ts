@@ -17,7 +17,7 @@ export const sentryDsn = undefined;
 // Firebase
 // ========
 
-export const appUrlContent = 'hhttps://blockframes-ci.web.app';
+export const appUrlContent = 'https://blockframes-ci.web.app';
 export const appUrlMarket = appUrlContent;
 
 export const firebase = {
