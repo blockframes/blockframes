@@ -58,7 +58,7 @@ export const onUserCreate = async (user: UserRecord) => {
   const { email, uid } = user;
 
   if (!email || !uid) {
-    throw new Error(`email & uid are mandatory parameter, provided email (${email}), uid (${uid})`);
+    throw new Error(`email and uid are mandatory parameter, provided email (${email}), uid (${uid})`);
   }
 
   const userDocRef = db.collection('users').doc(user.uid);
@@ -69,8 +69,9 @@ export const onUserCreate = async (user: UserRecord) => {
 
     if (userDoc.exists) {
       if (!user.emailVerified) {
+        const u = userDoc.data() as PublicUser;
         await startVerifyEmailFlow({ email });
-        await sendMailFromTemplate(welcomeMessage(email));
+        await sendMailFromTemplate(welcomeMessage(email, u.firstName));
       }
       tx.update(userDocRef, { email, uid });
     } else {

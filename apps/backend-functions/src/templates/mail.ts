@@ -17,8 +17,11 @@ export const ADMIN_DATA_PATH = '/admin/data'; // backup / restore
 //   FOR BLOCKFRAMES USERS   //
 // ------------------------- //
 
-export function welcomeMessage(email: string): EmailTemplateRequest {
-  const data = {};
+export function welcomeMessage(email: string, userFirstName?: string): EmailTemplateRequest {
+  const data = {
+    userEmail: email,
+    userFirstName
+  };
   return { to: email, templateId: templateIds.welcomeMessage, data };
 }
 
