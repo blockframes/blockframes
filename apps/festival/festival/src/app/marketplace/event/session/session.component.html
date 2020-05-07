@@ -1,8 +1,25 @@
 <ng-container *ngIf="url else later">
-  <iframe [src]="url" width="640" height="360" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+  <section fxLayout="row" fxLayoutAlign="center center">
+    <iframe [src]="url" width="860" height="462" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+  </section>
 </ng-container>
+
 <ng-template #later>
-  <section fxLayout="column" fxLayoutAlign="center center">
-    
+  <section fxLayoutAlign="center start" class="dark-contrast-theme">
+    <article fxLayout="column" fxLayoutAlign="space-between center">
+      <article class="waiting-screening" fxLayout="column" fxLayoutAlign="center center" [style.background-image]="background">
+        <img asset="archipel-content-icon.svg" type="logo" alt="organisation logo" class="calmos">
+        <h4 class="uppercase ">Truc muche presents</h4>
+        <span class="mat-display-2">{{movie.main.title.international}}</span>
+        <h2>by someone</h2>
+        <h6 class="uppercase">starting in</h6>
+        <span class="mat-body-1">x temps</span>
+        <button mat-stroked-button color="primary">
+          <mat-icon svgIcon="arrow_back"></mat-icon>
+          <span>Back to Calendar</span>
+        </button>
+      </article>
+      <img asset="screening_wait.webp" alt="test image qui foire">
+    </article>
   </section>
 </ng-template>

@@ -35,10 +35,9 @@ type MovieHeaderView = ReturnType<typeof createMovieView>
 export class HeaderComponent {
 
   public movieView: MovieHeaderView;
-
   public movie: Movie;
 
-  @HostBinding('style.backgroundImage') background: string;
+  @HostBinding('style.background-image') background: string;
   @Input('movie')
   set movieInput(movie: Movie) {
     if (movie) {

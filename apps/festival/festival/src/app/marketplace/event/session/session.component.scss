@@ -1,7 +1,35 @@
-:host {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  height: 100%;
+:host, section {
+  height: 100vh;
+}
+
+article {
+  margin-top: 70px;
+  height: 687px;
+  width: 1392px;
+  background-color: var(--background-slider);
+  img {
+    width: 1392px;
+  }
+  article.waiting-screening {
+    width: 860px;
+    height: 462px;
+    border: 1px solid var(--primary);
+    background-size: cover;
+    background-color:rgba(0, 0, 0, 0.5) !important;
+    button {
+      margin-top: 24px;
+    }
+  }
+}
+
+.uppercase {
+  text-transform: uppercase;
+}
+.calmos {
+  width: 80px;
+  height: 80px;
+}
+
+h2, h4, h6 {
+  margin: 0;
 }
