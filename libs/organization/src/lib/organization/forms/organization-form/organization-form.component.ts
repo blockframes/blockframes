@@ -3,7 +3,7 @@ import { network, baseEnsDomain } from '@env';
 import { getProvider, orgNameToEnsDomain } from '@blockframes/ethers/helpers';
 import { OrganizationService } from './../../+state/organization.service';
 import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
-import { activities } from '../../+state/organization.firestore';
+import { orgActivity } from '../../+state/organization.firestore';
 
 @Component({
   selector: 'organization-form',
@@ -12,7 +12,7 @@ import { activities } from '../../+state/organization.firestore';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationFormComponent {
-  activities = activities;
+  activities = orgActivity;
   @Input() form: OrganizationForm;
 
   constructor(private service: OrganizationService) { }

@@ -3,7 +3,7 @@ import * as admin from 'firebase-admin';
 
 export type DocumentReference = admin.firestore.DocumentReference;
 
-import { backupBucket } from '../environments/environment';
+import { backupBucket, storageBucket } from '../environments/environment';
 import { PublicUser } from '../data/types';
 
 admin.initializeApp(functions.config().firebase);
@@ -13,6 +13,7 @@ export const auth = admin.auth();
 export const serverTimestamp = admin.firestore.FieldValue.serverTimestamp;
 
 export const getBackupBucketName = (): string => backupBucket; // TODO: secure bucket
+export const getStorageBucketName = (): string => storageBucket;
 
 export { admin, functions };
 

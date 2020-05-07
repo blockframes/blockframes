@@ -5,7 +5,13 @@ import { Organization, AddressSet } from '../+state';
 export class OrgAddressPipe implements PipeTransform {
   transform(org: Organization, set: keyof AddressSet = 'main') {
     const { street, zipCode, city, country } = org.addresses[set];
-    return `${street}, ${zipCode} ${city}, ${country}`;
+    if (street && zipCode && city && country) {
+      return `${street}, ${zipCode} ${city}, ${country}`;
+    }
+    if (!!country) {
+      return country
+    }
+    return 'No address provided';
   }
 }
 

@@ -76,10 +76,10 @@ export class OrganizationService extends CollectionService<OrganizationState> {
       roles: { [user.uid]: 'superAdmin' }
     });
 
-    // Update user with orgId.
-    const userDoc = this.db.doc(`users/${user.uid}`);
-    write.update(userDoc.ref, { orgId });
-    return this.permissionsService.add({ id: orgId, ...permissions }, { write });
+    return Promise.all([
+      this.permissionsService.add(permissions, { write }),
+      this.userService.update(user.uid, { orgId, ...user }, { write }),
+    ]);
   }
 
   /** Add a new organization */

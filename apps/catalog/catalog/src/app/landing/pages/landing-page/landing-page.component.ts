@@ -1,8 +1,4 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { AngularFireFunctions } from '@angular/fire/functions';
-import { FormGroup } from '@angular/forms';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { RequestDemoInformations, createDemoRequestInformations } from '@blockframes/utils/request-demo';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
@@ -12,34 +8,70 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CatalogLandingPageComponent {
+  public tabNames = ['Seller', 'Buyer'];
+
+  public tabTitle = [
+    {
+      title: 'Maximize sales on library titles and access new buyers.',
+      imgSrc: '/assets/images/seller_perspective.jpg',
+      description: ''
+    },
+    {
+      title: 'Buy quality content from a multitude of rights holders in one single package.',
+      imgSrc: '/assets/images/buyer_perspective.jpg',
+      description: 'Access one massive library, search for avails easily and buy content in larger volumes through one single deal offer and negotiation.'
+    }
+  ]
+
+  public sellerFeatures = [
+    {
+      title: 'Bulk Import',
+      imgAsset: 'bulk_import.webp',
+      description: 'Import large amounts of data easily (either by directly filling a predefined template or with the help of an Archipel Content team member).'
+    },
+    {
+      title: 'Deals Management',
+      imgAsset: 'deal_management.webp',
+      description: 'Keep track of your previous and ongoing deals information. Download related documents. Get notified of any new element or information. Check your avails. '
+    },
+    {
+      title: 'Sales Statistics',
+      imgAsset: 'sales_statistics.webp',
+      description: 'Track your global sales and sales per title. Get an efficient overview of your data thanks to analytics tools.'
+    },
+    {
+      title: 'A Human Salesforce',
+      imgAsset: 'human_salesforce.webp',
+      description: 'Make the most of your library thanks to the Archipel Content salesforce, who will editorialize the platform and push the right content to the right Buyers.'
+    }
+  ];
+
+  public buyerFeatures = [
+    {
+      title: 'Access to line-up and library content ',
+      imgAsset: 'library_content.webp',
+      description: 'Search for quality content from a multitude of different Rights Holders in one consolidated library.'
+    },
+    {
+      title: 'Efficient content browsing',
+      imgAsset: 'efficient_content_browsing.webp',
+      description: 'Search content in a simple and efficient way and find what you’re looking for in just a few clicks, using efficient search criteria and filters'
+    },
+    {
+      title: 'Package deals',
+      imgAsset: 'package_deal.webp',
+      description: 'Group several Sellers’ titles together in one deal.'
+    },
+    {
+      title: 'Deals management',
+      imgAsset: 'deal_management.webp',
+      description: 'Keep track of your deals information and negotiations. Download related documents.Get notified of any new element or information.'
+    }
+  ]
 
   constructor(
-    private snackBar: MatSnackBar,
-    private functions: AngularFireFunctions,
     private dynTitle: DynamicTitleService
   ) {
     this.dynTitle.setPageTitle()
-  }
-
-  /** Send a mail to the admin with user's informations. */
-  private async sendDemoRequest(information: RequestDemoInformations) {
-    const f = this.functions.httpsCallable('sendDemoRequest');
-    return f(information).toPromise();
-  }
-
-  /** Triggers when a user click on the button from LearnMoreComponent.  */
-  public sendRequest(form: FormGroup) {
-    if (form.invalid) {
-      this.snackBar.open('Please fill the required informations.', 'close', { duration: 2000 });
-      return;
-    }
-    try {
-      const information: RequestDemoInformations = createDemoRequestInformations(form.value);
-
-      this.sendDemoRequest(information);
-      this.snackBar.open('Your request has been sent !', 'close', { duration: 2000 });
-    } catch (error) {
-      this.snackBar.open(error.message, 'close', { duration: 5000 });
-    }
   }
 }

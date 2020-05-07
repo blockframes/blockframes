@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { InvitationState, InvitationStore } from './invitation.store';
 import { Invitation, createInvitation } from './invitation.model';
-import { CollectionConfig, CollectionService } from 'akita-ng-fire';
+import { CollectionConfig, CollectionService, AtomicWrite } from 'akita-ng-fire';
 import { OrganizationQuery, createPublicOrganization } from '@blockframes/organization/+state';
 import { AuthQuery, AuthService } from '@blockframes/auth/+state';
 import { createPublicUser } from '@blockframes/user/+state';
@@ -72,7 +72,7 @@ export class InvitationService extends CollectionService<InvitationState> {
   request(who: 'user' | 'org', id: string) {
     return {
       from: (from: 'user' | 'org') => ({
-        to: async (type: 'attendEvent' | 'joinOrganization', docId: string) => {
+        to: async (type: 'attendEvent' | 'joinOrganization', docId: string, write?: AtomicWrite) => {
           const base = { mode: 'request', type, docId } as Partial<Invitation>
           if (who === 'user') {
             base['toUser'] = createPublicUser({ uid: id });
@@ -85,7 +85,7 @@ export class InvitationService extends CollectionService<InvitationState> {
             base['fromOrg'] = createPublicOrganization(this.orgQuery.getActive());
           }
           const invitation = createInvitation(base);
-          await this.add(invitation);
+          await this.add(invitation, { write });
         }
       })
     }
@@ -99,7 +99,7 @@ export class InvitationService extends CollectionService<InvitationState> {
   invite(who: 'user' | 'org', idOrEmails: string | string[]) {
     return {
       from: (from: 'user' | 'org') => ({
-        to: async (type: 'attendEvent' | 'joinOrganization', docId: string) => {
+        to: async (type: 'attendEvent' | 'joinOrganization', docId: string, write?: AtomicWrite) => {
           const base = { mode: 'invitation', type, docId } as Partial<Invitation>
           if (from === 'user') {
             base['fromUser'] = createPublicUser(this.authQuery.user);
@@ -118,7 +118,7 @@ export class InvitationService extends CollectionService<InvitationState> {
             return createInvitation(invitation);
           });
           const invitations = await Promise.all(promises);
-          await this.add(invitations);
+          await this.add(invitations, { write });
         }
       })
     }
