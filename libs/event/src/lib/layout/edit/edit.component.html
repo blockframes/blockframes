@@ -5,7 +5,7 @@
     </a>
     <div fxLayout fxLayoutAlign="end center">
       <ng-container *ngIf="form.dirty">
-        <button @scaleIn type="submit" mat-stroked-button color="primary" (click)="save()">Save</button>
+        <button @scaleIn type="submit" mat-stroked-button color="primary" (click)="save()" test-id="event-save">Save</button>
       </ng-container>
       <button type="button" mat-button color="warn" (click)="remove()">Delete</button>
     </div>
@@ -18,22 +18,22 @@
     <mat-card class="details" fxLayout="column" fxFlex="65">
       <mat-form-field appearance="outline">
         <mat-label>Event Title</mat-label>
-        <input matInput formControlName="title" />
+        <input matInput formControlName="title" test-id="event-title" />
       </mat-form-field>
 
       <div fxLayout fxLayoutAlign="space-between center" fxLayoutGap="24px">
-        <mat-form-field fxFlex appearance="outline">
+        <mat-form-field fxFlex appearance="outline" test-id="event-start">
           <mat-label>Start</mat-label>
           <time-picker formControlName="start"></time-picker>
         </mat-form-field>
         <span>to</span>
-        <mat-form-field fxFlex  appearance="outline">
+        <mat-form-field fxFlex  appearance="outline" test-id="event-end">
           <mat-label>End</mat-label>
           <time-picker formControlName="end"></time-picker>
         </mat-form-field>
       </div>
       
-      <mat-checkbox formControlName="isPrivate">Private</mat-checkbox>
+      <mat-checkbox formControlName="isPrivate" test-id="event-private">Private</mat-checkbox>
       <mat-checkbox formControlName="allDay">All day</mat-checkbox>
 
     </mat-card>
