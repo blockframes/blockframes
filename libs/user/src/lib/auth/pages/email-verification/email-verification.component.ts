@@ -11,6 +11,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class EmailVerificationComponent implements OnInit {
   public emailForm: FormGroup;
+  public submitted = false;
 
   constructor(
     private builder: FormBuilder,
@@ -31,6 +32,7 @@ export class EmailVerificationComponent implements OnInit {
       }
       this.service.resetPasswordInit(this.emailForm.value.email)
       this.snackBar.open('A password reset link has been sent to your email address', 'close', {duration: 5000})
+      this.submitted = true;
     }
     catch (error) {
       this.snackBar.open(error.message, 'close', {duration: 5000})
