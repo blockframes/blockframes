@@ -38,7 +38,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           date: toDate(notification.date),
           message: 'Your organization has been accepted !',
-          imgRef: notification.organization.logo,
+          imgRef: notification.organization?.logo,
           placeholderUrl: 'WelcomeArchipelContent_500.png' // TODO: ISSUE#2262
         };
       case 'movieTitleUpdated':
@@ -51,8 +51,8 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
       case 'movieTitleCreated':
         return {
           date: toDate(notification.date),
-          message: `${displayName} created ${movieTitle}.`,
-          imgRef: this.getPoster(notification.movie.id),
+          message: `${displayName} created ${movieTitle ? movieTitle : 'a new title'}.`,
+          imgRef: notification.user?.avatar,
           placeholderUrl: 'WelcomeDelivery_500.png' // TODO: ISSUE#2262
         };
       case 'movieDeleted':
