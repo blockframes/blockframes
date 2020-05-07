@@ -5,8 +5,8 @@ export default class FestivalDashboardHomePage {
     cy.get('festival-dashboard-home')
   }
 
-  goToCalendar(){
-    cy.get('a[test-id=calendar]').click();
+  goToCalendar() {
+    cy.get('festival-dashboard-home').get('a[test-id=calendar]').click();
     return new EventPage();
   }
 }
