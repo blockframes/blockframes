@@ -1,8 +1,6 @@
 /**
  * Apps definition
  */
-
-import { RouterQuery } from "@datorama/akita-ng-router-store";
 import { OrganizationDocument } from "@blockframes/organization/+state/organization.firestore";
 
 export const app = ['catalog', 'festival'] as const;
@@ -20,7 +18,7 @@ export type ModuleAccess = Record<Module, boolean>;
 export type OrgAppAccess = Record<App, ModuleAccess>;
 export type MovieAppAccess = Record<App, boolean>;
 
-export function getCurrentApp(routerQuery: RouterQuery): App {
+export function getCurrentApp(routerQuery: any): App {
   return routerQuery.getValue().state?.root.data.app;
 }
 

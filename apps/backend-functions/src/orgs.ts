@@ -16,7 +16,7 @@ import { emailToEnsDomain, precomputeAddress as precomputeEthAddress, getProvide
 import { NotificationType } from '@blockframes/notification/types';
 import { triggerNotifications, createNotification } from './notification';
 import { app, Module } from '@blockframes/utils/apps';
-import { getAdminIds, getAppUrl, getDocument } from './data/internals';
+import { getAdminIds, getAppUrl, getDocument, createPublicOrganizationDocument, createPublicUserDocument } from './data/internals';
 import { ErrorResultResponse } from './utils';
 
 /** Create a notification with user and org. */
@@ -24,15 +24,8 @@ function notifUser(toUserId: string, notificationType: NotificationType, org: Or
   return createNotification({
     toUserId,
     type: notificationType,
-    user: {
-      firstName: user.firstName,
-      lastName: user.lastName
-    },
-    organization: {
-      id: org.id,
-      denomination: org.denomination,
-      logo: org.logo,
-    }
+    user: createPublicUserDocument(user),
+    organization: createPublicOrganizationDocument(org)
   });
 }
 
@@ -81,7 +74,7 @@ function hasOrgAppAccessChanged(before: OrganizationDocument, after: Organizatio
   if (!!after.appAccess && before.status === 'pending' && after.status === 'pending') {
     for (const a of app) {
       const accessChanged = (module: Module) => {
-        return after.appAccess[a][module] === true && (!before.appAccess[a] || before.appAccess[a][module]  === false);
+        return after.appAccess[a][module] === true && (!before.appAccess[a] || before.appAccess[a][module] === false);
       }
       return accessChanged('dashboard') || accessChanged('marketplace');
     }
@@ -123,10 +116,7 @@ const RELAYER_CONFIG: RelayerConfig = {
   ...relayer,
   mnemonic
 };
-export async function onOrganizationUpdate(
-  change: functions.Change<FirebaseFirestore.DocumentSnapshot>,
-  context: functions.EventContext
-): Promise<any> {
+export async function onOrganizationUpdate(change: functions.Change<FirebaseFirestore.DocumentSnapshot>): Promise<any> {
   const before = change.before.data() as OrganizationDocument;
   const after = change.after.data() as OrganizationDocument;
 
@@ -161,6 +151,7 @@ export async function onOrganizationUpdate(
     const notification = createNotification({
       // At this moment, the organization was just created, so we are sure to have only one userId in the array
       toUserId: after.userIds[0],
+      organization: createPublicOrganizationDocument(before),
       type: 'organizationAcceptedByArchipelContent'
     });
     await triggerNotifications([notification]);
