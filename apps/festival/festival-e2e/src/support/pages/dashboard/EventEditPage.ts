@@ -4,7 +4,7 @@ export default class EventEditPage {
   }
 
   addEventTitle(title: string) {
-    cy.get('input[test-id=event-title]').clear().type(title);
+    cy.get('event-edit input[test-id=event-title]').clear().type(title);
   }
 
   selectDate(date: Date) {
