@@ -16,7 +16,7 @@ import { emailToEnsDomain, precomputeAddress as precomputeEthAddress, getProvide
 import { NotificationType } from '@blockframes/notification/types';
 import { triggerNotifications, createNotification } from './notification';
 import { app, Module } from '@blockframes/utils/apps';
-import { getAdminIds } from './data/internals';
+import { getAdminIds, getAppUrl, getDocument } from './data/internals';
 import { ErrorResultResponse } from './utils';
 
 /** Create a notification with user and org. */
@@ -93,25 +93,27 @@ function hasOrgAppAccessChanged(before: OrganizationDocument, after: Organizatio
 async function sendMailIfOrgAppAccessChanged(before: OrganizationDocument, after: OrganizationDocument) {
   if (hasOrgAppAccessChanged(before, after)) {
     // Send a mail to c8 admin to accept the organization given it's choosen app access
-    await sendMail(organizationRequestedAccessToApp(after.id))
+    const mailRequest = await organizationRequestedAccessToApp(after);
+    await sendMail(mailRequest);
   }
 }
 
-export function onOrganizationCreate(
+export async function onOrganizationCreate(
   snap: FirebaseFirestore.DocumentSnapshot,
   context: functions.EventContext
 ): Promise<any> {
-  const org = snap.data();
+  const org = snap.data() as OrganizationDocument;
   const orgID = context.params.orgID;
 
   if (!org?.denomination?.full) {
     console.error('Invalid org data:', org);
     throw new Error('organization update function got invalid org data');
   }
+  const emailRequest = await organizationCreated(org);
 
   return Promise.all([
     // Send a mail to c8 admin to inform about the created organization
-    sendMail(organizationCreated(org.id)),
+    sendMail(emailRequest),
     // Update algolia's index
     storeSearchableOrg(orgID, org.denomination.full)
   ]);
@@ -149,10 +151,11 @@ export async function onOrganizationUpdate(
   const blockchainBecomeEnabled = before.isBlockchainEnabled === false && after.isBlockchainEnabled === true;
 
   const { id, userIds } = before as OrganizationDocument;
-  const admin = await db.collection('users').doc(userIds[0]).get().then(adminSnapShot => adminSnapShot.data()! as PublicUser); // TODO use laurent's code after the merge of PR #698
+  const admin = await getDocument<PublicUser>(`users/${userIds[0]}`);
   if (becomeAccepted) {
     // send email to let the org admin know that the org has been accepted
-    await sendMailFromTemplate(organizationWasAccepted(admin.email, id, admin.firstName));
+    const urlToUse = await getAppUrl(after);
+    await sendMailFromTemplate(organizationWasAccepted(admin.email, id, admin.firstName, urlToUse));
 
     // Send a notification to the creator of the organization
     const notification = createNotification({

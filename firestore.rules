@@ -383,7 +383,7 @@ service cloud.firestore {
     }
 
     function getDocumentPermissions(orgId, docId) {
-    	return get(/databases/$(database)/documents/permissions/$(orgId)/documentPermissions/$(docId)).data;
+    	return getAfter(/databases/$(database)/documents/permissions/$(orgId)/documentPermissions/$(docId)).data;
     }
 
     function canCreateNewPermissions(orgId, docId) {

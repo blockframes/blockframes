@@ -3,6 +3,7 @@
  */
 
 import { RouterQuery } from "@datorama/akita-ng-router-store";
+import { OrganizationDocument } from "@blockframes/organization/+state/organization.firestore";
 
 export const app = ['catalog', 'festival'] as const;
 export type App = typeof app[number];
@@ -49,4 +50,21 @@ export function createModuleAccess(moduleAccess: Partial<ModuleAccess> = {}): Mo
 
 export function getAppName(slug: App) {
   return { slug, label: appName[slug] };
+}
+
+/**
+ * Returns the apps that the org have access to
+ * @param org 
+ */
+export function getOrgAppAccess(org: OrganizationDocument): App[] {
+  const allowedApps = {} as Record<App, boolean>;
+  for (const a of app) {
+    for (const m of module) {
+      if (org.appAccess[a][m]) {
+        allowedApps[a] = true;
+      }
+    }
+  }
+
+  return Object.keys(allowedApps).map(k => k as App);
 }

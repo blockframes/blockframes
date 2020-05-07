@@ -76,10 +76,9 @@ export class OrganizationService extends CollectionService<OrganizationState> {
       roles: { [user.uid]: 'superAdmin' }
     });
 
-    // Update user with orgId.
-    const userDoc = this.db.doc(`users/${user.uid}`);
-    write.update(userDoc.ref, { orgId });
-    return this.permissionsService.add({ id: orgId, ...permissions }, { write });
+    return Promise.all([
+      this.permissionsService.add(permissions, { write }),
+    ]);
   }
 
   /** Add a new organization */
@@ -90,7 +89,14 @@ export class OrganizationService extends CollectionService<OrganizationState> {
       ...organization,
     });
 
-    return this.add(newOrganization);
+    const orgId = await this.add(newOrganization);
+
+    // @TODO(#2710) This timeout is needed to prevent permission denied 
+    // when user is creating organization
+    // Once bug resolved move this to onCreate
+    return new Promise(resolve => setTimeout(resolve, 500))
+      .then(_ => this.userService.update(user.uid, { orgId, ...user }))
+      .then(_ => orgId)
   }
 
   // TODO(#679): somehow the updateActiveMembers array don't filter correctly
