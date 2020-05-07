@@ -1,0 +1,33 @@
+<form [formGroup]="form" fxLayout="column" (ngSubmit)="requestMeeting()">
+  <mat-form-field appearance="outline">
+    <mat-label>Title</mat-label>
+    <input matInput formControlName="title" />
+  </mat-form-field>
+
+  <div fxLayout fxLayoutAlign="space-between center" fxLayoutGap="24px">
+    <mat-form-field fxFlex appearance="outline">
+      <mat-label>Start</mat-label>
+      <time-picker formControlName="start"></time-picker>
+    </mat-form-field>
+    <span>to</span>
+    <mat-form-field fxFlex  appearance="outline">
+      <mat-label>End</mat-label>
+      <time-picker formControlName="end"></time-picker>
+    </mat-form-field>
+  </div>
+
+  <mat-form-field appearance="outline" formGroupName="meta">
+    <mat-label>Link to a video call</mat-label>
+    <input matInput placeholder="Paste your link here (zoom, meet, ...)" formControlName="callUrl" />
+  </mat-form-field>
+
+  <mat-checkbox formControlName="allDay">All day</mat-checkbox>
+  <mat-checkbox formControlName="isPrivate">Private</mat-checkbox>
+
+  <footer fxLayout fxLayoutAlign="center center">
+    <button mat-stroked-button type="submit">
+      <span>Request a Meeting</span>
+      <mat-icon svgIcon="send"></mat-icon>
+    </button>
+  </footer>
+</form>

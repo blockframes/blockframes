@@ -63,7 +63,7 @@ export class AppBarComponent {
 
   detach() {
     this.isApp = true;
-    if (this.pageView) {
+    if (this.pageView && this.pageView.isAttached) {
       this.pageView.detach();
     }
   }

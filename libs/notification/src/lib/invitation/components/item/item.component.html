@@ -2,7 +2,7 @@
   <img matListAvatar *ngIf="invitation.fromUser" placeholderAsset="profil_user.webp" [imgRef]="invitation.fromUser.avatar" alt="Profile picture" />
   <img matListAvatar *ngIf="invitation.fromOrg" placeholderAsset="profil_user.webp" [imgRef]="invitation.fromOrg.logo" alt="Organization logo" />
   <p matLine class="mat-body-1">
-    <ng-content></ng-content>
+    {{ invitation.message }}
   </p>
   <span matLine>
     <small class="mat-caption">
