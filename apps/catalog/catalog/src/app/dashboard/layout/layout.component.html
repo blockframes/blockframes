@@ -34,11 +34,12 @@
       <button mat-icon-button (click)="sidenav.toggle()">
         <mat-icon svgIcon="menu"></mat-icon>
       </button>
-      <algolia-autocomplete native clearable resetInput [index]="movieIndex" keyToDisplay="title.international" prefixIcon="magnifying_glasses">
+      <!--TODO#2728: improve component with filters-->
+      <!-- <algolia-autocomplete native clearable resetInput [index]="movieIndex" keyToDisplay="title.international" prefixIcon="magnifying_glasses">
         <ng-template let-result>
           <a [routerLink]="['titles', result.objectID]">{{ result.title.international }}</a>
         </ng-template>
-      </algolia-autocomplete>
+      </algolia-autocomplete> -->
       <div fxLayout="row" fxLayoutGap="24px">
         <overlay-notification-widget></overlay-notification-widget>
         <auth-widget></auth-widget>
