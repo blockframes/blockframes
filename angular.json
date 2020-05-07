@@ -945,6 +945,9 @@
             },
             "ci": {
               "devServerTarget": "festival:serve"
+            },
+            "staging": {
+              "devServerTarget": "festival:serve"
             }
           }
         },
