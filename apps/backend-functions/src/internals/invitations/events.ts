@@ -57,9 +57,9 @@ async function onInvitationToAnEventCreate({
     const senderEmail = fromOrg.denomination.public;
     const org = await getDocument<OrganizationDocument>(`orgs/${toUser.orgId}`);
     if (org.appAccess?.catalog.marketplace || org.appAccess?.festival.marketplace) {
-      link = '/marketplace/invitations';
+      link = '/c/o/marketplace/invitations';
     } else if (org.appAccess?.catalog.dashboard || org.appAccess?.festival.dashboard) {
-      link = '/dashboard/invitations';
+      link = '/c/o/dashboard/invitations';
     } else {
       link = "";
     }
@@ -74,9 +74,9 @@ async function onInvitationToAnEventCreate({
     const senderEmail = fromUser.email;
     const org = await getDocument<OrganizationDocument>(`orgs/${fromUser.orgId}`);
     if (org.appAccess?.catalog.marketplace || org.appAccess?.festival.marketplace) {
-      link = '/marketplace/invitations';
+      link = '/c/o/marketplace/invitations';
     } else if (org.appAccess?.catalog.dashboard || org.appAccess?.festival.dashboard) {
-      link = '/dashboard/invitations';
+      link = '/c/o/dashboard/invitations';
     } else {
       link = "";
     }

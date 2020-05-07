@@ -40,7 +40,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.sub = this.movieService.syncCollection(ref => ref.limit(30)).subscribe();
     const selectMovies = (status: MovieMain['status']) => {
       return this.movieQuery.selectAll({
-        filterBy: movies => movies.main.status === status
+        filterBy: movies => movies.main.status === status && movies.main.storeConfig.appAccess.festival
       });
     }
     const hasMovies = (status: MovieMain['status']) => {
@@ -52,7 +52,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         subline: 'Discover our latest releases',
         hasMovies$: this.movieQuery.hasMovies(movies => movies.main.productionYear >= 2018),
         movies$: this.movieQuery.selectAll({
-          filterBy: movies => movies.main. productionYear >= 2018
+          filterBy: movies => movies.main. productionYear >= 2018 && movies.main.storeConfig.appAccess.festival
         })
       },
       {

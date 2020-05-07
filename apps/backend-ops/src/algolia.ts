@@ -58,6 +58,7 @@ export async function upgradeAlgoliaMovies() {
       'status',
       'storeConfig',
       'storeType',
+      'appAccess',
     ],
   };
   await setIndexConfiguration(algolia.indexNameMovies, config, process.env['ALGOLIA_API_KEY']);
