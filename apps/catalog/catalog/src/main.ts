@@ -4,6 +4,7 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import { AppModule } from './app/app.module';
 import { production } from '@env';
 import { akitaConfig, akitaDevtools, enableAkitaProdMode, persistState } from '@datorama/akita';
+import firebase from 'firebase';
 
 if (production) {
   enableProdMode();

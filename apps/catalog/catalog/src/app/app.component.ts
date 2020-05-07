@@ -3,6 +3,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ThemeService } from '@blockframes/ui/theme';
 import { IconService } from '@blockframes/ui/icon-service';
 import { TunnelService } from '@blockframes/ui/tunnel';
+import firebase from 'firebase';
+
 
 @Component({
   selector: 'catalog-root',
