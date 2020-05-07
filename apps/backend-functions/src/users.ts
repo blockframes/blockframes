@@ -4,10 +4,13 @@ import { generate as passwordGenerator } from 'generate-password';
 import { auth, db } from './internals/firebase';
 import { userInvite, userVerifyEmail, welcomeMessage, userResetPassword, sendWishlist, sendWishlistPending, sendDemoRequestMail, sendContactEmail } from './templates/mail';
 import { sendMailFromTemplate, sendMail } from './internals/email';
-import { RequestDemoInformations, PublicUser } from './data/types';
+import { RequestDemoInformations, PublicUser, OrganizationDocument } from './data/types';
 import { storeSearchableUser, deleteObject } from './internals/algolia';
 import { algolia } from './environments/environment';
 import { upsertWatermark } from './internals/watermark';
+import { getDocument, getOrgAppName, getAppUrl } from './data/internals';
+import { App } from '@blockframes/utils/apps';
+import { templateIds } from '@env';
 
 type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
@@ -65,8 +68,8 @@ export const onUserCreate = async (user: UserRecord) => {
     const userDoc = await tx.get(userDocRef);
 
     if (userDoc.exists) {
-      if(!user.emailVerified) {
-        await startVerifyEmailFlow({email});
+      if (!user.emailVerified) {
+        await startVerifyEmailFlow({ email });
         await sendMailFromTemplate(welcomeMessage(email));
       }
       tx.update(userDocRef, { email, uid });
@@ -85,10 +88,7 @@ export const onUserCreate = async (user: UserRecord) => {
   ]);
 };
 
-export async function onUserUpdate(
-  change: functions.Change<FirebaseFirestore.DocumentSnapshot>,
-  context: functions.EventContext
-): Promise<any> {
+export async function onUserUpdate(change: functions.Change<FirebaseFirestore.DocumentSnapshot>): Promise<any> {
   const before = change.before.data() as PublicUser;
   const after = change.after.data() as PublicUser;
 
@@ -118,7 +118,6 @@ export async function onUserUpdate(
 
 export async function onUserDelete(
   userSnapshot: FirebaseFirestore.DocumentSnapshot<PublicUser>,
-  context: functions.EventContext
 ): Promise<any> {
 
   // update Algolia index
@@ -131,11 +130,8 @@ const generatePassword = () =>
     numbers: true
   });
 
-export const getOrCreateUserByMail = async (
-  data: any,
-  context: CallableContext
-): Promise<UserProposal> => {
-  const { email, orgName } = data;
+export const getOrCreateUserByMail = async (data: any): Promise<UserProposal> => {
+  const { email, orgId } = data;
 
   try {
     const user = await auth.getUserByEmail(email);
@@ -151,23 +147,25 @@ export const getOrCreateUserByMail = async (
       disabled: false
     });
 
-    await sendMailFromTemplate(userInvite(email, password, orgName));
+    const org = await getDocument<OrganizationDocument>(`orgs/${orgId}`);
+    const appName: App = await getOrgAppName(org);
+    const urlToUse = await getAppUrl(org);
+    const templateToUse = appName === 'festival' ? templateIds.userCredentialsMarket : templateIds.userCredentialsContent;
+
+    await sendMailFromTemplate(userInvite(email, password, org.denomination.full, urlToUse, templateToUse));
 
     return { uid: user.uid, email };
   }
 };
 
-export const sendDemoRequest = async (
-  data: RequestDemoInformations,
-  context: CallableContext
-): Promise<RequestDemoInformations> => {
+export const sendDemoRequest = async (data: RequestDemoInformations): Promise<RequestDemoInformations> => {
 
   await sendMail(sendDemoRequestMail(data))
 
   return data;
 }
 
-export const sendUserMail = async (data: any, context?: CallableContext): Promise<any> => {
+export const sendUserMail = async (data: any): Promise<any> => {
   const { userName, userMail, subject, message } = data;
 
   if (!subject || !message || !userName || !userMail) {

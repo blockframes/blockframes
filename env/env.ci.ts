@@ -17,7 +17,8 @@ export const sentryDsn = undefined;
 // Firebase
 // ========
 
-export const appUrl = 'https://blockframes-ci.web.app';
+export const appUrlContent = 'hhttps://blockframes-ci.web.app';
+export const appUrlMarket = appUrlContent;
 
 export const firebase = {
   apiKey: 'AIzaSyATQHmR6iTCgaBkCXansUcA3pJma3jCgC0',
@@ -75,12 +76,22 @@ export const backupBucket = 'ci-backups-blockframes';
 export const sendgridAPIKey = '';
 
 // Sendgrid Emails
-
 export const templateIds = {
+  // Template for welcome message when user created his account by himself
+  // At this step, we can not use links into emails
   welcomeMessage: 'd-eb8e1eb7c5a24eb8af1d2d32539ad714',
+
+  // Template for sending the verify email 
+  // Internal to firebase, no link needed here
   userVerifyEmail: 'd-81438bdf511b43cfa866ca63a45a02ae',
+
   orgInviteUser: 'd-7a0edb51795c493d9514fe4a595b40ac',
-  userCredentials: 'd-a34ce9ea59c5477f9feae8f556157b6b',
+
+  // Templates for informing new user that his account have been created
+  // Since user never came to archipelcontent or market, we must include a link in the mail
+  userCredentialsContent: 'd-a34ce9ea59c5477f9feae8f556157b6b',
+  userCredentialsMarket: 'd-f0c4f1b2582a4fc6ab12fcd2d7c02f5c',
+
   orgAccepted: 'd-8c5f7009cd2f4f1b877fa168b4efde48',
   joinAnOrgPending: 'd-88665c2583dc46ea85588a39fa8ca1ee',
   joinYourOrg: 'd-b1ab5d21def145ccb759520e2d984436',

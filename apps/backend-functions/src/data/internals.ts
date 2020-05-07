@@ -9,6 +9,8 @@ import { PermissionsDocument } from '@blockframes/permissions/types';
 import { ContractDocument } from '@blockframes/contract/contract/+state/contract.firestore';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 import { createDenomination } from '@blockframes/organization/+state/organization.firestore';
+import { App, getOrgAppAccess } from '@blockframes/utils/apps';
+import { appUrlMarket, appUrlContent } from '../environments/environment';
 
 export function getCollection<T>(path: string): Promise<T[]> {
   return db
@@ -89,5 +91,23 @@ export async function getAdminIds(organizationId: string): Promise<string[]> {
     );
   });
   return adminIds;
+}
+
+/**
+ * Return the first app name that an org have access to
+ * @param _org 
+ */
+export async function getOrgAppName(_org: OrganizationDocument | string): Promise<App> {
+  if (typeof _org === 'string') {
+    const org = await getDocument<OrganizationDocument>(`orgs/${_org}`);
+    return getOrgAppAccess(org)[0];
+  } else {
+    return getOrgAppAccess(_org)[0];
+  };
+}
+
+export async function getAppUrl(_org: OrganizationDocument | string): Promise<string> {
+  const appName = await getOrgAppName(_org);
+  return appName === 'festival' ? appUrlMarket : appUrlContent;
 }
 

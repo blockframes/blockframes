@@ -93,25 +93,27 @@ function hasOrgAppAccessChanged(before: OrganizationDocument, after: Organizatio
 async function sendMailIfOrgAppAccessChanged(before: OrganizationDocument, after: OrganizationDocument) {
   if (hasOrgAppAccessChanged(before, after)) {
     // Send a mail to c8 admin to accept the organization given it's choosen app access
-    await sendMail(organizationRequestedAccessToApp(after.id))
+    const mailRequest = await organizationRequestedAccessToApp(after);
+    await sendMail(mailRequest);
   }
 }
 
-export function onOrganizationCreate(
+export async function onOrganizationCreate(
   snap: FirebaseFirestore.DocumentSnapshot,
   context: functions.EventContext
 ): Promise<any> {
-  const org = snap.data();
+  const org = snap.data() as OrganizationDocument;
   const orgID = context.params.orgID;
 
   if (!org?.denomination?.full) {
     console.error('Invalid org data:', org);
     throw new Error('organization update function got invalid org data');
   }
+  const emailRequest = await organizationCreated(org);
 
   return Promise.all([
     // Send a mail to c8 admin to inform about the created organization
-    sendMail(organizationCreated(org.id)),
+    sendMail(emailRequest),
     // Update algolia's index
     storeSearchableOrg(orgID, org.denomination.full)
   ]);

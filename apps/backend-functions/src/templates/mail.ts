@@ -1,11 +1,12 @@
 /**
  * Templates for transactional emails we send to user and to cascade8 admins.
  */
-import { adminEmail, appUrl } from '../environments/environment';
+import { adminEmail, appUrlContent } from '../environments/environment';
 import { EmailRequest, EmailTemplateRequest } from '../internals/email';
 import { templateIds } from '@env';
-import { RequestToJoinOrganization, RequestDemoInformations } from '../data/types';
+import { RequestToJoinOrganization, RequestDemoInformations, OrganizationDocument } from '../data/types';
 import { PublicUser } from '@blockframes/user/+state/user.firestore';
+import { getAppUrl } from '../data/internals';
 
 const ORG_HOME = '/c/o/organization/';
 const USER_ORG_INVITATION = '/c/organization/home';
@@ -35,19 +36,26 @@ export function userResetPassword(email: string, link: string): EmailTemplateReq
   return { to: email, templateId: templateIds.resetPassword, data };
 }
 
-/** Generates a transactional email request for user invited to the application. */
-export function userInvite(email: string, password: string, orgName: string): EmailTemplateRequest {
+/**
+ * Generates a transactional email request for user invited to the application.
+ * @param email 
+ * @param password 
+ * @param orgName 
+ * @param pageURL 
+ * @param templateId 
+ */
+export function userInvite(email: string, password: string, orgName: string, pageURL: string = appUrlContent, templateId: string = templateIds.userCredentialsContent): EmailTemplateRequest {
   const data = {
     userEmail: email,
     userPassword: password,
     orgName,
-    pageURL: `${appUrl}`
+    pageURL
   };
-  return { to: email, templateId: templateIds.userCredentials, data };
+  return { to: email, templateId, data };
 }
 
 /** Generates a transactional email request for user invited to an organization. */
-export function userInviteToOrg(email: string, orgName: string, invitationId: string): EmailTemplateRequest {
+export function userInviteToOrg(email: string, orgName: string, appUrl: string = appUrlContent): EmailTemplateRequest {
   const data = {
     orgName: orgName,
     pageURL: `${appUrl}${USER_ORG_INVITATION}`
@@ -61,7 +69,7 @@ export function sendWishlistPending(email: string): EmailTemplateRequest {
 }
 
 /** Generates a transactional email request to let organization admins know that their org was approved. */
-export function organizationWasAccepted(email: string, orgId: string, userFirstName?: string): EmailTemplateRequest {
+export function organizationWasAccepted(email: string, orgId: string, userFirstName?: string, appUrl: string = appUrlContent): EmailTemplateRequest {
   const data = {
     userFirstName,
     pageURL: `${appUrl}${ORG_HOME}${orgId}`
@@ -87,7 +95,7 @@ export function organizationCanAccessApp(email: string): EmailRequest {
 }
 
 /** Send email to a user to inform him that he joined an org */
-export function userJoinedAnOrganization(userEmail: string, orgId: string): EmailTemplateRequest {
+export function userJoinedAnOrganization(userEmail: string, orgId: string, appUrl: string = appUrlContent): EmailTemplateRequest {
   const data = {
     pageURL: `${appUrl}${ORG_HOME}${orgId}`
   };
@@ -103,7 +111,7 @@ export function userJoinedYourOrganization(orgAdminEmail: string, userEmail: str
 }
 
 /** Generates a transactional email to let an admin now that a user requested to join their org */
-export function userRequestedToJoinYourOrg(request: RequestToJoinOrganization): EmailTemplateRequest { // TODO
+export function userRequestedToJoinYourOrg(request: RequestToJoinOrganization, appUrl: string = appUrlContent): EmailTemplateRequest { // TODO
   const data = {
     adminFirstName: request.adminName,
     userFirstName: request.userFirstname,
@@ -115,7 +123,7 @@ export function userRequestedToJoinYourOrg(request: RequestToJoinOrganization): 
 }
 
 /** Generates an email for user invited to an meeting event. */
-export function invitationToMeetingFromUser(toUserFirstName: string, fromUser: PublicUser, fromUserOrgName: string, eventName: string, link: string): EmailTemplateRequest {
+export function invitationToMeetingFromUser(toUserFirstName: string, fromUser: PublicUser, fromUserOrgName: string, eventName: string, link: string, appUrl: string = appUrlContent): EmailTemplateRequest {
   const data = {
     userFirstName: toUserFirstName,
     fromUserFirstName: fromUser.firstName,
@@ -127,7 +135,7 @@ export function invitationToMeetingFromUser(toUserFirstName: string, fromUser: P
 }
 
 /** Generates an email for user invited by an organization to a screening. */
-export function invitationToScreeningFromOrg(toUser: PublicUser, orgDenomination: string, eventId: string, link: string): EmailTemplateRequest {
+export function invitationToScreeningFromOrg(toUser: PublicUser, orgDenomination: string, eventId: string, link: string, appUrl: string = appUrlContent): EmailTemplateRequest {
   const data = {
     userFirstName: toUser.firstName,
     orgName: orgDenomination,
@@ -138,7 +146,7 @@ export function invitationToScreeningFromOrg(toUser: PublicUser, orgDenomination
 }
 
 /** Generates an email for user requesting to attend an event. */
-export function requestToAttendEventFromUser(fromUserFirstname: string, fromUserOrgName: string, toUser: PublicUser, eventTitle: string, link: string): EmailTemplateRequest {
+export function requestToAttendEventFromUser(fromUserFirstname: string, fromUserOrgName: string, toUser: PublicUser, eventTitle: string, link: string, appUrl: string = appUrlContent): EmailTemplateRequest {
   const data = {
     adminFirstName: toUser.firstName,
     userFirstName: fromUserFirstname,
@@ -156,7 +164,7 @@ export function requestToAttendEventFromUser(fromUserFirstname: string, fromUser
 /**
  * @param orgId
  */
-const organizationCreatedTemplate = (orgId: string) =>
+const organizationCreatedTemplate = (orgId: string, appUrl: string = appUrlContent) =>
   `
   A new organization was created on the blockframes project,
 
@@ -166,7 +174,7 @@ const organizationCreatedTemplate = (orgId: string) =>
 /**
  * @param orgId
  */
-const organizationRequestAccessToAppTemplate = (orgId: string) =>
+const organizationRequestAccessToAppTemplate = (orgId: string, appUrl: string = appUrlContent) =>
   `
   An organization requested access to an app,
 
@@ -180,11 +188,12 @@ const wishlistSent = (userName: string, orgName: string, wishlist: string[]) =>
   `;
 
 /** Generates a transactional email request to let cascade8 admin know that a new org have been created. */
-export function organizationCreated(orgId: string): EmailRequest {
+export async function organizationCreated(org: OrganizationDocument): Promise<EmailRequest> {
+  const urlToUse = await getAppUrl(org);
   return {
     to: adminEmail,
     subject: 'A new organization has been created',
-    text: organizationCreatedTemplate(orgId)
+    text: organizationCreatedTemplate(org.id, urlToUse)
   };
 }
 
@@ -192,11 +201,12 @@ export function organizationCreated(orgId: string): EmailRequest {
  * Generates a transactional email request to let cascade8 admin know that a new org is waiting for app access.
  * It sends an email to admin to accept or reject the request
  */
-export function organizationRequestedAccessToApp(orgId: string): EmailRequest {
+export async function organizationRequestedAccessToApp(org: OrganizationDocument): Promise<EmailRequest> {
+  const urlToUse = await getAppUrl(org);
   return {
     to: adminEmail,
     subject: 'An organization requested access to an app',
-    text: organizationRequestAccessToAppTemplate(orgId)
+    text: organizationRequestAccessToAppTemplate(org.id, urlToUse)
   };
 }
 

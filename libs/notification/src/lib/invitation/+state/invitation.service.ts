@@ -107,11 +107,11 @@ export class InvitationService extends CollectionService<InvitationState> {
             base['fromOrg'] = createPublicOrganization(this.orgQuery.getActive());
           }
           const recipients = Array.isArray(idOrEmails) ? idOrEmails : [idOrEmails];
-          const orgName = this.orgQuery.getActive().denomination.full;
           const promises = recipients.map(async recipient => {
             let invitation: Partial<Invitation>;
             if (who === 'user') {
-              invitation = await this.authService.getOrCreateUserByMail(recipient, orgName).then(toUser => ({ ...base, toUser: createPublicUser({ uid: toUser.uid }) }));
+              invitation = await this.authService.getOrCreateUserByMail(recipient, this.orgQuery.getActiveId())
+                .then(toUser => ({ ...base, toUser: createPublicUser({ uid: toUser.uid }) }));
             } else if (who === 'org') {
               invitation = { ...base, toOrg: createPublicOrganization({ id: recipient }) };
             }
