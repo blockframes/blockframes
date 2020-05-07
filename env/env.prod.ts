@@ -85,6 +85,7 @@ export const templateIds = {
   // Internal to firebase, no link needed here
   userVerifyEmail: 'd-81438bdf511b43cfa866ca63a45a02ae',
 
+  // Not implemented
   orgInviteUser: 'd-7a0edb51795c493d9514fe4a595b40ac',
 
   // Templates for informing new user that his account have been created
