@@ -16,8 +16,8 @@ export default class EventEditPage {
     cy.get('mat-checkbox[test-id=event-private]').find('input').check({ force: true })
   }
 
-  selectMovie(title: string) {
-    cy.get('mat-select[formControlName=titleId]').click().get('mat-option').contains(title).click();
+  selectMovie() {
+    cy.get('mat-select[formControlName=titleId]').click().get('mat-option').first().click()
   }
 
   saveEvent() {

@@ -12,8 +12,7 @@ import { clearDataAndPrepareTest } from '@blockframes/e2e/utils/functions';
 
 beforeEach(() => {
   clearDataAndPrepareTest();
-  // We want a specific user cause we relay on the movies that the org has
-  signInAndNavigateToMain('tmsa2YlfLEhONUmuKAIInFFKVYN2');
+  signInAndNavigateToMain();
 });
 
 describe('User create a screening', () => {
@@ -26,7 +25,7 @@ describe('User create a screening', () => {
     p4.addEventTitle('test screening')
     p4.checkPrivate();
     p4.selectDate(now)
-    p4.selectMovie('Girl With No Mouth')
+    p4.selectMovie()
     p4.saveEvent()
   })
   it('User creates a public screening, that taking place right now', () => {
@@ -37,7 +36,7 @@ describe('User create a screening', () => {
     const p4: EventEditPage = p3.createDetailedEvent(now);
     p4.addEventTitle('test screening')
     p4.selectDate(now)
-    p4.selectMovie('Girl With No Mouth')
+    p4.selectMovie()
     p4.saveEvent()
   })
   it('User creates a private screening, that taking place tomorrow', () => {
@@ -51,7 +50,7 @@ describe('User create a screening', () => {
     p4.addEventTitle('test screening')
     p4.checkPrivate();
     p4.selectDate(tomorrow)
-    p4.selectMovie('Girl With No Mouth')
+    p4.selectMovie()
     p4.saveEvent()
   })
   it('User creates a private screening, that taking place tomorrow', () => {
@@ -64,7 +63,7 @@ describe('User create a screening', () => {
     const p4: EventEditPage = p3.createDetailedEvent(tomorrow);
     p4.addEventTitle('test screening')
     p4.selectDate(tomorrow)
-    p4.selectMovie('Girl With No Mouth')
+    p4.selectMovie()
     p4.saveEvent()
   })
 });
