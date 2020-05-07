@@ -1,7 +1,7 @@
 <article>
   <h1>Please make sure everything you want to import is correct before finalizing your submission.</h1>
   <section class="help-section" fxLayout="column" fxLayoutAlign="center">
-    <p>Please create your titles first then review it and if you feel it's complete submit it to Archipel Content.</p>
+    <p>Please save your titles first then review it and if you feel it's complete publish it to marketplace.</p>
     <a [routerLink]="['./']" (click)="openIntercom()">Need help ?</a>
   </section>
   <ng-container *ngIf="moviesToUpdate.data.length || moviesToCreate.data.length else isLoading">

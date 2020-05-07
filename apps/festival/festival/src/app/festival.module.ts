@@ -21,13 +21,12 @@ const routes: Routes = createRoutes({
     {
       path: 'marketplace',
       canActivate: [FestivalAppGuard, MovieCollectionGuard],
-      canDeactivate: [FestivalAppGuard, MovieCollectionGuard],
+      canDeactivate: [MovieCollectionGuard],
       loadChildren: () => import('./marketplace/marketplace.module').then(m => m.MarketplaceModule)
     },
     {
       path: 'dashboard',
       canActivate: [FestivalAppGuard],
-      canDeactivate: [FestivalAppGuard],
       loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule)
     },
     {

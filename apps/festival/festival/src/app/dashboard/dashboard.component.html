@@ -25,7 +25,7 @@
         <img matListAvatar [imgRef]="org.logo" placeholderAsset="empty_organization.webp" alt="Organization logo"/>
         <span matLine>{{ org | orgName }}</span>
         <span matLine>
-          <small class="mat-caption">{{ org.activity }}</small>
+          <small class="mat-caption">{{ getActivity(org.activity) }}</small>
         </span>
       </a>
     </mat-nav-list>

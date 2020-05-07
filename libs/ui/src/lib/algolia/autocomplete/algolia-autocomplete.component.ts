@@ -55,7 +55,7 @@ export class AlgoliaAutocompleteComponent implements OnInit, OnDestroy {
    * @note .**search is not perform on facets by default** *(enter a value to start searching on facets)*
    * @example facet="orgName"
    */
-  @Input() facet = '';
+  @Input() facet = 'orgName';
 
   /** Optional input if you want to use your own form control */
   @Input() control = new FormControl();
