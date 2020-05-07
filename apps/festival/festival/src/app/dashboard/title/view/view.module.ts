@@ -17,14 +17,8 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
 
-// Guards
-import { MovieContractListGuard } from '@blockframes/contract/contract/guards/movie-contract-list.guard';
-import { OrganizationContractListGuard } from '@blockframes/contract/contract/guards/organization-contract-list.guard';
-
 const routes = [{
   path: '',
-  canActivate: [MovieContractListGuard],
-  canDeactivate: [MovieContractListGuard],
   component: TitleViewComponent,
   children: [
     {
@@ -34,8 +28,6 @@ const routes = [{
     },
     {
       path: 'activity',
-      canActivate: [OrganizationContractListGuard],
-      canDeactivate: [OrganizationContractListGuard],
       loadChildren: () => import('../activity/activity.module').then(m => m.TitleActivityModule)
     },
     {

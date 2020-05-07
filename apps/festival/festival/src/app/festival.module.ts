@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes, PreloadAllModules } from '@angular/router';
 import { MovieCollectionGuard } from '@blockframes/movie/guards/movie-collection.guard';
 import { createRoutes } from '@blockframes/utils/routes/create-routes';
+import { FestivalAppGuard } from './guards/festival-app.guard';
 
 // TODO: Add AppGuard
 
@@ -19,13 +20,14 @@ const routes: Routes = createRoutes({
     },
     {
       path: 'marketplace',
-      canActivate: [MovieCollectionGuard /*, CatalogAppGuard*/],
-      canDeactivate: [MovieCollectionGuard],
+      canActivate: [FestivalAppGuard, MovieCollectionGuard],
+      canDeactivate: [FestivalAppGuard, MovieCollectionGuard],
       loadChildren: () => import('./marketplace/marketplace.module').then(m => m.MarketplaceModule)
     },
     {
       path: 'dashboard',
-      canActivate: [/*CatalogAppGuard*/],
+      canActivate: [FestivalAppGuard],
+      canDeactivate: [FestivalAppGuard],
       loadChildren: () => import('./dashboard/dashboard.module').then(m => m.DashboardModule)
     },
     {
