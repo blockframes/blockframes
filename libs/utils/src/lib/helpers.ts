@@ -79,11 +79,3 @@ export function getKeyIfExists<T, K extends Code<T>>(base: T, code: K): Key<T, K
   const candidate = Object.entries(base).find(([key, value]) => [key.toLowerCase(), value.toLowerCase()].includes(sanitizedCode));
   return candidate ? candidate.shift() as any : undefined;
 }
-
-export function formatAmPm(date: Date, toLowerCase?: boolean) {
-  let hours = date.getHours();
-  const amPM = hours >= 12 ? 'PM' : 'AM';
-  hours = hours % 12;
-  hours = hours ? hours : 12; // the hour 0 should be 12
-  return toLowerCase ? hours + ' ' + amPM.toLowerCase() : hours + ' ' + amPM;
-}

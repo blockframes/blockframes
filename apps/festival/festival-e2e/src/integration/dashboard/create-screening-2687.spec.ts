@@ -7,62 +7,63 @@ import EventPage from '../../support/pages/dashboard/EventPage';
 import EventEditPage from '../../support/pages/dashboard/EventEditPage';
 
 // Hooks
-import { signInAndNavigateToMain } from '../../support/utils/utils';
-import { clearDataAndPrepareTest } from '@blockframes/e2e/utils/functions';
+import { clearDataAndPrepareTest, signIn } from '@blockframes/e2e/utils/functions';
+
+// Utils
+import { User } from '@blockframes/e2e/utils/type';
+import { USERS } from '@blockframes/e2e/utils/users';
+
+const NOW = new Date();
+let TOMORROW = new Date(NOW);
+const LOGIN_CREDENTIALS: Partial<User> = USERS[0];
+const EVENTNAME = 'test screening';
 
 beforeEach(() => {
   clearDataAndPrepareTest();
-  signInAndNavigateToMain();
+  TOMORROW = new Date(NOW);
+  signIn(LOGIN_CREDENTIALS);
 });
 
 describe('User create a screening', () => {
   it('User creates a private screening, that taking place right now', () => {
-    const now = new Date();
     const p1 = new FestivalMarketplaceHomePage();
     const p2: FestivalDashboardHomePage = p1.goToDashboard();
     const p3: EventPage = p2.goToCalendar()
-    const p4: EventEditPage = p3.createDetailedEvent(now);
-    p4.addEventTitle('test screening')
+    const p4: EventEditPage = p3.createDetailedEvent(NOW);
+    p4.addEventTitle(EVENTNAME)
     p4.checkPrivate();
-    p4.selectDate(now)
+    p4.selectDate(NOW)
     p4.selectMovie()
     p4.saveEvent()
   })
   it('User creates a public screening, that taking place right now', () => {
-    const now = new Date();
     const p1 = new FestivalMarketplaceHomePage();
     const p2: FestivalDashboardHomePage = p1.goToDashboard();
     const p3: EventPage = p2.goToCalendar()
-    const p4: EventEditPage = p3.createDetailedEvent(now);
-    p4.addEventTitle('test screening')
-    p4.selectDate(now)
+    const p4: EventEditPage = p3.createDetailedEvent(NOW);
+    p4.addEventTitle(EVENTNAME)
+    p4.selectDate(NOW)
     p4.selectMovie()
     p4.saveEvent()
   })
   it('User creates a private screening, that taking place tomorrow', () => {
-    const now = new Date();
-    const tomorrow = new Date(now);
-    tomorrow.setDate(tomorrow.getDate() + 1)
     const p1 = new FestivalMarketplaceHomePage();
     const p2: FestivalDashboardHomePage = p1.goToDashboard();
     const p3: EventPage = p2.goToCalendar()
-    const p4: EventEditPage = p3.createDetailedEvent(tomorrow);
-    p4.addEventTitle('test screening')
+    const p4: EventEditPage = p3.createDetailedEvent(TOMORROW);
+    p4.addEventTitle(EVENTNAME)
     p4.checkPrivate();
-    p4.selectDate(tomorrow)
+    p4.selectDate(TOMORROW)
     p4.selectMovie()
     p4.saveEvent()
   })
   it('User creates a private screening, that taking place tomorrow', () => {
-    const now = new Date();
-    const tomorrow = new Date(now);
-    tomorrow.setDate(tomorrow.getDate() + 1)
     const p1 = new FestivalMarketplaceHomePage();
     const p2: FestivalDashboardHomePage = p1.goToDashboard();
     const p3: EventPage = p2.goToCalendar()
-    const p4: EventEditPage = p3.createDetailedEvent(tomorrow);
-    p4.addEventTitle('test screening')
-    p4.selectDate(tomorrow)
+    const p4: EventEditPage = p3.createDetailedEvent(TOMORROW);
+    p4.addEventTitle(EVENTNAME)
+    p4.selectDate(TOMORROW)
     p4.selectMovie()
     p4.saveEvent()
   })

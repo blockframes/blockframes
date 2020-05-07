@@ -1,5 +1,5 @@
 import EventEditPage from './EventEditPage';
-import { formatAmPm } from '@blockframes/utils/helpers';
+import { formatAmPm } from '@blockframes/e2e/utils/functions';
 
 export default class EventPage {
   constructor() {

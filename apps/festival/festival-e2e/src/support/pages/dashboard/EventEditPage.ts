@@ -8,16 +8,20 @@ export default class EventEditPage {
   }
 
   selectDate(date: Date) {
-    cy.get('mat-form-field[test-id=event-start]').click().get('time-picker[formControlName=start]').get('div').contains(date.getDate()).click();
-    cy.get('mat-form-field[test-id=event-end]').click().get('time-picker[formControlName=end]').get('div').contains(date.getDate()).click();
+    // Start Date
+    cy.get('mat-form-field[test-id=event-start]').click().
+      get('time-picker[formControlName=start]').get('div').contains(date.getDate()).click();
+      // End Date
+    cy.get('mat-form-field[test-id=event-end]').click().get('time-picker[formControlName=end]')
+      .get('div').contains(date.getDate()).click();
   }
 
   checkPrivate() {
-    cy.get('mat-checkbox[test-id=event-private]').find('input').check({ force: true })
+    cy.get('event-edit mat-checkbox[test-id=event-private]').find('input').check({ force: true })
   }
 
   selectMovie() {
-    cy.get('mat-select[formControlName=titleId]').click().get('mat-option').first().click()
+    cy.get('event-edit mat-select[formControlName=titleId]').click().get('mat-option').first().click()
   }
 
   saveEvent() {
