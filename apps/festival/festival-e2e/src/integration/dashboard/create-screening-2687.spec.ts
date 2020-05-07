@@ -1,10 +1,10 @@
 /// <reference types="cypress" />
 
 // Pages
-import FestivalMarketplaceHomePage from '../../support/pages/marketplace/FestivalMarketplaceHomePage'
-import FestivalDashboardHomePage from '../../support/pages/dashboard/FestivalDashboardHomePage';
-import EventPage from '../../support/pages/dashboard/EventPage';
-import EventEditPage from '../../support/pages/dashboard/EventEditPage';
+import { FestivalMarketplaceHomePage } from '../../support/pages/marketplace/index'
+import { FestivalDashboardHomePage } from '../../support/pages/dashboard/index';
+import { EventPage } from '../../support/pages/dashboard/index';
+import { EventEditPage } from '../../support/pages/dashboard/index'
 
 // Hooks
 import { clearDataAndPrepareTest, signIn } from '@blockframes/e2e/utils/functions';

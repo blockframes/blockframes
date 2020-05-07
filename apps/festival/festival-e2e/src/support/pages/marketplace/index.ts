@@ -1,5 +1,5 @@
-import FestivalMarketpalceHomepage from './FestivalMarketplaceHomePage';
+import FestivalMarketplaceHomePage from './FestivalMarketplaceHomePage';
 
 export {
-  FestivalMarketpalceHomepage
+  FestivalMarketplaceHomePage
 }
