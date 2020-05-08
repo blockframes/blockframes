@@ -14,7 +14,7 @@
         <div fxLayout="row" fxLayoutGap="24px">
           <mat-divider vertical></mat-divider>
           <!-- Invitations -->
-          <a mat-icon-button routerLink="invitations">
+          <a mat-icon-button routerLink="invitations" test-id="invitations-link">
             <ng-container *ngIf="invitationCount$ | async as count; else noInvitation">
               <mat-icon svgIcon="add_member" [matBadge]="count" matBadgeColor="accent" matBadgeSize="small"></mat-icon>
             </ng-container>

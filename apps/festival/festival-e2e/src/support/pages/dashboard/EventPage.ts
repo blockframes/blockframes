@@ -1,4 +1,4 @@
-import EventEditPage from './EventEditPage';
+import { EventEditPage } from '.';
 import { formatAmPm } from '@blockframes/e2e/utils/functions';
 
 export default class EventPage {
@@ -10,6 +10,5 @@ export default class EventPage {
     cy.get('div').contains(hour).click();
     cy.get('button[test-id=more-details]').click();
     return new EventEditPage();
-
   }
 }

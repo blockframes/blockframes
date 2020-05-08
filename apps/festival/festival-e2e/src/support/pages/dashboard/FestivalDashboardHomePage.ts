@@ -1,4 +1,4 @@
-import EventPage from './EventPage';
+import { EventPage } from '.';
 
 export default class FestivalDashboardHomePage {
   constructor() {
@@ -8,5 +8,9 @@ export default class FestivalDashboardHomePage {
   goToCalendar() {
     cy.get('festival-dashboard-home').get('a[test-id=calendar]').click();
     return new EventPage();
+  }
+
+  logout() {
+    cy.get('auth-widget button[test-id=auth-user-avatar]').click().get('button[test-id=auth-logout]').click();
   }
 }
