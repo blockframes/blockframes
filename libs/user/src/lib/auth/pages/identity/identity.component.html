@@ -36,5 +36,8 @@
       </auth-accept-conditions>
     </form>
   </mat-card>
-  <button (click)="update()" type="submit" mat-flat-button color="accent" [disabled]="!isTermsChecked">Sign up</button>
+  <button (click)="update()" type="submit" mat-flat-button color="accent" [disabled]="!isTermsChecked || creating">
+    <span *ngIf="!creating">Sign up</span>
+    <span *ngIf="creating">Creating the account please wait</span>
+  </button>
 </section>

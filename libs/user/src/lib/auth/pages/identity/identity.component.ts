@@ -14,6 +14,7 @@ import { InvitationService } from '@blockframes/invitation/+state';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IdentityComponent {
+  public creating = false;
   public form = new FormGroup({
     firstName: new FormControl(''),
     lastName: new FormControl(''),
@@ -40,6 +41,7 @@ export class IdentityComponent {
       return;
     }
     try {
+      this.creating = true;
       await this.service.updatePassword(
         this.form.get('generatedPassword').value,
         this.form.get('newPassword').value
@@ -53,9 +55,10 @@ export class IdentityComponent {
       const invitations = await this.invitationService.getValue(ref => ref.where('toUser.uid', '==', this.query.userId));
       const pendingInvitation = invitations.find(invitation => invitation.status === 'pending');
       await this.db.doc(`invitations/${pendingInvitation.id}`).update({ status: 'accepted' });
-
+      this.creating = false;
       this.router.navigate(['/c'], { relativeTo: this.route });
     } catch (error) {
+      this.creating = false;
       this.snackBar.open(error.message, 'close', { duration: 5000 });
     }
   }
