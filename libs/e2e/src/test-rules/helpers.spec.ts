@@ -12,8 +12,10 @@ service cloud.firestore {
 }
 `;
 
+let i = 0;
+
 export const setup = async (auth, data) => {
-  const projectId = `rules-spec-${Date.now()}`;
+  const projectId = `rules-spec-${i++}`;
   const app = await firebase.initializeTestApp({
     projectId,
     auth
