@@ -13,6 +13,8 @@ import { DurationModule } from '@blockframes/utils/pipes/duration.pipe';
 import { TitleViewComponent } from './view.component';
 
 // Material
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatSelectModule } from '@angular/material/select';
@@ -47,6 +49,8 @@ const routes = [{
     TranslateSlugModule,
     DurationModule,
     // Material
+    MatButtonModule,
+    MatIconModule,
     MatTabsModule,
     MatProgressSpinnerModule,
     MatSelectModule,
