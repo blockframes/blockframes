@@ -6,11 +6,13 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { PasswordControl } from '@blockframes/utils/form/controls/password.control';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { InvitationService } from '@blockframes/invitation/+state';
+import { slideUp, slideDown } from '@blockframes/utils/animations/fade';
 
 @Component({
   selector: 'auth-identity',
   templateUrl: './identity.component.html',
   styleUrls: ['./identity.component.scss'],
+  animations: [slideUp, slideDown],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class IdentityComponent {
