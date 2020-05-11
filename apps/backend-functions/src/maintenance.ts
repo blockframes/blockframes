@@ -78,6 +78,7 @@ export function skipInMaintenance<T, R>(
   return async (x: T, context: EventContext) => {
     // early exit
     if (await wasInMaintenance(context)) {
+      console.debug('skip during maintenance');
       return;
     }
 
