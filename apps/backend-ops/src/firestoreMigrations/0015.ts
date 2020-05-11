@@ -1,5 +1,5 @@
 import { Firestore } from '../admin';
-
+import { omit } from 'lodash';
 /**
  * Update user and organization in notifications and invitations collections
  */
@@ -14,7 +14,12 @@ export async function upgrade(db: Firestore) {
 
     if (organization || user) {
       const newData = updateUserAndOrganization(notification);
-      return batch.set(doc.ref, newData);
+
+      if (!newData) {
+        console.error(doc.ref.path, notification, newData);
+      }
+
+      return batch.update(doc.ref, newData);
     }
   });
 
@@ -24,7 +29,12 @@ export async function upgrade(db: Firestore) {
 
     if (organization || user) {
       const newData = updateUserAndOrganization(invitation);
-      return batch.set(doc.ref, newData);
+
+      if (!newData) {
+        console.error(doc.ref.path, invitation, newData);
+      }
+      
+      return batch.update(doc.ref, newData);
     }
   });
 
@@ -32,52 +42,36 @@ export async function upgrade(db: Firestore) {
   console.log('Updating notifications and invitatins collections done.');
 }
 
+const upgradeOrg = (organization) => (
+  {
+    ...omit(organization, ['name']),
+    denomination: {
+      full: organization.name ? organization.name : 'main',
+      public: organization.name ? organization.name : 'main'
+    }
+  }
+)
+
+const upgradeUser = (user) => ({
+  ...omit(user, ['name', 'surname']),
+    firstName: user.name ? user.name : 'First Name',
+    lastName: user.surname ? user.surname : 'Last Name'
+})
+
 /**
  * Update and return the data in a new format
  * @param document a notification or an invitation
  */
 function updateUserAndOrganization(document: any) {
-  const { organization, user } = document;
+  const update: {[key: string]: any} = {}
 
-  if (organization && user) {
-
-    delete document.organization.name;
-    delete document.user.name;
-    delete document.user.surname;
-
-    const newData = {
-      ...document,
-      organization: {
-        ...document.organization,
-        denomination: {
-          full: organization.name ? organization.name : 'main',
-          public: organization.name ? organization.name : 'main'
-        }
-      },
-      user: {
-        firstName: user.name ? user.name : 'First Name',
-        lastName: user.surname ? user.lastName : 'Last Name'
-      }
-    };
-
-    return newData;
+  if (document.organization) {
+    update.organizaton = upgradeOrg(document.organization)
   }
 
-  // Specific case of invitation on documents (where only organization appears)
-  if (organization && !user) {
-    delete document.organization.name;
-
-    const newData = {
-      ...document,
-      organization: {
-        ...document.organization,
-        denomination: {
-          full: organization.name ? organization.name : 'main',
-          public: organization.name ? organization.name : 'main'
-        }
-      }
-    };
-
-    return newData;
+  if (document.user) {
+    update.user = upgradeUser(document.user)
   }
+
+  return update;
 }

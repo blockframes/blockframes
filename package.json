@@ -168,7 +168,6 @@
     "@types/node": "~12.11.1",
     "@types/pdfmake": "^0.1.13",
     "@types/tmp": "0.1.0",
-    "akita-schematics": "^2.0.0",
     "angular-prerender": "^5.4.0",
     "babel-loader": "8.0.6",
     "bundlesize": "^0.18.0",

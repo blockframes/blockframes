@@ -12,20 +12,20 @@ import { UserRole } from './permissions.firestore';
 })
 export class PermissionsQuery extends QueryEntity<PermissionsState, Permissions> {
 
-    /** Checks if the connected user is superAdmin of his organization. */
-    public isSuperAdmin$: Observable<boolean> = this.selectActive(permissions => {
-      return permissions?.roles[this.auth.userId] === 'superAdmin'
-    });
+  /** Checks if the connected user is superAdmin of his organization. */
+  public isSuperAdmin$: Observable<boolean> = this.selectActive(permissions => {
+    return permissions?.roles[this.auth.userId] === 'superAdmin'
+  });
 
-    /** Checks if the connected user is admin of his organization. */
-    public isAdmin$: Observable<boolean> = this.isSuperAdmin$.pipe(
-      map(isSuperAdmin => isSuperAdmin || this.getActive()?.roles[this.auth.userId] === 'admin')
-    );
+  /** Checks if the connected user is admin of his organization. */
+  public isAdmin$: Observable<boolean> = this.isSuperAdmin$.pipe(
+    map(isSuperAdmin => isSuperAdmin || this.getActive()?.roles[this.auth.userId] === 'admin')
+  );
 
-    /** Checks if the connected user is either member of his organization. */
-    public isOrgMember$: Observable<boolean> = this.isAdmin$.pipe(
-      map(isAdmin => isAdmin || this.getActive()?.roles[this.auth.userId] === 'member')
-    );
+  /** Checks if the connected user is either member of his organization. */
+  public isOrgMember$: Observable<boolean> = this.isAdmin$.pipe(
+    map(isAdmin => isAdmin || this.getActive()?.roles[this.auth.userId] === 'member')
+  );
 
   constructor(protected store: PermissionsStore, private auth: AuthQuery) {
     super(store);

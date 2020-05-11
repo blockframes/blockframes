@@ -1,7 +1,7 @@
 import { functions, db, DocumentReference } from './internals/firebase';
-import { ContractDocument, PublicContractDocument, OrganizationDocument, PublicOrganization } from './data/types';
+import { ContractDocument, PublicContractDocument, OrganizationDocument } from './data/types';
 import { ValidContractStatuses, ContractVersionDocument } from '@blockframes/contract/contract/+state/contract.firestore';
-import { getOrganizationsOfContract, getDocument } from './data/internals';
+import { getOrganizationsOfContract, getDocument, createPublicOrganizationDocument } from './data/internals';
 import { triggerNotifications, createNotification } from './notification';
 import { centralOrgID } from './environments/environment';
 import { isEqual, uniqBy, flatten } from 'lodash';
@@ -79,12 +79,12 @@ async function checkAndTriggerNotifications(current: ContractDocument) {
 
     if (contractSubmitted && current.partyIds.length > 0) { // Contract is submitted by organization to Archipel Content
       // TODO (#1999): Find real creator 
-      const { id, denomination, logo } = await getDocument<PublicOrganization>(`orgs/${current.partyIds[0]}`);
+      const org = await getDocument<OrganizationDocument>(`orgs/${current.partyIds[0]}`);
       const archipelContent = await getDocument<OrganizationDocument>(`orgs/${centralOrgID}`);
       const notifications = archipelContent.userIds.map(
         toUserId => createNotification({
           toUserId,
-          organization: { id, denomination, logo }, // TODO (#1999): Add the logo to display if orgs collection is not public to Archipel Content
+          organization: createPublicOrganizationDocument(org),
           type: 'newContract',
           docId: current.id
         })

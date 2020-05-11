@@ -14,7 +14,7 @@ import {
   userRequestedToJoinYourOrg,
   userJoinOrgPendingRequest
 } from '../../templates/mail';
-import { getAdminIds, getDocument } from '../../data/internals';
+import { getAdminIds, getDocument, getAppUrl } from '../../data/internals';
 import { wasAccepted, wasDeclined, wasCreated } from './utils';
 
 async function addUserToOrg(userId: string, organizationId: string) {
@@ -158,6 +158,7 @@ async function onInvitationFromUserToJoinOrgCreate({
     userJoinOrgPendingRequest(userData.email, toOrg.denomination.full, userData.firstName!)
   );
 
+  const urlToUse = await getAppUrl(toOrg.id);
   // send invitation received to every org admin
   return Promise.all(
     admins.map(admin =>
@@ -169,7 +170,7 @@ async function onInvitationFromUserToJoinOrgCreate({
           organizationId: toOrg.id,
           userFirstname: userData.firstName!,
           userLastname: userData.lastName!
-        })
+        }, urlToUse)
       )
     )
   );
@@ -186,7 +187,8 @@ async function onInvitationFromUserToJoinOrgAccept({
   }
   // TODO(issue#739): When a user is added to an org, clear other invitations
   await addUserToOrg(fromUser.uid, toOrg.id);
-  await sendMailFromTemplate(userJoinedAnOrganization(fromUser.email, toOrg.id));
+  const urlToUse = await getAppUrl(toOrg.id);
+  await sendMailFromTemplate(userJoinedAnOrganization(fromUser.email, toOrg.id, urlToUse));
   return mailOnInvitationAccept(fromUser.uid, toOrg.id);
 }
 

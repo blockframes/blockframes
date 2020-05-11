@@ -765,7 +765,7 @@
               ],
               "optimization": true,
               "outputHashing": "all",
-              "sourceMap": false,
+              "sourceMap": true,
               "extractCss": true,
               "namedChunks": false,
               "extractLicenses": true,
@@ -944,6 +944,9 @@
               "devServerTarget": "festival:serve:production"
             },
             "ci": {
+              "devServerTarget": "festival:serve"
+            },
+            "staging": {
               "devServerTarget": "festival:serve"
             }
           }

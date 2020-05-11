@@ -20,7 +20,7 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
 
   /**
    * @dev On loading notification in store, we add additionnal data for display
-   * @param notification 
+   * @param notification
    */
   akitaPreAddEntity(notification: Notification): Notification {
     return {
@@ -37,7 +37,8 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
       case 'organizationAcceptedByArchipelContent':
         return {
           date: toDate(notification.date),
-          message: 'Your organization has been accepted by Archipel Content !',
+          message: 'Your organization has been accepted !',
+          imgRef: notification.organization?.logo,
           placeholderUrl: 'WelcomeArchipelContent_500.png' // TODO: ISSUE#2262
         };
       case 'movieTitleUpdated':
@@ -50,8 +51,8 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
       case 'movieTitleCreated':
         return {
           date: toDate(notification.date),
-          message: `${displayName} created ${movieTitle}.`,
-          imgRef: this.getPoster(notification.movie.id),
+          message: `${displayName} created ${movieTitle ? movieTitle : 'a new title'}.`,
+          imgRef: notification.user?.avatar,
           placeholderUrl: 'WelcomeDelivery_500.png' // TODO: ISSUE#2262
         };
       case 'movieDeleted':

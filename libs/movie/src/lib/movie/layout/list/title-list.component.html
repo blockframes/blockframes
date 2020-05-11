@@ -55,34 +55,39 @@
 
   <!-- List || card of result -->
   <article>
-    <ng-container *ngIf="(titles$ | async) as titles">
-      <div fxLayout="row" fxLayoutAlign="end start">
-        <h6>There are {{ titles.length }} {{titleType}}s available!</h6>
-      </div>
-      <div fxLayout="row wrap" fxLayoutGap="24px" fxLayoutGap.lt-lg="16px" fxLayout.lt-sm="column" fxLayoutAlign.lt-md="center center">
-        <ng-container *ngIf="!listView; else displayList">
-          <ng-container *ngFor="let title of titles">
+    <ng-container *ngIf="(titles$ | async)?.length; else loading">
+      <ng-container *ngIf="(titles$ | async) as titles">
+        <div fxLayout="row" fxLayoutAlign="end start">
+          <h6>There are {{ titles.length }} {{titleType}}s available!</h6>
+        </div>
+        <div fxLayout="row wrap" fxLayoutGap="24px" fxLayoutGap.lt-lg="16px" fxLayout.lt-sm="column" fxLayoutAlign.lt-md="center center">
+          <ng-container *ngIf="!listView; else displayList">
+            <ng-container *ngFor="let title of titles">
 
-            <!-- INSERT CARD -->
-            <ng-template
-              [ngTemplateOutlet]="titleCardTemplate"
-              [ngTemplateOutletContext]="{$implicit: title}"
-            ></ng-template>
+              <!-- INSERT CARD -->
+              <ng-template
+                [ngTemplateOutlet]="titleCardTemplate"
+                [ngTemplateOutletContext]="{$implicit: title}"
+              ></ng-template>
 
+            </ng-container>
           </ng-container>
-        </ng-container>
-        <ng-template #displayList>
-          <ng-container *ngFor="let title of titles">
+          <ng-template #displayList>
+            <ng-container *ngFor="let title of titles">
 
-            <!-- INSERT LIST ITEM -->
-            <ng-template
-              [ngTemplateOutlet]="titleListItemTemplate"
-              [ngTemplateOutletContext]="{$implicit: title}"
-            ></ng-template>
+              <!-- INSERT LIST ITEM -->
+              <ng-template
+                [ngTemplateOutlet]="titleListItemTemplate"
+                [ngTemplateOutletContext]="{$implicit: title}"
+              ></ng-template>
 
-          </ng-container>
-        </ng-template>
-      </div>
+            </ng-container>
+          </ng-template>
+        </div>
+      </ng-container>
     </ng-container>
+    <ng-template #loading>
+      <mat-progress-spinner mode="indeterminate" color="primary"></mat-progress-spinner>
+    </ng-template>
   </article>
 </section>
