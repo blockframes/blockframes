@@ -4,6 +4,7 @@ export default class FestivalScreeningPage {
   }
 
   assertScreeningsExists(screeningName: string) {
+    cy.wait(1000);
     cy.get('festival-screening event-screening-item').should('have.length', 4).contains(screeningName);
   }
 }
