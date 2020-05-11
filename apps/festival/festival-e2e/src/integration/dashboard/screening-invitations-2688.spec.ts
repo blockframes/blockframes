@@ -49,7 +49,7 @@ describe('User invites other users to his screening', () => {
     cy.wait(500)
     p2.acceptInvitation();
     // Wait for post request to finish
-    cy.wait(5000)
+    cy.wait(50000)
     const p3 = p1.goToDashboard();
     p3.logout()
   });
@@ -61,7 +61,7 @@ describe('User invites other users to his screening', () => {
     cy.wait(500);
     p2.acceptInvitation();
     // Wait for post request to finish
-    cy.wait(5000);
+    cy.wait(50000);
     const p3 = p1.goToDashboard();
     p3.logout()
   });
