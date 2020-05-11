@@ -8,7 +8,7 @@
     <!-- TOOLBAR -->
     <app-bar #app>
       <header fxLayout fxLayoutAlign="space-between center">
-        <button mat-icon-button (click)="sidenav.toggle()">
+        <button mat-icon-button test-id="menu" (click)="sidenav.toggle()">
           <mat-icon svgIcon="menu"></mat-icon>
         </button>
         <algolia-autocomplete [index]="movieIndex" mode="standard" resetInput native prefixIcon="magnifying_glasses" clearable keyToDisplay="title.international">
