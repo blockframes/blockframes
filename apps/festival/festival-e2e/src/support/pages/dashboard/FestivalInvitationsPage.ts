@@ -4,6 +4,10 @@ export default class FestivalInvitationsPage {
   }
 
   acceptInvitation() {
-    cy.get('festival-invitation invitation-list invitation-item a[test-id=invitation-accept]').click({multiple: true})
+    cy.get('festival-invitation invitation-list invitation-item a[test-id=invitation-accept]').click()
+  }
+
+  refuseInvitation() {
+    cy.get('festival-invitation invitation-list invitation-item a[test-id=invitation-refuse]').click()
   }
 }

@@ -1,9 +1,10 @@
 export default class FestivalMarketplaceNotifications {
-  constructor(){
+  constructor() {
     cy.get('festival-marketplace-notification')
   }
 
-  verifyNotification(message: string) {
-    cy.get('notification-item p[test-id=notification-message]').contains(message)
+  verifyNotification(message: string, accepted: boolean) {
+    accepted ? cy.get('notification-item p[test-id=notification-message]').contains(message).contains('accepted')
+      : cy.get('notification-item p[test-id=notification-message]').contains(message).contains('declined')
   }
 }

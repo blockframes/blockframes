@@ -49,7 +49,7 @@ describe('User invites other users to his screening', () => {
     cy.wait(500)
     p2.acceptInvitation();
     // Wait for post request to finish
-    cy.wait(50000)
+    cy.wait(30000)
     const p3 = p1.goToDashboard();
     p3.logout()
   });
@@ -59,9 +59,9 @@ describe('User invites other users to his screening', () => {
     const p1 = new FestivalMarketplaceHomePage();
     const p2 = p1.goToInvitations();
     cy.wait(500);
-    p2.acceptInvitation();
+    p2.refuseInvitation();
     // Wait for post request to finish
-    cy.wait(50000);
+    cy.wait(30000);
     const p3 = p1.goToDashboard();
     p3.logout()
   });
@@ -71,7 +71,7 @@ describe('User invites other users to his screening', () => {
     signIn(LOGIN_CREDENTIALS);
     const p1 = new FestivalMarketplaceHomePage();
     const p2 = p1.goToNotifications()
-    p2.verifyNotification(PARTICIPANT_1_NAME);
-    p2.verifyNotification(PARTICIPANT_2_NAME);
+    p2.verifyNotification(PARTICIPANT_1_NAME, true);
+    p2.verifyNotification(PARTICIPANT_2_NAME, false);
   });
 });
