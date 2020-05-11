@@ -25,7 +25,7 @@ export class MovieAdminForm extends FormEntity<MovieAdminControl> {
 function createAppAccessMovieControls(entity: Partial<Movie>) {
   const movie = createMovie(entity);
   const appAccess = {} as any;
-  for(const a of app){
+  for (const a of app) {
     appAccess[a] = new FormControl(movie.main.storeConfig.appAccess[a])
   }
   return appAccess;

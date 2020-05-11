@@ -8,6 +8,7 @@ import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/imag
 import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 import { MovieTunnelGuard } from '@blockframes/movie/guards/movie-tunnel.guard';
 import { TunnelGuard } from '@blockframes/ui/tunnel';
+import { OrganizationContractListGuard } from '@blockframes/contract/contract/guards/organization-contract-list.guard';
 
 // Material
 import { MatListModule } from '@angular/material/list';
@@ -48,6 +49,8 @@ const routes: Routes = [{
       },
       {
         path: 'title',
+        canActivate: [OrganizationContractListGuard],
+        canDeactivate: [OrganizationContractListGuard],
         children: [{
           path: '',
           loadChildren: () => import('./title/list/list.module').then(m => m.TitleListModule)

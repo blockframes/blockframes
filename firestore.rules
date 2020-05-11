@@ -248,7 +248,6 @@ service cloud.firestore {
         && isNotUpdatingId('id', existingData().id)
         && isNotUpdatingField(['_meta', '_createdBy'])
         && isNotUpdatingField(['_type'])
-        && (isNotUpdatingField(['main', 'storeConfig','status']) || incomingData().main.storeConfig.status in ['submitted', 'draft'])
         && isNotUpdatingField(['main', 'storeConfig','storeType'])
         && isNotUpdatingField(['main', 'storeConfig','appAccess', 'catalog'])
         && isNotUpdatingField(['main', 'storeConfig','appAccess', 'festival'])

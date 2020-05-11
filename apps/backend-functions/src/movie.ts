@@ -3,7 +3,7 @@ import { MovieDocument, OrganizationDocument, PublicUser, StoreConfig, PublicOrg
 import { NotificationType } from '@blockframes/notification/types';
 import { triggerNotifications, createNotification } from './notification';
 import { flatten, isEqual } from 'lodash';
-import { getDocument, getOrganizationsOfMovie } from './data/internals';
+import { getDocument, getOrganizationsOfMovie, createPublicUserDocument } from './data/internals';
 import { removeAllSubcollections } from './utils';
 import { storeSearchableMovie, deleteObject } from './internals/algolia';
 import { centralOrgID, algolia } from './environments/environment';
@@ -12,7 +12,7 @@ import { centralOrgID, algolia } from './environments/environment';
 function notifUser(toUserId: string, notificationType: NotificationType, movie: MovieDocument, user: PublicUser) {
   return createNotification({
     toUserId,
-    user: { firstName: user.firstName, lastName: user.lastName },
+    user: createPublicUserDocument(user),
     type: notificationType,
     movie: {
       id: movie.id,

@@ -6,7 +6,7 @@ import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 function createPriceControls(price: Partial<Price>) {
   const entity = createPrice(price)
   return {
-    amount: new FormControl(entity.amount, [Validators.required, Validators.min(1)]),
+    amount: new FormControl(entity.amount, [Validators.min(0)]),
     currency: new FormStaticValue(entity.currency, 'MOVIE_CURRENCIES'),
     commission: new FormControl(entity.commission, Validators.max(100)),
     commissionBase: new FormControl(entity.commissionBase),

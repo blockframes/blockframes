@@ -35,6 +35,7 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -80,6 +81,7 @@ import { MatTabsModule } from '@angular/material/tabs';
     MatSnackBarModule,
     MatToolbarModule,
     MatTabsModule,
+    MatProgressSpinnerModule
   ]
 })
 export class TitleListLayoutModule { }
