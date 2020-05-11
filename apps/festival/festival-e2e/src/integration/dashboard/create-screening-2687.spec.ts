@@ -8,26 +8,13 @@ import { EventEditPage } from '../../support/pages/dashboard/index'
 
 // Hooks
 import { clearDataAndPrepareTest, signIn } from '@blockframes/e2e/utils/functions';
+import { NOW, TOMORROW, EVENTNAME, USER_1, USER_2, ORG_NAME } from '../../fixtures/data';
 
-// Utils
-import { User } from '@blockframes/e2e/utils/type';
-import { USERS } from '@blockframes/e2e/utils/users';
-
-const NOW = new Date();
-let TOMORROW = new Date(NOW);
-
-// david.ewing@gillespie-lawrence.fake.cascade8.com
-const USER_1: Partial<User> = USERS[0];
-// john.bryant@love-and-sons.fake.cascade8.com
-const USER_2: Partial<User> = USERS[4];
-
-const ORG_NAME = 'main';
-
-const EVENTNAME = 'test screening';
+let tomorrow = TOMORROW
 
 beforeEach(() => {
   clearDataAndPrepareTest();
-  TOMORROW = new Date(NOW);
+  tomorrow = new Date(NOW);
 });
 
 describe('User create a screening', () => {
@@ -59,10 +46,10 @@ describe('User create a screening', () => {
     const p1 = new FestivalMarketplaceHomePage();
     const p2: FestivalDashboardHomePage = p1.goToDashboard();
     const p3: EventPage = p2.goToCalendar()
-    const p4: EventEditPage = p3.createDetailedEvent(TOMORROW);
+    const p4: EventEditPage = p3.createDetailedEvent(tomorrow);
     p4.addEventTitle(EVENTNAME)
     p4.checkPrivate();
-    p4.selectDate(TOMORROW)
+    p4.selectDate(tomorrow)
     p4.selectMovie()
     p4.saveEvent()
   })
@@ -71,9 +58,9 @@ describe('User create a screening', () => {
     const p1 = new FestivalMarketplaceHomePage();
     const p2: FestivalDashboardHomePage = p1.goToDashboard();
     const p3: EventPage = p2.goToCalendar()
-    const p4: EventEditPage = p3.createDetailedEvent(TOMORROW);
+    const p4: EventEditPage = p3.createDetailedEvent(tomorrow);
     p4.addEventTitle(EVENTNAME)
-    p4.selectDate(TOMORROW)
+    p4.selectDate(tomorrow)
     p4.selectMovie()
     p4.saveEvent()
   })

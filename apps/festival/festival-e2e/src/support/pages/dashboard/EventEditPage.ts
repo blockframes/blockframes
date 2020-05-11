@@ -45,10 +45,6 @@ export default class EventEditPage {
     cy.get('event-edit invitation-guest-list button[test-id=invitation-copy]').click();
   }
 
-  verifyUsersInvitation(name: string) {
-    cy.get('event-edit invitation-guest-list invitation-guest-item span').contains(name);
-  }
-
   saveEvent() {
     cy.get('button[test-id=event-save]').click()
   }

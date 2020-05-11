@@ -4,6 +4,6 @@ export default class FestivalMarketplaceNotifications {
   }
 
   verifyNotification(message: string) {
-    cy.get('notification-item p[test-id=notification-message]').find(message);
+    cy.get('notification-item p[test-id=notification-message]').contains(message)
   }
 }

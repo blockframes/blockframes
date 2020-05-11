@@ -1,22 +1,22 @@
 /// <reference types="cypress" />
 
 // Utils
-import { User } from '@blockframes/e2e/utils/type';
-import { USERS } from '@blockframes/e2e/utils/users';
+import {
+  LOGIN_CREDENTIALS,
+  NOW,
+  EVENTNAME,
+  PARTICIPANT_1_EMAIL,
+  PARTICIPANT_2_EMAIL,
+  PARTICIPANT_1_NAME,
+  PARTICIPANT_2_NAME,
+  PASSWORD
+} from '../../fixtures/data'
 import { clearDataAndPrepareTest, signIn } from '@blockframes/e2e/utils/functions';
 
 // Pages
 import { FestivalMarketplaceHomePage } from '../../support/pages/marketplace/index';
 import { FestivalDashboardHomePage, EventPage, EventEditPage } from '../../support/pages/dashboard/index';
 
-const LOGIN_CREDENTIALS: Partial<User> = USERS[0];
-const NOW = new Date();
-const EVENTNAME = 'test screening';
-const PASSWORD = 'blockframes';
-const PARTICIPANT_1_EMAIL = 'john.bryant@love-and-sons.fake.cascade8.com';
-const PARTICIPANT_2_EMAIL = 'sarah.gregory@turner-gray.fake.cascade8.com';
-const PARTICIPANT_1_NAME = 'Bryant John';
-const PARTICIPANT_2_NAME = 'Gregory Sarah';
 
 beforeEach(() => {
   clearDataAndPrepareTest();
@@ -35,11 +35,7 @@ describe('User invites other users to his screening', () => {
     p4.inviteUser([PARTICIPANT_1_EMAIL, PARTICIPANT_2_EMAIL]);
     // We need to wait to fetch the invited user
     p4.copyGuests();
-    // The users will get fetched from the DB, so we need to wait for it to render
-    // This takes unusually long 
-    cy.wait(10000);
-    p4.verifyUsersInvitation(PARTICIPANT_1_NAME);
-    p4.verifyUsersInvitation(PARTICIPANT_2_NAME);
+    cy.wait(2000)
     p4.saveEvent();
     const p5 = p4.goToDashboard();
     p5.logout();
@@ -51,7 +47,9 @@ describe('User invites other users to his screening', () => {
     const p1 = new FestivalMarketplaceHomePage();
     const p2 = p1.goToInvitations();
     cy.wait(500)
-    p2.acceptInvitation()
+    p2.acceptInvitation();
+    // Wait for post request to finish
+    cy.wait(5000)
     const p3 = p1.goToDashboard();
     p3.logout()
   });
@@ -60,8 +58,10 @@ describe('User invites other users to his screening', () => {
     signIn({ email: PARTICIPANT_2_EMAIL, password: PASSWORD });
     const p1 = new FestivalMarketplaceHomePage();
     const p2 = p1.goToInvitations();
-    cy.wait(500)
-    p2.acceptInvitation()
+    cy.wait(500);
+    p2.acceptInvitation();
+    // Wait for post request to finish
+    cy.wait(5000);
     const p3 = p1.goToDashboard();
     p3.logout()
   });

@@ -17,8 +17,8 @@
       <span>Declined</span>
     </ng-container>
     <div *ngSwitchCase="'pending'" fxLayout="row" fxLayoutGap="16px">
-      <a test-id="accept" mat-mini-fab color="primary" (click)="accept(invitation.id)">
-        <mat-icon svgIcon="check"></mat-icon>
+      <a mat-mini-fab color="primary" (click)="accept(invitation.id)" test-id="invitation-accept">
+        <mat-icon svgIcon="check" ></mat-icon>
       </a>
       <a test-id="decline" mat-mini-fab color="warn" (click)="refuse(invitation.id)">
         <mat-icon svgIcon="refuse"></mat-icon>
