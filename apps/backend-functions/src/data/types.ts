@@ -15,32 +15,18 @@ export {
   InvitationOrUndefined,
   InvitationStatus,
   InvitationType,
-  InvitationFromOrganizationToUser,
-  InvitationFromUserToOrganization,
-  InvitationToWorkOnDocument
 } from '@blockframes/invitation/types';
-export { MaterialDocument, MaterialStatus } from '@blockframes/material/material/types';
-export { StakeholderDocument } from '@blockframes/material/delivery/stakeholder/types';
-export {
-  DeliveryDocument,
-  StepDocument,
-  StepDocumentWithDate,
-  convertStepDocumentToStepDocumentWithDate
-} from '@blockframes/material/delivery/types';
 export {
   PermissionsDocument,
-  AppPermissionsDocument,
-  UserPermissionsDocument,
   DocPermissionsDocument,
-  createAppPermissions,
   createDocPermissions,
   UserRole
 } from '@blockframes/permissions/types';
-export { PublicUser } from '@blockframes/auth/types';
-export { RequestDemoInformations } from '@blockframes/catalog/demo-request.model';
-export { MovieAnalytics, EventAnalytics } from '@blockframes/movie/movie/+state/movie.firestore';
+export { PublicUser } from '@blockframes/user/types';
+export { RequestDemoInformations } from '@blockframes/utils/request-demo';
+export { MovieAnalytics, MovieEventAnalytics, StoreStatus, StoreConfig } from '@blockframes/movie/+state/movie.firestore';
 export { NotificationOptions, NotificationType, NotificationDocument } from '@blockframes/notification/types';
-export { App } from '@blockframes/utils/apps';
+export { EventsAnalytics, EventAnalytics, ScreeningEventDocument } from '@blockframes/event/+state/event.firestore';
 
 /**
  * Types used by the firebase backend.
@@ -60,12 +46,6 @@ interface DocWithID {
 // Core Application Types
 // ======================
 // Business & App Related
-
-export enum AppAccessStatus {
-  requested = 'requested',
-  pending = 'pending',
-  accepted = 'accepted'
-}
 
 /** Custom object used to build notifications. */
 export interface SnapObject {

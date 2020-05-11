@@ -1,9 +1,10 @@
 // Angular
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
 // Blockframes
-import { MovieService, MovieQuery, createMovie } from '@blockframes/movie/movie/+state';
-import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
-import { MatSnackBar, MatDialog } from '@angular/material';
+import { MovieService, MovieQuery, createMovie } from '@blockframes/movie/+state';
+import { MovieForm } from '@blockframes/movie/form/movie.form';
+import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { TunnelStep, TunnelRoot, TunnelConfirmComponent } from '@blockframes/ui/tunnel';
 import { switchMap } from 'rxjs/operators';
 import { of } from 'rxjs';
@@ -55,7 +56,7 @@ const steps: TunnelStep[] = [{
   icon: 'document',
   routes: [{
     path: 'summary',
-    label: 'Summary & Sumbit'
+    label: 'Summary & Submission'
   }]
 }];
 
@@ -85,8 +86,10 @@ export class MovieTunnelComponent implements TunnelRoot, OnInit {
 
   // Should save movie
   public async save() {
-    const id = this.query.getActiveId();
-    const movie = createMovie({ id, ...this.form.value });
+    const movie = createMovie({
+      ...this.query.getActive(),
+      ...this.form.value
+    });
     await this.service.update(movie);
     this.form.markAsPristine();
     await this.snackBar.open('Title saved', '', { duration: 500 }).afterDismissed().toPromise();

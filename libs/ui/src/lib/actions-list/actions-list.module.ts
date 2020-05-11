@@ -5,15 +5,14 @@ import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ActionItem } from './actions-list.component';
-import { MatButtonModule } from '@angular/material';
+import { MatButtonModule } from '@angular/material/button';
 
 // Share the type of items with our users.
 export { ActionItem };
 
 /**
  * A list of action items,
- * Used to ask the user for an such as whether to create or find an organization,
- * or the kind of delivery they want to create.
+ * Used to ask the user for an such as whether to create or find an organization.
  */
 @NgModule({
   declarations: [ActionsListComponent],

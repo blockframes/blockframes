@@ -2,7 +2,7 @@
   <!-- Waiting -->
   <section *ngSwitchCase="'waiting'">
     <label>
-        <mat-icon color="primary" class="material-icons-outlined">cloud_upload</mat-icon>
+        <mat-icon color="primary" class="material-icons-outlined" svgIcon="download"></mat-icon>
       <input #fileExplorer [accept]="accept" type="file" (change)="upload($event.target.files)" />
     </label>
     <ng-content select="[type]"></ng-content>
@@ -12,7 +12,7 @@
 
   <!-- Hovering -->
   <section *ngSwitchCase="'hovering'">
-    <mat-icon>cloud_upload</mat-icon>
+    <mat-icon svgIcon="import"></mat-icon>
   </section>
 
   <!-- Uploading -->

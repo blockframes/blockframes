@@ -1,12 +1,37 @@
-h1 {
-  margin-top: 24px;
+table {
+  width: 100%;
 }
 
-section {
-  padding: 0 100px;
-  min-height: calc(100vh - (var(--toolbarHeight) * 2) - 30px); // TODO #1212
+.express-button {
+  margin-top: 16px;
+  margin-bottom: 60px;
+}
+
+tr.mat-row {
+  cursor: pointer;
+}
+
+h4 {
+  margin-bottom: 8px;
+}
+
+.picture {
+  border-radius: 50%;
+  width: 40px;
+}
+
+p {
+  margin-bottom: 40px;
+}
+
+th.mat-header-cell {
+  font-weight: lighter;
 }
 
 article {
-  margin-top: 20px;
+  height: 100%;
+}
+
+img {
+  width: 380px;
 }

@@ -1,6 +1,6 @@
 import { NotificationDocument, NotificationOptions } from './data/types';
-import * as admin from 'firebase-admin';
-import { db } from './internals/firebase'
+import { db } from './internals/firebase';
+import { firestore } from 'firebase-admin';
 
 /** Takes one or more notifications and add them on the notifications collection */
 export function triggerNotifications(notifications: NotificationDocument[]): Promise<any> {
@@ -17,9 +17,10 @@ export function triggerNotifications(notifications: NotificationDocument[]): Pro
 /** Create a Notification with required and generic informations. */
 export function createNotification(notification: NotificationOptions): NotificationDocument {
   return {
+    toUserId: '',
     id: db.collection('notifications').doc().id,
     isRead: false,
-    date: admin.firestore.Timestamp.now(),
+    date: firestore.Timestamp.now(),
     ...notification
   };
 }

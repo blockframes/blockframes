@@ -1,0 +1,48 @@
+@import '~@angular/flex-layout/mq';
+
+section {
+  padding: 0 180px;
+  text-align: center;
+  a {
+    margin-top: 40px;
+  }
+}
+
+.mat-option {
+  height: 50px;
+  margin: 5px 0;
+}
+.org-logo {
+  height: 50px;
+  width: 50px;
+  margin-right: 10px;
+  vertical-align: middle;
+}
+
+h1 {
+  margin: 60px 0 80px 0;
+}
+
+mat-card, mat-form-field {
+  width: 100%;
+    img {
+      width: 150px;
+      margin-bottom: 60px;
+    }
+}
+
+.join-org {
+  margin-top: 60px;
+}
+
+@include layout-bp(sm) {
+  section {
+    padding: 0 100px
+  }
+}
+
+@include layout-bp(xs) {
+  section {
+    padding: 10px;
+  }
+}

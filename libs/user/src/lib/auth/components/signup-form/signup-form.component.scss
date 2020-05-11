@@ -1,0 +1,52 @@
+@import '~@angular/flex-layout/mq';
+
+section {
+  height: 100%;
+  margin: 100px 24px 100px 100px;
+}
+
+.mat-card, form {
+  width: 100%;
+}
+
+#submit {
+  margin-top: 50px;
+}
+
+#tosignin {
+  margin-top: 10px;
+}
+
+mat-checkbox {
+  margin-right: 5px;
+}
+
+@include layout-bp(lg) {
+  form {
+    height: 80%;
+  }
+}
+
+@include layout-bp(md) {
+  section {
+    margin-right: 100px;
+    margin-left: 30px;
+  }
+}
+
+@include layout-bp(sm) {
+  section {
+    margin-right: 50px;
+    margin-left: 20px;
+  }
+}
+
+@include layout-bp(xs) {
+  form {
+    height: 80%;
+  }
+  section {
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+}

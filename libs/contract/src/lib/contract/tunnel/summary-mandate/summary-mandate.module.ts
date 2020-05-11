@@ -5,8 +5,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { SummaryMandateComponent } from './summary-mandate.component';
 
 import { TunnelPageModule } from '@blockframes/ui/tunnel';
-import { MovieBannerModule } from '@blockframes/movie/movie/components/banner';
-import { RightListModule } from '@blockframes/movie/distribution-deals/components/right-list/right-list.module';
+import { MovieBannerModule } from '@blockframes/movie/components/banner';
+import { RightListModule } from '@blockframes/distribution-rights/components/right-list/right-list.module';
 import { MissingControlModule } from '@blockframes/ui/missing-control/missing-control.module';
 
 // Material
@@ -28,7 +28,10 @@ import { MatIconModule } from '@angular/material/icon';
     MatCardModule,
     MatButtonModule,
     MatIconModule,
-    RouterModule.forChild([{ path: '', component: SummaryMandateComponent }])
+    RouterModule.forChild([
+      { path: '', component: SummaryMandateComponent },
+      { path: 'success', loadChildren: () => import('../success/success.module').then(m => m.SuccessModule) }
+    ])
   ]
 })
 export class SummaryMandateModule { }

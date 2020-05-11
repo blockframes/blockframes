@@ -1,7 +1,10 @@
 import { Routes, Route } from '@angular/router';
-import { AuthGuard } from '@blockframes/auth';
-import { PermissionsGuard, OrganizationGuard } from '@blockframes/organization';
-import { NotificationsGuard } from '@blockframes/notification';
+import { UserRedirectionGuard } from '@blockframes/auth/guard/user-redirection.guard';
+import { AuthGuard } from '@blockframes/auth/guard/auth.guard';
+import { PermissionsGuard } from '@blockframes/permissions/guard/permissions.guard';
+import { OrganizationGuard } from '@blockframes/organization/guard/organization.guard';
+import { NotificationsGuard } from '@blockframes/notification/notifications.guard';
+import { InvitationGuard } from '@blockframes/invitation/guard/invitations.guard';
 import { MaintenanceGuard } from '@blockframes/ui/maintenance';
 
 interface RouteOptions {
@@ -13,30 +16,30 @@ interface RouteOptions {
   landing?: Route,
 }
 
-const defaultLanding = {
-  path: '',
-  redirectTo: 'c',
-  pathMatch: 'full'
-}
-
-export function createRoutes({ appsRoutes, appName, landing = defaultLanding }: RouteOptions) {
+export function createRoutes({ appsRoutes, appName, landing }: RouteOptions) {
   // We need to put the spread operator in a local variable to make build works on prod
   const children = [
     ...appsRoutes,
+    landing = {
+      ...landing,
+      canActivate: landing.canActivate
+        ? [...landing.canActivate, UserRedirectionGuard]
+        : [UserRedirectionGuard]
+    },
     {
       path: 'organization',
-      loadChildren: () => import('@blockframes/organization').then(m => m.OrganizationModule)
+      loadChildren: () => import('@blockframes/organization/organization.module').then(m => m.OrganizationModule)
     },
     {
       path: 'account',
-      loadChildren: () => import('@blockframes/account').then(m => m.AccountModule)
+      loadChildren: () => import('@blockframes/user/account/account.module').then(m => m.AccountModule)
     },
   ];
   return [
     {
       path: 'maintenance',
       canActivate: [MaintenanceGuard],
-      loadChildren: () => import('@blockframes/ui/maintenance').then(m => m.MaintenanceModule)
+      loadChildren: () => import('@blockframes/ui/maintenance/maintenance.module').then(m => m.MaintenanceModule)
     },
     {
     path: '',
@@ -61,23 +64,23 @@ export function createRoutes({ appsRoutes, appName, landing = defaultLanding }: 
           {
             // The redirection route when user has no organization
             path: 'organization',
-            loadChildren: () => import('@blockframes/organization').then(m => m.NoOrganizationModule)
+            loadChildren: () => import('@blockframes/organization/no-organization.module').then(m => m.NoOrganizationModule)
           },
           {
             path: 'o',
-            canActivate: [NotificationsGuard, PermissionsGuard, OrganizationGuard],
-            canDeactivate: [NotificationsGuard, PermissionsGuard, OrganizationGuard],
+            canActivate: [NotificationsGuard, InvitationGuard, PermissionsGuard, OrganizationGuard],
+            canDeactivate: [NotificationsGuard, InvitationGuard, PermissionsGuard, OrganizationGuard],
             children
           }
         ]
       },
       {
         path: 'not-found',
-        loadChildren: () => import('@blockframes/ui').then(m => m.ErrorNotFoundModule)
+        loadChildren: () => import('@blockframes/ui/error/error-not-found.module').then(m => m.ErrorNotFoundModule)
       },
       {
         path: '**',
-        loadChildren: () => import('@blockframes/ui').then(m => m.ErrorNotFoundModule)
+        loadChildren: () => import('@blockframes/ui/error/error-not-found.module').then(m => m.ErrorNotFoundModule)
       }
     ]
   }]

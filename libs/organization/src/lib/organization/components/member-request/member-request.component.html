@@ -1,0 +1,28 @@
+<mat-card>
+  <mat-card-title>New Member Requests</mat-card-title>
+  <bf-table-filter
+    [source]="users"
+    [columns]="invitationColumns"
+    [initialColumns]="initialColumns"
+    showPaginator >
+    <ng-template colRef="firstName" let-firstName>
+      <b>{{ firstName | titlecase }}</b>
+    </ng-template>
+    <ng-template colRef="lastName" let-lastName>
+      <b>{{ lastName | titlecase }}</b>
+    </ng-template>
+    <ng-template colRef="email" let-email>
+      {{ email }}
+    </ng-template>
+    <ng-template colRef="uid" let-uid>
+      <div fxLayout="row" fxLayoutAlign="end">
+        <button class="mat-elevation-z0" mat-mini-fab color="primary" (click)="accepted.emit(findRequest(uid))">
+          <mat-icon svgIcon="accept_member"></mat-icon>
+        </button>
+        <button class="mat-elevation-z0" mat-mini-fab color="warn" (click)="declined.emit(findRequest(uid))">
+          <mat-icon svgIcon="refuse"></mat-icon>
+        </button>
+      </div>
+    </ng-template>
+  </bf-table-filter>
+</mat-card>

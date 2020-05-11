@@ -1,11 +1,11 @@
-import { Component, Output, EventEmitter, ChangeDetectionStrategy, OnInit, ChangeDetectorRef } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
-import { PreviewSheetComponent } from './../preview-sheet/preview-sheet.component';
+import { Component, Output, EventEmitter, ChangeDetectionStrategy, OnInit, ChangeDetectorRef, Optional } from '@angular/core';
 import { SheetTab, importSpreadsheet } from '@blockframes/utils/spreadsheet';
 import { FormControl } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { AuthService } from '@blockframes/auth';
 import { Intercom } from 'ng-intercom';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { AuthQuery } from '@blockframes/auth/+state';
+import { getCurrentApp } from '@blockframes/utils/apps';
 
 export interface SpreadsheetImportEvent {
   sheet: SheetTab,
@@ -26,17 +26,17 @@ export class ImportSpreadsheetComponent implements OnInit {
   public isUserBlockframesAdmin = false;
 
   constructor(
-    private dialog: MatDialog,
+    @Optional() private intercom: Intercom,
     private http: HttpClient,
-    private authService: AuthService,
+    private authQuery: AuthQuery,
     private cdRef: ChangeDetectorRef,
-    private intercom: Intercom,
+    private routerQuery: RouterQuery, 
   ) {
     this.fileType.setValue('movies');
   }
 
-  async ngOnInit() {
-    this.isUserBlockframesAdmin = await this.authService.isBlockframesAdmin();
+  ngOnInit() {
+    this.isUserBlockframesAdmin = this.authQuery.isBlockframesAdmin;
     this.cdRef.markForCheck();
   }
 
@@ -57,10 +57,6 @@ export class ImportSpreadsheetComponent implements OnInit {
     this.importEvent.next({ sheet: this.sheets[0], fileType: this.fileType.value } as SpreadsheetImportEvent);
   }
 
-  previewFile() {
-    this.dialog.open(PreviewSheetComponent, { data: this.sheets });
-  }
-
   removeFile() {
     this.sheets = [];
   }
@@ -70,7 +66,7 @@ export class ImportSpreadsheetComponent implements OnInit {
   }
 
   downloadTemplate(templateType: string) {
-    const fileName = `import-${templateType}-template.xlsx`;
+    const fileName = this.getTemplateName(templateType);
     this.http.get(`/assets/templates/${fileName}`, { responseType: 'arraybuffer' })
       .subscribe(response => {
         const buffer = new Uint8Array(response);
@@ -82,6 +78,15 @@ export class ImportSpreadsheetComponent implements OnInit {
         const event = new MouseEvent('click');
         element.dispatchEvent(event);
       });
+  }
+
+  getTemplateName(templateType: string){
+    const appName = getCurrentApp(this.routerQuery);
+    if(this.isUserBlockframesAdmin){
+      return `import-${templateType}-template-admin.xlsx`;
+    } else {
+      return `import-${templateType}-template-customer-${appName}.xlsx`;
+    }
   }
 
 }

@@ -1,5 +1,4 @@
-@import 'mixins';
-
+@import '~@angular/flex-layout/mq';
 
 header, section {
   padding: 0 24px;
@@ -15,7 +14,7 @@ header {
 }
 
 .mat-card {
-  padding: 24px 16px; 
+  padding: 24px 16px;
 }
 
 .movie-poster {
@@ -40,20 +39,7 @@ header h4 {
 }
 
 
-@include tablet {
-  header {
-    height: auto;
-    article {
-      height: auto;
-    }
-  }
-
-  .movie-info {
-    margin: 20px 0px;
-  }
-}
-
-@include mobile {
+@include layout-bp(lt-md) {
   header {
     height: auto;
     article {

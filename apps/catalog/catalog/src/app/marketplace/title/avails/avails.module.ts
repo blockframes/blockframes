@@ -5,7 +5,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { MarketplaceMovieAvailsComponent } from './avails.component';
-import { AvailsFilterModule } from '@blockframes/catalog/components/avails-filter/avails-filter.module';
+import { AvailsFilterModule } from '@blockframes/distribution-rights/components/avails-filter/avails-filter.module';
 import { MapModule } from '@blockframes/ui/map';
 import { RegionChipsAutocompleteModule } from '@blockframes/ui/form/region-chips-autocomplete/region-chips-autocomplete.module';
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';

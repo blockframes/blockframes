@@ -1,33 +1,111 @@
-<h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Movie > {{ movieId }} </h1>
+<section>
+  <h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Movie > {{ movieId }} </h1>
 
-<ng-container *ngIf="movieForm">
-  <form [formGroup]="movieForm" fxLayout="column">
-    <div>
-      <mat-form-field appearance="outline">
-        <mat-label>Movie Store Status</mat-label>
-        <mat-select formControlName="storeStatus" required>
-          <mat-option *ngFor="let status of storeStatuses" [value]="storeStatus[status]">
-            {{ storeStatus[status] }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-    <div>
-      <mat-form-field appearance="outline">
-        <mat-label>Movie Store Type</mat-label>
-        <mat-select formControlName="storeType" required>
-          <mat-option *ngFor="let status of storeTypes" [value]="storeType[status]">
-            {{ storeType[status] }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-    <mat-card-actions align="end">
-      <button type="submit" mat-raised-button class="main-btn" (click)="update()">Update</button>
-    </mat-card-actions>
-  </form>
-</ng-container>
+  <article fxLayout="row" fxLayoutAlign="space-between start" *ngIf="movie">
+    <mat-card>
+      <h2>
+        {{ movie.main.title.international }} ({{ movie.main.internalRef }})
+        <button mat-icon-button color="accent" [routerLink]="getMovieTunnelPath(movieId)">
+          <mat-icon svgIcon="eye"></mat-icon>
+        </button>
+      </h2>
 
+      <h4>({{ movie.main.title.original }})</h4>
 
+      <ng-container *ngIf="movieForm">
+        <form [formGroup]="movieForm" fxLayout="column">
+          <mat-form-field appearance="outline">
+            <mat-label>Internal ref</mat-label>
+            <input matInput type="text" placeholder="Internal ref" formControlName="internalRef" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Movie Store Status</mat-label>
+            <mat-select formControlName="storeStatus" required>
+              <mat-option *ngFor="let status of storeStatus | keyvalue" [value]="status.key">
+                {{ status.value }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Movie Store Type</mat-label>
+            <mat-select formControlName="storeType" required>
+              <mat-option *ngFor="let type of storeType | keyvalue" [value]="type.key">
+                {{ type.value }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Production Status</mat-label>
+            <mat-select formControlName="productionStatus" required>
+              <mat-option *ngFor="let status of staticModels.MOVIE_STATUS" [value]="status.slug">
+                {{ status.label }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-card-actions align="end">
+            <button type="submit" mat-flat-button color="primary" (click)="update()">Update</button>
+          </mat-card-actions>
+        </form>
+      </ng-container>
+    </mat-card>
 
+    <mat-card>
+      <h2>Application Access</h2>
+      <form [formGroup]="movieAppAccessForm" fxLayout="column">
+        <mat-form-field *ngFor="let a of app" appearance="outline">
+          <mat-label>{{ a | titlecase }} App</mat-label>
+          <mat-select [formControlName]="a" required>
+            <mat-option [value]="true">Yes</mat-option>
+            <mat-option [value]="false">No</mat-option>
+          </mat-select>
+        </mat-form-field>
+        <mat-card-actions align="end">
+          <button type="submit" mat-flat-button color="primary" (click)="updateAppAccess()">Update</button>
+        </mat-card-actions>
+      </form>
+    </mat-card>
 
+    <mat-card>
+      <h2>Rights :</h2>
+
+      <bf-table-filter class="rights-table"
+        [source]="rows"
+        [columns]="versionColumnsTable"
+        [initialColumns]="initialColumnsTable"
+        [filterPredicate]="filterPredicate"
+        showFilter
+        showLoader
+        showPaginator>
+        <ng-template colRef="contractId" let-contractId>
+          <a [routerLink]="getContractPath(contractId)" routerLinkActive="active"> {{ contractId }}</a>
+        </ng-template>
+        <ng-template colRef="terms" let-terms>
+          <strong>From : </strong>{{ terms | termDate: 'start' }} <strong>To : </strong>{{ terms | termDate: 'end' }}
+        </ng-template>
+        <ng-template colRef="rightLink" let-rightLink>
+          <a [routerLink]="getRightPath(rightLink.id, rightLink.movieId)"><mat-icon svgIcon="pencil"></mat-icon></a>
+        </ng-template>
+        <ng-template colRef="status" let-status>
+          {{ status | toLabel: 'distributionRightStatus' | async }}
+        </ng-template>
+      </bf-table-filter>
+    </mat-card>
+  </article>
+
+  <mat-card *ngIf="movie">
+    <h2>Movie private config :</h2>
+
+    <ng-container *ngIf="privateConfigForm">
+      <form [formGroup]="privateConfigForm" fxLayout="column">
+        <mat-form-field appearance="outline">
+          <mat-label>Something private</mat-label>
+          <input matInput type="text" placeholder="Something private" formControlName="url" />
+        </mat-form-field>
+        <mat-card-actions align="end">
+          <button type="submit" mat-flat-button color="primary" (click)="setMoviePrivateConfig()">Update</button>
+        </mat-card-actions>
+      </form>
+    </ng-container>
+  </mat-card>
+
+</section>

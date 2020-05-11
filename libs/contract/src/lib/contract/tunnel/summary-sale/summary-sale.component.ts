@@ -1,18 +1,16 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import { AngularFirestore } from '@angular/fire/firestore';
 import { ContractForm } from '../../form/contract.form';
-import { Movie } from '@blockframes/movie';
-import { FormEntity } from '@blockframes/utils';
-import { ContractVersionPriceControl } from '@blockframes/contract/version/form';
+import { Movie } from '@blockframes/movie/+state/movie.model';
+import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { PriceControl } from '@blockframes/contract/version/form';
 import { MovieCurrenciesSlug } from '@blockframes/utils/static-model';
-import { ContractVersionService } from '@blockframes/contract/version/+state';
-import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state';
-import { DistributionDealStatus } from '@blockframes/movie/distribution-deals/+state/distribution-deal.firestore';
-import { ContractTunnelComponent, DealControls } from '../contract-tunnel.component';
-import { ContractQuery, ContractStatus } from '../../+state';
+import { ContractTunnelComponent, RightControls } from '../contract-tunnel.component';
+import { ContractQuery, ContractService } from '../../+state';
 import { displayPaymentSchedule, displayTerms } from '../../+state/contract.utils';
 import { Observable } from 'rxjs';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'contract-tunnel-summary-sale',
@@ -23,29 +21,33 @@ import { Observable } from 'rxjs';
 export class SummarySaleComponent implements OnInit {
 
   public movies$: Observable<Movie[]>;
-  public dealForms: FormEntity<DealControls>;
+  public rightForms: FormEntity<RightControls>;
   public form: ContractForm;
   public parties: { licensee: FormControl[], licensor: FormControl[] };
   public terms: string;
-  public price: ContractVersionPriceControl;
+  public price: PriceControl;
   public moviePrices: Record<string, FormControl> = {}
   public currency: MovieCurrenciesSlug;
   public payments: { type: string, list: string[] } = { type: '', list: [] };
 
   constructor(
     private tunnel: ContractTunnelComponent,
-    private db: AngularFirestore,
-    private service: ContractVersionService,
-    private dealService: DistributionDealService,
-    private query: ContractQuery
-  ) { }
+    private contractService: ContractService,
+    private query: ContractQuery,
+    private dynTitle: DynamicTitleService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {
+    this.dynTitle.setPageTitle('Contract offer summary', 'Summary and Submit')
+  }
 
   ngOnInit() {
     // Need to create it in the ngOnInit or it's not updated
     this.movies$ = this.tunnel.movies$;
-    this.dealForms = this.tunnel.dealForms;
+    this.rightForms = this.tunnel.rightForms;
     this.form = this.tunnel.contractForm;
-    const lastVersion = this.form.get('versions').last();
+
+    const lastVersion = this.form.get('lastVersion');
 
     this.parties = {
       licensee: this.getParties('licensee'),
@@ -66,26 +68,16 @@ export class SummarySaleComponent implements OnInit {
     return parties.map(p => p.get('party').get('displayName'));
   }
 
-
   /**
    * Submit a contract version to Archipel Content
-   * @todo(#1887) should update the version on the contract
-   * @note cannot put this function on the service or you hit cyrcular dependancies
    */
   async submit() {
-    const lastIndex = this.form.get('versions').value.length - 1;
-    const contractId = this.query.getActiveId();
-
-    // Make sure everything is saved first and that deals have ids
-    await this.tunnel.save();
-    const write = this.db.firestore.batch();
-    this.service.update(`${lastIndex}`, { status: ContractStatus.submitted }, { params: { contractId }, write });
-
-    for (const movieId in this.dealForms.value) {
-      const undernegotiation = { status: DistributionDealStatus.undernegotiation };
-      const dealIds = this.dealForms.get(movieId).value.map(deal => deal.id);
-      this.dealService.update(dealIds, undernegotiation, { params: { movieId }, write });
+    try {
+      await this.tunnel.save();
+      await this.contractService.submit(this.tunnel.contractForm.value);
+    } catch (error) {
+      console.error(error)
     }
-    return write.commit();
+    this.router.navigate(['success'], {relativeTo: this.route})
   }
 }

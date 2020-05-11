@@ -1,0 +1,56 @@
+<h1>{{ data.title }}</h1>
+<p>{{ data.subtitle }}</p>
+
+<form [formGroup]="form">
+  <div formGroupName="party">
+    <div fxLayout="row" fxLayoutAlign="center start" fxLayoutGap="20px">
+      <!-- TODO #2102 -->
+      <algolia-autocomplete [index]="algoliaOrg" [control]="displayName" keyToDisplay="name"
+        label="Party Name" (selectionChange)="patchOrgId($event)">
+        <ng-template let-org>{{ org.name }}</ng-template>
+      </algolia-autocomplete>
+      <mat-form-field appearance="outline">
+        <mat-label>Select role</mat-label>
+        <mat-select formControlName="role">
+          <mat-option *ngFor="let role of staticRoles" [value]="role.slug">
+            {{ role.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="center start" fxLayoutGap="20px">
+      <mat-form-field appearance="outline">
+        <mat-label>Select sub role</mat-label>
+        <mat-select [formControl]="childRoleForm()">
+          <mat-option *ngFor="let role of staticSubRoles" [value]="role.slug">
+            {{ role.label }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Org Id</mat-label>
+        <input matInput type="text" placeholder="Org Id" formControlName="orgId" />
+      </mat-form-field>
+    </div>
+  </div>
+  <div fxLayout="row" fxLayoutAlign="center start" fxLayoutGap="20px">
+    <mat-form-field appearance="outline">
+      <mat-label>Status</mat-label>
+      <mat-select formControlName="status">
+        <mat-option *ngFor="let status of statuses | keyvalue" [value]="status.key">
+          {{ status.value }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+</form>
+
+<button class="save" mat-flat-button color="primary" (click)="save()">
+  Save & Exit
+</button>
+<button mat-flat-button color="warn" (click)="removeParty()">
+  <mat-icon svgIcon="refuse"></mat-icon><span>Remove party</span>
+</button>
+<button class="cancel" mat-button color="warn" [mat-dialog-close]="false">
+  Close without saving
+</button>

@@ -1,6 +1,6 @@
 <mat-sidenav-container>
-  <mat-sidenav #sidenav id="dashboard-navbar" [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
-    [mode]="(isHandset$ | async) ? 'over' : 'side'" [opened]="(isHandset$ | async) === false">
+  <mat-sidenav #sidenav id="dashboard-navbar" [attr.role]="(ltMd$ | async) ? 'dialog' : 'navigation'"
+    [mode]="(ltMd$ | async) ? 'over' : 'side'" [opened]="(ltMd$ | async) === false">
     <mat-toolbar>
       <a class="logo" routerLink=".">
         <img src="assets/logo/dark/archipel-content.svg" alt="Archipel Content Logo" />
@@ -9,29 +9,40 @@
     <mat-nav-list>
       <a mat-list-item routerLink="home" routerLinkActive="active">
         <mat-icon matListIcon svgIcon="dashboard"></mat-icon>
-        <span matLine>Dashboard</span>
+        <span matLine><b>Dashboard</b></span>
       </a>
       <a mat-list-item routerLink="titles" routerLinkActive="active">
         <mat-icon matListIcon svgIcon="video_library"></mat-icon>
-        <span matLine>My Titles</span>
+        <span matLine><b>My Titles</b></span>
       </a>
       <a mat-list-item routerLink="deals" routerLinkActive="active">
         <mat-icon matListIcon svgIcon="wallet"></mat-icon>
-        <span matLine>Offers and Deals</span>
+        <span matLine><b>Offers and Deals</b></span>
+      </a>
+      <mat-divider></mat-divider>
+      <a mat-list-item routerLink="contact" routerLinkActive="active">
+        <mat-icon matListIcon svgIcon="mail"></mat-icon>
+        <span matLine><b>Contact</b></span>
       </a>
     </mat-nav-list>
   </mat-sidenav>
 
 
-  <mat-sidenav-content>
+  <mat-sidenav-content #content>
     <!-- TOOLBAR -->
     <mat-toolbar fxLayout="row" fxLayoutAlign="space-between center" id="catalog-toolbar">
       <button mat-icon-button (click)="sidenav.toggle()">
-        <mat-icon>menu</mat-icon>
+        <mat-icon svgIcon="menu"></mat-icon>
       </button>
+      <!--TODO#2728: improve component with filters-->
+      <!-- <algolia-autocomplete native clearable resetInput [index]="movieIndex" keyToDisplay="title.international" prefixIcon="magnifying_glasses">
+        <ng-template let-result>
+          <a [routerLink]="['titles', result.objectID]">{{ result.title.international }}</a>
+        </ng-template>
+      </algolia-autocomplete> -->
       <div fxLayout="row" fxLayoutGap="24px">
         <overlay-notification-widget></overlay-notification-widget>
-        <account-profile-widget></account-profile-widget>
+        <auth-widget></auth-widget>
       </div>
     </mat-toolbar>
     <!-- CONTENT -->

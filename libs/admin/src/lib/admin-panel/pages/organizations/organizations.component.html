@@ -5,24 +5,29 @@
   [columns]="versionColumns" 
   [initialColumns]="initialColumns" 
   [filterPredicate]="filterPredicate"
-  showFilter="true"
-  showLoader="true"
-  showPaginator="true">
+  showFilter
+  showLoader
+  showPaginator>
   <ng-template colRef="logo" let-logo>
     <ng-container *ngIf="logo; else nologo">
-      <img class="logo" [src]="logo">
+      <img class="logo" [imgRef]="logo"  placeholderAsset="empty_poster.webp">
     </ng-container>
     <ng-template #nologo>
       --
     </ng-template>
   </ng-template>
   <ng-template colRef="edit" let-edit>
-    <a [routerLink]="edit.link"><mat-icon>edit</mat-icon></a>
+    <a [routerLink]="edit.link"><mat-icon svgIcon="pencil"></mat-icon></a>
+  </ng-template>
+  <ng-template colRef="denomination" let-denomination>
+    {{ denomination.full }}
   </ng-template>
   <ng-template colRef="appAccess" let-appAccess>
     <ul>
-      <li>Dashboard: {{ appAccess.catalogDashboard ? 'yes': 'no' }}</li>
-      <li>Marketplace: {{ appAccess.catalogMarketplace ? 'yes': 'no' }}</li>
+      <ng-container *ngFor="let access of appAccess | keyvalue">
+        <li>{{ access.key }}-dashboard : {{ access.value.dashboard ? 'yes': 'no' }} </li>
+        <li>{{ access.key }}-marketplace : {{ access.value.marketplace ? 'yes': 'no' }} </li>
+      </ng-container>
     </ul>
   </ng-template>
 </bf-table-filter>

@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { getValue } from '@blockframes/utils/helpers';
 import { InvoiceService } from '@blockframes/contract/invoice/+state/invoice.service';
 import { MovieCurrenciesSlug } from '@blockframes/utils/static-model';
@@ -7,7 +7,8 @@ import { getCodeBySlug } from '@blockframes/utils/static-model/staticModels';
 @Component({
   selector: 'admin-invoices',
   templateUrl: './invoices.component.html',
-  styleUrls: ['./invoices.component.scss']
+  styleUrls: ['./invoices.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InvoicesComponent implements OnInit {
   public versionColumns = {
@@ -43,27 +44,23 @@ export class InvoicesComponent implements OnInit {
 
   async ngOnInit() {
     const invoices = await this.invoiceService.getAllInvoices();
-    this.rows =  invoices.map(i => {
-      const row = {...i} as any;
-      // Append new data for table display
-      row.edit = {
+    this.rows = invoices.map(i => ({
+      ...i,
+      edit: {
         id: i.id,
         link: `/c/o/admin/panel/invoice/${i.id}`,
-      }
-
-      row.contractLink = {
+      },
+      contractLink: {
         id: i.contractId,
         link: `/c/o/admin/panel/contract/${i.contractId}`,
       }
-
-      return row;
-    });
+    }));
 
     this.cdRef.markForCheck();
   }
 
 
-  filterPredicate(data: any, filter) {
+  public filterPredicate(data: any, filter: string) {
     const columnsToFilter = [
       'id',
       'internalRef',
@@ -91,7 +88,7 @@ export class InvoicesComponent implements OnInit {
   }
 
   public getOrgPath(orgId: string) {
-    return  `/c/o/admin/panel/organization/${orgId}`;
+    return `/c/o/admin/panel/organization/${orgId}`;
   }
- 
+
 }

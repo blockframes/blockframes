@@ -1,0 +1,33 @@
+<layout-dashboard hideSearchbar>
+  <aside fxLayout="column" fxLayoutAlign="space-between">
+    <mat-toolbar>
+      <a class="logo" routerLink=".">
+        <img asset="archipel_market.png" alt="Archipel Content Logo" />
+      </a>
+    </mat-toolbar>
+    <mat-nav-list fxFlex>
+      <a mat-list-item routerLink="home" routerLinkActive="active">
+        <mat-icon matListIcon svgIcon="dashboard"></mat-icon>
+        <span matLine><b>Dashboard</b></span>
+      </a>
+      <a mat-list-item routerLink="title" routerLinkActive="active">
+        <mat-icon matListIcon svgIcon="video_library"></mat-icon>
+        <span matLine><b>My Titles</b></span>
+      </a>
+      <a mat-list-item routerLink="event" routerLinkActive="active">
+        <mat-icon matListIcon svgIcon="calendar"></mat-icon>
+        <span matLine><b>My Schedule</b></span>
+      </a>
+    </mat-nav-list>
+    <mat-nav-list *ngIf="org$ | async as org">
+      <mat-divider></mat-divider>
+      <a mat-list-item [routerLink]="['/c/o/organization', org.id]" routerLinkActive="active">
+        <img matListAvatar [imgRef]="org.logo" placeholderAsset="empty_organization.webp" alt="Organization logo"/>
+        <span matLine>{{ org | orgName }}</span>
+        <span matLine>
+          <small class="mat-caption">{{ getActivity(org.activity) }}</small>
+        </span>
+      </a>
+    </mat-nav-list>
+  </aside>
+</layout-dashboard>

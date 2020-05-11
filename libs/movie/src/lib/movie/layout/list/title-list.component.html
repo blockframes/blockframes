@@ -1,0 +1,93 @@
+<!-- TODO fix pageBar conflicting with another pageBar in catalog -->
+<!-- <ng-template pageBar targetId="nav">
+  <header fxLayout="row" fxLayoutAlign="start center" fxLayoutGap.gt-sm="10px">
+    <div fxFlex>
+      <ng-template [ngTemplateOutlet]="titleSearchTemplate"></ng-template>
+    </div>
+    <div fxLayout="row" fxLayoutAlign="start center" class="sort">
+      <button *ngIf="canToggle" mat-icon-button (click)="listView = !listView">
+        <ng-container *ngIf="!listView">
+          <mat-icon matPrefix svgIcon="list"></mat-icon>
+        </ng-container>
+        <ng-container *ngIf="listView">
+          <mat-icon matPrefix svgIcon="grid"></mat-icon>
+        </ng-container>
+      </button>
+      <ng-template [ngTemplateOutlet]="titleSortTemplate"></ng-template>
+    </div>
+  </header>
+</ng-template> -->
+
+<section id="nav" fxLayout="row" fxLayoutAlign="space-between center">
+  <h1 class="mat-headline">{{titleType}} list</h1>
+  <article fxLayout="row" fxLayoutAlign="center center">
+    <button *ngIf="canToggle" mat-icon-button (click)="listView = !listView">
+      <ng-container *ngIf="!listView">
+        <mat-icon matPrefix svgIcon="list"></mat-icon>
+      </ng-container>
+      <ng-container *ngIf="listView">
+        <mat-icon matPrefix svgIcon="grid"></mat-icon>
+      </ng-container>
+    </button>
+
+    <ng-template [ngTemplateOutlet]="titleSortTemplate"></ng-template>
+
+  </article>
+</section>
+
+<!-- MAIN SEARCH BAR -->
+<section class="search">
+
+  <ng-template [ngTemplateOutlet]="titleSearchTemplate"></ng-template>
+
+</section>
+
+<!-- FILTER SIDE CARD -->
+<section fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="50px" fxLayout.lt-md="column"
+  fxLayoutAlign.lt-md="center center" class="filters">
+  <aside fxLayout="column" class="filter">
+    <mat-card>
+
+      <ng-content></ng-content>
+
+    </mat-card>
+  </aside>
+
+  <!-- List || card of result -->
+  <article>
+    <ng-container *ngIf="(titles$ | async)?.length; else loading">
+      <ng-container *ngIf="(titles$ | async) as titles">
+        <div fxLayout="row" fxLayoutAlign="end start">
+          <h6>There are {{ titles.length }} {{titleType}}s available!</h6>
+        </div>
+        <div fxLayout="row wrap" fxLayoutGap="24px" fxLayoutGap.lt-lg="16px" fxLayout.lt-sm="column" fxLayoutAlign.lt-md="center center">
+          <ng-container *ngIf="!listView; else displayList">
+            <ng-container *ngFor="let title of titles">
+
+              <!-- INSERT CARD -->
+              <ng-template
+                [ngTemplateOutlet]="titleCardTemplate"
+                [ngTemplateOutletContext]="{$implicit: title}"
+              ></ng-template>
+
+            </ng-container>
+          </ng-container>
+          <ng-template #displayList>
+            <ng-container *ngFor="let title of titles">
+
+              <!-- INSERT LIST ITEM -->
+              <ng-template
+                [ngTemplateOutlet]="titleListItemTemplate"
+                [ngTemplateOutletContext]="{$implicit: title}"
+              ></ng-template>
+
+            </ng-container>
+          </ng-template>
+        </div>
+      </ng-container>
+    </ng-container>
+    <ng-template #loading>
+      <mat-progress-spinner mode="indeterminate" color="primary"></mat-progress-spinner>
+    </ng-template>
+  </article>
+</section>

@@ -1,11 +1,13 @@
 import { MoviePromotionalElements, PromotionalElement, createMoviePromotionalElements, createPromotionalElement } from '../../+state';
-import { FormEntity, FormList, urlValidators, ImgRef, createImgRef } from '@blockframes/utils';
 import { FormControl } from '@angular/forms';
+import { ImgRef, createImgRef } from '@blockframes/utils/image-uploader';
+import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
+import { FormList } from '@blockframes/utils/form/forms/list.form';
 
 function createImgRefForm(reference?: Partial<ImgRef>) {
   const { url, ref, originalRef, originalFileName } = createImgRef(reference);
   return {
-    url: new FormControl(url, urlValidators),
+    url: new FormControl(url),
     ref: new FormControl(ref),
     originalRef: new FormControl(originalRef),
     originalFileName: new FormControl(originalFileName),
@@ -42,7 +44,7 @@ function createPromotionalElementRefControl(promotionalElement?: Partial<Promoti
     label: new FormControl(label),
     size: new FormControl(size),
     ratio: new FormControl(ratio),
-    media: new FormControl(media, urlValidators),
+    media: new FormEntity(createImgRefForm(media)),
     language: new FormControl(language),
     country: new FormControl(country),
   }
@@ -77,12 +79,6 @@ function createMoviePromotionalElementsControls(promotionalElements?: Partial<Mo
 
 export type MoviePromotionalElementsControl = ReturnType<typeof createMoviePromotionalElementsControls>
 
-type MoviePromotionalElementsListKey = ExtractFormListKeys<MoviePromotionalElementsControl>
-
-// Extract the keys that return a FormList
-type ExtractFormListKeys<C> = {
-  [K in keyof C]: C[K] extends FormList<infer I> ? K : never
-}[keyof C]
 
 export class MoviePromotionalElementsForm extends FormEntity<MoviePromotionalElementsControl>{
   constructor(promotionalElements?: MoviePromotionalElements) {

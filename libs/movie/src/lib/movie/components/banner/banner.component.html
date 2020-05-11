@@ -1,10 +1,10 @@
 <figure>
-  <img [imgRef]="poster" placeholderAsset="empty_poster.png" alt="Movie Poster"/>
+  <img [imgRef]="poster" placeholderAsset="empty_poster.webp" alt="Movie Poster" />
   <figcaption>
-    <h1>{{ title.international }}</h1>
-    <h4>{{ title.original }}</h4>
-    <h3>{{ director }}</h3>
-    <p>{{ countries | translateSlug: 'TERRITORIES' }} - {{ date }}</p>
+    <h3 *ngIf="title.international">{{ title.international }}</h3>
+    <p class="mat-caption" *ngIf="title.original">{{ title.original }}</p>
+    <p class="mat-body-1" *ngIf="director">{{ director }}</p>
+    <p class="mat-body-2" *ngIf="countries.length">{{ countries | translateSlug: 'TERRITORIES' }} - {{ date }}</p>
   </figcaption>
 </figure>
 

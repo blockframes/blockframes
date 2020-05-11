@@ -1,8 +1,8 @@
 <tunnel-page>
-  <h4 title>Summary & Submit</h4>
+  <h4 title>Summary & Submission</h4>
   <h1 subtitle>Contract Offer Summary</h1>
   <p description class="mat-body-1">
-    Please verify that all the information you have entered is correct before submitting you contract offer.
+    Please verify that all the information you have entered is correct before submitting your contract offer.
   </p>
 
   <ng-container tunnel-form>
@@ -66,9 +66,9 @@
         </ul>
       </mat-card-content>
     </mat-card>
-  
+
     <ng-container *ngIf="movies$ | async as movies">
-      <!-- Distribution Deals -->
+      <!-- Distribution Rights -->
       <ng-container *ngIf="movies.length else noTitle">
         <h2>Exploitation Rights</h2>
         <ng-container *ngFor="let movie of movies$ | async">
@@ -78,11 +78,11 @@
                 <a mat-stroked-button color="primary" [routerLink]="['..', movie.id]">Edit</a>
               </movie-banner-actions>
             </movie-banner>
-            <ng-container *ngIf="dealForms.get(movie.id) as deals else noDeal" >
-              <ng-container *ngIf="deals.value.length else noDeal" >
-                <catalog-right-list [source]="deals.value"></catalog-right-list>
+            <ng-container *ngIf="rightForms.get(movie.id) as rights else noRight" >
+              <ng-container *ngIf="rights.value.length else noRight" >
+                <catalog-right-list [rights]="rights.value"></catalog-right-list>
               </ng-container>
-              <ng-template #noDeal >
+              <ng-template #noRight >
                 <a mat-button [routerLink]="['..', movie.id]" color="warn">
                   Add a right on this title.
                 </a>
@@ -91,16 +91,15 @@
           </mat-card>
         </ng-container>
         <button class="submit" mat-flat-button color="accent" (click)="submit()">
-          <span>Submit you Contract Offer</span>
+          <span>Submit your Contract Offer</span>
           <mat-icon svgIcon="arrow_forward"></mat-icon>
         </button>
       </ng-container>
-      <!-- If no deal -->
+      <!-- If no right -->
       <ng-template #noTitle >
         <a mat-button color="warn" routerLink="../details">Add a Title to your contract</a>
       </ng-template>
     </ng-container>
   </ng-container>
-  
 
 </tunnel-page>

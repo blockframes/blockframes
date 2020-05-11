@@ -1,0 +1,24 @@
+@import '~@angular/flex-layout/mq';
+
+landing-toolbar {
+  width: 100%;
+  position: fixed;
+  top: 0;
+  z-index: 2;
+}
+
+.transparent-toolbar {
+  background-color: transparent;
+  color: white;
+  border: none;
+}
+
+.plain-toolbar {
+  transition-duration: 1000ms;
+}
+
+@include layout-bp(xs) {
+  .offer {
+    font-size: 30px;
+  }
+}

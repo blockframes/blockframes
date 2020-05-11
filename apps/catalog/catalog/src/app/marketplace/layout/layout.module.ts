@@ -6,15 +6,15 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 
 // Libraries
-// import { ToolbarModule } from '@blockframes/ui';
+// import { ToolbarModule } from '@blockframes/ui/toolbar';
 // import { KeyManagerModule } from '@blockframes/ethers';
 // import { EmailVerifyModule } from '@blockframes/auth';
 import { ImgAssetModule } from '@blockframes/ui/theme';
 
 // Widgets
 import { SearchWidgetModule } from '@blockframes/ui/search-widget';
-import { NotificationWidgetModule } from '@blockframes/notification';
-import { ProfileWidgetModule } from '@blockframes/account';
+import { NotificationWidgetModule } from '@blockframes/notification/notification-widget/notification-widget.module';
+import { AuthWidgetModule } from '@blockframes/auth/components/widget/widget.module';
 
 // Material
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -54,7 +54,7 @@ import { LayoutComponent } from './layout.component';
     // Widgets
     NotificationWidgetModule,
     SearchWidgetModule,
-    ProfileWidgetModule,
+    AuthWidgetModule,
   ],
 })
 export class LayoutModule {}

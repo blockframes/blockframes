@@ -12,56 +12,74 @@ import {
   SoundFormatSlug,
   FormatQualitySlug,
   FormatSlug,
-  GenresSlug,
-  MovieCurrenciesSlug
+  GenresSlug
 } from "@blockframes/utils/static-model";
-import { RawRange, NumberRange } from "@blockframes/utils/common-interfaces/range";
-import { SalesAgent, Producer, Crew, Cast, Stakeholder, Credit } from "@blockframes/utils/common-interfaces/identity";
+import { NumberRange } from "@blockframes/utils/common-interfaces/range";
+import { Producer, Crew, Cast, Stakeholder, Credit } from "@blockframes/utils/common-interfaces/identity";
 import { firestore } from "firebase/app";
 import { ImgRef } from "@blockframes/utils/image-uploader";
 import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
 import { LegalDocument } from "@blockframes/contract/contract/+state/contract.firestore";
+import { Price } from "@blockframes/utils/common-interfaces";
+import { MovieAppAccess } from "@blockframes/utils/apps";
+
+// TODO issue#2582
 
 type Timestamp = firestore.Timestamp;
 
-export enum WorkType {
-  movie = 'Movie',
-  short = 'Short',
-  serie = 'Serie',
-  season = 'Season',
-  volume = 'Volume',
-  episode = 'Episode',
-  collection = 'Collection',
-  tv_film = 'TV Film',
-  flow = 'Flow'
-}
+export const workType = {
+  feature_film: 'Feature Film',
+  short: 'Short',
+  serie: 'Serie',
+  season: 'Season',
+  volume: 'Volume',
+  episode: 'Episode',
+  collection: 'Collection',
+  tv_film: 'TV Film',
+  flow: 'Flow'
+} as const;
 
-export enum StoreType {
-  library = 'Library',
-  line_up = 'Line-Up',
-}
+export type WorkType = keyof typeof workType;
+export type WorkTypeValue = typeof workType[WorkType];
 
-export enum PremiereType {
-  'international' = 'International',
-  'world' = 'World',
-  'market' = 'Market',
-  'national' = 'National',
-}
+export const storeType = {
+  library: 'Library',
+  line_up: 'Line-Up',
+} as const;
 
-export enum UnitBox {
-  boxoffice_dollar = 'Box office in $',
-  boxoffice_euro = 'Box office in €',
-  entrances = '#Entrances',
-}
+export type StoreType = keyof typeof storeType;
+export type StoreTypeValue = typeof storeType[StoreType];
 
-export enum StoreStatus {
-  submitted = 'Submitted',
-  accepted = 'Accepted',
-  draft = 'Draft',
-  refused = 'Refused',
-}
+export const premiereType = {
+  international: 'International',
+  world: 'World',
+  market: 'Market',
+  national: 'National',
+} as const;
 
-export interface EventAnalytics {
+export type PremiereType = keyof typeof premiereType;
+export type PremiereTypeValue = typeof premiereType[PremiereType];
+
+export const unitBox = {
+  boxoffice_dollar: 'Box office in $',
+  boxoffice_euro: 'Box office in €',
+  entrances: '#Entrances',
+} as const;
+
+export type UnitBox = keyof typeof unitBox;
+export type UnitBoxValue = typeof unitBox[UnitBox];
+
+export const storeStatus = {
+  submitted: 'Submitted',
+  accepted: 'Accepted',
+  draft: 'Draft',
+  refused: 'Refused',
+} as const;
+
+export type StoreStatus = keyof typeof storeStatus;
+export type StoreStatusValue = typeof storeStatus[StoreStatus];
+
+export interface MovieEventAnalytics {
   event_date: string,
   event_name: AnalyticsEvents,
   hits: number,
@@ -71,33 +89,24 @@ export interface EventAnalytics {
 export interface MovieAnalytics {
   movieId: string,
   addedToWishlist: {
-    current: EventAnalytics[],
-    past: EventAnalytics[]
+    current: MovieEventAnalytics[],
+    past: MovieEventAnalytics[]
   },
   movieViews: {
-    current: EventAnalytics[],
-    past: EventAnalytics[]
+    current: MovieEventAnalytics[],
+    past: MovieEventAnalytics[]
   },
   promoReelOpened: {
-    current: EventAnalytics[],
-    past: EventAnalytics[]
+    current: MovieEventAnalytics[],
+    past: MovieEventAnalytics[]
   }
 }
+
 
 export interface StoreConfig {
   status: StoreStatus,
   storeType: StoreType,
-}
-
-interface MovieSalesAgentDealRaw<D> {
-  rights: RawRange<D>;
-  territories: TerritoriesSlug[],
-  medias: MediasSlug[],
-  salesAgent?: SalesAgent,
-  reservedTerritories?: TerritoriesSlug[],
-}
-
-export interface MovieSalesAgentDealDocumentWithDates extends MovieSalesAgentDealRaw<Date> {
+  appAccess: MovieAppAccess
 }
 
 export interface MoviePromotionalDescription {
@@ -162,19 +171,28 @@ export interface BoxOffice {
 }
 
 export interface MovieBudget {
-  totalBudget: string, // WIP #1052 use Price Interface?
-  budgetCurrency?: MovieCurrenciesSlug,
-  detailledBudget?: any, // WIP #1052
+  /**
+   * @dev If the budget is fixed, we use totalBudget
+   */
+  totalBudget?: Price,
+  /**
+   * @dev If budget is not fixed, we can put an estimate with estimatedBudget.
+   * @see BUDGET_LIST for possible values
+   * */
   estimatedBudget?: NumberRange,
+  /** @dev More information needed. What is this about ? */
   boxOffice?: BoxOffice[],
 }
 
-export enum MovieLanguageTypes {
-  original = 'original',
-  dubbed = 'dubbed',
-  subtitle = 'subtitle',
-  caption = 'caption',
-}
+export const movieLanguageTypes = {
+  original: 'Original',
+  dubbed: 'Dubbed',
+  subtitle: 'Subtitle',
+  caption: 'Caption',
+} as const;
+
+export type MovieLanguageTypes = keyof typeof movieLanguageTypes;
+export type MovieLanguageTypesValue = typeof movieLanguageTypes[MovieLanguageTypes];
 
 export interface MovieLanguageSpecification {
   original: boolean;
@@ -208,7 +226,6 @@ export interface MovieOfficialIds {
 
 export interface MovieMain {
   internalRef?: string,
-  isan?: string,
   title: Title,
   directors?: Credit[],
   officialIds?: MovieOfficialIds,
@@ -263,7 +280,6 @@ interface MovieRaw<D> {
   _type: 'movies';
   _meta?: DocumentMeta;
   id: string;
-  deliveryIds: string[];
   documents: MovieLegalDocuments;
 
   // Sections
@@ -275,9 +291,13 @@ interface MovieRaw<D> {
   salesInfo: MovieSalesInfoRaw<D>;
   versionInfo: MovieVersionInfo;
   festivalPrizes: MovieFestivalPrizes;
-  salesAgentDeal: MovieSalesAgentDealRaw<D>;
   budget: MovieBudget;
   movieReview: MovieReview[];
+
+  // TODO discuss of what is the better way to store the JWPlayer id with Bruce, François and Yohann
+  // TODO we will need more visibility on the upload part to take the final decision
+  // TODO we also need to consider how to differentiate full movies from trailer
+  hostedVideo?: string;
 }
 
 export interface MovieLegalDocuments {
@@ -312,3 +332,5 @@ export interface MovieStakeholders {
   laboratory: Stakeholder[];
   financier: Stakeholder[];
 }
+
+export type LanguageRecord = Partial<{ [language in LanguagesSlug]: MovieLanguageSpecification }>;

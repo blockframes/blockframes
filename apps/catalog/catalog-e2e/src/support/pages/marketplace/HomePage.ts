@@ -4,22 +4,16 @@ import SearchPage from './SearchPage';
 export default class HomePage extends NavbarPage {
   constructor() {
     super();
-    cy.get('[page-id=catalog-marketplace-homepage]');
+    cy.get('catalog-home');
   }
 
-  public clickDiscover() {
-    cy.get('[page-id=catalog-marketplace-homepage] a[test-id=discover]', {
-      timeout: 10000
-    }).click();
+  public clickViewTheLibrary() {
+    cy.get('catalog-home a[test-id=library]').click();
     return new SearchPage();
   }
 
-  public clickWishlistButton(movieName: string) {
-    cy.get('[page-id=catalog-marketplace-homepage] li').contains(movieName)
-      .parent().parent()
-      .within(() => {
-        cy.get('button').click();
-      });
-    cy.wait(500);
+  public clickFirstWishlistButton() {
+    cy.get('catalog-home mat-carousel').first().find('button[test-id=heart-icon]').first().click( { force: true });
+    cy.wait(2000);
   }
 }

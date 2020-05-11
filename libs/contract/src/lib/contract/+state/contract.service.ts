@@ -1,206 +1,159 @@
 import { Injectable } from '@angular/core';
 import { ContractStore, ContractState } from './contract.store';
-import { CollectionConfig, CollectionService, awaitSyncQuery, Query, WriteOptions } from 'akita-ng-fire';
+import { CollectionConfig, CollectionService, WriteOptions } from 'akita-ng-fire';
 import {
   Contract,
   createContractPartyDetail,
-  initContractWithVersion,
-  ContractWithLastVersion,
-  ContractWithTimeStamp,
   getContractParties,
   createContractFromFirestore,
   cleanContract,
   PublicContract,
   createContract,
-  createContractVersion,
-  createVersionMandate
+  createContractTitleDetail,
 } from './contract.model';
-import orderBy from 'lodash/orderBy';
-import { tap, switchMap } from 'rxjs/operators';
-import { ContractVersionService } from '../../version/+state/contract-version.service';
-import { cleanModel } from '@blockframes/utils';
-import { PermissionsService, OrganizationQuery } from '@blockframes/organization';
-import { ContractDocumentWithDates, ContractStatus, ContractType } from './contract.firestore';
+
+import { ContractDocumentWithDates, ContractDocument } from './contract.firestore';
 import { firestore } from 'firebase/app';
-import { MovieQuery } from '@blockframes/movie';
-import { createContractVersionFromFirestore } from '@blockframes/contract/version/+state/contract-version.model';
-import { ContractVersion } from '@blockframes/contract/version/+state';
 import { Observable } from 'rxjs';
-import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state';
+import { cleanModel } from '@blockframes/utils/helpers';
+import { map } from 'rxjs/internal/operators/map';
+import { PermissionsService } from '@blockframes/permissions/+state/permissions.service';
+import { DistributionRight, createDistributionRight } from '@blockframes/distribution-rights/+state/distribution-right.model';
+import { centralOrgID } from '@env';
+import { DistributionRightService } from '@blockframes/distribution-rights/+state';
+import { OrganizationService } from '@blockframes/organization/+state';
+import { CollectionReference } from '@angular/fire/firestore/interfaces';
 
-
-
-/** Get the active contract and put his lastVersion in it. */
-const contractQuery = (contractId: string): Query<ContractWithTimeStamp> => ({
-  path: `contracts/${contractId}`,
-  versions: contract => ({
-    path: `contracts/${contract.id}/versions`
-  })
-})
-
-/** Get all the contracts where the active movie appears. */
-const movieContractsQuery = (movieId: string): Query<ContractWithTimeStamp[]> => ({
-  path: 'contracts',
-  queryFn: ref => ref.where('titleIds', 'array-contains', movieId).where('type', '==', ContractType.sale),
-  versions: contract => ({
-    path: `contracts/${contract.id}/versions`
-  })
-});
+export type TitlesAndRights = Record<string, DistributionRight[]>;
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'contracts' })
 export class ContractService extends CollectionService<ContractState> {
 
   constructor(
-    private contractVersionService: ContractVersionService,
-    private movieQuery: MovieQuery,
     private permissionsService: PermissionsService,
-    private orgQuery: OrganizationQuery,
+    private distributionRightService: DistributionRightService,
+    private organizationService: OrganizationService,
     store: ContractStore
   ) {
     super(store);
   }
 
-  //////////
-  // SYNC //
-  //////////
-
-  /** Sync the store with every contracts of the active movie. */
-  public syncMovieContracts() {
-    return this.movieQuery.selectActiveId().pipe(
-      // Clear the store everytime the active movieId changes.
-      tap(_ => this.store.reset()),
-      switchMap(movieId => awaitSyncQuery.call(this, movieContractsQuery(movieId)))
-    );
-  }
-
-  /** Sync the store with the given contract. */
-  public syncContractQuery(contractId: string) {
-    // Reset the store to clean the active contract.
-    this.store.reset();
-    return awaitSyncQuery.call(this, contractQuery(contractId));
-  }
-
-  /////////
-  // GET //
-  /////////
-
-  /** Get the mandate contract of an organization */
-  public async getMandate(orgId: string) {
-    const query = ref => ref.where('partyIds', 'array-contains', orgId).where('type', '==', ContractType.sale);
-    const mandates = await this.getValue(query);
-    return (mandates && mandates.length) ? mandates[0] : undefined;
-  }
-
-
   onCreate(contract: Contract, { write }: WriteOptions) {
     // When a contract is created, we also create a permissions document for each parties.
-    return this.permissionsService.addDocumentPermissions(contract, write as firestore.WriteBatch)
+    return this.permissionsService.addDocumentPermissions(contract.id, write as firestore.Transaction)
   }
 
   /**
-   * This convert the Contract into a ContractDocumentWithDates
+   * This converts the Contract into a ContractDocumentWithDates
    * to clean the unused properties in the database (lastVersion).
-  */
+   * @param contract
+   */
   formatToFirestore(contract: Contract): ContractDocumentWithDates {
     return cleanContract(contract);
   }
 
-  /**
-   * @dev Fetch contract and last version. Using contract from store as an argument
-   * is always better as it send less queries to the database
-   *
-   * @param contractOrId argument can be either an string or a Contract
-   */
-  public async getContractWithLastVersion(contractOrId: Contract | string): Promise<ContractWithLastVersion> {
-    try {
-      const contractWithVersion = initContractWithVersion()
-      const contract = typeof contractOrId === 'string'
-        ? await this.getValue(contractOrId)
-        : contractOrId
-
-      contractWithVersion.doc = createContractFromFirestore(contract);
-      const lastVersion = await this.contractVersionService.getContractLastVersion(contract.id);
-      if (lastVersion) {
-        contractWithVersion.last = lastVersion;
-      }
-
-      return contractWithVersion;
-    } catch (error) {
-      console.warn(`Contract ${typeof contractOrId === 'string' ? contractOrId : contractOrId.id} not found.`);
-    }
-  }
-
-  /**
-   *
-   * @param movieId
-   * @param distributionDealId
-   */
-  public async getContractWithLastVersionFromDeal(movieId: string, distributionDealId: string): Promise<ContractWithLastVersion> {
-    const contracts = await this.getValue(ref => ref.where('titleIds', 'array-contains', movieId));
-
-    if (contracts.length) {
-      const contractWithVersion = initContractWithVersion();
-
-      for (const contract of contracts) {
-
-        const contractVersions = await this.contractVersionService.getValue(ref =>
-          ref.where(`titles.${movieId}.distributionDealIds`, 'array-contains', distributionDealId),
-          { params: { contractId: contract.id } }
-        );
-        if (contractVersions.length) {
-          const sortedContractVersions = orderBy(contractVersions, 'id', 'desc');
-          contractWithVersion.doc = createContractFromFirestore(contract);
-          contractWithVersion.last = createContractVersionFromFirestore(sortedContractVersions[0]);
-          return contractWithVersion;
-        }
-      }
-    }
-  }
-
-  /**
-   * Create a new contract and a new version
-   * @note We need this method because `addContractAndVersion` only work on the import.
-   * @param contract The contract to add
-   * @param version Optional content for the first version
-   * @todo(#1887) Don't create _meta
-   * @todo(#2041) Use distribution deal service
-   */
-  public async create(contract: Partial<Contract>, version: Partial<ContractVersion> = {}) {
-    const write = this.db.firestore.batch();
-    const org = this.orgQuery.getActive();
-    // Initialize all values
-    const _contract = createContract({ ...contract, partyIds: [org.id] });
-    const _version = contract.type === ContractType.mandate
-      ? createVersionMandate({ id: '1', ...version })
-      : createContractVersion({ id: '1', ...version });
-    // Create contract + verions + _meta version
-    const contractId = await this.add(_contract, { write });
-    this.contractVersionService.add(_version, { params: { contractId }, write });
-    this.contractVersionService.add({ id: '_meta', count: 1 }, { params: { contractId }, write });
-    await write.commit();
-    return contractId;
-  }
-
-  /**
-   * Add/update a contract & create a new contract version
+  /** 
+   * This converts the ContractDocument into a Contract
    * @param contract
-   * @param version
+   * @dev If this method is implemented, remove akitaPreAddEntity and akitaPreUpdateEntity on store
    */
-  public async addContractAndVersion(
-    contract: ContractWithLastVersion
-  ): Promise<string> {
-    await this.add(contract.doc);
-    await this.contractVersionService.addContractVersion(contract);
-    return contract.doc.id;
+  formatFromFirestore(contract: ContractDocument): Contract {
+    return createContractFromFirestore(contract)
+  }
+
+  /**
+   * Gets the mandate contract of an organization
+   * @param orgId
+   */
+  public async getMandate(orgId: string): Promise<Contract> {
+    const query = (ref: CollectionReference) => ref.where('partyIds', 'array-contains', orgId)
+      .where('type', '==', 'mandate')
+      .limit(1);
+    const contracts = await this.getValue(query);
+
+    // Should only have one result
+    return (contracts && contracts.length) ? createContract(contracts.pop()) : undefined;
+  }
+
+  /**
+   * Gets a contract from a movieId and a distributionRightId
+   * @param movieId
+   * @param distributionRightId
+   */
+  public async getContractFromRight(movieId: string, distributionRightId: string): Promise<Contract> {
+    const contracts = await this.getValue(ref =>
+      ref.where(`lastVersion.titles.${movieId}.distributionRightIds`, 'array-contains', distributionRightId),
+    );
+
+    // Can have only one result
+    return contracts.length ? contracts.pop() : undefined;
+  }
+
+  /**
+   * Creates a new contract
+   * @dev Contract differentiation between types (mandate, sale etc..) is made on the backend functions side.
+   * @see apps/backend-functions/src/contract.ts
+   * @param contract The contract to add
+   */
+  public async create(contract: Partial<Contract>): Promise<string> {
+    return await this.add(createContract(contract));
+  }
+
+  /**
+   * Use this method to push rights and init the related contract
+   * @param licenseeId
+   * @param titlesAndRights
+   * @param contract
+   */
+  public async createContractAndRight(licenseeId: string, titlesAndRights: TitlesAndRights, contract: Contract = createContract({ type: 'sale' })): Promise<string> {
+    if (!contract.id) {
+      contract.id = this.db.createId();
+    }
+
+    // Licensee is the current logged in org
+    const licensees = getContractParties(contract, 'licensee');
+    if (licensees.length === 0) {
+      const licensee = createContractPartyDetail();
+      licensee.party.orgId = licenseeId;
+      licensee.party.role = 'licensee';
+      contract.parties.push(licensee);
+    }
+
+    // Licensor will always be centralOrgID
+    const licensors = getContractParties(contract, 'licensor');
+    if (licensors.length === 0) {
+      const licensor = createContractPartyDetail();
+      licensor.party.orgId = centralOrgID
+      licensor.party.role = 'licensor';
+      contract.parties.push(licensor);
+    }
+
+    // Add contract
+    const isValid = await this.validateAndConsolidateContract(contract);
+    if (isValid) {
+      const write = this.db.firestore.batch();
+      for (const titleId of Object.keys(titlesAndRights)) {
+        const rights = titlesAndRights[titleId];
+        const rightDocs = rights.map(d => createDistributionRight({ ...d, contractId: contract.id }));
+        const distributionRightIds = await this.distributionRightService.add(rightDocs, { params: { movieId: titleId }, write });
+        contract.lastVersion.titles[titleId] = createContractTitleDetail({ distributionRightIds, titleId: titleId });
+      }
+
+      const contractId = await this.add(contract, { write });
+      // Save batch
+      await write.commit();
+      return contractId;
+    }
+
   }
 
   /**
    * Various validation steps for validating a contract
-   * Currently (dec 2019), only validate that there is a licensee and a licensor
+   * Also add data to contract such as parties display names
    * @param contract
    */
-  public async isContractValid(contract: Contract): Promise<boolean> {
+  public async validateAndConsolidateContract(contract: Contract): Promise<boolean> {
 
     // First, contract must have at least a licensee and a licensor
 
@@ -235,45 +188,18 @@ export class ContractService extends CollectionService<ContractState> {
       }
     }
 
-    // Other contract validation steps goes here
-    // TODO: Add more validations steps to the isContractValid function => ISSUE#1542
-
-    return true;
-  }
-
-  /**
-   * This function appends data to contracts by looking on its parents contracts
-   * @param contract
-   * @param parentContracts
-   */
-  public async populatePartiesWithParentRoles(contract: Contract, parentContracts: Contract[] = []): Promise<Contract> {
-
-    /**
-     * @dev If any parent contracts of this current contract have parties with childRoles defined,
-     * We take thoses parties of the parent contracts to put them as regular parties of the current contract.
-     */
-    if (parentContracts.length === 0) {
-      const promises = contract.parentContractIds.map(id => this.getValue(id));
-      if (promises.length) {
-        parentContracts = await Promise.all(promises);
+    // Fetch displayName for parties that have orgId defined
+    for (const p of contract.parties) {
+      if (p.party.orgId) {
+        const org = await this.organizationService.getValue(p.party.orgId);
+        p.party.displayName = org.denomination.full;
       }
     }
 
-    parentContracts.forEach(parentContract => {
-      const partiesHavingRoleForChilds = parentContract.parties.filter(p => p.childRoles && p.childRoles.length);
-      partiesHavingRoleForChilds.forEach(parentPartyDetails => {
-        parentPartyDetails.childRoles.forEach(childRole => {
-          const partyDetails = createContractPartyDetail({ party: parentPartyDetails.party });
-          partyDetails.party.role = childRole;
-          contract.parties.push(partyDetails);
-          if (partyDetails.party.orgId) {
-            contract.partyIds.push(partyDetails.party.orgId);
-          }
-        });
-      });
-    });
+    // Other contract validation steps goes here
+    // TODO: Add more validations steps to the validateAndConsolidateContract function => ISSUE#1542
 
-    return contract;
+    return true;
   }
 
   /**
@@ -292,7 +218,7 @@ export class ContractService extends CollectionService<ContractState> {
     const updatedParty = createContractPartyDetail({
       ...contract.parties[index],
       signDate: new Date(),
-      status: ContractStatus.accepted
+      status: 'accepted'
     });
 
     // Replace the party at the index and update all the parties array.
@@ -316,7 +242,7 @@ export class ContractService extends CollectionService<ContractState> {
     const updatedParty = createContractPartyDetail({
       ...contract.parties[index],
       signDate: new Date(),
-      status: ContractStatus.rejected
+      status: 'rejected'
     });
 
     // Replace the party at the index and update all the parties array.
@@ -324,20 +250,14 @@ export class ContractService extends CollectionService<ContractState> {
     this.update({ ...contract, parties: [...updatedParties, updatedParty] })
   }
 
-  public listenOnPublicContract(contractId: string) : Observable<PublicContract>{
-    return this.db.collection('publicContracts').doc<PublicContract>(contractId).valueChanges();
+  public listenOnContract(contractId: string): Observable<Contract> {
+    return this.collection.doc<Contract>(contractId).valueChanges().pipe(
+      map((contract: Contract) => createContractFromFirestore(contract))
+    );
   }
 
-  /**
-   * @dev ADMIN method
-   * Get all contracts.
-   */
-  public async getAllContracts(): Promise<Contract[]> {
-    const contractsSnap = await this.db
-      .collection('contracts')
-      .get()
-      .toPromise();
-    return contractsSnap.docs.map(c => createContractFromFirestore(c.data()));
+  public listenOnPublicContract(contractId: string): Observable<PublicContract> {
+    return this.db.collection('publicContracts').doc<PublicContract>(contractId).valueChanges();
   }
 
   /**
@@ -349,6 +269,26 @@ export class ContractService extends CollectionService<ContractState> {
       .get()
       .toPromise();
     return contractsSnap.docs.map(c => createContractFromFirestore(c.data()));
+  }
+
+  /**
+   * Changes contract status to submitted. Also updates distribution rights state.
+   * @param _contract
+   */
+  public async submit(_contract: Contract) {
+    const write = this.db.firestore.batch();
+    const contract = { ..._contract };
+    contract.lastVersion = { ...contract.lastVersion, status: 'submitted' }; // For read-only purposes
+    this.update(contract, { write });
+
+    for (const titleId in contract.lastVersion.titles) {
+      this.distributionRightService.update(
+        contract.lastVersion.titles[titleId].distributionRightIds,
+        { status: 'undernegotiation' },
+        { params: { movieId: titleId }, write }
+      );
+    };
+    return write.commit();
   }
 
 }

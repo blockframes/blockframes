@@ -1,3 +1,12 @@
+@import '~@angular/flex-layout/mq';
+
+widget-card {
+  max-width: 430;
+  max-height: 700px;
+  border-radius: 10px;
+  margin-right: 24px;
+}
+
 mat-card-header {
   background-color: var(--primary);
 }
@@ -6,7 +15,6 @@ mat-card-header {
   padding: 10px;
 }
 
-
-widget-card {
-  max-width: 400px;
+footer {
+  margin-top: 16px;
 }

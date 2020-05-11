@@ -1,0 +1,4 @@
+<img [imgRef]="user.avatar" placeholderAsset="profil_user.webp" alt="User avatar" />
+<h5>{{ user.firstName }} {{ user.lastName }}</h5>
+<h4>{{ user.position }}</h4>
+<a class="mat-caption" [href]="'mailto:' + user.email">{{ user.email }}</a>

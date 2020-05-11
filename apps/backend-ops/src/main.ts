@@ -1,7 +1,7 @@
 import { prepareForTesting, restoreShortcut, upgrade } from './firebaseSetup';
 import { migrate } from './migrations';
 import { exitable, showHelp } from './tools';
-import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs } from './algolia';
+import { upgradeAlgoliaMovies, upgradeAlgoliaOrgs, upgradeAlgoliaUsers } from './algolia';
 import { clearUsers, createUsers, printUsers, syncUsers } from './users';
 
 const args = process.argv.slice(2);
@@ -27,6 +27,8 @@ if (cmd === 'prepareForTesting') {
   exitable(upgradeAlgoliaOrgs)();
 } else if (cmd === 'upgradeAlgoliaMovies') {
   exitable(upgradeAlgoliaMovies)();
+} else if (cmd === 'upgradeAlgoliaUsers') {
+  exitable(upgradeAlgoliaUsers)();
 } else {
   showHelp();
   process.exit(1);

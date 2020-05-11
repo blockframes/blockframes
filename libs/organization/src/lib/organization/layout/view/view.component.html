@@ -1,0 +1,57 @@
+<ng-container *ngIf="org">
+  <!-- Page Bar -->
+  <ng-template pageBar targetId="nav">
+    <div class="page-bar" fxLayout fxLayoutAlign="space-between center" fxLayoutGap="16px">
+      <app-menu></app-menu>
+      <div fxFlex fxLayout fxLayoutAlign="start center">
+        <ng-container *ngFor="let link of navLinks">
+          <a mat-button [color]="rla.isActive ? 'primary' : ''" [routerLink]="link.path" routerLinkActive #rla="routerLinkActive">
+            {{link.label}}
+          </a>
+        </ng-container>
+      </div>
+      <div fxLayout fxLayoutAlign="end" fxLayoutGap="16px">
+        <div fxLayout="column" fxLayoutAlign="space-around end">
+          <span>{{ org.denomination.full }}</span>
+          <span class="mat-caption">{{ org.activity | toLabel: 'orgActivity' | async }}</span>
+        </div>
+        <img [imgRef]="org.logo" placeholderAsset="Organization_250.png" alt="organization logo" />
+      </div>
+    </div>
+  </ng-template>
+
+  <header fxLayout="row" fxLayoutAlign="start start" @fade>
+    <a mat-icon-button routerLink="..">
+      <mat-icon svgIcon="arrow_back"></mat-icon>
+    </a>
+    <img [imgRef]="org.logo" placeholderAsset="Organization_250.png" alt="organization logo" />
+    <article fxLayout="column" fxLayoutAlign="start start">
+      <h4>{{ org.activity | toLabel: 'orgActivity' | async }}</h4>
+      <h1>{{ org.denomination.full }}</h1>
+      <h2>
+        {{ org.addresses.main.street | titlecase }}
+        <ng-container *ngIf="org.addresses.main.street && org.addresses.main.zipCode">, </ng-container>
+        {{ org.addresses.main.zipCode | titlecase }}
+        <ng-container *ngIf="org.addresses.main.zipCode && org.addresses.main.city">, </ng-container>
+        {{ org.addresses.main.city | titlecase }}
+      </h2>
+      <p>{{ org.description }}</p>
+      <ng-container *ngIf="org.email">
+        <a mat-stroked-button color="primary" [href]="'mailto:' + org.email">
+          <span>Get in touch</span>
+          <mat-icon svgIcon="arrow_forward"></mat-icon>
+        </a>
+      </ng-container>
+    </article>
+  </header>
+  <nav id="nav" mat-tab-nav-bar @fade>
+    <a mat-tab-link
+        *ngFor="let link of navLinks"
+        [routerLink]="link.path"
+        routerLinkActive #rla="routerLinkActive"
+        [active]="rla.isActive">
+      {{link.label}}
+    </a>
+  </nav>
+  <router-outlet></router-outlet>
+</ng-container>

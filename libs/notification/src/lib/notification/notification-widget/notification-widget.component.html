@@ -9,7 +9,7 @@
       </mat-icon>
     </ng-container>
     <ng-template #empty >
-      <mat-icon>notifications_none</mat-icon>
+      <mat-icon svgIcon="bell"></mat-icon>
     </ng-template>
   </button>
 </section>
@@ -17,10 +17,10 @@
 <overlay-widget #notifications test-id="notification-list">
   <widget-card>
     <header widgetHeader color="primary" fxLayout="row" fxLayoutAlign="space-between center">
-      <span>Recent Activity</span>
+      <span class="mat-caption">Recent Activity</span>
     </header>
     <invitation-list></invitation-list>
-    <notification-list></notification-list>
+    <notification-list [notificationsByDate]="(notifications$ | async)"></notification-list>
     <footer widgetFooter>
       <a mat-button color="primary" [routerLink]="page">
         <span>View All Activity</span>

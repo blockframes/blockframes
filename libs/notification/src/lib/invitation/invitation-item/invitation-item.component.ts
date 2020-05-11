@@ -1,7 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { InvitationService } from '../+state';
+import { InvitationService, Invitation } from '../+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { InvitationDocument, InvitationType, InvitationStatus } from '../+state/invitation.firestore';
 
 @Component({
   selector: 'invitation-item',
@@ -10,26 +9,24 @@ import { InvitationDocument, InvitationType, InvitationStatus } from '../+state/
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class InvitationItemComponent {
-  @Input() invitation: InvitationDocument;
+  @Input() invitation: Invitation;
   @Input() inWidget: boolean;
-  @Input() placeholderUrl: string;
 
-  constructor(private service: InvitationService, private snackBar: MatSnackBar) {}
+  constructor(
+    private service: InvitationService,
+    private snackBar: MatSnackBar,
+  ) { }
 
-  /** Creates a message based on the invitation.type. */
-  public get message(): string {
+  public get invitationLink(): string | boolean {
     switch (this.invitation.type) {
-      case InvitationType.toWorkOnDocument:
-        return 'You have been invited to work on a delivery.';
-      case InvitationType.fromUserToOrganization:
-        // TODO #1140 Put message in an other file dedicated to that
-        return `${this.invitation.user.name} ${this.invitation.user.surname} wants to join your organization`;
-      case InvitationType.fromOrganizationToUser:
-        return `Your organization sent an invitation to this user email: ${this.invitation.user.email}`;
+      case 'attendEvent':
+        return `/c/o/marketplace/event/${this.invitation.docId}`;
+      default:
+        return false;
     }
   }
 
-  public acceptInvitation(invitation: InvitationDocument) {
+  public acceptInvitation(invitation: Invitation) {
     try {
       this.service.acceptInvitation(invitation);
       this.snackBar.open('You accepted the invitation!', 'close', { duration: 5000 });
@@ -38,7 +35,7 @@ export class InvitationItemComponent {
     }
   }
 
-  public declineInvitation(invitation: InvitationDocument) {
+  public declineInvitation(invitation: Invitation) {
     try {
       this.service.declineInvitation(invitation);
       this.snackBar.open('You declined the invitation.', 'close', { duration: 5000 });
@@ -48,9 +45,7 @@ export class InvitationItemComponent {
   }
 
   public get displayInvitationButtons(): boolean {
-    return (
-      this.invitation.type === InvitationType.fromUserToOrganization &&
-      this.invitation.status === InvitationStatus.pending
-    );
+    return this.service.isInvitationForMe(this.invitation) && this.invitation.status === 'pending';
   }
+
 }

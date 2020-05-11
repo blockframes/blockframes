@@ -1,21 +1,21 @@
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { MovieService, createMovie } from '@blockframes/movie';
 import { Router, ActivatedRoute } from '@angular/router';
-import { AuthQuery } from '@blockframes/auth';
-import { TunnelService } from '@blockframes/ui/tunnel';
+import { TunnelService } from '@blockframes/ui/tunnel/tunnel.service';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 const cardContents = [
   {
     title: 'Title Information',
-    img: 'title_infos.svg'
+    img: 'title_infos.webp'
   },
   {
     title: 'Media',
-    img: 'media.svg'
+    img: 'media.webp'
   },
   {
     title: 'Legal Information',
-    img: 'legal_information.svg'
+    img: 'legal_informartion.webp'
   },
 ];
 
@@ -34,10 +34,12 @@ export class StartTunnelComponent implements OnInit {
   constructor(
     private movieService: MovieService,
     private tunnelService: TunnelService,
-    private auth: AuthQuery,
     private router: Router,
-    private route: ActivatedRoute
-  ) { }
+    private route: ActivatedRoute,
+    private dynTitle: DynamicTitleService
+  ) {
+    this.dynTitle.setPageTitle('Add a title')
+  }
 
   ngOnInit() {
     this.routeBeforeTunnel = this.tunnelService.previousUrl || '../../';
@@ -46,11 +48,9 @@ export class StartTunnelComponent implements OnInit {
   async begin() {
     this.loading = true;
     try {
-      const createdBy = this.auth.getValue().uid;
-      const movie = createMovie({ _meta: { createdBy } });
-      const movieId = await this.movieService.add(movie);
+      const { id } = await this.movieService.create();
       this.loading = false;
-      this.router.navigate([movieId], { relativeTo: this.route });
+      this.router.navigate([id], { relativeTo: this.route });
     } catch (err) {
       this.loading = false;
       console.error(err);

@@ -1,13 +1,13 @@
 import { combineLatest, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ChangeDetectionStrategy, Component, HostBinding, OnInit } from '@angular/core';
-import { Movie, MovieQuery } from '@blockframes/movie/movie/+state';
-import { CartService } from '@blockframes/organization/cart/+state/cart.service';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { Movie, MovieQuery } from '@blockframes/movie/+state';
+import { CartService } from '@blockframes/cart/+state/cart.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
-import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
-import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
+import { CatalogCartQuery } from '@blockframes/cart/+state/cart.query';
 import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 interface CarouselSection {
   title: string;
@@ -21,7 +21,6 @@ interface CarouselSection {
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MarketplaceHomeComponent implements OnInit {
-  @HostBinding('attr.page-id') pageId = 'catalog-marketplace-homepage';
 
   /** Observable to fetch all movies from the store */
   public moviesBySections$: Observable<CarouselSection[]>;
@@ -32,7 +31,9 @@ export class MarketplaceHomeComponent implements OnInit {
     private snackbar: MatSnackBar,
     private analytics: FireAnalytics,
     private catalogCartQuery: CatalogCartQuery,
+    private dynTitle: DynamicTitleService
   ) {
+    this.dynTitle.setPageTitle('Marketplace')
   }
 
   ngOnInit() {
@@ -84,8 +85,8 @@ export class MarketplaceHomeComponent implements OnInit {
   public addToWishlist(movie: Movie, event: Event) {
     event.stopPropagation();
     this.cartService.updateWishlist(movie);
-    this.snackbar.open(`${movie.main.title.international} has been added to your selection.`, 'close', { duration: 2000 });
-    this.analytics.event(AnalyticsEvents.addedToWishlist, {
+    this.snackbar.open(`Title ${movie.main.title.international} has been added.`, 'close', { duration: 2000 });
+    this.analytics.event('addedToWishlist', {
       movieId: movie.id,
       movieTitle: movie.main.title.original,
     });
@@ -94,16 +95,11 @@ export class MarketplaceHomeComponent implements OnInit {
   public removeFromWishlist(movie: Movie, event: Event) {
     event.stopPropagation();
     this.cartService.updateWishlist(movie);
-    this.snackbar.open(`${movie.main.title.international} has been removed from your selection.`, 'close', { duration: 2000 });
-    this.analytics.event(AnalyticsEvents.removedFromWishlist, {
+    this.snackbar.open(`Title ${movie.main.title.international} has been removed.`, 'close', { duration: 2000 });
+    this.analytics.event('removedFromWishlist', {
       movieId: movie.id,
       movieTitle: movie.main.title.original,
     });
-  }
-
-  public getBanner(movie: Movie): string {
-    const movieElement = movie.promotionalElements.banner;
-    return movieElement && movieElement.media && movieElement.media.url;
   }
 
   // TODO 1880 country short code

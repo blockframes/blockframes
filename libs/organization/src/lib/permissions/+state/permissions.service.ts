@@ -2,12 +2,10 @@ import { Injectable } from '@angular/core';
 import { PermissionsQuery } from './permissions.query';
 import { UserRole, createDocPermissions } from './permissions.firestore';
 import { PermissionsState, PermissionsStore } from './permissions.store';
-import { CollectionService, CollectionConfig } from 'akita-ng-fire';
+import { CollectionService, CollectionConfig, AtomicWrite } from 'akita-ng-fire';
 import { firestore } from 'firebase/app';
 import { OrganizationQuery } from '@blockframes/organization/+state/organization.query';
 import { Contract } from '@blockframes/contract/contract/+state/contract.model';
-import { Movie } from '@blockframes/movie/movie/+state/movie.model';
-import { Delivery } from '@blockframes/material';
 
 @Injectable({
   providedIn: 'root'
@@ -28,14 +26,14 @@ export class PermissionsService extends CollectionService<PermissionsState> {
     const permissions = await this.getValue(orgId);
 
     switch (role) {
-      case UserRole.superAdmin:
-        permissions.roles[uid] = UserRole.superAdmin;
+      case 'superAdmin':
+        permissions.roles[uid] = 'superAdmin';
         break;
-      case UserRole.admin:
-        permissions.roles[uid] = UserRole.admin;
+      case 'admin':
+        permissions.roles[uid] = 'admin';
         break;
-      case UserRole.member:
-        permissions.roles[uid] = UserRole.member;
+      case 'member':
+        permissions.roles[uid] = 'member';
         break;
       default:
         throw new Error(`User with id : ${uid} have no role.`);
@@ -46,16 +44,19 @@ export class PermissionsService extends CollectionService<PermissionsState> {
   }
 
   /**
-   * Takes a document (movie or delivery), create relative permissions
+   * Takes a document (movie or contract), create relative permissions
    * and add them to documentPermissions subcollection.
    * @param doc
    * @param write
    */
-  public addDocumentPermissions(doc: Movie | Delivery | Contract, write: firestore.WriteBatch) {
-    const organizationId = this.organizationQuery.getActiveId();
-    const documentPermissions = createDocPermissions({ id: doc.id, ownerId: organizationId });
+  public addDocumentPermissions(
+    docId: string,
+    write: AtomicWrite,
+    organizationId: string = this.organizationQuery.getActiveId()
+  ) {
+    const documentPermissions = createDocPermissions({ id: docId, ownerId: organizationId });
     const documentPermissionsRef = this.db.doc(`permissions/${organizationId}/documentPermissions/${documentPermissions.id}`).ref;
-    write.set(documentPermissionsRef, documentPermissions);
+    (write as firestore.WriteBatch).set(documentPermissionsRef, documentPermissions);
   }
 
   /**

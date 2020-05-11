@@ -1,0 +1,41 @@
+:host {
+  display: block;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.background {
+  background-size: cover;
+  height: 100%;
+  width: 100%;
+}
+
+.overlay {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  padding: 8px;
+  background-color: rgb(black, 0.6);
+
+  h5, span {
+    max-width: 100%;
+    white-space: normal;
+    text-align: center;
+  }
+}
+
+
+.large {
+  background-position: top;
+}
+
+.small {
+  background-position: center;
+}

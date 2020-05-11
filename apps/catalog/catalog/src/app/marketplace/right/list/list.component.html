@@ -1,0 +1,33 @@
+<ng-container *ngIf="!(salesLoading$ | async)">
+
+  <ng-container *ngIf="(tabs$ | async) as tabs">
+    <!-- Check if we have contracts in the tab "All" -->
+    <ng-container *ngIf="tabs[0].contracts.length else noDeal">
+      <h1>Offers & Deals</h1>
+
+      <mat-tab-group  (selectedTabChange)="refreshTitle($event)">
+        <mat-tab *ngFor="let tab of tabs">
+          <ng-template mat-tab-label>
+              {{ tab.name }} ({{ tab.contracts.length }})
+          </ng-template>
+          <ng-template matTabContent>
+            <ng-container *ngIf="tab.contracts.length; else noContracts">
+              <contract-table [contracts]="tab.contracts" app="marketplace"></contract-table>
+            </ng-container>
+            <ng-template #noContracts >
+              <span>There are no contract in {{ tab.name }}</span>
+            </ng-template>
+          </ng-template>
+        </mat-tab>
+      </mat-tab-group>
+    </ng-container>
+    <ng-template #noDeal>
+      <section fxLayout="column" fxLayoutAlign="center center">
+        <h1>You have no ongoing offers or deals yet.</h1>
+        <img asset="no_titles.webp" alt="No title image">
+        <a mat-flat-button color="warn" routerLink="../search">Explore the Library</a>
+      </section>
+    </ng-template>
+  </ng-container>
+
+</ng-container>

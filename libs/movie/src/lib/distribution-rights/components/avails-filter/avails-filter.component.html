@@ -1,0 +1,77 @@
+<ng-container [formGroup]="availsForm">
+  <h5>AVAILS</h5>
+  <p class="mat-caption">You need to fill in Terms, Territory and Media before applying the Avails filter</p>
+  <!-- Availabilities -->
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <span class="mat-body-1" test-id="availabilities-panel">Terms</span>
+    </mat-expansion-panel-header>
+    <ng-container formGroupName="terms">
+      <mat-form-field appearance="outline">
+        <mat-label>Start Date</mat-label>
+        <input matInput formControlName="start" [matDatepicker]="pickerAvailableFrom" placeholder="Start Date"
+          required />
+        <mat-error *ngIf="availsForm.get('terms').get('start').hasError('min')">
+          You only can choose the current year and above.
+        </mat-error>
+        <mat-datepicker-toggle test-id="datepicker-from" matSuffix [for]="pickerAvailableFrom">
+          <mat-icon matDatepickerToggleIcon svgIcon="calendar"></mat-icon>
+        </mat-datepicker-toggle>
+        <mat-datepicker #pickerAvailableFrom startView="multi-year" (yearSelected)="chosenYearHandler($event, 'start')"
+          (monthSelected)="chosenMonthHandler($event, pickerAvailableFrom, 'start')" panelClass="example-month-picker">
+        </mat-datepicker>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>End Date</mat-label>
+        <input matInput formControlName="end" [matDatepicker]="pickerAvailableTo" placeholder="End Date" required />
+        <mat-datepicker-toggle test-id="datepicker-to" matSuffix [for]="pickerAvailableTo">
+          <mat-icon matDatepickerToggleIcon svgIcon="calendar"></mat-icon>
+        </mat-datepicker-toggle>
+        <mat-datepicker #pickerAvailableTo startView="multi-year" [startAt]="currentYear" startView="multi-year"
+          (yearSelected)="chosenYearHandler($event, 'end')"
+          (monthSelected)="chosenMonthHandler($event, pickerAvailableTo, 'end')" panelClass="example-month-picker">
+        </mat-datepicker>
+      </mat-form-field>
+    </ng-container>
+    <mat-error *ngIf="availsForm.get('terms').hasError('invalidRange')">
+      The value <i>End</i> can't be smaller than the value <i>Start</i>!
+    </mat-error>
+  </mat-expansion-panel>
+
+  <!-- Territories -->
+  <mat-expansion-panel *ngIf="showTerritoryFilter">
+    <mat-expansion-panel-header>
+      <span class="mat-body-1" test-id="territories-panel">Territory</span>
+    </mat-expansion-panel-header>
+    <chips-autocomplete
+      [form]="territories"
+      model="TERRITORIES"
+      placeholder="Territories"
+      [disabled]="isFormDisabled"
+    ></chips-autocomplete>
+  </mat-expansion-panel>
+
+  <!-- Media -->
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <span class="mat-body-1" test-id="mandate-medias-panel">Media</span>
+    </mat-expansion-panel-header>
+    <div fxLayout="column" fxLayoutAlign="start space-between" class="checkbox-padding">
+      <mat-checkbox *ngFor="let media of movieMedias" (change)="checkMedia(media)" color="primary" [disabled]="availsForm.value.isActive">
+        {{  media | translateSlug: 'MEDIAS' }}
+      </mat-checkbox>
+    </div>
+  </mat-expansion-panel>
+
+  <!-- Exclusivity -->
+  <mat-expansion-panel>
+    <mat-expansion-panel-header>
+      <span class="mat-body-1">Exclusivity</span>
+    </mat-expansion-panel-header>
+    <article fxLayout="row" fxLayoutGap="10px">
+      <span>No</span>
+      <mat-slide-toggle formControlName="exclusive" color="primary"></mat-slide-toggle>
+      <span>Yes</span>
+    </article>
+  </mat-expansion-panel>
+</ng-container>

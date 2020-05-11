@@ -1,5 +1,11 @@
 @mixin mat-bf-sidenav-theme($theme) {
+  $background: map-get($theme, background);
+
   mat-sidenav {
     width: 256px;
+  }
+
+  mat-sidenav-content[tunnelSpecificities] {
+    background-color: mat-color($background, app-bar);
   }
 }

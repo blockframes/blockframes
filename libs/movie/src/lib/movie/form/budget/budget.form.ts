@@ -4,6 +4,7 @@ import { FormControl } from '@angular/forms';
 import { BoxOffice } from '../../+state/movie.firestore';
 import { createBoxOffice } from '../../+state/movie.model';
 import { NumberRange } from '@blockframes/utils/common-interfaces/range';
+import { PriceForm } from '@blockframes/contract/version/form/price/price.form';
 
 export const BUDGET_LIST: NumberRange[] = [
   { from: 0, to: 1000000, label: 'Less than $1 million' },
@@ -16,15 +17,12 @@ export const BUDGET_LIST: NumberRange[] = [
 ];
 
 function createBudgetFormControl(entity?: Partial<MovieBudget>) {
-  const { totalBudget, budgetCurrency, detailledBudget, estimatedBudget, boxOffice } = createMovieBudget(entity);
+  const { totalBudget, estimatedBudget, boxOffice } = createMovieBudget(entity);
   return {
-    totalBudget: new FormControl(totalBudget),
-    budgetCurrency: new FormControl(budgetCurrency),
-    detailledBudget: new FormControl(detailledBudget),
+    totalBudget: new PriceForm(totalBudget),
     // We use FormControl because objet { from, to } is one value (cannot update separately)
     estimatedBudget: new FormControl(estimatedBudget),
     boxOffice: FormList.factory(boxOffice, el => new BoxOfficeForm(el))
-    // boxOffice: FormList.factory(boxOffice, el => new BoxOfficeForm(el)),
   }
 }
 

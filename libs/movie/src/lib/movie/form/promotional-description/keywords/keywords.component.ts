@@ -4,7 +4,7 @@ import { startWith } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { FormList } from '@blockframes/utils';
+import { FormList } from '@blockframes/utils/form/forms/list.form';
 @Component({
   selector: '[form] movie-form-keywords',
   templateUrl: './keywords.component.html',

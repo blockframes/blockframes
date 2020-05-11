@@ -1,0 +1,45 @@
+<form [formGroup]="form" fxLayout="row" fxLayoutGap="20px">
+    <!-- Period -->
+    <div fxLayout="column">
+        <mat-slide-toggle [formControl]="periodCtrl" color="primary" (change)="updateState($event, 'event')">
+        </mat-slide-toggle>
+        <mat-form-field appearance="outline">
+            <mat-label>License Start Date</mat-label>
+            <input matInput [matDatepicker]="licenseeStart" formControlName="start">
+            <mat-datepicker-toggle matSuffix [for]="licenseeStart"></mat-datepicker-toggle>
+            <mat-datepicker #licenseeStart></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>License End Date</mat-label>
+            <input matInput [matDatepicker]="licenseeEnd" formControlName="end" />
+            <mat-datepicker-toggle matSuffix [for]="licenseeEnd"></mat-datepicker-toggle>
+            <mat-datepicker #licenseeEnd></mat-datepicker>
+        </mat-form-field>
+    </div>
+    <mat-divider vertical></mat-divider>
+    <!-- Period of Event -->
+    <div fxLayout="column">
+        <mat-slide-toggle [formControl]="eventCtrl" color="primary" (change)="updateState($event, 'period')">Event &
+            period</mat-slide-toggle>
+        <mat-form-field appearance="outline">
+            <mat-label>Event triggering holdback</mat-label>
+            <mat-select test-id="event" formControlName="floatingStart">
+                <mat-option *ngFor="let event of events | keyvalue" [value]="event.key">{{ event.value }}</mat-option>
+            </mat-select>
+        </mat-form-field>
+        <form formGroupName="floatingDuration" fxLayout="column">
+            <mat-form-field appearance="outline">
+                <mat-label>Duration</mat-label>
+                <input test-id="duration" type="number" matInput autocomplete="off" formControlName="duration">
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+                <mat-label>Period</mat-label>
+                <mat-select test-id="period" formControlName="unit">
+                    <mat-option *ngFor="let duration of durations | keyvalue" [value]="duration.key">
+                        {{ duration.value }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </form>
+    </div>
+</form>

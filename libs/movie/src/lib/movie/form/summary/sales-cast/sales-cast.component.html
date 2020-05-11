@@ -2,19 +2,22 @@
   <li>
     <strong>Principal Cast </strong>
     <ng-container *ngFor="let cast of salesCast.cast.controls; let isLast = last">
-      <ng-container *ngIf="cast.get('role').value === 'lead-role'">
-        <missing-control [control]="cast.get('firstName')" [link]="link"></missing-control>
-        <missing-control [control]="cast.get('lastName')" [link]="link" [isLast]="isLast"></missing-control>
-      </ng-container>
+      <!-- TODO #2306 -->
+      <!--       <ng-container *ngIf="cast.get('role').value === 'lead-role'"> -->
+      <missing-control [control]="cast.get('firstName')" [link]="link"></missing-control>
+      <span>&nbsp;</span>
+      <missing-control [control]="cast.get('lastName')" [link]="link" [isLast]="isLast"></missing-control>
+      <!--       </ng-container> -->
     </ng-container>
   </li>
-  <li>
+  <!--  <li>
     <strong>Secondary Roles </strong>
-    <ng-container *ngFor="let cast of salesCast.cast.controls; let isLast = last">
-      <ng-container *ngIf="cast.get('role').value === 'secondary-role'">
-        <missing-control [control]="cast.get('firstName')" [link]="link"></missing-control>
-        <missing-control [control]="cast.get('lastName')" [link]="link" [isLast]="isLast"></missing-control>
-      </ng-container>
-    </ng-container>
-  </li>
+    <ng-container *ngFor="let cast of salesCast.cast.controls; let isLast = last"> -->
+  <!-- TODO #2306 -->
+  <!--   <ng-container *ngIf="cast.get('role').value === 'secondary-role'"> -->
+  <!--   <missing-control [control]="cast.get('firstName')" [link]="link"></missing-control>
+      <missing-control [control]="cast.get('lastName')" [link]="link" [isLast]="isLast"></missing-control> -->
+  <!--       </ng-container> -->
+  <!--    </ng-container>
+  </li> -->
 </ul>

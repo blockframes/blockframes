@@ -35,13 +35,14 @@ const fade = trigger('fade', [
   `, `
     .widget-header {
       display: block;
-      border-radius: 4px 4px 0 0;
+      border-radius: 10px 10px 0 0;
       padding: 16px;
     }
   `, `
     .widget-footer {
       display: block;
-      border-radius: 0 0 4px 4px;
+      border-radius: 0 0 10px 10px;
+      margin-top: 16px;
     }
     .widget-footer .mat-button {
         padding: 16px;
@@ -52,11 +53,11 @@ const fade = trigger('fade', [
   animations: [fade]
 })
 export class OverlayWidgetComponent implements OnDestroy {
-  @ViewChild('ref', { static: false }) public ref: TemplateRef<any>;
+  @ViewChild('ref') public ref: TemplateRef<any>;
   private overlayRef: OverlayRef;
   private widgetPortal: TemplatePortal;
   private opened = false;
-  
+
   constructor(
     private overlay : Overlay,
     private viewContainerRef: ViewContainerRef,
@@ -70,7 +71,7 @@ export class OverlayWidgetComponent implements OnDestroy {
     }
   }
 
-  open(connectedTo: ElementRef) {
+  open(connectedTo: ElementRef, tooltip?: boolean) {
     if (this.opened) {
       return;
     }
@@ -85,7 +86,9 @@ export class OverlayWidgetComponent implements OnDestroy {
         overlayX: 'start',
         overlayY: 'top'
       }]);
-      this.overlayRef = this.overlay.create({
+      this.overlayRef = tooltip ? this.overlay.create({
+        positionStrategy,
+      }) : this.overlay.create({
         hasBackdrop: true,
         backdropClass: 'cdk-overlay-transparent-backdrop',
         positionStrategy,

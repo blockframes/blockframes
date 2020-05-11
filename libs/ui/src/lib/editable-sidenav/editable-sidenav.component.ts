@@ -8,7 +8,7 @@ import { MatSidenav } from '@angular/material/sidenav';
 })
 export class EditableSidenavComponent {
 
-  @ViewChild('sidenav', {static: false}) sidenav: MatSidenav;
+  @ViewChild('sidenav') sidenav: MatSidenav;
   @Input() opened = false;
   @Output() closed = new EventEmitter();
   @Output() saved = new EventEmitter();

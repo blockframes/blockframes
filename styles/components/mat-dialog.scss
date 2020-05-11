@@ -1,0 +1,13 @@
+@mixin mat-bf-dialog-theme($theme) {
+  $background: map-get($theme, background);
+  $foreground: map-get($theme, foreground);
+
+  .mat-dialog-container {
+    position: relative;
+    .mat-dialog-close {
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
+  }
+}

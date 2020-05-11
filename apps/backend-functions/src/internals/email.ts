@@ -1,7 +1,7 @@
 import SendGrid from '@sendgrid/mail';
 import { sendgridAPIKey } from '../environments/environment';
 
-import { MailData } from '@sendgrid/helpers/classes/mail';
+import { MailDataRequired } from '@sendgrid/helpers/classes/mail';
 
 export interface EmailRequest {
   to: string;
@@ -26,7 +26,7 @@ export async function sendMail({ to, subject, text }: EmailRequest): Promise<any
     return;
   }
   SendGrid.setApiKey(sendgridAPIKey);
-  const msg = {
+  const msg: MailDataRequired = {
     to,
     subject,
     text,
@@ -43,7 +43,7 @@ export function sendMailFromTemplate({to, templateId, data}: EmailTemplateReques
   }
   SendGrid.setApiKey(sendgridAPIKey);
 
-  const msg: MailData = {
+  const msg: MailDataRequired = {
     to,
     from: 'admin@blockframes.io',
     templateId,

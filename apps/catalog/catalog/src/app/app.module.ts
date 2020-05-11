@@ -1,5 +1,4 @@
 import { filter } from 'rxjs/operators';
-import { Subscription } from 'rxjs';
 
 // Angular
 import { BrowserModule } from '@angular/platform-browser';
@@ -10,12 +9,9 @@ import { HttpClientModule } from '@angular/common/http';
 import { ServiceWorkerModule } from '@angular/service-worker';
 import { Router, NavigationEnd, RouterModule } from '@angular/router';
 
-// Libraries
-import { AngularFireAnalyticsModule } from '@blockframes/utils/analytics/analytics.module';
-
 // Akita
 import { AkitaNgRouterStoreModule } from '@datorama/akita-ng-router-store';
-import { environment } from '../environments/environment';
+import { production, firebase, persistenceSettings } from '@env';
 
 // Components
 import { AppComponent } from './app.component';
@@ -27,13 +23,15 @@ import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFirePerformanceModule } from '@angular/fire/performance';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireStorageModule } from '@angular/fire/storage';
+import { AngularFireAnalyticsModule, ScreenTrackingService, UserTrackingService } from '@angular/fire/analytics';
+import 'firebase/storage';
 
 // Sentry
 import { SentryModule } from '@blockframes/utils/sentry.module';
 import { sentryDsn } from '@env';
 
 // Yandex Metrika
-import { NgxMetrikaModule } from '@kolkov/ngx-metrika';
+import { YandexMetricaModule } from '@blockframes/utils/yandex-metrica/yandex-metrica.module'
 import { yandexId } from '@env';
 
 // Intercom
@@ -42,7 +40,6 @@ import { intercomId } from '@env';
 
 // Analytics
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
-import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
 import { ErrorLoggerModule } from '@blockframes/utils/error-logger.module';
 
 @NgModule({
@@ -53,14 +50,14 @@ import { ErrorLoggerModule } from '@blockframes/utils/error-logger.module';
     BrowserAnimationsModule,
     FlexLayoutModule,
     HttpClientModule,
-    ServiceWorkerModule.register('ngsw-worker.js', { enabled: environment.production }),
+    ServiceWorkerModule.register('ngsw-worker.js', { enabled: production }),
 
     // Intercom
     intercomId ? IntercomAppModule : [],
 
     // Firebase
-    AngularFireModule.initializeApp(environment.firebase),
-    AngularFirestoreModule.enablePersistence(environment.persistenceSettings),
+    AngularFireModule.initializeApp(firebase),
+    AngularFirestoreModule.enablePersistence(persistenceSettings),
     AngularFireFunctionsModule,
     AngularFirePerformanceModule,
     AngularFireAuthModule,
@@ -73,13 +70,7 @@ import { ErrorLoggerModule } from '@blockframes/utils/error-logger.module';
     AkitaNgRouterStoreModule,
 
     // Yandex Metrika
-    NgxMetrikaModule.forRoot({
-      id: yandexId,
-      clickmap: true,
-      trackLinks: true,
-      accurateTrackBounce: true,
-      webvisor: true
-    }),
+    YandexMetricaModule.forRoot(yandexId),
 
     // Router
     RouterModule.forRoot([{
@@ -90,25 +81,25 @@ import { ErrorLoggerModule } from '@blockframes/utils/error-logger.module';
       anchorScrolling: 'enabled',
       onSameUrlNavigation: 'reload',
       paramsInheritanceStrategy: 'always',
-      relativeLinkResolution: 'corrected'
+      relativeLinkResolution: 'corrected',
+      scrollPositionRestoration: 'enabled'
     })
   ],
-  providers: [],
+  providers: [ScreenTrackingService, UserTrackingService],
   bootstrap: [AppComponent]
 })
 export class AppModule {
-  private subscription: Subscription;
 
   constructor(private router: Router, private analytics: FireAnalytics) {
     const navEnds = this.router.events.pipe(filter(event => event instanceof NavigationEnd));
-    this.subscription = navEnds.subscribe((event: NavigationEnd) => {
+    navEnds.subscribe((event: NavigationEnd) => {
       try {
-        this.analytics.event(AnalyticsEvents.pageView, {
+        this.analytics.event('pageView', {
           page_location: 'marketplace',
           page_path: event.urlAfterRedirects
         });
       } catch {
-        this.analytics.event(AnalyticsEvents.pageView, {
+        this.analytics.event('pageView', {
           page_location: 'marketplace',
           page_path: event.urlAfterRedirects
         });

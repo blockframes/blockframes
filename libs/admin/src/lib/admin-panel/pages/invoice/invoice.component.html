@@ -2,36 +2,30 @@
 
 <ng-container *ngIf="invoiceForm">
   <form [formGroup]="invoiceForm" fxLayout="column">
-    <div>
-      <mat-form-field appearance="outline">
-        <mat-label>Invoice Status</mat-label>
-        <mat-select formControlName="status" required>
-          <mat-option *ngFor="let status of statuses" [value]="paymentStatus[status]">
-            {{ paymentStatus[status] }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
-    </div>
-    <div>
-      <mat-form-field appearance="outline">
-        <mat-label>Contract Id</mat-label>
-        <input matInput type="text" placeholder="Contract Id" formControlName="contractId" required />
-        <mat-error *ngIf="invoiceForm.get('contractId').hasError('required')">
-          Contract Id is <strong>required</strong>
-        </mat-error>
-      </mat-form-field>
-    </div>
-    <div>
-      <mat-form-field appearance="outline">
-        <mat-label>Buyer Id</mat-label>
-        <input matInput type="text" placeholder="Buyer Id" formControlName="buyerId" required />
-        <mat-error *ngIf="invoiceForm.get('buyerId').hasError('required')">
-          Buyer Id is <strong>required</strong>
-        </mat-error>
-      </mat-form-field>
-    </div>
+    <mat-form-field appearance="outline">
+      <mat-label>Invoice Status</mat-label>
+      <mat-select formControlName="status" required>
+        <mat-option *ngFor="let status of paymentStatus | keyvalue" [value]="status.key">
+          {{ status.value }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Contract Id</mat-label>
+      <input matInput type="text" placeholder="Contract Id" formControlName="contractId" required />
+      <mat-error *ngIf="invoiceForm.get('contractId').hasError('required')">
+        Contract Id is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Buyer Id</mat-label>
+      <input matInput type="text" placeholder="Buyer Id" formControlName="buyerId" required />
+      <mat-error *ngIf="invoiceForm.get('buyerId').hasError('required')">
+        Buyer Id is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
     <mat-card-actions align="end">
-      <button type="submit" mat-raised-button class="main-btn" (click)="update()">Update</button>
+      <button type="submit" mat-flat-button color="primary" (click)="update()">Update</button>
     </mat-card-actions>
   </form>
 </ng-container>

@@ -1,0 +1,32 @@
+@import '~@angular/flex-layout/mq';
+
+section {
+  padding: 0 180px;
+  margin-top: 80px;
+  text-align: center;
+}
+
+.mat-card {
+  width: 100%;
+  height: 300px;
+  padding: 10px 50px;
+  img {
+    width: 150px;
+  }
+}
+
+a {
+  margin-top: 40px;
+}
+
+@include layout-bp(sm) {
+  section {
+    padding: 0 100px
+  }
+}
+
+@include layout-bp(xs) {
+  section {
+    padding: 10px;
+  }
+}

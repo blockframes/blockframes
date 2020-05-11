@@ -1,4 +1,4 @@
-import { StaticSelectModule } from '@blockframes/ui/static-select/static-select.module';
+import { StaticSelectModule } from '@blockframes/ui/static-autocomplete/select/static-select.module';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';

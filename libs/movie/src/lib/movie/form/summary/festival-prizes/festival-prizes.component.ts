@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit } from '@angular/core';
-import { MovieFestivalPrizesForm, MoviePrizeForm } from '@blockframes/movie/movie/form/festival-prizes/festival-prizes.form';
+import { MovieFestivalPrizesForm, MoviePrizeForm } from '@blockframes/movie/form/festival-prizes/festival-prizes.form';
 
 @Component({
   selector: '[festivalPrizes] movie-summary-festival-prizes',
@@ -18,6 +18,6 @@ export class MovieSummaryFestivalPrizesComponent implements OnInit {
   }
 
   public festivalPrizeHasNoValue(festivalPrize: MoviePrizeForm) {
-    return !festivalPrize.get('name').value || !festivalPrize.get('prize').value || !festivalPrize.get('year').value || !festivalPrize.get('premiere').value;
+    return !festivalPrize.get('name').value && !festivalPrize.get('prize').value && !festivalPrize.get('year').value && !festivalPrize.get('premiere').value;
   }
 }

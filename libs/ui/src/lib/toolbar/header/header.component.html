@@ -1,4 +1,4 @@
-<mat-toolbar page-id="navbar" class="mat-elevation-z2 top-mat-toolbar" fxLayout="row" fxLayoutAlign="space-between center">
+<mat-toolbar class="mat-elevation-z2 top-mat-toolbar" fxLayout="row" fxLayoutAlign="space-between center">
   <ng-container *ngIf="AFM_DISABLE"> <!-- TODO #1146 -->
     <!-- Applications panel-->
     <button mat-icon-button (click)="sidenav.toggle();" class="apps-button">
@@ -10,7 +10,7 @@
   <ng-container *ngIf="!AFM_DISABLE"> <!-- TODO #1146 -->
     <div fxHide.gt-xs>
         <button mat-icon-button (click)="sidenav.toggle();">
-            <mat-icon>menu</mat-icon>
+            <mat-icon svgIcon="menu"></mat-icon>
         </button>
     </div>
   </ng-container>

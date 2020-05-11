@@ -75,18 +75,6 @@ export abstract class CreateTx {
     return {...tx, callback};
   }
 
-  /** Craft a transaction that will trigger the Organization.approve() function with the sign delivery operation parameters*/
-  static approveDelivery(orgEthAddress: string, deliveryId: string, callback?: (...args) => void): ActionTx {
-    const tx: Tx = {
-      to: orgEthAddress,
-      value: '0x0',
-      // approve(hash bytes32, operationId uint256, to address, value uint256, data bytes)
-      data: `0x2a66ad97${deliveryId.slice(2)}000000000000000000000000000000000000000000000000000000000000000100000000000000000000000000000000000000000000000000000000ca5cade8000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000a00000000000000000000000000000000000000000000000000000000000000004ca5cade800000000000000000000000000000000000000000000000000000000`
-    };
-
-    return {...tx, callback};
-  }
-
   /** Craft a transaction that will trigger the Organization.admin_addAdmin() function with the sign delivery operation parameters*/
   static addAdmin(orgEthAddress: string, adminEthAddress: string, callback?: (...args) => void): ActionTx {
     const tx: Tx = {

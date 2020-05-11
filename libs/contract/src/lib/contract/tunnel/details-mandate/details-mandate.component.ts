@@ -1,5 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ContractTunnelComponent } from '../contract-tunnel.component';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+
 
 @Component({
   selector: 'contract-details-mandate',
@@ -9,29 +11,34 @@ import { ContractTunnelComponent } from '../contract-tunnel.component';
 })
 export class DetailsMandateComponent {
 
-  constructor(private tunnel: ContractTunnelComponent) { }
+  constructor(
+    private tunnel: ContractTunnelComponent,
+    private dynTitle: DynamicTitleService
+  ) {
+    this.dynTitle.setPageTitle('Create a contract offer', 'Overview')
+  }
 
   get parties() {
     return this.tunnel.contractForm.get('parties');
   }
 
-  get versions() {
-    return this.tunnel.contractForm.get('versions');
+  get lastVersion() {
+    return this.tunnel.contractForm.get('lastVersion');
   }
 
-  public terms(index: number) {
-    return this.versions.at(index).get('scope');
+  public terms() {
+    return this.lastVersion.get('scope');
   }
 
-  public conditions(index: number) {
-    return this.versions.at(index).get('renewalConditions')
+  public conditions() {
+    return this.lastVersion.get('renewalConditions')
   }
 
-  public terminations(index: number) {
-    return this.versions.at(index).get('terminationConditions');
+  public terminations() {
+    return this.lastVersion.get('terminationConditions');
   }
 
-  public fees(index: number) {
-    return this.versions.at(index).get('authorizedRecoupableExpenses')
+  public fees() {
+    return this.lastVersion.get('authorizedRecoupableExpenses')
   }
 }

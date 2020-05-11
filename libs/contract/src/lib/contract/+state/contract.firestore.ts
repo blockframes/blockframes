@@ -12,38 +12,44 @@ import { PaymentScheduleRaw } from "@blockframes/utils/common-interfaces/schedul
 
 type Timestamp = firestore.Timestamp;
 
-export enum ContractStatus {
-  accepted = 'accepted',
-  paid = 'paid',
-  unknown = 'unknown',
-  waitingsignature = 'waiting for signature',
-  waitingpayment = 'waiting for payment',
-  rejected = 'rejected',
-  aborted = 'aborted',
-  /** 
-   * @dev first status of a contract 
+export const contractStatus = {
+  accepted: 'Accepted',
+  paid: 'Paid',
+  unknown: 'Unknown',
+  waitingsignature: 'Waiting for signature',
+  waitingpayment: 'Waiting for payment',
+  rejected: 'Rejected',
+  aborted: 'Aborted',
+  /**
+   * @dev first status of a contract
    * Starting from this status, the contract is visible by creator only
    */
-  draft = 'draft',
-  /** 
-   * @dev once the user hit the submit button, the contract is waiting for approvment 
+  draft: 'Draft',
+  /**
+   * @dev once the user hit the submit button, the contract is waiting for approvment
    * Starting from this status, the contract is visible by creator (but not editable anymore) and by admins
    */
-  submitted = 'submitted',
-  /** 
+  submitted: 'Submitted',
+  /**
    * @dev when an admin checked a "submitted" contract and all seems good.
    * Starting from this status, contract is visible for every parties
    */
-  undernegotiation = 'under negotiation',
-}
+  undernegotiation: 'Under negotiation',
+} as const;
+
+export type ContractStatus = keyof typeof contractStatus;
+export type ContractStatusValue = typeof contractStatus[ContractStatus];
 
 /** @dev Valid values of ContractStatus */
 export const ValidContractStatuses = ['waitingpayment', 'paid', 'accepted'];
 
-export enum ContractType {
-  mandate = 'mandate',
-  sale = 'sale'
-}
+export const contractType = {
+  mandate: 'Mandate',
+  sale: 'Sale'
+} as const;
+
+export type ContractType = keyof typeof contractType;
+export type ContractTypeValue = typeof contractType[ContractType];
 
 interface ContractTitleDetailRaw<D> {
   /**
@@ -52,7 +58,7 @@ interface ContractTitleDetailRaw<D> {
    */
   titleId: string,
   price: PriceRaw<D>,
-  distributionDealIds: string[];
+  distributionRightIds: string[];
 }
 
 export interface ContractTitleDetail extends ContractTitleDetailRaw<Date> {
@@ -62,8 +68,18 @@ export interface ContractTitleDetailDocument extends ContractTitleDetailRaw<Time
 }
 
 interface ContractPartyDetailRaw<D> {
+  /**
+   * @dev This represents a company (at least) and can be linked to an orgId.
+   */
   party: Party,
+  /**
+   * @dev The signature date of the party for the last contract version
+   */
   signDate?: D,
+  /**
+   * @dev The status of the party for the last contract version.
+   * (ie: Accepted, Rejected)
+   */
   status: ContractStatus,
   /**
    * Legal role(s) of this party for child contracts.
@@ -79,7 +95,7 @@ interface ContractPartyDetailRaw<D> {
  * @dev Allows to handle multiple version of a contract
  */
 interface ContractVersionRaw<D> {
-  id: string,
+  id: number,
   status: ContractStatus,
   scope: TermsRaw<D>,
   creationDate?: D,
@@ -105,7 +121,7 @@ interface ContractVersionRaw<D> {
 interface ContractRaw<D> {
   id: string,
   /**
-   * @dev to facilitate firebase queries:
+   * @dev To facilitate firebase queries:
    * Without ContratType :
    *   if we wanted to fetch "Archipel" contracts where partyIds array-contains 'orgId Archipel'
    *   and where the corresponding party role is "licensor", we could not do it in a single Firebase query because
@@ -114,14 +130,32 @@ interface ContractRaw<D> {
    *   we can fetch contracts where partyIds array-contains 'orgId Archipel' and where ContractType = "mandate".
    */
   type: ContractType,
+  /** @dev This array is automatically populated by backend functions */
   parentContractIds?: string[],
+  /** @dev This array is automatically populated by backend functions */
   childContractIds?: string[],
-  /** @dev an informative signature date, given that the actual signatures are in parties */
+  /** @dev An informative signature date, given that the actual signatures are in parties */
   signDate?: D,
   parties: ContractPartyDetailRaw<D>[],
+  /**
+   * @dev Simply contains id of titles existing in lastVersion for querying purposes.
+   * No need to edit it in front code, this will be overrided by backend functions.
+  */
   titleIds: string[],
+  /**
+   * @dev simply contains id of org/parties existing in "parties"  for querying purposes.
+   * No need to edit it in front code, this will be overrided by backend functions.
+   */
   partyIds: string[],
-  documents: ContractLegalDocuments
+  documents: ContractLegalDocuments,
+  /**
+   * @dev This params is handled by backend functions.
+   * This will always contains the last version of the subcollection contractVersion.
+   * If you edit something here, when saving data to DB, a function will
+   * take previous lastVersion content and put it into contractVersion for history purposes.
+   * The new data will then replace the previous lastVersion.
+   */
+  lastVersion: ContractVersionRaw<D>
 }
 /**
  * @dev Public Contract document

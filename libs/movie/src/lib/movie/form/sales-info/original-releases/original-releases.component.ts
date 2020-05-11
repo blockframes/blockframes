@@ -1,8 +1,6 @@
 import { Component, OnInit, Input, ChangeDetectionStrategy, OnDestroy } from '@angular/core';
 import { OriginalReleaseForm } from '../sales-info.form';
-import { MovieForm } from '../../movie.form';
 import { startWith } from 'rxjs/operators';
-import { default as staticModel, ExtractCode } from '@blockframes/utils/static-model/staticModels';
 import { MovieMainControl } from '../../main/main.form';
 import { MovieSalesInfoControl } from '../sales-info.form'
 import { Subscription } from 'rxjs';
@@ -18,7 +16,16 @@ export class OriginalReleaseComponent implements OnInit, OnDestroy {
   @Input() releasesForm: MovieSalesInfoControl['originalRelease'];
   @Input() countriesForm: MovieMainControl['originCountries'];
   private sub: Subscription;
-  media = staticModel.MEDIAS;
+
+  // We want a specific selection 
+  media = [
+    { 'slug': 'pay-tv', 'label': 'Pay TV' },
+    { 'slug': 'free-tv', 'label': 'Free TV' },
+    { 'slug': 'a-vod', 'label': 'A-VOD' },
+    { 'slug': 's-vod', 'label': 'S-VOD' },
+    { 'slug': 'theatrical', 'label': 'Theatrical' },
+    { 'slug': 'video', 'label': 'Video' }
+  ];
 
   constructor() {}
 

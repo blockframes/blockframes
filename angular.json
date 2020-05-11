@@ -3,260 +3,6 @@
   "version": 1,
   "newProjectRoot": "",
   "projects": {
-    "main": {
-      "root": "apps/main/main/",
-      "sourceRoot": "apps/main/main/src",
-      "projectType": "application",
-      "prefix": "main",
-      "schematics": {
-        "@schematics/angular:component": {
-          "styleext": "scss"
-        }
-      },
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:browser",
-          "options": {
-            "outputPath": "dist/apps/main",
-            "index": "apps/main/main/src/index.html",
-            "main": "apps/main/main/src/main.ts",
-            "polyfills": "apps/main/main/src/polyfills.ts",
-            "stylePreprocessorOptions": {
-              "includePaths": ["styles"]
-            },
-            "tsConfig": "apps/main/main/tsconfig.app.json",
-            "assets": [
-              "apps/main/main/src/favicon.ico",
-              "apps/main/main/src/assets",
-              {
-                "glob": "**/*",
-                "input": "./libs/ui/src/lib/assets",
-                "output": "./assets"
-              }
-            ],
-            "styles": ["apps/main/main/src/styles.scss"],
-            "scripts": []
-          },
-          "configurations": {
-            "dev": {},
-            "production": {
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.prod.ts"
-                },
-                {
-                  "replace": "apps/main/main/src/environments/environment.ts",
-                  "with": "apps/main/main/src/environments/environment.prod.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": true,
-              "extractCss": true,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "4.5mb"
-                }
-              ],
-              "serviceWorker": true
-            },
-            "staging": {
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.staging.ts"
-                },
-                {
-                  "replace": "apps/main/main/src/environments/environment.ts",
-                  "with": "apps/main/main/src/environments/environment.staging.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": true,
-              "extractCss": true,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "4.5mb"
-                }
-              ],
-              "serviceWorker": true
-            },
-            "ci": {
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.ci.ts"
-                },
-                {
-                  "replace": "apps/main/main/src/environments/environment.ts",
-                  "with": "apps/main/main/src/environments/environment.ci.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": true,
-              "extractCss": true,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "4.5mb"
-                }
-              ],
-              "serviceWorker": true
-            }
-          }
-        },
-        "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-            "browserTarget": "main:build"
-          },
-          "configurations": {
-            "dev": {},
-            "production": {
-              "browserTarget": "main:build:production"
-            },
-            "staging": {
-              "browserTarget": "main:build:production"
-            }
-          }
-        },
-        "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "browserTarget": "main:build"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": ["apps/main/main/tsconfig.app.json", "apps/main/main/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "apps/main/main/jest.config.js",
-            "tsConfig": "apps/main/main/tsconfig.spec.json",
-            "setupFile": "apps/main/main/src/test-setup.ts"
-          }
-        }
-      }
-    },
-    "main-e2e": {
-      "root": "apps/main/main-e2e",
-      "projectType": "application",
-      "prefix": "",
-      "architect": {
-        "e2e": {
-          "builder": "@nrwl/cypress:cypress",
-          "options": {
-            "cypressConfig": "apps/main/main-e2e/cypress.json",
-            "tsConfig": "apps/main/main-e2e/tsconfig.e2e.json",
-            "baseUrl": "http://localhost:4200"
-          },
-          "configurations": {
-            "dev": {},
-            "production": {
-              "devServerTarget": "main:serve:production"
-            },
-            "ci": {
-              "devServerTarget": "main:serve"
-            }
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": "apps/main/main-e2e/tsconfig.e2e.json",
-            "exclude": ["**/node_modules/**"]
-          }
-        }
-      }
-    },
-    "ip": {
-      "root": "libs/ip",
-      "sourceRoot": "libs/ip/src",
-      "projectType": "library",
-      "prefix": "ip",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
-          "options": {
-            "tsConfig": "libs/ip/tsconfig.lib.json",
-            "project": "libs/ip/ng-package.json"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": ["libs/ip/tsconfig.lib.json", "libs/ip/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/ip/jest.config.js",
-            "tsConfig": "libs/ip/tsconfig.spec.json",
-            "setupFile": "libs/ip/src/test-setup.ts"
-          }
-        }
-      }
-    },
-    "auth": {
-      "root": "libs/auth",
-      "sourceRoot": "libs/auth/src",
-      "projectType": "library",
-      "prefix": "auth",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
-          "options": {
-            "tsConfig": "libs/auth/tsconfig.lib.json",
-            "project": "libs/auth/ng-package.json"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": ["libs/auth/tsconfig.lib.json", "libs/auth/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/auth/jest.config.js",
-            "tsConfig": "libs/auth/tsconfig.spec.json",
-            "setupFile": "libs/auth/src/test-setup.ts"
-          }
-        }
-      }
-    },
     "ui": {
       "root": "libs/ui",
       "sourceRoot": "libs/ui/src",
@@ -275,7 +21,38 @@
           "options": {
             "jestConfig": "libs/ui/jest.config.js",
             "tsConfig": "libs/ui/tsconfig.spec.json",
-            "setupFile": "libs/ui/src/test-setup.ts"
+            "setupFile": "libs/ui/src/test-setup.ts",
+            "passWithNoTests": true
+          }
+        },
+        "storybook": {
+          "builder": "@nrwl/storybook:storybook",
+          "options": {
+            "uiFramework": "@storybook/angular",
+            "port": 4400,
+            "config": {
+              "configFolder": "libs/ui/.storybook"
+            }
+          },
+          "configurations": {
+            "ci": {
+              "quiet": true
+            }
+          }
+        },
+        "build-storybook": {
+          "builder": "@nrwl/storybook:build",
+          "options": {
+            "uiFramework": "@storybook/angular",
+            "outputPath": "dist/storybook/ui",
+            "config": {
+              "configFolder": "libs/ui/.storybook"
+            }
+          },
+          "configurations": {
+            "ci": {
+              "quiet": true
+            }
           }
         }
       }
@@ -287,7 +64,7 @@
       "prefix": "wallet",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@nrwl/angular:package",
           "options": {
             "tsConfig": "libs/ethers/tsconfig.lib.json",
             "project": "libs/ethers/ng-package.json"
@@ -305,198 +82,8 @@
           "options": {
             "jestConfig": "libs/ethers/jest.config.js",
             "tsConfig": "libs/ethers/tsconfig.spec.json",
-            "setupFile": "libs/ethers/src/test-setup.ts"
-          }
-        }
-      }
-    },
-    "movie-financing": {
-      "root": "apps/movie-financing/movie-financing/",
-      "sourceRoot": "apps/movie-financing/movie-financing/src",
-      "projectType": "application",
-      "prefix": "blockframes",
-      "schematics": {
-        "@schematics/angular:component": {
-          "styleext": "scss"
-        }
-      },
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:browser",
-          "options": {
-            "outputPath": "dist/apps/movie-financing",
-            "index": "apps/movie-financing/movie-financing/src/index.html",
-            "main": "apps/movie-financing/movie-financing/src/main.ts",
-            "polyfills": "apps/movie-financing/movie-financing/src/polyfills.ts",
-            "stylePreprocessorOptions": {
-              "includePaths": ["styles"]
-            },
-            "tsConfig": "apps/movie-financing/movie-financing/tsconfig.app.json",
-            "assets": [
-              "apps/movie-financing/movie-financing/src/favicon.ico",
-              "apps/movie-financing/movie-financing/src/assets",
-              {
-                "glob": "**/*",
-                "input": "./libs/ui/src/lib/assets",
-                "output": "./assets"
-              }
-            ],
-            "styles": ["apps/movie-financing/movie-financing/src/styles.scss"],
-            "scripts": []
-          },
-          "configurations": {
-            "dev": {},
-            "production": {
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.prod.ts"
-                },
-                {
-                  "replace": "apps/movie-financing/movie-financing/src/environments/environment.ts",
-                  "with": "apps/movie-financing/movie-financing/src/environments/environment.prod.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": true,
-              "extractCss": true,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5.5mb"
-                }
-              ]
-            },
-            "staging": {
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.staging.ts"
-                },
-                {
-                  "replace": "apps/movie-financing/movie-financing/src/environments/environment.ts",
-                  "with": "apps/movie-financing/movie-financing/src/environments/environment.staging.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": true,
-              "extractCss": true,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5.5mb"
-                }
-              ]
-            },
-            "ci": {
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.ci.ts"
-                },
-                {
-                  "replace": "apps/movie-financing/movie-financing/src/environments/environment.ts",
-                  "with": "apps/movie-financing/movie-financing/src/environments/environment.ci.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": true,
-              "extractCss": true,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "5.5mb"
-                }
-              ]
-            }
-          }
-        },
-        "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-            "browserTarget": "movie-financing:build"
-          },
-          "configurations": {
-            "dev": {},
-            "production": {
-              "browserTarget": "movie-financing:build:production"
-            }
-          }
-        },
-        "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "browserTarget": "movie-financing:build"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "apps/movie-financing/movie-financing/tsconfig.app.json",
-              "apps/movie-financing/movie-financing/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "apps/movie-financing/movie-financing/jest.config.js",
-            "tsConfig": "apps/movie-financing/movie-financing/tsconfig.spec.json",
-            "setupFile": "apps/movie-financing/movie-financing/src/test-setup.ts"
-          }
-        }
-      }
-    },
-    "movie-financing-e2e": {
-      "root": "apps/movie-financing/movie-financing-e2e",
-      "projectType": "application",
-      "prefix": "",
-      "architect": {
-        "e2e": {
-          "builder": "@nrwl/cypress:cypress",
-          "options": {
-            "cypressConfig": "apps/movie-financing/movie-financing-e2e/cypress.json",
-            "tsConfig": "apps/movie-financing/movie-financing-e2e/tsconfig.e2e.json",
-            "baseUrl": "http://localhost:4200"
-          },
-          "configurations": {
-            "dev": {},
-            "production": {
-              "devServerTarget": "movie-financing:serve:production"
-            },
-            "ci": {
-              "devServerTarget": "movie-financing:serve"
-            }
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": "apps/movie-financing/movie-financing-e2e/tsconfig.e2e.json",
-            "exclude": ["**/node_modules/**"]
+            "setupFile": "libs/ethers/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       }
@@ -508,7 +95,7 @@
       "prefix": "movie",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@nrwl/angular:package",
           "options": {
             "tsConfig": "libs/movie/tsconfig.lib.json",
             "project": "libs/movie/ng-package.json"
@@ -526,7 +113,38 @@
           "options": {
             "jestConfig": "libs/movie/jest.config.js",
             "tsConfig": "libs/movie/tsconfig.spec.json",
-            "setupFile": "libs/movie/src/test-setup.ts"
+            "setupFile": "libs/movie/src/test-setup.ts",
+            "passWithNoTests": true
+          }
+        },
+        "storybook": {
+          "builder": "@nrwl/storybook:storybook",
+          "options": {
+            "uiFramework": "@storybook/angular",
+            "port": 4400,
+            "config": {
+              "configFolder": "libs/movie/.storybook"
+            }
+          },
+          "configurations": {
+            "ci": {
+              "quiet": true
+            }
+          }
+        },
+        "build-storybook": {
+          "builder": "@nrwl/storybook:build",
+          "options": {
+            "uiFramework": "@storybook/angular",
+            "outputPath": "dist/storybook/movie",
+            "config": {
+              "configFolder": "libs/movie/.storybook"
+            }
+          },
+          "configurations": {
+            "ci": {
+              "quiet": true
+            }
           }
         }
       }
@@ -538,7 +156,7 @@
       "prefix": "org",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@nrwl/angular:package",
           "options": {
             "tsConfig": "libs/organization/tsconfig.lib.json",
             "project": "libs/organization/ng-package.json"
@@ -559,7 +177,8 @@
           "options": {
             "jestConfig": "libs/organization/jest.config.js",
             "tsConfig": "libs/organization/tsconfig.spec.json",
-            "setupFile": "libs/organization/src/test-setup.ts"
+            "setupFile": "libs/organization/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -568,30 +187,6 @@
           "styleext": "scss"
         }
       }
-    },
-    "account": {
-      "root": "libs/account",
-      "sourceRoot": "libs/account/src",
-      "projectType": "library",
-      "prefix": "blockframes",
-      "architect": {
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/account/jest.config.js",
-            "tsConfig": "libs/account/tsconfig.spec.json",
-            "setupFile": "libs/account/src/test-setup.ts"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": ["libs/account/tsconfig.lib.json", "libs/account/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
-          }
-        }
-      },
-      "schematics": {}
     },
     "notification": {
       "root": "libs/notification",
@@ -604,7 +199,8 @@
           "options": {
             "jestConfig": "libs/notification/jest.config.js",
             "tsConfig": "libs/notification/tsconfig.spec.json",
-            "setupFile": "libs/notification/src/test-setup.ts"
+            "setupFile": "libs/notification/src/test-setup.ts",
+            "passWithNoTests": true
           }
         },
         "lint": {
@@ -620,238 +216,6 @@
       },
       "schematics": {}
     },
-    "delivery": {
-      "root": "apps/delivery/delivery/",
-      "sourceRoot": "apps/delivery/delivery/src",
-      "projectType": "application",
-      "prefix": "delivery",
-      "schematics": {
-        "@schematics/angular:component": {
-          "styleext": "scss"
-        }
-      },
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-angular:browser",
-          "options": {
-            "outputPath": "dist/apps/delivery",
-            "index": "apps/delivery/delivery/src/index.html",
-            "main": "apps/delivery/delivery/src/main.ts",
-            "polyfills": "apps/delivery/delivery/src/polyfills.ts",
-            "stylePreprocessorOptions": {
-              "includePaths": ["styles"]
-            },
-            "tsConfig": "apps/delivery/delivery/tsconfig.app.json",
-            "assets": [
-              "apps/delivery/delivery/src/favicon.ico",
-              "apps/delivery/delivery/src/assets",
-              {
-                "glob": "**/*",
-                "input": "./libs/ui/src/lib/assets",
-                "output": "./assets"
-              }
-            ],
-            "styles": ["apps/delivery/delivery/src/styles.scss"],
-            "scripts": []
-          },
-          "configurations": {
-            "dev": {},
-            "production": {
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.prod.ts"
-                },
-                {
-                  "replace": "apps/delivery/delivery/src/environments/environment.ts",
-                  "with": "apps/delivery/delivery/src/environments/environment.prod.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": true,
-              "extractCss": true,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "6mb"
-                }
-              ],
-              "serviceWorker": true
-            },
-            "staging": {
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.staging.ts"
-                },
-                {
-                  "replace": "apps/delivery/delivery/src/environments/environment.ts",
-                  "with": "apps/delivery/delivery/src/environments/environment.staging.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": true,
-              "extractCss": true,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "6mb"
-                }
-              ],
-              "serviceWorker": true
-            },
-            "ci": {
-              "fileReplacements": [
-                {
-                  "replace": "env/env.ts",
-                  "with": "env/env.ci.ts"
-                },
-                {
-                  "replace": "apps/delivery/delivery/src/environments/environment.ts",
-                  "with": "apps/delivery/delivery/src/environments/environment.ci.ts"
-                }
-              ],
-              "optimization": true,
-              "outputHashing": "all",
-              "sourceMap": true,
-              "extractCss": true,
-              "namedChunks": false,
-              "aot": true,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true,
-              "budgets": [
-                {
-                  "type": "initial",
-                  "maximumWarning": "2mb",
-                  "maximumError": "6mb"
-                }
-              ],
-              "serviceWorker": true
-            }
-          }
-        },
-        "serve": {
-          "builder": "@angular-devkit/build-angular:dev-server",
-          "options": {
-            "browserTarget": "delivery:build"
-          },
-          "configurations": {
-            "dev": {},
-            "production": {
-              "browserTarget": "delivery:build:production"
-            },
-            "staging": {
-              "browserTarget": "delivery:build:production"
-            }
-          }
-        },
-        "extract-i18n": {
-          "builder": "@angular-devkit/build-angular:extract-i18n",
-          "options": {
-            "browserTarget": "delivery:build"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "apps/delivery/delivery/tsconfig.app.json",
-              "apps/delivery/delivery/tsconfig.spec.json"
-            ],
-            "exclude": ["**/node_modules/**"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "apps/delivery/delivery/jest.config.js",
-            "tsConfig": "apps/delivery/delivery/tsconfig.spec.json",
-            "setupFile": "apps/delivery/delivery/src/test-setup.ts"
-          }
-        }
-      }
-    },
-    "delivery-e2e": {
-      "root": "apps/delivery/delivery-e2e",
-      "projectType": "application",
-      "prefix": "",
-      "architect": {
-        "e2e": {
-          "builder": "@nrwl/cypress:cypress",
-          "options": {
-            "cypressConfig": "apps/delivery/delivery-e2e/cypress.json",
-            "tsConfig": "apps/delivery/delivery-e2e/tsconfig.e2e.json",
-            "baseUrl": "http://localhost:4200"
-          },
-          "configurations": {
-            "dev": {},
-            "production": {
-              "devServerTarget": "delivery:serve:production"
-            },
-            "ci": {
-              "devServerTarget": "delivery:serve"
-            }
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": "apps/delivery/delivery-e2e/tsconfig.e2e.json",
-            "exclude": ["**/node_modules/**"]
-          }
-        }
-      }
-    },
-    "material": {
-      "root": "libs/material",
-      "sourceRoot": "libs/material/src",
-      "projectType": "library",
-      "prefix": "material",
-      "architect": {
-        "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
-          "options": {
-            "tsConfig": "libs/material/tsconfig.lib.json",
-            "project": "libs/material/ng-package.json"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": ["libs/material/tsconfig.lib.json", "libs/material/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/material/jest.config.js",
-            "tsConfig": "libs/material/tsconfig.spec.json",
-            "setupFile": "libs/material/src/test-setup.ts"
-          }
-        }
-      },
-      "schematics": {
-        "@nrwl/schematics:component": {
-          "styleext": "scss"
-        }
-      }
-    },
     "utils": {
       "root": "libs/utils",
       "sourceRoot": "libs/utils/src",
@@ -859,7 +223,7 @@
       "prefix": "utils",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@nrwl/angular:package",
           "options": {
             "tsConfig": "libs/utils/tsconfig.lib.json",
             "project": "libs/utils/ng-package.json"
@@ -877,7 +241,8 @@
           "options": {
             "jestConfig": "libs/utils/jest.config.js",
             "tsConfig": "libs/utils/tsconfig.spec.json",
-            "setupFile": "libs/utils/src/test-setup.ts"
+            "setupFile": "libs/utils/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       },
@@ -900,7 +265,8 @@
             "outputPath": "dist/apps/backend-functions",
             "main": "apps/backend-functions/src/main.ts",
             "tsConfig": "apps/backend-functions/tsconfig.app.json",
-            "assets": ["apps/backend-functions/src/assets"]
+            "assets": [],
+            "buildLibsFromSource": true
           },
           "configurations": {
             "dev": {},
@@ -932,7 +298,7 @@
                 },
                 {
                   "replace": "apps/backend-functions/src/environments/environment.ts",
-                  "with": "apps/backend-functions/src/environments/environment.staging.ts"
+                  "with": "apps/backend-functions/src/environments/environment.prod.ts"
                 }
               ]
             },
@@ -948,7 +314,7 @@
                 },
                 {
                   "replace": "apps/backend-functions/src/environments/environment.ts",
-                  "with": "apps/backend-functions/src/environments/environment.ci.ts"
+                  "with": "apps/backend-functions/src/environments/environment.prod.ts"
                 }
               ]
             }
@@ -975,7 +341,8 @@
           "options": {
             "jestConfig": "apps/backend-functions/jest.config.js",
             "tsConfig": "apps/backend-functions/tsconfig.spec.json",
-            "setupFile": "apps/backend-functions/src/test-setup.ts"
+            "setupFile": "apps/backend-functions/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       }
@@ -993,7 +360,8 @@
             "outputPath": "dist/apps/backend-ops",
             "main": "apps/backend-ops/src/main.ts",
             "tsConfig": "apps/backend-ops/tsconfig.app.json",
-            "assets": ["apps/backend-ops/src/assets"]
+            "assets": [],
+            "buildLibsFromSource": true
           },
           "configurations": {
             "dev": {},
@@ -1046,36 +414,9 @@
           "builder": "@nrwl/jest:jest",
           "options": {
             "jestConfig": "apps/backend-ops/jest.config.js",
-            "tsConfig": "apps/backend-ops/tsconfig.spec.json"
+            "tsConfig": "apps/backend-ops/tsconfig.spec.json",
+            "passWithNoTests": true
           }
-        }
-      }
-    },
-    "catalog-lib": {
-      "projectType": "library",
-      "root": "libs/catalog",
-      "sourceRoot": "libs/catalog/src",
-      "prefix": "catalog",
-      "architect": {
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": ["libs/catalog/tsconfig.lib.json", "libs/catalog/tsconfig.spec.json"],
-            "exclude": ["**/node_modules/**", "!libs/catalog/**"]
-          }
-        },
-        "test": {
-          "builder": "@nrwl/jest:jest",
-          "options": {
-            "jestConfig": "libs/catalog/jest.config.js",
-            "tsConfig": "libs/catalog/tsconfig.spec.json",
-            "setupFile": "libs/catalog/src/test-setup.ts"
-          }
-        }
-      },
-      "schematics": {
-        "@nrwl/angular:component": {
-          "styleext": "scss"
         }
       }
     },
@@ -1086,7 +427,7 @@
       "prefix": "contract",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@nrwl/angular:package",
           "options": {
             "tsConfig": "libs/contract/tsconfig.lib.json",
             "project": "libs/contract/ng-package.json"
@@ -1097,7 +438,8 @@
           "options": {
             "jestConfig": "libs/contract/jest.config.js",
             "tsConfig": "libs/contract/tsconfig.spec.json",
-            "setupFile": "libs/contract/src/test-setup.ts"
+            "setupFile": "libs/contract/src/test-setup.ts",
+            "passWithNoTests": true
           }
         },
         "lint": {
@@ -1116,7 +458,7 @@
       "prefix": "financial-report",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@nrwl/angular:package",
           "options": {
             "tsConfig": "libs/financial-report/tsconfig.lib.json",
             "project": "libs/financial-report/ng-package.json"
@@ -1127,7 +469,8 @@
           "options": {
             "jestConfig": "libs/financial-report/jest.config.js",
             "tsConfig": "libs/financial-report/tsconfig.spec.json",
-            "setupFile": "libs/financial-report/src/test-setup.ts"
+            "setupFile": "libs/financial-report/src/test-setup.ts",
+            "passWithNoTests": true
           }
         },
         "lint": {
@@ -1137,10 +480,7 @@
               "libs/financial-report/tsconfig.lib.json",
               "libs/financial-report/tsconfig.spec.json"
             ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/financial-report/**"
-            ]
+            "exclude": ["**/node_modules/**", "!libs/financial-report/**"]
           }
         }
       }
@@ -1152,7 +492,7 @@
       "prefix": "admin",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-ng-packagr:build",
+          "builder": "@nrwl/angular:package",
           "options": {
             "tsConfig": "libs/admin/tsconfig.lib.json",
             "project": "libs/admin/ng-package.json"
@@ -1163,20 +503,15 @@
           "options": {
             "jestConfig": "libs/admin/jest.config.js",
             "tsConfig": "libs/admin/tsconfig.spec.json",
-            "setupFile": "libs/admin/src/test-setup.ts"
+            "setupFile": "libs/admin/src/test-setup.ts",
+            "passWithNoTests": true
           }
         },
         "lint": {
           "builder": "@angular-devkit/build-angular:tslint",
           "options": {
-            "tsConfig": [
-              "libs/admin/tsconfig.lib.json",
-              "libs/admin/tsconfig.spec.json"
-            ],
-            "exclude": [
-              "**/node_modules/**",
-              "!libs/admin/**"
-            ]
+            "tsConfig": ["libs/admin/tsconfig.lib.json", "libs/admin/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**", "!libs/admin/**"]
           }
         }
       }
@@ -1223,10 +558,6 @@
                 {
                   "replace": "env/env.ts",
                   "with": "env/env.prod.ts"
-                },
-                {
-                  "replace": "apps/catalog/catalog/src/environments/environment.ts",
-                  "with": "apps/catalog/catalog/src/environments/environment.prod.ts"
                 }
               ],
               "optimization": true,
@@ -1258,10 +589,6 @@
                 {
                   "replace": "env/env.ts",
                   "with": "env/env.ci.ts"
-                },
-                {
-                  "replace": "apps/catalog/catalog/src/environments/environment.ts",
-                  "with": "apps/catalog/catalog/src/environments/environment.ci.ts"
                 }
               ],
               "optimization": true,
@@ -1278,6 +605,10 @@
                   "type": "initial",
                   "maximumWarning": "2mb",
                   "maximumError": "6mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
                 }
               ],
               "serviceWorker": false
@@ -1287,10 +618,6 @@
                 {
                   "replace": "env/env.ts",
                   "with": "env/env.staging.ts"
-                },
-                {
-                  "replace": "apps/catalog/catalog/src/environments/environment.ts",
-                  "with": "apps/catalog/catalog/src/environments/environment.staging.ts"
                 }
               ],
               "optimization": true,
@@ -1307,6 +634,10 @@
                   "type": "initial",
                   "maximumWarning": "2mb",
                   "maximumError": "6mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
                 }
               ],
               "serviceWorker": false
@@ -1345,7 +676,8 @@
           "options": {
             "jestConfig": "apps/catalog/catalog/jest.config.js",
             "tsConfig": "apps/catalog/catalog/tsconfig.spec.json",
-            "setupFile": "apps/catalog/catalog/src/test-setup.ts"
+            "setupFile": "apps/catalog/catalog/src/test-setup.ts",
+            "passWithNoTests": true
           }
         }
       }
@@ -1369,6 +701,9 @@
             },
             "ci": {
               "devServerTarget": "catalog:serve"
+            },
+            "staging": {
+              "devServerTarget": "catalog:serve"
             }
           }
         },
@@ -1380,6 +715,366 @@
           }
         }
       }
+    },
+    "festival": {
+      "projectType": "application",
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "apps/festival/festival",
+      "sourceRoot": "apps/festival/festival/src",
+      "prefix": "festival",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/festival/browser",
+            "index": "apps/festival/festival/src/index.html",
+            "main": "apps/festival/festival/src/main.ts",
+            "polyfills": "apps/festival/festival/src/polyfills.ts",
+            "tsConfig": "apps/festival/festival/tsconfig.app.json",
+            "aot": true,
+            "stylePreprocessorOptions": {
+              "includePaths": ["styles"]
+            },
+            "assets": [
+              "apps/festival/festival/src/favicon.ico",
+              "apps/festival/festival/src/assets",
+              {
+                "glob": "**/*",
+                "input": "./libs/ui/src/lib/assets",
+                "output": "./assets"
+              }
+            ],
+            "styles": [
+              "node_modules/angular-calendar/css/angular-calendar.css",
+              "apps/festival/festival/src/styles.scss"
+            ],
+            "scripts": []
+          },
+          "configurations": {
+            "dev": {},
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/env.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": true,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            },
+            "ci": {
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/env.ci.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": true,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "6mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
+              "serviceWorker": false
+            },
+            "staging": {
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/env.staging.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": true,
+              "extractCss": true,
+              "namedChunks": false,
+              "aot": true,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "6mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb"
+                }
+              ],
+              "serviceWorker": false
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "festival:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "festival:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "festival:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/festival/festival/tsconfig.app.json",
+              "apps/festival/festival/tsconfig.spec.json"
+            ],
+            "exclude": ["**/node_modules/**", "!apps/festival/festival/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/festival/festival/jest.config.js",
+            "tsConfig": "apps/festival/festival/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "apps/festival/festival/src/test-setup.ts"
+          }
+        },
+        "server": {
+          "builder": "@angular-devkit/build-angular:server",
+          "options": {
+            "outputPath": "dist/apps/festival/server",
+            "main": "apps/festival/festival/src/main.server.ts",
+            "tsConfig": "apps/festival/festival/tsconfig.server.json",
+            "externalDependencies": ["@firebase/firestore"]
+          },
+          "configurations": {
+            "production": {
+              "outputHashing": "media",
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/env.prod.ts"
+                }
+              ],
+              "sourceMap": false,
+              "optimization": true
+            },
+            "ci": {
+              "outputHashing": "media",
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/env.ci.ts"
+                }
+              ],
+              "sourceMap": false,
+              "optimization": true
+            },
+            "staging": {
+              "outputHashing": "media",
+              "fileReplacements": [
+                {
+                  "replace": "env/env.ts",
+                  "with": "env/env.staging.ts"
+                }
+              ],
+              "sourceMap": false,
+              "optimization": true
+            }
+          }
+        }
+      }
+    },
+    "festival-e2e": {
+      "root": "apps/festival/festival-e2e",
+      "sourceRoot": "apps/festival/festival-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/festival/festival-e2e/cypress.json",
+            "tsConfig": "apps/festival/festival-e2e/tsconfig.e2e.json",
+            "baseUrl": "http://localhost:4200"
+          },
+          "configurations": {
+            "dev": {},
+            "production": {
+              "devServerTarget": "festival:serve:production"
+            },
+            "ci": {
+              "devServerTarget": "festival:serve"
+            },
+            "staging": {
+              "devServerTarget": "festival:serve"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["apps/festival/festival-e2e/tsconfig.e2e.json"],
+            "exclude": ["**/node_modules/**", "!apps/festival/festival-e2e/**"]
+          }
+        }
+      }
+    },
+    "user": {
+      "projectType": "library",
+      "root": "libs/user",
+      "sourceRoot": "libs/user/src",
+      "prefix": "blockframes",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["libs/user/tsconfig.lib.json", "libs/user/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**", "!libs/user/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/user/jest.config.js",
+            "tsConfig": "libs/user/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "libs/user/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "event": {
+      "projectType": "library",
+      "root": "libs/event",
+      "sourceRoot": "libs/event/src",
+      "prefix": "event",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["libs/event/tsconfig.lib.json", "libs/event/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**", "!libs/event/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/event/jest.config.js",
+            "tsConfig": "libs/event/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "libs/event/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "e2e": {
+      "projectType": "library",
+      "root": "libs/e2e",
+      "sourceRoot": "libs/e2e/src",
+      "prefix": "blockframes",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["libs/e2e/tsconfig.lib.json", "libs/e2e/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**", "!libs/e2e/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/e2e/jest.config.js",
+            "tsConfig": "libs/e2e/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "libs/e2e/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "styleext": "scss"
+        }
+      }
+    },
+    "landing": {
+      "projectType": "library",
+      "root": "libs/landing",
+      "sourceRoot": "libs/landing/src",
+      "prefix": "blockframes",
+      "architect": {
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["libs/landing/tsconfig.lib.json", "libs/landing/tsconfig.spec.json"],
+            "exclude": ["**/node_modules/**", "!libs/landing/**"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "libs/landing/jest.config.js",
+            "tsConfig": "libs/landing/tsconfig.spec.json",
+            "passWithNoTests": true,
+            "setupFile": "libs/landing/src/test-setup.ts"
+          }
+        }
+      },
+      "schematics": {
+        "@nrwl/angular:component": {
+          "style": "scss"
+        }
+      }
     }
   },
   "cli": {
@@ -1387,7 +1082,8 @@
       "typescriptMismatch": false,
       "versionMismatch": false
     },
-    "defaultCollection": "@nrwl/angular"
+    "defaultCollection": "@nrwl/angular",
+    "analytics": "af619e50-5007-4476-b488-ccf1b32d3440"
   },
   "schematics": {
     "@nrwl/angular:library": {
@@ -1401,5 +1097,5 @@
       "framework": "express"
     }
   },
-  "defaultProject": "delivery"
+  "defaultProject": "catalog"
 }

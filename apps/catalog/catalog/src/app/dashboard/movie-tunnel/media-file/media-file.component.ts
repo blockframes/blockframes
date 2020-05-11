@@ -1,7 +1,9 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ImgRef } from "@blockframes/utils/image-uploader";
-import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
+import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { MovieTunnelComponent } from '../movie-tunnel.component';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+
 @Component({
   selector: 'catalog-movie-tunnel-media-file',
   templateUrl: './media-file.component.html',
@@ -11,7 +13,12 @@ import { MovieTunnelComponent } from '../movie-tunnel.component';
 export class MediaFileComponent {
   form = this.tunnel.form;
 
-  constructor(private tunnel: MovieTunnelComponent, private movieQuery: MovieQuery) { }
+  constructor(
+    private tunnel: MovieTunnelComponent,
+    private movieQuery: MovieQuery,
+    private dynTitle: DynamicTitleService) {
+    this.dynTitle.setPageTitle('Files & links', 'Title information')
+  }
 
   public movie = this.movieQuery.getActive();
   public presentationPath = `movie/${this.movie.id}/PresentationDeck`;

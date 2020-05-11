@@ -1,4 +1,4 @@
-@import 'mixins';
+@import '~@angular/flex-layout/mq';
 
 :host {
   display: flex;
@@ -17,13 +17,16 @@ mat-card {
   cursor: pointer;
   width: 300px;
   margin: 16px;
+  img {
+    width: 100%;
+  }
 }
 
 mat-card-footer {
   padding: 10px 0;
 }
 
-@include large {
+@include layout-bp(lg) {
   :host {
     height: 100%;
   }
@@ -31,7 +34,7 @@ mat-card-footer {
     width: 60%;
   }
 }
-@include tablet {
+@include layout-bp(sm) {
   :host {
     height: 100%;
   }

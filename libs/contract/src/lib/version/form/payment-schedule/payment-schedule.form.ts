@@ -1,7 +1,7 @@
 import { FormControl } from '@angular/forms';
-import { FormEntity, ScheduledDateRaw } from '@blockframes/utils';
-import { PaymentSchedule } from '@blockframes/utils/common-interfaces';
-import { DistributionDealFloatingDurationForm } from '@blockframes/movie/distribution-deals/form/terms/terms.form';
+import { DistributionRightFloatingDurationForm } from '@blockframes/distribution-rights/form/terms/terms.form';
+import { PaymentSchedule, ScheduledDateRaw } from '@blockframes/utils/common-interfaces';
+import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 
 function createContractVersionPaymentScheduleControls(paymentSchedule: Partial<PaymentSchedule>) {
     return {
@@ -23,7 +23,7 @@ export class ContractVersionPaymentScheduleForm extends FormEntity<ContractVersi
 function createContractVersionDateControls(date: Partial<ScheduledDateRaw<Date>>) {
     return {
         floatingStart: new FormControl(date.floatingStart),
-        floatingDuration: new DistributionDealFloatingDurationForm(date.floatingDuration),
+        floatingDuration: new DistributionRightFloatingDurationForm(date.floatingDuration),
         start: new FormControl(date.start)
     }
 }

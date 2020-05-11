@@ -1,0 +1,25 @@
+
+<ng-container *ngIf="versionView$ | async as version">
+  <!-- TITLE & PRICE -->
+  <header fxLayout="row" fxLayoutAlign="space-between start" fxLayoutGap="24px" >
+    <article fxLayout="row" fxLayoutAlign="start start" fxLayoutGap="25px">
+      <!-- Switch to [imgRef]="getLicenseeLogo(licensees[0].party.orgId) when public orgs are here => ISSUE#1359"-->
+      <img class="logo" [imgRef]="placeholderUrl" [placeholderUrl]="placeholderUrl" alt="Organization logo" />
+      <div *ngIf="licensees[0] as licensee">
+        <h1>{{ licensee.displayName }} - {{ (moviesCount$ | async) }} film{ moviesCount$| async, plural, =1 {} other {s} }</h1>
+        <span *ngIf="licensee.address">
+          {{ licensee.address.street }}, {{ licensee.address.city }}, {{ licensee.address.region }}
+          {{ licensee.address.zipCode }} {{ licensee.address.country }}
+        </span>
+      </div>
+    </article>
+    <section fxLayout="column" fxLayoutAlign="center end" *ngIf="version.price as price">
+      <span class="mat-caption"> {{ version.date | date }} </span>
+      <h2>{{ price.amount | currency: price.currency }}</h2>
+      <mat-chip-list>
+        <mat-chip>{{ version.status | toLabel: 'contractStatus' | async }}</mat-chip>
+      </mat-chip-list>
+    </section>
+  </header>
+</ng-container>
+<router-outlet></router-outlet>

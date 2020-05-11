@@ -1,0 +1,17 @@
+<section fxLayout="column" fxLayoutAlign="center center" test-id="content">
+  <h1>Find your Organization</h1>
+  <mat-card fxLayout="column" fxLayoutAlign="center center">
+    <img asset="find_organization.webp">
+    <algolia-autocomplete [index]="orgIndex" keyToDisplay="name" label="Organization name"
+     (selectionChange)="updateValue($event)">
+      <ng-template let-result>
+        <span>{{ result.name }}</span>
+      </ng-template>
+    </algolia-autocomplete>
+  </mat-card>
+  <button test-id="join-org" class="join-org" (click)="requestToJoinOrganization()" mat-flat-button color="accent">
+    Send a request</button>
+  <a routerLink="../create">
+    <button mat-button color="primary">Create an Organization</button>
+  </a>
+</section>

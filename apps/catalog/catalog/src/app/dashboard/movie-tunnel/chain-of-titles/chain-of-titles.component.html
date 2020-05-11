@@ -9,26 +9,27 @@
       </mat-card-header>
       <mat-card-content>
         <ng-container *ngFor="let control of chainOfTitles.controls; let i = index; let last = last">
-          <file-upload 
-            path="pdf" 
-            uploadOnFirestore="true" 
-            return="imgRef" 
-            accept="['.pdf']" 
-            [types]="['application/pdf']" 
+          <file-upload
+            test-id="chain-titles"
+            path="pdf"
+            uploadOnFirestore="true"
+            return="imgRef"
+            accept="['.pdf']"
+            [types]="['application/pdf']"
             (storeUploaded)="importPDF($event, i)">
             <h3 type>Upload files</h3>
             <p class="mat-caption" format>Accepted Formats: .pdf</p>
-        </file-upload>
+          </file-upload>
           <!-- Add / Delete -->
           <footer *ngIf="!last" fxLayout="column" fxLayoutAlign="center center">
             <button mat-mini-fab color="warn" (click)="chainOfTitles.removeAt(i)" aria-label="Remove a director form">
-              <mat-icon>delete</mat-icon>
+              <mat-icon svgIcon="trash"></mat-icon>
             </button>
             <span>Delete Document</span>
           </footer>
           <footer *ngIf="last" fxLayout="column" fxLayoutAlign="center center">
             <button mat-mini-fab color="primary" (click)="chainOfTitles.add()" aria-label="Remove a director form">
-              <mat-icon>add</mat-icon>
+              <mat-icon svgIcon="add"></mat-icon>
             </button>
             <span>Add Document</span>
           </footer>

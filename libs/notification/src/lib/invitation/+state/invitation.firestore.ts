@@ -1,55 +1,47 @@
-import { PublicOrganization } from "@blockframes/organization/types";
+import { PublicOrganization } from "@blockframes/organization/+state/organization.firestore";
 import { firestore } from 'firebase/app';
-import { PublicUser } from "@blockframes/auth/+state/auth.firestore";
+import { PublicUser } from "@blockframes/user/+state/user.firestore";
+
 type Timestamp = firestore.Timestamp;
 
-/** Raw type for Invitation. */
-export interface Invitation {
+/** 
+ * Raw type for Invitation.
+ * 
+ * For Events:
+ *  When a invitation is created, a backend function will check if:
+ *  If we have an user or an org we can create a notification.
+ *  If we have an email, the function will send an email.
+ *  If user that received an email invitation and
+ *  created an account, we will then be able to replace email by the coresponding new user.
+ * */
+export interface InvitationBase<D> {
   id: string;
-  app: string;
   type: InvitationType;
+  mode: InvitationMode,
   status: InvitationStatus;
-  date: Timestamp;
+  date: D;
+  /** @dev An invitation is created by an user or an org (fromOrg or fromUser) */
+  fromOrg?: PublicOrganization,
+  fromUser?: PublicUser,
+  /** @dev An invitation is for an user or an org */
+  toOrg?: PublicOrganization,
+  toUser?: PublicUser,
+  /**
+   * @dev Can be a titleId or a eventId for example.
+   * If empty, the invitation is about Organization and we use directly fromOrg.id
+   */
   docId?: string;
-  processedId?: string;
+  message?: string;
 }
 
 /** Specific types of Invitation, both used in firebase functions. */
-export type InvitationDocument = InvitationToWorkOnDocument | InvitationFromOrganizationToUser | InvitationFromUserToOrganization;
+export type InvitationDocument = InvitationBase<Timestamp>;
 export type InvitationOrUndefined = InvitationDocument | undefined;
 
-/** Specific Invitation send by an Organization to another Organization to work on a document. */
-export interface InvitationToWorkOnDocument extends Invitation {
-  type: InvitationType.toWorkOnDocument;
-  docId: string;
-  organization: PublicOrganization;
-  user?: PublicUser;
-}
-
-/**  Specific Invitation send by an Organization to a User to join it. */
-export interface InvitationFromOrganizationToUser extends Invitation {
-  type: InvitationType.fromOrganizationToUser;
-  user: PublicUser;
-  organization: PublicOrganization;
-}
-
-/** Specific Invitation send by a User to join an Organization. */
-export interface InvitationFromUserToOrganization extends Invitation {
-  type: InvitationType.fromUserToOrganization;
-  user: PublicUser;
-  organization: PublicOrganization;
-}
-
 /** Status of an Invitation. Set to pending by default, get erased if accepted, archived if declined. */
-export const enum InvitationStatus {
-  accepted = 'accepted',
-  declined = 'declined',
-  pending = 'pending'
-}
+export type InvitationStatus = 'accepted' | 'declined' | 'pending';
 
 /** Type of Invitation depending of its purpose. */
-export const enum InvitationType {
-  fromUserToOrganization = 'fromUserToOrganization',
-  fromOrganizationToUser = 'fromOrganizationToUser',
-  toWorkOnDocument = 'toWorkOnDocument'
-}
+export type InvitationType = 'attendEvent' | 'joinOrganization';
+
+export type InvitationMode = 'request' | 'invitation';

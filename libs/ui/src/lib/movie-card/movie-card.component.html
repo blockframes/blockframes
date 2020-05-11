@@ -2,7 +2,7 @@
   <!-- Movie Poster -->
   <div class="img-container" test-id="movie-poster">
     <a [routerLink]="link">
-      <img mat-card-image [imgRef]="posterSrc" alt="Movie poster link" />
+      <img mat-card-image [imgRef]="posterSrc" placeholderAsset="empty_poster.webp" alt="Movie poster link" />
     </a>
 
     <!-- Movie Status Chip -->
@@ -12,7 +12,9 @@
 
     <!-- First festival logo (if any) -->
     <div *ngIf="firstFestivalPrizeLogo" class="prize-logo-container" >
-      <a [routerLink]="link"><img [imgRef]="firstFestivalPrizeLogo"></a>
+      <a [routerLink]="link">
+        <img [imgRef]="firstFestivalPrizeLogo">
+      </a>
     </div>
   </div>
 
@@ -20,10 +22,10 @@
   <mat-card-content>
     <mat-card-title-group fxLayout="row" fxLayoutAlign="start">
       <ng-container *ngIf="!!movie.main.title.international; else originalTitle">
-        <mat-card-title>{{ movie.main.title.international }}</mat-card-title>
+        <h6>{{ movie.main.title.international }}</h6>
       </ng-container>
       <ng-template #originalTitle>
-        <mat-card-title>{{ movie.main.title.original }}</mat-card-title>
+        <h6>{{ movie.main.title.original }}</h6>
       </ng-template>
     </mat-card-title-group>
     <ng-content select="[movieInformation]"></ng-content>

@@ -1,12 +1,13 @@
-import { Component, ChangeDetectionStrategy, OnInit, ViewChild, OnDestroy, AfterViewInit} from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, ViewChild, OnDestroy, AfterViewInit } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
-import { Wishlist, WishlistStatus } from '@blockframes/organization';
-import { map } from 'rxjs/operators';
-import { CatalogCartQuery } from '@blockframes/organization/cart/+state/cart.query';
-import { AuthService, AuthQuery } from '@blockframes/auth';
+import { map, filter } from 'rxjs/operators';
+import { CatalogCartQuery } from '@blockframes/cart/+state/cart.query';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { MatSidenav } from '@angular/material';
+import { MatSidenav, MatSidenavContent } from '@angular/material/sidenav';
 import { MarketplaceQuery } from '../+state';
+import { AuthQuery } from '@blockframes/auth/+state/auth.query';
+import { Wishlist } from '@blockframes/organization/+state/organization.model';
+import { Router, NavigationEnd } from '@angular/router';
 
 @Component({
   selector: 'catalog-layout',
@@ -17,37 +18,44 @@ import { MarketplaceQuery } from '../+state';
 
 export class LayoutComponent implements OnInit, AfterViewInit, OnDestroy {
   private sub: Subscription;
+  private routerSub: Subscription;
   public user$ = this.authQuery.select('profile');
   public currentWishlist$: Observable<Wishlist>;
+  public wishlistCount$: Observable<number>;
   public cartCount$ = this.marketplaceQuery.selectCount();
 
-  @ViewChild('sidenav', { static: false }) sidenav: MatSidenav;
+  @ViewChild('sidenav') sidenav: MatSidenav;
+  @ViewChild('content') sidenavContent: MatSidenavContent;
 
   constructor(
     private marketplaceQuery: MarketplaceQuery,
     private catalogCartQuery: CatalogCartQuery,
-    private authService: AuthService,
     private authQuery: AuthQuery,
-    private routerQuery: RouterQuery
-  ) {}
+    private routerQuery: RouterQuery,
+    private router: Router
+  ) { }
 
   ngOnInit() {
     this.currentWishlist$ = this.catalogCartQuery.wishlistWithMovies$.pipe(
-      map(wishlists => wishlists.find(wishlist => wishlist.status === WishlistStatus.pending))
-      );
-    }
-    
+      map(wishlists => wishlists.find(wishlist => wishlist.status === 'pending'))
+    );
+    this.wishlistCount$ = this.currentWishlist$.pipe(
+      map(wishlist => wishlist?.movieIds?.length || 0)
+    );
+  }
+
   ngAfterViewInit() {
     this.sub = this.routerQuery.select('navigationId').subscribe(_ => this.sidenav.close());
+    // https://github.com/angular/components/issues/4280
+    this.routerSub = this.router.events.pipe(
+      filter(event => event instanceof NavigationEnd))
+      .subscribe(() => {
+        this.sidenavContent.scrollTo({top: 0});
+      })
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe();
-  }
-
-  public async logout() {
-    await this.authService.signOut();
-    // TODO: issue#879, navigate with router
-    window.location.reload();
+    if (this.sub) { this.sub.unsubscribe(); }
+    if (this.routerSub) { this.routerSub.unsubscribe(); }
   }
 }

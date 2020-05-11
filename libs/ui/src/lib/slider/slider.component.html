@@ -1,0 +1,25 @@
+<div class="slider" tabindex="0" [style.max-width]="maxWidth" #wrapper>
+
+  <!-- Slides -->
+  <ul class="slider-list" #slideList role="listbox"
+    [style.flex-direction]="slideDirection === 'rtl' ? 'row-reverse' : 'row'">
+    <li *ngFor="let image of slides" role="option" class="slider-item" #slideItems [style.max-height]="maxHeight">
+      <ng-template [ngTemplateOutlet]="image.templateRef"></ng-template>
+    </li>
+  </ul>
+
+  <!-- Arrows -->
+  <ng-container *ngIf="!hideArrows">
+    <mat-icon [svgIcon]="arrowBack" mat-ripple (click)="previous()" *ngIf="loop || currentIndex !== 0"
+      tabindex="-1" class="previous"></mat-icon>
+      <mat-icon [svgIcon]="arrowForward" mat-ripple (click)="next()"
+        *ngIf="loop || currentIndex !== slides.length - 1" tabindex="-1" class="next"></mat-icon>
+  </ng-container>
+
+  <!-- Indicator -->
+  <span *ngIf="!hideIndicators" class="slider-indicators" tabindex="-1"
+    [style.flex-direction]="slideDirection === 'rtl' ? 'row-reverse' : 'row'">
+    <button *ngFor="let slide of slides; let i = index" type="button" tabindex="-1" mat-mini-fab
+      [disabled]="i === currentIndex" (click)="slideTo(i)"></button>
+  </span>
+</div>

@@ -31,11 +31,11 @@ references:
       branches:
         only:
           - ci
-  release_candidate_only: &release_candidate_only
+  release_only: &release_only
     filters:
       branches:
         only:
-          - release-candidate
+          - /release\/.*/
 
 commands:
   checkout_project:
@@ -72,13 +72,27 @@ executors:
     docker:
       - image: blockframes/ci:latest
     working_directory: ~/repo
-    resource_class: medium+
+    resource_class: large
 jobs:
+  build-and-deploy-storybook:
+    executor: blockframes-ci
+    environment:
+      - ENV: ci
+      - NODE_OPTIONS: '--max_old_space_size=7168'
+      - GOOGLE_APPLICATION_CREDENTIALS: creds.json
+    steps:
+      - checkout_project
+      - run: echo "${FIREBASE_CI_SERVICE_ACCOUNT}" > creds.json
+      - run: npx nx run movie:build-storybook
+      - run:
+          command: |
+            npx firebase use ci &&
+            npx firebase deploy --only hosting:storybook
   build-and-test-all:
     executor: blockframes-ci
     environment:
       - ENV: ci
-      - NODE_OPTIONS: '--max_old_space_size=4096'
+      - NODE_OPTIONS: '--max_old_space_size=7168'
       - GOOGLE_APPLICATION_CREDENTIALS: creds.json
     steps:
       - checkout_project
@@ -94,13 +108,13 @@ jobs:
           name: Post sizes of apps to zapier
           command: |
             if [ "${CIRCLE_BRANCH}" = "production" ] || [ "${CIRCLE_BRANCH}" = "master" ]; then
-              curl -X POST "${ZAPPIER_WEBHOOK}" --header "Build-number:${CIRCLE_BUILD_NUM}" --header "Branch:${CIRCLE_BRANCH}" --header  "Date:`date "+%D"`" --header  Main-size:`cat ./dist/apps/main**.js | wc -c` --header  Delivery-size:`cat ./dist/apps/delivery/main**.js | wc -c` --header  Marketplace-size:`cat ./dist/apps/catalog/main**.js | wc -c` --header  Movie-financing-size:`cat ./dist/apps/movie-financing/main**.js | wc -c` --header  Functions-size:`cat ./dist/apps/backend-functions/main**.js | wc -c`;
+              curl -X POST "${ZAPPIER_WEBHOOK}" --header "Build-number:${CIRCLE_BUILD_NUM}" --header "Branch:${CIRCLE_BRANCH}" --header  "Date:`date "+%D"`" --header  Catalog-size:`cat ./dist/apps/catalog/main**.js  | wc -c` --header  Festival-size:`cat ./dist/apps/festival/main**.js  | wc -c` --header  Functions-size:`cat ./dist/apps/backend-functions/main**.js | wc -c`;
             fi
   build-and-test-prs:
     executor: blockframes-ci
     environment:
       - ENV: ci
-      - NODE_OPTIONS: '--max_old_space_size=4096'
+      - NODE_OPTIONS: '--max_old_space_size=7168'
       - GOOGLE_APPLICATION_CREDENTIALS: creds.json
     steps:
       - checkout_project
@@ -111,13 +125,13 @@ jobs:
           # the following command only build affected apps.
           name: build affected apps
           command: |
-            AFFECTED=`npx nx affected:apps --plain --base=origin/master`;
+            AFFECTED=`npx nx affected:apps --plain --base=origin/develop`;
             echo "Building: ${AFFECTED}"
             for app in ${AFFECTED}; do
               echo "building ${app}";
               npm run build:${app};
             done;
-      - run: npm run affected:lint --base=origin/master
+      - run: npm run affected:lint --base=origin/develop
       - run: npm run test
       - run:
           name: Check size of apps being build
@@ -125,28 +139,25 @@ jobs:
             # Generate default json for bundlesize
             # This is a quick hack to get bundlesize AND affected build working.
             # Maintain this script to keep checking new apps.
-            mkdir -p dist/apps/delivery \
-                     dist/apps/catalog \
-                     dist/apps/backend-functions \
-                     dist/apps/movie-financing
-            touch ./dist/apps/main.dummy.js \
-                  ./dist/apps/delivery/main.dummy.js \
-                  ./dist/apps/catalog/main.dummy.js \
-                  ./dist/apps/backend-functions/main.dummy.js \
-                  ./dist/apps/movie-financing/main.dummy.js \
+            mkdir -p dist/apps/catalog \
+                     dist/apps/festival \
+                     dist/apps/backend-functions
+            touch ./dist/apps/catalog/main.dummy.js \
+                  ./dist/apps/festival/main.dummy.js \
+                  ./dist/apps/backend-functions/main.dummy.js
             npm run bundlesize
       - run:
           name: Post sizes of apps to zapier
           command: |
             if [ "${CIRCLE_BRANCH}" = "production" ] || [ "${CIRCLE_BRANCH}" = "master" ]; then
               npm run build:all;
-              curl -X POST "${ZAPPIER_WEBHOOK}" --header "Build-number:${CIRCLE_BUILD_NUM}" --header "Branch:${CIRCLE_BRANCH}" --header  "Date:`date "+%D"`" --header  Main-size:`cat ./dist/apps/main**.js | wc -c` --header  Delivery-size:`cat ./dist/apps/delivery/main**.js | wc -c` --header  Marketplace-size:`cat ./dist/apps/catalog/main**.js | wc -c` --header  Movie-financing-size:`cat ./dist/apps/movie-financing/main**.js | wc -c` --header  Functions-size:`cat ./dist/apps/backend-functions/main**.js | wc -c`;
+              curl -X POST "${ZAPPIER_WEBHOOK}" --header "Build-number:${CIRCLE_BUILD_NUM}" --header "Branch:${CIRCLE_BRANCH}" --header  "Date:`date "+%D"`" --header  Catalog-size:`cat ./dist/apps/catalog/main**.js | wc -c` --header  Festival-size:`cat ./dist/apps/festival/main**.js | wc -c` --header  Functions-size:`cat ./dist/apps/backend-functions/main**.js | wc -c`;
             fi
   test-e2e:
     executor: blockframes-ci
     environment:
       - ENV: ci
-      - NODE_OPTIONS: '--max_old_space_size=4096'
+      - NODE_OPTIONS: '--max_old_space_size=7168'
       - GOOGLE_APPLICATION_CREDENTIALS: creds.json
     steps:
       - checkout_project
@@ -156,60 +167,64 @@ jobs:
       - run: npm run build:all
       - slack/notify:
           message: '🚲 Deploying & testing e2e (https://blockframes-ci.web.app/)'
+      - do-exclusively/do-exclusively:
+          token: $CIRCLE_TOKEN
+          command: ./.circleci/deploy-and-test-e2e.sh
+      - run:
+          name: send stability data
+          command: ./.circleci/submit-stability.sh dist/test-reports
+          when: always
+      - store_artifacts:
+          name: Uploading screenshots
+          path: ~/repo/dist/cypress/apps
+      - slack/status
+  test-e2e-release:
+    executor: blockframes-ci
+    environment:
+      - ENV: staging
+      - NODE_OPTIONS: '--max_old_space_size=7168'
+      - GOOGLE_APPLICATION_CREDENTIALS: creds.json
+    steps:
+      - checkout_project
+      - run: echo "${FIREBASE_STAGING_SERVICE_ACCOUNT}" > creds.json
+      - run: cp env/env.staging.ts env/env.ts # required for the typechecking & file rewrite to work
+      - run: npx cypress install
+      - run: npm run build:all
+      - slack/notify:
+          message: '🛵 🤠 Deploying release to staging.. (https://staging.blockframes.io/)'
       - run: |
-          npx firebase use ci &&
-          npx firebase deploy --force || true;
-          npx ng build backend-ops --configuration=$ENV
+          npx firebase use staging &&
+          cp firestore.rules firestore.rules.regular &&
+          cp firestore.maintenance.rules firestore.rules &&
+          npx firebase deploy --only hosting:catalog,hosting:festival,storage,firestore &&
+          npx firebase deploy --only functions --force
       - run:
-          name: prepare the ci for testing
-          command: npm run build:backend-ops && node dist/apps/backend-ops/main.js prepareForTesting
+          name: prepare staging for testing
+          command: node dist/apps/backend-ops/main.js prepareForTesting
           when: always
       - run:
-          name: main e2e tests
-          command: npm run e2e:main
-          when: always
-      - run:
-          name: delivery e2e tests
-          command: npm run e2e:delivery
+          command: |
+            cp firestore.rules.regular firestore.rules &&
+            npx firebase use staging &&
+            npx firebase deploy --only firestore:rules
           when: always
       - run:
           name: catalog e2e tests
           command: npm run e2e:catalog
           when: always
       - run:
-          name: movie-financing e2e tests
-          command: npm run e2e:movie-financing
+          name: festival e2e tests
+          command: npm run e2e:festival
           when: always
       - store_artifacts:
           name: Uploading screenshots
           path: ~/repo/dist/cypress/apps
       - slack/status
-  deploy-to-release-candidate:
-    executor: blockframes-ci
-    environment:
-      - ENV: production
-      - NODE_OPTIONS: '--max_old_space_size=4096'
-      - GOOGLE_APPLICATION_CREDENTIALS: creds.json
-    steps:
-      - checkout_project
-      - run: echo "${FIREBASE_PRODUCTION_SERVICE_ACCOUNT}" > creds.json
-      - run: cp env/env.prod.ts env/env.ts # required for the typechecking & file rewrite to work
-      - run: npm run build:all
-      - slack/notify:
-          message: '🚂 Deploying to release candidate... (deploy ONLY the frontend part, https://blockframes-next.web.app/)'
-      - run:
-          command: |
-            # tedious inject the target so that we don't need to duplicate the json
-            cat firebase.json | jq '.hosting[0].target = "next"' > firebase.next.json
-            mv firebase.next.json firebase.json
-            npx firebase use prod &&
-            npx firebase deploy --only hosting:next
-      - slack/status
   deploy-to-prod:
     executor: blockframes-ci
     environment:
       - ENV: production
-      - NODE_OPTIONS: '--max_old_space_size=4096'
+      - NODE_OPTIONS: '--max_old_space_size=7168'
       - GOOGLE_APPLICATION_CREDENTIALS: creds.json
     steps:
       - checkout_project
@@ -223,7 +238,7 @@ jobs:
             npx firebase use prod &&
             cp firestore.rules firestore.rules.regular &&
             cp firestore.maintenance.rules firestore.rules &&
-            npx firebase deploy --except functions &&
+            npx firebase deploy --only hosting:catalog,hosting:festival,storage,firestore &&
             npx firebase deploy --only functions --force
       - run: node dist/apps/backend-ops/main.js upgrade
       - run:
@@ -237,7 +252,7 @@ jobs:
     executor: blockframes-ci
     environment:
       - ENV: staging
-      - NODE_OPTIONS: '--max_old_space_size=4096'
+      - NODE_OPTIONS: '--max_old_space_size=7168'
       - GOOGLE_APPLICATION_CREDENTIALS: creds.json
     steps:
       - checkout_project
@@ -251,13 +266,42 @@ jobs:
             npx firebase use staging &&
             cp firestore.rules firestore.rules.regular &&
             cp firestore.maintenance.rules firestore.rules &&
-            npx firebase deploy --except functions &&
+            npx firebase deploy --only hosting:catalog,hosting:festival,storage,firestore &&
             npx firebase deploy --only functions --force
       - run: node dist/apps/backend-ops/main.js upgrade
       - run:
           command: |
             cp firestore.rules.regular firestore.rules &&
             npx firebase use staging &&
+            npx firebase deploy --only firestore:rules
+          when: always
+      - slack/status
+  deploy-to-demo1:
+    executor: blockframes-ci
+    environment:
+      - ENV: staging
+      - NODE_OPTIONS: '--max_old_space_size=7168'
+      - GOOGLE_APPLICATION_CREDENTIALS: creds.json
+    steps:
+      - checkout_project
+      - run: echo "${FIREBASE_STAGING_SERVICE_ACCOUNT}" > creds.json
+      - run: cp env/demo/env.demo1.ts env/env.ts # required for the typechecking & file rewrite to work
+      - run: cp env/demo/env.demo1.ts env/env.staging.ts # prevent rewrites
+      - run: npm run build:all
+      - slack/notify:
+          message: 'Deploying to demo1...'
+      - run:
+          command: |
+            npx firebase use demo1 &&
+            cp firestore.rules firestore.rules.regular &&
+            cp firestore.maintenance.rules firestore.rules &&
+            npx firebase deploy --only hosting:catalog,hosting:festival,storage,firestore &&
+            npx firebase deploy --only functions --force
+      - run: node dist/apps/backend-ops/main.js upgrade
+      - run:
+          command: |
+            cp firestore.rules.regular firestore.rules &&
+            npx firebase use demo1 &&
             npx firebase deploy --only firestore:rules
           when: always
       - slack/status
@@ -270,7 +314,10 @@ workflows:
           filters:
             branches:
               ignore:
+                # TODO: factor this array
                 - ci
+                - develop
+                - /release\/.*/
                 - master
                 - production
                 - staging
@@ -280,19 +327,29 @@ workflows:
             branches:
               only:
                 - ci
+                - develop
+                - /release\/.*/
                 - master
                 - production
                 - staging
-      - test-e2e:
-          <<: *ci_only
+      - test-e2e-release:
+          <<: *release_only
           requires:
             - build-and-test-all
+      - build-and-deploy-storybook:
+          filters:
+            branches:
+              only:
+                - develop
+      - deploy-to-demo1:
+          filters:
+            branches:
+              only:
+                - demo1
       - deploy-to-prod:
           <<: *production_only
       - deploy-to-staging:
           <<: *staging_only
-      - deploy-to-release-candidate:
-          <<: *release_candidate_only
   nightly-e2e:
     triggers:
       - schedule:
@@ -300,7 +357,7 @@ workflows:
           filters:
             branches:
               only:
-                - master
+                - develop
     jobs:
       - build-and-test-all
       - test-e2e:

@@ -6,9 +6,12 @@ import { LayoutComponent } from './layout/layout.component';
 // Guards
 import { ActiveContractGuard } from '@blockframes/contract/contract/guards/active-contract.guard';
 import { OrganizationContractListGuard } from '@blockframes/contract/contract/guards/organization-contract-list.guard';
-import { MovieActiveGuard, MovieOrganizationListGuard } from '@blockframes/movie';
-import { TunnelGuard } from '@blockframes/ui/tunnel';
-
+import { TunnelGuard } from '@blockframes/ui/tunnel/tunnel.guard';
+import { ContractsRightListGuard } from '@blockframes/distribution-rights/guards/contracts-right-list.guard';
+import { MovieListContractListGuard } from '@blockframes/movie/guards/movie-contract.guard';
+import { MovieOrganizationListGuard } from '@blockframes/movie/guards/movie-organization-list.guard';
+import { MovieTunnelGuard } from '@blockframes/movie/guards/movie-tunnel.guard';
+import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 
 const routes: Routes = [
   {
@@ -27,13 +30,12 @@ const routes: Routes = [
         loadChildren: () => import('./pages/home/home.module').then(m => m.HomeModule)
       },
       {
-        // TODO(#1522)
         path: 'activity',   // List of notifications
-        loadChildren: () => import('@blockframes/notification/notification/activity-feed/activity-feed.module').then(m => m.ActivityFeedModule)
+        loadChildren: () => import('../activity/activity.module').then(m => m.ActivityModule)
       },
       {
         path: 'import', // Import bulk of movies
-        loadChildren: () => import('@blockframes/movie/movie/components/import/import-movie.module')
+        loadChildren: () => import('@blockframes/movie/components/import/import-movie.module')
           .then(m => m.ImportMovieModule)
       },
       {
@@ -42,10 +44,12 @@ const routes: Routes = [
       },
       {
         path: 'titles',
+        canActivate: [OrganizationContractListGuard],
+        canDeactivate: [OrganizationContractListGuard],
         children: [{
           path: '',
-          canActivate: [MovieOrganizationListGuard, OrganizationContractListGuard],
-          canDeactivate: [MovieOrganizationListGuard, OrganizationContractListGuard],
+          canActivate: [MovieOrganizationListGuard],
+          canDeactivate: [MovieOrganizationListGuard],
           loadChildren: () => import('./title/list/list.module').then(m => m.TitleListModule)
         }, {
           path: ':movieId',
@@ -58,14 +62,14 @@ const routes: Routes = [
         path: 'deals',
         children: [{
           path: '',
-          canActivate: [OrganizationContractListGuard],
-          canDeactivate: [OrganizationContractListGuard],
-          loadChildren: () => import('./deal/list/list.module').then(m => m.DealListModule)
+          canActivate: [OrganizationContractListGuard, ContractsRightListGuard, MovieListContractListGuard],
+          canDeactivate: [OrganizationContractListGuard, ContractsRightListGuard, MovieListContractListGuard],
+          loadChildren: () => import('./right/list/list.module').then(m => m.RightListModule)
         }, {
-          path: ':contractId', // One deal: different state of a deal (offer, counter-offer, payment),
+          path: ':contractId', // One right: different state of a right (offer, counter-offer, payment),
           canActivate: [ActiveContractGuard],
           canDeactivate: [ActiveContractGuard],
-          loadChildren: () => import('./deal/view/view.module').then(m => m.DealViewModule)
+          loadChildren: () => import('./right/view/view.module').then(m => m.RightViewModule)
         }]
       },
       {
@@ -75,6 +79,10 @@ const routes: Routes = [
       {
         path: 'who-are-we',
         loadChildren: () => import('./pages/team-page/team.module').then(m => m.TeamModule)
+      },
+      {
+        path: 'contact',
+        loadChildren: () => import('./pages/contact-page/contact.module').then(m => m.ContactModule)
       },
       {
         path: 'terms',
@@ -92,7 +100,7 @@ const routes: Routes = [
         loadChildren: () => import('./movie-tunnel/start/start-tunnel.module').then(m => m.StartTunnelModule)
       }, {
         path: ':movieId',
-        canActivate: [MovieActiveGuard],
+        canActivate: [MovieActiveGuard, MovieTunnelGuard],
         canDeactivate: [MovieActiveGuard],
         loadChildren: () => import('./movie-tunnel/movie-tunnel.module').then(m => m.MovieTunnelModule),
         data: {

@@ -1,0 +1,28 @@
+<mat-list-item>
+  <img matListAvatar *ngIf="invitation.fromUser" placeholderAsset="profil_user.webp" [imgRef]="invitation.fromUser.avatar" alt="Profile picture" />
+  <img matListAvatar *ngIf="invitation.fromOrg" placeholderAsset="profil_user.webp" [imgRef]="invitation.fromOrg.logo" alt="Organization logo" />
+  <p matLine class="mat-body-1">
+    {{ invitation.message }}
+  </p>
+  <span matLine>
+    <small class="mat-caption">
+      {{ invitation.date | date: 'shortTime' }}
+    </small>
+  </span>
+  <ng-container [ngSwitch]="invitation.status">
+    <ng-container *ngSwitchCase="'accepted'">
+      <span>Accepted</span>
+    </ng-container>
+    <ng-container *ngSwitchCase="'declined'">
+      <span>Declined</span>
+    </ng-container>
+    <div *ngSwitchCase="'pending'" fxLayout="row" fxLayoutGap="16px">
+      <a test-id="accept" mat-mini-fab color="primary" (click)="accept(invitation.id)">
+        <mat-icon svgIcon="check"></mat-icon>
+      </a>
+      <a test-id="decline" mat-mini-fab color="warn" (click)="refuse(invitation.id)">
+        <mat-icon svgIcon="refuse"></mat-icon>
+      </a>
+    </div>
+  </ng-container>
+</mat-list-item>

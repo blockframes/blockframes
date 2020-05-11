@@ -2,8 +2,11 @@
     [formGroup]="control">
     <div formGroupName="party">
         <div fxLayout="row" fxLayoutAlign="center start" fxLayoutGap="20px">
-            <organization-autocomplete [control]="displayNameControl(control)" label="Licensee Name"
-                (emitSelect)="patchOrgId($event, control)"></organization-autocomplete>
+            <!-- TODO #2102 -->
+            <algolia-autocomplete [index]="algoliaOrg" [control]="displayNameControl(control)" keyToDisplay="name"
+                label="Party Name" (selectionChange)="patchOrgId($event, control)">
+                <ng-template let-org>{{ org.name }}</ng-template>
+            </algolia-autocomplete>
             <mat-form-field appearance="outline">
                 <mat-label>Select role</mat-label>
                 <mat-select formControlName="role">
@@ -22,7 +25,7 @@
             </mat-form-field>
             <div fxLayout="row" fxLayoutAlign="center center" *ngIf="i > 1">
                 <button (click)="form.removeAt(i)" mat-mini-fab color="warn">
-                    <mat-icon>delete</mat-icon>
+                    <mat-icon svgIcon="trash"></mat-icon>
                 </button>
                 <span>Remove party</span>
             </div>

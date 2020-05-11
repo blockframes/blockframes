@@ -1,0 +1,45 @@
+@import '~@angular/flex-layout/mq';
+
+header, section {
+  padding: 0 176px;
+}
+
+header {
+  height: 300px;
+  padding-top: 30px;
+  background: linear-gradient(to bottom, var(--background-disabled-button), transparent);
+}
+
+nav {
+  margin-bottom: 16px;
+}
+
+.org-info {
+  margin-left: 25px;
+}
+
+img {
+  height: 170px;
+  width: 170px;
+  border-radius: 50%;
+}
+
+@include layout-bp(sm) {
+  header, section {
+    padding: 0 100px
+  }
+}
+
+@include layout-bp(xs) {
+  header, section {
+    padding: 0px;
+  }
+}
+
+h1, h3 {
+  margin: 0;
+}
+
+p.mat-body-2 {
+  padding-top: 8px;
+}

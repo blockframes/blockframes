@@ -1,4 +1,3 @@
-import { EntityControl, FormEntity, FormList, urlValidators } from '@blockframes/utils';
 import { FormArray, FormControl } from '@angular/forms';
 import { MovieMainForm } from './main/main.form';
 import { MoviePromotionalElementsForm } from './promotional-elements/promotional-elements.form';
@@ -9,14 +8,16 @@ import { Movie, createMovie, createMovieLegalDocuments } from '../+state';
 import { MovieSalesInfoForm } from './sales-info/sales-info.form';
 import { MovieVersionInfoForm } from './version-info/version-info.form';
 import { MovieFestivalPrizesForm } from './festival-prizes/festival-prizes.form';
-import { MovieSalesAgentDealForm } from './sales-agent-deal/sales-agent-deal.form';
 import { MovieReviewForm } from './review/review.form';
 import { MovieBudgetForm } from './budget/budget.form';
-import { Injectable } from '@angular/core';
 import { LegalDocument } from '@blockframes/contract/contract/+state/contract.firestore';
 import { FormStaticValue } from '@blockframes/utils/form/forms/static-value.form';
 import { createLegalDocument } from '@blockframes/contract/contract/+state/contract.model';
 import { MovieLegalDocuments } from '../+state/movie.firestore';
+import { urlValidators } from '@blockframes/utils/form/validators/validators';
+import { FormEntity, EntityControl } from '@blockframes/utils/form/forms/entity.form';
+import { FormList } from '@blockframes/utils/form/forms/list.form';
+import { createLanguageControl } from '@blockframes/movie/form/version-info/version-info.form';
 
 // LEGAL DOCUMENTS
 
@@ -64,10 +65,9 @@ function createMovieControls(movie: Partial<Movie>) {
     salesCast: new MovieSalesCastForm(entity.salesCast),
     salesInfo: new MovieSalesInfoForm(entity.salesInfo),
     versionInfo: new FormEntity({
-      languages: new MovieVersionInfoForm(entity.versionInfo.languages)
+      languages: MovieVersionInfoForm.factory(entity.versionInfo.languages, createLanguageControl)
     }),
     festivalPrizes: new MovieFestivalPrizesForm(entity.festivalPrizes),
-    salesAgentDeal: new MovieSalesAgentDealForm(entity.salesAgentDeal),
     budget: new MovieBudgetForm(entity.budget),
     movieReview: FormList.factory(entity.movieReview, review => new MovieReviewForm(review)),
     documents: new MovieLegalDocumentsForm(entity.documents),

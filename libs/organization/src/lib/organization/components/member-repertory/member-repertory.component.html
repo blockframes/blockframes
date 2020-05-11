@@ -1,0 +1,50 @@
+<mat-card>
+  <mat-card-title>Company Members</mat-card-title>
+  <bf-table-filter
+    [source]="members"
+    [columns]="memberColumns"
+    [initialColumns]="initialColumns"
+    showPaginator >
+    <ng-template colRef="firstName" let-firstName>
+      <b>{{ firstName }}</b>
+    </ng-template>
+    <ng-template colRef="lastName" let-lastName>
+      <b>{{ lastName }}</b>
+    </ng-template>
+    <ng-template colRef="role" let-role>
+      {{ displayRole(role) }}
+    </ng-template>
+    <ng-template colRef="uid" let-uid>
+      <button mat-icon-button [matMenuTriggerFor]="menu">
+        <mat-icon svgIcon="more_vert"></mat-icon>
+      </button>
+      <mat-menu #menu>
+        <button mat-menu-item [matMenuTriggerFor]="subMenu">
+          Grant Permissions
+        </button>
+        <button mat-menu-item (click)="memberRemoved.emit(uid)">
+          <mat-icon color="warn" svgIcon="remove_member"></mat-icon>
+          <span>Remove from Company</span>
+        </button>
+      </mat-menu>
+      <mat-menu #subMenu>
+        <button mat-menu-item (click)="updatedToSuperAdmin.emit(uid)">
+          Super Admin
+        </button>
+        <button mat-menu-item (click)="updatedToAdmin.emit(uid)">
+          Admin
+        </button>
+        <button mat-menu-item (click)="updatedToMember.emit(uid)">
+          Member
+        </button>
+      </mat-menu>
+    </ng-template>
+  </bf-table-filter>
+  <h6>What is “Grant permissions”?</h6>
+  <p class="mat-body-2">Permissions give your company's members access to the different platform features.</p>
+  <ul class="mat-body-2">
+    <li><strong>"Super Admin"</strong>: can add and remove members and admins from the organization.</li>
+    <li><strong>"Admin"</strong>: can add an remove only members from the organization.</li>
+    <li><strong>"Members"</strong>: can't add or remove members from the organization.</li>
+  </ul>
+</mat-card>

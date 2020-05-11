@@ -1,0 +1,74 @@
+<ng-template pageBar>
+  <header fxLayout fxLayoutAlign="space-between center">
+    <a mat-icon-button routerLink="../..">
+      <mat-icon svgIcon="arrow_back"></mat-icon>
+    </a>
+    <div fxLayout fxLayoutAlign="end center">
+      <ng-container *ngIf="form.dirty">
+        <button @scaleIn type="submit" mat-stroked-button color="primary" (click)="save()">Save</button>
+      </ng-container>
+      <button type="button" mat-button color="warn" (click)="remove()">Delete</button>
+    </div>
+  </header>
+</ng-template>
+
+<form [formGroup]="form">
+  <section fxLayout="column" fxLayoutGap="24px">
+    <h2>Details</h2>
+    <mat-card class="details" fxLayout="column" fxFlex="65">
+      <mat-form-field appearance="outline">
+        <mat-label>Event Title</mat-label>
+        <input matInput formControlName="title" />
+      </mat-form-field>
+
+      <div fxLayout fxLayoutAlign="space-between center" fxLayoutGap="24px">
+        <mat-form-field fxFlex appearance="outline">
+          <mat-label>Start</mat-label>
+          <time-picker formControlName="start"></time-picker>
+        </mat-form-field>
+        <span>to</span>
+        <mat-form-field fxFlex  appearance="outline">
+          <mat-label>End</mat-label>
+          <time-picker formControlName="end"></time-picker>
+        </mat-form-field>
+      </div>
+
+      <mat-checkbox formControlName="isPrivate">Private</mat-checkbox>
+      <mat-checkbox formControlName="allDay">All day</mat-checkbox>
+
+    </mat-card>
+
+    <!-- Meta content -->
+    <ng-content></ng-content>
+
+
+    <!-- <h2>Invitations</h2>
+    <mat-card class="invitations" fxLayout="column"  fxFlex="35">
+      <div fxLayout fxLayout="space-between center" fxLayoutGap="16px">
+        <algolia-chips-autocomplete fxFlex
+          index="user"
+          displayWithPath="email"
+          [form]="invitationForm"
+          label="Search for a guest"
+          placeholder="Enter guest email"
+        >
+          <ng-template let-user>
+            <div class="profile-item" fxLayout fxLayoutAlign="strt center" fxLayoutGap="8px">
+              <img [imgRef]="user.avatar.media" placeholderAsset="profil_user.webp" alt="Profile" />
+              <span *ngIf="user.firstName">{{ user | displayName }}</span>
+              <span *ngIf="!user.firstName">{{ user.email }}</span>
+            </div>
+          </ng-template>
+        </algolia-chips-autocomplete>
+        <button mat-icon-button (click)="invite()">
+          <mat-icon svgIcon="send"></mat-icon>
+        </button>
+      </div>
+
+      Here the list of invited persons
+      <invitation-guest-list [invitations]="invitations"></invitation-guest-list>
+    </mat-card> -->
+  </section>
+</form>
+
+

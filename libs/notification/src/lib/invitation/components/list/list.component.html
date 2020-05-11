@@ -1,0 +1,24 @@
+<mat-list>
+  <ng-container *ngFor="let timeFrame of timeFrames">
+    <!-- For a time frame -->
+    <ng-container *ngIf="(invitations | filterByDate: timeFrame) as invitationList">
+      
+      <h2 *ngIf="invitationList.length">
+        {{ timeFrame | labelByDate }}
+      </h2>
+  
+      <!-- Display all invitations -->
+      <ng-container *ngFor="let invitation of invitationList">
+        <ng-template
+          [ngTemplateOutlet]="itemTemplate || default"
+          [ngTemplateOutletContext]="{ $implicit: invitation }">
+        </ng-template>
+      </ng-container>
+
+    </ng-container>
+  </ng-container>
+</mat-list>
+
+<ng-template #default let-invitation>
+  <invitation-item [invitation]="invitation"></invitation-item>
+</ng-template>

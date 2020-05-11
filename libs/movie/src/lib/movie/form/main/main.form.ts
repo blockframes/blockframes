@@ -1,8 +1,10 @@
-import { FormEntity, FormList, yearValidators } from '@blockframes/utils';
 import { MovieMain, Credit, createMovieMain, Movie, MovieStakeholders, createMovieStakeholders, createTitle, createStoreConfig } from '../../+state';
 import { Validators, FormControl } from '@angular/forms';
 import { createCredit, Stakeholder, createStakeholder } from '@blockframes/utils/common-interfaces/identity';
-import { FormStaticValue, FormStaticArray } from '@blockframes/utils/form';
+import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
+import { FormStaticValue, FormStaticArray } from '@blockframes/utils/form/forms/static-value.form';
+import { FormList } from '@blockframes/utils/form/forms/list.form';
+import { yearValidators } from '@blockframes/utils/form/validators/validators';
 
 // CREDIT
 
@@ -122,15 +124,14 @@ function createMovieMainControls(main : Partial<MovieMain> = {}) {
   const entity = createMovieMain(main);
   return {
     internalRef: new FormControl(entity.internalRef),
-    isan: new FormControl(entity.isan),
     title: new TitleForm(entity.title),
     directors: FormList.factory(entity.directors, el => new DirectorForm(el)),
-    productionYear: new FormControl(entity.productionYear, [Validators.required, yearValidators]),
-    genres: new FormStaticArray(entity.genres, 'GENRES', [Validators.required]),
-    originCountries: FormList.factory(entity.originCountries, el => new FormStaticValue(el, 'TERRITORIES', [Validators.required])),
+    productionYear: new FormControl(entity.productionYear, [yearValidators]),
+    genres: new FormStaticArray(entity.genres, 'GENRES'),
+    originCountries: FormList.factory(entity.originCountries, el => new FormStaticValue(el, 'TERRITORIES')),
     originalLanguages: FormList.factory(entity.originalLanguages, el => new FormStaticValue(el, 'LANGUAGES')),
     status: new FormControl(entity.status),
-    totalRunTime: new FormControl(entity.totalRunTime),
+    totalRunTime: new FormControl(entity.totalRunTime, [Validators.min(0)] ),
     shortSynopsis: new FormControl(entity.shortSynopsis, [Validators.maxLength(500)] ),
     stakeholders: new StakeholderMapForm(entity.stakeholders),
     workType: new FormControl(entity.workType),

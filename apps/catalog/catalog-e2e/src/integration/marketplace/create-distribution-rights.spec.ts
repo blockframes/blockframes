@@ -1,8 +1,8 @@
 /// <reference types="cypress" />
 
 import { HomePage, SearchPage, ViewPage, DistributionPage, SelectionPage, FeedbackPage } from '../../support/pages/marketplace';
-import { User, Availabilities } from "../../support/utils/type";
-import { WelcomeViewPage, LoginViewPage } from '../../support/pages/auth';
+import { User, Availabilities } from '@blockframes/e2e/utils/type';
+import { AuthLoginPage, AuthWelcomePage } from '@blockframes/e2e/pages/auth';
 
 const LOGIN_CREDENTIALS: Partial<User> = {
   email: 'hello2@cascade8.com',
@@ -41,12 +41,13 @@ beforeEach(() => {
 describe('test select movie from catalog', () => {
   it.skip('login into an existing account, go to movie catalog, search movie, create distribution rights, add distribution rights', () => {
     // Connexion
-    const p1: WelcomeViewPage = new WelcomeViewPage();
-    const p2: LoginViewPage = p1.clickCallToAction();
+    const p1: AuthWelcomePage = new AuthWelcomePage();
+    const p2: AuthLoginPage = p1.clickCallToAction();
     p2.fillSignin(LOGIN_CREDENTIALS);
-    const p3: HomePage = p2.clickSignIn();
+    p2.clickSignIn();
+    const p3 = new HomePage();
     // Go to search page and apply filters
-    const p4: SearchPage = p3.clickDiscover();
+    const p4: SearchPage = p3.clickViewTheLibrary();
     p4.fillProductionYear(PRODUCTION_YEAR);
     p4.selectGenres(GENRE_ARRAY);
     p4.selectLanguages(LANGUAGE);

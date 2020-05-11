@@ -1,29 +1,47 @@
 {
   "hosting": [
     {
-      "target": "current",
-      "public": "dist/apps/",
-      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
-      "rewrites": [
+      "target": "storybook",
+      "public": "dist/storybook"
+    },
+    {
+      "target": "catalog",
+      "public": "dist/apps/catalog/",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "redirects": [
         {
-          "source": "/delivery/contract.pdf",
-          "function": "generateDeliveryPDF"
-        },
+          "source": "/catalog/:path*",
+          "destination": "/:path",
+          "type": 301
+        }
+      ],
+      "rewrites": [
         {
           "source": "/admin{,/**}",
           "function": "admin"
         },
         {
-          "source": "/delivery{,/**}",
-          "destination": "/delivery/index.html"
-        },
+          "source": "**",
+          "destination": "/index.html"
+        }
+      ]
+    },
+    {
+      "target": "festival",
+      "public": "dist/apps/festival/browser",
+      "ignore": [
+        "firebase.json",
+        "**/.*",
+        "**/node_modules/**"
+      ],
+      "rewrites": [
         {
-          "source": "/catalog{,/**}",
-          "destination": "/catalog/index.html"
-        },
-        {
-          "source": "/movie-financing{,/**}",
-          "destination": "/movie-financing/index.html"
+          "source": "/admin{,/**}",
+          "function": "admin"
         },
         {
           "source": "**",
@@ -34,7 +52,7 @@
   ],
   "functions": {
     "predeploy": [
-      "cp ./package.json dist/apps/backend-functions/package.json",
+      "cat ./package.json | jq \"del(.scripts.postinstall)\" > dist/apps/backend-functions/package.json",
       "npm run lint backend-functions",
       "npm run build:backend-functions",
       "./ops/deploy_secrets.sh"

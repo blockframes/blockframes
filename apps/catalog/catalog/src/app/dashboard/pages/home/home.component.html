@@ -1,8 +1,5 @@
-<ng-template #loading>
-  <mat-spinner color="primary"></mat-spinner>
-</ng-template>
-<ng-container *ngIf="(movieAnalytics$ | async) as movieAnalytics; else loading">
-  <ng-container *ngIf="movieAnalytics.length else noMovie">
+<ng-container *ngIf="!(moviesLoading$ | async)">
+  <ng-container *ngIf="(movies$ | async).length else noMovie">
     <header fxLayout="row" fxLayoutAlign="space-between center">
       <h1>Dashboard</h1>
       <div fxLayout="row" fxLayoutAlign="center center" fxLayoutGap="24px">
@@ -11,13 +8,13 @@
           <span>View my titles</span>
         </a>
         <a mat-mini-fab color="primary" routerLink="../tunnel/movie" matTooltip="Import a new title">
-          <mat-icon>add</mat-icon>
+          <mat-icon svgIcon="add"></mat-icon>
         </a>
       </div>
     </header>
     <section>
       <h3>My Marketplace Activity</h3>
-      <movie-analytics-chart [analyticsData]="movieAnalytics"></movie-analytics-chart>
+      <movie-analytics-chart [analyticsData]="movieAnalytics$ | async"></movie-analytics-chart>
     </section>
   </ng-container>
 
@@ -25,3 +22,4 @@
     <catalog-no-movie></catalog-no-movie>
   </ng-template>
 </ng-container>
+

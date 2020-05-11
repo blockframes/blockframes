@@ -2,7 +2,7 @@
   <article dropZone (dropped)="filesSelected($event)" *ngSwitchCase="'drop'" @zoomDelay>
     <input #fileUploader multiple hidden type="file" (change)="filesSelected($event.target.files)" />
     <button mat-icon-button aria-label="file upload button" (click)="fileUploader.click()">
-      <img asset="add_files.svg" alt="upload image"/>
+      <img class="add-files-icon" asset="add_files.webp" alt="upload image"/>
     </button>
     <ng-content select="[type]"></ng-content>
     <ng-content select="[dimensions]"></ng-content>
@@ -13,6 +13,7 @@
     <image-cropper
       [imageFile]="file"
       [aspectRatio]="cropRatio"
+      format="webp"
       [containWithinAspectRatio]="true"
       [resizeToWidth]="setWidth || parentWidth"
       (imageCropped)="imageCropped($event)"

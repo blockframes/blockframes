@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { ContractService, ContractType } from '../../+state';
 import { Router, ActivatedRoute } from '@angular/router';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 @Component({
   selector: 'contract-tunnel-lobby',
@@ -14,11 +15,13 @@ export class LobbyComponent {
     private service: ContractService,
     private router: Router,
     private route: ActivatedRoute,
-  ) { }
+    private dynTitle: DynamicTitleService
+  ) { 
+    this.dynTitle.setPageTitle('Choose a contract type', 'Create an offer')
+  }
 
-  async select(contractType: 'sale' | 'mandate') {
-    const type = contractType === 'sale' ? ContractType.sale : ContractType.mandate;
+  async select(type: ContractType) {
     const contractId = await this.service.create({ type });
-    this.router.navigate([contractId, contractType], { relativeTo: this.route })
+    this.router.navigate([contractId, type], { relativeTo: this.route })
   }
 }

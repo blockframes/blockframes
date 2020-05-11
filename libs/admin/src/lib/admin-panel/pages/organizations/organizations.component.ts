@@ -1,18 +1,19 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { getValue } from '@blockframes/utils/helpers';
-import { OrganizationService } from '@blockframes/organization';
+import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 
 @Component({
   selector: 'admin-organizations',
   templateUrl: './organizations.component.html',
-  styleUrls: ['./organizations.component.scss']
+  styleUrls: ['./organizations.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationsComponent implements OnInit {
   public versionColumns = {
     'id': 'Id',
     'status': 'Status',
     'logo': 'Logo',
-    'name': 'Name',
+    'denomination': 'Name',
     'email': 'Email',
     'appAccess': 'Authorizations',
     'edit': 'Edit',
@@ -21,7 +22,7 @@ export class OrganizationsComponent implements OnInit {
   public initialColumns: string[] = [
     'id',
     'logo',
-    'name',
+    'denomination',
     'status',
     'email',
     'appAccess',
@@ -34,30 +35,28 @@ export class OrganizationsComponent implements OnInit {
   ) { }
 
   async ngOnInit() {
-    const orgs = await this.organizationService.getAllOrganizations();
-    this.rows = orgs.map(o => {
-      const org = {...o} as any;
-
-      // Append new data for table display
-      org.edit = {
-        id: org.id,
-        link: `/c/o/admin/panel/organization/${org.id}`,
+    const orgs = await this.organizationService.getValue();
+    this.rows = orgs.map(o => ({
+      ...o,
+      edit: {
+        id: o.id,
+        link: `/c/o/admin/panel/organization/${o.id}`,
       }
+    }));
 
-      return org;
-    });
     this.cdRef.markForCheck();
   }
 
-  filterPredicate(data: any, filter) {
+  public filterPredicate(data: any, filter: string) {
     const columnsToFilter = [
       'id',
-      'name',
+      'denomination.full',
+      'denomination.public',
       'status',
       'email',
     ];
     const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
     return dataStr.toLowerCase().indexOf(filter) !== -1;
   }
-  
+
 }

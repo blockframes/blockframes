@@ -1,0 +1,45 @@
+@import '~@angular/flex-layout/mq';
+
+header {
+  width: 100%;
+  mat-toolbar {
+    .sort {
+      padding-right: 16px;
+    }
+  }
+}
+
+section {
+  padding: 20px 20px;
+  h1 {
+    text-transform: capitalize;
+  }
+}
+
+aside {
+  position: sticky;
+  top: calc(var(--toolbarHeight) + 20px);
+  mat-card {
+    width: 450px;
+    max-height: calc(100vh - var(--toolbarHeight) - 40px);
+    overflow: auto;
+  }
+}
+
+@include layout-bp(lt-md) {
+  aside {
+    position: static;
+    mat-card {
+      width: 100%;
+      max-height: fit-content;
+    }
+  }
+}
+
+@include layout-bp(md) {
+  aside {
+    mat-card {
+      width: 350px;
+    }
+  }
+}

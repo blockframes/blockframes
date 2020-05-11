@@ -6,7 +6,7 @@ import {
   Output,
   EventEmitter
 } from '@angular/core';
-import { MatDatepicker } from '@angular/material';
+import { MatDatepicker } from '@angular/material/datepicker';
 
 import { FormControl, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -28,7 +28,7 @@ export class DatepickerRangeComponent {
   /** The range chosen by the user */
   @Output() wantedRange = new EventEmitter<DateRange>();
 
-  @ViewChild('picker', { static: false }) picker: MatDatepicker<Date>;
+  @ViewChild('picker') picker: MatDatepicker<Date>;
 
   range: DateRange = {
     from: new Date(),

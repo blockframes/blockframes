@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { QueryEntity } from '@datorama/akita';
-import { MovieQuery, Movie } from '@blockframes/movie';
 import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { MarketplaceState, MarketplaceStore } from './marketplace.store';
+import { MovieQuery } from '@blockframes/movie/+state/movie.query';
+import { Movie } from '@blockframes/movie/+state/movie.model';
 
 @Injectable({ providedIn: 'root' })
 export class MarketplaceQuery extends QueryEntity<MarketplaceState> {
@@ -16,11 +17,17 @@ export class MarketplaceQuery extends QueryEntity<MarketplaceState> {
     switchMap(movieIds => this.movieQuery.selectMany(movieIds))
   )
 
-  /** Check if a titl is in the wishlist */
+  /** Check if a title is in the wishlist */
   isInWishlist(movieId: string) {
     return this.select('wishlist').pipe(
       map(wishlist => wishlist.includes(movieId))
     );
+  }
+
+  /** Get the rights from a specific title in the cart */
+  getTitleRights(titleId: string) {
+    const titleCart = this.getEntity(titleId)
+    return (!!titleCart) ? titleCart.rights : [];
   }
 
 }

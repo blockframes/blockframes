@@ -1,16 +1,19 @@
 import { Price, createPrice } from '@blockframes/utils/common-interfaces/price';
 
-export const enum CartStatus {
-  pending = 'pending',
-  submitted = 'submitted',
-  accepted = 'accepted',
-  paid = 'paid'
-}
+export const cartStatus = {
+  pending : 'Pending',
+  submitted: 'Submitted',
+  accepted : 'Accepted',
+  paid : 'Paid'
+} as const;
+
+export type CartStatus = keyof typeof cartStatus;
+export type CartStatusValue = typeof cartStatus[CartStatus];
 
 export interface CatalogCart {
   name: string;
   status: CartStatus;
-  deals: string[];
+  rights: string[];
   price: Price;
 }
 
@@ -20,8 +23,8 @@ export interface CatalogCart {
 export function createCart(cart: Partial<CatalogCart> = {}): CatalogCart {
   return {
     name: 'default',
-    status: CartStatus.pending,
-    deals: [],
+    status: 'pending',
+    rights: [],
     ...cart,
     price: createPrice(cart.price),
   }

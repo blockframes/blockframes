@@ -1,5 +1,3 @@
-import { App } from "@blockframes/utils/apps";
-
 export interface PermissionsDocument {
   id: string;
   roles: Roles
@@ -15,31 +13,7 @@ export interface Roles {
 }
 
 /** Roles a user can have in an organization. */
-export const enum UserRole {
-  superAdmin = 'superAdmin',
-  admin = 'admin',
-  member = 'member'
-}
-
-/** Permissions related to a specific application. */
-export interface AppPermissionsDocument {
-  name: App;
-  admins: string[];
-  canCreate: string[];
-  canRead: string[];
-  canUpdate: string[];
-  canDelete: string[];
-}
-
-/** Permissions related to a specific user on a document. */
-export interface UserPermissionsDocument {
-  id: string;
-  admins: string[];
-  canCreate: string[];
-  canRead: string[];
-  canUpdate: string[];
-  canDelete: string[];
-}
+export type UserRole = 'superAdmin' | 'admin' | 'member';
 
 /** Permissions related to an organization on a document. */
 export interface DocPermissionsDocument {
@@ -56,24 +30,12 @@ export interface DocPermissionsDocument {
 export function createPermissions(params: Partial<PermissionsDocument>): PermissionsDocument {
   return {
     id: params.id || '',
-    roles : params.roles || {},
+    roles: params.roles || {},
     canCreate: [],
     canRead: [],
     canUpdate: [],
     canDelete: [],
     ...params
-  };
-}
-
-/** Factory function to create application related permissions. */
-export function createAppPermissions(app: App): AppPermissionsDocument {
-  return {
-    name: app,
-    admins: [],
-    canCreate: [],
-    canRead: [],
-    canUpdate: [],
-    canDelete: []
   };
 }
 

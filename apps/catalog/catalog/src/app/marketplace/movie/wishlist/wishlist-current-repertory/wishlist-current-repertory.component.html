@@ -3,7 +3,7 @@
   <ng-container matColumnDef="movie">
     <th mat-header-cell *matHeaderCellDef>International title</th>
     <td mat-cell *matCellDef="let element" class="bf-strong">
-      {{ element.main.title.international | titlecase }}
+      {{ element.main.title.international }}
     </td>
   </ng-container>
 
@@ -37,8 +37,7 @@
   <ng-container matColumnDef="totalRunTime">
     <th mat-header-cell *matHeaderCellDef>Running time</th>
     <td mat-cell *matCellDef="let element">
-      <ng-container *ngIf="element.main.totalRunTime; else noLength">{{ element.main.totalRunTime }} min</ng-container>
-      <ng-template #noLength>TBC</ng-template>
+      <span>{{ element.main.totalRunTime | duration: 'min'}}</span>
     </td>
   </ng-container>
 
@@ -46,7 +45,7 @@
   <ng-container matColumnDef="delete">
     <th mat-header-cell *matHeaderCellDef></th>
     <td mat-cell *matCellDef="let element">
-      <button mat-icon-button (click)="remove(element, $event)">
+      <button test-id="remove" mat-icon-button (click)="remove(element, $event)">
         <mat-icon svgIcon="trash"></mat-icon>
       </button>
     </td>

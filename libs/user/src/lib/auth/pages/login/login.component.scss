@@ -1,0 +1,47 @@
+@import '~@angular/material/theming';
+@import '~@angular/flex-layout/mq';
+
+mat-sidenav-container {
+  height: 100vh;
+  width: 100vw;
+}
+
+mat-sidenav-content {
+  background-size: cover;
+}
+
+button {
+  &:hover {
+    @include mat-elevation(4);
+  }
+}
+
+.mat-fab {
+  height: 120px;
+  width: 120px;
+  margin-left: 20px;
+  margin-right: 20px;
+}
+
+mat-sidenav {
+  width: 800px;
+}
+
+// Tablet and medium
+@include layout-bp(lt-lg) {
+  mat-sidenav {
+    width: 500px;
+  }
+  mat-sidenav-content {
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position-y: center;
+  }
+}
+
+// Mobile
+@include layout-bp(xs) {
+  mat-sidenav {
+    width: 100%;
+  }
+}

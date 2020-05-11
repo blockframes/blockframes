@@ -1,8 +1,8 @@
 import { Component, ChangeDetectionStrategy, Input, ChangeDetectorRef, OnInit } from '@angular/core';
 import { MovieBudgetForm } from '../../budget/budget.form';
 import { MovieSalesInfoForm } from '../../sales-info/sales-info.form';
-import { FormList } from '@blockframes/utils';
-import { MovieReview } from '@blockframes/movie/movie/+state/movie.model';
+import { MovieReview } from '@blockframes/movie/+state/movie.model';
+import { FormList } from '@blockframes/utils/form/forms/list.form';
 import { MovieReviewForm } from '../../review/review.form';
 
 @Component({
@@ -23,10 +23,6 @@ export class MovieSummaryBudgetComponent implements OnInit {
     this.budget.valueChanges.subscribe(_ => this.cdr.markForCheck());
     this.salesInfo.valueChanges.subscribe(_ => this.cdr.markForCheck());
     this.movieReview.valueChanges.subscribe(_ => this.cdr.markForCheck());
-  }
-
-  public budgetRange({ from, to }) {
-    return (from && to) ? `$ ${from} - ${to}` : '';
   }
 
   public reviewHasNoValue(review: MovieReviewForm) {

@@ -1,5 +1,5 @@
 import SelectionPage from "./SelectionPage";
-import { Dates } from "../../utils/type";
+import { Dates } from "@blockframes/e2e/utils/type";
 
 export default class DistributionPage {
   constructor() {

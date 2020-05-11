@@ -1,7 +1,6 @@
 import { FormControl } from '@angular/forms';
-import { FormEntity } from '@blockframes/utils';
-import { createContractVersion } from '@blockframes/contract/contract/+state/contract.model';
-import { ContractVersion } from '@blockframes/contract/version/+state/contract-version.model';
+import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
+import { ContractVersion, createContractVersion } from '@blockframes/contract/version/+state/contract-version.model';
 
 function createContractVersionAdminControls(entity: Partial<ContractVersion>) {
   const contract = createContractVersion(entity);

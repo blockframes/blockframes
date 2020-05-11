@@ -1,22 +1,25 @@
-import { Injectable, Inject, Renderer2 } from '@angular/core';
-import { DOCUMENT } from '@angular/common';
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { DOCUMENT, isPlatformBrowser } from '@angular/common';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class ThemeService {
-  private renderer: Renderer2
   _theme = new BehaviorSubject<string>('');
   theme$ = this._theme.asObservable();
 
-  constructor(@Inject(DOCUMENT) private document: Document) {}
+  constructor(@Inject(DOCUMENT) private document: Document) {
+    this.document.body.classList.add('mat-app-background', 'mat-typography');
+  }
 
   get theme() {
     return this._theme.getValue();
   }
 
   set theme(mode: string) {
-    this.setTheme(mode);
-    this.saveTheme(mode);
+    if (mode) {
+      this.setTheme(mode);
+      this.saveTheme(mode);
+    }
   }
 
   private saveTheme(mode: string) {
@@ -24,18 +27,15 @@ export class ThemeService {
   }
 
   private setTheme(mode: string) {
-    this.renderer.removeClass(this.document.body, 'dark-theme');
-    this.renderer.removeClass(this.document.body, 'light-theme');
-    this.renderer.addClass(this.document.body, `${mode}-theme`);
+    this.document.body.classList.remove('dark-theme');
+    this.document.body.classList.remove('light-theme');
+    this.document.body.classList.add(`${mode}-theme`);
     this._theme.next(mode);
   }
 
   /** Get the current value of the theme */
-  initTheme(renderer: Renderer2, mode: 'dark' | 'light') {
-    if (!this.renderer) {
-      this.renderer = renderer;
-      const theme = localStorage.getItem('theme') || mode;
-      this.setTheme(theme);
-    }
+  initTheme(mode: 'dark' | 'light') {
+    const theme = isPlatformBrowser(PLATFORM_ID) ? localStorage.getItem('theme') || mode : mode;
+    this.setTheme(theme);
   }
 }

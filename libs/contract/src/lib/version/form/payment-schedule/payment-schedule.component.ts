@@ -13,7 +13,7 @@ import {
   ViewChildren,
   AfterViewInit,
 } from '@angular/core';
-import { MovieEvent, PaymentEvent, TimeUnit, TemporalityUnit } from '@blockframes/utils/common-interfaces/terms'
+import { paymentEvent, movieEvent, timeUnit } from '@blockframes/utils/common-interfaces/terms'
 import { FormList } from '@blockframes/utils/form/forms/list.form';
 import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { PaymentScheduleRaw } from '@blockframes/utils/common-interfaces';
@@ -25,14 +25,14 @@ import { PaymentScheduleRaw } from '@blockframes/utils/common-interfaces';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewInit {
-  @Input() form: FormList<any, ContractVersionForm>;
+  @Input() form: ContractVersionForm;
 
   // concated enums
-  public triggerEvents = Object.assign({}, MovieEvent, PaymentEvent)
+  public triggerEvents = Object.assign({}, movieEvent, paymentEvent);
 
-  public paymentEvents = PaymentEvent;
+  public paymentEvents = paymentEvent;
 
-  public durations = TimeUnit;
+  public durations = timeUnit;
 
   public periodCtrl: FormControl = new FormControl(false);
 
@@ -51,11 +51,13 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
 
   ngOnInit() {
     /**
-     * We want to have two paymen schedules form groups from the beginning,
+     * We want to have three payment schedules form groups from the beginning,
      * so we can disable or enable only the inputs we want.
+     * At initialization we have one so we add two to get three.
      */
     if (this.paymentSchedule.controls.length <= 1) {
-      this.paymentSchedule.add()
+      this.paymentSchedule.add();
+      this.paymentSchedule.add();
     }
     this.periodSub = this.periodCtrl.valueChanges
       .pipe(
@@ -70,7 +72,7 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
       )
       .subscribe();
     // If we got data from the DB, convert it into date
-    this.form.at(0).get('paymentSchedule').controls.forEach(control => {
+    this.form.get('paymentSchedule').controls.forEach(control => {
       const start = control.get('date').get('start');
       start.setValue(toDate(start.value));
     })
@@ -92,7 +94,6 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
           this.activateFirstDuration();
         } else if (value === 'periodic') {
           this.disableAll();
-
           this.toggleDurationPeriod('last');
           this.eventCtrl.enable();
           this.periodCtrl.enable();
@@ -116,15 +117,15 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
   }
 
   get paymentTermFloatingStart() {
-    return this.form.at(0).get('paymentTerm').get('floatingStart');
+    return this.form.get('paymentTerm').get('floatingStart');
   }
 
   get customPaymentSchedule() {
-    return this.form.at(0).get('customPaymentSchedule');
+    return this.form.get('customPaymentSchedule');
   }
 
   get paymentSchedule() {
-    return this.form.at(0).get('paymentSchedule');
+    return this.form.get('paymentSchedule');
   }
 
   /**
@@ -137,7 +138,7 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
         tempValue.push(control.get('date').get('floatingDuration').get('temporality').value)
       }
     }
-    return tempValue.includes(TemporalityUnit.every);
+    return tempValue.includes('every');
   }
 
   /**paymentTerm
@@ -198,7 +199,7 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
     this.disableAll();
     this.activateFirstDuration()
     this.paymentSchedule.reset();
-    this.form.at(0).get('customPaymentSchedule').reset();
+    this.form.get('customPaymentSchedule').reset();
     if (fromResetButton) {
       this.radioCtrl.reset();
     }
@@ -209,12 +210,12 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
    * @param index of current iteration
    * @param isFirst if first element, dont show remove button
    */
-  public showRemoveButton(index: number, isFirst: boolean): boolean {
+  public showRemoveButton(index: number, isFirst: boolean, isLast: boolean): boolean {
     const length = this.paymentSchedule.controls.length;
-    if (isFirst) {
+    if (isFirst && isLast) {
       return false;
     }
-    return length < index + 2 ? false : true;
+    return length < index + 3 ? false : true;
   }
 
   /**
@@ -241,6 +242,7 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
   private activateFirstDuration() {
     this.paymentSchedule.at(0).get('date').get('floatingDuration').get('unit').enable();
     this.paymentSchedule.at(0).get('date').get('floatingDuration').get('duration').enable();
+    this.paymentSchedule.at(0).get('date').get('floatingStart').enable();
   }
 
   /**
@@ -288,7 +290,7 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
    * @param form 
    */
   private setRadioButton() {
-    if (this.form.at(0).get('customPaymentSchedule').value) {
+    if (this.form.get('customPaymentSchedule').value) {
       this.radioCtrl.setValue('other');
       return 'other';
     } else if (this.hasTemporallyValue) {
@@ -322,7 +324,7 @@ export class PaymentScheduleComponent implements OnInit, OnDestroy, AfterViewIni
     this.radioSub.unsubscribe();
     // If user checked radio button periodic, we want to update the form and set a default value
     if (this.radioCtrl.value === 'periodic') {
-      this.paymentSchedule.last().get('date').get('floatingDuration').get('temporality').setValue(TemporalityUnit.every)
+      this.paymentSchedule.last().get('date').get('floatingDuration').get('temporality').setValue('every')
     }
   }
 }

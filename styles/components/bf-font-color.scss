@@ -10,6 +10,7 @@
   }
   .mat-display-2 {
     color: mat-color($color-font, display-2);
+    margin: unset;
   }
   .mat-display-1 {
     color: mat-color($color-font, display-1);
@@ -48,6 +49,7 @@
     letter-spacing: 0.5px;
     color: mat-color($color-font, h6)
   }
+  p,
   .mat-body-1,
   .mat-body {
     color: mat-color($color-font, mat-body-1);

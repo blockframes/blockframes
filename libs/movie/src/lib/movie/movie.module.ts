@@ -7,8 +7,9 @@ import { firebase } from '@env';
 import { TranslateSlugModule } from '@blockframes/utils/pipes/translate-slug.module';
 
 // Angular Fire
-import { AngularFirestoreModule, FirestoreSettingsToken } from '@angular/fire/firestore';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireStorageModule } from '@angular/fire/storage';
+import 'firebase/storage';
 
 // Material
 import { MatSnackBarModule } from '@angular/material/snack-bar';
@@ -28,38 +29,26 @@ import { MatMenuModule} from '@angular/material/menu';
 import { NgxMatSelectSearchModule } from 'ngx-mat-select-search';
 
 // Libraries
-import { UploadModule } from '@blockframes/ui/upload';
-import { PasswordConfirmModule } from '@blockframes/ui/form';
-import { MovieCardModule } from '@blockframes/ui';
-import { MovieDisplayModule } from './display/display.module';
+import { UploadModule } from '@blockframes/ui/upload/upload.module';
+import { PasswordConfirmModule } from '@blockframes/ui/form/password-confirm/password-confirm.module';
+import { MovieCardModule } from '@blockframes/ui/movie-card/movie-card.module';
 
 // Components
-import { MovieEditableComponent } from './pages/movie-editable/movie-editable.component';
-import { MovieRoutingModule } from './movie-routing.module';
 import { AngularFireModule } from '@angular/fire';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTabsModule } from '@angular/material/tabs';
-import { HomeEmptyComponent } from './components/home-empty/home-empty.component';
-import { MovieViewComponent } from './pages/movie-view/movie-view.component';
 import { MovieFormModule } from './form/form.module';
 
-import { MoviePickerModule } from './components/movie-picker/movie-picker.module';
 import { MovieImdbSearchModule } from './components/movie-imdb-search/movie-imdb-search.module';
 
 @NgModule({
-  declarations: [
-    MovieEditableComponent,
-    HomeEmptyComponent,
-    MovieViewComponent
-  ],
   imports: [
     CommonModule,
     FlexLayoutModule,
     FormsModule,
     ReactiveFormsModule,
-    MovieRoutingModule,
     TranslateSlugModule,
     // Angular Fire
     AngularFireModule.initializeApp(firebase),
@@ -88,14 +77,9 @@ import { MovieImdbSearchModule } from './components/movie-imdb-search/movie-imdb
     // Librairies
     UploadModule,
     PasswordConfirmModule,
-    MovieDisplayModule,
     MovieFormModule,
     MovieCardModule,
-    MovieImdbSearchModule,
-    MoviePickerModule
+    MovieImdbSearchModule
   ],
-  providers: [
-    { provide: FirestoreSettingsToken, useValue: {} },// TODO: Remove when @angular/fire is updated
-  ]
 })
 export class MovieModule {}

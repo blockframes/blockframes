@@ -1,0 +1,50 @@
+<section fxLayout="column" fxLayoutAlign="center center">
+  <h1>Join your organization</h1>
+  <img asset="join_orga.webp" alt="Join Organization Illustration"/>
+  <mat-card>
+    <form [formGroup]="form">
+      <mat-form-field appearance="outline">
+        <mat-label>First name</mat-label>
+        <input matInput type="text" placeholder="First name" formControlName="firstName" required />
+        <mat-error *ngIf="form.get('firstName').hasError('required')">
+          First name is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Last name</mat-label>
+        <input matInput type="text" placeholder="Last name" formControlName="lastName" required />
+        <mat-error *ngIf="form.get('lastName').hasError('required')">
+          Last name is <strong>required</strong>
+        </mat-error>
+      </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput type="email" formControlName="email" required />
+      </mat-form-field>
+      <ng-container>
+        <mat-form-field appearance="outline">
+          <mat-label>Pre generated password</mat-label>
+          <input matInput type="password" placeholder="Your pre generated password" formControlName="generatedPassword"
+            required />
+        </mat-form-field>
+      </ng-container>
+      <password-confirm formControlName="newPassword"></password-confirm>
+      <auth-accept-conditions (termsOfUseChecked)="checkTermsOfUse($event)">
+        <ng-template authConditions>
+          <auth-terms-conditions></auth-terms-conditions>
+        </ng-template>
+      </auth-accept-conditions>
+    </form>
+  </mat-card>
+
+  <ng-container *ngIf="!creating else creatingAccount">
+    <button @slideDown (click)="update()" type="submit" mat-flat-button color="accent" [disabled]="!isTermsChecked">
+      Sign up
+    </button>
+  </ng-container>
+  <ng-template #creatingAccount>
+    <button @slideUp mat-flat-button disabled>
+      Creating the account please wait a few seconds
+    </button>
+  </ng-template>
+</section>

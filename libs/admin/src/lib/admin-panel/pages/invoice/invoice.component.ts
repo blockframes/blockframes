@@ -1,11 +1,10 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { MatSnackBar } from '@angular/material';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { InvoiceService } from '@blockframes/contract/invoice/+state/invoice.service';
 import { Invoice } from '@blockframes/contract/invoice/+state/invoice.firestore';
 import { InvoiceAdminForm } from '../../forms/invoice-admin.form';
-import { PaymentStatus } from '@blockframes/utils/common-interfaces/price';
-
+import { paymentStatus } from '@blockframes/utils/common-interfaces/price';
 
 @Component({
   selector: 'admin-invoice',
@@ -17,8 +16,7 @@ export class InvoiceComponent implements OnInit {
   public invoiceId = '';
   private invoice: Invoice;
   public invoiceForm: InvoiceAdminForm;
-  public statuses: string[];
-  public paymentStatus: any;
+  public paymentStatus = paymentStatus;
 
   constructor(
     private invoiceService: InvoiceService,
@@ -32,8 +30,6 @@ export class InvoiceComponent implements OnInit {
     this.invoice = await this.invoiceService.getValue(this.invoiceId);
     this.invoiceForm = new InvoiceAdminForm(this.invoice);
 
-    this.statuses = Object.keys(PaymentStatus);
-    this.paymentStatus = PaymentStatus;
     this.cdRef.markForCheck();
   }
 

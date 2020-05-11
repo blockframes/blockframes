@@ -8,12 +8,6 @@
     "nx.json": "*"
   },
   "projects": {
-    "ip": {
-      "tags": ["ip"]
-    },
-    "auth": {
-      "tags": ["auth", "wallet"]
-    },
     "ui": {
       "tags": ["ui", "shared"]
     },
@@ -32,44 +26,17 @@
     "ethers": {
       "tags": ["ethereum", "smart-contract"]
     },
-    "movie-financing": {
-      "tags": []
-    },
-    "movie-financing-e2e": {
-      "tags": []
-    },
     "movie": {
       "tags": ["movie"]
     },
     "organization": {
       "tags": []
     },
-    "account": {
-      "tags": []
-    },
-    "delivery": {
-      "tags": ["delivery", "template", "material"]
-    },
-    "delivery-e2e": {
-      "tags": []
-    },
-    "main": {
-      "tags": ["main"]
-    },
-    "main-e2e": {
-      "tags": []
-    },
     "backend-functions": {
-      "tags": []
-    },
-    "material": {
       "tags": []
     },
     "backend-ops": {
       "tags": []
-    },
-    "catalog-lib": {
-      "tags": ["catalog"]
     },
     "notification": {
       "tags": ["notification"]
@@ -79,6 +46,33 @@
     },
     "catalog-e2e": {
       "tags": []
+    },
+    "festival": {
+      "tags": ["festival"]
+    },
+    "festival-e2e": {
+      "tags": [],
+      "implicitDependencies": ["festival"]
+    },
+    "user": {
+      "tags": ["user"]
+    },
+    "event": {
+      "tags": ["event"]
+    },
+    "e2e": {
+      "tags": []
+    },
+    "landing": {
+      "tags": []
+    }
+  },
+  "tasksRunnerOptions": {
+    "default": {
+      "runner": "@nrwl/workspace/tasks-runners/default",
+      "options": {
+        "cacheableOperations": ["build", "lint", "test", "e2e"]
+      }
     }
   }
 }

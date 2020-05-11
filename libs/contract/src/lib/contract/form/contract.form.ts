@@ -22,7 +22,7 @@ function createPartyDetailsControls(partyDetails: Partial<ContractPartyDetail> =
   return {
     party: new ContractPartyForm(entity.party),
     status: new FormControl(entity.status),
-    childRoles: new FormControl(partyDetails.childRoles)
+    childRoles: new FormControl(entity.childRoles)
   };
 }
 
@@ -85,14 +85,12 @@ function createContractControls(contract: Partial<Contract> = {}) {
     ]
   }
 
-  // @todo(#1887)
-  const versions = entity.versions.filter(({ id }) => id !== '_meta');
   return {
     id: new FormControl(contract.id),
     parties: FormList.factory(entity.parties, partyDetails => new PartyDetailsForm(partyDetails)),
     documents: new LegalDocumentsForm(entity.documents),
     titleIds: FormList.factory(contract.titleIds),
-    versions: FormList.factory(versions, version => new ContractVersionForm(version))
+    lastVersion: new ContractVersionForm(entity.lastVersion)
   };
 }
 

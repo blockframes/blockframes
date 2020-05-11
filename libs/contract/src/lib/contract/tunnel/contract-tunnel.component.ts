@@ -1,20 +1,20 @@
 import { Router, ActivatedRoute } from '@angular/router';
 import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { AngularFirestore } from '@angular/fire/firestore';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MovieService, Movie } from '@blockframes/movie';
 import { TunnelStep, TunnelConfirmComponent } from '@blockframes/ui/tunnel'
 import { ContractForm } from '../form/contract.form';
-import { ContractQuery, ContractService, ContractType, createContract, createContractVersion } from '../+state';
-import { MatDialog } from '@angular/material';
-import { ContractVersionService } from '@blockframes/contract/version/+state';
-import { DistributionDealForm } from '@blockframes/movie/distribution-deals/form/distribution-deal.form';
-import { FormEntity, FormList } from '@blockframes/utils';
+import { ContractQuery, ContractService, ContractType, createContract, TitlesAndRights } from '../+state';
+import { MatDialog } from '@angular/material/dialog';
+import { DistributionRightForm } from '@blockframes/distribution-rights/form/distribution-right.form';
+import { FormEntity, FormList } from '@blockframes/utils/form/forms';
 import { ContractTitleDetailForm } from '@blockframes/contract/version/form';
-import { DistributionDealService, DistributionDeal, createDistributionDeal } from '@blockframes/movie/distribution-deals/+state';
+import { DistributionRightService, DistributionRight, createDistributionRight } from '@blockframes/distribution-rights/+state';
 import { startWith, map, switchMap, shareReplay } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
-import { CommissionBase } from '@blockframes/utils/common-interfaces';
+import { Movie } from '@blockframes/movie/+state/movie.model';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { OrganizationQuery } from '@blockframes/organization/+state';
+import { AngularFirestore } from '@angular/fire/firestore';
 
 const steps = [{
   title: 'Step 1',
@@ -50,7 +50,7 @@ function fillMovieSteps(movies: Movie[] = []): TunnelStep[] {
   }]
 }
 
-export type DealControls = Record<string, FormList<DistributionDeal, DistributionDealForm>>;
+export type RightControls = Record<string, FormList<DistributionRight, DistributionRightForm>>;
 
 @Component({
   selector: 'contract-tunnel',
@@ -59,27 +59,27 @@ export type DealControls = Record<string, FormList<DistributionDeal, Distributio
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ContractTunnelComponent implements OnInit {
-  /** Keep track of the deals removed */
-  private removedDeals: Record<string, string[]> = {};
+  /** Keep track of the rights removed */
+  private removedRights: Record<string, string[]> = {};
   public steps$: Observable<TunnelStep[]>;
   public type: ContractType;
   public exitRoute$: Observable<string>;
 
   public movies$: Observable<Movie[]>;
-  public dealForms = new FormEntity<DealControls>({});
+  public rightForms = new FormEntity<RightControls>({});
   public contractForm: ContractForm;
 
   constructor(
-    private db: AngularFirestore,
+    private orgQuery: OrganizationQuery,
     private snackBar: MatSnackBar,
-    private service: ContractService,
-    private versionService: ContractVersionService,
+    private contractService: ContractService,
     private query: ContractQuery,
     private movieService: MovieService,
-    private dealService: DistributionDealService,
+    private rightService: DistributionRightService,
     private dialog: MatDialog,
     private router: Router,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private db: AngularFirestore,
   ) { }
 
   async ngOnInit() {
@@ -87,15 +87,14 @@ export class ContractTunnelComponent implements OnInit {
     this.type = contract.type;
     this.contractForm = new ContractForm(contract);
 
-    // Set the initial deals
-    contract.titleIds.forEach(async movieId => {
-      const deals = await this.dealService.getValue(ref => ref.where('contractId', '==', contract.id), { params: { movieId } });
-      this.dealForms.setControl(movieId, FormList.factory(deals, deal => new DistributionDealForm(deal)));
+    // Set the initial rights
+    Object.keys(contract.lastVersion.titles).forEach(async movieId => {
+      const rights = await this.rightService.getContractDistributionRights(contract.id, movieId);
+      this.rightForms.setControl(movieId, FormList.factory(rights, right => new DistributionRightForm(right)));
     });
 
-
     // Listen on the changes of the titles from the contract form
-    const titlesForm = this.contractForm.get('versions').last().get('titles');
+    const titlesForm = this.contractForm.get('lastVersion').get('titles');
     this.movies$ = titlesForm.valueChanges.pipe(
       startWith(titlesForm.value),
       map(titles => Object.keys(titles)),
@@ -114,108 +113,105 @@ export class ContractTunnelComponent implements OnInit {
        * or on exploitation rights, different sizes of routes
        */
       if (value.keys.length === 1) {
-        return `../../../../deals/${value.get('contractId')}`;
+        return `../../../../rights/${value.get('contractId')}`;
       } else {
-        return `../../../../../deals/${value.get('contractId')}`;
+        return `../../../../../rights/${value.get('contractId')}`;
       }
     }))
   }
 
   /** Add a title to this contract */
   addTitle(movieId: string, mandate?: boolean) {
-    const params = mandate ? { price: { commissionBase: CommissionBase.grossreceipts, amount: 0 } } : {};
-    this.contractForm.get('versions').last().get('titles').setControl(movieId, new ContractTitleDetailForm(params));
-    this.dealForms.setControl(movieId, FormList.factory([], deal => new DistributionDealForm(deal)));
+    this.contractForm
+      .get('lastVersion')
+      .get('titles')
+      .setControl(movieId, new ContractTitleDetailForm(mandate ? { price: { amount: 0 } } : {}));
+    this.rightForms.setControl(movieId, FormList.factory([], right => new DistributionRightForm(right)));
   }
 
-  /** Remove a title to this contract */
+  /**
+   * Removes a title from the contract form
+   * @param movieId
+   * @param isExploitRight
+   */
   removeTitle(movieId: string, isExploitRight?: boolean) {
-    this.contractForm.get('versions').last().get('titles').removeControl(movieId);
-    const deals = this.dealForms.get(movieId).value;
+    this.contractForm.get('lastVersion').get('titles').removeControl(movieId);
+    const rights = this.rightForms.get(movieId).value;
     // start from the end to remove to avoid shift effects
-    for (let i = deals.length - 1; i >= 0; i--) {
-      this.removeDeal(movieId, i);
+    for (let i = rights.length - 1; i >= 0; i--) {
+      this.removeRight(movieId, i);
     }
     // if we are in exploitation rights section of the tunnel
     // we want to go to the next movie
     if (isExploitRight) {
-      this.dealForms.removeControl(movieId);
-      const dealIds = Object.keys(this.dealForms.controls)
-      if (!dealIds.length) {
+      this.rightForms.removeControl(movieId);
+      const rightIds = Object.keys(this.rightForms.controls)
+      if (!rightIds.length) {
         this.router.navigate(['details'], { relativeTo: this.route })
       } else {
-        this.router.navigate([dealIds[dealIds.length - 1]], { relativeTo: this.route })
+        this.router.navigate([rightIds[rightIds.length - 1]], { relativeTo: this.route })
       }
     }
   }
 
-  /** Add a deal to a title */
-  addDeal(movieId: string) {
-    this.dealForms.get(movieId).add();
+  /** Add a right to a title */
+  addRight(movieId: string) {
+    this.rightForms.get(movieId).add();
   }
 
-  /** Remove a deal from a title */
-  removeDeal(movieId: string, index: number) {  
-    const deal = this.dealForms.get(movieId).at(index).value;
-    if (deal.id) {
-      this.removedDeals[movieId]
-        ? this.removedDeals[movieId].push(deal.id)
-        : this.removedDeals[movieId] = [deal.id];
+  /** Remove a right from a title */
+  removeRight(movieId: string, index: number) {
+    const right = this.rightForms.get(movieId).at(index).value;
+    if (right.id) {
+      this.removedRights[movieId]
+        ? this.removedRights[movieId].push(right.id)
+        : this.removedRights[movieId] = [right.id];
     }
-    this.dealForms.get(movieId).removeAt(index);
+    this.rightForms.get(movieId).removeAt(index);
   }
 
-  /** Save Contract, Contract Version and deals */
+  /**
+   * Save Contract, Contract Version and rights
+   * @dev At this point, rights may already exists
+   * (ie: created when clicked on "create an offer" from selection page).
+   * but rights may have been edited, added or removed and the contract may
+   * have changed too in the contract tunnel form.
+   */
   public async save() {
-    const write = this.db.firestore.batch();
-    const contractId = this.query.getActiveId();
 
-    // Upsert deals
-    for (const movieId in this.dealForms.controls) {
-      const deals = this.dealForms.get(movieId).value.map(deal => createDistributionDeal(deal));
-      deals.forEach(async (deal, i) => {
-        if (deal.id) {
-          this.dealService.update(deal, { params: { movieId }, write });
-        } else {
-          const id = await this.dealService.add({ contractId, ...deal }, { params: { movieId }, write });
-          this.dealForms.get(movieId).at(i).patchValue({ id });
-          this.contractForm.get('versions').last().get('titles').get(movieId).get('distributionDealIds').add(id);
-        }
-      })
+    const orgId = this.orgQuery.getActiveId();
+    const titlesAndRights = {} as TitlesAndRights;
+
+    for (const movieId in this.rightForms.controls) {
+      const rights = this.rightForms.get(movieId).value.map(right => createDistributionRight(right));
+      titlesAndRights[movieId] = rights;
     }
 
-    // Remove deals
-    for (const movieId in this.removedDeals) {
-      for (const dealId of this.removedDeals[movieId]) {
-        this.dealService.remove(dealId, { params: { movieId }, write })
+    const contract = createContract({
+      ...this.query.getActive(),
+      ...this.contractForm.value
+    });
+
+    await this.contractService.createContractAndRight(orgId, titlesAndRights, contract);
+
+    // Remove rights
+    const write = this.db.firestore.batch();
+    for (const movieId in this.removedRights) {
+      for (const rightId of this.removedRights[movieId]) {
+        this.rightService.remove(rightId, { params: { movieId }, write })
       }
     }
-    this.removedDeals = {};
-
-
-    const contract = createContract({ id: contractId, ...this.contractForm.value });
-
-    // Upate Version
-    // @todo (#1887) don't use last index
-    const lastIndex = contract.versions.length - 1;
-    const version = createContractVersion({ ...contract.versions[lastIndex] });
-    this.versionService.update({ id: lastIndex.toString(), ...version }, { params: { contractId }, write })
-    delete contract.versions;
-
-    // Update Contract
-    contract.titleIds = Object.keys(version.titles || {});
-    this.service.update(contract, { write });
-
-    // Return an observable<boolean> for the confirmExit
+    this.removedRights = {};
     await write.commit();
+
     this.contractForm.markAsPristine();
-    this.dealForms.markAsPristine();
+    this.rightForms.markAsPristine();
     await this.snackBar.open('Saved', '', { duration: 500 }).afterDismissed().toPromise();
     return true;
   }
 
   confirmExit() {
-    if (this.contractForm.pristine && this.dealForms.pristine) {
+    if (this.contractForm.pristine && this.rightForms.pristine) {
       return of(true);
     }
     const dialogRef = this.dialog.open(TunnelConfirmComponent, {

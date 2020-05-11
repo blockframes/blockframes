@@ -2,6 +2,9 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
+// Modules
+import { ToLabelModule } from '@blockframes/utils/pipes/to-label.module';
+
 // Components
 import { MovieSummaryMainComponent } from './main.component';
 import { MissingControlModule } from '@blockframes/ui/missing-control/missing-control.module';
@@ -13,7 +16,8 @@ import { RouterModule } from '@angular/router';
     CommonModule,
     RouterModule,
     FlexLayoutModule,
-    MissingControlModule
+    MissingControlModule,
+    ToLabelModule,
   ],
   exports: [MovieSummaryMainComponent]
 })

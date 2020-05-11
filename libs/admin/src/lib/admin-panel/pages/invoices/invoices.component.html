@@ -5,9 +5,9 @@
   [columns]="versionColumns" 
   [initialColumns]="initialColumns" 
   [filterPredicate]="filterPredicate"
-  showFilter="true"
-  showLoader="true"
-  showPaginator="true">
+  showFilter
+  showLoader
+  showPaginator>
   <ng-template colRef="collected" let-collected>
     {{ collected.amount | currency: getCurrencyCode(collected.currency) }}
   </ng-template>
@@ -24,6 +24,6 @@
     <a [routerLink]="contractLink.link">{{ contractLink.id }}</a>
   </ng-template>
   <ng-template colRef="edit" let-edit>
-    <a [routerLink]="edit.link"><mat-icon>edit</mat-icon></a>
+    <a [routerLink]="edit.link"><mat-icon svgIcon="pencil"></mat-icon></a>
   </ng-template>
 </bf-table-filter>

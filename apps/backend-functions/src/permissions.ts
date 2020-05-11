@@ -11,11 +11,11 @@ import { db, functions } from './internals/firebase';
  * This index might be used for other features, will come later.
  */
 export async function onDocumentPermissionCreate(
-  snapshot: FirebaseFirestore.DocumentSnapshot,
+  _: FirebaseFirestore.DocumentSnapshot,
   context: functions.EventContext
 ) {
   const { docID, orgID } = context.params;
 
   // if the permission let you write the document, it means that you are the first owner.
-  return db.doc(`docsIndex/${docID}`).set({ authorOrgId: orgID });
+  return db.doc(`docsIndex/${docID}`).set({ authorOrgId: orgID }, { merge: true });
 }

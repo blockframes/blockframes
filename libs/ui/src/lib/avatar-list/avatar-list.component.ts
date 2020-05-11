@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { PLACEHOLDER_LOGO } from 'libs/organization/src/lib/+state/organization.model';
+import { PLACEHOLDER_LOGO } from '@blockframes/organization/+state/organization.model';
 
 @Component({
   selector: 'avatar-list',

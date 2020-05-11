@@ -1,5 +1,6 @@
 import { IsoTerritoriesToSlugAndLabel } from "./territories-ISO-3166";
 
+// TODO issue#2582
 const models = {
   'GENRES': [
     { 'slug': 'comedy', 'label': 'Comedy' },
@@ -8,7 +9,7 @@ const models = {
     { 'slug': 'horror', 'label': 'Horror' },
     { 'slug': 'science-fiction', 'label': 'Science Fiction' },
     { 'slug': 'thriller', 'label': 'Thriller' },
-    { 'slug': 'coming-of-age', 'label': 'Coming of Age' },
+    { 'slug': 'coming-of-age', 'label': 'Young Adult' },
     { 'slug': 'fantasy', 'label': 'Fantasy' },
     { 'slug': 'romance', 'label': 'Romance' },
     { 'slug': 'western', 'label': 'Western' },
@@ -33,10 +34,10 @@ const models = {
     { 'slug': 'still_photo', 'label': 'Stills' },
     { 'slug': 'presentation_deck', 'label': 'Presentation deck' },
     { 'slug': 'scenario', 'label': 'Scenario' },
-    { 'slug': 'promo_reel_link', 'label': 'Promo reel link' },
-    { 'slug': 'screener_link', 'label': 'Screener link' },
-    { 'slug': 'trailer_link', 'label': 'Trailer link' },
-    { 'slug': 'teaser_link', 'label': 'Teaser link' },
+    { 'slug': 'promo_reel_link', 'label': 'Promo reel' },
+    { 'slug': 'screener_link', 'label': 'Screener' },
+    { 'slug': 'trailer_link', 'label': 'Trailer' },
+    { 'slug': 'teaser_link', 'label': 'Teaser' },
   ] as const,
   'LEGAL_DOCUMENT_TYPES': [
     { 'slug': 'chain_of_titles', 'label': 'Chain of titles' },
@@ -89,31 +90,9 @@ const models = {
       'label': 'Broadcaster coproducer'
     }
   ] as const,
-  'STAKEHOLDER_DELIVERY_AUTHORIZATIONS': [
-    {
-      'slug': 'canValidateDelivery',
-      'label': 'Can validate delivery'
-    },
-    {
-      'slug': 'canModifyDelivery',
-      'label': 'Can add, remove and edit materials'
-    },
-    {
-      'slug': 'canDeliverMaterial',
-      'label': 'Can deliver materials'
-    },
-    {
-      'slug': 'canAcceptMaterial',
-      'label': 'Can accept materials'
-    },
-    {
-      'slug': 'canRefuseMaterial',
-      'label': 'Can refuse materials'
-    }
-  ],
   'PRODUCER_ROLES': [
     {
-      'slug': 'exectuive-producer',
+      'slug': 'executive-producer',
       'label': 'Executive Producer'
     },
     {
@@ -129,6 +108,7 @@ const models = {
       'label': 'Production Manager'
     },
   ] as const,
+  // TODO #2306
   'CAST_ROLES': [
     {
       'slug': 'lead-role',
@@ -516,6 +496,10 @@ const models = {
     { 'slug': 'dubbed', 'label': 'Dubbed' },
     { 'slug': 'subtitle', 'label': 'Subtitled' },
     { 'slug': 'caption', 'label': 'Closed-Captions' }
+  ] as const,
+  'STORE_TYPE': [
+    { 'slug': 'line_up', 'label': 'Line-up'},
+    { 'slug': 'library', 'label': 'Library'},
   ]
 };
 
@@ -602,13 +586,6 @@ export interface CurrencyWithLabel {
   label: string;
   slug: string;
   code: string;
-}
-
-/** Used in notifications/invitations to define which app is concerned. */
-export const enum App {
-  main = 'main',
-  delivery = 'delivery',
-  catalog = 'catalog'
 }
 
 /**

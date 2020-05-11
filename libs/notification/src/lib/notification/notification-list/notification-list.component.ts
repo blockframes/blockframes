@@ -1,9 +1,8 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
-import { NotificationQuery, Notification, NotificationService } from '../+state';
-import { Observable } from 'rxjs';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
 import { DateGroup } from '@blockframes/utils/helpers';
 import { Router } from '@angular/router';
-import { NotificationType } from '@blockframes/notification/types';
+import { Notification } from '../+state/notification.model';
+import { NotificationService } from '../+state/notification.service';
 
 @Component({
   selector: 'notification-list',
@@ -11,37 +10,22 @@ import { NotificationType } from '@blockframes/notification/types';
   styleUrls: ['./notification-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class NotificationListComponent implements OnInit {
-  public notificationsByDate$: Observable<DateGroup<Notification[]>>;
-  public theme$: Observable<string>;
+export class NotificationListComponent {
+  @Input() notificationsByDate: DateGroup<Notification[]>;
 
   public today: Date = new Date();
-  public yesterday: Date = new Date();
+  public yesterday = new Date().setDate(this.today.getDate() - 1);
 
   constructor(
     private service: NotificationService,
-    private query: NotificationQuery,
-    private router: Router,
+    private router: Router
   ) {}
 
-  ngOnInit() {
-    this.yesterday.setDate(this.today.getDate() - 1);
-    this.notificationsByDate$ = this.query.groupNotificationsByDate();
-  }
-
-  public getInformation(notification: Notification) {
-    return this.query.createNotificationInformation(notification)
-  }
 
   public goToPath(notification: Notification) {
-    try {
-      if (notification.type === NotificationType.newContract || NotificationType.contractInNegotiation) {
-        this.router.navigateByUrl(`c/o/dashboard/deals/${notification.docId}`);
-        this.service.readNotification(notification);
-      }
-    } catch (error) {
-      throw new Error(error.message);
+    this.service.readNotification(notification);
+    if (notification.url) {
+      return this.router.navigateByUrl(notification.url);
     }
   }
-
 }

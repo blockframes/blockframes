@@ -1,12 +1,17 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { CatalogCartGuard } from '@blockframes/organization/cart/guards/catalog-cart-list.guard';
-import { MovieActiveGuard } from '@blockframes/movie';
 import { LayoutComponent } from './layout/layout.component';
 import { LayoutModule } from './layout/layout.module';
+
+// Guards
+import { CatalogCartGuard } from '@blockframes/cart/guards/catalog-cart-list.guard';
 import { TunnelGuard } from '@blockframes/ui/tunnel';
-import { ActiveContractGuard, OrganizationContractListGuard } from '@blockframes/contract';
+import { ContractsRightListGuard } from '@blockframes/distribution-rights/guards/contracts-right-list.guard';
+import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
+import { MovieListContractListGuard } from '@blockframes/movie/guards/movie-contract.guard';
+import { OrganizationContractListGuard } from '@blockframes/contract/contract/guards/organization-contract-list.guard';
+import { ActiveContractGuard } from '@blockframes/contract/contract/guards/active-contract.guard';
 
 const routes: Routes = [{
   path: '',
@@ -19,19 +24,19 @@ const routes: Routes = [{
     },
     {
       path: 'about',
-      loadChildren: () => import('./pages/about-page/about.module').then(m => m.AboutModule)
+      loadChildren: () => import('./landing/about/about.module').then(m => m.AboutModule)
     },
     {
       path: 'who-are-we',
-      loadChildren: () => import('./pages/team-page/team.module').then(m => m.TeamModule)
+      loadChildren: () => import('./landing/team/team.module').then(m => m.TeamModule)
     },
     {
       path: 'contact',
-      loadChildren: () => import('./pages/contact-page/contact.module').then(m => m.ContactModule)
+      loadChildren: () => import('./landing/contact/contact.module').then(m => m.ContactModule)
     },
     {
       path: 'terms',
-      loadChildren: () => import('./pages/privacy-page/privacy.module').then(m => m.PrivacyModule)
+      loadChildren: () => import('./landing/privacy/privacy.module').then(m => m.PrivacyModule)
     },
     {
       path: 'search',
@@ -39,7 +44,7 @@ const routes: Routes = [{
     },
     {
       path: 'activity',   // List of notifications
-      loadChildren: () => import('@blockframes/notification/notification/activity-feed/activity-feed.module').then(m => m.ActivityFeedModule)
+      loadChildren: () => import('../activity/activity.module').then(m => m.ActivityModule)
     },
     {
       path: 'selection',
@@ -65,14 +70,14 @@ const routes: Routes = [{
       path: 'deals',
       children: [{
         path: '',
-        canActivate: [OrganizationContractListGuard],
-        canDeactivate: [OrganizationContractListGuard],
-        loadChildren: () => import('./deal/list/list.module').then(m => m.DealListModule),
-      },{
+        canActivate: [OrganizationContractListGuard, ContractsRightListGuard, MovieListContractListGuard],
+        canDeactivate: [OrganizationContractListGuard, ContractsRightListGuard, MovieListContractListGuard],
+        loadChildren: () => import('./right/list/list.module').then(m => m.RightListModule),
+      }, {
         path: ':contractId',
         canActivate: [ActiveContractGuard],
         canDeactivate: [ActiveContractGuard],
-        loadChildren: () => import('./deal/view/view.module').then(m => m.DealViewModule)
+        loadChildren: () => import('./right/view/view.module').then(m => m.RightViewModule)
       }]
     },
     {
@@ -84,13 +89,6 @@ const routes: Routes = [{
         {
           path: 'view',
           loadChildren: () => import('./title/view/view.module').then(m => m.MovieViewModule)
-        },
-        {
-          path: 'create',
-          loadChildren: () =>
-            import('@blockframes/movie/distribution-deals/create/create.module').then(
-              m => m.DistributionDealCreateModule
-            )
         }
       ]
     }
@@ -112,4 +110,4 @@ const routes: Routes = [{
 @NgModule({
   imports: [LayoutModule, RouterModule.forChild(routes)]
 })
-export class MarketplaceModule {}
+export class MarketplaceModule { }

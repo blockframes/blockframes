@@ -1,5 +1,4 @@
-@import 'mixins';
-
+@import '~@angular/flex-layout/mq';
 
 section {
   margin: 50px 0;
@@ -32,8 +31,14 @@ section {
   display: none;
 }
 
-@include mobile {
-  section video {
-    width: 100%;
+@include layout-bp(xs) {
+  .cover {
+    padding-top: 0;
+  }
+}
+
+@include layout-bp(sm) {
+  .cover {
+    padding-top: 100px;
   }
 }

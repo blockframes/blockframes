@@ -1,12 +1,24 @@
 import { ContractVersion } from "@blockframes/contract/version/+state";
-import { TemporalityUnit, Terms } from "@blockframes/utils";
 import { ContractTitleDetail } from "./contract.firestore";
-import { Price, createPrice } from "@blockframes/utils/common-interfaces";
+import { Price, createPrice, Terms } from "@blockframes/utils/common-interfaces";
 
 /**
- * Combine prices of all distributionDeals to get the total price of the contract.
+ * This method simply sums the price of each titles of a contractVersion
+ * @param version
+ */
+export function calculatePrice(version: ContractVersion) {
+  version.price.amount = 0;
+  for (const titleId in version.titles) {
+    version.price.amount += version.titles[titleId].price.amount;
+  }
+  return version;
+}
+
+
+/**
+ * Combine prices of all distributionRights to get the total price of the contract.
  *
- * @dev this is temporary solution, if there is different currencies in distributionDeals
+ * @dev this is temporary solution, if there is different currencies in distributionRights
  * the result will be wrong.
  */
 export function getTotalPrice(titles: Record<string, ContractTitleDetail>): Price {
@@ -19,7 +31,7 @@ export function getTotalPrice(titles: Record<string, ContractTitleDetail>): Pric
   return result;
 }
 
-// @todo(#1951) Merge this with content in dashboard/deal/view
+// @todo(#1951) Merge this with content in dashboard/right/view
 
 export interface VersionView {
   date: Date;
@@ -28,8 +40,8 @@ export interface VersionView {
   titleIds: string[];
 }
 
-/** Create a flatten object to be easily display on the frontend */
-export function getVersonView(version: ContractVersion): VersionView {
+/** Create a flatten object to be easily displayed on the frontend */
+export function getVersionView(version: ContractVersion): VersionView {
   return {
     date: version.creationDate,
     titleIds: Object.keys(version.titles),
@@ -42,14 +54,14 @@ export function getVersonView(version: ContractVersion): VersionView {
 /** Format the Payment schedule to be displayed  */
 export function displayPaymentSchedule(version: ContractVersion): { type: string, list: string[] } {
     // Payment Schedule
-    if (version.customPaymentSchedule) {
+    if (version?.customPaymentSchedule) {
       return {
         type: 'Custom Payment Schedule',
         list: [version.customPaymentSchedule]
       };
     }
     // Verify if payment schedule is incomplete
-    if (!version.paymentSchedule.length) {
+    if (!version?.paymentSchedule.length) {
       return undefined;
     }
     const isIncomplete = version.paymentSchedule.some(({ percentage, date }) => {
@@ -67,7 +79,7 @@ export function displayPaymentSchedule(version: ContractVersion): { type: string
       return undefined;
     }
 
-    if (version.paymentSchedule[0].date.floatingDuration.temporality === TemporalityUnit.every) {
+    if (version.paymentSchedule[0].date.floatingDuration.temporality === 'every') {
       return {
         type: 'Periodic Payment',
         list: version.paymentSchedule.map(({ percentage, date }) => {

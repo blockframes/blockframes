@@ -1,9 +1,48 @@
+// As the world map won't use theme colors but specifics colors, we define here all colors for this component.
+// Like that, we haven't one more palette in the theme files and
+// these colors won't be used for something else than the world-map
+
+// Color palette for the dark theme
+$bf-dark-world-map: (
+  color-1: #000,
+  color-2: #000,
+  color-3: #000,
+  color-4: #000,
+);
+
+// Color palette for the light theme
+$bf-light-world-map: (
+  color-1: #FFF,
+  color-2: #FFF,
+  color-3: #FFF,
+  color-4: #FFF,
+);
+
+//! Define here the variables we will use in the world map component
+.light-theme world-map {
+  --color-1: #{mat-color($bf-light-world-map, color-1)};
+  --color-2: #{mat-color($bf-light-world-map, color-2)};
+  --color-3: #{mat-color($bf-light-world-map, color-3)};
+  --color-4: #{mat-color($bf-light-world-map, color-4)};
+}
+
+.dark-theme world-map {
+  --color-1: #{mat-color($bf-dark-world-map, color-1)};
+  --color-2: #{mat-color($bf-dark-world-map, color-2)};
+  --color-3: #{mat-color($bf-dark-world-map, color-3)};
+  --color-4: #{mat-color($bf-dark-world-map, color-4)};
+}
+
+// If we use a color of the theme, it has to be inside the mixin
 @mixin bf-world-map-theme($theme) {
   $primary: map-get($theme, primary);
 
   world-map {
     background-color: mat-color($primary, 500, 0.05);
+    // TODO  #2218 remove these variables and replace colors when Mathilde find color that correspond to the world-map
+    --color-1: #{mat-color($primary, 900, 0.5)};
+    --color-2: #{mat-color($primary, 500, 0.3)};
+    --color-3: #{mat-color($primary, 100, 0.3)};
+    --color-4: #{mat-color($primary)};
   }
-
 }
-

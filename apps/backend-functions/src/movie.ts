@@ -1,20 +1,19 @@
 import { functions, db } from './internals/firebase';
-import { MovieDocument, OrganizationDocument, PublicUser } from './data/types';
+import { MovieDocument, OrganizationDocument, PublicUser, StoreConfig, PublicOrganization } from './data/types';
 import { NotificationType } from '@blockframes/notification/types';
-import { App } from '@blockframes/utils/apps';
 import { triggerNotifications, createNotification } from './notification';
 import { flatten, isEqual } from 'lodash';
-import { getDocument } from './data/internals';
+import { getDocument, getOrganizationsOfMovie, createPublicUserDocument } from './data/internals';
 import { removeAllSubcollections } from './utils';
-import { storeSearchableMovie, deleteSearchableMovie } from './internals/algolia';
+import { storeSearchableMovie, deleteObject } from './internals/algolia';
+import { centralOrgID, algolia } from './environments/environment';
 
 /** Create a notification with user and movie. */
-function notifUser(userId: string, notificationType: NotificationType, movie: MovieDocument, user: PublicUser) {
+function notifUser(toUserId: string, notificationType: NotificationType, movie: MovieDocument, user: PublicUser) {
   return createNotification({
-    userId,
-    user: { name: user.name, surname: user.surname },
+    toUserId,
+    user: createPublicUserDocument(user),
     type: notificationType,
-    app: App.blockframes,
     movie: {
       id: movie.id,
       title: {
@@ -39,8 +38,7 @@ async function createNotificationsForUsers(movie: MovieDocument, notificationTyp
 
 /** Function triggered when a document is added into movies collection. */
 export async function onMovieCreate(
-  snap: FirebaseFirestore.DocumentSnapshot,
-  context: functions.EventContext
+  snap: FirebaseFirestore.DocumentSnapshot
 ) {
   const movie = snap.data() as MovieDocument;
 
@@ -51,20 +49,18 @@ export async function onMovieCreate(
 
   // Get the user document and create notifications.
   const user = await getDocument<PublicUser>(`users/${movie._meta!.createdBy}`);
-  const notifications = await createNotificationsForUsers(movie, NotificationType.movieTitleCreated, user);
+  const notifications = await createNotificationsForUsers(movie, 'movieTitleCreated', user);
 
   return db.runTransaction(async tx => {
-
-    // Update algolia's index
-    await storeSearchableMovie(movie);
 
     // Get the organization document in the transaction for maximum freshness.
     const organizationSnap = await tx.get(db.doc(`orgs/${user.orgId}`));
     const organization = organizationSnap.data() as OrganizationDocument
 
+    // Update algolia's index
+    await storeSearchableMovie(movie, organization.denomination.full);
+
     return Promise.all([
-      // Update the organization's movieIds with the new movie id.
-      tx.update(organizationSnap.ref, { movieIds: [...organization.movieIds, movie.id] }),
       // Send notifications about this new movie to each organization member.
       triggerNotifications(notifications)
     ]);
@@ -103,23 +99,13 @@ export async function onMovieDelete(
     }
   });
 
-  const deliveries = await db.collection(`deliveries`).get();
-  // TODO: .where(movie.deliveryIds, 'array-contains', 'id') doesn't seem to work. => ISSUE#908
-
-  deliveries.forEach(doc => {
-    if (movie.deliveryIds.includes(doc.data().id)) {
-      console.log(`delivery ${doc.id} deleted`);
-      batch.delete(doc.ref);
-    }
-  });
-
-  const notifications = await createNotificationsForUsers(movie, NotificationType.movieDeleted, user);
+  const notifications = await createNotificationsForUsers(movie, 'movieDeleted', user);
 
   // Delete sub-collections
   await removeAllSubcollections(snap, batch);
 
   // Update algolia's index
-  await  deleteSearchableMovie(context.params.movieId);
+  await deleteObject(algolia.indexNameMovies, context.params.movieId);
 
   console.log(`removed sub colletions of ${movie.id}`);
   await batch.commit();
@@ -128,22 +114,75 @@ export async function onMovieDelete(
 }
 
 export async function onMovieUpdate(
-  change: functions.Change<FirebaseFirestore.DocumentSnapshot>,
-  context: functions.EventContext
+  change: functions.Change<FirebaseFirestore.DocumentSnapshot>
 ): Promise<any> {
   const before = change.before.data() as MovieDocument;
   const after = change.after.data() as MovieDocument;
 
-  const userSnapshot = await db.doc(`users/${after._meta!.updatedBy}`).get();
-  const user = userSnapshot.data() as PublicUser;
-
+  const isMovieSubmitted = isSubmitted(before.main.storeConfig, after.main.storeConfig);
+  const isMovieAccepted = isAccepted(before.main.storeConfig, after.main.storeConfig);
   const hasTitleChanged = !!before.main.title.international && !isEqual(before.main.title.international, after.main.title.international);
 
-  if (hasTitleChanged) {
-    const notifications = await createNotificationsForUsers(before, NotificationType.movieTitleUpdated, user);
+  if (isMovieSubmitted) { // When movie is submitted to Archipel Content
+    const archipelContent = await getDocument<OrganizationDocument>(`orgs/${centralOrgID}`);
+    const notifications = archipelContent.userIds.map(
+      toUserId => createNotification({
+        toUserId,
+        type: 'movieSubmitted',
+        docId: after.id
+      })
+    );
 
     return triggerNotifications(notifications);
   }
 
-  return storeSearchableMovie(after);
+  if (isMovieAccepted) { // When Archipel Content accept the movie
+    const organizations = await getOrganizationsOfMovie(after.id);
+    const notifications = organizations
+    .filter(organizationDocument => !!organizationDocument && !!organizationDocument.userIds)
+    .reduce((ids: string[], { userIds }) => [...ids, ...userIds], [])
+    .map(toUserId => {
+      return createNotification({
+        toUserId,
+        type: 'movieAccepted',
+        docId: after.id
+      });
+    });
+
+    return triggerNotifications(notifications);
+  }
+
+  if (hasTitleChanged) {
+    const userSnapshot = await db.doc(`users/${after._meta!.updatedBy}`).get();
+    const user = userSnapshot.data() as PublicUser;
+    const notifications = await createNotificationsForUsers(before, 'movieTitleUpdated', user);
+
+    return triggerNotifications(notifications);
+  }
+
+  // insert orgName & orgID to the algolia movie index (this is needed in order to filter on the frontend)
+  const creatorSnapshot = await db.doc(`users/${after._meta!.createdBy}`).get();
+  const creator = creatorSnapshot.data() as PublicUser;
+  const creatorOrgSnapshot = await db.doc(`orgs/${creator!.orgId}`).get();
+  const creatorOrg = creatorOrgSnapshot.data() as PublicOrganization;
+
+  if (creatorOrg.denomination?.full) {
+    return storeSearchableMovie(after, creatorOrg.denomination.full);
+  }
+}
+
+/** Checks if the store status is going from draft to submitted. */
+function isSubmitted(beforeStore: StoreConfig | undefined, afterStore: StoreConfig | undefined) {
+  return (
+    (beforeStore && beforeStore.status === 'draft') &&
+    (afterStore && afterStore.status === 'submitted')
+  )
+}
+
+/** Checks if the store status is going from submitted to accepted. */
+function isAccepted(beforeStore: StoreConfig | undefined, afterStore: StoreConfig | undefined) {
+  return (
+    (beforeStore && beforeStore.status === 'submitted') &&
+    (afterStore && afterStore.status === 'accepted')
+  )
 }

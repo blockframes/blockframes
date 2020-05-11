@@ -1,0 +1,45 @@
+@import '~@angular/flex-layout/mq';
+
+section {
+  height: 100%;
+  margin: 100px 100px 100px 24px;
+}
+
+.mat-card, form {
+  width: 100%;
+}
+
+#submit {
+  margin-top: 50px;
+}
+
+#tosignup {
+  margin-top: 10px;
+}
+
+@include layout-bp(lg) {
+  form {
+    height: 80%;
+  }
+}
+
+@include layout-bp(md) {
+  section {
+    margin-left: 100px;
+    margin-right: 30px;
+  }
+}
+
+@include layout-bp(sm) {
+  section {
+    margin-left: 50px;
+    margin-right: 20px;
+  }
+}
+
+@include layout-bp(xs) {
+  section {
+    margin-left: 5px;
+    margin-right: 5px;
+  }
+}

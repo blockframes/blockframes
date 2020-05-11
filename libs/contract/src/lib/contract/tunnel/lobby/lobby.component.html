@@ -2,14 +2,14 @@
 <p>Please choose the contract type that is more suitable for you.</p>
 
 <article fxLayout="row" fxLayout.lt-md="column" fxLayoutAlign="space-around center">
-  <mat-card matRipple (click)="select('sale')">
-    <img mat-card-image asset="Upload_380.png" alt="Sale Contract">
+  <mat-card test-id="sale" matRipple (click)="select('sale')">
+    <img mat-card-image asset="contract_details.webp" alt="Sale Contract">
     <mat-card-footer fxLayout="row" fxLayoutAlign="center center">
       <span>Sale</span>
     </mat-card-footer>
   </mat-card>
-  <mat-card matRipple (click)="select('mandate')">
-    <img mat-card-image asset="Upload_380.png" alt="Mandate Contract">
+  <mat-card test-id="mandate" matRipple (click)="select('mandate')">
+    <img mat-card-image asset="licensed_rights_contractform.webp" alt="Mandate Contract">
     <mat-card-footer fxLayout="row" fxLayoutAlign="center center">
       <span>Mandate</span>
     </mat-card-footer>

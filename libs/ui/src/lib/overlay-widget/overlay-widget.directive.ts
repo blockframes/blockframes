@@ -30,17 +30,15 @@ export class OverlayWidgetInputDirective {
 // OVERLAY TRIGGERED ON Hover
 @Directive({ selector: "[widgetTooltip]" })
 export class OverlayWidgetTooltipDirective {
-
+  
   @Input() widgetTooltip: OverlayWidgetComponent;
   @HostListener('mouseenter') onMouseEnter() {
-    this.widgetTooltip.open(this.el);
+    this.widgetTooltip.open(this.el, true);
   }
-  // TODO##1958 update widgetTooltip to listen to mouseleave event
-  // @HostListener('mouseleave') onMouseLeave() {
-  //   setTimeout(() => {
-  //     this.widgetTooltip.close();
-  //   }, 1000)
-  // }
+
+  @HostListener('mouseleave') onMouseLeave() {
+    this.widgetTooltip.close();
+  }
 
   constructor(private el: ElementRef) {}
 }

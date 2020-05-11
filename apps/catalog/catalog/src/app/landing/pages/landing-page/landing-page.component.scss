@@ -1,8 +1,6 @@
-main {
-  width: 100%;
-}
+@import '~@angular/flex-layout/mq';
 
-catalog-toolbar {
+landing-toolbar {
   width: 100%;
   position: fixed;
   top: 0;
@@ -16,4 +14,10 @@ catalog-toolbar {
 
 .plain-toolbar {
   transition-duration: 1000ms;
+}
+
+@include layout-bp(xs) {
+  .offer {
+    font-size: 30px;
+  }
 }

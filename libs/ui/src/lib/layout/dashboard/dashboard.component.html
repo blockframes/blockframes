@@ -1,0 +1,50 @@
+<mat-sidenav-container>
+  <mat-sidenav id="dashboard-navbar" role="navigation" [mode]="(ltMd$ | async) ? 'over' : 'side'" [opened]="!(ltMd$ | async)">
+    <ng-content select="aside"></ng-content>
+  </mat-sidenav>
+
+
+  <mat-sidenav-content fxLayout="column" [appContainer]="app" (toggle)="sidenav.toggle()">
+    <!-- TOOLBAR -->
+    <app-bar #app>
+      <header fxLayout fxLayoutAlign="space-between center">
+        <button mat-icon-button (click)="sidenav.toggle()">
+          <mat-icon svgIcon="menu"></mat-icon>
+        </button>
+        <!--TODO#2728: improve component with filters-->
+        <!-- <algolia-autocomplete
+          [index]="movieIndex" mode="standard" resetInput native prefixIcon="magnifying_glasses" clearable keyToDisplay="title.international">
+          <ng-template let-result>
+            <a [routerLink]="['title', result.objectID]" class="algolia-result">{{ result.title.international }}</a>
+          </ng-template>
+        </algolia-autocomplete> -->
+        <div fxLayout="row" fxLayoutGap="24px">
+          <mat-divider vertical></mat-divider>
+          <!-- Invitations -->
+          <a mat-icon-button routerLink="invitations">
+            <ng-container *ngIf="invitationCount$ | async as count; else noInvitation">
+              <mat-icon svgIcon="add_member" [matBadge]="count" matBadgeColor="accent" matBadgeSize="small"></mat-icon>
+            </ng-container>
+            <ng-template #noInvitation>
+              <mat-icon svgIcon="add_member"></mat-icon>
+            </ng-template>
+          </a>
+          <!-- Notifications -->
+          <a mat-icon-button routerLink="notifications">
+            <ng-container *ngIf="notificationCount$ | async as count; else noNotification">
+              <mat-icon svgIcon="bell" [matBadge]="count" matBadgeColor="accent" matBadgeSize="small"></mat-icon>
+            </ng-container>
+            <ng-template #noNotification>
+              <mat-icon svgIcon="bell"></mat-icon>
+            </ng-template>
+          </a>
+          <auth-widget></auth-widget>
+        </div>
+      </header>
+    </app-bar>
+    <!-- CONTENT -->
+      <main cdkScrollable fxFlex>
+        <router-outlet></router-outlet>
+      </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

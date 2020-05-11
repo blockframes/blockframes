@@ -1,0 +1,50 @@
+@import '~@angular/flex-layout/mq';
+
+mat-card {
+  margin-top: 20px;
+}
+
+button {
+  margin: 80px 0;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+img {
+  margin-top: 35px;
+  width: 380px;
+}
+
+h1 {
+  margin-top: 80px;
+}
+
+@include layout-bp(xs) {
+  form {
+    width: 80%;
+    padding-left: 0;
+  }
+  img {
+    height: 200px;
+    width: 200px;
+  }
+  button {
+    margin-top: 40px;
+  }
+}
+
+@include layout-bp(sm) {
+  form {
+    width: 60%;
+    padding-left: 0;
+  }
+  img {
+    height: 350px;
+    width: 350px;
+  }
+  button {
+    margin-top: 40px;
+  }
+}

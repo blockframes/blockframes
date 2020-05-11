@@ -1,43 +1,38 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
 import { getValue } from '@blockframes/utils/helpers';
-import { termToPrettyDate } from '@blockframes/utils/common-interfaces/terms';
 import { ActivatedRoute } from '@angular/router';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
-import { ContractWithLastVersion, Contract } from '@blockframes/contract/contract/+state/contract.model';
+import { Contract } from '@blockframes/contract/contract/+state/contract.model';
 
 @Component({
   selector: 'admin-contracts',
   templateUrl: './contracts.component.html',
-  styleUrls: ['./contracts.component.scss']
+  styleUrls: ['./contracts.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ContractsComponent implements OnInit {
   public versionColumns = {
-    'doc.id': 'Id',
-    'doc.type': 'Type',
-    'last.id': 'Version',
-    'last.status': 'Status',
-    'doc.parentContractIds': 'Parent Ids',
-    'doc.childContractIds': 'Child Ids',
-    'last.scope': 'Scope',
-    'doc.partyIds': 'Parties',
-    'doc.titleIds': 'Titles',
+    'id': 'Id',
+    'type': 'Type',
+    'lastVersion.id': 'Version',
+    'lastVersion.status': 'Status',
+    'lastVersion.scope': 'Scope',
+    'partyIds': 'Parties',
+    'titleIds': 'Titles',
     'edit': 'Edit',
   };
 
   public initialColumns: string[] = [
-    'doc.id',
-    'doc.type',
-    'last.id',
-    'last.status',
-    'doc.parentContractIds',
-    'doc.childContractIds',
-    'last.scope',
-    'doc.partyIds',
-    'doc.titleIds',
+    'id',
+    'type',
+    'lastVersion.id',
+    'lastVersion.status',
+    'lastVersion.scope',
+    'partyIds',
+    'titleIds',
     'edit',
   ];
-  public rows: ContractWithLastVersion[] = [];
-  public toPrettyDate = termToPrettyDate;
+  public rows: Contract[] = [];
   public movieId = '';
   constructor(
     private contractService: ContractService,
@@ -52,17 +47,15 @@ export class ContractsComponent implements OnInit {
     if (this.movieId) {
       contracts = await this.contractService.getMovieContracts(this.movieId);
     } else {
-      contracts = await this.contractService.getAllContracts();
+      contracts = await this.contractService.getValue();
     }
 
     const promises = contracts.map(async contract => {
-      const contractWithLastVersion = await this.contractService.getContractWithLastVersion(contract.id);
-      const row = { ...contractWithLastVersion } as any;
-
+      const row = { ...contract } as any;
       // Append new data for table display
       row.edit = {
-        id: contractWithLastVersion.doc.id,
-        link: `/c/o/admin/panel/contract/${contractWithLastVersion.doc.id}`,
+        id: row.id,
+        link: `/c/o/admin/panel/contract/${row.id}`,
       }
       return row;
     });
@@ -71,14 +64,12 @@ export class ContractsComponent implements OnInit {
     this.cdRef.markForCheck();
   }
 
-  filterPredicate(data: any, filter) {
+  public filterPredicate(data: any, filter: string) {
     const columnsToFilter = [
-      'doc.id',
-      'doc.type',
-      'last.id',
-      'last.status',
-      'doc.parentContractIds',
-      'doc.childContractIds'
+      'id',
+      'type',
+      'lastVersion.id',
+      'lastVersion.status',
     ];
     const dataStr = columnsToFilter.map(c => getValue(data, c)).join();
     return dataStr.toLowerCase().indexOf(filter) !== -1;

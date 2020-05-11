@@ -1,15 +1,10 @@
 import { FireAnalytics } from '@blockframes/utils/analytics/app-analytics';
-import { AnalyticsEvents } from '@blockframes/utils/analytics/analyticsEvents';
-import { MatTableDataSource, MatSnackBar } from '@angular/material';
-import {
-  Component,
-  ChangeDetectionStrategy,
-  Input,
-  HostBinding
-} from '@angular/core';
-import { Movie } from '@blockframes/movie';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MatTableDataSource } from '@angular/material/table';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Movie } from '@blockframes/movie/+state/movie.model';
 import { Router, ActivatedRoute } from '@angular/router';
-import { CartService } from '@blockframes/organization/cart/+state/cart.service';
+import { CartService } from '@blockframes/cart/+state/cart.service';
 
 @Component({
   selector: 'catalog-wishlist-current-repertory',
@@ -18,7 +13,6 @@ import { CartService } from '@blockframes/organization/cart/+state/cart.service'
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class WishlistCurrentRepertoryComponent {
-  @HostBinding('attr.test-id') testId = 'currentWishlist';
 
   public columnsToDisplay = [
     'movie',
@@ -55,7 +49,7 @@ export class WishlistCurrentRepertoryComponent {
       'close',
       { duration: 2000 }
     );
-    this.analytics.event(AnalyticsEvents.removedFromWishlist, {
+    this.analytics.event('removedFromWishlist', {
       movieId: movie.id,
       movieTitle: movie.main.title.original
     });

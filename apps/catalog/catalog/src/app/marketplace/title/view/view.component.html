@@ -11,14 +11,18 @@
       <div class="movie-info">
         <h4>{{ getTitle(movie) }}</h4>
         <h1>{{ movie.main.title.international }}</h1>
-        <h3>{{ movie.main.title.original }}</h3>
+        <ng-container *ngIf="movie.main.title.international !== movie.main.title.original">
+          <h3>{{ movie.main.title.original }}</h3>
+        </ng-container>
         <p class="mat-body-1">{{ getDirectors(movie) }}</p>
         <p class="mat-body-2">{{ getOriginalCountries(movie) }}</p>
       </div>
     </article>
     <article fxLayout="column" fxLayoutAlign="center">
-      <a *ngIf="router.url.split('/').pop() !== 'avails'" class="switch-button" mat-stroked-button color="primary" routerLink="avails">Switch to Avails</a>
-      <a *ngIf="router.url.split('/').pop() === 'avails'" class="switch-button" mat-stroked-button color="primary" routerLink="main">Switch to Film Info</a>
+      <a *ngIf="router.url.split('/').pop() !== 'avails'" class="switch-button" mat-stroked-button color="primary"
+       routerLink="avails">Switch to Avails</a>
+      <a *ngIf="router.url.split('/').pop() === 'avails'" class="switch-button" mat-stroked-button color="primary" 
+      routerLink="main">Switch to Main Information</a>
       <ng-container *ngIf="(toggle$ | async); else alreadyAdded">
         <button class="heart-button" mat-button color="accent" (click)="removeFromWishlist()">
           <mat-icon svgIcon="heart_fill" color="accent"></mat-icon>

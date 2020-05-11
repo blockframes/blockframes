@@ -1,18 +1,15 @@
-import { Component, ChangeDetectionStrategy, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnInit, OnDestroy } from '@angular/core';
 import { FormControl } from '@angular/forms';
-import {
-  Movie,
-  MovieQuery,
-  MovieService,
-  getMovieReceipt,
-  getMovieTotalViews
-} from '@blockframes/movie';
-import { startWith, switchMap, map, distinctUntilChanged } from 'rxjs/operators';
-import { Observable, combineLatest } from 'rxjs';
+import { startWith, switchMap, map } from 'rxjs/operators';
+import { Observable, combineLatest, Subscription } from 'rxjs';
 import { Contract } from '@blockframes/contract/contract/+state/contract.model';
-import { StoreStatus, MovieAnalytics } from '@blockframes/movie/movie/+state/movie.firestore';
+import { StoreStatus, MovieAnalytics } from '@blockframes/movie/+state/movie.firestore';
 import { ContractQuery } from '@blockframes/contract/contract/+state/contract.query';
-import { getContractLastVersion } from '@blockframes/contract/version/+state';
+import { Router, ActivatedRoute } from '@angular/router';
+import { Movie, getMovieTotalViews, getMovieReceipt } from '@blockframes/movie/+state/movie.model';
+import { MovieQuery } from '@blockframes/movie/+state/movie.query';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 
 interface TitleView {
   id: string; // movieId
@@ -37,11 +34,11 @@ function createTitleView(
   contracts: Contract[],
   analytics: MovieAnalytics[]
 ): TitleView {
-  const ownContracts = contracts.filter(c => getContractLastVersion(c).titles[movie.id]);
+  const ownContracts = contracts.filter(c => c.lastVersion.titles[movie.id]);
   return {
     id: movie.id,
     title: movie.main.title.international,
-    view: getMovieTotalViews(analytics, movie.id).toString(),
+    view: getMovieTotalViews(analytics, movie.id)?.toString(),
     sales: ownContracts.length,
     receipt: getMovieReceipt(ownContracts, movie.id),
     status: movie.main.storeConfig.status
@@ -54,29 +51,31 @@ function createTitleView(
   styleUrls: ['./list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TitleListComponent implements OnInit {
+export class TitleListComponent implements OnInit, OnDestroy {
   columns = columns;
   initialColumns = ['title', 'view', 'sales', 'receipt', 'status'];
   titles$: Observable<TitleView[]>;
   filter = new FormControl();
   filter$ = this.filter.valueChanges.pipe(startWith(this.filter.value));
   public allMovies$ = this.query.selectAll();
+  public allMoviesLoading$ = this.query.selectLoading();
+
+  private sub: Subscription;
+  private titleSub: Subscription;
 
   constructor(
     private query: MovieQuery,
     private contractQuery: ContractQuery,
-    private service: MovieService
-  ) {}
+    private service: MovieService,
+    private router: Router,
+    private route: ActivatedRoute,
+    private dynTitle: DynamicTitleService
+  ) { }
 
   ngOnInit() {
-    // Analytics from movies in the store
-    const moviesAnalytics$ = this.query.selectAll().pipe(
-      map(
-        movies => movies.map(movie => movie.id),
-        distinctUntilChanged((prev: string[], curr: string[]) => prev.length === curr.length)
-      ),
-      switchMap(movieIds => this.service.getMovieAnalytics(movieIds))
-    );
+    // @todo(#2684) use syncWithAnalytics instead
+    this.sub = this.service.syncAnalytics().subscribe();
+    const moviesAnalytics$ = this.query.analytics.selectAll();
 
     // Filtered movies
     const movies$ = this.filter$.pipe(
@@ -92,10 +91,35 @@ export class TitleListComponent implements OnInit {
         movies.map(movie => createTitleView(movie, contracts, analytics))
       )
     );
+    this.titleSub = this.query.selectCount().subscribe(count => {
+      count ? this.dynTitle.setPageTitle('My titles') : this.dynTitle.setPageTitle('No titles')
+    })
   }
 
   /** Dynamic filter of movies for each tab. */
   applyFilter(filter?: Movie['main']['storeConfig']['storeType']) {
     this.filter.setValue(filter);
+    filter === 'library'
+      ? this.dynTitle.setPageTitle('Library titles')
+      : this.dynTitle.setPageTitle('Line-up titles')
+  }
+
+  public resetFilter() {
+    this.filter.reset();
+    this.dynTitle.useDefault();
+  }
+
+  /** Navigate to tunnel if status is draft, else go to page */
+  public goToTitle(title: TitleView) {
+    const basePath = `/c/o/dashboard`;
+    const path = (title.status === 'draft')
+      ? `${basePath}/tunnel/movie/${title.id}`
+      : `${basePath}/titles/${title.id}`;
+    this.router.navigate([path], { relativeTo: this.route });
+  }
+
+  ngOnDestroy() {
+    this.sub.unsubscribe();
+    this.titleSub.unsubscribe();
   }
 }

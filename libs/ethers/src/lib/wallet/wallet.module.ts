@@ -18,9 +18,11 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatStepperModule } from '@angular/material/stepper';
 import { MatDividerModule } from '@angular/material/divider';
 
-import { UploadModule, FeedbackMessageModule } from '@blockframes/ui';
-import { PasswordConfirmModule } from '@blockframes/ui/form';
 import { KeyManagerModule } from '../key-manager/key-manager.module';
+import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
+import { UploadModule } from '@blockframes/ui/upload/upload.module';
+import { PasswordConfirmModule } from '@blockframes/ui/form/password-confirm/password-confirm.module';
+import { FeedbackMessageModule } from '@blockframes/ui/feedback/feedback-message.module';
 
 import { WalletActiveGuard } from './guards/wallet-active.guard';
 import { WalletKeyGuard } from './guards/wallet-key.guard';
@@ -36,8 +38,6 @@ import { WalletImportKeyComponent } from './components/wallet-import-key/wallet-
 import { WalletNoKeyComponent } from './pages/wallet-no-key/wallet-no-key.component';
 import { WalletRevealMnemonicComponent } from './pages/wallet-reveal-mnemonic/wallet-reveal-mnemonic.component';
 import { WalletTxGuard } from './guards/wallet-tx.guard';
-import { ImgAssetModule } from '@blockframes/ui/theme/img-asset.module';
-
 
 export const walletRoutes: Routes = [
   {

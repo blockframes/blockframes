@@ -1,0 +1,22 @@
+<ng-template pageBar>
+  <app-menu></app-menu>
+  <cal-header [viewDate]="viewDate" (viewDateChange)="updateViewDate($event)"></cal-header>
+</ng-template>
+
+<cal-week [viewDate]="viewDate" [events]="events$ | async">
+    
+  <!-- Small Events -->
+  <ng-template calEventSmall let-event>
+    <a [ngSwitch]="event.type" [routerLink]="event | eventLink : '..'">
+      <event-card [event]="event" size="small"></event-card>
+    </a>
+  </ng-template>
+
+  <!-- Large Events -->
+  <ng-template calEventLarge let-event>
+    <a [ngSwitch]="event.type" [routerLink]="event | eventLink : '..'">
+      <event-card [event]="event" size="large"></event-card>
+    </a>
+  </ng-template>
+
+</cal-week>

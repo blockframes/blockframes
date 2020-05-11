@@ -1,0 +1,17 @@
+<bf-table-filter
+  [source]="rightViews"
+  [columns]="columns"
+  [initialColumns]="initialColumns">
+  <ng-template colRef="territory" let-territory>
+    <b>{{ territory | slice:0:4 | translateSlug:'TERRITORIES' }}</b>
+    <span *ngIf="territory.length > 4" [widgetTooltip]="territories"><b> ...</b></span>
+    <overlay-widget #territories>
+      <widget-card>
+        <b *ngIf="territory.length > 4">
+          {{ territory | slice:4:territory.length | translateSlug: 'TERRITORIES' }}
+        </b>
+      </widget-card>
+    </overlay-widget>
+  </ng-template>
+  <ng-template colRef="rights" let-rights><b>{{ rights | translateSlug:'MEDIAS' }}</b></ng-template>
+</bf-table-filter>

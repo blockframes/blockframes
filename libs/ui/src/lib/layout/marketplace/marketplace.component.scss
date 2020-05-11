@@ -1,0 +1,21 @@
+:host {
+  display: block;
+  height: 100%;
+}
+
+mat-sidenav-container {
+  height: 100%;
+}
+
+mat-sidenav-content {
+  height: 100%;
+  overflow: hidden;
+
+  header {
+    width: 100%;
+  }
+  main {
+    height: 100%;
+    overflow: auto;
+  }
+}

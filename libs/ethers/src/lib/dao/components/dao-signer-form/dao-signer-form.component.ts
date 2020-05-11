@@ -1,12 +1,12 @@
 import { ControlContainer } from '@angular/forms';
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { MatSlideToggleChange } from '@angular/material';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { Router } from '@angular/router';
 import { WalletService } from 'libs/ethers/src/lib/wallet/+state';
 import { ActionTx, TxFeedback } from '@blockframes/ethers/types';
 import { CreateTx } from '@blockframes/ethers/create-tx';
-import { OrganizationMember } from '@blockframes/organization/member/+state/member.model';
-import { PermissionsQuery } from '@blockframes/organization/permissions/+state';
+import { OrganizationMember } from '@blockframes/user/+state/user.model';
+import { PermissionsQuery } from '@blockframes/permissions/+state';
 import { DaoService, DaoQuery, DaoOperation } from '../../+state';
 
 @Component({
@@ -51,7 +51,7 @@ export class DaoSignerFormComponent {
 
     const memberEthAddress = await this.service.getMemberEthAddress(this.member.email);
     const orgEthAddress = await this.service.getOrganizationEthAddress();
-    const memberName = this.member.name;
+    const memberName = this.member.firstName;
     const operationName = currentOperation.name;
 
     let tx: ActionTx;

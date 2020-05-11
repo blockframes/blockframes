@@ -1,10 +1,9 @@
 <tunnel-page>
-  <h4 title>Summary & Submit</h4>
+  <h4 title>Summary & Submission</h4>
   <h1 subtitle>Contract Offer Summary</h1>
   <p description class="mat-body-1">
     Please verify that all the information you have entered is correct before submitting you contract offer.
   </p>
-
   <ng-container tunnel-form>
 
     <!-- Cntract Details -->
@@ -33,10 +32,10 @@
           <li *ngIf="terms">
             <strong>Terms: </strong> {{ terms }}
           </li>
-          <li *ngIf="version.get('renewalConditions').value as condition">
+          <li *ngIf="lastVersionForm.get('renewalConditions').value as condition">
             <strong>Renewal Conditions: </strong> {{ condition }}
           </li>
-          <li *ngIf="version.get('terminationConditions').value as condition">
+          <li *ngIf="lastVersionForm.get('terminationConditions').value as condition">
             <strong>Contract Termination Conditions: </strong> {{ condition }}
           </li>
 
@@ -48,18 +47,17 @@
           </li>
           <li *ngFor="let movie of movies$ | async">
             <strong>{{ movie.main.title.international }}</strong>
-            <span *ngIf="deals[movie.id]">{{ deals[movie.id] }}</span>
-            <a mat-button color="warn" routerLink="../details" *ngIf="!deals[movie.id]">Mandatory</a>
+            <span *ngIf="rights[movie.id]">{{ rights[movie.id] }}</span>
+            <a mat-button color="warn" routerLink="../details" *ngIf="!rights[movie.id]">Mandatory</a>
           </li>
 
           <!-- Fees -->
-          <ng-container *ngIf="version.get('authorizedRecoupableExpenses').value as fee" >
+          <ng-container *ngIf="lastVersionForm.get('authorizedRecoupableExpenses').value as fee" >
             <h5>Fees</h5>
             <li>
               <strong>Recoupable expenses: </strong> {{ fee }}
             </li>
           </ng-container>
-          
 
           <!-- Payment schedules -->
           <ng-container *ngIf="payments">
@@ -71,9 +69,9 @@
         </ul>
       </mat-card-content>
     </mat-card>
-  
+
     <ng-container *ngIf="movies$ | async as movies">
-      <!-- Distribution Deals -->
+      <!-- Distribution rights -->
       <ng-container *ngIf="movies.length else noTitle">
         <h2>Exploitation Rights</h2>
         <ng-container *ngFor="let movie of movies$ | async">
@@ -83,12 +81,12 @@
                 <a mat-stroked-button color="primary" [routerLink]="['..', movie.id]">Edit</a>
               </movie-banner-actions>
             </movie-banner>
-            <ng-container *ngIf="dealForms.get(movie.id) as deals; else noDeal" >
-              <ng-container *ngIf="deals.value.length else noDeal" >
-                <catalog-right-list [source]="deals.value"></catalog-right-list>
+            <ng-container *ngIf="rightForms.get(movie.id) as rights; else noright" >
+              <ng-container *ngIf="rights.value.length else noright" >
+                <catalog-right-list [rights]="rights.value"></catalog-right-list>
               </ng-container>
             </ng-container>
-            <ng-template #noDeal >
+            <ng-template #noright >
               <a mat-button [routerLink]="['..', movie.id]" color="warn">
                 Add rights on this title.
               </a>
@@ -100,7 +98,7 @@
           <mat-icon svgIcon="arrow_forward"></mat-icon>
         </button>
       </ng-container>
-      <!-- If no deal -->
+      <!-- If no right -->
       <ng-template #noTitle >
         <a mat-button color="warn" routerLink="../details">Add a Title to your contract</a>
       </ng-template>

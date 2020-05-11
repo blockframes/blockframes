@@ -1,14 +1,14 @@
 import { MovieSalesInfo, createMovieSalesInfo, createMovieRating, createMovieOriginalRelease } from '../../+state';
-import { FormEntity, FormList } from '@blockframes/utils';
+import { FormEntity, FormList } from '@blockframes/utils/form/forms';
 import { FormControl } from '@angular/forms';
-import { MovieRating, MovieOriginalRelease } from '@blockframes/movie/movie/+state/movie.firestore';
+import { MovieRating, MovieOriginalRelease } from '@blockframes/movie/+state/movie.firestore';
 import { FormStaticValue } from '@blockframes/utils/form';
 
 // Ratings
 
 function createRatingFormControl(entity?: Partial<MovieRating>) {
   const { country, reason, system, value } = createMovieRating(entity);
-  return { 
+  return {
     country: new FormStaticValue(country, 'TERRITORIES'),
     reason: new FormControl(reason),
     system: new FormControl(system),
@@ -28,7 +28,7 @@ export class MovieRatingForm extends FormEntity<RatingFormControl> {
 
 function createOriginalReleaseFormControl(entity?: Partial<MovieOriginalRelease>) {
   const { country, date, media } = createMovieOriginalRelease(entity);
-  return { 
+  return {
     country: new FormStaticValue(country, 'TERRITORIES'),
     date: new FormControl(date),
     media: new FormControl(media),

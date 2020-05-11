@@ -1,13 +1,14 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { MovieService } from '@blockframes/movie';
+import { Component, OnInit, ChangeDetectorRef, ChangeDetectionStrategy } from '@angular/core';
+import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { getValue } from '@blockframes/utils/helpers';
-import { DistributionDealService } from '@blockframes/movie/distribution-deals';
+import { DistributionRightService } from '@blockframes/distribution-rights/+state/distribution-right.service';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 
 @Component({
   selector: 'admin-movies',
   templateUrl: './movies.component.html',
-  styleUrls: ['./movies.component.scss']
+  styleUrls: ['./movies.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MoviesComponent implements OnInit {
   public versionColumns = {
@@ -18,7 +19,7 @@ export class MoviesComponent implements OnInit {
     'main.productionYear': 'Production year',
     'main.storeConfig.status': 'Status',
     'main.storeConfig.storeType': 'Store type',
-    'distributionDealsInfo': 'Distribution deals',
+    'distributionRightsInfo': 'Distribution rights',
     'contractsInfo': 'Contracts',
     'edit': 'Edit',
   };
@@ -31,14 +32,14 @@ export class MoviesComponent implements OnInit {
     'main.productionYear',
     'main.storeConfig.status',
     'main.storeConfig.storeType',
-    'distributionDealsInfo',
+    'distributionRightsInfo',
     'contractsInfo',
     'edit',
   ];
   public rows: any[] = [];
   constructor(
     private movieService: MovieService,
-    private distributionDealService: DistributionDealService,
+    private distributionRightService: DistributionRightService,
     private contractService: ContractService,
     private cdRef: ChangeDetectorRef,
   ) { }
@@ -47,20 +48,20 @@ export class MoviesComponent implements OnInit {
     const movies = await this.movieService.getAllMovies();
 
     const promises = movies.map(async m => {
-      const row = {...m} as any;
+      const row = { ...m } as any;
 
       // Append new data for table display
 
-      // We add distribution deals infos to the row
-      const distributionDeals = await this.distributionDealService.getMovieDistributionDeals(m.id);
-      row.distributionDealsInfo =  { 
-        link: `/c/o/admin/panel/deals/${m.id}`,
-        count: distributionDeals.length
+      // We add distribution rights infos to the row
+      const distributionRights = await this.distributionRightService.getMovieDistributionRights(m.id);
+      row.distributionRightsInfo = {
+        link: `/c/o/admin/panel/rights/${m.id}`,
+        count: distributionRights.length
       };
 
       // We add contracts infos to the row
       const contract = await this.contractService.getMovieContracts(m.id);
-      row.contractsInfo =  { 
+      row.contractsInfo = {
         link: `/c/o/admin/panel/contracts/${m.id}`,
         count: contract.length
       };
@@ -80,7 +81,7 @@ export class MoviesComponent implements OnInit {
   }
 
 
-  filterPredicate(data: any, filter) {
+  public filterPredicate(data: any, filter: string) {
     const columnsToFilter = [
       'id',
       'main.internalRef',

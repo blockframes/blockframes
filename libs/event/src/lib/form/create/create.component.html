@@ -1,0 +1,43 @@
+<button mat-icon-button class="mat-dialog-close" mat-dialog-close>
+  <mat-icon svgIcon="cross"></mat-icon>
+</button>
+
+<h3>Add a new Event</h3>
+
+<form [formGroup]="form" fxLayout="column">
+  <mat-form-field appearance="outline">
+    <mat-label>Title</mat-label>
+    <input matInput formControlName="title" />
+  </mat-form-field>
+
+  <div fxLayout fxLayoutAlign="space-between center" fxLayoutGap="24px">
+    <mat-form-field fxFlex appearance="outline">
+      <mat-label>Start</mat-label>
+      <time-picker formControlName="start"></time-picker>
+    </mat-form-field>
+    <span>to</span>
+    <mat-form-field fxFlex  appearance="outline">
+      <mat-label>End</mat-label>
+      <time-picker formControlName="end"></time-picker>
+    </mat-form-field>
+  </div>
+
+  <div *ngIf="types.length">
+    <mat-form-field fxFlex appearance="outline">
+      <mat-label>Type</mat-label>
+      <mat-select required formControlName="type">
+        <ng-container *ngFor="let type of types">
+          <mat-option [value]="type">{{ type | titlecase }}</mat-option>
+        </ng-container>
+      </mat-select>
+    </mat-form-field>
+  </div>
+
+  <mat-checkbox formControlName="allDay">All day</mat-checkbox>
+  <mat-checkbox formControlName="isPrivate">Private</mat-checkbox>
+</form>
+
+<footer fxLayout fxLayoutAlign="end center"  fxLayoutGap="16px">
+  <button type="button" mat-button (click)="createAndRedirect(true)">More details</button>
+  <button type="submit" mat-flat-button color="primary" (click)="createAndRedirect(false)">Create</button>
+</footer>

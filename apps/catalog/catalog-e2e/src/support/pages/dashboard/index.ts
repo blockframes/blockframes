@@ -1,19 +1,35 @@
 import StartTunnelPage from "./StartTunnelPage";
 import TitlesListPage from "./TitlesListPage";
 import TunnelMainPage from "./TunnelMainPage";
-import TunnelKeywordsPage from "./TunnelKeywordsPage";
-import TunnelDistributionRightPage from "./TunnelDistributionRightPage";
+import TunnelStorylinePage from "./TunnelStorylinePage";
 import TunnelBudgetPage from "./TunnelBudgetPage";
-import TunnelVersionInfoPage from "./TunnelVersionInfoPage";
+import TunnelTechnicalInfoPage from "./TunnelTechnicalInfoPage";
 import TunnelCreditsPage from "./TunnelCreditsPage";
+import TunnelValuationPage from "./TunnelValuationPage";
+import TunnelSummaryPage from "./TunnelSummaryPage";
+import TunnelChainOfTitlesPage from "./TunnelChainOfTitlesPage";
+import TunnelFilesPage from "./TunnelFilesPage";
+import TunnelContractLobbyPage from "./TunnelContractLobby";
+import TunnelContractPage from "./TunnelContractPage";
+import TunnelContractSummaryPage from "./TunnelContractSummaryPage";
+import TitlesDetailsPage from "./TitlesDetailsPage";
+import TitlesActivityPage from "./TitlesActivityPage";
 
 export {
   StartTunnelPage,
   TitlesListPage,
   TunnelMainPage,
-  TunnelKeywordsPage,
-  TunnelDistributionRightPage,
+  TunnelStorylinePage,
   TunnelBudgetPage,
-  TunnelVersionInfoPage,
-  TunnelCreditsPage
+  TunnelTechnicalInfoPage,
+  TunnelCreditsPage,
+  TunnelValuationPage,
+  TunnelSummaryPage,
+  TunnelChainOfTitlesPage,
+  TunnelFilesPage,
+  TunnelContractLobbyPage,
+  TunnelContractPage,
+  TunnelContractSummaryPage,
+  TitlesDetailsPage,
+  TitlesActivityPage
 };

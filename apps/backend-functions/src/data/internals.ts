@@ -4,9 +4,13 @@
  * This code deals directly with the low level parts of firebase,
  */
 import { db } from '../internals/firebase';
-import { OrganizationDocument, StakeholderDocument } from './types';
-import { PermissionsDocument, UserRole } from '@blockframes/permissions/types';
-import { ContractDocument, ContractVersionDocument } from '@blockframes/contract/contract/+state/contract.firestore';
+import { OrganizationDocument } from './types';
+import { PermissionsDocument } from '@blockframes/permissions/types';
+import { ContractDocument } from '@blockframes/contract/contract/+state/contract.firestore';
+import { createImgRef } from '@blockframes/utils/image-uploader';
+import { createDenomination } from '@blockframes/organization/+state/organization.firestore';
+import { App, getOrgAppAccess } from '@blockframes/utils/apps';
+import { appUrlMarket, appUrlContent } from '../environments/environment';
 
 export function getCollection<T>(path: string): Promise<T[]> {
   return db
@@ -22,25 +26,23 @@ export function getDocument<T>(path: string): Promise<T> {
     .then(doc => doc.data() as T);
 }
 
-/**
- * Try to get all the organization in the stakeholders subcollection of `/{collection}/{documentId}`.
- *
- * Use with care: this function assumes the stakeholders collection exists and
- * it doesn't not deduplicate the orgs.
- *
- * @param documentId
- * @param collection
- * @returns the organization that are in the document's stakeholders.
- */
-export async function getOrganizationsOfDocument(
-  documentId: string,
-  collection: string
-): Promise<OrganizationDocument[]> {
-  const stakeholders = await getCollection<StakeholderDocument>(
-    `${collection}/${documentId}/stakeholders`
-  );
-  const promises = stakeholders.map(({ orgId }) => getDocument<OrganizationDocument>(`orgs/${orgId}`));
-  return Promise.all(promises);
+export function createPublicOrganizationDocument(org: OrganizationDocument) {
+  return {
+    id: org.id || '',
+    denomination: createDenomination(org.denomination),
+    logo: createImgRef(org.logo)
+  }
+}
+
+export function createPublicUserDocument(user: any = {}) {
+  return {
+    uid: user.uid,
+    email: user.email,
+    avatar: createImgRef(user.avatar),
+    firstName: user.firstName || '',
+    lastName: user.lastName || '',
+    orgId: user.orgId || ''
+  }
 }
 
 /**
@@ -50,6 +52,17 @@ export async function getOrganizationsOfDocument(
  */
 export async function getOrganizationsOfContract(contract: ContractDocument): Promise<OrganizationDocument[]> {
   const promises = contract.partyIds.map(orgId => getDocument<OrganizationDocument>(`orgs/${orgId}`));
+  return Promise.all(promises);
+}
+
+/**
+ * Gets all the organizations of a movie document
+ * @param movieId
+ * @returns the organizations that have movie id in organization.movieIds
+ */
+export async function getOrganizationsOfMovie(movieId: string): Promise<OrganizationDocument[]> {
+  const organizations = await db.collection(`orgs`).where('movieIds', 'array-contains', movieId).get();
+  const promises = organizations.docs.map(org => org.data() as OrganizationDocument);
   return Promise.all(promises);
 }
 
@@ -73,14 +86,28 @@ export async function getAdminIds(organizationId: string): Promise<string[]> {
 
   const adminIds = Object.keys(permissions.roles).filter(userId => {
     return (
-      permissions.roles[userId] === UserRole.superAdmin ||
-      permissions.roles[userId] === UserRole.admin
+      permissions.roles[userId] === 'superAdmin' ||
+      permissions.roles[userId] === 'admin'
     );
   });
   return adminIds;
 }
 
-export function versionExists(contractId: string, versionId: string) {
-  const version = getDocument<ContractVersionDocument>(`contracts/${contractId}/versions/${versionId}`);
-  return !!version
+/**
+ * Return the first app name that an org have access to
+ * @param _org 
+ */
+export async function getOrgAppName(_org: OrganizationDocument | string): Promise<App> {
+  if (typeof _org === 'string') {
+    const org = await getDocument<OrganizationDocument>(`orgs/${_org}`);
+    return getOrgAppAccess(org)[0];
+  } else {
+    return getOrgAppAccess(_org)[0];
+  };
 }
+
+export async function getAppUrl(_org: OrganizationDocument | string): Promise<string> {
+  const appName = await getOrgAppName(_org);
+  return appName === 'festival' ? appUrlMarket : appUrlContent;
+}
+

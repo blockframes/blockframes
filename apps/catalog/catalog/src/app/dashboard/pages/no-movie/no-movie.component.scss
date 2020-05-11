@@ -1,6 +1,10 @@
 mat-card {
   width: 330px;
   height: 220px;
+  img {
+    width: 100px;
+    align-self: center;
+  }
 }
 
 p {

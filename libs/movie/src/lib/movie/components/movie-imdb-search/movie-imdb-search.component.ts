@@ -3,8 +3,11 @@ import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { omdbApiKey } from "@env";
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
-import { ImdbService, SearchRequest, SearchResult, ImdbMovie, SearchResults, yearValidators } from '@blockframes/utils';
-import { MatPaginator, MatTableDataSource, MatRadioChange } from '@angular/material';
+import { ImdbService, SearchRequest, SearchResult, ImdbMovie, SearchResults } from '@blockframes/utils/imdb/service';
+import { yearValidators } from '@blockframes/utils/form/validators/validators';
+import { MatPaginator } from '@angular/material/paginator';
+import { MatRadioChange } from '@angular/material/radio';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'movie-imdb-search',

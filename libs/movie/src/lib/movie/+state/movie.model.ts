@@ -5,38 +5,35 @@ import {
   MoviePromotionalDescription,
   MoviePromotionalElements,
   MovieReview,
-  MovieSalesAgentDealDocumentWithDates as MovieSalesAgentDeal,
   MovieSalesCast,
   MovieSalesInfoDocumentWithDates as MovieSalesInfo,
   MovieStory,
   Prize,
   PromotionalElement,
   Title,
-  WorkType,
   MovieLanguageSpecification,
   MovieLanguageTypes,
   StoreConfig,
-  StoreType,
   MovieLanguageSpecificationContainer,
   MovieOfficialIds,
   MovieOriginalRelease,
   MovieRating,
   MovieDocumentWithDates,
   BoxOffice,
-  UnitBox,
   MovieStakeholders,
-  StoreStatus,
   MovieAnalytics,
   MovieLegalDocuments,
-  DocumentMeta
+  DocumentMeta,
+  LanguageRecord
 } from './movie.firestore';
 import { createImgRef } from '@blockframes/utils/image-uploader';
 import { LanguagesSlug } from '@blockframes/utils/static-model';
 import { createRange } from '@blockframes/utils/common-interfaces/range';
-import { DistributionDeal } from '@blockframes/movie/distribution-deals/+state/distribution-deal.model';
+import { DistributionRight } from '@blockframes/distribution-rights/+state/distribution-right.model';
 import { Contract, getValidatedContracts } from '@blockframes/contract/contract/+state/contract.model';
-import { getContractLastVersion } from '@blockframes/contract/version/+state/contract-version.model';
-import { toDate } from '@blockframes/utils';
+import { toDate } from '@blockframes/utils/helpers';
+import { createPrice } from '@blockframes/utils/common-interfaces';
+import { createMovieAppAccess } from '@blockframes/utils/apps';
 
 // Export for other files
 export { Credit, SalesAgent } from '@blockframes/utils/common-interfaces/identity';
@@ -53,25 +50,27 @@ export {
   MovieStakeholders,
   Prize,
   MovieSalesInfoDocumentWithDates as MovieSalesInfo,
-  MovieSalesAgentDealDocumentWithDates as MovieSalesAgentDeal,
   MovieAnalytics,
   MovieReview
 } from './movie.firestore';
 
 export interface Movie extends MovieDocumentWithDates {
-  distributionDeals?: DistributionDeal[]
+  distributionRights?: DistributionRight[]
+}
+
+export interface SyncMovieAnalyticsOptions {
+  filterBy: (movie: Movie) => boolean
 }
 
 /** A factory function that creates Movie */
 export function createMovie(params: Partial<Movie> = {}): Movie {
   return {
     id: params.id,
-    deliveryIds: [],
     _type: 'movies',
     documents: createMovieLegalDocuments(params.documents),
-    versionInfo: { languages: {} }, // TODO issue #1596
     movieReview: [],
     ...params,
+    versionInfo: { languages: createLanguageKey(params.versionInfo?.languages ? params.versionInfo.languages : {}) },
     main: createMovieMain(params.main),
     story: createMovieStory(params.story),
     promotionalElements: createMoviePromotionalElements(params.promotionalElements),
@@ -79,9 +78,16 @@ export function createMovie(params: Partial<Movie> = {}): Movie {
     salesCast: createMovieSalesCast(params.salesCast),
     salesInfo: createMovieSalesInfo(params.salesInfo),
     festivalPrizes: createMovieFestivalPrizes(params.festivalPrizes),
-    salesAgentDeal: createMovieSalesAgentDeal(params.salesAgentDeal),
     budget: createMovieBudget(params.budget),
   };
+}
+
+export function createLanguageKey(languages: Partial<{ [language in LanguagesSlug]: MovieLanguageSpecification }> = {}): LanguageRecord {
+  const languageSpecifications = {}
+  for (const language in languages) {
+    languageSpecifications[language] = createMovieLanguageSpecification(languages[language])
+  }
+  return (languageSpecifications as Partial<{ [language in LanguagesSlug]: MovieLanguageSpecification }>)
 }
 
 /** A factory function that creates MovieMain */
@@ -93,7 +99,7 @@ export function createMovieMain(params: Partial<MovieMain> = {}): MovieMain {
     },
     directors: [],
     genres: [],
-    workType: WorkType.movie,
+    workType: 'feature_film',
     originalLanguages: [],
     originCountries: [],
     status: null,
@@ -230,24 +236,9 @@ export function createTitle(title: Partial<Title> = {}): Title {
   };
 }
 
-export function createMovieSalesAgentDeal(
-  params: Partial<MovieSalesAgentDeal> = {}
-): MovieSalesAgentDeal {
-  return {
-    rights: {
-      from: null,
-      to: null
-    },
-    territories: [],
-    medias: [],
-    reservedTerritories: [],
-    ...params
-  };
-}
-
 export function createBoxOffice(params: Partial<BoxOffice> = {}): BoxOffice {
   return {
-    unit: UnitBox.boxoffice_dollar,
+    unit: 'boxoffice_dollar',
     value: 0,
     territory: null,
     ...params,
@@ -256,9 +247,9 @@ export function createBoxOffice(params: Partial<BoxOffice> = {}): BoxOffice {
 
 export function createMovieBudget(params: Partial<MovieBudget> = {}): MovieBudget {
   return {
-    totalBudget: '',
     boxOffice: [],
     ...params,
+    totalBudget: createPrice(params.totalBudget),
     estimatedBudget: createRange<number>(params.estimatedBudget),
   };
 }
@@ -301,9 +292,10 @@ export function populateMovieLanguageSpecification(
 
 export function createStoreConfig(params: Partial<StoreConfig> = {}): StoreConfig {
   return {
-    status: StoreStatus.draft,
-    storeType: StoreType.line_up,
-    ...params
+    status: 'draft',
+    storeType: 'line_up',
+    ...params,
+    appAccess: createMovieAppAccess(params.appAccess)
   };
 }
 
@@ -375,7 +367,7 @@ export function getMovieTitleList(movies: Movie[]): string[] {
  */
 export function getMovieReceipt(contracts: Contract[], movieId: string): number {
   const sales = getValidatedContracts(contracts);
-  return sales.reduce((sum, contract) => sum + getContractLastVersion(contract).titles[movieId].price.amount, 0);
+  return sales.reduce((sum, contract) => sum + contract.lastVersion.titles[movieId].price.amount, 0);
 }
 
 /**
@@ -385,6 +377,8 @@ export function getMovieReceipt(contracts: Contract[], movieId: string): number 
  */
 export function getMovieTotalViews(analytics: MovieAnalytics[], movieId: string): number {
   const movieAnalytic = analytics.find(analytic => analytic.movieId === movieId);
-  const movieHits = movieAnalytic.movieViews.current.map(event => event.hits);
-  return movieHits.reduce((sum, val) => sum + val, 0);
+  if (movieAnalytic) {
+    const movieHits = movieAnalytic.movieViews.current.map(event => event.hits);
+    return movieHits.reduce((sum, val) => sum + val, 0);
+  }
 }

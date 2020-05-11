@@ -1,0 +1,14 @@
+section {
+  overflow: auto;
+}
+
+table {
+  width: 100%;
+}
+
+widget-card {
+  display: block;
+  max-height: 300px;
+  max-width: 500px;
+  overflow: auto;
+}

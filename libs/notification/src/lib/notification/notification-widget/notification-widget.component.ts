@@ -1,11 +1,12 @@
 import { Component, ChangeDetectionStrategy, OnInit, Input } from '@angular/core';
 import { Observable, combineLatest } from 'rxjs';
-import { AuthQuery, User } from '@blockframes/auth';
-import { NotificationQuery } from '../+state';
-import { InvitationQuery, InvitationStore } from '../../invitation/+state';
+import { AuthQuery } from '@blockframes/auth/+state/auth.query';
+import { InvitationQuery, InvitationStore, Invitation } from '../../invitation/+state';
 import { switchMap, map } from 'rxjs/operators';
 import { PermissionsQuery } from 'libs/organization/src/lib/permissions/+state/permissions.query';
-import { Invitation, InvitationStatus, InvitationType } from '@blockframes/invitation/types';
+import { User } from '@blockframes/auth/+state/auth.store';
+import { NotificationQuery } from '../+state/notification.query';
+import { InvitationType } from '@blockframes/invitation/+state/invitation.firestore';
 
 @Component({
   selector: 'overlay-notification-widget',
@@ -19,13 +20,14 @@ export class NotificationWidgetComponent implements OnInit {
   public user$: Observable<User>;
   public notificationCount$: Observable<number>;
   public invitationCount$: Observable<number>;
+  public notifications$ = this.notificationQuery.groupNotificationsByDate();
 
   constructor(
     private authQuery: AuthQuery,
     private notificationQuery: NotificationQuery,
     private invitationQuery: InvitationQuery,
     private permissionQuery: PermissionsQuery
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.user$ = this.authQuery.user$;
@@ -43,18 +45,36 @@ export class NotificationWidgetComponent implements OnInit {
     }
   }
 
-  private adminInvitations(invitation: Invitation) {
+  /**
+   * Returns true if notification should be displayed
+   * for an admin.
+   *   joinOrganization : An user requested to join an org.
+   *   attendEvent: Even org admin can attend to an event (no discrimination!)
+   * 
+   * @param invitation 
+   */
+  private adminInvitations(invitation: Invitation) : boolean {
+    const invitationTypes: InvitationType[] = ['joinOrganization', 'attendEvent'];
     return (
-      invitation.status === InvitationStatus.pending &&
-      invitation.type !== InvitationType.fromOrganizationToUser
+      invitation.status === 'pending' &&
+      invitationTypes.includes(invitation.type)
     );
   }
 
-  private memberInvitations(invitation: Invitation) {
+  /**
+   * Returns true if notification should be displayed
+   * for an regular user.
+   *   joinOrganization : An org invited current user to join in.
+   *   attendEvent: Someone invited current user to an event
+   * 
+   * @param invitation 
+   */
+  private memberInvitations(invitation: Invitation) : boolean {
+    const invitationTypes: InvitationType[] = ['joinOrganization', 'attendEvent'];
     return (
-      invitation.status === InvitationStatus.pending &&
-      invitation.type === InvitationType.toWorkOnDocument
-    );
+      invitation.status === 'pending' &&
+      invitationTypes.includes(invitation.type)
+    )
   }
 
   public get totalCount$() {

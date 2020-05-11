@@ -6,8 +6,8 @@ import {
   ChangeDetectorRef
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { MovieQuery } from '@blockframes/movie/movie/+state/movie.query';
-import { MovieForm } from '@blockframes/movie/movie/form/movie.form';
+import { MovieQuery } from '@blockframes/movie/+state/movie.query';
+import { MovieForm } from '@blockframes/movie/form/movie.form';
 import { Subscription } from 'rxjs/internal/Subscription';
 
 @Component({
@@ -24,11 +24,11 @@ export class TitleDetailsComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private movieQuery: MovieQuery,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.subscription = this.movieQuery.selectActive().subscribe(movie => {
-      this.form.patchValue(movie);
+      this.form.patchAllValue(movie);
       this.cdr.markForCheck();
     });
   }

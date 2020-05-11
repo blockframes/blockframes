@@ -16,11 +16,11 @@ import {
 import { DaoQuery } from './dao.query';
 import { DaoStore } from './dao.store';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { MemberQuery } from '@blockframes/organization/member/+state/member.query';
+import { UserQuery } from '@blockframes/user/+state/user.query';
 import { DeploySteps, DaoOperation, DaoAction } from './dao.model';
 import { abi as ORGANIZATION_ABI } from '@blockframes/smart-contracts/Organization.json';
-import { OrganizationMember } from '@blockframes/organization/member/+state/member.model';
-import { PermissionsQuery } from '@blockframes/organization/permissions/+state';
+import { OrganizationMember } from '@blockframes/user/+state/user.model';
+import { PermissionsQuery } from '@blockframes/permissions/+state';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 
 //--------------------------------------
@@ -64,7 +64,7 @@ export class DaoService {
   constructor(
     private query: DaoQuery,
     private store: DaoStore,
-    private memberQuery: MemberQuery,
+    private userQuery: UserQuery,
     private orgQuery: OrganizationQuery,
     private db: AngularFirestore,
     private permissionsQuery: PermissionsQuery
@@ -103,7 +103,7 @@ export class DaoService {
   private async _requireContract() {
     if(!this.contract) {
       this._requireProvider();
-      const orgName = this.orgQuery.getActive().name;
+      const orgName = this.orgQuery.getActive().denomination.full;
       const organizationENS = orgNameToEnsDomain(orgName, baseEnsDomain);
       let ethAddress = await this.getOrganizationEthAddress();
       await new Promise(resolve => {
@@ -149,7 +149,7 @@ export class DaoService {
   /** Retrieve the Ethereum address of the current org (using it's ENS name) */
   public async getOrganizationEthAddress() {
     this._requireProvider();
-    const orgName = this.orgQuery.getActive().name;
+    const orgName = this.orgQuery.getActive().denomination.full;
     const organizationENS = orgNameToEnsDomain(orgName, baseEnsDomain);
     return this.provider.resolveName(organizationENS);
   }
@@ -193,11 +193,7 @@ export class DaoService {
 
     // OPERATIONS -----------------------------
 
-    // retrieve hardcoded operation(s)
-    const signingDelivery = await this.getOperationFromContract('0x0000000000000000000000000000000000000000000000000000000000000001');
-    this.upsertOperation(signingDelivery);
-
-    // retrieve every other operation
+    // retrieve operation
     const operationsFilter = getFilterFromTopics(this.contract.address, [operationCreatedTopic]);
     const operationLogs = await this.provider.getLogs(operationsFilter);
     const operationIds = operationLogs.map(operationLog => operationLog.topics[1]);
@@ -281,7 +277,7 @@ export class DaoService {
 
     // re construct members list
     const promises: Promise<number>[] = [];
-    this.memberQuery.getAll()
+    this.userQuery.getAll()
       .filter(member => !this.permissionsQuery.isUserAdmin(member.uid))
       .forEach(member => {
         const ensDomain = emailToEnsDomain(member.email, baseEnsDomain);
@@ -383,7 +379,7 @@ export class DaoService {
 
     // re construct signer list
     const promises: Promise<number>[] = [];
-    this.memberQuery.getAll()
+    this.userQuery.getAll()
       .forEach(member => {
         const ensDomain = emailToEnsDomain(member.email, baseEnsDomain);
         const promise = precomputeEthAddress(ensDomain, this.provider, factoryContract)

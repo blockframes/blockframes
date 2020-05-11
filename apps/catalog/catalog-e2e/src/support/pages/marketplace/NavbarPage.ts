@@ -1,43 +1,44 @@
-import { WishlistPage, SearchPage, HomePage } from "./index";
-import { LoginViewPage } from "../auth";
+import { WishlistPage, SearchPage } from "./index";
+import { AuthLoginPage } from "@blockframes/e2e/pages/auth";
 
 export default abstract class NavbarPage {
   constructor() {
-    cy.get('[page-id=navbar]', { timeout: 10000 });
+    cy.get('catalog-layout');
   }
 
   public openProfileMenu(){
-    cy.get('[page-id=navbar]')
-      .get('button[test-id=profile-avatar]')
-      .click();
+    cy.get('catalog-layout button[test-id=profile-avatar]').click();
+  }
+
+  public openSideNav(){
+    cy.get('catalog-layout button[test-id=menu]').click();
+  }
+
+  public clickLibrary(){
+    cy.get('catalog-layout a[test-id=library]').click();
+    return new SearchPage();
   }
 
   public clickWishlist() {
-    cy.get('[page-id=navbar] a[test-id=heartIcon]').click();
+    cy.get('catalog-layout a[test-id=heart-icon]').click();
     return new WishlistPage();
   }
 
   public checkWishListCount(count: number) {
-    cy.get('[page-id=navbar] a[test-id=heartIcon]').should('contain', count);
+    cy.get('catalog-layout a[test-id=heart-icon]').should('contain', count);
+  }
+
+  public assertNoWishListCount(count: number) {
+    cy.get('catalog-layout a[test-id=heart-icon]').should('not.contain', count || 0);
+  }
+
+  public assertWishListCountIsOne() {
+    cy.get('catalog-layout a[test-id=heart-icon]').should('contain', 1);
   }
 
   public clickLogout() {
     this.openProfileMenu();
     cy.get('button[test-id=logout]').click();
-    return new LoginViewPage();
-  }
-
-  public clickContextMenuLineUp() {
-    cy.get('[page-id=navbar] a')
-      .contains('Line-up')
-      .click();
-    return new SearchPage();
-  }
-
-  public clickContextMenuHome() {
-    cy.get('[page-id=navbar] a')
-      .contains('home')
-      .click();
-    return new HomePage();
+    return new AuthLoginPage();
   }
 }

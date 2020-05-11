@@ -2,9 +2,15 @@ import * as admin from 'firebase-admin';
 import * as functions from 'firebase-functions';
 import { generate as passwordGenerator } from 'generate-password';
 import { auth, db } from './internals/firebase';
-import { userInvite, userVerifyEmail, welcomeMessage, userResetPassword, sendWishlist, sendWishlistPending, sendDemoRequestMail } from './assets/mail-templates';
+import { userInvite, userVerifyEmail, welcomeMessage, userResetPassword, sendWishlist, sendWishlistPending, sendDemoRequestMail, sendContactEmail } from './templates/mail';
 import { sendMailFromTemplate, sendMail } from './internals/email';
-import { RequestDemoInformations } from './data/types';
+import { RequestDemoInformations, PublicUser, OrganizationDocument } from './data/types';
+import { storeSearchableUser, deleteObject } from './internals/algolia';
+import { algolia } from './environments/environment';
+import { upsertWatermark } from './internals/watermark';
+import { getDocument, getOrgAppName, getAppUrl } from './data/internals';
+import { App } from '@blockframes/utils/apps';
+import { templateIds } from '@env';
 
 type UserRecord = admin.auth.UserRecord;
 type CallableContext = functions.https.CallableContext;
@@ -12,11 +18,6 @@ type CallableContext = functions.https.CallableContext;
 interface UserProposal {
   uid: string;
   email: string;
-}
-
-interface OrgProposal {
-  id: string;
-  name: string;
 }
 
 export const startVerifyEmailFlow = async (data: any, context?: CallableContext) => {
@@ -57,87 +58,72 @@ export const onUserCreate = async (user: UserRecord) => {
   const { email, uid } = user;
 
   if (!email || !uid) {
-    throw new Error(`email & uid are mandatory parameter, provided email (${email}), uid (${uid})`);
+    throw new Error(`email and uid are mandatory parameter, provided email (${email}), uid (${uid})`);
   }
 
   const userDocRef = db.collection('users').doc(user.uid);
 
   // transaction to UPSERT the user doc
-  return db.runTransaction(async tx => {
+  await db.runTransaction(async tx => {
     const userDoc = await tx.get(userDocRef);
 
     if (userDoc.exists) {
-      if(!user.emailVerified) {
-        await startVerifyEmailFlow({email});
-        await sendMailFromTemplate(welcomeMessage(email));
+      if (!user.emailVerified) {
+        const u = userDoc.data() as PublicUser;
+        await startVerifyEmailFlow({ email });
+        await sendMailFromTemplate(welcomeMessage(email, u.firstName));
       }
       tx.update(userDocRef, { email, uid });
     } else {
       tx.set(userDocRef, { email, uid });
     }
   });
+
+  // update Algolia index
+  const userSnap = await userDocRef.get();
+  const userData = userSnap.data() as PublicUser;
+
+  return Promise.all([
+    storeSearchableUser(userData),
+    upsertWatermark(userData),
+  ]);
 };
 
-export const findUserByMail = async (data: any, context: CallableContext): Promise<UserProposal[]> => {
-  const prefix: string = decodeURIComponent(data.prefix);
+export async function onUserUpdate(change: functions.Change<FirebaseFirestore.DocumentSnapshot>): Promise<any> {
+  const before = change.before.data() as PublicUser;
+  const after = change.after.data() as PublicUser;
 
-  // Leave if the prefix is too short (do not search every users in the universe).
-  if (prefix.length < 2) {
-    return [];
+  const promises: Promise<any>[] = [];
+
+  // if name, email or avatar has changed : update algolia record
+  if (
+    before.firstName !== after.firstName ||
+    before.lastName !== after.lastName ||
+    before.email !== after.email ||
+    before.avatar?.url !== after.avatar?.url
+  ) {
+    promises.push(storeSearchableUser(after));
   }
 
-  // String magic to figure out a prefixEnd
-  // Say prefix is 'aaa'. We want to search all strings between 'aaa' (prefix) and 'aab' (prefixEnd)
-  // this will match: 'aaa', 'aaaa', 'aaahello', 'aaazerty', etc.
-  const incLast: string = String.fromCharCode(prefix.slice(-1).charCodeAt(0) + 1);
-  const prefixEnd: string = prefix.slice(0, -1) + incLast;
-
-  return db
-    .collection('users')
-    .where('email', '>=', prefix)
-    .where('email', '<', prefixEnd)
-    .get()
-    .then(query => {
-      // leave if there are too many results.
-      if (query.size > 10) {
-        return [];
-      }
-
-      return query.docs.map(doc => ({ uid: doc.id, email: doc.data().email }));
-    });
-};
-
-export const findOrgByName = async (data: any, context: CallableContext): Promise<OrgProposal[]> => {
-  const prefix: string = decodeURIComponent(data.prefix);
-
-  // Leave if the prefix is too short (do not search every users in the universe).
-  if (prefix.length < 2) {
-    return [];
+  // if name or email has changed : update watermark
+  if (
+    before.firstName !== after.firstName ||
+    before.lastName !== after.lastName ||
+    before.email !== after.email
+  ) {
+    promises.push(upsertWatermark(after));
   }
 
-  // String magic to figure out a prefixEnd
-  // Say prefix is 'aaa'. We want to search all strings between 'aaa' (prefix) and 'aab' (prefixEnd)
-  // this will match: 'aaa', 'aaaa', 'aaahello', 'aaazerty', etc.
-  const incLast: string = String.fromCharCode(prefix.slice(-1).charCodeAt(0) + 1);
-  const prefixEnd: string = prefix.slice(0, -1) + incLast;
+  return Promise.all(promises);
+}
 
-  return db
-    .collection('orgs')
-    .where('name', '>=', prefix)
-    .where('name', '<', prefixEnd)
-    .get()
-    .then(matchingOrgs => {
-      // leave if there are too many results.
-      if (matchingOrgs.size > 10) {
-        return [];
-      }
+export async function onUserDelete(
+  userSnapshot: FirebaseFirestore.DocumentSnapshot<PublicUser>,
+): Promise<any> {
 
-      return matchingOrgs.docs.map(matchingOrg => ({
-        id: matchingOrg.id,
-        name: matchingOrg.data().name
-      }));
-    });
-};
+  // update Algolia index
+  return deleteObject(algolia.indexNameUsers, userSnapshot.id);
+}
 
 const generatePassword = () =>
   passwordGenerator({
@@ -145,11 +131,8 @@ const generatePassword = () =>
     numbers: true
   });
 
-export const getOrCreateUserByMail = async (
-  data: any,
-  context: CallableContext
-): Promise<UserProposal> => {
-  const { email, orgName } = data;
+export const getOrCreateUserByMail = async (data: any): Promise<UserProposal> => {
+  const { email, orgId } = data;
 
   try {
     const user = await auth.getUserByEmail(email);
@@ -165,18 +148,30 @@ export const getOrCreateUserByMail = async (
       disabled: false
     });
 
-    await sendMailFromTemplate(userInvite(email, password, orgName));
+    const org = await getDocument<OrganizationDocument>(`orgs/${orgId}`);
+    const appName: App = await getOrgAppName(org);
+    const urlToUse = await getAppUrl(org);
+    const templateToUse = appName === 'festival' ? templateIds.userCredentialsMarket : templateIds.userCredentialsContent;
+
+    await sendMailFromTemplate(userInvite(email, password, org.denomination.full, urlToUse, templateToUse));
 
     return { uid: user.uid, email };
   }
 };
 
-export const sendDemoRequest = async (
-  data: RequestDemoInformations,
-  context: CallableContext
-): Promise<RequestDemoInformations> => {
+export const sendDemoRequest = async (data: RequestDemoInformations): Promise<RequestDemoInformations> => {
 
   await sendMail(sendDemoRequestMail(data))
 
   return data;
+}
+
+export const sendUserMail = async (data: any): Promise<any> => {
+  const { userName, userMail, subject, message } = data;
+
+  if (!subject || !message || !userName || !userMail) {
+    throw new Error('Subject, message and user email and name are mandatory parameters for the "sendUserMail()" function');
+  }
+
+  await sendMail(sendContactEmail(userName, userMail, subject, message));
 }

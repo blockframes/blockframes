@@ -16,3 +16,8 @@ $bf-typography: mat-typography-config(
   $button: mat-typography-level(16px, 25px, 600, $letter-spacing: 1.25px),
   $input: mat-typography-level(inherit, 1.125, 400)
 );
+
+pre {
+  font-family: mat-font-family($bf-typography);
+  font-size: mat-font-size($bf-typography, body-1);
+}

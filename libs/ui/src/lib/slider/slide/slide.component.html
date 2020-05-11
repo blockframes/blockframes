@@ -1,0 +1,9 @@
+<ng-template>
+  <div class="slide" [backgroundRef]="image">
+    <div class="slide-content">
+      <ng-content></ng-content>
+    </div>
+    <div *ngIf="!hideOverlay" class="slide-overlay" [style.background]="overlayColor">
+    </div>
+  </div>
+</ng-template>

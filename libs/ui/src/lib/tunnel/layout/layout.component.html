@@ -1,17 +1,17 @@
 <mat-toolbar fxLayout="row" fxLayoutAlign="space-between center">
-  <ng-container *ngIf="mobileQuery.matches">
-    <button mat-icon-button (click)="sidenav.toggle()"><mat-icon>menu</mat-icon></button>
+  <ng-container *ngIf="ltMd$ | async">
+    <button mat-icon-button (click)="sidenav.toggle()"><mat-icon svgIcon="menu"></mat-icon></button>
   </ng-container>
   <ng-content select="header, [tunnel-header]"></ng-content>
   <tunnel-exit [exitRedirect]="exitRedirect"></tunnel-exit>
 </mat-toolbar>
 
 <mat-sidenav-container>
-  <mat-sidenav #sidenav [opened]="!mobileQuery.matches" [mode]="mobileQuery.matches ? 'over' : 'side'">
+  <mat-sidenav #sidenav [opened]="!(ltMd$ | async)" [mode]="(ltMd$ | async) ? 'over' : 'side'">
     <ng-content select="aside"></ng-content>
   </mat-sidenav>
 
-  <mat-sidenav-content>
+  <mat-sidenav-content tunnelSpecificities>
     <!-- Skip to next -->
     <ng-container *ngIf="next$ | async as next">
       <div fxLayout="row" fxLayoutAlign="end center">

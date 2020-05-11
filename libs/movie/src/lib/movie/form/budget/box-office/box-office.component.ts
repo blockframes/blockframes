@@ -1,14 +1,14 @@
 import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { BudgetFormControl } from '../budget.form';
-import { UnitBox } from '@blockframes/movie/movie/+state/movie.firestore';
+import { UnitBox, unitBox } from '@blockframes/movie/+state/movie.firestore';
 import { startWith, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
 function toUnit(unit: UnitBox) {
   switch (unit) {
-    case UnitBox.boxoffice_dollar: return '$'
-    case UnitBox.boxoffice_euro: return '€'
-    case UnitBox.entrances: return 'entrances'
+    case 'boxoffice_dollar': return '$'
+    case 'boxoffice_euro': return '€'
+    case 'entrances': return 'entrances'
   }
 }
 type Unit = ReturnType<typeof toUnit>;
@@ -22,7 +22,7 @@ type Unit = ReturnType<typeof toUnit>;
 })
 export class BoxOfficeComponent implements OnInit {
   @Input() form: BudgetFormControl['boxOffice'];
-  unitBox = UnitBox;
+  unitBox = unitBox;
   units$: Observable<Unit[]>;
 
   constructor() { }

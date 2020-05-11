@@ -1,14 +1,16 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { MovieCollectionGuard } from '@blockframes/movie/movie/guards/movie-collection.guard';
-import { createRoutes } from '@blockframes/utils/routes';
+import { MovieCollectionGuard } from '@blockframes/movie/guards/movie-collection.guard';
+import { createRoutes } from '@blockframes/utils/routes/create-routes';
+
+// Guards
 import { CatalogAppGuard } from './guards/catalog-app.guard';
 
 const routes: Routes = createRoutes({
   appName: 'catalog',
   landing: {
     path: '',
-    loadChildren: () => import('./landing/landing.module').then(m => m.LandingModule)
+    loadChildren: () => import('./landing/landing.module').then(m => m.CatalogLandingModule)
   },
   appsRoutes: [{
     path: '',
@@ -28,11 +30,12 @@ const routes: Routes = createRoutes({
   },
   {
     path: 'admin',
-    loadChildren: () => import('@blockframes/admin').then(m => m.AdminModule)
+    loadChildren: () => import('@blockframes/admin/admin/admin.module').then(m => m.AdminModule)
   }]
 });
 
 @NgModule({
+  declarations: [],
   imports: [RouterModule.forChild(routes)],
 })
 export class CatalogModule {}

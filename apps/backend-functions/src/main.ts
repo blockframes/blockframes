@@ -1,7 +1,3 @@
-// import * as gcs from '@google-cloud/storage';
-import { hashToFirestore } from './generateHash';
-import { onIpHash } from './ipHash';
-import { onDeliveryUpdate } from './delivery';
 import { functions } from './internals/firebase';
 import {
   RelayerConfig,
@@ -10,15 +6,6 @@ import {
   relayerSendLogic,
 } from './relayer';
 import { mnemonic, relayer } from './environments/environment';
-import {
-  deleteFirestoreDelivery,
-  deleteFirestoreMaterial,
-  deleteFirestoreTemplate
-} from './delete';
-import {
-  onDeliveryStakeholderCreate,
-  onDeliveryStakeholderDelete
-} from './stakeholder';
 import * as users from './users';
 import {
   onDocumentCreate,
@@ -27,29 +14,18 @@ import {
   onDocumentWrite,
   onOrganizationDocumentUpdate
 } from './utils';
-import { onGenerateDeliveryPDFRequest } from './internals/pdf';
 import { logErrors } from './internals/sentry';
 import { onInvitationWrite } from './invitation';
-import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate } from './orgs';
-import { adminApp, onRequestAccessToAppWrite } from './admin';
+import { onOrganizationCreate, onOrganizationDelete, onOrganizationUpdate, accessToAppChanged } from './orgs';
+import { adminApp } from './admin';
 import { onMovieUpdate, onMovieCreate, onMovieDelete } from './movie';
 import * as bigQuery from './bigQuery';
 import { onDocumentPermissionCreate } from './permissions';
-import { onContractWrite, onContractVersionWrite } from './contract';
-
-/** Trigger: when eth-events-server pushes contract events. */
-export const onIpHashEvent = functions.pubsub.topic('eth-events.ipHash').onPublish(onIpHash);
-
-/**
- * Trigger: when user uploads document to firestore.
- *
- * NOTE: we will need to refactor the function to dispatch
- * depending on the file path. Or use different storage buckets
- * (one per app maybe).
- */
-export const generateHash = functions.storage
-  .object()
-  .onFinalize(hashToFirestore);
+import { onContractWrite } from './contract';
+import * as privateConfig from './privateConfig';
+import { createNotificationsForEventsToStart } from './internals/invitations/events';
+import { onFileUploadEvent } from './internals/resize-images';
+import { getPrivateVideoUrl, uploadToJWPlayer } from './player';
 
 /**
  * Trigger: when user creates an account.
@@ -60,9 +36,15 @@ export const onUserCreate = functions.auth
   .user()
   .onCreate(logErrors(users.onUserCreate));
 
-/** Trigger: REST call to find a list of users by email. */
-export const findUserByMail = functions.https
-  .onCall(logErrors(users.findUserByMail));
+export const onUserUpdate = onDocumentUpdate(
+  '/users/{userID}',
+  users.onUserUpdate
+);
+
+export const onUserDelete = onDocumentDelete(
+  '/users/{userID}',
+  users.onUserDelete
+);
 
 /** Trigger: REST call to send a verify email to a user. */
 export const sendVerifyEmail = functions.https
@@ -76,9 +58,8 @@ export const sendResetPasswordEmail = functions.https
 export const sendWishlistEmails = functions.https
   .onCall(users.startWishlistEmailsFlow);
 
-/** Trigger: REST call to find a list of organizations by name. */
-export const findOrgByName = functions.https
-  .onCall(logErrors(users.findOrgByName));
+/** Trigger: REST call when an user contacts blockframes admin and send them an email. */
+export const sendUserContactMail = functions.https.onCall(logErrors(users.sendUserMail));
 
 /** Trigger: REST call to get or create a user. */
 export const getOrCreateUserByMail = functions.https.onCall(logErrors(users.getOrCreateUserByMail));
@@ -86,35 +67,41 @@ export const getOrCreateUserByMail = functions.https.onCall(logErrors(users.getO
 /** Trigger: REST call to send a mail to an admin for demo request. */
 export const sendDemoRequest = functions.https.onCall(logErrors(users.sendDemoRequest));
 
-/** Trigger: REST call bigQuery with a movieId to get its analytics. */
+/** Trigger: REST call bigQuery with an array of movieIds to get their analytics. */
 export const getMovieAnalytics = functions.https.onCall(logErrors(bigQuery.requestMovieAnalytics));
+
+/** Trigger: REST call bigQuery with an array of eventIds to get their analytics. */
+export const getEventAnalytics = functions.https.onCall(logErrors(bigQuery.requestEventAnalytics));
+
+//--------------------------------
+//      Player  Management      //
+//--------------------------------
+
+export const privateVideo  = functions.https.onCall(logErrors(getPrivateVideoUrl));
+
+export const uploadVideo  = functions.https.onCall(logErrors(uploadToJWPlayer));
 
 /**
  * Trigger: REST call to the /admin app
  *
- * - Let admin accept organizations:
- *    When organizations are created they are in status "pending",
- *    cascade8 admins will accept the organization with this function.
- * - Let admin give an organization access to applications:
- *    Organization cannot access applications until they requested it and
- *    a cascade8 administrator accept their request.
+ *  - Backups / Restore the database
+ *  - Quorum Deploy & setup a movie smart-contract
  */
 export const admin = functions.https.onRequest(adminApp);
 
-/** Trigger: when signature (`orgId`) is added to or removed from `validated[]`. */
-export const onDeliveryUpdateEvent = onDocumentUpdate('deliveries/{deliveryID}', onDeliveryUpdate);
+//--------------------------------
+//   Permissions  Management    //
+//--------------------------------
 
-/** Trigger: when a stakeholder is added to a delivery. */
-export const onDeliveryStakeholderCreateEvent = onDocumentCreate(
-  'deliveries/{deliveryID}/stakeholders/{stakeholerID}',
-  onDeliveryStakeholderCreate
+/** Trigger: when a permission document is created. */
+export const onDocumentPermissionCreateEvent = onDocumentCreate(
+  'permissions/{orgID}/documentPermissions/{docId}',
+  onDocumentPermissionCreate
 );
 
-/** Trigger: when a stakeholder is removed from a delivery. */
-export const onDeliveryStakeholderDeleteEvent = onDocumentDelete(
-  'deliveries/{deliveryID}/stakeholders/{stakeholerID}',
-  onDeliveryStakeholderDelete
-);
+//--------------------------------
+//    Invitations Management    //
+//--------------------------------
 
 /** Trigger: when an invitation is updated (e. g. when invitation.status change). */
 export const onInvitationUpdateEvent = onDocumentWrite(
@@ -122,11 +109,15 @@ export const onInvitationUpdateEvent = onDocumentWrite(
   onInvitationWrite
 );
 
-/** Trigger: when a permission document is created. */
-export const onDocumentPermissionCreateEvent = onDocumentCreate(
-  'permissions/{orgID}/documentPermissions/{docId}',
-  onDocumentPermissionCreate
-);
+//--------------------------------
+//   Notifications Management   //
+//--------------------------------
+
+/**
+ * Creates notifications when an event is about to start
+ */
+export const scheduledNotifications = functions.pubsub.schedule('0 4 * * *')// every day at 4 AM
+  .onRun(_ => createNotificationsForEventsToStart());
 
 //--------------------------------
 //       Movies Management      //
@@ -168,23 +159,21 @@ export const onContractWriteEvent = onDocumentWrite(
   onContractWrite
 );
 
-/**
- * Trigger: when a contractVersion is created/updated/deleted
- */
-export const onContractVersionWriteEvent = onDocumentWrite(
-  'contracts/{contractId}/versions/{versionId}',
-  onContractVersionWrite
-)
+//---------------------------------
+//  Private documents Management //
+//---------------------------------
+
+export const setDocumentPrivateConfig = functions.https.onCall(logErrors(privateConfig.setDocumentPrivateConfig));
+export const getDocumentPrivateConfig = functions.https.onCall(logErrors(privateConfig.getDocumentPrivateConfig));
 
 //--------------------------------
 //       Apps Management        //
 //--------------------------------
 
-/** Trigger: when an organization requests access to apps. */
-export const onAccessToApp = onDocumentWrite(
-  'app-requests/{orgId}',
-  onRequestAccessToAppWrite
-);
+/**
+ * Trigger: when a blockframes admin changed an org app access and wants to notify admins.
+ */
+export const onAccessToAppChanged = functions.https.onCall(accessToAppChanged);
 
 //--------------------------------
 //       Orgs Management        //
@@ -209,14 +198,6 @@ export const onOrganizationDeleteEvent = onDocumentDelete(
 );
 
 //--------------------------------
-//        GENERATE PDF          //
-//--------------------------------
-
-/** Trigger: REST call to generate a delivery PDF. */
-export const generateDeliveryPDF = functions.https.onRequest(logErrors(onGenerateDeliveryPDFRequest));
-
-
-//--------------------------------
 //            RELAYER           //
 //--------------------------------
 const RELAYER_CONFIG: RelayerConfig = {
@@ -234,11 +215,8 @@ export const relayerSend = functions.https
   .onCall((data, context) => logErrors(relayerSendLogic(data, RELAYER_CONFIG)));
 
 //--------------------------------
-//   PROPER FIRESTORE DELETION  //
+//         File upload          //
 //--------------------------------
 
-export const deleteDelivery = onDocumentDelete('deliveries/{deliveryId}', logErrors(deleteFirestoreDelivery));
-
-export const deleteMaterial = onDocumentDelete('deliveries/{deliveryId}/materials/{materialId}', logErrors(deleteFirestoreMaterial));
-
-export const deleteTemplate = onDocumentDelete('templates/{templateId}', logErrors(deleteFirestoreTemplate));
+/** Trigger: on every file uploaded to the storage. Immediately exit function if contentType is not an image. */
+export const onFileUpload = functions.storage.object().onFinalize(data => onFileUploadEvent(data))

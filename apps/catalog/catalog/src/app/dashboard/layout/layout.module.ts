@@ -5,10 +5,12 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 
+import { AlgoliaAutocompleteModule } from '@blockframes/ui/algolia/autocomplete/algolia-autocomplete.module'
+
 // Widgets
-import { NotificationWidgetModule } from '@blockframes/notification';
+import { NotificationWidgetModule } from '@blockframes/notification/notification-widget/notification-widget.module';
 import { SearchWidgetModule } from '@blockframes/ui/search-widget';
-import { ProfileWidgetModule } from '@blockframes/account/profile';
+import { AuthWidgetModule } from '@blockframes/auth/components/widget/widget.module';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';
@@ -43,7 +45,8 @@ const material = [
     ReactiveFormsModule,
     NotificationWidgetModule,
     SearchWidgetModule,
-    ProfileWidgetModule,
+    AuthWidgetModule,
+    AlgoliaAutocompleteModule,
     ...material
   ],
   exports: [LayoutComponent]

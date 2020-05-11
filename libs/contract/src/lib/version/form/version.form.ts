@@ -1,23 +1,23 @@
 import { FormControl } from '@angular/forms';
-import { DistributionDealTermsForm } from '@blockframes/movie/distribution-deals/form/terms/terms.form';
+import { DistributionRightTermsForm } from '@blockframes/distribution-rights/form/terms/terms.form';
 import { createContractTitleDetail } from '@blockframes/contract/contract/+state/contract.model';
 import { ContractTitleDetail } from '@blockframes/contract/contract/+state/contract.firestore';
 import { ContractVersion } from '@blockframes/contract/version/+state';
-import { FormEntity, FormList } from '@blockframes/utils';
-import { ContractVersionPriceForm } from './price/price.form';
+import { FormEntity, FormList } from '@blockframes/utils/form/forms';
+import { PriceForm } from './price/price.form';
 import { ContractVersionPaymentScheduleForm } from './payment-schedule/payment-schedule.form';
 
 function createContractVersionControls(version: Partial<ContractVersion>) {
   return {
     id: new FormControl(version.id),  // Require or FormList can remove empty Form
-    price: new ContractVersionPriceForm(version.price),
+    price: new PriceForm(version.price),
     titles: new ContractVersionTitlesForm(version.titles),
-    scope: new DistributionDealTermsForm(version.scope),
+    scope: new DistributionRightTermsForm(version.scope),
     paymentSchedule: FormList.factory(version.paymentSchedule, payment => {
       return new ContractVersionPaymentScheduleForm(payment)
     }),
     customPaymentSchedule: new FormControl(version.customPaymentSchedule),
-    paymentTerm: new DistributionDealTermsForm(version.paymentTerm),
+    paymentTerm: new DistributionRightTermsForm(version.paymentTerm),
     renewalConditions: new FormControl(version.renewalConditions),
     terminationConditions: new FormControl(version.terminationConditions),
     authorizedRecoupableExpenses: new FormControl(version.authorizedRecoupableExpenses),
@@ -57,8 +57,8 @@ export class ContractVersionTitlesForm extends FormEntity<ContractTitlesControl,
 function createContractTitleDetailControl(detail?: Partial<ContractTitleDetail>) {
   const entity = createContractTitleDetail(detail);
   return {
-    distributionDealIds: FormList.factory(entity.distributionDealIds),
-    price: new ContractVersionPriceForm(entity.price)
+    distributionRightIds: FormList.factory(entity.distributionRightIds),
+    price: new PriceForm(entity.price)
   };
 }
 

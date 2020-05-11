@@ -12,19 +12,14 @@
   <h5>YOUR SELECTION</h5>
   <span class="capation">
     Add titles to your selection if needed and then offer a price. You may
-    choose to put a price forthe entire package or one for each title.
+    choose to put a price for the entire package or one for each title.
   </span>
-  <mat-form-field appearance="outline">
-    <input matInput type="text" [formControl]="movieCtrl" autocomplete="off" [matAutocomplete]="auto"
-      placeholder="Search for a movie..." aria-label="Search for a movie">
-    <mat-icon svgIcon="magnifying_glasses" matPrefix></mat-icon>
-    <mat-autocomplete #auto="matAutocomplete" (optionSelected)="addMovie($event)">
-      <mat-option *ngFor="let movie of movieSearchResults$ | async" [value]="movie">
-        {{ movie.main.title.international }}
-      </mat-option>
-    </mat-autocomplete>
-  </mat-form-field>
-  <div *ngFor="let control of form.last().get('titles').controls | keyvalue; let i = index;"
+  <algolia-autocomplete [index]="algoliaMovieIndex" keyToDisplay="title.international" (selectionChange)="addMovie($event)">
+    <ng-template let-result>
+      <span>{{ result ? result.title.international : '--' }}</span>
+    </ng-template>
+  </algolia-autocomplete>
+  <div *ngFor="let control of form.get('titles').controls | keyvalue; let i = index;"
     [formGroup]="priceForm(control.key)">
     <div fxLayout="row" fxLayoutAlign="space-between start">
       <movie-banner [movie]="selectMovie(control.key) | async" *ngIf="selectMovie(control.key) | async">
@@ -45,7 +40,7 @@
           </mat-form-field>
         </ng-template>
         <button color="warn" (click)="removeTitle(control.key)" mat-mini-fab>
-          <mat-icon>delete</mat-icon>
+          <mat-icon svgIcon="trash"></mat-icon>
         </button>
       </div>
     </div>
@@ -67,7 +62,7 @@
   <ng-template #currency>
     <mat-form-field appearance="outline" class="currency">
       <mat-label>Package Price</mat-label>
-      <input matInput [formControl]="totalAmount" type="number">
+      <input test-id="price" matInput [formControl]="totalAmount" type="number">
       <mat-hint *ngIf="totalPrice$ | async">
         Your Package Price must be equal to the sum of each Title Price.
       </mat-hint>

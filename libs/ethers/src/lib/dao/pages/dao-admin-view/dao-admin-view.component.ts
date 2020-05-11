@@ -3,8 +3,8 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { FormGroup } from '@angular/forms';
 import { tap, switchMap, startWith, filter, map } from 'rxjs/operators';
 import { createMemberFormList } from '@blockframes/organization/forms/member.form'
-import { OrganizationMember } from '@blockframes/organization/member/+state/member.model';
-import { MemberQuery } from '@blockframes/organization/member/+state/member.query';
+import { OrganizationMember } from '@blockframes/user/+state/user.model';
+import { UserQuery } from '@blockframes/user/+state/user.query';
 import { DaoQuery, DaoOperation, DeploySteps } from '../../+state';
 import { createOperationFormList } from '../../forms/operations.form';
 
@@ -40,7 +40,7 @@ export class DaoAdminViewComponent implements OnInit {
 
   constructor(
     private query: DaoQuery,
-    private memberQuery: MemberQuery
+    private userQuery: UserQuery
   ) {}
 
   ngOnInit() {
@@ -84,7 +84,7 @@ export class DaoAdminViewComponent implements OnInit {
     );
 
 
-    this.members$ = this.memberQuery.membersWithRole$.pipe(
+    this.members$ = this.userQuery.membersWithRole$.pipe(
       tap(members => this.memberFormList.patchAllValue(members)),
       switchMap(members => this.memberFormList.valueChanges.pipe(startWith(members))),
     );

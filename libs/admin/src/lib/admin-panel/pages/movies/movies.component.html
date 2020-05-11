@@ -1,44 +1,54 @@
-<h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Movie list</h1>
+<section fxLayout="column">
+  <h1><a routerLink="/c/o/admin/panel/">Administration panel</a> > Movie list</h1>
 
-<bf-table-filter 
-  [source]="rows" 
-  [columns]="versionColumns" 
-  [initialColumns]="initialColumns" 
-  [filterPredicate]="filterPredicate"
-  showFilter="true"
-  showLoader="true"
-  showPaginator="true">
-  <ng-template colRef="promotionalElements.poster" let-posters>
-    <ng-container *ngIf="posters[0] && posters[0].media as poster; else noposter">
-      <img class="poster" [imgRef]="poster">
-    </ng-container>
-    <ng-template #noposter>
-      --
+  <bf-table-filter
+    [source]="rows"
+    [columns]="versionColumns"
+    [initialColumns]="initialColumns"
+    [filterPredicate]="filterPredicate"
+    showFilter
+    showLoader
+    showPaginator>
+    <ng-template colRef="promotionalElements.poster" let-posters>
+      <ng-container *ngIf="posters[0] && posters[0].media as poster; else noposter">
+        <img class="poster" [imgRef]="poster" placeholderAsset="empty_poster.webp">
+      </ng-container>
+      <ng-template #noposter>
+        --
+      </ng-template>
     </ng-template>
-  </ng-template>
-  <ng-template colRef="id" let-id>
-    <a target="_blank" [routerLink]="getPath(id)" routerLinkActive="active"> {{ id }}</a>
-  </ng-template>
-  <ng-template colRef="distributionDeals" let-distributionDeals>
-    {{ distributionDeals.length }}
-  </ng-template>
-  <ng-template colRef="distributionDealsInfo" let-distributionDealsInfo>
-    <ng-container *ngIf="distributionDealsInfo.count else noDeals">
-      <a [routerLink]="distributionDealsInfo.link" routerLinkActive="active"><mat-icon>launch</mat-icon></a> ({{ distributionDealsInfo.count }})
-    </ng-container>
-    <ng-template #noDeals>
-      --
+    <ng-template colRef="id" let-id>
+      <a target="_blank" [routerLink]="getPath(id)" routerLinkActive="active"> {{ id }}</a>
     </ng-template>
-  </ng-template>
-  <ng-template colRef="contractsInfo" let-contractsInfo>
-    <ng-container *ngIf="contractsInfo.count else noDeals">
-      <a [routerLink]="contractsInfo.link" routerLinkActive="active"><mat-icon>launch</mat-icon></a> ({{ contractsInfo.count }})
-    </ng-container>
-    <ng-template #noDeals>
-      --
+    <ng-template colRef="distributionRights" let-distributionRights>
+      {{ distributionRights.length }}
     </ng-template>
-  </ng-template>
-  <ng-template colRef="edit" let-edit>
-    <a [routerLink]="edit.link"><mat-icon>edit</mat-icon></a>
-  </ng-template>
-</bf-table-filter>
+    <ng-template colRef="distributionRightsInfo" let-distributionRightsInfo>
+      <ng-container *ngIf="distributionRightsInfo.count else noRights">
+        <a [routerLink]="distributionRightsInfo.link" routerLinkActive="active"><mat-icon svgIcon="launch"></mat-icon></a> ({{ distributionRightsInfo.count }})
+      </ng-container>
+      <ng-template #noRights>
+        --
+      </ng-template>
+    </ng-template>
+    <ng-template colRef="contractsInfo" let-contractsInfo>
+      <ng-container *ngIf="contractsInfo.count else noRights">
+        <a [routerLink]="contractsInfo.link" routerLinkActive="active"><mat-icon svgIcon="launch"></mat-icon></a> ({{ contractsInfo.count }})
+      </ng-container>
+      <ng-template #noRights>
+        --
+      </ng-template>
+    </ng-template>
+    <ng-template colRef="edit" let-edit>
+      <a [routerLink]="edit.link"><mat-icon svgIcon="pencil"></mat-icon></a>
+    </ng-template>
+    <ng-template colRef="main.storeConfig.status" let-storeStatus>
+      {{ storeStatus | toLabel: 'storeStatus' | async }}
+    </ng-template>
+    <ng-template colRef="main.storeConfig.storeType" let-storeType>
+      {{ storeType | toLabel: 'storeType' | async }}
+    </ng-template>
+  </bf-table-filter>
+</section>
+
+

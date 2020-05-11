@@ -1,0 +1,3 @@
+<a [routerLink]="org.id" *ngFor="let org of orgs$ | async">
+  <org-card [org]="org"></org-card>
+</a>

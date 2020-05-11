@@ -1,0 +1,11 @@
+<header @slideDown class="dark-contrast-theme">
+  <h1 class="mat-display-2">Screening List</h1>
+</header>
+
+<ng-container *ngIf="events$ | async as events">
+  <event-list [events]="events">
+    <ng-template let-event>
+      <event-screening-item [event]="event"></event-screening-item>
+    </ng-template>
+  </event-list>
+</ng-container>

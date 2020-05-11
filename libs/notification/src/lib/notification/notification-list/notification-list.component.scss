@@ -1,0 +1,25 @@
+mat-list-item {
+  cursor: pointer;
+}
+
+span.mat-body-2 {
+  margin-left: 16px;
+  margin-top: 16px;
+}
+
+p.mat-body-1 {
+  margin: 0;
+  max-width: 400px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+mat-divider {
+  margin: 16px 0;
+}
+
+img {
+  margin: 16px 16px 16px 0;
+  border: 1px solid var(--foreground-divider);
+}

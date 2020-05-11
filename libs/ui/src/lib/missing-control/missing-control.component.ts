@@ -11,10 +11,11 @@ import { Scope } from '@blockframes/utils/static-model/staticModels';
 export class MissingControlComponent implements OnInit {
   @Input() control: FormControl;
   @Input() scope: Scope;
+  @Input() type: string;
   @Input() link: string;
   @Input() isLast = true;
 
-  @ContentChild(TemplateRef, { static: false }) child: TemplateRef<any>;
+  @ContentChild(TemplateRef) child: TemplateRef<any>;
 
   constructor(private cdr: ChangeDetectorRef) {}
 

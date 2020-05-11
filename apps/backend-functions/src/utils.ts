@@ -1,5 +1,4 @@
 import { db, functions } from './internals/firebase';
-import { MaterialDocument } from './data/types';
 import { logErrors } from './internals/sentry';
 import { skipInMaintenance } from './maintenance';
 
@@ -44,14 +43,6 @@ export function onDocumentCreate(docPath: string, fn: Function) {
 ////////////////////
 
 /**
- * Checks properties of two material to tell if they are the same or not.
- */
-export function isTheSame(matA: MaterialDocument, matB: MaterialDocument): boolean {
-  const getProperties = ({ value, description, category }: MaterialDocument) => ({ value, description, category });
-  return JSON.stringify(getProperties(matA)) === JSON.stringify(getProperties(matB));
-}
-
-/**
  * Removes all one-depth subcollections
  * @param snapshot
  * @param batch
@@ -67,4 +58,9 @@ export async function removeAllSubcollections(
     documents.forEach(ref => batch.delete(ref))
   }
   return batch;
+}
+
+export interface ErrorResultResponse {
+  error: string;
+  result: any;
 }

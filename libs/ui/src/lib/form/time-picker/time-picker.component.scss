@@ -1,0 +1,20 @@
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  ::-webkit-calendar-picker-indicator {
+    display: none;
+  }
+  input {
+    flex: 1;
+    font-family: Montserrat, Helvetica Neue, sans-serif;
+    background-color: transparent;
+    border: none;
+    &.day {
+      text-align: left;
+    }
+    &.time {
+      text-align: right;
+    }
+  }
+}

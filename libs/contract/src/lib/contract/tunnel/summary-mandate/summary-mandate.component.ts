@@ -1,18 +1,16 @@
 import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ContractForm } from '../../form/contract.form';
-import { Movie } from '@blockframes/movie';
-import { ContractTunnelComponent, DealControls } from '../contract-tunnel.component';
+import { Movie } from '@blockframes/movie/+state/movie.model';
+import { ContractTunnelComponent, RightControls } from '../contract-tunnel.component';
 import { Observable } from 'rxjs';
-import { FormEntity } from '@blockframes/utils';
+import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
+import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
 import { FormControl } from '@angular/forms';
-import { ContractVersionPriceControl, ContractVersionForm } from '@blockframes/contract/version/form';
+import { PriceControl, ContractVersionForm } from '@blockframes/contract/version/form';
 import { MovieCurrenciesSlug } from '@blockframes/utils/static-model';
 import { displayPaymentSchedule, displayTerms } from '../../+state/contract.utils';
-import { ContractQuery, ContractStatus, ContractService } from '../../+state';
-import { ContractVersionService } from '@blockframes/contract/version/+state';
-import { AngularFirestore } from '@angular/fire/firestore';
-import { DistributionDealStatus } from '@blockframes/movie/distribution-deals/+state/distribution-deal.firestore';
-import { DistributionDealService } from '@blockframes/movie/distribution-deals/+state';
+import { ContractQuery, ContractService } from '../../+state';
+import { Router, ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'contract-tunnel-summary-mandate',
@@ -23,30 +21,34 @@ import { DistributionDealService } from '@blockframes/movie/distribution-deals/+
 export class SummaryMandateComponent implements OnInit {
 
   public movies$: Observable<Movie[]>;
-  public version: ContractVersionForm;
-  public dealForms: FormEntity<DealControls>;
+  public lastVersionForm: ContractVersionForm;
+  public rightForms: FormEntity<RightControls>;
   public form: ContractForm;
-  public parties: { licensee: FormControl[], licensor: { subRole: FormControl, displayName: FormControl}[] };
+  public parties: { licensee: FormControl[], licensor: { subRole: FormControl, displayName: FormControl }[] };
   public terms: string;
-  public price: ContractVersionPriceControl;
-  public deals: Record<string, string> = {}
+  public price: PriceControl;
+  public rights: Record<string, string> = {}
   public currency: MovieCurrenciesSlug;
   public payments: { type: string, list: string[] };
 
   constructor(
     private tunnel: ContractTunnelComponent,
-    private db: AngularFirestore,
-    private service: ContractVersionService,
-    private dealService: DistributionDealService,
-    private query: ContractQuery
-  ) { }
+    private contractService: ContractService,
+    private query: ContractQuery,
+    private dynTitle: DynamicTitleService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {
+    this.dynTitle.setPageTitle('Contract offer summary', 'Summary and Submit')
+  }
 
   ngOnInit() {
     // Need to create it in the ngOnInit or it's not updated
     this.movies$ = this.tunnel.movies$;
-    this.dealForms = this.tunnel.dealForms;
+    this.rightForms = this.tunnel.rightForms;
     this.form = this.tunnel.contractForm;
-    this.version = this.form.get('versions').last();
+
+    this.lastVersionForm = this.form.get('lastVersion');
     // Parties
     this.parties = { licensee: [], licensor: [] };
     for (const party of this.form.get('parties').controls) {
@@ -60,49 +62,40 @@ export class SummaryMandateComponent implements OnInit {
       }
     }
 
-    this.terms = displayTerms(this.version.get('scope').value);
-    this.price = this.version.get('price').controls;
+    this.terms = displayTerms(this.lastVersionForm.get('scope').value);
+    this.price = this.lastVersionForm.get('price').controls;
     this.currency = this.price.currency.value;
 
     // Distribution fees
-    const { price, titles } = this.version.value;
+    const { price, titles } = this.lastVersionForm.value;
     for (const movieId in titles) {
       if (price.commission && titles[movieId].price.commissionBase) {
         // Common Distribution Fee
         const { commission } = price;
         const { commissionBase } = titles[movieId].price;
-        this.deals[movieId] = `${commission} Distribution fee on ${commissionBase}.`;
+        this.rights[movieId] = `${commission} Distribution fee on ${commissionBase}.`;
       } else if (titles[movieId].price.commission && titles[movieId].price.commissionBase) {
         // Title Distribution Fee
         const { commission, commissionBase } = titles[movieId].price;
-        this.deals[movieId] = `${commission} Distribution fee on ${commissionBase}.`;
+        this.rights[movieId] = `${commission} Distribution fee on ${commissionBase}.`;
       } else {
         return undefined;
       }
     }
 
-    this.payments = displayPaymentSchedule(this.version.value);
+    this.payments = displayPaymentSchedule(this.lastVersionForm.value);
   }
 
   /**
    * Submit a contract version to Archipel Content
-   * @todo(#1887) should update the version on the contract
-   * @note cannot put this function on the service or you hit cyrcular dependancies
    */
   async submit() {
-    const lastIndex = this.form.get('versions').value.length - 1;
-    const contractId = this.query.getActiveId();
-
-    // Make sure everything is saved first and that deals have ids
-    await this.tunnel.save();
-    const write = this.db.firestore.batch();
-    this.service.update(`${lastIndex}`, { status: ContractStatus.submitted }, { params: { contractId }, write });
-    
-    for (const movieId in this.dealForms.value) {
-      const undernegotiation = { status: DistributionDealStatus.undernegotiation };
-      const dealIds = this.dealForms.get(movieId).value.map(deal => deal.id);
-      this.dealService.update(dealIds, undernegotiation, { params: { movieId }, write });
+    try {
+      await this.tunnel.save();
+      await this.contractService.submit(this.form.value);
+    } catch (error) {
+      console.error(error)
     }
-    return write.commit();
+    this.router.navigate(['success'], { relativeTo: this.route })
   }
 }

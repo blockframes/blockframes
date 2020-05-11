@@ -21,7 +21,7 @@ export function createPaymentSchedule(params: Partial<PaymentSchedule> = {}): Pa
     percentage: 0,
     date: createScheduledDate(params && params.date),
     label: '',
-    status: PaymentStatus.unknown,
+    status: 'unknown',
     ...params,
   }
 }

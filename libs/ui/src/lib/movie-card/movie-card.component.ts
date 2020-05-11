@@ -1,5 +1,5 @@
-import { Component, ChangeDetectionStrategy, Input, HostBinding } from '@angular/core';
-import { Movie } from '@blockframes/movie/movie/+state/movie.model';
+import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
+import { Movie } from '@blockframes/movie/+state/movie.model';
 
 @Component({
   selector: '[movie] movie-card',
@@ -8,12 +8,11 @@ import { Movie } from '@blockframes/movie/movie/+state/movie.model';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class MovieCardComponent {
-  @HostBinding('attr.page-id') pageId = 'display-card';
   @Input() movie: Movie;
   @Input() link: string;
 
   public get posterSrc() {
-    return this.movie.promotionalElements.poster[0].media || '/assets/images/default-movie-poster.png';
+    return this.movie.promotionalElements.poster[0]?.media;
   }
 
   public get firstFestivalPrizeLogo() {

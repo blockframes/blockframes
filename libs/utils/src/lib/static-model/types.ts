@@ -12,16 +12,6 @@ export const STAKEHOLDER_ROLES_SLUG = models['STAKEHOLDER_ROLES'].map(key => key
 export type StakeholderRolesLabel = typeof STAKEHOLDER_ROLES_LABEL[number];
 export type StakeholderRolesSlug = typeof STAKEHOLDER_ROLES_SLUG[number];
 
-export const STAKEHOLDER_DELIVERY_AUTHORIZATIONS_LABEL = models[
-  'STAKEHOLDER_DELIVERY_AUTHORIZATIONS'
-].map(key => key.label);
-export const STAKEHOLDER_DELIVERY_AUTHORIZATIONS_SLUG = models[
-  'STAKEHOLDER_DELIVERY_AUTHORIZATIONS'
-].map(key => key.slug);
-
-export type StakeholderDeliveryAuthorizationsLabel = typeof STAKEHOLDER_DELIVERY_AUTHORIZATIONS_LABEL[number];
-export type StakeholderDeliveryAuthorizationsSlug = typeof STAKEHOLDER_DELIVERY_AUTHORIZATIONS_SLUG[number];
-
 export const PRODUCER_ROLES_LABEL = models['PRODUCER_ROLES'].map(key => key.label);
 export const PRODUCER_ROLES_SLUG = models['PRODUCER_ROLES'].map(key => key.slug);
 
@@ -153,3 +143,10 @@ export const SOUND_FORMAT_SLUG = models['SOUND_FORMAT'].map(key => key.slug);
 
 export type SoundFormatLabel = typeof SOUND_FORMAT_LABEL[number];
 export type SoundFormatSlug = typeof SOUND_FORMAT_SLUG[number];
+
+
+export const STORE_TYPE_LABEL = models['STORE_TYPE'].map(key => key.label);
+export const STORE_TYPE_SLUG = models['STORE_TYPE'].map(key => key.slug);
+
+export type StoreTypeLabel = typeof STORE_TYPE_LABEL[number];
+export type StoreTypeSlug = typeof STORE_TYPE_SLUG[number];

@@ -1,0 +1,35 @@
+movie-header {
+  display: block;
+  background-size: cover;
+
+  header {
+    padding: 50px 24px;
+
+    .poster {
+      height: 450px;
+    }
+    
+    .movie-details {
+      h4 {
+        text-transform: uppercase;
+        margin: 0;
+      }
+      h2 {
+        margin-bottom: 8px;
+      }
+    }
+  }
+
+  .information {
+    height: 100%;
+  }
+
+  .overlay {
+    width: 100%;
+    background: linear-gradient(to right, black, transparent);
+  }
+
+  .movie-header-actions {
+    display: flex;
+  }
+}

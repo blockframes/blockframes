@@ -10,13 +10,7 @@ import {
 } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { LANGUAGES_SLUG } from '../../static-model/types';
-import { network, baseEnsDomain } from '@env';
 import { getLabelBySlug, isInSlug, Scope } from '../../static-model/staticModels';
-import { getProvider, orgNameToEnsDomain } from '@blockframes/ethers/helpers';
-
-// TODO issue#1146
-import { AFM_DISABLE } from '@env';
-import { OrganizationService } from '@blockframes/organization';
 
 export const urlValidators = [Validators.pattern('^(http|https)://[^ "]+$')];
 
@@ -64,30 +58,6 @@ export function validPercentageList(control: FormArray): ValidationErrors {
 export function validPercentage(control: FormControl): ValidationErrors {
   const value = Number(control.value);
   return value >= 0 && value <= 100 ? null : { invalidPercentage: true };
-}
-
-/** Check if the `name` field of an Organization create form already exists as an ENS domain */
-export function UniqueOrgName(service: OrganizationService, formControl: FormControl): AsyncValidatorFn {
-  return async (control: AbstractControl): Promise<ValidationErrors | null> => {
-    if(!formControl.dirty) {
-      return null;
-    }
-    // TODO issue#1146
-    let uniqueOnEthereum = true; // set to true by default in case of AFM_DISABLE
-    let uniqueOnFirestore = false;
-
-    // TODO issue#1146
-    if (AFM_DISABLE) {
-      const orgENS = orgNameToEnsDomain(control.value, baseEnsDomain);
-      const provider = getProvider(network);
-      const orgEthAddress = await provider.resolveName(orgENS);
-      uniqueOnEthereum = !orgEthAddress ? true : false;
-    }
-
-    uniqueOnFirestore = await service.orgNameExist(control.value).then(exist => !exist);
-
-    return uniqueOnEthereum && uniqueOnFirestore ? null : { notUnique: true };
-  };
 }
 
 /**

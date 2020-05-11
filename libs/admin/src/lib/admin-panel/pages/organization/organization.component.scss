@@ -1,0 +1,35 @@
+.logo {
+  height: 170px;
+  width: 170px;
+  border-radius: 50%;
+}
+
+mat-card {
+  height: 380px;
+  width: 100%;
+}
+
+mat-card-content {
+  margin: 0;
+  width: 100%;
+  line-height: 1px;
+}
+
+.information {
+  width: 70%;
+  padding-left: 24px;
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    li {
+      line-height: 20px;
+    }
+  }
+}
+
+.poster, .avatar {
+  height: 50px;
+  width: 50px;
+}

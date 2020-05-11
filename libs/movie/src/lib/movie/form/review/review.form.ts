@@ -1,7 +1,7 @@
 import { FormControl } from '@angular/forms';
 import { MovieReview } from '../../+state/movie.firestore';
 import { createMovieReview } from '../../+state/movie.model';
-import { FormEntity } from '@blockframes/utils';
+import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 
 function createMovieReviewControl(review: Partial<MovieReview> = {}) {
   const { criticName, journalName, criticQuote, revueLink } = createMovieReview(review);

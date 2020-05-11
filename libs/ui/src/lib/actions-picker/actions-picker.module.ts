@@ -4,7 +4,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { ActionPickerItem, ActionsPickerComponent } from './actions-picker.component';
-import { MatRadioModule } from '@angular/material';
+import { MatRadioModule } from '@angular/material/radio';
 import { FlexModule } from '@angular/flex-layout';
 
 // Share the type of items with our users.

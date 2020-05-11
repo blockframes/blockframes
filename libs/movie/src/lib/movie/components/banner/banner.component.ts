@@ -1,7 +1,7 @@
 import { Component, Input, Directive, ChangeDetectionStrategy } from '@angular/core';
-import { Movie } from '../../+state';
+import { Movie } from '../../+state/movie.model';
 import { Title } from '../../+state/movie.firestore';
-import { ImgRef } from '@blockframes/utils';
+import { ImgRef } from '@blockframes/utils/image-uploader';
 
 @Component({
   selector: '[movie] movie-banner',
@@ -18,11 +18,13 @@ export class BannerComponent {
   public date: number;
 
   @Input() set movie(movie: Movie) {
-    this.poster = movie.promotionalElements.poster[0] && movie.promotionalElements.poster[0].media;
-    this.title = movie.main.title;
-    this.director = movie.main.directors.map(d => `${d.firstName} ${d.lastName}`).join(', ');
-    this.countries = movie.main.originCountries;
-    this.date = movie.main.productionYear;
+    if (movie) {
+      this.poster = movie.promotionalElements.poster[0] && movie.promotionalElements.poster[0].media;
+      this.title = movie.main.title;
+      this.director = movie.main.directors.map(d => `${d.firstName} ${d.lastName}`).join(', ');
+      this.countries = movie.main.originCountries;
+      this.date = movie.main.productionYear;
+    }
   }
 }
 

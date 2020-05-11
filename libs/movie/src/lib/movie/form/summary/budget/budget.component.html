@@ -7,19 +7,17 @@
       </a>
     </ng-container>
     <ng-template #displayBudget>
-      {{ budgetRange(budget.get('estimatedBudget').value) }}
+      {{ budget.get('estimatedBudget').value.label }}
     </ng-template>
   </li>
   <ng-container *ngFor="let boxOffice of budget.get('boxOffice').controls">
-    <li>
-      <ng-container *ngIf="boxOffice.get('territory').value else country">
+    <li fxLayout="row" fxFlexAlign="start center">
+      <strong>Box office &nbsp;</strong>
+      <missing-control [control]="boxOffice.get('value')" [link]="link">
+      </missing-control><mat-icon [svgIcon]="budget.get('totalBudget').get('currency').value"></mat-icon>
+      <ng-container *ngIf="boxOffice.get('territory').value">
         <strong>{{ boxOffice.get('territory').value | translateSlug: 'TERRITORIES' }} </strong>
       </ng-container>
-      <ng-template #country>
-        <strong>Country </strong>
-      </ng-template>
-      <missing-control [control]="boxOffice.get('value')" [link]="link"></missing-control>
-      <missing-control [control]="boxOffice.get('unit')" [link]="link"></missing-control>
     </li>
   </ng-container>
   <li>
@@ -38,7 +36,7 @@
   <ng-container *ngFor="let rating of salesInfo.get('rating').controls">
     <li>
       <strong>Rating </strong>
-      <missing-control [control]="rating.get('country')" scope="TERRITORIES" [link]="link"></missing-control>
+      <missing-control [control]="rating.get('country')" scope="TERRITORIES" [link]="link" *ngIf="rating.get('country').value"></missing-control>
       <missing-control [control]="rating.get('value')" [link]="link"></missing-control>
     </li>
   </ng-container>

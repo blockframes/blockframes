@@ -1,5 +1,5 @@
 import { FormControl, Validators } from '@angular/forms';
-import { FormEntity } from '@blockframes/utils';
+import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { Invoice } from '@blockframes/contract/invoice/+state/invoice.firestore';
 import { createInvoice } from '@blockframes/contract/invoice/+state/invoice.model';
 

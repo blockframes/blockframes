@@ -4,24 +4,24 @@
     PAYMENTS UPON EVENT
   </mat-radio-button>
   <ng-container *ngFor="let control of paymentSchedule.controls; let isLast = last; let isFirst = first let i = index">
-    <div [formGroup]="control" *ngIf="!isLast">
+    <div [formGroup]="control" *ngIf="!isLast && !isFirst">
       <div fxLayout="row" fxLayoutAlign="center baseline" fxLayoutGap="20px">
         <mat-form-field appearance="outline">
           <mat-label>Percentage</mat-label>
-          <input matInput type="number" formControlName="percentage" max="100" min="1" #eventInput>
+          <input test-id="percentage" matInput type="number" formControlName="percentage" max="100" min="1" #eventInput>
           <mat-icon matSuffix svgIcon="percent"></mat-icon>
         </mat-form-field>
         <mat-form-field appearance="outline" formGroupName="date">
           <mat-label>Triggering event</mat-label>
-          <mat-select formControlName="floatingStart">
+          <mat-select test-id="triggering-event" formControlName="floatingStart">
             <mat-option *ngFor="let event of triggerEvents | keyvalue" [value]="event.key">
               {{event.value}}
             </mat-option>
           </mat-select>
         </mat-form-field>
-        <ng-container *ngIf="showRemoveButton(i, isFirst); else add">
+        <ng-container *ngIf="showRemoveButton(i, isFirst, isLast); else add">
           <button mat-mini-fab (click)="removePayment(i)" color="warn" #eventButtons>
-            <mat-icon>delete</mat-icon>
+            <mat-icon svgIcon="trash"></mat-icon>
           </button>
         </ng-container>
         <ng-template #add>
@@ -45,7 +45,7 @@
         <input matInput type="number" formControlName="percentage" max="100" min="1" #periodicInputs>
         <mat-icon matSuffix svgIcon="percent"></mat-icon>
       </mat-form-field>
-      <span class="caption">Every</span>
+      <span class="caption">Within</span>
       <div formGroupName="date" fxLayout="column" fxLayoutAlign="baseline center" fxLayoutGap="20px">
         <div fxLayout="row" fxLayoutGap="20px">
           <mat-form-field appearance="outline" formGroupName="floatingDuration">
@@ -105,17 +105,28 @@
   <span class="caption">Please indicate the payment term you need regarding invoices.</span>
   <!-- We are using the first index cause it has nothing in common with event schedule -->
   <div *ngFor="let control of paymentSchedule.controls; let isFirst = first" [formGroup]="control">
-    <div formGroupName="date" *ngIf="isFirst">
+    <div formGroupName="date" *ngIf="isFirst" fxLayout="column">
       <div fxLayout="row" fxLayoutGap="20px">
         <mat-form-field appearance="outline" formGroupName="floatingDuration">
           <mat-label>Duration</mat-label>
-          <input matInput type="number" formControlName="duration">
+          <input test-id="duration" matInput type="number" formControlName="duration">
         </mat-form-field>
         <mat-form-field appearance="outline" formGroupName="floatingDuration">
           <mat-label>Period</mat-label>
-          <mat-select formControlName="unit">
+          <mat-select test-id="period" formControlName="unit">
             <mat-option *ngFor="let duration of durations | keyvalue" [value]="duration.key">
               {{ duration.value }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <span class="caption">After</span>
+      <div>
+        <mat-form-field appearance="outline" fxFlex.gt-xs="50" fxFlex="auto">
+          <mat-label>Triggering event</mat-label>
+          <mat-select test-id="every-event" formControlName="floatingStart">
+            <mat-option *ngFor="let event of triggerEvents | keyvalue" [value]="event.key">
+              {{event.value}}
             </mat-option>
           </mat-select>
         </mat-form-field>
@@ -126,7 +137,7 @@
 <div fxLayout="row" fxLayoutAlign="center start">
   <ng-container *ngIf="paymentSchedule.controls.length; else add">
     <button mat-fab (click)="resetVersionForm(true)" color="warn" matTooltip="Reset Payment Schedule">
-      <mat-icon>delete</mat-icon>
+      <mat-icon svgIcon="trash"></mat-icon>
     </button>
   </ng-container>
   <ng-template #add>

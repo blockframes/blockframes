@@ -3,7 +3,7 @@
   <form-display-name [form]="control"></form-display-name>
   <!--  Shot Biography -->
   <mat-form-field appearance="outline">
-    <mat-label>Director Filmography</mat-label>
+    <mat-label>Director's Filmography</mat-label>
     <textarea matInput [formControl]="control.get('shortBiography')"></textarea>
     <mat-hint>Selective Filmography to present the director.</mat-hint>
   </mat-form-field>
@@ -11,14 +11,14 @@
   <!-- Add / Delete -->
   <footer *ngIf="!last" fxLayout="column" fxLayoutAlign="center center">
     <button mat-mini-fab color="warn" (click)="form.removeAt(i)" aria-label="Remove a director form">
-      <mat-icon>delete</mat-icon>
+      <mat-icon svgIcon="trash"></mat-icon>
     </button>
     <span class="mat-caption">Delete additional director</span>
   </footer>
   <footer *ngIf="last" fxLayout="column" fxLayoutAlign="center center">
     <button mat-mini-fab color="primary" (click)="form.add()" aria-label="Remove a director form">
-      <mat-icon>add</mat-icon>
+      <mat-icon svgIcon="add"></mat-icon>
     </button>
-    <span class="mat-caption">Add another director</span>
+    <span class="mat-caption">Add Director</span>
   </footer>
 </article>
