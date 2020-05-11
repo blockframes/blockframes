@@ -1,4 +1,4 @@
-import { FestivalDashboardHomePage } from '.';
+import FestivalDashboardHomePage from './FestivalDashboardHomePage';
 
 export default class EventEditPage {
   constructor() {
