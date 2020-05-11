@@ -1,25 +1,41 @@
+<!-- DISPLAY THE SCREENING -->
 <ng-container *ngIf="url else later">
-  <section fxLayout="row" fxLayoutAlign="center center">
-    <iframe [src]="url" width="860" height="462" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+  <section fxLayoutAlign="center center" class="dark-contrast-theme">
+    <article fxLayout="column" fxLayoutAlign="space-between center">
+      <article class="screening" fxLayout="column" fxLayoutAlign="center center" [style.background-image]="background">
+        <!-- <iframe [src]="url" width="860" height="462" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe> -->
+        <img asset="archipel-content-icon.svg" type="logo" alt="organisation logo" class="org-logo">
+        <h4 class="uppercase ">{{ orgName }} presents</h4>
+        <span class="mat-display-2">{{ movie.main.title.international }}</span>
+        <h2>by {{ movie.main.directors | displayName }}</h2>
+        <span class="mat-caption">Screening now</span>
+        <button mat-flat-button color="accent">
+          <mat-icon svgIcon="play"></mat-icon>
+          <span>Play</span>
+        </button>
+      </article>
+      <img asset="screening_now.webp" alt="Screening now picture">
+    </article>
   </section>
 </ng-container>
 
+<!-- WAITING THE SCREENING -->
 <ng-template #later>
   <section fxLayoutAlign="center start" class="dark-contrast-theme">
     <article fxLayout="column" fxLayoutAlign="space-between center">
-      <article class="waiting-screening" fxLayout="column" fxLayoutAlign="center center" [style.background-image]="background">
-        <img asset="archipel-content-icon.svg" type="logo" alt="organisation logo" class="calmos">
-        <h4 class="uppercase ">Truc muche presents</h4>
-        <span class="mat-display-2">{{movie.main.title.international}}</span>
-        <h2>by someone</h2>
+      <article class="screening" fxLayout="column" fxLayoutAlign="center center" [style.background-image]="background">
+        <img asset="archipel-content-icon.svg" type="logo" alt="organisation logo" class="org-logo">
+        <h4 class="uppercase ">{{ orgName }} presents</h4>
+        <span class="mat-display-2">{{ movie.main.title.international }}</span>
+        <h2>by {{ movie.main.directors | displayName }}</h2>
         <h6 class="uppercase">starting in</h6>
         <span class="mat-body-1">x temps</span>
-        <button mat-stroked-button color="primary">
+        <button mat-stroked-button color="primary" routerLink="../../calendar">
           <mat-icon svgIcon="arrow_back"></mat-icon>
           <span>Back to Calendar</span>
         </button>
       </article>
-      <img asset="screening_wait.webp" alt="test image qui foire">
+      <img asset="screening_wait.webp" alt="Wait screening">
     </article>
   </section>
 </ng-template>

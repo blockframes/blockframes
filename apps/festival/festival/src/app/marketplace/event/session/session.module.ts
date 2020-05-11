@@ -2,11 +2,15 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
+
+// Components
 import { ImgAssetModule } from '@blockframes/ui/theme';
 import { SessionComponent } from './session.component';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
+import { EventPlayerModule } from '@blockframes/event/components/player/player.module';
+import { DisplayNameModule } from '@blockframes/utils/pipes';
 
-// Material
+// Materials
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -20,6 +24,8 @@ import { MatIconModule } from '@angular/material/icon';
     ImageReferenceModule,
     MatButtonModule,
     MatIconModule,
+    EventPlayerModule,
+    DisplayNameModule,
     RouterModule.forChild([{ path: '', component: SessionComponent }])
   ]
 })
