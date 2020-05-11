@@ -1,0 +1,20 @@
+@import '../../../../../styles/images.scss';
+
+:host {
+  display: block;
+}
+
+img {
+  border-radius: 50%;
+  @include avatar(48px);
+  margin-bottom: 16px;
+}
+
+a {
+  overflow-wrap: break-word;
+}
+
+// Kill the default margin on the h5
+h5 {
+  margin-bottom: 0;
+}
