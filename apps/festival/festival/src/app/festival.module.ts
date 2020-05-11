@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes, PreloadAllModules } from '@angular/router';
 import { MovieCollectionGuard } from '@blockframes/movie/guards/movie-collection.guard';
 import { createRoutes } from '@blockframes/utils/routes/create-routes';
-import { FestivalAppGuard } from './guards/festival-app.guard';
+import { FestivalAppGuard } from './festival-app.guard';
 
 // TODO: Add AppGuard
 
