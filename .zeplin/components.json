@@ -64,6 +64,18 @@
                     "Movie Title Features"
                 ]
             }
+        },
+        {
+            "path": "libs/ui/src/lib/team-card/team-card.component.ts",
+            "zeplinNames": [
+                "component/card/team-card"
+            ],
+            "storybook": {
+                "kind": "Team Card",
+                "storybook": [
+                    "Team Card"
+                ]
+            }
         }
     ],
     "github": {
