@@ -24,18 +24,25 @@ export async function upgrade(db: Firestore) {
 
 function updateOrganization(org: any) {
   const previous = org.appAccess;
-  const updatedOrg = {...org};
+  const updatedOrg = { ...org };
   delete updatedOrg.appAccess;
 
   updatedOrg.appAccess = {
     catalog: {
-      dashboard: previous.catalogDashboard ? previous.catalogDashboard :  false,
-      marketplace: previous.catalogMarketplace ? previous.catalogMarketplace :  false
+      dashboard: previous.catalogDashboard ? previous.catalogDashboard : false,
+      marketplace: previous.catalogMarketplace ? previous.catalogMarketplace : false
     },
-    festival: {
-      dashboard: false,
-      marketplace: false,
-    }
+    festival:
+      // For a specific organization for the e2e test
+      org.id === 'jnbHKBP5YLvRQGcyQ8In' && org.denomination.full === 'main'
+        ? {
+            dashboard: true,
+            marketplace: false
+          }
+        : {
+            dashboard: false,
+            marketplace: false
+          }
   };
 
   return updatedOrg;
