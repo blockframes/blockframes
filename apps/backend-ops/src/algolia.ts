@@ -21,10 +21,9 @@ export async function upgradeAlgoliaOrgs() {
   const { db } = loadAdminServices();
   const orgs = await db.collection('orgs').get();
 
-  const promises = [];
-  orgs.forEach(org => {
+  const promises = orgs.docs.map(async org => {
     const { id, denomination } = org.data();
-    promises.push(storeSearchableOrg(id, denomination.full, process.env['ALGOLIA_API_KEY']));
+    return storeSearchableOrg(id, denomination.full, process.env['ALGOLIA_API_KEY']);
   });
 
   await Promise.all(promises);
@@ -66,25 +65,25 @@ export async function upgradeAlgoliaMovies() {
   const { db } = loadAdminServices();
   const movies = await db.collection('movies').get();
 
-  const promises = [];
-  movies.forEach(movie => {
+  const promises = movies.docs.map(async movie => {
     const movieData = movie.data() as MovieDocument;
-    try {
 
-      const promise = db.collection('users').doc(movieData._meta.createdBy).get()
-        .then(snap => snap.data())
-        .then(user => db.collection('orgs').doc(user.orgId).get())
-        .then(snap => snap.data())
-        .then(organization => storeSearchableMovie(movieData, organization.denomination.full, process.env['ALGOLIA_API_KEY']))
-      ;
-      promises.push(promise);
+    try {
+      const snap = await db.collection('users').doc(movieData._meta.createdBy).get()
+      const userData = snap.data()
+
+      const snapOrg = await db.collection('orgs').doc(userData.orgId).get()
+      const orgData = snapOrg.data()
+
+      await storeSearchableMovie(movieData, orgData.denomination.full, process.env['ALGOLIA_API_KEY'])
     } catch (error) {
       console.error(`\n\n\tFailed to insert a movie ${movie.id} : skipping\n\n`);
       console.error(error);
-      promises.push(new Promise(res => res(true)));
     }
   });
+
   await Promise.all(promises);
+
   console.log('Algolia Movies index updated with success !');
 }
 
@@ -98,22 +97,20 @@ export async function upgradeAlgoliaUsers() {
       'lastName',
     ],
   };
+
   await setIndexConfiguration(algolia.indexNameUsers, config, process.env['ALGOLIA_API_KEY']);
   await clearIndex(algolia.indexNameUsers, process.env['ALGOLIA_API_KEY']);
 
   const { db } = loadAdminServices();
   const users = await db.collection('users').get();
 
-  const promises = [];
-  users.forEach(user => {
+  const promises = users.docs.map(async user => {
     const userData = user.data() as PublicUser;
     try {
-
-      promises.push(storeSearchableUser(userData, process.env['ALGOLIA_API_KEY']));
+      await storeSearchableUser(userData, process.env['ALGOLIA_API_KEY']);
     } catch (error) {
       console.error(`\n\n\tFailed to insert a movie ${user.id} : skipping\n\n`);
       console.error(error);
-      promises.push(new Promise(res => res(true)));
     }
   });
   await Promise.all(promises);
