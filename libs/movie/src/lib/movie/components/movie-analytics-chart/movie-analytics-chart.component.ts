@@ -45,7 +45,7 @@ function getLastDays(from: number, to: number = 0) {
 function toYMD(date: Date) {
   const m = date.getMonth()
   const d = date.getDate()
-  return `${date.getFullYear()}${m < 10 ? `0${m+1}` : m+1}${d < 10 ? `0${d}` : d}`;
+  return `${date.getFullYear()}${m < 10 ? `0${m + 1}` : m + 1}${d < 10 ? `0${d}` : d}`;
 }
 
 @Component({
@@ -89,15 +89,15 @@ export class MovieAnalyticsChartComponent {
   getXY(data: MovieAnalytics[], eventName: MovieAnalyticsEventName, period: 'current' | 'past') {
     const x = period === 'current' ? getLastDays(28) : getLastDays(56, 28);
     const y: number[] = [];
-    for(const date of x.map(toYMD)) {
+    for (const date of x.map(toYMD)) {
       let sum = 0;
-      for(const movieAnalytic of data) {
+      for (const movieAnalytic of data) {
         const event = movieAnalytic[eventName][period].find(e => e.event_date === date);
         sum += event ? event.hits : 0;
       }
       y.push(sum);
     }
-    return { x , y }
+    return { x, y }
   }
 
   getLineChartSeries(eventName: MovieAnalyticsEventName, title: MovieAnalyticsTitle) {
@@ -111,9 +111,9 @@ export class MovieAnalyticsChartComponent {
   getLineChartXaxis(eventName: MovieAnalyticsEventName) {
     return {
       categories: this.chartData.find(chart => chart.eventName === eventName).x,
-      labels: {show: false},
-      axisBorder: {show: false},
-      axisTicks: {show: false}
+      labels: { show: false },
+      axisBorder: { show: false },
+      axisTicks: { show: false }
     };
   }
 
