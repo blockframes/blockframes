@@ -2,7 +2,7 @@
   height: 100vh;
 }
 
-article {
+article.dark-contrast-theme {
   margin-top: 70px;
   height: 687px;
   width: 1392px;
@@ -11,13 +11,23 @@ article {
     width: 1392px;
   }
   article.screening {
+    margin-top: 24px;
     width: 860px;
     height: 462px;
-    border: 1px solid var(--primary);
     background-size: cover;
-    background-color: rgba(black, 0.8);
-    button {
-      margin-top: 24px;
+    .opacity {
+      width: 860px;
+      height: 462px;
+      border: 1px solid var(--primary);
+      background-color: rgba(0,0,0, 0.8);
+      .org-logo {
+        width: 80px;
+        height: 80px;
+        margin-bottom: 8px;
+      }
+      button {
+        margin-top: 24px;
+      }
     }
   }
 }
@@ -25,11 +35,6 @@ article {
 .uppercase {
   text-transform: uppercase;
 }
-.org-logo {
-  width: 80px;
-  height: 80px;
-}
-
 h2, h4, h6 {
   margin: 0;
 }

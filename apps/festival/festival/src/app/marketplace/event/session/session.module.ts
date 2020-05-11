@@ -8,7 +8,7 @@ import { ImgAssetModule } from '@blockframes/ui/theme';
 import { SessionComponent } from './session.component';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
 import { EventPlayerModule } from '@blockframes/event/components/player/player.module';
-import { DisplayNameModule } from '@blockframes/utils/pipes';
+import { DisplayNameModule } from "@blockframes/utils/pipes/display-name.module";
 
 // Materials
 import { MatButtonModule } from '@angular/material/button';
