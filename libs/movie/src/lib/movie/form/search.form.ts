@@ -1,7 +1,7 @@
 
 import { GenresSlug, LanguagesSlug, TerritoriesSlug, MovieStatusSlug, StoreTypeSlug } from '@blockframes/utils/static-model';
 import { ExtractSlug } from '@blockframes/utils/static-model/staticModels';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { FormEntity, FormList } from '@blockframes/utils/form';
 import { algolia } from '@env';
 import algoliasearch, { Index } from 'algoliasearch';
@@ -101,7 +101,7 @@ export class MovieSearchForm extends FormEntity<MovieSearchControl> {
   isEmpty() {
     return (
       !this.query.value.trim() &&
-      this.storeConfig.value.length === 0 && 
+      this.storeConfig.value.length === 0 &&
       this.genres.value.length === 0 &&
       this.originCountries.value.length === 0 &&
       this.languages.value.original.length === 0 &&

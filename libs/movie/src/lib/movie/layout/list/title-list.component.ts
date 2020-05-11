@@ -1,6 +1,7 @@
-import { Component, ChangeDetectionStrategy, Directive, ContentChild, TemplateRef, Input, AfterContentInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Directive, ContentChild, TemplateRef, Input, AfterContentInit, OnInit } from '@angular/core';
 
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 
 @Directive({selector: '[titleSort]'})
@@ -20,7 +21,7 @@ export class TitleListItemDirective {}
   styleUrls: ['./title-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class TitleListComponent implements AfterContentInit {
+export class TitleListComponent implements AfterContentInit, OnInit {
 
   @ContentChild(TitleSortDirective, { read: TemplateRef }) titleSortTemplate: TitleSortDirective;
   @ContentChild(TitleSearchDirective, { read: TemplateRef }) titleSearchTemplate: TitleSearchDirective;
@@ -33,6 +34,13 @@ export class TitleListComponent implements AfterContentInit {
 
   public listView = false;
   public canToggle = false;
+  public isLoaded = of(false);
+
+  ngOnInit() {
+    this.isLoaded = this.titles$.pipe(
+      map(titles => titles.lenght !== 0)
+    )
+  }
 
   ngAfterContentInit() {
     if (!!this.titleCardTemplate && !!this.titleListItemTemplate) {
