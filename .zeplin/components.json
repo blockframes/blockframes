@@ -89,6 +89,18 @@
                     "Review Card"
                 ]
             }
+        },
+        {
+            "path": "libs/ui/src/lib/layout/footer/footer.component.ts",
+            "zeplinNames": [
+                "component/footer-marketplace"
+            ],
+            "storybook": {
+                "kind": "Bf Footer",
+                "storybook": [
+                    "Bf Footer"
+                ]
+            }
         }
     ],
     "github": {
