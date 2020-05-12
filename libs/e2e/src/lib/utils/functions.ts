@@ -4,9 +4,9 @@ import { User } from "./type";
 /** Clear cookies, local storage, indexedDB and navigate to the path (/auth by default). */
 export function clearDataAndPrepareTest(path: string = '/auth') {
   // Since Cypress doesn't provide method to clear indexedDB = > https://github.com/cypress-io/cypress/issues/1208
-  indexedDB.deleteDatabase('firebaseLocalStorageDb');
   cy.clearCookies();
   cy.clearLocalStorage();
+  indexedDB.deleteDatabase('firebaseLocalStorageDb');
   cy.visit(path);
   cy.viewport('ipad-2', 'landscape');
 }

@@ -22,6 +22,26 @@ export async function upgrade(db: Firestore) {
   console.log('Updated org appAccess OK !');
 }
 
+// For a specific organization for the e2e test
+const festivalAppAccess = (org) => {
+  if (org.id === 'B10P335uag5cUsDT1VGk' && org.denomination.full === 'main') {
+    return  {
+      dashboard: false,
+      marketplace: true
+    }
+  } else if (org.id === 'jnbHKBP5YLvRQGcyQ8In' && org.denomination.full === 'main') {
+    return {
+      dashboard: true,
+      marketplace: false
+    }
+  } else {
+    return {
+      dashboard: false,
+      marketplace: false
+    }
+  }
+};
+
 function updateOrganization(org: any) {
   const previous = org.appAccess;
   const updatedOrg = { ...org };
@@ -32,17 +52,7 @@ function updateOrganization(org: any) {
       dashboard: previous.catalogDashboard ? previous.catalogDashboard : false,
       marketplace: previous.catalogMarketplace ? previous.catalogMarketplace : false
     },
-    festival:
-      // For a specific organization for the e2e test
-      org.id === 'jnbHKBP5YLvRQGcyQ8In' && org.denomination.full === 'main'
-        ? {
-            dashboard: true,
-            marketplace: false
-          }
-        : {
-            dashboard: false,
-            marketplace: false
-          }
+    festival: festivalAppAccess(updatedOrg)
   };
 
   return updatedOrg;
