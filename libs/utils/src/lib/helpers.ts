@@ -12,7 +12,7 @@ export function cleanModel<T>(data: T): T {
   return JSON.parse(JSON.stringify(data));
 }
 
-export function isObject(item) {
+export function isObject(item: any) {
   return (item && typeof item === 'object' && !Array.isArray(item));
 }
 
@@ -22,7 +22,7 @@ export function isObject(item) {
  * @param target 
  * @param source 
  */
-export default function mergeDeep(target, source) {
+export default function mergeDeep(target: any, source: any) {
   let output = Object.assign({}, target);
   if (isObject(target) && isObject(source)) {
     Object.keys(source).forEach(key => {
