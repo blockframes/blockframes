@@ -1,4 +1,4 @@
-<title-list [titles$]="movieSearchResults$">
+<title-list [titles]="movieSearchResults$ | async">
 
   <!-- SORT -->
   <ng-template titleSort>

@@ -41,7 +41,6 @@ export class MarketplaceSearchComponent implements OnInit {
     const movies$ = this.filterForm.valueChanges.pipe(
       debounceTime(300),
       distinctUntilChanged(),
-      startWith(this.filterForm.value),
       switchMap(_ => this.filterForm.search()),
       pluck('hits'),
       map(results => results.map(movie => movie.objectID)),

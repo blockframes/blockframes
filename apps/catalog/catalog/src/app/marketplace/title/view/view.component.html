@@ -18,23 +18,12 @@
         <p class="mat-body-2">{{ getOriginalCountries(movie) }}</p>
       </div>
     </article>
-    <article fxLayout="column" fxLayoutAlign="center end">
+    <article fxLayout="column" fxLayoutAlign="space-around end">
       <a *ngIf="router.url.split('/').pop() !== 'avails'" class="switch-button" mat-stroked-button color="primary"
        routerLink="avails">Switch to Avails</a>
       <a *ngIf="router.url.split('/').pop() === 'avails'" class="switch-button" mat-stroked-button color="primary"
       routerLink="main">Switch to Main Information</a>
-      <ng-container *ngIf="(toggle$ | async); else alreadyAdded">
-        <button fxLayout="row" fxLayoutAlign="space-around" class="heart-button" mat-button color="accent" (click)="removeFromWishlist()">
-          <mat-icon svgIcon="heart_fill" color="accent"></mat-icon>
-          <span>Remove from list</span>
-        </button>
-      </ng-container>
-      <ng-template #alreadyAdded>
-        <button fxLayout="row" fxLayoutAlign="space-around" class="heart-button" mat-button color="accent" (click)="addToWishlist()">
-          <mat-icon svgIcon="heart_outline" color="accent"></mat-icon>
-          <span>Add to Wishlist</span>
-        </button>
-      </ng-template>
+      <wishlist-button [movieId]="movie.id"></wishlist-button>
     </article>
   </header>
   <section>
