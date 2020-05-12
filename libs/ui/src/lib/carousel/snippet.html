@@ -1,0 +1,52 @@
+<mat-sidenav-container>
+  <mat-sidenav #start mode="side" position="start" >
+​
+  </mat-sidenav>
+  <mat-sidenav #end mode="side" position="end" >
+​
+  </mat-sidenav>
+  <mat-sidenav-content layout>
+    <mat-toolbar>
+      <button mat-icon-button (click)="start.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <button mat-icon-button (click)="toggle()">
+        <mat-icon>play_arrow</mat-icon>
+      </button>
+      <button mat-icon-button (click)="end.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+    </mat-toolbar>
+​
+    <main>
+      <section grid>
+        <mat-form-field [col]="12">
+          <mat-label>Search</mat-label>
+          <input placeholder="Search for a movie" matInput />
+        </mat-form-field>
+      </section>
+  
+      <section id="filter" flex>
+        <ng-container *ngFor="let item of list; let i = index">
+          <span [col]="2">
+            Filter {{ i }}
+          </span>
+        </ng-container>
+      </section>
+  
+      <section grid>
+        <ng-container *ngFor="let item of list">
+          <mat-card [col]="4" (click)="select($event, view)">
+            <mat-card-header>
+              <mat-card-title>{{ item.title }}</mat-card-title>
+            </mat-card-header>
+          </mat-card>
+        </ng-container>
+      </section>
+  
+      <div #view id="view" (click)="unselect()">
+  
+      </div>
+    </main>
+  </mat-sidenav-content>
+</mat-sidenav-container>

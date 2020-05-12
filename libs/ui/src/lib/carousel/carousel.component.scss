@@ -1,0 +1,23 @@
+bf-carousel {
+  display: flex;
+  overflow: auto;
+  scroll-snap-type: x mandatory;
+  scroll-padding: 50%;
+  &::-webkit-scrollbar {
+    height: 5px;
+  }
+  /* Track */
+  &::-webkit-scrollbar-track {
+    opacity: 0;
+  }
+  /* Handle */
+  &::-webkit-scrollbar-thumb {
+    opacity: 0;
+  }
+}
+bf-carousel:hover {  
+  /* Handle */
+  &::-webkit-scrollbar-thumb {
+    background: rgba(50, 50, 50, 0.5);
+  }
+}
