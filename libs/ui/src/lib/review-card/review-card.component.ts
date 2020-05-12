@@ -6,6 +6,7 @@ function createMovieReviewView(review: Partial<MovieReview>) {
     journalName: review.journalName || 'Journale name couldn\'t be loaded',
     criticQuote: review.criticQuote || 'Quote couldn\'t be loaded',
     link: review.revueLink
+    // Wait for TODO #2752 add author and date, and maybe img
   }
 }
 
