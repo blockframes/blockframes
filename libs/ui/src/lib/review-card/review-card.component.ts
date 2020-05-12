@@ -10,6 +10,8 @@ function createMovieReviewView(review: Partial<MovieReview>) {
   }
 }
 
+type MovieReviewView = ReturnType<typeof createMovieReviewView>;
+
 @Component({
   selector: '[review] review-card',
   templateUrl: 'review-card.component.html',
@@ -18,7 +20,7 @@ function createMovieReviewView(review: Partial<MovieReview>) {
 })
 
 export class ReviewCardComponent {
-  public movieReview
+  public movieReview: MovieReviewView;
   @Input()
   set review(review: MovieReview) {
     this.movieReview = createMovieReviewView(review);
