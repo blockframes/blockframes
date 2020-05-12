@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
 import { FooterComponent } from './footer.component';
 
 // Blockframes
-import { ImgAssetModule } from '../theme';
+import { ImgAssetModule } from '../../theme';
 
 // Material
 import { MatButtonModule } from '@angular/material/button';

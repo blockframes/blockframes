@@ -91,7 +91,7 @@
             }
         },
         {
-            "path": "libs/ui/src/lib/footer/footer.component.ts",
+            "path": "libs/ui/src/lib/layout/footer/footer.component.ts",
             "zeplinNames": [
                 "component/footer-marketplace"
             ],
