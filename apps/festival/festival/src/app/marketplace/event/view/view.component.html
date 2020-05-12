@@ -1,1 +1,29 @@
-<p>view works!</p>
+<ng-container *ngIf="event$ |  async as event">
+  <event-view [event]="event">
+    <ng-container [ngSwitch]="event | eventTime">
+      <ng-container *ngSwitchCase="'early'">
+        EARLY
+        <ng-container [ngSwitch]="event.type">
+          <ng-container *ngSwitchCase="'screening'">
+            SCREENING
+          </ng-container>
+          <ng-container *ngSwitchCase="'meeting'">
+            MEETING
+          </ng-container>
+  
+        </ng-container>
+      </ng-container>
+      <ng-container *ngSwitchCase="'late'">
+        LATE
+        <ng-container [ngSwitch]="event.type">
+          <ng-container *ngSwitchCase="'screening'">
+            SCREENING
+          </ng-container>
+          <ng-container *ngSwitchCase="'meeting'">
+            MEETING
+          </ng-container>
+        </ng-container>
+      </ng-container>
+    </ng-container>
+  </event-view>
+</ng-container>

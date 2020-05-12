@@ -5,6 +5,7 @@ import { ScreeningItemComponent } from './screening-item.component';
 import { EventRangeModule } from '../../pipes/event-range.pipe';
 import { ImageReferenceModule } from '@blockframes/ui/media';
 import { OrgChipModule } from '@blockframes/organization/components/chip/chip.module';
+import { InvitationActionModule } from '@blockframes/invitation/components/action/action.module';
 // Material
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -17,6 +18,7 @@ import { MatButtonModule } from '@angular/material/button';
     FlexLayoutModule,
     ImageReferenceModule,
     EventRangeModule,
+    InvitationActionModule,
     OrgChipModule,
     MatIconModule,
     MatButtonModule

@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { Event } from '../../+state/event.model';
 import { InvitationService, Invitation } from '@blockframes/invitation/+state';
 import { AuthQuery } from '@blockframes/auth/+state';
@@ -8,7 +8,8 @@ import { switchMap, map } from 'rxjs/operators';
 @Component({
   selector: 'event-view',
   templateUrl: './view.component.html',
-  styleUrls: ['./view.component.scss']
+  styleUrls: ['./view.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EventViewComponent implements OnInit {
   private _event = new BehaviorSubject<Event>(null);
