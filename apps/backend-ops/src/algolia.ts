@@ -6,7 +6,7 @@ import {
   storeSearchableOrg,
   storeSearchableUser,
 } from '../../backend-functions/src/internals/algolia';
-import { MovieDocument, PublicUser } from 'apps/backend-functions/src/data/types';
+import { MovieDocument, PublicUser, OrganizationDocument } from 'apps/backend-functions/src/data/types';
 import { algolia } from '@env';
 
 // TODO MIGRATE TO ALGOLIA v4 #2554
@@ -14,7 +14,9 @@ import { algolia } from '@env';
 export async function upgradeAlgoliaOrgs() {
 
   // reset config, clear index and fill it up from the db (which is the only source of truth)
-  const config = {};
+  const config = {
+    searchableAttributes: [ 'name' ],
+  };
   await setIndexConfiguration(algolia.indexNameOrganizations, config, process.env['ALGOLIA_API_KEY']);
   await clearIndex(algolia.indexNameOrganizations, process.env['ALGOLIA_API_KEY']);
 
@@ -70,13 +72,22 @@ export async function upgradeAlgoliaMovies() {
     const movieData = movie.data() as MovieDocument;
 
     try {
-      const snap = await db.collection('users').doc(movieData._meta.createdBy).get()
-      const userData = snap.data()
 
-      const snapOrg = await db.collection('orgs').doc(userData.orgId).get()
-      const orgData = snapOrg.data()
+      // TODO issue#2692
+      const querySnap = await db.collection('orgs').where('movieIds', 'array-contains', movie.id).get();
 
-      await storeSearchableMovie(movieData, orgData.denomination.full, process.env['ALGOLIA_API_KEY'])
+      if (querySnap.size === 0) {
+        throw new Error(`Movie ${movie.id} is not part of any orgs`);
+      }
+
+      // TODO : here we might decide to arbitrary choose first org
+      if (querySnap.size > 1) {
+        throw new Error(`Movie ${movie.id} is part of several orgs (${querySnap.docs.map(doc => doc.id).join(', ')})`);
+      }
+
+      const orgName = (querySnap.docs[0].data() as OrganizationDocument).denomination.full;
+
+      await storeSearchableMovie(movieData, orgName, process.env['ALGOLIA_API_KEY'])
     } catch (error) {
       console.error(`\n\n\tFailed to insert a movie ${movie.id} : skipping\n\n`);
       console.error(error);
