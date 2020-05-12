@@ -63,7 +63,7 @@ const upgradeUser = (user) => ({
  * @param document a notification or an invitation
  */
 function updateUserAndOrganization(document: any) {
-  let update: {[key: string]: any} = {}
+  const update: {[key: string]: any} = {}
 
   if (document.organization) {
     update.organizaton = upgradeOrg(document.organization)
