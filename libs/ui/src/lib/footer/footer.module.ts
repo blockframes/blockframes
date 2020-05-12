@@ -1,5 +1,6 @@
 // Angular
 import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { CommonModule } from '@angular/common';
 
@@ -16,6 +17,7 @@ import { MatButtonModule } from '@angular/material/button';
   imports: [
     CommonModule,
     FlexLayoutModule,
+    RouterModule,
     ImgAssetModule,
 
     // Material

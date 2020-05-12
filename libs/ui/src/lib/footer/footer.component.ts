@@ -1,5 +1,5 @@
 // Angular
-import { Component, ChangeDetectionStrategy, OnDestroy, ViewChild } from '@angular/core';
+import { Component, ChangeDetectionStrategy, OnDestroy, ViewChild, AfterViewInit, ChangeDetectorRef } from '@angular/core';
 
 // Blockframes
 import { getAppName } from '@blockframes/utils/apps';
@@ -16,28 +16,37 @@ import { Subscription } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 
-export class FooterComponent implements OnDestroy {
+export class FooterComponent implements AfterViewInit, OnDestroy {
+
+  public logoName: string;
+
+  public section: 'dashboard' | 'marketplace';
 
   private sub: Subscription;
 
   @ViewChild(AssetDirective) assetDirective: AssetDirective;
 
-  constructor(private routerQuery: RouterQuery) {
+  constructor(private routerQuery: RouterQuery, private cdr: ChangeDetectorRef) { }
+
+  ngAfterViewInit() {
     // Won't work for Storybook
     this.sub = this.routerQuery.select('state').subscribe(data => {
       const app = getAppName(data.root.data.app);
       switch (app.slug) {
         case 'catalog':
-          this.assetDirective.asset = 'archipel_market.png';
+          this.logoName = 'LogoArchipelContentPrimary.svg';
+          this.cdr.markForCheck();
           break;
         case 'festival':
-          this.assetDirective.asset = 'LogoArchipelContentPrimary.svg';
-          this.assetDirective.type = 'logo';
+          this.logoName = 'archipel_market.png';
+          this.cdr.markForCheck();
+          break;
       }
+      data.url.includes('marketplace') ? this.section = 'marketplace' : this.section = 'dashboard';
     })
   }
 
   ngOnDestroy() {
-    this.sub.unsubscribe();
+    if (this.sub) this.sub.unsubscribe();
   }
 }
