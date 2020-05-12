@@ -1,3 +1,5 @@
+import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
 import { Pipe, PipeTransform } from '@angular/core';
 
 /**
@@ -9,6 +11,16 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class MaxLength implements PipeTransform {
   transform(text: string, length: number) {
-    return text.substr(0, length).concat('...');
+    if(text.length > length) {
+      return text.substr(0, length).concat('...');
+    }
+    return text;
   }
 }
+
+@NgModule({
+  declarations: [MaxLength],
+  imports: [CommonModule],
+  exports: [MaxLength]
+})
+export class MaxLengthModule { }
