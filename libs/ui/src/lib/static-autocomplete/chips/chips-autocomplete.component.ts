@@ -47,7 +47,7 @@ export class ChipsAutocompleteComponent implements OnInit {
   public ctrl = new FormControl();
 
   public separatorKeysCodes: number[] = [ENTER, COMMA];
-  public filteredItems: Observable<any[]>;
+  public filteredItems$: Observable<any[]>;
 
   private items: SlugAndLabel[];
 
@@ -61,9 +61,9 @@ export class ChipsAutocompleteComponent implements OnInit {
       this.placeholder = `${this.model[0].toUpperCase()}${this.model.slice(1).toLowerCase()}`;
     }
 
-    this.filteredItems = this.ctrl.valueChanges.pipe(
+    this.filteredItems$ = this.ctrl.valueChanges.pipe(
       startWith(''),
-      map(value => (value ? this._filter(value) : this.items))
+      map(value => (value ? this._filter(value) : this.items).sort((a, b) => a.label.localeCompare(b.label)))
     );
   }
 

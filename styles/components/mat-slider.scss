@@ -1,0 +1,11 @@
+@mixin mat-bf-slider-theme($theme) {
+
+  .mat-slider-thumb-label {
+    width: 37px;
+    height: 37px;
+  }
+
+  .mat-slider-thumb-label-text {
+    font-size: 11px;
+}
+}
