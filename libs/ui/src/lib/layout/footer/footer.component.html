@@ -1,10 +1,8 @@
-<footer>
-  <div *ngIf="(section$ | async) as section" fxLayout=" row wrap" fxLayoutAlign="start center">
-    <img *ngIf="(logo$ | async) as logo" [asset]="logo" type="logo">
-    <a mat-button [routerLink]="['/c/o/'+section+'/about']">About us</a>
-    <a mat-button [routerLink]="['/c/o/'+section+'/contact']">Contact us</a>
-    <a mat-button [routerLink]="['/c/o/'+section+'/terms']">Legal Term</a>
-    <a mat-button [routerLink]="['/c/o/'+section+'/terms']">Privacy Policy</a>
-  </div>
-  <span class="mat-body-2">© 2019 Archipel Content Paris</span>
-</footer>
+<div *ngIf="(section$ | async) as section" fxLayout=" row wrap" fxLayoutAlign="start center">
+  <img *ngIf="(logo$ | async) as logo" [asset]="logo" type="logo">
+  <a mat-button [routerLink]="['/c/o/'+section+'/about']">About us</a>
+  <a mat-button [routerLink]="['/c/o/'+section+'/contact']">Contact us</a>
+  <a mat-button [routerLink]="['/c/o/'+section+'/terms']">Legal Term</a>
+  <a mat-button [routerLink]="['/c/o/'+section+'/terms']">Privacy Policy</a>
+</div>
+<span class="mat-body-2">© 2019 Archipel Content Paris</span>

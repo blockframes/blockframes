@@ -28,6 +28,7 @@ export class FooterComponent implements OnInit {
   ngOnInit() {
     // Won't work for Storybook
     const appName$ = this.routerQuery.select('state').pipe(map(data => getAppName(data.root.data.app)));
+    // TODO 2760
     this.logo$ = appName$.pipe(map(app => {
       switch (app.slug) {
         case 'catalog':
