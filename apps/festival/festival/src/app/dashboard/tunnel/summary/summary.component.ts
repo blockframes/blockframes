@@ -4,6 +4,7 @@ import { MovieService, MovieQuery } from '@blockframes/movie/+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieTunnelComponent } from '../movie-tunnel.component';
 import { FormGroup, FormArray } from '@angular/forms';
+import mergeDeep from '@blockframes/utils/helpers';
 
 @Component({
   selector: 'festival-summary-tunnel',
@@ -21,7 +22,7 @@ export class TunnelSummaryComponent {
     private service: MovieService,
     private query: MovieQuery,
     private snackBar: MatSnackBar,
-  ) {}
+  ) { }
 
   public getPath(segment: string) {
     const { movieId } = this.route.snapshot.params;
@@ -32,7 +33,7 @@ export class TunnelSummaryComponent {
     if (this.form.valid) {
       const movie = this.form.value;
       movie.main.storeConfig.status = 'accepted'; // Specific to this application
-      await this.service.update({...this.query.getActive(), ...movie});
+      await this.service.update(mergeDeep(this.query.getActive(), movie));
       this.form.markAsPristine();
       const ref = this.snackBar.open('Movie Online !!', '', { duration: 1000 });
       ref.afterDismissed().subscribe(_ => {
@@ -47,10 +48,10 @@ export class TunnelSummaryComponent {
   }
 
   /* Utils function to get the list of invalid form. Not used yet, but could be useful later */
-  public findInvalidControlsRecursive(formToInvestigate:FormGroup|FormArray):string[] {
-    const invalidControls:string[] = [];
-    const recursiveFunc = (form:FormGroup|FormArray) => {
-      Object.keys(form.controls).forEach(field => { 
+  public findInvalidControlsRecursive(formToInvestigate: FormGroup | FormArray): string[] {
+    const invalidControls: string[] = [];
+    const recursiveFunc = (form: FormGroup | FormArray) => {
+      Object.keys(form.controls).forEach(field => {
         const control = form.get(field);
         if (control.invalid) {
           invalidControls.push(field);
@@ -59,7 +60,7 @@ export class TunnelSummaryComponent {
           recursiveFunc(control);
         } else if (control instanceof FormArray) {
           recursiveFunc(control);
-        }        
+        }
       });
     }
     recursiveFunc(formToInvestigate);

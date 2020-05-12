@@ -6,6 +6,7 @@ import { FormGroup, FormArray } from '@angular/forms';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import mergeDeep from '@blockframes/utils/helpers';
 
 @Component({
   selector: 'catalog-summary-tunnel',
@@ -35,7 +36,7 @@ export class TunnelSummaryComponent {
     if (this.form.valid) {
       const movie = this.form.value;
       movie.main.storeConfig.status = 'submitted';
-      await this.service.update({ ...this.query.getActive(), ...movie });
+      await this.service.update(mergeDeep(this.query.getActive(), movie));
       this.form.markAsPristine();
       const ref = this.snackBar.open('Movie Submitted !!', '', { duration: 1000 });
       ref.afterDismissed().subscribe(_ => {

@@ -28,10 +28,10 @@
       </ng-template>
     </button>
     <button mat-stroked-button color="primary" [disabled]="!selection.selected.length || !!processedTitles"
-      (click)="submitSelectedMovies()">
+      (click)="submitOrPublishSelectedMovies()">
       <ng-container *ngIf="submittedTitles === 0 else submitinprogress">
         <mat-icon svgIcon="archipel_content"></mat-icon>
-        <span>Publish to Marketplace</span>
+        <span>{{currentApp === 'festival' ? 'Publish to Marketplace': 'Submit to Archipel Content'}}</span>
       </ng-container>
       <ng-template #submitinprogress>
         <span>Submitting... {{ submittedTitles }} / {{ selection.selected.length}}</span>
@@ -125,10 +125,10 @@
       <ng-container *ngIf="element.movie.id; else create">
         <button mat-icon-button color="accent" [disabled]="isSaveOrUpdateDisabledForTitle(element)"
           (click)="updateMovie(element)"><mat-icon svgIcon="access_time"></mat-icon></button>
-        <button mat-stroked-button color="primary" [disabled]="!isTitleValidForSubmit(element)"
-          (click)="submitMovie(element)">
+        <button mat-stroked-button color="primary" [disabled]="!isTitleValidForSubmitOrPublish(element)"
+          (click)="submitOrPublishMovie(element)">
           <mat-icon svgIcon="archipel_content"></mat-icon>
-          <span>Publish to Marketplace</span>
+          <span>{{currentApp === 'festival' ? 'Publish to Marketplace': 'Submit to Archipel Content'}}</span>
         </button>
         <!-- TODO #2648 for deploy festival v0 -->
 <!--         <button mat-icon-button color="primary" [routerLink]="['/c/o/dashboard/titles/', element.movie.id ]" target='_blank'>

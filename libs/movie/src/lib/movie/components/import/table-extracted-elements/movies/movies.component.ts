@@ -15,7 +15,7 @@ import { OrganizationQuery } from '@blockframes/organization/+state';
 import { ContractService } from '@blockframes/contract/contract/+state/contract.service';
 import { createContract, createContractPartyDetail } from '@blockframes/contract/contract/+state/contract.model';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
-import { getCurrentApp } from '@blockframes/utils/apps';
+import { getCurrentApp, App } from '@blockframes/utils/apps';
 
 const hasImportErrors = (importState: MovieImportState, type: string = 'error'): boolean => {
   return importState.errors.filter((error: SpreadsheetImportError) => error.type === type).length !== 0;
@@ -35,7 +35,7 @@ export class TableExtractedMoviesComponent implements OnInit {
   @ViewChild(MatSort, { static: true }) sort: MatSort;
   public processedTitles = 0;
   public submittedTitles = 0;
-
+  public currentApp: App;
   public selection = new SelectionModel<MovieImportState>(true, []);
   public displayedColumns: string[] = [
     'movie.main.internalRef',
@@ -63,6 +63,7 @@ export class TableExtractedMoviesComponent implements OnInit {
     this.rows.filterPredicate = this.filterPredicate;
     this.rows.sortingDataAccessor = sortingDataAccessor;
     this.rows.sort = this.sort;
+    this.currentApp = getCurrentApp(this.routerQuery);
   }
 
   async createMovie(importState: MovieImportState): Promise<boolean> {
@@ -72,11 +73,11 @@ export class TableExtractedMoviesComponent implements OnInit {
   }
 
   /**
- * @dev Once created (as draft), titls can be submitted to Archipel Content
- */
-  async submitMovie(importState: MovieImportState): Promise<boolean> {
-    await this.submitToArchipelContent(importState);
-    this.snackBar.open('Title submitted !', 'close', { duration: 3000 });
+    * @dev Once created (as draft), depending on the app, titles can be submitted to Archipel Content or accepted (ndlr: published) directly
+   */
+  async submitOrPublishMovie(importState: MovieImportState): Promise<boolean> {
+    await this.submitOrPublishToArchipelContent(importState);
+    this.snackBar.open(`Title ${this.currentApp === 'catalog' ? 'submitted' : 'published'} !`, 'close', { duration: 3000 });
     return true;
   }
 
@@ -99,18 +100,18 @@ export class TableExtractedMoviesComponent implements OnInit {
   /**
    * @dev Once created (as draft), titles can be submitted to Archipel Content
    */
-  async submitSelectedMovies(): Promise<boolean> {
+  async submitOrPublishSelectedMovies(): Promise<boolean> {
     try {
-      const creations = this.selection.selected.filter(importState => importState.movie.id && !hasImportErrors(importState) && this.isTitleValidForSubmit(importState));
+      const creations = this.selection.selected.filter(importState => importState.movie.id && !hasImportErrors(importState) && this.isTitleValidForSubmitOrPublish(importState));
       for (const movie of creations) {
         this.submittedTitles++;
-        await this.submitToArchipelContent(movie);
+        await this.submitOrPublishToArchipelContent(movie);
       }
-      this.snackBar.open(`${this.submittedTitles} titles submitted!`, 'close', { duration: 3000 });
+      this.snackBar.open(`${this.submittedTitles} titles ${this.currentApp === 'catalog' ? 'submitted' : 'published'}!`, 'close', { duration: 3000 });
       this.submittedTitles = 0;
       return true;
     } catch (err) {
-      this.snackBar.open(`Could not submit all titles (${this.submittedTitles} / ${this.selection.selected.length})`, 'close', { duration: 3000 });
+      this.snackBar.open(`Could not ${this.currentApp === 'catalog' ? 'submitted' : 'published'} all titles (${this.submittedTitles} / ${this.selection.selected.length})`, 'close', { duration: 3000 });
       this.submittedTitles = 0;
     }
   }
@@ -121,11 +122,6 @@ export class TableExtractedMoviesComponent implements OnInit {
    */
   private async addMovie(importState: MovieImportState): Promise<boolean> {
     const data = this.rows.data;
-    const appName = getCurrentApp(this.routerQuery)
-    const apps = ['festival', 'catalog'];
-    for (const app of apps) {
-      importState.movie.main.storeConfig.appAccess[app] = app === appName;
-    }
     importState.movie = await this.movieService.create(importState.movie);
     importState.errors.push({
       type: 'error',
@@ -170,15 +166,15 @@ export class TableExtractedMoviesComponent implements OnInit {
    * Change title status from 'Draft' to 'Submitted to Archipel Content'
    * @param importState
    */
-  private async submitToArchipelContent(importState: MovieImportState): Promise<boolean> {
+  private async submitOrPublishToArchipelContent(importState: MovieImportState): Promise<boolean> {
     const data = this.rows.data;
-    importState.movie.main.storeConfig.status = 'submitted';
+    importState.movie.main.storeConfig.status = this.currentApp === 'catalog' ? 'submitted' : 'accepted';
     await this.movieService.updateById(importState.movie.id, importState.movie);
     this.rows.data = data;
     return true;
   }
 
-  public isTitleValidForSubmit(importState: MovieImportState): boolean {
+  public isTitleValidForSubmitOrPublish(importState: MovieImportState): boolean {
     // Already valid or submitted
     if (
       importState.movie.main.storeConfig.status === 'submitted' ||

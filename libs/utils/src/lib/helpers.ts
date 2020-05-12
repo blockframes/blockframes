@@ -12,6 +12,33 @@ export function cleanModel<T>(data: T): T {
   return JSON.parse(JSON.stringify(data));
 }
 
+export function isObject(item) {
+  return (item && typeof item === 'object' && !Array.isArray(item));
+}
+
+/**
+ * @dev this method is used to deeply merge two object without loosing data
+ * Use this instead of { ...this.query.getActive(), ...this.form.value }
+ * @param target 
+ * @param source 
+ */
+export default function mergeDeep(target, source) {
+  let output = Object.assign({}, target);
+  if (isObject(target) && isObject(source)) {
+    Object.keys(source).forEach(key => {
+      if (isObject(source[key])) {
+        if (!(key in target))
+          Object.assign(output, { [key]: source[key] });
+        else
+          output[key] = mergeDeep(target[key], source[key]);
+      } else {
+        Object.assign(output, { [key]: source[key] });
+      }
+    });
+  }
+  return output;
+}
+
 /** A custom interface for group of dates. Used in notifications/invitations components. */
 export interface DateGroup<T> {
   [date: string]: T[];

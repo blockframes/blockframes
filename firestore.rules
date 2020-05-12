@@ -244,14 +244,7 @@ service cloud.firestore {
         && isRequestFieldValueEqualTo(['main', 'storeConfig', 'status'], 'draft')
       	&& isRequestFieldValueEqualToOrNotSetted(['id'], movieId)
         && canCreateNewPermissions(userOrgId(), movieId);
-      allow update: if isOrgAdmin(userOrgId())
-        && isNotUpdatingId('id', existingData().id)
-        && isNotUpdatingField(['_meta', '_createdBy'])
-        && isNotUpdatingField(['_type'])
-        && isNotUpdatingField(['main', 'storeConfig','storeType'])
-        && isNotUpdatingField(['main', 'storeConfig','appAccess', 'catalog'])
-        && isNotUpdatingField(['main', 'storeConfig','appAccess', 'festival'])
-        && orgCan('canUpdate', userOrgId(), existingData().id);
+      allow update: if isAllowedToUpdateMovie();
       allow delete: if orgCan('canDelete', userOrgId(), existingData().id)
       	&& isOrgAdmin(userOrgId());
 
@@ -266,6 +259,23 @@ service cloud.firestore {
         allow delete: if orgCan('canDelete', userOrgId(), movieId)
           && isOrgAdmin(userOrgId());
       }
+    }
+
+    /// FUNCTIONS ///
+
+    function isAllowedToUpdateMovie() {
+      return isOrgAdmin(userOrgId())
+        && isNotUpdatingId('id', existingData().id)
+        && isNotUpdatingField(['_meta', '_createdBy'])
+        && isNotUpdatingField(['_type'])
+        && ( isNotUpdatingField(['main', 'storeConfig','status']) 
+          || ( existingData().main.storeConfig.appAccess.festival == true && incomingData().main.storeConfig.status in ['submitted', 'accepted', 'draft'] )
+          || ( existingData().main.storeConfig.appAccess.catalog == true && incomingData().main.storeConfig.status in ['submitted', 'draft'] )
+        )
+        && isNotUpdatingField(['main', 'storeConfig','storeType'])
+        && isNotUpdatingField(['main', 'storeConfig','appAccess', 'catalog'])
+        && isNotUpdatingField(['main', 'storeConfig','appAccess', 'festival'])
+        && orgCan('canUpdate', userOrgId(), existingData().id);
     }
 
     ////////////////////////////////
