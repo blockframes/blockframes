@@ -72,6 +72,6 @@ export function getOrgAppAccess(org: OrganizationDocument): App[] {
  * Determine the status to update depending on the current app.
  * For app Festival, publish status is "accepted", "submittted" for other apps
  */
-export function getMoviePublishStatus(app: App): StoreStatus {
-  return app === 'festival' ? 'accepted' : 'submitted';
+export function getMoviePublishStatus(a: App): StoreStatus {
+  return a === 'festival' ? 'accepted' : 'submitted';
 }

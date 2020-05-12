@@ -23,7 +23,7 @@ export function isObject(item: any) {
  * @param source 
  */
 export function mergeDeep(target: any, source: any) {
-  let output = Object.assign({}, target);
+  const output = Object.assign({}, target);
   if (isObject(target) && isObject(source)) {
     Object.keys(source).forEach(key => {
       if (isObject(source[key])) {
