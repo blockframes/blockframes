@@ -1,28 +1,17 @@
 <ng-container *ngIf="event$ |  async as event">
   <event-view [event]="event">
-    <ng-container [ngSwitch]="event | eventTime">
-      <ng-container *ngSwitchCase="'early'">
-        EARLY
-        <ng-container [ngSwitch]="event.type">
-          <ng-container *ngSwitchCase="'screening'">
-            SCREENING
-          </ng-container>
-          <ng-container *ngSwitchCase="'meeting'">
-            MEETING
-          </ng-container>
-  
-        </ng-container>
+    <ng-container [ngSwitch]="event.type">
+      <!-- Screening -->
+      <ng-container *ngSwitchCase="'screening'">
+        <movie-header [movie]="event.movie">
+          <movie-header-cta>
+            <a mat-stroked-button [routerLink]="['../../title', event.movie.id]">More Details</a>
+          </movie-header-cta>
+        </movie-header>
       </ng-container>
-      <ng-container *ngSwitchCase="'late'">
-        LATE
-        <ng-container [ngSwitch]="event.type">
-          <ng-container *ngSwitchCase="'screening'">
-            SCREENING
-          </ng-container>
-          <ng-container *ngSwitchCase="'meeting'">
-            MEETING
-          </ng-container>
-        </ng-container>
+      <!-- Meeting -->
+      <ng-container *ngSwitchCase="'meeting'">
+        <invitation-guest-list [invitations]="invitations$ | async"></invitation-guest-list>
       </ng-container>
     </ng-container>
   </event-view>

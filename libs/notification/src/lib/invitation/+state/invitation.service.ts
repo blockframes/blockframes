@@ -8,6 +8,8 @@ import { createPublicUser } from '@blockframes/user/+state';
 import { InvitationDocument } from './invitation.firestore';
 import { toDate } from '@blockframes/utils/helpers';
 import { getInvitationMessage, cleanInvitation } from '../invitation-utils';
+import { combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'invitations' })
@@ -35,6 +37,33 @@ export class InvitationService extends CollectionService<InvitationState> {
   formatToFirestore(invitation: Invitation): Invitation {
     return cleanInvitation(invitation);
   }
+
+  /////////////
+  // QUERIES //
+  /////////////
+  /**
+   * Query all invitation on a docId created by from an orgId (Should be updated if )
+   * @param docId The id liked to the invitation
+   * @param orgId The organization owner of the docId
+   */
+  public queryGuest(docId: string, orgId: string) {
+    // Request * -> toOrg
+    const toOrg = ref => ref.where('toOrg.id', '==', orgId).where('docId', '==', docId).where('mode', '==', 'request');
+    // Invitation fromOrg -> *
+    const fromOrg = ref => ref.where('fromOrg.id', '==', orgId).where('docId', '==', docId).where('mode', '==', 'invitation');
+    return combineLatest([
+      this.valueChanges(toOrg),
+      this.valueChanges(fromOrg)
+    ]).pipe(
+      map(results => results.flat())
+    )
+  }
+
+
+  public queryOwn(docId: string) {
+
+  }
+
 
   /** Accept an Invitation and change its status to accepted. */
   public acceptInvitation(invitation: Invitation) {

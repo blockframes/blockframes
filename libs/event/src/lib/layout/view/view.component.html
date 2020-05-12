@@ -1,5 +1,5 @@
 <ng-container *ngIf="event$ | async as event">
-  <header fxLayout="column" fxLayoutAlign="center center">
+  <header class="dark-contrast-theme" fxLayout="column" fxLayoutAlign="center center">
     <h1 class="mat-display-2">{{ event.title }}</h1>
     <pre class="mat-body-1">{{ event | eventRange }}</pre>
     <ng-container *ngIf="event.isPrivate; else isPublic">

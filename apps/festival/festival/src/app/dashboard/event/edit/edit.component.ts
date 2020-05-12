@@ -41,11 +41,8 @@ export class EditComponent implements OnInit, OnDestroy {
     const orgId$ = this.orgQuery.selectActiveId();
     const eventId$ = this.route.params.pipe(pluck('eventId'));
 
-    this.invitations$ = combineLatest([ orgId$, eventId$ ]).pipe(
-      switchMap(([orgId, eventId]) => {
-        const queryFn = ref => ref.where('fromOrg.id', '==', orgId).where('docId', '==', eventId)
-        return this.invitationService.valueChanges(queryFn);
-      }),
+    this.invitations$ = combineLatest([ eventId$, orgId$ ]).pipe(
+      switchMap(([eventId, orgId]) => this.invitationService.queryGuest(eventId, orgId)),
     );
       
     // will be executed only if "screening" as Observable are lazy

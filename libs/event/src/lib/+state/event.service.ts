@@ -14,6 +14,16 @@ import { combineLatest } from 'rxjs';
 import { EventQuery } from './event.query';
 import { filter, switchMap, tap, map } from 'rxjs/operators';
 
+const eventQuery = (id: string) => ({
+  path: `events/${id}`,
+  org: ({ ownerId }: ScreeningEvent) => ({ path: `orgs/${ownerId}` }),
+  movie: (event: Event) => {
+    if (event.type === 'screening') {
+      return event.meta.titleId ? { path: `movies/${event.meta.titleId}` } : undefined
+    }
+  }
+})
+
 /** Hold all the different queries for an event */
 const eventQueries = {
   // Screening
@@ -107,6 +117,16 @@ export class EventService extends CollectionService<EventState> {
     return combineLatest(queries$).pipe(
       map((results) => results.flat())
     );
+  }
+
+  /** Query one or many event by id */
+  queryDocs(ids: string | string[]) {
+    if (typeof ids === 'string') {
+      return queryChanges.call(this, eventQuery(ids))
+    } else {
+      const queries = ids.map(id => queryChanges.call(this, eventQuery(id)))
+      return combineLatest(queries);
+    }
   }
 
   /** Call a firebase function to get analytics specify to an array of eventIds.*/
