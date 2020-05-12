@@ -166,7 +166,7 @@ export class TableExtractedMoviesComponent implements OnInit {
    */
   private async publish(importState: MovieImportState): Promise<boolean> {
     const data = this.rows.data;
-    importState.movie.main.storeConfig.status = getMoviePublishStatus(this.currentApp);
+    importState.movie.main.storeConfig.status = getMoviePublishStatus(this.currentApp); // @TODO (#2765)
     await this.movieService.updateById(importState.movie.id, importState.movie);
     this.rows.data = data;
     return true;
