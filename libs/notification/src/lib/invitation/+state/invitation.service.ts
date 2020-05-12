@@ -59,12 +59,6 @@ export class InvitationService extends CollectionService<InvitationState> {
     )
   }
 
-
-  public queryOwn(docId: string) {
-
-  }
-
-
   /** Accept an Invitation and change its status to accepted. */
   public acceptInvitation(invitation: Invitation) {
     // @TODO (#2500) should be handled by a backend function to prevent ugly rules

@@ -1,9 +1,8 @@
 import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { Event } from '../../+state/event.model';
-import { InvitationService, Invitation } from '@blockframes/invitation/+state';
-import { AuthQuery } from '@blockframes/auth/+state';
+import { InvitationService, Invitation, InvitationQuery } from '@blockframes/invitation/+state';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { switchMap, map } from 'rxjs/operators';
+import { switchMap, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'event-view',
@@ -26,17 +25,12 @@ export class EventViewComponent implements OnInit {
 
   constructor(
     private invitationService: InvitationService,
-    private authQuery: AuthQuery,
+    private invitationQuery: InvitationQuery,
   ) { }
 
   ngOnInit(): void {
-    const uid = this.authQuery.userId;
     this.invitation$ = this.event$.pipe(
-      switchMap(event => {
-        const querFn = ref => ref.where('docId', '==', event.id).where('toUser.uid', '==', uid);
-        return this.invitationService.valueChanges(querFn)
-      }),
-      map(invitations => invitations?.length ? invitations[0] : undefined)
+      switchMap(event => this.invitationQuery.selectByDocId(event.id)),
     )
   }
   
