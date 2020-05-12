@@ -10,6 +10,5 @@ export default class EventPage {
     cy.get('div').contains(hour).click();
     cy.get('button[test-id=more-details]').click();
     return new EventEditPage();
-
   }
 }

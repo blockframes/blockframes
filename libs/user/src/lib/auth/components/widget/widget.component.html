@@ -5,7 +5,7 @@
         <span class="mat-body-2">{{ user.firstName }} {{ user.lastName }}</span>
         <span class="mat-caption">{{ user.position }}</span>
       </div>
-      <button mat-icon-button [widgetTarget]="menu" test-id="profile-avatar">
+      <button mat-icon-button [widgetTarget]="menu" test-id="profile-avatar" test-id="auth-user-avatar">
         <img placeholderAsset="profil_user.webp" [imgRef]="user.avatar" alt="Profile picture" />
       </button>
       <overlay-widget #menu >
@@ -26,7 +26,7 @@
             </mat-list-item>
           </mat-nav-list>
           <footer widgetFooter>
-            <button mat-button test-id="logout" color="warn" (click)="logout()" >
+            <button mat-button test-id="logout" color="warn" (click)="logout()" test-id="auth-logout">
               <mat-icon svgIcon="logout"></mat-icon>
               <span>Log out</span>
             </button>
