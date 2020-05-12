@@ -73,6 +73,7 @@ export async function upgradeAlgoliaMovies() {
 
     try {
 
+      // TODO issue#2692
       const querySnap = await db.collection('orgs').where('movieIds', 'array-contains', movie.id).get();
 
       if (querySnap.size === 0) {
