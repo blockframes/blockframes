@@ -1,9 +1,8 @@
 <mat-slider
+  thumbLabel
+  [displayWith]="formatLabel"
   min="0"
   max="20000000"
   step="100000"
   [formControl]="form"
-  (input)="updateCurrentValue($event)"
-  >
-</mat-slider>
-<span>{{ currentValue }} </span>
+></mat-slider>
