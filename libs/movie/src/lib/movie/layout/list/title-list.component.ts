@@ -1,6 +1,8 @@
-import { Component, ChangeDetectionStrategy, Directive, ContentChild, TemplateRef, Input, AfterContentInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, Directive, ContentChild, TemplateRef, Input, AfterContentInit, OnInit } from '@angular/core';
 
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { Movie } from '@blockframes/movie/+state/movie.model';
 
 
 @Directive({selector: '[titleSort]'})
@@ -27,7 +29,7 @@ export class TitleListComponent implements AfterContentInit {
   @ContentChild(TitleCardDirective, { read: TemplateRef }) titleCardTemplate: TitleCardDirective;
   @ContentChild(TitleListItemDirective, { read: TemplateRef }) titleListItemTemplate: TitleListItemDirective;
 
-  @Input() titles$: Observable<any>;
+  @Input() titles: Movie[];
 
   @Input() titleType = 'title'; // only for display purpose
 

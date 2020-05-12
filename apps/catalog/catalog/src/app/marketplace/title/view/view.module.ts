@@ -9,6 +9,7 @@ import { MarketplaceMovieViewComponent } from './view.component';
 
 // Custom Modules
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
+import { WishlistButtonModule } from '@blockframes/organization/components/wishlist-button/wishlist-button.module';
 
 // Material
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -46,6 +47,7 @@ const routes = [{
     FlexLayoutModule,
     // Custom Modules
     ImageReferenceModule,
+    WishlistButtonModule,
     // Material
     MatCardModule,
     MatDividerModule,

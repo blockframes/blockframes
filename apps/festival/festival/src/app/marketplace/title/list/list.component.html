@@ -1,4 +1,4 @@
-<title-list [titles$]="movieSearchResults$">
+<title-list [titles]="movieSearchResults$ | async">
 
   <!-- SORT -->
   <ng-template titleSort>
@@ -62,7 +62,7 @@
       <static-check-boxes fxLayout="column" [form]="filterForm.productionStatus" model="MOVIE_STATUS"></static-check-boxes>
     </ng-template>
 
-    <ng-template filter label="Minimal Budget">
+    <ng-template filter label="Minimum Budget">
       <filter-budget fxLayout="column" [form]="filterForm.minBudget"></filter-budget>
     </ng-template>
 
