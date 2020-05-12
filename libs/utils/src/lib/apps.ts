@@ -2,6 +2,7 @@
  * Apps definition
  */
 import { OrganizationDocument } from "@blockframes/organization/+state/organization.firestore";
+import { StoreStatus } from "@blockframes/movie/+state/movie.firestore";
 
 export const app = ['catalog', 'festival'] as const;
 export type App = typeof app[number];
@@ -65,4 +66,12 @@ export function getOrgAppAccess(org: OrganizationDocument): App[] {
   }
 
   return Object.keys(allowedApps).map(k => k as App);
+}
+
+/**
+ * Determine the status to update depending on the current app.
+ * For app Festival, publish status is "accepted", "submittted" for other apps
+ */
+export function getMoviePublishStatus(a: App): StoreStatus {
+  return a === 'festival' ? 'accepted' : 'submitted';
 }

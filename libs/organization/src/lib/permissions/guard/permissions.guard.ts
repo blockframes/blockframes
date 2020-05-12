@@ -20,8 +20,7 @@ export class PermissionsGuard extends CollectionGuard<PermissionsState> {
 
   sync() {
     return this.authQuery.user$.pipe(
-      // @TODO(#2710) This async is needed to prevent permission denied
-      switchMap(async user => {
+      switchMap(user => {
         if (!user) {
           return of('/');
         }

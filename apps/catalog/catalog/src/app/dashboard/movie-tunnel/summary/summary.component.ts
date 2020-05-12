@@ -6,6 +6,9 @@ import { FormGroup, FormArray } from '@angular/forms';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { getCurrentApp, getMoviePublishStatus } from '@blockframes/utils/apps';
+import { RouterQuery } from '@datorama/akita-ng-router-store';
+import { mergeDeep } from '@blockframes/utils/helpers';
 
 @Component({
   selector: 'catalog-summary-tunnel',
@@ -23,7 +26,9 @@ export class TunnelSummaryComponent {
     private service: MovieService,
     private query: MovieQuery,
     private snackBar: MatSnackBar,
-    private dynTitle: DynamicTitleService) {
+    private dynTitle: DynamicTitleService,
+    private routerQuery: RouterQuery
+  ) {
     this.dynTitle.setPageTitle('Summary and Submit a new title')
   }
   public getPath(segment: string) {
@@ -33,9 +38,10 @@ export class TunnelSummaryComponent {
 
   public async submit() {
     if (this.form.valid) {
-      const movie = this.form.value;
-      movie.main.storeConfig.status = 'submitted';
-      await this.service.update({ ...this.query.getActive(), ...movie });
+      const movie = mergeDeep(this.query.getActive(), this.form.value);
+      const currentApp = getCurrentApp(this.routerQuery);
+      movie.main.storeConfig.status = getMoviePublishStatus(currentApp); // @TODO (#2765)
+      await this.service.update(movie);
       this.form.markAsPristine();
       const ref = this.snackBar.open('Movie Submitted !!', '', { duration: 1000 });
       ref.afterDismissed().subscribe(_ => {
