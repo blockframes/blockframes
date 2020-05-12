@@ -26,11 +26,6 @@ references:
       branches:
         only:
           - staging
-  ci_only: &ci_only
-    filters:
-      branches:
-        only:
-          - ci
   release_only: &release_only
     filters:
       branches:
@@ -336,6 +331,13 @@ workflows:
           <<: *release_only
           requires:
             - build-and-test-all
+      - test-e2e:
+          requires:
+            - build-and-test-all
+          filters:
+            branches:
+              only:
+                - ci
       - build-and-deploy-storybook:
           filters:
             branches:
