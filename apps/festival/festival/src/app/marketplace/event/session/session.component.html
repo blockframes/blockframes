@@ -1,6 +1,5 @@
 <ng-container [ngSwitch]="event.type">
   <section *ngSwitchCase="'screening'" fxLayout="column" fxLayoutAlign="start center">
-    <span>Screening ah ah ah !</span>
 
     <!-- DISPLAY THE SCREENING -->
     <ng-container *ngIf="url else later">
@@ -19,7 +18,8 @@
           </div>
         </article>
         <article class="video-session" [hidden]="showVideo">
-          <iframe [src]="url" width="860" height="462" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+          <!-- <iframe [src]="url" width="860" height="462" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe> -->
+          <event-player></event-player>
         </article>
         <img asset="screening_now.webp" alt="Screening now picture">
       </article>
@@ -35,7 +35,7 @@
             <span class="mat-display-2">{{ movie.main.title.international }}</span>
             <h2>by {{ movie.main.directors | displayName }}</h2>
             <h6 class="uppercase">starting in</h6>
-            <span class="mat-body-1">x temps</span>
+            <span class="mat-body-1">{{ timeBeforeNextScreening(event.start) }}</span>
             <button mat-stroked-button color="primary" routerLink="../../calendar">
               <mat-icon svgIcon="arrow_back"></mat-icon>
               <span>Back to Calendar</span>
