@@ -8,7 +8,7 @@
     <!-- TOOLBAR -->
     <app-bar #app>
       <header fxLayout fxLayoutAlign="space-between center">
-        <button mat-icon-button (click)="sidenav.toggle()">
+        <button mat-icon-button test-id="menu" (click)="sidenav.toggle()">
           <mat-icon svgIcon="menu"></mat-icon>
         </button>
         <!--TODO#2728: improve component with filters-->

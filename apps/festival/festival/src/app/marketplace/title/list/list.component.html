@@ -72,22 +72,7 @@
   <!-- TITLE CARD -->
   <ng-template titleCard let-title>
 
-    <movie-card [movie]="title" [link]="['/c/o/marketplace/title',  title.id]">
-      <!-- Information -->
-      <ng-container movieInformation>
-        <mat-card-subtitle>
-          <span class="mat-caption">
-            {{ title.main.directors | displayName }}
-          </span>
-        </mat-card-subtitle>
-      </ng-container>
-
-      <!-- Action -->
-      <ng-container movieCardAction>
-        <div fxLayout="row" fxLayoutAlign="end">
-          <wishlist-button [movieId]="title.id" small></wishlist-button>
-        </div>
-      </ng-container>
+    <movie-card [movie]="title" [link]="['/c/o/marketplace/title',  title.id]" size="poster">
     </movie-card>
 
   </ng-template>

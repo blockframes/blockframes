@@ -102,7 +102,6 @@ export interface MovieAnalytics {
   }
 }
 
-
 export interface StoreConfig {
   status: StoreStatus,
   storeType: StoreType,

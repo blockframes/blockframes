@@ -42,6 +42,7 @@ function createTitleView(
     status: movie.main.storeConfig.status
   };
 }
+
 @Component({
   selector: 'festival-dashboard-title-list',
   templateUrl: './list.component.html',
@@ -74,6 +75,7 @@ export class ListComponent implements OnInit, OnDestroy {
 
     const titles$ = this.orgQuery.selectActive().pipe(
       switchMap(org => this.service.valueChanges(org.movieIds)),
+      map(movies => movies.filter(movie => movie.main.storeConfig.appAccess.festival))
     );
     const analytics$ = this.query.analytics.selectAll().pipe(startWith([]));
 

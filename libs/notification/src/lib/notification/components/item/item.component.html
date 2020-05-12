@@ -2,7 +2,7 @@
 <!-- @todo(#2716) Add back the link : <a mat-list-item [routerLink]="[notification.url]"> -->
 <mat-list-item>
   <img matListAvatar placeholderAsset="empty_organization.webp" [imgRef]="notification.imgRef" alt="Notification picture"/>
-  <p matLine class="mat-body-1">{{ notification.message }}</p>
+  <p matLine class="mat-body-1" test-id="notification-message">{{ notification.message }}</p>
   <span matLine>
     <small class="mat-caption">{{ notification.date | date: 'shortTime' }}</small>
   </span>
