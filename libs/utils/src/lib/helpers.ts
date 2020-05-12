@@ -79,3 +79,12 @@ export function getKeyIfExists<T, K extends Code<T>>(base: T, code: K): Key<T, K
   const candidate = Object.entries(base).find(([key, value]) => [key.toLowerCase(), value.toLowerCase()].includes(sanitizedCode));
   return candidate ? candidate.shift() as any : undefined;
 }
+
+/**
+ * @description put the current route in this function
+ * and it returns you the current location of your route
+ * @param route
+ */
+export function getAppLocation(route: string) {
+  return route.includes('marketplace') ? 'marketplace' : 'dashboard';
+}
