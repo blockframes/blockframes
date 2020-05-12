@@ -1,0 +1,12 @@
+<mat-card fxLayout="column" fxLayoutAlign="start center">
+  <mat-card-title><img></mat-card-title>
+  <mat-card-subtitle>
+    <h5>{{ movieReview.journalName }}</h5>
+  </mat-card-subtitle>
+  <mat-card-content>
+    <p class="mat-body-2">« {{ movieReview.criticQuote | maxLength: 144 }} »</p>
+  </mat-card-content>
+  <mat-card-actions>
+    <a mat-button [href]="movieReview.link">Read the Article</a>
+  </mat-card-actions>
+</mat-card>
