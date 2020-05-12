@@ -19,7 +19,7 @@ article.dark-contrast-theme {
       width: 860px;
       height: 462px;
       border: 1px solid var(--primary);
-      background-color: rgba(0,0,0, 0.8);
+      background-color: rgba(0,0,0, 0.5);
       .org-logo {
         width: 80px;
         height: 80px;
@@ -29,6 +29,11 @@ article.dark-contrast-theme {
         margin-top: 24px;
       }
     }
+  }
+  article.video-session {
+    margin-top: 24px;
+    width: 860px;
+    height: 462px;
   }
 }
 

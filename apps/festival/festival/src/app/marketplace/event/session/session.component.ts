@@ -17,6 +17,8 @@ export class SessionComponent implements OnInit {
   public movie: Movie;
   public org: Organization;
   public event = this.eventQuery.getActive();
+  public showSession = false;
+  public showVideo = true;
 
 
   constructor(
@@ -30,11 +32,14 @@ export class SessionComponent implements OnInit {
     this.movie = this.movieQuery.getEntity(this.event.meta.titleId);
     this.background = `url(${this.movie.promotionalElements.banner.media.url})`;
     this.org = this.orgQuery.getEntity(this.event.ownerId);
-    this.url = this.sanitizer.bypassSecurityTrustResourceUrl(`${this.movie.promotionalElements.screener_link.media.url}`);
+    // this.url = this.sanitizer.bypassSecurityTrustResourceUrl(`${this.movie.promotionalElements.screener_link.media.url}`);
+    this.url = this.sanitizer.bypassSecurityTrustResourceUrl('https://player.vimeo.com/video/391939808');
   }
 
   playVideo() {
-    return console.log('ah ah ah ');
+    this.showSession = true;
+    this.showVideo = false;
+    return;
   }
 
   timeBeforeNextScreening() {

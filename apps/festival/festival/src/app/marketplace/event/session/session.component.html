@@ -5,8 +5,7 @@
     <!-- DISPLAY THE SCREENING -->
     <ng-container *ngIf="url else later">
       <article class="dark-contrast-theme" fxLayout="column" fxLayoutAlign="space-between center">
-        <article class="screening" [style.background-image]="background">
-          <!-- <iframe [src]="url" width="860" height="462" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe> -->
+        <article class="screening" [style.background-image]="background" [hidden]="showSession">
           <div class="opacity" fxLayout="column" fxLayoutAlign="center center">
             <img [imgRef]="org.logo" placeholderAsset="Organization_250.png" type="logo" alt="organisation logo" class="org-logo">
               <h4 class="uppercase ">{{ org.denomination.public }} presents</h4>
@@ -18,6 +17,9 @@
               <span>Play</span>
             </button>
           </div>
+        </article>
+        <article class="video-session" [hidden]="showVideo">
+          <iframe [src]="url" width="860" height="462" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
         </article>
         <img asset="screening_now.webp" alt="Screening now picture">
       </article>
