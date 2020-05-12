@@ -53,7 +53,7 @@ const routes: Routes = [{
         canActivate: [MovieActiveGuard],
         canDeactivate: [MovieActiveGuard],
         loadChildren: () => import('./title/view/view.module').then(m => m.MovieViewModule),
-        data: { animation: 'title-view' }
+        data: { animation: 'title-view', redirect: '/c/o/marketplace/home' }
       }]
     },
     {
@@ -103,7 +103,7 @@ const routes: Routes = [{
     CommonModule,
     FlexLayoutModule,
     MarketplaceLayoutModule,
-  
+
     ImgAssetModule,
 
     // Material

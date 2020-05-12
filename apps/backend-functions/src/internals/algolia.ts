@@ -2,6 +2,7 @@ import algoliasearch, { IndexSettings } from 'algoliasearch';
 import { algolia } from '../environments/environment';
 import { MovieDocument, PublicUser } from '../data/types';
 import { LanguagesSlug } from '@blockframes/utils/static-model';
+import { MovieAppAccess } from "@blockframes/utils/apps";
 
 const indexBuilder = (indexName: string, adminKey?: string) => {
   const client = algoliasearch(algolia.appId, adminKey || algolia.adminKey);
@@ -62,6 +63,8 @@ export function storeSearchableMovie(
   }
 
   try {
+    const movieAppAccess = movie.main.storeConfig!.appAccess;
+
     return indexBuilder(algolia.indexNameMovies, adminKey).saveObject({
       objectID: movie.id,
 
@@ -79,22 +82,25 @@ export function storeSearchableMovie(
       genres: !!movie.main.genres ? movie.main.genres : [],
       originCountries: !!movie.main.originCountries ? movie.main.originCountries : [],
       languages: {
-        original: !! movie.main.originalLanguages ? movie.main.originalLanguages: [],
-        dubbed: !! movie.versionInfo.languages ?
+        original: !!movie.main.originalLanguages ? movie.main.originalLanguages: [],
+        dubbed: !!movie.versionInfo.languages ?
           Object.keys(movie.versionInfo.languages).filter(lang => movie.versionInfo.languages[lang as LanguagesSlug]?.dubbed) :
           [],
-        subtitle: !! movie.versionInfo.languages ?
+        subtitle: !!movie.versionInfo.languages ?
           Object.keys(movie.versionInfo.languages).filter(lang => movie.versionInfo.languages[lang as LanguagesSlug]?.subtitle) :
           [],
-        caption: !! movie.versionInfo.languages ?
+        caption: !!movie.versionInfo.languages ?
           Object.keys(movie.versionInfo.languages).filter(lang => movie.versionInfo.languages[lang as LanguagesSlug]?.caption) :
           [],
       },
-      status: !! movie.main.status ? movie.main.status : '',
+      status: !!movie.main.status ? movie.main.status : '',
       storeConfig: movie.main.storeConfig?.status || '',
       budget: movie.budget.totalBudget?.amount || movie.budget.estimatedBudget?.from || 0,
       orgName,
       storeType: movie.main.storeConfig?.storeType || '',
+      appAccess: movieAppAccess ?
+        Object.keys(movie.main.storeConfig!.appAccess).filter(app => movie.main.storeConfig?.appAccess[app as (keyof MovieAppAccess)]) :
+        [],
     });
   } catch (error) {
     console.error(`\n\n\tFailed to format the movie ${movie.id} into an algolia record : skipping\n\n`);

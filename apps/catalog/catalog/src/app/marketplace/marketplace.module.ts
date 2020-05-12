@@ -88,9 +88,10 @@ const routes: Routes = [{
         { path: '', redirectTo: 'view', pathMatch: 'full' },
         {
           path: 'view',
-          loadChildren: () => import('./title/view/view.module').then(m => m.MovieViewModule)
+          loadChildren: () => import('./title/view/view.module').then(m => m.MovieViewModule),
         }
-      ]
+      ],
+      data: { redirect: '/c/o/marketplace/home' }
     }
   ]
 }, {

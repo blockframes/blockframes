@@ -3,7 +3,7 @@
 # Basics from: https://kvz.io/blog/2013/11/21/bash-best-practices/
 set -o errexit
 set -o pipefail
-set -o nounset
+# set -o nounset
 # set -o xtrace
 
 # Set magic variables for current file & dir

@@ -38,13 +38,13 @@ export class MarketplaceHomeComponent implements OnInit {
 
   ngOnInit() {
     const latest$ = this.movieQuery.selectAll({
-      filterBy: movies => movies.main.productionYear >= 2018
+      filterBy: movies => movies.main.productionYear >= 2018 && movies.main.storeConfig.appAccess.catalog
     });
     const postProduction$ = this.movieQuery.selectAll({
-      filterBy: movies => movies.main.status === 'post-production'
+      filterBy: movies => movies.main.status === 'post-production' && movies.main.storeConfig.appAccess.catalog
     });
     const completed$ = this.movieQuery.selectAll({
-      filterBy: movies => movies.main.status === 'finished'
+      filterBy: movies => movies.main.status === 'finished' && movies.main.storeConfig.appAccess.catalog
     });
 
     this.moviesBySections$ = combineLatest([latest$, postProduction$, completed$]).pipe(
