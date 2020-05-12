@@ -2,6 +2,8 @@
 
 mat-card {
   margin-top: 20px;
+  width: 100%;
+  min-width: 300px;
   .mat-card-content {
     padding-left: 20px;
   }
@@ -21,13 +23,12 @@ li {
   }
 }
 
-mat-card {
-  width: 100%;
-  min-width: 300px;
-}
-
 .synopsis {
   word-break: keep-all;
+}
+
+.tech-information {
+  margin-bottom: 20px;
 }
 
 @include layout-bp(lt-sm) {
