@@ -25,19 +25,19 @@ export class CatalogLandingPageComponent {
 
   public sellerFeatures = [
     {
-      title: 'Bulk Import',
+      title: 'Import your content easily',
       imgAsset: 'bulk_import.webp',
-      description: 'Import large amounts of data easily (either by directly filling a predefined template or with the help of an Archipel Content team member).'
+      description: 'Upload your films’ data, promotional elements and rights availabilities directly on the platform or by uploading an Excel template.'
     },
     {
-      title: 'Deals Management',
+      title: 'Manage your offers and deals',
       imgAsset: 'deal_management.webp',
-      description: 'Keep track of your previous and ongoing deals information. Download related documents. Get notified of any new element or information. Check your avails. '
+      description: 'Manage your current offers and sales deals, track negotiations and follow each deal’s status directly on the platform.'
     },
     {
-      title: 'Sales Statistics',
+      title: 'Track your films’ activity',
       imgAsset: 'sales_statistics.webp',
-      description: 'Track your global sales and sales per title. Get an efficient overview of your data thanks to analytics tools.'
+      description: 'Get detailed stats on your films’ activity on the marketplace, and get notified for any new activity.'
     },
     {
       title: 'A Human Salesforce',
