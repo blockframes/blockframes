@@ -146,10 +146,10 @@
       <mat-divider></mat-divider>
 
       <mat-card-footer fxLayoutAlign="center center">
-        <a mat-button color="primary" class="mat-body-2" (click)="addRight()">
+        <button mat-flat-button color="primary" class="mat-body-2" (click)="addRight()" [disabled]="incompleteForm">
           <span>Add to Selection</span>
           <mat-icon svgIcon="arrow_forward"></mat-icon>
-        </a>
+        </button>
       </mat-card-footer>
 
     </mat-card>

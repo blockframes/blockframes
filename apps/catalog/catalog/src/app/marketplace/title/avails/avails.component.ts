@@ -137,4 +137,12 @@ export class MarketplaceMovieAvailsComponent {
     this.hoveredTerritory = null;
   }
 
+  get incompleteForm() {
+    return (
+      !this.availsForm.get('terms').value ||
+      !this.availsForm.get('licenseType').value.length ||
+      !this.availsForm.get('territory').value.length
+    );
+  }
+
 }
