@@ -49,6 +49,7 @@ export const isMeeting = (event: Partial<Event>): event is MeetingEvent => event
 export function createMeeting(meeting: Partial<Meeting>): Meeting {
   return {
     callUrl: '',
+    message: '',
     ...meeting
   }
 }

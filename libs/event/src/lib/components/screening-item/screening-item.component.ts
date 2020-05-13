@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, Input } from '@angular/core';
-import { InvitationQuery, Invitation, InvitationService } from '@blockframes/invitation/+state';
+import { InvitationQuery, Invitation } from '@blockframes/invitation/+state';
 import { ImgRef } from '@blockframes/utils/image-uploader';
 import { ScreeningEvent } from '../../+state';
 
@@ -20,22 +20,6 @@ export class ScreeningItemComponent {
     this.invitation = this.invitationQuery.getAll().find(e => e.docId === screening.id);
   }
 
-  constructor(
-    private invitationService: InvitationService,
-    private invitationQuery: InvitationQuery
-  ) { }
+  constructor(private invitationQuery: InvitationQuery) { }
 
-  accept(invitation: Invitation) {
-    this.invitationService.acceptInvitation(invitation);
-  }
-
-  decline(invitation: Invitation) {
-    this.invitationService.declineInvitation(invitation);
-  }
-
-  /** Request the owner to accept invitation (automatically accepted if event is public) */
-  request(screening: ScreeningEvent) {
-    const { ownerId, id } = screening;
-    this.invitationService.request('org', ownerId).from('user').to('attendEvent', id);
-  }
 }

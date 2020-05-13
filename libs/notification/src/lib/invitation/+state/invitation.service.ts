@@ -5,9 +5,11 @@ import { CollectionConfig, CollectionService, AtomicWrite } from 'akita-ng-fire'
 import { OrganizationQuery, createPublicOrganization } from '@blockframes/organization/+state';
 import { AuthQuery, AuthService } from '@blockframes/auth/+state';
 import { createPublicUser } from '@blockframes/user/+state';
-import { InvitationDocument } from './invitation.firestore';
+import { InvitationDocument, InvitationType } from './invitation.firestore';
 import { toDate } from '@blockframes/utils/helpers';
 import { getInvitationMessage, cleanInvitation } from '../invitation-utils';
+import { combineLatest } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'invitations' })
@@ -35,6 +37,16 @@ export class InvitationService extends CollectionService<InvitationState> {
   formatToFirestore(invitation: Invitation): Invitation {
     return cleanInvitation(invitation);
   }
+
+  /////////////
+  // QUERIES //
+  /////////////
+  /** Query all guests linked to a docId */
+  // @todo(#2764)
+  public queryGuest(docId: string, type: InvitationType) {
+    return this.valueChanges(ref => ref.where('type', '==', type).where('docId', '==', docId))
+  }
+
 
   /** Accept an Invitation and change its status to accepted. */
   public acceptInvitation(invitation: Invitation) {

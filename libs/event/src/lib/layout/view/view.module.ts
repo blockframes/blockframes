@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { EventViewComponent } from './view.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { BackgroundAssetModule } from '@blockframes/ui/theme/background-asset.module';
+import { InvitationActionModule } from '@blockframes/invitation/components/action/action.module';
 import { EventRangeModule } from '../../pipes/event-range.pipe';
 
 
@@ -19,6 +20,7 @@ import { MatIconModule } from '@angular/material/icon';
     FlexLayoutModule,
     BackgroundAssetModule,
     EventRangeModule,
+    InvitationActionModule,
     MatButtonModule,
     MatIconModule,
   ]

@@ -1,4 +1,4 @@
-<ng-container *ngIf="invitation.toUser as user">
+<ng-container *ngIf="(invitation | guest: 'user') as user">
   <mat-list-item>
     <div matListAvatar class="avatar-status">
       <img [imgRef]="user.avatar" placeholderAsset="profil_user.webp" />

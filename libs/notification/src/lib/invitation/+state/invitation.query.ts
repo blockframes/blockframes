@@ -14,6 +14,10 @@ export class InvitationQuery extends QueryEntity<InvitationState> {
     super(store);
   }
 
+  selectByDocId(docId: string) {
+    return this.selectEntity((i: Invitation) => i.docId === docId);
+  }
+
   /** Group invitations by date in an object. */
   public groupInvitationsByDate(): Observable<DateGroup<Invitation[]>> {
     return this.selectAll( ).pipe(
