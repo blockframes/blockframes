@@ -1,10 +1,10 @@
 <ng-container *ngIf="event$ | async as event">
-  <header class="dark-contrast-theme" fxLayout="column" fxLayoutAlign="center center">
+  <header class="dark-contrast-theme" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="16px">
     <h1 class="mat-display-2">{{ event.title }}</h1>
-    <pre class="mat-body-1">{{ event | eventRange }}</pre>
     <h6>
       {{event.isPrivate ? 'Private' : 'Public'}} {{ event.type }}
     </h6>
+    <pre class="mat-body-1">{{ event | eventRange }}</pre>
     <invitation-action [invitation]="invitation$ | async" [event]="event"></invitation-action>
   </header>
   <section>
