@@ -42,7 +42,7 @@
     <ng-content></ng-content>
 
 
-    <!-- <h2>Invitations</h2>
+    <h2>Invitations</h2>
     <mat-card class="invitations" fxLayout="column"  fxFlex="35">
       <div fxLayout fxLayout="space-between center" fxLayoutGap="16px">
         <algolia-chips-autocomplete fxFlex
@@ -65,9 +65,9 @@
         </button>
       </div>
 
-      Here the list of invited persons
+      <!-- @todo(#2763) Add loading indication here -->
       <invitation-guest-list [invitations]="invitations"></invitation-guest-list>
-    </mat-card> -->
+    </mat-card>
   </section>
 </form>
 

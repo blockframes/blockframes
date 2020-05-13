@@ -1,6 +1,7 @@
 import { Component, ChangeDetectionStrategy, Input, TemplateRef, ContentChild, OnInit } from '@angular/core';
-import { Invitation, InvitationStatus } from '@blockframes/invitation/+state';
 import { FormControl } from '@angular/forms';
+import { Invitation, InvitationStatus } from '@blockframes/invitation/+state';
+import { getGuest } from '../../pipes/guest.pipe';
 import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
 import { startWith, debounceTime, distinctUntilChanged, map } from 'rxjs/operators';
 import { algolia } from '@env';
@@ -56,7 +57,7 @@ export class GuestListComponent implements OnInit {
   }
 
   copy(invitations: Invitation[]) {
-    return invitations.map(i => i.toUser.email).join('\n');
+    return invitations.map(i => getGuest(i, 'user').email).join('\n');
   }
 
   trackBy(invitation: Invitation) {

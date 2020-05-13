@@ -1,14 +1,14 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core';
 import { Event } from '../../+state/event.model';
-import { InvitationService, Invitation } from '@blockframes/invitation/+state';
-import { AuthQuery } from '@blockframes/auth/+state';
+import { InvitationService, Invitation, InvitationQuery } from '@blockframes/invitation/+state';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { switchMap, map } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'event-view',
   templateUrl: './view.component.html',
-  styleUrls: ['./view.component.scss']
+  styleUrls: ['./view.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class EventViewComponent implements OnInit {
   private _event = new BehaviorSubject<Event>(null);
@@ -25,17 +25,12 @@ export class EventViewComponent implements OnInit {
 
   constructor(
     private invitationService: InvitationService,
-    private authQuery: AuthQuery,
+    private invitationQuery: InvitationQuery,
   ) { }
 
   ngOnInit(): void {
-    const uid = this.authQuery.userId;
     this.invitation$ = this.event$.pipe(
-      switchMap(event => {
-        const queryFn = ref => ref.where('mode', '==', 'invitation').where('docId', '==', event.id).where('toUser.uid', '==', uid);
-        return this.invitationService.valueChanges(queryFn)
-      }),
-      map(invitations => invitations?.length ? invitations[0] : undefined)
+      switchMap(event => this.invitationQuery.selectByDocId(event.id)),
     )
   }
   
