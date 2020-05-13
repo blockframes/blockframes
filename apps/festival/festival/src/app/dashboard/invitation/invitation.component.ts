@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { InvitationQuery } from '@blockframes/invitation/+state';
 
 @Component({
@@ -7,13 +7,10 @@ import { InvitationQuery } from '@blockframes/invitation/+state';
   styleUrls: ['./invitation.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class InvitationComponent implements OnInit {
+export class InvitationComponent {
 
   invitations$ = this.query.selectAll();
 
   constructor(private query: InvitationQuery) { }
-
-  ngOnInit(): void {
-  }
 
 }

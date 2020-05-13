@@ -38,17 +38,16 @@ export class InvitationGuard extends CollectionGuard<InvitationState> {
       switchMap(([ user, orgId, isAdmin ]) => {
         if (isAdmin) {
           return combineLatest([
-            // Invitation to the org & Request from Org
-            this.service.syncCollection(ref => ref.where('toOrg.id', '==', orgId)),
             this.service.syncCollection(ref => ref.where('fromOrg.id', '==', orgId)),
-            // Invitation to the user & Request to the user
+            this.service.syncCollection(ref => ref.where('toOrg.id', '==', orgId)),
+
+            this.service.syncCollection(ref => ref.where('fromUser.uid', '==', user.uid)),
             this.service.syncCollection(ref => ref.where('toUser.uid', '==', user.uid)),
-            this.service.syncCollection(ref => ref.where('fromUser.uid', '==', user.uid))
           ])
         } else {
           return combineLatest([
+            this.service.syncCollection(ref => ref.where('fromUser.uid', '==', user.uid)),
             this.service.syncCollection(ref => ref.where('toUser.uid', '==', user.uid)),
-            this.service.syncCollection(ref => ref.where('fromUser.uid', '==', user.uid))
           ])
         }
       })

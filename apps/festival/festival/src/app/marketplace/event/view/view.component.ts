@@ -18,7 +18,7 @@ export class EventViewComponent {
   );
 
   invitations$ = this.event$.pipe(
-    switchMap(event => this.invitationService.queryGuest(event.id, 'attendEvent'))
+    switchMap(event => this.invitationService.valueChanges(ref => ref.where('docId', '==', event.id)))
   );
 
   constructor(

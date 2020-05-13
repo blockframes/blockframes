@@ -2,7 +2,7 @@ import { Component, OnInit, Input, ChangeDetectionStrategy } from '@angular/core
 import { Event } from '../../+state/event.model';
 import { InvitationService, Invitation, InvitationQuery } from '@blockframes/invitation/+state';
 import { Observable, BehaviorSubject } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   selector: 'event-view',

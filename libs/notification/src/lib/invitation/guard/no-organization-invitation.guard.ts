@@ -10,7 +10,9 @@ export class NoOrganizationInvitationGuard {
 
   async canActivate() {
     const uid = this.authQuery.userId;
-    const invitations = await this.service.getValue(ref => ref.where('toUser.uid', '==', uid));
+    const invitations = await this.service.getValue(ref => ref.where('mode', '==', 'invitation')
+      .where('type', '==', 'joinOrganization')
+      .where('toUser.uid', '==', uid));
     if (invitations.find(invitation => invitation.status === 'pending')) {
       return this.router.parseUrl('c/organization/join-congratulations');
     } else if (invitations.find(invitation => invitation.status === 'accepted')) {
