@@ -15,8 +15,8 @@ export class EventSessionComponent implements OnInit {
   @HostBinding('style.background-image') background: string;
   event$: Observable<Event>;
   public time: string;
-  public movie: Movie;
-  public org: Organization;
+  public movie;
+  public org;
 
   constructor(
     private query: EventQuery,
@@ -52,12 +52,14 @@ export class EventSessionComponent implements OnInit {
 
   timeBeforeNextScreening(date) {
     const milliseconds = Date.parse(date) - Date.now();
+    const msInDays = 1000 * 60 * 60 * 24;
     const msInHours = 1000 * 60 * 60;
     const msInMins = 1000 * 60;
 
-    const hours = Math.trunc(milliseconds / msInHours);
-    const mins = Math.trunc((milliseconds - (hours*msInHours)) / msInMins);
+    const days = Math.trunc(milliseconds / msInDays);
+    const hours = Math.trunc((milliseconds - (days*msInDays)) / msInHours);
+    const mins = Math.trunc((milliseconds - (hours*msInHours) - (days*msInDays)) / msInMins);
 
-    return `${hours}h ${mins}mins`;
+    return `${days} days | ${hours} hours | ${mins} minutes`;
   }
 }

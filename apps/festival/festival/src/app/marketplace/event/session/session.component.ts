@@ -34,9 +34,7 @@ export class SessionComponent implements OnInit {
     this.org = this.orgQuery.getEntity(this.event.ownerId);
     // this.url = this.sanitizer.bypassSecurityTrustResourceUrl(`${this.movie.promotionalElements.screener_link.media.url}`);
     // this.url = this.sanitizer.bypassSecurityTrustResourceUrl(' ');
-
-    //! 2 questions here, if timeBeforeNextScreening > 24h, do we display days and hours ?
-    //! second question : when do we switch between not yet page and almost page ?
+    // this.url = this.sanitizer.bypassSecurityTrustResourceUrl('https://player.vimeo.com/video/391939808');
   }
 
   playVideo() {
@@ -47,12 +45,14 @@ export class SessionComponent implements OnInit {
 
   timeBeforeNextScreening(date) {
     const milliseconds = Date.parse(date) - Date.now();
+    const msInDays = 1000 * 60 * 60 * 24;
     const msInHours = 1000 * 60 * 60;
     const msInMins = 1000 * 60;
 
-    const hours = Math.trunc(milliseconds / msInHours);
-    const mins = Math.trunc((milliseconds - (hours*msInHours)) / msInMins);
+    const days = Math.trunc(milliseconds / msInDays);
+    const hours = Math.trunc((milliseconds - (days*msInDays)) / msInHours);
+    const mins = Math.trunc((milliseconds - (hours*msInHours) - (days*msInDays)) / msInMins);
 
-    return `${hours}h ${mins}mins`;
+    return `${days} days | ${hours} hours | ${mins} minutes`;
   }
 }

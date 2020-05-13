@@ -7,7 +7,7 @@
       <ng-container [ngSwitch]="time">
         <!-- EARLY -->
         <ng-container *ngSwitchCase="'early'">
-          <article class="dark-contrast-theme" fxLayout="column" fxLayoutAlign="space-between center">
+          <!-- <article class="dark-contrast-theme" fxLayout="column" fxLayoutAlign="space-between center">
             <article class="screening" [style.background-image]="background">
               <div class="opacity" fxLayout="column" fxLayoutAlign="center center">
                 <img [imgRef]="org.logo" placeholderAsset="Organization_250.png" type="logo" alt="organisation logo" class="org-logo">
@@ -23,12 +23,15 @@
               </div>
             </article>
             <img asset="screening_wait.webp" alt="Screening now picture">
-          </article>        </ng-container>
+          </article>         -->
+          EARLY
+        </ng-container>
 
         <!-- ONTIME -->
         <ng-container *ngSwitchCase="'onTime'">
           <!-- <section fxLayout="column" fxLayoutAlign="start center"> -->
-          <event-player></event-player>
+          <!-- <event-player></event-player> -->
+          ONTIME
           <!-- </section> -->
         </ng-container>
 
