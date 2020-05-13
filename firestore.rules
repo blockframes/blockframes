@@ -136,7 +136,7 @@ service cloud.firestore {
     function isAllowedToReadInvitation() {
       return (
         ( existingData().type == 'attendEvent' && isSignedIn() )
-        || isConcerned()
+        || isConcerned() // is host or guest
       )
     }
 

@@ -9,6 +9,9 @@ import { ThemeService } from '@blockframes/ui/theme';
   styleUrls: ['./invitation-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
+/**
+ * @dev this component will be removed after homogenisation of festival & catalog.
+ */
 export class InvitationListComponent implements OnInit, OnDestroy {
   public invitationsByDate$: Observable<DateGroup<Invitation[]>>;
   public theme: string;
