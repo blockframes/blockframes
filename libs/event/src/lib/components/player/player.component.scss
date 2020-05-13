@@ -17,3 +17,45 @@ event-player {
     }
   }
 }
+
+article.dark-contrast-theme {
+  margin-top: 70px;
+  height: 687px;
+  width: 1392px;
+  background-color: var(--background-slider);
+  img {
+    width: 1392px;
+  }
+  article.screening {
+    margin-top: 24px;
+    width: 860px;
+    height: 462px;
+    background-size: cover;
+    .opacity {
+      width: 860px;
+      height: 462px;
+      border: 1px solid var(--primary);
+      background-color: var(--background);
+      .org-logo {
+        width: 80px;
+        height: 80px;
+        margin-bottom: 8px;
+      }
+      button {
+        margin-top: 24px;
+      }
+    }
+  }
+  article.video-session {
+    margin-top: 24px;
+    width: 860px;
+    height: 462px;
+  }
+}
+
+.uppercase {
+  text-transform: uppercase;
+}
+h2, h4, h6 {
+  margin: 0;
+}

@@ -7,7 +7,6 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { ImgAssetModule } from '@blockframes/ui/theme';
 import { SessionComponent } from './session.component';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
-import { EventPlayerModule } from '@blockframes/event/components/player/player.module';
 import { DisplayNameModule } from "@blockframes/utils/pipes/display-name.module";
 
 // Materials
@@ -24,7 +23,6 @@ import { MatIconModule } from '@angular/material/icon';
     ImageReferenceModule,
     MatButtonModule,
     MatIconModule,
-    EventPlayerModule,
     DisplayNameModule,
     RouterModule.forChild([{ path: '', component: SessionComponent }])
   ]

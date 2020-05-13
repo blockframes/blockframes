@@ -1,23 +1,51 @@
 <ng-container *ngIf="(event$ | async) as event; else loading">
 
-  <ng-container [ngSwitch]="event | eventTime">
+  <ng-container [ngSwitch]="event.type">
+    <!-- SCREENING TYPE -->
+    <ng-container *ngSwitchCase="'screening'">
 
-    <ng-container *ngSwitchCase="'early'">EARLY</ng-container>
-    <ng-container *ngSwitchCase="'late'">LATE</ng-container>
+      <ng-container [ngSwitch]="time">
+        <!-- EARLY -->
+        <ng-container *ngSwitchCase="'early'">
+          <article class="dark-contrast-theme" fxLayout="column" fxLayoutAlign="space-between center">
+            <article class="screening" [style.background-image]="background">
+              <div class="opacity" fxLayout="column" fxLayoutAlign="center center">
+                <img [imgRef]="org.logo" placeholderAsset="Organization_250.png" type="logo" alt="organisation logo" class="org-logo">
+                <h4 class="uppercase ">{{ org.denomination.public }} presents</h4>
+                <span class="mat-display-2">{{ movie.main.title.international }}</span>
+                <h2>by {{ movie.main.directors | displayName }}</h2>
+                <h6 class="uppercase">starting in</h6>
+                <span class="mat-body-1">{{ timeBeforeNextScreening(event.start) }}</span>
+                <button mat-stroked-button color="primary" routerLink="../../calendar">
+                  <mat-icon svgIcon="arrow_back"></mat-icon>
+                  <span>Back to Calendar</span>
+                </button>
+              </div>
+            </article>
+            <img asset="screening_wait.webp" alt="Screening now picture">
+          </article>        </ng-container>
 
-    <ng-container *ngSwitchCase="'onTime'">
-      <ng-container [ngSwitch]="event.type">
-        <ng-container *ngSwitchCase="'screening'">
+        <!-- ONTIME -->
+        <ng-container *ngSwitchCase="'onTime'">
+          <!-- <section fxLayout="column" fxLayoutAlign="start center"> -->
           <event-player></event-player>
+          <!-- </section> -->
         </ng-container>
-        <ng-container *ngSwitchCase="'meeting'">Meeting</ng-container>
+
+        <!-- LATE -->
+        <ng-container *ngSwitchCase="'late'">
+          <span>coucou c'est trop tard</span>
+        </ng-container>
       </ng-container>
 
     </ng-container>
 
+    <!-- MEETING TYPE -->
+    <ng-container *ngSwitchCase="'meeting'">Meeting</ng-container>
   </ng-container>
 
 </ng-container>
+
 <ng-template #loading>
   <mat-spinner></mat-spinner>
 </ng-template>

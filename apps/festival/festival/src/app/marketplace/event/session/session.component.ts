@@ -33,7 +33,7 @@ export class SessionComponent implements OnInit {
     this.background = `url(${this.movie.promotionalElements.banner.media.url})`;
     this.org = this.orgQuery.getEntity(this.event.ownerId);
     // this.url = this.sanitizer.bypassSecurityTrustResourceUrl(`${this.movie.promotionalElements.screener_link.media.url}`);
-    this.url = this.sanitizer.bypassSecurityTrustResourceUrl(' ');
+    // this.url = this.sanitizer.bypassSecurityTrustResourceUrl(' ');
 
     //! 2 questions here, if timeBeforeNextScreening > 24h, do we display days and hours ?
     //! second question : when do we switch between not yet page and almost page ?
@@ -53,8 +53,6 @@ export class SessionComponent implements OnInit {
     const hours = Math.trunc(milliseconds / msInHours);
     const mins = Math.trunc((milliseconds - (hours*msInHours)) / msInMins);
 
-    console.log('heure : ' + hours);
-    console.log('mins : ' + mins);
     return `${hours}h ${mins}mins`;
   }
 }
