@@ -10,9 +10,15 @@ export class FestivalAppGuard implements CanActivate {
     const isMarketplace = state.url.split('/').includes('marketplace');
     const org = this.query.getActive();
     if (isMarketplace) {
-      return org.appAccess.festival.marketplace ? true : this.router.parseUrl('c/o/dashboard');
+      if (org.appAccess.festival.marketplace) {
+        return true;
+      } else if (org.appAccess.festival.dashboard) {
+        return this.router.parseUrl('c/o/dashboard');
+      } else {
+        return false;
+      }
     } else {
-      return org.appAccess.festival.dashboard ? true : this.router.parseUrl('c/o/marketplace');
+      return org.appAccess.festival.dashboard;
     }
   }
 }

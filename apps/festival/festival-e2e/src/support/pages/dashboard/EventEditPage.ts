@@ -23,8 +23,9 @@ export default class EventEditPage {
   }
 
   selectMovie() {
-    cy.get('event-edit mat-select[formControlName=titleId]').click({timeout: 1000})
-    cy.get('mat-option').first().click()
+    cy.wait(3000);
+    cy.get('event-edit mat-select[formControlName=titleId]').click();
+    cy.get('mat-option').first().click();
   }
 
   inviteUser(email: string | string[]) {
