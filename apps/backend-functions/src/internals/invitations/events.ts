@@ -247,12 +247,14 @@ export async function createNotificationsForEventsToStart() {
 export async function isUserInvitedToScreening(userId: string, movieId: string) {
 
   const acceptedInvitations = db.collection('invitations')
+    .where('type', '==', 'attendEvent')
     .where('docId', '==', movieId)
     .where('toUser.uid', '==', userId)
     .where('status', '==', 'accepted')
     .where('mode', '==', 'invitation');
 
   const acceptedRequests = db.collection('invitations')
+    .where('type', '==', 'attendEvent')
     .where('docId', '==', movieId)
     .where('fromUser.uid', '==', userId)
     .where('status', '==', 'accepted')
