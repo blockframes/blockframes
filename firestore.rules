@@ -293,7 +293,7 @@ service cloud.firestore {
     /// FUNCTIONS ///
 
     function isAllowedToUpdateMovie() {
-      return isOrgAdmin(userOrgId())
+      return isOrgMember(userOrgId())
         && isNotUpdatingId('id', existingData().id)
         && isNotUpdatingField(['_meta', '_createdBy'])
         && isNotUpdatingField(['_type'])
