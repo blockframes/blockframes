@@ -7,7 +7,5 @@
     <pre class="mat-body-1">{{ event | eventRange }}</pre>
     <invitation-action [invitation]="invitation$ | async" [event]="event"></invitation-action>
   </header>
-  <section>
-    <ng-content></ng-content>
-  </section>
+  <ng-content></ng-content>
 </ng-container>

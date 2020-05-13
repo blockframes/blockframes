@@ -43,7 +43,8 @@ export function createMeetingControl(params?: Partial<Meeting>) {
   const meeting = createMeeting(params);
   return {
     callUrl: new FormControl(meeting.callUrl),
-    message: new FormControl(meeting.message),
+    organizerId: new FormControl(meeting.organizerId),
+    description: new FormControl(meeting.description),
   }
 }
 

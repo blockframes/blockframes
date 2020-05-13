@@ -9,7 +9,9 @@ import { EventViewModule as EventViewLayoutModule } from '@blockframes/event/lay
 import { EventRangeModule } from '@blockframes/event/pipes/event-range.pipe';
 import { MovieHeaderModule } from '@blockframes/movie/components/header/header.module';
 import { GuestListModule } from '@blockframes/invitation/components/guest-list/guest-list.module';
-import { OrgChipModule } from '@blockframes/organization/components/chip/chip.module';
+import { ImageReferenceModule } from '@blockframes/ui/media';
+import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
+import { DisplayNameModule } from '@blockframes/utils/pipes';
 
 @NgModule({
   declarations: [EventViewComponent],
@@ -20,7 +22,9 @@ import { OrgChipModule } from '@blockframes/organization/components/chip/chip.mo
     EventRangeModule,
     MovieHeaderModule,
     GuestListModule,
-    OrgChipModule,
+    ImageReferenceModule,
+    OrgNameModule,
+    DisplayNameModule,
     RouterModule.forChild([{ path: '', component: EventViewComponent }])
   ]
 })

@@ -2,21 +2,34 @@
   <event-view [event]="event">
     <ng-container [ngSwitch]="event.type">
       <!-- Screening -->
-      <ng-container *ngSwitchCase="'screening'">
+      <section *ngSwitchCase="'screening'">
         <movie-header [movie]="event.movie">
           <movie-header-cta>
             <a mat-stroked-button [routerLink]="['../../title', event.movie.id]">More Details</a>
           </movie-header-cta>
         </movie-header>
-      </ng-container>
+      </section>
       <!-- Meeting -->
-      <ng-container *ngSwitchCase="'meeting'">
-        <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="24px">
-          <h4>Organized by</h4>
-          <org-chip [org]="event.org"></org-chip>
-        </div>
-        <invitation-guest-list [invitations]="invitations$ | async"></invitation-guest-list>
-      </ng-container>
+      <section fxLayout="column" fxLayoutGap="40px" *ngSwitchCase="'meeting'">
+        <article fxLayout="column" fxLayoutGap="16px" class="organized-by">
+          <h2>Organized by</h2>
+          <div fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
+            <img [imgRef]="event.org.logo" placeholderAsset="empty_organization.webp" alt="Organization Logo" />
+            <div fxLayout="column" fxLayoutGap="4px">
+              <h6>{{ event.org | orgName }}</h6>
+              <ng-container *ngIf="event.organizedBy as user">
+                <span>{{ user | displayName }} | {{ user.position }}</span>
+              </ng-container>
+            </div>
+          </div>
+          <h5>Description</h5>
+          <p>{{ event.meta.description }}</p>
+        </article>
+        <article>
+          <h2>Guest List</h2>
+          <invitation-guest-list [invitations]="invitations$ | async"></invitation-guest-list>
+        </article>
+      </section>
     </ng-container>
   </event-view>
 </ng-container>
