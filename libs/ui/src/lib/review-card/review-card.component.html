@@ -5,6 +5,8 @@
   </mat-card-subtitle>
   <mat-card-content>
     <p class="mat-body-2">« {{ movieReview.criticQuote | maxLength: 144 }} »</p>
+    <span *ngIf="movieReview.criticName" class="mat-caption">{{ movieReview.criticName }}</span>
+    <span *ngIf="movieReview.publicationDate" class="mat-caption">{{ movieReview.publicationDate }}</span>
   </mat-card-content>
   <mat-card-actions>
     <a mat-button [href]="movieReview.link">Read the Article</a>
