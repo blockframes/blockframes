@@ -41,18 +41,6 @@ export class InvitationService extends CollectionService<InvitationState> {
   // QUERIES //
   /////////////
 
-  /** Query all guests linked to a docId */
-  public queryGuest(docId: string, type: InvitationType) {
-    if (type === 'attendEvent') {
-      return this.valueChanges(ref => ref.where('type', '==', 'attendEvent').where('docId', '==', docId))
-    } else if (type === 'joinOrganization') {
-      return combineLatest([
-        this.valueChanges(ref => ref.where('mode', '==', 'request').where('docId', '==', docId)),
-        this.valueChanges(ref => ref.where('mode', '==', 'invitation').where('docId', '==', docId))
-      ])
-    }
-  }
-
   /** Accept an Invitation and change its status to accepted. */
   public acceptInvitation(invitation: Invitation) {
     // @TODO (#2500) should be handled by a backend function to prevent ugly rules

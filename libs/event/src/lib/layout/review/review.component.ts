@@ -18,7 +18,7 @@ export class ReviewComponent {
   set event(event: Event) {
     if (event) {
       this._event = event;
-      this.invitations$ = this.invitationService.queryGuest(event.id, 'attendEvent');
+      this.invitations$ = this.invitationService.valueChanges(ref => ref.where('docId', '==', event.id));
     }
   }
   get event() {

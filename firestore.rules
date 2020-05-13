@@ -136,23 +136,16 @@ service cloud.firestore {
     function isAllowedToReadInvitation() {
       return (
         ( existingData().type == 'attendEvent' && isSignedIn() )
-        || ( isGuest() || isHostAdmin() )
-      )
-    }
-  
-    // Check if current user is guest (he was invited or he created a request)
-    function isGuest() {
-      return (
-        ( existingData().mode == 'request' &&  userId() == existingData().fromUser.uid )
-        || ( existingData().mode == 'invitation' && userId() == existingData().toUser.uid )
+        || isConcerned()
       )
     }
 
-    // Check if current user is host (he invited someone or someone requested the org) and org admin
-    function isHostAdmin() {
+    function isConcerned() {
       return (
-        ( existingData().mode == 'request' && isOrgAdmin(existingData().toOrg.id) )
-        || ( existingData().mode == 'invitation' && isOrgAdmin(existingData().fromOrg.id) )
+        userId() == existingData().fromUser.uid 
+        || isOrgMember(existingData().fromOrg.id) 
+        || userId() == existingData().toUser.uid
+        || isOrgMember(existingData().toOrg.id)
       )
     }
 
