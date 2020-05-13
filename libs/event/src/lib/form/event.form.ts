@@ -42,7 +42,8 @@ function createMetaControl(event: Event): MeetingForm | ScreeningForm | FormGrou
 export function createMeetingControl(params?: Partial<Meeting>) {
   const meeting = createMeeting(params);
   return {
-    callUrl: new FormControl(meeting.callUrl)
+    callUrl: new FormControl(meeting.callUrl),
+    message: new FormControl(meeting.message),
   }
 }
 
