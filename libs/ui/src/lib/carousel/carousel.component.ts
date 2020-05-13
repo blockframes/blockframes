@@ -1,31 +1,47 @@
-import { Component, OnInit, Input } from '@angular/core';
-import { Movie } from '@blockframes/movie/+state';
+// Angular
+import {
+  Component,
+  ViewChild,
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Directive,
+  HostBinding
+} from '@angular/core';
+import { CdkScrollable } from '@angular/cdk/overlay';
+import { Layout } from '../layout/layout.module';
 
-function createCarouselMovieView(movie: Movie) {
-  return {
-    banner: movie.promotionalElements?.banner.media,
-    title: movie.main?.title.international,
-    director: movie.main?.directors,
-    titleFeature: movie
+@Component({
+  selector: 'bf-carousel',
+  templateUrl: 'carousel.component.html',
+  styleUrls: ['./carousel.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class CarouselComponent implements AfterViewInit {
+
+  public currentPosition: number;
+
+  private totalWidth: number;
+
+  @ViewChild(CdkScrollable) scrollable: CdkScrollable;
+
+  constructor(private layout: Layout) { }
+
+  ngAfterViewInit() {
+    this.currentPosition = this.scrollable.measureScrollOffset('left')
+    this.totalWidth = this.scrollable.measureScrollOffset('end');
+  }
+
+  scrollTo(direction: 'left' | 'right') {
+    this.currentPosition = this.scrollable.measureScrollOffset('left');
+    // TODO MF this.layotu.width is not 100% correct cause it is not respecting the margin
+    direction === 'right'
+      ? this.scrollable.scrollTo({ left: this.currentPosition + this.layout.width.getValue() })
+      : this.scrollable.scrollTo({ left: this.currentPosition - this.layout.width.getValue() })
+
   }
 }
 
-type CarouselMovieView = ReturnType<typeof createCarouselMovieView>;
-
-@Component({
-  selector: '[movies] bf-carousel',
-  templateUrl: 'carousel.component.html',
-  styleUrls: ['./carousel.component.scss']
-})
-export class CarouselComponent implements OnInit {
-
-  public carouselMovies: CarouselMovieView[];
-  @Input() set movies(movies: Movie[]) {
-    this.carouselMovies = movies.map(movie => createCarouselMovieView(movie))
-    console.log(this.carouselMovies)
-  }
-
-  constructor() { }
-
-  ngOnInit() { }
+@Directive({ selector: '[shrink]' })
+export class SchrinkDirective {
+  @HostBinding('style.flexShrink') shrink = 0;
 }

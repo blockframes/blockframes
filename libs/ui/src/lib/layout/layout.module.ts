@@ -1,6 +1,7 @@
 import { Directive, Input, HostBinding, NgModule, ElementRef, Optional, OnDestroy, OnInit } from '@angular/core';
 import { combineLatest, BehaviorSubject, Subscription, of, Observable } from 'rxjs';
 import { map, distinctUntilChanged, shareReplay } from 'rxjs/operators';
+import { DomSanitizer } from '@angular/platform-browser';
 ​
 declare const ResizeObserver;
 ​
@@ -28,7 +29,7 @@ function getLayoutGrid(width: number): LayoutGrid {
 @Directive({ selector: '[layout]' })
 export class Layout implements OnInit, OnDestroy {
   private observer;
-  private width: BehaviorSubject<number>;
+  public width: BehaviorSubject<number>;
   public layout$: Observable<LayoutGrid>;
 ​
   constructor(private el: ElementRef) {}
@@ -50,7 +51,7 @@ export class Layout implements OnInit, OnDestroy {
     );
   }
   ngOnDestroy() {
-    this.observer.unobserve();
+    this.observer.unobserve(this.el.nativeElement);
   }
 }
 ​
@@ -63,7 +64,6 @@ export class Grid implements OnInit, OnDestroy {
   private sub: Subscription;
 ​
   @HostBinding('style.gridTemplateColumns') columns: string;
-
   @HostBinding('style.columnGap')
   @HostBinding('style.rowGap')
   gutters: string;
@@ -119,7 +119,7 @@ export class Column implements OnInit, OnDestroy {
   @HostBinding('style.gridColumn') gridColumns: string;
 ​
   // Flex
-  @HostBinding('style.width') width: string;
+  @HostBinding('style.width') width;
   @HostBinding('style.marginRight') marginRight: string;
 ​
 ​
@@ -131,7 +131,8 @@ export class Column implements OnInit, OnDestroy {
   constructor(
     @Optional() private grid: Grid,
     @Optional() private flex: Flex,
-    private layout: Layout
+    private layout: Layout,
+    private sanitizer: DomSanitizer
   ) {}
 ​
   ngOnInit() {
@@ -146,7 +147,7 @@ export class Column implements OnInit, OnDestroy {
         const ratio = column / grid.columns;
         const allGutters = (grid.columns - 1) * grid.gutter;
         const innerGutter = (column - 1) * grid.gutter;
-        this.width = `calc(${ratio} * (100% - ${allGutters}px) + ${innerGutter}px)`;
+        this.width = this.sanitizer.bypassSecurityTrustStyle(`calc(${ratio} * (100% - ${allGutters}px) + ${innerGutter}px)`);
         this.marginRight = `${grid.gutter}px`;
       }
     });
@@ -161,4 +162,4 @@ export class Column implements OnInit, OnDestroy {
   exports: [Layout, Grid, Flex, Column],
   declarations: [Layout, Grid, Flex, Column],
 })
-export class MatLayoutModule {}
+export class MatLayoutModule { }

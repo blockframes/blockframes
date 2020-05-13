@@ -154,8 +154,6 @@ export class SliderComponent implements OnDestroy, AfterContentInit, AfterViewIn
 
   @ViewChild('slideList') private slideList: ElementRef<HTMLUListElement>;
 
-  @ViewChildren('slideItems') private slideItems: QueryList<any>;
-
   constructor(
     private themeService: ThemeService,
     private animationBuilder: AnimationBuilder,

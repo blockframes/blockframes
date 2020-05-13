@@ -1,23 +1,29 @@
-bf-carousel {
-  display: flex;
-  overflow: auto;
-  scroll-snap-type: x mandatory;
-  scroll-padding: 50%;
-  &::-webkit-scrollbar {
-    height: 5px;
-  }
-  /* Track */
-  &::-webkit-scrollbar-track {
-    opacity: 0;
-  }
-  /* Handle */
-  &::-webkit-scrollbar-thumb {
-    opacity: 0;
-  }
+:host {
+  display: block;
+  position: relative;
 }
-bf-carousel:hover {  
-  /* Handle */
-  &::-webkit-scrollbar-thumb {
-    background: rgba(50, 50, 50, 0.5);
-  }
+
+.row{
+  display: flex;
+  width: 100%;
+  overflow: hidden;
+  scroll-behavior: smooth;
+}
+
+mat-icon {
+  position: absolute;
+  outline: none;
+  cursor: pointer;
+  border-radius: 50%;
+  background-color: rgba($color: #928f8f, $alpha: 0.3);
+}
+
+.previous {
+  left: 0px;
+  bottom: 50%;
+}
+
+.next {
+  right: 0px;
+  bottom: 50%;
 }
