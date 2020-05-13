@@ -28,15 +28,18 @@
         <ng-container *ngIf="hasMandate; else currency">
           <mat-form-field appearance="outline">
             <mat-label>Distribution Fee</mat-label>
-            <input matInput type="number" formControlName="commission" max="100" autocomplete="off">
+            <input matInput type="number" formControlName="commission" min="0" max="100" autocomplete="off">
             <mat-icon svgIcon="percent" matSuffix></mat-icon>
           </mat-form-field>
         </ng-container>
         <ng-template #currency>
           <mat-form-field appearance="outline">
             <mat-label>Title Price</mat-label>
-            <input matInput type="number" formControlName="amount" required>
+            <input matInput type="number" formControlName="amount" min="0" required>
             <mat-icon [svgIcon]="currencyCtrl.value" matSuffix></mat-icon>
+            <mat-error *ngIf="control.value.get('price').get('amount').hasError('min')">
+              Only positive values are accepted.
+            </mat-error>
           </mat-form-field>
         </ng-template>
         <button color="warn" (click)="removeTitle(control.key)" mat-mini-fab>
@@ -62,10 +65,13 @@
   <ng-template #currency>
     <mat-form-field appearance="outline" class="currency">
       <mat-label>Package Price</mat-label>
-      <input test-id="price" matInput [formControl]="totalAmount" type="number">
+      <input test-id="price" matInput [formControl]="totalAmount" type="number"  min="0">
       <mat-hint *ngIf="totalPrice$ | async">
         Your Package Price must be equal to the sum of each Title Price.
       </mat-hint>
+      <mat-error *ngIf="form.get('price').get('amount').hasError('min')">
+        Only positive values are accepted.
+      </mat-error>
       <mat-icon [svgIcon]="currencyCtrl.value" matSuffix></mat-icon>
     </mat-form-field>
   </ng-template>
