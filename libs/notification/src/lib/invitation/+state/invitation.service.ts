@@ -9,7 +9,6 @@ import { InvitationDocument, InvitationType } from './invitation.firestore';
 import { toDate } from '@blockframes/utils/helpers';
 import { getInvitationMessage, cleanInvitation } from '../invitation-utils';
 import { combineLatest } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 @CollectionConfig({ path: 'invitations' })
@@ -41,12 +40,18 @@ export class InvitationService extends CollectionService<InvitationState> {
   /////////////
   // QUERIES //
   /////////////
-  /** Query all guests linked to a docId */
-  // @todo(#2764)
-  public queryGuest(docId: string, type: InvitationType) {
-    return this.valueChanges(ref => ref.where('type', '==', type).where('docId', '==', docId))
-  }
 
+  /** Query all guests linked to a docId */
+  public queryGuest(docId: string, type: InvitationType) {
+    if (type === 'attendEvent') {
+      return this.valueChanges(ref => ref.where('type', '==', 'attendEvent').where('docId', '==', docId))
+    } else if (type === 'joinOrganization') {
+      return combineLatest([
+        this.valueChanges(ref => ref.where('mode', '==', 'request').where('docId', '==', docId)),
+        this.valueChanges(ref => ref.where('mode', '==', 'invitation').where('docId', '==', docId))
+      ])
+    }
+  }
 
   /** Accept an Invitation and change its status to accepted. */
   public acceptInvitation(invitation: Invitation) {
@@ -63,10 +68,9 @@ export class InvitationService extends CollectionService<InvitationState> {
   /** Return true if there is already a pending invitation for a list of users */
   public async orgInvitationExists(userEmails: string[]): Promise<boolean> {
     const orgId = this.authQuery.orgId;
-    const invitations = await this.getValue(ref => ref.where('fromOrg.id', '==', orgId));
-    const orgInvitations = invitations.filter(({ type, mode }) => {
-      return type === 'joinOrganization' && mode === 'invitation';
-    });
+    const orgInvitations = await this.getValue(ref => ref.where('mode', '==', 'invitation')
+      .where('type', '==', 'joinOrganization')
+      .where('fromOrg.id', '==', orgId));
 
     return orgInvitations.some(
       invitation => userEmails.includes(invitation.toUser.email) && invitation.status === 'pending'
