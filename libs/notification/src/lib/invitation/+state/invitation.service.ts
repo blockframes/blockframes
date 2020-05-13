@@ -5,7 +5,7 @@ import { CollectionConfig, CollectionService, AtomicWrite } from 'akita-ng-fire'
 import { OrganizationQuery, createPublicOrganization } from '@blockframes/organization/+state';
 import { AuthQuery, AuthService } from '@blockframes/auth/+state';
 import { createPublicUser } from '@blockframes/user/+state';
-import { InvitationDocument } from './invitation.firestore';
+import { InvitationDocument, InvitationType } from './invitation.firestore';
 import { toDate } from '@blockframes/utils/helpers';
 import { getInvitationMessage, cleanInvitation } from '../invitation-utils';
 import { combineLatest } from 'rxjs';
@@ -41,23 +41,12 @@ export class InvitationService extends CollectionService<InvitationState> {
   /////////////
   // QUERIES //
   /////////////
-  /**
-   * Query all invitation on a docId created by from an orgId (Should be updated if )
-   * @param docId The id liked to the invitation
-   * @param orgId The organization owner of the docId
-   */
-  public queryGuest(docId: string, orgId: string) {
-    // Request * -> toOrg
-    const toOrg = ref => ref.where('toOrg.id', '==', orgId).where('docId', '==', docId).where('mode', '==', 'request');
-    // Invitation fromOrg -> *
-    const fromOrg = ref => ref.where('fromOrg.id', '==', orgId).where('docId', '==', docId).where('mode', '==', 'invitation');
-    return combineLatest([
-      this.valueChanges(toOrg),
-      this.valueChanges(fromOrg)
-    ]).pipe(
-      map(results => results.flat())
-    )
+  /** Query all guests linked to a docId */
+  // @todo(#2764)
+  public queryGuest(docId: string, type: InvitationType) {
+    return this.valueChanges(ref => ref.where('type', '==', type).where('docId', '==', docId))
   }
+
 
   /** Accept an Invitation and change its status to accepted. */
   public acceptInvitation(invitation: Invitation) {

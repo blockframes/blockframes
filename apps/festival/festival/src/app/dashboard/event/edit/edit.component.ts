@@ -38,11 +38,10 @@ export class EditComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    const orgId$ = this.orgQuery.selectActiveId();
     const eventId$ = this.route.params.pipe(pluck('eventId'));
 
-    this.invitations$ = combineLatest([ eventId$, orgId$ ]).pipe(
-      switchMap(([eventId, orgId]) => this.invitationService.queryGuest(eventId, orgId)),
+    this.invitations$ = eventId$.pipe(
+      switchMap((eventId) => this.invitationService.queryGuest(eventId, 'attendEvent')),
     );
       
     // will be executed only if "screening" as Observable are lazy

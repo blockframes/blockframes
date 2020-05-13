@@ -18,7 +18,7 @@ export class EventViewComponent {
   );
 
   invitations$ = this.event$.pipe(
-    switchMap(event => this.invitationService.queryGuest(event.id, event.ownerId))
+    switchMap(event => this.invitationService.queryGuest(event.id, 'attendEvent'))
   );
 
   constructor(

@@ -18,7 +18,7 @@ export class ReviewComponent {
   set event(event: Event) {
     if (event) {
       this._event = event;
-      this.invitations$ = this.invitationService.queryGuest(event.id, event.ownerId);
+      this.invitations$ = this.invitationService.queryGuest(event.id, 'attendEvent');
     }
   }
   get event() {
