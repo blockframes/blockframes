@@ -1,5 +1,5 @@
 import { FloatingDuration } from '@blockframes/utils/common-interfaces/terms';
-import { FormControl } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 import { Terms } from '@blockframes/utils/common-interfaces';
 
@@ -24,7 +24,7 @@ export class DistributionRightTermsForm extends FormEntity<DistributionRightTerm
 function createFloatingDuration(floating: Partial<FloatingDuration>) {
   return {
     unit: new FormControl(floating.unit),
-    duration: new FormControl(floating.duration),
+    duration: new FormControl(floating.duration, Validators.min(1)),
     temporality: new FormControl(floating.temporality)
   };
 }

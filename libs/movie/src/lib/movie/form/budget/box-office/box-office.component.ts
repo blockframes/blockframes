@@ -8,7 +8,7 @@ function toUnit(unit: UnitBox) {
   switch (unit) {
     case 'boxoffice_dollar': return '$'
     case 'boxoffice_euro': return '€'
-    case 'entrances': return 'entrances'
+    case 'admissions': return 'admissions'
   }
 }
 type Unit = ReturnType<typeof toUnit>;
