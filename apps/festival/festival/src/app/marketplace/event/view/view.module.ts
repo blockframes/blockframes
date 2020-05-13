@@ -1,20 +1,26 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { EventViewComponent } from './view.component';
 import { RouterModule } from '@angular/router';
+import { FlexLayoutModule } from '@angular/flex-layout';
+
+import { EventViewComponent } from './view.component';
+
 import { EventViewModule as EventViewLayoutModule } from '@blockframes/event/layout/view/view.module';
 import { EventRangeModule } from '@blockframes/event/pipes/event-range.pipe';
 import { MovieHeaderModule } from '@blockframes/movie/components/header/header.module';
 import { GuestListModule } from '@blockframes/invitation/components/guest-list/guest-list.module';
+import { OrgChipModule } from '@blockframes/organization/components/chip/chip.module';
 
 @NgModule({
   declarations: [EventViewComponent],
   imports: [
     CommonModule,
+    FlexLayoutModule,
     EventViewLayoutModule,
     EventRangeModule,
     MovieHeaderModule,
     GuestListModule,
+    OrgChipModule,
     RouterModule.forChild([{ path: '', component: EventViewComponent }])
   ]
 })

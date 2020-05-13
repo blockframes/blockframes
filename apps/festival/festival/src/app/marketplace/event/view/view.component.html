@@ -11,6 +11,10 @@
       </ng-container>
       <!-- Meeting -->
       <ng-container *ngSwitchCase="'meeting'">
+        <div fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="24px">
+          <h4>Organized by</h4>
+          <org-chip [org]="event.org"></org-chip>
+        </div>
         <invitation-guest-list [invitations]="invitations$ | async"></invitation-guest-list>
       </ng-container>
     </ng-container>
