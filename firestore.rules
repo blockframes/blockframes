@@ -118,7 +118,7 @@ service cloud.firestore {
     /// RULES ///
     
     match /invitations/{invitationId} {
-    	allow read: if isInvitationSender() || isInvitationRecepient();
+    	allow read: if isAllowedToReadInvitation();
       allow create: if isInvitationCreator()
         && isRequestFieldValueEqualTo(['status'], 'pending')
         && ( incomingData().mode == 'request' || (
@@ -133,15 +133,38 @@ service cloud.firestore {
 
     /// FUNCTIONS ///
 
+    function isAllowedToReadInvitation() {
+      return (
+        ( existingData().type == 'attendEvent' && isSignedIn() )
+        || ( isGuest() || isHostAdmin() )
+      )
+    }
+  
+    // Check if current user is guest (he was invited or he created a request)
+    function isGuest() {
+      return (
+        ( existingData().mode == 'request' &&  userId() == existingData().fromUser.uid )
+        || ( existingData().mode == 'invitation' && userId() == existingData().toUser.uid )
+      )
+    }
+
+    // Check if current user is host (he invited someone or someone requested the org) and org admin
+    function isHostAdmin() {
+      return (
+        ( existingData().mode == 'request' && isOrgAdmin(existingData().toOrg.id) )
+        || ( existingData().mode == 'invitation' && isOrgAdmin(existingData().fromOrg.id) )
+      )
+    }
+
     // Check if current user or user org is the sender of the existing invitation.
     function isInvitationSender() {
-      return isOrgAdmin(existingData().fromOrg.id)
+      return isOrgMember(existingData().fromOrg.id)
         || userId() == existingData().fromUser.uid;
     }
 
     // Check if current user or user org is not creating an invitation on behalf of another user.
     function isInvitationCreator() {
-      return isOrgAdmin(incomingData().fromOrg.id)
+      return isOrgMember(incomingData().fromOrg.id)
         || userId() == incomingData().fromUser.uid;
     }
 
@@ -180,7 +203,7 @@ service cloud.firestore {
     	allow create: if isSignedIn()
         && isRequestFieldValueEqualTo(['status'], 'pending')
         && isRequestFieldValueEqualToOrNotSetted(['id'], orgId);
-      allow update: if isAllowedToUpdateOrg();
+      allow update: if isAdminAllowedToUpdateOrg() || isMemberAllowedToUpdateOrg();
       allow delete: if isSuperAdmin(existingData().id);
 
       match /carts/{cartId} {
@@ -193,11 +216,24 @@ service cloud.firestore {
 
     /// FUNCTIONS ///
 
-    function isAllowedToUpdateOrg() {
+    // Org admins can update under specific conditions only
+    function isAdminAllowedToUpdateOrg() {
       return isOrgAdmin(existingData().id)
       	&& isNotUpdatingField(['status'])
         && isNotUpdatingField(['created'])
         && ( isNotUpdatingField(['appAccess']) || existingData().status == 'pending' )
+        && isNotUpdatingId('id', existingData().id);
+    }
+
+    // Org members have less update possibilities than admis
+    // but need to be able to update movieIds
+    function isMemberAllowedToUpdateOrg() {
+      return isOrgMember(existingData().id)
+      	&& isNotUpdatingField(['status'])
+        && isNotUpdatingField(['userIds'])
+        && isNotUpdatingField(['created'])
+        && isNotUpdatingField(['appAccess'])
+        && isNotUpdatingField(['email'])
         && isNotUpdatingId('id', existingData().id);
     }
 

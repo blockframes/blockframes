@@ -32,8 +32,8 @@ export class EventViewComponent implements OnInit {
     const uid = this.authQuery.userId;
     this.invitation$ = this.event$.pipe(
       switchMap(event => {
-        const querFn = ref => ref.where('docId', '==', event.id).where('toUser.uid', '==', uid);
-        return this.invitationService.valueChanges(querFn)
+        const queryFn = ref => ref.where('mode', '==', 'invitation').where('docId', '==', event.id).where('toUser.uid', '==', uid);
+        return this.invitationService.valueChanges(queryFn)
       }),
       map(invitations => invitations?.length ? invitations[0] : undefined)
     )

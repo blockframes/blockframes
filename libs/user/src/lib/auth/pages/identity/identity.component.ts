@@ -54,7 +54,7 @@ export class IdentityComponent {
       });
 
       // Accept the invitation from the organization.
-      const invitations = await this.invitationService.getValue(ref => ref.where('toUser.uid', '==', this.query.userId));
+      const invitations = await this.invitationService.getValue(ref => ref.where('mode', '==', 'invitation').where('toUser.uid', '==', this.query.userId));
       const pendingInvitation = invitations.find(invitation => invitation.status === 'pending');
       await this.db.doc(`invitations/${pendingInvitation.id}`).update({ status: 'accepted' });
       this.creating = false;

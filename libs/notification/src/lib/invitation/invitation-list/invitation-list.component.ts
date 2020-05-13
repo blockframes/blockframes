@@ -37,18 +37,18 @@ export class InvitationListComponent implements OnInit, OnDestroy {
     const storeName = this.store.storeName;
     if (this.authQuery.orgId) {
       /**
-       * @dev We display all invitations whether user or org is invited or invinting
+       * @dev We display all invitations whether user or org is invited or inviting
        * Only invitation where user or org is invited will have buttons to accept or decline
       */
       const syncs = [];
-      const queryFn1 = ref => ref.where('toUser.uid', '==', this.authQuery.userId).where('status', '==', 'pending');
-      const queryFn2 = ref => ref.where('fromUser.uid', '==', this.authQuery.userId).where('status', '==', 'pending');
+      const queryFn1 = ref => ref.where('mode', '==', 'invitation').where('toUser.uid', '==', this.authQuery.userId).where('status', '==', 'pending');
+      const queryFn2 = ref => ref.where('mode', '==', 'request').where('fromUser.uid', '==', this.authQuery.userId).where('status', '==', 'pending');
       syncs.push(this.service.syncCollection(queryFn1, { storeName }));
       syncs.push(this.service.syncCollection(queryFn2, { storeName }));
 
       if(this.permissionQuery.isUserAdmin()){
-        const queryFn3 = ref => ref.where('toOrg.id', '==', this.authQuery.orgId).where('status', '==', 'pending');
-        const queryFn4 = ref => ref.where('fromOrg.id', '==', this.authQuery.orgId).where('status', '==', 'pending');
+        const queryFn3 = ref => ref.where('mode', '==', 'invitation').where('toOrg.id', '==', this.authQuery.orgId).where('status', '==', 'pending');
+        const queryFn4 = ref => ref.where('mode', '==', 'request').where('fromOrg.id', '==', this.authQuery.orgId).where('status', '==', 'pending');
         syncs.push(this.service.syncCollection(queryFn3, { storeName }));
         syncs.push(this.service.syncCollection(queryFn4, { storeName }));
       }
