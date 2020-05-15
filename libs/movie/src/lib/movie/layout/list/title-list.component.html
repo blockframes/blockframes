@@ -19,7 +19,7 @@
 </ng-template> -->
 
 <section id="nav" fxLayout="row" fxLayoutAlign="space-between center">
-  <h1 class="mat-headline">{{titleType}} list</h1>
+  <h1 class="mat-headline">Library</h1>
   <article fxLayout="row" fxLayoutAlign="center center">
     <button *ngIf="canToggle" mat-icon-button (click)="listView = !listView">
       <ng-container *ngIf="!listView">
@@ -57,7 +57,7 @@
   <article>
     <ng-container *ngIf="titles; else loading">
       <ng-container *ngIf="titles.length else empty">
-        <div fxLayout="row" fxLayoutAlign="end start">
+        <div fxLayout="row" fxLayoutAlign="start start">
           <h6 i18n *ngIf="titles.length as count">
             There {count, plural, =0 {} =1 {is} other {are}} {{ count }} title{count, plural, =0 {} =1 {} other {s}} available.
           </h6>
