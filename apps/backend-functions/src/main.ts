@@ -26,6 +26,7 @@ import * as privateConfig from './privateConfig';
 import { createNotificationsForEventsToStart } from './internals/invitations/events';
 import { onFileUploadEvent } from './internals/resize-images';
 import { getPrivateVideoUrl, uploadToJWPlayer } from './player';
+import { sendTestMail } from './internals/email';
 
 /**
  * Trigger: when user creates an account.
@@ -174,6 +175,16 @@ export const getDocumentPrivateConfig = functions.https.onCall(logErrors(private
  * Trigger: when a blockframes admin changed an org app access and wants to notify admins.
  */
 export const onAccessToAppChanged = functions.https.onCall(accessToAppChanged);
+
+
+//--------------------------------
+//       Emails Management      //
+//--------------------------------
+
+/**
+ * Trigger: when a blockframes admin wants to send an email.
+ */
+export const onSendTestMail = functions.https.onCall(sendTestMail);
 
 //--------------------------------
 //       Orgs Management        //

@@ -10,9 +10,9 @@ import { PrivateConfig } from "@blockframes/utils/common-interfaces/utility";
  * @param context 
  */
 export const setDocumentPrivateConfig = async (data: { docId: string, config: PrivateConfig }, context: CallableContext) => {
-  if (!context || !context.auth) { throw new Error('Permission denied'); }
+  if (!context || !context.auth) { throw new Error('Permission denied: missing auth context.'); }
   const admin = await db.doc(`blockframesAdmin/${context.auth.uid}`).get();
-  if (!admin.exists) { throw new Error('Permission denied'); }
+  if (!admin.exists) { throw new Error('Permission denied: you are not blockframes admin'); }
 
   return await db.doc(`docsIndex/${data.docId}`).set({ config: data.config }, { merge: true });
 };
@@ -24,9 +24,9 @@ export const setDocumentPrivateConfig = async (data: { docId: string, config: Pr
  * @param context 
  */
 export const getDocumentPrivateConfig = async (data: { docId: string, keys: string[] }, context: CallableContext) => {
-  if (!context || !context.auth) { throw new Error('Permission denied'); }
+  if (!context || !context.auth) { throw new Error('Permission denied: missing auth context.'); }
   const admin = await db.doc(`blockframesAdmin/${context.auth.uid}`).get();
-  if (!admin.exists) { throw new Error('Permission denied'); }
+  if (!admin.exists) { throw new Error('Permission denied: you are not blockframes admin'); }
 
   const snap = await db.doc(`docsIndex/${data.docId}`).get();
   if (!snap.exists) { return false; }
