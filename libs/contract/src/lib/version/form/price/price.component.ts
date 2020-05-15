@@ -56,13 +56,13 @@ export class PriceComponent implements OnInit {
    * @description checks if package price is equal or above all the title price
    */
   get totalPrice$(): Observable<boolean> {
-    let accumilatedPrice = 0;
+    let accumulatedPrice = 0;
     const state = new BehaviorSubject(false)
     for (const id of this.activeMovieIds) {
       const version = this.form.value;
-      accumilatedPrice += version.titles[id].price.amount;
+      accumulatedPrice += version.titles[id].price.amount;
     }
-    accumilatedPrice > this.totalAmount.value ? state.next(true) : state.next(false)
+    accumulatedPrice > this.totalAmount.value ? state.next(true) : state.next(false)
     return state
   }
 

@@ -95,7 +95,7 @@ export class DistributionRightService extends CollectionService<DistributionRigh
       throw new Error('Select at least one available territory to create an Exploitation Right');
     }
     if (!formValue.licenseType.length) {
-      throw new Error('Select at least one available territory to create an Exploitation Right');
+      throw new Error('Select at least one media to create an Exploitation Right');
     }
     if (formValue.territory.some(territory => !territories.find(({ slug }) => slug === territory))) {
       throw new Error('One or more selected territories are not available');
