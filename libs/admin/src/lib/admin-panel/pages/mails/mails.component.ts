@@ -12,7 +12,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class MailsComponent implements OnInit {
   public form: TestEmailForm;
-  public loading: boolean = false;
+  public loading = false;
 
   constructor(
     private adminService: AdminService,
