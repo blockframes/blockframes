@@ -10,7 +10,8 @@ export type EventMeta = Meeting | Screening | {};
 
 export interface Meeting {
   callUrl: string;
-  message: string;
+  organizerId: string;
+  description: string;
 }
 
 export interface Screening {

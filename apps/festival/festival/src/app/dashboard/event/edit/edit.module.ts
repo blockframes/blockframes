@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { ReactiveFormsModule } from '@angular/forms';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { EditComponent } from './edit.component';
+import { DisplayNameModule } from '@blockframes/utils/pipes';
 
 import { EventEditModule as LayoutEventEditModule } from '@blockframes/event/layout/edit/edit.module';
 // Material
@@ -19,6 +20,7 @@ import { MatCardModule } from '@angular/material/card';
     FlexLayoutModule,
     ReactiveFormsModule,
     LayoutEventEditModule,
+    DisplayNameModule,
     // Material
     MatCardModule,
     MatFormFieldModule,

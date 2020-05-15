@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { CollectionConfig, CollectionService, Query, WriteOptions, queryChanges } from 'akita-ng-fire';
 import { EventState, EventStore } from './event.store';
 import { EventDocument, EventBase, EventTypes } from './event.firestore';
-import { Event, ScreeningEvent, createCalendarEvent, EventsAnalytics, MeetingEvent } from './event.model';
+import { Event, ScreeningEvent, createCalendarEvent, EventsAnalytics, MeetingEvent, isMeeting, isScreening } from './event.model';
 import { QueryFn } from '@angular/fire/firestore/interfaces';
 import { Observable } from 'rxjs';
 import { AngularFireFunctions } from '@angular/fire/functions';
@@ -18,8 +18,13 @@ const eventQuery = (id: string) => ({
   path: `events/${id}`,
   org: ({ ownerId }: ScreeningEvent) => ({ path: `orgs/${ownerId}` }),
   movie: (event: Event) => {
-    if (event.type === 'screening') {
+    if (isScreening(event)) {
       return event.meta.titleId ? { path: `movies/${event.meta.titleId}` } : undefined
+    }
+  },
+  organizedBy: (event: Event) => {
+    if (isMeeting(event)) {
+      return event.meta.organizerId ? { path: `users/${event.meta.organizerId}` } : undefined
     }
   }
 })
@@ -91,7 +96,7 @@ export class EventService extends CollectionService<EventState> {
 
   /** Remove all invitations & notifications linked to this event */
   async onDelete(id: string, { write }: WriteOptions) {
-    const invitations = await this.invitationService.getValue(ref => ref.where('docId', '==', id));
+    const invitations = await this.invitationService.getValue(ref => ref.where('type', '==', 'attendEvent').where('docId', '==', id));
     await this.invitationService.remove(invitations.map(e => e.id), { write });
   }
 

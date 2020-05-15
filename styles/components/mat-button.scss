@@ -8,7 +8,10 @@
   // BUTTON WITH ICONS //
   ///////////////////////
 
+  // No background
+
   .mat-stroked-button, .mat-button, .mat-icon-button {
+    color: mat-color($foreground, text);
     &.mat-primary {
       svg g, svg polygon, svg path {
         fill: mat-color($primary);
@@ -25,6 +28,8 @@
       }
     }
   }
+
+  // With background
 
   .mat-raised-button, .mat-flat-button, .mat-fab, .mat-mini-fab {
     &.mat-primary {
