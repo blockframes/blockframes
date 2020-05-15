@@ -5,7 +5,7 @@ import { FormEntity } from '@blockframes/utils/form/forms/entity.form';
 
 function createContractVersionPaymentScheduleControls(paymentSchedule: Partial<PaymentSchedule>) {
     return {
-        percentage: new FormControl(paymentSchedule.percentage, Validators.min(1)),
+        percentage: new FormControl(paymentSchedule.percentage, Validators.min(0)),
         date: new ContractVersionDateForm(paymentSchedule.date)
     }
 }

@@ -154,8 +154,8 @@ function createCatalogSearchControl(search: CatalogSearch) {
 function createAvailsSearchControl(search: AvailsSearch) {
   return {
     terms: new DistributionRightTermsForm(search.terms),
-    licenseType: new FormControl(search.licenseType),
-    territory: new FormArray(search.territory.map(territory => new FormControl(territory))),
+    licenseType: new FormControl(search.licenseType, Validators.required),
+    territory: new FormArray(search.territory.map(territory => new FormControl(territory)), Validators.required),
     territoryExcluded: new FormArray(search.territoryExcluded.map(territory => new FormControl(territory))),
     exclusive: new FormControl(search.exclusive),
     isActive: new FormControl(search.isActive)
