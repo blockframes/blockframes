@@ -57,7 +57,7 @@
           <mat-form-field appearance="outline" formGroupName="floatingDuration">
             <mat-label>Duration</mat-label>
             <input matInput type="number" formControlName="duration" #periodicInputs>
-            <mat-error *ngIf="control.get('date').get('floatingDuration').get('duration').hasError('min')">
+            <mat-error *ngIf="control.get('date.floatingDuration.duration').hasError('min')">
               Only positive values are accepted.
             </mat-error>
           </mat-form-field>
@@ -119,7 +119,7 @@
         <mat-form-field appearance="outline" formGroupName="floatingDuration">
           <mat-label>Duration</mat-label>
           <input test-id="duration" matInput type="number" formControlName="duration">
-          <mat-error *ngIf="control.get('date').get('floatingDuration').get('duration').hasError('min')">
+          <mat-error *ngIf="control.get('date.floatingDuration.duration').hasError('min')">
             Only positive values are accepted.
           </mat-error>
         </mat-form-field>
