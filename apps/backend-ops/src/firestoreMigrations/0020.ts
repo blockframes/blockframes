@@ -14,7 +14,11 @@ export async function upgrade(db: Firestore) {
 
       if (!!userData) {
         // create watermark file & update user's firestore doc
-        await upsertWatermark(userData);
+        try {
+          await upsertWatermark(userData);
+        } catch (e) {
+          console.error(e);
+        }
       }
     }
   );

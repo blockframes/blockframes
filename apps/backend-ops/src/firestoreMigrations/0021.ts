@@ -170,6 +170,8 @@ const updateImgRef = async (
       // we try to download it directly from it's url (prod, staging, vincent's storage, ...)
       if (!!url) {
 
+        console.log(`downloading ${destinationFolder}`);
+
         await new Promise((resolve, reject) => {
           // create a write stream to save the image in google cloud storage
           const saveImage = to.createWriteStream({contentType: 'image/jpeg'})
@@ -181,6 +183,8 @@ const updateImgRef = async (
             result.pipe(saveImage);
           }).on('error', err => {console.log('fail to download because of', err); reject(err)});
         });
+
+        console.log('download OK');
 
         const [signedUrl] = await to.getSignedUrl({action: 'read', expires: '01-01-3000', version: 'v2'});
         // ### send the current update thingy
