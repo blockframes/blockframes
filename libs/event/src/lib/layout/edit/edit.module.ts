@@ -22,6 +22,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDividerModule } from '@angular/material/divider';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 
 
 
@@ -51,6 +52,7 @@ import { MatDividerModule } from '@angular/material/divider';
     MatInputModule,
     MatListModule,
     MatCheckboxModule,
+    MatProgressBarModule,
   ]
 })
 export class EventEditModule { }

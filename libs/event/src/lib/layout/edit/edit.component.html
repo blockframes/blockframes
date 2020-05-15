@@ -65,6 +65,9 @@
         </button>
       </div>
 
+      <ng-container *ngIf="progress">
+        <mat-progress-bar color="accent" mode="buffer" [value]="progress | async"></mat-progress-bar>
+      </ng-container>
       <!-- @todo(#2763) Add loading indication here -->
       <invitation-guest-list [invitations]="invitations"></invitation-guest-list>
     </mat-card>
