@@ -45,13 +45,19 @@ export function sendMailFromTemplate({ to, templateId, data }: EmailTemplateRequ
   return SendGrid.send(msg);
 }
 
+/**
+ * Http callabable function to send an email just like the other emails of the app are sent.
+ * For testing purposes
+ * @param data 
+ * @param context 
+ */
 export const sendTestMail = async (
   data: { request: EmailRequest, from: string },
   context: CallableContext
 ): Promise<ErrorResultResponse> => {
-  if (!context || !context.auth) { throw new Error('Permission denied'); }
+  if (!context || !context.auth) { throw new Error('Permission denied: missing auth context.'); }
   const admin = await db.doc(`blockframesAdmin/${context.auth.uid}`).get();
-  if (!admin.exists) { throw new Error('Permission denied'); }
+  if (!admin.exists) { throw new Error('Permission denied: you are not blockframes admin'); }
 
   try {
     await sendMail(data.request, data.from || sendgridEmailsFrom);

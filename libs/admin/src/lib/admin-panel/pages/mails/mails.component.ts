@@ -1,8 +1,9 @@
 import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
-import { AdminService } from '@blockframes/admin/admin/admin.service.';
-import { createEmailRequest } from '@blockframes/utils/emails';
+import { createEmailRequest, EmailRequest } from '@blockframes/utils/emails';
 import { TestEmailForm } from '../../forms/test-email.form';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AngularFireFunctions } from '@angular/fire/functions';
+import { ErrorResultResponse } from '@blockframes/utils/utils';
 
 @Component({
   selector: 'admin-mails',
@@ -15,9 +16,9 @@ export class MailsComponent implements OnInit {
   public loading = false;
 
   constructor(
-    private adminService: AdminService,
     private snackBar: MatSnackBar,
     private cdRef: ChangeDetectorRef,
+    private functions: AngularFireFunctions
   ) {
   }
 
@@ -33,7 +34,7 @@ export class MailsComponent implements OnInit {
 
     this.loading = true;
     const request = createEmailRequest(this.form.value);
-    const output = await this.adminService.sendTestMail(request);
+    const output = await this.sendTestMail(request);
 
     if (output.result === 'OK') {
       this.snackBar.open(`Mail successfully sent to ${request.to}`, 'close', { duration: 5000 });
@@ -42,5 +43,10 @@ export class MailsComponent implements OnInit {
     }
     this.loading = false;
     this.cdRef.markForCheck();
+  }
+
+  private async sendTestMail(request: EmailRequest, from? : string ): Promise<ErrorResultResponse> {
+    const f = this.functions.httpsCallable('onSendTestMail');
+    return f({ request, from }).toPromise();
   }
 }
