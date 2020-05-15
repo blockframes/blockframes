@@ -14,17 +14,17 @@
       </mat-form-field>
       <!-- Add / Delete -->
       <div fxLayout="row" fxLayoutAlign="center" fxLayout.lt-md="column" fxLayoutAlign.lt-md="center center">
-        <button class="mat-elevation-z0 action" *ngIf="!first" mat-flat-button color="warn" (click)="form.removeAt(i)" matTooltip="Remove a Member" aria-label="Remove a Member">
+        <button  *ngIf="!first" mat-flat-button color="warn" (click)="form.removeAt(i)" matTooltip="Remove a Member" aria-label="Remove a Member">
           Remove email
         </button>
-        <button class="mat-elevation-z0 action" *ngIf="last" mat-flat-button color="primary" (click)="form.add()" matTooltip="Add a Member" aria-label="Add a Member">
+        <button *ngIf="last" mat-flat-button color="primary" (click)="form.add()" matTooltip="Add a Member" aria-label="Add a Member">
           Add email
         </button>
       </div>
     </mat-card-content>
   </ng-container>
   <div fxLayout="row" fxLayoutAlign="center">
-    <ng-container *ngIf="!sending else sendingInvitations">
+    <ng-container *ngIf="!(isSending$ | async); else sendingInvitations">
       <button class="send" mat-flat-button color="accent" test-id="add" [disabled]="isSending$ | async" (click)="sendInvitations()">
         <mat-icon svgIcon="send"></mat-icon>
         <span i18n>Send invitation{ form.controls.length, plural, =1 {} other {s} }</span>

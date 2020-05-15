@@ -7,6 +7,7 @@ import { FormGroup, FormArray } from '@angular/forms';
 import { getMoviePublishStatus, getCurrentApp } from '@blockframes/utils/apps';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { mergeDeep } from '@blockframes/utils/helpers';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'festival-summary-tunnel',
@@ -16,6 +17,9 @@ import { mergeDeep } from '@blockframes/utils/helpers';
 })
 export class TunnelSummaryComponent {
   form = this.tunnel.form;
+  isPublished$ = this.query.selectActive(movie => movie.main.storeConfig.status).pipe(
+    map(status => status === 'accepted' || status === 'submitted')
+  )
 
   constructor(
     private tunnel: MovieTunnelComponent,
@@ -37,6 +41,7 @@ export class TunnelSummaryComponent {
       const movie = mergeDeep(this.query.getActive(), this.form.value);
       const currentApp = getCurrentApp(this.routerQuery);
       movie.main.storeConfig.status = getMoviePublishStatus(currentApp); // @TODO (#2765)
+      movie.main.storeConfig.appAccess.festival = true
       await this.service.update(movie);
       this.form.markAsPristine();
       const ref = this.snackBar.open('Movie Online !!', '', { duration: 1000 });
