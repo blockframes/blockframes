@@ -1,10 +1,8 @@
-import { Component, ChangeDetectionStrategy, AfterViewInit, Inject, ViewEncapsulation, HostBinding, OnInit } from '@angular/core';
+import { Component, ChangeDetectionStrategy, AfterViewInit, Inject, ViewEncapsulation } from '@angular/core';
 import { EventQuery } from '../../+state/event.query';
 import { AngularFireFunctions } from '@angular/fire/functions';
 import { DOCUMENT } from '@angular/common';
 import { AuthQuery } from '@blockframes/auth/+state';
-import { MovieQuery, Movie } from '@blockframes/movie/+state';
-import { OrganizationQuery, Organization } from '@blockframes/organization/+state';
 
 declare const jwplayer: any;
 
@@ -15,30 +13,16 @@ declare const jwplayer: any;
   encapsulation: ViewEncapsulation.None, // We use `None` because we need to override the nested jwplayer css
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class EventPlayerComponent implements AfterViewInit, OnInit {
+export class EventPlayerComponent implements AfterViewInit {
 
   private player: any;
-  @HostBinding('style.background-image') background: string;
-  public movie: Movie;
-  public org: Organization;
-  public event = this.eventQuery.getActive();
-  public showSession = false;
-  public showVideo = true;
 
   constructor(
     @Inject(DOCUMENT) private document: Document,
     private eventQuery: EventQuery,
-    private movieQuery: MovieQuery,
-    private orgQuery: OrganizationQuery,
     private authQuery: AuthQuery,
     private functions: AngularFireFunctions,
   ) {}
-
-  ngOnInit() {
-    this.movie = this.movieQuery.getEntity(this.event.meta.titleId);
-    this.org = this.orgQuery.getEntity(this.event.ownerId);
-    this.background = `url(${this.movie.promotionalElements.banner.media.url})`;
-  }
 
   async loadScript() {
     return new Promise(res => {
@@ -88,7 +72,7 @@ export class EventPlayerComponent implements AfterViewInit, OnInit {
     this.showSession = true;
     this.showVideo = false;
     const watermarkUrl = this.authQuery.user.watermark.url;
+    await this.loadScript();
     this.initPlayer(watermarkUrl);
-    return;
   }
 }

@@ -1,37 +1,15 @@
-<ng-container [ngSwitch]="event.type">
-  <!-- SCREENING TYPE -->
-  <section *ngSwitchCase="'screening'" fxLayout="column" fxLayoutAlign="start center">
+<ng-container *ngIf="(event$ | async) as event; else loading">
+  <ng-container [ngSwitch]="event.type">
+    <!-- SCREENING TYPE -->
+    <section *ngSwitchCase="'screening'" fxLayout="column" fxLayoutAlign="space-between center">
 
-    <!-- BEFORE TIME -->
-    <ng-template #later>
-      <article class="dark-contrast-theme" fxLayout="column" fxLayoutAlign="space-between center">
-        <article class="screening" [style.background-image]="background">
-          <div class="opacity" fxLayout="column" fxLayoutAlign="center center">
-            <img [imgRef]="org.logo" placeholderAsset="Organization_250.png" type="logo" alt="organisation logo" class="org-logo">
-            <h4 class="uppercase ">{{ org.denomination.public }} presents</h4>
-            <span class="mat-display-2">{{ movie.main.title.international }}</span>
-            <h2>by {{ movie.main.directors | displayName }}</h2>
-            <h6 class="uppercase">starting in</h6>
-            <span class="mat-body-1">{{ timeBeforeNextScreening(event.start) }}</span>
-            <button mat-stroked-button color="primary" routerLink="../../calendar">
-              <mat-icon svgIcon="arrow_back"></mat-icon>
-              <span>Back to Calendar</span>
-            </button>
-          </div>
-        </article>
-        <img asset="screening_wait.webp" alt="Screening now picture">
-      </article>
-    </ng-template>
-
-    <!-- ON TIME -->
-    <ng-container *ngIf="url else later">
-      <article class="dark-contrast-theme" fxLayout="column" fxLayoutAlign="space-between center">
-        <article class="screening" [style.background-image]="background" [hidden]="showSession">
-          <div class="opacity" fxLayout="column" fxLayoutAlign="center center">
-            <img [imgRef]="org.logo" placeholderAsset="Organization_250.png" type="logo" alt="organisation logo" class="org-logo">
-              <h4 class="uppercase ">{{ org.denomination.public }} presents</h4>
-            <span class="mat-display-2">{{ movie.main.title.international }}</span>
-            <h2>by {{ movie.main.directors | displayName }}</h2>
+      <ng-container *ngIf="showSession else showVideo">
+        <article class="dark-contrast-theme screen" [backgroundRef]="event.movie.promotionalElements.banner.media">
+          <div class="overlay" fxLayout="column" fxLayoutAlign="center center">
+            <img [imgRef]="event.org.logo" placeholderAsset="empty_organization.webp" type="logo" alt="organisation logo">
+            <h4 class="uppercase">{{ event.org | orgName }} presents</h4>
+            <span class="mat-display-2">{{ event.movie.main.title.international }}</span>
+            <h2>by {{ event.movie.main.directors | displayName }}</h2>
             <span class="mat-caption">Screening now</span>
             <button mat-flat-button color="accent" (click)="playVideo()">
               <mat-icon svgIcon="play"></mat-icon>
@@ -39,19 +17,21 @@
             </button>
           </div>
         </article>
-        <article class="video-session" [hidden]="showVideo">
-          <!-- <iframe [src]="url" width="860" height="462" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe> -->
-        </article>
-        <img asset="screening_now.webp" alt="Screening now picture">
-      </article>
-    </ng-container>
+      </ng-container>
 
-  </section>
+      <ng-template #showVideo>
+        <iframe class="screen" [src]="url" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe>
+      </ng-template>
 
-  <!-- MEETING TYPE -->
-  <section *ngSwitchCase="'meeting'" fxLayoutAlign="center start">
-    <span>Meeting ah ah ah !</span>
-  </section>
-</ng-container>
+      <img asset="screening_now.webp" alt="Screening now picture">
+
+    </section>
+
+    <!-- MEETING TYPE -->
+    <section *ngSwitchCase="'meeting'"></section>
+  </ng-container>
 
 
+<ng-template #loading>
+  <mat-spinner></mat-spinner>
+</ng-template>
