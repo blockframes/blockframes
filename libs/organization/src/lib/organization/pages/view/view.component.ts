@@ -9,6 +9,7 @@ import { User } from '@blockframes/auth/+state/auth.store';
 import { AuthQuery } from '@blockframes/auth/+state/auth.query';
 import { RouterQuery } from '@datorama/akita-ng-router-store';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { orgActivity } from '@blockframes/organization/+state/organization.firestore';
 
 const navLinks = [{
   path: 'org',
@@ -54,6 +55,10 @@ export class OrganizationViewComponent implements OnInit, OnDestroy {
     this.user$ = this.authQuery.user$;
     this.organization$ = this.query.selectActive();
     this.previousPage = this.tunnelService.previousUrl || '../../..';
+  }
+
+  getActivity(activity: string) {
+    return orgActivity[activity];
   }
 
   ngOnDestroy() {
