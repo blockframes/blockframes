@@ -18,6 +18,9 @@ export {
   centralOrgID
 } from '@env';
 
+import { firebase } from '@env';
+export const { storageBucket } = firebase;
+
 export const sendgridAPIKey = functions.config().sendgrid.api_key;
 export const sendgridEmailsFrom = 'admin@blockframes.io';
 export const mnemonic = functions.config().relayer.mnemonic;

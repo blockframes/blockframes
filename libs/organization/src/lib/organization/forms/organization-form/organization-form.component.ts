@@ -3,7 +3,7 @@ import { network, baseEnsDomain } from '@env';
 import { getProvider, orgNameToEnsDomain } from '@blockframes/ethers/helpers';
 import { OrganizationService } from './../../+state/organization.service';
 import { OrganizationForm } from '@blockframes/organization/forms/organization.form';
-import { activities } from '../../+state/organization.firestore';
+import { orgActivity } from '../../+state/organization.firestore';
 import { OrganizationQuery } from '@blockframes/organization/+state';
 
 @Component({
@@ -13,7 +13,7 @@ import { OrganizationQuery } from '@blockframes/organization/+state';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class OrganizationFormComponent {
-  activities = activities;
+  activities = orgActivity;
 
   public storagePath = `orgs/${this.query.getActiveId()}/logo`;
   @Input() form: OrganizationForm;

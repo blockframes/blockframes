@@ -4,6 +4,8 @@ import { join, dirname } from 'path';
 import * as admin from 'firebase-admin';
 import { ensureDir, remove } from 'fs-extra';
 import sharp from 'sharp';
+import {get, set} from 'lodash';
+import { ImgRef } from '@blockframes/utils/image-uploader';
 
 /**
  * This function is executed on every files uploaded on the storage.
@@ -11,9 +13,10 @@ import sharp from 'sharp';
  * any kind of image manipulation (like blur, crop...).
  */
 export async function onFileUploadEvent(data: functions.storage.ObjectMetadata) {
+
   // If the type of the data is not an image, exit the function
   if (!data.contentType?.includes('image')) {
-    console.log('File is not an image, exiting function');
+    console.log(`File ${data.contentType} is not an image, exiting function`);
     return false;
   }
 
@@ -33,12 +36,13 @@ export async function onFileUploadEvent(data: functions.storage.ObjectMetadata) 
   } catch (err) {
     // TODO: Add sentry to handle errors
     console.log(err.message);
+    console.log(err);
     return false;
   }
 }
 
 async function resize(data: functions.storage.ObjectMetadata) {
-  // Get all the needed informations from the data (bucket, path, file name and directory)
+  // Get all the needed information from the data (bucket, path, file name and directory)
   const bucket = admin.storage().bucket(data.bucket);
   const filePath = data.name;
 
@@ -56,6 +60,7 @@ async function resize(data: functions.storage.ObjectMetadata) {
 
   if (uploadedSize !== 'original') {
     console.info('skipping upload that is not "original": ' + uploadedSize);
+    return;
   }
 
   const directory = dirname(filePath);
@@ -91,7 +96,7 @@ async function resize(data: functions.storage.ObjectMetadata) {
   // Iterate on each item of sizes array to generate all wanted resized images
   const uploadPromises = Object.entries(sizes).map(async ([key, size]) => {
     const resizedImgName = fileName;
-    const resizedImgPath = join(workingDir, `${key}${resizedImgName}`);
+    const resizedImgPath = join(workingDir, `${key}_${resizedImgName}`);
     const destination = join(directory.replace('original', key), resizedImgName);
 
     // Use sharp to resize : take a path, resize to wanted size, save file to a new path
@@ -100,9 +105,10 @@ async function resize(data: functions.storage.ObjectMetadata) {
       .toFile(resizedImgPath);
 
     const file = bucket.file(destination);
-    const signedUrl = await file.getSignedUrl({
+    const [signedUrl] = await file.getSignedUrl({
       action: 'read',
-      expires: '03-09-2491'
+      expires: '01-01-3000',
+      version: 'v2',
     });
 
     // Then upload the resized image on the bucket
@@ -110,21 +116,35 @@ async function resize(data: functions.storage.ObjectMetadata) {
       destination
     });
 
-    return { key, url: signedUrl[0] };
+    return { key, url: signedUrl };
   });
 
   const uploaded = await Promise.all(uploadPromises);
 
-  const updatedDocument = {
-    [fieldToUpdate]: {
-      ref: filePath,
-      urls: uploaded.reduce((prev, { key, url }) => {
-        return { ...prev, [key]: url };
-      }, {})
-    }
-  };
+  await db.runTransaction(async (tx) => {
+    const doc = await tx.get(db.doc(`${collection}/${id}`));
+    const docData = await doc.data();
 
-  await db.doc(`${collection}/${id}`).update(updatedDocument);
+    if (docData === undefined) {
+      throw new Error('Data is undefined');
+    }
+
+    const  original = (get(docData, fieldToUpdate) as ImgRef).urls.original;
+
+    const value = {
+      ref: filePath,
+
+      urls: {
+        ...uploaded.reduce((prev, { key, url }) => {
+          return { ...prev, [key]: url };
+        }, {}),
+        original,
+      }
+    }
+
+    const updated = set(docData, fieldToUpdate, value);
+    return tx.set(doc.ref, updated);
+  })
 
   // Delete the temporary working directory after successfully uploading the resized images with fs.remove
   return remove(workingDir);
