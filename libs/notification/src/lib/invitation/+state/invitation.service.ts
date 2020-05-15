@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { InvitationState, InvitationStore } from './invitation.store';
 import { Invitation, createInvitation } from './invitation.model';
 import { CollectionConfig, CollectionService, AtomicWrite } from 'akita-ng-fire';
-import { OrganizationQuery, createPublicOrganization } from '@blockframes/organization/+state';
+import { OrganizationQuery, createPublicOrganization, OrganizationService } from '@blockframes/organization/+state';
 import { AuthQuery, AuthService } from '@blockframes/auth/+state';
 import { createPublicUser } from '@blockframes/user/+state';
 import { InvitationDocument } from './invitation.firestore';
@@ -19,6 +19,7 @@ export class InvitationService extends CollectionService<InvitationState> {
     private authQuery: AuthQuery,
     private authService: AuthService,
     private orgQuery: OrganizationQuery,
+    private orgService: OrganizationService,
   ) {
     super(store);
   }
@@ -115,13 +116,14 @@ export class InvitationService extends CollectionService<InvitationState> {
           // We use mergeMap to keep all subscriptions in memory (switchMap unsubscribe automatically)
           if (who === 'org') {
             return from(recipients).pipe(
-              map(recipient => createInvitation({ ...base, toOrg: createPublicOrganization({ id: recipient }) })),
+              mergeMap(recipient => this.orgService.getValue(recipient)),
+              map(toOrg => createInvitation({ ...base, toOrg: createPublicOrganization(toOrg) })),
               mergeMap(invitation => this.add(invitation, { write }))
             );
           } else if (who === 'user') {
             return from(recipients).pipe(
               mergeMap(recipient => this.authService.getOrCreateUserByMail(recipient, this.orgQuery.getActiveId())),
-              map(toUser => createInvitation({ ...base, toUser: createPublicUser({ uid: toUser.uid }) })),
+              map(toUser => createInvitation({ ...base, toUser: createPublicUser(toUser) })),
               mergeMap(invitation => this.add(invitation, { write }))
             );
           } else {
