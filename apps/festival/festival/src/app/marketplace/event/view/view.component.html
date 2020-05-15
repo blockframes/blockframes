@@ -1,6 +1,7 @@
 <ng-container *ngIf="event$ |  async as event">
   <event-view [event]="event">
     <ng-container [ngSwitch]="event.type">
+
       <!-- Screening -->
       <section class="screening" *ngSwitchCase="'screening'">
         <movie-header [movie]="event.movie">
@@ -15,6 +16,7 @@
           </movie-header-cta>
         </movie-header>
       </section>
+
       <!-- Meeting -->
       <section class="meeting" fxLayout="column" fxLayoutGap="40px" *ngSwitchCase="'meeting'">
         <article fxLayout="column" fxLayoutGap="16px" class="organized-by">
@@ -36,6 +38,7 @@
           <invitation-guest-list [invitations]="invitations$ | async"></invitation-guest-list>
         </article>
       </section>
+
     </ng-container>
   </event-view>
 </ng-container>

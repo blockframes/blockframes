@@ -1,11 +1,27 @@
 <ng-container *ngIf="event$ | async as event">
   <header class="dark-contrast-theme" fxLayout="column" fxLayoutAlign="center center" fxLayoutGap="16px">
     <h1 class="mat-display-2">{{ event.title }}</h1>
-    <h6>
-      {{event.isPrivate ? 'Private' : 'Public'}} {{ event.type }}
-    </h6>
-    <pre class="mat-body-1">{{ event | eventRange }}</pre>
-    <invitation-action [invitation]="invitation$ | async" [event]="event"></invitation-action>
+    <ng-container [ngSwitch]="event | eventTime">
+
+      <ng-container *ngSwitchCase="'early'">
+        <h6>{{event.isPrivate ? 'Private' : 'Public'}} {{ event.type }}</h6>
+        <pre class="mat-body-1">{{ event | eventRange }}</pre>
+        <invitation-action [invitation]="invitation$ | async" [event]="event"></invitation-action>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="'onTime'">
+        <h6>{{event.isPrivate ? 'Private' : 'Public'}} {{ event.type }}</h6>
+        <pre class="mat-body-1">{{ event | eventRange }}</pre>
+        <invitation-action [invitation]="invitation$ | async" [event]="event"></invitation-action>
+        <a routerLink="../session">Join the {{ event.type }}</a>
+      </ng-container>
+
+      <ng-container *ngSwitchCase="'late'">
+        <h6>{{ event.type }} done</h6>
+        <pre class="mat-body-1">{{ event | eventRange }}</pre>
+      </ng-container>
+
+    </ng-container>
   </header>
   <ng-content></ng-content>
 </ng-container>
