@@ -11,7 +11,9 @@ import { MovieHeaderModule } from '@blockframes/movie/components/header/header.m
 import { GuestListModule } from '@blockframes/invitation/components/guest-list/guest-list.module';
 import { ImageReferenceModule } from '@blockframes/ui/media';
 import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
+import { OrgChipModule } from '@blockframes/organization/components/chip/chip.module';
 import { DisplayNameModule } from '@blockframes/utils/pipes';
+import { MatButtonModule} from '@angular/material/button';
 
 @NgModule({
   declarations: [EventViewComponent],
@@ -24,7 +26,9 @@ import { DisplayNameModule } from '@blockframes/utils/pipes';
     GuestListModule,
     ImageReferenceModule,
     OrgNameModule,
+    OrgChipModule,
     DisplayNameModule,
+    MatButtonModule,
     RouterModule.forChild([{ path: '', component: EventViewComponent }])
   ]
 })

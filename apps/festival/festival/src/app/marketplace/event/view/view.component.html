@@ -2,15 +2,21 @@
   <event-view [event]="event">
     <ng-container [ngSwitch]="event.type">
       <!-- Screening -->
-      <section *ngSwitchCase="'screening'">
+      <section class="screening" *ngSwitchCase="'screening'">
         <movie-header [movie]="event.movie">
+          <movie-header-preferences>
+            <p>{{ event.movie.story.logline }}</p>
+            <org-chip [org]="event.org"></org-chip>
+          </movie-header-preferences>
           <movie-header-cta>
-            <a mat-stroked-button [routerLink]="['../../title', event.movie.id]">More Details</a>
+            <a mat-stroked-button color="primary" [routerLink]="['../../title', event.movie.id]">
+              More Details
+            </a>
           </movie-header-cta>
         </movie-header>
       </section>
       <!-- Meeting -->
-      <section fxLayout="column" fxLayoutGap="40px" *ngSwitchCase="'meeting'">
+      <section class="meeting" fxLayout="column" fxLayoutGap="40px" *ngSwitchCase="'meeting'">
         <article fxLayout="column" fxLayoutGap="16px" class="organized-by">
           <h2>Organized by</h2>
           <div fxLayout fxLayoutAlign="start center" fxLayoutGap="16px">
