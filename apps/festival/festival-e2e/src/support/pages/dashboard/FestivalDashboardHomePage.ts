@@ -1,4 +1,5 @@
 import EventPage from './EventPage';
+import FestivalInvitationsPage from './FestivalInvitationsPage';
 
 export default class FestivalDashboardHomePage {
   constructor() {
@@ -12,5 +13,10 @@ export default class FestivalDashboardHomePage {
 
   logout() {
     cy.get('auth-widget button[test-id=auth-user-avatar]').click().get('button[test-id=auth-logout]').click();
+  }
+
+  clickOnInvitations() {
+    cy.get('festival-dashboard a[test-id=invitations-link]').click();
+    return new FestivalInvitationsPage();
   }
 }

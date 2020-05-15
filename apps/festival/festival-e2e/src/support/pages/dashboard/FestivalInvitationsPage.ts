@@ -1,3 +1,5 @@
+const ACCEPTED = 'Accepted';
+
 export default class FestivalInvitationsPage {
   constructor() {
     cy.get('festival-invitation')
@@ -9,5 +11,9 @@ export default class FestivalInvitationsPage {
 
   refuseInvitation() {
     cy.get('festival-invitation invitation-list invitation-item a[test-id=invitation-refuse]').click()
+  }
+
+  assertInvitationIsAccepted() {
+    cy.get('festival-invitation invitation-list invitation-item').contains(ACCEPTED);
   }
 }

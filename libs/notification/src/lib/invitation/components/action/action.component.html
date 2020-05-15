@@ -12,7 +12,7 @@
 
 <ng-template #noInvitation>
   <!-- TODO : Use ng-content here -->
-  <button mat-button (click)="request(event)">
+  <button test-id="invitation-request" mat-button (click)="request(event)">
     <mat-icon svgIcon="calendar"></mat-icon>
     <span *ngIf="event.isPrivate">Ask for Invitation</span>
     <span *ngIf="!event.isPrivate">Add to my calendar</span>
