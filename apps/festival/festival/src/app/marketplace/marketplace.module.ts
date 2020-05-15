@@ -87,9 +87,6 @@ const routes: Routes = [{
             loadChildren: () => import('./event/view/view.module').then(m => m.EventViewModule),
           }, {
             path: 'session',
-            loadChildren: () => import('@blockframes/event/layout/session/session.module').then(m => m.EventSessionModule),
-          }, {
-            path: 'festival',
             loadChildren: () => import('./event/session/session.module').then(m => m.SessionModule),
           },
         ]

@@ -4,8 +4,6 @@ import { EventPlayerComponent } from './player.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
-
-
 @NgModule({
   declarations: [EventPlayerComponent],
   exports: [EventPlayerComponent],
