@@ -4,6 +4,7 @@ import { MovieService, MovieQuery } from '@blockframes/movie/+state';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MovieTunnelComponent } from '../movie-tunnel.component';
 import { FormGroup, FormArray } from '@angular/forms';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'festival-summary-tunnel',
@@ -13,6 +14,9 @@ import { FormGroup, FormArray } from '@angular/forms';
 })
 export class TunnelSummaryComponent {
   form = this.tunnel.form;
+  isPublished$ = this.query.selectActive(movie => movie.main.storeConfig.status).pipe(
+    map(status => status === 'accepted' || status === 'submitted')
+  )
 
   constructor(
     private tunnel: MovieTunnelComponent,
@@ -31,6 +35,7 @@ export class TunnelSummaryComponent {
   public async submit() {
     if (this.form.valid) {
       const movie = this.form.value;
+      movie.main.storeConfig.appAccess.festival = true; // Specific to this application
       movie.main.storeConfig.status = 'accepted'; // Specific to this application
       await this.service.update({...this.query.getActive(), ...movie});
       this.form.markAsPristine();
@@ -50,7 +55,7 @@ export class TunnelSummaryComponent {
   public findInvalidControlsRecursive(formToInvestigate:FormGroup|FormArray):string[] {
     const invalidControls:string[] = [];
     const recursiveFunc = (form:FormGroup|FormArray) => {
-      Object.keys(form.controls).forEach(field => { 
+      Object.keys(form.controls).forEach(field => {
         const control = form.get(field);
         if (control.invalid) {
           invalidControls.push(field);
@@ -59,7 +64,7 @@ export class TunnelSummaryComponent {
           recursiveFunc(control);
         } else if (control instanceof FormArray) {
           recursiveFunc(control);
-        }        
+        }
       });
     }
     recursiveFunc(formToInvestigate);

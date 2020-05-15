@@ -1,9 +1,14 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
+import { DashboardComponent } from './dashboard.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { DashboardLayoutModule } from '@blockframes/ui/layout/dashboard/dashboard.module';
 import { ImageReferenceModule } from '@blockframes/ui/media/image-reference/image-reference.module';
+import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
+import { ImgAssetModule } from '@blockframes/ui/theme';
+import { ToLabelModule } from '@blockframes/utils/pipes';
+
 // Guards
 import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
 import { MovieTunnelGuard } from '@blockframes/movie/guards/movie-tunnel.guard';
@@ -14,12 +19,7 @@ import { OrganizationContractListGuard } from '@blockframes/contract/contract/gu
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
-
-import { DashboardComponent } from './dashboard.component';
 import { MatDividerModule } from '@angular/material/divider';
-import { OrgNameModule } from '@blockframes/organization/pipes/org-name.pipe';
-import { ImgAssetModule } from '@blockframes/ui/theme';
-
 
 const routes: Routes = [{
     path: '',
@@ -114,6 +114,7 @@ const routes: Routes = [{
     ImageReferenceModule,
     ImgAssetModule,
     OrgNameModule,
+    ToLabelModule,
     // Material
     MatDividerModule,
     MatListModule,

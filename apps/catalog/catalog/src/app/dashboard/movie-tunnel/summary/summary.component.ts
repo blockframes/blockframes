@@ -6,6 +6,7 @@ import { FormGroup, FormArray } from '@angular/forms';
 import { MovieService } from '@blockframes/movie/+state/movie.service';
 import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-title.service';
+import { map } from 'rxjs/operators';
 
 @Component({
   selector: 'catalog-summary-tunnel',
@@ -15,6 +16,9 @@ import { DynamicTitleService } from '@blockframes/utils/dynamic-title/dynamic-ti
 })
 export class TunnelSummaryComponent {
   form = this.tunnel.form;
+  isPublished$ = this.query.selectActive(movie => movie.main.storeConfig.status).pipe(
+    map(status => status === 'accepted' || status === 'submitted')
+  )
 
   constructor(
     private tunnel: MovieTunnelComponent,
@@ -35,6 +39,7 @@ export class TunnelSummaryComponent {
     if (this.form.valid) {
       const movie = this.form.value;
       movie.main.storeConfig.status = 'submitted';
+      movie.main.storeConfig.appAccess.catalog = true;
       await this.service.update({ ...this.query.getActive(), ...movie });
       this.form.markAsPristine();
       const ref = this.snackBar.open('Movie Submitted !!', '', { duration: 1000 });
