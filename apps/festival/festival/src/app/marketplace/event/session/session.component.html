@@ -7,7 +7,7 @@
         <article class="dark-contrast-theme screen" [backgroundRef]="event.movie.promotionalElements.banner.media">
           <div class="overlay" fxLayout="column" fxLayoutAlign="center center">
             <img [imgRef]="event.org.logo" placeholderAsset="empty_organization.webp" type="logo" alt="organisation logo">
-            <h4 class="uppercase">{{ event.org | orgName }} presents</h4>
+            <h4>{{ event.org | orgName }} presents</h4>
             <span class="mat-display-2">{{ event.movie.main.title.international }}</span>
             <h2>by {{ event.movie.main.directors | displayName }}</h2>
             <span class="mat-caption">Screening now</span>
@@ -20,7 +20,6 @@
       </ng-container>
 
       <ng-template #showVideo>
-        <!-- <iframe class="screen" [src]="url" frameborder="0" allow="autoplay; fullscreen" allowfullscreen></iframe> -->
         <event-player></event-player>
       </ng-template>
 
@@ -31,6 +30,7 @@
     <!-- MEETING TYPE -->
     <section *ngSwitchCase="'meeting'"></section>
   </ng-container>
+</ng-container>
 
 
 <ng-template #loading>
