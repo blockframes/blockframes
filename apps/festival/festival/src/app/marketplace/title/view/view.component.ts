@@ -7,9 +7,16 @@ import { MovieQuery } from '@blockframes/movie/+state/movie.query';
 import { Organization } from '@blockframes/organization/+state/organization.model';
 import { OrganizationService } from '@blockframes/organization/+state/organization.service';
 import { scaleIn } from '@blockframes/utils/animations/fade';
-import { getLabelBySlug, ExtractCode } from '@blockframes/utils/static-model/staticModels';
+import { getLabelBySlug } from '@blockframes/utils/static-model/staticModels';
 
-const promoLinks = ['promo_reel_link', 'scenario', 'screener_link', 'teaser_link', 'presentation_deck', 'trailer_link'];
+const promoLinks = [
+  'promo_reel_link',
+  'scenario',
+  'screener_link',
+  'teaser_link',
+  'presentation_deck',
+  'trailer_link'
+];
 
 @Component({
   selector: 'festival-movie-view',
@@ -24,10 +31,12 @@ export class ViewComponent implements OnInit {
   public orgs$: Observable<Organization[]>;
   public promoLinks = promoLinks;
 
-  navLinks = [{
-    path: 'main',
-    label: 'Main Information'
-  }];
+  navLinks = [
+    {
+      path: 'main',
+      label: 'Main Information'
+    }
+  ];
 
   constructor(
     private movieQuery: MovieQuery,
@@ -37,23 +46,31 @@ export class ViewComponent implements OnInit {
 
   ngOnInit() {
     this.movie$ = this.movieQuery.selectActive();
-    this.orgs$ = this.movieQuery.selectActiveId().pipe(
-      switchMap(movieId => this.orgService.getValue(ref => ref.where('movieIds', 'array-contains', movieId)))
-    );
+    this.orgs$ = this.movieQuery
+      .selectActiveId()
+      .pipe(
+        switchMap(movieId =>
+          this.orgService.getValue(ref => ref.where('movieIds', 'array-contains', movieId))
+        )
+      );
   }
 
   public hasLink({ promotionalElements }: Movie): boolean {
     return this.promoLinks.some(link => !!promotionalElements[link].media.url);
   }
 
-  public getLink(movie: Movie, link: ExtractCode<'PROMOTIONAL_ELEMENT_TYPES'>) {
-    if(movie.promotionalElements[link].media.url) {
-      const isDownload = link === 'scenario' || link === 'presentation_deck';
-      return {
-        url: movie.promotionalElements[link].media.url,
-        icon: isDownload ? 'download' : 'play',
-        label: isDownload ? `Download ${getLabelBySlug('PROMOTIONAL_ELEMENT_TYPES', link)}` : `Watch ${getLabelBySlug('PROMOTIONAL_ELEMENT_TYPES', link)}`
-      };
-    }
+  public getLinks(movie: Movie) {
+    return promoLinks.map(link => {
+      if (movie.promotionalElements[link].media.url) {
+        const isDownload = link === 'scenario' || link === 'presentation_deck';
+        return {
+          url: movie.promotionalElements[link].media.url,
+          icon: isDownload ? 'download' : 'play',
+          label: isDownload
+            ? `Download ${getLabelBySlug('PROMOTIONAL_ELEMENT_TYPES', link)}`
+            : `Watch ${getLabelBySlug('PROMOTIONAL_ELEMENT_TYPES', link)}`
+        };
+      }
+    }).filter(link => link);
   }
 }

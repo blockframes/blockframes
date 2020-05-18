@@ -19,19 +19,25 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatMenuModule } from '@angular/material/menu';
 
-const routes = [{
-  path: '',
-  component: ViewComponent,
-  children: [{
+const routes = [
+  {
     path: '',
-    redirectTo: 'main',
-    pathMatch: 'full'
-  }, {
-    path: 'main',
-    loadChildren: () => import('../main/main.module').then(m => m.MovieMainModule)
-  }]
-}];
+    component: ViewComponent,
+    children: [
+      {
+        path: '',
+        redirectTo: 'main',
+        pathMatch: 'full'
+      },
+      {
+        path: 'main',
+        loadChildren: () => import('../main/main.module').then(m => m.MovieMainModule)
+      }
+    ]
+  }
+];
 
 @NgModule({
   declarations: [ViewComponent],
@@ -49,8 +55,9 @@ const routes = [{
     MatButtonModule,
     MatIconModule,
     MatSnackBarModule,
+    MatMenuModule,
     // Routes
     RouterModule.forChild(routes)
   ]
 })
-export class MovieViewModule { }
+export class MovieViewModule {}

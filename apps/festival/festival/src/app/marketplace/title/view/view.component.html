@@ -9,13 +9,26 @@
             <mat-icon svgIcon="arrow_forward"></mat-icon>
           </a>
           <article *ngIf="hasLink(movie)" fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="24px">
-            <wishlist-button [movieId]="movie.id" small>
-            </wishlist-button>
-            <ng-container *ngFor="let promoLink of promoLinks">
-              <a *ngIf="getLink(movie, promoLink) as link" [href]="link.url" target="_blank" fxLayout="row" fxLayoutAlign="start center">
+            <wishlist-button [movieId]="movie.id" small></wishlist-button>
+            <ng-container *ngFor="let link of getLinks(movie) | slice:0:2">
+              <a [href]="link.url" target="_blank" fxLayout="row" fxLayoutAlign="start center">
                 <mat-icon [svgIcon]="link.icon"></mat-icon>
                 <span>{{ link.label }}</span>
               </a>
+            </ng-container>
+            <ng-container>
+              <a *ngIf="getLinks(movie).length > 3" [matMenuTriggerFor]="more" fxLayout="row" fxLayoutAlign="start center">
+                <mat-icon svgIcon="more_horiz"></mat-icon>
+                <span>More</span>
+              </a>
+              <mat-menu #more>
+                <ng-container *ngFor="let link of getLinks(movie) | slice:3:5">
+                  <a [href]="link.url" target="_blank" fxLayout="row" fxLayoutAlign="start center">
+                    <mat-icon [svgIcon]="link.icon"></mat-icon>
+                    <span>{{ link.label }}</span>
+                  </a>
+                </ng-container>
+              </mat-menu>
             </ng-container>
           </article>
         </ng-container>
