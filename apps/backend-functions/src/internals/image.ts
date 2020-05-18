@@ -131,13 +131,17 @@ async function resize(data: functions.storage.ObjectMetadata) {
 
     const  original = (get(docData, fieldToUpdate) as ImgRef).urls.original;
 
+    // format an array of {key, value}[] into a record of {key1: value1, key2: value2, ...}
+    const uploadedUrl: Record<string, string> = {}
+    for (const { key, url } of  uploaded) {
+      uploadedUrl[key] = url;
+    }
+
     const value = {
       ref: filePath,
 
       urls: {
-        ...uploaded.reduce((prev, { key, url }) => {
-          return { ...prev, [key]: url };
-        }, {}),
+        ...uploadedUrl,
         original,
       }
     }
