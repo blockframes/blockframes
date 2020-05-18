@@ -13,6 +13,7 @@ import { Observable } from 'rxjs';
 })
 export class SessionComponent implements OnInit {
 
+  public background: string;
   event$: Observable<Event>;
   public showSession = true;
 
@@ -26,6 +27,7 @@ export class SessionComponent implements OnInit {
       pluck('eventId'),
       switchMap(eventId => this.service.queryDocs(eventId))
     );
+    this.background = `url(https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260)`;
   }
 
   playVideo() {

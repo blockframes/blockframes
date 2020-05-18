@@ -28,7 +28,22 @@
     </section>
 
     <!-- MEETING TYPE -->
-    <section *ngSwitchCase="'meeting'"></section>
+    <section *ngSwitchCase="'meeting'" fxLayout="column" fxLayoutAlign="space-between center">
+
+      <article class="dark-contrast-theme screen" [style.background-image]="background">
+        <div class="overlay" fxLayout="column" fxLayoutAlign="center center">
+          <span class="mat-display-2">{{ event.title }}</span>
+          <span class="mat-caption">Meeting now</span>
+          <a mat-flat-button color="accent" [href]="event.meta.callUrl">
+            <mat-icon svgIcon="play"></mat-icon>
+            <span>Join the meeting</span>
+          </a>
+        </div>
+      </article>
+
+      <img asset="screening_now.webp" alt="Screening now picture">
+
+    </section>
   </ng-container>
 </ng-container>
 

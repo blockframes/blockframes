@@ -34,7 +34,7 @@ section {
         height: 80px;
         border-radius: 50%;
       }
-      button {
+      button, a {
         margin-top: 24px;
       }
     }
@@ -48,7 +48,6 @@ section {
     height: 462px;
   }
 }
-
 
 @include layout-bp(md) {
   section {

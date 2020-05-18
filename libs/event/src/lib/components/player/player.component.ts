@@ -66,13 +66,6 @@ export class EventPlayerComponent implements AfterViewInit {
   async ngAfterViewInit() {
     const watermarkUrl = this.authQuery.user.watermark.urls.original;
     await this.loadScript();
-  }
-
-  playVideo() {
-    this.showSession = true;
-    this.showVideo = false;
-    const watermarkUrl = this.authQuery.user.watermark.url;
-    await this.loadScript();
     this.initPlayer(watermarkUrl);
   }
 }
