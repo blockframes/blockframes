@@ -5,14 +5,19 @@
       <ng-container *ngSwitchCase="'screening'">
         <h2>Screening</h2>
         <mat-card [formGroup]="meta" fxLayout="column">
-          <mat-form-field appearance="outline">
-            <mat-label>Select the title to display</mat-label>
-            <mat-select formControlName="titleId">
-              <mat-option *ngFor="let title of titles$ | async" [value]="title.id">
-                {{ title.main.title.international }}
-              </mat-option>
-            </mat-select>
-          </mat-form-field>
+          <ng-container *ngIf="(titles$ | async) as titles else loading">
+            <mat-form-field appearance="outline">
+              <mat-label>Select the title to display</mat-label>
+              <mat-select formControlName="titleId">
+                <mat-option *ngFor="let title of titles" [value]="title.id">
+                  {{ title.main.title.international }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </ng-container>
+          <ng-template #loading>
+            <mat-spinner diameter="50"></mat-spinner>
+          </ng-template>
         </mat-card>
       </ng-container>
       <!-- Meeting -->
