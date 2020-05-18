@@ -48,6 +48,7 @@
     "postinstall": "ngcc --properties es2015 browser module main --first-only --create-ivy-entry-points",
     "storybook:ui": "npx ng run ui:storybook",
     "storybook:movie": "npx ng run movie:storybook",
+    "storybook:user": "npx nx run user:storybook",
     "prerender:festival": "npx ng build festival --prod && npx ng run festival:server --configuration production && npx angular-prerender --browser-target festival:build --server-target festival:server"
   },
   "private": true,
@@ -156,7 +157,6 @@
     "@storybook/addon-knobs": "5.3.9",
     "@storybook/angular": "5.3.9",
     "@storybook/core": "^5.3.14",
-    "@storybook/react": "5.3.9",
     "@types/algoliasearch": "^3.30.16",
     "@types/express": "^4.17.6",
     "@types/express-serve-static-core": "^4.17.5",
