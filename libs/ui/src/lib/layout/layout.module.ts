@@ -27,6 +27,7 @@ function getLayoutGrid(width: number): LayoutGrid {
 ​
 ​
 @Directive({ selector: '[layout]' })
+// tslint:disable-next-line: directive-class-suffix
 export class Layout implements OnInit, OnDestroy {
   private observer;
   public width: BehaviorSubject<number>;
@@ -60,6 +61,7 @@ export class Layout implements OnInit, OnDestroy {
   selector: '[grid]',
   host: { class: 'mat-grid' },
 })
+// tslint:disable-next-line: directive-class-suffix
 export class Grid implements OnInit, OnDestroy {
   private sub: Subscription;
 ​
@@ -89,6 +91,7 @@ export class Grid implements OnInit, OnDestroy {
   selector: '[flex]',
   host: { class: 'mat-flex' }
 })
+// tslint:disable-next-line: directive-class-suffix
 export class Flex implements OnInit, OnDestroy {
   private sub: Subscription;
 ​
@@ -111,6 +114,7 @@ export class Flex implements OnInit, OnDestroy {
 // TODO: divide those directives into tow
 ​
 @Directive({ selector: '[col]' })
+// tslint:disable-next-line: directive-class-suffix
 export class Column implements OnInit, OnDestroy {
   private sub: Subscription;
   private _col = new BehaviorSubject(0);
