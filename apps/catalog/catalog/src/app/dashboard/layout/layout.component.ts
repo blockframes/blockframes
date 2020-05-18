@@ -1,6 +1,12 @@
 // Angular
 import { FormControl } from '@angular/forms';
-import { Component, ChangeDetectionStrategy, AfterViewInit, OnDestroy, ViewChild } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  AfterViewInit,
+  OnDestroy,
+  ViewChild
+} from '@angular/core';
 import { MatSidenavContent } from '@angular/material/sidenav';
 import { Router, NavigationEnd } from '@angular/router';
 
@@ -8,6 +14,8 @@ import { BreakpointsService } from '@blockframes/utils/breakpoint/breakpoints.se
 import { algolia } from '@env';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
+import { InvitationQuery } from '@blockframes/invitation/+state/invitation.query';
+import { NotificationQuery } from '@blockframes/notification/+state/notification.query';
 
 @Component({
   selector: 'catalog-layout',
@@ -16,28 +24,40 @@ import { filter } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LayoutComponent implements AfterViewInit, OnDestroy {
+  public invitationCount$ = this.invitationQuery.selectCount(
+    invitation => invitation.status === 'pending'
+  );
+  public notificationCount$ = this.notificationQuery.selectCount();
+
   searchCtrl: FormControl = new FormControl('');
 
   ltMd$ = this.breakpointsService.ltMd;
-  
-  public movieIndex = algolia.indexNameMovies
-  
-  private routerSub: Subscription
+
+  public movieIndex = algolia.indexNameMovies;
+
+  private routerSub: Subscription;
 
   @ViewChild('content') sidenavContent: MatSidenavContent;
 
-  constructor(private breakpointsService: BreakpointsService, private router: Router) { }
+  constructor(
+    private breakpointsService: BreakpointsService,
+    private invitationQuery: InvitationQuery,
+    private notificationQuery: NotificationQuery,
+    private router: Router
+  ) {}
 
-    ngAfterViewInit() {
+  ngAfterViewInit() {
     // https://github.com/angular/components/issues/4280
-    this.routerSub = this.router.events.pipe(
-      filter(event => event instanceof NavigationEnd))
+    this.routerSub = this.router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe(() => {
-        this.sidenavContent.scrollTo({top: 0});
-      })
-    }
+        this.sidenavContent.scrollTo({ top: 0 });
+      });
+  }
 
-    ngOnDestroy() {
-      if(this.routerSub) { this.routerSub.unsubscribe(); }
+  ngOnDestroy() {
+    if (this.routerSub) {
+      this.routerSub.unsubscribe();
     }
+  }
 }

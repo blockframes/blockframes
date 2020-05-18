@@ -9,7 +9,6 @@ import { CatalogCartGuard } from '@blockframes/cart/guards/catalog-cart-list.gua
 import { TunnelGuard } from '@blockframes/ui/tunnel';
 import { ContractsRightListGuard } from '@blockframes/distribution-rights/guards/contracts-right-list.guard';
 import { MovieActiveGuard } from '@blockframes/movie/guards/movie-active.guard';
-import { MovieListContractListGuard } from '@blockframes/movie/guards/movie-contract.guard';
 import { OrganizationContractListGuard } from '@blockframes/contract/contract/guards/organization-contract-list.guard';
 import { ActiveContractGuard } from '@blockframes/contract/contract/guards/active-contract.guard';
 
@@ -21,6 +20,16 @@ const routes: Routes = [{
     {
       path: 'home',
       loadChildren: () => import('./movie/home/home.module').then(m => m.MarketplaceHomeModule)
+    },
+    {
+      path: 'notifications',
+      loadChildren: () => import('./notification/notification.module').then(m => m.NotificationModule),
+      data: { animation: 'notifications' }
+    },
+    {
+      path: 'invitations',
+      loadChildren: () => import('./invitation/invitation.module').then(m => m.InvitationModule),
+      data: { animation: 'invitations' }
     },
     {
       path: 'about',
