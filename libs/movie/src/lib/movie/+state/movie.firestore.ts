@@ -266,6 +266,7 @@ export interface MovieReview {
   journalName?: string,
   criticQuote?: string,
   revueLink?: string,
+  publicationDate?: Date;
 }
 
 export interface DocumentMeta {
