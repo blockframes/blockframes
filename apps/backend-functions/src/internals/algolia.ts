@@ -125,10 +125,10 @@ export function storeSearchableUser(user: PublicUser, adminKey?: string): Promis
       email: user.email,
       firstName: user.firstName || '',
       lastName: user.lastName || '',
-      avatar: user.avatar?.url || '',
+      avatar: user.avatar?.urls.original || '',
     });
   } catch (error) {
-    console.error(`\n\n\tFailed to format the movie ${user.uid} into an algolia record : skipping\n\n`);
+    console.error(`\n\n\tFailed to format the user ${user.uid} into an algolia record : skipping\n\n`);
     console.error(error);
     return new Promise(res => res(true));
   }

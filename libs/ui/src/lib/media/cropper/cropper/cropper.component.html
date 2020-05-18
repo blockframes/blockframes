@@ -28,10 +28,10 @@
     </div>
   </article>
   <article *ngSwitchCase="'upload'" @zoomDelay>
-    <div *ngIf="( percentage$ | async ) as percentage">
-      <mat-progress-spinner class="example-margin" color="primary" mode="determinate" [value]="percentage$ | async">
+    <div *ngIf="( percentage$ | async ) as percentage" fxLayout="column" fxLayoutAlign="center center">
+      <mat-progress-spinner color="primary" mode="determinate" [value]="percentage$ | async">
       </mat-progress-spinner>
-      <p>{{ percentage | number:'1.0-0' }}% uploading....</p>
+      <p>{{ percentage | number:'1.0-0' }}% uploading...</p>
     </div>
   </article>
   <article *ngSwitchCase="'upload_complete'">
@@ -45,11 +45,15 @@
         stroke-width="17"
       />
     </svg>
+    <div *ngIf="resizing" fxLayout="column" fxLayoutAlign="center center">
+      <p>Generating the preview...</p>
+      <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+    </div>
   </article>
   <article class="show" *ngSwitchCase="'show'" @finalZoom>
-    <ng-container *ngIf="url$ | async as url">
+    <ng-container>
       <div class="show">
-        <img class="croppedImage" [src]="url" />
+        <img class="croppedImage" [src]="previewUrl | async" />
       </div>
       <div class="buttons" fxLayout="row" fxLayoutAlign="space-evenly center">
         <ng-container *ngIf="useFileuploader">

@@ -108,14 +108,14 @@ export class NotificationStore extends EntityStore<NotificationState, Notificati
         return {
           date: toDate(notification.date),
           message: `A new movie has been submitted`,
-          placeholderUrl: this.getPoster(notification.docId).url,
+          placeholderUrl: this.getPoster(notification.docId).urls.xs,
           url: `c/o/dashboard/titles/${notification.docId}`
         };
       case 'movieAccepted':
         return {
           date: toDate(notification.date),
           message: `Your movie has been accepted by Archipel Content.`,
-          placeholderUrl: this.getPoster(notification.docId).url,
+          placeholderUrl: this.getPoster(notification.docId).urls.xs,
           url: `c/o/dashboard/titles/${notification.docId}`
         };
       case 'eventIsAboutToStart':

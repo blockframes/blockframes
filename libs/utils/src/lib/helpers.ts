@@ -19,8 +19,8 @@ export function isObject(item: any) {
 /**
  * @dev this method is used to deeply merge two object without loosing data
  * Use this instead of { ...this.query.getActive(), ...this.form.value }
- * @param target 
- * @param source 
+ * @param target
+ * @param source
  */
 export function mergeDeep(target: any, source: any) {
   const output = Object.assign({}, target);
@@ -114,4 +114,13 @@ export function getKeyIfExists<T, K extends Code<T>>(base: T, code: K): Key<T, K
  */
 export function getAppLocation(route: string) {
   return route.includes('marketplace') ? 'marketplace' : 'dashboard';
+}
+
+/** Basic function to create a delay in a function when called
+ * @param ms milleseconds to wait for
+ */
+export async function delay(ms: number) {
+  return new Promise(resolve => {
+    setTimeout(resolve, ms);
+  });
 }

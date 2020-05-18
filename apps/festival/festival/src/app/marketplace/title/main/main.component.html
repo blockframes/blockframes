@@ -35,7 +35,8 @@
           <li><strong>Festivals </strong></li>
           <li *ngFor="let prize of prizes">{{ getPrize(prize) }}</li>
           <li *ngFor="let prize of prizes">
-            <img *ngIf="prize.logo.url" [imgRef]="prize.logo" />
+            <!-- TODO#2654 Change placeholder to prize placeholder -->
+            <img [imgRef]="prize.logo" placeholderAsset="empty_poster.webp"/>
           </li>
         </ng-container>
       </ul>

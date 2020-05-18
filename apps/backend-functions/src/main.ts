@@ -24,9 +24,9 @@ import { onDocumentPermissionCreate } from './permissions';
 import { onContractWrite } from './contract';
 import * as privateConfig from './privateConfig';
 import { createNotificationsForEventsToStart } from './internals/invitations/events';
-import { onFileUploadEvent } from './internals/resize-images';
 import { getPrivateVideoUrl, uploadToJWPlayer } from './player';
 import { sendTestMail } from './internals/email';
+import { onFileUploadEvent } from './internals/image';
 
 /**
  * Trigger: when user creates an account.

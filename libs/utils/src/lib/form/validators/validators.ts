@@ -5,14 +5,13 @@ import {
   ValidationErrors,
   ValidatorFn,
   Validators,
-  FormArray,
-  AsyncValidatorFn
+  FormArray
 } from '@angular/forms';
 import { ErrorStateMatcher } from '@angular/material/core';
 import { LANGUAGES_SLUG } from '../../static-model/types';
 import { getLabelBySlug, isInSlug, Scope } from '../../static-model/staticModels';
 
-export const urlValidators = [Validators.pattern('^(http|https)://[^ "]+$')];
+export const urlValidators = Validators.pattern('^(http|https)://[^ "]+$');
 
 export const yearValidators = Validators.pattern('^[1-2][0-9]{3}$');
 
